@@ -4,8 +4,6 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Application;
-using DotNetNuke.Common;
-using DotNetNuke.Entities.Controllers;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Localization;
@@ -14,7 +12,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Security;
-using Assembly = System.Reflection.Assembly;
+using ToSic.Sxc.WebApi.Context;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -35,7 +33,8 @@ namespace ToSic.Sxc.WebApi.Cms
         }
 
         [HttpGet]
-	    public dynamic GetLanguages()
+        // todo: deprecate PARAMS find out if / where used
+        public dynamic GetLanguages()
 	    {
             Log.Add("get languages");
 	        var portalId = PortalSettings.PortalId;
@@ -78,19 +77,32 @@ namespace ToSic.Sxc.WebApi.Cms
         [HttpGet]
         public dynamic DialogSettings(int appId)
         {
-            var appAndPerms = new MultiPermissionsApp(BlockBuilder, appId, Log);
-            if (!appAndPerms.ZoneIsOfCurrentContextOrUserIsSuper(out var exp))
-                throw exp;
+            IApp app = null;
+            // if we have an appid (we don't have it in an install-new-apps-scenario) check permissions
+            if (appId != 0)
+            {
+                var appAndPerms = new MultiPermissionsApp(BlockBuilder, appId, Log);
+                if (!appAndPerms.ZoneIsOfCurrentContextOrUserIsSuper(out var exp))
+                    throw exp;
+                app = appAndPerms.App;
+            }
 
-            var app = appAndPerms.App;
+            var cb = new ContextBuilder(PortalSettings.Current, 
+                Request.FindModuleInfo(),
+                UserInfo,
+                app?.ZoneId,
+                app);
 
             return new
             {
+                // TODO: Deprecate PARAMS these properties as soon as old UI is gone
                 IsContent = app?.AppGuid == "Default",
                 Language = PortalSettings.Current.CultureCode,
                 LanguageDefault = PortalSettings.Current.DefaultLanguage,
-                GettingStartedUrl = app == null ? "" : IntroductionToAppUrl(app),
-                AppPath = app?.Path
+                AppPath = app?.Path,
+                GettingStartedUrl = cb.GettingStartedUrl(),
+                // END TODO
+                Context = cb.Get(Ctx.All),
             };
         }
 
@@ -112,7 +124,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 return "error: user needs host permissions";
             }
 
-            return "//gettingstarted.2sxc.org/router.aspx?" // change to use protocoll neutral base URL, also change to 2sxc
+            return "//gettingstarted.2sxc.org/router.aspx?"
                 + $"DnnVersion={DotNetNukeContext.Current.Application.Version.ToString(4)}"
                 + $"&2SexyContentVersion={Settings.ModuleVersion}"
                 + $"&fp={HttpUtility.UrlEncode(Fingerprint.System)}"
@@ -145,44 +157,6 @@ namespace ToSic.Sxc.WebApi.Cms
         #endregion
 
 
-        /// <summary>
-        /// build a getting-started url which is used to correctly show the user infos like
-        /// warnings related to his dnn or 2sxc version
-        /// infos based on his languages
-        /// redirects based on the app he's looking at, etc.
-        /// </summary>
-        /// <param name="app"></param>
-        /// <returns></returns>
-        private string IntroductionToAppUrl(IApp app)
-        {
-            var dnn = PortalSettings.Current;
-            var mod = Request.FindModuleInfo();
-            //int appId = sxc.AppId.Value;
-            var gsUrl = "//gettingstarted.2sxc.org/router.aspx?" // change to use protocoll neutral base URL, also change to 2sxc
-
-                        // Add version & module infos
-                        + "DnnVersion=" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4)
-                        + "&2SexyContentVersion=" + Settings.ModuleVersion
-                        + "&ModuleName=" + mod.DesktopModule.ModuleName
-                        + "&ModuleId=" + mod.ModuleID
-                        + "&PortalID=" + dnn.PortalId
-                        + "&ZoneID=" + app.ZoneId
-                        + "&DefaultLanguage=" + dnn.DefaultLanguage
-                        + "&CurrentLanguage=" + dnn.CultureCode;
-            
-            // Add AppStaticName and Version
-            if (mod.DesktopModule.ModuleName != "2sxc")
-            {
-                gsUrl += "&AppGuid=" + app.AppGuid;
-                if (app.Configuration != null)
-                    gsUrl += "&AppVersion=" + app.Configuration.Version
-                             + "&AppOriginalId=" + app.Configuration.OriginalId;
-            }
-
-            var hostSettings = HostController.Instance.GetSettingsDictionary();
-            gsUrl += hostSettings.ContainsKey("GUID") ? "&DnnGUID=" + hostSettings["GUID"] : "";
-            return gsUrl;
-        }
 
         #endregion
 

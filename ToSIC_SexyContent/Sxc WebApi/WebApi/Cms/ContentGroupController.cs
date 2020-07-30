@@ -44,10 +44,9 @@ namespace ToSic.Sxc.WebApi.Cms
             var itemList = parent.Children(part);
             
             // find attribute-type-name
-            var attribute = parent.Type[part]; // .FirstOrDefault(a => string.Equals(a.Name, part, OrdinalIgnoreCase));
+            var attribute = parent.Type[part];
             if (attribute == null) throw new Exception($"Attribute definition for '{part}' not found on the item {guid}");
-            //var itemTypeName = attribute.Metadata.GetBestValue<string>(Eav.Constants.EntityFieldType) ?? "";
-            attributeSetName = attribute.EntityFieldItemTypePrimary();// itemTypeName.Split(',').First().Trim();
+            attributeSetName = attribute.EntityFieldItemTypePrimary();
             return itemList;
         }
 
@@ -67,7 +66,6 @@ namespace ToSic.Sxc.WebApi.Cms
             {
                 Log.Add("Something found, but doesn't seem to be a content-group. Cancel.");
                 return wrapLog(null, null);
-                //throw new Exception($"Found Content-Group but has no View: {guid}");
             }
 
             attributeSetName = partIsContent ? contentGroup.View.ContentType : contentGroup.View.HeaderType;

@@ -1,9 +1,11 @@
 ﻿using System;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.LookUp;
+using App = ToSic.Sxc.Apps.App;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -40,8 +42,7 @@ namespace ToSic.Sxc.Blocks
             Guid.TryParse(temp, out _previewTemplateGuid);
 
             temp = ContentBlockEntity.GetBestValue(CbPropertyShowChooser)?.ToString() ?? "";
-            bool show;
-            if (bool.TryParse(temp, out show))
+            if (bool.TryParse(temp, out var show))
                 ShowTemplateChooser = show;
 
         }
@@ -72,9 +73,10 @@ namespace ToSic.Sxc.Blocks
 
             ZoneId = Parent.ZoneId;
 
-            AppId = AppHelpers.GetAppIdFromGuidName(ZoneId, _appName); // should be 0 if unknown, must test
+            AppId = new ZoneRuntime(ZoneId, Log).FindAppId(_appName);
+            //AppId = AppHelpers.GetAppIdFromGuidName(ZoneId, _appName); // should be 0 if unknown, must test
 
-            if (AppId == Settings.DataIsMissingInDb)
+            if (AppId == AppConstants.AppIdNotFound)
             {
                 _dataIsMissing = true;
                 return;

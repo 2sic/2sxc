@@ -108,9 +108,7 @@ namespace ToSic.Sxc.Adam.WebApi
         private IContentTypeAttribute Definition(int appId, string contentType, string fieldName)
         {
             // try to find attribute definition - for later extra security checks
-            //var appRead = new AppRuntime(appId, true, Log);
             var type = State.Get(appId).GetContentType(contentType);
-            // appRead.ContentTypes.Get(contentType);
             return type[fieldName];
         }
 
@@ -227,10 +225,5 @@ namespace ToSic.Sxc.Adam.WebApi
 
             return false;
         }
-
-        //protected override Dictionary<string, IPermissionCheck> InitializePermissionChecks() 
-        //    => ContentTypes.Any() 
-        //        ? InitPermissionChecksForType(ContentTypes) 
-        //        : InitPermissionChecksForApp();
     }
 }

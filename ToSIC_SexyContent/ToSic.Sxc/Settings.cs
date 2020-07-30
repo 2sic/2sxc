@@ -10,17 +10,12 @@ namespace ToSic.Sxc
         // reason is that we must ensure that the static constructor is called 
         // whenever anything is accessed
         public static readonly string ContentGroupGuidString = "ToSIC_SexyContent_ContentGroupGuid";
-        //public static readonly string AppIDString = "AppId";
         public static readonly string AppNameString = "ToSIC_SexyContent_AppName";
-        //public static readonly string SettingsShowTemplateChooser = "ToSIC_SexyContent_ShowTemplateChooser";
         public static readonly string PreviewTemplateIdString = "ToSIC_SexyContent_PreviewTemplateId";
         internal static readonly string InternalUserName = "Internal";
 
-        //internal static readonly string ContentAppName = "Default";
-
         public const string PortalHostDirectory = "~/Portals/_default/";
         public const string AppsRootFolder = "2sxc";
-        //public const string AppsSystemFolder = "System";
         public const string PortalSettingsPrefix = "ToSIC_SexyContent_";
         public const string PortalSettingZoneId = PortalSettingsPrefix + "ZoneID";
         public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
@@ -35,8 +30,6 @@ namespace ToSic.Sxc
         public const string AttributeSetScope = "2SexyContent";
 
         internal static readonly string AttributeSetStaticNameContentBlockTypeName = "ContentGroupReference";
-
-        internal static readonly int DataIsMissingInDb = -100;
 
         /// <summary>
         /// Collection of Template Locations
@@ -67,7 +60,7 @@ namespace ToSic.Sxc
                 "10.25.02", // LTS
                 "10.25.03",
                 "10.26.00", "10.27.00", "10.27.01", "10.28.00", "10.30.00",
-                "11.00.00", "11.01.00", "11.02.00", "11.03.00",
+                "11.00.00", "11.01.00", "11.02.00", "11.03.00", "11.04.00",
             };
 
             // this is the last version which must run server-side change-code
@@ -91,7 +84,7 @@ namespace ToSic.Sxc
 
         /// <summary>
         /// This is needed so when the application starts, we can configure our IoC container
-        /// It is automatically executed when the first variable on this class (contstant, static, etc.)
+        /// It is automatically executed when the first variable on this class (constant, static, etc.)
         /// is accessed. 
         /// </summary>
         static Settings() => Boot.RunBootSequence();

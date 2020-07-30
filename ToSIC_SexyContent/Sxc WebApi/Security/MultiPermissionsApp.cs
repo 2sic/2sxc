@@ -6,11 +6,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security;
-using ToSic.Eav.Security.Permissions;
-using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.WebApi;
@@ -69,7 +65,7 @@ namespace ToSic.Sxc.Security
             exp = zoneSameOrSuperUser ? null: Http.PermissionDenied(
                 $"accessing app {App.AppId} in zone {App.ZoneId} is not allowed for this user");
 
-            wrapLog(zoneSameOrSuperUser ? $"sameportal:{SamePortal} - ok": "not ok, generate error");
+            wrapLog(zoneSameOrSuperUser ? $"SamePortal:{SamePortal} - ok": "not ok, generate error");
 
             return zoneSameOrSuperUser;
         }

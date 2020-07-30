@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Entities.Portals;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.Sxc.Dnn.Run;
 
 
@@ -15,7 +14,8 @@ namespace ToSic.Sxc.Dnn.Web.ClientInfos
 
         public ClientInfosLanguages(PortalSettings ps, int zoneId)
         {
-            Current = System.Threading.Thread.CurrentThread.CurrentCulture.Name.ToLower(); // 2016-05-09 had to ignore the Portalsettings, as that is wrong ps.CultureCode.ToLower();
+            // Don't use PortalSettings, as that provides a wrong ps.CultureCode.ToLower();
+            Current = System.Threading.Thread.CurrentThread.CurrentCulture.Name.ToLower(); 
             Primary = ps.DefaultLanguage.ToLower();
             All = new DnnZoneMapper().CulturesWithState(ps.PortalId, zoneId)
                 .Where(c => c.Active)
@@ -26,7 +26,9 @@ namespace ToSic.Sxc.Dnn.Web.ClientInfos
     public class ClientInfoLanguage
     {
         // key and name must be lowercase, has side effects in EAV
+        // ReSharper disable InconsistentNaming
         public string key;
         public string name;
+        // ReSharper restore InconsistentNaming
     }
 }

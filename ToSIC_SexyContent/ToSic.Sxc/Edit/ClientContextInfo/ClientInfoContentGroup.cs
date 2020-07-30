@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
 
             Id = blockBuilder.Block.Configuration?.Id ?? 0;
             Guid = blockBuilder.Block.Configuration?.Guid ?? Guid.Empty;
-            AppId = blockBuilder.Block.AppId;// 2019-11-09, Id not nullable any more // ?? 0;
+            AppId = blockBuilder.Block.AppId;
             AppUrl = blockBuilder.App?.Path ?? "" + "/";
             AppSettingsId = (blockBuilder.App?.Settings?.Entity?.Attributes?.Count > 0)
                 ? blockBuilder.App?.Settings?.EntityId : null;    // the real id (if entity exists), 0 (if entity missing, but type has fields), or null (if not available)

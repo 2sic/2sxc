@@ -58,9 +58,6 @@ namespace ToSic.Sxc.WebApi.App
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exp))
                 throw exp;
 
-            //2018-09-15 2dm replaced
-            //var context = GetContext(SxcBlock, Log);
-            //PerformSecurityCheck(appIdentity, contentType, Grants.Read, appPath == null ? context.Dnn.Module : null);
             var result = new EntityApi(appIdentity.AppId, permCheck.EnsureAny(GrantSets.ReadDraft), Log)
                 .GetEntities(contentType, cultureCode)
                 ?.ToList();
@@ -98,7 +95,7 @@ namespace ToSic.Sxc.WebApi.App
         /// <returns></returns>
         private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<EntityApi, IEntity> getOne, string appPath)
         {
-            Log.Add($"get and serialie after security check type:{contentType}, path:{appPath}");
+            Log.Add($"get and serialize after security check type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
             var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, BlockBuilder);
 
@@ -184,10 +181,6 @@ namespace ToSic.Sxc.WebApi.App
                     .EnsureAll(Grants.Update.AsSet(), out exp);
             if (!ok)
                 throw exp;
-
-            //2018-09-15 2dm moved/disabled
-            //var context = GetContext(SxcBlock, Log);
-            //PerformSecurityCheck(appIdentity, contentType, perm, appPath == null ? context.Dnn.Module : null, itm);
 
             // Convert to case-insensitive dictionary just to be safe!
             newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.OrdinalIgnoreCase);

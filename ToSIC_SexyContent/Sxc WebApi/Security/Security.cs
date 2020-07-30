@@ -21,9 +21,6 @@ namespace ToSic.Sxc.Security
             if (!permCheck.UserCanWriteAndPublicFormsEnabled(out exp))
                 throw exp;
 
-            // 2018-09-26 2dm
-            // add test to verify that saving existing items is allowed
-
             Log.Add("passed security checks");
             return permCheck;
 

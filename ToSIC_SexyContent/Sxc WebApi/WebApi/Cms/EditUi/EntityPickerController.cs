@@ -25,7 +25,6 @@ namespace ToSic.Sxc.WebApi.Cms
                 throw exp;
 
             // maybe in the future, ATM not relevant
-            //var withDrafts = set.Item2.UserMay(GrantSets.ReadDraft);
             var withDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
 
             return new Eav.WebApi.EntityPickerController(Log)

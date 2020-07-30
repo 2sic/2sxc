@@ -75,7 +75,6 @@ namespace ToSic.Sxc.WebApi.Cms
                 // check field list (default to content-block fields)
                 var fieldList = fields?.Split(',').Select(f => f.Trim()).ToArray() ?? ViewParts.ContentPair;
                 action.Invoke(target, fieldList, index, useVersioning);
-                //CmsManager.Entities.FieldListRemove(target, fieldList, index, useVersioning);
             }
 
             // use dnn versioning - items here are always part of list

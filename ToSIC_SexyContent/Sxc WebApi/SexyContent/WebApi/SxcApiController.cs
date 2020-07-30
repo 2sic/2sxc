@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Compatibility.Sxc;
@@ -42,7 +41,7 @@ namespace ToSic.SexyContent.WebApi
         IAppAndDataHelpers
 #pragma warning restore 618
     {
-        public new IDnnContext Dnn => base.Dnn;//  DynCodeHelpers.Dnn;
+        public new IDnnContext Dnn => base.Dnn;
 
         public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(BlockBuilder));
         private SxcHelper _sxc;

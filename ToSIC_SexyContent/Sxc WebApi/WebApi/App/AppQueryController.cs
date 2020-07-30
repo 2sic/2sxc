@@ -7,7 +7,6 @@ using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Conversion;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
@@ -31,11 +30,19 @@ namespace ToSic.Sxc.WebApi.App
 
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements
-        public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query([FromUri] string name, [FromUri] bool includeGuid = false, [FromUri] string stream = null)
+        public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query([FromUri] string name, [FromUri] bool includeGuid = false, [FromUri] string stream = null, [FromUri] int? appId = null)
         {
             var wrapLog = Log.Call($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
             var context = DnnDynamicCode.Create(BlockBuilder, Log);
-            var result = BuildQueryAndRun(BlockBuilder.App, name, stream, includeGuid, context.Dnn.Module, Log, BlockBuilder);
+            var app = BlockBuilder.App;
+
+            // If no app available from context, check if an app-id was supplied in url
+            // Note that it may only be an app from the current portal
+            // and security checks will run internally
+            if (app == null && appId != null)
+                app = Dnn.Factory.App(appId.Value, PortalSettings, false, UserInfo?.IsSuperUser ?? false, Log);
+
+            var result = BuildQueryAndRun(app, name, stream, includeGuid, context.Dnn.Module, Log, BlockBuilder?.UserMayEdit ?? false);
             wrapLog(null);
             return result;
         }
@@ -51,13 +58,15 @@ namespace ToSic.Sxc.WebApi.App
                 ConfigurationProvider.Build(false, false), false, Log);
 
             // now just run the default query check and serializer
-            var result = BuildQueryAndRun(queryApp, name, stream, false, null, Log, BlockBuilder);
+            var result = BuildQueryAndRun(queryApp, name, stream, false, null, Log, BlockBuilder?.UserMayEdit ?? false);
             wrapLog(null);
             return result;
         }
 
 
-        private static Dictionary<string, IEnumerable<Dictionary<string, object>>> BuildQueryAndRun(IApp app, string name, string stream, bool includeGuid, ModuleInfo module, ILog log, IBlockBuilder blockBuilder)
+        private static Dictionary<string, IEnumerable<Dictionary<string, object>>> 
+            BuildQueryAndRun(IApp app, string name, string stream, bool includeGuid, ModuleInfo module, ILog log, 
+                bool userMayEdit)
         {
             var wrapLog = log.Call($"name:{name}, withModule:{module?.ModuleID}");
             var query = app.GetQuery(name);
@@ -84,19 +93,17 @@ namespace ToSic.Sxc.WebApi.App
                 throw HttpErr(HttpStatusCode.Unauthorized, "Request not allowed", msg);
             }
 
-            var serializer = new DataToDictionary(blockBuilder?.UserMayEdit ?? false) { WithGuid = includeGuid };
+            var serializer = new DataToDictionary(userMayEdit) { WithGuid = includeGuid };
             var result = serializer.Convert(query, stream?.Split(','));
             wrapLog(null);
             return result;
         }
 
-        private static HttpResponseException HttpErr(HttpStatusCode status, string title, string msg)
-        {
-            return new HttpResponseException(new HttpResponseMessage(status)
+        private static HttpResponseException HttpErr(HttpStatusCode status, string title, string msg) =>
+            new HttpResponseException(new HttpResponseMessage(status)
             {
                 Content = new StringContent(msg),
                 ReasonPhrase = title
             });
-        }
     }
 }

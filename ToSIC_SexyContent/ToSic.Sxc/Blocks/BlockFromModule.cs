@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
@@ -52,7 +53,7 @@ namespace ToSic.Sxc.Blocks
 
             Log.Add($"parent#{ParentId}, content-block#{ContentBlockId}, z#{ZoneId}, a#{AppId}");
 
-            if (AppId == Settings.DataIsMissingInDb)
+            if (AppId == AppConstants.AppIdNotFound)
             {
                 _dataIsMissing = true;
                 Log.Add("data is missing, will stop here");
