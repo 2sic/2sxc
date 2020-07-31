@@ -12,7 +12,8 @@ namespace ToSic.Sxc
         public static readonly string ContentGroupGuidString = "ToSIC_SexyContent_ContentGroupGuid";
         public static readonly string AppNameString = "ToSIC_SexyContent_AppName";
         public static readonly string PreviewTemplateIdString = "ToSIC_SexyContent_PreviewTemplateId";
-        internal static readonly string InternalUserName = "Internal";
+        // #2134
+        //internal static readonly string InternalUserName = "Internal";
 
         public const string PortalHostDirectory = "~/Portals/_default/";
         public const string AppsRootFolder = "2sxc";

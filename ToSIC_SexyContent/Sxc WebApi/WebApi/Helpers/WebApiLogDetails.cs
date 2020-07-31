@@ -1,8 +1,5 @@
 ﻿using System.Web.Http.Filters;
 using ToSic.Eav.Logging;
-using ToSic.SexyContent;
-using ToSic.SexyContent.Environment.Dnn7;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
 
 namespace ToSic.Sxc.WebApi

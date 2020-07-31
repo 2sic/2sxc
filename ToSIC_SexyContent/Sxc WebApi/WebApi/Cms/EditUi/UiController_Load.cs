@@ -44,7 +44,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var result = new AllInOne();
             var entityApi = new EntityApi(appId, permCheck.EnsureAny(GrantSets.ReadDraft), Log);
             var typeRead = entityApi.AppRead.ContentTypes;
-            var list = entityApi.GetEntitiesForEditing(appId, items);
+            var list = entityApi.GetEntitiesForEditing(items);
             var jsonSerializer = new JsonSerializer();
             result.Items = list.Select(e => new BundleWithHeader<JsonEntity>
             {
@@ -134,25 +134,27 @@ namespace ToSic.Sxc.WebApi.Cms
                     if (bundle.Header?.For != null)
                         ent.For = bundle.Header.For;
 
+                    // #2134
                     // if we have "old" Metadata headers, attach these
-                    else if (bundle.Header?.Metadata != null)
-                    {
-                        var md = bundle.Header.Metadata;
-                        ent.For = new JsonMetadataFor
-                        {
-                            Guid = md.KeyGuid,
-                            String = md.KeyString,
-                            Number = md.KeyNumber,
-                            Target = jsonSerializer.MetadataProvider.GetName(md.TargetType)
-                        };
-                    }
+                    //else if (bundle.Header?.Metadata != null)
+                    //{
+                    //    var md = bundle.Header.Metadata;
+                    //    ent.For = new JsonMetadataFor
+                    //    {
+                    //        Guid = md.KeyGuid,
+                    //        String = md.KeyString,
+                    //        Number = md.KeyNumber,
+                    //        Target = jsonSerializer.MetadataProvider.GetName(md.TargetType)
+                    //    };
+                    //}
                 }
             }
 
             // new UI doesn't use this any more, reset it
             if (bundle.Header != null)
             {
-                bundle.Header.Metadata = null;
+                // #2134
+                //bundle.Header.Metadata = null;
                 bundle.Header.For = null;
             }
             return ent;

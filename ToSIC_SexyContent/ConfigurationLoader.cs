@@ -31,6 +31,7 @@ namespace ToSic.SexyContent
     /// this configures unity (the IoC container)
     /// Never call this directly! always go through Settings.Ensure...
     /// </summary>
+    // ReSharper disable once UnusedMember.Global
     public class ConfigurationLoader: IConfigurationLoader
     {
         private static bool _alreadyConfigured;

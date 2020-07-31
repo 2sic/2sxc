@@ -4,6 +4,7 @@ namespace ToSic.Sxc.WebApi.Context
 {
     [Flags] public enum Ctx
     {
+        // ReSharper disable once UnusedMember.Global
         None = 0,
         AppBasic = 1,
         AppAdvanced = 2,

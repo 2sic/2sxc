@@ -50,10 +50,10 @@ namespace ToSic.Sxc.WebApi.Cms
             var permCheck = new Security.Security(BlockBuilder, Log)
                 .DoPreSaveSecurityCheck(appId, package.Items);
 
-            var foundItems = package.Items.Where(i => i.EntityId != 0 && i.EntityGuid != Guid.Empty)
-                .Select(i => i.EntityGuid != Guid.Empty
-                        ? appRead.Entities.Get(i.EntityGuid) // prefer guid access if available
-                        : appRead.Entities.Get(i.EntityId)  // otherwise id
+            var foundItems = package.Items.Where(i => i.Entity.Id != 0 && i.Entity.Guid != Guid.Empty)
+                .Select(i => i.Entity.Guid != Guid.Empty
+                        ? appRead.Entities.Get(i.Entity.Guid) // prefer guid access if available
+                        : appRead.Entities.Get(i.Entity.Id)  // otherwise id
                 );
             if (foundItems.Any(i => i != null) && !permCheck.EnsureAll(GrantSets.UpdateSomething, out var exception))
                 throw exception;

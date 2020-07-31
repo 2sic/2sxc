@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
@@ -16,9 +17,9 @@ namespace ToSic.Sxc.Dnn
     {
         public DnnPublishing(IBlockBuilder blockBuilder, ILog parentLog) : base(blockBuilder, parentLog, "Api.DnnPub") { }
 
-        internal Dictionary<Guid, int> SaveWithinDnnPagePublishingAndUpdateParent<T>(
+        internal Dictionary<Guid, int> SaveWithinDnnPagePublishingAndUpdateParent(
             int appId,
-            List<BundleWithHeader<T>> items,
+            List<BundleWithHeader<IEntity>> items,
             bool partOfPage,
             Func<bool, Dictionary<Guid, int>> internalSaveMethod,
             IMultiPermissionCheck permCheck

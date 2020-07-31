@@ -19,7 +19,7 @@ namespace ToSic.Sxc.WebApi
     {
         public ContentGroupList(IBlockBuilder blockBuilder, ILog parentLog) : base(blockBuilder, parentLog, "Api.GrpPrc") {}
 
-        internal bool IfChangesAffectListUpdateIt<T>(int appId, List<BundleWithHeader<T>> items, Dictionary<Guid, int> ids)
+        internal bool IfChangesAffectListUpdateIt(int appId, List<BundleWithHeader<IEntity>> items, Dictionary<Guid, int> ids)
         {
             var wrapLog = Log.Call<bool>();
             var groupItems = items.Where(i => i.Header.ListHas())
@@ -37,10 +37,10 @@ namespace ToSic.Sxc.WebApi
             => new CmsRuntime(app, Log, BlockBuilder.UserMayEdit,
                 BlockBuilder.Environment.PagePublishing.IsEnabled(BlockBuilder.Container.Id)).Blocks.GetBlockConfig(blockGuid);
 
-        private bool PostSaveUpdateIdsInParent<T>(
+        private bool PostSaveUpdateIdsInParent(
             int appId,
             Dictionary<Guid, int> postSaveIds,
-            IEnumerable<IGrouping<string, BundleWithHeader<T>>> pairsOrSingleItems)
+            IEnumerable<IGrouping<string, BundleWithHeader<IEntity>>> pairsOrSingleItems)
         {
             var wrapLog = Log.Call<bool>($"{appId}");
             var app = new Apps.App(new DnnTenant(PortalSettings.Current), Eav.Apps.App.AutoLookupZone, appId,
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.WebApi
                 var targetIsContentBlock = entity.Type.Name == BlocksRuntime.BlockTypeName;
                 
                 var primaryItem = targetIsContentBlock ? FindContentItem(bundle) : bundle.First();
-                var primaryId = GetIdFromGuidOrError(postSaveIds, primaryItem.EntityGuid);
+                var primaryId = GetIdFromGuidOrError(postSaveIds, primaryItem.Entity.EntityGuid);
 
                 var ids = targetIsContentBlock
                     ? new[] {primaryId, FindPresentationItem(postSaveIds, bundle)}
@@ -70,7 +70,7 @@ namespace ToSic.Sxc.WebApi
                 //    willAdd = primaryItem.Header.ReallyAddBecauseAlreadyVerified.Value;
 
                 Log.Add($"will add: {willAdd}; " + // add-pre-verified:{primaryItem.Header.ReallyAddBecauseAlreadyVerified}; " +
-                        $"Group.Add:{primaryItem.Header.Add}; EntityId:{primaryItem.EntityId}");
+                        $"Group.Add:{primaryItem.Header.Add}; EntityId:{primaryItem.Entity.EntityId}");
 
                 var cms = new CmsManager(app, Log);
                 var fieldPair = targetIsContentBlock
@@ -109,7 +109,7 @@ namespace ToSic.Sxc.WebApi
             return postSaveIds[guid];
         }
 
-        private static int? FindPresentationItem<T>(Dictionary<Guid, int> postSaveIds, IGrouping<string, BundleWithHeader<T>> bundle)
+        private static int? FindPresentationItem(Dictionary<Guid, int> postSaveIds, IGrouping<string, BundleWithHeader<IEntity>> bundle)
         {
             int? presentationId = null;
             var presItem =
@@ -119,8 +119,8 @@ namespace ToSic.Sxc.WebApi
 
             if (presItem == null) return null;
 
-            if (postSaveIds.ContainsKey(presItem.EntityGuid))
-                presentationId = postSaveIds[presItem.EntityGuid];
+            if (postSaveIds.ContainsKey(presItem.Entity.EntityGuid))
+                presentationId = postSaveIds[presItem.Entity.EntityGuid];
 
             presentationId = presItem.Header.Group.SlotIsEmpty ? null : presentationId;
             // use null if it shouldn't have one

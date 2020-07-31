@@ -59,7 +59,7 @@ namespace ToSic.Sxc.WebApi.App
                 throw exp;
 
             var result = new EntityApi(appIdentity.AppId, permCheck.EnsureAny(GrantSets.ReadDraft), Log)
-                .GetEntities(contentType, cultureCode)
+                .GetEntities(contentType)
                 ?.ToList();
             wraplog("found: " + result?.Count);
             return result;

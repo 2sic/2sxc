@@ -32,7 +32,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private CmsManager _cmsManager;
 
         private CmsRuntime GetCmsRuntime()
-            // todo: this must be changed, set showDrafts to true for now, as it's probably only used in the view-picker, but it shoudln't just be here
+            // todo: this must be changed, set showDrafts to true for now, as it's probably only used in the view-picker, but it shouldn't just be here
             => App == null ? null : new CmsRuntime(App, Log, true, false);
 
 

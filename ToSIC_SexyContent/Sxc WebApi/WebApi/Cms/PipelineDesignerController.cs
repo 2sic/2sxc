@@ -49,7 +49,7 @@ namespace ToSic.Sxc.WebApi.Cms
 	    /// Save Pipeline
 	    /// </summary>
 	    /// <param name="data">JSON object { pipeline: pipeline, dataSources: dataSources }</param>
-	    /// <param name="appId">AppId this Pipeline belogs to</param>
+	    /// <param name="appId">AppId this Pipeline belongs to</param>
 	    /// <param name="id">PipelineEntityId</param>
 	    [HttpPost]
 	    public QueryDefinitionInfo SavePipeline([FromBody] QueryDefinitionInfo data, int appId, int id)

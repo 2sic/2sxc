@@ -109,10 +109,6 @@
     <None Include="material\docs\articles\content3.md" />
     <None Include="material\docs\articles\intro.md" />
     <None Include="material\docs\articles\toc.yml" />
-    <None Include="material\docs\CHANGELOG.md" />
-    <None Include="material\docs\docfx.json" />
-    <None Include="material\docs\index.md" />
-    <None Include="material\docs\toc.yml" />
     <None Include="material\LICENSE" />
     <None Include="material\material\partials\head.tmpl.partial" />
     <None Include="material\README.md" />
