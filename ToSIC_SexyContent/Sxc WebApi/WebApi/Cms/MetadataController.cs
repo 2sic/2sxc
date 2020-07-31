@@ -14,6 +14,6 @@ namespace ToSic.Sxc.WebApi.Cms
     {
         [HttpGet]
         public IEnumerable<Dictionary<string, object>> Get(int appId, int targetType, string keyType, string key, string contentType)
-            => new Eav.WebApi.MetadataController(Log).Get(appId, targetType, keyType, key, contentType);
+            => Eav.WebApi.MetadataController.Get(appId, targetType, keyType, key, contentType);
     }
 }
