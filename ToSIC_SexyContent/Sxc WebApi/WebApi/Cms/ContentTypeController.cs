@@ -42,7 +42,12 @@ namespace ToSic.Sxc.WebApi.Cms
         public IDictionary<string, string> Scopes(int appId)
         {
             var appMan = new AppManager(appId, Log);
-            var scopes = appMan.Read.ContentTypes.GetScopes();
+            var scopes = appMan.Read.ContentTypes.GetScopes().ToList();
+
+            // Make sure the "Default" scope is always included, otherwise it's missing on new apps
+            if(!scopes.Contains(AppConstants.ScopeContentOld))
+                scopes.Add(AppConstants.ScopeContentOld);
+
             var lookup = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
             {
                 {AppConstants.ScopeContentOld, "Default"},
