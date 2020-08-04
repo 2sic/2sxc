@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>NgDialogs</title>
+  <base href="./">
+  <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script>
+    (function obsoleteBrowserCheck() {
+      var isIE = navigator.userAgent.indexOf("MSIE") >= 0 || navigator.userAgent.indexOf("Trident") >= 0 || !!document.documentMode;
+      var isEdge = navigator.userAgent.indexOf("Edge") >= 0;
+      if (isIE || isEdge) {
+        alert("Error: Old Browser Detected\n\nIt seems that you are using an old browser like Internet Explorer or Edge. Editing doesn't work with obsolete browsers, so please use a modern browser like Chrome instead.");
+        window.parent.$2sxc.totalPopup.close();
+      }
+    })();
+
+    (function init2sxc() {
+      // https://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+      function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+          results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+      }
+
+      // get sxcver from the url. If there is none, load it from the session storage
+      var sxcVersion = getParameterByName('sxcver');
+      if (!sxcVersion) sxcVersion = getParameterByName('sxcver', sessionStorage.getItem('eav-url'));
+      if (!sxcVersion) sxcVersion = Math.floor(Math.random() * 99999);
+
+      // the version to append to each asset, to ensure reload after an upgrade
+      window.sxcVersion = sxcVersion;
+      // create an empty _jsApi so $2sxc can initialize - must fill afterwards!
+      window._jsApi = {};
+      // first load the main 2sxc because it contains some url-param methods
+      document.write('<script src="../../js/2sxc.api.min.js?sxcver=' + sxcVersion + '"></scr' + 'ipt>');
+    })();
+  </script>
+</head>
+
+<body>
+  <app-root></app-root>
+<script src="runtime.b02b28d89ccdaea4c67f.js" defer></script><script src="polyfills-es5.ffeba92d27b1ec1aa3c8.js" nomodule defer></script><script src="polyfills.b07cefb2d5529b33f8e1.js" defer></script><script src="styles.d07e8b9fa0e88232c22d.js" defer></script><script src="scripts.3036435dcccd39ba819a.js" defer></script><script src="vendor.6bb34ac46059506174b2.js" defer></script><script src="main.4dc0317f64e802245023.js" defer></script></body>
+
+</html>
