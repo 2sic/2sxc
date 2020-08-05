@@ -258,7 +258,7 @@
       <Name>ToSic.Eav.WebApi</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj">
-      <Project>{cf3b9349-8c66-4901-8edb-a4ec1d75326b}</Project>
+      <Project>{892f9d3b-0578-46a1-a46a-b694a7e15669}</Project>
       <Name>ToSic.Eav</Name>
     </ProjectReference>
     <ProjectReference Include="2Sexy Content Razor\2sxc Razor.csproj">
