@@ -22,8 +22,8 @@ namespace ToSic.Sxc.WebApi.Cms
     {
         protected override string HistoryLogName => "Api.SxcCTC";
 
-        private Eav.WebApi.ContentTypeController EavCtc => _eavCtc ?? (_eavCtc = new Eav.WebApi.ContentTypeController(Log));
-        private Eav.WebApi.ContentTypeController _eavCtc;
+        private Eav.WebApi.ContentTypeApi EavCtc => _eavCtc ?? (_eavCtc = new Eav.WebApi.ContentTypeApi(Log));
+        private Eav.WebApi.ContentTypeApi _eavCtc;
 
 	    #region Content-Type Get, Delete, Save
         [HttpGet]

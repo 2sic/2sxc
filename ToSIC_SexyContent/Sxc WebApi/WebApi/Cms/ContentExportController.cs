@@ -26,9 +26,9 @@ namespace ToSic.Sxc.WebApi.Cms
     {
         protected override string HistoryLogName => "Api.2sSysC";
 
-	    private Eav.WebApi.ContentExportController EavCtc => _eavCtc ?? (_eavCtc = new Eav.WebApi.ContentExportController(Log));
+	    private Eav.WebApi.ContentExportApi EavCtc => _eavCtc ?? (_eavCtc = new Eav.WebApi.ContentExportApi(Log));
 
-	    private Eav.WebApi.ContentExportController _eavCtc;
+	    private Eav.WebApi.ContentExportApi _eavCtc;
 
 
         [HttpGet]

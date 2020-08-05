@@ -19,10 +19,10 @@ namespace ToSic.Sxc.WebApi.Cms
 	    {
 	        base.Initialize(controllerContext);
 	        Log.Rename("2sApiC");
-	        _eavCtc = new Eav.WebApi.ContentImportController(Log);
+	        _eavCtc = new Eav.WebApi.ContentImportApi(Log);
 	    }
 
-        private Eav.WebApi.ContentImportController _eavCtc;
+        private Eav.WebApi.ContentImportApi _eavCtc;
 
         [HttpPost]
         public ContentImportResultDto EvaluateContent(ContentImportArgsDto args) => _eavCtc.EvaluateContent(args);
