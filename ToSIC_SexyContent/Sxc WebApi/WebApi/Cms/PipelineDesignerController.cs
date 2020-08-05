@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.WebApi;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Apps;
@@ -26,20 +26,14 @@ namespace ToSic.Sxc.WebApi.Cms
     {
         protected override string HistoryLogName => "Api.SxcQry";
 
+		private QueryController QryCtc => _eavCont ?? (_eavCont = new QueryController(Log));
 		private QueryController _eavCont;
-
-	    protected override void Initialize(HttpControllerContext controllerContext)
-	    {
-	        base.Initialize(controllerContext); // very important!!!
-	        //Log.Rename("Sxc.QryCnt");
-			_eavCont = new QueryController(Log);
-	    }
 
         /// <summary>
         /// Get a Pipeline with DataSources
         /// </summary>
         [HttpGet]
-		public QueryDefinitionInfo GetPipeline(int appId, int? id = null) => _eavCont.GetPipeline(appId, id);
+		public QueryDefinitionDto GetPipeline(int appId, int? id = null) => QryCtc.GetPipeline(appId, id);
 
 	    /// <summary>
 		/// Get installed DataSources from .NET Runtime but only those with [PipelineDesigner Attribute]
@@ -54,20 +48,20 @@ namespace ToSic.Sxc.WebApi.Cms
 	    /// <param name="appId">AppId this Pipeline belongs to</param>
 	    /// <param name="id">PipelineEntityId</param>
 	    [HttpPost]
-	    public QueryDefinitionInfo SavePipeline([FromBody] QueryDefinitionInfo data, int appId, int id)
-	        => _eavCont.SavePipeline(data, appId, id);
+	    public QueryDefinitionDto SavePipeline([FromBody] QueryDefinitionDto data, int appId, int id)
+	        => QryCtc.SavePipeline(data, appId, id);
 
 
 	    /// <summary>
 	    /// Query the Result of a Pipeline using Test-Parameters
 	    /// </summary>
 	    [HttpGet]
-	    public dynamic QueryPipeline(int appId, int id)
+	    public QueryRunDto QueryPipeline(int appId, int id)
 	    {
 	        var modId = ActiveModule?.ModuleID ?? 0;
 	        var wrapLog = Log.Call($"app:{appId}, id:{id}", message: $"mid:{modId}");
 	        var dnnConfigProvider = new GetDnnEngine().GetEngine(modId, Log);
-            var result = _eavCont.QueryPipeline(appId, id, dnnConfigProvider);
+            var result = QryCtc.QueryPipeline(appId, id, dnnConfigProvider);
             wrapLog(null);
             return result;
         }
@@ -76,7 +70,7 @@ namespace ToSic.Sxc.WebApi.Cms
 	    /// Clone a Pipeline with all DataSources and their configurations
 	    /// </summary>
 	    [HttpGet]
-	    public void ClonePipeline(int appId, int id) => _eavCont.ClonePipeline(appId, id);
+	    public void ClonePipeline(int appId, int id) => QryCtc.ClonePipeline(appId, id);
 	
 
 		/// <summary>
@@ -96,10 +90,10 @@ namespace ToSic.Sxc.WebApi.Cms
 				throw new Exception(
 				        $"Pipeline is used by Views and cant be deleted. Pipeline EntityId: {id}. TemplateIds: {string.Join(", ", templatesUsingPipeline)}");
 
-			return _eavCont.DeletePipeline(appId, id);
+			return QryCtc.DeletePipeline(appId, id);
 		}
 
 	    [HttpPost]
-	    public bool ImportQuery(EntityImport args) => _eavCont.ImportQuery(args);
+	    public bool ImportQuery(EntityImportDto args) => QryCtc.ImportQuery(args);
 	}
 }

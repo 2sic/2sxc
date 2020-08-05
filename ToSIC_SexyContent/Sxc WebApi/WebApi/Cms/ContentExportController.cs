@@ -29,7 +29,6 @@ namespace ToSic.Sxc.WebApi.Cms
         protected override void Initialize(HttpControllerContext controllerContext)
 	    {
 	        base.Initialize(controllerContext); // very important!!!
-	        //Log.Rename("2sSysC");
             _eavCtc = new Eav.WebApi.ContentExportController(Log);
 	    }
 

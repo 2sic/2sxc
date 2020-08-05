@@ -7,6 +7,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Security;
@@ -28,7 +29,7 @@ namespace ToSic.Sxc.WebApi.Cms
 	    #region Content-Type Get, Delete, Save
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<dynamic> Get(int appId, string scope = null, bool withStatistics = false) 
+        public IEnumerable<ContentTypeDto> Get(int appId, string scope = null, bool withStatistics = false) 
             => EavCtc.Get(appId, scope, withStatistics);
 
 
@@ -61,12 +62,12 @@ namespace ToSic.Sxc.WebApi.Cms
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public dynamic Get(int appId, string contentTypeId, string scope = null) 
+        public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) 
             => EavCtc.GetSingle(appId, contentTypeId, scope);
 
 	    [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        public dynamic GetSingle(int appId, string contentTypeStaticName, string scope = null)
+        public ContentTypeDto GetSingle(int appId, string contentTypeStaticName, string scope = null)
 	    {
 	        var permCheck = new MultiPermissionsTypes(BlockBuilder, appId, contentTypeStaticName, Log);
             if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var exp))
@@ -112,7 +113,7 @@ namespace ToSic.Sxc.WebApi.Cms
         /// </summary>
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        public IEnumerable<ContentTypeFieldInfo> GetFields(int appId, string staticName)
+        public IEnumerable<ContentTypeFieldDto> GetFields(int appId, string staticName)
         {
             Log.Add($"get fields for a:{appId} type:{staticName}");
 	        var permCheck = new MultiPermissionsTypes(BlockBuilder, appId, staticName, Log);

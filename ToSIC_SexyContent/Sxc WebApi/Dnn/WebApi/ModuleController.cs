@@ -10,13 +10,7 @@ namespace ToSic.Sxc.Dnn.WebApi
     [ValidateAntiForgeryToken]
     public class ModuleController: DnnApiControllerWithFixes
     {
-        protected override string HistoryLogName => "Api.2sModC";
-
-        //protected override void Initialize(HttpControllerContext controllerContext)
-        //{
-        //    base.Initialize(controllerContext); // very important!!!
-        //    Log.Rename("2sModC");
-        //}
+        protected override string HistoryLogName => "Api.SxcMod";
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]

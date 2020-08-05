@@ -11,6 +11,7 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Apps;
@@ -28,16 +29,10 @@ namespace ToSic.Sxc.WebApi.Cms
     {
         protected override string HistoryLogName => "Api.2sIExC";
 
-        //protected override void Initialize(HttpControllerContext controllerContext)
-        //{
-        //    base.Initialize(controllerContext); // very important!!!
-        //    Log.Rename("2sIExC");
-        //}
-
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
-        public dynamic GetAppInfo(int appId, int zoneId)
+        public AppExportInfoDto GetAppInfo(int appId, int zoneId)
         {
             Log.Add($"get app info for app:{appId} and zone:{zoneId}");
             var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);
@@ -49,9 +44,9 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var cms = new CmsRuntime(currentApp, Log, true, false);
 
-            return new
+            return new AppExportInfoDto
             {
-                currentApp.Name,
+                Name = currentApp.Name,
                 Guid = currentApp.AppGuid,
                 Version = currentApp.VersionSafe(),
                 EntitiesCount = cms.Entities.All.Count(),
@@ -67,41 +62,44 @@ namespace ToSic.Sxc.WebApi.Cms
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
-        public dynamic GetContentInfo(int appId, int zoneId, string scope)
+        public ExportPartsOverviewDto GetContentInfo(int appId, int zoneId, string scope)
         {
             Log.Add($"get content info for z#{zoneId}, a#{appId}, scope:{scope} super?:{UserInfo.IsSuperUser}");
-            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId,appId, UserInfo, Log);// AppWithRestrictedZoneChange(appId, zoneId);
+            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId,appId, UserInfo, Log);
 
             var cms = new CmsRuntime(currentApp, Log, true, false);
             var contentTypes = cms.ContentTypes.FromScope(scope);
             var entities = cms.Entities.All ;
             var templates = cms.Views.GetAll();
 
-            return new
+            return new ExportPartsOverviewDto
             {
-                ContentTypes = contentTypes.Select(c => new
+                ContentTypes = contentTypes.Select(c => new ExportPartsContentTypesDto
                 {
                     Id = c.ContentTypeId,
-                    c.Name,
-                    c.StaticName,
-                    Templates = templates.Where(t => t.ContentType == c.StaticName).Select(t => new
-                    {
-                        t.Id,
-                        t.Name
-                    }),
+                    Name = c.Name,
+                    StaticName = c.StaticName,
+                    Templates = templates.Where(t => t.ContentType == c.StaticName)
+                        .Select(t => new ExportPartsIdNameDto
+                        {
+                            Id = t.Id,
+                            Name = t.Name
+                        }),
                     Entities = entities
                         .Where(e => e.Type.ContentTypeId == c.ContentTypeId)
-                        .Select(e => new
+                        .Select(e => new ExportPartsEntitiesDto
                         {
                             Title = e.GetBestTitle(),
                             Id = e.EntityId
                         })
                 }),
-                TemplatesWithoutContentTypes = templates.Where(t => !string.IsNullOrEmpty(t.ContentType)).Select(t => new
-                {
-                    t.Id,
-                    t.Name
-                })
+                TemplatesWithoutContentTypes = templates
+                    .Where(t => !string.IsNullOrEmpty(t.ContentType))
+                    .Select(t => new ExportPartsIdNameDto
+                    {
+                        Id = t.Id,
+                        Name = t.Name
+                    })
             };
         }
 

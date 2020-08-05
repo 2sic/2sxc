@@ -2,6 +2,7 @@
 using System.Web.Http;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Security;
 
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.WebApi.Cms
         [HttpPost]
         [AllowAnonymous]
  		//[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        public IEnumerable<dynamic> GetAvailableEntities([FromUri]int appId, [FromBody] string[] items, [FromUri] string contentTypeName = null, [FromUri] int? dimensionId = null)
+        public IEnumerable<EntityForPickerDto> GetAvailableEntities([FromUri]int appId, [FromBody] string[] items, [FromUri] string contentTypeName = null, [FromUri] int? dimensionId = null)
         {
             // do security check
             var permCheck = string.IsNullOrEmpty(contentTypeName) 

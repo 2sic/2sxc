@@ -16,13 +16,6 @@ namespace ToSic.Sxc.WebApi.System
 
         internal const string InsightsUrlFragment = "/sys/insights/";
 
-
-        //protected override void Initialize(HttpControllerContext controllerContext)
-        //{
-        //    base.Initialize(controllerContext); // very important!!!
-        //    Log.Add("InsightsController");
-        //}
-
         /// <summary>
         /// Make sure that these requests don't land in the normal api-log.
         /// Otherwise each log-access would re-number what item we're looking at

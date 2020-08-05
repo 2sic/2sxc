@@ -20,12 +20,6 @@ namespace ToSic.Sxc.WebApi.Cms
     {
         protected override string HistoryLogName => "Api.2sInst";
 
-        //protected override void Initialize(HttpControllerContext controllerContext)
-        //{
-        //    base.Initialize(controllerContext); // very important!!!
-        //    Log.Rename("2sInst");
-        //}
-
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         //[ValidateAntiForgeryToken] - never activate this, because this is a GET and can't include the RVT

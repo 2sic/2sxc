@@ -2,6 +2,7 @@
 using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
 
@@ -25,14 +26,14 @@ namespace ToSic.Sxc.WebApi.Cms
         private Eav.WebApi.ContentImportController _eavCtc;
 
         [HttpPost]
-        public ContentImportResult EvaluateContent(ContentImportArgs args) => _eavCtc.EvaluateContent(args);
+        public ContentImportResultDto EvaluateContent(ContentImportArgsDto args) => _eavCtc.EvaluateContent(args);
 
 
 	    [HttpPost]
-        public ContentImportResult ImportContent(ContentImportArgs args) => _eavCtc.ImportContent(args);
+        public ContentImportResultDto ImportContent(ContentImportArgsDto args) => _eavCtc.ImportContent(args);
 
 	    [HttpPost]
-        public bool Import(EntityImport args) => _eavCtc.Import(args);
+        public bool Import(EntityImportDto args) => _eavCtc.Import(args);
 
 	}
 }

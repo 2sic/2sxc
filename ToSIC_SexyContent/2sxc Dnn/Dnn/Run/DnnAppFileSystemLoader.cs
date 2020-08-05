@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Dnn.Run
                     var niceName = NiceName(name);
                     // TODO: use metadata information if available
                     return new InputTypeInfo(fullName, niceName, "Extension Field", "", false,
-                        $"[App:Path]/{Eav.Constants.FolderAppExtensions}/{name}/{JsFile}", "", false);
+                        $"[App:Path]/{Eav.Constants.FolderAppExtensions}/{name}/{JsFile}", false);
                 })
                 .ToList();
             return wrapLog(null, types);
