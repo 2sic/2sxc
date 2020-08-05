@@ -165,7 +165,7 @@
     <Compile Include="Dnn\Search\SearchItem.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.AppEngine\ToSic.Eav.Apps.csproj">
+    <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">
       <Project>{fa1b4495-6b85-400f-a5e3-0e292ccbfae2}</Project>
       <Name>ToSic.Eav.Apps</Name>
     </ProjectReference>
