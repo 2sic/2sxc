@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Filters;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
 
 namespace ToSic.Sxc.WebApi

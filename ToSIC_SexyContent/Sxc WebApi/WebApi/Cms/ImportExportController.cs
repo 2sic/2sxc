@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Security.Authentication;
 using System.Web;
 using System.Web.Http;
 using System.Xml.Linq;
@@ -12,11 +11,11 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Dnn.ImportExport;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.Security;
 using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -80,7 +79,7 @@ namespace ToSic.Sxc.WebApi.Cms
                     Name = c.Name,
                     StaticName = c.StaticName,
                     Templates = templates.Where(t => t.ContentType == c.StaticName)
-                        .Select(t => new ExportPartsIdNameDto
+                        .Select(t => new IdNameDto
                         {
                             Id = t.Id,
                             Name = t.Name
@@ -95,7 +94,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 }),
                 TemplatesWithoutContentTypes = templates
                     .Where(t => !string.IsNullOrEmpty(t.ContentType))
-                    .Select(t => new ExportPartsIdNameDto
+                    .Select(t => new IdNameDto
                     {
                         Id = t.Id,
                         Name = t.Name
@@ -109,9 +108,9 @@ namespace ToSic.Sxc.WebApi.Cms
         public HttpResponseMessage ExportApp(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
         {
             Log.Add($"export app z#{zoneId}, a#{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
-            EnsureUserIsAdmin(); // must happen inside here, as it's opened as a new browser window, so not all headers exist
+            RunIf.ThrowIfNotAdmin(PortalSettings); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
-            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);// AppWithRestrictedZoneChange(appId, zoneId);
+            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);
 
             var zipExport = new ZipExport(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
             var addOnWhenContainingContent = includeContentGroups ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm") : "";
@@ -132,9 +131,9 @@ namespace ToSic.Sxc.WebApi.Cms
         public bool ExportForVersionControl(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
         {
             Log.Add($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
-            EnsureUserIsAdmin();
+            RunIf.ThrowIfNotAdmin(PortalSettings); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
-            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);// AppWithRestrictedZoneChange(appId, zoneId);
+            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);
 
             var zipExport = new ZipExport(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
             zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid);
@@ -146,9 +145,9 @@ namespace ToSic.Sxc.WebApi.Cms
         public HttpResponseMessage ExportContent(int appId, int zoneId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
         {
             Log.Add($"export content z#{zoneId}, a#{appId}, ids:{entityIdsString}, templId:{templateIdsString}");
-            EnsureUserIsAdmin();
+            RunIf.ThrowIfNotAdmin(PortalSettings); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
-            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);// AppWithRestrictedZoneChange(appId, zoneId);
+            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);
             var appRuntime = new AppRuntime(currentApp, true, Log);
 
             var fileName = $"2sxcContentExport_{currentApp.NameWithoutSpecialChars()}_{currentApp.VersionSafe()}.xml";
@@ -165,10 +164,10 @@ namespace ToSic.Sxc.WebApi.Cms
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
-        public ImportResult ImportApp()
+        public ImportResultDto ImportApp()
         {
             Log.Add("import app start");
-            var result = new ImportResult();
+            var result = new ImportResultDto();
 
             var request = HttpContext.Current.Request;
 
@@ -204,10 +203,10 @@ namespace ToSic.Sxc.WebApi.Cms
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
-        public ImportResult ImportContent()
+        public ImportResultDto ImportContent()
         {
             Log.Add("import content start");
-            var result = new ImportResult();
+            var result = new ImportResultDto();
 
             var request = HttpContext.Current.Request;
 
@@ -248,12 +247,5 @@ namespace ToSic.Sxc.WebApi.Cms
             return result;
         }
 
-
-        private void EnsureUserIsAdmin()
-        {
-            Log.Add("ensure user is admin");
-            if (!PortalSettings.UserInfo.Roles.Contains(PortalSettings.AdministratorRoleName) && !PortalSettings.UserInfo.IsSuperUser)
-                throw new AuthenticationException("user doesn't seem to be admin or super-user");
-        }
     }
 }

@@ -3,7 +3,6 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
 
 namespace ToSic.Sxc.WebApi.Cms

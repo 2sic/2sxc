@@ -1,21 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Security.Permissions;
-using ToSic.Eav.WebApi;
-using ToSic.Eav.WebApi.Formats;
-using ToSic.Sxc.Dnn;
-using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Security;
-using ToSic.Sxc.SxcTemp;
-
-namespace ToSic.Sxc.WebApi.Cms
+﻿namespace ToSic.Sxc.WebApi.Cms
 {
     // #2134 - all this code was deprecated when dropping the old UI
     public partial class EntitiesController

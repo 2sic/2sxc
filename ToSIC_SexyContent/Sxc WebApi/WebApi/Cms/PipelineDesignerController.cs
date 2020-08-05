@@ -7,7 +7,6 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Dnn.LookUp;
