@@ -128,7 +128,7 @@
       <Project>{cf3b9349-8c66-4901-8edb-a4ec1d75326b}</Project>
       <Name>ToSic.Eav</Name>
     </ProjectReference>
-    <ProjectReference Include="..\2sxc Dnn\2sxc Dnn.csproj">
+    <ProjectReference Include="..\ToSic.Sxc.Dnn\2sxc Dnn.csproj">
       <Project>{a94de6d7-d1e6-4be2-b5b5-dc4a6a61cd80}</Project>
       <Name>2sxc Dnn</Name>
     </ProjectReference>
