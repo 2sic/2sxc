@@ -12,13 +12,18 @@
             "**/obj/**",
             "**/bin/**",
             "_site/**",
-            "**/*Testing/**"
+            "**/*Testing/**",
+            "**/*.Tests/**",
+            "**/XOLD-*/**"
           ]
         }
       ],
       "dest": "obj/api/dot-net/",
       "filter": "filterConfig.yml",
-      "force": true
+      "force": true,
+      "properties": {
+        "TargetFramework": "net451"
+      }
     }
   ],
   "build": {
