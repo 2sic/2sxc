@@ -165,9 +165,9 @@
             <assembly>
               <name>ToSic.Eav.Repository.Efc.dll</name>
             </assembly>
-            <assembly>
+            <!--<assembly>
               <name>ToSic.Eav.Tokens.dll</name>
-            </assembly>
+            </assembly>-->
             <assembly>
               <name>ToSic.Eav.WebApi.dll</name>
             </assembly>

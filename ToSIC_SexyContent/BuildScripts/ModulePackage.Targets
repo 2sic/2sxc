@@ -128,8 +128,8 @@
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.Persistence.Efc.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Repository.Efc.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.Repository.Efc.pdb" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Tokens.dll" />
-      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.Tokens.pdb" />
+      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Tokens.dll" />
+      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.Tokens.pdb" />-->
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.WebApi.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.WebApi.pdb" />
 

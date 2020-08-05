@@ -124,10 +124,6 @@
       <Project>{daae8e21-ca5f-400b-9f5a-5e4e1196b21b}</Project>
       <Name>ToSic.Eav.DataSources</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.Tokens\ToSic.Eav.TokenEngine.csproj">
-      <Project>{2a81f269-8cca-4afd-a85f-82b1c2343965}</Project>
-      <Name>ToSic.Eav.TokenEngine</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj">
       <Project>{cf3b9349-8c66-4901-8edb-a4ec1d75326b}</Project>
       <Name>ToSic.Eav</Name>
