@@ -1,5 +1,11 @@
 ﻿using System.Web;
 using ToSic.Eav.Documentation;
+#if NET451
+using HtmlString = System.Web.HtmlString;
+#else
+using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
+#endif
+
 
 namespace ToSic.Sxc.Web
 {

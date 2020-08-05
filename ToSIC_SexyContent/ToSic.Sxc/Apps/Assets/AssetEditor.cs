@@ -157,7 +157,7 @@ public class " + CsApiTemplateControllerName + @" : ToSic.Sxc.Dnn.ApiController
             return t;
         }
 
-        public string InternalPath => HttpContext.Current.Server.MapPath(
+        public string InternalPath => netPlumbing.HostingEnvironment_MapPath(
             Path.Combine(
                 TemplateHelpers.GetTemplatePathRoot(EditInfo.LocationScope, _app),
                 EditInfo.FileName));

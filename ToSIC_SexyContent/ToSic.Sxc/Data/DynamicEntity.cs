@@ -10,6 +10,15 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit.Toolbar;
 using IEntity = ToSic.Eav.Data.IEntity;
 // ReSharper disable InheritdocInvalidUsage
+#if NET451
+using HtmlString = System.Web.HtmlString;
+using IHtmlString = System.Web.IHtmlString;
+#else
+using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
+using IHtmlString = Microsoft.AspNetCore.Html.IHtmlContent;
+#endif
+
+
 
 namespace ToSic.Sxc.Data
 {

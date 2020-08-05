@@ -80,7 +80,7 @@ namespace ToSic.Sxc.Apps
 
         #region Paths
         /// <inheritdoc />
-        public string Path => VirtualPathUtility.ToAbsolute(GetRootPath());
+        public string Path => netPlumbing.VirtualPathUtility_ToAbsolute(GetRootPath());
         /// <inheritdoc />
         public string Thumbnail => System.IO.File.Exists(PhysicalPath + IconFile) ? Path + IconFile : null;
 

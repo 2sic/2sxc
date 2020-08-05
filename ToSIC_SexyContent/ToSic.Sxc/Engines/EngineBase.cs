@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
-using System.Web.Hosting;
+//using System.Web.Hosting;
 using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.Eav.Documentation;
@@ -60,10 +60,10 @@ namespace ToSic.Sxc.Engines
             if (enablePolymorphism) templatePath = TryToFindPolymorphPath(root, view, subPath);
 
             if (templatePath == null)
-                templatePath = VirtualPathUtility.Combine(root + "/", subPath);
+                templatePath = netPlumbing.VirtualPathUtility_Combine(root + "/", subPath);
 
             // Throw Exception if Template does not exist
-            if (!File.Exists(HostingEnvironment.MapPath(templatePath)))
+            if (!File.Exists(netPlumbing.HostingEnvironment_MapPath(templatePath)))
                 // todo: change to some kind of "rendering exception"
                 throw new SexyContentException("The template file '" + templatePath + "' does not exist.");
 
@@ -91,8 +91,8 @@ namespace ToSic.Sxc.Engines
             if (edition == null) return wrapLog("no edition detected", null);
             Log.Add($"edition {edition} detected");
 
-            var testPath = VirtualPathUtility.Combine($"{root}/{edition}/", subPath);
-            if (File.Exists(HostingEnvironment.MapPath(testPath)))
+            var testPath = netPlumbing.VirtualPathUtility_Combine($"{root}/{edition}/", subPath);
+            if (File.Exists(netPlumbing.HostingEnvironment_MapPath(testPath)))
             {
                 view.Edition = edition;
                 return wrapLog($"edition {edition}", testPath);
@@ -103,8 +103,8 @@ namespace ToSic.Sxc.Engines
             if (firstSlash == -1) return wrapLog($"edition {edition} not found", null);
 
             subPath = subPath.Substring(firstSlash + 1);
-            testPath = VirtualPathUtility.Combine($"{root}/{edition}/", subPath);
-            if (File.Exists(HostingEnvironment.MapPath(testPath)))
+            testPath = netPlumbing.VirtualPathUtility_Combine($"{root}/{edition}/", subPath);
+            if (File.Exists(netPlumbing.HostingEnvironment_MapPath(testPath)))
             {
                 view.Edition = edition;
                 return wrapLog($"edition {edition} up one path", testPath);

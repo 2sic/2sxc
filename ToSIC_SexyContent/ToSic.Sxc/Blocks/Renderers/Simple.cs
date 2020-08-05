@@ -8,6 +8,15 @@ using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.InPageEditingSystem;
 using ToSic.Sxc.Web;
+#if NET451
+using HtmlString = System.Web.HtmlString;
+using IHtmlString = System.Web.IHtmlString;
+#else
+using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
+using IHtmlString = Microsoft.AspNetCore.Html.IHtmlContent;
+#endif
+
+
 
 namespace ToSic.Sxc.Blocks.Renderers
 {

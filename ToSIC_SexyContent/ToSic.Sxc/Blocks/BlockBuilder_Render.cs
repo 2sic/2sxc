@@ -4,6 +4,11 @@ using ToSic.Eav;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Interfaces;
+#if NET451
+using HtmlString = System.Web.HtmlString;
+#else
+using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
+#endif
 
 namespace ToSic.Sxc.Blocks
 {

@@ -2,6 +2,12 @@
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
 using IEntity = ToSic.Eav.Data.IEntity;
+#if NET451
+using HtmlString = System.Web.HtmlString;
+#else
+using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
+#endif
+
 
 namespace ToSic.Sxc.Edit.InPageEditingSystem
 {

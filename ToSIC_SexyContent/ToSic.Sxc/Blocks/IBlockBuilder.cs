@@ -4,6 +4,11 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using IApp = ToSic.Sxc.Apps.IApp;
+#if NET451
+using HtmlString = System.Web.HtmlString;
+#else
+using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
+#endif
 
 namespace ToSic.Sxc.Blocks
 {

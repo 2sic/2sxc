@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
+using System.Linq;
 using System.Web;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
@@ -62,23 +64,33 @@ namespace ToSic.Sxc.LookUp
             var provider = new LookUpEngine(dnnLookUps, blockBuilder?.Log);
 
             // only add these in running inside an http-context. Otherwise leave them away!
-            if (HttpContext.Current != null)
+            if (netPlumbing.HttpContext_Current() != null)
             {
                 log.Add("Found HttpContext, will ty to add params for querystring, server etc.");
-                var request = HttpContext.Current.Request;
+                var request = netPlumbing.HttpContext_Current().Request;
 
                 // new
                 var paramList = new NameValueCollection();
                 if (blockBuilder?.Parameters != null)
                     foreach (var pair in blockBuilder.Parameters)
                         paramList.Add(pair.Key, pair.Value);
-                else
+                else 
+                {
+#if NET451
                     paramList = request.QueryString;
+#else
+                    request.Query.ToList().ForEach(i => paramList.Add(i.Key, i.Value));
+#endif
+                }
                 provider.Add(new LookUpInNameValueCollection("querystring", paramList));
 
                 // old
+#if NET451
                 provider.Add(new LookUpInNameValueCollection("server", request.ServerVariables));
                 provider.Add(new LookUpInNameValueCollection("form", request.Form));
+#else
+                // "Not Yet Implemented in .net standard #TodoNetStandard" - might not actually support this
+#endif
             }
             else
                 log.Add("No HttpContext found, won't add http params to look-up");

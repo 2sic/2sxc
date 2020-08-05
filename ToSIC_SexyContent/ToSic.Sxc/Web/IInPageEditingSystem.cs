@@ -2,6 +2,11 @@
 using System.Web;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Data;
+#if NET451
+using HtmlString = System.Web.HtmlString;
+#else
+using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
+#endif
 
 // ReSharper disable UnusedMember.Global
 

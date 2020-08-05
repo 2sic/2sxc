@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Web;
-using System.Web.Hosting;
 using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Engines
@@ -25,8 +24,8 @@ namespace ToSic.Sxc.Engines
         public void EnsureTemplateFolderExists(string templateLocation)
         {
             var portalPath = templateLocation == Settings.TemplateLocations.HostFileSystem 
-                ? Path.Combine(HostingEnvironment.MapPath(Settings.PortalHostDirectory) ?? "", Settings.AppsRootFolder) 
-                : HostingEnvironment.MapPath(App.Tenant.SxcPath) ?? "";
+                ? Path.Combine(netPlumbing.HostingEnvironment_MapPath(Settings.PortalHostDirectory) ?? "", Settings.AppsRootFolder) 
+                : netPlumbing.HostingEnvironment_MapPath(App.Tenant.SxcPath) ?? "";
             var sexyFolderPath = portalPath;
 
             var sexyFolder = new DirectoryInfo(sexyFolderPath);
@@ -36,7 +35,7 @@ namespace ToSic.Sxc.Engines
 
             // Create web.config (copy from DesktopModules folder)
             if (!sexyFolder.GetFiles(Settings.WebConfigFileName).Any())
-                File.Copy(HostingEnvironment.MapPath(Settings.WebConfigTemplatePath), Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
+                File.Copy(netPlumbing.HostingEnvironment_MapPath(Settings.WebConfigTemplatePath), Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
 
             // Create a Content folder (or App Folder)
             if (string.IsNullOrEmpty(App.Folder)) return;
@@ -52,7 +51,7 @@ namespace ToSic.Sxc.Engines
         public static string GetTemplatePathRoot(string locationId, IApp app)
         {
             var rootFolder = locationId == Settings.TemplateLocations.HostFileSystem
-                ? VirtualPathUtility.ToAbsolute(Settings.PortalHostDirectory + Settings.AppsRootFolder)
+                ? netPlumbing.VirtualPathUtility_ToAbsolute(Settings.PortalHostDirectory + Settings.AppsRootFolder)
                 : app.Tenant.SxcPath;
             rootFolder += "/" + app.Folder;
             return rootFolder;
@@ -62,7 +61,7 @@ namespace ToSic.Sxc.Engines
         {
             var iconFile = GetTemplatePathRoot(locationId, app) + "/" + templatePath;
             iconFile = iconFile.Substring(0, iconFile.LastIndexOf(".")) + ".png";
-            var exists = File.Exists(HostingEnvironment.MapPath(iconFile));
+            var exists = File.Exists(netPlumbing.HostingEnvironment_MapPath(iconFile));
 
             return exists ? iconFile : null;
 

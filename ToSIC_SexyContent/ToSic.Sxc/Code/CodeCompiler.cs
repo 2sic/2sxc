@@ -1,8 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Web.Compilation;
 using ToSic.Eav.Logging;
+#if NET451
+using HtmlString = System.Web.HtmlString;
+using System.Web.Compilation;
+#else
+using System.Security.Policy;
+using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
+#endif
+
 
 namespace ToSic.Sxc.Code
 {
@@ -18,6 +25,9 @@ namespace ToSic.Sxc.Code
         
         internal object InstantiateClass(string virtualPath, string className = null, string relativePath = null, bool throwOnError = true)
         {
+#if NETSTANDARD
+            throw new Exception("Not Yet Implemented in .net standard #TodoNetStandard");
+#else
             var wrapLog = Log.Call($"{virtualPath}, {className}, {throwOnError}");
             string errorMsg = null;
 
@@ -71,7 +81,7 @@ namespace ToSic.Sxc.Code
 
             wrapLog($"found: {instance != null}");
             return instance;
-
+#endif
         }
 
         /// <summary>
@@ -96,8 +106,7 @@ namespace ToSic.Sxc.Code
                 // if necessary, add trailing slash
                 if (!relativePath.EndsWith("/"))
                     relativePath += "/";
-
-                virtualPath = System.Web.VirtualPathUtility.Combine(relativePath, virtualPath);
+                virtualPath = netPlumbing.VirtualPathUtility_Combine(relativePath, virtualPath);
                 Log.Add($"final virtual path: '{virtualPath}'");
             }
 

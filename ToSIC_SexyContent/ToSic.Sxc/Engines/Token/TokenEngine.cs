@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Web.Hosting;
 using ToSic.Eav;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
@@ -110,7 +109,7 @@ namespace ToSic.Sxc.Engines
         /// <inheritdoc />
         protected override string RenderTemplate()
         {
-            var templateSource = File.ReadAllText(HostingEnvironment.MapPath(TemplatePath));
+            var templateSource = File.ReadAllText(netPlumbing.HostingEnvironment_MapPath(TemplatePath));
             // Convert old <repeat> elements to the new ones
             for (var upgrade = 0; upgrade < _upgrade6To7.Length/2; upgrade++)
                 templateSource = templateSource.Replace(_upgrade6To7[upgrade, 0], _upgrade6To7[upgrade, 1]);
