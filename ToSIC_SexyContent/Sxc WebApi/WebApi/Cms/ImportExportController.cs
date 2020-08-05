@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Security.Authentication;
 using System.Web;
 using System.Web.Http;
-using System.Web.Http.Controllers;
 using System.Xml.Linq;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
@@ -27,11 +26,13 @@ namespace ToSic.Sxc.WebApi.Cms
     // we can't set this globally (only needed for imports)
     public class ImportExportController : DnnApiControllerWithFixes, IImportExportController
     {
-        protected override void Initialize(HttpControllerContext controllerContext)
-        {
-            base.Initialize(controllerContext); // very important!!!
-            Log.Rename("2sIExC");
-        }
+        protected override string HistoryLogName => "Api.2sIExC";
+
+        //protected override void Initialize(HttpControllerContext controllerContext)
+        //{
+        //    base.Initialize(controllerContext); // very important!!!
+        //    Log.Rename("2sIExC");
+        //}
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]

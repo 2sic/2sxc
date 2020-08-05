@@ -14,6 +14,7 @@ namespace ToSic.Sxc.Dnn.WebApi
     [WebApiLogDetails, JsonResponse]
     public abstract class DnnApiControllerWithFixes: DnnApiController, IHasLog
     {
+
         protected IAppEnvironment Env;
 
         protected DnnApiControllerWithFixes() 
@@ -26,12 +27,13 @@ namespace ToSic.Sxc.Dnn.WebApi
 	        // this is a dnn-bug
 	        Helpers.RemoveLanguageChangingCookie();
 
-            Log = new Log("DNN.WebApi", null, $"Path: {HttpContext.Current?.Request?.Url?.AbsoluteUri}");
+            // ReSharper disable once VirtualMemberCallInConstructor
+            Log = new Log(HistoryLogName /*"Dnn.WebApi"*/, null, $"Path: {HttpContext.Current?.Request?.Url?.AbsoluteUri}");
             TimerWrapLog = Log.Call(message: "timer", useTimer: true);
 	        
             // ReSharper disable VirtualMemberCallInConstructor
-	        if (LogHistoryName != null)
-	            History.Add(LogHistoryName, Log);
+	        if (HistoryLogGroup != null)
+	            History.Add(HistoryLogGroup, Log);
             // ReSharper restore VirtualMemberCallInConstructor
 
             Env = new DnnEnvironment(Log);
@@ -56,6 +58,16 @@ namespace ToSic.Sxc.Dnn.WebApi
         /// <inheritdoc />
         public ILog Log { get; }
 
-        protected virtual string LogHistoryName { get; } = "web-api";
+        /// <summary>
+        /// The group name for log entries in insights.
+        /// Helps group various calls by use case. 
+        /// </summary>
+        protected virtual string HistoryLogGroup { get; } = "web-api";
+
+        /// <summary>
+        /// The name of the logger in insights.
+        /// The inheriting class should provide the real name to be used.
+        /// </summary>
+        protected abstract string HistoryLogName { get; }
     }
 }

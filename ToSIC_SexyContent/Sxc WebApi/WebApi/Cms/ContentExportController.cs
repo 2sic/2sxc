@@ -24,10 +24,12 @@ namespace ToSic.Sxc.WebApi.Cms
     // can't globally use this attribute.
     public class ContentExportController : DnnApiControllerWithFixes, IContentExportController
     {
-	    protected override void Initialize(HttpControllerContext controllerContext)
+        protected override string HistoryLogName => "Api.2sSysC";
+
+        protected override void Initialize(HttpControllerContext controllerContext)
 	    {
 	        base.Initialize(controllerContext); // very important!!!
-	        Log.Rename("2sSysC");
+	        //Log.Rename("2sSysC");
             _eavCtc = new Eav.WebApi.ContentExportController(Log);
 	    }
 

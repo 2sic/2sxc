@@ -13,10 +13,11 @@ namespace ToSic.Sxc.WebApi
     [SxcWebApiExceptionHandling]
     public class SxcApiControllerBase: DnnApiControllerWithFixes
     {
+        protected override string HistoryLogName => "Api.CntBas";
+
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
-            Log.Rename("Api.CntBas");
             BlockBuilder = Helpers.GetCmsBlock(Request, true, Log);
         }
 

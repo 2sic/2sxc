@@ -24,12 +24,14 @@ namespace ToSic.Sxc.WebApi.Cms
     [ValidateAntiForgeryToken]
 	public class PipelineDesignerController : DnnApiControllerWithFixes, IPipelineDesignerController
     {
+        protected override string HistoryLogName => "Api.SxcQry";
+
 		private QueryController _eavCont;
 
 	    protected override void Initialize(HttpControllerContext controllerContext)
 	    {
 	        base.Initialize(controllerContext); // very important!!!
-	        Log.Rename("Sxc.QryCnt");
+	        //Log.Rename("Sxc.QryCnt");
 			_eavCont = new QueryController(Log);
 	    }
 

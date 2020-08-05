@@ -3,7 +3,6 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
-using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
@@ -19,11 +18,13 @@ namespace ToSic.Sxc.WebApi.Cms
     [ValidateAntiForgeryToken]
     public class InstallerController : DnnApiControllerWithFixes
     {
-        protected override void Initialize(HttpControllerContext controllerContext)
-        {
-            base.Initialize(controllerContext); // very important!!!
-            Log.Rename("2sInst");
-        }
+        protected override string HistoryLogName => "Api.2sInst";
+
+        //protected override void Initialize(HttpControllerContext controllerContext)
+        //{
+        //    base.Initialize(controllerContext); // very important!!!
+        //    Log.Rename("2sInst");
+        //}
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
