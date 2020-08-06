@@ -21,8 +21,6 @@ namespace ToSic.SexyContent
         public override List<string> RootPaths => new List<string>
         {
             BuildPath(Constants.FolderData),
-            //BuildPath("dist/edit/" + Constants.FolderData),
-            //BuildPath("dist/sxc-edit/" + Constants.FolderData),
             BuildPath(Constants.FolderDataBeta),
             BuildPath(Constants.FolderDataCustom)
         };
