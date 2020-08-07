@@ -4,6 +4,7 @@ using System.Text;
 using DotNetNuke.Application;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Dnn.Run
 {
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.Dnn.Run
     /// DNN implementation of the Fingerprinting system for extra security.
     /// </summary>
     [PrivateApi("probably not useful in the API docs.")]
-    public class DnnFingerprint: IFingerprintProvider
+    public class DnnFingerprint: IFingerprint
     {
         public string GetSystemFingerprint()
         {

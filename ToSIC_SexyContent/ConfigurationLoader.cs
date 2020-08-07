@@ -107,7 +107,7 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IEnvironmentInstaller, InstallationController>();
                 sc.AddTransient<IEnvironmentFileSystem, DnnFileSystem>();
                 sc.AddTransient<IGetEngine, GetDnnEngine>();
-                sc.AddTransient<IFingerprintProvider, DnnFingerprint>();
+                sc.AddTransient<IFingerprint, DnnFingerprint>();
 
                 if (appsCacheOverride != null)
                 {
