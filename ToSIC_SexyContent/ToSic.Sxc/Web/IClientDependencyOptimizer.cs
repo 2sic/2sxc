@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Web
     /// <summary>
     /// System to automatically pick up JS/CSS files which should be bundled
     /// </summary>
-    internal interface IClientDependencyOptimizer
+    public interface IClientDependencyOptimizer
     {
         /// <summary>
         /// Scan the html for possible JS/CSS files which should be bundled and extract these. 
