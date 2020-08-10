@@ -2,9 +2,11 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
+using ToSic.Eav;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Web;
 
 
 namespace ToSic.Sxc.Apps.Assets
@@ -157,7 +159,7 @@ public class " + CsApiTemplateControllerName + @" : ToSic.Sxc.Dnn.ApiController
             return t;
         }
 
-        public string InternalPath => netPlumbing.HostingEnvironment_MapPath(
+        public string InternalPath => Factory.Resolve<IHttp>().MapPath( //  netPlumbing.HostingEnvironment_MapPath(
             Path.Combine(
                 TemplateHelpers.GetTemplatePathRoot(EditInfo.LocationScope, _app),
                 EditInfo.FileName));

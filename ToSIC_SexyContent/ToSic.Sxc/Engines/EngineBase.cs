@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web;
-//using System.Web.Hosting;
 using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.Eav.Documentation;
@@ -24,9 +22,6 @@ namespace ToSic.Sxc.Engines
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public abstract class EngineBase : HasLog, IEngine
     {
-        // temporary, wait with this feature till 2sxc 11
-        private const bool enablePolymorphism = true;
-
         [PrivateApi] protected IView Template;
         [PrivateApi] protected string TemplatePath;
         [PrivateApi] protected IApp App;
@@ -46,6 +41,10 @@ namespace ToSic.Sxc.Engines
         protected EngineBase() : base("Sxc.EngBas")
         { }
 
+        protected IHttp Http => _http ?? (_http = Factory.Resolve<IHttp>());
+        private IHttp _http;
+
+
         /// <inheritdoc />
         public void Init(IBlockBuilder blockBuilder, Purpose purpose, ILog parentLog)
         {
@@ -56,14 +55,11 @@ namespace ToSic.Sxc.Engines
 
             var root = TemplateHelpers.GetTemplatePathRoot(view.Location, blockBuilder.App);
             var subPath = view.Path;
-            string templatePath = null;
-            if (enablePolymorphism) templatePath = TryToFindPolymorphPath(root, view, subPath);
-
-            if (templatePath == null)
-                templatePath = netPlumbing.VirtualPathUtility_Combine(root + "/", subPath);
+            var templatePath = TryToFindPolymorphPath(root, view, subPath) 
+                               ?? Http.Combine(root + "/", subPath);
 
             // Throw Exception if Template does not exist
-            if (!File.Exists(netPlumbing.HostingEnvironment_MapPath(templatePath)))
+            if (!File.Exists(Http.MapPath(templatePath)))
                 // todo: change to some kind of "rendering exception"
                 throw new SexyContentException("The template file '" + templatePath + "' does not exist.");
 
@@ -91,8 +87,8 @@ namespace ToSic.Sxc.Engines
             if (edition == null) return wrapLog("no edition detected", null);
             Log.Add($"edition {edition} detected");
 
-            var testPath = netPlumbing.VirtualPathUtility_Combine($"{root}/{edition}/", subPath);
-            if (File.Exists(netPlumbing.HostingEnvironment_MapPath(testPath)))
+            var testPath = Http.Combine($"{root}/{edition}/", subPath);
+            if (File.Exists(Http.MapPath(testPath)))
             {
                 view.Edition = edition;
                 return wrapLog($"edition {edition}", testPath);
@@ -103,8 +99,8 @@ namespace ToSic.Sxc.Engines
             if (firstSlash == -1) return wrapLog($"edition {edition} not found", null);
 
             subPath = subPath.Substring(firstSlash + 1);
-            testPath = netPlumbing.VirtualPathUtility_Combine($"{root}/{edition}/", subPath);
-            if (File.Exists(netPlumbing.HostingEnvironment_MapPath(testPath)))
+            testPath = Http.Combine($"{root}/{edition}/", subPath);
+            if (File.Exists(Http.MapPath(testPath)))
             {
                 view.Edition = edition;
                 return wrapLog($"edition {edition} up one path", testPath);

@@ -12,6 +12,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Engines.Token;
 using ToSic.Sxc.LookUp;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Engines
 {
@@ -109,7 +110,7 @@ namespace ToSic.Sxc.Engines
         /// <inheritdoc />
         protected override string RenderTemplate()
         {
-            var templateSource = File.ReadAllText(netPlumbing.HostingEnvironment_MapPath(TemplatePath));
+            var templateSource = File.ReadAllText(Factory.Resolve<IHttp>().MapPath(TemplatePath));
             // Convert old <repeat> elements to the new ones
             for (var upgrade = 0; upgrade < _upgrade6To7.Length/2; upgrade++)
                 templateSource = templateSource.Replace(_upgrade6To7[upgrade, 0], _upgrade6To7[upgrade, 1]);

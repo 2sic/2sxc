@@ -2,8 +2,8 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Web;
 #if NET451
-using HtmlString = System.Web.HtmlString;
 using System.Web.Compilation;
 #else
 using System.Security.Policy;
@@ -106,7 +106,7 @@ namespace ToSic.Sxc.Code
                 // if necessary, add trailing slash
                 if (!relativePath.EndsWith("/"))
                     relativePath += "/";
-                virtualPath = netPlumbing.VirtualPathUtility_Combine(relativePath, virtualPath);
+                virtualPath = Eav.Factory.Resolve<IHttp>().Combine(relativePath, virtualPath);
                 Log.Add($"final virtual path: '{virtualPath}'");
             }
 

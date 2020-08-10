@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Threading;
 using System.Web;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Apps
 {
@@ -80,7 +82,9 @@ namespace ToSic.Sxc.Apps
 
         #region Paths
         /// <inheritdoc />
-        public string Path => netPlumbing.VirtualPathUtility_ToAbsolute(GetRootPath());
+        public string Path => _path ?? (_path = Factory.Resolve<IHttp>().ToAbsolute(GetRootPath()));
+        private string _path;
+
         /// <inheritdoc />
         public string Thumbnail => System.IO.File.Exists(PhysicalPath + IconFile) ? Path + IconFile : null;
 

@@ -1,7 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
-using System.Web;
+using ToSic.Eav;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Engines
 {
@@ -15,6 +17,9 @@ namespace ToSic.Sxc.Engines
         {
             App = app;
         }
+
+        protected IHttp Http => _http ?? (_http = Factory.Resolve<IHttp>());
+        private IHttp _http;
         
         /// <summary>
         /// Creates a directory and copies the needed web.config for razor files
@@ -24,8 +29,8 @@ namespace ToSic.Sxc.Engines
         public void EnsureTemplateFolderExists(string templateLocation)
         {
             var portalPath = templateLocation == Settings.TemplateLocations.HostFileSystem 
-                ? Path.Combine(netPlumbing.HostingEnvironment_MapPath(Settings.PortalHostDirectory) ?? "", Settings.AppsRootFolder) 
-                : netPlumbing.HostingEnvironment_MapPath(App.Tenant.SxcPath) ?? "";
+                ? Path.Combine(Http.MapPath(Settings.PortalHostDirectory) ?? "", Settings.AppsRootFolder) 
+                : Http.MapPath(App.Tenant.SxcPath) ?? "";
             var sexyFolderPath = portalPath;
 
             var sexyFolder = new DirectoryInfo(sexyFolderPath);
@@ -35,7 +40,7 @@ namespace ToSic.Sxc.Engines
 
             // Create web.config (copy from DesktopModules folder)
             if (!sexyFolder.GetFiles(Settings.WebConfigFileName).Any())
-                File.Copy(netPlumbing.HostingEnvironment_MapPath(Settings.WebConfigTemplatePath), Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
+                File.Copy(Http.MapPath(Settings.WebConfigTemplatePath), Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
 
             // Create a Content folder (or App Folder)
             if (string.IsNullOrEmpty(App.Folder)) return;
@@ -51,17 +56,17 @@ namespace ToSic.Sxc.Engines
         public static string GetTemplatePathRoot(string locationId, IApp app)
         {
             var rootFolder = locationId == Settings.TemplateLocations.HostFileSystem
-                ? netPlumbing.VirtualPathUtility_ToAbsolute(Settings.PortalHostDirectory + Settings.AppsRootFolder)
+                ? Factory.Resolve<IHttp>().ToAbsolute(Settings.PortalHostDirectory + Settings.AppsRootFolder)
                 : app.Tenant.SxcPath;
-            rootFolder += "/" + app.Folder;
+            rootFolder += "\\" + app.Folder;
             return rootFolder;
         }
 
         public static string GetTemplateThumbnail(IApp app, string locationId, string templatePath)
         {
             var iconFile = GetTemplatePathRoot(locationId, app) + "/" + templatePath;
-            iconFile = iconFile.Substring(0, iconFile.LastIndexOf(".")) + ".png";
-            var exists = File.Exists(netPlumbing.HostingEnvironment_MapPath(iconFile));
+            iconFile = iconFile.Substring(0, iconFile.LastIndexOf(".", StringComparison.Ordinal)) + ".png";
+            var exists = File.Exists(Factory.Resolve<IHttp>().MapPath(iconFile));
 
             return exists ? iconFile : null;
 
