@@ -48,7 +48,10 @@ namespace ToSic.SexyContent
                     var wrappedMsg = BlockBuilder.UserMayEdit ? BlockBuilder.WrapInDivWithContext(msg) : msg;
                     phOutput.Controls.Add(new LiteralControl(wrappedMsg));
                 }
-                catch { /* ignore */  }
+                catch
+                {
+                    phOutput.Controls.Add(new LiteralControl("Something went really wrong in view.ascx - errors logging even failed"));
+                }
             }
             finally
             {
