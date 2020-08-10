@@ -138,26 +138,27 @@ namespace ToSic.Sxc.Dnn.Run
             var tabInfo = tabController.GetTab(id, 0);
             if (tabInfo == null) return null;
 
-            var portalSettings = PortalSettings.Current;
+            var psCurrent = PortalSettings.Current;
+            var psPage = psCurrent;
 
             // Get full PortalSettings (with portal alias) if module sharing is active
-            if (PortalSettings.Current != null && PortalSettings.Current.PortalId != tabInfo.PortalID)
-                portalSettings = new PortalSettings(tabInfo.PortalID);
+            if (psCurrent != null && psCurrent.PortalId != tabInfo.PortalID)
+                psPage = new PortalSettings(tabInfo.PortalID);
 
-            if (portalSettings == null) return null;
+            if (psPage == null) return null;
 
-            if (tabInfo.CultureCode != "" && PortalSettings.Current != null && tabInfo.CultureCode != PortalSettings.Current.CultureCode)
+            if (tabInfo.CultureCode != "" && psCurrent != null && tabInfo.CultureCode != psCurrent.CultureCode)
             {
                 var cultureTabInfo = tabController
                     .GetTabByCulture(tabInfo.TabID, tabInfo.PortalID,
-                        LocaleController.Instance.GetLocale(PortalSettings.Current.CultureCode));
+                        LocaleController.Instance.GetLocale(psCurrent.CultureCode));
 
                 if (cultureTabInfo != null)
                     tabInfo = cultureTabInfo;
             }
 
             // Exception in AdvancedURLProvider because ownerPortalSettings.PortalAlias is null
-            return Globals.NavigateURL(tabInfo.TabID, portalSettings, "", new string[] { });
+            return Globals.NavigateURL(tabInfo.TabID, psPage, "", new string[] { });
         }
     }
 }

@@ -26,10 +26,11 @@ namespace ToSic.Sxc.Dnn.Run
 
         private static List<int> BuildRoleList()
         {
-            if (PortalSettings.Current == null) return new List<int>();
+            var psCurrent = PortalSettings.Current;
+            if (psCurrent == null) return new List<int>();
 
-            var portalId = PortalSettings.Current.PortalId;
-            var user = PortalSettings.Current?.UserInfo;
+            var portalId = psCurrent.PortalId;
+            var user = psCurrent.UserInfo;
             if (user == null) return new List<int>();
 
             var rc = new DotNetNuke.Security.Roles.RoleController();

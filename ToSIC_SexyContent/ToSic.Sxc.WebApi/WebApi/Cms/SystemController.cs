@@ -44,7 +44,8 @@ namespace ToSic.Sxc.WebApi.Cms
                 app = appAndPerms.App;
             }
 
-            var cb = new ContextBuilder(PortalSettings.Current, 
+            var psCurrent = PortalSettings.Current;
+            var cb = new ContextBuilder(psCurrent, 
                 Request.FindModuleInfo(),
                 UserInfo,
                 app?.ZoneId,
@@ -54,8 +55,8 @@ namespace ToSic.Sxc.WebApi.Cms
             {
                 // TODO: Deprecate PARAMS these properties as soon as old UI is gone
                 IsContent = app?.AppGuid == "Default",
-                Language = PortalSettings.Current.CultureCode,
-                LanguageDefault = PortalSettings.Current.DefaultLanguage,
+                Language = psCurrent.CultureCode,
+                LanguageDefault = psCurrent.DefaultLanguage,
                 AppPath = app?.Path,
                 GettingStartedUrl = cb.GettingStartedUrl(),
                 // END TODO

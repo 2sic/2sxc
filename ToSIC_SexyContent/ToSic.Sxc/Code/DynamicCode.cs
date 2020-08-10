@@ -65,24 +65,15 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity) => UnwrappedContents?.AsDynamic(entity);
 
-        //[PrivateApi]
-        //[Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        //public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => Parent?.AsDynamic(entity);
-
         /// <inheritdoc />
         public dynamic AsDynamic(dynamic dynamicEntity) => UnwrappedContents?.AsDynamic(dynamicEntity);
 
         /// <inheritdoc />
         public IEntity AsEntity(dynamic dynamicEntity) => UnwrappedContents?.AsEntity(dynamicEntity);
 
-        //[PrivateApi]
-        //[Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        //public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => Parent?.AsDynamic(entities);
-
-
         #endregion
 
-        #region AsList (experimental
+        #region AsList
 
         /// <inheritdoc />
         public IEnumerable<dynamic> AsList(dynamic list)

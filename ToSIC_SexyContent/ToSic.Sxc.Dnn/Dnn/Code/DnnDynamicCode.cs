@@ -35,27 +35,6 @@ namespace ToSic.Sxc.Dnn.Code
 
         #endregion
 
-        //[PrivateApi]
-        //public override dynamic CreateInstance(string virtualPath,
-        //    string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
-        //    string name = null,
-        //    string relativePath = null,
-        //    bool throwOnError = true)
-        //{
-        //    var instance = base.CreateInstance(virtualPath, dontRelyOnParameterOrder, name, relativePath, throwOnError);
-        //    ForwardDynDnn(instance);
-        //    return instance;
-        //}
-
-        ///// <summary>
-        ///// special: if it's a RazorComponent , then it doesn't have all the necessary properties yet...
-        ///// </summary>
-        ///// <param name="instance"></param>
-        //[PrivateApi]
-        //private void ForwardDynDnn(object instance)
-        //{
-        //    if (instance is INeedsDynCodeContext needsDyn) needsDyn.DynCode = this;
-        //}
 
         #region Create From BlockBuilder
 
