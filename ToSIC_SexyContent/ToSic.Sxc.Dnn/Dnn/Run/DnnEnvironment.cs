@@ -1,18 +1,26 @@
-﻿using System.Web.Hosting;
-using DotNetNuke.Entities.Portals;
-using ToSic.Eav.Apps;
+﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.Run
 {
     public class DnnEnvironment: HasLog, IAppEnvironment
     {
         #region Constructor and Init
+
         /// <summary>
         /// Constructor for DI, you must always call Init(...) afterwards
         /// </summary>
-        public  DnnEnvironment() : base("DNN.Enviro") { }
+        public DnnEnvironment(IHttp http, ITenant tenant, IPagePublishing publishing) : base("DNN.Enviro")
+        {
+            _http = http;
+            _tenant = tenant;
+            PagePublishing = publishing.Init(Log);
+        }
+
+        private readonly IHttp _http;
+        private readonly ITenant _tenant;
 
         public IAppEnvironment Init(ILog parent)
         {
@@ -25,13 +33,11 @@ namespace ToSic.Sxc.Dnn.Run
 
         public IUser User { get; } = new DnnUser();
 
-        public IPagePublishing PagePublishing => _pagePublishing ?? (_pagePublishing = Eav.Factory.Resolve<IPagePublishing>().Init(Log));
-        private IPagePublishing _pagePublishing;
+        public IPagePublishing PagePublishing { get; }
 
+        public string MapPath(string virtualPath) => _http.MapPath(virtualPath);
 
-        public string MapAppPath(string virtualPath) => HostingEnvironment.MapPath(virtualPath);
-
-        public string DefaultLanguage => PortalSettings.Current.DefaultLanguage;
+        public string DefaultLanguage => _tenant.DefaultLanguage;
 
     }
 }

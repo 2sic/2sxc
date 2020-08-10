@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
             Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
 
             // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally
-            InitExportXDocument(PortalSettings.Current.DefaultLanguage, Settings.ModuleVersion);
+            InitExportXDocument(tenant.DefaultLanguage, Settings.ModuleVersion);
 
             return this;
         }

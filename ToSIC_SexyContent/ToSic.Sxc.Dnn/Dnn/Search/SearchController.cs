@@ -16,7 +16,6 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Search
 {
@@ -43,7 +42,7 @@ namespace ToSic.Sxc.Search
             var isContentModule = dnnModule.DesktopModule.ModuleName == "2sxc";
 
             // New Context because PortalSettings.Current is null
-            var zoneId = new DnnEnvironment().Init(Log).ZoneMapper.GetZoneId(dnnModule.OwnerPortalID);
+            var zoneId = Eav.Factory.Resolve<IAppEnvironment>().Init(Log).ZoneMapper.GetZoneId(dnnModule.OwnerPortalID);
 
             var appId = !isContentModule
                 ? new DnnMapAppToInstance(Log).GetAppIdFromInstance(container, zoneId)

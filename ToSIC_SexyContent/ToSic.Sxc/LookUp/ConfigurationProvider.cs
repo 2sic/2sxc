@@ -88,7 +88,7 @@ namespace ToSic.Sxc.LookUp
 #endif
             }
             else
-                log.Add("No HttpContext found, won't add http params to look-up");
+                log.Add("No Http-Context found, won't add http params to look-up");
 
 
             provider.Add(new LookUpInAppProperty("app", app));

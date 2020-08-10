@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Web;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
@@ -10,6 +9,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Persistence.Logging;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.SxcTemp;
@@ -18,11 +18,27 @@ namespace ToSic.Sxc.Dnn.ImportExport
 {
     public class DnnImportExportEnvironment : HasLog, IImportExportEnvironment
     {
-        public DnnImportExportEnvironment() : this(null)
+        #region Constructors
+
+        
+
+        public DnnImportExportEnvironment(IEnvironment environment, ITenant tenant) : base("Dnn.ImExEn")
         {
+            Environment = environment;
+            _tenant = tenant;
         }
 
-        public DnnImportExportEnvironment(ILog parentLog) : base("Dta.ImExEn", parentLog) { }
+        protected IEnvironment Environment;
+        private readonly ITenant _tenant; 
+
+        public IImportExportEnvironment Init(ILog parent)
+        {
+            Log.LinkTo(parent);
+            return this;
+        }
+
+        #endregion
+
 
         public List<Message> Messages { get; } = new List<Message>();
 
@@ -40,7 +56,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
 
             var dnnFileManager = FileManager.Instance;
             var dnnFolderManager = FolderManager.Instance;
-            var portalId = PortalSettings.Current.PortalId;
+            var portalId = _tenant.Id;
 
             if (!dnnFolderManager.FolderExists(portalId, destinationFolder))
                 dnnFolderManager.AddFolder(portalId, destinationFolder);
@@ -88,14 +104,14 @@ namespace ToSic.Sxc.Dnn.ImportExport
 
         public Version TenantVersion => typeof(PortalSettings).Assembly.GetName().Version;
 
-        public string DefaultLanguage => PortalSettings.Current.DefaultLanguage;
+        public string DefaultLanguage => _tenant.DefaultLanguage;//  PortalSettings.Current.DefaultLanguage;
 
         public string TemplatesRoot(int zoneId, int appId)
         {
-            var app = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), zoneId, appId, false, Log);
+            var app = GetApp.LightWithoutData(_tenant /*new DnnTenant(PortalSettings.Current)*/, zoneId, appId, false, Log);
 
             // Copy all files in 2sexy folder to (portal file system) 2sexy folder
-            var templateRoot =  HttpContext.Current.Server.MapPath(TemplateHelpers.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, app));
+            var templateRoot = Environment.MapPath(TemplateHelpers.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, app));
             return templateRoot;
         }
 
@@ -103,7 +119,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
         {
             var appPath = Path.Combine(DnnMapAppToInstance.AppBasePath(), folder);
 
-            return HttpContext.Current.Server.MapPath(appPath);
+            return Environment.MapPath(appPath);
         }
 
         #region stuff we need for Import
@@ -111,12 +127,12 @@ namespace ToSic.Sxc.Dnn.ImportExport
         public void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap)
         {
             Log.Add($"will map files - map-size:{fileIdMap.Count}");
-            var maybePortalId = PortalSettings.Current?.PortalId;
+            var portalId = _tenant.Id; // PortalSettings.Current?.PortalId;
 
-            if (!maybePortalId.HasValue)
-                return;
+            //if (!maybePortalId.HasValue)
+            //    return;
 
-            var portalId = maybePortalId.Value;
+            //var portalId = maybePortalId.Value;
             var fileManager = FileManager.Instance;
             var folderManager = FolderManager.Instance;
 
@@ -145,11 +161,11 @@ namespace ToSic.Sxc.Dnn.ImportExport
         public void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog)
         {
             Log.Add("create folder and map IDs - start");
-            var maybePortalId = PortalSettings.Current?.PortalId;
+            var portalId = _tenant.Id; // PortalSettings.Current?.PortalId;
 
-            if (!maybePortalId.HasValue)
-                return;
-            var portalId = maybePortalId.Value;
+            //if (!maybePortalId.HasValue)
+            //    return;
+            //var portalId = maybePortalId.Value;
             var folderManager = FolderManager.Instance;
 
             foreach (var file in foldersAndPath) // portalFiles)
@@ -187,5 +203,6 @@ namespace ToSic.Sxc.Dnn.ImportExport
         public SaveOptions SaveOptions(int zoneId) => new SaveOptions(DefaultLanguage, new ZoneRuntime(zoneId, Log).Languages(true));
 
         #endregion
+
     }
 }

@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 	            History.Add(HistoryLogGroup, Log);
             // ReSharper restore VirtualMemberCallInConstructor
 
-            Env = new DnnEnvironment().Init(Log);
+            Env = Eav.Factory.Resolve<IAppEnvironment>().Init(Log);
         }
 
         // ReSharper disable once InconsistentNaming

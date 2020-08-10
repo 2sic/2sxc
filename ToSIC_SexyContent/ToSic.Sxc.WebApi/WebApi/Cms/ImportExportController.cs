@@ -8,8 +8,10 @@ using System.Xml.Linq;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Apps;
@@ -36,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add($"get app info for app:{appId} and zone:{zoneId}");
             var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);
 
-            var zipExport = new ZipExport(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
+            var zipExport = Factory.Resolve<ZipExport>().Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
             var cultCount = Env.ZoneMapper
                 .CulturesWithState(currentApp.Tenant.Id, currentApp.ZoneId)
                 .Count(c => c.Active);
@@ -112,7 +114,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);
 
-            var zipExport = new ZipExport(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
+            var zipExport = Factory.Resolve<ZipExport>().Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
             var addOnWhenContainingContent = includeContentGroups ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm") : "";
 
             var fileName =
@@ -135,7 +137,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);
 
-            var zipExport = new ZipExport(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
+            var zipExport = Factory.Resolve<ZipExport>().Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
             zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid);
 
             return true;
@@ -170,6 +172,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var result = new ImportResultDto();
 
             var request = HttpContext.Current.Request;
+            var server = HttpContext.Current.Server;
 
             var zoneId  = int.Parse(request["ZoneId"]);
             if (request.Files.Count <= 0) return result;
@@ -180,14 +183,14 @@ namespace ToSic.Sxc.WebApi.Cms
                 Log.Add($"new app name: {name}");
             }
 
-            var helper = new DnnImportExportEnvironment(Log);
+            var helper = Factory.Resolve<IImportExportEnvironment>().Init(Log);// new DnnImportExportEnvironment(Log);
             try
             {
                 var zipImport = new ZipImport(helper, zoneId, null, PortalSettings.UserInfo.IsSuperUser, Log);
-                var temporaryDirectory = HttpContext.Current.Server.MapPath(Path.Combine(Eav.ImportExport.Settings.TemporaryDirectory, Guid.NewGuid().ToString().Substring(0, 8)));
+                var temporaryDirectory = server.MapPath(Path.Combine(Eav.ImportExport.Settings.TemporaryDirectory, Guid.NewGuid().ToString().Substring(0, 8)));
 
                 // Increase script timeout to prevent timeouts
-                HttpContext.Current.Server.ScriptTimeout = 300;
+                server.ScriptTimeout = 300;
                 result.Succeeded = zipImport.ImportZip(request.Files[0].InputStream, temporaryDirectory, name);
                 result.Messages = helper.Messages;
             }
@@ -221,7 +224,7 @@ namespace ToSic.Sxc.WebApi.Cms
             {   // ZIP
                 try
                 {
-                    var env = new DnnImportExportEnvironment(Log);
+                    var env = Factory.Resolve<IImportExportEnvironment>().Init(Log); // new DnnImportExportEnvironment(Log);
                     var zipImport = new ZipImport(env, zoneId, appId, PortalSettings.UserInfo.IsSuperUser, Log);
                     // Increase script timeout to prevent timeouts
                     HttpContext.Current.Server.ScriptTimeout = 300;

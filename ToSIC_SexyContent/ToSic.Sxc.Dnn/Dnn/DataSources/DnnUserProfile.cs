@@ -2,13 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Builder;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Dnn.DataSources
 {
@@ -76,21 +76,25 @@ namespace ToSic.Sxc.Dnn.DataSources
 
 		#endregion
 
-		public DnnUserProfile()
+		public DnnUserProfile(ITenant tenant)
 		{
 			Out.Add(Constants.DefaultStreamName, new DataStream(this, Constants.DefaultStreamName, GetList));
 			Configuration.Values.Add(UserIdsKey, UserIdsDefaultKeyToken);
 			Configuration.Values.Add(PropertiesKey, PropertiesDefaultKeyToken);
 			Configuration.Values.Add(ContentTypeKey, ContentTypeDefaultToken);
 			Configuration.Values.Add(TitleFieldKey, EntityTitleDefaultKeyToken);
-		}
+
+            _tenant = tenant;
+        }
+
+        private readonly ITenant _tenant;
 
 		private List<IEntity> GetList()
 		{
             Configuration.Parse();
 
             var properties = Properties.Split(',').Select(p => p.Trim()).ToArray();
-			var portalId = PortalSettings.Current.PortalId;
+            var portalId = _tenant.Id;
 
 			// read all user Profiles
 			ArrayList users;

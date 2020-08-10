@@ -93,14 +93,14 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IImportExportEnvironment, DnnImportExportEnvironment>();
 
                 sc.AddTransient<IRuntime, Runtime>();
-                sc.AddTransient<IAppEnvironment, DnnEnvironment>();
-                sc.AddTransient<IEnvironment, DnnEnvironment>();
 
                 // new for .net standard
                 sc.AddTransient<ITenant, DnnTenant>();
+                sc.AddTransient<IHttp, HttpAbstraction>();
                 sc.AddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
                 sc.AddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
-                sc.AddTransient<IHttp, HttpAbstraction>();
+                sc.AddTransient<IEnvironment, DnnEnvironment>();
+                sc.AddTransient<IAppEnvironment, DnnEnvironment>();
 
                 // The file-importer - temporarily itself
                 sc.AddTransient<XmlImportWithFiles, XmlImportFull>();

@@ -6,7 +6,9 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
+using ToSic.Eav;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Sxc.Dnn.ImportExport;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
@@ -30,7 +32,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var appId = new DnnMapAppToInstance(Log).GetAppIdFromInstance(new DnnContainer(ActiveModule), zoneId);
             bool success;
 
-            var helper = new DnnImportExportEnvironment(Log);
+            var helper = Factory.Resolve<IImportExportEnvironment>().Init(Log); // new DnnImportExportEnvironment(Log);
             try
             {
                 // Increase script timeout to prevent timeouts
