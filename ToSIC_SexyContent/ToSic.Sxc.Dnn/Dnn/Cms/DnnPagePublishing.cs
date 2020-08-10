@@ -19,14 +19,17 @@ namespace ToSic.Sxc.Dnn.Cms
 {
     public partial class PagePublishing : HasLog, IPagePublishing
     {
-        // ReSharper disable once UnusedMember.Local
-        private const string logName = "Dnn.Publsh";
+        #region DI Constructors and More
+        
+        public PagePublishing(): base("Dnn.Publsh") { }
 
-        public PagePublishing(): base(logName) { }
+        public IPagePublishing Init(ILog parent)
+        {
+            Log.LinkTo(parent);
+            return this;
+        }
 
-        //public PagePublishing(ILog parentLog): base(logName, parentLog, "()")
-        //{
-        //}
+        #endregion
 
         public bool Supported => true;
 
@@ -114,7 +117,7 @@ namespace ToSic.Sxc.Dnn.Cms
                 // publish all entites of this content block
                 var dnnModule = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
                 var instanceInfo = new DnnContainer(dnnModule);
-                // must find tenant through module, as the PortalSettings.Current is null in search mode
+                // must find tenant through module, as the Portal-Settings.Current is null in search mode
                 var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
                 var cb = new BlockFromModule(instanceInfo, Log, tenant);
 
@@ -122,7 +125,7 @@ namespace ToSic.Sxc.Dnn.Cms
                 if (cb.ContentGroupExists)
                 {
                     Log.Add("cb exists");
-                    var appManager = new AppManager(cb/*.AppId*/, Log);
+                    var appManager = new AppManager(cb, Log);
 
                     // Add content entities
                     IEnumerable<IEntity> list = new List<IEntity>();
@@ -177,10 +180,5 @@ namespace ToSic.Sxc.Dnn.Cms
             return list;
         }
 
-        public IPagePublishing Init(ILog parent)
-        {
-            Log.LinkTo(parent, logName);
-            return this;
-        }
     }
 }

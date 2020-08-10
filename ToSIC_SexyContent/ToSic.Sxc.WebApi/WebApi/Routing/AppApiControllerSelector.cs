@@ -10,8 +10,10 @@ using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
+using ToSic.Eav;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.WebApi.System;
@@ -103,8 +105,8 @@ namespace ToSic.Sxc.WebApi
 
                 log.Add($"Edition: {edition}");
 
-                var controllerFolder = Path.Combine(DnnMapAppToInstance.AppBasePath(), appFolder,
-                    edition + "api/");
+                var tenant = Factory.Resolve<ITenant>();
+                var controllerFolder = Path.Combine(tenant.SxcPath, appFolder, edition + "api/");
 
                 controllerFolder = controllerFolder.Replace("\\", @"/");
                 log.Add($"Controller Folder: {controllerFolder}");

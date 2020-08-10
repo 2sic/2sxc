@@ -95,8 +95,8 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IRuntime, Runtime>();
 
                 // new for .net standard
-                sc.AddTransient<ITenant, DnnTenant>();
-                sc.AddTransient<IHttp, HttpAbstraction>();
+                sc.AddScoped<ITenant, DnnTenant>();
+                sc.AddScoped<IHttp, HttpAbstraction>();
                 sc.AddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
                 sc.AddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
                 sc.AddTransient<IEnvironment, DnnEnvironment>();

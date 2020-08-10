@@ -180,10 +180,6 @@ namespace ToSic.Sxc.Dnn.Run
                 catch { /* ignored */ }
             }
         }
-
-        // todo: remove this, replace with calls to the current tenant -> RootPath
-        public static string AppBasePath() 
-            => Path.Combine(PortalSettings.Current.HomeDirectory, Settings.AppsRootFolder);
-
+        
     }
 }

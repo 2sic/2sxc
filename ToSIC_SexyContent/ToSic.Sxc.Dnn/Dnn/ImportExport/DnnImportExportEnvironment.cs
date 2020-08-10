@@ -104,11 +104,11 @@ namespace ToSic.Sxc.Dnn.ImportExport
 
         public Version TenantVersion => typeof(PortalSettings).Assembly.GetName().Version;
 
-        public string DefaultLanguage => _tenant.DefaultLanguage;//  PortalSettings.Current.DefaultLanguage;
+        public string DefaultLanguage => _tenant.DefaultLanguage;
 
         public string TemplatesRoot(int zoneId, int appId)
         {
-            var app = GetApp.LightWithoutData(_tenant /*new DnnTenant(PortalSettings.Current)*/, zoneId, appId, false, Log);
+            var app = GetApp.LightWithoutData(_tenant, zoneId, appId, false, Log);
 
             // Copy all files in 2sexy folder to (portal file system) 2sexy folder
             var templateRoot = Environment.MapPath(TemplateHelpers.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, app));
@@ -117,8 +117,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
 
         public string TargetPath(string folder)
         {
-            var appPath = Path.Combine(DnnMapAppToInstance.AppBasePath(), folder);
-
+            var appPath = Path.Combine(_tenant.SxcPath, folder);
             return Environment.MapPath(appPath);
         }
 
@@ -127,12 +126,8 @@ namespace ToSic.Sxc.Dnn.ImportExport
         public void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap)
         {
             Log.Add($"will map files - map-size:{fileIdMap.Count}");
-            var portalId = _tenant.Id; // PortalSettings.Current?.PortalId;
+            var portalId = _tenant.Id;
 
-            //if (!maybePortalId.HasValue)
-            //    return;
-
-            //var portalId = maybePortalId.Value;
             var fileManager = FileManager.Instance;
             var folderManager = FolderManager.Instance;
 
@@ -161,17 +156,12 @@ namespace ToSic.Sxc.Dnn.ImportExport
         public void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog)
         {
             Log.Add("create folder and map IDs - start");
-            var portalId = _tenant.Id; // PortalSettings.Current?.PortalId;
+            var portalId = _tenant.Id;
 
-            //if (!maybePortalId.HasValue)
-            //    return;
-            //var portalId = maybePortalId.Value;
             var folderManager = FolderManager.Instance;
 
-            foreach (var file in foldersAndPath) // portalFiles)
+            foreach (var file in foldersAndPath)
             {
-                //var origId = int.Parse(portalFile.Attribute(XmlConstants.FolderNodeId).Value);
-                //var relativePath = portalFile.Attribute(XmlConstants.FolderNodePath).Value;
                 try
                 {
                     if (String.IsNullOrEmpty(file.Value)) continue;

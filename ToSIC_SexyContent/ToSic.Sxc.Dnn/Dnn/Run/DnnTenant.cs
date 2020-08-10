@@ -13,14 +13,15 @@ namespace ToSic.Sxc.Dnn.Run
     {
         /// <summary>
         /// DI Constructor, will get the current portal settings
-        /// #TodoDI not ideal yet, as portalsettings.current is still retrieved from global
+        /// #TodoDI not ideal yet, as PortalSettings.current is still retrieved from global
         /// </summary>
         public DnnTenant() : this(PortalSettings.Current) { }
 
         /// <inheritdoc />
         public DnnTenant(PortalSettings settings) : base(settings ?? PortalSettings.Current) {}
 
-        public override string DefaultLanguage => UnwrappedContents.DefaultLanguage;
+        public override string DefaultLanguage => _defaultLanguage ?? (_defaultLanguage = UnwrappedContents.DefaultLanguage.ToLowerInvariant());
+        private string _defaultLanguage;
 
         /// <inheritdoc />
         public override int Id => UnwrappedContents.PortalId;

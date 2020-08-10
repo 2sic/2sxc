@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Search
 
             var isContentModule = dnnModule.DesktopModule.ModuleName == "2sxc";
 
-            // New Context because PortalSettings.Current is null
+            // New Context because Portal-Settings.Current is null
             var zoneId = Eav.Factory.Resolve<IAppEnvironment>().Init(Log).ZoneMapper.GetZoneId(dnnModule.OwnerPortalID);
 
             var appId = !isContentModule
@@ -50,15 +50,14 @@ namespace ToSic.Sxc.Search
 
             if (!appId.HasValue) return searchDocuments;
 
-            // As PortalSettings.Current is null, instantiate with modules' portal id
+            // Since Portal-Settings.Current is null, instantiate with modules' portal id (which can be a different portal!)
             var portalSettings = new PortalSettings(dnnModule.OwnerPortalID);
+            var tenant = new DnnTenant(portalSettings);
 
             // Ensure cache builds up with correct primary language
             var cache = State.Cache;
-            cache.Load(new AppIdentity(zoneId, appId.Value), portalSettings.DefaultLanguage.ToLower());
+            cache.Load(new AppIdentity(zoneId, appId.Value), tenant.DefaultLanguage);
 
-            // must find tenant through module, as the PortalSettings.Current is null in search mode
-            var tenant = new DnnTenant(portalSettings);
             var mcb = new BlockFromModule(container, Log, tenant);
             var cmsBlock = mcb.BlockBuilder;
 
@@ -77,16 +76,8 @@ namespace ToSic.Sxc.Search
                 Log.Add("Will try to attach dnn providers to DataSource LookUps");
                 try
                 {
-                    //var provider = dataSource.Configuration.LookUps;
                     var dnnLookUps = GetDnnEngine.GenerateDnnBasedLookupEngine(portalSettings, dnnModule.ModuleID, Log);
                     ((LookUpEngine) dataSource.Configuration.LookUps).Link(dnnLookUps);
-                    //    .Sources;
-                    //Log.Add($"Environment provided {dnnLookUps.Count} sources");
-                    //foreach (var prov in dnnLookUps)
-                    //    if (!provider.Sources.ContainsKey(prov.Key))
-                    //        provider.Sources.Add(prov.Key, prov.Value);
-                    //    else
-                    //        Log.Add($"Couldn't add source '{prov.Key}', as it already existed");
                 }
                 catch(Exception e)
                 {
@@ -134,20 +125,6 @@ namespace ToSic.Sxc.Search
                         TabId = dnnModule.TabID,
                         PortalId = dnnModule.PortalID
                     };
-
-                    // CodeChange #2020-03-20#ContentGroupItemModified - Delete if no side-effects till June 2020
-                    // 2020-03-20 2dm: unclear why this happens - the itm.Modified (above)
-                    // is identical with the typed.ContentGroupItemModified
-                    // because of this I'll turn the code off for now
-                    // I also marked 3 other code bits with the code 
-                    // Take the newest value (from ContentGroupItem and Entity)
-                    //if (entity is IHasEditingData typed)
-                    //{
-                    //    var contentGroupItemModifiedUtc = typed.ContentGroupItemModified.ToUniversalTime();
-                    //    searchInfo.ModifiedTimeUtc = searchInfo.ModifiedTimeUtc > contentGroupItemModifiedUtc
-                    //        ? searchInfo.ModifiedTimeUtc
-                    //        : contentGroupItemModifiedUtc;
-                    //}
 
                     return searchInfo;
                 }));

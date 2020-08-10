@@ -20,41 +20,45 @@ namespace ToSic.Sxc.Dnn.Run
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public class DnnValueConverter : IValueConverter
     {
-        /// <inheritdoc />
-        public string ToReference(string value)
-            => TryToResolveOneLinkToInternalDnnCode(value);
+        #region DI Constructor
+
+        public DnnValueConverter(ITenant tenant) => _tenant = tenant;
+
+        private readonly ITenant _tenant;
+
+        #endregion
 
         /// <inheritdoc />
-        public string ToValue(string reference, Guid itemGuid = default)
-            => TryToResolveDnnCodeToLink(itemGuid, reference);
+        public string ToReference(string value) => TryToResolveOneLinkToInternalDnnCode(value);
+
+        /// <inheritdoc />
+        public string ToValue(string reference, Guid itemGuid = default) => TryToResolveDnnCodeToLink(itemGuid, reference);
 
         /// <summary>
         /// Will take a link like http:\\... to a file or page and try to return a DNN-style info like
         /// Page:35 or File:43003
         /// </summary>
         /// <param name="potentialFilePath"></param>
+        /// <remarks>
+        /// note: this can always use the current context, because this should happen
+        /// when saving etc. - which is always expected to happen in the owning portal
+        /// </remarks>
         /// <returns></returns>
-        private static string TryToResolveOneLinkToInternalDnnCode(string potentialFilePath)
+        private string TryToResolveOneLinkToInternalDnnCode(string potentialFilePath)
         {
-            // note: this can always use the current context, because this should happen
-            // when saving etc. - which is always expected to happen in the owning portal
-            var portalInfo = PortalSettings.Current;
-
             // Try file reference
-            var fileInfo = FileManager.Instance.GetFile(portalInfo.PortalId, potentialFilePath);
-            if (fileInfo != null)
-                return "file:" + fileInfo.FileId;
+            var fileInfo = FileManager.Instance.GetFile(_tenant.Id, potentialFilePath);
+            if (fileInfo != null) return "file:" + fileInfo.FileId;
 
             // Try page / tab ID
             var tabController = new TabController();
-            var tabCollection = tabController.GetTabsByPortal(portalInfo.PortalId);
+            var tabCollection = tabController.GetTabsByPortal(_tenant.Id);
             var tabInfo = tabCollection.Select(tab => tab.Value)
                                        .FirstOrDefault(tab => tab.TabPath == potentialFilePath);
 
-            if (tabInfo != null)
-                return "page:" + tabInfo.TabID;
-
-            return potentialFilePath;
+            return tabInfo != null 
+                ? "page:" + tabInfo.TabID 
+                : potentialFilePath;
         }
 
         /// <summary>
@@ -156,8 +160,4 @@ namespace ToSic.Sxc.Dnn.Run
             return Globals.NavigateURL(tabInfo.TabID, portalSettings, "", new string[] { });
         }
     }
-
-
-
-
 }

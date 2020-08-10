@@ -4,6 +4,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Adam.WebApi;
 using ToSic.Sxc.Dnn.Code;
@@ -53,7 +54,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 		        var lookupPage = hyperlink.Trim().StartsWith("page", StringComparison.OrdinalIgnoreCase);
 
 		        // look it up first, because we need to know if the result is in ADAM or not (different security scenario)
-		        var conv = new DnnValueConverter();
+                var conv = Eav.Factory.Resolve<IValueConverter>();
                 var resolved = conv.ToValue(hyperlink, guid);
 
 		        if (lookupPage)

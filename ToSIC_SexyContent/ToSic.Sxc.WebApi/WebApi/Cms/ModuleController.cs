@@ -12,6 +12,7 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Ui;
+using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.WebApi;
 using ToSic.Sxc.Apps;
@@ -69,7 +70,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             // we must get the zone-id from the environment,
             // since the app may not yet exist when inserted the first time
-            var tenant = new DnnTenant(PortalSettings.Current);
+            var tenant = Eav.Factory.Resolve<ITenant>();
             var tenantZoneId = Env.ZoneMapper.GetZoneId(tenant);
             var list = new CmsZones(tenantZoneId, Env, Log).AppsRt.GetSelectableApps(tenant).ToList();
 
