@@ -109,13 +109,6 @@ namespace ToSic.Sxc.Dnn
             bool showDrafts = false, 
             ILog parentLog = null) 
             => App(Eav.Apps.App.AutoLookupZone, appId, new DnnTenant(ownerPortalSettings), publishingEnabled, showDrafts, parentLog);
-        //var appStuff = new App(
-        //    new DnnTenant(ownerPortalSettings), 
-        //    Eav.Apps.App.AutoLookupZone, appId,
-        //    ConfigurationProvider.Build(showDrafts, publishingEnabled, 
-        //        new LookUpEngine(parentLog)), 
-        //    true, parentLog);
-        //return appStuff;
 
         [InternalApi_DoNotUse_MayChangeWithoutNotice]
         private static IApp App(

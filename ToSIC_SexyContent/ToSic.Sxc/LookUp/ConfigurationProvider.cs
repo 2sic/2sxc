@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
-using System.Linq;
-using System.Web;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Blocks;
 using IApp = ToSic.Sxc.Apps.IApp;
+#if NETSTANDARD
+using System.Linq;
+#endif
 
 namespace ToSic.Sxc.LookUp
 {
