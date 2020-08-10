@@ -3,12 +3,11 @@ using System.IO;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Controllers;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Sxc.Apps.Assets;
-using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.SxcTemp;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -85,7 +84,7 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add($"create a#{appId}, path:{path}, global:{global}, cont-length:{content.Content?.Length}");
             path = path.Replace("/", "\\");
 
-            var thisApp = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, Log);
+            var thisApp = Factory.Resolve<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), Log);
 
             if (content.Content == null)
                 content.Content = "";
@@ -156,8 +155,8 @@ namespace ToSic.Sxc.WebApi.Cms
             var isAdmin = UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
             var app = BlockBuilder.App;
             if (appId != 0 && appId != app.AppId)
-                app = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, Log);
-            var assetEditor = (templateId != 0 && path == null)
+                app = Factory.Resolve<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId),  Log);
+            var assetEditor = templateId != 0 && path == null
                 ? new AssetEditor(app, templateId, UserInfo.IsSuperUser, isAdmin, Log)
                 : new AssetEditor(app, path, UserInfo.IsSuperUser, isAdmin, global, Log);
             assetEditor.EnsureUserMayEditAssetOrThrow();

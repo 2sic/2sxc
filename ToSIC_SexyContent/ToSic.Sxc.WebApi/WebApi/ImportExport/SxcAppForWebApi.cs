@@ -1,10 +1,10 @@
-﻿using DotNetNuke.Entities.Portals;
-using DotNetNuke.Entities.Users;
+﻿using DotNetNuke.Entities.Users;
+using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
-using ToSic.Sxc.Apps;
-using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.LookUp;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         {
             var wrapLog = log.Call<IApp>($"superuser: {user.IsSuperUser}");
             var app = user.IsSuperUser
-                ? new Apps.App(new DnnTenant(PortalSettings.Current), zoneId, appId, 
+                ? Factory.Resolve<Apps.App>().Init(new AppIdentity(zoneId, appId), 
                     ConfigurationProvider.Build(true, true, new LookUpEngine(log)), true, log)
                 : Dnn.Factory.App(appId, false, parentLog: log);
             return wrapLog(null, app);

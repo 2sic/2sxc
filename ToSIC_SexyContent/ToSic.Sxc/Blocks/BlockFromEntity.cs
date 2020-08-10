@@ -64,6 +64,7 @@ namespace ToSic.Sxc.Blocks
         {
             var wrapLog = Log.Call();
             Parent = parent;
+            var pBlock = parent.BlockBuilder;
             ParseContentBlockDefinition(cbDefinition);
             ParentId = parent.ParentId;
             ContentBlockId = -cbDefinition.EntityId; 
@@ -74,7 +75,6 @@ namespace ToSic.Sxc.Blocks
             ZoneId = Parent.ZoneId;
 
             AppId = new ZoneRuntime(ZoneId, Log).FindAppId(_appName);
-            //AppId = AppHelpers.GetAppIdFromGuidName(ZoneId, _appName); // should be 0 if unknown, must test
 
             if (AppId == AppConstants.AppIdNotFound)
             {
@@ -83,15 +83,14 @@ namespace ToSic.Sxc.Blocks
             }
 
             // 2018-09-22 new, must come before the AppId == 0 check
-            BlockBuilder = new BlockBuilder(parent.BlockBuilder, this, Parent.BlockBuilder.Container, Parent.BlockBuilder.Parameters, Log);
+            BlockBuilder = new BlockBuilder(pBlock, this, pBlock.Container, pBlock.Parameters, Log);
 
             if (AppId == 0) return;
 
-            App = new App(Tenant, ZoneId, AppId, ConfigurationProvider.Build(BlockBuilder, false), true, Log);
+            App = new App(pBlock.Environment, Tenant).Init(this, ConfigurationProvider.Build(BlockBuilder, false), true, Log);
             
             // 2019-11-11 2dm new, with CmsRuntime
-            var cms = new CmsRuntime(App, Log, parent.BlockBuilder.UserMayEdit,
-                parent.BlockBuilder.Environment.PagePublishing.IsEnabled(parent.BlockBuilder.Container.Id));
+            var cms = new CmsRuntime(App, Log, pBlock.UserMayEdit, pBlock.Environment.PagePublishing.IsEnabled(pBlock.Container.Id));
 
             Configuration = cms.Blocks.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
 

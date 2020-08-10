@@ -10,9 +10,8 @@ using ToSic.Eav.Persistence;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.SxcTemp;
+using App = ToSic.Sxc.Apps.App;
 
 namespace ToSic.Sxc.Dnn.ImportExport
 {
@@ -20,8 +19,11 @@ namespace ToSic.Sxc.Dnn.ImportExport
     {
         #region Constructors
 
-        
-
+        /// <summary>
+        /// DI Constructor
+        /// </summary>
+        /// <param name="environment"></param>
+        /// <param name="tenant"></param>
         public DnnImportExportEnvironment(IEnvironment environment, ITenant tenant) : base("Dnn.ImExEn")
         {
             Environment = environment;
@@ -108,7 +110,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
 
         public string TemplatesRoot(int zoneId, int appId)
         {
-            var app = GetApp.LightWithoutData(_tenant, zoneId, appId, false, Log);
+            var app = Eav.Factory.Resolve<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
 
             // Copy all files in 2sexy folder to (portal file system) 2sexy folder
             var templateRoot = Environment.MapPath(TemplateHelpers.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, app));

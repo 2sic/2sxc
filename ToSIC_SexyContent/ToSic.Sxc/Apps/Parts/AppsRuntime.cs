@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Ui;
@@ -38,9 +39,12 @@ namespace ToSic.Sxc.Apps
         /// <returns></returns>
         public List<IApp> GetApps(ITenant tenant, Func<Eav.Apps.App, IAppDataConfiguration> buildConfig)
         {
-            var appIds = new ZoneRuntime(ZoneRuntime.ZoneId, Log).Apps;
+            var zId = ZoneRuntime.ZoneId;
+            var appIds = new ZoneRuntime(zId, Log).Apps;
             return appIds
-                .Select(a => new App(tenant, ZoneRuntime.ZoneId, a.Key, buildConfig, true, Log) as IApp)
+                .Select(a => Factory.Resolve<App>()
+                    .PreInit(tenant)
+                    .Init(new AppIdentity(zId, a.Key), buildConfig, true, Log) as IApp)
                 .OrderBy(a => a.Name)
                 .ToList();
         }

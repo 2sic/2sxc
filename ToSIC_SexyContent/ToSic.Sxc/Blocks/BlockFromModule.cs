@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Blocks
             {
                 Log.Add("real app, will load data");
 
-                App = new App(Tenant, ZoneId, AppId, ConfigurationProvider.Build(BlockBuilder, false), true, Log);
+                App = new App(BlockBuilder.Environment, Tenant).Init(this, ConfigurationProvider.Build(BlockBuilder, false), true, Log);
 
                 // 2019-11-11 2dm new, with CmsRuntime
                 var cms = new CmsRuntime(App, Log, BlockBuilder.UserMayEdit,

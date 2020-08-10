@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using System.Web;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
@@ -8,6 +7,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web;
+using EavApp = ToSic.Eav.Apps.App;
 
 namespace ToSic.Sxc.Apps
 {
@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Apps
     /// name, folder, data, metadata etc.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public class App : Eav.Apps.App, IApp
+    public class App : EavApp, IApp
     {
         #region Dynamic Properties: Configuration, Settings, Resources
         /// <inheritdoc />
@@ -68,17 +68,43 @@ namespace ToSic.Sxc.Apps
         #endregion
 
 
+        #region DI Constructors
+
+        public App(IAppEnvironment appEnvironment, ITenant tenant) : base(appEnvironment, tenant)
+        {
+
+        }
+
+        public App PreInit(ITenant tenant)
+        {
+            Tenant = tenant;
+            return this;
+        }
+
         /// <summary>
         /// New constructor which auto-configures the app-data
         /// </summary>
         [PrivateApi]
-        public App(ITenant tenant, 
-            int zoneId, 
-            int appId, 
-            Func<Eav.Apps.App, IAppDataConfiguration> buildConfig, 
-            bool allowSideEffects, 
-            ILog parentLog = null)
-            : base(tenant, zoneId, appId, allowSideEffects, buildConfig, parentLog) { }
+        public App Init(IAppIdentity appId, Func<EavApp, IAppDataConfiguration> buildConfig, bool allowSideEffects, ILog parentLog)
+        {
+            Init(appId, allowSideEffects, buildConfig, "Sxc.App", parentLog, "Create");
+            return this;
+        }
+
+        /// <summary>
+        /// Quick init - won't provide data but can access properties, metadata etc.
+        /// </summary>
+        /// <param name="appIdentity"></param>
+        /// <param name="parentLog"></param>
+        /// <returns></returns>
+        public App InitNoData(IAppIdentity appIdentity, ILog parentLog)
+        {
+            Init(appIdentity, false, null, "Sxc.AppLgt", parentLog, "light use only");
+            return this;
+        }
+
+        #endregion
+
 
         #region Paths
         /// <inheritdoc />

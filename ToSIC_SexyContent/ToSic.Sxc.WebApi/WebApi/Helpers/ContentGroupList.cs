@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Entities.Portals;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
@@ -43,7 +44,7 @@ namespace ToSic.Sxc.WebApi
             IEnumerable<IGrouping<string, BundleWithHeader<IEntity>>> pairsOrSingleItems)
         {
             var wrapLog = Log.Call<bool>($"{appId}");
-            var app = new Apps.App(new DnnTenant(PortalSettings.Current), Eav.Apps.App.AutoLookupZone, appId,
+            var app = Factory.Resolve<Apps.App>().Init(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), 
                 ConfigurationProvider.Build(BlockBuilder, true), false, Log);
 
             foreach (var bundle in pairsOrSingleItems)

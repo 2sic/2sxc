@@ -20,31 +20,28 @@ namespace ToSic.Sxc.Dnn.Run
         /// <summary>
         /// Will get the EAV ZoneId for the current tenant
         /// Always returns a valid value, as it will otherwise create one if it was missing
+        /// ...if the tenant/portal exists
         /// </summary>
         /// <param name="tenantId"></param>
         /// <returns></returns>
         public int GetZoneId(int tenantId)
         {
-            // additional protection agains invalid portalid which may come from bad dnn configs and execute in search-index mode
+            // additional protection against invalid portalId which may come from bad dnn configs and execute in search-index mode
             // see https://github.com/2sic/2sxc/issues/1054
             if (tenantId < 0)
                 throw new Exception("Can't get zone for invalid portal ID: " + tenantId);
 
-            var zoneSettingKey = Settings.PortalSettingsPrefix + "ZoneID";
+            //const string zoneSettingKey = Settings.PortalSettingsPrefix + "ZoneID";
             var c = PortalController.Instance.GetPortalSettings(tenantId);
-            var portalSettings = new PortalSettings(tenantId);
-
-            int zoneId;
 
             // Create new zone automatically
-            if (!c.ContainsKey(zoneSettingKey))
-            {
-                zoneId = ZoneManager.CreateZone(portalSettings.PortalName + " (Portal " + tenantId + ")", Log);
-                PortalController.UpdatePortalSetting(tenantId, Settings.PortalSettingZoneId, zoneId.ToString());
-            }
-            else zoneId = Int32.Parse(c[zoneSettingKey]);
+            if (c.ContainsKey(Settings.PortalSettingZoneId)) return int.Parse(c[Settings.PortalSettingZoneId]);
 
+            var portalSettings = new PortalSettings(tenantId);
+            var zoneId = ZoneManager.CreateZone(portalSettings.PortalName + " (Portal " + tenantId + ")", Log);
+            PortalController.UpdatePortalSetting(tenantId, Settings.PortalSettingZoneId, zoneId.ToString());
             return zoneId;
+
         }
 
         public int GetZoneId(ITenant tenant) => GetZoneId(tenant.Id);

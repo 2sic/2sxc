@@ -6,7 +6,7 @@ using ToSic.Eav.ImportExport.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.SxcTemp;
+using App = ToSic.Sxc.Apps.App;
 
 namespace ToSic.Sxc.Dnn.ImportExport
 {
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
         public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds, ILog parentLog)
         {
             var tenant = new DnnTenant(PortalSettings.Current);
-            var app = GetApp.LightWithoutData(tenant, zoneId, appId, parentLog: Log);
+            var app = Eav.Factory.Resolve<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
             AdamAppContext = new AdamAppContext(tenant, app, null, 10, Log);
             Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
 

@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DotNetNuke.Entities.Portals;
+using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Sxc.Apps.Assets;
-using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.SxcTemp;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -62,7 +61,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         private string ResolveAppPath(int appId, bool global, bool allowFullAccess)
         {
-            var thisApp = GetApp.LightWithoutData(new DnnTenant(PortalSettings.Current), appId, Log);
+            var thisApp = Factory.Resolve<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), Log);
 
             if (global && !allowFullAccess)
                 throw new NotSupportedException("only host user may access global files");

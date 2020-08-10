@@ -10,7 +10,6 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
-using ToSic.Eav.Run;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
@@ -194,9 +193,7 @@ namespace ToSic.Sxc.WebApi.App
 
             // try to create
             var publish = Factory.Resolve<IPagePublishing>().Init(Log);
-            // 2018-09-22 new
-            // todo: something looks wrong here, I think create/update would fail if it doesn't have a moduleid
-            var currentApp = new Apps.App(new DnnTenant(PortalSettings), appIdentity.ZoneId, appIdentity.AppId, 
+            var currentApp = Factory.Resolve<Apps.App>().Init(appIdentity, 
                 ConfigurationProvider.Build(false, publish.IsEnabled(ActiveModule.ModuleID),
                     BlockBuilder.Block.Data.Configuration.LookUps), true, Log);
 

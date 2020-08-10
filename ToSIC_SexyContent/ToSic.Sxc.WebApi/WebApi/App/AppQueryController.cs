@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Modules;
+using ToSic.Eav;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Apps;
@@ -54,7 +55,7 @@ namespace ToSic.Sxc.WebApi.App
         {
             var wrapLog = Log.Call($"path:{appPath}, name:{name}");
             var appIdentity = AppFinder.GetCurrentAppIdFromPath(appPath);
-            var queryApp = new Apps.App(new DnnTenant(PortalSettings), appIdentity.ZoneId, appIdentity.AppId,
+            var queryApp = Factory.Resolve<Apps.App>().Init(appIdentity,
                 ConfigurationProvider.Build(false, false), false, Log);
 
             // now just run the default query check and serializer

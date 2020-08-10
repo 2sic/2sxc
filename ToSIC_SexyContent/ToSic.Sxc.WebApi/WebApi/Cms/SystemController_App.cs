@@ -35,16 +35,10 @@ namespace ToSic.Sxc.WebApi.Cms
         }
 
         [HttpGet]
-        public void DeleteApp(int zoneId, int appId)
-        {
-            new CmsZones(zoneId, Env, Log).AppsMan.RemoveAppInTenantAndEav(appId, new DnnTenant(PortalSettings));
-        }
+        public void DeleteApp(int zoneId, int appId) => new CmsZones(zoneId, Env, Log).AppsMan.RemoveAppInTenantAndEav(appId);
 
         [HttpPost]
-        public void App(int zoneId, string name)
-        {
-            AppManager.AddBrandNewApp(zoneId, name, Log);
-        }
+        public void App(int zoneId, string name) => AppManager.AddBrandNewApp(zoneId, name, Log);
 
         [HttpGet]
         public bool FlushCache(int zoneId, int appId)

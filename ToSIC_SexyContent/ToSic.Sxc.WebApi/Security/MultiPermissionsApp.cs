@@ -4,7 +4,6 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Run;
 using ToSic.Eav.Security;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Run;
@@ -31,22 +30,21 @@ namespace ToSic.Sxc.Security
         protected readonly bool SamePortal;
 
         public MultiPermissionsApp(IBlockBuilder blockBuilder, int appId, ILog parentLog) :
-            this(blockBuilder, SystemRuntime.ZoneIdOfApp(appId), appId, parentLog) { }
+            this(blockBuilder, new AppIdentity(SystemRuntime.ZoneIdOfApp(appId), appId), parentLog) { }
 
-        protected MultiPermissionsApp(IBlockBuilder blockBuilder, int zoneId, int appId, ILog parentLog) 
+        protected MultiPermissionsApp(IBlockBuilder blockBuilder, IAppIdentity appIdentity,  ILog parentLog) 
             : base("Api.Perms", parentLog)
         {
-            var wrapLog = Log.Call($"..., appId: {appId}, ...");
+            var wrapLog = Log.Call($"..., appId: {appIdentity.AppId}, ...");
             BlockBuilder = blockBuilder;
-            var tenant = new DnnTenant(PortalSettings.Current);
-            var environment = Factory.Resolve<IAppEnvironment>().Init(Log);
-            var contextZoneId = environment.ZoneMapper.GetZoneId(tenant.Id);
-            App = new App(tenant, zoneId, appId, 
+            App = Factory.Resolve<App>().Init(appIdentity,
                 ConfigurationProvider.Build(blockBuilder, true),
                 false, Log);
-            SamePortal = contextZoneId == zoneId;
+
+            var contextZoneId = blockBuilder.Environment.ZoneMapper.GetZoneId(App.Tenant.Id);
+            SamePortal = contextZoneId == appIdentity.ZoneId;
             PortalForSecurityCheck = SamePortal ? PortalSettings.Current : null;
-            wrapLog($"ready for z/a:{zoneId}/{appId} t/z:{tenant.Id}/{contextZoneId} same:{SamePortal}");
+            wrapLog($"ready for z/a:{appIdentity.ZoneId}/{appIdentity.AppId} t/z:{App.Tenant.Id}/{contextZoneId} same:{SamePortal}");
         }
 
         protected override Dictionary<string, IPermissionCheck> InitializePermissionChecks()

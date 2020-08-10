@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
@@ -74,7 +75,7 @@ namespace ToSic.Sxc.Dnn
         /// <param name="parentLog">optional logger to attach to</param>
         /// <returns>An initialized App object which you can use to access App.Data</returns>
         public static IApp App(int appId, bool publishingEnabled = false, bool showDrafts = false, ILog parentLog = null)
-            => App(appId, PortalSettings.Current, publishingEnabled, showDrafts, parentLog);
+            => App(Eav.Apps.App.AutoLookupZone, appId, null, publishingEnabled, showDrafts, parentLog);
 
         /// <summary>
         /// Get a full app-object for accessing data of the app from outside
@@ -89,7 +90,7 @@ namespace ToSic.Sxc.Dnn
         /// <param name="parentLog">optional logger to attach to</param>
         /// <returns>An initialized App object which you can use to access App.Data</returns>
         public static IApp App(int zoneId, int appId, bool publishingEnabled = false, bool showDrafts = false, ILog parentLog = null)
-            => App(zoneId, appId, new DnnTenant(PortalSettings.Current), publishingEnabled, showDrafts, parentLog);
+            => App(zoneId, appId, null, publishingEnabled, showDrafts, parentLog);
 
         /// <summary>
         /// Get a full app-object for accessing data of the app from outside
@@ -121,7 +122,8 @@ namespace ToSic.Sxc.Dnn
         {
             var log = new Log("Dnn.Factry", parentLog);
             log.Add($"Create App(z:{zoneId}, a:{appId}, tenantObj:{tenant != null}, publishingEnabled: {publishingEnabled}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
-            var appStuff = new App(tenant, zoneId, appId,
+            var appStuff = new App(Eav.Factory.Resolve<IAppEnvironment>(), tenant ?? Eav.Factory.Resolve<ITenant>())
+                .Init(new AppIdentity(zoneId, appId), 
                 ConfigurationProvider.Build(showDrafts, publishingEnabled, new LookUpEngine(parentLog)),
                 true, parentLog);
             return appStuff;
