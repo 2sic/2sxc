@@ -4,7 +4,7 @@ using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.Sxc.Dnn.Cms
 {
-    internal partial class PagePublishing
+    public partial class PagePublishing
     {
         internal class ModuleVersions: HasLog
         {

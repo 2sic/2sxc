@@ -36,9 +36,6 @@ namespace ToSic.Sxc.Blocks
         public IAppEnvironment Environment { get; }
 
         /// <inheritdoc />
-        public IEnvironmentFactory EnvFac { get; }
-
-        /// <inheritdoc />
         public IContainer Container { get; }
 
         /// <inheritdoc />
@@ -53,8 +50,7 @@ namespace ToSic.Sxc.Blocks
             IEnumerable<KeyValuePair<string, string>> urlParams, ILog parentLog)
             : base("Sxc.BlkBld", parentLog, $"get CmsInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}")
         {
-            EnvFac = Factory.Resolve<IEnvironmentFactory>();
-            Environment = EnvFac.Environment(parentLog);
+            Environment = Factory.Resolve<IAppEnvironment>().Init(parentLog);
             // the root block is the main container. If there is none yet, use this, as it will be the root
             RootBuilder = rootBlockBuilder ?? this;
             Block = cb;

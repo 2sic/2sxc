@@ -8,6 +8,7 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security;
@@ -192,7 +193,7 @@ namespace ToSic.Sxc.WebApi.App
             var userName = new DnnUser().IdentityToken;
 
             // try to create
-            var publish = Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
+            var publish = Factory.Resolve<IPagePublishing>().Init(Log);
             // 2018-09-22 new
             // todo: something looks wrong here, I think create/update would fail if it doesn't have a moduleid
             var currentApp = new Apps.App(new DnnTenant(PortalSettings), appIdentity.ZoneId, appIdentity.AppId, 

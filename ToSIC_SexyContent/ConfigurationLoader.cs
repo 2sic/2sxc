@@ -2,13 +2,14 @@
 using System.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Caching;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.ImportExport.Persistence.File;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Plumbing.Booting;
+using ToSic.Eav.Repositories;
 using ToSic.Eav.Run;
 using ToSic.SexyContent.Dnn920;
 using ToSic.Sxc.Adam;
@@ -94,12 +95,16 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IRuntime, Runtime>();
                 sc.AddTransient<IAppEnvironment, DnnEnvironment>();
                 sc.AddTransient<IEnvironment, DnnEnvironment>();
+                // new
+                sc.AddTransient<ITenant, DnnTenant>();
+                sc.AddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
+                sc.AddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
 
                 // The file-importer - temporarily itself
                 sc.AddTransient<XmlImportWithFiles, XmlImportFull>();
 
                 sc.AddTransient<IClientDependencyOptimizer, DnnClientDependencyOptimizer>();
-                sc.AddTransient<IRuntimeFactory, DnnEnvironmentFactory>();
+                //sc.AddTransient<IRuntimeFactory, DnnEnvironmentFactory>();
                 sc.AddTransient<IEnvironmentFactory, DnnEnvironmentFactory>();
                 sc.AddTransient<IWebFactoryTemp, DnnEnvironmentFactory>();
                 sc.AddTransient<IRenderingHelpers, DnnRenderingHelpers>();
@@ -108,6 +113,9 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IEnvironmentFileSystem, DnnFileSystem>();
                 sc.AddTransient<IGetEngine, GetDnnEngine>();
                 sc.AddTransient<IFingerprint, DnnFingerprint>();
+
+                // add page publishing
+                sc.AddTransient<IPagePublishing, Sxc.Dnn.Cms.PagePublishing>();
 
                 if (appsCacheOverride != null)
                 {

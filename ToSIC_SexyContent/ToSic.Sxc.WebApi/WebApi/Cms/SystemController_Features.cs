@@ -36,7 +36,7 @@ namespace ToSic.Sxc.WebApi.Cms
             // in this case, use the app-id of the content-app for feature-permission check
             if (appId == 0)
             {
-                var environment = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
+                var environment = Factory.Resolve<IAppEnvironment>().Init(Log);
                 var zoneId = environment.ZoneMapper.GetZoneId(PortalSettings.PortalId);
                 appId = new ZoneRuntime(zoneId, Log).DefaultAppId;
             }

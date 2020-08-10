@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Blocks
             Tenant = tenant;
 
             // important: don't use the SxcInstance.Environment, as it would try to init the Sxc-object before the app is known, causing various side-effects
-            var tempEnv = Factory.Resolve<IEnvironmentFactory>().Environment(parentLog);
+            var tempEnv = Factory.Resolve<IAppEnvironment>().Init(parentLog);
             ZoneId = tempEnv.ZoneMapper.GetZoneId(tenant.Id); // use tenant as reference, as it can be different from instance.TenantId
             
             AppId = Factory.Resolve<IMapAppToInstance>().GetAppIdFromInstance(container, ZoneId) ?? 0;// fallback/undefined YET

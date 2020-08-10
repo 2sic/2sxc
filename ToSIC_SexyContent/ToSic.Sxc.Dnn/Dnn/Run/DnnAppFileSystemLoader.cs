@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Hosting;
-using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
@@ -13,27 +12,27 @@ using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Dnn.Run
 {
-    public class DnnAppFileSystemLoader : HasLog, IAppFileSystemLoader
+    public class DnnAppFileSystemLoader : HasLog, IAppFileSystemLoader, IAppRepositoryLoader
     {
         public const string FieldFolderPrefix = "field-";
         public const string JsFile = "index.js";
 
-        public int AppId { get;  }
+        public int AppId { get; private set; }
 
-        public string Path { get; set; }
+        /// <summary>
+        /// Constructor for DI - you must always call Init(...) afterwards
+        /// </summary>
+        /// <param name="tenant"></param>
+        public DnnAppFileSystemLoader(ITenant tenant): base("Dnn.AppStf") => Tenant = tenant;
 
-        protected readonly PortalSettings PortalSettings;
-
-        public DnnAppFileSystemLoader(int appId, string path, PortalSettings portalSettings, ILog log): base("Dnn.AppStf", log)
+        public IAppFileSystemLoader Init(int appId, string path, ILog log)
         {
+            Log.LinkTo(log);
             var wrapLog = Log.Call($"{appId}, {path}, ...");
             AppId = appId;
-            PortalSettings = portalSettings;
-
             try
             {
-                var tenant = new DnnTenant(portalSettings);
-                var fullPath = tenant.SxcPath + "/" + path + "/" + Eav.Constants.FolderAppExtensions;
+                var fullPath = Tenant.SxcPath + "/" + path + "/" + Eav.Constants.FolderAppExtensions;
                 Path = HostingEnvironment.MapPath(fullPath);
                 Log.Add("System path:" + Path);
             }
@@ -41,11 +40,19 @@ namespace ToSic.Sxc.Dnn.Run
             {
                 // ignore
                 wrapLog("error: " + e.Message);
-                return;
+                return this;
             }
 
             wrapLog(null);
+            return this;
         }
+
+        IAppRepositoryLoader IAppRepositoryLoader.Init(int appId, string path, ILog log) => Init(appId, path, log) as IAppRepositoryLoader;
+
+        public string Path { get; set; }
+
+        protected readonly ITenant Tenant;
+
 
         public List<InputTypeInfo> InputTypes()
         {

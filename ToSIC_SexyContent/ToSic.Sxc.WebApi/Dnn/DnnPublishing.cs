@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.Blocks;
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Dnn
             if (partOfPage)
             {
                 Log.Add("partOfPage - save with publishing");
-                var versioning = Eav.Factory.Resolve<IEnvironmentFactory>().PagePublisher(Log);
+                var versioning = Eav.Factory.Resolve<IPagePublishing>().Init(Log);
                 var context = DnnDynamicCode.Create(BlockBuilder, Log);
                 versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID,
                     args => postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft));

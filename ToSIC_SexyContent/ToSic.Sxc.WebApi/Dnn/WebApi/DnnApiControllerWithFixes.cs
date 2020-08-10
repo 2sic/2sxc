@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 	        Helpers.RemoveLanguageChangingCookie();
 
             // ReSharper disable once VirtualMemberCallInConstructor
-            Log = new Log(HistoryLogName /*"Dnn.WebApi"*/, null, $"Path: {HttpContext.Current?.Request?.Url?.AbsoluteUri}");
+            Log = new Log(HistoryLogName, null, $"Path: {HttpContext.Current?.Request?.Url?.AbsoluteUri}");
             TimerWrapLog = Log.Call(message: "timer", useTimer: true);
 	        
             // ReSharper disable VirtualMemberCallInConstructor
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 	            History.Add(HistoryLogGroup, Log);
             // ReSharper restore VirtualMemberCallInConstructor
 
-            Env = new DnnEnvironment(Log);
+            Env = new DnnEnvironment().Init(Log);
         }
 
         // ReSharper disable once InconsistentNaming

@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Search
             var isContentModule = dnnModule.DesktopModule.ModuleName == "2sxc";
 
             // New Context because PortalSettings.Current is null
-            var zoneId = new DnnEnvironment(Log).ZoneMapper.GetZoneId(dnnModule.OwnerPortalID);
+            var zoneId = new DnnEnvironment().Init(Log).ZoneMapper.GetZoneId(dnnModule.OwnerPortalID);
 
             var appId = !isContentModule
                 ? new DnnMapAppToInstance(Log).GetAppIdFromInstance(container, zoneId)

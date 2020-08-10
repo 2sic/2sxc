@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
-using ToSic.SexyContent.Search;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Search;
@@ -40,8 +38,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 if (_publishing != null) return Publishing;
 
                 // if publishing is used, make sure it's in the log-history
-                _publishing = new Sxc.Dnn.Cms.PagePublishing(Log);
-                ToSic.Eav.Logging.History.Add("dnn-publishing", Log);
+                _publishing = new Sxc.Dnn.Cms.PagePublishing().Init(Log);
+                History.Add("dnn-publishing", Log);
                 return _publishing;
             }
         }

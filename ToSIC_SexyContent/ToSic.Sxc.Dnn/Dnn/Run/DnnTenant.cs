@@ -11,7 +11,15 @@ namespace ToSic.Sxc.Dnn.Run
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public class DnnTenant: Tenant<PortalSettings>
     {
+        /// <summary>
+        /// DI Constructor, will get the current portal settings
+        /// #TodoDI not ideal yet, as portalsettings.current is still retrieved from global
+        /// </summary>
+        public DnnTenant() : this(PortalSettings.Current) { }
+
         /// <inheritdoc />
+        public DnnTenant(PortalSettings settings) : base(settings ?? PortalSettings.Current) {}
+
         public override string DefaultLanguage => UnwrappedContents.DefaultLanguage;
 
         /// <inheritdoc />
@@ -30,6 +38,5 @@ namespace ToSic.Sxc.Dnn.Run
         /// <inheritdoc />
         public override string ContentPath => UnwrappedContents.HomeDirectory;
 
-        public DnnTenant(PortalSettings settings) : base(settings ?? PortalSettings.Current) {}
     }
 }

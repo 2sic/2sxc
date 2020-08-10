@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Security
             var wrapLog = Log.Call($"..., appId: {appId}, ...");
             BlockBuilder = blockBuilder;
             var tenant = new DnnTenant(PortalSettings.Current);
-            var environment = Factory.Resolve<IEnvironmentFactory>().Environment(Log);
+            var environment = Factory.Resolve<IAppEnvironment>().Init(Log);
             var contextZoneId = environment.ZoneMapper.GetZoneId(tenant.Id);
             App = new App(tenant, zoneId, appId, 
                 ConfigurationProvider.Build(blockBuilder, true),

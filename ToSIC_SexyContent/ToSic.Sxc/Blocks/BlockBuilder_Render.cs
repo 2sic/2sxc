@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Web;
 using ToSic.Eav;
+using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Interfaces;
@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Blocks
     {
         internal bool RenderWithDiv = true;
         public bool UserMayEdit => _userMayEdit
-            ?? (_userMayEdit = EnvFac.InstancePermissions(Log, Container, App).UserMay(GrantSets.WriteSomething)).Value;
+            ?? (_userMayEdit = Factory.Resolve<IEnvironmentFactory>().InstancePermissions(Log, Container, App).UserMay(GrantSets.WriteSomething)).Value;
         private bool? _userMayEdit;
 
 

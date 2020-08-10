@@ -17,11 +17,16 @@ using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Dnn.Cms
 {
-    internal partial class PagePublishing : HasLog, IPagePublishing
+    public partial class PagePublishing : HasLog, IPagePublishing
     {
-        public PagePublishing(ILog parentLog): base("Dnn.Publsh", parentLog, "()")
-        {
-        }
+        // ReSharper disable once UnusedMember.Local
+        private const string logName = "Dnn.Publsh";
+
+        public PagePublishing(): base(logName) { }
+
+        //public PagePublishing(ILog parentLog): base(logName, parentLog, "()")
+        //{
+        //}
 
         public bool Supported => true;
 
@@ -170,6 +175,12 @@ namespace ToSic.Sxc.Dnn.Cms
             Log.Add($"TryToAddStream(..., ..., key:{key}), found:{cont != null} add⋮{cont?.Count ?? 0}" );
             if (cont != null) list = list.Concat(cont);
             return list;
+        }
+
+        public IPagePublishing Init(ILog parent)
+        {
+            Log.LinkTo(parent, logName);
+            return this;
         }
     }
 }
