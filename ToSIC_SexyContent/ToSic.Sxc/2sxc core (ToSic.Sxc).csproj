@@ -39,9 +39,5 @@
     <Reference Include="System.Web" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Run\" />
-  </ItemGroup>
-
 
 </Project>
