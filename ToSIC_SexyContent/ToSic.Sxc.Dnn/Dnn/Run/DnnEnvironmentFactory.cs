@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Dnn.Run
             => new DnnPermissionCheck(parentLog, portal: PortalSettings.Current, instance: module, app: app);
 
         /// <inheritdoc />
-        public DynamicCodeRoot AppAndDataHelpers(Blocks.IBlockBuilder blockBuilder) => new DnnDynamicCode(blockBuilder, 9);
+        public DynamicCodeRoot AppAndDataHelpers(Blocks.IBlockBuilder blockBuilder) => new DnnDynamicCode(blockBuilder, compatibility: 9);
 
     }
 }

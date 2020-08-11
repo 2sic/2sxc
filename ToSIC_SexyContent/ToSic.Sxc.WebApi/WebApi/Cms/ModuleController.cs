@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Text;
 using System.Web.Http;
 using System.Web.Http.Controllers;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
@@ -17,7 +16,6 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.WebApi;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Security;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -41,10 +39,9 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             base.Initialize(controllerContext); // very important!!!
             Log.Rename("2sModC");
-            BlockEditor = BlockBuilder.Block.Editor;
         }
 
-        private BlockEditorBase BlockEditor { get; set;  }
+        private BlockEditorBase GetEditor() => BlockEditorBase.GetEditor(BlockBuilder);
 
 
         [HttpGet]
@@ -55,12 +52,12 @@ namespace ToSic.Sxc.WebApi.Cms
             if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var exp))
                 throw exp;
 
-            return BlockEditor.SaveTemplateId(templateId, forceCreateContentGroup);
+            return GetEditor().SaveTemplateId(templateId, forceCreateContentGroup);
         }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void SetAppId(int? appId) => BlockEditor.SetAppId(appId);
+        public void SetAppId(int? appId) => GetEditor().SetAppId(appId);
 
         #region Get Apps, ContentTypes and Views for UI
 

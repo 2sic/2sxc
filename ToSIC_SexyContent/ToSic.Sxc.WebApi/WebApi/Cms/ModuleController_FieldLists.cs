@@ -47,7 +47,7 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add($"try to publish #{index} on '{part}'");
             if (!new MultiPermissionsApp(BlockBuilder, App.AppId, Log).EnsureAll(GrantSets.WritePublished, out var exp))
                 throw exp;
-            return BlockEditor.Publish(part, index);
+            return GetEditor().Publish(part, index);
         }
 
         [HttpGet]

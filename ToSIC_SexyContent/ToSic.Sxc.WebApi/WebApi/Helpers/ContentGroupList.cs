@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
@@ -10,7 +9,6 @@ using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.LookUp;
 using static System.StringComparison;
 
@@ -86,7 +84,7 @@ namespace ToSic.Sxc.WebApi
             }
 
             // update-module-title
-            BlockBuilder.Block.Editor.UpdateTitle();
+            BlockEditorBase.GetEditor(BlockBuilder).UpdateTitle();
             return wrapLog("ok", true);
         }
 

@@ -60,23 +60,7 @@ namespace ToSic.Sxc.Engines
             Log.Add("will render into TextWriter");
             try
             {
-                // new in 2sxc 11, execute "run" at the end if possible
-                //var pageAsRzrComp = Webpage as RazorComponent;
-                //var code = pageAsRzrComp?.CodeManager.CodeOrNull as RazorComponentCode;
-                //if (code != null)
-                //{
-                //    Log.Add("Detected code, will try OnRender");
-                //    code.OnRender();
-                //}
-
                 Webpage.ExecutePageHierarchy(new WebPageContext(HttpContext, Webpage, null), writer, Webpage);
-
-                // new in 11
-                //if (code != null)
-                //{
-                //    Log.Add("detected code, will OnRenderComplete");
-                //    code.OnRendered();
-                //}
             }
             catch (Exception maybeIEntityCast)
             {
@@ -143,7 +127,7 @@ namespace ToSic.Sxc.Engines
         private void InitHelpers(RazorComponentBase webPage, int compatibility)
         {
             webPage.Html = new Razor.HtmlHelper();
-            webPage.DynCode = new DnnDynamicCode(BlockBuilder, compatibility, Log);
+            webPage.DynCode = new DnnDynamicCode(BlockBuilder, Log, compatibility);
 
             #region New in 10.25 - ensure jquery is not included by default
 

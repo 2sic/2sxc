@@ -7,15 +7,8 @@ namespace ToSic.Sxc.Blocks
 {
     internal class BlockEditorForModule: BlockEditorBase
     {
-        public BlockEditorForModule(IBlockBuilder blockBuilder) : base(blockBuilder)
-        {
-        }
-
-        #region methods which the entity-implementation must customize - so it's virtual
-
         protected override void SavePreviewTemplateId(Guid templateGuid)
             => Factory.Resolve<IMapAppToInstance>().SetPreviewTemplate(ModuleId, templateGuid);
-            //=> BlocksManager.SetPreviewTemplate(ModuleId, templateGuid);
 
         internal override void SetAppId(int? appId)
             => Factory.Resolve<IMapAppToInstance>().SetAppIdForInstance(BlockBuilder.Container, BlockBuilder.Environment, appId, Log);
@@ -29,11 +22,5 @@ namespace ToSic.Sxc.Blocks
             Log.Add("update title");
             Factory.Resolve<IMapAppToInstance>().UpdateTitle(BlockBuilder, titleItem);
         }
-
-        
-
-        #endregion
-
     }
-
 }

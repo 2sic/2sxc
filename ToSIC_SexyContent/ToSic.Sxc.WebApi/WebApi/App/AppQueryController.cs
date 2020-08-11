@@ -34,7 +34,7 @@ namespace ToSic.Sxc.WebApi.App
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query([FromUri] string name, [FromUri] bool includeGuid = false, [FromUri] string stream = null, [FromUri] int? appId = null)
         {
             var wrapLog = Log.Call($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
-            var context = DnnDynamicCode.Create(BlockBuilder, Log);
+            var context = new DnnDynamicCode(BlockBuilder, Log);
             var app = BlockBuilder.App;
 
             // If no app available from context, check if an app-id was supplied in url

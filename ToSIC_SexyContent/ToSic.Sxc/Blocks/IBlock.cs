@@ -32,12 +32,6 @@ namespace ToSic.Sxc.Blocks
         [PrivateApi]
         int ContentBlockId { get; }
 
-        // 2019-11-15 2dm removed, seems unused
-        //[PrivateApi]
-        //string ParentFieldName { get; }
-        //[PrivateApi]
-        //int ParentFieldSortOrder { get; }
-
         #region Values related to the current unit of content / the view
         
         /// <summary>
@@ -72,9 +66,5 @@ namespace ToSic.Sxc.Blocks
 
         [PrivateApi("naming not final")]
         bool ContentGroupExists { get; }
-
-        [PrivateApi("should get rid of this asap - shouldn't be in the Block object")]
-        // todo: should get rid of this asap.
-        BlockEditorBase Editor { get; }
     }
 }

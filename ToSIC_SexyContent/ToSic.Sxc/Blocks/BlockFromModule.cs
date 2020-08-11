@@ -19,8 +19,6 @@ namespace ToSic.Sxc.Blocks
     {
         public IContainer Container;
 
-        public override BlockEditorBase Editor => new BlockEditorForModule(BlockBuilder);
-
         public override bool ParentIsEntity => false;
 
 

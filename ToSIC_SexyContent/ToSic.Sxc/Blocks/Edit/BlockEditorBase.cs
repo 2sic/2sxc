@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web.Http;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
@@ -18,10 +17,25 @@ namespace ToSic.Sxc.Blocks
 
         private BlockConfiguration _cGroup;
 
-        internal BlockEditorBase(IBlockBuilder blockBuilder): base("CG.RefMan", blockBuilder.Log)
+        internal BlockEditorBase(/*IBlockBuilder blockBuilder*/): base("CG.RefMan") //, blockBuilder.Log)
         {
+            //BlockBuilder = blockBuilder;
+            //ModuleId = BlockBuilder.Container.Id;
+        }
+
+        internal BlockEditorBase Init(IBlockBuilder blockBuilder)
+        {
+            Log.LinkTo(blockBuilder.Log);
             BlockBuilder = blockBuilder;
             ModuleId = BlockBuilder.Container.Id;
+            return this;
+        }
+
+        internal static BlockEditorBase GetEditor(IBlockBuilder blockBuilder)
+        {
+            if(blockBuilder.Block is BlockFromModule) return new BlockEditorForModule().Init(blockBuilder);
+            if(blockBuilder.Block is BlockFromEntity) return new BlockEditorForEntity().Init(blockBuilder);
+            throw new Exception("Can't find BlockEditor - the base block type in unknown");
         }
 
 
@@ -80,7 +94,7 @@ namespace ToSic.Sxc.Blocks
             Log.Add($"publish part{part}, order:{sortOrder}");
             var contentGroup = BlockConfiguration;
             var contEntity = contentGroup[part][sortOrder];
-            var presKey = part.ToLower() == ViewParts.ContentLower ? ViewParts.PresentationLower : "listpresentation";
+            var presKey = part.ToLower() == ViewParts.ContentLower ? ViewParts.PresentationLower : ViewParts.ListPresentationLower;
             var presEntity = contentGroup[presKey][sortOrder];
 
             var hasPresentation = presEntity != null;
