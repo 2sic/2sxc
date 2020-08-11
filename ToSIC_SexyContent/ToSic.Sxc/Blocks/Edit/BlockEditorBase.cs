@@ -5,23 +5,15 @@ using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 
-namespace ToSic.Sxc.Blocks
+namespace ToSic.Sxc.Blocks.Edit
 {
-
     // todo: create interface
     // todo: move some parts out into a BlockManagement
     public abstract partial class BlockEditorBase : HasLog
     {
-        protected IBlockBuilder BlockBuilder;
-        protected int ModuleId;
+        #region DI and Construction
 
-        private BlockConfiguration _cGroup;
-
-        internal BlockEditorBase(/*IBlockBuilder blockBuilder*/): base("CG.RefMan") //, blockBuilder.Log)
-        {
-            //BlockBuilder = blockBuilder;
-            //ModuleId = BlockBuilder.Container.Id;
-        }
+        internal BlockEditorBase(): base("CG.RefMan") { }
 
         internal BlockEditorBase Init(IBlockBuilder blockBuilder)
         {
@@ -31,31 +23,20 @@ namespace ToSic.Sxc.Blocks
             return this;
         }
 
-        internal static BlockEditorBase GetEditor(IBlockBuilder blockBuilder)
-        {
-            if(blockBuilder.Block is BlockFromModule) return new BlockEditorForModule().Init(blockBuilder);
-            if(blockBuilder.Block is BlockFromEntity) return new BlockEditorForEntity().Init(blockBuilder);
-            throw new Exception("Can't find BlockEditor - the base block type in unknown");
-        }
-
-
-        #region methods which the entity-implementation must customize - so it's virtual
-
-        protected abstract void SavePreviewTemplateId(Guid templateGuid);
-
-
-        internal abstract void SetAppId(int? appId);
-
-        internal abstract void EnsureLinkToContentGroup(Guid cgGuid);
-        internal abstract void UpdateTitle(IEntity titleItem);
         #endregion
 
+        protected IBlockBuilder BlockBuilder;
+        protected int ModuleId;
+
+        private BlockConfiguration _cGroup;
+
+
+        
         #region methods which are fairly stable / the same across content-block implementations
 
         protected BlockConfiguration BlockConfiguration
             => _cGroup ?? (_cGroup = BlockBuilder.Block.Configuration);
-
-
+        
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {
             Guid? result;
@@ -69,11 +50,9 @@ namespace ToSic.Sxc.Blocks
                 var app = BlockBuilder.Block.App;
                 var cms = new CmsManager(app, Log);
 
-                var contentGroupGuid = cms.Blocks // CmsContext.Block.App.BlocksManager
-                    .UpdateOrCreateContentGroup(BlockConfiguration, templateId);
+                var contentGroupGuid = cms.Blocks.UpdateOrCreateContentGroup(BlockConfiguration, templateId);
 
-                if (!existedBeforeSettingTemplate)
-                    EnsureLinkToContentGroup(contentGroupGuid);
+                if (!existedBeforeSettingTemplate) EnsureLinkToContentGroup(contentGroupGuid);
 
                 result = contentGroupGuid;
             }
@@ -94,7 +73,9 @@ namespace ToSic.Sxc.Blocks
             Log.Add($"publish part{part}, order:{sortOrder}");
             var contentGroup = BlockConfiguration;
             var contEntity = contentGroup[part][sortOrder];
-            var presKey = part.ToLower() == ViewParts.ContentLower ? ViewParts.PresentationLower : ViewParts.ListPresentationLower;
+            var presKey = part.ToLower() == ViewParts.ContentLower 
+                ? ViewParts.PresentationLower 
+                : ViewParts.ListPresentationLower;
             var presEntity = contentGroup[presKey][sortOrder];
 
             var hasPresentation = presEntity != null;
@@ -116,8 +97,6 @@ namespace ToSic.Sxc.Blocks
 
 
         #endregion
-
-
 
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using ToSic.Sxc.Apps;
 
-namespace ToSic.Sxc.Blocks
+namespace ToSic.Sxc.Blocks.Edit
 {
     public partial class BlockEditorBase
     {

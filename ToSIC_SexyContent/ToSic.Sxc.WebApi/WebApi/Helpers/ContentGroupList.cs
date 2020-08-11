@@ -11,6 +11,7 @@ using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.LookUp;
 using static System.StringComparison;
+using BlockEditorBase = ToSic.Sxc.Blocks.Edit.BlockEditorBase;
 
 namespace ToSic.Sxc.WebApi
 {

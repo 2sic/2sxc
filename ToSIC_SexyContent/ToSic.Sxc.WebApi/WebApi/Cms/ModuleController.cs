@@ -17,6 +17,7 @@ using ToSic.SexyContent.WebApi;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Security;
+using ToSic.Sxc.Blocks.Edit;
 
 namespace ToSic.Sxc.WebApi.Cms
 {

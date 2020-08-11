@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 
-namespace ToSic.Sxc.Blocks
+namespace ToSic.Sxc.Blocks.Edit
 {
-    internal class BlockEditorForEntity : BlockEditorBase
+    internal class BlockEditorForEntity : Edit.BlockEditorBase
     {
         #region methods which the entity-implementation must customize 
 
