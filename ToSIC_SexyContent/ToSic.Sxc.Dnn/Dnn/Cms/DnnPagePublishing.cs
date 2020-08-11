@@ -116,12 +116,12 @@ namespace ToSic.Sxc.Dnn.Cms
             {
                 // publish all entites of this content block
                 var dnnModule = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
-                var instanceInfo = new DnnContainer(dnnModule);
+                var container = new DnnContainer(dnnModule);
                 // must find tenant through module, as the Portal-Settings.Current is null in search mode
                 var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
-                var cb = new BlockFromModule(instanceInfo, Log, tenant);
+                var cb = new BlockFromModule(container, Log, tenant);
 
-                Log.Add($"found dnn mod {instanceInfo.Id}, tenant {tenant.Id}, cb exists: {cb.ContentGroupExists}");
+                Log.Add($"found dnn mod {container.Id}, tenant {tenant.Id}, cb exists: {cb.ContentGroupExists}");
                 if (cb.ContentGroupExists)
                 {
                     Log.Add("cb exists");

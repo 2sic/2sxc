@@ -1,21 +1,20 @@
 ﻿using System;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
-using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Interfaces
 {
     internal interface IMapAppToInstance
     {
         int? GetAppIdFromInstance(IContainer instance, int zoneId);
+
         void SetAppIdForInstance(IContainer instance, IAppEnvironment env, int? appId, ILog parentLog);
 
-
-        void ClearPreviewTemplate(int instanceId);
+        // 2020-08-11 disabled, doesn't seem to be needed outside of code
+        //void ClearPreviewTemplate(int instanceId);
 
         void SetPreviewTemplate(int instanceId, Guid previewTemplateGuid);
 

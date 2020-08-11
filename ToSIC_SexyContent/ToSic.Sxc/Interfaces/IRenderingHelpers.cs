@@ -25,6 +25,7 @@ namespace ToSic.Sxc.Interfaces
 
         string DesignErrorMessage(Exception ex, bool addToEventLog, string visitorAlternateError, bool addMinimalWrapper, bool encodeMessage);
 
-        string UiContextInfos(bool autoToolbars);
+        // 2020-08-11 disabled, doesn't seem to be needed outside of code
+        //string UiContextInfos(bool autoToolbars);
     }
 }

@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Blocks
 
 
         public override IBlockDataSource Data => _dataSource 
-            ?? (_dataSource = Block.ForContentGroupInSxc(BlockBuilder, View, App?.ConfigurationProvider, Log, Container.Id));
+            ?? (_dataSource = Block.GetBlockDataSource(BlockBuilder, View, App?.ConfigurationProvider, Log, Container.Id));
 
         /// <summary>
         /// Create a module-content block
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Blocks
             ContentBlockId = ParentId;
 
             // Ensure we know what portal the stuff is coming from
-            // PortalSettings is null, when in search mode
+            // Important: PortalSettings is null when in search mode
             Tenant = tenant;
 
             // important: don't use the SxcInstance.Environment, as it would try to init the Sxc-object before the app is known, causing various side-effects

@@ -22,9 +22,6 @@ namespace ToSic.Sxc.DataSources
         [PrivateApi]
         public override string LogId => "Sxc.BlckDs";
 
-        //public Query Query { get; private set; }
-
-
         [PrivateApi("older use case, probably don't publish")]
         public DataPublishing Publish { get; }= new DataPublishing();
 
@@ -35,19 +32,17 @@ namespace ToSic.Sxc.DataSources
         [Obsolete]
         private CacheWithGetContentType _cache;
 
-
-
-
+        
         [PrivateApi]
-        internal static IBlockDataSource ForContentGroupInSxc(IBlockBuilder blockBuilder, IView view, ILookUpEngine configurationProvider, ILog parentLog, int instanceId = 0)
+        internal static IBlockDataSource GetBlockDataSource(IBlockBuilder builder, IView view, ILookUpEngine configurationProvider, ILog parentLog, int instanceId = 0)
         {
             var log = new Log("DS.CreateV", parentLog, "will create view data source");
-            var showDrafts = blockBuilder.UserMayEdit;
+            var showDrafts = builder.UserMayEdit;
 
             log.Add($"mid#{instanceId}, draft:{showDrafts}, template:{view?.Name}");
             // Get ModuleDataSource
             var dsFactory = new DataSource(log);
-            var initialSource = dsFactory.GetPublishing(blockBuilder.Block, showDrafts, configurationProvider);
+            var initialSource = dsFactory.GetPublishing(builder.Block, showDrafts, configurationProvider);
             var moduleDataSource = dsFactory.GetDataSource<CmsBlock>(initialSource);
             moduleDataSource.InstanceId = instanceId;
 
@@ -60,7 +55,7 @@ namespace ToSic.Sxc.DataSources
                 : null;
             log.Add($"use pipeline upstream:{viewDataSourceUpstream != null}");
 
-            var viewDataSource = dsFactory.GetDataSource<Block>(blockBuilder.Block, viewDataSourceUpstream, configurationProvider);
+            var viewDataSource = dsFactory.GetDataSource<Block>(builder.Block, viewDataSourceUpstream, configurationProvider);
 
             // Take Publish-Properties from the View-Template
             if (view != null)
@@ -73,13 +68,9 @@ namespace ToSic.Sxc.DataSources
                 if (view.Query != null)
                 {
                     log.Add("Generate query");
-                    var query = new Query(blockBuilder.App.ZoneId, blockBuilder.App.AppId, view.Query.Entity, configurationProvider, showDrafts, viewDataSource, parentLog);
+                    var query = new Query(builder.App.ZoneId, builder.App.AppId, view.Query.Entity, configurationProvider, showDrafts, viewDataSource, parentLog);
                     log.Add("attaching");
                     viewDataSource.Out = query.Out;
-
-                    //// build the query and attach it to the view-data-source
-                    //new QueryBuilder(parentLog)
-                    //    .BuildQuery(view.Query, configurationProvider, /*paramsLookUp*/null , viewDataSource, showDrafts);
                 }
             }
             else
@@ -87,6 +78,5 @@ namespace ToSic.Sxc.DataSources
 
             return viewDataSource;
         }
-
     }
 }

@@ -13,6 +13,7 @@ namespace ToSic.Sxc.Blocks
         public IBlock Parent;
 
         public int ZoneId { get; protected set; }
+
         public int AppId { get; protected set; }
 
         public IApp App { get; protected set; }
@@ -20,19 +21,18 @@ namespace ToSic.Sxc.Blocks
         public bool ContentGroupExists => Configuration?.Exists ?? false;
 
         public bool ShowTemplateChooser { get; protected set; } = true;
+
         public virtual bool ParentIsEntity => false;
+
         public int ParentId { get; protected set; }
 
         // ReSharper disable once InconsistentNaming
         protected bool _dataIsMissing = false;
+
         public bool DataIsMissing => _dataIsMissing;
 
         public int ContentBlockId { get; protected set; }
         
-        // 2019-11-15 2dm removed, seems unused
-        //public string ParentFieldName => null;
-        //public int ParentFieldSortOrder => 0;
-
         #region Template and extensive template-choice initialization
         private IView _view;
 
@@ -69,7 +69,5 @@ namespace ToSic.Sxc.Blocks
         public IBlockBuilder BlockBuilder { get; protected set; }
 
         public virtual bool IsContentApp => false;
-
-
     }
 }
