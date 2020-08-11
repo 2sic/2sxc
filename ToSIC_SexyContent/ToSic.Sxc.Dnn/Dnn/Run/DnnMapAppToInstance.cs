@@ -11,10 +11,11 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Interfaces;
+using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Dnn.Run
 {
-    public class DnnMapAppToInstance : HasLog, IMapAppToInstance
+    public class DnnMapAppToInstance : HasLog, IEnvironmentConnector
     {
         /// <summary>
         /// Empty constructor for DI

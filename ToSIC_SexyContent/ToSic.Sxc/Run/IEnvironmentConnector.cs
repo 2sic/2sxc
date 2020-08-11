@@ -5,9 +5,9 @@ using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 
-namespace ToSic.Sxc.Interfaces
+namespace ToSic.Sxc.Run
 {
-    internal interface IMapAppToInstance
+    internal interface IEnvironmentConnector
     {
         int? GetAppIdFromInstance(IContainer instance, int zoneId);
 

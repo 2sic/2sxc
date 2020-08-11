@@ -2,24 +2,25 @@
 using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Interfaces;
+using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
     internal class BlockEditorForModule: BlockEditorBase
     {
         protected override void SavePreviewTemplateId(Guid templateGuid)
-            => Factory.Resolve<IMapAppToInstance>().SetPreviewTemplate(ModuleId, templateGuid);
+            => Factory.Resolve<IEnvironmentConnector>().SetPreviewTemplate(ModuleId, templateGuid);
 
         internal override void SetAppId(int? appId)
-            => Factory.Resolve<IMapAppToInstance>().SetAppIdForInstance(BlockBuilder.Container, BlockBuilder.Environment, appId, Log);
+            => Factory.Resolve<IEnvironmentConnector>().SetAppIdForInstance(BlockBuilder.Container, BlockBuilder.Environment, appId, Log);
 
         internal override void EnsureLinkToContentGroup(Guid cgGuid)
-            => Factory.Resolve<IMapAppToInstance>().SetContentGroup(ModuleId, true, cgGuid);
+            => Factory.Resolve<IEnvironmentConnector>().SetContentGroup(ModuleId, true, cgGuid);
 
         internal override void UpdateTitle(IEntity titleItem)
         {
             Log.Add("update title");
-            Factory.Resolve<IMapAppToInstance>().UpdateTitle(BlockBuilder, titleItem);
+            Factory.Resolve<IEnvironmentConnector>().UpdateTitle(BlockBuilder, titleItem);
         }
     }
 }

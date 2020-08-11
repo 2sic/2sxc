@@ -8,6 +8,7 @@ using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
+using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Apps
 {
@@ -66,7 +67,7 @@ namespace ToSic.Sxc.Apps
 
 
         public BlockConfiguration GetInstanceContentGroup(int instanceId, int? pageId)
-            => Factory.Resolve<IMapAppToInstance>().GetInstanceContentGroup(this, Log, instanceId, pageId);
+            => Factory.Resolve<IEnvironmentConnector>().GetInstanceContentGroup(this, Log, instanceId, pageId);
 
         internal BlockConfiguration GetContentGroupOrGeneratePreview(Guid groupGuid, Guid previewTemplateGuid)
         {

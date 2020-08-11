@@ -10,6 +10,7 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DnnWebForms.Helpers;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.LookUp;
+using ToSic.Sxc.Run;
 using App = ToSic.Sxc.Apps.App;
 
 namespace ToSic.Sxc.Blocks
@@ -47,7 +48,7 @@ namespace ToSic.Sxc.Blocks
             var tempEnv = Factory.Resolve<IAppEnvironment>().Init(parentLog);
             ZoneId = tempEnv.ZoneMapper.GetZoneId(tenant.Id); // use tenant as reference, as it can be different from instance.TenantId
             
-            AppId = Factory.Resolve<IMapAppToInstance>().GetAppIdFromInstance(container, ZoneId) ?? 0;// fallback/undefined YET
+            AppId = Factory.Resolve<IEnvironmentConnector>().GetAppIdFromInstance(container, ZoneId) ?? 0;// fallback/undefined YET
 
             Log.Add($"parent#{ParentId}, content-block#{ContentBlockId}, z#{ZoneId}, a#{AppId}");
 

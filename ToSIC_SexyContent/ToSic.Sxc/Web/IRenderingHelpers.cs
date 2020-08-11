@@ -2,8 +2,7 @@
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Interfaces
+namespace ToSic.Sxc.Web
 {
     public interface IRenderingHelpers
     {

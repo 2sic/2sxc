@@ -24,6 +24,7 @@ using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Polymorphism;
+using ToSic.Sxc.Run;
 
 namespace ToSic.SexyContent
 {
@@ -109,7 +110,7 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IEnvironmentFactory, DnnEnvironmentFactory>();
                 sc.AddTransient<IWebFactoryTemp, DnnEnvironmentFactory>();
                 sc.AddTransient<IRenderingHelpers, DnnRenderingHelpers>();
-                sc.AddTransient<IMapAppToInstance, DnnMapAppToInstance>();
+                sc.AddTransient<IEnvironmentConnector, DnnMapAppToInstance>();
                 sc.AddTransient<IEnvironmentInstaller, InstallationController>();
                 sc.AddTransient<IEnvironmentFileSystem, DnnFileSystem>();
                 sc.AddTransient<IGetEngine, GetDnnEngine>();
