@@ -4,11 +4,11 @@ using System.Web.Hosting;
 #else
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 #endif
-using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using System.IO;
 
 namespace ToSic.Sxc.Web
@@ -50,6 +50,16 @@ namespace ToSic.Sxc.Web
                     return paramList;
 #endif
             }
+        }
+
+        public IEnumerable<KeyValuePair<string, string>> QueryStringKeyValuePairs()
+        {
+            var qs = QueryString;
+            return QueryString?.AllKeys
+                .Select(key => new KeyValuePair<string, string>(key, qs[key]))
+                .ToList();
+            //return (from string key in qs select new KeyValuePair<string, string>(key, qs[key]))
+            //    .ToList();
         }
         #endregion Request
 

@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using System.Collections.Specialized;
 #if NET451
 using System.Web;
@@ -19,6 +20,8 @@ namespace ToSic.Sxc.Web
         HttpRequest Request { get; }
 
         NameValueCollection QueryString { get; }
+
+        IEnumerable<KeyValuePair<string, string>> QueryStringKeyValuePairs();
 
         /// <summary>
         /// Get a full path like C:\...

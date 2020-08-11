@@ -7,10 +7,9 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.DnnWebForms.Helpers;
-using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.Web;
 using App = ToSic.Sxc.Apps.App;
 
 namespace ToSic.Sxc.Blocks
@@ -60,7 +59,7 @@ namespace ToSic.Sxc.Blocks
             }
 
             // 2018-09-22 new with auto-init-data
-            var urlParams = overrideParams ?? SystemWeb.GetUrlParams();
+            var urlParams = overrideParams ?? Factory.Resolve<IHttp>().QueryStringKeyValuePairs();
             BlockBuilder = new BlockBuilder(null, this, Container, urlParams, Log);
 
             if (AppId != 0)

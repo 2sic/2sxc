@@ -1,8 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
@@ -10,7 +8,6 @@ using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Dnn.Install;
-using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Dnn.Run
