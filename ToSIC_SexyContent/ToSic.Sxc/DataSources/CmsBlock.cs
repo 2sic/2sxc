@@ -8,7 +8,6 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
@@ -92,22 +91,19 @@ namespace ToSic.Sxc.DataSources
                 if (UseSxcInstanceContentGroup)
                 {
                     Log.Add("need content-group, will use from sxc-context");
-                    _blockConfiguration = BlockBuilder.Block.Configuration;
+                    return _blockConfiguration = BlockBuilder.Block.Configuration;
                 }
-                else
-                {
-                    Log.Add("need content-group, will construct as cannot use context");
-                    if (!InstanceId.HasValue)
-                        throw new Exception("Looking up BlockConfiguration failed because ModuleId is null.");
-                    var publish = Eav.Factory.Resolve<IPagePublishing>().Init(Log);
-                    var userMayEdit = HasSxcContext && BlockBuilder.UserMayEdit;
 
-                    var cms = new CmsRuntime(/*ZoneId, AppId*/this, Log, HasSxcContext && userMayEdit, publish.IsEnabled(InstanceId.Value));
-                    var cgm = cms.Blocks;
+                Log.Add("need content-group, will construct as cannot use context");
+                if (!InstanceId.HasValue)
+                    throw new Exception("Looking up BlockConfiguration failed because ModuleId is null.");
+                var publish = Factory.Resolve<IPagePublishing>().Init(Log);
+                var userMayEdit = HasSxcContext && BlockBuilder.UserMayEdit;
 
-                    _blockConfiguration = cgm.GetInstanceContentGroup(InstanceId.Value, null);
-                }
-                return _blockConfiguration;
+                var cms = new CmsRuntime(this, Log, HasSxcContext && userMayEdit, publish.IsEnabled(InstanceId.Value));
+                var cgm = cms.Blocks;
+
+                return _blockConfiguration = cgm.GetInstanceContentGroup(InstanceId.Value, null);
             }
         }
 

@@ -209,7 +209,6 @@ namespace ToSic.Sxc.Code
         internal void TryToBuildContent()
         {
             Log.Add("try to build Content objects");
-            //_list = new List<Element>();
 
             if (Data == null || BlockBuilder.View == null) return;
             if (!Data.Out.ContainsKey(Eav.Constants.DefaultStreamName)) return;
@@ -217,25 +216,6 @@ namespace ToSic.Sxc.Code
             var entities = Data.List.ToList();
             if (entities.Any()) _content = AsDynamic(entities.First());
 
-            //_list = entities.Select(GetElementFromEntity).ToList();
-
-            //Element GetElementFromEntity(IEntity e)
-            //{
-            //    var el = new Element
-            //    {
-            //        EntityId = e.EntityId,
-            //        Content = AsDynamic(e)
-            //    };
-
-            //    if (e is EntityInBlock c)
-            //    {
-            //        el.GroupId = c.GroupId;
-            //        el.Presentation = c.Presentation == null ? null : AsDynamic(c.Presentation);
-            //        el.SortOrder = c.SortOrder;
-            //    }
-
-            //    return el;
-            //}
         }
 #pragma warning restore 618
 

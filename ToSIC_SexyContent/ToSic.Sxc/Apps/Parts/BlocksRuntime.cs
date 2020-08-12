@@ -7,7 +7,6 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Apps
