@@ -1,5 +1,11 @@
-﻿using DotNetNuke.Entities.Modules;
+﻿using System;
+using DotNetNuke.Common.Utilities;
+using DotNetNuke.Entities.Modules;
+using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Dnn.Run
@@ -8,11 +14,34 @@ namespace ToSic.Sxc.Dnn.Run
     /// The DNN implementation of a Block Container (a Module).
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public class DnnContainer: Container<ModuleInfo>
+    public class DnnContainer: Container<ModuleInfo>, IHasLog
     {
-        public DnnContainer(ModuleInfo item) : base(item)
+        #region Constructors and DI
+
+        /// <summary>
+        /// Empty Constructor for DI - must call Init afterwards
+        /// </summary>
+        public DnnContainer() { }
+
+        public DnnContainer(ModuleInfo item, ILog parentLog) => Init(item, parentLog);
+
+        public DnnContainer Init(ModuleInfo item, ILog parentLog) 
         {
+            Log = new Log("Dnn.Contnr", parentLog);
+            Init(item);
+            return this;
         }
+
+        public override IContainer Init(int moduleId, ILog parentLog) 
+        {
+            Log = new Log("Dnn.Contnr", parentLog);
+            var mod = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, false);
+            return Init(mod);
+        }
+
+        public ILog Log { get; private set; }
+        #endregion
+
 
         /// <inheritdoc />
         public override int Id => UnwrappedContents.ModuleID;
@@ -25,5 +54,62 @@ namespace ToSic.Sxc.Dnn.Run
 
         /// <inheritdoc />
         public override bool IsPrimary => UnwrappedContents.DesktopModule.ModuleName == "2sxc";
+
+        public override IBlockIdentifier BlockIdentifier
+        {
+            get
+            {
+                if (_blockIdentifier != null) return _blockIdentifier;
+                if (UnwrappedContents == null) return null;
+
+                var mapper = new DnnMapAppToInstance(Log);
+                // find ZoneId
+                var zoneId = Eav.Factory.Resolve<IAppEnvironment>().Init(Log).ZoneMapper.GetZoneId(UnwrappedContents.OwnerPortalID); ;
+
+                // find AppId
+                var appId = GetAppId(zoneId) ?? AppConstants.AppIdNotFound;
+
+                // find view ID and content-guid
+                var settings = UnwrappedContents.ModuleSettings;
+
+                // find identifier
+                Guid.TryParse(settings[Settings.ContentGroupGuidString]?.ToString(), out var blockGuid);
+
+                var previewTemplateString = settings[Settings.PreviewTemplateIdString]?.ToString();
+                var overrideView = !string.IsNullOrEmpty(previewTemplateString)
+                    ? Guid.Parse(previewTemplateString)
+                    : new Guid();
+
+                // Create identifier
+                return _blockIdentifier = new BlockIdentifier(zoneId, appId, blockGuid, overrideView);
+            }
+        }
+        private IBlockIdentifier _blockIdentifier;
+
+        private int? GetAppId(int zoneId)
+        {
+            var wrapLog = Log.Call<int?>(parameters: $"..., {zoneId}");
+
+            var module = UnwrappedContents ?? throw new Exception("instance is not ModuleInfo");
+
+            var msg = $"get appid from instance for Z:{zoneId} Mod:{module.ModuleID}";
+            if (IsPrimary)
+            {
+                var appId = new ZoneRuntime(zoneId, null).DefaultAppId;
+                Log.Add($"{msg} - use def app: {appId}");
+                return wrapLog("default", appId);
+            }
+
+            if (module.ModuleSettings.ContainsKey(Settings.AppNameString))
+            {
+                var guid = module.ModuleSettings[Settings.AppNameString].ToString();
+                var appId = new ZoneRuntime(zoneId, Log).FindAppId(guid);
+                Log.Add($"{msg} AppG:{guid} = app:{appId}");
+                return wrapLog("ok", appId);
+            }
+
+            Log.Add($"{msg} not found = null");
+            return wrapLog("not found", null);
+        }
     }
 }

@@ -58,34 +58,23 @@ namespace ToSic.Sxc.Apps.Blocks
         
         
         #region View stuff
-
-
+        
         public IView View
         {
             get
             {
                 if (_view != null) return _view;
 
-                IEntity templateEntity = null;
-
                 // if we're previewing another template, look that up
-                if (PreviewTemplateId.HasValue)
-                {
-                    //var dataSource = new DataSource(Log).GetPublishing(this, ShowDrafts);
-                    // ToDo: Should use an indexed Guid filter
-                    templateEntity = _cmsRuntime.Data.List.One(PreviewTemplateId.Value);
-                }
-                else if (Entity != null)
-                    templateEntity = Entity.Children(ViewParts.ViewFieldInContentBlock).FirstOrDefault();
+                var templateEntity = PreviewTemplateId.HasValue
+                    ? _cmsRuntime.Data.List.One(PreviewTemplateId.Value) // ToDo: Should use an indexed Guid filter
+                    : Entity?.Children(ViewParts.ViewFieldInContentBlock).FirstOrDefault();
 
-                _view = templateEntity == null ? null : new View(templateEntity, Log);
-
-                return _view;
+                return _view = templateEntity == null ? null : new View(templateEntity, Log);
             }
         }
         private IView _view;
-
-
+        
         #endregion
 
 

@@ -45,9 +45,9 @@ namespace ToSic.Sxc.Blocks
 
             // important: don't use the SxcInstance.Environment, as it would try to init the Sxc-object before the app is known, causing various side-effects
             var tempEnv = Factory.Resolve<IAppEnvironment>().Init(parentLog);
-            ZoneId = tempEnv.ZoneMapper.GetZoneId(tenant.Id); // use tenant as reference, as it can be different from instance.TenantId
-            
-            AppId = Factory.Resolve<IEnvironmentConnector>().GetAppIdFromInstance(container, ZoneId) ?? 0;// fallback/undefined YET
+            ZoneId = container.BlockIdentifier.ZoneId; // tempEnv.ZoneMapper.GetZoneId(tenant.Id); // use tenant as reference, as it can be different from instance.TenantId
+
+            AppId = container.BlockIdentifier.AppId; // Factory.Resolve<IEnvironmentConnector>().GetAppIdFromInstance(container, ZoneId) ?? 0;// fallback/undefined YET
 
             Log.Add($"parent#{ParentId}, content-block#{ContentBlockId}, z#{ZoneId}, a#{AppId}");
 
@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Blocks
                 var cms = new CmsRuntime(App, Log, BlockBuilder.UserMayEdit,
                     BlockBuilder.Environment.PagePublishing.IsEnabled(BlockBuilder.Container.Id));
 
-                Configuration = cms.Blocks.GetInstanceContentGroup(container.Id, container.PageId);
+                Configuration = cms.Blocks.GetInstanceContentGroup(container);//.Id, container.PageId);
 
                 if (Configuration.DataIsMissing)
                 {

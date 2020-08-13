@@ -58,13 +58,13 @@ namespace ToSic.Sxc.LookUp
         {
             var log = new Log("Stc.GetCnf", blockBuilder?.Log);
 
-            // Find the standard DNN property sources if PortalSettings object is available (changed 2018-03-05)
-            var dnnLookUps = Factory.Resolve<IGetEngine>().GetEngine(moduleId, blockBuilder?.Log);
-            log.Add($"Environment provided {dnnLookUps.Sources.Count} sources");
+            // Find the standard DNN property sources if PortalSettings object is available
+            var envLookups = Factory.Resolve<IGetEngine>().GetEngine(moduleId, blockBuilder?.Log);
+            log.Add($"Environment provided {envLookups.Sources.Count} sources");
 
-            var provider = new LookUpEngine(dnnLookUps, blockBuilder?.Log);
+            var provider = new LookUpEngine(envLookups, blockBuilder?.Log);
 
-            // only add these in running inside an http-context. Otherwise leave them away!
+            // Add QueryString etc. when running inside an http-context. Otherwise leave them away!
             var http = Factory.Resolve<IHttp>();
             if (http.Current != null)
             {

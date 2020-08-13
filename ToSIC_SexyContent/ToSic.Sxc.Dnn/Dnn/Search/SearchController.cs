@@ -39,16 +39,16 @@ namespace ToSic.Sxc.Search
 
             if (dnnModule == null) return searchDocuments;
 
-            var isContentModule = dnnModule.DesktopModule.ModuleName == "2sxc";
-
             // New Context because Portal-Settings.Current is null
             var zoneId = Eav.Factory.Resolve<IAppEnvironment>().Init(Log).ZoneMapper.GetZoneId(dnnModule.OwnerPortalID);
 
-            var appId = !isContentModule
-                ? new DnnMapAppToInstance(Log).GetAppIdFromInstance(container, zoneId)
-                : new ZoneRuntime(zoneId, Log).DefaultAppId;
+            var appId = container.BlockIdentifier.AppId;
+            // 2020-08-13 2dm - remove by October if all ok
+            //var appId = !container.IsPrimary
+            //    ? new DnnMapAppToInstance(Log).GetAppIdFromInstance(container, zoneId)
+            //    : new ZoneRuntime(zoneId, Log).DefaultAppId;
 
-            if (!appId.HasValue) return searchDocuments;
+            if (appId == AppConstants.AppIdNotFound) return searchDocuments;
 
             // Since Portal-Settings.Current is null, instantiate with modules' portal id (which can be a different portal!)
             var portalSettings = new PortalSettings(dnnModule.OwnerPortalID);
@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Search
 
             // Ensure cache builds up with correct primary language
             var cache = State.Cache;
-            cache.Load(new AppIdentity(zoneId, appId.Value), tenant.DefaultLanguage);
+            cache.Load(container.BlockIdentifier /*new AppIdentity(zoneId, appId.Value)*/, tenant.DefaultLanguage);
 
             var mcb = new BlockFromModule(container, Log, tenant);
             var cmsBlock = mcb.BlockBuilder;
@@ -133,7 +133,7 @@ namespace ToSic.Sxc.Search
             // check if the cshtml has search customizations
             try
             {
-                engine.CustomizeSearch(searchInfoDictionary, new DnnContainer(dnnModule), beginDate);
+                engine.CustomizeSearch(searchInfoDictionary, new DnnContainer(dnnModule, Log), beginDate);
             }
             catch (Exception e)
             {

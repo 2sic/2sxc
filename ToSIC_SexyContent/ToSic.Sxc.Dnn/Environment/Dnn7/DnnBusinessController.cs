@@ -96,7 +96,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         {
             try
             {
-                return new SearchController(Log).GetModifiedSearchDocuments(new DnnContainer(moduleInfo), beginDate);
+                return new SearchController(Log).GetModifiedSearchDocuments(new DnnContainer(moduleInfo, Log), beginDate);
             }
             catch (Exception e)
             {

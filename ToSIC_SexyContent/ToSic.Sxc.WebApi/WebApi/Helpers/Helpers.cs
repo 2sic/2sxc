@@ -41,7 +41,7 @@ namespace ToSic.Sxc.WebApi
                 ? new DnnTenant(null)
                 : new DnnTenant(new PortalSettings(moduleInfo.OwnerPortalID));
 
-            IBlock contentBlock = new BlockFromModule(new DnnContainer(moduleInfo), log, tenant, urlParams);
+            IBlock contentBlock = new BlockFromModule(new DnnContainer(moduleInfo, log), log, tenant, urlParams);
 
             // check if we need an inner block
             if (request.Headers.Contains(headerId)) { 

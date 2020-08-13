@@ -5,6 +5,7 @@ using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Run;
@@ -51,7 +52,6 @@ namespace ToSic.Sxc.Apps
         public BlockConfiguration GetBlockConfig(Guid contentGroupGuid)
         {
             var wrapLog = Log.Call($"get CG#{contentGroupGuid}");
-            //var dataSource = ContentGroupSource();
             // ToDo: Should use an indexed guid source
             var groupEntity = Entities().One(contentGroupGuid);
             var found = groupEntity != null;
@@ -65,18 +65,19 @@ namespace ToSic.Sxc.Apps
         }
 
 
-        public BlockConfiguration GetInstanceContentGroup(int instanceId, int? pageId)
-            => Factory.Resolve<IEnvironmentConnector>().GetInstanceContentGroup(this, Log, instanceId, pageId);
+        public BlockConfiguration GetInstanceContentGroup(IContainer instance)
+            => GetOrGeneratePreviewConfig(instance.BlockIdentifier.Guid, instance.BlockIdentifier.PreviewView);
+            // => Factory.Resolve<IEnvironmentConnector>().GetInstanceContentGroup(this, instance, Log);
 
-        internal BlockConfiguration GetContentGroupOrGeneratePreview(Guid groupGuid, Guid previewTemplateGuid)
+        internal BlockConfiguration GetOrGeneratePreviewConfig(Guid blockGuid, Guid previewTemplateGuid)
         {
-            var wrapLog = Log.Call($"get CG or gen preview for grp#{groupGuid}, preview#{previewTemplateGuid}");
+            var wrapLog = Log.Call($"get CG or gen preview for grp#{blockGuid}, preview#{previewTemplateGuid}");
             // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
-            var createFake = groupGuid == Guid.Empty;
+            var createFake = blockGuid == Guid.Empty;
             Log.Add($"{nameof(createFake)}:{createFake}");
             var result = createFake
                 ? new BlockConfiguration(previewTemplateGuid, CmsRuntime, Log)
-                : GetBlockConfig(groupGuid);
+                : GetBlockConfig(blockGuid);
             wrapLog(null);
             return result;
         }

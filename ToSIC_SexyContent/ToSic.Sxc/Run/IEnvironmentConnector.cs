@@ -2,14 +2,13 @@
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Apps;
-using ToSic.Sxc.Apps.Blocks;
 
 namespace ToSic.Sxc.Run
 {
     internal interface IEnvironmentConnector
     {
-        int? GetAppIdFromInstance(IContainer instance, int zoneId);
+        // 2020-08-13 2dm - remove in October
+        //int? GetAppIdFromInstance(IContainer instance, int zoneId);
 
         void SetAppIdForInstance(IContainer instance, IAppEnvironment env, int? appId, ILog parentLog);
 
@@ -20,7 +19,8 @@ namespace ToSic.Sxc.Run
 
         void SetContentGroup(int instanceId, bool wasCreated, Guid guid);
 
-        BlockConfiguration GetInstanceContentGroup(BlocksRuntime cgm, ILog log, int instanceId, int? pageId);
+        // 2020-08-13 2dm - remove in October
+        //BlockConfiguration GetInstanceContentGroup(BlocksRuntime cgm, IContainer instance, ILog log); // int instanceId, int? pageId);
 
         void UpdateTitle(Blocks.IBlockBuilder blockBuilder, IEntity titleItem);
     }

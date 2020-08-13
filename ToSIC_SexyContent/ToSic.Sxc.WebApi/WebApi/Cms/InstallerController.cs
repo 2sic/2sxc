@@ -9,7 +9,6 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Persistence.Interfaces;
-using ToSic.Sxc.Dnn.ImportExport;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
 
@@ -28,17 +27,19 @@ namespace ToSic.Sxc.WebApi.Cms
         public HttpResponseMessage InstallPackage(string packageUrl)
         {
             Log.Add("install package:" + packageUrl);
-            var zoneId = Env.ZoneMapper.GetZoneId(ActiveModule.PortalID);
-            var appId = new DnnMapAppToInstance(Log).GetAppIdFromInstance(new DnnContainer(ActiveModule), zoneId);
+            var container = new DnnContainer(ActiveModule, Log);
+            var block = container.BlockIdentifier;
+            //var zoneId = Env.ZoneMapper.GetZoneId(ActiveModule.PortalID);
+            //var appId = new DnnMapAppToInstance(Log).GetAppIdFromInstance(new DnnContainer(ActiveModule, Log), zoneId);
             bool success;
 
-            var helper = Factory.Resolve<IImportExportEnvironment>().Init(Log); // new DnnImportExportEnvironment(Log);
+            var helper = Factory.Resolve<IImportExportEnvironment>().Init(Log);
             try
             {
                 // Increase script timeout to prevent timeouts
                 HttpContext.Current.Server.ScriptTimeout = 300;
 
-                success = new ZipFromUrlImport(helper, zoneId, appId, PortalSettings.UserInfo.IsSuperUser, Log)
+                success = new ZipFromUrlImport(helper, block.ZoneId, block.AppId, PortalSettings.UserInfo.IsSuperUser, Log)
                     .ImportUrl(packageUrl, ActiveModule.DesktopModule.ModuleName == "2sxc-app");
             }
             catch (Exception ex)

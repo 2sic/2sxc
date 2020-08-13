@@ -22,7 +22,7 @@ namespace ToSic.SexyContent
                 if (_cmsBlockLoaded) return _blockBuilder;
                 _cmsBlockLoaded = true;
                 _blockBuilder = new BlockFromModule(
-                        new DnnContainer(ModuleConfiguration),
+                        new DnnContainer(ModuleConfiguration, Log),
                         Log,
                         new DnnTenant(new PortalSettings(ModuleConfiguration.OwnerPortalID)))
                     .BlockBuilder as BlockBuilder;

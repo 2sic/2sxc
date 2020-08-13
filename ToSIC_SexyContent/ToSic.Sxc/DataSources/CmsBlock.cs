@@ -8,6 +8,7 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
@@ -101,9 +102,9 @@ namespace ToSic.Sxc.DataSources
                 var userMayEdit = HasSxcContext && BlockBuilder.UserMayEdit;
 
                 var cms = new CmsRuntime(this, Log, HasSxcContext && userMayEdit, publish.IsEnabled(InstanceId.Value));
-                var cgm = cms.Blocks;
+                var container = Factory.Resolve<IContainer>().Init(InstanceId.Value, Log);
 
-                return _blockConfiguration = cgm.GetInstanceContentGroup(InstanceId.Value, null);
+                return _blockConfiguration = cms.Blocks.GetInstanceContentGroup(container); // InstanceId.Value, null);
             }
         }
 

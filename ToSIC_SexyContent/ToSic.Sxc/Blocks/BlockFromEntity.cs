@@ -90,7 +90,7 @@ namespace ToSic.Sxc.Blocks
             // 2019-11-11 2dm new, with CmsRuntime
             var cms = new CmsRuntime(App, Log, pBlock.UserMayEdit, pBlock.Environment.PagePublishing.IsEnabled(pBlock.Container.Id));
 
-            Configuration = cms.Blocks.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
+            Configuration = cms.Blocks.GetOrGeneratePreviewConfig(_contentGroupGuid, _previewTemplateGuid);
 
             // handle cases where the content group is missing - usually because of incomplete import
             if (Configuration.DataIsMissing)

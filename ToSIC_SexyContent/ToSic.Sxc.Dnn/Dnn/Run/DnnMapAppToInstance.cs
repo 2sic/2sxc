@@ -22,33 +22,35 @@ namespace ToSic.Sxc.Dnn.Run
 
         public DnnMapAppToInstance(ILog parentLog) : base("Dnn.MapA2I", parentLog) { }
 
-        public int? GetAppIdFromInstance(IContainer instance, int zoneId)
-        {
-            var wrapLog = Log.Call<int?>(parameters: $"..., {zoneId}");
-
-            var module = (instance as Container<ModuleInfo>)?.UnwrappedContents
-                ?? throw new Exception("instance is not of type ModuleInfo");
-
-            var msg = $"get appid from instance for Z:{zoneId} Mod:{module.ModuleID}";
-            if (module.DesktopModule.ModuleName == "2sxc")
-            {
-                var appId = new ZoneRuntime(zoneId, null).DefaultAppId;
-                Log.Add($"{msg} - use def app: {appId}");
-                return wrapLog("default", appId);
-            }
-
-            if (module.ModuleSettings.ContainsKey(Settings.AppNameString))
-            {
-                var guid = module.ModuleSettings[Settings.AppNameString].ToString();
-                var appId = new ZoneRuntime(zoneId, Log).FindAppId(guid);
-                //var appId = AppHelpers.GetAppIdFromGuidName(zoneId, guid);
                 Log.Add($"{msg} AppG:{guid} = app:{appId}");
                 return wrapLog("ok", appId);
-            }
+        // 2020-08-13 2dm moved to Dnn Container - remove in October
+        //internal int? GetAppIdFromInstance(IContainer instance, int zoneId)
+        //{
+        //    var wrapLog = Log.Call<int?>(parameters: $"..., {zoneId}");
 
-            Log.Add($"{msg} not found = null");
-            return wrapLog("not found", null);
-        }
+        //    var module = (instance as Container<ModuleInfo>)?.UnwrappedContents
+        //        ?? throw new Exception("instance is not of type ModuleInfo");
+
+        //    var msg = $"get appid from instance for Z:{zoneId} Mod:{module.ModuleID}";
+        //    if (instance.IsPrimary)
+        //    {
+        //        var appId = new ZoneRuntime(zoneId, null).DefaultAppId;
+        //        Log.Add($"{msg} - use def app: {appId}");
+        //        return wrapLog("default", appId);
+        //    }
+
+        //    if (module.ModuleSettings.ContainsKey(Settings.AppNameString))
+        //    {
+        //        var guid = module.ModuleSettings[Settings.AppNameString].ToString();
+        //        var appId = new ZoneRuntime(zoneId, Log).FindAppId(guid);
+        //        Log.Add($"{msg} AppG:{guid} = app:{appId}");
+        //        return wrapLog("ok", appId);
+        //    }
+
+        //    Log.Add($"{msg} not found = null");
+        //    return wrapLog("not found", null);
+        //}
 
 
         
@@ -99,26 +101,25 @@ namespace ToSic.Sxc.Dnn.Run
                     guid.ToString(), Log);
         }
 
-        public BlockConfiguration GetInstanceContentGroup(BlocksRuntime cgm, ILog log, int instanceId, int? pageId)
-        {
-            var wrapLog = log.Call<BlockConfiguration>($"find content-group for mid#{instanceId} and page#{pageId}");
-            var mci = ModuleController.Instance;
+        // 2020-08-13 2dm moved to Dnn Container - remove in October
+        //public BlockConfiguration GetInstanceContentGroup(BlocksRuntime cgm, IContainer instance, ILog log)
+        //{
+        //    var wrapLog = log.Call<BlockConfiguration>($"find content-group for mid#{instance.Id} and page#{instance.PageId}");
+        //    // 2020-08-13 2dm changed / simplified. Leave till ca. October, then delete
+        //    //var settings = (instance as DnnContainer).UnwrappedContents.ModuleSettings;
 
-            var tabId = pageId ?? mci.GetTabModulesByModule(instanceId)[0].TabID;
+        //    //var maybeGuid = settings[Settings.ContentGroupGuidString];
+        //    //Guid.TryParse(maybeGuid?.ToString(), out var groupGuid);
+        //    //var previewTemplateString = settings[Settings.PreviewTemplateIdString]?.ToString();
 
-            var settings = mci.GetModule(instanceId, tabId, false).ModuleSettings;
+        //    //var templateGuid = !string.IsNullOrEmpty(previewTemplateString)
+        //    //    ? Guid.Parse(previewTemplateString)
+        //    //    : new Guid();
 
-            var maybeGuid = settings[Settings.ContentGroupGuidString];
-            Guid.TryParse(maybeGuid?.ToString(), out var groupGuid);
-            var previewTemplateString = settings[Settings.PreviewTemplateIdString]?.ToString();
-
-            var templateGuid = !string.IsNullOrEmpty(previewTemplateString)
-                ? Guid.Parse(previewTemplateString)
-                : new Guid();
-
-            var found = cgm.GetContentGroupOrGeneratePreview(groupGuid, templateGuid);
-            return wrapLog("ok", found);
-        }
+        //    var blockId = instance.BlockIdentifier;
+        //    var found = cgm.GetOrGeneratePreviewConfig(blockId.Guid, blockId.PreviewView);
+        //    return wrapLog("ok", found);
+        //}
 
         /// <summary>
         /// Saves a temporary templateId to the module's settings
@@ -126,8 +127,6 @@ namespace ToSic.Sxc.Dnn.Run
         /// </summary>
         public void SetPreviewTemplate(int instanceId, Guid previewTemplateGuid)
         {
-            // todo: 2rm - I believe you are accidentally using uncached module settings access - pls check and probably change
-            // todo: note: this is done ca. 3x in this class
             var moduleController = new ModuleController();
             var settings = moduleController.GetModule(instanceId).ModuleSettings;
 
