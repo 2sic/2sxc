@@ -55,6 +55,8 @@ namespace ToSic.Sxc.Dnn.Run
         /// <inheritdoc />
         public override bool IsPrimary => UnwrappedContents.DesktopModule.ModuleName == "2sxc";
 
+
+        /// <inheritdoc />
         public override IBlockIdentifier BlockIdentifier
         {
             get
@@ -62,19 +64,19 @@ namespace ToSic.Sxc.Dnn.Run
                 if (_blockIdentifier != null) return _blockIdentifier;
                 if (UnwrappedContents == null) return null;
 
-                var mapper = new DnnMapAppToInstance(Log);
                 // find ZoneId
-                var zoneId = Eav.Factory.Resolve<IAppEnvironment>().Init(Log).ZoneMapper.GetZoneId(UnwrappedContents.OwnerPortalID); ;
+                var zoneId = new DnnZoneMapper().GetZoneId(UnwrappedContents.OwnerPortalID);
 
                 // find AppId
-                var appId = GetAppId(zoneId) ?? AppConstants.AppIdNotFound;
+                var appId = GetInstanceAppId(zoneId) ?? AppConstants.AppIdNotFound;
 
                 // find view ID and content-guid
                 var settings = UnwrappedContents.ModuleSettings;
 
-                // find identifier
+                // find block identifier
                 Guid.TryParse(settings[Settings.ContentGroupGuidString]?.ToString(), out var blockGuid);
 
+                // Check if we have preview-view identifier - for blocks which don't exist yet
                 var previewTemplateString = settings[Settings.PreviewTemplateIdString]?.ToString();
                 var overrideView = !string.IsNullOrEmpty(previewTemplateString)
                     ? Guid.Parse(previewTemplateString)
@@ -86,7 +88,7 @@ namespace ToSic.Sxc.Dnn.Run
         }
         private IBlockIdentifier _blockIdentifier;
 
-        private int? GetAppId(int zoneId)
+        private int? GetInstanceAppId(int zoneId)
         {
             var wrapLog = Log.Call<int?>(parameters: $"..., {zoneId}");
 

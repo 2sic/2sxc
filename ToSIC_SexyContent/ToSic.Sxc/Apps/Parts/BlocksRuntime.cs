@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Apps
 {
@@ -67,15 +65,14 @@ namespace ToSic.Sxc.Apps
 
         public BlockConfiguration GetInstanceContentGroup(IContainer instance)
             => GetOrGeneratePreviewConfig(instance.BlockIdentifier.Guid, instance.BlockIdentifier.PreviewView);
-            // => Factory.Resolve<IEnvironmentConnector>().GetInstanceContentGroup(this, instance, Log);
 
         internal BlockConfiguration GetOrGeneratePreviewConfig(Guid blockGuid, Guid previewTemplateGuid)
         {
             var wrapLog = Log.Call($"get CG or gen preview for grp#{blockGuid}, preview#{previewTemplateGuid}");
             // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
-            var createFake = blockGuid == Guid.Empty;
-            Log.Add($"{nameof(createFake)}:{createFake}");
-            var result = createFake
+            var createTempBlockForPreview = blockGuid == Guid.Empty;
+            Log.Add($"{nameof(createTempBlockForPreview)}:{createTempBlockForPreview}");
+            var result = createTempBlockForPreview
                 ? new BlockConfiguration(previewTemplateGuid, CmsRuntime, Log)
                 : GetBlockConfig(blockGuid);
             wrapLog(null);

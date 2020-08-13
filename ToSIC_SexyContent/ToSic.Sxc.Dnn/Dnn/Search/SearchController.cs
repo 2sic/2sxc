@@ -17,6 +17,7 @@ using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Engines;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Search
 {
     internal class SearchController: HasLog
@@ -40,13 +41,7 @@ namespace ToSic.Sxc.Search
             if (dnnModule == null) return searchDocuments;
 
             // New Context because Portal-Settings.Current is null
-            var zoneId = Eav.Factory.Resolve<IAppEnvironment>().Init(Log).ZoneMapper.GetZoneId(dnnModule.OwnerPortalID);
-
             var appId = container.BlockIdentifier.AppId;
-            // 2020-08-13 2dm - remove by October if all ok
-            //var appId = !container.IsPrimary
-            //    ? new DnnMapAppToInstance(Log).GetAppIdFromInstance(container, zoneId)
-            //    : new ZoneRuntime(zoneId, Log).DefaultAppId;
 
             if (appId == AppConstants.AppIdNotFound) return searchDocuments;
 
@@ -56,7 +51,7 @@ namespace ToSic.Sxc.Search
 
             // Ensure cache builds up with correct primary language
             var cache = State.Cache;
-            cache.Load(container.BlockIdentifier /*new AppIdentity(zoneId, appId.Value)*/, tenant.DefaultLanguage);
+            cache.Load(container.BlockIdentifier, tenant.DefaultLanguage);
 
             var mcb = new BlockFromModule(container, Log, tenant);
             var cmsBlock = mcb.BlockBuilder;
@@ -143,7 +138,7 @@ namespace ToSic.Sxc.Search
             // add it to insights / history. It will only be preserved, if the inner code ran a Log.Preserve = true;
             History.Add("dnn-search", Log);
 
-            // reduce load by only keeping recently modified ites
+            // reduce load by only keeping recently modified items
             foreach (var searchInfoList in searchInfoDictionary)
             {
                 // Filter by Date - take only SearchDocuments that changed since beginDate

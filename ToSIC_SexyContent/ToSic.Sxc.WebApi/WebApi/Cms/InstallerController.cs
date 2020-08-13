@@ -29,8 +29,6 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add("install package:" + packageUrl);
             var container = new DnnContainer(ActiveModule, Log);
             var block = container.BlockIdentifier;
-            //var zoneId = Env.ZoneMapper.GetZoneId(ActiveModule.PortalID);
-            //var appId = new DnnMapAppToInstance(Log).GetAppIdFromInstance(new DnnContainer(ActiveModule, Log), zoneId);
             bool success;
 
             var helper = Factory.Resolve<IImportExportEnvironment>().Init(Log);

@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Blocks
         internal const string CbPropertyTitle = "Title";
         internal const string CbPropertyContentGroup = "ContentGroup";
         internal const string CbPropertyShowChooser = "ShowTemplateChooser";
-
+        
         public override bool ParentIsEntity => false;
 
         public override IBlockDataSource Data => _dataSource 
