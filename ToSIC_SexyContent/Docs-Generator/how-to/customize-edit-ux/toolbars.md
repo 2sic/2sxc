@@ -166,7 +166,7 @@ But maybe we would prefer to have a toolbar with only the two _add_ buttons, and
 But let's say you created a **News App** and want to allow the editor to also delete the news-items. Here's how:
 
 ```html
-<div @Edit.TagToolbar(Content, toolbar: toolbar: "%delete&show=true")>
+<div @Edit.TagToolbar(Content, toolbar: "%delete&show=true")>
   ...
 </div>
 ```
