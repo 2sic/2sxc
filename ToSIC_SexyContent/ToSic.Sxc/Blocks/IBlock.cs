@@ -14,8 +14,9 @@ namespace ToSic.Sxc.Blocks
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public interface IBlock: IAppIdentity
     {
-        [PrivateApi("should probably be factored out of this object, but not sure yet")]
-        bool ShowTemplateChooser { get; }
+        // 2020-08-14 #2146 2dm believe unused
+        //[PrivateApi("should probably be factored out of this object, but not sure yet")]
+        //bool ShowTemplateChooser { get; }
 
         [PrivateApi]
         bool ParentIsEntity { get; }   // alternative is module

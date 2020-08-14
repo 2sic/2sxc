@@ -14,8 +14,13 @@ namespace ToSic.Sxc.Blocks
         internal const string CbPropertyApp = "App";
         internal const string CbPropertyTitle = "Title";
         internal const string CbPropertyContentGroup = "ContentGroup";
+        // 2020-08-14 #2146 2dm believe unused
+        ///// <summary>
+        ///// Used to store template picker state - so reloads still show the template picker
+        ///// TODO: not sure if it's still in use, I don't see it really active in the inpage.js
+        ///// </summary>
         internal const string CbPropertyShowChooser = "ShowTemplateChooser";
-        
+
         public override bool ParentIsEntity => false;
 
         public override IBlockDataSource Data => _dataSource 
@@ -39,9 +44,10 @@ namespace ToSic.Sxc.Blocks
             temp = ContentBlockEntity.GetBestValue(ViewParts.TemplateContentType)?.ToString() ?? "";
             Guid.TryParse(temp, out _previewTemplateGuid);
 
-            temp = ContentBlockEntity.GetBestValue(CbPropertyShowChooser)?.ToString() ?? "";
-            if (bool.TryParse(temp, out var show))
-                ShowTemplateChooser = show;
+            // 2020-08-14 #2146 2dm believe unused
+            //temp = ContentBlockEntity.GetBestValue(CbPropertyShowChooser)?.ToString() ?? "";
+            //if (bool.TryParse(temp, out var show))
+            //    ShowTemplateChooser = show;
 
         }
         #endregion

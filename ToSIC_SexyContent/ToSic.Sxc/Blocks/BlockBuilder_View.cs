@@ -19,9 +19,9 @@ namespace ToSic.Sxc.Blocks
             if (Block.IsContentApp || App == null) return;
 
             // #2 Change Template if URL contains the part in the metadata "ViewNameInUrl"
-            var templateFromUrl = TryToGetTemplateBasedOnUrlParams();
-            if (templateFromUrl != null)
-                View = templateFromUrl;
+            var viewFromUrlParam = TryToGetTemplateBasedOnUrlParams();
+            if (viewFromUrlParam != null)
+                View = viewFromUrlParam;
         }
 
         private IView TryToGetTemplateBasedOnUrlParams()

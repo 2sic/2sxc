@@ -5,7 +5,8 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
 {
     public class ClientInfoContentBlock
     {
-        public bool ShowTemplatePicker;
+        // 2020-08-14 #2146 2dm believe unused
+        //public bool ShowTemplatePicker;
         public bool IsEntity;
         public string VersioningRequirements;
         public int Id;
@@ -15,7 +16,8 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
 
         internal ClientInfoContentBlock(IBlock contentBlock, string parentFieldName, int indexInField, PublishingMode versioningRequirements)
         {
-            ShowTemplatePicker = contentBlock.ShowTemplateChooser;
+            // 2020-08-14 #2146 2dm believe unused
+            //ShowTemplatePicker = contentBlock.ShowTemplateChooser;
             IsEntity = contentBlock.ParentIsEntity;
             Id = contentBlock.ContentBlockId;
             ParentFieldName = parentFieldName;

@@ -20,7 +20,8 @@ namespace ToSic.Sxc.Blocks
 
         public bool ContentGroupExists => Configuration?.Exists ?? false;
 
-        public bool ShowTemplateChooser { get; protected set; } = true;
+        // 2020-08-14 #2146 2dm believe unused
+        //public bool ShowTemplateChooser { get; protected set; } = true;
 
         public virtual bool ParentIsEntity => false;
 
