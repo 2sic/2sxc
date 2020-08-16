@@ -31,7 +31,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var entityId = CreateItemAndAddToList(parentId, field, sortOrder, contentTypeName, values, newGuid);
 
             // now return a rendered instance
-            var newContentBlock = new BlockFromEntity(BlockBuilder.Block, entityId, Log);
+            var newContentBlock = new BlockFromEntity().Init(BlockBuilder.Block, entityId, Log);
             return newContentBlock.BlockBuilder.Render().ToString();
 
         }

@@ -34,17 +34,17 @@ namespace ToSic.Sxc.DataSources
 
         
         [PrivateApi]
-        internal static IBlockDataSource GetBlockDataSource(IBlockBuilder builder, IView view, ILookUpEngine configurationProvider, ILog parentLog, int instanceId = 0)
+        internal static IBlockDataSource GetBlockDataSource(IBlockBuilder builder, IView view, ILookUpEngine configurationProvider, ILog parentLog/*, int instanceId = 0*/)
         {
             var log = new Log("DS.CreateV", parentLog, "will create view data source");
             var showDrafts = builder.UserMayEdit;
 
-            log.Add($"mid#{instanceId}, draft:{showDrafts}, template:{view?.Name}");
+            log.Add($"mid#{builder.Container.Id}, draft:{showDrafts}, template:{view?.Name}");
             // Get ModuleDataSource
             var dsFactory = new DataSource(log);
             var initialSource = dsFactory.GetPublishing(builder.Block, showDrafts, configurationProvider);
             var moduleDataSource = dsFactory.GetDataSource<CmsBlock>(initialSource);
-            moduleDataSource.InstanceId = instanceId;
+            //moduleDataSource.InstanceId = instanceId;
 
             moduleDataSource.OverrideView = view;
             moduleDataSource.UseSxcInstanceContentGroup = true;

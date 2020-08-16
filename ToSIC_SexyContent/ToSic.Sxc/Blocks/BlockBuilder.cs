@@ -47,7 +47,8 @@ namespace ToSic.Sxc.Blocks
         #region Constructor
         internal BlockBuilder(IBlockBuilder rootBlockBuilder, IBlock cb, 
             IContainer container, 
-            IEnumerable<KeyValuePair<string, string>> urlParams, ILog parentLog)
+            //IEnumerable<KeyValuePair<string, string>> urlParams, 
+            ILog parentLog)
             : base("Sxc.BlkBld", parentLog, $"get CmsInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}")
         {
             Environment = Factory.Resolve<IAppEnvironment>().Init(parentLog);
@@ -57,7 +58,7 @@ namespace ToSic.Sxc.Blocks
             Container = container;
 
             // keep url parameters, because we may need them later for view-switching and more
-            Parameters = urlParams;
+            Parameters = Container.Parameters;// urlParams;
         }
 
         #endregion

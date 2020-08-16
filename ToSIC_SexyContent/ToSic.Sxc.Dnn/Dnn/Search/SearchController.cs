@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Search
             var cache = State.Cache;
             cache.Load(container.BlockIdentifier, tenant.DefaultLanguage);
 
-            var mcb = new BlockFromModule(container, Log, tenant);
+            var mcb = new BlockFromModule().Init(tenant, container, Log);
             var cmsBlock = mcb.BlockBuilder;
 
             var language = dnnModule.CultureCode;

@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Blocks.Renderers
 
             // render it
             log.Add("found, will render");
-            var cb = new BlockFromEntity(parentCb, entity, log);
+            var cb = new BlockFromEntity().Init(parentCb, entity, log);
             return cb.BlockBuilder.Render();
         }
 

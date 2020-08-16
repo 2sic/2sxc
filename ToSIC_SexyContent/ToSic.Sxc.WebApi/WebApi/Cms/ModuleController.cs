@@ -100,9 +100,9 @@ namespace ToSic.Sxc.WebApi.Cms
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public HttpResponseMessage RenderTemplate([FromUri] int templateId, [FromUri] string lang, bool cbIsEntity = false)
+        public HttpResponseMessage RenderTemplate([FromUri] int templateId, [FromUri] string lang/*, bool cbIsEntity = false*/)
         {
-            Log.Add($"render template:{templateId}, lang:{lang}, isEnt:{cbIsEntity}");
+            Log.Add($"render template:{templateId}, lang:{lang}"); //, isEnt:{cbIsEntity}");
             try
             {
                 // Try setting thread language to enable 2sxc to render the template in this language

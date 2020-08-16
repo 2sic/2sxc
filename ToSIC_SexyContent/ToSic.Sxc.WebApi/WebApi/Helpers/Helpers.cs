@@ -35,13 +35,15 @@ namespace ToSic.Sxc.WebApi
             if (moduleInfo == null)
                 log.Add("context/module not found");
 
-            var urlParams = PrepareUrlParamsForInternalUse(request);
+            var container = new DnnContainer(moduleInfo, log);
+            container.Parameters = 
+            /*var urlParams =*/ PrepareUrlParamsForInternalUse(request);
             
             var tenant = moduleInfo == null
                 ? new DnnTenant(null)
                 : new DnnTenant(new PortalSettings(moduleInfo.OwnerPortalID));
 
-            IBlock contentBlock = new BlockFromModule(new DnnContainer(moduleInfo, log), log, tenant, urlParams);
+            IBlock contentBlock = new BlockFromModule().Init(tenant, container, log/*, urlParams*/);
 
             // check if we need an inner block
             if (request.Headers.Contains(headerId)) { 
@@ -50,7 +52,7 @@ namespace ToSic.Sxc.WebApi
                 if (blockId < 0)   // negative id, so it's an inner block
                 {
                     log.Add($"Inner Content: {blockId}");
-                    contentBlock = new BlockFromEntity(contentBlock, blockId, log);
+                    contentBlock = new BlockFromEntity().Init(contentBlock, blockId, log);
                 }
             }
 

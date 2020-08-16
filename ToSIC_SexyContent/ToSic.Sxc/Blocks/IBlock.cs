@@ -18,9 +18,10 @@ namespace ToSic.Sxc.Blocks
         //[PrivateApi("should probably be factored out of this object, but not sure yet")]
         //bool ShowTemplateChooser { get; }
 
-        [PrivateApi]
-        bool ParentIsEntity { get; }   // alternative is module
-        
+        //[PrivateApi]
+        // 2020-08-16 clean-up #2148
+        //bool ParentIsEntity { get; }   // alternative is module
+
         /// <summary>
         /// The module ID or the parent-content-block id, probably not ideal here, but not sure
         /// </summary>

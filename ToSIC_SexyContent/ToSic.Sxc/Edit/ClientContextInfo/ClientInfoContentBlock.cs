@@ -7,7 +7,8 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
     {
         // 2020-08-14 #2146 2dm believe unused
         //public bool ShowTemplatePicker;
-        public bool IsEntity;
+        // 2020-08-16 clean-up #2148
+        //public bool IsEntity;
         public string VersioningRequirements;
         public int Id;
         public string ParentFieldName;
@@ -18,7 +19,8 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
         {
             // 2020-08-14 #2146 2dm believe unused
             //ShowTemplatePicker = contentBlock.ShowTemplateChooser;
-            IsEntity = contentBlock.ParentIsEntity;
+            // 2020-08-16 clean-up #2148
+            //IsEntity = contentBlock.ParentIsEntity;
             Id = contentBlock.ContentBlockId;
             ParentFieldName = parentFieldName;
             ParentFieldSortOrder = indexInField;

@@ -95,6 +95,7 @@ namespace ToSic.Sxc.DataSources
                     return _blockConfiguration = BlockBuilder.Block.Configuration;
                 }
 
+                // If we don't have a context, then look it up based on the InstanceId
                 Log.Add("need content-group, will construct as cannot use context");
                 if (!InstanceId.HasValue)
                     throw new Exception("Looking up BlockConfiguration failed because ModuleId is null.");
@@ -104,7 +105,8 @@ namespace ToSic.Sxc.DataSources
                 var cms = new CmsRuntime(this, Log, HasSxcContext && userMayEdit, publish.IsEnabled(InstanceId.Value));
                 var container = Factory.Resolve<IContainer>().Init(InstanceId.Value, Log);
 
-                return _blockConfiguration = cms.Blocks.GetInstanceContentGroup(container);
+                var blockId = container.BlockIdentifier;
+                return _blockConfiguration = cms.Blocks.GetOrGeneratePreviewConfig(blockId/*.Guid, blockId.PreviewView*/);
             }
         }
 

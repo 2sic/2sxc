@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Apps;
@@ -7,6 +8,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.Run
 {
@@ -55,9 +57,22 @@ namespace ToSic.Sxc.Dnn.Run
         /// <inheritdoc />
         public override bool IsPrimary => UnwrappedContents.DesktopModule.ModuleName == "2sxc";
 
+        #region Parameters / URL Parameters
 
-        /// <inheritdoc />
-        public override IBlockIdentifier BlockIdentifier
+        public override List<KeyValuePair<string, string>> Parameters
+        {
+            get => _parameters ??
+                (_parameters = Eav.Factory.Resolve<IHttp>().QueryStringKeyValuePairs());
+            set => _parameters = value;
+        }
+        private List<KeyValuePair<string, string>> _parameters;
+
+
+
+#endregion
+
+/// <inheritdoc />
+public override IBlockIdentifier BlockIdentifier
         {
             get
             {

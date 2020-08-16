@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 
@@ -63,18 +63,18 @@ namespace ToSic.Sxc.Apps
         }
 
 
-        public BlockConfiguration GetInstanceContentGroup(IContainer instance)
-            => GetOrGeneratePreviewConfig(instance.BlockIdentifier.Guid, instance.BlockIdentifier.PreviewView);
+        //public BlockConfiguration GetOrGeneratePreviewConfig(IBlockIdentifier blockId)
+        //    => GetOrGeneratePreviewConfig(blockId.Guid, blockId.PreviewView);
 
-        internal BlockConfiguration GetOrGeneratePreviewConfig(Guid blockGuid, Guid previewTemplateGuid)
+        internal BlockConfiguration GetOrGeneratePreviewConfig(IBlockIdentifier blockId) // Guid blockGuid, Guid previewTemplateGuid)
         {
-            var wrapLog = Log.Call($"get CG or gen preview for grp#{blockGuid}, preview#{previewTemplateGuid}");
+            var wrapLog = Log.Call($"get CG or gen preview for grp#{blockId.Guid}, preview#{blockId.PreviewView}");
             // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
-            var createTempBlockForPreview = blockGuid == Guid.Empty;
+            var createTempBlockForPreview = blockId.Guid == Guid.Empty;
             Log.Add($"{nameof(createTempBlockForPreview)}:{createTempBlockForPreview}");
             var result = createTempBlockForPreview
-                ? new BlockConfiguration(previewTemplateGuid, CmsRuntime, Log)
-                : GetBlockConfig(blockGuid);
+                ? new BlockConfiguration(blockId.PreviewView, CmsRuntime, Log)
+                : GetBlockConfig(blockId.Guid);
             wrapLog(null);
             return result;
         }

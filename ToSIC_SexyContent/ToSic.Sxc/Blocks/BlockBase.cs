@@ -1,14 +1,92 @@
-﻿using ToSic.Eav.Logging;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.LookUp;
+using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks
 {
-    internal abstract class BlockBase : HasLog, IBlock
+    internal abstract class BlockBase : HasLog<BlockBase>, IBlock
     {
-        protected BlockBase(ILog parentLog, string logName) : base(logName, parentLog) { }
+        #region Constructor and DI
+
+        protected BlockBase(string logName) : base(logName) { }
+
+        protected void Init(ITenant tenant, IAppIdentity appId, ILog parentLog)
+        {
+            Init(parentLog);
+            Tenant = tenant;
+            ZoneId = appId.ZoneId;
+            AppId = appId.AppId;
+
+        }
+
+        protected T CompleteInit<T>(
+            IBlockBuilder rootBuilder, 
+            IContainer container,
+            IBlockIdentifier blockId,
+            int blockNumber
+            ) where T : class
+        {
+            var wrapLog = Log.Call();
+
+            ParentId = container.Id;
+            ContentBlockId = blockNumber;
+
+            Log.Add($"parent#{ParentId}, content-block#{ContentBlockId}, z#{ZoneId}, a#{AppId}");
+
+            if (AppId == AppConstants.AppIdNotFound)
+            {
+                DataIsMissing = true;
+                wrapLog("data is missing, will stop here");
+                return this as T;
+            }
+
+            BlockBuilder = new BlockBuilder(rootBuilder, this, container, Log);
+            // in case the root didn't exist yet, use the new one
+            rootBuilder = rootBuilder ?? BlockBuilder;
+
+            if (AppId == 0)
+            {
+                wrapLog($"ok a:{AppId}, container:{BlockBuilder.Container.Id}, content-group:{Configuration?.Id}");
+                return this as T;
+            }
+
+
+            Log.Add("real app, will load data");
+
+
+            App = new App(rootBuilder.Environment, Tenant)
+                .Init(this, ConfigurationProvider.Build(BlockBuilder, false),
+                    true, Log);
+
+
+            var cms = new CmsRuntime(App, Log, rootBuilder.UserMayEdit, 
+                rootBuilder.Environment.PagePublishing.IsEnabled(rootBuilder.Container.Id));
+
+            Configuration = cms.Blocks.GetOrGeneratePreviewConfig(blockId); // blockGuid, previewViewGuid);
+
+            // handle cases where the content group is missing - usually because of incomplete import
+            if (Configuration.DataIsMissing)
+            {
+                DataIsMissing = true;
+                App = null;
+                wrapLog($"ok a:{AppId}, container:{BlockBuilder.Container.Id}, content-group:{Configuration?.Id}");
+                return this as T;
+            }
+
+            // use the content-group template, which already covers stored data + module-level stored settings
+            ((BlockBuilder)BlockBuilder).SetTemplateOrOverrideFromUrl(Configuration.View);
+            wrapLog($"ok a:{AppId}, container:{BlockBuilder.Container.Id}, content-group:{Configuration?.Id}");
+            return this as T;
+        }
+
+        #endregion
 
         public IBlock Parent;
 
@@ -23,14 +101,12 @@ namespace ToSic.Sxc.Blocks
         // 2020-08-14 #2146 2dm believe unused
         //public bool ShowTemplateChooser { get; protected set; } = true;
 
-        public virtual bool ParentIsEntity => false;
+        // 2020-08-16 clean-up #2148
+        //public virtual bool ParentIsEntity => false;
 
         public int ParentId { get; protected set; }
 
-        // ReSharper disable once InconsistentNaming
-        protected bool _dataIsMissing = false;
-
-        public bool DataIsMissing => _dataIsMissing;
+        public bool DataIsMissing { get; private set; }
 
         public int ContentBlockId { get; protected set; }
         
@@ -62,13 +138,15 @@ namespace ToSic.Sxc.Blocks
         protected IBlockDataSource _dataSource;
 
 
-        public virtual IBlockDataSource Data => null;
+        public IBlockDataSource Data => _dataSource
+                                        ?? (_dataSource = Block.GetBlockDataSource(BlockBuilder, View,
+                                            App?.ConfigurationProvider, Log));
+        //public virtual IBlockDataSource Data => null;
 
         public BlockConfiguration Configuration { get; protected set; }
-
-
+        
         public IBlockBuilder BlockBuilder { get; protected set; }
 
-        public virtual bool IsContentApp => false;
+        public bool IsContentApp { get; protected set; }
     }
 }

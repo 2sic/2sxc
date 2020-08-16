@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Web;
@@ -25,9 +26,6 @@ namespace ToSic.Sxc.Code
         
         internal object InstantiateClass(string virtualPath, string className = null, string relativePath = null, bool throwOnError = true)
         {
-#if NETSTANDARD
-            throw new Exception("Not Yet Implemented in .net standard #TodoNetStandard");
-#else
             var wrapLog = Log.Call($"{virtualPath}, {className}, {throwOnError}");
             string errorMsg = null;
 
@@ -48,8 +46,11 @@ namespace ToSic.Sxc.Code
             Type compiledType = null;
             if (isCshtml && string.IsNullOrEmpty(className))
             {
+#if NETSTANDARD
+            throw new Exception("Not Yet Implemented in .net standard #TodoNetStandard");
+#else
                 compiledType = BuildManager.GetCompiledType(virtualPath);
-
+#endif
                 if (compiledType == null)
                     errorMsg = $"Couldn't create instance of {virtualPath}. Compiled type == null";
             }
@@ -59,7 +60,12 @@ namespace ToSic.Sxc.Code
                 // if no name provided, use the name which is the same as the file name
                 className = className ?? Path.GetFileNameWithoutExtension(virtualPath) ?? "unknown";
 
-                var assembly = BuildManager.GetCompiledAssembly(virtualPath);
+                Assembly assembly;
+#if NETSTANDARD
+                throw new Exception("Not Yet Implemented in .net standard #TodoNetStandard");
+#else
+                assembly = BuildManager.GetCompiledAssembly(virtualPath);
+#endif
                 compiledType = assembly.GetType(className, throwOnError, true);
 
                 if (compiledType == null) 
@@ -81,7 +87,7 @@ namespace ToSic.Sxc.Code
 
             wrapLog($"found: {instance != null}");
             return instance;
-#endif
+
         }
 
         /// <summary>

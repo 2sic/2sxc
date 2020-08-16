@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Web
             }
         }
 
-        public IEnumerable<KeyValuePair<string, string>> QueryStringKeyValuePairs()
+        public List<KeyValuePair<string, string>> QueryStringKeyValuePairs()
         {
             var qs = QueryString;
             return QueryString?.AllKeys

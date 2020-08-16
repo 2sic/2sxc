@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Web
 
         NameValueCollection QueryString { get; }
 
-        IEnumerable<KeyValuePair<string, string>> QueryStringKeyValuePairs();
+        List<KeyValuePair<string, string>> QueryStringKeyValuePairs();
 
         /// <summary>
         /// Get a full path like C:\...
