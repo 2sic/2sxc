@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.UI;
+using DotNetNuke.Services.Exceptions;
 using ToSic.Sxc.Dnn.Install;
 
 namespace ToSic.SexyContent
@@ -44,13 +45,17 @@ namespace ToSic.SexyContent
                 IsError = true;
                 try
                 {
+                    // Log to DNN
+                    Exceptions.ProcessModuleLoadException(this, ex, false);
+
+                    // Try to show nice message on screen
                     var msg = BlockBuilder.RenderingHelper.DesignErrorMessage(ex, true, null, false, true);
                     var wrappedMsg = BlockBuilder.UserMayEdit ? BlockBuilder.WrapInDivWithContext(msg) : msg;
                     phOutput.Controls.Add(new LiteralControl(wrappedMsg));
                 }
                 catch
                 {
-                    phOutput.Controls.Add(new LiteralControl("Something went really wrong in view.ascx - errors logging even failed"));
+                    phOutput.Controls.Add(new LiteralControl("Something went really wrong in view.ascx - check error logs"));
                 }
             }
             finally
