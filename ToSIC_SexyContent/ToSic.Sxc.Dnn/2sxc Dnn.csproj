@@ -114,10 +114,6 @@
     <Compile Include="Dnn\Run\DnnSecurity.cs" />
     <Compile Include="Dnn\Code\DnnDynamicCode.cs" />
     <Compile Include="Dnn\Web\DnnClientDependencyOptimizer.cs" />
-    <Compile Include="Dnn\Web\ClientInfos\ClientInfosAll.cs" />
-    <Compile Include="Dnn\Web\ClientInfos\ClientInfosEnvironment.cs" />
-    <Compile Include="Dnn\Web\ClientInfos\ClientInfosLanguages.cs" />
-    <Compile Include="Dnn\Web\ClientInfos\ClientInfosUser.cs" />
     <Compile Include="Dnn\DataSources\DnnSql.cs" />
     <Compile Include="Dnn\DataSources\DnnUserProfile.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.DataSources.DnnSqlDataSource.cs" />
