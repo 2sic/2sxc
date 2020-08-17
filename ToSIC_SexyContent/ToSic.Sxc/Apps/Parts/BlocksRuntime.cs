@@ -61,12 +61,9 @@ namespace ToSic.Sxc.Apps
                     DataIsMissing = true
                 };
         }
+        
 
-
-        //public BlockConfiguration GetOrGeneratePreviewConfig(IBlockIdentifier blockId)
-        //    => GetOrGeneratePreviewConfig(blockId.Guid, blockId.PreviewView);
-
-        internal BlockConfiguration GetOrGeneratePreviewConfig(IBlockIdentifier blockId) // Guid blockGuid, Guid previewTemplateGuid)
+        internal BlockConfiguration GetOrGeneratePreviewConfig(IBlockIdentifier blockId)
         {
             var wrapLog = Log.Call($"get CG or gen preview for grp#{blockId.Guid}, preview#{blockId.PreviewView}");
             // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
