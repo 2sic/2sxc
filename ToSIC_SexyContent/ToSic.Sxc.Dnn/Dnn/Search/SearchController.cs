@@ -128,7 +128,8 @@ namespace ToSic.Sxc.Search
             // check if the cshtml has search customizations
             try
             {
-                engine.CustomizeSearch(searchInfoDictionary, new DnnContainer(dnnModule, Log), beginDate);
+                engine.CustomizeSearch(searchInfoDictionary, 
+                    new DnnContainer().Init(dnnModule, Log), beginDate);
             }
             catch (Exception e)
             {

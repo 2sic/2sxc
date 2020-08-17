@@ -21,11 +21,11 @@ namespace ToSic.Sxc.Dnn.Run
 
         public DnnMapAppToInstance(ILog parentLog) : base("Dnn.MapA2I", parentLog) { }
 
-        public void SetAppIdForInstance(IContainer instance, IAppEnvironment env, int? appId, ILog parentLog)
+        public void SetAppId(IContainer instance, IAppEnvironment env, int? appId, ILog parentLog)
         {
             Log.Add($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
             // Reset temporary template
-            ClearPreviewTemplate(instance.Id);
+            ClearPreview(instance.Id);
 
             // ToDo: Should throw exception if a real BlockConfiguration exists
 
@@ -46,24 +46,24 @@ namespace ToSic.Sxc.Dnn.Run
                 var appIdentity = new AppIdentity(zoneId, appId.Value);
                 var cms = new CmsRuntime(appIdentity, Log, true, env.PagePublishing.IsEnabled(instance.Id));
                 var templateGuid = cms.Views.GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
-                if (templateGuid.HasValue) SetPreviewTemplate(instance.Id, templateGuid.Value);
+                if (templateGuid.HasValue) SetPreview(instance.Id, templateGuid.Value);
             }
         }
 
-        public void ClearPreviewTemplate(int instanceId)
+        public void ClearPreview(int instanceId)
         {
             Log.Add($"ClearPreviewTemplate(iid: {instanceId})");
-            DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instanceId, Settings.PreviewTemplateIdString, null, Log);
+            DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instanceId, Settings.FieldPreviewTemplate, null, Log);
         }
 
-        public void SetContentGroup(int instanceId, bool wasCreated, Guid guid)
+        public void SetContentGroup(int instanceId, bool blockExists, Guid guid)
         {
-            Log.Add($"SetContentGroup(iid: {instanceId}, wasCreated: {wasCreated}, guid: {guid})");
-            // Remove the previewTemplateId (because it's not needed as soon Content is inserted)
-            ClearPreviewTemplate(instanceId);
+            Log.Add($"SetContentGroup(iid: {instanceId}, {nameof(blockExists)}: {blockExists}, guid: {guid})");
+            // Remove Preview because it's not needed as soon Content is inserted
+            ClearPreview(instanceId);
             // Update blockConfiguration Guid for this module
-            if (wasCreated)
-                DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instanceId, Settings.ContentGroupGuidString,
+            if (blockExists)
+                DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instanceId, Settings.FieldContentGroup,
                     guid.ToString(), Log);
         }
 
@@ -71,16 +71,16 @@ namespace ToSic.Sxc.Dnn.Run
         /// Saves a temporary templateId to the module's settings
         /// This templateId will be used until a ContentGroup exists
         /// </summary>
-        public void SetPreviewTemplate(int instanceId, Guid previewTemplateGuid)
+        public void SetPreview(int instanceId, Guid previewView)
         {
             var moduleController = new ModuleController();
             var settings = moduleController.GetModule(instanceId).ModuleSettings;
 
             // Do not allow saving the temporary template id if a ContentGroup exists for this module
-            if (settings[Settings.ContentGroupGuidString] != null)
+            if (settings[Settings.FieldContentGroup] != null)
                 throw new Exception("Preview template id cannot be set for a module that already has content.");
 
-            DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instanceId, Settings.PreviewTemplateIdString, previewTemplateGuid.ToString(), Log);
+            DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instanceId, Settings.FieldPreviewTemplate, previewView.ToString(), Log);
         }
 
         public void UpdateTitle(Blocks.IBlockBuilder blockBuilder, IEntity titleItem)

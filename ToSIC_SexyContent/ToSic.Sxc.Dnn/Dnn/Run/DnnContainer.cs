@@ -21,12 +21,9 @@ namespace ToSic.Sxc.Dnn.Run
         #region Constructors and DI
 
         /// <summary>
-        /// Empty Constructor for DI - must call Init afterwards
+        /// We don't use a Constructor because of DI
+        /// So you must always call Init
         /// </summary>
-        public DnnContainer() { }
-
-        public DnnContainer(ModuleInfo item, ILog parentLog) => Init(item, parentLog);
-
         public DnnContainer Init(ModuleInfo item, ILog parentLog) 
         {
             Log = new Log("Dnn.Contnr", parentLog);
@@ -34,6 +31,10 @@ namespace ToSic.Sxc.Dnn.Run
             return this;
         }
 
+        /// <summary>
+        /// We don't use a Constructor because of DI
+        /// So you must always call Init
+        /// </summary>
         public override IContainer Init(int moduleId, ILog parentLog) 
         {
             Log = new Log("Dnn.Contnr", parentLog);
@@ -71,28 +72,24 @@ namespace ToSic.Sxc.Dnn.Run
 
 #endregion
 
-/// <inheritdoc />
-public override IBlockIdentifier BlockIdentifier
+        /// <inheritdoc />
+        public override IBlockIdentifier BlockIdentifier
         {
             get
             {
                 if (_blockIdentifier != null) return _blockIdentifier;
                 if (UnwrappedContents == null) return null;
 
-                // find ZoneId
+                // find ZoneId, AppId and prepare settings for next values
                 var zoneId = new DnnZoneMapper().GetZoneId(UnwrappedContents.OwnerPortalID);
-
-                // find AppId
-                var appId = GetInstanceAppId(zoneId) ?? AppConstants.AppIdNotFound;
-
-                // find view ID and content-guid
+                var appId = GetInstanceAppId(zoneId);
                 var settings = UnwrappedContents.ModuleSettings;
 
                 // find block identifier
-                Guid.TryParse(settings[Settings.ContentGroupGuidString]?.ToString(), out var blockGuid);
+                Guid.TryParse(settings[Settings.FieldContentGroup]?.ToString(), out var blockGuid);
 
                 // Check if we have preview-view identifier - for blocks which don't exist yet
-                var previewTemplateString = settings[Settings.PreviewTemplateIdString]?.ToString();
+                var previewTemplateString = settings[Settings.FieldPreviewTemplate]?.ToString();
                 var overrideView = !string.IsNullOrEmpty(previewTemplateString)
                     ? Guid.Parse(previewTemplateString)
                     : new Guid();
@@ -103,30 +100,29 @@ public override IBlockIdentifier BlockIdentifier
         }
         private IBlockIdentifier _blockIdentifier;
 
-        private int? GetInstanceAppId(int zoneId)
+        private int GetInstanceAppId(int zoneId)
         {
-            var wrapLog = Log.Call<int?>(parameters: $"..., {zoneId}");
+            var wrapLog = Log.Call<int>(parameters: $"..., {zoneId}");
 
             var module = UnwrappedContents ?? throw new Exception("instance is not ModuleInfo");
 
             var msg = $"get appid from instance for Z:{zoneId} Mod:{module.ModuleID}";
+            var zoneRt = new ZoneRuntime(zoneId, Log);
             if (IsPrimary)
             {
-                var appId = new ZoneRuntime(zoneId, null).DefaultAppId;
-                Log.Add($"{msg} - use def app: {appId}");
-                return wrapLog("default", appId);
+                var appId = zoneRt.DefaultAppId;
+                return wrapLog($"{msg} - use Default app: {appId}", appId);
             }
 
             if (module.ModuleSettings.ContainsKey(Settings.AppNameString))
             {
                 var guid = module.ModuleSettings[Settings.AppNameString].ToString();
-                var appId = new ZoneRuntime(zoneId, Log).FindAppId(guid);
-                Log.Add($"{msg} AppG:{guid} = app:{appId}");
-                return wrapLog("ok", appId);
+                var appId = zoneRt.FindAppId(guid);
+                return wrapLog($"{msg} AppG:{guid} = app:{appId}", appId);
             }
 
             Log.Add($"{msg} not found = null");
-            return wrapLog("not found", null);
+            return wrapLog("not found", AppConstants.AppIdNotFound);
         }
     }
 }

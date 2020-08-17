@@ -80,7 +80,7 @@ namespace ToSic.Sxc.WebApi.App
             }
 
             var permissionChecker = new DnnPermissionCheck(log, targetItem: query.Definition.Entity, 
-                instance: new DnnContainer(module, log), appIdentity: app);
+                instance: new DnnContainer().Init(module, log), appIdentity: app);
             var readExplicitlyAllowed = permissionChecker.UserMay(GrantSets.ReadSomething);
 
             var isAdmin = module != null && DotNetNuke.Security.Permissions

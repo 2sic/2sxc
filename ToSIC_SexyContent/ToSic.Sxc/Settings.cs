@@ -9,9 +9,9 @@ namespace ToSic.Sxc
         // Important note: always use static-readonly, NOT constant
         // reason is that we must ensure that the static constructor is called 
         // whenever anything is accessed
-        public static readonly string ContentGroupGuidString = "ToSIC_SexyContent_ContentGroupGuid";
+        public static readonly string FieldContentGroup = "ToSIC_SexyContent_ContentGroupGuid";
         public static readonly string AppNameString = "ToSIC_SexyContent_AppName";
-        public static readonly string PreviewTemplateIdString = "ToSIC_SexyContent_PreviewTemplateId";
+        public static readonly string FieldPreviewTemplate = "ToSIC_SexyContent_PreviewTemplateId";
         // #2134
         //internal static readonly string InternalUserName = "Internal";
 

@@ -27,7 +27,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public HttpResponseMessage InstallPackage(string packageUrl)
         {
             Log.Add("install package:" + packageUrl);
-            var container = new DnnContainer(ActiveModule, Log);
+            var container = new DnnContainer().Init(ActiveModule, Log);
             var block = container.BlockIdentifier;
             bool success;
 

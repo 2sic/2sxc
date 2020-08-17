@@ -116,7 +116,7 @@ namespace ToSic.Sxc.Dnn.Cms
             {
                 // publish all entites of this content block
                 var dnnModule = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
-                var container = new DnnContainer(dnnModule, Log);
+                var container = new DnnContainer().Init(dnnModule, Log);
                 // must find tenant through module, as the Portal-Settings.Current is null in search mode
                 var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
                 var cb = new BlockFromModule().Init(tenant, container, Log);

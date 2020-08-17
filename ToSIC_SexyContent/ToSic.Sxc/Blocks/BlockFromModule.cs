@@ -7,8 +7,6 @@ namespace ToSic.Sxc.Blocks
     [PrivateApi("todo: review how it's used and named, probably doesn't have any DNN stuff in it any more, and then Module is a wrong name")]
     internal sealed class BlockFromModule: BlockBase
     {
-        //public IContainer Container;
-
         #region Constructor for DI
 
         /// <summary>
@@ -33,8 +31,6 @@ namespace ToSic.Sxc.Blocks
             CompleteInit<BlockFromModule>(null, container, container.BlockIdentifier, container.Id);
             return wrapLog("ok", this);
         }
-
-        //public override bool IsContentApp => Container.IsPrimary;
 
     }
 }

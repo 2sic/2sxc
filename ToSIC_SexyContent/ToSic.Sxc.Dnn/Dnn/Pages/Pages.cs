@@ -28,13 +28,13 @@ namespace ToSic.Sxc.Dnn.Pages
             // filter the results
             var allMods = all
                 .Where(m => m.DefaultLanguageModule == null)
-                .Where(m => m.ModuleSettings.ContainsKey(Settings.ContentGroupGuidString))
+                .Where(m => m.ModuleSettings.ContainsKey(Settings.FieldContentGroup))
                 .ToList();
 
             var result = allMods.Select(m => new ModuleWithContent
             {
                     Module = m,
-                    ContentGroup = Guid.TryParse(m.ModuleSettings[Settings.ContentGroupGuidString].ToString(),
+                    ContentGroup = Guid.TryParse(m.ModuleSettings[Settings.FieldContentGroup].ToString(),
                         out var g)
                         ? g
                         : Guid.Empty,

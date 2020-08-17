@@ -35,7 +35,7 @@ namespace ToSic.Sxc.WebApi
             if (moduleInfo == null)
                 log.Add("context/module not found");
 
-            var container = new DnnContainer(moduleInfo, log);
+            var container = new DnnContainer().Init(moduleInfo, log);
             container.Parameters = 
             /*var urlParams =*/ PrepareUrlParamsForInternalUse(request);
             
