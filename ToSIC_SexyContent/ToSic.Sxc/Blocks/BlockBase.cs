@@ -30,37 +30,40 @@ namespace ToSic.Sxc.Blocks
             IBlockBuilder rootBuilder, 
             IContainer container,
             IBlockIdentifier blockId,
-            int blockNumber
+            int blockNumberUnsureIfNeeded
             ) where T : class
         {
-            var wrapLog = Log.Call();
+            var wrapLog = Log.Call<T>();
 
             ParentId = container.Id;
-            ContentBlockId = blockNumber;
+            ContentBlockId = blockNumberUnsureIfNeeded;
 
             Log.Add($"parent#{ParentId}, content-block#{ContentBlockId}, z#{ZoneId}, a#{AppId}");
 
+            // If specifically no app found, end initialization here
+            // Means we have no data, and no BlockBuilder
             if (AppId == AppConstants.AppIdNotFound)
             {
                 DataIsMissing = true;
-                wrapLog("data is missing, will stop here");
-                return this as T;
+                return wrapLog("data is missing, will stop here", this as T);
             }
 
             BlockBuilder = new BlockBuilder(rootBuilder, this, container, Log);
-            // in case the root didn't exist yet, use the new one
+            // In case the root didn't exist yet, use the new one as Root
             rootBuilder = rootBuilder ?? BlockBuilder;
 
+            // Note: not sure which case we capture here, because appid=0 also would mean not found
+            // Don't think this is ever hit
+            // probably merge with case above
             if (AppId == 0)
-            {
-                wrapLog($"ok a:{AppId}, container:{BlockBuilder.Container.Id}, content-group:{Configuration?.Id}");
-                return this as T;
-            }
+                return wrapLog(
+                    $"ok a:{AppId}, container:{BlockBuilder.Container.Id}, content-group:{Configuration?.Id}",
+                    this as T);
 
 
-            Log.Add("real app, will load data");
+            Log.Add("Real app specified, will load App object with Data");
 
-
+            // Get App for this block
             App = new App(rootBuilder.Environment, Tenant)
                 .Init(this, ConfigurationProvider.Build(BlockBuilder, false),
                     true, Log);
@@ -69,21 +72,19 @@ namespace ToSic.Sxc.Blocks
             var cms = new CmsRuntime(App, Log, rootBuilder.UserMayEdit, 
                 rootBuilder.Environment.PagePublishing.IsEnabled(rootBuilder.Container.Id));
 
-            Configuration = cms.Blocks.GetOrGeneratePreviewConfig(blockId); // blockGuid, previewViewGuid);
+            Configuration = cms.Blocks.GetOrGeneratePreviewConfig(blockId);
 
             // handle cases where the content group is missing - usually because of incomplete import
             if (Configuration.DataIsMissing)
             {
                 DataIsMissing = true;
                 App = null;
-                wrapLog($"ok a:{AppId}, container:{BlockBuilder.Container.Id}, content-group:{Configuration?.Id}");
-                return this as T;
+                return wrapLog($"DataIsMissing a:{AppId}, container:{BlockBuilder.Container.Id}, content-group:{Configuration?.Id}", this as T);
             }
 
             // use the content-group template, which already covers stored data + module-level stored settings
             ((BlockBuilder)BlockBuilder).SetTemplateOrOverrideFromUrl(Configuration.View);
-            wrapLog($"ok a:{AppId}, container:{BlockBuilder.Container.Id}, content-group:{Configuration?.Id}");
-            return this as T;
+            return wrapLog($"ok a:{AppId}, container:{BlockBuilder.Container.Id}, content-group:{Configuration?.Id}", this as T);
         }
 
         #endregion
@@ -97,12 +98,6 @@ namespace ToSic.Sxc.Blocks
         public IApp App { get; protected set; }
 
         public bool ContentGroupExists => Configuration?.Exists ?? false;
-
-        // 2020-08-14 #2146 2dm believe unused
-        //public bool ShowTemplateChooser { get; protected set; } = true;
-
-        // 2020-08-16 clean-up #2148
-        //public virtual bool ParentIsEntity => false;
 
         public int ParentId { get; protected set; }
 
@@ -141,7 +136,6 @@ namespace ToSic.Sxc.Blocks
         public IBlockDataSource Data => _dataSource
                                         ?? (_dataSource = Block.GetBlockDataSource(BlockBuilder, View,
                                             App?.ConfigurationProvider, Log));
-        //public virtual IBlockDataSource Data => null;
 
         public BlockConfiguration Configuration { get; protected set; }
         

@@ -24,8 +24,6 @@ namespace ToSic.Sxc.WebApi.Cms
             {
                 {BlockFromEntity.CbPropertyTitle, ""},
                 {BlockFromEntity.CbPropertyApp, app},
-                // 2020-08-14 #2146 2dm believe unused
-                //{BlockFromEntity.CbPropertyShowChooser, true},
             };
             var newGuid = guid ?? Guid.NewGuid();
             var entityId = CreateItemAndAddToList(parentId, field, sortOrder, contentTypeName, values, newGuid);

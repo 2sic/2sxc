@@ -14,14 +14,6 @@ namespace ToSic.Sxc.Blocks
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public interface IBlock: IAppIdentity
     {
-        // 2020-08-14 #2146 2dm believe unused
-        //[PrivateApi("should probably be factored out of this object, but not sure yet")]
-        //bool ShowTemplateChooser { get; }
-
-        //[PrivateApi]
-        // 2020-08-16 clean-up #2148
-        //bool ParentIsEntity { get; }   // alternative is module
-
         /// <summary>
         /// The module ID or the parent-content-block id, probably not ideal here, but not sure
         /// </summary>
