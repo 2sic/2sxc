@@ -103,6 +103,7 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
                 sc.AddTransient<IEnvironment, DnnEnvironment>();
                 sc.AddTransient<IAppEnvironment, DnnEnvironment>();
+                sc.AddTransient<IZoneMapper, DnnZoneMapper>();
 
                 // The file-importer - temporarily itself
                 sc.AddTransient<XmlImportWithFiles, XmlImportFull>();

@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Adam
     /// and the SxcInstance shouldn't be part of the App system
     /// </summary>
     [PrivateApi]
-    public interface IContext
+    public interface IContextAdamMaybe
     {
     }
 }

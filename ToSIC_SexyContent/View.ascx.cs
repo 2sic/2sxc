@@ -21,10 +21,11 @@ namespace ToSic.SexyContent
             {
                 if (_cmsBlockLoaded) return _blockBuilder;
                 _cmsBlockLoaded = true;
-                _blockBuilder = new BlockFromModule().Init(
-                        new DnnTenant(new PortalSettings(ModuleConfiguration.OwnerPortalID)),
-                        new DnnContainer().Init(ModuleConfiguration, Log), Log)
-                    .BlockBuilder as BlockBuilder;
+                var context = new DnnContext(
+                    new DnnTenant(new PortalSettings(ModuleConfiguration.OwnerPortalID)),
+                    new DnnContainer().Init(ModuleConfiguration, Log),
+                    new DnnUser(UserInfo));
+                _blockBuilder = new BlockFromModule().Init(context, Log).BlockBuilder as BlockBuilder;
                 return _blockBuilder;
             }
         }

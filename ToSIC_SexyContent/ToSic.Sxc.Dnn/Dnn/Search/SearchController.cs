@@ -8,6 +8,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
@@ -53,7 +54,7 @@ namespace ToSic.Sxc.Search
             var cache = State.Cache;
             cache.Load(container.BlockIdentifier, tenant.DefaultLanguage);
 
-            var mcb = new BlockFromModule().Init(tenant, container, Log);
+            var mcb = new BlockFromModule().Init(new DnnContext(tenant, container, new DnnUser()), Log);
             var cmsBlock = mcb.BlockBuilder;
 
             var language = dnnModule.CultureCode;

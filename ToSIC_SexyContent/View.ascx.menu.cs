@@ -64,7 +64,8 @@ namespace ToSic.SexyContent
             }
 
             if (DnnSecurity.SexyContentDesignersGroupConfigured(PortalId) &&
-                !DnnSecurity.IsInSexyContentDesignersGroup(UserInfo)) return;
+                !new DnnUser(UserInfo).IsDesigner) return;
+                //!DnnSecurity.IsInSexyContentDesignersGroup(UserInfo)) return;
 
             // Edit Template Button
             if (appIsKnown && BlockBuilder.View != null)

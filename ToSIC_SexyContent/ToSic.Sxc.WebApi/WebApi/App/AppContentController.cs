@@ -149,7 +149,7 @@ namespace ToSic.Sxc.WebApi.App
             else
             {
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden)
-                    {ReasonPhrase = dataHandler.GeneratePleaseEnableDataError(BlockBuilder.Container.Id)});
+                    {ReasonPhrase = dataHandler.GeneratePleaseEnableDataError(BlockBuilder.Context.Container.Id)});
             }
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new StringContent(json, Encoding.UTF8, "application/json");

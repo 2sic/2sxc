@@ -1,12 +1,15 @@
 ﻿using System;
 using ToSic.Eav.Data;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Run
 {
-    internal interface IEnvironmentConnector
+    [PrivateApi]
+    public interface IEnvironmentConnector: IHasLog<IEnvironmentConnector>
     {
+
         void SetAppId(IContainer instance, IAppEnvironment env, int? appId, ILog parentLog);
 
         void SetPreview(int instanceId, Guid previewView);

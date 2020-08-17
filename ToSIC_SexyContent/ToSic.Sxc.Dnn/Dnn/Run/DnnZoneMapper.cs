@@ -12,9 +12,16 @@ namespace ToSic.Sxc.Dnn.Run
     public class DnnZoneMapper : HasLog, IZoneMapper
     {
         /// <inheritdoc />
-        public DnnZoneMapper(ILog parentLog = null) : base("DNN.ZoneMp", parentLog)
+        public DnnZoneMapper() : base("DNN.ZoneMp")
         {
         }
+
+        public IZoneMapper Init(ILog parent)
+        {
+            Log.LinkTo(parent);
+            return this;
+        }
+
 
         /// <inheritdoc />
         /// <summary>

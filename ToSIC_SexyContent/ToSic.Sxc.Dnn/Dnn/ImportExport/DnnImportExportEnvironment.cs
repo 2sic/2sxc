@@ -119,7 +119,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
 
         public string TargetPath(string folder)
         {
-            var appPath = Path.Combine(_tenant.SxcPath, folder);
+            var appPath = Path.Combine(_tenant.AppsRoot, folder);
             return Environment.MapPath(appPath);
         }
 

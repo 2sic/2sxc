@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Engines;
@@ -29,9 +29,9 @@ namespace ToSic.Sxc.Blocks
         #region Values related to the current unit of content / the view
         
         /// <summary>
-        /// Tenant information, like a DNN Portal
+        /// The context we're running in, with tenant, container etc.
         /// </summary>
-        ITenant Tenant { get; }
+        IInstanceContext Context { get; }
 
         /// <summary>
         /// The view which will be used to render this block

@@ -21,8 +21,8 @@ namespace ToSic.Sxc.Dnn.Code
             : base(blockBuilder, new DnnTenant(null), compatibility, parentLog ?? blockBuilder?.Log)
         {
             // Init things than require module-info or similar, but not 2sxc
-            var instance = blockBuilder?.Container;
-            Dnn = new DnnContext(instance);
+            var instance = blockBuilder?.Context.Container;
+            Dnn = new DnnContextOld(instance);
             Link = new DnnLinkHelper(Dnn);
         }
 

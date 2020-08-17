@@ -30,7 +30,7 @@ namespace ToSic.Sxc.WebApi.Context
 
             // check if we're providing context for missing app
             // in this case we must find the zone based on the portals.
-            if (ZoneId == 0 && App == null) ZoneId = new DnnZoneMapper().GetZoneId(portal.PortalId);
+            if (ZoneId == 0 && App == null) ZoneId = new DnnZoneMapper().Init(null).GetZoneId(portal.PortalId);
         }
 
         public ContextDto Get(Ctx flags)
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.WebApi.Context
         private LanguageDto GetLanguage()
         {
             if (Portal == null || ZoneId == 0) return null;
-            var language = new ClientInfosLanguages(Portal, ZoneId);
+            var language = new ClientInfosLanguages(new DnnTenant(Portal), ZoneId);
             return new LanguageDto
             {
                 Current = language.Current,
@@ -121,7 +121,7 @@ namespace ToSic.Sxc.WebApi.Context
         private EnableDto GetEnable()
         {
             var isRealApp = App != null && App.AppGuid != Eav.Constants.DefaultAppName;
-            var tmp = User == null ? null : new ClientInfosUser(User);
+            var tmp = User == null ? null : new ClientInfosUser(new DnnUser(User));
             return new EnableDto
             {
                 AppPermissions = isRealApp,

@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav;
+﻿using ToSic.Eav;
+using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Blocks
     /// it would be hard to get anything done .
     /// Note that it also adds the current-user to the state, so that the system can log data-changes to this user
     /// </summary>
-    [PrivateApi("not sure yet what to call this, CmsBlock isn't right, because it's more of a BlockHost or something")]
+    [PrivateApi("not sure yet what to call this, maybe BlockHost or something")]
     public partial class BlockBuilder : HasLog, IBlockBuilder
     {
         #region App-level information
@@ -22,11 +22,6 @@ namespace ToSic.Sxc.Blocks
 
         #endregion
 
-        /// <summary>
-        /// The url-parameters (or alternative thereof) to use when picking views or anything
-        /// Note that it's not the same type as the request.querystring to ease migration to future coding conventions
-        /// </summary>
-        public IEnumerable<KeyValuePair<string, string>> Parameters { get; }
 
         #region Info for current runtime instance
 
@@ -36,7 +31,7 @@ namespace ToSic.Sxc.Blocks
         public IAppEnvironment Environment { get; }
 
         /// <inheritdoc />
-        public IContainer Container { get; }
+        public IInstanceContext Context { get; }
 
         /// <inheritdoc />
         public IBlock Block { get; }
@@ -46,8 +41,8 @@ namespace ToSic.Sxc.Blocks
 
         #region Constructor
         internal BlockBuilder(IBlockBuilder rootBlockBuilder, IBlock cb, 
+            IInstanceContext ctx,
             IContainer container, 
-            //IEnumerable<KeyValuePair<string, string>> urlParams, 
             ILog parentLog)
             : base("Sxc.BlkBld", parentLog, $"get CmsInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}")
         {
@@ -55,10 +50,7 @@ namespace ToSic.Sxc.Blocks
             // the root block is the main container. If there is none yet, use this, as it will be the root
             RootBuilder = rootBlockBuilder ?? this;
             Block = cb;
-            Container = container;
-
-            // keep url parameters, because we may need them later for view-switching and more
-            Parameters = Container.Parameters;// urlParams;
+            Context = ctx;
         }
 
         #endregion

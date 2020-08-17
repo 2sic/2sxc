@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using DotNetNuke.Entities.Portals;
-using ToSic.Eav.Run;
+using ToSic.Eav.Apps.Run;
+using ToSic.Sxc.Blocks;
 
 // ReSharper disable InconsistentNaming
 namespace ToSic.Sxc.Dnn.Web.ClientInfos
@@ -21,16 +21,16 @@ namespace ToSic.Sxc.Dnn.Web.ClientInfos
 
         public bool IsEditable;
 
-        public ClientInfosEnvironment(string systemRootUrl, PortalSettings ps, IContainer mic, Blocks.IBlockBuilder blockBuilder)
+        public ClientInfosEnvironment(string systemRootUrl, IInstanceContext ctx, IBlockBuilder blockBuilder)
         {
-            WebsiteId = ps.PortalId;
+            WebsiteId = ctx.Tenant.Id;
 
-            WebsiteUrl = "//" + ps.PortalAlias.HTTPAlias + "/";
+            WebsiteUrl = "//" + ctx.Tenant.Url + "/";
 
-            PageId = mic.PageId;
-            PageUrl = ps.ActiveTab.FullUrl;
+            PageId = ctx.Page.Id;
+            PageUrl = ctx.Page.Url;
 
-            InstanceId = mic.Id;
+            InstanceId = ctx.Container.Id;
 
             SxcVersion = Settings.Version.ToString();
 
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Dnn.Web.ClientInfos
             var userMayEdit = blockBuilder?.UserMayEdit ?? false;
 
             IsEditable = userMayEdit;
-            parameters = blockBuilder?.Parameters;
+            parameters = blockBuilder?.Context.Page.Parameters;
         }
     }
 

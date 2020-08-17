@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
@@ -57,12 +57,9 @@ namespace ToSic.Sxc.Blocks
         IAppEnvironment Environment { get; }
 
         /// <summary>
-        /// The container (DNN Module) wrapping this CMS Block
+        /// The context in which this is running
         /// </summary>
-        IContainer Container { get; }
-
-        [PrivateApi]
-        IEnumerable<KeyValuePair<string, string>> Parameters { get; }
+        IInstanceContext Context { get; }
 
     }
 }

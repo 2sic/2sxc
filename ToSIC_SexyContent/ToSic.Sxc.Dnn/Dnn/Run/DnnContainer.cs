@@ -49,28 +49,10 @@ namespace ToSic.Sxc.Dnn.Run
         /// <inheritdoc />
         public override int Id => UnwrappedContents.ModuleID;
 
-        /// <inheritdoc />
-        public override int PageId => UnwrappedContents.TabID;
-
-        /// <inheritdoc />
-        public override int TenantId => UnwrappedContents.PortalID;
 
         /// <inheritdoc />
         public override bool IsPrimary => UnwrappedContents.DesktopModule.ModuleName == "2sxc";
 
-        #region Parameters / URL Parameters
-
-        public override List<KeyValuePair<string, string>> Parameters
-        {
-            get => _parameters ??
-                (_parameters = Eav.Factory.Resolve<IHttp>().QueryStringKeyValuePairs());
-            set => _parameters = value;
-        }
-        private List<KeyValuePair<string, string>> _parameters;
-
-
-
-#endregion
 
         /// <inheritdoc />
         public override IBlockIdentifier BlockIdentifier
@@ -81,7 +63,7 @@ namespace ToSic.Sxc.Dnn.Run
                 if (UnwrappedContents == null) return null;
 
                 // find ZoneId, AppId and prepare settings for next values
-                var zoneId = new DnnZoneMapper().GetZoneId(UnwrappedContents.OwnerPortalID);
+                var zoneId = new DnnZoneMapper().Init(Log).GetZoneId(UnwrappedContents.OwnerPortalID);
                 var appId = GetInstanceAppId(zoneId);
                 var settings = UnwrappedContents.ModuleSettings;
 
@@ -102,7 +84,7 @@ namespace ToSic.Sxc.Dnn.Run
 
         private int GetInstanceAppId(int zoneId)
         {
-            var wrapLog = Log.Call<int>(parameters: $"..., {zoneId}");
+            var wrapLog = Log.Call<int>(parameters: $"{zoneId}");
 
             var module = UnwrappedContents ?? throw new Exception("instance is not ModuleInfo");
 
@@ -122,7 +104,7 @@ namespace ToSic.Sxc.Dnn.Run
             }
 
             Log.Add($"{msg} not found = null");
-            return wrapLog("not found", AppConstants.AppIdNotFound);
+            return wrapLog("not found", Eav.Constants.AppIdEmpty);
         }
     }
 }

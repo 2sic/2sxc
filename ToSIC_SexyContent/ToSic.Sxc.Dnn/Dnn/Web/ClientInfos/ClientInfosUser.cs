@@ -1,5 +1,4 @@
-﻿using DotNetNuke.Entities.Users;
-using ToSic.Sxc.Dnn.Run;
+﻿using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Dnn.Web.ClientInfos
 {
@@ -8,9 +7,9 @@ namespace ToSic.Sxc.Dnn.Web.ClientInfos
         public bool CanDesign;
         public bool CanDevelop;
 
-        public ClientInfosUser(UserInfo user)
+        public ClientInfosUser(IUser user)
         {
-            CanDesign = DnnSecurity.IsInSexyContentDesignersGroup(user);
+            CanDesign = user.IsDesigner;
             CanDevelop = user.IsSuperUser;
         }
     }

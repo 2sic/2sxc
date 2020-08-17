@@ -1,6 +1,6 @@
-﻿using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -19,16 +19,15 @@ namespace ToSic.Sxc.Blocks
         /// <summary>
         /// Create a module-content block
         /// </summary>
-        /// <param name="tenant"></param>
-        /// <param name="container">the dnn module-info</param>
+        /// <param name="ctx"></param>
         /// <param name="parentLog">a parent-log; can be null but where possible you should wire one up</param>
         ///// <param name="overrideParams">optional override parameters</param>
-        public BlockFromModule Init(ITenant tenant, IContainer container, ILog parentLog)
+        public BlockFromModule Init(IInstanceContext ctx, ILog parentLog)
         {
-            Init(tenant, container.BlockIdentifier, parentLog);
+            Init(ctx, ctx.Container.BlockIdentifier, parentLog);
             var wrapLog = Log.Call<BlockFromModule>();
-            IsContentApp = container.IsPrimary;
-            CompleteInit<BlockFromModule>(null, container, container.BlockIdentifier, container.Id);
+            IsContentApp = ctx.Container.IsPrimary;
+            CompleteInit<BlockFromModule>(null, ctx.Container.BlockIdentifier, ctx.Container.Id);
             return wrapLog("ok", this);
         }
 

@@ -1,5 +1,4 @@
-﻿using DotNetNuke.Entities.Users;
-using DotNetNuke.Security.Roles;
+﻿using DotNetNuke.Security.Roles;
 
 namespace ToSic.Sxc.Dnn.Run
 {
@@ -15,12 +14,12 @@ namespace ToSic.Sxc.Dnn.Run
                    .GetRoleByName(portalId, Settings.SexyContentGroupName)
                != null;
 
-        /// <summary>
-        /// Returns true if a user is in the SexyContent Designers group
-        /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        public static bool IsInSexyContentDesignersGroup(UserInfo user) 
-            => user.IsInRole(Settings.SexyContentGroupName);
+        ///// <summary>
+        ///// Returns true if a user is in the SexyContent Designers group
+        ///// </summary>
+        ///// <param name="user"></param>
+        ///// <returns></returns>
+        //public static bool IsInSexyContentDesignersGroup(IUser user) 
+        //    => user.IsInRole(Settings.SexyContentGroupName);
     }
 }

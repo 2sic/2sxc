@@ -34,7 +34,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             // some dialogs don't have an app-id yet, because no app has been selected
             // in this case, use the app-id of the content-app for feature-permission check
-            if (appId == 0)
+            if (appId == Eav.Constants.AppIdEmpty)
             {
                 var environment = Factory.Resolve<IAppEnvironment>().Init(Log);
                 var zoneId = environment.ZoneMapper.GetZoneId(PortalSettings.PortalId);

@@ -1,7 +1,6 @@
-﻿using DotNetNuke.Entities.Portals;
-using DotNetNuke.Entities.Users;
+﻿using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Run;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit.ClientContextInfo;
 
 namespace ToSic.Sxc.Dnn.Web.ClientInfos
@@ -18,18 +17,18 @@ namespace ToSic.Sxc.Dnn.Web.ClientInfos
 
         public Ui Ui;
 
-        public ClientInfosAll(string systemRootUrl, PortalSettings ps, IContainer mic, Blocks.IBlockBuilder blockBuilder, UserInfo user, int zoneId, bool isCreated, ILog parentLog)
+        public ClientInfosAll(string systemRootUrl, IInstanceContext ctx, IBlockBuilder blockBuilder, int zoneId, bool isCreated, ILog parentLog)
             : base("Sxc.CliInf", parentLog, "building entire client-context")
         {
             var versioning = blockBuilder.Environment.PagePublishing;
 
-            Environment = new ClientInfosEnvironment(systemRootUrl, ps, mic, blockBuilder);
-            Language = new ClientInfosLanguages(ps, zoneId);
-            User = new ClientInfosUser(user);
+            Environment = new ClientInfosEnvironment(systemRootUrl, ctx, blockBuilder);
+            Language = new ClientInfosLanguages(ctx.Tenant, zoneId);
+            User = new ClientInfosUser(ctx.User);
 
-            ContentBlock = new ClientInfoContentBlock(blockBuilder.Block, null, 0, versioning.Requirements(mic.Id));
+            ContentBlock = new ClientInfoContentBlock(blockBuilder.Block, null, 0, versioning.Requirements(ctx.Container.Id));
             ContentGroup = new ClientInfoContentGroup(blockBuilder, isCreated);
-            Ui = new Ui(((Blocks.BlockBuilder)blockBuilder).UiAutoToolbar);
+            Ui = new Ui(((BlockBuilder)blockBuilder).UiAutoToolbar);
 
             error = new ClientInfosError(blockBuilder.Block);
         }

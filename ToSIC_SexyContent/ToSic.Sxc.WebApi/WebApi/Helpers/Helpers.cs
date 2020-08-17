@@ -36,14 +36,13 @@ namespace ToSic.Sxc.WebApi
                 log.Add("context/module not found");
 
             var container = new DnnContainer().Init(moduleInfo, log);
-            container.Parameters = 
-            /*var urlParams =*/ PrepareUrlParamsForInternalUse(request);
             
             var tenant = moduleInfo == null
                 ? new DnnTenant(null)
                 : new DnnTenant(new PortalSettings(moduleInfo.OwnerPortalID));
 
-            IBlock contentBlock = new BlockFromModule().Init(tenant, container, log/*, urlParams*/);
+            var context = new DnnContext(tenant, container, new DnnUser(), GetOverrideParams(request));
+            IBlock contentBlock = new BlockFromModule().Init(context, log);
 
             // check if we need an inner block
             if (request.Headers.Contains(headerId)) { 
@@ -65,7 +64,7 @@ namespace ToSic.Sxc.WebApi
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        private static List<KeyValuePair<string, string>> PrepareUrlParamsForInternalUse(HttpRequestMessage request)
+        private static List<KeyValuePair<string, string>> GetOverrideParams(HttpRequestMessage request)
         {
             List<KeyValuePair<string, string>> urlParams = null;
             var requestParams = request.GetQueryNameValuePairs();

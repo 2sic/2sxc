@@ -27,9 +27,9 @@ namespace ToSic.Sxc.Blocks
         private IView TryToGetTemplateBasedOnUrlParams()
         {
             Log.Add("template override - check");
-            if (Parameters == null) return null;
+            if (Context.Page.Parameters == null) return null;
 
-            var urlParameterDict = Parameters.ToDictionary(pair => pair.Key?.ToLower() ?? "", pair =>
+            var urlParameterDict = Context.Page.Parameters.ToDictionary(pair => pair.Key?.ToLower() ?? "", pair =>
                 $"{pair.Key}/{pair.Value}".ToLower());
 
             var allTemplates = new CmsRuntime(App, Log, UserMayEdit, false).Views.GetAll();

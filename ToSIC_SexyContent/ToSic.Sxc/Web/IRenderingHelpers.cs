@@ -17,14 +17,8 @@ namespace ToSic.Sxc.Web
             bool autoToolbar = false,
             bool addLineBreaks = true);
 
-        string ContextAttributes(int instanceId, 
-            int contentBlockId, 
-            bool includeEditInfos,
-            bool autoToolbar);
+        string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos);
 
         string DesignErrorMessage(Exception ex, bool addToEventLog, string visitorAlternateError, bool addMinimalWrapper, bool encodeMessage);
-
-        // 2020-08-11 disabled, doesn't seem to be needed outside of code
-        //string UiContextInfos(bool autoToolbars);
     }
 }

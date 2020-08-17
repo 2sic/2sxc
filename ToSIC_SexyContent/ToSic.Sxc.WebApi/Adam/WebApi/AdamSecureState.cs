@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Adam.WebApi
         private void PrepCore(IApp app, Guid entityGuid, string fieldName, bool usePortalRoot)
         {
             Log.Add("PrepCore(...)");
-            var dnn = new DnnContext(BlockBuilder?.Container);
+            var dnn = new DnnContextOld(BlockBuilder?.Context.Container);
             var tenant = new DnnTenant(dnn.Portal);
             AdamAppContext = new AdamAppContext(tenant, app, BlockBuilder, 10, Log);
             ContainerContext = usePortalRoot
@@ -154,7 +154,7 @@ namespace ToSic.Sxc.Adam.WebApi
         public bool FieldPermissionOk(List<Grants> requiredGrant)
         {
             var fieldPermissions = new DnnPermissionCheck(Log,
-                instance: BlockBuilder.Container,
+                instance: BlockBuilder.Context.Container,
                 permissions1: Attribute.Permissions,
                 appIdentity: BlockBuilder.App);
 

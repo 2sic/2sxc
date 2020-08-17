@@ -24,7 +24,7 @@ namespace ToSic.Sxc.LookUp
             return appToUse =>
             {
                 // the module id
-                var envInstanceId = blockBuilder.Container.Id;
+                var envInstanceId = blockBuilder.Context.Container.Id;
 
                 // check if we'll use the config already on the sxc-instance, or generate a new one
                 var config = useExistingConfig
@@ -72,8 +72,8 @@ namespace ToSic.Sxc.LookUp
 
                 // new
                 var paramList = new NameValueCollection();
-                if (blockBuilder?.Parameters != null)
-                    foreach (var pair in blockBuilder.Parameters)
+                if (blockBuilder?.Context.Page.Parameters != null)
+                    foreach (var pair in blockBuilder.Context.Page.Parameters)
                         paramList.Add(pair.Key, pair.Value);
                 else
                     paramList = http.QueryString;

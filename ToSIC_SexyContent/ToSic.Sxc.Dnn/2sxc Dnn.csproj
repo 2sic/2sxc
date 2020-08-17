@@ -105,6 +105,8 @@
     <Compile Include="Dnn\Run\DnnAppFileSystemLoader.cs" />
     <Compile Include="Dnn\Run\DnnContext.cs" />
     <Compile Include="Dnn\Factory.cs" />
+    <Compile Include="Dnn\Run\DnnInstanceContext.cs" />
+    <Compile Include="Dnn\Run\DnnPage.cs" />
     <Compile Include="Dnn\Web\DnnJsApiHeader.cs" />
     <Compile Include="Dnn\Web\DnnClientResources.cs" />
     <Compile Include="Dnn\Web\IDynamicWebApi.cs" />

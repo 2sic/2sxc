@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.DataSources;
@@ -17,25 +16,20 @@ namespace ToSic.Sxc.Blocks
 
         protected BlockBase(string logName) : base(logName) { }
 
-        protected void Init(ITenant tenant, IAppIdentity appId, ILog parentLog)
+        protected void Init(IInstanceContext context, IAppIdentity appId, ILog parentLog)
         {
             Init(parentLog);
-            Tenant = tenant;
+            Context = context;
             ZoneId = appId.ZoneId;
             AppId = appId.AppId;
 
         }
 
-        protected T CompleteInit<T>(
-            IBlockBuilder rootBuilder, 
-            IContainer container,
-            IBlockIdentifier blockId,
-            int blockNumberUnsureIfNeeded
-            ) where T : class
+        protected T CompleteInit<T>(IBlockBuilder rootBuilder, IBlockIdentifier blockId, int blockNumberUnsureIfNeeded) where T : class
         {
             var wrapLog = Log.Call<T>();
 
-            ParentId = container.Id;
+            ParentId = Context.Container.Id;
             ContentBlockId = blockNumberUnsureIfNeeded;
 
             Log.Add($"parent#{ParentId}, content-block#{ContentBlockId}, z#{ZoneId}, a#{AppId}");
@@ -45,32 +39,31 @@ namespace ToSic.Sxc.Blocks
             if (AppId == AppConstants.AppIdNotFound)
             {
                 DataIsMissing = true;
-                return wrapLog("data is missing, will stop here", this as T);
+                return wrapLog("stop: app & data are missing", this as T);
             }
 
-            BlockBuilder = new BlockBuilder(rootBuilder, this, container, Log);
+            BlockBuilder = new BlockBuilder(rootBuilder, this, Context, Context.Container, Log);
             // In case the root didn't exist yet, use the new one as Root
             rootBuilder = rootBuilder ?? BlockBuilder;
 
-            // Note: not sure which case we capture here, because appid=0 also would mean not found
-            // Don't think this is ever hit
-            // probably merge with case above
-            if (AppId == 0)
-                return wrapLog(
-                    $"ok a:{AppId}, container:{BlockBuilder.Container.Id}, content-group:{Configuration?.Id}",
-                    this as T);
+            // If no app yet, stop now with BlockBuilder created
+            if (AppId == Eav.Constants.AppIdEmpty)
+            {
+                var msg = $"stop a:{AppId}, container:{Context.Container.Id}, content-group:{Configuration?.Id}";
+                return wrapLog(msg, this as T);
+            }
 
 
             Log.Add("Real app specified, will load App object with Data");
 
             // Get App for this block
-            App = new App(rootBuilder.Environment, Tenant)
+            App = new App(rootBuilder.Environment, Context.Tenant)
                 .Init(this, ConfigurationProvider.Build(BlockBuilder, false),
                     true, Log);
 
 
             var cms = new CmsRuntime(App, Log, rootBuilder.UserMayEdit, 
-                rootBuilder.Environment.PagePublishing.IsEnabled(rootBuilder.Container.Id));
+                rootBuilder.Environment.PagePublishing.IsEnabled(Context.Container.Id));
 
             Configuration = cms.Blocks.GetOrGeneratePreviewConfig(blockId);
 
@@ -79,12 +72,12 @@ namespace ToSic.Sxc.Blocks
             {
                 DataIsMissing = true;
                 App = null;
-                return wrapLog($"DataIsMissing a:{AppId}, container:{BlockBuilder.Container.Id}, content-group:{Configuration?.Id}", this as T);
+                return wrapLog($"DataIsMissing a:{AppId}, container:{Context.Container.Id}, content-group:{Configuration?.Id}", this as T);
             }
 
             // use the content-group template, which already covers stored data + module-level stored settings
             ((BlockBuilder)BlockBuilder).SetTemplateOrOverrideFromUrl(Configuration.View);
-            return wrapLog($"ok a:{AppId}, container:{BlockBuilder.Container.Id}, content-group:{Configuration?.Id}", this as T);
+            return wrapLog($"ok a:{AppId}, container:{Context.Container.Id}, content-group:{Configuration?.Id}", this as T);
         }
 
         #endregion
@@ -127,7 +120,9 @@ namespace ToSic.Sxc.Blocks
 
         #endregion
 
-        public ITenant Tenant { get; protected set; }
+
+        /// <inheritdoc />
+        public IInstanceContext Context { get; protected set; }
 
         // ReSharper disable once InconsistentNaming
         protected IBlockDataSource _dataSource;

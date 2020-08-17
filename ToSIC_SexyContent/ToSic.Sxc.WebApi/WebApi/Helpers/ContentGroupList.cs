@@ -35,7 +35,7 @@ namespace ToSic.Sxc.WebApi
 
         private BlockConfiguration GetBlockConfig(IAppIdentity app, Guid blockGuid)
             => new CmsRuntime(app, Log, BlockBuilder.UserMayEdit,
-                BlockBuilder.Environment.PagePublishing.IsEnabled(BlockBuilder.Container.Id)).Blocks.GetBlockConfig(blockGuid);
+                BlockBuilder.Environment.PagePublishing.IsEnabled(BlockBuilder.Context.Container.Id)).Blocks.GetBlockConfig(blockGuid);
 
         private bool PostSaveUpdateIdsInParent(
             int appId,

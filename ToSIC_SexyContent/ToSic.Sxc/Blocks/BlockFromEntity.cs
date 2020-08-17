@@ -18,13 +18,13 @@ namespace ToSic.Sxc.Blocks
 
         public BlockFromEntity Init(IBlock parent, IEntity blockEntity, ILog parentLog)
         {
-            Init(parent.App.Tenant, parent, parentLog);
+            Init(parent.Context, parent, parentLog);
             return CompleteInit(parent, blockEntity);
         }
 
         public BlockFromEntity Init(IBlock parent, int contentBlockId, ILog parentLog)
         {
-            Init(parent.App.Tenant, parent, parentLog);
+            Init(parent.Context, parent, parentLog);
             var wrapLog = Log.Call<BlockFromEntity>($"{nameof(contentBlockId)}:{contentBlockId}");
             var blockEntity = GetBlockEntity(parent, contentBlockId);
             return wrapLog("ok", CompleteInit(parent, blockEntity));
@@ -40,10 +40,7 @@ namespace ToSic.Sxc.Blocks
             // but the current instance can be of another block
             AppId = blockId.AppId;
 
-            CompleteInit<BlockFromEntity>(parent.BlockBuilder, 
-                parent.BlockBuilder.Container, 
-                blockId, 
-                -blockEntity.EntityId);
+            CompleteInit<BlockFromEntity>(parent.BlockBuilder, blockId, -blockEntity.EntityId);
             return wrapLog("ok", this);
         }
         #endregion

@@ -24,7 +24,7 @@ namespace ToSic.SexyContent
             // check things if it's a module of this portal (ensure everything is ok, etc.)
             var isSharedModule = ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID;
             if (!isSharedModule && !BlockBuilder.Block.ContentGroupExists && BlockBuilder.App != null)
-                new DnnTenantSettings().EnsureTenantIsConfigured(BlockBuilder, Server, ControlPath);
+                new DnnTenantSettings().EnsureTenantIsConfigured(BlockBuilder, Server);
 
             timerWrap(null);
         }

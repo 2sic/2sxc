@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Dnn.Run
             AppId = appId;
             try
             {
-                var fullPath = Tenant.SxcPath + "/" + path + "/" + Eav.Constants.FolderAppExtensions;
+                var fullPath = Tenant.AppsRoot + "/" + path + "/" + Eav.Constants.FolderAppExtensions;
                 Path = HostingEnvironment.MapPath(fullPath);
                 Log.Add("System path:" + Path);
             }

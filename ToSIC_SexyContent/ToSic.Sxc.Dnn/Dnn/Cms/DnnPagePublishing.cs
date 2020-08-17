@@ -119,7 +119,7 @@ namespace ToSic.Sxc.Dnn.Cms
                 var container = new DnnContainer().Init(dnnModule, Log);
                 // must find tenant through module, as the Portal-Settings.Current is null in search mode
                 var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
-                var cb = new BlockFromModule().Init(tenant, container, Log);
+                var cb = new BlockFromModule().Init(new DnnContext(tenant, container, new DnnUser()), Log);
 
                 Log.Add($"found dnn mod {container.Id}, tenant {tenant.Id}, cb exists: {cb.ContentGroupExists}");
                 if (cb.ContentGroupExists)

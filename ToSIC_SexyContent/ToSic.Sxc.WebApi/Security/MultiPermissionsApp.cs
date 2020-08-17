@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Security
 
             // user has edit permissions on this app, and it's the same app as the user is coming from
             return new DnnPermissionCheck(Log,
-                instance: BlockBuilder?.Container,
+                instance: BlockBuilder?.Context.Container,
                 app: App,
                 portal: PortalForSecurityCheck,
                 targetType: type,

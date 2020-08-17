@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Security;
 using DotNetNuke.Entities.Portals;
+using DotNetNuke.Entities.Users;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Dnn.Run
 {
     [PrivateApi("should probably be changed once we have IUser<T>")]
-    public class DnnUser: IUser
+    public class DnnUser: IUser<UserInfo>
     {
+        public DnnUser(UserInfo user = null)
+        {
+            UnwrappedContents = user ?? PortalSettings.Current?.UserInfo;
+        }
+
         private static string GetUserIdentityToken ()
         {
             var userId = PortalSettings.Current?.UserId;
@@ -23,6 +29,8 @@ namespace ToSic.Sxc.Dnn.Run
         public string IdentityToken => GetUserIdentityToken();
 
         public List<int> Roles => _roles ?? (_roles = BuildRoleList());
+        public bool IsSuperUser => UnwrappedContents?.IsSuperUser ?? false;
+        public bool IsDesigner => UnwrappedContents?.IsInRole(Settings.SexyContentGroupName) ?? false;
 
         private static List<int> BuildRoleList()
         {
@@ -42,5 +50,7 @@ namespace ToSic.Sxc.Dnn.Run
         }
 
         private List<int> _roles;
+
+        public UserInfo UnwrappedContents { get; }
     }
 }

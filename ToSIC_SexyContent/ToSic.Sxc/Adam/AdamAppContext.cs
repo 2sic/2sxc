@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Adam
     /// The app-context of ADAM
     /// In charge of managing assets inside this app
     /// </summary>
-    public class AdamAppContext: HasLog, IContext, ICompatibilityLevel
+    public class AdamAppContext: HasLog, IContextAdamMaybe, ICompatibilityLevel
     {
         /// <summary>
         /// the app is only used to get folder / guid etc.

@@ -30,7 +30,7 @@ namespace ToSic.Sxc.WebApi
                 DnnLogging.LogToDnn("2sxc-Api", 
                     actionContext.Request.RequestUri.PathAndQuery, 
                     log, 
-                    dnnContext as DnnContext);
+                    dnnContext as DnnContextOld);
 
                 // set property, to prevent double-logging
                 actionContext.Request.Properties.Add(AlreadyLogged, true);

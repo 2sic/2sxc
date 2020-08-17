@@ -29,7 +29,8 @@ namespace ToSic.Sxc.Dnn.Run
         }
         #endregion
 
-        public IZoneMapper ZoneMapper { get;  } = new DnnZoneMapper();
+        public IZoneMapper ZoneMapper => _zoneMapper ?? (_zoneMapper = new DnnZoneMapper().Init(Log));
+        private IZoneMapper _zoneMapper;
 
         public IUser User { get; } = new DnnUser();
 

@@ -24,7 +24,7 @@ namespace ToSic.Sxc.WebApi
                         ? context.Request.Properties[Constants.EavLogKey] as ILog
                         : null;
                     var dnnContext = context.Request.Properties.ContainsKey(Constants.DnnContextKey) 
-                        ? context.Request.Properties[Constants.DnnContextKey] as DnnContext
+                        ? context.Request.Properties[Constants.DnnContextKey] as DnnContextOld
                         : null;
                     DnnLogging.LogToDnn("2sxc-Api", "Auto-Log Exception", log, dnnContext, force: true);
                 }

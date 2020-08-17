@@ -36,7 +36,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             IApp app = null;
             // if we have an appid (we don't have it in an install-new-apps-scenario) check permissions
-            if (appId != 0)
+            if (appId != 0 && appId != Eav.Constants.AppIdEmpty)
             {
                 var appAndPerms = new MultiPermissionsApp(BlockBuilder, appId, Log);
                 if (!appAndPerms.ZoneIsOfCurrentContextOrUserIsSuper(out var exp))

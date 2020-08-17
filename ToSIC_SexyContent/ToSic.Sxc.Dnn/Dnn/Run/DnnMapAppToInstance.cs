@@ -13,6 +13,8 @@ namespace ToSic.Sxc.Dnn.Run
 {
     public class DnnMapAppToInstance : HasLog, IEnvironmentConnector
     {
+        #region Constructor and DI
+
         /// <summary>
         /// Empty constructor for DI
         /// </summary>
@@ -20,6 +22,15 @@ namespace ToSic.Sxc.Dnn.Run
         public DnnMapAppToInstance() : base("Dnn.MapA2I") { }
 
         public DnnMapAppToInstance(ILog parentLog) : base("Dnn.MapA2I", parentLog) { }
+
+        public IEnvironmentConnector Init(ILog parent)
+        {
+            Log.LinkTo(parent);
+            return this;
+        }
+
+        #endregion
+
 
         public void SetAppId(IContainer instance, IAppEnvironment env, int? appId, ILog parentLog)
         {
@@ -32,7 +43,7 @@ namespace ToSic.Sxc.Dnn.Run
             var module = (instance as Container<ModuleInfo>).UnwrappedContents;
             var zoneId = env.ZoneMapper.GetZoneId(module.OwnerPortalID);
 
-            if (appId == 0 || !appId.HasValue)
+            if (appId == Constants.AppIdEmpty || !appId.HasValue)
                 DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instance.Id, Settings.AppNameString, null, Log);
             else
             {
@@ -50,7 +61,7 @@ namespace ToSic.Sxc.Dnn.Run
             }
         }
 
-        public void ClearPreview(int instanceId)
+        protected void ClearPreview(int instanceId)
         {
             Log.Add($"ClearPreviewTemplate(iid: {instanceId})");
             DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instanceId, Settings.FieldPreviewTemplate, null, Log);
@@ -87,12 +98,12 @@ namespace ToSic.Sxc.Dnn.Run
         {
             Log.Add("update title");
 
-            var languages = blockBuilder.Environment.ZoneMapper.CulturesWithState(blockBuilder.Container.TenantId,
+            var languages = blockBuilder.Environment.ZoneMapper.CulturesWithState(blockBuilder.Context.Tenant.Id,
                 blockBuilder.Block.ZoneId);
 
             // Find Module for default language
             var moduleController = new ModuleController();
-            var originalModule = moduleController.GetModule(blockBuilder.Container.Id);
+            var originalModule = moduleController.GetModule(blockBuilder.Context.Container.Id);
 
             foreach (var dimension in languages)
             {
@@ -110,7 +121,7 @@ namespace ToSic.Sxc.Dnn.Run
 
                     // Find module for given Culture
                     var moduleByCulture = moduleController.GetModuleByCulture(originalModule.ModuleID,
-                        originalModule.TabID, blockBuilder.Container.TenantId,
+                        originalModule.TabID, blockBuilder.Context.Tenant.Id,
                         DotNetNuke.Services.Localization.LocaleController.Instance.GetLocale(dimension.Key));
 
                     // Break if no title module found
@@ -123,6 +134,6 @@ namespace ToSic.Sxc.Dnn.Run
                 catch { /* ignored */ }
             }
         }
-        
+
     }
 }

@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Blocks.Edit
         {
             Log.LinkTo(blockBuilder.Log);
             BlockBuilder = blockBuilder;
-            ModuleId = BlockBuilder.Container.Id;
+            ModuleId = BlockBuilder.Context.Container.Id;
             return this;
         }
 
