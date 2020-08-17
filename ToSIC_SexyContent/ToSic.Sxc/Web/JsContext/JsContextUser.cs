@@ -1,13 +1,13 @@
 ﻿using ToSic.Eav.Run;
 
-namespace ToSic.Sxc.Dnn.Web.ClientInfos
+namespace ToSic.Sxc.Web.JsContext
 {
-    public class ClientInfosUser
+    public class JsContextUser
     {
         public bool CanDesign;
         public bool CanDevelop;
 
-        public ClientInfosUser(IUser user)
+        public JsContextUser(IUser user)
         {
             CanDesign = user.IsDesigner;
             CanDevelop = user.IsSuperUser;

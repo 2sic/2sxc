@@ -2,16 +2,15 @@
 using System.Linq;
 using ToSic.Eav.Run;
 
-
-namespace ToSic.Sxc.Dnn.Web.ClientInfos
+namespace ToSic.Sxc.Web.JsContext
 {
-    public class ClientInfosLanguages
+    public class JsContextLanguage
     {
         public string Current;
         public string Primary;
         public IEnumerable<ClientInfoLanguage> All;
 
-        public ClientInfosLanguages(ITenant tenant, int zoneId)
+        public JsContextLanguage(ITenant tenant, int zoneId)
         {
             // Don't use PortalSettings, as that provides a wrong ps.CultureCode.ToLower();
             Current = System.Threading.Thread.CurrentThread.CurrentCulture.Name.ToLower();

@@ -4,9 +4,9 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Web
 {
-    public interface IRenderingHelpers
+    public interface IRenderingHelper
     {
-        IRenderingHelpers Init(IBlockBuilder blockBuilder, ILog parentLog);
+        IRenderingHelper Init(IBlockBuilder blockBuilder, ILog parentLog);
 
         string WrapInContext(string content,
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,

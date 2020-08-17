@@ -1,29 +1,29 @@
 ﻿using System;
-using System.Web;
 using DotNetNuke.Services.Exceptions;
-using Newtonsoft.Json;
-using ToSic.Eav.Logging;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Dnn.Web.ClientInfos;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.Web
 {
-    public class DnnRenderingHelpers : RenderingHelper
+    public class DnnRenderingHelper : RenderingHelper
     {
-        // Blank constructor for IoC
-        public DnnRenderingHelpers() :base("Dnn.Render") { }
+        /// <summary>
+        /// Constructor for IoC
+        /// You must always call Init afterwards
+        /// </summary>
+        /// <param name="http"></param>
+        public DnnRenderingHelper(IHttp http) : base( http,"Dnn.Render") { }
 
-        public override IRenderingHelpers Init(IBlockBuilder blockBuilder, ILog parentLog)
-        {
-            this.LinkLog(parentLog);
-            var appRoot = VirtualPathUtility.ToAbsolute("~/");
-            BlockBuilder = blockBuilder;
-            Context = blockBuilder?.Context;
-            AppRootPath = appRoot;
 
-            return this;
-        }
+        //public override IRenderingHelper Init(IBlockBuilder blockBuilder, ILog parentLog)
+        //{
+        //    this.LinkLog(parentLog);
+        //    var appRoot = Http.ToAbsolute("~/"); //  VirtualPathUtility.ToAbsolute("~/");
+        //    BlockBuilder = blockBuilder;
+        //    Context = blockBuilder?.Context;
+        //    AppRootPath = appRoot;
+
+        //    return this;
+        //}
 
 
 
@@ -48,55 +48,56 @@ namespace ToSic.Sxc.Dnn.Web
         //}
 
 
-        public override string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos)
-        {
-            var contextAttribs = "";
-            if (instanceId != 0) contextAttribs += $" data-cb-instance='{instanceId}'";
+        //public override string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos)
+        //{
+        //    var contextAttribs = "";
+        //    if (instanceId != 0) contextAttribs += $" data-cb-instance='{instanceId}'";
 
-            if (contentBlockId != 0) contextAttribs += $" data-cb-id='{contentBlockId}'";
+        //    if (contentBlockId != 0) contextAttribs += $" data-cb-id='{contentBlockId}'";
 
-            // optionally add editing infos
-            if (includeEditInfos) contextAttribs += Build.Attribute("data-edit-context", UiContextInfos());
-            return contextAttribs;
-        }
-
-
-
-
-        // new
-        public string UiContextInfos()
-            => JsonConvert.SerializeObject(new ClientInfosAll(AppRootPath, Context, BlockBuilder, 
-                BlockBuilder.Block.ZoneId, BlockBuilder.Block.ContentGroupExists, Log));
+        //    // optionally add editing infos
+        //    if (includeEditInfos) contextAttribs += Build.Attribute("data-edit-context", UiContextInfos());
+        //    return contextAttribs;
+        //}
 
 
 
-        public override string DesignErrorMessage(Exception ex, bool addToEventLog, string visitorAlternateError, bool addMinimalWrapper, bool encodeMessage)
-        {
-            var intro = "Error";
-            var msg = intro + ": " + ex;
-            if (addToEventLog)
-                LogToEnvironmentExceptions(ex);
 
-            if (!Context.User.IsSuperUser)
-                msg = visitorAlternateError ?? "error showing content";
+        //// new
+        //public string UiContextInfos()
+        //    => JsonConvert.SerializeObject(new JsContextAll(AppRootPath, Context, BlockBuilder, 
+        //        BlockBuilder.Block.ZoneId, BlockBuilder.Block.ContentGroupExists, Log));
 
-            if (encodeMessage)
-                msg = HttpUtility.HtmlEncode(msg);
 
-            // add dnn-error-div-wrapper
-            msg = "<div class='dnnFormMessage dnnFormWarning'>" + msg + "</div>";
 
-            // add another, minimal id-wrapper for those cases where the rendering-wrapper is missing
-            if (addMinimalWrapper)
-                msg = WrapInContext(msg, instanceId: Context.Container.Id, contentBlockId: Context.Container.Id);
+        //public override string DesignErrorMessage(Exception ex, bool addToEventLog, string visitorAlternateError, bool addMinimalWrapper, bool encodeMessage)
+        //{
+        //    var intro = "Error";
+        //    var msg = intro + ": " + ex;
+        //    if (addToEventLog)
+        //        LogToEnvironmentExceptions(ex);
 
-            return msg;
-        }
+        //    if (!Context.User.IsSuperUser)
+        //        msg = visitorAlternateError ?? "error showing content";
 
-        protected override void LogToEnvironmentExceptions(Exception ex)
-        {
-            Exceptions.LogException(ex);
-        }
+        //    if (encodeMessage)
+        //        msg = HttpUtility.HtmlEncode(msg);
+
+        //    // add dnn-error-div-wrapper
+        //    msg = "<div class='dnnFormMessage dnnFormWarning'>" + msg + "</div>";
+
+        //    // add another, minimal id-wrapper for those cases where the rendering-wrapper is missing
+        //    if (addMinimalWrapper)
+        //        msg = WrapInContext(msg, instanceId: Context.Container.Id, contentBlockId: Context.Container.Id);
+
+        //    return msg;
+        //}
+
+        /// <summary>
+        /// DNN specific implementation to log errors to the DNN event log
+        /// </summary>
+        /// <param name="ex"></param>
+        protected override void LogToEnvironmentExceptions(Exception ex) => Exceptions.LogException(ex);
     }
 
 }

@@ -2,15 +2,15 @@
 using ToSic.Eav.Apps.Run;
 using ToSic.Sxc.Blocks;
 
-// ReSharper disable InconsistentNaming
-namespace ToSic.Sxc.Dnn.Web.ClientInfos
+namespace ToSic.Sxc.Web.JsContext
 {
-    public class ClientInfosEnvironment
+    public class JsContextEnvironment
     {
         public int WebsiteId;       // aka PortalId
         public string WebsiteUrl;
         public int PageId;          // aka TabId
         public string PageUrl;
+        // ReSharper disable once InconsistentNaming
         public IEnumerable<KeyValuePair<string, string>> parameters;
 
         public int InstanceId;      // aka ModuleId
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.Web.ClientInfos
 
         public bool IsEditable;
 
-        public ClientInfosEnvironment(string systemRootUrl, IInstanceContext ctx, IBlockBuilder blockBuilder)
+        public JsContextEnvironment(string systemRootUrl, IInstanceContext ctx, IBlockBuilder blockBuilder)
         {
             WebsiteId = ctx.Tenant.Id;
 

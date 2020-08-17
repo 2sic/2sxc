@@ -7,7 +7,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Dnn.Web.ClientInfos;
+using ToSic.Sxc.Web.JsContext;
 using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.Sxc.WebApi.Context
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.WebApi.Context
         private LanguageDto GetLanguage()
         {
             if (Portal == null || ZoneId == 0) return null;
-            var language = new ClientInfosLanguages(new DnnTenant(Portal), ZoneId);
+            var language = new JsContextLanguage(new DnnTenant(Portal), ZoneId);
             return new LanguageDto
             {
                 Current = language.Current,
@@ -121,7 +121,7 @@ namespace ToSic.Sxc.WebApi.Context
         private EnableDto GetEnable()
         {
             var isRealApp = App != null && App.AppGuid != Eav.Constants.DefaultAppName;
-            var tmp = User == null ? null : new ClientInfosUser(new DnnUser(User));
+            var tmp = User == null ? null : new JsContextUser(new DnnUser(User));
             return new EnableDto
             {
                 AppPermissions = isRealApp,

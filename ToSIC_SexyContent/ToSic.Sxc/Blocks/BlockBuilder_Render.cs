@@ -21,9 +21,9 @@ namespace ToSic.Sxc.Blocks
         private bool? _userMayEdit;
 
 
-        internal IRenderingHelpers RenderingHelper =>
-            _rendHelp ?? (_rendHelp = Factory.Resolve<IRenderingHelpers>().Init(this, Log));
-        private IRenderingHelpers _rendHelp;
+        internal IRenderingHelper RenderingHelper =>
+            _rendHelp ?? (_rendHelp = Factory.Resolve<IRenderingHelper>().Init(this, Log));
+        private IRenderingHelper _rendHelp;
 
 
         public HtmlString Render()
