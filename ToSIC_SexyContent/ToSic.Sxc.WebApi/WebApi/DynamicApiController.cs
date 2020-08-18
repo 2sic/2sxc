@@ -36,7 +36,7 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"HasBlock: {BlockBuilder != null}");
             // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
             // if it's null, use the log of this object
-            DynCode = new DnnDynamicCode(BlockBuilder, BlockBuilder?.Log ?? Log);
+            DynCode = new DnnDynamicCode().Init(BlockBuilder, BlockBuilder?.Log ?? Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (DynCode.App == null)

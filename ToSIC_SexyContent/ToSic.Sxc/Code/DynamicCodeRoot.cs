@@ -30,14 +30,18 @@ namespace ToSic.Sxc.Code
     public abstract class DynamicCodeRoot : HasLog, IDynamicCode
     {
         [PrivateApi]
-        public IBlockBuilder BlockBuilder { get; }
+        public IBlockBuilder BlockBuilder { get; private set; }
 
-        private readonly ITenant _tenant;
+        private ITenant _tenant;
+
+        protected DynamicCodeRoot(string logName = null): base(logName ?? "Sxc.DynCdR") { }
+
         [PrivateApi]
-        protected DynamicCodeRoot(IBlockBuilder blockBuilder, ITenant tenant, int compatibility, ILog parentLog): base("Sxc.AppHlp", parentLog ?? blockBuilder?.Log)
+        public DynamicCodeRoot Init(IBlockBuilder blockBuilder, ITenant tenant, int compatibility, ILog parentLog) // : base("Sxc.AppHlp", parentLog ?? blockBuilder?.Log)
         {
+            Log.LinkTo(parentLog ?? blockBuilder?.Log);
             if (blockBuilder == null)
-                return;
+                return this;
 
             BlockBuilder = blockBuilder;
             _tenant = tenant;
@@ -45,19 +49,20 @@ namespace ToSic.Sxc.Code
             App = blockBuilder.App;
             Data = blockBuilder.Block.Data;
             Edit = new InPageEditingHelper(blockBuilder, Log);
+            return this;
         }
 
         [PrivateApi]
         internal void LateAttachApp(IApp app) => App = app;
 
         [PrivateApi]
-        public int CompatibilityLevel { get; }
+        public int CompatibilityLevel { get; private set; }
 
         /// <inheritdoc />
         public IApp App { get; private set; }
 
         /// <inheritdoc />
-        public IBlockDataSource Data { get; }
+        public IBlockDataSource Data { get; private set; }
 
         /// <inheritdoc />
         public ILinkHelper Link { get; protected set; }
@@ -244,7 +249,7 @@ namespace ToSic.Sxc.Code
         #region Edit
 
         /// <inheritdoc />
-        public IInPageEditingSystem Edit { get; }
+        public IInPageEditingSystem Edit { get; private set; }
         #endregion
 
         #region SharedCode Compiler

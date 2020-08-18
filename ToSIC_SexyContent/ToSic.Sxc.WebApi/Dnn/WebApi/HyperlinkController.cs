@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
 		public object GetFileByPath(string relativePath)
 		{
-		    var context = new DnnDynamicCode(BlockBuilder, Log);
+		    var context = new DnnDynamicCode().Init(BlockBuilder, Log);
             relativePath = relativePath.Replace(context.Dnn.Portal.HomeDirectory, "");
 			var file = FileManager.Instance.GetFile(context.Dnn.Portal.PortalId, relativePath);
 			if (CanUserViewFile(file))

@@ -46,7 +46,7 @@ namespace ToSic.Sxc.WebApi.Cms
             }
 
             // use dnn versioning - this is always part of page
-            var context = new DnnDynamicCode(BlockBuilder, Log);
+            var context = new DnnDynamicCode().Init(BlockBuilder, Log);
             versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID, InternalSave);
             wrapLog(null);
         }
@@ -127,7 +127,7 @@ namespace ToSic.Sxc.WebApi.Cms
             }
 
             // use dnn versioning - items here are always part of list
-            var context = new DnnDynamicCode(BlockBuilder, Log);
+            var context = new DnnDynamicCode().Init(BlockBuilder, Log);
             versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID, InternalSave);
 
             return true;

@@ -15,7 +15,9 @@ using ToSic.SexyContent.Dnn920;
 using ToSic.Sxc.Adam;
 using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Apps.ImportExport;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Conversion;
+using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.ImportExport;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.LookUp;
@@ -110,7 +112,7 @@ namespace ToSic.SexyContent
 
                 sc.AddTransient<IClientDependencyOptimizer, DnnClientDependencyOptimizer>();
                 sc.AddTransient<IEnvironmentFactory, DnnEnvironmentFactory>();
-                sc.AddTransient<IWebFactoryTemp, DnnEnvironmentFactory>();
+                sc.AddTransient<DynamicCodeRoot, DnnDynamicCode>();
                 sc.AddTransient<IRenderingHelper, DnnRenderingHelper>();
                 sc.AddTransient<IEnvironmentConnector, DnnMapAppToInstance>();
                 sc.AddTransient<IEnvironmentInstaller, InstallationController>();

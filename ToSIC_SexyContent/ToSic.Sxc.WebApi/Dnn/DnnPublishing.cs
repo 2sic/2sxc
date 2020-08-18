@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Dnn
             {
                 Log.Add("partOfPage - save with publishing");
                 var versioning = Eav.Factory.Resolve<IPagePublishing>().Init(Log);
-                var context = new DnnDynamicCode(BlockBuilder, Log);
+                var context = new DnnDynamicCode().Init(BlockBuilder, Log);
                 versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID,
                     args => postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft));
             }

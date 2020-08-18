@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 using ToSic.Eav;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
-using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Engines.Token;
@@ -86,10 +85,7 @@ namespace ToSic.Sxc.Engines
             InitTokenReplace();
         }
 
-        private void InitDataHelper()
-        {
-            _data = Factory.Resolve<IWebFactoryTemp>().AppAndDataHelpers(BlockBuilder) ;
-        }
+        private void InitDataHelper() => _data = Factory.Resolve<DynamicCodeRoot>().Init(BlockBuilder, BlockBuilder.Context.Tenant, 9, Log); //.AppAndDataHelpers(BlockBuilder, Log);
 
         private void InitTokenReplace()
         {

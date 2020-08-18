@@ -127,7 +127,7 @@ namespace ToSic.Sxc.Engines
         private void InitHelpers(RazorComponentBase webPage, int compatibility)
         {
             webPage.Html = new Razor.HtmlHelper();
-            webPage.DynCode = new DnnDynamicCode(BlockBuilder, Log, compatibility);
+            webPage.DynCode = new DnnDynamicCode().Init(BlockBuilder, Log, compatibility);
 
             #region New in 10.25 - ensure jquery is not included by default
 

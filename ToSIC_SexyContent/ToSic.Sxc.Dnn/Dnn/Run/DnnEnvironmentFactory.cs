@@ -3,16 +3,13 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
-using ToSic.SexyContent.Interfaces;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Dnn.Code;
 using IApp = ToSic.Eav.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 using PermissionCheckBase = ToSic.Eav.Security.PermissionCheckBase;
 
 namespace ToSic.Sxc.Dnn.Run
 {
-    public class DnnEnvironmentFactory : IEnvironmentFactory, IWebFactoryTemp
+    public class DnnEnvironmentFactory : IEnvironmentFactory
     {
         /// <inheritdoc />
         public PermissionCheckBase ItemPermissions(IAppIdentity appIdentity, IEntity targetItem, ILog parentLog, IContainer module = null) 
@@ -25,9 +22,5 @@ namespace ToSic.Sxc.Dnn.Run
         /// <inheritdoc />
         public PermissionCheckBase InstancePermissions(ILog parentLog, IContainer module, IApp app)
             => new DnnPermissionCheck(parentLog, portal: PortalSettings.Current, instance: module, app: app);
-
-        /// <inheritdoc />
-        public DynamicCodeRoot AppAndDataHelpers(Blocks.IBlockBuilder blockBuilder) => new DnnDynamicCode(blockBuilder, compatibility: 9);
-
     }
 }

@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Dnn
         /// </summary>
         /// <param name="blockBuilder">CMS Block for which the helper is targeted. </param>
         /// <returns>A Code Helper based on <see cref="IDnnDynamicCode"/></returns>
-        public static IDnnDynamicCode DynamicCode(IBlockBuilder blockBuilder) => new DnnDynamicCode(blockBuilder as BlockBuilder);
+        public static IDnnDynamicCode DynamicCode(IBlockBuilder blockBuilder) => new DnnDynamicCode().Init(blockBuilder as BlockBuilder);
 
         /// <summary>
         /// Get a full app-object for accessing data of the app from outside
