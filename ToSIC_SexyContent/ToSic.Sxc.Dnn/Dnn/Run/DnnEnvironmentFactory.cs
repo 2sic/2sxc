@@ -9,6 +9,7 @@ using PermissionCheckBase = ToSic.Eav.Security.PermissionCheckBase;
 
 namespace ToSic.Sxc.Dnn.Run
 {
+    // todo: change completely so we don't need this - we only need the premissioncheckbase to have these interfaces
     public class DnnEnvironmentFactory : IEnvironmentFactory
     {
         /// <inheritdoc />

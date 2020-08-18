@@ -6,7 +6,6 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
@@ -32,19 +31,16 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         public IBlockBuilder BlockBuilder { get; private set; }
 
-        private ITenant _tenant;
-
         protected DynamicCodeRoot(string logName = null): base(logName ?? "Sxc.DynCdR") { }
 
         [PrivateApi]
-        public DynamicCodeRoot Init(IBlockBuilder blockBuilder, ITenant tenant, int compatibility, ILog parentLog) // : base("Sxc.AppHlp", parentLog ?? blockBuilder?.Log)
+        public DynamicCodeRoot Init(IBlockBuilder blockBuilder, int compatibility, ILog parentLog)
         {
             Log.LinkTo(parentLog ?? blockBuilder?.Log);
             if (blockBuilder == null)
                 return this;
 
             BlockBuilder = blockBuilder;
-            _tenant = tenant;
             CompatibilityLevel = compatibility;
             App = blockBuilder.App;
             Data = blockBuilder.Block.Data;
@@ -76,19 +72,12 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, CompatibilityLevel, BlockBuilder);
 
-
-
         /// <inheritdoc />
         public dynamic AsDynamic(dynamic dynamicEntity) => dynamicEntity;
 
 
         /// <inheritdoc />
         public IEntity AsEntity(dynamic dynamicEntity) => ((IDynamicEntity) dynamicEntity).Entity;
-
-        ///// <inheritdoc />
-        //public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => entities.Select(e => AsDynamic(e));
-
-
 
         #endregion
 
@@ -238,14 +227,13 @@ namespace ToSic.Sxc.Code
         {
             var envFs = Factory.Resolve<IEnvironmentFileSystem>();
             if (_adamAppContext == null)
-                _adamAppContext = new AdamAppContext(_tenant, App, BlockBuilder, CompatibilityLevel, Log);
+                _adamAppContext = new AdamAppContext(BlockBuilder.Context.Tenant, App, BlockBuilder, CompatibilityLevel, Log);
             return new FolderOfField(envFs, _adamAppContext, entity.EntityGuid, fieldName);
         }
         private AdamAppContext _adamAppContext;
 
         #endregion
-
-
+        
         #region Edit
 
         /// <inheritdoc />

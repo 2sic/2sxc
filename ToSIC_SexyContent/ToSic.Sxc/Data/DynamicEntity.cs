@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using System.Web;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
@@ -89,8 +88,7 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         public bool TryGetMember(string memberName, out object result)
         {
-            result = GetEntityValue(memberName);//, out var propertyNotFound);
-            //if (propertyNotFound) result = null;
+            result = GetEntityValue(memberName);
             return true;
         }
 

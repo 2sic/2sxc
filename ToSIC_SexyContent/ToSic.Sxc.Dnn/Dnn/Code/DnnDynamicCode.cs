@@ -19,13 +19,11 @@ namespace ToSic.Sxc.Dnn.Code
         /// <param name="blockBuilder">CMS Block which is used in this code.</param>
         /// <param name="parentLog">parent logger for logging what's happening</param>
         /// <param name="compatibility">compatibility level - changes behaviour if level 9 or 10</param>
-        public DnnDynamicCode Init(IBlockBuilder blockBuilder, ILog parentLog = null, int compatibility = 10)
-            // : base(blockBuilder, new DnnTenant(null), compatibility, parentLog ?? blockBuilder?.Log)
+        public DnnDynamicCode Init(IBlockBuilder blockBuilder, ILog parentLog, int compatibility = 10)
         {
-            base.Init(blockBuilder, blockBuilder?.Context.Tenant ?? new DnnTenant(null), compatibility, parentLog ?? blockBuilder?.Log);
+            base.Init(blockBuilder, compatibility, parentLog ?? blockBuilder?.Log);
             // Init things than require module-info or similar, but not 2sxc
-            var instance = blockBuilder?.Context.Container;
-            Dnn = new DnnContextOld(instance);
+            Dnn = new DnnContextOld(blockBuilder?.Context.Container);
             Link = new DnnLinkHelper(Dnn);
             return this;
         }

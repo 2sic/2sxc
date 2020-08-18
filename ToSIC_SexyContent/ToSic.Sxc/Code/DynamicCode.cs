@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Code
     /// It delegates all properties like App and methods like AsDynamic() to the parent item which initially caused it to be compiled.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract class DynamicCode : IDynamicCode, IWrapper<IDynamicCode>, ICoupledDynamicCode, IHasLog
+    public abstract class DynamicCode : IDynamicCode, IWrapper<IDynamicCode>, ICoupledDynamicCode
     {
         [PrivateApi] public int CompatibilityLevel => UnwrappedContents?.CompatibilityLevel ?? 9;
 
@@ -117,7 +117,7 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc />
         public dynamic CreateInstance(string virtualPath, 
-            string dontRelyOnParameterOrder = Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string name = null,
             string relativePath = null,
             bool throwOnError = true) =>
