@@ -1,26 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Web;
 using System.Web.Compilation;
 using System.Web.WebPages;
-using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Run;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
-using ToSic.SexyContent.Search;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
-using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 
-// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Engines
 {
     /// <summary>
@@ -29,7 +21,7 @@ namespace ToSic.Sxc.Engines
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     [EngineDefinition(Name = "Razor")]
     // ReSharper disable once UnusedMember.Global
-    public class RazorEngine : EngineBase
+    public partial class RazorEngine : EngineBase
     {
         [PrivateApi]
         protected RazorComponentBase  Webpage { get; set; }
@@ -107,7 +99,7 @@ namespace ToSic.Sxc.Engines
             Webpage = objectValue as RazorComponentBase;
 
             if (Webpage == null)
-                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage at '{0}' must derive from SexyContentWebPage.", TemplatePath));
+                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage at '{0}' must derive from RazorComponentBase.", TemplatePath));
 
             Webpage.Context = HttpContext;
             Webpage.VirtualPath = TemplatePath;
@@ -138,26 +130,5 @@ namespace ToSic.Sxc.Engines
         }
 
 
-        /// <inheritdoc />
-        public override void CustomizeData() 
-            => (Webpage as IRazorComponent)?.CustomizeData();
-
-        /// <inheritdoc />
-        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo, DateTime beginDate)
-        {
-            if (Webpage == null || searchInfos == null || searchInfos.Count <= 0) return;
-
-            // call new signature
-            (Webpage as RazorComponent)?.CustomizeSearch(searchInfos, moduleInfo, beginDate);
-
-            // also call old signature
-            if (!(Webpage is SexyContentWebPage asWebPage)) return;
-            var oldSignature = searchInfos.ToDictionary(si => si.Key, si => si.Value.Cast<ISearchInfo>().ToList());
-            asWebPage.CustomizeSearch(oldSignature,
-                ((Container<ModuleInfo>) moduleInfo).UnwrappedContents, beginDate);
-            searchInfos.Clear();
-            foreach (var item in oldSignature) 
-                searchInfos.Add(item.Key, item.Value.Cast<ISearchItem>().ToList());
-        }
     }
 }

@@ -18,7 +18,6 @@ namespace ToSic.Sxc.Blocks
         internal bool RenderWithDiv = true;
         public bool UserMayEdit 
             => _userMayEdit ?? (_userMayEdit = Factory.Resolve<AppPermissionCheck>().ForApp(Context, App, Log).UserMay(GrantSets.WriteSomething)).Value;
-            //?? (_userMayEdit = Factory.Resolve<IEnvironmentFactory>().InstancePermissions(Log, Context.Container, App).UserMay(GrantSets.WriteSomething)).Value;
         private bool? _userMayEdit;
 
 
