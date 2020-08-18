@@ -92,7 +92,6 @@
     <Compile Include="Compatibility\Sxc\SxcHelper.cs" />
     <Compile Include="Dnn\DnnConstants.cs" />
     <Compile Include="Dnn\DynamicCode.cs" />
-    <Compile Include="Code\ErrorHelp.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.DataSources.DnnSqlDataSource.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource.cs" />
     <Compile Include="Dnn920\SharpZipLibRedirect.cs" />
@@ -188,6 +187,8 @@
     <None Include="packages.config" />
     <None Include="Dnn\Search\readme.md" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Code\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
