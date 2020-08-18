@@ -30,6 +30,8 @@ namespace ToSic.Sxc.Dnn.Run
 
         public List<int> Roles => _roles ?? (_roles = BuildRoleList());
         public bool IsSuperUser => UnwrappedContents?.IsSuperUser ?? false;
+
+        public bool IsAdmin => UnwrappedContents?.IsInRole(PortalSettings.Current?.AdministratorRoleName ?? "dummyrolename-if-no-portal") ?? false;
         public bool IsDesigner => UnwrappedContents?.IsInRole(Settings.SexyContentGroupName) ?? false;
 
         private static List<int> BuildRoleList()

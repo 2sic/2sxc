@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Security
                 ConfigurationProvider.Build(blockBuilder, true),
                 false, Log);
 
-            var contextZoneId = blockBuilder.Environment.ZoneMapper.GetZoneId(App.Tenant.Id);
+            var contextZoneId = blockBuilder.Environment.ZoneMapper.GetZoneId(App.Tenant);
             SamePortal = contextZoneId == appIdentity.ZoneId;
             PortalForSecurityCheck = SamePortal ? PortalSettings.Current : null;
             wrapLog($"ready for z/a:{appIdentity.ZoneId}/{appIdentity.AppId} t/z:{App.Tenant.Id}/{contextZoneId} same:{SamePortal}");
@@ -81,12 +81,9 @@ namespace ToSic.Sxc.Security
             Log.Add($"BuildPermissionChecker(type:{type?.Name}, item:{item?.EntityId})");
 
             // user has edit permissions on this app, and it's the same app as the user is coming from
-            return new DnnPermissionCheck(Log,
-                instance: BlockBuilder?.Context.Container,
-                app: App,
-                portal: PortalForSecurityCheck,
-                targetType: type,
-                targetItem: item);
+            return new DnnPermissionCheck().ForParts(
+                new DnnContext(new DnnTenant(PortalForSecurityCheck), BlockBuilder.Context.Container, BlockBuilder.Context.User),
+                App, type, item, Log);
         }
 
     }

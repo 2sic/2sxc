@@ -142,7 +142,6 @@
     <Compile Include="Dnn\Run\IDnnContext.cs" />
     <Compile Include="Dnn\Search\SearchController.cs" />
     <Compile Include="Dnn\Search\SearchIndexException.cs" />
-    <Compile Include="Dnn\Run\DnnEnvironmentFactory.cs" />
     <Compile Include="Dnn\Run\DnnUser.cs" />
     <Compile Include="Dnn\LookUp\GetDnnEngine.cs" />
     <Compile Include="Dnn\LookUp\TokenReplaceDnn.cs" />

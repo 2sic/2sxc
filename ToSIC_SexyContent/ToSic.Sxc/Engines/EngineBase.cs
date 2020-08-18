@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using ToSic.Eav;
+using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
@@ -34,6 +35,7 @@ namespace ToSic.Sxc.Engines
 
         [PrivateApi] public bool CompatibilityAutoLoadJQueryAndRVT { get; protected set; } = true;
 
+        #region Constructor and DI
 
         /// <summary>
         /// Empty constructor, so it can be used in dependency injection
@@ -43,8 +45,11 @@ namespace ToSic.Sxc.Engines
 
         protected IHttp Http => _http ?? (_http = Factory.Resolve<IHttp>());
         private IHttp _http;
+        
 
+        #endregion
 
+        
         /// <inheritdoc />
         public void Init(IBlockBuilder blockBuilder, Purpose purpose, ILog parentLog)
         {
@@ -147,7 +152,7 @@ namespace ToSic.Sxc.Engines
             return result.Item1;
         }
 
-        [PrivateApi] public bool ActivateJsApi { get; private set; } = false;
+        [PrivateApi] public bool ActivateJsApi { get; private set; }
 
 
         private void CheckExpectedTemplateErrors()
@@ -193,8 +198,8 @@ namespace ToSic.Sxc.Engines
         {
             // do security check IF security exists
             // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
-            var templatePermissions = Factory.Resolve<IEnvironmentFactory>()
-                .ItemPermissions(App, Template.Entity, Log, BlockBuilder.Context.Container);
+            var templatePermissions = Factory.Resolve<AppPermissionCheck>()
+                .ForItem(BlockBuilder.Context, App, Template.Entity, Log);
 
             // Views only use permissions to prevent access, so only check if there are any configured permissions
             if (tenant.RefactorUserIsAdmin || !templatePermissions.HasPermissions)

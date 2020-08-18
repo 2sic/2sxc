@@ -1,6 +1,6 @@
 ﻿using System;
 using ToSic.Eav;
-using ToSic.Eav.Run;
+using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Interfaces;
@@ -16,8 +16,9 @@ namespace ToSic.Sxc.Blocks
     public partial class BlockBuilder
     {
         internal bool RenderWithDiv = true;
-        public bool UserMayEdit => _userMayEdit
-            ?? (_userMayEdit = Factory.Resolve<IEnvironmentFactory>().InstancePermissions(Log, Context.Container, App).UserMay(GrantSets.WriteSomething)).Value;
+        public bool UserMayEdit 
+            => _userMayEdit ?? (_userMayEdit = Factory.Resolve<AppPermissionCheck>().ForApp(Context, App, Log).UserMay(GrantSets.WriteSomething)).Value;
+            //?? (_userMayEdit = Factory.Resolve<IEnvironmentFactory>().InstancePermissions(Log, Context.Container, App).UserMay(GrantSets.WriteSomething)).Value;
         private bool? _userMayEdit;
 
 

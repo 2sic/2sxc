@@ -79,8 +79,10 @@ namespace ToSic.Sxc.WebApi.App
                 throw HttpErr(HttpStatusCode.NotFound, "query not found", msg);
             }
 
-            var permissionChecker = new DnnPermissionCheck(log, targetItem: query.Definition.Entity, 
-                instance: new DnnContainer().Init(module, log), appIdentity: app);
+            var permissionChecker = new DnnPermissionCheck().ForItem(
+                new DnnContext(new DnnTenant(), new DnnContainer().Init(module, log), new DnnUser()), 
+                appIdentity: app,
+                targetItem: query.Definition.Entity, parentLog: log);
             var readExplicitlyAllowed = permissionChecker.UserMay(GrantSets.ReadSomething);
 
             var isAdmin = module != null && DotNetNuke.Security.Permissions

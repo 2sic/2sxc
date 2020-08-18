@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using DotNetNuke.Entities.Portals;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 
@@ -46,7 +47,7 @@ namespace ToSic.Sxc.Dnn.Run
         private string _defaultLanguage;
 
         /// <inheritdoc />
-        public override int Id => UnwrappedContents.PortalId;
+        public override int Id => UnwrappedContents?.PortalId ?? AppConstants.AppIdNotFound;
 
         /// <inheritdoc />
         public override string Name => UnwrappedContents.PortalName;

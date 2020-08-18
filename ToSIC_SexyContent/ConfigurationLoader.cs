@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Caching;
 using ToSic.Eav.ImportExport.Persistence.File;
 using ToSic.Eav.LookUp;
@@ -13,7 +14,6 @@ using ToSic.Eav.Repositories;
 using ToSic.Eav.Run;
 using ToSic.SexyContent.Dnn920;
 using ToSic.Sxc.Adam;
-using ToSic.SexyContent.Interfaces;
 using ToSic.Sxc.Apps.ImportExport;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Conversion;
@@ -111,7 +111,8 @@ namespace ToSic.SexyContent
                 sc.AddTransient<XmlImportWithFiles, XmlImportFull>();
 
                 sc.AddTransient<IClientDependencyOptimizer, DnnClientDependencyOptimizer>();
-                sc.AddTransient<IEnvironmentFactory, DnnEnvironmentFactory>();
+                sc.AddTransient<AppPermissionCheck, DnnPermissionCheck>();
+
                 sc.AddTransient<DynamicCodeRoot, DnnDynamicCode>();
                 sc.AddTransient<IRenderingHelper, DnnRenderingHelper>();
                 sc.AddTransient<IEnvironmentConnector, DnnMapAppToInstance>();

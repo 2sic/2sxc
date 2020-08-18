@@ -153,10 +153,10 @@ namespace ToSic.Sxc.Adam.WebApi
         /// </summary>
         public bool FieldPermissionOk(List<Grants> requiredGrant)
         {
-            var fieldPermissions = new DnnPermissionCheck(Log,
-                instance: BlockBuilder.Context.Container,
-                permissions1: Attribute.Permissions,
-                appIdentity: BlockBuilder.App);
+            var fieldPermissions = new DnnPermissionCheck().ForAttribute(
+                BlockBuilder.Context,
+                appIdentity: BlockBuilder.App, 
+                attribute: Attribute, parentLog: Log);
 
             return fieldPermissions.UserMay(requiredGrant);
         }

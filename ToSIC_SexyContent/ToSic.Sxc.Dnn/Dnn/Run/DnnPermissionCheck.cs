@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Data;
-using ToSic.Eav.Logging;
+using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security;
-using IEntity = ToSic.Eav.Data.IEntity;
-using PermissionCheckBase = ToSic.Eav.Security.PermissionCheckBase;
 
 namespace ToSic.Sxc.Dnn.Run
 {
@@ -18,43 +14,19 @@ namespace ToSic.Sxc.Dnn.Run
     /// Permissions object which checks if the user is allowed to do something based on specific permission
     /// This checks permissions based on EAV data related to an entity - so pure EAV, no DNN
     /// </summary>
-    public class DnnPermissionCheck: PermissionCheckBase
+    public class DnnPermissionCheck: AppPermissionCheck
     {
         public string CustomPermissionKey = ""; // "CONTENT";
 
         private readonly string _salPrefix = "SecurityAccessLevel.".ToLower();
 
-        protected IContainer Instance { get; }
-        protected ModuleInfo Module => ((Container<ModuleInfo>) Instance)?.UnwrappedContents;
-        protected PortalSettings Portal { get; }
-
-        protected IApp App { get; }
-
-        protected IAppIdentity AppIdentity;
-
-        public DnnPermissionCheck(
-            ILog parentLog,
-            IContentType targetType = null,
-            IEntity targetItem = null,
-            IContainer instance = null,
-            IApp app = null,
-            IEnumerable<Permission> permissions1 = null,
-            PortalSettings portal = null,
-            IAppIdentity appIdentity = null
-            )
-            : base(parentLog, targetType, targetItem, app?.Metadata.Permissions, permissions1)
-        {
-            var logWrap = Log.Call($"..., {targetItem?.EntityId}, app: {app?.AppId}, ");
-            AppIdentity = appIdentity ?? app;
-            App = app;
-            Instance = instance;
-            Portal = portal;
-            logWrap(null);
-        }
+        protected ModuleInfo Module =>
+            _module ?? (_module = ((Container<ModuleInfo>) Context.Container)?.UnwrappedContents);
+        private ModuleInfo _module;
 
 
+        public DnnPermissionCheck() : base("Dnn.PrmChk") { }
 
-        protected override IUser User => new DnnUser();
 
         protected override bool EnvironmentAllows(List<Grants> grants)
         {
@@ -90,20 +62,6 @@ namespace ToSic.Sxc.Dnn.Run
         }
 
         /// <summary>
-        /// Check if user is super user
-        /// </summary>
-        /// <returns></returns>
-        private bool UserIsSuperuser() => Log.Intercept("UserIsSuperuser", 
-            () => PortalSettings.Current?.UserInfo?.IsSuperUser ?? false);
-
-        /// <summary>
-        /// Check if user is valid admin of current portal / zone
-        /// </summary>
-        /// <returns></returns>
-        public bool UserIsTenantAdmin() => Log.Intercept("UserIsSuperuser", 
-            () => Portal?.UserInfo?.IsInRole(Portal?.AdministratorRoleName) ?? false);
-
-        /// <summary>
         /// Verify that we're in the same zone, allowing admin/module checks
         /// </summary>
         /// <returns></returns>
@@ -112,20 +70,21 @@ namespace ToSic.Sxc.Dnn.Run
             var wrapLog = Log.Call();
             // but is the current portal also the one we're asking about?
             var env = Eav.Factory.Resolve<IAppEnvironment>();
-            if (Portal == null) return false; // this is the case when running out-of http-context
+            if (Context.Tenant == null || Context.Tenant.Id == AppConstants.AppIdNotFound) return false; // this is the case when running out-of http-context
             if (AppIdentity == null) return true; // this is the case when an app hasn't been selected yet, so it's an empty module, must be on current portal
-            var pZone = env.ZoneMapper.GetZoneId(Portal.PortalId);
+            var pZone = env.ZoneMapper.GetZoneId(Context.Tenant);
             var result = pZone == AppIdentity.ZoneId; // must match, to accept user as admin
             wrapLog($"{result}");
             return result;
         }
 
         private bool UserIsModuleEditor()
-            => Log.Intercept("UserIsModuleEditor", () => Module != null && ModulePermissionController
+            => Log.Intercept(nameof(UserIsModuleEditor), 
+                () => Module != null && ModulePermissionController
                    .HasModuleAccess(SecurityAccessLevel.Edit, "", Module));
 
         private bool UserIsModuleAdmin()
-            => Log.Intercept("UserIsModuleAdmin", 
+            => Log.Intercept(nameof(UserIsModuleAdmin), 
                 () => Module != null && ModulePermissionController.CanAdminModule(Module));
     }
 }
