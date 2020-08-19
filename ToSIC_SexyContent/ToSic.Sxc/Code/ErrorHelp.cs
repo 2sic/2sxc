@@ -1,5 +1,11 @@
 ﻿using System;
 using System.Web;
+#if NETFRAMEWORK
+using HttpCompileException = System.Web.HttpCompileException;
+#else
+// TODO
+using HttpCompileException = System.Exception;
+#endif
 
 namespace ToSic.Sxc.Code
 {

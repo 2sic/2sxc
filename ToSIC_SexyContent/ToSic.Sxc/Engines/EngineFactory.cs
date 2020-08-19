@@ -23,8 +23,13 @@ namespace ToSic.Sxc.Engines
                     // TODO
                     // This isn't done well, a setup like the DataSources which are loaded from DLL and
                     // instantiated would be the more correct (and probably faster) way to do this
+#if NETFRAMEWORK
                     var engineAssembly = Assembly.Load("ToSic.SexyContent.Razor");
                     engineType = engineAssembly.GetType("ToSic.Sxc.Engines.RazorEngine");
+#else
+                    var engineAssembly = Assembly.Load("Website");
+                    engineType = engineAssembly.GetType("ToSic.Sxc.Mvc.Engines.MvcRazorEngine");
+#endif
                     break;
                 case false:
                     // Load Token Engine
