@@ -154,12 +154,10 @@
     <Compile Include="WebApi\System\Insights\InsightsController_Help.cs" />
     <Compile Include="WebApi\System\Insights\InsightsController_Entities.cs" />
     <Compile Include="WebApi\System\Insights\InsightsController_Log.cs" />
-    <Compile Include="WebApi\System\Insights\InsightsController_Metadata.cs" />
     <Compile Include="WebApi\System\Insights\InsightsController_Attributes.cs" />
     <Compile Include="WebApi\System\Insights\InsightsController_ParamChecks.cs" />
     <Compile Include="WebApi\System\Insights\InsightsController_Types.cs" />
     <Compile Include="WebApi\System\Insights\InsightsController_AppActions.cs" />
-    <Compile Include="WebApi\System\Insights\InsightsController_Html.cs" />
     <Compile Include="WebApi\Cms\SystemController_Features.cs" />
     <Compile Include="WebApi\Cms\EditUi\AllInOne.cs" />
     <Compile Include="WebApi\Cms\EditUi\UiController.cs" />
@@ -197,7 +195,6 @@
     <Compile Include="WebApi\Cms\TemplateController.cs" />
     <Compile Include="WebApi\Cms\Refactor\GetContentBlockDataLight.cs" />
     <Compile Include="WebApi\Cms\ModuleController.cs" />
-    <Compile Include="WebApi\System\Insights\InsightsHtml.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">

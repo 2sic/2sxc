@@ -23,9 +23,12 @@ namespace ToSic.Sxc.WebApi.System
         protected override string HistoryLogGroup { get; } = "web-api.insights";
 
 
-        private AppRuntime AppRt(int? appId) => new AppRuntime(appId.Value, true, Log);
+        //private AppRuntime AppRt(int? appId) => new AppRuntime(appId.Value, true, Log);
 
-        private AppState AppState(int? appId) => State.Get(appId.Value);
+        //private AppState AppState(int? appId) => State.Get(appId.Value);
 
+        protected ToSic.Sxc.Web.WebApi.System.Ins Insights =>
+            _insights ?? (_insights = new ToSic.Sxc.Web.WebApi.System.Ins(Log, ThrowIfNotSuperuser, (string msg) => Http.BadRequest(msg)));
+        private ToSic.Sxc.Web.WebApi.System.Ins _insights;
     }
 }

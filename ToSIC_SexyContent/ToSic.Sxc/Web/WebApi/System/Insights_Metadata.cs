@@ -1,29 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using IEntity = ToSic.Eav.Data.IEntity;
+﻿using System.Collections.Generic;
+using ToSic.Eav.Data;
 
-
-namespace ToSic.Sxc.WebApi.System
+namespace ToSic.Sxc.Web.WebApi.System
 {
-    public partial class InsightsController
+    public partial class Ins
     {
 
-
-
-        private static string MetadataTable(string msg, List<IEntity> metadata)
+        internal static string MetadataTable(string msg, List<IEntity> metadata)
         {
             try
             {
                 msg += p($"Assigned Items: {metadata.Count}\n");
                 msg += "<table id='table'><thead>"
-                       + tr(new[] {"#", "Id", "Title", "Content-Type", "Target", "Key"}, true)
+                       + tr(new[] { "#", "Id", "Title", "Content-Type", "Target", "Key" }, true)
                        + "</thead>"
                        + "<tbody>";
                 var count = 0;
                 foreach (var md in metadata)
                 {
                     var mdFor = md.MetadataFor;
-                    var key = !String.IsNullOrEmpty(mdFor.KeyString)
+                    var key = !string.IsNullOrEmpty(mdFor.KeyString)
                         ? "\"" + mdFor.KeyString + "\""
                         : mdFor.KeyNumber != null
                             ? "#" + mdFor.KeyNumber

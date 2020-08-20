@@ -6,11 +6,7 @@ namespace ToSic.Sxc.WebApi.System
     public partial class InsightsController
     {
         [HttpGet]
-        public bool IsAlive()
-        {
-            ThrowIfNotSuperuser();
-            return true;
-        }
+        public bool IsAlive() => Insights.IsAlive();
         
 
     }

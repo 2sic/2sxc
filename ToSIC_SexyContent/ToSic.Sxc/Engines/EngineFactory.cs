@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Engines
                     var engineAssembly = Assembly.Load("ToSic.SexyContent.Razor");
                     engineType = engineAssembly.GetType("ToSic.Sxc.Engines.RazorEngine");
 #else
-                    var engineAssembly = Assembly.Load("Website");
+                    var engineAssembly = Assembly.Load("ToSic.Sxc.Mvc");
                     engineType = engineAssembly.GetType("ToSic.Sxc.Mvc.Engines.MvcRazorEngine");
 #endif
                     break;
