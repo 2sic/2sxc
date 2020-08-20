@@ -149,15 +149,6 @@
     <Compile Include="WebApi\Helpers\SaveHelperBase.cs" />
     <Compile Include="Security\Security.cs" />
     <Compile Include="WebApi\DynamicApiController.cs" />
-    <Compile Include="WebApi\System\Insights\InsightsController_IsAlive.cs" />
-    <Compile Include="WebApi\System\Insights\InsightsController_App.cs" />
-    <Compile Include="WebApi\System\Insights\InsightsController_Help.cs" />
-    <Compile Include="WebApi\System\Insights\InsightsController_Entities.cs" />
-    <Compile Include="WebApi\System\Insights\InsightsController_Log.cs" />
-    <Compile Include="WebApi\System\Insights\InsightsController_Attributes.cs" />
-    <Compile Include="WebApi\System\Insights\InsightsController_ParamChecks.cs" />
-    <Compile Include="WebApi\System\Insights\InsightsController_Types.cs" />
-    <Compile Include="WebApi\System\Insights\InsightsController_AppActions.cs" />
     <Compile Include="WebApi\Cms\SystemController_Features.cs" />
     <Compile Include="WebApi\Cms\EditUi\AllInOne.cs" />
     <Compile Include="WebApi\Cms\EditUi\UiController.cs" />
