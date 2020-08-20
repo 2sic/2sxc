@@ -7,7 +7,7 @@ using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.Sxc.Web.WebApi.System
 {
-    public partial class Ins
+    public partial class Insights
     {
 
         internal static string LogHeader(string key = null)

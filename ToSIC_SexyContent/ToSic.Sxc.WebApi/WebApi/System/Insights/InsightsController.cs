@@ -26,9 +26,9 @@ namespace ToSic.Sxc.WebApi.System
         #endregion
 
 
-        protected Web.WebApi.System.Ins Insights =>
-            _insights ?? (_insights = new Web.WebApi.System.Ins(Log, ThrowIfNotSuperuser, Http.BadRequest));
-        private Web.WebApi.System.Ins _insights;
+        protected Web.WebApi.System.Insights Insights =>
+            _insights ?? (_insights = new Web.WebApi.System.Insights(Log, ThrowIfNotSuperuser, Http.BadRequest));
+        private Web.WebApi.System.Insights _insights;
 
         private void ThrowIfNotSuperuser()
         {

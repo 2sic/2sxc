@@ -5,7 +5,7 @@ using System.Web;
 
 namespace ToSic.Sxc.Web.WebApi.System
 {
-    public partial class Ins
+    public partial class Insights
     {
         private static string Tag(string tag, string content, string attributes = null) => $"<{tag}{attributes}>{content}</{tag}>";
         private static string Atr(string attribute, string content) => $" {attribute}={content} ";

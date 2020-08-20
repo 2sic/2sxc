@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Web.WebApi.System
 {
-    public partial class Ins
+    public partial class Insights
     {
         public string Purge(int? appId = null)
         {

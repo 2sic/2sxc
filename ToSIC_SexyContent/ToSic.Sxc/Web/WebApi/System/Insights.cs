@@ -4,9 +4,9 @@ using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Web.WebApi.System
 {
-    public partial class Ins: HasLog
+    public partial class Insights: HasLog
     {
-        public Ins(ILog parentLog, Action throwIfNotSuperUser, Func<string, Exception> createBadRequest) : base("Api.SysIns", parentLog)
+        public Insights(ILog parentLog, Action throwIfNotSuperUser, Func<string, Exception> createBadRequest) : base("Api.SysIns", parentLog)
         {
             ThrowIfNotSuperUser = throwIfNotSuperUser;
             CreateBadRequest = createBadRequest;

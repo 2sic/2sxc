@@ -3,7 +3,7 @@ using ToSic.Eav.Data;
 
 namespace ToSic.Sxc.Web.WebApi.System
 {
-    public partial class Ins
+    public partial class Insights
     {
 
         internal static string MetadataTable(string msg, List<IEntity> metadata)

@@ -3,7 +3,7 @@ using ToSic.Eav.Data;
 
 namespace ToSic.Sxc.Web.WebApi.System
 {
-    public partial class Ins
+    public partial class Insights
     {
 
         public string Attributes(int appId, string type = null)

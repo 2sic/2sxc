@@ -5,7 +5,7 @@ using ToSic.Eav.Types;
 
 namespace ToSic.Sxc.Web.WebApi.System
 {
-    public partial class Ins
+    public partial class Insights
     {
 
         public string Types(int? appId = null, bool detailed = false)

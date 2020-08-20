@@ -6,7 +6,7 @@ using ToSic.Eav.ImportExport.Json;
 
 namespace ToSic.Sxc.Web.WebApi.System
 {
-    public partial class Ins
+    public partial class Insights
     {
 
         public string Entities(int? appId = null, string type = null)

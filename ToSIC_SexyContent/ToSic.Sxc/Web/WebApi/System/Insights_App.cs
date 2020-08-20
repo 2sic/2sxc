@@ -3,7 +3,7 @@ using ToSic.Eav.Apps;
 
 namespace ToSic.Sxc.Web.WebApi.System
 {
-    public partial class Ins
+    public partial class Insights
     {
         public string LoadLog(int? appId = null)
         {
