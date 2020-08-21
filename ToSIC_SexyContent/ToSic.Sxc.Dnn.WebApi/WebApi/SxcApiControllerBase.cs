@@ -1,6 +1,7 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Eav;
 using ToSic.Eav.Documentation;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
@@ -38,7 +39,7 @@ namespace ToSic.Sxc.WebApi
         /// </summary>
         /// <param name="appId"></param>
         /// <returns></returns>
-        internal IApp GetApp(int appId) => AppApiHelpers.GetApp(appId, BlockBuilder, Log);
+        internal IApp GetApp(int appId) => Factory.Resolve<Apps.App>().Init(appId, Log, BlockBuilder);
 
         #endregion
     }

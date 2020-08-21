@@ -105,7 +105,6 @@
     <Compile Include="Dnn\ApiController.cs" />
     <Compile Include="Dnn\ApiController_Obsolete.cs" />
     <Compile Include="Security\RunIf.cs" />
-    <Compile Include="WebApi\App\AppContentEntityBuilder.cs" />
     <Compile Include="WebApi\Cms\AppAssetsController_Private.cs" />
     <Compile Include="WebApi\Cms\ContentGroupController_FieldList.cs" />
     <Compile Include="WebApi\Cms\EntitiesController_2134.cs" />

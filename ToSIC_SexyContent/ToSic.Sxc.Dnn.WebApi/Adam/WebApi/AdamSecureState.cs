@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Http;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
@@ -12,12 +13,12 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.Errors;
 using ToSic.Sxc.WebApi.Security;
 using SysConf = ToSic.Eav.Configuration;
 using Feats = ToSic.Eav.Configuration.Features;
 using IApp = ToSic.Sxc.Apps.IApp;
+using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Adam.WebApi
 {
@@ -43,7 +44,7 @@ namespace ToSic.Sxc.Adam.WebApi
         /// Initializes the object and performs all the initial security checks
         /// </summary>
         public AdamSecureState(IBlockBuilder blockBuilder, int appId, string contentType, string field, Guid guid, bool usePortalRoot, ILog log)
-            : base(blockBuilder.Context, AppApiHelpers.GetApp(appId, blockBuilder, log), contentType, log)
+            : base(blockBuilder.Context, Factory.Resolve<Apps.App>().Init(appId, log, blockBuilder), /*AppApiHelpers.GetApp(appId, blockBuilder, log)*/ contentType, log)
         {
             BlockBuilder = blockBuilder;
             // only do checks on field/guid if it's actually accessing that, if it's on the portal root, don't.

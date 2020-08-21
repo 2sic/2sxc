@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.Security;
 
 namespace ToSic.Sxc.WebApi.Save
@@ -17,7 +18,8 @@ namespace ToSic.Sxc.WebApi.Save
 
         public IMultiPermissionCheck DoPreSaveSecurityCheck(int appId, IEnumerable<BundleWithHeader> items)
         {
-            var permCheck = new MultiPermissionsTypes(BlockBuilder.Context, AppApiHelpers.GetApp(appId, BlockBuilder, Log), items.Select(i => i.Header).ToList(), Log);
+            var app = Factory.Resolve<Apps.App>().Init(appId, Log, BlockBuilder);
+            var permCheck = new MultiPermissionsTypes(BlockBuilder.Context, app, items.Select(i => i.Header).ToList(), Log);
             if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
                 throw HttpException.PermissionDenied(error);
             if (!permCheck.UserCanWriteAndPublicFormsEnabled(out _, out error))
