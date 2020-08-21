@@ -8,9 +8,6 @@ using ToSic.Eav.LookUp;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
-#if NETSTANDARD
-using System.Linq;
-#endif
 
 namespace ToSic.Sxc.LookUp
 {
@@ -21,19 +18,20 @@ namespace ToSic.Sxc.LookUp
         /// </summary>
         internal static Func<App, IAppDataConfiguration> Build(IBlockBuilder blockBuilder, bool useExistingConfig)
         {
+            var containerId = blockBuilder.Context.Container.Id;
+            var showDrafts = blockBuilder.UserMayEdit;
+            var activatePagePublishing = blockBuilder.Environment.PagePublishing.IsEnabled(containerId);
+            var existingLookups = blockBuilder.Block.Data.Configuration.LookUps;
+
             return appToUse =>
             {
-                // the module id
-                var envInstanceId = blockBuilder.Context.Container.Id;
-
                 // check if we'll use the config already on the sxc-instance, or generate a new one
-                var config = useExistingConfig
-                    ? blockBuilder.Block.Data.Configuration.LookUps
-                    : GetConfigProviderForModule(envInstanceId, appToUse as IApp, blockBuilder);
+                var lookUpEngine = useExistingConfig
+                    ? existingLookups
+                    : GetConfigProviderForModule(containerId, appToUse as IApp, blockBuilder);
 
                 // return results
-                return new AppDataConfiguration(blockBuilder.UserMayEdit,
-                    blockBuilder.Environment.PagePublishing.IsEnabled(envInstanceId), config);
+                return new AppDataConfiguration(showDrafts, activatePagePublishing, lookUpEngine);
             };
         }
 

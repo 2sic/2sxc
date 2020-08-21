@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Linq;
-using System.Net.Http;
-using System.Web.Http.Controllers;
-using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.WebApi
 {
@@ -16,15 +14,22 @@ namespace ToSic.Sxc.WebApi
     /// </summary>
     internal class AppFinder: HasLog
     {
-        private IZoneMapper ZoneMapper { get; }
-        private PortalSettings Portal { get; }
-        private HttpControllerContext ControllerContext { get; }
+        private IZoneMapper _zoneMapper;
+        private int _tenantId;
 
-        public AppFinder(PortalSettings portal, IZoneMapper zoneMapper, HttpControllerContext controllerContext, ILog parentLog) : base("Api.FindAp", parentLog, null, "AppForApiCall")
+        private readonly IHttp _http;
+
+        public AppFinder(IHttp http): base("Api.FindAp")
         {
-            ZoneMapper = zoneMapper;
-            Portal = portal;
-            ControllerContext = controllerContext;
+            _http = http;
+        }
+
+        public AppFinder Init(int tenantId, IZoneMapper zoneMapper, ILog parentLog) 
+        {
+            Log.LinkTo(parentLog);
+            _tenantId = tenantId;
+            _zoneMapper = zoneMapper;
+            return this;
         }
 
         /// <summary>
@@ -35,11 +40,10 @@ namespace ToSic.Sxc.WebApi
         internal IAppIdentity GetCurrentAppIdFromPath(string appPath)
         {
             var wrapLog = Log.Call(appPath);
-            var zid = ZoneMapper.GetZoneId(Portal.PortalId);
+            var zid = _zoneMapper.GetZoneId(_tenantId);
 
             // get app from AppName
             var aid = new ZoneRuntime(zid, Log).FindAppId(appPath, true);
-            //var aid = AppHelpers.GetAppIdFromGuidName(zid, appPath, true);
             wrapLog($"found app:{aid}");
             return new AppIdentity(zid, aid);
         }
@@ -80,7 +84,7 @@ namespace ToSic.Sxc.WebApi
         /// <returns></returns>
         private IAppIdentity GetAppIdentityFromUrlQueryAppZone()
         {
-            var allUrlKeyValues = ControllerContext.Request.GetQueryNameValuePairs().ToList();
+            var allUrlKeyValues = _http.QueryStringKeyValuePairs();
             var ok1 = int.TryParse(allUrlKeyValues.FirstOrDefault(x => x.Key == Route.ZoneIdKey).Value, out var zoneIdFromQueryString);
             var ok2 = int.TryParse(allUrlKeyValues.FirstOrDefault(x => x.Key == Route.AppIdKey).Value, out var appIdFromQueryString);
             if (ok1 && ok2)

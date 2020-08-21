@@ -1,8 +1,11 @@
 ﻿using System.Web.Http.Controllers;
+using ToSic.Eav;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.WebApi.App;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi
 {
@@ -27,8 +30,16 @@ namespace ToSic.Sxc.WebApi
 
         #region App-Helpers for anonyous access APIs
 
-        internal AppFinder AppFinder => _appFinder ?? (_appFinder = new AppFinder(PortalSettings, Env.ZoneMapper, ControllerContext, Log));
+        internal AppFinder AppFinder => _appFinder ?? (_appFinder = Factory.Resolve<AppFinder>()
+                                            .Init(PortalSettings.PortalId, Env.ZoneMapper, Log));
         private AppFinder _appFinder;
+
+        /// <summary>
+        /// used for API calls to get the current app
+        /// </summary>
+        /// <param name="appId"></param>
+        /// <returns></returns>
+        internal IApp GetApp(int appId) => AppApiHelpers.GetApp(appId, BlockBuilder, Log);
 
         #endregion
     }

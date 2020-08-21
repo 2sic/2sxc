@@ -3,6 +3,7 @@ using System.Linq;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -12,8 +13,8 @@ namespace ToSic.Sxc.WebApi.Security
     {
         protected List<IEntity> Items;
 
-        public MultiPermissionsItems(IBlockBuilder blockBuilder, IInstanceContext context, int appId, IEntity item, ILog parentLog) 
-            : base(blockBuilder, context, appId, parentLog)
+        public MultiPermissionsItems(IInstanceContext context, IApp app, IEntity item, ILog parentLog) 
+            : base(context, app, parentLog)
         {
             Items = new List<IEntity> {item};
         }

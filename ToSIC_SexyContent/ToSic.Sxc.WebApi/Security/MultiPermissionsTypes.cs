@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
 using ToSic.Eav.WebApi.Formats;
-using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.WebApi.Security
 {
@@ -12,16 +12,16 @@ namespace ToSic.Sxc.WebApi.Security
     {
         protected IEnumerable<string> ContentTypes;
 
-        public MultiPermissionsTypes(IBlockBuilder blockBuilder, int appId, string contentType, ILog parentLog) 
-            : this(blockBuilder, appId, new []{contentType}, parentLog)
+        public MultiPermissionsTypes(IInstanceContext context, Apps.IApp app, string contentType, ILog parentLog) 
+            : this(context, app, new []{contentType}, parentLog)
         { }
 
-        public MultiPermissionsTypes(IBlockBuilder blockBuilder, int appId, IEnumerable<string> contentTypes, ILog parentLog) 
-            : base(blockBuilder, blockBuilder.Context, appId, parentLog) 
+        public MultiPermissionsTypes(IInstanceContext context, Apps.IApp app, IEnumerable<string> contentTypes, ILog parentLog) 
+            : base(context, app, parentLog) 
             => ContentTypes = contentTypes;
 
-        public MultiPermissionsTypes(IBlockBuilder blockBuilder, int appId, List<ItemIdentifier> items, ILog parentLog) 
-            : base(blockBuilder, blockBuilder.Context, appId, parentLog) 
+        public MultiPermissionsTypes(IInstanceContext context, Apps.IApp app, List<ItemIdentifier> items, ILog parentLog) 
+            : base(context, app, parentLog) 
             => ContentTypes = ExtractTypeNamesFromItems(items);
 
 

@@ -15,7 +15,8 @@ namespace ToSic.Sxc.WebApi
         /// Workaround for deserializing KeyValuePair - it requires lowercase properties (case sensitive), 
         /// which seems to be a issue in some Newtonsoft.Json versions: http://stackoverflow.com/questions/11266695/json-net-case-insensitive-property-deserialization
         /// </summary>
-        public class UpperCaseStringKeyValuePair
+        // ReSharper disable once ClassNeverInstantiated.Local
+        private class UpperCaseStringKeyValuePair
         {
             public string Key { get; set; }
             public string Value{ get; set; }

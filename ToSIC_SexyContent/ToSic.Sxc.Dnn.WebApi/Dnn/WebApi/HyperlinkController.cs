@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 		        {
                     // page link - only resolve if the user has edit-permissions
 		            // only people who have some full edit permissions may actually look up pages
-		            var permCheckPage = new MultiPermissionsApp(BlockBuilder, BlockBuilder.Context, appId, Log);
+		            var permCheckPage = new MultiPermissionsApp(BlockBuilder.Context, GetApp(appId), Log);
 		            return permCheckPage.UserMayOnAll(GrantSets.WritePublished)
                         ? resolved
                         : hyperlink;

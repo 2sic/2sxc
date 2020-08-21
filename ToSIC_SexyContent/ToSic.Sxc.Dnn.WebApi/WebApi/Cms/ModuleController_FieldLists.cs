@@ -45,7 +45,8 @@ namespace ToSic.Sxc.WebApi.Cms
         public bool Publish(string part, int index)
         {
             Log.Add($"try to publish #{index} on '{part}'");
-            if (!new MultiPermissionsApp(BlockBuilder, BlockBuilder.Context, App.AppId, Log).EnsureAll(GrantSets.WritePublished, out var error))
+            if (!new MultiPermissionsApp(BlockBuilder.Context, App, Log)
+                .EnsureAll(GrantSets.WritePublished, out var error))
                 throw HttpException.PermissionDenied(error);
             return GetEditor().Publish(part, index);
         }

@@ -49,7 +49,7 @@ namespace ToSic.Sxc.WebApi.Cms
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {
-            var permCheck = new MultiPermissionsApp(BlockBuilder, BlockBuilder.Context, App.AppId, Log);
+            var permCheck = new MultiPermissionsApp(BlockBuilder.Context, App, Log);
             if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
@@ -145,7 +145,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public bool Publish(int id)
         {
             Log.Add($"try to publish id #{id}");
-            if (!new MultiPermissionsApp(BlockBuilder, BlockBuilder.Context, App.AppId, Log).EnsureAll(GrantSets.WritePublished, out var error))
+            if (!new MultiPermissionsApp(BlockBuilder.Context, App, Log).EnsureAll(GrantSets.WritePublished, out var error))
                 throw HttpException.PermissionDenied(error);
             new AppManager(App, Log).Entities.Publish(id);
             return true;

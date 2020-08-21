@@ -1,14 +1,10 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.LookUp;
-using App = ToSic.Sxc.Apps.App;
 using Factory = ToSic.Eav.Factory;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -22,35 +18,22 @@ namespace ToSic.Sxc.WebApi.Security
         /// </summary>
         public IApp App { get; }
 
-        //internal readonly IBlockBuilder BlockBuilder;
         internal readonly IInstanceContext Context;
 
-        //protected readonly PortalSettings PortalForSecurityCheck;
         protected readonly ITenant TenantForSecurityCheck;
 
         protected readonly bool SamePortal;
 
-        public MultiPermissionsApp(IBlockBuilder blockBuilder, IInstanceContext context, int appId, ILog parentLog) :
-            this(blockBuilder, context, new AppIdentity(SystemRuntime.ZoneIdOfApp(appId), appId), parentLog) { }
-
-        protected MultiPermissionsApp(IBlockBuilder blockBuilder, IInstanceContext context, IAppIdentity appIdentity,  ILog parentLog) 
+        public MultiPermissionsApp(IInstanceContext context, IApp app, ILog parentLog) 
             : base("Api.Perms", parentLog)
         {
-            var wrapLog = Log.Call($"..., appId: {appIdentity.AppId}, ...");
-            // old
-            //BlockBuilder = blockBuilder;
-            // new
+            var wrapLog = Log.Call($"..., appId: {app.AppId}, ...");
             Context = context;
-            App = Factory.Resolve<App>().Init(appIdentity, ConfigurationProvider.Build(blockBuilder, true),
-                false, Log);
+            App = app;
 
             SamePortal = Context.Tenant.ZoneId == App.ZoneId;
-            // old
-            //PortalForSecurityCheck = SamePortal ? PortalSettings.Current : null;
-            // new
-            TenantForSecurityCheck =
-                SamePortal ? Context.Tenant : Factory.Resolve<IZoneMapper>().Init(Log).Tenant(App.ZoneId);
-            wrapLog($"ready for z/a:{appIdentity.ZoneId}/{appIdentity.AppId} t/z:{App.Tenant.Id}/{Context.Tenant.ZoneId} same:{SamePortal}");
+            TenantForSecurityCheck = SamePortal ? Context.Tenant : Factory.Resolve<IZoneMapper>().Init(Log).Tenant(App.ZoneId);
+            wrapLog($"ready for z/a:{app.ZoneId}/{app.AppId} t/z:{App.Tenant.Id}/{Context.Tenant.ZoneId} same:{SamePortal}");
         }
 
         protected override Dictionary<string, IPermissionCheck> InitializePermissionChecks()

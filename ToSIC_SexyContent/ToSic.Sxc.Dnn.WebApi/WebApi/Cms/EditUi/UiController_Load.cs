@@ -36,7 +36,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // now look up the types, and repeat security check with type-names
             // todo: 2020-03-20 new feat 11.01, may not check inner type permissions ATM
-            var permCheck = new MultiPermissionsTypes(BlockBuilder, appId, items, Log);
+            var permCheck = new MultiPermissionsTypes(BlockBuilder.Context, GetApp(appId), items, Log);
             if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 

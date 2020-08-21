@@ -20,8 +20,8 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             // do security check
             var permCheck = string.IsNullOrEmpty(contentTypeName) 
-                ? new MultiPermissionsApp(BlockBuilder, BlockBuilder.Context, appId, Log)
-                : new MultiPermissionsTypes(BlockBuilder, appId, contentTypeName, Log);
+                ? new MultiPermissionsApp(BlockBuilder.Context, GetApp(appId), Log)
+                : new MultiPermissionsTypes(BlockBuilder.Context, GetApp(appId), contentTypeName, Log);
             if(!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 

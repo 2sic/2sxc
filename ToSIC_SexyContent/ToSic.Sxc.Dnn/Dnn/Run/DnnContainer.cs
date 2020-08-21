@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Apps;
@@ -8,7 +7,6 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.Run
 {

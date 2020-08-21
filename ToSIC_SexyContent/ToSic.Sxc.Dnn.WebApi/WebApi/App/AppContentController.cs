@@ -8,10 +8,12 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Conversion;
 using ToSic.Sxc.Dnn.Run;
@@ -32,14 +34,9 @@ namespace ToSic.Sxc.WebApi.App
     [AllowAnonymous]
     public class AppContentController : SxcApiControllerBase
 	{
+        #region Constructor / DI
         protected override string HistoryLogName => "Api.ApCont";
-
-     //   protected override void Initialize(HttpControllerContext controllerContext)
-	    //{
-	    //    base.Initialize(controllerContext); // very important!!!
-	    //    Log.Rename("Api.ApCont");
-	    //}
-
+        #endregion
 
         #region Get List / all of a certain content-type
         /// <summary>
@@ -49,20 +46,29 @@ namespace ToSic.Sxc.WebApi.App
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string appPath = null, string cultureCode = null)
         {
-            var wraplog = Log.Call($"get entities type:{contentType}, path:{appPath}, culture:{cultureCode}");
+            var wrapLog = Log.Call($"get entities type:{contentType}, path:{appPath}, culture:{cultureCode}");
+
+            // in case the initial request didn't yet find a block builder, we need to create it now
+            var context = BlockBuilder?.Context
+                ?? new DnnContext(new DnnTenant(PortalSettings), new ContainerNull(), new DnnUser());
 
             // if app-path specified, use that app, otherwise use from context
             var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, BlockBuilder);
+            
+            // get the app - if we have the context from the request, use that, otherwise generate full app
+            var app = BlockBuilder == null
+                ? Factory.Resolve<Apps.App>().Init(appIdentity, Log)
+                : GetApp(appIdentity.AppId);
 
             // verify that read-access to these content-types is permitted
-            var permCheck = new MultiPermissionsTypes(BlockBuilder, appIdentity.AppId, contentType, Log);
+            var permCheck = new MultiPermissionsTypes(context, app, contentType, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
             var result = new EntityApi(appIdentity.AppId, permCheck.EnsureAny(GrantSets.ReadDraft), Log)
                 .GetEntities(contentType)
                 ?.ToList();
-            wraplog("found: " + result?.Count);
+            wrapLog("found: " + result?.Count);
             return result;
         }
 
@@ -103,7 +109,7 @@ namespace ToSic.Sxc.WebApi.App
             var entityApi = new EntityApi(appIdentity.AppId, true, Log);
 
             var itm = getOne(entityApi);
-            var permCheck = new MultiPermissionsItems(BlockBuilder, BlockBuilder.Context, appIdentity.AppId, itm, Log);
+            var permCheck = new MultiPermissionsItems(BlockBuilder.Context, GetApp(appIdentity.AppId), itm, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
@@ -176,9 +182,9 @@ namespace ToSic.Sxc.WebApi.App
                 : new EntityApi(appIdentity.AppId, true, Log).GetOrThrow(contentType, id.Value);
 
             var ok = itm == null
-                ? new MultiPermissionsTypes(BlockBuilder, appIdentity.AppId, contentType, Log)
+                ? new MultiPermissionsTypes(BlockBuilder.Context, GetApp(appIdentity.AppId), contentType, Log)
                     .EnsureAll(Grants.Create.AsSet(), out var error)
-                : new MultiPermissionsItems(BlockBuilder, BlockBuilder.Context, appIdentity.AppId, itm, Log)
+                : new MultiPermissionsItems(BlockBuilder.Context, GetApp(appIdentity.AppId), itm, Log)
                     .EnsureAll(Grants.Update.AsSet(), out error);
             if (!ok)
                 throw HttpException.PermissionDenied(error);
@@ -229,7 +235,7 @@ namespace ToSic.Sxc.WebApi.App
 
             var entityApi = new EntityApi(appIdentity.AppId, true, Log);
             var itm = entityApi.GetOrThrow(contentType, id);
-            var permCheck = new MultiPermissionsItems(BlockBuilder, BlockBuilder.Context, appIdentity.AppId, itm, Log);
+            var permCheck = new MultiPermissionsItems(BlockBuilder.Context, GetApp(appIdentity.AppId), itm, Log);
             if (!permCheck.EnsureAll(Grants.Delete.AsSet(), out var error))
                 throw HttpException.PermissionDenied(error);
             entityApi.Delete(itm.Type.Name, id);
@@ -247,7 +253,7 @@ namespace ToSic.Sxc.WebApi.App
             var entityApi = new EntityApi(appIdentity.AppId, true, Log);
 	        var itm = entityApi.GetOrThrow(contentType == "any" ? null : contentType, guid);
 
-	        var permCheck = new MultiPermissionsItems(BlockBuilder, BlockBuilder.Context, appIdentity.AppId, itm, Log);
+	        var permCheck = new MultiPermissionsItems(BlockBuilder.Context, GetApp(appIdentity.AppId), itm, Log);
 	        if (!permCheck.EnsureAll(Grants.Delete.AsSet(), out var error))
 	            throw HttpException.PermissionDenied(error);
 

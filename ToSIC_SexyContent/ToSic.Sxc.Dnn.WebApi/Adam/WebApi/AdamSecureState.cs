@@ -12,6 +12,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.WebApi;
+using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.Errors;
 using ToSic.Sxc.WebApi.Security;
 using SysConf = ToSic.Eav.Configuration;
@@ -42,7 +43,7 @@ namespace ToSic.Sxc.Adam.WebApi
         /// Initializes the object and performs all the initial security checks
         /// </summary>
         public AdamSecureState(IBlockBuilder blockBuilder, int appId, string contentType, string field, Guid guid, bool usePortalRoot, ILog log)
-            : base(blockBuilder, appId, contentType, log)
+            : base(blockBuilder.Context, AppApiHelpers.GetApp(appId, blockBuilder, log), contentType, log)
         {
             BlockBuilder = blockBuilder;
             // only do checks on field/guid if it's actually accessing that, if it's on the portal root, don't.
