@@ -6,7 +6,7 @@ using ToSic.Eav.Security;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.Blocks;
 
-namespace ToSic.Sxc.Security
+namespace ToSic.Sxc.WebApi.Security
 {
     internal class MultiPermissionsTypes: MultiPermissionsApp
     {

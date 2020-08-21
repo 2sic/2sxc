@@ -1,13 +1,12 @@
-﻿using System.Web.Http;
-using ToSic.Eav.Configuration;
+﻿using ToSic.Eav.Configuration;
 using ToSic.Eav.Security.Permissions;
-using ToSic.Sxc.WebApi;
+using ToSic.Sxc.WebApi.Errors;
 
-namespace ToSic.Sxc.Security
+namespace ToSic.Sxc.WebApi.Security
 {
     internal static class PublicFormsPermissions
     {
-        internal static bool UserCanWriteAndPublicFormsEnabled(this MultiPermissionsApp mpa, out HttpResponseException preparedException, out string error)
+        internal static bool UserCanWriteAndPublicFormsEnabled(this MultiPermissionsApp mpa, out HttpExceptionAbstraction preparedException, out string error)
         {
             var wrapLog = mpa.Log.Call("");
             // 1. check if user is restricted

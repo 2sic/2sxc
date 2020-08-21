@@ -6,7 +6,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.PublicApi;
-using ToSic.Sxc.Security;
+using ToSic.Sxc.WebApi.Security;
 using Guid = System.Guid;
 
 namespace ToSic.Sxc.WebApi.Cms

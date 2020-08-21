@@ -11,7 +11,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.PublicApi;
-using ToSic.Sxc.Security;
+using ToSic.Sxc.WebApi.Security;
 
 namespace ToSic.Sxc.WebApi.Cms
 {

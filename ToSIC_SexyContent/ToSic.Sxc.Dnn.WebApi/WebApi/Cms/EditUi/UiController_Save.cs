@@ -47,7 +47,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             #region check if it's an update, and do more security checks then - shared with EntitiesController.Save
             // basic permission checks
-            var permCheck = new Security.Security(BlockBuilder, Log)
+            var permCheck = new ToSic.Sxc.Security.Security(BlockBuilder, Log)
                 .DoPreSaveSecurityCheck(appId, package.Items);
 
             var foundItems = package.Items.Where(i => i.Entity.Id != 0 && i.Entity.Guid != Guid.Empty)

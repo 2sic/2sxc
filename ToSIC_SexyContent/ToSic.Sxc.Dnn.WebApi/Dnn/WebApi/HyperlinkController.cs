@@ -8,8 +8,8 @@ using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Adam.WebApi;
 using ToSic.Sxc.Dnn.Code;
-using ToSic.Sxc.Security;
 using ToSic.Sxc.WebApi;
+using ToSic.Sxc.WebApi.Security;
 
 namespace ToSic.Sxc.Dnn.WebApi
 {

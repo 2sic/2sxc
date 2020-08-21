@@ -13,7 +13,7 @@ using Factory = ToSic.Eav.Factory;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 
-namespace ToSic.Sxc.Security
+namespace ToSic.Sxc.WebApi.Security
 {
     internal class MultiPermissionsApp: MultiPermissionsBase
     {

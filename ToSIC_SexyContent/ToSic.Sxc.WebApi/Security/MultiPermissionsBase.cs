@@ -3,7 +3,7 @@ using System.Linq;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
 
-namespace ToSic.Sxc.Security
+namespace ToSic.Sxc.WebApi.Security
 {
     /// <summary>
     /// A permission checker which is initialized with various items which must be checked
