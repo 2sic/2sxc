@@ -2,9 +2,9 @@
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Dnn.Run;
 
-namespace ToSic.Sxc.WebApi
+namespace ToSic.Sxc.Dnn.WebApi.Logging
 {
-    public class WebApiLogDetails : ActionFilterAttribute
+    public class DnnLogWebApi : ActionFilterAttribute
     {
         public override bool AllowMultiple => false;
 

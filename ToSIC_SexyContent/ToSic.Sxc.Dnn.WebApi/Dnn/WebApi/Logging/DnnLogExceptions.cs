@@ -5,9 +5,9 @@ using System.Web.Http.Filters;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Dnn.Run;
 
-namespace ToSic.Sxc.WebApi
+namespace ToSic.Sxc.Dnn.WebApi.Logging
 {
-    public class SxcWebApiExceptionHandling : ExceptionFilterAttribute
+    public class DnnLogExceptions : ExceptionFilterAttribute
     {
         public override void OnException(HttpActionExecutedContext context)
         {

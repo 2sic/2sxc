@@ -13,6 +13,7 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
@@ -32,7 +33,7 @@ namespace ToSic.SexyContent.WebApi
     /// For others, please use the SxiApiControllerBase, which doesn't have all that, and is usually then
     /// safer because it can't accidentally mix the App with a different appId in the params
     /// </summary>
-    [SxcWebApiExceptionHandling]
+    [DnnLogExceptions]
     public abstract class SxcApiController : 
         DynamicApiController, 
         IDynamicWebApi, 

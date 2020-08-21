@@ -51,7 +51,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             var permCheck = new MultiPermissionsApp(BlockBuilder, BlockBuilder.Context, App.AppId, Log);
             if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
-                throw Http.PermissionDenied(error);
+                throw HttpException.PermissionDenied(error);
 
             return GetEditor().SaveTemplateId(templateId, forceCreateContentGroup);
         }
@@ -146,7 +146,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             Log.Add($"try to publish id #{id}");
             if (!new MultiPermissionsApp(BlockBuilder, BlockBuilder.Context, App.AppId, Log).EnsureAll(GrantSets.WritePublished, out var error))
-                throw Http.PermissionDenied(error);
+                throw HttpException.PermissionDenied(error);
             new AppManager(App, Log).Entities.Publish(id);
             return true;
         }

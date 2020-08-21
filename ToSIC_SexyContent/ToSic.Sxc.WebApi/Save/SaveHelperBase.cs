@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 
-namespace ToSic.Sxc.WebApi
+namespace ToSic.Sxc.WebApi.Save
 {
     /// <summary>
     /// All save helpers usually need the sxc-instance and the log

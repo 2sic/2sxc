@@ -13,6 +13,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Security;
 using ToSic.Sxc.WebApi;
+using ToSic.Sxc.WebApi.Errors;
 using SysConf = ToSic.Eav.Configuration;
 using Feats = ToSic.Eav.Configuration.Features;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -67,7 +68,7 @@ namespace ToSic.Sxc.Adam.WebApi
 
             Log.Add("check if feature enabled");
             if (UserIsRestricted && !Feats.Enabled(FeaturesForRestrictedUsers))
-                throw Http.PermissionDenied(
+                throw HttpException.PermissionDenied(
                     $"low-permission users may not access this - {Feats.MsgMissingSome(FeaturesForRestrictedUsers)}");
 
             PrepCore(App, guid, field, usePortalRoot);
@@ -104,7 +105,7 @@ namespace ToSic.Sxc.Adam.WebApi
             var itm = AdamAppContext.AppRuntime.Entities.Get(guid);
             if (!(itm?.IsPublished ?? false)) return true;
 
-            exp = Http.PermissionDenied(Log.Add("user is restricted and may not see published, but item exists and is published - not allowed"));
+            exp = HttpException.PermissionDenied(Log.Add("user is restricted and may not see published, but item exists and is published - not allowed"));
             return false;
         }
 
@@ -124,7 +125,7 @@ namespace ToSic.Sxc.Adam.WebApi
             if (fieldDef == null || !(fieldDef.Type != Eav.Constants.DataTypeHyperlink ||
                                       fieldDef.Type != Eav.Constants.DataTypeString))
             {
-                preparedException = Http.BadRequest("Requested field '" + Field + "' type doesn't allow upload");
+                preparedException = HttpException.BadRequest("Requested field '" + Field + "' type doesn't allow upload");
                 Log.Add($"field type:{fieldDef?.Type} - does not allow upload");
                 result = false;
             }
@@ -142,7 +143,7 @@ namespace ToSic.Sxc.Adam.WebApi
             // check field permissions, but only for non-publish-data
             if (UserIsRestricted && !FieldPermissionOk(requiredPermissions))
             {
-                preparedException = Http.PermissionDenied("this field is not configured to allow uploads by the current user");
+                preparedException = HttpException.PermissionDenied("this field is not configured to allow uploads by the current user");
                 return false;
             }
             preparedException = null;
@@ -170,17 +171,17 @@ namespace ToSic.Sxc.Adam.WebApi
             return !UserIsRestricted || SecurityChecks.DestinationIsInItem(Guid, Field, path, out preparedException);
         }
 
-        public bool ExtensionIsOk(string fileName, out HttpResponseException preparedException)
+        public bool ExtensionIsOk(string fileName, out HttpExceptionAbstraction preparedException)
         {
             if (!SecurityChecks.IsAllowedDnnExtension(fileName))
             {
-                preparedException = Http.NotAllowedFileType(fileName, "Not in whitelisted CMS file types.");
+                preparedException = HttpException.NotAllowedFileType(fileName, "Not in whitelisted CMS file types.");
                 return false;
             }
 
             if (SecurityChecks.IsKnownRiskyExtension(fileName))
             {
-                preparedException = Http.NotAllowedFileType(fileName, "This is a known risky file type.");
+                preparedException = HttpException.NotAllowedFileType(fileName, "This is a known risky file type.");
                 return false;
             }
             preparedException = null;

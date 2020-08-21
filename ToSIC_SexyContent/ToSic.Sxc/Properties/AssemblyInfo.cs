@@ -13,6 +13,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
+[assembly: InternalsVisibleTo("ToSic.Sxc.WebApi")]
 [assembly: InternalsVisibleTo("ToSic.SexyContent")]
 [assembly: InternalsVisibleTo("ToSic.SexyContent.WebApi")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Dnn")]

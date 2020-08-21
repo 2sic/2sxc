@@ -11,6 +11,7 @@ using DotNetNuke.Web.Api;
 using System.Web.Http.Controllers;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.WebApi;
+using HttpException = ToSic.Sxc.WebApi.HttpException;
 
 namespace ToSic.Sxc.Adam.WebApi
 {
@@ -42,7 +43,7 @@ namespace ToSic.Sxc.Adam.WebApi
             {
                 // Check if the request contains multipart/form-data.
                 if (!Request.Content.IsMimeMultipartContent())
-                    throw Http.NotAllowedFileType("unknown", "doesn't look like a file-upload");
+                    throw HttpException.NotAllowedFileType("unknown", "doesn't look like a file-upload");
 
 
                 var filesCollection = HttpContext.Current.Request.Files;
@@ -177,7 +178,7 @@ namespace ToSic.Sxc.Adam.WebApi
 
             // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
             if (usePortalRoot && !SecurityChecks.CanEdit(dnnFolder))
-                throw Http.PermissionDenied("can't create new folder - permission denied");
+                throw HttpException.PermissionDenied("can't create new folder - permission denied");
 
             var newFolderPath = string.IsNullOrEmpty(subfolder) ? newFolder : Path.Combine(subfolder, newFolder).Replace("\\", "/"); 
 
@@ -210,13 +211,13 @@ namespace ToSic.Sxc.Adam.WebApi
 
                 // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
                 if (usePortalRoot && !SecurityChecks.CanEdit(fld))
-                    throw Http.PermissionDenied("can't delete folder - permission denied");
+                    throw HttpException.PermissionDenied("can't delete folder - permission denied");
 
                 if (!state.SuperUserOrAccessingItemFolder(fld.PhysicalPath, out exp))
                     throw exp;
 
                 if (fld.ParentID != current.Id)
-                    throw Http.BadRequest("can't delete folder - not found in folder");
+                    throw HttpException.BadRequest("can't delete folder - not found in folder");
                 folderManager.DeleteFolder(id);
             }
             else
@@ -226,13 +227,13 @@ namespace ToSic.Sxc.Adam.WebApi
 
                 // validate that dnn user have write permissions for folder where is file in case dnn file system is used (usePortalRoot)
                 if (usePortalRoot && !SecurityChecks.CanEdit(file))
-                    throw Http.PermissionDenied("can't delete file - permission denied");
+                    throw HttpException.PermissionDenied("can't delete file - permission denied");
 
                 if (!state.SuperUserOrAccessingItemFolder(file.PhysicalPath, out exp))
                     throw exp;
 
                 if (file.FolderId != current.Id)
-                    throw Http.BadRequest("can't delete file - not found in folder");
+                    throw HttpException.BadRequest("can't delete file - not found in folder");
                 fileManager.DeleteFile(file);
             }
 
@@ -263,13 +264,13 @@ namespace ToSic.Sxc.Adam.WebApi
 
                 // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
                 if (usePortalRoot && !SecurityChecks.CanEdit(fld))
-                    throw Http.PermissionDenied("can't rename folder - permission denied");
+                    throw HttpException.PermissionDenied("can't rename folder - permission denied");
 
                 if (!state.SuperUserOrAccessingItemFolder(fld.PhysicalPath, out exp))
                     throw exp;
 
                 if (fld.ParentID != current.Id)
-                    throw Http.BadRequest("can't rename folder - not found in folder");
+                    throw HttpException.BadRequest("can't rename folder - not found in folder");
                 folderManager.RenameFolder(fld, newName);
             }
             else
@@ -279,13 +280,13 @@ namespace ToSic.Sxc.Adam.WebApi
 
                 // validate that dnn user have write permissions for folder where is file in case dnn file system is used (usePortalRoot)
                 if (usePortalRoot && !SecurityChecks.CanEdit(file))
-                    throw Http.PermissionDenied("can't rename file - permission denied");
+                    throw HttpException.PermissionDenied("can't rename file - permission denied");
 
                 if (!state.SuperUserOrAccessingItemFolder(file.PhysicalPath, out exp))
                     throw exp;
 
                 if (file.FolderId != current.Id)
-                    throw Http.BadRequest("can't rename file - not found in folder");
+                    throw HttpException.BadRequest("can't rename file - not found in folder");
 
                 // never allow to change the extension
                 if (file.Extension != newName.Split('.').Last())

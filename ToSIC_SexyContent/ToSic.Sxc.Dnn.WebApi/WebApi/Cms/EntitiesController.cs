@@ -69,7 +69,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             var permCheck = new MultiPermissionsTypes(BlockBuilder, appId, contentType, Log);
             if (!permCheck.EnsureAll(requiredGrants, out var error))
-                throw Http.PermissionDenied(error);
+                throw HttpException.PermissionDenied(error);
             return new EntityApi(appId, true, Log);
         }
 

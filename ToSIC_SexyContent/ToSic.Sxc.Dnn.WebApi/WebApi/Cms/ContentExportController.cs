@@ -3,6 +3,7 @@ using System.Web.Http;
 using ToSic.Eav.ImportExport.Options;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Security;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.WebApi.Cms
     /// Security checking is possible, because the cookie still contains user information
     /// </remarks>
     [AllowAnonymous]
-    [SxcWebApiExceptionHandling]
+    [DnnLogExceptions]
     // [ValidateAntiForgeryToken] as these pages are called directly (browser opens the url directly to download files), we
     // can't globally use this attribute.
     public class ContentExportController : DnnApiControllerWithFixes, IContentExportController

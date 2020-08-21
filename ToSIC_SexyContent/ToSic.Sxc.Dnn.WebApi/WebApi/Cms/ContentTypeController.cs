@@ -70,10 +70,10 @@ namespace ToSic.Sxc.WebApi.Cms
 	    {
 	        var permCheck = new MultiPermissionsTypes(BlockBuilder, appId, contentTypeStaticName, Log);
             if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
-                throw Http.PermissionDenied(error);
+                throw HttpException.PermissionDenied(error);
 
             if(!permCheck.UserCanWriteAndPublicFormsEnabled(out _, out error))
-                throw Http.PermissionDenied(error);
+                throw HttpException.PermissionDenied(error);
 
             // if we got this far, permissions are ok
             return EavCtc.GetSingle(appId, contentTypeStaticName, scope);
@@ -117,9 +117,9 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add($"get fields for a:{appId} type:{staticName}");
 	        var permCheck = new MultiPermissionsTypes(BlockBuilder, appId, staticName, Log);
             if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
-                throw Http.PermissionDenied(error);
+                throw HttpException.PermissionDenied(error);
             if(!permCheck.UserCanWriteAndPublicFormsEnabled(out _, out error))
-                throw Http.PermissionDenied(error);
+                throw HttpException.PermissionDenied(error);
 
             return EavCtc.GetFields(appId, staticName);
 	    }

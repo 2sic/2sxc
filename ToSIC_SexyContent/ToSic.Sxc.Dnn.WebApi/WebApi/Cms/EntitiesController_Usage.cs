@@ -13,7 +13,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             var permCheck = new MultiPermissionsApp(BlockBuilder, BlockBuilder.Context, appId, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
-                throw Http.PermissionDenied(error);
+                throw HttpException.PermissionDenied(error);
 
             var appData = permCheck.App.Data;
             var item = appData.List.One(guid);

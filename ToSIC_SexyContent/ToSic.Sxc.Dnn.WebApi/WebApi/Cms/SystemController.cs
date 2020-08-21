@@ -4,6 +4,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Security;
 using ToSic.Sxc.WebApi.Context;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.WebApi.Cms
     /// This one supplies portal-wide (or cross-portal) settings / configuration
     /// </summary>
 	[SupportedModules("2sxc,2sxc-app")]
-    [SxcWebApiExceptionHandling]
+    [DnnLogExceptions]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
     public partial class SystemController : SxcApiControllerBase
@@ -40,7 +41,7 @@ namespace ToSic.Sxc.WebApi.Cms
             {
                 var appAndPerms = new MultiPermissionsApp(BlockBuilder, BlockBuilder.Context, appId, Log);
                 if (!appAndPerms.ZoneIsOfCurrentContextOrUserIsSuper(out var error))
-                    throw Http.PermissionDenied(error);
+                    throw HttpException.PermissionDenied(error);
                 app = appAndPerms.App;
             }
 

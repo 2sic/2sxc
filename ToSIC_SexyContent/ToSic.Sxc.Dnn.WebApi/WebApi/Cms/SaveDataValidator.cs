@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Builder;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Sxc.WebApi.Errors;
+using ToSic.Sxc.WebApi.Validation;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -31,7 +32,7 @@ namespace ToSic.Sxc.WebApi.Cms
         /// </summary>
         /// <param name="preparedException"></param>
         /// <returns></returns>
-        internal bool ContainsOnlyExpectedNodes(out HttpResponseException preparedException)
+        internal bool ContainsOnlyExpectedNodes(out HttpExceptionAbstraction preparedException)
         {
             var wrapLog = Log.Call();
             if (Package.ContentTypes != null) Add("package contained content-types, unexpected!");
@@ -103,7 +104,7 @@ namespace ToSic.Sxc.WebApi.Cms
         }
 
 
-        internal bool EntityIsOk(int count, IEntity newEntity, out HttpResponseException preparedException)
+        internal bool EntityIsOk(int count, IEntity newEntity, out HttpExceptionAbstraction preparedException)
         {
             var wrapLog = Log.Call<bool>();
             if (newEntity == null)
@@ -120,7 +121,7 @@ namespace ToSic.Sxc.WebApi.Cms
             return wrapLog("", ok);
         }
 
-        internal bool IfUpdateValidateAndCorrectIds(int count, IEntity newEntity, out HttpResponseException preparedException)
+        internal bool IfUpdateValidateAndCorrectIds(int count, IEntity newEntity, out HttpExceptionAbstraction preparedException)
         {
             var wrapLog = Log.Call();
             var previousEntity = AppRead.Entities.Get(newEntity.EntityId)

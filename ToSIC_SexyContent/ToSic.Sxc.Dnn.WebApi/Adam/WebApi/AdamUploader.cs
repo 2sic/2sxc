@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Adam.WebApi
 
             // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
             if (usePortalRoot && !SecurityChecks.CanEdit(dnnFolder))
-                throw Http.PermissionDenied("can't upload - permission denied");
+                throw HttpException.PermissionDenied("can't upload - permission denied");
 
             // we only upload into valid adam if that's the scenario
             if (!state.SuperUserOrAccessingItemFolder(dnnFolder.PhysicalPath, out exp))
@@ -58,15 +58,15 @@ namespace ToSic.Sxc.Adam.WebApi
             #region check content-type extensions...
 
             // Check file size and extension
-            var fileName = String.Copy(originalFileName);
-            if(!state.ExtensionIsOk(fileName, out exp))
-                throw exp;
+            var fileName = string.Copy(originalFileName);
+            if(!state.ExtensionIsOk(fileName, out var exceptionAbstraction))
+                throw exceptionAbstraction;
 
             // check metadata of the FieldDef to see if still allowed extension
             var additionalFilter = state.Attribute.Metadata.GetBestValue<string>("FileFilter");
             if (!string.IsNullOrWhiteSpace(additionalFilter)
                 && !state.CustomFileFilterOk(additionalFilter, originalFileName))
-                throw Http.NotAllowedFileType(fileName, "field has custom file-filter, which doesn't match");
+                throw HttpException.NotAllowedFileType(fileName, "field has custom file-filter, which doesn't match");
 
             // note 2018-04-20 2dm: can't do this for wysiwyg, as it doesn't have a setting for allowed file-uploads
 

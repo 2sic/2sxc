@@ -127,7 +127,6 @@
     <Compile Include="WebApi\Routing\Route.cs" />
     <Compile Include="WebApi\Cms\EditUi\UiController_Save.cs" />
     <Compile Include="WebApi\Cms\EditUi\UiController_Load.cs" />
-    <Compile Include="WebApi\Helpers\ValidatorBase.cs" />
     <Compile Include="WebApi\Cms\SaveDataValidator.cs" />
     <Compile Include="WebApi\Routing\AppFinder.cs" />
     <Compile Include="WebApi\ImportExport\ExtensionsForIApp.cs" />
@@ -137,19 +136,16 @@
     <Compile Include="Security\MultiPermissionsItems.cs" />
     <Compile Include="Security\PublicFormsPermissions.cs" />
     <Compile Include="WebApi\Routing\RouteParts.cs" />
-    <Compile Include="WebApi\Helpers\ContentGroupList.cs" />
     <Compile Include="Dnn\DnnPublishing.cs" />
-    <Compile Include="WebApi\Helpers\SaveHelperBase.cs" />
     <Compile Include="Security\Security.cs" />
     <Compile Include="WebApi\DynamicApiController.cs" />
     <Compile Include="WebApi\Cms\SystemController_Features.cs" />
     <Compile Include="WebApi\Cms\EditUi\AllInOne.cs" />
     <Compile Include="WebApi\Cms\EditUi\UiController.cs" />
-    <Compile Include="WebApi\Helpers\HttpErrors.cs" />
     <Compile Include="WebApi\Cms\Helpers\FeaturesManagementUtils.cs" />
     <Compile Include="WebApi\System\InsightsController.cs" />
     <Compile Include="WebApi\SxcApiControllerBase.cs" />
-    <Compile Include="WebApi\Helpers\WebApiLogDetails.cs" />
+    <Compile Include="Dnn\WebApi\Logging\DnnLogWebApi.cs" />
     <Compile Include="Adam\WebApi\AdamController.cs" />
     <Compile Include="WebApi\Routing\AppApiControllerSelector.cs" />
     <Compile Include="WebApi\Cms\AppAssetsController.cs" />
@@ -174,7 +170,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebApi\Routing\RouteMapper.cs" />
     <Compile Include="SexyContent\WebApi\SxcApiController.cs" />
-    <Compile Include="WebApi\Helpers\SxcWebApiExceptionHandling.cs" />
+    <Compile Include="Dnn\WebApi\Logging\DnnLogExceptions.cs" />
     <Compile Include="WebApi\Cms\SystemController.cs" />
     <Compile Include="WebApi\Cms\TemplateController.cs" />
     <Compile Include="WebApi\Cms\Refactor\GetContentBlockDataLight.cs" />

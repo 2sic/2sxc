@@ -38,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Cms
             // todo: 2020-03-20 new feat 11.01, may not check inner type permissions ATM
             var permCheck = new MultiPermissionsTypes(BlockBuilder, appId, items, Log);
             if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
-                throw Http.PermissionDenied(error);
+                throw HttpException.PermissionDenied(error);
 
             // load items - similar
             var result = new AllInOne();
@@ -65,7 +65,7 @@ namespace ToSic.Sxc.WebApi.Cms
             // important, this code is shared/duplicated in the EntitiesController.GetManyForEditing
             if (list.Any(set => set.Entity != null))
                 if (!permCheck.EnsureAll(GrantSets.ReadSomething, out error))
-                    throw Http.PermissionDenied(error);
+                    throw HttpException.PermissionDenied(error);
 
             // load content-types
             var types = UsedTypes(list, typeRead);

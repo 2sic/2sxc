@@ -11,6 +11,7 @@ using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.Dnn.WebApi.Logging;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.WebApi.Cms
 	/// </summary>
 	[SupportedModules("2sxc,2sxc-app")]
 	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    [SxcWebApiExceptionHandling]
+    [DnnLogExceptions]
     [ValidateAntiForgeryToken]
 	public class PipelineDesignerController : DnnApiControllerWithFixes, IPipelineDesignerController
     {

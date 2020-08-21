@@ -11,11 +11,12 @@ using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.Dnn.WebApi.Logging;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
     [SupportedModules("2sxc,2sxc-app")]
-    [SxcWebApiExceptionHandling]
+    [DnnLogExceptions]
     [ValidateAntiForgeryToken]
     public class InstallerController : DnnApiControllerWithFixes
     {

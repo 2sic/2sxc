@@ -9,6 +9,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
@@ -23,7 +24,7 @@ namespace ToSic.Sxc.Dnn
     /// With this, your code receives the full context  incl. the current App, DNN, Data, etc.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    [SxcWebApiExceptionHandling]
+    [DnnLogExceptions]
     public abstract partial class ApiController : DynamicApiController, IDynamicWebApi
     {
         /// <inheritdoc />

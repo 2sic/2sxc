@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Security
             if (userIsRestricted && !Features.Enabled(feats))
             {
                 error = $"low-permission users may not access this - {Features.MsgMissingSome(feats)}";
-                preparedException = Http.PermissionDenied(error);
+                preparedException = HttpException.PermissionDenied(error);
                 return false;
             }
             wrapLog("ok");

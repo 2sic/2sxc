@@ -1,9 +1,10 @@
 ﻿using System.Web.Http;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.Dnn.WebApi.Logging;
 
 namespace ToSic.Sxc.WebApi.System
 {
-    [SxcWebApiExceptionHandling]
+    [DnnLogExceptions]
     public class InsightsController : DnnApiControllerWithFixes
     {
         #region Logging
@@ -27,13 +28,13 @@ namespace ToSic.Sxc.WebApi.System
 
 
         protected Web.WebApi.System.Insights Insights =>
-            _insights ?? (_insights = new Web.WebApi.System.Insights(Log, ThrowIfNotSuperuser, Http.BadRequest));
+            _insights ?? (_insights = new Web.WebApi.System.Insights(Log, ThrowIfNotSuperuser, HttpException.BadRequest));
         private Web.WebApi.System.Insights _insights;
 
         private void ThrowIfNotSuperuser()
         {
             if (!PortalSettings.UserInfo.IsSuperUser)
-                throw Http.PermissionDenied("requires Superuser permissions");
+                throw HttpException.PermissionDenied("requires Superuser permissions");
         }
 
 

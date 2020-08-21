@@ -13,6 +13,7 @@ using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 
 // ReSharper disable once CheckNamespace
@@ -26,7 +27,7 @@ namespace ToSic.SexyContent.WebApi
     /// safer because it can't accidentally mix the App with a different appId in the params
     /// </summary>
     [PrivateApi]
-    [SxcWebApiExceptionHandling]
+    [DnnLogExceptions]
     public abstract class DynamicApiController : SxcApiControllerBase, ICreateInstance, IHasDynCodeContext
     {
         protected override void Initialize(HttpControllerContext controllerContext)

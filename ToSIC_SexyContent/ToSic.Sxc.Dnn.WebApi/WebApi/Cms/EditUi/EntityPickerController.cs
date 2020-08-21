@@ -23,7 +23,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 ? new MultiPermissionsApp(BlockBuilder, BlockBuilder.Context, appId, Log)
                 : new MultiPermissionsTypes(BlockBuilder, appId, contentTypeName, Log);
             if(!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
-                throw Http.PermissionDenied(error);
+                throw HttpException.PermissionDenied(error);
 
             // maybe in the future, ATM not relevant
             var withDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);

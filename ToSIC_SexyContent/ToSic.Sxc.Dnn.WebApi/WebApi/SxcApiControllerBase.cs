@@ -2,6 +2,7 @@
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.Dnn.WebApi.Logging;
 
 namespace ToSic.Sxc.WebApi
 {
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.WebApi
     /// It will auto-detect the SxcBlock context
     /// But it will NOT provide an App or anything like that
     /// </summary>
-    [SxcWebApiExceptionHandling]
+    [DnnLogExceptions]
     public class SxcApiControllerBase: DnnApiControllerWithFixes
     {
         protected override string HistoryLogName => "Api.CntBas";

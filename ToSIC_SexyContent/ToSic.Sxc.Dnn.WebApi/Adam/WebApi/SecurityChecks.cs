@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Adam.WebApi
             var inAdam = Security.PathIsInItemAdam(guid, field, path);
             preparedException = inAdam
                 ? null
-                : Http.PermissionDenied("Can't access a resource which is not part of this item.");
+                : HttpException.PermissionDenied("Can't access a resource which is not part of this item.");
             return inAdam;
         }
 
@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Adam.WebApi
         internal static void ThrowIfAccessingRootButNotAllowed(bool usePortalRoot, bool userIsRestricted)
         {
             if (usePortalRoot && userIsRestricted)
-                throw Http.BadRequest("you may only create draft-data, so file operations outside of ADAM is not allowed");
+                throw HttpException.BadRequest("you may only create draft-data, so file operations outside of ADAM is not allowed");
         }
 
         internal static bool CanEdit(IFileInfo file)

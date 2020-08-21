@@ -8,6 +8,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Sxc.Apps.Assets;
+using ToSic.Sxc.Dnn.WebApi.Logging;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.WebApi.Cms
     /// This one supplies portal-wide (or cross-portal) settings / configuration
     /// </summary>
 	[SupportedModules("2sxc,2sxc-app")]
-    [SxcWebApiExceptionHandling]
+    [DnnLogExceptions]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
     public partial class AppAssetsController : SxcApiControllerBase
