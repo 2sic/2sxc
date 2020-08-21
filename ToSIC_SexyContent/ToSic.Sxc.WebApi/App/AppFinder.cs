@@ -6,38 +6,40 @@ using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.WebApi
+namespace ToSic.Sxc.WebApi.App
 {
     /// <summary>
     /// This helps API calls to get the app which is currently needed
     /// It does not perform security checks ATM and maybe never will
     /// </summary>
-    internal class AppFinder: HasLog
+    internal class AppOfRequest: HasLog
     {
-        private IZoneMapper _zoneMapper;
-        private int _tenantId;
+        #region Constructor & DI 
 
+        private readonly IZoneMapper _zoneMapper;
+        private readonly int _tenantId;
         private readonly IHttp _http;
 
-        public AppFinder(IHttp http): base("Api.FindAp")
+        public AppOfRequest(IHttp http, ITenant tenant, IZoneMapper zoneMapper): base("Api.FindAp")
         {
             _http = http;
+            _tenantId = tenant.Id;
+            _zoneMapper = zoneMapper;
         }
 
-        public AppFinder Init(int tenantId, IZoneMapper zoneMapper, ILog parentLog) 
+        public AppOfRequest Init(ILog parentLog) 
         {
             Log.LinkTo(parentLog);
-            _tenantId = tenantId;
-            _zoneMapper = zoneMapper;
             return this;
         }
+        #endregion
 
         /// <summary>
         /// find the AppIdentity of an app which is referenced by a path
         /// </summary>
         /// <param name="appPath"></param>
         /// <returns></returns>
-        internal IAppIdentity GetCurrentAppIdFromPath(string appPath)
+        internal IAppIdentity GetAppIdFromPath(string appPath)
         {
             var wrapLog = Log.Call(appPath);
             var zid = _zoneMapper.GetZoneId(_tenantId);
@@ -59,7 +61,7 @@ namespace ToSic.Sxc.WebApi
             var wrapLog = Log.Call($"{appPath}, ...", message: "detect app from query string parameters");
 
             // try to override detection based on additional zone/app-id in urls
-            var appId = GetAppIdentityFromUrlQueryAppZone();
+            var appId = GetAppIdFromUrlParams();
 
             if (appId == null)
             {
@@ -69,7 +71,7 @@ namespace ToSic.Sxc.WebApi
                         blockBuilder?.Block?.ZoneId ??
                         throw new ArgumentException("try to get app-id from context, but none found"),
                         blockBuilder.Block.AppId)
-                    : GetCurrentAppIdFromPath(appPath);
+                    : GetAppIdFromPath(appPath);
             }
 
             wrapLog(appId.LogState());
@@ -82,17 +84,20 @@ namespace ToSic.Sxc.WebApi
         /// It's a temporary solution, because normally we want the control flow to be more obvious
         /// </summary>
         /// <returns></returns>
-        private IAppIdentity GetAppIdentityFromUrlQueryAppZone()
+        private IAppIdentity GetAppIdFromUrlParams()
         {
             var allUrlKeyValues = _http.QueryStringKeyValuePairs();
-            var ok1 = int.TryParse(allUrlKeyValues.FirstOrDefault(x => x.Key == Route.ZoneIdKey).Value, out var zoneIdFromQueryString);
-            var ok2 = int.TryParse(allUrlKeyValues.FirstOrDefault(x => x.Key == Route.AppIdKey).Value, out var appIdFromQueryString);
-            if (ok1 && ok2)
-            {
-                Log.Add($"Params in URL detected - will use appId:{appIdFromQueryString}, zoneId:{zoneIdFromQueryString}");
-                return new AppIdentity(zoneIdFromQueryString, appIdFromQueryString);
-            }
-            return null;
+            var ok1 = int.TryParse(allUrlKeyValues.FirstOrDefault(
+                x => x.Key.Equals(WebApiConstants.ZoneIdKey, StringComparison.InvariantCultureIgnoreCase)).Value, 
+                out var zoneId);
+            var ok2 = int.TryParse(allUrlKeyValues.FirstOrDefault(
+                x => x.Key.Equals(WebApiConstants.AppIdKey, StringComparison.InvariantCultureIgnoreCase)).Value, 
+                out var appId);
+
+            if (!ok1 || !ok2) return null;
+
+            Log.Add($"Params in URL detected - will use appId:{appId}, zoneId:{zoneId}");
+            return new AppIdentity(zoneId, appId);
         }
 
     }

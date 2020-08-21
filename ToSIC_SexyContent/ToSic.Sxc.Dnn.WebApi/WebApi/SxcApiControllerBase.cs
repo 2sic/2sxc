@@ -30,9 +30,8 @@ namespace ToSic.Sxc.WebApi
 
         #region App-Helpers for anonyous access APIs
 
-        internal AppFinder AppFinder => _appFinder ?? (_appFinder = Factory.Resolve<AppFinder>()
-                                            .Init(PortalSettings.PortalId, Env.ZoneMapper, Log));
-        private AppFinder _appFinder;
+        internal AppOfRequest AppFinder => _appOfRequest ?? (_appOfRequest = Factory.Resolve<AppOfRequest>().Init(Log));
+        private AppOfRequest _appOfRequest;
 
         /// <summary>
         /// used for API calls to get the current app

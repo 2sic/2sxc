@@ -54,7 +54,7 @@ namespace ToSic.Sxc.WebApi.App
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery([FromUri] string appPath, [FromUri] string name, [FromUri] string stream = null)
         {
             var wrapLog = Log.Call($"path:{appPath}, name:{name}");
-            var appIdentity = AppFinder.GetCurrentAppIdFromPath(appPath);
+            var appIdentity = AppFinder.GetAppIdFromPath(appPath);
             var queryApp = Factory.Resolve<Apps.App>().Init(appIdentity,
                 ConfigurationProvider.Build(false, false), false, Log);
 
