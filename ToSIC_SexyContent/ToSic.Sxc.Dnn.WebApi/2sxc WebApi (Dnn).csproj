@@ -130,11 +130,6 @@
     <Compile Include="WebApi\Cms\SaveDataValidator.cs" />
     <Compile Include="WebApi\Routing\AppFinder.cs" />
     <Compile Include="WebApi\ImportExport\ExtensionsForIApp.cs" />
-    <Compile Include="Security\MultiPermissionsBase.cs" />
-    <Compile Include="Security\MultiPermissionsApp.cs" />
-    <Compile Include="Security\MultiPermissionsTypes.cs" />
-    <Compile Include="Security\MultiPermissionsItems.cs" />
-    <Compile Include="Security\PublicFormsPermissions.cs" />
     <Compile Include="WebApi\Routing\RouteParts.cs" />
     <Compile Include="Dnn\DnnPublishing.cs" />
     <Compile Include="Security\Security.cs" />

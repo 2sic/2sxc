@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <Folder Include="Helpers\" />
-    <Folder Include="Security\" />
   </ItemGroup>
 
 </Project>
