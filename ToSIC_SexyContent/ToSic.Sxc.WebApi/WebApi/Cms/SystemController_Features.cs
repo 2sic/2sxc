@@ -41,7 +41,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 appId = new ZoneRuntime(zoneId, Log).DefaultAppId;
             }
 
-            return FeatureListWithPermissionCheck(new MultiPermissionsApp(BlockBuilder, appId, Log));
+            return FeatureListWithPermissionCheck(new MultiPermissionsApp(BlockBuilder, BlockBuilder.Context, appId, Log));
         }
 
         [HttpGet]

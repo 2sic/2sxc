@@ -17,11 +17,11 @@ namespace ToSic.Sxc.Security
         { }
 
         public MultiPermissionsTypes(IBlockBuilder blockBuilder, int appId, IEnumerable<string> contentTypes, ILog parentLog) 
-            : base(blockBuilder, appId, parentLog) 
+            : base(blockBuilder, blockBuilder.Context, appId, parentLog) 
             => ContentTypes = contentTypes;
 
         public MultiPermissionsTypes(IBlockBuilder blockBuilder, int appId, List<ItemIdentifier> items, ILog parentLog) 
-            : base(blockBuilder, appId, parentLog) 
+            : base(blockBuilder, blockBuilder.Context, appId, parentLog) 
             => ContentTypes = ExtractTypeNamesFromItems(items);
 
 

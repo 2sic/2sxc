@@ -118,7 +118,6 @@
     <Compile Include="WebApi\Cms\SystemController_App.cs" />
     <Compile Include="WebApi\Cms\TemplateController_Usage.cs" />
     <Compile Include="WebApi\Context\ContextBuilder.cs" />
-    <Compile Include="WebApi\Context\ContextDto.cs" />
     <Compile Include="WebApi\Context\Ctx.cs" />
     <Compile Include="WebApi\DataTransferObjects\Usage\ContentBlockDto.cs" />
     <Compile Include="WebApi\DataTransferObjects\Usage\ContentTypeDto.cs" />
@@ -136,12 +135,10 @@
     <Compile Include="WebApi\Cms\SaveDataValidator.cs" />
     <Compile Include="WebApi\Routing\AppFinder.cs" />
     <Compile Include="WebApi\ImportExport\ExtensionsForIApp.cs" />
-    <Compile Include="Security\IMultiPermissionCheck.cs" />
     <Compile Include="Security\MultiPermissionsBase.cs" />
     <Compile Include="Security\MultiPermissionsApp.cs" />
     <Compile Include="Security\MultiPermissionsTypes.cs" />
     <Compile Include="Security\MultiPermissionsItems.cs" />
-    <Compile Include="Security\PermissionCheckWithEnsure.cs" />
     <Compile Include="Security\PublicFormsPermissions.cs" />
     <Compile Include="WebApi\Routing\RouteParts.cs" />
     <Compile Include="WebApi\Helpers\ContentGroupList.cs" />
@@ -154,7 +151,7 @@
     <Compile Include="WebApi\Cms\EditUi\UiController.cs" />
     <Compile Include="WebApi\Helpers\HttpErrors.cs" />
     <Compile Include="WebApi\Cms\Helpers\FeaturesManagementUtils.cs" />
-    <Compile Include="WebApi\System\Insights\InsightsController.cs" />
+    <Compile Include="WebApi\System\InsightsController.cs" />
     <Compile Include="WebApi\SxcApiControllerBase.cs" />
     <Compile Include="WebApi\Helpers\WebApiLogDetails.cs" />
     <Compile Include="Adam\WebApi\AdamController.cs" />

@@ -76,5 +76,16 @@ namespace ToSic.Sxc.Dnn.Run
         /// <inheritdoc />
         public override string ContentPath => UnwrappedContents.HomeDirectory;
 
+        public override int ZoneId
+        {
+            get { 
+                if(_zoneId != null) return _zoneId.Value;
+                if (Id < 1) return (_zoneId = AppConstants.AppIdNotFound).Value;
+                _zoneId = new DnnZoneMapper().Init(null).GetZoneId(Id);
+                return _zoneId.Value;
+            }
+        }
+
+        private int? _zoneId;
     }
 }

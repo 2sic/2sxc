@@ -8,7 +8,6 @@ using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Adam.WebApi;
 using ToSic.Sxc.Dnn.Code;
-using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Security;
 using ToSic.Sxc.WebApi;
 
@@ -61,14 +60,14 @@ namespace ToSic.Sxc.Dnn.WebApi
 		        {
                     // page link - only resolve if the user has edit-permissions
 		            // only people who have some full edit permissions may actually look up pages
-		            var permCheckPage = new MultiPermissionsApp(BlockBuilder, appId, Log);
+		            var permCheckPage = new MultiPermissionsApp(BlockBuilder, BlockBuilder.Context, appId, Log);
 		            return permCheckPage.UserMayOnAll(GrantSets.WritePublished)
                         ? resolved
                         : hyperlink;
 		        }
 
                 // for file, we need guid & field - otherwise return the original unmodified
-		        if (guid == default(Guid) || string.IsNullOrEmpty(field) || string.IsNullOrEmpty(contentType))
+		        if (guid == default || string.IsNullOrEmpty(field) || string.IsNullOrEmpty(contentType))
 		            return hyperlink;
 
 		        var isOutsideOfAdam = !(resolved.IndexOf("/adam/", StringComparison.Ordinal) > 0);

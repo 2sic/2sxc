@@ -29,6 +29,8 @@ namespace ToSic.Sxc.Adam.WebApi
         internal AdamAppContext AdamAppContext;
         internal IContentTypeAttribute Attribute;
 
+        internal readonly IBlockBuilder BlockBuilder;
+
         public readonly Guid[] FeaturesForRestrictedUsers =
             {
                 SysConf.FeatureIds.PublicUpload,
@@ -41,6 +43,7 @@ namespace ToSic.Sxc.Adam.WebApi
         public AdamSecureState(IBlockBuilder blockBuilder, int appId, string contentType, string field, Guid guid, bool usePortalRoot, ILog log)
             : base(blockBuilder, appId, contentType, log)
         {
+            BlockBuilder = blockBuilder;
             // only do checks on field/guid if it's actually accessing that, if it's on the portal root, don't.
             if (!usePortalRoot)
             {
@@ -79,7 +82,7 @@ namespace ToSic.Sxc.Adam.WebApi
         private void PrepCore(IApp app, Guid entityGuid, string fieldName, bool usePortalRoot)
         {
             Log.Add("PrepCore(...)");
-            var dnn = new DnnContextOld(BlockBuilder?.Context.Container);
+            var dnn = new DnnContextOld(Context.Container);
             var tenant = new DnnTenant(dnn.Portal);
             AdamAppContext = new AdamAppContext(tenant, app, BlockBuilder, 10, Log);
             ContainerContext = usePortalRoot
@@ -154,7 +157,7 @@ namespace ToSic.Sxc.Adam.WebApi
         public bool FieldPermissionOk(List<Grants> requiredGrant)
         {
             var fieldPermissions = new DnnPermissionCheck().ForAttribute(
-                BlockBuilder.Context,
+                Context,
                 appIdentity: BlockBuilder.App, 
                 attribute: Attribute, parentLog: Log);
 

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
 
@@ -26,8 +25,6 @@ namespace ToSic.Sxc.Security
 
         protected abstract Dictionary<string, IPermissionCheck> InitializePermissionChecks();
 
-        public abstract bool ZoneIsOfCurrentContextOrUserIsSuper(out HttpResponseException exp);
-
         #endregion
 
 
@@ -42,16 +39,16 @@ namespace ToSic.Sxc.Security
         /// Ensure that all! checks pass
         /// </summary>
         /// <param name="grants"></param>
-        /// <param name="preparedException">Out variable to use to throw upstream</param>
+        /// <param name="error">Out error message to use to throw upstream</param>
         /// <returns>True if all pass, false if any one fails</returns>
-        public bool EnsureAll(List<Grants> grants, out HttpResponseException preparedException)
+        public bool EnsureAll(List<Grants> grants, out string error)
         {
             var wrap = Log.Call<bool>();
             foreach (var set in PermissionCheckers)
-                if (!set.Value.Ensure(grants, out preparedException))
+                if (!set.Value.Ensure(grants, out error))
                     return wrap(false.ToString(), false);
 
-            preparedException = null;
+            error = null;
             return wrap(true.ToString(), true);
         }
 

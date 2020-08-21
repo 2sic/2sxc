@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Security
 {
     internal static class PublicFormsPermissions
     {
-        internal static bool UserCanWriteAndPublicFormsEnabled(this MultiPermissionsApp mpa, out HttpResponseException preparedException)
+        internal static bool UserCanWriteAndPublicFormsEnabled(this MultiPermissionsApp mpa, out HttpResponseException preparedException, out string error)
         {
             var wrapLog = mpa.Log.Call("");
             // 1. check if user is restricted
@@ -17,11 +17,13 @@ namespace ToSic.Sxc.Security
             var feats = new[] { FeatureIds.PublicForms };
             if (userIsRestricted && !Features.Enabled(feats))
             {
-                preparedException = Http.PermissionDenied($"low-permission users may not access this - {Features.MsgMissingSome(feats)}");
+                error = $"low-permission users may not access this - {Features.MsgMissingSome(feats)}";
+                preparedException = Http.PermissionDenied(error);
                 return false;
             }
             wrapLog("ok");
             preparedException = null;
+            error = null;
             return true;
         }
 

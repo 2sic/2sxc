@@ -5,11 +5,6 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Web;
-#if NET451
-using HtmlString = System.Web.HtmlString;
-#else
-using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
-#endif
 
 namespace ToSic.Sxc.Blocks
 {
@@ -26,9 +21,9 @@ namespace ToSic.Sxc.Blocks
         private IRenderingHelper _rendHelp;
 
 
-        public HtmlString Render()
+        public string Render()
         {
-            var wrapLog = Log.Call<HtmlString>();
+            var wrapLog = Log.Call<string>();
 
             try
             {
@@ -85,14 +80,12 @@ namespace ToSic.Sxc.Blocks
                     : body;
                 #endregion
 
-                return wrapLog(null, new HtmlString(result));
+                return wrapLog(null, result);
             }
             catch (Exception ex)
             {
-                return wrapLog("error", 
-                    new HtmlString(RenderingHelper.DesignErrorMessage(ex, true, 
-                        null, true, true))
-                    );
+                return wrapLog("error", RenderingHelper.DesignErrorMessage(ex, true,
+                    null, true, true));
             }
         }
 

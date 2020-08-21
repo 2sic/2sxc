@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web;
 using Newtonsoft.Json;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Blocks;
@@ -16,9 +15,6 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
     public partial class InPageEditingHelper 
     {
-        //[PrivateApi]
-        //protected  IBlockBuilder BlockBuilder;
-
         #region Context Attributes
 
         /// <inheritdoc/>

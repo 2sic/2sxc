@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
 using ToSic.Sxc.Blocks;
@@ -11,8 +12,8 @@ namespace ToSic.Sxc.Security
     {
         protected List<IEntity> Items;
 
-        public MultiPermissionsItems(IBlockBuilder blockBuilder, int appId, IEntity item, ILog parentLog) 
-            : base(blockBuilder, appId, parentLog)
+        public MultiPermissionsItems(IBlockBuilder blockBuilder, IInstanceContext context, int appId, IEntity item, ILog parentLog) 
+            : base(blockBuilder, context, appId, parentLog)
         {
             Items = new List<IEntity> {item};
         }

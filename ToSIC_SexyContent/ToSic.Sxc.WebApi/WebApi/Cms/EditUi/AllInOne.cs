@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.ImportExport.Json.V1;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.WebApi.Context;
 

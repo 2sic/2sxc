@@ -49,9 +49,9 @@ namespace ToSic.Sxc.WebApi.Cms
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {
-            var permCheck = new MultiPermissionsApp(BlockBuilder, App.AppId, Log);
-            if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var exp))
-                throw exp;
+            var permCheck = new MultiPermissionsApp(BlockBuilder, BlockBuilder.Context, App.AppId, Log);
+            if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
+                throw Http.PermissionDenied(error);
 
             return GetEditor().SaveTemplateId(templateId, forceCreateContentGroup);
         }
@@ -124,7 +124,7 @@ namespace ToSic.Sxc.WebApi.Cms
                     ((BlockBuilder)cbToRender.BlockBuilder).View = template;
                 }
 
-                var rendered = cbToRender.BlockBuilder.Render().ToString();
+                var rendered = cbToRender.BlockBuilder.Render();
 
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
@@ -145,8 +145,8 @@ namespace ToSic.Sxc.WebApi.Cms
         public bool Publish(int id)
         {
             Log.Add($"try to publish id #{id}");
-            if (!new MultiPermissionsApp(BlockBuilder, App.AppId, Log).EnsureAll(GrantSets.WritePublished, out var exp))
-                throw exp;
+            if (!new MultiPermissionsApp(BlockBuilder, BlockBuilder.Context, App.AppId, Log).EnsureAll(GrantSets.WritePublished, out var error))
+                throw Http.PermissionDenied(error);
             new AppManager(App, Log).Entities.Publish(id);
             return true;
         }

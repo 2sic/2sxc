@@ -30,7 +30,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // now return a rendered instance
             var newContentBlock = new BlockFromEntity().Init(BlockBuilder.Block, entityId, Log);
-            return newContentBlock.BlockBuilder.Render().ToString();
+            return newContentBlock.BlockBuilder.Render();
 
         }
 

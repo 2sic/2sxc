@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
-using System.Web.Http;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Run;
 using ToSic.Eav.Security;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.LookUp;
-using ToSic.Sxc.WebApi;
 using App = ToSic.Sxc.Apps.App;
 using Factory = ToSic.Eav.Factory;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -23,28 +23,34 @@ namespace ToSic.Sxc.Security
         /// </summary>
         public IApp App { get; }
 
-        internal readonly IBlockBuilder BlockBuilder;
+        //internal readonly IBlockBuilder BlockBuilder;
+        internal readonly IInstanceContext Context;
 
         protected readonly PortalSettings PortalForSecurityCheck;
+        protected readonly ITenant TenantForSecurityCheck;
 
         protected readonly bool SamePortal;
 
-        public MultiPermissionsApp(IBlockBuilder blockBuilder, int appId, ILog parentLog) :
-            this(blockBuilder, new AppIdentity(SystemRuntime.ZoneIdOfApp(appId), appId), parentLog) { }
+        public MultiPermissionsApp(IBlockBuilder blockBuilder, IInstanceContext context, int appId, ILog parentLog) :
+            this(blockBuilder, context, new AppIdentity(SystemRuntime.ZoneIdOfApp(appId), appId), parentLog) { }
 
-        protected MultiPermissionsApp(IBlockBuilder blockBuilder, IAppIdentity appIdentity,  ILog parentLog) 
+        protected MultiPermissionsApp(IBlockBuilder blockBuilder, IInstanceContext context, IAppIdentity appIdentity,  ILog parentLog) 
             : base("Api.Perms", parentLog)
         {
             var wrapLog = Log.Call($"..., appId: {appIdentity.AppId}, ...");
-            BlockBuilder = blockBuilder;
-            App = Factory.Resolve<App>().Init(appIdentity,
-                ConfigurationProvider.Build(blockBuilder, true),
+            // old
+            //BlockBuilder = blockBuilder;
+            // new
+            Context = context;
+            App = Factory.Resolve<App>().Init(appIdentity, ConfigurationProvider.Build(blockBuilder, true),
                 false, Log);
 
-            var contextZoneId = blockBuilder.Environment.ZoneMapper.GetZoneId(App.Tenant);
-            SamePortal = contextZoneId == appIdentity.ZoneId;
+            SamePortal = Context.Tenant.ZoneId == App.ZoneId;
+            // old
             PortalForSecurityCheck = SamePortal ? PortalSettings.Current : null;
-            wrapLog($"ready for z/a:{appIdentity.ZoneId}/{appIdentity.AppId} t/z:{App.Tenant.Id}/{contextZoneId} same:{SamePortal}");
+            // new
+            TenantForSecurityCheck = SamePortal ? Context.Tenant : null;
+            wrapLog($"ready for z/a:{appIdentity.ZoneId}/{appIdentity.AppId} t/z:{App.Tenant.Id}/{Context.Tenant.ZoneId} same:{SamePortal}");
         }
 
         protected override Dictionary<string, IPermissionCheck> InitializePermissionChecks()
@@ -56,16 +62,12 @@ namespace ToSic.Sxc.Security
                 {"App", BuildPermissionChecker()}
             };
 
-        public sealed override bool ZoneIsOfCurrentContextOrUserIsSuper(out HttpResponseException exp)
+        public bool ZoneIsOfCurrentContextOrUserIsSuper(out string error)
         {
-            var wrapLog = Log.Call();
-            var zoneSameOrSuperUser = SamePortal || PortalSettings.Current.UserInfo.IsSuperUser;
-            exp = zoneSameOrSuperUser ? null: Http.PermissionDenied(
-                $"accessing app {App.AppId} in zone {App.ZoneId} is not allowed for this user");
-
-            wrapLog(zoneSameOrSuperUser ? $"SamePortal:{SamePortal} - ok": "not ok, generate error");
-
-            return zoneSameOrSuperUser;
+            var wrapLog = Log.Call<bool>();
+            var zoneSameOrSuperUser = SamePortal || Context.User.IsSuperUser; // PortalSettings.Current.UserInfo.IsSuperUser;
+            error = zoneSameOrSuperUser ? null: $"accessing app {App.AppId} in zone {App.ZoneId} is not allowed for this user";
+            return wrapLog(zoneSameOrSuperUser ? $"SamePortal:{SamePortal} - ok": "not ok, generate error", zoneSameOrSuperUser);
         }
 
 
@@ -82,7 +84,7 @@ namespace ToSic.Sxc.Security
 
             // user has edit permissions on this app, and it's the same app as the user is coming from
             return new DnnPermissionCheck().ForParts(
-                new DnnContext(new DnnTenant(PortalForSecurityCheck), BlockBuilder.Context.Container, BlockBuilder.Context.User),
+                new DnnContext(new DnnTenant(PortalForSecurityCheck), Context.Container, Context.User),
                 App, type, item, Log);
         }
 

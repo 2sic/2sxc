@@ -55,8 +55,8 @@ namespace ToSic.Sxc.WebApi.Cms
                         ? appRead.Entities.Get(i.Entity.Guid) // prefer guid access if available
                         : appRead.Entities.Get(i.Entity.Id)  // otherwise id
                 );
-            if (foundItems.Any(i => i != null) && !permCheck.EnsureAll(GrantSets.UpdateSomething, out var exception))
-                throw exception;
+            if (foundItems.Any(i => i != null) && !permCheck.EnsureAll(GrantSets.UpdateSomething, out var error))
+                throw Http.PermissionDenied(error);
             #endregion
 
 

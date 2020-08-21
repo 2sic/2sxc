@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Blocks.Renderers
             // render it
             log.Add("found, will render");
             var cb = new BlockFromEntity().Init(parentCb, entity, log);
-            return cb.BlockBuilder.Render();
+            return new HtmlString(cb.BlockBuilder.Render());
         }
 
         private const string WrapperTemplate = "<div class='{0}' {1}>{2}</div>";
@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Blocks.Renderers
             return string.Format(WrapperTemplate, new object[] { cbClasses, attribs, inner});
         }
 
-        internal static string RenderListWithContext(DynamicEntity parent, string fieldName/*, IInPageEditingSystem edit = null*/, string apps = null, int max = 100)
+        internal static string RenderListWithContext(DynamicEntity parent, string fieldName, string apps = null, int max = 100)
         {
             var innerBuilder = new StringBuilder();
             var found = parent.TryGetMember(fieldName, out var objFound);

@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http;
-using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
@@ -33,11 +32,13 @@ namespace ToSic.Sxc.WebApi.App
     [AllowAnonymous]
     public class AppContentController : SxcApiControllerBase
 	{
-	    protected override void Initialize(HttpControllerContext controllerContext)
-	    {
-	        base.Initialize(controllerContext); // very important!!!
-	        Log.Rename("Api.ApCont");
-	    }
+        protected override string HistoryLogName => "Api.ApCont";
+
+     //   protected override void Initialize(HttpControllerContext controllerContext)
+	    //{
+	    //    base.Initialize(controllerContext); // very important!!!
+	    //    Log.Rename("Api.ApCont");
+	    //}
 
 
         #region Get List / all of a certain content-type
@@ -55,8 +56,8 @@ namespace ToSic.Sxc.WebApi.App
 
             // verify that read-access to these content-types is permitted
             var permCheck = new MultiPermissionsTypes(BlockBuilder, appIdentity.AppId, contentType, Log);
-            if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exp))
-                throw exp;
+            if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
+                throw Http.PermissionDenied(error);
 
             var result = new EntityApi(appIdentity.AppId, permCheck.EnsureAny(GrantSets.ReadDraft), Log)
                 .GetEntities(contentType)
@@ -102,9 +103,9 @@ namespace ToSic.Sxc.WebApi.App
             var entityApi = new EntityApi(appIdentity.AppId, true, Log);
 
             var itm = getOne(entityApi);
-            var permCheck = new MultiPermissionsItems(BlockBuilder, appIdentity.AppId, itm, Log);
-            if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exception))
-                throw exception;
+            var permCheck = new MultiPermissionsItems(BlockBuilder, BlockBuilder.Context, appIdentity.AppId, itm, Log);
+            if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
+                throw Http.PermissionDenied(error);
 
             // in case draft wasn't allow, get again with more restricted permissions 
             if (!permCheck.EnsureAny(GrantSets.ReadDraft))
@@ -176,11 +177,11 @@ namespace ToSic.Sxc.WebApi.App
 
             var ok = itm == null
                 ? new MultiPermissionsTypes(BlockBuilder, appIdentity.AppId, contentType, Log)
-                    .EnsureAll(Grants.Create.AsSet(), out var exp)
-                : new MultiPermissionsItems(BlockBuilder, appIdentity.AppId, itm, Log)
-                    .EnsureAll(Grants.Update.AsSet(), out exp);
+                    .EnsureAll(Grants.Create.AsSet(), out var error)
+                : new MultiPermissionsItems(BlockBuilder, BlockBuilder.Context, appIdentity.AppId, itm, Log)
+                    .EnsureAll(Grants.Update.AsSet(), out error);
             if (!ok)
-                throw exp;
+                throw Http.PermissionDenied(error);
 
             // Convert to case-insensitive dictionary just to be safe!
             newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.OrdinalIgnoreCase);
@@ -228,9 +229,9 @@ namespace ToSic.Sxc.WebApi.App
 
             var entityApi = new EntityApi(appIdentity.AppId, true, Log);
             var itm = entityApi.GetOrThrow(contentType, id);
-            var permCheck = new MultiPermissionsItems(BlockBuilder, appIdentity.AppId, itm, Log);
-            if (!permCheck.EnsureAll(Grants.Delete.AsSet(), out var exception))
-                throw exception;
+            var permCheck = new MultiPermissionsItems(BlockBuilder, BlockBuilder.Context, appIdentity.AppId, itm, Log);
+            if (!permCheck.EnsureAll(Grants.Delete.AsSet(), out var error))
+                throw Http.PermissionDenied(error);
             entityApi.Delete(itm.Type.Name, id);
         }
 
@@ -246,9 +247,9 @@ namespace ToSic.Sxc.WebApi.App
             var entityApi = new EntityApi(appIdentity.AppId, true, Log);
 	        var itm = entityApi.GetOrThrow(contentType == "any" ? null : contentType, guid);
 
-	        var permCheck = new MultiPermissionsItems(BlockBuilder, appIdentity.AppId, itm, Log);
-	        if (!permCheck.EnsureAll(Grants.Delete.AsSet(), out var exception))
-	            throw exception;
+	        var permCheck = new MultiPermissionsItems(BlockBuilder, BlockBuilder.Context, appIdentity.AppId, itm, Log);
+	        if (!permCheck.EnsureAll(Grants.Delete.AsSet(), out var error))
+	            throw Http.PermissionDenied(error);
 
             entityApi.Delete(itm.Type.Name, guid);
         }

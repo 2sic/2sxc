@@ -22,9 +22,9 @@ namespace ToSic.Sxc.WebApi.Cms
             var wrapLog = Log.Call<dynamic>($"{appId}, {guid}");
             
             // extra security to only allow zone change if host user
-            var permCheck = new MultiPermissionsApp(BlockBuilder, appId, Log);
-            if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var exception))
-                throw exception;
+            var permCheck = new MultiPermissionsApp(BlockBuilder, BlockBuilder.Context, appId, Log);
+            if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
+                throw Http.PermissionDenied(error);
 
             var cms = new CmsRuntime(appId, Log, true);
             // treat view as a list - in case future code will want to analyze many views together

@@ -37,8 +37,8 @@ namespace ToSic.Sxc.WebApi.Cms
             // now look up the types, and repeat security check with type-names
             // todo: 2020-03-20 new feat 11.01, may not check inner type permissions ATM
             var permCheck = new MultiPermissionsTypes(BlockBuilder, appId, items, Log);
-            if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var exception))
-                throw exception;
+            if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
+                throw Http.PermissionDenied(error);
 
             // load items - similar
             var result = new AllInOne();
@@ -64,8 +64,8 @@ namespace ToSic.Sxc.WebApi.Cms
             // this is to ensure that if public forms only have create permissions, they can't access existing data
             // important, this code is shared/duplicated in the EntitiesController.GetManyForEditing
             if (list.Any(set => set.Entity != null))
-                if (!permCheck.EnsureAll(GrantSets.ReadSomething, out exception))
-                    throw exception;
+                if (!permCheck.EnsureAll(GrantSets.ReadSomething, out error))
+                    throw Http.PermissionDenied(error);
 
             // load content-types
             var types = UsedTypes(list, typeRead);

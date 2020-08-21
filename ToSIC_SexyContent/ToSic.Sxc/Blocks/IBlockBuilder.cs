@@ -3,11 +3,6 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using IApp = ToSic.Sxc.Apps.IApp;
-#if NET451
-using HtmlString = System.Web.HtmlString;
-#else
-using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
-#endif
 
 namespace ToSic.Sxc.Blocks
 {
@@ -36,7 +31,7 @@ namespace ToSic.Sxc.Blocks
         /// Render this block. Internally will use the engine. 
         /// </summary>
         /// <returns></returns>
-        HtmlString Render();
+        string Render();
 
         /// <summary>
         /// The real block / unit of content which will be rendered. 

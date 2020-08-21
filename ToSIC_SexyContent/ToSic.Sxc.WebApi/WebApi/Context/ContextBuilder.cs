@@ -5,6 +5,7 @@ using DotNetNuke.Entities.Controllers;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Web.JsContext;
