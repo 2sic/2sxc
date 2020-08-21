@@ -103,17 +103,23 @@
     </ItemGroup>
 
     <ItemGroup>
+      <!-- Global / Shared 2sxc DLLs-->
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Sxc.dll" />
+      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Sxc.pdb" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Sxc.WebApi.dll" />
+      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Sxc.WebApi.pdb" />
+
+      <!-- DNN specific DLLs -->
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.Razor.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.Razor.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.WebApi.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.WebApi.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.pdb" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Sxc.dll" />
-      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Sxc.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Sxc.Dnn.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Sxc.Dnn.pdb" />
 
+      <!-- EAV DLLs -->
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Apps.dll" />
@@ -128,8 +134,6 @@
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.Persistence.Efc.pdb" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Repository.Efc.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.Repository.Efc.pdb" />
-      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Tokens.dll" />
-      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.Tokens.pdb" />-->
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.WebApi.dll" />
       <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.WebApi.pdb" />
 
