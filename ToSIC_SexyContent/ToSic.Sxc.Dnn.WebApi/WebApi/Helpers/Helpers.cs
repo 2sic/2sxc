@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Net.Http;
 using DotNetNuke.Common.Utilities;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
@@ -39,7 +38,7 @@ namespace ToSic.Sxc.WebApi
             
             var tenant = moduleInfo == null
                 ? new DnnTenant(null)
-                : new DnnTenant(new PortalSettings(moduleInfo.OwnerPortalID));
+                : new DnnTenant().Init(moduleInfo.OwnerPortalID);
 
             var context = new DnnContext(tenant, container, new DnnUser(), GetOverrideParams(request));
             IBlock contentBlock = new BlockFromModule().Init(context, log);

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Web.UI;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Blocks;
@@ -22,7 +21,7 @@ namespace ToSic.SexyContent
                 if (_cmsBlockLoaded) return _blockBuilder;
                 _cmsBlockLoaded = true;
                 var context = new DnnContext(
-                    new DnnTenant(new PortalSettings(ModuleConfiguration.OwnerPortalID)),
+                    new DnnTenant().Init(ModuleConfiguration.OwnerPortalID),
                     new DnnContainer().Init(ModuleConfiguration, Log),
                     new DnnUser(UserInfo));
                 _blockBuilder = new BlockFromModule().Init(context, Log).BlockBuilder as BlockBuilder;

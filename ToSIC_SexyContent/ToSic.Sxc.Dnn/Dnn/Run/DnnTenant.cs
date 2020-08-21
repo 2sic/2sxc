@@ -12,6 +12,8 @@ namespace ToSic.Sxc.Dnn.Run
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public class DnnTenant: Tenant<PortalSettings>
     {
+        #region Constructors and DI
+
         /// <summary>
         /// DI Constructor, will get the current portal settings
         /// #TodoDI not ideal yet, as PortalSettings.current is still retrieved from global
@@ -43,6 +45,20 @@ namespace ToSic.Sxc.Dnn.Run
             return settings;
         }
 
+        /// <inheritdoc />
+        public override ITenant Init(int tenantId)
+        {
+            var newSettings = new PortalSettings(tenantId);
+            // only replace it if it's different - because the initial normal Portalsettings has more loaded values
+            if (newSettings.PortalId != (UnwrappedContents?.PortalId ?? -1))
+                UnwrappedContents = newSettings;
+            return this;
+        }
+
+        #endregion
+
+
+        /// <inheritdoc />
         public override string DefaultLanguage => _defaultLanguage ?? (_defaultLanguage = UnwrappedContents.DefaultLanguage.ToLowerInvariant());
         private string _defaultLanguage;
 

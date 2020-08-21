@@ -15,7 +15,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public dynamic Apps(int zoneId)
         {
             var cms = new CmsZones(zoneId, Env, Log);
-            var tenant = new DnnTenant(new PortalSettings(ActiveModule.OwnerPortalID));
+            var tenant = new DnnTenant().Init(ActiveModule.OwnerPortalID);
             var configurationBuilder = ConfigurationProvider.Build(BlockBuilder, true);
             var list = cms.AppsRt.GetApps(tenant, configurationBuilder);
             return list.Select(a => new

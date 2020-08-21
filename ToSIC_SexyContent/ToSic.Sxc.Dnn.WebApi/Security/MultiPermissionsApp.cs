@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
-using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.LookUp;
 using App = ToSic.Sxc.Apps.App;
 using Factory = ToSic.Eav.Factory;
@@ -26,7 +25,7 @@ namespace ToSic.Sxc.Security
         //internal readonly IBlockBuilder BlockBuilder;
         internal readonly IInstanceContext Context;
 
-        protected readonly PortalSettings PortalForSecurityCheck;
+        //protected readonly PortalSettings PortalForSecurityCheck;
         protected readonly ITenant TenantForSecurityCheck;
 
         protected readonly bool SamePortal;
@@ -47,9 +46,10 @@ namespace ToSic.Sxc.Security
 
             SamePortal = Context.Tenant.ZoneId == App.ZoneId;
             // old
-            PortalForSecurityCheck = SamePortal ? PortalSettings.Current : null;
+            //PortalForSecurityCheck = SamePortal ? PortalSettings.Current : null;
             // new
-            TenantForSecurityCheck = SamePortal ? Context.Tenant : null;
+            TenantForSecurityCheck =
+                SamePortal ? Context.Tenant : Factory.Resolve<IZoneMapper>().Init(Log).Tenant(App.ZoneId);
             wrapLog($"ready for z/a:{appIdentity.ZoneId}/{appIdentity.AppId} t/z:{App.Tenant.Id}/{Context.Tenant.ZoneId} same:{SamePortal}");
         }
 
@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Security
         public bool ZoneIsOfCurrentContextOrUserIsSuper(out string error)
         {
             var wrapLog = Log.Call<bool>();
-            var zoneSameOrSuperUser = SamePortal || Context.User.IsSuperUser; // PortalSettings.Current.UserInfo.IsSuperUser;
+            var zoneSameOrSuperUser = SamePortal || Context.User.IsSuperUser;
             error = zoneSameOrSuperUser ? null: $"accessing app {App.AppId} in zone {App.ZoneId} is not allowed for this user";
             return wrapLog(zoneSameOrSuperUser ? $"SamePortal:{SamePortal} - ok": "not ok, generate error", zoneSameOrSuperUser);
         }
@@ -83,8 +83,8 @@ namespace ToSic.Sxc.Security
             Log.Add($"BuildPermissionChecker(type:{type?.Name}, item:{item?.EntityId})");
 
             // user has edit permissions on this app, and it's the same app as the user is coming from
-            return new DnnPermissionCheck().ForParts(
-                new DnnContext(new DnnTenant(PortalForSecurityCheck), Context.Container, Context.User),
+            return Factory.Resolve<AppPermissionCheck>().ForParts(Context.Clone(TenantForSecurityCheck),
+                // new DnnContext(TenantForSecurityCheck, Context.Container, Context.User),
                 App, type, item, Log);
         }
 
