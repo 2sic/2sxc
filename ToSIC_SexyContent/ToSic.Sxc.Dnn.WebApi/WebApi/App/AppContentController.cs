@@ -81,7 +81,7 @@ namespace ToSic.Sxc.WebApi.App
             // - note that it's really not needed, as you can always use a query or something similar instead
             // - not also that if ever you do support view switching, you will need to ensure security checks
 
-            var dataHandler = new GetContentBlockDataLight(BlockBuilder);
+            var dataHandler = new AppContentJsonForInstance();
 
             // must access engine to ensure pre-processing of data has happened, 
             // especially if the cshtml contains a override void CustomizeData()
@@ -94,7 +94,7 @@ namespace ToSic.Sxc.WebApi.App
             {
                 var publishedStreams = dataSource.Publish.Streams;
                 var streamList = publishedStreams.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
-                json = dataHandler.GetJsonFromStreams(dataSource, streamList);
+                json = dataHandler.GenerateJson(dataSource, streamList, BlockBuilder.UserMayEdit);
             }
             else
             {
