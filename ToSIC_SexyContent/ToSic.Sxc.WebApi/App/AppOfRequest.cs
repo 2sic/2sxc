@@ -59,25 +59,23 @@ namespace ToSic.Sxc.WebApi.App
         /// <returns></returns>
         internal IAppIdentity GetAppIdFromPathOrContext(string appPath, IBlockBuilder blockBuilder)
         {
-            var wrapLog = Log.Call($"{appPath}, ...", message: "detect app from query string parameters");
+            var wrapLog = Log.Call<IAppIdentity>($"{appPath}, ...", message: "detect app from query string parameters");
 
             // try to override detection based on additional zone/app-id in urls
             var appId = GetAppIdFromUrlParams();
 
-            if (appId == null)
-            {
-                Log.Add($"auto detect app and init eav - path:{appPath}, context null: {blockBuilder == null}");
-                appId = appPath == null || appPath == "auto"
-                    ? new AppIdentity(
-                        blockBuilder?.Block?.ZoneId ??
-                        throw new ArgumentException("try to get app-id from context, but none found"),
-                        blockBuilder.Block.AppId)
-                    : GetAppIdFromPath(appPath);
-            }
+            if (appId != null) return wrapLog(appId.LogState(), appId);
 
-            wrapLog(appId.LogState());
 
-            return appId;
+            Log.Add($"auto detect app and init eav - path:{appPath}, context null: {blockBuilder == null}");
+            appId = appPath == null || appPath == "auto"
+                ? new AppIdentity(
+                    blockBuilder?.Block?.ZoneId ??
+                    throw new ArgumentException("try to get app-id from context, but none found"),
+                    blockBuilder.Block.AppId)
+                : GetAppIdFromPath(appPath);
+
+            return wrapLog(appId.LogState(), appId);
         }
 
         /// <summary>

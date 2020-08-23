@@ -62,6 +62,7 @@ namespace ToSic.Sxc.WebApi
             //});
         }
 
-
+        internal static HttpExceptionAbstraction MissingParam(string paramName) 
+            => new HttpExceptionAbstraction(HttpStatusCode.BadRequest, $"Param {paramName} missing.");
     }
 }

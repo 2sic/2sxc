@@ -20,8 +20,14 @@ namespace ToSic.Sxc.Dnn.Run
 
         private readonly string _salPrefix = "SecurityAccessLevel.".ToLower();
 
+        /// <summary>
+        /// The DNN module on the container
+        /// </summary>
+        /// <remarks>
+        /// In some cases the container is a ContainerNull object without ModuleInfo, so we must really do null-checks
+        /// </remarks>
         protected ModuleInfo Module =>
-            _module ?? (_module = ((Container<ModuleInfo>) Context.Container)?.UnwrappedContents);
+            _module ?? (_module = (Context.Container as Container<ModuleInfo>)?.UnwrappedContents);
         private ModuleInfo _module;
 
 

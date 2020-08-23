@@ -1,8 +1,10 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Eav;
+using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi.App;
@@ -40,6 +42,14 @@ namespace ToSic.Sxc.WebApi
         /// <param name="appId"></param>
         /// <returns></returns>
         internal IApp GetApp(int appId) => Factory.Resolve<Apps.App>().Init(appId, Log, BlockBuilder);
+
+        protected IInstanceContext GetContext()
+        {
+            // in case the initial request didn't yet find a block builder, we need to create it now
+            var context = BlockBuilder?.Context
+                          ?? new DnnContext(new DnnTenant(PortalSettings), new ContainerNull(), new DnnUser());
+            return context;
+        }
 
         #endregion
     }

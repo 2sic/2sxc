@@ -15,7 +15,7 @@ using ToSic.Sxc.WebApi.Security;
 
 namespace ToSic.Sxc.WebApi.App
 {
-    public class AppContent: WebApiBase
+    public class AppContent: WebApiBackendBase
     {
         #region Constructor / DI
 

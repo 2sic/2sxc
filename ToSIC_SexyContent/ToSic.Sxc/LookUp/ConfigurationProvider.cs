@@ -38,14 +38,14 @@ namespace ToSic.Sxc.LookUp
         /// <summary>
         /// Generate a delegate which will be used to build the configuration based existing stuff
         /// </summary>
-        internal static Func<App, IAppDataConfiguration> Build(bool userMayEdit, bool publishingEnabled, ILookUpEngine config) 
-            => appToUse => new AppDataConfiguration(userMayEdit, publishingEnabled, config);
+        internal static Func<App, IAppDataConfiguration> Build(bool showDrafts, bool publishingEnabled, ILookUpEngine config) 
+            => appToUse => new AppDataConfiguration(showDrafts, publishingEnabled, config);
 
         /// <summary>
         /// Generate a delegate which will be used to build a basic configuration with very little context
         /// </summary>
-        internal static Func<App, IAppDataConfiguration> Build(bool userMayEdit, bool publishingEnabled)
-            => appToUse => new AppDataConfiguration(userMayEdit, publishingEnabled,
+        internal static Func<App, IAppDataConfiguration> Build(bool showDrafts, bool publishingEnabled)
+            => appToUse => new AppDataConfiguration(showDrafts, publishingEnabled,
                 GetConfigProviderForModule(0, appToUse as IApp, null));
 
 

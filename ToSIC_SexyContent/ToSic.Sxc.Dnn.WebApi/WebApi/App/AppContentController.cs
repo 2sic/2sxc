@@ -31,13 +31,13 @@ namespace ToSic.Sxc.WebApi.App
 
         #region New Helpers
 
-        private IInstanceContext GetContext()
-        {
-            // in case the initial request didn't yet find a block builder, we need to create it now
-            var context = BlockBuilder?.Context
-                          ?? new DnnContext(new DnnTenant(PortalSettings), new ContainerNull(), new DnnUser());
-            return context;
-        }
+        //protected IInstanceContext GetContext()
+        //{
+        //    // in case the initial request didn't yet find a block builder, we need to create it now
+        //    var context = BlockBuilder?.Context
+        //                  ?? new DnnContext(new DnnTenant(PortalSettings), new ContainerNull(), new DnnUser());
+        //    return context;
+        //}
 
         #endregion
 
@@ -50,32 +50,7 @@ namespace ToSic.Sxc.WebApi.App
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string appPath = null) 
             => Factory.Resolve<AppContent>().Init(Log).GetItems(GetContext(), contentType, BlockBuilder, appPath);
 
-        //internal IEnumerable<Dictionary<string, object>> GetItems(IInstanceContext context, string contentType, IBlockBuilder ctxBlockBuilder, string appPath = null)
-        //{
-        //    var wrapLog = Log.Call($"get entities type:{contentType}, path:{appPath}");
-
-        //    // if app-path specified, use that app, otherwise use from context
-        //    var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, ctxBlockBuilder);
-
-        //    // get the app - if we have the context from the request, use that, otherwise generate full app
-        //    var app = ctxBlockBuilder == null
-        //        ? Factory.Resolve<Apps.App>().Init(appIdentity, Log)
-        //        : GetApp(appIdentity.AppId);
-
-        //    // verify that read-access to these content-types is permitted
-        //    var permCheck = new MultiPermissionsTypes(context, app, contentType, Log);
-        //    if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
-        //        throw HttpException.PermissionDenied(error);
-
-        //    var result = new EntityApi(appIdentity.AppId, permCheck.EnsureAny(GrantSets.ReadDraft), Log)
-        //        .GetEntities(contentType)
-        //        ?.ToList();
-        //    wrapLog("found: " + result?.Count);
-        //    return result;
-        //}
-
         #endregion
-
 
         #region GetOne by ID / GUID
 
@@ -102,37 +77,12 @@ namespace ToSic.Sxc.WebApi.App
         /// <param name="getOne"></param>
         /// <param name="appPath"></param>
         /// <returns></returns>
-        private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<EntityApi, IEntity> getOne, string appPath)
-        {
-            return Factory.Resolve<AppContent>().Init(Log).GetOne(GetContext(), BlockBuilder, contentType, getOne, appPath);
-        }
-
-        //internal Dictionary<string, object> GetOne(IInstanceContext context, IBlockBuilder ctxBlockBuilder, string contentType, Func<EntityApi, IEntity> getOne, string appPath)
-        //{
-        //    Log.Add($"get and serialize after security check type:{contentType}, path:{appPath}");
-        //    // if app-path specified, use that app, otherwise use from context
-        //    var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, ctxBlockBuilder);
-
-        //    var entityApi = new EntityApi(appIdentity.AppId, true, Log);
-
-        //    var itm = getOne(entityApi);
-        //    var permCheck = new MultiPermissionsItems(context, GetApp(appIdentity.AppId), itm, Log);
-        //    if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
-        //        throw HttpException.PermissionDenied(error);
-
-        //    // in case draft wasn't allow, get again with more restricted permissions 
-        //    if (!permCheck.EnsureAny(GrantSets.ReadDraft))
-        //    {
-        //        entityApi = new EntityApi(appIdentity.AppId, false, Log);
-        //        itm = getOne(entityApi);
-        //    }
-
-        //    return InitEavAndSerializer(appIdentity.AppId).Convert(itm);
-        //}
+        private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<EntityApi, IEntity> getOne, string appPath) 
+            => Factory.Resolve<AppContent>().Init(Log).GetOne(GetContext(), BlockBuilder, contentType, getOne, appPath);
 
         #endregion
 
-        #region ContentBlock - retrieving data of the current instance as is
+        #region ContentBlock - retrieving data of the current instance as is (ATM DNN-specific)
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
 	    public HttpResponseMessage GetContentBlockData()
@@ -171,66 +121,17 @@ namespace ToSic.Sxc.WebApi.App
         }
         #endregion
 
-
-
         #region Create
+
         [HttpPost]
-        [AllowAnonymous]   // will check security internally, so assume no requirements
-        public Dictionary<string, object> CreateOrUpdate([FromUri] string contentType, [FromBody] Dictionary<string, object> newContentItem, [FromUri] int? id = null, [FromUri] string appPath = null)
-        {
-            return Factory.Resolve<AppContent>().Init(Log)
+        [AllowAnonymous] // will check security internally, so assume no requirements
+        public Dictionary<string, object> CreateOrUpdate([FromUri] string contentType,
+            [FromBody] Dictionary<string, object> newContentItem, [FromUri] int? id = null,
+            [FromUri] string appPath = null)
+            => Factory.Resolve<AppContent>().Init(Log)
                 .CreateOrUpdate(GetContext(), BlockBuilder, contentType, newContentItem, id, appPath);
-        }
-
-        //internal Dictionary<string, object> CreateOrUpdate(IInstanceContext context, IBlockBuilder ctxBlockBuilder, string contentType, Dictionary<string, object> newContentItem, int? id = null, string appPath = null)
-        //{
-        //    Log.Add($"create or update type:{contentType}, id:{id}, path:{appPath}");
-        //    // if app-path specified, use that app, otherwise use from context
-        //    var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, ctxBlockBuilder);
-
-        //    // Check that this ID is actually of this content-type,
-        //    // this throws an error if it's not the correct type
-        //    var itm = id == null
-        //        ? null
-        //        : new EntityApi(appIdentity.AppId, true, Log).GetOrThrow(contentType, id.Value);
-
-        //    var ok = itm == null
-        //        ? new MultiPermissionsTypes(context, GetApp(appIdentity.AppId), contentType, Log)
-        //            .EnsureAll(Grants.Create.AsSet(), out var error)
-        //        : new MultiPermissionsItems(context, GetApp(appIdentity.AppId), itm, Log)
-        //            .EnsureAll(Grants.Update.AsSet(), out error);
-        //    if (!ok)
-        //        throw HttpException.PermissionDenied(error);
-
-        //    // Convert to case-insensitive dictionary just to be safe!
-        //    newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.OrdinalIgnoreCase);
-
-        //    // Now create the cleaned up import-dictionary so we can create a new entity
-        //    var cleanedNewItem = new AppContentEntityBuilder(Log)
-        //        .CreateEntityDictionary(contentType, newContentItem, appIdentity.AppId);
-
-        //    var userName = context.User.IdentityToken;
-
-        //    // try to create
-        //    var publish = Factory.Resolve<IPagePublishing>().Init(Log);
-        //    var currentApp = Factory.Resolve<Apps.App>().Init(appIdentity,
-        //        ConfigurationProvider.Build(false, publish.IsEnabled(context.Container.Id),
-        //            ctxBlockBuilder.Block.Data.Configuration.LookUps), true, Log);
-
-        //    if (id == null)
-        //    {
-        //        currentApp.Data.Create(contentType, cleanedNewItem, userName);
-        //        // Todo: try to return the newly created object 
-        //        return null;
-        //    }
-
-        //    currentApp.Data.Update(id.Value, cleanedNewItem, userName);
-        //    return InitEavAndSerializer(appIdentity.AppId).Convert(currentApp.Data.List.One(id.Value));
-        //}
 
         #endregion
-
-
 
         #region Delete
 
@@ -239,60 +140,12 @@ namespace ToSic.Sxc.WebApi.App
         public void Delete(string contentType, int id, [FromUri] string appPath = null) 
             => Factory.Resolve<AppContent>().Init(Log).Delete(GetContext(), BlockBuilder, contentType, id, appPath);
 
-        //internal void Delete(IInstanceContext context, IBlockBuilder ctxBlockBuilder, string contentType, int id, string appPath)
-        //{
-        //    Log.Add($"delete id:{id}, type:{contentType}, path:{appPath}");
-        //    // if app-path specified, use that app, otherwise use from context
-        //    var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, ctxBlockBuilder);
-
-        //    // don't allow type "any" on this
-        //    if (contentType == "any")
-        //        throw new Exception("type any not allowed with id-only, requires guid");
-
-        //    var entityApi = new EntityApi(appIdentity.AppId, true, Log);
-        //    var itm = entityApi.GetOrThrow(contentType, id);
-        //    var permCheck = new MultiPermissionsItems(context, GetApp(appIdentity.AppId), itm, Log);
-        //    if (!permCheck.EnsureAll(Grants.Delete.AsSet(), out var error))
-        //        throw HttpException.PermissionDenied(error);
-        //    entityApi.Delete(itm.Type.Name, id);
-        //}
-
-
         [HttpDelete]
 	    [AllowAnonymous]   // will check security internally, so assume no requirements
         public void Delete(string contentType, Guid guid, [FromUri] string appPath = null) 
             => Factory.Resolve<AppContent>().Init(Log).Delete(GetContext(), BlockBuilder, contentType, guid, appPath);
 
-        //internal void Delete(IInstanceContext context, IBlockBuilder ctxBlockBuilder, string contentType, Guid guid, string appPath)
-        //{
-        //    Log.Add($"delete guid:{guid}, type:{contentType}, path:{appPath}");
-        //    // if app-path specified, use that app, otherwise use from context
-        //    var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, ctxBlockBuilder);
-
-        //    var entityApi = new EntityApi(appIdentity.AppId, true, Log);
-        //    var itm = entityApi.GetOrThrow(contentType == "any" ? null : contentType, guid);
-
-        //    var permCheck = new MultiPermissionsItems(context, GetApp(appIdentity.AppId), itm, Log);
-        //    if (!permCheck.EnsureAll(Grants.Delete.AsSet(), out var error))
-        //        throw HttpException.PermissionDenied(error);
-
-        //    entityApi.Delete(itm.Type.Name, guid);
-        //}
-
         #endregion
-
-
-        //#region helpers / initializers to prep the EAV and Serializer
-
-        //private Eav.Conversion.EntitiesToDictionary InitEavAndSerializer(int appId)
-        //{
-        //    Log.Add($"init eav for a#{appId}");
-        //    // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
-        //    var ser = Eav.WebApi.Helpers.Serializers.GetSerializerWithGuidEnabled();
-        //    ((DataToDictionary)ser).WithEdit = BlockBuilder?.UserMayEdit ?? false;
-        //    return ser;
-        //}
-        //#endregion
 
     }
 }
