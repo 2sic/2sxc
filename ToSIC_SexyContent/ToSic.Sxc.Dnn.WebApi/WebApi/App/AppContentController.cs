@@ -6,10 +6,8 @@ using System.Text;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.Apps.Run;
 using ToSic.Eav.WebApi;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.WebApi.Cms.Refactor;
 using Factory = ToSic.Eav.Factory;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -27,18 +25,6 @@ namespace ToSic.Sxc.WebApi.App
 	{
         #region Constructor / DI
         protected override string HistoryLogName => "Api.ApCont";
-        #endregion
-
-        #region New Helpers
-
-        //protected IInstanceContext GetContext()
-        //{
-        //    // in case the initial request didn't yet find a block builder, we need to create it now
-        //    var context = BlockBuilder?.Context
-        //                  ?? new DnnContext(new DnnTenant(PortalSettings), new ContainerNull(), new DnnUser());
-        //    return context;
-        //}
-
         #endregion
 
         #region Get List / all of a certain content-type
