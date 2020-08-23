@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Blocks
                 if (body == null)
                     try
                     {
-                        if (View != null) // when a content block is still new, there is no definition yet
+                        if (Block.View != null) // when a content block is still new, there is no definition yet
                         {
                             Log.Add("standard case, found template, will render");
                             var engine = GetEngine(Purpose.WebView);
@@ -130,8 +130,8 @@ namespace ToSic.Sxc.Blocks
         {
             if (_engine != null) return _engine;
             // edge case: view hasn't been built/configured yet, so no engine to find/attach
-            if (View == null) return null;
-            _engine = EngineFactory.CreateEngine(View);
+            if (Block.View == null) return null;
+            _engine = EngineFactory.CreateEngine(Block.View);
             _engine.Init(this, renderingPurpose, Log);
             return _engine;
         }

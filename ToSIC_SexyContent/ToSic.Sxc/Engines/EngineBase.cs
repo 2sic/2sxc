@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Engines
         public void Init(IBlockBuilder blockBuilder, Purpose purpose, ILog parentLog)
         {
             BlockBuilder = blockBuilder;
-            var view = BlockBuilder.View;
+            var view = BlockBuilder.Block.View;
             Log.LinkTo(parentLog);
 
 

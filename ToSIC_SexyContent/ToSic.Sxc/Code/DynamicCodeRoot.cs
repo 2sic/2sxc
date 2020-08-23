@@ -176,7 +176,7 @@ namespace ToSic.Sxc.Code
         private void TryToBuildHeaderObject()
         {
             Log.Add("try to build ListContent (header) object");
-            if (Data == null || BlockBuilder.View == null) return;
+            if (Data == null || BlockBuilder.Block.View == null) return;
             if (!Data.Out.ContainsKey(ViewParts.ListContent)) return;
 
             var listEntity = Data[ViewParts.ListContent].List.FirstOrDefault();
@@ -204,7 +204,7 @@ namespace ToSic.Sxc.Code
         {
             Log.Add("try to build Content objects");
 
-            if (Data == null || BlockBuilder.View == null) return;
+            if (Data == null || BlockBuilder.Block.View == null) return;
             if (!Data.Out.ContainsKey(Eav.Constants.DefaultStreamName)) return;
 
             var entities = Data.List.ToList();

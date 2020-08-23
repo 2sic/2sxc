@@ -20,11 +20,11 @@ namespace ToSic.Sxc.Blocks
         IApp App { get; }
 
 
-        /// <summary>
-        /// The view in the current block - necessary to pick up the right rendering engine etc.
-        /// </summary>
-        /// <remarks>It usually pre-defined by the inner content-block, but in rare cases it can be overriden, for example when previewing a template switch.</remarks>
-        IView View { get; }
+        ///// <summary>
+        ///// The view in the current block - necessary to pick up the right rendering engine etc.
+        ///// </summary>
+        ///// <remarks>It usually pre-defined by the inner content-block, but in rare cases it can be overriden, for example when previewing a template switch.</remarks>
+        //IView View { get; }
 
 
         /// <summary>

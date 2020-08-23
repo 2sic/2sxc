@@ -37,13 +37,13 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
             AppResourcesId = (blockBuilder.App?.Resources?.Entity?.Attributes?.Count > 0)
                 ? blockBuilder.App?.Resources?.EntityId : null;  // the real id (if entity exists), 0 (if entity missing, but type has fields), or null (if not available)
 
-            HasContent = blockBuilder.View != null && (blockBuilder.Block.Configuration?.Exists ?? false);
+            HasContent = blockBuilder.Block.View != null && (blockBuilder.Block.Configuration?.Exists ?? false);
 
             ZoneId = blockBuilder.Block.ZoneId; // 2019-11-09, Id not nullable any more // ?? 0;
-            TemplateId = blockBuilder.View?.Id ?? 0;
-            TemplateEdition = blockBuilder.View?.Edition;
-            QueryId = blockBuilder.View?.Query?.Id; // will be null if not defined
-            ContentTypeName = blockBuilder.View?.ContentType ?? "";
+            TemplateId = blockBuilder.Block.View?.Id ?? 0;
+            TemplateEdition = blockBuilder.Block.View?.Edition;
+            QueryId = blockBuilder.Block.View?.Query?.Id; // will be null if not defined
+            ContentTypeName = blockBuilder.Block.View?.ContentType ?? "";
             IsList = blockBuilder.Block.Configuration?.View?.UseForList ?? false;//  isCreated && ((sxc.BlockConfiguration?.Content?.Count ?? 0) > 1);
             SupportsAjax = blockBuilder.Block.IsContentApp || (blockBuilder.App?.Configuration?.EnableAjax ?? false);
         }

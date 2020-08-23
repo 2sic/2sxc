@@ -3,6 +3,7 @@ using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Blocks.Views;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.LookUp;
 using App = ToSic.Sxc.Apps.App;
@@ -42,7 +43,7 @@ namespace ToSic.Sxc.Blocks
                 return wrapLog("stop: app & data are missing", this as T);
             }
 
-            BlockBuilder = new BlockBuilder(rootBuilder, this, Context, Context.Container, Log);
+            BlockBuilder = new BlockBuilder(rootBuilder, this, Context, Log);
             // In case the root didn't exist yet, use the new one as Root
             rootBuilder = rootBuilder ?? BlockBuilder;
 
@@ -76,7 +77,8 @@ namespace ToSic.Sxc.Blocks
             }
 
             // use the content-group template, which already covers stored data + module-level stored settings
-            ((BlockBuilder)BlockBuilder).SetTemplateOrOverrideFromUrl(Configuration.View);
+            View = new BlockViewLoader(Log).PickView(this, Configuration.View, Context, cms);
+            //View = ((BlockBuilder)BlockBuilder).SetTemplateOrOverrideFromUrl(Configuration.View);
             return wrapLog($"ok a:{AppId}, container:{Context.Container.Id}, content-group:{Configuration?.Id}", this as T);
         }
 

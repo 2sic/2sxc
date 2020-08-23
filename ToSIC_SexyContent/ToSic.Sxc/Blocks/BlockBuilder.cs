@@ -42,7 +42,6 @@ namespace ToSic.Sxc.Blocks
         #region Constructor
         internal BlockBuilder(IBlockBuilder rootBlockBuilder, IBlock cb, 
             IInstanceContext ctx,
-            IContainer container, 
             ILog parentLog)
             : base("Sxc.BlkBld", parentLog, $"get CmsInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}")
         {

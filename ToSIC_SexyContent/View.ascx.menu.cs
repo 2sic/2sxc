@@ -45,7 +45,7 @@ namespace ToSic.SexyContent
             if (appIsKnown)
             {
                 // Edit item
-                if (!BlockBuilder.View?.UseForList ?? false)
+                if (!BlockBuilder.Block.View?.UseForList ?? false)
                     actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"), "", "", "edit.gif",
                         "javascript:$2sxcActionMenuMapper(" + ModuleId + ").edit();", "test", true,
                         SecurityAccessLevel.Edit, true, false);
@@ -68,7 +68,7 @@ namespace ToSic.SexyContent
                 //!DnnSecurity.IsInSexyContentDesignersGroup(UserInfo)) return;
 
             // Edit Template Button
-            if (appIsKnown && BlockBuilder.View != null)
+            if (appIsKnown && BlockBuilder.Block.View != null)
                 actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent,
                     "templatehelp", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").develop();", "test",
                     true,

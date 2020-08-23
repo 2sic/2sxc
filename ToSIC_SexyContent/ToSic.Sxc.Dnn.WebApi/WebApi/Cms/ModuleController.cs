@@ -121,7 +121,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 if (templateId > 0)
                 {
                     var template = new CmsRuntime(cbToRender.App, Log, Edit.Enabled, false).Views.Get(templateId);
-                    ((BlockBuilder)cbToRender.BlockBuilder).View = template;
+                    cbToRender.View = template;
                 }
 
                 var rendered = cbToRender.BlockBuilder.Render();

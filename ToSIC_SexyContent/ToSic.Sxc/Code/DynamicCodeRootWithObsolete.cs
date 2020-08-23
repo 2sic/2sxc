@@ -81,7 +81,7 @@ namespace ToSic.Sxc.Code
             DynCode.Log.Add("try to build old List");
             _list = new List<Element>();
 
-            if (DynCode.Data == null || DynCode.BlockBuilder.View == null) return;
+            if (DynCode.Data == null || DynCode.BlockBuilder.Block.View == null) return;
             if (!DynCode.Data.Out.ContainsKey(Eav.Constants.DefaultStreamName)) return;
 
             var entities = DynCode.Data.List.ToList();

@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Search
 
             var language = dnnModule.CultureCode;
 
-            var view = cmsBlock.View;
+            var view = cmsBlock.Block.View;
 
             if (view == null) return searchDocuments;
 
