@@ -30,6 +30,7 @@ namespace ToSic.Sxc.WebApi.App
         public AppOfRequest Init(ILog parentLog) 
         {
             Log.LinkTo(parentLog);
+            _zoneMapper.Init(Log);
             return this;
         }
         #endregion
