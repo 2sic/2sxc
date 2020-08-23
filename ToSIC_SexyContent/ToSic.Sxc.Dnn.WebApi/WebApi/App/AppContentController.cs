@@ -8,7 +8,6 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.WebApi.Cms.Refactor;
 using Factory = ToSic.Eav.Factory;
 using IEntity = ToSic.Eav.Data.IEntity;
 

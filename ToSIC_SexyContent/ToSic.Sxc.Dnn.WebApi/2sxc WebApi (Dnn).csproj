@@ -104,7 +104,6 @@
     <Compile Include="Adam\WebApi\UploadResultDto.cs" />
     <Compile Include="Dnn\ApiController.cs" />
     <Compile Include="Dnn\ApiController_Obsolete.cs" />
-    <Compile Include="Dnn\Compatibility\OldContentBlockJsonSerialization.cs" />
     <Compile Include="Security\RunIf.cs" />
     <Compile Include="WebApi\Cms\AppAssetsController_Private.cs" />
     <Compile Include="WebApi\Cms\ContentGroupController_FieldList.cs" />
