@@ -1,3 +1,7 @@
 # exclude map files from dist and system
 dist/**/*.map
 system/**/*.map
+js/*.map
+
+# note that we want to keep the old angular maps
+# because they never change, and in case of emergencies they are only located here and not on sources
