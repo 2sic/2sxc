@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\</OutputPath>
+    <OutputPath>bin\debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -39,21 +39,18 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.1.0" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="DotNetNuke, Version=7.4.2.216, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\DotNetNuke.dll</HintPath>
+    <Reference Include="DotNetNuke">
+      <HintPath>..\..\Dependencies\Dnn742\DotNetNuke.dll</HintPath>
     </Reference>
-    <Reference Include="DotNetNuke.Web, Version=7.4.2.216, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\DotNetNuke.Web.dll</HintPath>
+    <Reference Include="DotNetNuke.Web">
+      <HintPath>..\..\Dependencies\Dnn742\DotNetNuke.Web.dll</HintPath>
     </Reference>
-    <Reference Include="DotNetNuke.Web.Client, Version=7.4.2.216, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\DotNetNuke.Web.Client.dll</HintPath>
+    <Reference Include="DotNetNuke.Web.Client">
+      <HintPath>..\..\Dependencies\Dnn742\DotNetNuke.Web.Client.dll</HintPath>
     </Reference>
     <Reference Include="DotNetNuke.WebUtility, Version=4.2.1.783, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\DotNetNuke.WebUtility.dll</HintPath>
+      <HintPath>..\..\Dependencies\Dnn742\DotNetNuke.WebUtility.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -72,7 +69,7 @@
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\System.Web.WebPages.dll</HintPath>
+      <HintPath>..\..\Dependencies\System.Web\System.Web.WebPages.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -81,10 +78,10 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="ToSic.Razor">
-      <HintPath>..\..\..\bin\ToSic.Razor.dll</HintPath>
+      <HintPath>..\..\Dependencies\RazorBlade\ToSic.Razor.dll</HintPath>
     </Reference>
     <Reference Include="ToSic.Razor.Dnn">
-      <HintPath>..\..\..\bin\ToSic.Razor.Dnn.dll</HintPath>
+      <HintPath>..\..\Dependencies\RazorBlade\ToSic.Razor.Dnn.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
