@@ -34,8 +34,7 @@ namespace ToSic.Sxc.Blocks.Edit
         
         #region methods which are fairly stable / the same across content-block implementations
 
-        protected BlockConfiguration BlockConfiguration
-            => _cGroup ?? (_cGroup = Block.Configuration);
+        protected BlockConfiguration BlockConfiguration => _cGroup ?? (_cGroup = Block.Configuration);
         
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {
@@ -59,7 +58,7 @@ namespace ToSic.Sxc.Blocks.Edit
             else
             {
                 // only set preview / content-group-reference - but must use the guid
-                var dataSource = Block.Data;
+                var dataSource = Block.App.Data;
                 var templateGuid = dataSource.List.One(templateId).EntityGuid;
                 SavePreviewTemplateId(templateGuid);
                 result = null; // send null back

@@ -105,7 +105,7 @@ namespace ToSic.Sxc.DataSources
                 var container = Factory.Resolve<IContainer>().Init(InstanceId.Value, Log);
 
                 var blockId = container.BlockIdentifier;
-                return _blockConfiguration = cms.Blocks.GetOrGeneratePreviewConfig(blockId/*.Guid, blockId.PreviewView*/);
+                return _blockConfiguration = cms.Blocks.GetOrGeneratePreviewConfig(blockId);
             }
         }
 
