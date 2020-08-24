@@ -1,1 +1,3 @@
+# exclude map files from dist and system
 dist/**/*.map
+system/**/*.map
