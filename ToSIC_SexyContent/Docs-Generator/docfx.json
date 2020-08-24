@@ -4,7 +4,7 @@
       "src": [
         {
           "files": [
-            "2sxc-dnn742/Website/DesktopModules/**.csproj",
+            "2sxc/**.csproj",
             "eav-server/**.csproj"
           ],
           "cwd": "c:/projects/",
