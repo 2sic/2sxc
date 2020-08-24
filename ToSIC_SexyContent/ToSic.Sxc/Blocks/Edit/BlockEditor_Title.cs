@@ -13,17 +13,13 @@ namespace ToSic.Sxc.Blocks.Edit
             // ...but for now we'll just update the current modules title
             // note: it also correctly handles published/unpublished, but I'm not sure why :)
 
-            var cms = GetCmsRuntime();
+            var cms = new CmsRuntime(Block.App, Log, true, false);
             var contentGroup = cms.Blocks.GetBlockConfig(BlockConfiguration.Guid);
 
             var titleItem = contentGroup.Header.FirstOrDefault() ?? contentGroup.Content.FirstOrDefault();
 
             UpdateTitle(titleItem);
         }
-
-        private CmsRuntime GetCmsRuntime()
-            // todo: this must be changed, set showDrafts to true for now, as it's probably only used in the view-picker, but it shoudln't just be here
-            => BlockBuilder.App == null ? null : new CmsRuntime(BlockBuilder.App, Log, true, false);
 
     }
 }

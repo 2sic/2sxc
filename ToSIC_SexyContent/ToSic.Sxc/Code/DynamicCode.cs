@@ -28,9 +28,9 @@ namespace ToSic.Sxc.Code
         public IApp App => UnwrappedContents?.App;
 
         /// <inheritdoc />
-        public IBlockDataSource Data => UnwrappedContents?.BlockBuilder?.Block?.Data;
+        public IBlockDataSource Data => UnwrappedContents?.Data;
 
-        [PrivateApi] public IBlockBuilder BlockBuilder => UnwrappedContents?.BlockBuilder;
+        [PrivateApi] public IBlock Block => UnwrappedContents?.Block;
 
         /// <inheritdoc />
         /// <remarks>

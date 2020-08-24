@@ -21,10 +21,10 @@ namespace ToSic.Sxc.Dnn.WebApi
 		[HttpGet]
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
 		public object GetFileByPath(string relativePath)
-		{
-		    var context = new DnnDynamicCode().Init(BlockBuilder, Log);
-            relativePath = relativePath.Replace(context.Dnn.Portal.HomeDirectory, "");
-			var file = FileManager.Instance.GetFile(context.Dnn.Portal.PortalId, relativePath);
+        {
+            var dnnDynamicCode = new DnnDynamicCode().Init(GetBlock(), Log);
+            relativePath = relativePath.Replace(dnnDynamicCode.Dnn.Portal.HomeDirectory, "");
+			var file = FileManager.Instance.GetFile(dnnDynamicCode.Dnn.Portal.PortalId, relativePath);
 			if (CanUserViewFile(file))
 				return new
 				{
@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 		        {
                     // page link - only resolve if the user has edit-permissions
 		            // only people who have some full edit permissions may actually look up pages
-		            var permCheckPage = new MultiPermissionsApp(BlockBuilder.Context, GetApp(appId), Log);
+		            var permCheckPage = new MultiPermissionsApp(GetContext(), GetApp(appId), Log);
 		            return permCheckPage.UserMayOnAll(GrantSets.WritePublished)
                         ? resolved
                         : hyperlink;
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 
 		        // file-check, more abilities to allow
 		        // this will already do a ensure-or-throw inside it if outside of adam
-		        var adamCheck = new AdamSecureState(BlockBuilder, appId, contentType, field, guid, isOutsideOfAdam, Log);
+		        var adamCheck = new AdamSecureState(GetBlock(), appId, contentType, field, guid, isOutsideOfAdam, Log);
 		        if (!adamCheck.SuperUserOrAccessingItemFolder(resolved, out var exp))
 		            throw exp;
                 if(!adamCheck.UserIsPermittedOnField(GrantSets.ReadSomething, out exp))

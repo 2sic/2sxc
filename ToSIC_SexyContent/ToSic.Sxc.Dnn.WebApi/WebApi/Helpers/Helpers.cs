@@ -18,13 +18,15 @@ namespace ToSic.Sxc.WebApi
         // ReSharper disable once ClassNeverInstantiated.Local
         private class UpperCaseStringKeyValuePair
         {
+            // ReSharper disable UnusedAutoPropertyAccessor.Local
             public string Key { get; set; }
             public string Value{ get; set; }
+            // ReSharper restore UnusedAutoPropertyAccessor.Local
         }
 
-        internal static IBlockBuilder GetCmsBlock(HttpRequestMessage request, bool allowNoContextFound, ILog log)
+        internal static IBlock GetCmsBlock(HttpRequestMessage request, bool allowNoContextFound, ILog log)
         {
-            var wrapLog = log.Call<IBlockBuilder>(parameters: $"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
+            var wrapLog = log.Call<IBlock>(parameters: $"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
 
             const string headerId = "ContentBlockId";
             var moduleInfo = request.FindModuleInfo();
@@ -42,7 +44,7 @@ namespace ToSic.Sxc.WebApi
                 : new DnnTenant().Init(moduleInfo.OwnerPortalID);
 
             var context = new DnnContext(tenant, container, new DnnUser(), GetOverrideParams(request));
-            IBlock contentBlock = new BlockFromModule().Init(context, log);
+            IBlock block = new BlockFromModule().Init(context, log);
 
             // check if we need an inner block
             if (request.Headers.Contains(headerId)) { 
@@ -51,11 +53,11 @@ namespace ToSic.Sxc.WebApi
                 if (blockId < 0)   // negative id, so it's an inner block
                 {
                     log.Add($"Inner Content: {blockId}");
-                    contentBlock = new BlockFromEntity().Init(contentBlock, blockId, log);
+                    block = new BlockFromEntity().Init(block, blockId, log);
                 }
             }
 
-            return wrapLog("ok", contentBlock.BlockBuilder);
+            return wrapLog("ok", block);
         }
 
         /// <summary>

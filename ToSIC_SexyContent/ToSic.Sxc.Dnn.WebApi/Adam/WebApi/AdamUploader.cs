@@ -14,12 +14,12 @@ namespace ToSic.Sxc.Adam.WebApi
 {
     internal class AdamUploader: HasLog
     {
-        protected readonly IBlockBuilder BlockBuilder;
+        private readonly IBlock _block;
         private readonly int _appId;
 
-        public AdamUploader(IBlockBuilder blockBuilder, int appId, ILog parentLog) : base("Api.AdmUpl", parentLog)
+        public AdamUploader(IBlock block, int appId, ILog parentLog) : base("Api.AdmUpl", parentLog)
         {
-            BlockBuilder = blockBuilder;
+            _block = block;
             _appId = appId;
         }
 
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Adam.WebApi
         {
             Log.Add($"upload one a:{_appId}, i:{guid}, field:{field}, subfold:{subFolder}, useRoot:{usePortalRoot}");
             
-            var state = new AdamSecureState(BlockBuilder, _appId, contentType, field, guid, usePortalRoot, Log);
+            var state = new AdamSecureState(_block, _appId, contentType, field, guid, usePortalRoot, Log);
             HttpResponseException exp;
             if (!skipFieldAndContentTypePermissionCheck)
             {
@@ -91,7 +91,7 @@ namespace ToSic.Sxc.Adam.WebApi
             var dnnFile = FileManager.Instance.AddFile(dnnFolder, Path.GetFileName(fileName),
                 stream);
 
-            var adamcontext = new AdamAppContext(BlockBuilder.Block.Context.Tenant, state.App, BlockBuilder, 10, Log);
+            var adamcontext = new AdamAppContext(_block.Context.Tenant, state.App, _block, 10, Log);
             var eavFile = new File(adamcontext)
             {
                 Created = dnnFile.CreatedOnDate,

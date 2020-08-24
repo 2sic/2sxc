@@ -57,7 +57,7 @@ namespace ToSic.Sxc.WebApi.App
         /// Note that this will fail, if both appPath and context are missing
         /// </summary>
         /// <returns></returns>
-        internal IAppIdentity GetAppIdFromPathOrContext(string appPath, IBlockBuilder blockBuilder)
+        internal IAppIdentity GetAppIdFromPathOrContext(string appPath, IBlock block)
         {
             var wrapLog = Log.Call<IAppIdentity>($"{appPath}, ...", message: "detect app from query string parameters");
 
@@ -67,12 +67,12 @@ namespace ToSic.Sxc.WebApi.App
             if (appId != null) return wrapLog(appId.LogState(), appId);
 
 
-            Log.Add($"auto detect app and init eav - path:{appPath}, context null: {blockBuilder == null}");
+            Log.Add($"auto detect app and init eav - path:{appPath}, context null: {block == null}");
             appId = appPath == null || appPath == "auto"
                 ? new AppIdentity(
-                    blockBuilder?.Block?.ZoneId ??
+                    block?.ZoneId ??
                     throw new ArgumentException("try to get app-id from context, but none found"),
-                    blockBuilder.Block.AppId)
+                    block.AppId)
                 : GetAppIdFromPath(appPath);
 
             return wrapLog(appId.LogState(), appId);

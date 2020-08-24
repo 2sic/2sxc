@@ -18,7 +18,7 @@ namespace ToSic.Sxc.WebApi
 {
     internal class ContentGroupList: SaveHelperBase
     {
-        public ContentGroupList(IBlockBuilder blockBuilder, ILog parentLog) : base(blockBuilder, parentLog, "Api.GrpPrc") {}
+        public ContentGroupList(IBlock block, ILog parentLog) : base(block, parentLog, "Api.GrpPrc") {}
 
         internal bool IfChangesAffectListUpdateIt(int appId, List<BundleWithHeader<IEntity>> items, Dictionary<Guid, int> ids)
         {
@@ -35,8 +35,11 @@ namespace ToSic.Sxc.WebApi
         }
 
         private BlockConfiguration GetBlockConfig(IAppIdentity app, Guid blockGuid)
-            => new CmsRuntime(app, Log, BlockBuilder.UserMayEdit,
-                BlockBuilder.Environment.PagePublishing.IsEnabled(BlockBuilder.Context.Container.Id)).Blocks.GetBlockConfig(blockGuid);
+        {
+            var publishingEnabled = Factory.Resolve<IPagePublishing>().Init(Log).IsEnabled(Block.Context.Container.Id);
+            return new CmsRuntime(app, Log, Block.EditAllowed, publishingEnabled)
+                .Blocks.GetBlockConfig(blockGuid);
+        }
 
         private bool PostSaveUpdateIdsInParent(
             int appId,
@@ -45,7 +48,7 @@ namespace ToSic.Sxc.WebApi
         {
             var wrapLog = Log.Call<bool>($"{appId}");
             var app = Factory.Resolve<Apps.App>().Init(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), 
-                ConfigurationProvider.Build(BlockBuilder, true), false, Log);
+                ConfigurationProvider.Build(Block, true), false, Log);
 
             foreach (var bundle in pairsOrSingleItems)
             {
@@ -86,7 +89,7 @@ namespace ToSic.Sxc.WebApi
             }
 
             // update-module-title
-            BlockEditorBase.GetEditor(BlockBuilder).UpdateTitle();
+            BlockEditorBase.GetEditor(Block).UpdateTitle();
             return wrapLog("ok", true);
         }
 
@@ -156,7 +159,7 @@ namespace ToSic.Sxc.WebApi
                 if (identifier.Parent != null && identifier.Field != null)
                 {
                     // look up type
-                    var target = BlockBuilder.App.Data.List.One(identifier.Parent.Value);
+                    var target = Block.App.Data.List.One(identifier.Parent.Value);
                     var field = target.Type[identifier.Field];
                     identifier.ContentTypeName = field.EntityFieldItemTypePrimary();
                     newItems.Add(identifier);

@@ -23,9 +23,9 @@ namespace ToSic.Sxc.Blocks.Renderers
     {
         private static string EmptyMessage = "<!-- auto-render of item {0} -->";
 
-        internal static IHtmlString Render(IBlock parentCb, IEntity entity, ILog parentLog)
+        internal static IHtmlString Render(IBlock parentBlock, IEntity entity, ILog parentLog)
         {
-            var log = new Log("Htm.Render", parentLog, "simple");
+            var log = new Log("Htm.Render", parentBlock.Log, "simple");
 
             // if not the expected content-type, just output a hidden html placeholder
             if (entity.Type.Name != Settings.AttributeSetStaticNameContentBlockTypeName)
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Blocks.Renderers
 
             // render it
             log.Add("found, will render");
-            var cb = new BlockFromEntity().Init(parentCb, entity, log);
+            var cb = new BlockFromEntity().Init(parentBlock, entity, log);
             return new HtmlString(cb.BlockBuilder.Render());
         }
 
@@ -45,33 +45,33 @@ namespace ToSic.Sxc.Blocks.Renderers
         private const string WrapperSingleItem = WrapperMultiItems + " show-placeholder single-item"; // enables a placeholder when empty, and limits one entry
 
 
-        internal static string RenderWithEditContext(DynamicEntity parent, IDynamicEntity subItem, string cbFieldName,  Guid? newGuid = null, IInPageEditingSystem edit = null)
+        internal static string RenderWithEditContext(DynamicEntity dynParent, IDynamicEntity subItem, string cbFieldName,  Guid? newGuid = null, IInPageEditingSystem edit = null)
         {
             if (edit == null)
-                edit = new InPageEditingHelper(parent.BlockBuilder, parent.BlockBuilder.Log);
+                edit = new InPageEditingHelper(dynParent.Block);
 
-            var attribs = edit.ContextAttributes(parent, field: cbFieldName, newGuid: newGuid);
-            var inner = subItem == null ? "": Render(parent.BlockBuilder.Block, subItem.Entity, parent.BlockBuilder.Log).ToString();
+            var attribs = edit.ContextAttributes(dynParent, field: cbFieldName, newGuid: newGuid);
+            var inner = subItem == null ? "": Render(dynParent.Block, subItem.Entity, dynParent.Block.Log).ToString();
             var cbClasses = edit.Enabled ? WrapperSingleItem : "";
             return string.Format(WrapperTemplate, new object[] { cbClasses, attribs, inner});
         }
 
-        internal static string RenderListWithContext(DynamicEntity parent, string fieldName, string apps = null, int max = 100)
+        internal static string RenderListWithContext(DynamicEntity dynParent, string fieldName, string apps = null, int max = 100)
         {
             var innerBuilder = new StringBuilder();
-            var found = parent.TryGetMember(fieldName, out var objFound);
+            var found = dynParent.TryGetMember(fieldName, out var objFound);
             if (found && objFound is IList<DynamicEntity> items)
                 foreach (var cb in items)
-                    innerBuilder.Append(Render(cb.BlockBuilder.Block, cb.Entity, parent.BlockBuilder.Log));
+                    innerBuilder.Append(Render(cb.Block, cb.Entity, dynParent.Block.Log));
 
             // create edit object if missing...to re-use of the parent
             //if (edit == null)
-            IInPageEditingSystem edit = new InPageEditingHelper(parent.BlockBuilder, parent.BlockBuilder.Log);
+            IInPageEditingSystem edit = new InPageEditingHelper(dynParent.Block);
 
             return string.Format(WrapperTemplate, new object[]
             {
                 edit.Enabled ? WrapperMultiItems : "",
-                edit.ContextAttributes(parent, field: fieldName, apps: apps, max: max),
+                edit.ContextAttributes(dynParent, field: fieldName, apps: apps, max: max),
                 innerBuilder
             });
         }

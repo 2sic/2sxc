@@ -33,7 +33,7 @@ namespace ToSic.Sxc.WebApi.App
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string appPath = null) 
-            => Factory.Resolve<AppContent>().Init(Log).GetItems(GetContext(), contentType, BlockBuilder, appPath);
+            => Factory.Resolve<AppContent>().Init(Log).GetItems(GetContext(), contentType, GetBlock(), appPath);
 
         #endregion
 
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.WebApi.App
         /// <param name="appPath"></param>
         /// <returns></returns>
         private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<EntityApi, IEntity> getOne, string appPath) 
-            => Factory.Resolve<AppContent>().Init(Log).GetOne(GetContext(), BlockBuilder, contentType, getOne, appPath);
+            => Factory.Resolve<AppContent>().Init(Log).GetOne(GetContext(), GetBlock(), contentType, getOne, appPath);
 
         #endregion
 
@@ -81,24 +81,24 @@ namespace ToSic.Sxc.WebApi.App
             // - not also that if ever you do support view switching, you will need to ensure security checks
 
             var dataHandler = new AppContentJsonForInstance();
-
+            var block = GetBlock();
             // must access engine to ensure pre-processing of data has happened, 
             // especially if the cshtml contains a override void CustomizeData()
-            var engine = ((BlockBuilder)BlockBuilder).GetEngine(Purpose.PublishData);  
+            var engine = ((BlockBuilder)block.BlockBuilder).GetEngine(Purpose.PublishData);  
             engine.CustomizeData();
 
-            var dataSource = BlockBuilder.Block.Data;
+            var dataSource = block.Data;
             string json;
             if (dataSource.Publish.Enabled)
             {
                 var publishedStreams = dataSource.Publish.Streams;
                 var streamList = publishedStreams.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
-                json = dataHandler.GenerateJson(dataSource, streamList, BlockBuilder.UserMayEdit);
+                json = dataHandler.GenerateJson(dataSource, streamList, block.EditAllowed);
             }
             else
             {
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden)
-                    {ReasonPhrase = dataHandler.GeneratePleaseEnableDataError(BlockBuilder.Context.Container.Id)});
+                    {ReasonPhrase = dataHandler.GeneratePleaseEnableDataError(GetContext().Container.Id)});
             }
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -114,7 +114,7 @@ namespace ToSic.Sxc.WebApi.App
             [FromBody] Dictionary<string, object> newContentItem, [FromUri] int? id = null,
             [FromUri] string appPath = null)
             => Factory.Resolve<AppContent>().Init(Log)
-                .CreateOrUpdate(GetContext(), BlockBuilder, contentType, newContentItem, id, appPath);
+                .CreateOrUpdate(GetContext(), GetBlock(), contentType, newContentItem, id, appPath);
 
         #endregion
 
@@ -123,12 +123,12 @@ namespace ToSic.Sxc.WebApi.App
         [HttpDelete]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public void Delete(string contentType, int id, [FromUri] string appPath = null) 
-            => Factory.Resolve<AppContent>().Init(Log).Delete(GetContext(), BlockBuilder, contentType, id, appPath);
+            => Factory.Resolve<AppContent>().Init(Log).Delete(GetContext(), GetBlock(), contentType, id, appPath);
 
         [HttpDelete]
 	    [AllowAnonymous]   // will check security internally, so assume no requirements
         public void Delete(string contentType, Guid guid, [FromUri] string appPath = null) 
-            => Factory.Resolve<AppContent>().Init(Log).Delete(GetContext(), BlockBuilder, contentType, guid, appPath);
+            => Factory.Resolve<AppContent>().Init(Log).Delete(GetContext(), GetBlock(), contentType, guid, appPath);
 
         #endregion
 

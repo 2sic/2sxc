@@ -37,12 +37,13 @@ namespace ToSic.Sxc.DataSources
         internal static IBlockDataSource GetBlockDataSource(IBlockBuilder builder, IView view, ILookUpEngine configurationProvider, ILog parentLog)
         {
             var log = new Log("DS.CreateV", parentLog, "will create view data source");
-            var showDrafts = builder.UserMayEdit;
+            var showDrafts = builder.Block.EditAllowed;
 
-            log.Add($"mid#{builder.Context.Container.Id}, draft:{showDrafts}, template:{view?.Name}");
+            log.Add($"mid#{builder.Block.Context.Container.Id}, draft:{showDrafts}, template:{view?.Name}");
             // Get ModuleDataSource
             var dsFactory = new DataSource(log);
-            var initialSource = dsFactory.GetPublishing(builder.Block, showDrafts, configurationProvider);
+            var block = builder.Block;
+            var initialSource = dsFactory.GetPublishing(block, showDrafts, configurationProvider);
             var moduleDataSource = dsFactory.GetDataSource<CmsBlock>(initialSource);
             //moduleDataSource.InstanceId = instanceId;
 
@@ -55,7 +56,7 @@ namespace ToSic.Sxc.DataSources
                 : null;
             log.Add($"use pipeline upstream:{viewDataSourceUpstream != null}");
 
-            var viewDataSource = dsFactory.GetDataSource<Block>(builder.Block, viewDataSourceUpstream, configurationProvider);
+            var viewDataSource = dsFactory.GetDataSource<Block>(block, viewDataSourceUpstream, configurationProvider);
 
             // Take Publish-Properties from the View-Template
             if (view != null)
@@ -68,7 +69,7 @@ namespace ToSic.Sxc.DataSources
                 if (view.Query != null)
                 {
                     log.Add("Generate query");
-                    var query = new Query(builder.App.ZoneId, builder.App.AppId, view.Query.Entity, configurationProvider, showDrafts, viewDataSource, parentLog);
+                    var query = new Query(block.App.ZoneId, block.App.AppId, view.Query.Entity, configurationProvider, showDrafts, viewDataSource, parentLog);
                     log.Add("attaching");
                     viewDataSource.Out = query.Out;
                 }

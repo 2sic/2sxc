@@ -24,16 +24,15 @@ namespace ToSic.Sxc.Adam
         private readonly IApp _app;
         public readonly AppRuntime AppRuntime;
         public readonly ITenant Tenant;
-        public readonly IBlockBuilder BlockBuilder;
+        public readonly IBlock Block;
         internal readonly IEnvironmentFileSystem EnvironmentFs;
-
-
-        public AdamAppContext(ITenant tenant, IApp app, IBlockBuilder blockBuilder, int compatibility, ILog parentLog) : base("Adm.ApCntx", parentLog, "starting")
+        
+        public AdamAppContext(ITenant tenant, IApp app, IBlock block, int compatibility, ILog parentLog) : base("Adm.ApCntx", parentLog, "starting")
         {
             Tenant = tenant;
             _app = app;
-            AppRuntime = new AppRuntime(app, blockBuilder?.UserMayEdit ?? false, null);
-            BlockBuilder = blockBuilder;
+            Block = block;
+            AppRuntime = new AppRuntime(app, block?.EditAllowed ?? false, null);
             CompatibilityLevel = compatibility;
             EnvironmentFs = Factory.Resolve<IEnvironmentFileSystem>();
         }
@@ -41,10 +40,8 @@ namespace ToSic.Sxc.Adam
         /// <summary>
         /// Path to the app assets
         /// </summary>
-        public string Path
-            => _path ?? (_path =
-                   Configuration.AppReplacementMap(_app)
-                       .ReplaceInsensitive(Configuration.AdamAppRootFolder));
+        public string Path => _path ?? (_path = Configuration.AppReplacementMap(_app)
+                                  .ReplaceInsensitive(Configuration.AdamAppRootFolder));
         private string _path;
 
 

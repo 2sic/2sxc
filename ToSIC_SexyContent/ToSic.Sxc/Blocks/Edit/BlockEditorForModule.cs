@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Blocks.Edit
             => Factory.Resolve<IEnvironmentConnector>().Init(Log).SetPreview(ModuleId, templateGuid);
 
         internal override void SetAppId(int? appId)
-            => Factory.Resolve<IEnvironmentConnector>().Init(Log).SetAppId(BlockBuilder.Context.Container, BlockBuilder.Environment, appId, Log);
+            => Factory.Resolve<IEnvironmentConnector>().Init(Log).SetAppId(Block.Context.Container, appId, Log);
 
         internal override void EnsureLinkToContentGroup(Guid cgGuid)
             => Factory.Resolve<IEnvironmentConnector>().Init(Log).SetContentGroup(ModuleId, true, cgGuid);
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Blocks.Edit
         internal override void UpdateTitle(IEntity titleItem)
         {
             Log.Add("update title");
-            Factory.Resolve<IEnvironmentConnector>().Init(Log).UpdateTitle(BlockBuilder, titleItem);
+            Factory.Resolve<IEnvironmentConnector>().Init(Log).UpdateTitle(Block, titleItem);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace ToSic.Sxc.WebApi.App
 
         #region In-Container-Context Queries
 
-        internal Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(IInstanceContext context, IBlockBuilder blockBuilder, IApp app, string name, bool includeGuid, string stream, int? appId)
+        internal Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(IInstanceContext context, IBlock block, IApp app, string name, bool includeGuid, string stream, int? appId)
         {
             var wrapLog = Log.Call($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
             //var dynamicCode = new DnnDynamicCode().Init(BlockBuilder, Log);
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.WebApi.App
                 //app = Dnn.Factory.App(appId.Value, PortalSettings, false, context.User.IsSuperUser, Log);
             }
 
-            var result = BuildQueryAndRun(app, name, stream, includeGuid, context, Log, blockBuilder?.UserMayEdit ?? false);
+            var result = BuildQueryAndRun(app, name, stream, includeGuid, context, Log, block?.EditAllowed ?? false);
             wrapLog(null);
             return result;
         }
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.WebApi.App
 
 
         internal Dictionary<string, IEnumerable<Dictionary<string, object>>> 
-            PublicQuery(IInstanceContext context, string appPath, string name, string stream, IBlockBuilder blockBuilder)
+            PublicQuery(IInstanceContext context, string appPath, string name, string stream, IBlock block)
         {
             var wrapLog = Log.Call($"path:{appPath}, name:{name}");
             if (string.IsNullOrEmpty(name))
@@ -69,7 +69,7 @@ namespace ToSic.Sxc.WebApi.App
                 ConfigurationProvider.Build(false, false), false, Log);
 
             // now just run the default query check and serializer
-            var result = BuildQueryAndRun(queryApp, name, stream, false, context, Log, blockBuilder?.UserMayEdit ?? false);
+            var result = BuildQueryAndRun(queryApp, name, stream, false, context, Log, block?.EditAllowed ?? false);
             wrapLog(null);
             return result;
         }

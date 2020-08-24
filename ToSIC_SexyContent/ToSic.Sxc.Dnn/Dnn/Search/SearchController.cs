@@ -8,7 +8,6 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
@@ -83,7 +82,7 @@ namespace ToSic.Sxc.Search
 
 
             var engine = EngineFactory.CreateEngine(view);
-            engine.Init(cmsBlock, Purpose.IndexingForSearch, Log);
+            engine.Init(cmsBlock.Block, Purpose.IndexingForSearch, Log);
 
             // see if data customization inside the cshtml works
             try

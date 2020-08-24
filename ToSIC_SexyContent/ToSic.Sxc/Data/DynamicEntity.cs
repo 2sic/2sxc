@@ -8,7 +8,6 @@ using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit.Toolbar;
 using IEntity = ToSic.Eav.Data.IEntity;
-// ReSharper disable InheritdocInvalidUsage
 #if NET451
 using HtmlString = System.Web.HtmlString;
 using IHtmlString = System.Web.IHtmlString;
@@ -41,11 +40,11 @@ namespace ToSic.Sxc.Data
             get
             {
                 // if it's neither in a running context nor in a running portal, no toolbar
-                if (BlockBuilder == null)
+                if (Block == null)
                     return new HtmlString("");
 
                 // If we're not in a running context, of which we know the permissions, no toolbar
-                var userMayEdit = BlockBuilder?.UserMayEdit ?? false;
+                var userMayEdit = Block?.EditAllowed ?? false;
 
                 if (!userMayEdit)
                     return new HtmlString("");
@@ -60,19 +59,20 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         protected readonly string[] Dimensions;
-        [PrivateApi]
-        internal IBlockBuilder BlockBuilder { get; }   // must be internal for further use cases
+
+        [PrivateApi("Keep internal only - should never surface")]
+        internal IBlock Block { get; }
 
         /// <summary>
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
         [PrivateApi]
-        public DynamicEntity(IEntity entity, string[] dimensions, int compatibility, IBlockBuilder blockBuilder)
+        public DynamicEntity(IEntity entity, string[] dimensions, int compatibility, IBlock block)
         {
             SetEntity(entity);
             Dimensions = dimensions;
             CompatibilityLevel = compatibility;
-            BlockBuilder = blockBuilder;
+            Block = block;
         }
 
         protected void SetEntity(IEntity entity)
@@ -85,7 +85,6 @@ namespace ToSic.Sxc.Data
         public override bool TryGetMember(GetMemberBinder binder, out object result)
             => TryGetMember(binder.Name, out result);
 
-        /// <inheritdoc />
         public bool TryGetMember(string memberName, out object result)
         {
             result = GetEntityValue(memberName);
@@ -117,7 +116,7 @@ namespace ToSic.Sxc.Data
 
             var result = Entity.GetBestValue(field, Dimensions, true);
             if (result is IEnumerable<IEntity> rel)
-                result = new DynamicEntityWithList(Entity, field, rel, Dimensions, CompatibilityLevel, BlockBuilder);
+                result = new DynamicEntityWithList(Entity, field, rel, Dimensions, CompatibilityLevel, Block);
 
             _valCache.Add(field, result);
             return result;
@@ -139,7 +138,7 @@ namespace ToSic.Sxc.Data
 
         private IDynamicEntity GetPresentation
             => _presentation ?? (_presentation = Entity is EntityInBlock entityInGroup
-                   ? new DynamicEntity(entityInGroup.Presentation, Dimensions, CompatibilityLevel, BlockBuilder)
+                   ? new DynamicEntity(entityInGroup.Presentation, Dimensions, CompatibilityLevel, Block)
                    : null);
         private IDynamicEntity _presentation;
 
@@ -157,10 +156,10 @@ namespace ToSic.Sxc.Data
         public object EntityTitle => Entity?.Title[Dimensions];
 
         /// <inheritdoc />
-        public dynamic GetDraft() => new DynamicEntity(Entity?.GetDraft(), Dimensions, CompatibilityLevel, BlockBuilder);
+        public dynamic GetDraft() => new DynamicEntity(Entity?.GetDraft(), Dimensions, CompatibilityLevel, Block);
         
         /// <inheritdoc />
-        public dynamic GetPublished() => new DynamicEntity(Entity?.GetPublished(), Dimensions, CompatibilityLevel, BlockBuilder);
+        public dynamic GetPublished() => new DynamicEntity(Entity?.GetPublished(), Dimensions, CompatibilityLevel, Block);
 
         /// <summary>
         /// Tell the system that it's a demo item, not one added by the user
@@ -183,14 +182,14 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         public List<IDynamicEntity> Parents(string type = null, string field = null)
             => Entity.Parents(type, field)
-                .Select(e => new DynamicEntity(e, Dimensions, CompatibilityLevel, BlockBuilder))
+                .Select(e => new DynamicEntity(e, Dimensions, CompatibilityLevel, Block))
                 .Cast<IDynamicEntity>()
                 .ToList();
 
         /// <inheritdoc />
         public List<IDynamicEntity> Children(string field = null, string type = null)
             => Entity.Children(field, type)
-                .Select(e => new DynamicEntity(e, Dimensions, CompatibilityLevel, BlockBuilder))
+                .Select(e => new DynamicEntity(e, Dimensions, CompatibilityLevel, Block))
                 .Cast<IDynamicEntity>()
                 .ToList();
     }

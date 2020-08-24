@@ -1,9 +1,5 @@
-﻿using ToSic.Eav;
-using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Run;
-using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -17,21 +13,7 @@ namespace ToSic.Sxc.Blocks
     [PrivateApi("not sure yet what to call this, maybe BlockHost or something")]
     public partial class BlockBuilder : HasLog, IBlockBuilder
     {
-        #region App-level information
-        public IApp App => Block.App;
-
-        #endregion
-
-
         #region Info for current runtime instance
-
-        /// <summary>
-        /// Environment - should be the place to refactor everything into, which is the host around 2sxc
-        /// </summary>
-        public IAppEnvironment Environment { get; }
-
-        /// <inheritdoc />
-        public IInstanceContext Context { get; }
 
         /// <inheritdoc />
         public IBlock Block { get; }
@@ -40,16 +22,12 @@ namespace ToSic.Sxc.Blocks
         #endregion
 
         #region Constructor
-        internal BlockBuilder(IBlockBuilder rootBlockBuilder, IBlock cb, 
-            IInstanceContext ctx,
-            ILog parentLog)
+        internal BlockBuilder(IBlockBuilder rootBlockBuilder, IBlock cb, ILog parentLog)
             : base("Sxc.BlkBld", parentLog, $"get CmsInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}")
         {
-            Environment = Factory.Resolve<IAppEnvironment>().Init(parentLog);
             // the root block is the main container. If there is none yet, use this, as it will be the root
             RootBuilder = rootBlockBuilder ?? this;
             Block = cb;
-            Context = ctx;
         }
 
         #endregion

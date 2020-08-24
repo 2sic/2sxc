@@ -4,7 +4,6 @@ using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.WebApi.Security

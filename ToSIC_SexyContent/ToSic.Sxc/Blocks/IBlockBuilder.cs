@@ -1,8 +1,5 @@
-﻿using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Run;
-using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -13,19 +10,6 @@ namespace ToSic.Sxc.Blocks
     [PrivateApi("not sure yet what to call this, CmsBlock isn't right, because it's more of a BlockHost or something")]
     public interface IBlockBuilder: IHasLog
     {
-        /// <summary>
-        /// The app relevant to this instance - contains much more material like
-        /// app-path or all the data existing in this app
-        /// </summary>
-        IApp App { get; }
-
-
-        ///// <summary>
-        ///// The view in the current block - necessary to pick up the right rendering engine etc.
-        ///// </summary>
-        ///// <remarks>It usually pre-defined by the inner content-block, but in rare cases it can be overriden, for example when previewing a template switch.</remarks>
-        //IView View { get; }
-
 
         /// <summary>
         /// Render this block. Internally will use the engine. 
@@ -42,19 +26,5 @@ namespace ToSic.Sxc.Blocks
         /// The root block, which controls what assets / js etc. will be rendered
         /// </summary>
         IBlockBuilder RootBuilder { get; }
-
-        /// <summary>
-        /// Determines if the current user may edit content here.
-        /// </summary>
-        bool UserMayEdit { get; }
-
-        [PrivateApi]
-        IAppEnvironment Environment { get; }
-
-        /// <summary>
-        /// The context in which this is running
-        /// </summary>
-        IInstanceContext Context { get; }
-
     }
 }

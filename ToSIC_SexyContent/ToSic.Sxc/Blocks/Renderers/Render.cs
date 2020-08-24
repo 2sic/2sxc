@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Blocks.Renderers;
 using ToSic.Sxc.Data;
@@ -27,13 +26,13 @@ namespace ToSic.Sxc.Blocks
         /// This is accessed through DynamicEntity.Render()
         /// At the moment it MUST stay internal, as it's not clear what API we want to surface
         /// </summary>
-        /// <param name="context">The parent-item containing the content-blocks and providing edit-context</param>
+        /// <param name="dynParent">The parent-item containing the content-blocks and providing edit-context</param>
         /// <param name="dontRelyOnParameterOrder"></param>
         /// <param name="item">The content-block item to render. Optional, by default the same item is used as the context.</param>
         /// <param name="field">Optional: </param>
         /// <param name="newGuid">Internal: this is the guid given to the item when being created in this block. Important for the inner-content functionality to work. </param>
         /// <returns></returns>
-        public static IHtmlString One(DynamicEntity context,
+        public static IHtmlString One(DynamicEntity dynParent,
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             IDynamicEntity item = null, 
             string field = null,
@@ -41,11 +40,11 @@ namespace ToSic.Sxc.Blocks
         {
             Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, nameof(One), $"{nameof(item)},{nameof(field)},{nameof(newGuid)}");
             if (item == null)
-                item = context;
+                item = dynParent;
             
             return field == null
-                ? Simple.Render(context.BlockBuilder.Block, item.Entity, context.BlockBuilder.Log) // with edit-context
-                : new HtmlString(Simple.RenderWithEditContext(context, item, field, newGuid) + "<b>data-list-context</b>"); // data-list-context (no edit-context)
+                ? Simple.Render(dynParent.Block, item.Entity, dynParent.Block.Log) // with edit-context
+                : new HtmlString(Simple.RenderWithEditContext(dynParent, item, field, newGuid) + "<b>data-list-context</b>"); // data-list-context (no edit-context)
         }
 
         /// <summary>

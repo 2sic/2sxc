@@ -154,7 +154,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             var wrapLog = Log.Call<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
             var isAdmin = UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
-            var app = BlockBuilder.App;
+            var app = GetBlock().App;
             if (appId != 0 && appId != app.AppId)
                 app = Factory.Resolve<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId),  Log);
             var assetEditor = templateId != 0 && path == null

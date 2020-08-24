@@ -34,10 +34,11 @@ namespace ToSic.SexyContent.WebApi
         {
             base.Initialize(controllerContext);
             Log.Rename("Api.DynApi");
-            Log.Add($"HasBlock: {BlockBuilder != null}");
+            var block = GetBlock();
+            Log.Add($"HasBlock: {block != null}");
             // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
             // if it's null, use the log of this object
-            DynCode = new DnnDynamicCode().Init(BlockBuilder, BlockBuilder?.Log ?? Log);
+            DynCode = new DnnDynamicCode().Init(block, Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (DynCode.App == null)
@@ -102,7 +103,8 @@ namespace ToSic.SexyContent.WebApi
             if (!Features.EnabledOrException(feats, "can't save in ADAM", out var exp))
                 throw exp;
 
-            return new AdamUploader(BlockBuilder, BlockBuilder.Block.AppId, Log)
+            var block = GetBlock();
+            return new AdamUploader(block, block.AppId, Log)
                 .UploadOne(stream, fileName, contentType, guid.Value, field, subFolder, false, true);
         }
 

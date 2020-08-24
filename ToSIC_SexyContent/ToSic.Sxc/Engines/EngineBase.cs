@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Engines
         [PrivateApi] protected IApp App;
         [PrivateApi] protected IDataSource DataSource;
         [PrivateApi] protected Purpose Purpose;
-        [PrivateApi] protected IBlockBuilder BlockBuilder;
+        [PrivateApi] protected IBlock Block;
 
         [PrivateApi]
         public RenderStatusType PreRenderStatus { get; internal set; }
@@ -51,14 +51,15 @@ namespace ToSic.Sxc.Engines
 
         
         /// <inheritdoc />
-        public void Init(IBlockBuilder blockBuilder, Purpose purpose, ILog parentLog)
+        public void Init(IBlock block, Purpose purpose, ILog parentLog)
         {
-            BlockBuilder = blockBuilder;
-            var view = BlockBuilder.Block.View;
+            //BlockBuilder = blockBuilder;
+            Block = block;
+            var view = Block.View;
             Log.LinkTo(parentLog);
 
 
-            var root = TemplateHelpers.GetTemplatePathRoot(view.Location, blockBuilder.App);
+            var root = TemplateHelpers.GetTemplatePathRoot(view.Location, Block.App);
             var subPath = view.Path;
             var templatePath = TryToFindPolymorphPath(root, view, subPath) 
                                ?? Http.Combine(root + "/", subPath);
@@ -70,15 +71,15 @@ namespace ToSic.Sxc.Engines
 
             Template = view;
             TemplatePath = templatePath;
-            App = blockBuilder.App;
-            DataSource = blockBuilder.Block.Data;
+            App = Block.App;
+            DataSource = Block.Data;
             Purpose = purpose;
 
             // check common errors
             CheckExpectedTemplateErrors();
 
             // check access permissions - before initializing or running data-code in the template
-            CheckTemplatePermissions(blockBuilder.Block.Context.Tenant);
+            CheckTemplatePermissions(Block.Context.Tenant);
 
             // Run engine-internal init stuff
             Init();
@@ -87,7 +88,7 @@ namespace ToSic.Sxc.Engines
         private string TryToFindPolymorphPath(string root, IView view, string subPath)
         {
             var wrapLog = Log.Call<string>($"{root}, {subPath}");
-            var polymorph = new Polymorphism.Polymorphism(BlockBuilder.App.Data, Log);
+            var polymorph = new Polymorphism.Polymorphism(Block.App.Data, Log);
             var edition = polymorph.Edition();
             if (edition == null) return wrapLog("no edition detected", null);
             Log.Add($"edition {edition} detected");
@@ -170,7 +171,7 @@ namespace ToSic.Sxc.Engines
         private void CheckExpectedNoRenderConditions()
         {
             if (Template.ContentType != "" && Template.ContentItem == null &&
-                BlockBuilder.Block.Configuration.Content.All(e => e == null))
+                Block.Configuration.Content.All(e => e == null))
             {
                 PreRenderStatus = RenderStatusType.MissingData;
 
@@ -199,7 +200,7 @@ namespace ToSic.Sxc.Engines
             // do security check IF security exists
             // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
             var templatePermissions = Factory.Resolve<AppPermissionCheck>()
-                .ForItem(BlockBuilder.Context, App, Template.Entity, Log);
+                .ForItem(Block.Context, App, Template.Entity, Log);
 
             // Views only use permissions to prevent access, so only check if there are any configured permissions
             if (tenant.RefactorUserIsAdmin || !templatePermissions.HasPermissions)

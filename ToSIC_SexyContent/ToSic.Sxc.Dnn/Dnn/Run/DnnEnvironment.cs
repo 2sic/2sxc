@@ -12,11 +12,12 @@ namespace ToSic.Sxc.Dnn.Run
         /// <summary>
         /// Constructor for DI, you must always call Init(...) afterwards
         /// </summary>
-        public DnnEnvironment(IHttp http, ITenant tenant, IPagePublishing publishing) : base("DNN.Enviro")
+        public DnnEnvironment(IHttp http, ITenant tenant, IPagePublishing publishing, IZoneMapper zoneMapper) : base("DNN.Enviro")
         {
             _http = http;
             _tenant = tenant;
             PagePublishing = publishing.Init(Log);
+            ZoneMapper = zoneMapper.Init(Log);
         }
 
         private readonly IHttp _http;
@@ -29,8 +30,9 @@ namespace ToSic.Sxc.Dnn.Run
         }
         #endregion
 
-        public IZoneMapper ZoneMapper => _zoneMapper ?? (_zoneMapper = new DnnZoneMapper().Init(Log));
-        private IZoneMapper _zoneMapper;
+        public IZoneMapper ZoneMapper { get; }
+        //    => _zoneMapper ?? (_zoneMapper = new DnnZoneMapper().Init(Log));
+        //private IZoneMapper _zoneMapper;
 
         public IUser User { get; } = new DnnUser();
 

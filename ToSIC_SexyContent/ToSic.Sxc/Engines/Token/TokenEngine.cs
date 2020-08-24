@@ -85,12 +85,12 @@ namespace ToSic.Sxc.Engines
             InitTokenReplace();
         }
 
-        private void InitDataHelper() => _data = Factory.Resolve<DynamicCodeRoot>().Init(BlockBuilder, 9, Log);
+        private void InitDataHelper() => _data = Factory.Resolve<DynamicCodeRoot>().Init(Block, 9, Log);
 
         private void InitTokenReplace()
         {
-            var confProv = ConfigurationProvider.GetConfigProviderForModule(BlockBuilder.Context.Container.Id, BlockBuilder.App, BlockBuilder);
-            _tokenReplace = new TokenReplaceEav(BlockBuilder.Context.Container.Id, confProv);
+            var confProv = ConfigurationProvider.GetConfigProviderForModule(Block.Context.Container.Id, Block.App, Block);
+            _tokenReplace = new TokenReplaceEav(Block.Context.Container.Id, confProv);
             
             // Add the Content and ListContent property sources used always
             confProv.Add(new LookUpInDynamicEntity(SourcePropertyName.ListContent, _data.Header));

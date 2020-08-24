@@ -8,12 +8,10 @@ namespace ToSic.Sxc.WebApi.Save
     /// </summary>
     internal abstract class SaveHelperBase: HasLog
     {
-        internal IBlockBuilder BlockBuilder;
+        internal IBlock Block;
 
-        protected SaveHelperBase(IBlockBuilder blockBuilder, ILog parentLog, string logName) : base(logName, parentLog)
-        {
-            BlockBuilder = blockBuilder;
-        }
-
+        protected SaveHelperBase(IBlock block, ILog parentLog, string logName) 
+            : base(logName, parentLog) 
+            => Block = block;
     }
 }

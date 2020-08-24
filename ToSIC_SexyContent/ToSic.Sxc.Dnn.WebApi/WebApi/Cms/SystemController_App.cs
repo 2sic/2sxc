@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Web.Http;
-using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Dnn.Run;
@@ -16,7 +15,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             var cms = new CmsZones(zoneId, Env, Log);
             var tenant = new DnnTenant().Init(ActiveModule.OwnerPortalID);
-            var configurationBuilder = ConfigurationProvider.Build(BlockBuilder, true);
+            var configurationBuilder = ConfigurationProvider.Build(GetBlock(), true);
             var list = cms.AppsRt.GetApps(tenant, configurationBuilder);
             return list.Select(a => new
             {

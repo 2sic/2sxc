@@ -22,7 +22,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var wrapLog = Log.Call<dynamic>($"{appId}, {guid}");
             
             // extra security to only allow zone change if host user
-            var permCheck = new MultiPermissionsApp(BlockBuilder.Context, GetApp(appId), Log);
+            var permCheck = new MultiPermissionsApp(GetContext(), GetApp(appId), Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 

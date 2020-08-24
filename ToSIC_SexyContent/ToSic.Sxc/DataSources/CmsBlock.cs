@@ -37,7 +37,7 @@ namespace ToSic.Sxc.DataSources
         /// <inheritdoc />
         public override string LogId => "Sxc.CmsBDs";
 
-        private IBlockBuilder _blockBuilder;
+        private IBlock _block;
 
         [PrivateApi]
         public enum Settings
@@ -61,21 +61,20 @@ namespace ToSic.Sxc.DataSources
         }
 
         [PrivateApi]
-        internal IBlockBuilder BlockBuilder
+        internal IBlock Block
         {
             get
             {
-                if (_blockBuilder != null) return _blockBuilder;
+                if (_block != null) return _block;
 
                 if(!HasSxcContext)
                     throw new Exception("value provider didn't have sxc provider - can't use module data source");
 
                 var sxciProvider = Configuration.LookUps.FindSource(LookUpConstants.InstanceContext);
-                _blockBuilder = (sxciProvider as LookUpCmsBlock)?
-                              .BlockBuilder 
-                              ?? throw new Exception("value provider didn't have sxc provider - can't use module data source");
+                _block = (sxciProvider as LookUpCmsBlock)?.Block
+                         ?? throw new Exception("value provider didn't have sxc provider - can't use module data source");
 
-                return _blockBuilder;
+                return _block;
             }
         }
 
@@ -92,7 +91,7 @@ namespace ToSic.Sxc.DataSources
                 if (UseSxcInstanceContentGroup)
                 {
                     Log.Add("need content-group, will use from sxc-context");
-                    return _blockConfiguration = BlockBuilder.Block.Configuration;
+                    return _blockConfiguration = Block.Configuration;
                 }
 
                 // If we don't have a context, then look it up based on the InstanceId
@@ -100,7 +99,7 @@ namespace ToSic.Sxc.DataSources
                 if (!InstanceId.HasValue)
                     throw new Exception("Looking up BlockConfiguration failed because ModuleId is null.");
                 var publish = Factory.Resolve<IPagePublishing>().Init(Log);
-                var userMayEdit = HasSxcContext && BlockBuilder.UserMayEdit;
+                var userMayEdit = HasSxcContext && Block.EditAllowed;
 
                 var cms = new CmsRuntime(this, Log, HasSxcContext && userMayEdit, publish.IsEnabled(InstanceId.Value));
                 var container = Factory.Resolve<IContainer>().Init(InstanceId.Value, Log);

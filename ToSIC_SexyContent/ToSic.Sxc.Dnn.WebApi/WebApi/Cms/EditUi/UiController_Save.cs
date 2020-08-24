@@ -45,9 +45,10 @@ namespace ToSic.Sxc.WebApi.Cms
             };
             validator.PrepareForEntityChecks(appRead);
 
+            var block = GetBlock();
             #region check if it's an update, and do more security checks then - shared with EntitiesController.Save
             // basic permission checks
-            var permCheck = new Save.SaveSecurity(BlockBuilder, Log)
+            var permCheck = new Save.SaveSecurity(block, Log)
                 .DoPreSaveSecurityCheck(appId, package.Items);
 
             var foundItems = package.Items.Where(i => i.Entity.Id != 0 && i.Entity.Guid != Guid.Empty)
@@ -95,7 +96,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             Log.Add("items to save generated, all data tests passed");
 
-            return new DnnPublishing(BlockBuilder, Log)
+            return new DnnPublishing(block, Log)
                 .SaveWithinDnnPagePublishingAndUpdateParent(appId, items, partOfPage,
                     forceSaveAsDraft => DoSave(appMan, items, forceSaveAsDraft),
                     permCheck);

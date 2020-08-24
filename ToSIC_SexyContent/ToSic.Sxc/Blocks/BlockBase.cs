@@ -11,7 +11,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks
 {
-    internal abstract class BlockBase : HasLog<BlockBase>, IBlock
+    internal abstract partial class BlockBase : HasLog<BlockBase>, IBlock
     {
         #region Constructor and DI
 
@@ -23,7 +23,6 @@ namespace ToSic.Sxc.Blocks
             Context = context;
             ZoneId = appId.ZoneId;
             AppId = appId.AppId;
-
         }
 
         protected T CompleteInit<T>(IBlockBuilder rootBuilder, IBlockIdentifier blockId, int blockNumberUnsureIfNeeded) where T : class
@@ -43,7 +42,7 @@ namespace ToSic.Sxc.Blocks
                 return wrapLog("stop: app & data are missing", this as T);
             }
 
-            BlockBuilder = new BlockBuilder(rootBuilder, this, Context, Log);
+            BlockBuilder = new BlockBuilder(rootBuilder, this, Log);
             // In case the root didn't exist yet, use the new one as Root
             rootBuilder = rootBuilder ?? BlockBuilder;
 
@@ -58,13 +57,13 @@ namespace ToSic.Sxc.Blocks
             Log.Add("Real app specified, will load App object with Data");
 
             // Get App for this block
-            App = new App(rootBuilder.Environment, Context.Tenant)
-                .Init(this, ConfigurationProvider.Build(BlockBuilder, false),
+            App = Eav.Factory.Resolve<App>().PreInit(Context.Tenant)
+                .Init(this, ConfigurationProvider.Build(this, false),
                     true, Log);
 
-
-            var cms = new CmsRuntime(App, Log, rootBuilder.UserMayEdit, 
-                rootBuilder.Environment.PagePublishing.IsEnabled(Context.Container.Id));
+            // note: requires EditAllowed, which isn't ready till App is created
+            var publishing = Eav.Factory.Resolve<IPagePublishing>().Init(Log);
+            var cms = new CmsRuntime(App, Log, EditAllowed, publishing.IsEnabled(Context.Container.Id));
 
             Configuration = cms.Blocks.GetOrGeneratePreviewConfig(blockId);
 

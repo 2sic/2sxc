@@ -26,19 +26,7 @@ namespace ToSic.Sxc.Code
     public interface IDynamicCode: ICreateInstance, ICompatibilityLevel, IHasLog // inherit from old namespace to ensure compatibility
 #pragma warning restore 618
     {
-        #region internal/obsolete but still needed, not public!
-        //[PrivateApi("will be removed soon")]
-        //SxcHelper Sxc { get; }
-
-        [PrivateApi("will be moved/removed/renamed")]
-        IBlockBuilder BlockBuilder { get; }
-
-        //[PrivateApi]
-        //IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null);
-
-        #endregion
-
-
+        [PrivateApi("WIP")] IBlock Block { get; }
 
         /// <summary>
         /// A fully prepared <see cref="IApp"/> object letting you access all the data and queries in the current app. 

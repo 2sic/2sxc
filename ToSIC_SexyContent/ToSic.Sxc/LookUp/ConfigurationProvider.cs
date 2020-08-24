@@ -16,19 +16,22 @@ namespace ToSic.Sxc.LookUp
         /// <summary>
         /// Generate a delegate which will be used to build the configuration based on a new sxc-instance
         /// </summary>
-        internal static Func<App, IAppDataConfiguration> Build(IBlockBuilder blockBuilder, bool useExistingConfig)
+        internal static Func<App, IAppDataConfiguration> Build(IBlock block, bool useExistingConfig)
         {
-            var containerId = blockBuilder.Context.Container.Id;
-            var showDrafts = blockBuilder.UserMayEdit;
-            var activatePagePublishing = blockBuilder.Environment.PagePublishing.IsEnabled(containerId);
-            var existingLookups = blockBuilder.Block.Data.Configuration.LookUps;
+            var log = new Log("Sxc.CnfPrv", block.Log);
+            var wrapLog = log.Call($"{nameof(useExistingConfig)}:{useExistingConfig}");
+            var containerId = block.Context.Container.Id;
+            var showDrafts = block.EditAllowed;
+            var activatePagePublishing = Factory.Resolve<IPagePublishing>().Init(log).IsEnabled(containerId);
+            var existingLookups = block.Data.Configuration.LookUps;
 
+            wrapLog("ok");
             return appToUse =>
             {
                 // check if we'll use the config already on the sxc-instance, or generate a new one
                 var lookUpEngine = useExistingConfig
                     ? existingLookups
-                    : GetConfigProviderForModule(containerId, appToUse as IApp, blockBuilder);
+                    : GetConfigProviderForModule(containerId, appToUse as IApp, block);
 
                 // return results
                 return new AppDataConfiguration(showDrafts, activatePagePublishing, lookUpEngine);
@@ -52,15 +55,15 @@ namespace ToSic.Sxc.LookUp
 
         // note: not sure yet where the best place for this method is, so it's here for now
         // will probably move again some day
-        internal static LookUpEngine GetConfigProviderForModule(int moduleId, IApp app, IBlockBuilder blockBuilder)
+        internal static LookUpEngine GetConfigProviderForModule(int moduleId, IApp app, IBlock block)
         {
-            var log = new Log("Stc.GetCnf", blockBuilder?.Log);
+            var log = new Log("Stc.GetCnf", block?.Log);
 
             // Find the standard DNN property sources if PortalSettings object is available
-            var envLookups = Factory.Resolve<IGetEngine>().GetEngine(moduleId, blockBuilder?.Log);
+            var envLookups = Factory.Resolve<IGetEngine>().GetEngine(moduleId, block?.Log);
             log.Add($"Environment provided {envLookups.Sources.Count} sources");
 
-            var provider = new LookUpEngine(envLookups, blockBuilder?.Log);
+            var provider = new LookUpEngine(envLookups, block?.Log);
 
             // Add QueryString etc. when running inside an http-context. Otherwise leave them away!
             var http = Factory.Resolve<IHttp>();
@@ -70,8 +73,8 @@ namespace ToSic.Sxc.LookUp
 
                 // new
                 var paramList = new NameValueCollection();
-                if (blockBuilder?.Context.Page.Parameters != null)
-                    foreach (var pair in blockBuilder.Context.Page.Parameters)
+                if (block?.Context.Page.Parameters != null)
+                    foreach (var pair in block.Context.Page.Parameters)
                         paramList.Add(pair.Key, pair.Value);
                 else
                     paramList = http.QueryString;
@@ -100,9 +103,9 @@ namespace ToSic.Sxc.LookUp
             }
 
             // provide the current SxcInstance to the children where necessary
-            if (!provider.HasSource(LookUpConstants.InstanceContext) && blockBuilder != null)
+            if (!provider.HasSource(LookUpConstants.InstanceContext) && block != null)
             {
-                var blockBuilderLookUp = new LookUpCmsBlock(LookUpConstants.InstanceContext, blockBuilder);
+                var blockBuilderLookUp = new LookUpCmsBlock(LookUpConstants.InstanceContext, block);
                 provider.Add(blockBuilderLookUp);
             }
             return provider;

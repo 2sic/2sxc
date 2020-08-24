@@ -1,20 +1,16 @@
-﻿using ToSic.Sxc.Blocks;
-
-namespace ToSic.Sxc.Compatibility.RazorPermissions
+﻿namespace ToSic.Sxc.Compatibility.RazorPermissions
 {
     /// <summary>
-    /// This is a compatibily leftover from old code - new code uses Edit.Enabled
+    /// This is a compatibility leftover from old code - new code uses Edit.Enabled
     /// </summary>
     public class RazorPermissions
     {
-        protected readonly IBlockBuilder BlockBuilder;
-        internal RazorPermissions(IBlockBuilder blockBuilder) => BlockBuilder = blockBuilder;
+        internal RazorPermissions(bool editAllowed) => UserMayEditContent = editAllowed;
 
         /// <summary>
         /// This property is used publicly, so it must exist
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public bool UserMayEditContent => BlockBuilder.UserMayEdit;
-
+        public bool UserMayEditContent { get; }
     }
 }

@@ -25,27 +25,29 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
 
         public ClientInfoContentGroup(IBlockBuilder blockBuilder)
         {
-            IsCreated = blockBuilder.Block.ContentGroupExists;
-            IsContent = blockBuilder.Block.IsContentApp;
+            var block = blockBuilder.Block;
+            IsCreated = block.ContentGroupExists;
+            IsContent = block.IsContentApp;
+            var app = block.App;
 
-            Id = blockBuilder.Block.Configuration?.Id ?? 0;
-            Guid = blockBuilder.Block.Configuration?.Guid ?? Guid.Empty;
-            AppId = blockBuilder.Block.AppId;
-            AppUrl = blockBuilder.App?.Path ?? "" + "/";
-            AppSettingsId = (blockBuilder.App?.Settings?.Entity?.Attributes?.Count > 0)
-                ? blockBuilder.App?.Settings?.EntityId : null;    // the real id (if entity exists), 0 (if entity missing, but type has fields), or null (if not available)
-            AppResourcesId = (blockBuilder.App?.Resources?.Entity?.Attributes?.Count > 0)
-                ? blockBuilder.App?.Resources?.EntityId : null;  // the real id (if entity exists), 0 (if entity missing, but type has fields), or null (if not available)
+            Id = block.Configuration?.Id ?? 0;
+            Guid = block.Configuration?.Guid ?? Guid.Empty;
+            AppId = block.AppId;
+            AppUrl = app?.Path ?? "" + "/";
+            AppSettingsId = app?.Settings?.Entity?.Attributes?.Count > 0
+                ? app?.Settings?.EntityId : null;    // the real id (if entity exists), 0 (if entity missing, but type has fields), or null (if not available)
+            AppResourcesId = app?.Resources?.Entity?.Attributes?.Count > 0
+                ? app?.Resources?.EntityId : null;  // the real id (if entity exists), 0 (if entity missing, but type has fields), or null (if not available)
 
-            HasContent = blockBuilder.Block.View != null && (blockBuilder.Block.Configuration?.Exists ?? false);
+            HasContent = block.View != null && (block.Configuration?.Exists ?? false);
 
-            ZoneId = blockBuilder.Block.ZoneId; // 2019-11-09, Id not nullable any more // ?? 0;
-            TemplateId = blockBuilder.Block.View?.Id ?? 0;
-            TemplateEdition = blockBuilder.Block.View?.Edition;
-            QueryId = blockBuilder.Block.View?.Query?.Id; // will be null if not defined
-            ContentTypeName = blockBuilder.Block.View?.ContentType ?? "";
-            IsList = blockBuilder.Block.Configuration?.View?.UseForList ?? false;//  isCreated && ((sxc.BlockConfiguration?.Content?.Count ?? 0) > 1);
-            SupportsAjax = blockBuilder.Block.IsContentApp || (blockBuilder.App?.Configuration?.EnableAjax ?? false);
+            ZoneId = block.ZoneId; // 2019-11-09, Id not nullable any more // ?? 0;
+            TemplateId = block.View?.Id ?? 0;
+            TemplateEdition = block.View?.Edition;
+            QueryId = block.View?.Query?.Id; // will be null if not defined
+            ContentTypeName = block.View?.ContentType ?? "";
+            IsList = block.Configuration?.View?.UseForList ?? false;//  isCreated && ((sxc.BlockConfiguration?.Content?.Count ?? 0) > 1);
+            SupportsAjax = block.IsContentApp || (block.App?.Configuration?.EnableAjax ?? false);
         }
     }
 }

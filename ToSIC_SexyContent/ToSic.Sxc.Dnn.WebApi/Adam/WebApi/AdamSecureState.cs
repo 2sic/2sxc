@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Adam.WebApi
         internal AdamAppContext AdamAppContext;
         internal IContentTypeAttribute Attribute;
 
-        internal readonly IBlockBuilder BlockBuilder;
+        private readonly IBlock _block;
 
         public readonly Guid[] FeaturesForRestrictedUsers =
             {
@@ -43,10 +43,10 @@ namespace ToSic.Sxc.Adam.WebApi
         /// <summary>
         /// Initializes the object and performs all the initial security checks
         /// </summary>
-        public AdamSecureState(IBlockBuilder blockBuilder, int appId, string contentType, string field, Guid guid, bool usePortalRoot, ILog log)
-            : base(blockBuilder.Context, Factory.Resolve<Apps.App>().Init(appId, log, blockBuilder), /*AppApiHelpers.GetApp(appId, blockBuilder, log)*/ contentType, log)
+        public AdamSecureState(IBlock block, int appId, string contentType, string field, Guid guid, bool usePortalRoot, ILog log)
+            : base(block.Context, Factory.Resolve<Apps.App>().Init(appId, log, block), contentType, log)
         {
-            BlockBuilder = blockBuilder;
+            _block = block;
             // only do checks on field/guid if it's actually accessing that, if it's on the portal root, don't.
             if (!usePortalRoot)
             {
@@ -87,7 +87,7 @@ namespace ToSic.Sxc.Adam.WebApi
             Log.Add("PrepCore(...)");
             var dnn = new DnnContextOld(Context.Container);
             var tenant = new DnnTenant(dnn.Portal);
-            AdamAppContext = new AdamAppContext(tenant, app, BlockBuilder, 10, Log);
+            AdamAppContext = new AdamAppContext(tenant, app, _block, 10, Log);
             ContainerContext = usePortalRoot
                 ? new ContainerOfTenant(AdamAppContext) as ContainerBase
                 : new ContainerOfField(AdamAppContext, entityGuid, fieldName);
@@ -160,9 +160,7 @@ namespace ToSic.Sxc.Adam.WebApi
         public bool FieldPermissionOk(List<Grants> requiredGrant)
         {
             var fieldPermissions = new DnnPermissionCheck().ForAttribute(
-                Context,
-                appIdentity: BlockBuilder.App, 
-                attribute: Attribute, parentLog: Log);
+                Context, appIdentity: _block.App, attribute: Attribute, parentLog: Log);
 
             return fieldPermissions.UserMay(requiredGrant);
         }

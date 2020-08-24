@@ -48,9 +48,9 @@ namespace ToSic.Sxc.Blocks.Edit
 
         private void Update(Dictionary<string, object> newValues)
         {
-            var app = ((BlockBase)BlockBuilder.Block).Parent.App;
+            var app = ((BlockBase)Block).Parent.App;
             new AppManager(app, Log)
-                .Entities.UpdateParts(Math.Abs(BlockBuilder.Block.ContentBlockId), newValues);
+                .Entities.UpdateParts(Math.Abs(Block.ContentBlockId), newValues);
         }
 
         #endregion

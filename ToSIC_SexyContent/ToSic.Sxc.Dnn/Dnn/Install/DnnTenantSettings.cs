@@ -16,15 +16,15 @@ namespace ToSic.Sxc.Dnn.Install
         /// <summary>
         /// Returns true if the Portal HomeDirectory Contains the 2sxc Folder and this folder contains the web.config and a Content folder
         /// </summary>
-        public void EnsureTenantIsConfigured(IBlockBuilder blockBuilder, HttpServerUtility server)
+        public void EnsureTenantIsConfigured(IBlock block, HttpServerUtility server)
         {
-            var sexyFolder = new DirectoryInfo(server.MapPath(blockBuilder.Block.Context.Tenant.AppsRoot));
+            var sexyFolder = new DirectoryInfo(server.MapPath(block.Context.Tenant.AppsRoot));
             var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, Eav.Constants.ContentAppName));
             var webConfigTemplate = new FileInfo(Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
             if (!(sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
             {
                 // configure it
-                var tm = new TemplateHelpers(blockBuilder.App);
+                var tm = new TemplateHelpers(block.App);
                 tm.EnsureTemplateFolderExists(Settings.TemplateLocations.PortalFileSystem);
             };
         }

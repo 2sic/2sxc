@@ -15,7 +15,6 @@ using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.WebApi;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.WebApi.Security;
 
@@ -42,14 +41,14 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Rename("2sModC");
         }
 
-        private BlockEditorBase GetEditor() => BlockEditorBase.GetEditor(BlockBuilder);
+        private BlockEditorBase GetEditor() => BlockEditorBase.GetEditor(Block);
 
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {
-            var permCheck = new MultiPermissionsApp(BlockBuilder.Context, App, Log);
+            var permCheck = new MultiPermissionsApp(GetContext(), App, Log);
             if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
@@ -92,7 +91,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<TemplateUiInfo> GetSelectableTemplates() => CmsRuntime?.Views.GetCompatibleViews(App, BlockBuilder.Block.Configuration);
+        public IEnumerable<TemplateUiInfo> GetSelectableTemplates() => CmsRuntime?.Views.GetCompatibleViews(App, GetBlock().Configuration);
 
         #endregion
 
@@ -115,7 +114,7 @@ namespace ToSic.Sxc.WebApi.Cms
                     // Fallback / ignore if the language specified has not been found
                     catch (global::System.Globalization.CultureNotFoundException) { }
 
-                var cbToRender = BlockBuilder.Block;
+                var cbToRender = GetBlock();
 
                 // if a real templateId was specified, swap to that
                 if (templateId > 0)
@@ -145,7 +144,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public bool Publish(int id)
         {
             Log.Add($"try to publish id #{id}");
-            if (!new MultiPermissionsApp(BlockBuilder.Context, App, Log).EnsureAll(GrantSets.WritePublished, out var error))
+            if (!new MultiPermissionsApp(GetContext(), App, Log).EnsureAll(GrantSets.WritePublished, out var error))
                 throw HttpException.PermissionDenied(error);
             new AppManager(App, Log).Entities.Publish(id);
             return true;

@@ -31,7 +31,10 @@ namespace ToSic.Sxc.Adam
         {
             var meta = GetFirstMetadata(appContext.AppRuntime, id, isFolder) 
                        ?? Build.FakeEntity(Eav.Constants.TransientAppId);
-            return new DynamicEntity(meta, new[] { Thread.CurrentThread.CurrentCulture.Name }, appContext.CompatibilityLevel, appContext.BlockBuilder);
+            return new DynamicEntity(meta, 
+                new[] { Thread.CurrentThread.CurrentCulture.Name }, 
+                appContext.CompatibilityLevel, 
+                appContext.Block);
         }
 
         public static int GetMetadataId(AppRuntime appRuntime, int id, bool isFolder)

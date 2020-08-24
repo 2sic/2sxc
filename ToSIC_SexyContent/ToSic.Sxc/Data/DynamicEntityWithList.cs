@@ -21,8 +21,8 @@ namespace ToSic.Sxc.Data
         protected List<IDynamicEntity> DynEntities;
 
         [PrivateApi]
-        internal DynamicEntityWithList(IEntity parent, string field, IEnumerable<IEntity> entities, string[] dimensions, int compatibility, IBlockBuilder blockBuilder) 
-            : base(null, dimensions, compatibility, blockBuilder)
+        internal DynamicEntityWithList(IEntity parent, string field, IEnumerable<IEntity> entities, string[] dimensions, int compatibility, IBlock block) 
+            : base(null, dimensions, compatibility, block)
         {
             var index = 0;
             DynEntities = entities
@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Data
                 {
                     // we create an Entity with some metadata-decoration, so that toolbars know it's part of a list
                     var blockEntity = new EntityInBlock(e, parent.EntityGuid, field, index++);
-                    return new DynamicEntity(blockEntity, Dimensions, CompatibilityLevel, BlockBuilder) as
+                    return new DynamicEntity(blockEntity, Dimensions, CompatibilityLevel, block) as
                         IDynamicEntity;
                 })
                 .ToList();

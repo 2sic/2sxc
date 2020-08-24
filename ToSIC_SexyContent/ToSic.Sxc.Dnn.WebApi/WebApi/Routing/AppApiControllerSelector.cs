@@ -89,8 +89,8 @@ namespace ToSic.Sxc.WebApi
                 if(appFolder == null)
                 {
                     log.Add("no folder found in url, will auto-detect");
-                    var sexy = Helpers.GetCmsBlock(request, false, log);
-                    appFolder = sexy.App.Folder;
+                    var block = Helpers.GetCmsBlock(request, false, log);
+                    appFolder = block.App.Folder;
                 }
 
                 log.Add($"App Folder: {appFolder}");

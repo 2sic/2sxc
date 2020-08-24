@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Engines;
@@ -12,7 +13,7 @@ namespace ToSic.Sxc.Blocks
     /// A unit / block of output in a CMS. 
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public interface IBlock: IAppIdentity
+    public interface IBlock: IAppIdentity, IHasLog
     {
         /// <summary>
         /// The module ID or the parent-content-block id, probably not ideal here, but not sure
@@ -60,5 +61,8 @@ namespace ToSic.Sxc.Blocks
 
         [PrivateApi("naming not final")]
         bool ContentGroupExists { get; }
+
+        [PrivateApi]
+        bool EditAllowed { get; }
     }
 }

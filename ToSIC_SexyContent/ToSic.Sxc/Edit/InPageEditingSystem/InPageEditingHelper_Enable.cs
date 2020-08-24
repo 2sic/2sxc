@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             }
 
             // find the root host, as this is the one we must tell what js etc. we need
-            var hostWithInternals = (BlockBuilder) BlockBuilder.RootBuilder;
+            var hostWithInternals = (BlockBuilder) Block.BlockBuilder.RootBuilder;
 
             if (js.HasValue || api.HasValue || forms.HasValue)
                 hostWithInternals.UiAddJsApi = (js ?? false) || (api ?? false) || (forms ?? false);

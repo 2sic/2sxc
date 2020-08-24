@@ -22,9 +22,9 @@ namespace ToSic.Sxc.Web
         public IRenderingHelper Init(IBlockBuilder blockBuilder, ILog parentLog)
         {
             this.LinkLog(parentLog);
-            var appRoot = Http.ToAbsolute("~/"); //  VirtualPathUtility.ToAbsolute("~/");
+            var appRoot = Http.ToAbsolute("~/");
             BlockBuilder = blockBuilder;
-            Context = blockBuilder?.Context;
+            Context = blockBuilder?.Block.Context;
             AppRootPath = appRoot;
 
             return this;

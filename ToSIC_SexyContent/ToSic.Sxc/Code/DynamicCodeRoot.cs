@@ -28,23 +28,22 @@ namespace ToSic.Sxc.Code
     [PublicApi_Stable_ForUseInYourCode]
     public abstract class DynamicCodeRoot : HasLog, IDynamicCode
     {
-        [PrivateApi]
-        public IBlockBuilder BlockBuilder { get; private set; }
+        public IBlock Block { get; private set; }
 
         protected DynamicCodeRoot(string logName = null): base(logName ?? "Sxc.DynCdR") { }
 
         [PrivateApi]
-        public DynamicCodeRoot Init(IBlockBuilder blockBuilder, int compatibility, ILog parentLog)
+        public DynamicCodeRoot Init(IBlock block, int compatibility, ILog parentLog)
         {
-            Log.LinkTo(parentLog ?? blockBuilder?.Log);
-            if (blockBuilder == null)
+            Log.LinkTo(parentLog ?? block?.Log);
+            if (block == null)
                 return this;
 
-            BlockBuilder = blockBuilder;
             CompatibilityLevel = compatibility;
-            App = blockBuilder.App;
-            Data = blockBuilder.Block.Data;
-            Edit = new InPageEditingHelper(blockBuilder, Log);
+            Block = block;
+            App = Block.App;
+            Data = Block.Data;
+            Edit = new InPageEditingHelper(Block, Log);
             return this;
         }
 
@@ -70,7 +69,8 @@ namespace ToSic.Sxc.Code
         public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => DynamicJacket.AsDynamicJacket(json, fallback);
 
         /// <inheritdoc />
-        public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, CompatibilityLevel, BlockBuilder);
+        public dynamic AsDynamic(IEntity entity) 
+            => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, CompatibilityLevel, Block);
 
         /// <inheritdoc />
         public dynamic AsDynamic(dynamic dynamicEntity) => dynamicEntity;
@@ -124,7 +124,7 @@ namespace ToSic.Sxc.Code
             if (inSource != null)
                 return DataSourceFactory.GetDataSource<T>(inSource, inSource, configurationProvider);
 
-            var userMayEdit = BlockBuilder.UserMayEdit;
+            var userMayEdit = Block.EditAllowed;
 
             var initialSource = DataSourceFactory.GetPublishing(
                 App, userMayEdit, ConfigurationProvider as LookUpEngine);
@@ -176,7 +176,7 @@ namespace ToSic.Sxc.Code
         private void TryToBuildHeaderObject()
         {
             Log.Add("try to build ListContent (header) object");
-            if (Data == null || BlockBuilder.Block.View == null) return;
+            if (Data == null || Block.View == null) return;
             if (!Data.Out.ContainsKey(ViewParts.ListContent)) return;
 
             var listEntity = Data[ViewParts.ListContent].List.FirstOrDefault();
@@ -204,7 +204,7 @@ namespace ToSic.Sxc.Code
         {
             Log.Add("try to build Content objects");
 
-            if (Data == null || BlockBuilder.Block.View == null) return;
+            if (Data == null || Block.View == null) return;
             if (!Data.Out.ContainsKey(Eav.Constants.DefaultStreamName)) return;
 
             var entities = Data.List.ToList();
@@ -227,7 +227,7 @@ namespace ToSic.Sxc.Code
         {
             var envFs = Factory.Resolve<IEnvironmentFileSystem>();
             if (_adamAppContext == null)
-                _adamAppContext = new AdamAppContext(BlockBuilder.Context.Tenant, App, BlockBuilder, CompatibilityLevel, Log);
+                _adamAppContext = new AdamAppContext(Block.Context.Tenant, App, Block, CompatibilityLevel, Log);
             return new FolderOfField(envFs, _adamAppContext, entity.EntityGuid, fieldName);
         }
         private AdamAppContext _adamAppContext;

@@ -1,7 +1,5 @@
 ﻿using System;
 using ToSic.Eav;
-using ToSic.Eav.Apps.Security;
-using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Web;
@@ -11,10 +9,6 @@ namespace ToSic.Sxc.Blocks
     public partial class BlockBuilder
     {
         internal bool RenderWithDiv = true;
-        public bool UserMayEdit 
-            => _userMayEdit ?? (_userMayEdit = Factory.Resolve<AppPermissionCheck>().ForApp(Context, App, Log).UserMay(GrantSets.WriteSomething)).Value;
-        private bool? _userMayEdit;
-
 
         internal IRenderingHelper RenderingHelper =>
             _rendHelp ?? (_rendHelp = Factory.Resolve<IRenderingHelper>().Init(this, Log));
@@ -37,7 +31,7 @@ namespace ToSic.Sxc.Blocks
                     if (Block.DataIsMissing)
                     {
                         Log.Add("content-block is missing data - will show error or just stop if not-admin-user");
-                        body = UserMayEdit
+                        body = Block.EditAllowed
                             ? "" // stop further processing
                             // end users should see server error as no js-side processing will happen
                             : RenderingHelper.DesignErrorMessage(
@@ -132,7 +126,7 @@ namespace ToSic.Sxc.Blocks
             // edge case: view hasn't been built/configured yet, so no engine to find/attach
             if (Block.View == null) return null;
             _engine = EngineFactory.CreateEngine(Block.View);
-            _engine.Init(this, renderingPurpose, Log);
+            _engine.Init(Block, renderingPurpose, Log);
             return _engine;
         }
         private IEngine _engine;

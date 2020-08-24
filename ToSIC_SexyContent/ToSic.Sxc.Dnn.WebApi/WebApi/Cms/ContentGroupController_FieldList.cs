@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Apps;
@@ -23,11 +25,11 @@ namespace ToSic.Sxc.WebApi.Cms
         public void Replace(Guid guid, string part, int index, int entityId, bool add = false)
         {
             var wrapLog = Log.Call($"target:{guid}, part:{part}, index:{index}, id:{entityId}");
-            var versioning = BlockBuilder.Environment.PagePublishing;
+            var versioning = Factory.Resolve<IPagePublishing>().Init(Log);
 
             void InternalSave(VersioningActionInfo args)
             {
-                var cms = new CmsManager(BlockBuilder.App, Log);
+                var cms = new CmsManager(GetBlock().App, Log);
                 var entity = cms.AppState.List.One(guid);
                 if (entity == null) throw new Exception($"Can't find item '{guid}'");
 
@@ -46,8 +48,8 @@ namespace ToSic.Sxc.WebApi.Cms
             }
 
             // use dnn versioning - this is always part of page
-            var context = new DnnDynamicCode().Init(BlockBuilder, Log);
-            versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID, InternalSave);
+            var dnnDynCode = new DnnDynamicCode().Init(GetBlock(), Log);
+            versioning.DoInsidePublishing(dnnDynCode.Dnn.Module.ModuleID, dnnDynCode.Dnn.User.UserID, InternalSave);
             wrapLog(null);
         }
         // TODO: WIP changing this from ContentGroup editing to any list editing
@@ -65,10 +67,11 @@ namespace ToSic.Sxc.WebApi.Cms
             if (string.IsNullOrEmpty(attributeSetName))
                 return null;
 
-            var appState = Eav.Apps.State.Get(BlockBuilder.App);
+            var blockApp = GetBlock().App;
+            var appState = State.Get(blockApp);
             var ct = appState.GetContentType(attributeSetName);
 
-            var dataSource = BlockBuilder.App.Data[ct.Name];
+            var dataSource = blockApp.Data[ct.Name];
             var results = dataSource.List.ToDictionary(p => p.EntityId,
                 p => p.GetBestTitle() ?? "");
 
@@ -91,7 +94,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public List<SortedEntityItem> ItemList(Guid guid, string part)
         {
             Log.Add($"item list for:{guid}");
-            var cg = BlockBuilder.App.Data.List.One(guid);
+            var cg = GetBlock().App.Data.List.One(guid);
             var itemList = cg.Children(part);
 
             var list = itemList.Select((c, index) => new SortedEntityItem
@@ -114,11 +117,12 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add($"list for:{guid}, items:{list?.Count}");
             if (list == null) throw new ArgumentNullException(nameof(list));
 
-            var versioning = BlockBuilder.Environment.PagePublishing;
+            var versioning = Factory.Resolve<IPagePublishing>().Init(Log);
 
+            var block = GetBlock();
             void InternalSave(VersioningActionInfo args)
             {
-                var cms = new CmsManager(BlockBuilder.App, Log);
+                var cms = new CmsManager(block.App, Log);
                 var entity = cms.Read.AppState.List.One(guid);
 
                 var sequence = list.Select(i => i.Index).ToArray();
@@ -127,8 +131,8 @@ namespace ToSic.Sxc.WebApi.Cms
             }
 
             // use dnn versioning - items here are always part of list
-            var context = new DnnDynamicCode().Init(BlockBuilder, Log);
-            versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID, InternalSave);
+            var dnnDynCode = new DnnDynamicCode().Init(block, Log);
+            versioning.DoInsidePublishing(dnnDynCode.Dnn.Module.ModuleID, dnnDynCode.Dnn.User.UserID, InternalSave);
 
             return true;
         }

@@ -36,10 +36,10 @@ namespace ToSic.Sxc.Web.JsContext
 
             SxcRootUrl = systemRootUrl;
 
-            var userMayEdit = blockBuilder?.UserMayEdit ?? false;
+            var userMayEdit = blockBuilder?.Block.EditAllowed ?? false;
 
             IsEditable = userMayEdit;
-            parameters = blockBuilder?.Context.Page.Parameters;
+            parameters = blockBuilder?.Block.Context.Page.Parameters;
         }
     }
 

@@ -38,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                 try
                 {
-                    var all = new CmsRuntime(BlockBuilder.App, Log, Edit.Enabled, false).Views.GetAll();
+                    var all = new CmsRuntime(GetBlock().App, Log, Edit.Enabled, false).Views.GetAll();
                     if (all.Any())
                         return null;
                 }

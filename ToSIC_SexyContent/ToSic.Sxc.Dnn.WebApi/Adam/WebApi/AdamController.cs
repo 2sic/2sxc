@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Adam.WebApi
                 if (filesCollection.Count > 0)
                 {
                     var originalFile = filesCollection[0];
-                    var file = new AdamUploader(BlockBuilder, appId, Log)
+                    var file = new AdamUploader(GetBlock(), appId, Log)
                         .UploadOne(originalFile.InputStream, originalFile.FileName, contentType, guid, field, subFolder, usePortalRoot, false);
 
                     return new UploadResultDto
@@ -85,7 +85,7 @@ namespace ToSic.Sxc.Adam.WebApi
             string folder = "")
         {
             // if app-path specified, use that app, otherwise use from context
-            var appId = BlockBuilder.Block.AppId;
+            var appId = GetBlock().AppId;
             return Items(appId, contenttype, guid, field, folder);
         }
 
@@ -93,7 +93,7 @@ namespace ToSic.Sxc.Adam.WebApi
         public IEnumerable<AdamItem> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
         {
             var wrapLog = Log.Call<IEnumerable<AdamItem>>(parameters: $"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
-            var state = new AdamSecureState(BlockBuilder, appId, contentType, field, guid, usePortalRoot, Log);
+            var state = new AdamSecureState(GetBlock(), appId, contentType, field, guid, usePortalRoot, Log);
 
 
             Log.Add("starting permissions checks");
@@ -160,7 +160,7 @@ namespace ToSic.Sxc.Adam.WebApi
         public IEnumerable<AdamItem> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
         {
             Log.Add($"get folders for a:{appId}, i:{guid}, field:{field}, subfld:{subfolder}, new:{newFolder}, useRoot:{usePortalRoot}");
-            var state = new AdamSecureState(BlockBuilder, appId, contentType, field, guid, usePortalRoot, Log);
+            var state = new AdamSecureState(GetBlock(), appId, contentType, field, guid, usePortalRoot, Log);
             if (state.UserIsRestricted && !state.FieldPermissionOk(GrantSets.ReadSomething))
             {
                 return null;
@@ -192,7 +192,7 @@ namespace ToSic.Sxc.Adam.WebApi
         public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot)
         {
             Log.Add($"delete from a:{appId}, i:{guid}, field:{field}, file:{id}, subf:{subfolder}, isFld:{isFolder}, useRoot:{usePortalRoot}");
-            var state = new AdamSecureState(BlockBuilder, appId, contentType, field, guid, usePortalRoot, Log);
+            var state = new AdamSecureState(GetBlock(), appId, contentType, field, guid, usePortalRoot, Log);
             if (!state.UserIsPermittedOnField(GrantSets.DeleteSomething, out var exp))
                 throw exp;
 
@@ -246,7 +246,7 @@ namespace ToSic.Sxc.Adam.WebApi
         {
             Log.Add($"rename a:{appId}, i:{guid}, field:{field}, subf:{subfolder}, isfld:{isFolder}, new:{newName}, useRoot:{usePortalRoot}");
 
-            var state = new AdamSecureState(BlockBuilder, appId, contentType, field, guid, usePortalRoot, Log);
+            var state = new AdamSecureState(GetBlock(), appId, contentType, field, guid, usePortalRoot, Log);
             if (!state.UserIsPermittedOnField(GrantSets.WriteSomething, out var exp))
                 throw exp;
 

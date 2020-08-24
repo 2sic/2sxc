@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ItemListActions;
@@ -29,7 +30,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var entityId = CreateItemAndAddToList(parentId, field, sortOrder, contentTypeName, values, newGuid);
 
             // now return a rendered instance
-            var newContentBlock = new BlockFromEntity().Init(BlockBuilder.Block, entityId, Log);
+            var newContentBlock = new BlockFromEntity().Init(GetBlock(), entityId, Log);
             return newContentBlock.BlockBuilder.Render();
 
         }
@@ -37,14 +38,15 @@ namespace ToSic.Sxc.WebApi.Cms
         private int CreateItemAndAddToList(int parentId, string field, int sortOrder, string contentTypeName,
             Dictionary<string, object> values, Guid newGuid)
         {
-            var cgApp = BlockBuilder.App;
+            var block = GetBlock();
+            var cgApp = block.App;
 
             // create the new entity 
             var entityId = new AppManager(cgApp, Log).Entities.GetOrCreate(newGuid, contentTypeName, values);
 
             #region attach to the current list of items
 
-            var cbEnt = BlockBuilder.App.Data.List.One(parentId);
+            var cbEnt = block.App.Data.List.One(parentId);
             var blockList = ((IEnumerable<IEntity>)cbEnt.GetBestValue(field))?.ToList() ?? new List<IEntity>();
 
             var intList = blockList.Select(b => b.EntityId).ToList();
@@ -66,9 +68,9 @@ namespace ToSic.Sxc.WebApi.Cms
         public void MoveItemInList(int parentId, string field, int indexFrom, int indexTo, [FromUri] bool partOfPage = false)
         {
             Log.Add($"move item in list parent:{parentId}, field:{field}, from:{indexFrom}, to:{indexTo}, partOfpage:{partOfPage}");
-            var versioning = BlockBuilder.Environment.PagePublishing;
+            var versioning = Factory.Resolve<IPagePublishing>().Init(Log);
 
-            void InternalSave(VersioningActionInfo args) => new AppManager(BlockBuilder.App, Log)
+            void InternalSave(VersioningActionInfo args) => new AppManager(GetBlock().App, Log)
                 .Entities.ModifyItemList(parentId, field, new Move(indexFrom, indexTo));
 
             // use dnn versioning if partOfPage
@@ -88,9 +90,9 @@ namespace ToSic.Sxc.WebApi.Cms
         public void RemoveItemInList(int parentId, string field, int index, [FromUri] bool partOfPage = false)
         {
             Log.Add($"remove item: parent{parentId}, field:{field}, index:{index}, partOfPage{partOfPage}");
-            var versioning = BlockBuilder.Environment.PagePublishing;
+            var versioning = Factory.Resolve<IPagePublishing>().Init(Log);
 
-            void InternalSave(VersioningActionInfo args) => new AppManager(BlockBuilder.App, Log)
+            void InternalSave(VersioningActionInfo args) => new AppManager(GetBlock().App, Log)
                 .Entities.ModifyItemList(parentId, field, new Remove(index));
 
             // use dnn versioning if partOfPage

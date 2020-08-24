@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Blocks
         {
             // for various reasons this can be introduced as a negative value, make sure we neutralize that
             contentBlockId = Math.Abs(contentBlockId); 
-            return parent.BlockBuilder.App.Data.List.One(contentBlockId);
+            return parent.App.Data.List.One(contentBlockId);
         }
 
         #region ContentBlock Definition Entity

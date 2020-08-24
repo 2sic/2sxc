@@ -26,7 +26,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private BlockConfiguration GetContentGroup(Guid contentGroupGuid)
         {
             Log.Add($"get group:{contentGroupGuid}");
-            var cms = new CmsRuntime(BlockBuilder.App, Log, true, false);
+            var cms = new CmsRuntime(GetBlock().App, Log, true, false);
             var contentGroup = cms.Blocks.GetBlockConfig(contentGroupGuid);
 
             if (contentGroup == null)
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         private List<IEntity> FindItemAndFieldTypeName(Guid guid, string part, out string attributeSetName)
         {
-            var parent = BlockBuilder.App.Data.List.One(guid);
+            var parent = GetBlock().App.Data.List.One(guid);
             if (parent == null) throw new Exception($"No item found for {guid}");
             if (!parent.Attributes.ContainsKey(part)) throw new Exception($"Could not find field {part} in item {guid}");
             var itemList = parent.Children(part);

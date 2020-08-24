@@ -14,11 +14,11 @@ namespace ToSic.Sxc.Apps
             return app.Init(appIdentity, buildConfig, false, log);
         }
 
-        public static IApp Init(this App app, int appId, ILog log, IBlockBuilder optionalBuilder = null, bool showDrafts = false)
+        public static IApp Init(this App app, int appId, ILog log, IBlock optionalBlock = null, bool showDrafts = false)
         {
             var appIdentity = new AppIdentity(SystemRuntime.ZoneIdOfApp(appId), appId);
-            if (optionalBuilder == null) return app.Init(appIdentity, log, showDrafts);
-            var buildConfig = ConfigurationProvider.Build(optionalBuilder, true);
+            if (optionalBlock == null) return app.Init(appIdentity, log, showDrafts);
+            var buildConfig = ConfigurationProvider.Build(optionalBlock, true);
             return app.Init(appIdentity, buildConfig, false, log);
         }
     }

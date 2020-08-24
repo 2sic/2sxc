@@ -19,7 +19,7 @@ namespace ToSic.Sxc.WebApi
         /// used for API calls to get the current app
         /// </summary>
         /// <returns></returns>
-        internal IApp GetApp(int appId, IBlockBuilder optionalBuilder) => Factory.Resolve<Apps.App>().Init(appId, Log, optionalBuilder);
+        internal IApp GetApp(int appId, IBlock optionalBlock) => Factory.Resolve<Apps.App>().Init(appId, Log, optionalBlock);
 
     }
 }

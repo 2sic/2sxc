@@ -1,13 +1,12 @@
-﻿using System.Web;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Web;
 #if NET451
 using HtmlString = System.Web.HtmlString;
-using IHtmlString = System.Web.IHtmlString;
 #else
+using System.Web;
 using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
 using IHtmlString = Microsoft.AspNetCore.Html.IHtmlContent;
 #endif
@@ -16,14 +15,17 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
     public partial class InPageEditingHelper : HasLog, IInPageEditingSystem
     {
-        internal InPageEditingHelper(IBlockBuilder blockBuilder, ILog parentLog) : base("Edt", parentLog)
+        internal InPageEditingHelper(IBlock block, ILog parentLog = null) : base("Edt", parentLog ?? block?.Log)
         {
-            Enabled = blockBuilder.UserMayEdit;
-            BlockBuilder = blockBuilder;
+            Block = block;
+            Enabled = Block?.EditAllowed ?? false;
+            BlockBuilder = block?.BlockBuilder;
         }
 
         [PrivateApi]
         protected  IBlockBuilder BlockBuilder;
+
+        protected IBlock Block;
 
         #region Attribute-helper
 

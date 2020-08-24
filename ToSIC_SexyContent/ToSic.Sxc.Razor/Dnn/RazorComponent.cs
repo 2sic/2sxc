@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Dnn
         /// <inheritdoc />
         public IDnnContext Dnn => DynCode.Dnn;
 
-        [PrivateApi] public IBlockBuilder BlockBuilder => throw new NotSupportedException("don't use this");
+        [PrivateApi] public IBlock Block => throw new NotSupportedException("don't use this");
 
         [PrivateApi] public int CompatibilityLevel => DynCode.CompatibilityLevel;
 

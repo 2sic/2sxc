@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Dnn
 {
     internal class DnnPublishing:SaveHelperBase
     {
-        public DnnPublishing(IBlockBuilder blockBuilder, ILog parentLog) : base(blockBuilder, parentLog, "Api.DnnPub") { }
+        public DnnPublishing(IBlock block, ILog parentLog) : base(block, parentLog, "Api.DnnPub") { }
 
         internal Dictionary<Guid, int> SaveWithinDnnPagePublishingAndUpdateParent(
             int appId,
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Dnn
             {
                 var ids = call.Invoke(forceSaveAsDraft);
                 // now assign all content-groups as needed
-                new ContentGroupList(BlockBuilder, Log).IfChangesAffectListUpdateIt(appId, items, ids);
+                new ContentGroupList(Block, Log).IfChangesAffectListUpdateIt(appId, items, ids);
                 return ids;
             }
 
@@ -48,8 +48,8 @@ namespace ToSic.Sxc.Dnn
             {
                 Log.Add("partOfPage - save with publishing");
                 var versioning = Eav.Factory.Resolve<IPagePublishing>().Init(Log);
-                var context = new DnnDynamicCode().Init(BlockBuilder, Log);
-                versioning.DoInsidePublishing(context.Dnn.Module.ModuleID, context.Dnn.User.UserID,
+                var dnnContext = new DnnDynamicCode().Init(Block, Log);
+                versioning.DoInsidePublishing(dnnContext.Dnn.Module.ModuleID, dnnContext.Dnn.User.UserID,
                     args => postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft));
             }
             else

@@ -6,6 +6,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Run;
 
@@ -13,26 +14,32 @@ namespace ToSic.Sxc.Dnn.Run
 {
     public class DnnMapAppToInstance : HasLog, IEnvironmentConnector
     {
+        private readonly IAppEnvironment _environment;
+
         #region Constructor and DI
 
         /// <summary>
         /// Empty constructor for DI
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public DnnMapAppToInstance() : base("Dnn.MapA2I") { }
+        public DnnMapAppToInstance(IAppEnvironment environment) : base("Dnn.MapA2I")
+        {
+            _environment = environment;
+        }
 
-        public DnnMapAppToInstance(ILog parentLog) : base("Dnn.MapA2I", parentLog) { }
+        //public DnnMapAppToInstance(ILog parentLog) : base("Dnn.MapA2I", parentLog) { }
 
         public IEnvironmentConnector Init(ILog parent)
         {
             Log.LinkTo(parent);
+            _environment.Init(Log);
             return this;
         }
 
         #endregion
 
 
-        public void SetAppId(IContainer instance, IAppEnvironment env, int? appId, ILog parentLog)
+        public void SetAppId(IContainer instance, /*IAppEnvironment env,*/ int? appId, ILog parentLog)
         {
             Log.Add($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
             // Reset temporary template
@@ -41,7 +48,7 @@ namespace ToSic.Sxc.Dnn.Run
             // ToDo: Should throw exception if a real BlockConfiguration exists
 
             var module = (instance as Container<ModuleInfo>).UnwrappedContents;
-            var zoneId = env.ZoneMapper.GetZoneId(module.OwnerPortalID);
+            var zoneId = _environment.ZoneMapper.GetZoneId(module.OwnerPortalID);
 
             if (appId == Constants.AppIdEmpty || !appId.HasValue)
                 DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instance.Id, Settings.AppNameString, null, Log);
@@ -55,7 +62,7 @@ namespace ToSic.Sxc.Dnn.Run
             if (appId.HasValue)
             {
                 var appIdentity = new AppIdentity(zoneId, appId.Value);
-                var cms = new CmsRuntime(appIdentity, Log, true, env.PagePublishing.IsEnabled(instance.Id));
+                var cms = new CmsRuntime(appIdentity, Log, true, _environment.PagePublishing.IsEnabled(instance.Id));
                 var templateGuid = cms.Views.GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
                 if (templateGuid.HasValue) SetPreview(instance.Id, templateGuid.Value);
             }
@@ -94,16 +101,15 @@ namespace ToSic.Sxc.Dnn.Run
             DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instanceId, Settings.FieldPreviewTemplate, previewView.ToString(), Log);
         }
 
-        public void UpdateTitle(Blocks.IBlockBuilder blockBuilder, IEntity titleItem)
+        public void UpdateTitle(IBlock block, IEntity titleItem)
         {
             Log.Add("update title");
 
-            var languages = blockBuilder.Environment.ZoneMapper.CulturesWithState(blockBuilder.Context.Tenant.Id,
-                blockBuilder.Block.ZoneId);
+            var languages = _environment.ZoneMapper.CulturesWithState(block.Context.Tenant.Id, block.ZoneId);
 
             // Find Module for default language
             var moduleController = new ModuleController();
-            var originalModule = moduleController.GetModule(blockBuilder.Context.Container.Id);
+            var originalModule = moduleController.GetModule(block.Context.Container.Id);
 
             foreach (var dimension in languages)
             {
@@ -121,7 +127,7 @@ namespace ToSic.Sxc.Dnn.Run
 
                     // Find module for given Culture
                     var moduleByCulture = moduleController.GetModuleByCulture(originalModule.ModuleID,
-                        originalModule.TabID, blockBuilder.Context.Tenant.Id,
+                        originalModule.TabID, block.Context.Tenant.Id,
                         DotNetNuke.Services.Localization.LocaleController.Instance.GetLocale(dimension.Key));
 
                     // Break if no title module found

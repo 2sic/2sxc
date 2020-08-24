@@ -15,15 +15,15 @@ namespace ToSic.Sxc.LookUp
         /// <summary>
         /// The class constructor, can optionally take a dictionary to reference with, otherwise creates a new one
         /// </summary>
-        public LookUpCmsBlock(string name, IBlockBuilder blockBuilder): base(name, new Dictionary<string, string>
+        public LookUpCmsBlock(string name, IBlock block): base(name, new Dictionary<string, string>
         {
-            { QueryConstants.ParamsShowDraftKey, blockBuilder.UserMayEdit.ToString() }
+            { QueryConstants.ParamsShowDraftKey, block.EditAllowed.ToString() }
         })
         {
-            BlockBuilder = blockBuilder;
+            Block = block;
         }
 
-        public IBlockBuilder BlockBuilder;
+        public IBlock Block ;
 
 
     }

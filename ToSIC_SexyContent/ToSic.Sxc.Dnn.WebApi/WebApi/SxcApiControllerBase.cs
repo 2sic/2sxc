@@ -25,11 +25,14 @@ namespace ToSic.Sxc.WebApi
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
-            BlockBuilder = Helpers.GetCmsBlock(Request, true, Log);
+            Block = Helpers.GetCmsBlock(Request, true, Log);
+            //Block = GetBlock();
         }
 
-        [PrivateApi] public IBlockBuilder BlockBuilder { get; private set; }
+        //[PrivateApi] public IBlockBuilder BlockBuilder { get; private set; }
+        [PrivateApi] public IBlock Block { get; private set; }
 
+        [PrivateApi] protected IBlock GetBlock() => Block;
 
         #region App-Helpers for anonyous access APIs
 
@@ -41,12 +44,12 @@ namespace ToSic.Sxc.WebApi
         /// </summary>
         /// <param name="appId"></param>
         /// <returns></returns>
-        internal IApp GetApp(int appId) => Factory.Resolve<Apps.App>().Init(appId, Log, BlockBuilder);
+        internal IApp GetApp(int appId) => Factory.Resolve<Apps.App>().Init(appId, Log, GetBlock());
 
         protected IInstanceContext GetContext()
         {
             // in case the initial request didn't yet find a block builder, we need to create it now
-            var context = BlockBuilder?.Context
+            var context = Block?.Context
                           ?? new DnnContext(new DnnTenant(PortalSettings), new ContainerNull(), new DnnUser());
             return context;
         }

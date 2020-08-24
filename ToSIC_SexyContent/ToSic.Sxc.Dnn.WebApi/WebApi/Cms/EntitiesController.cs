@@ -67,7 +67,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         private EntityApi GetApiOrThrowIfMissingPermissions(int appId, string contentType, List<Eav.Security.Grants> requiredGrants)
         {
-            var permCheck = new MultiPermissionsTypes(BlockBuilder.Context, GetApp(appId), contentType, Log);
+            var permCheck = new MultiPermissionsTypes(GetContext(), GetApp(appId), contentType, Log);
             if (!permCheck.EnsureAll(requiredGrants, out var error))
                 throw HttpException.PermissionDenied(error);
             return new EntityApi(appId, true, Log);

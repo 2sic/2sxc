@@ -15,17 +15,17 @@ namespace ToSic.Sxc.Blocks.Edit
 
         internal BlockEditorBase(): base("CG.RefMan") { }
 
-        internal BlockEditorBase Init(IBlockBuilder blockBuilder)
+        internal BlockEditorBase Init(IBlock block)
         {
-            Log.LinkTo(blockBuilder.Log);
-            BlockBuilder = blockBuilder;
-            ModuleId = BlockBuilder.Context.Container.Id;
+            Log.LinkTo(block.Log);
+            Block = block;
+            ModuleId = Block.Context.Container.Id;
             return this;
         }
 
         #endregion
 
-        protected IBlockBuilder BlockBuilder;
+        protected IBlock Block;
         protected int ModuleId;
 
         private BlockConfiguration _cGroup;
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Blocks.Edit
         #region methods which are fairly stable / the same across content-block implementations
 
         protected BlockConfiguration BlockConfiguration
-            => _cGroup ?? (_cGroup = BlockBuilder.Block.Configuration);
+            => _cGroup ?? (_cGroup = Block.Configuration);
         
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Blocks.Edit
             {
                 var existedBeforeSettingTemplate = BlockConfiguration.Exists;
 
-                var app = BlockBuilder.Block.App;
+                var app = Block.App;
                 var cms = new CmsManager(app, Log);
 
                 var contentGroupGuid = cms.Blocks.UpdateOrCreateContentGroup(BlockConfiguration, templateId);
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Blocks.Edit
             else
             {
                 // only set preview / content-group-reference - but must use the guid
-                var dataSource = BlockBuilder.App.Data;
+                var dataSource = Block.Data;
                 var templateGuid = dataSource.List.One(templateId).EntityGuid;
                 SavePreviewTemplateId(templateGuid);
                 result = null; // send null back
@@ -80,7 +80,7 @@ namespace ToSic.Sxc.Blocks.Edit
 
             var hasPresentation = presEntity != null;
 
-            var appMan = new AppManager(BlockBuilder.App, Log);
+            var appMan = new AppManager(Block.App, Log);
 
             // make sure we really have the draft item an not the live one
             var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;

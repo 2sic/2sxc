@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Blocks
         /// </summary>
         internal bool UiAddJsApi
         {
-            get => _uiAddJsApi ?? UserMayEdit;
+            get => _uiAddJsApi ?? Block.EditAllowed;
             set
             {
                 Log.Add($"{nameof(UiAddJsApi)}:{value}");
@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Blocks
         /// </summary>
         internal bool UiAddEditApi
         {
-            get => _uiAddEditApi ?? UserMayEdit;
+            get => _uiAddEditApi ?? Block.EditAllowed;
             set
             {
                 Log.Add($"{nameof(UiAddEditApi)}:{value}");
@@ -36,11 +36,11 @@ namespace ToSic.Sxc.Blocks
         private bool? _uiAddEditApi;
 
         /// <summary>
-        /// Activate the toolbars
+        /// Activate the toolbar
         /// </summary>
         internal bool UiAddEditUi
         {
-            get => _uiAddEditUi ?? UserMayEdit;
+            get => _uiAddEditUi ?? Block.EditAllowed;
             set
             {
                 Log.Add($"{nameof(UiAddEditApi)}:{value}");
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Blocks
         /// </summary>
         internal bool UiAddEditContext
         {
-            get => _uiAddEditContext ?? UserMayEdit;
+            get => _uiAddEditContext ?? Block.EditAllowed;
             set
             {
                 Log.Add($"{nameof(UiAddEditContext)}:{value}");
@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Blocks
 
         internal bool UiAutoToolbar
         {
-            get => _uiAutoToolbar ?? UserMayEdit;
+            get => _uiAutoToolbar ?? Block.EditAllowed;
             set
             {
                 Log.Add($"{nameof(UiAutoToolbar)}:{value}");

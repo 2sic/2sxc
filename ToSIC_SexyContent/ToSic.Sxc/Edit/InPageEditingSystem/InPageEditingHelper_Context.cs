@@ -5,7 +5,6 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 #if NET451
 using HtmlString = System.Web.HtmlString;
-using IHtmlString = System.Web.IHtmlString;
 #else
 using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
 using IHtmlString = Microsoft.AspNetCore.Html.IHtmlContent;
@@ -66,13 +65,13 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             Eav.Constants.ProtectAgainstMissingParameterNames(noParameterOrder, nameof(WrapInContext), $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
 
             return new HtmlString(
-                ((BlockBuilder)BlockBuilder).RenderingHelper.WrapInContext(content.ToString(),
+                ((BlockBuilder)Block.BlockBuilder).RenderingHelper.WrapInContext(content.ToString(),
                     instanceId: instanceId > 0
                         ? instanceId
-                        : BlockBuilder?.Block?.ParentId ?? 0,
+                        : Block?.ParentId ?? 0,
                     contentBlockId: contentBlockId > 0
                         ? contentBlockId
-                        : BlockBuilder?.Block?.ContentBlockId ?? 0,
+                        : Block?.ContentBlockId ?? 0,
                     editContext: enableEdit ?? Enabled)
             );
         }
