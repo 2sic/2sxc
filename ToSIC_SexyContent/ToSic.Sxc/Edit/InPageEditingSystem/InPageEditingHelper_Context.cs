@@ -42,13 +42,6 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             });
 
             return new HtmlString(innerContentAttribute + "='" + serialized + "'");
-
-            //return new HtmlString(string.Format(
-            //    _jsonTemplate,
-            //    target.EntityId,
-            //    field,
-            //    contentType ?? Settings.AttributeSetStaticNameContentBlockTypeName,
-            //    newGuid));
         }
 
         /// <inheritdoc/>

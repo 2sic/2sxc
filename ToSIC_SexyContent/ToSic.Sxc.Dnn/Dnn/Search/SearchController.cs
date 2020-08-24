@@ -53,17 +53,16 @@ namespace ToSic.Sxc.Search
             var cache = State.Cache;
             cache.Load(container.BlockIdentifier, tenant.DefaultLanguage);
 
-            var mcb = new BlockFromModule().Init(new DnnContext(tenant, container, new DnnUser()), Log);
-            var cmsBlock = mcb.BlockBuilder;
+            var modBlock = new BlockFromModule().Init(new DnnContext(tenant, container, new DnnUser()), Log);
 
             var language = dnnModule.CultureCode;
 
-            var view = cmsBlock.Block.View;
+            var view = modBlock.View;
 
             if (view == null) return searchDocuments;
 
             // This list will hold all EAV entities to be indexed
-            var dataSource = cmsBlock.Block.Data;
+            var dataSource = modBlock.Data;
 
             // 2020-03-12 Try to attach DNN Lookup Providers so query-params like [DateTime:Now] or [Portal:PortalId] will work
             if (dataSource?.Configuration?.LookUps != null)
@@ -82,7 +81,7 @@ namespace ToSic.Sxc.Search
 
 
             var engine = EngineFactory.CreateEngine(view);
-            engine.Init(cmsBlock.Block, Purpose.IndexingForSearch, Log);
+            engine.Init(modBlock, Purpose.IndexingForSearch, Log);
 
             // see if data customization inside the cshtml works
             try

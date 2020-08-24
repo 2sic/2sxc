@@ -43,8 +43,6 @@ namespace ToSic.Sxc.Blocks
             }
 
             BlockBuilder = new BlockBuilder(rootBuilder, this, Log);
-            // In case the root didn't exist yet, use the new one as Root
-            rootBuilder = rootBuilder ?? BlockBuilder;
 
             // If no app yet, stop now with BlockBuilder created
             if (AppId == Eav.Constants.AppIdEmpty)
@@ -77,7 +75,6 @@ namespace ToSic.Sxc.Blocks
 
             // use the content-group template, which already covers stored data + module-level stored settings
             View = new BlockViewLoader(Log).PickView(this, Configuration.View, Context, cms);
-            //View = ((BlockBuilder)BlockBuilder).SetTemplateOrOverrideFromUrl(Configuration.View);
             return wrapLog($"ok a:{AppId}, container:{Context.Container.Id}, content-group:{Configuration?.Id}", this as T);
         }
 

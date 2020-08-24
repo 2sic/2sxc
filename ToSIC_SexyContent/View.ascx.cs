@@ -11,23 +11,32 @@ namespace ToSic.SexyContent
 {
     public partial class View : PortalModuleBase, IActionable
     {
-        private BlockBuilder _blockBuilder;
-        private bool _cmsBlockLoaded;
+        protected IBlock Block
+        {
+            get
+            {
+                if (_blockLoaded) return _block;
+                _blockLoaded = true;
+                var context = new DnnContext(
+                    new DnnTenant().Init(ModuleConfiguration.OwnerPortalID),
+                    new DnnContainer().Init(ModuleConfiguration, Log),
+                    new DnnUser(UserInfo));
+                return _block = new BlockFromModule().Init(context, Log);
+            }
+        }
+        private IBlock _block;
+        private bool _blockLoaded;
+
 
         protected BlockBuilder BlockBuilder
         {
             get
             {
-                if (_cmsBlockLoaded) return _blockBuilder;
-                _cmsBlockLoaded = true;
-                var context = new DnnContext(
-                    new DnnTenant().Init(ModuleConfiguration.OwnerPortalID),
-                    new DnnContainer().Init(ModuleConfiguration, Log),
-                    new DnnUser(UserInfo));
-                _blockBuilder = new BlockFromModule().Init(context, Log).BlockBuilder as BlockBuilder;
-                return _blockBuilder;
+                if (_blockBuilder != null) return _blockBuilder;
+                return _blockBuilder = Block?.BlockBuilder as BlockBuilder;
             }
         }
+        private BlockBuilder _blockBuilder;
 
         private ILog Log { get; } = new Log("Sxc.View");
 

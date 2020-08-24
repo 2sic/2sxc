@@ -19,11 +19,11 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         {
             Block = block;
             Enabled = Block?.EditAllowed ?? false;
-            BlockBuilder = block?.BlockBuilder;
+            //BlockBuilder = block?.BlockBuilder;
         }
 
-        [PrivateApi]
-        protected  IBlockBuilder BlockBuilder;
+        //[PrivateApi]
+        //protected  IBlockBuilder BlockBuilder;
 
         protected IBlock Block;
 

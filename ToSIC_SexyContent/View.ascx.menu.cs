@@ -40,7 +40,7 @@ namespace ToSic.SexyContent
         {
             _moduleActions = new ModuleActionCollection();
             var actions = _moduleActions;
-            var block = BlockBuilder.Block;
+            var block = Block;
             var appIsKnown = block.AppId > 0;
             if (appIsKnown)
             {

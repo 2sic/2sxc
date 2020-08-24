@@ -23,7 +23,7 @@ namespace ToSic.SexyContent
 
             // check things if it's a module of this portal (ensure everything is ok, etc.)
             var isSharedModule = ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID;
-            var block = BlockBuilder.Block;
+            var block = Block;
             if (!isSharedModule && !block.ContentGroupExists && block.App != null)
                 new DnnTenantSettings().EnsureTenantIsConfigured(block, Server);
 
@@ -51,7 +51,7 @@ namespace ToSic.SexyContent
 
                     // Try to show nice message on screen
                     var msg = BlockBuilder.RenderingHelper.DesignErrorMessage(ex, true, null, false, true);
-                    var wrappedMsg = BlockBuilder.Block.EditAllowed ? BlockBuilder.WrapInDivWithContext(msg) : msg;
+                    var wrappedMsg = Block.EditAllowed ? BlockBuilder.WrapInDivWithContext(msg) : msg;
                     phOutput.Controls.Add(new LiteralControl(wrappedMsg));
                 }
                 catch
