@@ -54,6 +54,7 @@
       <DefaultExclude Include="tmp\**" />
       <DefaultExclude Include=".vs\**" />
       <DefaultExclude Include="_\**" />
+      <DefaultExclude Include=".gitignore" />
 
       <!-- 2dm 2019-05-22 exclude source maps in ng-edit, as we'll publish them on sources.2sxc.org -->
       <DefaultExclude Include="..\Src\Assets\**\*.map" />
@@ -83,9 +84,9 @@
       <InstallInclude Include="**\*.resx" Exclude="@(DefaultExclude)" />
 
       <InstallInclude Include="**\*.aspx" Exclude="@(DefaultExclude)" />
-      <InstallInclude Include="**\*.js" Exclude="@(DefaultExclude)" />
+      <!--<InstallInclude Include="**\*.js" Exclude="@(DefaultExclude)" />-->
       <!-- all js + css + html etc. stuff from assets-->
-      <InstallInclude Include="..\Src\Assets\**\*.*" Exclude="@(DefaultExclude)" />
+      <InstallInclude Include="..\Src\Assets\**\*.*" Exclude="@(DefaultExclude);*.gitignore" />
 
       <!-- all global types and queries -->
       <InstallInclude Include="..\Src\Data\**\.data\**\*.json" Exclude="@(DefaultExclude)" />

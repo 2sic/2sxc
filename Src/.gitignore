@@ -106,3 +106,14 @@ Resources.zip.manifest
 .data-custom/contenttypes 2/
 \.data-custom/configurations/**
 .data-custom/configurations/**
+
+
+
+# Assets
+# Normally we would place this in the assets folder, but then the .gitignore is included in the DNN bundle, so we have the rules here
+# exclude map files from dist and system
+# note that we want to keep the old angular maps
+# because they never change, and in case of emergencies they are only located here and not on sources
+Assets/dist/**/*.map
+Assets/system/**/*.map
+Assets/js/*.map
