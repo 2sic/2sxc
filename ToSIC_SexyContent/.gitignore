@@ -99,6 +99,7 @@ Resources.zip.manifest
 !koi/bin/
 !razorblade/bin/
 !razorblade-old/bin/
+!Extensions/ImageResizer/bin/
 
 # Test data
 \.data-custom/configurations/features.json
