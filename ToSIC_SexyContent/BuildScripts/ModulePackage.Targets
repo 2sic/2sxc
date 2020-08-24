@@ -93,7 +93,7 @@
       <InstallInclude Include="**\*.png" Exclude="@(DefaultExclude);icon.png;icon-app.png" />
       <InstallInclude Include="**\*.jpg" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.gif" Exclude="@(DefaultExclude)" />
-      <InstallInclude Include="**\*.config" Exclude="@(DefaultExclude);**\web-Deploy.config" />
+      <InstallInclude Include="**\*.config" Exclude="@(DefaultExclude);**\web-Deploy.config;**\app.config;**\packages.config" />
       <InstallInclude Include="**\*.xml" Exclude="@(DefaultExclude);" />
       <InstallInclude Include="**\*.eot" Exclude="@(DefaultExclude);" />
       <InstallInclude Include="**\*.svg" Exclude="@(DefaultExclude)" />
@@ -104,61 +104,61 @@
 
     <ItemGroup>
       <!-- Global / Shared 2sxc DLLs-->
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Sxc.dll" />
-      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Sxc.pdb" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Sxc.WebApi.dll" />
-      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Sxc.WebApi.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.WebApi.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.WebApi.pdb" />
 
       <!-- DNN specific DLLs -->
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.Razor.dll" />
-      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.Razor.pdb" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.WebApi.dll" />
-      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.WebApi.pdb" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.dll" />
-      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.pdb" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Sxc.Dnn.dll" />
-      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Sxc.Dnn.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.SexyContent.Razor.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.SexyContent.Razor.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.SexyContent.WebApi.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.SexyContent.WebApi.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.SexyContent.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.SexyContent.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Dnn.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Dnn.pdb" />
 
       <!-- EAV DLLs -->
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.dll" />
-      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.pdb" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Apps.dll" />
-      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.Apps.pdb" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Core.dll" />
-      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.Core.pdb" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.DataSources.dll" />
-      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.DataSources.pdb" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.ImportExport.dll" />
-      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.ImportExport.pdb" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Persistence.Efc.dll" />
-      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.Persistence.Efc.pdb" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Repository.Efc.dll" />
-      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.Repository.Efc.pdb" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.WebApi.dll" />
-      <AssemblyHelper Include="$(MSBuildDnnBinPath)\ToSic.Eav.WebApi.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Eav.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Eav.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Eav.Apps.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Eav.Apps.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Eav.Core.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Eav.Core.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Eav.DataSources.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Eav.DataSources.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Eav.ImportExport.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Eav.ImportExport.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Eav.Persistence.Efc.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Eav.Persistence.Efc.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Eav.Repository.Efc.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Eav.Repository.Efc.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Eav.WebApi.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Eav.WebApi.pdb" />
 
       <!-- New assemblies for entity framework core etc. -->
-      <Assembly2sxcInclude Include="$(MSBuildDnnBinPath)\2sxc\Microsoft.EntityFrameworkCore.dll" />
-      <Assembly2sxcInclude Include="$(MSBuildDnnBinPath)\2sxc\Microsoft.EntityFrameworkCore.Relational.dll" />
-      <Assembly2sxcInclude Include="$(MSBuildDnnBinPath)\2sxc\Microsoft.EntityFrameworkCore.SqlServer.dll" />
-      <Assembly2sxcInclude Include="$(MSBuildDnnBinPath)\2sxc\Microsoft.Extensions.Caching.Abstractions.dll" />
-      <Assembly2sxcInclude Include="$(MSBuildDnnBinPath)\2sxc\Microsoft.Extensions.Caching.Memory.dll" />
-      <Assembly2sxcInclude Include="$(MSBuildDnnBinPath)\2sxc\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
-      <Assembly2sxcInclude Include="$(MSBuildDnnBinPath)\2sxc\Microsoft.Extensions.DependencyInjection.dll" />
-      <Assembly2sxcInclude Include="$(MSBuildDnnBinPath)\2sxc\Microsoft.Extensions.Logging.Abstractions.dll" />
-      <Assembly2sxcInclude Include="$(MSBuildDnnBinPath)\2sxc\Microsoft.Extensions.Logging.dll" />
-      <Assembly2sxcInclude Include="$(MSBuildDnnBinPath)\2sxc\Microsoft.Extensions.Options.dll" />
-      <Assembly2sxcInclude Include="$(MSBuildDnnBinPath)\2sxc\Microsoft.Extensions.Primitives.dll" />
-      <Assembly2sxcInclude Include="$(MSBuildDnnBinPath)\2sxc\Remotion.Linq.dll" />
-      <Assembly2sxcInclude Include="$(MSBuildDnnBinPath)\2sxc\System.Collections.Immutable.dll" />
-      <Assembly2sxcInclude Include="$(MSBuildDnnBinPath)\2sxc\System.Diagnostics.DiagnosticSource.dll" />
-      <Assembly2sxcInclude Include="$(MSBuildDnnBinPath)\2sxc\System.Interactive.Async.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.Relational.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.SqlServer.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Caching.Abstractions.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Caching.Memory.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Logging.Abstractions.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Logging.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Options.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Primitives.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\Remotion.Linq.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\System.Collections.Immutable.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\System.Diagnostics.DiagnosticSource.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\System.Interactive.Async.dll" />
 
       <!-- 2020-06 2dm - disable this, will try to include in a more DNN-package standard like koi/razor blade -->
       <!--<AssemblyInclude Include="$(ProjectDir)BuildScripts\Binary Dependencies\ImageResizer.dll" />
       <AssemblyInclude Include="$(ProjectDir)BuildScripts\Binary Dependencies\ImageResizer.Plugins.DiskCache.dll" />-->
 
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\CsvHelper.dll" />
+      <AssemblyInclude Include="$(OutDir)\CsvHelper.dll" />
     </ItemGroup>
 
     <CreateItem Include="DnnPackageBuilder/$(DNNFileName).dnn">
