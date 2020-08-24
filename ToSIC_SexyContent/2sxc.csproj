@@ -215,6 +215,10 @@
       <Project>{892f9d3b-0578-46a1-a46a-b694a7e15669}</Project>
       <Name>ToSic.Eav</Name>
     </ProjectReference>
+    <ProjectReference Include="ToSic.Sxc.Dnn.WebApi\2sxc WebApi %28Dnn%29.csproj">
+      <Project>{8398fe44-7164-48cb-96cf-74ba9c270bd2}</Project>
+      <Name>2sxc WebApi %28Dnn%29</Name>
+    </ProjectReference>
     <ProjectReference Include="ToSic.Sxc.Razor\2sxc Razor.csproj">
       <Project>{78a558af-f274-4e3c-95fe-8de9226e0ebc}</Project>
       <Name>2sxc Razor</Name>
@@ -222,6 +226,10 @@
     <ProjectReference Include="ToSic.Sxc.Dnn\2sxc Dnn.csproj">
       <Project>{a94de6d7-d1e6-4be2-b5b5-dc4a6a61cd80}</Project>
       <Name>2sxc Dnn</Name>
+    </ProjectReference>
+    <ProjectReference Include="ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj">
+      <Project>{80d15f35-334b-4c7c-af94-b0ff1e6cc354}</Project>
+      <Name>ToSic.Sxc.WebApi</Name>
     </ProjectReference>
     <ProjectReference Include="ToSic.Sxc\2sxc core %28ToSic.Sxc%29.csproj">
       <Project>{66318f76-3d43-406c-8de6-94b46c22f776}</Project>
