@@ -307,7 +307,29 @@
   </ProjectExtensions>
   <PropertyGroup>
     <PostBuildEvent>
-xcopy "C:\Projects\2sxc-dnn742\Website\bin\ToSic.*.*" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /Y /I</PostBuildEvent>
+@set BuildTarget=%25Dev2sxcDnnRoot%25\DesktopModules\ToSIC_SexyContent
+@REM set BuildTarget=C:\Projects\2sxc-dnn742-target\Website\DesktopModules\ToSIC_SexyContent
+@REM xcopy "C:\Projects\2sxc-dnn742\Website\bin\ToSic.*.*" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /y /i
+
+robocopy /mir "$(ProjectDir).data\ " "%25BuildTarget%25\.data\ "
+robocopy /mir "$(ProjectDir).databeta\ " "%25BuildTarget%25\.databeta\ "
+robocopy /mir "$(ProjectDir).data-custom\ " "%25BuildTarget%25\.data-custom\ "
+
+robocopy /mir "$(ProjectDir)ClientScripts\ " "%25BuildTarget%25\ClientScripts\ "
+robocopy /mir "$(ProjectDir)DnnWebForms\ " "%25BuildTarget%25\DnnWebForms\ "
+
+robocopy /mir "$(ProjectDir)js\ " "%25BuildTarget%25\js\ "
+robocopy /mir "$(ProjectDir)dist\ " "%25BuildTarget%25\dist\ "
+robocopy /mir "$(ProjectDir)system\ " "%25BuildTarget%25\system\ "
+robocopy /mir "$(ProjectDir)Extensions\ " "%25BuildTarget%25\Extensions\ "
+
+xcopy "$(ProjectDir)View.ascx" "%25BuildTarget%25\" /y
+
+@echo Copied all files to this DNN target: '%25Dev2sxcDnnRoot%25'
+@echo So DesktopModules Folder is '%25BuildTarget%25'
+@echo To change your path to DNN set the environment variable Dev2sxcDnnRoot to your DNN Root and restart visual studio
+
+</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <Extension>zip</Extension>
