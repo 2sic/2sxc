@@ -32,44 +32,45 @@
       <DefaultExclude Include="Styles\EditDataSource\**" />
       <DefaultExclude Include="ModulePackages\**" />
 
-      <DefaultExclude Include="Docs-Generator\**" />
+      <!--<DefaultExclude Include="Docs-Generator\**" />
       <DefaultExclude Include="ToSic.Sxc.Tests\**" />
       <DefaultExclude Include="2sxc.WebApi.Tests\**" />
       <DefaultExclude Include="ToSic.Sxc\**" />
-      <DefaultExclude Include="Sxc WebApi\**" />
+      <DefaultExclude Include="Sxc WebApi\**" />-->
 
       <DefaultExclude Include="DnnPackageBuilder\**" />
       <DefaultExclude Include="xSqlDataProvider\**" />
-      <DefaultExclude Include=".databeta\**" />
-      <DefaultExclude Include=".data-custom\**" />
-      <DefaultExclude Include="2Sexy Content Testing\**" />
+      <!--<DefaultExclude Include=".databeta\**" />
+      <DefaultExclude Include=".data-custom\**" />-->
+      <!--<DefaultExclude Include="2Sexy Content Testing\**" />-->
       <DefaultExclude Include=".git\**" />
-      <DefaultExclude Include="**\node_modules\**" />
+      <!--<DefaultExclude Include="**\node_modules\**" />
       <DefaultExclude Include="**\bower_components\**" />
-      <DefaultExclude Include="**\grunt-tasks\**" />
+      <DefaultExclude Include="**\grunt-tasks\**" />-->
       <DefaultExclude Include="packages\**" />
-      <DefaultExclude Include="src\**" />
+      <!--<DefaultExclude Include="src\**" />-->
       <!-- exclude the vendor bundle map, as it's huge, and we don't want it for customer-side debugging -->
-      <DefaultExclude Include="dist\ng\vendor.js.map" />
+      <!--<DefaultExclude Include="dist\ng\vendor.js.map" />-->
       <DefaultExclude Include="tmp\**" />
       <DefaultExclude Include=".vs\**" />
       <DefaultExclude Include="_\**" />
 
       <!-- 2dm 2019-05-22 exclude source maps in ng-edit, as we'll publish them on sources.2sxc.org -->
-      <DefaultExclude Include="dist\inpage\**\*.map" />
-      <DefaultExclude Include="dist\ng-edit\**\*.map" />
-      <DefaultExclude Include="dist\ng\**\*.map" />
-      <DefaultExclude Include="js\**\*.map" />
-      <DefaultExclude Include="system\**\*.map" />
+      <DefaultExclude Include="..\Src\Assets\**\*.map" />
+      <!--<DefaultExclude Include="..\Src\Assets\dist\inpage\**\*.map" />
+      <DefaultExclude Include="..\Src\Assets\dist\ng-edit\**\*.map" />
+      <DefaultExclude Include="..\Src\Assets\dist\ng\**\*.map" />
+      <DefaultExclude Include="..\Src\Assets\js\**\*.map" />
+      <DefaultExclude Include="..\Src\Assets\system\**\*.map" />-->
     </ItemGroup>
 
     <ItemGroup>
-      <ExternalSourceMaps Include="dist\*ng-edit\**\*.map" />
-      <ExternalSourceMaps Include="dist\*inpage\**\*.map" />
-      <ExternalSourceMaps Include="dist\*ng\**\*.map" />
+      <ExternalSourceMaps Include="..\Src\Assets\dist\*ng-edit\**\*.map" />
+      <ExternalSourceMaps Include="..\Src\Assets\dist\*inpage\**\*.map" />
+      <ExternalSourceMaps Include="..\Src\Assets\dist\*ng\**\*.map" />
       <!--include the js and system folders, but as a subfolder (that's why the strange syntax) -->
-      <ExternalSourceMaps Include=".\*js\**\*.map" />
-      <ExternalSourceMaps Include=".\*system\**\*.map" />
+      <ExternalSourceMaps Include="..\Src\Assets\*js\**\*.map" />
+      <ExternalSourceMaps Include="..\Src\Assets\*system\**\*.map" />
     </ItemGroup>
 
     <ItemGroup>
@@ -82,11 +83,13 @@
       <InstallInclude Include="**\*.resx" Exclude="@(DefaultExclude)" />
 
       <InstallInclude Include="**\*.aspx" Exclude="@(DefaultExclude)" />
-      <InstallInclude Include="**\*.js" Exclude="@(DefaultExclude);gruntfile.js" />
+      <InstallInclude Include="**\*.js" Exclude="@(DefaultExclude)" />
+      <!-- all js + css + html etc. stuff from assets-->
+      <InstallInclude Include="..\Src\Assets\**\*.*" Exclude="@(DefaultExclude)" />
 
-      <InstallInclude Include="**\.data\**\*.json" Exclude="@(DefaultExclude)" />
-      <!--<InstallInclude Include="**\System.*.json" Exclude="@(DefaultExclude)" />
-      <InstallInclude Include="**\Query.*.json" Exclude="@(DefaultExclude)" />-->
+      <!-- all global types and queries -->
+      <InstallInclude Include="..\Src\Data\**\.data\**\*.json" Exclude="@(DefaultExclude)" />
+
       <InstallInclude Include="**\*.map" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.txt"  Exclude="@(DefaultExclude);**\obj\**;**\_ReSharper*\**;License.txt;ReleaseNotes.txt" />
       <InstallInclude Include="**\*.ashx" Exclude="@(DefaultExclude)" />
