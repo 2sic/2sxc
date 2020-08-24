@@ -32,37 +32,17 @@
       <DefaultExclude Include="Styles\EditDataSource\**" />
       <DefaultExclude Include="ModulePackages\**" />
 
-      <!--<DefaultExclude Include="Docs-Generator\**" />
-      <DefaultExclude Include="ToSic.Sxc.Tests\**" />
-      <DefaultExclude Include="2sxc.WebApi.Tests\**" />
-      <DefaultExclude Include="ToSic.Sxc\**" />
-      <DefaultExclude Include="Sxc WebApi\**" />-->
-
       <DefaultExclude Include="DnnPackageBuilder\**" />
       <DefaultExclude Include="xSqlDataProvider\**" />
-      <!--<DefaultExclude Include=".databeta\**" />
-      <DefaultExclude Include=".data-custom\**" />-->
-      <!--<DefaultExclude Include="2Sexy Content Testing\**" />-->
       <DefaultExclude Include=".git\**" />
-      <!--<DefaultExclude Include="**\node_modules\**" />
-      <DefaultExclude Include="**\bower_components\**" />
-      <DefaultExclude Include="**\grunt-tasks\**" />-->
       <DefaultExclude Include="packages\**" />
-      <!--<DefaultExclude Include="src\**" />-->
-      <!-- exclude the vendor bundle map, as it's huge, and we don't want it for customer-side debugging -->
-      <!--<DefaultExclude Include="dist\ng\vendor.js.map" />-->
       <DefaultExclude Include="tmp\**" />
       <DefaultExclude Include=".vs\**" />
       <DefaultExclude Include="_\**" />
       <DefaultExclude Include=".gitignore" />
 
-      <!-- 2dm 2019-05-22 exclude source maps in ng-edit, as we'll publish them on sources.2sxc.org -->
+      <!-- exclude source maps as we'll publish them on sources.2sxc.org -->
       <DefaultExclude Include="..\Src\Assets\**\*.map" />
-      <!--<DefaultExclude Include="..\Src\Assets\dist\inpage\**\*.map" />
-      <DefaultExclude Include="..\Src\Assets\dist\ng-edit\**\*.map" />
-      <DefaultExclude Include="..\Src\Assets\dist\ng\**\*.map" />
-      <DefaultExclude Include="..\Src\Assets\js\**\*.map" />
-      <DefaultExclude Include="..\Src\Assets\system\**\*.map" />-->
     </ItemGroup>
 
     <ItemGroup>
@@ -84,7 +64,6 @@
       <InstallInclude Include="**\*.resx" Exclude="@(DefaultExclude)" />
 
       <InstallInclude Include="**\*.aspx" Exclude="@(DefaultExclude)" />
-      <!--<InstallInclude Include="**\*.js" Exclude="@(DefaultExclude)" />-->
       <!-- all js + css + html etc. stuff from assets-->
       <InstallInclude Include="..\Src\Assets\**\*.*" Exclude="@(DefaultExclude);*.gitignore" />
 
@@ -255,17 +234,14 @@
 
     <Zip Files="@(ResourcesContent)" WorkingDirectory="$(TempPackageResourcesFolder)" ZipFileName="$(TempPackageFolder)\Resources.zip" />
     <Zip Files="@(AssemblyHelperContent)" WorkingDirectory="$(TempPackagePdbFolder)" ZipFileName="$(TempPackageFolder)\tosic.bin.debug-helpers.zip" />
-    <!--<Copy SourceFiles="$(TempPackageResourcesFolder)\Resources.zip" DestinationFolder="$(TempPackageFolder)" />-->
 
     <CreateItem Include="$(TempPackageFolder)\**\*.*">
       <Output TaskParameter="Include" ItemName="OutputContent" />
     </CreateItem>
     <!-- Create the Install package -->
     <Zip Files="@(OutputContent)" WorkingDirectory="$(TempPackageFolder)" ZipFileName="ModulePackages/$(PackageName)_$(Version)_Install.$(Extension)" />
-    <!-- Copy the Install package to the Packages folder -->
-    <!--<Copy SourceFiles="$(TempPackageFolder)\$(PackageName)_$(Version)_Install.$(Extension)" DestinationFolder="ModulePackages/" />-->
 
-    <!-- 2dm Experiment - try to auto-deploy the externalized map files -->
+    <!-- Auto-deploy the externalized map files to another repo-->
     <Copy SourceFiles="@(ExternalSourceMaps)" DestinationFolder="C:\Projects\2sxc-sources\$(Version)\%(RecursiveDir)" />
 
     <!-- Cleanup -->
@@ -274,6 +250,4 @@
     <RemoveDir Directories="$(TempPackagePdbFolder)" />
 
   </Target>
-
-
 </Project>
