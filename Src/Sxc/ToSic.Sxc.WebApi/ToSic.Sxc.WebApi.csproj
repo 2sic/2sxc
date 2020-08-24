@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj" />
-    <ProjectReference Include="..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj" />
-    <ProjectReference Include="..\..\..\eav-server\ToSic.Eav.WebApi\ToSic.Eav.WebApi.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.WebApi\ToSic.Eav.WebApi.csproj" />
     <ProjectReference Include="..\ToSic.Sxc\2sxc core (ToSic.Sxc).csproj" />
   </ItemGroup>
 
