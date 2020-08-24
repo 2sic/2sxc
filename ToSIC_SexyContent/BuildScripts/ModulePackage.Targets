@@ -27,9 +27,9 @@
       <DefaultExclude Include="**\*.user" />
       <DefaultExclude Include="**\*.suo" />
       <DefaultExclude Include="**\*.zip" />
-      <DefaultExclude Include="**\*.zip" />
-      <DefaultExclude Include="Js\EditDataSource\**" />
-      <DefaultExclude Include="Styles\EditDataSource\**" />
+      <!--<DefaultExclude Include="**\*.zip" />-->
+      <!--<DefaultExclude Include="Js\EditDataSource\**" />-->
+      <!--<DefaultExclude Include="Styles\EditDataSource\**" />-->
       <DefaultExclude Include="ModulePackages\**" />
 
       <DefaultExclude Include="DnnPackageBuilder\**" />
@@ -39,7 +39,7 @@
       <DefaultExclude Include="tmp\**" />
       <DefaultExclude Include=".vs\**" />
       <DefaultExclude Include="_\**" />
-      <DefaultExclude Include=".gitignore" />
+      <!--<DefaultExclude Include=".gitignore" />-->
 
       <!-- exclude source maps as we'll publish them on sources.2sxc.org -->
       <DefaultExclude Include="..\Src\Assets\**\*.map" />
@@ -69,6 +69,9 @@
 
       <!-- all global types and queries -->
       <InstallInclude Include="..\Src\Data\**\.data\**\*.json" Exclude="@(DefaultExclude)" />
+
+      <!-- special DNN client scripts which react when adding a module to a page (js/html) -->
+      <InstallInclude Include="*ClientScripts\*.*" />
 
       <InstallInclude Include="**\*.map" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.txt"  Exclude="@(DefaultExclude);**\obj\**;**\_ReSharper*\**;License.txt;ReleaseNotes.txt" />
