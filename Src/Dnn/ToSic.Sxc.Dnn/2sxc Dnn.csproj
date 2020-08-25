@@ -173,9 +173,9 @@
       <Project>{cf3b9349-8c66-4901-8edb-a4ec1d75326b}</Project>
       <Name>ToSic.Eav</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Sxc\ToSic.Sxc\2sxc core %28ToSic.Sxc%29.csproj">
-      <Project>{66318f76-3d43-406c-8de6-94b46c22f776}</Project>
-      <Name>2sxc core %28ToSic.Sxc%29</Name>
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj">
+      <Project>{5D87EB0C-BF67-4814-A0FF-D96256C9B852}</Project>
+      <Name>ToSic.Sxc</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

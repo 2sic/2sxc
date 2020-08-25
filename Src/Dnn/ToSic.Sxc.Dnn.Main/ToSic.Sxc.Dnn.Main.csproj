@@ -229,9 +229,9 @@
       <Project>{78a558af-f274-4e3c-95fe-8de9226e0ebc}</Project>
       <Name>2sxc Razor</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Sxc\ToSic.Sxc\2sxc core %28ToSic.Sxc%29.csproj">
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj">
       <Project>{5d87eb0c-bf67-4814-a0ff-d96256c9b852}</Project>
-      <Name>2sxc core %28ToSic.Sxc%29</Name>
+      <Name>ToSic.Sxc</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj">
       <Project>{80d15f35-334b-4c7c-af94-b0ff1e6cc354}</Project>
