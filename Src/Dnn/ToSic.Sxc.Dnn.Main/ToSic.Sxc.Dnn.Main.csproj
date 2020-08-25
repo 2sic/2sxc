@@ -63,8 +63,9 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.1.0" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Connect.Koi">
-      <HintPath>..\..\2sxc-dnn742\Website\bin\Connect.Koi.dll</HintPath>
+    <Reference Include="Connect.Koi, Version=1.0.4.14722, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Dependencies\Koi\Connect.Koi.dll</HintPath>
     </Reference>
     <Reference Include="DotNetNuke">
       <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.dll</HintPath>
