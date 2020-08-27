@@ -242,7 +242,7 @@
       <Output TaskParameter="Include" ItemName="OutputContent" />
     </CreateItem>
     <!-- Create the Install package -->
-    <Zip Files="@(OutputContent)" WorkingDirectory="$(TempPackageFolder)" ZipFileName="ModulePackages/$(PackageName)_$(Version)_Install.$(Extension)" />
+    <Zip Files="@(OutputContent)" WorkingDirectory="$(TempPackageFolder)" ZipFileName="../../../InstallPackages/Dnn-Installer/$(PackageName)_$(Version)_Install.$(Extension)" />
 
     <!-- Auto-deploy the externalized map files to another repo-->
     <Copy SourceFiles="@(ExternalSourceMaps)" DestinationFolder="C:\Projects\2sxc-sources\$(Version)\%(RecursiveDir)" />
