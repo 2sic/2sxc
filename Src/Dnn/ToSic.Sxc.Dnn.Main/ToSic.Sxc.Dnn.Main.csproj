@@ -331,6 +331,7 @@ robocopy /mir "$(ProjectDir)..\..\Assets\dist\ " "%25BuildTarget%25\dist\ "
 robocopy /mir "$(ProjectDir)..\..\Assets\system\ " "%25BuildTarget%25\system\ "
 
 robocopy /mir "$(ProjectDir)Extensions\ " "%25BuildTarget%25\Extensions\ "
+robocopy /mir "$(ProjectDir)App_LocalResources\ " "%25BuildTarget%25\App_LocalResources\ "
 
 xcopy "$(ProjectDir)View.ascx" "%25BuildTarget%25\" /y
 xcopy "$(ProjectDir)icon.png" "%25BuildTarget%25\" /y
