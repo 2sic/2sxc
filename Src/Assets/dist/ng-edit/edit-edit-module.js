@@ -60058,6 +60058,7 @@ __webpack_require__.r(__webpack_exports__);
 function createTranslateLoader(http) {
     return new _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_4__["TranslateHttpLoader"](http, './i18n/', ".js?" + sxcVersion);
 }
+console.log('hello test');
 var EditModule = /** @class */ (function () {
     function EditModule() {
     }
