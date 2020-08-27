@@ -160,9 +160,7 @@
       }
     },
     "DateTime": {
-      "Open": "abrir calendário",
-      "Cancel": "Cancelar",
-      "Set": "Definir"
+      "Open": "abrir calendário"
     },
     "String": {
       "Dropdown": "mudar para seleção vertical",

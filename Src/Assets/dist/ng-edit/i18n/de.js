@@ -160,9 +160,7 @@
       }
     },
     "DateTime": {
-      "Open": "Kalendar öffnen",
-      "Cancel": "Abbrechen",
-      "Set": "Speichern"
+      "Open": "Kalendar öffnen"
     },
     "String": {
       "Dropdown": "Auswahl",
