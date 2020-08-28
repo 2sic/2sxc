@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Search
             // New Context because Portal-Settings.Current is null
             var appId = container.BlockIdentifier.AppId;
 
-            if (appId == AppConstants.AppIdNotFound) return searchDocuments;
+            if (appId == AppConstants.AppIdNotFound || appId == Eav.Constants.NullId) return searchDocuments;
 
             // Since Portal-Settings.Current is null, instantiate with modules' portal id (which can be a different portal!)
             var portalSettings = new PortalSettings(dnnModule.OwnerPortalID);

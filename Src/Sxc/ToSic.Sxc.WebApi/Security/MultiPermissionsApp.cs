@@ -32,7 +32,7 @@ namespace ToSic.Sxc.WebApi.Security
             App = app;
 
             SamePortal = Context.Tenant.ZoneId == App.ZoneId;
-            TenantForSecurityCheck = SamePortal ? Context.Tenant : Factory.Resolve<IZoneMapper>().Init(Log).Tenant(App.ZoneId);
+            TenantForSecurityCheck = SamePortal ? Context.Tenant : Factory.Resolve<IZoneMapper>().Init(Log).TenantOfZone(App.ZoneId);
             wrapLog($"ready for z/a:{app.ZoneId}/{app.AppId} t/z:{App.Tenant.Id}/{Context.Tenant.ZoneId} same:{SamePortal}");
         }
 

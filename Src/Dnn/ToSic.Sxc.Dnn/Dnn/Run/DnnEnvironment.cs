@@ -26,13 +26,13 @@ namespace ToSic.Sxc.Dnn.Run
         public IAppEnvironment Init(ILog parent)
         {
             Log.LinkTo(parent);
+            if (_tenant.Id == Eav.Constants.NullId)
+                Log.Add("Warning - tenant isn't ready - will probably cause errors");
             return this;
         }
         #endregion
 
         public IZoneMapper ZoneMapper { get; }
-        //    => _zoneMapper ?? (_zoneMapper = new DnnZoneMapper().Init(Log));
-        //private IZoneMapper _zoneMapper;
 
         public IUser User { get; } = new DnnUser();
 

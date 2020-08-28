@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Dnn.Run
         public IAppIdentity IdentityFromTenant(int tenantId, int appId) 
             => new AppIdentity(GetZoneId(tenantId), appId);
 
-        public ITenant Tenant(int zoneId)
+        public ITenant TenantOfZone(int zoneId)
         {
             var pinst = PortalController.Instance;
             var portals = pinst.GetPortals();
@@ -68,6 +68,15 @@ namespace ToSic.Sxc.Dnn.Run
                 })
                 .FirstOrDefault(f => f != null);
             return found != null ? new DnnTenant(found) : null;
+        }
+
+        public ITenant TenantOfApp(int appId)
+        {
+            var wrapLog = Log.Call<ITenant>($"{appId}");
+            Log.Add("TenantId not found. Must be in search mode, will try to find correct portalsettings");
+            var appIdentifier = State.Identity(null, appId);
+            var tenant = TenantOfZone(appIdentifier.ZoneId);
+            return wrapLog(null, tenant);
         }
 
 

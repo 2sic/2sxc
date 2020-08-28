@@ -76,7 +76,7 @@ namespace ToSic.Sxc.Dnn.DataSources
 
 		#endregion
 
-		public DnnUserProfile(ITenant tenant)
+		public DnnUserProfile(ITenant tenant, IZoneMapper zoneMapper)
 		{
 			Out.Add(Constants.DefaultStreamName, new DataStream(this, Constants.DefaultStreamName, GetList));
 			Configuration.Values.Add(UserIdsKey, UserIdsDefaultKeyToken);
@@ -85,16 +85,19 @@ namespace ToSic.Sxc.Dnn.DataSources
 			Configuration.Values.Add(TitleFieldKey, EntityTitleDefaultKeyToken);
 
             _tenant = tenant;
+            _zoneMapper = zoneMapper;
         }
 
         private readonly ITenant _tenant;
+        private readonly IZoneMapper _zoneMapper;
 
 		private List<IEntity> GetList()
 		{
             Configuration.Parse();
+			var realTenant = _tenant.Id != Eav.Constants.NullId ? _tenant : _zoneMapper.Init(Log).TenantOfApp(AppId);
 
-            var properties = Properties.Split(',').Select(p => p.Trim()).ToArray();
-            var portalId = _tenant.Id;
+			var properties = Properties.Split(',').Select(p => p.Trim()).ToArray();
+            var portalId = realTenant.Id;
 
 			// read all user Profiles
 			ArrayList users;

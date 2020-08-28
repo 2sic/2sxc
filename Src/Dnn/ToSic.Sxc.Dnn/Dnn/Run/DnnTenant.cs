@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Dnn.Run
         private string _defaultLanguage;
 
         /// <inheritdoc />
-        public override int Id => UnwrappedContents?.PortalId ?? AppConstants.AppIdNotFound;
+        public override int Id => UnwrappedContents?.PortalId ?? Eav.Constants.NullId;
 
         /// <inheritdoc />
         public override string Name => UnwrappedContents.PortalName;
@@ -96,7 +96,7 @@ namespace ToSic.Sxc.Dnn.Run
         {
             get { 
                 if(_zoneId != null) return _zoneId.Value;
-                if (Id < 1) return (_zoneId = AppConstants.AppIdNotFound).Value;
+                if (Id < 1) return (_zoneId = Eav.Constants.NullId).Value;
                 _zoneId = new DnnZoneMapper().Init(null).GetZoneId(Id);
                 return _zoneId.Value;
             }

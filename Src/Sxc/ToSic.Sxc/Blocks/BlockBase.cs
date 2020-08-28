@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Blocks
 
             // If specifically no app found, end initialization here
             // Means we have no data, and no BlockBuilder
-            if (AppId == AppConstants.AppIdNotFound)
+            if (AppId == AppConstants.AppIdNotFound || AppId == Eav.Constants.NullId)
             {
                 DataIsMissing = true;
                 return wrapLog("stop: app & data are missing", this as T);
