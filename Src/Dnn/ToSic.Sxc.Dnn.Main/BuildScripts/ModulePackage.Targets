@@ -45,13 +45,14 @@
       <DefaultExclude Include="..\..\Assets\**\*.map" />
     </ItemGroup>
 
+    <!-- New in 2020-09 From now on we'll also publish the built js files to sources.2sxc.org and not include them in 2sxc-repo any more -->
     <ItemGroup>
-      <ExternalSourceMaps Include="..\..\Assets\dist\*ng-edit\**\*.map" />
-      <ExternalSourceMaps Include="..\..\Assets\dist\*inpage\**\*.map" />
-      <ExternalSourceMaps Include="..\..\Assets\dist\*ng\**\*.map" />
+      <ExternalSourceMaps Include="..\..\Assets\dist\*ng-edit\**\*.*" />
+      <ExternalSourceMaps Include="..\..\Assets\dist\*inpage\**\*.*" />
+      <ExternalSourceMaps Include="..\..\Assets\dist\*ng\**\*.*" />
       <!--include the js and system folders, but as a subfolder (that's why the strange syntax) -->
-      <ExternalSourceMaps Include="..\..\Assets\*js\**\*.map" />
-      <ExternalSourceMaps Include="..\..\Assets\*system\**\*.map" />
+      <ExternalSourceMaps Include="..\..\Assets\*js\**\*.*" />
+      <ExternalSourceMaps Include="..\..\Assets\*system\**\*.*" />
     </ItemGroup>
 
     <ItemGroup>
