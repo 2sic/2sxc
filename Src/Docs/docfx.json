@@ -7,7 +7,7 @@
             "2sxc/**.csproj",
             "eav-server/**.csproj"
           ],
-          "cwd": "c:/projects/",
+          "cwd": "../../..",
           "exclude": [
             "**/obj/**",
             "**/bin/**",
@@ -79,7 +79,7 @@
         ]
       }
     ],
-    "dest": "c:/Projects/2sxc-docs/docs",
+    "dest": "../../../2sxc-docs/docs",
     "template": [
       "default",
       "statictoc",
