@@ -46,16 +46,19 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="api\.gitignore" />
+    <!--<None Include="api\.gitignore" />
     <None Include="api\dot-net\index.md" />
-    <None Include="api\index.md" />
-    <None Include="articles\eav-core-data.md" />
+    <None Include="api\index.md" />-->
+    <None Include="api\**\*.*" />
+    <None Include="articles\**\*.*" />
+    <!--<None Include="articles\eav-core-data.md" />
     <None Include="articles\breaking-changes.md" />
     <None Include="articles\dynamic-entity.md" />
     <None Include="articles\architecture.md" />
     <None Include="articles\intro.md" />
-    <None Include="articles\toc.md" />
-    <None Include="concepts\cms\dnn-evoq-page-publishing.md" />
+    <None Include="articles\toc.md" />-->
+    <None Include="concepts\**\*.*" />
+    <!--<None Include="concepts\cms\dnn-evoq-page-publishing.md" />
     <None Include="concepts\cms\dnn-module.md" />
     <None Include="concepts\cms\edit-context.md" />
     <None Include="concepts\cms\edit.md" />
@@ -66,25 +69,34 @@
     <None Include="concepts\cms\quick-edit.md" />
     <None Include="concepts\cms\tokens.md" />
     <None Include="concepts\cms\views.md" />
-    <None Include="concepts\concept-features.md" />
     <None Include="concepts\data\content-types.md" />
     <None Include="concepts\data\entities.md" />
     <None Include="concepts\data\file-provided-content-types.md" />
     <None Include="concepts\data\metadata.md" />
     <None Include="concepts\data\permissions.md" />
-    <None Include="concepts\data\relationships.md" />
-    <None Include="concepts\index.md" />
-    <None Include="concepts\toc.md" />
+    <None Include="concepts\data\relationships.md" />-->
     <None Include="docfx.json" />
     <None Include="filterConfig.yml" />
+    <None Include="how-to\**\*.*" />
+    <!--<None Include="how-to\customize-edit-ux\index.md" />
+    <None Include="how-to\customize-edit-ux\input-fields.md" />
+    <None Include="how-to\customize-edit-ux\toc.yml" />
+    <None Include="how-to\customize-edit-ux\toolbars.md" />
     <None Include="how-to\dotnet-razor-csharp-overview.md" />
-    <None Include="how-to\dynamic-code\edit.enable.md" />
+    <None Include="how-to\dynamic-code\as-dynamic.md" />
+    <None Include="how-to\dynamic-code\as-list.md" />
+    <None Include="how-to\dynamic-code\dynamic-entity.md" />
     <None Include="how-to\dynamic-code\entity.md" />
+    <None Include="how-to\dynamic-code\errors\dynamicentity-not-be-found.md" />
+    <None Include="how-to\dynamic-code\errors\ientity-not-found.md" />
+    <None Include="how-to\dynamic-code\errors\index.md" />
+    <None Include="how-to\dynamic-code\errors\linq-cannot-use-lambda.md" />
+    <None Include="how-to\dynamic-code\errors\toc.yml" />
     <None Include="how-to\dynamic-code\object-app.md" />
     <None Include="how-to\dynamic-code\object-data.md" />
     <None Include="how-to\dynamic-code\object-dnn.md" />
-    <None Include="how-to\dynamic-code\object-edit.md" />
     <None Include="how-to\dynamic-code\object-link.md" />
+    <None Include="how-to\dynamic-code\toc.yml" />
     <None Include="how-to\dynamic-code\use-named-parameters.md" />
     <None Include="how-to\external\dotnet-external-use.md" />
     <None Include="how-to\index.md" />
@@ -98,10 +110,10 @@
     <None Include="how-to\razor\edit.toolbar.md" />
     <None Include="how-to\razor\purpose.md" />
     <None Include="how-to\razor\templates.md" />
-    <None Include="how-to\toc.md" />
+    <None Include="how-to\toc.yml" />
     <None Include="how-to\webapi\dotnet-webapi-saveinadam.md" />
     <None Include="how-to\webapi\dotnet-webapi.md" />
-    <None Include="how-to\webapi\webapis.md" />
+    <None Include="how-to\webapi\webapis.md" />-->
     <None Include="index.md" />
     <None Include="material\docs\api\index.md" />
     <None Include="material\docs\api\toc.yml" />
@@ -112,7 +124,8 @@
     <None Include="material\LICENSE" />
     <None Include="material\material\partials\head.tmpl.partial" />
     <None Include="material\README.md" />
-    <None Include="namespaces\ToSic.Eav\DataSources\App.md" />
+    <None Include="namespaces\**\*.*" />
+    <!--<None Include="namespaces\ToSic.Eav\DataSources\App.md" />
     <None Include="namespaces\ToSic.Eav\DataSources\AttributeFilter.md" />
     <None Include="namespaces\ToSic.Eav\DataSources\CacheAllStreams.md" />
     <None Include="namespaces\ToSic.Eav\DataSources\ContentTypeFilter.md" />
@@ -160,11 +173,12 @@
     <None Include="namespaces\ToSic.Sxc\Sxc.Views.md" />
     <None Include="namespaces\ToSic.Sxc\Web\IDynamicCode.App.md" />
     <None Include="namespaces\ToSic.Sxc\Web\IDynamicCode.Data.md" />
-    <None Include="namespaces\ToSic.Sxc\Web\_Sxc.Web.md" />
+    <None Include="namespaces\ToSic.Sxc\Web\_Sxc.Web.md" />-->
     <None Include="packages.config" />
     <None Include="shared\before-you-start-idynamicentity.md" />
     <None Include="shared\where-to-start.md" />
-    <None Include="specs\angularJs\angularjs-1-overview.md" />
+    <None Include="specs\**\*.*" />
+    <!--<None Include="specs\angularJs\angularjs-1-overview.md" />
     <None Include="specs\angular\dnn-sxc-angular.md" />
     <None Include="specs\app\app-folder-structure.md" />
     <None Include="specs\architecture\architecture.md" />
@@ -257,7 +271,7 @@
     <None Include="specs\roadmap\roadmap.md" />
     <None Include="specs\style-guides\style-guide-2020.md" />
     <None Include="specs\style-guides\style-guides.md" />
-    <None Include="specs\toc.md" />
+    <None Include="specs\toc.md" />-->
     <None Include="toc.md.old" />
     <None Include="toc.yml" />
     <None Include="wiki\source-material\diagrams-and-illustrations\2sxc and DNN mockups.bmpr" />
@@ -269,6 +283,10 @@
   <ItemGroup>
     <Content Include=".gitignore" />
     <Content Include="api\dot-net\.gitignore" />
+    <Content Include="assets\**\*.*" />
+    <Content Include="images\**\*.*" />
+
+    <!--
     <Content Include="assets\concepts\administrating-content-group-in-an-app.jpg" />
     <Content Include="assets\concepts\app-polymorph-classic-vs.png" />
     <Content Include="assets\concepts\app-polymorph-progress.png" />
@@ -400,7 +418,8 @@
     <Content Include="assets\logos\2sxc_150px.png" />
     <Content Include="assets\logos\2sxc_300px.png" />
     <Content Include="assets\logos\2sxc_75px.png" />
-    <Content Include="images\architecture\eav-2sxc-dnn.png" />
+    -->
+    <!--<Content Include="images\architecture\eav-2sxc-dnn.png" />
     <Content Include="images\architecture\eav-internals.png" />
     <Content Include="images\data-models\eav-core-data-contenttype.png" />
     <Content Include="images\data-models\eav-core-data-entity.png" />
@@ -410,7 +429,7 @@
     <Content Include="images\logos\2sxc-10-500.png" />
     <Content Include="images\logos\2sxc-10.svg" />
     <Content Include="images\logos\2sxcv-10-300.png" />
-    <Content Include="images\logos\favicon.ico" />
+    <Content Include="images\logos\favicon.ico" />-->
     <Content Include="material\.gitignore" />
     <Content Include="material\docs\images\material-site.png" />
     <Content Include="material\docs\images\screenshot-1-shadow.png" />
