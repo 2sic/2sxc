@@ -4,8 +4,26 @@
 <!-- REMEMBER THAT IF YOU MODIFY THE TARGETS FILE YOU NEED TO CLOSE/OPEN THE PROJECT FOR THE CHANGES TO TAKE EFFECT -->
 
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Properties / Variables for the DNN Build-->
+  <PropertyGroup>
+    <Extension>zip</Extension>
+    <DNNFileName>2sic_2SexyContent</DNNFileName>
+    <PackageName>2sic_2SexyContent</PackageName>
+    <MSBuildCommunityTasksPath>$(SolutionDir)\BuildScripts</MSBuildCommunityTasksPath>
+  </PropertyGroup>
+
+
   <Import Project="MSBuild.Community.Tasks.Targets" />
-  <Target Name="PackageModule" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+
+  <!-- The Dnn Build Package - Should only run after release compile -->
+  <Target Name="PackageModule"
+    AfterTargets="AfterBuild"
+    Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+
+    <Message Text="DnnBuild: Starting DNN Build" Importance="high" />
+    <Message Text="DnnBuild: Will get Assets from $(Dev2sxcAssets)" Importance="high" />
+
     <XmlRead Prefix="n"
                     Namespace="http://schemas.microsoft.com/developer/msbuild/2003"
                     XPath="dotnetnuke/packages/package[1]/@version"
@@ -17,6 +35,8 @@
       <TempPackageFolder>$(MSBuildProjectDirectory)\ModulePackages\Temp</TempPackageFolder>
       <TempPackageResourcesFolder>$(MSBuildProjectDirectory)\ModulePackages\TempResources</TempPackageResourcesFolder>
       <TempPackagePdbFolder>$(MSBuildProjectDirectory)\ModulePackages\TempPdb</TempPackagePdbFolder>
+      <FinalZipFolder>../../../InstallPackages/Dnn-Installer</FinalZipFolder>
+      <FinalZipFileName>$(PackageName)_$(Version)_Install.$(Extension)</FinalZipFileName>
     </PropertyGroup>
 
     <ItemGroup>
@@ -42,17 +62,17 @@
       <!--<DefaultExclude Include=".gitignore" />-->
 
       <!-- exclude source maps as we'll publish them on sources.2sxc.org -->
-      <DefaultExclude Include="..\..\Assets\**\*.map" />
+      <DefaultExclude Include="$(Dev2sxcAssets)\**\*.map" />
     </ItemGroup>
 
     <!-- New in 2020-09 From now on we'll also publish the built js files to sources.2sxc.org and not include them in 2sxc-repo any more -->
     <ItemGroup>
-      <ExternalSourceMaps Include="..\..\Assets\dist\*ng-edit\**\*.*" />
-      <ExternalSourceMaps Include="..\..\Assets\dist\*inpage\**\*.*" />
-      <ExternalSourceMaps Include="..\..\Assets\dist\*ng\**\*.*" />
+      <ExternalSourceMaps Include="$(Dev2sxcAssets)\dist\*ng-edit\**\*.*" />
+      <ExternalSourceMaps Include="$(Dev2sxcAssets)\dist\*inpage\**\*.*" />
+      <ExternalSourceMaps Include="$(Dev2sxcAssets)\dist\*ng\**\*.*" />
       <!--include the js and system folders, but as a subfolder (that's why the strange syntax) -->
-      <ExternalSourceMaps Include="..\..\Assets\*js\**\*.*" />
-      <ExternalSourceMaps Include="..\..\Assets\*system\**\*.*" />
+      <ExternalSourceMaps Include="$(Dev2sxcAssets)\*js\**\*.*" />
+      <ExternalSourceMaps Include="$(Dev2sxcAssets)\*system\**\*.*" />
     </ItemGroup>
 
     <ItemGroup>
@@ -66,7 +86,7 @@
 
       <InstallInclude Include="**\*.aspx" Exclude="@(DefaultExclude)" />
       <!-- all js + css + html etc. stuff from assets-->
-      <InstallInclude Include="..\..\Assets\**\*.*" Exclude="@(DefaultExclude);*.gitignore" />
+      <InstallInclude Include="$(Dev2sxcAssets)\**\*.*" Exclude="@(DefaultExclude);*.gitignore" />
 
       <!-- all global types and queries -->
       <InstallInclude Include="..\..\Data\**\.data\**\*.json" Exclude="@(DefaultExclude)" />
@@ -242,16 +262,21 @@
     <CreateItem Include="$(TempPackageFolder)\**\*.*">
       <Output TaskParameter="Include" ItemName="OutputContent" />
     </CreateItem>
+
     <!-- Create the Install package -->
-    <Zip Files="@(OutputContent)" WorkingDirectory="$(TempPackageFolder)" ZipFileName="../../../InstallPackages/Dnn-Installer/$(PackageName)_$(Version)_Install.$(Extension)" />
+    <Message Text="DnnBuild: Creating final Zip file $(FinalZipFileName) in $(FinalZipFolder)" Importance="high" />
+    <Zip Files="@(OutputContent)" WorkingDirectory="$(TempPackageFolder)" ZipFileName="$(FinalZipFolder)/$(FinalZipFileName)" />
 
     <!-- Auto-deploy the externalized map files to another repo-->
     <Copy SourceFiles="@(ExternalSourceMaps)" DestinationFolder="C:\Projects\2sxc-sources\$(Version)\%(RecursiveDir)" />
 
     <!-- Cleanup -->
+    <Message Text="DnnBuild: Clean-up temporary folders" Importance="high" />
     <RemoveDir Directories="$(TempPackageFolder)" />
     <RemoveDir Directories="$(TempPackageResourcesFolder)" />
     <RemoveDir Directories="$(TempPackagePdbFolder)" />
+    <Message Text="DnnBuild: Clean-up temporary folders done" Importance="high" />
 
+    <Message Text="DnnBuild: Completed" Importance="high" />
   </Target>
 </Project>
