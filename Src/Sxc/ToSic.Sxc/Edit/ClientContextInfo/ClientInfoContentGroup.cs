@@ -23,9 +23,9 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
         [JsonProperty(NullValueHandling = Ignore)]
         public string TemplateEdition;
 
-        public ClientInfoContentGroup(IBlockBuilder blockBuilder)
+        public ClientInfoContentGroup(IBlock block)
         {
-            var block = blockBuilder.Block;
+            //var block = blockBuilder.Block;
             IsCreated = block.ContentGroupExists;
             IsContent = block.IsContentApp;
             var app = block.App;

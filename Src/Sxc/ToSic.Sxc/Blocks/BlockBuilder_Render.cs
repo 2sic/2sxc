@@ -8,16 +8,16 @@ namespace ToSic.Sxc.Blocks
 {
     public partial class BlockBuilder
     {
-        internal bool RenderWithDiv = true;
+        public bool WrapInDiv { get; set; } = true;
 
         internal IRenderingHelper RenderingHelper =>
-            _rendHelp ?? (_rendHelp = Factory.Resolve<IRenderingHelper>().Init(this, Log));
+            _rendHelp ?? (_rendHelp = Factory.Resolve<IRenderingHelper>().Init(Block, Log));
         private IRenderingHelper _rendHelp;
 
 
         public string Render()
         {
-            var wrapLog = Log.Call<string>();
+          var wrapLog = Log.Call<string>();
 
             try
             {
@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Blocks
                 #endregion
 
                 #region Wrap it all up into a nice wrapper tag
-                var result = RenderWithDiv
+                var result = WrapInDiv
                     ? WrapInDivWithContext(body)
                     : body;
                 #endregion

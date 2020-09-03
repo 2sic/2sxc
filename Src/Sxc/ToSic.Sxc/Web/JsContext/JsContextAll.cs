@@ -19,20 +19,21 @@ namespace ToSic.Sxc.Web.JsContext
 
         public Ui Ui;
 
-        public JsContextAll(string systemRootUrl, IInstanceContext ctx, IBlockBuilder blockBuilder, ILog parentLog)
+        public JsContextAll(string systemRootUrl, IBlock block, ILog parentLog)
             : base("Sxc.CliInf", parentLog, "building entire client-context")
         {
+            var ctx = block.Context;
             var versioning = Factory.Resolve<IPagePublishing>().Init(Log);
 
-            Environment = new JsContextEnvironment(systemRootUrl, ctx, blockBuilder);
-            Language = new JsContextLanguage(ctx.Tenant, blockBuilder.Block.ZoneId);
+            Environment = new JsContextEnvironment(systemRootUrl, ctx, block);
+            Language = new JsContextLanguage(ctx.Tenant, block.ZoneId);
             User = new JsContextUser(ctx.User);
 
-            ContentBlock = new ClientInfoContentBlock(blockBuilder.Block, null, 0, versioning.Requirements(ctx.Container.Id));
-            ContentGroup = new ClientInfoContentGroup(blockBuilder);
-            Ui = new Ui(((BlockBuilder)blockBuilder).UiAutoToolbar);
+            ContentBlock = new ClientInfoContentBlock(block, null, 0, versioning.Requirements(ctx.Container.Id));
+            ContentGroup = new ClientInfoContentGroup(block);
+            Ui = new Ui(((BlockBuilder)block.BlockBuilder)?.UiAutoToolbar ?? false);
 
-            error = new ClientInfosError(blockBuilder.Block);
+            error = new ClientInfosError(block);
         }
     }
 }

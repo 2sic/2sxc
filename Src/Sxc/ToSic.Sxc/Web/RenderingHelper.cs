@@ -19,12 +19,12 @@ namespace ToSic.Sxc.Web
 
         protected readonly IHttp Http;
 
-        public IRenderingHelper Init(IBlockBuilder blockBuilder, ILog parentLog)
+        public IRenderingHelper Init(IBlock block, ILog parentLog)
         {
             this.LinkLog(parentLog);
             var appRoot = Http.ToAbsolute("~/");
-            BlockBuilder = blockBuilder;
-            Context = blockBuilder?.Block.Context;
+            Block = block;
+            Context = block.Context;
             AppRootPath = appRoot;
 
             return this;
@@ -35,6 +35,7 @@ namespace ToSic.Sxc.Web
 
         protected IInstanceContext Context;
         protected IBlockBuilder BlockBuilder;
+        protected IBlock Block;
         protected string AppRootPath;
 
 
@@ -93,8 +94,7 @@ namespace ToSic.Sxc.Web
             return msg;
         }
 
-        public string UiContextInfos()
-            => JsonConvert.SerializeObject(new JsContextAll(AppRootPath, Context, BlockBuilder, Log));
+        public string UiContextInfos() => JsonConvert.SerializeObject(new JsContextAll(AppRootPath, Block, Log));
 
 
         protected abstract void LogToEnvironmentExceptions(Exception ex);

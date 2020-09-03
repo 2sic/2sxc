@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Web.UI;
 using DotNetNuke.Services.Exceptions;
+using ToSic.Eav;
 using ToSic.Sxc.Dnn.Install;
+using ToSic.Sxc.Web;
 
 namespace ToSic.SexyContent
 {
@@ -17,7 +19,7 @@ namespace ToSic.SexyContent
             var timerWrap = Log.Call(message: $"module {ModuleId} on page {TabId}", useTimer: true);
             // throw better error if SxcInstance isn't available
             // not sure if this doesn't have side-effects...
-            if (BlockBuilder == null)
+            if (Block?.BlockBuilder == null)
                 throw new Exception("Error - can't find 2sxc instance configuration. " +
                                     "Probably trying to show an app or content that has been deleted.");
 
@@ -46,13 +48,26 @@ namespace ToSic.SexyContent
                 IsError = true;
                 try
                 {
-                    // Log to DNN
+                    // 1. Log to DNN
                     Exceptions.ProcessModuleLoadException(this, ex, false);
 
-                    // Try to show nice message on screen
-                    var msg = BlockBuilder.RenderingHelper.DesignErrorMessage(ex, true, null, false, true);
-                    var wrappedMsg = Block.EditAllowed ? BlockBuilder.WrapInDivWithContext(msg) : msg;
-                    phOutput.Controls.Add(new LiteralControl(wrappedMsg));
+                    // 2. Try to show nice message on screen
+
+                    // first get a rendering helper - but since BlockBuilder may be null, create a new one
+                    var renderingHelper = Factory.Resolve<IRenderingHelper>().Init(Block, Log);
+                    var msg = renderingHelper.DesignErrorMessage(ex, true, null, false, true);
+                    try
+                    {
+                        if (Block.EditAllowed)
+                            msg = renderingHelper.WrapInContext(msg,
+                                instanceId: Block.ParentId,
+                                contentBlockId: Block.ContentBlockId,
+                                editContext: true,
+                                autoToolbar: true);
+                    }
+                    catch { /* ignore */ }
+
+                    phOutput.Controls.Add(new LiteralControl(msg));
                 }
                 catch
                 {

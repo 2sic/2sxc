@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Dnn.Web
         /// You must always call Init afterwards
         /// </summary>
         /// <param name="http"></param>
-        public DnnRenderingHelper(IHttp http) : base( http,"Dnn.Render") { }
+        public DnnRenderingHelper(IHttp http) : base(http, "Dnn.Render") { }
 
         /// <summary>
         /// DNN specific implementation to log errors to the DNN event log

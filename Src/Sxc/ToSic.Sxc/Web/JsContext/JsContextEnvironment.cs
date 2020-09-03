@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Web.JsContext
 
         public bool IsEditable;
 
-        public JsContextEnvironment(string systemRootUrl, IInstanceContext ctx, IBlockBuilder blockBuilder)
+        public JsContextEnvironment(string systemRootUrl, IInstanceContext ctx, IBlock block)
         {
             WebsiteId = ctx.Tenant.Id;
 
@@ -36,10 +36,10 @@ namespace ToSic.Sxc.Web.JsContext
 
             SxcRootUrl = systemRootUrl;
 
-            var userMayEdit = blockBuilder?.Block.EditAllowed ?? false;
+            var userMayEdit = block?.EditAllowed ?? false;
 
             IsEditable = userMayEdit;
-            parameters = blockBuilder?.Block.Context.Page.Parameters;
+            parameters = block?.Context.Page.Parameters;
         }
     }
 

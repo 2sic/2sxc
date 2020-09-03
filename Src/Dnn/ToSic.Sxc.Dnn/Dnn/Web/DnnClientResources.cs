@@ -17,10 +17,10 @@ namespace ToSic.Sxc.Dnn.Web
         protected Page Page;
         protected DnnJsApiHeader Header;
 
-        public DnnClientResources(Page page, BlockBuilder blockBuilder, ILog parentLog) : base("Dnn.JsCss", parentLog)
+        public DnnClientResources(Page page, IBlockBuilder blockBuilder, ILog parentLog) : base("Dnn.JsCss", parentLog)
         {
             Page = page;
-            BlockBuilder = blockBuilder;
+            BlockBuilder = blockBuilder as BlockBuilder;
             Header = new DnnJsApiHeader(Log);
         }
 

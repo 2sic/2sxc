@@ -28,15 +28,8 @@ namespace ToSic.SexyContent
         private bool _blockLoaded;
 
 
-        protected BlockBuilder BlockBuilder
-        {
-            get
-            {
-                if (_blockBuilder != null) return _blockBuilder;
-                return _blockBuilder = Block?.BlockBuilder as BlockBuilder;
-            }
-        }
-        private BlockBuilder _blockBuilder;
+        //protected BlockBuilder BlockBuilder => _blockBuilder ?? (_blockBuilder = Block?.BlockBuilder as BlockBuilder);
+        //private BlockBuilder _blockBuilder;
 
         private ILog Log { get; } = new Log("Sxc.View");
 
@@ -61,7 +54,7 @@ namespace ToSic.SexyContent
             TryCatchAndLogToDnn(() =>
             {
                 EnsureCmsBlockAndPortalIsReady();
-                DnnClientResources = new DnnClientResources(Page, BlockBuilder, Log);
+                DnnClientResources = new DnnClientResources(Page, Block?.BlockBuilder, Log);
                 DnnClientResources.EnsurePre1025Behavior();
             });
         }
@@ -99,8 +92,8 @@ namespace ToSic.SexyContent
             var timerWrap = Log.Call(message: $"module {ModuleId} on page {TabId}", useTimer: true);
             TryCatchAndLogToDnn(() =>
             {
-                if (RenderNaked) BlockBuilder.RenderWithDiv = false;
-                renderedTemplate = BlockBuilder.Render()
+                if (RenderNaked) Block.BlockBuilder.WrapInDiv = false;
+                renderedTemplate = Block.BlockBuilder.Render()
                     + GetOptionalDetailedLogToAttach();
             }, timerWrap);
 

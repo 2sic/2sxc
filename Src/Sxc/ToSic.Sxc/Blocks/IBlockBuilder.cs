@@ -26,5 +26,10 @@ namespace ToSic.Sxc.Blocks
         /// The root block, which controls what assets / js etc. will be rendered
         /// </summary>
         IBlockBuilder RootBuilder { get; }
+
+        /// <summary>
+        /// Determines if the output should be wrapped in a div or not
+        /// </summary>
+        bool WrapInDiv { get; set; }
     }
 }

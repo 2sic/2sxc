@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Web
 {
     public interface IRenderingHelper
     {
-        IRenderingHelper Init(IBlockBuilder blockBuilder, ILog parentLog);
+        IRenderingHelper Init(IBlock block, ILog parentLog);
 
         string WrapInContext(string content,
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
