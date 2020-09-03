@@ -115,15 +115,6 @@
     <None Include="how-to\webapi\dotnet-webapi.md" />
     <None Include="how-to\webapi\webapis.md" />-->
     <None Include="index.md" />
-    <None Include="material\docs\api\index.md" />
-    <None Include="material\docs\api\toc.yml" />
-    <None Include="material\docs\articles\content2.md" />
-    <None Include="material\docs\articles\content3.md" />
-    <None Include="material\docs\articles\intro.md" />
-    <None Include="material\docs\articles\toc.yml" />
-    <None Include="material\LICENSE" />
-    <None Include="material\material\partials\head.tmpl.partial" />
-    <None Include="material\README.md" />
     <None Include="namespaces\**\*.*" />
     <!--<None Include="namespaces\ToSic.Eav\DataSources\App.md" />
     <None Include="namespaces\ToSic.Eav\DataSources\AttributeFilter.md" />
@@ -178,6 +169,9 @@
     <None Include="shared\before-you-start-idynamicentity.md" />
     <None Include="shared\where-to-start.md" />
     <None Include="specs\**\*.*" />
+    <None Include="templates\2sxc\partials\head.tmpl.partial" />
+    <None Include="templates\2sxc\partials\li.tmpl.partial" />
+    <None Include="templates\2sxc\partials\toc.tmpl.partial" />
     <!--<None Include="specs\angularJs\angularjs-1-overview.md" />
     <None Include="specs\angular\dnn-sxc-angular.md" />
     <None Include="specs\app\app-folder-structure.md" />
@@ -285,7 +279,9 @@
     <Content Include="api\dot-net\.gitignore" />
     <Content Include="assets\**\*.*" />
     <Content Include="images\**\*.*" />
-
+    <Content Include="templates\2sxc\api-meta.js" />
+    <Content Include="templates\2sxc\styles\main.css" />
+    <Content Include="templates\2sxc\toc.extension.js" />
     <!--
     <Content Include="assets\concepts\administrating-content-group-in-an-app.jpg" />
     <Content Include="assets\concepts\app-polymorph-classic-vs.png" />
@@ -430,13 +426,6 @@
     <Content Include="images\logos\2sxc-10.svg" />
     <Content Include="images\logos\2sxcv-10-300.png" />
     <Content Include="images\logos\favicon.ico" />-->
-    <Content Include="material\.gitignore" />
-    <Content Include="material\docs\images\material-site.png" />
-    <Content Include="material\docs\images\screenshot-1-shadow.png" />
-    <Content Include="material\docs\images\screenshot-1.png" />
-    <Content Include="material\docs\images\screenshot-2-shadow.png" />
-    <Content Include="material\docs\images\screenshot-2.png" />
-    <Content Include="material\material\styles\main.css" />
     <Content Include="wiki\assets\contribute\Edit-in-a-page.png" />
     <Content Include="wiki\assets\contribute\edit-in-vs-code.png" />
     <Content Include="wiki\assets\dotnet\all-data-sources.html" />

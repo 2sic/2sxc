@@ -12,11 +12,11 @@ Once we're really sure that certain parts are very final, we'll publish the API 
 
 > [!TIP]
 > We've color and icon coded all the things you might care about. <br>
-> <span class="priority-internal">Internal</span> stuff in subdued <br/>
-> <span class="priority-web"></span> marks things usually used in Razor/WebApi development <br/>
-> <span class="priority-data"></span> marks things related to data processing, usually data sources <br/>
-> <span class="priority-adam"></span> marks ADAM things (automatic Digital Asset Management) <br/>
-> <span class="priority-metadata"></span> marks things related to metadata <br/>
+> * <span class="priority-internal">Internal</span> stuff in subdued <br/>
+> * <span class="priority-web"></span> marks things usually used in Razor/WebApi development <br/>
+> * <span class="priority-data"></span> marks things related to data processing, usually data sources <br/>
+> * <span class="priority-adam"></span> marks ADAM things (automatic Digital Asset Management) <br/>
+> * <span class="priority-metadata"></span> marks things related to metadata <br/>
 
 ## What You're Probably Looking for
 
