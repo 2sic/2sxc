@@ -326,9 +326,9 @@ robocopy /mir "$(ProjectDir)..\..\Data\.data-custom\ " "%25BuildTarget%25\.data-
 robocopy /mir "$(ProjectDir)ClientScripts\ " "%25BuildTarget%25\ClientScripts\ "
 robocopy /mir "$(ProjectDir)DnnWebForms\ " "%25BuildTarget%25\DnnWebForms\ "
 
-robocopy /mir "$(ProjectDir)..\..\Assets\js\ " "%25BuildTarget%25\js\ "
-robocopy /mir "$(ProjectDir)..\..\Assets\dist\ " "%25BuildTarget%25\dist\ "
-robocopy /mir "$(ProjectDir)..\..\Assets\system\ " "%25BuildTarget%25\system\ "
+robocopy /mir "$(Dev2sxcAssets)\js\ " "%25BuildTarget%25\js\ "
+robocopy /mir "$(Dev2sxcAssets)\dist\ " "%25BuildTarget%25\dist\ "
+robocopy /mir "$(Dev2sxcAssets)\system\ " "%25BuildTarget%25\system\ "
 
 robocopy /mir "$(ProjectDir)Extensions\ " "%25BuildTarget%25\Extensions\ "
 robocopy /mir "$(ProjectDir)App_LocalResources\ " "%25BuildTarget%25\App_LocalResources\ "
