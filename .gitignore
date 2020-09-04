@@ -2,27 +2,5 @@
 !ToSIC_SexyContent
 
 # other stuff in the DesktopModules Folder
-/2FlexCopyright/*
-/Admin/*
-/AuthenticationServices/*
-/DDRMenu/*
-/DNNCorp/*
-/DevicePreviewManagement/*
-/DigitalAssets/*
-/CoreMessaging/*
-/HTML/*
-/MemberDirectory/*
-/Journal/*
-/RazorModules/*
-/MobileManagement/*
-/SocialGroups/*
-/UserDefinedTable/*
-/Connect.Dnn.Koi/*
-/Connect.Razor/*
-/ToSic.Razor/*
-/ToSIC_Imazen_ImageResizer/*
-ToSIC_SexyContent/dist/ng-edit/ng-dialogs/*
 /2sxc-docs/*
-ToSIC_SexyContent/dist/ng/*.map
-ToSIC_SexyContent/dist/inpage/*.map
-ToSIC_SexyContent/dist/ng-edit/*.map
+/InstallPackages/*
