@@ -1,7 +1,9 @@
 ﻿@page
+@using ToSic.Sxc.Mvc.WebApi
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
+  ViewData["SxcPageHeaders"] = "<!-- test -->";
 }
 
 <div class="text-center">
@@ -17,7 +19,7 @@
 
 <ol>
     <li>
-        <a href="/api/insights/help">Insights Help</a>
+        <a href="/@WebApiConstants.WebApiRoot/insights/help">Insights Help</a>
     </li>
 </ol>
 

@@ -8,25 +8,41 @@ using ToSic.Sxc.Mvc.Code;
 using ToSic.Sxc.Mvc.Dev;
 using ToSic.Sxc.Mvc.Run;
 using ToSic.Sxc.Mvc.TestStuff;
+using ToSic.Sxc.Mvc.Web;
 
 namespace ToSic.Sxc.Mvc
 {
     public class SxcMvc: HasLog
     {
-        // Empty constructor for DI for now
-        public SxcMvc() : base("Mvc.View") { }
+        #region Constructor and DI
+        
+        public SxcMvc(MvcPageProperties pageProperties) : base("Mvc.View")
+        {
+            PageProperties = pageProperties;
+
+            // add log to history!
+        }
+
+        public MvcPageProperties PageProperties;
+
+        #endregion
 
         public HtmlString Render(InstanceId id)
         {
-            var blockBuilder = CreateBuilder(id.Zone, id.Page, id.Container, id.App, id.Block, Log);
-            return new HtmlString(blockBuilder.BlockBuilder.Render());
+            var blockBuilder = CreateBlock(id.Zone, id.Page, id.Container, id.App, id.Block, Log);
+            
+            var result = blockBuilder.BlockBuilder.Render();
+
+            // todo: set parameters for loading scripts etc.
+            //PageProperties.Headers += "hello!!!";
+            return new HtmlString(result);
         }
 
         public static DynamicCodeRoot CreateDynCode(InstanceId id, ILog log) =>
-            new MvcDynamicCode().Init(CreateBuilder(id.Zone, id.Page, id.Container, id.App, id.Block, log), log);
+            new MvcDynamicCode().Init(CreateBlock(id.Zone, id.Page, id.Container, id.App, id.Block, log), log);
 
 
-        public static IBlock CreateBuilder(int zoneId, int pageId, int containerId, int appId, Guid blockGuid, ILog log)
+        public static IBlock CreateBlock(int zoneId, int pageId, int containerId, int appId, Guid blockGuid, ILog log)
         {
             var context = CreateContext(zoneId, pageId, containerId, appId, blockGuid);
             var block = new BlockFromModule().Init(context, log);

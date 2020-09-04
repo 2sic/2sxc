@@ -50,11 +50,11 @@ Content is null: "@(Content == null)" @Content "@Content.EntityTitle"
     <li>Out Default: (@Data.List.Count())</li>
 </ol>
 
-<h3>Items List </h3>
+<h3>Blog Items List </h3>
 <ol>
     @foreach (var item in AsList(Data))
     {
-        <li>
+        <li @Edit.TagToolbar(item)>
             <a href="?post=@item.UrlKey">@item.EntityTitle</a>
             
         </li>

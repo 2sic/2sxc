@@ -2,7 +2,7 @@
 {
     public class WebApiConstants
     {
-        public const string Root = "api";
-        public const string DefaultRoute = "api/[controller]/[action]";
+        public const string WebApiRoot = "api/sxc";
+        public const string WebApiDefaultRoute = WebApiRoot + "/[controller]/[action]";
     }
 }

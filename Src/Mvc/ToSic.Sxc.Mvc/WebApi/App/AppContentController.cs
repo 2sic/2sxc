@@ -15,7 +15,7 @@ using ToSic.Sxc.WebApi.App;
 
 namespace ToSic.Sxc.Mvc.WebApi.App
 {
-    [Route(WebApiConstants.Root + "/app/{appPath}/content/")]
+    [Route(WebApiConstants.WebApiRoot + "/app/{appPath}/content/")]
     [ApiController]
     public class AppContentController: SxcStatelessControllerBase
     {

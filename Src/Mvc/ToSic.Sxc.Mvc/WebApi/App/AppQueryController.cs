@@ -12,7 +12,7 @@ using ToSic.Sxc.WebApi.App;
 
 namespace ToSic.Sxc.Mvc.WebApi.App
 {
-    [Route(WebApiConstants.Root + "/app/{appPath}/query/")]
+    [Route(WebApiConstants.WebApiRoot + "/app/{appPath}/query/")]
     [ApiController]
     public class AppQueryController : SxcStatelessControllerBase
     {

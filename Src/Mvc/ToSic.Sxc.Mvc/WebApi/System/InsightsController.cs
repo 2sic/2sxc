@@ -4,7 +4,7 @@ using ToSic.Sxc.Web.WebApi.System;
 
 namespace ToSic.Sxc.Mvc.WebApi.System
 {
-    [Route(WebApiConstants.DefaultRoute)]
+    [Route(WebApiConstants.WebApiDefaultRoute)]
     [ApiController]
     public class InsightsController : SxcStatelessControllerBase
     {

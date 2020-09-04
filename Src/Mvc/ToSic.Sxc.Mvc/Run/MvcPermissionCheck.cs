@@ -10,7 +10,8 @@ namespace ToSic.Sxc.Mvc.Run
     {
         public MvcPermissionCheck(): base("Mvc.PrmChk") { }
 
-        protected override bool EnvironmentAllows(List<Grants> grants) => false;
+        // todo: #permissions
+        protected override bool EnvironmentAllows(List<Grants> grants) => true;
 
         protected override bool VerifyConditionOfEnvironment(string condition)
         {
