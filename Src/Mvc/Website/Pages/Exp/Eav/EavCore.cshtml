@@ -1,0 +1,58 @@
+﻿@page
+@using ToSic.Eav.Persistence.Efc.Models
+@model Website.Pages.EavCoreModel
+@{
+    ViewData["Title"] = "Eav.Core";
+}
+
+<h1>Eav.Core and Basic "the DLLs are Here"</h1>
+
+<ol>
+    <li>
+        An EAV Constant: @ToSic.Eav.Constants.ContentAppName
+    </li>
+    <li>
+        A DataSource Object: @(new ToSic.Eav.DataSource().GetType().AssemblyQualifiedName)
+    </li>
+    <li>
+        Repository type Code: @(ToSic.Eav.Repositories.RepositoryTypes.Code)
+    </li>
+    <li>
+        2sxc constant: @(ToSic.Sxc.Settings.PortalHostDirectory)
+    </li>
+    <li>
+        App Cache: @(ToSic.Eav.Factory.Resolve<ToSic.Eav.Caching.IAppsCache>().GetType().Name)
+    </li>
+    <li>
+        EavDbContext (transient...?) : @(ToSic.Eav.Factory.Resolve<EavDbContext>().GetType().Namespace)
+    </li>
+</ol>
+<h2>State of App 78 (Blog)</h2>
+
+<ol>
+    <li>
+        Timestamp : @(ToSic.Eav.Apps.State.Get(78).CacheTimestamp)
+    </li>
+    <li>
+        Items in it : @(ToSic.Eav.Apps.State.Get(78).List.Count())
+    </li>
+    <li>
+        First Item: Guid @(Model.EntityInBlog.EntityGuid) <br/>
+        Title: @Model.EntityInBlog.GetBestTitle() <br/>
+        Query AllQueries: @ToSic.Eav.Apps.State.Get(78)  can't work yet, this object doesn't have queries!
+    </li>
+    <li>
+        Blog DS = @Model.BlogRoot().List.Count()
+    </li>
+    <li>
+        blog tags: @Model.BlogTags().List.Count() <br/>
+        first: @Model.BlogTags().List.First().GetBestTitle()
+    </li>
+    <li>
+        App: @Model.BlogApp.AppGuid <br/>
+        Folder: @Model.BlogApp.Folder <br/>
+        Data: @Model.BlogApp.Data.List.Count() <br/>
+        Query: @Model.BlogApp.Query["AllQueries"].List.Count()
+    </li>
+</ol>
+

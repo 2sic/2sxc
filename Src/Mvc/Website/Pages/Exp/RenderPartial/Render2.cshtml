@@ -1,0 +1,13 @@
+﻿@page
+@model Website.Pages.RenderPartial.Render2Model
+
+<h1>Render V2</h1>
+
+From https://www.learnrazorpages.com/advanced/render-partial-to-string <br/>
+
+<em>Note: won't send a real mail, just show it</em>
+
+<h2>The render inside this</h2>
+@Html.Raw(Model.InnerRender)
+
+<hr/>

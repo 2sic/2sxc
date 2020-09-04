@@ -1,0 +1,17 @@
+﻿@inherits ToSic.Sxc.Mvc.RazorPages.SxcRazorPage<ContactForm>
+@model ContactForm
+@{
+    Layout = null;
+}
+<h1>Render Partial 2</h1>
+<p>@Model.Name sent a message via the contact form at @DateTime.Now as follows:</p>
+<blockquote>@Model.Message</blockquote>
+<p>
+    @Model.Name is using the email address @Model.Email and considers the message to
+    be @Model.Priority.ToString() priority.
+</p>
+
+Test call for debugging the parent class: @Test()
+<hr/>
+
+App: @App.Name

@@ -1,0 +1,18 @@
+﻿inherits ToSic.Sxc.Mvc.RazorPages.Page
+@inherits ToSic.Sxc.Mvc.RazorPages.Exp.SxcTestPageViewParams<TModel>
+@{
+    ViewData["Title"] = "Default";
+}
+
+<h4>ComponentWith Params</h4>
+
+<ol>
+    foreach (var name in Model)
+    {
+        <li>name</li>
+    }
+</ol>
+
+<h4>Type info</h4>
+
+@GetType().FullName

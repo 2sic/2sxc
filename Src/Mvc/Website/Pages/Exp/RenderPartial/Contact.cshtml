@@ -1,0 +1,50 @@
+﻿@page
+@model Website.Pages.ContactModel
+
+<h1>Contact / Send Mail</h1>
+
+From https://www.learnrazorpages.com/advanced/render-partial-to-string <br/>
+
+<em>Note: won't send a real mail, just show it</em>
+
+<h2>The render inside this</h2>
+@Html.Raw(Model.InnerRender)
+
+<hr/>
+
+@if (TempData["PostResult"] == null)
+{
+    <h2>The Form</h2>
+    <form method="post">
+        <label asp-for="ContactForm.Name"></label>
+        <div class="form-group">
+            <input asp-for="ContactForm.Name">
+        </div>
+        <label asp-for="ContactForm.Email"></label>
+        <div class="form-group">
+            <input asp-for="ContactForm.Email">
+        </div>
+        <label asp-for="ContactForm.Subject"></label>
+        <div class="form-group">
+            <input asp-for="ContactForm.Subject">
+        </div>
+        <label asp-for="ContactForm.Message"></label>
+        <div class="form-group">
+            <textarea asp-for="ContactForm.Message"></textarea>
+        </div>
+        <label asp-for="ContactForm.Priority"></label>
+        <div class="form-group">
+            <select asp-for="ContactForm.Priority" asp-items="Html.GetEnumSelectList<Priority>()">
+                <option value="">Set Priority</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-sm btn-primary">Submit </button>
+        </div>
+    </form>
+}
+else
+{
+    <h2>Result</h2>
+    <p>@Html.Raw(TempData["PostResult"]))</p>
+}

@@ -1,0 +1,59 @@
+﻿@page
+@inherits ToSic.Sxc.Mvc.RazorPages.Exp.PageBaseLoadingBlogOnly
+@model Website.Pages.SxcBlockModel
+@{
+    ViewData["Title"] = "SxcBlock";
+}
+
+<h1>This initial page inherits the Class which only knows the blog instance</h1>
+<div>
+    testing... 
+</div>
+
+<h2>Details</h2>
+
+<ol>
+    <li>
+        App: @App (AppId: @Block.App.AppId) <br/>
+        Items: @App.Data (@App.Data.List.Count())<br/>
+    </li>
+    <li>
+        AsDynamic entity: @AsDynamic(App.Data.List.First()).EntityTitle
+    </li>
+    <li>
+        AsDynamic Json: @AsDynamic("{\"test\": 25}").test
+    </li>
+    <li>
+        Get data BlogPost: @App.Data["BlogPost"].List.Count()
+        @{
+            var last = AsList(App.Data["BlogPost"]).Last();
+        }
+        First: @last.Title (image is @last.Image) <br/>
+        Body: @last.Body 
+        <div>
+            @Html.Raw(last.Body)
+        </div>
+    </li>
+</ol>
+
+<h2>Content</h2>
+
+Content is null: "@(Content == null)" @Content "@Content.EntityTitle"
+
+<h3>Data</h3>
+<ol>
+    <li>Data: @Data</li>
+    <li>Out Streams: (@Data.Out.Count) @String.Join(',', Data.Out.Keys)</li>
+    <li>Out Default: (@Data.List.Count())</li>
+</ol>
+
+<h3>Items List </h3>
+<ol>
+    @foreach (var item in AsList(Data))
+    {
+        <li>@item.EntityTitle</li>
+    }
+</ol>
+
+<hr/>
+

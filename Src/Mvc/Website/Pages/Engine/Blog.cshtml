@@ -1,0 +1,12 @@
+﻿@page
+@using ToSic.Sxc.Mvc
+@using ToSic.Sxc.Mvc.Dev
+@inject SxcMvc SxcEngine
+@model Website.Pages.EngineBlogModel
+@{
+    ViewData["Title"] = "EngineBlog";
+}
+
+<h1>Engine calling Blog Instance</h1>
+
+Render: @SxcEngine.Render(TestIds.Blog)

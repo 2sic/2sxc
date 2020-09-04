@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Website/bin
+/Website/obj
+ToSic.Sxc.Mvc/bin
+ToSic.Sxc.Mvc/obj
+Website/wwwroot/System/Sxc/**

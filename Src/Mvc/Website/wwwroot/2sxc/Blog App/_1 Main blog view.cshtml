@@ -1,0 +1,64 @@
+﻿@inherits ToSic.Sxc.Mvc.RazorPages.SxcRazorPage<TModel>
+
+<h1>Main Blog List file</h1>
+
+My type: @GetType().FullName
+
+The App being shown: @App.Name
+<br />
+
+Content Title: @Content.Title
+
+
+<h2>Details</h2>
+
+<ol>
+    <li>
+        App: @App (AppId: @App.AppId) <br />
+        Items: @App.Data (@App.Data.List.Count())<br />
+    </li>
+    <li>
+        AsDynamic entity: @AsDynamic(App.Data.List.First()).EntityTitle
+    </li>
+    <li>
+        AsDynamic Json: @AsDynamic("{\"test\": 25}").test
+    </li>
+    @if (App.Data.Out.ContainsKey("BlogPost"))
+    {
+        <li>
+            Get data BlogPost: @App.Data["BlogPost"].List.Count()
+            @{
+                var last = AsList(App.Data["BlogPost"]).Last();
+            }
+            First: @last.Title (image is @last.Image) <br />
+            Body: @last.Body
+            <div>
+                @Html.Raw(last.Body)
+            </div>
+        </li>
+    }
+</ol>
+
+<h2>Content</h2>
+
+Content is null: "@(Content == null)" @Content "@Content.EntityTitle"
+
+<h3>Data</h3>
+<ol>
+    <li>Data: @Data</li>
+    <li>Out Streams: (@Data.Out.Count) @String.Join(',', Data.Out.Keys)</li>
+    <li>Out Default: (@Data.List.Count())</li>
+</ol>
+
+<h3>Items List </h3>
+<ol>
+    @foreach (var item in AsList(Data))
+    {
+        <li>
+            <a href="?post=@item.UrlKey">@item.EntityTitle</a>
+            
+        </li>
+    }
+</ol>
+
+<hr />

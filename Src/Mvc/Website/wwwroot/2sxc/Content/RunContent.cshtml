@@ -1,0 +1,17 @@
+﻿@inherits ToSic.Sxc.Mvc.RazorPages.Exp.SxcTestPageViewParams<TModel>
+@{
+    ViewData["Title"] = "Default";
+}
+
+<h1>Dynamically compiled razor file</h1>
+
+My type: @GetType().FullName
+
+The App being shown: @App.Name <br/>
+
+Content Title: @Content.Title
+
+@Html.Partial("_InnerPart.cshtml")
+
+
+
