@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav;
+using ToSic.Eav.Documentation;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Web;
@@ -8,9 +9,10 @@ namespace ToSic.Sxc.Blocks
 {
     public partial class BlockBuilder
     {
+        [PrivateApi]
         public bool WrapInDiv { get; set; } = true;
 
-        internal IRenderingHelper RenderingHelper =>
+        private IRenderingHelper RenderingHelper =>
             _rendHelp ?? (_rendHelp = Factory.Resolve<IRenderingHelper>().Init(Block, Log));
         private IRenderingHelper _rendHelp;
 
@@ -50,7 +52,7 @@ namespace ToSic.Sxc.Blocks
                         if (Block.View != null) // when a content block is still new, there is no definition yet
                         {
                             Log.Add("standard case, found template, will render");
-                            var engine = GetEngine(Purpose.WebView);
+                            var engine = GetEngine();
                             body = engine.Render();
                             // Activate-js-api is true, if the html has some <script> tags which tell it to load the 2sxc
                             // only set if true, because otherwise we may accidentally overwrite the previous setting
@@ -70,7 +72,11 @@ namespace ToSic.Sxc.Blocks
 
                 #region Wrap it all up into a nice wrapper tag
                 var result = WrapInDiv
-                    ? WrapInDivWithContext(body)
+                    ? RenderingHelper.WrapInContext(body,
+                        instanceId: Block.ParentId,
+                        contentBlockId: Block.ContentBlockId,
+                        editContext: UiAddEditContext,
+                        autoToolbar: UiAutoToolbar) // WrapInDivWithContext(body)
                     : body;
                 #endregion
 
@@ -83,12 +89,12 @@ namespace ToSic.Sxc.Blocks
             }
         }
 
-        internal string WrapInDivWithContext(string body) =>
-            RenderingHelper.WrapInContext(body,
-                instanceId: Block.ParentId,
-                contentBlockId: Block.ContentBlockId,
-                editContext: UiAddEditContext,
-                autoToolbar: UiAutoToolbar);
+        //internal string WrapInDivWithContext(string body) =>
+        //    RenderingHelper.WrapInContext(body,
+        //        instanceId: Block.ParentId,
+        //        contentBlockId: Block.ContentBlockId,
+        //        editContext: UiAddEditContext,
+        //        autoToolbar: UiAutoToolbar);
 
 
         /// <summary>
