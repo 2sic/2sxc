@@ -34,6 +34,10 @@ namespace ToSic.Sxc.Blocks
 
             Log.Add($"parent#{ParentId}, content-block#{ContentBlockId}, z#{ZoneId}, a#{AppId}");
 
+            // 2020-09-04 2dm - new change, moved BlockBuilder up so it's never null - may solve various issues
+            // but may introduce new ones
+            BlockBuilder = new BlockBuilder(rootBuilder, this, Log);
+
             // If specifically no app found, end initialization here
             // Means we have no data, and no BlockBuilder
             if (AppId == AppConstants.AppIdNotFound || AppId == Eav.Constants.NullId)
@@ -41,8 +45,6 @@ namespace ToSic.Sxc.Blocks
                 DataIsMissing = true;
                 return wrapLog("stop: app & data are missing", this as T);
             }
-
-            BlockBuilder = new BlockBuilder(rootBuilder, this, Log);
 
             // If no app yet, stop now with BlockBuilder created
             if (AppId == Eav.Constants.AppIdEmpty)
@@ -127,7 +129,7 @@ namespace ToSic.Sxc.Blocks
 
 
         public IBlockDataSource Data => _dataSource
-                                        ?? (_dataSource = Block.GetBlockDataSource(BlockBuilder, View,
+                                        ?? (_dataSource = Block.GetBlockDataSource(this, View,
                                             App?.ConfigurationProvider, Log));
 
         public BlockConfiguration Configuration { get; protected set; }

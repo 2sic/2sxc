@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Engines;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -31,5 +32,12 @@ namespace ToSic.Sxc.Blocks
         /// Determines if the output should be wrapped in a div or not
         /// </summary>
         bool WrapInDiv { get; set; }
+
+        /// <summary>
+        /// Get the engine which will render a block
+        /// </summary>
+        /// <param name="renderingPurpose"></param>
+        /// <returns></returns>
+        IEngine GetEngine(Purpose renderingPurpose = Purpose.WebView);
     }
 }

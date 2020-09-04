@@ -69,21 +69,25 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void Page_PreRender(object sender, EventArgs e)
         {
+            var headersAndScriptsAdded = false;
             // skip this if something before this caused an error
-            if (IsError) return;
+            if (!IsError)
+                TryCatchAndLogToDnn(() =>
+                {
+                    // Try to build the html
+                    var html = RenderViewAndGatherJsCssSpecs();
+                    // call this after rendering templates, because the template may change what resources are registered
+                    headersAndScriptsAdded = DnnClientResources.AddEverything();
+                    // If standalone is specified, output just the template without anything else
+                    if (RenderNaked)
+                        SendStandalone(html);
+                    else
+                        phOutput.Controls.Add(new LiteralControl(html));
+                });
 
-            // Try to build the html
-            TryCatchAndLogToDnn(() =>
-            {
-                var html = RenderViewAndGatherJsCssSpecs();
-                // call this after rendering templates, because the template may change what resources are registered
-                DnnClientResources.AddEverything();
-                // If standalone is specified, output just the template without anything else
-                if (RenderNaked)
-                    SendStandalone(html);
-                else
-                    phOutput.Controls.Add(new LiteralControl(html));
-            });
+            // if we had an error before, or have one now, re-check assets
+            if (IsError && !headersAndScriptsAdded)
+                DnnClientResources?.AddEverything();
         }
 
         private string RenderViewAndGatherJsCssSpecs()

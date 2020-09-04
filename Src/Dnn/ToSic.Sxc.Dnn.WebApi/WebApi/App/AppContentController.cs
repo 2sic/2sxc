@@ -84,7 +84,7 @@ namespace ToSic.Sxc.WebApi.App
             var block = GetBlock();
             // must access engine to ensure pre-processing of data has happened, 
             // especially if the cshtml contains a override void CustomizeData()
-            var engine = ((BlockBuilder)block.BlockBuilder).GetEngine(Purpose.PublishData);  
+            var engine = block.BlockBuilder.GetEngine(Purpose.PublishData);  
             engine.CustomizeData();
 
             var dataSource = block.Data;

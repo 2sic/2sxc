@@ -11,7 +11,10 @@ namespace ToSic.Sxc.Dnn.Run
             : base(tenant, null, container, user)
         {
             var activeTab = (tenant as Tenant<PortalSettings>)?.UnwrappedContents?.ActiveTab;
-            var page = new DnnPage(activeTab?.TabID ?? Eav.Constants.NullId, activeTab?.FullUrl);
+            // the FullUrl will throw an error in search scenarios
+            string fullUrl = null;
+            try { fullUrl = activeTab?.FullUrl; } catch {  /* ignore */ }
+            var page = new DnnPage(activeTab?.TabID ?? Eav.Constants.NullId, fullUrl);
             if (overrideParams != null)
                 page.Parameters = overrideParams;
             Page = page;

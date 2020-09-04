@@ -28,10 +28,6 @@ namespace ToSic.Sxc.Dnn.Web
         {
             var wrapLog = Log.Call<bool>();
 
-            // new in 10.25 - by default jQuery isn't loaded!
-            // 2020-01-13 disabled this, as the parent must call it in the right moment, not here
-            //EnsurePre1025Behavior();
-
             // normal scripts
             var editJs = BlockBuilder?.UiAddEditApi ?? false;
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
@@ -71,7 +67,6 @@ namespace ToSic.Sxc.Dnn.Web
             var wrapLog = Log.Call($"-, {nameof(readJs)}:{readJs}, {nameof(editJs)}:{editJs}, {nameof(editCss)}:{editCss}");
             var root = "~/desktopmodules/tosic_sexycontent/";
             root = page.ResolveUrl(root);
-            //var ext = IsDebugUrl(page.Request) ? ".min.js" : ".js";
             var ver = Settings.Version.ToString();
             var priority = (int) FileOrder.Js.DefaultPriority - 2;
 
