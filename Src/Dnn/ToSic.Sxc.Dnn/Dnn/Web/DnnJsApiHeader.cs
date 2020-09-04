@@ -8,15 +8,13 @@ using DotNetNuke.Framework;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Edit;
 
 namespace ToSic.Sxc.Dnn.Web
 {
     [PrivateApi]
     public class DnnJsApiHeader: HasLog
     {
-        private const string MetaName = "_jsApi";
-        private const string ExtensionPlaceholder = "{extension}";
-
         public DnnJsApiHeader(ILog parentLog) : base("Dnn.JsApiH", parentLog)
         {
         }
@@ -33,8 +31,8 @@ namespace ToSic.Sxc.Dnn.Web
 
             var dnnVersion = DotNetNukeContext.Current.Application.Version.Major;
             var apiRoot = path + (dnnVersion < 9
-                ? $"desktopmodules/{ExtensionPlaceholder}/api/"
-                : $"api/{ExtensionPlaceholder}/");
+                ? $"desktopmodules/{InpageCms.ExtensionPlaceholder}/api/"
+                : $"api/{InpageCms.ExtensionPlaceholder}/");
 
             var json = "{"
                        + $"\"page\": {pageId},"
@@ -43,7 +41,7 @@ namespace ToSic.Sxc.Dnn.Web
                        + $"\"rvt\": \"{AntiForgeryToken()}\""
                        + "}";
 
-            HtmlPage.AddMeta(MetaName, json);
+            HtmlPage.AddMeta(InpageCms.MetaName, json);
             return wrapLog("added", true);
         }
 
