@@ -319,13 +319,16 @@
 @REM set BuildTarget=C:\Projects\2sxc-dnn742-target\Website\DesktopModules\ToSIC_SexyContent
 @REM xcopy "C:\Projects\2sxc-dnn742\Website\bin\ToSic.*.*" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /y /i
 
+@REM Copy the data folders
 robocopy /mir "$(ProjectDir)..\..\Data\.data\ " "%25BuildTarget%25\.data\ "
 robocopy /mir "$(ProjectDir)..\..\Data\.databeta\ " "%25BuildTarget%25\.databeta\ "
 robocopy /mir "$(ProjectDir)..\..\Data\.data-custom\ " "%25BuildTarget%25\.data-custom\ "
 
+@REM Copy DNN JavaScripts and Bridge
 robocopy /mir "$(ProjectDir)ClientScripts\ " "%25BuildTarget%25\ClientScripts\ "
 robocopy /mir "$(ProjectDir)DnnWebForms\ " "%25BuildTarget%25\DnnWebForms\ "
 
+@REM Copy 2sxc JS stuff
 robocopy /mir "$(Dev2sxcAssets)\js\ " "%25BuildTarget%25\js\ "
 robocopy /mir "$(Dev2sxcAssets)\dist\ " "%25BuildTarget%25\dist\ "
 robocopy /mir "$(Dev2sxcAssets)\system\ " "%25BuildTarget%25\system\ "
@@ -344,17 +347,13 @@ xcopy "$(ProjectDir)WebConfigTemplate.config" "%25BuildTarget%25\" /y
 
 </PostBuildEvent>
   </PropertyGroup>
-
   <!-- Run the DNN Package Builder after every build -->
   <Import Project="BuildScripts\ModulePackage.Targets" />
-
-  <Import Project="..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets" 
-          Condition="Exists('..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" />
+  <Import Project="..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets" Condition="Exists('..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" 
-           Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets'))" />
+    <Error Condition="!Exists('..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets'))" />
   </Target>
 </Project>
