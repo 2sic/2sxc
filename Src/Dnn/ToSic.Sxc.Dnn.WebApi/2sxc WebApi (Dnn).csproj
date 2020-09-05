@@ -117,11 +117,9 @@
     <Compile Include="WebApi\Cms\SystemController_App.cs" />
     <Compile Include="WebApi\Cms\TemplateController_Usage.cs" />
     <Compile Include="WebApi\Context\ContextBuilder.cs" />
-    <Compile Include="WebApi\Context\Ctx.cs" />
     <Compile Include="WebApi\DataTransferObjects\Usage\ContentBlockDto.cs" />
     <Compile Include="WebApi\DataTransferObjects\Usage\ModuleDto.cs" />
     <Compile Include="WebApi\DataTransferObjects\Usage\PageDto.cs" />
-    <Compile Include="WebApi\DataTransferObjects\Usage\PortalDto.cs" />
     <Compile Include="WebApi\DataTransferObjects\Usage\ViewDto.cs" />
     <Compile Include="WebApi\Routing\Route.cs" />
     <Compile Include="WebApi\Cms\EditUi\UiController_Save.cs" />
@@ -132,7 +130,6 @@
     <Compile Include="Dnn\DnnPublishing.cs" />
     <Compile Include="WebApi\DynamicApiController.cs" />
     <Compile Include="WebApi\Cms\SystemController_Features.cs" />
-    <Compile Include="WebApi\Cms\EditUi\AllInOne.cs" />
     <Compile Include="WebApi\Cms\EditUi\UiController.cs" />
     <Compile Include="WebApi\Cms\Helpers\FeaturesManagementUtils.cs" />
     <Compile Include="WebApi\System\InsightsController.cs" />
@@ -206,9 +203,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="WebApi\Cms\Refactor\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
