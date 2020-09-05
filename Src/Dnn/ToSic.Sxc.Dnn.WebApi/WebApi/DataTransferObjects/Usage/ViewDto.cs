@@ -3,6 +3,7 @@ using System.Linq;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Pages;
+using ToSic.Sxc.WebApi.Usage.Dto;
 
 namespace ToSic.Sxc.WebApi.DataTransferObjects.Usage
 {

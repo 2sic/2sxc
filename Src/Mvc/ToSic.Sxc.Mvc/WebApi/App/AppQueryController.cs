@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.Apps.Run;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Mvc.Run;
 using ToSic.Sxc.WebApi.App;
 
@@ -24,12 +23,9 @@ namespace ToSic.Sxc.Mvc.WebApi.App
         private IInstanceContext GetContext()
         {
             // in case the initial request didn't yet find a block builder, we need to create it now
-            var context = // BlockBuilder?.Context ??
-                new InstanceContext(new MvcTenant(), new PageNull(), new ContainerNull(), new MvcUser());
+            var context = new InstanceContext(new MvcTenant(), new PageNull(), new ContainerNull(), new MvcUser());
             return context;
         }
-
-        private IBlockBuilder BlockBuilder => null;
 
         [HttpGet("{name}")]
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(

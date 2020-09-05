@@ -13,25 +13,33 @@ using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.Sxc.WebApi.Context
 {
-    internal class ContextBuilder
+
+    internal class ContextBuilder : IContextBuilder
     {
         protected readonly PortalSettings Portal;
         protected readonly ModuleInfo Module;
         protected readonly UserInfo User;
-        protected readonly int ZoneId;
-        protected readonly IApp App;
+        protected int ZoneId;
+        protected IApp App;
 
         public ContextBuilder(PortalSettings portal, ModuleInfo module, UserInfo user = null, int? zoneId = null, IApp app = null)
         {
-            App = app;
             Portal = portal;
             Module = module;
             User = user;
+            InitApp(zoneId, app);
+        }
+
+        public IContextBuilder InitApp(int? zoneId, IApp app)
+        {
+            App = app;
             ZoneId = zoneId ?? 0;
 
             // check if we're providing context for missing app
             // in this case we must find the zone based on the portals.
-            if (ZoneId == 0 && App == null) ZoneId = new DnnZoneMapper().Init(null).GetZoneId(portal.PortalId);
+            if (ZoneId == 0 && App == null) ZoneId = new DnnZoneMapper().Init(null).GetZoneId(Portal.PortalId);
+            
+            return this;
         }
 
         public ContextDto Get(Ctx flags)

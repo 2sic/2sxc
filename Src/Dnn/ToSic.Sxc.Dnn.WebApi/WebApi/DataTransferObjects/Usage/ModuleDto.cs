@@ -1,17 +1,11 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
+using ToSic.Sxc.WebApi.Context;
 
 namespace ToSic.Sxc.WebApi.DataTransferObjects.Usage
 {
-    public class ModuleDto
+    public class ModuleDto: InstanceDto
     {
-        public int Id;
-        public int ModuleId;
-        public bool ShowOnAllPages;
-        public string Title;
-        public bool IsDeleted;
-        public PageDto Page;
-
         public ModuleDto(ModuleInfo module, TabInfo page)
         {
             ModuleId = module.ModuleID;

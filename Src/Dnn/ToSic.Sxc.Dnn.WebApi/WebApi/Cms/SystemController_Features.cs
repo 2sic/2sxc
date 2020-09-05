@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Http;
 using DotNetNuke.Application;
@@ -9,9 +8,9 @@ using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Run;
-using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.WebApi.Security;
+using ToSic.Sxc.WebApi.System;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -41,7 +40,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 appId = new ZoneRuntime(zoneId, Log).DefaultAppId;
             }
 
-            return FeatureListWithPermissionCheck(new MultiPermissionsApp(GetContext(), GetApp(appId), Log));
+            return FeaturesHelpers.FeatureListWithPermissionCheck(new MultiPermissionsApp(GetContext(), GetApp(appId), Log));
         }
 
         [HttpGet]
@@ -84,14 +83,14 @@ namespace ToSic.Sxc.WebApi.Cms
         }
 
 
-        internal static IEnumerable<Feature> FeatureListWithPermissionCheck(MultiPermissionsApp permCheck)
-	    {
-            // if the user has full edit permissions, he may also get the un-public features
-            // otherwise just the public Ui features
-	        var includeNonPublic = permCheck.UserMayOnAll(GrantSets.WritePublished);
+     //   internal static IEnumerable<Feature> FeatureListWithPermissionCheck(MultiPermissionsApp permCheck)
+	    //{
+     //       // if the user has full edit permissions, he may also get the un-public features
+     //       // otherwise just the public Ui features
+	    //    var includeNonPublic = permCheck.UserMayOnAll(GrantSets.WritePublished);
 
-	        return Eav.Configuration.Features.Ui
-                .Where(f => includeNonPublic || f.Public == true);
-	    }
+	    //    return Eav.Configuration.Features.Ui
+     //           .Where(f => includeNonPublic || f.Public == true);
+	    //}
 	}
 }

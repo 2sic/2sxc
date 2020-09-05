@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.WebApi.DataTransferObjects.Usage
+﻿namespace ToSic.Sxc.WebApi.Usage.Dto
 {
     public class PortalDto
     {

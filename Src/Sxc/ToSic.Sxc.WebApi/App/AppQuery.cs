@@ -13,7 +13,7 @@ using ToSic.Sxc.WebApi.Errors;
 
 namespace ToSic.Sxc.WebApi.App
 {
-    public class AppQuery: WebApiBackendBase
+    public class AppQuery: WebApiBackendBase<AppQuery>
     {
         #region Constructor / DI
 
@@ -22,11 +22,11 @@ namespace ToSic.Sxc.WebApi.App
 
         }
 
-        public AppQuery Init(ILog parentLog)
-        {
-            Log.LinkTo(parentLog);
-            return this;
-        }
+        //public AppQuery Init(ILog parentLog)
+        //{
+        //    Log.LinkTo(parentLog);
+        //    return this;
+        //}
 
         #endregion
 

@@ -15,7 +15,7 @@ using ToSic.Sxc.WebApi.Security;
 
 namespace ToSic.Sxc.WebApi.App
 {
-    public class AppContent: WebApiBackendBase
+    public class AppContent: WebApiBackendBase<AppContent>
     {
         #region Constructor / DI
 
@@ -24,11 +24,11 @@ namespace ToSic.Sxc.WebApi.App
 
         }
 
-        public AppContent Init(ILog parentLog)
-        {
-            Log.LinkTo(parentLog);
-            return this;
-        }
+        //public AppContent Init(ILog parentLog)
+        //{
+        //    Log.LinkTo(parentLog);
+        //    return this;
+        //}
 
         #endregion
 

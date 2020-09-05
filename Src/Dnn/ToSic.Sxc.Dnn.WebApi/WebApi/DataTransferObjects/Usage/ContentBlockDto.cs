@@ -5,9 +5,9 @@ using ToSic.Sxc.Dnn.Pages;
 
 namespace ToSic.Sxc.WebApi.DataTransferObjects.Usage
 {
-    public class ContentBlockDto: IdentifierBase
+    public class ContentBlockDto: Context.ContentBlockDto
     {
-        public IEnumerable<ModuleDto> Modules;
+        //public IEnumerable<ModuleDto> Modules;
 
         public ContentBlockDto(BlockConfiguration block, IEnumerable<ModuleWithContent> blockModules)
         {
