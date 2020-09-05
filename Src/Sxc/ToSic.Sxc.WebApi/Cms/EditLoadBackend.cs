@@ -14,8 +14,12 @@ using ToSic.Sxc.WebApi.System;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    internal partial class UiBackend
+    internal partial class EditLoadBackend: WebApiBackendBase<EditLoadBackend>
     {
+        public EditLoadBackend(string logName) : base(logName)
+        {
+        }
+
         public AllInOne Load(IBlock block, IContextBuilder contextBuilder, int appId, List<ItemIdentifier> items)
         {
             // Security check
@@ -42,7 +46,7 @@ namespace ToSic.Sxc.WebApi.Cms
             result.Items = list.Select(e => new BundleWithHeader<JsonEntity>
             {
                 Header = e.Header,
-                Entity = UiBackend.GetSerializeAndMdAssignJsonEntity(appId, e, jsonSerializer, typeRead)
+                Entity = GetSerializeAndMdAssignJsonEntity(appId, e, jsonSerializer, typeRead)
             }).ToList();
 
             // set published if some data already exists
@@ -61,7 +65,7 @@ namespace ToSic.Sxc.WebApi.Cms
                     throw HttpException.PermissionDenied(error);
 
             // load content-types
-            var types = UiBackend.UsedTypes(list, typeRead);
+            var types = UsedTypes(list, typeRead);
             result.ContentTypes = types
                 .Select(ct => JsonSerializer.ToJson(ct, true))
                 .ToList();
@@ -100,3 +104,4 @@ namespace ToSic.Sxc.WebApi.Cms
         }
     }
 }
+
