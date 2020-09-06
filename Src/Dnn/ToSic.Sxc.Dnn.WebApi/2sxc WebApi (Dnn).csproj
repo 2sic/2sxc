@@ -116,8 +116,8 @@
     <Compile Include="WebApi\Cms\SystemController_Languages.cs" />
     <Compile Include="WebApi\Cms\SystemController_App.cs" />
     <Compile Include="WebApi\Cms\TemplateController_Usage.cs" />
-    <Compile Include="WebApi\Context\ContextBuilder.cs" />
-    <Compile Include="WebApi\Context\DnnContextDtoExtensions.cs" />
+    <Compile Include="Dnn\WebApi\Context\ContextBuilder.cs" />
+    <Compile Include="Dnn\WebApi\Context\DnnContextDtoExtensions.cs" />
     <Compile Include="WebApi\Routing\Route.cs" />
     <Compile Include="WebApi\Cms\EditUi\UiController_Save.cs" />
     <Compile Include="WebApi\Cms\EditUi\UiController_Load.cs" />
