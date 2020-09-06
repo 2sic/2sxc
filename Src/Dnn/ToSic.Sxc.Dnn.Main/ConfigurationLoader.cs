@@ -14,6 +14,7 @@ using ToSic.Eav.Repositories;
 using ToSic.Eav.Run;
 using ToSic.SexyContent.Dnn920;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.WebApi;
 using ToSic.Sxc.Apps.ImportExport;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Conversion;
@@ -27,6 +28,7 @@ using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.SexyContent
 {
@@ -118,6 +120,9 @@ namespace ToSic.SexyContent
                 sc.AddTransient<IEnvironmentConnector, DnnMapAppToInstance>();
                 sc.AddTransient<IEnvironmentInstaller, InstallationController>();
                 sc.AddTransient<IEnvironmentFileSystem, DnnFileSystem>();
+                // new #2160
+                sc.AddTransient<SecurityChecksBase, DnnAdamSecurityChecks>();
+
                 sc.AddTransient<IGetEngine, GetDnnEngine>();
                 sc.AddTransient<IFingerprint, DnnFingerprint>();
 

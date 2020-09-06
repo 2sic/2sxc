@@ -68,7 +68,7 @@ namespace ToSic.Sxc.WebApi.Cms
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public ContentTypeDto GetSingle(int appId, string contentTypeStaticName, string scope = null)
 	    {
-	        var permCheck = new MultiPermissionsTypes(GetContext(), GetApp(appId), contentTypeStaticName, Log);
+	        var permCheck = new MultiPermissionsTypes().Init(GetContext(), GetApp(appId), contentTypeStaticName, Log);
             if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
@@ -115,7 +115,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public IEnumerable<ContentTypeFieldDto> GetFields(int appId, string staticName)
         {
             Log.Add($"get fields for a:{appId} type:{staticName}");
-	        var permCheck = new MultiPermissionsTypes(GetContext(), GetApp(appId), staticName, Log);
+	        var permCheck = new MultiPermissionsTypes().Init(GetContext(), GetApp(appId), staticName, Log);
             if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
                 throw HttpException.PermissionDenied(error);
             if(!permCheck.UserCanWriteAndPublicFormsEnabled(out _, out error))

@@ -3,11 +3,12 @@ using System;
 using System.Configuration;
 using System.IO;
 using System.Web.Configuration;
-using System.Web.Http;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.WebApi;
+using ToSic.Sxc.WebApi.Adam;
+using ToSic.Sxc.WebApi.Errors;
 
 
 namespace ToSic.Sxc.Adam.WebApi
@@ -27,15 +28,15 @@ namespace ToSic.Sxc.Adam.WebApi
         {
             Log.Add($"upload one a:{_appId}, i:{guid}, field:{field}, subfold:{subFolder}, useRoot:{usePortalRoot}");
             
-            var state = new AdamSecureState(_block, _appId, contentType, field, guid, usePortalRoot, Log);
-            HttpResponseException exp;
+            var state = new AdamState(_block, _appId, contentType, field, guid, usePortalRoot, Log);
+            HttpExceptionAbstraction exp;
             if (!skipFieldAndContentTypePermissionCheck)
             {
-                if(!state.UserIsPermittedOnField(GrantSets.WriteSomething, out exp))
+                if(!state.Security.UserIsPermittedOnField(GrantSets.WriteSomething, out exp))
                     throw exp;
 
                 // check that if the user should only see drafts, he doesn't see items of published data
-                if (!state.UserIsNotRestrictedOrItemIsDraft(guid, out var permissionException))
+                if (!state.Security.UserIsNotRestrictedOrItemIsDraft(guid, out var permissionException))
                     throw permissionException;
             }
 
@@ -48,24 +49,24 @@ namespace ToSic.Sxc.Adam.WebApi
             var dnnFolder = FolderManager.Instance.GetFolder(folder.Id);
 
             // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
-            if (usePortalRoot && !SecurityChecks.CanEdit(dnnFolder))
+            if (usePortalRoot && !DnnAdamSecurityChecks.CanEdit(dnnFolder))
                 throw HttpException.PermissionDenied("can't upload - permission denied");
 
             // we only upload into valid adam if that's the scenario
-            if (!state.SuperUserOrAccessingItemFolder(dnnFolder.PhysicalPath, out exp))
+            if (!state.Security.SuperUserOrAccessingItemFolder(dnnFolder.PhysicalPath, out exp))
                 throw exp;
 
             #region check content-type extensions...
 
             // Check file size and extension
             var fileName = string.Copy(originalFileName);
-            if(!state.ExtensionIsOk(fileName, out var exceptionAbstraction))
+            if(!state.Security.ExtensionIsOk(fileName, out var exceptionAbstraction))
                 throw exceptionAbstraction;
 
             // check metadata of the FieldDef to see if still allowed extension
             var additionalFilter = state.Attribute.Metadata.GetBestValue<string>("FileFilter");
             if (!string.IsNullOrWhiteSpace(additionalFilter)
-                && !state.CustomFileFilterOk(additionalFilter, originalFileName))
+                && !new SecurityCheckHelpers().Init(Log).CustomFileFilterOk(additionalFilter, originalFileName))
                 throw HttpException.NotAllowedFileType(fileName, "field has custom file-filter, which doesn't match");
 
             // note 2018-04-20 2dm: can't do this for wysiwyg, as it doesn't have a setting for allowed file-uploads

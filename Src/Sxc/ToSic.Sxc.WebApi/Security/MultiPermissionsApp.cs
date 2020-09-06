@@ -16,25 +16,32 @@ namespace ToSic.Sxc.WebApi.Security
         /// <summary>
         /// The current app which will be used and can be re-used externally
         /// </summary>
-        public IApp App { get; }
+        public IApp App { get; private set; }
 
-        internal readonly IInstanceContext Context;
+        internal IInstanceContext Context { get; private set; }
 
-        protected readonly ITenant TenantForSecurityCheck;
+        protected ITenant TenantForSecurityCheck { get; private set; }
 
-        protected readonly bool SamePortal;
+        protected bool SamePortal { get; private set; }
 
-        public MultiPermissionsApp(IInstanceContext context, IApp app, ILog parentLog) 
-            : base("Api.Perms", parentLog)
+        #region Constructors and DI
+
+        public MultiPermissionsApp() : base("Api.Perms") { }
+
+        public MultiPermissionsApp Init(IInstanceContext context, IApp app, ILog parentLog, string logName = null)
+            // : base("Api.Perms", parentLog)
         {
-            var wrapLog = Log.Call($"..., appId: {app.AppId}, ...");
+            Init(parentLog, logName ?? "Api.PermApp");
+            var wrapLog = Log.Call<MultiPermissionsApp>($"..., appId: {app.AppId}, ...");
             Context = context;
             App = app;
 
             SamePortal = Context.Tenant.ZoneId == App.ZoneId;
             TenantForSecurityCheck = SamePortal ? Context.Tenant : Factory.Resolve<IZoneMapper>().Init(Log).TenantOfZone(App.ZoneId);
-            wrapLog($"ready for z/a:{app.ZoneId}/{app.AppId} t/z:{App.Tenant.Id}/{Context.Tenant.ZoneId} same:{SamePortal}");
+            return wrapLog($"ready for z/a:{app.ZoneId}/{app.AppId} t/z:{App.Tenant.Id}/{Context.Tenant.ZoneId} same:{SamePortal}", this);
         }
+
+        #endregion
 
         protected override Dictionary<string, IPermissionCheck> InitializePermissionChecks()
             => InitPermissionChecksForApp();

@@ -1,26 +1,23 @@
-﻿using System;
-using System.IO;
-using System.Web.Http;
+﻿using System.IO;
 using DotNetNuke.Entities.Host;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
 using JetBrains.Annotations;
-using ToSic.Eav.Security.Files;
-using ToSic.Sxc.WebApi;
+using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.Adam.WebApi
 {
-    internal class SecurityChecks
+    public class DnnAdamSecurityChecks: SecurityChecksBase
     {
 
-        internal static bool DestinationIsInItem(Guid guid, string field, string path, out HttpResponseException preparedException)
-        {
-            var inAdam = Security.PathIsInItemAdam(guid, field, path);
-            preparedException = inAdam
-                ? null
-                : HttpException.PermissionDenied("Can't access a resource which is not part of this item.");
-            return inAdam;
-        }
+        //internal static bool DestinationIsInItem(Guid guid, string field, string path, out HttpResponseException preparedException)
+        //{
+        //    var inAdam = Security.PathIsInItemAdam(guid, field, path);
+        //    preparedException = inAdam
+        //        ? null
+        //        : HttpException.PermissionDenied("Can't access a resource which is not part of this item.");
+        //    return inAdam;
+        //}
 
 
         /// <summary>
@@ -32,7 +29,7 @@ namespace ToSic.Sxc.Adam.WebApi
         /// mostly a copy from https://github.com/dnnsoftware/Dnn.Platform/blob/115ae75da6b152f77ad36312eb76327cdc55edd7/DNN%20Platform/Modules/Journal/FileUploadController.cs#L72
         /// </remarks>
         [AssertionMethod]
-        internal static bool IsAllowedDnnExtension(string fileName)
+        internal override bool TenantAllowsExtension(string fileName)
         {
             var extension = Path.GetExtension(fileName);
             return !string.IsNullOrEmpty(extension)
@@ -42,16 +39,16 @@ namespace ToSic.Sxc.Adam.WebApi
 
 
 
-        [AssertionMethod]
-        internal static bool IsKnownRiskyExtension(string fileName) 
-            => FileNames.IsKnownRiskyExtension(fileName);
+        //[AssertionMethod]
+        //internal static bool IsKnownRiskyExtension(string fileName) 
+        //    => FileNames.IsKnownRiskyExtension(fileName);
 
-        [AssertionMethod]
-        internal static void ThrowIfAccessingRootButNotAllowed(bool usePortalRoot, bool userIsRestricted)
-        {
-            if (usePortalRoot && userIsRestricted)
-                throw HttpException.BadRequest("you may only create draft-data, so file operations outside of ADAM is not allowed");
-        }
+        //[AssertionMethod]
+        //internal static void ThrowIfAccessingRootButNotAllowed(bool usePortalRoot, bool userIsRestricted)
+        //{
+        //    if (usePortalRoot && userIsRestricted)
+        //        throw HttpException.BadRequest("you may only create draft-data, so file operations outside of ADAM is not allowed");
+        //}
 
         internal static bool CanEdit(IFileInfo file)
         {

@@ -9,7 +9,7 @@ namespace ToSic.Sxc.WebApi.Security
     /// A permission checker which is initialized with various items which must be checked
     /// Calling Ensure or similar will verify that all permission checks succeed
     /// </summary>
-    internal abstract class MultiPermissionsBase: HasLog, IMultiPermissionCheck
+    internal abstract class MultiPermissionsBase: HasLog<MultiPermissionsBase>, IMultiPermissionCheck
     {
         /// <summary>
         /// All the permission checks that will be used
@@ -18,8 +18,15 @@ namespace ToSic.Sxc.WebApi.Security
             => _permissionCheckers ?? (_permissionCheckers = InitializePermissionChecks());
         private Dictionary<string, IPermissionCheck> _permissionCheckers;
 
+        #region Constructor / Init stuff
+
+        protected MultiPermissionsBase(string logName) : base(logName) { }
+
         protected MultiPermissionsBase(string logName, ILog parentLog) : base(logName, parentLog)
         {}
+        
+
+        #endregion
 
         #region abstract methods
 

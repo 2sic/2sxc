@@ -19,7 +19,7 @@ namespace ToSic.Sxc.WebApi.Save
         public IMultiPermissionCheck DoPreSaveSecurityCheck(int appId, IEnumerable<BundleWithHeader> items)
         {
             var app = Factory.Resolve<Apps.App>().Init(appId, Log, Block);
-            var permCheck = new MultiPermissionsTypes(Block.Context, app, items.Select(i => i.Header).ToList(), Log);
+            var permCheck = new MultiPermissionsTypes().Init(Block.Context, app, items.Select(i => i.Header).ToList(), Log);
             if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
                 throw HttpException.PermissionDenied(error);
             if (!permCheck.UserCanWriteAndPublicFormsEnabled(out _, out error))

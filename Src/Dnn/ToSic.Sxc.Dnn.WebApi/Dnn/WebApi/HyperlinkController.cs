@@ -9,6 +9,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Adam.WebApi;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.WebApi;
+using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.Security;
 
 namespace ToSic.Sxc.Dnn.WebApi
@@ -60,7 +61,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 		        {
                     // page link - only resolve if the user has edit-permissions
 		            // only people who have some full edit permissions may actually look up pages
-		            var permCheckPage = new MultiPermissionsApp(GetContext(), GetApp(appId), Log);
+		            var permCheckPage = new MultiPermissionsApp().Init(GetContext(), GetApp(appId), Log);
 		            return permCheckPage.UserMayOnAll(GrantSets.WritePublished)
                         ? resolved
                         : hyperlink;
@@ -74,10 +75,10 @@ namespace ToSic.Sxc.Dnn.WebApi
 
 		        // file-check, more abilities to allow
 		        // this will already do a ensure-or-throw inside it if outside of adam
-		        var adamCheck = new AdamSecureState(GetBlock(), appId, contentType, field, guid, isOutsideOfAdam, Log);
-		        if (!adamCheck.SuperUserOrAccessingItemFolder(resolved, out var exp))
+		        var adamCheck = new AdamState(GetBlock(), appId, contentType, field, guid, isOutsideOfAdam, Log);
+		        if (!adamCheck.Security.SuperUserOrAccessingItemFolder(resolved, out var exp))
 		            throw exp;
-                if(!adamCheck.UserIsPermittedOnField(GrantSets.ReadSomething, out exp))
+                if(!adamCheck.Security.UserIsPermittedOnField(GrantSets.ReadSomething, out exp))
                     throw exp;
 
 		        // if everything worked till now, it's ok to return the result

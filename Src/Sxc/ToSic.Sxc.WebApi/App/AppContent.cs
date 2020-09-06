@@ -4,7 +4,6 @@ using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
-using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
@@ -48,7 +47,7 @@ namespace ToSic.Sxc.WebApi.App
                 : GetApp(appIdentity.AppId, ctxBlock);
 
             // verify that read-access to these content-types is permitted
-            var permCheck = new MultiPermissionsTypes(context, app, contentType, Log);
+            var permCheck = new MultiPermissionsTypes().Init(context, app, contentType, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
@@ -78,7 +77,7 @@ namespace ToSic.Sxc.WebApi.App
             var entityApi = new EntityApi(appIdentity.AppId, true, Log);
 
             var itm = getOne(entityApi);
-            var permCheck = new MultiPermissionsItems(context, GetApp(appIdentity.AppId, ctxBlock), itm, Log);
+            var permCheck = new MultiPermissionsItems().Init(context, GetApp(appIdentity.AppId, ctxBlock), itm, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
@@ -111,9 +110,10 @@ namespace ToSic.Sxc.WebApi.App
                 : new EntityApi(appIdentity.AppId, true, Log).GetOrThrow(contentType, id.Value);
 
             var ok = itm == null
-                ? new MultiPermissionsTypes(context, GetApp(appIdentity.AppId, ctxBlock), contentType, Log)
+                ? new MultiPermissionsTypes()
+                    .Init(context, GetApp(appIdentity.AppId, ctxBlock), contentType, Log)
                     .EnsureAll(Grants.Create.AsSet(), out var error)
-                : new MultiPermissionsItems(context, GetApp(appIdentity.AppId, ctxBlock), itm, Log)
+                : new MultiPermissionsItems().Init(context, GetApp(appIdentity.AppId, ctxBlock), itm, Log)
                     .EnsureAll(Grants.Update.AsSet(), out error);
             if (!ok)
                 throw HttpException.PermissionDenied(error);
@@ -177,7 +177,7 @@ namespace ToSic.Sxc.WebApi.App
 
             var entityApi = new EntityApi(appIdentity.AppId, true, Log);
             var itm = entityApi.GetOrThrow(contentType, id);
-            var permCheck = new MultiPermissionsItems(context, GetApp(appIdentity.AppId, ctxBlock), itm, Log);
+            var permCheck = new MultiPermissionsItems().Init(context, GetApp(appIdentity.AppId, ctxBlock), itm, Log);
             if (!permCheck.EnsureAll(Grants.Delete.AsSet(), out var error))
                 throw HttpException.PermissionDenied(error);
             entityApi.Delete(itm.Type.Name, id);
@@ -192,7 +192,7 @@ namespace ToSic.Sxc.WebApi.App
             var entityApi = new EntityApi(appIdentity.AppId, true, Log);
             var itm = entityApi.GetOrThrow(contentType == "any" ? null : contentType, guid);
 
-            var permCheck = new MultiPermissionsItems(context, GetApp(appIdentity.AppId, ctxBlock), itm, Log);
+            var permCheck = new MultiPermissionsItems().Init(context, GetApp(appIdentity.AppId, ctxBlock), itm, Log);
             if (!permCheck.EnsureAll(Grants.Delete.AsSet(), out var error))
                 throw HttpException.PermissionDenied(error);
 

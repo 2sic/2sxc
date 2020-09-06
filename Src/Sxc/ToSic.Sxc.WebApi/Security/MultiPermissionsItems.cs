@@ -12,11 +12,17 @@ namespace ToSic.Sxc.WebApi.Security
     {
         protected List<IEntity> Items;
 
-        public MultiPermissionsItems(IInstanceContext context, IApp app, IEntity item, ILog parentLog) 
-            : base(context, app, parentLog)
+        #region Constructors and DI / Init
+
+        public MultiPermissionsItems Init(IInstanceContext context, IApp app, IEntity item, ILog parentLog) 
+            //: base(context, app, parentLog)
         {
+            Init(context, app, parentLog, "Sec.MpItms");
             Items = new List<IEntity> {item};
+            return this;
         }
+
+        #endregion
 
         protected override Dictionary<string, IPermissionCheck> InitializePermissionChecks()
             => Items.ToDictionary(i => i.EntityId.ToString(), BuildItemPermissionChecker);

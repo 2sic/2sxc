@@ -11,6 +11,7 @@ using DotNetNuke.Web.Api;
 using System.Web.Http.Controllers;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.WebApi;
+using ToSic.Sxc.WebApi.Adam;
 using HttpException = ToSic.Sxc.WebApi.HttpException;
 
 namespace ToSic.Sxc.Adam.WebApi
@@ -93,15 +94,15 @@ namespace ToSic.Sxc.Adam.WebApi
         public IEnumerable<AdamItem> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
         {
             var wrapLog = Log.Call<IEnumerable<AdamItem>>(parameters: $"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
-            var state = new AdamSecureState(GetBlock(), appId, contentType, field, guid, usePortalRoot, Log);
+            var state = new AdamState(GetBlock(), appId, contentType, field, guid, usePortalRoot, Log);
 
 
             Log.Add("starting permissions checks");
-            if (state.UserIsRestricted && !state.FieldPermissionOk(GrantSets.ReadSomething))
+            if (state.Security.UserIsRestricted && !state.Security.FieldPermissionOk(GrantSets.ReadSomething))
                 return wrapLog("user is restricted, and doesn't have permissions on field - return null", null);
 
             // check that if the user should only see drafts, he doesn't see items of published data
-            if (!state.UserIsNotRestrictedOrItemIsDraft(guid, out var _))
+            if (!state.Security.UserIsNotRestrictedOrItemIsDraft(guid, out var _))
                 return wrapLog("user is restricted (no read-published rights) and item is published - return null", null);
 
             Log.Add("first permission checks passed");
@@ -116,7 +117,7 @@ namespace ToSic.Sxc.Adam.WebApi
             var currentDnn = folderManager.GetFolder(currentAdam.Id);
 
             // ensure that it's super user, or the folder is really part of this item
-            if (!state.SuperUserOrAccessingItemFolder(currentDnn.PhysicalPath, out var exp))
+            if (!state.Security.SuperUserOrAccessingItemFolder(currentDnn.PhysicalPath, out var exp))
             {
                 Log.Add("user is not super-user and folder doesn't seem to be an ADAM folder of this item - will throw");
                 throw exp;
@@ -160,8 +161,8 @@ namespace ToSic.Sxc.Adam.WebApi
         public IEnumerable<AdamItem> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
         {
             Log.Add($"get folders for a:{appId}, i:{guid}, field:{field}, subfld:{subfolder}, new:{newFolder}, useRoot:{usePortalRoot}");
-            var state = new AdamSecureState(GetBlock(), appId, contentType, field, guid, usePortalRoot, Log);
-            if (state.UserIsRestricted && !state.FieldPermissionOk(GrantSets.ReadSomething))
+            var state = new AdamState(GetBlock(), appId, contentType, field, guid, usePortalRoot, Log);
+            if (state.Security.UserIsRestricted && !state.Security.FieldPermissionOk(GrantSets.ReadSomething))
             {
                 return null;
             }
@@ -177,7 +178,7 @@ namespace ToSic.Sxc.Adam.WebApi
             var dnnFolder = FolderManager.Instance.GetFolder(folder.Id);
 
             // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
-            if (usePortalRoot && !SecurityChecks.CanEdit(dnnFolder))
+            if (usePortalRoot && !DnnAdamSecurityChecks.CanEdit(dnnFolder))
                 throw HttpException.PermissionDenied("can't create new folder - permission denied");
 
             var newFolderPath = string.IsNullOrEmpty(subfolder) ? newFolder : Path.Combine(subfolder, newFolder).Replace("\\", "/"); 
@@ -192,12 +193,12 @@ namespace ToSic.Sxc.Adam.WebApi
         public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot)
         {
             Log.Add($"delete from a:{appId}, i:{guid}, field:{field}, file:{id}, subf:{subfolder}, isFld:{isFolder}, useRoot:{usePortalRoot}");
-            var state = new AdamSecureState(GetBlock(), appId, contentType, field, guid, usePortalRoot, Log);
-            if (!state.UserIsPermittedOnField(GrantSets.DeleteSomething, out var exp))
+            var state = new AdamState(GetBlock(), appId, contentType, field, guid, usePortalRoot, Log);
+            if (!state.Security.UserIsPermittedOnField(GrantSets.DeleteSomething, out var exp))
                 throw exp;
 
             // check that if the user should only see drafts, he doesn't see items of published data
-            if (!state.UserIsNotRestrictedOrItemIsDraft(guid, out var permissionException))
+            if (!state.Security.UserIsNotRestrictedOrItemIsDraft(guid, out var permissionException))
                 throw permissionException;
 
             // try to see if we can get into the subfolder - will throw error if missing
@@ -210,10 +211,10 @@ namespace ToSic.Sxc.Adam.WebApi
                 var fld = folderManager.GetFolder(id);
 
                 // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
-                if (usePortalRoot && !SecurityChecks.CanEdit(fld))
+                if (usePortalRoot && !DnnAdamSecurityChecks.CanEdit(fld))
                     throw HttpException.PermissionDenied("can't delete folder - permission denied");
 
-                if (!state.SuperUserOrAccessingItemFolder(fld.PhysicalPath, out exp))
+                if (!state.Security.SuperUserOrAccessingItemFolder(fld.PhysicalPath, out exp))
                     throw exp;
 
                 if (fld.ParentID != current.Id)
@@ -226,10 +227,10 @@ namespace ToSic.Sxc.Adam.WebApi
                 var file = fileManager.GetFile(id);
 
                 // validate that dnn user have write permissions for folder where is file in case dnn file system is used (usePortalRoot)
-                if (usePortalRoot && !SecurityChecks.CanEdit(file))
+                if (usePortalRoot && !DnnAdamSecurityChecks.CanEdit(file))
                     throw HttpException.PermissionDenied("can't delete file - permission denied");
 
-                if (!state.SuperUserOrAccessingItemFolder(file.PhysicalPath, out exp))
+                if (!state.Security.SuperUserOrAccessingItemFolder(file.PhysicalPath, out exp))
                     throw exp;
 
                 if (file.FolderId != current.Id)
@@ -246,12 +247,12 @@ namespace ToSic.Sxc.Adam.WebApi
         {
             Log.Add($"rename a:{appId}, i:{guid}, field:{field}, subf:{subfolder}, isfld:{isFolder}, new:{newName}, useRoot:{usePortalRoot}");
 
-            var state = new AdamSecureState(GetBlock(), appId, contentType, field, guid, usePortalRoot, Log);
-            if (!state.UserIsPermittedOnField(GrantSets.WriteSomething, out var exp))
+            var state = new AdamState(GetBlock(), appId, contentType, field, guid, usePortalRoot, Log);
+            if (!state.Security.UserIsPermittedOnField(GrantSets.WriteSomething, out var exp))
                 throw exp;
 
             // check that if the user should only see drafts, he doesn't see items of published data
-            if (!state.UserIsNotRestrictedOrItemIsDraft(guid, out var permissionException))
+            if (!state.Security.UserIsNotRestrictedOrItemIsDraft(guid, out var permissionException))
                 throw permissionException;
 
             // try to see if we can get into the subfolder - will throw error if missing
@@ -263,10 +264,10 @@ namespace ToSic.Sxc.Adam.WebApi
                 var fld = folderManager.GetFolder(id);
 
                 // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
-                if (usePortalRoot && !SecurityChecks.CanEdit(fld))
+                if (usePortalRoot && !DnnAdamSecurityChecks.CanEdit(fld))
                     throw HttpException.PermissionDenied("can't rename folder - permission denied");
 
-                if (!state.SuperUserOrAccessingItemFolder(fld.PhysicalPath, out exp))
+                if (!state.Security.SuperUserOrAccessingItemFolder(fld.PhysicalPath, out exp))
                     throw exp;
 
                 if (fld.ParentID != current.Id)
@@ -279,10 +280,10 @@ namespace ToSic.Sxc.Adam.WebApi
                 var file = fileManager.GetFile(id);
 
                 // validate that dnn user have write permissions for folder where is file in case dnn file system is used (usePortalRoot)
-                if (usePortalRoot && !SecurityChecks.CanEdit(file))
+                if (usePortalRoot && !DnnAdamSecurityChecks.CanEdit(file))
                     throw HttpException.PermissionDenied("can't rename file - permission denied");
 
-                if (!state.SuperUserOrAccessingItemFolder(file.PhysicalPath, out exp))
+                if (!state.Security.SuperUserOrAccessingItemFolder(file.PhysicalPath, out exp))
                     throw exp;
 
                 if (file.FolderId != current.Id)

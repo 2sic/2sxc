@@ -10,19 +10,30 @@ namespace ToSic.Sxc.WebApi.Security
 {
     internal class MultiPermissionsTypes: MultiPermissionsApp
     {
+        private const string _logName = "Sec.MPTyps";
         protected IEnumerable<string> ContentTypes;
 
-        public MultiPermissionsTypes(IInstanceContext context, Apps.IApp app, string contentType, ILog parentLog) 
-            : this(context, app, new []{contentType}, parentLog)
-        { }
+        public MultiPermissionsTypes(): base() { }
 
-        public MultiPermissionsTypes(IInstanceContext context, Apps.IApp app, IEnumerable<string> contentTypes, ILog parentLog) 
-            : base(context, app, parentLog) 
-            => ContentTypes = contentTypes;
+        public MultiPermissionsTypes Init(IInstanceContext context, Apps.IApp app, string contentType, ILog parentLog)
+        {
+            Init(context, app, new[] {contentType}, parentLog);
+            return this;
+        }
 
-        public MultiPermissionsTypes(IInstanceContext context, Apps.IApp app, List<ItemIdentifier> items, ILog parentLog) 
-            : base(context, app, parentLog) 
-            => ContentTypes = ExtractTypeNamesFromItems(items);
+        public MultiPermissionsTypes Init(IInstanceContext context, Apps.IApp app, IEnumerable<string> contentTypes, ILog parentLog)
+        { 
+           Init(context, app, parentLog, _logName);
+           ContentTypes = contentTypes;
+           return this;
+        }
+
+        public MultiPermissionsTypes Init(IInstanceContext context, Apps.IApp app, List<ItemIdentifier> items, ILog parentLog)
+        {
+            Init(context, app, parentLog, _logName);
+            ContentTypes = ExtractTypeNamesFromItems(items);
+            return this;
+        }
 
 
         protected override Dictionary<string, IPermissionCheck> InitializePermissionChecks()

@@ -40,7 +40,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 appId = new ZoneRuntime(zoneId, Log).DefaultAppId;
             }
 
-            return FeaturesHelpers.FeatureListWithPermissionCheck(new MultiPermissionsApp(GetContext(), GetApp(appId), Log));
+            return FeaturesHelpers.FeatureListWithPermissionCheck(new MultiPermissionsApp().Init(GetContext(), GetApp(appId), Log));
         }
 
         [HttpGet]

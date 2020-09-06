@@ -11,7 +11,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         public dynamic Usage(int appId, Guid guid)
         {
-            var permCheck = new MultiPermissionsApp(GetContext(), GetApp(appId), Log);
+            var permCheck = new MultiPermissionsApp().Init(GetContext(), GetApp(appId), Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
