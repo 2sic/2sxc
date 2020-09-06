@@ -45,11 +45,11 @@ namespace ToSic.Sxc.Adam
             _folderIds.Add(fldr.Id);  // track of the folder
             AddFilesInFolder(fldr);         // keep track of the files
 
-            foreach (var f in _envFs.GetFolders(fldr.Id, null))   // then add subfolders
+            foreach (var f in _envFs.GetFolders(fldr.Id/*, null*/))   // then add subfolders
                 AddFolder(f);
         }
 
         private void AddFilesInFolder(Eav.Apps.Assets.Folder fldr) 
-            => _envFs.GetFiles(fldr.Id, null).ForEach(f => _fileIds.Add(f.Id));
+            => _envFs.GetFiles(fldr.Id/*, null*/).ForEach(f => _fileIds.Add(f.Id));
     }
 }

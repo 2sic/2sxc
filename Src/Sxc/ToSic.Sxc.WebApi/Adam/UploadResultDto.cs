@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Adam.WebApi
+﻿namespace ToSic.Sxc.WebApi.Adam
 {
     public class UploadResultDto
     {

@@ -45,6 +45,8 @@ namespace ToSic.Sxc.WebApi.Adam
 
         internal abstract bool TenantAllowsExtension(string fileName);
 
+        internal abstract bool CanEditFolder(int folderId);
+
         #endregion
 
         internal bool ExtensionIsOk(string fileName, out HttpExceptionAbstraction preparedException)

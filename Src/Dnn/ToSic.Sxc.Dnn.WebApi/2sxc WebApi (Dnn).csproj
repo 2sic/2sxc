@@ -98,6 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adam\WebApi\AdamItem.cs" />
+    <Compile Include="Adam\WebApi\AdamItem_T.cs" />
     <Compile Include="Adam\WebApi\AdamUploader.cs" />
     <Compile Include="Adam\WebApi\SecurityChecks.cs" />
     <Compile Include="Dnn\ApiController.cs" />

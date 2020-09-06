@@ -225,10 +225,10 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public IFolder AsAdam(IEntity entity, string fieldName)
         {
-            var envFs = Factory.Resolve<IEnvironmentFileSystem>();
             if (_adamAppContext == null)
                 _adamAppContext = new AdamAppContext(Block.Context.Tenant, App, Block, CompatibilityLevel, Log);
-            return new FolderOfField(envFs, _adamAppContext, entity.EntityGuid, fieldName);
+            //var envFs = Factory.Resolve<IEnvironmentFileSystem>().Init(_adamAppContext);
+            return new FolderOfField(/*envFs, */_adamAppContext, entity.EntityGuid, fieldName);
         }
         private AdamAppContext _adamAppContext;
 

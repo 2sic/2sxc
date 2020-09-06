@@ -9,17 +9,6 @@ namespace ToSic.Sxc.Adam.WebApi
 {
     public class DnnAdamSecurityChecks: SecurityChecksBase
     {
-
-        //internal static bool DestinationIsInItem(Guid guid, string field, string path, out HttpResponseException preparedException)
-        //{
-        //    var inAdam = Security.PathIsInItemAdam(guid, field, path);
-        //    preparedException = inAdam
-        //        ? null
-        //        : HttpException.PermissionDenied("Can't access a resource which is not part of this item.");
-        //    return inAdam;
-        //}
-
-
         /// <summary>
         /// Helper to check extension based on DNN settings
         /// </summary>
@@ -36,19 +25,11 @@ namespace ToSic.Sxc.Adam.WebApi
                    && Host.AllowedExtensionWhitelist.IsAllowedExtension(extension.ToLower());
         }
 
-
-
-
-        //[AssertionMethod]
-        //internal static bool IsKnownRiskyExtension(string fileName) 
-        //    => FileNames.IsKnownRiskyExtension(fileName);
-
-        //[AssertionMethod]
-        //internal static void ThrowIfAccessingRootButNotAllowed(bool usePortalRoot, bool userIsRestricted)
-        //{
-        //    if (usePortalRoot && userIsRestricted)
-        //        throw HttpException.BadRequest("you may only create draft-data, so file operations outside of ADAM is not allowed");
-        //}
+        internal override bool CanEditFolder(int folderId)
+        {
+            var dnnFolder = FolderManager.Instance.GetFolder(folderId);
+            return CanEdit(dnnFolder);
+        }
 
         internal static bool CanEdit(IFileInfo file)
         {

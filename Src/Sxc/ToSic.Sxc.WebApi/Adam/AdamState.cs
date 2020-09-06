@@ -12,7 +12,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    internal class AdamState: HasLog // : MultiPermissionsTypes
+    internal class AdamState: HasLog
     {
         public string Field;
         public Guid Guid;
@@ -41,7 +41,6 @@ namespace ToSic.Sxc.WebApi.Adam
         /// </summary>
         public AdamState(IBlock block, int appId, string contentType, string field, Guid guid, bool usePortalRoot, ILog log)
             : base("Adm.State", log)
-            //: base(block.Context, Factory.Resolve<Apps.App>().Init(appId, log, block), contentType, log)
         {
             var callLog = Log.Call($"field:{field}, guid:{guid}");
             App = Factory.Resolve<Apps.App>().Init(appId, log, block);

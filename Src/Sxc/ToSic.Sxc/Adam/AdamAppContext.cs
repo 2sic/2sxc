@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Adam
         public readonly AppRuntime AppRuntime;
         public readonly ITenant Tenant;
         public readonly IBlock Block;
-        internal readonly IEnvironmentFileSystem EnvironmentFs;
+        public readonly IEnvironmentFileSystem EnvironmentFs;
         
         public AdamAppContext(ITenant tenant, IApp app, IBlock block, int compatibility, ILog parentLog) : base("Adm.ApCntx", parentLog, "starting")
         {
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Adam
             Block = block;
             AppRuntime = new AppRuntime(app, block?.EditAllowed ?? false, null);
             CompatibilityLevel = compatibility;
-            EnvironmentFs = Factory.Resolve<IEnvironmentFileSystem>();
+            EnvironmentFs = Factory.Resolve<IEnvironmentFileSystem>().Init(this);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace ToSic.Sxc.Adam
         }
 
 
-        internal Eav.Apps.Assets.Folder Folder(string path) => EnvironmentFs.Get(Tenant.Id, path, this);
+        internal Eav.Apps.Assets.Folder Folder(string path) => EnvironmentFs.Get(Tenant.Id, path/*, this*/);
 
 
         #endregion

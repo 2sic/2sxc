@@ -9,6 +9,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Api;
 using System.Web.Http.Controllers;
+using ToSic.Eav;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Adam;
@@ -82,7 +83,7 @@ namespace ToSic.Sxc.Adam.WebApi
 
         // test method to provide a public API for accessing adam items easily
         [HttpGet]
-        public IEnumerable<AdamItem> ItemsWithAppIdFromContext(string contenttype, Guid guid, string field,
+        public IEnumerable<AdamItemDto> ItemsWithAppIdFromContext(string contenttype, Guid guid, string field,
             string folder = "")
         {
             // if app-path specified, use that app, otherwise use from context
@@ -91,7 +92,7 @@ namespace ToSic.Sxc.Adam.WebApi
         }
 
         [HttpGet]
-        public IEnumerable<AdamItem> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
+        public IEnumerable<AdamItemDto> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
         {
             var wrapLog = Log.Call<IEnumerable<AdamItem>>(parameters: $"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
             var state = new AdamState(GetBlock(), appId, contentType, field, guid, usePortalRoot, Log);
@@ -113,52 +114,65 @@ namespace ToSic.Sxc.Adam.WebApi
 
             // try to see if we can get into the subfolder - will throw error if missing
             var currentAdam = state.ContainerContext.Folder(subfolder, false);
-            var folderManager = FolderManager.Instance;
-            var currentDnn = folderManager.GetFolder(currentAdam.Id);
-
+            //var folderManager = FolderManager.Instance;
+            //var currentDnn = folderManager.GetFolder(currentAdam.Id);
+            var fs = state.AdamAppContext.EnvironmentFs;
+            var currentFolder = fs.GetFolder(currentAdam.Id);
+            
             // ensure that it's super user, or the folder is really part of this item
-            if (!state.Security.SuperUserOrAccessingItemFolder(currentDnn.PhysicalPath, out var exp))
+            if (!state.Security.SuperUserOrAccessingItemFolder(currentFolder.Path /*currentDnn.PhysicalPath*/, out var exp))
             {
                 Log.Add("user is not super-user and folder doesn't seem to be an ADAM folder of this item - will throw");
                 throw exp;
             }
 
-            var subfolders = folderManager.GetFolders(currentDnn);
-            var files = folderManager.GetFiles(currentDnn);
+            var subfolders = currentFolder.Folders.ToList();// folderManager.GetFolders(currentDnn);
+            var files = currentFolder.Files.ToList();// folderManager.GetFiles(currentDnn);
 
-            var all = new List<AdamItem>();
+            var dtoMaker = Factory.Resolve<AdamItemDtoMaker>();
+            var allDtos = new List<AdamItemDto>();
 
             // currentFolder is needed to get allowEdit for Adam root folder
-            var currentFolder = new AdamItem(currentDnn, usePortalRoot, state)
-            {
-                Name = ".",
-                MetadataId = Metadata.GetMetadataId(state.AdamAppContext.AppRuntime, currentDnn.FolderID, true)
-            };
-            all.Insert(0, currentFolder);
+            //var currentFolderDto = new AdamItem(currentDnn, usePortalRoot, state)
+            //{
+            //    Name = ".",
+            //    MetadataId = Metadata.GetMetadataId(state.AdamAppContext.AppRuntime, currentDnn.FolderID, true)
+            //};
+            var currentFolderDto = dtoMaker.Create(currentFolder, usePortalRoot, state);
+            //{
+            currentFolderDto.Name = ".";
+            //MetadataId = Metadata.GetMetadataId(state.AdamAppContext.AppRuntime, currentFolder.Id, true)
+            currentFolderDto.MetadataId = currentFolder.Metadata.EntityId;
+            //};
+            allDtos.Insert(0, currentFolderDto);
 
-            var adamFolders = subfolders.Where(s => s.FolderID != currentDnn.FolderID)
-                .Select(f => new AdamItem(f, usePortalRoot, state)
+            var adamFolders = subfolders.Where(s => s.Id != currentFolder.Id)
+                .Select(f =>
                 {
-                    MetadataId = Metadata.GetMetadataId(state.AdamAppContext.AppRuntime, f.FolderID, true)
+                    var dto = dtoMaker.Create(f, usePortalRoot, state);
+                    dto.MetadataId = Metadata.GetMetadataId(state.AdamAppContext.AppRuntime, f.Id, true);
+                    return dto;
                 })
                 .ToList();
-            all.AddRange(adamFolders);
+            allDtos.AddRange(adamFolders);
 
             var adamFiles = files
-                .Select(f => new AdamItem(f, usePortalRoot, state)
+                .Select(f =>
                 {
-                    MetadataId = Metadata.GetMetadataId(state.AdamAppContext.AppRuntime, f.FileId, false),
-                    Type = Classification.TypeName(f.Extension)
+                    var dto = dtoMaker.Create(f, usePortalRoot, state);
+                    dto.MetadataId = Metadata.GetMetadataId(state.AdamAppContext.AppRuntime, f.Id, false);
+                    dto.Type = Classification.TypeName(f.Extension);
+                    return dto;
                 })
                 .ToList();
-            all.AddRange(adamFiles);
+            allDtos.AddRange(adamFiles);
 
-            Log.Add($"items complete - will return fld⋮{adamFolders.Count}, files⋮{adamFiles.Count} tot⋮{all.Count}");
-            return all;
+            Log.Add($"items complete - will return fld⋮{adamFolders.Count}, files⋮{adamFiles.Count} tot⋮{allDtos.Count}");
+            return allDtos;
         }
 
         [HttpPost]
-        public IEnumerable<AdamItem> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
+        public IEnumerable<AdamItemDto> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
         {
             Log.Add($"get folders for a:{appId}, i:{guid}, field:{field}, subfld:{subfolder}, new:{newFolder}, useRoot:{usePortalRoot}");
             var state = new AdamState(GetBlock(), appId, contentType, field, guid, usePortalRoot, Log);
@@ -175,10 +189,10 @@ namespace ToSic.Sxc.Adam.WebApi
                 folder = state.ContainerContext.Folder(subfolder, false);
 
             // start with a security check...
-            var dnnFolder = FolderManager.Instance.GetFolder(folder.Id);
+            //var dnnFolder = FolderManager.Instance.GetFolder(folder.Id);
 
             // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
-            if (usePortalRoot && !DnnAdamSecurityChecks.CanEdit(dnnFolder))
+            if (usePortalRoot && !state.Security.CanEditFolder(folder.Id)) //DnnAdamSecurityChecks.CanEdit(dnnFolder))
                 throw HttpException.PermissionDenied("can't create new folder - permission denied");
 
             var newFolderPath = string.IsNullOrEmpty(subfolder) ? newFolder : Path.Combine(subfolder, newFolder).Replace("\\", "/"); 

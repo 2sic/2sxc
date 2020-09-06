@@ -6,31 +6,33 @@ namespace ToSic.Sxc.Adam
 
     public class Folder : Eav.Apps.Assets.Folder, IFolder
     {
-        protected AdamAppContext AppContext { get; set; }
+        protected AdamAppContext AdamContext { get; set; }
 
-        private readonly IEnvironmentFileSystem _fileSystem;
+        //private readonly IEnvironmentFileSystem _fileSystem;
 
-        public Folder(AdamAppContext appContext, IEnvironmentFileSystem fileSystem)
+        public Folder(AdamAppContext adamContext/*, IEnvironmentFileSystem fileSystem*/)
         {
-            AppContext = appContext;
-            _fileSystem = fileSystem;
+            AdamContext = adamContext;
+            //_fileSystem = fileSystem;
         }
 
         /// <inheritdoc />
-        public dynamic Metadata => Adam.Metadata.GetFirstOrFake(AppContext, Id, true);
+        public dynamic Metadata => Adam.Metadata.GetFirstOrFake(AdamContext, Id, true);
 
         /// <inheritdoc />
-        public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AppContext.AppRuntime, Id, false) != null;
+        public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AdamContext.AppRuntime, Id, false) != null;
 
         /// <inheritdoc />
-        public string Url => AppContext.Tenant.ContentPath + Path;
+        public string Url { get; internal set; }  // AdamContext.Tenant.ContentPath + Path;
 
         /// <inheritdoc />
         public string Type => Classification.Folder;
 
 
         /// <inheritdoc />
-        public override bool HasChildren => _hasChildren ?? (_hasChildren = _fileSystem.GetFiles(Id, AppContext).Any() || _fileSystem.GetFiles(Id, AppContext).Any()).Value;
+        public override bool HasChildren 
+            => _hasChildren ?? (_hasChildren = AdamContext.EnvironmentFs.GetFiles(Id/*, AppContext*/).Any() 
+                                               || AdamContext.EnvironmentFs.GetFiles(Id/*, AppContext*/).Any()).Value;
         private bool? _hasChildren;
 
 
@@ -42,7 +44,7 @@ namespace ToSic.Sxc.Adam
                 if (_folders != null) return _folders;
                 return _folders = string.IsNullOrEmpty(Name)
                     ? new List<Folder>()
-                    : _fileSystem.GetFolders(Id, AppContext);
+                    : AdamContext.EnvironmentFs.GetFolders(Id/*, AppContext*/);
             }
         }
         private IEnumerable<IFolder> _folders;
@@ -50,7 +52,7 @@ namespace ToSic.Sxc.Adam
 
         /// <inheritdoc/>
         public IEnumerable<IFile> Files 
-            => _files ?? (_files = _fileSystem.GetFiles(Id, AppContext));
+            => _files ?? (_files = AdamContext.EnvironmentFs.GetFiles(Id/*, AppContext*/));
         private IEnumerable<IFile> _files;
     }
 }

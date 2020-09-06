@@ -21,7 +21,11 @@ namespace ToSic.Sxc.Adam
 
         public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AppContext.AppRuntime, Id, false) != null;
 
-        public string Url => AppContext.Tenant.ContentPath + Folder + FullName;
+        public string Url // => AppContext.Tenant.ContentPath + Folder + FullName;
+        {
+            get;
+            internal set;
+        }
 
        public string Type => Classification.TypeName(Extension);
 
