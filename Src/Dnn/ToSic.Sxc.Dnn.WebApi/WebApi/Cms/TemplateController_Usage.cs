@@ -8,7 +8,8 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Pages;
-using ToSic.Sxc.WebApi.DataTransferObjects.Usage;
+using ToSic.Sxc.Dnn.WebApi.Context;
+using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.Security;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -38,7 +39,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var allMods = new Pages(Log).AllModulesWithContent(PortalSettings.PortalId);
             Log.Add($"Found {allMods.Count} modules");
 
-            var result = views.Select(vwb => new ViewDto(vwb, blocks, allMods));
+            var result = views.Select(vwb => new ViewDto().Init(vwb, blocks, allMods));
 
             return wrapLog("ok", result);
         }

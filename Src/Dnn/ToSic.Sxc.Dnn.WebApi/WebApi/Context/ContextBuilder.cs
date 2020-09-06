@@ -9,9 +9,10 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Web.JsContext;
+using ToSic.Sxc.WebApi.Context;
 using Assembly = System.Reflection.Assembly;
 
-namespace ToSic.Sxc.WebApi.Context
+namespace ToSic.Sxc.Dnn.WebApi.Context
 {
 
     internal class ContextBuilder : IContextBuilder
