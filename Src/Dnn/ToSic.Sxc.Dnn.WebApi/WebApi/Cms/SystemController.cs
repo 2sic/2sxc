@@ -47,7 +47,7 @@ namespace ToSic.Sxc.WebApi.Cms
             }
 
             var psCurrent = PortalSettings.Current;
-            var cb = new ContextBuilder(psCurrent, 
+            var cb = new DnnContextBuilder(psCurrent, 
                 Request.FindModuleInfo(),
                 UserInfo,
                 app?.ZoneId,

@@ -15,55 +15,56 @@ using Assembly = System.Reflection.Assembly;
 namespace ToSic.Sxc.Dnn.WebApi.Context
 {
 
-    internal class ContextBuilder : IContextBuilder
+    internal sealed class DnnContextBuilder : ContextBuilderBase
     {
-        protected readonly PortalSettings Portal;
-        protected readonly ModuleInfo Module;
-        protected readonly UserInfo User;
-        protected int ZoneId;
-        protected IApp App;
+        private readonly PortalSettings _portal;
+        private readonly ModuleInfo _module;
+        private readonly UserInfo _user;
+        //protected int ZoneId;
+        //protected IApp App;
 
-        public ContextBuilder(PortalSettings portal, ModuleInfo module, UserInfo user = null, int? zoneId = null, IApp app = null)
+        public DnnContextBuilder(PortalSettings portal, ModuleInfo module, UserInfo user = null, int? zoneId = null, IApp app = null)
         {
-            Portal = portal;
-            Module = module;
-            User = user;
+            _portal = portal;
+            _module = module;
+            _user = user;
             InitApp(zoneId, app);
         }
 
-        public IContextBuilder InitApp(int? zoneId, IApp app)
+        public override IContextBuilder InitApp(int? zoneId, IApp app)
         {
-            App = app;
-            ZoneId = zoneId ?? 0;
+            //App = app;
+            //ZoneId = zoneId ?? 0;
 
             // check if we're providing context for missing app
             // in this case we must find the zone based on the portals.
-            if (ZoneId == 0 && App == null) ZoneId = new DnnZoneMapper().Init(null).GetZoneId(Portal.PortalId);
+            if ((zoneId ?? 0) == 0 && app == null) zoneId = new DnnZoneMapper().Init(null).GetZoneId(_portal.PortalId);
+            return base.InitApp(zoneId, app);
             
-            return this;
+            //return this;
         }
 
-        public ContextDto Get(Ctx flags)
-        {
-            var ctx = new ContextDto();
-            // logic for activating each part
-            // 1. either that switch is on
-            // 2. or the null-check: all is on
-            // 3. This also means if the switch is off, it's off
-            if (flags.HasFlag(Ctx.AppBasic) | flags.HasFlag(Ctx.AppAdvanced)) 
-                ctx.App = GetApp(flags);
-            if (flags.HasFlag(Ctx.Enable)) ctx.Enable = GetEnable();
-            if (flags.HasFlag(Ctx.Language)) ctx.Language = GetLanguage();
-            if (flags.HasFlag(Ctx.Page)) ctx.Page = GetPage();
-            if (flags.HasFlag(Ctx.Site)) ctx.Site = GetSite();
-            if (flags.HasFlag(Ctx.System)) ctx.System = GetSystem();
-            return ctx;
-        }
+        //public ContextDto Get(Ctx flags)
+        //{
+        //    var ctx = new ContextDto();
+        //    // logic for activating each part
+        //    // 1. either that switch is on
+        //    // 2. or the null-check: all is on
+        //    // 3. This also means if the switch is off, it's off
+        //    if (flags.HasFlag(Ctx.AppBasic) | flags.HasFlag(Ctx.AppAdvanced)) 
+        //        ctx.App = GetApp(flags);
+        //    if (flags.HasFlag(Ctx.Enable)) ctx.Enable = GetEnable();
+        //    if (flags.HasFlag(Ctx.Language)) ctx.Language = GetLanguage();
+        //    if (flags.HasFlag(Ctx.Page)) ctx.Page = GetPage();
+        //    if (flags.HasFlag(Ctx.Site)) ctx.Site = GetSite();
+        //    if (flags.HasFlag(Ctx.System)) ctx.System = GetSystem();
+        //    return ctx;
+        //}
 
-        private LanguageDto GetLanguage()
+        protected override LanguageDto GetLanguage()
         {
-            if (Portal == null || ZoneId == 0) return null;
-            var language = new JsContextLanguage(new DnnTenant(Portal), ZoneId);
+            if (_portal == null || ZoneId == 0) return null;
+            var language = new JsContextLanguage(new DnnTenant(_portal), ZoneId);
             return new LanguageDto
             {
                 Current = language.Current,
@@ -83,7 +84,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
         //    };
         //}
 
-        private WebResourceDto GetSystem()
+        protected override WebResourceDto GetSystem()
         {
             return new WebResourceDto
             {
@@ -91,47 +92,47 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
             };
         }
 
-        private WebResourceDto GetSite()
+        protected override WebResourceDto GetSite()
         {
             return new WebResourceDto
             {
-                Id = Portal.PortalId,
-                Url = "//" + Portal.PortalAlias.HTTPAlias + "/",
+                Id = _portal.PortalId,
+                Url = "//" + _portal.PortalAlias.HTTPAlias + "/",
             };
         }
 
-        private WebResourceDto GetPage()
+        protected override WebResourceDto GetPage()
         {
-            if (Module == null) return null;
+            if (_module == null) return null;
             return new WebResourceDto
             {
-                Id = Module.ModuleID,
+                Id = _module.TabID, // .ModuleID,
                 // todo: maybe page url
                 // used to be on ps.ActiveTab.FullUrl;
                 // but we can't get it from there directly
             };
         }
 
-        private AppDto GetApp(Ctx flags)
-        {
-            if (App == null) return null;
-            var result = new AppDto
-            {
-                Id = App.AppId,
-                Url = App.Path,
-                Name = App.Name,
-            };
-            if (!flags.HasFlag(Ctx.AppAdvanced)) return result;
+        //private AppDto GetApp(Ctx flags)
+        //{
+        //    if (App == null) return null;
+        //    var result = new AppDto
+        //    {
+        //        Id = App.AppId,
+        //        Url = App.Path,
+        //        Name = App.Name,
+        //    };
+        //    if (!flags.HasFlag(Ctx.AppAdvanced)) return result;
 
-            result.GettingStartedUrl = GettingStartedUrl();
-            result.Identifier = App.AppGuid;
-            return result;
-        }
+        //    result.GettingStartedUrl = GettingStartedUrl();
+        //    result.Identifier = App.AppGuid;
+        //    return result;
+        //}
 
-        private EnableDto GetEnable()
+        protected override EnableDto GetEnable()
         {
             var isRealApp = App != null && App.AppGuid != Eav.Constants.DefaultAppName;
-            var tmp = User == null ? null : new JsContextUser(new DnnUser(User));
+            var tmp = _user == null ? null : new JsContextUser(new DnnUser(_user));
             return new EnableDto
             {
                 AppPermissions = isRealApp,
@@ -147,7 +148,9 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
         /// redirects based on the app he's looking at, etc.
         /// </summary>
         /// <returns></returns>
-        internal string GettingStartedUrl()
+        public string GettingStartedUrl() => GetGettingStartedUrl();
+
+        protected override string GetGettingStartedUrl()
         {
             if (App == null) return "";
 
@@ -155,15 +158,15 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
                 "//gettingstarted.2sxc.org/router.aspx?" +
                 $"DnnVersion={Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4)}" +
                 $"&2SexyContentVersion={Settings.ModuleVersion}" +
-                $"&ModuleName={Module.DesktopModule.ModuleName}" +
-                $"&ModuleId={Module.ModuleID}" +
-                $"&PortalID={Portal.PortalId}" +
+                $"&ModuleName={_module.DesktopModule.ModuleName}" +
+                $"&ModuleId={_module.ModuleID}" +
+                $"&PortalID={_portal.PortalId}" +
                 $"&ZoneID={App.ZoneId}" +
-                $"&DefaultLanguage={Portal.DefaultLanguage}" +
-                $"&CurrentLanguage={Portal.CultureCode}";
+                $"&DefaultLanguage={_portal.DefaultLanguage}" +
+                $"&CurrentLanguage={_portal.CultureCode}";
 
             // Add AppStaticName and Version
-            if (Module.DesktopModule.ModuleName != "2sxc")
+            if (_module.DesktopModule.ModuleName != "2sxc")
             {
                 gsUrl += "&AppGuid=" + App.AppGuid;
                 if (App.Configuration != null)

@@ -1,5 +1,4 @@
-﻿using System.Web.Http.Controllers;
-using DotNetNuke.Web.Api;
+﻿using DotNetNuke.Web.Api;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -7,11 +6,13 @@ namespace ToSic.Sxc.WebApi.Cms
     [ValidateAntiForgeryToken]
     public partial class UiController : SxcApiControllerBase
     {
-        protected override void Initialize(HttpControllerContext controllerContext)
-        {
-            base.Initialize(controllerContext); // very important!!!
-            Log.Rename("Api.UiCont");
-        }
+        protected override string HistoryLogName => "Api.UiCont";
+
+        //protected override void Initialize(HttpControllerContext controllerContext)
+        //{
+        //    base.Initialize(controllerContext); // very important!!!
+        //    Log.Rename("Api.UiCont");
+        //}
         
     }
 }
