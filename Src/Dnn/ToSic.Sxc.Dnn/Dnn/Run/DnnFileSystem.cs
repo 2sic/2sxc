@@ -68,7 +68,14 @@ namespace ToSic.Sxc.Dnn.Run
             return GetFile(dnnFile.FileId);
         }
 
-        public string FindUniqueFileName(IFolder parentFolder, string fileName)
+        /// <summary>
+        /// When uploading a new file, we must verify that the name isn't used. 
+        /// If it is used, walk through numbers to make a new name which isn't used. 
+        /// </summary>
+        /// <param name="parentFolder"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        private string FindUniqueFileName(IFolder parentFolder, string fileName)
         {
             var numberedFile = fileName;
 
