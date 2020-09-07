@@ -14,8 +14,22 @@ namespace ToSic.Sxc.WebApi.Adam
 {
     internal class AdamState: HasLog
     {
-        public string Field;
-        public Guid Guid;
+        /// <summary>
+        /// Determines if the files come from the root (shared files).
+        /// Is false, if they come from the item specific ADAM folder.
+        /// </summary>
+        public readonly bool UseTenantRoot;
+
+        /// <summary>
+        /// The field this state is for. Will be null/empty if UsePortalRoot is true
+        /// </summary>
+        public string ItemField;
+
+        /// <summary>
+        /// The item guid this state is for. Will be Empty if UsePortalRoot is true.
+        /// </summary>
+        public Guid ItemGuid;
+
         internal ContainerBase ContainerContext;
         internal AdamAppContext AdamAppContext;
         internal IContentTypeAttribute Attribute;
@@ -49,10 +63,11 @@ namespace ToSic.Sxc.WebApi.Adam
             Block = block;
 
             // only do checks on field/guid if it's actually accessing that, if it's on the portal root, don't.
+            UseTenantRoot = usePortalRoot;
             if (!usePortalRoot)
             {
-                Field = field;
-                Guid = guid;
+                ItemField = field;
+                ItemGuid = guid;
             }
 
             Security = Factory.Resolve<SecurityChecksBase>().Init(this, usePortalRoot, Log);

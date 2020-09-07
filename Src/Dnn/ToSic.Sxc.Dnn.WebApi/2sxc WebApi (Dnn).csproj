@@ -97,8 +97,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Adam\WebApi\AdamUploader.cs" />
-    <Compile Include="Adam\WebApi\SecurityChecks.cs" />
+    <Compile Include="Dnn\WebApi\Adam\DnnAdamSecurityChecks.cs" />
     <Compile Include="Dnn\ApiController.cs" />
     <Compile Include="Dnn\ApiController_Obsolete.cs" />
     <Compile Include="Security\RunIf.cs" />
@@ -129,7 +128,7 @@
     <Compile Include="WebApi\System\InsightsController.cs" />
     <Compile Include="WebApi\SxcApiControllerBase.cs" />
     <Compile Include="Dnn\WebApi\Logging\DnnLogWebApi.cs" />
-    <Compile Include="Adam\WebApi\AdamController.cs" />
+    <Compile Include="Dnn\WebApi\Adam\AdamController.cs" />
     <Compile Include="WebApi\Routing\AppApiControllerSelector.cs" />
     <Compile Include="WebApi\Cms\AppAssetsController.cs" />
     <Compile Include="WebApi\App\AppContentController.cs" />
@@ -197,7 +196,9 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Adam\WebApi\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

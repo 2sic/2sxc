@@ -2,7 +2,6 @@
 using System.Net.Http;
 using System.Web.Http.Controllers;
 using Factory = ToSic.Eav.Factory;
-using ToSic.Sxc.Adam.WebApi;
 using System.IO;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
@@ -15,6 +14,7 @@ using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
+using ToSic.Sxc.WebApi.Adam;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.WebApi
@@ -104,8 +104,9 @@ namespace ToSic.SexyContent.WebApi
                 throw exp;
 
             var block = GetBlock();
-            return new AdamUploader(block, block.AppId, Log)
-                .UploadOne(stream, fileName, contentType, guid.Value, field, subFolder, false, true);
+            return new AdamTransUpload()
+                .Init(block, block.AppId, contentType, guid.Value, field, false, Log)
+                .UploadOne(stream, fileName, subFolder, true);
         }
 
         #endregion

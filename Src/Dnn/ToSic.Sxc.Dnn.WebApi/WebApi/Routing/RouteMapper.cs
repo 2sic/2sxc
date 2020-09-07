@@ -1,7 +1,6 @@
 ﻿using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using DotNetNuke.Web.Api;
-using ToSic.Sxc.Adam.WebApi;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.Cms;
@@ -39,7 +38,6 @@ namespace ToSic.Sxc.WebApi
             };
             var stdNsAdam = new[]
             {
-                //"ToSic.Sxc.Adam.WebApi",
                 typeof(AdamController).Namespace
             };
 

@@ -94,7 +94,7 @@ namespace ToSic.Sxc.WebApi.Adam
             if (fieldDef == null || !(fieldDef.Type != Eav.Constants.DataTypeHyperlink ||
                                       fieldDef.Type != Eav.Constants.DataTypeString))
             {
-                preparedException = HttpException.BadRequest("Requested field '" + AdamState.Field + "' type doesn't allow upload");
+                preparedException = HttpException.BadRequest("Requested field '" + AdamState.ItemField + "' type doesn't allow upload");
                 Log.Add($"field type:{fieldDef?.Type} - does not allow upload");
                 result = false;
             }
@@ -136,7 +136,7 @@ namespace ToSic.Sxc.WebApi.Adam
         internal bool SuperUserOrAccessingItemFolder(string path, out HttpExceptionAbstraction preparedException)
         {
             preparedException = null;
-            return !UserIsRestricted || SecurityCheckHelpers.DestinationIsInItem(AdamState.Guid, AdamState.Field, path, out preparedException);
+            return !UserIsRestricted || SecurityCheckHelpers.DestinationIsInItem(AdamState.ItemGuid, AdamState.ItemField, path, out preparedException);
         }
     }
 }

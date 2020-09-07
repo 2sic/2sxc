@@ -5,7 +5,7 @@ using DotNetNuke.Services.FileSystem;
 using JetBrains.Annotations;
 using ToSic.Sxc.WebApi.Adam;
 
-namespace ToSic.Sxc.Adam.WebApi
+namespace ToSic.Sxc.Dnn.WebApi
 {
     public class DnnAdamSecurityChecks: SecurityChecksBase
     {
@@ -27,18 +27,8 @@ namespace ToSic.Sxc.Adam.WebApi
 
         internal override bool CanEditFolder(int folderId)
         {
-            var dnnFolder = FolderManager.Instance.GetFolder(folderId);
-            return CanEdit(dnnFolder);
+            var folder = FolderManager.Instance.GetFolder(folderId);
+            return folder != null && FolderPermissionController.CanAddFolder(folder as FolderInfo);
         }
-
-        internal static bool CanEdit(IFileInfo file)
-        {
-            if (file == null) return false;
-            var folder = (FolderInfo)FolderManager.Instance.GetFolder(file.FolderId);
-            return CanEdit(folder);
-        }
-
-        internal static bool CanEdit(IFolderInfo folder) 
-            => folder != null && FolderPermissionController.CanAddFolder(folder as FolderInfo);
     }
 }

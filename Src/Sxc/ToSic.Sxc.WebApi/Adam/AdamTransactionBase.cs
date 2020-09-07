@@ -1,14 +1,28 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
+using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    internal partial class AdamBackend: HasLog<AdamBackend>
+    internal abstract partial class AdamTransactionBase<T>: HasLog where T : class
     {
-        public AdamBackend() : base("Adm.BckEnd")
+        protected AdamTransactionBase(string logName) : base(logName)
         {
-
         }
+
+        public T Init(IBlock block, int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot, ILog parentLog) 
+            
+        {
+            Log.LinkTo(parentLog);
+            var logCall = Log.Call<T>($"app: {appId}, type: {contentType}, itemGuid: {itemGuid}, field: {field}, portalRoot: {usePortalRoot}");
+            State = new AdamState(block, appId, contentType, field, itemGuid, usePortalRoot, Log);
+            return logCall(null, this as T);
+        }
+
+        protected AdamState State;
+
 
         /// <summary>
         /// Validate that user has write permissions for folder.
@@ -18,13 +32,12 @@ namespace ToSic.Sxc.WebApi.Adam
         /// <param name="parentFolder"></param>
         /// <param name="target"></param>
         /// <param name="folderId"></param>
-        /// <param name="usePortalRoot"></param>
         /// <param name="errPrefix"></param>
         [AssertionMethod]
-        private static void VerifySecurityAndStructure(AdamState state, Eav.Apps.Assets.IAsset parentFolder, Eav.Apps.Assets.IAsset target, int folderId, bool usePortalRoot, string errPrefix)
+        protected static void VerifySecurityAndStructure(AdamState state, IAsset parentFolder, IAsset target, int folderId, string errPrefix)
         {
             // In case the primary file system is used (usePortalRoot) then also check higher permissions
-            if (usePortalRoot && !state.Security.CanEditFolder(folderId))
+            if (state.UseTenantRoot && !state.Security.CanEditFolder(folderId))
                 throw HttpException.PermissionDenied(errPrefix + " - permission denied");
 
             if (!state.Security.SuperUserOrAccessingItemFolder(target.Path, out var exp))
@@ -33,7 +46,5 @@ namespace ToSic.Sxc.WebApi.Adam
             if (target.ParentId != parentFolder.Id)
                 throw HttpException.BadRequest(errPrefix + " - not found in folder");
         }
-
-
     }
 }

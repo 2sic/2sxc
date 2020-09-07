@@ -6,7 +6,6 @@ using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
-using ToSic.Sxc.Adam.WebApi;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Adam;

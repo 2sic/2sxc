@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
+using System.Web.Configuration;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Adam;
+using File = ToSic.Sxc.Adam.File;
 
 namespace ToSic.Sxc.Dnn.Run
 {
@@ -20,7 +24,16 @@ namespace ToSic.Sxc.Dnn.Run
             return this;
         }
 
+
         protected AdamAppContext AdamContext;
+
+        #endregion
+
+        #region FileSystem Settings
+
+        public int MaxUploadKb()
+            => (ConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection)
+               ?.MaxRequestLength ?? 1;
 
         #endregion
 
@@ -43,6 +56,30 @@ namespace ToSic.Sxc.Dnn.Run
         {
             var dnnFile = _dnnFiles.GetFile(file.Id);
             _dnnFiles.DeleteFile(dnnFile);
+        }
+
+        public IFile Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
+        {
+            if (ensureUniqueName)
+                fileName = FindUniqueFileName(parent, fileName);
+            var dnnFolder = FolderManager.Instance.GetFolder(parent.Id);
+            var dnnFile = FileManager.Instance.AddFile(dnnFolder, Path.GetFileName(fileName), body);
+            return GetFile(dnnFile.FileId);
+        }
+
+        public string FindUniqueFileName(IFolder parentFolder, string fileName)
+        {
+            var numberedFile = fileName;
+
+            var dnnFolder = FolderManager.Instance.GetFolder(parentFolder.Id);
+            var dnnFs = FileManager.Instance;
+            bool FileExists(string fileToCheck) => dnnFs.FileExists(dnnFolder, Path.GetFileName(fileToCheck));
+
+            for (var i = 1; i < 1000 && FileExists(numberedFile); i++)
+                numberedFile = Path.GetFileNameWithoutExtension(fileName)
+                               + "-" + i + Path.GetExtension(fileName);
+            fileName = numberedFile;
+            return fileName;
         }
 
         #endregion

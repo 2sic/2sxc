@@ -17,13 +17,13 @@ namespace ToSic.Sxc.WebApi.Adam
 
         #endregion
 
-        internal AdamItemDto Create(IFile original, bool usePortalRoot, AdamState state)
+        internal AdamItemDto Create(IFile original, AdamState state)
         {
             var item = new AdamItemDto(false, original.Id, original.FolderId, original.FullName, original.Size,
                 original.Created, original.Modified)
             {
                 Path = original.Path,
-                AllowEdit = usePortalRoot
+                AllowEdit = state.UseTenantRoot
                     ? _security.CanEditFolder(original.FolderId)
                     : !state.Security.UserIsRestricted || state.Security.FieldPermissionOk(GrantSets.WriteSomething)
             };
@@ -32,13 +32,13 @@ namespace ToSic.Sxc.WebApi.Adam
         }
 
 
-        internal AdamItemDto Create(IFolder folder, bool usePortalRoot, AdamState state)
+        internal AdamItemDto Create(IFolder folder, AdamState state)
         {
             var item = new AdamItemDto(true, folder.Id, folder.ParentId, folder.Name, 0, folder.Created,
                 folder.Modified)
             {
                 Path = folder.Path,
-                AllowEdit = usePortalRoot
+                AllowEdit = state.UseTenantRoot
                     ? _security.CanEditFolder(folder.Id)
                     : !state.Security.UserIsRestricted || state.Security.FieldPermissionOk(GrantSets.WriteSomething)
             };
