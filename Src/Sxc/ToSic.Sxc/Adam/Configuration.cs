@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Adam
         public static string AdamAppRootFolder =>
             _adamAppRootFolder ?? (_adamAppRootFolder =
                 Global.GetOverride(TypeName, "AppRootFolder",
-                    "adam/[AppFolder]/"));
+                    $"{AdamConstants.AdamRootFolder}/[AppFolder]/"));
 
         private static string _adamAppRootFolder;
 

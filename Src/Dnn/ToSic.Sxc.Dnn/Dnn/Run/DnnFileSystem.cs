@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DotNetNuke.Security.Permissions;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
@@ -62,8 +63,8 @@ namespace ToSic.Sxc.Dnn.Run
         {
             if (ensureUniqueName)
                 fileName = FindUniqueFileName(parent, fileName);
-            var dnnFolder = FolderManager.Instance.GetFolder(parent.Id);
-            var dnnFile = FileManager.Instance.AddFile(dnnFolder, Path.GetFileName(fileName), body);
+            var dnnFolder = _dnnFolders.GetFolder(parent.Id);
+            var dnnFile = _dnnFiles.AddFile(dnnFolder, Path.GetFileName(fileName), body);
             return GetFile(dnnFile.FileId);
         }
 
@@ -71,9 +72,8 @@ namespace ToSic.Sxc.Dnn.Run
         {
             var numberedFile = fileName;
 
-            var dnnFolder = FolderManager.Instance.GetFolder(parentFolder.Id);
-            var dnnFs = FileManager.Instance;
-            bool FileExists(string fileToCheck) => dnnFs.FileExists(dnnFolder, Path.GetFileName(fileToCheck));
+            var dnnFolder = _dnnFolders.GetFolder(parentFolder.Id);
+            bool FileExists(string fileToCheck) => _dnnFiles.FileExists(dnnFolder, Path.GetFileName(fileToCheck));
 
             for (var i = 1; i < 1000 && FileExists(numberedFile); i++)
                 numberedFile = Path.GetFileNameWithoutExtension(fileName)
@@ -81,6 +81,18 @@ namespace ToSic.Sxc.Dnn.Run
             fileName = numberedFile;
             return fileName;
         }
+
+        #endregion
+
+        #region FolderPermissions
+
+        //public bool CanUserViewFolder(int folderId)
+        //{
+        //    if (folderId <= 0) return false;
+        //    var folder = (FolderInfo)_dnnFolders.GetFolder(folderId);
+        //    return FolderPermissionController.CanViewFolder(folder);
+        //}
+
 
         #endregion
 
