@@ -20,20 +20,49 @@ namespace ToSic.Sxc.Dnn.Run
             return this;
         }
 
-        public AdamAppContext AdamContext;
+        protected AdamAppContext AdamContext;
 
         #endregion
 
-        private readonly IFolderManager _folderManager = FolderManager.Instance;
+        #region Files
+        private readonly IFileManager _dnnFiles = FileManager.Instance;
 
-        public bool FolderExists(int tenantId, string path) => _folderManager.FolderExists(tenantId, path);
+        public IFile GetFile(int fileId)
+        {
+            var file = _dnnFiles.GetFile(fileId);
+            return DnnToAdam(AdamContext, file);
+        }
+
+        public void Rename(IFile file, string newName)
+        {
+            var dnnFile = _dnnFiles.GetFile(file.Id);
+            _dnnFiles.RenameFile(dnnFile, newName);
+        }
+
+        public void Delete(IFile file)
+        {
+            var dnnFile = _dnnFiles.GetFile(file.Id);
+            _dnnFiles.DeleteFile(dnnFile);
+        }
+
+        #endregion
+
+        #region Folders
+
+
+
+
+        private readonly IFolderManager _dnnFolders = FolderManager.Instance;
+
+        public bool FolderExists(int tenantId, string path) => _dnnFolders.FolderExists(tenantId, path);
+
 
 
         public void AddFolder(int tenantId, string path)
         {
             try
             {
-                _folderManager.AddFolder(tenantId, path);
+                _dnnFolders.AddFolder(tenantId, path);
             }
             catch (SqlException)
             {
@@ -48,34 +77,51 @@ namespace ToSic.Sxc.Dnn.Run
 
         }
 
-        public Eav.Apps.Assets.Folder Get(int tenantId, string path/*, AdamAppContext appContext*/) 
-            => DnnToAdam( /*appContext,*/ _folderManager.GetFolder(tenantId, path));
+        public void Rename(IFolder folder, string newName)
+        {
+            var fld = _dnnFolders.GetFolder(folder.Id);
+            _dnnFolders.RenameFolder(fld, newName);
+        }
 
-        public List<Folder> GetFolders(int folderId/*, AdamAppContext appContext*/) 
-            => GetFolders(GetFolder(folderId)/*, appContext*/);
+        public void Delete(IFolder folder)
+        {
+            // var fld = _folderManager.GetFolder(folder.Id);
+            _dnnFolders.DeleteFolder(folder.Id);
+        }
+
+        public Eav.Apps.Assets.Folder Get(int tenantId, string path) 
+            => DnnToAdam(_dnnFolders.GetFolder(tenantId, path));
+
+        public List<Folder> GetFolders(int folderId) 
+            => GetFolders(GetFolder(folderId));
 
         Folder IEnvironmentFileSystem.GetFolder(int folderId) => DnnToAdam(GetFolder(folderId));
 
+        #endregion
+
+
+
+
         #region Dnn typed calls
 
-        private IFolderInfo GetFolder(int folderId) => _folderManager.GetFolder(folderId);
+        private IFolderInfo GetFolder(int folderId) => _dnnFolders.GetFolder(folderId);
 
-        private List<Folder> GetFolders(IFolderInfo fldObj/*, AdamAppContext appContext = null*/)
+        private List<Folder> GetFolders(IFolderInfo fldObj)
         {
-            var firstList = _folderManager.GetFolders(fldObj);
+            var firstList = _dnnFolders.GetFolders(fldObj);
             var folders = firstList?.Select(f => DnnToAdam(/*AdamContext,*/ f)).ToList()
                           ?? new List<Folder>();
             return folders;
         }
 
-        public List<File> GetFiles(int folderId/*, AdamAppContext appContext*/)
+        public List<File> GetFiles(int folderId)
         {
-            var fldObj = _folderManager.GetFolder(folderId);
+            var fldObj = _dnnFolders.GetFolder(folderId);
             // sometimes the folder doesn't exist for whatever reason
             if (fldObj == null) return  new List<File>();
 
             // try to find the files
-            var firstList = _folderManager.GetFiles(fldObj);
+            var firstList = _dnnFolders.GetFiles(fldObj);
             var files = firstList?.Select(f => DnnToAdam(AdamContext, f)).ToList()
                      ?? new List<File>();
             return files;
@@ -84,8 +130,8 @@ namespace ToSic.Sxc.Dnn.Run
         #endregion
 
         #region DnnToAdam
-        private Folder DnnToAdam(/*AdamAppContext appContext,*/ IFolderInfo f)
-            => new Folder(AdamContext/*, this*/)
+        private Folder DnnToAdam(IFolderInfo f)
+            => new Folder(AdamContext)
             {
                 Path = f.FolderPath,
                 Id = f.FolderID,
@@ -114,8 +160,6 @@ namespace ToSic.Sxc.Dnn.Run
             FolderId = f.FolderId,
 
             Path = f.RelativePath,
-                // Special converter: if it's not the real file system but something encrypted etc use dnn redirect url
-            //Path = (f.StorageLocation == 0) ? f.RelativePath : FileLinkClickController.Instance.GetFileLinkClick(f),
 
             Created = f.CreatedOnDate,
             Modified = f.LastModifiedOnDate,
@@ -123,8 +167,8 @@ namespace ToSic.Sxc.Dnn.Run
             Url = f.StorageLocation == 0 
                 ? appContext.Tenant.ContentPath + f.Folder + f.FileName
                 : FileLinkClickController.Instance.GetFileLinkClick(f),
-                // note: there are more properties in the DNN data, but we don't use it,
-                // because it will probably never be cross-platform
+            // note: there are more properties in the DNN data, but we don't use it,
+            // because it will probably never be cross-platform
             };
         #endregion
     }

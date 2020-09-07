@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using DotNetNuke.Security;
-using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Api;
 using System.Web.Http.Controllers;
-using ToSic.Eav;
-using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Adam;
 using HttpException = ToSic.Sxc.WebApi.HttpException;
@@ -94,224 +90,235 @@ namespace ToSic.Sxc.Adam.WebApi
         [HttpGet]
         public IEnumerable<AdamItemDto> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
         {
-            var wrapLog = Log.Call<IEnumerable<AdamItem>>(parameters: $"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
             var state = new AdamState(GetBlock(), appId, contentType, field, guid, usePortalRoot, Log);
-
-
-            Log.Add("starting permissions checks");
-            if (state.Security.UserIsRestricted && !state.Security.FieldPermissionOk(GrantSets.ReadSomething))
-                return wrapLog("user is restricted, and doesn't have permissions on field - return null", null);
-
-            // check that if the user should only see drafts, he doesn't see items of published data
-            if (!state.Security.UserIsNotRestrictedOrItemIsDraft(guid, out var _))
-                return wrapLog("user is restricted (no read-published rights) and item is published - return null", null);
-
-            Log.Add("first permission checks passed");
-
-
-            // get root and at the same time auto-create the core folder in case it's missing (important)
-            state.ContainerContext.Folder();
-
-            // try to see if we can get into the subfolder - will throw error if missing
-            var currentAdam = state.ContainerContext.Folder(subfolder, false);
-            //var folderManager = FolderManager.Instance;
-            //var currentDnn = folderManager.GetFolder(currentAdam.Id);
-            var fs = state.AdamAppContext.EnvironmentFs;
-            var currentFolder = fs.GetFolder(currentAdam.Id);
-            
-            // ensure that it's super user, or the folder is really part of this item
-            if (!state.Security.SuperUserOrAccessingItemFolder(currentFolder.Path /*currentDnn.PhysicalPath*/, out var exp))
-            {
-                Log.Add("user is not super-user and folder doesn't seem to be an ADAM folder of this item - will throw");
-                throw exp;
-            }
-
-            var subfolders = currentFolder.Folders.ToList();// folderManager.GetFolders(currentDnn);
-            var files = currentFolder.Files.ToList();// folderManager.GetFiles(currentDnn);
-
-            var dtoMaker = Factory.Resolve<AdamItemDtoMaker>();
-            var allDtos = new List<AdamItemDto>();
-
-            // currentFolder is needed to get allowEdit for Adam root folder
-            //var currentFolderDto = new AdamItem(currentDnn, usePortalRoot, state)
-            //{
-            //    Name = ".",
-            //    MetadataId = Metadata.GetMetadataId(state.AdamAppContext.AppRuntime, currentDnn.FolderID, true)
-            //};
-            var currentFolderDto = dtoMaker.Create(currentFolder, usePortalRoot, state);
-            //{
-            currentFolderDto.Name = ".";
-            //MetadataId = Metadata.GetMetadataId(state.AdamAppContext.AppRuntime, currentFolder.Id, true)
-            currentFolderDto.MetadataId = currentFolder.Metadata.EntityId;
-            //};
-            allDtos.Insert(0, currentFolderDto);
-
-            var adamFolders = subfolders.Where(s => s.Id != currentFolder.Id)
-                .Select(f =>
-                {
-                    var dto = dtoMaker.Create(f, usePortalRoot, state);
-                    dto.MetadataId = Metadata.GetMetadataId(state.AdamAppContext.AppRuntime, f.Id, true);
-                    return dto;
-                })
-                .ToList();
-            allDtos.AddRange(adamFolders);
-
-            var adamFiles = files
-                .Select(f =>
-                {
-                    var dto = dtoMaker.Create(f, usePortalRoot, state);
-                    dto.MetadataId = Metadata.GetMetadataId(state.AdamAppContext.AppRuntime, f.Id, false);
-                    dto.Type = Classification.TypeName(f.Extension);
-                    return dto;
-                })
-                .ToList();
-            allDtos.AddRange(adamFiles);
-
-            Log.Add($"items complete - will return fld⋮{adamFolders.Count}, files⋮{adamFiles.Count} tot⋮{allDtos.Count}");
-            return allDtos;
+            var callLog = Log.Call<IEnumerable<AdamItemDto>>($"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
+            var results = new AdamBackend().Init(Log).ItemsInField(state, guid, subfolder, usePortalRoot);
+            return callLog("ok",  results);
         }
+
+        //private IEnumerable<AdamItemDto> AdamItems(AdamState state, Guid entityGuid, string fieldSubfolder, bool usePortalRoot)
+        //{
+        //    var wrapLog = Log.Call<IEnumerable<AdamItemDto>>();
+
+        //    Log.Add("starting permissions checks");
+        //    if (state.Security.UserIsRestricted && !state.Security.FieldPermissionOk(GrantSets.ReadSomething))
+        //        return wrapLog("user is restricted, and doesn't have permissions on field - return null", null);
+
+        //    // check that if the user should only see drafts, he doesn't see items of published data
+        //    if (!state.Security.UserIsNotRestrictedOrItemIsDraft(entityGuid, out _))
+        //        return wrapLog("user is restricted (no read-published rights) and item is published - return null", null);
+
+        //    Log.Add("first permission checks passed");
+
+
+        //    // get root and at the same time auto-create the core folder in case it's missing (important)
+        //    state.ContainerContext.Folder();
+
+        //    // try to see if we can get into the subfolder - will throw error if missing
+        //    var currentAdam = state.ContainerContext.Folder(fieldSubfolder, false);
+        //    var fs = state.AdamAppContext.EnvironmentFs;
+        //    var currentFolder = fs.GetFolder(currentAdam.Id);
+
+        //    // ensure that it's super user, or the folder is really part of this item
+        //    if (!state.Security.SuperUserOrAccessingItemFolder(currentFolder.Path, out var exp))
+        //    {
+        //        Log.Add("user is not super-user and folder doesn't seem to be an ADAM folder of this item - will throw");
+        //        throw exp;
+        //    }
+
+        //    var subfolders = currentFolder.Folders.ToList();
+        //    var files = currentFolder.Files.ToList();
+
+        //    var dtoMaker = Factory.Resolve<AdamItemDtoMaker>();
+        //    var allDtos = new List<AdamItemDto>();
+
+        //    var currentFolderDto = dtoMaker.Create(currentFolder, usePortalRoot, state);
+        //    currentFolderDto.Name = ".";
+        //    currentFolderDto.MetadataId = currentFolder.Metadata.EntityId;
+        //    allDtos.Insert(0, currentFolderDto);
+
+        //    var adamFolders = subfolders.Where(s => s.Id != currentFolder.Id)
+        //        .Select(f =>
+        //        {
+        //            var dto = dtoMaker.Create(f, usePortalRoot, state);
+        //            dto.MetadataId = Metadata.GetMetadataId(state.AdamAppContext.AppRuntime, f.Id, true);
+        //            return dto;
+        //        })
+        //        .ToList();
+        //    allDtos.AddRange(adamFolders);
+
+        //    var adamFiles = files
+        //        .Select(f =>
+        //        {
+        //            var dto = dtoMaker.Create(f, usePortalRoot, state);
+        //            dto.MetadataId = Metadata.GetMetadataId(state.AdamAppContext.AppRuntime, f.Id, false);
+        //            dto.Type = Classification.TypeName(f.Extension);
+        //            return dto;
+        //        })
+        //        .ToList();
+        //    allDtos.AddRange(adamFiles);
+
+        //    return wrapLog($"ok - fld⋮{adamFolders.Count}, files⋮{adamFiles.Count} tot⋮{allDtos.Count}",  allDtos);
+        //}
 
         [HttpPost]
-        public IEnumerable<AdamItemDto> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
-        {
-            Log.Add($"get folders for a:{appId}, i:{guid}, field:{field}, subfld:{subfolder}, new:{newFolder}, useRoot:{usePortalRoot}");
-            var state = new AdamState(GetBlock(), appId, contentType, field, guid, usePortalRoot, Log);
-            if (state.Security.UserIsRestricted && !state.Security.FieldPermissionOk(GrantSets.ReadSomething))
-            {
-                return null;
-            }
+        public IEnumerable<AdamItemDto> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot) 
+            => new AdamBackend().Init(Log).Folder(GetBlock(), appId, contentType, guid, field, subfolder, newFolder, usePortalRoot);
 
-            // get root and at the same time auto-create the core folder in case it's missing (important)
-            var folder = state.ContainerContext.Folder();
+        //internal IEnumerable<AdamItemDto> Folder(IBlock block, int appId, string contentType, Guid guid, string field, string subfolder, string newFolder,
+        //    bool usePortalRoot)
+        //{
+        //    Log.Add(
+        //        $"get folders for a:{appId}, i:{guid}, field:{field}, subfld:{subfolder}, new:{newFolder}, useRoot:{usePortalRoot}");
+        //    var state = new AdamState(block, appId, contentType, field, guid, usePortalRoot, Log);
+        //    if (state.Security.UserIsRestricted && !state.Security.FieldPermissionOk(GrantSets.ReadSomething))
+        //        return null;
 
-            // try to see if we can get into the subfolder - will throw error if missing
-            if (!string.IsNullOrEmpty(subfolder))
-                folder = state.ContainerContext.Folder(subfolder, false);
+        //    // get root and at the same time auto-create the core folder in case it's missing (important)
+        //    var folder = state.ContainerContext.Folder();
 
-            // start with a security check...
-            //var dnnFolder = FolderManager.Instance.GetFolder(folder.Id);
+        //    // try to see if we can get into the subfolder - will throw error if missing
+        //    if (!string.IsNullOrEmpty(subfolder))
+        //        folder = state.ContainerContext.Folder(subfolder, false);
 
-            // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
-            if (usePortalRoot && !state.Security.CanEditFolder(folder.Id)) //DnnAdamSecurityChecks.CanEdit(dnnFolder))
-                throw HttpException.PermissionDenied("can't create new folder - permission denied");
+        //    // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
+        //    if (usePortalRoot && !state.Security.CanEditFolder(folder.Id))
+        //        throw HttpException.PermissionDenied("can't create new folder - permission denied");
 
-            var newFolderPath = string.IsNullOrEmpty(subfolder) ? newFolder : Path.Combine(subfolder, newFolder).Replace("\\", "/"); 
+        //    var newFolderPath = string.IsNullOrEmpty(subfolder)
+        //        ? newFolder
+        //        : Path.Combine(subfolder, newFolder).Replace("\\", "/");
 
-            // now access the subfolder, creating it if missing (which is what we want
-            state.ContainerContext.Folder(newFolderPath, true);
+        //    // now access the subfolder, creating it if missing (which is what we want
+        //    state.ContainerContext.Folder(newFolderPath, true);
 
-            return Items(appId, contentType, guid, field, subfolder, usePortalRoot);
-        }
-
-        [HttpGet]
-        public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot)
-        {
-            Log.Add($"delete from a:{appId}, i:{guid}, field:{field}, file:{id}, subf:{subfolder}, isFld:{isFolder}, useRoot:{usePortalRoot}");
-            var state = new AdamState(GetBlock(), appId, contentType, field, guid, usePortalRoot, Log);
-            if (!state.Security.UserIsPermittedOnField(GrantSets.DeleteSomething, out var exp))
-                throw exp;
-
-            // check that if the user should only see drafts, he doesn't see items of published data
-            if (!state.Security.UserIsNotRestrictedOrItemIsDraft(guid, out var permissionException))
-                throw permissionException;
-
-            // try to see if we can get into the subfolder - will throw error if missing
-            var current = state.ContainerContext.Folder(subfolder, false);
-
-
-            if (isFolder)
-            {
-                var folderManager = FolderManager.Instance;
-                var fld = folderManager.GetFolder(id);
-
-                // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
-                if (usePortalRoot && !DnnAdamSecurityChecks.CanEdit(fld))
-                    throw HttpException.PermissionDenied("can't delete folder - permission denied");
-
-                if (!state.Security.SuperUserOrAccessingItemFolder(fld.PhysicalPath, out exp))
-                    throw exp;
-
-                if (fld.ParentID != current.Id)
-                    throw HttpException.BadRequest("can't delete folder - not found in folder");
-                folderManager.DeleteFolder(id);
-            }
-            else
-            {
-                var fileManager = FileManager.Instance;
-                var file = fileManager.GetFile(id);
-
-                // validate that dnn user have write permissions for folder where is file in case dnn file system is used (usePortalRoot)
-                if (usePortalRoot && !DnnAdamSecurityChecks.CanEdit(file))
-                    throw HttpException.PermissionDenied("can't delete file - permission denied");
-
-                if (!state.Security.SuperUserOrAccessingItemFolder(file.PhysicalPath, out exp))
-                    throw exp;
-
-                if (file.FolderId != current.Id)
-                    throw HttpException.BadRequest("can't delete file - not found in folder");
-                fileManager.DeleteFile(file);
-            }
-
-            Log.Add("delete complete");
-            return true;
-        }
+        //    return new AdamBackend().Init(Log)
+        //        .ItemsInField(state, guid, subfolder,
+        //            usePortalRoot); // Items(appId, contentType, guid, field, subfolder, usePortalRoot);
+        //}
 
         [HttpGet]
-        public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot)
-        {
-            Log.Add($"rename a:{appId}, i:{guid}, field:{field}, subf:{subfolder}, isfld:{isFolder}, new:{newName}, useRoot:{usePortalRoot}");
+        public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot) 
+            => new AdamBackend().Init(Log).Delete(GetBlock(), appId, contentType, guid, field, subfolder, isFolder, id, usePortalRoot);
 
-            var state = new AdamState(GetBlock(), appId, contentType, field, guid, usePortalRoot, Log);
-            if (!state.Security.UserIsPermittedOnField(GrantSets.WriteSomething, out var exp))
-                throw exp;
+        //private bool Delete(IBlock block, int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id,
+        //    bool usePortalRoot)
+        //{
+        //    Log.Add(
+        //        $"delete from a:{appId}, i:{guid}, field:{field}, file:{id}, subf:{subfolder}, isFld:{isFolder}, useRoot:{usePortalRoot}");
+        //    var state = new AdamState(block, appId, contentType, field, guid, usePortalRoot, Log);
+        //    if (!state.Security.UserIsPermittedOnField(GrantSets.DeleteSomething, out var exp))
+        //        throw exp;
 
-            // check that if the user should only see drafts, he doesn't see items of published data
-            if (!state.Security.UserIsNotRestrictedOrItemIsDraft(guid, out var permissionException))
-                throw permissionException;
+        //    // check that if the user should only see drafts, he doesn't see items of published data
+        //    if (!state.Security.UserIsNotRestrictedOrItemIsDraft(guid, out var permissionException))
+        //        throw permissionException;
 
-            // try to see if we can get into the subfolder - will throw error if missing
-            var current = state.ContainerContext.Folder(subfolder, false);
+        //    // try to see if we can get into the subfolder - will throw error if missing
+        //    var current = state.ContainerContext.Folder(subfolder, false);
 
-            if (isFolder)
-            {
-                var folderManager = FolderManager.Instance;
-                var fld = folderManager.GetFolder(id);
+        //    var fs = state.AdamAppContext.EnvironmentFs;
+        //    if (isFolder)
+        //    {
+        //        var target = fs.GetFolder(id);
+        //        // validate that dnn user have write permissions for folder where is file in case dnn file system is used (usePortalRoot)
+        //        VerifySecurityAndStructure(state, current, target, id, usePortalRoot, "can't delete folder");
+        //        fs.Delete(target);
+        //    }
+        //    else
+        //    {
+        //        var target = fs.GetFile(id);
+        //        // validate that dnn user have write permissions for folder where is file in case dnn file system is used (usePortalRoot)
+        //        VerifySecurityAndStructure(state, current, target, target.FolderId, usePortalRoot, "can't delete file");
+        //        fs.Delete(target);
+        //    }
 
-                // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
-                if (usePortalRoot && !DnnAdamSecurityChecks.CanEdit(fld))
-                    throw HttpException.PermissionDenied("can't rename folder - permission denied");
+        //    Log.Add("delete complete");
+        //    return true;
+        //}
 
-                if (!state.Security.SuperUserOrAccessingItemFolder(fld.PhysicalPath, out exp))
-                    throw exp;
+        //[AssertionMethod]
+        //private static void VerifySecurityAndStructure(AdamState state, Eav.Apps.Assets.IAsset parentFolder, Eav.Apps.Assets.IAsset target, int folderId, bool usePortalRoot, string errPrefix)
+        //{
+        //    // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
+        //    if (usePortalRoot && !state.Security.CanEditFolder(folderId)) 
+        //        throw HttpException.PermissionDenied(errPrefix + " - permission denied");
 
-                if (fld.ParentID != current.Id)
-                    throw HttpException.BadRequest("can't rename folder - not found in folder");
-                folderManager.RenameFolder(fld, newName);
-            }
-            else
-            {
-                var fileManager = FileManager.Instance;
-                var file = fileManager.GetFile(id);
+        //    if (!state.Security.SuperUserOrAccessingItemFolder(target.Path, out var exp))
+        //        throw exp;
 
-                // validate that dnn user have write permissions for folder where is file in case dnn file system is used (usePortalRoot)
-                if (usePortalRoot && !DnnAdamSecurityChecks.CanEdit(file))
-                    throw HttpException.PermissionDenied("can't rename file - permission denied");
+        //    if (target.ParentId != parentFolder.Id)
+        //        throw HttpException.BadRequest(errPrefix + " - not found in folder");
+        //}
 
-                if (!state.Security.SuperUserOrAccessingItemFolder(file.PhysicalPath, out exp))
-                    throw exp;
+        [HttpGet]
+        public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot) 
+            => new AdamBackend().Init(Log).Rename(GetBlock(), appId, contentType, guid, field, subfolder, isFolder, id, newName, usePortalRoot);
 
-                if (file.FolderId != current.Id)
-                    throw HttpException.BadRequest("can't rename file - not found in folder");
+        //private bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id,
+        //    string newName, bool usePortalRoot, IBlock block)
+        //{
+        //    Log.Add(
+        //        $"rename a:{appId}, i:{guid}, field:{field}, subf:{subfolder}, isfld:{isFolder}, new:{newName}, useRoot:{usePortalRoot}");
 
-                // never allow to change the extension
-                if (file.Extension != newName.Split('.').Last())
-                    newName += "." + file.Extension;
-                fileManager.RenameFile(file, newName);
-            }
+        //    var state = new AdamState(block, appId, contentType, field, guid, usePortalRoot, Log);
+        //    if (!state.Security.UserIsPermittedOnField(GrantSets.WriteSomething, out var exp))
+        //        throw exp;
 
-            Log.Add("rename complete");
-            return true;
-        }
+        //    // check that if the user should only see drafts, he doesn't see items of published data
+        //    if (!state.Security.UserIsNotRestrictedOrItemIsDraft(guid, out var permissionException))
+        //        throw permissionException;
+
+        //    // try to see if we can get into the subfolder - will throw error if missing
+        //    var current = state.ContainerContext.Folder(subfolder, false);
+
+        //    var fs = state.AdamAppContext.EnvironmentFs;
+        //    if (isFolder)
+        //    {
+        //        var folder = fs.GetFolder(id);
+
+        //        // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
+        //        if (usePortalRoot && !state.Security.CanEditFolder(folder.Id)) //DnnAdamSecurityChecks.CanEdit(fld))
+        //            throw HttpException.PermissionDenied("can't rename folder - permission denied");
+
+        //        if (!state.Security.SuperUserOrAccessingItemFolder(folder.Path, out exp))
+        //            throw exp;
+
+        //        if (folder.ParentId != current.Id)
+        //            throw HttpException.BadRequest("can't rename folder - not found in folder");
+
+        //        fs.Rename(folder, newName);
+        //        //var folderManager = FolderManager.Instance;
+        //        //var fld = folderManager.GetFolder(id);
+        //        //folderManager.RenameFolder(fld, newName);
+        //    }
+        //    else
+        //    {
+        //        // var test = state.ContainerContext.
+        //        var adamFile = fs.GetFile(id);
+
+        //        // validate that dnn user have write permissions for folder where is file in case dnn file system is used (usePortalRoot)
+        //        if (usePortalRoot && !state.Security.CanEditFolder(adamFile.FolderId)) //DnnAdamSecurityChecks.CanEdit(file))
+        //            throw HttpException.PermissionDenied("can't rename file - permission denied");
+
+        //        if (!state.Security.SuperUserOrAccessingItemFolder(adamFile.Path, out exp))
+        //            throw exp;
+
+        //        if (adamFile.FolderId != current.Id)
+        //            throw HttpException.BadRequest("can't rename file - not found in folder");
+
+        //        // never allow to change the extension
+        //        if (adamFile.Extension != newName.Split('.').Last())
+        //            newName += "." + adamFile.Extension;
+        //        fs.Rename(adamFile, newName);
+        //        //var fileManager = FileManager.Instance;
+        //        //var file = fileManager.GetFile(id);
+        //        //fileManager.RenameFile(file, newName);
+        //    }
+
+        //    Log.Add("rename complete");
+        //    return true;
+        //}
 
         #endregion
     }

@@ -6,15 +6,34 @@ namespace ToSic.Sxc.Adam
     {
         IEnvironmentFileSystem Init(AdamAppContext adamContext);
 
-        void AddFolder(int tenantId, string path);
-        bool FolderExists(int tenantId, string path);
-        List<File> GetFiles(int folderId/*, AdamAppContext appContext*/);
+        #region Files
+
+        IFile GetFile(int fileId);
+
+        List<File> GetFiles(int folderId);
+
+        void Rename(IFile file, string newName);
+
+        void Delete(IFile file);
+
+        #endregion
 
         #region Folders
 
+        void AddFolder(int tenantId, string path);
+        bool FolderExists(int tenantId, string path);
+
         Folder GetFolder(int folderId);
-        List<Folder> GetFolders(int folderId/*, AdamAppContext appContext*/);
+
+        List<Folder> GetFolders(int folderId);
+
+        void Rename(IFolder folder, string newName);
+
+        void Delete(IFolder folder);
+
         #endregion
-        Eav.Apps.Assets.Folder Get(int tenantId, string path/*, AdamAppContext appContext*/);
+
+
+        Eav.Apps.Assets.Folder Get(int tenantId, string path);
     }
 }

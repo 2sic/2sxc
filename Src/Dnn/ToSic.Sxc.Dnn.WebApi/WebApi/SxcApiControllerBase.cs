@@ -26,10 +26,8 @@ namespace ToSic.Sxc.WebApi
         {
             base.Initialize(controllerContext);
             Block = Helpers.GetCmsBlock(Request, true, Log);
-            //Block = GetBlock();
         }
 
-        //[PrivateApi] public IBlockBuilder BlockBuilder { get; private set; }
         [PrivateApi] public IBlock Block { get; private set; }
 
         [PrivateApi] protected IBlock GetBlock() => Block;
