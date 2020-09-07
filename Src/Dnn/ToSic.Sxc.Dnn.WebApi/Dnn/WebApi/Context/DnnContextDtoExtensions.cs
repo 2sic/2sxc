@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
             dto.CultureCode = page.CultureCode;
             dto.Visible = page.IsVisible;
             dto.Title = page.Title;
-            dto.Portal = new PortalDto(page.PortalID);
+            dto.Portal = new TenantDto(page.PortalID);
             return dto;
         }
 

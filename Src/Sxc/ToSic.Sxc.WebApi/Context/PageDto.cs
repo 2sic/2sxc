@@ -10,6 +10,6 @@ namespace ToSic.Sxc.WebApi.Context
         public string Title;
         public string Url;
         public bool Visible;
-        public PortalDto Portal;
+        public TenantDto Portal;
     }
 }

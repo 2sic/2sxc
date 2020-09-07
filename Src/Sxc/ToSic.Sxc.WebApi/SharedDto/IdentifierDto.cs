@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace ToSic.Sxc.WebApi.Usage.Dto
+namespace ToSic.Sxc.WebApi.SharedDto
 {
-    public class IdentifierBase
+    public class IdentifierDto
     {
         public int Id;
         public Guid Guid;
