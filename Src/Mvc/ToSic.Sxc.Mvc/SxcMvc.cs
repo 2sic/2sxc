@@ -21,6 +21,7 @@ namespace ToSic.Sxc.Mvc
             PageProperties = pageProperties;
 
             // add log to history!
+            History.Add("sxc-mvc-view", Log);
         }
 
         public MvcPageProperties PageProperties;
