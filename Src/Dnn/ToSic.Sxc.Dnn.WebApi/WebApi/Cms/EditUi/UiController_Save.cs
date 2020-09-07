@@ -18,7 +18,7 @@ namespace ToSic.Sxc.WebApi.Cms
     {
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        public Dictionary<Guid, int> Save([FromBody] AllInOne package, int appId, bool partOfPage)
+        public Dictionary<Guid, int> Save([FromBody] AllInOneDto package, int appId, bool partOfPage)
         {
             Log.Add($"save started with a#{appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
 

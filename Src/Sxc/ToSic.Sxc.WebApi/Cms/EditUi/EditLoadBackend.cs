@@ -20,7 +20,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
         }
 
-        public AllInOne Load(IBlock block, IContextBuilder contextBuilder, int appId, List<ItemIdentifier> items)
+        public AllInOneDto Load(IBlock block, IContextBuilder contextBuilder, int appId, List<ItemIdentifier> items)
         {
             // Security check
             var wraplog = Log.Call($"load many a#{appId}, items⋮{items.Count}");
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 throw HttpException.PermissionDenied(error);
 
             // load items - similar
-            var result = new AllInOne();
+            var result = new AllInOneDto();
             var entityApi = new EntityApi(appId, permCheck.EnsureAny(GrantSets.ReadDraft), Log);
             var typeRead = entityApi.AppRead.ContentTypes;
             var list = entityApi.GetEntitiesForEditing(items);

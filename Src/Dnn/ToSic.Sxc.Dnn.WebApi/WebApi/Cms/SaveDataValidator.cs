@@ -14,10 +14,10 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     internal class SaveDataValidator: ValidatorBase
     {
-        public AllInOne Package;
+        public AllInOneDto Package;
         internal AppRuntime AppRead;
 
-        public SaveDataValidator(AllInOne package, ILog parentLog) 
+        public SaveDataValidator(AllInOneDto package, ILog parentLog) 
             : base("Val.Save", parentLog, "start save validator", nameof(SaveDataValidator))
         {
             Package = package;

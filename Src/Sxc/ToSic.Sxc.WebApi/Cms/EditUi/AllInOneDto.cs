@@ -7,7 +7,7 @@ using ToSic.Eav.WebApi.Formats;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public class AllInOne
+    public class AllInOneDto
     {
         /// <summary>
         /// The items in the load/save package.
