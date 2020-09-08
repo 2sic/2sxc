@@ -31,8 +31,8 @@ namespace ToSic.Sxc.Adam
 
         /// <inheritdoc />
         public override bool HasChildren 
-            => _hasChildren ?? (_hasChildren = AdamContext.EnvironmentFs.GetFiles(Id/*, AppContext*/).Any() 
-                                               || AdamContext.EnvironmentFs.GetFiles(Id/*, AppContext*/).Any()).Value;
+            => _hasChildren ?? (_hasChildren = AdamContext.AdamFs.GetFiles(Id/*, AppContext*/).Any() 
+                                               || AdamContext.AdamFs.GetFiles(Id/*, AppContext*/).Any()).Value;
         private bool? _hasChildren;
 
 
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Adam
                 if (_folders != null) return _folders;
                 return _folders = string.IsNullOrEmpty(Name)
                     ? new List<Folder>()
-                    : AdamContext.EnvironmentFs.GetFolders(Id/*, AppContext*/);
+                    : AdamContext.AdamFs.GetFolders(Id/*, AppContext*/);
             }
         }
         private IEnumerable<IFolder> _folders;
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Adam
 
         /// <inheritdoc/>
         public IEnumerable<IFile> Files 
-            => _files ?? (_files = AdamContext.EnvironmentFs.GetFiles(Id/*, AppContext*/));
+            => _files ?? (_files = AdamContext.AdamFs.GetFiles(Id/*, AppContext*/));
         private IEnumerable<IFile> _files;
     }
 }

@@ -21,7 +21,7 @@ namespace ToSic.Sxc.WebApi.Adam
             // try to see if we can get into the subfolder - will throw error if missing
             var parent = State.ContainerContext.Folder(parentSubfolder, false);
 
-            var fs = State.AdamAppContext.EnvironmentFs;
+            var fs = State.AdamAppContext.AdamFs;
             if (isFolder)
             {
                 var target = fs.GetFolder(id);

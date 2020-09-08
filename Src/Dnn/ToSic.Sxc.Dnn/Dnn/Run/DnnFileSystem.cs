@@ -13,13 +13,13 @@ using File = ToSic.Sxc.Adam.File;
 
 namespace ToSic.Sxc.Dnn.Run
 {
-    public class DnnFileSystem : HasLog, IEnvironmentFileSystem
+    public class DnnFileSystem : HasLog, IAdamFileSystem
     {
         #region Constructor / DI / Init
 
         public DnnFileSystem(): base("Dnn.FilSys") { }
 
-        public IEnvironmentFileSystem Init(AdamAppContext adamContext)
+        public IAdamFileSystem Init(AdamAppContext adamContext)
         {
             AdamContext = adamContext;
             return this;
@@ -151,7 +151,7 @@ namespace ToSic.Sxc.Dnn.Run
         public List<Folder> GetFolders(int folderId) 
             => GetFolders(GetFolder(folderId));
 
-        Folder IEnvironmentFileSystem.GetFolder(int folderId) => DnnToAdam(GetFolder(folderId));
+        Folder IAdamFileSystem.GetFolder(int folderId) => DnnToAdam(GetFolder(folderId));
 
         #endregion
 

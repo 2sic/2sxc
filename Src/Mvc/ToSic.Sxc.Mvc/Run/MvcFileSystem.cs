@@ -6,9 +6,9 @@ using File = ToSic.Sxc.Adam.File;
 
 namespace ToSic.Sxc.Mvc.Run
 {
-    public class MvcFileSystem: IEnvironmentFileSystem
+    public class MvcFileSystem: IAdamFileSystem
     {
-        public IEnvironmentFileSystem Init(AdamAppContext adamContext)
+        public IAdamFileSystem Init(AdamAppContext adamContext)
         {
             throw new NotImplementedException();
         }

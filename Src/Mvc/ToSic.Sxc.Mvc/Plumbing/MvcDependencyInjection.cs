@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Mvc.Plumbing
 
             // Add SxcEngineTest
             services.AddTransient<SxcMvc>();
-            services.AddTransient<IEnvironmentFileSystem, MvcFileSystem>();
+            services.AddTransient<IAdamFileSystem, MvcFileSystem>();
             // Still pending...
             //sc.AddTransient<XmlExporter, DnnXmlExporter>();
             //sc.AddTransient<IImportExportEnvironment, DnnImportExportEnvironment>();

@@ -28,7 +28,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
             // try to see if we can get into the subfolder - will throw error if missing
             var currentAdam = State.ContainerContext.Folder(subFolderName, false);
-            var fs = State.AdamAppContext.EnvironmentFs;
+            var fs = State.AdamAppContext.AdamFs;
             var currentFolder = fs.GetFolder(currentAdam.Id);
 
             // ensure that it's super user, or the folder is really part of this item

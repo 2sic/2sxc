@@ -3,9 +3,9 @@ using System.IO;
 
 namespace ToSic.Sxc.Adam
 {
-    public interface IEnvironmentFileSystem
+    public interface IAdamFileSystem
     {
-        IEnvironmentFileSystem Init(AdamAppContext adamContext);
+        IAdamFileSystem Init(AdamAppContext adamContext);
 
         #region FileSystem Settings
 

@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Adam
         public readonly AppRuntime AppRuntime;
         public readonly ITenant Tenant;
         public readonly IBlock Block;
-        public readonly IEnvironmentFileSystem EnvironmentFs;
+        public readonly IAdamFileSystem AdamFs;
         
         public AdamAppContext(ITenant tenant, IApp app, IBlock block, int compatibility, ILog parentLog) : base("Adm.ApCntx", parentLog, "starting")
         {
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Adam
             Block = block;
             AppRuntime = new AppRuntime(app, block?.EditAllowed ?? false, null);
             CompatibilityLevel = compatibility;
-            EnvironmentFs = Factory.Resolve<IEnvironmentFileSystem>().Init(this);
+            AdamFs = Factory.Resolve<IAdamFileSystem>().Init(this);
         }
 
         /// <summary>
@@ -57,13 +57,13 @@ namespace ToSic.Sxc.Adam
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        internal bool Exists(string path) => EnvironmentFs.FolderExists(Tenant.Id, path);
+        internal bool Exists(string path) => AdamFs.FolderExists(Tenant.Id, path);
 
         /// <summary>
         /// Create a path (folder)
         /// </summary>
         /// <param name="path"></param>
-        internal void Add(string path) => EnvironmentFs.AddFolder(Tenant.Id, path);
+        internal void Add(string path) => AdamFs.AddFolder(Tenant.Id, path);
 
 
         internal Eav.Apps.Assets.Folder Folder(string path, bool autoCreate)
@@ -85,7 +85,7 @@ namespace ToSic.Sxc.Adam
         }
 
 
-        internal Eav.Apps.Assets.Folder Folder(string path) => EnvironmentFs.Get(Tenant.Id, path/*, this*/);
+        internal Eav.Apps.Assets.Folder Folder(string path) => AdamFs.Get(Tenant.Id, path/*, this*/);
 
 
         #endregion
