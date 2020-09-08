@@ -27,7 +27,10 @@ namespace ToSic.Sxc.WebApi.Adam
 
         internal IFile UploadOne(Stream stream, string originalFileName, string subFolder, bool skipFieldAndContentTypePermissionCheck)
         {
-            Log.Add($"upload one subfold:{subFolder}");
+            Log.Add($"upload one subfold:{subFolder}, file: {originalFileName}");
+
+            // make sure the file name we'll use doesn't contain injected path-traversal
+            originalFileName = Path.GetFileName(originalFileName);
 
             HttpExceptionAbstraction exp;
             if (!skipFieldAndContentTypePermissionCheck)
@@ -67,7 +70,7 @@ namespace ToSic.Sxc.WebApi.Adam
             // check metadata of the FieldDef to see if still allowed extension
             var additionalFilter = State.Attribute.Metadata.GetBestValue<string>("FileFilter");
             if (!string.IsNullOrWhiteSpace(additionalFilter)
-                && !new SecurityCheckHelpers().Init(Log).CustomFileFilterOk(additionalFilter, originalFileName))
+                && !new SecurityCheckHelpers().Init(Log).CustomFileFilterOk(additionalFilter, fileName))
                 throw HttpException.NotAllowedFileType(fileName, "field has custom file-filter, which doesn't match");
 
             // note 2018-04-20 2dm: can't do this for wysiwyg, as it doesn't have a setting for allowed file-uploads

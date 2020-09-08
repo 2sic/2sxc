@@ -1,7 +1,10 @@
 ﻿using System.IO;
+using Microsoft.AspNetCore.Http;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Mvc.TestStuff;
+
+// #todo: not really multi-tenant, incl. url 
 
 namespace ToSic.Sxc.Mvc.Run
 {
@@ -11,7 +14,31 @@ namespace ToSic.Sxc.Mvc.Run
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public class MvcTenant : Tenant<MvcPortalSettings>
     {
-        public MvcTenant() : base(new MvcPortalSettings()) { }
+        /// <summary>
+        /// Constructor for DI
+        /// </summary>
+        /// <param name="httpContextAccessor"></param>
+        public MvcTenant(IHttpContextAccessor httpContextAccessor) : base(new MvcPortalSettings())
+        {
+            HttpContext = httpContextAccessor.HttpContext;
+        }
+
+        /// <summary>
+        /// Constructor for normal initialization
+        /// </summary>
+        /// <param name="httpContext"></param>
+        public MvcTenant(HttpContext httpContext) : base(new MvcPortalSettings())
+        {
+            HttpContext = httpContext;
+        }
+
+        public MvcTenant(HttpContext httpContext, MvcPortalSettings settings) : base(
+            settings ?? new MvcPortalSettings())
+        {
+            HttpContext = httpContext;
+        }
+
+        protected HttpContext HttpContext { get; }
 
         public override ITenant Init(int tenantId)
         {
@@ -25,7 +52,8 @@ namespace ToSic.Sxc.Mvc.Run
         /// <inheritdoc />
         public override int Id => UnwrappedContents.Id;
 
-        public override string Url => "todo-mvc-tenant-should-be-host-name";
+        // https://localhost:44361
+        public override string Url => HttpContext?.Request.Host.ToString();
 
         /// <inheritdoc />
         public override string Name => UnwrappedContents.Name;
@@ -41,6 +69,5 @@ namespace ToSic.Sxc.Mvc.Run
 
         public override int ZoneId => UnwrappedContents.Id;
 
-        public MvcTenant(MvcPortalSettings settings) : base(settings ?? new MvcPortalSettings()) { }
     }
 }

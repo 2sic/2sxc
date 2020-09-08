@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using ToSic.Eav.Apps.Run;
-using ToSic.Sxc.Mvc.Run;
 using ToSic.Sxc.WebApi.App;
 
 // TODO: #MissingFeature
@@ -13,19 +11,13 @@ namespace ToSic.Sxc.Mvc.WebApi.App
 {
     [Route(WebApiConstants.WebApiRoot + "/app/{appPath}/query/")]
     [ApiController]
-    public class AppQueryController : SxcStatelessControllerBase
+    public class AppQueryController : SxcStatefullControllerBase
     {
         #region DI / Constructor
         protected override string HistoryLogName => "App.AppQry";
 
         #endregion
 
-        private IInstanceContext GetContext()
-        {
-            // in case the initial request didn't yet find a block builder, we need to create it now
-            var context = new InstanceContext(new MvcTenant(), new PageNull(), new ContainerNull(), new MvcUser());
-            return context;
-        }
 
         [HttpGet("{name}")]
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(

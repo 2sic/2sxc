@@ -8,16 +8,22 @@ namespace ToSic.Sxc.Mvc.Run
 {
     public class MvcEnvironment : HasLog, IAppEnvironment
     {
-        public string DefaultLanguage => new MvcPortalSettings().DefaultLanguage;
+        public MvcEnvironment(IHttp http) : base("Mvc.Enviro")
+        {
+            _http = http;
+        }
+        private readonly IHttp _http;
+        private IZoneMapper _zoneMapper;
+
         public IAppEnvironment Init(ILog parent)
         {
             Log.LinkTo(parent);
             return this;
         }
-        private readonly IHttp _http;
 
+        public string DefaultLanguage => new MvcPortalSettings().DefaultLanguage;
 
-        public IZoneMapper ZoneMapper { get; } = new MvcZoneMapper();
+        public IZoneMapper ZoneMapper => _zoneMapper ??= new MvcZoneMapper(_http);
 
         public IUser User { get; } = new MvcUser();
 
@@ -27,10 +33,6 @@ namespace ToSic.Sxc.Mvc.Run
         public string MapPath(string virtualPath) => _http.MapPath(virtualPath);
 
 
-        public MvcEnvironment(IHttp http) : base("Mvc.Enviro")
-        {
-            _http = http;
-        }
 
     }
 }

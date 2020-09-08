@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Http;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
@@ -16,14 +17,15 @@ namespace ToSic.Sxc.Mvc
     {
         #region Constructor and DI
         
-        public SxcMvc(MvcPageProperties pageProperties) : base("Mvc.View")
+        public SxcMvc(IHttpContextAccessor httpContextAccessor, MvcPageProperties pageProperties) : base("Mvc.View")
         {
             PageProperties = pageProperties;
-
+            _httpContext = httpContextAccessor.HttpContext;
             // add log to history!
             History.Add("sxc-mvc-view", Log);
         }
 
+        private HttpContext _httpContext;
         public MvcPageProperties PageProperties;
 
         #endregion
@@ -39,20 +41,20 @@ namespace ToSic.Sxc.Mvc
             return new HtmlString(result);
         }
 
-        public static DynamicCodeRoot CreateDynCode(InstanceId id, ILog log) =>
+        public DynamicCodeRoot CreateDynCode(InstanceId id, ILog log) =>
             new MvcDynamicCode().Init(CreateBlock(id.Zone, id.Page, id.Container, id.App, id.Block, log), log);
 
 
-        public static IBlock CreateBlock(int zoneId, int pageId, int containerId, int appId, Guid blockGuid, ILog log)
+        public IBlock CreateBlock(int zoneId, int pageId, int containerId, int appId, Guid blockGuid, ILog log)
         {
             var context = CreateContext(zoneId, pageId, containerId, appId, blockGuid);
             var block = new BlockFromModule().Init(context, log);
             return block;
         }
 
-        private static InstanceContext CreateContext(int zoneId, int pageId, int containerId, int appId, Guid blockGuid)
+        private InstanceContext CreateContext(int zoneId, int pageId, int containerId, int appId, Guid blockGuid)
             => new InstanceContext(
-                new MvcTenant(new MvcPortalSettings(zoneId)),
+                new MvcTenant(_httpContext, new MvcPortalSettings(zoneId)),
                 new MvcPage(pageId, null),
                 new MvcContainer(tenantId: zoneId, id: containerId, appId: appId, block: blockGuid),
                 new MvcUser()

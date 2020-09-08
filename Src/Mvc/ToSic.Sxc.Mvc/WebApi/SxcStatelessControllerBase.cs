@@ -11,10 +11,6 @@ namespace ToSic.Sxc.Mvc.WebApi
     {
         protected SxcStatelessControllerBase()
         {
-            // ensure that the sql connection string is correct
-            // this is technically only necessary, when dnn just restarted and didn't already set this
-            // todo: verify: probably not necessary in MVC
-            //Settings.EnsureSystemIsInitialized();
             // ReSharper disable once VirtualMemberCallInConstructor
             // todo: redesign so it works - in .net core the HttpContext isn't ready in the constructor
             Log = new Log(HistoryLogName, null, $"Path: {HttpContext?.Request.GetDisplayUrl()}");

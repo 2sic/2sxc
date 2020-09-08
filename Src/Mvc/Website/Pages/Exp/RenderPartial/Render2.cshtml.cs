@@ -11,14 +11,16 @@ namespace Website.Pages.RenderPartial
     public class Render2Model : PageModel
     {
         private readonly IRenderRazor _renderer;
-        public Render2Model(IRenderRazor renderer)
+        private readonly SxcMvc _sxcMvc;
+        public Render2Model(IRenderRazor renderer, SxcMvc sxcMvc)
         {
             _renderer = renderer;
+            _sxcMvc = sxcMvc;
         }
 
         public async Task OnGetAsync()
         {
-            var dynCode = SxcMvc.CreateDynCode(TestIds.Blog, null);
+            var dynCode = _sxcMvc.CreateDynCode(TestIds.Blog, null);
 
             var path = "/wwwroot/2sxc/Blog App/_1 Main blog view.cshtml";
 

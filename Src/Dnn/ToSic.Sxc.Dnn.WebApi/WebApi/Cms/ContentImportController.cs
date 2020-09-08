@@ -1,5 +1,4 @@
 ﻿using System.Web.Http;
-using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Dto;
@@ -15,24 +14,19 @@ namespace ToSic.Sxc.WebApi.Cms
     [ValidateAntiForgeryToken]
     public class ContentImportController : SxcApiControllerBase, IContentImportController
     {
-	    protected override void Initialize(HttpControllerContext controllerContext)
-	    {
-	        base.Initialize(controllerContext);
-	        Log.Rename("2sApiC");
-	        _eavCtc = new Eav.WebApi.ContentImportApi(Log);
-	    }
-
-        private Eav.WebApi.ContentImportApi _eavCtc;
+        protected override string HistoryLogName => "Api.ConImp";
 
         [HttpPost]
-        public ContentImportResultDto EvaluateContent(ContentImportArgsDto args) => _eavCtc.EvaluateContent(args);
+        public ContentImportResultDto EvaluateContent(ContentImportArgsDto args) 
+            => new Eav.WebApi.ContentImportApi(Log).EvaluateContent(args);
 
 
 	    [HttpPost]
-        public ContentImportResultDto ImportContent(ContentImportArgsDto args) => _eavCtc.ImportContent(args);
+        public ContentImportResultDto ImportContent(ContentImportArgsDto args) 
+            => new Eav.WebApi.ContentImportApi(Log).ImportContent(args);
 
 	    [HttpPost]
-        public bool Import(EntityImportDto args) => _eavCtc.Import(args);
-
-	}
+        public bool Import(EntityImportDto args) 
+            => new Eav.WebApi.ContentImportApi(Log).Import(args);
+    }
 }

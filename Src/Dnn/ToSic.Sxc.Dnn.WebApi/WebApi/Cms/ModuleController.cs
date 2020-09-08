@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http;
-using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
@@ -24,6 +23,8 @@ namespace ToSic.Sxc.WebApi.Cms
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
     public partial class ModuleController : SxcApiController
     {
+        protected override string HistoryLogName => "Api.ModCnt";
+
         protected CmsRuntime CmsRuntime => _cmsRuntime ?? (_cmsRuntime = GetCmsRuntime());
         private CmsRuntime _cmsRuntime;
 
@@ -35,11 +36,7 @@ namespace ToSic.Sxc.WebApi.Cms
             => App == null ? null : new CmsRuntime(App, Log, true, false);
 
 
-        protected override void Initialize(HttpControllerContext controllerContext)
-        {
-            base.Initialize(controllerContext); // very important!!!
-            Log.Rename("2sModC");
-        }
+
 
         private BlockEditorBase GetEditor() => BlockEditorBase.GetEditor(Block);
 

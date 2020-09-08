@@ -1,5 +1,4 @@
 ﻿using System.Web.Http;
-using System.Web.Http.Controllers;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
@@ -21,11 +20,7 @@ namespace ToSic.Sxc.WebApi.Cms
     [ValidateAntiForgeryToken]
     public partial class SystemController : SxcApiControllerBase
     {
-        protected override void Initialize(HttpControllerContext controllerContext)
-        {
-            base.Initialize(controllerContext); // very important!!!
-            Log.Rename("2sSysC");
-        }
+        protected override string HistoryLogName => "Api.SysCnt";
 
         #region Dialog Helpers
         /// <summary>

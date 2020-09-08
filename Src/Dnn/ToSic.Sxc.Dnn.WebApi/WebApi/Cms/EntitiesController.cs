@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
-using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Security.Permissions;
@@ -18,11 +17,7 @@ namespace ToSic.Sxc.WebApi.Cms
     [ValidateAntiForgeryToken]
 	public partial class EntitiesController : SxcApiControllerBase, IEntitiesController
 	{
-	    protected override void Initialize(HttpControllerContext controllerContext)
-	    {
-	        base.Initialize(controllerContext); // very important!!!
-            Log.Rename("Api.2sEntC");
-        }
+        protected override string HistoryLogName => "Api.EntCnt";
 
         // #2134
         ///// <inheritdoc />

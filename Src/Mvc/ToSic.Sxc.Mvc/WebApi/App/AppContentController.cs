@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
 using ToSic.Eav.WebApi;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Mvc.Run;
 using ToSic.Sxc.WebApi.App;
 
 
@@ -15,22 +12,22 @@ using ToSic.Sxc.WebApi.App;
 
 namespace ToSic.Sxc.Mvc.WebApi.App
 {
-    [Route(WebApiConstants.WebApiRoot + "/app/{appPath}/content/")]
     [ApiController]
-    public class AppContentController: SxcStatelessControllerBase
+    [Route(WebApiConstants.WebApiRoot + "/app/{appPath}/content/")]
+    public class AppContentController: SxcStatefullControllerBase
     {
         #region DI / Constructor
-        protected override string HistoryLogName => "App.AppCnt";
+        protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "AppCnt";
         
         #endregion
 
-        private IInstanceContext GetContext()
-        {
-            // in case the initial request didn't yet find a block builder, we need to create it now
-            var context = // BlockBuilder?.Context ??
-                          new InstanceContext(new MvcTenant(), new PageNull(), new ContainerNull(), new MvcUser());
-            return context;
-        }
+        //private IInstanceContext GetContext()
+        //{
+        //    // in case the initial request didn't yet find a block builder, we need to create it now
+        //    var context = // BlockBuilder?.Context ??
+        //                  new InstanceContext(new MvcTenant(), new PageNull(), new ContainerNull(), new MvcUser());
+        //    return context;
+        //}
 
         #region Get List / all of a certain content-type
         /// <summary>

@@ -1,44 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Web;
-using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using ToSic.Sxc.WebApi;
+using Microsoft.AspNetCore.Mvc;
 using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.Errors;
 
-namespace ToSic.Sxc.Dnn.WebApi
+// #todo: security checks on APIs still completely missing
+// #todo: upload not implemented yet
+
+namespace ToSic.Sxc.Mvc.WebApi.Adam
 {
     /// <summary>
     /// Direct access to app-content items, simple manipulations etc.
     /// Should check for security at each standard call - to see if the current user may do this
     /// Then we can reduce security access level to anonymous, because each method will do the security check
     /// </summary>
-    [SupportedModules("2sxc,2sxc-app")]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]    // use view, all methods must re-check permissions
-    [ValidateAntiForgeryToken]
-    public class AdamController : SxcApiControllerBase
+    [ApiController]
+    [Route(WebApiConstants.WebApiRoot + "/app-content/{contentType}/{guid}/{field}/")]
+    public class AdamController : SxcStatefullControllerBase
     {
         protected override string HistoryLogName => "Api.Adam";
 
         [HttpPost]
         [HttpPut]
-        public UploadResultDto Upload(int appId, string contentType, Guid guid, string field, [FromUri] string subFolder = "", bool usePortalRoot = false)
+        public UploadResultDto Upload(int appId, string contentType, Guid guid, string field, string subFolder = "", bool usePortalRoot = false)
         {
             // wrap all of it in try/catch, to reformat error in better way for js to tell the user
             try
             {
                 // Check if the request contains multipart/form-data.
-                if (!Request.Content.IsMimeMultipartContent())
+                if (Request.Form.Files.Count < 1) // ..Content.IsMimeMultipartContent())
                     return new UploadResultDto
                     {
                         Success = false,
                         Error = "doesn't look like a file-upload"
                     };
 
-                var filesCollection = HttpContext.Current.Request.Files;
+                var filesCollection = Request.Form.Files;
                 if (filesCollection.Count <= 0)
                 {
                     Log.Add("Error, no files");
@@ -46,14 +43,14 @@ namespace ToSic.Sxc.Dnn.WebApi
                 }
 
                 var originalFile = filesCollection[0];
-                var stream = originalFile.InputStream;
+                var stream = originalFile.OpenReadStream();
                 var fileName = originalFile.FileName;
                 var uploader = new AdamTransUpload().Init(GetBlock(), appId, contentType, guid, field, usePortalRoot, Log);
                 return uploader.UploadOne(stream, subFolder, fileName);
             }
             catch (HttpExceptionAbstraction he)
             {
-                return new UploadResultDto { Success = false, Error = he.Response.ReasonPhrase };
+                return new UploadResultDto { Success = false, Error = he.Message };
             }
             catch (Exception e)
             {
@@ -66,11 +63,11 @@ namespace ToSic.Sxc.Dnn.WebApi
 
         // test method to provide a public API for accessing adam items easily
         [HttpGet]
-        public IEnumerable<AdamItemDto> ItemsWithAppIdFromContext(string contenttype, Guid guid, string field, string folder = "")
+        public IEnumerable<AdamItemDto> ItemsWithAppIdFromContext(string contentType, Guid guid, string field, string folder = "")
         {
             // if app-path specified, use that app, otherwise use from context
             var appId = GetBlock().AppId;
-            return Items(appId, contenttype, guid, field, folder);
+            return Items(appId, contentType, guid, field, folder);
         }
 
         [HttpGet]
@@ -103,5 +100,6 @@ namespace ToSic.Sxc.Dnn.WebApi
                 .Rename(subfolder, isFolder, id, newName);
 
         #endregion
+
     }
 }

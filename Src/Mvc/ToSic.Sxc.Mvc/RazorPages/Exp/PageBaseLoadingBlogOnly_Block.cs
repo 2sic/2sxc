@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
                 if (_blockLoaded) return _block;
                 _blockLoaded = true;
                 var context = new InstanceContext(
-                    new MvcTenant(new MvcPortalSettings()),
+                    new MvcTenant(HttpContext),
                     new MvcPage(0, null), 
                     new MvcContainer(),
                     new MvcUser()

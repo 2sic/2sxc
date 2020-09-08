@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Mvc.Razor.Internal;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Mvc.Dev;
 
@@ -6,9 +7,13 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
 {
     public abstract class SxcTestPageViewParams<TModel>: SxcRazorPage<TModel>
     {
-        protected SxcTestPageViewParams()
+        [RazorInject]
+        public SxcMvc SxcMvc { get; set; }
+
+        protected SxcTestPageViewParams(/*SxcMvc sxcMvc*/)
         {
             Log.Rename("Mvc.SxcRzr");
+            //_sxcMvc = sxcMvc;
         }
 
         #region Properties to identify the block

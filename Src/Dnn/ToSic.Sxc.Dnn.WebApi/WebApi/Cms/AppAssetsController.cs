@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Web.Http;
-using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
@@ -21,11 +20,7 @@ namespace ToSic.Sxc.WebApi.Cms
     [ValidateAntiForgeryToken]
     public partial class AppAssetsController : SxcApiControllerBase
     {
-        protected override void Initialize(HttpControllerContext controllerContext)
-        {
-            base.Initialize(controllerContext); // very important!!!
-            Log.Rename("2sApAs");
-        }
+        protected override string HistoryLogName => "Api.Assets";
 
         #region Public API
 

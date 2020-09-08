@@ -14,8 +14,9 @@ namespace ToSic.Sxc.Dnn.WebApi
     [ValidateAntiForgeryToken]
 	public class HyperlinkController : SxcApiControllerBase
 	{
+        protected override string HistoryLogName => "Api.LnkCnt";
 
-		[HttpGet]
+        [HttpGet]
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
 		public object GetFileByPath(string relativePath)
         {

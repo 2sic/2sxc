@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Data;
@@ -15,13 +14,7 @@ namespace ToSic.Sxc.WebApi.Cms
     [ValidateAntiForgeryToken]
 	public partial class TemplateController : SxcApiControllerBase
 	{
-
-	    protected override void Initialize(HttpControllerContext controllerContext)
-	    {
-	        base.Initialize(controllerContext); // very important!!!
-	        Log.Rename("2sSysC");
-	    }
-
+        protected override string HistoryLogName => "Api.TmpCnt";
 
         [HttpGet]
 	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
