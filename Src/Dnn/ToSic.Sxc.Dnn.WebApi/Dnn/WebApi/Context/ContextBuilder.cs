@@ -14,14 +14,11 @@ using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.Sxc.Dnn.WebApi.Context
 {
-
     internal sealed class DnnContextBuilder : ContextBuilderBase
     {
         private readonly PortalSettings _portal;
         private readonly ModuleInfo _module;
         private readonly UserInfo _user;
-        //protected int ZoneId;
-        //protected IApp App;
 
         public DnnContextBuilder(PortalSettings portal, ModuleInfo module, UserInfo user = null, int? zoneId = null, IApp app = null)
         {
@@ -33,33 +30,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
 
         public override IContextBuilder InitApp(int? zoneId, IApp app)
         {
-            //App = app;
-            //ZoneId = zoneId ?? 0;
-
             // check if we're providing context for missing app
             // in this case we must find the zone based on the portals.
             if ((zoneId ?? 0) == 0 && app == null) zoneId = new DnnZoneMapper().Init(null).GetZoneId(_portal.PortalId);
             return base.InitApp(zoneId, app);
-            
-            //return this;
         }
-
-        //public ContextDto Get(Ctx flags)
-        //{
-        //    var ctx = new ContextDto();
-        //    // logic for activating each part
-        //    // 1. either that switch is on
-        //    // 2. or the null-check: all is on
-        //    // 3. This also means if the switch is off, it's off
-        //    if (flags.HasFlag(Ctx.AppBasic) | flags.HasFlag(Ctx.AppAdvanced)) 
-        //        ctx.App = GetApp(flags);
-        //    if (flags.HasFlag(Ctx.Enable)) ctx.Enable = GetEnable();
-        //    if (flags.HasFlag(Ctx.Language)) ctx.Language = GetLanguage();
-        //    if (flags.HasFlag(Ctx.Page)) ctx.Page = GetPage();
-        //    if (flags.HasFlag(Ctx.Site)) ctx.Site = GetSite();
-        //    if (flags.HasFlag(Ctx.System)) ctx.System = GetSystem();
-        //    return ctx;
-        //}
 
         protected override LanguageDto GetLanguage()
         {
@@ -84,50 +59,28 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
         //    };
         //}
 
-        protected override WebResourceDto GetSystem()
-        {
-            return new WebResourceDto
+        protected override WebResourceDto GetSystem() =>
+            new WebResourceDto
             {
                 Url = VirtualPathUtility.ToAbsolute("~/")
             };
-        }
 
-        protected override WebResourceDto GetSite()
-        {
-            return new WebResourceDto
+        protected override WebResourceDto GetSite() =>
+            new WebResourceDto
             {
                 Id = _portal.PortalId,
                 Url = "//" + _portal.PortalAlias.HTTPAlias + "/",
             };
-        }
 
-        protected override WebResourceDto GetPage()
-        {
-            if (_module == null) return null;
-            return new WebResourceDto
-            {
-                Id = _module.TabID, // .ModuleID,
-                // todo: maybe page url
-                // used to be on ps.ActiveTab.FullUrl;
-                // but we can't get it from there directly
-            };
-        }
-
-        //private AppDto GetApp(Ctx flags)
-        //{
-        //    if (App == null) return null;
-        //    var result = new AppDto
-        //    {
-        //        Id = App.AppId,
-        //        Url = App.Path,
-        //        Name = App.Name,
-        //    };
-        //    if (!flags.HasFlag(Ctx.AppAdvanced)) return result;
-
-        //    result.GettingStartedUrl = GettingStartedUrl();
-        //    result.Identifier = App.AppGuid;
-        //    return result;
-        //}
+        protected override WebResourceDto GetPage() =>
+            _module == null ? null
+                : new WebResourceDto
+                {
+                    Id = _module.TabID, // .ModuleID,
+                    // todo: maybe page url
+                    // used to be on ps.ActiveTab.FullUrl;
+                    // but we can't get it from there directly
+                };
 
         protected override EnableDto GetEnable()
         {

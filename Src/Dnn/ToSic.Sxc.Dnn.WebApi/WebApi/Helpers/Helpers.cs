@@ -28,7 +28,7 @@ namespace ToSic.Sxc.WebApi
         {
             var wrapLog = log.Call<IBlock>(parameters: $"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
 
-            const string headerId = "ContentBlockId";
+            //const string headerId = "ContentBlockId";
             var moduleInfo = request.FindModuleInfo();
 
             if (allowNoContextFound & moduleInfo == null)
@@ -47,8 +47,8 @@ namespace ToSic.Sxc.WebApi
             IBlock block = new BlockFromModule().Init(context, log);
 
             // check if we need an inner block
-            if (request.Headers.Contains(headerId)) { 
-                var blockHeaderId = request.Headers.GetValues(headerId).FirstOrDefault();
+            if (request.Headers.Contains(WebApiConstants.HeaderContentBlockId)) { 
+                var blockHeaderId = request.Headers.GetValues(WebApiConstants.HeaderContentBlockId).FirstOrDefault();
                 int.TryParse(blockHeaderId, out var blockId);
                 if (blockId < 0)   // negative id, so it's an inner block
                 {
