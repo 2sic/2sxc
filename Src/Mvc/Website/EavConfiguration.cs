@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav;
-using ToSic.Sxc.Mvc.Run;
+using ToSic.Sxc.Mvc.Plumbing;
+using ToSic.Sxc.WebApi.Plumbing;
 
 namespace Website.Plumbing
 {
@@ -16,11 +17,13 @@ namespace Website.Plumbing
 
         internal static void ConfigureIoC(IServiceCollection services)
         {
-            Factory.BetaUseExistingServiceCollection(services);
-            Factory.ActivateNetCoreDi(sc =>
+            Factory.UseExistingServices(services);
+            Factory.ActivateNetCoreDi(services2 =>
             {
-                ConfigureServices.Configure(sc);
-                new DependencyInjection().ConfigureNetCoreContainer(sc);
+                services2
+                    .AddSxcMvc()
+                    .AddSxc()
+                    .AddEav();
             });
         }
     }
