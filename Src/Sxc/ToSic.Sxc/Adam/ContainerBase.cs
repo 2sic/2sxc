@@ -16,7 +16,7 @@
         /// <remarks>
         /// Will create the folder if it does not exist
         /// </remarks>
-        internal Eav.Apps.Assets.Folder Folder(string subFolder, bool autoCreate) 
+        internal Folder Folder(string subFolder, bool autoCreate) 
             => AppContext.Folder(GeneratePath(subFolder), autoCreate);
 
         /// <summary>
@@ -36,8 +36,8 @@
         /// Get a (root) folder object for this container
         /// </summary>
         /// <returns></returns>
-        internal Eav.Apps.Assets.Folder Folder() => _folder ?? (_folder = Folder("", true));
-        private Eav.Apps.Assets.Folder _folder;
+        internal Folder Folder() => _folder ?? (_folder = Folder("", true));
+        private Folder _folder;
         
     }
 }

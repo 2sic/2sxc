@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Adam
 
         IFile GetFile(int fileId);
 
-        List<File> GetFiles(int folderId);
+        List<File> GetFiles(Eav.Apps.Assets.Folder folder);
 
         void Rename(IFile file, string newName);
 
@@ -38,12 +38,12 @@ namespace ToSic.Sxc.Adam
 
         #region Folders
 
-        void AddFolder(int tenantId, string path);
-        bool FolderExists(int tenantId, string path);
+        void AddFolder(string path);
+        bool FolderExists(string path);
 
         Folder GetFolder(int folderId);
 
-        List<Folder> GetFolders(int folderId);
+        List<Folder> GetFolders(Eav.Apps.Assets.Folder folder);
 
         void Rename(IFolder folder, string newName);
 
@@ -52,6 +52,6 @@ namespace ToSic.Sxc.Adam
         #endregion
 
 
-        Eav.Apps.Assets.Folder Get(int tenantId, string path);
+        Folder Get(string path);
     }
 }

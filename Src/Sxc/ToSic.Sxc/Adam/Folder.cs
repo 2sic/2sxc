@@ -8,12 +8,9 @@ namespace ToSic.Sxc.Adam
     {
         protected AdamAppContext AdamContext { get; set; }
 
-        //private readonly IEnvironmentFileSystem _fileSystem;
-
-        public Folder(AdamAppContext adamContext/*, IEnvironmentFileSystem fileSystem*/)
+        public Folder(AdamAppContext adamContext)
         {
             AdamContext = adamContext;
-            //_fileSystem = fileSystem;
         }
 
         /// <inheritdoc />
@@ -23,7 +20,7 @@ namespace ToSic.Sxc.Adam
         public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AdamContext.AppRuntime, Id, false) != null;
 
         /// <inheritdoc />
-        public string Url { get; internal set; }  // AdamContext.Tenant.ContentPath + Path;
+        public string Url { get; internal set; }
 
         /// <inheritdoc />
         public string Type => Classification.Folder;
@@ -31,8 +28,8 @@ namespace ToSic.Sxc.Adam
 
         /// <inheritdoc />
         public override bool HasChildren 
-            => _hasChildren ?? (_hasChildren = AdamContext.AdamFs.GetFiles(Id/*, AppContext*/).Any() 
-                                               || AdamContext.AdamFs.GetFiles(Id/*, AppContext*/).Any()).Value;
+            => _hasChildren ?? (_hasChildren = AdamContext.AdamFs.GetFiles(this).Any() 
+                                               || AdamContext.AdamFs.GetFiles(this).Any()).Value;
         private bool? _hasChildren;
 
 
@@ -44,7 +41,7 @@ namespace ToSic.Sxc.Adam
                 if (_folders != null) return _folders;
                 return _folders = string.IsNullOrEmpty(Name)
                     ? new List<Folder>()
-                    : AdamContext.AdamFs.GetFolders(Id/*, AppContext*/);
+                    : AdamContext.AdamFs.GetFolders(this);
             }
         }
         private IEnumerable<IFolder> _folders;
@@ -52,7 +49,7 @@ namespace ToSic.Sxc.Adam
 
         /// <inheritdoc/>
         public IEnumerable<IFile> Files 
-            => _files ?? (_files = AdamContext.AdamFs.GetFiles(Id/*, AppContext*/));
+            => _files ?? (_files = AdamContext.AdamFs.GetFiles(this));
         private IEnumerable<IFile> _files;
     }
 }
