@@ -52,7 +52,7 @@ namespace Website
             services.AddHttpContextAccessor();
 
             // enable webapi - include all controllers in the Sxc.Mvc assembly
-            services.AddControllers()
+            services.AddControllers(options => { options.AllowEmptyInputInBodyModelBinding = true; })
                 // This is needed to preserve compatibility with previous api usage
                 .AddNewtonsoftJson(options =>
                 {

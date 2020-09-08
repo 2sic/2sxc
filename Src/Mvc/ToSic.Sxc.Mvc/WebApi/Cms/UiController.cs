@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
             _contextBuilder = contextBuilder;
         }
 
-        private MvcContextBuilder _contextBuilder;
+        private readonly MvcContextBuilder _contextBuilder;
         #endregion
 
 
