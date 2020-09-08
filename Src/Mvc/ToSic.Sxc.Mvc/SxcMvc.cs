@@ -53,8 +53,11 @@ namespace ToSic.Sxc.Mvc
         }
 
         private InstanceContext CreateContext(int zoneId, int pageId, int containerId, int appId, Guid blockGuid)
+            => CreateContext(_httpContext, zoneId, appId, containerId, appId, blockGuid);
+
+        public static InstanceContext CreateContext(HttpContext http, int zoneId, int pageId, int containerId, int appId, Guid blockGuid)
             => new InstanceContext(
-                new MvcTenant(_httpContext, new MvcPortalSettings(zoneId)),
+                new MvcTenant(http).Init(zoneId),
                 new MvcPage(pageId, null),
                 new MvcContainer(tenantId: zoneId, id: containerId, appId: appId, block: blockGuid),
                 new MvcUser()

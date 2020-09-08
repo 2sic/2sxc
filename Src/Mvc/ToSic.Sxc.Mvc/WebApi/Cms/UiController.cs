@@ -7,19 +7,35 @@ using ToSic.Sxc.WebApi.Cms;
 
 namespace ToSic.Sxc.Mvc.WebApi.Cms
 {
-    [Route(WebApiConstants.WebApiRoot + "/eav/ui/")]
+    [Route(WebApiConstants.WebApiRoot + "/eav/ui/[action]")]
     [ApiController]
     public class UiController: SxcStatefullControllerBase
     {
+        #region DI
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "UiCntr";
+
+        public UiController(MvcContextBuilder contextBuilder)
+        {
+            _contextBuilder = contextBuilder;
+        }
+
+        private MvcContextBuilder _contextBuilder;
+        #endregion
+
 
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements
+        public string Ping() => "test ping";
+
+        [HttpPost]
+        [AllowAnonymous]   // will check security internally, so assume no requirements
         public AllInOneDto Load([FromBody] List<ItemIdentifier> items, int appId)
         {
-            return new EditLoadBackend(null)
+            var block = GetBlock();
+            var result = new EditLoadBackend(null)
                 .Init(Log)
-                .Load(GetBlock(), new MvcContextBuilder(), appId, items);
+                .Load(block, _contextBuilder.Init(block), appId, items);
+            return result;
         }
     }
 }

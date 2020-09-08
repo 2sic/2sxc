@@ -51,13 +51,6 @@ namespace ToSic.Sxc.Mvc.Web
             var pageId = 0;
             var siteRoot = MvcConstants.SiteRoot;
             var apiRoot = siteRoot + WebApi.WebApiConstants.WebApiRoot + "/";
-            //var json = "{"
-            //           + $"\"page\": {pageId},"
-            //           + $"\"root\": \"{siteRoot}\","
-            //           + $"\"api\": \"{apiRoot}\","
-            //           + $"\"rvt\": \"{AntiForgeryToken()}\", "
-            //           + $"\"uiRoot\": \"{MvcConstants.UiRoot}\""
-            //           + "}";
             var json = InpageCms.JsApiJson(pageId, siteRoot, apiRoot, AntiForgeryToken(), MvcConstants.UiRoot);
 
             var meta = Tag.Meta().Name(InpageCms.MetaName).Content(json).ToString();

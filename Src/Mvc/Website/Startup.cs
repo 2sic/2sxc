@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using RazorPartialToString.Services;
 using ToSic.Sxc.Mvc;
 using ToSic.Sxc.Mvc.Engines;
@@ -51,6 +53,13 @@ namespace Website
 
             // enable webapi - include all controllers in the Sxc.Mvc assembly
             services.AddControllers()
+                // This is needed to preserve compatibility with previous api usage
+                .AddNewtonsoftJson(options =>
+                {
+                    // this ensures that c# objects with Pascal-case keep that
+                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                    options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                })
                 .PartManager.ApplicationParts.Add(new AssemblyPart(typeof(SxcMvc).Assembly));
 
             // enable use of UrlHelper for AbsolutePath
@@ -72,6 +81,7 @@ namespace Website
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseRouteDebugger();
             }
             else
             {

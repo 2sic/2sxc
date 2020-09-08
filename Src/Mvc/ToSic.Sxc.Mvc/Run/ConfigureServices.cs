@@ -12,6 +12,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Conversion;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Mvc.Code;
+using ToSic.Sxc.Mvc.Plumbing;
 using ToSic.Sxc.Mvc.Web;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
@@ -32,9 +33,10 @@ namespace ToSic.Sxc.Mvc.Run
 
         public static void Configure(IServiceCollection sc)
         {
-            sc.AddTransient<Eav.Conversion.EntitiesToDictionary, DataToDictionary>();
-            sc.AddTransient<IValueConverter, BasicValueConverter>();
-            sc.AddTransient<IUser, BasicUser>();
+            sc.AddSxcMvc()
+                .AddTransient<Eav.Conversion.EntitiesToDictionary, DataToDictionary>()
+                .AddTransient<IValueConverter, BasicValueConverter>()
+                .AddTransient<IUser, BasicUser>();
 
             //sc.AddTransient<XmlExporter, DnnXmlExporter>();
             //sc.AddTransient<IImportExportEnvironment, DnnImportExportEnvironment>();
