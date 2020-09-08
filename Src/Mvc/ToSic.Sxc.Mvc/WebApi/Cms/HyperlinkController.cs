@@ -13,19 +13,9 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
     {
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "HypLnk";
 
-        /// <summary>
-        /// This overload is only for resolving page-references, which need fewer parameters
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        public string ResolveHyperlink(string hyperlink, int appId)
-            => ResolveHyperlink(hyperlink, appId, null, default, null);
-
-
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements
-        public string ResolveHyperlink(string hyperlink, int appId, string contentType, Guid guid, string field)
+        public string ResolveHyperlink(string hyperlink, int appId, string contentType = default, Guid guid = default, string field = default)
             => new HyperlinkBackend().Init(Log).ResolveHyperlink(GetBlock(), hyperlink, appId, contentType, guid, field);
 
     }
