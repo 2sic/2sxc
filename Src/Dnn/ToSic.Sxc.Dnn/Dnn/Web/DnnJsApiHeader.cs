@@ -1,5 +1,5 @@
-﻿using System.Globalization;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Helpers;
 using DotNetNuke.Application;
 using DotNetNuke.Common;
@@ -24,22 +24,21 @@ namespace ToSic.Sxc.Dnn.Web
             var wrapLog = Log.Call<bool>();
             // ensure we only do this once
             if (MarkAddedAndReturnIfAlreadyDone()) return wrapLog("already", false);
-
-            var pageId = PortalSettings.Current.ActiveTab.TabID.ToString(CultureInfo.InvariantCulture);
-            var path = ServicesFramework.GetServiceFrameworkRoot();
-            if (string.IsNullOrEmpty(path)) return wrapLog("no path", false);
+            var siteRoot = ServicesFramework.GetServiceFrameworkRoot();
+            if (string.IsNullOrEmpty(siteRoot)) return wrapLog("no path", false);
 
             var dnnVersion = DotNetNukeContext.Current.Application.Version.Major;
-            var apiRoot = path + (dnnVersion < 9
+            var apiRoot = siteRoot + (dnnVersion < 9
                 ? $"desktopmodules/{InpageCms.ExtensionPlaceholder}/api/"
                 : $"api/{InpageCms.ExtensionPlaceholder}/");
 
-            var json = "{"
-                       + $"\"page\": {pageId},"
-                       + $"\"root\": \"{path}\","
-                       + $"\"api\": \"{apiRoot}\","
-                       + $"\"rvt\": \"{AntiForgeryToken()}\""
-                       + "}";
+            var portal = PortalSettings.Current;
+            var json = InpageCms.JsApiJson(
+                portal.ActiveTab.TabID, 
+                siteRoot, 
+                apiRoot, 
+                AntiForgeryToken(),
+                VirtualPathUtility.ToAbsolute("~/desktopmodules/tosic_sexycontent/"));
 
             HtmlPage.AddMeta(InpageCms.MetaName, json);
             return wrapLog("added", true);
