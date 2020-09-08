@@ -91,6 +91,10 @@ namespace Website
             }
 
             app.UseHttpsRedirection();
+            var defFiles = new DefaultFilesOptions();
+            defFiles.DefaultFileNames.Clear();
+            defFiles.DefaultFileNames.Add("index.html");
+            app.UseDefaultFiles(defFiles);
             app.UseStaticFiles();
 
             app.UseRouting();
