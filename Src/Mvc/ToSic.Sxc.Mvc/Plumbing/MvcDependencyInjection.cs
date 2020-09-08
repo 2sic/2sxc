@@ -3,14 +3,17 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Mvc.Code;
 using ToSic.Sxc.Mvc.Run;
 using ToSic.Sxc.Mvc.Web;
+using ToSic.Sxc.Mvc.WebApi.Adam;
 using ToSic.Sxc.Mvc.WebApi.Context;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.Mvc.Plumbing
 {
@@ -36,6 +39,11 @@ namespace ToSic.Sxc.Mvc.Plumbing
             // MVC Specific stuff
             services.AddScoped<MvcPageProperties>();
 
+            services.AddTransient<SecurityChecksBase, MvcAdamSecurityChecks>();
+
+            // Add SxcEngineTest
+            services.AddTransient<SxcMvc>();
+            services.AddTransient<IEnvironmentFileSystem, MvcFileSystem>();
             // Still pending...
             //sc.AddTransient<XmlExporter, DnnXmlExporter>();
             //sc.AddTransient<IImportExportEnvironment, DnnImportExportEnvironment>();

@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <Folder Include="Engine\" />
+    <Folder Include="wwwroot\adam\" />
     <Folder Include="wwwroot\System\Sxc\" />
   </ItemGroup>
 

@@ -33,16 +33,12 @@ namespace Website
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add SxcEngineTest
-            services.AddTransient<SxcMvc>();
-
             // Add razor pages dynamic compilation WIP
             services.AddRazorPages()
                 // experiment
                 // https://github.com/aspnet/samples/blob/master/samples/aspnetcore/mvc/runtimecompilation/MyApp/Startup.cs#L26
                 .AddRazorRuntimeCompilation(options =>
                 {
-                    // var libraryPathOld = Path.GetFullPath(Path.Combine(HostEnvironment.ContentRootPath, "wwwroot", "2sxc"));
                     var configuredPath = Configuration["SxcRoot"];
                     var libraryPath = Path.GetFullPath(Path.Combine(HostEnvironment.ContentRootPath, configuredPath)); 
                     options.FileProviders.Add(new PhysicalFileProvider(libraryPath));

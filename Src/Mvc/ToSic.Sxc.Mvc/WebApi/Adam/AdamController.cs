@@ -70,10 +70,9 @@ namespace ToSic.Sxc.Mvc.WebApi.Adam
             return Items(appId, contentType, guid, field, folder);
         }
 
-        [HttpGet]
+        [HttpGet("items")]
         public IEnumerable<AdamItemDto> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
         {
-            //var state = new AdamState(GetBlock(), appId, contentType, field, guid, usePortalRoot, Log);
             var callLog = Log.Call<IEnumerable<AdamItemDto>>($"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
             var results = new AdamTransGetItems()
                 .Init(GetBlock(), appId, contentType, guid, field, usePortalRoot, Log)
@@ -81,19 +80,19 @@ namespace ToSic.Sxc.Mvc.WebApi.Adam
             return callLog("ok",  results);
         }
 
-        [HttpPost]
+        [HttpPost("folder")]
         public IEnumerable<AdamItemDto> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot) 
             => new AdamTransFolder()
                 .Init(GetBlock(), appId, contentType, guid, field, usePortalRoot, Log)
                 .Folder(subfolder, newFolder);
 
-        [HttpGet]
+        [HttpGet("delete")]
         public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot) 
             => new AdamTransDelete()
                 .Init(GetBlock(), appId, contentType, guid, field, usePortalRoot, Log)
                 .Delete(subfolder, isFolder, id);
 
-        [HttpGet]
+        [HttpGet("rename")]
         public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot) 
             => new AdamTransRename()
                 .Init(GetBlock(), appId, contentType, guid, field, usePortalRoot, Log)
