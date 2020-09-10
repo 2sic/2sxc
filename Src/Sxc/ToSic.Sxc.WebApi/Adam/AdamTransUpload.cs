@@ -6,7 +6,7 @@ using ToSic.Sxc.WebApi.Errors;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    internal class AdamTransUpload : AdamTransactionBase<AdamTransUpload, int, int>
+    internal class AdamTransUpload<TFolderId, TFileId> : AdamTransactionBase<AdamTransUpload<TFolderId, TFileId>, TFolderId, TFileId>
     {
         public AdamTransUpload() : base("Adm.TrnDel") { }
 
@@ -68,12 +68,11 @@ namespace ToSic.Sxc.WebApi.Adam
                 throw exceptionAbstraction;
 
             // check metadata of the FieldDef to see if still allowed extension
+            // note 2018-04-20 2dm: can't do this for wysiwyg, as it doesn't have a setting for allowed file-uploads
             var additionalFilter = State.Attribute.Metadata.GetBestValue<string>("FileFilter");
             if (!string.IsNullOrWhiteSpace(additionalFilter)
                 && !new SecurityCheckHelpers().Init(Log).CustomFileFilterOk(additionalFilter, fileName))
                 throw HttpException.NotAllowedFileType(fileName, "field has custom file-filter, which doesn't match");
-
-            // note 2018-04-20 2dm: can't do this for wysiwyg, as it doesn't have a setting for allowed file-uploads
 
             #endregion
 
@@ -91,29 +90,6 @@ namespace ToSic.Sxc.WebApi.Adam
                 Log.Add($"cleaned file name from'{originalFileName}' to '{fileName}'");
 
             var eavFile = fs.Add(parentFolder, stream, fileName, true);
-
-            //// Make sure the image does not exist yet, cycle through numbers (change file name)
-            //fileName = state.AdamAppContext.EnvironmentFs.FindUniqueFileName(parentFolder, fileName);
-
-            //// Everything is ok, add file to DNN
-            //var dnnFolder = FolderManager.Instance.GetFolder(folder.Id);
-            //var dnnFile = FileManager.Instance.AddFile(dnnFolder, Path.GetFileName(fileName),
-            //    stream);
-
-            //var dtoMake= new AdamItemDtoMaker(state.Security);
-            //var dto = dtoMake.Create(dnnFile2, state);
-
-            //var adamcontext = new AdamAppContext(_block.Context.Tenant, state.App, _block, 10, Log);
-            //var eavFile = new File(state.AdamAppContext /*adamcontext*/)
-            //{
-            //    Created = dnnFile.CreatedOnDate,
-            //    Extension = dnnFile.Extension,
-            //    FullName = dnnFile.FileName,
-            //    Folder = dnnFile.Folder,
-            //    FolderId = dnnFile.FolderId,
-            //    Id = dnnFile.FileId,
-            //    Modified = dnnFile.LastModificationTime
-            //};
 
             return eavFile;
         }

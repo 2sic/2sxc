@@ -3,7 +3,7 @@ using ToSic.Eav.Security.Permissions;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    internal class AdamTransDelete : AdamTransactionBase<AdamTransDelete, int, int>
+    internal class AdamTransDelete<TFolderId, TFileId> : AdamTransactionBase<AdamTransDelete<TFolderId, TFileId>, TFolderId, TFileId>
     {
         public AdamTransDelete() : base("Adm.TrnDel") { }
 
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 throw permissionException;
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var parent = State.ContainerContext.Folder(parentSubfolder, false) as Folder<int, int>;
+            var parent = State.ContainerContext.Folder(parentSubfolder, false) as IFolder<TFolderId, TFileId>;
 
             var fs = State.AdamAppContext.AdamFs;
             if (isFolder)

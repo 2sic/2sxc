@@ -106,7 +106,7 @@ namespace ToSic.SexyContent.WebApi
                 throw exp;
 
             var block = GetBlock();
-            return new AdamTransUpload()
+            return new AdamTransUpload<int, int>()
                 .Init(block, block.AppId, contentType, guid.Value, field, false, Log)
                 .UploadOne(stream, fileName, subFolder, true);
         }

@@ -1,10 +1,10 @@
 ﻿using System.Linq;
+using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Security.Permissions;
-using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    internal class AdamTransRename : AdamTransactionBase<AdamTransRename, int, int>
+    internal class AdamTransRename<TFolderId, TFileId> : AdamTransactionBase<AdamTransRename<TFolderId, TFileId>, TFolderId, TFileId>
     {
         public AdamTransRename() : base("Adm.TrnDel") { }
 
@@ -20,7 +20,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 throw permissionException;
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var parent = State.ContainerContext.Folder(parentSubfolder, false) as Folder<int, int>;
+            var parent = State.ContainerContext.Folder(parentSubfolder, false) as IFolder<TFolderId, TFileId>;
 
             var fs = State.AdamAppContext.AdamFs;
             if (isFolder)

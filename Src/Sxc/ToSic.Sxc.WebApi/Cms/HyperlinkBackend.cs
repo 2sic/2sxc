@@ -9,7 +9,7 @@ using ToSic.Sxc.WebApi.Security;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    internal class HyperlinkBackend: WebApiBackendBase<HyperlinkBackend>
+    internal class HyperlinkBackend<TFolderId, TFileId>: WebApiBackendBase<HyperlinkBackend<TFolderId, TFileId>>
     {
         public HyperlinkBackend() : base("Bck.HypLnk")
         {
