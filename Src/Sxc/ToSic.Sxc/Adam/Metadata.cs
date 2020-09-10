@@ -37,8 +37,8 @@ namespace ToSic.Sxc.Adam
                 appContext.Block);
         }
 
-        public static int GetMetadataId(AppRuntime appRuntime, int id, bool isFolder)
-            => GetFirstMetadata(appRuntime, id, isFolder)?.EntityId ?? 0;
+        //public static int GetMetadataId(AppRuntime appRuntime, int id, bool isFolder)
+        //    => GetFirstMetadata(appRuntime, id, isFolder)?.EntityId ?? 0;
 
 
     }

@@ -52,7 +52,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 .Select(f =>
                 {
                     var dto = dtoMaker.Create(f, State);
-                    dto.MetadataId = Metadata.GetMetadataId(State.AdamAppContext.AppRuntime, f.Id, true);
+                    dto.MetadataId = (int)f.Metadata.EntityId;
                     return dto;
                 })
                 .ToList();
@@ -61,8 +61,8 @@ namespace ToSic.Sxc.WebApi.Adam
             var adamFiles = files
                 .Select(f =>
                 {
-                    var dto = dtoMaker.Create(f, State);
-                    dto.MetadataId = Metadata.GetMetadataId(State.AdamAppContext.AppRuntime, f.Id, false);
+                    var dto = dtoMaker.Create<int, int>(f, State);
+                    dto.MetadataId = (int)f.Metadata.EntityId;
                     dto.Type = Classification.TypeName(f.Extension);
                     return dto;
                 })

@@ -4,7 +4,7 @@ using System.Linq;
 namespace ToSic.Sxc.Adam
 {
 
-    public class Folder : Eav.Apps.Assets.Folder, IFolder
+    public class Folder : Eav.Apps.Assets.Folder<int, int>, IFolder
     {
         protected AdamAppContext AdamContext { get; set; }
 
@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Adam
         public dynamic Metadata => Adam.Metadata.GetFirstOrFake(AdamContext, Id, true);
 
         /// <inheritdoc />
-        public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AdamContext.AppRuntime, Id, false) != null;
+        public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AdamContext.AppRuntime, Id, true) != null;
 
         /// <inheritdoc />
         public string Url { get; internal set; }
@@ -34,21 +34,16 @@ namespace ToSic.Sxc.Adam
 
 
         /// <inheritdoc />
-        public IEnumerable<IFolder> Folders
-        {
-            get
-            {
-                if (_folders != null) return _folders;
-                return _folders = string.IsNullOrEmpty(Name)
-                    ? new List<Folder>()
-                    : AdamContext.AdamFs.GetFolders(this);
-            }
-        }
+        public IEnumerable<IFolder<int, int>> Folders =>
+            _folders ?? (_folders = string.IsNullOrEmpty(Name)
+                ? new List<Folder>()
+                : AdamContext.AdamFs.GetFolders(this));
+
         private IEnumerable<IFolder> _folders;
 
 
         /// <inheritdoc/>
-        public IEnumerable<IFile> Files 
+        public IEnumerable<IFile<int, int>> Files 
             => _files ?? (_files = AdamContext.AdamFs.GetFiles(this));
         private IEnumerable<IFile> _files;
     }

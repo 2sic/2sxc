@@ -3,7 +3,7 @@ using ToSic.SexyContent.Adam;
 
 namespace ToSic.Sxc.Adam
 {
-    public class File : Eav.Apps.Assets.File, 
+    public class File : Eav.Apps.Assets.File<int, int>, 
 #pragma warning disable 618
         AdamFile, 
 #pragma warning restore 618
@@ -17,15 +17,11 @@ namespace ToSic.Sxc.Adam
         }
 
         /// <inheritdoc />
-        public dynamic Metadata => Adam.Metadata.GetFirstOrFake(AppContext, Id, false) as dynamic;
+        public dynamic Metadata => Adam.Metadata.GetFirstOrFake(AppContext, Id, false);
 
         public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AppContext.AppRuntime, Id, false) != null;
 
-        public string Url // => AppContext.Tenant.ContentPath + Folder + FullName;
-        {
-            get;
-            internal set;
-        }
+        public string Url { get; internal set; }
 
        public string Type => Classification.TypeName(Extension);
 

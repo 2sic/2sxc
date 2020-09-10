@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Adam
 
     public interface IFile: 
         IAsset, 
-        Eav.Apps.Assets.IFile
+        IFile<int, int>
     {
     }
 }

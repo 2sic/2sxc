@@ -31,13 +31,12 @@ namespace ToSic.Sxc.WebApi.Adam
         /// <param name="state"></param>
         /// <param name="parentFolder"></param>
         /// <param name="target"></param>
-        /// <param name="folderId"></param>
         /// <param name="errPrefix"></param>
         [AssertionMethod]
-        protected static void VerifySecurityAndStructure(AdamState state, IAsset parentFolder, IAsset target, int folderId, string errPrefix)
+        protected static void VerifySecurityAndStructure(AdamState state, IFolder<int, int> parentFolder, IAsset target, string errPrefix)
         {
             // In case the primary file system is used (usePortalRoot) then also check higher permissions
-            if (state.UseTenantRoot && !state.Security.CanEditFolder(folderId))
+            if (state.UseTenantRoot && !state.Security.CanEditFolder(target)) 
                 throw HttpException.PermissionDenied(errPrefix + " - permission denied");
 
             if (!state.Security.SuperUserOrAccessingItemFolder(target.Path, out var exp))

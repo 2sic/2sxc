@@ -25,13 +25,13 @@ namespace ToSic.Sxc.WebApi.Adam
             if (isFolder)
             {
                 var target = fs.GetFolder(id);
-                VerifySecurityAndStructure(State, parent, target, target.Id, "Can't rename folder");
+                VerifySecurityAndStructure(State, parent, target, "Can't rename folder");
                 fs.Rename(target, newName);
             }
             else
             {
                 var target = fs.GetFile(id);
-                VerifySecurityAndStructure(State, parent, target, target.FolderId, "Can't rename file");
+                VerifySecurityAndStructure(State, parent, target, "Can't rename file");
 
                 // never allow to change the extension
                 if (target.Extension != newName.Split('.').Last())

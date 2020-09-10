@@ -9,8 +9,8 @@ namespace ToSic.Sxc.Adam
     public class FolderOfField : Folder
     {
         protected ContainerOfField Container { get; set; }
-        public FolderOfField(/*IEnvironmentFileSystem enfFileSystem, */AdamAppContext adamContext, Guid entityGuid, string fieldName) 
-            : base(adamContext/*, adamContext.EnvironmentFs*//* enfFileSystem*/)
+        public FolderOfField(AdamAppContext adamContext, Guid entityGuid, string fieldName) 
+            : base(adamContext)
         {
             Container = new ContainerOfField(AdamContext, entityGuid, fieldName);
 
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Adam
                 return;
 
             // ReSharper disable once PatternAlwaysOfType
-            if (!(AdamContext.Folder(Container.Root) is Eav.Apps.Assets.Folder f))
+            if (!(AdamContext.Folder(Container.Root) is Eav.Apps.Assets.IFolder f))
                 return;
 
             Path = f.Path;

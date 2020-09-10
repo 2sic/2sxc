@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Adam
                    /*&& Host.AllowedExtensionWhitelist.IsAllowedExtension(extension.ToLower())*/;
         }
 
-        internal override bool CanEditFolder(int folderId)
+        internal override bool CanEditFolder(Eav.Apps.Assets.IAsset item)
         {
             //var folder = FolderManager.Instance.GetFolder(folderId);
             //return folder != null && FolderPermissionController.CanAddFolder(folder as FolderInfo);

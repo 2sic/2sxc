@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Mvc.Run
             throw new NotImplementedException();
         }
 
-        public List<File> GetFiles(Eav.Apps.Assets.Folder folder)
+        public List<IFile> GetFiles(IFolder folder)
         {
             var dir = Directory.GetFiles(folder.Path);
             return dir.Select(FileToAdam).ToList();
@@ -85,7 +85,7 @@ namespace ToSic.Sxc.Mvc.Run
             throw new NotImplementedException();
         }
 
-        public List<Folder> GetFolders(Eav.Apps.Assets.Folder folder)
+        public List<Folder> GetFolders(IFolder folder)
         {
             var dir = Directory.GetDirectories(folder.Path);
             return dir.Select(AdamFolder).ToList();
@@ -126,7 +126,7 @@ namespace ToSic.Sxc.Mvc.Run
         }
 
 
-        private File FileToAdam(string path)
+        private IFile FileToAdam(string path)
         {
             var f = new FileInfo(PathOnDrive(path));
             var directoryName = f.Directory.Name;

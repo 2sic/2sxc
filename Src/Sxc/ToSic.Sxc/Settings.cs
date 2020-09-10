@@ -6,6 +6,30 @@ namespace ToSic.Sxc
 {
     public class Settings
     {
+
+        #region System Initialization
+
+        /// <summary>
+        /// This is a placeholder method, please call it in code places where you must ensure that
+        /// everything is initialized, especially the EAV etc. 
+        /// Reason is that once this object is accessed statically, the (other) static initializer will be called
+        /// which will take care of all registration
+        /// 
+        /// This is a minor workaround, I'll try to find a cleaner way to do this some other time
+        /// Before it happened automatically, because we had all the constants as part of this object...
+        /// </summary>
+        public static void EnsureSystemIsInitialized() { }
+
+
+        /// <summary>
+        /// This is needed so when the application starts, we can configure our IoC container
+        /// It is automatically executed when the first variable on this class (constant, static, etc.)
+        /// is accessed. 
+        /// </summary>
+        static Settings() => Boot.RunBootSequence();
+
+        #endregion
+
         // Important note: always use static-readonly, NOT constant
         // reason is that we must ensure that the static constructor is called 
         // whenever anything is accessed
@@ -68,28 +92,5 @@ namespace ToSic.Sxc
             // it's not sql-code, as the SqlDataProvider files are imported by DNN, not by our code
             internal const string LastVersionWithServerChanges = "08.11.00";
         }
-
-        #region System Initialization
-
-        /// <summary>
-        /// This is a placeholder method, please call it in code places where you must ensure that
-        /// everything is initialized, especially the EAV etc. 
-        /// Reason is that once this object is accessed statically, the (other) static initializer will be called
-        /// which will take care of all registration
-        /// 
-        /// This is a minor workaround, I'll try to find a cleaner way to do this some other time
-        /// Before it happened automatically, because we had all the constants as part of this object...
-        /// </summary>
-        public static void EnsureSystemIsInitialized() { } 
-
-
-        /// <summary>
-        /// This is needed so when the application starts, we can configure our IoC container
-        /// It is automatically executed when the first variable on this class (constant, static, etc.)
-        /// is accessed. 
-        /// </summary>
-        static Settings() => Boot.RunBootSequence();
-
-        #endregion
     }
 }

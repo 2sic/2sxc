@@ -23,13 +23,13 @@ namespace ToSic.Sxc.WebApi.Adam
             if (isFolder)
             {
                 var target = fs.GetFolder(id);
-                VerifySecurityAndStructure(State, parent, target, id, "can't delete folder");
+                VerifySecurityAndStructure(State, parent, target, "can't delete folder");
                 fs.Delete(target);
             }
             else
             {
                 var target = fs.GetFile(id);
-                VerifySecurityAndStructure(State, parent, target, target.FolderId, "can't delete file");
+                VerifySecurityAndStructure(State, parent, target, "can't delete file");
                 fs.Delete(target);
             }
 

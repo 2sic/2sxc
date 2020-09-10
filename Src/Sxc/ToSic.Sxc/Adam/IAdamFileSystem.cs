@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Adam
 
         IFile GetFile(int fileId);
 
-        List<File> GetFiles(Eav.Apps.Assets.Folder folder);
+        List<IFile> GetFiles(IFolder folder);
 
         void Rename(IFile file, string newName);
 
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Adam
 
         Folder GetFolder(int folderId);
 
-        List<Folder> GetFolders(Eav.Apps.Assets.Folder folder);
+        List<Folder> GetFolders(IFolder folder);
 
         void Rename(IFolder folder, string newName);
 

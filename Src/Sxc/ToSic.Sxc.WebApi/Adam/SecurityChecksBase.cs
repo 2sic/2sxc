@@ -7,6 +7,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.WebApi.Errors;
+using IAsset = ToSic.Eav.Apps.Assets.IAsset;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
@@ -45,7 +46,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
         internal abstract bool TenantAllowsExtension(string fileName);
 
-        internal abstract bool CanEditFolder(int folderId);
+        internal abstract bool CanEditFolder(IAsset item);
 
         #endregion
 

@@ -146,7 +146,7 @@ namespace ToSic.Sxc.Dnn.Run
         public Folder Get(string path) 
             => DnnToAdam(_dnnFolders.GetFolder(AdamContext.Tenant.Id, path));
 
-        public List<Folder> GetFolders(Eav.Apps.Assets.Folder folder) 
+        public List<Folder> GetFolders(IFolder folder) 
             => GetFolders(GetDnnFolder(folder.Id));
 
         public Folder GetFolder(int folderId) => DnnToAdam(GetDnnFolder(folderId));
@@ -168,17 +168,17 @@ namespace ToSic.Sxc.Dnn.Run
             return folders;
         }
 
-        public List<File> GetFiles(Eav.Apps.Assets.Folder folder)
+        public List<IFile> GetFiles(IFolder folder)
         {
             var folderId = folder.Id;
             var fldObj = _dnnFolders.GetFolder(folderId);
             // sometimes the folder doesn't exist for whatever reason
-            if (fldObj == null) return  new List<File>();
+            if (fldObj == null) return  new List<IFile>();
 
             // try to find the files
             var firstList = _dnnFolders.GetFiles(fldObj);
             var files = firstList?.Select(DnnToAdam).ToList()
-                     ?? new List<File>();
+                     ?? new List<IFile>();
             return files;
         }
 
@@ -204,7 +204,7 @@ namespace ToSic.Sxc.Dnn.Run
 
 
 
-        private File DnnToAdam(IFileInfo f) 
+        private IFile DnnToAdam(IFileInfo f) 
             => new File(AdamContext)
         {
             FullName = f.FileName,
