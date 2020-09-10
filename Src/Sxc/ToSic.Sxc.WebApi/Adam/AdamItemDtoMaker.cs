@@ -1,9 +1,8 @@
 ﻿using ToSic.Eav.Security.Permissions;
-using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    public class AdamItemDtoMaker
+    public class AdamItemDtoMaker<TFolderId, TFileId>
     {
         #region Constructor / DI
 
@@ -17,9 +16,9 @@ namespace ToSic.Sxc.WebApi.Adam
 
         #endregion
 
-        internal AdamItemDto Create<TFolderId, TFileId>(IFile<TFolderId, TFileId> original, AdamState state)
+        internal AdamItemDto Create(Sxc.Adam.File<TFolderId, TFileId> original, AdamState state)
         {
-            var item = new AdamItemDto<TFolderId, TFileId>(false, original.Id, original.FolderId, original.FullName, original.Size,
+            var item = new AdamItemDto<TFolderId, TFileId>(false, original.SysId, original.ParentSysId, original.FullName, original.Size,
                 original.Created, original.Modified)
             {
                 Path = original.Path,
@@ -32,9 +31,10 @@ namespace ToSic.Sxc.WebApi.Adam
         }
 
 
-        internal AdamItemDto Create<TFolderId, TFileId>(IFolder<TFolderId, TFileId> folder, AdamState state)
+        internal AdamItemDto Create(Sxc.Adam.Folder<TFolderId, TFileId> folder, AdamState state)
         {
-            var item = new AdamItemDto<TFolderId, TFolderId>(true, folder.Id, folder.ParentId, folder.Name, 0, folder.Created,
+            // todo: AdamId
+            var item = new AdamItemDto<TFolderId, TFolderId>(true, folder.SysId, folder.ParentSysId, folder.Name, 0, folder.Created,
                 folder.Modified)
             {
                 Path = folder.Path,

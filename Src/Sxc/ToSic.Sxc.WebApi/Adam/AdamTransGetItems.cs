@@ -4,7 +4,7 @@
     /// Backend for the API
     /// Is meant to be transaction based - so create a new one for each thing as the initializers set everything for the transaction
     /// </summary>
-    internal class AdamTransGetItems: AdamTransactionBase<AdamTransGetItems>
+    internal class AdamTransGetItems: AdamTransactionBase<AdamTransGetItems, int, int>
     {
         public AdamTransGetItems() : base("Adm.BckEnd") { }
 

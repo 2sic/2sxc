@@ -6,7 +6,7 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    internal abstract partial class AdamTransactionBase<T>: HasLog where T : class
+    internal abstract partial class AdamTransactionBase<T, TFolderId, TFileId>: HasLog where T : class
     {
         protected AdamTransactionBase(string logName) : base(logName)
         {

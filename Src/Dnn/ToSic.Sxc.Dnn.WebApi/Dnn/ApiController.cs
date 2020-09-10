@@ -11,7 +11,6 @@ using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Web;
-using ToSic.Sxc.WebApi;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -100,7 +99,7 @@ namespace ToSic.Sxc.Dnn
 
 
         /// <inheritdoc />
-        public new Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+        public new Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             Stream stream = null,
             string fileName = null,
             string contentType = null,

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Data;
 
 namespace ToSic.Sxc.Adam
 {
 
-    public class Folder : Eav.Apps.Assets.Folder<int, int>, IFolder
+    public class Folder<TFolderId, TFileId> : Eav.Apps.Assets.Folder<TFolderId, TFileId>, IFolder
     {
         protected AdamAppContext AdamContext { get; set; }
 
@@ -14,10 +15,17 @@ namespace ToSic.Sxc.Adam
         }
 
         /// <inheritdoc />
-        public dynamic Metadata => Adam.Metadata.GetFirstOrFake(AdamContext, Id, true);
+        public dynamic Metadata => Adam.Metadata.GetFirstOrFake(AdamContext, MetadataId);
 
         /// <inheritdoc />
-        public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AdamContext.AppRuntime, Id, true) != null;
+        public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AdamContext.AppRuntime, MetadataId) != null;
+
+        public MetadataFor MetadataId => _metadataKey ?? (_metadataKey = new MetadataFor
+        {
+            TargetType = Eav.Constants.MetadataForCmsObject,
+            KeyString = "folder:" + SysId
+        });
+        private MetadataFor _metadataKey;
 
         /// <inheritdoc />
         public string Url { get; internal set; }
@@ -34,16 +42,16 @@ namespace ToSic.Sxc.Adam
 
 
         /// <inheritdoc />
-        public IEnumerable<IFolder<int, int>> Folders =>
+        public IEnumerable<IFolder> Folders =>
             _folders ?? (_folders = string.IsNullOrEmpty(Name)
-                ? new List<Folder>()
+                ? new List<IFolder>()
                 : AdamContext.AdamFs.GetFolders(this));
 
         private IEnumerable<IFolder> _folders;
 
 
         /// <inheritdoc/>
-        public IEnumerable<IFile<int, int>> Files 
+        public IEnumerable<IFile> Files 
             => _files ?? (_files = AdamContext.AdamFs.GetFiles(this));
         private IEnumerable<IFile> _files;
     }

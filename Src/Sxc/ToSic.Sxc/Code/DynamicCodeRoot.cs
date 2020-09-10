@@ -227,8 +227,7 @@ namespace ToSic.Sxc.Code
         {
             if (_adamAppContext == null)
                 _adamAppContext = new AdamAppContext(Block.Context.Tenant, App, Block, CompatibilityLevel, Log);
-            //var envFs = Factory.Resolve<IEnvironmentFileSystem>().Init(_adamAppContext);
-            return new FolderOfField(/*envFs, */_adamAppContext, entity.EntityGuid, fieldName);
+            return new FolderOfField(_adamAppContext, entity.EntityGuid, fieldName);
         }
         private AdamAppContext _adamAppContext;
 

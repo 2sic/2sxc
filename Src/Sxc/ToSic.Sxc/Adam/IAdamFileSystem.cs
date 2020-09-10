@@ -41,9 +41,9 @@ namespace ToSic.Sxc.Adam
         void AddFolder(string path);
         bool FolderExists(string path);
 
-        Folder GetFolder(int folderId);
+        IFolder GetFolder(int folderId);
 
-        List<Folder> GetFolders(IFolder folder);
+        List<IFolder> GetFolders(IFolder folder);
 
         void Rename(IFolder folder, string newName);
 
@@ -51,7 +51,6 @@ namespace ToSic.Sxc.Adam
 
         #endregion
 
-
-        Folder Get(string path);
+        IFolder Get(string path);
     }
 }

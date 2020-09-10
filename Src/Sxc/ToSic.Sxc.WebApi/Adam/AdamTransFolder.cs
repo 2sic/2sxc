@@ -4,7 +4,7 @@ using ToSic.Eav.Security.Permissions;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    internal class AdamTransFolder : AdamTransactionBase<AdamTransFolder>
+    internal class AdamTransFolder : AdamTransactionBase<AdamTransFolder, int, int>
     {
         public AdamTransFolder() : base("Adm.TrnDel") { }
         internal IList<AdamItemDto> Folder(string parentSubfolder, string newFolder)

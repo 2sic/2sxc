@@ -7,18 +7,18 @@ namespace ToSic.Sxc.Adam
     /// An ADAM (Automatic Digital Asset Management) folder
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public interface IFolder: IFolder<int, int>, IAsset
+    public interface IFolder: Eav.Apps.Assets.IFolder, IAsset
     {
-        ///// <summary>
-        ///// Get the files in this folder
-        ///// </summary>
-        ///// <returns>A list of files in this folder as <see cref="IFile"/></returns>
-        //IEnumerable<IFile> Files { get; }
+        /// <summary>
+        /// Get the files in this folder
+        /// </summary>
+        /// <returns>A list of files in this folder as <see cref="IFile"/></returns>
+        IEnumerable<IFile> Files { get; }
 
-        ///// <summary>
-        ///// Get the sub-folders in this folder
-        ///// </summary>
-        ///// <returns>A list of folders inside this folder - as <see cref="IFolder"/>.</returns>
-        //IEnumerable<IFolder> Folders { get; }
+        /// <summary>
+        /// Get the sub-folders in this folder
+        /// </summary>
+        /// <returns>A list of folders inside this folder - as <see cref="IFolder"/>.</returns>
+        IEnumerable<IFolder> Folders { get; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Data;
+using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Adam
 {
@@ -23,6 +24,11 @@ namespace ToSic.Sxc.Adam
         /// </summary>
         /// <returns>An IDynamicEntity which contains the metadata, or an empty IDynamicEntity which still works if no metadata exists.</returns>
         dynamic Metadata { get; }
+
+        /// <summary>
+        /// Experimental
+        /// </summary>
+        MetadataFor MetadataId { get; }
         #endregion
 
 

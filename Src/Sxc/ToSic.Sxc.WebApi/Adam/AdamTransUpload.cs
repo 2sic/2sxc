@@ -6,7 +6,7 @@ using ToSic.Sxc.WebApi.Errors;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    internal class AdamTransUpload : AdamTransactionBase<AdamTransUpload>
+    internal class AdamTransUpload : AdamTransactionBase<AdamTransUpload, int, int>
     {
         public AdamTransUpload() : base("Adm.TrnDel") { }
 

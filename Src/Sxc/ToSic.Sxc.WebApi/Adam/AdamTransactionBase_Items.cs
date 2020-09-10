@@ -6,7 +6,7 @@ using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    internal partial class AdamTransactionBase<T>
+    internal partial class AdamTransactionBase<T, TFolderId, TFileId>
     {
         internal IList<AdamItemDto> ItemsInField(string subFolderName)
         {
@@ -27,8 +27,7 @@ namespace ToSic.Sxc.WebApi.Adam
             State.ContainerContext.Folder();
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var currentAdam = State.ContainerContext.Folder(subFolderName, false);
-            var currentFolder = currentAdam;
+            var currentFolder = State.ContainerContext.Folder(subFolderName, false) as Folder<TFolderId, TFileId>;
 
             // ensure that it's super user, or the folder is really part of this item
             if (!State.Security.SuperUserOrAccessingItemFolder(currentFolder.Path, out var exp))
@@ -40,7 +39,7 @@ namespace ToSic.Sxc.WebApi.Adam
             var subfolders = currentFolder.Folders.ToList();
             var files = currentFolder.Files.ToList();
 
-            var dtoMaker = Factory.Resolve<AdamItemDtoMaker>();
+            var dtoMaker = Factory.Resolve<AdamItemDtoMaker<TFolderId, TFileId>>();
             var allDtos = new List<AdamItemDto>();
 
             var currentFolderDto = dtoMaker.Create(currentFolder, State);
@@ -48,7 +47,9 @@ namespace ToSic.Sxc.WebApi.Adam
             currentFolderDto.MetadataId = currentFolder.Metadata.EntityId;
             allDtos.Insert(0, currentFolderDto);
 
-            var adamFolders = subfolders.Where(s => s.Id != currentFolder.Id)
+            var adamFolders = subfolders
+                .Cast<Folder<TFolderId, TFileId>>()
+                .Where(s => !EqualityComparer<TFolderId>.Default.Equals(s.SysId, currentFolder.SysId))// s.SysId != currentFolder.SysId)
                 .Select(f =>
                 {
                     var dto = dtoMaker.Create(f, State);
@@ -59,9 +60,10 @@ namespace ToSic.Sxc.WebApi.Adam
             allDtos.AddRange(adamFolders);
 
             var adamFiles = files
+                .Cast<File<TFolderId, TFileId>>()
                 .Select(f =>
                 {
-                    var dto = dtoMaker.Create<int, int>(f, State);
+                    var dto = dtoMaker.Create(f, State);
                     dto.MetadataId = (int)f.Metadata.EntityId;
                     dto.Type = Classification.TypeName(f.Extension);
                     return dto;

@@ -8,7 +8,7 @@ using System.Web.Configuration;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Adam;
-using File = ToSic.Sxc.Adam.File;
+using ToSic.Sxc.Dnn.Adam;
 
 namespace ToSic.Sxc.Dnn.Run
 {
@@ -48,13 +48,13 @@ namespace ToSic.Sxc.Dnn.Run
 
         public void Rename(IFile file, string newName)
         {
-            var dnnFile = _dnnFiles.GetFile(file.Id);
+            var dnnFile = _dnnFiles.GetFile(file.AsDnn().SysId);
             _dnnFiles.RenameFile(dnnFile, newName);
         }
 
         public void Delete(IFile file)
         {
-            var dnnFile = _dnnFiles.GetFile(file.Id);
+            var dnnFile = _dnnFiles.GetFile(file.AsDnn().SysId);
             _dnnFiles.DeleteFile(dnnFile);
         }
 
@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Dnn.Run
         {
             if (ensureUniqueName)
                 fileName = FindUniqueFileName(parent, fileName);
-            var dnnFolder = _dnnFolders.GetFolder(parent.Id);
+            var dnnFolder = _dnnFolders.GetFolder(parent.AsDnn().SysId);
             var dnnFile = _dnnFiles.AddFile(dnnFolder, Path.GetFileName(fileName), body);
             return GetFile(dnnFile.FileId);
         }
@@ -78,7 +78,7 @@ namespace ToSic.Sxc.Dnn.Run
         {
             var numberedFile = fileName;
 
-            var dnnFolder = _dnnFolders.GetFolder(parentFolder.Id);
+            var dnnFolder = _dnnFolders.GetFolder(parentFolder.AsDnn().SysId);
             bool FileExists(string fileToCheck) => _dnnFiles.FileExists(dnnFolder, Path.GetFileName(fileToCheck));
 
             for (var i = 1; i < 1000 && FileExists(numberedFile); i++)
@@ -90,23 +90,10 @@ namespace ToSic.Sxc.Dnn.Run
 
         #endregion
 
-        #region FolderPermissions
 
-        //public bool CanUserViewFolder(int folderId)
-        //{
-        //    if (folderId <= 0) return false;
-        //    var folder = (FolderInfo)_dnnFolders.GetFolder(folderId);
-        //    return FolderPermissionController.CanViewFolder(folder);
-        //}
-
-
-        #endregion
 
         #region Folders
-
-
-
-
+        
         private readonly IFolderManager _dnnFolders = FolderManager.Instance;
 
         public bool FolderExists(string path) => _dnnFolders.FolderExists(AdamContext.Tenant.Id, path);
@@ -134,22 +121,22 @@ namespace ToSic.Sxc.Dnn.Run
 
         public void Rename(IFolder folder, string newName)
         {
-            var fld = _dnnFolders.GetFolder(folder.Id);
+            var fld = _dnnFolders.GetFolder(folder.AsDnn().SysId);
             _dnnFolders.RenameFolder(fld, newName);
         }
 
         public void Delete(IFolder folder)
         {
-            _dnnFolders.DeleteFolder(folder.Id);
+            _dnnFolders.DeleteFolder(folder.AsDnn().SysId);
         }
 
-        public Folder Get(string path) 
+        public IFolder Get(string path) 
             => DnnToAdam(_dnnFolders.GetFolder(AdamContext.Tenant.Id, path));
 
-        public List<Folder> GetFolders(IFolder folder) 
-            => GetFolders(GetDnnFolder(folder.Id));
+        public List<IFolder> GetFolders(IFolder folder) 
+            => GetFolders(GetDnnFolder(folder.AsDnn().SysId));
 
-        public Folder GetFolder(int folderId) => DnnToAdam(GetDnnFolder(folderId));
+        public IFolder GetFolder(int folderId) => DnnToAdam(GetDnnFolder(folderId));
 
         #endregion
 
@@ -160,18 +147,17 @@ namespace ToSic.Sxc.Dnn.Run
 
         private IFolderInfo GetDnnFolder(int folderId) => _dnnFolders.GetFolder(folderId);
 
-        private List<Folder> GetFolders(IFolderInfo fldObj)
+        private List<IFolder> GetFolders(IFolderInfo fldObj)
         {
             var firstList = _dnnFolders.GetFolders(fldObj);
             var folders = firstList?.Select(DnnToAdam).ToList()
-                          ?? new List<Folder>();
+                          ?? new List<IFolder>();
             return folders;
         }
 
         public List<IFile> GetFiles(IFolder folder)
         {
-            var folderId = folder.Id;
-            var fldObj = _dnnFolders.GetFolder(folderId);
+            var fldObj = _dnnFolders.GetFolder(folder.AsDnn().SysId);
             // sometimes the folder doesn't exist for whatever reason
             if (fldObj == null) return  new List<IFile>();
 
@@ -185,13 +171,13 @@ namespace ToSic.Sxc.Dnn.Run
         #endregion
 
         #region DnnToAdam
-        private Folder DnnToAdam(IFolderInfo f)
-            => new Folder(AdamContext)
+        private IFolder DnnToAdam(IFolderInfo f)
+            => new Folder<int, int>(AdamContext)
             {
                 Path = f.FolderPath,
-                Id = f.FolderID,
+                SysId = f.FolderID,
                 
-                ParentId = f.ParentID,
+                ParentSysId = f.ParentID,
 
                 Name = f.DisplayName,
                 Created = f.CreatedOnDate,
@@ -205,14 +191,14 @@ namespace ToSic.Sxc.Dnn.Run
 
 
         private IFile DnnToAdam(IFileInfo f) 
-            => new File(AdamContext)
+            => new File<int, int>(AdamContext)
         {
             FullName = f.FileName,
             Extension = f.Extension,
             Size = f.Size,
-            Id = f.FileId,
+            SysId = f.FileId,
             Folder = f.Folder,
-            FolderId = f.FolderId,
+            ParentSysId = f.FolderId,
 
             Path = f.RelativePath,
 

@@ -5,7 +5,6 @@ using System.Linq;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Web;
-using File = ToSic.Sxc.Adam.File;
 
 namespace ToSic.Sxc.Mvc.Run
 {
@@ -80,12 +79,12 @@ namespace ToSic.Sxc.Mvc.Run
             return _http.MapPath(path);
         }
 
-        public Folder GetFolder(int folderId)
+        public IFolder GetFolder(int folderId)
         {
             throw new NotImplementedException();
         }
 
-        public List<Folder> GetFolders(IFolder folder)
+        public List<IFolder> GetFolders(IFolder folder)
         {
             var dir = Directory.GetDirectories(folder.Path);
             return dir.Select(AdamFolder).ToList();
@@ -101,19 +100,18 @@ namespace ToSic.Sxc.Mvc.Run
             throw new NotImplementedException();
         }
 
-        public Folder Get(string path) => AdamFolder(path);
+        public IFolder Get(string path) => AdamFolder(path);
 
         #region DnnToAdam
-        private Folder AdamFolder(string path)
+        private IFolder AdamFolder(string path)
         {
             var f = new DirectoryInfo(PathOnDrive(path));
 
-            return new Folder(AdamContext)
+            return new Folder<int, int>(AdamContext)
             {
                 Path = path,
-                Id = Constants.NullId,
-
-                ParentId = Constants.NullId,
+                SysId = Constants.NullId,
+                ParentSysId = Constants.NullId,
 
                 Name = f.Name,
                 Created = f.CreationTime,
@@ -130,14 +128,14 @@ namespace ToSic.Sxc.Mvc.Run
         {
             var f = new FileInfo(PathOnDrive(path));
             var directoryName = f.Directory.Name;
-            return new File(AdamContext)
+            return new File<int, int>(AdamContext)
             {
                 FullName = f.Name,
                 Extension = f.Extension,
                 Size = Convert.ToInt32(f.Length),
-                Id = Constants.NullId,
+                SysId = Constants.NullId,
                 Folder = directoryName,
-                FolderId = Constants.NullId,
+                ParentSysId = Constants.NullId,
 
                 Path = path,
 

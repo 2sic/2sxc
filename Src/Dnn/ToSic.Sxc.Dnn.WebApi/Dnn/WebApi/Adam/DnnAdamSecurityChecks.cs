@@ -1,13 +1,11 @@
 ﻿using System;
 using System.IO;
-using DotNetNuke.Common;
 using DotNetNuke.Entities.Host;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
 using JetBrains.Annotations;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Sxc.WebApi.Adam;
-using IAsset = ToSic.Sxc.Adam.IAsset;
 
 namespace ToSic.Sxc.Dnn.WebApi
 {
@@ -29,13 +27,13 @@ namespace ToSic.Sxc.Dnn.WebApi
                    && Host.AllowedExtensionWhitelist.IsAllowedExtension(extension.ToLower());
         }
 
-        internal override bool CanEditFolder(Eav.Apps.Assets.IAsset item)
+        internal override bool CanEditFolder(IAsset item)
         {
             var id = (item as IFolder)?.Id
                      ?? (item as IFile)?.ParentId
                      ?? throw new ArgumentException("Should be a DNN asset", nameof(item));
             
-            var folder = FolderManager.Instance.GetFolder(id /*folderId*/);
+            var folder = FolderManager.Instance.GetFolder(id);
             return folder != null && FolderPermissionController.CanAddFolder(folder as FolderInfo);
         }
     }

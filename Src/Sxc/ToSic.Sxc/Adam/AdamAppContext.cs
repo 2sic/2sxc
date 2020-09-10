@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Adam
         /// <summary>
         /// Root folder object of the app assets
         /// </summary>
-        public Folder RootFolder => Folder(Path, true);
+        public IFolder RootFolder => Folder(Path, true);
 
         #region basic, generic folder commands -- all internal
 
@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Adam
         internal void Add(string path) => AdamFs.AddFolder(path);
 
 
-        internal Folder Folder(string path, bool autoCreate)
+        internal IFolder Folder(string path, bool autoCreate)
         {
             // create all folders to ensure they exist. Must do one-by-one because the environment must have it in the catalog
             var pathParts = path.Split('/');
@@ -85,7 +85,7 @@ namespace ToSic.Sxc.Adam
         }
 
 
-        internal Folder Folder(string path) => AdamFs.Get(path);
+        internal IFolder Folder(string path) => AdamFs.Get(path);
 
 
         #endregion
