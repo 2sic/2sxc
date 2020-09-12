@@ -81,6 +81,8 @@
       <!-- <InstallInclude Include="**\*.gif" Exclude="@(DefaultExclude)" /> -->
       <InstallInclude Include="**\*.config" Exclude="@(DefaultExclude);**\web-Deploy.config;**\app.config;**\packages.config" />
       <!-- <InstallInclude Include="**\*.xml" Exclude="@(DefaultExclude);" /> -->
+
+      <InstallInclude Include="ImportExport\**" />
     </ItemGroup>
 
     <ItemGroup>

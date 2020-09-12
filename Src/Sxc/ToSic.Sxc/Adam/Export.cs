@@ -8,10 +8,10 @@ namespace ToSic.Sxc.Adam
     /// </summary>
     public class Export<TFolderId, TFileId>
     {
-        private readonly IFolder _root;
+        private readonly Folder<TFolderId, TFileId> _root;
         // todo #adamid - should use TFile/TFolder
-        private readonly List<int> _fileIds = new List<int>();
-        private readonly List<int> _folderIds = new List<int>();
+        private readonly List<TFileId> _fileIds = new List<TFileId>();
+        private readonly List<TFolderId> _folderIds = new List<TFolderId>();
 
         private readonly IAdamFileSystem<TFolderId, TFileId> _envFs;
 
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Adam
             _envFs = adm.AdamFs;
         }
 
-        public List<int> AppFiles
+        public List<TFileId> AppFiles
         {
             get
             {
@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Adam
             }
         }
 
-        public List<int> AppFolders
+        public List<TFolderId> AppFolders
         {
             get
             {
@@ -41,9 +41,9 @@ namespace ToSic.Sxc.Adam
             }
             
         } 
-        private void AddFolder(IFolder folder)
+        private void AddFolder(Folder<TFolderId, TFileId> folder)
         {
-            _folderIds.Add(folder.Id);  // track of the folder
+            _folderIds.Add(folder.SysId);  // track of the folder
             AddFilesInFolder(folder);   // keep track of the files
 
             foreach (var f in _envFs.GetFolders(folder))   // then add subfolders
@@ -51,6 +51,6 @@ namespace ToSic.Sxc.Adam
         }
 
         private void AddFilesInFolder(IFolder folder) 
-            => _envFs.GetFiles(folder).ForEach(f => _fileIds.Add(f.Id));
+            => _envFs.GetFiles(folder).ForEach(f => _fileIds.Add(f.SysId));
     }
 }

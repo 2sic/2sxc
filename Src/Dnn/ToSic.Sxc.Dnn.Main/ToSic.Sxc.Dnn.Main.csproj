@@ -162,9 +162,9 @@
     <Content Include="razorblade-old\bin\Connect.Razor.Dnn.dll" />
     <Content Include="razorblade-old\License.txt" />
     <Content Include="razorblade-old\ReleaseNotes.txt" />
-    <Content Include="SexyContent\ImportExport\Instructions\App installation instructions.txt" />
-    <Content Include="SexyContent\ImportExport\Instructions\License.txt" />
-    <Content Include="SexyContent\ImportExport\Instructions\ReleaseNotes.txt" />
+    <Content Include="ImportExport\Instructions\App installation instructions.txt" />
+    <Content Include="ImportExport\Instructions\License.txt" />
+    <Content Include="ImportExport\Instructions\ReleaseNotes.txt" />
     <Content Include="razorblade\bin\ToSic.Razor.dll" />
     <Content Include="razorblade\bin\ToSic.Razor.Dnn.dll" />
     <Content Include="razorblade\License.txt" />
@@ -173,9 +173,9 @@
     <Content Include="WebConfigTemplate.config" />
     <Content Include="web-Deploy.config" />
     <Content Include="web.config" />
-    <Content Include="SexyContent\ImportExport\Instructions\2sxc_App_ByUnknown_NameUnknown.dnn" />
-    <Content Include="SexyContent\ImportExport\Instructions\Online help to install this app.url" />
-    <Content Include="SexyContent\readme.md" />
+    <Content Include="ImportExport\Instructions\2sxc_App_ByUnknown_NameUnknown.dnn" />
+    <Content Include="ImportExport\Instructions\Online help to install this app.url" />
+    <Content Include="ImportExport\readme.md" />
     <Content Include="Upgrade\readme.md" />
     <Content Include="razorblade-old\Resources.zip" />
     <Content Include="razorblade\Resources.zip" />
@@ -334,6 +334,7 @@ robocopy /mir "$(Dev2sxcAssets)\dist\ " "%25BuildTarget%25\dist\ "
 robocopy /mir "$(Dev2sxcAssets)\system\ " "%25BuildTarget%25\system\ "
 
 robocopy /mir "$(ProjectDir)Extensions\ " "%25BuildTarget%25\Extensions\ "
+robocopy /mir "$(ProjectDir)ImportExport\ " "%25BuildTarget%25\ImportExport\ "
 robocopy /mir "$(ProjectDir)App_LocalResources\ " "%25BuildTarget%25\App_LocalResources\ "
 
 xcopy "$(ProjectDir)View.ascx" "%25BuildTarget%25\" /y
