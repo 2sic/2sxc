@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Logging;
@@ -28,22 +29,20 @@ namespace ToSic.Sxc.WebApi.Adam
         /// Validate that user has write permissions for folder.
         /// In case the primary file system is used (usePortalRoot) then also check higher permissions
         /// </summary>
-        /// <param name="state"></param>
         /// <param name="parentFolder"></param>
         /// <param name="target"></param>
         /// <param name="errPrefix"></param>
         [AssertionMethod]
-        protected static void VerifySecurityAndStructure(AdamState state, IFolder<TFolderId, TFileId> parentFolder, IAsset target, string errPrefix)
+        protected void VerifySecurityAndStructure(Folder<TFolderId, TFileId> parentFolder, IAssetWithParentSysId<TFolderId> target, string errPrefix)
         {
             // In case the primary file system is used (usePortalRoot) then also check higher permissions
-            if (state.UseTenantRoot && !state.Security.CanEditFolder(target)) 
+            if (State.UseTenantRoot && !State.Security.CanEditFolder(target)) 
                 throw HttpException.PermissionDenied(errPrefix + " - permission denied");
 
-            if (!state.Security.SuperUserOrAccessingItemFolder(target.Path, out var exp))
+            if (!State.Security.SuperUserOrAccessingItemFolder(target.Path, out var exp))
                 throw exp;
 
-            // todo: #adamID
-            if (target.ParentId != parentFolder.Id)
+            if(!EqualityComparer<TFolderId>.Default.Equals(target.ParentSysId, parentFolder.SysId))
                 throw HttpException.BadRequest(errPrefix + " - not found in folder");
         }
     }

@@ -22,8 +22,9 @@ namespace ToSic.Sxc.WebApi.Adam
         protected override void PrepCore(IApp app, Guid entityGuid, string fieldName, bool usePortalRoot)
         {
             Log.Add("PrepCore(...)");
-            AdamAppContext = new AdamAppContext<TFolderId, TFileId>(Permissions.Context.Tenant, app, Block, 10, Log);
-            ContainerContext = usePortalRoot
+            AdamAppContext = new AdamAppContext<TFolderId, TFileId>();
+            AdamAppContext.Init(Permissions.Context.Tenant, app, Block, 10, Log);
+                ContainerContext = usePortalRoot
                 ? new AdamOfTenant<TFolderId, TFileId>(AdamAppContext) as AdamOfBase<TFolderId, TFileId>
                 : new AdamOfField<TFolderId, TFileId>(AdamAppContext, entityGuid, fieldName);
         }

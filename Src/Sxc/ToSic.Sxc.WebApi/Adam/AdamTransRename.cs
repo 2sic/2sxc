@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Security.Permissions;
 
 namespace ToSic.Sxc.WebApi.Adam
@@ -20,19 +19,19 @@ namespace ToSic.Sxc.WebApi.Adam
                 throw permissionException;
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var parent = State.ContainerContext.Folder(parentSubfolder, false) as IFolder<TFolderId, TFileId>;
+            var parent = State.ContainerContext.Folder(parentSubfolder, false); // as IFolder<TFolderId, TFileId>;
 
             var fs = State.AdamAppContext.AdamFs;
             if (isFolder)
             {
                 var target = fs.GetFolder(folderId);
-                VerifySecurityAndStructure(State, parent, target, "Can't rename folder");
+                VerifySecurityAndStructure(parent, target, "Can't rename folder");
                 fs.Rename(target, newName);
             }
             else
             {
                 var target = fs.GetFile(fileId);
-                VerifySecurityAndStructure(State, parent, target, "Can't rename file");
+                VerifySecurityAndStructure(parent, target, "Can't rename file");
 
                 // never allow to change the extension
                 if (target.Extension != newName.Split('.').Last())

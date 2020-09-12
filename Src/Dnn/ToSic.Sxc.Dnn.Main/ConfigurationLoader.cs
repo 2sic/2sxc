@@ -119,7 +119,11 @@ namespace ToSic.SexyContent
             services.AddTransient<IRenderingHelper, DnnRenderingHelper>();
             services.AddTransient<IEnvironmentConnector, DnnMapAppToInstance>();
             services.AddTransient<IEnvironmentInstaller, InstallationController>();
+
+            // ADAM 
             services.AddTransient<IAdamFileSystem<int, int>, DnnFileSystem>();
+            services.AddTransient<AdamAppContext, AdamAppContext<int, int>>();
+
             // new #2160
             services.AddTransient<SecurityChecksBase, DnnAdamSecurityChecks>();
 

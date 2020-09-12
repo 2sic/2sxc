@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Apps.Assets;
-using ToSic.Eav.Security.Permissions;
+﻿using ToSic.Eav.Security.Permissions;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
@@ -18,19 +17,19 @@ namespace ToSic.Sxc.WebApi.Adam
                 throw permissionException;
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var parent = State.ContainerContext.Folder(parentSubfolder, false) as IFolder<TFolderId, TFileId>;
+            var parent = State.ContainerContext.Folder(parentSubfolder, false); // as IFolder<TFolderId, TFileId>;
 
             var fs = State.AdamAppContext.AdamFs;
             if (isFolder)
             {
                 var target = fs.GetFolder(id);
-                VerifySecurityAndStructure(State, parent, target, "can't delete folder");
+                VerifySecurityAndStructure(parent, target, "can't delete folder");
                 fs.Delete(target);
             }
             else
             {
                 var target = fs.GetFile(fileId);
-                VerifySecurityAndStructure(State, parent, target, "can't delete file");
+                VerifySecurityAndStructure(parent, target, "can't delete file");
                 fs.Delete(target);
             }
 

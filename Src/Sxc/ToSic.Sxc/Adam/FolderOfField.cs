@@ -6,17 +6,17 @@ namespace ToSic.Sxc.Adam
     /// The ADAM Navigator creates a folder object for an entity/field combination
     /// This is the root folder where all files for this field are stored
     /// </summary>
-    public class FolderOfField : Folder<int, int>
+    public class FolderOfField<TFolderId, TFileId> : Folder<TFolderId, TFileId>
     {
-        protected ContainerBase AdamOfField { get; set; }
-        public FolderOfField(AdamAppContext<int, int> adamContext, Guid entityGuid, string fieldName) 
+        //public ContainerBase AdamOfField { get; set; }
+        public FolderOfField(AdamAppContext<TFolderId, TFileId> adamContext, Guid entityGuid, string fieldName) 
             : base(adamContext)
         {
-            AdamOfField = new AdamOfField<int, int>(AdamContext, entityGuid, fieldName);
+            var adamOfField = new AdamOfField<TFolderId, TFileId>(AdamContext, entityGuid, fieldName);
 
-            if (!Exists) return;
+            if (!AdamContext.Exists(adamOfField.Root)) return;
 
-            var f = AdamContext.Folder(AdamOfField.Root);
+            var f = AdamContext.Folder(adamOfField.Root);
             if (f == null) return;
 
             Path = f.Path;
@@ -30,7 +30,9 @@ namespace ToSic.Sxc.Adam
             Url = f.Url;
         }
 
-        public bool Exists => AdamContext.Exists(AdamOfField.Root);
+        // 2020-09-12 2dm removed, I don't think it's surfaced anywhere
+        // and the only public use is an IFolder, so it shouldn't be seen elsewhere
+        //private bool Exists => AdamContext.Exists(AdamOfField.Root);
 
     }
 

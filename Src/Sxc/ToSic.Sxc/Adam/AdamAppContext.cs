@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
@@ -14,25 +12,29 @@ namespace ToSic.Sxc.Adam
     /// The app-context of ADAM
     /// In charge of managing assets inside this app
     /// </summary>
-    public class AdamAppContext: HasLog, IContextAdamMaybe, ICompatibilityLevel
+    public abstract class AdamAppContext: HasLog, IContextAdamMaybe, ICompatibilityLevel
     {
         /// <summary>
         /// the app is only used to get folder / guid etc.
         /// don't use it to access data! as the data should never have to be initialized for this to work
         /// always use the AppRuntime instead
         /// </summary>
-        private readonly IApp _app;
-        public readonly AppRuntime AppRuntime;
-        public readonly ITenant Tenant;
-        public readonly IBlock Block;
+        private IApp _app;
+        public AppRuntime AppRuntime { get; private set; }
+        public ITenant Tenant { get; private set; }
+        public IBlock Block { get; private set;  }
         
-        protected AdamAppContext(ITenant tenant, IApp app, IBlock block, int compatibility, ILog parentLog) : base("Adm.ApCntx", parentLog, "starting")
+        protected AdamAppContext(string logName) : base(logName ?? "Adm.AppCtx") { }
+
+        public virtual AdamAppContext Init(ITenant tenant, IApp app, IBlock block, int compatibility, ILog parentLog)
         {
+            Log.LinkTo(parentLog);
             Tenant = tenant;
             _app = app;
             Block = block;
             AppRuntime = new AppRuntime(app, block?.EditAllowed ?? false, null);
             CompatibilityLevel = compatibility;
+            return this;
         }
 
         /// <summary>
@@ -43,20 +45,14 @@ namespace ToSic.Sxc.Adam
         private string _path;
 
 
-
-        #region basic, generic folder commands -- all internal
-
-
+        [PrivateApi]
+        public int CompatibilityLevel { get; set; }
 
 
+        #region Properties the base class already provides, but must be implemented at inheritance
 
-
+        internal abstract IFolder FolderOfField(Guid entityGuid, string fieldName);
 
         #endregion
-
-        // todo: #adamId (int)
-        public Export Export => new Export(this as AdamAppContext<int, int>);
-        [PrivateApi]
-        public int CompatibilityLevel { get; }
     }
 }
