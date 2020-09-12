@@ -5,6 +5,7 @@ using ToSic.Sxc.Mvc;
 using ToSic.Sxc.Mvc.Dev;
 using ToSic.Sxc.Mvc.Engines;
 using ToSic.Sxc.Mvc.RazorPages;
+using ToSic.Sxc.Mvc.Web;
 
 namespace Website.Pages.RenderPartial
 {
@@ -22,7 +23,7 @@ namespace Website.Pages.RenderPartial
         {
             var dynCode = _sxcMvc.CreateDynCode(TestIds.Blog, null);
 
-            var path = "/wwwroot/2sxc/Blog App/_1 Main blog view.cshtml";
+            var path = $"/{MvcConstants.WwwRoot}2sxc/Blog App/_1 Main blog view.cshtml";
 
             InnerRender = await _renderer.RenderToStringAsync(
                 path,

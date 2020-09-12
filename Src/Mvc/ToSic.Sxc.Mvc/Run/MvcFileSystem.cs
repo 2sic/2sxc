@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Mvc.Web;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Mvc.Run
@@ -34,29 +35,21 @@ namespace ToSic.Sxc.Mvc.Run
 
         public File<string, string> GetFile(string fileId)
         {
-            throw new NotImplementedException();
+            var dir = AdjustPathToSiteRoot(fileId);
+            return FileToAdam(dir);
         }
 
         public List<File<string, string>> GetFiles(IFolder folder)
         {
-            var dir = Directory.GetFiles(folder.Path);
+            var dir = Directory.GetFiles(AdjustPathToSiteRoot(folder.Path));
             return dir.Select(FileToAdam).ToList();
         }
 
-        public void Rename(IFile file, string newName)
-        {
-            throw new NotImplementedException();
-        }
+        public void Rename(IFile file, string newName) => throw new NotImplementedException();
 
-        public void Delete(IFile file)
-        {
-            throw new NotImplementedException();
-        }
+        public void Delete(IFile file) => throw new NotImplementedException();
 
-        public File<string, string> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
-        {
-            throw new NotImplementedException();
-        }
+        public File<string, string> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName) => throw new NotImplementedException();
 
         public void AddFolder(string path)
         {
@@ -74,31 +67,30 @@ namespace ToSic.Sxc.Mvc.Run
         private string PathOnDrive(string path)
         {
             if (path.Contains("..")) throw new ArgumentException("path may not contain ..", nameof(path));
-            path = Path.Combine(AdamContext.Tenant.ContentPath, path);
+            // check if it already has the root path attached, otherwise add
+            path = path.StartsWith(AdamContext.Tenant.ContentPath) ? path : Path.Combine(AdamContext.Tenant.ContentPath, path);
             path = path.Replace("//", "/").Replace("\\\\", "\\");
             return _http.MapPath(path);
         }
 
-        public Folder<string, string> GetFolder(string folderId)
-        {
-            throw new NotImplementedException();
-        }
+        public Folder<string, string> GetFolder(string folderId) => AdamFolder(AdjustPathToSiteRoot(folderId));
 
         public List<Folder<string, string>> GetFolders(IFolder folder)
         {
-            var dir = Directory.GetDirectories(folder.Path);
+            var dir = Directory.GetDirectories(AdjustPathToSiteRoot(folder.Path));
             return dir.Select(AdamFolder).ToList();
         }
 
-        public void Rename(IFolder folder, string newName)
+        private static string AdjustPathToSiteRoot(string path)
         {
-            throw new NotImplementedException();
+            return path.StartsWith("adam", StringComparison.CurrentCultureIgnoreCase)
+                ? Path.Combine(MvcConstants.WwwRoot, path)
+                : path;
         }
 
-        public void Delete(IFolder folder)
-        {
-            throw new NotImplementedException();
-        }
+        public void Rename(IFolder folder, string newName) => throw new NotImplementedException();
+
+        public void Delete(IFolder folder) => throw new NotImplementedException();
 
         public Folder<string, string> Get(string path) => AdamFolder(path);
 
@@ -110,17 +102,24 @@ namespace ToSic.Sxc.Mvc.Run
             return new Folder<string, string>(AdamContext)
             {
                 Path = path,
-                SysId = "todo", // Constants.NullId,
-                ParentSysId = "todo",// Constants.NullId,
-
+                SysId = path,
+                ParentSysId = FindParentPath(path),
                 Name = f.Name,
                 Created = f.CreationTime,
                 Modified = f.LastWriteTime,
 
                 Url = AdamContext.Tenant.ContentPath + path,
-                // note: there are more properties in the DNN data, but we don't use it,
-                // because it will probably never be cross-platform
             };
+        }
+
+        private static string FindParentPath(string path)
+        {
+            var cleanedPath = path.TrimEnd('/').TrimEnd('\\');
+            var prevSlashF = cleanedPath.LastIndexOf('/');
+            var prevSlashB = cleanedPath.LastIndexOf('\\');
+            var lastSlash = prevSlashB > prevSlashF ? prevSlashB : prevSlashF;
+            var parentPath = lastSlash == -1 ? "" : cleanedPath.Substring(0, lastSlash);
+            return parentPath;
         }
 
 
@@ -133,20 +132,16 @@ namespace ToSic.Sxc.Mvc.Run
                 FullName = f.Name,
                 Extension = f.Extension,
                 Size = Convert.ToInt32(f.Length),
-                SysId = "todo mvc", // Constants.NullId,
+                SysId = path,
                 Folder = directoryName,
-                ParentSysId = "todo mvc",// Constants.NullId,
+                ParentSysId = path.Replace(f.Name, "", StringComparison.InvariantCultureIgnoreCase), // "todo mvc",// Constants.NullId,
 
                 Path = path,
 
                 Created = f.CreationTime,
                 Modified = f.LastWriteTime,
                 Name = Path.GetFileNameWithoutExtension(f.Name),
-                Url = // f.StorageLocation == 0 ?
-                    AdamContext.Tenant.ContentPath + directoryName + f.Name
-                    // : FileLinkClickController.Instance.GetFileLinkClick(f),
-                // note: there are more properties in the DNN data, but we don't use it,
-                // because it will probably never be cross-platform
+                Url = AdamContext.Tenant.ContentPath + directoryName + f.Name
             };
         }
 

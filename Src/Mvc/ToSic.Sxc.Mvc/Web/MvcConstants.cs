@@ -4,5 +4,7 @@
     {
         public const string SiteRoot = "/";
         public const string UiRoot = "/system/sxc/";
+
+        public const string WwwRoot = "wwwroot/";
     }
 }

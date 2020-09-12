@@ -1,4 +1,5 @@
 ﻿using ToSic.Sxc.Mvc.Dev;
+using ToSic.Sxc.Mvc.Web;
 
 namespace ToSic.Sxc.Mvc.TestStuff
 {
@@ -14,6 +15,6 @@ namespace ToSic.Sxc.Mvc.TestStuff
 
         public string Name => "Fake MVC Tenant Name";
 
-        public string HomePath => "wwwroot/";
+        public string HomePath => MvcConstants.WwwRoot;
     }
 }
