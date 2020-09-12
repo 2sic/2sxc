@@ -71,9 +71,6 @@
       <!-- all global types and queries -->
       <InstallInclude Include="..\..\Data\**\.data\**\*.json" Exclude="@(DefaultExclude)" />
 
-      <!-- special DNN client scripts which react when adding a module to a page (js/html) -->
-      <InstallInclude Include="*ClientScripts\*.*" />
-
       <InstallInclude Include="**\*.txt"  Exclude="@(DefaultExclude);**\obj\**;**\_ReSharper*\**;License.txt;ReleaseNotes.txt" />
       <InstallInclude Include="**\*.ashx" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.png" Exclude="@(DefaultExclude);icon.png;icon-app.png" />
@@ -82,7 +79,11 @@
       <InstallInclude Include="**\*.config" Exclude="@(DefaultExclude);**\web-Deploy.config;**\app.config;**\packages.config" />
       <!-- <InstallInclude Include="**\*.xml" Exclude="@(DefaultExclude);" /> -->
 
-      <InstallInclude Include="ImportExport\**" />
+      <!-- special DNN client scripts which react when adding a module to a page (js/html) -->
+      <InstallInclude Include="*ClientScripts\*.*" />
+
+      <!--the ImportExport folder. Leading * is important so it will create a folder with this -->
+      <InstallInclude Include="*ImportExport\**\*.*" />
     </ItemGroup>
 
     <ItemGroup>
