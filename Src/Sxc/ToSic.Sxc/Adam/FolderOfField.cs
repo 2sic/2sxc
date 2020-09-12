@@ -8,23 +8,20 @@ namespace ToSic.Sxc.Adam
     /// </summary>
     public class FolderOfField : Folder<int, int>
     {
-        protected ContainerOfField Container { get; set; }
-        public FolderOfField(AdamAppContext adamContext, Guid entityGuid, string fieldName) 
+        protected ContainerBase AdamOfField { get; set; }
+        public FolderOfField(AdamAppContext<int, int> adamContext, Guid entityGuid, string fieldName) 
             : base(adamContext)
         {
-            Container = new ContainerOfField(AdamContext, entityGuid, fieldName);
+            AdamOfField = new AdamOfField<int, int>(AdamContext, entityGuid, fieldName);
 
             if (!Exists) return;
 
-            // ReSharper disable once PatternAlwaysOfType
-            //if (!(AdamContext.Folder(Container.Root) is Eav.Apps.Assets.IFolder f))
-            //    return;
-            var f = AdamContext.Folder(Container.Root);
+            var f = AdamContext.Folder(AdamOfField.Root);
             if (f == null) return;
 
             Path = f.Path;
             Modified = f.Modified;
-            SysId = (f as Folder<int, int>).SysId;
+            SysId = f.SysId;
             Created = f.Created;
             Modified = f.Modified;
 
@@ -33,7 +30,7 @@ namespace ToSic.Sxc.Adam
             Url = f.Url;
         }
 
-        public bool Exists => AdamContext.Exists(Container.Root);
+        public bool Exists => AdamContext.Exists(AdamOfField.Root);
 
     }
 

@@ -12,12 +12,14 @@ namespace ToSic.Sxc.Adam
         private readonly List<int> _fileIds = new List<int>();
         private readonly List<int> _folderIds = new List<int>();
 
-        private readonly IAdamFileSystem _envFs;
+        // todo: #adamId int
+        private readonly IAdamFileSystem<int, int> _envFs;
 
-        public Export(AdamAppContext adm)
+        // todo: #adamId int
+        public Export(AdamAppContext<int, int> adm)
         {
             _root = adm.RootFolder;
-            _envFs = adm.AdamFs;
+            _envFs = adm.AdamFs as IAdamFileSystem<int, int>;
         }
 
         public List<int> AppFiles

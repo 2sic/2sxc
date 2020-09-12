@@ -7,7 +7,7 @@ namespace ToSic.Sxc.WebApi.Adam
     {
         public AdamTransDelete() : base("Adm.TrnDel") { }
 
-        internal bool Delete(string parentSubfolder, bool isFolder, int id)
+        internal bool Delete(string parentSubfolder, bool isFolder, TFolderId id, TFileId fileId)
         {
             Log.Add($"delete");
             if (!State.Security.UserIsPermittedOnField(GrantSets.DeleteSomething, out var exp))
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.WebApi.Adam
             }
             else
             {
-                var target = fs.GetFile(id);
+                var target = fs.GetFile(fileId);
                 VerifySecurityAndStructure(State, parent, target, "can't delete file");
                 fs.Delete(target);
             }

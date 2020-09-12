@@ -25,16 +25,14 @@ namespace ToSic.Sxc.Adam
         public readonly AppRuntime AppRuntime;
         public readonly ITenant Tenant;
         public readonly IBlock Block;
-        public readonly IAdamFileSystem AdamFs;
         
-        public AdamAppContext(ITenant tenant, IApp app, IBlock block, int compatibility, ILog parentLog) : base("Adm.ApCntx", parentLog, "starting")
+        protected AdamAppContext(ITenant tenant, IApp app, IBlock block, int compatibility, ILog parentLog) : base("Adm.ApCntx", parentLog, "starting")
         {
             Tenant = tenant;
             _app = app;
             Block = block;
             AppRuntime = new AppRuntime(app, block?.EditAllowed ?? false, null);
             CompatibilityLevel = compatibility;
-            AdamFs = Factory.Resolve<IAdamFileSystem>().Init(this);
         }
 
         /// <summary>
@@ -45,52 +43,19 @@ namespace ToSic.Sxc.Adam
         private string _path;
 
 
-        /// <summary>
-        /// Root folder object of the app assets
-        /// </summary>
-        public IFolder RootFolder => Folder(Path, true);
 
         #region basic, generic folder commands -- all internal
 
-        /// <summary>
-        /// Verify that a path exists
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        internal bool Exists(string path) => AdamFs.FolderExists(path);
-
-        /// <summary>
-        /// Create a path (folder)
-        /// </summary>
-        /// <param name="path"></param>
-        internal void Add(string path) => AdamFs.AddFolder(path);
 
 
-        internal IFolder Folder(string path, bool autoCreate)
-        {
-            // create all folders to ensure they exist. Must do one-by-one because the environment must have it in the catalog
-            var pathParts = path.Split('/');
-            var pathToCheck = "";
-            foreach (var part in pathParts.Where(p => !string.IsNullOrEmpty(p)))
-            {
-                pathToCheck += part + "/";
-                if (Exists(pathToCheck)) continue;
-                if (autoCreate)
-                    Add(pathToCheck);
-                else
-                    throw new Exception("subfolder " + pathToCheck + "not found");
-            }
-
-            return Folder(path);
-        }
 
 
-        internal IFolder Folder(string path) => AdamFs.Get(path);
 
 
         #endregion
 
-        public Export Export => new Export(this);
+        // todo: #adamId (int)
+        public Export Export => new Export(this as AdamAppContext<int, int>);
         [PrivateApi]
         public int CompatibilityLevel { get; }
     }

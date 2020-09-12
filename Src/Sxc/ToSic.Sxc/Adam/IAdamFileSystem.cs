@@ -3,9 +3,9 @@ using System.IO;
 
 namespace ToSic.Sxc.Adam
 {
-    public interface IAdamFileSystem
+    public interface IAdamFileSystem<TFolderId, TFileId>
     {
-        IAdamFileSystem Init(AdamAppContext adamContext);
+        IAdamFileSystem<TFolderId, TFileId> Init(AdamAppContext<TFolderId, TFileId> adamContext);
 
         #region FileSystem Settings
 
@@ -15,15 +15,15 @@ namespace ToSic.Sxc.Adam
 
         #region Files
 
-        IFile GetFile(int fileId);
+        File<TFolderId, TFileId> GetFile(TFileId fileId);
 
-        List<IFile> GetFiles(IFolder folder);
+        List<File<TFolderId, TFileId>> GetFiles(IFolder folder);
 
         void Rename(IFile file, string newName);
 
         void Delete(IFile file);
 
-        IFile Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName);
+        File<TFolderId, TFileId> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName);
 
         ///// <summary>
         ///// When uploading a new file, we must verify that the name isn't used. 
@@ -41,9 +41,9 @@ namespace ToSic.Sxc.Adam
         void AddFolder(string path);
         bool FolderExists(string path);
 
-        IFolder GetFolder(int folderId);
+        Folder<TFolderId, TFileId> GetFolder(TFolderId folderId);
 
-        List<IFolder> GetFolders(IFolder folder);
+        List<Folder<TFolderId, TFileId>> GetFolders(IFolder folder);
 
         void Rename(IFolder folder, string newName);
 
@@ -51,6 +51,6 @@ namespace ToSic.Sxc.Adam
 
         #endregion
 
-        IFolder Get(string path);
+        Folder<TFolderId, TFileId> Get(string path);
     }
 }

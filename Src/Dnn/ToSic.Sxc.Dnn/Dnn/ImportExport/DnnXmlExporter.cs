@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
         {
             var tenant = new DnnTenant(PortalSettings.Current);
             var app = Eav.Factory.Resolve<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
-            AdamAppContext = new AdamAppContext(tenant, app, null, 10, Log);
+            AdamAppContext = new AdamAppContext<int, int>(tenant, app, null, 10, Log);
             Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
 
             // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally

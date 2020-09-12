@@ -93,13 +93,13 @@ namespace ToSic.Sxc.Dnn.WebApi
         public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot) 
             => new AdamTransDelete<int, int>()
                 .Init(GetBlock(), appId, contentType, guid, field, usePortalRoot, Log)
-                .Delete(subfolder, isFolder, id);
+                .Delete(subfolder, isFolder, id, id);
 
         [HttpGet]
         public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot) 
             => new AdamTransRename<int, int>()
                 .Init(GetBlock(), appId, contentType, guid, field, usePortalRoot, Log)
-                .Rename(subfolder, isFolder, id, newName);
+                .Rename(subfolder, isFolder, id, id, newName);
 
         #endregion
     }

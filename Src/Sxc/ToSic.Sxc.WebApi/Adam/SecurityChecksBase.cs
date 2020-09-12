@@ -79,7 +79,7 @@ namespace ToSic.Sxc.WebApi.Adam
             if (!UserIsRestricted || FieldPermissionOk(GrantSets.ReadPublished)) return true;
 
             // check if the data is public
-            var itm = AdamState.AdamAppContext.AppRuntime.Entities.Get(guid);
+            var itm = AdamState.AppRuntime.Entities.Get(guid);
             if (!(itm?.IsPublished ?? false)) return true;
 
             exp = HttpException.PermissionDenied(Log.Add("user is restricted and may not see published, but item exists and is published - not allowed"));

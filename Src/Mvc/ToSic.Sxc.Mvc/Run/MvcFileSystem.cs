@@ -8,7 +8,7 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Mvc.Run
 {
-    public class MvcFileSystem: HasLog, IAdamFileSystem
+    public class MvcFileSystem: HasLog, IAdamFileSystem<string, string>
     {
         #region Constructor / DI / Init
 
@@ -17,27 +17,27 @@ namespace ToSic.Sxc.Mvc.Run
             _http = http;
         }
 
-        private IHttp _http;
+        private readonly IHttp _http;
 
-        public IAdamFileSystem Init(AdamAppContext adamContext)
+        public IAdamFileSystem<string, string> Init(AdamAppContext<string, string> adamContext)
         {
             AdamContext = adamContext;
             return this;
         }
 
 
-        protected AdamAppContext AdamContext;
+        protected AdamAppContext<string, string> AdamContext;
 
         #endregion
         // #todo MVC
         public int MaxUploadKb() => 25000;
 
-        public IFile GetFile(int fileId)
+        public File<string, string> GetFile(string fileId)
         {
             throw new NotImplementedException();
         }
 
-        public List<IFile> GetFiles(IFolder folder)
+        public List<File<string, string>> GetFiles(IFolder folder)
         {
             var dir = Directory.GetFiles(folder.Path);
             return dir.Select(FileToAdam).ToList();
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Mvc.Run
             throw new NotImplementedException();
         }
 
-        public IFile Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
+        public File<string, string> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
         {
             throw new NotImplementedException();
         }
@@ -79,12 +79,12 @@ namespace ToSic.Sxc.Mvc.Run
             return _http.MapPath(path);
         }
 
-        public IFolder GetFolder(int folderId)
+        public Folder<string, string> GetFolder(string folderId)
         {
             throw new NotImplementedException();
         }
 
-        public List<IFolder> GetFolders(IFolder folder)
+        public List<Folder<string, string>> GetFolders(IFolder folder)
         {
             var dir = Directory.GetDirectories(folder.Path);
             return dir.Select(AdamFolder).ToList();
@@ -100,18 +100,18 @@ namespace ToSic.Sxc.Mvc.Run
             throw new NotImplementedException();
         }
 
-        public IFolder Get(string path) => AdamFolder(path);
+        public Folder<string, string> Get(string path) => AdamFolder(path);
 
         #region DnnToAdam
-        private IFolder AdamFolder(string path)
+        private Folder<string, string> AdamFolder(string path)
         {
             var f = new DirectoryInfo(PathOnDrive(path));
 
-            return new Folder<int, int>(AdamContext)
+            return new Folder<string, string>(AdamContext)
             {
                 Path = path,
-                SysId = Constants.NullId,
-                ParentSysId = Constants.NullId,
+                SysId = "todo", // Constants.NullId,
+                ParentSysId = "todo",// Constants.NullId,
 
                 Name = f.Name,
                 Created = f.CreationTime,
@@ -124,18 +124,18 @@ namespace ToSic.Sxc.Mvc.Run
         }
 
 
-        private IFile FileToAdam(string path)
+        private File<string, string> FileToAdam(string path)
         {
             var f = new FileInfo(PathOnDrive(path));
             var directoryName = f.Directory.Name;
-            return new File<int, int>(AdamContext)
+            return new File<string, string>(AdamContext)
             {
                 FullName = f.Name,
                 Extension = f.Extension,
                 Size = Convert.ToInt32(f.Length),
-                SysId = Constants.NullId,
+                SysId = "todo mvc", // Constants.NullId,
                 Folder = directoryName,
-                ParentSysId = Constants.NullId,
+                ParentSysId = "todo mvc",// Constants.NullId,
 
                 Path = path,
 

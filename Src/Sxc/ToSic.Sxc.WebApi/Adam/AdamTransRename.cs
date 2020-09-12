@@ -8,7 +8,7 @@ namespace ToSic.Sxc.WebApi.Adam
     {
         public AdamTransRename() : base("Adm.TrnDel") { }
 
-        internal bool Rename(string parentSubfolder, bool isFolder, int id, string newName)
+        internal bool Rename(string parentSubfolder, bool isFolder, TFolderId folderId, TFileId fileId, string newName)
         {
             Log.Add($"");
 
@@ -25,13 +25,13 @@ namespace ToSic.Sxc.WebApi.Adam
             var fs = State.AdamAppContext.AdamFs;
             if (isFolder)
             {
-                var target = fs.GetFolder(id);
+                var target = fs.GetFolder(folderId);
                 VerifySecurityAndStructure(State, parent, target, "Can't rename folder");
                 fs.Rename(target, newName);
             }
             else
             {
-                var target = fs.GetFile(id);
+                var target = fs.GetFile(fileId);
                 VerifySecurityAndStructure(State, parent, target, "Can't rename file");
 
                 // never allow to change the extension

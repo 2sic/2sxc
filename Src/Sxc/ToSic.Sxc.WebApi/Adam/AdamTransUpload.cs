@@ -50,7 +50,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
             // start with a security check...
             var fs = State.AdamAppContext.AdamFs;
-            var parentFolder = fs.GetFolder(folder.Id);
+            var parentFolder = fs.GetFolder(folder.SysId);
 
             // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
             if (State.UseTenantRoot && !State.Security.CanEditFolder(parentFolder))

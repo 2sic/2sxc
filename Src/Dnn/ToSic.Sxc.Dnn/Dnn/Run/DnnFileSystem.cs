@@ -12,20 +12,20 @@ using ToSic.Sxc.Dnn.Adam;
 
 namespace ToSic.Sxc.Dnn.Run
 {
-    public class DnnFileSystem : HasLog, IAdamFileSystem
+    public class DnnFileSystem : HasLog, IAdamFileSystem<int, int>
     {
         #region Constructor / DI / Init
 
         public DnnFileSystem(): base("Dnn.FilSys") { }
 
-        public IAdamFileSystem Init(AdamAppContext adamContext)
+        public IAdamFileSystem<int, int> Init(AdamAppContext<int, int> adamContext)
         {
             AdamContext = adamContext;
             return this;
         }
 
 
-        protected AdamAppContext AdamContext;
+        protected AdamAppContext<int, int> AdamContext;
 
         #endregion
 
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Dnn.Run
         #region Files
         private readonly IFileManager _dnnFiles = FileManager.Instance;
 
-        public IFile GetFile(int fileId)
+        public File<int, int> GetFile(int fileId)
         {
             var file = _dnnFiles.GetFile(fileId);
             return DnnToAdam(file);
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Dnn.Run
             _dnnFiles.DeleteFile(dnnFile);
         }
 
-        public IFile Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
+        public File<int, int> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
         {
             if (ensureUniqueName)
                 fileName = FindUniqueFileName(parent, fileName);
@@ -130,13 +130,13 @@ namespace ToSic.Sxc.Dnn.Run
             _dnnFolders.DeleteFolder(folder.AsDnn().SysId);
         }
 
-        public IFolder Get(string path) 
+        public Folder<int, int> Get(string path) 
             => DnnToAdam(_dnnFolders.GetFolder(AdamContext.Tenant.Id, path));
 
-        public List<IFolder> GetFolders(IFolder folder) 
+        public List<Folder<int, int>> GetFolders(IFolder folder) 
             => GetFolders(GetDnnFolder(folder.AsDnn().SysId));
 
-        public IFolder GetFolder(int folderId) => DnnToAdam(GetDnnFolder(folderId));
+        public Folder<int, int> GetFolder(int folderId) => DnnToAdam(GetDnnFolder(folderId));
 
         #endregion
 
@@ -147,31 +147,31 @@ namespace ToSic.Sxc.Dnn.Run
 
         private IFolderInfo GetDnnFolder(int folderId) => _dnnFolders.GetFolder(folderId);
 
-        private List<IFolder> GetFolders(IFolderInfo fldObj)
+        private List<Folder<int, int>> GetFolders(IFolderInfo fldObj)
         {
             var firstList = _dnnFolders.GetFolders(fldObj);
             var folders = firstList?.Select(DnnToAdam).ToList()
-                          ?? new List<IFolder>();
+                          ?? new List<Folder<int, int>>();
             return folders;
         }
 
-        public List<IFile> GetFiles(IFolder folder)
+        public List<File<int, int>> GetFiles(IFolder folder)
         {
             var fldObj = _dnnFolders.GetFolder(folder.AsDnn().SysId);
             // sometimes the folder doesn't exist for whatever reason
-            if (fldObj == null) return  new List<IFile>();
+            if (fldObj == null) return  new List<File<int, int>>();
 
             // try to find the files
             var firstList = _dnnFolders.GetFiles(fldObj);
             var files = firstList?.Select(DnnToAdam).ToList()
-                     ?? new List<IFile>();
+                     ?? new List<File<int, int>>();
             return files;
         }
 
         #endregion
 
         #region DnnToAdam
-        private IFolder DnnToAdam(IFolderInfo f)
+        private Folder<int, int> DnnToAdam(IFolderInfo f)
             => new Folder<int, int>(AdamContext)
             {
                 Path = f.FolderPath,
@@ -190,7 +190,7 @@ namespace ToSic.Sxc.Dnn.Run
 
 
 
-        private IFile DnnToAdam(IFileInfo f) 
+        private File<int, int> DnnToAdam(IFileInfo f) 
             => new File<int, int>(AdamContext)
         {
             FullName = f.FileName,

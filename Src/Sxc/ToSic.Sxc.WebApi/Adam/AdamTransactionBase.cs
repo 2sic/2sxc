@@ -17,11 +17,11 @@ namespace ToSic.Sxc.WebApi.Adam
         {
             Log.LinkTo(parentLog);
             var logCall = Log.Call<T>($"app: {appId}, type: {contentType}, itemGuid: {itemGuid}, field: {field}, portalRoot: {usePortalRoot}");
-            State = new AdamState(block, appId, contentType, field, itemGuid, usePortalRoot, Log);
+            State = new AdamState<TFolderId, TFileId>(block, appId, contentType, field, itemGuid, usePortalRoot, Log);
             return logCall(null, this as T);
         }
 
-        protected AdamState State;
+        protected AdamState<TFolderId, TFileId> State;
 
 
         /// <summary>

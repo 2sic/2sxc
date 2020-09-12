@@ -4,7 +4,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.WebApi.Security;
@@ -12,8 +11,11 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    internal class AdamState: HasLog
+    internal abstract class AdamState: HasLog
     {
+        // Temp
+        public abstract AppRuntime AppRuntime { get; }
+
         /// <summary>
         /// Determines if the files come from the root (shared files).
         /// Is false, if they come from the item specific ADAM folder.
@@ -30,8 +32,6 @@ namespace ToSic.Sxc.WebApi.Adam
         /// </summary>
         public Guid ItemGuid;
 
-        internal ContainerBase ContainerContext;
-        internal AdamAppContext AdamAppContext;
         internal IContentTypeAttribute Attribute;
 
         internal readonly IBlock Block;
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.WebApi.Adam
         /// <summary>
         /// Initializes the object and performs all the initial security checks
         /// </summary>
-        public AdamState(IBlock block, int appId, string contentType, string field, Guid guid, bool usePortalRoot, ILog log)
+        protected AdamState(IBlock block, int appId, string contentType, string field, Guid guid, bool usePortalRoot, ILog log)
             : base("Adm.State", log)
         {
             var callLog = Log.Call($"field:{field}, guid:{guid}");
@@ -100,14 +100,8 @@ namespace ToSic.Sxc.WebApi.Adam
             return type[fieldName];
         }
 
-        protected void PrepCore(IApp app, Guid entityGuid, string fieldName, bool usePortalRoot)
-        {
-            Log.Add("PrepCore(...)");
-            AdamAppContext = new AdamAppContext(Permissions.Context.Tenant, app, Block, 10, Log);
-            ContainerContext = usePortalRoot
-                ? new ContainerOfTenant(AdamAppContext) as ContainerBase
-                : new ContainerOfField(AdamAppContext, entityGuid, fieldName);
-        }
+        protected abstract void PrepCore(IApp app, Guid entityGuid, string fieldName, bool usePortalRoot);
+
         #endregion
     }
 }

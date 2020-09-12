@@ -7,9 +7,9 @@ namespace ToSic.Sxc.Adam
 
     public class Folder<TFolderId, TFileId> : Eav.Apps.Assets.Folder<TFolderId, TFileId>, IFolder
     {
-        protected AdamAppContext AdamContext { get; set; }
+        protected AdamAppContext<TFolderId, TFileId> AdamContext { get; set; }
 
-        public Folder(AdamAppContext adamContext)
+        public Folder(AdamAppContext<TFolderId, TFileId> adamContext)
         {
             AdamContext = adamContext;
         }
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Adam
         /// <inheritdoc />
         public IEnumerable<IFolder> Folders =>
             _folders ?? (_folders = string.IsNullOrEmpty(Name)
-                ? new List<IFolder>()
+                ? new List<Folder<TFolderId, TFileId>>()
                 : AdamContext.AdamFs.GetFolders(this));
 
         private IEnumerable<IFolder> _folders;

@@ -44,7 +44,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
 				// file-check, more abilities to allow
 				// this will already do a ensure-or-throw inside it if outside of adam
-				var adamCheck = new AdamState(block, appId, contentType, field, guid, isOutsideOfAdam, Log);
+				var adamCheck = new AdamState<int, int>(block, appId, contentType, field, guid, isOutsideOfAdam, Log);
 				if (!adamCheck.Security.SuperUserOrAccessingItemFolder(resolved, out var exp))
 					throw exp;
 				if (!adamCheck.Security.UserIsPermittedOnField(GrantSets.ReadSomething, out exp))

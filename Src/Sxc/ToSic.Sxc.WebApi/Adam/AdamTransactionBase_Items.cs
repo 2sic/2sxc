@@ -27,7 +27,7 @@ namespace ToSic.Sxc.WebApi.Adam
             State.ContainerContext.Folder();
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var currentFolder = State.ContainerContext.Folder(subFolderName, false) as Folder<TFolderId, TFileId>;
+            var currentFolder = State.ContainerContext.Folder(subFolderName, false);
 
             // ensure that it's super user, or the folder is really part of this item
             if (!State.Security.SuperUserOrAccessingItemFolder(currentFolder.Path, out var exp))

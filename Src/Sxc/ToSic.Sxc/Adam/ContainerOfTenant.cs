@@ -4,9 +4,9 @@
     /// A container for the tenant (top level)
     /// For browsing the tenants content files
     /// </summary>
-    public class ContainerOfTenant: ContainerBase
+    public class AdamOfTenant<TFolderId, TFileId>: AdamOfBase<TFolderId, TFileId>
     {
-        public ContainerOfTenant(AdamAppContext appContext) : base(appContext)
+        public AdamOfTenant(AdamAppContext<TFolderId, TFileId> appContext) : base(appContext)
         {
         }
 
