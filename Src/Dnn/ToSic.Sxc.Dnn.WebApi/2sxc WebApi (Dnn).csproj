@@ -117,7 +117,6 @@
     <Compile Include="WebApi\Routing\Route.cs" />
     <Compile Include="WebApi\Cms\EditUi\UiController_Save.cs" />
     <Compile Include="WebApi\Cms\EditUi\UiController_Load.cs" />
-    <Compile Include="WebApi\Cms\SaveDataValidator.cs" />
     <Compile Include="WebApi\ImportExport\ExtensionsForIApp.cs" />
     <Compile Include="WebApi\Routing\RouteParts.cs" />
     <Compile Include="Dnn\DnnPublishing.cs" />

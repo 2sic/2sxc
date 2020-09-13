@@ -74,7 +74,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 .Entities.ModifyItemList(parentId, field, new Move(indexFrom, indexTo));
 
             // use dnn versioning if partOfPage
-            if (partOfPage) versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
+            if (partOfPage) versioning.DoInsidePublishing(GetContext(), InternalSave);
             else InternalSave(null);
         }
 
@@ -96,7 +96,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 .Entities.ModifyItemList(parentId, field, new Remove(index));
 
             // use dnn versioning if partOfPage
-            if (partOfPage) versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
+            if (partOfPage) versioning.DoInsidePublishing(GetContext(), InternalSave);
             else InternalSave(null);
         }
     }

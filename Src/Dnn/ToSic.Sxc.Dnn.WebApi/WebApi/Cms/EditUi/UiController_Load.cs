@@ -13,7 +13,7 @@ namespace ToSic.Sxc.WebApi.Cms
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public AllInOneDto Load([FromBody] List<ItemIdentifier> items, int appId)
         {
-            return new EditLoadBackend(null)
+            return new EditLoadBackend()
                 .Init(Log)
                 .Load(GetBlock(),
                     new DnnContextBuilder(PortalSettings, ActiveModule, UserInfo), 

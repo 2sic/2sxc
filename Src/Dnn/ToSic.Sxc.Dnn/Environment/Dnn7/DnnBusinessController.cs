@@ -38,7 +38,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 if (_publishing != null) return Publishing;
 
                 // if publishing is used, make sure it's in the log-history
-                _publishing = new Sxc.Dnn.Cms.PagePublishing().Init(Log);
+                _publishing = new Sxc.Dnn.Cms.DnnPagePublishing().Init(Log);
                 History.Add("dnn-publishing", Log);
                 return _publishing;
             }

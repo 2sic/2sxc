@@ -26,7 +26,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 CmsManager.Blocks.AddEmptyItem(GetBlock().Configuration, index);
 
             // use dnn versioning - this is always part of page
-            versioning.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
+            versioning.DoInsidePublishing(GetContext(), InternalSave);
         }
 
         [HttpGet]
@@ -82,7 +82,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // use dnn versioning - items here are always part of list
             var publishing = Factory.Resolve<IPagePublishing>().Init(Log);
-            publishing.DoInsidePublishing(Dnn.Module.ModuleID, Dnn.User.UserID, InternalSave);
+            publishing.DoInsidePublishing(GetContext(), InternalSave);
         }
     }
 }

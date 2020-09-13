@@ -16,7 +16,7 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     internal partial class EditLoadBackend: WebApiBackendBase<EditLoadBackend>
     {
-        public EditLoadBackend(string logName) : base(logName)
+        public EditLoadBackend() : base("Cms.LoadBk")
         {
         }
 

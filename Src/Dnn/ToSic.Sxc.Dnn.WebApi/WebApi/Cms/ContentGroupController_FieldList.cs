@@ -48,8 +48,9 @@ namespace ToSic.Sxc.WebApi.Cms
             }
 
             // use dnn versioning - this is always part of page
-            var dnnDynCode = new DnnDynamicCode().Init(GetBlock(), Log);
-            versioning.DoInsidePublishing(dnnDynCode.Dnn.Module.ModuleID, dnnDynCode.Dnn.User.UserID, InternalSave);
+            var block = GetBlock();
+            var dnnDynCode = new DnnDynamicCode().Init(block, Log);
+            versioning.DoInsidePublishing(block.Context, InternalSave);
             wrapLog(null);
         }
         // TODO: WIP changing this from ContentGroup editing to any list editing
@@ -132,7 +133,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // use dnn versioning - items here are always part of list
             var dnnDynCode = new DnnDynamicCode().Init(block, Log);
-            versioning.DoInsidePublishing(dnnDynCode.Dnn.Module.ModuleID, dnnDynCode.Dnn.User.UserID, InternalSave);
+            versioning.DoInsidePublishing(block.Context, InternalSave);
 
             return true;
         }

@@ -131,7 +131,7 @@ namespace ToSic.SexyContent
             services.AddTransient<IFingerprint, DnnFingerprint>();
 
             // add page publishing
-            services.AddTransient<IPagePublishing, Sxc.Dnn.Cms.PagePublishing>();
+            services.AddTransient<IPagePublishing, Sxc.Dnn.Cms.DnnPagePublishing>();
 
             if (appsCacheOverride != null)
             {

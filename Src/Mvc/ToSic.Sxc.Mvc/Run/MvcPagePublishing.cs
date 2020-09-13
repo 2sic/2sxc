@@ -4,6 +4,7 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Enums;
 using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.DataSources;
@@ -48,8 +49,10 @@ namespace ToSic.Sxc.Mvc.Run
 
         public bool IsEnabled(int moduleId) => Requirements(moduleId) != PublishingMode.DraftOptional;
 
-        public void DoInsidePublishing(int moduleId, int userId, Action<VersioningActionInfo> action)
+        public void DoInsidePublishing(IInstanceContext context, Action<VersioningActionInfo> action)
         {
+            var moduleId = context.Container.Id;
+            var userId = 0;
             var enabled = IsEnabled(moduleId);
             Log.Add($"DoInsidePublishing(module:{moduleId}, user:{userId}, enabled:{enabled})");
             if (enabled)

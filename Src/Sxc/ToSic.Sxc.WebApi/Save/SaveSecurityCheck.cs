@@ -13,7 +13,10 @@ namespace ToSic.Sxc.WebApi.Save
 {
     internal class SaveSecurity: SaveHelperBase
     {
-        public SaveSecurity(IBlock block, ILog parentLog) : base(block, parentLog, "Api.SavSec") { }
+        public SaveSecurity(IBlock block, ILog parentLog) : base("Api.SavSec")
+        {
+            base.Init(block, parentLog);
+        }
 
 
         public IMultiPermissionCheck DoPreSaveSecurityCheck(int appId, IEnumerable<BundleWithHeader> items)

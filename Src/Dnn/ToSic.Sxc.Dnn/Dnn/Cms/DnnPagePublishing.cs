@@ -8,6 +8,7 @@ using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Enums;
 using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
@@ -17,11 +18,11 @@ using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Dnn.Cms
 {
-    public partial class PagePublishing : HasLog, IPagePublishing
+    public partial class DnnPagePublishing : HasLog, IPagePublishing
     {
         #region DI Constructors and More
         
-        public PagePublishing(): base("Dnn.Publsh") { }
+        public DnnPagePublishing(): base("Dnn.Publsh") { }
 
         public IPagePublishing Init(ILog parent)
         {
@@ -54,7 +55,6 @@ namespace ToSic.Sxc.Dnn.Cms
                 else
                     decision = PublishingMode.DraftRequired;
 
-                //Log.Add($"decision: {decision}");
                 _cache.Add(moduleId, decision);
                 return wrapLog("decision: ", decision);
             }
@@ -67,13 +67,15 @@ namespace ToSic.Sxc.Dnn.Cms
         
         public bool IsEnabled(int moduleId) => Requirements(moduleId) != PublishingMode.DraftOptional;
 
-        public void DoInsidePublishing(int moduleId, int userId, Action<VersioningActionInfo> action)
+        public void DoInsidePublishing(IInstanceContext context, Action<VersioningActionInfo> action)
         {
+            var moduleId = context.Container.Id;
+            var userId = (context.User as DnnUser).UnwrappedContents.UserID;
             var enabled = IsEnabled(moduleId);
             Log.Add($"DoInsidePublishing(module:{moduleId}, user:{userId}, enabled:{enabled})");
             if (enabled)
             {
-                var moduleVersionSettings = new PagePublishing.ModuleVersions(moduleId, Log);
+                var moduleVersionSettings = new DnnPagePublishing.ModuleVersions(moduleId, Log);
                 
                 // Get an new version number and submit it to DNN
                 // The submission must be made every time something changes, because a "discard" could have happened
@@ -94,7 +96,7 @@ namespace ToSic.Sxc.Dnn.Cms
 
         public int GetLatestVersion(int moduleId)
         {
-            var moduleVersionSettings = new PagePublishing.ModuleVersions(moduleId, Log);
+            var moduleVersionSettings = new DnnPagePublishing.ModuleVersions(moduleId, Log);
             var ver = moduleVersionSettings.GetLatestVersion();
             Log.Add($"GetLatestVersion(m:{moduleId}) = ver:{ver}");
             return ver;
@@ -102,7 +104,7 @@ namespace ToSic.Sxc.Dnn.Cms
 
         public int GetPublishedVersion(int moduleId)
         {
-            var moduleVersionSettings = new PagePublishing.ModuleVersions(moduleId, Log);
+            var moduleVersionSettings = new DnnPagePublishing.ModuleVersions(moduleId, Log);
             var publ = moduleVersionSettings.GetPublishedVersion();
             Log.Add($"GetPublishedVersion(m:{moduleId}) = pub:{publ}");
             return publ;
@@ -160,7 +162,7 @@ namespace ToSic.Sxc.Dnn.Cms
                 }
 
                 // Set published version
-                new PagePublishing.ModuleVersions(instanceId, Log).PublishLatestVersion();
+                new DnnPagePublishing.ModuleVersions(instanceId, Log).PublishLatestVersion();
                 Log.Add("publish completed");
             }
             catch (Exception ex)

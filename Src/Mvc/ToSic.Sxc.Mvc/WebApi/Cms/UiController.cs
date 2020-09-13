@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
         public AllInOneDto Load([FromBody] List<ItemIdentifier> items, int appId)
         {
             var block = GetBlock();
-            var result = new EditLoadBackend(null)
+            var result = new EditLoadBackend()
                 .Init(Log)
                 .Load(block, _contextBuilder.Init(block), appId, items);
             return result;

@@ -10,8 +10,13 @@ namespace ToSic.Sxc.WebApi.Save
     {
         internal IBlock Block;
 
-        protected SaveHelperBase(IBlock block, ILog parentLog, string logName) 
-            : base(logName, parentLog) 
-            => Block = block;
+        protected SaveHelperBase(string logName)  : base( logName ) { }
+
+        protected void Init(IBlock block, ILog parentLog)
+        {
+            Log.LinkTo(parentLog);
+            Block = block;
+
+        }
     }
 }

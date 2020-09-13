@@ -9,7 +9,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
-using ToSic.Sxc.Dnn;
+using ToSic.Sxc.WebApi.Save;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -96,27 +96,27 @@ namespace ToSic.Sxc.WebApi.Cms
 
             Log.Add("items to save generated, all data tests passed");
 
-            return new DnnPublishing(block, Log)
-                .SaveWithinDnnPagePublishingAndUpdateParent(appId, items, partOfPage,
-                    forceSaveAsDraft => DoSave(appMan, items, forceSaveAsDraft),
+            var publishing = new SxcPagePublishing().Init(block, Log);
+            return publishing.SaveInPagePublishing(appId, items, partOfPage,
+                    forceSaveAsDraft => new EditSaveBackend().DoSave(appMan, items, forceSaveAsDraft),
                     permCheck);
         }
 
-        public Dictionary<Guid, int> DoSave(AppManager appMan, List<BundleWithHeader<IEntity>> items, bool forceSaveAsDraft)
-        {
-            // only save entities that are
-            // a) not in a group
-            // b) in a group where the slot isn't marked as empty
-            var entitiesToSave = items
-                .Where(e => e.Header.Group == null || !e.Header.Group.SlotIsEmpty)
-                .ToList();
+        //public Dictionary<Guid, int> DoSave(AppManager appMan, List<BundleWithHeader<IEntity>> items, bool forceSaveAsDraft)
+        //{
+        //    // only save entities that are
+        //    // a) not in a group
+        //    // b) in a group where the slot isn't marked as empty
+        //    var entitiesToSave = items
+        //        .Where(e => e.Header.Group == null || !e.Header.Group.SlotIsEmpty)
+        //        .ToList();
 
-            var save = new Eav.WebApi.SaveHelpers.SaveEntities(Log);
-            save.UpdateGuidAndPublishedAndSaveMany(appMan, entitiesToSave, forceSaveAsDraft);
+        //    var save = new Eav.WebApi.SaveHelpers.SaveEntities(Log);
+        //    save.UpdateGuidAndPublishedAndSaveMany(appMan, entitiesToSave, forceSaveAsDraft);
 
-            return save.GenerateIdList(appMan.Read.Entities, items);
+        //    return save.GenerateIdList(appMan.Read.Entities, items);
 
-        }
+        //}
 
     }
 }
