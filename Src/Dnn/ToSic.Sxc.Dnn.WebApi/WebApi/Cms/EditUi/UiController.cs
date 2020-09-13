@@ -1,4 +1,10 @@
-﻿using DotNetNuke.Web.Api;
+﻿using System;
+using System.Collections.Generic;
+using System.Web.Http;
+using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
+using ToSic.Eav.WebApi.Formats;
+using ToSic.Sxc.Dnn.WebApi.Context;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -8,11 +14,16 @@ namespace ToSic.Sxc.WebApi.Cms
     {
         protected override string HistoryLogName => "Api.UiCont";
 
-        //protected override void Initialize(HttpControllerContext controllerContext)
-        //{
-        //    base.Initialize(controllerContext); // very important!!!
-        //    Log.Rename("Api.UiCont");
-        //}
-        
+        [HttpPost]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        public AllInOneDto Load([FromBody] List<ItemIdentifier> items, int appId)
+            => new EditLoadBackend().Init(Log)
+                .Load(GetBlock(), new DnnContextBuilder(PortalSettings, ActiveModule, UserInfo), appId, items);
+
+        [HttpPost]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        public Dictionary<Guid, int> Save([FromBody] AllInOneDto package, int appId, bool partOfPage) 
+            => new EditSaveBackend().Init(Log)
+                .Save(GetBlock(), package, appId, partOfPage);
     }
 }

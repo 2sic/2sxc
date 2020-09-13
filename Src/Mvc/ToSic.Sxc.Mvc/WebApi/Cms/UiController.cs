@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.WebApi.Formats;
@@ -14,12 +15,9 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
         #region DI
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "UiCntr";
 
-        public UiController(MvcContextBuilder contextBuilder)
-        {
-            _contextBuilder = contextBuilder;
-        }
-
+        public UiController(MvcContextBuilder contextBuilder) => _contextBuilder = contextBuilder;
         private readonly MvcContextBuilder _contextBuilder;
+
         #endregion
 
 
@@ -37,5 +35,12 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
                 .Load(block, _contextBuilder.Init(block), appId, items);
             return result;
         }
+
+        [HttpPost]
+        // todo #mvcSec [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        public Dictionary<Guid, int> Save([FromBody] AllInOneDto package, int appId, bool partOfPage)
+            => new EditSaveBackend().Init(Log)
+                .Save(GetBlock(), package, appId, partOfPage);
+
     }
 }

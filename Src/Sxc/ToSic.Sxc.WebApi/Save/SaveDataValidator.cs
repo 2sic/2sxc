@@ -6,11 +6,12 @@ using ToSic.Eav.Data.Builder;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Sxc.WebApi.Cms;
 using ToSic.Sxc.WebApi.Errors;
 using ToSic.Sxc.WebApi.Validation;
 using IEntity = ToSic.Eav.Data.IEntity;
 
-namespace ToSic.Sxc.WebApi.Cms
+namespace ToSic.Sxc.WebApi.Save
 {
     internal class SaveDataValidator: ValidatorBase
     {
