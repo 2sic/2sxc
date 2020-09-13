@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Mvc.Dev
     {
         // Global, valid for all
         public const int PrimaryZone = 2;
-        public const string DefaultLanguage = "en";
+        public const string DefaultLanguage = "en-us";
         public const string DefaultLanguageText = "MVC English!";
         public const int PrimaryApp = 2;
 

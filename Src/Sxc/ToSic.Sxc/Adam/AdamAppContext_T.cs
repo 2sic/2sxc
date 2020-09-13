@@ -18,7 +18,8 @@ namespace ToSic.Sxc.Adam
         public override AdamAppContext Init(ITenant tenant, IApp app, IBlock block, int compatibility, ILog parentLog)
         {
             base.Init(tenant, app, block, compatibility, parentLog);
-            AdamFs = Factory.Resolve<IAdamFileSystem<TFolderId, TFileId>>().Init(this);
+            AdamFs = Factory.Resolve<IAdamFileSystem<TFolderId, TFileId>>()
+                .Init(this, Log);
             return this;
         }
 

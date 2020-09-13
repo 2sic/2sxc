@@ -20,8 +20,9 @@ namespace ToSic.Sxc.Mvc.Run
 
         private readonly IHttp _http;
 
-        public IAdamFileSystem<string, string> Init(AdamAppContext<string, string> adamContext)
+        public IAdamFileSystem<string, string> Init(AdamAppContext<string, string> adamContext, ILog parentLog)
         {
+            Log.LinkTo(parentLog);
             AdamContext = adamContext;
             return this;
         }

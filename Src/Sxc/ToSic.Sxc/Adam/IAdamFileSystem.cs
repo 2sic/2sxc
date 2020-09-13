@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Adam
 {
     public interface IAdamFileSystem<TFolderId, TFileId>
     {
-        IAdamFileSystem<TFolderId, TFileId> Init(AdamAppContext<TFolderId, TFileId> adamContext);
+        IAdamFileSystem<TFolderId, TFileId> Init(AdamAppContext<TFolderId, TFileId> adamContext, ILog parentLog);
 
         #region FileSystem Settings
 

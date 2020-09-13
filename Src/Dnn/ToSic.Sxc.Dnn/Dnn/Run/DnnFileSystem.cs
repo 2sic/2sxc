@@ -12,14 +12,15 @@ using ToSic.Sxc.Dnn.Adam;
 
 namespace ToSic.Sxc.Dnn.Run
 {
-    public class DnnFileSystem : HasLog, IAdamFileSystem<int, int>
+    public class DnnAdamFileSystem : HasLog, IAdamFileSystem<int, int>
     {
         #region Constructor / DI / Init
 
-        public DnnFileSystem(): base("Dnn.FilSys") { }
+        public DnnAdamFileSystem(): base("Dnn.FilSys") { }
 
-        public IAdamFileSystem<int, int> Init(AdamAppContext<int, int> adamContext)
+        public IAdamFileSystem<int, int> Init(AdamAppContext<int, int> adamContext, ILog parentLog)
         {
+            Log.LinkTo(parentLog);
             AdamContext = adamContext;
             return this;
         }

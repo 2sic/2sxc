@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
@@ -46,10 +47,9 @@ namespace ToSic.Sxc.Mvc.Plumbing
             services.AddTransient<IAdamFileSystem<string, string>, MvcFileSystem>();
             // Still pending...
             //sc.AddTransient<XmlExporter, DnnXmlExporter>();
-            //sc.AddTransient<IImportExportEnvironment, DnnImportExportEnvironment>();
+            services.AddTransient<IImportExportEnvironment, MvcImportExportEnvironment>();
             //sc.AddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
             //sc.AddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
-            //sc.AddTransient<IEnvironmentFileSystem, DnnFileSystem>();
 
 
             return services;

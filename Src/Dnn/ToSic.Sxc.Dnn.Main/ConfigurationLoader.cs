@@ -121,7 +121,7 @@ namespace ToSic.SexyContent
             services.AddTransient<IEnvironmentInstaller, InstallationController>();
 
             // ADAM 
-            services.AddTransient<IAdamFileSystem<int, int>, DnnFileSystem>();
+            services.AddTransient<IAdamFileSystem<int, int>, DnnAdamFileSystem>();
             services.AddTransient<AdamAppContext, AdamAppContext<int, int>>();
 
             // new #2160
