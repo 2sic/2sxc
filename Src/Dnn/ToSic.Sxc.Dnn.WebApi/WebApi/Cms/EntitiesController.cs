@@ -19,14 +19,6 @@ namespace ToSic.Sxc.WebApi.Cms
 	{
         protected override string HistoryLogName => "Api.EntCnt";
 
-        // #2134
-        ///// <inheritdoc />
-        //[HttpGet]
-        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        //public Dictionary<string, object> GetOne(string contentType, int id, int appId)
-        //    => GetApiOrThrowIfMissingPermissions(appId, contentType, GrantSets.ReadSomething)
-        //        .GetOne(contentType, id);
-
         /// <summary>
         /// Get all Entities of specified Type
         /// </summary>
