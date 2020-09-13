@@ -33,10 +33,10 @@ namespace ToSic.Sxc.Dnn.Run
         /// We don't use a Constructor because of DI
         /// So you must always call Init
         /// </summary>
-        public override IContainer Init(int moduleId, ILog parentLog) 
+        public override IContainer Init(int instanceId, ILog parentLog) 
         {
             Log = new Log("Dnn.Contnr", parentLog);
-            var mod = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, false);
+            var mod = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, false);
             return Init(mod);
         }
 

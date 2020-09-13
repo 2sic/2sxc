@@ -15,6 +15,7 @@ using ToSic.Eav.Run;
 using ToSic.SexyContent.Dnn920;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Dnn.Adam;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.ImportExport;
 using ToSic.Sxc.Dnn.Install;

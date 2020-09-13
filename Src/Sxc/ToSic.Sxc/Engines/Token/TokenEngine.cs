@@ -90,7 +90,7 @@ namespace ToSic.Sxc.Engines
         private void InitTokenReplace()
         {
             var confProv = ConfigurationProvider.GetConfigProviderForModule(Block.Context.Container.Id, Block.App, Block);
-            _tokenReplace = new TokenReplaceEav(Block.Context.Container.Id, confProv);
+            _tokenReplace = new TokenReplaceEav(/*Block.Context.Container.Id,*/ confProv);
             
             // Add the Content and ListContent property sources used always
             confProv.Add(new LookUpInDynamicEntity(SourcePropertyName.ListContent, _data.Header));

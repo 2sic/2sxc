@@ -7,9 +7,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
     {
         public ModuleInfo ModuleInfo { get; set; }
 
-        public ModuleSettingsHelper(int moduleId)
+        public ModuleSettingsHelper(int instanceId)
         {
-            ModuleInfo = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, true);
+            ModuleInfo = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
         }
 
         public string GetModuleSetting(string settingName, string defaultValue)

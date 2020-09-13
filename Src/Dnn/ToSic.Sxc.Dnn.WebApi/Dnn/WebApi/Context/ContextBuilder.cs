@@ -76,7 +76,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
             _module == null ? null
                 : new WebResourceDto
                 {
-                    Id = _module.TabID, // .ModuleID,
+                    Id = _module.TabID,
                     // todo: maybe page url
                     // used to be on ps.ActiveTab.FullUrl;
                     // but we can't get it from there directly

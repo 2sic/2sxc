@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
             ParentFieldSortOrder = indexInField;
             VersioningRequirements = versioningRequirements.ToString();
 
-            // if the CBID is the moduleId, then it's part of page
+            // if the CBID is the Mod-Id, then it's part of page
             PartOfPage = contentBlock.ParentId == contentBlock.ContentBlockId;
         }
     }

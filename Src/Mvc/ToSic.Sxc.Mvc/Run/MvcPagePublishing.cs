@@ -28,16 +28,16 @@ namespace ToSic.Sxc.Mvc.Run
 
         private readonly Dictionary<int, PublishingMode> _cache = new Dictionary<int, PublishingMode>();
 
-        public PublishingMode Requirements(int moduleId)
+        public PublishingMode Requirements(int instanceId)
         {
-            var wrapLog = Log.Call<PublishingMode>($"{moduleId}");
-            if (_cache.ContainsKey(moduleId)) return wrapLog("in cache", _cache[moduleId]);
+            var wrapLog = Log.Call<PublishingMode>($"{instanceId}");
+            if (_cache.ContainsKey(instanceId)) return wrapLog("in cache", _cache[instanceId]);
 
-            Log.Add($"Requirements(mod:{moduleId}) - checking first time (others will be cached)");
+            Log.Add($"Requirements(mod:{instanceId}) - checking first time (others will be cached)");
             try
             {
                 PublishingMode decision = PublishingMode.DraftOptional;
-                _cache.Add(moduleId, decision);
+                _cache.Add(instanceId, decision);
                 return wrapLog("decision: ", decision);
             }
             catch
@@ -47,14 +47,14 @@ namespace ToSic.Sxc.Mvc.Run
             }
         }
 
-        public bool IsEnabled(int moduleId) => Requirements(moduleId) != PublishingMode.DraftOptional;
+        public bool IsEnabled(int instanceId) => Requirements(instanceId) != PublishingMode.DraftOptional;
 
         public void DoInsidePublishing(IInstanceContext context, Action<VersioningActionInfo> action)
         {
-            var moduleId = context.Container.Id;
+            var containerId = context.Container.Id;
             var userId = 0;
-            var enabled = IsEnabled(moduleId);
-            Log.Add($"DoInsidePublishing(module:{moduleId}, user:{userId}, enabled:{enabled})");
+            var enabled = IsEnabled(containerId);
+            Log.Add($"DoInsidePublishing(module:{containerId}, user:{userId}, enabled:{enabled})");
             if (enabled)
             {
                 /* ignore */
@@ -67,9 +67,9 @@ namespace ToSic.Sxc.Mvc.Run
 
 
 
-        public int GetLatestVersion(int moduleId) => 0;
+        public int GetLatestVersion(int instanceId) => 0;
 
-        public int GetPublishedVersion(int moduleId) => 0;
+        public int GetPublishedVersion(int instanceId) => 0;
 
 
         public void Publish(int instanceId, int version)

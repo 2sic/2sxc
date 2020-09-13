@@ -36,15 +36,15 @@ namespace ToSic.Sxc.Dnn.Cms
 
         private readonly Dictionary<int, PublishingMode> _cache = new Dictionary<int, PublishingMode>();
         
-        public PublishingMode Requirements(int moduleId)
+        public PublishingMode Requirements(int instanceId)
         {
-            var wrapLog = Log.Call<PublishingMode>($"{moduleId}");
-            if (_cache.ContainsKey(moduleId)) return wrapLog("in cache", _cache[moduleId]);
+            var wrapLog = Log.Call<PublishingMode>($"{instanceId}");
+            if (_cache.ContainsKey(instanceId)) return wrapLog("in cache", _cache[instanceId]);
 
-            Log.Add($"Requirements(mod:{moduleId}) - checking first time (others will be cached)");
+            Log.Add($"Requirements(mod:{instanceId}) - checking first time (others will be cached)");
             try
             {
-                var moduleInfo = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, true);
+                var moduleInfo = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
                 PublishingMode decision;
                 var versioningEnabled =
                     TabChangeSettings.Instance.IsChangeControlEnabled(moduleInfo.PortalID, moduleInfo.TabID);
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Dnn.Cms
                 else
                     decision = PublishingMode.DraftRequired;
 
-                _cache.Add(moduleId, decision);
+                _cache.Add(instanceId, decision);
                 return wrapLog("decision: ", decision);
             }
             catch
@@ -65,17 +65,17 @@ namespace ToSic.Sxc.Dnn.Cms
             }
         }
         
-        public bool IsEnabled(int moduleId) => Requirements(moduleId) != PublishingMode.DraftOptional;
+        public bool IsEnabled(int instanceId) => Requirements(instanceId) != PublishingMode.DraftOptional;
 
         public void DoInsidePublishing(IInstanceContext context, Action<VersioningActionInfo> action)
         {
-            var moduleId = context.Container.Id;
+            var instanceId = context.Container.Id;
             var userId = (context.User as DnnUser).UnwrappedContents.UserID;
-            var enabled = IsEnabled(moduleId);
-            Log.Add($"DoInsidePublishing(module:{moduleId}, user:{userId}, enabled:{enabled})");
+            var enabled = IsEnabled(instanceId);
+            Log.Add($"DoInsidePublishing(module:{instanceId}, user:{userId}, enabled:{enabled})");
             if (enabled)
             {
-                var moduleVersionSettings = new DnnPagePublishing.ModuleVersions(moduleId, Log);
+                var moduleVersionSettings = new DnnPagePublishing.ModuleVersions(instanceId, Log);
                 
                 // Get an new version number and submit it to DNN
                 // The submission must be made every time something changes, because a "discard" could have happened
@@ -94,19 +94,19 @@ namespace ToSic.Sxc.Dnn.Cms
 
 
 
-        public int GetLatestVersion(int moduleId)
+        public int GetLatestVersion(int instanceId)
         {
-            var moduleVersionSettings = new DnnPagePublishing.ModuleVersions(moduleId, Log);
+            var moduleVersionSettings = new DnnPagePublishing.ModuleVersions(instanceId, Log);
             var ver = moduleVersionSettings.GetLatestVersion();
-            Log.Add($"GetLatestVersion(m:{moduleId}) = ver:{ver}");
+            Log.Add($"GetLatestVersion(m:{instanceId}) = ver:{ver}");
             return ver;
         }
 
-        public int GetPublishedVersion(int moduleId)
+        public int GetPublishedVersion(int instanceId)
         {
-            var moduleVersionSettings = new DnnPagePublishing.ModuleVersions(moduleId, Log);
+            var moduleVersionSettings = new DnnPagePublishing.ModuleVersions(instanceId, Log);
             var publ = moduleVersionSettings.GetPublishedVersion();
-            Log.Add($"GetPublishedVersion(m:{moduleId}) = pub:{publ}");
+            Log.Add($"GetPublishedVersion(m:{instanceId}) = pub:{publ}");
             return publ;
         }
 

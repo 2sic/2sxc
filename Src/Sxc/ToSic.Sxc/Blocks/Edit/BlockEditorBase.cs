@@ -19,14 +19,12 @@ namespace ToSic.Sxc.Blocks.Edit
         {
             Log.LinkTo(block.Log);
             Block = block;
-            ModuleId = Block.Context.Container.Id;
             return this;
         }
 
         #endregion
 
         protected IBlock Block;
-        protected int ModuleId;
 
         private BlockConfiguration _cGroup;
 

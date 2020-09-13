@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ToSic.Sxc.WebApi.Context
+﻿namespace ToSic.Sxc.WebApi.Context
 {
     public class InstanceDto
     {
         public int Id;
+
+        // todo: find out if we can get rid of this - to DNN specific
         public int ModuleId;
         public bool ShowOnAllPages;
         public string Title;

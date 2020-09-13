@@ -6,6 +6,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -95,10 +96,10 @@ namespace ToSic.Sxc.LookUp
             provider.Add(new LookUpInAppProperty("app", app));
 
             // add module if it was not already added previously
-            if (!provider.HasSource("module"))
+            if (!provider.HasSource(CmsBlock.InstanceLookupName/* "module"*/))
             {
-                var modulePropertyAccess = new LookUpInDictionary("module");
-                modulePropertyAccess.Properties.Add("ModuleID", moduleId.ToString(CultureInfo.InvariantCulture));
+                var modulePropertyAccess = new LookUpInDictionary(CmsBlock.InstanceLookupName/*"module"*/);
+                modulePropertyAccess.Properties.Add(CmsBlock.InstanceIdKey /*"ModuleID"*/, moduleId.ToString(CultureInfo.InvariantCulture));
                 provider.Add(modulePropertyAccess);
             }
 

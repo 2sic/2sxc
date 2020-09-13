@@ -8,9 +8,8 @@ using System.Web.Configuration;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Dnn.Adam;
 
-namespace ToSic.Sxc.Dnn.Run
+namespace ToSic.Sxc.Dnn.Adam
 {
     public class DnnAdamFileSystem : HasLog, IAdamFileSystem<int, int>
     {

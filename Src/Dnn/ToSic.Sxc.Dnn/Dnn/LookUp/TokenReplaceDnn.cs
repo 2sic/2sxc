@@ -13,14 +13,13 @@ namespace ToSic.Sxc.Dnn.LookUp
     [PrivateApi("not for public use, it's an internal class just needed to retrieve DNN stuff")]
     internal sealed class DnnTokenReplace : TokenReplace
     {
-
-        /// <param name="moduleId"></param>
+        /// <param name="instanceId"></param>
         /// <param name="ps"></param>
         /// <param name="userInfo"></param>
-        public DnnTokenReplace(int moduleId, PortalSettings ps, UserInfo userInfo)
-            : base(Scope.DefaultSettings, "", ps, userInfo, moduleId)
+        public DnnTokenReplace(int instanceId, PortalSettings ps, UserInfo userInfo)
+            : base(Scope.DefaultSettings, "", ps, userInfo, instanceId)
         {
-            ModuleId = moduleId;
+            ModuleId = instanceId;
             PortalSettings = ps;  
             ReplaceTokens("InitializePropertySources"); // must be executed, otherwise the list doesn't get built
         }

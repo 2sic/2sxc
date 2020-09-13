@@ -26,6 +26,9 @@ namespace ToSic.Sxc.DataSources
         /// <inheritdoc />
         public override string LogId => "Sxc.CmsBDs";
 
+        public const string InstanceLookupName = "module";
+        public const string InstanceIdKey = "ModuleId";
+
         [PrivateApi]
         public enum Settings
         {
@@ -33,7 +36,7 @@ namespace ToSic.Sxc.DataSources
         }
 
         /// <summary>
-        /// The instance-id of the CmsBlock (2sxc instance, DNN ModuleId). <br/>
+        /// The instance-id of the CmsBlock (2sxc instance, DNN ModId). <br/>
         /// It's named Instance-Id to be more neutral as we're opening it to other platforms
         /// </summary>
         public int? InstanceId
@@ -41,10 +44,10 @@ namespace ToSic.Sxc.DataSources
             get
             {
                 Configuration.Parse();
-                var listIdString = Configuration["ModuleId"];
+                var listIdString = Configuration[InstanceIdKey];
                 return int.TryParse(listIdString, out var listId) ? listId : new int?();
             }
-            set => Configuration["ModuleId"] = value.ToString();
+            set => Configuration[InstanceIdKey] = value.ToString();
         }
 
 
@@ -53,7 +56,7 @@ namespace ToSic.Sxc.DataSources
             Out.Add(Eav.Constants.DefaultStreamName, new DataStream(this, Eav.Constants.DefaultStreamName, GetContent));
             Out.Add(ViewParts.ListContent, new DataStream(this, Eav.Constants.DefaultStreamName, GetListContent));
 
-			Configuration.Values.Add("ModuleId", $"[Settings:{Settings.InstanceId}||[Module:ModuleId]]");
+			Configuration.Values.Add(InstanceIdKey, $"[Settings:{Settings.InstanceId}||[{InstanceLookupName}:{InstanceIdKey}]]");
         }
 
         #region Cached properties for Content, Presentation etc. --> not necessary, as each stream auto-caches
