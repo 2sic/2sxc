@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <Folder Include="Cms\Dto\" />
+    <Folder Include="Query\" />
     <Folder Include="System\" />
   </ItemGroup>
 
