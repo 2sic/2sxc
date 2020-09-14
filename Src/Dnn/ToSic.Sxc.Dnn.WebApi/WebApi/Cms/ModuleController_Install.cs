@@ -6,6 +6,7 @@ using DotNetNuke.Entities.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Interfaces;
 using Assembly = System.Reflection.Assembly;
@@ -57,7 +58,8 @@ namespace ToSic.Sxc.WebApi.Cms
                 + "&ModuleName=" + modName + "&ModuleId=" + moduleInfo.ModuleID
                 + "&PortalID=" + moduleInfo.PortalID;
             // Add VDB / Zone ID (if set)
-            var zoneId = Env.ZoneMapper.GetZoneId(moduleInfo.PortalID);
+            var zoneMapper = Eav.Factory.Resolve<IZoneMapper>().Init(Log);
+            var zoneId = zoneMapper.GetZoneId(moduleInfo.PortalID);
             gettingStartedSrc += "&ZoneID=" + zoneId;
             // ReSharper restore StringLiteralTypo
 

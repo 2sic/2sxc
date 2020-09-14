@@ -2,6 +2,7 @@
 using System.Web.Http;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -13,9 +14,10 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             Log.Add("get languages");
             var portalId = PortalSettings.PortalId;
-            var zoneId = Env.ZoneMapper.GetZoneId(portalId);
+            var zoneMapper = Eav.Factory.Resolve<IZoneMapper>().Init(Log);
+            var zoneId = zoneMapper.GetZoneId(portalId);
             // ReSharper disable once PossibleInvalidOperationException
-            var cultures = Env.ZoneMapper.CulturesWithState(portalId, zoneId)
+            var cultures = zoneMapper.CulturesWithState(portalId, zoneId)
                 .Select(c => new
                 {
                     Code = c.Key,
@@ -36,7 +38,8 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             Log.Add($"switch language:{cultureCode}, to:{enable}");
             // Activate or Deactivate the Culture
-            var zoneId = Env.ZoneMapper.GetZoneId(PortalSettings.PortalId);
+            var zoneMapper = Eav.Factory.Resolve<IZoneMapper>().Init(Log);
+            var zoneId = zoneMapper.GetZoneId(PortalSettings.PortalId);
 
             var cultureText = LocaleController.Instance.GetLocale(cultureCode).Text;
             new ZoneManager(zoneId, Log).SaveLanguage(cultureCode, cultureText, enable);

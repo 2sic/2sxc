@@ -5,6 +5,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.WebApi.Admin;
 using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.Security;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -31,34 +32,40 @@ namespace ToSic.Sxc.WebApi.Cms
         [HttpGet]
         public dynamic DialogSettings(int appId)
         {
-            IApp app = null;
-            // if we have an appid (we don't have it in an install-new-apps-scenario) check permissions
-            if (appId != 0 && appId != Eav.Constants.AppIdEmpty)
-            {
-                var appAndPerms = new MultiPermissionsApp().Init(GetContext(), GetApp(appId), Log);
-                if (!appAndPerms.ZoneIsOfCurrentContextOrUserIsSuper(out var error))
-                    throw HttpException.PermissionDenied(error);
-                app = appAndPerms.App;
-            }
+            return new AdminBackend().Init(Log).DialogSettings(
+                GetContext(),
+                new DnnContextBuilder(
+                    PortalSettings.Current,
+                    Request.FindModuleInfo(), UserInfo),
+                appId);
 
-            var psCurrent = PortalSettings.Current;
-            var cb = new DnnContextBuilder(psCurrent, 
-                Request.FindModuleInfo(),
-                UserInfo,
-                app?.ZoneId,
-                app);
+            //IApp app = null;
+            //// if we have an appid (we don't have it in an install-new-apps-scenario) check permissions
+            //if (appId != 0 && appId != Eav.Constants.AppIdEmpty)
+            //{
+            //    var appAndPerms = new MultiPermissionsApp().Init(GetContext(), GetApp(appId), Log);
+            //    if (!appAndPerms.ZoneIsOfCurrentContextOrUserIsSuper(out var error))
+            //        throw HttpException.PermissionDenied(error);
+            //    app = appAndPerms.App;
+            //}
 
-            return new
-            {
-                // TODO: Deprecate PARAMS these properties as soon as old UI is gone
-                IsContent = app?.AppGuid == "Default",
-                Language = psCurrent.CultureCode,
-                LanguageDefault = psCurrent.DefaultLanguage,
-                AppPath = app?.Path,
-                GettingStartedUrl = cb.GettingStartedUrl(),
-                // END TODO
-                Context = cb.Get(Ctx.All),
-            };
+            //var psCurrent = PortalSettings.Current;
+            //var cb = new DnnContextBuilder(psCurrent,
+            //        Request.FindModuleInfo(),
+            //        UserInfo)
+            //    .InitApp(app?.ZoneId, app);
+
+            //return new
+            //{
+            //    // TODO: Deprecate PARAMS these properties as soon as old UI is gone
+            //    //IsContent = app?.AppGuid == "Default",
+            //    //Language = psCurrent.CultureCode,
+            //    //LanguageDefault = psCurrent.DefaultLanguage,
+            //    //AppPath = app?.Path,
+            //    //GettingStartedUrl = cb.GettingStartedUrl(),
+            //    // END TODO
+            //    Context = cb.Get(Ctx.All),
+            //};
         }
 
         #endregion

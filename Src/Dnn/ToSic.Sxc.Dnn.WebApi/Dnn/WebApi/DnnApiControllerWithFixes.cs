@@ -4,7 +4,6 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Helpers;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
@@ -14,9 +13,6 @@ namespace ToSic.Sxc.Dnn.WebApi
     [DnnLogWebApi, JsonResponse]
     public abstract class DnnApiControllerWithFixes: DnnApiController, IHasLog
     {
-
-        protected IAppEnvironment Env;
-
         protected DnnApiControllerWithFixes() 
 	    {
             // ensure that the sql connection string is correct
@@ -36,7 +32,6 @@ namespace ToSic.Sxc.Dnn.WebApi
 	            History.Add(HistoryLogGroup, Log);
             // ReSharper restore VirtualMemberCallInConstructor
 
-            Env = Eav.Factory.Resolve<IAppEnvironment>().Init(Log);
         }
 
         // ReSharper disable once InconsistentNaming

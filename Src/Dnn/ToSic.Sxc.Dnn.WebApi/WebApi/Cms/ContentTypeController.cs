@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using DotNetNuke.Security;
@@ -36,27 +35,28 @@ namespace ToSic.Sxc.WebApi.Cms
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IDictionary<string, string> Scopes(int appId)
         {
-            var appMan = new AppManager(appId, Log);
-            var scopes = appMan.Read.ContentTypes.GetScopes().ToList();
+            return new AppRuntime(appId, false, Log).ContentTypes.ScopesWithLabels();
+            //var scopes = appMan.Read.ContentTypes.GetScopes().ToList();
 
-            // Make sure the "Default" scope is always included, otherwise it's missing on new apps
-            if(!scopes.Contains(AppConstants.ScopeContentOld))
-                scopes.Add(AppConstants.ScopeContentOld);
+            ////// Make sure the "Default" scope is always included, otherwise it's missing on new apps
+            ////if(!scopes.Contains(AppConstants.ScopeContentOld))
+            ////    scopes.Add(AppConstants.ScopeContentOld);
 
-            var lookup = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
-            {
-                {AppConstants.ScopeContentOld, "Default"},
-                {AppConstants.ScopeContentSystem, "System: CMS"},
-                {AppConstants.ScopeApp, "System: App"},
-                {Eav.Constants.ScopeSystem, "System: System"},
-                {"System.DataSources", "System: DataSources"},
-                {"System.Fields", "System: Fields"}
-            };
-            var dic = scopes
-                .Select(s => new {value = s, name = lookup.TryGetValue(s, out var label) ? label : s})
-                .OrderBy(s => s.name)
-                .ToDictionary(s => s.value, s => s.name);
-            return dic;
+            //var lookup = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
+            //{
+            //    {AppConstants.ScopeContentOld, "Default"},
+            //    {AppConstants.ScopeContentSystem, "System: CMS"},
+            //    {AppConstants.ScopeApp, "System: App"},
+            //    {Eav.Constants.ScopeSystem, "System: System"},
+            //    {"System.DataSources", "System: DataSources"},
+            //    {"System.Fields", "System: Fields"}
+            //};
+
+            //var dic = scopes
+            //    .Select(s => new {value = s, name = lookup.TryGetValue(s, out var label) ? label : s})
+            //    .OrderBy(s => s.name)
+            //    .ToDictionary(s => s.value, s => s.name);
+            //return dic;
         }
 
         [HttpGet]

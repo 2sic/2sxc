@@ -18,16 +18,7 @@ namespace ToSic.Sxc.WebApi.App
     {
         #region Constructor / DI
 
-        public AppContent() : base("Sxc.ApiApC")
-        {
-
-        }
-
-        //public AppContent Init(ILog parentLog)
-        //{
-        //    Log.LinkTo(parentLog);
-        //    return this;
-        //}
+        public AppContent() : base("Sxc.ApiApC") { }
 
         #endregion
 

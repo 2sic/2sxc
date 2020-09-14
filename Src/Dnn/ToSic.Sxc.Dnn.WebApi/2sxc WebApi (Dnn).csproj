@@ -114,7 +114,6 @@
     <Compile Include="Dnn\WebApi\Context\ContextBuilder.cs" />
     <Compile Include="Dnn\WebApi\Context\DnnContextDtoExtensions.cs" />
     <Compile Include="WebApi\Routing\Route.cs" />
-    <Compile Include="WebApi\ImportExport\ExtensionsForIApp.cs" />
     <Compile Include="WebApi\Routing\RouteParts.cs" />
     <Compile Include="Dnn\DnnPublishing.cs" />
     <Compile Include="WebApi\DynamicApiController.cs" />
