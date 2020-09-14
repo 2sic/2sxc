@@ -41,20 +41,6 @@ namespace ToSic.Sxc.WebApi.Features
             return Eav.Configuration.Features.All;
         }
 
-        // 2020-09-14 2dm disabled this - don't think it's in use
-        //public IEnumerable<Feature> Features(IInstanceContext context, int tenantId, int appId)
-        //{
-        //    // some dialogs don't have an app-id yet, because no app has been selected
-        //    // in this case, use the app-id of the content-app for feature-permission check
-        //    if (appId == Eav.Constants.AppIdEmpty)
-        //    {
-        //        var zoneId = _zoneMapper.GetZoneId(tenantId);
-        //        appId = new ZoneRuntime(zoneId, Log).DefaultAppId;
-        //    }
-
-        //    return FeaturesHelpers.FeatureListWithPermissionCheck(new MultiPermissionsApp().Init(context, GetApp(appId, null), Log));
-        //}
-
 
         public bool SaveFeatures(FeaturesDto featuresManagementResponse)
         {

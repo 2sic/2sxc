@@ -22,24 +22,6 @@ namespace ToSic.Sxc.WebApi.Cms
         public IEnumerable<Feature> Features(bool reload = false) => 
             Factory.Resolve<FeaturesBackend>().Init(Log).GetAll(reload);
 
-        // 2020-09-14 2dm disabled this - don't think it's in use
-        //[HttpGet]
-        //public IEnumerable<Feature> Features(int appId)
-        //{
-        //    return Factory.Resolve<FeaturesBackend>().Init(Log).Features(GetContext(), PortalSettings.PortalId, appId);
-
-        //    //// some dialogs don't have an app-id yet, because no app has been selected
-        //    //// in this case, use the app-id of the content-app for feature-permission check
-        //    //if (appId == Eav.Constants.AppIdEmpty)
-        //    //{
-        //    //    var environment = Factory.Resolve<IAppEnvironment>().Init(Log);
-        //    //    var zoneId = environment.ZoneMapper.GetZoneId(PortalSettings.PortalId);
-        //    //    appId = new ZoneRuntime(zoneId, Log).DefaultAppId;
-        //    //}
-
-        //    //return FeaturesHelpers.FeatureListWithPermissionCheck(new MultiPermissionsApp().Init(GetContext(), GetApp(appId), Log));
-        //}
-
         [HttpGet]
         public string ManageFeaturesUrl()
         {
