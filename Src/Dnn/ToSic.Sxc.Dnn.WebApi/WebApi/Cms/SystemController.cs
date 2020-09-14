@@ -6,9 +6,6 @@ using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi.Admin;
-using ToSic.Sxc.WebApi.Context;
-using ToSic.Sxc.WebApi.Security;
-using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.Cms
 {

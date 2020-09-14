@@ -11,7 +11,8 @@ namespace ToSic.Sxc.WebApi.Cms
 
         [HttpGet]
         public IList<TenantLanguageDto> GetLanguages() => 
-            Factory.Resolve<LanguageBackend>().Init(Log).GetLanguages(PortalSettings.PortalId);
+            Factory.Resolve<LanguagesBackend>().Init(Log)
+                .GetLanguages(PortalSettings.PortalId);
 
         /// <summary>
         /// Enable / disable a language in the EAV
@@ -19,10 +20,11 @@ namespace ToSic.Sxc.WebApi.Cms
         /// <returns></returns>
         [HttpGet]
         public void SwitchLanguage(string cultureCode, bool enable) =>
-            Factory.Resolve<LanguageBackend>().Init(Log).Toggle(
-                PortalSettings.PortalId, 
-                cultureCode, 
-                enable,
-                LocaleController.Instance.GetLocale(cultureCode).Text);
+            Factory.Resolve<LanguagesBackend>().Init(Log)
+                .Toggle(
+                    PortalSettings.PortalId,
+                    cultureCode,
+                    enable,
+                    LocaleController.Instance.GetLocale(cultureCode).Text);
     }
 }

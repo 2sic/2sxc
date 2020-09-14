@@ -6,19 +6,19 @@ using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.WebApi.Languages
 {
-    public class LanguageBackend: HasLog
+    public class LanguagesBackend: HasLog
     {
 
         #region Constructor & DI
         
-        public LanguageBackend(IZoneMapper zoneMapper) : base("Bck.Admin")
+        public LanguagesBackend(IZoneMapper zoneMapper) : base("Bck.Admin")
         {
             _zoneMapper = zoneMapper;
         }
 
         private readonly IZoneMapper _zoneMapper;
 
-        public LanguageBackend Init(ILog parentLog)
+        public LanguagesBackend Init(ILog parentLog)
         {
             Log.LinkTo(parentLog);
             _zoneMapper.Init(Log);
@@ -45,8 +45,6 @@ namespace ToSic.Sxc.WebApi.Languages
             // Activate or Deactivate the Culture
             var zoneMapper = _zoneMapper.Init(Log);
             var zoneId = zoneMapper.GetZoneId(tenantId);
-
-            //var cultureText = LocaleController.Instance.GetLocale(cultureCode).Text;
             new ZoneManager(zoneId, Log).SaveLanguage(cultureCode, niceName, enable);
         }
     }
