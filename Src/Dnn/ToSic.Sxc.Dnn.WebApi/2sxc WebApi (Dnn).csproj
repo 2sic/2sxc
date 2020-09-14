@@ -119,7 +119,6 @@
     <Compile Include="WebApi\DynamicApiController.cs" />
     <Compile Include="WebApi\Cms\SystemController_Features.cs" />
     <Compile Include="WebApi\Cms\EditUi\UiController.cs" />
-    <Compile Include="WebApi\Cms\Helpers\FeaturesManagementUtils.cs" />
     <Compile Include="WebApi\System\InsightsController.cs" />
     <Compile Include="WebApi\SxcApiControllerBase.cs" />
     <Compile Include="Dnn\WebApi\Logging\DnnLogWebApi.cs" />

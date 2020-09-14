@@ -5,13 +5,9 @@ using DotNetNuke.Application;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.WebApi.Features;
-using ToSic.Sxc.WebApi.Security;
-using ToSic.Sxc.WebApi.System;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -22,30 +18,27 @@ namespace ToSic.Sxc.WebApi.Cms
     public partial class SystemController : ISystemController
     {
         [HttpGet]
-        public IEnumerable<Feature> Features(bool reload = false)
-        {
-            return Factory.Resolve<FeaturesBackend>().Init(Log).GetFeatures(reload);
-            //if (reload)
-            //    Eav.Configuration.Features.Reset();
-            //return Eav.Configuration.Features.All;
-        }
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        public IEnumerable<Feature> Features(bool reload = false) => 
+            Factory.Resolve<FeaturesBackend>().Init(Log).GetAll(reload);
 
-        [HttpGet]
-        public IEnumerable<Feature> Features(int appId)
-        {
-            return Factory.Resolve<FeaturesBackend>().Init(Log).Features(GetContext(), PortalSettings.PortalId, appId);
+        // 2020-09-14 2dm disabled this - don't think it's in use
+        //[HttpGet]
+        //public IEnumerable<Feature> Features(int appId)
+        //{
+        //    return Factory.Resolve<FeaturesBackend>().Init(Log).Features(GetContext(), PortalSettings.PortalId, appId);
 
-            //// some dialogs don't have an app-id yet, because no app has been selected
-            //// in this case, use the app-id of the content-app for feature-permission check
-            //if (appId == Eav.Constants.AppIdEmpty)
-            //{
-            //    var environment = Factory.Resolve<IAppEnvironment>().Init(Log);
-            //    var zoneId = environment.ZoneMapper.GetZoneId(PortalSettings.PortalId);
-            //    appId = new ZoneRuntime(zoneId, Log).DefaultAppId;
-            //}
+        //    //// some dialogs don't have an app-id yet, because no app has been selected
+        //    //// in this case, use the app-id of the content-app for feature-permission check
+        //    //if (appId == Eav.Constants.AppIdEmpty)
+        //    //{
+        //    //    var environment = Factory.Resolve<IAppEnvironment>().Init(Log);
+        //    //    var zoneId = environment.ZoneMapper.GetZoneId(PortalSettings.PortalId);
+        //    //    appId = new ZoneRuntime(zoneId, Log).DefaultAppId;
+        //    //}
 
-            //return FeaturesHelpers.FeatureListWithPermissionCheck(new MultiPermissionsApp().Init(GetContext(), GetApp(appId), Log));
-        }
+        //    //return FeaturesHelpers.FeatureListWithPermissionCheck(new MultiPermissionsApp().Init(GetContext(), GetApp(appId), Log));
+        //}
 
         [HttpGet]
         public string ManageFeaturesUrl()
@@ -63,25 +56,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-        public bool SaveFeatures([FromBody] FeaturesDto featuresManagementResponse)
-        {
-            return Factory.Resolve<FeaturesBackend>().Init(Log).SaveFeatures(featuresManagementResponse);
-            //// first do a validity check 
-            //if (featuresManagementResponse?.Msg?.Features == null) return false;
-
-            //// 1. valid json? 
-            //// - ensure signature is valid
-            //if (!FeaturesManagementUtils.IsValidJson(featuresManagementResponse.Msg.Features)) return false;
-
-            //// then take the newFeatures (it should be a json)
-            //// and save to /desktopmodules/.data-custom/configurations/features.json
-            //if (!FeaturesManagementUtils.SaveFeature(featuresManagementResponse.Msg.Features)) return false;
-
-            //// when done, reset features
-            //Eav.Configuration.Features.Reset();
-
-            //return true;
-        }
-
-	}
+        public bool SaveFeatures([FromBody] FeaturesDto featuresManagementResponse) => 
+            Factory.Resolve<FeaturesBackend>().Init(Log).SaveFeatures(featuresManagementResponse);
+    }
 }
