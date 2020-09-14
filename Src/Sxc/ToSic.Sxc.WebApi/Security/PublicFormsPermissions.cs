@@ -14,9 +14,9 @@ namespace ToSic.Sxc.WebApi.Security
 
             // 2. check if feature is enabled
             var feats = new[] { FeatureIds.PublicForms };
-            if (userIsRestricted && !Features.Enabled(feats))
+            if (userIsRestricted && !ToSic.Eav.Configuration.Features.Enabled(feats))
             {
-                error = $"low-permission users may not access this - {Features.MsgMissingSome(feats)}";
+                error = $"low-permission users may not access this - {ToSic.Eav.Configuration.Features.MsgMissingSome(feats)}";
                 preparedException = HttpException.PermissionDenied(error);
                 return false;
             }

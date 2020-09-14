@@ -75,9 +75,9 @@ namespace ToSic.Sxc.WebApi.Adam
             SecurityCheckHelpers.ThrowIfAccessingRootButNotAllowed(usePortalRoot, Security.UserIsRestricted);
 
             Log.Add("check if feature enabled");
-            if (Security.UserIsRestricted && !Features.Enabled(FeaturesForRestrictedUsers))
+            if (Security.UserIsRestricted && !ToSic.Eav.Configuration.Features.Enabled(FeaturesForRestrictedUsers))
                 throw HttpException.PermissionDenied(
-                    $"low-permission users may not access this - {Features.MsgMissingSome(FeaturesForRestrictedUsers)}");
+                    $"low-permission users may not access this - {ToSic.Eav.Configuration.Features.MsgMissingSome(FeaturesForRestrictedUsers)}");
 
             PrepCore(App, guid, field, usePortalRoot);
 

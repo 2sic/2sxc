@@ -14,7 +14,7 @@ namespace ToSic.Sxc.WebApi.System
             // otherwise just the public Ui features
             var includeNonPublic = permCheck.UserMayOnAll(GrantSets.WritePublished);
 
-            return Features.Ui.Where(f => includeNonPublic || f.Public == true);
+            return Eav.Configuration.Features.Ui.Where(f => includeNonPublic || f.Public == true);
         }
     }
 }
