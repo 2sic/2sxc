@@ -10,7 +10,7 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     [SupportedModules("2sxc,2sxc-app")]
     [ValidateAntiForgeryToken]
-    public partial class UiController : SxcApiControllerBase
+    public class UiController : SxcApiControllerBase
     {
         protected override string HistoryLogName => "Api.UiCont";
 
