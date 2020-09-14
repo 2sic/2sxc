@@ -19,6 +19,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Dnn.ImportExport;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Security;
+using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.WebApi.Cms

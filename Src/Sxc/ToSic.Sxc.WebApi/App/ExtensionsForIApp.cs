@@ -1,9 +1,9 @@
 ﻿using System.Text.RegularExpressions;
 using ToSic.Sxc.Apps;
 
-namespace ToSic.Sxc.WebApi.ImportExport
+namespace ToSic.Sxc.WebApi.App
 {
-    internal static class ExtensionsForIApp
+    public static class ExtensionsForIApp
     {
         public static string VersionSafe(this IApp app) => app.Configuration.Version?.ToString() ?? "";
 
