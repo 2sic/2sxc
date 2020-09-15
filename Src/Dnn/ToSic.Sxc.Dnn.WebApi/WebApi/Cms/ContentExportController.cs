@@ -27,11 +27,6 @@ namespace ToSic.Sxc.WebApi.Cms
     {
         protected override string HistoryLogName => "Api.2sSysC";
 
-	    private Eav.WebApi.ContentExportApi EavCtc => _eavCtc ?? (_eavCtc = new Eav.WebApi.ContentExportApi(Log));
-
-	    private Eav.WebApi.ContentExportApi _eavCtc;
-
-
         [HttpGet]
         [AllowAnonymous] // will do security check internally
         public HttpResponseMessage ExportContent(
@@ -44,7 +39,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             Log.Add($"export content start app:{appId}, language:{language}, defLang:{defaultLanguage}, type:{contentType}, ids:{selectedIds}");
             // do security check and get data
-            return RunIf.Admin(PortalSettings, () => EavCtc.ExportContent(appId, language, defaultLanguage, contentType,
+            return RunIf.Admin(PortalSettings, () => new Eav.WebApi.ContentExportApi(Log).ExportContent(appId, language, defaultLanguage, contentType,
                     recordExport, resourcesReferences,
                     languageReferences, selectedIds));
         }
@@ -52,12 +47,12 @@ namespace ToSic.Sxc.WebApi.Cms
 	    [HttpGet]
 	    [AllowAnonymous] // will do security check internally
 	    public HttpResponseMessage DownloadTypeAsJson(int appId, string name) 
-            => RunIf.Admin(PortalSettings,() => EavCtc.DownloadTypeAsJson(appId, name));
+            => RunIf.Admin(PortalSettings,() => new Eav.WebApi.ContentExportApi(Log).DownloadTypeAsJson(appId, name));
 
         [HttpGet]
 	    [AllowAnonymous] // will do security check internally
 	    public HttpResponseMessage DownloadEntityAsJson(int appId, int id, string prefix, bool withMetadata)
-            => RunIf.Admin(PortalSettings, () => EavCtc.DownloadEntityAsJson(appId, id, prefix, withMetadata));
+            => RunIf.Admin(PortalSettings, () => new Eav.WebApi.ContentExportApi(Log).DownloadEntityAsJson(appId, id, prefix, withMetadata));
 
     }
 }

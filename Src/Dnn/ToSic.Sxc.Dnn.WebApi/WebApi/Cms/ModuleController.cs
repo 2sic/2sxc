@@ -67,7 +67,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var tenant = Eav.Factory.Resolve<ITenant>();
             var zoneMapper = Eav.Factory.Resolve<IZoneMapper>().Init(Log);
             var tenantZoneId = zoneMapper.GetZoneId(tenant);
-            var list = new CmsZones(tenantZoneId, /*Env,*/ Log).AppsRt.GetSelectableApps(tenant).ToList();
+            var list = new CmsZones(tenantZoneId, Log).AppsRt.GetSelectableApps(tenant).ToList();
 
             if (string.IsNullOrWhiteSpace(apps)) return list;
 
