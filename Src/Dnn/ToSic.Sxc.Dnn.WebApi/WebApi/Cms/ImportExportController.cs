@@ -41,7 +41,7 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add($"get app info for app:{appId} and zone:{zoneId}");
             var zoneMapper = Factory.Resolve<IZoneMapper>().Init(Log);
             var contextZoneId = zoneMapper.GetZoneId(PortalSettings.PortalId);
-            var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, UserInfo, contextZoneId, Log);
+            var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, new DnnUser(UserInfo), contextZoneId, Log);
 
             var zipExport = Factory.Resolve<ZipExport>().Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
             var cultCount = zoneMapper
@@ -73,7 +73,7 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add($"get content info for z#{zoneId}, a#{appId}, scope:{scope} super?:{UserInfo.IsSuperUser}");
             var zoneMapper = Factory.Resolve<IZoneMapper>().Init(Log);
             var contextZoneId = zoneMapper.GetZoneId(PortalSettings.PortalId);
-            var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, UserInfo, contextZoneId, Log);
+            var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, new DnnUser(UserInfo), contextZoneId, Log);
 
             var cms = new CmsRuntime(currentApp, Log, true, false);
             var contentTypes = cms.ContentTypes.FromScope(scope);
@@ -121,7 +121,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var zoneMapper = Factory.Resolve<IZoneMapper>().Init(Log);
             var contextZoneId = zoneMapper.GetZoneId(PortalSettings.PortalId);
-            var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, UserInfo, contextZoneId, Log);
+            var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, new DnnUser(UserInfo), contextZoneId, Log);
 
             var zipExport = Factory.Resolve<ZipExport>().Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
             var addOnWhenContainingContent = includeContentGroups ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm") : "";
@@ -146,7 +146,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var zoneMapper = Factory.Resolve<IZoneMapper>().Init(Log);
             var contextZoneId = zoneMapper.GetZoneId(PortalSettings.PortalId);
-            var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, UserInfo, contextZoneId, Log);
+            var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, new DnnUser(UserInfo), contextZoneId, Log);
 
             var zipExport = Factory.Resolve<ZipExport>().Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
             zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid);
@@ -162,7 +162,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var zoneMapper = Factory.Resolve<IZoneMapper>().Init(Log);
             var contextZoneId = zoneMapper.GetZoneId(PortalSettings.PortalId);
-            var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, UserInfo, contextZoneId, Log);
+            var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, new DnnUser(UserInfo), contextZoneId, Log);
             var appRuntime = new AppRuntime(currentApp, true, Log);
 
             var fileName = $"2sxcContentExport_{currentApp.NameWithoutSpecialChars()}_{currentApp.VersionSafe()}.xml";

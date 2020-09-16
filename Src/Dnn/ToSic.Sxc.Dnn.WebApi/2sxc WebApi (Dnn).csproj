@@ -139,7 +139,6 @@
     <Compile Include="WebApi\Cms\PipelineDesignerController.cs" />
     <Compile Include="Dnn\WebApi\GetDnnBlock.cs" />
     <Compile Include="WebApi\Cms\ImportExportController.cs" />
-    <Compile Include="WebApi\ImportExport\SxcAppForWebApi.cs" />
     <Compile Include="WebApi\Cms\InstallerController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebApi\Routing\RouteMapper.cs" />
@@ -188,7 +187,9 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="WebApi\ImportExport\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
