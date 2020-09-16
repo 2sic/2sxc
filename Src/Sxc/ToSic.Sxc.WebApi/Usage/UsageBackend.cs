@@ -33,11 +33,7 @@ namespace ToSic.Sxc.WebApi.Usage
 
             Log.Add($"Found {blocks.Count} content blocks");
 
-            // create array with all 2sxc modules in this portal
-            //var allMods = new Pages(Log).AllModulesWithContent(PortalSettings.PortalId);
-            //Log.Add($"Found {allMods.Count} modules");
-
-            var result = finalBuilder(views, blocks); // views.Select(vwb => new ViewDto().Init(vwb, blocks, allMods));
+            var result = finalBuilder(views, blocks);
 
             return wrapLog("ok", result);
         }

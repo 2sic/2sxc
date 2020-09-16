@@ -96,7 +96,8 @@ namespace ToSic.Sxc.Dnn.Run
         {
             get { 
                 if(_zoneId != null) return _zoneId.Value;
-                if (Id < 1) return (_zoneId = Eav.Constants.NullId).Value;
+                // check if id is negative; 0 is a valid tenant id
+                if (Id < 0) return (_zoneId = Eav.Constants.NullId).Value;
                 _zoneId = new DnnZoneMapper().Init(null).GetZoneId(Id);
                 return _zoneId.Value;
             }
