@@ -4,10 +4,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
-using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.PublicApi;
-using ToSic.Eav.WebApi.Security;
-using ToSic.Sxc.WebApi.Security;
 using Guid = System.Guid;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -36,7 +33,7 @@ namespace ToSic.Sxc.WebApi.Cms
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public IEnumerable<Dictionary<string, object>> GetAllOfTypeForAdmin(int appId, string contentType) 
-            => GetApiOrThrowIfMissingPermissions(appId, contentType, GrantSets.ReadSomething)
+            => EntityApi.GetOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.ReadSomething, Log)
                 .GetEntitiesForAdmin(contentType);
 
 
@@ -44,23 +41,15 @@ namespace ToSic.Sxc.WebApi.Cms
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, int id, int appId, bool force = false) 
-            => GetApiOrThrowIfMissingPermissions(appId, contentType, GrantSets.DeleteSomething)
+            => EntityApi.GetOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
                 .Delete(contentType, id, force);
 
         [HttpDelete]
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void Delete(string contentType, Guid guid, int appId, bool force = false) 
-            => GetApiOrThrowIfMissingPermissions(appId, contentType, GrantSets.DeleteSomething)
+        public void Delete(string contentType, Guid guid, int appId, bool force = false)
+            => EntityApi.GetOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
                 .Delete(contentType, guid, force);
-
-        private EntityApi GetApiOrThrowIfMissingPermissions(int appId, string contentType, List<Eav.Security.Grants> requiredGrants)
-        {
-            var permCheck = new MultiPermissionsTypes().Init(GetContext(), GetApp(appId), contentType, Log);
-            if (!permCheck.EnsureAll(requiredGrants, out var error))
-                throw HttpException.PermissionDenied(error);
-            return new EntityApi(appId, true, Log);
-        }
 
     }
 }
