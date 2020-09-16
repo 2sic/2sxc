@@ -5,7 +5,6 @@ using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
-using ToSic.Sxc.WebApi.Security;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -36,24 +35,22 @@ namespace ToSic.Sxc.WebApi.Cms
             string defaultLanguage, 
             string contentType,
             ExportSelection recordExport, ExportResourceReferenceMode resourcesReferences,
-            ExportLanguageResolution languageReferences, string selectedIds = null)
-        {
-            Log.Add($"export content start app:{appId}, language:{language}, defLang:{defaultLanguage}, type:{contentType}, ids:{selectedIds}");
-            // do security check and get data
-            return SecurityHelpers.RunIfAdmin(new DnnUser(UserInfo), () => new Eav.WebApi.ContentExportApi(Log).ExportContent(appId, language, defaultLanguage, contentType,
-                    recordExport, resourcesReferences,
-                    languageReferences, selectedIds));
-        }
+            ExportLanguageResolution languageReferences, string selectedIds = null) =>
+            new Eav.WebApi.ContentExportApi(Log).ExportContent(
+                new DnnUser(UserInfo), appId,
+                language, defaultLanguage, contentType,
+                recordExport, resourcesReferences,
+                languageReferences, selectedIds);
 
-	    [HttpGet]
+        [HttpGet]
 	    [AllowAnonymous] // will do security check internally
 	    public HttpResponseMessage DownloadTypeAsJson(int appId, string name) 
-            => SecurityHelpers.RunIfAdmin(new DnnUser(UserInfo), () => new Eav.WebApi.ContentExportApi(Log).DownloadTypeAsJson(appId, name));
+            => new Eav.WebApi.ContentExportApi(Log).DownloadTypeAsJson(new DnnUser(UserInfo),  appId, name);
 
         [HttpGet]
 	    [AllowAnonymous] // will do security check internally
 	    public HttpResponseMessage DownloadEntityAsJson(int appId, int id, string prefix, bool withMetadata)
-            => SecurityHelpers.RunIfAdmin(new DnnUser(UserInfo), () => new Eav.WebApi.ContentExportApi(Log).DownloadEntityAsJson(appId, id, prefix, withMetadata));
+            => new Eav.WebApi.ContentExportApi(Log).DownloadEntityAsJson(new DnnUser(UserInfo), appId, id, prefix, withMetadata);
 
     }
 }

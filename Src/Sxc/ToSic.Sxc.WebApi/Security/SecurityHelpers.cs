@@ -20,17 +20,17 @@ namespace ToSic.Sxc.WebApi.Security
         }
 
 
-        internal static T RunIfAdmin<T>(IUser user, Func<T> task)
-        {
-            ThrowIfNotAdmin(user);
-            return task.Invoke();
-        }
+        //internal static T RunIfAdmin<T>(IUser user, Func<T> task)
+        //{
+        //    ThrowIfNotAdmin(user);
+        //    return task.Invoke();
+        //}
 
-        internal static void ThrowIfNotAdmin(IUser user)
-        {
-            if (!user.IsAdmin)
-                throw new AuthenticationException("Needs admin permissions to do this");
-        }
+        //internal static void ThrowIfNotAdmin(IUser user)
+        //{
+        //    if (!user.IsAdmin)
+        //        throw new AuthenticationException("Needs admin permissions to do this");
+        //}
 
     }
 }

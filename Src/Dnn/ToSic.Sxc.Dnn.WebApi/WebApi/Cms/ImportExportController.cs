@@ -15,11 +15,11 @@ using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Dnn.ImportExport;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
-using ToSic.Sxc.Security;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.ImportExport;
 using ToSic.Sxc.WebApi.Security;
@@ -115,7 +115,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public HttpResponseMessage ExportApp(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
         {
             Log.Add($"export app z#{zoneId}, a#{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
-            SecurityHelpers.ThrowIfNotAdmin(new DnnUser()); // must happen inside here, as it's opened as a new browser window, so not all headers exist
+            EavSecurityHelpers.ThrowIfNotAdmin(new DnnUser()); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
             var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);
 
@@ -138,7 +138,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public bool ExportForVersionControl(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
         {
             Log.Add($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
-            SecurityHelpers.ThrowIfNotAdmin(new DnnUser(UserInfo)); // must happen inside here, as it's opened as a new browser window, so not all headers exist
+            EavSecurityHelpers.ThrowIfNotAdmin(new DnnUser(UserInfo)); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
             var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);
 
@@ -152,7 +152,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public HttpResponseMessage ExportContent(int appId, int zoneId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
         {
             Log.Add($"export content z#{zoneId}, a#{appId}, ids:{entityIdsString}, templId:{templateIdsString}");
-            SecurityHelpers.ThrowIfNotAdmin(new DnnUser(UserInfo)); // must happen inside here, as it's opened as a new browser window, so not all headers exist
+            EavSecurityHelpers.ThrowIfNotAdmin(new DnnUser(UserInfo)); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
             var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);
             var appRuntime = new AppRuntime(currentApp, true, Log);
