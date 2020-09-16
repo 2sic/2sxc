@@ -30,13 +30,13 @@ namespace ToSic.Sxc.WebApi.Cms
         [HttpGet]
         [AllowAnonymous] // will do security check internally
         public HttpResponseMessage ExportContent(
-            int appId, 
-            string language, 
-            string defaultLanguage, 
+            int appId,
+            string language,
+            string defaultLanguage,
             string contentType,
             ExportSelection recordExport, ExportResourceReferenceMode resourcesReferences,
-            ExportLanguageResolution languageReferences, string selectedIds = null) =>
-            new Eav.WebApi.ContentExportApi(Log).ExportContent(
+            ExportLanguageResolution languageReferences, string selectedIds = null)
+            => new Eav.WebApi.ContentExportApi(Log).ExportContent(
                 new DnnUser(UserInfo), appId,
                 language, defaultLanguage, contentType,
                 recordExport, resourcesReferences,

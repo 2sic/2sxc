@@ -12,6 +12,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.WebApi.Security;
 using ToSic.SexyContent.WebApi;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Edit;

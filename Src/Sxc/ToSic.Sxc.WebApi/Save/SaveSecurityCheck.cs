@@ -5,6 +5,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.WebApi.Security;

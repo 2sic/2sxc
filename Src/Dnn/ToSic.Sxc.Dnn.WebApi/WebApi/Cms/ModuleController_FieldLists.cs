@@ -8,6 +8,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Data;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.WebApi.Security;
 

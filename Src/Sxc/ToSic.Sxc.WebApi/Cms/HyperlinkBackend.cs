@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.WebApi.Adam;

@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Data;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.WebApi.Security;
 
 namespace ToSic.Sxc.WebApi.Cms

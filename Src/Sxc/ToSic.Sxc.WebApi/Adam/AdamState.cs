@@ -4,6 +4,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.WebApi.Security;

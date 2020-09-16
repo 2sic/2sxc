@@ -1,6 +1,6 @@
 ﻿using System;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Sxc.Apps;
+using ToSic.Eav.Apps;
 
 namespace ToSic.Sxc.WebApi.Context
 {
@@ -50,7 +50,7 @@ namespace ToSic.Sxc.WebApi.Context
             var result = new AppDto
             {
                 Id = App.AppId,
-                Url = App.Path,
+                Url = (App as Sxc.Apps.IApp)?.Path,
                 Name = App.Name,
             };
             if (!flags.HasFlag(Ctx.AppAdvanced)) return result;

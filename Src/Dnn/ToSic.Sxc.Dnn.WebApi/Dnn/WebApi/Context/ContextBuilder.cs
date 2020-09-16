@@ -5,8 +5,8 @@ using DotNetNuke.Entities.Controllers;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
+using ToSic.Eav.Apps;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Web.JsContext;
 using ToSic.Sxc.WebApi.Context;
@@ -106,6 +106,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
         protected override string GetGettingStartedUrl()
         {
             if (App == null) return "";
+            var app = App as Sxc.Apps.IApp;
+            if (app == null) return "";
 
             var gsUrl =
                 "//gettingstarted.2sxc.org/router.aspx?" +
@@ -114,16 +116,16 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
                 $"&ModuleName={_module.DesktopModule.ModuleName}" +
                 $"&ModuleId={_module.ModuleID}" +
                 $"&PortalID={_portal.PortalId}" +
-                $"&ZoneID={App.ZoneId}" +
+                $"&ZoneID={app.ZoneId}" +
                 $"&DefaultLanguage={_portal.DefaultLanguage}" +
                 $"&CurrentLanguage={_portal.CultureCode}";
 
             // Add AppStaticName and Version
             if (_module.DesktopModule.ModuleName != "2sxc")
             {
-                gsUrl += "&AppGuid=" + App.AppGuid;
-                if (App.Configuration != null)
-                    gsUrl += $"&AppVersion={App.Configuration.Version}&AppOriginalId={App.Configuration.OriginalId}";
+                gsUrl += "&AppGuid=" + app.AppGuid;
+                if (app.Configuration != null)
+                    gsUrl += $"&AppVersion={app.Configuration.Version}&AppOriginalId={app.Configuration.OriginalId}";
             }
 
             var hostSettings = HostController.Instance.GetSettingsDictionary();

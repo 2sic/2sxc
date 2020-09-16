@@ -22,7 +22,6 @@ using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.ImportExport;
-using ToSic.Sxc.WebApi.Security;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -43,7 +42,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);
 
             var zipExport = Factory.Resolve<ZipExport>().Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
-            var zoneMapper = Eav.Factory.Resolve<IZoneMapper>().Init(Log);
+            var zoneMapper = Factory.Resolve<IZoneMapper>().Init(Log);
             var cultCount = zoneMapper
                 .CulturesWithState(currentApp.Tenant.Id, currentApp.ZoneId)
                 .Count(c => c.Active);
