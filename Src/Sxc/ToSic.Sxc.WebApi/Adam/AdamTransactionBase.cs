@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Logging;
+using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.WebApi.Adam

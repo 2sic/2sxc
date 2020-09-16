@@ -5,9 +5,9 @@ using System.Web;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Adam;
-using ToSic.Sxc.WebApi.Errors;
 
 namespace ToSic.Sxc.Dnn.WebApi
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Files;
-using ToSic.Sxc.WebApi.Errors;
+using ToSic.Eav.WebApi.Errors;
 
 namespace ToSic.Sxc.WebApi.Adam
 {

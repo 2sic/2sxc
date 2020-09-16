@@ -4,6 +4,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
+using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.WebApi.Security;

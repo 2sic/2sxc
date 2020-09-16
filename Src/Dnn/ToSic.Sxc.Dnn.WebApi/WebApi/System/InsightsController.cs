@@ -1,4 +1,5 @@
 ﻿using System.Web.Http;
+using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 

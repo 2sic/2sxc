@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Sxc.WebApi.Adam;
-using ToSic.Sxc.WebApi.Errors;
 
 // #todo: security checks on APIs still completely missing
 // #todo: upload not implemented yet

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.WebApi.Errors;
 
 namespace ToSic.Sxc.WebApi.Adam
 {

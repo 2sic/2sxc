@@ -6,7 +6,7 @@ using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
-using ToSic.Sxc.WebApi.Errors;
+using ToSic.Eav.WebApi.Errors;
 using IAsset = ToSic.Eav.Apps.Assets.IAsset;
 
 namespace ToSic.Sxc.WebApi.Adam

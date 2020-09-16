@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Logging;
-using ToSic.Sxc.WebApi.Errors;
+using ToSic.Eav.WebApi.Errors;
 
 namespace ToSic.Sxc.WebApi.Validation
 {

@@ -5,6 +5,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.WebApi.Save;
