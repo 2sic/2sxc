@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
-using System.Web;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
@@ -27,18 +26,18 @@ namespace ToSic.Sxc.WebApi.Cms
         //[ValidateAntiForgeryToken] - never activate this, because this is a GET and can't include the RVT
         public HttpResponseMessage InstallPackage(string packageUrl)
         {
+            PreventServerTimeout300();
+            
             Log.Add("install package:" + packageUrl);
             var container = new DnnContainer().Init(ActiveModule, Log);
             var block = container.BlockIdentifier;
             bool success;
 
-            var helper = Factory.Resolve<IImportExportEnvironment>().Init(Log);
+            //var helper = Factory.Resolve<IImportExportEnvironment>().Init(Log);
+            var importer = Factory.Resolve<ZipFromUrlImport>();
             try
             {
-                // Increase script timeout to prevent timeouts
-                HttpContext.Current.Server.ScriptTimeout = 300;
-
-                success = new ZipFromUrlImport(helper, block.ZoneId, block.AppId, PortalSettings.UserInfo.IsSuperUser, Log)
+                success = importer.Init(block.ZoneId, block.AppId, PortalSettings.UserInfo.IsSuperUser, Log)
                     .ImportUrl(packageUrl, ActiveModule.DesktopModule.ModuleName == "2sxc-app");
             }
             catch (Exception ex)
@@ -48,7 +47,7 @@ namespace ToSic.Sxc.WebApi.Cms
             }
             
             Log.Add("install completed with success:" + success);
-            return Request.CreateResponse(success ? HttpStatusCode.OK : HttpStatusCode.InternalServerError, new { success, helper.Messages });
+            return Request.CreateResponse(success ? HttpStatusCode.OK : HttpStatusCode.InternalServerError, new { success, importer.Messages });
         }
 
     }

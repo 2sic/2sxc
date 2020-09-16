@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Mvc.Run
         {
         }
 
-        public override void TransferFilesToTenant(string sourceFolder, string destinationFolder) 
+        public override List<Message> TransferFilesToTenant(string sourceFolder, string destinationFolder) 
             => throw new NotImplementedException();
 
         public override Version TenantVersion => typeof(MvcImportExportEnvironment).Assembly.GetName().Version;

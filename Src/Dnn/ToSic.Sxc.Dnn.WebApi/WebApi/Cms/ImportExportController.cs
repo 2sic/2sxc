@@ -62,8 +62,7 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add("import app start");
 
             var request = HttpContext.Current.Request;
-            // Increase script timeout to prevent timeouts
-            HttpContext.Current.Server.ScriptTimeout = 300;
+            PreventServerTimeout300();
 
             var zoneId  = int.Parse(request["ZoneId"]);
             if (request.Files.Count <= 0) return new ImportResultDto();
@@ -85,7 +84,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             if (request.Files.Count <= 0) return new ImportResultDto();
 
-            HttpContext.Current.Server.ScriptTimeout = 300;
+            PreventServerTimeout300();
 
             var result = Factory.Resolve<ImportContent>().Init(new DnnUser(UserInfo), Log).Import(zoneId, appId, request.Files[0].FileName,
                 request.Files[0].InputStream, PortalSettings.DefaultLanguage, Exceptions.LogException);

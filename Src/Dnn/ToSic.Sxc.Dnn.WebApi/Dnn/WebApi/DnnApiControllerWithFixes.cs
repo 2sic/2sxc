@@ -76,5 +76,12 @@ namespace ToSic.Sxc.Dnn.WebApi
         }
 
         #endregion
+
+        #region Extend Time so Web Server doesn't time out
+
+        protected void PreventServerTimeout300() => HttpContext.Current.Server.ScriptTimeout = 300;
+
+        #endregion
+
     }
 }

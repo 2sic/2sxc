@@ -30,10 +30,10 @@ namespace ToSic.Sxc.Dnn.ImportExport
         /// </summary>
         /// <param name="sourceFolder"></param>
         /// <param name="destinationFolder">The portal-relative path where the files should be copied to</param>
-        public override void TransferFilesToTenant(string sourceFolder, string destinationFolder)
+        public override List<Message> TransferFilesToTenant(string sourceFolder, string destinationFolder)
         {
             Log.Add($"transfer files to tenant from:{sourceFolder} to:{destinationFolder}");
-            var messages = Messages;
+            var messages = new List<Message>();
             var files = Directory.GetFiles(sourceFolder, "*.*");
 
             var dnnFileManager = FileManager.Instance;
@@ -82,6 +82,8 @@ namespace ToSic.Sxc.Dnn.ImportExport
                 var newDestinationFolder = Path.Combine(destinationFolder, sourceFolderPath.Replace(sourceFolder, "").TrimStart('\\')).Replace('\\', '/');
                 TransferFilesToTenant(sourceFolderPath, newDestinationFolder);
             }
+
+            return messages;
         }
 
         public override Version TenantVersion => typeof(PortalSettings).Assembly.GetName().Version;

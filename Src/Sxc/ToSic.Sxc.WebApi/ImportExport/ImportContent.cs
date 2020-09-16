@@ -47,13 +47,13 @@ namespace ToSic.Sxc.WebApi.ImportExport
             {   // ZIP
                 try
                 {
-                    var env = Factory.Resolve<IImportExportEnvironment>().Init(Log);
-                    var zipImport = new ZipImport(env, zoneId, appId, _user.IsSuperUser, Log);
-                    // Increase script timeout to prevent timeouts
+                    var zipImport = Factory.Resolve<ZipImport>();
+
+                    zipImport.Init(zoneId, appId, _user.IsSuperUser, Log);
                     var temporaryDirectory = _http.MapPath(Path.Combine(Eav.ImportExport.Settings.TemporaryDirectory,
                         Guid.NewGuid().ToString()));
                     result.Succeeded = zipImport.ImportZip(stream, temporaryDirectory);
-                    result.Messages = env.Messages;
+                    result.Messages = zipImport.Messages;
                 }
                 catch (Exception ex)
                 {

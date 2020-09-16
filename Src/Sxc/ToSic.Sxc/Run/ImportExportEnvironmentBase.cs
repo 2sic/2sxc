@@ -34,15 +34,16 @@ namespace ToSic.Sxc.Run
         }
         #endregion
 
-        public List<Message> Messages { get; } = new List<Message>();
+        public abstract List<Message> TransferFilesToTenant(string sourceFolder, string destinationFolder);
 
-        public abstract void TransferFilesToTenant(string sourceFolder, string destinationFolder);
         public abstract Version TenantVersion { get; }
+
         public string ModuleVersion => Settings.ModuleVersion;
 
         public string FallbackContentTypeScope => Settings.AttributeSetScope;
 
         public string DefaultLanguage => Tenant.DefaultLanguage;
+
         public string TemplatesRoot(int zoneId, int appId)
         {
             var app = Eav.Factory.Resolve<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
@@ -51,12 +52,15 @@ namespace ToSic.Sxc.Run
             var templateRoot = Environment.MapPath(TemplateHelpers.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, app));
             return templateRoot;
         }
+
         public string TargetPath(string folder)
         {
             var appPath = Path.Combine(Tenant.AppsRoot, folder);
             return Environment.MapPath(appPath);
         }
+
         public abstract void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap);
+
         public abstract void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog);
         
         public SaveOptions SaveOptions(int zoneId) 
