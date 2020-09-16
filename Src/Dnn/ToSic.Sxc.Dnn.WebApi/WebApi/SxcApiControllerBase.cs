@@ -25,7 +25,7 @@ namespace ToSic.Sxc.WebApi
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
-            Block = Helpers.GetCmsBlock(Request, true, Log);
+            Block = DnnGetBlock.GetCmsBlock(Request, true, Log);
         }
 
         [PrivateApi] public IBlock Block { get; private set; }

@@ -9,20 +9,8 @@ using ToSic.Sxc.Dnn.Run;
 
 namespace ToSic.Sxc.WebApi
 {
-    public static class Helpers
+    public static class DnnGetBlock
     {
-        /// <summary>
-        /// Workaround for deserializing KeyValuePair - it requires lowercase properties (case sensitive), 
-        /// which seems to be a issue in some Newtonsoft.Json versions: http://stackoverflow.com/questions/11266695/json-net-case-insensitive-property-deserialization
-        /// </summary>
-        // ReSharper disable once ClassNeverInstantiated.Local
-        private class UpperCaseStringKeyValuePair
-        {
-            // ReSharper disable UnusedAutoPropertyAccessor.Local
-            public string Key { get; set; }
-            public string Value{ get; set; }
-            // ReSharper restore UnusedAutoPropertyAccessor.Local
-        }
 
         internal static IBlock GetCmsBlock(HttpRequestMessage request, bool allowNoContextFound, ILog log)
         {
@@ -85,12 +73,20 @@ namespace ToSic.Sxc.WebApi
         }
 
 
-        internal static void RemoveLanguageChangingCookie()
+        /// <summary>
+        /// Workaround for deserializing KeyValuePair - it requires lowercase properties (case sensitive), 
+        /// which seems to be a issue in some Newtonsoft.Json versions: http://stackoverflow.com/questions/11266695/json-net-case-insensitive-property-deserialization
+        /// </summary>
+        // ReSharper disable once ClassNeverInstantiated.Local
+        private class UpperCaseStringKeyValuePair
         {
-            // this is to fix a dnn-bug, which adds a cookie to set the language
-            // but always defaults to the main language, which is simply wrong. 
-            var cookies = global::System.Web.HttpContext.Current?.Response.Cookies;
-            cookies?.Remove("language"); // try to remove, otherwise no exception will be thrown
+            // ReSharper disable UnusedAutoPropertyAccessor.Local
+            public string Key { get; set; }
+            public string Value { get; set; }
+            // ReSharper restore UnusedAutoPropertyAccessor.Local
         }
+
     }
+
+
 }
