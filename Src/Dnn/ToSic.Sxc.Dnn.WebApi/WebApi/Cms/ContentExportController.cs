@@ -2,9 +2,10 @@
 using System.Web.Http;
 using ToSic.Eav.ImportExport.Options;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
-using ToSic.Sxc.Security;
+using ToSic.Sxc.WebApi.Security;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -39,7 +40,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             Log.Add($"export content start app:{appId}, language:{language}, defLang:{defaultLanguage}, type:{contentType}, ids:{selectedIds}");
             // do security check and get data
-            return RunIf.Admin(PortalSettings, () => new Eav.WebApi.ContentExportApi(Log).ExportContent(appId, language, defaultLanguage, contentType,
+            return SecurityHelpers.RunIfAdmin(new DnnUser(UserInfo), () => new Eav.WebApi.ContentExportApi(Log).ExportContent(appId, language, defaultLanguage, contentType,
                     recordExport, resourcesReferences,
                     languageReferences, selectedIds));
         }
@@ -47,12 +48,12 @@ namespace ToSic.Sxc.WebApi.Cms
 	    [HttpGet]
 	    [AllowAnonymous] // will do security check internally
 	    public HttpResponseMessage DownloadTypeAsJson(int appId, string name) 
-            => RunIf.Admin(PortalSettings,() => new Eav.WebApi.ContentExportApi(Log).DownloadTypeAsJson(appId, name));
+            => SecurityHelpers.RunIfAdmin(new DnnUser(UserInfo), () => new Eav.WebApi.ContentExportApi(Log).DownloadTypeAsJson(appId, name));
 
         [HttpGet]
 	    [AllowAnonymous] // will do security check internally
 	    public HttpResponseMessage DownloadEntityAsJson(int appId, int id, string prefix, bool withMetadata)
-            => RunIf.Admin(PortalSettings, () => new Eav.WebApi.ContentExportApi(Log).DownloadEntityAsJson(appId, id, prefix, withMetadata));
+            => SecurityHelpers.RunIfAdmin(new DnnUser(UserInfo), () => new Eav.WebApi.ContentExportApi(Log).DownloadEntityAsJson(appId, id, prefix, withMetadata));
 
     }
 }
