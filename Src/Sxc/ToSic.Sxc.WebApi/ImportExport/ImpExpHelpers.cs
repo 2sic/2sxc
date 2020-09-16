@@ -1,8 +1,8 @@
-﻿using DotNetNuke.Entities.Users;
-using ToSic.Eav;
+﻿using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Run;
 using ToSic.Sxc.LookUp;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -14,7 +14,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         /// Get an app - but only allow zone change if super-user
         /// </summary>
         /// <returns></returns>
-        internal static IApp GetAppAndCheckZoneSwitchPermissions(int zoneId, int appId, UserInfo user, int contextZoneId, ILog log)
+        internal static IApp GetAppAndCheckZoneSwitchPermissions(int zoneId, int appId, IUser user, int contextZoneId, ILog log)
         {
             var wrapLog = log.Call<IApp>($"superuser: {user.IsSuperUser}");
             if (!user.IsSuperUser && zoneId != contextZoneId)
