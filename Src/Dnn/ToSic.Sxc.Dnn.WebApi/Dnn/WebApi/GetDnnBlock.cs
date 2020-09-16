@@ -6,10 +6,11 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.WebApi;
 
-namespace ToSic.Sxc.WebApi
+namespace ToSic.Sxc.Dnn.WebApi
 {
-    public static class DnnGetBlock
+    internal static class DnnGetBlock
     {
 
         internal static IBlock GetCmsBlock(HttpRequestMessage request, bool allowNoContextFound, ILog log)
