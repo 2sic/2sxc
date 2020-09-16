@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
-    public static class HttpResponseMessageHelper
+    public static class HttpFileHelper
     {
         public static HttpResponseMessage GetAttachmentHttpResponseMessage(string fileName, string fileType, Stream fileContent)
         {

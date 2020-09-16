@@ -39,10 +39,11 @@ namespace ToSic.Sxc.WebApi.Cms
         public AppExportInfoDto GetAppInfo(int appId, int zoneId)
         {
             Log.Add($"get app info for app:{appId} and zone:{zoneId}");
-            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);
+            var zoneMapper = Factory.Resolve<IZoneMapper>().Init(Log);
+            var contextZoneId = zoneMapper.GetZoneId(PortalSettings.PortalId);
+            var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, UserInfo, contextZoneId, Log);
 
             var zipExport = Factory.Resolve<ZipExport>().Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
-            var zoneMapper = Factory.Resolve<IZoneMapper>().Init(Log);
             var cultCount = zoneMapper
                 .CulturesWithState(currentApp.Tenant.Id, currentApp.ZoneId)
                 .Count(c => c.Active);
@@ -70,7 +71,9 @@ namespace ToSic.Sxc.WebApi.Cms
         public ExportPartsOverviewDto GetContentInfo(int appId, int zoneId, string scope)
         {
             Log.Add($"get content info for z#{zoneId}, a#{appId}, scope:{scope} super?:{UserInfo.IsSuperUser}");
-            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);
+            var zoneMapper = Factory.Resolve<IZoneMapper>().Init(Log);
+            var contextZoneId = zoneMapper.GetZoneId(PortalSettings.PortalId);
+            var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, UserInfo, contextZoneId, Log);
 
             var cms = new CmsRuntime(currentApp, Log, true, false);
             var contentTypes = cms.ContentTypes.FromScope(scope);
@@ -116,7 +119,9 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add($"export app z#{zoneId}, a#{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
             SecurityHelpers.ThrowIfNotAdmin(new DnnUser()); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
-            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);
+            var zoneMapper = Factory.Resolve<IZoneMapper>().Init(Log);
+            var contextZoneId = zoneMapper.GetZoneId(PortalSettings.PortalId);
+            var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, UserInfo, contextZoneId, Log);
 
             var zipExport = Factory.Resolve<ZipExport>().Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
             var addOnWhenContainingContent = includeContentGroups ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm") : "";
@@ -128,7 +133,7 @@ namespace ToSic.Sxc.WebApi.Cms
             {
                 var fileBytes = fileStream.ToArray();
                 Log.Add("will stream so many bytes:" + fileBytes.Length);
-                return HttpResponseMessageHelper.GetAttachmentHttpResponseMessage(fileName, "application/octet-stream", new MemoryStream(fileBytes));
+                return HttpFileHelper.GetAttachmentHttpResponseMessage(fileName, "application/octet-stream", new MemoryStream(fileBytes));
             }
         }
 
@@ -139,7 +144,9 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
             SecurityHelpers.ThrowIfNotAdmin(new DnnUser(UserInfo)); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
-            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);
+            var zoneMapper = Factory.Resolve<IZoneMapper>().Init(Log);
+            var contextZoneId = zoneMapper.GetZoneId(PortalSettings.PortalId);
+            var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, UserInfo, contextZoneId, Log);
 
             var zipExport = Factory.Resolve<ZipExport>().Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
             zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid);
@@ -153,7 +160,9 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add($"export content z#{zoneId}, a#{appId}, ids:{entityIdsString}, templId:{templateIdsString}");
             SecurityHelpers.ThrowIfNotAdmin(new DnnUser(UserInfo)); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
-            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);
+            var zoneMapper = Factory.Resolve<IZoneMapper>().Init(Log);
+            var contextZoneId = zoneMapper.GetZoneId(PortalSettings.PortalId);
+            var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, UserInfo, contextZoneId, Log);
             var appRuntime = new AppRuntime(currentApp, true, Log);
 
             var fileName = $"2sxcContentExport_{currentApp.NameWithoutSpecialChars()}_{currentApp.VersionSafe()}.xml";
@@ -163,7 +172,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 Log
             ).GenerateNiceXml();
 
-            return HttpResponseMessageHelper.GetAttachmentHttpResponseMessage(fileName, "text/xml", fileXml);
+            return HttpFileHelper.GetAttachmentHttpResponseMessage(fileName, "text/xml", fileXml);
         }
 
 
