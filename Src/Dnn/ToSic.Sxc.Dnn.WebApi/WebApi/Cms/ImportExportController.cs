@@ -70,7 +70,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public ExportPartsOverviewDto GetContentInfo(int appId, int zoneId, string scope)
         {
             Log.Add($"get content info for z#{zoneId}, a#{appId}, scope:{scope} super?:{UserInfo.IsSuperUser}");
-            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId,appId, UserInfo, Log);
+            var currentApp = SxcAppForWebApi.AppBasedOnUserPermissions(zoneId, appId, UserInfo, Log);
 
             var cms = new CmsRuntime(currentApp, Log, true, false);
             var contentTypes = cms.ContentTypes.FromScope(scope);

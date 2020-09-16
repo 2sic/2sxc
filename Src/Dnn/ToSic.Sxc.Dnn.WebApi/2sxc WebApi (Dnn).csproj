@@ -139,7 +139,6 @@
     <Compile Include="WebApi\Cms\PipelineDesignerController.cs" />
     <Compile Include="Dnn\WebApi\GetDnnBlock.cs" />
     <Compile Include="WebApi\Cms\ImportExportController.cs" />
-    <Compile Include="WebApi\ImportExport\HttpResponseMessageHelper.cs" />
     <Compile Include="WebApi\ImportExport\SxcAppForWebApi.cs" />
     <Compile Include="WebApi\Cms\InstallerController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
