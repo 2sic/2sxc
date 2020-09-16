@@ -29,6 +29,7 @@
   <ItemGroup>
     <Folder Include="Cms\Dto\" />
     <Folder Include="Query\" />
+    <Folder Include="Security\" />
     <Folder Include="System\" />
   </ItemGroup>
 

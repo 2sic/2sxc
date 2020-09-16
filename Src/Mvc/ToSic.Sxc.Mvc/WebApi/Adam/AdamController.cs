@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.WebApi.Adam;
 
 // #todo: security checks on APIs still completely missing
