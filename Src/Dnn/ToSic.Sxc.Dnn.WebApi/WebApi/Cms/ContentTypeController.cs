@@ -5,10 +5,10 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
-using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.WebApi.Security;
+using ContentTypeApi = ToSic.Eav.WebApi.ContentTypeApi;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -25,7 +25,7 @@ namespace ToSic.Sxc.WebApi.Cms
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<ContentTypeDto> Get(int appId, string scope = null, bool withStatistics = false) 
-            => new Eav.WebApi.ContentTypeApi(Log).Get(appId, scope, withStatistics);
+            => new ContentTypeApi(Log).Get(appId, scope, withStatistics);
 
 
         [HttpGet]
@@ -36,28 +36,21 @@ namespace ToSic.Sxc.WebApi.Cms
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) 
-            => new Eav.WebApi.ContentTypeApi(Log).GetSingle(appId, contentTypeId, scope);
+            => new ContentTypeApi(Log).GetSingle(appId, contentTypeId, scope);
 
 	    [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public ContentTypeDto GetSingle(int appId, string contentTypeStaticName, string scope = null)
-	    {
-	        var permCheck = new MultiPermissionsTypes().Init(GetContext(), GetApp(appId), contentTypeStaticName, Log);
-            if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
-                throw HttpException.PermissionDenied(error);
-
-            if(!permCheck.UserCanWriteAndPublicFormsEnabled(out _, out error))
-                throw HttpException.PermissionDenied(error);
-
-            // if we got this far, permissions are ok
-            return new Eav.WebApi.ContentTypeApi(Log).GetSingle(appId, contentTypeStaticName, scope);
+        {
+            SecurityHelpers.ThrowIfNotEditorOrIsPublicForm(GetContext(), GetApp(appId), contentTypeStaticName, Log);
+            return new ContentTypeApi(Log).GetSingle(appId, contentTypeStaticName, scope);
 	    }
 
-	    [HttpGet]
+        [HttpGet]
         [HttpDelete]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public bool Delete(int appId, string staticName) 
-            => new Eav.WebApi.ContentTypeApi(Log).Delete(appId, staticName);
+            => new ContentTypeApi(Log).Delete(appId, staticName);
 
 	    [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
@@ -67,14 +60,14 @@ namespace ToSic.Sxc.WebApi.Cms
         public bool Save(int appId, Dictionary<string, object> item)
         {
             var cleanList = item.ToDictionary(i => i.Key, i => i.Value?.ToString());
-            return new Eav.WebApi.ContentTypeApi(Log).Save(appId, cleanList);
+            return new ContentTypeApi(Log).Save(appId, cleanList);
         }
 
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
         public bool CreateGhost(int appId, string sourceStaticName) 
-            => new Eav.WebApi.ContentTypeApi(Log).CreateGhost(appId, sourceStaticName);
+            => new ContentTypeApi(Log).CreateGhost(appId, sourceStaticName);
 
 	    #endregion
 
@@ -88,20 +81,14 @@ namespace ToSic.Sxc.WebApi.Cms
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public IEnumerable<ContentTypeFieldDto> GetFields(int appId, string staticName)
         {
-            Log.Add($"get fields for a:{appId} type:{staticName}");
-	        var permCheck = new MultiPermissionsTypes().Init(GetContext(), GetApp(appId), staticName, Log);
-            if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
-                throw HttpException.PermissionDenied(error);
-            if(!permCheck.UserCanWriteAndPublicFormsEnabled(out _, out error))
-                throw HttpException.PermissionDenied(error);
-
-            return new Eav.WebApi.ContentTypeApi(Log).GetFields(appId, staticName);
+            SecurityHelpers.ThrowIfNotEditorOrIsPublicForm(GetContext(), GetApp(appId), staticName, Log);
+            return new ContentTypeApi(Log).GetFields(appId, staticName);
 	    }
 
 	    [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public string[] DataTypes(int appId) 
-            => new Eav.WebApi.ContentTypeApi(Log).DataTypes(appId);
+            => new ContentTypeApi(Log).DataTypes(appId);
 
 	    [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
@@ -111,36 +98,36 @@ namespace ToSic.Sxc.WebApi.Cms
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public int AddField(int appId, int contentTypeId, string staticName, string type, string inputType, int sortOrder) 
-            => new Eav.WebApi.ContentTypeApi(Log).AddField(appId, contentTypeId, staticName, type, inputType, sortOrder);
+            => new ContentTypeApi(Log).AddField(appId, contentTypeId, staticName, type, inputType, sortOrder);
 
 	    [HttpGet]
         [HttpDelete]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public bool DeleteField(int appId, int contentTypeId, int attributeId) 
-            => new Eav.WebApi.ContentTypeApi(Log).DeleteField(appId, contentTypeId, attributeId);
+            => new ContentTypeApi(Log).DeleteField(appId, contentTypeId, attributeId);
 
 	    [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public bool Reorder(int appId, int contentTypeId, string newSortOrder) 
-            => new Eav.WebApi.ContentTypeApi(Log).Reorder(appId, contentTypeId, newSortOrder);
+            => new ContentTypeApi(Log).Reorder(appId, contentTypeId, newSortOrder);
 
 	    [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public void SetTitle(int appId, int contentTypeId, int attributeId) 
-            => new Eav.WebApi.ContentTypeApi(Log).SetTitle(appId, contentTypeId, attributeId);
+            => new ContentTypeApi(Log).SetTitle(appId, contentTypeId, attributeId);
         
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public bool UpdateInputType(int appId, int attributeId, string inputType) 
-            => new Eav.WebApi.ContentTypeApi(Log).UpdateInputType(appId, attributeId, inputType);
+            => new ContentTypeApi(Log).UpdateInputType(appId, attributeId, inputType);
 
 	    #endregion
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public void Rename(int appId, int contentTypeId, int attributeId, string newName)
-            => new Eav.WebApi.ContentTypeApi(Log).Rename(appId, contentTypeId, attributeId, newName);
+            => new ContentTypeApi(Log).Rename(appId, contentTypeId, attributeId, newName);
 
 	}
 }
