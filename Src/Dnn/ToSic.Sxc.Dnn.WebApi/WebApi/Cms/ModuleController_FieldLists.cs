@@ -9,11 +9,6 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public partial class ModuleController
     {
-        [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void AddItem([FromUri] int? index = null) 
-            => Factory.Resolve<FieldListBackend>().Init(GetContext(), GetBlock(), Log)
-                .AddItem(index);
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -32,7 +27,7 @@ namespace ToSic.Sxc.WebApi.Cms
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void RemoveFromList(Guid? parent, string fields, int index)
             => Factory.Resolve<FieldListBackend>().Init(GetContext(), GetBlock(), Log)
-                .RemoveFromList(parent, fields, index);
+                .Remove(parent, fields, index);
 
     }
 }

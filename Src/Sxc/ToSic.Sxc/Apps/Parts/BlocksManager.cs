@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
@@ -39,6 +41,52 @@ namespace ToSic.Sxc.Apps
 		    }
 		}
 
+        public void AddEmptyItem(BlockConfiguration block, int? sortOrder) =>
+            AppManager.Entities.FieldListUpdate(block.Entity, ViewParts.ContentPair, block.VersioningEnabled,
+                lists => lists.Add(sortOrder, new int?[] { null, null }));
 
-	}
+
+
+        public int NewBlockReference(int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
+        {
+            Log.Add($"get CB parent:{parentId}, field:{field}, order:{sortOrder}, app:{app}, guid:{guid}");
+            var contentTypeName = Settings.AttributeSetStaticNameContentBlockTypeName;
+            var values = new Dictionary<string, object>
+            {
+                {BlockFromEntity.CbPropertyTitle, ""},
+                {BlockFromEntity.CbPropertyApp, app},
+            };
+            var newGuid = guid ?? Guid.NewGuid();
+            var entityId = CreateItemAndAddToList(parentId, field, sortOrder, contentTypeName, values, newGuid);
+
+            return entityId;
+        }
+
+        private int CreateItemAndAddToList(int parentId, string field, int index, string typeName, Dictionary<string, object> values, Guid newGuid)
+        {
+            var callLog = Log.Call<int>($"{nameof(parentId)}:{parentId}, {nameof(field)}:{field}, {nameof(index)}, {index}, {nameof(typeName)}:{typeName}");
+            // create the new entity 
+            var entityId = CmsManager.Entities.GetOrCreate(newGuid, typeName, values);
+
+            #region attach to the current list of items
+
+            var cbEnt = CmsManager.AppState.List.One(parentId);
+            var blockList = ((IEnumerable<IEntity>)cbEnt.GetBestValue(field))?.ToList() ?? new List<IEntity>();
+
+            var intList = blockList.Select(b => b.EntityId).ToList();
+            // add only if it's not already in the list (could happen if http requests are run again)
+            if (!intList.Contains(entityId))
+            {
+                if (index > intList.Count) index = intList.Count;
+                intList.Insert(index, entityId);
+            }
+            var updateDic = new Dictionary<string, object> { { field, intList } };
+            CmsManager.Entities.UpdateParts(cbEnt.EntityId, updateDic);
+            #endregion
+
+            return callLog($"{entityId}", entityId);
+        }
+
+
+    }
 }

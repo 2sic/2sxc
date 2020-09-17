@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
@@ -39,13 +37,6 @@ namespace ToSic.Sxc.WebApi.FieldList
         private CmsManager _cmsManager;
         #endregion
 
-        public void AddItem( int? index = null)
-        {
-            Log.Add($"add order:{index}");
-            // use dnn versioning - this is always part of page
-            _publishing.DoInsidePublishing(_context, args => _cmsManager.Blocks.AddEmptyItem(_block.Configuration, index));
-        }
-
         public void ChangeOrder(Guid? parent, string fields, int index, int toIndex)
         {
             var wrapLog = Log.Call($"change order sort:{index}, dest:{toIndex}");
@@ -65,7 +56,8 @@ namespace ToSic.Sxc.WebApi.FieldList
         }
 
 
-        public void RemoveFromList(Guid? parent, string fields, int index)
+
+        public void Remove(Guid? parent, string fields, int index)
         {
             var wrapLog = Log.Call($"remove from index:{index}");
             var entMan = _cmsManager.Entities;
