@@ -17,7 +17,6 @@ using ToSic.Eav.WebApi.Security;
 using ToSic.SexyContent.WebApi;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Edit;
-using ToSic.Sxc.WebApi.Security;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -99,9 +98,9 @@ namespace ToSic.Sxc.WebApi.Cms
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public HttpResponseMessage RenderTemplate([FromUri] int templateId, [FromUri] string lang/*, bool cbIsEntity = false*/)
+        public HttpResponseMessage RenderTemplate([FromUri] int templateId, [FromUri] string lang)
         {
-            Log.Add($"render template:{templateId}, lang:{lang}"); //, isEnt:{cbIsEntity}");
+            Log.Add($"render template:{templateId}, lang:{lang}");
             try
             {
                 // Try setting thread language to enable 2sxc to render the template in this language
