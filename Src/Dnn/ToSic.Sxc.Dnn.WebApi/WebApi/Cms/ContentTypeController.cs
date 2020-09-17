@@ -8,7 +8,6 @@ using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Eav.WebApi.Security;
-using ToSic.Sxc.WebApi.Security;
 using ContentTypeApi = ToSic.Eav.WebApi.ContentTypeApi;
 
 namespace ToSic.Sxc.WebApi.Cms

@@ -22,13 +22,8 @@ namespace ToSic.Sxc.WebApi.Cms
     {
         protected override string HistoryLogName => "Api.ModCnt";
 
-        protected CmsRuntime CmsRuntime => _cmsRuntime ?? (_cmsRuntime = GetCmsRuntime());
+        protected CmsRuntime CmsRuntime => _cmsRuntime ?? (_cmsRuntime = App == null ? null : new CmsRuntime(App, Log, true, false));
         private CmsRuntime _cmsRuntime;
-
-        private CmsRuntime GetCmsRuntime()
-            // todo: this must be changed, set showDrafts to true for now, as it's probably only used in the view-picker, but it shouldn't just be here
-            => App == null ? null : new CmsRuntime(App, Log, true, false);
-
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]

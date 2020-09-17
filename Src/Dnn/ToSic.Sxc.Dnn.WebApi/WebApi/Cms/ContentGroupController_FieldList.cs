@@ -12,33 +12,31 @@ namespace ToSic.Sxc.WebApi.Cms
     // Some day they should be moved to an own controller or to EntitiesController
     public partial class ContentGroupController
     {
+        private ListsBackendBase Backend => Factory.Resolve<ListsBackendBase>().Init(GetBlock().App, Log);
+
         // TODO: shouldn't be part of ContentGroupController any more, as it's generic now
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Replace(Guid guid, string part, int index, int entityId, bool add = false)
-            => Factory.Resolve<ListsBackendBase>().Init(GetBlock().App, Log)
-                .Replace(GetContext(), guid, part, index, entityId, add);
+            => Backend.Replace(GetContext(), guid, part, index, entityId, add);
 
 
         // TODO: WIP changing this from ContentGroup editing to any list editing
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public dynamic Replace(Guid guid, string part, int index) 
-            => Factory.Resolve<ListsBackendBase>().Init(GetBlock().App, Log)
-                .GetReplacementOptions(guid, part, index);
+            => Backend.GetReplacementOptions(guid, part, index);
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public List<EntityInListDto> ItemList(Guid guid, string part) 
-            => Factory.Resolve<ListsBackendBase>().Init(GetBlock().App, Log)
-                .ItemList(guid, part);
+            => Backend.ItemList(guid, part);
 
 
         // TODO: part should be handed in with all the relevant names! atm it's "content" in the content-block scenario
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool ItemList([FromUri] Guid guid, List<EntityInListDto> list, [FromUri] string part = null) 
-            => Factory.Resolve<ListsBackendBase>().Init(GetBlock().App, Log)
-                .Reorder(GetContext(), guid, list, part);
+            => Backend.Reorder(GetContext(), guid, list, part);
     }
 }

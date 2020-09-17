@@ -10,12 +10,13 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public partial class ModuleController
     {
+        private ContentBlockBackend Backend => Factory.Resolve<ContentBlockBackend>().Init(GetContext(), GetBlock(), Log);
+
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public string GenerateContentBlock(int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
         {
-            var entityId = Factory.Resolve<ContentBlockBackend>().Init(GetContext(), GetBlock(), Log)
-                .NewBlock(parentId, field, sortOrder, app, guid);
+            var entityId = Backend.NewBlock(parentId, field, sortOrder, app, guid);
 
             // now return a rendered instance
             var newContentBlock = new BlockFromEntity().Init(GetBlock(), entityId, Log);
@@ -26,14 +27,12 @@ namespace ToSic.Sxc.WebApi.Cms
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void AddItem([FromUri] int? index = null)
-            => Factory.Resolve<ContentBlockBackend>().Init(GetContext(), GetBlock(), Log)
-                .AddItem(index);
+            => Backend.AddItem(index);
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void MoveItemInList(int parentId, string field, int indexFrom, int indexTo, [FromUri] bool partOfPage = false) 
-            => Factory.Resolve<ContentBlockBackend>().Init(GetContext(), GetBlock(), Log)
-                .MoveInList(parentId, field, indexFrom, indexTo, partOfPage);
+            => Backend.MoveInList(parentId, field, indexFrom, indexTo, partOfPage);
 
         /// <summary>
         /// Delete a content-block inside a list of content-blocks
@@ -45,7 +44,6 @@ namespace ToSic.Sxc.WebApi.Cms
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void RemoveItemInList(int parentId, string field, int index, [FromUri] bool partOfPage = false) 
-            => Factory.Resolve<ContentBlockBackend>().Init(GetContext(), GetBlock(), Log)
-                .RemoveBlockInList(parentId, field, index, partOfPage);
+            => Backend.RemoveBlockInList(parentId, field, index, partOfPage);
     }
 }
