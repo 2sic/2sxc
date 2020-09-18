@@ -7,7 +7,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi
 {
-    public abstract class WebApiBackendBase: HasLog
+    public abstract class WebApiBackendBase<T>: HasLog<T> where T : class
     {
         protected WebApiBackendBase(string logName) : base(logName)
         {

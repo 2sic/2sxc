@@ -1,0 +1,16 @@
+﻿@page
+@using ToSic.Sxc.Mvc.Dev
+@model Website.Pages.DynamicRazorModel
+@{
+    ViewData["Title"] = "DynamicRazor";
+}
+
+<h1>Dynamic Razor Data</h1>
+
+@Html.Partial("../../../wwwroot/2sxc/Content/RunContent.cshtml", new ViewDataDictionary(ViewData)
+{
+    { "Id", TestIds.ContentOnHome.Container },
+    { "PageId", TestIds.ContentOnHome.Page },
+    { "AppId", TestIds.ContentOnHome.App },
+    { "Block", TestIds.ContentOnHome.Block }
+})

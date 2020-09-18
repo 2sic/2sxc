@@ -4,7 +4,7 @@
     <TargetFrameworks>net451;netstandard2.0</TargetFrameworks>
     <RootNamespace>ToSic.Sxc</RootNamespace>
     <AssemblyName>ToSic.Sxc</AssemblyName>
-    <Version>11.05.00.00</Version>
+    <Version>11.06.00.00</Version>
   </PropertyGroup>
 
   <ItemGroup>

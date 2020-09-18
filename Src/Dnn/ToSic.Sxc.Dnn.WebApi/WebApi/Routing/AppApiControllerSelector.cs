@@ -15,6 +15,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.WebApi.System;
 
 namespace ToSic.Sxc.WebApi
@@ -89,7 +90,7 @@ namespace ToSic.Sxc.WebApi
                 if(appFolder == null)
                 {
                     log.Add("no folder found in url, will auto-detect");
-                    var block = Helpers.GetCmsBlock(request, false, log);
+                    var block = DnnGetBlock.GetCmsBlock(request, false, log);
                     appFolder = block.App.Folder;
                 }
 

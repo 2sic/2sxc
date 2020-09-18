@@ -5,15 +5,15 @@ using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Conversion;
 using ToSic.Sxc.LookUp;
-using ToSic.Sxc.WebApi.Errors;
 
 namespace ToSic.Sxc.WebApi.App
 {
-    public class AppQuery: WebApiBackendBase
+    public class AppQuery: WebApiBackendBase<AppQuery>
     {
         #region Constructor / DI
 
@@ -22,11 +22,11 @@ namespace ToSic.Sxc.WebApi.App
 
         }
 
-        public AppQuery Init(ILog parentLog)
-        {
-            Log.LinkTo(parentLog);
-            return this;
-        }
+        //public AppQuery Init(ILog parentLog)
+        //{
+        //    Log.LinkTo(parentLog);
+        //    return this;
+        //}
 
         #endregion
 

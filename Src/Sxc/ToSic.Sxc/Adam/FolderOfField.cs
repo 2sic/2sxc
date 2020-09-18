@@ -6,31 +6,33 @@ namespace ToSic.Sxc.Adam
     /// The ADAM Navigator creates a folder object for an entity/field combination
     /// This is the root folder where all files for this field are stored
     /// </summary>
-    public class FolderOfField : Folder
+    public class FolderOfField<TFolderId, TFileId> : Folder<TFolderId, TFileId>
     {
-        protected ContainerOfField Container { get; set; }
-        public FolderOfField(IEnvironmentFileSystem enfFileSystem, AdamAppContext appContext, Guid entityGuid, string fieldName) : base(appContext, enfFileSystem)
+        //public ContainerBase AdamOfField { get; set; }
+        public FolderOfField(AdamAppContext<TFolderId, TFileId> adamContext, Guid entityGuid, string fieldName) 
+            : base(adamContext)
         {
-            Container = new ContainerOfField(AppContext, entityGuid, fieldName);
+            var adamOfField = new AdamOfField<TFolderId, TFileId>(AdamContext, entityGuid, fieldName);
 
-            if (!Exists)
-                return;
+            if (!AdamContext.Exists(adamOfField.Root)) return;
 
-            // ReSharper disable once PatternAlwaysOfType
-            if (!(AppContext.Folder(Container.Root) is Eav.Apps.Assets.Folder f))
-                return;
+            var f = AdamContext.Folder(adamOfField.Root);
+            if (f == null) return;
 
             Path = f.Path;
             Modified = f.Modified;
-            Id = f.Id;
+            SysId = f.SysId;
             Created = f.Created;
             Modified = f.Modified;
 
             // IAdamItem interface properties
             Name = f.Name;
+            Url = f.Url;
         }
 
-        public bool Exists => AppContext.Exists(Container.Root);
+        // 2020-09-12 2dm removed, I don't think it's surfaced anywhere
+        // and the only public use is an IFolder, so it shouldn't be seen elsewhere
+        //private bool Exists => AdamContext.Exists(AdamOfField.Root);
 
     }
 

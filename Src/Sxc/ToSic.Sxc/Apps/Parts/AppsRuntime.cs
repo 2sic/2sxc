@@ -16,10 +16,10 @@ namespace ToSic.Sxc.Apps
         {
         }
 
-        public IEnumerable<AppUiInfo> GetSelectableApps(ITenant tenant)
+        public IEnumerable<AppUiInfo> GetSelectableApps(ITenant tenant, string filter)
         {
             Log.Add("get selectable apps");
-            return
+            var list =
                 GetApps(tenant, null)
                     .Where(a => a.Name != Eav.Constants.ContentAppName)
                     .Where(a => !a.Hidden)
@@ -31,6 +31,18 @@ namespace ToSic.Sxc.Apps
                         Thumbnail = a.Thumbnail,
                         Version = a.Configuration?.Version?.ToString() ?? ""
                     });
+
+            if (string.IsNullOrWhiteSpace(filter)) return list;
+
+            // New feature in 10.27 - if app-list is provided, only return these
+            var appNames = filter.Split(',')
+                .Select(s => s.Trim())
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .ToList();
+            list = list.Where(ap => appNames
+                    .Any(name => string.Equals(name, ap.Name, StringComparison.InvariantCultureIgnoreCase)))
+                .ToList();
+            return list;
         }
 
         /// <summary>

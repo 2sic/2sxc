@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Data;
+using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Adam
 {
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.Adam
         /// Informs the code if this asset has real metadata attached or not. 
         /// </summary>
         /// <returns>True if this asset has metadata, false if it doesn't (in which case the Metadata property still works, but won't deliver any real values)</returns>
-         bool HasMetadata { get; }
+        bool HasMetadata { get; }
 
         /// <summary>
         /// List of metadata items - 
@@ -22,7 +23,12 @@ namespace ToSic.Sxc.Adam
         /// to help in razor template etc.
         /// </summary>
         /// <returns>An IDynamicEntity which contains the metadata, or an empty IDynamicEntity which still works if no metadata exists.</returns>
-         dynamic Metadata { get; }
+        dynamic Metadata { get; }
+
+        /// <summary>
+        /// Experimental
+        /// </summary>
+        MetadataFor MetadataId { get; }
         #endregion
 
 
@@ -30,20 +36,13 @@ namespace ToSic.Sxc.Adam
         /// The path to this asset as used from external access
         /// </summary>
         /// <returns>The url to this asset</returns>
-         string Url { get; }
+        string Url { get; }
 
         /// <summary>
         /// The type of this asset (folder, file, etc.)
         /// </summary>
         /// <returns>"folder", "image", "document", "file" depending on what it is</returns>
-         string Type { get; }
-
-        ///// <summary>
-        ///// The asset name
-        ///// typically the folder or teh file name
-        ///// </summary>
-        //string Name { get; }
-
-    };
+        string Type { get; }
+    }
 }
 

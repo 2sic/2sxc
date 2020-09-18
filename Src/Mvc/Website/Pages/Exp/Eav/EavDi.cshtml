@@ -1,0 +1,34 @@
+﻿@page
+@model Website.Pages.EavDiModel
+@{
+    ViewData["Title"] = "EavDi";
+}
+
+<h1>Eav Dependency Injections</h1>
+
+
+<h2>MapPath and more</h2>
+<ol>
+    <li>
+        MapPath(2sxc): @Model.Http.MapPath("2sxc");
+    </li>
+    <li>
+        ToAbsolute(2sxc): @Model.Http.ToAbsolute("2sxc"); <br />
+        ToAbsolute("~/2sxc"): @Model.Http.ToAbsolute("~/2sxc") <br />
+        ToAbsolute("/2sxc"): @Model.Http.ToAbsolute("/2sxc")
+    </li>
+    <li>
+        Combine: @Model.Http.Combine("~/Portals/0", "2sxc") <br/>
+        Combine: @Model.Http.Combine("/Portals/0/", "2sxc") <br/>
+    </li>
+</ol>
+
+<h2>Inherits</h2>
+<ol>
+    <li>
+        Current Type: @GetType().FullName
+    </li>
+    <li>
+        Current Type: @GetType().BaseType.FullName
+    </li>
+</ol>

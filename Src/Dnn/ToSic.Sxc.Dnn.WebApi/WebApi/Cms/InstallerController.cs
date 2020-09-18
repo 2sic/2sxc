@@ -1,17 +1,13 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
-using System.Web;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
-using ToSic.Eav;
-using ToSic.Eav.Apps.ImportExport;
-using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -27,28 +23,17 @@ namespace ToSic.Sxc.WebApi.Cms
         //[ValidateAntiForgeryToken] - never activate this, because this is a GET and can't include the RVT
         public HttpResponseMessage InstallPackage(string packageUrl)
         {
+            PreventServerTimeout300();
+            
             Log.Add("install package:" + packageUrl);
             var container = new DnnContainer().Init(ActiveModule, Log);
             var block = container.BlockIdentifier;
-            bool success;
 
-            var helper = Factory.Resolve<IImportExportEnvironment>().Init(Log);
-            try
-            {
-                // Increase script timeout to prevent timeouts
-                HttpContext.Current.Server.ScriptTimeout = 300;
+            var result = new ImportFromRemote().Init(new DnnUser(UserInfo), Log)
+                .InstallPackage(block.ZoneId, block.AppId, ActiveModule.DesktopModule.ModuleName == "2sxc-app", packageUrl, Exceptions.LogException);
 
-                success = new ZipFromUrlImport(helper, block.ZoneId, block.AppId, PortalSettings.UserInfo.IsSuperUser, Log)
-                    .ImportUrl(packageUrl, ActiveModule.DesktopModule.ModuleName == "2sxc-app");
-            }
-            catch (Exception ex)
-            {
-                Exceptions.LogException(ex);
-                throw new Exception("An error occurred while installing the app: " + ex.Message, ex);
-            }
-            
-            Log.Add("install completed with success:" + success);
-            return Request.CreateResponse(success ? HttpStatusCode.OK : HttpStatusCode.InternalServerError, new { success, helper.Messages });
+            Log.Add("install completed with success:" + result.Item1);
+            return Request.CreateResponse(result.Item1 ? HttpStatusCode.OK : HttpStatusCode.InternalServerError, new { result.Item1, result.Item2 });
         }
 
     }

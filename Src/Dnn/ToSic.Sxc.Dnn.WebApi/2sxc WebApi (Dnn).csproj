@@ -97,17 +97,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Adam\WebApi\AdamSecureState.cs" />
-    <Compile Include="Adam\WebApi\AdamItem.cs" />
-    <Compile Include="Adam\WebApi\AdamUploader.cs" />
-    <Compile Include="Adam\WebApi\SecurityChecks.cs" />
-    <Compile Include="Adam\WebApi\UploadResultDto.cs" />
+    <Compile Include="Dnn\WebApi\Adam\DnnAdamSecurityChecks.cs" />
     <Compile Include="Dnn\ApiController.cs" />
     <Compile Include="Dnn\ApiController_Obsolete.cs" />
-    <Compile Include="Security\RunIf.cs" />
-    <Compile Include="WebApi\Cms\AppAssetsController_Private.cs" />
     <Compile Include="WebApi\Cms\ContentGroupController_FieldList.cs" />
-    <Compile Include="WebApi\Cms\EntitiesController_2134.cs" />
     <Compile Include="WebApi\Cms\EntitiesController_History.cs" />
     <Compile Include="WebApi\Cms\EntitiesController_Usage.cs" />
     <Compile Include="WebApi\Cms\ModuleController_ContentBlock.cs" />
@@ -116,29 +109,18 @@
     <Compile Include="WebApi\Cms\SystemController_Languages.cs" />
     <Compile Include="WebApi\Cms\SystemController_App.cs" />
     <Compile Include="WebApi\Cms\TemplateController_Usage.cs" />
-    <Compile Include="WebApi\Context\ContextBuilder.cs" />
-    <Compile Include="WebApi\Context\Ctx.cs" />
-    <Compile Include="WebApi\DataTransferObjects\Usage\ContentBlockDto.cs" />
-    <Compile Include="WebApi\DataTransferObjects\Usage\ModuleDto.cs" />
-    <Compile Include="WebApi\DataTransferObjects\Usage\PageDto.cs" />
-    <Compile Include="WebApi\DataTransferObjects\Usage\PortalDto.cs" />
-    <Compile Include="WebApi\DataTransferObjects\Usage\ViewDto.cs" />
+    <Compile Include="Dnn\WebApi\Context\ContextBuilder.cs" />
+    <Compile Include="Dnn\WebApi\Context\DnnContextDtoExtensions.cs" />
     <Compile Include="WebApi\Routing\Route.cs" />
-    <Compile Include="WebApi\Cms\EditUi\UiController_Save.cs" />
-    <Compile Include="WebApi\Cms\EditUi\UiController_Load.cs" />
-    <Compile Include="WebApi\Cms\SaveDataValidator.cs" />
-    <Compile Include="WebApi\ImportExport\ExtensionsForIApp.cs" />
     <Compile Include="WebApi\Routing\RouteParts.cs" />
     <Compile Include="Dnn\DnnPublishing.cs" />
     <Compile Include="WebApi\DynamicApiController.cs" />
     <Compile Include="WebApi\Cms\SystemController_Features.cs" />
-    <Compile Include="WebApi\Cms\EditUi\AllInOne.cs" />
     <Compile Include="WebApi\Cms\EditUi\UiController.cs" />
-    <Compile Include="WebApi\Cms\Helpers\FeaturesManagementUtils.cs" />
     <Compile Include="WebApi\System\InsightsController.cs" />
     <Compile Include="WebApi\SxcApiControllerBase.cs" />
     <Compile Include="Dnn\WebApi\Logging\DnnLogWebApi.cs" />
-    <Compile Include="Adam\WebApi\AdamController.cs" />
+    <Compile Include="Dnn\WebApi\Adam\AdamController.cs" />
     <Compile Include="WebApi\Routing\AppApiControllerSelector.cs" />
     <Compile Include="WebApi\Cms\AppAssetsController.cs" />
     <Compile Include="WebApi\App\AppContentController.cs" />
@@ -154,10 +136,8 @@
     <Compile Include="WebApi\Cms\EditUi\EntityPickerController.cs" />
     <Compile Include="WebApi\Cms\MetadataController.cs" />
     <Compile Include="WebApi\Cms\PipelineDesignerController.cs" />
-    <Compile Include="WebApi\Helpers\Helpers.cs" />
+    <Compile Include="Dnn\WebApi\GetDnnBlock.cs" />
     <Compile Include="WebApi\Cms\ImportExportController.cs" />
-    <Compile Include="WebApi\ImportExport\HttpResponseMessageHelper.cs" />
-    <Compile Include="WebApi\ImportExport\SxcAppForWebApi.cs" />
     <Compile Include="WebApi\Cms\InstallerController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebApi\Routing\RouteMapper.cs" />
@@ -206,9 +186,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="WebApi\Cms\Refactor\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Configuration;
 using ToSic.Sxc.Apps;
 
@@ -16,7 +17,7 @@ namespace ToSic.Sxc.Adam
         public static string AdamAppRootFolder =>
             _adamAppRootFolder ?? (_adamAppRootFolder =
                 Global.GetOverride(TypeName, "AppRootFolder",
-                    "adam/[AppFolder]/"));
+                    $"{AdamConstants.AdamRootFolder}/[AppFolder]/"));
 
         private static string _adamAppRootFolder;
 

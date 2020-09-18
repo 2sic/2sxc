@@ -15,31 +15,25 @@ namespace ToSic.Sxc.Adam
         /// Find the first metadata entity for this file/folder
         /// </summary>
         /// <param name="app">the app which manages the metadata</param>
-        /// <param name="id">the id of the file/folder</param>
-        /// <param name="isFolder">if it's a file or a folder</param>
+        /// <param name="mdId"></param>
         /// <returns></returns>
-        internal static IEntity GetFirstMetadata(AppRuntime app, int id, bool isFolder)
+        internal static IEntity GetFirstMetadata(AppRuntime app, MetadataFor mdId)
             => app.Metadata
-                .Get(Eav.Constants.MetadataForCmsObject,
-                    (isFolder ? "folder:" : "file:") + id)
+                .Get(mdId.TargetType, mdId.KeyString) //(isFolder ? "folder:" : "file:") + id)
                 .FirstOrDefault();
 
         /// <summary>
         /// Get the first metadata entity of an item - or return a fake one instead
         /// </summary>
-        internal static IDynamicEntity GetFirstOrFake(AdamAppContext appContext, int id, bool isFolder)
+        internal static IDynamicEntity GetFirstOrFake(AdamAppContext appContext, MetadataFor mdId)
         {
-            var meta = GetFirstMetadata(appContext.AppRuntime, id, isFolder) 
+            var meta = GetFirstMetadata(appContext.AppRuntime, mdId) 
                        ?? Build.FakeEntity(Eav.Constants.TransientAppId);
             return new DynamicEntity(meta, 
                 new[] { Thread.CurrentThread.CurrentCulture.Name }, 
                 appContext.CompatibilityLevel, 
                 appContext.Block);
         }
-
-        public static int GetMetadataId(AppRuntime appRuntime, int id, bool isFolder)
-            => GetFirstMetadata(appRuntime, id, isFolder)?.EntityId ?? 0;
-
 
     }
 }

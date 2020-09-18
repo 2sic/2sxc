@@ -1,0 +1,50 @@
+﻿@page
+@using ToSic.Sxc.Mvc.Dev
+@model Website.Pages.ComponentsModel
+@{
+    ViewData["Title"] = "Components";
+}
+
+<h1>Components</h1>
+
+todo
+
+<h2>First</h2>
+
+todo
+
+<h2>Second</h2>
+
+<h2>Third (works but not exciting)</h2>
+@await Component.InvokeAsync("Third")
+
+await Component.InvokeAsync()
+
+<h2>
+    Partials
+</h2>
+@Html.Partial("Partial/Partial1.cshtml")
+
+<h2>Component with Params</h2>
+@await Component.InvokeAsync("ComponentWithParams", new { pageId = TestIds.Blog.Page, instanceId = TestIds.Blog.Container })
+
+
+<h2>Direct call of my component inheriting from SxcRazorPage</h2>
+
+
+@Html.Partial("Partial/SxcRazorPageWithParamsInView", new ViewDataDictionary(ViewData)
+{
+    { "id", TestIds.Blog.Container },
+    { "PageId", TestIds.Blog.Page },
+    { "AppId", TestIds.Blog.App },
+    { "Block", TestIds.Blog.Block }
+})
+
+<h2>Now a simple content</h2>
+@Html.Partial("Partial/SxcRazorPageWithParamsInView", new ViewDataDictionary(ViewData)
+{
+    { "Id", TestIds.ContentOnHome.Container },
+    { "PageId", TestIds.ContentOnHome.Page },
+    { "AppId", TestIds.ContentOnHome.App },
+    { "Block", TestIds.ContentOnHome.Block }
+})

@@ -8,6 +8,7 @@ using DotNetNuke.Web.Client.ClientResourceManagement;
 using DotNetNuke.Web.Client.Providers;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Edit;
 
 namespace ToSic.Sxc.Dnn.Web
 {
@@ -71,13 +72,13 @@ namespace ToSic.Sxc.Dnn.Web
             var priority = (int) FileOrder.Js.DefaultPriority - 2;
 
             // add edit-mode CSS
-            if (editCss) RegisterCss(page, root + "dist/inpage/inpage.min.css");
+            if (editCss) RegisterCss(page, root + InpageCms.EditCss);
 
             // add read-js
             if (readJs || editJs)
             {
                 Log.Add("add $2sxc api and headers");
-                RegisterJs(page, ver, root + "js/2sxc.api.min.js", true, priority);
+                RegisterJs(page, ver, root + InpageCms.CoreJs, true, priority);
                 Header.AddHeaders();
             }
 
@@ -86,7 +87,7 @@ namespace ToSic.Sxc.Dnn.Web
             {
                 Log.Add("add 2sxc edit api; also request jQuery and anti-forgery");
                 // note: the inpage only works if it's not in the head, so we're adding it below
-                RegisterJs(page, ver, root + "dist/inpage/inpage.min.js", false, priority + 1);
+                RegisterJs(page, ver, root + InpageCms.EditJs, false, priority + 1);
                 // request full $services and jQuery etc.
                 JavaScript.RequestRegistration(CommonJs.jQuery);
                 ServicesFramework.Instance.RequestAjaxAntiForgerySupport();

@@ -13,13 +13,14 @@ namespace ToSic.Sxc.Dnn.ImportExport
     public class DnnXmlExporter: XmlExporter
     {
         private readonly IFileManager _dnnFiles = FileManager.Instance;
-        internal AdamAppContext AdamAppContext;
+        internal AdamAppContext<int, int> AdamAppContext;
 
         public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds, ILog parentLog)
         {
             var tenant = new DnnTenant(PortalSettings.Current);
             var app = Eav.Factory.Resolve<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
-            AdamAppContext = new AdamAppContext(tenant, app, null, 10, Log);
+            AdamAppContext = new AdamAppContext<int, int>();
+            AdamAppContext.Init(tenant, app, null, 10, Log);
             Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
 
             // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally

@@ -2,11 +2,11 @@
 using System.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Caching;
-using ToSic.Eav.ImportExport.Persistence.File;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Plumbing.Booting;
@@ -14,19 +14,21 @@ using ToSic.Eav.Repositories;
 using ToSic.Eav.Run;
 using ToSic.SexyContent.Dnn920;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Apps.ImportExport;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Conversion;
+using ToSic.Sxc.Dnn.Adam;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.ImportExport;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.WebApi.Adam;
+using ToSic.Sxc.WebApi.Plumbing;
 
 namespace ToSic.SexyContent
 {
@@ -50,7 +52,14 @@ namespace ToSic.SexyContent
 
             ConfigureConnectionString();
             var appsCache = GetAppsCacheOverride();
-            ConfigureIoC(appsCache);
+            Factory.ActivateNetCoreDi(services =>
+            {
+                services
+                    .AddDnn(appsCache)
+                    .AddSxc()
+                    .AddEav();
+            });
+            //ConfigureIoC(appsCache);
             SharpZipLibRedirect.RegisterSharpZipLibRedirect();
             ConfigurePolymorphResolvers();
             _alreadyConfigured = true;
@@ -83,59 +92,62 @@ namespace ToSic.SexyContent
             Polymorphism.Add(new Koi());
             Polymorphism.Add(new Permissions());
         }
+    }
 
-        private static void ConfigureIoC(string appsCacheOverride)
+    internal static class DnnDependencyInjection
+    {
+        public static IServiceCollection AddDnn(this IServiceCollection services, string appsCacheOverride)
         {
-            Eav.Factory.ActivateNetCoreDi(sc =>
+            services.AddTransient<IValueConverter, DnnValueConverter>();
+            services.AddTransient<IUser, DnnUser>();
+
+            services.AddTransient<XmlExporter, DnnXmlExporter>();
+            services.AddTransient<IImportExportEnvironment, DnnImportExportEnvironment>();
+
+            // new for .net standard
+            services.AddScoped<ITenant, DnnTenant>();
+            services.AddTransient<IContainer, DnnContainer>();
+            services.AddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
+            services.AddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
+            services.AddScoped<IEnvironment, DnnEnvironment>();
+            services.AddScoped<IAppEnvironment, DnnEnvironment>();
+            services.AddTransient<IZoneMapper, DnnZoneMapper>();
+
+            services.AddTransient<IClientDependencyOptimizer, DnnClientDependencyOptimizer>();
+            services.AddTransient<AppPermissionCheck, DnnPermissionCheck>();
+
+            services.AddTransient<DynamicCodeRoot, DnnDynamicCode>();
+            services.AddTransient<IRenderingHelper, DnnRenderingHelper>();
+            services.AddTransient<IEnvironmentConnector, DnnMapAppToInstance>();
+            services.AddTransient<IEnvironmentInstaller, InstallationController>();
+
+            // ADAM 
+            services.AddTransient<IAdamFileSystem<int, int>, DnnAdamFileSystem>();
+            services.AddTransient<AdamAppContext, AdamAppContext<int, int>>();
+
+            // new #2160
+            services.AddTransient<SecurityChecksBase, DnnAdamSecurityChecks>();
+
+            services.AddTransient<IGetEngine, GetDnnEngine>();
+            services.AddTransient<IFingerprint, DnnFingerprint>();
+
+            // add page publishing
+            services.AddTransient<IPagePublishing, Sxc.Dnn.Cms.DnnPagePublishing>();
+
+            if (appsCacheOverride != null)
             {
-                sc.AddTransient<Eav.Conversion.EntitiesToDictionary, DataToDictionary>();
-                sc.AddTransient<IValueConverter, DnnValueConverter>();
-                sc.AddTransient<IUser, DnnUser>();
-
-                sc.AddTransient<XmlExporter, DnnXmlExporter>();
-                sc.AddTransient<IImportExportEnvironment, DnnImportExportEnvironment>();
-
-                sc.AddTransient<IRuntime, Runtime>();
-
-                // new for .net standard
-                sc.AddScoped<ITenant, DnnTenant>();
-                sc.AddTransient<IContainer, DnnContainer>();
-                sc.AddScoped<IHttp, HttpAbstraction>();
-                sc.AddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
-                sc.AddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
-                sc.AddScoped<IEnvironment, DnnEnvironment>();
-                sc.AddScoped<IAppEnvironment, DnnEnvironment>();
-                sc.AddTransient<IZoneMapper, DnnZoneMapper>();
-
-                // The file-importer - temporarily itself
-                sc.AddTransient<XmlImportWithFiles, XmlImportFull>();
-
-                sc.AddTransient<IClientDependencyOptimizer, DnnClientDependencyOptimizer>();
-                sc.AddTransient<AppPermissionCheck, DnnPermissionCheck>();
-
-                sc.AddTransient<DynamicCodeRoot, DnnDynamicCode>();
-                sc.AddTransient<IRenderingHelper, DnnRenderingHelper>();
-                sc.AddTransient<IEnvironmentConnector, DnnMapAppToInstance>();
-                sc.AddTransient<IEnvironmentInstaller, InstallationController>();
-                sc.AddTransient<IEnvironmentFileSystem, DnnFileSystem>();
-                sc.AddTransient<IGetEngine, GetDnnEngine>();
-                sc.AddTransient<IFingerprint, DnnFingerprint>();
-
-                // add page publishing
-                sc.AddTransient<IPagePublishing, Sxc.Dnn.Cms.PagePublishing>();
-
-                if (appsCacheOverride != null)
+                try
                 {
-                    try
-                    {
-                        var appsCacheType = Type.GetType(appsCacheOverride);
-                        sc.TryAddSingleton(typeof(IAppsCache), appsCacheType);
-                    }
-                    catch {  /* ignore */ }
+                    var appsCacheType = Type.GetType(appsCacheOverride);
+                    services.TryAddSingleton(typeof(IAppsCache), appsCacheType);
                 }
+                catch
+                {
+                    /* ignore */
+                }
+            }
 
-                new Eav.DependencyInjection().ConfigureNetCoreContainer(sc);
-            });
+            return services;
         }
     }
 }

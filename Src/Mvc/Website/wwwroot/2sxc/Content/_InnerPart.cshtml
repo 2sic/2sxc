@@ -1,0 +1,13 @@
+﻿@inherits ToSic.Sxc.Mvc.RazorPages.SxcRazorPage<TModel>
+@{
+    ViewData["Title"] = "Default";
+}
+
+<h2>Inner Part - loaded with Partial</h2>
+
+My type: @GetType().FullName <br/>
+
+My Path: @this.Path <br/>
+CreateInstance Path: @this.CreateInstancePath
+
+<hr/>

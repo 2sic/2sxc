@@ -6,21 +6,22 @@ namespace ToSic.Sxc.Adam
     /// Export helper
     /// provides a list of all files / folders in ADAM for export
     /// </summary>
-    public class Export
+    public class Export<TFolderId, TFileId>
     {
-        private readonly Eav.Apps.Assets.Folder _root;
-        private readonly List<int> _fileIds = new List<int>();
-        private readonly List<int> _folderIds = new List<int>();
+        private readonly Folder<TFolderId, TFileId> _root;
+        // todo #adamid - should use TFile/TFolder
+        private readonly List<TFileId> _fileIds = new List<TFileId>();
+        private readonly List<TFolderId> _folderIds = new List<TFolderId>();
 
-        private readonly IEnvironmentFileSystem _envFs;
+        private readonly IAdamFileSystem<TFolderId, TFileId> _envFs;
 
-        public Export(AdamAppContext adm)
+        public Export(AdamAppContext<TFolderId, TFileId> adm)
         {
             _root = adm.RootFolder;
-            _envFs = adm.EnvironmentFs;
+            _envFs = adm.AdamFs;
         }
 
-        public List<int> AppFiles
+        public List<TFileId> AppFiles
         {
             get
             {
@@ -30,7 +31,7 @@ namespace ToSic.Sxc.Adam
             }
         }
 
-        public List<int> AppFolders
+        public List<TFolderId> AppFolders
         {
             get
             {
@@ -40,16 +41,16 @@ namespace ToSic.Sxc.Adam
             }
             
         } 
-        private void AddFolder(Eav.Apps.Assets.Folder fldr)
+        private void AddFolder(Folder<TFolderId, TFileId> folder)
         {
-            _folderIds.Add(fldr.Id);  // track of the folder
-            AddFilesInFolder(fldr);         // keep track of the files
+            _folderIds.Add(folder.SysId);  // track of the folder
+            AddFilesInFolder(folder);   // keep track of the files
 
-            foreach (var f in _envFs.GetFolders(fldr.Id, null))   // then add subfolders
+            foreach (var f in _envFs.GetFolders(folder))   // then add subfolders
                 AddFolder(f);
         }
 
-        private void AddFilesInFolder(Eav.Apps.Assets.Folder fldr) 
-            => _envFs.GetFiles(fldr.Id, null).ForEach(f => _fileIds.Add(f.Id));
+        private void AddFilesInFolder(IFolder folder) 
+            => _envFs.GetFiles(folder).ForEach(f => _fileIds.Add(f.SysId));
     }
 }

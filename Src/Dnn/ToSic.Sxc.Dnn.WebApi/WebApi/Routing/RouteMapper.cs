@@ -1,7 +1,6 @@
 ﻿using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using DotNetNuke.Web.Api;
-using ToSic.Sxc.Adam.WebApi;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.Cms;
@@ -39,10 +38,9 @@ namespace ToSic.Sxc.WebApi
             };
             var stdNsAdam = new[]
             {
-                //"ToSic.Sxc.Adam.WebApi",
                 typeof(AdamController).Namespace
             };
-
+            var adamController = new {controller = "Adam"};
             #region EAV and View-routes
             // 2019-11-28 moved namespace for this stuff
             mapRouteManager.MapHttpRoute("2sxc", "EAV", "EAV/{controller}/{action}", new[]
@@ -69,8 +67,8 @@ namespace ToSic.Sxc.WebApi
 
             #region old API routes before 08.10
             // ADAM routes
-            mapRouteManager.MapHttpRoute("2sxc", "adam-old-81", "app-content/{contenttype}/{guid}/{field}", new { controller = "Adam" }, stdNsAdam);
-            mapRouteManager.MapHttpRoute("2sxc", "adam", "app-content/{contenttype}/{guid}/{field}/{action}", new { controller = "Adam" }, stdNsAdam);
+            mapRouteManager.MapHttpRoute("2sxc", "adam-old-81", "app-content/{contenttype}/{guid}/{field}", adamController, stdNsAdam);
+            mapRouteManager.MapHttpRoute("2sxc", "adam", "app-content/{contenttype}/{guid}/{field}/{action}", adamController, stdNsAdam);
 
             // App Content routes - for GET/DELETE/PUT entities using REST
             // 1. Type and null or int-id
@@ -99,8 +97,8 @@ namespace ToSic.Sxc.WebApi
             const string appPathWithEdition = appPath + RouteParts.EditionToken + "/";
 
             // ADAM routes
-            mapRouteManager.MapHttpRoute("2sxc", "adam-auto", appAuto + "content/{contenttype}/{guid}/{field}", new { controller = "Adam" }, stdNsAdam);
-            mapRouteManager.MapHttpRoute("2sxc", "adam2-auto", appAuto + "content/{contenttype}/{guid}/{field}/{action}", new { controller = "Adam" }, stdNsAdam);
+            mapRouteManager.MapHttpRoute("2sxc", "adam-auto", appAuto + "content/{contenttype}/{guid}/{field}", adamController, stdNsAdam);
+            mapRouteManager.MapHttpRoute("2sxc", "adam2-auto", appAuto + "content/{contenttype}/{guid}/{field}/{action}", adamController, stdNsAdam);
 
             // App Content routes - for GET/DELETE/PUT entities using REST
             // 1. Type and null or int-id

@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Dnn
     public static class Factory
     {
         /// <summary>
-        /// Get a Root CMS Block if you know the TabId and the ModuleId
+        /// Get a Root CMS Block if you know the TabId and the ModId
         /// </summary>
         /// <param name="tabId">The DNN tab id (page id)</param>
         /// <param name="modId">The DNN Module id</param>

@@ -1,48 +1,35 @@
 ﻿using System;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
-using System.Web;
-using System.Web.Hosting;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
-using ToSic.Sxc.Interfaces;
+using ToSic.Sxc.Run;
 using Exception = System.Exception;
 
 namespace ToSic.Sxc.Dnn.Install
 {
-    public class InstallationController: IEnvironmentInstaller
+    public partial class InstallationController: HasLog, IEnvironmentInstaller
     {
         public bool SaveUnimportantDetails = true;
 
         private readonly DnnInstallLogger _installLogger;
 
-        private ILog Log = new Log("Ist.InstCo");
-
-        /// <summary>
-        /// This static initializer will do a one-time check to see if everything is ready,
-        /// so subsequent access to this property will not need to do anything any more
-        /// </summary>
-        static InstallationController()
-        {
-            UpdateUpgradeCompleteStatus();
-        }
-
-        private static void UpdateUpgradeCompleteStatus()
-        {
-            UpgradeComplete = new InstallationController().IsUpgradeComplete(Settings.Installation.LastVersionWithServerChanges, "- static check");
-        }
 
         /// <summary>
         /// Instance initializers...
         /// </summary>
-        public InstallationController()
+        public InstallationController(): base("Dnn.InstCo")
         {
             _installLogger = new DnnInstallLogger(SaveUnimportantDetails);
+            History.Add("installation", Log);
+        }
+
+        public IEnvironmentInstaller Init(ILog parent)
+        {
+            Log.LinkTo(parent);
+            return this;
         }
 
         internal string UpgradeModule(string version)
@@ -53,7 +40,7 @@ namespace ToSic.Sxc.Dnn.Install
             var sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString);
             sqlConnection.Open();
             var sqlCommand = new SqlCommand(sql, sqlConnection);
-            var runDbChangesUntil811 = (Int32)sqlCommand.ExecuteScalar() == 1; // if there is one result row, this means the templates table still exists, we need to run changes before 08.11
+            var runDbChangesUntil811 = (int)sqlCommand.ExecuteScalar() == 1; // if there is one result row, this means the templates table still exists, we need to run changes before 08.11
             sqlConnection.Close();
 
             // if version is 01.00.00, the upgrade has to run because log files should be cleared
@@ -121,8 +108,8 @@ namespace ToSic.Sxc.Dnn.Install
                     case "08.11.00":
                         throw new Exception("Trying to upgrade a 7 or 8 version - which isn't supported in v9.20+. Please upgrade to the latest 8.12 or 9.15before trying to upgrade to a 9.20+");
 
-                    // case "09.xx.xx":
-                    //Helpers.ImportXmlSchemaOfVersion("09.xx.xx", false);
+                    // case "1X.xx.xx":
+                    //Helpers.ImportXmlSchemaOfVersion("1X.xx.xx", false);
                     //new V9(version, _installLogger, Log).Version09xxxx();
                     // warning!!! when you add a new case, make sure you upgrade the version number on Settings.Installation.LastVersionWithServerChanges!!!
                 }
@@ -159,105 +146,17 @@ namespace ToSic.Sxc.Dnn.Install
             return version;
         }
 
-        internal void MaybeResetUpgradeLogsToStartAgainFromV1()
+        private void MaybeResetUpgradeLogsToStartAgainFromV1()
         {
             _installLogger.LogStep("", "Maybe reset logs start");
             // this condition only applies, if 2sxc upgrade 7 didn't happen yet
-            // var cache = Eav.Factory.Resolve<IAppsCache>();
-            var appState = /*Factory.GetAppState*/Eav.Apps.State.Get(new AppIdentity(Constants.DefaultZoneId, Constants.MetaDataAppId));
-            if (appState // DataSource.GetCache(DataSource.GetIdentity(Constants.DefaultZoneId, Constants.MetaDataAppId))
-                    .GetContentType("2SexyContent-Template") != null) return;
+            var appState = State.Get(new AppIdentity(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId));
+            if (appState.GetContentType("2SexyContent-Template") != null) return;
 
             _installLogger.LogStep("", "Will reset all logs now");
             _installLogger.DeleteAllLogFiles();
             _installLogger.LogStep("", "Maybe Reset logs done");
         }
-
-
-        public void ResumeAbortedUpgrade()
-        {
-            _installLogger.LogStep("", "FinishAbortedUpgrade starting", false);
-            _installLogger.LogStep("", "Will handle " + Settings.Installation.UpgradeVersionList.Length + " versions");
-            // Run upgrade again for all versions that do not have a corresponding logfile
-            foreach (var upgradeVersion in Settings.Installation.UpgradeVersionList)
-            {
-                var complete = IsUpgradeComplete(upgradeVersion, "- check for FinishAbortedUpgrade");
-                _installLogger.LogStep("", "Status for version " + upgradeVersion + " is " + complete);
-                if (!complete)
-                    UpgradeModule(upgradeVersion);
-            }
-
-            _installLogger.LogStep("", "FinishAbortedUpgrade done", false);
-
-            //_logger.SaveDetailedLog();
-            // Restart application
-            HttpRuntime.UnloadAppDomain();
-        }
-
-
-        public string UpgradeMessages()
-            => CheckUpgradeMessage(PortalSettings.Current.UserInfo.IsSuperUser);
-
-
-
-
-        internal string CheckUpgradeMessage(bool isSuperUser)
-        {
-            // Upgrade success check - show message if upgrade did not run successfully
-            if (UpgradeComplete) return null;
-
-            return IsUpgradeRunning
-                ? "It looks like a 2sxc upgrade is currently running.Please wait for the operation to complete(the upgrade may take a few minutes)."
-                : isSuperUser
-                    ? "Module upgrade did not complete (<a href='http://2sxc.org/en/help/tag/install' target='_blank'>read more</a>). Click to complete: <br><a class='dnnPrimaryAction' onclick='$2sxc.system.finishUpgrade(this)'>complete upgrade</a>"
-                    : "Module upgrade did not complete successfully. Please login as host user to finish the upgrade.";
-        }
-
-        #region Status Stuff
-        internal static bool UpgradeComplete;
-
-        internal bool IsUpgradeComplete(string version, string note = "")
-        {
-            _installLogger.LogStep(version, "IsUgradeComplete checking " + note, false);
-            var logFilePath = HostingEnvironment.MapPath(Settings.Installation.LogDirectory + version + ".resources");
-            var complete = File.Exists(logFilePath);
-            _installLogger.LogStep(version, "IsUgradeComplete: " + complete, false);
-            return complete;
-        }
-
-        // cache the status
-        private static bool? _running;
-        /// <summary>
-        /// Set / Check if it's running, by storing the static info but also creating/releasing a lock-file
-        /// We need the lock file in case another system would try to read the status, which doesn't share
-        /// this running static instance
-        /// </summary>
-        public bool IsUpgradeRunning
-        {
-            get => _running ?? (_running = new DnnFileLock().IsSet).Value;
-            private set
-            {
-                try
-                {
-                    _installLogger.LogStep("", "set upgrade running - " + value);
-
-                    if (value)
-                        new DnnFileLock().Set();
-                    else
-                        new DnnFileLock().Release();
-                    _installLogger.LogStep("", "set upgrade running - " + value + " - done");
-                }
-                catch
-                {
-                    _installLogger.LogStep("", "set upgrade running - " + value + " - error!");
-                }
-                finally
-                {
-                    _running = value;
-                }
-            }
-        }
-        #endregion
 
 
     }

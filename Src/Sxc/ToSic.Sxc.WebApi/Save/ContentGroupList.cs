@@ -18,7 +18,10 @@ namespace ToSic.Sxc.WebApi
 {
     internal class ContentGroupList: SaveHelperBase
     {
-        public ContentGroupList(IBlock block, ILog parentLog) : base(block, parentLog, "Api.GrpPrc") {}
+        public ContentGroupList(IBlock block, ILog parentLog) : base("Api.GrpPrc")
+        {
+            base.Init(block, parentLog);
+        }
 
         internal bool IfChangesAffectListUpdateIt(int appId, List<BundleWithHeader<IEntity>> items, Dictionary<Guid, int> ids)
         {

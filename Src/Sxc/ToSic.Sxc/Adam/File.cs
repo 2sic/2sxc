@@ -1,9 +1,10 @@
 ﻿using System;
+using ToSic.Eav.Data;
 using ToSic.SexyContent.Adam;
 
 namespace ToSic.Sxc.Adam
 {
-    public class File : Eav.Apps.Assets.File, 
+    public class File<TFolderId, TFileId> : Eav.Apps.Assets.File<TFolderId, TFileId>,
 #pragma warning disable 618
         AdamFile, 
 #pragma warning restore 618
@@ -16,26 +17,32 @@ namespace ToSic.Sxc.Adam
             AppContext = appContext;
         }
 
+        #region Metadata
+
         /// <inheritdoc />
-        public dynamic Metadata => Adam.Metadata.GetFirstOrFake(AppContext, Id, false) as dynamic;
+        public dynamic Metadata => Adam.Metadata.GetFirstOrFake(AppContext, MetadataId);
 
-        public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AppContext.AppRuntime, Id, false) != null;
+        public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AppContext.AppRuntime, MetadataId) != null;
 
-        public string Url => AppContext.Tenant.ContentPath + Folder + FullName;
+        public MetadataFor MetadataId => _metadataKey ?? (_metadataKey = new MetadataFor
+        {
+            TargetType = Eav.Constants.MetadataForCmsObject,
+            KeyString = "file:" + SysId
+        });
+        private MetadataFor _metadataKey;
+        #endregion
 
-       public string Type => Classification.TypeName(Extension);
+        public string Url { get; internal set; }
+
+        public string Type => Classification.TypeName(Extension);
 
 
 
-        #region Obsolete properties, included to ensure old stuff still works because of refactoring in 2sxc 9.20
-        [Obsolete("use FullName instead")]
         public string FileName => FullName;
 
-        [Obsolete("use Created instead")]
         public DateTime CreatedOnDate => Created;
 
-        [Obsolete("use Id instead")]
-        public int FileId => Id;
-        #endregion
+        public int FileId => SysId as int? ?? 0;
+
     }
 }

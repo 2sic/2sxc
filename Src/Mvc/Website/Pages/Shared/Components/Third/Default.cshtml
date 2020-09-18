@@ -1,0 +1,13 @@
+﻿@model List<string>
+@{
+    ViewData["Title"] = "Default";
+}
+
+<h1>Third component</h1>
+
+<ol>
+@foreach (var name in Model)
+{
+    <li>@name</li>
+}
+</ol>

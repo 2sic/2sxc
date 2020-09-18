@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ToSic.Sxc.WebApi
+﻿namespace ToSic.Sxc.WebApi
 {
-    internal class WebApiConstants
+    public class WebApiConstants
     {
         public const string AppIdKey = "appId";
         public const string ZoneIdKey = "zoneId";
+
+        public const string HeaderInstanceId = "moduleid";
+        public const string HeaderContentBlockId = "ContentBlockId";
+        public const string HeaderPageId = "tabid";
+
     }
 }

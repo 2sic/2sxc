@@ -1,4 +1,5 @@
 ﻿using System.Web.Http;
+using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 
@@ -26,10 +27,7 @@ namespace ToSic.Sxc.WebApi.System
 
         #endregion
 
-
-        protected Web.WebApi.System.Insights Insights =>
-            _insights ?? (_insights = new Web.WebApi.System.Insights(Log, ThrowIfNotSuperuser, HttpException.BadRequest));
-        private Web.WebApi.System.Insights _insights;
+        protected Web.WebApi.System.Insights GetInsights => new Web.WebApi.System.Insights(Log, ThrowIfNotSuperuser, HttpException.BadRequest);
 
         private void ThrowIfNotSuperuser()
         {
@@ -41,97 +39,97 @@ namespace ToSic.Sxc.WebApi.System
         #region Help and Basics
 
         [HttpGet]
-        public string Help() => Insights.Help();
+        public string Help() => GetInsights.Help();
 
         [HttpGet]
-        public bool IsAlive() => Insights.IsAlive();
+        public bool IsAlive() => GetInsights.IsAlive();
 
         #endregion
 
         #region App
         [HttpGet]
-        public string LoadLog(int? appId = null) => Insights.LoadLog(appId);
+        public string LoadLog(int? appId = null) => GetInsights.LoadLog(appId);
 
         [HttpGet]
-        public string Cache() => Insights.Cache();
+        public string Cache() => GetInsights.Cache();
 
         [HttpGet]
-        public string Stats(int? appId = null) => Insights.Stats(appId);
+        public string Stats(int? appId = null) => GetInsights.Stats(appId);
         #endregion
 
         #region AppActions
 
         [HttpGet]
-        public string Purge(int? appId = null) => Insights.Purge(appId);
+        public string Purge(int? appId = null) => GetInsights.Purge(appId);
 
         #endregion
 
         #region Attributes
 
         [HttpGet]
-        public string Attributes(int appId, string type = null) => Insights.Attributes(appId, type);
+        public string Attributes(int appId, string type = null) => GetInsights.Attributes(appId, type);
 
         [HttpGet]
         public string AttributeMetadata(int? appId = null, string type = null, string attribute = null) =>
-            Insights.AttributeMetadata(appId, type, attribute);
+            GetInsights.AttributeMetadata(appId, type, attribute);
 
         [HttpGet]
         public string AttributePermissions(int? appId = null, string type = null, string attribute = null) =>
-            Insights.AttributePermissions(appId, type, attribute);
+            GetInsights.AttributePermissions(appId, type, attribute);
 
         #endregion
 
         #region Entities
 
         [HttpGet]
-        public string Entities(int? appId = null, string type = null) => Insights.Entities(appId, type);
+        public string Entities(int? appId = null, string type = null) => GetInsights.Entities(appId, type);
 
         [HttpGet]
-        public string EntityMetadata(int? appId = null, int? entity = null) => Insights.EntityMetadata(appId, entity);
+        public string EntityMetadata(int? appId = null, int? entity = null) => GetInsights.EntityMetadata(appId, entity);
 
         [HttpGet]
         public string EntityPermissions(int? appId = null, int? entity = null) =>
-            Insights.EntityPermissions(appId, entity);
+            GetInsights.EntityPermissions(appId, entity);
 
         [HttpGet]
-        public string Entity(int? appId = null, string entity = null) => Insights.Entity(appId, entity);
+        public string Entity(int? appId = null, string entity = null) => GetInsights.Entity(appId, entity);
         #endregion
 
         #region Logs
 
         [HttpGet]
-        public string Logs() => Insights.Logs();
+        public string Logs() => GetInsights.Logs();
 
         [HttpGet]
-        public string Logs(string key) => Insights.Logs(key);
+        public string Logs(string key) => GetInsights.Logs(key);
 
         [HttpGet]
-        public string Logs(string key, int position) => Insights.Logs(key, position);
+        public string Logs(string key, int position) => GetInsights.Logs(key, position);
 
         [HttpGet]
-        public string Logs(bool pause) => Insights.Logs(pause);
+        public string Logs(bool pause) => GetInsights.Logs(pause);
 
         [HttpGet]
-        public string LogsFlush(string key) => Insights.LogsFlush(key);
+        public string LogsFlush(string key) => GetInsights.LogsFlush(key);
 
         #endregion
 
         #region Types
 
         [HttpGet]
-        public string Types(int? appId = null, bool detailed = false) => Insights.Types(appId, detailed);
+        public string Types(int? appId = null, bool detailed = false) => GetInsights.Types(appId, detailed);
 
         [HttpGet]
-        public string GlobalTypes() => Insights.GlobalTypes();
+        public string GlobalTypes() => GetInsights.GlobalTypes();
 
         [HttpGet]
-        public string GlobalTypesLog() => Insights.GlobalTypesLog();
+        public string GlobalTypesLog() => GetInsights.GlobalTypesLog();
 
         [HttpGet]
-        public string TypeMetadata(int? appId = null, string type = null) => Insights.TypeMetadata(appId, type);
+        public string TypeMetadata(int? appId = null, string type = null) => GetInsights.TypeMetadata(appId, type);
 
         [HttpGet]
-        public string TypePermissions(int? appId = null, string type = null) => Insights.TypePermissions(appId, type);
+        public string TypePermissions(int? appId = null, string type = null) => GetInsights.TypePermissions(appId, type);
         #endregion
 
     }

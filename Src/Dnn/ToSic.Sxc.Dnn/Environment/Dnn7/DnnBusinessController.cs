@@ -38,7 +38,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 if (_publishing != null) return Publishing;
 
                 // if publishing is used, make sure it's in the log-history
-                _publishing = new Sxc.Dnn.Cms.PagePublishing().Init(Log);
+                _publishing = new Sxc.Dnn.Cms.DnnPagePublishing().Init(Log);
                 History.Add("dnn-publishing", Log);
                 return _publishing;
             }
@@ -46,14 +46,14 @@ namespace ToSic.SexyContent.Environment.Dnn7
         private IPagePublishing _publishing;
 
 
-        public int GetLatestVersion(int moduleId) => Publishing.GetLatestVersion(moduleId);
+        public int GetLatestVersion(int instanceId) => Publishing.GetLatestVersion(instanceId);
 
-        public int GetPublishedVersion(int moduleId) => Publishing.GetPublishedVersion(moduleId);
+        public int GetPublishedVersion(int instanceId) => Publishing.GetPublishedVersion(instanceId);
 
-        public void PublishVersion(int moduleId, int version)
+        public void PublishVersion(int instanceId, int version)
         {
-            Log.Add($"publish m#{moduleId}, v:{version}");
-            Publishing.Publish(moduleId, version);
+            Log.Add($"publish m#{instanceId}, v:{version}");
+            Publishing.Publish(instanceId, version);
 
             try
             {
@@ -67,15 +67,15 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
 
 
-        public void DeleteVersion(int moduleId, int version) 
+        public void DeleteVersion(int instanceId, int version) 
             => Log.Add("delete version is not supported");
 
-        public int RollBackVersion(int moduleId, int version)
+        public int RollBackVersion(int instanceId, int version)
         {
             Log.Add("DNN tried to rollback version " + version + ", but 2sxc does not support this.");
 
             // Return the currently published version, because this is what the module's state is after this operation
-            return Publishing.GetPublishedVersion(moduleId);
+            return Publishing.GetPublishedVersion(instanceId);
         }
 
         /// <summary>

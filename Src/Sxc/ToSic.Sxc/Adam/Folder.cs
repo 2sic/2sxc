@@ -1,56 +1,58 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Data;
 
 namespace ToSic.Sxc.Adam
 {
 
-    public class Folder : Eav.Apps.Assets.Folder, IFolder
+    public class Folder<TFolderId, TFileId> : Eav.Apps.Assets.Folder<TFolderId, TFileId>, IFolder
     {
-        protected AdamAppContext AppContext { get; set; }
+        protected AdamAppContext<TFolderId, TFileId> AdamContext { get; set; }
 
-        private readonly IEnvironmentFileSystem _fileSystem;
-
-        public Folder(AdamAppContext appContext, IEnvironmentFileSystem fileSystem)
+        public Folder(AdamAppContext<TFolderId, TFileId> adamContext)
         {
-            AppContext = appContext;
-            _fileSystem = fileSystem;
+            AdamContext = adamContext;
         }
 
         /// <inheritdoc />
-        public dynamic Metadata => Adam.Metadata.GetFirstOrFake(AppContext, Id, true);
+        public dynamic Metadata => Adam.Metadata.GetFirstOrFake(AdamContext, MetadataId);
 
         /// <inheritdoc />
-        public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AppContext.AppRuntime, Id, false) != null;
+        public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AdamContext.AppRuntime, MetadataId) != null;
+
+        public MetadataFor MetadataId => _metadataKey ?? (_metadataKey = new MetadataFor
+        {
+            TargetType = Eav.Constants.MetadataForCmsObject,
+            KeyString = "folder:" + SysId
+        });
+        private MetadataFor _metadataKey;
 
         /// <inheritdoc />
-        public string Url => AppContext.Tenant.ContentPath + Path;
+        public string Url { get; internal set; }
 
         /// <inheritdoc />
         public string Type => Classification.Folder;
 
 
         /// <inheritdoc />
-        public override bool HasChildren => _hasChildren ?? (_hasChildren = _fileSystem.GetFiles(Id, AppContext).Any() || _fileSystem.GetFiles(Id, AppContext).Any()).Value;
+        public override bool HasChildren 
+            => _hasChildren ?? (_hasChildren = AdamContext.AdamFs.GetFiles(this).Any() 
+                                               || AdamContext.AdamFs.GetFiles(this).Any()).Value;
         private bool? _hasChildren;
 
 
         /// <inheritdoc />
-        public IEnumerable<IFolder> Folders
-        {
-            get
-            {
-                if (_folders != null) return _folders;
-                return _folders = string.IsNullOrEmpty(Name)
-                    ? new List<Folder>()
-                    : _fileSystem.GetFolders(Id, AppContext);
-            }
-        }
+        public IEnumerable<IFolder> Folders =>
+            _folders ?? (_folders = string.IsNullOrEmpty(Name)
+                ? new List<Folder<TFolderId, TFileId>>()
+                : AdamContext.AdamFs.GetFolders(this));
+
         private IEnumerable<IFolder> _folders;
 
 
         /// <inheritdoc/>
         public IEnumerable<IFile> Files 
-            => _files ?? (_files = _fileSystem.GetFiles(Id, AppContext));
+            => _files ?? (_files = AdamContext.AdamFs.GetFiles(this));
         private IEnumerable<IFile> _files;
     }
 }

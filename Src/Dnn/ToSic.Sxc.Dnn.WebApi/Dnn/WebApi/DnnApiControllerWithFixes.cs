@@ -4,7 +4,6 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Helpers;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
@@ -14,9 +13,6 @@ namespace ToSic.Sxc.Dnn.WebApi
     [DnnLogWebApi, JsonResponse]
     public abstract class DnnApiControllerWithFixes: DnnApiController, IHasLog
     {
-
-        protected IAppEnvironment Env;
-
         protected DnnApiControllerWithFixes() 
 	    {
             // ensure that the sql connection string is correct
@@ -25,7 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 
 	        // ensure that the call to this webservice doesn't reset the language in the cookie
 	        // this is a dnn-bug
-	        Helpers.RemoveLanguageChangingCookie();
+	        RemoveLanguageChangingCookie();
 
             // ReSharper disable once VirtualMemberCallInConstructor
             Log = new Log(HistoryLogName, null, $"Path: {HttpContext.Current?.Request?.Url?.AbsoluteUri}");
@@ -36,7 +32,6 @@ namespace ToSic.Sxc.Dnn.WebApi
 	            History.Add(HistoryLogGroup, Log);
             // ReSharper restore VirtualMemberCallInConstructor
 
-            Env = Eav.Factory.Resolve<IAppEnvironment>().Init(Log);
         }
 
         // ReSharper disable once InconsistentNaming
@@ -69,5 +64,24 @@ namespace ToSic.Sxc.Dnn.WebApi
         /// The inheriting class should provide the real name to be used.
         /// </summary>
         protected abstract string HistoryLogName { get; }
+
+        #region Helpers
+
+        internal static void RemoveLanguageChangingCookie()
+        {
+            // this is to fix a dnn-bug, which adds a cookie to set the language
+            // but always defaults to the main language, which is simply wrong. 
+            var cookies = global::System.Web.HttpContext.Current?.Response.Cookies;
+            cookies?.Remove("language"); // try to remove, otherwise no exception will be thrown
+        }
+
+        #endregion
+
+        #region Extend Time so Web Server doesn't time out
+
+        protected void PreventServerTimeout300() => HttpContext.Current.Server.ScriptTimeout = 300;
+
+        #endregion
+
     }
 }

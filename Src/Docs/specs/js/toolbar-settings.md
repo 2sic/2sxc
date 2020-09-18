@@ -42,6 +42,8 @@ In many cases the `<ul toolbar="...">` tag will be very simple, and adding these
 will automatically add a "..." (more) button if multiple button groups are detected
 1. string `hover`: **"right"** | "left" | "none"  ("center" ist still beta)
 determines where the toolbar appears when the mouse hovers over the area (usually a DIV) with the class `sc-element`
+1. string `follow` _new in 11.06_ **"none"** | "initial" | "scroll" | "always"  
+tells the toolbar to follow the mouse - ideal for large content blocks where you need the toolbar even if otherwise it would be off-screen. _Note: this used to default to `scroll` on the `TagToolbar` but was changed to `none` in 2sxc 11.06 because it caused too many UX issues._
 1. string `show`: **"hover"** | "always"  
 by default any toolbar inside an element with a `sc-element` class will appear on hover
 1. string `classes`: **(null)** | _any kind of string_   

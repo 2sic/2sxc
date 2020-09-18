@@ -4,18 +4,13 @@ using System.IO;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Logging;
-using ToSic.Eav.Persistence;
-using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Engines;
-using App = ToSic.Sxc.Apps.App;
+using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Dnn.ImportExport
 {
-    public class DnnImportExportEnvironment : HasLog, IImportExportEnvironment
+    public class DnnImportExportEnvironment : ImportExportEnvironmentBase
     {
         #region Constructors
 
@@ -24,25 +19,10 @@ namespace ToSic.Sxc.Dnn.ImportExport
         /// </summary>
         /// <param name="environment"></param>
         /// <param name="tenant"></param>
-        public DnnImportExportEnvironment(IEnvironment environment, ITenant tenant) : base("Dnn.ImExEn")
-        {
-            Environment = environment;
-            _tenant = tenant;
-        }
-
-        protected IEnvironment Environment;
-        private readonly ITenant _tenant; 
-
-        public IImportExportEnvironment Init(ILog parent)
-        {
-            Log.LinkTo(parent);
-            return this;
-        }
+        public DnnImportExportEnvironment(IEnvironment environment, ITenant tenant) 
+            : base(environment, tenant, "Dnn.ImExEn") { }
 
         #endregion
-
-
-        public List<Message> Messages { get; } = new List<Message>();
 
         /// <inheritdoc />
         /// <summary>
@@ -50,15 +30,15 @@ namespace ToSic.Sxc.Dnn.ImportExport
         /// </summary>
         /// <param name="sourceFolder"></param>
         /// <param name="destinationFolder">The portal-relative path where the files should be copied to</param>
-        public void TransferFilesToTenant(string sourceFolder, string destinationFolder)
+        public override List<Message> TransferFilesToTenant(string sourceFolder, string destinationFolder)
         {
             Log.Add($"transfer files to tenant from:{sourceFolder} to:{destinationFolder}");
-            var messages = Messages;
+            var messages = new List<Message>();
             var files = Directory.GetFiles(sourceFolder, "*.*");
 
             var dnnFileManager = FileManager.Instance;
             var dnnFolderManager = FolderManager.Instance;
-            var portalId = _tenant.Id;
+            var portalId = Tenant.Id;
 
             if (!dnnFolderManager.FolderExists(portalId, destinationFolder))
                 dnnFolderManager.AddFolder(portalId, destinationFolder);
@@ -102,33 +82,18 @@ namespace ToSic.Sxc.Dnn.ImportExport
                 var newDestinationFolder = Path.Combine(destinationFolder, sourceFolderPath.Replace(sourceFolder, "").TrimStart('\\')).Replace('\\', '/');
                 TransferFilesToTenant(sourceFolderPath, newDestinationFolder);
             }
+
+            return messages;
         }
 
-        public Version TenantVersion => typeof(PortalSettings).Assembly.GetName().Version;
-
-        public string DefaultLanguage => _tenant.DefaultLanguage;
-
-        public string TemplatesRoot(int zoneId, int appId)
-        {
-            var app = Eav.Factory.Resolve<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
-
-            // Copy all files in 2sexy folder to (portal file system) 2sexy folder
-            var templateRoot = Environment.MapPath(TemplateHelpers.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, app));
-            return templateRoot;
-        }
-
-        public string TargetPath(string folder)
-        {
-            var appPath = Path.Combine(_tenant.AppsRoot, folder);
-            return Environment.MapPath(appPath);
-        }
+        public override Version TenantVersion => typeof(PortalSettings).Assembly.GetName().Version;
 
         #region stuff we need for Import
 
-        public void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap)
+        public override void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap)
         {
             Log.Add($"will map files - map-size:{fileIdMap.Count}");
-            var portalId = _tenant.Id;
+            var portalId = Tenant.Id;
 
             var fileManager = FileManager.Instance;
             var folderManager = FolderManager.Instance;
@@ -155,10 +120,10 @@ namespace ToSic.Sxc.Dnn.ImportExport
             }
         }
 
-        public void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog)
+        public override void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog)
         {
             Log.Add("create folder and map IDs - start");
-            var portalId = _tenant.Id;
+            var portalId = Tenant.Id;
 
             var folderManager = FolderManager.Instance;
 
@@ -166,7 +131,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
             {
                 try
                 {
-                    if (String.IsNullOrEmpty(file.Value)) continue;
+                    if (string.IsNullOrEmpty(file.Value)) continue;
                     var directory = Path.GetDirectoryName(file.Value)?.Replace('\\', '/');
                     if (directory == null) continue;
                     // if not exist, create - important because we need for metadata assignment
@@ -187,12 +152,6 @@ namespace ToSic.Sxc.Dnn.ImportExport
             }
             Log.Add("create folder and map IDs - completed");
         }
-
-        public string ModuleVersion => Settings.ModuleVersion;
-
-        public string FallbackContentTypeScope => Settings.AttributeSetScope;
-
-        public SaveOptions SaveOptions(int zoneId) => new SaveOptions(DefaultLanguage, new ZoneRuntime(zoneId, Log).Languages(true));
 
         #endregion
 

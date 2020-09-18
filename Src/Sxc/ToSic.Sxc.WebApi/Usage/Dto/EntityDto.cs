@@ -1,8 +1,9 @@
 ﻿using ToSic.Eav.Data;
+using ToSic.Sxc.WebApi.SharedDto;
 
-namespace ToSic.Sxc.WebApi.DataTransferObjects.Usage
+namespace ToSic.Sxc.WebApi.Usage.Dto
 {
-    public class EntityDto: IdentifierBase
+    public class EntityDto: IdentifierDto
     {
         public string Title;
         public ContentTypeDto Type;

@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\System\Sxc\**" />
+    <Content Remove="wwwroot\System\Sxc\**" />
+    <EmbeddedResource Remove="wwwroot\System\Sxc\**" />
+    <None Remove="wwwroot\System\Sxc\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="RazorPartialToString\IRazorPartialToStringRenderer.cs" />
+    <Content Include="RazorPartialToString\RazorPartialToStringRenderer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Edi.RouteDebugger" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.6" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.6" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.DataSources\ToSic.Eav.DataSources.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Mvc\ToSic.Sxc.Mvc.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Engine\" />
+    <Folder Include="wwwroot\adam\" />
+    <Folder Include="wwwroot\System\" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="&#xD;&#xA;@set BuildTarget=$(ProjectDir)wwwroot\System\Sxc&#xD;&#xA;&#xD;&#xA;@REM Copy the data folders&#xD;&#xA;robocopy /mir &quot;$(ProjectDir)..\..\Data\.data\ &quot; &quot;%25BuildTarget%25\.data\ &quot;&#xD;&#xA;robocopy /mir &quot;$(ProjectDir)..\..\Data\.databeta\ &quot; &quot;%25BuildTarget%25\.databeta\ &quot;&#xD;&#xA;robocopy /mir &quot;$(ProjectDir)..\..\Data\.data-custom\ &quot; &quot;%25BuildTarget%25\.data-custom\ &quot;&#xD;&#xA;&#xD;&#xA;@REM Copy 2sxc JS stuff&#xD;&#xA;robocopy /mir &quot;$(Dev2sxcAssets)\js\ &quot; &quot;%25BuildTarget%25\js\ &quot;&#xD;&#xA;robocopy /mir &quot;$(Dev2sxcAssets)\dist\ &quot; &quot;%25BuildTarget%25\dist\ &quot;&#xD;&#xA;robocopy /mir &quot;$(Dev2sxcAssets)\system\ &quot; &quot;%25BuildTarget%25\system\ &quot;&#xD;&#xA;&#xD;&#xA;@echo Copied all files to this Website target: '%25BuildTarget%25'&#xD;&#xA;&#xD;&#xA;" />
+  </Target>
+
+</Project>

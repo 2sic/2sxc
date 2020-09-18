@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Adam
     [PublicApi_Stable_ForUseInYourCode]
 
     public interface IFile: 
-        IAsset, 
+        IAsset,
         Eav.Apps.Assets.IFile
     {
     }

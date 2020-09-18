@@ -5,18 +5,14 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http;
-using System.Web.Http.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Ui;
-using ToSic.Eav.Run;
-using ToSic.Eav.Security.Permissions;
 using ToSic.SexyContent.WebApi;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks.Edit;
-using ToSic.Sxc.WebApi.Security;
+using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.WebApi.InPage;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -24,40 +20,22 @@ namespace ToSic.Sxc.WebApi.Cms
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
     public partial class ModuleController : SxcApiController
     {
-        protected CmsRuntime CmsRuntime => _cmsRuntime ?? (_cmsRuntime = GetCmsRuntime());
+        protected override string HistoryLogName => "Api.ModCnt";
+
+        protected CmsRuntime CmsRuntime => _cmsRuntime ?? (_cmsRuntime = App == null ? null : new CmsRuntime(App, Log, true, false));
         private CmsRuntime _cmsRuntime;
-
-        protected CmsManager CmsManager => _cmsManager ?? (_cmsManager = new CmsManager(App, Log));
-        private CmsManager _cmsManager;
-
-        private CmsRuntime GetCmsRuntime()
-            // todo: this must be changed, set showDrafts to true for now, as it's probably only used in the view-picker, but it shouldn't just be here
-            => App == null ? null : new CmsRuntime(App, Log, true, false);
-
-
-        protected override void Initialize(HttpControllerContext controllerContext)
-        {
-            base.Initialize(controllerContext); // very important!!!
-            Log.Rename("2sModC");
-        }
-
-        private BlockEditorBase GetEditor() => BlockEditorBase.GetEditor(Block);
-
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
-        {
-            var permCheck = new MultiPermissionsApp(GetContext(), App, Log);
-            if(!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
-                throw HttpException.PermissionDenied(error);
-
-            return GetEditor().SaveTemplateId(templateId, forceCreateContentGroup);
-        }
+            => new AppViewPickerBackend().Init(GetContext(), GetBlock(), Log)
+                .SaveTemplateId(templateId, forceCreateContentGroup);
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void SetAppId(int? appId) => GetEditor().SetAppId(appId);
+        public void SetAppId(int? appId)
+            => new AppViewPickerBackend().Init(GetContext(), GetBlock(), Log)
+                .SetAppId(appId);
 
         #region Get Apps, ContentTypes and Views for UI
 
@@ -65,23 +43,9 @@ namespace ToSic.Sxc.WebApi.Cms
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<AppUiInfo> GetSelectableApps(string apps = null)
         {
-            // we must get the zone-id from the environment,
-            // since the app may not yet exist when inserted the first time
-            var tenant = Eav.Factory.Resolve<ITenant>();
-            var tenantZoneId = Env.ZoneMapper.GetZoneId(tenant);
-            var list = new CmsZones(tenantZoneId, Env, Log).AppsRt.GetSelectableApps(tenant).ToList();
-
-            if (string.IsNullOrWhiteSpace(apps)) return list;
-
-            // New feature in 10.27 - if app-list is provided, only return these
-            var appNames = apps.Split(',')
-                .Select(s => s.Trim())
-                .Where(s => !string.IsNullOrWhiteSpace(s))
-                .ToList();
-            list = list.Where(ap => appNames
-                    .Any(name => string.Equals(name, ap.Name, StringComparison.InvariantCultureIgnoreCase)))
-                .ToList();
-            return list;
+            // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
+            var tenant = new DnnTenant(PortalSettings);
+            return new CmsZones(tenant.ZoneId, Log).AppsRt.GetSelectableApps(tenant, apps).ToList();
         }
 
         [HttpGet]
@@ -99,37 +63,16 @@ namespace ToSic.Sxc.WebApi.Cms
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public HttpResponseMessage RenderTemplate([FromUri] int templateId, [FromUri] string lang/*, bool cbIsEntity = false*/)
+        public HttpResponseMessage RenderTemplate([FromUri] int templateId, [FromUri] string lang)
         {
-            Log.Add($"render template:{templateId}, lang:{lang}"); //, isEnt:{cbIsEntity}");
+            Log.Add($"render template:{templateId}, lang:{lang}");
             try
             {
-                // Try setting thread language to enable 2sxc to render the template in this language
-                if (!string.IsNullOrEmpty(lang))
-                    try
-                    {
-                        var culture = global::System.Globalization.CultureInfo.GetCultureInfo(lang);
-                        global::System.Threading.Thread.CurrentThread.CurrentCulture = culture;
-                    }
-                    // Fallback / ignore if the language specified has not been found
-                    catch (global::System.Globalization.CultureNotFoundException) { }
-
-                var cbToRender = GetBlock();
-
-                // if a real templateId was specified, swap to that
-                if (templateId > 0)
-                {
-                    var template = new CmsRuntime(cbToRender.App, Log, Edit.Enabled, false).Views.Get(templateId);
-                    cbToRender.View = template;
-                }
-
-                var rendered = cbToRender.BlockBuilder.Render();
-
+                var rendered = new AppViewPickerBackend().Init(GetContext(), GetBlock(), Log).Render(templateId, lang);
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new StringContent(rendered, Encoding.UTF8, "text/plain")
                 };
-
             }
             catch (Exception e)
             {
@@ -139,15 +82,11 @@ namespace ToSic.Sxc.WebApi.Cms
         }
 
 
+
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public bool Publish(int id)
-        {
-            Log.Add($"try to publish id #{id}");
-            if (!new MultiPermissionsApp(GetContext(), App, Log).EnsureAll(GrantSets.WritePublished, out var error))
-                throw HttpException.PermissionDenied(error);
-            new AppManager(App, Log).Entities.Publish(id);
-            return true;
-        }
+            => new AppViewPickerBackend().Init(GetContext(), GetBlock(), Log)
+                .Publish(id);
     }
 }

@@ -1,0 +1,13 @@
+﻿@page
+@using ToSic.Sxc.Mvc.Dev
+@model Website.Pages.BlogModel
+
+<h1>Directly call Partial view in wwwroot/blog/_list and pass in data</h1>
+
+@Html.Partial("../../../wwwroot/2sxc/Blog App/_List.cshtml", new ViewDataDictionary(ViewData)
+{
+    { "Id", TestIds.Blog.Container },
+    { "PageId", TestIds.Blog.Page},
+    { "AppId", TestIds.Blog.App},
+    { "Block", TestIds.Blog.Block}
+})
