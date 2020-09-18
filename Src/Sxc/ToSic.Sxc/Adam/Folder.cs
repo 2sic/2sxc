@@ -37,15 +37,12 @@ namespace ToSic.Sxc.Adam
         /// <inheritdoc />
         public override bool HasChildren 
             => _hasChildren ?? (_hasChildren = AdamContext.AdamFs.GetFiles(this).Any() 
-                                               || AdamContext.AdamFs.GetFiles(this).Any()).Value;
+                                               || AdamContext.AdamFs.GetFolders(this).Any()).Value;
         private bool? _hasChildren;
 
 
         /// <inheritdoc />
-        public IEnumerable<IFolder> Folders =>
-            _folders ?? (_folders = string.IsNullOrEmpty(Name)
-                ? new List<Folder<TFolderId, TFileId>>()
-                : AdamContext.AdamFs.GetFolders(this));
+        public IEnumerable<IFolder> Folders => _folders ?? (_folders = AdamContext.AdamFs.GetFolders(this)); 
 
         private IEnumerable<IFolder> _folders;
 

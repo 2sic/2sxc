@@ -6,6 +6,6 @@
     /// </summary>
     internal class AdamTransGetItems<TFolderId, TFileId> : AdamTransactionBase<AdamTransGetItems<TFolderId, TFileId>, TFolderId, TFileId>
     {
-        public AdamTransGetItems() : base("Adm.BckEnd") { }
+        public AdamTransGetItems() : base("Adm.TrnItm") { }
     }
 }
