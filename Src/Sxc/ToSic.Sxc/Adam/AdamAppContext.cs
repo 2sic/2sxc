@@ -29,11 +29,13 @@ namespace ToSic.Sxc.Adam
         public virtual AdamAppContext Init(ITenant tenant, IApp app, IBlock block, int compatibility, ILog parentLog)
         {
             Log.LinkTo(parentLog);
+            var callLog = Log.Call();
             Tenant = tenant;
             _app = app;
             Block = block;
             AppRuntime = new AppRuntime(app, block?.EditAllowed ?? false, null);
             CompatibilityLevel = compatibility;
+            callLog("ready");
             return this;
         }
 

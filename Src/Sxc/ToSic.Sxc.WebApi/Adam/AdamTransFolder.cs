@@ -7,7 +7,7 @@ namespace ToSic.Sxc.WebApi.Adam
 {
     internal class AdamTransFolder<TFolderId, TFileId> : AdamTransactionBase<AdamTransFolder<TFolderId, TFileId>, TFolderId, TFileId>
     {
-        public AdamTransFolder() : base("Adm.TrnDel") { }
+        public AdamTransFolder() : base("Adm.TrnFld") { }
         internal IList<AdamItemDto> Folder(string parentSubfolder, string newFolder)
         {
             var logCall = Log.Call<IList<AdamItemDto>>($"get folders for subfld:{parentSubfolder}, new:{newFolder}");
