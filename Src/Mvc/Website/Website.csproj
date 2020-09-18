@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\System\Sxc\**" />
+    <Content Remove="wwwroot\System\Sxc\**" />
+    <EmbeddedResource Remove="wwwroot\System\Sxc\**" />
+    <None Remove="wwwroot\System\Sxc\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="RazorPartialToString\IRazorPartialToStringRenderer.cs" />
     <Content Include="RazorPartialToString\RazorPartialToStringRenderer.cs" />
   </ItemGroup>
@@ -30,7 +37,7 @@
   <ItemGroup>
     <Folder Include="Engine\" />
     <Folder Include="wwwroot\adam\" />
-    <Folder Include="wwwroot\System\Sxc\" />
+    <Folder Include="wwwroot\System\" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
