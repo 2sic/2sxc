@@ -153,5 +153,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
             }
         }
 
+        /// <summary>
+        /// Used to be GET Module/Publish
+        /// </summary>
+        [HttpPost]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public bool Publish(string part, int index) => Backend.PublishPart(part, index);
     }
 }

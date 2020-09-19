@@ -39,6 +39,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
                 guid = newGuid.ToString(),
                 max,
                 parent = target.EntityId,
+                parentGuid = target.EntityGuid,
                 type = contentType ?? Settings.AttributeSetStaticNameContentBlockTypeName,
             });
 

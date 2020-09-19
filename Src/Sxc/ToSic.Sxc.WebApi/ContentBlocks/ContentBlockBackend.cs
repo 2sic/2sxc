@@ -1,7 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Environment;
-using ToSic.Eav.Apps.ItemListActions;
+using ToSic.Eav.Security.Permissions;
+using ToSic.Sxc.Blocks.Edit;
 
 namespace ToSic.Sxc.WebApi.ContentBlocks
 {
@@ -27,36 +27,12 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             _publishing.DoInsidePublishing(_context, args => _cmsManager.Blocks.AddEmptyItem(_block.Configuration, index));
         }
 
-
-        public void MoveInList(int parentId, string field, int indexFrom, int indexTo, bool partOfPage = false)
+        
+        public bool PublishPart(string part, int index)
         {
-            var callLog = Log.Call($"parent:{parentId}, field:{field}, from:{indexFrom}, to:{indexTo}, partOfpage:{partOfPage}");
-
-            void InternalSave(VersioningActionInfo _)
-            {
-                _cmsManager.Entities.ModifyItemList(parentId, field, new Move(indexFrom, indexTo));
-            }
-
-            // use dnn versioning if partOfPage
-            if (partOfPage) _publishing.DoInsidePublishing(_context, InternalSave);
-            else InternalSave(null);
-            callLog("ok");
+            Log.Add($"try to publish #{index} on '{part}'");
+            ThrowIfNotAllowedInApp(GrantSets.WritePublished);
+            return BlockEditorBase.GetEditor(_block).Publish(part, index);
         }
-
-        public void RemoveBlockInList(int parentId, string field, int index, bool partOfPage = false)
-        {
-            var callLog = Log.Call($"parent{parentId}, field:{field}, index:{index}, partOfPage{partOfPage}");
-            void InternalSave(VersioningActionInfo _)
-            {
-                _cmsManager.Entities.ModifyItemList(parentId, field, new Remove(index));
-            }
-
-            // use dnn versioning if partOfPage
-            if (partOfPage) _publishing.DoInsidePublishing(_context, InternalSave);
-            else InternalSave(null);
-            callLog("ok");
-        }
-
-
     }
 }
