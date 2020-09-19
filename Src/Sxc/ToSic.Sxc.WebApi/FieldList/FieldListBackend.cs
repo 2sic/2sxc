@@ -1,40 +1,22 @@
 ﻿using System;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
-using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
-using ToSic.Eav.WebApi.Errors;
-using ToSic.Eav.WebApi.Security;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 
 namespace ToSic.Sxc.WebApi.FieldList
 {
-    internal class FieldListBackend: HasLog
+    internal class FieldListBackend: BlockWebApiBackendBase<FieldListBackend>
     {
         private readonly IPagePublishing _publishing;
 
         #region constructor / DI
 
-        public FieldListBackend(IPagePublishing publishing) : base("Bck.FldLst")
-        {
-            _publishing = publishing;
-        }
+        public FieldListBackend(IPagePublishing publishing) : base("Bck.FldLst") 
+            => _publishing = publishing.Init(Log);
 
-        public FieldListBackend Init(IInstanceContext context, IBlock block, ILog parentLog)
-        {
-            Log.LinkTo(parentLog);
-            _block = block;
-            _context = context;
-            _cmsManager = new CmsManager(_block.App, Log);
-            return this;
-        }
-        private IInstanceContext _context;
-        private IBlock _block;
-        private CmsManager _cmsManager;
         #endregion
 
         public void ChangeOrder(Guid? parent, string fields, int index, int toIndex)
@@ -49,13 +31,9 @@ namespace ToSic.Sxc.WebApi.FieldList
         public bool Publish(string part, int index)
         {
             Log.Add($"try to publish #{index} on '{part}'");
-            if (!new MultiPermissionsApp().Init(_context, _block.App, Log)
-                .EnsureAll(GrantSets.WritePublished, out var error))
-                throw HttpException.PermissionDenied(error);
+            ThrowIfNotAllowedInApp(GrantSets.WritePublished);
             return BlockEditorBase.GetEditor(_block).Publish(part, index);
         }
-
-
 
         public void Remove(Guid? parent, string fields, int index)
         {
@@ -65,8 +43,6 @@ namespace ToSic.Sxc.WebApi.FieldList
                 (entity, fieldList, idx, versioning) => entMan.FieldListRemove(entity, fieldList, idx, versioning));
             wrapLog(null);
         }
-
-
 
 
         private void FindTargetAndModifyList(Guid? parent, string fields, int index, Action<IEntity, string[], int, bool> action)

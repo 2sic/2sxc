@@ -11,10 +11,11 @@ namespace ToSic.Sxc.WebApi.Cms
     {
         private FieldListBackend FieldBacked => Factory.Resolve<FieldListBackend>().Init(GetContext(), GetBlock(), Log);
 
-        [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void ChangeOrder(Guid? parent, string fields, int index, int toIndex)
-            => FieldBacked.ChangeOrder(parent, fields, index, toIndex);
+        // Moved to ListController
+        //[HttpGet]
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        //public void ChangeOrder(Guid? parent, string fields, int index, int toIndex)
+        //    => FieldBacked.ChangeOrder(parent, fields, index, toIndex);
 
 
         [HttpGet]
@@ -22,10 +23,11 @@ namespace ToSic.Sxc.WebApi.Cms
         public bool Publish(string part, int index) 
             => FieldBacked.Publish(part, index);
 
-        [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void RemoveFromList(Guid? parent, string fields, int index)
-            => FieldBacked.Remove(parent, fields, index);
+        // Moved to ListController
+        //[HttpGet]
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        //public void RemoveFromList(Guid? parent, string fields, int index)
+        //    => FieldBacked.Remove(parent, fields, index);
 
     }
 }

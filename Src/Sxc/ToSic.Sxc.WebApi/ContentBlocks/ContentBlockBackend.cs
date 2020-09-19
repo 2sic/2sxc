@@ -2,35 +2,18 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ItemListActions;
-using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Logging;
-using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.WebApi.ContentBlocks
 {
-    internal class ContentBlockBackend : HasLog
+    internal class ContentBlockBackend : BlockWebApiBackendBase<ContentBlockBackend>
     {
         private readonly IPagePublishing _publishing;
 
         #region constructor / DI
 
-        public ContentBlockBackend(IPagePublishing publishing) : base("Bck.FldLst")
-        {
-            _publishing = publishing;
-        }
+        public ContentBlockBackend(IPagePublishing publishing) : base("Bck.FldLst") 
+            => _publishing = publishing.Init(Log);
 
-        public ContentBlockBackend Init(IInstanceContext context, IBlock block, ILog parentLog)
-        {
-            Log.LinkTo(parentLog);
-            _block = block;
-            _context = context;
-            _cmsManager = new CmsManager(_block.App, Log);
-            return this;
-        }
-        private IInstanceContext _context;
-        private IBlock _block;
-        private CmsManager _cmsManager;
         #endregion
 
         // todo: probably move to CmsManager.Block
