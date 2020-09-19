@@ -33,7 +33,7 @@ namespace ToSic.Sxc.WebApi.App
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string appPath = null) 
-            => Factory.Resolve<AppContent>().Init(Log).GetItems(GetContext(), contentType, GetBlock(), appPath);
+            => Factory.Resolve<AppContent>().Init(GetContext(), GetBlock(), Log).GetItems(contentType, appPath);
 
         #endregion
 
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.WebApi.App
         /// <param name="appPath"></param>
         /// <returns></returns>
         private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<EntityApi, IEntity> getOne, string appPath) 
-            => Factory.Resolve<AppContent>().Init(Log).GetOne(GetContext(), GetBlock(), contentType, getOne, appPath);
+            => Factory.Resolve<AppContent>().Init(GetContext(), GetBlock(), Log).GetOne(contentType, getOne, appPath);
 
         #endregion
 
@@ -113,8 +113,8 @@ namespace ToSic.Sxc.WebApi.App
         public Dictionary<string, object> CreateOrUpdate([FromUri] string contentType,
             [FromBody] Dictionary<string, object> newContentItem, [FromUri] int? id = null,
             [FromUri] string appPath = null)
-            => Factory.Resolve<AppContent>().Init(Log)
-                .CreateOrUpdate(GetContext(), GetBlock(), contentType, newContentItem, id, appPath);
+            => Factory.Resolve<AppContent>().Init(GetContext(), GetBlock(),Log)
+                .CreateOrUpdate(contentType, newContentItem, id, appPath);
 
         #endregion
 
@@ -123,12 +123,12 @@ namespace ToSic.Sxc.WebApi.App
         [HttpDelete]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public void Delete(string contentType, int id, [FromUri] string appPath = null) 
-            => Factory.Resolve<AppContent>().Init(Log).Delete(GetContext(), GetBlock(), contentType, id, appPath);
+            => Factory.Resolve<AppContent>().Init(GetContext(), GetBlock(), Log).Delete(contentType, id, appPath);
 
         [HttpDelete]
 	    [AllowAnonymous]   // will check security internally, so assume no requirements
         public void Delete(string contentType, Guid guid, [FromUri] string appPath = null) 
-            => Factory.Resolve<AppContent>().Init(Log).Delete(GetContext(), GetBlock(), contentType, guid, appPath);
+            => Factory.Resolve<AppContent>().Init(GetContext(), GetBlock(), Log).Delete(contentType, guid, appPath);
 
         #endregion
 
