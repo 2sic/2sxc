@@ -1,9 +1,8 @@
 ﻿using System.Web.Http;
 using ToSic.Eav.WebApi.Errors;
-using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 
-namespace ToSic.Sxc.WebApi.System
+namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
     [DnnLogExceptions]
     public class InsightsController : DnnApiControllerWithFixes
@@ -27,7 +26,7 @@ namespace ToSic.Sxc.WebApi.System
 
         #endregion
 
-        protected Web.WebApi.System.Insights GetInsights => new Web.WebApi.System.Insights(Log, ThrowIfNotSuperuser, HttpException.BadRequest);
+        protected Sxc.Web.WebApi.System.Insights GetInsights => new Sxc.Web.WebApi.System.Insights(Log, ThrowIfNotSuperuser, HttpException.BadRequest);
 
         private void ThrowIfNotSuperuser()
         {

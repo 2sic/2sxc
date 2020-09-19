@@ -24,7 +24,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
         {
             Log.Add($"add order:{index}");
             // use dnn versioning - this is always part of page
-            _publishing.DoInsidePublishing(_context, args => _cmsManager.Blocks.AddEmptyItem(_block.Configuration, index));
+            _publishing.DoInsidePublishing(_context, _ => _cmsManager.Blocks.AddEmptyItem(_block.Configuration, index));
         }
 
         

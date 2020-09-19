@@ -3,9 +3,9 @@ using System.Web.Http.Dispatcher;
 using DotNetNuke.Web.Api;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Cms;
+using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.Cms;
-using ToSic.Sxc.WebApi.System;
 using ModuleController = ToSic.Sxc.WebApi.Cms.ModuleController;
 using UiController = ToSic.Sxc.WebApi.Cms.UiController;
 
@@ -66,8 +66,6 @@ namespace ToSic.Sxc.WebApi
             const string frgQueryStream = "{stream}";
 
             const string cntrAppQuery = "AppQuery";
-
-            const string listController = "List";
 
             #endregion
 
@@ -152,16 +150,11 @@ namespace ToSic.Sxc.WebApi
                     typeof(HyperlinkController).Namespace
                 });
             mapRouteManager.MapHttpRoute(mod2sxc, "default", "{controller}/{action}", stdNsWebApi);
-            mapRouteManager.MapHttpRoute(mod2sxc, "insights", "sys/insights/{action}",
-                new {controller = "Insights", action = "help"},
+            mapRouteManager.MapHttpRoute(mod2sxc, "2sxc-sys", "sys/{controller}/{action}",
                 new[] {typeof(InsightsController).Namespace});
             #endregion
 
             #region New routes in 2sxc 11.06+ which should replace most previous internal routes
-
-            //mapRouteManager.MapHttpRoute(mod2sxc, "cms-list", RouteParts.cmsRoot + "/list/",
-            //    new {controller = listController},
-            //    new[] {typeof(BlockController).Namespace});
 
             mapRouteManager.MapHttpRoute(mod2sxc, "cms-in-dnn", RouteParts.cmsRoot + "/{controller}/{action}",
                 new[] {typeof(BlockController).Namespace});
@@ -174,7 +167,7 @@ namespace ToSic.Sxc.WebApi
             var previousSelector = config.Services.GetService(typeof(IHttpControllerSelector)) as IHttpControllerSelector;
             config.Services.Replace(typeof(IHttpControllerSelector), new AppApiControllerSelector(config) { PreviousSelector = previousSelector });
             
-            // Also register Unity Dependency-Injection here, since this will certainly run once early during bootup
+            // Also register Dependency-Injection here, since this will certainly run once early during boot
             // do this by accessing a setting, which registers everything
             Settings.EnsureSystemIsInitialized();
         }

@@ -103,10 +103,10 @@
     <Compile Include="Dnn\WebApi\Cms\BlockController.cs" />
     <Compile Include="Dnn\WebApi\Cms\ListController.cs" />
     <Compile Include="Dnn\WebApi\Cms\ItemController.cs" />
+    <Compile Include="Dnn\WebApi\Sys\InstallController.cs" />
     <Compile Include="WebApi\Cms\ContentGroupController_FieldList.cs" />
     <Compile Include="WebApi\Cms\EntitiesController_History.cs" />
     <Compile Include="WebApi\Cms\EntitiesController_Usage.cs" />
-    <Compile Include="WebApi\Cms\ModuleController_Install.cs" />
     <Compile Include="WebApi\Cms\SystemController_Languages.cs" />
     <Compile Include="WebApi\Cms\SystemController_App.cs" />
     <Compile Include="WebApi\Cms\TemplateController_Usage.cs" />
