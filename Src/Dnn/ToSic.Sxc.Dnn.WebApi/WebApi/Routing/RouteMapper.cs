@@ -2,6 +2,7 @@
 using System.Web.Http.Dispatcher;
 using DotNetNuke.Web.Api;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.Dnn.WebApi.Cms;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.Cms;
 using ToSic.Sxc.WebApi.System;
@@ -24,6 +25,9 @@ namespace ToSic.Sxc.WebApi
             // app-content  will do basic content-actions like get one, edit, update, delete
             // app-query    will try to request a query
             // app-api      will call custom c# web-apis of a specific app
+
+            // DNN Module Name
+            const string mod2sxc = "2sxc";
 
             var stdNsWebApi = new[]
             {
@@ -63,6 +67,8 @@ namespace ToSic.Sxc.WebApi
 
             const string cntrAppQuery = "AppQuery";
 
+            const string listController = "List";
+
             #endregion
 
             #region old API routes before 08.10
@@ -97,59 +103,69 @@ namespace ToSic.Sxc.WebApi
             const string appPathWithEdition = appPath + RouteParts.EditionToken + "/";
 
             // ADAM routes
-            mapRouteManager.MapHttpRoute("2sxc", "adam-auto", appAuto + "content/{contenttype}/{guid}/{field}", adamController, stdNsAdam);
-            mapRouteManager.MapHttpRoute("2sxc", "adam2-auto", appAuto + "content/{contenttype}/{guid}/{field}/{action}", adamController, stdNsAdam);
+            mapRouteManager.MapHttpRoute(mod2sxc, "adam-auto", appAuto + "content/{contenttype}/{guid}/{field}", adamController, stdNsAdam);
+            mapRouteManager.MapHttpRoute(mod2sxc, "adam2-auto", appAuto + "content/{contenttype}/{guid}/{field}/{action}", adamController, stdNsAdam);
 
             // App Content routes - for GET/DELETE/PUT entities using REST
             // 1. Type and null or int-id
             // 2. Type and guid-id
-            mapRouteManager.MapHttpRoute("2sxc", "app-content-auto", appAuto + "content/{contenttype}/{id}", new { controller = "AppContent", id = RouteParameter.Optional },
+            mapRouteManager.MapHttpRoute(mod2sxc, "app-content-auto", appAuto + "content/{contenttype}/{id}", new { controller = "AppContent", id = RouteParameter.Optional },
                 new { id = @"^\d*$" },   // Only matches if "id" is null, or built only with digits.
                 stdNsWebApi);
-            mapRouteManager.MapHttpRoute("2sxc", "app-content-new-guid", appAuto + "content/{contenttype}/{guid}", new { controller = "AppContent" }, stdNsWebApi);
+            mapRouteManager.MapHttpRoute(mod2sxc, "app-content-new-guid", appAuto + "content/{contenttype}/{guid}", new { controller = "AppContent" }, stdNsWebApi);
 
-            mapRouteManager.MapHttpRoute("2sxc", "app-content-new-named", appPath + "content/{contenttype}/{id}", new { controller = "AppContent", id = RouteParameter.Optional },
+            mapRouteManager.MapHttpRoute(mod2sxc, "app-content-new-named", appPath + "content/{contenttype}/{id}", new { controller = "AppContent", id = RouteParameter.Optional },
                 new { id = @"^\d*$" },   // Only matches if "id" is null, or built only with digits.
                 stdNsWebApi);
-            mapRouteManager.MapHttpRoute("2sxc", "app-content-new-guid-named", appPath + "content/{contenttype}/{guid}", new { controller = "AppContent" }, stdNsWebApi);
+            mapRouteManager.MapHttpRoute(mod2sxc, "app-content-new-guid-named", appPath + "content/{contenttype}/{guid}", new { controller = "AppContent" }, stdNsWebApi);
 
             // App-API routes - for the custom code API calls of an app
-            mapRouteManager.MapHttpRoute("2sxc", "app-api-auto", appAuto + RouteParts.PathApiContAct, stdNsApps);  // new, v08.10+
-            mapRouteManager.MapHttpRoute("2sxc", "app-api-public", appPath + RouteParts.PathApiContAct, stdNsApps); // new public v08.10+
+            mapRouteManager.MapHttpRoute(mod2sxc, "app-api-auto", appAuto + RouteParts.PathApiContAct, stdNsApps);  // new, v08.10+
+            mapRouteManager.MapHttpRoute(mod2sxc, "app-api-public", appPath + RouteParts.PathApiContAct, stdNsApps); // new public v08.10+
 
             // New for 2sxc 9.34 #1651 Open-Heart-Surgery
-            mapRouteManager.MapHttpRoute("2sxc", "app-api-edition-auto", appAutoEdition + RouteParts.PathApiContAct, stdNsApps);  // new, v09. 34
-            mapRouteManager.MapHttpRoute("2sxc", "app-api-edition-public", appPathWithEdition + RouteParts.PathApiContAct, stdNsApps); // new public v09. 34
+            mapRouteManager.MapHttpRoute(mod2sxc, "app-api-edition-auto", appAutoEdition + RouteParts.PathApiContAct, stdNsApps);  // new, v09. 34
+            mapRouteManager.MapHttpRoute(mod2sxc, "app-api-edition-public", appPathWithEdition + RouteParts.PathApiContAct, stdNsApps); // new public v09. 34
 
 
             // App-Query routes - to access designed queries
             // new routes, v08.10+
             const string rootQueryAuto = appAuto + "query";
             const string rootQueryNamed = appPath + "query";
-            mapRouteManager.MapHttpRoute("2sxc", "app-query-auto", $"{rootQueryAuto}/{frgQueryName}", new { controller = cntrAppQuery }, stdNsWebApi);
-            mapRouteManager.MapHttpRoute("2sxc", "app-query-auto-slash", $"{rootQueryAuto}/{frgQueryName}/", new { controller = cntrAppQuery }, stdNsWebApi);
-            mapRouteManager.MapHttpRoute("2sxc", "app-query-auto-stream", $"{rootQueryAuto}/{frgQueryName}/{frgQueryStream}", new { controller = cntrAppQuery }, stdNsWebApi);
-            mapRouteManager.MapHttpRoute("2sxc", "app-query-public", $"{rootQueryNamed}/{frgQueryName}", new { controller = cntrAppQuery }, stdNsWebApi);
+            mapRouteManager.MapHttpRoute(mod2sxc, "app-query-auto", $"{rootQueryAuto}/{frgQueryName}", new { controller = cntrAppQuery }, stdNsWebApi);
+            mapRouteManager.MapHttpRoute(mod2sxc, "app-query-auto-slash", $"{rootQueryAuto}/{frgQueryName}/", new { controller = cntrAppQuery }, stdNsWebApi);
+            mapRouteManager.MapHttpRoute(mod2sxc, "app-query-auto-stream", $"{rootQueryAuto}/{frgQueryName}/{frgQueryStream}", new { controller = cntrAppQuery }, stdNsWebApi);
+            mapRouteManager.MapHttpRoute(mod2sxc, "app-query-public", $"{rootQueryNamed}/{frgQueryName}", new { controller = cntrAppQuery }, stdNsWebApi);
             #endregion
 
 
             #region API calls for app-sys, dnn, default
             // System calls to app, dnn, default
             // 2017-02-17 2dm: disabled, as the "app" route will be used for apps now: 
-            // mapRouteManager.MapHttpRoute("2sxc", "app", "app/{controller}/{action}", stdNsWebApi);
+            // mapRouteManager.MapHttpRoute(mod2sxc, "app", "app/{controller}/{action}", stdNsWebApi);
             // 2017-02-17 2dm: new alternate route to replace the "app" route, because I want app to be reserved!
-            mapRouteManager.MapHttpRoute("2sxc", "app-sys", "app-sys/{controller}/{action}", stdNsWebApi);  
-			mapRouteManager.MapHttpRoute("2sxc", "dnn", "dnn/{controller}/{action}", new[]
-            {
-                //"ToSic.SexyContent.WebApi.Dnn",
-                typeof(HyperlinkController).Namespace
-            });
-            mapRouteManager.MapHttpRoute("2sxc", "default", "{controller}/{action}", stdNsWebApi);
-            mapRouteManager.MapHttpRoute("2sxc", "insights", "sys/insights/{action}", new { controller = "Insights", action = "help"}, new[]
-            {
-                //"ToSic.Sxc.WebApi.System",
-                typeof(InsightsController).Namespace
-            });
+            mapRouteManager.MapHttpRoute(mod2sxc, "app-sys", "app-sys/{controller}/{action}", stdNsWebApi);
+            mapRouteManager.MapHttpRoute(mod2sxc, "dnn", "dnn/{controller}/{action}",
+                new[]
+                {
+                    //"ToSic.SexyContent.WebApi.Dnn",
+                    typeof(HyperlinkController).Namespace
+                });
+            mapRouteManager.MapHttpRoute(mod2sxc, "default", "{controller}/{action}", stdNsWebApi);
+            mapRouteManager.MapHttpRoute(mod2sxc, "insights", "sys/insights/{action}",
+                new {controller = "Insights", action = "help"},
+                new[] {typeof(InsightsController).Namespace});
+            #endregion
+
+            #region New routes in 2sxc 11.06+ which should replace most previous internal routes
+
+            //mapRouteManager.MapHttpRoute(mod2sxc, "cms-list", RouteParts.cmsRoot + "/list/",
+            //    new {controller = listController},
+            //    new[] {typeof(BlockController).Namespace});
+
+            mapRouteManager.MapHttpRoute(mod2sxc, "cms-in-dnn", RouteParts.cmsRoot + "/{controller}/{action}",
+                new[] {typeof(BlockController).Namespace});
+
             #endregion
 
             // Add custom service locator into the chain of service-locators
