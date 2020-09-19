@@ -100,6 +100,9 @@
     <Compile Include="Dnn\WebApi\Adam\DnnAdamSecurityChecks.cs" />
     <Compile Include="Dnn\ApiController.cs" />
     <Compile Include="Dnn\ApiController_Obsolete.cs" />
+    <Compile Include="Dnn\WebApi\Cms\BlockController.cs" />
+    <Compile Include="Dnn\WebApi\Cms\ListController.cs" />
+    <Compile Include="Dnn\WebApi\Cms\ItemController.cs" />
     <Compile Include="WebApi\Cms\ContentGroupController_FieldList.cs" />
     <Compile Include="WebApi\Cms\EntitiesController_History.cs" />
     <Compile Include="WebApi\Cms\EntitiesController_Usage.cs" />
@@ -117,7 +120,7 @@
     <Compile Include="WebApi\DynamicApiController.cs" />
     <Compile Include="WebApi\Cms\SystemController_Features.cs" />
     <Compile Include="WebApi\Cms\EditUi\UiController.cs" />
-    <Compile Include="WebApi\System\InsightsController.cs" />
+    <Compile Include="Dnn\WebApi\Sys\InsightsController.cs" />
     <Compile Include="WebApi\SxcApiControllerBase.cs" />
     <Compile Include="Dnn\WebApi\Logging\DnnLogWebApi.cs" />
     <Compile Include="Dnn\WebApi\Adam\AdamController.cs" />

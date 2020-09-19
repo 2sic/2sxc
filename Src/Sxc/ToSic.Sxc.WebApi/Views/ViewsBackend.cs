@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
@@ -11,11 +10,7 @@ namespace ToSic.Sxc.WebApi.Views
 {
     internal class ViewsBackend: HasLog
     {
-        //private readonly IZoneMapper _zoneMapper;
-        public ViewsBackend(/*IZoneMapper zoneMapper*/) : base("Bck.Views")
-        {
-            //_zoneMapper = zoneMapper.Init(Log);
-        }
+        public ViewsBackend() : base("Bck.Views") { }
 
         public ViewsBackend Init(ITenant tenant, IUser user, ILog parentLog)
         {
@@ -27,9 +22,6 @@ namespace ToSic.Sxc.WebApi.Views
 
         private ITenant _tenant;
         private IUser _user;
-
-
-
 
         public IEnumerable<ViewDetailsDto> GetAll(int appId)
         {

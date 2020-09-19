@@ -6,24 +6,15 @@ using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.WebApi.Languages
 {
-    public class LanguagesBackend: HasLog
+    public class LanguagesBackend: HasLog<LanguagesBackend>
     {
-
         #region Constructor & DI
         
-        public LanguagesBackend(IZoneMapper zoneMapper) : base("Bck.Admin")
-        {
-            _zoneMapper = zoneMapper;
-        }
+        public LanguagesBackend(IZoneMapper zoneMapper) : base("Bck.Admin") 
+            => _zoneMapper = zoneMapper.Init(Log);
 
         private readonly IZoneMapper _zoneMapper;
 
-        public LanguagesBackend Init(ILog parentLog)
-        {
-            Log.LinkTo(parentLog);
-            _zoneMapper.Init(Log);
-            return this;
-        }
         #endregion
 
         public IList<TenantLanguageDto> GetLanguages(int tenantId)

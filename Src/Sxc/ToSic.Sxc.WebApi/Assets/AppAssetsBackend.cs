@@ -57,7 +57,7 @@ namespace ToSic.Sxc.WebApi.Assets
 
             path = SanitizePathAndContent(path, content);
 
-            var isAdmin = _user.IsAdmin; // UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
+            var isAdmin = _user.IsAdmin;
             var assetEditor = new AssetEditor(thisApp, path, _user.IsSuperUser, isAdmin, global, Log);
             assetEditor.EnsureUserMayEditAssetOrThrow(path);
             return assetEditor.Create(content.Content);
