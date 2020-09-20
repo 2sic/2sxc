@@ -2,7 +2,8 @@
 {
     internal class RouteParts
     {
-        public const string cmsRoot = "cms";
+        public const string RootCms = "cms";
+        public const string RootAdmin = "admin";
 
         public const string EditionKey = "edition";
         public const string EditionToken = "{" + EditionKey + "}";

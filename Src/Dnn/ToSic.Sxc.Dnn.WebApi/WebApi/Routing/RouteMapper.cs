@@ -156,8 +156,11 @@ namespace ToSic.Sxc.WebApi
 
             #region New routes in 2sxc 11.06+ which should replace most previous internal routes
 
-            mapRouteManager.MapHttpRoute(mod2sxc, "cms-in-dnn", RouteParts.cmsRoot + "/{controller}/{action}",
+            mapRouteManager.MapHttpRoute(mod2sxc, "2sxc-cms", RouteParts.RootCms + "/{controller}/{action}",
                 new[] {typeof(BlockController).Namespace});
+
+            mapRouteManager.MapHttpRoute(mod2sxc, "2sic-admin", RouteParts.RootAdmin + "/{controller}/{action}",
+                new[] {typeof(MetadataController).Namespace});
 
             #endregion
 
