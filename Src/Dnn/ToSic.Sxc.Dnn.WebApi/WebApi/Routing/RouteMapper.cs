@@ -33,7 +33,7 @@ namespace ToSic.Sxc.WebApi
             var stdNsWebApi = new[]
             {
                 /*"ToSic.SexyContent.WebApi",*/
-                typeof(ImportExportController).Namespace, 
+                typeof(ContentGroupController).Namespace, 
                 typeof(AppContentController).Namespace
             };
             var stdNsApps = new[]
