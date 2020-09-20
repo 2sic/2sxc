@@ -3,8 +3,10 @@ using System.Net.Http;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.ImportExport.Options;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Logging;
@@ -71,6 +73,65 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [AllowAnonymous] // will do security check internally
         public HttpResponseMessage Json(int appId, int id, string prefix, bool withMetadata)
             => new ContentExportApi(Log).DownloadEntityAsJson(new DnnUser(UserInfo), appId, id, prefix, withMetadata);
+
+        /// <summary>
+        /// Used to be GET ContentExport/ExportContent
+        /// </summary>
+        /// <param name="appId"></param>
+        /// <param name="language"></param>
+        /// <param name="defaultLanguage"></param>
+        /// <param name="contentType"></param>
+        /// <param name="recordExport"></param>
+        /// <param name="resourcesReferences"></param>
+        /// <param name="languageReferences"></param>
+        /// <param name="selectedIds"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous] // will do security check internally
+        public HttpResponseMessage Download(
+            int appId,
+            string language,
+            string defaultLanguage,
+            string contentType,
+            ExportSelection recordExport, ExportResourceReferenceMode resourcesReferences,
+            ExportLanguageResolution languageReferences, string selectedIds = null)
+            => new ContentExportApi(Log).ExportContent(
+                new DnnUser(UserInfo), appId,
+                language, defaultLanguage, contentType,
+                recordExport, resourcesReferences,
+                languageReferences, selectedIds);
+
+        /// <summary>
+        /// This seems to be for XML import of a list
+        /// Used to be POST ContentImport/EvaluateContent
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public ContentImportResultDto XmlPreview(ContentImportArgsDto args)
+            => new ContentImportApi(Log).EvaluateContent(args);
+
+
+        /// <summary>
+        /// This seems to be for XML import of a list
+        /// Used to be POST ContentImport/ImportContent
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public ContentImportResultDto XmlUpload(ContentImportArgsDto args)
+            => new ContentImportApi(Log).ImportContent(args);
+
+
+        /// <summary>
+        /// This is the single-item json import
+        /// Used to be POST ContentImport/Import
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public bool Upload(EntityImportDto args)
+            => new ContentImportApi(Log).Import(args);
 
 
         // New feature in 11.03 - Usage Statistics
