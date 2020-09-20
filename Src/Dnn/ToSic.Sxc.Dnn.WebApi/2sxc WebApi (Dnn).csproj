@@ -109,7 +109,6 @@
     <Compile Include="WebApi\Cms\EntitiesController_Usage.cs" />
     <Compile Include="WebApi\Cms\SystemController_Languages.cs" />
     <Compile Include="WebApi\Cms\SystemController_App.cs" />
-    <Compile Include="Dnn\WebApi\Admin\TemplateController_Usage.cs" />
     <Compile Include="Dnn\WebApi\Context\ContextBuilder.cs" />
     <Compile Include="Dnn\WebApi\Context\DnnContextDtoExtensions.cs" />
     <Compile Include="WebApi\Routing\Route.cs" />

@@ -2,6 +2,7 @@
 using System.Web.Http.Dispatcher;
 using DotNetNuke.Web.Api;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.Dnn.WebApi.Admin;
 using ToSic.Sxc.Dnn.WebApi.Cms;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.WebApi.App;
@@ -32,7 +33,7 @@ namespace ToSic.Sxc.WebApi
             var stdNsWebApi = new[]
             {
                 /*"ToSic.SexyContent.WebApi",*/
-                typeof(TemplateController).Namespace, 
+                typeof(ImportExportController).Namespace, 
                 typeof(AppContentController).Namespace
             };
             var stdNsApps = new[]
