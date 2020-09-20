@@ -1,13 +1,20 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.Apps;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.WebApi;
+using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.ImportExport;
+using AppDto = ToSic.Sxc.WebApi.App.AppDto;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
@@ -15,9 +22,32 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     // token, which fails in the cases where the url is called using get, which should result in a download
     // [ValidateAntiForgeryToken] because the exports are called by the browser directly (new tab) 
     // we can't set this globally (only needed for imports)
-    public class AppController : DnnApiControllerWithFixes, IAppController
+    [DnnLogExceptions]
+    public class AppController : SxcApiControllerBase, IAppController
     {
         protected override string HistoryLogName => "Api.App";
+
+        [HttpGet]
+        [ValidateAntiForgeryToken]
+        [SupportedModules("2sxc,2sxc-app")]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        public List<AppDto> List(int zoneId)
+            => new AppsBackend().Init(Log).Apps(new DnnTenant().Init(ActiveModule.OwnerPortalID), GetBlock(), zoneId);
+
+        [HttpDelete]
+        [ValidateAntiForgeryToken]
+        [SupportedModules("2sxc,2sxc-app")]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        public void App(int zoneId, int appId)
+            => new CmsZones(zoneId, Log).AppsMan.RemoveAppInTenantAndEav(appId);
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [SupportedModules("2sxc,2sxc-app")]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        public void App(int zoneId, string name)
+            => AppManager.AddBrandNewApp(zoneId, name, Log);
+
 
         /// <summary>
         /// Used to be GET ImportExport/GetAppInfo
