@@ -5,16 +5,26 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Cms;
 
-namespace ToSic.Sxc.Dnn.WebApi.Admin
+namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
-    public partial class EntityController
+    [SupportedModules("2sxc,2sxc-app")]
+    [ValidateAntiForgeryToken]
+    public class HistoryController : SxcApiControllerBase
     {
+        protected override string HistoryLogName => "Api.History";
 
+        /// <summary>
+        /// Used to be POST Entities/History
+        /// </summary>
+        /// <param name="appId"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public List<ItemHistory> History(int appId, [FromBody] ItemIdentifier item) 
+        public List<ItemHistory> Get(int appId, [FromBody] ItemIdentifier item) 
             => new AppManager(appId, Log).Entities.VersionHistory(EntityBackend.ResolveItemIdOfGroup(appId, item, Log).EntityId);
 
         [HttpPost]
