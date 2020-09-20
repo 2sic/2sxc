@@ -5,10 +5,11 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Sxc.WebApi.Cms;
 
-namespace ToSic.Sxc.WebApi.Cms
+namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
-    public partial class EntitiesController
+    public partial class EntityController
     {
 
         [HttpPost]
