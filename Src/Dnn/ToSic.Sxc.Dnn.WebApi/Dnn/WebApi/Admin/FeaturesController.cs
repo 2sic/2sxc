@@ -4,28 +4,34 @@ using System.Web.Http;
 using DotNetNuke.Application;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Features;
 
-namespace ToSic.Sxc.WebApi.Cms
+namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
-    /// <inheritdoc cref="ISystemController" />
     [SupportedModules("2sxc,2sxc-app")]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public partial class SystemController : ISystemController
+    public class FeatureController : SxcApiControllerBase, IFeatureController
     {
+        /// <summary>
+        /// Used to be GET System/Features
+        /// </summary>
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public IEnumerable<Feature> Features(bool reload = false) => 
-            Factory.Resolve<FeaturesBackend>().Init(Log).GetAll(reload);
+        public IEnumerable<Feature> List(bool reload = false) => 
+            Eav.Factory.Resolve<FeaturesBackend>().Init(Log).GetAll(reload);
 
+        /// <summary>
+        /// Used to be GET System/ManageFeaturesUrl
+        /// </summary>
         [HttpGet]
-        public string ManageFeaturesUrl()
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+        public string RemoteManageUrl()
         {
-            if (!UserInfo.IsSuperUser) return "error: user needs SuperUser permissions";
+            //if (!UserInfo.IsSuperUser) return "error: user needs SuperUser permissions";
 
             return "//gettingstarted.2sxc.org/router.aspx?"
                    + $"DnnVersion={DotNetNukeContext.Current.Application.Version.ToString(4)}"
@@ -36,9 +42,12 @@ namespace ToSic.Sxc.WebApi.Cms
                    + "&destination=features";
         }
 
+        /// <summary>
+        /// Used to be GET System/SaveFeatures
+        /// </summary>
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-        public bool SaveFeatures([FromBody] FeaturesDto featuresManagementResponse) => 
-            Factory.Resolve<FeaturesBackend>().Init(Log).SaveFeatures(featuresManagementResponse);
+        public bool Save([FromBody] FeaturesDto featuresManagementResponse) => 
+            Eav.Factory.Resolve<FeaturesBackend>().Init(Log).SaveFeatures(featuresManagementResponse);
     }
 }
