@@ -109,7 +109,6 @@
     <Compile Include="Dnn\WebApi\Sys\InstallController.cs" />
     <Compile Include="WebApi\Cms\ContentGroupController_FieldList.cs" />
     <Compile Include="Dnn\WebApi\Cms\HistoryController.cs" />
-    <Compile Include="WebApi\Cms\SystemController_App.cs" />
     <Compile Include="Dnn\WebApi\Context\ContextBuilder.cs" />
     <Compile Include="Dnn\WebApi\Context\DnnContextDtoExtensions.cs" />
     <Compile Include="WebApi\Routing\Route.cs" />

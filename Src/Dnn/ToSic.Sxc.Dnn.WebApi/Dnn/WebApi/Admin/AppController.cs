@@ -58,9 +58,20 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
-        public AppExportInfoDto Statistics(int appId, int zoneId)
+        public AppExportInfoDto Statistics(int zoneId, int appId)
             => Eav.Factory.Resolve<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
                 .GetAppInfo(appId, zoneId);
+
+
+        [HttpGet]
+        [ValidateAntiForgeryToken]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        public bool FlushCache(int zoneId, int appId)
+        {
+            var wrapLog = Log.Call<bool>($"{zoneId}, {appId}");
+            SystemManager.Purge(zoneId, appId, log: Log);
+            return wrapLog("ok", true);
+        }
 
         /// <summary>
         /// Used to be GET ImportExport/ExportApp
