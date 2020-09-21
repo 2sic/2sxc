@@ -7,6 +7,7 @@ using ToSic.Sxc.Dnn.WebApi.Cms;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.Cms;
+using ContentGroupController = ToSic.Sxc.Dnn.WebApi.Cms.ContentGroupController;
 
 
 namespace ToSic.Sxc.WebApi
@@ -31,13 +32,12 @@ namespace ToSic.Sxc.WebApi
 
             var stdNsWebApi = new[]
             {
-                /*"ToSic.SexyContent.WebApi",*/
-                typeof(ContentGroupController).Namespace, 
+                /* "ToSic.Sxc.WebApi.App" */
                 typeof(AppContentController).Namespace
             };
             var stdNsApps = new[]
             {
-                //"ToSic.SexyContent.Apps",
+                //"ToSic.Sxc.WebApi.App"
                 typeof(AppContentController).Namespace
             };
             var stdNsAdam = new[]
@@ -142,22 +142,17 @@ namespace ToSic.Sxc.WebApi
 
             #region API calls for app-sys, dnn, default
             // System calls to app, dnn, default
-            // 2017-02-17 2dm: disabled, as the "app" route will be used for apps now: 
-            // mapRouteManager.MapHttpRoute(mod2sxc, "app", "app/{controller}/{action}", stdNsWebApi);
-            // 2017-02-17 2dm: new alternate route to replace the "app" route, because I want app to be reserved!
-            mapRouteManager.MapHttpRoute(mod2sxc, "app-sys", "app-sys/{controller}/{action}", stdNsWebApi);
+            // 2020-09-21 2dm - not used any more
+            //mapRouteManager.MapHttpRoute(mod2sxc, "app-sys", "app-sys/{controller}/{action}", stdNsWebApi);
             mapRouteManager.MapHttpRoute(mod2sxc, "dnn", "dnn/{controller}/{action}",
-                new[]
-                {
-                    //"ToSic.SexyContent.WebApi.Dnn",
-                    typeof(HyperlinkController).Namespace
-                });
+                new[] {typeof(HyperlinkController).Namespace /*"ToSic.SexyContent.WebApi.Dnn"*/});
             mapRouteManager.MapHttpRoute(mod2sxc, "default", "{controller}/{action}", stdNsWebApi);
-            mapRouteManager.MapHttpRoute(mod2sxc, "2sxc-sys", "sys/{controller}/{action}",
-                new[] {typeof(InsightsController).Namespace});
             #endregion
 
             #region New routes in 2sxc 11.06+ which should replace most previous internal routes
+
+            mapRouteManager.MapHttpRoute(mod2sxc, "2sxc-sys", RouteParts.RootSys + "/{controller}/{action}",
+                new[] {typeof(InsightsController).Namespace});
 
             mapRouteManager.MapHttpRoute(mod2sxc, "2sxc-cms", RouteParts.RootCms + "/{controller}/{action}",
                 new[] {typeof(BlockController).Namespace});
