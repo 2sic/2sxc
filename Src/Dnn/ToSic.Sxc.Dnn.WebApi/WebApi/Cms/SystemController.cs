@@ -16,7 +16,7 @@ namespace ToSic.Sxc.WebApi.Cms
     [DnnLogExceptions]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public partial class SystemController : SxcApiControllerBase
+    public class SystemController : SxcApiControllerBase
     {
         protected override string HistoryLogName => "Api.SysCnt";
 
@@ -37,17 +37,5 @@ namespace ToSic.Sxc.WebApi.Cms
 
         #endregion
 
-        #region Enable extended logging
-
-        [HttpGet]
-        public string ExtendedLogging(int duration = 1)
-        {
-            Log.Add("Extended logging will set for duration:" + duration);
-            var msg = DnnLogging.ActivateForDuration(duration);
-            Log.Add(msg);
-            return msg;
-        }
-
-        #endregion
     }
 }

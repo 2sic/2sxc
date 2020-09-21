@@ -14,8 +14,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [SupportedModules("2sxc,2sxc-app")]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public class FeatureController : SxcApiControllerBase, IFeatureController
+    public class FeatureController : DnnApiControllerWithFixes, IFeatureController
     {
+        protected override string HistoryLogName => "Api.Feats";
+
         /// <summary>
         /// Used to be GET System/Features
         /// </summary>
