@@ -117,7 +117,7 @@
     <Compile Include="WebApi\Routing\RouteParts.cs" />
     <Compile Include="Dnn\DnnPublishing.cs" />
     <Compile Include="WebApi\DynamicApiController.cs" />
-    <Compile Include="WebApi\Cms\EditUi\UiController.cs" />
+    <Compile Include="Dnn\WebApi\Cms\UiController.cs" />
     <Compile Include="Dnn\WebApi\Sys\InsightsController.cs" />
     <Compile Include="WebApi\SxcApiControllerBase.cs" />
     <Compile Include="Dnn\WebApi\Logging\DnnLogWebApi.cs" />
