@@ -132,7 +132,6 @@
     <Compile Include="Dnn\WebApi\ModuleController.cs" />
     <Compile Include="Dnn\WebApi\Admin\TypeController.cs" />
     <Compile Include="Dnn\WebApi\Admin\EntityController.cs" />
-    <Compile Include="WebApi\Cms\EditUi\EntityPickerController.cs" />
     <Compile Include="Dnn\WebApi\Admin\MetadataController.cs" />
     <Compile Include="Dnn\WebApi\Admin\QueryController.cs" />
     <Compile Include="Dnn\WebApi\GetDnnBlock.cs" />

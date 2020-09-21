@@ -8,7 +8,7 @@ using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.Cms;
 using ModuleController = ToSic.Sxc.WebApi.Cms.ModuleController;
-using UiController = ToSic.Sxc.WebApi.Cms.UiController;
+
 
 namespace ToSic.Sxc.WebApi
 {
@@ -47,12 +47,17 @@ namespace ToSic.Sxc.WebApi
             };
             var adamController = new {controller = "Adam"};
             #region EAV and View-routes
+
+
             // 2019-11-28 moved namespace for this stuff
-            mapRouteManager.MapHttpRoute("2sxc", "EAV", "EAV/{controller}/{action}", new[]
-            {
-                //"ToSic.SexyContent.WebApi.EavApiProxies"
-                typeof(UiController).Namespace
-            });
+            // 2020-09-21 dropped this endpoint
+            //mapRouteManager.MapHttpRoute("2sxc", "EAV", "EAV/{controller}/{action}", new[]
+            //{
+            //    //"ToSic.SexyContent.WebApi.EavApiProxies"
+            //    typeof(UiController).Namespace
+            //});
+
+
             mapRouteManager.MapHttpRoute("2sxc", "View", "view/{controller}/{action}", new[]
             {
                 //"ToSic.SexyContent.WebApi.View"
