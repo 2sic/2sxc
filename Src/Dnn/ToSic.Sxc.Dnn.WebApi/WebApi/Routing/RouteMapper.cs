@@ -3,12 +3,9 @@ using System.Web.Http.Dispatcher;
 using DotNetNuke.Web.Api;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Admin;
+using ToSic.Sxc.Dnn.WebApi.App;
 using ToSic.Sxc.Dnn.WebApi.Cms;
 using ToSic.Sxc.Dnn.WebApi.Sys;
-using ToSic.Sxc.WebApi.App;
-using ToSic.Sxc.WebApi.Cms;
-using ContentGroupController = ToSic.Sxc.Dnn.WebApi.Cms.ContentGroupController;
-
 
 namespace ToSic.Sxc.WebApi
 {
@@ -30,20 +27,9 @@ namespace ToSic.Sxc.WebApi
             // DNN Module Name
             const string mod2sxc = "2sxc";
 
-            var stdNsWebApi = new[]
-            {
-                /* "ToSic.Sxc.WebApi.App" */
-                typeof(AppContentController).Namespace
-            };
-            var stdNsApps = new[]
-            {
-                //"ToSic.Sxc.WebApi.App"
-                typeof(AppContentController).Namespace
-            };
-            var stdNsAdam = new[]
-            {
-                typeof(AdamController).Namespace
-            };
+            var stdNsWebApi = new[] {typeof(AppContentController).Namespace /* "ToSic.Sxc.WebApi.App" */};
+            var stdNsApps = new[] {typeof(AppContentController).Namespace /* "ToSic.Sxc.WebApi.App" */};
+            var stdNsAdam = new[] {typeof(AdamController).Namespace};
             var adamController = new {controller = "Adam"};
             #region EAV and View-routes
 

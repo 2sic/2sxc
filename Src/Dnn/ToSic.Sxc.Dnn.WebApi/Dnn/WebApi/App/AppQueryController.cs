@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
+using ToSic.Sxc.WebApi;
+using ToSic.Sxc.WebApi.App;
 
-namespace ToSic.Sxc.WebApi.App
+namespace ToSic.Sxc.Dnn.WebApi.App
 {
     /// <inheritdoc />
     /// <summary>

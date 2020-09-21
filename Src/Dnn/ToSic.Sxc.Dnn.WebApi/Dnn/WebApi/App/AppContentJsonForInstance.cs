@@ -6,7 +6,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Sxc.Conversion;
 
-namespace ToSic.Sxc.WebApi.App
+namespace ToSic.Sxc.Dnn.WebApi.App
 {
     internal class AppContentJsonForInstance
     {
