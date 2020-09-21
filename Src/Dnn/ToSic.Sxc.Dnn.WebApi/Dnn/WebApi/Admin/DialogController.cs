@@ -2,12 +2,12 @@
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Admin;
 
-namespace ToSic.Sxc.WebApi.Cms
+namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
     /// <summary>
     /// This one supplies portal-wide (or cross-portal) settings / configuration
@@ -16,18 +16,19 @@ namespace ToSic.Sxc.WebApi.Cms
     [DnnLogExceptions]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public class SystemController : SxcApiControllerBase
+    public class DialogController : SxcApiControllerBase
     {
         protected override string HistoryLogName => "Api.SysCnt";
 
         #region Dialog Helpers
         /// <summary>
         /// This is the subsystem which delivers the getting-started app-iframe with instructions etc.
+        /// Used to be GET System/DialogSettings
         /// </summary>
         /// <param name="appId"></param>
         /// <returns></returns>
         [HttpGet]
-        public dynamic DialogSettings(int appId) =>
+        public dynamic Settings(int appId) =>
             new AdminBackend().Init(Log).DialogSettings(
                 GetContext(),
                 new DnnContextBuilder(

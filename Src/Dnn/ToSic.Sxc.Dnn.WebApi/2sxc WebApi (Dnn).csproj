@@ -109,7 +109,7 @@
     <Compile Include="Dnn\WebApi\Cms\ItemController.cs" />
     <Compile Include="Dnn\WebApi\Sys\InstallController.cs" />
     <Compile Include="Dnn\WebApi\Sys\LogController.cs" />
-    <Compile Include="WebApi\Cms\ContentGroupController_FieldList.cs" />
+    <Compile Include="Dnn\WebApi\Cms\ContentGroupController_FieldList.cs" />
     <Compile Include="Dnn\WebApi\Cms\HistoryController.cs" />
     <Compile Include="Dnn\WebApi\Context\ContextBuilder.cs" />
     <Compile Include="Dnn\WebApi\Context\DnnContextDtoExtensions.cs" />
@@ -126,7 +126,7 @@
     <Compile Include="Dnn\WebApi\Admin\AppFilesController.cs" />
     <Compile Include="WebApi\App\AppContentController.cs" />
     <Compile Include="WebApi\App\AppQueryController.cs" />
-    <Compile Include="WebApi\Cms\ContentGroupController.cs" />
+    <Compile Include="Dnn\WebApi\Cms\ContentGroupController.cs" />
     <Compile Include="Dnn\WebApi\DnnApiControllerWithFixes.cs" />
     <Compile Include="Dnn\WebApi\HyperlinkController.cs" />
     <Compile Include="Dnn\WebApi\ModuleController.cs" />
@@ -143,7 +143,6 @@
     <Compile Include="Dnn\WebApi\Admin\DialogController.cs" />
     <Compile Include="Dnn\WebApi\Admin\ViewController.cs" />
     <Compile Include="WebApi\App\AppContentJsonForInstance.cs" />
-    <Compile Include="WebApi\Cms\X-ModuleController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">
@@ -183,7 +182,9 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="WebApi\Cms\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

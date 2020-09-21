@@ -7,7 +7,6 @@ using ToSic.Sxc.Dnn.WebApi.Cms;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.Cms;
-using ModuleController = ToSic.Sxc.WebApi.Cms.ModuleController;
 
 
 namespace ToSic.Sxc.WebApi
@@ -50,19 +49,17 @@ namespace ToSic.Sxc.WebApi
 
 
             // 2019-11-28 moved namespace for this stuff
-            // 2020-09-21 dropped this endpoint
+            // 2020-09-21 dropped this endpoint #2173
             //mapRouteManager.MapHttpRoute("2sxc", "EAV", "EAV/{controller}/{action}", new[]
             //{
             //    //"ToSic.SexyContent.WebApi.EavApiProxies"
             //    typeof(UiController).Namespace
             //});
-
-
-            mapRouteManager.MapHttpRoute("2sxc", "View", "view/{controller}/{action}", new[]
-            {
-                //"ToSic.SexyContent.WebApi.View"
-                typeof(ModuleController).Namespace
-            });
+            //mapRouteManager.MapHttpRoute("2sxc", "View", "view/{controller}/{action}", new[]
+            //{
+            //    //"ToSic.SexyContent.WebApi.View"
+            //    typeof(ModuleController).Namespace
+            //});
             #endregion
 
             #region Constants for the Routes
