@@ -102,13 +102,13 @@
     <Compile Include="Dnn\ApiController_Obsolete.cs" />
     <Compile Include="Dnn\WebApi\Admin\AppPartsController.cs" />
     <Compile Include="Dnn\WebApi\Admin\FieldController.cs" />
+    <Compile Include="Dnn\WebApi\Admin\ZoneController.cs" />
     <Compile Include="Dnn\WebApi\Cms\BlockController.cs" />
     <Compile Include="Dnn\WebApi\Cms\ListController.cs" />
     <Compile Include="Dnn\WebApi\Cms\ItemController.cs" />
     <Compile Include="Dnn\WebApi\Sys\InstallController.cs" />
     <Compile Include="WebApi\Cms\ContentGroupController_FieldList.cs" />
     <Compile Include="Dnn\WebApi\Cms\HistoryController.cs" />
-    <Compile Include="WebApi\Cms\SystemController_Languages.cs" />
     <Compile Include="WebApi\Cms\SystemController_App.cs" />
     <Compile Include="Dnn\WebApi\Context\ContextBuilder.cs" />
     <Compile Include="Dnn\WebApi\Context\DnnContextDtoExtensions.cs" />
