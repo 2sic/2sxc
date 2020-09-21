@@ -5,6 +5,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Cms;
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
     [SupportedModules("2sxc,2sxc-app")]
     [ValidateAntiForgeryToken]
-    public class EditController : SxcApiControllerBase
+    public class EditController : SxcApiControllerBase, IEditController
     {
         protected override string HistoryLogName => "Api.UiCont";
 

@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [DnnLogExceptions]
     [ValidateAntiForgeryToken]
-	public class QueryController : DnnApiControllerWithFixes, IPipelineDesignerController
+	public class QueryController : DnnApiControllerWithFixes, IQueryController
     {
         protected override string HistoryLogName => "Api.Query";
 
