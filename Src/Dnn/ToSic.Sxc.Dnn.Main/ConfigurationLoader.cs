@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Caching;
@@ -15,6 +16,7 @@ using ToSic.Eav.Run;
 using ToSic.SexyContent.Dnn920;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Adam;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.ImportExport;
@@ -23,12 +25,12 @@ using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Dnn.WebApi;
-using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.Plumbing;
+using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.SexyContent
 {
@@ -130,6 +132,9 @@ namespace ToSic.SexyContent
 
             services.AddTransient<IGetEngine, GetDnnEngine>();
             services.AddTransient<IFingerprint, DnnFingerprint>();
+
+            // new in 11.07 - exception logger
+            services.AddTransient<IEnvironmentLogger, DnnEnvironmentLogger>();
 
             // add page publishing
             services.AddTransient<IPagePublishing, Sxc.Dnn.Cms.DnnPagePublishing>();

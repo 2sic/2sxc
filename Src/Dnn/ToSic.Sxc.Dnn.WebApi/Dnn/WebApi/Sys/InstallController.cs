@@ -2,7 +2,6 @@
 using System.Net.Http;
 using System.Web.Http;
 using DotNetNuke.Security;
-using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Run;
@@ -66,8 +65,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
             var container = new DnnContainer().Init(ActiveModule, Log);
             var block = container.BlockIdentifier;
 
-            var result = new ImportFromRemote().Init(new DnnUser(UserInfo), Log)
-                .InstallPackage(block.ZoneId, block.AppId, ActiveModule.DesktopModule.ModuleName == "2sxc-app", packageUrl, Exceptions.LogException);
+            var result = Eav.Factory.Resolve<ImportFromRemote>().Init(new DnnUser(UserInfo), Log)
+                .InstallPackage(block.ZoneId, block.AppId, ActiveModule.DesktopModule.ModuleName == "2sxc-app", packageUrl);
 
             Log.Add("install completed with success:" + result.Item1);
             return Request.CreateResponse(result.Item1 ? HttpStatusCode.OK : HttpStatusCode.InternalServerError, new { result.Item1, result.Item2 });
