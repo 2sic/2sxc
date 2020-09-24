@@ -12,6 +12,7 @@ using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
+using ToSic.Sxc.WebApi.Assets;
 using ToSic.Sxc.WebApi.ImportExport;
 using ContentTypeApi = ToSic.Eav.WebApi.ContentTypeApi;
 
@@ -127,12 +128,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
                 return new ImportResultDto(false, "no file uploaded", Message.MessageTypes.Error);
 
             var files = HttpContext.Current.Request.Files;
-            var streams = files.AllKeys.Select(k => files[k]?.InputStream);
+            var streams = new List<FileUploadDto>();
+            for(var i = 0; i < files.Count; i++)
+                streams.Add(new FileUploadDto { Name = files[i].FileName, Stream = files[i].InputStream});
             var result = Eav.Factory.Resolve<ImportContent>().Init(new DnnUser(UserInfo), Log)
                 .ImportContentType(zoneId, appId, streams, PortalSettings.DefaultLanguage);
 
             return wrapLog("ok", result);
         }
-
     }
 }

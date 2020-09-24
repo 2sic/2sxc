@@ -14,6 +14,7 @@ using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.WebApi.Assets;
 using ToSic.Sxc.WebApi.Validation;
 
 namespace ToSic.Sxc.WebApi.ImportExport
@@ -82,27 +83,20 @@ namespace ToSic.Sxc.WebApi.ImportExport
         }
 
 
-        public ImportResultDto ImportContentType(int zoneId, int appId, IEnumerable<Stream> streams, string defaultLanguage)
+        public ImportResultDto ImportContentType(int zoneId, int appId, List<FileUploadDto> files, string defaultLanguage)
         {
             var callLog = Log.Call<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
 
             try
             {
-                string fileContents;
                 // 0. Verify it's json etc.
-                //using (var fileStreamReader = new StreamReader(streams)) fileContents = fileStreamReader.ReadToEnd();
-                var files = streams.Select(s =>
-                {
-                    using (var fileStreamReader = new StreamReader(s)) return fileStreamReader.ReadToEnd();
-                }).ToList();
-
-                if (files.Any(file => !Json.IsValidJson(file)))
+                if (files.Any(file => !Json.IsValidJson(file.Contents)))
                     throw new ArgumentException("a file is not json");
 
                 // 1. create the content type
                 var serializer = new JsonSerializer(State.Get(new AppIdentity(zoneId, appId)), Log);
 
-                var types = files.Select(f => serializer.DeserializeContentType(f) as ContentType).ToList();
+                var types = files.Select(f => serializer.DeserializeContentType(f.Contents) as ContentType).ToList();
 
                 if (types.Any(t => t == null))
                     throw new NullReferenceException("One ContentType is null, something is wrong");
