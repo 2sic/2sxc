@@ -60,7 +60,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                     zipImport.Init(zoneId, appId, _user.IsSuperUser, Log);
                     var temporaryDirectory = _http.MapPath(Path.Combine(Eav.ImportExport.Settings.TemporaryDirectory,
                         Guid.NewGuid().ToString()));
-                    result.Succeeded = zipImport.ImportZip(stream, temporaryDirectory);
+                    result.Success = zipImport.ImportZip(stream, temporaryDirectory);
                     result.Messages.AddRange(zipImport.Messages);
                 }
                 catch (Exception ex)
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 {
                     var xmlImport = new XmlImportWithFiles(Log, defaultLanguage, allowSystemChanges);
                     var xmlDocument = XDocument.Parse(fileStreamReader.ReadToEnd());
-                    result.Succeeded = xmlImport.ImportXml(zoneId, appId, xmlDocument);
+                    result.Success = xmlImport.ImportXml(zoneId, appId, xmlDocument);
                     result.Messages.AddRange(xmlImport.Messages);
                 }
             }
@@ -97,7 +97,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 }).ToList();
 
                 if (files.Any(file => !Json.IsValidJson(file)))
-                    throw new ArgumentException("a file file is not json");
+                    throw new ArgumentException("a file is not json");
 
                 // 1. create the content type
                 var serializer = new JsonSerializer(State.Get(new AppIdentity(zoneId, appId)), Log);

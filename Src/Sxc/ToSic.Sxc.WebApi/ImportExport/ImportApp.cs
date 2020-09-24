@@ -51,13 +51,13 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 var temporaryDirectory = _http.MapPath(Path.Combine(Eav.ImportExport.Settings.TemporaryDirectory, Guid.NewGuid().ToString().Substring(0, 8)));
 
                 // Increase script timeout to prevent timeouts
-                result.Succeeded = zipImport.ImportZip(stream, temporaryDirectory, name);
+                result.Success = zipImport.ImportZip(stream, temporaryDirectory, name);
                 result.Messages.AddRange(zipImport.Messages);
             }
             catch (Exception ex)
             {
                 _envLogger.LogException(ex);
-                result.Succeeded = false;
+                result.Success = false;
                 result.Messages.AddRange(zipImport.Messages);
             }
             return result;
