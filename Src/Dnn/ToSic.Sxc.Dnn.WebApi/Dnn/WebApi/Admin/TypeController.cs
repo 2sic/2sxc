@@ -122,10 +122,12 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             PreventServerTimeout300();
             if (HttpContext.Current.Request.Files.Count <= 0)
                 return new ImportResultDto(false, "no file uploaded", Message.MessageTypes.Error);
-            
-            var file = HttpContext.Current.Request.Files[0];
-            var result = Eav.Factory.Resolve<ImportContent>().Init(new DnnUser(UserInfo), Log).ImportContentType(zoneId, appId, 
-                file.InputStream, PortalSettings.DefaultLanguage);
+
+            //var file = HttpContext.Current.Request.Files[0];
+            var files = HttpContext.Current.Request.Files;
+            var streams = files.AllKeys.Select(k => files[k].InputStream);
+            var result = Eav.Factory.Resolve<ImportContent>().Init(new DnnUser(UserInfo), Log)
+                .ImportContentType(zoneId, appId, streams, PortalSettings.DefaultLanguage);
 
             return wrapLog("ok", result);
         }

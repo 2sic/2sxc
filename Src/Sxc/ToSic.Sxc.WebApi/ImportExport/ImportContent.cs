@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
@@ -81,7 +82,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         }
 
 
-        public ImportResultDto ImportContentType(int zoneId, int appId, Stream stream, string defaultLanguage)
+        public ImportResultDto ImportContentType(int zoneId, int appId, IEnumerable<Stream> streams, string defaultLanguage)
         {
             var callLog = Log.Call<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
 
@@ -89,19 +90,26 @@ namespace ToSic.Sxc.WebApi.ImportExport
             {
                 string fileContents;
                 // 0. Verify it's json etc.
-                using (var fileStreamReader = new StreamReader(stream)) fileContents = fileStreamReader.ReadToEnd();
+                //using (var fileStreamReader = new StreamReader(streams)) fileContents = fileStreamReader.ReadToEnd();
+                var files = streams.Select(s =>
+                {
+                    using (var fileStreamReader = new StreamReader(s)) return fileStreamReader.ReadToEnd();
+                }).ToList();
 
-                if (!Json.IsValidJson(fileContents))
-                    throw new ArgumentException("file is not json");
+                if (files.Any(file => !Json.IsValidJson(file)))
+                    throw new ArgumentException("a file file is not json");
 
                 // 1. create the content type
                 var serializer = new JsonSerializer(State.Get(new AppIdentity(zoneId, appId)), Log);
-                if(!(serializer.DeserializeContentType(fileContents) is ContentType type)) 
-                    throw new NullReferenceException("ContentType is null, something is wrong");
+
+                var types = files.Select(f => serializer.DeserializeContentType(f) as ContentType).ToList();
+
+                if (types.Any(t => t == null))
+                    throw new NullReferenceException("One ContentType is null, something is wrong");
 
                 // 2. Import the type
                 var import = new Import(zoneId, appId, true, parentLog: Log);
-                import.ImportIntoDb(new List<ContentType> { type }, null);
+                import.ImportIntoDb(types, null);
 
                 Log.Add($"Purging {zoneId}/{appId}");
                 SystemManager.Purge(zoneId, appId, log: Log);
