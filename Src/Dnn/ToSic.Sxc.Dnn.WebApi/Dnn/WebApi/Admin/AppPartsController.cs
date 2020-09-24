@@ -2,7 +2,6 @@
 using System.Web;
 using System.Web.Http;
 using DotNetNuke.Security;
-using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
@@ -63,10 +62,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             var wrapLog = Log.Call<ImportResultDto>();
 
             PreventServerTimeout300();
-            if (HttpContext.Current.Request.Files.Count <= 0) return new ImportResultDto();
+            if (HttpContext.Current.Request.Files.Count <= 0) return new ImportResultDto(false, "no files uploaded");
             var file = HttpContext.Current.Request.Files[0];
             var result = Eav.Factory.Resolve<ImportContent>().Init(new DnnUser(UserInfo), Log).Import(zoneId, appId, file.FileName,
-                file.InputStream, PortalSettings.DefaultLanguage, Exceptions.LogException);
+                file.InputStream, PortalSettings.DefaultLanguage);
 
             return wrapLog("ok", result);
         }

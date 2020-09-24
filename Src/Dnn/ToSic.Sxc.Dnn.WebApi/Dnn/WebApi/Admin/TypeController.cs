@@ -1,15 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
+using ToSic.Sxc.WebApi.ImportExport;
 using ContentTypeApi = ToSic.Eav.WebApi.ContentTypeApi;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
@@ -102,6 +105,30 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [AllowAnonymous] // will do security check internally
         public HttpResponseMessage Json(int appId, string name)
             => new Eav.WebApi.ContentExportApi(Log).DownloadTypeAsJson(new DnnUser(UserInfo), appId, name);
+
+
+
+        /// <summary>
+        /// Used to be POST ImportExport/ImportContent
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [ValidateAntiForgeryToken]
+        public ImportResultDto Import(int zoneId, int appId)
+        {
+            var wrapLog = Log.Call<ImportResultDto>();
+
+            PreventServerTimeout300();
+            if (HttpContext.Current.Request.Files.Count <= 0)
+                return new ImportResultDto(false, "no file uploaded", Message.MessageTypes.Error);
+            
+            var file = HttpContext.Current.Request.Files[0];
+            var result = Eav.Factory.Resolve<ImportContent>().Init(new DnnUser(UserInfo), Log).ImportContentType(zoneId, appId, 
+                file.InputStream, PortalSettings.DefaultLanguage);
+
+            return wrapLog("ok", result);
+        }
 
     }
 }

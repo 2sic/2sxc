@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.WebApi.Validation;
 
 
 // Todo: MVC - has a DNN folder name in this code
@@ -49,7 +48,7 @@ namespace ToSic.Sxc.WebApi.Features
 
             // 1. valid json? 
             // - ensure signature is valid
-            if (!IsValidJson(featuresManagementResponse.Msg.Features)) return false;
+            if (!IsValidFeaturesJson(featuresManagementResponse.Msg.Features)) return false;
 
             // then take the newFeatures (it should be a json)
             // and save to /desktopmodules/.data-custom/configurations/features.json
@@ -66,36 +65,42 @@ namespace ToSic.Sxc.WebApi.Features
 
         #region Helper Functions
 
-
-
-        public static bool IsValidJson(string strInput)
+        public static bool IsValidFeaturesJson(string input)
         {
-            strInput = strInput.Trim();
-            if (!(strInput.StartsWith("{") && strInput.EndsWith("}")) &&
-                !(strInput.StartsWith("[") && strInput.EndsWith("]")))
-                // it is not js Object and not js Array
-                return false;
-
-            try
-            {
-                JToken.Parse(strInput);
-            }
-            catch (JsonReaderException)
-            {
-                //  exception in parsing json
-                return false;
-            }
-            catch (Exception)
-            {
-                // some other exception
-                return false;
-            }
+            return Json.IsValidJson(input);
 
             // todo: ensure signature is valid
 
             // json is valid
-            return true;
+            //return true;
         }
+
+        //public static bool IsValidJson(string strInput)
+        //{
+        //    strInput = strInput.Trim();
+        //    if (!(strInput.StartsWith("{") && strInput.EndsWith("}")) &&
+        //        !(strInput.StartsWith("[") && strInput.EndsWith("]")))
+        //        // it is not js Object and not js Array
+        //        return false;
+
+        //    try
+        //    {
+        //        JToken.Parse(strInput);
+        //    }
+        //    catch (JsonReaderException)
+        //    {
+        //        //  exception in parsing json
+        //        return false;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        // some other exception
+        //        return false;
+        //    }
+
+        //    // json is valid
+        //    return true;
+        //}
 
         public bool SaveFeature(string features)
         {
