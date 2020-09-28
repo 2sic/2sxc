@@ -40,12 +40,15 @@ namespace ToSic.Sxc.Engines
         /// <summary>
         /// Empty constructor, so it can be used in dependency injection
         /// </summary>
-        protected EngineBase() : base("Sxc.EngBas")
-        { }
+        protected EngineBase(IHttp http, TemplateHelpers templateHelpers) : base("Sxc.EngBas")
+        {
+            Http = http;
+            _templateHelpers = templateHelpers;
+        }
 
-        protected IHttp Http => _http ?? (_http = Factory.Resolve<IHttp>());
-        private IHttp _http;
-        
+        protected IHttp Http { get; }
+
+        private readonly TemplateHelpers _templateHelpers;
 
         #endregion
 
@@ -53,13 +56,11 @@ namespace ToSic.Sxc.Engines
         /// <inheritdoc />
         public void Init(IBlock block, Purpose purpose, ILog parentLog)
         {
-            //BlockBuilder = blockBuilder;
             Block = block;
             var view = Block.View;
             Log.LinkTo(parentLog);
 
-
-            var root = TemplateHelpers.GetTemplatePathRoot(view.Location, Block.App);
+            var root = _templateHelpers.Init(Block.App).AppPathRoot(view.Location);
             var subPath = view.Path;
             var templatePath = TryToFindPolymorphPath(root, view, subPath) 
                                ?? Http.Combine(root + "/", subPath);

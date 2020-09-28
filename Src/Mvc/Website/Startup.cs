@@ -8,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using RazorPartialToString.Services;
 using ToSic.Sxc.Mvc;
@@ -54,7 +53,8 @@ namespace Website
                 {
                     // this ensures that c# objects with Pascal-case keep that
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                    options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                    ToSic.Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings);
+                    //options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
                 })
                 .PartManager.ApplicationParts.Add(new AssemblyPart(typeof(SxcMvc).Assembly));
 

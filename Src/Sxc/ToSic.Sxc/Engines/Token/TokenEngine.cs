@@ -72,6 +72,11 @@ namespace ToSic.Sxc.Engines
                 | RegexOptions.IgnorePatternWhitespace);
         #endregion
 
+        #region Constructor / DI
+
+        public TokenEngine(IHttp http, TemplateHelpers templateHelpers) : base(http, templateHelpers) { }
+
+        #endregion
 
         private DynamicCodeRoot _data;
 
@@ -90,7 +95,7 @@ namespace ToSic.Sxc.Engines
         private void InitTokenReplace()
         {
             var confProv = ConfigurationProvider.GetConfigProviderForModule(Block.Context.Container.Id, Block.App, Block);
-            _tokenReplace = new TokenReplaceEav(/*Block.Context.Container.Id,*/ confProv);
+            _tokenReplace = new TokenReplaceEav(confProv);
             
             // Add the Content and ListContent property sources used always
             confProv.Add(new LookUpInDynamicEntity(SourcePropertyName.ListContent, _data.Header));

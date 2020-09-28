@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Conversion;
@@ -42,12 +43,9 @@ namespace ToSic.Sxc.Apps
 
         public IView Get(int templateId)
 		{
-			//var dataSource = ViewsDataSource();
-			//dataSource = DsFactory.GetDataSource<EntityIdFilter>(dataSource);
-			//((EntityIdFilter)dataSource).EntityIds = templateId.ToString();
-            var templateEntity = ViewsDataSource().List.One(templateId); // dataSource.List.FirstOrDefault();
+            var templateEntity = ViewsDataSource().List.One(templateId);
 
-			if(templateEntity == null)
+            if(templateEntity == null)
 				throw new Exception("The template with id " + templateId + " does not exist.");
 
 			return new View(templateEntity, Log);
@@ -87,7 +85,7 @@ namespace ToSic.Sxc.Apps
 	            Name = t.Name,
 	            ContentTypeStaticName = t.ContentType,
 	            IsHidden = t.IsHidden,
-	            Thumbnail = TemplateHelpers.GetTemplateThumbnail(app, t.Location, t.Path)
+	            Thumbnail = Factory.Resolve<TemplateHelpers>().Init(app).ViewThumbnail(t)
 	        });
 	    }
 

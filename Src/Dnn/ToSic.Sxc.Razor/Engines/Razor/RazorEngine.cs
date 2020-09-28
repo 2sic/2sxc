@@ -23,6 +23,13 @@ namespace ToSic.Sxc.Engines
     // ReSharper disable once UnusedMember.Global
     public partial class RazorEngine : EngineBase
     {
+        #region Constructor / DI
+
+        public RazorEngine(IHttp http, TemplateHelpers templateHelpers) : base(http, templateHelpers) { }
+
+        #endregion
+
+
         [PrivateApi]
         protected RazorComponentBase  Webpage { get; set; }
 

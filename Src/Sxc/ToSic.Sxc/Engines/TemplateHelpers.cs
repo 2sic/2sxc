@@ -3,19 +3,26 @@ using System.IO;
 using System.Linq;
 using ToSic.Eav;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Engines
 {
-    internal class TemplateHelpers
+    public class TemplateHelpers
     {
         public const string RazorC = "C# Razor";
         public const string TokenReplace = "Token";
 
         public IApp App;
-        public TemplateHelpers(IApp app)
+        public TemplateHelpers(IHttp http)
+        {
+            _http = http;
+        }
+
+        public TemplateHelpers Init(IApp app)
         {
             App = app;
+            return this;
         }
 
         protected IHttp Http => _http ?? (_http = Factory.Resolve<IHttp>());
@@ -48,28 +55,37 @@ namespace ToSic.Sxc.Engines
             var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, App.Folder));
             contentFolder.Create();
         }
-        
+
+        public string AppPathRoot(bool global) =>
+            AppPathRoot(global
+                ? Settings.TemplateLocations.HostFileSystem
+                : Settings.TemplateLocations.PortalFileSystem, true);
 
         /// <summary>
         /// Returns the location where Templates are stored for the current app
         /// </summary>
-        public static string GetTemplatePathRoot(string locationId, IApp app)
+        public string AppPathRoot(string locationId, bool fullPath = false)
         {
             var rootFolder = locationId == Settings.TemplateLocations.HostFileSystem
-                ? Factory.Resolve<IHttp>().ToAbsolute(Settings.PortalHostDirectory + Settings.AppsRootFolder)
-                : app.Tenant.AppsRoot;
-            rootFolder += "\\" + app.Folder;
+                ? _http.ToAbsolute(Settings.PortalHostDirectory + Settings.AppsRootFolder)
+                : App.Tenant.AppsRoot;
+            rootFolder += "\\" + App.Folder;
+            if (fullPath) rootFolder = _http.MapPath(rootFolder);
             return rootFolder;
         }
 
-        public static string GetTemplateThumbnail(IApp app, string locationId, string templatePath)
+        public string ViewThumbnail(IView view)
         {
-            var iconFile = GetTemplatePathRoot(locationId, app) + "/" + templatePath;
-            iconFile = iconFile.Substring(0, iconFile.LastIndexOf(".", StringComparison.Ordinal)) + ".png";
-            var exists = File.Exists(Factory.Resolve<IHttp>().MapPath(iconFile));
+            var iconFile = ViewPath(view);
+            iconFile = ViewIconFileName(iconFile);
+            var exists = File.Exists(_http.MapPath(iconFile));
 
             return exists ? iconFile : null;
-
         }
+
+        public string ViewIconFileName(string viewPath) 
+            => viewPath.Substring(0, viewPath.LastIndexOf(".", StringComparison.Ordinal)) + ".png";
+
+        public string ViewPath(IView view) => AppPathRoot(view.Location) + "/" + view.Path;
     }
 }
