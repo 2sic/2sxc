@@ -6,10 +6,10 @@ namespace ToSic.Sxc.WebApi.Views
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public object ContentType { get; set; }
-        public object PresentationType { get; set; }
-        public object ListContentType { get; set; }
-        public object ListPresentationType { get; set; }
+        public ViewContentTypeDto ContentType { get; set; }
+        public ViewContentTypeDto PresentationType { get; set; }
+        public ViewContentTypeDto ListContentType { get; set; }
+        public ViewContentTypeDto ListPresentationType { get; set; }
         public string TemplatePath { get; set; }
         public bool IsHidden { get; set; }
         public string ViewNameInUrl { get; set; }
