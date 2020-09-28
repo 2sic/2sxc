@@ -24,22 +24,21 @@ using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi.Assets;
 using ToSic.Sxc.WebApi.ImportExport;
 using ToSic.Sxc.WebApi.Validation;
-using Import = ToSic.Eav.Apps.ImportExport.Import;
 
 namespace ToSic.Sxc.WebApi.Views
 {
     internal class ViewsExportImport: HasLog
     {
         private readonly IHttp _http;
-        private readonly TemplateHelpers _tmplHelpers;
+        private readonly TemplateHelpers _appHelpers;
         private readonly IEnvironmentLogger _envLogger;
         private ITenant _tenant;
         private IUser _user;
 
-        public ViewsExportImport(IHttp http, TemplateHelpers tmplHelpers, IEnvironmentLogger envLogger) : base("Bck.Views")
+        public ViewsExportImport(IHttp http, TemplateHelpers appHelpers, IEnvironmentLogger envLogger) : base("Bck.Views")
         {
             _http = http;
-            _tmplHelpers = tmplHelpers;
+            _appHelpers = appHelpers;
             _envLogger = envLogger;
         }
 
@@ -65,13 +64,13 @@ namespace ToSic.Sxc.WebApi.Views
             // Attach files
             var view = new View(bundle.Entity, Log);
 
-            _tmplHelpers.Init(app);
+            _appHelpers.Init(app);
             if (!string.IsNullOrEmpty(view.Path))
             {
-                TryAddAsset(bundle, _tmplHelpers.ViewPath(view), view.Path);
-                var thumb = _tmplHelpers.ViewThumbnail(view);
+                TryAddAsset(bundle, _appHelpers.ViewPath(view), view.Path);
+                var thumb = _appHelpers.ViewThumbnail(view);
                 if(thumb != null)
-                    TryAddAsset(bundle, thumb, _tmplHelpers.ViewIconFileName(view.Path));
+                    TryAddAsset(bundle, thumb, _appHelpers.ViewIconFileName(view.Path));
             }
 
             var serializer = new JsonBundleSerializer();
@@ -103,7 +102,7 @@ namespace ToSic.Sxc.WebApi.Views
             {
                 // 0.1 Check permissions, get the app, 
                 var app = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(_tenant.ZoneId, appId, _user, _tenant.ZoneId, Log);
-                _tmplHelpers.Init(app);
+                _appHelpers.Init(app);
 
                 // 0.2 Verify it's json etc.
                 if (files.Any(file => !Json.IsValidJson(file.Contents)))
@@ -124,16 +123,12 @@ namespace ToSic.Sxc.WebApi.Views
                                         "Expected all to be " + Eav.ImportExport.Settings.TemplateContentType);
 
                 // 2. Import the views
-                var import = new Import(zoneId, appId, true, parentLog: Log);
-                var views = bundles.Select(v => v.Entity as Entity).ToList();
-                import.ImportIntoDb(null, views);
-
-                SystemManager.Purge(zoneId, appId, log: Log);
+                new AppManager(app.AppId, Log).Entities.Import(bundles.Select(v => v.Entity).ToList());
 
                 // 3. Import the attachments
                 var assets = bundles.SelectMany(b => b.Assets);
                 var assetMan = new JsonAssets();
-                foreach (var asset in assets) assetMan.Create(GetRealPath(asset), asset, false);
+                foreach (var asset in assets) assetMan.Create(GetRealPath(asset), asset);
 
                 // 3. possibly show messages / issues
                 return callLog("ok", new ImportResultDto(true));
@@ -148,7 +143,7 @@ namespace ToSic.Sxc.WebApi.Views
         private string GetRealPath(JsonAsset asset)
         {
             if (!string.IsNullOrEmpty(asset.Storage) && asset.Storage != JsonAsset.StorageApp) return null;
-            var root = _tmplHelpers.AppPathRoot(false);
+            var root = _appHelpers.AppPathRoot(false);
             return Path.Combine(root, asset.Folder, asset.Name);
         }
     }

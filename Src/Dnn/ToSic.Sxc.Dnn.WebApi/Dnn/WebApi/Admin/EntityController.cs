@@ -130,8 +130,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpPost]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public bool Upload(EntityImportDto args)
-            => new ContentImportApi(Log).Import(args);
+        public bool Upload(EntityImportDto args) => new ContentImportApi(Log).Import(args);
 
 
         // New feature in 11.03 - Usage Statistics
