@@ -10,6 +10,9 @@ namespace ToSic.Sxc.WebApi.Views
 {
     internal class ViewsBackend: HasLog
     {
+        private ITenant _tenant;
+        private IUser _user;
+
         public ViewsBackend() : base("Bck.Views") { }
 
         public ViewsBackend Init(ITenant tenant, IUser user, ILog parentLog)
@@ -20,8 +23,6 @@ namespace ToSic.Sxc.WebApi.Views
             return this;
         }
 
-        private ITenant _tenant;
-        private IUser _user;
 
         public IEnumerable<ViewDetailsDto> GetAll(int appId)
         {
@@ -30,7 +31,7 @@ namespace ToSic.Sxc.WebApi.Views
 
             var attributeSetList = cms.ContentTypes.FromScope(Settings.AttributeSetScope).ToList();
             var templateList = cms.Views.GetAll().ToList();
-            Log.Add($"attrib list count:{attributeSetList.Count}, template count:{templateList.Count}");
+            Log.Add($"attribute list count:{attributeSetList.Count}, template count:{templateList.Count}");
             var templates = templateList.Select(c => new ViewDetailsDto
             {
                 Id = c.Id, Name = c.Name, ContentType = MiniCTSpecs(attributeSetList, c.ContentType, c.ContentItem),
@@ -56,17 +57,14 @@ namespace ToSic.Sxc.WebApi.Views
         /// <param name="staticName"></param>
         /// <param name="maybeEntity"></param>
         /// <returns></returns>
-        private dynamic MiniCTSpecs(IEnumerable<IContentType> allCTs, string staticName, IEntity maybeEntity)
+        private ViewContentTypeDto MiniCTSpecs(IEnumerable<IContentType> allCTs, string staticName, IEntity maybeEntity)
         {
             var found = allCTs.FirstOrDefault(ct => ct.StaticName == staticName);
-            return new
+            return new ViewContentTypeDto
             {
-                StaticName = staticName,
-                Id = found?.ContentTypeId ?? 0,
-                Name = (found == null) ? "no content type" : found.Name,
+                StaticName = staticName, Id = found?.ContentTypeId ?? 0, Name = found == null ? "no content type" : found.Name,
                 DemoId = maybeEntity?.EntityId ?? 0,
                 DemoTitle = maybeEntity?.GetBestTitle() ?? ""
-
             };
         }
 
@@ -75,11 +73,9 @@ namespace ToSic.Sxc.WebApi.Views
             // todo: extra security to only allow zone change if host user
             Log.Add($"delete a{appId}, t:{id}");
             var app = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(_tenant.ZoneId, appId, _user, _tenant.ZoneId, Log);
-
             var cms = new CmsManager(app, Log);
             cms.Views.DeleteTemplate(id);
             return true;
         }
-
     }
 }

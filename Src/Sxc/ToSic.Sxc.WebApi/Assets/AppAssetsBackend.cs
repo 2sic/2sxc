@@ -3,6 +3,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps.Assets;
+using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -11,10 +12,12 @@ namespace ToSic.Sxc.WebApi.Assets
     internal partial class AppAssetsBackend: HasLog
     {
         private readonly IHttp _http;
+        private readonly TemplateHelpers _tmplHelpers;
 
-        public AppAssetsBackend(IHttp http) : base("Bck.Assets")
+        public AppAssetsBackend(IHttp http, TemplateHelpers tmplHelpers) : base("Bck.Assets")
         {
             _http = http;
+            _tmplHelpers = tmplHelpers;
         }
 
         public AppAssetsBackend Init(IApp app, IUser user, ILog parentLog)
@@ -22,6 +25,7 @@ namespace ToSic.Sxc.WebApi.Assets
             Log.LinkTo(parentLog);
             _app = app;
             _user = user;
+            _tmplHelpers.Init(app);
             return this;
         }
 
