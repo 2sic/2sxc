@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.Apps;
+using ToSic.Eav.WebApi.Security;
 
 namespace ToSic.Sxc.WebApi.Context
 {
@@ -57,6 +59,7 @@ namespace ToSic.Sxc.WebApi.Context
 
             result.GettingStartedUrl = GetGettingStartedUrl();
             result.Identifier = App.AppGuid;
+            result.Permissions = new HasPermissionsDto {Count = App.Metadata.Permissions.Count()};
             return result;
         }
     }

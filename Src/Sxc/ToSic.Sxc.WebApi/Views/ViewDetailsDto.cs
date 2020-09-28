@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.WebApi.Security;
 
 namespace ToSic.Sxc.WebApi.Views
 {
@@ -17,5 +18,7 @@ namespace ToSic.Sxc.WebApi.Views
         public bool List { get; set; }
         public bool HasQuery { get; set; }
         public int Used { get; set; }
+
+        public HasPermissionsDto Permissions { get; set; }
     }
 }

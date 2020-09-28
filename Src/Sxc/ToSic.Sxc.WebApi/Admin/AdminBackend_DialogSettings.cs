@@ -26,13 +26,6 @@ namespace ToSic.Sxc.WebApi.Admin
 
             return new
             {
-                // TODO: Deprecate PARAMS these properties as soon as old UI is gone
-                //IsContent = app?.AppGuid == "Default",
-                //Language = psCurrent.CultureCode,
-                //LanguageDefault = psCurrent.DefaultLanguage,
-                //AppPath = app?.Path,
-                //GettingStartedUrl = cb.GettingStartedUrl(),
-                // END TODO
                 Context = cb.Get(Ctx.All),
             };
         }
