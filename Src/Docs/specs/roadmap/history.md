@@ -267,11 +267,21 @@ The following changes are all super-low-profile, but we want to document them ju
 1. show app-icon in apps-management #2078 
 
 
-## Future
+### Version 11.03 - todo
 
-### Planned Breaking Changes ca. v11.05
+### Version 11.04 - todo
 
-1. Old Edit UI will be removed
-1. Old Admin-UI will be removed
-1. APIs which only the old UIs used will be removed
-1. Old helper JS for AngularJS apps (located in `/js/angularjs`) will be removed from the distribution. They had not been updated for over 3 years and we believe they were not widely used. Anybody upgrading will still preserve the files that are there. If you really need them, download an old release of 2sxc and get them manually. 
+### Version 11.05
+
+1. Old Edit UI be removed
+1. Old Admin-UI be removed
+1. APIs which only the old UIs used be removed
+1. Old helper JS for AngularJS apps (located in `/js/angularjs`) will be removed from the distribution. 
+They had not been updated for over 3 years and we believe they were not widely used. 
+Anybody upgrading will still preserve the files that are there. 
+If you really need them, download an old release of 2sxc and get them manually. 
+
+
+## Github Release Notes
+
+You can always find the latest and detailed release notes on the [github releases](https://github.com/2sic/2sxc/releases)

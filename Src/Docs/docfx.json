@@ -89,8 +89,8 @@
     "globalMetadata": {
       "_appTitle": "2sxc and EAV 10",
 
-      "_appLogoPath": "images/logos/2sxc-10-50.png",
-      "_appFaviconPath": "images/logos/favicon.ico",
+      "_appLogoPath": "images/logos/v11/2sxc50.png",
+      "_appFaviconPath": "images/logos/v11/favicon.ico",
       "_enableNewTab": true,
       "_enableSearch": true
     }

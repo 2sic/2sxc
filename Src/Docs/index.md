@@ -1,5 +1,7 @@
 
-# EAV & 2sxc API Documentation v11.07.00
+<img src="images/logos/v11/2sxc500.png" width="250px" align="right">
+
+# EAV & 2sxc Docs v11.07.00
 
 This is the documentation for EAV and 2sxc APIs. It's fairly advanced, so if you're new to 2sxc, best start with [2sxc.org](https://2sxc.org/).
 
@@ -22,7 +24,6 @@ it also include instructions how to export/import data, working with the image r
 1. [Many solutions and recommendations](http://2sxc.org/en/blog) are found in the _Blog_ on 2sxc.org
 1. [Many demo, template and tutorial Apps](http://2sxc.org/en/Apps) are found in the _App Catalog_ on 2sxc.org
 1. [2sxc / EAV Roadmap](xref:Specs.Roadmap.Roadmap)
-1. APIs and similar are found in this [wiki](https://github.com/2sic/2sxc/wiki) - you'll see the TOC in the box to the right
 1. [App folder structure](xref:Specs.App.Folders) and special files
 1. [Style Guide 2020 (beta)](xref:Specs.StyleGuide2020) best-practices draft
 
