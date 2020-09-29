@@ -24,9 +24,9 @@ namespace ToSic.Sxc.Dnn.Install
             if (!(sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
             {
                 // configure it
-                var tm = new TemplateHelpers(block.App);
+                var tm = Eav.Factory.Resolve<TemplateHelpers>().Init(block.App);
                 tm.EnsureTemplateFolderExists(Settings.TemplateLocations.PortalFileSystem);
-            };
+            }
         }
 
 

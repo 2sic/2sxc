@@ -21,13 +21,7 @@ namespace ToSic.Sxc.WebApi.App
         {
 
         }
-
-        //public AppQuery Init(ILog parentLog)
-        //{
-        //    Log.LinkTo(parentLog);
-        //    return this;
-        //}
-
+        
         #endregion
 
         #region In-Container-Context Queries
@@ -92,15 +86,11 @@ namespace ToSic.Sxc.WebApi.App
                 throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, msg, "query not found");
             }
 
-            var permissionChecker = Factory.Resolve<AppPermissionCheck>().ForItem( // new DnnPermissionCheck().ForItem(
-                context, // new DnnContext(new DnnTenant(), new DnnContainer().Init(module, log), new DnnUser()), 
-                appIdentity: app,
+            var permissionChecker = Factory.Resolve<AppPermissionCheck>().ForItem(context, appIdentity: app,
                 targetItem: query.Definition.Entity, parentLog: log);
             var readExplicitlyAllowed = permissionChecker.UserMay(GrantSets.ReadSomething);
 
             var isAdmin = context.User.IsAdmin;
-            //module != null && DotNetNuke.Security.Permissions
-            //              .ModulePermissionController.CanAdminModule(module);
 
             // Only return query if permissions ok
             if (!(readExplicitlyAllowed || isAdmin))

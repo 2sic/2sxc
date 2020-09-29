@@ -1,36 +1,19 @@
 ﻿using System;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Environment;
-using ToSic.Eav.Apps.ItemListActions;
-using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Logging;
-using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
+using ToSic.Eav.Security.Permissions;
+using ToSic.Sxc.Blocks.Edit;
 
 namespace ToSic.Sxc.WebApi.ContentBlocks
 {
-    internal class ContentBlockBackend : HasLog
+    internal class ContentBlockBackend : BlockWebApiBackendBase<ContentBlockBackend>
     {
         private readonly IPagePublishing _publishing;
 
         #region constructor / DI
 
-        public ContentBlockBackend(IPagePublishing publishing) : base("Bck.FldLst")
-        {
-            _publishing = publishing;
-        }
+        public ContentBlockBackend(IPagePublishing publishing) : base("Bck.FldLst") 
+            => _publishing = publishing.Init(Log);
 
-        public ContentBlockBackend Init(IInstanceContext context, IBlock block, ILog parentLog)
-        {
-            Log.LinkTo(parentLog);
-            _block = block;
-            _context = context;
-            _cmsManager = new CmsManager(_block.App, Log);
-            return this;
-        }
-        private IInstanceContext _context;
-        private IBlock _block;
-        private CmsManager _cmsManager;
         #endregion
 
         // todo: probably move to CmsManager.Block
@@ -41,39 +24,15 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
         {
             Log.Add($"add order:{index}");
             // use dnn versioning - this is always part of page
-            _publishing.DoInsidePublishing(_context, args => _cmsManager.Blocks.AddEmptyItem(_block.Configuration, index));
+            _publishing.DoInsidePublishing(_context, _ => _cmsManager.Blocks.AddEmptyItem(_block.Configuration, index));
         }
 
-
-        public void MoveInList(int parentId, string field, int indexFrom, int indexTo, bool partOfPage = false)
+        
+        public bool PublishPart(string part, int index)
         {
-            var callLog = Log.Call($"parent:{parentId}, field:{field}, from:{indexFrom}, to:{indexTo}, partOfpage:{partOfPage}");
-
-            void InternalSave(VersioningActionInfo _)
-            {
-                _cmsManager.Entities.ModifyItemList(parentId, field, new Move(indexFrom, indexTo));
-            }
-
-            // use dnn versioning if partOfPage
-            if (partOfPage) _publishing.DoInsidePublishing(_context, InternalSave);
-            else InternalSave(null);
-            callLog("ok");
+            Log.Add($"try to publish #{index} on '{part}'");
+            ThrowIfNotAllowedInApp(GrantSets.WritePublished);
+            return BlockEditorBase.GetEditor(_block).Publish(part, index);
         }
-
-        public void RemoveBlockInList(int parentId, string field, int index, bool partOfPage = false)
-        {
-            var callLog = Log.Call($"parent{parentId}, field:{field}, index:{index}, partOfPage{partOfPage}");
-            void InternalSave(VersioningActionInfo _)
-            {
-                _cmsManager.Entities.ModifyItemList(parentId, field, new Remove(index));
-            }
-
-            // use dnn versioning if partOfPage
-            if (partOfPage) _publishing.DoInsidePublishing(_context, InternalSave);
-            else InternalSave(null);
-            callLog("ok");
-        }
-
-
     }
 }

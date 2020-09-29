@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
+using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.WebApi.ImportExport;
 
@@ -11,11 +11,10 @@ namespace ToSic.Sxc.WebApi.Views
 {
     internal class ViewsBackend: HasLog
     {
-        //private readonly IZoneMapper _zoneMapper;
-        public ViewsBackend(/*IZoneMapper zoneMapper*/) : base("Bck.Views")
-        {
-            //_zoneMapper = zoneMapper.Init(Log);
-        }
+        private ITenant _tenant;
+        private IUser _user;
+
+        public ViewsBackend() : base("Bck.Views") { }
 
         public ViewsBackend Init(ITenant tenant, IUser user, ILog parentLog)
         {
@@ -25,11 +24,6 @@ namespace ToSic.Sxc.WebApi.Views
             return this;
         }
 
-        private ITenant _tenant;
-        private IUser _user;
-
-
-
 
         public IEnumerable<ViewDetailsDto> GetAll(int appId)
         {
@@ -38,20 +32,21 @@ namespace ToSic.Sxc.WebApi.Views
 
             var attributeSetList = cms.ContentTypes.FromScope(Settings.AttributeSetScope).ToList();
             var templateList = cms.Views.GetAll().ToList();
-            Log.Add($"attrib list count:{attributeSetList.Count}, template count:{templateList.Count}");
+            Log.Add($"attribute list count:{attributeSetList.Count}, template count:{templateList.Count}");
             var templates = templateList.Select(c => new ViewDetailsDto
             {
-                Id = c.Id, Name = c.Name, ContentType = MiniCTSpecs(attributeSetList, c.ContentType, c.ContentItem),
-                PresentationType = MiniCTSpecs(attributeSetList, c.PresentationType, c.PresentationItem),
-                ListContentType = MiniCTSpecs(attributeSetList, c.HeaderType, c.HeaderItem),
-                ListPresentationType = MiniCTSpecs(attributeSetList, c.HeaderPresentationType, c.HeaderPresentationItem),
+                Id = c.Id, Name = c.Name, ContentType = TypeSpecs(attributeSetList, c.ContentType, c.ContentItem),
+                PresentationType = TypeSpecs(attributeSetList, c.PresentationType, c.PresentationItem),
+                ListContentType = TypeSpecs(attributeSetList, c.HeaderType, c.HeaderItem),
+                ListPresentationType = TypeSpecs(attributeSetList, c.HeaderPresentationType, c.HeaderPresentationItem),
                 TemplatePath = c.Path,
                 IsHidden = c.IsHidden,
                 ViewNameInUrl = c.UrlIdentifier,
                 Guid = c.Guid,
                 List = c.UseForList,
                 HasQuery = c.QueryRaw != null,
-                Used = c.Entity.Parents().Count
+                Used = c.Entity.Parents().Count,
+                Permissions = new HasPermissionsDto {Count = c.Entity.Metadata.Permissions.Count()},
             });
             return templates;
         }
@@ -64,17 +59,14 @@ namespace ToSic.Sxc.WebApi.Views
         /// <param name="staticName"></param>
         /// <param name="maybeEntity"></param>
         /// <returns></returns>
-        private dynamic MiniCTSpecs(IEnumerable<IContentType> allCTs, string staticName, IEntity maybeEntity)
+        private static ViewContentTypeDto TypeSpecs(IEnumerable<IContentType> allCTs, string staticName, IEntity maybeEntity)
         {
             var found = allCTs.FirstOrDefault(ct => ct.StaticName == staticName);
-            return new
+            return new ViewContentTypeDto
             {
-                StaticName = staticName,
-                Id = found?.ContentTypeId ?? 0,
-                Name = (found == null) ? "no content type" : found.Name,
+                StaticName = staticName, Id = found?.ContentTypeId ?? 0, Name = found == null ? "no content type" : found.Name,
                 DemoId = maybeEntity?.EntityId ?? 0,
                 DemoTitle = maybeEntity?.GetBestTitle() ?? ""
-
             };
         }
 
@@ -83,11 +75,9 @@ namespace ToSic.Sxc.WebApi.Views
             // todo: extra security to only allow zone change if host user
             Log.Add($"delete a{appId}, t:{id}");
             var app = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(_tenant.ZoneId, appId, _user, _tenant.ZoneId, Log);
-
             var cms = new CmsManager(app, Log);
             cms.Views.DeleteTemplate(id);
             return true;
         }
-
     }
 }

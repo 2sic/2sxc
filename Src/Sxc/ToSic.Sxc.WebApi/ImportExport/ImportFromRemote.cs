@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav;
+using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Logging;
@@ -10,11 +11,13 @@ namespace ToSic.Sxc.WebApi.ImportExport
 {
     internal class ImportFromRemote: HasLog
     {
+        private readonly IEnvironmentLogger _envLogger;
 
         #region Constructor / DI
 
-        public ImportFromRemote() : base("Bck.Export")
+        public ImportFromRemote(IEnvironmentLogger envLogger) : base("Bck.Export")
         {
+            _envLogger = envLogger;
         }
 
         private IUser _user;
@@ -28,7 +31,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         #endregion
 
-        public Tuple<bool, List<Message>> InstallPackage(int zoneId, int appId, bool isApp, string packageUrl, Action<Exception> logException)
+        public Tuple<bool, List<Message>> InstallPackage(int zoneId, int appId, bool isApp, string packageUrl)
         {
             var callLog = Log.Call($"{nameof(zoneId)}:{zoneId}, {nameof(appId)}:{appId}, {nameof(isApp)}:{isApp}, url:{packageUrl}");
             Log.Add("install package:" + packageUrl);
@@ -43,12 +46,12 @@ namespace ToSic.Sxc.WebApi.ImportExport
             }
             catch (Exception ex)
             {
-                logException(ex);
+                _envLogger.LogException(ex);
                 throw new Exception("An error occurred while installing the app: " + ex.Message, ex);
             }
 
             callLog(success.ToString());
-            return new Tuple<bool, List<Message>>(success, importer.Messages);//  Request.CreateResponse(success ? HttpStatusCode.OK : HttpStatusCode.InternalServerError, new { success, importer.Messages });
+            return new Tuple<bool, List<Message>>(success, importer.Messages);
         }
 
 

@@ -9,9 +9,7 @@ namespace ToSic.Sxc.WebApi
 {
     public abstract class WebApiBackendBase<T>: HasLog<T> where T : class
     {
-        protected WebApiBackendBase(string logName) : base(logName)
-        {
-        }
+        protected WebApiBackendBase(string logName) : base(logName) { }
 
         internal AppOfRequest AppFinder => Factory.Resolve<AppOfRequest>().Init(Log);
 
@@ -20,6 +18,5 @@ namespace ToSic.Sxc.WebApi
         /// </summary>
         /// <returns></returns>
         internal IApp GetApp(int appId, IBlock optionalBlock) => Factory.Resolve<Apps.App>().Init(appId, Log, optionalBlock);
-
     }
 }

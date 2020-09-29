@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using ToSic.Eav;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Engines
@@ -41,7 +42,9 @@ namespace ToSic.Sxc.Engines
             if (engineType == null)
                 throw new Exception("Error: Could not find the template engine to parse this template.");
 
-            return (IEngine)Activator.CreateInstance(engineType, null);
+            return Factory.Resolve(engineType) as IEngine;
+
+            //return (IEngine)Activator.CreateInstance(engineType, null);
         }
 
     }

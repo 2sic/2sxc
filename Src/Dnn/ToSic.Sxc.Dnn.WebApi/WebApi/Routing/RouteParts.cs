@@ -2,6 +2,10 @@
 {
     internal class RouteParts
     {
+        public const string RootSys = "sys";
+        public const string RootCms = "cms";
+        public const string RootAdmin = "admin";
+
         public const string EditionKey = "edition";
         public const string EditionToken = "{" + EditionKey + "}";
 

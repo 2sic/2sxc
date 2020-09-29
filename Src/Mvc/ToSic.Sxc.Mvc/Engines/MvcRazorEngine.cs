@@ -6,6 +6,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Mvc.Code;
 using ToSic.Sxc.Mvc.RazorPages;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Mvc.Engines
 {
@@ -17,6 +18,13 @@ namespace ToSic.Sxc.Mvc.Engines
 
     public partial class MvcRazorEngine : EngineBase
     {
+        #region Constructor / DI
+
+        public MvcRazorEngine(IHttp http, TemplateHelpers templateHelpers) : base(http, templateHelpers) { }
+
+        #endregion
+
+
         /// <inheritdoc />
         [PrivateApi]
         protected override void Init()

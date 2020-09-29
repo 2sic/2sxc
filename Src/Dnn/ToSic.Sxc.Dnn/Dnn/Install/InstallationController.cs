@@ -151,7 +151,7 @@ namespace ToSic.Sxc.Dnn.Install
             _installLogger.LogStep("", "Maybe reset logs start");
             // this condition only applies, if 2sxc upgrade 7 didn't happen yet
             var appState = State.Get(new AppIdentity(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId));
-            if (appState.GetContentType("2SexyContent-Template") != null) return;
+            if (appState.GetContentType(Eav.ImportExport.Settings.TemplateContentType) != null) return;
 
             _installLogger.LogStep("", "Will reset all logs now");
             _installLogger.DeleteAllLogFiles();

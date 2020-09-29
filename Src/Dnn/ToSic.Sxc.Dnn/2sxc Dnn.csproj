@@ -83,6 +83,7 @@
     <Compile Include="Compatibility\Sxc\SxcHelper.cs" />
     <Compile Include="Dnn\Adam\DnnAdam.cs" />
     <Compile Include="Dnn\DnnConstants.cs" />
+    <Compile Include="Dnn\DnnEnvironmentLogger.cs" />
     <Compile Include="Dnn\DynamicCode.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.DataSources.DnnSqlDataSource.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource.cs" />

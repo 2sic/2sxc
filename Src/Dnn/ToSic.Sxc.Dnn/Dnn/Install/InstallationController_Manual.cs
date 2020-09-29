@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web;
 using DotNetNuke.Common;
 using DotNetNuke.Entities.Controllers;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Dnn.Run;
@@ -41,7 +42,7 @@ namespace ToSic.Sxc.Dnn.Install
         }
 
 
-        public string GetAutoInstallPackagesUiUrl(ITenant tenant, IContainer container, bool isContentApp, int appId)
+        public string GetAutoInstallPackagesUiUrl(ITenant tenant, IContainer container, bool isContentApp)
         {
             var moduleInfo = (container as DnnContainer)?.UnwrappedContents;
             var portal = (tenant as DnnTenant)?.UnwrappedContents;
@@ -55,8 +56,9 @@ namespace ToSic.Sxc.Dnn.Install
             if (isContentApp)
                 try
                 {
+                    var primaryAppId = new ZoneRuntime(tenant.ZoneId, Log).DefaultAppId;
                     // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
-                    var contentViews = new CmsRuntime(appId, Log, /*Edit.Enabled,*/ false).Views.GetAll();
+                    var contentViews = new CmsRuntime(primaryAppId, Log, false).Views.GetAll();
                     if (contentViews.Any()) return null;
                 }
                 catch { /* ignore */ }
@@ -70,19 +72,19 @@ namespace ToSic.Sxc.Dnn.Install
                 + "&DnnVersion=" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4)
                 + "&2SexyContentVersion=" + Settings.ModuleVersion
                 + "&ModuleName=" + moduleInfo.DesktopModule.ModuleName
-                + "&ModuleId=" + moduleInfo.ModuleID
-                + "&PortalID=" + moduleInfo.PortalID;
+                + "&ModuleId=" + container.Id // moduleInfo.ModuleID
+                + "&PortalID=" + tenant.Id;
             // Add VDB / Zone ID (if set)
-            var zoneMapper = Eav.Factory.Resolve<IZoneMapper>().Init(Log);
-            var zoneId = zoneMapper.GetZoneId(moduleInfo.PortalID);
-            gettingStartedSrc += "&ZoneID=" + zoneId;
+            //var zoneMapper = Eav.Factory.Resolve<IZoneMapper>().Init(Log);
+            //var zoneId = zoneMapper.GetZoneId(moduleInfo.PortalID);
+            gettingStartedSrc += "&ZoneID=" + tenant.ZoneId;
             // ReSharper restore StringLiteralTypo
 
             // Add DNN Guid
             var hostSettings = HostController.Instance.GetSettingsDictionary();
             gettingStartedSrc += hostSettings.ContainsKey("GUID") ? "&DnnGUID=" + hostSettings["GUID"] : "";
             // Add Portal Default Language & current language
-            gettingStartedSrc += "&DefaultLanguage=" + portal.DefaultLanguage
+            gettingStartedSrc += "&DefaultLanguage=" + tenant.DefaultLanguage // portal.DefaultLanguage
                 + "&CurrentLanguage=" + portal.CultureCode;
 
             // Set src to iframe

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence;
@@ -18,6 +19,7 @@ namespace ToSic.Sxc.Run
         /// <summary>
         /// DI Constructor
         /// </summary>
+        // todo: replace IEnvironment with IHttp ?
         protected ImportExportEnvironmentBase(IEnvironment environment, ITenant tenant, string logName) : base(logName)
         {
             Environment = environment;
@@ -46,10 +48,12 @@ namespace ToSic.Sxc.Run
 
         public string TemplatesRoot(int zoneId, int appId)
         {
-            var app = Eav.Factory.Resolve<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
+            var app = Factory.Resolve<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
 
             // Copy all files in 2sexy folder to (portal file system) 2sexy folder
-            var templateRoot = Environment.MapPath(TemplateHelpers.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, app));
+            var templateRoot = // Environment.MapPath(
+                Factory.Resolve<TemplateHelpers>().Init(app)
+                .AppPathRoot(Settings.TemplateLocations.PortalFileSystem, true); //);
             return templateRoot;
         }
 
