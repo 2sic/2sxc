@@ -7,6 +7,8 @@ using ToSic.Sxc.WebApi.FieldList;
 
 namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
+    [SupportedModules("2sxc,2sxc-app")]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     public class ListController: SxcApiController
     {
         protected override string HistoryLogName => "Api.List";
@@ -21,15 +23,9 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         /// <param name="index"></param>
         /// <param name="toIndex"></param>
         [HttpPost]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Move(Guid? parent, string fields, int index, int toIndex)
             => FieldBacked.ChangeOrder(parent, fields, index, toIndex);
 
-
-        //[HttpGet]
-        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        //public bool Publish(string part, int index) 
-        //    => FieldBacked.Publish(part, index);
 
         /// <summary>
         /// Used to be Get Module/RemoveFromList
@@ -38,7 +34,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         /// <param name="fields"></param>
         /// <param name="index"></param>
         [HttpDelete]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(Guid? parent, string fields, int index)
             => FieldBacked.Remove(parent, fields, index);
 

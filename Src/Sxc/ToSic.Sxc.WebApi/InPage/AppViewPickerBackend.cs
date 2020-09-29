@@ -14,16 +14,17 @@ namespace ToSic.Sxc.WebApi.InPage
 
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {
+            var callLog = Log.Call<Guid?>($"{templateId}, {forceCreateContentGroup}");
             ThrowIfNotAllowedInApp(GrantSets.WriteSomething);
-            return BlockEditorBase.GetEditor(_block).SaveTemplateId(templateId, forceCreateContentGroup);
+            return callLog("ok", BlockEditorBase.GetEditor(_block).SaveTemplateId(templateId, forceCreateContentGroup));
         }
 
         public bool Publish(int id)
         {
-            Log.Add($"try to publish id #{id}");
+            var callLog = Log.Call<bool>($"{id}");
             ThrowIfNotAllowedInApp(GrantSets.WritePublished);
             new AppManager(_block.App, Log).Entities.Publish(id);
-            return true;
+            return callLog("ok", true);
         }
 
 
@@ -49,17 +50,14 @@ namespace ToSic.Sxc.WebApi.InPage
         /// <param name="lang"></param>
         private static void SetThreadCulture(string lang)
         {
-            if (!string.IsNullOrEmpty(lang))
-                try
-                {
-                    System.Threading.Thread.CurrentThread.CurrentCulture =
-                        System.Globalization.CultureInfo.GetCultureInfo(lang);
-                }
-                // Fallback / ignore if the language specified has not been found
-                catch (System.Globalization.CultureNotFoundException)
-                {
-                    /* ignore */
-                }
+            if (string.IsNullOrEmpty(lang)) return;
+            try
+            {
+                System.Threading.Thread.CurrentThread.CurrentCulture =
+                    System.Globalization.CultureInfo.GetCultureInfo(lang);
+            }
+            // Fallback / ignore if the language specified has not been found
+            catch (System.Globalization.CultureNotFoundException) { /* ignore */ }
         }
     }
 }
