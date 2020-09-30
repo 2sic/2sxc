@@ -98,7 +98,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var publishing = new SxcPagePublishing().Init(block, Log);
             return publishing.SaveInPagePublishing(appId, items, partOfPage,
-                    forceSaveAsDraft => new EditSaveBackend().DoSave(appMan, items, forceSaveAsDraft),
+                    forceSaveAsDraft => DoSave(appMan, items, forceSaveAsDraft),
                     permCheck);
         }
 

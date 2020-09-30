@@ -17,8 +17,8 @@ The 2sxc roadmap contains the things we think are fairly important to tackle nex
 
 ## Future / Other
 * [ ] Support for persisting data to the file-system instead of DB
-* [ ] ...or whatever is needed next :)
 * [ ] Files DataSource
 * [ ] ADAM DataSource
 * [ ] Pages DataSource
 * [ ] Navigation DataSource
+* [ ] ...or whatever is needed next :)
