@@ -35,7 +35,6 @@ namespace ToSic.SexyContent.WebApi
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
-            //Log.Rename("Api.DynApi");
             var block = GetBlock();
             Log.Add($"HasBlock: {block != null}");
             // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null

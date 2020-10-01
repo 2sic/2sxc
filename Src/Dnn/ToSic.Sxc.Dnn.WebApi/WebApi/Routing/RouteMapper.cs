@@ -137,6 +137,12 @@ namespace ToSic.Sxc.WebApi
 
             #region New routes in 2sxc 11.06+ which should replace most previous internal routes
 
+            // Replacement route for GetContentBlockData
+            mapRouteManager.MapHttpRoute(mod2sxc, "2sxc-ContentBlockData", appAuto + "InstanceData", 
+                new { controller = "AppContent", action = nameof(AppContentController.GetContentBlockData) },
+                stdNsWebApi);
+
+
             mapRouteManager.MapHttpRoute(mod2sxc, "2sxc-sys", RouteParts.RootSys + "/{controller}/{action}",
                 new[] {typeof(InsightsController).Namespace});
 
