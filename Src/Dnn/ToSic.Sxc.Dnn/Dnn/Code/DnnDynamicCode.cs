@@ -17,9 +17,9 @@ namespace ToSic.Sxc.Dnn.Code
         /// <param name="compatibility">compatibility level - changes behaviour if level 9 or 10</param>
         public DnnDynamicCode Init(IBlock block, ILog parentLog, int compatibility = 10)
         {
-            base.Init(block, compatibility, parentLog);
+            Init(block, compatibility, parentLog);
             // Init things than require module-info or similar, but not 2sxc
-            Dnn = new DnnContextOld(block.Context.Container);
+            Dnn = new DnnContextOld(block?.Context.Container);
             Link = new DnnLinkHelper(Dnn);
             return this;
         }
