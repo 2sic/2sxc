@@ -9,6 +9,8 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.LookUp;
+using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
@@ -19,7 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [DnnLogExceptions]
     [ValidateAntiForgeryToken]
-	public class QueryController : DnnApiControllerWithFixes, IQueryController
+	public class QueryController : SxcApiControllerBase, IQueryController
     {
         protected override string HistoryLogName => "Api.Query";
 
@@ -50,7 +52,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 	    /// Query the Result of a Pipeline using Test-Parameters
 	    /// </summary>
 	    [HttpGet]
-	    public QueryRunDto Run(int appId, int id) => new QueryApi(Log).Run(appId, id, ActiveModule?.ModuleID ?? 0);
+	    public QueryRunDto Run(int appId, int id)
+        {
+            var block = GetBlock();
+            var instanceId = ActiveModule?.ModuleID ?? 0;
+            var config = ConfigurationProvider.GetConfigProviderForModule(instanceId, block?.App, block);
+            return new QueryApi(Log).Run(appId, id, instanceId, config);
+        }
 
         /// <summary>
 	    /// Clone a Pipeline with all DataSources and their configurations

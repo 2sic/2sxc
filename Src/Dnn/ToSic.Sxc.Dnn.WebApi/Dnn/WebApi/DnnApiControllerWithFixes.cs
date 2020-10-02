@@ -6,7 +6,6 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.WebApi.Helpers;
 using ToSic.Sxc.Dnn.WebApi.Logging;
-using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Dnn.WebApi
 {
