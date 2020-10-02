@@ -96,10 +96,10 @@ namespace ToSic.Sxc.LookUp
             provider.Add(new LookUpInAppProperty("app", app));
 
             // add module if it was not already added previously
-            if (!provider.HasSource(CmsBlock.InstanceLookupName/* "module"*/))
+            if (!provider.HasSource(CmsBlock.InstanceLookupName))
             {
-                var modulePropertyAccess = new LookUpInDictionary(CmsBlock.InstanceLookupName/*"module"*/);
-                modulePropertyAccess.Properties.Add(CmsBlock.InstanceIdKey /*"ModuleID"*/, moduleId.ToString(CultureInfo.InvariantCulture));
+                var modulePropertyAccess = new LookUpInDictionary(CmsBlock.InstanceLookupName);
+                modulePropertyAccess.Properties.Add(CmsBlock.InstanceIdKey, moduleId.ToString(CultureInfo.InvariantCulture));
                 provider.Add(modulePropertyAccess);
             }
 
