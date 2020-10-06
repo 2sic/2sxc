@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using DotNetNuke.Entities.Users;
 using ToSic.Eav.Data;
@@ -78,7 +79,8 @@ namespace ToSic.Sxc.Dnn.DataSources
 
 		public DnnUserProfile(ITenant tenant, IZoneMapper zoneMapper)
 		{
-			Out.Add(Constants.DefaultStreamName, new DataStream(this, Constants.DefaultStreamName, GetList));
+			Provide(GetList);
+            //Out.Add(Eav.Constants.DefaultStreamName, new DataStream(this, Eav.Constants.DefaultStreamName, GetList));
 			Configuration.Values.Add(UserIdsKey, UserIdsDefaultKeyToken);
 			Configuration.Values.Add(PropertiesKey, PropertiesDefaultKeyToken);
 			Configuration.Values.Add(ContentTypeKey, ContentTypeDefaultToken);
@@ -91,7 +93,7 @@ namespace ToSic.Sxc.Dnn.DataSources
         private readonly ITenant _tenant;
         private readonly IZoneMapper _zoneMapper;
 
-		private List<IEntity> GetList()
+		private IImmutableList<IEntity> GetList()
 		{
             Configuration.Parse();
 			var realTenant = _tenant.Id != Eav.Constants.NullId ? _tenant : _zoneMapper.Init(Log).TenantOfApp(AppId);
@@ -147,11 +149,11 @@ namespace ToSic.Sxc.Dnn.DataSources
 				}
 
 				// create Entity and add to result
-				var entity = new Eav.Data.Entity(Eav.Constants.TransientAppId, user.UserID, ContentTypeBuilder.Fake(ContentType) , values, TitleField);
+				var entity = new Entity(Eav.Constants.TransientAppId, user.UserID, ContentTypeBuilder.Fake(ContentType) , values, TitleField);
 				result.Add(entity);
 			}
 
-			return result;
+			return result.ToImmutableList();
 		}
 	}
 }

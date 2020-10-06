@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Immutable;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
@@ -53,26 +53,20 @@ namespace ToSic.Sxc.DataSources
 
         public CmsBlock()
         {
-            Out.Add(Eav.Constants.DefaultStreamName, new DataStream(this, Eav.Constants.DefaultStreamName, GetContent));
-            Out.Add(ViewParts.ListContent, new DataStream(this, Eav.Constants.DefaultStreamName, GetListContent));
+            Provide(GetContent);
+            Provide(ViewParts.ListContent, GetHeader);
+            //Out.Add(Eav.Constants.DefaultStreamName, new DataStream(this, Eav.Constants.DefaultStreamName, GetContent));
+            //Out.Add(ViewParts.ListContent, new DataStream(this, Eav.Constants.DefaultStreamName, GetHeader));
 
 			Configuration.Values.Add(InstanceIdKey, $"[Settings:{Settings.InstanceId}||[{InstanceLookupName}:{InstanceIdKey}]]");
         }
 
-        #region Cached properties for Content, Presentation etc. --> not necessary, as each stream auto-caches
-        private IEnumerable<IEntity> _content;
+        private IImmutableList<IEntity> GetContent()
+            => GetStream(BlockConfiguration.Content, View.ContentItem,
+                BlockConfiguration.Presentation, View.PresentationItem, false);
 
-        private IEnumerable<IEntity> GetContent()
-            => _content ?? (_content = GetStream(BlockConfiguration.Content, View.ContentItem,
-                   BlockConfiguration.Presentation, View.PresentationItem, false));
-
-        private IEnumerable<IEntity> _listContent;
-
-        private IEnumerable<IEntity> GetListContent()
-            => _listContent ?? (_listContent = GetStream(BlockConfiguration.Header, View.HeaderItem,
-                   BlockConfiguration.HeaderPresentation, View.HeaderPresentationItem, true));
-
-        #endregion
-
+        private IImmutableList<IEntity> GetHeader()
+            => GetStream(BlockConfiguration.Header, View.HeaderItem,
+                BlockConfiguration.HeaderPresentation, View.HeaderPresentationItem, true);
     }
 }

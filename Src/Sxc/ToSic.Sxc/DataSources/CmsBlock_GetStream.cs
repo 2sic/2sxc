@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Data;
@@ -8,17 +9,21 @@ namespace ToSic.Sxc.DataSources
 {
     public sealed partial class CmsBlock
     {
-        private IEnumerable<IEntity> GetStream(List<IEntity> contentList, IEntity contentDemoEntity, List<IEntity> presentationList, IEntity presentationDemoEntity, bool isListHeader)
+        private IImmutableList<IEntity> GetStream(
+            IReadOnlyCollection<IEntity> contentList, 
+            IEntity contentDemoEntity, 
+            IReadOnlyList<IEntity> presentationList, 
+            IEntity presentationDemoEntity, 
+            bool isListHeader)
         {
             Log.Add($"get stream content⋮{contentList.Count}, demo#{contentDemoEntity?.EntityId}, present⋮{presentationList?.Count}, presDemo#{presentationDemoEntity?.EntityId}, header:{isListHeader}");
             try
             {
-                var entitiesToDeliver = new List<IEntity>();
                 // if no template is defined, return empty list
                 if (BlockConfiguration.View == null && OverrideView == null)
                 {
                     Log.Add("no template definition - will return empty list");
-                    return entitiesToDeliver;
+                    return new ImmutableArray<IEntity>();
                 }
 
                 // Create copy of list (not in cache) because it will get modified
@@ -31,7 +36,8 @@ namespace ToSic.Sxc.DataSources
                     contentEntities.Add(null);
                 }
 
-                var originals = In[Eav.Constants.DefaultStreamName].List.ToList();
+                var entitiesToDeliver = new List<IEntity>();
+                var originals = In[Eav.Constants.DefaultStreamName].List;//.ToList();
                 int i = 0, entityId = 0, prevIdForErrorReporting = 0;
                 try
                 {
@@ -87,7 +93,7 @@ namespace ToSic.Sxc.DataSources
                 }
 
                 Log.Add($"stream:{(isListHeader ? "list" : "content")} - items⋮{entitiesToDeliver.Count}");
-                return entitiesToDeliver;
+                return entitiesToDeliver.ToImmutableList();
             }
             catch (Exception ex)
             {
@@ -95,7 +101,7 @@ namespace ToSic.Sxc.DataSources
             }
         }
 
-        private static IEntity GetPresentationEntity(List<IEntity> originals, List<IEntity> presItems, int itemIndex, IEntity demo, int entityId)
+        private static IEntity GetPresentationEntity(IReadOnlyCollection<IEntity> originals, IReadOnlyList<IEntity> presItems, int itemIndex, IEntity demo, int entityId)
         {
             try
             {
