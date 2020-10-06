@@ -153,7 +153,7 @@ namespace ToSic.Sxc.Dnn.DataSources
 				result.Add(entity);
 			}
 
-			return result.ToImmutableList();
+			return result.ToImmutableArray();
 		}
 	}
 }

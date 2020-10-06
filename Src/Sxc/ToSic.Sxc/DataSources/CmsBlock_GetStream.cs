@@ -9,7 +9,7 @@ namespace ToSic.Sxc.DataSources
 {
     public sealed partial class CmsBlock
     {
-        private IImmutableList<IEntity> GetStream(
+        private ImmutableArray<IEntity> GetStream(
             IReadOnlyCollection<IEntity> contentList, 
             IEntity contentDemoEntity, 
             IReadOnlyList<IEntity> presentationList, 
@@ -93,7 +93,7 @@ namespace ToSic.Sxc.DataSources
                 }
 
                 Log.Add($"stream:{(isListHeader ? "list" : "content")} - items⋮{entitiesToDeliver.Count}");
-                return entitiesToDeliver.ToImmutableList();
+                return entitiesToDeliver.ToImmutableArray();
             }
             catch (Exception ex)
             {

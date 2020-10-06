@@ -61,11 +61,11 @@ namespace ToSic.Sxc.DataSources
 			Configuration.Values.Add(InstanceIdKey, $"[Settings:{Settings.InstanceId}||[{InstanceLookupName}:{InstanceIdKey}]]");
         }
 
-        private IImmutableList<IEntity> GetContent()
+        private ImmutableArray<IEntity> GetContent()
             => GetStream(BlockConfiguration.Content, View.ContentItem,
                 BlockConfiguration.Presentation, View.PresentationItem, false);
 
-        private IImmutableList<IEntity> GetHeader()
+        private ImmutableArray<IEntity> GetHeader()
             => GetStream(BlockConfiguration.Header, View.HeaderItem,
                 BlockConfiguration.HeaderPresentation, View.HeaderPresentationItem, true);
     }

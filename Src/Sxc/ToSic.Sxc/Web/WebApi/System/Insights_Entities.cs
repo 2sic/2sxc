@@ -27,9 +27,9 @@ namespace ToSic.Sxc.Web.WebApi.System
             {
                 Log.Add("getting content-type stats");
                 var entities = type == "all"
-                    ? appRead.Entities.All.ToImmutableList() // .ToList()
-                    : appRead.Entities.Get(type).ToImmutableList();
-                msg += p($"entities: {entities.Count}\n");
+                    ? appRead.Entities.All.ToImmutableArray() // .ToList()
+                    : appRead.Entities.Get(type).ToImmutableArray();
+                msg += p($"entities: {entities.Length}\n");
                 msg += "<table id='table'><thead>"
                     + tr(new[] { "#", "Id", "Guid", "Title", "Type", "Modified", "Owner", "Version", "Metadata", "Permissions" }, true)
                     + "</thead>"
