@@ -52,7 +52,7 @@ namespace ToSic.Sxc.WebApi.FieldList
 
         private IEntity FindOrThrow(Guid? parent)
         {
-            var target = parent == null ? _block.Configuration.Entity : _block.App.Data.List.One(parent.Value);
+            var target = parent == null ? _block.Configuration.Entity : _block.App.Data.Immutable.One(parent.Value);
             if (target == null) throw new Exception($"Can't find parent {parent}");
             return target;
         }

@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Blocks.Edit
             {
                 // only set preview / content-group-reference - but must use the guid
                 var dataSource = Block.App.Data;
-                var templateGuid = dataSource.List.One(templateId).EntityGuid;
+                var templateGuid = dataSource.Immutable.One(templateId).EntityGuid;
                 SavePreviewTemplateId(templateGuid);
                 result = null; // send null back
             }

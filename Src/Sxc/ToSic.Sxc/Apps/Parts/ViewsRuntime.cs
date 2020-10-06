@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Apps
 		}
 
         public IEnumerable<IView> GetAll() 
-            => _all ?? (_all = ViewsDataSource().List
+            => _all ?? (_all = ViewsDataSource().Immutable
                    .Select(p => new View(p, Log))
                    .OrderBy(p => p.Name));
         private IEnumerable<IView> _all;
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Apps
 
         public IView Get(int templateId)
 		{
-            var templateEntity = ViewsDataSource().List.One(templateId);
+            var templateEntity = ViewsDataSource().Immutable.One(templateId);
 
             if(templateEntity == null)
 				throw new Exception("The template with id " + templateId + " does not exist.");
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Apps
 
         public IView Get(Guid guid)
         {
-            var templateEntity = ViewsDataSource().List.One(guid);
+            var templateEntity = ViewsDataSource().Immutable.One(guid);
 
             if (templateEntity == null)
                 throw new Exception("The template with id " + guid + " does not exist.");

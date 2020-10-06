@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Apps
                 .ToList();
         }
 
-        public IEnumerable<IEntity> Entities() => ContentGroupSource().List;
+        public IEnumerable<IEntity> Entities() => ContentGroupSource().Immutable;
 
         public BlockConfiguration GetBlockConfig(Guid contentGroupGuid)
         {

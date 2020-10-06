@@ -179,7 +179,7 @@ namespace ToSic.Sxc.Code
             if (Data == null || Block.View == null) return;
             if (!Data.Out.ContainsKey(ViewParts.ListContent)) return;
 
-            var listEntity = Data[ViewParts.ListContent].List.FirstOrDefault();
+            var listEntity = Data[ViewParts.ListContent].Immutable.FirstOrDefault();
             _header = listEntity == null ? null : AsDynamic(listEntity);
         }
 
@@ -207,7 +207,7 @@ namespace ToSic.Sxc.Code
             if (Data == null || Block.View == null) return;
             if (!Data.Out.ContainsKey(Eav.Constants.DefaultStreamName)) return;
 
-            var entities = Data.List.ToList();
+            var entities = Data.Immutable; //.ToList();
             if (entities.Any()) _content = AsDynamic(entities.First());
 
         }

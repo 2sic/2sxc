@@ -117,7 +117,7 @@ namespace ToSic.Sxc.WebApi.App
                 realApp.Data.Update(id.Value, cleanedNewItem, userName);
 
             return InitEavAndSerializer(appIdentity.AppId, _block?.EditAllowed ?? false)
-                .Convert(realApp.Data.List.One(id.Value));
+                .Convert(realApp.Data.Immutable.One(id.Value));
         }
 
         #endregion

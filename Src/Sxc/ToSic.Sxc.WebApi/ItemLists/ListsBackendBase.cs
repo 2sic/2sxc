@@ -90,7 +90,7 @@ namespace ToSic.Sxc.WebApi.ItemLists
             var ct = appState.GetContentType(attributeSetName);
 
             var dataSource = _app.Data[ct.Name];
-            var results = dataSource.List.ToDictionary(p => p.EntityId,
+            var results = dataSource.Immutable.ToDictionary(p => p.EntityId,
                 p => p.GetBestTitle() ?? "");
 
             // if list is empty or shorter than index (would happen in an add-to-end-request) return null
@@ -107,7 +107,7 @@ namespace ToSic.Sxc.WebApi.ItemLists
         public List<EntityInListDto> ItemList(Guid guid, string part)
         {
             Log.Add($"item list for:{guid}");
-            var cg = _app.Data.List.One(guid);
+            var cg = _app.Data.Immutable.One(guid);
             var itemList = cg.Children(part);
 
             var list = itemList.Select((c, index) => new EntityInListDto
@@ -144,7 +144,7 @@ namespace ToSic.Sxc.WebApi.ItemLists
 
         private List<IEntity> FindItemAndFieldTypeName(Guid guid, string part, out string attributeSetName)
         {
-            var parent = _app.Data.List.One(guid);
+            var parent = _app.Data.Immutable.One(guid);
             if (parent == null) throw new Exception($"No item found for {guid}");
             if (!parent.Attributes.ContainsKey(part)) throw new Exception($"Could not find field {part} in item {guid}");
             var itemList = parent.Children(part);

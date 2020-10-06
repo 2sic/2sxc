@@ -81,7 +81,7 @@ namespace ToSic.SexyContent.WebApi
         public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => DynCode.AsDynamic(entityKeyValuePair.Value);
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DynCode.AsList(stream.List);
+        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DynCode.AsList(stream.Immutable);
 
         /// <inheritdoc />
         public IEntity AsEntity(dynamic dynamicEntity) =>  DynCode.AsEntity(dynamicEntity);

@@ -37,7 +37,7 @@ namespace ToSic.Sxc.DataSources
                 }
 
                 var entitiesToDeliver = new List<IEntity>();
-                var originals = In[Eav.Constants.DefaultStreamName].List;//.ToList();
+                var originals = In[Eav.Constants.DefaultStreamName].Immutable;//.ToList();
                 int i = 0, entityId = 0, prevIdForErrorReporting = 0;
                 try
                 {

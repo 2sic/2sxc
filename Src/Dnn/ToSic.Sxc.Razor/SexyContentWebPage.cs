@@ -90,7 +90,7 @@ namespace ToSic.SexyContent.Razor
 
         /// <inheritdoc />
         [Obsolete]
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DynCode.AsList(stream.List);
+        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DynCode.AsList(stream.Immutable);
 
         /// <inheritdoc />
         public IEntity AsEntity(dynamic dynamicEntity) => DynCode.AsEntity(dynamicEntity);

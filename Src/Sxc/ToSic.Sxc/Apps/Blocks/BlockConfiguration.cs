@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Apps.Blocks
 
                 // if we're previewing another template, look that up
                 var templateEntity = PreviewTemplateId.HasValue
-                    ? _cmsRuntime.Data.List.One(PreviewTemplateId.Value) // ToDo: Should use an indexed Guid filter
+                    ? _cmsRuntime.Data.Immutable.One(PreviewTemplateId.Value) // ToDo: Should use an indexed Guid filter
                     : Entity?.Children(ViewParts.ViewFieldInContentBlock).FirstOrDefault();
 
                 return _view = templateEntity == null ? null : new View(templateEntity, Log);

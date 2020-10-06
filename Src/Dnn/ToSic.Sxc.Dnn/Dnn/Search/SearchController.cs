@@ -99,7 +99,7 @@ namespace ToSic.Sxc.Search
             foreach (var stream in dataSource.Out.Where(p => p.Key != ViewParts.Presentation && p.Key != ViewParts.ListPresentation))
             {
                 
-                var entities = stream.Value.List;
+                var entities = stream.Value.Immutable;
                 var searchInfoList = searchInfoDictionary[stream.Key] = new List<ISearchItem>();
 
                 searchInfoList.AddRange(entities.Select(entity =>

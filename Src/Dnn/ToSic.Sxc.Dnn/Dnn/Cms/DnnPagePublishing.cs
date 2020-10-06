@@ -162,7 +162,7 @@ namespace ToSic.Sxc.Dnn.Cms
                 }
 
                 // Set published version
-                new DnnPagePublishing.ModuleVersions(instanceId, Log).PublishLatestVersion();
+                new ModuleVersions(instanceId, Log).PublishLatestVersion();
                 Log.Add("publish completed");
             }
             catch (Exception ex)
@@ -176,7 +176,7 @@ namespace ToSic.Sxc.Dnn.Cms
 
         private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, IBlockDataSource data, string key)
         {
-            var cont = data.Out.ContainsKey(key) ? data[key]?.List?.ToList() : null;
+            var cont = data.Out.ContainsKey(key) ? data[key]?.Immutable/*.List?.ToList()*/ : null;
             Log.Add($"TryToAddStream(..., ..., key:{key}), found:{cont != null} add⋮{cont?.Count ?? 0}" );
             if (cont != null) list = list.Concat(cont);
             return list;

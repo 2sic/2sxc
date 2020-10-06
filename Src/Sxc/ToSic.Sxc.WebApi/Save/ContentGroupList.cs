@@ -56,7 +56,7 @@ namespace ToSic.Sxc.WebApi
             foreach (var bundle in pairsOrSingleItems)
             {
                 Log.Add("processing:" + bundle.Key);
-                var entity = app.Data.List.One(bundle.First().Header.ListParent());
+                var entity = app.Data.Immutable.One(bundle.First().Header.ListParent());
                 var targetIsContentBlock = entity.Type.Name == BlocksRuntime.BlockTypeName;
                 
                 var primaryItem = targetIsContentBlock ? FindContentItem(bundle) : bundle.First();
@@ -162,7 +162,7 @@ namespace ToSic.Sxc.WebApi
                 if (identifier.Parent != null && identifier.Field != null)
                 {
                     // look up type
-                    var target = Block.App.Data.List.One(identifier.Parent.Value);
+                    var target = Block.App.Data.Immutable.One(identifier.Parent.Value);
                     var field = target.Type[identifier.Field];
                     identifier.ContentTypeName = field.EntityFieldItemTypePrimary();
                     newItems.Add(identifier);
