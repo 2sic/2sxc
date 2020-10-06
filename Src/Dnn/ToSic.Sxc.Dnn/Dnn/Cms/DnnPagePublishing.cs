@@ -177,7 +177,7 @@ namespace ToSic.Sxc.Dnn.Cms
         private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, IBlockDataSource data, string key)
         {
             var cont = data.Out.ContainsKey(key) ? data[key]?.Immutable/*.List?.ToList()*/ : null;
-            Log.Add($"TryToAddStream(..., ..., key:{key}), found:{cont != null} add⋮{cont?.Count ?? 0}" );
+            Log.Add($"TryToAddStream(..., ..., key:{key}), found:{cont != null} add⋮{cont?.Length ?? 0}" );
             if (cont != null) list = list.Concat(cont);
             return list;
         }

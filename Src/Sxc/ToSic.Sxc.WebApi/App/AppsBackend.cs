@@ -28,7 +28,7 @@ namespace ToSic.Sxc.WebApi.App
                 AppRoot = a.Path,
                 IsHidden = a.Hidden,
                 ConfigurationId = a.Configuration?.Id,
-                Items = a.Data.Immutable.Count,
+                Items = a.Data.Immutable.Length,
                 Thumbnail = a.Thumbnail,
                 Version = a.VersionSafe()
             }).ToList();

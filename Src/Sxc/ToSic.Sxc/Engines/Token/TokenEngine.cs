@@ -149,7 +149,7 @@ namespace ToSic.Sxc.Engines
                 throw new ArgumentException("Was not able to implement REPEAT because I could not find Data:" + streamName + ". Please check spelling the pipeline delivering data to this template.");
 
             var dataItems = DataSource[streamName].Immutable;//.ToList();
-            var itemsCount = dataItems.Count;
+            var itemsCount = dataItems.Length;
             for (var i = 0; i < itemsCount; i++)
             {
                 // Create property sources for the current data item (for the current data item and its list information)

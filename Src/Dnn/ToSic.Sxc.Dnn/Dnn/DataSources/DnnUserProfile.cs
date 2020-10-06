@@ -93,7 +93,7 @@ namespace ToSic.Sxc.Dnn.DataSources
         private readonly ITenant _tenant;
         private readonly IZoneMapper _zoneMapper;
 
-		private IImmutableList<IEntity> GetList()
+		private ImmutableArray<IEntity> GetList()
 		{
             Configuration.Parse();
 			var realTenant = _tenant.Id != Eav.Constants.NullId ? _tenant : _zoneMapper.Init(Log).TenantOfApp(AppId);

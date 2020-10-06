@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Polymorphism
         public Polymorphism(IDataSource data, ILog parentLog) : base("Plm.Managr", parentLog)
         {
             //if (!data.Out.ContainsKey(PolymorphismConstants.Name)) return;
-            Entity = data?.Immutable?.FirstOrDefault(e => e.Type.Name == PolymorphismConstants.Name);
+            Entity = data?.Immutable/*?*/.FirstOrDefault(e => e.Type.Name == PolymorphismConstants.Name);
             //Entity = data[PolymorphismConstants.Name].List.FirstOrDefault();
             if (Entity == null) return;
 
