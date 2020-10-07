@@ -23,7 +23,7 @@ namespace ToSic.Sxc.DataSources
                 if (BlockConfiguration.View == null && OverrideView == null)
                 {
                     Log.Add("no template definition - will return empty list");
-                    return new ImmutableArray<IEntity>();
+                    return ImmutableArray<IEntity>.Empty;
                 }
 
                 // Create copy of list (not in cache) because it will get modified
