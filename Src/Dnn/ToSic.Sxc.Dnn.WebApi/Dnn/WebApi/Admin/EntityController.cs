@@ -109,7 +109,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public ContentImportResultDto XmlPreview(ContentImportArgsDto args)
-            => new ContentImportApi(Log).EvaluateContent(args);
+            => new ContentImportApi(Log).XmlPreview(args);
 
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public ContentImportResultDto XmlUpload(ContentImportArgsDto args)
-            => new ContentImportApi(Log).ImportContent(args);
+            => new ContentImportApi(Log).XmlImport(args);
 
 
         /// <summary>

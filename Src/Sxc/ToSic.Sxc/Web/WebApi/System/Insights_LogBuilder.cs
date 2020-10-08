@@ -154,6 +154,7 @@ namespace ToSic.Sxc.Web.WebApi.System
                     lg.AppendLine(TreeDumpOneLine(e, breadcrumb.Count > 0 ? breadcrumb.Peek() : ""));
                     if (e.WrapOpen)
                     {
+                        if (!e.WrapOpenWasClosed) lg.AppendLine("LOGGER WARNING: This logger was never closed");
                         breadcrumb.Push(e.ShortSource);
                         lg.AppendLine("<ol>");
                     }
