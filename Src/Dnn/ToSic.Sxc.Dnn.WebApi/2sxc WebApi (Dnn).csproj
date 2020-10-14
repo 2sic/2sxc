@@ -137,7 +137,7 @@
     <Compile Include="Dnn\WebApi\Admin\AppController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebApi\Routing\RouteMapper.cs" />
-    <Compile Include="SexyContent\WebApi\SxcApiController.cs" />
+    <Compile Include="Obsolete\SexyContent\WebApi\SxcApiController.cs" />
     <Compile Include="Dnn\WebApi\Logging\DnnLogExceptions.cs" />
     <Compile Include="Dnn\WebApi\Admin\DialogController.cs" />
     <Compile Include="Dnn\WebApi\Admin\ViewController.cs" />
