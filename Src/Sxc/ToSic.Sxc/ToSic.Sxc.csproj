@@ -5,6 +5,8 @@
     <RootNamespace>ToSic.Sxc</RootNamespace>
     <AssemblyName>ToSic.Sxc</AssemblyName>
     <Version>11.08.00.00</Version>
+    <AssemblyVersion>11.08.00.*</AssemblyVersion>
+    <Deterministic>false</Deterministic>
   </PropertyGroup>
 
   <ItemGroup>
