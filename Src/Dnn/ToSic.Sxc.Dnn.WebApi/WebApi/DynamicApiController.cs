@@ -1,23 +1,20 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Web.Http.Controllers;
-using Factory = ToSic.Eav.Factory;
-using System.IO;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
-using ToSic.Sxc;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Dnn.WebApi.Logging;
-using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Adam;
+using Factory = ToSic.Eav.Factory;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.SexyContent.WebApi
+namespace ToSic.Sxc.WebApi
 {
     /// <inheritdoc cref="SxcApiControllerBase" />
     /// <summary>
@@ -101,7 +98,7 @@ namespace ToSic.SexyContent.WebApi
                 throw new Exception();
 
             var feats = new[]{FeatureIds.UseAdamInWebApi, FeatureIds.PublicUpload};
-            if (!Features.EnabledOrException(feats, "can't save in ADAM", out var exp))
+            if (!Eav.Configuration.Features.EnabledOrException(feats, "can't save in ADAM", out var exp))
                 throw exp;
 
             var block = GetBlock();
