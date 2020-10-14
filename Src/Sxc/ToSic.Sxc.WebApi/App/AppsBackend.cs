@@ -7,7 +7,7 @@ using ToSic.Sxc.LookUp;
 
 namespace ToSic.Sxc.WebApi.App
 {
-    public partial class AppsBackend: WebApiBackendBase<AppsBackend>
+    public class AppsBackend: WebApiBackendBase<AppsBackend>
     {
         public AppsBackend() : base("Bck.Apps")
         {
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.WebApi.App
                 AppRoot = a.Path,
                 IsHidden = a.Hidden,
                 ConfigurationId = a.Configuration?.Id,
-                Items = a.Data.Immutable.Length,
+                Items = a.Data.Immutable.Count,
                 Thumbnail = a.Thumbnail,
                 Version = a.VersionSafe()
             }).ToList();

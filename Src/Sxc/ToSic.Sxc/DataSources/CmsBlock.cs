@@ -55,9 +55,6 @@ namespace ToSic.Sxc.DataSources
         {
             Provide(GetContent);
             Provide(ViewParts.ListContent, GetHeader);
-            //Out.Add(Eav.Constants.DefaultStreamName, new DataStream(this, Eav.Constants.DefaultStreamName, GetContent));
-            //Out.Add(ViewParts.ListContent, new DataStream(this, Eav.Constants.DefaultStreamName, GetHeader));
-
 			Configuration.Values.Add(InstanceIdKey, $"[Settings:{Settings.InstanceId}||[{InstanceLookupName}:{InstanceIdKey}]]");
         }
 
