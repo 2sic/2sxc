@@ -12,7 +12,6 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.Features;
-using ToSic.Sxc.WebApi.Security;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -72,7 +71,9 @@ namespace ToSic.Sxc.WebApi.Cms
                 .Select(ct => JsonSerializer.ToJson(ct, true))
                 .ToList();
 
-            // todo: ensure that sub-properties of the content-types are included
+            // ensure that sub-properties of the content-types are included
+            // this is for UI Formulas (children of @All) - WIP
+            // and the warning/error Regex specials - WIP
             var entList = types.SelectMany(
                 // in all Content-Type attributes like title, body etc.
                 t => t.Attributes.SelectMany(
