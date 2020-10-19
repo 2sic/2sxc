@@ -14,7 +14,9 @@
             "_site/**",
             "**/*Testing/**",
             "**/*.Tests/**",
-            "**/XOLD-*/**"
+            "**/XOLD-*/**",
+            "**Mvc/Website/**",
+            "**/ToSic.Sxc.Mvc/**"
           ]
         }
       ],
