@@ -72,15 +72,14 @@ namespace ToSic.Sxc.Dnn.Run
         /// <returns></returns>
         private bool CurrentZoneMatchesTenantZone()
         {
-            var wrapLog = Log.Call();
+            var wrapLog = Log.Call<bool>();
             // but is the current portal also the one we're asking about?
             var env = Eav.Factory.Resolve<IAppEnvironment>();
-            if (Context.Tenant == null || Context.Tenant.Id == Eav.Constants.NullId) return false; // this is the case when running out-of http-context
-            if (AppIdentity == null) return true; // this is the case when an app hasn't been selected yet, so it's an empty module, must be on current portal
+            if (Context.Tenant == null || Context.Tenant.Id == Eav.Constants.NullId) return wrapLog("no", false); // this is the case when running out-of http-context
+            if (AppIdentity == null) return wrapLog("yes", true); // this is the case when an app hasn't been selected yet, so it's an empty module, must be on current portal
             var pZone = env.ZoneMapper.GetZoneId(Context.Tenant);
             var result = pZone == AppIdentity.ZoneId; // must match, to accept user as admin
-            wrapLog($"{result}");
-            return result;
+            return wrapLog($"{result}", result);
         }
 
         private bool UserIsModuleEditor()
