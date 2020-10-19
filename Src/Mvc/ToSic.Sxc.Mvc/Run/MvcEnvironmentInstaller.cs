@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Mvc.Run
             return "mvc not implemented #todo #mvc";
         }
 
-        public MvcEnvironmentInstaller(string logName, ILog parentLog = null, string initialMessage = null, string cPath = null, string cName = null, int cLine = 0) : base(logName, parentLog, initialMessage, cPath, cName, cLine)
+        public MvcEnvironmentInstaller() : base("Mvc.Instll")
         {
         }
 

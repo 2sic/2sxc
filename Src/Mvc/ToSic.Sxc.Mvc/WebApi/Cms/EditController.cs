@@ -2,20 +2,21 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.Mvc.WebApi.Context;
 using ToSic.Sxc.WebApi.Cms;
 
 namespace ToSic.Sxc.Mvc.WebApi.Cms
 {
-    [Route(WebApiConstants.WebApiRoot + "/eav/ui/[action]")]
+    [Route(WebApiConstants.WebApiRoot + "/cms/edit/[action]")]
     [ApiController]
-    public class UiController: SxcStatefullControllerBase
+    public class EditController: SxcStatefullControllerBase
     {
         #region DI
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "UiCntr";
 
-        public UiController(MvcContextBuilder contextBuilder) => _contextBuilder = contextBuilder;
+        public EditController(MvcContextBuilder contextBuilder) => _contextBuilder = contextBuilder;
         private readonly MvcContextBuilder _contextBuilder;
 
         #endregion
@@ -41,6 +42,22 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
         public Dictionary<Guid, int> Save([FromBody] AllInOneDto package, int appId, bool partOfPage)
             => new EditSaveBackend().Init(Log)
                 .Save(GetBlock(), package, appId, partOfPage);
+
+        /// <summary>
+        /// Used to be GET Ui/GetAvailableEntities
+        /// </summary>
+        /// <param name="appId"></param>
+        /// <param name="items"></param>
+        /// <param name="contentTypeName"></param>
+        /// <param name="dimensionId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [HttpPost]
+        [AllowAnonymous] // security check happens internally
+        public IEnumerable<EntityForPickerDto> EntityPicker(int appId, [FromBody] string[] items,
+            string contentTypeName = null, int? dimensionId = null)
+            => new EntityPickerBackend().Init(Log)
+                .GetAvailableEntities(GetContext(), appId, items, contentTypeName, dimensionId);
 
     }
 }
