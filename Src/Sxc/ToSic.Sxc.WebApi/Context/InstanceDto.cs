@@ -2,10 +2,17 @@
 {
     public class InstanceDto
     {
+        /// <summary>
+        /// The Module Id / Instance Id.
+        /// Note that an instance can be used again, in which case the UsageId will differ
+        /// </summary>
         public int Id;
 
-        // todo: find out if we can get rid of this - to DNN specific
-        public int ModuleId;
+        /// <summary>
+        /// The usage id - in case an instance is reused.
+        /// </summary>
+        public int UsageId;
+
         public bool ShowOnAllPages;
         public string Title;
         public bool IsDeleted;
