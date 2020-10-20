@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ToSic.Sxc.Models;
+using ToSic.Sxc.OqtaneModule.Models;
 
-namespace ToSic.Sxc.Services
+namespace ToSic.Sxc.OqtaneModule.Services
 {
-    public interface ISxcService 
+    public interface ISxcService
     {
         Task<List<Models.Sxc>> GetSxcsAsync(int ModuleId);
 

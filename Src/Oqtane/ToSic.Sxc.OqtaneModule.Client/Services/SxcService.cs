@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Oqtane.Modules;
 using Oqtane.Services;
 using Oqtane.Shared;
-using ToSic.Sxc.Models;
+using ToSic.Sxc.OqtaneModule.Models;
 
-namespace ToSic.Sxc.Services
+namespace ToSic.Sxc.OqtaneModule.Services
 {
     public class SxcService : ServiceBase, ISxcService, IService
     {

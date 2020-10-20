@@ -5,10 +5,10 @@ using Oqtane.Modules;
 using Oqtane.Models;
 using Oqtane.Infrastructure;
 using Oqtane.Repository;
-using ToSic.Sxc.Models;
-using ToSic.Sxc.Repository;
+using ToSic.Sxc.OqtaneModule.Models;
+using ToSic.Sxc.OqtaneModule.Repository;
 
-namespace ToSic.Sxc.Manager
+namespace ToSic.Sxc.OqtaneModule.Manager
 {
     public class SxcManager : IInstallable, IPortable
     {

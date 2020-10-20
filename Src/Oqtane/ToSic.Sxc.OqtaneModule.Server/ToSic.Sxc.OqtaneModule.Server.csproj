@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -10,7 +10,7 @@
     <Company>ToSic</Company>
     <Description>2sic 2sxc Oqtane POC</Description>
     <Copyright>ToSic</Copyright>
-    <AssemblyName>ToSic.Sxc.Server.Oqtane</AssemblyName>
+    <AssemblyName>ToSic.Sxc.OqtaneModule.Server</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,11 +27,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shared\ToSic.Sxc.Shared.csproj" />
+    <PackageReference Include="Oqtane.Server" Version="1.0.4" />
+    <PackageReference Include="Oqtane.Shared" Version="1.0.4" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Oqtane.Server" Version="1.0.4" />
-    <PackageReference Include="Oqtane.Shared" Version="1.0.4" />
+    <ProjectReference Include="..\ToSic.Sxc.OqtaneModule.Shared\ToSic.Sxc.OqtaneModule.Shared.csproj" />
   </ItemGroup>
 </Project>

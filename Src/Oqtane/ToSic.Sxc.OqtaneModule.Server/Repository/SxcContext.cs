@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using Oqtane.Modules;
 using Oqtane.Repository;
-using ToSic.Sxc.Models;
+using ToSic.Sxc.OqtaneModule.Models;
 
-namespace ToSic.Sxc.Repository
+namespace ToSic.Sxc.OqtaneModule.Repository
 {
     public class SxcContext : DBContextBase, IService
     {

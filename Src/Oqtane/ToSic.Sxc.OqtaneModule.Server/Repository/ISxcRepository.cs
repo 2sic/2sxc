@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using ToSic.Sxc.Models;
+using ToSic.Sxc.OqtaneModule.Models;
 
-namespace ToSic.Sxc.Repository
+namespace ToSic.Sxc.OqtaneModule.Repository
 {
     public interface ISxcRepository
     {

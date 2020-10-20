@@ -1,7 +1,7 @@
 using Microsoft.JSInterop;
 using System.Threading.Tasks;
 
-namespace ToSic.Sxc
+namespace ToSic.Sxc.OqtaneModule
 {
     public class Interop
     {

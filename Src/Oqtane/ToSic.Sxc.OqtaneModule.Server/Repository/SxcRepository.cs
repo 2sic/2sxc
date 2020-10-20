@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Collections.Generic;
 using Oqtane.Modules;
-using ToSic.Sxc.Models;
+using ToSic.Sxc.OqtaneModule.Models;
 
-namespace ToSic.Sxc.Repository
+namespace ToSic.Sxc.OqtaneModule.Repository
 {
     public class SxcRepository : ISxcRepository, IService
     {

@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Oqtane.Models;
 
-namespace ToSic.Sxc.Models
+namespace ToSic.Sxc.OqtaneModule.Models
 {
     [Table("ToSicSxc")]
     public class Sxc : IAuditable

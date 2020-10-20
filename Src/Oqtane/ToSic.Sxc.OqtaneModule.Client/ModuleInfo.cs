@@ -1,7 +1,7 @@
 using Oqtane.Models;
 using Oqtane.Modules;
 
-namespace ToSic.Sxc
+namespace ToSic.Sxc.OqtaneModule
 {
     public class ModuleInfo : IModule
     {
@@ -10,9 +10,9 @@ namespace ToSic.Sxc
             Name = "Sxc",
             Description = "Sxc",
             Version = "1.0.0",
-            ServerManagerType = "ToSic.Sxc.Manager.SxcManager, ToSic.Sxc.Server.Oqtane",
+            ServerManagerType = "ToSic.Sxc.OqtaneModule.Manager.SxcManager, ToSic.Sxc.OqtaneModule.Server",
             ReleaseVersions = "1.0.0",
-            Dependencies = "ToSic.Sxc.Shared.Oqtane"
+            Dependencies = "ToSic.Sxc.OqtaneModule.Shared"
         };
     }
 }

@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Http;
 using Oqtane.Shared;
 using Oqtane.Enums;
 using Oqtane.Infrastructure;
-using ToSic.Sxc.Models;
-using ToSic.Sxc.Repository;
+using ToSic.Sxc.OqtaneModule.Models;
+using ToSic.Sxc.OqtaneModule.Repository;
 
-namespace ToSic.Sxc.Controllers
+namespace ToSic.Sxc.OqtaneModule.Controllers
 {
     [Route("{alias}/api/[controller]")]
     public class SxcController : Controller

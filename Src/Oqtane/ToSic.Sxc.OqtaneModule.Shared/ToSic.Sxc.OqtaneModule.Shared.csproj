@@ -9,7 +9,7 @@
     <Company>ToSic</Company>
     <Description>2sic 2sxc Oqtane POC</Description>
     <Copyright>ToSic</Copyright>
-    <AssemblyName>ToSic.Sxc.Shared.Oqtane</AssemblyName>
+    <AssemblyName>ToSic.Sxc.OqtaneModule.Shared</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
