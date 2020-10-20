@@ -8,11 +8,13 @@ namespace ToSic.Sxc.OqtaneModule
         public ModuleDefinition ModuleDefinition => new ModuleDefinition
         {
             Name = "Sxc",
-            Description = "Sxc",
-            Version = "1.0.0",
+            Description = "2sxc Oqtane Module",
+            Version = "0.0.1",
             ServerManagerType = "ToSic.Sxc.OqtaneModule.Manager.SxcManager, ToSic.Sxc.OqtaneModule.Server",
-            ReleaseVersions = "1.0.0",
-            Dependencies = "ToSic.Sxc.OqtaneModule.Shared"
+            ReleaseVersions = "0.0.1",
+            Dependencies = "ToSic.Sxc.OqtaneModule.Shared",
+            Categories = "Develop",
+            Runtimes = "Server",
         };
     }
 }

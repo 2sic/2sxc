@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Scripts\ToSic.Sxc.1.0.0.sql" />
+    <EmbeddedResource Include="Scripts\ToSic.Sxc.0.0.1.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.Uninstall.sql" />
   </ItemGroup>
 
