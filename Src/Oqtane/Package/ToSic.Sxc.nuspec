@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>ToSic.Sxc</id>
+    <version>1.0.0</version>
+    <authors>ToSic</authors>
+    <owners>ToSic</owners>
+    <title>Sxc</title>
+    <description>Sxc</description>
+    <copyright>ToSic</copyright>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/oqtane/oqtane.framework</projectUrl>
+    <iconUrl>https://www.oqtane.org/Portals/0/icon.jpg</iconUrl>
+    <tags>oqtane module</tags>
+    <releaseNotes></releaseNotes>
+    <summary></summary>
+    <dependencies>
+      <dependency id="Oqtane.Framework" version="1.0.4" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\Client\bin\Release\netstandard2.1\ToSic.Sxc.Client.Oqtane.dll" target="lib\netstandard2.1" /> 
+    <file src="..\Client\bin\Release\netstandard2.1\ToSic.Sxc.Client.Oqtane.pdb" target="lib\netstandard2.1" /> 
+    <file src="..\Server\bin\Release\netcoreapp3.1\ToSic.Sxc.Server.Oqtane.dll" target="lib\netcoreapp3.1" /> 
+    <file src="..\Server\bin\Release\netcoreapp3.1\ToSic.Sxc.Server.Oqtane.pdb" target="lib\netcoreapp3.1" /> 
+    <file src="..\Shared\bin\Release\netstandard2.1\ToSic.Sxc.Shared.Oqtane.dll" target="lib\netstandard2.1" /> 
+    <file src="..\Shared\bin\Release\netstandard2.1\ToSic.Sxc.Shared.Oqtane.pdb" target="lib\netstandard2.1" /> 
+    <file src="..\Server\wwwroot\**\*.*" target="wwwroot" /> 
+  </files>
+</package>
