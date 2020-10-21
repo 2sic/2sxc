@@ -1,76 +1,54 @@
 @using ToSic.Sxc.OqtaneModule.Services
 @using ToSic.Sxc.OqtaneModule.Models
+@using System.Text.Json;
+@using System.Text.Json.Serialization;
 
 @namespace ToSic.Sxc.OqtaneModule
 @inherits ModuleBase
 @inject ISxcService SxcService
 @inject NavigationManager NavigationManager
 
-@if (_Sxcs == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="Add Sxc" />
-    <br />
-    <br />
-    @if (@_Sxcs.Count != 0)
-    {
-        <Pager Items="@_Sxcs">
-            <Header>
-                <th style="width: 1px;">&nbsp;</th>
-                <th style="width: 1px;">&nbsp;</th>
-                <th>Name</th>
-            </Header>
-            <Row>
-                <td><ActionLink Action="Edit" Parameters="@($"id=" + context.SxcId.ToString())" /></td>
-                <td><ActionDialog Header="Delete Sxc" Message="@("Are You Sure You Wish To Delete The " + context.Name + " Sxc?")" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" /></td>
-                <td>@context.Name</td>
-            </Row>
-        </Pager>
-    }
-    else
-    {
-        <p>No Sxcs To Display</p>
-    }
-}
+
+<h3>Alias</h3>
+<pre>@JsonSerializer.Serialize(PageState.Alias, jsonSerializerOptions)</pre>
+
+<h3>Site</h3>
+<pre>@JsonSerializer.Serialize(PageState.Site, jsonSerializerOptions)</pre>
+
+<h3>User</h3>
+<pre>@JsonSerializer.Serialize(PageState.User, jsonSerializerOptions)</pre>
+
+<h3>ModuleState</h3>
+<pre>@JsonSerializer.Serialize(ModuleState, jsonSerializerOptions)</pre>
+
+<h3>PageState</h3>
+<pre>@JsonSerializer.Serialize(PageState, jsonSerializerOptions)</pre>
+
 
 @code {
     public override List<Resource> Resources => new List<Resource>()
     {
-        new Resource { ResourceType = ResourceType.Stylesheet, Url = ModulePath() + "Module.css" },
-        new Resource { ResourceType = ResourceType.Script, Url = ModulePath() + "Module.js" }
+    new Resource { ResourceType = ResourceType.Stylesheet, Url = ModulePath() + "Module.css" },
+    new Resource { ResourceType = ResourceType.Script, Url = ModulePath() + "Module.js" }
     };
 
-    List<Sxc> _Sxcs;
+    JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
+    {
+        WriteIndented = true,
+    };
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            _Sxcs = await SxcService.GetSxcsAsync(ModuleState.ModuleId);
+            //_Sxcs = await SxcService.GetSxcsAsync(ModuleState.ModuleId);
+
+
         }
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Loading Sxc {Error}", ex.Message);
             AddModuleMessage("Error Loading Sxc", MessageType.Error);
-        }
-    }
-
-    private async Task Delete(Sxc Sxc)
-    {
-        try
-        {
-            await SxcService.DeleteSxcAsync(Sxc.SxcId, ModuleState.ModuleId);
-            await logger.LogInformation("Sxc Deleted {Sxc}", Sxc);
-            _Sxcs = await SxcService.GetSxcsAsync(ModuleState.ModuleId);
-            StateHasChanged();
-        }
-        catch (Exception ex)
-        {
-            await logger.LogError(ex, "Error Deleting Sxc {Sxc} {Error}", Sxc, ex.Message);
-            AddModuleMessage("Error Deleting Sxc", MessageType.Error);
         }
     }
 }
