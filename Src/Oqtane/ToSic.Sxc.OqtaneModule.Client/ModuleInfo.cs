@@ -9,9 +9,9 @@ namespace ToSic.Sxc.OqtaneModule
         {
             Name = "2sxc",
             Description = "2sxc is a Oqtane module to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.",
-            Version = "0.0.1",
+            Version = "0.0.2",
             ServerManagerType = "ToSic.Sxc.OqtaneModule.Manager.SxcManager, ToSic.Sxc.OqtaneModule.Server",
-            ReleaseVersions = "0.0.1",
+            ReleaseVersions = "0.0.2",
             Dependencies = "ToSic.Sxc.OqtaneModule.Shared",
             Categories = "Developer",
             Runtimes = "Server",

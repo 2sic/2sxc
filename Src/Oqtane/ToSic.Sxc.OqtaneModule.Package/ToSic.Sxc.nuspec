@@ -2,12 +2,12 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>ToSic.Sxc</id>
-    <version>0.0.1</version>
-    <authors>ToSic</authors>
-    <owners>ToSic</owners>
-    <title>Sxc</title>
-    <description>Sxc</description>
-    <copyright>ToSic</copyright>
+    <version>0.0.2</version>
+    <authors>2Sic</authors>
+    <owners>2Sic</owners>
+    <title>2sxc</title>
+    <description>2sxc is a Oqtane module to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
+    <copyright>2Sic</copyright>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">MIT</license>
     <projectUrl>https://github.com/oqtane/oqtane.framework</projectUrl>
