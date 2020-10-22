@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Repository;
 using ToSic.Eav.Data;
@@ -21,7 +22,8 @@ namespace ToSic.Sxc.OqtaneModule.Server.Controllers
         #region DI / Constructor
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "AppCnt";
 
-        public AppContentController(SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver) : base(sxcOqtane, zoneMapper, tenantResolver) { }
+        public AppContentController(SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver, IHttpContextAccessor httpContextAccessor, IAliasRepository aliasRepository) :
+            base(sxcOqtane, zoneMapper, tenantResolver, httpContextAccessor, aliasRepository) { }
         #endregion
 
         //private IInstanceContext GetContext()
@@ -63,14 +65,14 @@ namespace ToSic.Sxc.OqtaneModule.Server.Controllers
 
 
         /// <summary>
-        /// Preprocess security / context, then get the item based on an passed in method, 
+        /// Preprocess security / context, then get the item based on an passed in method,
         /// ...then process/finish
         /// </summary>
         /// <param name="contentType"></param>
         /// <param name="getOne"></param>
         /// <param name="appPath"></param>
         /// <returns></returns>
-        private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<EntityApi, IEntity> getOne, string appPath) 
+        private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<EntityApi, IEntity> getOne, string appPath)
             => Eav.Factory.Resolve<AppContent>().Init(GetContext(), NoBlock, Log).GetOne(contentType, getOne, appPath);
 
         #endregion
