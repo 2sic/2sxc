@@ -26,7 +26,8 @@ namespace ToSic.Sxc.OqtaneModule.Server
         {
             var builder = new ConfigurationBuilder()
                 //.SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("appsettings.local.json", optional: true, reloadOnChange: true);
             Configuration = builder.Build();
 
             var connectionString = Configuration.GetConnectionString("SiteSqlServer");
