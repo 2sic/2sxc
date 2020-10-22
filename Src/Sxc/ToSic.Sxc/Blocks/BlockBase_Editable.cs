@@ -4,7 +4,7 @@ using ToSic.Eav.Security.Permissions;
 
 namespace ToSic.Sxc.Blocks
 {
-    internal abstract partial class BlockBase
+    public abstract partial class BlockBase
     {
         public bool EditAllowed
         {

@@ -5,7 +5,7 @@ using ToSic.Eav.Logging;
 namespace ToSic.Sxc.Blocks
 {
     [PrivateApi("todo: review how it's used and named, probably doesn't have any DNN stuff in it any more, and then Module is a wrong name")]
-    internal sealed class BlockFromModule: BlockBase
+    public sealed class BlockFromModule: BlockBase
     {
         #region Constructor for DI
 

@@ -6,7 +6,7 @@ using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Blocks
 {
-    internal sealed class BlockFromEntity: BlockBase
+    public sealed class BlockFromEntity: BlockBase
     {
         internal const string CbPropertyApp = "App";
         internal const string CbPropertyTitle = "Title";

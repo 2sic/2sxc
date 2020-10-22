@@ -6,9 +6,12 @@ using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.OqtaneModule.Server.Code;
+using ToSic.Sxc.OqtaneModule.Server.Controllers;
+using ToSic.Sxc.OqtaneModule.Server.Page;
+using ToSic.Sxc.OqtaneModule.Server.Run;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
-using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.OqtaneModule.Server
 {
@@ -17,32 +20,34 @@ namespace ToSic.Sxc.OqtaneModule.Server
         public static IServiceCollection AddSxcOqtane(this IServiceCollection services)
         {
             services.AddScoped<IHttp, OqtaneHttpAbstraction>();
-            //services.AddTransient<IAppEnvironment, MvcEnvironment>();
-            //services.AddTransient<IEnvironment, MvcEnvironment>();
-            //services.AddTransient<ITenant, MvcTenant>();
-            //services.AddTransient<IRenderingHelper, MvcRenderingHelper>();
-            //services.AddTransient<IZoneMapper, MvcZoneMapper>();
-            //services.AddTransient<AppPermissionCheck, MvcPermissionCheck>();
-            //services.AddTransient<DynamicCodeRoot, MvcDynamicCode>();
-            //services.AddTransient<IEnvironmentConnector, MvcEnvironmentConnector>();
-            //services.AddTransient<IEnvironmentInstaller, MvcEnvironmentInstaller>();
-            //services.AddTransient<IGetEngine, MvcGetLookupEngine>();
-            //services.AddTransient<MvcContextBuilder>();
+            services.AddTransient<IAppEnvironment, OqtaneEnvironment>();
+            services.AddTransient<IEnvironment, OqtaneEnvironment>();
+            services.AddTransient<ITenant, OqtaneTenantSite>();
+            services.AddTransient<IRenderingHelper, OqtaneRenderingHelper>();
+            services.AddTransient<IZoneMapper, OqtaneZoneMapper>();
+            services.AddTransient<AppPermissionCheck, OqtanePermissionCheck>();
+            services.AddTransient<DynamicCodeRoot, OqtaneDynamicCode>();
+            services.AddTransient<IEnvironmentConnector, OqtaneEnvironmentConnector>();
+            services.AddTransient<IEnvironmentInstaller, OqtaneEnvironmentInstaller>();
+            services.AddTransient<IGetEngine, OqtaneGetLookupEngine>();
+            services.AddTransient<OqtaneContextBuilder>();
 
             //// add page publishing
-            //services.AddTransient<IPagePublishing, MvcPagePublishing>();
+            services.AddTransient<IPagePublishing, OqtanePagePublishing>();
 
             //// MVC Specific stuff
-            //services.AddScoped<MvcPageProperties>();
+            services.AddScoped<OqtanePageProperties>();
+            services.AddTransient<OqtaneSiteFactory>();
+            services.AddTransient<SxcOqtane>();
 
             //services.AddTransient<SecurityChecksBase, MvcAdamSecurityChecks>();
 
             //// Add SxcEngineTest
             //services.AddTransient<SxcMvc>();
-            //services.AddTransient<IAdamFileSystem<string, string>, MvcFileSystem>();
+            services.AddTransient<IAdamFileSystem<string, string>, OqtaneFileSystem>();
             //// Still pending...
             ////sc.AddTransient<XmlExporter, DnnXmlExporter>();
-            //services.AddTransient<IImportExportEnvironment, MvcImportExportEnvironment>();
+            services.AddTransient<IImportExportEnvironment, OqtaneImportExportEnvironment>();
             //sc.AddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
             //sc.AddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
 

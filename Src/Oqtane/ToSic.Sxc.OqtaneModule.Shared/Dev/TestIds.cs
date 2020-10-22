@@ -10,8 +10,6 @@ namespace ToSic.Sxc.OqtaneModule.Shared.Dev
 
         // Global, valid for all
         public static int PrimaryZone => Dev4Spm ? 2 : 2;
-        public static string DefaultLanguage => "en-us";
-        public static string DefaultLanguageText = "Oqtane temp English";
         public static int PrimaryApp => Dev4Spm ? 999 : 2;
 
         public static InstanceId Blog => Dev4Spm

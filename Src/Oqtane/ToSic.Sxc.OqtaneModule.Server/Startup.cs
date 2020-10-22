@@ -53,7 +53,8 @@ namespace ToSic.Sxc.OqtaneModule.Server
             //    });
 
             // enable use of HttpContext
-            services.AddHttpContextAccessor();
+            // 2020-10-22 should already be in Oqtane
+            //services.AddHttpContextAccessor();
 
             // enable webapi - include all controllers in the Sxc.Mvc assembly
             services.AddControllers(options => { options.AllowEmptyInputInBodyModelBinding = true; })

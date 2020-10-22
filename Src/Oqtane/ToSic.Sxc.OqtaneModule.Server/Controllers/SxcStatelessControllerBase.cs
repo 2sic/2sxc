@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Http.Extensions;
+﻿using System;
+using System.Linq;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using Oqtane.Models;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.OqtaneModule.Server.Run;
+using Log = ToSic.Eav.Logging.Simple.Log;
 
-namespace ToSic.Sxc.OqtaneModule.Server
+namespace ToSic.Sxc.OqtaneModule.Server.Controllers
 {
     public abstract class SxcStatelessControllerBase : ControllerBase, IHasLog
     {
@@ -15,6 +19,7 @@ namespace ToSic.Sxc.OqtaneModule.Server
             // todo: redesign so it works - in .net core the HttpContext isn't ready in the constructor
             Log = new Log(HistoryLogName, null, $"Path: {HttpContext?.Request.GetDisplayUrl()}");
             //TimerWrapLog = Log.Call(message: "timer", useTimer: true);
+            // ReSharper disable once VirtualMemberCallInConstructor
             History.Add(HistoryLogGroup, Log);
             // register for dispose / stopping the timer at the end
             _logWrapper = new LogWrapper(Log);
@@ -51,6 +56,18 @@ namespace ToSic.Sxc.OqtaneModule.Server
         //    base.Dispose(disposing);
         //}
 
+        public OqtaneUser GetUser()
+        {
+            var user = new User { IsAuthenticated = User.Identity.IsAuthenticated, Username = "", UserId = -1, Roles = "" };
+            if (!user.IsAuthenticated) return new OqtaneUser(user);
+
+            user.Username = User.Identity.Name;
+            user.UserId = int.Parse(User.Claims.First(item => item.Type == ClaimTypes.PrimarySid).Value);
+            var roles = User.Claims.Where(item => item.Type == ClaimTypes.Role).Aggregate("", (current, claim) => current + (claim.Value + ";"));
+            if (roles != "") roles = ";" + roles;
+            user.Roles = roles;
+            return new OqtaneUser(user);
+        }
     }
 
     internal class LogWrapper : IDisposable

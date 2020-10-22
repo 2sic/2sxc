@@ -11,7 +11,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks
 {
-    internal abstract partial class BlockBase : HasLog<BlockBase>, IBlock
+    public abstract partial class BlockBase : HasLog<BlockBase>, IBlock
     {
         #region Constructor and DI
 
