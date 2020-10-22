@@ -10,11 +10,15 @@
 @using ToSic.Eav.LookUp
 @using ToSic.Sxc.OqtaneModule.Client
 @using ToSic.Eav.Persistence.Efc.Models
+@using ToSic.Sxc.OqtaneModule.Shared.Dev
 
 @namespace ToSic.Sxc.OqtaneModule
 @inherits ModuleBase
 @inject ISxcService SxcService
 @inject NavigationManager NavigationManager
+
+
+test: @TestIds.PrimaryApp
 
 <h2>
     Test API Insights

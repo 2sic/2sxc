@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using Oqtane.Infrastructure;
 using ToSic.Eav;
+using ToSic.Sxc.OqtaneModule.Shared.Dev;
 using ToSic.Sxc.WebApi.Plumbing;
 using Factory = ToSic.Eav.Factory;
 
@@ -29,6 +30,9 @@ namespace ToSic.Sxc.OqtaneModule.Server
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile("appsettings.local.json", optional: true, reloadOnChange: true);
             Configuration = builder.Build();
+
+            var devMode = Configuration["DevMode"];
+            if (devMode == "SPM") TestIds.Dev4Spm = true;
 
             var connectionString = Configuration.GetConnectionString("SiteSqlServer");
             ToSic.Eav.Repository.Efc.Implementations.Configuration.SetConnectionString(connectionString);

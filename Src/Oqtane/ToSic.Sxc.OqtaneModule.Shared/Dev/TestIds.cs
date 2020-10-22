@@ -12,7 +12,7 @@ namespace ToSic.Sxc.OqtaneModule.Shared.Dev
         public static int PrimaryZone => Dev4Spm ? 2 : 2;
         public static string DefaultLanguage => "en-us";
         public static string DefaultLanguageText = "Oqtane temp English";
-        public static int PrimaryApp => Dev4Spm ? 2 : 2;
+        public static int PrimaryApp => Dev4Spm ? 999 : 2;
 
         public static InstanceId Blog => Dev4Spm
             ? null
@@ -23,8 +23,8 @@ namespace ToSic.Sxc.OqtaneModule.Shared.Dev
             : new InstanceId(2, 56, 2, 6935, new Guid("f8ae3d07-5805-4650-a46d-a047e113ab53"));
 
         // Token app here: http://2sexycontent.2dm.2sic/features/Tokens
-        public static InstanceId Token => Dev4Spm 
-            ? null 
+        public static InstanceId Token => Dev4Spm
+            ? null
             : new InstanceId(128, 4062, 1262,9170, new Guid("584b7398-8517-4bdf-b05d-71d64b935f4f"));
 
         public static List<InstanceId> FakeDb = new List<InstanceId>
