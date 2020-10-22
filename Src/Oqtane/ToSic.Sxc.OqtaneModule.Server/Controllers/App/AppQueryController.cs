@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Oqtane.Repository;
 using ToSic.Eav.Run;
 using ToSic.Sxc.WebApi.App;
 
@@ -17,7 +18,7 @@ namespace ToSic.Sxc.OqtaneModule.Server.Controllers
         #region DI / Constructor
         protected override string HistoryLogName => "App.AppQry";
 
-        public AppQueryController(SxcOqtane sxcOqtane, IZoneMapper zoneMapper) : base(sxcOqtane, zoneMapper) { }
+        public AppQueryController(SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver) : base(sxcOqtane, zoneMapper, tenantResolver) { }
 
         #endregion
 

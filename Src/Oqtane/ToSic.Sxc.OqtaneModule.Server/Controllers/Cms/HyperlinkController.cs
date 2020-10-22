@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Oqtane.Repository;
 using ToSic.Eav.Run;
 using ToSic.Sxc.WebApi.Cms;
 
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.OqtaneModule.Server.Controllers
     {
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "HypLnk";
 
-        public HyperlinkController(SxcOqtane sxcOqtane, IZoneMapper zoneMapper) : base(sxcOqtane, zoneMapper) { }
+        public HyperlinkController(SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver) : base(sxcOqtane, zoneMapper, tenantResolver) { }
 
 
         [HttpGet]
