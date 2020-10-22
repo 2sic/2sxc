@@ -16,7 +16,7 @@ namespace Website.Pages
     public class EavCoreModel : PageModel
     {
         protected const int ZoneId = 2;
-        protected const int AppId = 78;
+        protected const int AppId = 4;
 
         public EavCoreModel()
         {

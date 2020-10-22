@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Mvc.Dev
         public const string DefaultLanguageText = "MVC English!";
         public const int PrimaryApp = 2;
 
-        public static InstanceId Blog = new InstanceId(2, 680, 78, 3002, new Guid("9cbcee9d-49d5-4fe0-8e74-1e20f74a5916"));
+        public static InstanceId Blog = new InstanceId(2, 55, 4, 3002, new Guid("9cbcee9d-49d5-4fe0-8e74-1e20f74a5916"));
 
         public static InstanceId ContentOnHome = new InstanceId(2, 56, 2, 6935, new Guid("f8ae3d07-5805-4650-a46d-a047e113ab53"));
 

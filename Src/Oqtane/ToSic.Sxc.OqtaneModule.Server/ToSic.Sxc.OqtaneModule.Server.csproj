@@ -14,6 +14,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="RazorPartialToString\IRazorPartialToStringRenderer.cs" />
+    <Compile Remove="RazorPartialToString\RazorPartialToStringRenderer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="IRazorPartialToStringRenderer.cs" />
+    <Content Include="RazorPartialToStringRenderer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Scripts\ToSic.Sxc.0.0.1.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.Uninstall.sql" />
   </ItemGroup>
@@ -37,5 +47,9 @@
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.OqtaneModule.Shared\ToSic.Sxc.OqtaneModule.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="RazorPartialToString\" />
   </ItemGroup>
 </Project>

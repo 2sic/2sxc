@@ -2,12 +2,37 @@
 @using ToSic.Sxc.OqtaneModule.Models
 @using System.Text.Json;
 @using System.Text.Json.Serialization;
+@using Microsoft.AspNetCore.Http
+@using ToSic.Eav
+@using ToSic.Eav.Apps
+@using ToSic.Eav.Data
+@using ToSic.Eav.DataSources
+@using ToSic.Eav.LookUp
+@using ToSic.Sxc.OqtaneModule.Client
+@using ToSic.Eav.Persistence.Efc.Models
 
 @namespace ToSic.Sxc.OqtaneModule
 @inherits ModuleBase
 @inject ISxcService SxcService
 @inject NavigationManager NavigationManager
 
+<h2>State of App 4 (Blog)</h2>
+
+<ol>
+    <li>
+        Timestamp : @(ToSic.Eav.Apps.State.Get(4).CacheTimestamp)
+    </li>
+</ol>
+
+<h2>
+    Test API Insights
+</h2>
+
+<ol>
+    <li>
+        <a href="/@WebApiConstants.WebApiRoot/insights/help">Insights Help</a>
+    </li>
+</ol>
 
 <h3>Alias</h3>
 <pre>@JsonSerializer.Serialize(PageState.Alias, jsonSerializerOptions)</pre>
@@ -26,6 +51,9 @@
 
 
 @code {
+
+    public string test1 = "test1";
+
     public override List<Resource> Resources => new List<Resource>()
     {
     new Resource { ResourceType = ResourceType.Stylesheet, Url = ModulePath() + "Module.css" },
@@ -39,16 +67,19 @@
 
     protected override async Task OnInitializedAsync()
     {
+        /*
         try
         {
             //_Sxcs = await SxcService.GetSxcsAsync(ModuleState.ModuleId);
-
+            test1 = ToSic.Eav.Apps.State.Get(4).CacheTimestamp.ToString();
 
         }
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Loading Sxc {Error}", ex.Message);
             AddModuleMessage("Error Loading Sxc", MessageType.Error);
+            throw;
         }
+        */
     }
 }
