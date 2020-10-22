@@ -60,13 +60,13 @@ namespace ToSic.Sxc.OqtaneModule.Server
                     ToSic.Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings);
                     //options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
                 });
-                //.PartManager.ApplicationParts.Add(new AssemblyPart(typeof(SxcMvc).Assembly));
+            //.PartManager.ApplicationParts.Add(new AssemblyPart(typeof(SxcMvc).Assembly));
 
             // enable use of UrlHelper for AbsolutePath
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
-            services.AddScoped(it => it.GetService<IUrlHelperFactory>()
-                .GetUrlHelper(it.GetService<IActionContextAccessor>().ActionContext));
+            //services.AddScoped(it => it.GetService<IUrlHelperFactory>()
+            //    .GetUrlHelper(it.GetService<IActionContextAccessor>().ActionContext));
 
             // Try to get partial to string rendering
             services.AddTransient<IRazorPartialToStringRenderer, RazorPartialToStringRenderer>();

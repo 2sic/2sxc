@@ -16,6 +16,7 @@ namespace ToSic.Sxc.OqtaneModule.Server
     {
         public static IServiceCollection AddSxcOqtane(this IServiceCollection services)
         {
+            services.AddScoped<IHttp, OqtaneHttpAbstraction>();
             //services.AddTransient<IAppEnvironment, MvcEnvironment>();
             //services.AddTransient<IEnvironment, MvcEnvironment>();
             //services.AddTransient<ITenant, MvcTenant>();
