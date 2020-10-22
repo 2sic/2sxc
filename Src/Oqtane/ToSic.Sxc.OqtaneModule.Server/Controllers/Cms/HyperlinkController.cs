@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Repository;
 using ToSic.Eav.Run;
@@ -16,8 +15,8 @@ namespace ToSic.Sxc.OqtaneModule.Server.Controllers
     {
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "HypLnk";
 
-        public HyperlinkController(SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver, IHttpContextAccessor httpContextAccessor, IAliasRepository aliasRepository) :
-            base(sxcOqtane, zoneMapper, tenantResolver, httpContextAccessor, aliasRepository) { }
+        public HyperlinkController(SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver) :
+            base(sxcOqtane, zoneMapper, tenantResolver) { }
 
 
         [HttpGet]

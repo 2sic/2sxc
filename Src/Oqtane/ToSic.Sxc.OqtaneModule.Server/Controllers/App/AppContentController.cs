@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Repository;
 using ToSic.Eav.Data;
@@ -16,14 +15,14 @@ using ToSic.Sxc.WebApi.App;
 namespace ToSic.Sxc.OqtaneModule.Server.Controllers
 {
     [ApiController]
-    [Route( "{alias}/" + WebApiConstants.WebApiRoot + "/app/{appPath}/content/")]
+    [Route( WebApiConstants.WebApiStateRoot + "/app/{appPath}/content/")]
     public class AppContentController: SxcStatefulControllerBase
     {
         #region DI / Constructor
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "AppCnt";
 
-        public AppContentController(SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver, IHttpContextAccessor httpContextAccessor, IAliasRepository aliasRepository) :
-            base(sxcOqtane, zoneMapper, tenantResolver, httpContextAccessor, aliasRepository) { }
+        public AppContentController(SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver) :
+            base(sxcOqtane, zoneMapper, tenantResolver) { }
         #endregion
 
         //private IInstanceContext GetContext()

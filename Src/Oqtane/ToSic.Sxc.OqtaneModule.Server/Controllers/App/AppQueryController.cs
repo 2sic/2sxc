@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Repository;
 using ToSic.Eav.Run;
@@ -12,15 +11,15 @@ using ToSic.Sxc.WebApi.App;
 
 namespace ToSic.Sxc.OqtaneModule.Server.Controllers
 {
-    [Route(WebApiConstants.WebApiRoot + "/app/{appPath}/query/")]
+    [Route(WebApiConstants.WebApiStateRoot + "/app/{appPath}/query/")]
     [ApiController]
     public class AppQueryController : SxcStatefulControllerBase
     {
         #region DI / Constructor
         protected override string HistoryLogName => "App.AppQry";
 
-        public AppQueryController(SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver, IHttpContextAccessor httpContextAccessor, IAliasRepository aliasRepository) :
-            base(sxcOqtane, zoneMapper, tenantResolver, httpContextAccessor, aliasRepository) { }
+        public AppQueryController(SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver) :
+            base(sxcOqtane, zoneMapper, tenantResolver) { }
 
         #endregion
 
