@@ -9,11 +9,13 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.OqtaneModule.Server.Code;
 using ToSic.Sxc.OqtaneModule.Server.Page;
 using ToSic.Sxc.OqtaneModule.Server.Run;
+using ToSic.Sxc.OqtaneModule.Server.Wip;
 using ToSic.Sxc.OqtaneModule.Shared.Dev;
+using ToSic.Sxc.OqtaneModule.Shared.Run;
 
 namespace ToSic.Sxc.OqtaneModule.Server
 {
-    public class SxcOqtane: HasLog
+    public class SxcOqtane: HasLog, IRenderTestIds
     {
         #region Constructor and DI
         
@@ -34,13 +36,19 @@ namespace ToSic.Sxc.OqtaneModule.Server
 
         public HtmlString Render(InstanceId id)
         {
+            var result = RenderString(id);
+            return new HtmlString(result);
+        }
+
+        public string RenderString(InstanceId id)
+        {
             var blockBuilder = CreateBlock(id.Zone, id.Page, id.Container, id.App, id.Block, Log);
-            
+
             var result = blockBuilder.BlockBuilder.Render();
 
             // todo: set parameters for loading scripts etc.
             //PageProperties.Headers += "hello!!!";
-            return new HtmlString(result);
+            return result;
         }
 
         public DynamicCodeRoot CreateDynCode(InstanceId id, ILog log) =>
@@ -60,7 +68,8 @@ namespace ToSic.Sxc.OqtaneModule.Server
         public InstanceContext CreateContext(HttpContext http, int zoneId, int pageId, int containerId, int appId,
             Guid blockGuid)
             => new InstanceContext(
-                _zoneMapper.TenantOfZone(zoneId),
+                new WipTenant(http).Init(zoneId), 
+                //_zoneMapper.TenantOfZone(zoneId),
                 new OqtanePage(pageId, null),
                 new OqtaneContainer(tenantId: zoneId, id: containerId, appId: appId, block: blockGuid),
                 new OqtaneUser(WipConstants.NullUser)

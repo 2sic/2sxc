@@ -10,6 +10,7 @@ using ToSic.Sxc.OqtaneModule.Server.Code;
 using ToSic.Sxc.OqtaneModule.Server.Controllers;
 using ToSic.Sxc.OqtaneModule.Server.Page;
 using ToSic.Sxc.OqtaneModule.Server.Run;
+using ToSic.Sxc.OqtaneModule.Shared.Run;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 
@@ -51,6 +52,8 @@ namespace ToSic.Sxc.OqtaneModule.Server
             //sc.AddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
             //sc.AddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
 
+            // 2020-10-22 2dm test
+            services.AddTransient<IRenderTestIds, SxcOqtane>();
 
             return services;
         }

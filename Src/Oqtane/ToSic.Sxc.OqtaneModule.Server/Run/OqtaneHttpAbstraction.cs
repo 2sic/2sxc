@@ -94,6 +94,7 @@ namespace ToSic.Sxc.Web
         public string ToAbsolute(string virtualPath)
         {
 //#if NETSTANDARD
+            //return _hostingEnvironment
             return _urlHelper.Content(virtualPath);
 //#else
 //            //return VirtualPathUtility.ToAbsolute(virtualPath);

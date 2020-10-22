@@ -20,15 +20,24 @@ namespace ToSic.Sxc.OqtaneModule.Server.Run
         /// <summary>
         /// Constructor for DI
         /// </summary>
-        public OqtaneTenantSite(ISiteRepository siteRepository) : base(new Site())
+        public OqtaneTenantSite(ISiteRepository siteRepository, ITenantResolver tenantResolver) : base(null)
         {
             _siteRepository = siteRepository;
+            _tenantResolver = tenantResolver;
         }
         private readonly ISiteRepository _siteRepository;
+        private readonly ITenantResolver _tenantResolver;
 
         public OqtaneTenantSite(Site settings) : base(settings)
         {
         }
+
+        public override Site UnwrappedContents
+        {
+            get => _unwrapped ??= _siteRepository.GetSite(_tenantResolver.GetAlias().SiteId);
+            protected set => _unwrapped = value;
+        }
+        private Site _unwrapped;
 
 
         public override ITenant Init(int siteId)

@@ -16,7 +16,7 @@ using ToSic.Sxc.WebApi.App;
 namespace ToSic.Sxc.OqtaneModule.Server.Controllers
 {
     [ApiController]
-    [Route(WebApiConstants.WebApiRoot + "/app/{appPath}/content/")]
+    [Route( "{alias}/" + WebApiConstants.WebApiRoot + "/app/{appPath}/content/")]
     public class AppContentController: SxcStatefulControllerBase
     {
         #region DI / Constructor
