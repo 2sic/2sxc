@@ -16,23 +16,27 @@
 @inject ISxcService SxcService
 @inject NavigationManager NavigationManager
 
-<h2>State of App 4 (Blog)</h2>
-
-<ol>
-    <li>
-        Timestamp : @(ToSic.Eav.Apps.State.Get(4).CacheTimestamp)
-    </li>
-</ol>
-
 <h2>
     Test API Insights
 </h2>
 
 <ol>
     <li>
-        <a href="/@WebApiConstants.WebApiRoot/insights/help">Insights Help</a>
+        <a href="/@WebApiConstants.WebApiRoot/insights/help" target="_new">Insights Help</a>
     </li>
 </ol>
+
+<h2>State of App 4 (Blog)</h2>
+
+<ol>
+    <li>
+        Timestamp : @(ToSic.Eav.Apps.State.Get(4).CacheTimestamp)
+    </li>
+    <li>
+        Items in it : @(ToSic.Eav.Apps.State.Get(4).List.Count())
+    </li>
+</ol>
+
 
 <h3>Alias</h3>
 <pre>@JsonSerializer.Serialize(PageState.Alias, jsonSerializerOptions)</pre>

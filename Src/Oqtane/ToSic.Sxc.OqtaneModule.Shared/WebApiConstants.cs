@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ToSic.Sxc.OqtaneModule.Client
+namespace ToSic.Sxc.OqtaneModule
 {
     public class WebApiConstants /*: ToSic.Sxc.WebApi.WebApiConstants*/
     {
