@@ -6,6 +6,7 @@ using Oqtane.Repository;
 using ToSic.Eav.Data;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi;
+using ToSic.Sxc.OqtaneModule.Server.Repository;
 using ToSic.Sxc.WebApi.App;
 
 
@@ -21,8 +22,8 @@ namespace ToSic.Sxc.OqtaneModule.Server.Controllers
         #region DI / Constructor
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "AppCnt";
 
-        public AppContentController(SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver) :
-            base(sxcOqtane, zoneMapper, tenantResolver) { }
+        public AppContentController(SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver, IUserResolver userResolver) :
+            base(sxcOqtane, zoneMapper, tenantResolver, userResolver) { }
         #endregion
 
         //private IInstanceContext GetContext()

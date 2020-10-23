@@ -22,7 +22,7 @@ namespace ToSic.Sxc.OqtaneModule.Shared.Dev
 
         // Token app here: http://2sexycontent.2dm.2sic/features/Tokens
         public static InstanceId Token => Dev4Spm
-            ? null
+            ? new InstanceId(2, 92, 18, 428, new Guid("7e4dfd75-4158-44cd-a08f-d3078f9bd3ff"))
             : new InstanceId(128, 4062, 1262,9170, new Guid("584b7398-8517-4bdf-b05d-71d64b935f4f"));
 
         public static List<InstanceId> FakeDb = new List<InstanceId>

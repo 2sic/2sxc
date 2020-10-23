@@ -6,6 +6,7 @@ using Oqtane.Repository;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.OqtaneModule.Server.Repository;
 using ToSic.Sxc.OqtaneModule.Server.Run;
 using ToSic.Sxc.OqtaneModule.Shared.Dev;
 
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.OqtaneModule.Server.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IAliasRepository _aliasRepository;
 
-        protected SxcStatefulControllerBase(SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver)
+        protected SxcStatefulControllerBase(SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver, IUserResolver userResolver) : base(userResolver)
         {
             _sxcOqtane = sxcOqtane;
             _tenantResolver = tenantResolver;

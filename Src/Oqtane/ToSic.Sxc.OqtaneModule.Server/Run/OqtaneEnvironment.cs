@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
+using ToSic.Sxc.OqtaneModule.Server.Repository;
 using ToSic.Sxc.OqtaneModule.Shared.Dev;
 using ToSic.Sxc.Web;
 
@@ -8,12 +9,14 @@ namespace ToSic.Sxc.OqtaneModule.Server.Run
 {
     public class OqtaneEnvironment : HasLog, IAppEnvironment
     {
-        public OqtaneEnvironment(IHttp http, IZoneMapper zoneMapper) : base("Mvc.Enviro")
+        public OqtaneEnvironment(IHttp http, IZoneMapper zoneMapper, IUserResolver userResolver) : base("Mvc.Enviro")
         {
             _http = http;
             ZoneMapper = zoneMapper;
+            _userResolver = userResolver;
         }
         private readonly IHttp _http;
+        private readonly IUserResolver _userResolver;
 
         public IAppEnvironment Init(ILog parent)
         {
@@ -25,7 +28,7 @@ namespace ToSic.Sxc.OqtaneModule.Server.Run
 
         public IZoneMapper ZoneMapper { get; }
 
-        public IUser User { get; } = new OqtaneUser(WipConstants.NullUser);
+        public IUser User => new OqtaneUser(_userResolver.GetUser());
 
         public IPagePublishing PagePublishing => Eav.Factory.Resolve<IPagePublishing>().Init(Log);
 

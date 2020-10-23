@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Models;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.OqtaneModule.Server.Repository;
 using ToSic.Sxc.OqtaneModule.Server.Run;
 using Log = ToSic.Eav.Logging.Simple.Log;
 
@@ -13,7 +14,9 @@ namespace ToSic.Sxc.OqtaneModule.Server.Controllers
 {
     public abstract class SxcStatelessControllerBase : ControllerBase, IHasLog
     {
-        protected SxcStatelessControllerBase()
+        private readonly IUserResolver _userResolver;
+
+        protected SxcStatelessControllerBase(IUserResolver userResolver)
         {
             // ReSharper disable once VirtualMemberCallInConstructor
             // todo: redesign so it works - in .net core the HttpContext isn't ready in the constructor
@@ -25,6 +28,7 @@ namespace ToSic.Sxc.OqtaneModule.Server.Controllers
             _logWrapper = new LogWrapper(Log);
             // todo: get this to work
             // ControllerContext.HttpContext.Response.RegisterForDispose(_logWrapper);
+            _userResolver = userResolver;
         }
 
         #region Dummy Content-Block, as still stateless
@@ -58,15 +62,7 @@ namespace ToSic.Sxc.OqtaneModule.Server.Controllers
 
         public OqtaneUser GetUser()
         {
-            var user = new User { IsAuthenticated = User.Identity.IsAuthenticated, Username = "", UserId = -1, Roles = "" };
-            if (!user.IsAuthenticated) return new OqtaneUser(user);
-
-            user.Username = User.Identity.Name;
-            user.UserId = int.Parse(User.Claims.First(item => item.Type == ClaimTypes.PrimarySid).Value);
-            var roles = User.Claims.Where(item => item.Type == ClaimTypes.Role).Aggregate("", (current, claim) => current + (claim.Value + ";"));
-            if (roles != "") roles = ";" + roles;
-            user.Roles = roles;
-            return new OqtaneUser(user);
+            return new OqtaneUser(_userResolver.GetUser());
         }
     }
 

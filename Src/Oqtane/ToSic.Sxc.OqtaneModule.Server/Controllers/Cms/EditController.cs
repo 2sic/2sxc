@@ -6,6 +6,7 @@ using Oqtane.Repository;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Sxc.OqtaneModule.Server.Repository;
 using ToSic.Sxc.WebApi.Cms;
 
 namespace ToSic.Sxc.OqtaneModule.Server.Controllers
@@ -17,8 +18,8 @@ namespace ToSic.Sxc.OqtaneModule.Server.Controllers
         #region DI
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "UiCntr";
 
-        public EditController(OqtaneContextBuilder contextBuilder, SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver)
-            : base(sxcOqtane, zoneMapper, tenantResolver)
+        public EditController(OqtaneContextBuilder contextBuilder, SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver, IUserResolver userResolver)
+            : base(sxcOqtane, zoneMapper, tenantResolver, userResolver)
         {
             _contextBuilder = contextBuilder;
         }

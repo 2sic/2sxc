@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using ToSic.Sxc.OqtaneModule.Server.Repository;
 using ToSic.Sxc.Web.WebApi.System;
 
 namespace ToSic.Sxc.OqtaneModule.Server.Controllers
@@ -8,6 +9,9 @@ namespace ToSic.Sxc.OqtaneModule.Server.Controllers
     [ApiController]
     public class InsightsController : SxcStatelessControllerBase
     {
+        public InsightsController(IUserResolver userResolver) : base(userResolver) { }
+
+
         #region Logging aspects
 
         protected override string HistoryLogName => "Api.Debug";
@@ -34,7 +38,6 @@ namespace ToSic.Sxc.OqtaneModule.Server.Controllers
         protected Insights Insights =>
             _insights ??= new Insights(Log, ThrowIfNotSuperuser, (string msg) => new Exception(msg));
         private Insights _insights;
-
 
         private void ThrowIfNotSuperuser()
         {

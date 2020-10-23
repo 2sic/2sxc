@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Repository;
 using ToSic.Eav.Run;
+using ToSic.Sxc.OqtaneModule.Server.Repository;
 using ToSic.Sxc.WebApi.App;
 
 // TODO: #MissingFeature
@@ -18,8 +19,8 @@ namespace ToSic.Sxc.OqtaneModule.Server.Controllers
         #region DI / Constructor
         protected override string HistoryLogName => "App.AppQry";
 
-        public AppQueryController(SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver) :
-            base(sxcOqtane, zoneMapper, tenantResolver) { }
+        public AppQueryController(SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver, IUserResolver userResolver) :
+            base(sxcOqtane, zoneMapper, tenantResolver, userResolver) { }
 
         #endregion
 
