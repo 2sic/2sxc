@@ -73,13 +73,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Website", "Mvc\Website\Webs
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Oqtane", "Oqtane", "{C2BEB114-B1DB-404D-8442-A75809059619}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.OqtaneModule.Server", "Oqtane\ToSic.Sxc.OqtaneModule.Server\ToSic.Sxc.OqtaneModule.Server.csproj", "{8DDD9ECE-28B0-4714-AD1A-B24FEF0C6785}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Oqt.Server", "Oqtane\ToSic.Sxc.Oqt.Server\ToSic.Sxc.Oqt.Server.csproj", "{8DDD9ECE-28B0-4714-AD1A-B24FEF0C6785}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.OqtaneModule.Client", "Oqtane\ToSic.Sxc.OqtaneModule.Client\ToSic.Sxc.OqtaneModule.Client.csproj", "{5D7BC881-21DD-4123-985E-BBFFD8D683F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Oqt.Client", "Oqtane\ToSic.Sxc.Oqt.Client\ToSic.Sxc.Oqt.Client.csproj", "{5D7BC881-21DD-4123-985E-BBFFD8D683F3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.OqtaneModule.Shared", "Oqtane\ToSic.Sxc.OqtaneModule.Shared\ToSic.Sxc.OqtaneModule.Shared.csproj", "{4E24511B-CF81-4F93-AF8F-D41D306133E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Oqt.Shared", "Oqtane\ToSic.Sxc.Oqt.Shared\ToSic.Sxc.Oqt.Shared.csproj", "{4E24511B-CF81-4F93-AF8F-D41D306133E9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.OqtaneModule.Package", "Oqtane\ToSic.Sxc.OqtaneModule.Package\ToSic.Sxc.OqtaneModule.Package.csproj", "{8885C3AD-A7D0-4725-BF28-23C55522083E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Oqt.Package", "Oqtane\ToSic.Sxc.Oqt.Package\ToSic.Sxc.Oqt.Package.csproj", "{8885C3AD-A7D0-4725-BF28-23C55522083E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oqtane.Client", "..\..\octane\oqtane.framework\Oqtane.Client\Oqtane.Client.csproj", "{0A9C208C-41BA-49DA-B3DD-DE5FD20CCE9E}"
 EndProject
