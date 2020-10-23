@@ -1,8 +1,10 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Html;
 using ToSic.Eav.Logging;
-
-//using ToSic.Razor.Blade;
+using ToSic.Razor.Blade;
+using ToSic.Sxc.Edit;
+using ToSic.Sxc.OqtaneModule.Shared;
+using ToSic.Sxc.OqtaneModule.Shared.Dev;
 
 namespace ToSic.Sxc.OqtaneModule.Server.Page
 {
@@ -31,11 +33,11 @@ namespace ToSic.Sxc.OqtaneModule.Server.Page
             var headers = new StringBuilder();
             headers.AppendLine("<!-- 2sxc headers -->");
             // TODO #Oqtane
-            //if (AddContextMeta) headers.AppendLine(ContextHeader());
+            if (AddContextMeta) headers.AppendLine(ContextHeader());
 
-            //if(AddJsCore) headers.AppendLine(Tag.Script().Src($"{MvcConstants.UiRoot}{InpageCms.CoreJs}").ToString());
-            //if(AddCmsJs) headers.AppendLine(Tag.Script().Src($"{MvcConstants.UiRoot}{InpageCms.EditJs}").ToString());
-            //if(AddCmsCss) headers.AppendLine(Tag.Link().Href($"{MvcConstants.UiRoot}{InpageCms.EditCss}").Rel("stylesheet").ToString());
+            if (AddJsCore) headers.AppendLine(Tag.Script().Src($"{OqtConstants.UiRoot}{InpageCms.CoreJs}").ToString());
+            if (AddCmsJs) headers.AppendLine(Tag.Script().Src($"{OqtConstants.UiRoot}{InpageCms.EditJs}").ToString());
+            if (AddCmsCss) headers.AppendLine(Tag.Link().Href($"{OqtConstants.UiRoot}{InpageCms.EditCss}").Rel("stylesheet").ToString());
             headers.AppendLine($"<meta />{Headers}<!-- end -->");
             return new HtmlString(headers.ToString());
         }
@@ -46,20 +48,20 @@ namespace ToSic.Sxc.OqtaneModule.Server.Page
         }
 
 
-            // TODO: #Oqtane
-        //public string ContextHeader()
-        //{
-        //    var wrapLog = Log.Call<string>();
-            
-        //    var pageId = 0;
-        //    var siteRoot = MvcConstants.SiteRoot;
-        //    var apiRoot = siteRoot + WebApi.WebApiConstants.WebApiRoot + "/";
-        //    var json = InpageCms.JsApiJson(pageId, siteRoot, apiRoot, AntiForgeryToken(), MvcConstants.UiRoot);
+        // TODO: #Oqtane
+        public string ContextHeader()
+        {
+            var wrapLog = Log.Call<string>();
 
-        //    var meta = Tag.Meta().Name(InpageCms.MetaName).Content(json).ToString();
+            var pageId = 0;
+            var siteRoot = OqtConstants.SiteRoot;
+            var apiRoot = siteRoot + WipConstants.WebApiPrefixFor1 + OqtaneModule.WebApiConstants.WebApiRoot + "/";
+            var json = InpageCms.JsApiJson(pageId, siteRoot, apiRoot, AntiForgeryToken(), OqtConstants.UiRoot);
 
-        //    return wrapLog(meta, meta);
-        //}
+            var meta = Tag.Meta().Name(InpageCms.MetaName).Content(json).ToString();
+
+            return wrapLog(meta, meta);
+        }
 
         private string AntiForgeryToken()
         {

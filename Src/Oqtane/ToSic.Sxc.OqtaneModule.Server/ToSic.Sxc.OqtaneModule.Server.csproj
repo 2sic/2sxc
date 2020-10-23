@@ -52,4 +52,10 @@
   <ItemGroup>
     <Folder Include="RazorPartialToString\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ToSic.Razor">
+      <HintPath>..\..\..\Dependencies\RazorBlade\netstandard2.0\ToSic.Razor.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

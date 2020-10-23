@@ -35,5 +35,7 @@ namespace ToSic.Sxc.OqtaneModule.Shared.Dev
         public static int NeedSiteFromHeader = 2;
         public static IPage NullPage = new PageNull();
         public static IContainer NullContainer = new ContainerNull();
+
+        public static string WebApiPrefixFor1 = "1/";
     }
 }
