@@ -10,11 +10,13 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private readonly IWebHostEnvironment _hostingEnvironment;
 
 
-        public string FullAppPath(string virtualPath) => Path.Combine(_hostingEnvironment.ContentRootPath, virtualPath);
+        public string FullAppPath(string virtualPath) => FullContentPath(virtualPath);
 
-        public string FullSystemPath(string virtualPath) => Path.Combine(_hostingEnvironment.WebRootPath, virtualPath);
 
-        public string FullContentPath(string virtualPath) => Path.Combine(_hostingEnvironment.ContentRootPath, virtualPath);
+        public string FullSystemPath(string virtualPath) => Path.Combine(_hostingEnvironment.WebRootPath, NoLeadingSlashes(virtualPath));
+
+        public string FullContentPath(string virtualPath) => Path.Combine(_hostingEnvironment.ContentRootPath, "Content", NoLeadingSlashes(virtualPath));
+        private static string NoLeadingSlashes(string path) => path.TrimStart('/').TrimStart('\\');
     }
 
 }

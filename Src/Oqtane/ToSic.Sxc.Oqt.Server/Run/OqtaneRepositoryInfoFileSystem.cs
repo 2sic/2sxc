@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public override List<string> RootPaths => new List<string>
         {
-            _serverPaths.FullSystemPath("wwwroot/Modules/ToSic.Sxc/.data"),
+            _serverPaths.FullSystemPath("Modules/ToSic.Sxc/.data"),
             //@"c:\Projects\2sxc\octane\oqtane.framework\Oqtane.Server\wwwroot\Modules\ToSic.Sxc\.data"
             //"C:\\Projects\\poc-2sxc-mvc-website\\Website\\wwwroot\\System\\Sxc\\.data"
             //BuildPath(Constants.FolderData),

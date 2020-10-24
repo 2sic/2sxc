@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Shared.Dev
 
         public static string ContentRoot = "/content-wip/";
 
-        public static string AppRootPublicBase = "/app-root-public/";
+        public static string AppRootPublicBase = "Tenants/1/Sites/1/";
 
         public static string HttpUrlRoot = "http://test-test/";
 

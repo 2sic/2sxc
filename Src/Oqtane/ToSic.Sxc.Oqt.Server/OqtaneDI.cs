@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Oqt.Server
     {
         public static IServiceCollection AddSxcOqtane(this IServiceCollection services)
         {
-            services.AddScoped<ILinkPaths, LinkPaths>();
+            services.AddScoped<ILinkPaths, OqtaneLinkPaths>();
             services.AddTransient<IServerPaths, OqtaneServerPaths>();
 
 
