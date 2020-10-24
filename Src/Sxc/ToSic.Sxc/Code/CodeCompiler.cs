@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 #if NET451
 using System.Web.Compilation;
@@ -112,7 +113,7 @@ namespace ToSic.Sxc.Code
                 // if necessary, add trailing slash
                 if (!relativePath.EndsWith("/"))
                     relativePath += "/";
-                virtualPath = Eav.Factory.Resolve<IHttp>().Combine(relativePath, virtualPath);
+                virtualPath = Eav.Factory.Resolve<ILinkPaths>().ToAbsolute(relativePath, virtualPath);
                 Log.Add($"final virtual path: '{virtualPath}'");
             }
 

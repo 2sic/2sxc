@@ -1,5 +1,6 @@
 ﻿using System;
 using DotNetNuke.Services.Exceptions;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.Web
@@ -10,8 +11,7 @@ namespace ToSic.Sxc.Dnn.Web
         /// Constructor for IoC
         /// You must always call Init afterwards
         /// </summary>
-        /// <param name="http"></param>
-        public DnnRenderingHelper(IHttp http) : base(http, "Dnn.Render") { }
+        public DnnRenderingHelper(ILinkPaths linkPaths) : base(linkPaths, "Dnn.Render") { }
 
         /// <summary>
         /// DNN specific implementation to log errors to the DNN event log

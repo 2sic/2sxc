@@ -41,16 +41,15 @@ namespace ToSic.Sxc.Engines
         /// <summary>
         /// Empty constructor, so it can be used in dependency injection
         /// </summary>
-        protected EngineBase(IHttp http, IServerPaths serverPaths, TemplateHelpers templateHelpers) : base("Sxc.EngBas")
+        protected EngineBase(IServerPaths serverPaths, ILinkPaths linkPaths, TemplateHelpers templateHelpers) : base("Sxc.EngBas")
         {
-            Http = http;
             ServerPaths = serverPaths;
+            _linkPaths = linkPaths;
             _templateHelpers = templateHelpers;
         }
 
-        protected IHttp Http { get; }
-
         protected readonly IServerPaths ServerPaths;
+        private readonly ILinkPaths _linkPaths;
         private readonly TemplateHelpers _templateHelpers;
 
         #endregion
@@ -66,7 +65,7 @@ namespace ToSic.Sxc.Engines
             var root = _templateHelpers.Init(Block.App).AppPathRoot(view.Location);
             var subPath = view.Path;
             var templatePath = TryToFindPolymorphPath(root, view, subPath) 
-                               ?? Http.Combine(root + "/", subPath);
+                               ?? _linkPaths.ToAbsolute(root + "/", subPath);
 
             // Throw Exception if Template does not exist
             if (!File.Exists(ServerPaths.FullAppPath(templatePath)))
@@ -97,7 +96,7 @@ namespace ToSic.Sxc.Engines
             if (edition == null) return wrapLog("no edition detected", null);
             Log.Add($"edition {edition} detected");
 
-            var testPath = Http.Combine($"{root}/{edition}/", subPath);
+            var testPath = _linkPaths.ToAbsolute($"{root}/{edition}/", subPath);
             if (File.Exists(ServerPaths.FullAppPath(testPath)))
             {
                 view.Edition = edition;
@@ -109,7 +108,7 @@ namespace ToSic.Sxc.Engines
             if (firstSlash == -1) return wrapLog($"edition {edition} not found", null);
 
             subPath = subPath.Substring(firstSlash + 1);
-            testPath = Http.Combine($"{root}/{edition}/", subPath);
+            testPath = _linkPaths.ToAbsolute($"{root}/{edition}/", subPath);
             if (File.Exists(ServerPaths.FullAppPath(testPath)))
             {
                 view.Edition = edition;

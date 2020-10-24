@@ -23,19 +23,19 @@ namespace ToSic.Sxc.Web
 
         List<KeyValuePair<string, string>> QueryStringKeyValuePairs();
 
-        /// <summary>
-        /// Get an absolute path like /Portals/xyz
-        /// </summary>
-        /// <param name="virtualPath"></param>
-        /// <returns></returns>
-        string ToAbsolute(string virtualPath);
+        ///// <summary>
+        ///// Get an absolute path like /Portals/xyz
+        ///// </summary>
+        ///// <param name="virtualPath"></param>
+        ///// <returns></returns>
+        //string ToAbsolute(string virtualPath);
 
-        /// <summary>
-        /// Get an Absolute path like /portal/xyz and combine with another relative path
-        /// </summary>
-        /// <param name="basePath"></param>
-        /// <param name="relativePath"></param>
-        /// <returns></returns>
-        string Combine(string basePath, string relativePath);
+        ///// <summary>
+        ///// Get an Absolute path like /portal/xyz and combine with another relative path
+        ///// </summary>
+        ///// <param name="basePath"></param>
+        ///// <param name="relativePath"></param>
+        ///// <returns></returns>
+        //string Combine(string basePath, string relativePath);
     }
 }

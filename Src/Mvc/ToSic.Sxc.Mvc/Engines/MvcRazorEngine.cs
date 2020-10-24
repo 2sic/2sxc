@@ -7,7 +7,7 @@ using ToSic.Eav.Run;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Mvc.Code;
 using ToSic.Sxc.Mvc.RazorPages;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Mvc.Engines
 {
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Mvc.Engines
     {
         #region Constructor / DI
 
-        public MvcRazorEngine(IHttp http, IServerPaths serverPaths, TemplateHelpers templateHelpers) : base(http, serverPaths, templateHelpers) { }
+        public MvcRazorEngine(IServerPaths serverPaths, ILinkPaths linkPaths, TemplateHelpers templateHelpers) : base(serverPaths, linkPaths, templateHelpers) { }
 
         #endregion
 

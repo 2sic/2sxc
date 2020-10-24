@@ -12,6 +12,7 @@ using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Engines
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.Engines
     {
         #region Constructor / DI
 
-        public RazorEngine(IHttp http, IServerPaths serverPaths, TemplateHelpers templateHelpers) : base(http, serverPaths, templateHelpers) { }
+        public RazorEngine(IServerPaths serverPaths, ILinkPaths linkPaths, TemplateHelpers templateHelpers) : base(serverPaths, linkPaths, templateHelpers) { }
 
         #endregion
 

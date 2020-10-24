@@ -16,10 +16,11 @@ namespace ToSic.Sxc.Engines
         public const string TokenReplace = "Token";
 
         public IApp App;
-        public TemplateHelpers(IHttp http, IServerPaths serverPaths)
+        public TemplateHelpers(IHttp http, IServerPaths serverPaths, ILinkPaths linkPaths)
         {
             _http = http;
             _serverPaths = serverPaths;
+            _linkPaths = linkPaths;
         }
 
         public TemplateHelpers Init(IApp app)
@@ -32,6 +33,7 @@ namespace ToSic.Sxc.Engines
         private IHttp _http;
         protected IServerPaths ServerPaths => _serverPaths ?? (_serverPaths = Factory.Resolve<IServerPaths>());
         private IServerPaths _serverPaths;
+        private readonly ILinkPaths _linkPaths;
 
         /// <summary>
         /// Creates a directory and copies the needed web.config for razor files
@@ -72,7 +74,7 @@ namespace ToSic.Sxc.Engines
         public string AppPathRoot(string locationId, bool fullPath = false)
         {
             var rootFolder = locationId == Settings.TemplateLocations.HostFileSystem
-                ? _http.ToAbsolute(Settings.PortalHostDirectory + Settings.AppsRootFolder)
+                ? _linkPaths.ToAbsolute(Settings.PortalHostDirectory, Settings.AppsRootFolder)
                 : App.Tenant.AppsRoot;
             rootFolder += "\\" + App.Folder;
             if (fullPath) rootFolder = ServerPaths.FullAppPath(rootFolder);

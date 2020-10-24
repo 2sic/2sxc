@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.Web.JsContext;
 
 namespace ToSic.Sxc.Web
@@ -12,17 +13,14 @@ namespace ToSic.Sxc.Web
     {
         #region Constructors and DI
 
-        protected RenderingHelper(IHttp http, string logName) : base(logName)
-        {
-            Http = http;
-        }
+        protected RenderingHelper(ILinkPaths linkPaths, string logName) : base(logName) => _linkPaths = linkPaths;
 
-        protected readonly IHttp Http;
+        private readonly ILinkPaths _linkPaths;
 
         public IRenderingHelper Init(IBlock block, ILog parentLog)
         {
             this.LinkLog(parentLog);
-            var appRoot = Http.ToAbsolute("~/");
+            var appRoot = _linkPaths.ToAbsolute("~/");
             Block = block;
             Context = block.Context;
             AppRootPath = appRoot;

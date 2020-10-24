@@ -1,11 +1,12 @@
 ﻿using System;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Mvc.Run
 {
     public class MvcRenderingHelper: RenderingHelper
     {
-        public MvcRenderingHelper(IHttp http) : base(http, "Mvc.RndHlp") { }
+        public MvcRenderingHelper(ILinkPaths linkPaths) : base(linkPaths, "Mvc.RndHlp") { }
 
         protected override void LogToEnvironmentExceptions(Exception ex)
         {

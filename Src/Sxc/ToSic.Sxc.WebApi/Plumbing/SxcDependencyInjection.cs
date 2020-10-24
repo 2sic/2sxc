@@ -17,6 +17,7 @@ namespace ToSic.Sxc.WebApi.Plumbing
         {
             services.TryAddTransient<Eav.Conversion.EntitiesToDictionary, DataToDictionary>();
             services.TryAddScoped<IHttp, HttpAbstraction>();
+            services.TryAddScoped<ILinkPaths, LinkPaths>();
             services.TryAddTransient<IServerPaths, ServerPaths>();
             services.TryAddTransient<XmlImportWithFiles, XmlImportFull>();
             services.TryAddTransient<TemplateHelpers, TemplateHelpers>();

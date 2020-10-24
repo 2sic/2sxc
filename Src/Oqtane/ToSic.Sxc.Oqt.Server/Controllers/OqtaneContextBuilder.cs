@@ -3,16 +3,16 @@ using ToSic.Eav.Apps.Run;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Oqt.Shared.Dev;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.Context;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     public class OqtaneContextBuilder: ContextBuilderBase
     {
-        public OqtaneContextBuilder(IHttp http)
+        public OqtaneContextBuilder(ILinkPaths linkPaths)
         {
-            _http = http;
+            _linkPaths = linkPaths;
         }
 
         internal OqtaneContextBuilder Init(IBlock block)
@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             return this;
         }
 
-        private readonly IHttp _http;
+        private readonly ILinkPaths _linkPaths;
         private IInstanceContext _context;
 
 
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected override WebResourceDto GetSystem() =>
             new WebResourceDto
             {
-                Url = _http.ToAbsolute("~/")
+                Url = _linkPaths.ToAbsolute("~/")
             };
 
         protected override WebResourceDto GetSite() =>

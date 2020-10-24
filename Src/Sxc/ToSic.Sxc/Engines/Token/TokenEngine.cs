@@ -13,7 +13,6 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Engines.Token;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Run;
-using ToSic.Sxc.Web;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Engines
@@ -76,7 +75,7 @@ namespace ToSic.Sxc.Engines
 
         #region Constructor / DI
 
-        public TokenEngine(IHttp http, IServerPaths serverPaths, TemplateHelpers templateHelpers) : base(http, serverPaths, templateHelpers) { }
+        public TokenEngine(IServerPaths serverPaths, ILinkPaths linkPaths, TemplateHelpers templateHelpers) : base(serverPaths, linkPaths, templateHelpers) { }
 
         #endregion
 

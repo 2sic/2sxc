@@ -6,6 +6,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 using EavApp = ToSic.Eav.Apps.App;
 
@@ -18,6 +19,8 @@ namespace ToSic.Sxc.Apps
     [PublicApi_Stable_ForUseInYourCode]
     public class App : EavApp, IApp
     {
+        private readonly ILinkPaths _linkPaths;
+
         #region Dynamic Properties: Configuration, Settings, Resources
         /// <inheritdoc />
         public AppConfiguration Configuration => _appConfig
@@ -73,9 +76,9 @@ namespace ToSic.Sxc.Apps
 
         #region DI Constructors
 
-        public App(IAppEnvironment appEnvironment, IServerPaths serverPaths, ITenant tenant) : base(appEnvironment, serverPaths, tenant)
+        public App(IAppEnvironment appEnvironment, IServerPaths serverPaths, ITenant tenant, ILinkPaths linkPaths) : base(appEnvironment, serverPaths, tenant)
         {
-
+            _linkPaths = linkPaths;
         }
 
         public App PreInit(ITenant tenant)
@@ -111,7 +114,7 @@ namespace ToSic.Sxc.Apps
 
         #region Paths
         /// <inheritdoc />
-        public string Path => _path ?? (_path = Factory.Resolve<IHttp>().ToAbsolute(GetRootPath()));
+        public string Path => _path ?? (_path = _linkPaths.ToAbsolute(GetRootPath()));
         private string _path;
 
         /// <inheritdoc />
