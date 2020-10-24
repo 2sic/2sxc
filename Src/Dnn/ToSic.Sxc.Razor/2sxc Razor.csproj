@@ -102,6 +102,7 @@
     <Compile Include="Dnn\CodeManager.cs" />
     <Compile Include="Dnn\RazorComponentCode.cs" />
     <Compile Include="Dnn\RazorComponent_Code.cs" />
+    <Compile Include="Dnn\Run\DnnEngineFinder.cs" />
     <Compile Include="Dnn\Web\IRazorComponent.cs" />
     <Compile Include="Dnn\Web\IHtmlHelper.cs" />
     <Compile Include="Dnn\RazorComponent.cs" />

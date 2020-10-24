@@ -25,6 +25,7 @@ using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.Run;
@@ -135,6 +136,9 @@ namespace ToSic.SexyContent
 
             // new in 11.07 - exception logger
             services.AddTransient<IEnvironmentLogger, DnnEnvironmentLogger>();
+
+            // new in 11.08 - provide Razor Engine
+            services.AddTransient<IEngineFinder, DnnEngineFinder>();
 
             // add page publishing
             services.AddTransient<IPagePublishing, Sxc.Dnn.Cms.DnnPagePublishing>();
