@@ -20,13 +20,15 @@ namespace ToSic.Sxc.Run
         /// DI Constructor
         /// </summary>
         // todo: replace IEnvironment with IHttp ?
-        protected ImportExportEnvironmentBase(IEnvironment environment, ITenant tenant, string logName) : base(logName)
+        protected ImportExportEnvironmentBase(IServerPaths serverPaths, ITenant tenant, string logName) : base(logName)
         {
-            Environment = environment;
+            //Environment = environment;
+            _serverPaths = serverPaths;
             Tenant = tenant;
         }
 
-        protected readonly IEnvironment Environment;
+        //protected readonly IEnvironment Environment;
+        private readonly IServerPaths _serverPaths;
         protected readonly ITenant Tenant;
 
         public IImportExportEnvironment Init(ILog parent)
@@ -60,7 +62,7 @@ namespace ToSic.Sxc.Run
         public string TargetPath(string folder)
         {
             var appPath = Path.Combine(Tenant.AppsRoot, folder);
-            return Environment.MapPath(appPath);
+            return _serverPaths.FullAppPath(appPath);
         }
 
         public abstract void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap);

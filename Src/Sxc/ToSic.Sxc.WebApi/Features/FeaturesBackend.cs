@@ -4,7 +4,7 @@ using System.IO;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.Validation;
 
 
@@ -17,12 +17,13 @@ namespace ToSic.Sxc.WebApi.Features
     {
         #region Constructor / DI
 
-        public FeaturesBackend(IHttp http, IZoneMapper zoneMapper) : base("Bck.Feats")
+        public FeaturesBackend(IServerPaths serverPaths, IZoneMapper zoneMapper) : base("Bck.Feats")
         {
-            _http = http;
+            _serverPaths = serverPaths;
             _zoneMapper = zoneMapper;
         }
-        private readonly IHttp _http;
+
+        private readonly IServerPaths _serverPaths;
         private readonly IZoneMapper _zoneMapper;
 
         public new FeaturesBackend Init(ILog parentLog)
@@ -106,7 +107,7 @@ namespace ToSic.Sxc.WebApi.Features
         {
             try
             {
-                var configurationsPath = _http.MapPath("~/DesktopModules/ToSIC_SexyContent/" + Eav.Configuration.Features.FeaturesPath);
+                var configurationsPath = _serverPaths.FullAppPath("~/DesktopModules/ToSIC_SexyContent/" + Eav.Configuration.Features.FeaturesPath);
 
                 if (!Directory.Exists(configurationsPath)) 
                     Directory.CreateDirectory(configurationsPath);

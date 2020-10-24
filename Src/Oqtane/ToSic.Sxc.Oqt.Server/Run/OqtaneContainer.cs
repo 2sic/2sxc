@@ -34,14 +34,13 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public List<KeyValuePair<string, string>> Parameters
         {
-            get => _parameters ??
-                   (_parameters = Eav.Factory.Resolve<IHttp>().QueryStringKeyValuePairs());
+            get => _parameters ??= Eav.Factory.Resolve<IHttp>().QueryStringKeyValuePairs();
             set => _parameters = value;
         }
         private List<KeyValuePair<string, string>> _parameters;
 
         public IBlockIdentifier BlockIdentifier 
-            => _blockIdentifier ?? (_blockIdentifier = new BlockIdentifier(TenantId, AppId, Block, Guid.Empty));
+            => _blockIdentifier ??= new BlockIdentifier(TenantId, AppId, Block, Guid.Empty);
 
         private IBlockIdentifier _blockIdentifier;
 

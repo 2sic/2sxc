@@ -8,8 +8,8 @@ namespace ToSic.Sxc.Mvc.Run
 {
     public class MvcImportExportEnvironment: ImportExportEnvironmentBase
     {
-        public MvcImportExportEnvironment(IEnvironment environment, ITenant tenant) 
-            : base(environment, tenant, "Mvc.IExEnv")
+        public MvcImportExportEnvironment(IServerPaths serverPaths, ITenant tenant) 
+            : base(serverPaths, tenant, "Mvc.IExEnv")
         {
         }
 

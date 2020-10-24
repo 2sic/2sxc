@@ -2,8 +2,10 @@
 using System.IO;
 using System.Linq;
 using ToSic.Eav;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Engines
@@ -14,9 +16,10 @@ namespace ToSic.Sxc.Engines
         public const string TokenReplace = "Token";
 
         public IApp App;
-        public TemplateHelpers(IHttp http)
+        public TemplateHelpers(IHttp http, IServerPaths serverPaths)
         {
             _http = http;
+            _serverPaths = serverPaths;
         }
 
         public TemplateHelpers Init(IApp app)
@@ -27,7 +30,9 @@ namespace ToSic.Sxc.Engines
 
         protected IHttp Http => _http ?? (_http = Factory.Resolve<IHttp>());
         private IHttp _http;
-        
+        protected IServerPaths ServerPaths => _serverPaths ?? (_serverPaths = Factory.Resolve<IServerPaths>());
+        private IServerPaths _serverPaths;
+
         /// <summary>
         /// Creates a directory and copies the needed web.config for razor files
         /// if the directory does not exist.
@@ -36,8 +41,8 @@ namespace ToSic.Sxc.Engines
         public void EnsureTemplateFolderExists(string templateLocation)
         {
             var portalPath = templateLocation == Settings.TemplateLocations.HostFileSystem 
-                ? Path.Combine(Http.MapPath(Settings.PortalHostDirectory) ?? "", Settings.AppsRootFolder) 
-                : Http.MapPath(App.Tenant.AppsRoot) ?? "";
+                ? Path.Combine(ServerPaths.FullAppPath(Settings.PortalHostDirectory) ?? "", Settings.AppsRootFolder) 
+                : ServerPaths.FullAppPath(App.Tenant.AppsRoot) ?? "";
             var sexyFolderPath = portalPath;
 
             var sexyFolder = new DirectoryInfo(sexyFolderPath);
@@ -47,7 +52,7 @@ namespace ToSic.Sxc.Engines
 
             // Create web.config (copy from DesktopModules folder)
             if (!sexyFolder.GetFiles(Settings.WebConfigFileName).Any())
-                File.Copy(Http.MapPath(Settings.WebConfigTemplatePath), Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
+                File.Copy(ServerPaths.FullSystemPath(Settings.WebConfigTemplatePath), Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
 
             // Create a Content folder (or App Folder)
             if (string.IsNullOrEmpty(App.Folder)) return;
@@ -70,7 +75,7 @@ namespace ToSic.Sxc.Engines
                 ? _http.ToAbsolute(Settings.PortalHostDirectory + Settings.AppsRootFolder)
                 : App.Tenant.AppsRoot;
             rootFolder += "\\" + App.Folder;
-            if (fullPath) rootFolder = _http.MapPath(rootFolder);
+            if (fullPath) rootFolder = ServerPaths.FullAppPath(rootFolder);
             return rootFolder;
         }
 
@@ -78,7 +83,7 @@ namespace ToSic.Sxc.Engines
         {
             var iconFile = ViewPath(view);
             iconFile = ViewIconFileName(iconFile);
-            var exists = File.Exists(_http.MapPath(iconFile));
+            var exists = File.Exists(ServerPaths.FullAppPath(iconFile));
 
             return exists ? iconFile : null;
         }

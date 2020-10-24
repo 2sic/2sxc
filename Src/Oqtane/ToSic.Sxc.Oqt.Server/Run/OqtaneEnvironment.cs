@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public IPagePublishing PagePublishing => Eav.Factory.Resolve<IPagePublishing>().Init(Log);
 
 
-        public string MapPath(string virtualPath) => _http.MapPath(virtualPath);
+        //public string MapPath(string virtualPath) => _http.MapPath(virtualPath);
 
 
 

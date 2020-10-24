@@ -20,7 +20,7 @@ using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.Assets;
 using ToSic.Sxc.WebApi.ImportExport;
 using ToSic.Sxc.WebApi.Validation;
@@ -29,15 +29,15 @@ namespace ToSic.Sxc.WebApi.Views
 {
     internal class ViewsExportImport: HasLog
     {
-        private readonly IHttp _http;
+        private readonly IServerPaths _serverPaths;
         private readonly TemplateHelpers _appHelpers;
         private readonly IEnvironmentLogger _envLogger;
         private ITenant _tenant;
         private IUser _user;
 
-        public ViewsExportImport(IHttp http, TemplateHelpers appHelpers, IEnvironmentLogger envLogger) : base("Bck.Views")
+        public ViewsExportImport(IServerPaths serverPaths, TemplateHelpers appHelpers, IEnvironmentLogger envLogger) : base("Bck.Views")
         {
-            _http = http;
+            _serverPaths = serverPaths;
             _appHelpers = appHelpers;
             _envLogger = envLogger;
         }
@@ -86,7 +86,7 @@ namespace ToSic.Sxc.WebApi.Views
         private void TryAddAsset(BundleEntityWithAssets bundle, string webPath, string relativePath)
         {
             if (string.IsNullOrEmpty(webPath)) return;
-            var realPath = _http.MapPath(webPath);
+            var realPath = _serverPaths.FullAppPath(webPath);
             var jsonAssetMan = new JsonAssets();
             var asset1 = jsonAssetMan.Get(realPath, relativePath);
             bundle.Assets.Add(asset1);

@@ -73,7 +73,7 @@ namespace ToSic.Sxc.Apps
 
         #region DI Constructors
 
-        public App(IAppEnvironment appEnvironment, ITenant tenant) : base(appEnvironment, tenant)
+        public App(IAppEnvironment appEnvironment, IServerPaths serverPaths, ITenant tenant) : base(appEnvironment, serverPaths, tenant)
         {
 
         }

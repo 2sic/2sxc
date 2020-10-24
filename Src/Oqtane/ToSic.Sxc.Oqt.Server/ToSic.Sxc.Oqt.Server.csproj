@@ -14,8 +14,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="RazorPartialToString\IRazorPartialToStringRenderer.cs" />
-    <Compile Remove="RazorPartialToString\RazorPartialToStringRenderer.cs" />
+    <Compile Remove="RazorPartialToString\**" />
+    <Content Remove="RazorPartialToString\**" />
+    <EmbeddedResource Remove="RazorPartialToString\**" />
+    <None Remove="RazorPartialToString\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,10 +49,6 @@
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Oqt.Shared\ToSic.Sxc.Oqt.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="RazorPartialToString\" />
   </ItemGroup>
 
   <ItemGroup>

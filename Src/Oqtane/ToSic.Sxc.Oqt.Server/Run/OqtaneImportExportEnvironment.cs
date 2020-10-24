@@ -8,8 +8,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtaneImportExportEnvironment: ImportExportEnvironmentBase
     {
-        public OqtaneImportExportEnvironment(IEnvironment environment, ITenant tenant) 
-            : base(environment, tenant, "Mvc.IExEnv")
+        public OqtaneImportExportEnvironment(IServerPaths serverPaths, ITenant tenant) 
+            : base(serverPaths, tenant, "Mvc.IExEnv")
         {
         }
 

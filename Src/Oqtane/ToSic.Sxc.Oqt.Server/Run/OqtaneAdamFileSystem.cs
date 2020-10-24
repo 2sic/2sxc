@@ -3,24 +3,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.Web;
-
-// using ToSic.Sxc.Mvc.Web;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtaneFileSystem: HasLog, IAdamFileSystem<string, string>
+    public class OqtaneAdamFileSystem: HasLog, IAdamFileSystem<string, string>
     {
         #region Constructor / DI / Init
 
-        public OqtaneFileSystem(IHttp http) : base("Dnn.FilSys")
-        {
-            _http = http;
-        }
+        public OqtaneAdamFileSystem(IServerPaths serverPaths) : base("Dnn.FilSys") => _serverPaths = serverPaths;
 
-        private readonly IHttp _http;
+        private readonly IServerPaths _serverPaths;
 
         public IAdamFileSystem<string, string> Init(AdamAppContext<string, string> adamContext, ILog parentLog)
         {
@@ -73,7 +68,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             // check if it already has the root path attached, otherwise add
             path = path.StartsWith(AdamContext.Tenant.ContentPath) ? path : Path.Combine(AdamContext.Tenant.ContentPath, path);
             path = path.Replace("//", "/").Replace("\\\\", "\\");
-            return _http.MapPath(path);
+            return _serverPaths.FullContentPath(path);
         }
 
         public Folder<string, string> GetFolder(string folderId) => AdamFolder(AdjustPathToSiteRoot(folderId));

@@ -24,13 +24,6 @@ namespace ToSic.Sxc.Web
         List<KeyValuePair<string, string>> QueryStringKeyValuePairs();
 
         /// <summary>
-        /// Get a full path like C:\...
-        /// </summary>
-        /// <param name="virtualPath"></param>
-        /// <returns></returns>
-        string MapPath(string virtualPath);
-
-        /// <summary>
         /// Get an absolute path like /Portals/xyz
         /// </summary>
         /// <param name="virtualPath"></param>

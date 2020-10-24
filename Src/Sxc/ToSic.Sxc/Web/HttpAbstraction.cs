@@ -3,7 +3,6 @@ using System.Web;
 using System.Web.Hosting;
 #else
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 #endif
@@ -23,14 +22,12 @@ namespace ToSic.Sxc.Web
         public HttpAbstraction() => Current = HttpContext.Current;
 
 #else
-        public HttpAbstraction(IHttpContextAccessor contextAccessor, IHostingEnvironment hostingEnvironment, IUrlHelper urlHelper)
+        public HttpAbstraction(IHttpContextAccessor contextAccessor, IUrlHelper urlHelper)
         {
             Current = contextAccessor.HttpContext;
-            _hostingEnvironment = hostingEnvironment;
             _urlHelper = urlHelper;
         }
 
-        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IUrlHelper _urlHelper;
 #endif
 
@@ -74,16 +71,7 @@ namespace ToSic.Sxc.Web
         private List<KeyValuePair<string, string>> _queryStringKeyValuePairs;
         #endregion Request
 
-        #region MapPath and other Paths
-
-        public string MapPath(string virtualPath)
-        {
-#if NETSTANDARD
-            return Path.Combine(_hostingEnvironment.ContentRootPath, virtualPath);
-#else
-            return HostingEnvironment.MapPath(virtualPath);
-#endif
-        }
+        #region Paths
 
         public string ToAbsolute(string virtualPath)
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Mvc.Web;
 using ToSic.Sxc.Web;
@@ -11,14 +12,11 @@ namespace ToSic.Sxc.Mvc.Run
 {
     public class MvcFileSystem: HasLog, IAdamFileSystem<string, string>
     {
+        private readonly IServerPaths _serverPaths;
+
         #region Constructor / DI / Init
 
-        public MvcFileSystem(IHttp http) : base("Dnn.FilSys")
-        {
-            _http = http;
-        }
-
-        private readonly IHttp _http;
+        public MvcFileSystem(IServerPaths serverPaths) : base("Dnn.FilSys") => _serverPaths = serverPaths;
 
         public IAdamFileSystem<string, string> Init(AdamAppContext<string, string> adamContext, ILog parentLog)
         {
@@ -71,7 +69,7 @@ namespace ToSic.Sxc.Mvc.Run
             // check if it already has the root path attached, otherwise add
             path = path.StartsWith(AdamContext.Tenant.ContentPath) ? path : Path.Combine(AdamContext.Tenant.ContentPath, path);
             path = path.Replace("//", "/").Replace("\\\\", "\\");
-            return _http.MapPath(path);
+            return _serverPaths.FullContentPath(path);
         }
 
         public Folder<string, string> GetFolder(string folderId) => AdamFolder(AdjustPathToSiteRoot(folderId));

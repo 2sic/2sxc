@@ -10,6 +10,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -40,14 +41,16 @@ namespace ToSic.Sxc.Engines
         /// <summary>
         /// Empty constructor, so it can be used in dependency injection
         /// </summary>
-        protected EngineBase(IHttp http, TemplateHelpers templateHelpers) : base("Sxc.EngBas")
+        protected EngineBase(IHttp http, IServerPaths serverPaths, TemplateHelpers templateHelpers) : base("Sxc.EngBas")
         {
             Http = http;
+            ServerPaths = serverPaths;
             _templateHelpers = templateHelpers;
         }
 
         protected IHttp Http { get; }
 
+        protected readonly IServerPaths ServerPaths;
         private readonly TemplateHelpers _templateHelpers;
 
         #endregion
@@ -66,7 +69,7 @@ namespace ToSic.Sxc.Engines
                                ?? Http.Combine(root + "/", subPath);
 
             // Throw Exception if Template does not exist
-            if (!File.Exists(Http.MapPath(templatePath)))
+            if (!File.Exists(ServerPaths.FullAppPath(templatePath)))
                 // todo: change to some kind of "rendering exception"
                 throw new SexyContentException("The template file '" + templatePath + "' does not exist.");
 
@@ -95,7 +98,7 @@ namespace ToSic.Sxc.Engines
             Log.Add($"edition {edition} detected");
 
             var testPath = Http.Combine($"{root}/{edition}/", subPath);
-            if (File.Exists(Http.MapPath(testPath)))
+            if (File.Exists(ServerPaths.FullAppPath(testPath)))
             {
                 view.Edition = edition;
                 return wrapLog($"edition {edition}", testPath);
@@ -107,7 +110,7 @@ namespace ToSic.Sxc.Engines
 
             subPath = subPath.Substring(firstSlash + 1);
             testPath = Http.Combine($"{root}/{edition}/", subPath);
-            if (File.Exists(Http.MapPath(testPath)))
+            if (File.Exists(ServerPaths.FullAppPath(testPath)))
             {
                 view.Edition = edition;
                 return wrapLog($"edition {edition} up one path", testPath);

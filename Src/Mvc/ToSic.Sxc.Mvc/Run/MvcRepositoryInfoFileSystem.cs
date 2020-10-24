@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Repositories;
-using ToSic.Sxc.Web;
+using ToSic.Eav.Run;
+using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Mvc.Run
 {
@@ -8,15 +9,15 @@ namespace ToSic.Sxc.Mvc.Run
     {
         #region Constructor and DI
 
-        public MvcRepositoryInfoFileSystem(IHttp http) : base() => _http = http;
+        public MvcRepositoryInfoFileSystem(IServerPaths serverPaths) => _serverPaths = serverPaths;
 
-        private readonly IHttp _http;
+        private readonly IServerPaths _serverPaths;
 
         #endregion
 
         public override List<string> RootPaths => new List<string>
         {
-            _http.MapPath("wwwroot/System/Sxc/.data"),
+            _serverPaths.FullSystemPath("wwwroot/System/Sxc/.data"),
             //"C:\\Projects\\poc-2sxc-mvc-website\\Website\\wwwroot\\System\\Sxc\\.data"
             //BuildPath(Constants.FolderData),
             //BuildPath(Constants.FolderDataBeta),

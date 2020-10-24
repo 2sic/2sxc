@@ -13,7 +13,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.Assets;
 using ToSic.Sxc.WebApi.Validation;
 
@@ -24,15 +24,15 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         #region Constructor / DI
 
-        public ImportContent(IZoneMapper zoneMapper, IHttp http, IEnvironmentLogger envLogger) : base("Bck.Export")
+        public ImportContent(IZoneMapper zoneMapper, IServerPaths serverPaths, IEnvironmentLogger envLogger) : base("Bck.Export")
         {
             _zoneMapper = zoneMapper;
-            _http = http;
+            _serverPaths = serverPaths;
             _envLogger = envLogger;
         }
 
         private readonly IZoneMapper _zoneMapper;
-        private readonly IHttp _http;
+        private readonly IServerPaths _serverPaths;
         private readonly IEnvironmentLogger _envLogger;
         private IUser _user;
 
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                     var zipImport = Factory.Resolve<ZipImport>();
 
                     zipImport.Init(zoneId, appId, _user.IsSuperUser, Log);
-                    var temporaryDirectory = _http.MapPath(Path.Combine(Eav.ImportExport.Settings.TemporaryDirectory,
+                    var temporaryDirectory = _serverPaths.FullSystemPath(Path.Combine(Eav.ImportExport.Settings.TemporaryDirectory,
                         Guid.NewGuid().ToString()));
                     result.Success = zipImport.ImportZip(stream, temporaryDirectory);
                     result.Messages.AddRange(zipImport.Messages);

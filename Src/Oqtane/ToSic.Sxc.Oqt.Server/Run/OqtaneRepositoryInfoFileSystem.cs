@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Repositories;
-using ToSic.Sxc.Web;
+using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
@@ -8,15 +8,15 @@ namespace ToSic.Sxc.Oqt.Server.Run
     {
         #region Constructor and DI
 
-        public OqtaneRepositoryInfoFileSystem(IHttp http) : base() => _http = http;
+        public OqtaneRepositoryInfoFileSystem(IServerPaths serverPaths) => _serverPaths = serverPaths;
 
-        private readonly IHttp _http;
+        private readonly IServerPaths _serverPaths;
 
         #endregion
 
         public override List<string> RootPaths => new List<string>
         {
-            _http.MapPath("wwwroot/Modules/ToSic.Sxc/.data"),
+            _serverPaths.FullSystemPath("wwwroot/Modules/ToSic.Sxc/.data"),
             //@"c:\Projects\2sxc\octane\oqtane.framework\Oqtane.Server\wwwroot\Modules\ToSic.Sxc\.data"
             //"C:\\Projects\\poc-2sxc-mvc-website\\Website\\wwwroot\\System\\Sxc\\.data"
             //BuildPath(Constants.FolderData),

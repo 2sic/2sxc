@@ -1,9 +1,4 @@
-﻿#if NET451
-using System.Web;
-using System.Web.Hosting;
-#else
-using System.IO;
-#endif
+﻿using System.IO;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -17,14 +12,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtaneHttpAbstraction: IHttp
     {
-#if NET451
-        /// <summary>
-        /// Empty constructor for DI
-        /// </summary>
-        public HttpAbstraction() => Current = HttpContext.Current;
-        public HttpContext Current { get; }
-
-#else
         public OqtaneHttpAbstraction(IHttpContextAccessor contextAccessor, IWebHostEnvironment hostingEnvironment
             //IUrlHelperFactory urlHelperFactory, 
             //IActionContextAccessor actionContextAccessor
@@ -44,7 +31,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
         //private IUrlHelper UrlHelper => _urlHlp ??= _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext );
         private IUrlHelper _urlHlp;
         public HttpContext Current => _contextAccessor.HttpContext;
-#endif
 
 
         #region Request and properties thereof
@@ -85,15 +71,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private List<KeyValuePair<string, string>> _queryStringKeyValuePairs;
         #endregion Request
 
-        #region MapPath and other Paths
+        #region Paths
 
-        public string MapPath(string virtualPath)
+        public string TestMapPath()
         {
-//#if NETSTANDARD
-            return Path.Combine(_hostingEnvironment.ContentRootPath, virtualPath);
-//#else
-//            //return HostingEnvironment.MapPath(virtualPath);
-//#endif
+            return _hostingEnvironment.WebRootPath;
         }
 
         private string toWebAbsolute(string virtualPath)
@@ -104,21 +86,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public string ToAbsolute(string virtualPath)
         {
-//#if NETSTANDARD
-            //return _hostingEnvironment
-
             return /*UrlHelper.Content*/toWebAbsolute(virtualPath);
-//#else
-//            //return VirtualPathUtility.ToAbsolute(virtualPath);
-//#endif
         }
         public string Combine(string basePath, string relativePath)
         {
-//#if NETSTANDARD
             return /*UrlHelper.Content*/toWebAbsolute(Path.Combine(basePath, relativePath));
-//#else
-//            return VirtualPathUtility.Combine(basePath, relativePath);
-//#endif
         }
 
 

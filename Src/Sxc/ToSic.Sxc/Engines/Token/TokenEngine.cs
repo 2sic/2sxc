@@ -7,10 +7,12 @@ using System.Text.RegularExpressions;
 using ToSic.Eav;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Engines.Token;
 using ToSic.Sxc.LookUp;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 
 // ReSharper disable once CheckNamespace
@@ -74,7 +76,7 @@ namespace ToSic.Sxc.Engines
 
         #region Constructor / DI
 
-        public TokenEngine(IHttp http, TemplateHelpers templateHelpers) : base(http, templateHelpers) { }
+        public TokenEngine(IHttp http, IServerPaths serverPaths, TemplateHelpers templateHelpers) : base(http, serverPaths, templateHelpers) { }
 
         #endregion
 
@@ -106,7 +108,7 @@ namespace ToSic.Sxc.Engines
         /// <inheritdoc />
         protected override string RenderTemplate()
         {
-            var templateSource = File.ReadAllText(Factory.Resolve<IHttp>().MapPath(TemplatePath));
+            var templateSource = File.ReadAllText(ServerPaths.FullAppPath(TemplatePath));
             // Convert old <repeat> elements to the new ones
             for (var upgrade = 0; upgrade < _upgrade6To7.Length/2; upgrade++)
                 templateSource = templateSource.Replace(_upgrade6To7[upgrade, 0], _upgrade6To7[upgrade, 1]);

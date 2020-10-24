@@ -7,6 +7,7 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Run
 {
+    // Todo#Rename - something like ISaveToEnvironment
     [PrivateApi]
     public interface IEnvironmentConnector: IHasLog<IEnvironmentConnector>
     {

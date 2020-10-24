@@ -21,6 +21,8 @@ namespace ToSic.Sxc.Oqt.Server
         public static IServiceCollection AddSxcOqtane(this IServiceCollection services)
         {
             services.AddScoped<IHttp, OqtaneHttpAbstraction>();
+            services.AddTransient<IServerPaths, OqtaneServerPaths>();
+
             services.AddTransient<IAppEnvironment, OqtaneEnvironment>();
             services.AddTransient<IEnvironment, OqtaneEnvironment>();
             services.AddTransient<ITenant, OqtaneTenantSite>();
@@ -45,7 +47,7 @@ namespace ToSic.Sxc.Oqt.Server
 
             //// Add SxcEngineTest
             //services.AddTransient<SxcMvc>();
-            services.AddTransient<IAdamFileSystem<string, string>, OqtaneFileSystem>();
+            services.AddTransient<IAdamFileSystem<string, string>, OqtaneAdamFileSystem>();
             //// Still pending...
             ////sc.AddTransient<XmlExporter, DnnXmlExporter>();
             services.AddTransient<IImportExportEnvironment, OqtaneImportExportEnvironment>();
