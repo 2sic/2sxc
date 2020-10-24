@@ -11,10 +11,8 @@
 
 @inject IRenderTestIds SxcEngine
 
-Test 2dm: @SxcEngine.RenderHtml(TestIds.Token)
+Test 2dm: @SxcEngine.RenderModule(PageState.Site, PageState.Page, this.ModuleState)
 
-
-link: @this.NavigateUrl("~/something")
 
 <hr />
 

@@ -6,8 +6,10 @@ using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Engines;
 using ToSic.Sxc.Oqt.Server.Code;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.Oqt.Server.Engines;
 using ToSic.Sxc.Oqt.Server.Page;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared.Run;
@@ -57,6 +59,9 @@ namespace ToSic.Sxc.Oqt.Server
 
             // 2020-10-22 2dm test
             services.AddTransient<IRenderTestIds, SxcOqtane>();
+            services.AddTransient<IRenderRazor, RenderRazor>();
+
+            services.AddTransient<IEngineFinder, OqtaneEngineFinder>();
 
             return services;
         }

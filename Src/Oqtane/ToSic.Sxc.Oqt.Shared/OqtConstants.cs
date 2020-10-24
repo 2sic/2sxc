@@ -8,6 +8,10 @@
         public const string SiteSettingsName = "Site";
         public const string SiteKeyForZoneId = "EavZoneId";
 
+        /// <summary>
+        /// This must be added to the `HostEnvironment.ContentRootPath` to really get into the content
+        /// </summary>
+        public const string ContentSubfolder = "Content";
 
         public const string UserTokenPrefix = "oqt";
 

@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using Oqtane.Infrastructure;
 using ToSic.Eav;
+using ToSic.Sxc.Oqt.Server.Engines;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.WebApi.Plumbing;
 using Factory = ToSic.Eav.Factory;
@@ -16,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Server
     class Startup : IServerStartup
     {
         public IConfiguration Configuration { get; }
-        public IWebHostEnvironment HostEnvironment { get; }
+        public IWebHostEnvironment HostEnvironment { get; set; }
 
 
         public Startup()
@@ -44,7 +45,7 @@ namespace ToSic.Sxc.Oqt.Server
             //    .AddRazorRuntimeCompilation(options =>
             //    {
             //        var configuredPath = Configuration["SxcRoot"];
-            //        var libraryPath = Path.GetFullPath(Path.Combine(HostEnvironment.ContentRootPath, configuredPath));
+            //        var libraryPath = Path.GetFullPath(Path.Combine(HostEnvironment.ContentRootPath, OqtConstants.ContentSubfolder));
             //        options.FileProviders.Add(new PhysicalFileProvider(libraryPath));
             //    });
 
@@ -72,7 +73,7 @@ namespace ToSic.Sxc.Oqt.Server
 
             // Try to get partial to string rendering
             services.AddTransient<IRazorPartialToStringRenderer, RazorPartialToStringRenderer>();
-            //services.AddTransient<IRenderRazor, RenderRazor>();
+            services.AddTransient<IRenderRazor, RenderRazor>();
 
             Factory.UseExistingServices(services);
             Factory.ActivateNetCoreDi(services2 =>
@@ -86,7 +87,7 @@ namespace ToSic.Sxc.Oqt.Server
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //throw new NotImplementedException();
+            HostEnvironment = env;
         }
 
         public void ConfigureMvc(IMvcBuilder mvcBuilder)

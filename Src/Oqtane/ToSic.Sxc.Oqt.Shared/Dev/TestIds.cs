@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Oqt.Shared.Dev
 
         public static InstanceId Blog => Dev4Spm
             ? null
-            : new InstanceId(2, 55, 4, 3002, new Guid("9cbcee9d-49d5-4fe0-8e74-1e20f74a5916"));
+            : new InstanceId(2, 680, 78, 3002, new Guid("9cbcee9d-49d5-4fe0-8e74-1e20f74a5916"));
 
         public static InstanceId ContentOnHome => Dev4Spm
             ? null

@@ -3,6 +3,7 @@ using Oqtane.Models;
 using Oqtane.Repository;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Dev;
 
 // todo: #Oqtane
@@ -59,7 +60,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public override string Name => UnwrappedContents.Name;
 
         [PrivateApi]
-        public override string AppsRoot => Path.Combine(WipConstants.AppRootPublicBase, Settings.AppsRootFolder);
+        public override string AppsRoot => Path.Combine(OqtConstants.ContentSubfolder, WipConstants.AppRootPublicBase, Settings.AppsRootFolder);
 
         [PrivateApi]
         public override bool RefactorUserIsAdmin => WipConstants.IsAdmin;

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
+using Oqtane.Models;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
@@ -38,6 +39,15 @@ namespace ToSic.Sxc.Oqt.Server
         public HtmlString Render(InstanceId id) => new HtmlString(RenderString(id));
 
         public MarkupString RenderHtml(InstanceId id) => (MarkupString)RenderString(id);
+
+        public MarkupString RenderModule(Site site, Oqtane.Models.Page page, Module module)
+        {
+            if (module.ModuleId == 27)
+                return RenderHtml(TestIds.Token);
+            if (module.ModuleId == 28)
+                return RenderHtml(TestIds.Blog);
+            return (MarkupString) $"Error - module id {module} not found";
+        }
 
         private string RenderString(InstanceId id)
         {
