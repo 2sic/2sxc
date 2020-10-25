@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Mvc.Razor.Internal;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Mvc.Dev;
+using ToSic.Sxc.Razor.Components;
 
 namespace ToSic.Sxc.Mvc.RazorPages.Exp
 {
-    public abstract class SxcTestPageViewParams<TModel>: SxcRazorPage<TModel>
+    public abstract class SxcTestPageViewParams<TModel>: SxcRazorComponent<TModel>
     {
         [RazorInject]
         public SxcMvc SxcMvc { get; set; }

@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Mvc.Code;
-using ToSic.Sxc.Mvc.RazorPages;
+using ToSic.Sxc.Razor.Code;
+using ToSic.Sxc.Razor.Components;
 using ToSic.Sxc.Run;
 
-namespace ToSic.Sxc.Mvc.Engines
+namespace ToSic.Sxc.Razor.Engines
 {
     /// <summary>
     /// The razor engine, which compiles / runs engine templates
@@ -17,11 +17,11 @@ namespace ToSic.Sxc.Mvc.Engines
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     [EngineDefinition(Name = "Razor")]
 
-    public partial class MvcRazorEngine : EngineBase
+    public partial class RazorEngine3 : EngineBase
     {
         #region Constructor / DI
 
-        public MvcRazorEngine(IServerPaths serverPaths, ILinkPaths linkPaths, TemplateHelpers templateHelpers) : base(serverPaths, linkPaths, templateHelpers) { }
+        public RazorEngine3(IServerPaths serverPaths, ILinkPaths linkPaths, TemplateHelpers templateHelpers) : base(serverPaths, linkPaths, templateHelpers) { }
 
         #endregion
 
@@ -52,13 +52,13 @@ namespace ToSic.Sxc.Mvc.Engines
             try
             {
                 if (string.IsNullOrEmpty(TemplatePath)) return null;
-                var dynCode = new MvcDynamicCode().Init(Block, 10, Log);
+                var dynCode = new Razor3DynamicCode().Init(Block, 10, Log);
 
                 var compiler = Eav.Factory.Resolve<IRenderRazor>();
                 var result = await compiler.RenderToStringAsync(TemplatePath, new Object(),
                     rzv =>
                     {
-                        if (rzv.RazorPage is IIsSxcRazorPage asSxc)
+                        if (rzv.RazorPage is ISxcRazorComponent asSxc)
                         {
                             asSxc.DynCode = dynCode;
                             asSxc.VirtualPath = TemplatePath;
@@ -92,13 +92,13 @@ namespace ToSic.Sxc.Mvc.Engines
         private string InitWebpage()
         {
             if (string.IsNullOrEmpty(TemplatePath)) return null;
-            var dynCode = new MvcDynamicCode().Init(Block, 10, Log);
+            var dynCode = new Razor3DynamicCode().Init(Block, 10, Log);
 
             var compiler = Eav.Factory.Resolve<IRenderRazor>();
             var result = compiler.RenderToStringAsync(TemplatePath, new Object(), 
                 rzv =>
                 {
-                    if (rzv.RazorPage is IIsSxcRazorPage asSxc)
+                    if (rzv.RazorPage is ISxcRazorComponent asSxc)
                     {
                         asSxc.DynCode = dynCode;
                         asSxc.VirtualPath = TemplatePath;

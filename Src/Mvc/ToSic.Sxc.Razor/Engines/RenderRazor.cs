@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 
-namespace ToSic.Sxc.Mvc.Engines
+namespace ToSic.Sxc.Razor.Engines
 {
     public class RenderRazor : IRenderRazor
     {

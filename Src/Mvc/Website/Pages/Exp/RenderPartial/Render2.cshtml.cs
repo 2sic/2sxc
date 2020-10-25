@@ -1,11 +1,14 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Mvc;
 using ToSic.Sxc.Mvc.Dev;
-using ToSic.Sxc.Mvc.Engines;
+//using ToSic.Sxc.Mvc.Engines;
 using ToSic.Sxc.Mvc.RazorPages;
 using ToSic.Sxc.Mvc.Web;
+using ToSic.Sxc.Razor.Components;
+using ToSic.Sxc.Razor.Engines;
 
 namespace Website.Pages.RenderPartial
 {
@@ -21,7 +24,7 @@ namespace Website.Pages.RenderPartial
 
         public async Task OnGetAsync()
         {
-            var dynCode = _sxcMvc.CreateDynCode(TestIds.Blog, null);
+            DynamicCodeRoot dynCode = null;// _sxcMvc.CreateDynCode(TestIds.Blog, null);
 
             var path = $"/{MvcConstants.WwwRoot}2sxc/Blog App/_1 Main blog view.cshtml";
 
@@ -36,7 +39,7 @@ namespace Website.Pages.RenderPartial
                     Subject = "This is the subject"
                 }, rzv =>
                 {
-                    if (rzv.RazorPage is IIsSxcRazorPage asSxc)
+                    if (rzv.RazorPage is ISxcRazorComponent asSxc)
                     {
                         asSxc.DynCode = dynCode;
                         asSxc.VirtualPath = path;

@@ -87,6 +87,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oqtane.Shared", "..\..\octa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oqtane.Client", "..\..\octane\oqtane.framework\Oqtane.Client\Oqtane.Client.csproj", "{62B0A822-C3ED-436E-A67B-8E99A7E89B24}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Razor", "Mvc\ToSic.Sxc.Razor\ToSic.Sxc.Razor.csproj", "{9269847A-20A1-4F72-9E14-36BFE0323632}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -899,6 +901,30 @@ Global
 		{62B0A822-C3ED-436E-A67B-8E99A7E89B24}.Testing|Windows-x64.Build.0 = Release|Any CPU
 		{62B0A822-C3ED-436E-A67B-8E99A7E89B24}.Testing|Windows-x86.ActiveCfg = Release|Any CPU
 		{62B0A822-C3ED-436E-A67B-8E99A7E89B24}.Testing|Windows-x86.Build.0 = Release|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Debug|DNN.ActiveCfg = Debug|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Debug|DNN.Build.0 = Debug|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Debug|Windows-x64.Build.0 = Debug|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Release|DNN.ActiveCfg = Release|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Release|DNN.Build.0 = Release|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Release|Windows-x64.ActiveCfg = Release|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Release|Windows-x64.Build.0 = Release|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Testing|Any CPU.ActiveCfg = Release|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Testing|Any CPU.Build.0 = Release|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Testing|DNN.ActiveCfg = Release|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Testing|DNN.Build.0 = Release|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Testing|Windows-x64.ActiveCfg = Release|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Testing|Windows-x64.Build.0 = Release|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Testing|Windows-x86.ActiveCfg = Release|Any CPU
+		{9269847A-20A1-4F72-9E14-36BFE0323632}.Testing|Windows-x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -939,6 +965,7 @@ Global
 		{1F1C0F04-736D-4A4D-A324-8FCA8C373738} = {C2BEB114-B1DB-404D-8442-A75809059619}
 		{748C1FF5-D9A0-4F8D-A113-0D1C54791CE8} = {C2BEB114-B1DB-404D-8442-A75809059619}
 		{62B0A822-C3ED-436E-A67B-8E99A7E89B24} = {C2BEB114-B1DB-404D-8442-A75809059619}
+		{9269847A-20A1-4F72-9E14-36BFE0323632} = {F1366AA6-6508-47E4-AE39-CB39537CA220}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}

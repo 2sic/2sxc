@@ -23,10 +23,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Engines\**" />
     <Compile Remove="RazorPartialToString\**" />
+    <Content Remove="Engines\**" />
     <Content Remove="RazorPartialToString\**" />
+    <EmbeddedResource Remove="Engines\**" />
     <EmbeddedResource Remove="RazorPartialToString\**" />
+    <None Remove="Engines\**" />
     <None Remove="RazorPartialToString\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="RazorPages\IIsSxcRazorPage.cs" />
+    <Compile Remove="RazorPages\SxcRazorPage.cs" />
+    <Compile Remove="RazorPages\SxcRazorPage_Block.cs" />
+    <Compile Remove="RazorPages\SxcRazorPage_CreateInstance.cs" />
+    <Compile Remove="RazorPages\SxcRazorPage_IDynamicCode.cs" />
   </ItemGroup>
 
   <ItemGroup>

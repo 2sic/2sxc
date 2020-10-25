@@ -1,7 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav;
+using ToSic.Sxc.Engines;
+//using ToSic.Sxc.Mvc.Engines;
 using ToSic.Sxc.Mvc.Plumbing;
+using ToSic.Sxc.Razor;
 using ToSic.Sxc.WebApi.Plumbing;
 
 namespace Website.Plumbing
@@ -22,8 +25,12 @@ namespace Website.Plumbing
             {
                 services2
                     .AddSxcMvc()
+                    .AddRazor()
                     .AddSxc()
                     .AddEav();
+                //services.AddTransient<IRenderRazor, RenderRazor>();
+                //services.AddTransient<IEngineFinder, RazorEngineFinder>();
+
             });
         }
     }

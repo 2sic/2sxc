@@ -5,7 +5,7 @@ using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Mvc.Code;
+//using ToSic.Sxc.Mvc.Code;
 using ToSic.Sxc.Mvc.Dev;
 using ToSic.Sxc.Mvc.Run;
 using ToSic.Sxc.Mvc.TestStuff;
@@ -41,8 +41,8 @@ namespace ToSic.Sxc.Mvc
             return new HtmlString(result);
         }
 
-        public DynamicCodeRoot CreateDynCode(InstanceId id, ILog log) =>
-            new MvcDynamicCode().Init(CreateBlock(id.Zone, id.Page, id.Container, id.App, id.Block, log), log);
+        //public DynamicCodeRoot CreateDynCode(InstanceId id, ILog log) =>
+        //    new MvcDynamicCode().Init(CreateBlock(id.Zone, id.Page, id.Container, id.App, id.Block, log), log);
 
 
         public IBlock CreateBlock(int zoneId, int pageId, int containerId, int appId, Guid blockGuid, ILog log)
