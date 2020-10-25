@@ -8,6 +8,7 @@ using Newtonsoft.Json.Serialization;
 using Oqtane.Infrastructure;
 using ToSic.Eav;
 using ToSic.Sxc.Oqt.Server.Engines;
+using ToSic.Sxc.Oqt.Server.RazorPages;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.WebApi.Plumbing;
 using Factory = ToSic.Eav.Factory;
@@ -32,22 +33,15 @@ namespace ToSic.Sxc.Oqt.Server
             if (devMode == "SPM") TestIds.Dev4Spm = true;
 
             var connectionString = Configuration.GetConnectionString("SiteSqlServer");
-            ToSic.Eav.Repository.Efc.Implementations.Configuration.SetConnectionString(connectionString);
-            ToSic.Eav.Repository.Efc.Implementations.Configuration.SetFeaturesHelpLink("https://2sxc.org/help?tag=features", "https://2sxc.org/r/f/");
+            Eav.Repository.Efc.Implementations.Configuration.SetConnectionString(connectionString);
+            Eav.Repository.Efc.Implementations.Configuration.SetFeaturesHelpLink("https://2sxc.org/help?tag=features", "https://2sxc.org/r/f/");
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            //// Add razor pages dynamic compilation WIP
-            //services.AddRazorPages()
-            //    // experiment
-            //    // https://github.com/aspnet/samples/blob/master/samples/aspnetcore/mvc/runtimecompilation/MyApp/Startup.cs#L26
-            //    .AddRazorRuntimeCompilation(options =>
-            //    {
-            //        var configuredPath = Configuration["SxcRoot"];
-            //        var libraryPath = Path.GetFullPath(Path.Combine(HostEnvironment.ContentRootPath, OqtConstants.ContentSubfolder));
-            //        options.FileProviders.Add(new PhysicalFileProvider(libraryPath));
-            //    });
+            // try to enable dynamic razor compiling - still WIP
+            new StartUpRazorPages().ConfigureServices(services);
+
 
             // enable use of HttpContext
             // 2020-10-22 should already be in Oqtane
@@ -60,8 +54,7 @@ namespace ToSic.Sxc.Oqt.Server
                 {
                     // this ensures that c# objects with Pascal-case keep that
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                    ToSic.Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings);
-                    //options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                    Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings);
                 });
             //.PartManager.ApplicationParts.Add(new AssemblyPart(typeof(SxcMvc).Assembly));
 
@@ -88,11 +81,17 @@ namespace ToSic.Sxc.Oqt.Server
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             HostEnvironment = env;
+            //_contentRootPath = env.ContentRootPath;
         }
+
+        // Workaround because of initialization issues with razor pages
+        //private static string _contentRootPath;
 
         public void ConfigureMvc(IMvcBuilder mvcBuilder)
         {
             //throw new NotImplementedException();
         }
+
+
     }
 }
