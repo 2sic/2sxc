@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Oqt.Server
 
             // 2020-10-22 2dm test
             services.AddTransient<IRenderTestIds, SxcOqtane>();
-            services.AddTransient<IRenderRazor, RenderRazor>();
+            //services.AddTransient<IRenderRazor, RenderRazor>();
 
             services.AddTransient<IEngineFinder, OqtaneEngineFinder>();
 

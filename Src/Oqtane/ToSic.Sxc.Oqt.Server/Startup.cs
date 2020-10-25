@@ -10,6 +10,7 @@ using ToSic.Eav;
 using ToSic.Sxc.Oqt.Server.Engines;
 using ToSic.Sxc.Oqt.Server.RazorPages;
 using ToSic.Sxc.Oqt.Shared.Dev;
+using ToSic.Sxc.Razor;
 using ToSic.Sxc.WebApi.Plumbing;
 using Factory = ToSic.Eav.Factory;
 
@@ -65,14 +66,15 @@ namespace ToSic.Sxc.Oqt.Server
             //    .GetUrlHelper(it.GetService<IActionContextAccessor>().ActionContext));
 
             // Try to get partial to string rendering
-            services.AddTransient<IRazorPartialToStringRenderer, RazorPartialToStringRenderer>();
-            services.AddTransient<IRenderRazor, RenderRazor>();
+            //services.AddTransient<IRazorPartialToStringRenderer, RazorPartialToStringRenderer>();
+            //services.AddTransient<IRenderRazor, RenderRazor>();
 
             Factory.UseExistingServices(services);
             Factory.ActivateNetCoreDi(services2 =>
             {
                 services2
                     .AddSxcOqtane()
+                    .AddSxcRazor()
                     .AddSxc()
                     .AddEav();
             });

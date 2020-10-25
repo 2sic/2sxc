@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Razor
 {
     public static class RazorDI
     {
-        public static IServiceCollection AddRazor(this IServiceCollection services)
+        public static IServiceCollection AddSxcRazor(this IServiceCollection services)
         {
             services.AddTransient<DynamicCodeRoot, Razor3DynamicCode>();
             services.AddTransient<IRenderRazor, RenderRazor>();
