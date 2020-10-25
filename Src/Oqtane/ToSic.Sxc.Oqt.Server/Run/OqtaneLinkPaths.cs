@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         //private readonly IUrlHelperFactory _urlHelperFactory;
         //private readonly IActionContextAccessor _actionContextAccessor;
         //private IUrlHelper UrlHelper => _urlHlp ??= _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext );
-        private IUrlHelper _urlHlp;
+        //private IUrlHelper _urlHlp;
         public HttpContext Current => _contextAccessor.HttpContext;
 
         #region Paths

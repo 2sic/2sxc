@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Oqtane.Models;
-using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Oqt.Shared.Dev
 {
@@ -32,8 +30,6 @@ namespace ToSic.Sxc.Oqt.Shared.Dev
 
 
         public static int NeedSiteFromHeader = 2;
-        public static IPage NullPage = new PageNull();
-        public static IContainer NullContainer = new ContainerNull();
 
         public static string WebApiPrefixFor1 = "1/";
     }

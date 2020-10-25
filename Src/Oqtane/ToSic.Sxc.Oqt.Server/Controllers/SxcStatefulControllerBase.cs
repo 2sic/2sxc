@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using Oqtane.Repository;
 using ToSic.Eav.Apps.Run;
@@ -19,8 +18,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         //private readonly ITenantResolver _tenantResolver;
         private readonly OqtaneZoneMapper _zoneMapper;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IAliasRepository _aliasRepository;
+        //private readonly IHttpContextAccessor _httpContextAccessor;
+        //private readonly IAliasRepository _aliasRepository;
 
         protected SxcStatefulControllerBase(SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver, IUserResolver userResolver) : base(userResolver)
         {
@@ -32,7 +31,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected IInstanceContext GetContext()
         {
             var alias = _tenantResolver.GetAlias();
-            var context = new InstanceContext(_zoneMapper.TenantOfSite(alias.SiteId), WipConstants.NullPage, WipConstants.NullContainer, GetUser());
+            var context = new InstanceContext(_zoneMapper.TenantOfSite(alias.SiteId), WipConstServer.NullPage, WipConstServer.NullContainer, GetUser());
             return context;
         }
 
