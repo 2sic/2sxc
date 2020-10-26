@@ -26,11 +26,11 @@ namespace ToSic.Sxc.Oqt.Server.Page
 
         public void Init(SxcOqtane parent)
         {
-            _parent = parent;
+            Parent = parent;
             BlockBuilder = parent?.Block?.BlockBuilder as BlockBuilder;
         }
 
-        protected SxcOqtane _parent;
+        protected SxcOqtane Parent;
         protected BlockBuilder BlockBuilder;
 
         #endregion
@@ -57,12 +57,11 @@ namespace ToSic.Sxc.Oqt.Server.Page
             return list;
         }
 
-        // TODO: #Oqtane
         public string ContextMetaContents()
         {
             var wrapLog = Log.Call<string>();
 
-            var pageId = _parent?.Page.PageId ?? -1;
+            var pageId = Parent?.Page.PageId ?? -1;
             var siteRoot = OqtConstants.SiteRoot;
             var apiRoot = siteRoot + WipConstants.WebApiPrefixFor1 + WebApiConstants.WebApiRoot + "/";
             var result = InpageCms.JsApiJson(pageId, siteRoot, apiRoot, AntiForgeryToken(), OqtConstants.UiRoot + "/");
