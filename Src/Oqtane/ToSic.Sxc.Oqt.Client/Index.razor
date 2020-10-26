@@ -10,7 +10,6 @@
 @inject NavigationManager NavigationManager
 
 @inject IRenderTestIds SxcEngine
-
 Test 2dm: @SxcEngine.RenderModule(PageState.Site, PageState.Page, this.ModuleState)
 
 test razor manager: @SxcEngine.Test()
@@ -20,50 +19,50 @@ test razor manager: @SxcEngine.Test()
 test: @TestIds.PrimaryApp
 
 <h2>
-  Test API Insights
+    Test API Insights
 </h2>
 
 <ol>
-  <li>
-    <a href="/@WebApiConstants.WebApiRoot/insights/help" target="_new">Insights Help</a>
-  </li>
+    <li>
+        <a href="/@WebApiConstants.WebApiRoot/insights/help" target="_new">Insights Help</a>
+    </li>
 </ol>
 
 <h2>State of App 4 (Blog)</h2>
 
 <ol>
-  <li>
-    @*Timestamp : @(ToSic.Eav.Apps.State.Get(4).CacheTimestamp)*@
-  </li>
-  @*
     <li>
-        Items in it : @(ToSic.Eav.Apps.State.Get(4).List.Count())
-    </li>*@
+        @*Timestamp : @(ToSic.Eav.Apps.State.Get(4).CacheTimestamp)*@
+    </li>
+    @*
+        <li>
+            Items in it : @(ToSic.Eav.Apps.State.Get(4).List.Count())
+        </li>*@
 </ol>
 
 <h2>
-  Content / Query API
+    Content / Query API
 </h2>
 <ol>
-  <li>
-    Tags
-    <a href="/1/@WebApiConstants.WebApiRoot/app/Blog%20App/content/Tag" target="_blank">List</a> or
-    <a href="/1/@WebApiConstants.WebApiRoot/app/Blog%20App/content/Tag/6628" target="_blank">One (#6628)</a>
-  </li>
-  <li>
-    BlogPost
-    <a href="/1/@WebApiConstants.WebApiRoot/app/Blog%20App/content/BlogPost" target="_blank">List</a> or
-    <a href="/1/@WebApiConstants.WebApiRoot/app/Blog%20App/content/BlogPost/6728" target="_blank">One with AppIdentity (#6728)</a> or
-    <a href="/1/@WebApiConstants.WebApiRoot/app/Blog%20App/content/BlogPost/d5fce6dd-c16a-4374-aaff-dc223e45b540" target="_blank">One with guAppIdentity (#d5fce6dd-c16a-4374-aaff-dc223e45b540)</a>
-  </li>
-  <li>
-    Tags Query
-    <a href="/1/@WebApiConstants.WebApiRoot/app/Blog%20App/query/Tags" target="_blank">List</a> or
+    <li>
+        Tags
+        <a href="/1/@WebApiConstants.WebApiRoot/app/Blog%20App/content/Tag" target="_blank">List</a> or
+        <a href="/1/@WebApiConstants.WebApiRoot/app/Blog%20App/content/Tag/6628" target="_blank">One (#6628)</a>
+    </li>
+    <li>
+        BlogPost
+        <a href="/1/@WebApiConstants.WebApiRoot/app/Blog%20App/content/BlogPost" target="_blank">List</a> or
+        <a href="/1/@WebApiConstants.WebApiRoot/app/Blog%20App/content/BlogPost/6728" target="_blank">One with AppIdentity (#6728)</a> or
+        <a href="/1/@WebApiConstants.WebApiRoot/app/Blog%20App/content/BlogPost/d5fce6dd-c16a-4374-aaff-dc223e45b540" target="_blank">One with guAppIdentity (#d5fce6dd-c16a-4374-aaff-dc223e45b540)</a>
+    </li>
+    <li>
+        Tags Query
+        <a href="/1/@WebApiConstants.WebApiRoot/app/Blog%20App/query/Tags" target="_blank">List</a> or
 
-  </li>
-  <li>
-    Routing Table <a href="/route-debugger">Routing debug table</a>
-  </li>
+    </li>
+    <li>
+        Routing Table <a href="/route-debugger">Routing debug table</a>
+    </li>
 </ol>
 
 
@@ -85,34 +84,39 @@ test: @TestIds.PrimaryApp
 
 @code {
 
-  public string test1 = "test1";
+    public string test1 = "test1";
 
-  public override List<Resource> Resources => new List<Resource>()
-  {
-    new Resource { ResourceType = ResourceType.Stylesheet, Url = ModulePath() + "Module.css" },
-    new Resource { ResourceType = ResourceType.Script, Url = ModulePath() + "Module.js" }
+    public string ToSxcModulePath()
+    {
+        return "Modules/ToSic.Sxc/";
+    }
+
+    public override List<Resource> Resources => new List<Resource>()
+    {
+        new Resource { ResourceType = ResourceType.Stylesheet, Url = ToSxcModulePath() + "Module.css" },
+        new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "Module.js" }
     };
 
-  JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
-  {
-    WriteIndented = true,
-  };
-
-  protected override async Task OnInitializedAsync()
-  {
-    /*
-    try
+    JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
     {
-        //_Sxcs = await SxcService.GetSxcsAsync(ModuleState.ModuleId);
-        test1 = ToSic.Eav.Apps.State.Get(4).CacheTimestamp.ToString();
+        WriteIndented = true,
+    };
 
-    }
-    catch (Exception ex)
+    protected override async Task OnInitializedAsync()
     {
-        await logger.LogError(ex, "Error Loading Sxc {Error}", ex.Message);
-        AddModuleMessage("Error Loading Sxc", MessageType.Error);
-        throw;
+        /*
+        try
+        {
+            //_Sxcs = await SxcService.GetSxcsAsync(ModuleState.ModuleId);
+            test1 = ToSic.Eav.Apps.State.Get(4).CacheTimestamp.ToString();
+
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Sxc {Error}", ex.Message);
+            AddModuleMessage("Error Loading Sxc", MessageType.Error);
+            throw;
+        }
+        */
     }
-    */
-  }
 }
