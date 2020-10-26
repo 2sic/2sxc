@@ -43,27 +43,27 @@ namespace ToSic.Sxc.Oqt.Server
         {
             if (_renderDone) throw new Exception("already prepared this module");
 
-            _site = site;
-            _page = page;
-            _module = module;
+            Site = site;
+            Page = page;
+            Module = module;
 
             var idSet = LookupTestIdSet();
             if (idSet == null)
             {
-                GeneratedHtml = (MarkupString)$"Error - module id {_module.ModuleId} not found";
+                GeneratedHtml = (MarkupString)$"Error - module id {Module.ModuleId} not found";
                 return;
             }
 
-            _block = GetBlock(idSet);
-            _assetsAndHeaders.Init(_block.BlockBuilder);
-            GeneratedHtml = (MarkupString) RenderString();
+            Block = GetBlock(idSet);
+            _assetsAndHeaders.Init(this);
+            GeneratedHtml = (MarkupString) Block.BlockBuilder.Render();
             _renderDone = true;
         }
 
-        private Site _site;
-        private Oqtane.Models.Page _page;
-        private Module _module;
-        private IBlock _block;
+        internal Site Site;
+        internal Oqtane.Models.Page Page;
+        internal Module Module;
+        internal IBlock Block;
 
         private bool _renderDone;
         public MarkupString GeneratedHtml { get; private set; }
@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Oqt.Server
 
         private InstanceId LookupTestIdSet()
         {
-            var mid = _module.ModuleId;
+            var mid = Module.ModuleId;
             InstanceId ids = null;
             switch (mid)
             {
@@ -92,19 +92,6 @@ namespace ToSic.Sxc.Oqt.Server
         public string Test()
         {
             return _debugRefMan.CompilationReferences.Count.ToString();
-        }
-
-        private string RenderString()
-        {
-
-            var result = _block.BlockBuilder.Render();
-
-            _assetsAndHeaders.Init(_block.BlockBuilder);
-
-            // todo: set parameters for loading scripts etc.
-            //PageProperties.Headers += "hello!!!";
-
-            return result;
         }
 
         private IBlock GetBlock(InstanceId id) => CreateBlock(id.Zone, id.Page, id.Container, id.App, id.Block, Log);

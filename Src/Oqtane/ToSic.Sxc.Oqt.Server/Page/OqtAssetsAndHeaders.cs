@@ -24,7 +24,13 @@ namespace ToSic.Sxc.Oqt.Server.Page
         private readonly IHttpContextAccessor _httpContextAccessor;
 
 
-        public void Init(IBlockBuilder blockBuilder) => BlockBuilder = blockBuilder as BlockBuilder;
+        public void Init(SxcOqtane parent)
+        {
+            _parent = parent;
+            BlockBuilder = parent?.Block?.BlockBuilder as BlockBuilder;
+        }
+
+        protected SxcOqtane _parent;
         protected BlockBuilder BlockBuilder;
 
         #endregion
@@ -56,7 +62,7 @@ namespace ToSic.Sxc.Oqt.Server.Page
         {
             var wrapLog = Log.Call<string>();
 
-            var pageId = 0;
+            var pageId = _parent?.Page.PageId ?? -1;
             var siteRoot = OqtConstants.SiteRoot;
             var apiRoot = siteRoot + WipConstants.WebApiPrefixFor1 + WebApiConstants.WebApiRoot + "/";
             var result = InpageCms.JsApiJson(pageId, siteRoot, apiRoot, AntiForgeryToken(), OqtConstants.UiRoot + "/");

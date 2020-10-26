@@ -12,6 +12,7 @@ using ToSic.Sxc.WebApi.Cms;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     [Route(WebApiConstants.WebApiStateRoot + "/cms/edit/[action]")]
     [ApiController]
     public class EditController: SxcStatefulControllerBase
