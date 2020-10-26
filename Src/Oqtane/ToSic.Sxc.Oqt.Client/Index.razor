@@ -12,7 +12,7 @@
 @inject IRenderTestIds SxcEngine
 Test 2dm: @SxcEngine.RenderModule(PageState.Site, PageState.Page, this.ModuleState)
 
-test razor manager: @SxcEngine.Test()
+@*test razor manager: @SxcEngine.Test()*@
 
 <hr />
 
@@ -94,7 +94,8 @@ test: @TestIds.PrimaryApp
     public override List<Resource> Resources => new List<Resource>()
     {
         new Resource { ResourceType = ResourceType.Stylesheet, Url = ToSxcModulePath() + "Module.css" },
-        new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "Module.js" }
+        new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "Module.js" },
+        new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/2sxc.api.min.js" }
     };
 
     JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
@@ -118,5 +119,24 @@ test: @TestIds.PrimaryApp
             throw;
         }
         */
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (PageState.Runtime == Runtime.Server)
+            {
+                var interop = new Interop(JSRuntime);
+                await interop.IncludeMeta("kk1", "name", "description", $"content {PageState.Page.PageId} {PageState.ModuleId}", "id");
+                await interop.IncludeMeta("kk2", "name", "keywords", $"content {PageState.Page.PageId} {PageState.ModuleId}", "id");
+                await interop.IncludeMeta("kk3", "name", "author", $"content {PageState.Page.PageId} {PageState.ModuleId}", "id");
+
+                string antiforgerytoken = await interop.GetElementByName("__RequestVerificationToken");
+                //var fields = new { __RequestVerificationToken = antiforgerytoken, username = _username, password = _password, remember = _remember, returnurl = _returnUrl };
+                //await interop.IncludeLink("app-stylesheet", "stylesheet", "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css", "text/css", "sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T", "anonymous", "");
+                //await interop.IncludeScripts(scripts.ToArray());
+            }
+        }
     }
 }
