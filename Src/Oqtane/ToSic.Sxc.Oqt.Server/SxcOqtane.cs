@@ -18,17 +18,18 @@ namespace ToSic.Sxc.Oqt.Server
     {
         #region Constructor and DI
         
-        public SxcOqtane(IHttpContextAccessor httpContextAccessor, OqtAssetsAndHeaders moduleAssets, RazorReferenceManager debugRefMan) : base("Mvc.View")
+        public SxcOqtane(IHttpContextAccessor httpContextAccessor, OqtAssetsAndHeaders assetsAndHeaders, RazorReferenceManager debugRefMan) : base("Mvc.View")
         {
-            AssetsAndHeaders = moduleAssets;
+            _assetsAndHeaders = assetsAndHeaders;
             _debugRefMan = debugRefMan;
             _httpContext = httpContextAccessor.HttpContext;
             // add log to history!
-            History.Add("sxc-mvc-view", Log);
+            History.Add("oqt-view", Log);
         }
 
         private readonly HttpContext _httpContext;
-        public IOqtAssetsAndHeader AssetsAndHeaders { get; }
+        public IOqtAssetsAndHeader AssetsAndHeaders => _assetsAndHeaders;
+        private readonly OqtAssetsAndHeaders _assetsAndHeaders;
         private readonly RazorReferenceManager _debugRefMan;
 
         #endregion
@@ -41,45 +42,72 @@ namespace ToSic.Sxc.Oqt.Server
         public void Prepare(Site site, Oqtane.Models.Page page, Module module)
         {
             if (_renderDone) throw new Exception("already prepared this module");
-            GeneratedHtml = RenderModule(site, page, module);
+
+            _site = site;
+            _page = page;
+            _module = module;
+
+            var idSet = LookupTestIdSet();
+            if (idSet == null)
+            {
+                GeneratedHtml = (MarkupString)$"Error - module id {_module.ModuleId} not found";
+                return;
+            }
+
+            _block = GetBlock(idSet);
+            _assetsAndHeaders.Init(_block.BlockBuilder);
+            GeneratedHtml = (MarkupString) RenderString();
             _renderDone = true;
         }
+
+        private Site _site;
+        private Oqtane.Models.Page _page;
+        private Module _module;
+        private IBlock _block;
 
         private bool _renderDone;
         public MarkupString GeneratedHtml { get; private set; }
 
         #endregion
 
-        public MarkupString RenderModule(Site site, Oqtane.Models.Page page, Module module)
+        private InstanceId LookupTestIdSet()
         {
-            if (module.ModuleId == 27)
-                return RenderHtml(TestIds.Token);
-            if (module.ModuleId == 28 // test site 2dm, root site
-                || module.ModuleId == 1049 // test sub-site 2dm "blogsite"
-                || module.ModuleId == 56 // test sub-site Tonci "blogsite"
-                )
-                return RenderHtml(TestIds.Blog);
-            return (MarkupString) $"Error - module id {module} not found";
-        }
+            var mid = _module.ModuleId;
+            InstanceId ids = null;
+            switch (mid)
+            {
+                case 27:
+                    ids = TestIds.Token;
+                    break;
+                case 28: // test site 2dm, root site
+                case 1049: // test sub-site 2dm "blogsite"
+                case 56: // test sub-site Tonci "blogsite"
+                    ids = TestIds.Blog;
+                    break;
+            }
 
-        private MarkupString RenderHtml(InstanceId id) => (MarkupString)RenderString(id);
+            return ids;
+        }
 
         public string Test()
         {
             return _debugRefMan.CompilationReferences.Count.ToString();
         }
 
-        private string RenderString(InstanceId id)
+        private string RenderString()
         {
-            var block = CreateBlock(id.Zone, id.Page, id.Container, id.App, id.Block, Log);
 
-            var result = block.BlockBuilder.Render();
+            var result = _block.BlockBuilder.Render();
+
+            _assetsAndHeaders.Init(_block.BlockBuilder);
 
             // todo: set parameters for loading scripts etc.
             //PageProperties.Headers += "hello!!!";
 
             return result;
         }
+
+        private IBlock GetBlock(InstanceId id) => CreateBlock(id.Zone, id.Page, id.Container, id.App, id.Block, Log);
 
         public IBlock CreateBlock(int zoneId, int pageId, int containerId, int appId, Guid blockGuid, ILog log)
         {

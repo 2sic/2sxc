@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Dev;
@@ -12,9 +13,6 @@ namespace ToSic.Sxc.Oqt.Server.Page
 {
     public class OqtAssetsAndHeaders: HasLog, IOqtAssetsAndHeader
     {
-        private readonly IAntiforgery _antiForgery;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
         #region Constructor and DI
 
         public OqtAssetsAndHeaders(IAntiforgery antiForgery, IHttpContextAccessor httpContextAccessor) : base("Oqt.AssHdr")
@@ -22,27 +20,33 @@ namespace ToSic.Sxc.Oqt.Server.Page
             _antiForgery = antiForgery;
             _httpContextAccessor = httpContextAccessor;
         }
+        private readonly IAntiforgery _antiForgery;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+
+        public void Init(IBlockBuilder blockBuilder) => BlockBuilder = blockBuilder as BlockBuilder;
+        protected BlockBuilder BlockBuilder;
 
         #endregion
 
-        public bool AddContextMeta => true;
+        public bool AddContextMeta => AddJsCore || AddJsEdit;
 
-        public bool AddJsCore = true;
+        private bool AddJsCore => BlockBuilder?.UiAddJsApi ?? false;
         //public bool AddJsAdvanced = true;
-        public bool AddCmsJs = true;
-        public bool AddCmsCss = true;
+        private bool AddJsEdit => BlockBuilder?.UiAddEditApi ?? false;
+        private bool AddCssEdit => BlockBuilder?.UiAddEditUi ?? false;
 
         public IEnumerable<string> Scripts()
         {
             var list = new List<string>();
             if (AddJsCore) list.Add($"{OqtConstants.UiRoot}/{InpageCms.CoreJs}");
-            if (AddCmsJs) list.Add($"{OqtConstants.UiRoot}/{InpageCms.EditJs}");
+            if (AddJsEdit) list.Add($"{OqtConstants.UiRoot}/{InpageCms.EditJs}");
             return list;
         }
 
         public IEnumerable<string> Styles()
         {
-            if (!AddCmsCss) return Array.Empty<string>();
+            if (!AddCssEdit) return Array.Empty<string>();
             var list = new List<string>  { $"{OqtConstants.UiRoot}/{InpageCms.EditCss}" };
             return list;
         }
