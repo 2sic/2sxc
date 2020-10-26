@@ -54,7 +54,10 @@ namespace ToSic.Sxc.Oqt.Server
         {
             if (module.ModuleId == 27)
                 return RenderHtml(TestIds.Token);
-            if (module.ModuleId == 28)
+            if (module.ModuleId == 28 // test site 2dm, root site
+                || module.ModuleId == 1049 // test sub-site 2dm "blogsite"
+                || module.ModuleId == 56 // test sub-site Tonci "blogsite"
+                )
                 return RenderHtml(TestIds.Blog);
             return (MarkupString) $"Error - module id {module} not found";
         }

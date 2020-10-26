@@ -32,5 +32,10 @@ namespace ToSic.Sxc.Oqt.Shared.Dev
         public static int NeedSiteFromHeader = 2;
 
         public static string WebApiPrefixFor1 = "1/";
+
+        public static void DontDoAnythingImplementLater()
+        {
+
+        }
     }
 }
