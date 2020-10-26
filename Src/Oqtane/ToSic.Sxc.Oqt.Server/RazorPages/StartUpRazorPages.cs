@@ -30,6 +30,7 @@ namespace ToSic.Sxc.Oqt.Server.RazorPages
                 .AddRazorRuntimeCompilation(options =>
                 {
                     options.FileProviders.Add(new PhysicalFileProvider(contentRootPath));
+                    //options.AdditionalReferencePaths
                 });
 
             // exp: access the anti forgery so it's loaded

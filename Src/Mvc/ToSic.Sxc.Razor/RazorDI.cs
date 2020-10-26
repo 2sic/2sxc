@@ -2,6 +2,7 @@
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Razor.Code;
+using ToSic.Sxc.Razor.Debug;
 using ToSic.Sxc.Razor.Engines;
 
 namespace ToSic.Sxc.Razor
@@ -13,6 +14,9 @@ namespace ToSic.Sxc.Razor
             services.AddTransient<DynamicCodeRoot, Razor3DynamicCode>();
             services.AddTransient<IRenderRazor, RenderRazor>();
             services.AddTransient<IEngineFinder, RazorEngineFinder>();
+
+            // debugging
+            services.AddTransient<RazorReferenceManager>();
 
             return services;
         }

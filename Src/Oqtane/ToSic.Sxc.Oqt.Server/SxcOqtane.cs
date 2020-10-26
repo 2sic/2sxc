@@ -14,6 +14,7 @@ using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.Wip;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.Oqt.Shared.Run;
+using ToSic.Sxc.Razor.Debug;
 
 namespace ToSic.Sxc.Oqt.Server
 {
@@ -21,10 +22,12 @@ namespace ToSic.Sxc.Oqt.Server
     {
         #region Constructor and DI
         
-        public SxcOqtane(IHttpContextAccessor httpContextAccessor, OqtanePageProperties pageProperties, IZoneMapper zoneMapper) : base("Mvc.View")
+        public SxcOqtane(IHttpContextAccessor httpContextAccessor, OqtanePageProperties pageProperties, IZoneMapper zoneMapper, 
+            Razor.Debug.RazorReferenceManager debugRefMan) : base("Mvc.View")
         {
             PageProperties = pageProperties;
             _zoneMapper = zoneMapper;
+            _debugRefMan = debugRefMan;
             _httpContext = httpContextAccessor.HttpContext;
             // add log to history!
             History.Add("sxc-mvc-view", Log);
@@ -33,6 +36,7 @@ namespace ToSic.Sxc.Oqt.Server
         private readonly HttpContext _httpContext;
         public OqtanePageProperties PageProperties;
         private readonly IZoneMapper _zoneMapper;
+        private readonly RazorReferenceManager _debugRefMan;
 
         #endregion
 
@@ -47,6 +51,11 @@ namespace ToSic.Sxc.Oqt.Server
             if (module.ModuleId == 28)
                 return RenderHtml(TestIds.Blog);
             return (MarkupString) $"Error - module id {module} not found";
+        }
+
+        public string Test()
+        {
+            return _debugRefMan.CompilationReferences.Count.ToString();
         }
 
         private string RenderString(InstanceId id)

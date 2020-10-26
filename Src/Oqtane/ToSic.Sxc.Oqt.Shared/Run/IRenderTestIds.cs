@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Oqtane.Models;
-using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Shared.Dev;
 
 namespace ToSic.Sxc.Oqt.Shared.Run
@@ -11,5 +10,6 @@ namespace ToSic.Sxc.Oqt.Shared.Run
 
         MarkupString RenderModule(Site site, Page page, Module module);
 
+        string Test();
     }
 }
