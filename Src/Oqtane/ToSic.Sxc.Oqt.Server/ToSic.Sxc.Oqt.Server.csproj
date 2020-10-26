@@ -65,7 +65,7 @@
     <ProjectReference Include="..\..\..\..\octane\oqtane.framework\Oqtane.Server\Oqtane.Server.csproj" />
     <ProjectReference Include="..\..\..\..\octane\oqtane.framework\Oqtane.Shared\Oqtane.Shared.csproj" />
     <ProjectReference Include="..\..\Dnn\ToSic.Sxc.Razor\2sxc Razor.csproj" />
-    <ProjectReference Include="..\..\Mvc\ToSic.Sxc.Razor\ToSic.Sxc.Razor.csproj" />
+    <ProjectReference Include="..\..\Razor\ToSic.Sxc.Razor.Engine\ToSic.Sxc.Razor.Engine.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Oqt.Shared\ToSic.Sxc.Oqt.Shared.csproj" />

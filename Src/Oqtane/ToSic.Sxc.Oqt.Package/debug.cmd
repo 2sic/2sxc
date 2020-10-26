@@ -13,10 +13,10 @@ XCOPY "..\ToSic.Sxc.Oqt.Server\bin\Debug\netcoreapp3.1\ToSic.*.pdb" "%OqtaneBin%
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Mvc.Razor.*.dll" "%OqtaneBin%" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Razor.*" "%OqtaneBin%" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\Debug\netcoreapp3.1\Microsoft.CodeAnalys*.*" "%OqtaneBin%" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyModel.dll" "%OqtaneBin%" /Y
+@REM XCOPY "..\ToSic.Sxc.Oqt.Server\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyModel.dll" "%OqtaneBin%" /Y
 
 @Echo Copying refs folder for runtime compilation of Razor cshtml
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\Debug\netcoreapp3.1\refs\*.dll" "%OqtaneBin%refs" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\Debug\netcoreapp3.1\refs\*.dll" "%OqtaneBin%refs\" /Y
 
 @REM 2sxc Oqtane - Shared
 XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\Debug\netstandard2.1\ToSic.*.dll" "%OqtaneBin%" /Y

@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Razor.Components
 {
     public partial class SxcRazorComponent<TModel>: ISxcRazorComponent
     {
-        #region DynCode 
+        #region DynCode
 
         public DynamicCodeRoot DynCode
         {

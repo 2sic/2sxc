@@ -87,7 +87,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oqtane.Shared", "..\..\octa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oqtane.Client", "..\..\octane\oqtane.framework\Oqtane.Client\Oqtane.Client.csproj", "{62B0A822-C3ED-436E-A67B-8E99A7E89B24}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Razor", "Mvc\ToSic.Sxc.Razor\ToSic.Sxc.Razor.csproj", "{9269847A-20A1-4F72-9E14-36BFE0323632}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Razor.Engine", "Razor\ToSic.Sxc.Razor.Engine\ToSic.Sxc.Razor.Engine.csproj", "{9269847A-20A1-4F72-9E14-36BFE0323632}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Razor", "Razor\ToSic.Sxc.Razor\ToSic.Sxc.Razor.csproj", "{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Razor", "Razor", "{DD59EAFD-02D1-4285-B8BE-D2DD40536304}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -925,6 +929,30 @@ Global
 		{9269847A-20A1-4F72-9E14-36BFE0323632}.Testing|Windows-x64.Build.0 = Release|Any CPU
 		{9269847A-20A1-4F72-9E14-36BFE0323632}.Testing|Windows-x86.ActiveCfg = Release|Any CPU
 		{9269847A-20A1-4F72-9E14-36BFE0323632}.Testing|Windows-x86.Build.0 = Release|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Debug|DNN.ActiveCfg = Debug|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Debug|DNN.Build.0 = Debug|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Debug|Windows-x64.Build.0 = Debug|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Release|DNN.ActiveCfg = Release|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Release|DNN.Build.0 = Release|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Release|Windows-x64.ActiveCfg = Release|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Release|Windows-x64.Build.0 = Release|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Testing|Any CPU.ActiveCfg = Release|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Testing|Any CPU.Build.0 = Release|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Testing|DNN.ActiveCfg = Release|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Testing|DNN.Build.0 = Release|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Testing|Windows-x64.ActiveCfg = Release|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Testing|Windows-x64.Build.0 = Release|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Testing|Windows-x86.ActiveCfg = Release|Any CPU
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}.Testing|Windows-x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -965,10 +993,11 @@ Global
 		{1F1C0F04-736D-4A4D-A324-8FCA8C373738} = {C2BEB114-B1DB-404D-8442-A75809059619}
 		{748C1FF5-D9A0-4F8D-A113-0D1C54791CE8} = {C2BEB114-B1DB-404D-8442-A75809059619}
 		{62B0A822-C3ED-436E-A67B-8E99A7E89B24} = {C2BEB114-B1DB-404D-8442-A75809059619}
-		{9269847A-20A1-4F72-9E14-36BFE0323632} = {F1366AA6-6508-47E4-AE39-CB39537CA220}
+		{9269847A-20A1-4F72-9E14-36BFE0323632} = {DD59EAFD-02D1-4285-B8BE-D2DD40536304}
+		{ACD30ED0-0B6E-48E7-A898-CF42C93E857A} = {DD59EAFD-02D1-4285-B8BE-D2DD40536304}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
+		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 	EndGlobalSection
 EndGlobal

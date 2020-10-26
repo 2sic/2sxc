@@ -12,14 +12,14 @@ namespace ToSic.Sxc.Oqt.Server.Page
 {
     public class OqtAssetsAndHeaders: HasLog, IOqtAssetsAndHeader
     {
-        private readonly IAntiforgery _antiforgery;
+        private readonly IAntiforgery _antiForgery;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         #region Constructor and DI
 
-        public OqtAssetsAndHeaders(IAntiforgery antiforgery, IHttpContextAccessor httpContextAccessor) : base("Oqt.AssHdr")
+        public OqtAssetsAndHeaders(IAntiforgery antiForgery, IHttpContextAccessor httpContextAccessor) : base("Oqt.AssHdr")
         {
-            _antiforgery = antiforgery;
+            _antiForgery = antiForgery;
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -62,6 +62,6 @@ namespace ToSic.Sxc.Oqt.Server.Page
         public string ContextMetaName => InpageCms.MetaName;
 
         private string AntiForgeryToken() 
-            => _antiforgery.GetAndStoreTokens(_httpContextAccessor.HttpContext).RequestToken;
+            => _antiForgery.GetAndStoreTokens(_httpContextAccessor.HttpContext).RequestToken;
     }
 }
