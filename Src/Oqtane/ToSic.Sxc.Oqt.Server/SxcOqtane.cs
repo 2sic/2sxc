@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Http;
 using Oqtane.Models;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Oqt.Server.Code;
@@ -22,11 +21,9 @@ namespace ToSic.Sxc.Oqt.Server
     {
         #region Constructor and DI
         
-        public SxcOqtane(IHttpContextAccessor httpContextAccessor, OqtanePageProperties pageProperties, IZoneMapper zoneMapper, 
-            Razor.Debug.RazorReferenceManager debugRefMan) : base("Mvc.View")
+        public SxcOqtane(IHttpContextAccessor httpContextAccessor, OqtAssetsAndHeaders moduleAssets, RazorReferenceManager debugRefMan) : base("Mvc.View")
         {
-            PageProperties = pageProperties;
-            _zoneMapper = zoneMapper;
+            AssetsAndHeaders = moduleAssets;
             _debugRefMan = debugRefMan;
             _httpContext = httpContextAccessor.HttpContext;
             // add log to history!
@@ -34,8 +31,7 @@ namespace ToSic.Sxc.Oqt.Server
         }
 
         private readonly HttpContext _httpContext;
-        public OqtanePageProperties PageProperties;
-        private readonly IZoneMapper _zoneMapper;
+        public IOqtAssetsAndHeader AssetsAndHeaders { get; }
         private readonly RazorReferenceManager _debugRefMan;
 
         #endregion

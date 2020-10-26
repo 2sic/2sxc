@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddTransient<IPagePublishing, OqtanePagePublishing>();
 
             //// MVC Specific stuff
-            services.AddScoped<OqtanePageProperties>();
+            services.AddScoped<OqtAssetsAndHeaders>();
             services.AddTransient<OqtaneSiteFactory>();
             services.AddTransient<SxcOqtane>();
 

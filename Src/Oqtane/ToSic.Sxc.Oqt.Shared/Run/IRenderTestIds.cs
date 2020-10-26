@@ -10,6 +10,8 @@ namespace ToSic.Sxc.Oqt.Shared.Run
 
         MarkupString RenderModule(Site site, Page page, Module module);
 
+        IOqtAssetsAndHeader AssetsAndHeaders { get; }
+
         string Test();
     }
 }

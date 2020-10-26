@@ -1,24 +1,28 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Text;
 using Microsoft.AspNetCore.Html;
 using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Edit;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Dev;
+using ToSic.Sxc.Oqt.Shared.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Page
 {
-    public class OqtanePageProperties: HasLog
+    public class OqtAssetsAndHeaders: HasLog, IOqtAssetsAndHeader
     {
         #region Constructor and DI
 
-        public OqtanePageProperties() : base("Mvc.PgProp")
+        public OqtAssetsAndHeaders() : base("Mvc.PgProp")
         {
         }
 
         #endregion
 
-        public bool AddContextMeta = true;
+        public bool AddContextMeta => true;
 
         public bool AddJsCore = true;
         //public bool AddJsAdvanced = true;
@@ -28,28 +32,29 @@ namespace ToSic.Sxc.Oqt.Server.Page
         public string Headers = "";
 
 
-        public HtmlString FinalHeaders()
+        public IEnumerable<string> Scripts()
         {
-            var headers = new StringBuilder();
-            headers.AppendLine("<!-- 2sxc headers -->");
-            // TODO #Oqtane
-            if (AddContextMeta) headers.AppendLine(ContextHeader());
-
-            if (AddJsCore) headers.AppendLine(Tag.Script().Src($"{OqtConstants.UiRoot}{InpageCms.CoreJs}").ToString());
-            if (AddCmsJs) headers.AppendLine(Tag.Script().Src($"{OqtConstants.UiRoot}{InpageCms.EditJs}").ToString());
-            if (AddCmsCss) headers.AppendLine(Tag.Link().Href($"{OqtConstants.UiRoot}{InpageCms.EditCss}").Rel("stylesheet").ToString());
-            headers.AppendLine($"<meta />{Headers}<!-- end -->");
-            return new HtmlString(headers.ToString());
+            var list = new List<string>();
+            if (AddJsCore) list.Add($"{OqtConstants.UiRoot}{InpageCms.CoreJs}");
+            if (AddCmsJs) list.Add($"{OqtConstants.UiRoot}{InpageCms.EditJs}");
+            return list;
         }
 
-        public HtmlString FinalFooter()
+        public IEnumerable<string> Styles()
         {
-            return new HtmlString("<!-- footer from PageManager - should later contain the scripts etc.");
+            if (!AddCmsCss) return Array.Empty<string>();
+            var list = new List<string>  { $"{OqtConstants.UiRoot}{InpageCms.EditCss}" };
+            return list;
         }
+
+        //public HtmlString FinalFooter()
+        //{
+        //    return new HtmlString("<!-- footer from PageManager - should later contain the scripts etc.");
+        //}
 
 
         // TODO: #Oqtane
-        public string ContextHeader()
+        public string ContextMetaHeader()
         {
             var wrapLog = Log.Call<string>();
 

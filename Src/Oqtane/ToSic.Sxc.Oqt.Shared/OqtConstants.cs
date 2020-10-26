@@ -16,7 +16,7 @@
         public const string UserTokenPrefix = "oqt";
 
         // #uncertain: maybe should incorporate the virtual path of the application?
-        public const string UiRoot = "/Modules/ToSic.Sxc/dist";
+        public const string UiRoot = "/Modules/ToSic.Sxc";
         // #uncertain: maybe should be more dynamic
         public const string SiteRoot = "/";
 
