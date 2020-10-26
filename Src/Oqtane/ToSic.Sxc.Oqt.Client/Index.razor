@@ -96,12 +96,6 @@ test: @TestIds.PrimaryApp
         new Resource { ResourceType = ResourceType.Stylesheet, Url = ToSxcModulePath() + "Module.css" },
         new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "Module.js" },
         new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/2sxc.api.min.js" }, // Oqtane will not load this script because of bug???
-    };
-
-    // HACK: Lets load all 2sxc js dependeces.
-    public List<Resource> ToSxcJsResources => new List<Resource>()
-    {
-        new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/2sxc.api.min.js" },
         new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-A.api.min.js" },
         new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-B.api.min.js" },
         new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-C.api.min.js" },
@@ -142,9 +136,9 @@ test: @TestIds.PrimaryApp
                 var interop = new Interop(JSRuntime);
 
                 // HACK: Lets load all 2sxc js dependeces.
-                if (ToSxcJsResources != null && ToSxcJsResources.Exists(item => item.ResourceType == ResourceType.Script))
+                if (Resources != null && Resources.Exists(item => item.ResourceType == ResourceType.Script))
                 {
-                    foreach (Resource resource in ToSxcJsResources.Where(item => item.ResourceType == ResourceType.Script))
+                    foreach (Resource resource in Resources.Where(item => item.ResourceType == ResourceType.Script))
                     {
                         await interop.IncludeScript("", resource.Url, resource.Integrity ?? "", resource.CrossOrigin ?? "", "", "head", "");
                     }
