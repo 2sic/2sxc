@@ -10,7 +10,12 @@
 @inject NavigationManager NavigationManager
 
 @inject IRenderTestIds SxcEngine
-Test 2dm: @SxcEngine.RenderModule(PageState.Site, PageState.Page, this.ModuleState)
+
+<div style="border: aqua 2px dotted">
+  @SxcEngine.GeneratedHtml
+</div>
+
+Info: razor with manual timestamp 2020-10-26 13:57
 
 @*test razor manager: @SxcEngine.Test()*@
 
@@ -88,71 +93,100 @@ test: @TestIds.PrimaryApp
 
     public string ToSxcModulePath()
     {
-        return "Modules/ToSic.Sxc/";
+      return "Modules/ToSic.Sxc/";
     }
 
     public override List<Resource> Resources => new List<Resource>()
     {
         new Resource { ResourceType = ResourceType.Stylesheet, Url = ToSxcModulePath() + "Module.css" },
         new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "Module.js" },
-        new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/2sxc.api.min.js" }, // Oqtane will not load this script because of bug???
-        new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-A.api.min.js" },
-        new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-B.api.min.js" },
-        new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-C.api.min.js" },
-        new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-D.api.min.js" },
+        //new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/2sxc.api.min.js" }, // Oqtane will not load this script because of bug???
+
+        //new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-A.api.min.js" },
+        //new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-B.api.min.js" },
+        //new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-C.api.min.js" },
+        //new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-D.api.min.js" },
     };
+
+
+    // HACK: Lets load all 2sxc js dependeces.
+    public List<Resource> ToSxcJsResources
+    {
+      get
+      {
+        return SxcEngine.AssetsAndHeaders.Scripts().Select(s => new Resource
+        {
+          ResourceType = ResourceType.Script,
+          Url = s
+        }).ToList();
+        //return new List<Resource>()
+        //{
+        //  new Resource {ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/2sxc.api.min.js"},
+        //  new Resource {ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-A.api.min.js"},
+        //  new Resource {ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-B.api.min.js"},
+        //  new Resource {ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-C.api.min.js"},
+        //  new Resource {ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-D.api.min.js"},
+        //};
+      }
+    }
 
     JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
     {
-        WriteIndented = true,
+      WriteIndented = true,
     };
 
     protected override async Task OnInitializedAsync()
     {
-        /*
-        try
-        {
-            //_Sxcs = await SxcService.GetSxcsAsync(ModuleState.ModuleId);
-            test1 = ToSic.Eav.Apps.State.Get(4).CacheTimestamp.ToString();
+      // prepare the html / headers
+      SxcEngine.Prepare(PageState.Site, PageState.Page, ModuleState);
+      /*
+      try
+      {
+          //_Sxcs = await SxcService.GetSxcsAsync(ModuleState.ModuleId);
+          test1 = ToSic.Eav.Apps.State.Get(4).CacheTimestamp.ToString();
 
-        }
-        catch (Exception ex)
-        {
-            await logger.LogError(ex, "Error Loading Sxc {Error}", ex.Message);
-            AddModuleMessage("Error Loading Sxc", MessageType.Error);
-            throw;
-        }
-        */
+      }
+      catch (Exception ex)
+      {
+          await logger.LogError(ex, "Error Loading Sxc {Error}", ex.Message);
+          AddModuleMessage("Error Loading Sxc", MessageType.Error);
+          throw;
+      }
+      */
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+      if (firstRender)
+      {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (PageState.Runtime == Runtime.Server)
         {
-            await base.OnAfterRenderAsync(firstRender);
+          var interop = new Interop(JSRuntime);
 
-            if (PageState.Runtime == Runtime.Server)
-            {
-                var interop = new Interop(JSRuntime);
+          // HACK: Lets load all 2sxc js dependeces.
+          //if (Resources != null && Resources.Exists(item => item.ResourceType == ResourceType.Script))
+          //{
+          foreach (Resource resource in ToSxcJsResources) // .Where(item => item.ResourceType == ResourceType.Script))
+          {
+            await interop.IncludeScript("", resource.Url, resource.Integrity ?? "", resource.CrossOrigin ?? "", "", "head", "");
+          }
+          //}
 
-                // HACK: Lets load all 2sxc js dependeces.
-                if (Resources != null && Resources.Exists(item => item.ResourceType == ResourceType.Script))
-                {
-                    foreach (Resource resource in Resources.Where(item => item.ResourceType == ResourceType.Script))
-                    {
-                        await interop.IncludeScript("", resource.Url, resource.Integrity ?? "", resource.CrossOrigin ?? "", "", "head", "");
-                    }
-                }
+          var aAndH = SxcEngine.AssetsAndHeaders;
+          if (aAndH.AddContextMeta)
+            await interop.IncludeMeta("sxc-tmp-context-id", "name", aAndH.ContextMetaName, aAndH.ContextMetaContents(), "id");
 
-                await interop.IncludeMeta("kk1", "name", "description", $"content {PageState.Page.PageId} {PageState.ModuleId}", "id");
-                await interop.IncludeMeta("kk2", "name", "keywords", $"content {PageState.Page.PageId} {PageState.ModuleId}", "id");
-                await interop.IncludeMeta("kk3", "name", "author", $"content {PageState.Page.PageId} {PageState.ModuleId}", "id");
+          //await interop.IncludeMeta("kk1", "name", "description", $"content {PageState.Page.PageId} {PageState.ModuleId}", "id");
+          //await interop.IncludeMeta("kk2", "name", "keywords", $"content {PageState.Page.PageId} {PageState.ModuleId}", "id");
+          //await interop.IncludeMeta("kk3", "name", "author", $"content {PageState.Page.PageId} {PageState.ModuleId}", "id");
 
-                string antiforgerytoken = await interop.GetElementByName("__RequestVerificationToken");
-                //var fields = new { __RequestVerificationToken = antiforgerytoken, username = _username, password = _password, remember = _remember, returnurl = _returnUrl };
-                //await interop.IncludeLink("app-stylesheet", "stylesheet", "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css", "text/css", "sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T", "anonymous", "");
-                //await interop.IncludeScripts(scripts.ToArray());
-            }
+          string antiforgerytoken = await interop.GetElementByName("__RequestVerificationToken");
+          //var fields = new { __RequestVerificationToken = antiforgerytoken, username = _username, password = _password, remember = _remember, returnurl = _returnUrl };
+          //await interop.IncludeLink("app-stylesheet", "stylesheet", "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css", "text/css", "sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T", "anonymous", "");
+          //await interop.IncludeScripts(scripts.ToArray());
         }
-    }
+      }
+}
 }
