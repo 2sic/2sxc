@@ -6,6 +6,7 @@ using ToSic.Eav.LookUp;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Run;
@@ -141,5 +142,10 @@ namespace ToSic.Sxc.Dnn
 
         #endregion
 
+        #region RunContext WIP
+
+        [PrivateApi] public ContextBundle RunContext => DynCode?.RunContext;
+
+        #endregion
     }
 }

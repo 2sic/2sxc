@@ -11,6 +11,7 @@ using ToSic.SexyContent.Search;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Context;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Compatibility.RazorPermissions;
 using ToSic.Sxc.Compatibility.Sxc;
@@ -203,6 +204,11 @@ namespace ToSic.SexyContent.Razor
         /// <inheritdoc />
         public IFolder AsAdam(IEntity entity, string fieldName) => DynCode.AsAdam(entity, fieldName);
 
+        #endregion
+
+        #region RunContext - new in 11.08 or similar, not implemented in old base classes
+
+        public ContextBundle RunContext => throw new NotImplementedException("RunContext is only used on newer base classes");
         #endregion
 
     }

@@ -8,6 +8,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Edit.InPageEditingSystem;
@@ -241,6 +242,7 @@ namespace ToSic.Sxc.Code
         #endregion
 
         #region SharedCode Compiler
+
         /// <inheritdoc />
         public virtual dynamic CreateInstance(string virtualPath,
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
@@ -262,10 +264,16 @@ namespace ToSic.Sxc.Code
             return instance;
         }
 
+        /// <inheritdoc />
+        public string CreateInstancePath { get; set; }
 
         #endregion
 
-        /// <inheritdoc />
-        public string CreateInstancePath { get; set; }
+        #region Context WIP
+
+        [PrivateApi] public ContextBundle RunContext => _context ?? (_context = new ContextBundle(this));
+        private ContextBundle _context;
+
+        #endregion
     }
 }

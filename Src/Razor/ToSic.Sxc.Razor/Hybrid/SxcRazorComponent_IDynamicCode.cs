@@ -7,6 +7,7 @@ using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Web;
@@ -78,9 +79,8 @@ namespace ToSic.Sxc.Razor.Components
             throw new NotImplementedException();
         }
 
+
         #endregion
-
-
 
         #region Adam 
 
@@ -90,6 +90,12 @@ namespace ToSic.Sxc.Razor.Components
 
         /// <inheritdoc />
         public IFolder AsAdam(IEntity entity, string fieldName) => DynCode.AsAdam(entity, fieldName);
+
+        #endregion
+
+        #region Context WIP
+
+        public ContextBundle RunContext => DynCode.RunContext;
 
         #endregion
 

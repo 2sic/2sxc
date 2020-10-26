@@ -4,6 +4,7 @@ using System.IO;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
+using ToSic.Sxc.Code.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Run;
@@ -120,5 +121,11 @@ namespace ToSic.Sxc.Dnn
 
         #endregion
 
+        #region RunContext WiP
+
+        public ContextBundle RunContext => DynCode?.RunContext;
+
+
+        #endregion
     }
 }

@@ -7,6 +7,7 @@ using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Web;
@@ -126,5 +127,11 @@ namespace ToSic.Sxc.Code
         #endregion
 
         public ILog Log => UnwrappedContents?.Log;
+
+        #region Context WIP
+
+        public ContextBundle RunContext => UnwrappedContents?.RunContext;
+
+        #endregion
     }
 }

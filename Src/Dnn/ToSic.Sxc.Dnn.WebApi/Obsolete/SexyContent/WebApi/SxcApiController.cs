@@ -6,6 +6,7 @@ using System.Linq;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Context;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Compatibility.Sxc;
 using ToSic.Sxc.Data;
@@ -195,5 +196,9 @@ namespace ToSic.SexyContent.WebApi
 
         #endregion
 
+        #region RunContext - new in 11.08 or similar, not implemented in old base classes
+
+        public ContextBundle RunContext => throw new NotImplementedException("RunContext is only used on newer base classes");
+        #endregion
     }
 }
