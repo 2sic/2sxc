@@ -11,11 +11,12 @@ namespace ToSic.Sxc.Oqt.Shared.Run
         /// </summary>
         bool AddContextMeta { get; }
 
+        string ContextMetaName { get; }
         /// <summary>
         /// Will return the meta-header which the $2sxc client needs for context, page id, request verification token etc.
         /// </summary>
         /// <returns></returns>
-        string ContextMetaHeader();
+        string ContextMetaContents();
 
         /// <summary>
         /// The JavaScripts needed

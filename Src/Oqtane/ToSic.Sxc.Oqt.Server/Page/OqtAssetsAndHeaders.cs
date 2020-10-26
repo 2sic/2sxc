@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Html;
 using ToSic.Eav.Logging;
-using ToSic.Razor.Blade;
 using ToSic.Sxc.Edit;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Dev;
@@ -29,21 +25,18 @@ namespace ToSic.Sxc.Oqt.Server.Page
         public bool AddCmsJs = true;
         public bool AddCmsCss = true;
 
-        public string Headers = "";
-
-
         public IEnumerable<string> Scripts()
         {
             var list = new List<string>();
-            if (AddJsCore) list.Add($"{OqtConstants.UiRoot}{InpageCms.CoreJs}");
-            if (AddCmsJs) list.Add($"{OqtConstants.UiRoot}{InpageCms.EditJs}");
+            if (AddJsCore) list.Add($"{OqtConstants.UiRoot}/{InpageCms.CoreJs}");
+            if (AddCmsJs) list.Add($"{OqtConstants.UiRoot}/{InpageCms.EditJs}");
             return list;
         }
 
         public IEnumerable<string> Styles()
         {
             if (!AddCmsCss) return Array.Empty<string>();
-            var list = new List<string>  { $"{OqtConstants.UiRoot}{InpageCms.EditCss}" };
+            var list = new List<string>  { $"{OqtConstants.UiRoot}/{InpageCms.EditCss}" };
             return list;
         }
 
@@ -54,19 +47,17 @@ namespace ToSic.Sxc.Oqt.Server.Page
 
 
         // TODO: #Oqtane
-        public string ContextMetaHeader()
+        public string ContextMetaContents()
         {
             var wrapLog = Log.Call<string>();
 
             var pageId = 0;
             var siteRoot = OqtConstants.SiteRoot;
             var apiRoot = siteRoot + WipConstants.WebApiPrefixFor1 + WebApiConstants.WebApiRoot + "/";
-            var json = InpageCms.JsApiJson(pageId, siteRoot, apiRoot, AntiForgeryToken(), OqtConstants.UiRoot);
-
-            var meta = Tag.Meta().Name(InpageCms.MetaName).Content(json).ToString();
-
-            return wrapLog(meta, meta);
+            return InpageCms.JsApiJson(pageId, siteRoot, apiRoot, AntiForgeryToken(), OqtConstants.UiRoot);
         }
+
+        public string ContextMetaName => InpageCms.MetaName;
 
         private string AntiForgeryToken()
         {

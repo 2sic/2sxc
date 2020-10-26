@@ -1,13 +1,10 @@
 ﻿using System;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 using Oqtane.Models;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Oqt.Server.Code;
 using ToSic.Sxc.Oqt.Server.Page;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.Wip;
@@ -36,9 +33,22 @@ namespace ToSic.Sxc.Oqt.Server
 
         #endregion
 
-        public HtmlString Render(InstanceId id) => new HtmlString(RenderString(id));
+        #region Prepare
 
-        public MarkupString RenderHtml(InstanceId id) => (MarkupString)RenderString(id);
+        /// <summary>
+        /// Prepare must always be the first thing to be called - to ensure that afterwards both headers and html are known. 
+        /// </summary>
+        public void Prepare(Site site, Oqtane.Models.Page page, Module module)
+        {
+            if (_renderDone) throw new Exception("already prepared this module");
+            GeneratedHtml = RenderModule(site, page, module);
+            _renderDone = true;
+        }
+
+        private bool _renderDone;
+        public MarkupString GeneratedHtml { get; private set; }
+
+        #endregion
 
         public MarkupString RenderModule(Site site, Oqtane.Models.Page page, Module module)
         {
@@ -49,6 +59,8 @@ namespace ToSic.Sxc.Oqt.Server
             return (MarkupString) $"Error - module id {module} not found";
         }
 
+        private MarkupString RenderHtml(InstanceId id) => (MarkupString)RenderString(id);
+
         public string Test()
         {
             return _debugRefMan.CompilationReferences.Count.ToString();
@@ -56,28 +68,22 @@ namespace ToSic.Sxc.Oqt.Server
 
         private string RenderString(InstanceId id)
         {
-            var blockBuilder = CreateBlock(id.Zone, id.Page, id.Container, id.App, id.Block, Log);
+            var block = CreateBlock(id.Zone, id.Page, id.Container, id.App, id.Block, Log);
 
-            var result = blockBuilder.BlockBuilder.Render();
+            var result = block.BlockBuilder.Render();
 
             // todo: set parameters for loading scripts etc.
             //PageProperties.Headers += "hello!!!";
+
             return result;
         }
 
-        public DynamicCodeRoot CreateDynCode(InstanceId id, ILog log) =>
-            new OqtaneDynamicCode().Init(CreateBlock(id.Zone, id.Page, id.Container, id.App, id.Block, log), log);
-
-
         public IBlock CreateBlock(int zoneId, int pageId, int containerId, int appId, Guid blockGuid, ILog log)
         {
-            var context = CreateContext(zoneId, pageId, containerId, appId, blockGuid);
+            var context = CreateContext(_httpContext, zoneId, pageId, containerId, appId, blockGuid);
             var block = new BlockFromModule().Init(context, log);
             return block;
         }
-
-        private InstanceContext CreateContext(int zoneId, int pageId, int containerId, int appId, Guid blockGuid)
-            => CreateContext(_httpContext, zoneId, pageId, containerId, appId, blockGuid);
 
         public InstanceContext CreateContext(HttpContext http, int zoneId, int pageId, int containerId, int appId,
             Guid blockGuid)

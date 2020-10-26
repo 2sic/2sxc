@@ -6,9 +6,11 @@ namespace ToSic.Sxc.Oqt.Shared.Run
 {
     public interface IRenderTestIds
     {
-        MarkupString RenderHtml(InstanceId id);
+        void Prepare(Site site, Page page, Module module);
 
-        MarkupString RenderModule(Site site, Page page, Module module);
+        MarkupString GeneratedHtml { get; }
+
+        //MarkupString RenderModule(Site site, Page page, Module module);
 
         IOqtAssetsAndHeader AssetsAndHeaders { get; }
 
