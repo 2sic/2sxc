@@ -12,7 +12,7 @@ using ToSic.Sxc.WebApi.Cms;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
-    [Route(WebApiConstants.WebApiRoot + "/cms/edit/[action]")]
+    [Route(WebApiConstants.WebApiStateRoot + "/cms/edit/[action]")]
     [ApiController]
     public class EditController: SxcStatefulControllerBase
     {

@@ -12,7 +12,7 @@ using ToSic.Sxc.WebApi.Cms;
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     [ApiController]
-    [Route(WebApiConstants.WebApiRoot + "/dnn/[controller]/[action]")]
+    [Route(WebApiConstants.WebApiStateRoot + "/dnn/[controller]/[action]")]
     public class HyperlinkController: SxcStatefulControllerBase
     {
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "HypLnk";
