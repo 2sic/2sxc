@@ -35,10 +35,13 @@ robocopy /mir "..\..\Data\.data\ " "%BuildTarget%\.data\ "
 robocopy /mir "..\..\Data\.databeta\ " "%BuildTarget%\.databeta\ "
 robocopy /mir "..\..\Data\.data-custom\ " "%BuildTarget%\.data-custom\ "
 
+@REM ... find better source
+@set Dev2sxcAssets=C:\Projects\2sxc\2sxc\Src\Mvc\Website\wwwroot
+
 @REM Copy 2sxc JS stuff
-@REM robocopy /mir "$(Dev2sxcAssets)\js\ " "%BuildTarget%\js\ "
-@REM robocopy /mir "$(Dev2sxcAssets)\dist\ " "%BuildTarget%\dist\ "
-@REM robocopy /mir "$(Dev2sxcAssets)\system\ " "%BuildTarget%\system\ "
+robocopy /mir "%Dev2sxcAssets%\js\ " "%BuildTarget%\js\ "
+robocopy /mir "%Dev2sxcAssets%\dist\ " "%BuildTarget%\dist\ "
+robocopy /mir "%Dev2sxcAssets%\system\ " "%BuildTarget%\system\ "
 
 @echo Copied all files to this Website target: '%BuildTarget%'
 
