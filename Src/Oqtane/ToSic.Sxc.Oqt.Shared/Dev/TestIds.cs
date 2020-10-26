@@ -13,11 +13,11 @@ namespace ToSic.Sxc.Oqt.Shared.Dev
         public static int PrimaryApp => Dev4Spm ? 999 : 2;
 
         public static InstanceId Blog => Dev4Spm
-            ? null
+            ? new InstanceId(2, 55, 4, 3002, new Guid("b9bc0e05-2dc1-451b-a185-bd22a03e0952"))
             : new InstanceId(2, 680, 78, 3002, new Guid("9cbcee9d-49d5-4fe0-8e74-1e20f74a5916"));
 
         public static InstanceId ContentOnHome => Dev4Spm
-            ? null
+            ? new InstanceId(2, 56, 2, 6935, new Guid("f8ae3d07-5805-4650-a46d-a047e113ab53"))
             : new InstanceId(2, 56, 2, 6935, new Guid("f8ae3d07-5805-4650-a46d-a047e113ab53"));
 
         // Token app here: http://2sexycontent.2dm.2sic/features/Tokens
@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Oqt.Shared.Dev
             ? new InstanceId(2, 92, 18, 428, new Guid("7e4dfd75-4158-44cd-a08f-d3078f9bd3ff"))
             : new InstanceId(128, 4062, 1262,9170, new Guid("584b7398-8517-4bdf-b05d-71d64b935f4f"));
 
-        public static List<InstanceId> FakeDb = new List<InstanceId>
+        public static List<InstanceId> FakeDb => new List<InstanceId>
         {
             Blog,
             ContentOnHome,
