@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Http;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Edit;
 using ToSic.Sxc.Oqt.Shared;
@@ -10,10 +12,15 @@ namespace ToSic.Sxc.Oqt.Server.Page
 {
     public class OqtAssetsAndHeaders: HasLog, IOqtAssetsAndHeader
     {
+        private readonly IAntiforgery _antiforgery;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
         #region Constructor and DI
 
-        public OqtAssetsAndHeaders() : base("Mvc.PgProp")
+        public OqtAssetsAndHeaders(IAntiforgery antiforgery, IHttpContextAccessor httpContextAccessor) : base("Oqt.AssHdr")
         {
+            _antiforgery = antiforgery;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         #endregion
@@ -40,12 +47,6 @@ namespace ToSic.Sxc.Oqt.Server.Page
             return list;
         }
 
-        //public HtmlString FinalFooter()
-        //{
-        //    return new HtmlString("<!-- footer from PageManager - should later contain the scripts etc.");
-        //}
-
-
         // TODO: #Oqtane
         public string ContextMetaContents()
         {
@@ -60,10 +61,7 @@ namespace ToSic.Sxc.Oqt.Server.Page
 
         public string ContextMetaName => InpageCms.MetaName;
 
-        private string AntiForgeryToken()
-        {
-            return "anti forgery token todo";
-        }
-
+        private string AntiForgeryToken() 
+            => _antiforgery.GetAndStoreTokens(_httpContextAccessor.HttpContext).RequestToken;
     }
 }
