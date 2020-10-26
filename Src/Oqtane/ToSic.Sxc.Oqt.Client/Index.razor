@@ -88,47 +88,24 @@ test: @TestIds.PrimaryApp
 
 
 @code {
+  public string test1 = "test1";
 
-    public string test1 = "test1";
+  public string ToSxcModulePath()
+  {
+    return "Modules/ToSic.Sxc/";
+  }
 
-    public string ToSxcModulePath()
+  public override List<Resource> Resources
+  {
+    get
     {
-      return "Modules/ToSic.Sxc/";
+      return new List<Resource>();
+      //{
+      //  new Resource {ResourceType = ResourceType.Stylesheet, Url = ToSxcModulePath() + "Module.css"},
+      //  new Resource {ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "Module.js"},
+      //new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/2sxc.api.min.js" }, // Oqtane will not load this script because of bug???
     }
-
-    public override List<Resource> Resources => new List<Resource>()
-    {
-        new Resource { ResourceType = ResourceType.Stylesheet, Url = ToSxcModulePath() + "Module.css" },
-        new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "Module.js" },
-        //new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/2sxc.api.min.js" }, // Oqtane will not load this script because of bug???
-
-        //new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-A.api.min.js" },
-        //new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-B.api.min.js" },
-        //new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-C.api.min.js" },
-        //new Resource { ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-D.api.min.js" },
-    };
-
-
-    // HACK: Lets load all 2sxc js dependeces.
-    public List<Resource> ToSxcJsResources
-    {
-      get
-      {
-        return SxcEngine.AssetsAndHeaders.Scripts().Select(s => new Resource
-        {
-          ResourceType = ResourceType.Script,
-          Url = s
-        }).ToList();
-        //return new List<Resource>()
-        //{
-        //  new Resource {ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/2sxc.api.min.js"},
-        //  new Resource {ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-A.api.min.js"},
-        //  new Resource {ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-B.api.min.js"},
-        //  new Resource {ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-C.api.min.js"},
-        //  new Resource {ResourceType = ResourceType.Script, Url = ToSxcModulePath() + "system/Sxc/js/dummy-D.api.min.js"},
-        //};
-      }
-    }
+  }
 
     JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
     {
@@ -165,14 +142,12 @@ test: @TestIds.PrimaryApp
         {
           var interop = new Interop(JSRuntime);
 
-          // HACK: Lets load all 2sxc js dependeces.
-          //if (Resources != null && Resources.Exists(item => item.ResourceType == ResourceType.Script))
-          //{
-          foreach (Resource resource in ToSxcJsResources) // .Where(item => item.ResourceType == ResourceType.Script))
-          {
-            await interop.IncludeScript("", resource.Url, resource.Integrity ?? "", resource.CrossOrigin ?? "", "", "head", "");
-          }
-          //}
+          // HACK: Lets load all 2sxc js dependencies (js / styles)
+          foreach (var resource in SxcEngine.AssetsAndHeaders.Scripts())
+            await interop.IncludeScript("", resource, "", "", "", "head", "");
+
+          foreach (var style in SxcEngine.AssetsAndHeaders.Styles())
+            await interop.IncludeLink("", "stylesheet", style, "text/css", "", "", ""); //.IncludeScript("", resource.Url, resource.Integrity ?? "", resource.CrossOrigin ?? "", "", "head", "");
 
           var aAndH = SxcEngine.AssetsAndHeaders;
           if (aAndH.AddContextMeta)
@@ -188,5 +163,5 @@ test: @TestIds.PrimaryApp
           //await interop.IncludeScripts(scripts.ToArray());
         }
       }
-}
+    }
 }

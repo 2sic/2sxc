@@ -54,7 +54,8 @@ namespace ToSic.Sxc.Oqt.Server.Page
             var pageId = 0;
             var siteRoot = OqtConstants.SiteRoot;
             var apiRoot = siteRoot + WipConstants.WebApiPrefixFor1 + WebApiConstants.WebApiRoot + "/";
-            return InpageCms.JsApiJson(pageId, siteRoot, apiRoot, AntiForgeryToken(), OqtConstants.UiRoot);
+            var result = InpageCms.JsApiJson(pageId, siteRoot, apiRoot, AntiForgeryToken(), OqtConstants.UiRoot + "/");
+            return wrapLog("ok", result);
         }
 
         public string ContextMetaName => InpageCms.MetaName;

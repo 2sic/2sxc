@@ -36,7 +36,7 @@ robocopy /mir "..\..\Data\.databeta\ " "%BuildTarget%\.databeta\ "
 robocopy /mir "..\..\Data\.data-custom\ " "%BuildTarget%\.data-custom\ "
 
 @REM ... find better source
-@set Dev2sxcAssets=C:\Projects\2sxc\2sxc\Src\Mvc\Website\wwwroot
+@REM @set Dev2sxcAssets=C:\Projects\2sxc\2sxc\Src\Mvc\Website\wwwroot
 
 @REM Copy 2sxc JS stuff
 robocopy /mir "%Dev2sxcAssets%\js\ " "%BuildTarget%\js\ "
