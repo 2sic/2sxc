@@ -8,8 +8,6 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
@@ -18,14 +16,14 @@ using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 
-namespace ToSic.Sxc.Hybrid
+namespace ToSic.Sxc.Hybrid.Razor
 {
     /// <summary>
     /// The base class for Razor-Components in 2sxc 10+ <br/>
     /// Provides context infos like the Dnn object, helpers like Edit and much more. <br/>
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract partial class RazorComponent : RazorComponentBase // , IRazorComponent
+    public abstract partial class RazorComponent : RazorComponentBase //, IRazorComponent
     {
 
         #region Link, Edit, Dnn, App, Data

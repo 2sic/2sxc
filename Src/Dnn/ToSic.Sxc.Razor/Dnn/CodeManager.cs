@@ -7,8 +7,8 @@ namespace ToSic.Sxc.Dnn
 {
     public class CodeManager: HasLog
     {
-        public Hybrid.RazorComponent Parent;
-        public CodeManager(Hybrid.RazorComponent parent): base("Rzr.Code", parent.Log)
+        public Hybrid.Razor.RazorComponent Parent;
+        public CodeManager(Hybrid.Razor.RazorComponent parent): base("Rzr.Code", parent.Log)
         {
             Parent = parent;
         }

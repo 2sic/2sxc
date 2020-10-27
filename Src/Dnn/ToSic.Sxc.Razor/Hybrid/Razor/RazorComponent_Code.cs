@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Dnn;
 
-namespace ToSic.Sxc.Hybrid
+namespace ToSic.Sxc.Hybrid.Razor
 {
     public partial class RazorComponent
     {

@@ -25,11 +25,17 @@ namespace ToSic.Sxc.Oqt.Shared.Dev
             ? new InstanceId(2, 92, 18, 428, new Guid("7e4dfd75-4158-44cd-a08f-d3078f9bd3ff"))
             : new InstanceId(128, 4062, 1262,9170, new Guid("584b7398-8517-4bdf-b05d-71d64b935f4f"));
 
+        // Slider / Swiper App
+        public static InstanceId Swiper => Dev4Spm
+            ? new InstanceId(138, 4216, 1318, 9476, new Guid("17c84277-d427-4df7-9748-5e8fcbb402f2")) // todo: SPM not correct yet
+            : new InstanceId(138, 4216, 1318, 9476, new Guid("17c84277-d427-4df7-9748-5e8fcbb402f2"));
+
         public static List<InstanceId> FakeDb => new List<InstanceId>
         {
             Blog,
             ContentOnHome,
             Token,
+            Swiper,
         };
 
         public static InstanceId FindInstance(int containerId) => FakeDb.FirstOrDefault(i => i.Container == containerId);

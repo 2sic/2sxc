@@ -82,6 +82,9 @@ namespace ToSic.Sxc.Oqt.Server
                 case 56: // test sub-site Tonci "blogsite"
                     ids = TestIds.Blog;
                     break;
+                case 1071:
+                    ids = TestIds.Swiper;
+                    break;
             }
 
             return ids;

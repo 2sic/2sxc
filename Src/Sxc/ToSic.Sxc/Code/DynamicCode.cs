@@ -122,6 +122,8 @@ namespace ToSic.Sxc.Code
             bool throwOnError = true)
         {
             var wrapLog = Log.Call<dynamic>();
+            // usually we don't have a relative path, so we use the preset path from when this class was instantiated
+            relativePath = relativePath ?? CreateInstancePath;
             var instance = UnwrappedContents?.CreateInstance(virtualPath, dontRelyOnParameterOrder, name,
                 relativePath ?? CreateInstancePath, throwOnError);
             return wrapLog((instance != null).ToString(), instance);

@@ -5,7 +5,7 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 
-namespace ToSic.Sxc.Hybrid
+namespace ToSic.Sxc.Hybrid.Razor
 {
     public partial class RazorComponent
     {
@@ -90,18 +90,18 @@ namespace ToSic.Sxc.Hybrid
         /// <inheritdoc/>
         [PrivateApi]
         public IEnumerable<dynamic> AsDynamic(IDataStream stream)
-            => throw new Exception($"AsDynamic for lists isn't supported in {nameof(RazorComponent)}. Please use AsList instead.");
+            => throw new Exception($"AsDynamic for lists isn't supported in {nameof(Razor.RazorComponent)}. Please use AsList instead.");
 
         /// <inheritdoc/>
         [PrivateApi]
         public IEnumerable<dynamic> AsDynamic(IDataSource source)
-            => throw new Exception($"AsDynamic for lists isn't supported in {nameof(RazorComponent)}. Please use AsList instead.");
+            => throw new Exception($"AsDynamic for lists isn't supported in {nameof(Razor.RazorComponent)}. Please use AsList instead.");
 
 
         /// <inheritdoc/>
         [PrivateApi]
         public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities)
-            => throw new Exception($"AsDynamic for lists isn't supported in {nameof(RazorComponent)}. Please use AsList instead.");
+            => throw new Exception($"AsDynamic for lists isn't supported in {nameof(Razor.RazorComponent)}. Please use AsList instead.");
 
         #endregion
 
