@@ -4,10 +4,10 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Blocks;
 
-namespace ToSic.Sxc.Razor.Hybrid
+namespace ToSic.Sxc.Hybrid.Razor
 {
     // test, doesn't do anything yet
-    public abstract partial class SxcRazorComponent<TModel>: Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>
+    public abstract partial class RazorComponent<TModel>: Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>
     {
         #region Constructor / DI
 
@@ -19,14 +19,13 @@ namespace ToSic.Sxc.Razor.Hybrid
         [RazorInject]
         public IServiceProvider ServiceProvider { get; set; }
 
-        protected SxcRazorComponent()
+        protected RazorComponent()
         {
             Log = new Log("Mvc.SxcRzr");
         }
+
         public ILog Log { get; }
         #endregion
-
-        public string VirtualPath { get; set; }
 
         public Purpose Purpose { get; set; }
 

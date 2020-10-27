@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Razor.Hybrid;
+using ToSic.Sxc.Hybrid.Razor;
 using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Razor.Engine

@@ -2,9 +2,9 @@
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 
-namespace ToSic.Sxc.Razor.Hybrid
+namespace ToSic.Sxc.Hybrid.Razor
 {
-    public partial class SxcRazorComponent<TModel>: ISxcRazorComponent
+    public partial class RazorComponent<TModel>: ISxcRazorComponent
     {
         #region DynCode
 

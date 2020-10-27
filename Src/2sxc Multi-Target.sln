@@ -89,7 +89,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oqtane.Client", "..\..\octa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Razor.Engine", "Razor\ToSic.Sxc.Razor.Engine\ToSic.Sxc.Razor.Engine.csproj", "{9269847A-20A1-4F72-9E14-36BFE0323632}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Razor", "Razor\ToSic.Sxc.Razor\ToSic.Sxc.Razor.csproj", "{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Hybrid", "Razor\ToSic.Sxc.Hybrid\ToSic.Sxc.Hybrid.csproj", "{ACD30ED0-0B6E-48E7-A898-CF42C93E857A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Razor", "Razor", "{DD59EAFD-02D1-4285-B8BE-D2DD40536304}"
 EndProject
@@ -1024,7 +1024,7 @@ Global
 		{5F8069F1-FB03-40D4-B76E-838AB2555A8D} = {C2BEB114-B1DB-404D-8442-A75809059619}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
+		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 	EndGlobalSection
 EndGlobal

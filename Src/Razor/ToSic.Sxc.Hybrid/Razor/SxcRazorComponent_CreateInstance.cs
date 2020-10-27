@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace ToSic.Sxc.Razor.Hybrid
+namespace ToSic.Sxc.Hybrid.Razor
 {
-    public partial class SxcRazorComponent<TModel>
+    public partial class RazorComponent<TModel>
     {
         public string CreateInstancePath
         {
