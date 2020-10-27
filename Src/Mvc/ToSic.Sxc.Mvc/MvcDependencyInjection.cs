@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Mvc.Plumbing
             services.AddTransient<IZoneMapper, MvcZoneMapper>();
             services.AddTransient<AppPermissionCheck, MvcPermissionCheck>();
             //services.AddTransient<DynamicCodeRoot, MvcDynamicCode>();
-            services.AddTransient<IEnvironmentConnector, MvcEnvironmentConnector>();
+            services.AddTransient<IPlatformModuleUpdater, MvcPlatformModuleUpdater>();
             services.AddTransient<IEnvironmentInstaller, MvcEnvironmentInstaller>();
             services.AddTransient<IGetEngine, MvcGetLookupEngine>();
             services.AddTransient<MvcContextBuilder>();

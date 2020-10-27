@@ -7,16 +7,16 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Mvc.Run
 {
-    internal class MvcEnvironmentConnector: HasLog, IEnvironmentConnector
+    internal class MvcPlatformModuleUpdater: HasLog, IPlatformModuleUpdater
     {
         /// <summary>
         /// Empty constructor for DI
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public MvcEnvironmentConnector() : base("Mvc.MapA2I") { }
+        public MvcPlatformModuleUpdater() : base("Mvc.MapA2I") { }
 
 
-        public IEnvironmentConnector Init(ILog parent)
+        public IPlatformModuleUpdater Init(ILog parent)
         {
             Log.LinkTo(parent);
             return this;

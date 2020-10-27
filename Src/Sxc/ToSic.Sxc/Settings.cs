@@ -33,9 +33,9 @@ namespace ToSic.Sxc
         // Important note: always use static-readonly, NOT constant
         // reason is that we must ensure that the static constructor is called 
         // whenever anything is accessed
-        public static readonly string FieldContentGroup = "ToSIC_SexyContent_ContentGroupGuid";
-        public static readonly string AppNameString = "ToSIC_SexyContent_AppName";
-        public static readonly string FieldPreviewTemplate = "ToSIC_SexyContent_PreviewTemplateId";
+        public static readonly string ModuleSettingContentGroup = "ToSIC_SexyContent_ContentGroupGuid";
+        public static readonly string ModuleSettingApp = "ToSIC_SexyContent_AppName";
+        public static readonly string ModuleSettingsPreview = "ToSIC_SexyContent_PreviewTemplateId";
 
         public const string PortalHostDirectory = "~/Portals/_default/";
         public const string AppsRootFolder = "2sxc";

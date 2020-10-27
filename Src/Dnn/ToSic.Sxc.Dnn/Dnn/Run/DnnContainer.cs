@@ -66,10 +66,10 @@ namespace ToSic.Sxc.Dnn.Run
                 var settings = UnwrappedContents.ModuleSettings;
 
                 // find block identifier
-                Guid.TryParse(settings[Settings.FieldContentGroup]?.ToString(), out var blockGuid);
+                Guid.TryParse(settings[Settings.ModuleSettingContentGroup]?.ToString(), out var blockGuid);
 
                 // Check if we have preview-view identifier - for blocks which don't exist yet
-                var previewTemplateString = settings[Settings.FieldPreviewTemplate]?.ToString();
+                var previewTemplateString = settings[Settings.ModuleSettingsPreview]?.ToString();
                 var overrideView = !string.IsNullOrEmpty(previewTemplateString)
                     ? Guid.Parse(previewTemplateString)
                     : new Guid();
@@ -94,9 +94,9 @@ namespace ToSic.Sxc.Dnn.Run
                 return wrapLog($"{msg} - use Default app: {appId}", appId);
             }
 
-            if (module.ModuleSettings.ContainsKey(Settings.AppNameString))
+            if (module.ModuleSettings.ContainsKey(Settings.ModuleSettingApp))
             {
-                var guid = module.ModuleSettings[Settings.AppNameString].ToString();
+                var guid = module.ModuleSettings[Settings.ModuleSettingApp].ToString();
                 var appId = zoneRt.FindAppId(guid);
                 return wrapLog($"{msg} AppG:{guid} = app:{appId}", appId);
             }

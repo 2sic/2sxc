@@ -8,16 +8,16 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    internal class OqtaneEnvironmentConnector: HasLog, IEnvironmentConnector
+    internal class OqtanePlatformModuleUpdater: HasLog, IPlatformModuleUpdater
     {
         /// <summary>
         /// Empty constructor for DI
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public OqtaneEnvironmentConnector() : base("Mvc.MapA2I") { }
+        public OqtanePlatformModuleUpdater() : base("Mvc.MapA2I") { }
 
 
-        public IEnvironmentConnector Init(ILog parent)
+        public IPlatformModuleUpdater Init(ILog parent)
         {
             Log.LinkTo(parent);
             return this;

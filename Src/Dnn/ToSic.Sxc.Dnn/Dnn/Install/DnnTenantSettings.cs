@@ -1,8 +1,5 @@
 ﻿using System.IO;
 using System.Web;
-using DotNetNuke.Entities.Modules;
-using DotNetNuke.Services.Localization;
-using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
 
@@ -28,43 +25,5 @@ namespace ToSic.Sxc.Dnn.Install
                 tm.EnsureTemplateFolderExists(Settings.TemplateLocations.PortalFileSystem);
             }
         }
-
-
-        #region Settings
-
-        
-
-        
-        /// <summary>
-        /// Update a setting for all language-versions of a module
-        /// </summary>
-        public static void UpdateInstanceSettingForAllLanguages(int instanceId, string key, string value, ILog log)
-        {
-            log?.Add($"UpdateInstanceSettingForAllLanguages(iid: {instanceId}, key: {key}, val: {value})");
-            var moduleController = new ModuleController();
-
-            // Find this module in other languages and update contentGroupGuid
-            var originalModule = moduleController.GetModule(instanceId);
-            var languages = LocaleController.Instance.GetLocales(originalModule.PortalID);
-
-            if (!originalModule.IsDefaultLanguage && originalModule.DefaultLanguageModule != null)
-                originalModule = originalModule.DefaultLanguageModule;
-
-            foreach (var language in languages)
-            {
-                // Find module for given Culture
-                var moduleByCulture = moduleController.GetModuleByCulture(originalModule.ModuleID, originalModule.TabID, originalModule.PortalID, language.Value);
-
-                // Break if no module found
-                if (moduleByCulture == null)
-                    continue;
-
-                if (value == null)
-                    moduleController.DeleteModuleSetting(moduleByCulture.ModuleID, key);
-                else
-                    moduleController.UpdateModuleSetting(moduleByCulture.ModuleID, key, value);
-            }
-        }
-        #endregion
     }
 }

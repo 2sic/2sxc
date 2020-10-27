@@ -120,7 +120,7 @@ namespace ToSic.SexyContent
 
             services.AddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
             services.AddTransient<IRenderingHelper, DnnRenderingHelper>();
-            services.AddTransient<IEnvironmentConnector, DnnMapAppToInstance>();
+            services.AddTransient<IPlatformModuleUpdater, DnnModuleUpdater>();
             services.AddTransient<IEnvironmentInstaller, InstallationController>();
 
             // ADAM 

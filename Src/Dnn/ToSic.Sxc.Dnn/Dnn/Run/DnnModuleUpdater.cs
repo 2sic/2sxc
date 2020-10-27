@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Linq;
 using DotNetNuke.Entities.Modules;
+using DotNetNuke.Services.Localization;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Dnn.Run
 {
-    public class DnnMapAppToInstance : HasLog, IEnvironmentConnector
+    public class DnnModuleUpdater : HasLog, IPlatformModuleUpdater
     {
         private readonly IAppEnvironment _environment;
 
@@ -22,14 +22,14 @@ namespace ToSic.Sxc.Dnn.Run
         /// Empty constructor for DI
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public DnnMapAppToInstance(IAppEnvironment environment) : base("Dnn.MapA2I")
+        public DnnModuleUpdater(IAppEnvironment environment) : base("Dnn.MapA2I")
         {
             _environment = environment;
         }
 
         //public DnnMapAppToInstance(ILog parentLog) : base("Dnn.MapA2I", parentLog) { }
 
-        public IEnvironmentConnector Init(ILog parent)
+        public IPlatformModuleUpdater Init(ILog parent)
         {
             Log.LinkTo(parent);
             _environment.Init(Log);
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Dnn.Run
         #endregion
 
 
-        public void SetAppId(IContainer instance, /*IAppEnvironment env,*/ int? appId, ILog parentLog)
+        public void SetAppId(IContainer instance, int? appId, ILog parentLog)
         {
             Log.Add($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
             // Reset temporary template
@@ -51,11 +51,11 @@ namespace ToSic.Sxc.Dnn.Run
             var zoneId = _environment.ZoneMapper.GetZoneId(module.OwnerPortalID);
 
             if (appId == Constants.AppIdEmpty || !appId.HasValue)
-                DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instance.Id, Settings.AppNameString, null, Log);
+                UpdateInstanceSettingForAllLanguages(instance.Id, Settings.ModuleSettingApp, null, Log);
             else
             {
                 var appName = State.Zones[zoneId].Apps[appId.Value];
-                DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instance.Id, Settings.AppNameString, appName, Log);
+                UpdateInstanceSettingForAllLanguages(instance.Id, Settings.ModuleSettingApp, appName, Log);
             }
 
             // Change to 1. available template if app has been set
@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Dnn.Run
         protected void ClearPreview(int instanceId)
         {
             Log.Add($"ClearPreviewTemplate(iid: {instanceId})");
-            DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instanceId, Settings.FieldPreviewTemplate, null, Log);
+            UpdateInstanceSettingForAllLanguages(instanceId, Settings.ModuleSettingsPreview, null, Log);
         }
 
         public void SetContentGroup(int instanceId, bool blockExists, Guid guid)
@@ -81,7 +81,7 @@ namespace ToSic.Sxc.Dnn.Run
             ClearPreview(instanceId);
             // Update blockConfiguration Guid for this module
             if (blockExists)
-                DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instanceId, Settings.FieldContentGroup,
+                UpdateInstanceSettingForAllLanguages(instanceId, Settings.ModuleSettingContentGroup,
                     guid.ToString(), Log);
         }
 
@@ -95,10 +95,10 @@ namespace ToSic.Sxc.Dnn.Run
             var settings = moduleController.GetModule(instanceId).ModuleSettings;
 
             // Do not allow saving the temporary template id if a ContentGroup exists for this module
-            if (settings[Settings.FieldContentGroup] != null)
+            if (settings[Settings.ModuleSettingContentGroup] != null)
                 throw new Exception("Preview template id cannot be set for a module that already has content.");
 
-            DnnTenantSettings.UpdateInstanceSettingForAllLanguages(instanceId, Settings.FieldPreviewTemplate, previewView.ToString(), Log);
+            UpdateInstanceSettingForAllLanguages(instanceId, Settings.ModuleSettingsPreview, previewView.ToString(), Log);
         }
 
         public void UpdateTitle(IBlock block, IEntity titleItem)
@@ -141,5 +141,42 @@ namespace ToSic.Sxc.Dnn.Run
             }
         }
 
+
+        #region Settings
+
+
+
+
+        /// <summary>
+        /// Update a setting for all language-versions of a module
+        /// </summary>
+        public static void UpdateInstanceSettingForAllLanguages(int instanceId, string key, string value, ILog log)
+        {
+            log?.Add($"UpdateInstanceSettingForAllLanguages(iid: {instanceId}, key: {key}, val: {value})");
+            var moduleController = new ModuleController();
+
+            // Find this module in other languages and update contentGroupGuid
+            var originalModule = moduleController.GetModule(instanceId);
+            var languages = LocaleController.Instance.GetLocales(originalModule.PortalID);
+
+            if (!originalModule.IsDefaultLanguage && originalModule.DefaultLanguageModule != null)
+                originalModule = originalModule.DefaultLanguageModule;
+
+            foreach (var language in languages)
+            {
+                // Find module for given Culture
+                var moduleByCulture = moduleController.GetModuleByCulture(originalModule.ModuleID, originalModule.TabID, originalModule.PortalID, language.Value);
+
+                // Break if no module found
+                if (moduleByCulture == null)
+                    continue;
+
+                if (value == null)
+                    moduleController.DeleteModuleSetting(moduleByCulture.ModuleID, key);
+                else
+                    moduleController.UpdateModuleSetting(moduleByCulture.ModuleID, key, value);
+            }
+        }
+        #endregion
     }
 }
