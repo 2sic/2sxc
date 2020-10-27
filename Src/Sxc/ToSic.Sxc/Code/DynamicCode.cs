@@ -7,9 +7,9 @@ using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -42,9 +42,10 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         public virtual void DynamicCodeCoupling(IDynamicCode parent, string path)
         {
+            Log?.Call()(null);
             UnwrappedContents = parent;
             try { 
-                Log.Add("DynamicCode created: " + path);
+                Log?.Add("DynamicCode created: " + path);
             } catch { /* ignore */ }
         }
 
@@ -130,7 +131,7 @@ namespace ToSic.Sxc.Code
 
         #region Context WIP
 
-        public ContextBundle RunContext => UnwrappedContents?.RunContext;
+        public RunContext RunContext => UnwrappedContents?.RunContext;
 
         #endregion
     }

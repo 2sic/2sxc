@@ -62,7 +62,6 @@ namespace ToSic.SexyContent
                     .AddSxc()
                     .AddEav();
             });
-            //ConfigureIoC(appsCache);
             SharpZipLibRedirect.RegisterSharpZipLibRedirect();
             ConfigurePolymorphResolvers();
             _alreadyConfigured = true;
@@ -137,8 +136,9 @@ namespace ToSic.SexyContent
             // new in 11.07 - exception logger
             services.AddTransient<IEnvironmentLogger, DnnEnvironmentLogger>();
 
-            // new in 11.08 - provide Razor Engine
+            // new in 11.08 - provide Razor Engine and platform
             services.AddTransient<IEngineFinder, DnnEngineFinder>();
+            services.AddSingleton<Sxc.Run.Context.PlatformContext, DnnPlatformContext>();
 
             // add page publishing
             services.AddTransient<IPagePublishing, Sxc.Dnn.Cms.DnnPagePublishing>();

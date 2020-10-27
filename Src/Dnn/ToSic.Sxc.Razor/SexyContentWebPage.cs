@@ -11,7 +11,6 @@ using ToSic.SexyContent.Search;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Context;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Compatibility.RazorPermissions;
 using ToSic.Sxc.Compatibility.Sxc;
@@ -20,6 +19,7 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
@@ -208,7 +208,7 @@ namespace ToSic.SexyContent.Razor
 
         #region RunContext - new in 11.08 or similar, not implemented in old base classes
 
-        public ContextBundle RunContext => throw new NotImplementedException("RunContext is only used on newer base classes");
+        public RunContext RunContext => throw new NotImplementedException("RunContext is only used on newer base classes");
         #endregion
 
     }

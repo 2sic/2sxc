@@ -46,6 +46,8 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddTransient<OqtaneSiteFactory>();
             services.AddTransient<SxcOqtane>();
 
+            services.AddSingleton<Sxc.Run.Context.PlatformContext, OqtPlatformContext>();
+
             //services.AddTransient<SecurityChecksBase, MvcAdamSecurityChecks>();
 
             //// Add SxcEngineTest

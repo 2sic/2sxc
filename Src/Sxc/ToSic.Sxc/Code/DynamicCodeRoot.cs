@@ -8,10 +8,10 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Edit.InPageEditingSystem;
+using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -250,6 +250,7 @@ namespace ToSic.Sxc.Code
             string relativePath = null,
             bool throwOnError = true)
         {
+            var wrap = Log.Call<dynamic>($"{virtualPath}, {name}, {relativePath}, {throwOnError}");
             Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "CreateInstance",
                 $"{nameof(name)},{nameof(throwOnError)}");
 
@@ -259,9 +260,11 @@ namespace ToSic.Sxc.Code
 
             // if it supports all our known context properties, attach them
             if (instance is ICoupledDynamicCode isShared)
+            {
                 isShared.DynamicCodeCoupling(this, virtualPath);
+            }
 
-            return instance;
+            return wrap((instance != null).ToString(), instance);
         }
 
         /// <inheritdoc />
@@ -271,8 +274,8 @@ namespace ToSic.Sxc.Code
 
         #region Context WIP
 
-        [PrivateApi] public ContextBundle RunContext => _context ?? (_context = new ContextBundle(this));
-        private ContextBundle _context;
+        [PrivateApi] public RunContext RunContext => _runContext ?? (_runContext = Eav.Factory.Resolve<RunContext>().Init(this));
+        private RunContext _runContext;
 
         #endregion
     }

@@ -6,11 +6,11 @@ using ToSic.Eav.LookUp;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
@@ -144,7 +144,7 @@ namespace ToSic.Sxc.Dnn
 
         #region RunContext WIP
 
-        [PrivateApi] public ContextBundle RunContext => DynCode?.RunContext;
+        [PrivateApi] public RunContext RunContext => DynCode?.RunContext;
 
         #endregion
     }
