@@ -122,8 +122,13 @@ namespace ToSic.Sxc.Code
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string name = null,
             string relativePath = null,
-            bool throwOnError = true) =>
-            UnwrappedContents?.CreateInstance(virtualPath, dontRelyOnParameterOrder, name, CreateInstancePath, throwOnError);
+            bool throwOnError = true)
+        {
+            var wrapLog = Log.Call<dynamic>();
+            var instance = UnwrappedContents?.CreateInstance(virtualPath, dontRelyOnParameterOrder, name,
+                relativePath ?? CreateInstancePath, throwOnError);
+            return wrapLog((instance != null).ToString(), instance);
+        }
 
         #endregion
 

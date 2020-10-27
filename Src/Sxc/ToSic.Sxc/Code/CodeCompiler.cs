@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Code
         
         internal object InstantiateClass(string virtualPath, string className = null, string relativePath = null, bool throwOnError = true)
         {
-            var wrapLog = Log.Call($"{virtualPath}, {className}, {throwOnError}");
+            var wrapLog = Log.Call($"{virtualPath}, {nameof(className)}:{className}, {nameof(relativePath)}:{relativePath}, {throwOnError}");
             string errorMsg = null;
 
             // Perform various checks on the path values
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Code
             if (isCshtml && string.IsNullOrEmpty(className))
             {
 #if NETSTANDARD
-            throw new Exception("Not Yet Implemented in .net standard #TodoNetStandard");
+                throw new Exception("Not Yet Implemented in .net standard #TodoNetStandard");
 #else
                 compiledType = BuildManager.GetCompiledType(virtualPath);
 #endif
@@ -124,11 +124,16 @@ namespace ToSic.Sxc.Code
         }
 
 
-        private static void AttachRelativePath(string virtualPath, object instance)
+        private bool AttachRelativePath(string virtualPath, object instance)
         {
+            var wrapLog = Log.Call<bool>();
             // in case it supports shared code again, give it the relative path
             if (instance is ICreateInstance codeForwarding)
+            {
                 codeForwarding.CreateInstancePath = Path.GetDirectoryName(virtualPath);
+                return wrapLog("attached", true);
+            }
+            return wrapLog("didn't attach", false);
         }
     }
 }

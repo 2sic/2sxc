@@ -1,11 +1,12 @@
 ﻿using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 
 namespace ToSic.Sxc.Dnn.Code
 {
-    public class DnnDynamicCode : Sxc.Code.DynamicCodeRoot, IDnnDynamicCode
+    public class DnnDynamicCode : Sxc.Code.DynamicCodeRoot, IDnnDynamicCode, IHasDynCodeContext
     {
         public DnnDynamicCode(): base("Dnn.DynCdRt") { }
 
@@ -29,5 +30,6 @@ namespace ToSic.Sxc.Dnn.Code
         /// </summary>
         public IDnnContext Dnn { get; private set; }
 
+        public DnnDynamicCode DynCode => this;
     }
 }

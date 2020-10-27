@@ -63,11 +63,13 @@ namespace ToSic.Sxc.Web
             string relativePath = null,
             bool throwOnError = true)
         {
+            var wrapLog = Log.Call<dynamic>($"{virtualPath}, ..., {name}");
             var path = NormalizePath(virtualPath);
             VerifyFileExists(path);
-            return path.EndsWith(CodeCompiler.CsFileExtension)
+            var result = path.EndsWith(CodeCompiler.CsFileExtension)
                 ? DynCode.CreateInstance(path, dontRelyOnParameterOrder, name, null, throwOnError)
                 : CreateInstanceCshtml(path);
+            return wrapLog("ok", result);
         }
 
         protected dynamic CreateInstanceCshtml(string path)
@@ -95,7 +97,14 @@ namespace ToSic.Sxc.Web
 
         public void DynamicCodeCoupling(IDynamicCode parent, string path)
         {
-            if (parent is DnnDynamicCode isDynCode) DynCode = isDynCode;
+            var wrapLog = Log.Call();
+            var parentIsDynCode = false;
+            if (parent is DnnDynamicCode isDynCode)
+            {
+                DynCode = isDynCode;
+                parentIsDynCode = true;
+            }
+            wrapLog(parentIsDynCode.ToString());
         }
     }
 
