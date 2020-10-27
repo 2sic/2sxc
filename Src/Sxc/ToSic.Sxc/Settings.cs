@@ -4,7 +4,7 @@ using ToSic.Eav.Plumbing.Booting;
 
 namespace ToSic.Sxc
 {
-    public class Settings
+    public partial class Settings
     {
 
         #region System Initialization
@@ -30,12 +30,9 @@ namespace ToSic.Sxc
 
         #endregion
 
-        // Important note: always use static-readonly, NOT constant
+        // Important note: always use static-readonly, NOT constant for .net 456
         // reason is that we must ensure that the static constructor is called 
         // whenever anything is accessed
-        public static readonly string ModuleSettingContentGroup = "ToSIC_SexyContent_ContentGroupGuid";
-        public static readonly string ModuleSettingApp = "ToSIC_SexyContent_AppName";
-        public static readonly string ModuleSettingsPreview = "ToSIC_SexyContent_PreviewTemplateId";
 
         public const string PortalHostDirectory = "~/Portals/_default/";
         public const string AppsRootFolder = "2sxc";
