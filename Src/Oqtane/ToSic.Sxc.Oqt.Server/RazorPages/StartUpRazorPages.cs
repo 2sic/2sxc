@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Drawing.Drawing2D;
+using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -22,15 +23,17 @@ namespace ToSic.Sxc.Oqt.Server.RazorPages
             var contentRootPath = Path.GetFullPath(Path.Combine(webHost.ContentRootPath, OqtConstants.ContentSubfolder));
 
             //// Add razor pages dynamic compilation WIP
-            //var dllLocation = typeof(Oqtane.Server.Program).Assembly.Location;
-            //var dllPath = Path.GetDirectoryName(dllLocation);
+            var dllLocation = typeof(Oqtane.Server.Program).Assembly.Location;
+            var dllPath = Path.GetDirectoryName(dllLocation);
             var mvcBuilder = services.AddRazorPages()
                 // experiment
                 // https://github.com/aspnet/samples/blob/master/samples/aspnetcore/mvc/runtimecompilation/MyApp/Startup.cs#L26
                 .AddRazorRuntimeCompilation(options =>
                 {
                     options.FileProviders.Add(new PhysicalFileProvider(contentRootPath));
-                    //options.AdditionalReferencePaths
+                    foreach (string dllFile in Directory.GetFiles(dllPath, "*.dll"))
+                        options.AdditionalReferencePaths.Add(dllFile);
+
                 });
 
             // exp: access the anti forgery so it's loaded
