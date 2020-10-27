@@ -12,36 +12,3 @@
         </td>
     </tr>
 </table>
-
-@code {
-    public override string Title => "Sxc Settings";
-
-    string _value;
-
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            Dictionary<string, string> settings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
-            _value = SettingService.GetSetting(settings, "SettingName", "");
-        }
-        catch (Exception ex)
-        {
-            ModuleInstance.AddModuleMessage(ex.Message, MessageType.Error);
-        }
-    }
-
-    public async Task UpdateSettings()
-    {
-        try
-        {
-            Dictionary<string, string> settings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
-            SettingService.SetSetting(settings, "SettingName", _value);
-            await SettingService.UpdateModuleSettingsAsync(settings, ModuleState.ModuleId);
-        }
-        catch (Exception ex)
-        {
-            ModuleInstance.AddModuleMessage(ex.Message, MessageType.Error);
-        }
-    }
-}
