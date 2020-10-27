@@ -25,6 +25,8 @@ namespace ToSic.Sxc.WebApi.Plumbing
             // These are usually replaced by the target platform
             services.TryAddTransient<IClientDependencyOptimizer, BasicClientDependencyOptimizer>();
 
+            // 11.08 - fallback in case not added
+            services.TryAddSingleton<Run.Context.PlatformContext>();
 
             return services;
         }

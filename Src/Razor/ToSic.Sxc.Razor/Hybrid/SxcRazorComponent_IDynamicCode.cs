@@ -7,9 +7,9 @@ using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Razor.Components
@@ -95,7 +95,7 @@ namespace ToSic.Sxc.Razor.Components
 
         #region Context WIP
 
-        public ContextBundle RunContext => DynCode.RunContext;
+        public RunContext RunContext => DynCode.RunContext;
 
         #endregion
 
