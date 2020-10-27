@@ -3,17 +3,18 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.Run;
 
-namespace ToSic.Sxc.Mvc.Run
+namespace ToSic.Sxc.Oqt.Server.Run
 {
-    internal class MvcPlatformModuleUpdater: HasLog, IPlatformModuleUpdater
+    internal class OqtaneModuleUpdater: HasLog, IPlatformModuleUpdater
     {
         /// <summary>
         /// Empty constructor for DI
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public MvcPlatformModuleUpdater() : base("Mvc.MapA2I") { }
+        public OqtaneModuleUpdater() : base("Mvc.MapA2I") { }
 
 
         public IPlatformModuleUpdater Init(ILog parent)
@@ -29,6 +30,6 @@ namespace ToSic.Sxc.Mvc.Run
 
         public void SetContentGroup(int instanceId, bool wasCreated, Guid guid) => throw new NotImplementedException();
 
-        public void UpdateTitle(IBlock block, IEntity titleItem) => throw new NotImplementedException();
+        public void UpdateTitle(IBlock block, IEntity titleItem) => WipConstants.DontDoAnythingImplementLater();
     }
 }

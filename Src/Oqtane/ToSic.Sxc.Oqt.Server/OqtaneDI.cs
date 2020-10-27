@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddTransient<IZoneMapper, OqtaneZoneMapper>();
             services.AddTransient<AppPermissionCheck, OqtanePermissionCheck>();
             services.AddTransient<DynamicCodeRoot, OqtaneDynamicCode>();
-            services.AddTransient<IPlatformModuleUpdater, OqtanePlatformModuleUpdater>();
+            services.AddTransient<IPlatformModuleUpdater, OqtaneModuleUpdater>();
             services.AddTransient<IEnvironmentInstaller, OqtaneEnvironmentInstaller>();
             services.AddTransient<IGetEngine, OqtaneGetLookupEngine>();
             services.AddTransient<OqtaneContextBuilder>();
