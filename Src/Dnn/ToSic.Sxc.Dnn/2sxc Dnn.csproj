@@ -109,7 +109,7 @@
     <Compile Include="Dnn\Web\IDynamicWebApi.cs" />
     <Compile Include="Dnn\Code\IDnnDynamicCode.cs" />
     <Compile Include="Dnn\Run\DnnSecurity.cs" />
-    <Compile Include="Dnn\Code\DnnDynamicCode.cs" />
+    <Compile Include="Dnn\Code\DnnDynamicCodeRoot.cs" />
     <Compile Include="Dnn\Web\DnnClientDependencyOptimizer.cs" />
     <Compile Include="Dnn\DataSources\DnnSql.cs" />
     <Compile Include="Dnn\DataSources\DnnUserProfile.cs" />

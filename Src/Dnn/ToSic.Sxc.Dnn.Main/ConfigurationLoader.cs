@@ -118,7 +118,7 @@ namespace ToSic.SexyContent
             services.AddTransient<IClientDependencyOptimizer, DnnClientDependencyOptimizer>();
             services.AddTransient<AppPermissionCheck, DnnPermissionCheck>();
 
-            services.AddTransient<DynamicCodeRoot, DnnDynamicCode>();
+            services.AddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
             services.AddTransient<IRenderingHelper, DnnRenderingHelper>();
             services.AddTransient<IEnvironmentConnector, DnnMapAppToInstance>();
             services.AddTransient<IEnvironmentInstaller, InstallationController>();

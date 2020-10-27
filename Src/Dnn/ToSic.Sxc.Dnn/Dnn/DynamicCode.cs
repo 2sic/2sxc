@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Dnn
         /// <inheritdoc />
         public IDnnContext Dnn => DynCode?.Dnn;
 
-        [PrivateApi] public DnnDynamicCode DynCode => (UnwrappedContents as IHasDynCodeContext)?.DynCode;
+        [PrivateApi] public DnnDynamicCodeRoot DynCode => (UnwrappedContents as IHasDynCodeContext)?.DynCode;
 
         public new dynamic CreateInstance(string virtualPath,
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,

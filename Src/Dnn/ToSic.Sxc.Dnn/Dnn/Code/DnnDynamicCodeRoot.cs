@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Logging;
+﻿using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Run;
@@ -6,9 +7,10 @@ using ToSic.Sxc.Dnn.Web;
 
 namespace ToSic.Sxc.Dnn.Code
 {
-    public class DnnDynamicCode : DynamicCodeRoot, IDnnDynamicCode, IHasDynCodeContext
+    [PrivateApi]
+    public class DnnDynamicCodeRoot : DynamicCodeRoot, IDnnDynamicCode, IHasDynCodeContext
     {
-        public DnnDynamicCode(): base("Dnn.DynCdRt") { }
+        public DnnDynamicCodeRoot(): base("Dnn.DynCdRt") { }
 
         /// <summary>
         /// Standard constructor
@@ -16,7 +18,7 @@ namespace ToSic.Sxc.Dnn.Code
         /// <param name="block">CMS Block which provides context and maybe some edit-allowed info.</param>
         /// <param name="parentLog">parent logger for logging what's happening</param>
         /// <param name="compatibility">compatibility level - changes behaviour if level 9 or 10</param>
-        public DnnDynamicCode Init(IBlock block, ILog parentLog, int compatibility = 10)
+        public DnnDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)
         {
             Init(block, compatibility, parentLog);
             // Init things than require module-info or similar, but not 2sxc
@@ -30,6 +32,6 @@ namespace ToSic.Sxc.Dnn.Code
         /// </summary>
         public IDnnContext Dnn { get; private set; }
 
-        public DnnDynamicCode DynCode => this;
+        public DnnDynamicCodeRoot DynCode => this;
     }
 }

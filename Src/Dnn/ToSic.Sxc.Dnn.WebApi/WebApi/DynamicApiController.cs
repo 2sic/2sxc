@@ -36,7 +36,7 @@ namespace ToSic.Sxc.WebApi
             Log.Add($"HasBlock: {block != null}");
             // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
             // if it's null, use the log of this object
-            DynCode = new DnnDynamicCode().Init(block, Log);
+            DynCode = new DnnDynamicCodeRoot().Init(block, Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (DynCode.App == null)
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.WebApi
         }
 
         [PrivateApi]
-        public DnnDynamicCode DynCode { get; private set; }
+        public DnnDynamicCodeRoot DynCode { get; private set; }
 
         public IDnnContext Dnn => DynCode.Dnn;
 

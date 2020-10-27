@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Web
         public IHtmlHelper Html { get; internal set; }
 
         [PrivateApi]
-        public DnnDynamicCode DynCode { get; set; }
+        public DnnDynamicCodeRoot DynCode { get; set; }
 
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace ToSic.Sxc.Web
         {
             var wrapLog = Log.Call();
             var parentIsDynCode = false;
-            if (parent is DnnDynamicCode isDynCode)
+            if (parent is DnnDynamicCodeRoot isDynCode)
             {
                 DynCode = isDynCode;
                 parentIsDynCode = true;
