@@ -6,7 +6,7 @@ using ToSic.Sxc.Dnn.Web;
 
 namespace ToSic.Sxc.Dnn.Code
 {
-    public class DnnDynamicCode : Sxc.Code.DynamicCodeRoot, IDnnDynamicCode, IHasDynCodeContext
+    public class DnnDynamicCode : DynamicCodeRoot, IDnnDynamicCode, IHasDynCodeContext
     {
         public DnnDynamicCode(): base("Dnn.DynCdRt") { }
 

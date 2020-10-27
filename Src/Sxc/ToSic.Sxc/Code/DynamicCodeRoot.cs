@@ -274,7 +274,7 @@ namespace ToSic.Sxc.Code
 
         #region Context WIP
 
-        [PrivateApi] public RunContext RunContext => _runContext ?? (_runContext = Eav.Factory.Resolve<RunContext>().Init(this));
+        [PrivateApi] public RunContext RunContext => _runContext ?? (_runContext = Factory.Resolve<RunContext>().Init(this));
         private RunContext _runContext;
 
         #endregion

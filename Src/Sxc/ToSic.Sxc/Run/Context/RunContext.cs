@@ -1,8 +1,14 @@
-﻿using ToSic.Sxc.Code;
+﻿using ToSic.Eav.Documentation;
+using ToSic.Sxc.Code;
 using static ToSic.Eav.Constants;
 
 namespace ToSic.Sxc.Run.Context
 {
+    /// <summary>
+    /// Runtime context information, used in dynamic code. Help the code to detect what environment it's in, what page etc.
+    /// This lets the code be platform agnostic, so that it works across implementations (Dnn, Oqtane, NopCommerce)
+    /// </summary>
+    [WorkInProgressApi("Still WIP")]
     public class RunContext
     {
         #region Constructor
@@ -11,10 +17,7 @@ namespace ToSic.Sxc.Run.Context
         /// DI Constructor
         /// </summary>
         /// <param name="platform"></param>
-        public RunContext(PlatformContext platform)
-        {
-            Platform = platform;
-        }
+        public RunContext(PlatformContext platform) => Platform = platform;
 
         internal RunContext Init(DynamicCodeRoot root)
         {

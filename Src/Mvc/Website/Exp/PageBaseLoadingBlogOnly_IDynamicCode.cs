@@ -97,7 +97,8 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
 
         #region RunContext - new in 11.08 or similar, not implemented in old base classes
 
-        public RunContext RunContext => throw new NotImplementedException("RunContext is only used on newer base classes");
+        public RunContext RunContext => DynCode.RunContext;
+
         #endregion
     }
 }

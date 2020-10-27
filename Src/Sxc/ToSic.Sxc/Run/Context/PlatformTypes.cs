@@ -1,6 +1,7 @@
 ﻿namespace ToSic.Sxc.Run.Context
 {
-    public enum Platforms
+    [WorkInProgressApi("Still WIP")]
+    public enum PlatformTypes
     {
         Unknown = 0,
         None = 1,
