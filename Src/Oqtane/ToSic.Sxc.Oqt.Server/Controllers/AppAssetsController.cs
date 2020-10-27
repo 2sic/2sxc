@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.StaticFiles;
 using Oqtane.Infrastructure;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Oqtane.Repository;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
@@ -18,6 +19,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         private readonly ILogManager _logger;
         private readonly ITenantResolver _tenantResolver;
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly List<string> _whiteListExtensions = new List<string> {".js", ".css", ".json", ".map", ".xml", ".csv"};
+        private const string RiskyExtensionsAll =
+            @"^\.\s*(ade|adp|app|bas|bat|chm|class|cmd|com|cpl|crt|dll|exe|fxp|hlp|hta|ins|isp|jse|lnk|mda|mdb|mde|mdt|mdw|mdz|msc|msi|msp|mst|ops|pcd|pif|prf|prg|reg|scf|scr|sct|shb|shs|url|vb|vbe|vbs|wsc|wsf|wsh|cshtml|vbhtml|cs|ps[0-9]|ascx|aspx|asmx|config|inc|html|sql|bin|iso|asp|sh|php([0-9])?|pl|cgi|386|torrent|jar|vbscript|cer|csr|jsp|drv|sys|csh|inf|htaccess|htpasswd|ksh)\s*$";
+        private static readonly Regex RiskyDetector = new Regex(RiskyExtensionsAll);
 
         public AppAssetsController(ITenantResolver tenantResolver , IHostingEnvironment hostingEnvironment, ILogManager logger)
         {
@@ -51,12 +56,19 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         {
             try
             {
-                // TODO: stv
-                // 1. any mime-image/... type should be fine
-	            // 2. extensions like, js, css, json, .map, xml, csv. should all be fine.
-	            // 3. nothing in a ".xyz" folder or a subfolder of this should be allowed (like .data must be protected)
-	            // 4. anything in the ToSic.Eav.Security.Files.FileNames.IsKnownRisyExtension(...) should be denied
+                // Blacklist extensions should be denied.
+                if (IsKnownRiskyExtension(filePath)) return NotFound();
+                if (Eav.Security.Files.FileNames.IsKnownCodeExtension(filePath)) return NotFound();
 
+                // Whitelist extensions like, js, css, json, map, xml, csv should all be fine or
+                // any mime-type image/...  should be fine.
+                var mimeType = GetMimeType(filePath);
+                if (!_whiteListExtensions.Contains(Path.GetExtension(filePath)) && (!mimeType.StartsWith("image"))) return NotFound();
+
+                // Nothing in a ".xyz" folder or a subfolder of this should be allowed (like .data must be protected).
+                if (appName.StartsWith(".") || filePath.StartsWith(".") || filePath.Contains("/.")) return NotFound();
+
+                // Validate for alias.
                 var alias = _tenantResolver.GetAlias();
                 if (alias == null) return NotFound();
 
@@ -75,7 +87,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                 if (GetAllFiles(appPath).All(file => file != fullFilePath)) return NotFound();
 
                 var fileBytes = System.IO.File.ReadAllBytes(fullFilePath);
-                var mimeType = GetMimeType(fullFilePath);
 
                 return new FileContentResult(fileBytes, mimeType)
                 {
@@ -100,6 +111,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                 files.AddRange(GetAllFiles(subFolder));
 
             return files;
+        }
+
+        public static bool IsKnownRiskyExtension(string fileName)
+        {
+            var extension = Path.GetExtension(fileName);
+            return !string.IsNullOrEmpty(extension) && RiskyDetector.IsMatch(extension);
         }
     }
 }
