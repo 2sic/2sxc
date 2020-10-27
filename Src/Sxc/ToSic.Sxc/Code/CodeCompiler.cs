@@ -4,26 +4,22 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Run;
-using ToSic.Sxc.Web;
 #if NET451
 using System.Web.Compilation;
-#else
-using System.Security.Policy;
-using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
 #endif
 
 
 namespace ToSic.Sxc.Code
 {
-    internal class CodeCompiler: HasLog
+    public class CodeCompiler: HasLog
     {
         internal CodeCompiler(ILog parentLog) : base("Sys.CsCmpl", parentLog)
         {
         }
 
-        internal const string CsFileExtension = ".cs";
-        internal const string CsHtmlFileExtension = ".cshtml";
-        internal const string SharedCodeRootPathKeyInCache = "SharedCodeRootPath";
+        public const string CsFileExtension = ".cs";
+        public const string CsHtmlFileExtension = ".cshtml";
+        public const string SharedCodeRootPathKeyInCache = "SharedCodeRootPath";
         
         internal object InstantiateClass(string virtualPath, string className = null, string relativePath = null, bool throwOnError = true)
         {
@@ -48,7 +44,7 @@ namespace ToSic.Sxc.Code
             if (isCshtml && string.IsNullOrEmpty(className))
             {
 #if NETSTANDARD
-                throw new Exception("Not Yet Implemented in .net standard #TodoNetStandard");
+                throw new Exception("On-the Fly / Runtime Compile Not Yet Implemented in .net standard #TodoNetStandard");
 #else
                 compiledType = BuildManager.GetCompiledType(virtualPath);
 #endif
@@ -63,7 +59,7 @@ namespace ToSic.Sxc.Code
 
                 Assembly assembly;
 #if NETSTANDARD
-                throw new Exception("Not Yet Implemented in .net standard #TodoNetStandard");
+                throw new Exception("On-the Fly / Runtime Compile Not Yet Implemented in .net standard #TodoNetStandard");
 #else
                 assembly = BuildManager.GetCompiledAssembly(virtualPath);
 #endif

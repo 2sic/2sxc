@@ -1,4 +1,8 @@
 ﻿using System;
+using System.IO;
+using Microsoft.Extensions.Configuration.EnvironmentVariables;
+using ToSic.Eav.Run;
+using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Hybrid.Razor
 {
@@ -21,27 +25,32 @@ namespace ToSic.Sxc.Hybrid.Razor
             string relativePath = null,
             bool throwOnError = true)
         {
-            throw new NotImplementedException();
-            //var path = NormalizePath(virtualPath);
-            //VerifyFileExists(path);
-            //return path.EndsWith(CodeCompiler.CsFileExtension)
-            //    ? DynCode.CreateInstance(path, dontRelyOnParameterOrder, name, null, throwOnError)
-            //    : CreateInstanceCshtml(path);
+            var directory = System.IO.Path.GetDirectoryName(Path);
+            if (directory == null) throw new Exception("Current directory seems to be null");
+            var path = System.IO.Path.Combine(directory, virtualPath);
+            VerifyFileExists(path);
+            //return "all is ok with " + virtualPath + "(" + path + ")";
+            
+            return path.EndsWith(CodeCompiler.CsFileExtension)
+                ? DynCode.CreateInstance(path, dontRelyOnParameterOrder, name, null, throwOnError)
+                : throw new NotImplementedException(); 
+            // CreateInstanceCshtml(path);
         }
 
         protected dynamic CreateInstanceCshtml(string path)
         {
             throw new NotImplementedException();
-            //var webPage = (RazorComponentBase)CreateInstanceFromVirtualPath(path);
+            //var webPage = this. CreateInstanceFromVirtualPath(path);
             //webPage.ConfigurePage(this);
             //return webPage;
         }
 
-        protected static void VerifyFileExists(string path)
+        protected void VerifyFileExists(string path)
         {
-            throw new NotImplementedException();
-            //if (!File.Exists(HostingEnvironment.MapPath(path)))
-            //    throw new FileNotFoundException("The shared file does not exist.", path);
+            var pathFinder = (IServerPaths)ServiceProvider.GetService(typeof(IServerPaths));
+            var finalPath = pathFinder.FullAppPath(path);
+            if (!File.Exists(finalPath))
+                throw new FileNotFoundException("The shared file does not exist.", path);
         }
     }
 }

@@ -1,6 +1,8 @@
-﻿namespace ToSic.Sxc.Hybrid.Razor
+﻿using System;
+
+namespace ToSic.Sxc.Hybrid.Razor
 {
-    public abstract class RazorComponent: RazorComponent<EmptyModel>
+    public abstract class RazorComponent: RazorComponent<object>
     {
 
     }
