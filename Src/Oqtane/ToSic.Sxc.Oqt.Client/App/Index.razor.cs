@@ -8,11 +8,6 @@ namespace ToSic.Sxc.Oqt.App
 {
     public partial class Index
     {
-        private JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
-        {
-            WriteIndented = true,
-        };
-
         public string ToSxcModulePath()
         {
             return "Modules/ToSic.Sxc/";
