@@ -4,7 +4,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Blocks;
 
-namespace ToSic.Sxc.Razor.Components
+namespace ToSic.Sxc.Razor.Hybrid
 {
     // test, doesn't do anything yet
     public abstract partial class SxcRazorComponent<TModel>: Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>
@@ -25,9 +25,6 @@ namespace ToSic.Sxc.Razor.Components
         }
         public ILog Log { get; }
         #endregion
-
-
-        public string Test() => "hello from test()";
 
         public string VirtualPath { get; set; }
 

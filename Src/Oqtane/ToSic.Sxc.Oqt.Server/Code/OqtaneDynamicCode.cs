@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Oqt.Server.Code
         public OqtaneDynamicCode(): base("Mvc.CodeRt") { }
         public OqtaneDynamicCode Init(IBlock block, ILog parentLog) 
         {
-            base.Init(block, 10, parentLog);
+            base.Init(block, parentLog, 10);
             return this;
         }
     }

@@ -1,8 +1,6 @@
 ﻿using ToSic.Eav.Apps.Run;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Mvc.Run;
-using ToSic.Sxc.Mvc.TestStuff;
-using ToSic.Sxc.Razor.Code;
 
 namespace ToSic.Sxc.Mvc.RazorPages.Exp
 {
@@ -10,8 +8,8 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
     {
         #region DynCode 
 
-        protected Razor3DynamicCode DynCode => _dynCode ??= new Razor3DynamicCode().Init(Block, Log);
-        private Razor3DynamicCode _dynCode;
+        protected Sxc.Code.DynamicCodeRoot DynCode => _dynCode ??= new Sxc.Code.DynamicCodeRoot().Init(Block, Log);
+        private Sxc.Code.DynamicCodeRoot _dynCode;
         #endregion
         public IBlock Block 
         {

@@ -18,9 +18,9 @@ namespace ToSic.Sxc.Dnn.Code
         /// <param name="block">CMS Block which provides context and maybe some edit-allowed info.</param>
         /// <param name="parentLog">parent logger for logging what's happening</param>
         /// <param name="compatibility">compatibility level - changes behaviour if level 9 or 10</param>
-        public DnnDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)
+        public new DnnDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)
         {
-            Init(block, compatibility, parentLog);
+            base.Init(block, parentLog, compatibility);
             // Init things than require module-info or similar, but not 2sxc
             Dnn = new DnnContextOld(block?.Context.Container);
             Link = new DnnLinkHelper(Dnn);

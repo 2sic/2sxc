@@ -27,14 +27,14 @@ namespace ToSic.Sxc.Code
     /// Note that other DynamicCode objects like RazorComponent or ApiController reference this object for all the interface methods of <see cref="IDynamicCode"/>.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract class DynamicCodeRoot : HasLog, IDynamicCode
+    public /*abstract*/ class DynamicCodeRoot : HasLog, IDynamicCode
     {
         public IBlock Block { get; private set; }
 
-        protected DynamicCodeRoot(string logName = null): base(logName ?? "Sxc.DynCdR") { }
+        public DynamicCodeRoot(string logName = null): base(logName ?? "Sxc.DynCdR") { }
 
         [PrivateApi]
-        public DynamicCodeRoot Init(IBlock block, int compatibility, ILog parentLog)
+        public DynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)
         {
             Log.LinkTo(parentLog ?? block?.Log);
             if (block == null)

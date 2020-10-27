@@ -12,9 +12,9 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Razor.Components
+namespace ToSic.Sxc.Razor.Hybrid
 {
-    public partial class SxcRazorComponent<TModel> : IDynamicCode, ISxcRazorComponent
+    public partial class SxcRazorComponent<TModel> : IDynamicCode
     {
 
         #region Content, Header, etc. and List

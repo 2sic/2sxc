@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Configuration;
 using System.IO;
 using System.Threading.Tasks;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Razor.Code;
-using ToSic.Sxc.Razor.Components;
+using ToSic.Sxc.Razor.Hybrid;
 using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Razor.Engines
@@ -33,16 +31,16 @@ namespace ToSic.Sxc.Razor.Engines
             // in MVC we're always using V10 compatibility
             CompatibilityAutoLoadJQueryAndRVT = false;
 
-            try
-            {
-                InitWebpage();
-            }
-            // Catch web.config Error on DNNs upgraded to 7
-            catch (ConfigurationErrorsException exc)
-            {
-                var e = new Exception("Configuration Error: Please follow this checklist to solve the problem: http://swisschecklist.com/en/i4k4hhqo/2Sexy-Content-Solve-configuration-error-after-upgrading-to-DotNetNuke-7", exc);
-                throw e;
-            }
+            //try
+            //{
+            //    InitWebpage();
+            //}
+            //// Catch web.config Error on DNNs upgraded to 7
+            //catch (ConfigurationErrorsException exc)
+            //{
+            //    var e = new Exception("Configuration Error: Please follow this checklist to solve the problem: http://swisschecklist.com/en/i4k4hhqo/2Sexy-Content-Solve-configuration-error-after-upgrading-to-DotNetNuke-7", exc);
+            //    throw e;
+            //}
         }
 
         [PrivateApi]
@@ -52,16 +50,16 @@ namespace ToSic.Sxc.Razor.Engines
             try
             {
                 if (string.IsNullOrEmpty(TemplatePath)) return null;
-                var dynCode = new Razor3DynamicCode().Init(Block, 10, Log);
+                var dynCode = new Sxc.Code.DynamicCodeRoot().Init(Block, Log);
 
                 var compiler = Eav.Factory.Resolve<IRenderRazor>();
-                var result = await compiler.RenderToStringAsync(TemplatePath, new Object(),
+                var result = await compiler.RenderToStringAsync(TemplatePath, new object(),
                     rzv =>
                     {
                         if (rzv.RazorPage is ISxcRazorComponent asSxc)
                         {
                             asSxc.DynCode = dynCode;
-                            asSxc.VirtualPath = TemplatePath;
+                            //asSxc.VirtualPath = TemplatePath;
                             asSxc.Purpose = Purpose;
 
                         }
@@ -76,6 +74,11 @@ namespace ToSic.Sxc.Razor.Engines
                 Sxc.Code.ErrorHelp.AddHelpIfKnownError(maybeIEntityCast);
                 throw;
             }
+
+            // WIP https://github.com/dotnet/aspnetcore/blob/master/src/Mvc/Mvc.Razor.RuntimeCompilation/src/RuntimeViewCompiler.cs#L397-L404
+            // maybe also https://stackoverflow.com/questions/48206993/how-to-load-asp-net-core-razor-view-dynamically-at-runtime
+            // later also check loading more DLLs on https://stackoverflow.com/questions/58685966/adding-assemblies-types-to-be-made-available-to-razor-page-at-runtime
+
         }
 
 
@@ -89,31 +92,28 @@ namespace ToSic.Sxc.Razor.Engines
             return task.Result.ToString();
         }
 
-        private string InitWebpage()
-        {
-            if (string.IsNullOrEmpty(TemplatePath)) return null;
-            var dynCode = new Razor3DynamicCode().Init(Block, 10, Log);
+        //private string InitWebpage()
+        //{
+        //    if (string.IsNullOrEmpty(TemplatePath)) return null;
+        //    var dynCode = new Sxc.Code.DynamicCodeRoot().Init(Block, Log);
 
-            var compiler = Eav.Factory.Resolve<IRenderRazor>();
-            var result = compiler.RenderToStringAsync(TemplatePath, new Object(), 
-                rzv =>
-                {
-                    if (rzv.RazorPage is ISxcRazorComponent asSxc)
-                    {
-                        asSxc.DynCode = dynCode;
-                        asSxc.VirtualPath = TemplatePath;
-                        asSxc.Purpose = Purpose;
+        //    var compiler = Eav.Factory.Resolve<IRenderRazor>();
+        //    var result = compiler.RenderToStringAsync(TemplatePath, new Object(), 
+        //        rzv =>
+        //        {
+        //            if (rzv.RazorPage is ISxcRazorComponent asSxc)
+        //            {
+        //                asSxc.DynCode = dynCode;
+        //                //asSxc.VirtualPath = TemplatePath;
+        //                asSxc.Purpose = Purpose;
 
-                    }
+        //            }
 
-                });
-            // todo: de-async!
-            return result.Result;
+        //        });
+        //    // todo: de-async!
+        //    return result.Result;
 
-            // WIP https://github.com/dotnet/aspnetcore/blob/master/src/Mvc/Mvc.Razor.RuntimeCompilation/src/RuntimeViewCompiler.cs#L397-L404
-            // maybe also https://stackoverflow.com/questions/48206993/how-to-load-asp-net-core-razor-view-dynamically-at-runtime
-            // later also check loading more DLLs on https://stackoverflow.com/questions/58685966/adding-assemblies-types-to-be-made-available-to-razor-page-at-runtime
 
-        }
+        //}
     }
 }

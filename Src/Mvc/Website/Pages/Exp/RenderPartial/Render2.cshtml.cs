@@ -7,8 +7,8 @@ using ToSic.Sxc.Mvc.Dev;
 //using ToSic.Sxc.Mvc.Engines;
 using ToSic.Sxc.Mvc.RazorPages;
 using ToSic.Sxc.Mvc.Web;
-using ToSic.Sxc.Razor.Components;
 using ToSic.Sxc.Razor.Engines;
+using ToSic.Sxc.Razor.Hybrid;
 
 namespace Website.Pages.RenderPartial
 {
@@ -42,7 +42,7 @@ namespace Website.Pages.RenderPartial
                     if (rzv.RazorPage is ISxcRazorComponent asSxc)
                     {
                         asSxc.DynCode = dynCode;
-                        asSxc.VirtualPath = path;
+                        //asSxc.VirtualPath = path;
                         asSxc.Purpose = Purpose.WebView;
                     }
                 });

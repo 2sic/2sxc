@@ -1,9 +1,8 @@
 ﻿using System;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Razor.Code;
 
-namespace ToSic.Sxc.Razor.Components
+namespace ToSic.Sxc.Razor.Hybrid
 {
     public partial class SxcRazorComponent<TModel>: ISxcRazorComponent
     {
@@ -11,7 +10,7 @@ namespace ToSic.Sxc.Razor.Components
 
         public DynamicCodeRoot DynCode
         {
-            get => _dynCode ??= new Razor3DynamicCode().Init(Block, Log);
+            get => _dynCode ??= new DynamicCodeRoot().Init(Block, Log);
             set => _dynCode = value;
         }
 

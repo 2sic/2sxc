@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ToSic.Sxc.Razor.Components
+namespace ToSic.Sxc.Razor.Hybrid
 {
     public partial class SxcRazorComponent<TModel>
     {

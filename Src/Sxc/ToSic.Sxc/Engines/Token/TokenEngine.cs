@@ -91,7 +91,7 @@ namespace ToSic.Sxc.Engines
             InitTokenReplace();
         }
 
-        private void InitDataHelper() => _data = Factory.Resolve<DynamicCodeRoot>().Init(Block, 9, Log);
+        private void InitDataHelper() => _data = Factory.Resolve<DynamicCodeRoot>().Init(Block, Log, 9);
 
         private void InitTokenReplace()
         {
