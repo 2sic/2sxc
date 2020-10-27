@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Razor.Debug;
-using ToSic.Sxc.Razor.Engines;
+using ToSic.Sxc.Razor.Engine.DbgWip;
 
-namespace ToSic.Sxc.Razor
+namespace ToSic.Sxc.Razor.Engine
 {
+    // ReSharper disable once InconsistentNaming
     public static class RazorDI
     {
         public static IServiceCollection AddSxcRazor(this IServiceCollection services)

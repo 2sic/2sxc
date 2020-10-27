@@ -7,7 +7,7 @@ using ToSic.Sxc.Mvc.Dev;
 //using ToSic.Sxc.Mvc.Engines;
 using ToSic.Sxc.Mvc.RazorPages;
 using ToSic.Sxc.Mvc.Web;
-using ToSic.Sxc.Razor.Engines;
+using ToSic.Sxc.Razor.Engine;
 using ToSic.Sxc.Razor.Hybrid;
 
 namespace Website.Pages.RenderPartial

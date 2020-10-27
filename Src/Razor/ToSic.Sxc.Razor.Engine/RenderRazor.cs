@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 
-namespace ToSic.Sxc.Razor.Engines
+namespace ToSic.Sxc.Razor.Engine
 {
     public class RenderRazor : IRenderRazor
     {
@@ -38,24 +38,22 @@ namespace ToSic.Sxc.Razor.Engines
 
             if (partial is RazorView rzv) configure?.Invoke(rzv);
 
-            using (var output = new StringWriter())
-            {
-                var viewContext = new ViewContext(
-                    actionContext,
-                    partial,
-                    new ViewDataDictionary<TModel>(new EmptyModelMetadataProvider(), new ModelStateDictionary())
-                    {
-                        Model = model
-                    },
-                    new TempDataDictionary(
-                        actionContext.HttpContext,
-                        _tempDataProvider),
-                    output,
-                    new HtmlHelperOptions()
-                );
-                await partial.RenderAsync(viewContext);
-                return output.ToString();
-            }
+            await using var output = new StringWriter();
+            var viewContext = new ViewContext(
+                actionContext,
+                partial,
+                new ViewDataDictionary<TModel>(new EmptyModelMetadataProvider(), new ModelStateDictionary())
+                {
+                    Model = model
+                },
+                new TempDataDictionary(
+                    actionContext.HttpContext,
+                    _tempDataProvider),
+                output,
+                new HtmlHelperOptions()
+            );
+            await partial.RenderAsync(viewContext);
+            return output.ToString();
         }
 
 
@@ -77,6 +75,7 @@ namespace ToSic.Sxc.Razor.Engines
                 new[] { $"Unable to find partial '{partialName}'. The following locations were searched:" }.Concat(searchedLocations)); ;
             throw new InvalidOperationException(errorMessage);
         }
+
         private ActionContext GetActionContext()
         {
             var httpContext = new DefaultHttpContext

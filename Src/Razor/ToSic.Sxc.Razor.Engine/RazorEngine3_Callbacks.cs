@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Search;
 
-namespace ToSic.Sxc.Razor.Engines
+namespace ToSic.Sxc.Razor.Engine
 {
-    public partial class RazorEngine3
+    public partial class RazorEngine
     {
         /// <inheritdoc />
         public override void CustomizeData()

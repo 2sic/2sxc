@@ -7,7 +7,7 @@ using ToSic.Sxc.Engines;
 using ToSic.Sxc.Razor.Hybrid;
 using ToSic.Sxc.Run;
 
-namespace ToSic.Sxc.Razor.Engines
+namespace ToSic.Sxc.Razor.Engine
 {
     /// <summary>
     /// The razor engine, which compiles / runs engine templates
@@ -15,11 +15,11 @@ namespace ToSic.Sxc.Razor.Engines
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     [EngineDefinition(Name = "Razor")]
 
-    public partial class RazorEngine3 : EngineBase
+    public partial class RazorEngine : EngineBase
     {
         #region Constructor / DI
 
-        public RazorEngine3(IServerPaths serverPaths, ILinkPaths linkPaths, TemplateHelpers templateHelpers) : base(serverPaths, linkPaths, templateHelpers) { }
+        public RazorEngine(IServerPaths serverPaths, ILinkPaths linkPaths, TemplateHelpers templateHelpers) : base(serverPaths, linkPaths, templateHelpers) { }
 
         #endregion
 

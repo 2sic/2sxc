@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Options;
 
-namespace ToSic.Sxc.Razor.Debug
+namespace ToSic.Sxc.Razor.Engine.DbgWip
 {
     public class RazorReferenceManager
     {

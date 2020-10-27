@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Razor;
 
-namespace ToSic.Sxc.Razor.Engines
+namespace ToSic.Sxc.Razor.Engine
 {
     public interface IRenderRazor
     {

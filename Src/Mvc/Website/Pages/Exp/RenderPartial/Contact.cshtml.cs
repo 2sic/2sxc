@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RazorPartialToString.Services;
-using ToSic.Sxc.Razor.Engines;
+using ToSic.Sxc.Razor.Engine;
 
 
 namespace Website.Pages

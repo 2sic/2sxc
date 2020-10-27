@@ -10,7 +10,7 @@ using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.Wip;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.Oqt.Shared.Run;
-using ToSic.Sxc.Razor.Debug;
+using ToSic.Sxc.Razor.Engine.DbgWip;
 
 namespace ToSic.Sxc.Oqt.Server
 {
