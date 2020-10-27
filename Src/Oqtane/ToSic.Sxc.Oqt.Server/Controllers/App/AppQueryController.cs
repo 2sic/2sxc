@@ -20,8 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         #region DI / Constructor
         protected override string HistoryLogName => "App.AppQry";
 
-        public AppQueryController(SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver, IUserResolver userResolver) :
-            base(sxcOqtane, zoneMapper, tenantResolver, userResolver) { }
+        public AppQueryController(StatefulControllerDependencies dependencies) : base(dependencies) { }
 
         #endregion
 

@@ -12,21 +12,14 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     public abstract class SxcStatefulControllerBase: SxcStatelessControllerBase
     {
-        private readonly SxcOqtane _sxcOqtane;
 
-        private readonly ITenantResolver _tenantResolver;
-
-        //private readonly ITenantResolver _tenantResolver;
-        private readonly OqtaneZoneMapper _zoneMapper;
-        //private readonly IHttpContextAccessor _httpContextAccessor;
-        //private readonly IAliasRepository _aliasRepository;
-
-        protected SxcStatefulControllerBase(SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver, IUserResolver userResolver) : base(userResolver)
+        protected SxcStatefulControllerBase(StatefulControllerDependencies dependencies) : base(dependencies.UserResolver)
         {
-            _sxcOqtane = sxcOqtane;
-            _tenantResolver = tenantResolver;
-            _zoneMapper = zoneMapper as OqtaneZoneMapper;
+            _tenantResolver = dependencies.TenantResolver;
+            _zoneMapper = dependencies.ZoneMapper as OqtaneZoneMapper;
         }
+        private readonly ITenantResolver _tenantResolver;
+        private readonly OqtaneZoneMapper _zoneMapper;
 
         protected IInstanceContext GetContext()
         {
@@ -50,7 +43,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                 throw new Exception("No context found, cannot continue");
             }
 
-            var ctx = _sxcOqtane.CreateContext(HttpContext, instance.Zone, pageId, containerId, instance.App, instance.Block);
+            var ctx = OqtTempInstanceContext.CreateContext(HttpContext, instance.Zone, pageId, containerId, instance.App, instance.Block);
             IBlock block = new BlockFromModule().Init(ctx, Log);
 
             // only if it's negative, do we load the inner block

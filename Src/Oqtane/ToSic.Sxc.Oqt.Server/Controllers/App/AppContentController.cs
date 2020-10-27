@@ -23,8 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         #region DI / Constructor
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "AppCnt";
 
-        public AppContentController(SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver, IUserResolver userResolver) :
-            base(sxcOqtane, zoneMapper, tenantResolver, userResolver) { }
+        public AppContentController(StatefulControllerDependencies dependencies) : base(dependencies) { }
         #endregion
 
         //private IInstanceContext GetContext()

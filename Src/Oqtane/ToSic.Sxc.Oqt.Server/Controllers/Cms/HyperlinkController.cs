@@ -17,8 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     {
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "HypLnk";
 
-        public HyperlinkController(SxcOqtane sxcOqtane, IZoneMapper zoneMapper, ITenantResolver tenantResolver, IUserResolver userResolver) :
-            base(sxcOqtane, zoneMapper, tenantResolver, userResolver) { }
+        public HyperlinkController(StatefulControllerDependencies dependencies) : base(dependencies) { }
 
 
         [HttpGet]

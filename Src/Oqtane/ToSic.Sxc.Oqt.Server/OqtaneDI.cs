@@ -61,6 +61,7 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddTransient<IRenderTestIds, SxcOqtane>();
             //services.AddTransient<IRenderRazor, RenderRazor>();
             //services.AddTransient<IEngineFinder, OqtaneEngineFinder>();
+            services.AddTransient<StatefulControllerDependencies>();
 
             return services;
         }
