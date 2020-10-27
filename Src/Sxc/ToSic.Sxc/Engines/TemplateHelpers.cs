@@ -42,9 +42,9 @@ namespace ToSic.Sxc.Engines
         /// <param name="templateLocation"></param>
         public void EnsureTemplateFolderExists(string templateLocation)
         {
-            var portalPath = templateLocation == Settings.TemplateLocations.HostFileSystem 
-                ? Path.Combine(ServerPaths.FullAppPath(Settings.PortalHostDirectory) ?? "", Settings.AppsRootFolder) 
-                : ServerPaths.FullAppPath(App.Tenant.AppsRootPhysical) ?? "";
+            var portalPath = templateLocation == Settings.TemplateLocations.HostFileSystem
+                ? Path.Combine(ServerPaths.FullAppPath(Settings.PortalHostDirectory) ?? "", Settings.AppsRootFolder)
+                : App.Tenant.AppsRootPhysicalFull ?? "";// ServerPaths.FullAppPath(App.Tenant.AppsRootPhysical) ?? "";
             var sexyFolderPath = portalPath;
 
             var sexyFolder = new DirectoryInfo(sexyFolderPath);

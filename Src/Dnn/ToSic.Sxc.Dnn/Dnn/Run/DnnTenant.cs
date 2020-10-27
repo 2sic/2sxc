@@ -1,6 +1,6 @@
 ﻿using System.IO;
+using System.Web.Hosting;
 using DotNetNuke.Entities.Portals;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 
@@ -83,7 +83,12 @@ namespace ToSic.Sxc.Dnn.Run
                                           ?? "err-portal-alias-not-loaded";
 
         [PrivateApi]
-        public override string AppsRootPhysical => Path.Combine(UnwrappedContents.HomeDirectory, Settings.AppsRootFolder);
+        public override string AppsRootPhysical => AppsRootRelative;
+
+        internal string AppsRootRelative => Path.Combine(UnwrappedContents.HomeDirectory, Settings.AppsRootFolder);
+
+        [PrivateApi]
+        public override string AppsRootPhysicalFull => HostingEnvironment.MapPath(AppsRootRelative);
 
         [PrivateApi]
         public override bool RefactorUserIsAdmin

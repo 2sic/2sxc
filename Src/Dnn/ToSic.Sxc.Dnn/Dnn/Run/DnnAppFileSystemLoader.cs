@@ -41,8 +41,8 @@ namespace ToSic.Sxc.Dnn.Run
             {
                 Log.Add($"Trying to build path based on tenant. If it's in search mode, the {nameof(ITenant)} will be missing. Id: {Tenant.Id}");
                 EnsureTenantIsLoadedWhenDiFails();
-                var fullPath = Tenant.AppsRootPhysical + "/" + path + "/" + Eav.Constants.FolderAppExtensions;
-                Path = HostingEnvironment.MapPath(fullPath);
+                var fullPath = System.IO.Path.Combine(Tenant.AppsRootPhysicalFull, /*+ "/" +*/ path, /*+ "/" + */ Eav.Constants.FolderAppExtensions);
+                Path = fullPath;// HostingEnvironment.MapPath(fullPath);
                 Log.Add("System path:" + Path);
             }
             catch (Exception e)

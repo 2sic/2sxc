@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Http;
+using ToSic.Eav;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Oqt.Shared;
@@ -15,12 +16,15 @@ namespace ToSic.Sxc.Oqt.Server.Wip
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public class WipTenant : Tenant<int>
     {
+        private readonly IServerPaths _serverPaths;
+
         /// <summary>
         /// Constructor for DI
         /// </summary>
         /// <param name="httpContextAccessor"></param>
-        public WipTenant(IHttpContextAccessor httpContextAccessor) : base(0)
+        public WipTenant(IHttpContextAccessor httpContextAccessor, IServerPaths serverPaths) : base(0)
         {
+            _serverPaths = serverPaths;
             HttpContext = httpContextAccessor.HttpContext;
         }
 
@@ -31,6 +35,8 @@ namespace ToSic.Sxc.Oqt.Server.Wip
         public WipTenant(HttpContext httpContext) : base(0)
         {
             HttpContext = httpContext;
+            _serverPaths = Factory.Resolve<IServerPaths>();
+
         }
 
         //public WipTenant(HttpContext httpContext, MvcPortalSettings settings) : base(
@@ -60,10 +66,17 @@ namespace ToSic.Sxc.Oqt.Server.Wip
         public override string Name => "dummy";
 
         [PrivateApi]
-        public override string AppsRootPhysical => Path.Combine(OqtConstants.ContentSubfolder, WipConstants.AppRootPublicBase, Settings.AppsRootFolder);
+        public override string AppsRootPhysical => AppsRootPartial();
+
+        private static string AppsRootPartial()
+        {
+            return Path.Combine(OqtConstants.ContentSubfolder, WipConstants.AppRootPublicBase, Settings.AppsRootFolder);
+        }
 
         [PrivateApi]
         public override string AppsRootLink => Path.Combine(string.Format(OqtConstants.AppAssetsLinkRoot, Id.ToString()));
+
+        public override string AppsRootPhysicalFull => Eav.Factory.Resolve<IServerPaths>().FullAppPath(AppsRootPartial());
 
         [PrivateApi]
         public override bool RefactorUserIsAdmin => false;

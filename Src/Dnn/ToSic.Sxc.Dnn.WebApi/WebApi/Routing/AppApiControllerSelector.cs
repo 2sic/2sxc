@@ -15,6 +15,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 
@@ -105,8 +106,8 @@ namespace ToSic.Sxc.WebApi
 
                 log.Add($"Edition: {edition}");
 
-                var tenant = Factory.Resolve<ITenant>();
-                var controllerFolder = Path.Combine(tenant.AppsRootPhysical, appFolder, edition + "api/");
+                var tenant = (DnnTenant)Factory.Resolve<ITenant>();
+                var controllerFolder = Path.Combine(tenant.AppsRootRelative, appFolder, edition + "api/");
 
                 controllerFolder = controllerFolder.Replace("\\", @"/");
                 log.Add($"Controller Folder: {controllerFolder}");

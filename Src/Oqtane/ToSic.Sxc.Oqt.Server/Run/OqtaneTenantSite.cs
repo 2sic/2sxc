@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Oqtane.Models;
 using Oqtane.Repository;
+using ToSic.Eav;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Oqt.Shared;
@@ -21,16 +22,19 @@ namespace ToSic.Sxc.Oqt.Server.Run
         /// <summary>
         /// Constructor for DI
         /// </summary>
-        public OqtaneTenantSite(ISiteRepository siteRepository, ITenantResolver tenantResolver) : base(null)
+        public OqtaneTenantSite(ISiteRepository siteRepository, ITenantResolver tenantResolver, IServerPaths serverPaths) : base(null)
         {
             _siteRepository = siteRepository;
             _tenantResolver = tenantResolver;
+            _serverPaths = serverPaths;
         }
         private readonly ISiteRepository _siteRepository;
         private readonly ITenantResolver _tenantResolver;
+        private readonly IServerPaths _serverPaths;
 
         public OqtaneTenantSite(Site settings) : base(settings)
         {
+            _serverPaths = Factory.Resolve<IServerPaths>();
         }
 
         public override Site UnwrappedContents
@@ -60,10 +64,17 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public override string Name => UnwrappedContents.Name;
 
         [PrivateApi]
-        public override string AppsRootPhysical => Path.Combine(OqtConstants.ContentSubfolder, WipConstants.AppRootPublicBase, Settings.AppsRootFolder);
+        public override string AppsRootPhysical => AppsRootPartial();
+
+        private static string AppsRootPartial()
+        {
+            return Path.Combine(OqtConstants.ContentSubfolder, WipConstants.AppRootPublicBase, Settings.AppsRootFolder);
+        }
 
         [PrivateApi]
         public override string AppsRootLink => Path.Combine(string.Format(OqtConstants.AppAssetsLinkRoot, Id.ToString()));
+
+        [PrivateApi] public override string AppsRootPhysicalFull => _serverPaths.FullAppPath(AppsRootPartial());
 
         [PrivateApi]
         public override bool RefactorUserIsAdmin => WipConstants.IsAdmin;

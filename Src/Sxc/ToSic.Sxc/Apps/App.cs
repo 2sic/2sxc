@@ -76,7 +76,7 @@ namespace ToSic.Sxc.Apps
 
         #region DI Constructors
 
-        public App(IAppEnvironment appEnvironment, IServerPaths serverPaths, ITenant tenant, ILinkPaths linkPaths) : base(appEnvironment, serverPaths, tenant)
+        public App(IAppEnvironment appEnvironment, ITenant tenant, ILinkPaths linkPaths) : base(appEnvironment, tenant)
         {
             _linkPaths = linkPaths;
         }

@@ -61,8 +61,8 @@ namespace ToSic.Sxc.Run
 
         public string TargetPath(string folder)
         {
-            var appPath = Path.Combine(Tenant.AppsRootPhysical, folder);
-            return _serverPaths.FullAppPath(appPath);
+            var appPath = Path.Combine(Tenant.AppsRootPhysicalFull, folder);
+            return appPath; // _serverPaths.FullAppPath(appPath);
         }
 
         public abstract void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap);
