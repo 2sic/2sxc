@@ -95,7 +95,7 @@ namespace ToSic.Sxc.Web
 
         #endregion
 
-        public void DynamicCodeCoupling(IDynamicCode parent, string path)
+        public void DynamicCodeCoupling(IDynamicCode parent)
         {
             var wrapLog = Log.Call();
             var parentIsDynCode = false;

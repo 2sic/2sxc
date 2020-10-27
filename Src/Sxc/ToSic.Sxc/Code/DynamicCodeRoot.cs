@@ -261,7 +261,7 @@ namespace ToSic.Sxc.Code
             // if it supports all our known context properties, attach them
             if (instance is ICoupledDynamicCode isShared)
             {
-                isShared.DynamicCodeCoupling(this, virtualPath);
+                isShared.DynamicCodeCoupling(this);
             }
 
             return wrap((instance != null).ToString(), instance);

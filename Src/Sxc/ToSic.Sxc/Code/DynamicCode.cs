@@ -40,13 +40,10 @@ namespace ToSic.Sxc.Code
         public IDynamicCode UnwrappedContents { get; private set; }
 
         [PrivateApi]
-        public virtual void DynamicCodeCoupling(IDynamicCode parent, string path)
+        public virtual void DynamicCodeCoupling(IDynamicCode parent)
         {
             Log?.Call()(null);
             UnwrappedContents = parent;
-            try { 
-                Log?.Add("DynamicCode created: " + path);
-            } catch { /* ignore */ }
         }
 
         #region Content and Header
