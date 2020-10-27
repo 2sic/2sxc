@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// </summary>
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public new string Block(int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
+        public string Block(int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
         {
             var entityId = Backend.NewBlock(parentId, field, sortOrder, app, guid);
 

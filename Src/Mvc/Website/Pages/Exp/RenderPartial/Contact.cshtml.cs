@@ -9,8 +9,8 @@ namespace Website.Pages
 {
     public class ContactModel : PageModel
     {
-        private readonly IRenderRazor _renderer;
-        public ContactModel(IRenderRazor renderer)
+        private readonly IRazorRenderer _renderer;
+        public ContactModel(IRazorRenderer renderer)
         {
             _renderer = renderer;
         }

@@ -21,14 +21,13 @@ namespace ToSic.Sxc.Razor.Engine
 
         public RazorEngine(IServerPaths serverPaths, ILinkPaths linkPaths, TemplateHelpers templateHelpers) : base(serverPaths, linkPaths, templateHelpers) { }
 
-        #endregion
 
 
         /// <inheritdoc />
         [PrivateApi]
         protected override void Init()
         {
-            // in MVC we're always using V10 compatibility
+            // in MVC & Oqtane we're always using V10 compatibility
             CompatibilityAutoLoadJQueryAndRVT = false;
 
             //try
@@ -42,6 +41,17 @@ namespace ToSic.Sxc.Razor.Engine
             //    throw e;
             //}
         }
+        #endregion
+
+
+        /// <inheritdoc/>
+        protected override string RenderTemplate()
+        {
+            Log.Call();
+            var task = RenderTask();
+            task.Wait();
+            return task.Result.ToString();
+        }
 
         [PrivateApi]
         public async Task<TextWriter> RenderTask()
@@ -50,28 +60,26 @@ namespace ToSic.Sxc.Razor.Engine
             try
             {
                 if (string.IsNullOrEmpty(TemplatePath)) return null;
-                var dynCode = new Sxc.Code.DynamicCodeRoot().Init(Block, Log);
+                var dynCode = new Code.DynamicCodeRoot().Init(Block, Log);
 
-                var compiler = Eav.Factory.Resolve<IRenderRazor>();
+                var compiler = Eav.Factory.Resolve<IRazorRenderer>();
                 var result = await compiler.RenderToStringAsync(TemplatePath, new object(),
                     rzv =>
                     {
                         if (rzv.RazorPage is ISxcRazorComponent asSxc)
                         {
                             asSxc.DynCode = dynCode;
-                            //asSxc.VirtualPath = TemplatePath;
                             asSxc.Purpose = Purpose;
 
                         }
                     });
                 var writer = new StringWriter();
-                writer.Write(result);
-                // todo: continue here 2020-08-19
+                await writer.WriteAsync(result);
                 return writer;
             }
             catch (Exception maybeIEntityCast)
             {
-                Sxc.Code.ErrorHelp.AddHelpIfKnownError(maybeIEntityCast);
+                Code.ErrorHelp.AddHelpIfKnownError(maybeIEntityCast);
                 throw;
             }
 
@@ -83,14 +91,6 @@ namespace ToSic.Sxc.Razor.Engine
 
 
 
-        /// <inheritdoc/>
-        protected override string RenderTemplate()
-        {
-            Log.Call();
-            var task = RenderTask();
-            task.Wait();
-            return task.Result.ToString();
-        }
 
         //private string InitWebpage()
         //{
@@ -110,7 +110,6 @@ namespace ToSic.Sxc.Razor.Engine
         //            }
 
         //        });
-        //    // todo: de-async!
         //    return result.Result;
 
 

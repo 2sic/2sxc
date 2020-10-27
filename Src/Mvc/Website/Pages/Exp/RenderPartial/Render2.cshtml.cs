@@ -14,9 +14,9 @@ namespace Website.Pages.RenderPartial
 {
     public class Render2Model : PageModel
     {
-        private readonly IRenderRazor _renderer;
+        private readonly IRazorRenderer _renderer;
         private readonly SxcMvc _sxcMvc;
-        public Render2Model(IRenderRazor renderer, SxcMvc sxcMvc)
+        public Render2Model(IRazorRenderer renderer, SxcMvc sxcMvc)
         {
             _renderer = renderer;
             _sxcMvc = sxcMvc;
