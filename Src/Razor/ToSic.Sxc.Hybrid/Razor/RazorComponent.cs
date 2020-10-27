@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ToSic.Sxc.Hybrid.Razor
+﻿namespace ToSic.Sxc.Hybrid.Razor
 {
-    class RazorComponent
+    public abstract class RazorComponent: RazorComponent<EmptyModel>
     {
+
     }
 }

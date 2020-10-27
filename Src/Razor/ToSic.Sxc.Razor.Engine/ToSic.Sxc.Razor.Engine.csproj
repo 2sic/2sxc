@@ -18,4 +18,10 @@
     <ProjectReference Include="..\ToSic.Sxc.Hybrid\ToSic.Sxc.Hybrid.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="ToSic.Razor">
+      <HintPath>..\..\..\Dependencies\RazorBlade\netstandard2.0\ToSic.Razor.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
