@@ -8,11 +8,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     internal class OqtTempInstanceContext
     {
-        public OqtTempInstanceContext()
-        {
-
-        }
-
         public static InstanceContext CreateContext(HttpContext http, int zoneId, int pageId, int containerId, int appId,
             Guid blockGuid)
             => new InstanceContext(

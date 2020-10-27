@@ -2,12 +2,10 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using Oqtane.Models;
-using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Oqt.Server.Page;
 using ToSic.Sxc.Oqt.Server.Run;
-using ToSic.Sxc.Oqt.Server.Wip;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.Oqt.Shared.Run;
 using ToSic.Sxc.Razor.Engine.DbgWip;
@@ -98,19 +96,9 @@ namespace ToSic.Sxc.Oqt.Server
 
         public IBlock CreateBlock(int zoneId, int pageId, int containerId, int appId, Guid blockGuid, ILog log)
         {
-            var context = CreateContext(_httpContext, zoneId, pageId, containerId, appId, blockGuid);
+            var context = OqtTempInstanceContext.CreateContext(_httpContext, zoneId, pageId, containerId, appId, blockGuid);
             var block = new BlockFromModule().Init(context, log);
             return block;
         }
-
-        public InstanceContext CreateContext(HttpContext http, int zoneId, int pageId, int containerId, int appId,
-            Guid blockGuid)
-            => new InstanceContext(
-                new WipTenant(http).Init(zoneId), 
-                //_zoneMapper.TenantOfZone(zoneId),
-                new OqtanePage(pageId, null),
-                new OqtaneContainer(tenantId: zoneId, id: containerId, appId: appId, block: blockGuid),
-                new OqtaneUser(WipConstants.NullUser)
-            );
     }
 }
