@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Run.Context
+﻿using ToSic.Eav.Documentation;
+
+namespace ToSic.Sxc.Run.Context
 {
     /// <summary>
     /// General platform information
@@ -6,6 +8,7 @@
     /// <remarks>
     /// This must be provided through Dependency Injection, Singleton, as it cannot change at runtime.
     /// </remarks>
+    [WorkInProgressApi("Still WIP")]
     public class PlatformContext
     {
         /// <summary>

@@ -1,8 +1,11 @@
-﻿namespace ToSic.Sxc.Run.Context
+﻿using ToSic.Eav.Documentation;
+
+namespace ToSic.Sxc.Run.Context
 {
     /// <summary>
     /// The page the app is running on. 
     /// </summary>
+    [WorkInProgressApi("Still WIP")]
     public class PageContext
     {
         /// <summary>

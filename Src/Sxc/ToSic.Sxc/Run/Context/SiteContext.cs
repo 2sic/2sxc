@@ -1,8 +1,11 @@
-﻿namespace ToSic.Sxc.Run.Context
+﻿using ToSic.Eav.Documentation;
+
+namespace ToSic.Sxc.Run.Context
 {
     /// <summary>
     /// The site where the current instance is running. 
     /// </summary>
+    [WorkInProgressApi("Still WIP")]
     public class SiteContext
     {
         /// <summary>

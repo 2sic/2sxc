@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Run.Context
+﻿using ToSic.Eav.Documentation;
+
+namespace ToSic.Sxc.Run.Context
 {
     [WorkInProgressApi("Still WIP")]
     public enum PlatformTypes
