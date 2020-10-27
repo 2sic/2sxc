@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Mvc.Run
         public override string Name => UnwrappedContents.Name;
 
         [PrivateApi]
-        public override string AppsRoot => Path.Combine(UnwrappedContents.HomePath, Settings.AppsRootFolder);
+        public override string AppsRootPhysical => Path.Combine(UnwrappedContents.HomePath, Settings.AppsRootFolder);
 
         [PrivateApi]
         public override bool RefactorUserIsAdmin => false;

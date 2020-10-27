@@ -60,7 +60,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public override string Name => UnwrappedContents.Name;
 
         [PrivateApi]
-        public override string AppsRoot => Path.Combine(OqtConstants.ContentSubfolder, WipConstants.AppRootPublicBase, Settings.AppsRootFolder);
+        public override string AppsRootPhysical => Path.Combine(OqtConstants.ContentSubfolder, WipConstants.AppRootPublicBase, Settings.AppsRootFolder);
+
+        [PrivateApi]
+        public override string AppsRootLink => Path.Combine(string.Format(OqtConstants.AppAssetsLinkRoot, Id.ToString()));
 
         [PrivateApi]
         public override bool RefactorUserIsAdmin => WipConstants.IsAdmin;

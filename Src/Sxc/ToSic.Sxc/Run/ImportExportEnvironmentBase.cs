@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Run
 
         public string TargetPath(string folder)
         {
-            var appPath = Path.Combine(Tenant.AppsRoot, folder);
+            var appPath = Path.Combine(Tenant.AppsRootPhysical, folder);
             return _serverPaths.FullAppPath(appPath);
         }
 

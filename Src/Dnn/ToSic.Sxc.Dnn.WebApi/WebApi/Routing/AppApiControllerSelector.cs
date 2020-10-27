@@ -106,7 +106,7 @@ namespace ToSic.Sxc.WebApi
                 log.Add($"Edition: {edition}");
 
                 var tenant = Factory.Resolve<ITenant>();
-                var controllerFolder = Path.Combine(tenant.AppsRoot, appFolder, edition + "api/");
+                var controllerFolder = Path.Combine(tenant.AppsRootPhysical, appFolder, edition + "api/");
 
                 controllerFolder = controllerFolder.Replace("\\", @"/");
                 log.Add($"Controller Folder: {controllerFolder}");

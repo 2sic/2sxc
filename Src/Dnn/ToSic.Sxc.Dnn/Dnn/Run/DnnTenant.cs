@@ -83,7 +83,7 @@ namespace ToSic.Sxc.Dnn.Run
                                           ?? "err-portal-alias-not-loaded";
 
         [PrivateApi]
-        public override string AppsRoot => Path.Combine(UnwrappedContents.HomeDirectory, Settings.AppsRootFolder);
+        public override string AppsRootPhysical => Path.Combine(UnwrappedContents.HomeDirectory, Settings.AppsRootFolder);
 
         [PrivateApi]
         public override bool RefactorUserIsAdmin

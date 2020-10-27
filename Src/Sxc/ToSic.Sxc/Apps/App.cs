@@ -114,7 +114,7 @@ namespace ToSic.Sxc.Apps
 
         #region Paths
         /// <inheritdoc />
-        public string Path => _path ?? (_path = _linkPaths.ToAbsolute(GetRootPath()));
+        public string Path => _path ?? (_path = _linkPaths.ToAbsolute(System.IO.Path.Combine(Tenant.AppsRootLink, Folder)));
         private string _path;
 
         /// <inheritdoc />

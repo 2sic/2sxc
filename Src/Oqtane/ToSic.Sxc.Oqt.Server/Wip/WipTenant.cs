@@ -60,7 +60,10 @@ namespace ToSic.Sxc.Oqt.Server.Wip
         public override string Name => "dummy";
 
         [PrivateApi]
-        public override string AppsRoot => Path.Combine(WipConstants.AppRootPublicBase, Settings.AppsRootFolder);
+        public override string AppsRootPhysical => Path.Combine(OqtConstants.ContentSubfolder, WipConstants.AppRootPublicBase, Settings.AppsRootFolder);
+
+        [PrivateApi]
+        public override string AppsRootLink => Path.Combine(string.Format(OqtConstants.AppAssetsLinkRoot, Id.ToString()));
 
         [PrivateApi]
         public override bool RefactorUserIsAdmin => false;

@@ -13,6 +13,9 @@
         /// </summary>
         public const string ContentSubfolder = "Content";
 
+        // todo: must later replace the 1 with {0} for string-replaces to work
+        public const string AppAssetsLinkRoot = "1/api/appAssets";
+
         public const string UserTokenPrefix = "oqt";
 
         // #uncertain: maybe should incorporate the virtual path of the application?

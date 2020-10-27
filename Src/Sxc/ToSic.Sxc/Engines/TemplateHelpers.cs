@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Engines
         {
             var portalPath = templateLocation == Settings.TemplateLocations.HostFileSystem 
                 ? Path.Combine(ServerPaths.FullAppPath(Settings.PortalHostDirectory) ?? "", Settings.AppsRootFolder) 
-                : ServerPaths.FullAppPath(App.Tenant.AppsRoot) ?? "";
+                : ServerPaths.FullAppPath(App.Tenant.AppsRootPhysical) ?? "";
             var sexyFolderPath = portalPath;
 
             var sexyFolder = new DirectoryInfo(sexyFolderPath);
@@ -75,7 +75,7 @@ namespace ToSic.Sxc.Engines
         {
             var rootFolder = locationId == Settings.TemplateLocations.HostFileSystem
                 ? _linkPaths.ToAbsolute(Settings.PortalHostDirectory, Settings.AppsRootFolder)
-                : App.Tenant.AppsRoot;
+                : App.Tenant.AppsRootPhysical;
             rootFolder += "\\" + App.Folder;
             if (fullPath) rootFolder = ServerPaths.FullAppPath(rootFolder);
             return rootFolder;
