@@ -5,8 +5,7 @@
     /// </summary>
     public class OqtConstants
     {
-        public const string SiteSettingsName = "Site";
-        public const string SiteKeyForZoneId = "EavZoneId";
+        public const string SiteKeyForZoneId = "EavZone";
 
         /// <summary>
         /// This must be added to the `HostEnvironment.ContentRootPath` to really get into the content

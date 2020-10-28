@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Oqtane.Models;
 using Oqtane.Repository;
+using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Run;
@@ -41,7 +42,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 CreatedBy = "2sxc", 
                 CreatedOn = DateTime.Now, 
                 EntityId = tenantId, 
-                EntityName = OqtConstants.SiteSettingsName,
+                EntityName = EntityNames.Site,
                 ModifiedBy = "2sxc",
                 ModifiedOn = DateTime.Now,
                 SettingName = OqtConstants.SiteKeyForZoneId,
@@ -53,7 +54,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         private bool HasZoneId(int tenantId, out int i)
         {
-            var c = _settingRepository.GetSettings(OqtConstants.SiteSettingsName, tenantId).ToList();
+            var c = _settingRepository.GetSettings(EntityNames.Site, tenantId).ToList();
 
             var zoneSetting = c.FirstOrDefault(s => s.SettingName == OqtConstants.SiteKeyForZoneId);
             if (zoneSetting != null)
