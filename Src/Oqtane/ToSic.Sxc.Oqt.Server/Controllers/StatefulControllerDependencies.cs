@@ -1,6 +1,7 @@
 ﻿using Oqtane.Repository;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Oqt.Server.Repository;
+using ToSic.Sxc.Oqt.Server.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
@@ -12,13 +13,23 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         internal readonly IZoneMapper ZoneMapper;
         internal readonly ITenantResolver TenantResolver;
         internal readonly IUserResolver UserResolver;
+        internal readonly IModuleRepository ModuleRepository;
+        internal readonly IModuleDefinitionRepository ModuleDefinitionRepository;
+        internal readonly ISettingRepository SettingRepository;
+        private readonly OqtaneContainer _oqtaneContainer;
+        internal readonly OqtTempInstanceContext OqtTempInstanceContext;
 
-        public StatefulControllerDependencies(IZoneMapper zoneMapper, ITenantResolver tenantResolver,
-            IUserResolver userResolver)
+        public StatefulControllerDependencies(IZoneMapper zoneMapper, ITenantResolver tenantResolver, IUserResolver userResolver, 
+            IModuleDefinitionRepository moduleDefinitionRepository, IModuleRepository moduleRepository, ISettingRepository settingRepository, OqtaneContainer oqtaneContainer, OqtTempInstanceContext oqtTempInstanceContext)
         {
             ZoneMapper = zoneMapper;
             TenantResolver = tenantResolver;
             UserResolver = userResolver;
+            ModuleDefinitionRepository = moduleDefinitionRepository;
+            ModuleRepository = moduleRepository;
+            SettingRepository = settingRepository;
+            _oqtaneContainer = oqtaneContainer;
+            OqtTempInstanceContext = oqtTempInstanceContext;
         }
     }
 }

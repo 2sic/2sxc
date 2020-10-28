@@ -35,7 +35,11 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddTransient<IEnvironmentInstaller, OqtaneEnvironmentInstaller>();
             services.AddTransient<IGetEngine, OqtaneGetLookupEngine>();
             services.AddTransient<OqtaneContextBuilder>();
-
+            services.AddTransient<OqtaneContainer>();
+            services.AddTransient<OqtTempInstanceContext>();
+            services.AddTransient<OqtaneTenantSite>();
+            services.AddTransient<OqtaneZoneMapper>();
+            services.AddTransient<SettingsHelper>();
             //// add page publishing
             services.AddTransient<IPagePublishing, OqtanePagePublishing>();
 

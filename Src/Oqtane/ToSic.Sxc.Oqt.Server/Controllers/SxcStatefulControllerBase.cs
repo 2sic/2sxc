@@ -17,9 +17,17 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         {
             _tenantResolver = dependencies.TenantResolver;
             _zoneMapper = dependencies.ZoneMapper as OqtaneZoneMapper;
+            _moduleDefinitionRepository = dependencies.ModuleDefinitionRepository;
+            _moduleRepository = dependencies.ModuleRepository;
+            _settingRepository = dependencies.SettingRepository;
+            _oqtTempInstanceContext = dependencies.OqtTempInstanceContext;
         }
         private readonly ITenantResolver _tenantResolver;
         private readonly OqtaneZoneMapper _zoneMapper;
+        private readonly IModuleRepository _moduleRepository;
+        private readonly IModuleDefinitionRepository _moduleDefinitionRepository;
+        private readonly ISettingRepository _settingRepository;
+        private readonly OqtTempInstanceContext _oqtTempInstanceContext;
 
         protected IInstanceContext GetContext()
         {
@@ -43,7 +51,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                 throw new Exception("No context found, cannot continue");
             }
 
-            var ctx = OqtTempInstanceContext.CreateContext(HttpContext, instance.Zone, pageId, containerId, instance.App, instance.Block);
+            var ctx = _oqtTempInstanceContext.CreateContext(HttpContext, instance.Zone, pageId, containerId, instance.App, instance.Block);
             IBlock block = new BlockFromModule().Init(ctx, Log);
 
             // only if it's negative, do we load the inner block

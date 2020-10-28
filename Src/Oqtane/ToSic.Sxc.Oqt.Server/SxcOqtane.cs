@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using Oqtane.Models;
+using Oqtane.Repository;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Oqt.Server.Page;
@@ -16,11 +17,16 @@ namespace ToSic.Sxc.Oqt.Server
     {
         #region Constructor and DI
         
-        public SxcOqtane(IHttpContextAccessor httpContextAccessor, OqtAssetsAndHeaders assetsAndHeaders, RazorReferenceManager debugRefMan) : base("Mvc.View")
+        public SxcOqtane(IHttpContextAccessor httpContextAccessor, OqtAssetsAndHeaders assetsAndHeaders, RazorReferenceManager debugRefMan, IModuleDefinitionRepository moduleDefinitionRepository, IModuleRepository moduleRepository, ISettingRepository settingRepository, OqtaneContainer oqtaneContainer, OqtTempInstanceContext oqtTempInstanceContext) : base("Mvc.View")
         {
             _assetsAndHeaders = assetsAndHeaders;
             _debugRefMan = debugRefMan;
             _httpContext = httpContextAccessor.HttpContext;
+            _moduleDefinitionRepository = moduleDefinitionRepository;
+            _moduleRepository = moduleRepository;
+            _settingRepository = settingRepository;
+            _oqtaneContainer = oqtaneContainer;
+            _oqtTempInstanceContext = oqtTempInstanceContext;
             // add log to history!
             History.Add("oqt-view", Log);
         }
@@ -29,6 +35,11 @@ namespace ToSic.Sxc.Oqt.Server
         public IOqtAssetsAndHeader AssetsAndHeaders => _assetsAndHeaders;
         private readonly OqtAssetsAndHeaders _assetsAndHeaders;
         private readonly RazorReferenceManager _debugRefMan;
+        private readonly IModuleRepository _moduleRepository;
+        private readonly IModuleDefinitionRepository _moduleDefinitionRepository;
+        private readonly ISettingRepository _settingRepository;
+        private readonly OqtaneContainer _oqtaneContainer;
+        private readonly OqtTempInstanceContext _oqtTempInstanceContext;
 
         #endregion
 
@@ -99,7 +110,7 @@ namespace ToSic.Sxc.Oqt.Server
 
         public IBlock CreateBlock(int zoneId, int pageId, int containerId, int appId, Guid blockGuid, ILog log)
         {
-            var context = OqtTempInstanceContext.CreateContext(_httpContext, zoneId, pageId, containerId, appId, blockGuid);
+            var context = _oqtTempInstanceContext.CreateContext(_httpContext, zoneId, pageId, Module.ModuleId, appId, blockGuid);
             var block = new BlockFromModule().Init(context, log);
             return block;
         }

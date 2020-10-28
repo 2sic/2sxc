@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.Repository
 
         public User GetUser()
         {
-            var user = new User { IsAuthenticated = _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated, Username = "", UserId = -1, Roles = "" };
+            var user = new User { IsAuthenticated = _httpContextAccessor.HttpContext.User?.Identity?.IsAuthenticated ?? false, Username = "", UserId = -1, Roles = "" };
             if (!user.IsAuthenticated) return user;
 
             user.Username = _httpContextAccessor.HttpContext.User.Identity.Name;
