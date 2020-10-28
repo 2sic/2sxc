@@ -22,7 +22,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return this;
         }
 
-
         // Convert settings collection to Dictionary.
         private Dictionary<string, string> GetSettings(List<Setting> settings)
         {
@@ -32,6 +31,32 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 dictionary.Add(setting.SettingName, setting.SettingValue);
             }
             return dictionary;
+        }
+
+        public Setting GetSetting(string entityName, int entityId, string settingName)
+        {
+            return _settingRepository.GetSettings(entityName, entityId)
+                .FirstOrDefault(item => item.SettingName == settingName);
+        }
+
+        public void DeleteSetting(string entityName, int entityId, string settingName)
+        {
+            var delete = _settingRepository.GetSettings(entityName, entityId)
+                .FirstOrDefault(item => item.SettingName == settingName);
+
+            if (delete != null) _settingRepository.DeleteSetting(delete.SettingId);
+        }
+
+        public void UpdateSetting(string entityName, int entityId, string settingName, string settingValue)
+        {
+            var update = _settingRepository.GetSettings(entityName, entityId)
+                .FirstOrDefault(item => item.SettingName == settingName);
+
+            if (update != null)
+            {
+                update.SettingValue = settingValue;
+                _settingRepository.UpdateSetting(update);
+            }
         }
     }
 }
