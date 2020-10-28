@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 using ToSic.Eav;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Engines.Token;
@@ -75,7 +74,7 @@ namespace ToSic.Sxc.Engines
 
         #region Constructor / DI
 
-        public TokenEngine(IServerPaths serverPaths, ILinkPaths linkPaths, TemplateHelpers templateHelpers) : base(serverPaths, linkPaths, templateHelpers) { }
+        public TokenEngine(EngineBaseDependencies helpers) : base(helpers) { }
 
         #endregion
 
@@ -107,7 +106,7 @@ namespace ToSic.Sxc.Engines
         /// <inheritdoc />
         protected override string RenderTemplate()
         {
-            var templateSource = File.ReadAllText(ServerPaths.FullAppPath(TemplatePath));
+            var templateSource = File.ReadAllText(Helpers.ServerPaths.FullAppPath(TemplatePath));
             // Convert old <repeat> elements to the new ones
             for (var upgrade = 0; upgrade < _upgrade6To7.Length/2; upgrade++)
                 templateSource = templateSource.Replace(_upgrade6To7[upgrade, 0], _upgrade6To7[upgrade, 1]);

@@ -1,6 +1,8 @@
-﻿using ToSic.Eav.Documentation;
+﻿using System.Collections.Generic;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -11,7 +13,6 @@ namespace ToSic.Sxc.Blocks
     [PrivateApi("not sure yet what to call this, CmsBlock isn't right, because it's more of a BlockHost or something")]
     public interface IBlockBuilder: IHasLog
     {
-
         /// <summary>
         /// Render this block. Internally will use the engine. 
         /// </summary>
@@ -39,5 +40,7 @@ namespace ToSic.Sxc.Blocks
         /// <param name="renderingPurpose"></param>
         /// <returns></returns>
         IEngine GetEngine(Purpose renderingPurpose = Purpose.WebView);
+
+        List<ClientAssetInfo> Assets { get; }
     }
 }

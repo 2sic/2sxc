@@ -1,0 +1,19 @@
+﻿using System.Collections.Generic;
+using ToSic.Sxc.Engines;
+using ToSic.Sxc.Web;
+using System.Linq;
+
+namespace ToSic.Sxc.Blocks
+{
+    public partial class BlockBuilder
+    {
+        public List<ClientAssetInfo> Assets { get; } = new List<ClientAssetInfo>();
+
+        private void TransferEngineAssets(IEngine engine)
+        {
+            if (!engine.Assets.Any()) return;
+            if (RootBuilder is BlockBuilder parentBlock)
+                parentBlock.Assets.AddRange(engine.Assets);
+        }
+    }
+}

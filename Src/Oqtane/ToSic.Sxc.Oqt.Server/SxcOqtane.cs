@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Components;
 using Oqtane.Models;
+using Oqtane.Shared;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Oqt.Server.Page;
@@ -10,7 +13,7 @@ using ToSic.Sxc.Razor.Engine.DbgWip;
 
 namespace ToSic.Sxc.Oqt.Server
 {
-    public class SxcOqtane: HasLog, IRenderTestIds
+    public class SxcOqtane: HasLog, ISxcOqtane
     {
         #region Constructor and DI
         
@@ -46,6 +49,11 @@ namespace ToSic.Sxc.Oqt.Server
             Block = GetBlock();
             _assetsAndHeaders.Init(this);
             GeneratedHtml = (MarkupString) Block.BlockBuilder.Render();
+            Resources = Block.BlockBuilder.Assets.Select(a => new Resource
+            {
+                ResourceType = a.IsJs ? ResourceType.Script : ResourceType.Stylesheet,
+                Url = a.Url
+            }).ToList();
             _renderDone = true;
         }
 
@@ -56,6 +64,8 @@ namespace ToSic.Sxc.Oqt.Server
 
         private bool _renderDone;
         public MarkupString GeneratedHtml { get; private set; }
+
+        public List<Resource> Resources { get; private set; }
 
         #endregion
 

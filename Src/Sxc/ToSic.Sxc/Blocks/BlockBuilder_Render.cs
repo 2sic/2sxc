@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Internal;
 using ToSic.Eav;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Engines;
@@ -61,6 +62,8 @@ namespace ToSic.Sxc.Blocks
                                 Log.Add("template referenced 2sxc.api JS in script-tag: will enable");
                                 if (RootBuilder is BlockBuilder parentBlock) parentBlock.UiAddJsApi = engine.ActivateJsApi;
                             }
+
+                            TransferEngineAssets(engine);
                         }
                         else body = "";
                     }
@@ -76,7 +79,7 @@ namespace ToSic.Sxc.Blocks
                         instanceId: Block.ParentId,
                         contentBlockId: Block.ContentBlockId,
                         editContext: UiAddEditContext,
-                        autoToolbar: UiAutoToolbar) // WrapInDivWithContext(body)
+                        autoToolbar: UiAutoToolbar)
                     : body;
                 #endregion
 
@@ -88,14 +91,6 @@ namespace ToSic.Sxc.Blocks
                     null, true, true));
             }
         }
-
-        //internal string WrapInDivWithContext(string body) =>
-        //    RenderingHelper.WrapInContext(body,
-        //        instanceId: Block.ParentId,
-        //        contentBlockId: Block.ContentBlockId,
-        //        editContext: UiAddEditContext,
-        //        autoToolbar: UiAutoToolbar);
-
 
         /// <summary>
         /// Cache the installation ok state, because once it's ok, we don't need to re-check

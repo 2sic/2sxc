@@ -2,10 +2,8 @@
 using System.IO;
 using System.Threading.Tasks;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Hybrid.Razor;
-using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Razor.Engine
 {
@@ -19,7 +17,7 @@ namespace ToSic.Sxc.Razor.Engine
     {
         #region Constructor / DI
 
-        public RazorEngine(IServerPaths serverPaths, ILinkPaths linkPaths, TemplateHelpers templateHelpers) : base(serverPaths, linkPaths, templateHelpers) { }
+        public RazorEngine(EngineBaseDependencies helpers) : base(helpers) { }
 
 
 

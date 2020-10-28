@@ -24,6 +24,7 @@ namespace ToSic.Sxc.Engines
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public abstract class EngineBase : HasLog, IEngine
     {
+        protected readonly EngineBaseDependencies Helpers;
         [PrivateApi] protected IView Template;
         [PrivateApi] protected string TemplatePath;
         [PrivateApi] protected IApp App;
@@ -41,17 +42,12 @@ namespace ToSic.Sxc.Engines
         /// <summary>
         /// Empty constructor, so it can be used in dependency injection
         /// </summary>
-        protected EngineBase(IServerPaths serverPaths, ILinkPaths linkPaths, TemplateHelpers templateHelpers) : base("Sxc.EngBas")
+        protected EngineBase(EngineBaseDependencies helpers) : base("Sxc.EngBas")
         {
-            ServerPaths = serverPaths;
-            _linkPaths = linkPaths;
-            _templateHelpers = templateHelpers;
+            Helpers = helpers;
+            helpers.ClientDependencyOptimizer.Init(Log);
         }
-
-        protected readonly IServerPaths ServerPaths;
-        private readonly ILinkPaths _linkPaths;
-        private readonly TemplateHelpers _templateHelpers;
-
+        
         #endregion
 
         
@@ -62,13 +58,13 @@ namespace ToSic.Sxc.Engines
             var view = Block.View;
             Log.LinkTo(parentLog);
 
-            var root = _templateHelpers.Init(Block.App, Log).AppPathRoot(view.Location, PathTypes.PhysRelative);
+            var root = Helpers.TemplateHelpers.Init(Block.App, Log).AppPathRoot(view.Location, PathTypes.PhysRelative);
             var subPath = view.Path;
             var templatePath = TryToFindPolymorphPath(root, view, subPath) 
-                               ?? _linkPaths.ToAbsolute(root + "/", subPath);
+                               ?? Helpers.LinkPaths.ToAbsolute(root + "/", subPath);
 
             // Throw Exception if Template does not exist
-            if (!File.Exists(ServerPaths.FullAppPath(templatePath)))
+            if (!File.Exists(Helpers.ServerPaths.FullAppPath(templatePath)))
                 // todo: change to some kind of "rendering exception"
                 throw new SexyContentException("The template file '" + templatePath + "' does not exist.");
 
@@ -96,8 +92,8 @@ namespace ToSic.Sxc.Engines
             if (edition == null) return wrapLog("no edition detected", null);
             Log.Add($"edition {edition} detected");
 
-            var testPath = _linkPaths.ToAbsolute($"{root}/{edition}/", subPath);
-            if (File.Exists(ServerPaths.FullAppPath(testPath)))
+            var testPath = Helpers.LinkPaths.ToAbsolute($"{root}/{edition}/", subPath);
+            if (File.Exists(Helpers.ServerPaths.FullAppPath(testPath)))
             {
                 view.Edition = edition;
                 return wrapLog($"edition {edition}", testPath);
@@ -108,8 +104,8 @@ namespace ToSic.Sxc.Engines
             if (firstSlash == -1) return wrapLog($"edition {edition} not found", null);
 
             subPath = subPath.Substring(firstSlash + 1);
-            testPath = _linkPaths.ToAbsolute($"{root}/{edition}/", subPath);
-            if (File.Exists(ServerPaths.FullAppPath(testPath)))
+            testPath = Helpers.LinkPaths.ToAbsolute($"{root}/{edition}/", subPath);
+            if (File.Exists(Helpers.ServerPaths.FullAppPath(testPath)))
             {
                 view.Edition = edition;
                 return wrapLog($"edition {edition} up one path", testPath);
@@ -150,13 +146,16 @@ namespace ToSic.Sxc.Engines
                 return AlternateRendering;
 
             var renderedTemplate = RenderTemplate();
-            var depMan = Factory.Resolve<IClientDependencyOptimizer>();
+            var depMan = Helpers.ClientDependencyOptimizer;// Factory.Resolve<IClientDependencyOptimizer>();
             var result = depMan.Process(renderedTemplate);
             ActivateJsApi = result.Item2;
             return result.Item1;
         }
 
         [PrivateApi] public bool ActivateJsApi { get; private set; }
+
+        /// <inheritdoc/>
+        [PrivateApi] public List<ClientAssetInfo> Assets => Helpers.ClientDependencyOptimizer.Assets;
 
 
         private void CheckExpectedTemplateErrors()

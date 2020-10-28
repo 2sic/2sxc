@@ -21,9 +21,11 @@ namespace ToSic.Sxc.WebApi.Plumbing
             services.TryAddTransient<IServerPaths, ServerPaths>();
             services.TryAddTransient<XmlImportWithFiles, XmlImportFull>();
             services.TryAddTransient<TemplateHelpers, TemplateHelpers>();
+            services.TryAddTransient<EngineBaseDependencies>();
 
             // These are usually replaced by the target platform
             services.TryAddTransient<IClientDependencyOptimizer, BasicClientDependencyOptimizer>();
+            
 
             // 11.08 - fallback in case not added
             services.TryAddSingleton<Run.Context.PlatformContext>();

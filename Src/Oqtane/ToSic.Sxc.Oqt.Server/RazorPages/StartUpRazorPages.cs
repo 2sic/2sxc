@@ -1,5 +1,4 @@
-﻿using System.Drawing.Drawing2D;
-using System.IO;
+﻿using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -9,7 +8,6 @@ namespace ToSic.Sxc.Oqt.Server.RazorPages
 {
     /// <summary>
     /// Still experimental. Getting Razor Pages to compile seems very, very difficult
-    /// ...and it has changed from .net core 2
     /// Because we probably have quite a bit of code, we'll try to put it here
     /// </summary>
     internal class StartUpRazorPages

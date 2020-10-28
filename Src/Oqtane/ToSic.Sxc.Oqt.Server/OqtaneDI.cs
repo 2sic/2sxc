@@ -43,10 +43,11 @@ namespace ToSic.Sxc.Oqt.Server
             //// add page publishing
             services.AddTransient<IPagePublishing, OqtanePagePublishing>();
 
-            //// MVC Specific stuff
+            //// Oqtane Specific stuff
             services.AddScoped<OqtAssetsAndHeaders>();
             services.AddTransient<OqtaneSiteFactory>();
             services.AddTransient<SxcOqtane>();
+            services.AddTransient<IClientDependencyOptimizer, OqtClientDependencyOptimizer>();
 
             services.AddSingleton<Sxc.Run.Context.PlatformContext, OqtPlatformContext>();
 
@@ -62,7 +63,7 @@ namespace ToSic.Sxc.Oqt.Server
             //sc.AddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
 
             // 2020-10-22 2dm test
-            services.AddTransient<IRenderTestIds, SxcOqtane>();
+            services.AddTransient<ISxcOqtane, SxcOqtane>();
             //services.AddTransient<IRenderRazor, RenderRazor>();
             //services.AddTransient<IEngineFinder, OqtaneEngineFinder>();
             services.AddTransient<StatefulControllerDependencies>();
