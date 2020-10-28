@@ -9,7 +9,7 @@ using Log = ToSic.Eav.Logging.Simple.Log;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
-    public abstract class SxcStatelessControllerBase : ControllerBase, IHasLog
+    public abstract class SxcStatelessControllerBase : Controller, IHasLog
     {
         private readonly IUserResolver _userResolver;
 
