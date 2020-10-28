@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public string GetAutoInstallPackagesUiUrl(ITenant tenant, IContainer container, bool forContentApp)
         {
-            return "mvc not implemented #todo #mvc";
+            return "oqtane not implemented #todo #mvc";
         }
 
         public OqtaneEnvironmentInstaller() : base("Mvc.Instll")
