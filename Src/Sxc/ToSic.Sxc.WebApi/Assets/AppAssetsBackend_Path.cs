@@ -13,7 +13,7 @@ namespace ToSic.Sxc.WebApi.Assets
             if (global && !allowFullAccess)
                 throw new NotSupportedException("only host user may access global files");
 
-            return _tmplHelpers.Init(thisApp).AppPathRoot(global);
+            return _tmplHelpers.Init(thisApp, Log).AppPathRoot(global);
         }
     }
 }

@@ -85,7 +85,7 @@ namespace ToSic.Sxc.Apps
 	            Name = t.Name,
 	            ContentTypeStaticName = t.ContentType,
 	            IsHidden = t.IsHidden,
-	            Thumbnail = Factory.Resolve<TemplateHelpers>().Init(app).ViewThumbnail(t)
+	            Thumbnail = Factory.Resolve<TemplateHelpers>().Init(app, Log).IconPathOrNull(t, PathTypes.Link)
 	        });
 	    }
 

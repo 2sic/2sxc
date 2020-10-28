@@ -8,10 +8,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtaneImportExportEnvironment: ImportExportEnvironmentBase
     {
-        public OqtaneImportExportEnvironment(IServerPaths serverPaths, ITenant tenant) 
-            : base(serverPaths, tenant, "Mvc.IExEnv")
-        {
-        }
+        public OqtaneImportExportEnvironment(ITenant tenant) : base( tenant, "Mvc.IExEnv") { }
 
         public override List<Message> TransferFilesToTenant(string sourceFolder, string destinationFolder) 
             => throw new NotImplementedException();

@@ -17,8 +17,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
         /// <summary>
         /// DI Constructor
         /// </summary>
-        public DnnImportExportEnvironment(IServerPaths serverPaths, ITenant tenant) 
-            : base(serverPaths, tenant, "Dnn.ImExEn") { }
+        public DnnImportExportEnvironment(ITenant tenant) : base(tenant, "Dnn.ImExEn") { }
 
         #endregion
 

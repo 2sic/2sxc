@@ -156,7 +156,9 @@ public class " + CsApiTemplateControllerName + @" : ToSic.Sxc.Dnn.ApiController
             return t;
         }
 
-        public string InternalPath => Path.Combine(Factory.Resolve<TemplateHelpers>().Init(_app).AppPathRoot(EditInfo.LocationScope, true), EditInfo.FileName);
+        public string InternalPath => Path.Combine(
+            Factory.Resolve<TemplateHelpers>().Init(_app, Log)
+                .AppPathRoot(EditInfo.LocationScope, PathTypes.PhysFull), EditInfo.FileName);
 
 
         /// <summary>
@@ -202,7 +204,7 @@ public class " + CsApiTemplateControllerName + @" : ToSic.Sxc.Dnn.ApiController
             if (File.Exists(absolutePath)) return false;
 
             // ensure the web.config exists (usually missing in the global area)
-            Factory.Resolve<TemplateHelpers>().Init(_app).EnsureTemplateFolderExists(EditInfo.LocationScope);
+            Factory.Resolve<TemplateHelpers>().Init(_app, Log).EnsureTemplateFolderExists(EditInfo.LocationScope);
 
             // check if the folder to it already exists, or create it...
             var foundFolder = absolutePath.LastIndexOf("\\", StringComparison.InvariantCulture);

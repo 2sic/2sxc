@@ -16,9 +16,9 @@ namespace ToSic.Sxc.Apps
         {
         }
 
-        public IEnumerable<AppUiInfo> GetSelectableApps(ITenant tenant, string filter)
+        public IList<AppUiInfo> GetSelectableApps(ITenant tenant, string filter)
         {
-            Log.Add("get selectable apps");
+            var callLog = Log.Call<IList<AppUiInfo>>(filter);
             var list =
                 GetApps(tenant, null)
                     .Where(a => a.Name != Eav.Constants.ContentAppName)
@@ -30,9 +30,10 @@ namespace ToSic.Sxc.Apps
                         SupportsAjaxReload = a.Configuration?.EnableAjax ?? false,
                         Thumbnail = a.Thumbnail,
                         Version = a.Configuration?.Version?.ToString() ?? ""
-                    });
+                    })
+                    .ToList();
 
-            if (string.IsNullOrWhiteSpace(filter)) return list;
+            if (string.IsNullOrWhiteSpace(filter)) return callLog("unfiltered", list);
 
             // New feature in 10.27 - if app-list is provided, only return these
             var appNames = filter.Split(',')
@@ -42,7 +43,7 @@ namespace ToSic.Sxc.Apps
             list = list.Where(ap => appNames
                     .Any(name => string.Equals(name, ap.Name, StringComparison.InvariantCultureIgnoreCase)))
                 .ToList();
-            return list;
+            return callLog(null, list);
         }
 
         /// <summary>

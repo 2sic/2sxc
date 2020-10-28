@@ -25,7 +25,7 @@ namespace ToSic.Sxc.WebApi.Assets
             Log.LinkTo(parentLog);
             _app = app;
             _user = user;
-            _tmplHelpers.Init(app);
+            _tmplHelpers.Init(app, Log);
             return this;
         }
 

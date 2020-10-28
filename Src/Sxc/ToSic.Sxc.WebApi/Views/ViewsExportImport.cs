@@ -64,13 +64,13 @@ namespace ToSic.Sxc.WebApi.Views
             // Attach files
             var view = new View(bundle.Entity, Log);
 
-            _appHelpers.Init(app);
+            _appHelpers.Init(app, Log);
             if (!string.IsNullOrEmpty(view.Path))
             {
-                TryAddAsset(bundle, _appHelpers.ViewPath(view), view.Path);
-                var thumb = _appHelpers.ViewThumbnail(view);
+                TryAddAsset(bundle, _appHelpers.ViewPath(view, PathTypes.PhysRelative), view.Path);
+                var thumb = _appHelpers.IconPathOrNull(view, PathTypes.PhysRelative);
                 if(thumb != null)
-                    TryAddAsset(bundle, thumb, _appHelpers.ViewIconFileName(view.Path));
+                    TryAddAsset(bundle, thumb, thumb);
             }
 
             var serializer = new JsonBundleSerializer();
@@ -102,7 +102,7 @@ namespace ToSic.Sxc.WebApi.Views
             {
                 // 0.1 Check permissions, get the app, 
                 var app = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(_tenant.ZoneId, appId, _user, _tenant.ZoneId, Log);
-                _appHelpers.Init(app);
+                _appHelpers.Init(app, Log);
 
                 // 0.2 Verify it's json etc.
                 if (files.Any(file => !Json.IsValidJson(file.Contents)))

@@ -8,10 +8,7 @@ namespace ToSic.Sxc.Mvc.Run
 {
     public class MvcImportExportEnvironment: ImportExportEnvironmentBase
     {
-        public MvcImportExportEnvironment(IServerPaths serverPaths, ITenant tenant) 
-            : base(serverPaths, tenant, "Mvc.IExEnv")
-        {
-        }
+        public MvcImportExportEnvironment(ITenant tenant): base(tenant, "Mvc.IExEnv") { }
 
         public override List<Message> TransferFilesToTenant(string sourceFolder, string destinationFolder) 
             => throw new NotImplementedException();
