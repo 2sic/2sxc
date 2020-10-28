@@ -2,11 +2,8 @@
 using Microsoft.Extensions.Primitives;
 using Oqtane.Repository;
 using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Oqt.Server.Repository;
 using ToSic.Sxc.Oqt.Server.Run;
-using ToSic.Sxc.Oqt.Shared.Dev;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
@@ -17,16 +14,14 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         {
             _tenantResolver = dependencies.TenantResolver;
             _zoneMapper = dependencies.ZoneMapper as OqtaneZoneMapper;
-            _moduleDefinitionRepository = dependencies.ModuleDefinitionRepository;
+            //_moduleDefinitionRepository = dependencies.ModuleDefinitionRepository;
             _moduleRepository = dependencies.ModuleRepository;
-            _settingRepository = dependencies.SettingRepository;
+            //_settingRepository = dependencies.SettingRepository;
             _oqtTempInstanceContext = dependencies.OqtTempInstanceContext;
         }
         private readonly ITenantResolver _tenantResolver;
         private readonly OqtaneZoneMapper _zoneMapper;
         private readonly IModuleRepository _moduleRepository;
-        private readonly IModuleDefinitionRepository _moduleDefinitionRepository;
-        private readonly ISettingRepository _settingRepository;
         private readonly OqtTempInstanceContext _oqtTempInstanceContext;
 
         protected IInstanceContext GetContext()
@@ -43,15 +38,16 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             var containerId = GetTypedHeader(WebApi.WebApiConstants.HeaderInstanceId, -1);
             var contentblockId = GetTypedHeader(WebApi.WebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
             var pageId = GetTypedHeader(WebApi.WebApiConstants.HeaderPageId, -1);
-            var instance = TestIds.FindInstance(containerId);
+            //var instance = TestIds.FindInstance(containerId);
 
-            if (containerId == -1 || pageId == -1 || instance == null)
+            if (containerId == -1 || pageId == -1)
             {
                 if (allowNoContextFound) return wrapLog("not found", null);
                 throw new Exception("No context found, cannot continue");
             }
 
-            var ctx = _oqtTempInstanceContext.CreateContext(HttpContext, instance.Zone, pageId, containerId, instance.App, instance.Block);
+            var module = _moduleRepository.GetModule(containerId);
+            var ctx = _oqtTempInstanceContext.CreateContext(module, Log);
             IBlock block = new BlockFromModule().Init(ctx, Log);
 
             // only if it's negative, do we load the inner block

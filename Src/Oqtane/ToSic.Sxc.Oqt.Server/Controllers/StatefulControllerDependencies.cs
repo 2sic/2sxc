@@ -14,21 +14,27 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         internal readonly ITenantResolver TenantResolver;
         internal readonly IUserResolver UserResolver;
         internal readonly IModuleRepository ModuleRepository;
-        internal readonly IModuleDefinitionRepository ModuleDefinitionRepository;
-        internal readonly ISettingRepository SettingRepository;
-        private readonly OqtaneContainer _oqtaneContainer;
+        //internal readonly IModuleDefinitionRepository ModuleDefinitionRepository;
+        //internal readonly ISettingRepository SettingRepository;
+        //private readonly OqtaneContainer _oqtaneContainer;
         internal readonly OqtTempInstanceContext OqtTempInstanceContext;
 
-        public StatefulControllerDependencies(IZoneMapper zoneMapper, ITenantResolver tenantResolver, IUserResolver userResolver, 
-            IModuleDefinitionRepository moduleDefinitionRepository, IModuleRepository moduleRepository, ISettingRepository settingRepository, OqtaneContainer oqtaneContainer, OqtTempInstanceContext oqtTempInstanceContext)
+        public StatefulControllerDependencies(IZoneMapper zoneMapper, 
+            ITenantResolver tenantResolver, 
+            IUserResolver userResolver, 
+            //IModuleDefinitionRepository moduleDefinitionRepository,
+            IModuleRepository moduleRepository,
+            //ISettingRepository settingRepository, 
+            //OqtaneContainer oqtaneContainer, 
+            OqtTempInstanceContext oqtTempInstanceContext)
         {
             ZoneMapper = zoneMapper;
             TenantResolver = tenantResolver;
             UserResolver = userResolver;
-            ModuleDefinitionRepository = moduleDefinitionRepository;
+            //ModuleDefinitionRepository = moduleDefinitionRepository;
             ModuleRepository = moduleRepository;
-            SettingRepository = settingRepository;
-            _oqtaneContainer = oqtaneContainer;
+            //SettingRepository = settingRepository;
+            //_oqtaneContainer = oqtaneContainer;
             OqtTempInstanceContext = oqtTempInstanceContext;
         }
     }

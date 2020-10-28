@@ -1,8 +1,6 @@
-﻿using System;
-using Microsoft.AspNetCore.Http;
-using Oqtane.Repository;
+﻿using Oqtane.Models;
 using ToSic.Eav.Apps.Run;
-using ToSic.Sxc.Oqt.Server.Wip;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Oqt.Shared.Dev;
 
 namespace ToSic.Sxc.Oqt.Server.Run
@@ -18,13 +16,12 @@ namespace ToSic.Sxc.Oqt.Server.Run
             _oqtaneTenantSite = oqtaneTenantSite;
         }
 
-        public InstanceContext CreateContext(HttpContext http, int zoneId, int pageId, int containerId, int appId,
-            Guid blockGuid)
+        public InstanceContext CreateContext(Module module, ILog parentLog)
             => new InstanceContext(
-                 _oqtaneTenantSite, //new WipTenant(http).Init(zoneId),
+                 _oqtaneTenantSite, 
                 //_zoneMapper.TenantOfZone(zoneId),
-                new OqtanePage(pageId, null),
-                _oqtaneContainer.Init(tenantId: zoneId, id: containerId, appId: appId, block: blockGuid),
+                new OqtanePage(module.PageId, null),
+                _oqtaneContainer.Init(module, parentLog),
                 new OqtaneUser(WipConstants.NullUser)
             );
 

@@ -1,13 +1,10 @@
 ﻿using System;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Http;
 using Oqtane.Models;
-using Oqtane.Repository;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Oqt.Server.Page;
 using ToSic.Sxc.Oqt.Server.Run;
-using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.Oqt.Shared.Run;
 using ToSic.Sxc.Razor.Engine.DbgWip;
 
@@ -17,28 +14,18 @@ namespace ToSic.Sxc.Oqt.Server
     {
         #region Constructor and DI
         
-        public SxcOqtane(IHttpContextAccessor httpContextAccessor, OqtAssetsAndHeaders assetsAndHeaders, RazorReferenceManager debugRefMan, IModuleDefinitionRepository moduleDefinitionRepository, IModuleRepository moduleRepository, ISettingRepository settingRepository, OqtaneContainer oqtaneContainer, OqtTempInstanceContext oqtTempInstanceContext) : base("Mvc.View")
+        public SxcOqtane(OqtAssetsAndHeaders assetsAndHeaders, RazorReferenceManager debugRefMan, OqtTempInstanceContext oqtTempInstanceContext) : base("Oqt.Buildr")
         {
             _assetsAndHeaders = assetsAndHeaders;
             _debugRefMan = debugRefMan;
-            _httpContext = httpContextAccessor.HttpContext;
-            _moduleDefinitionRepository = moduleDefinitionRepository;
-            _moduleRepository = moduleRepository;
-            _settingRepository = settingRepository;
-            _oqtaneContainer = oqtaneContainer;
             _oqtTempInstanceContext = oqtTempInstanceContext;
             // add log to history!
             History.Add("oqt-view", Log);
         }
 
-        private readonly HttpContext _httpContext;
         public IOqtAssetsAndHeader AssetsAndHeaders => _assetsAndHeaders;
         private readonly OqtAssetsAndHeaders _assetsAndHeaders;
         private readonly RazorReferenceManager _debugRefMan;
-        private readonly IModuleRepository _moduleRepository;
-        private readonly IModuleDefinitionRepository _moduleDefinitionRepository;
-        private readonly ISettingRepository _settingRepository;
-        private readonly OqtaneContainer _oqtaneContainer;
         private readonly OqtTempInstanceContext _oqtTempInstanceContext;
 
         #endregion
@@ -56,14 +43,7 @@ namespace ToSic.Sxc.Oqt.Server
             Page = page;
             Module = module;
 
-            var idSet = LookupTestIdSet();
-            if (idSet == null)
-            {
-                GeneratedHtml = (MarkupString)$"Error - module id {Module.ModuleId} not found";
-                return;
-            }
-
-            Block = GetBlock(idSet);
+            Block = GetBlock();
             _assetsAndHeaders.Init(this);
             GeneratedHtml = (MarkupString) Block.BlockBuilder.Render();
             _renderDone = true;
@@ -79,39 +59,12 @@ namespace ToSic.Sxc.Oqt.Server
 
         #endregion
 
-        private InstanceId LookupTestIdSet()
+        public string Test() => _debugRefMan.CompilationReferences.Count.ToString();
+
+        private IBlock GetBlock()
         {
-            var mid = Module.ModuleId;
-            InstanceId ids = null;
-            switch (mid)
-            {
-                case 27:
-                    ids = TestIds.Token;
-                    break;
-                case 28: // test site 2dm, root site
-                case 1049: // test sub-site 2dm "blogsite"
-                case 56: // test sub-site Tonci "blogsite"
-                    ids = TestIds.Blog;
-                    break;
-                case 1071:
-                    ids = TestIds.Swiper;
-                    break;
-            }
-
-            return ids;
-        }
-
-        public string Test()
-        {
-            return _debugRefMan.CompilationReferences.Count.ToString();
-        }
-
-        private IBlock GetBlock(InstanceId id) => CreateBlock(id.Zone, id.Page, id.Container, id.App, id.Block, Log);
-
-        public IBlock CreateBlock(int zoneId, int pageId, int containerId, int appId, Guid blockGuid, ILog log)
-        {
-            var context = _oqtTempInstanceContext.CreateContext(_httpContext, zoneId, pageId, Module.ModuleId, appId, blockGuid);
-            var block = new BlockFromModule().Init(context, log);
+            var context = _oqtTempInstanceContext.CreateContext(Module, Log);
+            var block = new BlockFromModule().Init(context, Log);
             return block;
         }
     }

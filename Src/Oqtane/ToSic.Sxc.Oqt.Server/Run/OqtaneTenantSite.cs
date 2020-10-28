@@ -22,15 +22,17 @@ namespace ToSic.Sxc.Oqt.Server.Run
         /// <summary>
         /// Constructor for DI
         /// </summary>
-        public OqtaneTenantSite(ISiteRepository siteRepository, ITenantResolver tenantResolver, IServerPaths serverPaths) : base(null)
+        public OqtaneTenantSite(ISiteRepository siteRepository, ITenantResolver tenantResolver, IServerPaths serverPaths, OqtaneZoneMapper zoneMapper) : base(null)
         {
             _siteRepository = siteRepository;
             _tenantResolver = tenantResolver;
             _serverPaths = serverPaths;
+            _zoneMapper = zoneMapper;
         }
         private readonly ISiteRepository _siteRepository;
         private readonly ITenantResolver _tenantResolver;
         private readonly IServerPaths _serverPaths;
+        private readonly OqtaneZoneMapper _zoneMapper;
 
         public OqtaneTenantSite(Site settings) : base(settings)
         {
@@ -82,7 +84,19 @@ namespace ToSic.Sxc.Oqt.Server.Run
         /// <inheritdoc />
         public override string ContentPath => WipConstants.ContentRoot;
 
-        public override int ZoneId => TestIds.PrimaryZone;
+        public override int ZoneId
+        {
+            get
+            {
+                // big todo: use zoneMapper
+                if (_zoneId != null) return _zoneId.Value;
+                // check if id is negative; 0 is a valid tenant id
+                if (Id < 0) return (_zoneId = Eav.Constants.NullId).Value;
+                _zoneId = _zoneMapper.Init(null).GetZoneId(Id);
+                return _zoneId.Value;
+            }
+        }
+        private int? _zoneId;
 
     }
 }
