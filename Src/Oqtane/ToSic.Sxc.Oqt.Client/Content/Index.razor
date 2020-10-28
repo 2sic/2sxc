@@ -1,9 +1,7 @@
-@using ToSic.Sxc.Oqt.Shared.Run
-
+@* ReSharper disable once CheckNamespace *@
 @namespace ToSic.Sxc.Oqt.Content
 @inherits ToSic.Sxc.Oqt.App.Index
 
-@inject NavigationManager NavigationManager
-@inject IRenderTestIds SxcEngine
-
-<p>2sxc Content</p>
+<div style="border: pink 2px dotted">
+  @SxcEngine.GeneratedHtml
+</div>

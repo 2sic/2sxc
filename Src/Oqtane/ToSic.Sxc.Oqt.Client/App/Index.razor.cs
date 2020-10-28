@@ -1,25 +1,19 @@
 ﻿using Oqtane.Models;
 using Oqtane.UI;
 using System.Collections.Generic;
-using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
+using ToSic.Sxc.Oqt.Shared.Run;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Oqt.App
 {
     public partial class Index
     {
-        public string ToSxcModulePath()
-        {
-            return "Modules/ToSic.Sxc/";
-        }
+        [Inject]
+        public IRenderTestIds SxcEngine { get; set; }
 
-        public override List<Resource> Resources
-        {
-            get
-            {
-                return new List<Resource>();
-            }
-        }
+        public override List<Resource> Resources => new List<Resource>();
 
         protected override async Task OnInitializedAsync()
         {
@@ -47,15 +41,6 @@ namespace ToSic.Sxc.Oqt.App
                     var aAndH = SxcEngine.AssetsAndHeaders;
                     if (aAndH.AddContextMeta)
                         await interop.IncludeMeta("sxc-tmp-context-id", "name", aAndH.ContextMetaName, aAndH.ContextMetaContents(), "id");
-
-                    //await interop.IncludeMeta("kk1", "name", "description", $"content {PageState.Page.PageId} {PageState.ModuleId}", "id");
-                    //await interop.IncludeMeta("kk2", "name", "keywords", $"content {PageState.Page.PageId} {PageState.ModuleId}", "id");
-                    //await interop.IncludeMeta("kk3", "name", "author", $"content {PageState.Page.PageId} {PageState.ModuleId}", "id");
-
-                    string antiforgerytoken = await interop.GetElementByName("__RequestVerificationToken");
-                    //var fields = new { __RequestVerificationToken = antiforgerytoken, username = _username, password = _password, remember = _remember, returnurl = _returnUrl };
-                    //await interop.IncludeLink("app-stylesheet", "stylesheet", "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css", "text/css", "sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T", "anonymous", "");
-                    //await interop.IncludeScripts(scripts.ToArray());
                 }
             }
         }
