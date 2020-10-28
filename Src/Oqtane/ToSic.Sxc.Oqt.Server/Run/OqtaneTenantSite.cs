@@ -37,6 +37,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public OqtaneTenantSite(Site settings) : base(settings)
         {
             _serverPaths = Factory.Resolve<IServerPaths>();
+            _zoneMapper = Factory.Resolve<OqtaneZoneMapper>();
         }
 
         public override Site UnwrappedContents

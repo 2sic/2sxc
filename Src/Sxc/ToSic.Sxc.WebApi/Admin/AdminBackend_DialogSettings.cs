@@ -22,7 +22,7 @@ namespace ToSic.Sxc.WebApi.Admin
                 app = appAndPerms.App;
             }
 
-            var cb = contextBuilder.InitApp(app?.ZoneId, app);
+            var cb = contextBuilder.InitApp(app?.ZoneId ?? context.Tenant.ZoneId, app);
 
             return new
             {
