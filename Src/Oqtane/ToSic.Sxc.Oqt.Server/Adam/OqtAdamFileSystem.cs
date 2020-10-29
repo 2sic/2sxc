@@ -117,7 +117,9 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         #region Folders
         
 
-        public bool FolderExists(string path) => FolderRepository.GetFolder(AdamContext.Tenant.Id, path) != null;
+        public bool FolderExists(string path) => GetOqtFolderByName(path) != null;
+
+        private Folder GetOqtFolderByName(string path) => FolderRepository.GetFolder(AdamContext.Tenant.Id, Backslash(path));
 
 
         public void AddFolder(string path)
@@ -163,13 +165,12 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             callLog("ok");
         }
 
-        public Folder<int, int> Get(string path) 
-            => OqtToAdam(FolderRepository.GetFolder(AdamContext.Tenant.Id, path));
+        public Folder<int, int> Get(string path) => OqtToAdam(GetOqtFolderByName(path));
 
         public List<Folder<int, int>> GetFolders(IFolder folder)
         {
             var callLog = Log.Call<List<Folder<int, int>>>();
-            var fldObj = GetDnnFolder(folder.AsOqt().SysId);
+            var fldObj = GetOqtFolder(folder.AsOqt().SysId);
             if(fldObj == null) return new List<Folder<int, int>>();
 
             var firstList = FolderRepository.GetFolders(fldObj.FolderId);
@@ -178,16 +179,20 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             return callLog($"{folders.Count}", folders);
         }
 
-        public Folder<int, int> GetFolder(int folderId) => OqtToAdam(GetDnnFolder(folderId));
+        public Folder<int, int> GetFolder(int folderId) => OqtToAdam(GetOqtFolder(folderId));
+
+        #endregion
+
+        #region Slash helpers - because Oqtane DB only stores with "\" slashes
+
+        private string Backslash(string original) => original.Replace("/", "\\").Replace("\\\\", "\\");
 
         #endregion
 
 
+        #region Oqtane typed calls
 
-
-        #region Dnn typed calls
-
-        private Folder GetDnnFolder(int folderId) => FolderRepository.GetFolder(folderId);
+        private Folder GetOqtFolder(int folderId) => FolderRepository.GetFolder(folderId);
 
 
         public List<File<int, int>> GetFiles(IFolder folder)
@@ -206,7 +211,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         #endregion
 
-        #region DnnToAdam
+        #region OqtToAdam
         private Folder<int, int> OqtToAdam(Folder f)
             => new Folder<int, int>(AdamContext)
             {
