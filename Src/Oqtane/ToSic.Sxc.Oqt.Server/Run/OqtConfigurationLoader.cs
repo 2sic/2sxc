@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
     /// This is just an empty class that doesn't do anything
     /// Would initialize some stuff if necessary. 
     /// </summary>
-    public class OqtaneConfigurationLoader: IConfigurationLoader
+    public class OqtConfigurationLoader: IConfigurationLoader
     {
         /// <summary>
         /// This is a special callback which was needed by DNN to auto-load certain features.

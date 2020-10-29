@@ -15,14 +15,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected SxcStatefulControllerBase(StatefulControllerDependencies dependencies) : base(dependencies.UserResolver)
         {
             _tenantResolver = dependencies.TenantResolver;
-            _zoneMapper = dependencies.ZoneMapper as OqtaneZoneMapper;
-            //_moduleDefinitionRepository = dependencies.ModuleDefinitionRepository;
+            _zoneMapper = dependencies.ZoneMapper as OqtZoneMapper;
             _moduleRepository = dependencies.ModuleRepository;
-            //_settingRepository = dependencies.SettingRepository;
             _oqtTempInstanceContext = dependencies.OqtTempInstanceContext;
         }
         private readonly ITenantResolver _tenantResolver;
-        private readonly OqtaneZoneMapper _zoneMapper;
+        private readonly OqtZoneMapper _zoneMapper;
         private readonly IModuleRepository _moduleRepository;
         private readonly OqtTempInstanceContext _oqtTempInstanceContext;
 

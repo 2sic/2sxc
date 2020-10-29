@@ -7,9 +7,9 @@ using ToSic.Sxc.Oqt.Shared.Dev;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtanePermissionCheck: AppPermissionCheck
+    public class OqtPermissionCheck: AppPermissionCheck
     {
-        public OqtanePermissionCheck(): base("Mvc.PrmChk") { }
+        public OqtPermissionCheck(): base("Mvc.PrmChk") { }
 
         // todo: #permissions
         protected override bool EnvironmentAllows(List<Grants> grants) => true;
@@ -21,6 +21,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return false;
         }
 
-        protected override IUser User => new OqtaneUser(WipConstants.NullUser);
+        protected override IUser User => new OqtUser(WipConstants.NullUser);
     }
 }

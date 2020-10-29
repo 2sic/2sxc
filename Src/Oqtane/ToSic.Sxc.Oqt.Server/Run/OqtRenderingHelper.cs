@@ -6,9 +6,9 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtaneRenderingHelper: RenderingHelper
+    public class OqtRenderingHelper: RenderingHelper
     {
-        public OqtaneRenderingHelper(ILinkPaths linkPaths) : base(linkPaths, "Mvc.RndHlp") { }
+        public OqtRenderingHelper(ILinkPaths linkPaths) : base(linkPaths, "Mvc.RndHlp") { }
 
         protected override void LogToEnvironmentExceptions(Exception ex)
         {

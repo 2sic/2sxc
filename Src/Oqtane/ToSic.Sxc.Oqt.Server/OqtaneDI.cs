@@ -24,32 +24,32 @@ namespace ToSic.Sxc.Oqt.Server
     {
         public static IServiceCollection AddSxcOqtane(this IServiceCollection services)
         {
-            services.AddScoped<ILinkPaths, OqtaneLinkPaths>();
-            services.AddTransient<IServerPaths, OqtaneServerPaths>();
+            services.AddScoped<ILinkPaths, OqtLinkPaths>();
+            services.AddTransient<IServerPaths, OqtServerPaths>();
 
 
-            services.AddTransient<IAppEnvironment, OqtaneEnvironment>();
-            services.AddTransient<IEnvironment, OqtaneEnvironment>();
+            services.AddTransient<IAppEnvironment, OqtEnvironment>();
+            services.AddTransient<IEnvironment, OqtEnvironment>();
             services.AddTransient<ISite, OqtSite>();
-            services.AddTransient<IRenderingHelper, OqtaneRenderingHelper>();
-            services.AddTransient<IZoneMapper, OqtaneZoneMapper>();
-            services.AddTransient<AppPermissionCheck, OqtanePermissionCheck>();
+            services.AddTransient<IRenderingHelper, OqtRenderingHelper>();
+            services.AddTransient<IZoneMapper, OqtZoneMapper>();
+            services.AddTransient<AppPermissionCheck, OqtPermissionCheck>();
             services.AddTransient<DynamicCodeRoot, OqtaneDynamicCode>();
-            services.AddTransient<IPlatformModuleUpdater, OqtaneModuleUpdater>();
-            services.AddTransient<IEnvironmentInstaller, OqtaneEnvironmentInstaller>();
-            services.AddTransient<IGetEngine, OqtaneGetLookupEngine>();
-            services.AddTransient<OqtaneContextBuilder>();
-            services.AddTransient<OqtaneContainer>();
+            services.AddTransient<IPlatformModuleUpdater, OqtModuleUpdater>();
+            services.AddTransient<IEnvironmentInstaller, OqtEnvironmentInstaller>();
+            services.AddTransient<IGetEngine, OqtGetLookupEngine>();
+            services.AddTransient<OqtContextBuilder>();
+            services.AddTransient<OqtContainer>();
             services.AddTransient<OqtTempInstanceContext>();
             services.AddTransient<OqtSite>();
-            services.AddTransient<OqtaneZoneMapper>();
+            services.AddTransient<OqtZoneMapper>();
             services.AddTransient<SettingsHelper>();
             //// add page publishing
-            services.AddTransient<IPagePublishing, OqtanePagePublishing>();
+            services.AddTransient<IPagePublishing, OqtPagePublishing>();
 
             //// Oqtane Specific stuff
             services.AddScoped<OqtAssetsAndHeaders>();
-            services.AddTransient<OqtaneSiteFactory>();
+            services.AddTransient<OqtSiteFactory>();
             services.AddTransient<SxcOqtane>();
             services.AddTransient<IClientDependencyOptimizer, OqtClientDependencyOptimizer>();
 
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Oqt.Server
             //services.AddTransient<SxcMvc>();
             //// Still pending...
             ////sc.AddTransient<XmlExporter, DnnXmlExporter>();
-            services.AddTransient<IImportExportEnvironment, OqtaneImportExportEnvironment>();
+            services.AddTransient<IImportExportEnvironment, OqtImportExportEnvironment>();
             //sc.AddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
             //sc.AddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
 

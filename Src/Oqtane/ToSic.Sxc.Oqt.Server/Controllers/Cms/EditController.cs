@@ -17,12 +17,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         #region DI
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "UiCntr";
 
-        public EditController(OqtaneContextBuilder contextBuilder, StatefulControllerDependencies dependencies) : base(dependencies)
+        public EditController(OqtContextBuilder contextBuilder, StatefulControllerDependencies dependencies) : base(dependencies)
         {
             _contextBuilder = contextBuilder;
         }
 
-        private readonly OqtaneContextBuilder _contextBuilder;
+        private readonly OqtContextBuilder _contextBuilder;
 
         #endregion
 

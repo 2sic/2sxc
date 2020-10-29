@@ -58,9 +58,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         //    base.Dispose(disposing);
         //}
 
-        public OqtaneUser GetUser()
+        public OqtUser GetUser()
         {
-            return new OqtaneUser(_userResolver.GetUser());
+            return new OqtUser(_userResolver.GetUser());
         }
 
 

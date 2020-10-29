@@ -10,19 +10,19 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtaneContainer: Container<Module>
+    public class OqtContainer: Container<Module>
     {
         private readonly SettingsHelper _settingsHelper;
-        private readonly OqtaneZoneMapper _zoneMapper;
+        private readonly OqtZoneMapper _zoneMapper;
         private Dictionary<string, string> _settings;
 
-        public OqtaneContainer(SettingsHelper settingsHelper, OqtaneZoneMapper zoneMapper) : base ("Oqt.Cont")
+        public OqtContainer(SettingsHelper settingsHelper, OqtZoneMapper zoneMapper) : base ("Oqt.Cont")
         {
             _settingsHelper = settingsHelper;
             _zoneMapper = zoneMapper;
         }
 
-        public new OqtaneContainer Init(Module module, ILog parentLog)
+        public new OqtContainer Init(Module module, ILog parentLog)
         {
             var wrapLog = Log.Call($"id:{module.ModuleId}");
             base.Init(module, parentLog);

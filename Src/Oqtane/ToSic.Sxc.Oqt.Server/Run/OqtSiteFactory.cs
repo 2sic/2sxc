@@ -8,12 +8,12 @@ namespace ToSic.Sxc.Oqt.Server.Run
     /// This is a Mvc implementation of a Tenant-object. 
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public class OqtaneSiteFactory
+    public class OqtSiteFactory
     {
         /// <summary>
         /// Constructor for DI
         /// </summary>
-        public OqtaneSiteFactory(ISiteRepository siteRepository) => _siteRepository = siteRepository;
+        public OqtSiteFactory(ISiteRepository siteRepository) => _siteRepository = siteRepository;
 
         private readonly ISiteRepository _siteRepository;
 

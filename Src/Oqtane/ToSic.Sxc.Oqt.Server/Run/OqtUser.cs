@@ -9,9 +9,9 @@ using ToSic.Sxc.Oqt.Shared.Dev;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtaneUser: IUser<User>
+    public class OqtUser: IUser<User>
     {
-        public OqtaneUser(User user)
+        public OqtUser(User user)
         {
             UnwrappedContents = user;
         }

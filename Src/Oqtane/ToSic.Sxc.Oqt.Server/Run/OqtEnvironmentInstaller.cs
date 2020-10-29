@@ -4,7 +4,7 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtaneEnvironmentInstaller: HasLog, IEnvironmentInstaller
+    public class OqtEnvironmentInstaller: HasLog, IEnvironmentInstaller
     {
         public string UpgradeMessages()
         {
@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return "oqtane not implemented #todo #mvc";
         }
 
-        public OqtaneEnvironmentInstaller() : base("Mvc.Instll")
+        public OqtEnvironmentInstaller() : base("Mvc.Instll")
         {
         }
 

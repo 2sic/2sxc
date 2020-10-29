@@ -6,14 +6,14 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtaneImportExportEnvironment: ImportExportEnvironmentBase
+    public class OqtImportExportEnvironment: ImportExportEnvironmentBase
     {
-        public OqtaneImportExportEnvironment(ISite site) : base( site, "Mvc.IExEnv") { }
+        public OqtImportExportEnvironment(ISite site) : base( site, "Mvc.IExEnv") { }
 
         public override List<Message> TransferFilesToSite(string sourceFolder, string destinationFolder) 
             => throw new NotImplementedException();
 
-        public override Version TenantVersion => typeof(OqtaneImportExportEnvironment).Assembly.GetName().Version;
+        public override Version TenantVersion => typeof(OqtImportExportEnvironment).Assembly.GetName().Version;
 
         public override void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap)
         {

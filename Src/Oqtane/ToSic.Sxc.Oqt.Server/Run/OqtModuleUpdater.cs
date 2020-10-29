@@ -12,10 +12,10 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    internal class OqtaneModuleUpdater: HasLog<IPlatformModuleUpdater>, IPlatformModuleUpdater
+    internal class OqtModuleUpdater: HasLog<IPlatformModuleUpdater>, IPlatformModuleUpdater
     {
         private readonly SettingsHelper _settingsHelper;
-        private readonly OqtaneZoneMapper _zoneMapper;
+        private readonly OqtZoneMapper _zoneMapper;
         private readonly IModuleRepository _moduleRepository;
         private readonly IAppEnvironment _environment;
         private readonly IPageModuleRepository _pageModuleRepository;
@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         /// Empty constructor for DI
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public OqtaneModuleUpdater(SettingsHelper settingsHelper, OqtaneZoneMapper zoneMapper, IModuleRepository moduleRepository, IAppEnvironment environment, IPageModuleRepository pageModuleRepository) : base("Mvc.MapA2I")
+        public OqtModuleUpdater(SettingsHelper settingsHelper, OqtZoneMapper zoneMapper, IModuleRepository moduleRepository, IAppEnvironment environment, IPageModuleRepository pageModuleRepository) : base("Mvc.MapA2I")
         {
             _settingsHelper = settingsHelper;
             _zoneMapper = zoneMapper;

@@ -6,9 +6,9 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtaneServerPaths : IServerPaths
+    public class OqtServerPaths : IServerPaths
     {
-        public OqtaneServerPaths(IWebHostEnvironment hostingEnvironment) => _hostingEnvironment = hostingEnvironment;
+        public OqtServerPaths(IWebHostEnvironment hostingEnvironment) => _hostingEnvironment = hostingEnvironment;
         private readonly IWebHostEnvironment _hostingEnvironment;
 
 

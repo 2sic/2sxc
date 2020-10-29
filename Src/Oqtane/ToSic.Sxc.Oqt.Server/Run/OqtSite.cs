@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         /// <summary>
         /// Constructor for DI
         /// </summary>
-        public OqtSite(ISiteRepository siteRepository, ITenantResolver tenantResolver, IServerPaths serverPaths, OqtaneZoneMapper zoneMapper) : base(null)
+        public OqtSite(ISiteRepository siteRepository, ITenantResolver tenantResolver, IServerPaths serverPaths, OqtZoneMapper zoneMapper) : base(null)
         {
             _siteRepository = siteRepository;
             _tenantResolver = tenantResolver;
@@ -32,12 +32,12 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private readonly ISiteRepository _siteRepository;
         private readonly ITenantResolver _tenantResolver;
         private readonly IServerPaths _serverPaths;
-        private readonly OqtaneZoneMapper _zoneMapper;
+        private readonly OqtZoneMapper _zoneMapper;
 
         public OqtSite(Site settings) : base(settings)
         {
             _serverPaths = Factory.Resolve<IServerPaths>();
-            _zoneMapper = Factory.Resolve<OqtaneZoneMapper>();
+            _zoneMapper = Factory.Resolve<OqtZoneMapper>();
         }
 
         public override Site UnwrappedContents

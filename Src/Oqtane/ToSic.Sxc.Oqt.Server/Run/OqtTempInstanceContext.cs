@@ -7,12 +7,12 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtTempInstanceContext
     {
-        private readonly OqtaneContainer _oqtaneContainer;
+        private readonly OqtContainer _oqtContainer;
         private readonly OqtSite _oqtSite;
 
-        public OqtTempInstanceContext(OqtaneContainer oqtaneContainer, OqtSite oqtSite)
+        public OqtTempInstanceContext(OqtContainer oqtContainer, OqtSite oqtSite)
         {
-            _oqtaneContainer = oqtaneContainer;
+            _oqtContainer = oqtContainer;
             _oqtSite = oqtSite;
         }
 
@@ -20,9 +20,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
             => new InstanceContext(
                  _oqtSite, 
                 //_zoneMapper.TenantOfZone(zoneId),
-                new OqtanePage(pageId, null),
-                _oqtaneContainer.Init(module, parentLog),
-                new OqtaneUser(WipConstants.NullUser)
+                new OqtPage(pageId, null),
+                _oqtContainer.Init(module, parentLog),
+                new OqtUser(WipConstants.NullUser)
             );
 
     }

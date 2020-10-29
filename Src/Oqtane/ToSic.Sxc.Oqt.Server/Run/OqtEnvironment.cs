@@ -7,9 +7,9 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtaneEnvironment : HasLog, IAppEnvironment
+    public class OqtEnvironment : HasLog, IAppEnvironment
     {
-        public OqtaneEnvironment(IHttp http, IZoneMapper zoneMapper, IUserResolver userResolver) : base("Mvc.Enviro")
+        public OqtEnvironment(IHttp http, IZoneMapper zoneMapper, IUserResolver userResolver) : base("Mvc.Enviro")
         {
             _http = http;
             ZoneMapper = zoneMapper;
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public IZoneMapper ZoneMapper { get; }
 
-        public IUser User => new OqtaneUser(_userResolver.GetUser());
+        public IUser User => new OqtUser(_userResolver.GetUser());
 
         public IPagePublishing PagePublishing => Eav.Factory.Resolve<IPagePublishing>().Init(Log);
 

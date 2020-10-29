@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.Apps.Run;
+﻿using ToSic.Eav.Apps.Run;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Oqt.Shared.Dev;
@@ -8,14 +7,14 @@ using ToSic.Sxc.WebApi.Context;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
-    public class OqtaneContextBuilder: ContextBuilderBase
+    public class OqtContextBuilder: ContextBuilderBase
     {
-        public OqtaneContextBuilder(ILinkPaths linkPaths)
+        public OqtContextBuilder(ILinkPaths linkPaths)
         {
             _linkPaths = linkPaths;
         }
 
-        internal OqtaneContextBuilder Init(IBlock block)
+        internal OqtContextBuilder Init(IBlock block)
         {
             _context = block.Context;
             InitApp(block.ZoneId, block.App);

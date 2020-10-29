@@ -17,9 +17,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     [ValidateAntiForgeryToken]
     public class DialogController : SxcStatefulControllerBase
     {
-        private readonly OqtaneContextBuilder _contextBuilder;
+        private readonly OqtContextBuilder _contextBuilder;
         protected override string HistoryLogName => "Api.SysCnt";
-        public DialogController(StatefulControllerDependencies dependencies, OqtaneContextBuilder contextBuilder) : base(dependencies)
+        public DialogController(StatefulControllerDependencies dependencies, OqtContextBuilder contextBuilder) : base(dependencies)
         {
             _contextBuilder = contextBuilder;
         }

@@ -2,9 +2,9 @@
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtanePage: SxcPage
+    public class OqtPage: SxcPage
     {
-        public OqtanePage(int id, string url) : base(id, url)
+        public OqtPage(int id, string url) : base(id, url)
         {
         }
     }

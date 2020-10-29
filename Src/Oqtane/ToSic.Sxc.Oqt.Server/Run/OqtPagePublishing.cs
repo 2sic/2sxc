@@ -11,9 +11,9 @@ using ToSic.Sxc.DataSources;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    internal class OqtanePagePublishing : HasLog, IPagePublishing
+    internal class OqtPagePublishing : HasLog, IPagePublishing
     {
-        public OqtanePagePublishing() : base("Mvc.Publsh")
+        public OqtPagePublishing() : base("Mvc.Publsh")
         {
         }
 

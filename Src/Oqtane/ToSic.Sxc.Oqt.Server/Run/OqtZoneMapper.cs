@@ -12,16 +12,14 @@ using ToSic.Sxc.Oqt.Shared.Dev;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtaneZoneMapper : ZoneMapperBase
+    public class OqtZoneMapper : ZoneMapperBase
     {
         /// <inheritdoc />
-        public OqtaneZoneMapper(/*IHttp http,*/ ISiteRepository siteRepository, ISettingRepository settingRepository) : base("Mvc.ZoneMp")
+        public OqtZoneMapper(ISiteRepository siteRepository, ISettingRepository settingRepository) : base("Mvc.ZoneMp")
         {
-            //_http = http;
             _siteRepository = siteRepository;
             _settingRepository = settingRepository;
         }
-        //private readonly IHttp _http;
         private readonly ISiteRepository _siteRepository;
         private readonly ISettingRepository _settingRepository;
 

@@ -7,26 +7,16 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtaneLinkPaths: ILinkPaths
+    public class OqtLinkPaths: ILinkPaths
     {
-        public OqtaneLinkPaths(IHttpContextAccessor contextAccessor, IWebHostEnvironment hostingEnvironment
-            //IUrlHelperFactory urlHelperFactory, 
-            //IActionContextAccessor actionContextAccessor
-            )
+        public OqtLinkPaths(IHttpContextAccessor contextAccessor, IWebHostEnvironment hostingEnvironment)
         {
-            //Current = contextAccessor.HttpContext;
             _contextAccessor = contextAccessor;
             _hostingEnvironment = hostingEnvironment;
-            //_urlHelperFactory = urlHelperFactory;
-            //_actionContextAccessor = actionContextAccessor;
         }
 
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        //private readonly IUrlHelperFactory _urlHelperFactory;
-        //private readonly IActionContextAccessor _actionContextAccessor;
-        //private IUrlHelper UrlHelper => _urlHlp ??= _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext );
-        //private IUrlHelper _urlHlp;
         public HttpContext Current => _contextAccessor.HttpContext;
 
         #region Paths
@@ -42,11 +32,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public string ToAbsolute(string virtualPath)
         {
-            return /*UrlHelper.Content*/toWebAbsolute(virtualPath);
+            return toWebAbsolute(virtualPath);
         }
         public string ToAbsolute(string virtualPath, string subPath)
         {
-            return /*UrlHelper.Content*/toWebAbsolute(Path.Combine(virtualPath, subPath));
+            return toWebAbsolute(Path.Combine(virtualPath, subPath));
         }
 
 

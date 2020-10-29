@@ -5,7 +5,7 @@ using ToSic.Eav.LookUp;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtaneGetLookupEngine: IGetEngine
+    public class OqtGetLookupEngine: IGetEngine
     {
         public ILookUpEngine GetEngine(int instanceId, ILog parentLog)
         {
