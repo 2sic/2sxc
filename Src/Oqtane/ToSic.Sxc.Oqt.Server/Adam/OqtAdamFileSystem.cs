@@ -67,6 +67,8 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             var dnnFile = FileRepository.GetFile(file.AsOqt().SysId);
             WipConstants.AdamNotImplementedYet();
             Log.Add("Not implement yet in Oqtane");
+
+            // just upd file in repo
             //FileRepository.RenameFile(dnnFile, newName);
             callLog("ok");
         }
@@ -84,8 +86,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             var callLog = Log.Call<File<int, int>>($"..., ..., {fileName}, {ensureUniqueName}");
             if (ensureUniqueName)
                 fileName = FindUniqueFileName(parent, fileName);
-            var rootPath = AdamContext.Site.ContentPath;
-            var fullContentPath = Path.Combine(_oqtServerPaths.FullContentPath(rootPath), parent.Path);
+            var fullContentPath = Path.Combine(_oqtServerPaths.FullContentPath(AdamContext.Site.ContentPath), parent.Path);
             Directory.CreateDirectory(fullContentPath);
             var filePath = Path.Combine(fullContentPath, fileName);
             using (var stream = new FileStream(filePath, FileMode.Create))
@@ -122,8 +123,8 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             var ext = Path.GetExtension(fileName);
             WipConstants.AdamNotImplementedYet();
             Log.Add("Not implement yet in Oqtane");
-            //for (var i = 1; i < 1000 && FileRepository.FileExists(dnnFolder, Path.GetFileName(fileName)); i++)
-            //    fileName = $"{name}-{i}{ext}";
+            for (var i = 1; i < 1000 && System.IO.File.Exists(Path.Combine(_oqtServerPaths.FullContentPath(AdamContext.Site.ContentPath), dnnFolder.Path, Path.GetFileName(fileName))); i++)
+                fileName = $"{name}-{i}{ext}";
 
             return callLog(fileName, fileName);
         }
