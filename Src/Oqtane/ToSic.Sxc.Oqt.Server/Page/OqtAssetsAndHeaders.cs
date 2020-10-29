@@ -64,8 +64,7 @@ namespace ToSic.Sxc.Oqt.Server.Page
 
             var pageId = Parent?.Page.PageId ?? -1;
             var siteRoot = OqtConstants.SiteRoot;
-            var idPart = Parent?.Site.SiteId.ToString();
-            idPart = idPart == null ? WipConstants.WebApiPrefixFor1 : idPart + "/";
+            var idPart = Parent?.Site.SiteId + "/";
             var apiRoot = siteRoot + idPart + WebApiConstants.WebApiRoot + "/";
             var result = InpageCms.JsApiJson(pageId, siteRoot, apiRoot, AntiForgeryToken(), OqtConstants.UiRoot + "/");
             return wrapLog("ok", result);
