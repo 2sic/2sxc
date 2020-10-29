@@ -9,6 +9,8 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using File = Oqtane.Models.File;
 using System.Linq;
+using Oqtane.Extensions;
+using Oqtane.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Adam
 {
@@ -124,12 +126,30 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         public void AddFolder(string path)
         {
+            path = Backslash(path);
             var callLog = Log.Call(path);
             try
             {
-                WipConstants.AdamNotImplementedYet();
-                Log.Add("Not implement yet in Oqtane");
-                //FolderRepository.AddFolder(AdamContext.Tenant.Id, path);
+                // find parent
+                var pathWithPretendFileName = path.TrimEnd().TrimEnd('/').TrimEnd('\\');
+                var parent = Path.GetDirectoryName(pathWithPretendFileName) + Path.DirectorySeparatorChar;
+                var subfolder = Path.GetFileName(pathWithPretendFileName);
+                var parentFolder = GetOqtFolderByName(parent);
+
+                // Create the folder
+                FolderRepository.AddFolder(new Folder
+                {
+                    SiteId = AdamContext.Tenant.Id,
+                    ParentId = parentFolder.FolderId,
+                    Name = subfolder,
+                    Path = path,
+                    Order = 1,
+                    IsSystem = true,
+                    Permissions = new List<Permission>
+                    {
+                        new Permission(PermissionNames.View, Oqtane.Shared.Constants.AllUsersRole, true),
+                    }.EncodePermissions()
+                });
                 callLog("ok");
             }
             catch (SqlException)
@@ -137,7 +157,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 // don't do anything - this happens when multiple processes try to add the folder at the same time
                 // like when two fields in a dialog cause the web-api to create the folders in parallel calls
                 // see also https://github.com/2sic/2sxc/issues/811
-                Log.Add("error in DNN SQL, probably folder already exists");
+                Log.Add("error in SQL, probably folder already exists");
             }
             catch (NullReferenceException)
             {
