@@ -85,10 +85,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
         // TODO: #Oqtane
         public override List<TempTempCulture> CulturesWithState(int tenantId, int zoneId)
         {
-            return new List<TempTempCulture>
-            {
-                new TempTempCulture(WipConstants.DefaultLanguage, WipConstants.DefaultLanguageText, true)
-            };
+            //return new List<TempTempCulture>
+            //{
+            //    new TempTempCulture(WipConstants.DefaultLanguage, WipConstants.DefaultLanguageText, true)
+            //};
+            return WipConstants.EmptyCultureList;
         }
 
     }

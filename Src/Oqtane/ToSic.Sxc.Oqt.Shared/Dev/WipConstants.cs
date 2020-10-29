@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Oqtane.Models;
+using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Oqt.Shared.Dev
 {
@@ -11,6 +12,8 @@ namespace ToSic.Sxc.Oqt.Shared.Dev
     {
         public static string DefaultLanguage => "en-us";
         public static string DefaultLanguageText = "Oqtane temp English";
+        public static Dictionary<string,string> EmptyLanguages = new Dictionary<string, string>();
+        public static List<TempTempCulture> EmptyCultureList = new List<TempTempCulture>();
 
         public static string ContentRoot = "/content-wip/";
 
