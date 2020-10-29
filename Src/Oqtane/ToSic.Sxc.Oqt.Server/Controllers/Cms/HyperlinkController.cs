@@ -10,12 +10,22 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     [ApiController]
     [Route(WebApiConstants.WebApiStateRoot + "/dnn/[controller]/[action]")]
-    [Route(WebApiConstants.WebApiStateRoot + "/link/[controller]/[action]")]
+    [Route(WebApiConstants.WebApiStateRoot + "/cms/link/[action]")]
     public class HyperlinkController: SxcStatefulControllerBase
     {
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "HypLnk";
 
         public HyperlinkController(StatefulControllerDependencies dependencies) : base(dependencies) { }
+
+        // new: will replace ResolveHyperlink
+        [HttpGet]
+        [AllowAnonymous]   // will check security internally, so assume no requirements
+        public IActionResult Resolve(string hyperlink, int appId, string contentType = default, Guid guid = default, string field = default)
+        {
+            var result = new HyperlinkBackend<int, int>().Init(Log)
+                .ResolveHyperlink(GetBlock(), hyperlink, appId, contentType, guid, field);
+            return Json(result);
+        }
 
 
         [HttpGet]

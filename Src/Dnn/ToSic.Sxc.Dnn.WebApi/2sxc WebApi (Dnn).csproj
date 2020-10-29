@@ -105,6 +105,7 @@
     <Compile Include="Dnn\WebApi\Admin\FeaturesController.cs" />
     <Compile Include="Dnn\WebApi\Admin\ZoneController.cs" />
     <Compile Include="Dnn\WebApi\Cms\BlockController.cs" />
+    <Compile Include="Dnn\WebApi\Cms\LinkController.cs" />
     <Compile Include="Dnn\WebApi\Cms\ListController.cs" />
     <Compile Include="Dnn\WebApi\Cms\ItemController.cs" />
     <Compile Include="Dnn\WebApi\Sys\InstallController.cs" />
