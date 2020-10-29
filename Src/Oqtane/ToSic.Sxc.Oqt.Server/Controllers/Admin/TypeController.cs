@@ -29,14 +29,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         { }
 
         [HttpGet]
-        [AllowAnonymous]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S3400:Methods should not return constants", Justification = "<Pending>")]
-        public string Ping()
-        {
-            return "pong";
-        }
-
-        [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)

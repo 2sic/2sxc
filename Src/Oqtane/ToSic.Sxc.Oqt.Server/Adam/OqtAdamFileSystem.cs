@@ -168,6 +168,9 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         {
             path = Backslash(path);
             var callLog = Log.Call(path);
+
+            if (FolderExists(path)) return;
+
             try
             {
                 // find parent
