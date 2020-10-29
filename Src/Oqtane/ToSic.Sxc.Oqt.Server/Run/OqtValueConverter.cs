@@ -129,9 +129,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         private string ResolveFileLink(int linkId, Guid itemGuid)
         {
-            WipConstants.DontDoAnythingImplementLater();
-            // TODO: spm - this below is the original DNN code
-
             var fileInfo = FileRepository.Value.GetFile(linkId);
             if (fileInfo == null)
                 return null;
