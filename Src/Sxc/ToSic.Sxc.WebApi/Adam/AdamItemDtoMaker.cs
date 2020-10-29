@@ -16,7 +16,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
         #endregion
 
-        internal AdamItemDto Create(Sxc.Adam.File<TFolderId, TFileId> original, AdamState state)
+        internal virtual AdamItemDto Create(Sxc.Adam.File<TFolderId, TFileId> original, AdamState state)
         {
             var item = new AdamItemDto<TFolderId, TFileId>(false, original.SysId, original.ParentSysId, original.FullName, original.Size,
                 original.Created, original.Modified)
@@ -31,7 +31,7 @@ namespace ToSic.Sxc.WebApi.Adam
         }
 
 
-        internal AdamItemDto Create(Sxc.Adam.Folder<TFolderId, TFileId> folder, AdamState state)
+        internal virtual AdamItemDto Create(Sxc.Adam.Folder<TFolderId, TFileId> folder, AdamState state)
         {
             // todo: AdamId
             var item = new AdamItemDto<TFolderId, TFolderId>(true, folder.SysId, folder.ParentSysId, folder.Name, 0, folder.Created,

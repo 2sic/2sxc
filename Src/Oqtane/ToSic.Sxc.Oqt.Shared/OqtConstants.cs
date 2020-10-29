@@ -12,8 +12,14 @@
         /// </summary>
         public const string ContentSubfolder = "Content";
 
+
+        public static string AppRootPublicBase = "Tenants/{0}/Sites/{1}/";
+
         // todo: must later replace the 1 with {0} for string-replaces to work
-        public const string AppAssetsLinkRoot = "1/api/appAssets";
+        public const string AppAssetsLinkRoot = "/{0}/api/appAssets";
+
+        // Adam / Download
+        public const string DownloadLinkTemplate = "/{0}/api/file/download/{1}";
 
         public const string UserTokenPrefix = "oqt";
 

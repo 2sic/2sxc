@@ -49,7 +49,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
             var adamFolders = subfolders
                 .Cast<Folder<TFolderId, TFileId>>()
-                .Where(s => !EqualityComparer<TFolderId>.Default.Equals(s.SysId, currentFolder.SysId))// s.SysId != currentFolder.SysId)
+                .Where(s => !EqualityComparer<TFolderId>.Default.Equals(s.SysId, currentFolder.SysId))
                 .Select(f =>
                 {
                     var dto = dtoMaker.Create(f, State);

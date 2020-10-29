@@ -11,13 +11,13 @@ namespace ToSic.Sxc.Oqt.Shared.Dev
     public class WipConstants
     {
         public static string DefaultLanguage => "en-us";
-        public static string DefaultLanguageText = "Oqtane temp English";
+        //public static string DefaultLanguageText = "Oqtane temp English";
         public static Dictionary<string,string> EmptyLanguages = new Dictionary<string, string>();
         public static List<TempTempCulture> EmptyCultureList = new List<TempTempCulture>();
 
         public static string ContentRoot = "/content-wip/";
 
-        public static string AppRootPublicBase = "Tenants/1/Sites/1/";
+        //public static string AppRootPublicBase = "Tenants/1/Sites/1/";
 
         public static string HttpUrlRoot = "http://test-test/";
 
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Oqt.Shared.Dev
         public static User NullUser = null;
 
 
-        public static int NeedSiteFromHeader = 2;
+        //public static int NeedSiteFromHeader = 2;
 
         public static string WebApiPrefixFor1 = "1/";
 

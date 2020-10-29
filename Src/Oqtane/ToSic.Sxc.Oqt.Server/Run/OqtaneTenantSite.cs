@@ -69,9 +69,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
         [PrivateApi]
         public override string AppsRootPhysical => AppsRootPartial();
 
-        private static string AppsRootPartial()
+        private  string AppsRootPartial()
         {
-            return Path.Combine(OqtConstants.ContentSubfolder, WipConstants.AppRootPublicBase, Settings.AppsRootFolder);
+            var site = UnwrappedContents;
+            return Path.Combine(OqtConstants.ContentSubfolder, string.Format(OqtConstants.AppRootPublicBase, site.TenantId, site.SiteId), Settings.AppsRootFolder);
         }
 
         [PrivateApi]

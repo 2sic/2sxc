@@ -57,10 +57,10 @@ namespace ToSic.Sxc.Oqt.Server
 
             services.AddTransient<SecurityChecksBase, OqtAdamSecurityChecks>();
             services.AddTransient<IAdamFileSystem<int, int>, OqtAdamFileSystem>();
+            services.AddTransient(typeof(AdamItemDtoMaker<,>), typeof(OqtAdamItemDtoMaker<,>));
 
             //// Add SxcEngineTest
             //services.AddTransient<SxcMvc>();
-            services.AddTransient<IAdamFileSystem<string, string>, OqtaneAdamFileSystem>();
             //// Still pending...
             ////sc.AddTransient<XmlExporter, DnnXmlExporter>();
             services.AddTransient<IImportExportEnvironment, OqtaneImportExportEnvironment>();
