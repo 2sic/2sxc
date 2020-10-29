@@ -18,6 +18,10 @@ namespace ToSic.Sxc.Oqt.Shared.Dev
 
         public static string HttpUrlRoot = "http://test-test/";
 
+        // ADAM
+        public const int MaxUploadSize = 25000;
+        public const int ParentFolderNotFound = 0;
+        public static void AdamNotImplementedYet() { }
 
 
         // User WIP
@@ -33,9 +37,6 @@ namespace ToSic.Sxc.Oqt.Shared.Dev
 
         public static string WebApiPrefixFor1 = "1/";
 
-        public static void DontDoAnythingImplementLater()
-        {
-
-        }
+        public static void DontDoAnythingImplementLater() { }
     }
 }

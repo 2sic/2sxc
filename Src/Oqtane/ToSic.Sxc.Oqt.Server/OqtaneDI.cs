@@ -6,16 +6,20 @@ using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Code;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.Oqt.Server.Controllers.Adam;
 using ToSic.Sxc.Oqt.Server.Page;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared.Run;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.Oqt.Server
 {
+    // ReSharper disable once InconsistentNaming
     static class OqtaneDI
     {
         public static IServiceCollection AddSxcOqtane(this IServiceCollection services)
@@ -51,7 +55,8 @@ namespace ToSic.Sxc.Oqt.Server
 
             services.AddSingleton<Sxc.Run.Context.PlatformContext, OqtPlatformContext>();
 
-            //services.AddTransient<SecurityChecksBase, MvcAdamSecurityChecks>();
+            services.AddTransient<SecurityChecksBase, OqtAdamSecurityChecks>();
+            services.AddTransient<IAdamFileSystem<int, int>, OqtAdamFileSystem>();
 
             //// Add SxcEngineTest
             //services.AddTransient<SxcMvc>();
