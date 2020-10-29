@@ -76,7 +76,7 @@ namespace ToSic.Sxc.Oqt.Server
 
         private IBlock GetBlock()
         {
-            var context = _oqtTempInstanceContext.CreateContext(Module, Log);
+            var context = _oqtTempInstanceContext.CreateContext(Module, Page.PageId, Log);
             var block = new BlockFromModule().Init(context, Log);
             return block;
         }

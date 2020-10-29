@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             }
 
             var module = _moduleRepository.GetModule(containerId);
-            var ctx = _oqtTempInstanceContext.CreateContext(module, Log);
+            var ctx = _oqtTempInstanceContext.CreateContext(module, pageId, Log);
             IBlock block = new BlockFromModule().Init(ctx, Log);
 
             // only if it's negative, do we load the inner block
