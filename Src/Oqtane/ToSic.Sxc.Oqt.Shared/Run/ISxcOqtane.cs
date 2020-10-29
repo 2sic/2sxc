@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 using Oqtane.Models;
+using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Shared.Run
 {
@@ -12,7 +13,7 @@ namespace ToSic.Sxc.Oqt.Shared.Run
 
         IOqtAssetsAndHeader AssetsAndHeaders { get; }
         
-        List<Resource> Resources { get; }
+        List<SxcResource> Resources { get; }
 
         string Test();
     }

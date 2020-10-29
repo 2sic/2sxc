@@ -17,22 +17,37 @@ namespace ToSic.Sxc.Oqt.Server.Run
             if (_httpContext.HttpContext == null)
                 return new Tuple<string, bool>(renderedTemplate, false);
 
-            //JsDefaultPriority = (int)FileOrder.Js.DefaultPriority;
-            //CssDefaultPriority = (int)FileOrder.Css.DefaultPriority;
-
             var include2SxcJs = false;
 
-            // Handle Client Dependency injection
-            renderedTemplate = ExtractScripts(renderedTemplate, ref include2SxcJs);
+            ExtractOnlyEnableOptimization = false;
 
-            // Handle Scripts
+            // Handle Client Dependency injection
+            renderedTemplate = ExtractExternalScripts(renderedTemplate, ref include2SxcJs);
+
+            // Handle inline JS
+            renderedTemplate = ExtractInlineScripts(renderedTemplate);
+
+            // Handle Styles
             renderedTemplate = ExtractStyles(renderedTemplate);
 
-            // Add to Oqtane -#todo
+            Assets.ForEach(a => a.PosInPage = OqtPositionName(a.PosInPage));
 
             return new Tuple<string, bool>(renderedTemplate, include2SxcJs);
         }
 
+
+
+        private string OqtPositionName(string position)
+        {
+            position = position.ToLower();
+
+            return position switch
+            {
+                "body" => position,
+                "head" => position,
+                _ => "body"
+            };
+        }
 
     }
 

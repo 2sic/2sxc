@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Dnn.Web
             var include2SxcJs = false;
             
             // Handle Client Dependency injection
-            renderedTemplate = ExtractScripts(renderedTemplate, ref include2SxcJs);
+            renderedTemplate = ExtractExternalScripts(renderedTemplate, ref include2SxcJs);
 
             // Handle Scripts
             renderedTemplate = ExtractStyles(renderedTemplate);

@@ -7,5 +7,8 @@
         public int Priority;
         public string PosInPage = "body";
         public bool AutoOpt = false;
+
+        public bool IsExternal = true;
+        public string Content = null;
     }
 }

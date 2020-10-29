@@ -8,6 +8,7 @@ using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Oqt.Server.Page;
 using ToSic.Sxc.Oqt.Server.Run;
+using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Oqt.Shared.Run;
 using ToSic.Sxc.Razor.Engine.DbgWip;
 
@@ -49,10 +50,12 @@ namespace ToSic.Sxc.Oqt.Server
             Block = GetBlock();
             _assetsAndHeaders.Init(this);
             GeneratedHtml = (MarkupString) Block.BlockBuilder.Render();
-            Resources = Block.BlockBuilder.Assets.Select(a => new Resource
+            Resources = Block.BlockBuilder.Assets.Select(a => new SxcResource
             {
                 ResourceType = a.IsJs ? ResourceType.Script : ResourceType.Stylesheet,
-                Url = a.Url
+                Url = a.Url,
+                IsExternal = a.IsExternal,
+                Content = a.Content,
             }).ToList();
             _renderDone = true;
         }
@@ -65,7 +68,7 @@ namespace ToSic.Sxc.Oqt.Server
         private bool _renderDone;
         public MarkupString GeneratedHtml { get; private set; }
 
-        public List<Resource> Resources { get; private set; }
+        public List<SxcResource> Resources { get; private set; }
 
         #endregion
 

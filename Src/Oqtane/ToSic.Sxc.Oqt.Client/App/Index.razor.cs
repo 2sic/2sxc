@@ -37,20 +37,26 @@ namespace ToSic.Sxc.Oqt.App
                     foreach (var resource in SxcEngine.AssetsAndHeaders.Scripts())
                         await interop.IncludeScript("", resource, "", "", "", "head", "");
 
-                    await interop.IncludeScripts(SxcEngine.Resources
+                    var externalResources = SxcEngine.Resources.Where(r => r.IsExternal).ToArray();
+
+                    await interop.IncludeScripts(externalResources
                         .Where(r => r.ResourceType == ResourceType.Script)
-                        .Select(a => new { href = a.Url })
+                        .Select(a => new { href = a.Url, location = a.Location })
                         .Cast<object>()
                         .ToArray());
 
                     foreach (var style in SxcEngine.AssetsAndHeaders.Styles())
                         await interop.IncludeLink("", "stylesheet", style, "text/css", "", "", ""); //.IncludeScript("", resource.Url, resource.Integrity ?? "", resource.CrossOrigin ?? "", "", "head", "");
 
-                    await interop.IncludeLinks(SxcEngine.Resources
+                    await interop.IncludeLinks(externalResources
                         .Where(r => r.ResourceType == ResourceType.Stylesheet)
                         .Select(a => new { rel = "stylesheet", href = a.Url, type = "text/css" })
                         .Cast<object>()
                         .ToArray());
+
+                    var inlineResources = SxcEngine.Resources.Where(r => !r.IsExternal).ToArray();
+                    foreach (var inline in inlineResources)
+                        await interop.IncludeScript("", "", "", "", inline.Content, "body", "");
 
                     var aAndH = SxcEngine.AssetsAndHeaders;
                     if (aAndH.AddContextMeta)

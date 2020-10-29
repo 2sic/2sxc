@@ -7,30 +7,41 @@ namespace ToSic.Sxc.Web
 {
     public abstract class ClientDependencyOptimizer: HasLog<IClientDependencyOptimizer>, IClientDependencyOptimizer
     {
+        #region Construction / DI
         protected ClientDependencyOptimizer() : base("Sxc.AstOpt") { }
 
-        public List<ClientAssetInfo> Assets { get; }= new List<ClientAssetInfo>();
+        #endregion
 
+        #region Settings
+
+        /// <summary>
+        /// Priority of a CSS - will be used for sorting when added to page
+        /// </summary>
         protected int CssDefaultPriority = 99;
+
+        /// <summary>
+        /// Priority of a CSS - will be used for sorting when added to page
+        /// </summary>
         protected int JsDefaultPriority = 100;
 
-        public abstract Tuple<string, bool> Process(string renderedTemplate);
-
-        #region RegEx formulas and static compiled RegEx objects (performance)
-
-        private const string ClientDependencyRegex =
-            "\\sdata-enableoptimizations=('|\")(?<Priority>true|[0-9]+)?(?::)?(?<Position>bottom|head|body)?('|\")(>|\\s)";
-
-        private const string ScriptRegExFormula = "<script\\s([^>]*)src=('|\")(?<Src>.*?)('|\")(([^>]*/>)|[^>]*(>.*?</script>))";
-        private const string StyleRegExFormula = "<link\\s([^>]*)href=('|\")(?<Src>.*?)('|\")([^>]*)(>.*?</link>|/?>)";
-        private const string StyleRelFormula = "('|\"|\\s)rel=('|\")stylesheet('|\")";
-
-        internal static readonly Regex ScriptDetection = new Regex(ScriptRegExFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-        internal static readonly Regex StyleDetection = new Regex(StyleRegExFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-        internal static readonly Regex StyleRelDetect = new Regex(StyleRelFormula, RegexOptions.IgnoreCase);
-        internal static readonly Regex OptimizeDetection = new Regex(ClientDependencyRegex, RegexOptions.IgnoreCase);
+        /// <summary>
+        /// Extract only script tags which are marked for extraction
+        /// </summary>
+        protected bool ExtractOnlyEnableOptimization = true;
 
         #endregion
+
+        /// <summary>
+        /// List of extracted assets - this must be processed later by the caller
+        /// </summary>
+        public List<ClientAssetInfo> Assets { get; }= new List<ClientAssetInfo>();
+        
+        /// <summary>
+        /// Run the sequence to extract assets
+        /// </summary>
+        /// <param name="renderedTemplate"></param>
+        /// <returns></returns>
+        public abstract Tuple<string, bool> Process(string renderedTemplate);
 
 
 
@@ -40,26 +51,37 @@ namespace ToSic.Sxc.Web
             var styleMatches = StyleDetection.Matches(renderedTemplate);
             var styleMatchesToRemove = new List<Match>();
 
+            Log.Add($"Found {styleMatches.Count} external styles");
             foreach (Match match in styleMatches)
             {
+                var posInPage = "head"; // default for styles
+                var priority = CssDefaultPriority;
+
                 var optMatch = OptimizeDetection.Match(match.Value);
-                if (!optMatch.Success)
-                    continue;
 
-                // skip If the Rel attribute is not stylesheet
-                if (!StyleRelDetect.IsMatch(match.Value))
-                    continue;
+                // todo: ATM the priority and type is only detected in the Regex which expects "enable-optimizations"
+                // ...so to improve this code, we would have to use 2 regexs - one for detecting "enable-optimizations" 
+                // ...and another for the priority etc.
 
-                var posInPage = optMatch.Groups["Position"]?.Value ?? "head"; //DnnProviderName(optMatch.Groups["Position"]?.Value, "head");
+                // skip if not matched and setting only wants matches
+                if (ExtractOnlyEnableOptimization)
+                {
+                    if (!optMatch.Success) continue;
 
-                var prio = GetPriority(optMatch, CssDefaultPriority);
+                    // skip if not stylesheet
+                    if (!StyleRelDetect.IsMatch(match.Value)) continue;
 
-                if (prio <= 0) continue; // don't register/remove if not within specs
+                    posInPage = optMatch.Groups["Position"]?.Value ?? posInPage;
+
+                    priority = GetPriority(optMatch, priority);
+
+                    // don't register/remove if not within specs
+                    if (priority <= 0) continue; 
+                }
 
                 // Register, then remember to remove later on
                 var url = FixUrlWithSpaces(match.Groups["Src"].Value);
-                Assets.Add(new ClientAssetInfo { IsJs = false, PosInPage = posInPage, Priority = prio, Url = url });
-                //ClientResourceManager.RegisterStyleSheet(page, url, prio, providerName);
+                Assets.Add(new ClientAssetInfo { IsJs = false, PosInPage = posInPage, Priority = priority, Url = url });
                 styleMatchesToRemove.Add(match);
             }
 
@@ -68,17 +90,19 @@ namespace ToSic.Sxc.Web
             return wrapLog(null, renderedTemplate);
         }
 
-        protected string ExtractScripts(string renderedTemplate, ref bool include2SxcJs)
+        protected string ExtractExternalScripts(string renderedTemplate, ref bool include2SxcJs)
         {
             var wrapLog = Log.Call<string>();
 
-            var scriptMatches = ScriptDetection.Matches(renderedTemplate);
+            var scriptMatches = ScriptSrcDetection.Matches(renderedTemplate);
             var scriptMatchesToRemove = new List<Match>();
 
+            Log.Add($"Found {scriptMatches.Count} external scripts");
             foreach (Match match in scriptMatches)
             {
-                // always remove 2sxc JS requests from template and ensure it's added the standard way
                 var url = FixUrlWithSpaces(match.Groups["Src"].Value);
+
+                // always remove 2sxc JS requests from template and ensure it's added the standard way
                 if (Is2SxcApiJs(url))
                 {
                     include2SxcJs = true;
@@ -86,18 +110,28 @@ namespace ToSic.Sxc.Web
                     continue;
                 }
 
-                var optMatch = OptimizeDetection.Match(match.Value);
-                if (!optMatch.Success) continue;
+                var providerName = "body";
+                var priority = JsDefaultPriority;
 
-                var providerName = optMatch.Groups["Position"]?.Value ?? "body"; //DnnProviderName(optMatch.Groups["Position"]?.Value, "body");
+                // todo: ATM the priority and type is only detected in the Regex which expects "enable-optimizations"
+                // ...so to improve this code, we would have to use 2 regexs - one for detecting "enable-optimizations" 
+                // ...and another for the priority etc.
 
-                var prio = GetPriority(optMatch, JsDefaultPriority);
+                // skip if not matched and setting only wants matches
+                if (ExtractOnlyEnableOptimization)
+                {
+                    var optMatch = OptimizeDetection.Match(match.Value);
+                    if (!optMatch.Success) continue;
 
-                if (prio <= 0) continue; // don't register/remove if not within specs
+                    providerName = optMatch.Groups["Position"]?.Value ?? providerName;
+
+                    priority = GetPriority(optMatch, priority);
+
+                    if (priority <= 0) continue; // don't register/remove if not within specs
+                }
 
                 // Register, then add to remove-queue
-                Assets.Add(new ClientAssetInfo { IsJs = true, PosInPage = providerName, Priority = prio, Url = url });
-                //ClientResourceManager.RegisterScript(page, url, prio, providerName);
+                Assets.Add(new ClientAssetInfo { IsJs = true, PosInPage = providerName, Priority = priority, Url = url });
                 scriptMatchesToRemove.Add(match);
             }
 
@@ -106,6 +140,30 @@ namespace ToSic.Sxc.Web
             scriptMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
             return wrapLog(null, renderedTemplate);
         }
+
+
+        protected string ExtractInlineScripts(string renderedTemplate)
+        {
+            var wrapLog = Log.Call<string>();
+
+            var scriptMatches = ScriptContentDetection.Matches(renderedTemplate);
+            var scriptMatchesToRemove = new List<Match>();
+
+            Log.Add($"Found {scriptMatches.Count} inline scripts");
+            var order = 1000;
+            foreach (Match match in scriptMatches)
+            {
+                // Register, then add to remove-queue
+                Assets.Add(new ClientAssetInfo { IsJs = true, Priority = order++, PosInPage = "inline", Content = match.Groups["Content"]?.Value, IsExternal = false});
+                scriptMatchesToRemove.Add(match);
+            }
+
+            // remove in reverse order, so that the indexes don't change
+            scriptMatchesToRemove.Reverse();
+            scriptMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
+            return wrapLog(null, renderedTemplate);
+        }
+
 
         /// <summary>
         /// 
@@ -140,5 +198,25 @@ namespace ToSic.Sxc.Web
                 : int.Parse(priority);
             return prio;
         }
+
+
+        #region RegEx formulas and static compiled RegEx objects (performance)
+
+        private const string ClientDependencyRegex =
+            "\\sdata-enableoptimizations=('|\")(?<Priority>true|[0-9]+)?(?::)?(?<Position>bottom|head|body)?('|\")(>|\\s)";
+
+        private const string ScriptSrcFormula = "<script\\s([^>]*)src=('|\")(?<Src>.*?)('|\")(([^>]*/>)|[^>]*(>.*?</script>))";
+        private const string ScriptContentFormula = @"<script[^>]*>(?<Content>(.|\n)*?)</script[^>]*>";
+        private const string StyleSrcFormula = "<link\\s([^>]*)href=('|\")(?<Src>.*?)('|\")([^>]*)(>.*?</link>|/?>)";
+        private const string StyleRelFormula = "('|\"|\\s)rel=('|\")stylesheet('|\")";
+
+        internal static readonly Regex ScriptSrcDetection = new Regex(ScriptSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        internal static readonly Regex ScriptContentDetection = new Regex(ScriptContentFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+        internal static readonly Regex StyleDetection = new Regex(StyleSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        internal static readonly Regex StyleRelDetect = new Regex(StyleRelFormula, RegexOptions.IgnoreCase);
+        internal static readonly Regex OptimizeDetection = new Regex(ClientDependencyRegex, RegexOptions.IgnoreCase);
+
+        #endregion
+
     }
 }
