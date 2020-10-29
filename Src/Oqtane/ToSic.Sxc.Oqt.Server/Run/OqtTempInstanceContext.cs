@@ -16,11 +16,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
             _oqtaneTenantSite = oqtaneTenantSite;
         }
 
-        public InstanceContext CreateContext(Module module, ILog parentLog)
+        public InstanceContext CreateContext(Module module, int pageId, ILog parentLog)
             => new InstanceContext(
                  _oqtaneTenantSite, 
                 //_zoneMapper.TenantOfZone(zoneId),
-                new OqtanePage(module.PageId, null),
+                new OqtanePage(pageId, null),
                 _oqtaneContainer.Init(module, parentLog),
                 new OqtaneUser(WipConstants.NullUser)
             );

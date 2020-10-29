@@ -32,10 +32,11 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             {
                 Current = WipConstants.DefaultLanguage,
                 Primary = WipConstants.DefaultLanguage,
-                All = new Dictionary<string, string>
-                {
-                    {WipConstants.DefaultLanguage, WipConstants.DefaultLanguageText}
-                }
+                //All = new Dictionary<string, string>
+                //{
+                //    {WipConstants.DefaultLanguage, WipConstants.DefaultLanguageText}
+                //}
+                All = WipConstants.EmptyLanguages,
             };
         }
 
