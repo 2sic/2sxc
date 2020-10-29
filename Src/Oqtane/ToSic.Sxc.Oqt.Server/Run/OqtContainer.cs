@@ -80,7 +80,12 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 if (_settings.ContainsKey(Settings.ModuleSettingContentGroup))
                     Guid.TryParse(_settings[Settings.ModuleSettingContentGroup], out block);
 
-                _blockIdentifier = new BlockIdentifier(zoneId, appId, block, Guid.Empty);
+                // Check if we have preview-view identifier - for blocks which don't exist yet
+                var overrideView = new Guid();
+                if (_settings.TryGetValue(Settings.ModuleSettingsPreview, out var previewId) && !string.IsNullOrEmpty(previewId))
+                    Guid.TryParse(previewId, out overrideView);
+
+                _blockIdentifier = new BlockIdentifier(zoneId, appId, block, overrideView);
 
                 return _blockIdentifier;
             }
