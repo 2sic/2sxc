@@ -32,5 +32,9 @@ namespace ToSic.Sxc.Oqt.Shared.Dev
         public static User NullUser = null;
 
         public static void DontDoAnythingImplementLater() { }
+
+
+        // Settings
+        public const string SettingsChangeUserId = "sxc-auto";
     }
 }
