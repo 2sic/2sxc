@@ -77,7 +77,6 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddTransient<StatefulControllerDependencies>();
 
             // Plumbing: enable lazy services Dependency Injection
-            services.AddTransient(typeof(Lazy<>),typeof(LazyDependencyInjection<>));
 
             return services;
         }

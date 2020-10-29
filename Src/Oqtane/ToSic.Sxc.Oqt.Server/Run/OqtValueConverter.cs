@@ -7,7 +7,6 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Oqt.Server.Adam;
-using ToSic.Sxc.Oqt.Shared.Dev;
 
 // todo: nothing here is tested yet!
 
