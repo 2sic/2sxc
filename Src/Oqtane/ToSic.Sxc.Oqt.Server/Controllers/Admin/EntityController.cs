@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.Net.Http;
 using ToSic.Eav.ImportExport.Options;
 using ToSic.Eav.Security.Permissions;
@@ -28,7 +29,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     //[AllowAnonymous]
     //[DnnLogExceptions]
     [Route(WebApiConstants.WebApiStateRoot + "/admin/entity/[action]")]
-    public class EntityController : SxcStatefulControllerBase, IEntitiesController
+    public class EntityController : SxcStatefulControllerBase //, IEntitiesController // FIX: changed from interface to solve ambiguous DELETE routes.
     {
         protected override string HistoryLogName => "Api.EntCnt";
         public EntityController(StatefulControllerDependencies dependencies) : base(dependencies)
@@ -55,21 +56,18 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
             => EntityApi.GetOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.ReadSomething, Log)
                 .GetEntitiesForAdmin(contentType);
 
+        //[HttpDelete("contentType={contentType:string?}&id={id:int}&appId={appId:int}&appId={force:bool=false}")]
         [HttpDelete]
         [ValidateAntiForgeryToken]
         // todo: unsure why only Edit - is this used anywhere else than admin?
         [Authorize(Policy = "EditModule")]
-        public void Delete(string contentType, int id, int appId, bool force = false)
-            => EntityApi.GetOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
-                .Delete(contentType, id, force);
-
-        [HttpDelete]
-        [ValidateAntiForgeryToken]
-        // todo: unsure why only Edit - is this used anywhere else than admin?
-        [Authorize(Policy = "EditModule")]
-        public void Delete(string contentType, Guid guid, int appId, bool force = false)
-            => EntityApi.GetOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
-                .Delete(contentType, guid, force);
+        public void Delete([FromQuery] string contentType, [FromQuery] int? id, [FromQuery] Guid? guid, [FromQuery] int appId, [FromQuery] bool force = false)
+        {
+            if (id.HasValue) EntityApi.GetOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
+                .Delete(contentType, id.Value, force);
+            else if (guid.HasValue) EntityApi.GetOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
+                .Delete(contentType, guid.Value, force);
+        }
 
         /// <summary>
         /// Used to be GET ContentExport/DownloadEntityAsJson
