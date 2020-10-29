@@ -64,13 +64,38 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         public void Rename(IFile file, string newName)
         {
             var callLog = Log.Call();
-            var dnnFile = FileRepository.GetFile(file.AsOqt().SysId);
-            WipConstants.AdamNotImplementedYet();
-            Log.Add("Not implement yet in Oqtane");
+            try
+            {
+                var path = Path.Combine(_oqtServerPaths.FullContentPath(AdamContext.Site.ContentPath), file.Path);
 
-            // just upd file in repo
-            //FileRepository.RenameFile(dnnFile, newName);
-            callLog("ok");
+                var currentFilePath = Path.Combine(path, file.FullName);
+                if (!System.IO.File.Exists(currentFilePath))
+                {
+                    callLog($"Can't rename because source file do not exists {currentFilePath}");
+                    return;
+                }
+
+                var newFilePath = Path.Combine(path, newName);
+                if (!System.IO.File.Exists(newFilePath))
+                {
+                    callLog($"Can't rename because file with new name already exists {newFilePath}");
+                    return;
+                }
+
+                System.IO.File.Move(currentFilePath, newFilePath);
+                Log.Add($"File renamed {currentFilePath} to {newFilePath}");
+
+                var dnnFile = FileRepository.GetFile(file.AsOqt().SysId);
+                dnnFile.Name = newName;
+                FileRepository.UpdateFile(dnnFile);
+                Log.Add($"VirtualFile {dnnFile.FileId} renamed to {dnnFile.Name}");
+
+                callLog("ok");
+            }
+            catch (Exception e)
+            {
+                callLog($"Error:{e.Message}; {e.InnerException}");
+            }
         }
 
         public void Delete(IFile file)
