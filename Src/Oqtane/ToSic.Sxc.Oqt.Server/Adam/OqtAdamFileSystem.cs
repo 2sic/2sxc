@@ -121,8 +121,6 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             var dnnFolder = FolderRepository.GetFolder(parentFolder.AsOqt().SysId);
             var name = Path.GetFileNameWithoutExtension(fileName);
             var ext = Path.GetExtension(fileName);
-            WipConstants.AdamNotImplementedYet();
-            Log.Add("Not implement yet in Oqtane");
             for (var i = 1; i < 1000 && System.IO.File.Exists(Path.Combine(_oqtServerPaths.FullContentPath(AdamContext.Site.ContentPath), dnnFolder.Path, Path.GetFileName(fileName))); i++)
                 fileName = $"{name}-{i}{ext}";
 
