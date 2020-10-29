@@ -5,6 +5,7 @@ using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Oqt.Server.Repository;
 using ToSic.Sxc.Oqt.Server.Run;
+using ToSic.Sxc.Oqt.Shared.Dev;
 using Log = ToSic.Eav.Logging.Simple.Log;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
@@ -61,6 +62,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         {
             return new OqtaneUser(_userResolver.GetUser());
         }
+
+
+        #region Extend Time so Web Server doesn't time out
+
+        protected void PreventServerTimeout300() => WipConstants.DontDoAnythingImplementLater();
+
+        #endregion
     }
 
     internal class LogWrapper : IDisposable

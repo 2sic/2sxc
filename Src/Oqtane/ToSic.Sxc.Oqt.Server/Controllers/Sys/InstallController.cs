@@ -81,12 +81,5 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
         }
 
         #endregion
-
-
-        #region Extend Time so Web Server doesn't time out
-
-        protected void PreventServerTimeout300() => WipConstants.DontDoAnythingImplementLater();
-
-        #endregion
     }
 }
