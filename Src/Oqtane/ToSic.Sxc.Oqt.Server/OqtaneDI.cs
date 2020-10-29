@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.LookUp;
@@ -11,6 +12,7 @@ using ToSic.Sxc.Oqt.Server.Code;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.Adam;
 using ToSic.Sxc.Oqt.Server.Page;
+using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared.Run;
 using ToSic.Sxc.Run;
@@ -52,6 +54,7 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddTransient<OqtSiteFactory>();
             services.AddTransient<SxcOqtane>();
             services.AddTransient<IClientDependencyOptimizer, OqtClientDependencyOptimizer>();
+            services.AddTransient<IValueConverter, OqtValueConverter>();
 
             services.AddSingleton<Sxc.Run.Context.PlatformContext, OqtPlatformContext>();
 
@@ -72,6 +75,9 @@ namespace ToSic.Sxc.Oqt.Server
             //services.AddTransient<IRenderRazor, RenderRazor>();
             //services.AddTransient<IEngineFinder, OqtaneEngineFinder>();
             services.AddTransient<StatefulControllerDependencies>();
+
+            // Plumbing: enable lazy services Dependency Injection
+            services.AddTransient(typeof(Lazy<>),typeof(LazyDependencyInjection<>));
 
             return services;
         }
