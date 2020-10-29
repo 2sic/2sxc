@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         [PrivateApi]
         public override string AppsRootPhysical => AppsRootPartial();
 
-        private  string AppsRootPartial()
+        private string AppsRootPartial()
         {
             var site = UnwrappedContents;
             return Path.Combine(OqtConstants.ContentSubfolder, string.Format(OqtConstants.AppRootPublicBase, site.TenantId, site.SiteId), Settings.AppsRootFolder);
@@ -84,7 +84,14 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public override bool RefactorUserIsAdmin => WipConstants.IsAdmin;
 
         /// <inheritdoc />
-        public override string ContentPath => WipConstants.ContentRoot;
+        public override string ContentPath
+        {
+            get
+            {
+                var site = UnwrappedContents;
+                return Path.Combine(OqtConstants.ContentSubfolder, string.Format(OqtConstants.AppRootPublicBase, site.TenantId, site.SiteId));
+            }
+        }
 
         public override int ZoneId
         {

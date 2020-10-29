@@ -1,28 +1,31 @@
-﻿using System;
+﻿using Oqtane.Extensions;
+using Oqtane.Models;
+using Oqtane.Repository;
+using Oqtane.Shared;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
-using Oqtane.Models;
-using Oqtane.Repository;
+using System.Linq;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using File = Oqtane.Models.File;
-using System.Linq;
-using Oqtane.Extensions;
-using Oqtane.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Adam
 {
     public class OqtAdamFileSystem : HasLog, IAdamFileSystem<int, int>
     {
+        private readonly IServerPaths _oqtServerPaths;
         public IFileRepository FileRepository { get; }
         public IFolderRepository FolderRepository { get; }
 
         #region Constructor / DI / Init
 
-        public OqtAdamFileSystem(IFileRepository fileRepository, IFolderRepository folderRepository) : base("Dnn.FilSys")
+        public OqtAdamFileSystem(IFileRepository fileRepository, IFolderRepository folderRepository, IServerPaths oqtServerPaths) : base("Dnn.FilSys")
         {
+            _oqtServerPaths = oqtServerPaths;
             FileRepository = fileRepository;
             FolderRepository = folderRepository;
         }
@@ -35,7 +38,6 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             wrapLog("ok");
             return this;
         }
-
 
         protected AdamAppContext<int, int> AdamContext;
 
@@ -82,12 +84,26 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             var callLog = Log.Call<File<int, int>>($"..., ..., {fileName}, {ensureUniqueName}");
             if (ensureUniqueName)
                 fileName = FindUniqueFileName(parent, fileName);
-            var dnnFolder = FolderRepository.GetFolder(parent.AsOqt().SysId);
-            WipConstants.AdamNotImplementedYet();
-            Log.Add("Not implement yet in Oqtane");
-            //var dnnFile = FileRepository.AddFile(dnnFolder, Path.GetFileName(fileName), body);
-            //return callLog("ok", GetFile(dnnFile.FileId));
-            return callLog("not implemented", null);
+            var rootPath = AdamContext.Site.ContentPath;
+            var fullContentPath = Path.Combine(_oqtServerPaths.FullContentPath(rootPath), parent.Path);
+            Directory.CreateDirectory(fullContentPath);
+            var filePath = Path.Combine(fullContentPath, fileName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                body.CopyTo(stream);
+            }
+            FileInfo fileInfo = new FileInfo(filePath);
+            File newAdamFile = new File()
+            {
+                Name = Path.GetFileName(fileName),
+                FolderId = parent.Id,
+                Extension = fileInfo.Extension.ToLower().Replace(".", ""),
+                Size = (int)fileInfo.Length,
+                ImageHeight = 0,
+                ImageWidth = 0
+            };
+            var dnnFile = FileRepository.AddFile(newAdamFile);
+            return callLog("ok", GetFile(dnnFile.FileId));
         }
 
         /// <summary>
@@ -134,22 +150,10 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 var pathWithPretendFileName = path.TrimEnd().TrimEnd('/').TrimEnd('\\');
                 var parent = Path.GetDirectoryName(pathWithPretendFileName) + Path.DirectorySeparatorChar;
                 var subfolder = Path.GetFileName(pathWithPretendFileName);
-                var parentFolder = GetOqtFolderByName(parent);
+                var parentFolder = GetOqtFolderByName(parent) ?? GetOqtFolderByName("");
 
-                // Create the folder
-                FolderRepository.AddFolder(new Folder
-                {
-                    SiteId = AdamContext.Site.Id,
-                    ParentId = parentFolder.FolderId,
-                    Name = subfolder,
-                    Path = path,
-                    Order = 1,
-                    IsSystem = true,
-                    Permissions = new List<Permission>
-                    {
-                        new Permission(PermissionNames.View, Oqtane.Shared.Constants.AllUsersRole, true),
-                    }.EncodePermissions()
-                });
+                // Create the new virtual folder
+                CreateVirtualFolder(parentFolder, path, subfolder);
                 callLog("ok");
             }
             catch (SqlException)
@@ -166,6 +170,25 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             }
 
             callLog("?");
+        }
+
+        private Folder CreateVirtualFolder(Folder parentFolder, string path, string folder)
+        {
+            var newVirtualFolder = new Folder
+            {
+                SiteId = AdamContext.Site.Id,
+                ParentId = parentFolder.FolderId,
+                Name = folder,
+                Path = path,
+                Order = 1,
+                IsSystem = true,
+                Permissions = new List<Permission>
+                {
+                    new Permission(PermissionNames.View, Oqtane.Shared.Constants.AllUsersRole, true),
+                }.EncodePermissions()
+            };
+            FolderRepository.AddFolder(newVirtualFolder);
+            return newVirtualFolder;
         }
 
         public void Rename(IFolder folder, string newName)
