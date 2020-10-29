@@ -2,13 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Imaging;
 using System.Net.Http;
 using ToSic.Eav.ImportExport.Options;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Cms;
 
@@ -35,13 +33,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         public EntityController(StatefulControllerDependencies dependencies) : base(dependencies)
         { }
 
-        [HttpGet]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S3400:Methods should not return constants", Justification = "<Pending>")]
-        public string Ping()
-        {
-            return "pong";
-        }
-
         /// <summary>
         /// Used to be Entities/GetOllOfTypeForAdmin
         /// Used to be Entities/GetEntities
@@ -56,11 +47,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
             => EntityApi.GetOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.ReadSomething, Log)
                 .GetEntitiesForAdmin(contentType);
 
-        //[HttpDelete("contentType={contentType:string?}&id={id:int}&appId={appId:int}&appId={force:bool=false}")]
         [HttpDelete]
         [ValidateAntiForgeryToken]
-        // todo: unsure why only Edit - is this used anywhere else than admin?
-        [Authorize(Policy = "EditModule")]
+        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public void Delete([FromQuery] string contentType, [FromQuery] int? id, [FromQuery] Guid? guid, [FromQuery] int appId, [FromQuery] bool force = false)
         {
             if (id.HasValue) EntityApi.GetOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
