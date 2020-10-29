@@ -6,7 +6,7 @@ using ToSic.Sxc.Web.WebApi.System;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
-    [Route(WebApiConstants.WebApiDefaultRoute)]
+    [Route("{alias}/api/sxc/sys/[controller]/[action]")]
     [ApiController]
     public class InsightsController : SxcStatelessControllerBase
     {

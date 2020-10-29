@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Oqtane.Infrastructure;
@@ -18,13 +16,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     {
         private readonly ILogManager _logger;
         private readonly ITenantResolver _tenantResolver;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly List<string> _whiteListExtensions = new List<string> {".js", ".css", ".json", ".map", ".xml", ".csv"};
         private const string RiskyExtensionsAll =
             @"^\.\s*(ade|adp|app|bas|bat|chm|class|cmd|com|cpl|crt|dll|exe|fxp|hlp|hta|ins|isp|jse|lnk|mda|mdb|mde|mdt|mdw|mdz|msc|msi|msp|mst|ops|pcd|pif|prf|prg|reg|scf|scr|sct|shb|shs|url|vb|vbe|vbs|wsc|wsf|wsh|cshtml|vbhtml|cs|ps[0-9]|ascx|aspx|asmx|config|inc|html|sql|bin|iso|asp|sh|php([0-9])?|pl|cgi|386|torrent|jar|vbscript|cer|csr|jsp|drv|sys|csh|inf|htaccess|htpasswd|ksh)\s*$";
         private static readonly Regex RiskyDetector = new Regex(RiskyExtensionsAll);
 
-        public AppAssetsController(ITenantResolver tenantResolver , IHostingEnvironment hostingEnvironment, ILogManager logger)
+        public AppAssetsController(ITenantResolver tenantResolver , IWebHostEnvironment hostingEnvironment, ILogManager logger)
         {
             _tenantResolver = tenantResolver;
             _hostingEnvironment = hostingEnvironment;
@@ -34,8 +32,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         private string GetMimeType(string fileName)
         {
             var provider = new FileExtensionContentTypeProvider();
-            string contentType;
-            if (!provider.TryGetContentType(fileName, out contentType))
+            if (!provider.TryGetContentType(fileName, out var contentType))
             {
                 contentType = "application/octet-stream";
             }
