@@ -10,6 +10,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     [ApiController]
     [Route(WebApiConstants.WebApiStateRoot + "/dnn/[controller]/[action]")]
+    [Route(WebApiConstants.WebApiStateRoot + "/link/[controller]/[action]")]
     public class HyperlinkController: SxcStatefulControllerBase
     {
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "HypLnk";
@@ -19,8 +20,11 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements
-        public string ResolveHyperlink(string hyperlink, int appId, string contentType = default, Guid guid = default, string field = default)
-            => new HyperlinkBackend<int, int>().Init(Log).ResolveHyperlink(GetBlock(), hyperlink, appId, contentType, guid, field);
-
+        public IActionResult ResolveHyperlink(string hyperlink, int appId, string contentType = default, Guid guid = default, string field = default)
+        {
+            var result = new HyperlinkBackend<int, int>().Init(Log)
+                .ResolveHyperlink(GetBlock(), hyperlink, appId, contentType, guid, field);
+            return Json(result);
+        }
     }
 }
