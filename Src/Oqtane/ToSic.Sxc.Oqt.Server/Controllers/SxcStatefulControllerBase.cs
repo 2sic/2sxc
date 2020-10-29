@@ -1,7 +1,9 @@
 ﻿using System;
 using Microsoft.Extensions.Primitives;
 using Oqtane.Repository;
+using ToSic.Eav;
 using ToSic.Eav.Apps.Run;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Oqt.Server.Run;
 
@@ -55,7 +57,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
             Log.Add($"Inner Content: {contentblockId}");
             block = new BlockFromEntity().Init(block, contentblockId, Log);
-
             return wrapLog("found", block);
         }
 
@@ -74,5 +75,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             }
 
         }
+
+        /// <summary>
+        /// used for API calls to get the current app
+        /// </summary>
+        /// <param name="appId"></param>
+        /// <returns></returns>
+        internal IApp GetApp(int appId) => Factory.Resolve<Apps.App>().Init(appId, Log, GetBlock());
     }
 }

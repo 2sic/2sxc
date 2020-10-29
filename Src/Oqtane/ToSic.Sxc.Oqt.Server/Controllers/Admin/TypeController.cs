@@ -1,15 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using Oqtane.Shared;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Run;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.WebApi.Admin;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 {
@@ -18,24 +16,20 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     /// </summary>
     //[SupportedModules("2sxc,2sxc-app")]
     //   [DnnLogExceptions]
-    //   [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    //[AutoValidateAntiforgeryToken]
+    [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+    [AutoValidateAntiforgeryToken]
     [Route(WebApiConstants.WebApiStateRoot + "/admin/type/[action]")]
-    [Route("{alias}/api/[controller]")]
     //[ApiController]
-
-    //[ValidateAntiForgeryToken]
+    [ValidateAntiForgeryToken]
     public class TypeController : SxcStatefulControllerBase, ITypeController
     {
-        private readonly OqtaneContextBuilder _contextBuilder;
         protected override string HistoryLogName => "Api.Types";
         private ContentTypeApi Backend => new ContentTypeApi(Log);
-        public TypeController(StatefulControllerDependencies dependencies, OqtaneContextBuilder contextBuilder) : base(dependencies)
-        {
-            _contextBuilder = contextBuilder;
-        }
+        public TypeController(StatefulControllerDependencies dependencies) : base(dependencies)
+        { }
 
         [HttpGet]
+        [AllowAnonymous]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S3400:Methods should not return constants", Justification = "<Pending>")]
         public string Ping()
         {
@@ -43,8 +37,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         }
 
         [HttpGet]
-        //[ValidateAntiForgeryToken]
-        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
             => Backend.Get(appId, scope, withStatistics);
 
@@ -52,8 +46,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// Used to be GET ContentTypes/Scopes
         /// </summary>
         [HttpGet]
-        //[ValidateAntiForgeryToken]
-        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public IDictionary<string, string> Scopes(int appId)
             => new AppRuntime(appId, false, Log).ContentTypes.ScopesWithLabels();
 
@@ -61,18 +55,18 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// Used to be GET ContentTypes/Scopes
         /// </summary>
         [HttpGet]
-        //[ValidateAntiForgeryToken]
-        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) => Backend.GetSingle(appId, contentTypeId, scope);
 
         [HttpDelete]
-        //[ValidateAntiForgeryToken]
-        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public bool Delete(int appId, string staticName) => Backend.Delete(appId, staticName);
 
         [HttpPost]
-        //[ValidateAntiForgeryToken]
-        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         // 2019-11-15 2dm special change: item to be Dictionary<string, object> because in DNN 9.4
         // it causes problems when a content-type has metadata, where a value then is a deeper object
         // in future, the JS front-end should send something clearer and not the whole object
@@ -89,13 +83,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <param name="sourceStaticName"></param>
         /// <returns></returns>
         [HttpPost]
-        //[ValidateAntiForgeryToken]
-        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = Oqtane.Shared.Constants.HostRole)]
         public bool AddGhost(int appId, string sourceStaticName) => Backend.CreateGhost(appId, sourceStaticName);
 
         [HttpPost]
-        //[ValidateAntiForgeryToken]
-        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public void SetTitle(int appId, int contentTypeId, int attributeId)
             => Backend.SetTitle(appId, contentTypeId, attributeId);
 
@@ -103,8 +97,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// Used to be GET ContentExport/DownloadTypeAsJson
         /// </summary>
         [HttpGet]
-        //[AllowAnonymous] // will do security check internally
+        [AllowAnonymous] // will do security check internally
         public HttpResponseMessage Json(int appId, string name)
-            => new Eav.WebApi.ContentExportApi(Log).DownloadTypeAsJson(GetContext().User, appId, name);
+            => new ContentExportApi(Log).DownloadTypeAsJson(GetContext().User, appId, name);
     }
 }
