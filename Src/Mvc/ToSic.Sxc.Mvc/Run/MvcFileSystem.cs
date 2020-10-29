@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Mvc.Run
         {
             if (path.Contains("..")) throw new ArgumentException("path may not contain ..", nameof(path));
             // check if it already has the root path attached, otherwise add
-            path = path.StartsWith(AdamContext.Tenant.ContentPath) ? path : Path.Combine(AdamContext.Tenant.ContentPath, path);
+            path = path.StartsWith(AdamContext.Site.ContentPath) ? path : Path.Combine(AdamContext.Site.ContentPath, path);
             path = path.Replace("//", "/").Replace("\\\\", "\\");
             return _serverPaths.FullContentPath(path);
         }
@@ -107,7 +107,7 @@ namespace ToSic.Sxc.Mvc.Run
                 Created = f.CreationTime,
                 Modified = f.LastWriteTime,
 
-                Url = AdamContext.Tenant.ContentPath + path,
+                Url = AdamContext.Site.ContentPath + path,
             };
         }
 
@@ -140,7 +140,7 @@ namespace ToSic.Sxc.Mvc.Run
                 Created = f.CreationTime,
                 Modified = f.LastWriteTime,
                 Name = Path.GetFileNameWithoutExtension(f.Name),
-                Url = AdamContext.Tenant.ContentPath + directoryName + f.Name
+                Url = AdamContext.Site.ContentPath + directoryName + f.Name
             };
         }
 

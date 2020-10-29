@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Mvc.Run
 
         //public override IAppIdentity IdentityFromTenant(int tenantId, int appId) => new AppIdentity(tenantId, appId);
         
-        public override ITenant TenantOfZone(int zoneId) => new MvcTenant(_http.Current, new MvcPortalSettings(zoneId));
+        public override ISite SiteOfZone(int zoneId) => new MvcSite(_http.Current, new MvcPortalSettings(zoneId));
 
 
         //public ITenant Tenant(int zoneId) => new MvcTenant(new MvcPortalSettings());

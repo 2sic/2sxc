@@ -197,7 +197,7 @@ namespace ToSic.Sxc.Engines
             }
         }
 
-        private void CheckTemplatePermissions(ITenant tenant)
+        private void CheckTemplatePermissions(ISite site)
         {
             // do security check IF security exists
             // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
@@ -205,7 +205,7 @@ namespace ToSic.Sxc.Engines
                 .ForItem(Block.Context, App, Template.Entity, Log);
 
             // Views only use permissions to prevent access, so only check if there are any configured permissions
-            if (tenant.RefactorUserIsAdmin || !templatePermissions.HasPermissions)
+            if (site.RefactorUserIsAdmin || !templatePermissions.HasPermissions)
                 return;
 
             if (!templatePermissions.UserMay(GrantSets.ReadSomething))

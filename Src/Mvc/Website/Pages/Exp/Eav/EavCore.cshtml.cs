@@ -47,7 +47,7 @@ namespace Website.Pages
             return dsFilter;
         }
 
-        public IApp BlogApp => _blogApp ??= ToSic.Sxc.Mvc.Factory.App(ZoneId, AppId, new MvcTenant(HttpContext), false, false, null);
+        public IApp BlogApp => _blogApp ??= ToSic.Sxc.Mvc.Factory.App(ZoneId, AppId, new MvcSite(HttpContext), false, false, null);
         private IApp _blogApp;
     }
 }

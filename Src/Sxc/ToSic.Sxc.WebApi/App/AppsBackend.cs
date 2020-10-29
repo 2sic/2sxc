@@ -13,11 +13,11 @@ namespace ToSic.Sxc.WebApi.App
         {
         }
 
-        public List<AppDto> Apps(ITenant tenant, IBlock block, int zoneId)
+        public List<AppDto> Apps(ISite site, IBlock block, int zoneId)
         {
             var cms = new CmsZones(zoneId, Log);
             var configurationBuilder = ConfigurationProvider.Build(block, true);
-            var list = cms.AppsRt.GetApps(tenant, configurationBuilder);
+            var list = cms.AppsRt.GetApps(site, configurationBuilder);
             return list.Select(a => new AppDto
             {
                 Id = a.AppId,

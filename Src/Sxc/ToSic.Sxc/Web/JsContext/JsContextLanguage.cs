@@ -10,13 +10,13 @@ namespace ToSic.Sxc.Web.JsContext
         public string Primary;
         public IEnumerable<ClientInfoLanguage> All;
 
-        public JsContextLanguage(ITenant tenant, int zoneId)
+        public JsContextLanguage(ISite site, int zoneId)
         {
             // Don't use PortalSettings, as that provides a wrong ps.CultureCode.ToLower();
             Current = System.Threading.Thread.CurrentThread.CurrentCulture.Name.ToLower();
-            Primary = tenant.DefaultLanguage;
+            Primary = site.DefaultLanguage;
             All = Eav.Factory.Resolve<IZoneMapper>()
-                .CulturesWithState(tenant.Id, zoneId)
+                .CulturesWithState(site.Id, zoneId)
                 .Where(c => c.Active)
                 .Select(c => new ClientInfoLanguage { key = c.Key.ToLower(), name = c.Text });
         }

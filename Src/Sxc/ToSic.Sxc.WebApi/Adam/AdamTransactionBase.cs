@@ -37,7 +37,7 @@ namespace ToSic.Sxc.WebApi.Adam
         protected void VerifySecurityAndStructure(Folder<TFolderId, TFileId> parentFolder, IAssetWithParentSysId<TFolderId> target, string errPrefix)
         {
             // In case the primary file system is used (usePortalRoot) then also check higher permissions
-            if (State.UseTenantRoot && !State.Security.CanEditFolder(target)) 
+            if (State.UseSiteRoot && !State.Security.CanEditFolder(target)) 
                 throw HttpException.PermissionDenied(errPrefix + " - permission denied");
 
             if (!State.Security.SuperUserOrAccessingItemFolder(target.Path, out var exp))

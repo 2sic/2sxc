@@ -17,13 +17,13 @@ namespace ToSic.Sxc.WebApi.Languages
 
         #endregion
 
-        public IList<TenantLanguageDto> GetLanguages(int tenantId)
+        public IList<SiteLanguageDto> GetLanguages(int tenantId)
         {
             var callLog = Log.Call();
             var zoneId = _zoneMapper.GetZoneId(tenantId);
             // ReSharper disable once PossibleInvalidOperationException
             var cultures = _zoneMapper.CulturesWithState(tenantId, zoneId)
-                .Select(c => new TenantLanguageDto { Code = c.Key, Culture = c.Text, IsEnabled = c.Active })
+                .Select(c => new SiteLanguageDto { Code = c.Key, Culture = c.Text, IsEnabled = c.Active })
                 .ToList();
 
             callLog("found:" + cultures.Count);

@@ -22,7 +22,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 folder = State.ContainerContext.Folder(parentSubfolder, false);
 
             // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
-            if (State.UseTenantRoot && !State.Security.CanEditFolder(folder))
+            if (State.UseSiteRoot && !State.Security.CanEditFolder(folder))
                 throw HttpException.PermissionDenied("can't create new folder - permission denied");
 
             var newFolderPath = string.IsNullOrEmpty(parentSubfolder)

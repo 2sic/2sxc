@@ -76,14 +76,14 @@ namespace ToSic.Sxc.Apps
 
         #region DI Constructors
 
-        public App(IAppEnvironment appEnvironment, ITenant tenant, ILinkPaths linkPaths) : base(appEnvironment, tenant)
+        public App(IAppEnvironment appEnvironment, ISite site, ILinkPaths linkPaths) : base(appEnvironment, site)
         {
             _linkPaths = linkPaths;
         }
 
-        public App PreInit(ITenant tenant)
+        public App PreInit(ISite site)
         {
-            Tenant = tenant;
+            Site = site;
             return this;
         }
 
@@ -114,7 +114,7 @@ namespace ToSic.Sxc.Apps
 
         #region Paths
         /// <inheritdoc />
-        public string Path => _path ?? (_path = _linkPaths.ToAbsolute(System.IO.Path.Combine(Tenant.AppsRootLink, Folder)));
+        public string Path => _path ?? (_path = _linkPaths.ToAbsolute(System.IO.Path.Combine(Site.AppsRootLink, Folder)));
         private string _path;
 
         /// <inheritdoc />

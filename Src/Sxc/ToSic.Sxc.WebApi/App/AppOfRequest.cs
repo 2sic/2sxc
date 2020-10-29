@@ -17,13 +17,13 @@ namespace ToSic.Sxc.WebApi.App
         #region Constructor & DI 
 
         private readonly IZoneMapper _zoneMapper;
-        private readonly int _tenantId;
+        private readonly int _siteId;
         private readonly IHttp _http;
 
-        public AppOfRequest(IHttp http, ITenant tenant, IZoneMapper zoneMapper): base("Api.FindAp")
+        public AppOfRequest(IHttp http, ISite site, IZoneMapper zoneMapper): base("Api.FindAp")
         {
             _http = http;
-            _tenantId = tenant.Id;
+            _siteId = site.Id;
             _zoneMapper = zoneMapper;
         }
 
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.WebApi.App
         internal IAppIdentity GetAppIdFromPath(string appPath)
         {
             var wrapLog = Log.Call(appPath);
-            var zid = _zoneMapper.GetZoneId(_tenantId);
+            var zid = _zoneMapper.GetZoneId(_siteId);
 
             // get app from AppName
             var aid = new ZoneRuntime(zid, Log).FindAppId(appPath, true);

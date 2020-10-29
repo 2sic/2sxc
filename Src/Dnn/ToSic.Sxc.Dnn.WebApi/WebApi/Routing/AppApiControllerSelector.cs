@@ -106,7 +106,7 @@ namespace ToSic.Sxc.WebApi
 
                 log.Add($"Edition: {edition}");
 
-                var tenant = (DnnTenant)Factory.Resolve<ITenant>();
+                var tenant = (DnnSite)Factory.Resolve<ISite>();
                 var controllerFolder = Path.Combine(tenant.AppsRootRelative, appFolder, edition + "api/");
 
                 controllerFolder = controllerFolder.Replace("\\", @"/");

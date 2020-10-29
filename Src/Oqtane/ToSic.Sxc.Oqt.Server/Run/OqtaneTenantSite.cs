@@ -17,12 +17,12 @@ namespace ToSic.Sxc.Oqt.Server.Run
     /// This is a Mvc implementation of a Tenant-object. 
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public class OqtaneTenantSite: Tenant<Site>
+    public class OqtSite: Site<Site>
     {
         /// <summary>
         /// Constructor for DI
         /// </summary>
-        public OqtaneTenantSite(ISiteRepository siteRepository, ITenantResolver tenantResolver, IServerPaths serverPaths, OqtaneZoneMapper zoneMapper) : base(null)
+        public OqtSite(ISiteRepository siteRepository, ITenantResolver tenantResolver, IServerPaths serverPaths, OqtaneZoneMapper zoneMapper) : base(null)
         {
             _siteRepository = siteRepository;
             _tenantResolver = tenantResolver;
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private readonly IServerPaths _serverPaths;
         private readonly OqtaneZoneMapper _zoneMapper;
 
-        public OqtaneTenantSite(Site settings) : base(settings)
+        public OqtSite(Site settings) : base(settings)
         {
             _serverPaths = Factory.Resolve<IServerPaths>();
             _zoneMapper = Factory.Resolve<OqtaneZoneMapper>();
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private Site _unwrapped;
 
 
-        public override ITenant Init(int siteId)
+        public override ISite Init(int siteId)
         {
             UnwrappedContents = _siteRepository.GetSite(siteId);
             return this;

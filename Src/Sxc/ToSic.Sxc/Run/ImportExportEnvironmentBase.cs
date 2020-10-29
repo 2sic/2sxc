@@ -20,12 +20,12 @@ namespace ToSic.Sxc.Run
         /// DI Constructor
         /// </summary>
         // todo: replace IEnvironment with IHttp ?
-        protected ImportExportEnvironmentBase(ITenant tenant, string logName) : base(logName)
+        protected ImportExportEnvironmentBase(ISite site, string logName) : base(logName)
         {
-            Tenant = tenant;
+            Tenant = site;
         }
 
-        protected readonly ITenant Tenant;
+        protected readonly ISite Tenant;
 
         public IImportExportEnvironment Init(ILog parent)
         {
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Run
         }
         #endregion
 
-        public abstract List<Message> TransferFilesToTenant(string sourceFolder, string destinationFolder);
+        public abstract List<Message> TransferFilesToSite(string sourceFolder, string destinationFolder);
 
         public abstract Version TenantVersion { get; }
 

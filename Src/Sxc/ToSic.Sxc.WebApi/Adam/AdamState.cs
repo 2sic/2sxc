@@ -22,7 +22,7 @@ namespace ToSic.Sxc.WebApi.Adam
         /// Determines if the files come from the root (shared files).
         /// Is false, if they come from the item specific ADAM folder.
         /// </summary>
-        public readonly bool UseTenantRoot;
+        public readonly bool UseSiteRoot;
 
         /// <summary>
         /// The field this state is for. Will be null/empty if UsePortalRoot is true
@@ -65,7 +65,7 @@ namespace ToSic.Sxc.WebApi.Adam
             Block = block;
 
             // only do checks on field/guid if it's actually accessing that, if it's on the portal root, don't.
-            UseTenantRoot = usePortalRoot;
+            UseSiteRoot = usePortalRoot;
             if (!usePortalRoot)
             {
                 ItemField = field;

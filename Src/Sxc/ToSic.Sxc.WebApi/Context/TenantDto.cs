@@ -1,10 +1,10 @@
 ﻿namespace ToSic.Sxc.WebApi.Context
 {
-    public class TenantDto
+    public class SiteDto
     {
         public int Id;
 
-        public TenantDto(int portalId)
+        public SiteDto(int portalId)
         {
             Id = portalId;
         }

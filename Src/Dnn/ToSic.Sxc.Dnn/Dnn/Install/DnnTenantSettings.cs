@@ -5,7 +5,7 @@ using ToSic.Sxc.Engines;
 
 namespace ToSic.Sxc.Dnn.Install
 {
-    public class DnnTenantSettings
+    public class DnnSiteSettings
     {
         // todo: try to cache the result of settings-stored in a static variable, this full check
         // todo: shouldn't have to happen every time
@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Dnn.Install
         /// <summary>
         /// Returns true if the Portal HomeDirectory Contains the 2sxc Folder and this folder contains the web.config and a Content folder
         /// </summary>
-        public void EnsureTenantIsConfigured(IBlock block, HttpServerUtility server)
+        public void EnsureSiteIsConfigured(IBlock block, HttpServerUtility server)
         {
             var sexyFolder = new DirectoryInfo(block.Context.Tenant.AppsRootPhysicalFull); //server.MapPath(block.Context.Tenant.AppsRootPhysical));
             var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, Eav.Constants.ContentAppName));

@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Dnn.Run
         {
             var logWrap = Log.Call(() => $"[{string.Join(",", grants)}]");
             var ok = UserIsSuperuser(); // superusers are always ok
-            if (!ok && CurrentZoneMatchesTenantZone())
+            if (!ok && CurrentZoneMatchesSiteZone())
                 ok = UserIsTenantAdmin()
                      || UserIsModuleAdmin()
                      || UserIsModuleEditor();
@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Dnn.Run
         /// Verify that we're in the same zone, allowing admin/module checks
         /// </summary>
         /// <returns></returns>
-        private bool CurrentZoneMatchesTenantZone()
+        private bool CurrentZoneMatchesSiteZone()
         {
             var wrapLog = Log.Call<bool>();
             // but is the current portal also the one we're asking about?

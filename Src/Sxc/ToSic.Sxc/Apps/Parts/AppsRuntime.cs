@@ -16,11 +16,11 @@ namespace ToSic.Sxc.Apps
         {
         }
 
-        public IList<AppUiInfo> GetSelectableApps(ITenant tenant, string filter)
+        public IList<AppUiInfo> GetSelectableApps(ISite site, string filter)
         {
             var callLog = Log.Call<IList<AppUiInfo>>(filter);
             var list =
-                GetApps(tenant, null)
+                GetApps(site, null)
                     .Where(a => a.Name != Eav.Constants.ContentAppName)
                     .Where(a => !a.Hidden)
                     .Select(a => new AppUiInfo
@@ -50,13 +50,13 @@ namespace ToSic.Sxc.Apps
         /// Returns all Apps for the current zone
         /// </summary>
         /// <returns></returns>
-        public List<IApp> GetApps(ITenant tenant, Func<Eav.Apps.App, IAppDataConfiguration> buildConfig)
+        public List<IApp> GetApps(ISite site, Func<Eav.Apps.App, IAppDataConfiguration> buildConfig)
         {
             var zId = ZoneRuntime.ZoneId;
             var appIds = new ZoneRuntime(zId, Log).Apps;
             return appIds
                 .Select(a => Factory.Resolve<App>()
-                    .PreInit(tenant)
+                    .PreInit(site)
                     .Init(new AppIdentity(zId, a.Key), buildConfig, true, Log) as IApp)
                 .OrderBy(a => a.Name)
                 .ToList();

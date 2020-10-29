@@ -8,9 +8,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtaneImportExportEnvironment: ImportExportEnvironmentBase
     {
-        public OqtaneImportExportEnvironment(ITenant tenant) : base( tenant, "Mvc.IExEnv") { }
+        public OqtaneImportExportEnvironment(ISite site) : base( site, "Mvc.IExEnv") { }
 
-        public override List<Message> TransferFilesToTenant(string sourceFolder, string destinationFolder) 
+        public override List<Message> TransferFilesToSite(string sourceFolder, string destinationFolder) 
             => throw new NotImplementedException();
 
         public override Version TenantVersion => typeof(OqtaneImportExportEnvironment).Assembly.GetName().Version;

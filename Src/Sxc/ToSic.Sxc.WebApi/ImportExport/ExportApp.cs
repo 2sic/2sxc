@@ -27,12 +27,12 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private readonly IZoneMapper _zoneMapper;
         private readonly ZipExport _zipExport;
         private IUser _user;
-        private int _tenantId;
+        private int _siteId;
 
         public ExportApp Init(int tenantId, IUser user, ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            _tenantId = tenantId;
+            _siteId = tenantId;
             _user = user;
             _zoneMapper.Init(Log);
             return this;
@@ -44,12 +44,12 @@ namespace ToSic.Sxc.WebApi.ImportExport
         public AppExportInfoDto GetAppInfo(int appId, int zoneId)
         {
             Log.Add($"get app info for app:{appId} and zone:{zoneId}");
-            var contextZoneId = _zoneMapper.GetZoneId(_tenantId);
+            var contextZoneId = _zoneMapper.GetZoneId(_siteId);
             var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId, Log);
 
             var zipExport = Factory.Resolve<ZipExport>().Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
             var cultCount = _zoneMapper
-                .CulturesWithState(currentApp.Tenant.Id, currentApp.ZoneId)
+                .CulturesWithState(currentApp.Site.Id, currentApp.ZoneId)
                 .Count(c => c.Active);
 
             var cms = new CmsRuntime(currentApp, Log, true, false);
@@ -77,7 +77,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             Log.Add($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
             SecurityHelpers.ThrowIfNotAdmin(_user); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
-            var contextZoneId = _zoneMapper.GetZoneId(_tenantId);
+            var contextZoneId = _zoneMapper.GetZoneId(_siteId);
             var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId, Log);
 
             var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
@@ -91,7 +91,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             Log.Add($"export app z#{zoneId}, a#{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
             SecurityHelpers.ThrowIfNotAdmin(_user); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
-            var contextZoneId = _zoneMapper.GetZoneId(_tenantId);
+            var contextZoneId = _zoneMapper.GetZoneId(_siteId);
             var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId, Log);
 
             var zipExport = Factory.Resolve<ZipExport>().Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);

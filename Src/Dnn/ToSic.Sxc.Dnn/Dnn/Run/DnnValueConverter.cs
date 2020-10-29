@@ -22,9 +22,9 @@ namespace ToSic.Sxc.Dnn.Run
     {
         #region DI Constructor
 
-        public DnnValueConverter(ITenant tenant) => _tenant = tenant;
+        public DnnValueConverter(ISite site) => _site = site;
 
-        private readonly ITenant _tenant;
+        private readonly ISite _site;
 
         #endregion
 
@@ -47,12 +47,12 @@ namespace ToSic.Sxc.Dnn.Run
         private string TryToResolveOneLinkToInternalDnnCode(string potentialFilePath)
         {
             // Try file reference
-            var fileInfo = FileManager.Instance.GetFile(_tenant.Id, potentialFilePath);
+            var fileInfo = FileManager.Instance.GetFile(_site.Id, potentialFilePath);
             if (fileInfo != null) return "file:" + fileInfo.FileId;
 
             // Try page / tab ID
             var tabController = new TabController();
-            var tabCollection = tabController.GetTabsByPortal(_tenant.Id);
+            var tabCollection = tabController.GetTabsByPortal(_site.Id);
             var tabInfo = tabCollection.Select(tab => tab.Value)
                                        .FirstOrDefault(tab => tab.TabPath == potentialFilePath);
 

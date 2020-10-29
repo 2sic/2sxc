@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
         protected override LanguageDto GetLanguage()
         {
             if (_portal == null || ZoneId == 0) return null;
-            var language = new JsContextLanguage(new DnnTenant(_portal), ZoneId);
+            var language = new JsContextLanguage(new DnnSite(_portal), ZoneId);
             return new LanguageDto
             {
                 Current = language.Current,

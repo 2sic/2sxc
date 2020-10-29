@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Search
 
             // Since Portal-Settings.Current is null, instantiate with modules' portal id (which can be a different portal!)
             var portalSettings = new PortalSettings(dnnModule.OwnerPortalID);
-            var tenant = new DnnTenant(portalSettings);
+            var tenant = new DnnSite(portalSettings);
 
             // Ensure cache builds up with correct primary language
             var cache = State.Cache;

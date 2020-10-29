@@ -25,7 +25,7 @@ namespace ToSic.Sxc.WebApi.Adam
             AdamAppContext = new AdamAppContext<TFolderId, TFileId>();
             AdamAppContext.Init(Permissions.Context.Tenant, app, Block, 10, Log);
                 ContainerContext = usePortalRoot
-                ? new AdamOfTenant<TFolderId, TFileId>(AdamAppContext) as AdamOfBase<TFolderId, TFileId>
+                ? new AdamOfSite<TFolderId, TFileId>(AdamAppContext) as AdamOfBase<TFolderId, TFileId>
                 : new AdamOfField<TFolderId, TFileId>(AdamAppContext, entityGuid, fieldName);
         }
 

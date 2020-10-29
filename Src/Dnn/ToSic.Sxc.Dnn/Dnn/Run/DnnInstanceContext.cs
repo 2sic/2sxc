@@ -7,10 +7,10 @@ namespace ToSic.Sxc.Dnn.Run
 {
     public class DnnContext: InstanceContext
     {
-        public DnnContext(ITenant tenant, IContainer container, IUser user, List<KeyValuePair<string, string>> overrideParams = null) 
-            : base(tenant, null, container, user)
+        public DnnContext(ISite site, IContainer container, IUser user, List<KeyValuePair<string, string>> overrideParams = null) 
+            : base(site, null, container, user)
         {
-            var activeTab = (tenant as Tenant<PortalSettings>)?.UnwrappedContents?.ActiveTab;
+            var activeTab = (site as Site<PortalSettings>)?.UnwrappedContents?.ActiveTab;
             // the FullUrl will throw an error in search scenarios
             string fullUrl = null;
             try { fullUrl = activeTab?.FullUrl; } catch {  /* ignore */ }

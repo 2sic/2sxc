@@ -17,6 +17,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         private readonly ISiteRepository _siteRepository;
 
-        public ITenant GetSite(int siteId) => new OqtaneTenantSite(_siteRepository.GetSite(siteId));
+        public ISite GetSite(int siteId) => new OqtSite(_siteRepository.GetSite(siteId));
     }
 }

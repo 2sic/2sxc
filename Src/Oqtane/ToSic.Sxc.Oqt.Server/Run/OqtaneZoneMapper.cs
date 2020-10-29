@@ -69,17 +69,17 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return false;
         }
 
-        public override ITenant TenantOfZone(int zoneId)
+        public override ISite SiteOfZone(int zoneId)
         {
             var sites = _siteRepository.GetSites().ToList();
             var found = sites.FirstOrDefault(p => HasZoneId(p.SiteId, out var zoneOfSite) && zoneOfSite == zoneId);
-            return found != null ? new OqtaneTenantSite(found) : null;
+            return found != null ? new OqtSite(found) : null;
         }
 
-        public ITenant TenantOfSite(int siteId)
+        public ISite TenantOfSite(int siteId)
         {
             var site = _siteRepository.GetSite(siteId);
-            return new OqtaneTenantSite(site);
+            return new OqtSite(site);
         }
 
         // TODO: #Oqtane

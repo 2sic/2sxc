@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Dnn.Run
         //public IAppIdentity IdentityFromTenant(int tenantId, int appId) 
         //    => new AppIdentity(GetZoneId(tenantId), appId);
 
-        public override ITenant TenantOfZone(int zoneId)
+        public override ISite SiteOfZone(int zoneId)
         {
             var pinst = PortalController.Instance;
             var portals = pinst.GetPortals();
@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Dnn.Run
                     return zid == zoneId ? new PortalSettings(p) : null;
                 })
                 .FirstOrDefault(f => f != null);
-            return found != null ? new DnnTenant(found) : null;
+            return found != null ? new DnnSite(found) : null;
         }
 
         //public ITenant TenantOfApp(int appId)

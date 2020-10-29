@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Mvc.Plumbing
         {
             services.AddTransient<IAppEnvironment, MvcEnvironment>();
             services.AddTransient<IEnvironment, MvcEnvironment>();
-            services.AddTransient<ITenant, MvcTenant>();
+            services.AddTransient<ISite, MvcSite>();
             services.AddTransient<IRenderingHelper, MvcRenderingHelper>();
             services.AddTransient<IZoneMapper, MvcZoneMapper>();
             services.AddTransient<AppPermissionCheck, MvcPermissionCheck>();

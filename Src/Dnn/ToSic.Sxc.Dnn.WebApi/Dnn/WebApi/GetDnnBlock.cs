@@ -29,8 +29,8 @@ namespace ToSic.Sxc.Dnn.WebApi
             var container = new DnnContainer().Init(moduleInfo, log);
             
             var tenant = moduleInfo == null
-                ? new DnnTenant(null)
-                : new DnnTenant().Init(moduleInfo.OwnerPortalID);
+                ? new DnnSite(null)
+                : new DnnSite().Init(moduleInfo.OwnerPortalID);
 
             var context = new DnnContext(tenant, container, new DnnUser(), GetOverrideParams(request));
             IBlock block = new BlockFromModule().Init(context, log);

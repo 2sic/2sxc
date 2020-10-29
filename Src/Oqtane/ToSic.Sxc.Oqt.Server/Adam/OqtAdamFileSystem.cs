@@ -121,7 +121,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         public bool FolderExists(string path) => GetOqtFolderByName(path) != null;
 
-        private Folder GetOqtFolderByName(string path) => FolderRepository.GetFolder(AdamContext.Tenant.Id, Backslash(path));
+        private Folder GetOqtFolderByName(string path) => FolderRepository.GetFolder(AdamContext.Site.Id, Backslash(path));
 
 
         public void AddFolder(string path)
@@ -139,7 +139,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 // Create the folder
                 FolderRepository.AddFolder(new Folder
                 {
-                    SiteId = AdamContext.Tenant.Id,
+                    SiteId = AdamContext.Site.Id,
                     ParentId = parentFolder.FolderId,
                     Name = subfolder,
                     Path = path,
@@ -243,7 +243,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 Name = f.Name,
                 Created = f.CreatedOn,
                 Modified = f.ModifiedOn,
-                Url = AdamContext.Tenant.ContentPath + f.Path,
+                Url = AdamContext.Site.ContentPath + f.Path,
             };
 
 
@@ -264,7 +264,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 Modified = f.ModifiedOn,
                 Name = Path.GetFileNameWithoutExtension(f.Name),
                 Url = // f.StorageLocation == 0
-                    /*?*/ AdamContext.Tenant.ContentPath + f.Folder + f.Name
+                    /*?*/ AdamContext.Site.ContentPath + f.Folder + f.Name
                     //: FileLinkClickController.Instance.GetFileLinkClick(f)
             };
 

@@ -21,16 +21,16 @@ namespace ToSic.Sxc.Adam
         /// </summary>
         private IApp _app;
         public AppRuntime AppRuntime { get; private set; }
-        public ITenant Tenant { get; private set; }
+        public ISite Site { get; private set; }
         public IBlock Block { get; private set;  }
         
         protected AdamAppContext(string logName) : base(logName ?? "Adm.AppCtx") { }
 
-        public virtual AdamAppContext Init(ITenant tenant, IApp app, IBlock block, int compatibility, ILog parentLog)
+        public virtual AdamAppContext Init(ISite site, IApp app, IBlock block, int compatibility, ILog parentLog)
         {
             Log.LinkTo(parentLog);
             var callLog = Log.Call();
-            Tenant = tenant;
+            Site = site;
             _app = app;
             Block = block;
             AppRuntime = new AppRuntime(app, block?.EditAllowed ?? false, null);

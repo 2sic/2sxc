@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Engines
             var wrapLog = Log.Call(templateLocation);
             var portalPath = templateLocation == Settings.TemplateLocations.HostFileSystem
                 ? Path.Combine(ServerPaths.FullAppPath(Settings.PortalHostDirectory) ?? "", Settings.AppsRootFolder)
-                : App.Tenant.AppsRootPhysicalFull ?? "";// ServerPaths.FullAppPath(App.Tenant.AppsRootPhysical) ?? "";
+                : App.Site.AppsRootPhysicalFull ?? "";// ServerPaths.FullAppPath(App.Tenant.AppsRootPhysical) ?? "";
             var sexyFolderPath = portalPath;
 
             var sexyFolder = new DirectoryInfo(sexyFolderPath);
@@ -98,17 +98,17 @@ namespace ToSic.Sxc.Engines
                 case PathTypes.Link:
                     basePath = useSharedFileSystem
                         ? _linkPaths.ToAbsolute(Settings.PortalHostDirectory, Settings.AppsRootFolder)
-                        : App.Tenant.AppsRootLink;
+                        : App.Site.AppsRootLink;
                     break;
                 case PathTypes.PhysRelative:
                     basePath = useSharedFileSystem
                         ? _linkPaths.ToAbsolute(Settings.PortalHostDirectory, Settings.AppsRootFolder)
-                        : App.Tenant.AppsRootPhysical;
+                        : App.Site.AppsRootPhysical;
                     break;
                 case PathTypes.PhysFull:
                     basePath = useSharedFileSystem
                         ? ServerPaths.FullAppPath(Path.Combine(Settings.PortalHostDirectory, Settings.AppsRootFolder))
-                        : App.Tenant.AppsRootPhysicalFull;
+                        : App.Site.AppsRootPhysicalFull;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(pathType), pathType, null);

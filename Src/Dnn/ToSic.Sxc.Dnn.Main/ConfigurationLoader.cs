@@ -107,7 +107,7 @@ namespace ToSic.SexyContent
             services.AddTransient<IImportExportEnvironment, DnnImportExportEnvironment>();
 
             // new for .net standard
-            services.AddScoped<ITenant, DnnTenant>();
+            services.AddScoped<ISite, DnnSite>();
             services.AddTransient<IContainer, DnnContainer>();
             services.AddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
             services.AddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();

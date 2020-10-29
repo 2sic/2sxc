@@ -32,7 +32,7 @@ namespace ToSic.Sxc.WebApi.Views
         private readonly IServerPaths _serverPaths;
         private readonly TemplateHelpers _appHelpers;
         private readonly IEnvironmentLogger _envLogger;
-        private ITenant _tenant;
+        private ISite _site;
         private IUser _user;
 
         public ViewsExportImport(IServerPaths serverPaths, TemplateHelpers appHelpers, IEnvironmentLogger envLogger) : base("Bck.Views")
@@ -42,10 +42,10 @@ namespace ToSic.Sxc.WebApi.Views
             _envLogger = envLogger;
         }
 
-        public ViewsExportImport Init(ITenant tenant, IUser user, ILog parentLog)
+        public ViewsExportImport Init(ISite site, IUser user, ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            _tenant = tenant;
+            _site = site;
             _user = user;
             return this;
         }
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.WebApi.Views
         {
             var logCall = Log.Call($"{appId}, {viewId}");
             SecurityHelpers.ThrowIfNotAdmin(_user);
-            var app = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(_tenant.ZoneId, appId, _user, _tenant.ZoneId, Log);
+            var app = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId, Log);
             var cms = new CmsManager(app, Log);
             var bundle = new BundleEntityWithAssets
             {
@@ -101,7 +101,7 @@ namespace ToSic.Sxc.WebApi.Views
             try
             {
                 // 0.1 Check permissions, get the app, 
-                var app = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(_tenant.ZoneId, appId, _user, _tenant.ZoneId, Log);
+                var app = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId, Log);
                 _appHelpers.Init(app, Log);
 
                 // 0.2 Verify it's json etc.

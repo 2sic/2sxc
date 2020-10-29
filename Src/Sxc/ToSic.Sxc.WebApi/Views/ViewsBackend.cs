@@ -11,15 +11,15 @@ namespace ToSic.Sxc.WebApi.Views
 {
     internal class ViewsBackend: HasLog
     {
-        private ITenant _tenant;
+        private ISite _site;
         private IUser _user;
 
         public ViewsBackend() : base("Bck.Views") { }
 
-        public ViewsBackend Init(ITenant tenant, IUser user, ILog parentLog)
+        public ViewsBackend Init(ISite site, IUser user, ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            _tenant = tenant;
+            _site = site;
             _user = user;
             return this;
         }
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.WebApi.Views
         {
             // todo: extra security to only allow zone change if host user
             Log.Add($"delete a{appId}, t:{id}");
-            var app = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(_tenant.ZoneId, appId, _user, _tenant.ZoneId, Log);
+            var app = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId, Log);
             var cms = new CmsManager(app, Log);
             cms.Views.DeleteTemplate(id);
             return true;

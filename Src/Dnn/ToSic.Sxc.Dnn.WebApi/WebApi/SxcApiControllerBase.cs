@@ -48,7 +48,7 @@ namespace ToSic.Sxc.WebApi
         {
             // in case the initial request didn't yet find a block builder, we need to create it now
             var context = Block?.Context
-                          ?? new DnnContext(new DnnTenant(PortalSettings), new ContainerNull(), new DnnUser());
+                          ?? new DnnContext(new DnnSite(PortalSettings), new ContainerNull(), new DnnUser());
             return context;
         }
 

@@ -19,7 +19,7 @@ namespace ToSic.SexyContent
                 if (_blockLoaded) return _block;
                 _blockLoaded = true;
                 var context = new DnnContext(
-                    new DnnTenant().Init(ModuleConfiguration.OwnerPortalID),
+                    new DnnSite().Init(ModuleConfiguration.OwnerPortalID),
                     new DnnContainer().Init(ModuleConfiguration, Log),
                     new DnnUser(UserInfo));
                 return _block = new BlockFromModule().Init(context, Log);

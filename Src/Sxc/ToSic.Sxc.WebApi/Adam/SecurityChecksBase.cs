@@ -44,7 +44,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
         #region Abstract methods to re-implement
 
-        internal abstract bool TenantAllowsExtension(string fileName);
+        internal abstract bool SiteAllowsExtension(string fileName);
 
         internal abstract bool CanEditFolder(IAsset item);
 
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
         internal bool ExtensionIsOk(string fileName, out HttpExceptionAbstraction preparedException)
         {
-            if (!TenantAllowsExtension(fileName))
+            if (!SiteAllowsExtension(fileName))
             {
                 preparedException = HttpException.NotAllowedFileType(fileName, "Not in whitelisted CMS file types.");
                 return false;

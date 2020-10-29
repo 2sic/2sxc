@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         public IEnumerable<AppUiInfo> Apps(string apps = null)
         {
             // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
-            var tenant = new DnnTenant(PortalSettings);
+            var tenant = new DnnSite(PortalSettings);
             return new CmsZones(tenant.ZoneId, Log).AppsRt.GetSelectableApps(tenant, apps).ToList();
         }
 

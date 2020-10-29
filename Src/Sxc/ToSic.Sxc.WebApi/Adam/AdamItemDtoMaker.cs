@@ -22,7 +22,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 original.Created, original.Modified)
             {
                 Path = original.Path,
-                AllowEdit = state.UseTenantRoot
+                AllowEdit = state.UseSiteRoot
                     ? _security.CanEditFolder(original)
                     : !state.Security.UserIsRestricted || state.Security.FieldPermissionOk(GrantSets.WriteSomething)
             };
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 folder.Modified)
             {
                 Path = folder.Path,
-                AllowEdit = state.UseTenantRoot
+                AllowEdit = state.UseSiteRoot
                     ? _security.CanEditFolder(folder)
                     : !state.Security.UserIsRestricted || state.Security.FieldPermissionOk(GrantSets.WriteSomething)
             };

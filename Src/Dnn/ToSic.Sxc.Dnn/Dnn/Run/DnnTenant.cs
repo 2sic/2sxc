@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Dnn.Run
     /// This is a DNN implementation of a Tenant-object. 
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public class DnnTenant: Tenant<PortalSettings>
+    public class DnnSite: Site<PortalSettings>
     {
         #region Constructors and DI
 
@@ -18,10 +18,10 @@ namespace ToSic.Sxc.Dnn.Run
         /// DI Constructor, will get the current portal settings
         /// #TodoDI not ideal yet, as PortalSettings.current is still retrieved from global
         /// </summary>
-        public DnnTenant() : this(PortalSettings.Current) { }
+        public DnnSite() : this(PortalSettings.Current) { }
 
         /// <inheritdoc />
-        public DnnTenant(PortalSettings settings): base(GetBestPortalSettings(settings)) {}
+        public DnnSite(PortalSettings settings): base(GetBestPortalSettings(settings)) {}
 
         /// <summary>
         /// Very special helper to work around a DNN issue
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Dnn.Run
         }
 
         /// <inheritdoc />
-        public override ITenant Init(int tenantId)
+        public override ISite Init(int tenantId)
         {
             var newSettings = new PortalSettings(tenantId);
             // only replace it if it's different - because the initial normal Portalsettings has more loaded values

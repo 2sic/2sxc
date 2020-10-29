@@ -12,13 +12,13 @@ namespace ToSic.Sxc.Mvc.Run
     /// This is a Mvc implementation of a Tenant-object. 
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public class MvcTenant : Tenant<MvcPortalSettings>
+    public class MvcSite : Site<MvcPortalSettings>
     {
         /// <summary>
         /// Constructor for DI
         /// </summary>
         /// <param name="httpContextAccessor"></param>
-        public MvcTenant(IHttpContextAccessor httpContextAccessor) : base(new MvcPortalSettings())
+        public MvcSite(IHttpContextAccessor httpContextAccessor) : base(new MvcPortalSettings())
         {
             HttpContext = httpContextAccessor.HttpContext;
         }
@@ -27,12 +27,12 @@ namespace ToSic.Sxc.Mvc.Run
         /// Constructor for normal initialization
         /// </summary>
         /// <param name="httpContext"></param>
-        public MvcTenant(HttpContext httpContext) : base(new MvcPortalSettings())
+        public MvcSite(HttpContext httpContext) : base(new MvcPortalSettings())
         {
             HttpContext = httpContext;
         }
 
-        public MvcTenant(HttpContext httpContext, MvcPortalSettings settings) : base(
+        public MvcSite(HttpContext httpContext, MvcPortalSettings settings) : base(
             settings ?? new MvcPortalSettings())
         {
             HttpContext = httpContext;
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Mvc.Run
 
         protected HttpContext HttpContext { get; }
 
-        public override ITenant Init(int tenantId)
+        public override ISite Init(int tenantId)
         {
             UnwrappedContents = new MvcPortalSettings(tenantId);
             return this;

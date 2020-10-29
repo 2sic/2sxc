@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Dnn
         public static IBlockBuilder CmsBlock(IContainer container, ILog parentLog = null)
         {
             var dnnModule = ((Container<ModuleInfo>)container).UnwrappedContents;
-            var tenant = new DnnTenant(new PortalSettings(dnnModule.OwnerPortalID));
+            var tenant = new DnnSite(new PortalSettings(dnnModule.OwnerPortalID));
             return new BlockFromModule().Init(new DnnContext(tenant, container, new DnnUser()), parentLog).BlockBuilder;
         }
 
@@ -108,21 +108,21 @@ namespace ToSic.Sxc.Dnn
             bool publishingEnabled = false, 
             bool showDrafts = false, 
             ILog parentLog = null) 
-            => App(Eav.Apps.App.AutoLookupZone, appId, new DnnTenant(ownerPortalSettings), publishingEnabled, showDrafts, parentLog);
+            => App(Eav.Apps.App.AutoLookupZone, appId, new DnnSite(ownerPortalSettings), publishingEnabled, showDrafts, parentLog);
 
         [InternalApi_DoNotUse_MayChangeWithoutNotice]
         private static IApp App(
             int zoneId,
             int appId,
-            ITenant tenant,
+            ISite site,
             bool publishingEnabled,
             bool showDrafts,
             ILog parentLog)
         {
             var log = new Log("Dnn.Factry", parentLog);
-            log.Add($"Create App(z:{zoneId}, a:{appId}, tenantObj:{tenant != null}, publishingEnabled: {publishingEnabled}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
+            log.Add($"Create App(z:{zoneId}, a:{appId}, tenantObj:{site != null}, publishingEnabled: {publishingEnabled}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
             var app = Eav.Factory.Resolve<App>();
-            if (tenant != null) app.PreInit(tenant);
+            if (site != null) app.PreInit(site);
             var appStuff = app.Init(new AppIdentity(zoneId, appId), 
                 ConfigurationProvider.Build(showDrafts, publishingEnabled, new LookUpEngine(parentLog)),
                 true, parentLog);

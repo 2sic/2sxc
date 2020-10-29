@@ -13,23 +13,23 @@ namespace ToSic.Sxc.Dnn.Run
         /// <summary>
         /// Constructor for DI, you must always call Init(...) afterwards
         /// </summary>
-        public DnnEnvironment(IHttp http, IServerPaths serverPaths, ITenant tenant, IPagePublishing publishing, IZoneMapper zoneMapper) : base("DNN.Enviro")
+        public DnnEnvironment(IHttp http, IServerPaths serverPaths, ISite site, IPagePublishing publishing, IZoneMapper zoneMapper) : base("DNN.Enviro")
         {
             _http = http;
             _serverPaths = serverPaths;
-            _tenant = tenant;
+            _site = site;
             PagePublishing = publishing.Init(Log);
             ZoneMapper = zoneMapper.Init(Log);
         }
 
         private readonly IHttp _http;
         private readonly IServerPaths _serverPaths;
-        private readonly ITenant _tenant;
+        private readonly ISite _site;
 
         public IAppEnvironment Init(ILog parent)
         {
             Log.LinkTo(parent);
-            if (_tenant.Id == Eav.Constants.NullId)
+            if (_site.Id == Eav.Constants.NullId)
                 Log.Add("Warning - tenant isn't ready - will probably cause errors");
             return this;
         }
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Dnn.Run
 
         //public string MapPath(string virtualPath) => _http.MapPath(virtualPath);
 
-        public string DefaultLanguage => _tenant.DefaultLanguage;
+        public string DefaultLanguage => _site.DefaultLanguage;
 
     }
 }

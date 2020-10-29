@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Apps
 
 
 
-        internal void RemoveAppInTenantAndEav(int appId)
+        internal void RemoveAppInSiteAndEav(int appId)
         {
             var zoneId = ZoneRuntime.ZoneId;
             // check portal assignment and that it's not the default app

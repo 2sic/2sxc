@@ -8,17 +8,17 @@ namespace ToSic.Sxc.Oqt.Server.Run
     public class OqtTempInstanceContext
     {
         private readonly OqtaneContainer _oqtaneContainer;
-        private readonly OqtaneTenantSite _oqtaneTenantSite;
+        private readonly OqtSite _oqtSite;
 
-        public OqtTempInstanceContext(OqtaneContainer oqtaneContainer, OqtaneTenantSite oqtaneTenantSite)
+        public OqtTempInstanceContext(OqtaneContainer oqtaneContainer, OqtSite oqtSite)
         {
             _oqtaneContainer = oqtaneContainer;
-            _oqtaneTenantSite = oqtaneTenantSite;
+            _oqtSite = oqtSite;
         }
 
         public InstanceContext CreateContext(Module module, int pageId, ILog parentLog)
             => new InstanceContext(
-                 _oqtaneTenantSite, 
+                 _oqtSite, 
                 //_zoneMapper.TenantOfZone(zoneId),
                 new OqtanePage(pageId, null),
                 _oqtaneContainer.Init(module, parentLog),

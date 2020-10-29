@@ -25,13 +25,13 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private readonly IZoneMapper _zoneMapper;
         private readonly XmlExporter _xmlExporter;
         private IUser _user;
-        private int _tenantId;
+        private int _siteId;
 
         public ExportContent Init(int tenantId, IUser user, ILog parentLog)
         {
             Log.LinkTo(parentLog);
             _zoneMapper.Init(Log);
-            _tenantId = tenantId;
+            _siteId = tenantId;
             _user = user;
             return this;
         }
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         public ExportPartsOverviewDto PreExportSummary(int appId, int zoneId, string scope)
         {
             Log.Add($"get content info for z#{zoneId}, a#{appId}, scope:{scope} super?:{_user.IsSuperUser}");
-            var contextZoneId = _zoneMapper.GetZoneId(_tenantId);
+            var contextZoneId = _zoneMapper.GetZoneId(_siteId);
             var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId, Log);
 
             var cms = new CmsRuntime(currentApp, Log, true, false);
@@ -86,7 +86,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             Log.Add($"export content z#{zoneId}, a#{appId}, ids:{entityIdsString}, templId:{templateIdsString}");
             SecurityHelpers.ThrowIfNotAdmin(_user); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
-            var contextZoneId = _zoneMapper.GetZoneId(_tenantId);
+            var contextZoneId = _zoneMapper.GetZoneId(_siteId);
             var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId, Log);
             var appRuntime = new AppRuntime(currentApp, true, Log);
 

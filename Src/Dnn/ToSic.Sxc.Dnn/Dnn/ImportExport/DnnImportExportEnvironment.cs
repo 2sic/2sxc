@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
         /// <summary>
         /// DI Constructor
         /// </summary>
-        public DnnImportExportEnvironment(ITenant tenant) : base(tenant, "Dnn.ImExEn") { }
+        public DnnImportExportEnvironment(ISite site) : base(site, "Dnn.ImExEn") { }
 
         #endregion
 
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
         /// </summary>
         /// <param name="sourceFolder"></param>
         /// <param name="destinationFolder">The portal-relative path where the files should be copied to</param>
-        public override List<Message> TransferFilesToTenant(string sourceFolder, string destinationFolder)
+        public override List<Message> TransferFilesToSite(string sourceFolder, string destinationFolder)
         {
             Log.Add($"transfer files to tenant from:{sourceFolder} to:{destinationFolder}");
             var messages = new List<Message>();
@@ -77,7 +77,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
             {
                 Log.Add($"subfolder:{sourceFolderPath}");
                 var newDestinationFolder = Path.Combine(destinationFolder, sourceFolderPath.Replace(sourceFolder, "").TrimStart('\\')).Replace('\\', '/');
-                TransferFilesToTenant(sourceFolderPath, newDestinationFolder);
+                TransferFilesToSite(sourceFolderPath, newDestinationFolder);
             }
 
             return messages;

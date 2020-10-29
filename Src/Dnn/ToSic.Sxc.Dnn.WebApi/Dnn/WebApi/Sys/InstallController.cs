@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         public string RemoteWizardUrl(bool isContentApp) =>
             Eav.Factory.Resolve<IEnvironmentInstaller>().Init(Log)
                 .GetAutoInstallPackagesUiUrl(
-                    new DnnTenant(PortalSettings),
+                    new DnnSite(PortalSettings),
                     new DnnContainer().Init(Request.FindModuleInfo(), Log), 
                     isContentApp);
 

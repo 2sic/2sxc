@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Mvc.WebApi
         {
             // in case the initial request didn't yet find a block builder, we need to create it now
             var context = // BlockBuilder?.Context ??
-                new InstanceContext(new MvcTenant(HttpContext), new PageNull(), new ContainerNull(), new MvcUser());
+                new InstanceContext(new MvcSite(HttpContext), new PageNull(), new ContainerNull(), new MvcUser());
             return context;
         }
 

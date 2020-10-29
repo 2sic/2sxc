@@ -8,10 +8,10 @@ namespace Website.Pages
 {
     public class EavDiModel : PageModel
     {
-        public EavDiModel(ITenant tenant, IHttpContextAccessor httpC, IHttp http, IServerPaths serverPaths, ILinkPaths linkPaths)
+        public EavDiModel(ISite site, IHttpContextAccessor httpC, IHttp http, IServerPaths serverPaths, ILinkPaths linkPaths)
         {
             // itenant should exist
-            var x = tenant.Id;
+            var x = site.Id;
             var y = httpC.HttpContext.Request.Body;
             Http = http;
             ServerPaths = serverPaths;

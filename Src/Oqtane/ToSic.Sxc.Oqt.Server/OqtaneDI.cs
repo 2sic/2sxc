@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Oqt.Server
 
             services.AddTransient<IAppEnvironment, OqtaneEnvironment>();
             services.AddTransient<IEnvironment, OqtaneEnvironment>();
-            services.AddTransient<ITenant, OqtaneTenantSite>();
+            services.AddTransient<ISite, OqtSite>();
             services.AddTransient<IRenderingHelper, OqtaneRenderingHelper>();
             services.AddTransient<IZoneMapper, OqtaneZoneMapper>();
             services.AddTransient<AppPermissionCheck, OqtanePermissionCheck>();
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddTransient<OqtaneContextBuilder>();
             services.AddTransient<OqtaneContainer>();
             services.AddTransient<OqtTempInstanceContext>();
-            services.AddTransient<OqtaneTenantSite>();
+            services.AddTransient<OqtSite>();
             services.AddTransient<OqtaneZoneMapper>();
             services.AddTransient<SettingsHelper>();
             //// add page publishing

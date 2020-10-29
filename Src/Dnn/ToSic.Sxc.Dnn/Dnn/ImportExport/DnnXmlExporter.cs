@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
 
         public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds, ILog parentLog)
         {
-            var tenant = new DnnTenant(PortalSettings.Current);
+            var tenant = new DnnSite(PortalSettings.Current);
             var app = Eav.Factory.Resolve<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
             AdamAppContext = new AdamAppContext<int, int>();
             AdamAppContext.Init(tenant, app, null, 10, Log);

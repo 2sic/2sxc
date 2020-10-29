@@ -22,11 +22,11 @@ namespace ToSic.Sxc.Dnn.Run
         /// <summary>
         /// Constructor for DI - you must always call Init(...) afterwards
         /// </summary>
-        /// <param name="tenant">DI injected param</param>
+        /// <param name="site">DI injected param</param>
         /// <param name="zoneMapper">DI injected param</param>
-        public DnnAppFileSystemLoader(ITenant tenant, IZoneMapper zoneMapper): base("Dnn.AppStf")
+        public DnnAppFileSystemLoader(ISite site, IZoneMapper zoneMapper): base("Dnn.AppStf")
         {
-            Tenant = tenant;
+            Site = site;
             ZoneMapper = zoneMapper;
         }
 
@@ -39,9 +39,9 @@ namespace ToSic.Sxc.Dnn.Run
             AppId = appId;
             try
             {
-                Log.Add($"Trying to build path based on tenant. If it's in search mode, the {nameof(ITenant)} will be missing. Id: {Tenant.Id}");
-                EnsureTenantIsLoadedWhenDiFails();
-                var fullPath = System.IO.Path.Combine(Tenant.AppsRootPhysicalFull, /*+ "/" +*/ path, /*+ "/" + */ Eav.Constants.FolderAppExtensions);
+                Log.Add($"Trying to build path based on tenant. If it's in search mode, the {nameof(ISite)} will be missing. Id: {Site.Id}");
+                EnsureSiteIsLoadedWhenDiFails();
+                var fullPath = System.IO.Path.Combine(Site.AppsRootPhysicalFull, /*+ "/" +*/ path, /*+ "/" + */ Eav.Constants.FolderAppExtensions);
                 Path = fullPath;// HostingEnvironment.MapPath(fullPath);
                 Log.Add("System path:" + Path);
             }
@@ -56,18 +56,18 @@ namespace ToSic.Sxc.Dnn.Run
             return this;
         }
 
-        private void EnsureTenantIsLoadedWhenDiFails()
+        private void EnsureSiteIsLoadedWhenDiFails()
         {
-            if (Tenant.Id != Eav.Constants.NullId) return;
+            if (Site.Id != Eav.Constants.NullId) return;
             Log.Add("TenantId not found. Must be in search mode, will try to find correct portalsettings");
-            Tenant = ZoneMapper.TenantOfApp(AppId);
+            Site = ZoneMapper.TenantOfApp(AppId);
         }
 
         IAppRepositoryLoader IAppRepositoryLoader.Init(int appId, string path, ILog log) => Init(appId, path, log) as IAppRepositoryLoader;
 
         public string Path { get; set; }
 
-        protected ITenant Tenant;
+        protected ISite Site;
         protected readonly IZoneMapper ZoneMapper;
 
         public List<InputTypeInfo> InputTypes()

@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         protected override string HistoryLogName => "Api.Zone";
 
         [HttpGet]
-        public IList<TenantLanguageDto> GetLanguages() =>
+        public IList<SiteLanguageDto> GetLanguages() =>
             Eav.Factory.Resolve<LanguagesBackend>().Init(Log)
                 .GetLanguages(PortalSettings.PortalId);
 
