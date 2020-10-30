@@ -7,10 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using Oqtane.Infrastructure;
 using ToSic.Eav;
-using ToSic.Sxc.Oqt.Server.Engines;
 using ToSic.Sxc.Oqt.Server.RazorPages;
 using ToSic.Sxc.Oqt.Shared.Dev;
-using ToSic.Sxc.Razor;
 using ToSic.Sxc.Razor.Engine;
 using ToSic.Sxc.WebApi.Plumbing;
 using Factory = ToSic.Eav.Factory;
@@ -44,11 +42,6 @@ namespace ToSic.Sxc.Oqt.Server
             // try to enable dynamic razor compiling - still WIP
             new StartUpRazorPages().ConfigureServices(services);
 
-
-            // enable use of HttpContext
-            // 2020-10-22 should already be in Oqtane
-            //services.AddHttpContextAccessor();
-
             // enable webapi - include all controllers in the Sxc.Mvc assembly
             services.AddControllers(options => { options.AllowEmptyInputInBodyModelBinding = true; })
                 // This is needed to preserve compatibility with previous api usage
@@ -63,12 +56,6 @@ namespace ToSic.Sxc.Oqt.Server
             // enable use of UrlHelper for AbsolutePath
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
-            //services.AddScoped(it => it.GetService<IUrlHelperFactory>()
-            //    .GetUrlHelper(it.GetService<IActionContextAccessor>().ActionContext));
-
-            // Try to get partial to string rendering
-            //services.AddTransient<IRazorPartialToStringRenderer, RazorPartialToStringRenderer>();
-            //services.AddTransient<IRenderRazor, RenderRazor>();
 
             Factory.UseExistingServices(services);
             Factory.ActivateNetCoreDi(services2 =>

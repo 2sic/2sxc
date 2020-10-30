@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Oqt.App
                         .ToArray());
 
                     foreach (var style in SxcEngine.AssetsAndHeaders.Styles())
-                        await interop.IncludeLink("", "stylesheet", style, "text/css", "", "", ""); //.IncludeScript("", resource.Url, resource.Integrity ?? "", resource.CrossOrigin ?? "", "", "head", "");
+                        await interop.IncludeLink("", "stylesheet", style, "text/css", "", "", "");
 
                     await interop.IncludeLinks(externalResources
                         .Where(r => r.ResourceType == ResourceType.Stylesheet)

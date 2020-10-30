@@ -49,28 +49,5 @@ namespace ToSic.Sxc.Razor.Engine
             await view.RenderAsync(viewContext);
             return output.ToString();
         }
-
-
-        //private IView FindView(ActionContext actionContext, string partialName)
-        //{
-        //    var firstAttempt = _viewEngine.GetView(null, partialName, false);
-        //    if (firstAttempt.Success)
-        //        return firstAttempt.View;
-
-        //    var secondAttempt = _viewEngine.FindView(actionContext, partialName, false);
-        //    if (secondAttempt.Success)
-        //        return secondAttempt.View;
-        //    var searchedLocations = firstAttempt.SearchedLocations.Concat(secondAttempt.SearchedLocations);
-        //    var errorMessage = string.Join(
-        //        Environment.NewLine,
-        //        new[] { $"Unable to find partial '{partialName}'. The following locations were searched:" }.Concat(searchedLocations)); ;
-        //    throw new InvalidOperationException(errorMessage);
-        //}
-
-        //private ActionContext NewActionContext()
-        //{
-        //    var httpContext = _httpContextAccessor.HttpContext ?? new DefaultHttpContext { RequestServices = _serviceProvider };
-        //    return new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
-        //}
     }
 }

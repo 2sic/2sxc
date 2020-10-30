@@ -18,30 +18,17 @@ namespace ToSic.Sxc.Razor.Engine
         #region Constructor / DI
 
         public RazorEngine(EngineBaseDependencies helpers) : base(helpers) { }
-
-
-
+        
         /// <inheritdoc />
         [PrivateApi]
         protected override void Init()
         {
             // in MVC & Oqtane we're always using V10 compatibility
             CompatibilityAutoLoadJQueryAndRVT = false;
-
-            //try
-            //{
-            //    InitWebpage();
-            //}
-            //// Catch web.config Error on DNNs upgraded to 7
-            //catch (ConfigurationErrorsException exc)
-            //{
-            //    var e = new Exception("Configuration Error: Please follow this checklist to solve the problem: http://swisschecklist.com/en/i4k4hhqo/2Sexy-Content-Solve-configuration-error-after-upgrading-to-DotNetNuke-7", exc);
-            //    throw e;
-            //}
         }
+
         #endregion
-
-
+        
         /// <inheritdoc/>
         protected override string RenderTemplate()
         {
@@ -86,31 +73,5 @@ namespace ToSic.Sxc.Razor.Engine
             // later also check loading more DLLs on https://stackoverflow.com/questions/58685966/adding-assemblies-types-to-be-made-available-to-razor-page-at-runtime
 
         }
-
-
-
-
-        //private string InitWebpage()
-        //{
-        //    if (string.IsNullOrEmpty(TemplatePath)) return null;
-        //    var dynCode = new Sxc.Code.DynamicCodeRoot().Init(Block, Log);
-
-        //    var compiler = Eav.Factory.Resolve<IRenderRazor>();
-        //    var result = compiler.RenderToStringAsync(TemplatePath, new Object(), 
-        //        rzv =>
-        //        {
-        //            if (rzv.RazorPage is ISxcRazorComponent asSxc)
-        //            {
-        //                asSxc.DynCode = dynCode;
-        //                //asSxc.VirtualPath = TemplatePath;
-        //                asSxc.Purpose = Purpose;
-
-        //            }
-
-        //        });
-        //    return result.Result;
-
-
-        //}
     }
 }

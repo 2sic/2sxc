@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Oqt.Shared
 {
-    public class WebApiConstants /*: ToSic.Sxc.WebApi.WebApiConstants*/
+    public class WebApiConstants
     {
         public const string WebApiRoot = "api/sxc";
         public const string WebApiStateRoot = "{alias}/api/sxc";

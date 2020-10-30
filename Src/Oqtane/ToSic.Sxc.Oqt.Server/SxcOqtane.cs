@@ -53,20 +53,11 @@ namespace ToSic.Sxc.Oqt.Server
         {
             if (_renderDone) throw new Exception("already prepared this module");
 
-            var test1 = _vcTemp.ToValue("file:8");
-
-            //var test4 = Eav.Factory.Resolve<IHttpContextAccessor>().HttpContext
-            //    .RequestServices.GetRequiredService<IValueConverter>().ToValue("file:1");
-
-            //var failed  = ToSic.Eav.Factory.Resolve<ToSic.Eav.Run.IValueConverter>().ToValue("file:8");
-
             Site = site;
             Page = page;
             Module = module;
 
             Block = GetBlock();
-
-            //var works = Block.Context.ServiceProvider.GetRequiredService<IValueConverter>().ToValue("file:2");
 
             _assetsAndHeaders.Init(this);
             GeneratedHtml = (MarkupString) Block.BlockBuilder.Render();
