@@ -159,7 +159,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                     Content = new StringContent(rendered, Encoding.UTF8, "text/plain")
                 };
             }
-            catch (Exception e)
+            catch
             {
 				//Exceptions.LogException(e);
                 throw;

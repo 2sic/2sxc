@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
-
-namespace ToSic.Sxc.Oqt.Server.Adam
+﻿namespace ToSic.Sxc.Oqt.Server.Adam
 {
     internal static class PathFixer
     {
@@ -17,6 +12,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         {
             if (original == null) return "/";
             if (original.StartsWith('/')) return original;
+            if (original.StartsWith('\\')) original = original.TrimStart('\\');
             return "/" + original;
         }
     }

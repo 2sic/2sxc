@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         private readonly ILogManager _logger;
         private readonly ITenantResolver _tenantResolver;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly List<string> _whiteListExtensions = new List<string> {".js", ".css", ".json", ".map", ".xml", ".csv", ".txt" };
+        //private readonly List<string> _whiteListExtensions = new List<string> {".js", ".css", ".json", ".map", ".xml", ".csv", ".txt" };
         private const string RiskyExtensionsAll =
             @"^\.\s*(ade|adp|app|bas|bat|chm|class|cmd|com|cpl|crt|dll|exe|fxp|hlp|hta|ins|isp|jse|lnk|mda|mdb|mde|mdt|mdw|mdz|msc|msi|msp|mst|ops|pcd|pif|prf|prg|reg|scf|scr|sct|shb|shs|url|vb|vbe|vbs|wsc|wsf|wsh|cshtml|vbhtml|cs|ps[0-9]|ascx|aspx|asmx|config|inc|html|sql|bin|iso|asp|sh|php([0-9])?|pl|cgi|386|torrent|jar|vbscript|cer|csr|jsp|drv|sys|csh|inf|htaccess|htpasswd|ksh)\s*$";
         private static readonly Regex RiskyDetector = new Regex(RiskyExtensionsAll);
@@ -85,26 +85,27 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                     _ => "2sxc"
                 };
 
+                // todo: put into constants somewhere
                 var aliasPart = $@"Content\Tenants\{alias.TenantId}\Sites\{alias.SiteId}\{folder}";
                 var appPath = Path.Combine(_hostingEnvironment.ContentRootPath, aliasPart);
                 var fullAppPath = Path.Combine(appPath, appName).Backslash();
 
-                // Check that folder with appName exists.
-                if (Directory.GetDirectories(appPath).All(f => !string.Equals(f, fullAppPath, StringComparison.OrdinalIgnoreCase))) return NotFound();
+                // Check that the app-folder folder with provided appName exists.
+                //if (!Directory.GetDirectories(appPath).Any(f => string.Equals(f, fullAppPath, StringComparison.OrdinalIgnoreCase))) return NotFound();
                 
                 // Check that file exist in file system.
                 var fullFilePath = Path.Combine(_hostingEnvironment.ContentRootPath, aliasPart, appName, filePath).Backslash();
                 if (!System.IO.File.Exists(fullFilePath)) return NotFound();
 
                 // Check that file with filePath exists in appPath.
-                if (GetAllFiles(appPath).All(f => !string.Equals(f, fullFilePath, StringComparison.OrdinalIgnoreCase))) return NotFound();
+                //if (!GetAllFiles(appPath).Any(f => string.Equals(f, fullFilePath, StringComparison.OrdinalIgnoreCase))) return NotFound();
 
                 var fileBytes = System.IO.File.ReadAllBytes(fullFilePath);
 
                 return mimeType.StartsWith("image") ? File(fileBytes, mimeType) :
                     new FileContentResult(fileBytes, mimeType) { FileDownloadName = Path.GetFileName(fullFilePath) };
             }
-            catch (Exception e)
+            catch
             {
                 //Console.WriteLine(e);
                 return NotFound();

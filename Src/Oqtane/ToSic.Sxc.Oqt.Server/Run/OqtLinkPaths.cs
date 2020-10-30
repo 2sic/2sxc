@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Run;
 
 
@@ -25,9 +26,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private string toWebAbsolute(string virtualPath)
         {
             virtualPath = virtualPath.TrimStart('~');
-            if (!virtualPath.StartsWith('/') && !virtualPath.StartsWith('\\'))
-                virtualPath = "/" + virtualPath;
-            return virtualPath;
+            //if (!virtualPath.StartsWith('/') && !virtualPath.StartsWith('\\'))
+            //    virtualPath = "/" + virtualPath;
+            return virtualPath.PrefixSlash().Forwardslash();
         }
 
         public string ToAbsolute(string virtualPath)
