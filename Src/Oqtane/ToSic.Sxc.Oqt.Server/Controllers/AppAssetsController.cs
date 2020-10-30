@@ -94,10 +94,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
                 var fileBytes = System.IO.File.ReadAllBytes(fullFilePath);
 
-                return new FileContentResult(fileBytes, mimeType)
-                {
-                    FileDownloadName = Path.GetFileName(fullFilePath)
-                };
+                return mimeType.StartsWith("image") ? File(fileBytes, mimeType) :
+                    new FileContentResult(fileBytes, mimeType) { FileDownloadName = Path.GetFileName(fullFilePath) };
             }
             catch (Exception e)
             {
