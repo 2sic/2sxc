@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Oqtane.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
@@ -56,6 +57,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         {
             try
             {
+                // Oqtane path and file name validation.
+                if (!appName.IsPathOrFileValid() || filePath.IsPathOrFileValid()) return NotFound();
+                
                 // Blacklist extensions should be denied.
                 if (IsKnownRiskyExtension(filePath)) return NotFound();
                 if (Eav.Security.Files.FileNames.IsKnownCodeExtension(filePath)) return NotFound();
@@ -72,25 +76,26 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                 var alias = _tenantResolver.GetAlias();
                 if (alias == null) return NotFound();
 
-                var folder = "2sxc";
-                if (Route == "adam") folder = "adam";
-                if (Route == "sxc") folder = "2sxc";
+                var folder = Route switch
+                {
+                    "adam" => "adam",
+                    "sxc" => "2sxc",
+                    _ => "2sxc"
+                };
 
                 var aliasPart = $@"Content\Tenants\{alias.TenantId}\Sites\{alias.SiteId}\{folder}";
                 var appPath = Path.Combine(_hostingEnvironment.ContentRootPath, aliasPart);
                 var fullAppPath = Path.Combine(appPath, appName);
 
                 // Check that folder with appName exists.
-                // todo STV
-                //if (Directory.GetDirectories(appPath).All(folder => folder != fullAppPath)) return NotFound();
-
+                if (Directory.GetDirectories(appPath).All(f => !string.Equals(f, fullAppPath, StringComparison.OrdinalIgnoreCase))) return NotFound();
+                
                 // Check that file exist in file system.
                 var fullFilePath = Path.Combine(_hostingEnvironment.ContentRootPath, aliasPart, appName, filePath).Replace("/", @"\");
                 if (!System.IO.File.Exists(fullFilePath)) return NotFound();
 
                 // Check that file with filePath exists in appPath.
-                // todo STV
-                //if (GetAllFiles(appPath).All(file => file != fullFilePath)) return NotFound();
+                if (GetAllFiles(appPath).All(f => !string.Equals(f, fullFilePath, StringComparison.OrdinalIgnoreCase))) return NotFound();
 
                 var fileBytes = System.IO.File.ReadAllBytes(fullFilePath);
 
