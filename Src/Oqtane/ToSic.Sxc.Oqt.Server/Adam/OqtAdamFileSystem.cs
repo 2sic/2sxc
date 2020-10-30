@@ -161,12 +161,12 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         public bool FolderExists(string path) => GetOqtFolderByName(path) != null;
 
-        private Folder GetOqtFolderByName(string path) => FolderRepository.GetFolder(AdamContext.Site.Id, Backslash(path));
+        private Folder GetOqtFolderByName(string path) => FolderRepository.GetFolder(AdamContext.Site.Id, path.Backslash());
 
 
         public void AddFolder(string path)
         {
-            path = Backslash(path);
+            path = path.Backslash();
             var callLog = Log.Call(path);
 
             if (FolderExists(path)) return;
@@ -252,13 +252,6 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         public Folder<int, int> GetFolder(int folderId) => OqtToAdam(GetOqtFolder(folderId));
 
         #endregion
-
-        #region Slash helpers - because Oqtane DB only stores with "\" slashes
-
-        private string Backslash(string original) => original.Replace("/", "\\").Replace("\\\\", "\\");
-
-        #endregion
-
 
         #region Oqtane typed calls
 
