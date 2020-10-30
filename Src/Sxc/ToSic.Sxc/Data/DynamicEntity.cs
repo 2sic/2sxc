@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
+using ToSic.Eav.Run.Basic;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit.Toolbar;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -114,7 +116,18 @@ namespace ToSic.Sxc.Data
             // check if we already have it in the cache
             if (_valCache.ContainsKey(field)) return _valCache[field];
 
-            var result = Entity.GetBestValue(field, Dimensions, true);
+            var result = Entity.GetBestValue(field, Dimensions/*, true*/);
+
+            // New mechanism to not use resolve-hyperlink
+            if (result is string strResult 
+                && BasicValueConverter.CouldBeReference(strResult)
+                && Entity.Attributes.ContainsKey(field) &&
+                Entity.Attributes[field].Type == Eav.Constants.DataTypeHyperlink)
+            {
+                result = Block?.Context?.ServiceProvider?.GetService<IValueConverter>()?.ToValue(strResult, EntityGuid) ??
+                      result;
+            }
+
             if (result is IEnumerable<IEntity> rel)
                 result = new DynamicEntityWithList(Entity, field, rel, Dimensions, CompatibilityLevel, Block);
 
