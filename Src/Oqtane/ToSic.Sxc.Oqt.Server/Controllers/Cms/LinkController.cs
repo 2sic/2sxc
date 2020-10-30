@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         [HttpGet]
         [Authorize(Policy = "ViewModule")]
-        public object GetFileByPath(string relativePath)
+        public void /*object*/ GetFileByPath(string relativePath)
         {
             WipConstants.DontDoAnythingImplementLater();
             //var dnnDynamicCode = new DnnDynamicCodeRoot().Init(GetBlock(), Log);
