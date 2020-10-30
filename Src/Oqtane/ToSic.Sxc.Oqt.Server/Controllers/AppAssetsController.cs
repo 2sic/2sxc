@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
                 // Whitelist extensions like, js, css, json, map, xml, csv should all be fine or
                 // any mime-type image/...  should be fine.
-                //var mimeType = GetMimeType(filePath);
+                var mimeType = GetMimeType(filePath);
                 //if (!_whiteListExtensions.Contains(Path.GetExtension(filePath)) && (!mimeType.StartsWith("image"))) return NotFound();
 
                 // Nothing in a ".xyz" folder or a subfolder of this should be allowed (like .data must be protected).
