@@ -149,7 +149,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
                 // return linkclick url for secure and other not standard folder locations
                 //var result = (fileInfo.StorageLocation == 0) ? filePath : FileLinkClickController.Instance.GetFileLinkClick(fileInfo);
-                var result = $"{siteId}/api/sxc/{filePath}".Forwardslash();
+                var result = $"/{siteId}/api/sxc/{filePath}".Forwardslash();
 
                 // optionally do extra security checks (new in 10.02)
                 if (!Features.Enabled(FeatureIds.BlockFileIdLookupIfNotInSameApp)) return result;

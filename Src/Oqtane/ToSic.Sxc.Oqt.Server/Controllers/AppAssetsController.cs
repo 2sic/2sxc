@@ -81,14 +81,16 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                 var fullAppPath = Path.Combine(appPath, appName);
 
                 // Check that folder with appName exists.
-                if (Directory.GetDirectories(appPath).All(folder => folder != fullAppPath)) return NotFound();
+                // todo STV
+                //if (Directory.GetDirectories(appPath).All(folder => folder != fullAppPath)) return NotFound();
 
                 // Check that file exist in file system.
                 var fullFilePath = Path.Combine(_hostingEnvironment.ContentRootPath, aliasPart, appName, filePath).Replace("/", @"\");
                 if (!System.IO.File.Exists(fullFilePath)) return NotFound();
 
                 // Check that file with filePath exists in appPath.
-                if (GetAllFiles(appPath).All(file => file != fullFilePath)) return NotFound();
+                // todo STV
+                //if (GetAllFiles(appPath).All(file => file != fullFilePath)) return NotFound();
 
                 var fileBytes = System.IO.File.ReadAllBytes(fullFilePath);
 
