@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Oqtane.Shared;
+using ToSic.Sxc.Oqt.Server.Adam;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
@@ -58,7 +59,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             try
             {
                 // Oqtane path and file name validation.
-                if (!appName.IsPathOrFileValid() || filePath.IsPathOrFileValid()) return NotFound();
+                // Partly commented because Path validation is not working as expected.
+                if (!appName.IsPathOrFileValid() /*|| !filePath.Backslash().IsPathOrFileValid()*/) return NotFound();
                 
                 // Blacklist extensions should be denied.
                 if (IsKnownRiskyExtension(filePath)) return NotFound();
@@ -70,7 +72,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                 //if (!_whiteListExtensions.Contains(Path.GetExtension(filePath)) && (!mimeType.StartsWith("image"))) return NotFound();
 
                 // Nothing in a ".xyz" folder or a subfolder of this should be allowed (like .data must be protected).
-                if (appName.StartsWith(".") || filePath.StartsWith(".") || filePath.Contains("/.")) return NotFound();
+                if (appName.StartsWith(".") || filePath.StartsWith(".") || filePath.Backslash().Contains(@"\.")) return NotFound();
 
                 // Validate for alias.
                 var alias = _tenantResolver.GetAlias();
@@ -85,13 +87,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
                 var aliasPart = $@"Content\Tenants\{alias.TenantId}\Sites\{alias.SiteId}\{folder}";
                 var appPath = Path.Combine(_hostingEnvironment.ContentRootPath, aliasPart);
-                var fullAppPath = Path.Combine(appPath, appName);
+                var fullAppPath = Path.Combine(appPath, appName).Backslash();
 
                 // Check that folder with appName exists.
                 if (Directory.GetDirectories(appPath).All(f => !string.Equals(f, fullAppPath, StringComparison.OrdinalIgnoreCase))) return NotFound();
                 
                 // Check that file exist in file system.
-                var fullFilePath = Path.Combine(_hostingEnvironment.ContentRootPath, aliasPart, appName, filePath).Replace("/", @"\");
+                var fullFilePath = Path.Combine(_hostingEnvironment.ContentRootPath, aliasPart, appName, filePath).Backslash();
                 if (!System.IO.File.Exists(fullFilePath)) return NotFound();
 
                 // Check that file with filePath exists in appPath.
