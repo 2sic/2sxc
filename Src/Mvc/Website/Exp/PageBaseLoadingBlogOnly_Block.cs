@@ -21,7 +21,8 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
                     new MvcSite(HttpContext),
                     new MvcPage(0, null), 
                     new MvcContainer(),
-                    new MvcUser()
+                    new MvcUser(),
+                    null
                 );
                 _block = new BlockFromModule().Init(context, Log);
                 return _block;

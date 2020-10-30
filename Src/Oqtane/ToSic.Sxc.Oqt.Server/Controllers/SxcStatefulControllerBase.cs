@@ -14,6 +14,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         protected SxcStatefulControllerBase(StatefulControllerDependencies dependencies) : base(dependencies.UserResolver)
         {
+            ServiceProvider = dependencies.ServiceProvider;
             _tenantResolver = dependencies.TenantResolver;
             _zoneMapper = dependencies.ZoneMapper as OqtZoneMapper;
             _moduleRepository = dependencies.ModuleRepository;
@@ -23,12 +24,18 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         private readonly OqtZoneMapper _zoneMapper;
         private readonly IModuleRepository _moduleRepository;
         private readonly OqtTempInstanceContext _oqtTempInstanceContext;
+        protected readonly IServiceProvider ServiceProvider;
 
         protected IInstanceContext GetContext()
         {
-            var alias = _tenantResolver.GetAlias();
-            var context = new InstanceContext(_zoneMapper.TenantOfSite(alias.SiteId), WipConstServer.NullPage, WipConstServer.NullContainer, GetUser());
-            return context;
+            var block = GetBlock();
+            if (block != null) return block.Context;
+
+            throw new Exception("todo - must figure out - should always have a block state...?");
+
+            //var alias = _tenantResolver.GetAlias();
+            //var context = new InstanceContext(_zoneMapper.TenantOfSite(alias.SiteId), WipConstServer.NullPage, WipConstServer.NullContainer, GetUser(), ServiceProvider);
+            //return context;
         }
 
         protected IBlock GetBlock(bool allowNoContextFound = true)
@@ -47,7 +54,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             }
 
             var module = _moduleRepository.GetModule(containerId);
-            var ctx = _oqtTempInstanceContext.CreateContext(module, pageId, Log);
+            var ctx = _oqtTempInstanceContext.CreateContext(module, pageId, Log, ServiceProvider);
             IBlock block = new BlockFromModule().Init(ctx, Log);
 
             // only if it's negative, do we load the inner block

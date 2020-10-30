@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Oqtane.Models;
 using Oqtane.Shared;
+using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Oqt.Server.Page;
 using ToSic.Sxc.Oqt.Server.Run;
@@ -18,11 +22,15 @@ namespace ToSic.Sxc.Oqt.Server
     {
         #region Constructor and DI
         
-        public SxcOqtane(OqtAssetsAndHeaders assetsAndHeaders, RazorReferenceManager debugRefMan, OqtTempInstanceContext oqtTempInstanceContext) : base("Oqt.Buildr")
+        public SxcOqtane(OqtAssetsAndHeaders assetsAndHeaders, RazorReferenceManager debugRefMan, OqtTempInstanceContext oqtTempInstanceContext,
+            IValueConverter vcTemp, IServiceProvider serviceProvider
+            ) : base("Oqt.Buildr")
         {
             _assetsAndHeaders = assetsAndHeaders;
             _debugRefMan = debugRefMan;
             _oqtTempInstanceContext = oqtTempInstanceContext;
+            _vcTemp = vcTemp;
+            _serviceProvider = serviceProvider;
             // add log to history!
             History.Add("oqt-view", Log);
         }
@@ -31,6 +39,8 @@ namespace ToSic.Sxc.Oqt.Server
         private readonly OqtAssetsAndHeaders _assetsAndHeaders;
         private readonly RazorReferenceManager _debugRefMan;
         private readonly OqtTempInstanceContext _oqtTempInstanceContext;
+        private readonly IValueConverter _vcTemp;
+        private readonly IServiceProvider _serviceProvider;
 
         #endregion
 
@@ -43,11 +53,21 @@ namespace ToSic.Sxc.Oqt.Server
         {
             if (_renderDone) throw new Exception("already prepared this module");
 
+            var test1 = _vcTemp.ToValue("file:8");
+
+            //var test4 = Eav.Factory.Resolve<IHttpContextAccessor>().HttpContext
+            //    .RequestServices.GetRequiredService<IValueConverter>().ToValue("file:1");
+
+            //var failed  = ToSic.Eav.Factory.Resolve<ToSic.Eav.Run.IValueConverter>().ToValue("file:8");
+
             Site = site;
             Page = page;
             Module = module;
 
             Block = GetBlock();
+
+            //var works = Block.Context.ServiceProvider.GetRequiredService<IValueConverter>().ToValue("file:2");
+
             _assetsAndHeaders.Init(this);
             GeneratedHtml = (MarkupString) Block.BlockBuilder.Render();
             Resources = Block.BlockBuilder.Assets.Select(a => new SxcResource
@@ -76,7 +96,7 @@ namespace ToSic.Sxc.Oqt.Server
 
         private IBlock GetBlock()
         {
-            var context = _oqtTempInstanceContext.CreateContext(Module, Page.PageId, Log);
+            var context = _oqtTempInstanceContext.CreateContext(Module, Page.PageId, Log, _serviceProvider);
             var block = new BlockFromModule().Init(context, Log);
             return block;
         }

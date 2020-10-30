@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Dnn.Run
     public class DnnContext: InstanceContext
     {
         public DnnContext(ISite site, IContainer container, IUser user, List<KeyValuePair<string, string>> overrideParams = null) 
-            : base(site, null, container, user)
+            : base(site, null, container, user, null)
         {
             var activeTab = (site as Site<PortalSettings>)?.UnwrappedContents?.ActiveTab;
             // the FullUrl will throw an error in search scenarios

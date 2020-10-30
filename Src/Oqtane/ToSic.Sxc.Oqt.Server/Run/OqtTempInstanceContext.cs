@@ -1,4 +1,5 @@
-﻿using Oqtane.Models;
+﻿using System;
+using Oqtane.Models;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Oqt.Shared.Dev;
@@ -16,13 +17,15 @@ namespace ToSic.Sxc.Oqt.Server.Run
             _oqtSite = oqtSite;
         }
 
-        public InstanceContext CreateContext(Module module, int pageId, ILog parentLog)
+        public InstanceContext CreateContext(Module module, int pageId, ILog parentLog,
+            IServiceProvider serviceProvider)
             => new InstanceContext(
-                 _oqtSite, 
+                _oqtSite,
                 //_zoneMapper.TenantOfZone(zoneId),
                 new OqtPage(pageId, null),
                 _oqtContainer.Init(module, parentLog),
-                new OqtUser(WipConstants.NullUser)
+                new OqtUser(WipConstants.NullUser),
+                serviceProvider
             );
 
     }

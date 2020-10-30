@@ -60,7 +60,8 @@ namespace ToSic.Sxc.Mvc
                 new MvcSite(http).Init(zoneId),
                 new MvcPage(pageId, null),
                 new MvcContainer(tenantId: zoneId, id: containerId, appId: appId, block: blockGuid),
-                new MvcUser()
+                new MvcUser(),
+                null
             );
     }
 }

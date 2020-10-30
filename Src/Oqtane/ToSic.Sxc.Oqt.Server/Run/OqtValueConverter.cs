@@ -7,6 +7,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Oqt.Server.Adam;
+using ToSic.Sxc.Run;
 
 // todo: nothing here is tested yet!
 
@@ -18,6 +19,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public class OqtValueConverter : IValueConverter
     {
+        private readonly Lazy<ILinkPaths> _linkPaths;
+        private ILinkPaths LinkPaths => _linkPaths.Value;
+
         public Lazy<IFileRepository> FileRepository { get; }
         public Lazy<IFolderRepository> FolderRepository { get; }
         public Lazy<ITenantResolver> TenantResolver { get; }
@@ -31,8 +35,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
             Lazy<IFolderRepository> folderRepository, 
             Lazy<ITenantResolver> tenantResolver,
             Lazy<IPageRepository> pageRepository,
-            Lazy<IServerPaths> serverPaths)
+            Lazy<IServerPaths> serverPaths,
+            Lazy<ILinkPaths> linkPaths)
         {
+            _linkPaths = linkPaths;
             FileRepository = fileRepository;
             FolderRepository = folderRepository;
             TenantResolver = tenantResolver;
@@ -44,10 +50,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
         #endregion
 
         /// <inheritdoc />
-        public string ToReference(string value) => TryToResolveOneLinkToInternalDnnCode(value);
+        public string ToReference(string value) => TryToResolveOneLinkToInternalOqtCode(value);
 
         /// <inheritdoc />
-        public string ToValue(string reference, Guid itemGuid = default) => TryToResolveDnnCodeToLink(itemGuid, reference);
+        public string ToValue(string reference, Guid itemGuid = default) => TryToResolveOqtCodeToLink(itemGuid, reference);
 
         /// <summary>
         /// Will take a link like http:\\... to a file or page and try to return a DNN-style info like
@@ -59,7 +65,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         /// when saving etc. - which is always expected to happen in the owning portal
         /// </remarks>
         /// <returns></returns>
-        private string TryToResolveOneLinkToInternalDnnCode(string potentialFilePath)
+        private string TryToResolveOneLinkToInternalOqtCode(string potentialFilePath)
         {
             // find site
             var site = TenantResolver.Value.GetAlias();
@@ -93,7 +99,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         /// <param name="itemGuid">the item we're in - important for the feature which checks if the file is in this items ADAM</param>
         /// <param name="originalValue"></param>
         /// <returns></returns>
-        private string TryToResolveDnnCodeToLink(Guid itemGuid, string originalValue)
+        private string TryToResolveOqtCodeToLink(Guid itemGuid, string originalValue)
         {
             // new
             var resultString = originalValue;
@@ -136,7 +142,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             #region special handling of issues in case something in the background is broken
             try
             {
-                var filePath = ServerPaths.Value.FullContentPath(Path.Combine(fileInfo.Folder.Path, fileInfo.Name));
+                var filePath = LinkPaths.ToAbsolute(Path.Combine(fileInfo.Folder.Path, fileInfo.Name));
                 // = Path.Combine(new PortalSettings(fileInfo.PortalId)?.HomeDirectory ?? "", fileInfo?.RelativePath ?? "");
 
                 // return linkclick url for secure and other not standard folder locations

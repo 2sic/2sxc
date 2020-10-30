@@ -1,4 +1,5 @@
-﻿using Oqtane.Repository;
+﻿using System;
+using Oqtane.Repository;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Oqt.Server.Repository;
 using ToSic.Sxc.Oqt.Server.Run;
@@ -10,6 +11,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     /// </summary>
     public class StatefulControllerDependencies
     {
+        public IServiceProvider ServiceProvider { get; }
         internal readonly IZoneMapper ZoneMapper;
         internal readonly ITenantResolver TenantResolver;
         internal readonly IUserResolver UserResolver;
@@ -26,8 +28,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             IModuleRepository moduleRepository,
             //ISettingRepository settingRepository, 
             //OqtaneContainer oqtaneContainer, 
-            OqtTempInstanceContext oqtTempInstanceContext)
+            OqtTempInstanceContext oqtTempInstanceContext,
+            IServiceProvider serviceProvider)
         {
+            ServiceProvider = serviceProvider;
             ZoneMapper = zoneMapper;
             TenantResolver = tenantResolver;
             UserResolver = userResolver;
