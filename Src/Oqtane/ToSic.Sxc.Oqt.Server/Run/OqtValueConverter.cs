@@ -145,9 +145,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 var filePath = LinkPaths.ToAbsolute(Path.Combine(fileInfo.Folder.Path, fileInfo.Name));
                 // = Path.Combine(new PortalSettings(fileInfo.PortalId)?.HomeDirectory ?? "", fileInfo?.RelativePath ?? "");
 
+                var siteId = TenantResolver.Value.GetAlias().SiteId;
+
                 // return linkclick url for secure and other not standard folder locations
                 //var result = (fileInfo.StorageLocation == 0) ? filePath : FileLinkClickController.Instance.GetFileLinkClick(fileInfo);
-                var result = filePath;
+                var result = $"{siteId}/api/sxc/{filePath}".Forwardslash();
 
                 // optionally do extra security checks (new in 10.02)
                 if (!Features.Enabled(FeatureIds.BlockFileIdLookupIfNotInSameApp)) return result;
