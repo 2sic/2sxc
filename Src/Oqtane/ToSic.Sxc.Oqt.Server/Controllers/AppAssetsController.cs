@@ -9,12 +9,13 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Oqtane.Shared;
+using ToSic.Sxc.Oqt.Server.Adam;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     [Route("{alias}/api/[controller]")]
     //[Route("{alias}/api/sxc/adam")]
-    //[Route("{alias}/api/sxc/assets")]
+    [Route("{alias}/api/sxc/app-assets")]
     public class AppAssetsController : Controller
     {
         public virtual string Route => "default";
@@ -91,7 +92,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                 if (Directory.GetDirectories(appPath).All(f => !string.Equals(f, fullAppPath, StringComparison.OrdinalIgnoreCase))) return NotFound();
                 
                 // Check that file exist in file system.
-                var fullFilePath = Path.Combine(_hostingEnvironment.ContentRootPath, aliasPart, appName, filePath).Replace("/", @"\");
+                var fullFilePath = Path.Combine(_hostingEnvironment.ContentRootPath, aliasPart, appName, filePath).Backslash();
                 if (!System.IO.File.Exists(fullFilePath)) return NotFound();
 
                 // Check that file with filePath exists in appPath.

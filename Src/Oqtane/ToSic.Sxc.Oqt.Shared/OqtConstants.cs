@@ -16,7 +16,7 @@
         public static string AppRootPublicBase = "Tenants\\{0}\\Sites\\{1}\\";
 
         // todo: must later replace the 1 with {0} for string-replaces to work
-        public const string AppAssetsLinkRoot = "/{0}/api/appAssets";
+        public const string AppAssetsLinkRoot = "/{0}/api/sxc/app-assets";
 
         // Adam / Download
         public const string DownloadLinkTemplate = "/{0}/api/file/download/{1}";
