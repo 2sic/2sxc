@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Logging;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Apps
@@ -9,13 +9,9 @@ namespace ToSic.Sxc.Apps
     /// <summary>
     /// Views manager for the app engine - in charge of importing / modifying templates at app-level
     /// </summary>
-    public class ViewsManager: CmsManagerBase
+    public class ViewsManager: PartOf<CmsManager, ViewsManager>
     {
-        public ViewsManager(CmsManager cmsManager, ILog parentLog) : base(cmsManager, parentLog, "Cms.ViewMn")
-        {
-        }
-
-        #region Template
+        public ViewsManager() : base("Cms.ViewMn") { }
 
         /// <summary>
         /// Adds or updates a template - will create a new template if templateId is not specified
@@ -49,22 +45,18 @@ namespace ToSic.Sxc.Apps
             };
 
             if (templateId.HasValue)
-                AppManager.Entities.UpdateParts(templateId.Value, values);
+                Parent.Entities.UpdateParts(templateId.Value, values);
             else
-                AppManager.Entities.Create(Configuration.TemplateContentType, values);
+                Parent.Entities.Create(Configuration.TemplateContentType, values);
         }
 
 
 
-        #endregion
-
-        public bool DeleteTemplate(int templateId)
+        public bool DeleteView(int viewId)
         {
             // really get template first, to be sure it is a template
-            var template = CmsManager.Read.Views.Get(templateId);
-            return AppManager .Entities.Delete(template.Id);
+            var template = Parent.Read.Views.Get(viewId);
+            return Parent .Entities.Delete(template.Id);
         }
-
-
     }
 }

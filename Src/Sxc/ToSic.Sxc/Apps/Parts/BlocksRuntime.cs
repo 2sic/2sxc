@@ -1,28 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Apps
 {
-    public class BlocksRuntime: CmsRuntimeBase
+    public class BlocksRuntime: PartOf<CmsRuntime, BlocksRuntime>
     {
         public const string BlockTypeName = "2SexyContent-ContentGroup";
 
-        internal BlocksRuntime(CmsRuntime cmsRuntime, ILog parentLog) : base(cmsRuntime, parentLog, "Sxc.BlkRdr")
+        internal BlocksRuntime() : base("Sxc.BlkRdr")
         {
         }
 
         private IDataSource ContentGroupSource()
         {
             if (_contentGroupSource != null) return _contentGroupSource;
-            var dataSource = CmsRuntime.Data;
-            var onlyCGs = CmsRuntime.DataSourceFactory.GetDataSource<EntityTypeFilter>(CmsRuntime, dataSource);
+            var dataSource = Parent.Data;
+            var onlyCGs = Parent.DataSourceFactory.GetDataSource<EntityTypeFilter>(Parent, dataSource);
             onlyCGs.TypeName = BlockTypeName;
             return _contentGroupSource = dataSource;
         }
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Apps
                         : null;
                 })
                 .Where(b => b != null)
-                .Select(e => new BlockConfiguration(e.Entity, CmsRuntime, Log))
+                .Select(e => new BlockConfiguration(e.Entity, Parent, Log))
                 .ToList();
         }
 
@@ -55,8 +55,8 @@ namespace ToSic.Sxc.Apps
             var found = groupEntity != null;
             wrapLog(found ? "found" : "missing");
             return found
-                ? new BlockConfiguration(groupEntity, CmsRuntime, Log)
-                : new BlockConfiguration(Guid.Empty, CmsRuntime, Log)
+                ? new BlockConfiguration(groupEntity, Parent, Log)
+                : new BlockConfiguration(Guid.Empty, Parent, Log)
                 {
                     DataIsMissing = true
                 };
@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Apps
             var createTempBlockForPreview = blockId.Guid == Guid.Empty;
             Log.Add($"{nameof(createTempBlockForPreview)}:{createTempBlockForPreview}");
             var result = createTempBlockForPreview
-                ? new BlockConfiguration(blockId.PreviewView, CmsRuntime, Log)
+                ? new BlockConfiguration(blockId.PreviewView, Parent, Log)
                 : GetBlockConfig(blockId.Guid);
             wrapLog(null);
             return result;

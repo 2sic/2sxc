@@ -17,10 +17,10 @@ namespace ToSic.Sxc.Apps
         }
 
 
-        public ViewsRuntime Views => _views ?? (_views = new ViewsRuntime(this, Log));
+        public ViewsRuntime Views => _views ?? (_views = new ViewsRuntime().Init(this, Log));
         private ViewsRuntime _views;
 
-        public BlocksRuntime Blocks => _blocks ?? (_blocks = new BlocksRuntime(this, Log));
+        public BlocksRuntime Blocks => _blocks ?? (_blocks = new BlocksRuntime().Init(this, Log));
         private BlocksRuntime _blocks;
 
     }

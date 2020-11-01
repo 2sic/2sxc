@@ -20,10 +20,10 @@ namespace ToSic.Sxc.Apps
         private CmsRuntime _runtime;
 
 
-        public ViewsManager Views => _views ?? (_views = new ViewsManager(this, Log));
+        public ViewsManager Views => _views ?? (_views = new ViewsManager().Init(this, Log));
         private ViewsManager _views;
 
-        public BlocksManager Blocks => _blocks ?? (_blocks = new BlocksManager(this, Log));
+        public BlocksManager Blocks => _blocks ?? (_blocks = new BlocksManager().Init(this, Log));
         private BlocksManager _blocks;
 
 

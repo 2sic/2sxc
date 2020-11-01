@@ -76,7 +76,7 @@ namespace ToSic.Sxc.WebApi.Views
             Log.Add($"delete a{appId}, t:{id}");
             var app = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId, Log);
             var cms = new CmsManager(app, Log);
-            cms.Views.DeleteTemplate(id);
+            cms.Views.DeleteView(id);
             return true;
         }
     }
