@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
@@ -25,7 +26,7 @@ namespace ToSic.Sxc.WebApi.Usage
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
-            var cms = new CmsRuntime(appId, Log, true);
+            var cms = new CmsRuntime(State.Identity(null, appId), Log, true, false);
             // treat view as a list - in case future code will want to analyze many views together
             var views = new List<IView> { cms.Views.Get(guid) };
 

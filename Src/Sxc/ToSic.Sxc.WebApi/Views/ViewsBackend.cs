@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
@@ -28,7 +29,7 @@ namespace ToSic.Sxc.WebApi.Views
         public IEnumerable<ViewDetailsDto> GetAll(int appId)
         {
             Log.Add($"get all a#{appId}");
-            var cms = new CmsRuntime(appId, Log, true);
+            var cms = new CmsRuntime(State.Identity(null, appId), Log, true, false);
 
             var attributeSetList = cms.ContentTypes.FromScope(Settings.AttributeSetScope).ToList();
             var templateList = cms.Views.GetAll().ToList();

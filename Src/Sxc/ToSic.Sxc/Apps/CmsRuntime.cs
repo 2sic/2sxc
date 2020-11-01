@@ -7,14 +7,15 @@ namespace ToSic.Sxc.Apps
     {
         internal bool EnablePublishing { get; }
 
-        public CmsRuntime(IAppIdentity app, ILog parentLog, bool showDrafts, bool enablePublishing) : base(app, showDrafts, parentLog)
+        public CmsRuntime(IAppIdentity app, ILog parentLog, bool showDrafts, bool enablePublishing) : base("Sxc.CmsRt")
         {
+            Init(app, showDrafts, parentLog);
             EnablePublishing = enablePublishing;
         }
 
-        public CmsRuntime(int appId, ILog parentLog, bool showDrafts) : base(appId, showDrafts, parentLog)
-        {
-        }
+        //public CmsRuntime(int appId, ILog parentLog, bool showDrafts) : base(State.Identity(null, appId), showDrafts, parentLog)
+        //{
+        //}
 
 
         public ViewsRuntime Views => _views ?? (_views = new ViewsRuntime().Init(this, Log));

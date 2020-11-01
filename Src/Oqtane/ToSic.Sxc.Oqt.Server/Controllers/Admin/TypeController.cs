@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public IDictionary<string, string> Scopes(int appId)
-            => new AppRuntime(appId, false, Log).ContentTypes.ScopesWithLabels();
+            => new AppRuntime().Init(State.Identity(null, appId), false, Log).ContentTypes.ScopesWithLabels();
 
         /// <summary>
         /// Used to be GET ContentTypes/Scopes

@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// Used to be GET ContentType/InputTypes
         /// </summary>
 	    [HttpGet]
-        public List<InputTypeInfo> InputTypes(int appId) => new AppRuntime(appId, true, Log).ContentTypes.GetInputTypes();
+        public List<InputTypeInfo> InputTypes(int appId) => new AppRuntime().Init(State.Identity(null, appId), true, Log).ContentTypes.GetInputTypes();
 
         /// <summary>
         /// Used to be GET ContentType/AddField

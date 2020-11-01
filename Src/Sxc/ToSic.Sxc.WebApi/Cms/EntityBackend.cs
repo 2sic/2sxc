@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
@@ -7,6 +8,7 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -37,7 +39,7 @@ namespace ToSic.Sxc.WebApi.Cms
         internal static ItemIdentifier ResolveItemIdOfGroup(int appId, ItemIdentifier item, ILog log)
         {
             if (item.Group == null) return item;
-            var cms = new CmsRuntime(appId, log, true);
+            var cms = new CmsRuntime(State.Identity(null, appId), log, true, false);
 
             var contentGroup = cms.Blocks.GetBlockConfig(item.Group.Guid);
             var part = contentGroup[item.Group.Part];

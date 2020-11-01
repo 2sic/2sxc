@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Web.WebApi.System
         private readonly Func<string, Exception> CreateBadRequest;
 
 
-        private AppRuntime AppRt(int? appId) => new AppRuntime(appId.Value, true, Log);
+        private AppRuntime AppRt(int? appId) => new AppRuntime().Init(State.Identity(null, appId.Value), true, Log);
 
         private AppState AppState(int? appId) => State.Get(appId.Value);
 

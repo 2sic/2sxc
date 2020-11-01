@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Dnn.Install
                 {
                     var primaryAppId = new ZoneRuntime(site.ZoneId, Log).DefaultAppId;
                     // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
-                    var contentViews = new CmsRuntime(primaryAppId, Log, false).Views.GetAll();
+                    var contentViews = new CmsRuntime(State.Identity(null, primaryAppId), Log, false, false).Views.GetAll();
                     if (contentViews.Any()) return null;
                 }
                 catch { /* ignore */ }

@@ -49,7 +49,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
             var zipExport = Factory.Resolve<ZipExport>().Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
             var cultCount = _zoneMapper
-                .CulturesWithState(currentApp.Site.Id, currentApp.ZoneId)
+                .CulturesWithState(_siteId, currentApp.ZoneId)
                 .Count(c => c.Active);
 
             var cms = new CmsRuntime(currentApp, Log, true, false);

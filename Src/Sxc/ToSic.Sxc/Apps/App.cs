@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Threading;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Run;
-using ToSic.Sxc.Web;
 using EavApp = ToSic.Eav.Apps.App;
 
 namespace ToSic.Sxc.Apps
@@ -76,7 +74,7 @@ namespace ToSic.Sxc.Apps
 
         #region DI Constructors
 
-        public App(IAppEnvironment appEnvironment, ISite site, ILinkPaths linkPaths) : base(appEnvironment, site)
+        public App(IAppEnvironment appEnvironment, ISite site, ILinkPaths linkPaths) : base(appEnvironment, site, "App.SxcApp")
         {
             _linkPaths = linkPaths;
         }
@@ -93,7 +91,7 @@ namespace ToSic.Sxc.Apps
         [PrivateApi]
         public App Init(IAppIdentity appId, Func<EavApp, IAppDataConfiguration> buildConfig, bool allowSideEffects, ILog parentLog)
         {
-            Init(appId, allowSideEffects, buildConfig, "Sxc.App", parentLog, "Create");
+            Init(appId, allowSideEffects, buildConfig, parentLog);
             return this;
         }
 
@@ -105,7 +103,9 @@ namespace ToSic.Sxc.Apps
         /// <returns></returns>
         public App InitNoData(IAppIdentity appIdentity, ILog parentLog)
         {
-            Init(appIdentity, false, null, "Sxc.AppLgt", parentLog, "light use only");
+            Init(appIdentity, false, null, parentLog);
+            Log.Rename("App.SxcLgt");
+            Log.Add("App only initialized for light use - data shouldn't be used");
             return this;
         }
 

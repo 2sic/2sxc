@@ -88,7 +88,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
             var contextZoneId = _zoneMapper.GetZoneId(_siteId);
             var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId, Log);
-            var appRuntime = new AppRuntime(currentApp, true, Log);
+            var appRuntime = new AppRuntime().Init(currentApp, true, Log);
 
             var fileName = $"2sxcContentExport_{currentApp.NameWithoutSpecialChars()}_{currentApp.VersionSafe()}.xml";
             var fileXml = _xmlExporter.Init(zoneId, appId, appRuntime, false,
