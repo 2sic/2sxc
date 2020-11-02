@@ -1,12 +1,9 @@
 ﻿using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Oqtane.Shared;
-using ToSic.Eav.ImportExport;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.WebApi.Cms;
-using ToSic.Sxc.WebApi.InPage;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
@@ -14,10 +11,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     [ValidateAntiForgeryToken]
     public class LinkController : SxcStatefulControllerBase
     {
+        private readonly HyperlinkBackend<int, int> _hyperlinkBackend;
         protected override string HistoryLogName => "Api.LnkCnt";
 
-        public LinkController(StatefulControllerDependencies dependencies) : base(dependencies)
+        public LinkController(StatefulControllerDependencies dependencies, HyperlinkBackend<int, int> hyperlinkBackend) : base(dependencies)
         {
+            _hyperlinkBackend = hyperlinkBackend;
         }
 
         [HttpGet]
@@ -51,6 +50,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [HttpGet]
         [Authorize(Policy = "ViewModule")]
         public string Resolve(string hyperlink, int appId, string contentType, Guid guid, string field)
-            => new HyperlinkBackend<int, int>().Init(Log).ResolveHyperlink(GetBlock(), hyperlink, appId, contentType, guid, field);
+            => /*new HyperlinkBackend<int, int>()*/_hyperlinkBackend.Init(Log).ResolveHyperlink(GetBlock(), hyperlink, appId, contentType, guid, field);
     }
 }

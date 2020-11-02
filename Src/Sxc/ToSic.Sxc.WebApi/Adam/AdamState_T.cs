@@ -1,28 +1,34 @@
 ﻿using System;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Logging;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Blocks;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    internal class AdamState<TFolderId, TFileId>: AdamState
+    public class AdamState<TFolderId, TFileId>: AdamState
     {
-        public AdamState(IBlock block, int appId, string contentType, string field, Guid guid, bool usePortalRoot, ILog log) 
-            : base(block, appId, contentType, field, guid, usePortalRoot, log)
+        private readonly Lazy<AdamAppContext<TFolderId, TFileId>> _adamAppContext;
+        internal AdamAppContext<TFolderId, TFileId> AdamAppContext => _adamAppContext.Value;
+        public AdamState(Lazy<AdamAppContext<TFolderId, TFileId>> adamAppContext): base("Adm.StatTT")
         {
+            _adamAppContext = adamAppContext;
         }
 
-        internal AdamAppContext<TFolderId, TFileId> AdamAppContext;
+        //public AdamState<TFolderId, TFileId> Init(IBlock block, int appId, string contentType, string field, Guid guid, bool usePortalRoot, ILog log) 
+        //    : base("Adm.StatTT") // block, appId, contentType, field, guid, usePortalRoot, log)
+        //{
+        //    base.Init(block, appId, contentType, field, guid, usePortalRoot, log);
+        //}
+
+        //internal AdamAppContext<TFolderId, TFileId> AdamAppContext;
 
         internal AdamOfBase<TFolderId, TFileId> ContainerContext;
 
 
-        protected override void PrepCore(IApp app, Guid entityGuid, string fieldName, bool usePortalRoot)
+        protected override void Init(IApp app, Guid entityGuid, string fieldName, bool usePortalRoot)
         {
             Log.Add("PrepCore(...)");
-            AdamAppContext = new AdamAppContext<TFolderId, TFileId>();
+            //AdamAppContext = new AdamAppContext<TFolderId, TFileId>();
             AdamAppContext.Init(Permissions.Context.Tenant, app, Block, 10, Log);
                 ContainerContext = usePortalRoot
                 ? new AdamOfSite<TFolderId, TFileId>(AdamAppContext) as AdamOfBase<TFolderId, TFileId>

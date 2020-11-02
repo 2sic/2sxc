@@ -14,6 +14,7 @@ using ToSic.Eav.Plumbing.Booting;
 using ToSic.Eav.Repositories;
 using ToSic.Eav.Run;
 using ToSic.SexyContent.Dnn920;
+using ToSic.Sxc;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
@@ -59,7 +60,8 @@ namespace ToSic.SexyContent
             {
                 services
                     .AddDnn(appsCache)
-                    .AddSxc()
+                    .AddSxcWebApi()
+                    .AddSxcCore()
                     .AddEav();
             });
             SharpZipLibRedirect.RegisterSharpZipLibRedirect();

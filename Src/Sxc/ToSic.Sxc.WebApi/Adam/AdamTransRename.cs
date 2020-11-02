@@ -1,11 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using ToSic.Eav.Security.Permissions;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    internal class AdamTransRename<TFolderId, TFileId> : AdamTransactionBase<AdamTransRename<TFolderId, TFileId>, TFolderId, TFileId>
+    public class AdamTransRename<TFolderId, TFileId> : AdamTransactionBase<AdamTransRename<TFolderId, TFileId>, TFolderId, TFileId>
     {
-        public AdamTransRename() : base("Adm.TrnRen") { }
+        public AdamTransRename(Lazy<AdamState<TFolderId, TFileId>> adamState) : base(adamState, "Adm.TrnRen") { }
 
         internal bool Rename(string parentSubfolder, bool isFolder, TFolderId folderId, TFileId fileId, string newName)
         {

@@ -3,17 +3,19 @@ using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Security;
-using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.WebApi.Adam;
-using ToSic.Sxc.WebApi.Security;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    internal class HyperlinkBackend<TFolderId, TFileId>: WebApiBackendBase<HyperlinkBackend<TFolderId, TFileId>>
+    public class HyperlinkBackend<TFolderId, TFileId>: WebApiBackendBase<HyperlinkBackend<TFolderId, TFileId>>
     {
-        public HyperlinkBackend() : base("Bck.HypLnk")
+        private readonly Lazy<AdamState<TFolderId, TFileId>> _adamState;
+        private AdamState<TFolderId, TFileId> AdamState => _adamState.Value;
+
+        public HyperlinkBackend(Lazy<AdamState<TFolderId, TFileId>> adamState) : base("Bck.HypLnk")
         {
+            _adamState = adamState;
         }
 
 		public string ResolveHyperlink(IBlock block, string hyperlink, int appId, string contentType, Guid guid, string field)
@@ -45,7 +47,8 @@ namespace ToSic.Sxc.WebApi.Cms
 
 				// file-check, more abilities to allow
 				// this will already do a ensure-or-throw inside it if outside of adam
-				var adamCheck = new AdamState<int, int>(block, appId, contentType, field, guid, isOutsideOfAdam, Log);
+                var adamCheck = AdamState; // new AdamState<int, int>();
+                adamCheck.Init(block, appId, contentType, field, guid, isOutsideOfAdam, Log);
 				if (!adamCheck.Security.SuperUserOrAccessingItemFolder(resolved, out var exp))
 					throw exp;
 				if (!adamCheck.Security.UserIsPermittedOnField(GrantSets.ReadSomething, out exp))

@@ -13,11 +13,6 @@ namespace ToSic.Sxc.Apps
             EnablePublishing = enablePublishing;
         }
 
-        //public CmsRuntime(int appId, ILog parentLog, bool showDrafts) : base(State.Identity(null, appId), showDrafts, parentLog)
-        //{
-        //}
-
-
         public ViewsRuntime Views => _views ?? (_views = new ViewsRuntime().Init(this, Log));
         private ViewsRuntime _views;
 

@@ -6,7 +6,7 @@ using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    internal partial class AdamTransactionBase<T, TFolderId, TFileId>
+    public partial class AdamTransactionBase<T, TFolderId, TFileId>
     {
         internal IList<AdamItemDto> ItemsInField(string subFolderName)
         {

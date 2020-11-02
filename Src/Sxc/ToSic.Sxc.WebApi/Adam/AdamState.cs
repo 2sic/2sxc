@@ -8,12 +8,11 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.WebApi.Security;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    internal abstract class AdamState: HasLog
+    public abstract class AdamState: HasLog
     {
         // Temp
         public abstract AppRuntime AppRuntime { get; }
@@ -22,7 +21,7 @@ namespace ToSic.Sxc.WebApi.Adam
         /// Determines if the files come from the root (shared files).
         /// Is false, if they come from the item specific ADAM folder.
         /// </summary>
-        public readonly bool UseSiteRoot;
+        public bool UseSiteRoot;
 
         /// <summary>
         /// The field this state is for. Will be null/empty if UsePortalRoot is true
@@ -36,7 +35,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
         internal IContentTypeAttribute Attribute;
 
-        internal readonly IBlock Block;
+        internal IBlock Block;
 
         public readonly Guid[] FeaturesForRestrictedUsers =
         {
@@ -52,14 +51,17 @@ namespace ToSic.Sxc.WebApi.Adam
 
         #region Constructor / DI
 
+        protected AdamState(string logName): base(logName ?? "Adm.State") {}
+
         /// <summary>
         /// Initializes the object and performs all the initial security checks
         /// </summary>
-        protected AdamState(IBlock block, int appId, string contentType, string field, Guid guid, bool usePortalRoot, ILog log)
-            : base("Adm.State", log)
+        public AdamState Init(IBlock block, int appId, string contentType, string field, Guid guid, bool usePortalRoot, ILog parentLog)
+            // : base("Adm.State", parentLog)
         {
-            var callLog = Log.Call($"field:{field}, guid:{guid}");
-            App = Factory.Resolve<Apps.App>().Init(appId, log, block);
+            Log.LinkTo(parentLog);
+            var callLog = Log.Call<AdamState>($"field:{field}, guid:{guid}");
+            App = Factory.Resolve<Apps.App>().Init(appId, parentLog, block);
             Permissions = new MultiPermissionsTypes()
                 .Init(block.Context, App, contentType, Log);
             Block = block;
@@ -81,14 +83,14 @@ namespace ToSic.Sxc.WebApi.Adam
                 throw HttpException.PermissionDenied(
                     $"low-permission users may not access this - {ToSic.Eav.Configuration.Features.MsgMissingSome(FeaturesForRestrictedUsers)}");
 
-            PrepCore(App, guid, field, usePortalRoot);
+            Init(App, guid, field, usePortalRoot);
 
-            if (string.IsNullOrEmpty(contentType) || string.IsNullOrEmpty(field)) return;
+            if (string.IsNullOrEmpty(contentType) || string.IsNullOrEmpty(field)) return callLog(null, this);
 
             Attribute = Definition(appId, contentType, field);
             if (!Security.FileTypeIsOkForThisField(out var exp))
                 throw exp;
-            callLog(null);
+            return callLog(null, this);
         }
 
         #endregion
@@ -102,7 +104,7 @@ namespace ToSic.Sxc.WebApi.Adam
             return type[fieldName];
         }
 
-        protected abstract void PrepCore(IApp app, Guid entityGuid, string fieldName, bool usePortalRoot);
+        protected abstract void Init(IApp app, Guid entityGuid, string fieldName, bool usePortalRoot);
 
         #endregion
     }

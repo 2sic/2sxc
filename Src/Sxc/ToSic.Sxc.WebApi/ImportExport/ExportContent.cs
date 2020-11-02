@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net.Http;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
@@ -16,14 +17,17 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         #region Constructor / DI
 
-        public ExportContent(IZoneMapper zoneMapper, XmlExporter xmlExporter) : base("Bck.Export")
+        public ExportContent(IZoneMapper zoneMapper, XmlExporter xmlExporter, Lazy<AppRuntime> appRuntime) : base("Bck.Export")
         {
             _zoneMapper = zoneMapper;
             _xmlExporter = xmlExporter;
+            _appRuntime = appRuntime;
         }
 
         private readonly IZoneMapper _zoneMapper;
         private readonly XmlExporter _xmlExporter;
+        private readonly Lazy<AppRuntime> _appRuntime;
+        private AppRuntime AppRuntime => _appRuntime.Value;
         private IUser _user;
         private int _siteId;
 
@@ -88,7 +92,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
             var contextZoneId = _zoneMapper.GetZoneId(_siteId);
             var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId, Log);
-            var appRuntime = new AppRuntime().Init(currentApp, true, Log);
+            var appRuntime = AppRuntime.Init(currentApp, true, Log);
 
             var fileName = $"2sxcContentExport_{currentApp.NameWithoutSpecialChars()}_{currentApp.VersionSafe()}.xml";
             var fileXml = _xmlExporter.Init(zoneId, appId, appRuntime, false,

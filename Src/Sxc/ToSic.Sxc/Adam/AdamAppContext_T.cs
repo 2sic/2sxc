@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Linq;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Adam
 {
     public class AdamAppContext<TFolderId, TFileId>: AdamAppContext
     {
         #region Constructor / DI
-        public AdamAppContext(): base("Adm.ApCxTT")
+        public AdamAppContext(Lazy<AppRuntime> appRuntime) : base(appRuntime, "Adm.ApCxTT")
         {
         }
 

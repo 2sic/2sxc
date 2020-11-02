@@ -12,14 +12,21 @@ namespace ToSic.Sxc.Dnn.ImportExport
 {
     public class DnnXmlExporter: XmlExporter
     {
+        #region Constructor / DI
+
+        public DnnXmlExporter(AdamAppContext<int, int> adamAppContext)
+        {
+            AdamAppContext = adamAppContext;
+        }
+
         private readonly IFileManager _dnnFiles = FileManager.Instance;
-        internal AdamAppContext<int, int> AdamAppContext;
+        internal AdamAppContext<int, int> AdamAppContext { get; }
 
         public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds, ILog parentLog)
         {
             var tenant = new DnnSite(PortalSettings.Current);
             var app = Eav.Factory.Resolve<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
-            AdamAppContext = new AdamAppContext<int, int>();
+            //AdamAppContext = new AdamAppContext<int, int>();
             AdamAppContext.Init(tenant, app, null, 10, Log);
             Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
 
@@ -28,6 +35,8 @@ namespace ToSic.Sxc.Dnn.ImportExport
 
             return this;
         }
+
+        #endregion
 
         public override void AddFilesToExportQueue()
         {

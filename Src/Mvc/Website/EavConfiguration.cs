@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav;
+using ToSic.Sxc;
 using ToSic.Sxc.Mvc.Plumbing;
 using ToSic.Sxc.Razor;
 using ToSic.Sxc.Razor.Engine;
@@ -25,7 +26,8 @@ namespace Website.Plumbing
                 services2
                     .AddSxcMvc()
                     .AddSxcRazor()
-                    .AddSxc()
+                    .AddSxcWebApi()
+                    .AddSxcCore()
                     .AddEav();
             });
         }

@@ -63,7 +63,8 @@ namespace ToSic.Sxc.Oqt.Server
                 services2
                     .AddSxcOqtane()
                     .AddSxcRazor()
-                    .AddSxc()
+                    .AddSxcWebApi()
+                    .AddSxcCore()
                     .AddEav();
             });
         }
