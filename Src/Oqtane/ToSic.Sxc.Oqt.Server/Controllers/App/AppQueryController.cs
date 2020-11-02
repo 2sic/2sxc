@@ -23,8 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         public AppQueryController(StatefulControllerDependencies dependencies) : base(dependencies) { }
 
         #endregion
-
-
+        
         [HttpGet("{name}")]
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(
             string appPath,
@@ -32,5 +31,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             [FromQuery] string stream = null
         ) => new AppQuery().Init(Log).PublicQuery(GetContext(), appPath, name, stream, NoBlock);
 
+
+        [HttpGet("{name}")]
+        public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(
+            string name,
+            [FromQuery] bool includeGuid = false,
+            [FromQuery] string stream = null,
+            [FromQuery] int? appId = null
+        ) => new AppQuery().Init(Log).Query(GetContext(), GetBlock(), GetBlock().App, name, includeGuid, stream, appId);
     }
 }
