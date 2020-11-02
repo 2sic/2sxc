@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\octane\oqtane.framework\Oqtane.Client\Oqtane.Client.csproj" />
     <ProjectReference Include="..\..\..\..\octane\oqtane.framework\Oqtane.Shared\Oqtane.Shared.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Oqt.Shared\ToSic.Sxc.Oqt.Shared.csproj" />
   </ItemGroup>
 

@@ -1,15 +1,32 @@
- @* ReSharper disable once CheckNamespace *@
- @namespace ToSic.Sxc.Oqt.App
+@* ReSharper disable once CheckNamespace *@
+@namespace ToSic.Sxc.Oqt.App
+@using SxcSettings = ToSic.Sxc.Settings;
 @inherits ModuleBase
 @inject ISettingService SettingService
 
 <table class="table table-borderless">
     <tr>
         <td>
-            <Label For="value" HelpText="Enter a value">Name: </Label>
+            <Label For="value" HelpText="Enter a value">@SxcSettings.ModuleSettingApp: </Label>
         </td>
         <td>
-            <input id="value" type="text" class="form-control" @bind="@_value" />
+            <input id="value" type="text" class="form-control" @bind="@_eavApp" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <Label For="value" HelpText="Enter a value">@SxcSettings.ModuleSettingContentGroup: </Label>
+        </td>
+        <td>
+            <input id="value" type="text" class="form-control" @bind="@_eavContentGroup" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <Label For="value" HelpText="Enter a value">@SxcSettings.ModuleSettingsPreview: </Label>
+        </td>
+        <td>
+            <input id="value" type="text" class="form-control" @bind="@_eavPreview" />
         </td>
     </tr>
 </table>
