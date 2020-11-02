@@ -13,7 +13,7 @@ using ToSic.Sxc.WebApi.App;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
-    [Route(WebApiConstants.WebApiStateRoot + "/app/{appPath}/query/")]
+    [Route(WebApiConstants.WebApiStateRoot + "/app/")]
     [ApiController]
     public class AppQueryController : SxcStatefulControllerBase
     {
@@ -24,17 +24,16 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         #endregion
         
-        [HttpGet("{name}")]
+        [HttpGet("{appPath}/query/{name}/{default}")]
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(
-            string appPath,
-            string name,
+            [FromRoute] string appPath,
+            [FromRoute] string name,
             [FromQuery] string stream = null
         ) => new AppQuery().Init(Log).PublicQuery(GetContext(), appPath, name, stream, NoBlock);
 
-
-        [HttpGet("{name}")]
+        [HttpGet("auto/query/{name}/{default}")]
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(
-            string name,
+            [FromRoute] string name,
             [FromQuery] bool includeGuid = false,
             [FromQuery] string stream = null,
             [FromQuery] int? appId = null
