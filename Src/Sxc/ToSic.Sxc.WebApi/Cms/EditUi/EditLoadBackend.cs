@@ -15,10 +15,13 @@ using ToSic.Sxc.WebApi.Features;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    internal partial class EditLoadBackend: WebApiBackendBase<EditLoadBackend>
+    public partial class EditLoadBackend: WebApiBackendBase<EditLoadBackend>
     {
-        public EditLoadBackend() : base("Cms.LoadBk")
+        private readonly EntityApi _entityApi;
+
+        public EditLoadBackend(EntityApi entityApi) : base("Cms.LoadBk")
         {
+            _entityApi = entityApi;
         }
 
         public AllInOneDto Load(IBlock block, IContextBuilder contextBuilder, int appId, List<ItemIdentifier> items)
@@ -40,7 +43,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // load items - similar
             var result = new AllInOneDto();
-            var entityApi = new EntityApi(appId, permCheck.EnsureAny(GrantSets.ReadDraft), Log);
+            var entityApi = _entityApi.Init(appId, permCheck.EnsureAny(GrantSets.ReadDraft), Log);
             var typeRead = entityApi.AppRead.ContentTypes;
             var list = entityApi.GetEntitiesForEditing(items);
             var jsonSerializer = new JsonSerializer();

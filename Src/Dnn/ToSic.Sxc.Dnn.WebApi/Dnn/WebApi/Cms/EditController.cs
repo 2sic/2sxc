@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public AllInOneDto Load([FromBody] List<ItemIdentifier> items, int appId)
-            => new EditLoadBackend().Init(Log)
+            => Eav.Factory.Resolve<EditLoadBackend>().Init(Log)
                 .Load(GetBlock(), new DnnContextBuilder(PortalSettings, ActiveModule, UserInfo), appId, items);
 
         [HttpPost]
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [AllowAnonymous] // security check happens internally
         public IEnumerable<EntityForPickerDto> EntityPicker([FromUri] int appId, [FromBody] string[] items,
             [FromUri] string contentTypeName = null, [FromUri] int? dimensionId = null)
-            => new EntityPickerBackend().Init(Log)
+            => Eav.Factory.Resolve<EntityPickerBackend>().Init(Log)
                 .GetAvailableEntities(GetContext(), appId, items, contentTypeName, dimensionId);
 
     }

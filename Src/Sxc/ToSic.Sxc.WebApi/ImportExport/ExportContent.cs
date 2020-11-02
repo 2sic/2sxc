@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Dto;
@@ -49,7 +50,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId, Log);
 
             var cms = new CmsRuntime(currentApp, Log, true, false);
-            var contentTypes = cms.ContentTypes.FromScope(scope);
+            var contentTypes = cms.ContentTypes.All.OfScope(scope);
             var entities = cms.Entities.All;
             var templates = cms.Views.GetAll();
 

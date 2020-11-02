@@ -45,7 +45,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public IEnumerable<Dictionary<string, object>> List(int appId, string contentType) 
-            => EntityApi.GetOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.ReadSomething, Log)
+            => Eav.Factory.Resolve<EntityApi>()
+                .InitOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.ReadSomething, Log)
                 .GetEntitiesForAdmin(contentType);
 
 
@@ -54,7 +55,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         // todo: unsure why only Edit - is this used anywhere else than admin?
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, int id, int appId, bool force = false) 
-            => EntityApi.GetOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
+            => Eav.Factory.Resolve<EntityApi>()
+                .InitOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
                 .Delete(contentType, id, force);
 
         [HttpDelete]
@@ -62,7 +64,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         // todo: unsure why only Edit - is this used anywhere else than admin?
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, Guid guid, int appId, bool force = false)
-            => EntityApi.GetOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
+            => Eav.Factory.Resolve<EntityApi>()
+                .InitOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
                 .Delete(contentType, guid, force);
 
 

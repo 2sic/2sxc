@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Sxc.Oqt.Server.Repository;
-using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Web.WebApi.System;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
@@ -10,7 +9,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     [ApiController]
     public class InsightsController : SxcStatelessControllerBase
     {
-        public InsightsController(IUserResolver userResolver) : base(userResolver) { }
+        private readonly Lazy<Insights> _lazyInsights;
+
+        public InsightsController(IUserResolver userResolver, Lazy<Insights> lazyInsights) : base(userResolver)
+        {
+            _lazyInsights = lazyInsights;
+        }
 
 
         #region Logging aspects
@@ -37,7 +41,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         #region Construction and Security
 
         protected Insights Insights =>
-            _insights ??= new Insights(Log, ThrowIfNotSuperuser, (string msg) => new Exception(msg));
+            _insights ??= _lazyInsights.Value.Init(Log, ThrowIfNotSuperuser, msg => new Exception(msg));
         private Insights _insights;
 
         private void ThrowIfNotSuperuser()

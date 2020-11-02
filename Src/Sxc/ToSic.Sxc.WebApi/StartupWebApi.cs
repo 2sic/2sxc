@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Run;
+using ToSic.Eav.WebApi;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.ImportExport;
 using ToSic.Sxc.Conversion;
@@ -9,10 +10,12 @@ using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Basic;
+using ToSic.Sxc.Web.WebApi.System;
 using ToSic.Sxc.WebApi.Adam;
+using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.Cms;
 
-namespace ToSic.Sxc.WebApi.Plumbing
+namespace ToSic.Sxc.WebApi
 {
     public static class StartupWebApi
     {
@@ -38,6 +41,15 @@ namespace ToSic.Sxc.WebApi.Plumbing
             services.TryAddTransient(typeof(AdamTransFolder<,>));
             services.TryAddTransient(typeof(AdamTransUpload<,>));
             services.TryAddTransient(typeof(AdamTransRename<,>));
+
+            // Internal API helpers
+            services.TryAddTransient<EntityApi>();
+            services.TryAddTransient<EntityPickerApi>();
+            services.TryAddTransient<EntityPickerBackend>();
+            services.TryAddTransient<Insights>();
+            services.TryAddTransient<ContentTypeApi>();
+            services.TryAddTransient<AppContent>();
+            services.TryAddTransient<EditLoadBackend>();
 
 
             // 11.08 - fallback in case not added

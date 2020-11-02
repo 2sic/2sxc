@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using ToSic.Eav.Apps;
@@ -15,10 +16,15 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     [Route(WebApiConstants.WebApiStateRoot + "/admin/field/[action]")]
     public class FieldController : SxcStatefulControllerBase, IFieldController
     {
+        private readonly Lazy<AppRuntime> _appRuntime;
+        private readonly Lazy<ContentTypeApi> _lazyContentType;
         protected override string HistoryLogName => "Api.Fields";
-        private ContentTypeApi Backend => new ContentTypeApi(Log);
-        public FieldController(StatefulControllerDependencies dependencies) : base(dependencies)
-        { }
+        private ContentTypeApi Backend => _lazyContentType.Value.Init(Log);
+        public FieldController(StatefulControllerDependencies dependencies, Lazy<AppRuntime> appRuntime, Lazy<ContentTypeApi> lazyContentType) : base(dependencies)
+        {
+            _appRuntime = appRuntime;
+            _lazyContentType = lazyContentType;
+        }
 
         #region Fields - Get, Reorder, Data-Types (for dropdown), etc.
 
@@ -38,7 +44,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// Used to be GET ContentType/InputTypes
         /// </summary>
 	    [HttpGet]
-        public List<InputTypeInfo> InputTypes(int appId) => new AppRuntime().Init(State.Identity(null, appId), true, Log).ContentTypes.GetInputTypes();
+        public List<InputTypeInfo> InputTypes(int appId) => _appRuntime.Value.Init(State.Identity(null, appId), true, Log).ContentTypes.GetInputTypes();
 
         /// <summary>
         /// Used to be GET ContentType/AddField

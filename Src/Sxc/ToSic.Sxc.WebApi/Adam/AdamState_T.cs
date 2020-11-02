@@ -14,14 +14,6 @@ namespace ToSic.Sxc.WebApi.Adam
             _adamAppContext = adamAppContext;
         }
 
-        //public AdamState<TFolderId, TFileId> Init(IBlock block, int appId, string contentType, string field, Guid guid, bool usePortalRoot, ILog log) 
-        //    : base("Adm.StatTT") // block, appId, contentType, field, guid, usePortalRoot, log)
-        //{
-        //    base.Init(block, appId, contentType, field, guid, usePortalRoot, log);
-        //}
-
-        //internal AdamAppContext<TFolderId, TFileId> AdamAppContext;
-
         internal AdamOfBase<TFolderId, TFileId> ContainerContext;
 
 

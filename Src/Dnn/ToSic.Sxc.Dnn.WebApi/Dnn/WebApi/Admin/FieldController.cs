@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     {
         protected override string HistoryLogName => "Api.Fields";
 
-        private ContentTypeApi Backend => new ContentTypeApi(Log);
+        private ContentTypeApi Backend => Eav.Factory.Resolve<ContentTypeApi>().Init(Log);
 
         #region Fields - Get, Reorder, Data-Types (for dropdown), etc.
 
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// Used to be GET ContentType/InputTypes
         /// </summary>
 	    [HttpGet]
-        public List<InputTypeInfo> InputTypes(int appId) => new AppRuntime().Init(State.Identity(null, appId), true, Log).ContentTypes.GetInputTypes();
+        public List<InputTypeInfo> InputTypes(int appId) => Eav.Factory.Resolve<AppRuntime>().Init(State.Identity(null, appId), true, Log).ContentTypes.GetInputTypes();
 
         /// <summary>
         /// Used to be GET ContentType/AddField

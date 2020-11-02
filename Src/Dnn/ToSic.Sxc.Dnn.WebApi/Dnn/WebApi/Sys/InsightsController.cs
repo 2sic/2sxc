@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
 
         #endregion
 
-        protected Sxc.Web.WebApi.System.Insights GetInsights => new Sxc.Web.WebApi.System.Insights(Log, ThrowIfNotSuperuser, HttpException.BadRequest);
+        protected Sxc.Web.WebApi.System.Insights GetInsights => Eav.Factory.Resolve<Sxc.Web.WebApi.System.Insights>().Init(Log, ThrowIfNotSuperuser, HttpException.BadRequest);
 
         private void ThrowIfNotSuperuser()
         {

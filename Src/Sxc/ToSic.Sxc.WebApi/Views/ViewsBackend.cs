@@ -31,7 +31,7 @@ namespace ToSic.Sxc.WebApi.Views
             Log.Add($"get all a#{appId}");
             var cms = new CmsRuntime(State.Identity(null, appId), Log, true, false);
 
-            var attributeSetList = cms.ContentTypes.FromScope(Settings.AttributeSetScope).ToList();
+            var attributeSetList = cms.ContentTypes.All.OfScope(Settings.AttributeSetScope).ToList();
             var templateList = cms.Views.GetAll().ToList();
             Log.Add($"attribute list count:{attributeSetList.Count}, template count:{templateList.Count}");
             var templates = templateList.Select(c => new ViewDetailsDto

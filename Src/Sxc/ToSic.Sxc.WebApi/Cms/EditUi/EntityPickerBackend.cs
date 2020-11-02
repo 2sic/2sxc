@@ -1,19 +1,23 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
-using ToSic.Sxc.WebApi.Security;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    internal class EntityPickerBackend: WebApiBackendBase<EntityPickerBackend>
+    public class EntityPickerBackend: WebApiBackendBase<EntityPickerBackend>
     {
-        public EntityPickerBackend() : base("BE.EntPck")
-        {
+        private readonly EntityPickerApi _entityPickerApi;
 
+        public EntityPickerBackend(Eav.WebApi.EntityPickerApi entityPickerApi) : base("BE.EntPck")
+        {
+            _entityPickerApi = entityPickerApi;
         }
+
+
         public IEnumerable<EntityForPickerDto> GetAvailableEntities(IInstanceContext ctx, int appId, string[] items, string contentTypeName, int? dimensionId)
         {
             // do security check
@@ -26,7 +30,8 @@ namespace ToSic.Sxc.WebApi.Cms
             // maybe in the future, ATM not relevant
             var withDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
 
-            return new Eav.WebApi.EntityPickerApi(Log)
+            return _entityPickerApi
+                .Init(Log)
                 .GetAvailableEntities(appId, items, contentTypeName, withDrafts, dimensionId);
         }
     }

@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Data;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
@@ -23,10 +25,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     [ValidateAntiForgeryToken]
     public class TypeController : SxcStatefulControllerBase, ITypeController
     {
+        private readonly Lazy<ContentTypeApi> _lazyContentTypeApi;
         protected override string HistoryLogName => "Api.Types";
-        private ContentTypeApi Backend => new ContentTypeApi(Log);
-        public TypeController(StatefulControllerDependencies dependencies) : base(dependencies)
-        { }
+        private ContentTypeApi Backend => _lazyContentTypeApi.Value.Init(Log);
+        public TypeController(StatefulControllerDependencies dependencies, Lazy<ContentTypeApi> lazyContentTypeApi) : base(dependencies)
+        {
+            _lazyContentTypeApi = lazyContentTypeApi;
+        }
 
         [HttpGet]
         [ValidateAntiForgeryToken]
@@ -41,7 +46,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public IDictionary<string, string> Scopes(int appId)
-            => new AppRuntime().Init(State.Identity(null, appId), false, Log).ContentTypes.ScopesWithLabels();
+            => State.Get(appId).ContentTypes.GetAllScopesWithLabels(); // new AppRuntime().Init(State.Identity(null, appId), false, Log).ContentTypes.ScopesWithLabels();
 
         /// <summary>
         /// Used to be GET ContentTypes/Scopes

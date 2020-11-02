@@ -6,6 +6,7 @@ using System.Text;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.Data;
 using ToSic.Eav.WebApi;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.WebApi;
@@ -63,7 +64,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         /// <param name="getOne"></param>
         /// <param name="appPath"></param>
         /// <returns></returns>
-        private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<EntityApi, IEntity> getOne, string appPath) 
+        private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string appPath) 
             => Eav.Factory.Resolve<AppContent>().Init(GetContext(), GetBlock(), Log).GetOne(contentType, getOne, appPath);
 
         #endregion

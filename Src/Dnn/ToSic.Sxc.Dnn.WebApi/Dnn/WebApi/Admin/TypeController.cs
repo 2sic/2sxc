@@ -6,6 +6,7 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Data;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
@@ -36,7 +37,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     {
         protected override string HistoryLogName => "Api.Types";
 
-        private ContentTypeApi Backend => new ContentTypeApi(Log);
+        private ContentTypeApi Backend => Eav.Factory.Resolve<ContentTypeApi>().Init(Log);
 
         [HttpGet]
         [ValidateAntiForgeryToken]
@@ -50,8 +51,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public IDictionary<string, string> Scopes(int appId) 
-            => new AppRuntime().Init(State.Identity(null, appId), false, Log).ContentTypes.ScopesWithLabels();
+        public IDictionary<string, string> Scopes(int appId)
+            => State.Get(appId).ContentTypes.GetAllScopesWithLabels();
+        //Eav.Factory.Resolve<AppRuntime>()
+        //        .Init(State.Identity(null, appId), false, Log).ContentTypes
+        //        .ScopesWithLabels();
 
         /// <summary>
         /// Used to be GET ContentTypes/Scopes

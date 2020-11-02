@@ -16,8 +16,17 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
         #region DI
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "UiCntr";
 
-        public EditController(MvcContextBuilder contextBuilder) => _contextBuilder = contextBuilder;
+        public EditController(MvcContextBuilder contextBuilder, Lazy<EntityPickerBackend> entityBackend, Lazy<EditLoadBackend> loadBackend)
+        {
+            _contextBuilder = contextBuilder;
+            _entityBackend = entityBackend;
+            _loadBackend = loadBackend;
+        }
+
         private readonly MvcContextBuilder _contextBuilder;
+        private readonly Lazy<EntityPickerBackend> _entityBackend;
+        private readonly Lazy<EditLoadBackend> _loadBackend;
+        private EntityPickerBackend EntityBackend => _entityBackend.Value;
 
         #endregion
 
@@ -31,7 +40,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
         public AllInOneDto Load([FromBody] List<ItemIdentifier> items, int appId)
         {
             var block = GetBlock();
-            var result = new EditLoadBackend()
+            var result = _loadBackend.Value
                 .Init(Log)
                 .Load(block, _contextBuilder.Init(block), appId, items);
             return result;
@@ -56,7 +65,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
         [AllowAnonymous] // security check happens internally
         public IEnumerable<EntityForPickerDto> EntityPicker(int appId, [FromBody] string[] items,
             string contentTypeName = null, int? dimensionId = null)
-            => new EntityPickerBackend().Init(Log)
+            => EntityBackend.Init(Log)
                 .GetAvailableEntities(GetContext(), appId, items, contentTypeName, dimensionId);
 
     }

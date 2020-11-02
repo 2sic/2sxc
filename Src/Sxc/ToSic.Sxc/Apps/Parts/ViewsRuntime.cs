@@ -117,7 +117,7 @@ namespace ToSic.Sxc.Apps
             var visible = templates.Where(t => !t.IsHidden).ToList();
             var serializer = new EntitiesToDictionary();
 
-            return Parent.ContentTypes.FromScope(Settings.AttributeSetScope) 
+            return Parent.ContentTypes.All.OfScope(Settings.AttributeSetScope) 
                 .Where(ct => templates.Any(t => t.ContentType == ct.StaticName)) // must exist in at least 1 template
                 .OrderBy(ct => ct.Name)
                 .Select(ct =>

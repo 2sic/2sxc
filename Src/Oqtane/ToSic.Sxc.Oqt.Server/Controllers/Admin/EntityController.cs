@@ -29,9 +29,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     [Route(WebApiConstants.WebApiStateRoot + "/admin/entity/[action]")]
     public class EntityController : SxcStatefulControllerBase //, IEntitiesController // FIX: changed from interface to solve ambiguous DELETE routes.
     {
+        private readonly Lazy<EntityApi> _lazyEntityApi;
         protected override string HistoryLogName => "Api.EntCnt";
-        public EntityController(StatefulControllerDependencies dependencies) : base(dependencies)
-        { }
+        public EntityController(StatefulControllerDependencies dependencies, Lazy<EntityApi> lazyEntityApi) : base(dependencies)
+        {
+            _lazyEntityApi = lazyEntityApi;
+        }
 
         /// <summary>
         /// Used to be Entities/GetOllOfTypeForAdmin
@@ -44,7 +47,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public IEnumerable<Dictionary<string, object>> List(int appId, string contentType)
-            => EntityApi.GetOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.ReadSomething, Log)
+            => _lazyEntityApi.Value.InitOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.ReadSomething, Log)
                 .GetEntitiesForAdmin(contentType);
 
         [HttpDelete]
@@ -52,9 +55,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public void Delete([FromQuery] string contentType, [FromQuery] int? id, [FromQuery] Guid? guid, [FromQuery] int appId, [FromQuery] bool force = false)
         {
-            if (id.HasValue) EntityApi.GetOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
+            if (id.HasValue) _lazyEntityApi.Value.InitOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
                 .Delete(contentType, id.Value, force);
-            else if (guid.HasValue) EntityApi.GetOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
+            else if (guid.HasValue) _lazyEntityApi.Value.InitOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
                 .Delete(contentType, guid.Value, force);
         }
 
