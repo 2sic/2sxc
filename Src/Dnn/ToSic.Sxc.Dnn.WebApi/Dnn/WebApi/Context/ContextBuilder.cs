@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
         {
             // check if we're providing context for missing app
             // in this case we must find the zone based on the portals.
-            if ((zoneId ?? 0) == 0 && app == null) zoneId = new DnnZoneMapper().Init(null).GetZoneId(_portal.PortalId);
+            if ((zoneId ?? 0) == 0 && app == null) zoneId = Eav.Factory.Resolve<DnnZoneMapper>().Init(null).GetZoneId(_portal.PortalId);
             return base.InitApp(zoneId, app);
         }
 

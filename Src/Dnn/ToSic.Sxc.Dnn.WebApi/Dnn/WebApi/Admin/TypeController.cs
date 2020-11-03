@@ -64,13 +64,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) => Backend.Init(appId, Log).GetSingle(appId, contentTypeId, scope);
+        public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) => Backend.Init(appId, Log).GetSingle(contentTypeId, scope);
 
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public bool Delete(int appId, string staticName) => Backend.Init(appId, Log).Delete(appId, staticName);
+        public bool Delete(int appId, string staticName) => Backend.Init(appId, Log).Delete(staticName);
 
 	    [HttpPost]
         [ValidateAntiForgeryToken]
@@ -81,7 +81,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public bool Save(int appId, Dictionary<string, object> item)
         {
             var cleanList = item.ToDictionary(i => i.Key, i => i.Value?.ToString());
-            return Backend.Init(appId, Log).Save(appId, cleanList);
+            return Backend.Init(appId, Log).Save(cleanList);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpPost]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-        public bool AddGhost(int appId, string sourceStaticName) => Backend.Init(appId, Log).CreateGhost(appId, sourceStaticName);
+        public bool AddGhost(int appId, string sourceStaticName) => Backend.Init(appId, Log).CreateGhost(sourceStaticName);
 
 
 
@@ -101,7 +101,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public void SetTitle(int appId, int contentTypeId, int attributeId)
-            => Backend.Init(appId, Log).SetTitle(appId, contentTypeId, attributeId);
+            => Backend.Init(appId, Log).SetTitle(contentTypeId, attributeId);
 
 
         /// <summary>

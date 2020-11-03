@@ -8,10 +8,15 @@ namespace ToSic.Sxc.WebApi.Languages
 {
     public class LanguagesBackend: HasLog<LanguagesBackend>
     {
+        private readonly ZoneManager _zoneManager;
+
         #region Constructor & DI
         
-        public LanguagesBackend(IZoneMapper zoneMapper) : base("Bck.Admin") 
-            => _zoneMapper = zoneMapper.Init(Log);
+        public LanguagesBackend(IZoneMapper zoneMapper, ZoneManager zoneManager) : base("Bck.Admin")
+        {
+            _zoneManager = zoneManager;
+            _zoneMapper = zoneMapper.Init(Log);
+        }
 
         private readonly IZoneMapper _zoneMapper;
 
@@ -36,7 +41,7 @@ namespace ToSic.Sxc.WebApi.Languages
             // Activate or Deactivate the Culture
             var zoneMapper = _zoneMapper.Init(Log);
             var zoneId = zoneMapper.GetZoneId(tenantId);
-            new ZoneManager().Init(zoneId, Log).SaveLanguage(cultureCode, niceName, enable);
+            _zoneManager.Init(zoneId, Log).SaveLanguage(cultureCode, niceName, enable);
         }
     }
 }

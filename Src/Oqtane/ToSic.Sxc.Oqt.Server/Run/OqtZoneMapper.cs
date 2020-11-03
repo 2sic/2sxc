@@ -16,15 +16,20 @@ namespace ToSic.Sxc.Oqt.Server.Run
     public class OqtZoneMapper : ZoneMapperBase
     {
         /// <inheritdoc />
-        public OqtZoneMapper(ISiteRepository siteRepository, ISettingRepository settingRepository, IServiceProvider serviceProvider) : base("Mvc.ZoneMp")
+        public OqtZoneMapper(ISiteRepository siteRepository, 
+            ISettingRepository settingRepository, 
+            IServiceProvider serviceProvider, 
+            Lazy<ZoneManager> zoneManagerLazy) : base("Mvc.ZoneMp")
         {
             _siteRepository = siteRepository;
             _settingRepository = settingRepository;
             _serviceProvider = serviceProvider;
+            _zoneManagerLazy = zoneManagerLazy;
         }
         private readonly ISiteRepository _siteRepository;
         private readonly ISettingRepository _settingRepository;
         private readonly IServiceProvider _serviceProvider;
+        private readonly Lazy<ZoneManager> _zoneManagerLazy;
 
         public override int GetZoneId(int tenantId)
         {
@@ -37,7 +42,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             // Create new zone automatically
             var portalSettings = _siteRepository.GetSite(tenantId);
-            var zoneId = ZoneManager.CreateZone(portalSettings.Name + " (Site " + tenantId + ")", Log);
+            var zoneId = _zoneManagerLazy.Value.Init(0, Log).CreateZone(portalSettings.Name + " (Site " + tenantId + ")");
             _settingRepository.AddSetting(new Setting
             {
                 CreatedBy = "2sxc", 

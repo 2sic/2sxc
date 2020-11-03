@@ -49,7 +49,6 @@ namespace ToSic.Sxc.Oqt.Server
 
             //// Oqtane Specific stuff
             services.AddScoped<OqtAssetsAndHeaders>();
-            //services.AddTransient<OqtSiteFactory>();
             services.AddTransient<SxcOqtane>();
             services.AddTransient<IClientDependencyOptimizer, OqtClientDependencyOptimizer>();
             services.AddTransient<IValueConverter, OqtValueConverter>();
@@ -60,8 +59,6 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddTransient<IAdamFileSystem<int, int>, OqtAdamFileSystem>();
             services.AddTransient(typeof(AdamItemDtoMaker<,>), typeof(OqtAdamItemDtoMaker<,>));
 
-            //// Add SxcEngineTest
-            //services.AddTransient<SxcMvc>();
             //// Still pending...
             ////sc.AddTransient<XmlExporter, DnnXmlExporter>();
             services.AddTransient<IImportExportEnvironment, OqtImportExportEnvironment>();
@@ -70,8 +67,6 @@ namespace ToSic.Sxc.Oqt.Server
 
             // 2020-10-22 2dm test
             services.AddTransient<ISxcOqtane, SxcOqtane>();
-            //services.AddTransient<IRenderRazor, RenderRazor>();
-            //services.AddTransient<IEngineFinder, OqtaneEngineFinder>();
             services.AddTransient<StatefulControllerDependencies>();
 
             // Plumbing: enable lazy services Dependency Injection

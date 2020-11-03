@@ -29,13 +29,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// Returns the configuration for a content type
         /// </summary>
         [HttpGet]
-        public IEnumerable<ContentTypeFieldDto> All(int appId, string staticName) => Backend.Init(appId, Log).GetFields(appId, staticName);
+        public IEnumerable<ContentTypeFieldDto> All(int appId, string staticName) => Backend.Init(appId, Log).GetFields(staticName);
 
         /// <summary>
         /// Used to be GET ContentType/DataTypes
         /// </summary>
         [HttpGet]
-        public string[] DataTypes(int appId) => Backend.Init(appId, Log).DataTypes(appId);
+        public string[] DataTypes(int appId) => Backend.Init(appId, Log).DataTypes();
 
         /// <summary>
         /// Used to be GET ContentType/InputTypes
@@ -55,13 +55,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// </summary>
         [HttpDelete]
         public bool Delete(int appId, int contentTypeId, int attributeId) 
-            => Backend.Init(appId, Log).DeleteField(appId, contentTypeId, attributeId);
+            => Backend.Init(appId, Log).DeleteField(contentTypeId, attributeId);
 
         /// <summary>
         /// Used to be GET ContentType/Reorder
         /// </summary>
 	    [HttpPost]
-        public bool Sort(int appId, int contentTypeId, string order) => Backend.Init(appId, Log).Reorder(appId, contentTypeId, order);
+        public bool Sort(int appId, int contentTypeId, string order) => Backend.Init(appId, Log).Reorder(contentTypeId, order);
 
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// Used to be GET ContentType/Rename
         /// </summary>
         [HttpPost]
-        public void Rename(int appId, int contentTypeId, int attributeId, string newName) => Backend.Init(appId, Log).Rename(appId, contentTypeId, attributeId, newName);
+        public void Rename(int appId, int contentTypeId, int attributeId, string newName) => Backend.Init(appId, Log).Rename(contentTypeId, attributeId, newName);
 
 	}
 }

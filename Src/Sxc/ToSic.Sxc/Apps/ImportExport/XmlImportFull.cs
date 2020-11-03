@@ -3,13 +3,17 @@ using System.Linq;
 using System.Xml.Linq;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.ImportExport;
+using ToSic.Eav.Repository.Efc;
 
 namespace ToSic.Sxc.Apps.ImportExport
 {
     public partial class XmlImportFull: XmlImportWithFiles
     {
         private readonly Lazy<CmsManager> _cmsManagerLazy;
-        public XmlImportFull(Lazy<Import> importerLazy, Lazy<CmsManager> cmsManagerLazy) : base(importerLazy, "Sxc.XmlImp")
+        public XmlImportFull(Lazy<Import> importerLazy, 
+            Lazy<CmsManager> cmsManagerLazy, 
+            Lazy<DbDataController> dbDataForNewApp,
+            Lazy<DbDataController> dbDataForAppImport) : base(importerLazy, dbDataForNewApp, dbDataForAppImport, "Sxc.XmlImp")
         {
             _cmsManagerLazy = cmsManagerLazy;
         }

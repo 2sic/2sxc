@@ -8,8 +8,11 @@ namespace ToSic.Sxc.Apps
 {
     public class AppsManager: ZonePartRuntimeBase<ZoneRuntime, AppsManager>
     {
-        internal AppsManager() : base("Cms.AppsRt") { }
-
+        private readonly Lazy<ZoneManager> _zoneManagerLazy;
+        internal AppsManager(Lazy<ZoneManager> zoneManagerLazy) : base("Cms.AppsRt")
+        {
+            _zoneManagerLazy = zoneManagerLazy;
+        }
 
 
         internal void RemoveAppInSiteAndEav(int appId)
@@ -31,7 +34,7 @@ namespace ToSic.Sxc.Apps
 
             // now remove from DB. This sometimes fails, so we do this before trying to clean the files
             // as the db part should be in a transaction, and if it fails, everything should stay as is
-            new ZoneManager().Init(zoneId, Log).DeleteApp(appId);
+            _zoneManagerLazy.Value.Init(zoneId, Log).DeleteApp(appId);
 
             // now really delete the files - if the DB didn't end up throwing an error
             if (!string.IsNullOrEmpty(folder) && Directory.Exists(physPath))

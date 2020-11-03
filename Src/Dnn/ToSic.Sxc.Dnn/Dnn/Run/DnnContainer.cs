@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Dnn.Run
                 if (UnwrappedContents == null) return null;
 
                 // find ZoneId, AppId and prepare settings for next values
-                var zoneId = new DnnZoneMapper().Init(Log).GetZoneId(UnwrappedContents.OwnerPortalID);
+                var zoneId = Eav.Factory.Resolve<DnnZoneMapper>().Init(Log).GetZoneId(UnwrappedContents.OwnerPortalID);
                 var appId = GetInstanceAppId(zoneId);
                 var settings = UnwrappedContents.ModuleSettings;
 
