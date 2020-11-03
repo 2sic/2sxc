@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.RazorPages
@@ -17,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.RazorPages
         {
             // get path for content
             var tempDi = services.BuildServiceProvider();
-            var webHost = tempDi.GetRequiredService<IWebHostEnvironment>();
+            var webHost = tempDi.Build<IWebHostEnvironment>();
             var contentRootPath = Path.GetFullPath(Path.Combine(webHost.ContentRootPath, OqtConstants.ContentSubfolder));
 
             //// Add razor pages dynamic compilation WIP

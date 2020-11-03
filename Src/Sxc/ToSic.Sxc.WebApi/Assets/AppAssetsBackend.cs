@@ -1,8 +1,8 @@
 ﻿using System;
-using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Engines;
@@ -84,8 +84,8 @@ namespace ToSic.Sxc.WebApi.Assets
             if (appId != 0 && appId != app.AppId)
                 app = Factory.Resolve<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), Log);
             var assetEditor = templateId != 0 && path == null
-                ? _serviceProvider.GetRequiredService<AssetEditor>().Init(app, templateId, _user.IsSuperUser, isAdmin, Log)
-                : _serviceProvider.GetRequiredService<AssetEditor>().Init(app, path, _user.IsSuperUser, isAdmin, global, Log);
+                ? _serviceProvider.Build<AssetEditor>().Init(app, templateId, _user.IsSuperUser, isAdmin, Log)
+                : _serviceProvider.Build<AssetEditor>().Init(app, path, _user.IsSuperUser, isAdmin, global, Log);
             assetEditor.EnsureUserMayEditAssetOrThrow();
             return wrapLog(null, assetEditor);
         }

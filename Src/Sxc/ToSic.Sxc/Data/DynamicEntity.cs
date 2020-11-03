@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Eav.Run.Basic;
 using ToSic.Sxc.Blocks;
@@ -124,7 +125,7 @@ namespace ToSic.Sxc.Data
                 && Entity.Attributes.ContainsKey(field) &&
                 Entity.Attributes[field].Type == Eav.Constants.DataTypeHyperlink)
             {
-                result = Block?.Context?.ServiceProvider?.GetService<IValueConverter>()?.ToValue(strResult, EntityGuid) ??
+                result = Block?.Context?.ServiceProvider?.Build<IValueConverter>()?.ToValue(strResult, EntityGuid) ??
                       result;
             }
 

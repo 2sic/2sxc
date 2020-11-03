@@ -1,7 +1,7 @@
 ﻿using System;
-using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Web.WebApi.System
 {
@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Web.WebApi.System
 
         #endregion
 
-        private AppRuntime AppRt(int? appId) => _serviceProvider.GetRequiredService<AppRuntime>().Init(State.Identity(null, appId.Value), true, Log);
+        private AppRuntime AppRt(int? appId) => _serviceProvider.Build<AppRuntime>().Init(State.Identity(null, appId.Value), true, Log);
 
         private AppState AppState(int? appId) => State.Get(appId.Value);
 
