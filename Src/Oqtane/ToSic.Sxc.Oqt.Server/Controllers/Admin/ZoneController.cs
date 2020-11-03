@@ -22,14 +22,17 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
     public class ZoneController : SxcStatefulControllerBase
     {
+        private readonly LanguagesBackend _languagesBackend;
         protected override string HistoryLogName => "Api.Zone";
 
-        public ZoneController(StatefulControllerDependencies dependencies) : base(dependencies)
-        { }
+        public ZoneController(StatefulControllerDependencies dependencies, LanguagesBackend languagesBackend) : base(dependencies)
+        {
+            _languagesBackend = languagesBackend;
+        }
 
         [HttpGet]
         public IList<SiteLanguageDto> GetLanguages() =>
-            Eav.Factory.Resolve<LanguagesBackend>().Init(Log)
+            _languagesBackend.Init(Log)
                 .GetLanguages(GetContext().Tenant.Id);
 
         /// <summary>
@@ -38,7 +41,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <returns></returns>
         [HttpGet]
         public void SwitchLanguage(string cultureCode, bool enable) =>
-            Eav.Factory.Resolve<LanguagesBackend>().Init(Log)
+            _languagesBackend.Init(Log)
                 .Toggle(
                     GetContext().Tenant.Id,
                     cultureCode,

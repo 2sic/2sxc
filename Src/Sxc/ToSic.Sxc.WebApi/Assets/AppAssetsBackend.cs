@@ -10,7 +10,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.Assets
 {
-    internal partial class AppAssetsBackend: HasLog
+    public partial class AppAssetsBackend: HasLog
     {
         #region Constructor / DI
 

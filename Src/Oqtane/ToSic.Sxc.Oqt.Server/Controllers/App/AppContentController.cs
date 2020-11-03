@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Oqtane.Repository;
 using ToSic.Eav.Data;
-using ToSic.Eav.Run;
-using ToSic.Eav.WebApi;
-using ToSic.Sxc.Oqt.Server.Repository;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.App;
 
@@ -20,19 +16,16 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     [Route( WebApiConstants.WebApiStateRoot + "/app/{appPath}/content/")]
     public class AppContentController: SxcStatefulControllerBase
     {
+        private readonly Lazy<AppContent> _appContentLazy;
+
         #region DI / Constructor
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "AppCnt";
 
-        public AppContentController(StatefulControllerDependencies dependencies) : base(dependencies) { }
+        public AppContentController(StatefulControllerDependencies dependencies, Lazy<AppContent> appContentLazy) : base(dependencies)
+        {
+            _appContentLazy = appContentLazy;
+        }
         #endregion
-
-        //private IInstanceContext GetContext()
-        //{
-        //    // in case the initial request didn't yet find a block builder, we need to create it now
-        //    var context = // BlockBuilder?.Context ??
-        //                  new InstanceContext(new MvcTenant(), new PageNull(), new ContainerNull(), new MvcUser());
-        //    return context;
-        //}
 
         #region Get List / all of a certain content-type
         /// <summary>
@@ -41,7 +34,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [HttpGet("{contentType}")]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string appPath = null)
-            => Eav.Factory.Resolve<AppContent>().Init(GetContext(), NoBlock, Log).GetItems(contentType, appPath);
+            => _appContentLazy.Value.Init(GetContext(), NoBlock, Log).GetItems(contentType, appPath);
 
         #endregion
 
@@ -73,7 +66,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// <param name="appPath"></param>
         /// <returns></returns>
         private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string appPath)
-            => Eav.Factory.Resolve<AppContent>().Init(GetContext(), NoBlock, Log).GetOne(contentType, getOne, appPath);
+            => _appContentLazy.Value.Init(GetContext(), NoBlock, Log).GetOne(contentType, getOne, appPath);
 
         #endregion
 

@@ -16,13 +16,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected SxcStatefulControllerBase(StatefulControllerDependencies dependencies) : base(dependencies.UserResolver)
         {
             ServiceProvider = dependencies.ServiceProvider;
-            _tenantResolver = dependencies.TenantResolver;
-            _zoneMapper = dependencies.ZoneMapper as OqtZoneMapper;
             _moduleRepository = dependencies.ModuleRepository;
             _oqtTempInstanceContext = dependencies.OqtTempInstanceContext;
         }
-        private readonly ITenantResolver _tenantResolver;
-        private readonly OqtZoneMapper _zoneMapper;
         private readonly IModuleRepository _moduleRepository;
         private readonly OqtTempInstanceContext _oqtTempInstanceContext;
         protected readonly IServiceProvider ServiceProvider;
@@ -87,6 +83,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// </summary>
         /// <param name="appId"></param>
         /// <returns></returns>
-        internal IApp GetApp(int appId) => Factory.Resolve<Apps.App>().Init(appId, Log, GetBlock());
+        internal IApp GetApp(int appId)
+        {
+            return ServiceProvider.Build<App>().Init(appId, Log, GetBlock());
+        }
     }
 }

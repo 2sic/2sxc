@@ -26,7 +26,7 @@ using ToSic.Sxc.WebApi.Validation;
 
 namespace ToSic.Sxc.WebApi.Views
 {
-    internal class ViewsExportImport: HasLog
+    public class ViewsExportImport: HasLog
     {
         private readonly IServerPaths _serverPaths;
         private readonly TemplateHelpers _appHelpers;

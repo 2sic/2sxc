@@ -18,7 +18,7 @@ using ToSic.Sxc.WebApi.Validation;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
-    internal class ImportContent: HasLog
+    public class ImportContent: HasLog
     {
 
         #region Constructor / DI

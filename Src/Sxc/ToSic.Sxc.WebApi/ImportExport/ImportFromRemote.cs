@@ -9,7 +9,7 @@ using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
-    internal class ImportFromRemote: HasLog
+    public class ImportFromRemote: HasLog
     {
         private readonly IEnvironmentLogger _envLogger;
 

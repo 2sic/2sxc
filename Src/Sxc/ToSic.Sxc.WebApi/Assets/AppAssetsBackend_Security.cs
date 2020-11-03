@@ -1,13 +1,11 @@
 ﻿using System;
 using System.IO;
 using JetBrains.Annotations;
-using ToSic.Eav;
-using ToSic.Eav.Apps;
 using ToSic.Sxc.Apps.Assets;
 
 namespace ToSic.Sxc.WebApi.Assets
 {
-    internal partial class AppAssetsBackend
+    public partial class AppAssetsBackend
     {
         private static string SanitizePathAndContent(string path, FileContentsDto content)
         {

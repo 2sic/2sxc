@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using ToSic.Eav.WebApi.Dto;
@@ -15,10 +16,17 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
     public class AppPartsController : SxcStatefulControllerBase, IAppPartsController
     {
+        private readonly Lazy<ExportContent> _exportContentLazy;
+        private readonly Lazy<ImportContent> _importContentLazy;
         protected override string HistoryLogName => "Api.AParts";
 
-        public AppPartsController(StatefulControllerDependencies dependencies) : base(dependencies)
-        { }
+        public AppPartsController(StatefulControllerDependencies dependencies, 
+            Lazy<ExportContent> exportContentLazy,
+            Lazy<ImportContent> importContentLazy) : base(dependencies)
+        {
+            _exportContentLazy = exportContentLazy;
+            _importContentLazy = importContentLazy;
+        }
 
         #region Parts Export/Import
 
@@ -33,7 +41,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public ExportPartsOverviewDto Get(int zoneId, int appId, string scope)
-            => Eav.Factory.Resolve<ExportContent>().Init(GetContext().Tenant.Id, GetContext().User, Log)
+            => _exportContentLazy.Value.Init(GetContext().Tenant.Id, GetContext().User, Log)
                 .PreExportSummary(appId, zoneId, scope);
 
         /// <summary>
@@ -48,7 +56,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [HttpGet]
         public HttpResponseMessage Export(int zoneId, int appId, string contentTypeIdsString,
             string entityIdsString, string templateIdsString)
-            => Eav.Factory.Resolve<ExportContent>().Init(GetContext().Tenant.Id, GetContext().User, Log)
+            => _exportContentLazy.Value.Init(GetContext().Tenant.Id, GetContext().User, Log)
                 .Export(appId, zoneId, contentTypeIdsString, entityIdsString, templateIdsString);
 
         /// <summary>
@@ -65,7 +73,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
             PreventServerTimeout300();
             if (HttpContext.Request.Form.Files.Count <= 0) return new ImportResultDto(false, "no files uploaded");
             var file = HttpContext.Request.Form.Files[0];
-            var result = Eav.Factory.Resolve<ImportContent>().Init(GetContext().User, Log).Import(zoneId, appId, file.FileName,
+            var result = _importContentLazy.Value.Init(GetContext().User, Log).Import(zoneId, appId, file.FileName,
                 file.OpenReadStream(), GetContext().Tenant.DefaultLanguage);
 
             return wrapLog("ok", result);

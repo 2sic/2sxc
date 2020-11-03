@@ -8,7 +8,7 @@ using ToSic.Sxc.Engines;
 
 namespace ToSic.Sxc.Apps.Assets
 {
-    internal class AssetEditor : HasLog
+    public class AssetEditor : HasLog
     {
         #region Constructor / DI
 

@@ -7,7 +7,7 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.WebApi.FieldList
 {
-    internal class FieldListBackend: BlockWebApiBackendBase<FieldListBackend>
+    public class FieldListBackend: BlockWebApiBackendBase<FieldListBackend>
     {
         private readonly IPagePublishing _publishing;
 

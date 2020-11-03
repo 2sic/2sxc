@@ -6,7 +6,7 @@ using ToSic.Sxc.WebApi.App;
 
 namespace ToSic.Sxc.WebApi
 {
-    internal abstract class BlockWithAppWebApiBackendBase<T>: BlockWebApiBackendBase<T> where T: class
+    public abstract class BlockWithAppWebApiBackendBase<T>: BlockWebApiBackendBase<T> where T: class
     {
         protected BlockWithAppWebApiBackendBase(Lazy<CmsManager> cmsManagerLazy, string logName) : base(cmsManagerLazy, logName) { }
 

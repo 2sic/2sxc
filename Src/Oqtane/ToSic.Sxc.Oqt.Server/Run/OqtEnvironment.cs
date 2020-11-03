@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps;
+﻿using System;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Oqt.Server.Repository;
@@ -9,14 +10,16 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtEnvironment : HasLog, IAppEnvironment
     {
-        public OqtEnvironment(IHttp http, IZoneMapper zoneMapper, IUserResolver userResolver) : base("Mvc.Enviro")
+        public OqtEnvironment(IHttp http, IZoneMapper zoneMapper, IUserResolver userResolver, Lazy<IPagePublishing> pagePublishingLazy) : base("Mvc.Enviro")
         {
             _http = http;
             ZoneMapper = zoneMapper;
             _userResolver = userResolver;
+            _pagePublishingLazy = pagePublishingLazy;
         }
         private readonly IHttp _http;
         private readonly IUserResolver _userResolver;
+        private readonly Lazy<IPagePublishing> _pagePublishingLazy;
 
         public IAppEnvironment Init(ILog parent)
         {
@@ -30,7 +33,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public IUser User => new OqtUser(_userResolver.GetUser());
 
-        public IPagePublishing PagePublishing => Eav.Factory.Resolve<IPagePublishing>().Init(Log);
+        public IPagePublishing PagePublishing => _pagePublishing ??= _pagePublishingLazy.Value.Init(Log);
+        private IPagePublishing _pagePublishing;
 
 
         //public string MapPath(string virtualPath) => _http.MapPath(virtualPath);

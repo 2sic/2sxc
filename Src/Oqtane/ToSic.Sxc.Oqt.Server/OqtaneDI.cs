@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Oqt.Server
 
             //// Oqtane Specific stuff
             services.AddScoped<OqtAssetsAndHeaders>();
-            services.AddTransient<OqtSiteFactory>();
+            //services.AddTransient<OqtSiteFactory>();
             services.AddTransient<SxcOqtane>();
             services.AddTransient<IClientDependencyOptimizer, OqtClientDependencyOptimizer>();
             services.AddTransient<IValueConverter, OqtValueConverter>();

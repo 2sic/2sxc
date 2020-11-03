@@ -13,7 +13,7 @@ using ToSic.Sxc.WebApi.App;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
-    internal class ExportContent: HasLog
+    public class ExportContent: HasLog
     {
 
         #region Constructor / DI

@@ -15,9 +15,14 @@ namespace ToSic.Sxc.Razor.Engine
 
     public partial class RazorEngine : EngineBase
     {
+        public IRazorRenderer RazorRenderer { get; }
+
         #region Constructor / DI
 
-        public RazorEngine(EngineBaseDependencies helpers) : base(helpers) { }
+        public RazorEngine(EngineBaseDependencies helpers, IRazorRenderer razorRenderer) : base(helpers)
+        {
+            RazorRenderer = razorRenderer;
+        }
         
         /// <inheritdoc />
         [PrivateApi]
@@ -47,8 +52,7 @@ namespace ToSic.Sxc.Razor.Engine
                 if (string.IsNullOrEmpty(TemplatePath)) return null;
                 var dynCode = new Code.DynamicCodeRoot().Init(Block, Log);
 
-                var compiler = Eav.Factory.Resolve<IRazorRenderer>();
-                var result = await compiler.RenderToStringAsync(TemplatePath, new object(),
+                var result = await RazorRenderer.RenderToStringAsync(TemplatePath, new object(),
                     rzv =>
                     {
                         if (rzv.RazorPage is ISxcRazorComponent asSxc)

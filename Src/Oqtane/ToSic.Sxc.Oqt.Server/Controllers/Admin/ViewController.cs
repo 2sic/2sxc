@@ -3,17 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using Oqtane.Shared;
-using ToSic.Eav.ImportExport.Options;
 using ToSic.Eav.Persistence.Logging;
-using ToSic.Eav.Security.Permissions;
-using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Assets;
-using ToSic.Sxc.WebApi.Cms;
 using ToSic.Sxc.WebApi.Views;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
@@ -22,13 +15,20 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     [Route(WebApiConstants.WebApiStateRoot + "/admin/view/[action]")]
     public class ViewController : SxcStatefulControllerBase
     {
+        private readonly Lazy<ViewsBackend> _viewsBackendLazy;
+        private readonly Lazy<ViewsExportImport> _viewExportLazy;
         protected override string HistoryLogName => "Api.TmpCnt";
 
-        private ViewsBackend Backend => Eav.Factory.Resolve<ViewsBackend>().Init(/* new DnnTenant(PortalSettings) */ GetContext().Tenant, GetUser(), Log);
-        private ViewsExportImport exportImport => Eav.Factory.Resolve<ViewsExportImport>().Init(/* new DnnTenant(PortalSettings) */ GetContext().Tenant, GetUser(), Log);
+        private ViewsBackend Backend => _viewsBackendLazy.Value.Init(GetContext().Tenant, GetUser(), Log);
+        private ViewsExportImport ExportImport => _viewExportLazy.Value.Init(GetContext().Tenant, GetUser(), Log);
 
-        public ViewController(StatefulControllerDependencies dependencies) : base(dependencies)
-        { }
+        public ViewController(StatefulControllerDependencies dependencies, 
+            Lazy<ViewsBackend> viewsBackendLazy,
+            Lazy<ViewsExportImport> viewExportLazy) : base(dependencies)
+        {
+            _viewsBackendLazy = viewsBackendLazy;
+            _viewExportLazy = viewExportLazy;
+        }
 
         [HttpGet]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S3400:Methods should not return constants", Justification = "<Pending>")]
@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 
         [HttpGet]
         [AllowAnonymous] // will do security check internally
-        public HttpResponseMessage Json(int appId, int viewId) => exportImport.DownloadViewAsJson(appId, viewId);
+        public HttpResponseMessage Json(int appId, int viewId) => ExportImport.DownloadViewAsJson(appId, viewId);
 
         /// <summary>
         /// Used to be POST ImportExport/ImportContent
@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
             var streams = new List<FileUploadDto>();
             for (var i = 0; i < files.Count; i++)
                 streams.Add(new FileUploadDto { Name = files[i].FileName, Stream = files[i].OpenReadStream() });
-            var result = exportImport.ImportView(zoneId, appId, streams, GetContext().Tenant.DefaultLanguage);
+            var result = ExportImport.ImportView(zoneId, appId, streams, GetContext().Tenant.DefaultLanguage);
             
             return wrapLog("ok", result);
         }

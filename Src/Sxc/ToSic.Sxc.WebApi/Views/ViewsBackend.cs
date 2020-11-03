@@ -11,7 +11,7 @@ using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.WebApi.Views
 {
-    internal class ViewsBackend: HasLog
+    public class ViewsBackend: HasLog
     {
         private readonly Lazy<CmsManager> _cmsManagerLazy;
         private ISite _site;

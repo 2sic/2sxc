@@ -6,6 +6,7 @@ using Oqtane.Repository;
 using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Dev;
@@ -15,13 +16,15 @@ namespace ToSic.Sxc.Oqt.Server.Run
     public class OqtZoneMapper : ZoneMapperBase
     {
         /// <inheritdoc />
-        public OqtZoneMapper(ISiteRepository siteRepository, ISettingRepository settingRepository) : base("Mvc.ZoneMp")
+        public OqtZoneMapper(ISiteRepository siteRepository, ISettingRepository settingRepository, IServiceProvider serviceProvider) : base("Mvc.ZoneMp")
         {
             _siteRepository = siteRepository;
             _settingRepository = settingRepository;
+            _serviceProvider = serviceProvider;
         }
         private readonly ISiteRepository _siteRepository;
         private readonly ISettingRepository _settingRepository;
+        private readonly IServiceProvider _serviceProvider;
 
         public override int GetZoneId(int tenantId)
         {
@@ -71,14 +74,14 @@ namespace ToSic.Sxc.Oqt.Server.Run
         {
             var sites = _siteRepository.GetSites().ToList();
             var found = sites.FirstOrDefault(p => HasZoneId(p.SiteId, out var zoneOfSite) && zoneOfSite == zoneId);
-            return found != null ? new OqtSite(found) : null;
+            return found != null ? _serviceProvider.Build<OqtSite>().Init(found) : null;
         }
 
-        public ISite TenantOfSite(int siteId)
-        {
-            var site = _siteRepository.GetSite(siteId);
-            return new OqtSite(site);
-        }
+        //public ISite TenantOfSite(int siteId)
+        //{
+        //    var site = _siteRepository.GetSite(siteId);
+        //    return _serviceProvider.Build<OqtSite>().Init(site);
+        //}
 
         // TODO: #Oqtane
         public override List<TempTempCulture> CulturesWithState(int tenantId, int zoneId)

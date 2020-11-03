@@ -4,7 +4,7 @@ using ToSic.Eav.Apps;
 
 namespace ToSic.Sxc.WebApi.Assets
 {
-    internal partial class AppAssetsBackend
+    public partial class AppAssetsBackend
     {
         private string ResolveAppPath(int appId, bool global, bool allowFullAccess)
         {

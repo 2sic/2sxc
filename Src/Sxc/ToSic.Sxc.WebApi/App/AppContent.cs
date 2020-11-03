@@ -15,7 +15,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.App
 {
-    internal class AppContent: BlockWithAppWebApiBackendBase<AppContent>
+    public class AppContent: BlockWithAppWebApiBackendBase<AppContent>
     {
         private readonly EntityApi _entityApi;
 

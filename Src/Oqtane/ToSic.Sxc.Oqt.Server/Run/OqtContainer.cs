@@ -13,13 +13,15 @@ namespace ToSic.Sxc.Oqt.Server.Run
     public class OqtContainer: Container<Module>
     {
         private readonly SettingsHelper _settingsHelper;
-        private readonly OqtZoneMapper _zoneMapper;
+        private readonly Lazy<OqtZoneMapper> _zoneMapperLazy;
+        private IZoneMapper ZoneMapper => _zoneMapper ??= _zoneMapperLazy.Value.Init(Log);
+        private IZoneMapper _zoneMapper;
         private Dictionary<string, string> _settings;
 
-        public OqtContainer(SettingsHelper settingsHelper, OqtZoneMapper zoneMapper) : base ("Oqt.Cont")
+        public OqtContainer(SettingsHelper settingsHelper, Lazy<OqtZoneMapper> zoneMapperLazy) : base ("Oqt.Cont")
         {
             _settingsHelper = settingsHelper;
-            _zoneMapper = zoneMapper;
+            _zoneMapperLazy = zoneMapperLazy;
         }
 
         public new OqtContainer Init(Module module, ILog parentLog)
@@ -60,13 +62,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public override bool IsPrimary => _isPrimary;
         private bool _isPrimary = true;
 
-        public List<KeyValuePair<string, string>> Parameters
-        {
-            get => _parameters ??= Eav.Factory.Resolve<IHttp>().QueryStringKeyValuePairs();
-            set => _parameters = value;
-        }
-        private List<KeyValuePair<string, string>> _parameters;
-
         public override IBlockIdentifier BlockIdentifier
         {
             get
@@ -74,7 +69,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 if (_blockIdentifier != null) return _blockIdentifier;
 
                 // find ZoneId, AppId and prepare settings for next values
-                var zoneId = _zoneMapper.Init(Log).GetZoneId(UnwrappedContents.SiteId);
+                var zoneId = ZoneMapper.GetZoneId(UnwrappedContents.SiteId);
                 var appId = GetInstanceAppId(zoneId); //appId ?? TestIds.Blog.App;
                 var block = Guid.Empty;
                 if (_settings.ContainsKey(Settings.ModuleSettingContentGroup))

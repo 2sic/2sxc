@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using ToSic.Sxc.Oqt.Shared;
@@ -13,18 +12,21 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
     public class ContentGroupController : SxcStatefulControllerBase
     {
+        private readonly Lazy<ListsBackendBase> _listBackendLazy;
         protected override string HistoryLogName => "Api.ConGrp";
-        public ContentGroupController(StatefulControllerDependencies dependencies) : base(dependencies)
+        public ContentGroupController(StatefulControllerDependencies dependencies,
+            Lazy<ListsBackendBase> listBackendLazy) : base(dependencies)
         {
+            _listBackendLazy = listBackendLazy;
         }
 
         [HttpGet]
         //[Authorize(Policy = "EditModule")] // TODO: disabled
         public EntityInListDto Header(Guid guid)
-            => Eav.Factory.Resolve<ListsBackendBase>().Init(GetBlock().App, Log)
+            => _listBackendLazy.Value.Init(GetBlock().App, Log)
                 .HeaderItem(guid);
 
-        private ListsBackendBase Backend => Eav.Factory.Resolve<ListsBackendBase>().Init(GetBlock().App, Log);
+        private ListsBackendBase Backend => _listBackendLazy.Value.Init(GetBlock().App, Log);
 
         // TODO: shouldn't be part of ContentGroupController any more, as it's generic now
         [HttpPost]

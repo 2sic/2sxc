@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using ToSic.Sxc.Apps.Assets;
@@ -15,12 +16,15 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
     public class AppFilesController : SxcStatefulControllerBase
     {
+        private readonly Lazy<AppAssetsBackend> _appAssetsLazy;
         protected override string HistoryLogName => "Api.Assets";
 
-        private AppAssetsBackend Backend() => Eav.Factory.Resolve<AppAssetsBackend>().Init(GetBlock().App, GetContext().User, Log);
+        private AppAssetsBackend Backend() => _appAssetsLazy.Value.Init(GetBlock().App, GetContext().User, Log);
 
-        public AppFilesController(StatefulControllerDependencies dependencies) : base(dependencies)
-        { }
+        public AppFilesController(StatefulControllerDependencies dependencies, Lazy<AppAssetsBackend> appAssetsLazy) : base(dependencies)
+        {
+            _appAssetsLazy = appAssetsLazy;
+        }
 
         [HttpGet]
         public List<string> All(

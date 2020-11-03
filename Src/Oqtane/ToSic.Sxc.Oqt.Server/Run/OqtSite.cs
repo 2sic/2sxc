@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Oqtane.Models;
 using Oqtane.Repository;
 using ToSic.Eav;
@@ -22,27 +23,27 @@ namespace ToSic.Sxc.Oqt.Server.Run
         /// <summary>
         /// Constructor for DI
         /// </summary>
-        public OqtSite(ISiteRepository siteRepository, ITenantResolver tenantResolver, IServerPaths serverPaths, OqtZoneMapper zoneMapper) : base(null)
+        public OqtSite(Lazy<ISiteRepository> siteRepository, Lazy<ITenantResolver> tenantResolver, Lazy<IServerPaths> serverPaths, Lazy<OqtZoneMapper> zoneMapper) : base(null)
         {
             _siteRepository = siteRepository;
             _tenantResolver = tenantResolver;
             _serverPaths = serverPaths;
             _zoneMapper = zoneMapper;
         }
-        private readonly ISiteRepository _siteRepository;
-        private readonly ITenantResolver _tenantResolver;
-        private readonly IServerPaths _serverPaths;
-        private readonly OqtZoneMapper _zoneMapper;
+        private readonly Lazy<ISiteRepository> _siteRepository;
+        private readonly Lazy<ITenantResolver> _tenantResolver;
+        private readonly Lazy<IServerPaths> _serverPaths;
+        private readonly Lazy<OqtZoneMapper> _zoneMapper;
 
-        public OqtSite(Site settings) : base(settings)
+        public OqtSite Init(Site settings)
         {
-            _serverPaths = Factory.Resolve<IServerPaths>();
-            _zoneMapper = Factory.Resolve<OqtZoneMapper>();
+            UnwrappedContents = settings;
+            return this;
         }
 
         public override Site UnwrappedContents
         {
-            get => _unwrapped ??= _siteRepository.GetSite(_tenantResolver.GetAlias().SiteId);
+            get => _unwrapped ??= _siteRepository.Value.GetSite(_tenantResolver.Value.GetAlias().SiteId);
             protected set => _unwrapped = value;
         }
         private Site _unwrapped;
@@ -50,7 +51,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public override ISite Init(int siteId)
         {
-            UnwrappedContents = _siteRepository.GetSite(siteId);
+            UnwrappedContents = _siteRepository.Value.GetSite(siteId);
             return this;
         }
 
@@ -78,7 +79,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         [PrivateApi]
         public override string AppsRootLink => Path.Combine(string.Format(OqtConstants.AppAssetsLinkRoot, Id.ToString()));
 
-        [PrivateApi] public override string AppsRootPhysicalFull => _serverPaths.FullAppPath(AppsRootPartial());
+        [PrivateApi] public override string AppsRootPhysicalFull => _serverPaths.Value.FullAppPath(AppsRootPartial());
 
         [PrivateApi]
         public override bool RefactorUserIsAdmin => WipConstants.IsAdmin;
@@ -97,11 +98,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
         {
             get
             {
-                // big todo: use zoneMapper
                 if (_zoneId != null) return _zoneId.Value;
                 // check if id is negative; 0 is a valid tenant id
                 if (Id < 0) return (_zoneId = Eav.Constants.NullId).Value;
-                _zoneId = _zoneMapper.Init(null).GetZoneId(Id);
+                _zoneId = _zoneMapper.Value.Init(null).GetZoneId(Id);
                 return _zoneId.Value;
             }
         }

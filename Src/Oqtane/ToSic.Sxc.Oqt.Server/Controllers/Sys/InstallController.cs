@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.ImportExport;
 
@@ -9,6 +9,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
     [Route(WebApiConstants.WebApiStateRoot + "/sys/install/[action]")]
     public class InstallController: SxcStatefulControllerBase
     {
+        private readonly Lazy<IEnvironmentInstaller> _envInstallerLazy;
+        private readonly Lazy<ImportFromRemote> _impFromRemoteLazy;
         protected override string HistoryLogName => "Api.Install";
 
         /// <summary>
@@ -20,8 +22,14 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
 
         #region System Installation
 
-        public InstallController(StatefulControllerDependencies dependencies) : base(dependencies)
-        { }
+        public InstallController(
+            StatefulControllerDependencies dependencies, 
+            Lazy<IEnvironmentInstaller> envInstallerLazy,
+            Lazy<ImportFromRemote> impFromRemoteLazy) : base(dependencies)
+        {
+            _envInstallerLazy = envInstallerLazy;
+            _impFromRemoteLazy = impFromRemoteLazy;
+        }
 
         /// <summary>
         /// Finish system installation which had somehow been interrupted
@@ -29,7 +37,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
         /// <returns></returns>
         [HttpGet]
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-        public bool Resume() => Eav.Factory.Resolve<IEnvironmentInstaller>().ResumeAbortedUpgrade();
+        public bool Resume() => _envInstallerLazy.Value.ResumeAbortedUpgrade();
 
         #endregion
 
@@ -45,7 +53,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public IActionResult RemoteWizardUrl(bool isContentApp)
         {
-            var result = Eav.Factory.Resolve<IEnvironmentInstaller>().Init(Log)
+            var result = _envInstallerLazy.Value.Init(Log)
                 .GetAutoInstallPackagesUiUrl(
                     GetContext().Tenant,
                     GetContext().Container,
@@ -72,7 +80,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
             Log.Add("install package:" + packageUrl);
 
             var block = container.BlockIdentifier;
-            var result = Eav.Factory.Resolve<ImportFromRemote>().Init(oqtaneUser, Log)
+            var result = _impFromRemoteLazy.Value.Init(oqtaneUser, Log)
                 .InstallPackage(block.ZoneId, block.AppId, isApp, packageUrl);
 
             Log.Add("install completed with success:" + result.Item1);
