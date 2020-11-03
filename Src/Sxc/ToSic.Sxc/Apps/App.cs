@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using ToSic.Eav.Apps;
-using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
@@ -75,8 +74,7 @@ namespace ToSic.Sxc.Apps
 
         #region DI Constructors
 
-        public App(IAppEnvironment appEnvironment, ISite site, ILinkPaths linkPaths, DataSourceFactory dataSourceFactory) 
-            : base(appEnvironment, site, dataSourceFactory, "App.SxcApp")
+        public App(AppDependencies appDependencies, ILinkPaths linkPaths) : base(appDependencies, "App.SxcApp")
         {
             _linkPaths = linkPaths;
         }
