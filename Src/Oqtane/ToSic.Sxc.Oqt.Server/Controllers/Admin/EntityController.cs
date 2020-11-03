@@ -29,13 +29,19 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     [Route(WebApiConstants.WebApiStateRoot + "/admin/entity/[action]")]
     public class EntityController : SxcStatefulControllerBase //, IEntitiesController // FIX: changed from interface to solve ambiguous DELETE routes.
     {
+        private readonly Lazy<ContentExportApi>_contentExportLazy;
+        private readonly Lazy<ContentImportApi> _contentImportLazy;
         private readonly Lazy<EntityApi> _lazyEntityApi;
         private readonly Lazy<EntityBackend> _lazyEntityBackend;
         protected override string HistoryLogName => "Api.EntCnt";
         public EntityController(StatefulControllerDependencies dependencies, 
             Lazy<EntityApi> lazyEntityApi,
-            Lazy<EntityBackend> lazyEntityBackend) : base(dependencies)
+            Lazy<EntityBackend> lazyEntityBackend,
+            Lazy<ContentExportApi> contentExportLazy,
+            Lazy<ContentImportApi> contentImportLazy) : base(dependencies)
         {
+            _contentExportLazy = contentExportLazy;
+            _contentImportLazy = contentImportLazy;
             _lazyEntityApi = lazyEntityApi;
             _lazyEntityBackend = lazyEntityBackend;
         }
@@ -71,7 +77,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [HttpGet]
         [AllowAnonymous] // will do security check internally
         public HttpResponseMessage Json(int appId, int id, string prefix, bool withMetadata)
-            => new ContentExportApi(Log).DownloadEntityAsJson(GetContext().User, appId, id, prefix, withMetadata);
+            => _contentExportLazy.Value.Init(appId, Log).DownloadEntityAsJson(GetContext().User, id, prefix, withMetadata);
 
 
         /// <summary>
@@ -95,8 +101,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
             string contentType,
             ExportSelection recordExport, ExportResourceReferenceMode resourcesReferences,
             ExportLanguageResolution languageReferences, string selectedIds = null)
-            => new ContentExportApi(Log).ExportContent(
-                GetContext().User, appId,
+            => _contentExportLazy.Value.Init(appId, Log).ExportContent(
+                GetContext().User,
                 language, defaultLanguage, contentType,
                 recordExport, resourcesReferences,
                 languageReferences, selectedIds);
@@ -109,7 +115,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "EditModule")]
         public ContentImportResultDto XmlPreview(ContentImportArgsDto args)
-            => new ContentImportApi(Log).XmlPreview(args);
+            => _contentImportLazy.Value.Init(args.AppId, Log).XmlPreview(args);
 
         /// <summary>
         /// This seems to be for XML import of a list
@@ -119,7 +125,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "EditModule")]
         public ContentImportResultDto XmlUpload(ContentImportArgsDto args)
-            => new ContentImportApi(Log).XmlImport(args);
+            => _contentImportLazy.Value.Init(args.AppId, Log).XmlImport(args);
 
         /// <summary>
         /// This is the single-item json import
@@ -128,7 +134,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "EditModule")]
-        public bool Upload(EntityImportDto args) => new ContentImportApi(Log).Import(args);
+        public bool Upload(EntityImportDto args) => _contentImportLazy.Value.Init(args.AppId, Log).Import(args);
 
         // New feature in 11.03 - Usage Statistics
         // not final yet, so no [HttpGet]

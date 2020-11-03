@@ -16,11 +16,13 @@ namespace ToSic.Sxc.WebApi.Cms
     public class EditSaveBackend : WebApiBackendBase<EditSaveBackend>
     {
         private readonly SxcPagePublishing _pagePublishing;
+        private readonly Lazy<AppManager> _appManagerLazy;
 
         #region Constructor / DI
-        public EditSaveBackend(SxcPagePublishing pagePublishing) : base("Cms.SaveBk")
+        public EditSaveBackend(SxcPagePublishing pagePublishing, Lazy<AppManager> appManagerLazy) : base("Cms.SaveBk")
         {
             _pagePublishing = pagePublishing;
+            _appManagerLazy = appManagerLazy;
         }
 
         public EditSaveBackend Init(IBlock block, ILog log)
@@ -52,7 +54,7 @@ namespace ToSic.Sxc.WebApi.Cms
             //    appId = targetAppId;
             //}
 
-            var appMan = new AppManager(appId, Log);
+            var appMan = _appManagerLazy.Value.Init(appId, Log);
             var appRead = appMan.Read;
             var ser = new JsonSerializer(appRead.AppState, Log)
             {

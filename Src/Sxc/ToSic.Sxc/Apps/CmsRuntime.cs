@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps;
+﻿using System;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Apps
@@ -7,7 +8,7 @@ namespace ToSic.Sxc.Apps
     {
         internal bool EnablePublishing { get; set; }
 
-        public CmsRuntime(): base("Sxc.CmsRt") { }
+        public CmsRuntime(IServiceProvider serviceProvider): base(serviceProvider, "Sxc.CmsRt") { }
 
         public CmsRuntime Init(IAppIdentity app, bool showDrafts, bool enablePublishing, ILog parentLog)
         {

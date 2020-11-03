@@ -15,6 +15,7 @@ using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.Cms;
 using ToSic.Sxc.WebApi.ContentBlocks;
+using ToSic.Sxc.WebApi.Features;
 using ToSic.Sxc.WebApi.ImportExport;
 using ToSic.Sxc.WebApi.InPage;
 using ToSic.Sxc.WebApi.Save;
@@ -52,17 +53,23 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<EntityPickerBackend>();
             services.TryAddTransient<EntityBackend>();
             services.TryAddTransient<EditLoadBackend>();
+            services.TryAddTransient<EditSaveBackend>();
             services.TryAddTransient<AppViewPickerBackend>();
             services.TryAddTransient<ContentBlockBackend>();
+            services.TryAddTransient<FeaturesBackend>();
+            services.TryAddTransient<UsageBackend>();
+
+            // APIs
+            services.TryAddTransient<EntityPickerApi>();
+            services.TryAddTransient<ContentTypeApi>();
+            services.TryAddTransient<QueryApi>();
+            services.TryAddTransient<ContentExportApi>();
+            services.TryAddTransient<ContentImportApi>();
 
             // Internal API helpers
             services.TryAddTransient<EntityApi>();
-            services.TryAddTransient<EntityPickerApi>();
             services.TryAddTransient<Insights>();
-            services.TryAddTransient<ContentTypeApi>();
             services.TryAddTransient<AppContent>();
-            services.TryAddTransient<UsageBackend>();
-            services.TryAddTransient<EditSaveBackend>();
             services.TryAddTransient<SxcPagePublishing>();
             services.TryAddTransient<ExportApp>();
             services.TryAddTransient<ImportApp>();

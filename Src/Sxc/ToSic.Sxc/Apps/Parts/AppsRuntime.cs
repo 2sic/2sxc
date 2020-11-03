@@ -5,14 +5,13 @@ using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Ui;
-using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Apps
 {
-    public class AppsRuntime: ZonePartRuntimeBase
+    public class AppsRuntime: ZonePartRuntimeBase<CmsZones, AppsRuntime>
     {
-        internal AppsRuntime(CmsZones cmsRuntime, ILog parentLog) : base(cmsRuntime, parentLog, "Cms.AppsRt")
+        internal AppsRuntime() : base("Cms.AppsRt")
         {
         }
 

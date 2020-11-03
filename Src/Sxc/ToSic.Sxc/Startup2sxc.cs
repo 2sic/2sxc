@@ -13,6 +13,8 @@ namespace ToSic.Sxc
             services.TryAddTransient<CmsRuntime>();
             services.TryAddTransient<CmsManager>();
             services.TryAddTransient<CmsZones>();
+            services.TryAddTransient<AppsRuntime>();
+            services.TryAddTransient<AppsManager>();
 
             // Block Editors
             services.TryAddTransient<BlockEditorForEntity>();

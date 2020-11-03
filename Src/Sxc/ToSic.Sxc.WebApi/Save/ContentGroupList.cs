@@ -88,7 +88,7 @@ namespace ToSic.Sxc.WebApi.Save
                 Log.Add($"will add: {willAdd}; " + // add-pre-verified:{primaryItem.Header.ReallyAddBecauseAlreadyVerified}; " +
                         $"Group.Add:{primaryItem.Header.Add}; EntityId:{primaryItem.Entity.EntityId}");
 
-                var cms = new CmsManager(app, Log);
+                var cms = new CmsManager().Init(app, Log);
                 var fieldPair = targetIsContentBlock
                     ? ViewParts.PickPair(primaryItem.Header.Group.Part)
                     : new[] {primaryItem.Header.Field};

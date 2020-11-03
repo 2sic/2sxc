@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using ToSic.Eav.Apps;
@@ -20,16 +21,24 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
     public class QueryController : SxcStatefulControllerBase, IQueryController
     {
+        private readonly Lazy<QueryApi> _queryLazy;
+        private readonly Lazy<CmsManager> _cmsManagerLazy;
         protected override string HistoryLogName => "Api.Query";
 
-        public QueryController(StatefulControllerDependencies dependencies) : base(dependencies)
-        { }
+        public QueryController(StatefulControllerDependencies dependencies, 
+            Lazy<QueryApi> queryLazy,
+            Lazy<CmsManager> cmsManagerLazy
+            ) : base(dependencies)
+        {
+            _queryLazy = queryLazy;
+            _cmsManagerLazy = cmsManagerLazy;
+        }
 
         /// <summary>
         /// Get a Pipeline with DataSources
         /// </summary>
         [HttpGet]
-        public QueryDefinitionDto Get(int appId, int? id = null) => new QueryApi(Log).Definition(appId, id);
+        public QueryDefinitionDto Get(int appId, int? id = null) => _queryLazy.Value.Init(appId, Log).Definition(appId, id);
 
         /// <summary>
         /// Get installed DataSources from .NET Runtime but only those with [PipelineDesigner Attribute]
@@ -45,7 +54,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <param name="id">PipelineEntityId</param>
         [HttpPost]
         public QueryDefinitionDto Save([FromBody] QueryDefinitionDto data, int appId, int id)
-            => new QueryApi(Log).Save(data, appId, id);
+            => _queryLazy.Value.Init(appId, Log).Save(data, appId, id);
 
 
         /// <summary>
@@ -57,14 +66,14 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
             var block = GetBlock();
             var instanceId = GetContext().Container.Id; // ?? 0;
             var config = ConfigurationProvider.GetConfigProviderForModule(instanceId, block?.App, block);
-            return new QueryApi(Log).Run(appId, id, instanceId, config);
+            return _queryLazy.Value.Init(appId, Log).Run(appId, id, instanceId, config);
         }
 
         /// <summary>
 	    /// Clone a Pipeline with all DataSources and their configurations
 	    /// </summary>
 	    [HttpGet]
-        public void Clone(int appId, int id) => new QueryApi(Log).Clone(appId, id);
+        public void Clone(int appId, int id) => _queryLazy.Value.Init(appId, Log).Clone(appId, id);
 
 
         /// <summary>
@@ -72,11 +81,11 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// </summary>
         [HttpDelete]
         public bool Delete(int appId, int id)
-            => new CmsManager(State.Identity(null, appId), true, false, Log)
+            => _cmsManagerLazy.Value.Init(State.Identity(null, appId), true, false, Log)
                 .DeleteQueryIfNotUsedByView(id, Log);
 
         [HttpPost]
-        public bool Import(EntityImportDto args) => new QueryApi(Log).Import(args);
+        public bool Import(EntityImportDto args) => _queryLazy.Value.Init(args.AppId, Log).Import(args);
 
     }
 }

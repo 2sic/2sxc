@@ -127,7 +127,7 @@ namespace ToSic.Sxc.Dnn.Cms
                 if (cb.ContentGroupExists)
                 {
                     Log.Add("cb exists");
-                    var appManager = new AppManager(cb, Log);
+                    var appManager = Eav.Factory.Resolve<AppManager>().Init(cb, Log);
 
                     // Add content entities
                     IEnumerable<IEntity> list = new List<IEntity>();

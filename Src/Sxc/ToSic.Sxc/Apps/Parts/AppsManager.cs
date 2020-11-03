@@ -3,18 +3,12 @@ using System.IO;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
-using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Apps
 {
-    public class AppsManager: ZonePartRuntimeBase
+    public class AppsManager: ZonePartRuntimeBase<ZoneRuntime, AppsManager>
     {
-        internal CmsZones CmsZones;
-
-        internal AppsManager(CmsZones cmsZones, ILog parentLog) : base(cmsZones, parentLog, "Cms.AppsRt")
-        {
-            CmsZones = cmsZones;
-        }
+        internal AppsManager() : base("Cms.AppsRt") { }
 
 
 

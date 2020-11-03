@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// Get a Pipeline with DataSources
         /// </summary>
         [HttpGet]
-		public QueryDefinitionDto Get(int appId, int? id = null) => new QueryApi(Log).Definition(appId, id);
+		public QueryDefinitionDto Get(int appId, int? id = null) => Eav.Factory.Resolve<QueryApi>().Init(appId, Log).Definition(appId, id);
 
         /// <summary>
         /// Get installed DataSources from .NET Runtime but only those with [PipelineDesigner Attribute]
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 		/// <param name="id">PipelineEntityId</param>
 		[HttpPost]
 	    public QueryDefinitionDto Save([FromBody] QueryDefinitionDto data, int appId, int id)
-	        => new QueryApi(Log).Save(data, appId, id);
+	        => Eav.Factory.Resolve<QueryApi>().Init(appId, Log).Save(data, appId, id);
 
 
 	    /// <summary>
@@ -57,14 +57,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             var block = GetBlock();
             var instanceId = ActiveModule?.ModuleID ?? 0;
             var config = ConfigurationProvider.GetConfigProviderForModule(instanceId, block?.App, block);
-            return new QueryApi(Log).Run(appId, id, instanceId, config);
+            return Eav.Factory.Resolve<QueryApi>().Init(appId, Log).Run(appId, id, instanceId, config);
         }
 
         /// <summary>
 	    /// Clone a Pipeline with all DataSources and their configurations
 	    /// </summary>
 	    [HttpGet]
-	    public void Clone(int appId, int id) => new QueryApi(Log).Clone(appId, id);
+	    public void Clone(int appId, int id) => Eav.Factory.Resolve<QueryApi>().Init(appId, Log).Clone(appId, id);
 
 
         /// <summary>
@@ -72,10 +72,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// </summary>
         [HttpDelete]
         public bool Delete(int appId, int id)
-            => new CmsManager(State.Identity(null, appId), true, false, Log)
+            => Eav.Factory.Resolve<CmsManager>().Init(State.Identity(null, appId), true, false, Log)
                 .DeleteQueryIfNotUsedByView(id, Log);
 
         [HttpPost]
-	    public bool Import(EntityImportDto args) => new QueryApi(Log).Import(args);
+	    public bool Import(EntityImportDto args) => Eav.Factory.Resolve<QueryApi>().Init(args.AppId, Log).Import(args);
 	}
 }

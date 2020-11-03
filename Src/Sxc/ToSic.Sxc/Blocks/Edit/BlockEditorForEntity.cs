@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Apps;
+using IApp = ToSic.Eav.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
     internal class BlockEditorForEntity : BlockEditorBase
     {
-        public BlockEditorForEntity(Lazy<CmsRuntime> lazyCmsRuntime) : base(lazyCmsRuntime)  { }
+        public BlockEditorForEntity(Lazy<CmsRuntime> lazyCmsRuntime, Lazy<AppManager> appManagerLazy) : base(lazyCmsRuntime, appManagerLazy)
+        {
+        }
 
         #region methods which the entity-implementation must customize 
 
@@ -52,9 +55,10 @@ namespace ToSic.Sxc.Blocks.Edit
         private void Update(Dictionary<string, object> newValues)
         {
             var app = ((BlockBase)Block).Parent.App;
-            new AppManager(app, Log)
+            GetAppManagerOrReuse(app)
                 .Entities.UpdateParts(Math.Abs(Block.ContentBlockId), newValues);
         }
+
 
         #endregion
 

@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public bool Publish(int id)
-            => new AppViewPickerBackend().Init(GetContext(), GetBlock(), Log)
+            => Eav.Factory.Resolve<AppViewPickerBackend>().Init(GetContext(), GetBlock(), Log)
                 .Publish(id);
     }
 }

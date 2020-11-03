@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Persistence.Versions;
@@ -14,11 +15,15 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     public class HistoryController : SxcStatefulControllerBase, IHistoryController
     {
         private readonly IdentifierHelper _idHelper;
+        private readonly Lazy<AppManager> _appManagerLazy;
         protected override string HistoryLogName => "Api.History";
 
-        public HistoryController(StatefulControllerDependencies dependencies, IdentifierHelper idHelper) : base(dependencies)
+        public HistoryController(StatefulControllerDependencies dependencies, 
+            IdentifierHelper idHelper,
+            Lazy<AppManager> appManagerLazy) : base(dependencies)
         {
             _idHelper = idHelper;
+            _appManagerLazy = appManagerLazy;
         }
 
         /// <summary>
@@ -30,13 +35,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [HttpPost]
         //[Authorize(Policy = "EditModule")]  // TODO: disabled
         public List<ItemHistory> Get(int appId, [FromBody] ItemIdentifier item)
-            => new AppManager(appId, Log).Entities.VersionHistory(_idHelper.Init(Log).ResolveItemIdOfGroup(appId, item, Log).EntityId);
+            => _appManagerLazy.Value.Init(appId, Log).Entities.VersionHistory(_idHelper.Init(Log).ResolveItemIdOfGroup(appId, item, Log).EntityId);
 
         [HttpPost]
         //[Authorize(Policy = "EditModule")]  // TODO: disabled
         public bool Restore(int appId, int changeId, [FromBody] ItemIdentifier item)
         {
-            new AppManager(appId, Log).Entities.VersionRestore(_idHelper.Init(Log).ResolveItemIdOfGroup(appId, item, Log).EntityId, changeId);
+            _appManagerLazy.Value.Init(appId, Log).Entities.VersionRestore(_idHelper.Init(Log).ResolveItemIdOfGroup(appId, item, Log).EntityId, changeId);
             return true;
         }
 

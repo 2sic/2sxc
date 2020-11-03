@@ -5,15 +5,23 @@ namespace ToSic.Sxc.Apps
 {
     public class CmsManager: AppManager, IAppIdentityWithPublishingState
     {
-        public bool EnablePublishing { get; }
+        public bool EnablePublishing { get; private set; }
 
-        public CmsManager(IAppIdentityWithPublishingState app, ILog parentLog) 
-            : base(app, parentLog) 
-            => EnablePublishing = app.EnablePublishing;
+        public CmsManager() : base("Sxc.CmsMan") { }
 
-        public CmsManager(IAppIdentity app, bool showDrafts, bool enablePublishing, ILog parentLog) 
-            : base(app, parentLog) 
-            => EnablePublishing = enablePublishing;
+        public CmsManager Init(IAppIdentityWithPublishingState app, ILog parentLog)
+        {
+            base.Init(app, parentLog);
+            EnablePublishing = app.EnablePublishing;
+            return this;
+        }
+
+        public CmsManager Init(IAppIdentity app, bool showDrafts, bool enablePublishing, ILog parentLog)
+        {
+            base.Init(app, showDrafts, parentLog);
+            EnablePublishing = enablePublishing;
+            return this;
+        }
 
         public new CmsRuntime Read 
             => _runtime ?? (_runtime = Eav.Factory.Resolve<CmsRuntime>().Init(this, ShowDrafts, EnablePublishing, Log));

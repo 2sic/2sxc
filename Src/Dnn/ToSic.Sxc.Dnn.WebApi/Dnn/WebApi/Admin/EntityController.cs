@@ -75,7 +75,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [AllowAnonymous] // will do security check internally
         public HttpResponseMessage Json(int appId, int id, string prefix, bool withMetadata)
-            => new ContentExportApi(Log).DownloadEntityAsJson(new DnnUser(UserInfo), appId, id, prefix, withMetadata);
+            => Eav.Factory.Resolve<ContentExportApi>().Init(appId, Log).DownloadEntityAsJson(new DnnUser(UserInfo), id, prefix, withMetadata);
 
         /// <summary>
         /// Used to be GET ContentExport/ExportContent
@@ -98,8 +98,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             string contentType,
             ExportSelection recordExport, ExportResourceReferenceMode resourcesReferences,
             ExportLanguageResolution languageReferences, string selectedIds = null)
-            => new ContentExportApi(Log).ExportContent(
-                new DnnUser(UserInfo), appId,
+            => Eav.Factory.Resolve<ContentExportApi>().Init(appId, Log).ExportContent(
+                new DnnUser(UserInfo),
                 language, defaultLanguage, contentType,
                 recordExport, resourcesReferences,
                 languageReferences, selectedIds);
@@ -112,7 +112,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public ContentImportResultDto XmlPreview(ContentImportArgsDto args)
-            => new ContentImportApi(Log).XmlPreview(args);
+            => Eav.Factory.Resolve<ContentImportApi>().Init(args.AppId, Log).XmlPreview(args);
 
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public ContentImportResultDto XmlUpload(ContentImportArgsDto args)
-            => new ContentImportApi(Log).XmlImport(args);
+            => Eav.Factory.Resolve<ContentImportApi>().Init(args.AppId, Log).XmlImport(args);
 
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpPost]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public bool Upload(EntityImportDto args) => new ContentImportApi(Log).Import(args);
+        public bool Upload(EntityImportDto args) => Eav.Factory.Resolve<ContentImportApi>().Init(args.AppId, Log).Import(args);
 
 
         // New feature in 11.03 - Usage Statistics

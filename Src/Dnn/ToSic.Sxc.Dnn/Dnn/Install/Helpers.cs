@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Dnn.Install
             var xmlToImport =
                 File.ReadAllText(
                     HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/" + version + ".xml"));
-            var xmlImport = new XmlImportWithFiles(parentLog, "en-US", /*userName,*/ true);
+            var xmlImport = Eav.Factory.Resolve<XmlImportWithFiles>().Init("en-US", /*userName,*/ true, parentLog);
             var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport),
                 leaveOriginalsUntouched);
 

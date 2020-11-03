@@ -23,7 +23,7 @@ namespace ToSic.Sxc.WebApi
             Log.LinkTo(parentLog);
             _context = context;
             _block = block;
-            _cmsManager = _block?.App == null ? null : new CmsManager(_block.App, Log);
+            _cmsManager = _block?.App == null ? null : new CmsManager().Init(_block.App, Log);
 
             return this as T;
         }

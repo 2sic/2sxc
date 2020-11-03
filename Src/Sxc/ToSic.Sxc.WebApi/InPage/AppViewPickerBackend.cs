@@ -7,7 +7,12 @@ namespace ToSic.Sxc.WebApi.InPage
 {
     public class AppViewPickerBackend: BlockWebApiBackendBase<AppViewPickerBackend>
     {
-        public AppViewPickerBackend() : base("Bck.ViwApp") { }
+        private readonly Lazy<AppManager> _appManagerLazy;
+        public AppViewPickerBackend(Lazy<AppManager> appManagerLazy) : base("Bck.ViwApp")
+        {
+            _appManagerLazy = appManagerLazy;
+        }
+
 
         public void SetAppId(int? appId) => BlockEditorBase.GetEditor(_block).SetAppId(appId);
 
@@ -23,7 +28,7 @@ namespace ToSic.Sxc.WebApi.InPage
         {
             var callLog = Log.Call<bool>($"{id}");
             ThrowIfNotAllowedInApp(GrantSets.WritePublished);
-            new AppManager(_block.App, Log).Entities.Publish(id);
+            _appManagerLazy.Value.Init(_block.App, Log).Entities.Publish(id);
             return callLog("ok", true);
         }
 

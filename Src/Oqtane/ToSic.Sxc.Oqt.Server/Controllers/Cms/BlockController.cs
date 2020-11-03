@@ -24,17 +24,20 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         private readonly Lazy<ContentBlockBackend> _blockBackendLazy;
         private readonly Lazy<AppViewPickerBackend> _viewPickerBackendLazy;
         private readonly Lazy<CmsZones> _cmsZonesLazy;
+        private readonly Lazy<AppViewPickerBackend> _appViewPickerBackendLazy;
         protected override string HistoryLogName => "Api.Block";
         public BlockController(StatefulControllerDependencies dependencies,
             Lazy<CmsRuntime> lazyCmsRuntime, 
             Lazy<ContentBlockBackend> blockBackendLazy,
             Lazy<AppViewPickerBackend> viewPickerBackendLazy,
-            Lazy<CmsZones> cmsZonesLazy) : base(dependencies)
+            Lazy<CmsZones> cmsZonesLazy,
+            Lazy<AppViewPickerBackend> appViewPickerBackendLazy) : base(dependencies)
         {
             _lazyCmsRuntime = lazyCmsRuntime;
             _blockBackendLazy = blockBackendLazy;
             _viewPickerBackendLazy = viewPickerBackendLazy;
             _cmsZonesLazy = cmsZonesLazy;
+            _appViewPickerBackendLazy = appViewPickerBackendLazy;
         }
 
         protected CmsRuntime CmsRuntime
@@ -166,7 +169,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             Log.Add($"render template:{templateId}, lang:{lang}");
             try
             {
-                var rendered = new AppViewPickerBackend().Init(GetContext(), GetBlock(), Log).Render(templateId, lang);
+                var rendered = _appViewPickerBackendLazy.Value.Init(GetContext(), GetBlock(), Log).Render(templateId, lang);
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new StringContent(rendered, Encoding.UTF8, "text/plain")

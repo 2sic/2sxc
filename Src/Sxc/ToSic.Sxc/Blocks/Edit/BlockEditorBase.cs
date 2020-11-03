@@ -4,6 +4,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
+using IApp = ToSic.Eav.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
@@ -12,11 +13,14 @@ namespace ToSic.Sxc.Blocks.Edit
     public abstract partial class BlockEditorBase : HasLog
     {
         private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
+        private readonly Lazy<AppManager> _appManagerLazy;
+
         #region DI and Construction
 
-        internal BlockEditorBase(Lazy<CmsRuntime> lazyCmsRuntime): base("CG.RefMan")
+        internal BlockEditorBase(Lazy<CmsRuntime> lazyCmsRuntime, Lazy<AppManager> appManagerLazy) : base("CG.RefMan")
         {
             _lazyCmsRuntime = lazyCmsRuntime;
+            _appManagerLazy = appManagerLazy;
         }
 
         internal BlockEditorBase Init(IBlock block)
@@ -49,7 +53,7 @@ namespace ToSic.Sxc.Blocks.Edit
                 var existedBeforeSettingTemplate = BlockConfiguration.Exists;
 
                 var app = Block.App;
-                var cms = new CmsManager(app, Log);
+                var cms = new CmsManager().Init(app, Log);
 
                 var contentGroupGuid = cms.Blocks.UpdateOrCreateContentGroup(BlockConfiguration, templateId);
 
@@ -81,7 +85,7 @@ namespace ToSic.Sxc.Blocks.Edit
 
             var hasPresentation = presEntity != null;
 
-            var appMan = new AppManager(Block.App, Log);
+            var appMan = GetAppManagerOrReuse(Block.App);// new AppManager(Block.App, Log);
 
             // make sure we really have the draft item an not the live one
             var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;
@@ -95,6 +99,10 @@ namespace ToSic.Sxc.Blocks.Edit
 
             return true;
         }
+
+        protected AppManager GetAppManagerOrReuse(IApp appIdentity) =>
+            _appManager ?? (_appManager = _appManagerLazy.Value.Init(appIdentity, Log));
+        private AppManager _appManager;
 
 
         #endregion

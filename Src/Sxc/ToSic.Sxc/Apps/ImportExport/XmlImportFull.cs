@@ -8,10 +8,7 @@ namespace ToSic.Sxc.Apps.ImportExport
 {
     public partial class XmlImportFull: XmlImportWithFiles
     {
-        public XmlImportFull()
-        {
-            Log.Rename("Sxc.XmlImp");
-        }
+        public XmlImportFull(Lazy<Import> importerLazy) : base(importerLazy, "Sxc.XmlImp") { }
 
         public new bool ImportXml(int zoneId, int appId, XDocument doc, bool leaveExistingValuesUntouched = true)
         {

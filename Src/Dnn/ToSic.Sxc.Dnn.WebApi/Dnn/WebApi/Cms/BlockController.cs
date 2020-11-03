@@ -123,7 +123,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Guid? Template(int templateId, bool forceCreateContentGroup)
-            => new AppViewPickerBackend().Init(GetContext(), GetBlock(), Log)
+            => Eav.Factory.Resolve<AppViewPickerBackend>().Init(GetContext(), GetBlock(), Log)
                 .SaveTemplateId(templateId, forceCreateContentGroup);
 
         #endregion
@@ -143,7 +143,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
             Log.Add($"render template:{templateId}, lang:{lang}");
             try
             {
-                var rendered = new AppViewPickerBackend().Init(GetContext(), GetBlock(), Log).Render(templateId, lang);
+                var rendered = Eav.Factory.Resolve<AppViewPickerBackend>().Init(GetContext(), GetBlock(), Log).Render(templateId, lang);
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new StringContent(rendered, Encoding.UTF8, "text/plain")

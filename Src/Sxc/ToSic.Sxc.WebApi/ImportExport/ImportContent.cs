@@ -13,7 +13,6 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.Assets;
 using ToSic.Sxc.WebApi.Validation;
 
@@ -24,16 +23,24 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         #region Constructor / DI
 
-        public ImportContent(IZoneMapper zoneMapper, IServerPaths serverPaths, IEnvironmentLogger envLogger) : base("Bck.Export")
+        public ImportContent(IZoneMapper zoneMapper, 
+            IServerPaths serverPaths, 
+            IEnvironmentLogger envLogger,
+            Lazy<Import> importerLazy,
+            Lazy<XmlImportWithFiles> xmlImportWithFilesLazy) : base("Bck.Export")
         {
             _zoneMapper = zoneMapper;
             _serverPaths = serverPaths;
             _envLogger = envLogger;
+            _importerLazy = importerLazy;
+            _xmlImportWithFilesLazy = xmlImportWithFilesLazy;
         }
 
         private readonly IZoneMapper _zoneMapper;
         private readonly IServerPaths _serverPaths;
         private readonly IEnvironmentLogger _envLogger;
+        private readonly Lazy<Import> _importerLazy;
+        private readonly Lazy<XmlImportWithFiles> _xmlImportWithFilesLazy;
         private IUser _user;
 
         public ImportContent Init(IUser user, ILog parentLog)
@@ -73,7 +80,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             {   // XML
                 using (var fileStreamReader = new StreamReader(stream))
                 {
-                    var xmlImport = new XmlImportWithFiles(Log, defaultLanguage, allowSystemChanges);
+                    var xmlImport = _xmlImportWithFilesLazy.Value.Init(defaultLanguage, allowSystemChanges, Log);
                     var xmlDocument = XDocument.Parse(fileStreamReader.ReadToEnd());
                     result.Success = xmlImport.ImportXml(zoneId, appId, xmlDocument);
                     result.Messages.AddRange(xmlImport.Messages);
@@ -102,7 +109,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                     throw new NullReferenceException("One ContentType is null, something is wrong");
 
                 // 2. Import the type
-                var import = new Import(zoneId, appId, true, parentLog: Log);
+                var import = _importerLazy.Value.Init(zoneId, appId, true, true, Log);
                 import.ImportIntoDb(types, null);
 
                 Log.Add($"Purging {zoneId}/{appId}");

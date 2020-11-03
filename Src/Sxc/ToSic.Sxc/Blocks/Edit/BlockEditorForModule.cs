@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Run;
@@ -8,7 +9,7 @@ namespace ToSic.Sxc.Blocks.Edit
 {
     internal class BlockEditorForModule: BlockEditorBase
     {
-        public BlockEditorForModule(Lazy<CmsRuntime> lazyCmsRuntime) : base(lazyCmsRuntime) { }
+        public BlockEditorForModule(Lazy<CmsRuntime> lazyCmsRuntime, Lazy<AppManager> appManagerLazy) : base(lazyCmsRuntime, appManagerLazy) { }
 
         protected override void SavePreviewTemplateId(Guid templateGuid)
             => Factory.Resolve<IPlatformModuleUpdater>().Init(Log)

@@ -81,7 +81,7 @@ namespace ToSic.Sxc.WebApi.Views
             // todo: extra security to only allow zone change if host user
             Log.Add($"delete a{appId}, t:{id}");
             var app = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId, Log);
-            var cms = new CmsManager(app, Log);
+            var cms = new CmsManager().Init(app, Log);
             cms.Views.DeleteView(id);
             return true;
         }

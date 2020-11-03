@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.InPage;
@@ -9,10 +10,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     [ValidateAntiForgeryToken]
     public class ItemController : SxcStatefulControllerBase
     {
+        private readonly Lazy<AppViewPickerBackend> _appViewPickerBackendLazy;
         protected override string HistoryLogName => "Api.Item";
 
-        public ItemController(StatefulControllerDependencies dependencies) : base(dependencies)
+        public ItemController(StatefulControllerDependencies dependencies,
+            Lazy<AppViewPickerBackend> appViewPickerBackendLazy) : base(dependencies)
         {
+            _appViewPickerBackendLazy = appViewPickerBackendLazy;
         }
 
         /// <summary>
@@ -23,7 +27,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [HttpPost]
         //[Authorize(Policy = "ViewModule")] // TODO: disabled
         public bool Publish(int id)
-            => new AppViewPickerBackend().Init(GetContext(), GetBlock(), Log)
+            => _appViewPickerBackendLazy.Value.Init(GetContext(), GetBlock(), Log)
                 .Publish(id);
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.ImportExport;
 using ToSic.Eav.Persistence.Logging;
@@ -22,9 +21,10 @@ namespace ToSic.Sxc.Apps.ImportExport
             var templates = root.Element(XmlConstants.Templates);
             if (templates == null) return;
 
-            //var appState = DataSource.GetCache(DataSource.GetIdentity(ZoneId, AppId));
-            //var cache = Factory.Resolve<IAppsCache>();
-            var appState = /*Factory.GetAppState*/Eav.Apps.State.Get(new AppIdentity(ZoneId, AppId));
+            var appId = new AppIdentity(ZoneId, AppId);
+            var appState = State.Get(appId);
+
+            var viewsManager = new CmsManager().Init(appId, true, false, Log).Views;
 
             foreach (var template in templates.Elements(XmlConstants.Template))
             {
@@ -165,8 +165,7 @@ namespace ToSic.Sxc.Apps.ImportExport
                         listPresentationDemoEntityId = listPresentationDefault.DemoEntityId;
                     }
 
-                    new CmsManager(GetCurrentAppManager(), true, false, Log).Views
-                        .CreateOrUpdate(
+                    viewsManager.CreateOrUpdate(
                         null, name, path, contentTypeStaticName, demoEntityId, presentationTypeStaticName,
                         presentationDemoEntityId, listContentTypeStaticName, listContentDemoEntityId,
                         listPresentationTypeStaticName, listPresentationDemoEntityId, type, isHidden, location,

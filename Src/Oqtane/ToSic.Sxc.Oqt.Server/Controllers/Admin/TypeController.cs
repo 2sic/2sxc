@@ -25,19 +25,24 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     [ValidateAntiForgeryToken]
     public class TypeController : SxcStatefulControllerBase, ITypeController
     {
-        private readonly Lazy<ContentTypeApi> _lazyContentTypeApi;
+        private readonly Lazy<ContentTypeApi> _ctApiLazy;
+        private readonly Lazy<ContentExportApi> _contentExportLazy;
         protected override string HistoryLogName => "Api.Types";
-        private ContentTypeApi Backend => _lazyContentTypeApi.Value.Init(Log);
-        public TypeController(StatefulControllerDependencies dependencies, Lazy<ContentTypeApi> lazyContentTypeApi) : base(dependencies)
+
+        public TypeController(StatefulControllerDependencies dependencies, 
+            Lazy<ContentTypeApi> ctApiLazy,
+            Lazy<ContentExportApi> contentExportLazy
+            ) : base(dependencies)
         {
-            _lazyContentTypeApi = lazyContentTypeApi;
+            _ctApiLazy = ctApiLazy;
+            _contentExportLazy = contentExportLazy;
         }
 
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
-            => Backend.Get(appId, scope, withStatistics);
+            => _ctApiLazy.Value.Init(appId, Log).Get(scope, withStatistics);
 
         /// <summary>
         /// Used to be GET ContentTypes/Scopes
@@ -54,12 +59,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
-        public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) => Backend.GetSingle(appId, contentTypeId, scope);
+        public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) => _ctApiLazy.Value.Init(appId, Log).GetSingle(appId, contentTypeId, scope);
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
-        public bool Delete(int appId, string staticName) => Backend.Delete(appId, staticName);
+        public bool Delete(int appId, string staticName) => _ctApiLazy.Value.Init(appId, Log).Delete(appId, staticName);
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -70,7 +75,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         public bool Save(int appId, Dictionary<string, object> item)
         {
             var cleanList = item.ToDictionary(i => i.Key, i => i.Value?.ToString());
-            return Backend.Save(appId, cleanList);
+            return _ctApiLazy.Value.Init(appId, Log).Save(appId, cleanList);
         }
 
         /// <summary>
@@ -82,13 +87,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.HostRole)]
-        public bool AddGhost(int appId, string sourceStaticName) => Backend.CreateGhost(appId, sourceStaticName);
+        public bool AddGhost(int appId, string sourceStaticName) => _ctApiLazy.Value.Init(appId, Log).CreateGhost(appId, sourceStaticName);
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public void SetTitle(int appId, int contentTypeId, int attributeId)
-            => Backend.SetTitle(appId, contentTypeId, attributeId);
+            => _ctApiLazy.Value.Init(appId, Log).SetTitle(appId, contentTypeId, attributeId);
 
         /// <summary>
         /// Used to be GET ContentExport/DownloadTypeAsJson
@@ -96,6 +101,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [HttpGet]
         [AllowAnonymous] // will do security check internally
         public HttpResponseMessage Json(int appId, string name)
-            => new ContentExportApi(Log).DownloadTypeAsJson(GetContext().User, appId, name);
+            => _contentExportLazy.Value.Init(appId, Log).DownloadTypeAsJson(GetContext().User, name);
     }
 }

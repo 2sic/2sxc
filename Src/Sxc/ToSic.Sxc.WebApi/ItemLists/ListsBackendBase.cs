@@ -51,7 +51,7 @@ namespace ToSic.Sxc.WebApi.ItemLists
 
             void InternalSave(VersioningActionInfo args)
             {
-                var cms = new CmsManager(_app, Log);
+                var cms = new CmsManager().Init(_app, Log);
                 var entity = cms.AppState.List.One(guid);
                 if (entity == null) throw new Exception($"Can't find item '{guid}'");
 
@@ -134,7 +134,7 @@ namespace ToSic.Sxc.WebApi.ItemLists
 
             _publishing.DoInsidePublishing(context, args =>
             {
-                var cms = new CmsManager(_app, Log);
+                var cms = new CmsManager().Init(_app, Log);
                 var entity = cms.Read.AppState.List.One(guid);
 
                 var sequence = list.Select(i => i.Index).ToArray();

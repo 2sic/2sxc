@@ -17,13 +17,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     public class FieldController : SxcStatefulControllerBase, IFieldController
     {
         private readonly Lazy<AppRuntime> _appRuntime;
-        private readonly Lazy<ContentTypeApi> _lazyContentType;
+        private readonly Lazy<ContentTypeApi> _ctApiLazy;
         protected override string HistoryLogName => "Api.Fields";
-        private ContentTypeApi Backend => _lazyContentType.Value.Init(Log);
-        public FieldController(StatefulControllerDependencies dependencies, Lazy<AppRuntime> appRuntime, Lazy<ContentTypeApi> lazyContentType) : base(dependencies)
+        public FieldController(StatefulControllerDependencies dependencies, Lazy<AppRuntime> appRuntime, Lazy<ContentTypeApi> ctApiLazy) : base(dependencies)
         {
             _appRuntime = appRuntime;
-            _lazyContentType = lazyContentType;
+            _ctApiLazy = ctApiLazy;
         }
 
         #region Fields - Get, Reorder, Data-Types (for dropdown), etc.
@@ -32,13 +31,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// Returns the configuration for a content type
         /// </summary>
         [HttpGet]
-        public IEnumerable<ContentTypeFieldDto> All(int appId, string staticName) => Backend.GetFields(appId, staticName);
+        public IEnumerable<ContentTypeFieldDto> All(int appId, string staticName) => _ctApiLazy.Value.Init(appId, Log).GetFields(appId, staticName);
 
         /// <summary>
         /// Used to be GET ContentType/DataTypes
         /// </summary>
         [HttpGet]
-        public string[] DataTypes(int appId) => Backend.DataTypes(appId);
+        public string[] DataTypes(int appId) => _ctApiLazy.Value.Init(appId, Log).DataTypes(appId);
 
         /// <summary>
         /// Used to be GET ContentType/InputTypes
@@ -51,27 +50,27 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// </summary>
         [HttpPost]
         public int Add(int appId, int contentTypeId, string staticName, string type, string inputType, int index)
-            => Backend.AddField(appId, contentTypeId, staticName, type, inputType, index);
+            => _ctApiLazy.Value.Init(appId, Log).AddField(contentTypeId, staticName, type, inputType, index);
 
         /// <summary>
         /// Used to be GET ContentType/DeleteField
         /// </summary>
         [HttpDelete]
         public bool Delete(int appId, int contentTypeId, int attributeId)
-            => Backend.DeleteField(appId, contentTypeId, attributeId);
+            => _ctApiLazy.Value.Init(appId, Log).DeleteField(appId, contentTypeId, attributeId);
 
         /// <summary>
         /// Used to be GET ContentType/Reorder
         /// </summary>
 	    [HttpPost]
-        public bool Sort(int appId, int contentTypeId, string order) => Backend.Reorder(appId, contentTypeId, order);
+        public bool Sort(int appId, int contentTypeId, string order) => _ctApiLazy.Value.Init(appId, Log).Reorder(appId, contentTypeId, order);
 
 
         /// <summary>
         /// Used to be GET ContentType/UpdateInputType
         /// </summary>
         [HttpPost]
-        public bool InputType(int appId, int attributeId, string inputType) => Backend.SetInputType(appId, attributeId, inputType);
+        public bool InputType(int appId, int attributeId, string inputType) => _ctApiLazy.Value.Init(appId, Log).SetInputType(attributeId, inputType);
 
         #endregion
 
@@ -79,6 +78,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// Used to be GET ContentType/Rename
         /// </summary>
         [HttpPost]
-        public void Rename(int appId, int contentTypeId, int attributeId, string newName) => Backend.Rename(appId, contentTypeId, attributeId, newName);
+        public void Rename(int appId, int contentTypeId, int attributeId, string newName) => _ctApiLazy.Value.Init(appId, Log).Rename(appId, contentTypeId, attributeId, newName);
     }
 }
