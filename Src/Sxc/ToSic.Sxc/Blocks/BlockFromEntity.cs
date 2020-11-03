@@ -3,6 +3,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.DataSources;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.Blocks
         
         #region Constructor and DI
 
-        public BlockFromEntity() : base("CB.Ent") { }
+        public BlockFromEntity(Lazy<BlockDataSourceFactory> bdsFactoryLazy) : base(bdsFactoryLazy, "CB.Ent") { }
 
         public BlockFromEntity Init(IBlock parent, IEntity blockEntity, ILog parentLog)
         {

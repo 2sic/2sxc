@@ -8,7 +8,11 @@ namespace ToSic.Sxc.Apps.ImportExport
 {
     public partial class XmlImportFull: XmlImportWithFiles
     {
-        public XmlImportFull(Lazy<Import> importerLazy) : base(importerLazy, "Sxc.XmlImp") { }
+        private readonly Lazy<CmsManager> _cmsManagerLazy;
+        public XmlImportFull(Lazy<Import> importerLazy, Lazy<CmsManager> cmsManagerLazy) : base(importerLazy, "Sxc.XmlImp")
+        {
+            _cmsManagerLazy = cmsManagerLazy;
+        }
 
         public new bool ImportXml(int zoneId, int appId, XDocument doc, bool leaveExistingValuesUntouched = true)
         {

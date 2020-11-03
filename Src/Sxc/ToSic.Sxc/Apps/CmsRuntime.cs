@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Apps;
+using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Apps
@@ -8,7 +9,7 @@ namespace ToSic.Sxc.Apps
     {
         internal bool EnablePublishing { get; set; }
 
-        public CmsRuntime(IServiceProvider serviceProvider): base(serviceProvider, "Sxc.CmsRt") { }
+        public CmsRuntime(DataSourceFactory dataSourceFactory) : base(dataSourceFactory, "Sxc.CmsRt") { }
 
         public CmsRuntime Init(IAppIdentity app, bool showDrafts, bool enablePublishing, ILog parentLog)
         {

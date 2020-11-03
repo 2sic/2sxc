@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Dnn.WebApi
                 : new DnnSite().Init(moduleInfo.OwnerPortalID);
 
             var context = new DnnContext(tenant, container, new DnnUser(), GetOverrideParams(request));
-            IBlock block = new BlockFromModule().Init(context, log);
+            IBlock block = Eav.Factory.Resolve<BlockFromModule>().Init(context, log);
 
             // check if we need an inner block
             if (request.Headers.Contains(WebApiConstants.HeaderContentBlockId)) { 
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Dnn.WebApi
                 if (blockId < 0)   // negative id, so it's an inner block
                 {
                     log.Add($"Inner Content: {blockId}");
-                    block = new BlockFromEntity().Init(block, blockId, log);
+                    block = Eav.Factory.Resolve<BlockFromEntity>().Init(block, blockId, log);
                 }
             }
 

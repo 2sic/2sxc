@@ -15,11 +15,13 @@ namespace Website.Pages
 {
     public class EavCoreModel : PageModel
     {
+        public DataSourceFactory DataSourceFactory { get; }
         protected const int ZoneId = 2;
         protected const int AppId = 4;
 
-        public EavCoreModel()
+        public EavCoreModel(DataSourceFactory dataSourceFactory)
         {
+            DataSourceFactory = dataSourceFactory;
         }
 
 
@@ -34,15 +36,13 @@ namespace Website.Pages
 
         public IDataSource BlogRoot()
         {
-            var dsFact = new DataSource();
-            return dsFact.GetDataSource<IAppRoot>(new AppIdentity(ZoneId, AppId), null, ConfigProvider);
+            return DataSourceFactory.GetDataSource<IAppRoot>(new AppIdentity(ZoneId, AppId), null, ConfigProvider);
         }
 
         public IDataSource BlogTags()
         {
-            var dsFact = new DataSource();
             var dsBlog = BlogRoot();
-            var dsFilter = dsFact.GetDataSource<EntityTypeFilter>(dsBlog, dsBlog);
+            var dsFilter = DataSourceFactory.GetDataSource<EntityTypeFilter>(dsBlog, dsBlog);
             dsFilter.TypeName = "Tag";
             return dsFilter;
         }

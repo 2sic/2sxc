@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.Apps.Ui;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Oqt.Shared;
@@ -70,7 +71,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             var entityId = Backend.NewBlock(parentId, field, sortOrder, app, guid);
 
             // now return a rendered instance
-            var newContentBlock = new BlockFromEntity().Init(GetBlock(), entityId, Log);
+            var newContentBlock = HttpContext.RequestServices.Build<BlockFromEntity>().Init(GetBlock(), entityId, Log);
             return newContentBlock.BlockBuilder.Render();
 
         }

@@ -17,14 +17,17 @@ namespace ToSic.Sxc.WebApi.ItemLists
 {
     public class ListsBackendBase: HasLog
     {
-        private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
-        private readonly IPagePublishing _publishing;
 
         #region Constructor / di
+        private readonly Lazy<CmsManager> _cmsManagerLazy;
+        private readonly IPagePublishing _publishing;
+        private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.Init(_app, Log));
+        private CmsManager _cmsManager;
 
-        public ListsBackendBase(IPagePublishing publishing, Lazy<CmsRuntime> lazyCmsRuntime) : base("Bck.Lists")
+        public ListsBackendBase(IPagePublishing publishing, Lazy<CmsManager> cmsManagerLazy) : base("Bck.Lists")
         {
-            _lazyCmsRuntime = lazyCmsRuntime;
+            //_lazyCmsRuntime = lazyCmsRuntime;
+            _cmsManagerLazy = cmsManagerLazy;
             _publishing = publishing.Init(Log);
         }
 
@@ -32,12 +35,10 @@ namespace ToSic.Sxc.WebApi.ItemLists
         {
             Log.LinkTo(parentLog);
             _app = app;
-            CmsRuntime.Init(_app, true, false, Log);
             return this;
         }
 
         private IApp _app;
-        private CmsRuntime CmsRuntime => _lazyCmsRuntime.Value;
 
         #endregion
 
@@ -51,8 +52,8 @@ namespace ToSic.Sxc.WebApi.ItemLists
 
             void InternalSave(VersioningActionInfo args)
             {
-                var cms = new CmsManager().Init(_app, Log);
-                var entity = cms.AppState.List.One(guid);
+                //var cms = new CmsManager().Init(_app, Log);
+                var entity = CmsManager.AppState.List.One(guid);
                 if (entity == null) throw new Exception($"Can't find item '{guid}'");
 
                 // correct casing of content / listcontent for now - TODO should already happen in JS-Call
@@ -63,10 +64,10 @@ namespace ToSic.Sxc.WebApi.ItemLists
                 }
 
                 if (add)
-                    cms.Entities.FieldListAdd(entity, new[] { part }, index, new int?[] { entityId }, cms.EnablePublishing);
+                    CmsManager.Entities.FieldListAdd(entity, new[] { part }, index, new int?[] { entityId }, CmsManager.EnablePublishing);
                 else
-                    cms.Entities.FieldListReplaceIfModified(entity, new[] { part }, index, new int?[] { entityId },
-                        cms.EnablePublishing);
+                    CmsManager.Entities.FieldListReplaceIfModified(entity, new[] { part }, index, new int?[] { entityId },
+                        CmsManager.EnablePublishing);
             }
 
             // use dnn versioning - this is always part of page
@@ -134,12 +135,12 @@ namespace ToSic.Sxc.WebApi.ItemLists
 
             _publishing.DoInsidePublishing(context, args =>
             {
-                var cms = new CmsManager().Init(_app, Log);
-                var entity = cms.Read.AppState.List.One(guid);
+                //var cms = new CmsManager().Init(_app, Log);
+                var entity = CmsManager.Read.AppState.List.One(guid);
 
                 var sequence = list.Select(i => i.Index).ToArray();
                 var fields = part == ViewParts.ContentLower ? ViewParts.ContentPair : new[] {part};
-                cms.Entities.FieldListReorder(entity, fields, sequence, cms.EnablePublishing);
+                CmsManager.Entities.FieldListReorder(entity, fields, sequence, CmsManager.EnablePublishing);
             });
 
             return true;
@@ -208,7 +209,7 @@ namespace ToSic.Sxc.WebApi.ItemLists
         protected BlockConfiguration GetContentGroup(Guid contentGroupGuid)
         {
             Log.Add($"get group:{contentGroupGuid}");
-            var contentGroup = CmsRuntime.Blocks.GetBlockConfig(contentGroupGuid);
+            var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(contentGroupGuid);
 
             if (contentGroup == null)
                 throw new Exception("BlockConfiguration with Guid " + contentGroupGuid + " does not exist.");

@@ -2,6 +2,7 @@
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.WebApi.FieldList
@@ -12,7 +13,7 @@ namespace ToSic.Sxc.WebApi.FieldList
 
         #region constructor / DI
 
-        public FieldListBackend(IPagePublishing publishing) : base("Bck.FldLst") 
+        public FieldListBackend(IPagePublishing publishing, Lazy<CmsManager> cmsManagerLazy) : base(cmsManagerLazy, "Bck.FldLst") 
             => _publishing = publishing.Init(Log);
 
         #endregion
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.WebApi.FieldList
         public void ChangeOrder(Guid? parent, string fields, int index, int toIndex)
         {
             var wrapLog = Log.Call($"change order sort:{index}, dest:{toIndex}");
-            var entMan = _cmsManager.Entities;
+            var entMan = CmsManager.Entities;
             ModifyList(FindOrThrow(parent), fields, 
                 (entity, fieldList, versioning) => entMan.FieldListMove(entity, fieldList, index, toIndex, versioning));
             wrapLog(null);
@@ -30,7 +31,7 @@ namespace ToSic.Sxc.WebApi.FieldList
         public void Remove(Guid? parent, string fields, int index)
         {
             var wrapLog = Log.Call($"remove from index:{index}");
-            var entMan = _cmsManager.Entities;
+            var entMan = CmsManager.Entities;
             ModifyList(FindOrThrow(parent), fields, 
                 (entity, fieldList, versioning) => entMan.FieldListRemove(entity, fieldList, index, versioning));
             wrapLog(null);

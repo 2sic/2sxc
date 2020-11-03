@@ -20,16 +20,20 @@ namespace ToSic.Sxc.WebApi.Save
         #region Constructor / DI
         private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
         private CmsRuntime CmsRuntime { get; set; }
+        private readonly Lazy<CmsManager> _cmsManagerLazy;
+        private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.Init(Block?.App, Log));
+        private CmsManager _cmsManager;
 
-        public ContentGroupList(Lazy<CmsRuntime> lazyCmsRuntime) : base("Api.GrpPrc")
+        public ContentGroupList(Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> cmsManagerLazy) : base("Api.GrpPrc")
         {
             _lazyCmsRuntime = lazyCmsRuntime;
+            _cmsManagerLazy = cmsManagerLazy;
         }
 
         public ContentGroupList Init(IBlock block, ILog log, IAppIdentity appIdentity)
         {
             Init(block, log);
-            _appIdentity = appIdentity;
+            _appIdentity = appIdentity ?? block;
             var publishingEnabled = Factory.Resolve<IPagePublishing>().Init(Log).IsEnabled(Block.Context.Container.Id);
             CmsRuntime = _lazyCmsRuntime.Value.Init(appIdentity, Block.EditAllowed, publishingEnabled, Log);
             return this;
@@ -88,15 +92,15 @@ namespace ToSic.Sxc.WebApi.Save
                 Log.Add($"will add: {willAdd}; " + // add-pre-verified:{primaryItem.Header.ReallyAddBecauseAlreadyVerified}; " +
                         $"Group.Add:{primaryItem.Header.Add}; EntityId:{primaryItem.Entity.EntityId}");
 
-                var cms = new CmsManager().Init(app, Log);
+                //var cms = new CmsManager().Init(app, Log);
                 var fieldPair = targetIsContentBlock
                     ? ViewParts.PickPair(primaryItem.Header.Group.Part)
                     : new[] {primaryItem.Header.Field};
 
                 if (willAdd) // this cannot be auto-detected, it must be specified
-                    cms.Entities.FieldListAdd(entity, fieldPair, index, ids, cms.EnablePublishing);
+                    CmsManager.Entities.FieldListAdd(entity, fieldPair, index, ids, CmsManager.EnablePublishing);
                 else
-                    cms.Entities.FieldListReplaceIfModified(entity, fieldPair, index, ids, cms.EnablePublishing);
+                    CmsManager.Entities.FieldListReplaceIfModified(entity, fieldPair, index, ids, CmsManager.EnablePublishing);
 
             }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
@@ -11,19 +12,23 @@ namespace ToSic.Sxc.WebApi
 {
     public abstract class BlockWebApiBackendBase<T>: HasLog where T: class
     {
+        private readonly Lazy<CmsManager> _cmsManagerLazy;
         protected IInstanceContext _context;
         protected IBlock _block;
-        protected CmsManager _cmsManager;
+        protected CmsManager CmsManager;
 
 
-        protected BlockWebApiBackendBase(string logName) : base(logName) { }
+        protected BlockWebApiBackendBase(Lazy<CmsManager> cmsManagerLazy, string logName) : base(logName)
+        {
+            _cmsManagerLazy = cmsManagerLazy;
+        }
 
         public T Init(IInstanceContext context, IBlock block, ILog parentLog)
         {
             Log.LinkTo(parentLog);
             _context = context;
             _block = block;
-            _cmsManager = _block?.App == null ? null : new CmsManager().Init(_block.App, Log);
+            CmsManager = _block?.App == null ? null : _cmsManagerLazy.Value.Init(_block.App, Log);
 
             return this as T;
         }

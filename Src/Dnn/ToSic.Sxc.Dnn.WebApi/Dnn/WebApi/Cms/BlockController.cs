@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
             var entityId = Backend.NewBlock(parentId, field, sortOrder, app, guid);
 
             // now return a rendered instance
-            var newContentBlock = new BlockFromEntity().Init(GetBlock(), entityId, Log);
+            var newContentBlock = Eav.Factory.Resolve<BlockFromEntity>().Init(GetBlock(), entityId, Log);
             return newContentBlock.BlockBuilder.Render();
 
         }

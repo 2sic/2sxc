@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Search
             var cache = State.Cache;
             cache.Load(container.BlockIdentifier, tenant.DefaultLanguage);
 
-            var modBlock = new BlockFromModule().Init(new DnnContext(tenant, container, new DnnUser()), Log);
+            var modBlock = Eav.Factory.Resolve<BlockFromModule>().Init(new DnnContext(tenant, container, new DnnUser()), Log);
 
             var language = dnnModule.CultureCode;
 

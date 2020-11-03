@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
+using ToSic.Sxc.DataSources;
 
 namespace ToSic.Sxc
 {
@@ -19,6 +21,11 @@ namespace ToSic.Sxc
             // Block Editors
             services.TryAddTransient<BlockEditorForEntity>();
             services.TryAddTransient<BlockEditorForModule>();
+            
+            // Block functionality
+            services.TryAddTransient<BlockDataSourceFactory>();
+            services.TryAddTransient<BlockFromModule>();
+            services.TryAddTransient<BlockFromEntity>();
 
             return services;
         }

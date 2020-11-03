@@ -42,9 +42,9 @@ namespace ToSic.Sxc.Blocks
             if (item == null)
                 item = dynParent;
             
-            return field == null
-                ? Simple.Render(dynParent.Block, item.Entity, dynParent.Block.Log) // with edit-context
-                : new HtmlString(Simple.RenderWithEditContext(dynParent, item, field, newGuid) + "<b>data-list-context</b>"); // data-list-context (no edit-context)
+            return new HtmlString(field == null
+                ? Simple.Render(dynParent.Block, item.Entity) // with edit-context
+                : Simple.RenderWithEditContext(dynParent, item, field, newGuid) + "<b>data-list-context</b>"); // data-list-context (no edit-context)
         }
 
         /// <summary>

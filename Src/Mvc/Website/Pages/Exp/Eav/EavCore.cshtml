@@ -12,7 +12,7 @@
         An EAV Constant: @ToSic.Eav.Constants.ContentAppName
     </li>
     <li>
-        A DataSource Object: @(new ToSic.Eav.DataSource().GetType().AssemblyQualifiedName)
+        A DataSource Object: @(new ToSic.Eav.DataSources.DataSourceFactory(null).GetType().AssemblyQualifiedName)
     </li>
     <li>
         Repository type Code: @(ToSic.Eav.Repositories.RepositoryTypes.Code)

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 //using ToSic.Sxc.Mvc.Code;
@@ -48,7 +49,7 @@ namespace ToSic.Sxc.Mvc
         public IBlock CreateBlock(int zoneId, int pageId, int containerId, int appId, Guid blockGuid, ILog log)
         {
             var context = CreateContext(zoneId, pageId, containerId, appId, blockGuid);
-            var block = new BlockFromModule().Init(context, log);
+            var block = _httpContext.RequestServices.Build<BlockFromModule>().Init(context, log);
             return block;
         }
 

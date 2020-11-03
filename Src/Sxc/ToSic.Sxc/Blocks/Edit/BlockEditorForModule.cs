@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Blocks.Edit
 {
     internal class BlockEditorForModule: BlockEditorBase
     {
-        public BlockEditorForModule(Lazy<CmsRuntime> lazyCmsRuntime, Lazy<AppManager> appManagerLazy) : base(lazyCmsRuntime, appManagerLazy) { }
+        public BlockEditorForModule(Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> cmsManagerLazy) : base(lazyCmsRuntime, cmsManagerLazy) { }
 
         protected override void SavePreviewTemplateId(Guid templateGuid)
             => Factory.Resolve<IPlatformModuleUpdater>().Init(Log)

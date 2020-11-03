@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components;
 using Oqtane.Models;
 using Oqtane.Shared;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Oqt.Server.Page;
 using ToSic.Sxc.Oqt.Server.Run;
@@ -81,7 +82,7 @@ namespace ToSic.Sxc.Oqt.Server
         private IBlock GetBlock()
         {
             var context = _oqtTempInstanceContext.CreateContext(Module, Page.PageId, Log, _serviceProvider);
-            var block = new BlockFromModule().Init(context, Log);
+            var block = _serviceProvider.Build<BlockFromModule>().Init(context, Log);
             return block;
         }
     }

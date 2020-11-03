@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Apps.ImportExport
             var appId = new AppIdentity(ZoneId, AppId);
             var appState = State.Get(appId);
 
-            var viewsManager = new CmsManager().Init(appId, true, false, Log).Views;
+            var viewsManager = _cmsManagerLazy.Value.Init(appId, true, false, Log).Views;
 
             foreach (var template in templates.Elements(XmlConstants.Template))
             {

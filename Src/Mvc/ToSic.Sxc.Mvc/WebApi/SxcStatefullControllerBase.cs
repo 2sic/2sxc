@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Primitives;
 using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Mvc.Dev;
 using ToSic.Sxc.Mvc.Run;
@@ -35,13 +36,13 @@ namespace ToSic.Sxc.Mvc.WebApi
 
             var ctx = SxcMvc.CreateContext(HttpContext, instance.Zone, pageId, containerId, instance.App,
                 instance.Block);
-            IBlock block = new BlockFromModule().Init(ctx, Log);
+            IBlock block = HttpContext.RequestServices.Build<BlockFromModule>().Init(ctx, Log);
 
             // only if it's negative, do we load the inner block
             if (contentblockId > 0) return wrapLog("found", block);
 
             Log.Add($"Inner Content: {contentblockId}");
-            block = new BlockFromEntity().Init(block, contentblockId, Log);
+            block = HttpContext.RequestServices.Build<BlockFromEntity>().Init(block, contentblockId, Log);
 
             return wrapLog("found", block);
         }

@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps;
+﻿using System;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
@@ -13,9 +14,14 @@ namespace ToSic.Sxc.Blocks
 {
     public abstract partial class BlockBase : HasLog<BlockBase>, IBlock
     {
+        private readonly Lazy<BlockDataSourceFactory> _bdsFactoryLazy;
+
         #region Constructor and DI
 
-        protected BlockBase(string logName) : base(logName) { }
+        protected BlockBase(Lazy<BlockDataSourceFactory> bdsFactoryLazy, string logName) : base(logName)
+        {
+            _bdsFactoryLazy = bdsFactoryLazy;
+        }
 
         protected void Init(IInstanceContext context, IAppIdentity appId, ILog parentLog)
         {
@@ -124,13 +130,15 @@ namespace ToSic.Sxc.Blocks
         /// <inheritdoc />
         public IInstanceContext Context { get; protected set; }
 
-        // ReSharper disable once InconsistentNaming
-        protected IBlockDataSource _dataSource;
 
 
         public IBlockDataSource Data => _dataSource
-                                        ?? (_dataSource = Block.GetBlockDataSource(this, View,
-                                            App?.ConfigurationProvider, Log));
+                                        ?? (_dataSource = _bdsFactoryLazy.Value.Init(Log).GetBlockDataSource(this,
+                                            App?.ConfigurationProvider));
+                                        //?? (_dataSource = Block.GetBlockDataSource(this, View,
+                                        //    App?.ConfigurationProvider, Log));
+        // ReSharper disable once InconsistentNaming
+        protected IBlockDataSource _dataSource;
 
         public BlockConfiguration Configuration { get; protected set; }
         

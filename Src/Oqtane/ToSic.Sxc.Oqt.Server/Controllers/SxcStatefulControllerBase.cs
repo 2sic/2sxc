@@ -3,6 +3,7 @@ using Microsoft.Extensions.Primitives;
 using Oqtane.Repository;
 using ToSic.Eav;
 using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Oqt.Server.Run;
@@ -55,13 +56,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
             var module = _moduleRepository.GetModule(containerId);
             var ctx = _oqtTempInstanceContext.CreateContext(module, pageId, Log, ServiceProvider);
-            IBlock block = new BlockFromModule().Init(ctx, Log);
+            IBlock block = ServiceProvider.Build<BlockFromModule>().Init(ctx, Log);
 
             // only if it's negative, do we load the inner block
             if (contentblockId > 0) return wrapLog("found", block);
 
             Log.Add($"Inner Content: {contentblockId}");
-            block = new BlockFromEntity().Init(block, contentblockId, Log);
+            block = ServiceProvider.Build<BlockFromEntity>().Init(block, contentblockId, Log);
             return wrapLog("found", block);
         }
 

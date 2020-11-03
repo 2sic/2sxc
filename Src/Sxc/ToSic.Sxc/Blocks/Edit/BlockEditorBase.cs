@@ -12,15 +12,17 @@ namespace ToSic.Sxc.Blocks.Edit
     // todo: move some parts out into a BlockManagement
     public abstract partial class BlockEditorBase : HasLog
     {
-        private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
-        private readonly Lazy<AppManager> _appManagerLazy;
-
         #region DI and Construction
 
-        internal BlockEditorBase(Lazy<CmsRuntime> lazyCmsRuntime, Lazy<AppManager> appManagerLazy) : base("CG.RefMan")
+        private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
+        private readonly Lazy<CmsManager> _cmsManagerLazy;
+        private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.Init(Block?.App, Log));
+        private CmsManager _cmsManager;
+
+        internal BlockEditorBase(Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> cmsManagerLazy) : base("CG.RefMan")
         {
             _lazyCmsRuntime = lazyCmsRuntime;
-            _appManagerLazy = appManagerLazy;
+            _cmsManagerLazy = cmsManagerLazy;
         }
 
         internal BlockEditorBase Init(IBlock block)
@@ -52,10 +54,10 @@ namespace ToSic.Sxc.Blocks.Edit
             {
                 var existedBeforeSettingTemplate = BlockConfiguration.Exists;
 
-                var app = Block.App;
-                var cms = new CmsManager().Init(app, Log);
+                //var app = Block.App;
+                //var cms = new CmsManager().Init(app, Log);
 
-                var contentGroupGuid = cms.Blocks.UpdateOrCreateContentGroup(BlockConfiguration, templateId);
+                var contentGroupGuid = CmsManager.Blocks.UpdateOrCreateContentGroup(BlockConfiguration, templateId);
 
                 if (!existedBeforeSettingTemplate) EnsureLinkToContentGroup(contentGroupGuid);
 
@@ -101,7 +103,7 @@ namespace ToSic.Sxc.Blocks.Edit
         }
 
         protected AppManager GetAppManagerOrReuse(IApp appIdentity) =>
-            _appManager ?? (_appManager = _appManagerLazy.Value.Init(appIdentity, Log));
+            _appManager ?? (_appManager = _cmsManagerLazy.Value.Init(appIdentity, Log));
         private AppManager _appManager;
 
 

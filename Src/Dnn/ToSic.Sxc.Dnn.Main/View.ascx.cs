@@ -22,7 +22,7 @@ namespace ToSic.SexyContent
                     new DnnSite().Init(ModuleConfiguration.OwnerPortalID),
                     new DnnContainer().Init(ModuleConfiguration, Log),
                     new DnnUser(UserInfo));
-                return _block = new BlockFromModule().Init(context, Log);
+                return _block = Eav.Factory.Resolve<BlockFromModule>().Init(context, Log);
             }
         }
         private IBlock _block;

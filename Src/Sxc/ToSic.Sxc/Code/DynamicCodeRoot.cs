@@ -6,6 +6,7 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
@@ -31,7 +32,8 @@ namespace ToSic.Sxc.Code
     {
         public IBlock Block { get; private set; }
 
-        public DynamicCodeRoot(string logName = null): base(logName ?? "Sxc.DynCdR") { }
+        public DynamicCodeRoot(): base("Sxc.DynCdR") { }
+        protected DynamicCodeRoot(string logName): base(logName) { }
 
         [PrivateApi]
         public DynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)
@@ -111,8 +113,10 @@ namespace ToSic.Sxc.Code
             => _configurationProvider ??
                (_configurationProvider = Data.Configuration.LookUps);
 
-        internal DataSource DataSourceFactory => _dataSourceFactory ?? (_dataSourceFactory = new DataSource(Log));
-        private DataSource _dataSourceFactory;
+        internal DataSourceFactory DataSourceFactory => _dataSourceFactory ??
+                                                        (_dataSourceFactory = Block?.Context?.ServiceProvider
+                                                            .Build<DataSourceFactory>().Init(Log));// new DataSource(Log));
+        private DataSourceFactory _dataSourceFactory;
 
 
 

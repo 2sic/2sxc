@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Dnn
         {
             var dnnModule = ((Container<ModuleInfo>)container).UnwrappedContents;
             var tenant = new DnnSite(new PortalSettings(dnnModule.OwnerPortalID));
-            return new BlockFromModule().Init(new DnnContext(tenant, container, new DnnUser()), parentLog).BlockBuilder;
+            return Eav.Factory.Resolve<BlockFromModule>().Init(new DnnContext(tenant, container, new DnnUser()), parentLog).BlockBuilder;
         }
 
         /// <summary>

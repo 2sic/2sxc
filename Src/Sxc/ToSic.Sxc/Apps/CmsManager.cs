@@ -1,4 +1,6 @@
-﻿using ToSic.Eav.Apps;
+﻿using System;
+using ToSic.Eav.Apps;
+using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Apps
@@ -7,7 +9,7 @@ namespace ToSic.Sxc.Apps
     {
         public bool EnablePublishing { get; private set; }
 
-        public CmsManager() : base("Sxc.CmsMan") { }
+        public CmsManager(IServiceProvider serviceProvider, DataSourceFactory dataSourceFactory) : base(serviceProvider, dataSourceFactory, "Sxc.CmsMan") { }
 
         public CmsManager Init(IAppIdentityWithPublishingState app, ILog parentLog)
         {

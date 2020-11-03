@@ -31,19 +31,19 @@ namespace ToSic.Sxc.WebApi.Views
         private readonly IServerPaths _serverPaths;
         private readonly TemplateHelpers _appHelpers;
         private readonly IEnvironmentLogger _envLogger;
-        private readonly Lazy<AppManager> _appManagerLazy;
+        private readonly Lazy<CmsManager> _cmsManagerLazy;
         private ISite _site;
         private IUser _user;
 
         public ViewsExportImport(IServerPaths serverPaths, 
             TemplateHelpers appHelpers, 
             IEnvironmentLogger envLogger,
-            Lazy<AppManager> appManagerLazy) : base("Bck.Views")
+            Lazy<CmsManager> cmsManagerLazy) : base("Bck.Views")
         {
             _serverPaths = serverPaths;
             _appHelpers = appHelpers;
             _envLogger = envLogger;
-            _appManagerLazy = appManagerLazy;
+            _cmsManagerLazy = cmsManagerLazy;
         }
 
         public ViewsExportImport Init(ISite site, IUser user, ILog parentLog)
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.WebApi.Views
             var logCall = Log.Call($"{appId}, {viewId}");
             SecurityHelpers.ThrowIfNotAdmin(_user);
             var app = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId, Log);
-            var cms = new CmsManager().Init(app, Log);
+            var cms = _cmsManagerLazy.Value.Init(app, Log); // new CmsManager().Init(app, Log);
             var bundle = new BundleEntityWithAssets
             {
                 Entity = app.Data[Eav.ImportExport.Settings.TemplateContentType].One(viewId)
@@ -128,7 +128,7 @@ namespace ToSic.Sxc.WebApi.Views
 
                 // 2. Import the views
                 // todo: construction of this should go into init
-                _appManagerLazy.Value.Init(app.AppId, Log).Entities.Import(bundles.Select(v => v.Entity).ToList());
+                _cmsManagerLazy.Value.Init(app.AppId, Log).Entities.Import(bundles.Select(v => v.Entity).ToList());
 
                 // 3. Import the attachments
                 var assets = bundles.SelectMany(b => b.Assets);

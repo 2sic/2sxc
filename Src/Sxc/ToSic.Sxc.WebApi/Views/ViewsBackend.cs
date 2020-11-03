@@ -13,13 +13,13 @@ namespace ToSic.Sxc.WebApi.Views
 {
     internal class ViewsBackend: HasLog
     {
-        private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
+        private readonly Lazy<CmsManager> _cmsManagerLazy;
         private ISite _site;
         private IUser _user;
 
-        public ViewsBackend(Lazy<CmsRuntime> lazyCmsRuntime) : base("Bck.Views")
+        public ViewsBackend(Lazy<CmsManager> cmsManagerLazy) : base("Bck.Views")
         {
-            _lazyCmsRuntime = lazyCmsRuntime;
+            _cmsManagerLazy = cmsManagerLazy;
         }
 
         public ViewsBackend Init(ISite site, IUser user, ILog parentLog)
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.WebApi.Views
         public IEnumerable<ViewDetailsDto> GetAll(int appId)
         {
             Log.Add($"get all a#{appId}");
-            var cms = _lazyCmsRuntime.Value.Init(State.Identity(null, appId), true, false, Log);
+            var cms = _cmsManagerLazy.Value.Init(State.Identity(null, appId), true, false, Log).Read;
 
             var attributeSetList = cms.ContentTypes.All.OfScope(Settings.AttributeSetScope).ToList();
             var templateList = cms.Views.GetAll().ToList();
@@ -81,7 +81,7 @@ namespace ToSic.Sxc.WebApi.Views
             // todo: extra security to only allow zone change if host user
             Log.Add($"delete a{appId}, t:{id}");
             var app = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId, Log);
-            var cms = new CmsManager().Init(app, Log);
+            var cms = _cmsManagerLazy.Value.Init(app, Log); // new CmsManager().Init(app, Log);
             cms.Views.DeleteView(id);
             return true;
         }

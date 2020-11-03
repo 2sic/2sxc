@@ -1,4 +1,5 @@
-﻿using ToSic.Eav;
+﻿using System;
+using ToSic.Eav;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.WebApi.App;
@@ -7,7 +8,7 @@ namespace ToSic.Sxc.WebApi
 {
     internal abstract class BlockWithAppWebApiBackendBase<T>: BlockWebApiBackendBase<T> where T: class
     {
-        protected BlockWithAppWebApiBackendBase(string logName) : base(logName) { }
+        protected BlockWithAppWebApiBackendBase(Lazy<CmsManager> cmsManagerLazy, string logName) : base(cmsManagerLazy, logName) { }
 
         internal AppOfRequest AppFinder => Factory.Resolve<AppOfRequest>().Init(Log);
 

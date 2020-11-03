@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
                     new MvcUser(),
                     null
                 );
-                _block = new BlockFromModule().Init(context, Log);
+                _block = Eav.Factory.Resolve<BlockFromModule>().Init(context, Log);
                 return _block;
             }
         }

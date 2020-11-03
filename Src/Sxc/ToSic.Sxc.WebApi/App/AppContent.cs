@@ -21,7 +21,7 @@ namespace ToSic.Sxc.WebApi.App
 
         #region Constructor / DI
 
-        public AppContent(EntityApi entityApi) : base("Sxc.ApiApC")
+        public AppContent(EntityApi entityApi, Lazy<CmsManager> cmsManagerLazy) : base(cmsManagerLazy, "Sxc.ApiApC")
         {
             _entityApi = entityApi;
         }
