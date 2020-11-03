@@ -138,7 +138,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
         // New feature in 11.03 - Usage Statistics
         // not final yet, so no [HttpGet]
-        public dynamic Usage(int appId, Guid guid) => new EntityBackend().Init(Log).Usage(GetContext(), GetApp(appId), guid);
+        public dynamic Usage(int appId, Guid guid) => Eav.Factory.Resolve<EntityBackend>().Init(Log).Usage(GetContext(), GetApp(appId), guid);
 
     }
 }

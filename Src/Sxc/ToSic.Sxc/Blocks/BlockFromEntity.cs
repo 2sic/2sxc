@@ -76,7 +76,7 @@ namespace ToSic.Sxc.Blocks
             temp = blockDefinition.GetBestValue(ViewParts.TemplateContentType)?.ToString() ?? "";
             Guid.TryParse(temp, out var previewTemplateGuid);
 
-            var appId = new ZoneRuntime(zoneId, log).FindAppId(appName);
+            var appId = new ZoneRuntime().Init(zoneId, log).FindAppId(appName);
             return new BlockIdentifier(zoneId, appId, contentGroupGuid, previewTemplateGuid);
         }
         #endregion

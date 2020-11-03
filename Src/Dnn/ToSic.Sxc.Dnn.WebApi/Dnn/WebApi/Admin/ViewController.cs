@@ -81,7 +81,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public IEnumerable<ViewDto> Usage(int appId, Guid guid)
-            => new UsageBackend().Init(Log)
+            => Eav.Factory.Resolve<UsageBackend>().Init(Log)
                 .ViewUsage(GetContext(), appId, guid,
                     (views, blocks) =>
                     {

@@ -13,7 +13,7 @@ using ToSic.Sxc.WebApi.Security;
 
 namespace ToSic.Sxc.WebApi.Save
 {
-    internal class SaveSecurity: SaveHelperBase
+    internal class SaveSecurity: SaveHelperBase<SaveSecurity>
     {
         public SaveSecurity(IBlock block, ILog parentLog) : base("Api.SavSec")
         {

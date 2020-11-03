@@ -20,9 +20,21 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
     public class BlockController : SxcStatefulControllerBase
     {
+        private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
+        private readonly Lazy<ContentBlockBackend> _blockBackendLazy;
+        private readonly Lazy<AppViewPickerBackend> _viewPickerBackendLazy;
+        private readonly Lazy<CmsZones> _cmsZonesLazy;
         protected override string HistoryLogName => "Api.Block";
-        public BlockController(StatefulControllerDependencies dependencies) : base(dependencies)
+        public BlockController(StatefulControllerDependencies dependencies,
+            Lazy<CmsRuntime> lazyCmsRuntime, 
+            Lazy<ContentBlockBackend> blockBackendLazy,
+            Lazy<AppViewPickerBackend> viewPickerBackendLazy,
+            Lazy<CmsZones> cmsZonesLazy) : base(dependencies)
         {
+            _lazyCmsRuntime = lazyCmsRuntime;
+            _blockBackendLazy = blockBackendLazy;
+            _viewPickerBackendLazy = viewPickerBackendLazy;
+            _cmsZonesLazy = cmsZonesLazy;
         }
 
         protected CmsRuntime CmsRuntime
@@ -32,7 +44,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                 var runtime = _cmsRuntime;
                 if (runtime != null) return runtime;
 
-                return _cmsRuntime = ContextApp == null ? null : new CmsRuntime(ContextApp, Log, true, false);
+                return _cmsRuntime = ContextApp == null ? null : _lazyCmsRuntime.Value.Init(ContextApp, true, false, Log);
             }
         }
         private CmsRuntime _cmsRuntime;
@@ -42,8 +54,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         #region Block
 
-        private ContentBlockBackend Backend => Eav.Factory.Resolve<ContentBlockBackend>().Init(GetContext(), GetBlock(), Log);
-
+        private ContentBlockBackend Backend => _backend ??= _blockBackendLazy.Value.Init(GetContext(), GetBlock(), Log);
+        private ContentBlockBackend _backend;
 
         /// <summary>
         /// used to be GET Module/GenerateContentBlock
@@ -82,7 +94,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void App(int? appId)
-            => new AppViewPickerBackend().Init(GetContext(), GetBlock(), Log)
+            => _viewPickerBackendLazy.Value.Init(GetContext(), GetBlock(), Log)
                 .SetAppId(appId);
 
         /// <summary>
@@ -96,7 +108,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         {
             // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
             var tenant = GetContext().Tenant;// new DnnTenant(PortalSettings);
-            return new CmsZones(tenant.ZoneId, Log).AppsRt.GetSelectableApps(tenant, apps).ToList();
+            return _cmsZonesLazy.Value.Init(tenant.ZoneId, Log).AppsRt.GetSelectableApps(tenant, apps)
+                .ToList();
         }
 
         #endregion
@@ -133,7 +146,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Guid? Template(int templateId, bool forceCreateContentGroup)
-            => new AppViewPickerBackend().Init(GetContext(), GetBlock(), Log)
+            => _viewPickerBackendLazy.Value.Init(GetContext(), GetBlock(), Log)
                 .SaveTemplateId(templateId, forceCreateContentGroup);
 
         #endregion

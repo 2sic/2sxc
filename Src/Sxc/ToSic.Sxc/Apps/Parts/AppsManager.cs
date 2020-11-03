@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Apps
 
             // now remove from DB. This sometimes fails, so we do this before trying to clean the files
             // as the db part should be in a transaction, and if it fails, everything should stay as is
-            new ZoneManager(zoneId, Log).DeleteApp(appId);
+            new ZoneManager().Init(zoneId, Log).DeleteApp(appId);
 
             // now really delete the files - if the DB didn't end up throwing an error
             if (!string.IsNullOrEmpty(folder) && Directory.Exists(physPath))

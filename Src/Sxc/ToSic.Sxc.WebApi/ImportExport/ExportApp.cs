@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using ToSic.Eav;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
@@ -13,19 +12,21 @@ using ToSic.Sxc.WebApi.App;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
-    internal class ExportApp: HasLog
+    public class ExportApp: HasLog
     {
 
         #region Constructor / DI
 
-        public ExportApp(IZoneMapper zoneMapper, ZipExport zipExport) : base("Bck.Export")
+        public ExportApp(IZoneMapper zoneMapper, ZipExport zipExport, CmsRuntime cmsRuntime) : base("Bck.Export")
         {
             _zoneMapper = zoneMapper;
             _zipExport = zipExport;
+            _cmsRuntime = cmsRuntime;
         }
 
         private readonly IZoneMapper _zoneMapper;
         private readonly ZipExport _zipExport;
+        private readonly CmsRuntime _cmsRuntime;
         private IUser _user;
         private int _siteId;
 
@@ -47,12 +48,12 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var contextZoneId = _zoneMapper.GetZoneId(_siteId);
             var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId, Log);
 
-            var zipExport = Factory.Resolve<ZipExport>().Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
+            var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
             var cultCount = _zoneMapper
                 .CulturesWithState(_siteId, currentApp.ZoneId)
                 .Count(c => c.Active);
 
-            var cms = new CmsRuntime(currentApp, Log, true, false);
+            var cms = _cmsRuntime.Init(currentApp, true, false, Log);
 
             return new AppExportInfoDto
             {
@@ -94,7 +95,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var contextZoneId = _zoneMapper.GetZoneId(_siteId);
             var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId, Log);
 
-            var zipExport = Factory.Resolve<ZipExport>().Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
+            var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
             var addOnWhenContainingContent = includeContentGroups ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm") : "";
 
             var fileName =

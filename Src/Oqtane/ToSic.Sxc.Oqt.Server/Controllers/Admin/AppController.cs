@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using System.Collections.Generic;
 using System.Net.Http;
 using ToSic.Eav.Apps;
@@ -21,22 +21,35 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     [Route(WebApiConstants.WebApiStateRoot + "/admin/app/[action]")]
     public class AppController : SxcStatefulControllerBase, IAppController
     {
+        private readonly Lazy<AppsBackend> _appsBackendLazy;
+        private readonly Lazy<CmsZones> _cmsZonesLazy;
+        private readonly Lazy<ExportApp> _exportAppLazy;
+        private readonly Lazy<ImportApp> _importAppLazy;
         protected override string HistoryLogName => "Api.App";
 
-        public AppController(StatefulControllerDependencies dependencies) : base(dependencies)
-        { }
+        public AppController(StatefulControllerDependencies dependencies, 
+            Lazy<AppsBackend> appsBackendLazy,
+            Lazy<CmsZones> cmsZonesLazy,
+            Lazy<ExportApp> exportAppLazy,
+            Lazy<ImportApp> importAppLazy) : base(dependencies)
+        {
+            _appsBackendLazy = appsBackendLazy;
+            _cmsZonesLazy = cmsZonesLazy;
+            _exportAppLazy = exportAppLazy;
+            _importAppLazy = importAppLazy;
+        }
 
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public List<AppDto> List(int zoneId)
-            => new AppsBackend().Init(Log).Apps(GetContext().Tenant, GetBlock(), zoneId);
+            => _appsBackendLazy.Value.Init(Log).Apps(GetContext().Tenant, GetBlock(), zoneId);
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public void App(int zoneId, int appId)
-            => new CmsZones(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId);
+            => _cmsZonesLazy.Value.Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId);
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -55,7 +68,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public AppExportInfoDto Statistics(int zoneId, int appId)
-            => Eav.Factory.Resolve<ExportApp>().Init(GetContext().Tenant.Id, GetContext().User, Log)
+            => _exportAppLazy.Value.Init(GetContext().Tenant.Id, GetContext().User, Log)
                 .GetAppInfo(appId, zoneId);
 
 
@@ -79,7 +92,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <returns></returns>
         [HttpGet]
         public HttpResponseMessage Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => Eav.Factory.Resolve<ExportApp>().Init(GetContext().Tenant.Id, GetContext().User, Log)
+            => _exportAppLazy.Value.Init(GetContext().Tenant.Id, GetContext().User, Log)
                 .Export(appId, zoneId, includeContentGroups, resetAppGuid);
 
         /// <summary>
@@ -93,7 +106,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [HttpGet]
         [ValidateAntiForgeryToken]
         public bool SaveData(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => Eav.Factory.Resolve<ExportApp>().Init(GetContext().Tenant.Id, GetContext().User, Log)
+            => _exportAppLazy.Value.Init(GetContext().Tenant.Id, GetContext().User, Log)
                 .SaveDataForVersionControl(appId, zoneId, includeContentGroups, resetAppGuid);
 
 
@@ -114,7 +127,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 
             if (request.Files.Count <= 0) return new ImportResultDto(false, "no files uploaded");
 
-            return Eav.Factory.Resolve<ImportApp>().Init(GetContext().User, Log)
+            return _importAppLazy.Value.Init(GetContext().User, Log)
                 .Import(zoneId, request["Name"], request.Files[0].OpenReadStream());
         }
     }

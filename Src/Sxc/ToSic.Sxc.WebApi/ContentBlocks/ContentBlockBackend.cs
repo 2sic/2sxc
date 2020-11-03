@@ -5,7 +5,7 @@ using ToSic.Sxc.Blocks.Edit;
 
 namespace ToSic.Sxc.WebApi.ContentBlocks
 {
-    internal class ContentBlockBackend : BlockWebApiBackendBase<ContentBlockBackend>
+    public class ContentBlockBackend : BlockWebApiBackendBase<ContentBlockBackend>
     {
         private readonly IPagePublishing _publishing;
 

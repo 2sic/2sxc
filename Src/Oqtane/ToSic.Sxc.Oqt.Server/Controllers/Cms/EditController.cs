@@ -20,16 +20,19 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         public EditController(OqtContextBuilder contextBuilder,
             StatefulControllerDependencies dependencies,
             Lazy<EntityPickerBackend> entityBackend,
-            Lazy<EditLoadBackend> loadBackend) : base(dependencies)
+            Lazy<EditLoadBackend> loadBackend,
+            Lazy<EditSaveBackend> saveBackendLazy) : base(dependencies)
         {
             _contextBuilder = contextBuilder;
             _entityBackend = entityBackend;
             _loadBackend = loadBackend;
+            _saveBackendLazy = saveBackendLazy;
         }
 
         private readonly OqtContextBuilder _contextBuilder;
         private readonly Lazy<EntityPickerBackend> _entityBackend;
         private readonly Lazy<EditLoadBackend> _loadBackend;
+        private readonly Lazy<EditSaveBackend> _saveBackendLazy;
         private EntityPickerBackend EntityBackend => _entityBackend.Value;
 
         #endregion
@@ -53,8 +56,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [HttpPost]
         // todo #mvcSec [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Dictionary<Guid, int> Save([FromBody] AllInOneDto package, int appId, bool partOfPage)
-            => new EditSaveBackend().Init(Log)
-                .Save(GetBlock(), package, appId, partOfPage);
+            => _saveBackendLazy.Value.Init(GetBlock(), Log)
+                .Save(package, appId, partOfPage);
 
         /// <summary>
         /// Used to be GET Ui/GetAvailableEntities

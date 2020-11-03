@@ -65,6 +65,6 @@ namespace ToSic.Sxc.Run
         public abstract void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog);
         
         public SaveOptions SaveOptions(int zoneId) 
-            => new SaveOptions(DefaultLanguage, new ZoneRuntime(zoneId, Log).Languages(true));
+            => new SaveOptions(DefaultLanguage, new ZoneRuntime().Init(zoneId, Log).Languages(true));
     }
 }

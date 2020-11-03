@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Apps
             => EnablePublishing = enablePublishing;
 
         public new CmsRuntime Read 
-            => _runtime ?? (_runtime = new CmsRuntime(this, Log, ShowDrafts, EnablePublishing));
+            => _runtime ?? (_runtime = Eav.Factory.Resolve<CmsRuntime>().Init(this, ShowDrafts, EnablePublishing, Log));
         private CmsRuntime _runtime;
 
 

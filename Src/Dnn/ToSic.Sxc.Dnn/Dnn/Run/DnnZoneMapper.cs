@@ -90,7 +90,7 @@ namespace ToSic.Sxc.Dnn.Run
         public override List<TempTempCulture> CulturesWithState(int tenantId, int zoneId)
         {
             // note: 
-            var availableEavLanguages = new ZoneRuntime(zoneId, Log).Languages(true); 
+            var availableEavLanguages = new ZoneRuntime().Init(zoneId, Log).Languages(true); 
             var defaultLanguageCode = new PortalSettings(tenantId).DefaultLanguage;
 
             return (from c in LocaleController.Instance.GetLocales(tenantId)

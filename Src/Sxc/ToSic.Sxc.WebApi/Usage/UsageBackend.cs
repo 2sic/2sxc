@@ -14,7 +14,11 @@ namespace ToSic.Sxc.WebApi.Usage
 {
     internal class UsageBackend: WebApiBackendBase<UsageBackend>
     {
-        public UsageBackend() : base("Bck.Usage") { }
+        private readonly CmsRuntime _cmsRuntime;
+        public UsageBackend(CmsRuntime cmsRuntime) : base("Bck.Usage")
+        {
+            _cmsRuntime = cmsRuntime;
+        }
 
         public IEnumerable<ViewDto> ViewUsage(IInstanceContext context, int appId, Guid guid, 
             Func<List<IView>, List<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
@@ -26,7 +30,7 @@ namespace ToSic.Sxc.WebApi.Usage
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
-            var cms = new CmsRuntime(State.Identity(null, appId), Log, true, false);
+            var cms = _cmsRuntime.Init(State.Identity(null, appId), true, false, Log);
             // treat view as a list - in case future code will want to analyze many views together
             var views = new List<IView> { cms.Views.Get(guid) };
 

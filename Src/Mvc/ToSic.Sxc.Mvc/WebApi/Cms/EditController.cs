@@ -16,16 +16,21 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
         #region DI
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "UiCntr";
 
-        public EditController(MvcContextBuilder contextBuilder, Lazy<EntityPickerBackend> entityBackend, Lazy<EditLoadBackend> loadBackend)
+        public EditController(MvcContextBuilder contextBuilder, 
+            Lazy<EntityPickerBackend> entityBackend, 
+            Lazy<EditLoadBackend> loadBackend,
+            Lazy<EditSaveBackend> saveBackendLazy)
         {
             _contextBuilder = contextBuilder;
             _entityBackend = entityBackend;
             _loadBackend = loadBackend;
+            _saveBackendLazy = saveBackendLazy;
         }
 
         private readonly MvcContextBuilder _contextBuilder;
         private readonly Lazy<EntityPickerBackend> _entityBackend;
         private readonly Lazy<EditLoadBackend> _loadBackend;
+        private readonly Lazy<EditSaveBackend> _saveBackendLazy;
         private EntityPickerBackend EntityBackend => _entityBackend.Value;
 
         #endregion
@@ -49,8 +54,8 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
         [HttpPost]
         // todo #mvcSec [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Dictionary<Guid, int> Save([FromBody] AllInOneDto package, int appId, bool partOfPage)
-            => new EditSaveBackend().Init(Log)
-                .Save(GetBlock(), package, appId, partOfPage);
+            => _saveBackendLazy.Value.Init(GetBlock(), Log)
+                .Save(package, appId, partOfPage);
 
         /// <summary>
         /// Used to be GET Ui/GetAvailableEntities

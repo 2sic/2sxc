@@ -17,12 +17,14 @@ namespace ToSic.Sxc.WebApi.ItemLists
 {
     public class ListsBackendBase: HasLog
     {
+        private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
         private readonly IPagePublishing _publishing;
 
         #region Constructor / di
 
-        public ListsBackendBase(IPagePublishing publishing) : base("Bck.Lists")
+        public ListsBackendBase(IPagePublishing publishing, Lazy<CmsRuntime> lazyCmsRuntime) : base("Bck.Lists")
         {
+            _lazyCmsRuntime = lazyCmsRuntime;
             _publishing = publishing.Init(Log);
         }
 
@@ -30,10 +32,12 @@ namespace ToSic.Sxc.WebApi.ItemLists
         {
             Log.LinkTo(parentLog);
             _app = app;
+            CmsRuntime.Init(_app, true, false, Log);
             return this;
         }
 
         private IApp _app;
+        private CmsRuntime CmsRuntime => _lazyCmsRuntime.Value;
 
         #endregion
 
@@ -204,8 +208,7 @@ namespace ToSic.Sxc.WebApi.ItemLists
         protected BlockConfiguration GetContentGroup(Guid contentGroupGuid)
         {
             Log.Add($"get group:{contentGroupGuid}");
-            var cms = new CmsRuntime(_app, Log, true, false);
-            var contentGroup = cms.Blocks.GetBlockConfig(contentGroupGuid);
+            var contentGroup = CmsRuntime.Blocks.GetBlockConfig(contentGroupGuid);
 
             if (contentGroup == null)
                 throw new Exception("BlockConfiguration with Guid " + contentGroupGuid + " does not exist.");

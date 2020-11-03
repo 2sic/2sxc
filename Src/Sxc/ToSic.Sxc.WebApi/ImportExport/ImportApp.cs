@@ -6,11 +6,10 @@ using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
-    internal class ImportApp: HasLog
+    public class ImportApp: HasLog
     {
 
         #region Constructor / DI

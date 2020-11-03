@@ -1,23 +1,30 @@
-﻿using ToSic.Eav;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.Assets
 {
     internal partial class AppAssetsBackend: HasLog
     {
-        private readonly IHttp _http;
-        private readonly TemplateHelpers _tmplHelpers;
+        #region Constructor / DI
 
-        public AppAssetsBackend(IHttp http, TemplateHelpers tmplHelpers) : base("Bck.Assets")
+        
+
+        private readonly TemplateHelpers _tmplHelpers;
+        private readonly Lazy<AssetEditor> _assetEditorLazy;
+        private readonly IServiceProvider _serviceProvider;
+
+        public AppAssetsBackend(TemplateHelpers tmplHelpers, Lazy<AssetEditor> assetEditorLazy, IServiceProvider serviceProvider) : base("Bck.Assets")
         {
-            _http = http;
             _tmplHelpers = tmplHelpers;
+            _assetEditorLazy = assetEditorLazy;
+            _serviceProvider = serviceProvider;
         }
 
         public AppAssetsBackend Init(IApp app, IUser user, ILog parentLog)
@@ -28,6 +35,8 @@ namespace ToSic.Sxc.WebApi.Assets
             _tmplHelpers.Init(app, Log);
             return this;
         }
+
+        #endregion
 
         private IUser _user;
         private IApp _app;
@@ -49,7 +58,7 @@ namespace ToSic.Sxc.WebApi.Assets
             return wrapLog(null, true);
         }
 
-        public bool Create( int appId,  string path,  FileContentsDto content, bool global = false)
+        public bool Create(int appId,  string path,  FileContentsDto content, bool global = false)
         {
             Log.Add($"create a#{appId}, path:{path}, global:{global}, cont-length:{content.Content?.Length}");
             path = path.Replace("/", "\\");
@@ -62,10 +71,25 @@ namespace ToSic.Sxc.WebApi.Assets
             path = SanitizePathAndContent(path, content);
 
             var isAdmin = _user.IsAdmin;
-            var assetEditor = new AssetEditor(thisApp, path, _user.IsSuperUser, isAdmin, global, Log);
+            var assetEditor = _assetEditorLazy.Value.Init(thisApp, path, _user.IsSuperUser, isAdmin, global, Log);
             assetEditor.EnsureUserMayEditAssetOrThrow(path);
             return assetEditor.Create(content.Content);
         }
+
+        private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(int appId, int templateId, bool global, string path)
+        {
+            var wrapLog = Log.Call<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
+            var isAdmin = _user.IsAdmin;
+            var app = _app;
+            if (appId != 0 && appId != app.AppId)
+                app = Factory.Resolve<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), Log);
+            var assetEditor = templateId != 0 && path == null
+                ? _serviceProvider.GetRequiredService<AssetEditor>().Init(app, templateId, _user.IsSuperUser, isAdmin, Log)
+                : _serviceProvider.GetRequiredService<AssetEditor>().Init(app, path, _user.IsSuperUser, isAdmin, global, Log);
+            assetEditor.EnsureUserMayEditAssetOrThrow();
+            return wrapLog(null, assetEditor);
+        }
+
 
 
     }

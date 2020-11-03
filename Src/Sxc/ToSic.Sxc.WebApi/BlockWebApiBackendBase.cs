@@ -9,7 +9,7 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.WebApi
 {
-    internal abstract class BlockWebApiBackendBase<T>: HasLog where T: class
+    public abstract class BlockWebApiBackendBase<T>: HasLog where T: class
     {
         protected IInstanceContext _context;
         protected IBlock _block;

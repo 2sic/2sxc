@@ -31,14 +31,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public List<AppDto> List(int zoneId)
-            => new AppsBackend().Init(Log).Apps(new DnnSite().Init(ActiveModule.OwnerPortalID), GetBlock(), zoneId);
+            => Eav.Factory.Resolve<AppsBackend>().Init(Log).Apps(new DnnSite().Init(ActiveModule.OwnerPortalID), GetBlock(), zoneId);
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public void App(int zoneId, int appId)
-            => new CmsZones(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId);
+            => Eav.Factory.Resolve<CmsZones>().Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId);
 
         [HttpPost]
         [ValidateAntiForgeryToken]

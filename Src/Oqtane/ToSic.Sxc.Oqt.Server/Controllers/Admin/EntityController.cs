@@ -30,10 +30,14 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     public class EntityController : SxcStatefulControllerBase //, IEntitiesController // FIX: changed from interface to solve ambiguous DELETE routes.
     {
         private readonly Lazy<EntityApi> _lazyEntityApi;
+        private readonly Lazy<EntityBackend> _lazyEntityBackend;
         protected override string HistoryLogName => "Api.EntCnt";
-        public EntityController(StatefulControllerDependencies dependencies, Lazy<EntityApi> lazyEntityApi) : base(dependencies)
+        public EntityController(StatefulControllerDependencies dependencies, 
+            Lazy<EntityApi> lazyEntityApi,
+            Lazy<EntityBackend> lazyEntityBackend) : base(dependencies)
         {
             _lazyEntityApi = lazyEntityApi;
+            _lazyEntityBackend = lazyEntityBackend;
         }
 
         /// <summary>
@@ -128,6 +132,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 
         // New feature in 11.03 - Usage Statistics
         // not final yet, so no [HttpGet]
-        public dynamic Usage(int appId, Guid guid) => new EntityBackend().Init(Log).Usage(GetContext(), GetApp(appId), guid);
+        public dynamic Usage(int appId, Guid guid) => _lazyEntityBackend.Value.Init(Log).Usage(GetContext(), GetApp(appId), guid);
     }
 }

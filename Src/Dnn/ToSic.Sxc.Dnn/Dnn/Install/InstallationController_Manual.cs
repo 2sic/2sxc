@@ -56,9 +56,9 @@ namespace ToSic.Sxc.Dnn.Install
             if (isContentApp)
                 try
                 {
-                    var primaryAppId = new ZoneRuntime(site.ZoneId, Log).DefaultAppId;
+                    var primaryAppId = new ZoneRuntime().Init(site.ZoneId, Log).DefaultAppId;
                     // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
-                    var contentViews = new CmsRuntime(State.Identity(null, primaryAppId), Log, false, false).Views.GetAll();
+                    var contentViews = Eav.Factory.Resolve<CmsRuntime>().Init(State.Identity(null, primaryAppId), false, false, Log).Views.GetAll();
                     if (contentViews.Any()) return null;
                 }
                 catch { /* ignore */ }

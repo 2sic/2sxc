@@ -13,10 +13,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     [ValidateAntiForgeryToken]
     public class HistoryController : SxcStatefulControllerBase, IHistoryController
     {
+        private readonly IdentifierHelper _idHelper;
         protected override string HistoryLogName => "Api.History";
 
-        public HistoryController(StatefulControllerDependencies dependencies) : base(dependencies)
+        public HistoryController(StatefulControllerDependencies dependencies, IdentifierHelper idHelper) : base(dependencies)
         {
+            _idHelper = idHelper;
         }
 
         /// <summary>
@@ -28,13 +30,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [HttpPost]
         //[Authorize(Policy = "EditModule")]  // TODO: disabled
         public List<ItemHistory> Get(int appId, [FromBody] ItemIdentifier item)
-            => new AppManager(appId, Log).Entities.VersionHistory(EntityBackend.ResolveItemIdOfGroup(appId, item, Log).EntityId);
+            => new AppManager(appId, Log).Entities.VersionHistory(_idHelper.Init(Log).ResolveItemIdOfGroup(appId, item, Log).EntityId);
 
         [HttpPost]
         //[Authorize(Policy = "EditModule")]  // TODO: disabled
         public bool Restore(int appId, int changeId, [FromBody] ItemIdentifier item)
         {
-            new AppManager(appId, Log).Entities.VersionRestore(EntityBackend.ResolveItemIdOfGroup(appId, item, Log).EntityId, changeId);
+            new AppManager(appId, Log).Entities.VersionRestore(_idHelper.Init(Log).ResolveItemIdOfGroup(appId, item, Log).EntityId, changeId);
             return true;
         }
 

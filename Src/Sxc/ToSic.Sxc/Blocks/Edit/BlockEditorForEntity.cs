@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
+using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
-    internal class BlockEditorForEntity : Edit.BlockEditorBase
+    internal class BlockEditorForEntity : BlockEditorBase
     {
+        public BlockEditorForEntity(Lazy<CmsRuntime> lazyCmsRuntime) : base(lazyCmsRuntime)  { }
+
         #region methods which the entity-implementation must customize 
 
         protected override void SavePreviewTemplateId(Guid templateGuid)

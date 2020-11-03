@@ -12,16 +12,19 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.Features;
+using ToSic.Sxc.WebApi.Save;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
     public partial class EditLoadBackend: WebApiBackendBase<EditLoadBackend>
     {
         private readonly EntityApi _entityApi;
+        private readonly ContentGroupList _contentGroupList;
 
-        public EditLoadBackend(EntityApi entityApi) : base("Cms.LoadBk")
+        public EditLoadBackend(EntityApi entityApi, ContentGroupList contentGroupList) : base("Cms.LoadBk")
         {
             _entityApi = entityApi;
+            _contentGroupList = contentGroupList;
         }
 
         public AllInOneDto Load(IBlock block, IContextBuilder contextBuilder, int appId, List<ItemIdentifier> items)
@@ -32,8 +35,7 @@ namespace ToSic.Sxc.WebApi.Cms
             // do early permission check - but at this time it may be that we don't have the types yet
             // because they may be group/id combinations, without type information which we'll look up afterwards
             var appIdentity = State.Identity(null, appId);
-            //var block = GetBlock();
-            items = new ContentGroupList(block, Log).ConvertListIndexToId(items, appIdentity);
+            items = _contentGroupList.Init(block, Log, appIdentity).ConvertListIndexToId(items);
 
             // now look up the types, and repeat security check with type-names
             // todo: 2020-03-20 new feat 11.01, may not check inner type permissions ATM

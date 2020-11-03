@@ -5,7 +5,7 @@ using ToSic.Sxc.Blocks.Edit;
 
 namespace ToSic.Sxc.WebApi.InPage
 {
-    internal class AppViewPickerBackend: BlockWebApiBackendBase<AppViewPickerBackend>
+    public class AppViewPickerBackend: BlockWebApiBackendBase<AppViewPickerBackend>
     {
         public AppViewPickerBackend() : base("Bck.ViwApp") { }
 

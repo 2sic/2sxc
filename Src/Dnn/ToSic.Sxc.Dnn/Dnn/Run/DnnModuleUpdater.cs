@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Dnn.Run
             if (appId.HasValue)
             {
                 var appIdentity = new AppIdentity(zoneId, appId.Value);
-                var cms = new CmsRuntime(appIdentity, Log, true, _environment.PagePublishing.IsEnabled(instance.Id));
+                var cms = Eav.Factory.Resolve<CmsRuntime>().Init(appIdentity, true, _environment.PagePublishing.IsEnabled(instance.Id), Log);
                 var templateGuid = cms.Views.GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
                 if (templateGuid.HasValue) SetPreview(instance.Id, templateGuid.Value);
             }

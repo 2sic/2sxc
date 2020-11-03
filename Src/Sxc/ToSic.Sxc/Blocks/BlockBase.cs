@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Blocks
 
             // note: requires EditAllowed, which isn't ready till App is created
             var publishing = Eav.Factory.Resolve<IPagePublishing>().Init(Log);
-            var cms = new CmsRuntime(App, Log, EditAllowed, publishing.IsEnabled(Context.Container.Id));
+            var cms = Eav.Factory.Resolve<CmsRuntime>().Init(App, EditAllowed, publishing.IsEnabled(Context.Container.Id), Log);
 
             Configuration = cms.Blocks.GetOrGeneratePreviewConfig(blockId);
 

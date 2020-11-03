@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Apps
         public List<IApp> GetApps(ISite site, Func<Eav.Apps.App, IAppDataConfiguration> buildConfig)
         {
             var zId = ZoneRuntime.ZoneId;
-            var appIds = new ZoneRuntime(zId, Log).Apps;
+            var appIds = new ZoneRuntime().Init(zId, Log).Apps;
             return appIds
                 .Select(a => Factory.Resolve<App>()
                     .PreInit(site)

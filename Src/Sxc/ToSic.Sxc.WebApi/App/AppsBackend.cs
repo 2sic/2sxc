@@ -9,13 +9,16 @@ namespace ToSic.Sxc.WebApi.App
 {
     public class AppsBackend: WebApiBackendBase<AppsBackend>
     {
-        public AppsBackend() : base("Bck.Apps")
+        private readonly CmsZones _cmsZones;
+
+        public AppsBackend(CmsZones cmsZones) : base("Bck.Apps")
         {
+            _cmsZones = cmsZones;
         }
 
         public List<AppDto> Apps(ISite site, IBlock block, int zoneId)
         {
-            var cms = new CmsZones(zoneId, Log);
+            var cms = _cmsZones.Init(zoneId, Log);
             var configurationBuilder = ConfigurationProvider.Build(block, true);
             var list = cms.AppsRt.GetApps(site, configurationBuilder);
             return list.Select(a => new AppDto

@@ -19,18 +19,25 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private readonly IModuleRepository _moduleRepository;
         private readonly IAppEnvironment _environment;
         private readonly IPageModuleRepository _pageModuleRepository;
+        private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
 
         /// <summary>
         /// Empty constructor for DI
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public OqtModuleUpdater(SettingsHelper settingsHelper, OqtZoneMapper zoneMapper, IModuleRepository moduleRepository, IAppEnvironment environment, IPageModuleRepository pageModuleRepository) : base("Mvc.MapA2I")
+        public OqtModuleUpdater(SettingsHelper settingsHelper, 
+            OqtZoneMapper zoneMapper, 
+            IModuleRepository moduleRepository,
+            IAppEnvironment environment, 
+            IPageModuleRepository pageModuleRepository,
+            Lazy<CmsRuntime> lazyCmsRuntime) : base("Mvc.MapA2I")
         {
             _settingsHelper = settingsHelper;
             _zoneMapper = zoneMapper;
             _moduleRepository = moduleRepository;
             _environment = environment;
             _pageModuleRepository = pageModuleRepository;
+            _lazyCmsRuntime = lazyCmsRuntime;
         }
 
         public void SetAppId(IContainer instance, int? appId, ILog parentLog)
@@ -57,7 +64,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             if (appId.HasValue)
             {
                 var appIdentity = new AppIdentity(zoneId, appId.Value);
-                var cms = new CmsRuntime(appIdentity, Log, true, _environment.PagePublishing.IsEnabled(instance.Id));
+                var cms = _lazyCmsRuntime.Value.Init(appIdentity, true, _environment.PagePublishing.IsEnabled(instance.Id), Log);
                 var templateGuid = cms.Views.GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
                 if (templateGuid.HasValue) SetPreview(instance.Id, templateGuid.Value);
             }

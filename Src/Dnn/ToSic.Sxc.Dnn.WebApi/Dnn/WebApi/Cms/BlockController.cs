@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
     {
         protected override string HistoryLogName => "Api.Block";
 
-        protected CmsRuntime CmsRuntime => _cmsRuntime ?? (_cmsRuntime = base.App == null ? null : new CmsRuntime(base.App, Log, true, false));
+        protected CmsRuntime CmsRuntime => _cmsRuntime ?? (_cmsRuntime = base.App == null ? null : Eav.Factory.Resolve<CmsRuntime>().Init(base.App, true, false, Log));
         private CmsRuntime _cmsRuntime;
 
         #region Block
@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public new void App(int? appId)
-            => new AppViewPickerBackend().Init(GetContext(), GetBlock(), Log)
+            => Eav.Factory.Resolve<AppViewPickerBackend>().Init(GetContext(), GetBlock(), Log)
                 .SetAppId(appId);
 
         /// <summary>
@@ -83,7 +83,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         {
             // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
             var tenant = new DnnSite(PortalSettings);
-            return new CmsZones(tenant.ZoneId, Log).AppsRt.GetSelectableApps(tenant, apps).ToList();
+            return Eav.Factory.Resolve<CmsZones>().Init(tenant.ZoneId, Log)
+                .AppsRt
+                .GetSelectableApps(tenant, apps)
+                .ToList();
         }
 
         #endregion

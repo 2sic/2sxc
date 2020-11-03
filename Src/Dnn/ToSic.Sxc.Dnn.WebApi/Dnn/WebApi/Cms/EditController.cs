@@ -27,8 +27,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Dictionary<Guid, int> Save([FromBody] AllInOneDto package, int appId, bool partOfPage) 
-            => new EditSaveBackend().Init(Log)
-                .Save(GetBlock(), package, appId, partOfPage);
+            => Eav.Factory.Resolve<EditSaveBackend>().Init(GetBlock(), Log)
+                .Save(package, appId, partOfPage);
 
         /// <summary>
         /// Used to be GET Ui/GetAvailableEntities

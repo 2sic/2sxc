@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
@@ -12,10 +13,14 @@ namespace ToSic.Sxc.WebApi.Views
 {
     internal class ViewsBackend: HasLog
     {
+        private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
         private ISite _site;
         private IUser _user;
 
-        public ViewsBackend() : base("Bck.Views") { }
+        public ViewsBackend(Lazy<CmsRuntime> lazyCmsRuntime) : base("Bck.Views")
+        {
+            _lazyCmsRuntime = lazyCmsRuntime;
+        }
 
         public ViewsBackend Init(ISite site, IUser user, ILog parentLog)
         {
@@ -29,7 +34,7 @@ namespace ToSic.Sxc.WebApi.Views
         public IEnumerable<ViewDetailsDto> GetAll(int appId)
         {
             Log.Add($"get all a#{appId}");
-            var cms = new CmsRuntime(State.Identity(null, appId), Log, true, false);
+            var cms = _lazyCmsRuntime.Value.Init(State.Identity(null, appId), true, false, Log);
 
             var attributeSetList = cms.ContentTypes.All.OfScope(Settings.AttributeSetScope).ToList();
             var templateList = cms.Views.GetAll().ToList();

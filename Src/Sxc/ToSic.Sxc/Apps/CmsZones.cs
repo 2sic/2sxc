@@ -5,7 +5,13 @@ namespace ToSic.Sxc.Apps
 {
     public class CmsZones: ZoneRuntime
     {
-        public CmsZones(int zoneId, ILog parentLog) : base(zoneId, parentLog) { }
+        public CmsZones() : base("Sxc.ZoneRt") { }
+
+        public new CmsZones Init(int zoneId, ILog parentLog)
+        {
+            base.Init(zoneId, parentLog);
+            return this;
+        }
 
         public AppsRuntime AppsRt => _apps ?? (_apps = new AppsRuntime(this, Log));
         private AppsRuntime _apps;

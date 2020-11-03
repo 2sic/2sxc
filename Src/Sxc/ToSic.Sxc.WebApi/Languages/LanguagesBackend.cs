@@ -36,7 +36,7 @@ namespace ToSic.Sxc.WebApi.Languages
             // Activate or Deactivate the Culture
             var zoneMapper = _zoneMapper.Init(Log);
             var zoneId = zoneMapper.GetZoneId(tenantId);
-            new ZoneManager(zoneId, Log).SaveLanguage(cultureCode, niceName, enable);
+            new ZoneManager().Init(zoneId, Log).SaveLanguage(cultureCode, niceName, enable);
         }
     }
 }

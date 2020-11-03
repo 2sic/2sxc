@@ -12,13 +12,11 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    internal class EntityBackend: WebApiBackendBase<EntityBackend>
+    public class EntityBackend: WebApiBackendBase<EntityBackend>
     {
-        public EntityBackend() : base("Bck.Entity")
-        {
-        }
+        public EntityBackend() : base("Bck.Entity") { }
 
-        #region New feature in 11.03 - Usage Statitics
+        // New feature in 11.03 - Usage Statistics
 
         public dynamic Usage(IInstanceContext context, IApp app, Guid guid)
         {
@@ -34,18 +32,7 @@ namespace ToSic.Sxc.WebApi.Cms
             return null;
         }
 
-        #endregion
 
-        internal static ItemIdentifier ResolveItemIdOfGroup(int appId, ItemIdentifier item, ILog log)
-        {
-            if (item.Group == null) return item;
-            var cms = new CmsRuntime(State.Identity(null, appId), log, true, false);
-
-            var contentGroup = cms.Blocks.GetBlockConfig(item.Group.Guid);
-            var part = contentGroup[item.Group.Part];
-            item.EntityId = part[item.ListIndex()].EntityId;
-            return item;
-        }
 
     }
 }

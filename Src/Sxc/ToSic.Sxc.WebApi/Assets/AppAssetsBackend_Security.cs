@@ -3,15 +3,12 @@ using System.IO;
 using JetBrains.Annotations;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Assets;
 
 namespace ToSic.Sxc.WebApi.Assets
 {
     internal partial class AppAssetsBackend
     {
-
-
         private static string SanitizePathAndContent(string path, FileContentsDto content)
         {
             var name = Path.GetFileName(path);
@@ -60,21 +57,6 @@ namespace ToSic.Sxc.WebApi.Assets
 
             return path;
         }
-
-        private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(int appId, int templateId, bool global, string path)
-        {
-            var wrapLog = Log.Call<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
-            var isAdmin = _user.IsAdmin; // UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
-            var app = _app;
-            if (appId != 0 && appId != app.AppId)
-                app = Factory.Resolve<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), Log);
-            var assetEditor = templateId != 0 && path == null
-                ? new AssetEditor(app, templateId, _user.IsSuperUser, isAdmin, Log)
-                : new AssetEditor(app, path, _user.IsSuperUser, isAdmin, global, Log);
-            assetEditor.EnsureUserMayEditAssetOrThrow();
-            return wrapLog(null, assetEditor);
-        }
-
 
         [AssertionMethod]
         private string EnsurePathMayBeAccessed(string p, string appPath, bool allowFullAccess)

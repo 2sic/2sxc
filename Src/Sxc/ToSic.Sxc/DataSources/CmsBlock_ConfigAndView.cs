@@ -30,7 +30,10 @@ namespace ToSic.Sxc.DataSources
             var publish = Factory.Resolve<IPagePublishing>().Init(Log);
             var userMayEdit = HasInstanceContext && Block.EditAllowed;
 
-            var cms = new CmsRuntime(this, Log, HasInstanceContext && userMayEdit, publish.IsEnabled(InstanceId.Value));
+            var cms = _lazyCmsRuntime.IsValueCreated
+                ? _lazyCmsRuntime.Value
+                : _lazyCmsRuntime.Value.Init(this, HasInstanceContext && userMayEdit,
+                    publish.IsEnabled(InstanceId.Value), Log);
             var container = Factory.Resolve<IContainer>().Init(InstanceId.Value, Log);
             var blockId = container.BlockIdentifier;
             return wrapLog("ok", cms.Blocks.GetOrGeneratePreviewConfig(blockId));

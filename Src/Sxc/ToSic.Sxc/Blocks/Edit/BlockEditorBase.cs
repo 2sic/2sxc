@@ -11,9 +11,13 @@ namespace ToSic.Sxc.Blocks.Edit
     // todo: move some parts out into a BlockManagement
     public abstract partial class BlockEditorBase : HasLog
     {
+        private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
         #region DI and Construction
 
-        internal BlockEditorBase(): base("CG.RefMan") { }
+        internal BlockEditorBase(Lazy<CmsRuntime> lazyCmsRuntime): base("CG.RefMan")
+        {
+            _lazyCmsRuntime = lazyCmsRuntime;
+        }
 
         internal BlockEditorBase Init(IBlock block)
         {

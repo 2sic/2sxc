@@ -86,7 +86,7 @@ namespace ToSic.Sxc.Dnn.Run
             var module = UnwrappedContents ?? throw new Exception("instance is not ModuleInfo");
 
             var msg = $"get appid from instance for Z:{zoneId} Mod:{module.ModuleID}";
-            var zoneRt = new ZoneRuntime(zoneId, Log);
+            var zoneRt = new ZoneRuntime().Init(zoneId, Log);
             if (IsPrimary)
             {
                 var appId = zoneRt.DefaultAppId;

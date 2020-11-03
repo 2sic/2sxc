@@ -18,7 +18,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         #region Constructor / DI
 
-        public ExportContent(IZoneMapper zoneMapper, XmlExporter xmlExporter, Lazy<AppRuntime> appRuntime) : base("Bck.Export")
+        public ExportContent(IZoneMapper zoneMapper, XmlExporter xmlExporter, Lazy<CmsRuntime> appRuntime) : base("Bck.Export")
         {
             _zoneMapper = zoneMapper;
             _xmlExporter = xmlExporter;
@@ -27,8 +27,8 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         private readonly IZoneMapper _zoneMapper;
         private readonly XmlExporter _xmlExporter;
-        private readonly Lazy<AppRuntime> _appRuntime;
-        private AppRuntime AppRuntime => _appRuntime.Value;
+        private readonly Lazy<CmsRuntime> _appRuntime;
+        private CmsRuntime CmsRuntime => _appRuntime.Value;
         private IUser _user;
         private int _siteId;
 
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var contextZoneId = _zoneMapper.GetZoneId(_siteId);
             var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId, Log);
 
-            var cms = new CmsRuntime(currentApp, Log, true, false);
+            var cms = CmsRuntime.Init(currentApp, true, false, Log);
             var contentTypes = cms.ContentTypes.All.OfScope(scope);
             var entities = cms.Entities.All;
             var templates = cms.Views.GetAll();
@@ -93,7 +93,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
             var contextZoneId = _zoneMapper.GetZoneId(_siteId);
             var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId, Log);
-            var appRuntime = AppRuntime.Init(currentApp, true, Log);
+            var appRuntime = CmsRuntime.Init(currentApp, true, Log);
 
             var fileName = $"2sxcContentExport_{currentApp.NameWithoutSpecialChars()}_{currentApp.VersionSafe()}.xml";
             var fileXml = _xmlExporter.Init(zoneId, appId, appRuntime, false,

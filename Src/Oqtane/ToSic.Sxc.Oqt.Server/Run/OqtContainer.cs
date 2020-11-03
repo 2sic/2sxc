@@ -96,7 +96,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         private int GetInstanceAppId(int zoneId)
         {
-            var zoneRt = new ZoneRuntime(zoneId, Log);
+            var zoneRt = new ZoneRuntime().Init(zoneId, Log);
             if (IsPrimary) return zoneRt.DefaultAppId;
 
             if (!_settings.ContainsKey(Settings.ModuleSettingApp)) return Eav.Constants.AppIdEmpty;

@@ -4,6 +4,7 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
@@ -12,14 +13,28 @@ using ToSic.Sxc.WebApi.Save;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    internal class EditSaveBackend : WebApiBackendBase<EditSaveBackend>
+    public class EditSaveBackend : WebApiBackendBase<EditSaveBackend>
     {
-        public EditSaveBackend() : base("Cms.SaveBk")
+        private readonly SxcPagePublishing _pagePublishing;
+
+        #region Constructor / DI
+        public EditSaveBackend(SxcPagePublishing pagePublishing) : base("Cms.SaveBk")
         {
+            _pagePublishing = pagePublishing;
         }
 
+        public EditSaveBackend Init(IBlock block, ILog log)
+        {
+            Init(log);
+            _block = block;
+            _pagePublishing.Init(_block, Log);
+            return this;
+        }
 
-        public Dictionary<Guid, int> Save(IBlock block, AllInOneDto package, int appId, bool partOfPage)
+        private IBlock _block;
+        #endregion
+
+        public Dictionary<Guid, int> Save(AllInOneDto package, int appId, bool partOfPage)
         {
             Log.Add($"save started with a#{appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
 
@@ -48,7 +63,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             #region check if it's an update, and do more security checks then - shared with EntitiesController.Save
             // basic permission checks
-            var permCheck = new Save.SaveSecurity(block, Log)
+            var permCheck = new Save.SaveSecurity(_block, Log)
                 .DoPreSaveSecurityCheck(appId, package.Items);
 
             var foundItems = package.Items.Where(i => i.Entity.Id != 0 && i.Entity.Guid != Guid.Empty)
@@ -96,8 +111,8 @@ namespace ToSic.Sxc.WebApi.Cms
 
             Log.Add("items to save generated, all data tests passed");
 
-            var publishing = new SxcPagePublishing().Init(block, Log);
-            return publishing.SaveInPagePublishing(appId, items, partOfPage,
+            //var publishing = new SxcPagePublishing().Init(_block, Log);
+            return _pagePublishing.SaveInPagePublishing(appId, items, partOfPage,
                     forceSaveAsDraft => DoSave(appMan, items, forceSaveAsDraft),
                     permCheck);
         }

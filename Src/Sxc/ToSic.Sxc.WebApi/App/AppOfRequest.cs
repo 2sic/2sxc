@@ -46,7 +46,7 @@ namespace ToSic.Sxc.WebApi.App
             var zid = _zoneMapper.GetZoneId(_siteId);
 
             // get app from AppName
-            var aid = new ZoneRuntime(zid, Log).FindAppId(appPath, true);
+            var aid = new ZoneRuntime().Init(zid, Log).FindAppId(appPath, true);
             wrapLog($"found app:{aid}");
             return new AppIdentity(zid, aid);
         }
