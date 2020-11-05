@@ -9,6 +9,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Oqt.Server.Page;
 using ToSic.Sxc.Oqt.Server.Run;
+using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Oqt.Shared.Run;
 using ToSic.Sxc.Razor.Engine.DbgWip;
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.Oqt.Server
         #region Constructor and DI
         
         public SxcOqtane(OqtAssetsAndHeaders assetsAndHeaders, RazorReferenceManager debugRefMan, OqtTempInstanceContext oqtTempInstanceContext, IServiceProvider serviceProvider
-            ) : base("Oqt.Buildr")
+            ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
         {
             _assetsAndHeaders = assetsAndHeaders;
             _debugRefMan = debugRefMan;

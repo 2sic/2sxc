@@ -6,7 +6,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private IZoneMapper _zoneMapper;
         private Dictionary<string, string> _settings;
 
-        public OqtContainer(SettingsHelper settingsHelper, Lazy<OqtZoneMapper> zoneMapperLazy) : base ("Oqt.Cont")
+        public OqtContainer(SettingsHelper settingsHelper, Lazy<OqtZoneMapper> zoneMapperLazy) : base ($"{OqtConstants.OqtLogPrefix}.Cont")
         {
             _settingsHelper = settingsHelper;
             _zoneMapperLazy = zoneMapperLazy;

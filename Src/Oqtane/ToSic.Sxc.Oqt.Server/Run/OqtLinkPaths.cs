@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Run;
 

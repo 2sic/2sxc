@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Oqt.Server.Page
     {
         #region Constructor and DI
 
-        public OqtAssetsAndHeaders(IAntiforgery antiForgery, IHttpContextAccessor httpContextAccessor) : base("Oqt.AssHdr")
+        public OqtAssetsAndHeaders(IAntiforgery antiForgery, IHttpContextAccessor httpContextAccessor) : base($"{OqtConstants.OqtLogPrefix}.AssHdr")
         {
             _antiForgery = antiForgery;
             _httpContextAccessor = httpContextAccessor;

@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Run
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return "oqtane not implemented #todo #mvc";
         }
 
-        public OqtEnvironmentInstaller() : base("Mvc.Instll")
+        public OqtEnvironmentInstaller() : base($"{OqtConstants.OqtLogPrefix}.Instll")
         {
         }
 

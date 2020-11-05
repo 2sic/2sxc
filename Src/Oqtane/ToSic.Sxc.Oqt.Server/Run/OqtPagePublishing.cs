@@ -8,20 +8,23 @@ using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
     internal class OqtPagePublishing : HasLog, IPagePublishing
     {
-        public OqtPagePublishing() : base("Mvc.Publsh")
-        {
-        }
+        #region Constructor / DI
+
+        public OqtPagePublishing() : base($"{OqtConstants.OqtLogPrefix}.Publsh") { }
 
         public IPagePublishing Init(ILog parent)
         {
-            Log.LinkTo(parent, "Mvc.Publsh");
+            Log.LinkTo(parent);
             return this;
         }
+
+        #endregion
 
 
         public bool Supported => false;

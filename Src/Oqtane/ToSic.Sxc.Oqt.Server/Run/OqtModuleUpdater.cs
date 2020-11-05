@@ -8,6 +8,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Run
@@ -30,7 +31,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             IModuleRepository moduleRepository,
             IAppEnvironment environment, 
             IPageModuleRepository pageModuleRepository,
-            Lazy<CmsRuntime> lazyCmsRuntime) : base("Mvc.MapA2I")
+            Lazy<CmsRuntime> lazyCmsRuntime) : base($"{OqtConstants.OqtLogPrefix}.MapA2I")
         {
             _settingsHelper = settingsHelper;
             _zoneMapper = zoneMapper;

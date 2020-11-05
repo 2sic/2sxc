@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public OqtZoneMapper(ISiteRepository siteRepository, 
             ISettingRepository settingRepository, 
             IServiceProvider serviceProvider, 
-            Lazy<ZoneManager> zoneManagerLazy) : base("Mvc.ZoneMp")
+            Lazy<ZoneManager> zoneManagerLazy) : base($"{OqtConstants.OqtLogPrefix}.ZoneMp")
         {
             _siteRepository = siteRepository;
             _settingRepository = settingRepository;

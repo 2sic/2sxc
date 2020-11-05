@@ -3,6 +3,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Oqt.Server.Repository;
+using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.Web;
 
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtEnvironment : HasLog, IAppEnvironment
     {
-        public OqtEnvironment(IHttp http, IZoneMapper zoneMapper, IUserResolver userResolver, Lazy<IPagePublishing> pagePublishingLazy) : base("Mvc.Enviro")
+        public OqtEnvironment(IHttp http, IZoneMapper zoneMapper, IUserResolver userResolver, Lazy<IPagePublishing> pagePublishingLazy): base($"{OqtConstants.OqtLogPrefix}.Enviro")
         {
             _http = http;
             ZoneMapper = zoneMapper;

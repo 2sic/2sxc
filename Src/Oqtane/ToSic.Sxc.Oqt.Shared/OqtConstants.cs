@@ -31,7 +31,10 @@
 
 
         // not yet sure what this is needed for...
-        public const string WwwRoot = "wwwroot/";
+        //public const string WwwRoot = "wwwroot/";
 
+
+        // Logging constants
+        public const string OqtLogPrefix = "Oct";
     }
 }

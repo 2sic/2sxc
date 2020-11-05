@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 
@@ -8,7 +9,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtRenderingHelper: RenderingHelper
     {
-        public OqtRenderingHelper(ILinkPaths linkPaths) : base(linkPaths, "Mvc.RndHlp") { }
+        public OqtRenderingHelper(ILinkPaths linkPaths) : base(linkPaths, $"{OqtConstants.OqtLogPrefix}.RndHlp") { }
 
         protected override void LogToEnvironmentExceptions(Exception ex)
         {
