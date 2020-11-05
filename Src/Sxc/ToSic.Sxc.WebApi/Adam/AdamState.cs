@@ -57,12 +57,11 @@ namespace ToSic.Sxc.WebApi.Adam
         /// Initializes the object and performs all the initial security checks
         /// </summary>
         public AdamState Init(IBlock block, int appId, string contentType, string field, Guid guid, bool usePortalRoot, ILog parentLog)
-            // : base("Adm.State", parentLog)
         {
             Log.LinkTo(parentLog);
             var callLog = Log.Call<AdamState>($"field:{field}, guid:{guid}");
             App = Factory.Resolve<Apps.App>().Init(appId, parentLog, block);
-            Permissions = new MultiPermissionsTypes()
+            Permissions = Factory.Resolve<MultiPermissionsTypes>()
                 .Init(block.Context, App, contentType, Log);
             Block = block;
 

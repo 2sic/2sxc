@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
@@ -12,7 +14,7 @@ namespace ToSic.Sxc.WebApi.Cms
     {
         private readonly EntityPickerApi _entityPickerApi;
 
-        public EntityPickerBackend(Eav.WebApi.EntityPickerApi entityPickerApi) : base("BE.EntPck")
+        public EntityPickerBackend(EntityPickerApi entityPickerApi, IServiceProvider serviceProvider) : base(serviceProvider, "BE.EntPck")
         {
             _entityPickerApi = entityPickerApi;
         }
@@ -22,8 +24,8 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             // do security check
             var permCheck = string.IsNullOrEmpty(contentTypeName)
-                ? new MultiPermissionsApp().Init(ctx, GetApp(appId, null), Log)
-                : new MultiPermissionsTypes().Init(ctx, GetApp(appId, null), contentTypeName, Log);
+                ? ServiceProvider.Build<MultiPermissionsApp>().Init(ctx, GetApp(appId, null), Log)
+                : ServiceProvider.Build<MultiPermissionsTypes>().Init(ctx, GetApp(appId, null), contentTypeName, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 

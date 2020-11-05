@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Errors;
@@ -21,7 +23,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly EntityApi _entityApi;
         private readonly ContentGroupList _contentGroupList;
 
-        public EditLoadBackend(EntityApi entityApi, ContentGroupList contentGroupList) : base("Cms.LoadBk")
+        public EditLoadBackend(EntityApi entityApi, ContentGroupList contentGroupList, IServiceProvider serviceProvider) : base(serviceProvider, "Cms.LoadBk")
         {
             _entityApi = entityApi;
             _contentGroupList = contentGroupList;
@@ -39,7 +41,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // now look up the types, and repeat security check with type-names
             // todo: 2020-03-20 new feat 11.01, may not check inner type permissions ATM
-            var permCheck = new MultiPermissionsTypes().Init(block.Context, GetApp(appId, block), items, Log);
+            var permCheck = block.Context.ServiceProvider.Build<MultiPermissionsTypes>().Init(block.Context, GetApp(appId, block), items, Log);
             if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 

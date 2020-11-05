@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.WebApi.Usage
     internal class UsageBackend: WebApiBackendBase<UsageBackend>
     {
         private readonly CmsRuntime _cmsRuntime;
-        public UsageBackend(CmsRuntime cmsRuntime) : base("Bck.Usage")
+        public UsageBackend(CmsRuntime cmsRuntime, IServiceProvider serviceProvider) : base(serviceProvider, "Bck.Usage")
         {
             _cmsRuntime = cmsRuntime;
         }
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.WebApi.Usage
             var wrapLog = Log.Call<IEnumerable<ViewDto>>($"{appId}, {guid}");
 
             // extra security to only allow zone change if host user
-            var permCheck = new MultiPermissionsApp().Init(context, GetApp(appId, null), Log);
+            var permCheck = ServiceProvider.Build<MultiPermissionsApp>().Init(context, GetApp(appId, null), Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml.Linq;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.ImportExport;
+using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Repository.Efc;
 
 namespace ToSic.Sxc.Apps.ImportExport
@@ -13,7 +14,8 @@ namespace ToSic.Sxc.Apps.ImportExport
         public XmlImportFull(Lazy<Import> importerLazy, 
             Lazy<CmsManager> cmsManagerLazy, 
             Lazy<DbDataController> dbDataForNewApp,
-            Lazy<DbDataController> dbDataForAppImport) : base(importerLazy, dbDataForNewApp, dbDataForAppImport, "Sxc.XmlImp")
+            Lazy<DbDataController> dbDataForAppImport,
+            IImportExportEnvironment importExportEnvironment) : base(importerLazy, dbDataForNewApp, dbDataForAppImport, importExportEnvironment, "Sxc.XmlImp")
         {
             _cmsManagerLazy = cmsManagerLazy;
         }

@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <returns></returns>
         [HttpGet]
         public dynamic Settings(int appId) =>
-            new AdminBackend().Init(Log).DialogSettings(
+            Eav.Factory.Resolve<AdminBackend>().Init(Log).DialogSettings(
                 GetContext(),
                 new DnnContextBuilder(
                     PortalSettings.Current,

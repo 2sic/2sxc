@@ -4,6 +4,7 @@ using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
@@ -17,14 +18,16 @@ namespace ToSic.Sxc.WebApi.App
 {
     public class AppContent: BlockWithAppWebApiBackendBase<AppContent>
     {
-        private readonly EntityApi _entityApi;
 
         #region Constructor / DI
 
-        public AppContent(EntityApi entityApi, Lazy<CmsManager> cmsManagerLazy) : base(cmsManagerLazy, "Sxc.ApiApC")
+        public AppContent(EntityApi entityApi, 
+            Lazy<CmsManager> cmsManagerLazy) : base(cmsManagerLazy, "Sxc.ApiApC")
         {
             _entityApi = entityApi;
         }
+        private readonly EntityApi _entityApi;
+
 
         #endregion
 
@@ -183,7 +186,7 @@ namespace ToSic.Sxc.WebApi.App
 
         protected MultiPermissionsTypes ThrowIfNotAllowedInType(string contentType, List<Grants> requiredGrants, IApp alternateApp = null)
         {
-            var permCheck = new MultiPermissionsTypes().Init(_context, alternateApp ?? _block.App, contentType, Log);
+            var permCheck = CmsManager.ServiceProvider.Build<MultiPermissionsTypes>().Init(_context, alternateApp ?? _block.App, contentType, Log);
             if (!permCheck.EnsureAll(requiredGrants, out var error))
                 throw HttpException.PermissionDenied(error);
             return permCheck;
@@ -191,7 +194,7 @@ namespace ToSic.Sxc.WebApi.App
 
         protected MultiPermissionsItems ThrowIfNotAllowedInItem(IEntity itm, List<Grants> requiredGrants, IApp alternateApp = null)
         {
-            var permCheck = new MultiPermissionsItems().Init(_context, alternateApp ?? _block.App, itm, Log);
+            var permCheck = CmsManager.ServiceProvider.Build<MultiPermissionsItems>().Init(_context, alternateApp ?? _block.App, itm, Log);
             if (!permCheck.EnsureAll(requiredGrants, out var error))
                 throw HttpException.PermissionDenied(error);
             return permCheck;

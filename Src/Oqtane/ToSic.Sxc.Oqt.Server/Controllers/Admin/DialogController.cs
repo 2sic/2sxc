@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Admin;
 
@@ -35,7 +36,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         public dynamic Settings(int appId)
         {
             var block = GetBlock();
-            return new AdminBackend().Init(Log).DialogSettings(GetContext(), _contextBuilder.Init(block), appId);
+            return HttpContext.RequestServices.Build<AdminBackend>().Init(Log).DialogSettings(GetContext(), _contextBuilder.Init(block), appId);
         }
 
         #endregion

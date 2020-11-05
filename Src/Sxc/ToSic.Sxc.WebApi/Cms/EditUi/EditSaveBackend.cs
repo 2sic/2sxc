@@ -19,7 +19,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly Lazy<AppManager> _appManagerLazy;
 
         #region Constructor / DI
-        public EditSaveBackend(SxcPagePublishing pagePublishing, Lazy<AppManager> appManagerLazy) : base("Cms.SaveBk")
+        public EditSaveBackend(SxcPagePublishing pagePublishing, Lazy<AppManager> appManagerLazy, IServiceProvider serviceProvider) : base(serviceProvider, "Cms.SaveBk")
         {
             _pagePublishing = pagePublishing;
             _appManagerLazy = appManagerLazy;

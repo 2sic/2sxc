@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.WebApi.App
     {
         private readonly CmsZones _cmsZones;
 
-        public AppsBackend(CmsZones cmsZones) : base("Bck.Apps")
+        public AppsBackend(CmsZones cmsZones, IServiceProvider serviceProvider) : base(serviceProvider, "Bck.Apps")
         {
             _cmsZones = cmsZones;
         }

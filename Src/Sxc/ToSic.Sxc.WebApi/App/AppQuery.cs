@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using ToSic.Eav;
 using ToSic.Eav.Apps.Run;
@@ -17,7 +18,7 @@ namespace ToSic.Sxc.WebApi.App
     {
         #region Constructor / DI
 
-        public AppQuery() : base("Sxc.ApiApQ")
+        public AppQuery(IServiceProvider serviceProvider) : base(serviceProvider, "Sxc.ApiApQ")
         {
 
         }

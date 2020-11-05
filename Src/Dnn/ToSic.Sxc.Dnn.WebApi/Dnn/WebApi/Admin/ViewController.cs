@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [SupportedModules("2sxc,2sxc-app")]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public PolymorphismDto Polymorphism(int appId) => new PolymorphismBackend().Init(Log).Polymorphism(appId);
+        public PolymorphismDto Polymorphism(int appId) => Eav.Factory.Resolve<PolymorphismBackend>().Init(Log).Polymorphism(appId);
 
 
         [HttpGet, HttpDelete]

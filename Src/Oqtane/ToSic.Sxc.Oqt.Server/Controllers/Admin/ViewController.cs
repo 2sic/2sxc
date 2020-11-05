@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using ToSic.Eav.Persistence.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Assets;
@@ -47,7 +48,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         //[SupportedModules("2sxc,2sxc-app")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
-        public PolymorphismDto Polymorphism(int appId) => new PolymorphismBackend().Init(Log).Polymorphism(appId);
+        public PolymorphismDto Polymorphism(int appId) => HttpContext.RequestServices.Build<PolymorphismBackend>().Init(Log).Polymorphism(appId);
 
         [HttpGet, HttpDelete]
         //[SupportedModules("2sxc,2sxc-app")]

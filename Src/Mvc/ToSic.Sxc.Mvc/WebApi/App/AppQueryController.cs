@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.WebApi.App;
 
 // TODO: #MissingFeature
@@ -24,7 +25,7 @@ namespace ToSic.Sxc.Mvc.WebApi.App
             string appPath,
             string name,
             [FromQuery] string stream = null
-        ) => new AppQuery().Init(Log).PublicQuery(GetContext(), appPath, name, stream, NoBlock);
+        ) => HttpContext.RequestServices.Build<AppQuery>().Init(Log).PublicQuery(GetContext(), appPath, name, stream, NoBlock);
 
     }
 }

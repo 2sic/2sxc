@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps;
+﻿using System;
+using ToSic.Eav.Apps;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Polymorphism;
 
@@ -6,7 +7,7 @@ namespace ToSic.Sxc.WebApi.Views
 {
     internal class PolymorphismBackend : WebApiBackendBase<PolymorphismBackend>
     {
-        public PolymorphismBackend() : base("Bck.Views") { }
+        public PolymorphismBackend(IServiceProvider serviceProvider) : base(serviceProvider, "Bck.Views") { }
 
 
 

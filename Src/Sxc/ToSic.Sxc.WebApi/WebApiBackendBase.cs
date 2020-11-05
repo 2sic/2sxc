@@ -1,4 +1,5 @@
-﻿using ToSic.Eav;
+﻿using System;
+using ToSic.Eav;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
@@ -9,7 +10,11 @@ namespace ToSic.Sxc.WebApi
 {
     public abstract class WebApiBackendBase<T>: HasLog<T> where T : class
     {
-        protected WebApiBackendBase(string logName) : base(logName) { }
+        public IServiceProvider ServiceProvider { get; }
+        protected WebApiBackendBase(IServiceProvider serviceProvider, string logName) : base(logName)
+        {
+            ServiceProvider = serviceProvider;
+        }
 
         internal AppOfRequest AppFinder => Factory.Resolve<AppOfRequest>().Init(Log);
 

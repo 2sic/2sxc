@@ -1,26 +1,23 @@
 ﻿using System;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
-using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
-using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Security;
-using ToSic.Sxc.Apps;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
     public class EntityBackend: WebApiBackendBase<EntityBackend>
     {
-        public EntityBackend() : base("Bck.Entity") { }
+        public EntityBackend(IServiceProvider serviceProvider) : base(serviceProvider, "Bck.Entity") { }
 
         // New feature in 11.03 - Usage Statistics
 
         public dynamic Usage(IInstanceContext context, IApp app, Guid guid)
         {
-            var permCheck = new MultiPermissionsApp().Init(context, app, Log);
+            var permCheck = ServiceProvider.Build<MultiPermissionsApp>().Init(context, app, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 

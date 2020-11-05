@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Apps.Adam;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Security;
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly Lazy<AdamState<TFolderId, TFileId>> _adamState;
         private AdamState<TFolderId, TFileId> AdamState => _adamState.Value;
 
-        public HyperlinkBackend(Lazy<AdamState<TFolderId, TFileId>> adamState) : base("Bck.HypLnk")
+        public HyperlinkBackend(Lazy<AdamState<TFolderId, TFileId>> adamState, IServiceProvider serviceProvider) : base(serviceProvider, "Bck.HypLnk")
         {
             _adamState = adamState;
         }
@@ -33,7 +34,7 @@ namespace ToSic.Sxc.WebApi.Cms
 				{
 					// page link - only resolve if the user has edit-permissions
 					// only people who have some full edit permissions may actually look up pages
-					var permCheckPage = new MultiPermissionsApp().Init(block.Context, GetApp(appId, block), Log);
+					var permCheckPage = ServiceProvider.Build<MultiPermissionsApp>().Init(block.Context, GetApp(appId, block), Log);
 					return permCheckPage.UserMayOnAll(GrantSets.WritePublished)
 						? resolved
 						: hyperlink;

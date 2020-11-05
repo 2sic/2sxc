@@ -17,10 +17,15 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     [ApiController]
     public class AppQueryController : SxcStatefulControllerBase
     {
+        private readonly AppQuery _appQuery;
+
         #region DI / Constructor
         protected override string HistoryLogName => "App.AppQry";
 
-        public AppQueryController(StatefulControllerDependencies dependencies) : base(dependencies) { }
+        public AppQueryController(StatefulControllerDependencies dependencies, AppQuery appQuery) : base(dependencies)
+        {
+            _appQuery = appQuery;
+        }
 
         #endregion
         
@@ -29,7 +34,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             [FromRoute] string appPath,
             [FromRoute] string name,
             [FromQuery] string stream = null
-        ) => new AppQuery().Init(Log).PublicQuery(GetContext(), appPath, name, stream, NoBlock);
+        ) => _appQuery.Init(Log).PublicQuery(GetContext(), appPath, name, stream, NoBlock);
 
         [HttpGet("auto/query/{name}/{default}")]
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(
@@ -37,6 +42,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             [FromQuery] bool includeGuid = false,
             [FromQuery] string stream = null,
             [FromQuery] int? appId = null
-        ) => new AppQuery().Init(Log).Query(GetContext(), GetBlock(), GetBlock().App, name, includeGuid, stream, appId);
+        ) => _appQuery.Init(Log).Query(GetContext(), GetBlock(), GetBlock().App, name, includeGuid, stream, appId);
     }
 }

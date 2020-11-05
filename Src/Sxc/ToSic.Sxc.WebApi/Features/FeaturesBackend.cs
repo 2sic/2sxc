@@ -17,7 +17,7 @@ namespace ToSic.Sxc.WebApi.Features
     {
         #region Constructor / DI
 
-        public FeaturesBackend(IServerPaths serverPaths, IZoneMapper zoneMapper) : base("Bck.Feats")
+        public FeaturesBackend(IServerPaths serverPaths, IZoneMapper zoneMapper, IServiceProvider serviceProvider) : base(serviceProvider, "Bck.Feats")
         {
             _serverPaths = serverPaths;
             _zoneMapper = zoneMapper;

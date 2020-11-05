@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
@@ -35,7 +36,7 @@ namespace ToSic.Sxc.WebApi
 
         protected void ThrowIfNotAllowedInApp(List<Grants> requiredGrants, IApp alternateApp = null)
         {
-            var permCheck = new MultiPermissionsApp().Init(_context, alternateApp ?? _block.App, Log);
+            var permCheck = _context.ServiceProvider.Build<MultiPermissionsApp>().Init(_context, alternateApp ?? _block.App, Log);
             if (!permCheck.EnsureAll(requiredGrants, out var error))
                 throw HttpException.PermissionDenied(error);
         }
