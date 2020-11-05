@@ -44,11 +44,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="IRazorPartialToStringRenderer.cs" />
-    <Content Include="RazorPartialToStringRenderer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Scripts\ToSic.Sxc.0.0.1.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.Uninstall.sql" />
   </ItemGroup>

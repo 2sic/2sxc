@@ -33,34 +33,50 @@ namespace ToSic.Sxc.Oqt.App
                 {
                     var interop = new Interop(JSRuntime);
 
-                    // HACK: Lets load all 2sxc js dependencies (js / styles)
-                    foreach (var resource in SxcEngine.AssetsAndHeaders.Scripts())
+                    #region 2sxc Standard Assets and Header
+
+                    // Add Context-Meta first, because it should be available when $2sxc loads
+                    var aAndH = SxcEngine.AssetsAndHeaders;
+                    if (aAndH.AddContextMeta)
+                        await interop.IncludeMeta("sxc-tmp-context-id", "name", aAndH.ContextMetaName, aAndH.ContextMetaContents(), "id");
+
+                    // Lets load all 2sxc js dependencies (js / styles)
+                    // Not done the official Oqtane way, because that asks for the scripts before 
+                    // the razor component reported what it needs
+                    foreach (var resource in aAndH.Scripts())
                         await interop.IncludeScript("", resource, "", "", "", "head", "");
 
-                    var externalResources = SxcEngine.Resources.Where(r => r.IsExternal).ToArray();
-
-                    await interop.IncludeScripts(externalResources
-                        .Where(r => r.ResourceType == ResourceType.Script)
-                        .Select(a => new { href = a.Url, location = a.Location })
-                        .Cast<object>()
-                        .ToArray());
-
-                    foreach (var style in SxcEngine.AssetsAndHeaders.Styles())
+                    foreach (var style in aAndH.Styles())
                         await interop.IncludeLink("", "stylesheet", style, "text/css", "", "", "");
 
+                    #endregion
+
+                    #region External resources requested by the razor template
+
+                    // External resources = independent files (so not inline JS in the template)
+                    var externalResources = SxcEngine.Resources.Where(r => r.IsExternal).ToArray();
+
+                    // 1. Style Sheets, ideally before JS
                     await interop.IncludeLinks(externalResources
                         .Where(r => r.ResourceType == ResourceType.Stylesheet)
                         .Select(a => new { rel = "stylesheet", href = a.Url, type = "text/css" })
                         .Cast<object>()
                         .ToArray());
 
+                    // 2. Scripts - usually libraries etc.
+                    await interop.IncludeScripts(externalResources
+                        .Where(r => r.ResourceType == ResourceType.Script)
+                        .Select(a => new { href = a.Url, location = a.Location })
+                        .Cast<object>()
+                        .ToArray());
+
+                    // 3. Inline JS code which was extracted from the template
                     var inlineResources = SxcEngine.Resources.Where(r => !r.IsExternal).ToArray();
                     foreach (var inline in inlineResources)
                         await interop.IncludeScript("", "", "", "", inline.Content, "body", "");
 
-                    var aAndH = SxcEngine.AssetsAndHeaders;
-                    if (aAndH.AddContextMeta)
-                        await interop.IncludeMeta("sxc-tmp-context-id", "name", aAndH.ContextMetaName, aAndH.ContextMetaContents(), "id");
+
+                    #endregion
                 }
             }
         }
