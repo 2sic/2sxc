@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Blocks.Views
             var urlParameterDict = context.Page.Parameters.ToDictionary(pair => pair.Key?.ToLower() ?? "", pair =>
                 $"{pair.Key}/{pair.Value}".ToLower());
 
-            var allTemplates = /*new CmsRuntime(App, Log, UserMayEdit, false)*/cms.Views.GetAll();
+            var allTemplates = cms.Views.GetAll();
 
             foreach (var template in allTemplates.Where(t => !string.IsNullOrEmpty(t.UrlIdentifier)))
             {

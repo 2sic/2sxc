@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Mvc.Run
 {
     public class MvcImportExportEnvironment: ImportExportEnvironmentBase
     {
-        public MvcImportExportEnvironment(ISite site): base(site, "Mvc.IExEnv") { }
+        public MvcImportExportEnvironment(Dependencies dependencies) : base(dependencies, "Mvc.IExEnv") { }
 
         public override List<Message> TransferFilesToSite(string sourceFolder, string destinationFolder) 
             => throw new NotImplementedException();

@@ -18,10 +18,11 @@ namespace ToSic.SexyContent
             {
                 if (_blockLoaded) return _block;
                 _blockLoaded = true;
-                var context = new DnnContext(
+                var context = DnnContext.Create(
                     new DnnSite().Init(ModuleConfiguration.OwnerPortalID),
-                    new DnnContainer().Init(ModuleConfiguration, Log),
-                    new DnnUser(UserInfo));
+                    Eav.Factory.Resolve<DnnContainer>().Init(ModuleConfiguration, Log),
+                    new DnnUser(UserInfo),
+                    Eav.Factory.GetServiceProvider());
                 return _block = Eav.Factory.Resolve<BlockFromModule>().Init(context, Log);
             }
         }

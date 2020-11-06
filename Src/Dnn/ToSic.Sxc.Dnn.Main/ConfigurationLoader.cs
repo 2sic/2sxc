@@ -111,6 +111,7 @@ namespace ToSic.SexyContent
             // new for .net standard
             services.AddScoped<ISite, DnnSite>();
             services.AddTransient<IContainer, DnnContainer>();
+            services.AddTransient<DnnContainer>();
             services.AddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
             services.AddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
             services.AddScoped<IEnvironment, DnnEnvironment>();

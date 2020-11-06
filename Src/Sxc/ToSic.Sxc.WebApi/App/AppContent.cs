@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Conversion;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Eav.WebApi.Helpers;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Conversion;
@@ -22,12 +24,14 @@ namespace ToSic.Sxc.WebApi.App
         #region Constructor / DI
 
         public AppContent(EntityApi entityApi, 
-            Lazy<CmsManager> cmsManagerLazy) : base(cmsManagerLazy, "Sxc.ApiApC")
+            Lazy<CmsManager> cmsManagerLazy, 
+            Lazy<EntitiesToDictionary> entToDicLazy) : base(cmsManagerLazy, "Sxc.ApiApC")
         {
             _entityApi = entityApi;
+            _entToDicLazy = entToDicLazy;
         }
         private readonly EntityApi _entityApi;
-
+        private readonly Lazy<EntitiesToDictionary> _entToDicLazy;
 
         #endregion
 
@@ -136,11 +140,11 @@ namespace ToSic.Sxc.WebApi.App
         
         #region helpers / initializers to prep the EAV and Serializer
 
-        private Eav.Conversion.EntitiesToDictionary InitEavAndSerializer(int appId, bool userMayEdit)
+        private EntitiesToDictionary InitEavAndSerializer(int appId, bool userMayEdit)
         {
             Log.Add($"init eav for a#{appId}");
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
-            var ser = Eav.WebApi.Helpers.Serializers.GetSerializerWithGuidEnabled();
+            var ser = _entToDicLazy.Value.EnableGuids();// Eav.WebApi.Helpers.Serializers.GetSerializerWithGuidEnabled();
             ((DataToDictionary)ser).WithEdit = userMayEdit;
             return ser;
         }

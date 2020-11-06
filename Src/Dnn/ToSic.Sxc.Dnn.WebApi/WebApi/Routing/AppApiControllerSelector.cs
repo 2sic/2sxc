@@ -13,8 +13,6 @@ using System.Web.Http.Dispatcher;
 using ToSic.Eav;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.Eav.Plumbing;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
@@ -92,7 +90,7 @@ namespace ToSic.Sxc.WebApi
                 if(appFolder == null)
                 {
                     log.Add("no folder found in url, will auto-detect");
-                    var block = Factory.Resolve<DnnGetBlock>().GetCmsBlock(request, false, log);
+                    var block = Factory.StaticBuild<DnnGetBlock>().GetCmsBlock(request, false, log);
                     appFolder = block.App.Folder;
                 }
 
@@ -107,7 +105,7 @@ namespace ToSic.Sxc.WebApi
 
                 log.Add($"Edition: {edition}");
 
-                var tenant = Factory.GetServiceProvider().Build<DnnSite>();
+                var tenant = Factory.StaticBuild<DnnSite>();
                 var controllerFolder = Path.Combine(tenant.AppsRootRelative, appFolder, edition + "api/");
 
                 controllerFolder = controllerFolder.Replace("\\", @"/");

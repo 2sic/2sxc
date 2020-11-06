@@ -15,9 +15,14 @@ namespace ToSic.Sxc.Dnn.Run
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public class DnnContainer: Container<ModuleInfo>, IHasLog
     {
+        private readonly Lazy<IZoneMapper> _zoneMapperLazy;
+
         #region Constructors and DI
         
-        public DnnContainer(): base("Dnn.Contnr") {}
+        public DnnContainer(Lazy<IZoneMapper> zoneMapperLazy): base("Dnn.Contnr")
+        {
+            _zoneMapperLazy = zoneMapperLazy;
+        }
 
         /// <summary>
         /// We don't use a Constructor because of DI
@@ -60,7 +65,7 @@ namespace ToSic.Sxc.Dnn.Run
                 if (UnwrappedContents == null) return null;
 
                 // find ZoneId, AppId and prepare settings for next values
-                var zoneId = Eav.Factory.Resolve<DnnZoneMapper>().Init(Log).GetZoneId(UnwrappedContents.OwnerPortalID);
+                var zoneId = _zoneMapperLazy.Value.Init(Log).GetZoneId(UnwrappedContents.OwnerPortalID);
                 var appId = GetInstanceAppId(zoneId);
                 var settings = UnwrappedContents.ModuleSettings;
 

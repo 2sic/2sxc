@@ -5,6 +5,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
@@ -56,11 +57,9 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var appMan = _appManagerLazy.Value.Init(appId, Log);
             var appRead = appMan.Read;
-            var ser = new JsonSerializer(appRead.AppState, Log)
-            {
-                // Since we're importing directly into this app, we would prefer local content-types
-                PreferLocalAppTypes = true
-            };
+            var ser = _block.Context.ServiceProvider.Build<JsonSerializer>().Init(appRead.AppState, Log);
+            // Since we're importing directly into this app, we would prefer local content-types
+            ser.PreferLocalAppTypes = true;
             validator.PrepareForEntityChecks(appRead);
 
             #region check if it's an update, and do more security checks then - shared with EntitiesController.Save

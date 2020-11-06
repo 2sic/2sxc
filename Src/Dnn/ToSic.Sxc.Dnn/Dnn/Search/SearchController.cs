@@ -11,6 +11,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.LookUp;
@@ -22,7 +23,11 @@ namespace ToSic.Sxc.Search
 {
     internal class SearchController: HasLog
     {
-        public SearchController(ILog parentLog = null) : base("DNN.Search", parentLog) { }
+        private readonly IServiceProvider _serviceProvider;
+        public SearchController(IServiceProvider serviceProvider, ILog parentLog) : base("DNN.Search", parentLog)
+        {
+            _serviceProvider = serviceProvider;
+        }
 
         /// <summary>
         /// Get search info for each dnn module containing 2sxc data
@@ -53,7 +58,7 @@ namespace ToSic.Sxc.Search
             var cache = State.Cache;
             cache.Load(container.BlockIdentifier, tenant.DefaultLanguage);
 
-            var modBlock = Eav.Factory.Resolve<BlockFromModule>().Init(new DnnContext(tenant, container, new DnnUser()), Log);
+            var modBlock = _serviceProvider.Build<BlockFromModule>().Init(DnnContext.Create(tenant, container, new DnnUser(), Eav.Factory.GetServiceProvider()), Log);
 
             var language = dnnModule.CultureCode;
 
@@ -128,7 +133,7 @@ namespace ToSic.Sxc.Search
             try
             {
                 engine.CustomizeSearch(searchInfoDictionary, 
-                    new DnnContainer().Init(dnnModule, Log), beginDate);
+                    _serviceProvider.Build<DnnContainer>().Init(dnnModule, Log), beginDate);
             }
             catch (Exception e)
             {

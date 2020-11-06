@@ -5,12 +5,11 @@ using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code;
-//using ToSic.Sxc.Mvc.Code;
 using ToSic.Sxc.Mvc.Dev;
 using ToSic.Sxc.Mvc.Run;
-using ToSic.Sxc.Mvc.TestStuff;
 using ToSic.Sxc.Mvc.Web;
+using ToSic.Sxc.Run;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Mvc
 {
@@ -59,10 +58,10 @@ namespace ToSic.Sxc.Mvc
         public static InstanceContext CreateContext(HttpContext http, int zoneId, int pageId, int containerId, int appId, Guid blockGuid)
             => new InstanceContext(
                 new MvcSite(http).Init(zoneId),
-                new MvcPage(pageId, null),
+                new SxcPage(pageId, null, http.RequestServices.Build<IHttp>().QueryStringKeyValuePairs()),
                 new MvcContainer(tenantId: zoneId, id: containerId, appId: appId, block: blockGuid),
                 new MvcUser(),
-                null
+                http.RequestServices
             );
     }
 }

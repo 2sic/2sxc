@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
         /// <summary>
         /// DI Constructor
         /// </summary>
-        public DnnImportExportEnvironment(ISite site) : base(site, "Dnn.ImExEn") { }
+        public DnnImportExportEnvironment(ImportExportEnvironmentBase.Dependencies dependencies) : base(dependencies, "Dnn.ImExEn") { }
 
         #endregion
 
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
 
             var dnnFileManager = FileManager.Instance;
             var dnnFolderManager = FolderManager.Instance;
-            var portalId = Tenant.Id;
+            var portalId = Site.Id;
 
             if (!dnnFolderManager.FolderExists(portalId, destinationFolder))
                 dnnFolderManager.AddFolder(portalId, destinationFolder);
@@ -90,7 +90,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
         public override void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap)
         {
             Log.Add($"will map files - map-size:{fileIdMap.Count}");
-            var portalId = Tenant.Id;
+            var portalId = Site.Id;
 
             var fileManager = FileManager.Instance;
             var folderManager = FolderManager.Instance;
@@ -120,7 +120,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
         public override void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog)
         {
             Log.Add("create folder and map IDs - start");
-            var portalId = Tenant.Id;
+            var portalId = Site.Id;
 
             var folderManager = FolderManager.Instance;
 

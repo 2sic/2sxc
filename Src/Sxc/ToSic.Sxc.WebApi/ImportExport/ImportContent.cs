@@ -27,7 +27,8 @@ namespace ToSic.Sxc.WebApi.ImportExport
             IEnvironmentLogger envLogger,
             Lazy<Import> importerLazy,
             Lazy<XmlImportWithFiles> xmlImportWithFilesLazy,
-            ZipImport zipImport) : base("Bck.Export")
+            ZipImport zipImport,
+            Lazy<JsonSerializer> jsonSerializerLazy) : base("Bck.Export")
         {
             _zoneMapper = zoneMapper;
             _serverPaths = serverPaths;
@@ -35,6 +36,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             _importerLazy = importerLazy;
             _xmlImportWithFilesLazy = xmlImportWithFilesLazy;
             _zipImport = zipImport;
+            _jsonSerializerLazy = jsonSerializerLazy;
         }
 
         private readonly IZoneMapper _zoneMapper;
@@ -43,6 +45,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private readonly Lazy<Import> _importerLazy;
         private readonly Lazy<XmlImportWithFiles> _xmlImportWithFilesLazy;
         private readonly ZipImport _zipImport;
+        private readonly Lazy<JsonSerializer> _jsonSerializerLazy;
         private IUser _user;
 
         public ImportContent Init(IUser user, ILog parentLog)
@@ -103,7 +106,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                     throw new ArgumentException("a file is not json");
 
                 // 1. create the content type
-                var serializer = new JsonSerializer(State.Get(new AppIdentity(zoneId, appId)), Log);
+                var serializer = _jsonSerializerLazy.Value.Init(State.Get(new AppIdentity(zoneId, appId)), Log);
 
                 var types = files.Select(f => serializer.DeserializeContentType(f.Contents) as ContentType).ToList();
 

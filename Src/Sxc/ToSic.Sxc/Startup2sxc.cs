@@ -5,6 +5,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.LookUp;
+using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc
 {
@@ -30,6 +31,8 @@ namespace ToSic.Sxc
 
             // Configuration Provider WIP
             services.TryAddTransient<AppConfigDelegate>();
+            services.TryAddTransient<App>();
+            services.TryAddTransient<ImportExportEnvironmentBase.Dependencies>();
 
             return services;
         }

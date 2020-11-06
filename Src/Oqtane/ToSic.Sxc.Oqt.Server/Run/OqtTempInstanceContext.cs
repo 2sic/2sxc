@@ -2,7 +2,10 @@
 using Oqtane.Models;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Oqt.Shared.Dev;
+using ToSic.Sxc.Run;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
@@ -22,7 +25,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             => new InstanceContext(
                 _oqtSite,
                 //_zoneMapper.TenantOfZone(zoneId),
-                new OqtPage(pageId, null),
+                new SxcPage(pageId, null, serviceProvider.Build<IHttp>().QueryStringKeyValuePairs()),
                 _oqtContainer.Init(module, parentLog),
                 new OqtUser(WipConstants.NullUser),
                 serviceProvider

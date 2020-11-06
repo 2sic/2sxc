@@ -49,24 +49,5 @@ namespace ToSic.Sxc.Dnn.Install
                 }
             }
         }
-
-
-        internal static void ImportXmlSchemaOfVersion(string version, bool leaveOriginalsUntouched, ILog parentLog = null)
-        {
-            //var userName = "System-ModuleUpgrade-" + version;
-            var xmlToImport =
-                File.ReadAllText(
-                    HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/" + version + ".xml"));
-            var xmlImport = Eav.Factory.Resolve<XmlImportWithFiles>().Init("en-US", /*userName,*/ true, parentLog);
-            var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport),
-                leaveOriginalsUntouched);
-
-            if (!success)
-            {
-                var messages = String.Join("\r\n- ", xmlImport.Messages.Select(p => p.Text).ToArray());
-                throw new Exception("The 2sxc module upgrade to " + version + " failed: " + messages);
-            }
-        }
-
     }
 }

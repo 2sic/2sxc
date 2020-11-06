@@ -4,6 +4,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.ImportExport.Environment;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Persistence.Xml;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Dnn.Run;
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
     {
         #region Constructor / DI
 
-        public DnnXmlExporter(AdamAppContext<int, int> adamAppContext)
+        public DnnXmlExporter(AdamAppContext<int, int> adamAppContext, XmlSerializer xmlSerializer): base(xmlSerializer)
         {
             AdamAppContext = adamAppContext;
         }

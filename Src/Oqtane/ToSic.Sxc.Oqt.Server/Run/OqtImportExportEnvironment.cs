@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Persistence.Logging;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
 
@@ -9,7 +8,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtImportExportEnvironment: ImportExportEnvironmentBase
     {
-        public OqtImportExportEnvironment(ISite site) : base( site, $"{OqtConstants.OqtLogPrefix}.IExEnv") { }
+        public OqtImportExportEnvironment(Dependencies dependencies) : base(dependencies, $"{OqtConstants.OqtLogPrefix}.IExEnv") { }
 
         public override List<Message> TransferFilesToSite(string sourceFolder, string destinationFolder) 
             => throw new NotImplementedException();

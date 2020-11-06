@@ -33,18 +33,21 @@ namespace ToSic.Sxc.WebApi.Views
         private readonly TemplateHelpers _appHelpers;
         private readonly IEnvironmentLogger _envLogger;
         private readonly Lazy<CmsManager> _cmsManagerLazy;
+        private readonly Lazy<JsonBundleSerializer> _jsonBundleLazy;
         private ISite _site;
         private IUser _user;
 
         public ViewsExportImport(IServerPaths serverPaths, 
             TemplateHelpers appHelpers, 
             IEnvironmentLogger envLogger,
-            Lazy<CmsManager> cmsManagerLazy) : base("Bck.Views")
+            Lazy<CmsManager> cmsManagerLazy, 
+            Lazy<JsonBundleSerializer> jsonBundleLazy) : base("Bck.Views")
         {
             _serverPaths = serverPaths;
             _appHelpers = appHelpers;
             _envLogger = envLogger;
             _cmsManagerLazy = cmsManagerLazy;
+            _jsonBundleLazy = jsonBundleLazy;
         }
 
         public ViewsExportImport Init(ISite site, IUser user, ILog parentLog)
@@ -78,7 +81,7 @@ namespace ToSic.Sxc.WebApi.Views
                     TryAddAsset(bundle, thumb, thumb);
             }
 
-            var serializer = new JsonBundleSerializer();
+            var serializer = _jsonBundleLazy.Value;
             serializer.Init(cms.AppState, Log);
             var serialized = serializer.Serialize(bundle, 0);
 
@@ -114,7 +117,7 @@ namespace ToSic.Sxc.WebApi.Views
                     throw new ArgumentException("a file is not json");
 
                 // 1. create the views
-                var serializer = new JsonBundleSerializer();
+                var serializer = _jsonBundleLazy.Value;
                 serializer.Init(State.Get(app), Log);
 
                 var bundles = files.Select(f => serializer.Deserialize(f.Contents)).ToList();

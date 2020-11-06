@@ -10,6 +10,7 @@ using ToSic.Eav.Apps.Enums;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
@@ -20,9 +21,14 @@ namespace ToSic.Sxc.Dnn.Cms
 {
     public partial class DnnPagePublishing : HasLog<IPagePublishing>, IPagePublishing
     {
+        private readonly IServiceProvider _serviceProvider;
+
         #region DI Constructors and More
         
-        public DnnPagePublishing(): base("Dnn.Publsh") { }
+        public DnnPagePublishing(IServiceProvider serviceProvider): base("Dnn.Publsh")
+        {
+            _serviceProvider = serviceProvider;
+        }
         
         #endregion
 
@@ -112,16 +118,17 @@ namespace ToSic.Sxc.Dnn.Cms
             {
                 // publish all entites of this content block
                 var dnnModule = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
-                var container = new DnnContainer().Init(dnnModule, Log);
+                var container = _serviceProvider.Build<DnnContainer>().Init(dnnModule, Log);
                 // must find tenant through module, as the Portal-Settings.Current is null in search mode
                 var tenant = new DnnSite().Init(dnnModule.OwnerPortalID);
-                var cb = Eav.Factory.Resolve<BlockFromModule>().Init(new DnnContext(tenant, container, new DnnUser()), Log);
+                var cb = _serviceProvider.Build<BlockFromModule>()
+                    .Init(DnnContext.Create(tenant, container, new DnnUser(), _serviceProvider), Log);
 
                 Log.Add($"found dnn mod {container.Id}, tenant {tenant.Id}, cb exists: {cb.ContentGroupExists}");
                 if (cb.ContentGroupExists)
                 {
                     Log.Add("cb exists");
-                    var appManager = Eav.Factory.Resolve<AppManager>().Init(cb, Log);
+                    var appManager = _serviceProvider.Build<AppManager>().Init(cb, Log);
 
                     // Add content entities
                     IEnumerable<IEntity> list = new List<IEntity>();

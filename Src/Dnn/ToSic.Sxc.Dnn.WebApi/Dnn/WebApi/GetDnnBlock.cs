@@ -34,13 +34,13 @@ namespace ToSic.Sxc.Dnn.WebApi
             if (moduleInfo == null)
                 log.Add("context/module not found");
 
-            var container = new DnnContainer().Init(moduleInfo, log);
+            var container = _serviceProvider.Build<DnnContainer>().Init(moduleInfo, log);
             
             var tenant = moduleInfo == null
                 ? new DnnSite(null)
                 : new DnnSite().Init(moduleInfo.OwnerPortalID);
 
-            var context = new DnnContext(tenant, container, new DnnUser(), GetOverrideParams(request));
+            var context = DnnContext.Create(tenant, container, new DnnUser(), _serviceProvider, GetOverrideParams(request));
             IBlock block = _serviceProvider.Build<BlockFromModule>().Init(context, log);
 
             // check if we need an inner block
@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Dnn.WebApi
                 if (blockId < 0)   // negative id, so it's an inner block
                 {
                     log.Add($"Inner Content: {blockId}");
-                    block = Eav.Factory.Resolve<BlockFromEntity>().Init(block, blockId, log);
+                    block = _serviceProvider.Build<BlockFromEntity>().Init(block, blockId, log);
                 }
             }
 

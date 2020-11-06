@@ -15,17 +15,36 @@ namespace ToSic.Sxc.Run
 {
     public abstract class ImportExportEnvironmentBase: HasLog, IImportExportEnvironment
     {
+
         #region constructor / DI
+
+        public class Dependencies
+        {
+            internal readonly ISite Site;
+            internal readonly App NewApp;
+            internal readonly TemplateHelpers TemplateHelpers;
+
+            public Dependencies(ISite site, App newApp, TemplateHelpers templateHelpers)
+            {
+                Site = site;
+                NewApp = newApp;
+                TemplateHelpers = templateHelpers;
+            }
+        }
+
+        private readonly Dependencies _dependencies;
+
         /// <summary>
         /// DI Constructor
         /// </summary>
         // todo: replace IEnvironment with IHttp ?
-        protected ImportExportEnvironmentBase(ISite site, string logName) : base(logName)
+        protected ImportExportEnvironmentBase(Dependencies dependencies, string logName) : base(logName)
         {
-            Tenant = site;
+            _dependencies = dependencies;
+            Site = dependencies.Site;
         }
 
-        protected readonly ISite Tenant;
+        protected readonly ISite Site;
 
         public IImportExportEnvironment Init(ILog parent)
         {
@@ -42,21 +61,21 @@ namespace ToSic.Sxc.Run
 
         public string FallbackContentTypeScope => Settings.AttributeSetScope;
 
-        public string DefaultLanguage => Tenant.DefaultLanguage;
+        public string DefaultLanguage => Site.DefaultLanguage;
 
         public string TemplatesRoot(int zoneId, int appId)
         {
-            var app = Factory.Resolve<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
+            var app = _dependencies.NewApp.InitNoData(new AppIdentity(zoneId, appId), Log);
 
             // Copy all files in 2sexy folder to (portal file system) 2sexy folder
-            var templateRoot = Factory.Resolve<TemplateHelpers>().Init(app, Log)
+            var templateRoot = _dependencies.TemplateHelpers.Init(app, Log)
                 .AppPathRoot(Settings.TemplateLocations.PortalFileSystem, PathTypes.PhysFull);
             return templateRoot;
         }
 
         public string TargetPath(string folder)
         {
-            var appPath = Path.Combine(Tenant.AppsRootPhysicalFull, folder);
+            var appPath = Path.Combine(Site.AppsRootPhysicalFull, folder);
             return appPath;
         }
 

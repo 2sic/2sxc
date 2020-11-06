@@ -1,6 +1,9 @@
 ﻿using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Mvc.Run;
+using ToSic.Sxc.Run;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Mvc.RazorPages.Exp
 {
@@ -19,10 +22,10 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
                 _blockLoaded = true;
                 var context = new InstanceContext(
                     new MvcSite(HttpContext),
-                    new MvcPage(0, null), 
+                    new SxcPage(0, null, _serviceProvider.Build<IHttp>().QueryStringKeyValuePairs()), 
                     new MvcContainer(),
                     new MvcUser(),
-                    null
+                    _serviceProvider
                 );
                 _block = Eav.Factory.Resolve<BlockFromModule>().Init(context, Log);
                 return _block;

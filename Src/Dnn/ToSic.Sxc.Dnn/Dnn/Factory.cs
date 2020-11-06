@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Dnn
         public static IBlockBuilder CmsBlock(int tabId, int modId)
         {
             var moduleInfo = new ModuleController().GetModule(modId, tabId, false);
-            var instance = new DnnContainer().Init(moduleInfo, null);
+            var instance = Eav.Factory.StaticBuild<DnnContainer>().Init(moduleInfo, null);
             return CmsBlock(instance);
         }
 
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Dnn
         /// <param name="moduleInfo">A DNN ModuleInfo object</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
         public static IBlockBuilder CmsBlock(ModuleInfo moduleInfo)
-            => CmsBlock(new DnnContainer().Init(moduleInfo, null));
+            => CmsBlock(Eav.Factory.StaticBuild<DnnContainer>().Init(moduleInfo, null));
 
         /// <summary>
         /// Get a Root CMS Block if you have the ModuleInfo object.
@@ -52,7 +52,8 @@ namespace ToSic.Sxc.Dnn
         {
             var dnnModule = ((Container<ModuleInfo>)container).UnwrappedContents;
             var tenant = new DnnSite(new PortalSettings(dnnModule.OwnerPortalID));
-            return Eav.Factory.Resolve<BlockFromModule>().Init(new DnnContext(tenant, container, new DnnUser()), parentLog).BlockBuilder;
+            return Eav.Factory.StaticBuild<BlockFromModule>()
+                .Init(DnnContext.Create(tenant, container, new DnnUser(), Eav.Factory.GetServiceProvider()), parentLog).BlockBuilder;
         }
 
         /// <summary>
@@ -121,10 +122,10 @@ namespace ToSic.Sxc.Dnn
         {
             var log = new Log("Dnn.Factry", parentLog);
             log.Add($"Create App(z:{zoneId}, a:{appId}, tenantObj:{site != null}, publishingEnabled: {publishingEnabled}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
-            var app = Eav.Factory.Resolve<App>();
+            var app = Eav.Factory.StaticBuild<App>();
             if (site != null) app.PreInit(site);
             var appStuff = app.Init(new AppIdentity(zoneId, appId), 
-                Eav.Factory.Resolve<AppConfigDelegate>().Init(parentLog).Build(showDrafts, publishingEnabled, new LookUpEngine(parentLog)),
+                Eav.Factory.StaticBuild<AppConfigDelegate>().Init(parentLog).Build(showDrafts, publishingEnabled, new LookUpEngine(parentLog)),
                 true, parentLog);
             return appStuff;
         }

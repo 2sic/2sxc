@@ -5,6 +5,7 @@ using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Search;
@@ -38,7 +39,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 if (_publishing != null) return Publishing;
 
                 // if publishing is used, make sure it's in the log-history
-                _publishing = new Sxc.Dnn.Cms.DnnPagePublishing().Init(Log);
+                _publishing = new Sxc.Dnn.Cms.DnnPagePublishing(Eav.Factory.GetServiceProvider()).Init(Log);
                 History.Add("dnn-publishing", Log);
                 return _publishing;
             }
@@ -96,8 +97,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
         {
             try
             {
-                return new SearchController(Log).GetModifiedSearchDocuments(
-                    new DnnContainer().Init(moduleInfo, Log), beginDate);
+                var sp = Eav.Factory.GetServiceProvider();
+                return new SearchController(sp, Log).GetModifiedSearchDocuments(
+                    sp.Build<DnnContainer>().Init(moduleInfo, Log), beginDate);
             }
             catch (Exception e)
             {
