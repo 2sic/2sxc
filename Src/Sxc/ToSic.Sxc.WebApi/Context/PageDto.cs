@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.WebApi.Usage.Dto;
-
-namespace ToSic.Sxc.WebApi.Context
+﻿namespace ToSic.Sxc.WebApi.Context
 {
     public class PageDto
     {

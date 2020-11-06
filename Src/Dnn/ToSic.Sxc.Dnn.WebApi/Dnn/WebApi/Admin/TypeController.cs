@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     {
         protected override string HistoryLogName => "Api.Types";
 
-        private ContentTypeApi Backend => Eav.Factory.Resolve<ContentTypeApi>();
+        private ContentTypeApi Backend => _build<ContentTypeApi>();
 
         [HttpGet]
         [ValidateAntiForgeryToken]
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public IDictionary<string, string> Scopes(int appId)
             => State.Get(appId).ContentTypes.GetAllScopesWithLabels();
-        //Eav.Factory.Resolve<AppRuntime>()
+        //_build<AppRuntime>()
         //        .Init(State.Identity(null, appId), false, Log).ContentTypes
         //        .ScopesWithLabels();
 
@@ -110,7 +110,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [AllowAnonymous] // will do security check internally
         public HttpResponseMessage Json(int appId, string name)
-            => Eav.Factory.Resolve<ContentExportApi>().Init(appId, Log).DownloadTypeAsJson(new DnnUser(UserInfo), name);
+            => _build<ContentExportApi>().Init(appId, Log).DownloadTypeAsJson(new DnnUser(UserInfo), name);
 
 
 
@@ -136,7 +136,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             var streams = new List<FileUploadDto>();
             for(var i = 0; i < files.Count; i++)
                 streams.Add(new FileUploadDto { Name = files[i].FileName, Stream = files[i].InputStream});
-            var result = Eav.Factory.Resolve<ImportContent>().Init(new DnnUser(UserInfo), Log)
+            var result = _build<ImportContent>().Init(new DnnUser(UserInfo), Log)
                 .ImportContentType(zoneId, appId, streams, PortalSettings.DefaultLanguage);
 
             return wrapLog("ok", result);

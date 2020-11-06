@@ -15,8 +15,7 @@ namespace ToSic.Sxc.Run
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="appId"></param>
-        /// <param name="parentLog"></param>
-        void SetAppId(IContainer instance, int? appId, ILog parentLog);
+        void SetAppId(IContainer instance, int? appId);
 
         /// <summary>
         /// Set the preview view of the Container / Module

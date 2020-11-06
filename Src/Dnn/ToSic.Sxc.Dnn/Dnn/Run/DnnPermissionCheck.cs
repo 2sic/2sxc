@@ -15,6 +15,20 @@ namespace ToSic.Sxc.Dnn.Run
     /// </summary>
     public class DnnPermissionCheck: AppPermissionCheck
     {
+        #region Constructor / DI
+
+        private readonly Lazy<IZoneMapper> _zoneMapperLazy;
+        private IZoneMapper ZoneMapper => _zoneMapper ?? (_zoneMapper = _zoneMapperLazy.Value.Init(Log));
+        private IZoneMapper _zoneMapper;
+
+
+        public DnnPermissionCheck(Lazy<IZoneMapper> zoneMapperLazy) : base("Dnn.PrmChk")
+        {
+            _zoneMapperLazy = zoneMapperLazy;
+        }
+
+        #endregion
+
         public string CustomPermissionKey = ""; // "CONTENT";
 
         private readonly string _salPrefix = "SecurityAccessLevel.".ToLower();
@@ -28,9 +42,6 @@ namespace ToSic.Sxc.Dnn.Run
         protected ModuleInfo Module =>
             _module ?? (_module = (Context.Container as Container<ModuleInfo>)?.UnwrappedContents);
         private ModuleInfo _module;
-
-
-        public DnnPermissionCheck() : base("Dnn.PrmChk") { }
 
 
         protected override bool EnvironmentAllows(List<Grants> grants)
@@ -74,10 +85,9 @@ namespace ToSic.Sxc.Dnn.Run
         {
             var wrapLog = Log.Call<bool>();
             // but is the current portal also the one we're asking about?
-            var env = Eav.Factory.Resolve<IAppEnvironment>();
             if (Context.Tenant == null || Context.Tenant.Id == Eav.Constants.NullId) return wrapLog("no", false); // this is the case when running out-of http-context
             if (AppIdentity == null) return wrapLog("yes", true); // this is the case when an app hasn't been selected yet, so it's an empty module, must be on current portal
-            var pZone = env.ZoneMapper.GetZoneId(Context.Tenant);
+            var pZone = ZoneMapper.GetZoneId(Context.Tenant);
             var result = pZone == AppIdentity.ZoneId; // must match, to accept user as admin
             return wrapLog($"{result}", result);
         }

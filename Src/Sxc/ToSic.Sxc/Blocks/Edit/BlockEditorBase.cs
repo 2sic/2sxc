@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Blocks.Edit
 
         private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
         private readonly Lazy<CmsManager> _cmsManagerLazy;
-        private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.Init(Block?.App, Log));
+        protected CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.Init(Block?.App, Log));
         private CmsManager _cmsManager;
 
         internal BlockEditorBase(Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> cmsManagerLazy) : base("CG.RefMan")

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.WebApi.App
         public List<AppDto> Apps(ISite site, IBlock block, int zoneId)
         {
             var cms = _cmsZones.Init(zoneId, Log);
-            var configurationBuilder = ConfigurationProvider.Build(block, true);
+            var configurationBuilder = ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(block, true);
             var list = cms.AppsRt.GetApps(site, configurationBuilder);
             return list.Select(a => new AppDto
             {

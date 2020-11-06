@@ -24,7 +24,7 @@ namespace ToSic.Sxc.WebApi.Save
         public IMultiPermissionCheck DoPreSaveSecurityCheck(int appId, IEnumerable<BundleWithHeader> items)
         {
             var sp = Block.Context.ServiceProvider;
-            var app = sp.Build<Apps.App>().Init(appId, Log, Block);
+            var app = sp.Build<Apps.App>().Init(sp, appId, Log, Block);
             var permCheck = sp.Build<MultiPermissionsTypes>().Init(Block.Context, app, items.Select(i => i.Header).ToList(), Log);
             if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
                 throw HttpException.PermissionDenied(error);

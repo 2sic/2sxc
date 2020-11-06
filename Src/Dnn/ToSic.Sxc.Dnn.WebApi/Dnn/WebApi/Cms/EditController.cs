@@ -21,13 +21,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public AllInOneDto Load([FromBody] List<ItemIdentifier> items, int appId)
-            => Eav.Factory.Resolve<EditLoadBackend>().Init(Log)
-                .Load(GetBlock(), new DnnContextBuilder(PortalSettings, ActiveModule, UserInfo), appId, items);
+            => _build<EditLoadBackend>().Init(Log)
+                .Load(GetBlock(), new DnnContextBuilder(_serviceProvider, PortalSettings, ActiveModule, UserInfo), appId, items);
 
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Dictionary<Guid, int> Save([FromBody] AllInOneDto package, int appId, bool partOfPage) 
-            => Eav.Factory.Resolve<EditSaveBackend>().Init(GetBlock(), Log)
+            => _build<EditSaveBackend>().Init(GetBlock(), Log)
                 .Save(package, appId, partOfPage);
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [AllowAnonymous] // security check happens internally
         public IEnumerable<EntityForPickerDto> EntityPicker([FromUri] int appId, [FromBody] string[] items,
             [FromUri] string contentTypeName = null, [FromUri] int? dimensionId = null)
-            => Eav.Factory.Resolve<EntityPickerBackend>().Init(Log)
+            => _build<EntityPickerBackend>().Init(Log)
                 .GetAvailableEntities(GetContext(), appId, items, contentTypeName, dimensionId);
 
     }

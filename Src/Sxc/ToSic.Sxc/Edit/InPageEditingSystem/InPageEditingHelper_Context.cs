@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web;
 #if NET451
@@ -59,7 +60,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         {
             Eav.Constants.ProtectAgainstMissingParameterNames(noParameterOrder, nameof(WrapInContext), $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
 
-            var renderingHelper = Factory.Resolve<IRenderingHelper>().Init(Block, Log);
+            var renderingHelper = Block.Context.ServiceProvider.Build<IRenderingHelper>().Init(Block, Log);
 
             return new HtmlString(
                renderingHelper.WrapInContext(content.ToString(),

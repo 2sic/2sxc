@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Http;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Security;
@@ -18,17 +18,17 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         #region Constructor / DI
 
-        public ExportContent(IZoneMapper zoneMapper, XmlExporter xmlExporter, Lazy<CmsRuntime> appRuntime) : base("Bck.Export")
+        public ExportContent(IZoneMapper zoneMapper, XmlExporter xmlExporter, Lazy<CmsRuntime> cmsRuntime) : base("Bck.Export")
         {
             _zoneMapper = zoneMapper;
             _xmlExporter = xmlExporter;
-            _appRuntime = appRuntime;
+            _cmsRuntime = cmsRuntime;
         }
 
         private readonly IZoneMapper _zoneMapper;
         private readonly XmlExporter _xmlExporter;
-        private readonly Lazy<CmsRuntime> _appRuntime;
-        private CmsRuntime CmsRuntime => _appRuntime.Value;
+        private readonly Lazy<CmsRuntime> _cmsRuntime;
+        private CmsRuntime CmsRuntime => _cmsRuntime.Value;
         private IUser _user;
         private int _siteId;
 
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         {
             Log.Add($"get content info for z#{zoneId}, a#{appId}, scope:{scope} super?:{_user.IsSuperUser}");
             var contextZoneId = _zoneMapper.GetZoneId(_siteId);
-            var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId, Log);
+            var currentApp = CmsRuntime.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
             var cms = CmsRuntime.Init(currentApp, true, false, Log);
             var contentTypes = cms.ContentTypes.All.OfScope(scope);
@@ -92,7 +92,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             SecurityHelpers.ThrowIfNotAdmin(_user); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
             var contextZoneId = _zoneMapper.GetZoneId(_siteId);
-            var currentApp = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId, Log);
+            var currentApp = CmsRuntime.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
             var appRuntime = CmsRuntime.Init(currentApp, true, Log);
 
             var fileName = $"2sxcContentExport_{currentApp.NameWithoutSpecialChars()}_{currentApp.VersionSafe()}.xml";

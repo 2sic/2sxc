@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
@@ -63,7 +62,7 @@ namespace ToSic.Sxc.WebApi.Assets
             Log.Add($"create a#{appId}, path:{path}, global:{global}, cont-length:{content.Content?.Length}");
             path = path.Replace("/", "\\");
 
-            var thisApp = Factory.Resolve<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), Log);
+            var thisApp = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), Log);
 
             if (content.Content == null)
                 content.Content = "";
@@ -82,7 +81,7 @@ namespace ToSic.Sxc.WebApi.Assets
             var isAdmin = _user.IsAdmin;
             var app = _app;
             if (appId != 0 && appId != app.AppId)
-                app = Factory.Resolve<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), Log);
+                app = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), Log);
             var assetEditor = templateId != 0 && path == null
                 ? _serviceProvider.Build<AssetEditor>().Init(app, templateId, _user.IsSuperUser, isAdmin, Log)
                 : _serviceProvider.Build<AssetEditor>().Init(app, path, _user.IsSuperUser, isAdmin, global, Log);

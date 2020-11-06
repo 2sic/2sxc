@@ -1,13 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Run;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Engines
 {
@@ -23,11 +21,15 @@ namespace ToSic.Sxc.Engines
         public const string RazorC = "C# Razor";
         public const string TokenReplace = "Token";
 
+        #region Constructor / DI
+
+        
+        private IServerPaths ServerPaths { get; }
         public IApp App;
-        public TemplateHelpers(IHttp http, IServerPaths serverPaths, ILinkPaths linkPaths): base("Viw.Help")
+        public TemplateHelpers(IServerPaths serverPaths, ILinkPaths linkPaths): base("Viw.Help")
         {
-            _http = http;
-            _serverPaths = serverPaths;
+            ServerPaths = serverPaths;
+            //_serverPaths = serverPaths;
             _linkPaths = linkPaths;
         }
 
@@ -38,10 +40,10 @@ namespace ToSic.Sxc.Engines
             return this;
         }
 
-        protected IHttp Http => _http ?? (_http = Factory.Resolve<IHttp>());
-        private IHttp _http;
-        protected IServerPaths ServerPaths => _serverPaths ?? (_serverPaths = Factory.Resolve<IServerPaths>());
-        private IServerPaths _serverPaths;
+        #endregion
+
+        //protected IServerPaths ServerPaths => _serverPaths ?? (_serverPaths = Factory.Resolve<IServerPaths>());
+        //private IServerPaths _serverPaths;
         private readonly ILinkPaths _linkPaths;
 
         /// <summary>

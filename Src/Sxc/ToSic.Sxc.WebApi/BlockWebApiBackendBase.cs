@@ -17,11 +17,12 @@ namespace ToSic.Sxc.WebApi
         protected IInstanceContext _context;
         protected IBlock _block;
         protected CmsManager CmsManager;
-
+        protected IServiceProvider ServiceProvider;
 
         protected BlockWebApiBackendBase(Lazy<CmsManager> cmsManagerLazy, string logName) : base(logName)
         {
             _cmsManagerLazy = cmsManagerLazy;
+            ServiceProvider = _cmsManagerLazy.Value.ServiceProvider;
         }
 
         public T Init(IInstanceContext context, IBlock block, ILog parentLog)
@@ -36,7 +37,7 @@ namespace ToSic.Sxc.WebApi
 
         protected void ThrowIfNotAllowedInApp(List<Grants> requiredGrants, IApp alternateApp = null)
         {
-            var permCheck = _context.ServiceProvider.Build<MultiPermissionsApp>().Init(_context, alternateApp ?? _block.App, Log);
+            var permCheck = ServiceProvider.Build<MultiPermissionsApp>().Init(_context, alternateApp ?? _block.App, Log);
             if (!permCheck.EnsureAll(requiredGrants, out var error))
                 throw HttpException.PermissionDenied(error);
         }

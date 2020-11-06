@@ -6,7 +6,6 @@ namespace ToSic.Sxc.Engines
 {
     internal class EngineFactory
     {
-
         public enum EngineType
         {
             Token = 0,
@@ -23,7 +22,10 @@ namespace ToSic.Sxc.Engines
             return Factory.Resolve(engineType) as IEngine;
         }
 
-        private static Type RazorEngine => _razorEngine ?? (_razorEngine = Factory.Resolve<IEngineFinder>().RazorEngineType());
+        /// <summary>
+        /// Look up the engine once in the whole application lifecycle, then re-use
+        /// </summary>
+        private static Type RazorEngine => _razorEngine ?? (_razorEngine = Factory.StaticBuild<IEngineFinder>().RazorEngineType());
         private static Type _razorEngine;
 
     }

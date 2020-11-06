@@ -5,6 +5,7 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Apps;
@@ -31,21 +32,21 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public List<AppDto> List(int zoneId)
-            => Eav.Factory.Resolve<AppsBackend>().Init(Log).Apps(new DnnSite().Init(ActiveModule.OwnerPortalID), GetBlock(), zoneId);
+            => _build<AppsBackend>().Init(Log).Apps(new DnnSite().Init(ActiveModule.OwnerPortalID), GetBlock(), zoneId);
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public void App(int zoneId, int appId)
-            => Eav.Factory.Resolve<CmsZones>().Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId);
+            => _build<CmsZones>().Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId);
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public void App(int zoneId, string name)
-            => AppManager.AddBrandNewApp(zoneId, name, Log);
+            => _build<AppManager>().Init(null, Log).AddBrandNewApp(zoneId, name);
 
 
         /// <summary>
@@ -58,7 +59,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
         public AppExportInfoDto Statistics(int zoneId, int appId)
-            => Eav.Factory.Resolve<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
+            => _build<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
                 .GetAppInfo(appId, zoneId);
 
 
@@ -82,7 +83,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <returns></returns>
         [HttpGet]
         public HttpResponseMessage Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => Eav.Factory.Resolve<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
+            => _build<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
                 .Export(appId, zoneId, includeContentGroups, resetAppGuid);
 
         /// <summary>
@@ -96,7 +97,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [ValidateAntiForgeryToken]
         public bool SaveData(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => Eav.Factory.Resolve<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
+            => _build<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
                 .SaveDataForVersionControl(appId, zoneId, includeContentGroups, resetAppGuid);
 
 
@@ -116,7 +117,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
             if (request.Files.Count <= 0) return new ImportResultDto(false, "no files uploaded");
 
-            return Eav.Factory.Resolve<ImportApp>().Init(new DnnUser(UserInfo), Log)
+            return _build<ImportApp>().Init(new DnnUser(UserInfo), Log)
                 .Import(zoneId, request["Name"], request.Files[0].InputStream);
         }
 

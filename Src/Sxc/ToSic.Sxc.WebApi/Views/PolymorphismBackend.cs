@@ -1,6 +1,5 @@
 ﻿using System;
 using ToSic.Eav.Apps;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Polymorphism;
 
 namespace ToSic.Sxc.WebApi.Views

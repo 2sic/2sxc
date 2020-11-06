@@ -1,19 +1,27 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Dnn.WebApi
 {
-    internal static class DnnGetBlock
+    internal class DnnGetBlock
     {
+        private readonly IServiceProvider _serviceProvider;
 
-        internal static IBlock GetCmsBlock(HttpRequestMessage request, bool allowNoContextFound, ILog log)
+        public DnnGetBlock(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
+
+        internal IBlock GetCmsBlock(HttpRequestMessage request, bool allowNoContextFound, ILog log)
         {
             var wrapLog = log.Call<IBlock>(parameters: $"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
 
@@ -33,7 +41,7 @@ namespace ToSic.Sxc.Dnn.WebApi
                 : new DnnSite().Init(moduleInfo.OwnerPortalID);
 
             var context = new DnnContext(tenant, container, new DnnUser(), GetOverrideParams(request));
-            IBlock block = Eav.Factory.Resolve<BlockFromModule>().Init(context, log);
+            IBlock block = _serviceProvider.Build<BlockFromModule>().Init(context, log);
 
             // check if we need an inner block
             if (request.Headers.Contains(WebApiConstants.HeaderContentBlockId)) { 

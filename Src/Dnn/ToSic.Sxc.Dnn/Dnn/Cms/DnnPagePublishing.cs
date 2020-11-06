@@ -18,18 +18,12 @@ using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Dnn.Cms
 {
-    public partial class DnnPagePublishing : HasLog, IPagePublishing
+    public partial class DnnPagePublishing : HasLog<IPagePublishing>, IPagePublishing
     {
         #region DI Constructors and More
         
         public DnnPagePublishing(): base("Dnn.Publsh") { }
-
-        public IPagePublishing Init(ILog parent)
-        {
-            Log.LinkTo(parent);
-            return this;
-        }
-
+        
         #endregion
 
         public bool Supported => true;

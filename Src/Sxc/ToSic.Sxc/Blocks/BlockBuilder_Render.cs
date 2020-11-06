@@ -1,7 +1,7 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Internal;
 using ToSic.Eav;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Blocks
         public bool WrapInDiv { get; set; } = true;
 
         private IRenderingHelper RenderingHelper =>
-            _rendHelp ?? (_rendHelp = Factory.Resolve<IRenderingHelper>().Init(Block, Log));
+            _rendHelp ?? (_rendHelp = Block.Context.ServiceProvider.Build<IRenderingHelper>().Init(Block, Log));
         private IRenderingHelper _rendHelp;
 
 
@@ -101,7 +101,7 @@ namespace ToSic.Sxc.Blocks
         {
             if (InstallationOk) return null;
 
-            var installer = Factory.Resolve<IEnvironmentInstaller>();
+            var installer = Block.Context.ServiceProvider.Build<IEnvironmentInstaller>();
             var notReady = installer.UpgradeMessages();
             if (!string.IsNullOrEmpty(notReady))
             {

@@ -27,7 +27,7 @@ namespace ToSic.Sxc.WebApi.Cms
 				var lookupPage = hyperlink.Trim().StartsWith("page", StringComparison.OrdinalIgnoreCase);
 
 				// look it up first, because we need to know if the result is in ADAM or not (different security scenario)
-				var conv = Eav.Factory.Resolve<IValueConverter>();
+				var conv = ServiceProvider.Build<IValueConverter>();
 				var resolved = conv.ToValue(hyperlink, guid);
 
 				if (lookupPage)

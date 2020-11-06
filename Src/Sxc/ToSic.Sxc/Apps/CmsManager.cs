@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Apps
 {
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.Apps
         }
 
         public new CmsRuntime Read 
-            => _runtime ?? (_runtime = Eav.Factory.Resolve<CmsRuntime>().Init(this, ShowDrafts, EnablePublishing, Log));
+            => _runtime ?? (_runtime = ServiceProvider.Build<CmsRuntime>().Init(this, ShowDrafts, EnablePublishing, Log));
         private CmsRuntime _runtime;
 
 

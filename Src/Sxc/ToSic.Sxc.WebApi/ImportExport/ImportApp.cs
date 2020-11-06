@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using ToSic.Eav;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Logging;
@@ -14,16 +13,18 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         #region Constructor / DI
 
-        public ImportApp(IZoneMapper zoneMapper, IServerPaths serverPaths, IEnvironmentLogger envLogger) : base("Bck.Export")
+        public ImportApp(IZoneMapper zoneMapper, IServerPaths serverPaths, IEnvironmentLogger envLogger, ZipImport zipImport) : base("Bck.Export")
         {
             _zoneMapper = zoneMapper;
             _serverPaths = serverPaths;
             _envLogger = envLogger;
+            _zipImport = zipImport;
         }
 
         private readonly IZoneMapper _zoneMapper;
         private readonly IServerPaths _serverPaths;
         private readonly IEnvironmentLogger _envLogger;
+        private readonly ZipImport _zipImport;
         private IUser _user;
 
         public ImportApp Init(IUser user, ILog parentLog)
@@ -43,7 +44,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
             if (!string.IsNullOrEmpty(name)) Log.Add($"new app name: {name}");
 
-            var zipImport = Factory.Resolve<ZipImport>();
+            var zipImport = _zipImport;
             try
             {
                 zipImport.Init(zoneId, null, _user.IsSuperUser, Log);

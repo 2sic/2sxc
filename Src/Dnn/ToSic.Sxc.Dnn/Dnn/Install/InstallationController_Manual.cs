@@ -58,7 +58,9 @@ namespace ToSic.Sxc.Dnn.Install
                 {
                     var primaryAppId = new ZoneRuntime().Init(site.ZoneId, Log).DefaultAppId;
                     // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
-                    var contentViews = Eav.Factory.Resolve<CmsRuntime>().Init(State.Identity(null, primaryAppId), false, false, Log).Views.GetAll();
+                    var contentViews = Eav.Factory.Resolve<CmsRuntime>()
+                        .Init(State.Identity(null, primaryAppId), false, false, Log)
+                        .Views.GetAll();
                     if (contentViews.Any()) return null;
                 }
                 catch { /* ignore */ }
@@ -72,20 +74,18 @@ namespace ToSic.Sxc.Dnn.Install
                 + "&DnnVersion=" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4)
                 + "&2SexyContentVersion=" + Settings.ModuleVersion
                 + "&ModuleName=" + moduleInfo.DesktopModule.ModuleName
-                + "&ModuleId=" + container.Id // moduleInfo.ModuleID
-                + "&PortalID=" + site.Id;
-            // Add VDB / Zone ID (if set)
-            //var zoneMapper = Eav.Factory.Resolve<IZoneMapper>().Init(Log);
-            //var zoneId = zoneMapper.GetZoneId(moduleInfo.PortalID);
-            gettingStartedSrc += "&ZoneID=" + site.ZoneId;
+                + "&ModuleId=" + container.Id
+                + "&PortalID=" + site.Id
+                + "&ZoneID=" + site.ZoneId;
             // ReSharper restore StringLiteralTypo
 
             // Add DNN Guid
             var hostSettings = HostController.Instance.GetSettingsDictionary();
             gettingStartedSrc += hostSettings.ContainsKey("GUID") ? "&DnnGUID=" + hostSettings["GUID"] : "";
             // Add Portal Default Language & current language
-            gettingStartedSrc += "&DefaultLanguage=" + site.DefaultLanguage // portal.DefaultLanguage
-                + "&CurrentLanguage=" + portal.CultureCode;
+            gettingStartedSrc += "&DefaultLanguage="
+                                 + site.DefaultLanguage
+                                 + "&CurrentLanguage=" + portal.CultureCode;
 
             // Set src to iframe
             return gettingStartedSrc;

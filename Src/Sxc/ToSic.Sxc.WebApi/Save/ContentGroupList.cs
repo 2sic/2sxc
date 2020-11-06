@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
@@ -21,20 +21,22 @@ namespace ToSic.Sxc.WebApi.Save
         private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
         private CmsRuntime CmsRuntime { get; set; }
         private readonly Lazy<CmsManager> _cmsManagerLazy;
+        private readonly IPagePublishing _pagePublishing;
         private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.Init(Block?.App, Log));
         private CmsManager _cmsManager;
 
-        public ContentGroupList(Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> cmsManagerLazy) : base("Api.GrpPrc")
+        public ContentGroupList(Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> cmsManagerLazy, IPagePublishing pagePublishing) : base("Api.GrpPrc")
         {
             _lazyCmsRuntime = lazyCmsRuntime;
             _cmsManagerLazy = cmsManagerLazy;
+            _pagePublishing = pagePublishing;
         }
 
         public ContentGroupList Init(IBlock block, ILog log, IAppIdentity appIdentity)
         {
             Init(block, log);
             _appIdentity = appIdentity ?? block;
-            var publishingEnabled = Factory.Resolve<IPagePublishing>().Init(Log).IsEnabled(Block.Context.Container.Id);
+            var publishingEnabled = _pagePublishing.Init(Log).IsEnabled(Block.Context.Container.Id);
             CmsRuntime = _lazyCmsRuntime.Value.Init(appIdentity, Block.EditAllowed, publishingEnabled, Log);
             return this;
         }
@@ -63,8 +65,9 @@ namespace ToSic.Sxc.WebApi.Save
             IEnumerable<IGrouping<string, BundleWithHeader<IEntity>>> pairsOrSingleItems)
         {
             var wrapLog = Log.Call<bool>($"{_appIdentity.AppId}");
-            var app = Factory.Resolve<Apps.App>().Init(_appIdentity, 
-                ConfigurationProvider.Build(Block, true), false, Log);
+            var sp = CmsManager.ServiceProvider;
+            var app = sp.Build<Apps.App>().Init(_appIdentity, 
+                sp.Build<AppConfigDelegate>().Init(Log).Build(Block, true), false, Log);
 
             foreach (var bundle in pairsOrSingleItems)
             {

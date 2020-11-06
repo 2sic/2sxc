@@ -12,34 +12,28 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Dnn.Run
 {
-    public class DnnModuleUpdater : HasLog, IPlatformModuleUpdater
+    public class DnnModuleUpdater : HasLog<IPlatformModuleUpdater>, IPlatformModuleUpdater
     {
-        private readonly IAppEnvironment _environment;
-
         #region Constructor and DI
+
+        private readonly IAppEnvironment _environment;
+        private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
 
         /// <summary>
         /// Empty constructor for DI
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public DnnModuleUpdater(IAppEnvironment environment) : base("Dnn.MapA2I")
+        public DnnModuleUpdater(IAppEnvironment environment, Lazy<CmsRuntime> cmsRuntimeLazy) : base("Dnn.MapA2I")
         {
             _environment = environment;
-        }
-
-        //public DnnMapAppToInstance(ILog parentLog) : base("Dnn.MapA2I", parentLog) { }
-
-        public IPlatformModuleUpdater Init(ILog parent)
-        {
-            Log.LinkTo(parent);
+            _cmsRuntimeLazy = cmsRuntimeLazy;
             _environment.Init(Log);
-            return this;
         }
 
         #endregion
 
 
-        public void SetAppId(IContainer instance, int? appId, ILog parentLog)
+        public void SetAppId(IContainer instance, int? appId)
         {
             Log.Add($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
             // Reset temporary template
@@ -62,7 +56,7 @@ namespace ToSic.Sxc.Dnn.Run
             if (appId.HasValue)
             {
                 var appIdentity = new AppIdentity(zoneId, appId.Value);
-                var cms = Eav.Factory.Resolve<CmsRuntime>().Init(appIdentity, true, _environment.PagePublishing.IsEnabled(instance.Id), Log);
+                var cms = _cmsRuntimeLazy.Value.Init(appIdentity, true, _environment.PagePublishing.IsEnabled(instance.Id), Log);
                 var templateGuid = cms.Views.GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
                 if (templateGuid.HasValue) SetPreview(instance.Id, templateGuid.Value);
             }

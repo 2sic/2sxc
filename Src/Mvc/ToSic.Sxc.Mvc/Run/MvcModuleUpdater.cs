@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Mvc.Run
         }
 
 
-        public void SetAppId(IContainer instance, int? appId, ILog parentLog) => throw new NotImplementedException();
+        public void SetAppId(IContainer instance, int? appId) => throw new NotImplementedException();
 
         public void SetPreview(int instanceId, Guid previewTemplateGuid) => throw new NotImplementedException();
 

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web;
 using DotNetNuke.Common;
 using DotNetNuke.Entities.Controllers;
@@ -6,6 +7,7 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Web.JsContext;
@@ -16,30 +18,37 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
 {
     internal sealed class DnnContextBuilder : ContextBuilderBase
     {
+        #region Constructor / DI
+
+
+        private readonly IServiceProvider _serviceProvider;
         private readonly PortalSettings _portal;
         private readonly ModuleInfo _module;
         private readonly UserInfo _user;
 
-        public DnnContextBuilder(PortalSettings portal, ModuleInfo module, UserInfo user = null, int? zoneId = null, IApp app = null)
+        public DnnContextBuilder(IServiceProvider serviceProvider, PortalSettings portal, ModuleInfo module, UserInfo user = null, int? zoneId = null, IApp app = null)
         {
+            _serviceProvider = serviceProvider;
             _portal = portal;
             _module = module;
             _user = user;
             InitApp(zoneId, app);
         }
 
+        #endregion
+
         public override IContextBuilder InitApp(int? zoneId, IApp app)
         {
             // check if we're providing context for missing app
             // in this case we must find the zone based on the portals.
-            if ((zoneId ?? 0) == 0 && app == null) zoneId = Eav.Factory.Resolve<DnnZoneMapper>().Init(null).GetZoneId(_portal.PortalId);
+            if ((zoneId ?? 0) == 0 && app == null) zoneId = _serviceProvider.Build<DnnZoneMapper>().Init(null).GetZoneId(_portal.PortalId);
             return base.InitApp(zoneId, app);
         }
 
         protected override LanguageDto GetLanguage()
         {
             if (_portal == null || ZoneId == 0) return null;
-            var language = new JsContextLanguage(new DnnSite(_portal), ZoneId);
+            var language = new JsContextLanguage(_serviceProvider, new DnnSite(_portal), ZoneId);
             return new LanguageDto
             {
                 Current = language.Current,

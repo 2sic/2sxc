@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
@@ -44,11 +44,11 @@ namespace ToSic.Sxc.WebApi.ItemLists
 
 
 
-        // TODO: shouldn't be part of ContentGroupController any more, as it's generic now
+        // TODO: probably should move from "backend" to a Manager
         public void Replace(IInstanceContext context, Guid guid, string part, int index, int entityId, bool add = false)
         {
             var wrapLog = Log.Call($"target:{guid}, part:{part}, index:{index}, id:{entityId}");
-            var versioning = Factory.Resolve<IPagePublishing>().Init(Log);
+            var versioning = CmsManager.ServiceProvider.Build<IPagePublishing>().Init(Log);
 
             void InternalSave(VersioningActionInfo args)
             {

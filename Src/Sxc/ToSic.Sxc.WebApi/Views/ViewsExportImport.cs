@@ -13,6 +13,7 @@ using ToSic.Eav.ImportExport.Serialization;
 using ToSic.Eav.ImportExport.Validation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Helpers;
@@ -58,8 +59,8 @@ namespace ToSic.Sxc.WebApi.Views
         {
             var logCall = Log.Call($"{appId}, {viewId}");
             SecurityHelpers.ThrowIfNotAdmin(_user);
-            var app = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId, Log);
-            var cms = _cmsManagerLazy.Value.Init(app, Log); // new CmsManager().Init(app, Log);
+            var app = _cmsManagerLazy.Value.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
+            var cms = _cmsManagerLazy.Value.Init(app, Log);
             var bundle = new BundleEntityWithAssets
             {
                 Entity = app.Data[Eav.ImportExport.Settings.TemplateContentType].One(viewId)
@@ -105,7 +106,7 @@ namespace ToSic.Sxc.WebApi.Views
             try
             {
                 // 0.1 Check permissions, get the app, 
-                var app = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId, Log);
+                var app = _cmsManagerLazy.Value.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
                 _appHelpers.Init(app, Log);
 
                 // 0.2 Verify it's json etc.

@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks.Views;
@@ -63,13 +64,13 @@ namespace ToSic.Sxc.Blocks
             Log.Add("Real app specified, will load App object with Data");
 
             // Get App for this block
-            App = Eav.Factory.Resolve<App>().PreInit(Context.Tenant)
-                .Init(this, ConfigurationProvider.Build(this, false),
+            App = Context.ServiceProvider.Build<App>().PreInit(Context.Tenant)
+                .Init(this, Context.ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(this, false),
                     true, Log);
 
             // note: requires EditAllowed, which isn't ready till App is created
-            var publishing = Eav.Factory.Resolve<IPagePublishing>().Init(Log);
-            var cms = Eav.Factory.Resolve<CmsRuntime>().Init(App, EditAllowed, publishing.IsEnabled(Context.Container.Id), Log);
+            var publishing = Context.ServiceProvider.Build<IPagePublishing>().Init(Log);
+            var cms = Context.ServiceProvider.Build<CmsRuntime>().Init(App, EditAllowed, publishing.IsEnabled(Context.Container.Id), Log);
 
             Configuration = cms.Blocks.GetOrGeneratePreviewConfig(blockId);
 

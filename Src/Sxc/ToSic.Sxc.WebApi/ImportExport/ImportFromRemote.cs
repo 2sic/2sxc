@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Logging;
@@ -12,12 +11,14 @@ namespace ToSic.Sxc.WebApi.ImportExport
     public class ImportFromRemote: HasLog
     {
         private readonly IEnvironmentLogger _envLogger;
+        private readonly ZipFromUrlImport _zipImportFromUrl;
 
         #region Constructor / DI
 
-        public ImportFromRemote(IEnvironmentLogger envLogger) : base("Bck.Export")
+        public ImportFromRemote(IEnvironmentLogger envLogger, ZipFromUrlImport zipImportFromUrl) : base("Bck.Export")
         {
             _envLogger = envLogger;
+            _zipImportFromUrl = zipImportFromUrl;
         }
 
         private IUser _user;
@@ -38,7 +39,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             if(!_user.IsAdmin) throw new Exception("must be admin");
             bool success;
 
-            var importer = Factory.Resolve<ZipFromUrlImport>();
+            var importer = _zipImportFromUrl; // Factory.Resolve<ZipFromUrlImport>();
             try
             {
                 success = importer.Init(zoneId, appId, _user.IsSuperUser, Log)

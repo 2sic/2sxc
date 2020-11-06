@@ -3,8 +3,10 @@ using System.Collections.Specialized;
 using System.Globalization;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Web;
@@ -12,18 +14,33 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.LookUp
 {
-    public class ConfigurationProvider
+    public class AppConfigDelegate: HasLog<AppConfigDelegate>
     {
+        #region Constructor / DI
+
+        private readonly Lazy<IGetEngine> _getEngineLazy;
+        private readonly Lazy<IHttp> _httpLazy;
+
+        public AppConfigDelegate(Lazy<IGetEngine> getEngineLazy, Lazy<IHttp> httpLazy) : base("Sxc.CnfPrv")
+        {
+            _getEngineLazy = getEngineLazy;
+            _httpLazy = httpLazy;
+        }
+        
+
+        #endregion
+
+
         /// <summary>
         /// Generate a delegate which will be used to build the configuration based on a new sxc-instance
         /// </summary>
-        internal static Func<App, IAppDataConfiguration> Build(IBlock block, bool useExistingConfig)
+        internal Func<App, IAppDataConfiguration> Build(IBlock block, bool useExistingConfig)
         {
             var log = new Log("Sxc.CnfPrv", block.Log);
             var wrapLog = log.Call($"{nameof(useExistingConfig)}:{useExistingConfig}");
             var containerId = block.Context.Container.Id;
             var showDrafts = block.EditAllowed;
-            var activatePagePublishing = Factory.Resolve<IPagePublishing>().Init(log).IsEnabled(containerId);
+            var activatePagePublishing = block.Context.ServiceProvider.Build<IPagePublishing>().Init(log).IsEnabled(containerId);
             var existingLookups = block.Data.Configuration.LookUps;
 
             wrapLog("ok");
@@ -42,13 +59,13 @@ namespace ToSic.Sxc.LookUp
         /// <summary>
         /// Generate a delegate which will be used to build the configuration based existing stuff
         /// </summary>
-        internal static Func<App, IAppDataConfiguration> Build(bool showDrafts, bool publishingEnabled, ILookUpEngine config) 
+        internal Func<App, IAppDataConfiguration> Build(bool showDrafts, bool publishingEnabled, ILookUpEngine config) 
             => appToUse => new AppDataConfiguration(showDrafts, publishingEnabled, config);
 
         /// <summary>
         /// Generate a delegate which will be used to build a basic configuration with very little context
         /// </summary>
-        internal static Func<App, IAppDataConfiguration> Build(bool showDrafts, bool publishingEnabled)
+        internal Func<App, IAppDataConfiguration> Build(bool showDrafts, bool publishingEnabled)
             => appToUse => new AppDataConfiguration(showDrafts, publishingEnabled,
                 GetConfigProviderForModule(0, appToUse as IApp, null));
 
@@ -56,18 +73,18 @@ namespace ToSic.Sxc.LookUp
 
         // note: not sure yet where the best place for this method is, so it's here for now
         // will probably move again some day
-        internal static LookUpEngine GetConfigProviderForModule(int moduleId, IApp app, IBlock block)
+        internal LookUpEngine GetConfigProviderForModule(int moduleId, IApp app, IBlock block)
         {
             var log = new Log("Stc.GetCnf", block?.Log);
 
             // Find the standard DNN property sources if PortalSettings object is available
-            var envLookups = Factory.Resolve<IGetEngine>().GetEngine(moduleId, block?.Log);
+            var envLookups = _getEngineLazy.Value.GetEngine(moduleId, block?.Log);
             log.Add($"Environment provided {envLookups.Sources.Count} sources");
 
             var provider = new LookUpEngine(envLookups, block?.Log);
 
             // Add QueryString etc. when running inside an http-context. Otherwise leave them away!
-            var http = Factory.Resolve<IHttp>();
+            var http = _httpLazy.Value;
             if (http.Current != null)
             {
                 log.Add("Found Http-Context, will ty to add params for querystring, server etc.");

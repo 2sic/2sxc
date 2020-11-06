@@ -4,6 +4,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Cms;
@@ -46,6 +47,6 @@ namespace ToSic.Sxc.Dnn.WebApi
 	    [HttpGet]
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
 		public string ResolveHyperlink(string hyperlink, int appId, string contentType, Guid guid, string field)
-            => Eav.Factory.Resolve</*>() new */HyperlinkBackend<int, int>>().Init(Log).ResolveHyperlink(GetBlock(), hyperlink, appId, contentType, guid, field);
+            => _build<HyperlinkBackend<int, int>>().Init(Log).ResolveHyperlink(GetBlock(), hyperlink, appId, contentType, guid, field);
     }
 }

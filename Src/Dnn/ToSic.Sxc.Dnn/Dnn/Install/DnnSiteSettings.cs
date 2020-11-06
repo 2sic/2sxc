@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Web;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
 
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Dnn.Install
             if (!(sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
             {
                 // configure it
-                var tm = Eav.Factory.Resolve<TemplateHelpers>().Init(block.App, block.Log);
+                var tm = block.Context.ServiceProvider.Build<TemplateHelpers>().Init(block.App, block.Log);
                 tm.EnsureTemplateFolderExists(Settings.TemplateLocations.PortalFileSystem);
             }
         }

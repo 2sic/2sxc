@@ -5,13 +5,14 @@ using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Ui;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Apps
 {
     public class AppsRuntime: ZonePartRuntimeBase<CmsZones, AppsRuntime>
     {
-        internal AppsRuntime() : base("Cms.AppsRt")
+        internal AppsRuntime(IServiceProvider serviceProvider) : base(serviceProvider, "Cms.AppsRt")
         {
         }
 
@@ -54,7 +55,7 @@ namespace ToSic.Sxc.Apps
             var zId = ZoneRuntime.ZoneId;
             var appIds = new ZoneRuntime().Init(zId, Log).Apps;
             return appIds
-                .Select(a => Factory.Resolve<App>()
+                .Select(a => ServiceProvider.Build<App>()
                     .PreInit(site)
                     .Init(new AppIdentity(zId, a.Key), buildConfig, true, Log) as IApp)
                 .OrderBy(a => a.Name)

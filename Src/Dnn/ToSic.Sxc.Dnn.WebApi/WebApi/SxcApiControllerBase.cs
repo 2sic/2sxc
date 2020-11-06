@@ -1,7 +1,9 @@
-﻿using System.Web.Http.Controllers;
+﻿using System;
+using System.Web.Http.Controllers;
 using ToSic.Eav;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Run;
@@ -25,7 +27,7 @@ namespace ToSic.Sxc.WebApi
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
-            Block = DnnGetBlock.GetCmsBlock(Request, true, Log);
+            Block = _serviceProvider.Build<DnnGetBlock>().GetCmsBlock(Request, true, Log);
         }
 
         [PrivateApi] public IBlock Block { get; private set; }
@@ -34,7 +36,7 @@ namespace ToSic.Sxc.WebApi
 
         #region App-Helpers for anonyous access APIs
 
-        internal AppOfRequest AppFinder => _appOfRequest ?? (_appOfRequest = Factory.Resolve<AppOfRequest>().Init(Log));
+        internal AppOfRequest AppFinder => _appOfRequest ?? (_appOfRequest = _build<AppOfRequest>().Init(Log));
         private AppOfRequest _appOfRequest;
 
         /// <summary>
@@ -42,7 +44,7 @@ namespace ToSic.Sxc.WebApi
         /// </summary>
         /// <param name="appId"></param>
         /// <returns></returns>
-        internal IApp GetApp(int appId) => Factory.Resolve<Apps.App>().Init(appId, Log, GetBlock());
+        internal IApp GetApp(int appId) => _build<Apps.App>().Init(_serviceProvider, appId, Log, GetBlock());
 
         protected IInstanceContext GetContext()
         {

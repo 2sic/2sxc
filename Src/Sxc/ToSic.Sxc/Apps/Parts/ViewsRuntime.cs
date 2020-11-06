@@ -8,6 +8,7 @@ using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Conversion;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
@@ -85,7 +86,7 @@ namespace ToSic.Sxc.Apps
 	            Name = t.Name,
 	            ContentTypeStaticName = t.ContentType,
 	            IsHidden = t.IsHidden,
-	            Thumbnail = Factory.Resolve<TemplateHelpers>().Init(app, Log).IconPathOrNull(t, PathTypes.Link)
+	            Thumbnail = Parent.ServiceProvider.Build<TemplateHelpers>().Init(app, Log).IconPathOrNull(t, PathTypes.Link)
 	        });
 	    }
 

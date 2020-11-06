@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             _lazyCmsRuntime = lazyCmsRuntime;
         }
 
-        public void SetAppId(IContainer instance, int? appId, ILog parentLog)
+        public void SetAppId(IContainer instance, int? appId)
         {
             Log.Add($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
             // Reset temporary template

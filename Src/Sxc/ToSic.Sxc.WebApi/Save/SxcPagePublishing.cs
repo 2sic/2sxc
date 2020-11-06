@@ -13,9 +13,12 @@ namespace ToSic.Sxc.WebApi.Save
     {
         #region Constructor / DI
         private readonly ContentGroupList _contentGroupList;
-        public SxcPagePublishing(ContentGroupList contentGroupList) : base("Sxc.PgPubl")
+        private readonly IPagePublishing _pagePublishing;
+
+        public SxcPagePublishing(ContentGroupList contentGroupList, IPagePublishing pagePublishing) : base("Sxc.PgPubl")
         {
             _contentGroupList = contentGroupList;
+            _pagePublishing = pagePublishing;
         }
 
         #endregion
@@ -51,7 +54,7 @@ namespace ToSic.Sxc.WebApi.Save
             if (partOfPage)
             {
                 Log.Add("partOfPage - save with publishing");
-                var versioning = Eav.Factory.Resolve<IPagePublishing>().Init(Log);
+                var versioning = _pagePublishing.Init(Log);
                 //var dnnContext = new DnnDynamicCode().Init(Block, Log);
                 //var instanceId = Block.Context.Container.Id;
                 //var userId = Block.Context.User.Guid;

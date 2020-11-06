@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Run;
 #if NET451
 using System.Web.Compilation;
@@ -13,9 +14,16 @@ namespace ToSic.Sxc.Code
 {
     public class CodeCompiler: HasLog
     {
-        internal CodeCompiler(ILog parentLog) : base("Sys.CsCmpl", parentLog)
+        private readonly IServiceProvider _serviceProvider;
+
+        #region Constructor / DI
+
+        internal CodeCompiler(IServiceProvider serviceProvider, ILog parentLog) : base("Sys.CsCmpl", parentLog)
         {
+            _serviceProvider = serviceProvider;
         }
+
+        #endregion
 
         public const string CsFileExtension = ".cs";
         public const string CsHtmlFileExtension = ".cshtml";
@@ -109,7 +117,7 @@ namespace ToSic.Sxc.Code
                 // if necessary, add trailing slash
                 if (!relativePath.EndsWith("/"))
                     relativePath += "/";
-                virtualPath = Eav.Factory.Resolve<ILinkPaths>().ToAbsolute(relativePath, virtualPath);
+                virtualPath = _serviceProvider.Build<ILinkPaths>().ToAbsolute(relativePath, virtualPath);
                 Log.Add($"final virtual path: '{virtualPath}'");
             }
 

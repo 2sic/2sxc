@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
         public ExportPartsOverviewDto Get(int zoneId, int appId, string scope)
-            => Eav.Factory.Resolve<ExportContent>().Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
+            => _build<ExportContent>().Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
                 .PreExportSummary(appId, zoneId, scope);
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         public HttpResponseMessage Export(int zoneId, int appId, string contentTypeIdsString,
             string entityIdsString, string templateIdsString)
-            => Eav.Factory.Resolve<ExportContent>().Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
+            => _build<ExportContent>().Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
                 .Export(appId, zoneId, contentTypeIdsString, entityIdsString, templateIdsString);
 
 
@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             PreventServerTimeout300();
             if (HttpContext.Current.Request.Files.Count <= 0) return new ImportResultDto(false, "no files uploaded");
             var file = HttpContext.Current.Request.Files[0];
-            var result = Eav.Factory.Resolve<ImportContent>().Init(new DnnUser(UserInfo), Log).Import(zoneId, appId, file.FileName,
+            var result = _build<ImportContent>().Init(new DnnUser(UserInfo), Log).Import(zoneId, appId, file.FileName,
                 file.InputStream, PortalSettings.DefaultLanguage);
 
             return wrapLog("ok", result);

@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using ToSic.Eav;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Engines.Token;
@@ -23,6 +24,7 @@ namespace ToSic.Sxc.Engines
     [EngineDefinition(Name = "Token")]
     public class TokenEngine : EngineBase
     {
+
         #region Replacement List to still support old Tokens
         // Version 6 to 7
         /// <summary>
@@ -74,7 +76,12 @@ namespace ToSic.Sxc.Engines
 
         #region Constructor / DI
 
-        public TokenEngine(EngineBaseDependencies helpers) : base(helpers) { }
+        private readonly Lazy<DynamicCodeRoot> _dynCodeRootLazy;
+
+        public TokenEngine(EngineBaseDependencies helpers, Lazy<DynamicCodeRoot> dynCodeRootLazy) : base(helpers)
+        {
+            _dynCodeRootLazy = dynCodeRootLazy;
+        }
 
         #endregion
 
@@ -90,11 +97,11 @@ namespace ToSic.Sxc.Engines
             InitTokenReplace();
         }
 
-        private void InitDataHelper() => _data = Factory.Resolve<DynamicCodeRoot>().Init(Block, Log, 9);
+        private void InitDataHelper() => _data = _dynCodeRootLazy.Value.Init(Block, Log, 9);
 
         private void InitTokenReplace()
         {
-            var confProv = ConfigurationProvider.GetConfigProviderForModule(Block.Context.Container.Id, Block.App, Block);
+            var confProv = Block.Context.ServiceProvider.Build<AppConfigDelegate>().Init(Log).GetConfigProviderForModule(Block.Context.Container.Id, Block.App, Block);
             _tokenReplace = new TokenReplaceEav(confProv);
             
             // Add the Content and ListContent property sources used always

@@ -9,7 +9,7 @@ namespace ToSic.Sxc.WebApi.Adam
     {
         private readonly Lazy<AdamAppContext<TFolderId, TFileId>> _adamAppContext;
         internal AdamAppContext<TFolderId, TFileId> AdamAppContext => _adamAppContext.Value;
-        public AdamState(Lazy<AdamAppContext<TFolderId, TFileId>> adamAppContext): base("Adm.StatTT")
+        public AdamState(Lazy<AdamAppContext<TFolderId, TFileId>> adamAppContext, IServiceProvider serviceProvider): base(serviceProvider, "Adm.StatTT")
         {
             _adamAppContext = adamAppContext;
         }

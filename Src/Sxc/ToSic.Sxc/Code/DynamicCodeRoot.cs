@@ -115,7 +115,7 @@ namespace ToSic.Sxc.Code
 
         internal DataSourceFactory DataSourceFactory => _dataSourceFactory ??
                                                         (_dataSourceFactory = Block?.Context?.ServiceProvider
-                                                            .Build<DataSourceFactory>().Init(Log));// new DataSource(Log));
+                                                            .Build<DataSourceFactory>().Init(Log));
         private DataSourceFactory _dataSourceFactory;
 
 
@@ -231,7 +231,7 @@ namespace ToSic.Sxc.Code
         public IFolder AsAdam(IEntity entity, string fieldName)
         {
             if (_adamAppContext == null) 
-                _adamAppContext = Factory.Resolve<AdamAppContext>()
+                _adamAppContext = Block.Context.ServiceProvider.Build<AdamAppContext>()
                     .Init(Block.Context.Tenant, App, Block, CompatibilityLevel, Log);
             return _adamAppContext.FolderOfField(entity.EntityGuid, fieldName);
         }
@@ -259,7 +259,7 @@ namespace ToSic.Sxc.Code
                 $"{nameof(name)},{nameof(throwOnError)}");
 
             // Compile
-            var instance = new CodeCompiler(Log)
+            var instance = new CodeCompiler(Block.Context.ServiceProvider, Log)
                 .InstantiateClass(virtualPath, name, relativePath, throwOnError);
 
             // if it supports all our known context properties, attach them
@@ -278,7 +278,7 @@ namespace ToSic.Sxc.Code
 
         #region Context WIP
 
-        [PrivateApi] public RunContext RunContext => _runContext ?? (_runContext = Factory.Resolve<RunContext>().Init(this));
+        [PrivateApi] public RunContext RunContext => _runContext ?? (_runContext = Block.Context.ServiceProvider.Build<RunContext>().Init(this));
         private RunContext _runContext;
 
         #endregion

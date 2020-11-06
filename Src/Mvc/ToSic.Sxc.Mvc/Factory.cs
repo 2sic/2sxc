@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Mvc
             var log = new Log("Mvc.Factry", parentLog);
             log.Add($"Create App(z:{zoneId}, a:{appId}, tenantObj:{site != null}, publishingEnabled: {publishingEnabled}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
             var appStuff = Eav.Factory.Resolve<App>().Init(new AppIdentity(zoneId, appId),
-                ConfigurationProvider.Build(showDrafts, publishingEnabled, new LookUpEngine(parentLog)),
+                Eav.Factory.Resolve<AppConfigDelegate>().Init(log).Build(showDrafts, publishingEnabled, new LookUpEngine(parentLog)),
                 true, parentLog);
             return appStuff;
         }

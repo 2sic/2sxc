@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
@@ -12,6 +11,7 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Conversion;
+using ToSic.Sxc.LookUp;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.App
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.WebApi.App
 
             // get the app - if we have the context from the request, use that, otherwise generate full app
             var app = _block == null
-                ? Factory.Resolve<Apps.App>().Init(appIdentity, Log)
+                ? ServiceProvider.Build<Apps.App>().Init(ServiceProvider.Build<AppConfigDelegate>().Init(Log), appIdentity, Log)
                 : GetApp(appIdentity.AppId, _block);
 
             // verify that read-access to these content-types is permitted

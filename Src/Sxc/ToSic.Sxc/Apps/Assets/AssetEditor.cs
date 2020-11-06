@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using ToSic.Eav;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
 
@@ -17,6 +18,7 @@ namespace ToSic.Sxc.Apps.Assets
         private bool _userIsSuperUser;
         private bool _userIsAdmin;
         private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
+        private CmsRuntime _cmsRuntime;
         private IApp _app;
 
         public AssetEditor(Lazy<CmsRuntime> cmsRuntimeLazy) : base("Sxc.AstEdt")
@@ -32,7 +34,8 @@ namespace ToSic.Sxc.Apps.Assets
             _userIsAdmin = isAdmin;
 
             // todo: 2dm Views - see if we can get logger to flow
-            var template = _cmsRuntimeLazy.Value.Init(app, true, false, Log).Views.Get(templateId);
+            _cmsRuntime = _cmsRuntimeLazy.Value.Init(app, true, false, Log);
+            var template = _cmsRuntime.Views.Get(templateId);
             EditInfo = TemplateAssetsInfo(template);
             return this;
         }
@@ -168,7 +171,7 @@ public class " + CsApiTemplateControllerName + @" : ToSic.Sxc.Dnn.ApiController
         }
 
         public string InternalPath => Path.Combine(
-            Factory.Resolve<TemplateHelpers>().Init(_app, Log)
+            _cmsRuntime.ServiceProvider.Build<TemplateHelpers>().Init(_app, Log)
                 .AppPathRoot(EditInfo.LocationScope, PathTypes.PhysFull), EditInfo.FileName);
 
 
@@ -215,7 +218,8 @@ public class " + CsApiTemplateControllerName + @" : ToSic.Sxc.Dnn.ApiController
             if (File.Exists(absolutePath)) return false;
 
             // ensure the web.config exists (usually missing in the global area)
-            Factory.Resolve<TemplateHelpers>().Init(_app, Log).EnsureTemplateFolderExists(EditInfo.LocationScope);
+            _cmsRuntime.ServiceProvider.Build<TemplateHelpers>().Init(_app, Log)
+                .EnsureTemplateFolderExists(EditInfo.LocationScope);
 
             // check if the folder to it already exists, or create it...
             var foundFolder = absolutePath.LastIndexOf("\\", StringComparison.InvariantCulture);

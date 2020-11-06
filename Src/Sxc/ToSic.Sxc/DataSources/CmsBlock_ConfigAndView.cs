@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
@@ -27,14 +28,16 @@ namespace ToSic.Sxc.DataSources
                 wrapLog("Error, no module-id", null);
                 throw new Exception("Looking up BlockConfiguration failed because ModuleId is null.");
             }
-            var publish = Factory.Resolve<IPagePublishing>().Init(Log);
+
+            var sp = DataSourceFactory.ServiceProvider;
+            var publish = sp.Build<IPagePublishing>().Init(Log);
             var userMayEdit = HasInstanceContext && Block.EditAllowed;
 
             var cms = _lazyCmsRuntime.IsValueCreated
                 ? _lazyCmsRuntime.Value
                 : _lazyCmsRuntime.Value.Init(this, HasInstanceContext && userMayEdit,
                     publish.IsEnabled(InstanceId.Value), Log);
-            var container = Factory.Resolve<IContainer>().Init(InstanceId.Value, Log);
+            var container = sp.Build<IContainer>().Init(InstanceId.Value, Log);
             var blockId = container.BlockIdentifier;
             return wrapLog("ok", cms.Blocks.GetOrGeneratePreviewConfig(blockId));
         }

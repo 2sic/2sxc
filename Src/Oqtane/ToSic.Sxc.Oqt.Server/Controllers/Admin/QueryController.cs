@@ -23,15 +23,18 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     {
         private readonly Lazy<QueryApi> _queryLazy;
         private readonly Lazy<CmsManager> _cmsManagerLazy;
+        private readonly Lazy<AppConfigDelegate> _configProviderLazy;
         protected override string HistoryLogName => "Api.Query";
 
         public QueryController(StatefulControllerDependencies dependencies, 
             Lazy<QueryApi> queryLazy,
-            Lazy<CmsManager> cmsManagerLazy
+            Lazy<CmsManager> cmsManagerLazy,
+            Lazy<AppConfigDelegate> configProviderLazy
             ) : base(dependencies)
         {
             _queryLazy = queryLazy;
             _cmsManagerLazy = cmsManagerLazy;
+            _configProviderLazy = configProviderLazy;
         }
 
         /// <summary>
@@ -65,7 +68,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         {
             var block = GetBlock();
             var instanceId = GetContext().Container.Id; // ?? 0;
-            var config = ConfigurationProvider.GetConfigProviderForModule(instanceId, block?.App, block);
+            var config = _configProviderLazy.Value.Init(Log).GetConfigProviderForModule(instanceId, block?.App, block);
             return _queryLazy.Value.Init(appId, Log).Run(appId, id, instanceId, config);
         }
 

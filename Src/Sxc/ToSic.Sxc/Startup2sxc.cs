@@ -4,6 +4,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.LookUp;
 
 namespace ToSic.Sxc
 {
@@ -26,6 +27,9 @@ namespace ToSic.Sxc
             services.TryAddTransient<BlockDataSourceFactory>();
             services.TryAddTransient<BlockFromModule>();
             services.TryAddTransient<BlockFromEntity>();
+
+            // Configuration Provider WIP
+            services.TryAddTransient<AppConfigDelegate>();
 
             return services;
         }

@@ -4,6 +4,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
@@ -29,7 +30,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// Get a Pipeline with DataSources
         /// </summary>
         [HttpGet]
-		public QueryDefinitionDto Get(int appId, int? id = null) => Eav.Factory.Resolve<QueryApi>().Init(appId, Log).Definition(appId, id);
+		public QueryDefinitionDto Get(int appId, int? id = null) => _build<QueryApi>().Init(appId, Log).Definition(appId, id);
 
         /// <summary>
         /// Get installed DataSources from .NET Runtime but only those with [PipelineDesigner Attribute]
@@ -45,7 +46,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 		/// <param name="id">PipelineEntityId</param>
 		[HttpPost]
 	    public QueryDefinitionDto Save([FromBody] QueryDefinitionDto data, int appId, int id)
-	        => Eav.Factory.Resolve<QueryApi>().Init(appId, Log).Save(data, appId, id);
+	        => _build<QueryApi>().Init(appId, Log).Save(data, appId, id);
 
 
 	    /// <summary>
@@ -56,15 +57,15 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         {
             var block = GetBlock();
             var instanceId = ActiveModule?.ModuleID ?? 0;
-            var config = ConfigurationProvider.GetConfigProviderForModule(instanceId, block?.App, block);
-            return Eav.Factory.Resolve<QueryApi>().Init(appId, Log).Run(appId, id, instanceId, config);
+            var config = _serviceProvider.Build<AppConfigDelegate>().Init(Log).GetConfigProviderForModule(instanceId, block?.App, block);
+            return _build<QueryApi>().Init(appId, Log).Run(appId, id, instanceId, config);
         }
 
         /// <summary>
 	    /// Clone a Pipeline with all DataSources and their configurations
 	    /// </summary>
 	    [HttpGet]
-	    public void Clone(int appId, int id) => Eav.Factory.Resolve<QueryApi>().Init(appId, Log).Clone(appId, id);
+	    public void Clone(int appId, int id) => _build<QueryApi>().Init(appId, Log).Clone(appId, id);
 
 
         /// <summary>
@@ -72,10 +73,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// </summary>
         [HttpDelete]
         public bool Delete(int appId, int id)
-            => Eav.Factory.Resolve<CmsManager>().Init(State.Identity(null, appId), true, false, Log)
+            => _build<CmsManager>().Init(State.Identity(null, appId), true, false, Log)
                 .DeleteQueryIfNotUsedByView(id, Log);
 
         [HttpPost]
-	    public bool Import(EntityImportDto args) => Eav.Factory.Resolve<QueryApi>().Init(args.AppId, Log).Import(args);
+	    public bool Import(EntityImportDto args) => _build<QueryApi>().Init(args.AppId, Log).Import(args);
 	}
 }

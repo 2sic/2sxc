@@ -5,6 +5,7 @@ using System.Web.Http.Controllers;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
@@ -66,7 +67,7 @@ namespace ToSic.Sxc.WebApi
                 var routeAppPath = Route.AppPathOrNull(Request.GetRouteData());
                 var appId = AppFinder.GetAppIdFromPath(routeAppPath).AppId;
                 // Look up if page publishing is enabled - if module context is not available, always false
-                var publish = Factory.Resolve<IPagePublishing>().Init(Log);
+                var publish = _build<IPagePublishing>().Init(Log);
                 var publishingEnabled = Dnn.Module != null && publish.IsEnabled(Dnn.Module.ModuleID);
                 Log.Add($"AppId: {appId}, publishing:{publishingEnabled}");
                 var app = Sxc.Dnn.Factory.App(appId, publishingEnabled, parentLog: Log);
@@ -102,7 +103,7 @@ namespace ToSic.Sxc.WebApi
                 throw exp;
 
             var block = GetBlock();
-            return Factory.Resolve<AdamTransUpload<int, int>>()
+            return _build<AdamTransUpload<int, int>>()
                 .Init(block, block.AppId, contentType, guid.Value, field, false, Log)
                 .UploadOne(stream, fileName, subFolder, true);
         }

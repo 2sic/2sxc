@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Web.JsContext
@@ -10,12 +13,12 @@ namespace ToSic.Sxc.Web.JsContext
         public string Primary;
         public IEnumerable<ClientInfoLanguage> All;
 
-        public JsContextLanguage(ISite site, int zoneId)
+        public JsContextLanguage(IServiceProvider serviceProvider, ISite site, int zoneId)
         {
             // Don't use PortalSettings, as that provides a wrong ps.CultureCode.ToLower();
             Current = System.Threading.Thread.CurrentThread.CurrentCulture.Name.ToLower();
             Primary = site.DefaultLanguage;
-            All = Eav.Factory.Resolve<IZoneMapper>()
+            All = serviceProvider.Build<IZoneMapper>()
                 .CulturesWithState(site.Id, zoneId)
                 .Where(c => c.Active)
                 .Select(c => new ClientInfoLanguage { key = c.Key.ToLower(), name = c.Text });

@@ -25,18 +25,21 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         private readonly Lazy<CmsZones> _cmsZonesLazy;
         private readonly Lazy<ExportApp> _exportAppLazy;
         private readonly Lazy<ImportApp> _importAppLazy;
+        private readonly Lazy<AppManager> _appManagerLazy;
         protected override string HistoryLogName => "Api.App";
 
         public AppController(StatefulControllerDependencies dependencies, 
             Lazy<AppsBackend> appsBackendLazy,
             Lazy<CmsZones> cmsZonesLazy,
             Lazy<ExportApp> exportAppLazy,
-            Lazy<ImportApp> importAppLazy) : base(dependencies)
+            Lazy<ImportApp> importAppLazy,
+            Lazy<AppManager> appManagerLazy) : base(dependencies)
         {
             _appsBackendLazy = appsBackendLazy;
             _cmsZonesLazy = cmsZonesLazy;
             _exportAppLazy = exportAppLazy;
             _importAppLazy = importAppLazy;
+            _appManagerLazy = appManagerLazy;
         }
 
         [HttpGet]
@@ -55,7 +58,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public void App(int zoneId, string name)
-            => AppManager.AddBrandNewApp(zoneId, name, Log);
+            => _appManagerLazy.Value.Init(null, Log).AddBrandNewApp(zoneId, name);
 
 
         /// <summary>

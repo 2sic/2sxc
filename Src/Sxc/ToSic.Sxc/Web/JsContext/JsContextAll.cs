@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit.ClientContextInfo;
 
@@ -23,10 +24,10 @@ namespace ToSic.Sxc.Web.JsContext
             : base("Sxc.CliInf", parentLog, "building entire client-context")
         {
             var ctx = block.Context;
-            var versioning = Factory.Resolve<IPagePublishing>().Init(Log);
+            var versioning = block.Context.ServiceProvider.Build<IPagePublishing>().Init(Log);
 
             Environment = new JsContextEnvironment(systemRootUrl, ctx, block);
-            Language = new JsContextLanguage(ctx.Tenant, block.ZoneId);
+            Language = new JsContextLanguage(ctx.ServiceProvider, ctx.Tenant, block.ZoneId);
             User = new JsContextUser(ctx.User);
 
             ContentBlock = new ClientInfoContentBlock(block, null, 0, versioning.Requirements(ctx.Container.Id));

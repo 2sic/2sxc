@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
@@ -27,13 +26,15 @@ namespace ToSic.Sxc.WebApi.ImportExport
             IServerPaths serverPaths, 
             IEnvironmentLogger envLogger,
             Lazy<Import> importerLazy,
-            Lazy<XmlImportWithFiles> xmlImportWithFilesLazy) : base("Bck.Export")
+            Lazy<XmlImportWithFiles> xmlImportWithFilesLazy,
+            ZipImport zipImport) : base("Bck.Export")
         {
             _zoneMapper = zoneMapper;
             _serverPaths = serverPaths;
             _envLogger = envLogger;
             _importerLazy = importerLazy;
             _xmlImportWithFilesLazy = xmlImportWithFilesLazy;
+            _zipImport = zipImport;
         }
 
         private readonly IZoneMapper _zoneMapper;
@@ -41,6 +42,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private readonly IEnvironmentLogger _envLogger;
         private readonly Lazy<Import> _importerLazy;
         private readonly Lazy<XmlImportWithFiles> _xmlImportWithFilesLazy;
+        private readonly ZipImport _zipImport;
         private IUser _user;
 
         public ImportContent Init(IUser user, ILog parentLog)
@@ -63,7 +65,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             {   // ZIP
                 try
                 {
-                    var zipImport = Factory.Resolve<ZipImport>();
+                    var zipImport = _zipImport;
 
                     zipImport.Init(zoneId, appId, _user.IsSuperUser, Log);
                     var temporaryDirectory = _serverPaths.FullSystemPath(Path.Combine(Eav.ImportExport.Settings.TemporaryDirectory,

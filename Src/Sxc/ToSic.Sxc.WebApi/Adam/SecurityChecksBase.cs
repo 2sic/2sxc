@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
@@ -128,7 +128,7 @@ namespace ToSic.Sxc.WebApi.Adam
         /// </summary>
         public bool FieldPermissionOk(List<Grants> requiredGrant)
         {
-            var fieldPermissions = Factory.Resolve<AppPermissionCheck>().ForAttribute(
+            var fieldPermissions = AdamState.ServiceProvider.Build<AppPermissionCheck>().ForAttribute(
                 AdamState.Permissions.Context, AdamState.Block.App, AdamState.Attribute, Log);
 
             return fieldPermissions.UserMay(requiredGrant);

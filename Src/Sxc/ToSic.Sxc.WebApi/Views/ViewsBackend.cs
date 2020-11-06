@@ -4,6 +4,7 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
@@ -80,8 +81,8 @@ namespace ToSic.Sxc.WebApi.Views
         {
             // todo: extra security to only allow zone change if host user
             Log.Add($"delete a{appId}, t:{id}");
-            var app = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId, Log);
-            var cms = _cmsManagerLazy.Value.Init(app, Log); // new CmsManager().Init(app, Log);
+            var app = _cmsManagerLazy.Value.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
+            var cms = _cmsManagerLazy.Value.Init(app, Log);
             cms.Views.DeleteView(id);
             return true;
         }

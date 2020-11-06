@@ -3,13 +3,14 @@ using System.IO;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Apps
 {
     public class AppsManager: ZonePartRuntimeBase<ZoneRuntime, AppsManager>
     {
         private readonly Lazy<ZoneManager> _zoneManagerLazy;
-        internal AppsManager(Lazy<ZoneManager> zoneManagerLazy) : base("Cms.AppsRt")
+        internal AppsManager(Lazy<ZoneManager> zoneManagerLazy, IServiceProvider serviceProvider) : base(serviceProvider, "Cms.AppsRt")
         {
             _zoneManagerLazy = zoneManagerLazy;
         }
@@ -28,7 +29,7 @@ namespace ToSic.Sxc.Apps
             // todo: maybe verify the app is of this portal; I assume delete will fail anyhow otherwise
 
             // Prepare to Delete folder in dnn - this must be done, before deleting the app in the DB
-            var sexyApp = Factory.Resolve<App>().InitNoData(new AppIdentity(zoneId, appId), null);
+            var sexyApp = ServiceProvider.Build<App>().InitNoData(new AppIdentity(zoneId, appId), null);
             var folder = sexyApp.Folder;
             var physPath = sexyApp.PhysicalPath;
 

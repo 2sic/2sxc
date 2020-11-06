@@ -7,6 +7,7 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Data;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.WebApi;
@@ -35,7 +36,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string appPath = null) 
-            => Eav.Factory.Resolve<AppContent>().Init(GetContext(), GetBlock(), Log).GetItems(contentType, appPath);
+            => _build<AppContent>().Init(GetContext(), GetBlock(), Log).GetItems(contentType, appPath);
 
         #endregion
 
@@ -65,7 +66,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         /// <param name="appPath"></param>
         /// <returns></returns>
         private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string appPath) 
-            => Eav.Factory.Resolve<AppContent>().Init(GetContext(), GetBlock(), Log).GetOne(contentType, getOne, appPath);
+            => _build<AppContent>().Init(GetContext(), GetBlock(), Log).GetOne(contentType, getOne, appPath);
 
         #endregion
 
@@ -115,7 +116,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         public Dictionary<string, object> CreateOrUpdate([FromUri] string contentType,
             [FromBody] Dictionary<string, object> newContentItem, [FromUri] int? id = null,
             [FromUri] string appPath = null)
-            => Eav.Factory.Resolve<AppContent>().Init(GetContext(), GetBlock(),Log)
+            => _build<AppContent>().Init(GetContext(), GetBlock(),Log)
                 .CreateOrUpdate(contentType, newContentItem, id, appPath);
 
         #endregion
@@ -125,12 +126,12 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         [HttpDelete]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public void Delete(string contentType, int id, [FromUri] string appPath = null) 
-            => Eav.Factory.Resolve<AppContent>().Init(GetContext(), GetBlock(), Log).Delete(contentType, id, appPath);
+            => _build<AppContent>().Init(GetContext(), GetBlock(), Log).Delete(contentType, id, appPath);
 
         [HttpDelete]
 	    [AllowAnonymous]   // will check security internally, so assume no requirements
         public void Delete(string contentType, Guid guid, [FromUri] string appPath = null) 
-            => Eav.Factory.Resolve<AppContent>().Init(GetContext(), GetBlock(), Log).Delete(contentType, guid, appPath);
+            => _build<AppContent>().Init(GetContext(), GetBlock(), Log).Delete(contentType, guid, appPath);
 
         #endregion
 

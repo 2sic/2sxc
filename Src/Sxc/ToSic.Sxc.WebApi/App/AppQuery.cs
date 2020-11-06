@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using ToSic.Eav;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Apps;
@@ -37,11 +37,7 @@ namespace ToSic.Sxc.WebApi.App
             // Note that it may only be an app from the current portal
             // and security checks will run internally
             if (app == null && appId != null)
-            {
-                app = Factory.Resolve<Apps.App>().Init(appId.Value, Log, showDrafts: context.User.IsSuperUser);
-                //   Dnn.Factory.App(appId.Value, PortalSettings, false, context.User.IsSuperUser, Log);
-                //app = Dnn.Factory.App(appId.Value, PortalSettings, false, context.User.IsSuperUser, Log);
-            }
+                app = ServiceProvider.Build<Apps.App>().Init(ServiceProvider, appId.Value, Log, showDrafts: context.User.IsSuperUser);
 
             var result = BuildQueryAndRun(app, name, stream, includeGuid, context, Log, block?.EditAllowed ?? false);
             wrapLog(null);
@@ -60,8 +56,9 @@ namespace ToSic.Sxc.WebApi.App
             if (string.IsNullOrEmpty(name))
                 throw HttpException.MissingParam(nameof(name));
             var appIdentity = AppFinder.GetAppIdFromPath(appPath);
-            var queryApp = Factory.Resolve<Apps.App>().Init(appIdentity,
-                ConfigurationProvider.Build(false, false), false, Log);
+            var queryApp = ServiceProvider.Build<Apps.App>().Init(appIdentity,
+                ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(false, false),
+                false, Log);
 
             // now just run the default query check and serializer
             var result = BuildQueryAndRun(queryApp, name, stream, false, context, Log, block?.EditAllowed ?? false);
@@ -73,7 +70,7 @@ namespace ToSic.Sxc.WebApi.App
         #endregion
 
 
-        internal static Dictionary<string, IEnumerable<Dictionary<string, object>>>
+        private static Dictionary<string, IEnumerable<Dictionary<string, object>>>
             BuildQueryAndRun(IApp app, string name, string stream, bool includeGuid, IInstanceContext context, ILog log,
                 bool userMayEdit)
         {
@@ -87,7 +84,7 @@ namespace ToSic.Sxc.WebApi.App
                 throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, msg, "query not found");
             }
 
-            var permissionChecker = Factory.Resolve<AppPermissionCheck>().ForItem(context, appIdentity: app,
+            var permissionChecker = context.ServiceProvider.Build<AppPermissionCheck>().ForItem(context, appIdentity: app,
                 targetItem: query.Definition.Entity, parentLog: log);
             var readExplicitlyAllowed = permissionChecker.UserMay(GrantSets.ReadSomething);
 
