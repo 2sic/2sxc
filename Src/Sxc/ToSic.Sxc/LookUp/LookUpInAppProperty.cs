@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Apps;
 
@@ -52,7 +51,7 @@ namespace ToSic.Sxc.LookUp
         }
 
         /// <inheritdoc/>
-        public override string Get(string key, string strFormat, ref bool notFound)
+        public override string Get(string key, string strFormat)
         {
             key = key.ToLower();
             if (key == "path")
@@ -69,13 +68,12 @@ namespace ToSic.Sxc.LookUp
                         ? Settings
                         : (subToken.Source == "resources") ? Resources : null;
                 if (subProvider != null)
-                    return subProvider.Get(subToken.Rest, strFormat, ref notFound);
+                    return subProvider.Get(subToken.Rest, strFormat);
             }
 
             // Maybe someday: also retrieve metadata like Folder, Name, Version
             // var found = base.Get(key, strFormat, ref notFound);
 
-            notFound = true;
             return string.Empty;
         }
 

@@ -26,11 +26,11 @@ namespace ToSic.Sxc.Dnn.LookUp
             _loc = localization;
         }
 
-        public override string Get(string key, string format, ref bool notFound)
+        public override string Get(string key, string format)
         {
             var blnNotFound = true;
             var result = _source.GetProperty(key, format, _loc, _user, Scope.DefaultSettings, ref blnNotFound);
-            return result;
+            return blnNotFound ? string.Empty : result;
         }
     }
 }
