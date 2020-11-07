@@ -28,7 +28,6 @@ namespace ToSic.Sxc.WebApi
         public static IServiceCollection AddSxcWebApi(this IServiceCollection services)
         {
             services.TryAddTransient<Eav.Conversion.EntitiesToDictionary, DataToDictionary>();
-            services.TryAddScoped<IHttp, HttpAbstraction>();
             services.TryAddScoped<ILinkPaths, LinkPaths>();
             services.TryAddTransient<IServerPaths, ServerPaths>();
             services.TryAddTransient<XmlImportWithFiles, XmlImportFull>();

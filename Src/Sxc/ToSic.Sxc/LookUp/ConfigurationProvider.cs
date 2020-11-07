@@ -95,7 +95,7 @@ namespace ToSic.Sxc.LookUp
                     foreach (var pair in block.Context.Page.Parameters)
                         paramList.Add(pair.Key, pair.Value);
                 else
-                    paramList = http.QueryString;
+                    paramList = http.QueryStringParams;
                 provider.Add(new LookUpInNameValueCollection("querystring", paramList));
 
                 // old

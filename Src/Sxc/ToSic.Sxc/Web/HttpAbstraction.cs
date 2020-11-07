@@ -11,57 +11,33 @@ using System.Linq;
 
 namespace ToSic.Sxc.Web
 {
-    public class HttpAbstraction: IHttp
+    public abstract class HttpAbstractionBase: IHttp
     {
-#if NET451
-        /// <summary>
-        /// Empty constructor for DI
-        /// </summary>
-        public HttpAbstraction() => Current = HttpContext.Current;
-
-#else
-        public HttpAbstraction(IHttpContextAccessor contextAccessor) => Current = contextAccessor.HttpContext;
-
-#endif
-
-        public HttpContext Current { get; }
+        /// <inheritdoc />
+        public HttpContext Current { get; protected set; }
 
         #region Request and properties thereof
+
+        /// <inheritdoc />
         public HttpRequest Request => Current?.Request;
 
-        public NameValueCollection QueryString
-        {
-            get
-            {
-                if (_queryStringValues != null) return _queryStringValues;
-                // ReSharper disable once ConvertIfStatementToReturnStatement
-                if(Request == null) return _queryStringValues = new NameValueCollection();
-#if NET451
-                return _queryStringValues = Request.QueryString;
-#else
-                var paramList = new NameValueCollection();
-                Request.Query.ToList().ForEach(i => paramList.Add(i.Key, i.Value));
-                return _queryStringValues = paramList;
-#endif
-            }
-        }
+        /// <inheritdoc />
+        public abstract NameValueCollection QueryStringParams { get; }
 
-        private NameValueCollection _queryStringValues;
-
+        /// <inheritdoc />
         public List<KeyValuePair<string, string>> QueryStringKeyValuePairs()
         {
             if (_queryStringKeyValuePairs != null) return _queryStringKeyValuePairs;
-            var qs = QueryString;
+            var qs = QueryStringParams;
             _queryStringKeyValuePairs = qs?.AllKeys
                                             .Select(key => new KeyValuePair<string, string>(key, qs[key]))
                                             .ToList()
                                         ?? new List<KeyValuePair<string, string>>();
             return _queryStringKeyValuePairs;
-            //return (from string key in qs select new KeyValuePair<string, string>(key, qs[key]))
-            //    .ToList();
         }
 
         private List<KeyValuePair<string, string>> _queryStringKeyValuePairs;
+
         #endregion Request
 
     }

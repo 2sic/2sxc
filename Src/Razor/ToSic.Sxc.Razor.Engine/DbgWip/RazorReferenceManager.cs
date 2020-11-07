@@ -10,6 +10,11 @@ using Microsoft.Extensions.Options;
 
 namespace ToSic.Sxc.Razor.Engine.DbgWip
 {
+    /// <summary>
+    /// This is a copy of the .net core 3.1 internal RazorReferenceManager
+    /// It's not used in runtime, but we need during development to to verify what's happening
+    /// when dependencies are missing
+    /// </summary>
     public class RazorReferenceManager
     {
         private readonly ApplicationPartManager _partManager;

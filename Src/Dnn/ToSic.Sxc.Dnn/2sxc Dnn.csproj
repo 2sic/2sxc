@@ -117,6 +117,7 @@
     <Compile Include="Dnn\Adam\DnnAdamFileSystem.cs" />
     <Compile Include="Dnn\Web\DnnLinkHelper.cs" />
     <Compile Include="Dnn\Run\DnnModuleUpdater.cs" />
+    <Compile Include="WebForms\Web\WebFormsHttp.cs" />
     <Compile Include="Environment\Dnn7\DnnBusinessController.cs" />
     <Compile Include="Dnn\Run\DnnContainer.cs" />
     <Compile Include="Dnn\Run\DnnPermissionCheck.cs" />
@@ -185,8 +186,6 @@
     <None Include="packages.config" />
     <None Include="Dnn\Search\readme.md" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Code\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
