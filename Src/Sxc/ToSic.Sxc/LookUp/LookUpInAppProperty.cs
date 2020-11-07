@@ -79,12 +79,5 @@ namespace ToSic.Sxc.LookUp
             return string.Empty;
         }
 
-
-        [PrivateApi]
-        public override bool Has(string key)
-        {
-            throw new NotImplementedException();
-        }
-
     }
 }

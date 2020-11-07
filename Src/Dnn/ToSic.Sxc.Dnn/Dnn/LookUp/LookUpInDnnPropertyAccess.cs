@@ -32,10 +32,5 @@ namespace ToSic.Sxc.Dnn.LookUp
             var result = _source.GetProperty(key, format, _loc, _user, Scope.DefaultSettings, ref blnNotFound);
             return result;
         }
-
-        public override bool Has(string key)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

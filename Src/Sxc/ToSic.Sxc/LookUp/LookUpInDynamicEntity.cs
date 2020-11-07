@@ -163,13 +163,5 @@ namespace ToSic.Sxc.LookUp
             var temp = false;
             return Get(key, "", ref temp);
         }
-
-        /// <inheritdoc />
-        [PrivateApi]
-        public bool Has(string key)
-        {
-            throw new NotImplementedException();
-        }
-
-	}
+    }
 }
