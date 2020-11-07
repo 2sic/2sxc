@@ -21,8 +21,6 @@ namespace ToSic.Sxc.Dnn.Run
             try { fullUrl = activeTab?.FullUrl; } catch {  /* ignore */ }
             overrideParams = overrideParams ?? serviceProvider.Build<IHttp>()?.QueryStringKeyValuePairs() ?? new List<KeyValuePair<string, string>>();
             var page = new SxcPage(activeTab?.TabID ?? Eav.Constants.NullId, fullUrl, overrideParams);
-            //if (overrideParams != null)
-            //    page.Parameters = overrideParams;
 
             return new InstanceContext(site, page, container, user, serviceProvider);
         }
