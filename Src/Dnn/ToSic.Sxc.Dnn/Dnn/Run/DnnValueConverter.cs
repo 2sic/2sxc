@@ -11,6 +11,7 @@ using DotNetNuke.Services.Localization;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
+using ToSic.Eav.Run.Basic;
 
 namespace ToSic.Sxc.Dnn.Run
 {
@@ -48,7 +49,7 @@ namespace ToSic.Sxc.Dnn.Run
         {
             // Try file reference
             var fileInfo = FileManager.Instance.GetFile(_site.Id, potentialFilePath);
-            if (fileInfo != null) return "file:" + fileInfo.FileId;
+            if (fileInfo != null) return BasicValueConverter.PrefixFile + BasicValueConverter.Separator + fileInfo.FileId;
 
             // Try page / tab ID
             var tabController = new TabController();
@@ -57,7 +58,7 @@ namespace ToSic.Sxc.Dnn.Run
                                        .FirstOrDefault(tab => tab.TabPath == potentialFilePath);
 
             return tabInfo != null 
-                ? "page:" + tabInfo.TabID 
+                ? BasicValueConverter.PrefixPage + BasicValueConverter.Separator + tabInfo.TabID 
                 : potentialFilePath;
         }
 
@@ -83,7 +84,7 @@ namespace ToSic.Sxc.Dnn.Run
             var linkId = int.Parse(regularExpression.Groups["id"].Value);
             var urlParams = regularExpression.Groups["params"].Value ?? "";
 
-            var isPageLookup = linkType == "page";
+            var isPageLookup = linkType == BasicValueConverter.PrefixPage;
             try
             {
                 var result = (isPageLookup
@@ -113,7 +114,7 @@ namespace ToSic.Sxc.Dnn.Run
             // so this is to just ensure that if it can't be converted, it'll just fall back to default
             try
             {
-                var filePath = Path.Combine(new PortalSettings(fileInfo.PortalId)?.HomeDirectory ?? "", fileInfo?.RelativePath ?? "");
+                var filePath = Path.Combine(new PortalSettings(fileInfo.PortalId).HomeDirectory ?? "", fileInfo.RelativePath ?? "");
 
                 // return linkclick url for secure and other not standard folder locations
                 var result = (fileInfo.StorageLocation == 0) ? filePath : FileLinkClickController.Instance.GetFileLinkClick(fileInfo);
