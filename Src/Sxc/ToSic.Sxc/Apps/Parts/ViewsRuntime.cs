@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Apps
         private IValueConverter ValueConverter => _valConverter ?? (_valConverter = _valConverterLazy.Value);
         private IValueConverter _valConverter;
 
-        internal ViewsRuntime(Lazy<IValueConverter> valConverterLazy) : base("Cms.ViewRd")
+        public ViewsRuntime(Lazy<IValueConverter> valConverterLazy) : base("Cms.ViewRd")
         {
             _valConverterLazy = valConverterLazy;
         }
