@@ -28,7 +28,6 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddTransient<IServerPaths, OqtServerPaths>();
 
 
-            services.AddTransient<IAppEnvironment, OqtEnvironment>();
             services.AddTransient<IEnvironment, OqtEnvironment>();
             services.AddTransient<ISite, OqtSite>();
             services.AddTransient<IRenderingHelper, OqtRenderingHelper>();

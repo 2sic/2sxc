@@ -16,17 +16,23 @@ namespace ToSic.Sxc.Dnn.Run
     {
         #region Constructor and DI
 
-        private readonly IAppEnvironment _environment;
+        private readonly IEnvironment _environment;
         private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
+        private readonly IPagePublishing _pagePublishing;
+        private readonly IZoneMapper _zoneMapper;
 
         /// <summary>
         /// Empty constructor for DI
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public DnnModuleUpdater(IAppEnvironment environment, Lazy<CmsRuntime> cmsRuntimeLazy) : base("Dnn.MapA2I")
+        public DnnModuleUpdater(IEnvironment environment, 
+            Lazy<CmsRuntime> cmsRuntimeLazy, 
+            IZoneMapper zoneMapper, IPagePublishing pagePublishing) : base("Dnn.MapA2I")
         {
             _environment = environment;
             _cmsRuntimeLazy = cmsRuntimeLazy;
+            _pagePublishing = pagePublishing.Init(Log);
+            _zoneMapper = zoneMapper.Init(Log);
             _environment.Init(Log);
         }
 
@@ -42,7 +48,7 @@ namespace ToSic.Sxc.Dnn.Run
             // ToDo: Should throw exception if a real BlockConfiguration exists
 
             var module = (instance as Container<ModuleInfo>).UnwrappedContents;
-            var zoneId = _environment.ZoneMapper.GetZoneId(module.OwnerPortalID);
+            var zoneId = _zoneMapper.GetZoneId(module.OwnerPortalID);
 
             if (appId == Constants.AppIdEmpty || !appId.HasValue)
                 UpdateInstanceSettingForAllLanguages(instance.Id, Settings.ModuleSettingApp, null, Log);
@@ -56,7 +62,7 @@ namespace ToSic.Sxc.Dnn.Run
             if (appId.HasValue)
             {
                 var appIdentity = new AppIdentity(zoneId, appId.Value);
-                var cms = _cmsRuntimeLazy.Value.Init(appIdentity, true, _environment.PagePublishing.IsEnabled(instance.Id), Log);
+                var cms = _cmsRuntimeLazy.Value.Init(appIdentity, true, _pagePublishing.IsEnabled(instance.Id), Log);
                 var templateGuid = cms.Views.GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
                 if (templateGuid.HasValue) SetPreview(instance.Id, templateGuid.Value);
             }
@@ -99,7 +105,7 @@ namespace ToSic.Sxc.Dnn.Run
         {
             Log.Add("update title");
 
-            var languages = _environment.ZoneMapper.CulturesWithState(block.Context.Tenant.Id, block.ZoneId);
+            var languages = _zoneMapper.CulturesWithState(block.Context.Tenant.Id, block.ZoneId);
 
             // Find Module for default language
             var moduleController = new ModuleController();

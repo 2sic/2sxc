@@ -18,9 +18,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private readonly SettingsHelper _settingsHelper;
         private readonly OqtZoneMapper _zoneMapper;
         private readonly IModuleRepository _moduleRepository;
-        private readonly IAppEnvironment _environment;
         private readonly IPageModuleRepository _pageModuleRepository;
         private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
+        private readonly IPagePublishing _pagePublishing;
 
         /// <summary>
         /// Empty constructor for DI
@@ -29,16 +29,15 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public OqtModuleUpdater(SettingsHelper settingsHelper, 
             OqtZoneMapper zoneMapper, 
             IModuleRepository moduleRepository,
-            IAppEnvironment environment, 
             IPageModuleRepository pageModuleRepository,
-            Lazy<CmsRuntime> lazyCmsRuntime) : base($"{OqtConstants.OqtLogPrefix}.MapA2I")
+            Lazy<CmsRuntime> lazyCmsRuntime, IPagePublishing pagePublishing) : base($"{OqtConstants.OqtLogPrefix}.MapA2I")
         {
             _settingsHelper = settingsHelper;
-            _zoneMapper = zoneMapper;
+            _zoneMapper = zoneMapper.Init(Log) as OqtZoneMapper;
             _moduleRepository = moduleRepository;
-            _environment = environment;
             _pageModuleRepository = pageModuleRepository;
             _lazyCmsRuntime = lazyCmsRuntime;
+            _pagePublishing = pagePublishing.Init(Log);
         }
 
         public void SetAppId(IContainer instance, int? appId)
@@ -65,7 +64,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             if (appId.HasValue)
             {
                 var appIdentity = new AppIdentity(zoneId, appId.Value);
-                var cms = _lazyCmsRuntime.Value.Init(appIdentity, true, _environment.PagePublishing.IsEnabled(instance.Id), Log);
+                var cms = _lazyCmsRuntime.Value.Init(appIdentity, true, _pagePublishing.IsEnabled(instance.Id), Log);
                 var templateGuid = cms.Views.GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
                 if (templateGuid.HasValue) SetPreview(instance.Id, templateGuid.Value);
             }

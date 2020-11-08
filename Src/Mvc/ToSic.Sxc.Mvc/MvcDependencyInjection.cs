@@ -5,10 +5,6 @@ using ToSic.Eav.LookUp;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Engines;
-using ToSic.Sxc.Interfaces;
-//using ToSic.Sxc.Mvc.Code;
 using ToSic.Sxc.Mvc.Run;
 using ToSic.Sxc.Mvc.Web;
 using ToSic.Sxc.Mvc.WebApi.Adam;
@@ -23,7 +19,6 @@ namespace ToSic.Sxc.Mvc.Plumbing
     {
         public static IServiceCollection AddSxcMvc(this IServiceCollection services)
         {
-            services.AddTransient<IAppEnvironment, MvcEnvironment>();
             services.AddTransient<IEnvironment, MvcEnvironment>();
             services.AddTransient<ISite, MvcSite>();
             services.AddTransient<IRenderingHelper, MvcRenderingHelper>();

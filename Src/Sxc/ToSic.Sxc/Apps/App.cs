@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Apps
 
         #region DI Constructors
 
-        public App(AppDependencies appDependencies, ILinkPaths linkPaths) : base(appDependencies, "App.SxcApp")
+        public App(AppDependencies dependencies, ILinkPaths linkPaths) : base(dependencies, "App.SxcApp")
         {
             _linkPaths = linkPaths;
         }
