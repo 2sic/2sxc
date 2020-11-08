@@ -32,6 +32,7 @@ namespace ToSic.Sxc.Mvc.Plumbing
 
             // add page publishing
             services.AddTransient<IPagePublishing, MvcPagePublishing>();
+            services.AddTransient<IPagePublishingResolver, MvcPagePublishing>();
 
             // MVC Specific stuff
             services.AddScoped<MvcPageProperties>();

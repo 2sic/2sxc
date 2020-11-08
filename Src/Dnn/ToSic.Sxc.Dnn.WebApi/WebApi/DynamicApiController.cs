@@ -67,7 +67,7 @@ namespace ToSic.Sxc.WebApi
                 var routeAppPath = Route.AppPathOrNull(Request.GetRouteData());
                 var appId = AppFinder.GetAppIdFromPath(routeAppPath).AppId;
                 // Look up if page publishing is enabled - if module context is not available, always false
-                var publish = _build<IPagePublishing>().Init(Log);
+                var publish = _build<IPagePublishingResolver>().Init(Log);
                 var publishingEnabled = Dnn.Module != null && publish.IsEnabled(Dnn.Module.ModuleID);
                 Log.Add($"AppId: {appId}, publishing:{publishingEnabled}");
                 var app = Sxc.Dnn.Factory.App(appId, publishingEnabled, parentLog: Log);

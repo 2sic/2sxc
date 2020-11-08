@@ -85,6 +85,7 @@ namespace ToSic.SexyContent
 
             // add page publishing
             services.AddTransient<IPagePublishing, Sxc.Dnn.Cms.DnnPagePublishing>();
+            services.AddTransient<IPagePublishingResolver, Sxc.Dnn.Cms.DnnPagePublishingResolver>();
 
             if (appsCacheOverride != null)
             {

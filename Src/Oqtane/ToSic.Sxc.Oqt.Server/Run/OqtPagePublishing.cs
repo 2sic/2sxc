@@ -12,51 +12,19 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    internal class OqtPagePublishing : HasLog, IPagePublishing
+    internal class OqtPagePublishing : HasLog<IPagePublishing>, IPagePublishing
     {
         #region Constructor / DI
 
         public OqtPagePublishing() : base($"{OqtConstants.OqtLogPrefix}.Publsh") { }
 
-        public IPagePublishing Init(ILog parent)
-        {
-            Log.LinkTo(parent);
-            return this;
-        }
-
         #endregion
-
-
-        public bool Supported => false;
-
-        private readonly Dictionary<int, PublishingMode> _cache = new Dictionary<int, PublishingMode>();
-
-        public PublishingMode Requirements(int instanceId)
-        {
-            var wrapLog = Log.Call<PublishingMode>($"{instanceId}");
-            if (_cache.ContainsKey(instanceId)) return wrapLog("in cache", _cache[instanceId]);
-
-            Log.Add($"Requirements(mod:{instanceId}) - checking first time (others will be cached)");
-            try
-            {
-                PublishingMode decision = PublishingMode.DraftOptional;
-                _cache.Add(instanceId, decision);
-                return wrapLog("decision: ", decision);
-            }
-            catch
-            {
-                Log.Add("Requirements had exception!");
-                throw;
-            }
-        }
-
-        public bool IsEnabled(int instanceId) => Requirements(instanceId) != PublishingMode.DraftOptional;
 
         public void DoInsidePublishing(IInstanceContext context, Action<VersioningActionInfo> action)
         {
             var containerId = context.Container.Id;
             var userId = 0;
-            var enabled = IsEnabled(containerId);
+            var enabled = false;// IsEnabled(containerId);
             Log.Add($"DoInsidePublishing(module:{containerId}, user:{userId}, enabled:{enabled})");
             if (enabled)
             {

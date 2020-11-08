@@ -69,8 +69,7 @@ namespace ToSic.Sxc.Blocks
                     true, Log);
 
             // note: requires EditAllowed, which isn't ready till App is created
-            var publishing = Context.ServiceProvider.Build<IPagePublishing>().Init(Log);
-            var cms = Context.ServiceProvider.Build<CmsRuntime>().Init(App, EditAllowed, publishing.IsEnabled(Context.Container.Id), Log);
+            var cms = Context.ServiceProvider.Build<CmsRuntime>().Init(App, EditAllowed, Context.Container, Log);
 
             Configuration = cms.Blocks.GetOrGeneratePreviewConfig(blockId);
 

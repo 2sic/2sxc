@@ -11,15 +11,15 @@ using ToSic.Sxc.DataSources;
 
 namespace ToSic.Sxc.Mvc.Run
 {
-    internal class MvcPagePublishing : HasLog, IPagePublishing
+    internal class MvcPagePublishing : HasLog<IPagePublishing>, IPagePublishing, IPagePublishingResolver
     {
         public MvcPagePublishing() : base("Mvc.Publsh")
         {
         }
 
-        public IPagePublishing Init(ILog parent)
+        IPagePublishingResolver IHasLog<IPagePublishingResolver>.Init(ILog parent)
         {
-            Log.LinkTo(parent, "Mvc.Publsh");
+            base.Init(parent);
             return this;
         }
 

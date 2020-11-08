@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Web.JsContext
             : base("Sxc.CliInf", parentLog, "building entire client-context")
         {
             var ctx = block.Context;
-            var versioning = block.Context.ServiceProvider.Build<IPagePublishing>().Init(Log);
+            var versioning = block.Context.ServiceProvider.Build<IPagePublishingResolver>().Init(Log);
 
             Environment = new JsContextEnvironment(systemRootUrl, ctx, block);
             Language = new JsContextLanguage(ctx.ServiceProvider, ctx.Tenant, block.ZoneId);

@@ -40,7 +40,7 @@ namespace ToSic.Sxc.LookUp
             var wrapLog = log.Call($"{nameof(useExistingConfig)}:{useExistingConfig}");
             var containerId = block.Context.Container.Id;
             var showDrafts = block.EditAllowed;
-            var activatePagePublishing = block.Context.ServiceProvider.Build<IPagePublishing>().Init(log).IsEnabled(containerId);
+            var activatePagePublishing = block.Context.ServiceProvider.Build<IPagePublishingResolver>()/*.Init(log)*/.IsEnabled(containerId);
             var existingLookups = block.Data.Configuration.LookUps;
 
             wrapLog("ok");

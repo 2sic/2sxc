@@ -2,6 +2,7 @@
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Apps
 {
@@ -10,6 +11,12 @@ namespace ToSic.Sxc.Apps
         internal bool EnablePublishing { get; set; }
 
         public CmsRuntime(DataSourceFactory dataSourceFactory) : base(dataSourceFactory, "Sxc.CmsRt") { }
+
+        public CmsRuntime Init(IAppIdentity app, bool showDrafts, IContainer container, ILog parentLog)
+        {
+            var publishing = ServiceProvider.Build<IPagePublishingResolver>().Init(Log).IsEnabled(container.Id);
+            return Init(app, showDrafts, publishing, parentLog);
+        }
 
         public CmsRuntime Init(IAppIdentity app, bool showDrafts, bool enablePublishing, ILog parentLog)
         {

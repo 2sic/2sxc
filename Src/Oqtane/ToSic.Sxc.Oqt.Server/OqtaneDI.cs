@@ -45,6 +45,7 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddTransient<SettingsHelper>();
             //// add page publishing
             services.AddTransient<IPagePublishing, OqtPagePublishing>();
+            services.AddTransient<IPagePublishingResolver, OqtPagePublishingResolver>();
 
             //// Oqtane Specific stuff
             services.AddScoped<OqtAssetsAndHeaders>();

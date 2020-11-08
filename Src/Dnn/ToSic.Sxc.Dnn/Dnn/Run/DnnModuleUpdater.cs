@@ -18,7 +18,6 @@ namespace ToSic.Sxc.Dnn.Run
 
         private readonly IEnvironment _environment;
         private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
-        private readonly IPagePublishing _pagePublishing;
         private readonly IZoneMapper _zoneMapper;
 
         /// <summary>
@@ -27,11 +26,10 @@ namespace ToSic.Sxc.Dnn.Run
         // ReSharper disable once UnusedMember.Global
         public DnnModuleUpdater(IEnvironment environment, 
             Lazy<CmsRuntime> cmsRuntimeLazy, 
-            IZoneMapper zoneMapper, IPagePublishing pagePublishing) : base("Dnn.MapA2I")
+            IZoneMapper zoneMapper) : base("Dnn.MapA2I")
         {
             _environment = environment;
             _cmsRuntimeLazy = cmsRuntimeLazy;
-            _pagePublishing = pagePublishing.Init(Log);
             _zoneMapper = zoneMapper.Init(Log);
             _environment.Init(Log);
         }
@@ -62,7 +60,7 @@ namespace ToSic.Sxc.Dnn.Run
             if (appId.HasValue)
             {
                 var appIdentity = new AppIdentity(zoneId, appId.Value);
-                var cms = _cmsRuntimeLazy.Value.Init(appIdentity, true, _pagePublishing.IsEnabled(instance.Id), Log);
+                var cms = _cmsRuntimeLazy.Value.Init(appIdentity, true, instance, Log);
                 var templateGuid = cms.Views.GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
                 if (templateGuid.HasValue) SetPreview(instance.Id, templateGuid.Value);
             }

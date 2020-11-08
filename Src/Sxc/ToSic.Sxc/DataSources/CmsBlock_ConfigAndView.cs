@@ -30,7 +30,7 @@ namespace ToSic.Sxc.DataSources
             }
 
             var sp = DataSourceFactory.ServiceProvider;
-            var publish = sp.Build<IPagePublishing>().Init(Log);
+            var publish = sp.Build<IPagePublishingResolver>();//.Init(Log);
             var userMayEdit = HasInstanceContext && Block.EditAllowed;
 
             var cms = _lazyCmsRuntime.IsValueCreated

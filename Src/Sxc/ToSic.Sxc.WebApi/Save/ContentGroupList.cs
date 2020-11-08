@@ -21,23 +21,20 @@ namespace ToSic.Sxc.WebApi.Save
         private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
         private CmsRuntime CmsRuntime { get; set; }
         private readonly Lazy<CmsManager> _cmsManagerLazy;
-        private readonly IPagePublishing _pagePublishing;
         private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.Init(Block?.App, Log));
         private CmsManager _cmsManager;
 
-        public ContentGroupList(Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> cmsManagerLazy, IPagePublishing pagePublishing) : base("Api.GrpPrc")
+        public ContentGroupList(Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> cmsManagerLazy) : base("Api.GrpPrc")
         {
             _lazyCmsRuntime = lazyCmsRuntime;
             _cmsManagerLazy = cmsManagerLazy;
-            _pagePublishing = pagePublishing;
         }
 
         public ContentGroupList Init(IBlock block, ILog log, IAppIdentity appIdentity)
         {
             Init(block, log);
             _appIdentity = appIdentity ?? block;
-            var publishingEnabled = _pagePublishing.Init(Log).IsEnabled(Block.Context.Container.Id);
-            CmsRuntime = _lazyCmsRuntime.Value.Init(appIdentity, Block.EditAllowed, publishingEnabled, Log);
+            CmsRuntime = _lazyCmsRuntime.Value.Init(appIdentity, Block.EditAllowed, Block.Context.Container, Log);
             return this;
         }
 
