@@ -9,6 +9,7 @@ using ToSic.Eav.Conversion;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
@@ -18,7 +19,18 @@ namespace ToSic.Sxc.Apps
 {
 	public class ViewsRuntime: PartOf<CmsRuntime, ViewsRuntime>
     {
-        internal ViewsRuntime() : base("Cms.ViewRd") { }
+        #region Constructor / DI
+
+        private readonly Lazy<IValueConverter> _valConverterLazy;
+        private IValueConverter ValueConverter => _valConverter ?? (_valConverter = _valConverterLazy.Value);
+        private IValueConverter _valConverter;
+
+        internal ViewsRuntime(Lazy<IValueConverter> valConverterLazy) : base("Cms.ViewRd")
+        {
+            _valConverterLazy = valConverterLazy;
+        }
+
+        #endregion
 
         private IDataSource _viewDs;
 		private IDataSource ViewsDataSource()
@@ -128,7 +140,7 @@ namespace ToSic.Sxc.Apps
                         StaticName = ct.StaticName,
                         Name = ct.Name,
                         IsHidden = visible.All(t => t.ContentType != ct.StaticName),   // must check if *any* template is visible, otherwise tell the UI that it's hidden
-                        Thumbnail = metadata?.GetBestValue(View.TemplateIcon, true)?.ToString(),
+                        Thumbnail = ValueConverter.ToValue(metadata?.GetBestValue<string>(View.TemplateIcon)),
                         Metadata = serializer.Convert(metadata)
                     };
                 });

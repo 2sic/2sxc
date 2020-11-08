@@ -5,6 +5,7 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 
+#if NET451
 namespace ToSic.Sxc.Compatibility
 {
 	/// <summary>
@@ -51,3 +52,4 @@ namespace ToSic.Sxc.Compatibility
 
     }
 }
+#endif

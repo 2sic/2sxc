@@ -70,6 +70,8 @@ namespace ToSic.Sxc.Dnn.Run
         /// <returns></returns>
         private string TryToResolveDnnCodeToLink(Guid itemGuid, string originalValue)
         {
+            if (string.IsNullOrEmpty(originalValue)) return originalValue;
+
             // new
             var resultString = originalValue;
             var regularExpression = Regex.Match(resultString, @"^(?<type>(file|page)):(?<id>[0-9]+)(?<params>(\?|\#).*)?$", RegexOptions.IgnoreCase);
