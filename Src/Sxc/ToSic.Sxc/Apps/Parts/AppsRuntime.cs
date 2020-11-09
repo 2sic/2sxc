@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Ui;
@@ -12,9 +11,11 @@ namespace ToSic.Sxc.Apps
 {
     public class AppsRuntime: ZonePartRuntimeBase<CmsZones, AppsRuntime>
     {
-        internal AppsRuntime(IServiceProvider serviceProvider) : base(serviceProvider, "Cms.AppsRt")
-        {
-        }
+        #region Constructor / DI
+
+        public AppsRuntime(IServiceProvider serviceProvider) : base(serviceProvider, "Cms.AppsRt") { }
+
+        #endregion
 
         public IList<AppUiInfo> GetSelectableApps(ISite site, string filter)
         {

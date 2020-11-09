@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Ui;
@@ -21,8 +20,8 @@ namespace ToSic.Sxc.Apps
     {
         #region Constructor / DI
 
-        private readonly Lazy<IValueConverter> _valConverterLazy;
         private IValueConverter ValueConverter => _valConverter ?? (_valConverter = _valConverterLazy.Value);
+        private readonly Lazy<IValueConverter> _valConverterLazy;
         private IValueConverter _valConverter;
 
         public ViewsRuntime(Lazy<IValueConverter> valConverterLazy) : base("Cms.ViewRd")

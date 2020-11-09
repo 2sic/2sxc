@@ -12,15 +12,17 @@ namespace ToSic.Sxc.Blocks.Edit
     // todo: move some parts out into a BlockManagement
     public abstract partial class BlockEditorBase : HasLog
     {
+
         #region DI and Construction
 
+        protected IServiceProvider ServiceProvider { get; }
         private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
         private readonly Lazy<CmsManager> _cmsManagerLazy;
-        protected CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.Init(Block?.App, Log));
         private CmsManager _cmsManager;
 
-        internal BlockEditorBase(Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> cmsManagerLazy) : base("CG.RefMan")
+        internal BlockEditorBase(IServiceProvider serviceProvider, Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> cmsManagerLazy) : base("CG.RefMan")
         {
+            ServiceProvider = serviceProvider;
             _lazyCmsRuntime = lazyCmsRuntime;
             _cmsManagerLazy = cmsManagerLazy;
         }
@@ -55,9 +57,9 @@ namespace ToSic.Sxc.Blocks.Edit
                 var existedBeforeSettingTemplate = BlockConfiguration.Exists;
 
                 //var app = Block.App;
-                //var cms = new CmsManager().Init(app, Log);
+                var cms = _cmsManager = _cmsManagerLazy.Value.Init(Block?.App, Log);
 
-                var contentGroupGuid = CmsManager.Blocks.UpdateOrCreateContentGroup(BlockConfiguration, templateId);
+                var contentGroupGuid = cms.Blocks.UpdateOrCreateContentGroup(BlockConfiguration, templateId);
 
                 if (!existedBeforeSettingTemplate) EnsureLinkToContentGroup(contentGroupGuid);
 

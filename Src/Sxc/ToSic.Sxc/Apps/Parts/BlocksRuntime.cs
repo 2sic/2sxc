@@ -14,9 +14,7 @@ namespace ToSic.Sxc.Apps
     {
         public const string BlockTypeName = "2SexyContent-ContentGroup";
 
-        public BlocksRuntime() : base("Sxc.BlkRdr")
-        {
-        }
+        public BlocksRuntime() : base("Sxc.BlkRdr") { }
 
         private IDataSource ContentGroupSource()
         {

@@ -9,9 +9,9 @@ namespace ToSic.Sxc.Blocks.Edit
 {
     internal class BlockEditorForModule: BlockEditorBase
     {
-        public BlockEditorForModule(Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> cmsManagerLazy) : base(lazyCmsRuntime, cmsManagerLazy) { }
+        public BlockEditorForModule(IServiceProvider serviceProvider, Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> cmsManagerLazy) : base(serviceProvider, lazyCmsRuntime, cmsManagerLazy) { }
         private IPlatformModuleUpdater PlatformModuleUpdater => _platformModuleUpdater 
-                                                                ?? (_platformModuleUpdater = CmsManager.ServiceProvider.Build<IPlatformModuleUpdater>().Init(Log));
+                                                                ?? (_platformModuleUpdater = ServiceProvider.Build<IPlatformModuleUpdater>().Init(Log));
         private IPlatformModuleUpdater _platformModuleUpdater;
 
         protected override void SavePreviewTemplateId(Guid templateGuid)

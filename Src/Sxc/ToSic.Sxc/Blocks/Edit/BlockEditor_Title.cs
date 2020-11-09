@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Blocks.Edit
 {

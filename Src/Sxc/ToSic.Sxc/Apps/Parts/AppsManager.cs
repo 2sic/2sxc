@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Plumbing;
@@ -9,11 +8,15 @@ namespace ToSic.Sxc.Apps
 {
     public class AppsManager: ZonePartRuntimeBase<ZoneRuntime, AppsManager>
     {
-        private readonly Lazy<ZoneManager> _zoneManagerLazy;
-        internal AppsManager(Lazy<ZoneManager> zoneManagerLazy, IServiceProvider serviceProvider) : base(serviceProvider, "Cms.AppsRt")
+        #region Constructor / DI
+
+        public AppsManager(Lazy<ZoneManager> zoneManagerLazy, IServiceProvider serviceProvider) : base(serviceProvider, "Cms.AppsRt")
         {
             _zoneManagerLazy = zoneManagerLazy;
         }
+        private readonly Lazy<ZoneManager> _zoneManagerLazy;
+
+        #endregion
 
 
         internal void RemoveAppInSiteAndEav(int appId)

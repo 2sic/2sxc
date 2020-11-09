@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Blocks.Edit
 {
     internal class BlockEditorForEntity : BlockEditorBase
     {
-        public BlockEditorForEntity(Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> cmsManagerLazy) : base(lazyCmsRuntime, cmsManagerLazy)
+        public BlockEditorForEntity(IServiceProvider serviceProvider, Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> cmsManagerLazy) : base(serviceProvider, lazyCmsRuntime, cmsManagerLazy)
         {
         }
 
