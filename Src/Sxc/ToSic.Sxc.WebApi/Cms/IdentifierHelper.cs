@@ -16,7 +16,7 @@ namespace ToSic.Sxc.WebApi.Cms
         internal ItemIdentifier ResolveItemIdOfGroup(int appId, ItemIdentifier item, ILog log)
         {
             if (item.Group == null) return item;
-            var cms = _cmsRuntime.Init(State.Identity(null, appId), true, false, log);
+            var cms = _cmsRuntime.Init(State.Identity(null, appId), true, log);
 
             var contentGroup = cms.Blocks.GetBlockConfig(item.Group.Guid);
             var part = contentGroup[item.Group.Part];

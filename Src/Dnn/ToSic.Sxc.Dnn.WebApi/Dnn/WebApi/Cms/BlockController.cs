@@ -24,7 +24,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
     {
         protected override string HistoryLogName => "Api.Block";
 
-        protected CmsRuntime CmsRuntime => _cmsRuntime ?? (_cmsRuntime = base.App == null ? null : _build<CmsRuntime>().Init(base.App, true, false, Log));
+        protected CmsRuntime CmsRuntime => _cmsRuntime ?? (_cmsRuntime = base.App == null ? null : _build<CmsRuntime>()
+            .Init(base.App, true, Log));
         private CmsRuntime _cmsRuntime;
 
         #region Block

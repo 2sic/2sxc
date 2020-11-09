@@ -8,6 +8,7 @@ using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -40,7 +41,6 @@ namespace ToSic.Sxc.LookUp
             var wrapLog = log.Call($"{nameof(useExistingConfig)}:{useExistingConfig}");
             var containerId = block.Context.Container.Id;
             var showDrafts = block.EditAllowed;
-            var activatePagePublishing = block.Context.ServiceProvider.Build<IPagePublishingResolver>()/*.Init(log)*/.IsEnabled(containerId);
             var existingLookups = block.Data.Configuration.LookUps;
 
             wrapLog("ok");
@@ -52,21 +52,21 @@ namespace ToSic.Sxc.LookUp
                     : GetConfigProviderForModule(containerId, appToUse as IApp, block);
 
                 // return results
-                return new AppDataConfiguration(showDrafts, activatePagePublishing, lookUpEngine);
+                return new AppDataConfiguration(showDrafts, lookUpEngine);
             };
         }
 
         /// <summary>
         /// Generate a delegate which will be used to build the configuration based existing stuff
         /// </summary>
-        internal Func<App, IAppDataConfiguration> Build(bool showDrafts, bool publishingEnabled, ILookUpEngine config) 
-            => appToUse => new AppDataConfiguration(showDrafts, publishingEnabled, config);
+        internal Func<App, IAppDataConfiguration> Build(bool showDrafts, ILookUpEngine config) 
+            => appToUse => new AppDataConfiguration(showDrafts, config);
 
         /// <summary>
         /// Generate a delegate which will be used to build a basic configuration with very little context
         /// </summary>
-        internal Func<App, IAppDataConfiguration> Build(bool showDrafts, bool publishingEnabled)
-            => appToUse => new AppDataConfiguration(showDrafts, publishingEnabled,
+        internal Func<App, IAppDataConfiguration> Build(bool showDrafts)
+            => appToUse => new AppDataConfiguration(showDrafts,
                 GetConfigProviderForModule(0, appToUse as IApp, null));
 
 

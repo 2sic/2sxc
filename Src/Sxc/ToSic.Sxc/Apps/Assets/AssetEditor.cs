@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Apps.Assets
             _userIsAdmin = isAdmin;
 
             // todo: 2dm Views - see if we can get logger to flow
-            _cmsRuntime = _cmsRuntimeLazy.Value.Init(app, true, false, Log);
+            _cmsRuntime = _cmsRuntimeLazy.Value.Init(app, true, Log);
             var template = _cmsRuntime.Views.Get(templateId);
             EditInfo = TemplateAssetsInfo(template);
             return this;

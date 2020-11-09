@@ -54,7 +54,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 .CulturesWithState(_siteId, currentApp.ZoneId)
                 .Count(c => c.Active);
 
-            var cms = _cmsRuntime.Init(currentApp, true, false, Log);
+            var cms = _cmsRuntime.Init(currentApp, true, Log);
 
             return new AppExportInfoDto
             {

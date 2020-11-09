@@ -4,6 +4,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 
@@ -22,7 +23,8 @@ namespace ToSic.Sxc.Dnn.Run
             overrideParams = overrideParams ?? serviceProvider.Build<IHttp>()?.QueryStringKeyValuePairs() ?? new List<KeyValuePair<string, string>>();
             var page = new SxcPage(activeTab?.TabID ?? Eav.Constants.NullId, fullUrl, overrideParams);
 
-            return new InstanceContext(site, page, container, user, serviceProvider);
+            var publishing = serviceProvider.Build<IPagePublishingResolver>();
+            return new InstanceContext(site, page, container, user, serviceProvider, publishing.GetPublishingState(container.Id));
         }
 
     }

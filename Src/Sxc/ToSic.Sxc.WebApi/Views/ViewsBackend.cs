@@ -35,7 +35,7 @@ namespace ToSic.Sxc.WebApi.Views
         public IEnumerable<ViewDetailsDto> GetAll(int appId)
         {
             Log.Add($"get all a#{appId}");
-            var cms = _cmsManagerLazy.Value.Init(State.Identity(null, appId), true, false, Log).Read;
+            var cms = _cmsManagerLazy.Value.Init(State.Identity(null, appId), true, Log).Read;
 
             var attributeSetList = cms.ContentTypes.All.OfScope(Settings.AttributeSetScope).ToList();
             var templateList = cms.Views.GetAll().ToList();

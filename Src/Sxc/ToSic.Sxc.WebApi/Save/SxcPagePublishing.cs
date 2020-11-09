@@ -6,6 +6,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Sxc.Cms.Publishing;
 
 namespace ToSic.Sxc.WebApi.Save
 {

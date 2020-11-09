@@ -34,7 +34,7 @@ namespace ToSic.Sxc.WebApi.Save
         {
             Init(block, log);
             _appIdentity = appIdentity ?? block;
-            CmsRuntime = _lazyCmsRuntime.Value.Init(appIdentity, Block.EditAllowed, Block.Context.Container, Log);
+            CmsRuntime = _lazyCmsRuntime.Value.Init(appIdentity, Block.EditAllowed, Log);
             return this;
         }
 
@@ -98,9 +98,9 @@ namespace ToSic.Sxc.WebApi.Save
                     : new[] {primaryItem.Header.Field};
 
                 if (willAdd) // this cannot be auto-detected, it must be specified
-                    CmsManager.Entities.FieldListAdd(entity, fieldPair, index, ids, CmsManager.EnablePublishing);
+                    CmsManager.Entities.FieldListAdd(entity, fieldPair, index, ids, Block.Context.Publishing.ForceDraft);
                 else
-                    CmsManager.Entities.FieldListReplaceIfModified(entity, fieldPair, index, ids, CmsManager.EnablePublishing);
+                    CmsManager.Entities.FieldListReplaceIfModified(entity, fieldPair, index, ids, Block.Context.Publishing.ForceDraft);
 
             }
 

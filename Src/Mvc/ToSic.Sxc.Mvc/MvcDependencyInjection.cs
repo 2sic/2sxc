@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Mvc.Run;
 using ToSic.Sxc.Mvc.Web;
 using ToSic.Sxc.Mvc.WebApi.Adam;
@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Mvc.Plumbing
 
             // add page publishing
             services.AddTransient<IPagePublishing, MvcPagePublishing>();
-            services.AddTransient<IPagePublishingResolver, MvcPagePublishing>();
+            services.AddTransient<IPagePublishingResolver, MvcPagePublishingResolver>();
 
             // MVC Specific stuff
             services.AddScoped<MvcPageProperties>();

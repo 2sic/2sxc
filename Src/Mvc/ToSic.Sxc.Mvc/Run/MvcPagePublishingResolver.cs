@@ -1,19 +1,12 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Apps.Enums;
 using ToSic.Sxc.Cms.Publishing;
-using ToSic.Sxc.Oqt.Shared;
 
-namespace ToSic.Sxc.Oqt.Server.Run
+namespace ToSic.Sxc.Mvc.Run
 {
-    internal class OqtPagePublishingResolver: PagePublishingResolverBase
+    internal class MvcPagePublishingResolver : PagePublishingResolverBase
     {
-        #region Constructor / DI
-
-        public OqtPagePublishingResolver() : base($"{OqtConstants.OqtLogPrefix}.PubRes") { }
-
-
-        #endregion
-
+        public MvcPagePublishingResolver() : base("Mvc.Publsh") { }
 
         //public override bool Supported => false;
 
@@ -37,6 +30,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 throw;
             }
         }
+
 
     }
 }

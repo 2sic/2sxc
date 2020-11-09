@@ -23,9 +23,8 @@ namespace ToSic.Sxc.Dnn.WebApi
 
         internal IBlock GetCmsBlock(HttpRequestMessage request, bool allowNoContextFound, ILog log)
         {
-            var wrapLog = log.Call<IBlock>(parameters: $"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
+            var wrapLog = log.Call<IBlock>($"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
 
-            //const string headerId = "ContentBlockId";
             var moduleInfo = request.FindModuleInfo();
 
             if (allowNoContextFound & moduleInfo == null)

@@ -4,6 +4,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Cms.Publishing;
 
 namespace ToSic.Sxc.WebApi.FieldList
 {
@@ -44,7 +45,7 @@ namespace ToSic.Sxc.WebApi.FieldList
             _publishing.DoInsidePublishing(_context, args =>
             {
                 // determine versioning
-                var forceDraft = _block.Configuration.VersioningEnabled;
+                var forceDraft = _block.Context.Publishing.ForceDraft; //.Configuration.VersioningEnabled;
                 // check field list (default to content-block fields)
                 var fieldList = fields?.Split(',').Select(f => f.Trim()).ToArray() ?? ViewParts.ContentPair;
                 action.Invoke(target, fieldList, forceDraft);

@@ -23,10 +23,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [HttpGet]
         //[Authorize(Policy = "EditModule")] // TODO: disabled
         public EntityInListDto Header(Guid guid)
-            => _listBackendLazy.Value.Init(GetBlock().App, Log)
+            => _listBackendLazy.Value.Init(GetBlock(), Log)
                 .HeaderItem(guid);
 
-        private ListsBackendBase Backend => _listBackendLazy.Value.Init(GetBlock().App, Log);
+        private ListsBackendBase Backend => _listBackendLazy.Value.Init(GetBlock(), Log);
 
         // TODO: shouldn't be part of ContentGroupController any more, as it's generic now
         [HttpPost]

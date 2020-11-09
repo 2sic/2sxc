@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
                     new SxcPage(0, null, _serviceProvider.Build<IHttp>().QueryStringKeyValuePairs()), 
                     new MvcContainer(),
                     new MvcUser(),
-                    _serviceProvider
+                    _serviceProvider, new InstancePublishingState()
                 );
                 _block = Eav.Factory.Resolve<BlockFromModule>().Init(context, Log);
                 return _block;

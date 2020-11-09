@@ -6,6 +6,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Search;

@@ -15,7 +15,6 @@ namespace ToSic.Sxc.Apps.Blocks
         public  int ZoneId { get; }
         public  int AppId { get; }
         internal readonly bool ShowDrafts;
-        internal readonly bool VersioningEnabled;
         internal readonly Guid? PreviewTemplateId;
 
         private readonly CmsRuntime _cmsRuntime;
@@ -45,7 +44,6 @@ namespace ToSic.Sxc.Apps.Blocks
             ZoneId = cmsRuntime.ZoneId;
             AppId = cmsRuntime.AppId;
             ShowDrafts = cmsRuntime.ShowDrafts;
-            VersioningEnabled = cmsRuntime.EnablePublishing;
         }
 
         /// <summary>

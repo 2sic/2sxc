@@ -2,10 +2,8 @@
 using System.IO;
 using System.Net.Http;
 using System.Web.Http.Controllers;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
@@ -13,7 +11,6 @@ using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi.Adam;
-using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.Sxc.WebApi
 {
@@ -67,10 +64,8 @@ namespace ToSic.Sxc.WebApi
                 var routeAppPath = Route.AppPathOrNull(Request.GetRouteData());
                 var appId = AppFinder.GetAppIdFromPath(routeAppPath).AppId;
                 // Look up if page publishing is enabled - if module context is not available, always false
-                var publish = _build<IPagePublishingResolver>().Init(Log);
-                var publishingEnabled = Dnn.Module != null && publish.IsEnabled(Dnn.Module.ModuleID);
-                Log.Add($"AppId: {appId}, publishing:{publishingEnabled}");
-                var app = Sxc.Dnn.Factory.App(appId, publishingEnabled, parentLog: Log);
+                Log.Add($"AppId: {appId}");
+                var app = Sxc.Dnn.Factory.App(appId, false, parentLog: Log);
                 DynCode.LateAttachApp(app);
                 found = true;
             } catch { /* ignore */ }

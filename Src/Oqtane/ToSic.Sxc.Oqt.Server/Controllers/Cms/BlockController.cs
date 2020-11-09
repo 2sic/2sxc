@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                 var runtime = _cmsRuntime;
                 if (runtime != null) return runtime;
 
-                return _cmsRuntime = ContextApp == null ? null : _lazyCmsRuntime.Value.Init(ContextApp, true, false, Log);
+                return _cmsRuntime = ContextApp == null ? null : _lazyCmsRuntime.Value.Init(ContextApp, true, Log);
             }
         }
         private CmsRuntime _cmsRuntime;

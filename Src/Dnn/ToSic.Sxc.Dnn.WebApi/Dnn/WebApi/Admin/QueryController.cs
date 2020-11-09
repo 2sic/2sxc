@@ -73,7 +73,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// </summary>
         [HttpDelete]
         public bool Delete(int appId, int id)
-            => _build<CmsManager>().Init(State.Identity(null, appId), true, false, Log)
+            => _build<CmsManager>().Init(State.Identity(null, appId), true, Log)
                 .DeleteQueryIfNotUsedByView(id, Log);
 
         [HttpPost]

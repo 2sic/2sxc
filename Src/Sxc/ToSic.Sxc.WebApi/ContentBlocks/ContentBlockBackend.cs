@@ -1,8 +1,8 @@
 ﻿using System;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Edit;
+using ToSic.Sxc.Cms.Publishing;
 
 namespace ToSic.Sxc.WebApi.ContentBlocks
 {
@@ -25,7 +25,8 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
         {
             Log.Add($"add order:{index}");
             // use dnn versioning - this is always part of page
-            _publishing.DoInsidePublishing(_context, _ => CmsManager.Blocks.AddEmptyItem(_block.Configuration, index));
+            _publishing.DoInsidePublishing(_context, _ 
+                => CmsManager.Blocks.AddEmptyItem(_block.Configuration, index, _block.Context.Publishing.ForceDraft));
         }
 
         

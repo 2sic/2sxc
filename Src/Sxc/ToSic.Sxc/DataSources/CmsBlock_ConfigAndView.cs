@@ -1,11 +1,9 @@
 ﻿using System;
-using ToSic.Eav;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Cms.Publishing;
 
 namespace ToSic.Sxc.DataSources
 {
@@ -30,13 +28,11 @@ namespace ToSic.Sxc.DataSources
             }
 
             var sp = DataSourceFactory.ServiceProvider;
-            var publish = sp.Build<IPagePublishingResolver>();//.Init(Log);
             var userMayEdit = HasInstanceContext && Block.EditAllowed;
 
             var cms = _lazyCmsRuntime.IsValueCreated
                 ? _lazyCmsRuntime.Value
-                : _lazyCmsRuntime.Value.Init(this, HasInstanceContext && userMayEdit,
-                    publish.IsEnabled(InstanceId.Value), Log);
+                : _lazyCmsRuntime.Value.Init(this, HasInstanceContext && userMayEdit, Log);
             var container = sp.Build<IContainer>().Init(InstanceId.Value, Log);
             var blockId = container.BlockIdentifier;
             return wrapLog("ok", cms.Blocks.GetOrGeneratePreviewConfig(blockId));

@@ -7,26 +7,22 @@ namespace ToSic.Sxc.Apps
 {
     public class CmsManager: AppManager, IAppIdentityWithPublishingState
     {
-        public bool EnablePublishing { get; private set; }
-
         public CmsManager(DataSourceFactory dataSourceFactory) : base(dataSourceFactory, "Sxc.CmsMan") { }
 
         public CmsManager Init(IAppIdentityWithPublishingState app, ILog parentLog)
         {
             base.Init(app, parentLog);
-            EnablePublishing = app.EnablePublishing;
             return this;
         }
 
-        public CmsManager Init(IAppIdentity app, bool showDrafts, bool enablePublishing, ILog parentLog)
+        public new CmsManager Init(IAppIdentity app, bool showDrafts, ILog parentLog)
         {
             base.Init(app, showDrafts, parentLog);
-            EnablePublishing = enablePublishing;
             return this;
         }
 
         public new CmsRuntime Read 
-            => _runtime ?? (_runtime = ServiceProvider.Build<CmsRuntime>().Init(this, ShowDrafts, EnablePublishing, Log));
+            => _runtime ?? (_runtime = ServiceProvider.Build<CmsRuntime>().Init(this, ShowDrafts, Log));
         private CmsRuntime _runtime;
 
 

@@ -10,6 +10,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Cms.Publishing;
 using static System.StringComparison;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -26,18 +27,19 @@ namespace ToSic.Sxc.WebApi.ItemLists
 
         public ListsBackendBase(IPagePublishing publishing, Lazy<CmsManager> cmsManagerLazy) : base("Bck.Lists")
         {
-            //_lazyCmsRuntime = lazyCmsRuntime;
             _cmsManagerLazy = cmsManagerLazy;
             _publishing = publishing.Init(Log);
         }
 
-        public ListsBackendBase Init(IApp app, ILog parentLog)
+        public ListsBackendBase Init(IBlock block, ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            _app = app;
+            _block = block;
+            _app = block.App;
             return this;
         }
 
+        private IBlock _block;
         private IApp _app;
 
         #endregion
@@ -63,11 +65,12 @@ namespace ToSic.Sxc.WebApi.ItemLists
                     if (string.Equals(part, ViewParts.ListContent, OrdinalIgnoreCase)) part = ViewParts.ListContent;
                 }
 
+                var forceDraft = _block.Context.Publishing.ForceDraft;
                 if (add)
-                    CmsManager.Entities.FieldListAdd(entity, new[] { part }, index, new int?[] { entityId }, CmsManager.EnablePublishing);
+                    CmsManager.Entities.FieldListAdd(entity, new[] { part }, index, new int?[] { entityId }, forceDraft);
                 else
                     CmsManager.Entities.FieldListReplaceIfModified(entity, new[] { part }, index, new int?[] { entityId },
-                        CmsManager.EnablePublishing);
+                        forceDraft);
             }
 
             // use dnn versioning - this is always part of page
@@ -140,7 +143,7 @@ namespace ToSic.Sxc.WebApi.ItemLists
 
                 var sequence = list.Select(i => i.Index).ToArray();
                 var fields = part == ViewParts.ContentLower ? ViewParts.ContentPair : new[] {part};
-                CmsManager.Entities.FieldListReorder(entity, fields, sequence, CmsManager.EnablePublishing);
+                CmsManager.Entities.FieldListReorder(entity, fields, sequence, context.Publishing.ForceDraft);
             });
 
             return true;

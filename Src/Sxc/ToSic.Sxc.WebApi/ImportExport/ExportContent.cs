@@ -49,7 +49,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var contextZoneId = _zoneMapper.GetZoneId(_siteId);
             var currentApp = CmsRuntime.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
-            var cms = CmsRuntime.Init(currentApp, true, false, Log);
+            var cms = CmsRuntime.Init(currentApp, true, Log);
             var contentTypes = cms.ContentTypes.All.OfScope(scope);
             var entities = cms.Entities.All;
             var templates = cms.Views.GetAll();

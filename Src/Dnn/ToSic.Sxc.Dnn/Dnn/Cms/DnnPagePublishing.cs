@@ -10,6 +10,7 @@ using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Run;
@@ -20,14 +21,12 @@ namespace ToSic.Sxc.Dnn.Cms
     public partial class DnnPagePublishing : HasLog<IPagePublishing>, IPagePublishing
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly IPagePublishingResolver _publishResolver;
 
         #region DI Constructors and More
         
-        public DnnPagePublishing(IServiceProvider serviceProvider, IPagePublishingResolver publishResolver) : base("Dnn.Publsh")
+        public DnnPagePublishing(IServiceProvider serviceProvider) : base("Dnn.Publsh")
         {
             _serviceProvider = serviceProvider;
-            _publishResolver = publishResolver;
         }
         
         #endregion
@@ -36,7 +35,7 @@ namespace ToSic.Sxc.Dnn.Cms
         {
             var instanceId = context.Container.Id;
             var userId = (context.User as DnnUser).UnwrappedContents.UserID;
-            var enabled = _publishResolver.IsEnabled(instanceId);
+            var enabled = context.Publishing.ForceDraft;
             Log.Add($"DoInsidePublishing(module:{instanceId}, user:{userId}, enabled:{enabled})");
             if (enabled)
             {

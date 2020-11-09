@@ -57,8 +57,7 @@ namespace ToSic.Sxc.WebApi.App
                 throw HttpException.MissingParam(nameof(name));
             var appIdentity = AppFinder.GetAppIdFromPath(appPath);
             var queryApp = ServiceProvider.Build<Apps.App>().Init(appIdentity,
-                ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(false, false),
-                false, Log);
+                ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(false), false, Log);
 
             // now just run the default query check and serializer
             var result = BuildQueryAndRun(queryApp, name, stream, false, context, Log, block?.EditAllowed ?? false);

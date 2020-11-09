@@ -84,7 +84,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// </summary>
         [HttpDelete]
         public bool Delete(int appId, int id)
-            => _cmsManagerLazy.Value.Init(State.Identity(null, appId), true, false, Log)
+            => _cmsManagerLazy.Value.Init(State.Identity(null, appId), true, Log)
                 .DeleteQueryIfNotUsedByView(id, Log);
 
         [HttpPost]

@@ -38,8 +38,8 @@ namespace ToSic.Sxc.Apps
 		    }
 		}
 
-        public void AddEmptyItem(BlockConfiguration block, int? sortOrder) =>
-            Parent.Entities.FieldListUpdate(block.Entity, ViewParts.ContentPair, block.VersioningEnabled,
+        public void AddEmptyItem(BlockConfiguration block, int? sortOrder, bool forceDraft) =>
+            Parent.Entities.FieldListUpdate(block.Entity, ViewParts.ContentPair, forceDraft,
                 lists => lists.Add(sortOrder, new int?[] { null, null }));
 
 
