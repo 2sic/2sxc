@@ -38,8 +38,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public void App(int zoneId, int appId)
-            => _build<CmsZones>().Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId);
+        public void App(int zoneId, int appId, bool fullDelete = true)
+            => _build<CmsZones>().Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId, fullDelete);
 
         [HttpPost]
         [ValidateAntiForgeryToken]

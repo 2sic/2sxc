@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Apps
         #endregion
 
 
-        internal void RemoveAppInSiteAndEav(int appId)
+        internal void RemoveAppInSiteAndEav(int appId, bool fullDelete)
         {
             var zoneId = ZoneRuntime.ZoneId;
             // check portal assignment and that it's not the default app
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Apps
 
             // now remove from DB. This sometimes fails, so we do this before trying to clean the files
             // as the db part should be in a transaction, and if it fails, everything should stay as is
-            _zoneManagerLazy.Value.Init(zoneId, Log).DeleteApp(appId);
+            _zoneManagerLazy.Value.Init(zoneId, Log).DeleteApp(appId, fullDelete);
 
             // now really delete the files - if the DB didn't end up throwing an error
             if (!string.IsNullOrEmpty(folder) && Directory.Exists(physPath))

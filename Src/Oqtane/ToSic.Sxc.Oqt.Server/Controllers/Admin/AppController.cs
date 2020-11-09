@@ -51,8 +51,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
-        public void App(int zoneId, int appId)
-            => _cmsZonesLazy.Value.Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId);
+        public void App(int zoneId, int appId, bool fullDelete = true)
+            => _cmsZonesLazy.Value.Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId, fullDelete);
 
         [HttpPost]
         [ValidateAntiForgeryToken]
