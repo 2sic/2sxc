@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using DotNetNuke.Common.Utilities;
+﻿using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
@@ -12,24 +11,17 @@ namespace ToSic.Sxc.Dnn.Cms
     {
         #region DI Constructors and More
         
-        public DnnPagePublishingResolver(): base("Dnn.PubRes") { }
+        public DnnPagePublishingResolver(): base("Dnn") { }
         
         #endregion
 
-        //public override bool Supported => true;
-
-        private readonly Dictionary<int, PublishingMode> _cache = new Dictionary<int, PublishingMode>();
-        
-        public override PublishingMode Requirements(int instanceId)
+        protected override PublishingMode LookupRequirements(int instanceId)
         {
-            var wrapLog = Log.Call<PublishingMode>($"{instanceId}");
-            if (_cache.ContainsKey(instanceId)) return wrapLog("in cache", _cache[instanceId]);
-
+            PublishingMode decision;
             Log.Add($"Requirements(mod:{instanceId}) - checking first time (others will be cached)");
             try
             {
                 var moduleInfo = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
-                PublishingMode decision;
                 var versioningEnabled =
                     TabChangeSettings.Instance.IsChangeControlEnabled(moduleInfo.PortalID, moduleInfo.TabID);
                 if (!versioningEnabled)
@@ -38,15 +30,14 @@ namespace ToSic.Sxc.Dnn.Cms
                     decision = PublishingMode.DraftRequired;
                 else
                     decision = PublishingMode.DraftRequired;
-
-                _cache.Add(instanceId, decision);
-                return wrapLog("decision: ", decision);
             }
             catch
             {
                 Log.Add("Requirements had exception!");
                 throw;
             }
+
+            return decision;
         }
     }
 }

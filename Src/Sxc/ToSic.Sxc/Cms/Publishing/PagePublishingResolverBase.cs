@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.Enums;
+﻿using System.Collections.Generic;
+using ToSic.Eav.Apps.Enums;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 
@@ -6,13 +7,25 @@ namespace ToSic.Sxc.Cms.Publishing
 {
     public abstract class PagePublishingResolverBase: HasLog<IPagePublishingResolver>, IPagePublishingResolver
     {
-        protected PagePublishingResolverBase(string logName) : base(logName) { }
+        protected PagePublishingResolverBase(string logPrefix) : base(logPrefix + ".PubRes") { }
 
-        //public abstract bool Supported { get; }
+        protected PublishingMode Requirements(int instanceId)
+        {
+            var wrapLog = Log.Call<PublishingMode>($"{instanceId}");
+            if (Cache.ContainsKey(instanceId)) return wrapLog("in cache", Cache[instanceId]);
 
-        public abstract PublishingMode Requirements(int instanceId);
+            var decision = LookupRequirements(instanceId);
+            Cache.Add(instanceId, decision);
+            return wrapLog("decision: ", decision);
+        }
+        protected static readonly Dictionary<int, PublishingMode> Cache = new Dictionary<int, PublishingMode>();
 
-        //public bool IsEnabled(int instanceId) => RequirementsIsEnabled(PublishingMode.DraftOptional);
+        /// <summary>
+        /// The lookup must be implemented for each platform
+        /// </summary>
+        /// <param name="instanceId"></param>
+        /// <returns></returns>
+        protected abstract PublishingMode LookupRequirements(int instanceId);
 
         protected bool RequirementsIsEnabled(PublishingMode mode) => mode != PublishingMode.DraftOptional;
 

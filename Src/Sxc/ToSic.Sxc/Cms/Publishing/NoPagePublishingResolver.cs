@@ -17,11 +17,6 @@ namespace ToSic.Sxc.Cms.Publishing
 
         #endregion
 
-        //public bool Supported => false;
-
-        public PublishingMode Requirements(int instanceId) => PublishingMode.DraftOptional;
-
-        //public bool IsEnabled(int instanceId) => false;
         public InstancePublishingState GetPublishingState(int instanceId) 
             => new InstancePublishingState {ForceDraft = false, Mode = PublishingMode.DraftOptional};
     }
