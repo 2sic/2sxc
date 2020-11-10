@@ -4,7 +4,7 @@ using System.Linq;
 using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
-using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
@@ -18,18 +18,18 @@ namespace ToSic.Sxc.Oqt.Server.Run
         /// <inheritdoc />
         public OqtZoneMapper(ISiteRepository siteRepository, 
             ISettingRepository settingRepository, 
-            IServiceProvider serviceProvider, 
-            Lazy<ZoneManager> zoneManagerLazy) : base($"{OqtConstants.OqtLogPrefix}.ZoneMp")
+            IServiceProvider serviceProvider,
+            Lazy<ZoneCreator> zoneCreatorLazy) : base($"{OqtConstants.OqtLogPrefix}.ZoneMp")
         {
             _siteRepository = siteRepository;
             _settingRepository = settingRepository;
             _serviceProvider = serviceProvider;
-            _zoneManagerLazy = zoneManagerLazy;
+            _zoneCreatorLazy = zoneCreatorLazy;
         }
         private readonly ISiteRepository _siteRepository;
         private readonly ISettingRepository _settingRepository;
         private readonly IServiceProvider _serviceProvider;
-        private readonly Lazy<ZoneManager> _zoneManagerLazy;
+        private readonly Lazy<ZoneCreator> _zoneCreatorLazy;
 
         public override int GetZoneId(int tenantId)
         {
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             // Create new zone automatically
             var portalSettings = _siteRepository.GetSite(tenantId);
-            var zoneId = _zoneManagerLazy.Value.Init(0, Log).CreateZone(portalSettings.Name + " (Site " + tenantId + ")");
+            var zoneId = _zoneCreatorLazy.Value.Init(Log).Create(portalSettings.Name + " (Site " + tenantId + ")");
             _settingRepository.AddSetting(new Setting
             {
                 CreatedBy = "2sxc", 
@@ -81,12 +81,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var found = sites.FirstOrDefault(p => HasZoneId(p.SiteId, out var zoneOfSite) && zoneOfSite == zoneId);
             return found != null ? _serviceProvider.Build<OqtSite>().Init(found) : null;
         }
-
-        //public ISite TenantOfSite(int siteId)
-        //{
-        //    var site = _siteRepository.GetSite(siteId);
-        //    return _serviceProvider.Build<OqtSite>().Init(site);
-        //}
 
         // TODO: #Oqtane
         public override List<TempTempCulture> CulturesWithState(int tenantId, int zoneId)

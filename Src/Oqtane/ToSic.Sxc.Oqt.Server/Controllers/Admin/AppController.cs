@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Net.Http;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Apps;
@@ -26,6 +27,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         private readonly Lazy<ExportApp> _exportAppLazy;
         private readonly Lazy<ImportApp> _importAppLazy;
         private readonly Lazy<AppManager> _appManagerLazy;
+        private readonly Lazy<AppCreator> _appBuilderLazy;
         protected override string HistoryLogName => "Api.App";
 
         public AppController(StatefulControllerDependencies dependencies, 
@@ -33,13 +35,15 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
             Lazy<CmsZones> cmsZonesLazy,
             Lazy<ExportApp> exportAppLazy,
             Lazy<ImportApp> importAppLazy,
-            Lazy<AppManager> appManagerLazy) : base(dependencies)
+            Lazy<AppManager> appManagerLazy,
+            Lazy<AppCreator> appBuilderLazy) : base(dependencies)
         {
             _appsBackendLazy = appsBackendLazy;
             _cmsZonesLazy = cmsZonesLazy;
             _exportAppLazy = exportAppLazy;
             _importAppLazy = importAppLazy;
             _appManagerLazy = appManagerLazy;
+            _appBuilderLazy = appBuilderLazy;
         }
 
         [HttpGet]
@@ -58,7 +62,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public void App(int zoneId, string name)
-            => _appManagerLazy.Value.Init(null, Log).AddBrandNewApp(zoneId, name);
+            => _appBuilderLazy.Value.Init(zoneId, Log).Create(name);
 
 
         /// <summary>

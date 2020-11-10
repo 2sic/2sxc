@@ -4,6 +4,7 @@ using System.Linq;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Run;
 
@@ -11,12 +12,12 @@ namespace ToSic.Sxc.Dnn.Run
 {
     public class DnnZoneMapper : ZoneMapperBase
     {
-        private readonly Lazy<ZoneManager> _zoneManagerLazy;
+        private readonly Lazy<ZoneCreator> _zoneCreatorLazy;
 
         /// <inheritdoc />
-        public DnnZoneMapper(Lazy<ZoneManager> zoneManagerLazy) : base("DNN.ZoneMp")
+        public DnnZoneMapper(Lazy<ZoneCreator> zoneCreatorLazy) : base("DNN.ZoneMp")
         {
-            _zoneManagerLazy = zoneManagerLazy;
+            _zoneCreatorLazy = zoneCreatorLazy;
         }
 
         /// <inheritdoc />
@@ -41,7 +42,7 @@ namespace ToSic.Sxc.Dnn.Run
             if (c.ContainsKey(Settings.PortalSettingZoneId)) return int.Parse(c[Settings.PortalSettingZoneId]);
 
             var portalSettings = new PortalSettings(tenantId);
-            var zoneId = _zoneManagerLazy.Value.Init(0, Log).CreateZone(portalSettings.PortalName + " (Portal " + tenantId + ")");
+            var zoneId = _zoneCreatorLazy.Value.Init(Log).Create(portalSettings.PortalName + " (Portal " + tenantId + ")");
             PortalController.UpdatePortalSetting(tenantId, Settings.PortalSettingZoneId, zoneId.ToString());
             return zoneId;
 
