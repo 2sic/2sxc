@@ -23,9 +23,6 @@ namespace ToSic.Sxc.Apps
         {
             var zoneId = ZoneRuntime.ZoneId;
             // check portal assignment and that it's not the default app
-            //if (zoneId != CmsZones.Env.ZoneMapper.GetZoneId(tenant.Id))
-            //    throw new Exception("This app does not belong to portal " + tenant.Id);
-
             if (appId == ZoneRuntime.DefaultAppId)
                 throw new Exception("The default app of a zone cannot be removed.");
 
@@ -41,7 +38,8 @@ namespace ToSic.Sxc.Apps
             _zoneManagerLazy.Value.Init(zoneId, Log).DeleteApp(appId, fullDelete);
 
             // now really delete the files - if the DB didn't end up throwing an error
-            if (!string.IsNullOrEmpty(folder) && Directory.Exists(physPath))
+            // ...but only if it's a full-delete
+            if (fullDelete && !string.IsNullOrEmpty(folder) && Directory.Exists(physPath))
                 Directory.Delete(physPath, true);
 
         }

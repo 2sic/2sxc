@@ -101,6 +101,24 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             => _build<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
                 .SaveDataForVersionControl(appId, zoneId, includeContentGroups, resetAppGuid);
 
+        /// <summary>
+        /// Reset an App to the last xml state
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+        [ValidateAntiForgeryToken]
+        public ImportResultDto Reset(int zoneId, int appId)
+        {
+            var wrapLog = Log.Call<ImportResultDto>();
+
+            PreventServerTimeout300();
+            var result = _build<ResetApp>()
+                .Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
+                .Reset(zoneId, appId, PortalSettings.DefaultLanguage);
+
+            return wrapLog("ok", result);
+        }
 
         /// <summary>
         /// Used to be POST ImportExport/ImportApp

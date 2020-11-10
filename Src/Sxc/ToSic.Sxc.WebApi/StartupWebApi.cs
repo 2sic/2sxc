@@ -72,11 +72,16 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<SxcPagePublishing>();
             services.TryAddTransient<ExportApp>();
             services.TryAddTransient<ImportApp>();
+            services.TryAddTransient<ImportContent>();
+            services.TryAddTransient<ResetApp>();
 
             // Small WebApi Helpers
             services.TryAddTransient<IdentifierHelper>();
             services.TryAddTransient<ContentGroupList>();
             services.TryAddTransient<SaveSecurity>();
+
+            // Helpers
+            services.TryAddTransient<ImpExpHelpers>();
 
 
             // 11.08 - fallback in case not added
