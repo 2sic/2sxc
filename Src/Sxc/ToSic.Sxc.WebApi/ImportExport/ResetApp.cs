@@ -52,8 +52,6 @@ namespace ToSic.Sxc.WebApi.ImportExport
             Log.Add($"Reset App {zoneId}/{appId}");
             var result = new ImportResultDto();
 
-            var allowSystemChanges = _user.IsSuperUser;
-
             SecurityHelpers.ThrowIfNotAdmin(_user);
 
             var contextZoneId = _zoneMapper.GetZoneId(_siteId);
@@ -79,6 +77,8 @@ namespace ToSic.Sxc.WebApi.ImportExport
             // 2. Now we can delete the app before we prepare the import
             _cmsZones.Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId, false);
 
+            // 3. Now import the App.xml
+            var allowSystemChanges = _user.IsSuperUser;
             var xmlImport = _xmlImportWithFilesLazy.Value.Init(defaultLanguage, allowSystemChanges, Log);
             var imp = new ImportXmlReader(filePath, xmlImport, Log);
             result.Success = xmlImport.ImportXml(zoneId, appId, imp.XmlDoc);

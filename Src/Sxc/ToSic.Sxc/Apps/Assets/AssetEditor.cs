@@ -28,13 +28,7 @@ namespace ToSic.Sxc.Apps.Assets
 
         public AssetEditor Init(IApp app, int templateId, bool isSuperUser, bool isAdmin, ILog parentLog)
         {
-            Log.LinkTo(parentLog);
-            _app = app;
-            _userIsSuperUser = isSuperUser;
-            _userIsAdmin = isAdmin;
-
-            // todo: 2dm Views - see if we can get logger to flow
-            _cmsRuntime = _cmsRuntimeLazy.Value.Init(app, true, Log);
+            InitShared(app, isSuperUser, isAdmin, parentLog);
             var template = _cmsRuntime.Views.Get(templateId);
             EditInfo = TemplateAssetsInfo(template);
             return this;
@@ -42,13 +36,21 @@ namespace ToSic.Sxc.Apps.Assets
 
         public AssetEditor Init(IApp app, string path, bool isSuperUser, bool isAdmin, bool global, ILog parentLog)
         {
+            InitShared(app, isSuperUser, isAdmin, parentLog);
+            EditInfo = new AssetEditInfo(_app.AppId, _app.Name, path, global);
+            return this;
+        }
+
+
+        private void InitShared(IApp app, bool isSuperUser, bool isAdmin, ILog parentLog)
+        {
             Log.LinkTo(parentLog);
             _app = app;
             _userIsSuperUser = isSuperUser;
             _userIsAdmin = isAdmin;
 
-            EditInfo = new AssetEditInfo(_app.AppId, _app.Name, path, global);
-            return this;
+            // todo: 2dm Views - see if we can get logger to flow
+            _cmsRuntime = _cmsRuntimeLazy.Value.Init(app, true, Log);
         }
 
         #endregion
