@@ -190,7 +190,7 @@ namespace ToSic.Sxc.WebApi.App
 
         protected MultiPermissionsTypes ThrowIfNotAllowedInType(string contentType, List<Grants> requiredGrants, IApp alternateApp = null)
         {
-            var permCheck = CmsManager.ServiceProvider.Build<MultiPermissionsTypes>().Init(_context, alternateApp ?? _block.App, contentType, Log);
+            var permCheck = ServiceProvider.Build<MultiPermissionsTypes>().Init(_context, alternateApp ?? _block.App, contentType, Log);
             if (!permCheck.EnsureAll(requiredGrants, out var error))
                 throw HttpException.PermissionDenied(error);
             return permCheck;
@@ -198,7 +198,7 @@ namespace ToSic.Sxc.WebApi.App
 
         protected MultiPermissionsItems ThrowIfNotAllowedInItem(IEntity itm, List<Grants> requiredGrants, IApp alternateApp = null)
         {
-            var permCheck = CmsManager.ServiceProvider.Build<MultiPermissionsItems>().Init(_context, alternateApp ?? _block.App, itm, Log);
+            var permCheck = ServiceProvider.Build<MultiPermissionsItems>().Init(_context, alternateApp ?? _block.App, itm, Log);
             if (!permCheck.EnsureAll(requiredGrants, out var error))
                 throw HttpException.PermissionDenied(error);
             return permCheck;

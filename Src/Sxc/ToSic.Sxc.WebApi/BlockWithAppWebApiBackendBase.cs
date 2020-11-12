@@ -10,13 +10,13 @@ namespace ToSic.Sxc.WebApi
     {
         protected BlockWithAppWebApiBackendBase(Lazy<CmsManager> cmsManagerLazy, string logName) : base(cmsManagerLazy, logName) { }
 
-        internal AppOfRequest AppFinder => CmsManager.ServiceProvider.Build<AppOfRequest>().Init(Log);
+        internal AppOfRequest AppFinder => ServiceProvider.Build<AppOfRequest>().Init(Log);
 
         /// <summary>
         /// used for API calls to get the current app
         /// </summary>
         /// <returns></returns>
-        internal IApp GetApp(int appId, IBlock optionalBlock) => CmsManager.ServiceProvider.Build<Apps.App>().Init(CmsManager.ServiceProvider, appId, Log, optionalBlock);
+        internal IApp GetApp(int appId, IBlock optionalBlock) => ServiceProvider.Build<Apps.App>().Init(ServiceProvider, appId, Log, optionalBlock);
 
     }
 }

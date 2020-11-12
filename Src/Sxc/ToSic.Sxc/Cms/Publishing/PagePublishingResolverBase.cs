@@ -12,6 +12,7 @@ namespace ToSic.Sxc.Cms.Publishing
         protected PublishingMode Requirements(int instanceId)
         {
             var wrapLog = Log.Call<PublishingMode>($"{instanceId}");
+            if (instanceId < 0) return wrapLog("no instance", PublishingMode.DraftOptional);
             if (Cache.ContainsKey(instanceId)) return wrapLog("in cache", Cache[instanceId]);
 
             var decision = LookupRequirements(instanceId);
@@ -27,12 +28,10 @@ namespace ToSic.Sxc.Cms.Publishing
         /// <returns></returns>
         protected abstract PublishingMode LookupRequirements(int instanceId);
 
-        protected bool RequirementsIsEnabled(PublishingMode mode) => mode != PublishingMode.DraftOptional;
-
         public InstancePublishingState GetPublishingState(int instanceId)
         {
             var mode = Requirements(instanceId);
-            return new InstancePublishingState { ForceDraft = RequirementsIsEnabled(mode), Mode = mode };
+            return new InstancePublishingState { ForceDraft = mode == PublishingMode.DraftRequired, Mode = mode };
         }
 
     }
