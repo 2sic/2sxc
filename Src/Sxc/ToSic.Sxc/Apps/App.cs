@@ -17,61 +17,6 @@ namespace ToSic.Sxc.Apps
     [PublicApi_Stable_ForUseInYourCode]
     public class App : EavApp, IApp
     {
-        private readonly ILinkPaths _linkPaths;
-
-        #region Dynamic Properties: Configuration, Settings, Resources
-        /// <inheritdoc />
-        public AppConfiguration Configuration => _appConfig
-                                                 // Create config object. Note that AppConfiguration could be null, then it would use default values
-                                                 ?? (_appConfig = new AppConfiguration(AppConfiguration, Log));
-
-        private AppConfiguration _appConfig;
-
-        [PrivateApi("obsolete, use the typed accessor instead, only included for old-compatibility")]
-        [Obsolete("use the new, typed accessor instead")]
-        dynamic SexyContent.Interfaces.IApp.Configuration
-        {
-            get
-            {
-                var c = Configuration;
-                return c?.Entity != null ? new DynamicEntity(c.Entity, 
-                    new[] {Thread.CurrentThread.CurrentCulture.Name}, 
-                    10, 
-                    null) : null;
-            }
-        }
-
-        /// <inheritdoc />
-        public dynamic Settings
-        {
-            get
-            {
-                if(!_settingsLoaded && AppSettings != null)
-                    _settings = new DynamicEntity(AppSettings, new[] {Thread.CurrentThread.CurrentCulture.Name}, 10, null);
-                _settingsLoaded = true;
-                return _settings;
-            }
-        }
-        private bool _settingsLoaded;
-        private dynamic _settings;
-
-        /// <inheritdoc />
-        public dynamic Resources
-        {
-            get
-            {
-                if(!_resLoaded && AppResources!= null)
-                    _res = new DynamicEntity(AppResources, new[] {Thread.CurrentThread.CurrentCulture.Name}, 10, null);
-                _resLoaded = true;
-                return _res;
-            }
-        }
-        private bool _resLoaded;
-        private dynamic _res;
-
-        #endregion
-
-
         #region DI Constructors
 
         public App(AppDependencies dependencies, ILinkPaths linkPaths) : base(dependencies, "App.SxcApp")
@@ -110,6 +55,66 @@ namespace ToSic.Sxc.Apps
         }
 
         #endregion
+
+
+        private readonly ILinkPaths _linkPaths;
+
+        #region Dynamic Properties: Configuration, Settings, Resources
+        /// <inheritdoc />
+        public AppConfiguration Configuration => _appConfig
+                                                 // Create config object. Note that AppConfiguration could be null, then it would use default values
+                                                 ?? (_appConfig = new AppConfiguration(AppConfiguration, Log));
+
+        private AppConfiguration _appConfig;
+
+        [PrivateApi("obsolete, use the typed accessor instead, only included for old-compatibility")]
+        [Obsolete("use the new, typed accessor instead")]
+        dynamic SexyContent.Interfaces.IApp.Configuration
+        {
+            get
+            {
+                var c = Configuration;
+                return c?.Entity != null ? new DynamicEntity(c.Entity, 
+                    new[] {Thread.CurrentThread.CurrentCulture.Name}, 
+                    10, 
+                    null)
+                    { ServiceProviderOrNull = DataSourceFactory.ServiceProvider } : null;
+            }
+        }
+
+        /// <inheritdoc />
+        public dynamic Settings
+        {
+            get
+            {
+                if (!_settingsLoaded && AppSettings != null)
+                    _settings = new DynamicEntity(AppSettings, new[] {Thread.CurrentThread.CurrentCulture.Name},
+                        10, null) {ServiceProviderOrNull = DataSourceFactory.ServiceProvider};
+                _settingsLoaded = true;
+                return _settings;
+            }
+        }
+        private bool _settingsLoaded;
+        private dynamic _settings;
+
+        /// <inheritdoc />
+        public dynamic Resources
+        {
+            get
+            {
+                if(!_resLoaded && AppResources!= null)
+                    _res = new DynamicEntity(AppResources, new[] {Thread.CurrentThread.CurrentCulture.Name}, 10, null)
+                    { ServiceProviderOrNull = DataSourceFactory.ServiceProvider };
+                _resLoaded = true;
+                return _res;
+            }
+        }
+        private bool _resLoaded;
+        private dynamic _res;
+
+        #endregion
+
+
 
 
         #region Paths

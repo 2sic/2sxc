@@ -76,6 +76,7 @@ namespace ToSic.Sxc.Data
             Dimensions = dimensions;
             CompatibilityLevel = compatibility;
             Block = block;
+            ServiceProviderOrNull = Block?.Context?.ServiceProvider;
         }
 
         protected void SetEntity(IEntity entity)
@@ -83,6 +84,12 @@ namespace ToSic.Sxc.Data
             Entity = entity;
             _EntityForEqualityCheck = (Entity as IEntityWrapper)?._EntityForEqualityCheck ?? Entity;
         }
+
+        /// <summary>
+        /// Very internal implementation - we need this to allow the IValueProvider to be created, and normaly it's provided by the Block context.
+        /// But in rare cases (like when the App.Resources is a DynamicEntity) it must be injected separately.
+        /// </summary>
+        internal IServiceProvider ServiceProviderOrNull;
 
         /// <inheritdoc />
         public override bool TryGetMember(GetMemberBinder binder, out object result)
@@ -125,7 +132,7 @@ namespace ToSic.Sxc.Data
                 && Entity.Attributes.ContainsKey(field) &&
                 Entity.Attributes[field].Type == Eav.Constants.DataTypeHyperlink)
             {
-                result = Block?.Context?.ServiceProvider?.Build<IValueConverter>()?.ToValue(strResult, EntityGuid) ??
+                result = ServiceProviderOrNull?.Build<IValueConverter>()?.ToValue(strResult, EntityGuid) ??
                       result;
             }
 
