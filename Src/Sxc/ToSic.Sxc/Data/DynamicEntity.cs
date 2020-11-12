@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
@@ -79,6 +78,7 @@ namespace ToSic.Sxc.Data
             ServiceProviderOrNull = Block?.Context?.ServiceProvider;
         }
 
+        [PrivateApi]
         protected void SetEntity(IEntity entity)
         {
             Entity = entity;
@@ -89,12 +89,15 @@ namespace ToSic.Sxc.Data
         /// Very internal implementation - we need this to allow the IValueProvider to be created, and normaly it's provided by the Block context.
         /// But in rare cases (like when the App.Resources is a DynamicEntity) it must be injected separately.
         /// </summary>
+        [PrivateApi]
         internal IServiceProvider ServiceProviderOrNull;
 
         /// <inheritdoc />
+        [PrivateApi]
         public override bool TryGetMember(GetMemberBinder binder, out object result)
             => TryGetMember(binder.Name, out result);
 
+        [PrivateApi]
         public bool TryGetMember(string memberName, out object result)
         {
             result = GetEntityValue(memberName);
@@ -153,8 +156,6 @@ namespace ToSic.Sxc.Data
         public dynamic Get(string name) => GetEntityValue(name);
 
         /// <inheritdoc />
-        [PrivateApi("should use Content.Presentation")]
-        [Obsolete("should use Content.Presentation")]
         public dynamic Presentation => GetPresentation; 
 
         private IDynamicEntity GetPresentation
@@ -165,15 +166,12 @@ namespace ToSic.Sxc.Data
 
 
         /// <inheritdoc />
-        /// <remarks>If the entity doesn't exist, it will return 0</remarks>
         public int EntityId => Entity?.EntityId ?? 0;
 
         /// <inheritdoc />
-        /// <remarks>If the entity doesn't exist, it will return an empty guid</remarks>
         public Guid EntityGuid => Entity?.EntityGuid ?? Guid.Empty;
 
         /// <inheritdoc />
-        /// <remarks>If the entity doesn't exist, it will return null</remarks>
         public object EntityTitle => Entity?.Title[Dimensions];
 
         /// <inheritdoc />
@@ -182,11 +180,7 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         public dynamic GetPublished() => new DynamicEntity(Entity?.GetPublished(), Dimensions, CompatibilityLevel, Block);
 
-        /// <summary>
-        /// Tell the system that it's a demo item, not one added by the user
-        /// 2019-09-18 trying to mark demo-items for better detection in output #1792
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         public bool IsDemoItem => Entity is EntityInBlock entInCg && entInCg.IsDemoItem;
 
         [Obsolete]

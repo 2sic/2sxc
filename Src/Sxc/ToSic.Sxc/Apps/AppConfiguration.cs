@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Apps
         [PrivateApi]
         public const string
             FieldDescription = "Description",
-            FieldName = "DisplayName",
+            //FieldName = "DisplayName",
             //FieldFolder = "Folder",
             FieldOriginalId = "OriginalId",
             FieldVersion = "Version",
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Apps
                 ? version
                 : new Version();
 
-        public string Name => Get(FieldName, "unknown");
+        public string Name => Get(AppConstants.FieldName, "unknown");
 
         public string Description => Get(FieldDescription, "");
 

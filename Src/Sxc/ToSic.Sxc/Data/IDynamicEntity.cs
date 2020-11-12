@@ -4,8 +4,6 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using IEntity = ToSic.Eav.Data.IEntity;
 
-// ReSharper disable UnusedMember.Global
-
 namespace ToSic.Sxc.Data
 {
     /// <summary>
@@ -18,7 +16,7 @@ namespace ToSic.Sxc.Data
     /// </blockquote>
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public interface IDynamicEntity: SexyContent.Interfaces.IDynamicEntity, IEntityWrapper
+    public partial interface IDynamicEntity: SexyContent.Interfaces.IDynamicEntity, IEntityWrapper
     {
         /// <summary>
         /// The underlying entity which provides all the data for the DynamicEntity
@@ -32,24 +30,22 @@ namespace ToSic.Sxc.Data
         /// The ID of the underlying entity.
         /// Use it for edit-functionality or just to have a unique number for this item.
         /// </summary>
-        /// <returns>
-        /// The same Id as you would get from .Entity.EntityId
-        /// </returns>
+        /// <remarks>If the entity doesn't exist, it will return 0</remarks>
         new int EntityId { get; }
 
         /// <summary>
         /// The guid of the underlying entity.
         /// </summary>
-        /// <returns>
-        /// The same Guid as you would get from .Entity.EntityGuid
-        /// </returns>
+        /// <remarks>If the entity doesn't exist, it will return an empty guid</remarks>
         new Guid EntityGuid { get; }
 
         /// <summary>
         /// The title of this item. This is always available no matter what the underlying field for the title is. 
         /// </summary>
         /// <returns>
-        /// The title of the underlying entity. In rare cases it can be null.
+        /// The title of the underlying entity.
+        /// In rare cases where no title-field is known, it can be null.
+        /// It can also be null if there is no underlying entity. 
         /// </returns>
         new object EntityTitle { get; }
 
@@ -79,12 +75,11 @@ namespace ToSic.Sxc.Data
         /// <summary>
         /// Many templates show demo data. If the template code must know if it's the demo item or
         /// real data, use IsDemoItem.
-        /// Added in 2sxc 10.07.
         /// </summary>
         /// <returns>
         /// True if this is the item configured in the view-settings, false if not.
         /// </returns>
-        /// <remarks>New in 10.06</remarks>
+        /// <remarks>New in 10.07</remarks>
         new bool IsDemoItem { get; }
 
         #region parents / children
