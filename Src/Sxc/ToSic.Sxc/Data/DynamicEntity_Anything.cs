@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Data
     public partial class DynamicEntity
     {
         /// <inheritdoc />
-        public double AnyBooleanProperty { get; }
+        public bool AnyBooleanProperty { get; }
 
         /// <inheritdoc />
         public DateTime AnyDateTimeProperty { get; }
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Data
         public IEnumerable<DynamicEntity> AnyChildrenProperty { get; }
 
         /// <inheritdoc />
-        public IEnumerable<DynamicEntity> AnyJsonProperty { get; }
+        public string AnyJsonProperty { get; }
 
         /// <inheritdoc />
         public string AnyLinkOrFileProperty { get; }

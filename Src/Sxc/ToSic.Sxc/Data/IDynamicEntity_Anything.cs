@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Data
         /// Since the object is dynamic, you can just use `.IsFemale` or whatever other property your item has.
         /// If it's a true/false, it will just magically work and return a `bool`. If it doesn't exist, it will return null. 
         /// </summary>
-        double AnyBooleanProperty { get; }
+        bool AnyBooleanProperty { get; }
 
         /// <summary>
         /// A Dynamic Entity always contains an item of your data - a book, person, blog-post or a piece of content.
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Data
         /// Example: `var gps = AsDynamic(myThing.Gps); var lat = gps.Lat;`
         /// Read more about this in the [Dnn JSON Tutorials](https://2sxc.org/dnn-tutorials/en/razor/json/home)
         /// </remarks>
-        IEnumerable<DynamicEntity> AnyJsonProperty { get; }
+        string AnyJsonProperty { get; }
 
         /// <summary>
         /// A Dynamic Entity always contains an item of your data - a book, person, blog-post or a piece of content.
@@ -77,6 +77,9 @@ namespace ToSic.Sxc.Data
         /// Since the object is dynamic, you can just use `.FirstName` or whatever other property your item has.
         /// If it's a string, it will just magically work. If it doesn't exist, it will return null. 
         /// </summary>
+        /// <remarks>
+        /// Remember to use `@Html.Raw(...)` if you want the html to be preserved and not cleaned when placed in the page. 
+        /// </remarks>
         string AnyStringProperty { get; }
 
     }

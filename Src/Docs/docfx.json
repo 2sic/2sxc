@@ -16,7 +16,9 @@
             "**/*.Tests/**",
             "**/XOLD-*/**",
             "**Mvc/Website/**",
-            "**/ToSic.Sxc.Mvc/**"
+            "**/ToSic.Sxc.Mvc/**",
+            "**/Oqtane/**"
+
           ]
         }
       ],
