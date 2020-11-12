@@ -54,7 +54,7 @@ namespace ToSic.Sxc.WebApi.Context
                 Id = App.AppId,
                 Url = (App as Apps.IApp)?.Path,
                 Name = App.Name,
-                Path = App.Folder,
+                Folder = App.Folder,
             };
             if (!flags.HasFlag(Ctx.AppAdvanced)) return result;
 

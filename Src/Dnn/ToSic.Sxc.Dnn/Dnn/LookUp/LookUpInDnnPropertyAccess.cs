@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Dnn.LookUp
 
         public override string Get(string key, string format)
         {
-            var blnNotFound = true;
+            var blnNotFound = false;
             var result = _source.GetProperty(key, format, _loc, _user, Scope.DefaultSettings, ref blnNotFound);
             return blnNotFound ? string.Empty : result;
         }
