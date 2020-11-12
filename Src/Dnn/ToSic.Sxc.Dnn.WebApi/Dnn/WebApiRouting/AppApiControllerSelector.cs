@@ -10,7 +10,6 @@ using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
-using ToSic.Eav;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Code;
@@ -18,7 +17,7 @@ using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 
-namespace ToSic.Sxc.WebApi
+namespace ToSic.Sxc.Dnn.WebApiRouting
 {
     /// <inheritdoc />
     /// <summary>
@@ -81,7 +80,7 @@ namespace ToSic.Sxc.WebApi
                 return wrapLog("upstream", PreviousSelector.SelectController(request));
 
             var routeData = request.GetRouteData();
-            var controllerTypeName = routeData.Values[RouteParts.ControllerKey] + "Controller";
+            var controllerTypeName = routeData.Values[Names.Controller] + "Controller";
             // Handle the app-api queries
             try
             {
@@ -90,7 +89,7 @@ namespace ToSic.Sxc.WebApi
                 if(appFolder == null)
                 {
                     log.Add("no folder found in url, will auto-detect");
-                    var block = Factory.StaticBuild<DnnGetBlock>().GetCmsBlock(request, false, log);
+                    var block = Eav.Factory.StaticBuild<DnnGetBlock>().GetCmsBlock(request, false, log);
                     appFolder = block.App.Folder;
                 }
 
@@ -98,14 +97,14 @@ namespace ToSic.Sxc.WebApi
 
                 // new for 2sxc 9.34 #1651
                 var edition = "";
-                if (routeData.Values.ContainsKey(RouteParts.EditionKey))
-                    edition = routeData.Values[RouteParts.EditionKey].ToString();
+                if (routeData.Values.ContainsKey(Names.Edition))
+                    edition = routeData.Values[Names.Edition].ToString();
                 if (!string.IsNullOrEmpty(edition))
                     edition += "/";
 
                 log.Add($"Edition: {edition}");
 
-                var tenant = Factory.StaticBuild<DnnSite>();
+                var tenant = Eav.Factory.StaticBuild<DnnSite>();
                 var controllerFolder = Path.Combine(tenant.AppsRootRelative, appFolder, edition + "api/");
 
                 controllerFolder = controllerFolder.Replace("\\", @"/");
