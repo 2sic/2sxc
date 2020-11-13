@@ -86,7 +86,7 @@ namespace ToSic.Sxc.Data
         }
 
         /// <summary>
-        /// Very internal implementation - we need this to allow the IValueProvider to be created, and normaly it's provided by the Block context.
+        /// Very internal implementation - we need this to allow the IValueProvider to be created, and normally it's provided by the Block context.
         /// But in rare cases (like when the App.Resources is a DynamicEntity) it must be injected separately.
         /// </summary>
         [PrivateApi]
@@ -140,7 +140,13 @@ namespace ToSic.Sxc.Data
             }
 
             if (result is IEnumerable<IEntity> rel)
-                result = new DynamicEntityWithList(Entity, field, rel, Dimensions, CompatibilityLevel, Block);
+            {
+                var list = new DynamicEntityWithList(Entity, field, rel, Dimensions, CompatibilityLevel, Block);
+                // special case: if it's a Dynamic Entity without block (like App.Settings)
+                // it needs the Service Provider from this object to work
+                if (Block == null) list.ServiceProviderOrNull = ServiceProviderOrNull;
+                result = list;
+            }
 
             _valCache.Add(field, result);
             return result;
@@ -160,9 +166,20 @@ namespace ToSic.Sxc.Data
 
         private IDynamicEntity GetPresentation
             => _presentation ?? (_presentation = Entity is EntityInBlock entityInGroup
-                   ? new DynamicEntity(entityInGroup.Presentation, Dimensions, CompatibilityLevel, Block)
+                   ? SubDynEntity(entityInGroup.Presentation) // new DynamicEntity(entityInGroup.Presentation, Dimensions, CompatibilityLevel, Block)
                    : null);
         private IDynamicEntity _presentation;
+
+        [PrivateApi]
+        protected IDynamicEntity SubDynEntity(IEntity contents)
+        {
+            if (contents == null) return null;
+            var child = new DynamicEntity(contents, Dimensions, CompatibilityLevel, Block);
+            // special case: if it's a Dynamic Entity without block (like App.Settings)
+            // it needs the Service Provider from this object to work
+            if (Block == null && ServiceProviderOrNull != null) child.ServiceProviderOrNull = ServiceProviderOrNull;
+            return child;
+        }
 
 
         /// <inheritdoc />

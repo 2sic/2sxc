@@ -24,9 +24,6 @@ namespace ToSic.Sxc.Data
         /// </summary>
         public int SortOrder { get; set; }
 
-        // CodeChange #2020-03-20#ContentGroupItemModified - Delete if no side-effects till June 2020
-        //public DateTime ContentGroupItemModified { get; set; }
-
         /// <summary>
         /// Presentation entity of this content-item.
         /// Important to keep content & presentation linked together

@@ -30,8 +30,7 @@ namespace ToSic.Sxc.Data
                 {
                     // we create an Entity with some metadata-decoration, so that toolbars know it's part of a list
                     var blockEntity = new EntityInBlock(e, parent.EntityGuid, field, index++);
-                    return new DynamicEntity(blockEntity, Dimensions, CompatibilityLevel, block) as
-                        IDynamicEntity;
+                    return SubDynEntity(blockEntity); // new DynamicEntity(blockEntity, Dimensions, CompatibilityLevel, block) ;
                 })
                 .ToList();
             SetEntity(DynEntities.FirstOrDefault()?.Entity
