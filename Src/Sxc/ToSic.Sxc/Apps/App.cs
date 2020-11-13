@@ -31,12 +31,12 @@ namespace ToSic.Sxc.Apps
         }
 
         /// <summary>
-        /// New constructor which auto-configures the app-data
+        /// Main constructor which auto-configures the app-data
         /// </summary>
         [PrivateApi]
-        public App Init(IAppIdentity appId, Func<EavApp, IAppDataConfiguration> buildConfig, bool allowSideEffects, ILog parentLog)
+        public new App Init(IAppIdentity appId, Func<EavApp, IAppDataConfiguration> buildConfig, ILog parentLog)
         {
-            Init(appId, allowSideEffects, buildConfig, parentLog);
+            base.Init(appId, buildConfig, parentLog);
             return this;
         }
 
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Apps
         /// <returns></returns>
         public App InitNoData(IAppIdentity appIdentity, ILog parentLog)
         {
-            Init(appIdentity, false, null, parentLog);
+            Init(appIdentity, null, parentLog);
             Log.Rename("App.SxcLgt");
             Log.Add("App only initialized for light use - data shouldn't be used");
             return this;

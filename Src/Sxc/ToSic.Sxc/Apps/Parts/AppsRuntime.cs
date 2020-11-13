@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Apps
             return appIds
                 .Select(a => ServiceProvider.Build<App>()
                     .PreInit(site)
-                    .Init(new AppIdentity(zId, a.Key), buildConfig, true, Log) as IApp)
+                    .Init(new AppIdentity(zId, a.Key), buildConfig, Log) as IApp)
                 .OrderBy(a => a.Name)
                 .ToList();
         }

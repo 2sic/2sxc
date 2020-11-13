@@ -35,7 +35,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             }
 
             var app = _unInitializedApp.Init(new AppIdentity(zoneId, appId),
-                _configProvider.Build(true, new LookUpEngine(Log)), true, Log);
+                _configProvider.Build(true, new LookUpEngine(Log)), Log);
             return wrapLog(null, app);
         }
 

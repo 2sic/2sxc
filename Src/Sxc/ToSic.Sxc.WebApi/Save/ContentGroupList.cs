@@ -64,7 +64,7 @@ namespace ToSic.Sxc.WebApi.Save
             var wrapLog = Log.Call<bool>($"{_appIdentity.AppId}");
             var sp = CmsManager.ServiceProvider;
             var app = sp.Build<Apps.App>().Init(_appIdentity, 
-                sp.Build<AppConfigDelegate>().Init(Log).Build(Block, true), false, Log);
+                sp.Build<AppConfigDelegate>().Init(Log).Build(Block, true), Log);
 
             foreach (var bundle in pairsOrSingleItems)
             {

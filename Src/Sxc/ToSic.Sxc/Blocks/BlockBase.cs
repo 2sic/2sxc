@@ -65,8 +65,7 @@ namespace ToSic.Sxc.Blocks
 
             // Get App for this block
             App = Context.ServiceProvider.Build<App>().PreInit(Context.Tenant)
-                .Init(this, Context.ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(this, false),
-                    true, Log);
+                .Init(this, Context.ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(this, false), Log);
 
             // note: requires EditAllowed, which isn't ready till App is created
             var cms = Context.ServiceProvider.Build<CmsRuntime>().Init(App, EditAllowed, Log);

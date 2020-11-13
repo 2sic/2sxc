@@ -125,7 +125,7 @@ namespace ToSic.Sxc.Dnn
             if (site != null) app.PreInit(site);
             var appStuff = app.Init(new AppIdentity(zoneId, appId), 
                 Eav.Factory.StaticBuild<AppConfigDelegate>().Init(parentLog).Build(showDrafts, new LookUpEngine(parentLog)),
-                true, parentLog);
+                parentLog);
             return appStuff;
         }
 
