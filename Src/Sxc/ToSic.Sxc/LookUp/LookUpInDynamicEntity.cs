@@ -102,11 +102,11 @@ namespace ToSic.Sxc.LookUp
 			{
 				switch (valueObject.GetType().Name)
 				{
-					case "String":
+					case Eav.Constants.DataTypeString:
 						return LookUpBase.FormatString((string)valueObject, strFormat);
-					case "Boolean":
+					case Eav.Constants.DataTypeBoolean:
 						return ((bool)valueObject).ToString(formatProvider).ToLower();
-					case "DateTime":
+					case Eav.Constants.DataTypeDateTime:
 					case "Double":
 					case "Single":
 					case "Int32":
