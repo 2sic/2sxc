@@ -12,6 +12,9 @@ namespace ToSic.Sxc.Apps
         public new CmsRuntime Init(IAppIdentity app, bool showDrafts, ILog parentLog) 
             => base.Init(app, showDrafts, parentLog) as CmsRuntime;
 
+        public new CmsRuntime InitWithState(AppState appState, bool showDrafts, ILog parentLog) 
+            => base.InitWithState(appState, showDrafts, parentLog) as CmsRuntime;
+
         public ViewsRuntime Views => _views ?? (_views = ServiceProvider.Build<ViewsRuntime>().Init(this, Log));
         private ViewsRuntime _views;
 

@@ -109,7 +109,7 @@ namespace ToSic.Sxc.WebApi.App
             // this throws an error if it's not the correct type
             var itm = id == null
                 ? null
-                : /*_entityApi.Init(appIdentity.AppId, true, Log)*/State.Get(appIdentity).List.GetOrThrow(contentType, id.Value);
+                : State.Get(appIdentity).List.GetOrThrow(contentType, id.Value);
 
             var realApp = GetApp(appIdentity.AppId, _block);
             if (itm == null) ThrowIfNotAllowedInType(contentType, Grants.Create.AsSet(), realApp);

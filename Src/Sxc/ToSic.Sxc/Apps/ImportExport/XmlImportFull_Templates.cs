@@ -21,10 +21,11 @@ namespace ToSic.Sxc.Apps.ImportExport
             var templates = root.Element(XmlConstants.Templates);
             if (templates == null) return;
 
-            var appId = new AppIdentity(ZoneId, AppId);
-            var appState = State.Get(appId);
+            // The state must come from the DB, and not from the cache
+            // Otherwise it will auto-initialize, which it shouldn't do when importing data
+            var appState = _repositoryLoader.AppState(AppId, Log);
 
-            var viewsManager = _cmsManagerLazy.Value.Init(appId, true, Log).Views;
+            var viewsManager = _cmsManagerLazy.Value.InitWithState(appState, true, Log).Views;
 
             foreach (var template in templates.Elements(XmlConstants.Template))
             {

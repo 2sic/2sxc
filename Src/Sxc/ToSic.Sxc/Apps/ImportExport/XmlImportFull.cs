@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.ImportExport;
 using ToSic.Eav.Persistence.Interfaces;
+using ToSic.Eav.Repositories;
 using ToSic.Eav.Repository.Efc;
 
 namespace ToSic.Sxc.Apps.ImportExport
@@ -11,13 +12,17 @@ namespace ToSic.Sxc.Apps.ImportExport
     public partial class XmlImportFull: XmlImportWithFiles
     {
         private readonly Lazy<CmsManager> _cmsManagerLazy;
+        private readonly IRepositoryLoader _repositoryLoader;
+
         public XmlImportFull(Lazy<Import> importerLazy, 
             Lazy<CmsManager> cmsManagerLazy, 
             Lazy<DbDataController> dbDataForNewApp,
             Lazy<DbDataController> dbDataForAppImport,
-            IImportExportEnvironment importExportEnvironment) : base(importerLazy, dbDataForNewApp, dbDataForAppImport, importExportEnvironment, "Sxc.XmlImp")
+            IImportExportEnvironment importExportEnvironment, 
+            IRepositoryLoader repositoryLoader) : base(importerLazy, dbDataForNewApp, dbDataForAppImport, importExportEnvironment, "Sxc.XmlImp")
         {
             _cmsManagerLazy = cmsManagerLazy;
+            _repositoryLoader = repositoryLoader;
         }
 
         public new bool ImportXml(int zoneId, int appId, XDocument doc, bool leaveExistingValuesUntouched = true)

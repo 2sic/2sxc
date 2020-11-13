@@ -21,8 +21,14 @@ namespace ToSic.Sxc.Apps
             return this;
         }
 
+        public new CmsManager InitWithState(AppState app, bool showDrafts, ILog parentLog)
+        {
+            base.InitWithState(app, showDrafts, parentLog);
+            return this;
+        }
+
         public new CmsRuntime Read 
-            => _runtime ?? (_runtime = ServiceProvider.Build<CmsRuntime>().Init(this, ShowDrafts, Log));
+            => _runtime ?? (_runtime = ServiceProvider.Build<CmsRuntime>().InitWithState(AppState, ShowDrafts, Log));
         private CmsRuntime _runtime;
 
 
