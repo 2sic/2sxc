@@ -45,7 +45,6 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
         public static RootId[] AppAutoNamedInclEditions = AppAutoAndNamed
             .Concat(AppAutoAndNamed.Select(rid => new RootId(rid.Name + "-edition", rid.Path + "/" + Token.Edition)))
             .ToArray();
-        //public static string[] AppAutoAndNamed = new[] { AppAuto, AppNamed };
     }
 
     public struct RootId
