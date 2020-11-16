@@ -26,9 +26,21 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
         public const string AppNamed = Root.App + "/" + Token.AppPath;
         public const string ContentAuto = AppAuto + "/" + Parts.Content;
         public const string ContentNamed = AppNamed + "/" + Parts.Content;
-        public static RootId[] QueryRoots = {new RootId("qry-auto", Root.App + "/" + Parts.Query), new RootId("qry-name", Root.App + "/" + Parts.Query)};
-        public static RootId[] AppAutoAndNamed = {new RootId("app-auto", AppAuto), new RootId("app-name",  AppNamed)};
-        public static RootId[] Content = {new RootId("cont-auto", ContentAuto), new RootId("cont-name", ContentNamed)};
+        public static RootId[] QueryRoots =
+        {
+            new RootId("qry-auto", AppAuto + "/" + Parts.Query), 
+            new RootId("qry-name", AppNamed + "/" + Parts.Query)
+        };
+        public static RootId[] AppAutoAndNamed =
+        {
+            new RootId("app-auto", AppAuto), 
+            new RootId("app-name",  AppNamed)
+        };
+        public static RootId[] Content =
+        {
+            new RootId("cont-auto", ContentAuto), 
+            new RootId("cont-name", ContentNamed)
+        };
 
         public static RootId[] AppAutoNamedInclEditions = AppAutoAndNamed
             .Concat(AppAutoAndNamed.Select(rid => new RootId(rid.Name + "-edition", rid.Path + "/" + Token.Edition)))
