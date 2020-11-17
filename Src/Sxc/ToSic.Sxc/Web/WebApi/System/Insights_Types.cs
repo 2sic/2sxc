@@ -18,12 +18,12 @@ namespace ToSic.Sxc.Web.WebApi.System
             var appRead = AppRt(appId);
             var pkg = appRead.AppState;
 
-            var msg = TypesTable(appId.Value, pkg.ContentTypes, pkg.List.ToList());
+            var msg = TypesTable(appId.Value, pkg.ContentTypes, pkg.List); //.ToList());
 
             return msg;
         }
 
-        private string TypesTable(int appId, IEnumerable<IContentType> typesA, List<IEntity> items)
+        private string TypesTable(int appId, IEnumerable<IContentType> typesA, IReadOnlyCollection<IEntity> items)
         {
             var msg = h1($"App types for {appId}\n");
             try

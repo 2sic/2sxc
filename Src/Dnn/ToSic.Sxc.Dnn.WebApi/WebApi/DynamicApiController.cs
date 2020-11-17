@@ -1,23 +1,19 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Web.Http.Controllers;
-using Factory = ToSic.Eav.Factory;
-using System.IO;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
-using ToSic.Sxc;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Dnn.WebApi.Logging;
-using ToSic.Sxc.WebApi;
+using ToSic.Sxc.Dnn.WebApiRouting;
 using ToSic.Sxc.WebApi.Adam;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.SexyContent.WebApi
+namespace ToSic.Sxc.WebApi
 {
     /// <inheritdoc cref="SxcApiControllerBase" />
     /// <summary>
@@ -39,7 +35,7 @@ namespace ToSic.SexyContent.WebApi
             Log.Add($"HasBlock: {block != null}");
             // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
             // if it's null, use the log of this object
-            DynCode = new DnnDynamicCode().Init(block, Log);
+            DynCode = new DnnDynamicCodeRoot().Init(block, Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (DynCode.App == null)
@@ -56,7 +52,7 @@ namespace ToSic.SexyContent.WebApi
         }
 
         [PrivateApi]
-        public DnnDynamicCode DynCode { get; private set; }
+        public DnnDynamicCodeRoot DynCode { get; private set; }
 
         public IDnnContext Dnn => DynCode.Dnn;
 
@@ -69,10 +65,8 @@ namespace ToSic.SexyContent.WebApi
                 var routeAppPath = Route.AppPathOrNull(Request.GetRouteData());
                 var appId = AppFinder.GetAppIdFromPath(routeAppPath).AppId;
                 // Look up if page publishing is enabled - if module context is not available, always false
-                var publish = Factory.Resolve<IPagePublishing>().Init(Log);
-                var publishingEnabled = Dnn.Module != null && publish.IsEnabled(Dnn.Module.ModuleID);
-                Log.Add($"AppId: {appId}, publishing:{publishingEnabled}");
-                var app = Sxc.Dnn.Factory.App(appId, publishingEnabled, parentLog: Log);
+                Log.Add($"AppId: {appId}");
+                var app = Sxc.Dnn.Factory.App(appId, false, parentLog: Log);
                 DynCode.LateAttachApp(app);
                 found = true;
             } catch { /* ignore */ }
@@ -101,11 +95,11 @@ namespace ToSic.SexyContent.WebApi
                 throw new Exception();
 
             var feats = new[]{FeatureIds.UseAdamInWebApi, FeatureIds.PublicUpload};
-            if (!Features.EnabledOrException(feats, "can't save in ADAM", out var exp))
+            if (!Eav.Configuration.Features.EnabledOrException(feats, "can't save in ADAM", out var exp))
                 throw exp;
 
             var block = GetBlock();
-            return new AdamTransUpload<int, int>()
+            return _build<AdamTransUpload<int, int>>()
                 .Init(block, block.AppId, contentType, guid.Value, field, false, Log)
                 .UploadOne(stream, fileName, subFolder, true);
         }

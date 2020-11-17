@@ -1,18 +1,20 @@
-﻿using ToSic.Eav.Apps.Run;
+﻿using System;
+using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.DataSources;
 
 namespace ToSic.Sxc.Blocks
 {
-    [PrivateApi("todo: review how it's used and named, probably doesn't have any DNN stuff in it any more, and then Module is a wrong name")]
-    internal sealed class BlockFromModule: BlockBase
+    [PrivateApi]
+    public sealed class BlockFromModule: BlockBase
     {
         #region Constructor for DI
 
         /// <summary>
         /// Official constructor, must call Init afterwards
         /// </summary>
-        public BlockFromModule(): base("CB.Mod") { }
+        public BlockFromModule(Lazy<BlockDataSourceFactory> bdsFactoryLazy) : base(bdsFactoryLazy, "CB.Mod") { }
 
         #endregion
 

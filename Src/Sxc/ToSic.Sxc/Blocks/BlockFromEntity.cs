@@ -3,10 +3,11 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.DataSources;
 
 namespace ToSic.Sxc.Blocks
 {
-    internal sealed class BlockFromEntity: BlockBase
+    public sealed class BlockFromEntity: BlockBase
     {
         internal const string CbPropertyApp = "App";
         internal const string CbPropertyTitle = "Title";
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.Blocks
         
         #region Constructor and DI
 
-        public BlockFromEntity() : base("CB.Ent") { }
+        public BlockFromEntity(Lazy<BlockDataSourceFactory> bdsFactoryLazy) : base(bdsFactoryLazy, "CB.Ent") { }
 
         public BlockFromEntity Init(IBlock parent, IEntity blockEntity, ILog parentLog)
         {
@@ -57,7 +58,7 @@ namespace ToSic.Sxc.Blocks
         {
             // for various reasons this can be introduced as a negative value, make sure we neutralize that
             contentBlockId = Math.Abs(contentBlockId); 
-            return parent.App.Data.List.One(contentBlockId);
+            return parent.App.Data.Immutable.One(contentBlockId);
         }
 
         #region ContentBlock Definition Entity
@@ -76,7 +77,7 @@ namespace ToSic.Sxc.Blocks
             temp = blockDefinition.GetBestValue(ViewParts.TemplateContentType)?.ToString() ?? "";
             Guid.TryParse(temp, out var previewTemplateGuid);
 
-            var appId = new ZoneRuntime(zoneId, log).FindAppId(appName);
+            var appId = new ZoneRuntime().Init(zoneId, log).FindAppId(appName);
             return new BlockIdentifier(zoneId, appId, contentGroupGuid, previewTemplateGuid);
         }
         #endregion

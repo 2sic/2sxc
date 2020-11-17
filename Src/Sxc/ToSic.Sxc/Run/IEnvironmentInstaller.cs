@@ -17,6 +17,6 @@ namespace ToSic.Sxc.Run
         /// <returns></returns>
         bool ResumeAbortedUpgrade();
 
-        string GetAutoInstallPackagesUiUrl(ITenant tenant, IContainer container, bool forContentApp);
+        string GetAutoInstallPackagesUiUrl(ISite site, IContainer container, bool forContentApp);
     }
 }

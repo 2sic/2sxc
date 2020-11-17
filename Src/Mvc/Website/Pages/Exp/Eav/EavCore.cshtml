@@ -12,7 +12,7 @@
         An EAV Constant: @ToSic.Eav.Constants.ContentAppName
     </li>
     <li>
-        A DataSource Object: @(new ToSic.Eav.DataSource().GetType().AssemblyQualifiedName)
+        A DataSource Object: @(new ToSic.Eav.DataSources.DataSourceFactory(null).GetType().AssemblyQualifiedName)
     </li>
     <li>
         Repository type Code: @(ToSic.Eav.Repositories.RepositoryTypes.Code)
@@ -27,19 +27,19 @@
         EavDbContext (transient...?) : @(ToSic.Eav.Factory.Resolve<EavDbContext>().GetType().Namespace)
     </li>
 </ol>
-<h2>State of App 78 (Blog)</h2>
+<h2>State of App 4 (Blog)</h2>
 
 <ol>
     <li>
-        Timestamp : @(ToSic.Eav.Apps.State.Get(78).CacheTimestamp)
+        Timestamp : @(ToSic.Eav.Apps.State.Get(4).CacheTimestamp)
     </li>
     <li>
-        Items in it : @(ToSic.Eav.Apps.State.Get(78).List.Count())
+        Items in it : @(ToSic.Eav.Apps.State.Get(4).List.Count())
     </li>
     <li>
         First Item: Guid @(Model.EntityInBlog.EntityGuid) <br/>
         Title: @Model.EntityInBlog.GetBestTitle() <br/>
-        Query AllQueries: @ToSic.Eav.Apps.State.Get(78)  can't work yet, this object doesn't have queries!
+        Query AllQueries: @ToSic.Eav.Apps.State.Get(4)  can't work yet, this object doesn't have queries!
     </li>
     <li>
         Blog DS = @Model.BlogRoot().List.Count()
@@ -52,7 +52,7 @@
         App: @Model.BlogApp.AppGuid <br/>
         Folder: @Model.BlogApp.Folder <br/>
         Data: @Model.BlogApp.Data.List.Count() <br/>
-        Query: @Model.BlogApp.Query["AllQueries"].List.Count()
+        Query: @*@Model.BlogApp.Query["AllQueries"].List.Count()*@ not working at TONCIP51 (probabliy old blog app)
     </li>
 </ol>
 

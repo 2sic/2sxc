@@ -3,23 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
-using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
-using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Cms.Publishing;
 
 namespace ToSic.Sxc.WebApi.Save
 {
-    internal class SxcPagePublishing: SaveHelperBase
+    public class SxcPagePublishing: SaveHelperBase<SxcPagePublishing>
     {
-        public SxcPagePublishing() : base("Sxc.PgPubl") { }
+        #region Constructor / DI
+        private readonly ContentGroupList _contentGroupList;
+        private readonly IPagePublishing _pagePublishing;
 
-        public new SxcPagePublishing Init(IBlock block, ILog parentLog)
+        public SxcPagePublishing(ContentGroupList contentGroupList, IPagePublishing pagePublishing) : base("Sxc.PgPubl")
         {
-            base.Init(block,parentLog);
-            return this;
+            _contentGroupList = contentGroupList;
+            _pagePublishing = pagePublishing;
         }
+
+        #endregion
 
         internal Dictionary<Guid, int> SaveInPagePublishing(
             int appId,
@@ -37,12 +40,13 @@ namespace ToSic.Sxc.WebApi.Save
             Dictionary<Guid, int> postSaveIds = null;
 
             // The internal call which will be used further down
+            var groupList = _contentGroupList.Init(Block, Log, new AppIdentity(Eav.Apps.App.AutoLookupZone, appId));
             Dictionary<Guid, int> SaveAndSaveGroupsInnerCall(Func<bool, Dictionary<Guid, int>> call,
                 bool forceSaveAsDraft)
             {
                 var ids = call.Invoke(forceSaveAsDraft);
                 // now assign all content-groups as needed
-                new ContentGroupList(Block, Log).IfChangesAffectListUpdateIt(appId, items, ids);
+                groupList.IfChangesAffectListUpdateIt(items, ids);
                 return ids;
             }
 
@@ -51,7 +55,7 @@ namespace ToSic.Sxc.WebApi.Save
             if (partOfPage)
             {
                 Log.Add("partOfPage - save with publishing");
-                var versioning = Eav.Factory.Resolve<IPagePublishing>().Init(Log);
+                var versioning = _pagePublishing.Init(Log);
                 //var dnnContext = new DnnDynamicCode().Init(Block, Log);
                 //var instanceId = Block.Context.Container.Id;
                 //var userId = Block.Context.User.Guid;

@@ -7,3 +7,5 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("ToSic.SexyContent.WebApi")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Mvc")]
+
+[assembly: InternalsVisibleTo("ToSic.Sxc.Oqtane.Server")]

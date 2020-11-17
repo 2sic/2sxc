@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Web.WebApi.System
         {
             ThrowIfNotSuperUser();
             Log.Add($"debug log load for {key}/{position}");
-            var msg = LogHeader();
+            var msg = PageStyles() + LogHeader();
             if (History.Logs.TryGetValue(key, out var set))
             {
                 if (set.Count >= position - 1)
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Web.WebApi.System
             else
                 msg += $"position {position} not found in log set {key}";
 
-            msg += PageStyles();
+            //msg += PageStyles();
             return msg;
         }
 

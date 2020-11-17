@@ -4,6 +4,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
+using IApp = ToSic.Eav.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
@@ -11,9 +12,20 @@ namespace ToSic.Sxc.Blocks.Edit
     // todo: move some parts out into a BlockManagement
     public abstract partial class BlockEditorBase : HasLog
     {
+
         #region DI and Construction
 
-        internal BlockEditorBase(): base("CG.RefMan") { }
+        protected IServiceProvider ServiceProvider { get; }
+        private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
+        private readonly Lazy<CmsManager> _cmsManagerLazy;
+        private CmsManager _cmsManager;
+
+        internal BlockEditorBase(IServiceProvider serviceProvider, Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> cmsManagerLazy) : base("CG.RefMan")
+        {
+            ServiceProvider = serviceProvider;
+            _lazyCmsRuntime = lazyCmsRuntime;
+            _cmsManagerLazy = cmsManagerLazy;
+        }
 
         internal BlockEditorBase Init(IBlock block)
         {
@@ -44,8 +56,8 @@ namespace ToSic.Sxc.Blocks.Edit
             {
                 var existedBeforeSettingTemplate = BlockConfiguration.Exists;
 
-                var app = Block.App;
-                var cms = new CmsManager(app, Log);
+                //var app = Block.App;
+                var cms = _cmsManager = _cmsManagerLazy.Value.Init(Block?.App, Log);
 
                 var contentGroupGuid = cms.Blocks.UpdateOrCreateContentGroup(BlockConfiguration, templateId);
 
@@ -57,7 +69,7 @@ namespace ToSic.Sxc.Blocks.Edit
             {
                 // only set preview / content-group-reference - but must use the guid
                 var dataSource = Block.App.Data;
-                var templateGuid = dataSource.List.One(templateId).EntityGuid;
+                var templateGuid = dataSource.Immutable.One(templateId).EntityGuid;
                 SavePreviewTemplateId(templateGuid);
                 result = null; // send null back
             }
@@ -77,7 +89,7 @@ namespace ToSic.Sxc.Blocks.Edit
 
             var hasPresentation = presEntity != null;
 
-            var appMan = new AppManager(Block.App, Log);
+            var appMan = GetAppManagerOrReuse(Block.App);// new AppManager(Block.App, Log);
 
             // make sure we really have the draft item an not the live one
             var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;
@@ -91,6 +103,10 @@ namespace ToSic.Sxc.Blocks.Edit
 
             return true;
         }
+
+        protected AppManager GetAppManagerOrReuse(IApp appIdentity) =>
+            _appManager ?? (_appManager = _cmsManagerLazy.Value.Init(appIdentity, Log));
+        private AppManager _appManager;
 
 
         #endregion

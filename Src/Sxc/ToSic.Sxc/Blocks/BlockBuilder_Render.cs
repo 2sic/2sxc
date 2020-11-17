@@ -1,8 +1,8 @@
 ﻿using System;
 using ToSic.Eav;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Interfaces;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 
@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Blocks
         public bool WrapInDiv { get; set; } = true;
 
         private IRenderingHelper RenderingHelper =>
-            _rendHelp ?? (_rendHelp = Factory.Resolve<IRenderingHelper>().Init(Block, Log));
+            _rendHelp ?? (_rendHelp = Block.Context.ServiceProvider.Build<IRenderingHelper>().Init(Block, Log));
         private IRenderingHelper _rendHelp;
 
 
@@ -62,6 +62,8 @@ namespace ToSic.Sxc.Blocks
                                 Log.Add("template referenced 2sxc.api JS in script-tag: will enable");
                                 if (RootBuilder is BlockBuilder parentBlock) parentBlock.UiAddJsApi = engine.ActivateJsApi;
                             }
+
+                            TransferEngineAssets(engine);
                         }
                         else body = "";
                     }
@@ -77,7 +79,7 @@ namespace ToSic.Sxc.Blocks
                         instanceId: Block.ParentId,
                         contentBlockId: Block.ContentBlockId,
                         editContext: UiAddEditContext,
-                        autoToolbar: UiAutoToolbar) // WrapInDivWithContext(body)
+                        autoToolbar: UiAutoToolbar)
                     : body;
                 #endregion
 
@@ -90,14 +92,6 @@ namespace ToSic.Sxc.Blocks
             }
         }
 
-        //internal string WrapInDivWithContext(string body) =>
-        //    RenderingHelper.WrapInContext(body,
-        //        instanceId: Block.ParentId,
-        //        contentBlockId: Block.ContentBlockId,
-        //        editContext: UiAddEditContext,
-        //        autoToolbar: UiAutoToolbar);
-
-
         /// <summary>
         /// Cache the installation ok state, because once it's ok, we don't need to re-check
         /// </summary>
@@ -107,7 +101,7 @@ namespace ToSic.Sxc.Blocks
         {
             if (InstallationOk) return null;
 
-            var installer = Factory.Resolve<IEnvironmentInstaller>();
+            var installer = Block.Context.ServiceProvider.Build<IEnvironmentInstaller>();
             var notReady = installer.UpgradeMessages();
             if (!string.IsNullOrEmpty(notReady))
             {

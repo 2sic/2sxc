@@ -28,13 +28,18 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <param name="appId"></param>
         /// <returns></returns>
         [HttpGet]
-        public dynamic Settings(int appId) =>
-            new AdminBackend().Init(Log).DialogSettings(
+        public dynamic Settings(int appId)
+        {
+            // reset app-id if we get a info-token like -100
+            if (appId < 0) appId = 0;
+            return _build<AdminBackend>().Init(Log).DialogSettings(
                 GetContext(),
                 new DnnContextBuilder(
+                    _serviceProvider,
                     PortalSettings.Current,
                     Request.FindModuleInfo(), UserInfo),
                 appId);
+        }
 
         #endregion
 

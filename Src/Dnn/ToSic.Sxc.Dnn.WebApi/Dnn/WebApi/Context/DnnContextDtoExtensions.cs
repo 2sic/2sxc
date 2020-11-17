@@ -6,7 +6,6 @@ using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Pages;
 using ToSic.Sxc.WebApi.Context;
-using ToSic.Sxc.WebApi.Usage.Dto;
 
 namespace ToSic.Sxc.Dnn.WebApi.Context
 {
@@ -26,10 +25,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
 
         internal static InstanceDto Init(this InstanceDto dto, ModuleInfo module, TabInfo page)
         {
-            dto.ModuleId = module.ModuleID;
+            dto.Id = module.ModuleID;
             dto.ShowOnAllPages = module.AllTabs;
             dto.Title = module.ModuleTitle;
-            dto.Id = module.TabModuleID;
+            dto.UsageId = module.TabModuleID;
             dto.IsDeleted = module.IsDeleted || page.IsDeleted;
             dto.Page = new PageDto().Init(page);
             return dto;
@@ -43,7 +42,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
             dto.CultureCode = page.CultureCode;
             dto.Visible = page.IsVisible;
             dto.Title = page.Title;
-            dto.Portal = new TenantDto(page.PortalID);
+            dto.Portal = new SiteDto(page.PortalID);
             return dto;
         }
 

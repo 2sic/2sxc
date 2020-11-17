@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using ToSic.Eav.Configuration;
 
 namespace ToSic.Sxc.Edit.ClientContextInfo
 {
@@ -15,7 +14,7 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
             AutoToolbar = autoToolbar;
 
             // for 2sxc 10
-            Form = Features.Enabled(FeatureIds.EditFormPreferAngularJs) ? null : "ng8";
+            Form = null; // Features.Enabled(FeatureIds.EditFormPreferAngularJs) ? null : "ng8";
         }
     }
 }

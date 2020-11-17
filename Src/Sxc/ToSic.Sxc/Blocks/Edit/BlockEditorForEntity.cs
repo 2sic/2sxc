@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
+using ToSic.Sxc.Apps;
+using IApp = ToSic.Eav.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
-    internal class BlockEditorForEntity : Edit.BlockEditorBase
+    internal class BlockEditorForEntity : BlockEditorBase
     {
+        public BlockEditorForEntity(IServiceProvider serviceProvider, Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> cmsManagerLazy) : base(serviceProvider, lazyCmsRuntime, cmsManagerLazy)
+        {
+        }
+
         #region methods which the entity-implementation must customize 
 
         protected override void SavePreviewTemplateId(Guid templateGuid)
@@ -49,9 +55,10 @@ namespace ToSic.Sxc.Blocks.Edit
         private void Update(Dictionary<string, object> newValues)
         {
             var app = ((BlockBase)Block).Parent.App;
-            new AppManager(app, Log)
+            GetAppManagerOrReuse(app)
                 .Entities.UpdateParts(Math.Abs(Block.ContentBlockId), newValues);
         }
+
 
         #endregion
 

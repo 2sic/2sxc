@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Cms.Publishing;
 using static System.StringComparison;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -17,38 +18,44 @@ namespace ToSic.Sxc.WebApi.ItemLists
 {
     public class ListsBackendBase: HasLog
     {
-        private readonly IPagePublishing _publishing;
 
         #region Constructor / di
+        private readonly Lazy<CmsManager> _cmsManagerLazy;
+        private readonly IPagePublishing _publishing;
+        private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.Init(_app, Log));
+        private CmsManager _cmsManager;
 
-        public ListsBackendBase(IPagePublishing publishing) : base("Bck.Lists")
+        public ListsBackendBase(IPagePublishing publishing, Lazy<CmsManager> cmsManagerLazy) : base("Bck.Lists")
         {
+            _cmsManagerLazy = cmsManagerLazy;
             _publishing = publishing.Init(Log);
         }
 
-        public ListsBackendBase Init(IApp app, ILog parentLog)
+        public ListsBackendBase Init(IBlock block, ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            _app = app;
+            _block = block;
+            _app = block.App;
             return this;
         }
 
+        private IBlock _block;
         private IApp _app;
 
         #endregion
 
 
 
-        // TODO: shouldn't be part of ContentGroupController any more, as it's generic now
+        // TODO: probably should move from "backend" to a Manager
         public void Replace(IInstanceContext context, Guid guid, string part, int index, int entityId, bool add = false)
         {
             var wrapLog = Log.Call($"target:{guid}, part:{part}, index:{index}, id:{entityId}");
-            var versioning = Factory.Resolve<IPagePublishing>().Init(Log);
+            var versioning = CmsManager.ServiceProvider.Build<IPagePublishing>().Init(Log);
 
             void InternalSave(VersioningActionInfo args)
             {
-                var cms = new CmsManager(_app, Log);
-                var entity = cms.AppState.List.One(guid);
+                //var cms = new CmsManager().Init(_app, Log);
+                var entity = CmsManager.AppState.List.One(guid);
                 if (entity == null) throw new Exception($"Can't find item '{guid}'");
 
                 // correct casing of content / listcontent for now - TODO should already happen in JS-Call
@@ -58,11 +65,12 @@ namespace ToSic.Sxc.WebApi.ItemLists
                     if (string.Equals(part, ViewParts.ListContent, OrdinalIgnoreCase)) part = ViewParts.ListContent;
                 }
 
+                var forceDraft = _block.Context.Publishing.ForceDraft;
                 if (add)
-                    cms.Entities.FieldListAdd(entity, new[] { part }, index, new int?[] { entityId }, cms.EnablePublishing);
+                    CmsManager.Entities.FieldListAdd(entity, new[] { part }, index, new int?[] { entityId }, forceDraft);
                 else
-                    cms.Entities.FieldListReplaceIfModified(entity, new[] { part }, index, new int?[] { entityId },
-                        cms.EnablePublishing);
+                    CmsManager.Entities.FieldListReplaceIfModified(entity, new[] { part }, index, new int?[] { entityId },
+                        forceDraft);
             }
 
             // use dnn versioning - this is always part of page
@@ -90,7 +98,7 @@ namespace ToSic.Sxc.WebApi.ItemLists
             var ct = appState.GetContentType(attributeSetName);
 
             var dataSource = _app.Data[ct.Name];
-            var results = dataSource.List.ToDictionary(p => p.EntityId,
+            var results = dataSource.Immutable.ToDictionary(p => p.EntityId,
                 p => p.GetBestTitle() ?? "");
 
             // if list is empty or shorter than index (would happen in an add-to-end-request) return null
@@ -107,7 +115,7 @@ namespace ToSic.Sxc.WebApi.ItemLists
         public List<EntityInListDto> ItemList(Guid guid, string part)
         {
             Log.Add($"item list for:{guid}");
-            var cg = _app.Data.List.One(guid);
+            var cg = _app.Data.Immutable.One(guid);
             var itemList = cg.Children(part);
 
             var list = itemList.Select((c, index) => new EntityInListDto
@@ -130,12 +138,12 @@ namespace ToSic.Sxc.WebApi.ItemLists
 
             _publishing.DoInsidePublishing(context, args =>
             {
-                var cms = new CmsManager(_app, Log);
-                var entity = cms.Read.AppState.List.One(guid);
+                //var cms = new CmsManager().Init(_app, Log);
+                var entity = CmsManager.Read.AppState.List.One(guid);
 
                 var sequence = list.Select(i => i.Index).ToArray();
                 var fields = part == ViewParts.ContentLower ? ViewParts.ContentPair : new[] {part};
-                cms.Entities.FieldListReorder(entity, fields, sequence, cms.EnablePublishing);
+                CmsManager.Entities.FieldListReorder(entity, fields, sequence, context.Publishing.ForceDraft);
             });
 
             return true;
@@ -144,7 +152,7 @@ namespace ToSic.Sxc.WebApi.ItemLists
 
         private List<IEntity> FindItemAndFieldTypeName(Guid guid, string part, out string attributeSetName)
         {
-            var parent = _app.Data.List.One(guid);
+            var parent = _app.Data.Immutable.One(guid);
             if (parent == null) throw new Exception($"No item found for {guid}");
             if (!parent.Attributes.ContainsKey(part)) throw new Exception($"Could not find field {part} in item {guid}");
             var itemList = parent.Children(part);
@@ -204,8 +212,7 @@ namespace ToSic.Sxc.WebApi.ItemLists
         protected BlockConfiguration GetContentGroup(Guid contentGroupGuid)
         {
             Log.Add($"get group:{contentGroupGuid}");
-            var cms = new CmsRuntime(_app, Log, true, false);
-            var contentGroup = cms.Blocks.GetBlockConfig(contentGroupGuid);
+            var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(contentGroupGuid);
 
             if (contentGroup == null)
                 throw new Exception("BlockConfiguration with Guid " + contentGroupGuid + " does not exist.");

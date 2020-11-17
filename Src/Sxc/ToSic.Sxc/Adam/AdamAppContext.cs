@@ -14,26 +14,31 @@ namespace ToSic.Sxc.Adam
     /// </summary>
     public abstract class AdamAppContext: HasLog, IContextAdamMaybe, ICompatibilityLevel
     {
+        private readonly Lazy<AppRuntime> _appRuntime;
+        public AppRuntime AppRuntime => _appRuntime.Value;
         /// <summary>
         /// the app is only used to get folder / guid etc.
         /// don't use it to access data! as the data should never have to be initialized for this to work
         /// always use the AppRuntime instead
         /// </summary>
         private IApp _app;
-        public AppRuntime AppRuntime { get; private set; }
-        public ITenant Tenant { get; private set; }
+        //public AppRuntime AppRuntime { get; private set; }
+        public ISite Site { get; private set; }
         public IBlock Block { get; private set;  }
         
-        protected AdamAppContext(string logName) : base(logName ?? "Adm.AppCtx") { }
+        protected AdamAppContext(Lazy<AppRuntime> appRuntime, string logName) : base(logName ?? "Adm.AppCtx")
+        {
+            _appRuntime = appRuntime;
+        }
 
-        public virtual AdamAppContext Init(ITenant tenant, IApp app, IBlock block, int compatibility, ILog parentLog)
+        public virtual AdamAppContext Init(ISite site, IApp app, IBlock block, int compatibility, ILog parentLog)
         {
             Log.LinkTo(parentLog);
             var callLog = Log.Call();
-            Tenant = tenant;
+            Site = site;
             _app = app;
             Block = block;
-            AppRuntime = new AppRuntime(app, block?.EditAllowed ?? false, null);
+            AppRuntime /*= new AppRuntime()*/.Init(app, block?.EditAllowed ?? false, null);
             CompatibilityLevel = compatibility;
             callLog("ready");
             return this;

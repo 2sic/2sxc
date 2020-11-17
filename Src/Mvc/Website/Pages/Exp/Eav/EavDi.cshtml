@@ -10,16 +10,16 @@
 <h2>MapPath and more</h2>
 <ol>
     <li>
-        MapPath(2sxc): @Model.Http.MapPath("2sxc");
+        MapPath(2sxc): @Model.ServerPaths.FullAppPath("2sxc");
     </li>
     <li>
-        ToAbsolute(2sxc): @Model.Http.ToAbsolute("2sxc"); <br />
-        ToAbsolute("~/2sxc"): @Model.Http.ToAbsolute("~/2sxc") <br />
-        ToAbsolute("/2sxc"): @Model.Http.ToAbsolute("/2sxc")
+        ToAbsolute(2sxc): @Model.LinkPaths.ToAbsolute("2sxc"); <br />
+        ToAbsolute("~/2sxc"): @Model.LinkPaths.ToAbsolute("~/2sxc") <br />
+        ToAbsolute("/2sxc"): @Model.LinkPaths.ToAbsolute("/2sxc")
     </li>
     <li>
-        Combine: @Model.Http.Combine("~/Portals/0", "2sxc") <br/>
-        Combine: @Model.Http.Combine("/Portals/0/", "2sxc") <br/>
+        Combine: @Model.LinkPaths.ToAbsolute("~/Portals/0", "2sxc") <br/>
+        Combine: @Model.LinkPaths.ToAbsolute("/Portals/0/", "2sxc") <br/>
     </li>
 </ol>
 

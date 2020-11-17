@@ -82,6 +82,7 @@
     <Compile Include="Compatibility\Sxc\OldDataToDictionaryWrapper.cs" />
     <Compile Include="Compatibility\Sxc\SxcHelper.cs" />
     <Compile Include="Dnn\Adam\DnnAdam.cs" />
+    <Compile Include="Dnn\Cms\DnnPagePublishingResolver.cs" />
     <Compile Include="Dnn\DnnConstants.cs" />
     <Compile Include="Dnn\DnnEnvironmentLogger.cs" />
     <Compile Include="Dnn\DynamicCode.cs" />
@@ -103,24 +104,26 @@
     <Compile Include="Dnn\Factory.cs" />
     <Compile Include="Dnn\Run\DnnInstanceContext.cs" />
     <Compile Include="Dnn\Run\DnnPage.cs" />
+    <Compile Include="Dnn\Run\DnnPlatformContext.cs" />
     <Compile Include="Dnn\Web\DnnJsApiHeader.cs" />
     <Compile Include="Dnn\Web\DnnClientResources.cs" />
     <Compile Include="Dnn\Web\IDynamicWebApi.cs" />
     <Compile Include="Dnn\Code\IDnnDynamicCode.cs" />
     <Compile Include="Dnn\Run\DnnSecurity.cs" />
-    <Compile Include="Dnn\Code\DnnDynamicCode.cs" />
+    <Compile Include="Dnn\Code\DnnDynamicCodeRoot.cs" />
     <Compile Include="Dnn\Web\DnnClientDependencyOptimizer.cs" />
     <Compile Include="Dnn\DataSources\DnnSql.cs" />
     <Compile Include="Dnn\DataSources\DnnUserProfile.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.DataSources.DnnSqlDataSource.cs" />
     <Compile Include="Dnn\Adam\DnnAdamFileSystem.cs" />
     <Compile Include="Dnn\Web\DnnLinkHelper.cs" />
-    <Compile Include="Dnn\Run\DnnMapAppToInstance.cs" />
+    <Compile Include="Dnn\Run\DnnModuleUpdater.cs" />
+    <Compile Include="WebForms\Web\WebFormsHttp.cs" />
     <Compile Include="Environment\Dnn7\DnnBusinessController.cs" />
     <Compile Include="Dnn\Run\DnnContainer.cs" />
     <Compile Include="Dnn\Run\DnnPermissionCheck.cs" />
     <Compile Include="Dnn\Web\DnnRenderingHelpers.cs" />
-    <Compile Include="Dnn\Run\DnnTenant.cs" />
+    <Compile Include="Dnn\Run\DnnSite.cs" />
     <Compile Include="Dnn\Run\DnnValueConverter.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.Factory.cs" />
     <Compile Include="Dnn\Run\DnnFingerprint.cs" />
@@ -145,7 +148,7 @@
     <Compile Include="Dnn\Run\DnnZoneMapper.cs" />
     <Compile Include="Dnn\Run\DnnEnvironment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Dnn\Install\DnnTenantSettings.cs" />
+    <Compile Include="Dnn\Install\DnnSiteSettings.cs" />
     <Compile Include="Dnn\Search\SearchItem.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -184,8 +187,6 @@
     <None Include="packages.config" />
     <None Include="Dnn\Search\readme.md" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Code\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

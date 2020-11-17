@@ -9,7 +9,7 @@ using ToSic.Eav.WebApi.Formats;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    internal partial class EditLoadBackend
+    public partial class EditLoadBackend
     {
 
         /// <summary>

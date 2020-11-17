@@ -4,6 +4,7 @@ using System.Text;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.InPageEditingSystem;
 using ToSic.Sxc.Web;
@@ -23,7 +24,7 @@ namespace ToSic.Sxc.Blocks.Renderers
     {
         private static string EmptyMessage = "<!-- auto-render of item {0} -->";
 
-        internal static IHtmlString Render(IBlock parentBlock, IEntity entity, ILog parentLog)
+        internal static string Render(IBlock parentBlock, IEntity entity)
         {
             var log = new Log("Htm.Render", parentBlock.Log, "simple");
 
@@ -31,13 +32,13 @@ namespace ToSic.Sxc.Blocks.Renderers
             if (entity.Type.Name != Settings.AttributeSetStaticNameContentBlockTypeName)
             {
                 log.Add("empty, will return hidden html placeholder");
-                return new HtmlString(string.Format(EmptyMessage, entity.EntityId));
+                return string.Format(EmptyMessage, entity.EntityId);
             }
 
             // render it
             log.Add("found, will render");
-            var cb = new BlockFromEntity().Init(parentBlock, entity, log);
-            return new HtmlString(cb.BlockBuilder.Render());
+            var cb = parentBlock.Context.ServiceProvider.Build<BlockFromEntity>().Init(parentBlock, entity, log);
+            return cb.BlockBuilder.Render();
         }
 
         private const string WrapperTemplate = "<div class='{0}' {1}>{2}</div>";
@@ -51,7 +52,7 @@ namespace ToSic.Sxc.Blocks.Renderers
                 edit = new InPageEditingHelper(dynParent.Block);
 
             var attribs = edit.ContextAttributes(dynParent, field: cbFieldName, newGuid: newGuid);
-            var inner = subItem == null ? "": Render(dynParent.Block, subItem.Entity, dynParent.Block.Log).ToString();
+            var inner = subItem == null ? "": Render(dynParent.Block, subItem.Entity).ToString();
             var cbClasses = edit.Enabled ? WrapperSingleItem : "";
             return string.Format(WrapperTemplate, new object[] { cbClasses, attribs, inner});
         }
@@ -62,7 +63,7 @@ namespace ToSic.Sxc.Blocks.Renderers
             var found = dynParent.TryGetMember(fieldName, out var objFound);
             if (found && objFound is IList<DynamicEntity> items)
                 foreach (var cb in items)
-                    innerBuilder.Append(Render(cb.Block, cb.Entity, dynParent.Block.Log));
+                    innerBuilder.Append(Render(cb.Block, cb.Entity));
 
             // create edit object if missing...to re-use of the parent
             //if (edit == null)

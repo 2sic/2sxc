@@ -1,6 +1,8 @@
-﻿using ToSic.Eav.Apps;
+﻿using System;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks.Views;
@@ -11,11 +13,16 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks
 {
-    internal abstract partial class BlockBase : HasLog<BlockBase>, IBlock
+    public abstract partial class BlockBase : HasLog<BlockBase>, IBlock
     {
+        private readonly Lazy<BlockDataSourceFactory> _bdsFactoryLazy;
+
         #region Constructor and DI
 
-        protected BlockBase(string logName) : base(logName) { }
+        protected BlockBase(Lazy<BlockDataSourceFactory> bdsFactoryLazy, string logName) : base(logName)
+        {
+            _bdsFactoryLazy = bdsFactoryLazy;
+        }
 
         protected void Init(IInstanceContext context, IAppIdentity appId, ILog parentLog)
         {
@@ -57,13 +64,11 @@ namespace ToSic.Sxc.Blocks
             Log.Add("Real app specified, will load App object with Data");
 
             // Get App for this block
-            App = Eav.Factory.Resolve<App>().PreInit(Context.Tenant)
-                .Init(this, ConfigurationProvider.Build(this, false),
-                    true, Log);
+            App = Context.ServiceProvider.Build<App>().PreInit(Context.Tenant)
+                .Init(this, Context.ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(this, false), Log);
 
             // note: requires EditAllowed, which isn't ready till App is created
-            var publishing = Eav.Factory.Resolve<IPagePublishing>().Init(Log);
-            var cms = new CmsRuntime(App, Log, EditAllowed, publishing.IsEnabled(Context.Container.Id));
+            var cms = Context.ServiceProvider.Build<CmsRuntime>().Init(App, EditAllowed, Log);
 
             Configuration = cms.Blocks.GetOrGeneratePreviewConfig(blockId);
 
@@ -124,13 +129,15 @@ namespace ToSic.Sxc.Blocks
         /// <inheritdoc />
         public IInstanceContext Context { get; protected set; }
 
-        // ReSharper disable once InconsistentNaming
-        protected IBlockDataSource _dataSource;
 
 
         public IBlockDataSource Data => _dataSource
-                                        ?? (_dataSource = Block.GetBlockDataSource(this, View,
-                                            App?.ConfigurationProvider, Log));
+                                        ?? (_dataSource = _bdsFactoryLazy.Value.Init(Log).GetBlockDataSource(this,
+                                            App?.ConfigurationProvider));
+                                        //?? (_dataSource = Block.GetBlockDataSource(this, View,
+                                        //    App?.ConfigurationProvider, Log));
+        // ReSharper disable once InconsistentNaming
+        protected IBlockDataSource _dataSource;
 
         public BlockConfiguration Configuration { get; protected set; }
         

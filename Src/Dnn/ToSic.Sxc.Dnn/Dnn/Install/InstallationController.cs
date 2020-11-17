@@ -108,8 +108,6 @@ namespace ToSic.Sxc.Dnn.Install
                     case "08.11.00":
                         throw new Exception("Trying to upgrade a 7 or 8 version - which isn't supported in v9.20+. Please upgrade to the latest 8.12 or 9.15before trying to upgrade to a 9.20+");
 
-                    // case "1X.xx.xx":
-                    //Helpers.ImportXmlSchemaOfVersion("1X.xx.xx", false);
                     //new V9(version, _installLogger, Log).Version09xxxx();
                     // warning!!! when you add a new case, make sure you upgrade the version number on Settings.Installation.LastVersionWithServerChanges!!!
                 }

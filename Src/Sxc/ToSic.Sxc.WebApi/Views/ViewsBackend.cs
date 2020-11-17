@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
@@ -9,17 +12,21 @@ using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.WebApi.Views
 {
-    internal class ViewsBackend: HasLog
+    public class ViewsBackend: HasLog
     {
-        private ITenant _tenant;
+        private readonly Lazy<CmsManager> _cmsManagerLazy;
+        private ISite _site;
         private IUser _user;
 
-        public ViewsBackend() : base("Bck.Views") { }
+        public ViewsBackend(Lazy<CmsManager> cmsManagerLazy) : base("Bck.Views")
+        {
+            _cmsManagerLazy = cmsManagerLazy;
+        }
 
-        public ViewsBackend Init(ITenant tenant, IUser user, ILog parentLog)
+        public ViewsBackend Init(ISite site, IUser user, ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            _tenant = tenant;
+            _site = site;
             _user = user;
             return this;
         }
@@ -28,9 +35,9 @@ namespace ToSic.Sxc.WebApi.Views
         public IEnumerable<ViewDetailsDto> GetAll(int appId)
         {
             Log.Add($"get all a#{appId}");
-            var cms = new CmsRuntime(appId, Log, true);
+            var cms = _cmsManagerLazy.Value.Init(State.Identity(null, appId), true, Log).Read;
 
-            var attributeSetList = cms.ContentTypes.FromScope(Settings.AttributeSetScope).ToList();
+            var attributeSetList = cms.ContentTypes.All.OfScope(Settings.AttributeSetScope).ToList();
             var templateList = cms.Views.GetAll().ToList();
             Log.Add($"attribute list count:{attributeSetList.Count}, template count:{templateList.Count}");
             var templates = templateList.Select(c => new ViewDetailsDto
@@ -74,9 +81,9 @@ namespace ToSic.Sxc.WebApi.Views
         {
             // todo: extra security to only allow zone change if host user
             Log.Add($"delete a{appId}, t:{id}");
-            var app = ImpExpHelpers.GetAppAndCheckZoneSwitchPermissions(_tenant.ZoneId, appId, _user, _tenant.ZoneId, Log);
-            var cms = new CmsManager(app, Log);
-            cms.Views.DeleteTemplate(id);
+            var app = _cmsManagerLazy.Value.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
+            var cms = _cmsManagerLazy.Value.Init(app, Log);
+            cms.Views.DeleteView(id);
             return true;
         }
     }

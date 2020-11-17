@@ -3,30 +3,35 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Web;
+using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Run;
 #if NET451
 using System.Web.Compilation;
-#else
-using System.Security.Policy;
-using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
 #endif
 
 
 namespace ToSic.Sxc.Code
 {
-    internal class CodeCompiler: HasLog
+    public class CodeCompiler: HasLog
     {
-        internal CodeCompiler(ILog parentLog) : base("Sys.CsCmpl", parentLog)
+        private readonly IServiceProvider _serviceProvider;
+
+        #region Constructor / DI
+
+        internal CodeCompiler(IServiceProvider serviceProvider, ILog parentLog) : base("Sys.CsCmpl", parentLog)
         {
+            _serviceProvider = serviceProvider;
         }
 
-        internal const string CsFileExtension = ".cs";
-        internal const string CsHtmlFileExtension = ".cshtml";
-        internal const string SharedCodeRootPathKeyInCache = "SharedCodeRootPath";
+        #endregion
+
+        public const string CsFileExtension = ".cs";
+        public const string CsHtmlFileExtension = ".cshtml";
+        public const string SharedCodeRootPathKeyInCache = "SharedCodeRootPath";
         
         internal object InstantiateClass(string virtualPath, string className = null, string relativePath = null, bool throwOnError = true)
         {
-            var wrapLog = Log.Call($"{virtualPath}, {className}, {throwOnError}");
+            var wrapLog = Log.Call($"{virtualPath}, {nameof(className)}:{className}, {nameof(relativePath)}:{relativePath}, {throwOnError}");
             string errorMsg = null;
 
             // Perform various checks on the path values
@@ -47,7 +52,7 @@ namespace ToSic.Sxc.Code
             if (isCshtml && string.IsNullOrEmpty(className))
             {
 #if NETSTANDARD
-            throw new Exception("Not Yet Implemented in .net standard #TodoNetStandard");
+                throw new Exception("On-the Fly / Runtime Compile Not Yet Implemented in .net standard #TodoNetStandard");
 #else
                 compiledType = BuildManager.GetCompiledType(virtualPath);
 #endif
@@ -62,7 +67,7 @@ namespace ToSic.Sxc.Code
 
                 Assembly assembly;
 #if NETSTANDARD
-                throw new Exception("Not Yet Implemented in .net standard #TodoNetStandard");
+                throw new Exception("On-the Fly / Runtime Compile Not Yet Implemented in .net standard #TodoNetStandard");
 #else
                 assembly = BuildManager.GetCompiledAssembly(virtualPath);
 #endif
@@ -112,7 +117,7 @@ namespace ToSic.Sxc.Code
                 // if necessary, add trailing slash
                 if (!relativePath.EndsWith("/"))
                     relativePath += "/";
-                virtualPath = Eav.Factory.Resolve<IHttp>().Combine(relativePath, virtualPath);
+                virtualPath = _serviceProvider.Build<ILinkPaths>().ToAbsolute(relativePath, virtualPath);
                 Log.Add($"final virtual path: '{virtualPath}'");
             }
 
@@ -123,11 +128,16 @@ namespace ToSic.Sxc.Code
         }
 
 
-        private static void AttachRelativePath(string virtualPath, object instance)
+        private bool AttachRelativePath(string virtualPath, object instance)
         {
+            var wrapLog = Log.Call<bool>();
             // in case it supports shared code again, give it the relative path
             if (instance is ICreateInstance codeForwarding)
+            {
                 codeForwarding.CreateInstancePath = Path.GetDirectoryName(virtualPath);
+                return wrapLog("attached", true);
+            }
+            return wrapLog("didn't attach", false);
         }
     }
 }

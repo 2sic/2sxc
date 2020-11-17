@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ToSic.Sxc.WebApi.Assets
 {
-    internal partial class AppAssetsBackend
+    public partial class AppAssetsBackend
     {
         public List<string> List(int appId, bool global = false, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
         {

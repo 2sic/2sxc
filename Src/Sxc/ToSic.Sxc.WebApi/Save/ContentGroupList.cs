@@ -1,29 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.LookUp;
-using ToSic.Sxc.WebApi.Save;
 using static System.StringComparison;
 using BlockEditorBase = ToSic.Sxc.Blocks.Edit.BlockEditorBase;
 
-namespace ToSic.Sxc.WebApi
+namespace ToSic.Sxc.WebApi.Save
 {
-    internal class ContentGroupList: SaveHelperBase
+    public class ContentGroupList: SaveHelperBase<ContentGroupList>
     {
-        public ContentGroupList(IBlock block, ILog parentLog) : base("Api.GrpPrc")
+        #region Constructor / DI
+        private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
+        private CmsRuntime CmsRuntime { get; set; }
+        private readonly Lazy<CmsManager> _cmsManagerLazy;
+        private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.Init(Block?.App, Log));
+        private CmsManager _cmsManager;
+
+        public ContentGroupList(Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> cmsManagerLazy) : base("Api.GrpPrc")
         {
-            base.Init(block, parentLog);
+            _lazyCmsRuntime = lazyCmsRuntime;
+            _cmsManagerLazy = cmsManagerLazy;
         }
 
-        internal bool IfChangesAffectListUpdateIt(int appId, List<BundleWithHeader<IEntity>> items, Dictionary<Guid, int> ids)
+        public ContentGroupList Init(IBlock block, ILog log, IAppIdentity appIdentity)
+        {
+            Init(block, log);
+            _appIdentity = appIdentity ?? block;
+            CmsRuntime = _lazyCmsRuntime.Value.Init(appIdentity, Block.EditAllowed, Log);
+            return this;
+        }
+
+        private IAppIdentity _appIdentity;
+        #endregion
+
+        internal bool IfChangesAffectListUpdateIt(List<BundleWithHeader<IEntity>> items, Dictionary<Guid, int> ids)
         {
             var wrapLog = Log.Call<bool>();
             var groupItems = items.Where(i => i.Header.ListHas())
@@ -33,30 +51,25 @@ namespace ToSic.Sxc.WebApi
             // if it's new, it has to be added to a group
             // only add if the header wants it, AND we started with ID unknown
             return groupItems.Any() 
-                ? wrapLog(null, PostSaveUpdateIdsInParent(appId, ids, groupItems)) 
+                ? wrapLog(null, PostSaveUpdateIdsInParent(ids, groupItems)) 
                 : wrapLog("no additional group processing necessary", true);
         }
 
-        private BlockConfiguration GetBlockConfig(IAppIdentity app, Guid blockGuid)
-        {
-            var publishingEnabled = Factory.Resolve<IPagePublishing>().Init(Log).IsEnabled(Block.Context.Container.Id);
-            return new CmsRuntime(app, Log, Block.EditAllowed, publishingEnabled)
-                .Blocks.GetBlockConfig(blockGuid);
-        }
+        private BlockConfiguration GetBlockConfig(Guid blockGuid) => CmsRuntime.Blocks.GetBlockConfig(blockGuid);
 
         private bool PostSaveUpdateIdsInParent(
-            int appId,
             Dictionary<Guid, int> postSaveIds,
             IEnumerable<IGrouping<string, BundleWithHeader<IEntity>>> pairsOrSingleItems)
         {
-            var wrapLog = Log.Call<bool>($"{appId}");
-            var app = Factory.Resolve<Apps.App>().Init(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), 
-                ConfigurationProvider.Build(Block, true), false, Log);
+            var wrapLog = Log.Call<bool>($"{_appIdentity.AppId}");
+            var sp = CmsManager.ServiceProvider;
+            var app = sp.Build<Apps.App>().Init(_appIdentity, 
+                sp.Build<AppConfigDelegate>().Init(Log).Build(Block, true), Log);
 
             foreach (var bundle in pairsOrSingleItems)
             {
                 Log.Add("processing:" + bundle.Key);
-                var entity = app.Data.List.One(bundle.First().Header.ListParent());
+                var entity = app.Data.Immutable.One(bundle.First().Header.ListParent());
                 var targetIsContentBlock = entity.Type.Name == BlocksRuntime.BlockTypeName;
                 
                 var primaryItem = targetIsContentBlock ? FindContentItem(bundle) : bundle.First();
@@ -79,15 +92,15 @@ namespace ToSic.Sxc.WebApi
                 Log.Add($"will add: {willAdd}; " + // add-pre-verified:{primaryItem.Header.ReallyAddBecauseAlreadyVerified}; " +
                         $"Group.Add:{primaryItem.Header.Add}; EntityId:{primaryItem.Entity.EntityId}");
 
-                var cms = new CmsManager(app, Log);
+                //var cms = new CmsManager().Init(app, Log);
                 var fieldPair = targetIsContentBlock
                     ? ViewParts.PickPair(primaryItem.Header.Group.Part)
                     : new[] {primaryItem.Header.Field};
 
                 if (willAdd) // this cannot be auto-detected, it must be specified
-                    cms.Entities.FieldListAdd(entity, fieldPair, index, ids, cms.EnablePublishing);
+                    CmsManager.Entities.FieldListAdd(entity, fieldPair, index, ids, Block.Context.Publishing.ForceDraft);
                 else
-                    cms.Entities.FieldListReplaceIfModified(entity, fieldPair, index, ids, cms.EnablePublishing);
+                    CmsManager.Entities.FieldListReplaceIfModified(entity, fieldPair, index, ids, Block.Context.Publishing.ForceDraft);
 
             }
 
@@ -135,7 +148,7 @@ namespace ToSic.Sxc.WebApi
             return presentationId;
         }
 
-        internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers, IAppIdentity app)
+        internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers)
         {
             var wrapLog = Log.Call<List<ItemIdentifier>>();
             var newItems = new List<ItemIdentifier>();
@@ -144,7 +157,7 @@ namespace ToSic.Sxc.WebApi
                 // Case one, it's a Content-Group (older model, probably drop soon)
                 if (identifier.Group != null)
                 {
-                    var contentGroup = GetBlockConfig(app, identifier.Group.Guid);
+                    var contentGroup = GetBlockConfig(identifier.Group.Guid);
                     var contentTypeStaticName = (contentGroup.View as View)?
                                                 .GetTypeStaticName(identifier.Group.Part) ?? "";
 
@@ -162,7 +175,7 @@ namespace ToSic.Sxc.WebApi
                 if (identifier.Parent != null && identifier.Field != null)
                 {
                     // look up type
-                    var target = Block.App.Data.List.One(identifier.Parent.Value);
+                    var target = Block.App.Data.Immutable.One(identifier.Parent.Value);
                     var field = target.Type[identifier.Field];
                     identifier.ContentTypeName = field.EntityFieldItemTypePrimary();
                     newItems.Add(identifier);

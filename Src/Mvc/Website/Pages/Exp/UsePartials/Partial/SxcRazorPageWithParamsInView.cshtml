@@ -7,7 +7,7 @@
 
 <ol>
     <li>
-        Id: @ViewData["id"] / @Id <br />
+        Id: @ViewData["AppIdentity"] / @Id <br />
         Page: @PageId
     </li>
     <li>
@@ -35,7 +35,7 @@
     @if (App.Data.Out.ContainsKey("BlogPost"))
     {
         <li>
-            Get data BlogPost: @App.Data["BlogPost"].List.Count()
+            Get data BlogPost: @App.Data["BlogPost"].Immutable.Count()
             @{
                 var last = AsList(App.Data["BlogPost"]).Last();
             }

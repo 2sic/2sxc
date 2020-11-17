@@ -27,7 +27,7 @@ namespace ToSic.SexyContent
             var isSharedModule = ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID;
             var block = Block;
             if (!isSharedModule && !block.ContentGroupExists && block.App != null)
-                new DnnTenantSettings().EnsureTenantIsConfigured(block, Server);
+                new DnnSiteSettings().EnsureSiteIsConfigured(block, Server);
 
             timerWrap(null);
         }

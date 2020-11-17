@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.ImportExport.Json.V1;
@@ -39,6 +40,10 @@ namespace ToSic.Sxc.WebApi.Cms
         /// </summary>
         public List<Feature> Features;
 
+        /// <summary>
+        /// Experimental additional data for configuration
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<JsonEntity> ContentTypeItems;
 
         public ContextDto Context;

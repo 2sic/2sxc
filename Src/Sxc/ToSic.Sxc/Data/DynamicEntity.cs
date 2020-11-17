@@ -4,7 +4,9 @@ using System.Dynamic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
+using ToSic.Eav.Run.Basic;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit.Toolbar;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -73,18 +75,29 @@ namespace ToSic.Sxc.Data
             Dimensions = dimensions;
             CompatibilityLevel = compatibility;
             Block = block;
+            ServiceProviderOrNull = Block?.Context?.ServiceProvider;
         }
 
+        [PrivateApi]
         protected void SetEntity(IEntity entity)
         {
             Entity = entity;
             _EntityForEqualityCheck = (Entity as IEntityWrapper)?._EntityForEqualityCheck ?? Entity;
         }
 
+        /// <summary>
+        /// Very internal implementation - we need this to allow the IValueProvider to be created, and normally it's provided by the Block context.
+        /// But in rare cases (like when the App.Resources is a DynamicEntity) it must be injected separately.
+        /// </summary>
+        [PrivateApi]
+        internal IServiceProvider ServiceProviderOrNull;
+
         /// <inheritdoc />
+        [PrivateApi]
         public override bool TryGetMember(GetMemberBinder binder, out object result)
             => TryGetMember(binder.Name, out result);
 
+        [PrivateApi]
         public bool TryGetMember(string memberName, out object result)
         {
             result = GetEntityValue(memberName);
@@ -114,9 +127,26 @@ namespace ToSic.Sxc.Data
             // check if we already have it in the cache
             if (_valCache.ContainsKey(field)) return _valCache[field];
 
-            var result = Entity.GetBestValue(field, Dimensions, true);
+            var result = Entity.GetBestValue(field, Dimensions/*, true*/);
+
+            // New mechanism to not use resolve-hyperlink
+            if (result is string strResult 
+                && BasicValueConverter.CouldBeReference(strResult)
+                && Entity.Attributes.ContainsKey(field) &&
+                Entity.Attributes[field].Type == Eav.Constants.DataTypeHyperlink)
+            {
+                result = ServiceProviderOrNull?.Build<IValueConverter>()?.ToValue(strResult, EntityGuid) ??
+                      result;
+            }
+
             if (result is IEnumerable<IEntity> rel)
-                result = new DynamicEntityWithList(Entity, field, rel, Dimensions, CompatibilityLevel, Block);
+            {
+                var list = new DynamicEntityWithList(Entity, field, rel, Dimensions, CompatibilityLevel, Block);
+                // special case: if it's a Dynamic Entity without block (like App.Settings)
+                // it needs the Service Provider from this object to work
+                if (Block == null) list.ServiceProviderOrNull = ServiceProviderOrNull;
+                result = list;
+            }
 
             _valCache.Add(field, result);
             return result;
@@ -132,27 +162,33 @@ namespace ToSic.Sxc.Data
         public dynamic Get(string name) => GetEntityValue(name);
 
         /// <inheritdoc />
-        [PrivateApi("should use Content.Presentation")]
-        [Obsolete("should use Content.Presentation")]
         public dynamic Presentation => GetPresentation; 
 
         private IDynamicEntity GetPresentation
             => _presentation ?? (_presentation = Entity is EntityInBlock entityInGroup
-                   ? new DynamicEntity(entityInGroup.Presentation, Dimensions, CompatibilityLevel, Block)
+                   ? SubDynEntity(entityInGroup.Presentation) // new DynamicEntity(entityInGroup.Presentation, Dimensions, CompatibilityLevel, Block)
                    : null);
         private IDynamicEntity _presentation;
 
+        [PrivateApi]
+        protected IDynamicEntity SubDynEntity(IEntity contents)
+        {
+            if (contents == null) return null;
+            var child = new DynamicEntity(contents, Dimensions, CompatibilityLevel, Block);
+            // special case: if it's a Dynamic Entity without block (like App.Settings)
+            // it needs the Service Provider from this object to work
+            if (Block == null && ServiceProviderOrNull != null) child.ServiceProviderOrNull = ServiceProviderOrNull;
+            return child;
+        }
+
 
         /// <inheritdoc />
-        /// <remarks>If the entity doesn't exist, it will return 0</remarks>
         public int EntityId => Entity?.EntityId ?? 0;
 
         /// <inheritdoc />
-        /// <remarks>If the entity doesn't exist, it will return an empty guid</remarks>
         public Guid EntityGuid => Entity?.EntityGuid ?? Guid.Empty;
 
         /// <inheritdoc />
-        /// <remarks>If the entity doesn't exist, it will return null</remarks>
         public object EntityTitle => Entity?.Title[Dimensions];
 
         /// <inheritdoc />
@@ -161,11 +197,7 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         public dynamic GetPublished() => new DynamicEntity(Entity?.GetPublished(), Dimensions, CompatibilityLevel, Block);
 
-        /// <summary>
-        /// Tell the system that it's a demo item, not one added by the user
-        /// 2019-09-18 trying to mark demo-items for better detection in output #1792
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         public bool IsDemoItem => Entity is EntityInBlock entInCg && entInCg.IsDemoItem;
 
         [Obsolete]

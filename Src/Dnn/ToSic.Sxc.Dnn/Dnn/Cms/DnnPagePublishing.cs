@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Enums;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Run;
@@ -18,60 +18,24 @@ using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Dnn.Cms
 {
-    public partial class DnnPagePublishing : HasLog, IPagePublishing
+    public partial class DnnPagePublishing : HasLog<IPagePublishing>, IPagePublishing
     {
+        private readonly IServiceProvider _serviceProvider;
+
         #region DI Constructors and More
         
-        public DnnPagePublishing(): base("Dnn.Publsh") { }
-
-        public IPagePublishing Init(ILog parent)
+        public DnnPagePublishing(IServiceProvider serviceProvider) : base("Dnn.Publsh")
         {
-            Log.LinkTo(parent);
-            return this;
+            _serviceProvider = serviceProvider;
         }
-
+        
         #endregion
-
-        public bool Supported => true;
-
-        private readonly Dictionary<int, PublishingMode> _cache = new Dictionary<int, PublishingMode>();
-        
-        public PublishingMode Requirements(int instanceId)
-        {
-            var wrapLog = Log.Call<PublishingMode>($"{instanceId}");
-            if (_cache.ContainsKey(instanceId)) return wrapLog("in cache", _cache[instanceId]);
-
-            Log.Add($"Requirements(mod:{instanceId}) - checking first time (others will be cached)");
-            try
-            {
-                var moduleInfo = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
-                PublishingMode decision;
-                var versioningEnabled =
-                    TabChangeSettings.Instance.IsChangeControlEnabled(moduleInfo.PortalID, moduleInfo.TabID);
-                if (!versioningEnabled)
-                    decision = PublishingMode.DraftOptional;
-                else if (!new PortalSettings(moduleInfo.PortalID).UserInfo.IsSuperUser)
-                    decision = PublishingMode.DraftRequired;
-                else
-                    decision = PublishingMode.DraftRequired;
-
-                _cache.Add(instanceId, decision);
-                return wrapLog("decision: ", decision);
-            }
-            catch
-            {
-                Log.Add("Requirements had exception!");
-                throw;
-            }
-        }
-        
-        public bool IsEnabled(int instanceId) => Requirements(instanceId) != PublishingMode.DraftOptional;
 
         public void DoInsidePublishing(IInstanceContext context, Action<VersioningActionInfo> action)
         {
             var instanceId = context.Container.Id;
             var userId = (context.User as DnnUser).UnwrappedContents.UserID;
-            var enabled = IsEnabled(instanceId);
+            var enabled = context.Publishing.ForceDraft;
             Log.Add($"DoInsidePublishing(module:{instanceId}, user:{userId}, enabled:{enabled})");
             if (enabled)
             {
@@ -118,16 +82,17 @@ namespace ToSic.Sxc.Dnn.Cms
             {
                 // publish all entites of this content block
                 var dnnModule = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
-                var container = new DnnContainer().Init(dnnModule, Log);
+                var container = _serviceProvider.Build<DnnContainer>().Init(dnnModule, Log);
                 // must find tenant through module, as the Portal-Settings.Current is null in search mode
-                var tenant = new DnnTenant().Init(dnnModule.OwnerPortalID);
-                var cb = new BlockFromModule().Init(new DnnContext(tenant, container, new DnnUser()), Log);
+                var tenant = new DnnSite().Init(dnnModule.OwnerPortalID);
+                var cb = _serviceProvider.Build<BlockFromModule>()
+                    .Init(DnnContext.Create(tenant, container, new DnnUser(), _serviceProvider), Log);
 
                 Log.Add($"found dnn mod {container.Id}, tenant {tenant.Id}, cb exists: {cb.ContentGroupExists}");
                 if (cb.ContentGroupExists)
                 {
                     Log.Add("cb exists");
-                    var appManager = new AppManager(cb, Log);
+                    var appManager = _serviceProvider.Build<AppManager>().Init(cb, Log);
 
                     // Add content entities
                     IEnumerable<IEntity> list = new List<IEntity>();
@@ -162,7 +127,7 @@ namespace ToSic.Sxc.Dnn.Cms
                 }
 
                 // Set published version
-                new DnnPagePublishing.ModuleVersions(instanceId, Log).PublishLatestVersion();
+                new ModuleVersions(instanceId, Log).PublishLatestVersion();
                 Log.Add("publish completed");
             }
             catch (Exception ex)
@@ -176,7 +141,7 @@ namespace ToSic.Sxc.Dnn.Cms
 
         private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, IBlockDataSource data, string key)
         {
-            var cont = data.Out.ContainsKey(key) ? data[key]?.List?.ToList() : null;
+            var cont = data.Out.ContainsKey(key) ? data[key]?.Immutable : null;
             Log.Add($"TryToAddStream(..., ..., key:{key}), found:{cont != null} add⋮{cont?.Count ?? 0}" );
             if (cont != null) list = list.Concat(cont);
             return list;

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <AppIdentity>ToSic.Sxc</AppIdentity>
+    <version>0.0.2</version>
+    <authors>2Sic</authors>
+    <owners>2Sic</owners>
+    <title>2sxc</title>
+    <description>2sxc is a Oqtane module to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
+    <copyright>2Sic</copyright>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/oqtane/oqtane.framework</projectUrl>
+    <iconUrl>https://www.oqtane.org/Portals/0/icon.jpg</iconUrl>
+    <tags>oqtane module</tags>
+    <releaseNotes></releaseNotes>
+    <summary></summary>
+    <dependencies>
+      <dependency AppIdentity="Oqtane.Framework" version="1.0.4" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\ToSic.Sxc.OqtaneModule.Client\bin\Release\netstandard2.1\ToSic.*.dll" target="lib\netstandard2.1" />
+    <file src="..\ToSic.Sxc.OqtaneModule.Client\bin\Release\netstandard2.1\ToSic.*.pdb" target="lib\netstandard2.1" />
+    <file src="..\ToSic.Sxc.OqtaneModule.Server\bin\Release\netcoreapp3.1\ToSic.*.dll" target="lib\netcoreapp3.1" />
+    <file src="..\ToSic.Sxc.OqtaneModule.Server\bin\Release\netcoreapp3.1\ToSic.*.pdb" target="lib\netcoreapp3.1" />
+    <file src="..\ToSic.Sxc.OqtaneModule.Shared\bin\Release\netstandard2.1\ToSic.*.dll" target="lib\netstandard2.1" />
+    <file src="..\ToSic.Sxc.OqtaneModule.Shared\bin\Release\netstandard2.1\ToSic.*.pdb" target="lib\netstandard2.1" />
+    <file src="..\ToSic.Sxc.OqtaneModule.Server\wwwroot\**\*.*" target="wwwroot" />
+  </files>
+</package>

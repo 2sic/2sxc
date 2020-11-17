@@ -10,6 +10,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -23,6 +24,7 @@ namespace ToSic.Sxc.Engines
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public abstract class EngineBase : HasLog, IEngine
     {
+        protected readonly EngineBaseDependencies Helpers;
         [PrivateApi] protected IView Template;
         [PrivateApi] protected string TemplatePath;
         [PrivateApi] protected IApp App;
@@ -40,16 +42,12 @@ namespace ToSic.Sxc.Engines
         /// <summary>
         /// Empty constructor, so it can be used in dependency injection
         /// </summary>
-        protected EngineBase(IHttp http, TemplateHelpers templateHelpers) : base("Sxc.EngBas")
+        protected EngineBase(EngineBaseDependencies helpers) : base("Sxc.EngBas")
         {
-            Http = http;
-            _templateHelpers = templateHelpers;
+            Helpers = helpers;
+            helpers.ClientDependencyOptimizer.Init(Log);
         }
-
-        protected IHttp Http { get; }
-
-        private readonly TemplateHelpers _templateHelpers;
-
+        
         #endregion
 
         
@@ -60,13 +58,13 @@ namespace ToSic.Sxc.Engines
             var view = Block.View;
             Log.LinkTo(parentLog);
 
-            var root = _templateHelpers.Init(Block.App).AppPathRoot(view.Location);
+            var root = Helpers.TemplateHelpers.Init(Block.App, Log).AppPathRoot(view.Location, PathTypes.PhysRelative);
             var subPath = view.Path;
             var templatePath = TryToFindPolymorphPath(root, view, subPath) 
-                               ?? Http.Combine(root + "/", subPath);
+                               ?? Helpers.LinkPaths.ToAbsolute(root + "/", subPath);
 
             // Throw Exception if Template does not exist
-            if (!File.Exists(Http.MapPath(templatePath)))
+            if (!File.Exists(Helpers.ServerPaths.FullAppPath(templatePath)))
                 // todo: change to some kind of "rendering exception"
                 throw new SexyContentException("The template file '" + templatePath + "' does not exist.");
 
@@ -89,13 +87,13 @@ namespace ToSic.Sxc.Engines
         private string TryToFindPolymorphPath(string root, IView view, string subPath)
         {
             var wrapLog = Log.Call<string>($"{root}, {subPath}");
-            var polymorph = new Polymorphism.Polymorphism(Block.App.Data, Log);
+            var polymorph = new Polymorphism.Polymorphism(Block.App.Data.List, Log);
             var edition = polymorph.Edition();
             if (edition == null) return wrapLog("no edition detected", null);
             Log.Add($"edition {edition} detected");
 
-            var testPath = Http.Combine($"{root}/{edition}/", subPath);
-            if (File.Exists(Http.MapPath(testPath)))
+            var testPath = Helpers.LinkPaths.ToAbsolute($"{root}/{edition}/", subPath);
+            if (File.Exists(Helpers.ServerPaths.FullAppPath(testPath)))
             {
                 view.Edition = edition;
                 return wrapLog($"edition {edition}", testPath);
@@ -106,8 +104,8 @@ namespace ToSic.Sxc.Engines
             if (firstSlash == -1) return wrapLog($"edition {edition} not found", null);
 
             subPath = subPath.Substring(firstSlash + 1);
-            testPath = Http.Combine($"{root}/{edition}/", subPath);
-            if (File.Exists(Http.MapPath(testPath)))
+            testPath = Helpers.LinkPaths.ToAbsolute($"{root}/{edition}/", subPath);
+            if (File.Exists(Helpers.ServerPaths.FullAppPath(testPath)))
             {
                 view.Edition = edition;
                 return wrapLog($"edition {edition} up one path", testPath);
@@ -148,13 +146,16 @@ namespace ToSic.Sxc.Engines
                 return AlternateRendering;
 
             var renderedTemplate = RenderTemplate();
-            var depMan = Factory.Resolve<IClientDependencyOptimizer>();
+            var depMan = Helpers.ClientDependencyOptimizer;// Factory.Resolve<IClientDependencyOptimizer>();
             var result = depMan.Process(renderedTemplate);
             ActivateJsApi = result.Item2;
             return result.Item1;
         }
 
         [PrivateApi] public bool ActivateJsApi { get; private set; }
+
+        /// <inheritdoc/>
+        [PrivateApi] public List<ClientAssetInfo> Assets => Helpers.ClientDependencyOptimizer.Assets;
 
 
         private void CheckExpectedTemplateErrors()
@@ -196,15 +197,15 @@ namespace ToSic.Sxc.Engines
             }
         }
 
-        private void CheckTemplatePermissions(ITenant tenant)
+        private void CheckTemplatePermissions(ISite site)
         {
             // do security check IF security exists
             // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
-            var templatePermissions = Factory.Resolve<AppPermissionCheck>()
+            var templatePermissions = Helpers.AppPermCheckLazy.Value
                 .ForItem(Block.Context, App, Template.Entity, Log);
 
             // Views only use permissions to prevent access, so only check if there are any configured permissions
-            if (tenant.RefactorUserIsAdmin || !templatePermissions.HasPermissions)
+            if (site.RefactorUserIsAdmin || !templatePermissions.HasPermissions)
                 return;
 
             if (!templatePermissions.UserMay(GrantSets.ReadSomething))

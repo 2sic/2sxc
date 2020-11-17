@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
@@ -13,27 +12,40 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi.Assets;
 using ToSic.Sxc.WebApi.Validation;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
-    internal class ImportContent: HasLog
+    public class ImportContent: HasLog
     {
 
         #region Constructor / DI
 
-        public ImportContent(IZoneMapper zoneMapper, IHttp http, IEnvironmentLogger envLogger) : base("Bck.Export")
+        public ImportContent(IZoneMapper zoneMapper, 
+            IServerPaths serverPaths, 
+            IEnvironmentLogger envLogger,
+            Lazy<Import> importerLazy,
+            Lazy<XmlImportWithFiles> xmlImportWithFilesLazy,
+            ZipImport zipImport,
+            Lazy<JsonSerializer> jsonSerializerLazy) : base("Bck.Export")
         {
             _zoneMapper = zoneMapper;
-            _http = http;
+            _serverPaths = serverPaths;
             _envLogger = envLogger;
+            _importerLazy = importerLazy;
+            _xmlImportWithFilesLazy = xmlImportWithFilesLazy;
+            _zipImport = zipImport;
+            _jsonSerializerLazy = jsonSerializerLazy;
         }
 
         private readonly IZoneMapper _zoneMapper;
-        private readonly IHttp _http;
+        private readonly IServerPaths _serverPaths;
         private readonly IEnvironmentLogger _envLogger;
+        private readonly Lazy<Import> _importerLazy;
+        private readonly Lazy<XmlImportWithFiles> _xmlImportWithFilesLazy;
+        private readonly ZipImport _zipImport;
+        private readonly Lazy<JsonSerializer> _jsonSerializerLazy;
         private IUser _user;
 
         public ImportContent Init(IUser user, ILog parentLog)
@@ -56,10 +68,10 @@ namespace ToSic.Sxc.WebApi.ImportExport
             {   // ZIP
                 try
                 {
-                    var zipImport = Factory.Resolve<ZipImport>();
+                    var zipImport = _zipImport;
 
                     zipImport.Init(zoneId, appId, _user.IsSuperUser, Log);
-                    var temporaryDirectory = _http.MapPath(Path.Combine(Eav.ImportExport.Settings.TemporaryDirectory,
+                    var temporaryDirectory = _serverPaths.FullSystemPath(Path.Combine(Eav.ImportExport.Settings.TemporaryDirectory,
                         Guid.NewGuid().ToString()));
                     result.Success = zipImport.ImportZip(stream, temporaryDirectory);
                     result.Messages.AddRange(zipImport.Messages);
@@ -73,7 +85,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             {   // XML
                 using (var fileStreamReader = new StreamReader(stream))
                 {
-                    var xmlImport = new XmlImportWithFiles(Log, defaultLanguage, allowSystemChanges);
+                    var xmlImport = _xmlImportWithFilesLazy.Value.Init(defaultLanguage, allowSystemChanges, Log);
                     var xmlDocument = XDocument.Parse(fileStreamReader.ReadToEnd());
                     result.Success = xmlImport.ImportXml(zoneId, appId, xmlDocument);
                     result.Messages.AddRange(xmlImport.Messages);
@@ -94,7 +106,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                     throw new ArgumentException("a file is not json");
 
                 // 1. create the content type
-                var serializer = new JsonSerializer(State.Get(new AppIdentity(zoneId, appId)), Log);
+                var serializer = _jsonSerializerLazy.Value.Init(State.Get(new AppIdentity(zoneId, appId)), Log);
 
                 var types = files.Select(f => serializer.DeserializeContentType(f.Contents) as ContentType).ToList();
 
@@ -102,7 +114,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                     throw new NullReferenceException("One ContentType is null, something is wrong");
 
                 // 2. Import the type
-                var import = new Import(zoneId, appId, true, parentLog: Log);
+                var import = _importerLazy.Value.Init(zoneId, appId, true, true, Log);
                 import.ImportIntoDb(types, null);
 
                 Log.Add($"Purging {zoneId}/{appId}");

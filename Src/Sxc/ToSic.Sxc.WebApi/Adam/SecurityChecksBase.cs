@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
         #region Abstract methods to re-implement
 
-        internal abstract bool TenantAllowsExtension(string fileName);
+        internal abstract bool SiteAllowsExtension(string fileName);
 
         internal abstract bool CanEditFolder(IAsset item);
 
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
         internal bool ExtensionIsOk(string fileName, out HttpExceptionAbstraction preparedException)
         {
-            if (!TenantAllowsExtension(fileName))
+            if (!SiteAllowsExtension(fileName))
             {
                 preparedException = HttpException.NotAllowedFileType(fileName, "Not in whitelisted CMS file types.");
                 return false;
@@ -128,7 +128,7 @@ namespace ToSic.Sxc.WebApi.Adam
         /// </summary>
         public bool FieldPermissionOk(List<Grants> requiredGrant)
         {
-            var fieldPermissions = Factory.Resolve<AppPermissionCheck>().ForAttribute(
+            var fieldPermissions = AdamState.ServiceProvider.Build<AppPermissionCheck>().ForAttribute(
                 AdamState.Permissions.Context, AdamState.Block.App, AdamState.Attribute, Log);
 
             return fieldPermissions.UserMay(requiredGrant);

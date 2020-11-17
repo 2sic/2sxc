@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
-using IDynamicCode = ToSic.Sxc.Code.IDynamicCode;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -17,15 +16,25 @@ namespace ToSic.Sxc.Dnn
         /// <inheritdoc />
         public IDnnContext Dnn => DynCode?.Dnn;
 
-        [PrivateApi] public DnnDynamicCode DynCode => (UnwrappedContents as IHasDynCodeContext)?.DynCode;
+        [PrivateApi] public DnnDynamicCodeRoot DynCode => (UnwrappedContents as IHasDynCodeContext)?.DynCode;
 
-        public new dynamic CreateInstance(string virtualPath,
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
-            string name = null,
-            string relativePath = null,
-            bool throwOnError = true) =>
-            // try to create a DNN instance, but if that's not possible, use base
-            DynCode?.CreateInstance(virtualPath, dontRelyOnParameterOrder, name, relativePath, throwOnError)
-            ?? base.CreateInstance(virtualPath, dontRelyOnParameterOrder, name, relativePath, throwOnError);
+        // 2020-10-27 2dm - probably not necessary any more, as functionally comparable to normal DynamicCode
+        //public new dynamic CreateInstance(string virtualPath,
+        //    string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+        //    string name = null,
+        //    string relativePath = null,
+        //    bool throwOnError = true)
+        //{
+        //    var wrapLog = Log.Call<dynamic>($"{virtualPath}, ..., {name}, {relativePath}");
+        //    // usually we don't have a relative path, so we use the preset path from when this class was instantiated
+        //    relativePath = relativePath ?? CreateInstancePath;
+        //    var result = DynCode?.CreateInstance(virtualPath, dontRelyOnParameterOrder, name, relativePath, throwOnError);
+        //    if (result != null) return wrapLog("ok", result);
+
+        //    Log.Add("DynCode doesn't exist or returned null, will use standard CreateInstance");
+        //    result = base.CreateInstance(virtualPath, dontRelyOnParameterOrder, name, relativePath, throwOnError);
+
+        //    return wrapLog((result != null).ToString(), result);
+        //}
     }
 }

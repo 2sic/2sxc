@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace ToSic.Sxc.WebApi.Assets
 {
-    internal class FileUploadDto
+    public class FileUploadDto
     {
         public string Name;
         public Stream Stream;

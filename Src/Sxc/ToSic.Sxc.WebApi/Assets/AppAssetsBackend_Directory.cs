@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ToSic.Sxc.WebApi.Assets
 {
-    internal partial class AppAssetsBackend
+    public partial class AppAssetsBackend
     {
 
         private void FullDirList(DirectoryInfo dir, string searchPattern, List<DirectoryInfo> folders, List<FileInfo> files, SearchOption opt)

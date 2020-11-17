@@ -1,4 +1,6 @@
-﻿namespace ToSic.SexyContent
+﻿using ToSic.Sxc.WebApi;
+
+namespace ToSic.SexyContent
 {
     /// <summary>
     /// This is a dummy code which just ensures that this project
@@ -6,7 +8,7 @@
     /// </summary>
     internal class CompilerDependencies
     {
-        private string ToSicSexyContentWebApi => nameof(WebApi.DynamicApiController);
+        private string ToSicSexyContentWebApi => nameof(DynamicApiController);
 
         private string ToSicSexyContentRazor => nameof(Sxc.Engines.RazorEngine);
     }

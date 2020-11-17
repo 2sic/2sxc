@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Sxc.Web.WebApi.System;
 
@@ -8,6 +9,8 @@ namespace ToSic.Sxc.Mvc.WebApi.System
     [ApiController]
     public class InsightsController : SxcStatelessControllerBase
     {
+        private readonly Lazy<Insights> _lazyInsights;
+
         #region Logging aspects
 
          protected override string HistoryLogName => "Api.Debug";
@@ -31,8 +34,12 @@ namespace ToSic.Sxc.Mvc.WebApi.System
 
         #region Construction and Security
 
-        protected Insights Insights =>
-            _insights ??= new Insights(Log, ThrowIfNotSuperuser, (string msg) => new Exception(msg));
+        public InsightsController(Lazy<Insights> lazyInsights)
+        {
+            _lazyInsights = lazyInsights;
+        }
+
+        protected Insights Insights => _insights ??= _lazyInsights.Value.Init(Log, ThrowIfNotSuperuser, msg => new Exception(msg));
         private Insights _insights;
 
 

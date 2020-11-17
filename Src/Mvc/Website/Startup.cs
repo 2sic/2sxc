@@ -11,7 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using RazorPartialToString.Services;
 using ToSic.Sxc.Mvc;
-using ToSic.Sxc.Mvc.Engines;
+//using ToSic.Sxc.Mvc.Engines;
 
 
 namespace Website
@@ -66,7 +66,7 @@ namespace Website
 
             // Try to get partial to string rendering
             services.AddTransient<IRazorPartialToStringRenderer, RazorPartialToStringRenderer>();
-            services.AddTransient<IRenderRazor, RenderRazor>();
+            //services.AddTransient<IRenderRazor, RenderRazor>();
 
             Plumbing.EavConfiguration.ConfigureIoC(services);
         }

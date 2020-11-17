@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     {
         protected override string HistoryLogName => "Api.Fields";
 
-        private ContentTypeApi Backend => new ContentTypeApi(Log);
+        private ContentTypeApi Backend => _build<ContentTypeApi>();
 
         #region Fields - Get, Reorder, Data-Types (for dropdown), etc.
 
@@ -29,46 +29,46 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// Returns the configuration for a content type
         /// </summary>
         [HttpGet]
-        public IEnumerable<ContentTypeFieldDto> All(int appId, string staticName) => Backend.GetFields(appId, staticName);
+        public IEnumerable<ContentTypeFieldDto> All(int appId, string staticName) => Backend.Init(appId, Log).GetFields(staticName);
 
         /// <summary>
         /// Used to be GET ContentType/DataTypes
         /// </summary>
         [HttpGet]
-        public string[] DataTypes(int appId) => Backend.DataTypes(appId);
+        public string[] DataTypes(int appId) => Backend.Init(appId, Log).DataTypes();
 
         /// <summary>
         /// Used to be GET ContentType/InputTypes
         /// </summary>
 	    [HttpGet]
-        public List<InputTypeInfo> InputTypes(int appId) => new AppRuntime(appId, true, Log).ContentTypes.GetInputTypes();
+        public List<InputTypeInfo> InputTypes(int appId) => _build<AppRuntime>().Init(State.Identity(null, appId), true, Log).ContentTypes.GetInputTypes();
 
         /// <summary>
         /// Used to be GET ContentType/AddField
         /// </summary>
         [HttpPost]
         public int Add(int appId, int contentTypeId, string staticName, string type, string inputType, int index) 
-            => Backend.AddField(appId, contentTypeId, staticName, type, inputType, index);
+            => Backend.Init(appId, Log).AddField(contentTypeId, staticName, type, inputType, index);
 
         /// <summary>
         /// Used to be GET ContentType/DeleteField
         /// </summary>
         [HttpDelete]
         public bool Delete(int appId, int contentTypeId, int attributeId) 
-            => Backend.DeleteField(appId, contentTypeId, attributeId);
+            => Backend.Init(appId, Log).DeleteField(contentTypeId, attributeId);
 
         /// <summary>
         /// Used to be GET ContentType/Reorder
         /// </summary>
 	    [HttpPost]
-        public bool Sort(int appId, int contentTypeId, string order) => Backend.Reorder(appId, contentTypeId, order);
+        public bool Sort(int appId, int contentTypeId, string order) => Backend.Init(appId, Log).Reorder(contentTypeId, order);
 
 
         /// <summary>
         /// Used to be GET ContentType/UpdateInputType
         /// </summary>
         [HttpPost]
-        public bool InputType(int appId, int attributeId, string inputType) => Backend.SetInputType(appId, attributeId, inputType);
+        public bool InputType(int appId, int attributeId, string inputType) => Backend.Init(appId, Log).SetInputType(attributeId, inputType);
 
         #endregion
 
@@ -76,7 +76,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// Used to be GET ContentType/Rename
         /// </summary>
         [HttpPost]
-        public void Rename(int appId, int contentTypeId, int attributeId, string newName) => Backend.Rename(appId, contentTypeId, attributeId, newName);
+        public void Rename(int appId, int contentTypeId, int attributeId, string newName) => Backend.Init(appId, Log).Rename(contentTypeId, attributeId, newName);
 
 	}
 }

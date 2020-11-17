@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Dnn
     public interface INeedsDynCodeContext
     {
         [PrivateApi("internal, for passing around context!")]
-        DnnDynamicCode DynCode { set; }
+        DnnDynamicCodeRoot DynCode { set; }
 
     }
 }

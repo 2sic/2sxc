@@ -9,6 +9,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -39,12 +40,10 @@ namespace ToSic.Sxc.Code
         public IDynamicCode UnwrappedContents { get; private set; }
 
         [PrivateApi]
-        public virtual void DynamicCodeCoupling(IDynamicCode parent, string path)
+        public virtual void DynamicCodeCoupling(IDynamicCode parent)
         {
+            Log?.Call()(null);
             UnwrappedContents = parent;
-            try { 
-                Log.Add("DynamicCode created: " + path);
-            } catch { /* ignore */ }
         }
 
         #region Content and Header
@@ -120,11 +119,24 @@ namespace ToSic.Sxc.Code
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string name = null,
             string relativePath = null,
-            bool throwOnError = true) =>
-            UnwrappedContents?.CreateInstance(virtualPath, dontRelyOnParameterOrder, name, CreateInstancePath, throwOnError);
+            bool throwOnError = true)
+        {
+            var wrapLog = Log.Call<dynamic>();
+            // usually we don't have a relative path, so we use the preset path from when this class was instantiated
+            relativePath = relativePath ?? CreateInstancePath;
+            var instance = UnwrappedContents?.CreateInstance(virtualPath, dontRelyOnParameterOrder, name,
+                relativePath ?? CreateInstancePath, throwOnError);
+            return wrapLog((instance != null).ToString(), instance);
+        }
 
         #endregion
 
         public ILog Log => UnwrappedContents?.Log;
+
+        #region Context WIP
+
+        public RunContext RunContext => UnwrappedContents?.RunContext;
+
+        #endregion
     }
 }

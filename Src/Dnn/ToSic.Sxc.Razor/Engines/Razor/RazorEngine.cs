@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Engines
     {
         #region Constructor / DI
 
-        public RazorEngine(IHttp http, TemplateHelpers templateHelpers) : base(http, templateHelpers) { }
+        public RazorEngine(EngineBaseDependencies helpers) : base(helpers) { }
 
         #endregion
 
@@ -126,7 +126,7 @@ namespace ToSic.Sxc.Engines
         private void InitHelpers(RazorComponentBase webPage, int compatibility)
         {
             webPage.Html = new Razor.HtmlHelper();
-            webPage.DynCode = new DnnDynamicCode().Init(Block, Log, compatibility);
+            webPage.DynCode = new DnnDynamicCodeRoot().Init(Block, Log, compatibility);
 
             #region New in 10.25 - ensure jquery is not included by default
 

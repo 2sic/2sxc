@@ -19,3 +19,4 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("ToSic.Sxc.Dnn")]
 [assembly: InternalsVisibleTo("ToSic.SexyContent.Razor")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Mvc")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.Oqtane.Server")]

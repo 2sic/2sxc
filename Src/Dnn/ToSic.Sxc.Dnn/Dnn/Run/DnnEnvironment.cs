@@ -1,46 +1,34 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Logging;
+﻿using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.Run
 {
-    public class DnnEnvironment: HasLog, IAppEnvironment
+    public class DnnEnvironment: HasLog, IEnvironment
     {
         #region Constructor and Init
 
         /// <summary>
         /// Constructor for DI, you must always call Init(...) afterwards
         /// </summary>
-        public DnnEnvironment(IHttp http, ITenant tenant, IPagePublishing publishing, IZoneMapper zoneMapper) : base("DNN.Enviro")
+        public DnnEnvironment(ISite site) : base("DNN.Enviro")
         {
-            _http = http;
-            _tenant = tenant;
-            PagePublishing = publishing.Init(Log);
-            ZoneMapper = zoneMapper.Init(Log);
+            _site = site;
         }
 
-        private readonly IHttp _http;
-        private readonly ITenant _tenant;
+        private readonly ISite _site;
 
-        public IAppEnvironment Init(ILog parent)
+        public IEnvironment Init(ILog parent)
         {
             Log.LinkTo(parent);
-            if (_tenant.Id == Eav.Constants.NullId)
+            if (_site.Id == Eav.Constants.NullId)
                 Log.Add("Warning - tenant isn't ready - will probably cause errors");
             return this;
         }
         #endregion
 
-        public IZoneMapper ZoneMapper { get; }
-
         public IUser User { get; } = new DnnUser();
 
-        public IPagePublishing PagePublishing { get; }
-
-        public string MapPath(string virtualPath) => _http.MapPath(virtualPath);
-
-        public string DefaultLanguage => _tenant.DefaultLanguage;
+        public string DefaultLanguage => _site.DefaultLanguage;
 
     }
 }

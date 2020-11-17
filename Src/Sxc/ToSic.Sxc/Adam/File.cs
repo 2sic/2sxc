@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Adam
         private MetadataFor _metadataKey;
         #endregion
 
-        public string Url { get; internal set; }
+        public string Url { get; set; }
 
         public string Type => Classification.TypeName(Extension);
 

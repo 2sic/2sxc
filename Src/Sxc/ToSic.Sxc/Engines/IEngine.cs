@@ -5,6 +5,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Search;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Engines
 {
@@ -59,5 +60,7 @@ namespace ToSic.Sxc.Engines
 
         [PrivateApi]
         bool CompatibilityAutoLoadJQueryAndRVT { get; }
+
+        List<ClientAssetInfo> Assets { get; }
     }
 }

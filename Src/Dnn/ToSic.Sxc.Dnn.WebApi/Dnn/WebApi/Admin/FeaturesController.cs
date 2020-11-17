@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public IEnumerable<Feature> List(bool reload = false) => 
-            Eav.Factory.Resolve<FeaturesBackend>().Init(Log).GetAll(reload);
+            _build<FeaturesBackend>().Init(Log).GetAll(reload);
 
         /// <summary>
         /// Used to be GET System/ManageFeaturesUrl
@@ -50,6 +50,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
         public bool Save([FromBody] FeaturesDto featuresManagementResponse) => 
-            Eav.Factory.Resolve<FeaturesBackend>().Init(Log).SaveFeatures(featuresManagementResponse);
+            _build<FeaturesBackend>().Init(Log).SaveFeatures(featuresManagementResponse);
     }
 }

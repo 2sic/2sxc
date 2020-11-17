@@ -1,23 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Dnn.WebApi
 {
-    internal static class DnnGetBlock
+    internal class DnnGetBlock
     {
+        private readonly IServiceProvider _serviceProvider;
 
-        internal static IBlock GetCmsBlock(HttpRequestMessage request, bool allowNoContextFound, ILog log)
+        public DnnGetBlock(IServiceProvider serviceProvider)
         {
-            var wrapLog = log.Call<IBlock>(parameters: $"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
+            _serviceProvider = serviceProvider;
+        }
 
-            //const string headerId = "ContentBlockId";
+        internal IBlock GetCmsBlock(HttpRequestMessage request, bool allowNoContextFound, ILog log)
+        {
+            var wrapLog = log.Call<IBlock>($"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
+
             var moduleInfo = request.FindModuleInfo();
 
             if (allowNoContextFound & moduleInfo == null)
@@ -26,14 +33,14 @@ namespace ToSic.Sxc.Dnn.WebApi
             if (moduleInfo == null)
                 log.Add("context/module not found");
 
-            var container = new DnnContainer().Init(moduleInfo, log);
+            var container = _serviceProvider.Build<DnnContainer>().Init(moduleInfo, log);
             
             var tenant = moduleInfo == null
-                ? new DnnTenant(null)
-                : new DnnTenant().Init(moduleInfo.OwnerPortalID);
+                ? new DnnSite(null)
+                : new DnnSite().Init(moduleInfo.OwnerPortalID);
 
-            var context = new DnnContext(tenant, container, new DnnUser(), GetOverrideParams(request));
-            IBlock block = new BlockFromModule().Init(context, log);
+            var context = DnnContext.Create(tenant, container, new DnnUser(), _serviceProvider, GetOverrideParams(request));
+            IBlock block = _serviceProvider.Build<BlockFromModule>().Init(context, log);
 
             // check if we need an inner block
             if (request.Headers.Contains(WebApiConstants.HeaderContentBlockId)) { 
@@ -42,7 +49,7 @@ namespace ToSic.Sxc.Dnn.WebApi
                 if (blockId < 0)   // negative id, so it's an inner block
                 {
                     log.Add($"Inner Content: {blockId}");
-                    block = new BlockFromEntity().Init(block, blockId, log);
+                    block = _serviceProvider.Build<BlockFromEntity>().Init(block, blockId, log);
                 }
             }
 

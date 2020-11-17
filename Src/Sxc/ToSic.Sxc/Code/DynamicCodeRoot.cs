@@ -6,11 +6,13 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Edit.InPageEditingSystem;
+using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -26,14 +28,15 @@ namespace ToSic.Sxc.Code
     /// Note that other DynamicCode objects like RazorComponent or ApiController reference this object for all the interface methods of <see cref="IDynamicCode"/>.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract class DynamicCodeRoot : HasLog, IDynamicCode
+    public /*abstract*/ class DynamicCodeRoot : HasLog, IDynamicCode
     {
         public IBlock Block { get; private set; }
 
-        protected DynamicCodeRoot(string logName = null): base(logName ?? "Sxc.DynCdR") { }
+        public DynamicCodeRoot(): base("Sxc.DynCdR") { }
+        protected DynamicCodeRoot(string logName): base(logName) { }
 
         [PrivateApi]
-        public DynamicCodeRoot Init(IBlock block, int compatibility, ILog parentLog)
+        public DynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)
         {
             Log.LinkTo(parentLog ?? block?.Log);
             if (block == null)
@@ -110,8 +113,10 @@ namespace ToSic.Sxc.Code
             => _configurationProvider ??
                (_configurationProvider = Data.Configuration.LookUps);
 
-        internal DataSource DataSourceFactory => _dataSourceFactory ?? (_dataSourceFactory = new DataSource(Log));
-        private DataSource _dataSourceFactory;
+        internal DataSourceFactory DataSourceFactory => _dataSourceFactory ??
+                                                        (_dataSourceFactory = Block?.Context?.ServiceProvider
+                                                            .Build<DataSourceFactory>().Init(Log));
+        private DataSourceFactory _dataSourceFactory;
 
 
 
@@ -179,7 +184,7 @@ namespace ToSic.Sxc.Code
             if (Data == null || Block.View == null) return;
             if (!Data.Out.ContainsKey(ViewParts.ListContent)) return;
 
-            var listEntity = Data[ViewParts.ListContent].List.FirstOrDefault();
+            var listEntity = Data[ViewParts.ListContent].Immutable.FirstOrDefault();
             _header = listEntity == null ? null : AsDynamic(listEntity);
         }
 
@@ -207,7 +212,7 @@ namespace ToSic.Sxc.Code
             if (Data == null || Block.View == null) return;
             if (!Data.Out.ContainsKey(Eav.Constants.DefaultStreamName)) return;
 
-            var entities = Data.List.ToList();
+            var entities = Data.Immutable; //.ToList();
             if (entities.Any()) _content = AsDynamic(entities.First());
 
         }
@@ -226,7 +231,7 @@ namespace ToSic.Sxc.Code
         public IFolder AsAdam(IEntity entity, string fieldName)
         {
             if (_adamAppContext == null) 
-                _adamAppContext = Factory.Resolve<AdamAppContext>()
+                _adamAppContext = Block.Context.ServiceProvider.Build<AdamAppContext>()
                     .Init(Block.Context.Tenant, App, Block, CompatibilityLevel, Log);
             return _adamAppContext.FolderOfField(entity.EntityGuid, fieldName);
         }
@@ -241,6 +246,7 @@ namespace ToSic.Sxc.Code
         #endregion
 
         #region SharedCode Compiler
+
         /// <inheritdoc />
         public virtual dynamic CreateInstance(string virtualPath,
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
@@ -248,24 +254,33 @@ namespace ToSic.Sxc.Code
             string relativePath = null,
             bool throwOnError = true)
         {
+            var wrap = Log.Call<dynamic>($"{virtualPath}, {name}, {relativePath}, {throwOnError}");
             Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "CreateInstance",
                 $"{nameof(name)},{nameof(throwOnError)}");
 
             // Compile
-            var instance = new CodeCompiler(Log)
+            var instance = new CodeCompiler(Block.Context.ServiceProvider, Log)
                 .InstantiateClass(virtualPath, name, relativePath, throwOnError);
 
             // if it supports all our known context properties, attach them
             if (instance is ICoupledDynamicCode isShared)
-                isShared.DynamicCodeCoupling(this, virtualPath);
+            {
+                isShared.DynamicCodeCoupling(this);
+            }
 
-            return instance;
+            return wrap((instance != null).ToString(), instance);
         }
-
-
-        #endregion
 
         /// <inheritdoc />
         public string CreateInstancePath { get; set; }
+
+        #endregion
+
+        #region Context WIP
+
+        [PrivateApi] public RunContext RunContext => _runContext ?? (_runContext = Block.Context.ServiceProvider.Build<RunContext>().Init(this));
+        private RunContext _runContext;
+
+        #endregion
     }
 }

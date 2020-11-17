@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Errors;
@@ -12,14 +14,19 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.Features;
-using ToSic.Sxc.WebApi.Security;
+using ToSic.Sxc.WebApi.Save;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    internal partial class EditLoadBackend: WebApiBackendBase<EditLoadBackend>
+    public partial class EditLoadBackend: WebApiBackendBase<EditLoadBackend>
     {
-        public EditLoadBackend() : base("Cms.LoadBk")
+        private readonly EntityApi _entityApi;
+        private readonly ContentGroupList _contentGroupList;
+
+        public EditLoadBackend(EntityApi entityApi, ContentGroupList contentGroupList, IServiceProvider serviceProvider) : base(serviceProvider, "Cms.LoadBk")
         {
+            _entityApi = entityApi;
+            _contentGroupList = contentGroupList;
         }
 
         public AllInOneDto Load(IBlock block, IContextBuilder contextBuilder, int appId, List<ItemIdentifier> items)
@@ -30,21 +37,20 @@ namespace ToSic.Sxc.WebApi.Cms
             // do early permission check - but at this time it may be that we don't have the types yet
             // because they may be group/id combinations, without type information which we'll look up afterwards
             var appIdentity = State.Identity(null, appId);
-            //var block = GetBlock();
-            items = new ContentGroupList(block, Log).ConvertListIndexToId(items, appIdentity);
+            items = _contentGroupList.Init(block, Log, appIdentity).ConvertListIndexToId(items);
 
             // now look up the types, and repeat security check with type-names
             // todo: 2020-03-20 new feat 11.01, may not check inner type permissions ATM
-            var permCheck = new MultiPermissionsTypes().Init(block.Context, GetApp(appId, block), items, Log);
+            var permCheck = block.Context.ServiceProvider.Build<MultiPermissionsTypes>().Init(block.Context, GetApp(appId, block), items, Log);
             if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
             // load items - similar
             var result = new AllInOneDto();
-            var entityApi = new EntityApi(appId, permCheck.EnsureAny(GrantSets.ReadDraft), Log);
+            var entityApi = _entityApi.Init(appId, permCheck.EnsureAny(GrantSets.ReadDraft), Log);
             var typeRead = entityApi.AppRead.ContentTypes;
             var list = entityApi.GetEntitiesForEditing(items);
-            var jsonSerializer = new JsonSerializer();
+            var jsonSerializer = ServiceProvider.Build<JsonSerializer>();
             result.Items = list.Select(e => new BundleWithHeader<JsonEntity>
             {
                 Header = e.Header,
@@ -72,7 +78,9 @@ namespace ToSic.Sxc.WebApi.Cms
                 .Select(ct => JsonSerializer.ToJson(ct, true))
                 .ToList();
 
-            // todo: ensure that sub-properties of the content-types are included
+            // ensure that sub-properties of the content-types are included
+            // this is for UI Formulas (children of @All) - WIP
+            // and the warning/error Regex specials - WIP
             var entList = types.SelectMany(
                 // in all Content-Type attributes like title, body etc.
                 t => t.Attributes.SelectMany(

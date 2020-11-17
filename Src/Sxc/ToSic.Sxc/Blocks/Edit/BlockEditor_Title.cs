@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
@@ -13,7 +12,7 @@ namespace ToSic.Sxc.Blocks.Edit
             // ...but for now we'll just update the current modules title
             // note: it also correctly handles published/unpublished, but I'm not sure why :)
 
-            var cms = new CmsRuntime(Block.App, Log, true, false);
+            var cms = _lazyCmsRuntime.Value.Init(Block.App, true, Log);
             var contentGroup = cms.Blocks.GetBlockConfig(BlockConfiguration.Guid);
 
             var titleItem = contentGroup.Header.FirstOrDefault() ?? contentGroup.Content.FirstOrDefault();

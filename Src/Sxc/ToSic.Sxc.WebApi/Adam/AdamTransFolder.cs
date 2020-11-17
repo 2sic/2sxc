@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    internal class AdamTransFolder<TFolderId, TFileId> : AdamTransactionBase<AdamTransFolder<TFolderId, TFileId>, TFolderId, TFileId>
+    public class AdamTransFolder<TFolderId, TFileId> : AdamTransactionBase<AdamTransFolder<TFolderId, TFileId>, TFolderId, TFileId>
     {
-        public AdamTransFolder() : base("Adm.TrnFld") { }
+        public AdamTransFolder(Lazy<AdamState<TFolderId, TFileId>> adamState) : base(adamState, "Adm.TrnFld") { }
         internal IList<AdamItemDto> Folder(string parentSubfolder, string newFolder)
         {
             var logCall = Log.Call<IList<AdamItemDto>>($"get folders for subfld:{parentSubfolder}, new:{newFolder}");
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 folder = State.ContainerContext.Folder(parentSubfolder, false);
 
             // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
-            if (State.UseTenantRoot && !State.Security.CanEditFolder(folder))
+            if (State.UseSiteRoot && !State.Security.CanEditFolder(folder))
                 throw HttpException.PermissionDenied("can't create new folder - permission denied");
 
             var newFolderPath = string.IsNullOrEmpty(parentSubfolder)

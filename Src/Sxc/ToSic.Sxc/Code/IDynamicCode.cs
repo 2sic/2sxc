@@ -8,6 +8,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -192,6 +193,10 @@ namespace ToSic.Sxc.Code
         T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null) where T : IDataSource;
         #endregion
 
+        #region WIP Context
+        [PrivateApi("still WIP")]
+        RunContext RunContext { get; }
 
+        #endregion
     }
 }

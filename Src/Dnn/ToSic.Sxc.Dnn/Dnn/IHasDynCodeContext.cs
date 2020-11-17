@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Dnn
     public interface IHasDynCodeContext
     {
         [PrivateApi("internal, for passing around context!")]
-        DnnDynamicCode DynCode { get; }
+        DnnDynamicCodeRoot DynCode { get; }
 
     }
 }

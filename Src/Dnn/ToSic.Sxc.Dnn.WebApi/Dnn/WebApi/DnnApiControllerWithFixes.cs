@@ -2,8 +2,10 @@
 using System.Web;
 using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Helpers;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 
@@ -79,6 +81,10 @@ namespace ToSic.Sxc.Dnn.WebApi
         #region Extend Time so Web Server doesn't time out
 
         protected void PreventServerTimeout300() => HttpContext.Current.Server.ScriptTimeout = 300;
+
+        protected IServiceProvider _serviceProvider => Eav.Factory.GetServiceProvider();
+
+        protected T _build<T>() => Eav.Factory.GetServiceProvider().Build<T>();
 
         #endregion
 

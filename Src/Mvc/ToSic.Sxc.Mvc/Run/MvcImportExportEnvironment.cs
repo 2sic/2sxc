@@ -8,12 +8,9 @@ namespace ToSic.Sxc.Mvc.Run
 {
     public class MvcImportExportEnvironment: ImportExportEnvironmentBase
     {
-        public MvcImportExportEnvironment(IEnvironment environment, ITenant tenant) 
-            : base(environment, tenant, "Mvc.IExEnv")
-        {
-        }
+        public MvcImportExportEnvironment(Dependencies dependencies) : base(dependencies, "Mvc.IExEnv") { }
 
-        public override List<Message> TransferFilesToTenant(string sourceFolder, string destinationFolder) 
+        public override List<Message> TransferFilesToSite(string sourceFolder, string destinationFolder) 
             => throw new NotImplementedException();
 
         public override Version TenantVersion => typeof(MvcImportExportEnvironment).Assembly.GetName().Version;

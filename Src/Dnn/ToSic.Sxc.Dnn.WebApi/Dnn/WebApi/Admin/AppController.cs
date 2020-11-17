@@ -5,6 +5,8 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Apps;
@@ -31,21 +33,21 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public List<AppDto> List(int zoneId)
-            => new AppsBackend().Init(Log).Apps(new DnnTenant().Init(ActiveModule.OwnerPortalID), GetBlock(), zoneId);
+            => _build<AppsBackend>().Init(Log).Apps(new DnnSite().Init(ActiveModule.OwnerPortalID), GetBlock(), zoneId);
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public void App(int zoneId, int appId)
-            => new CmsZones(zoneId, Log).AppsMan.RemoveAppInTenantAndEav(appId);
+        public void App(int zoneId, int appId, bool fullDelete = true)
+            => _build<CmsZones>().Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId, fullDelete);
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public void App(int zoneId, string name)
-            => AppManager.AddBrandNewApp(zoneId, name, Log);
+            => _build<AppCreator>().Init(zoneId, Log).Create(name);
 
 
         /// <summary>
@@ -58,7 +60,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
         public AppExportInfoDto Statistics(int zoneId, int appId)
-            => Eav.Factory.Resolve<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
+            => _build<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
                 .GetAppInfo(appId, zoneId);
 
 
@@ -82,7 +84,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <returns></returns>
         [HttpGet]
         public HttpResponseMessage Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => Eav.Factory.Resolve<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
+            => _build<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
                 .Export(appId, zoneId, includeContentGroups, resetAppGuid);
 
         /// <summary>
@@ -96,9 +98,27 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [ValidateAntiForgeryToken]
         public bool SaveData(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => Eav.Factory.Resolve<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
+            => _build<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
                 .SaveDataForVersionControl(appId, zoneId, includeContentGroups, resetAppGuid);
 
+        /// <summary>
+        /// Reset an App to the last xml state
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+        [ValidateAntiForgeryToken]
+        public ImportResultDto Reset(int zoneId, int appId)
+        {
+            var wrapLog = Log.Call<ImportResultDto>();
+
+            PreventServerTimeout300();
+            var result = _build<ResetApp>()
+                .Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
+                .Reset(zoneId, appId, PortalSettings.DefaultLanguage);
+
+            return wrapLog("ok", result);
+        }
 
         /// <summary>
         /// Used to be POST ImportExport/ImportApp
@@ -116,7 +136,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
             if (request.Files.Count <= 0) return new ImportResultDto(false, "no files uploaded");
 
-            return Eav.Factory.Resolve<ImportApp>().Init(new DnnUser(UserInfo), Log)
+            return _build<ImportApp>().Init(new DnnUser(UserInfo), Log)
                 .Import(zoneId, request["Name"], request.Files[0].InputStream);
         }
 

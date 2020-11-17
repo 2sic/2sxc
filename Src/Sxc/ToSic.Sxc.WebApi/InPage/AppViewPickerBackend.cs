@@ -1,13 +1,18 @@
 ﻿using System;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Edit;
 
 namespace ToSic.Sxc.WebApi.InPage
 {
-    internal class AppViewPickerBackend: BlockWebApiBackendBase<AppViewPickerBackend>
+    public class AppViewPickerBackend: BlockWebApiBackendBase<AppViewPickerBackend>
     {
-        public AppViewPickerBackend() : base("Bck.ViwApp") { }
+        //private readonly Lazy<AppManager> _appManagerLazy;
+        public AppViewPickerBackend(Lazy<CmsManager> cmsManagerLazy) : base(cmsManagerLazy,"Bck.ViwApp")
+        {
+            //_appManagerLazy = appManagerLazy;
+        }
+
 
         public void SetAppId(int? appId) => BlockEditorBase.GetEditor(_block).SetAppId(appId);
 
@@ -23,7 +28,8 @@ namespace ToSic.Sxc.WebApi.InPage
         {
             var callLog = Log.Call<bool>($"{id}");
             ThrowIfNotAllowedInApp(GrantSets.WritePublished);
-            new AppManager(_block.App, Log).Entities.Publish(id);
+            //_appManagerLazy.Value.Init(_block.App, Log)
+            CmsManager.Entities.Publish(id);
             return callLog("ok", true);
         }
 
@@ -36,7 +42,7 @@ namespace ToSic.Sxc.WebApi.InPage
             // if a preview templateId was specified, swap to that
             if (templateId > 0)
             {
-                var template = _cmsManager.Read.Views.Get(templateId);
+                var template = CmsManager.Read.Views.Get(templateId);
                 _block.View = template;
             }
 

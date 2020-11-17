@@ -1,23 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data;
-using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Apps
 {
-	public partial class BlocksManager: CmsManagerBase
+	public class BlocksManager: PartOf<CmsManager, BlocksManager>
 	{
-        public BlocksManager(CmsManager cms, ILog parentLog)
-            : base(cms, parentLog, "CG.Manage")
-        {
-        }
+        public BlocksManager() : base("CG.Manage") { }
 
 	    public Guid UpdateOrCreateContentGroup(BlockConfiguration blockConfiguration, int templateId)
 		{
-		    var appMan = CmsManager;
+		    var appMan = Parent;
 
 		    if (!blockConfiguration.Exists)
 		    {
@@ -41,8 +38,8 @@ namespace ToSic.Sxc.Apps
 		    }
 		}
 
-        public void AddEmptyItem(BlockConfiguration block, int? sortOrder) =>
-            AppManager.Entities.FieldListUpdate(block.Entity, ViewParts.ContentPair, block.VersioningEnabled,
+        public void AddEmptyItem(BlockConfiguration block, int? sortOrder, bool forceDraft) =>
+            Parent.Entities.FieldListUpdate(block.Entity, ViewParts.ContentPair, forceDraft,
                 lists => lists.Add(sortOrder, new int?[] { null, null }));
 
 
@@ -66,11 +63,11 @@ namespace ToSic.Sxc.Apps
         {
             var callLog = Log.Call<int>($"{nameof(parentId)}:{parentId}, {nameof(field)}:{field}, {nameof(index)}, {index}, {nameof(typeName)}:{typeName}");
             // create the new entity 
-            var entityId = CmsManager.Entities.GetOrCreate(newGuid, typeName, values);
+            var entityId = Parent.Entities.GetOrCreate(newGuid, typeName, values);
 
             #region attach to the current list of items
 
-            var cbEnt = CmsManager.AppState.List.One(parentId);
+            var cbEnt = Parent.AppState.List.One(parentId);
             var blockList = ((IEnumerable<IEntity>)cbEnt.GetBestValue(field))?.ToList() ?? new List<IEntity>();
 
             var intList = blockList.Select(b => b.EntityId).ToList();
@@ -81,7 +78,7 @@ namespace ToSic.Sxc.Apps
                 intList.Insert(index, entityId);
             }
             var updateDic = new Dictionary<string, object> { { field, intList } };
-            CmsManager.Entities.UpdateParts(cbEnt.EntityId, updateDic);
+            Parent.Entities.UpdateParts(cbEnt.EntityId, updateDic);
             #endregion
 
             return callLog($"{entityId}", entityId);

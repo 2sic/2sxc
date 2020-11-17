@@ -5,7 +5,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Dnn.Run
@@ -16,16 +15,22 @@ namespace ToSic.Sxc.Dnn.Run
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public class DnnContainer: Container<ModuleInfo>, IHasLog
     {
+        private readonly Lazy<IZoneMapper> _zoneMapperLazy;
+
         #region Constructors and DI
+        
+        public DnnContainer(Lazy<IZoneMapper> zoneMapperLazy): base("Dnn.Contnr")
+        {
+            _zoneMapperLazy = zoneMapperLazy;
+        }
 
         /// <summary>
         /// We don't use a Constructor because of DI
         /// So you must always call Init
         /// </summary>
-        public DnnContainer Init(ModuleInfo item, ILog parentLog) 
+        public new DnnContainer Init(ModuleInfo item, ILog parentLog)
         {
-            Log = new Log("Dnn.Contnr", parentLog);
-            Init(item);
+            base.Init(item, parentLog);
             return this;
         }
 
@@ -35,12 +40,11 @@ namespace ToSic.Sxc.Dnn.Run
         /// </summary>
         public override IContainer Init(int instanceId, ILog parentLog) 
         {
-            Log = new Log("Dnn.Contnr", parentLog);
             var mod = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, false);
-            return Init(mod);
+            return Init(mod, parentLog);
         }
 
-        public ILog Log { get; private set; }
+        //public ILog Log { get; private set; }
         #endregion
 
 
@@ -61,15 +65,15 @@ namespace ToSic.Sxc.Dnn.Run
                 if (UnwrappedContents == null) return null;
 
                 // find ZoneId, AppId and prepare settings for next values
-                var zoneId = new DnnZoneMapper().Init(Log).GetZoneId(UnwrappedContents.OwnerPortalID);
+                var zoneId = _zoneMapperLazy.Value.Init(Log).GetZoneId(UnwrappedContents.OwnerPortalID);
                 var appId = GetInstanceAppId(zoneId);
                 var settings = UnwrappedContents.ModuleSettings;
 
                 // find block identifier
-                Guid.TryParse(settings[Settings.FieldContentGroup]?.ToString(), out var blockGuid);
+                Guid.TryParse(settings[Settings.ModuleSettingContentGroup]?.ToString(), out var blockGuid);
 
                 // Check if we have preview-view identifier - for blocks which don't exist yet
-                var previewTemplateString = settings[Settings.FieldPreviewTemplate]?.ToString();
+                var previewTemplateString = settings[Settings.ModuleSettingsPreview]?.ToString();
                 var overrideView = !string.IsNullOrEmpty(previewTemplateString)
                     ? Guid.Parse(previewTemplateString)
                     : new Guid();
@@ -87,16 +91,16 @@ namespace ToSic.Sxc.Dnn.Run
             var module = UnwrappedContents ?? throw new Exception("instance is not ModuleInfo");
 
             var msg = $"get appid from instance for Z:{zoneId} Mod:{module.ModuleID}";
-            var zoneRt = new ZoneRuntime(zoneId, Log);
+            var zoneRt = new ZoneRuntime().Init(zoneId, Log);
             if (IsPrimary)
             {
                 var appId = zoneRt.DefaultAppId;
                 return wrapLog($"{msg} - use Default app: {appId}", appId);
             }
 
-            if (module.ModuleSettings.ContainsKey(Settings.AppNameString))
+            if (module.ModuleSettings.ContainsKey(Settings.ModuleSettingApp))
             {
-                var guid = module.ModuleSettings[Settings.AppNameString].ToString();
+                var guid = module.ModuleSettings[Settings.ModuleSettingApp].ToString();
                 var appId = zoneRt.FindAppId(guid);
                 return wrapLog($"{msg} AppG:{guid} = app:{appId}", appId);
             }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using DotNetNuke.Entities.Users;
 using ToSic.Eav.Data;
@@ -76,25 +77,26 @@ namespace ToSic.Sxc.Dnn.DataSources
 
 		#endregion
 
-		public DnnUserProfile(ITenant tenant, IZoneMapper zoneMapper)
+		public DnnUserProfile(ISite site, IZoneMapper zoneMapper)
 		{
-			Out.Add(Constants.DefaultStreamName, new DataStream(this, Constants.DefaultStreamName, GetList));
+			Provide(GetList);
+            //Out.Add(Eav.Constants.DefaultStreamName, new DataStream(this, Eav.Constants.DefaultStreamName, GetList));
 			Configuration.Values.Add(UserIdsKey, UserIdsDefaultKeyToken);
 			Configuration.Values.Add(PropertiesKey, PropertiesDefaultKeyToken);
 			Configuration.Values.Add(ContentTypeKey, ContentTypeDefaultToken);
 			Configuration.Values.Add(TitleFieldKey, EntityTitleDefaultKeyToken);
 
-            _tenant = tenant;
+            _site = site;
             _zoneMapper = zoneMapper;
         }
 
-        private readonly ITenant _tenant;
+        private readonly ISite _site;
         private readonly IZoneMapper _zoneMapper;
 
-		private List<IEntity> GetList()
+		private ImmutableArray<IEntity> GetList()
 		{
             Configuration.Parse();
-			var realTenant = _tenant.Id != Eav.Constants.NullId ? _tenant : _zoneMapper.Init(Log).TenantOfApp(AppId);
+			var realTenant = _site.Id != Eav.Constants.NullId ? _site : _zoneMapper.Init(Log).TenantOfApp(AppId);
 
 			var properties = Properties.Split(',').Select(p => p.Trim()).ToArray();
             var portalId = realTenant.Id;
@@ -147,11 +149,11 @@ namespace ToSic.Sxc.Dnn.DataSources
 				}
 
 				// create Entity and add to result
-				var entity = new Eav.Data.Entity(Eav.Constants.TransientAppId, user.UserID, ContentTypeBuilder.Fake(ContentType) , values, TitleField);
+				var entity = new Entity(Eav.Constants.TransientAppId, user.UserID, ContentTypeBuilder.Fake(ContentType) , values, TitleField);
 				result.Add(entity);
 			}
 
-			return result;
+			return result.ToImmutableArray();
 		}
 	}
 }

@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
     {
         protected override string HistoryLogName => "Api.List";
 
-        private FieldListBackend FieldBacked => Eav.Factory.Resolve<FieldListBackend>().Init(GetContext(), GetBlock(), Log);
+        private FieldListBackend FieldBacked => _build<FieldListBackend>().Init(GetContext(), GetBlock(), Log);
 
         /// <summary>
         /// used to be GET Module/ChangeOrder

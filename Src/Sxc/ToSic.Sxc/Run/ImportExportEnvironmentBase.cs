@@ -15,19 +15,36 @@ namespace ToSic.Sxc.Run
 {
     public abstract class ImportExportEnvironmentBase: HasLog, IImportExportEnvironment
     {
+
         #region constructor / DI
+
+        public class Dependencies
+        {
+            internal readonly ISite Site;
+            internal readonly App NewApp;
+            internal readonly TemplateHelpers TemplateHelpers;
+
+            public Dependencies(ISite site, App newApp, TemplateHelpers templateHelpers)
+            {
+                Site = site;
+                NewApp = newApp;
+                TemplateHelpers = templateHelpers;
+            }
+        }
+
+        private readonly Dependencies _dependencies;
+
         /// <summary>
         /// DI Constructor
         /// </summary>
         // todo: replace IEnvironment with IHttp ?
-        protected ImportExportEnvironmentBase(IEnvironment environment, ITenant tenant, string logName) : base(logName)
+        protected ImportExportEnvironmentBase(Dependencies dependencies, string logName) : base(logName)
         {
-            Environment = environment;
-            Tenant = tenant;
+            _dependencies = dependencies;
+            Site = dependencies.Site;
         }
 
-        protected readonly IEnvironment Environment;
-        protected readonly ITenant Tenant;
+        protected readonly ISite Site;
 
         public IImportExportEnvironment Init(ILog parent)
         {
@@ -36,7 +53,7 @@ namespace ToSic.Sxc.Run
         }
         #endregion
 
-        public abstract List<Message> TransferFilesToTenant(string sourceFolder, string destinationFolder);
+        public abstract List<Message> TransferFilesToSite(string sourceFolder, string destinationFolder);
 
         public abstract Version TenantVersion { get; }
 
@@ -44,23 +61,22 @@ namespace ToSic.Sxc.Run
 
         public string FallbackContentTypeScope => Settings.AttributeSetScope;
 
-        public string DefaultLanguage => Tenant.DefaultLanguage;
+        public string DefaultLanguage => Site.DefaultLanguage;
 
         public string TemplatesRoot(int zoneId, int appId)
         {
-            var app = Factory.Resolve<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
+            var app = _dependencies.NewApp.InitNoData(new AppIdentity(zoneId, appId), Log);
 
             // Copy all files in 2sexy folder to (portal file system) 2sexy folder
-            var templateRoot = // Environment.MapPath(
-                Factory.Resolve<TemplateHelpers>().Init(app)
-                .AppPathRoot(Settings.TemplateLocations.PortalFileSystem, true); //);
+            var templateRoot = _dependencies.TemplateHelpers.Init(app, Log)
+                .AppPathRoot(Settings.TemplateLocations.PortalFileSystem, PathTypes.PhysFull);
             return templateRoot;
         }
 
         public string TargetPath(string folder)
         {
-            var appPath = Path.Combine(Tenant.AppsRoot, folder);
-            return Environment.MapPath(appPath);
+            var appPath = Path.Combine(Site.AppsRootPhysicalFull, folder);
+            return appPath;
         }
 
         public abstract void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap);
@@ -68,6 +84,6 @@ namespace ToSic.Sxc.Run
         public abstract void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog);
         
         public SaveOptions SaveOptions(int zoneId) 
-            => new SaveOptions(DefaultLanguage, new ZoneRuntime(zoneId, Log).Languages(true));
+            => new SaveOptions(DefaultLanguage, new ZoneRuntime().Init(zoneId, Log).Languages(true));
     }
 }

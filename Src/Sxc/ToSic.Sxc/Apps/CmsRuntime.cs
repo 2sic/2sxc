@@ -1,27 +1,24 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Apps
 {
     public class CmsRuntime: AppRuntime
     {
-        internal bool EnablePublishing { get; }
+        public CmsRuntime(DataSourceFactory dataSourceFactory) : base(dataSourceFactory, "Sxc.CmsRt") { }
 
-        public CmsRuntime(IAppIdentity app, ILog parentLog, bool showDrafts, bool enablePublishing) : base(app, showDrafts, parentLog)
-        {
-            EnablePublishing = enablePublishing;
-        }
+        public new CmsRuntime Init(IAppIdentity app, bool showDrafts, ILog parentLog) 
+            => base.Init(app, showDrafts, parentLog) as CmsRuntime;
 
-        public CmsRuntime(int appId, ILog parentLog, bool showDrafts) : base(appId, showDrafts, parentLog)
-        {
-        }
+        public new CmsRuntime InitWithState(AppState appState, bool showDrafts, ILog parentLog) 
+            => base.InitWithState(appState, showDrafts, parentLog) as CmsRuntime;
 
-
-        public ViewsRuntime Views => _views ?? (_views = new ViewsRuntime(this, Log));
+        public ViewsRuntime Views => _views ?? (_views = ServiceProvider.Build<ViewsRuntime>().Init(this, Log));
         private ViewsRuntime _views;
 
-        public BlocksRuntime Blocks => _blocks ?? (_blocks = new BlocksRuntime(this, Log));
+        public BlocksRuntime Blocks => _blocks ?? (_blocks = new BlocksRuntime().Init(this, Log));
         private BlocksRuntime _blocks;
-
     }
 }

@@ -3,13 +3,14 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Mvc.Code;
+using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Mvc.Dev;
 using ToSic.Sxc.Mvc.Run;
-using ToSic.Sxc.Mvc.TestStuff;
 using ToSic.Sxc.Mvc.Web;
+using ToSic.Sxc.Run;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Mvc
 {
@@ -41,14 +42,14 @@ namespace ToSic.Sxc.Mvc
             return new HtmlString(result);
         }
 
-        public DynamicCodeRoot CreateDynCode(InstanceId id, ILog log) =>
-            new MvcDynamicCode().Init(CreateBlock(id.Zone, id.Page, id.Container, id.App, id.Block, log), log);
+        //public DynamicCodeRoot CreateDynCode(InstanceId id, ILog log) =>
+        //    new MvcDynamicCode().Init(CreateBlock(id.Zone, id.Page, id.Container, id.App, id.Block, log), log);
 
 
         public IBlock CreateBlock(int zoneId, int pageId, int containerId, int appId, Guid blockGuid, ILog log)
         {
             var context = CreateContext(zoneId, pageId, containerId, appId, blockGuid);
-            var block = new BlockFromModule().Init(context, log);
+            var block = _httpContext.RequestServices.Build<BlockFromModule>().Init(context, log);
             return block;
         }
 
@@ -56,11 +57,17 @@ namespace ToSic.Sxc.Mvc
             => CreateContext(_httpContext, zoneId, appId, containerId, appId, blockGuid);
 
         public static InstanceContext CreateContext(HttpContext http, int zoneId, int pageId, int containerId, int appId, Guid blockGuid)
-            => new InstanceContext(
-                new MvcTenant(http).Init(zoneId),
-                new MvcPage(pageId, null),
+        {
+            var publishing = http.RequestServices.Build<IPagePublishingResolver>();
+
+            return new InstanceContext(
+                new MvcSite(http).Init(zoneId),
+                new SxcPage(pageId, null, http.RequestServices.Build<IHttp>().QueryStringKeyValuePairs()),
                 new MvcContainer(tenantId: zoneId, id: containerId, appId: appId, block: blockGuid),
-                new MvcUser()
+                new MvcUser(),
+                http.RequestServices, 
+                publishing.GetPublishingState(containerId)
             );
+        }
     }
 }

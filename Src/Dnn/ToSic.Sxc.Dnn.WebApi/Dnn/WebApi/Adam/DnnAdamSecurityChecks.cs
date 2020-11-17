@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         /// mostly a copy from https://github.com/dnnsoftware/Dnn.Platform/blob/115ae75da6b152f77ad36312eb76327cdc55edd7/DNN%20Platform/Modules/Journal/FileUploadController.cs#L72
         /// </remarks>
         [AssertionMethod]
-        internal override bool TenantAllowsExtension(string fileName)
+        internal override bool SiteAllowsExtension(string fileName)
         {
             var extension = Path.GetExtension(fileName);
             return !string.IsNullOrEmpty(extension)

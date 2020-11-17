@@ -23,8 +23,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 	{
         protected override string HistoryLogName => "Api.TmpCnt";
 
-        private ViewsBackend Backend => Eav.Factory.Resolve<ViewsBackend>().Init(new DnnTenant(PortalSettings), new DnnUser(UserInfo), Log);
-        private ViewsExportImport exportImport => Eav.Factory.Resolve<ViewsExportImport>().Init(new DnnTenant(PortalSettings), new DnnUser(UserInfo), Log);
+        private ViewsBackend Backend => _build<ViewsBackend>().Init(new DnnSite(PortalSettings), new DnnUser(UserInfo), Log);
+        private ViewsExportImport exportImport => _build<ViewsExportImport>().Init(new DnnSite(PortalSettings), new DnnUser(UserInfo), Log);
 
         [HttpGet]
         [SupportedModules("2sxc,2sxc-app")]
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [SupportedModules("2sxc,2sxc-app")]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public PolymorphismDto Polymorphism(int appId) => new PolymorphismBackend().Init(Log).Polymorphism(appId);
+        public PolymorphismDto Polymorphism(int appId) => _build<PolymorphismBackend>().Init(Log).Polymorphism(appId);
 
 
         [HttpGet, HttpDelete]
@@ -81,7 +81,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public IEnumerable<ViewDto> Usage(int appId, Guid guid)
-            => new UsageBackend().Init(Log)
+            => _build<UsageBackend>().Init(Log)
                 .ViewUsage(GetContext(), appId, guid,
                     (views, blocks) =>
                     {

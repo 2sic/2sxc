@@ -7,11 +7,12 @@ using System.Text.RegularExpressions;
 using ToSic.Eav;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Engines.Token;
 using ToSic.Sxc.LookUp;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Run;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Engines
@@ -23,6 +24,7 @@ namespace ToSic.Sxc.Engines
     [EngineDefinition(Name = "Token")]
     public class TokenEngine : EngineBase
     {
+
         #region Replacement List to still support old Tokens
         // Version 6 to 7
         /// <summary>
@@ -74,7 +76,12 @@ namespace ToSic.Sxc.Engines
 
         #region Constructor / DI
 
-        public TokenEngine(IHttp http, TemplateHelpers templateHelpers) : base(http, templateHelpers) { }
+        private readonly Lazy<DynamicCodeRoot> _dynCodeRootLazy;
+
+        public TokenEngine(EngineBaseDependencies helpers, Lazy<DynamicCodeRoot> dynCodeRootLazy) : base(helpers)
+        {
+            _dynCodeRootLazy = dynCodeRootLazy;
+        }
 
         #endregion
 
@@ -90,11 +97,11 @@ namespace ToSic.Sxc.Engines
             InitTokenReplace();
         }
 
-        private void InitDataHelper() => _data = Factory.Resolve<DynamicCodeRoot>().Init(Block, 9, Log);
+        private void InitDataHelper() => _data = _dynCodeRootLazy.Value.Init(Block, Log, 9);
 
         private void InitTokenReplace()
         {
-            var confProv = ConfigurationProvider.GetConfigProviderForModule(Block.Context.Container.Id, Block.App, Block);
+            var confProv = Block.Context.ServiceProvider.Build<AppConfigDelegate>().Init(Log).GetConfigProviderForModule(Block.Context.Container.Id, Block.App, Block);
             _tokenReplace = new TokenReplaceEav(confProv);
             
             // Add the Content and ListContent property sources used always
@@ -106,7 +113,7 @@ namespace ToSic.Sxc.Engines
         /// <inheritdoc />
         protected override string RenderTemplate()
         {
-            var templateSource = File.ReadAllText(Factory.Resolve<IHttp>().MapPath(TemplatePath));
+            var templateSource = File.ReadAllText(Helpers.ServerPaths.FullAppPath(TemplatePath));
             // Convert old <repeat> elements to the new ones
             for (var upgrade = 0; upgrade < _upgrade6To7.Length/2; upgrade++)
                 templateSource = templateSource.Replace(_upgrade6To7[upgrade, 0], _upgrade6To7[upgrade, 1]);
@@ -148,7 +155,7 @@ namespace ToSic.Sxc.Engines
             if (!DataSource.Out.ContainsKey(streamName))
                 throw new ArgumentException("Was not able to implement REPEAT because I could not find Data:" + streamName + ". Please check spelling the pipeline delivering data to this template.");
 
-            var dataItems = DataSource[streamName].List.ToList();
+            var dataItems = DataSource[streamName].Immutable;
             var itemsCount = dataItems.Count;
             for (var i = 0; i < itemsCount; i++)
             {

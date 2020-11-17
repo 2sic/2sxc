@@ -14,6 +14,7 @@ using ToSic.Eav.Plumbing.Booting;
 using ToSic.Eav.Repositories;
 using ToSic.Eav.Run;
 using ToSic.SexyContent.Dnn920;
+using ToSic.Sxc;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
@@ -25,11 +26,12 @@ using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Adam;
-using ToSic.Sxc.WebApi.Plumbing;
 using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.SexyContent
@@ -58,10 +60,10 @@ namespace ToSic.SexyContent
             {
                 services
                     .AddDnn(appsCache)
-                    .AddSxc()
+                    .AddSxcWebApi()
+                    .AddSxcCore()
                     .AddEav();
             });
-            //ConfigureIoC(appsCache);
             SharpZipLibRedirect.RegisterSharpZipLibRedirect();
             ConfigurePolymorphResolvers();
             _alreadyConfigured = true;
@@ -96,63 +98,4 @@ namespace ToSic.SexyContent
         }
     }
 
-    internal static class DnnDependencyInjection
-    {
-        public static IServiceCollection AddDnn(this IServiceCollection services, string appsCacheOverride)
-        {
-            services.AddTransient<IValueConverter, DnnValueConverter>();
-            services.AddTransient<IUser, DnnUser>();
-
-            services.AddTransient<XmlExporter, DnnXmlExporter>();
-            services.AddTransient<IImportExportEnvironment, DnnImportExportEnvironment>();
-
-            // new for .net standard
-            services.AddScoped<ITenant, DnnTenant>();
-            services.AddTransient<IContainer, DnnContainer>();
-            services.AddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
-            services.AddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
-            services.AddScoped<IEnvironment, DnnEnvironment>();
-            services.AddScoped<IAppEnvironment, DnnEnvironment>();
-            services.AddTransient<IZoneMapper, DnnZoneMapper>();
-
-            services.AddTransient<IClientDependencyOptimizer, DnnClientDependencyOptimizer>();
-            services.AddTransient<AppPermissionCheck, DnnPermissionCheck>();
-
-            services.AddTransient<DynamicCodeRoot, DnnDynamicCode>();
-            services.AddTransient<IRenderingHelper, DnnRenderingHelper>();
-            services.AddTransient<IEnvironmentConnector, DnnMapAppToInstance>();
-            services.AddTransient<IEnvironmentInstaller, InstallationController>();
-
-            // ADAM 
-            services.AddTransient<IAdamFileSystem<int, int>, DnnAdamFileSystem>();
-            services.AddTransient<AdamAppContext, AdamAppContext<int, int>>();
-
-            // new #2160
-            services.AddTransient<SecurityChecksBase, DnnAdamSecurityChecks>();
-
-            services.AddTransient<IGetEngine, GetDnnEngine>();
-            services.AddTransient<IFingerprint, DnnFingerprint>();
-
-            // new in 11.07 - exception logger
-            services.AddTransient<IEnvironmentLogger, DnnEnvironmentLogger>();
-
-            // add page publishing
-            services.AddTransient<IPagePublishing, Sxc.Dnn.Cms.DnnPagePublishing>();
-
-            if (appsCacheOverride != null)
-            {
-                try
-                {
-                    var appsCacheType = Type.GetType(appsCacheOverride);
-                    services.TryAddSingleton(typeof(IAppsCache), appsCacheType);
-                }
-                catch
-                {
-                    /* ignore */
-                }
-            }
-
-            return services;
-        }
-    }
 }

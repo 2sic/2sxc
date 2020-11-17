@@ -1,28 +1,34 @@
 ﻿using System;
 using ToSic.Eav;
 using ToSic.Eav.Data;
+using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
     internal class BlockEditorForModule: BlockEditorBase
     {
+        public BlockEditorForModule(IServiceProvider serviceProvider, Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> cmsManagerLazy) : base(serviceProvider, lazyCmsRuntime, cmsManagerLazy) { }
+        private IPlatformModuleUpdater PlatformModuleUpdater => _platformModuleUpdater 
+                                                                ?? (_platformModuleUpdater = ServiceProvider.Build<IPlatformModuleUpdater>().Init(Log));
+        private IPlatformModuleUpdater _platformModuleUpdater;
+
         protected override void SavePreviewTemplateId(Guid templateGuid)
-            => Factory.Resolve<IEnvironmentConnector>().Init(Log)
-                .SetPreview(Block.Context.Container.Id, templateGuid);
+            => PlatformModuleUpdater.SetPreview(Block.Context.Container.Id, templateGuid);
+
 
         internal override void SetAppId(int? appId)
-            => Factory.Resolve<IEnvironmentConnector>().Init(Log)
-                .SetAppId(Block.Context.Container, appId, Log);
+            => PlatformModuleUpdater.SetAppId(Block.Context.Container, appId);
 
         internal override void EnsureLinkToContentGroup(Guid cgGuid)
-            => Factory.Resolve<IEnvironmentConnector>().Init(Log)
-                .SetContentGroup(Block.Context.Container.Id, true, cgGuid);
+            => PlatformModuleUpdater.SetContentGroup(Block.Context.Container.Id, true, cgGuid);
 
         internal override void UpdateTitle(IEntity titleItem)
         {
             Log.Add("update title");
-            Factory.Resolve<IEnvironmentConnector>().Init(Log).UpdateTitle(Block, titleItem);
+            PlatformModuleUpdater.UpdateTitle(Block, titleItem);
         }
+
     }
 }

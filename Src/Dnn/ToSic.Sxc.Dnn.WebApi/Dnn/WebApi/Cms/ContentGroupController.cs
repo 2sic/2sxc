@@ -17,10 +17,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public EntityInListDto Header(Guid guid) 
-            => Eav.Factory.Resolve<ListsBackendBase>().Init(GetBlock().App, Log)
+            => _build<ListsBackendBase>().Init(GetBlock(), Log)
                 .HeaderItem(guid);
 
-        private ListsBackendBase Backend => Eav.Factory.Resolve<ListsBackendBase>().Init(GetBlock().App, Log);
+        private ListsBackendBase Backend => _build<ListsBackendBase>().Init(GetBlock(), Log);
 
         // TODO: shouldn't be part of ContentGroupController any more, as it's generic now
         [HttpPost]

@@ -19,6 +19,7 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
@@ -90,7 +91,7 @@ namespace ToSic.SexyContent.Razor
 
         /// <inheritdoc />
         [Obsolete]
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DynCode.AsList(stream.List);
+        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DynCode.AsList(stream.Immutable);
 
         /// <inheritdoc />
         public IEntity AsEntity(dynamic dynamicEntity) => DynCode.AsEntity(dynamicEntity);
@@ -153,10 +154,11 @@ namespace ToSic.SexyContent.Razor
         /// <summary>
         /// We are blocking this property on purpose, so that people will want to migrate to the new RazorComponent
         /// </summary>
-        public dynamic Header 
-            => throw new Exception("The header property is a new feature in 2sxc 10.20. To use it, change your template type to " + nameof(RazorComponent) + " see https://r.2sxc.org/RazorComponent");
-            //=> DynCodeHelper.Header;
+        public dynamic Header => throw new Exception("The header property is a new feature in 2sxc 10.20. " +
+                                                     "To use it, change your template type to inherit from " +
+                                                     nameof(RazorComponent) + " see https://r.2sxc.org/RazorComponent");
 
+#pragma warning disable 618
         [Obsolete("Use Header instead")]
         public dynamic ListContent => DynCode.Header;
 
@@ -164,11 +166,15 @@ namespace ToSic.SexyContent.Razor
         public dynamic ListPresentation => DynCode.Header?.Presentation;
 
         [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in a future version")]
-        public List<Element> List => new DynamicCodeObsolete(DynCode).ElementList;
+        public List<Element> List => _list ?? (_list =new DynamicCodeObsolete(DynCode).ElementList);
+        [Obsolete("don't use any more")]
+        private List<Element> _list;
+#pragma warning restore 618
 
         /// <inheritdoc/>
         public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson)
-            => throw new Exception("The AsDynamic(string) is a new feature in 2sxc 10.20. To use it, change your template type to " + nameof(RazorComponent) + " see https://r.2sxc.org/RazorComponent");
+            => throw new Exception("The AsDynamic(string) is a new feature in 2sxc 10.20. To use it, change your template type to inherit from " 
+                                   + nameof(RazorComponent) + " see https://r.2sxc.org/RazorComponent");
 
         #endregion
 
@@ -202,6 +208,12 @@ namespace ToSic.SexyContent.Razor
 
         /// <inheritdoc />
         public IFolder AsAdam(IEntity entity, string fieldName) => DynCode.AsAdam(entity, fieldName);
+
+        #endregion
+
+        #region RunContext - new in 11.08 or similar, not implemented in old base classes
+
+        public RunContext RunContext => DynCode.RunContext;
 
         #endregion
 

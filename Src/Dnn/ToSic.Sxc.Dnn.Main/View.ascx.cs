@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Web.UI;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Logging;
@@ -17,22 +18,20 @@ namespace ToSic.SexyContent
             {
                 if (_blockLoaded) return _block;
                 _blockLoaded = true;
-                var context = new DnnContext(
-                    new DnnTenant().Init(ModuleConfiguration.OwnerPortalID),
-                    new DnnContainer().Init(ModuleConfiguration, Log),
-                    new DnnUser(UserInfo));
-                return _block = new BlockFromModule().Init(context, Log);
+                var context = DnnContext.Create(
+                    new DnnSite().Init(ModuleConfiguration.OwnerPortalID),
+                    Eav.Factory.Resolve<DnnContainer>().Init(ModuleConfiguration, Log),
+                    new DnnUser(UserInfo),
+                    Eav.Factory.GetServiceProvider());
+                return _block = Eav.Factory.Resolve<BlockFromModule>().Init(context, Log);
             }
         }
         private IBlock _block;
         private bool _blockLoaded;
 
-
-        //protected BlockBuilder BlockBuilder => _blockBuilder ?? (_blockBuilder = Block?.BlockBuilder as BlockBuilder);
-        //private BlockBuilder _blockBuilder;
-
         private ILog Log { get; } = new Log("Sxc.View");
-
+        private Stopwatch _stopwatch;
+        private Action<string> _entireLog;
         /// <summary>
         /// Page Load event
         /// </summary>
@@ -40,7 +39,9 @@ namespace ToSic.SexyContent
         {
             // add to insights-history for analytic
             History.Add("module", Log);
-
+            _stopwatch = Stopwatch.StartNew();
+            _entireLog = Log.Call(message: $"Page:{TabId} '{Page?.Title}', Instance:{ModuleId} '{ModuleConfiguration.ModuleTitle}'");
+            var callLog = Log.Call(useTimer: true);
             // always do this, part of the guarantee that everything will work
             // 2020-01-06 2sxc 10.25 - moved away to DnnRenderingHelpers
             // to only load when we're actually activating the JS.
@@ -56,7 +57,8 @@ namespace ToSic.SexyContent
                 EnsureCmsBlockAndPortalIsReady();
                 DnnClientResources = new DnnClientResources(Page, Block?.BlockBuilder, Log);
                 DnnClientResources.EnsurePre1025Behavior();
-            });
+            }, callLog);
+            _stopwatch.Stop();
         }
 
         protected DnnClientResources DnnClientResources;
@@ -69,6 +71,8 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void Page_PreRender(object sender, EventArgs e)
         {
+            _stopwatch?.Start();
+            var callLog = Log.Call(useTimer: true);
             var headersAndScriptsAdded = false;
             // skip this if something before this caused an error
             if (!IsError)
@@ -88,12 +92,15 @@ namespace ToSic.SexyContent
             // if we had an error before, or have one now, re-check assets
             if (IsError && !headersAndScriptsAdded)
                 DnnClientResources?.AddEverything();
+            callLog(null);
+            _stopwatch?.Stop();
+            _entireLog?.Invoke($"⌚ {_stopwatch?.ElapsedMilliseconds:##.##}ms");
         }
 
         private string RenderViewAndGatherJsCssSpecs()
         {
-            var renderedTemplate = "";
             var timerWrap = Log.Call(message: $"module {ModuleId} on page {TabId}", useTimer: true);
+            var renderedTemplate = "";
             TryCatchAndLogToDnn(() =>
             {
                 if (RenderNaked) Block.BlockBuilder.WrapInDiv = false;

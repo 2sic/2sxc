@@ -1,24 +1,26 @@
 ﻿using System;
 using System.Linq;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Adam
 {
     public class AdamAppContext<TFolderId, TFileId>: AdamAppContext
     {
         #region Constructor / DI
-        public AdamAppContext(): base("Adm.ApCxTT")
+        public AdamAppContext(Lazy<AppRuntime> appRuntime) : base(appRuntime, "Adm.ApCxTT")
         {
         }
 
-        public override AdamAppContext Init(ITenant tenant, IApp app, IBlock block, int compatibility, ILog parentLog)
+        public override AdamAppContext Init(ISite site, IApp app, IBlock block, int compatibility, ILog parentLog)
         {
-            base.Init(tenant, app, block, compatibility, parentLog);
-            AdamFs = Factory.Resolve<IAdamFileSystem<TFolderId, TFileId>>()
+            base.Init(site, app, block, compatibility, parentLog);
+            AdamFs = AppRuntime.ServiceProvider.Build<IAdamFileSystem<TFolderId, TFileId>>()
                 .Init(this, Log);
             return this;
         }

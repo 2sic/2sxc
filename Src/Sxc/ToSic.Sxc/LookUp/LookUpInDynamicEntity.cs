@@ -52,17 +52,14 @@ namespace ToSic.Sxc.LookUp
         /// <param name="strPropertyName"></param>
         /// <param name="strFormat"></param>
         /// <param name="formatProvider"></param>
-        /// <param name="propertyNotFound"></param>
         /// <returns></returns>
-        public string GetProperty(string strPropertyName, string strFormat, CultureInfo formatProvider, ref bool propertyNotFound)
+        public string GetProperty(string strPropertyName, string strFormat, CultureInfo formatProvider)
 		{
 			// Return empty string if Entity is null
 			if (_entity == null)
 				return string.Empty;
 
             var outputFormat = strFormat == string.Empty ? "g" : strFormat;
-
-			var propNotFound = false;
 
             string repeaterHelper = null;
             if (_repeaterIndex > -1 && strPropertyName.StartsWith(TokenRepeater + ":", StringComparison.OrdinalIgnoreCase))
@@ -105,11 +102,11 @@ namespace ToSic.Sxc.LookUp
 			{
 				switch (valueObject.GetType().Name)
 				{
-					case "String":
+					case Eav.Constants.DataTypeString:
 						return LookUpBase.FormatString((string)valueObject, strFormat);
-					case "Boolean":
+					case Eav.Constants.DataTypeBoolean:
 						return ((bool)valueObject).ToString(formatProvider).ToLower();
-					case "DateTime":
+					case Eav.Constants.DataTypeDateTime:
 					case "Double":
 					case "Single":
 					case "Int32":
@@ -122,54 +119,34 @@ namespace ToSic.Sxc.LookUp
 			}
 
 			#region Check for Navigation-Property (e.g. Manager:Name)
-			if (strPropertyName.Contains(':'))
-			{
-				var propertyMatch = Regex.Match(strPropertyName, "([a-z]+):([a-z]+)", RegexOptions.IgnoreCase);
-				if (propertyMatch.Success)
-				{
-					valueObject = _entity.Get(propertyMatch.Groups[1].Value);
-					if (valueObject != null)
-					{
-						#region Handle Entity-Field (List of DynamicEntity)
-						var list = valueObject as List<IDynamicEntity>;
 
-                        var entity = list != null ? list.FirstOrDefault() : null;
+            if (!strPropertyName.Contains(':')) return string.Empty;
 
-                        if (entity == null)
-                            entity = valueObject as IDynamicEntity;
+            var propertyMatch = Regex.Match(strPropertyName, "([a-z]+):([a-z]+)", RegexOptions.IgnoreCase);
+            if (!propertyMatch.Success) return string.Empty;
 
-						if (entity != null)
-                            return new LookUpInDynamicEntity(null, entity).GetProperty(propertyMatch.Groups[2].Value, string.Empty, formatProvider, /*AccessingUser,*/ /*AccessLevel,*/ ref propNotFound);
+            valueObject = _entity.Get(propertyMatch.Groups[1].Value);
+            if (valueObject == null) return string.Empty;
 
-						#endregion
+            #region Handle Entity-Field (List of DynamicEntity)
+            var list = valueObject as List<IDynamicEntity>;
 
-                        return string.Empty;
-                    }
-				}
-			}
-			#endregion
+            var entity = list?.FirstOrDefault() ?? valueObject as IDynamicEntity;
 
-			propertyNotFound = true;
-			return string.Empty;
-		}
+            if (entity != null)
+                return new LookUpInDynamicEntity(null, entity).GetProperty(propertyMatch.Groups[2].Value, string.Empty, formatProvider);
+
+            #endregion
+
+            return string.Empty;
+            #endregion
+
+        }
 
         [PrivateApi]
-		public string Get(string key, string strFormat, ref bool notFound) 
-            => GetProperty(key, strFormat, Thread.CurrentThread.CurrentCulture, ref notFound);
+		public string Get(string key, string strFormat) => GetProperty(key, strFormat, Thread.CurrentThread.CurrentCulture);
 
         /// <inheritdoc/>
-        public virtual string Get(string key)
-        {
-            var temp = false;
-            return Get(key, "", ref temp);
-        }
-
-        /// <inheritdoc />
-        [PrivateApi]
-        public bool Has(string key)
-        {
-            throw new NotImplementedException();
-        }
-
-	}
+        public virtual string Get(string key) => Get(key, "");
+    }
 }

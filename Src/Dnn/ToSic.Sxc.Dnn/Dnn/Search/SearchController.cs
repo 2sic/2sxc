@@ -11,6 +11,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.LookUp;
@@ -22,7 +23,11 @@ namespace ToSic.Sxc.Search
 {
     internal class SearchController: HasLog
     {
-        public SearchController(ILog parentLog = null) : base("DNN.Search", parentLog) { }
+        private readonly IServiceProvider _serviceProvider;
+        public SearchController(IServiceProvider serviceProvider, ILog parentLog) : base("DNN.Search", parentLog)
+        {
+            _serviceProvider = serviceProvider;
+        }
 
         /// <summary>
         /// Get search info for each dnn module containing 2sxc data
@@ -47,13 +52,13 @@ namespace ToSic.Sxc.Search
 
             // Since Portal-Settings.Current is null, instantiate with modules' portal id (which can be a different portal!)
             var portalSettings = new PortalSettings(dnnModule.OwnerPortalID);
-            var tenant = new DnnTenant(portalSettings);
+            var tenant = new DnnSite(portalSettings);
 
             // Ensure cache builds up with correct primary language
             var cache = State.Cache;
             cache.Load(container.BlockIdentifier, tenant.DefaultLanguage);
 
-            var modBlock = new BlockFromModule().Init(new DnnContext(tenant, container, new DnnUser()), Log);
+            var modBlock = _serviceProvider.Build<BlockFromModule>().Init(DnnContext.Create(tenant, container, new DnnUser(), Eav.Factory.GetServiceProvider()), Log);
 
             var language = dnnModule.CultureCode;
 
@@ -99,7 +104,7 @@ namespace ToSic.Sxc.Search
             foreach (var stream in dataSource.Out.Where(p => p.Key != ViewParts.Presentation && p.Key != ViewParts.ListPresentation))
             {
                 
-                var entities = stream.Value.List;
+                var entities = stream.Value.Immutable;
                 var searchInfoList = searchInfoDictionary[stream.Key] = new List<ISearchItem>();
 
                 searchInfoList.AddRange(entities.Select(entity =>
@@ -128,7 +133,7 @@ namespace ToSic.Sxc.Search
             try
             {
                 engine.CustomizeSearch(searchInfoDictionary, 
-                    new DnnContainer().Init(dnnModule, Log), beginDate);
+                    _serviceProvider.Build<DnnContainer>().Init(dnnModule, Log), beginDate);
             }
             catch (Exception e)
             {
@@ -161,7 +166,7 @@ namespace ToSic.Sxc.Search
         private string GetJoinedAttributes(IEntity entity, string language)
         {
             return string.Join(", ",
-                entity.Attributes.Where(x => x.Value.Type == "String" || x.Value.Type == "Number").Select(x => x.Value[language])
+                entity.Attributes.Where(x => x.Value.Type == Eav.Constants.DataTypeString || x.Value.Type == Eav.Constants.DataTypeNumber).Select(x => x.Value[language])
                     .Where(a => a != null)
                     .Select(a => StripHtmlAndHtmlDecode(a.ToString()))
                     .Where(x => !String.IsNullOrEmpty(x))) + " ";

@@ -1,4 +1,5 @@
 ﻿using System.Web.Http;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
 
         #endregion
 
-        protected Sxc.Web.WebApi.System.Insights GetInsights => new Sxc.Web.WebApi.System.Insights(Log, ThrowIfNotSuperuser, HttpException.BadRequest);
+        protected Sxc.Web.WebApi.System.Insights GetInsights => _build<Sxc.Web.WebApi.System.Insights>().Init(Log, ThrowIfNotSuperuser, HttpException.BadRequest);
 
         private void ThrowIfNotSuperuser()
         {

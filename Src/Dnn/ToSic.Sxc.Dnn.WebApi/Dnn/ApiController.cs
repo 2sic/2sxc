@@ -4,13 +4,14 @@ using System.IO;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
-using ToSic.SexyContent.WebApi;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.WebApi;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -120,5 +121,11 @@ namespace ToSic.Sxc.Dnn
 
         #endregion
 
+        #region RunContext WiP
+
+        public RunContext RunContext => DynCode?.RunContext;
+
+
+        #endregion
     }
 }

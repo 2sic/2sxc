@@ -21,12 +21,12 @@ namespace ToSic.Sxc.Mvc.Run
             return true;
         }
 
-        public string GetAutoInstallPackagesUiUrl(ITenant tenant, IContainer container, bool forContentApp)
+        public string GetAutoInstallPackagesUiUrl(ISite site, IContainer container, bool forContentApp)
         {
             return "mvc not implemented #todo #mvc";
         }
 
-        public MvcEnvironmentInstaller(string logName, ILog parentLog = null, string initialMessage = null, string cPath = null, string cName = null, int cLine = 0) : base(logName, parentLog, initialMessage, cPath, cName, cLine)
+        public MvcEnvironmentInstaller() : base("Mvc.Instll")
         {
         }
 

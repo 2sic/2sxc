@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
@@ -13,7 +15,11 @@ namespace ToSic.Sxc.WebApi.Usage
 {
     internal class UsageBackend: WebApiBackendBase<UsageBackend>
     {
-        public UsageBackend() : base("Bck.Usage") { }
+        private readonly CmsRuntime _cmsRuntime;
+        public UsageBackend(CmsRuntime cmsRuntime, IServiceProvider serviceProvider) : base(serviceProvider, "Bck.Usage")
+        {
+            _cmsRuntime = cmsRuntime;
+        }
 
         public IEnumerable<ViewDto> ViewUsage(IInstanceContext context, int appId, Guid guid, 
             Func<List<IView>, List<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
@@ -21,11 +27,11 @@ namespace ToSic.Sxc.WebApi.Usage
             var wrapLog = Log.Call<IEnumerable<ViewDto>>($"{appId}, {guid}");
 
             // extra security to only allow zone change if host user
-            var permCheck = new MultiPermissionsApp().Init(context, GetApp(appId, null), Log);
+            var permCheck = ServiceProvider.Build<MultiPermissionsApp>().Init(context, GetApp(appId, null), Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
-            var cms = new CmsRuntime(appId, Log, true);
+            var cms = _cmsRuntime.Init(State.Identity(null, appId), true, Log);
             // treat view as a list - in case future code will want to analyze many views together
             var views = new List<IView> { cms.Views.Get(guid) };
 

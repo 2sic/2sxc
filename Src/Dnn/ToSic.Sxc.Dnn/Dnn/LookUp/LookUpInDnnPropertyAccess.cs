@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Services.Tokens;
 using ToSic.Eav.Documentation;
@@ -26,16 +25,11 @@ namespace ToSic.Sxc.Dnn.LookUp
             _loc = localization;
         }
 
-        public override string Get(string key, string format, ref bool notFound)
+        public override string Get(string key, string format)
         {
-            var blnNotFound = true;
+            var blnNotFound = false;
             var result = _source.GetProperty(key, format, _loc, _user, Scope.DefaultSettings, ref blnNotFound);
-            return result;
-        }
-
-        public override bool Has(string key)
-        {
-            throw new NotImplementedException();
+            return blnNotFound ? string.Empty : result;
         }
     }
 }

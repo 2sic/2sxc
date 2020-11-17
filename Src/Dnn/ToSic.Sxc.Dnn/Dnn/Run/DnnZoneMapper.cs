@@ -4,25 +4,21 @@ using System.Linq;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Dnn.Run
 {
-    public class DnnZoneMapper : ZoneMapperBase // HasLog, IZoneMapper
+    public class DnnZoneMapper : ZoneMapperBase
     {
+        private readonly Lazy<ZoneCreator> _zoneCreatorLazy;
+
         /// <inheritdoc />
-        public DnnZoneMapper() : base("DNN.ZoneMp")
+        public DnnZoneMapper(Lazy<ZoneCreator> zoneCreatorLazy) : base("DNN.ZoneMp")
         {
+            _zoneCreatorLazy = zoneCreatorLazy;
         }
-
-        //public IZoneMapper Init(ILog parent)
-        //{
-        //    Log.LinkTo(parent);
-        //    return this;
-        //}
-
 
         /// <inheritdoc />
         /// <summary>
@@ -46,17 +42,13 @@ namespace ToSic.Sxc.Dnn.Run
             if (c.ContainsKey(Settings.PortalSettingZoneId)) return int.Parse(c[Settings.PortalSettingZoneId]);
 
             var portalSettings = new PortalSettings(tenantId);
-            var zoneId = ZoneManager.CreateZone(portalSettings.PortalName + " (Portal " + tenantId + ")", Log);
+            var zoneId = _zoneCreatorLazy.Value.Init(Log).Create(portalSettings.PortalName + " (Portal " + tenantId + ")");
             PortalController.UpdatePortalSetting(tenantId, Settings.PortalSettingZoneId, zoneId.ToString());
             return zoneId;
 
         }
 
-        //public int GetZoneId(ITenant tenant) => GetZoneId(tenant.Id);
-        //public IAppIdentity IdentityFromTenant(int tenantId, int appId) 
-        //    => new AppIdentity(GetZoneId(tenantId), appId);
-
-        public override ITenant TenantOfZone(int zoneId)
+        public override ISite SiteOfZone(int zoneId)
         {
             var pinst = PortalController.Instance;
             var portals = pinst.GetPortals();
@@ -68,17 +60,8 @@ namespace ToSic.Sxc.Dnn.Run
                     return zid == zoneId ? new PortalSettings(p) : null;
                 })
                 .FirstOrDefault(f => f != null);
-            return found != null ? new DnnTenant(found) : null;
+            return found != null ? new DnnSite(found) : null;
         }
-
-        //public ITenant TenantOfApp(int appId)
-        //{
-        //    var wrapLog = Log.Call<ITenant>($"{appId}");
-        //    Log.Add("TenantId not found. Must be in search mode, will try to find correct portalsettings");
-        //    var appIdentifier = State.Identity(null, appId);
-        //    var tenant = TenantOfZone(appIdentifier.ZoneId);
-        //    return wrapLog(null, tenant);
-        //}
 
 
         /// <inheritdoc />
@@ -90,7 +73,7 @@ namespace ToSic.Sxc.Dnn.Run
         public override List<TempTempCulture> CulturesWithState(int tenantId, int zoneId)
         {
             // note: 
-            var availableEavLanguages = new ZoneRuntime(zoneId, Log).Languages(true); 
+            var availableEavLanguages = new ZoneRuntime().Init(zoneId, Log).Languages(true); 
             var defaultLanguageCode = new PortalSettings(tenantId).DefaultLanguage;
 
             return (from c in LocaleController.Instance.GetLocales(tenantId)
@@ -102,7 +85,5 @@ namespace ToSic.Sxc.Dnn.Run
                 .OrderByDescending(c => c.Key == defaultLanguageCode)
                 .ThenBy(c => c.Key).ToList();
         }
-
-        //public List<TempTempCulture> CulturesWithState(PortalSettings tenant, int zoneId) => CulturesWithState(tenant.PortalId, zoneId);
     }
 }

@@ -1,0 +1,76 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <Version>0.0.55</Version>
+    <Product>ToSic.Sxc</Product>
+    <Authors>ToSic</Authors>
+    <Company>ToSic</Company>
+    <Description>2sic 2sxc Oqtane POC</Description>
+    <Copyright>ToSic</Copyright>
+    <AssemblyName>ToSic.Sxc.Oqtane.Server</AssemblyName>
+    <!--2dm I think we need this to include DLLs-->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <AnalysisLevel>none</AnalysisLevel>
+
+    <!-- 2dm - this seems necessary to ensure that compiler DLLs are included in the output -->
+    <!-- See: https://github.com/toddams/RazorLight/issues/294 and https://stackoverflow.com/questions/40426665/what-is-the-use-of-preservecompilationcontext-under-build-option-in-project-json -->
+    <!-- also https://github.com/dotnet/aspnetcore/issues/14418 -->
+    <!-- but apparently we don't need it, bcause it's set when we activate dynamic razor compilation ... https://github.com/dotnet/aspnetcore/issues/20173 ??? --> 
+    <!--<PreserveCompilationReferences>true</PreserveCompilationReferences>
+    <PreserveCompilationContext>true</PreserveCompilationContext>-->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Engines\**" />
+    <Compile Remove="RazorPartialToString\**" />
+    <Content Remove="Engines\**" />
+    <Content Remove="RazorPartialToString\**" />
+    <EmbeddedResource Remove="Engines\**" />
+    <EmbeddedResource Remove="RazorPartialToString\**" />
+    <None Remove="Engines\**" />
+    <None Remove="RazorPartialToString\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="RazorPages\IIsSxcRazorPage.cs" />
+    <Compile Remove="RazorPages\SxcRazorPage.cs" />
+    <Compile Remove="RazorPages\SxcRazorPage_Block.cs" />
+    <Compile Remove="RazorPages\SxcRazorPage_CreateInstance.cs" />
+    <Compile Remove="RazorPages\SxcRazorPage_IDynamicCode.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\ToSic.Sxc.0.0.1.sql" />
+    <EmbeddedResource Include="Scripts\ToSic.Sxc.Uninstall.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="3.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj" />
+    <ProjectReference Include="..\..\..\..\octane\oqtane.framework\Oqtane.Server\Oqtane.Server.csproj" />
+    <ProjectReference Include="..\..\..\..\octane\oqtane.framework\Oqtane.Shared\Oqtane.Shared.csproj" />
+    <ProjectReference Include="..\..\Razor\ToSic.Sxc.Razor.Engine\ToSic.Sxc.Razor.Engine.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Oqt.Shared\ToSic.Sxc.Oqt.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ToSic.Razor">
+      <HintPath>..\..\..\Dependencies\RazorBlade\netstandard2.0\ToSic.Razor.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

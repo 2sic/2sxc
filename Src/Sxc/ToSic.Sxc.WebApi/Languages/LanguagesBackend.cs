@@ -8,22 +8,27 @@ namespace ToSic.Sxc.WebApi.Languages
 {
     public class LanguagesBackend: HasLog<LanguagesBackend>
     {
+        private readonly ZoneManager _zoneManager;
+
         #region Constructor & DI
         
-        public LanguagesBackend(IZoneMapper zoneMapper) : base("Bck.Admin") 
-            => _zoneMapper = zoneMapper.Init(Log);
+        public LanguagesBackend(IZoneMapper zoneMapper, ZoneManager zoneManager) : base("Bck.Admin")
+        {
+            _zoneManager = zoneManager;
+            _zoneMapper = zoneMapper.Init(Log);
+        }
 
         private readonly IZoneMapper _zoneMapper;
 
         #endregion
 
-        public IList<TenantLanguageDto> GetLanguages(int tenantId)
+        public IList<SiteLanguageDto> GetLanguages(int tenantId)
         {
             var callLog = Log.Call();
             var zoneId = _zoneMapper.GetZoneId(tenantId);
             // ReSharper disable once PossibleInvalidOperationException
             var cultures = _zoneMapper.CulturesWithState(tenantId, zoneId)
-                .Select(c => new TenantLanguageDto { Code = c.Key, Culture = c.Text, IsEnabled = c.Active })
+                .Select(c => new SiteLanguageDto { Code = c.Key, Culture = c.Text, IsEnabled = c.Active })
                 .ToList();
 
             callLog("found:" + cultures.Count);
@@ -36,7 +41,7 @@ namespace ToSic.Sxc.WebApi.Languages
             // Activate or Deactivate the Culture
             var zoneMapper = _zoneMapper.Init(Log);
             var zoneId = zoneMapper.GetZoneId(tenantId);
-            new ZoneManager(zoneId, Log).SaveLanguage(cultureCode, niceName, enable);
+            _zoneManager.Init(zoneId, Log).SaveLanguage(cultureCode, niceName, enable);
         }
     }
 }

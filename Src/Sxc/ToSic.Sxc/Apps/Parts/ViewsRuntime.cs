@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Conversion;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
@@ -15,24 +16,35 @@ using ToSic.Sxc.Engines;
 // note: not sure if the final namespace should be Sxc.Apps or Sxc.Views
 namespace ToSic.Sxc.Apps
 {
-	public class ViewsRuntime: CmsRuntimeBase
+	public class ViewsRuntime: PartOf<CmsRuntime, ViewsRuntime>
     {
-        internal ViewsRuntime(CmsRuntime cmsRuntime, ILog parentLog) : base(cmsRuntime, parentLog, "Cms.ViewRd") { }
+        #region Constructor / DI
+
+        private IValueConverter ValueConverter => _valConverter ?? (_valConverter = _valConverterLazy.Value);
+        private readonly Lazy<IValueConverter> _valConverterLazy;
+        private IValueConverter _valConverter;
+
+        public ViewsRuntime(Lazy<IValueConverter> valConverterLazy) : base("Cms.ViewRd")
+        {
+            _valConverterLazy = valConverterLazy;
+        }
+
+        #endregion
 
         private IDataSource _viewDs;
 		private IDataSource ViewsDataSource()
 		{
             if(_viewDs!= null)return _viewDs;
 		    // ReSharper disable once RedundantArgumentDefaultValue
-            var dataSource = AppRT.Data;
-			dataSource = CmsRuntime.DataSourceFactory.GetDataSource<EntityTypeFilter>(dataSource);
+            var dataSource = Parent.Data;
+			dataSource = Parent.DataSourceFactory.GetDataSource<EntityTypeFilter>(dataSource);
 		    ((EntityTypeFilter) dataSource).TypeName = Configuration.TemplateContentType;
 		    _viewDs = dataSource;
 			return dataSource;
 		}
 
         public IEnumerable<IView> GetAll() 
-            => _all ?? (_all = ViewsDataSource().List
+            => _all ?? (_all = ViewsDataSource().Immutable
                    .Select(p => new View(p, Log))
                    .OrderBy(p => p.Name));
         private IEnumerable<IView> _all;
@@ -43,7 +55,7 @@ namespace ToSic.Sxc.Apps
 
         public IView Get(int templateId)
 		{
-            var templateEntity = ViewsDataSource().List.One(templateId);
+            var templateEntity = ViewsDataSource().Immutable.One(templateId);
 
             if(templateEntity == null)
 				throw new Exception("The template with id " + templateId + " does not exist.");
@@ -53,7 +65,7 @@ namespace ToSic.Sxc.Apps
 
         public IView Get(Guid guid)
         {
-            var templateEntity = ViewsDataSource().List.One(guid);
+            var templateEntity = ViewsDataSource().Immutable.One(guid);
 
             if (templateEntity == null)
                 throw new Exception("The template with id " + guid + " does not exist.");
@@ -85,7 +97,7 @@ namespace ToSic.Sxc.Apps
 	            Name = t.Name,
 	            ContentTypeStaticName = t.ContentType,
 	            IsHidden = t.IsHidden,
-	            Thumbnail = Factory.Resolve<TemplateHelpers>().Init(app).ViewThumbnail(t)
+	            Thumbnail = Parent.ServiceProvider.Build<TemplateHelpers>().Init(app, Log).IconPathOrNull(t, PathTypes.Link)
 	        });
 	    }
 
@@ -117,7 +129,7 @@ namespace ToSic.Sxc.Apps
             var visible = templates.Where(t => !t.IsHidden).ToList();
             var serializer = new EntitiesToDictionary();
 
-            return AppRT.ContentTypes.FromScope(Settings.AttributeSetScope) 
+            return Parent.ContentTypes.All.OfScope(Settings.AttributeSetScope) 
                 .Where(ct => templates.Any(t => t.ContentType == ct.StaticName)) // must exist in at least 1 template
                 .OrderBy(ct => ct.Name)
                 .Select(ct =>
@@ -126,8 +138,8 @@ namespace ToSic.Sxc.Apps
                     return new ContentTypeUiInfo {
                         StaticName = ct.StaticName,
                         Name = ct.Name,
-                        IsHidden = visible.All(t => t.ContentType != ct.StaticName),   // must check if *any* template is visible, otherise tell the UI that it's hidden
-                        Thumbnail = metadata?.GetBestValue(View.TemplateIcon, true)?.ToString(),
+                        IsHidden = visible.All(t => t.ContentType != ct.StaticName),   // must check if *any* template is visible, otherwise tell the UI that it's hidden
+                        Thumbnail = ValueConverter.ToValue(metadata?.GetBestValue<string>(View.TemplateIcon)),
                         Metadata = serializer.Convert(metadata)
                     };
                 });

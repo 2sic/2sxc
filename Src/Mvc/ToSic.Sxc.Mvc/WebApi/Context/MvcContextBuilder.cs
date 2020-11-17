@@ -3,16 +3,16 @@ using ToSic.Eav.Apps.Run;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Mvc.Dev;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.Context;
 
 namespace ToSic.Sxc.Mvc.WebApi.Context
 {
     public class MvcContextBuilder: ContextBuilderBase
     {
-        public MvcContextBuilder(IHttp http)
+        public MvcContextBuilder(ILinkPaths linkPaths)
         {
-            _http = http;
+            _linkPaths = linkPaths;
         }
 
         internal MvcContextBuilder Init(IBlock block)
@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Context
             return this;
         }
 
-        private IHttp _http;
+        private readonly ILinkPaths _linkPaths;
         private IInstanceContext _context;
 
 
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Context
         protected override WebResourceDto GetSystem() =>
             new WebResourceDto
             {
-                Url = _http.ToAbsolute("~/")
+                Url = _linkPaths.ToAbsolute("~/")
             };
 
         protected override WebResourceDto GetSite() =>

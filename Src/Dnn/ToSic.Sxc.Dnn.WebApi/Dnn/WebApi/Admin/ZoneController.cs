@@ -21,8 +21,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         protected override string HistoryLogName => "Api.Zone";
 
         [HttpGet]
-        public IList<TenantLanguageDto> GetLanguages() =>
-            Eav.Factory.Resolve<LanguagesBackend>().Init(Log)
+        public IList<SiteLanguageDto> GetLanguages() =>
+            _build<LanguagesBackend>().Init(Log)
                 .GetLanguages(PortalSettings.PortalId);
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <returns></returns>
         [HttpGet]
         public void SwitchLanguage(string cultureCode, bool enable) =>
-            Eav.Factory.Resolve<LanguagesBackend>().Init(Log)
+            _build<LanguagesBackend>().Init(Log)
                 .Toggle(
                     PortalSettings.PortalId,
                     cultureCode,

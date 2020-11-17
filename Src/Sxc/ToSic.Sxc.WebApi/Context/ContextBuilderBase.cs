@@ -52,8 +52,9 @@ namespace ToSic.Sxc.WebApi.Context
             var result = new AppDto
             {
                 Id = App.AppId,
-                Url = (App as Sxc.Apps.IApp)?.Path,
+                Url = (App as Apps.IApp)?.Path,
                 Name = App.Name,
+                Folder = App.Folder,
             };
             if (!flags.HasFlag(Ctx.AppAdvanced)) return result;
 

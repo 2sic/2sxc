@@ -24,12 +24,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
     {
         protected override string HistoryLogName => "Api.Block";
 
-        protected CmsRuntime CmsRuntime => _cmsRuntime ?? (_cmsRuntime = base.App == null ? null : new CmsRuntime(base.App, Log, true, false));
+        protected CmsRuntime CmsRuntime => _cmsRuntime ?? (_cmsRuntime = base.App == null ? null : _build<CmsRuntime>()
+            .Init(base.App, true, Log));
         private CmsRuntime _cmsRuntime;
 
         #region Block
 
-        private ContentBlockBackend Backend => Eav.Factory.Resolve<ContentBlockBackend>().Init(GetContext(), GetBlock(), Log);
+        private ContentBlockBackend Backend => _build<ContentBlockBackend>().Init(GetContext(), GetBlock(), Log);
 
 
         /// <summary>
@@ -42,7 +43,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
             var entityId = Backend.NewBlock(parentId, field, sortOrder, app, guid);
 
             // now return a rendered instance
-            var newContentBlock = new BlockFromEntity().Init(GetBlock(), entityId, Log);
+            var newContentBlock = _build<BlockFromEntity>().Init(GetBlock(), entityId, Log);
             return newContentBlock.BlockBuilder.Render();
 
         }
@@ -69,7 +70,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public new void App(int? appId)
-            => new AppViewPickerBackend().Init(GetContext(), GetBlock(), Log)
+            => _build<AppViewPickerBackend>().Init(GetContext(), GetBlock(), Log)
                 .SetAppId(appId);
 
         /// <summary>
@@ -82,8 +83,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         public IEnumerable<AppUiInfo> Apps(string apps = null)
         {
             // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
-            var tenant = new DnnTenant(PortalSettings);
-            return new CmsZones(tenant.ZoneId, Log).AppsRt.GetSelectableApps(tenant, apps).ToList();
+            var tenant = new DnnSite(PortalSettings);
+            return _build<CmsZones>().Init(tenant.ZoneId, Log)
+                .AppsRt
+                .GetSelectableApps(tenant, apps)
+                .ToList();
         }
 
         #endregion
@@ -120,7 +124,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Guid? Template(int templateId, bool forceCreateContentGroup)
-            => new AppViewPickerBackend().Init(GetContext(), GetBlock(), Log)
+            => _build<AppViewPickerBackend>().Init(GetContext(), GetBlock(), Log)
                 .SaveTemplateId(templateId, forceCreateContentGroup);
 
         #endregion
@@ -140,7 +144,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
             Log.Add($"render template:{templateId}, lang:{lang}");
             try
             {
-                var rendered = new AppViewPickerBackend().Init(GetContext(), GetBlock(), Log).Render(templateId, lang);
+                var rendered = _build<AppViewPickerBackend>().Init(GetContext(), GetBlock(), Log).Render(templateId, lang);
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new StringContent(rendered, Encoding.UTF8, "text/plain")

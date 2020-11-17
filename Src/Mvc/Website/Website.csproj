@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <AnalysisLevel>none</AnalysisLevel>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,8 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="Edi.RouteDebugger" Version="1.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.4" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.6" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
   </ItemGroup>
@@ -31,6 +32,7 @@
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.DataSources\ToSic.Eav.DataSources.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj" />
+    <ProjectReference Include="..\..\Razor\ToSic.Sxc.Razor.Engine\ToSic.Sxc.Razor.Engine.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Mvc\ToSic.Sxc.Mvc.csproj" />
   </ItemGroup>
 

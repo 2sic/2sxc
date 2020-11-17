@@ -26,14 +26,34 @@ namespace ToSic.Sxc.Web.WebApi.System
             var zones = cache.Zones.OrderBy(z => z.Key);
 
             msg += "<table id='table'><thead>"
-                + tr(new[] { "Zone", "App", "Guid", "InCache", "Details", "Actions" }, true)
+                + tr(new[] { "Zone", "App", "Guid", "InCache", "Name", "Folder", "Details", "Actions" }, true)
                 + "</thead>"
                 + "<tbody>";
             foreach (var zone in zones)
             {
                 var apps = zone.Value.Apps
-                    .Select(a => new { Id = a.Key, Guid = a.Value, InCache = cache.Has(new AppIdentity(zone.Value.ZoneId, a.Key)) })
+                    .Select(a =>
+                    {
+                        var appIdentity = new AppIdentity(zone.Value.ZoneId, a.Key);
+                        var inCache = cache.Has(appIdentity);
+                        var appState = inCache
+                            ? State.Get(appIdentity)
+                            : null;
+                        return new
+                        {
+                            Id = a.Key, Guid = a.Value,
+                            InCache = inCache,
+                            Name = inCache
+                                ? appState?.Name ?? "unknown, app-infos not json"
+                                : "not-loaded",
+                            Folder = inCache
+                                ? appState?.Folder ?? "unknown, app-infos not json"
+                                : "not-loaded",
+                        };
+                    })
                     .OrderBy(a => a.Id);
+
+
                 foreach (var app in apps)
                 {
                     msg += tr(new[]
@@ -42,6 +62,8 @@ namespace ToSic.Sxc.Web.WebApi.System
                         app.Id.ToString(),
                         $"{app.Guid}",
                         app.InCache ? "yes" : "no",
+                        app.Name,
+                        app.Folder,
                         $"{a("stats", $"stats?appid={app.Id}")} | {a("load log", $"loadlog?appid={app.Id}")} | {a("types", $"types?appid={app.Id}")}",
                         summary("show actions",
                             $"{a("purge", $"purge?appid={app.Id}")}"

@@ -102,7 +102,7 @@ namespace ToSic.Sxc.Dnn.Adam
         
         private readonly IFolderManager _dnnFolders = FolderManager.Instance;
 
-        public bool FolderExists(string path) => _dnnFolders.FolderExists(AdamContext.Tenant.Id, path);
+        public bool FolderExists(string path) => _dnnFolders.FolderExists(AdamContext.Site.Id, path);
 
 
 
@@ -111,7 +111,7 @@ namespace ToSic.Sxc.Dnn.Adam
             var callLog = Log.Call(path);
             try
             {
-                _dnnFolders.AddFolder(AdamContext.Tenant.Id, path);
+                _dnnFolders.AddFolder(AdamContext.Site.Id, path);
                 callLog("ok");
             }
             catch (SqlException)
@@ -146,7 +146,7 @@ namespace ToSic.Sxc.Dnn.Adam
         }
 
         public Folder<int, int> Get(string path) 
-            => DnnToAdam(_dnnFolders.GetFolder(AdamContext.Tenant.Id, path));
+            => DnnToAdam(_dnnFolders.GetFolder(AdamContext.Site.Id, path));
 
         public List<Folder<int, int>> GetFolders(IFolder folder)
         {
@@ -200,7 +200,7 @@ namespace ToSic.Sxc.Dnn.Adam
                 Name = f.DisplayName,
                 Created = f.CreatedOnDate,
                 Modified = f.LastModifiedOnDate,
-                Url = AdamContext.Tenant.ContentPath + f.FolderPath,
+                Url = AdamContext.Site.ContentPath + f.FolderPath,
             };
 
 
@@ -221,7 +221,7 @@ namespace ToSic.Sxc.Dnn.Adam
                 Modified = f.LastModifiedOnDate,
                 Name = Path.GetFileNameWithoutExtension(f.FileName),
                 Url = f.StorageLocation == 0
-                    ? AdamContext.Tenant.ContentPath + f.Folder + f.FileName
+                    ? AdamContext.Site.ContentPath + f.Folder + f.FileName
                     : FileLinkClickController.Instance.GetFileLinkClick(f)
             };
 

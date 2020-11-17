@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Threading;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Run;
 using EavApp = ToSic.Eav.Apps.App;
 
 namespace ToSic.Sxc.Apps
@@ -18,6 +17,48 @@ namespace ToSic.Sxc.Apps
     [PublicApi_Stable_ForUseInYourCode]
     public class App : EavApp, IApp
     {
+        #region DI Constructors
+
+        public App(AppDependencies dependencies, ILinkPaths linkPaths) : base(dependencies, "App.SxcApp")
+        {
+            _linkPaths = linkPaths;
+        }
+
+        public App PreInit(ISite site)
+        {
+            Site = site;
+            return this;
+        }
+
+        /// <summary>
+        /// Main constructor which auto-configures the app-data
+        /// </summary>
+        [PrivateApi]
+        public new App Init(IAppIdentity appId, Func<EavApp, IAppDataConfiguration> buildConfig, ILog parentLog)
+        {
+            base.Init(appId, buildConfig, parentLog);
+            return this;
+        }
+
+        /// <summary>
+        /// Quick init - won't provide data but can access properties, metadata etc.
+        /// </summary>
+        /// <param name="appIdentity"></param>
+        /// <param name="parentLog"></param>
+        /// <returns></returns>
+        public App InitNoData(IAppIdentity appIdentity, ILog parentLog)
+        {
+            Init(appIdentity, null, parentLog);
+            Log.Rename("App.SxcLgt");
+            Log.Add("App only initialized for light use - data shouldn't be used");
+            return this;
+        }
+
+        #endregion
+
+
+        private readonly ILinkPaths _linkPaths;
+
         #region Dynamic Properties: Configuration, Settings, Resources
         /// <inheritdoc />
         public AppConfiguration Configuration => _appConfig
@@ -36,7 +77,8 @@ namespace ToSic.Sxc.Apps
                 return c?.Entity != null ? new DynamicEntity(c.Entity, 
                     new[] {Thread.CurrentThread.CurrentCulture.Name}, 
                     10, 
-                    null) : null;
+                    null)
+                    { ServiceProviderOrNull = DataSourceFactory.ServiceProvider } : null;
             }
         }
 
@@ -45,8 +87,9 @@ namespace ToSic.Sxc.Apps
         {
             get
             {
-                if(!_settingsLoaded && AppSettings != null)
-                    _settings = new DynamicEntity(AppSettings, new[] {Thread.CurrentThread.CurrentCulture.Name}, 10, null);
+                if (!_settingsLoaded && AppSettings != null)
+                    _settings = new DynamicEntity(AppSettings, new[] {Thread.CurrentThread.CurrentCulture.Name},
+                        10, null) {ServiceProviderOrNull = DataSourceFactory.ServiceProvider};
                 _settingsLoaded = true;
                 return _settings;
             }
@@ -60,7 +103,8 @@ namespace ToSic.Sxc.Apps
             get
             {
                 if(!_resLoaded && AppResources!= null)
-                    _res = new DynamicEntity(AppResources, new[] {Thread.CurrentThread.CurrentCulture.Name}, 10, null);
+                    _res = new DynamicEntity(AppResources, new[] {Thread.CurrentThread.CurrentCulture.Name}, 10, null)
+                    { ServiceProviderOrNull = DataSourceFactory.ServiceProvider };
                 _resLoaded = true;
                 return _res;
             }
@@ -71,47 +115,11 @@ namespace ToSic.Sxc.Apps
         #endregion
 
 
-        #region DI Constructors
-
-        public App(IAppEnvironment appEnvironment, ITenant tenant) : base(appEnvironment, tenant)
-        {
-
-        }
-
-        public App PreInit(ITenant tenant)
-        {
-            Tenant = tenant;
-            return this;
-        }
-
-        /// <summary>
-        /// New constructor which auto-configures the app-data
-        /// </summary>
-        [PrivateApi]
-        public App Init(IAppIdentity appId, Func<EavApp, IAppDataConfiguration> buildConfig, bool allowSideEffects, ILog parentLog)
-        {
-            Init(appId, allowSideEffects, buildConfig, "Sxc.App", parentLog, "Create");
-            return this;
-        }
-
-        /// <summary>
-        /// Quick init - won't provide data but can access properties, metadata etc.
-        /// </summary>
-        /// <param name="appIdentity"></param>
-        /// <param name="parentLog"></param>
-        /// <returns></returns>
-        public App InitNoData(IAppIdentity appIdentity, ILog parentLog)
-        {
-            Init(appIdentity, false, null, "Sxc.AppLgt", parentLog, "light use only");
-            return this;
-        }
-
-        #endregion
 
 
         #region Paths
         /// <inheritdoc />
-        public string Path => _path ?? (_path = Factory.Resolve<IHttp>().ToAbsolute(GetRootPath()));
+        public string Path => _path ?? (_path = _linkPaths.ToAbsolute(System.IO.Path.Combine(Site.AppsRootLink, Folder)));
         private string _path;
 
         /// <inheritdoc />

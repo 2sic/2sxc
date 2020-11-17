@@ -6,7 +6,9 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Data;
 using ToSic.Eav.Persistence.Logging;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Dnn.Run;
@@ -36,13 +38,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     {
         protected override string HistoryLogName => "Api.Types";
 
-        private ContentTypeApi Backend => new ContentTypeApi(Log);
+        private ContentTypeApi Backend => _build<ContentTypeApi>();
 
         [HttpGet]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false) 
-            => Backend.Get(appId, scope, withStatistics);
+            => Backend.Init(appId, Log).Get(scope, withStatistics);
 
         /// <summary>
         /// Used to be GET ContentTypes/Scopes
@@ -50,8 +52,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public IDictionary<string, string> Scopes(int appId) 
-            => new AppRuntime(appId, false, Log).ContentTypes.ScopesWithLabels();
+        public IDictionary<string, string> Scopes(int appId)
+            => State.Get(appId).ContentTypes.GetAllScopesWithLabels();
+        //_build<AppRuntime>()
+        //        .Init(State.Identity(null, appId), false, Log).ContentTypes
+        //        .ScopesWithLabels();
 
         /// <summary>
         /// Used to be GET ContentTypes/Scopes
@@ -59,13 +64,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) => Backend.GetSingle(appId, contentTypeId, scope);
+        public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) => Backend.Init(appId, Log).GetSingle(contentTypeId, scope);
 
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public bool Delete(int appId, string staticName) => Backend.Delete(appId, staticName);
+        public bool Delete(int appId, string staticName) => Backend.Init(appId, Log).Delete(staticName);
 
 	    [HttpPost]
         [ValidateAntiForgeryToken]
@@ -76,7 +81,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public bool Save(int appId, Dictionary<string, object> item)
         {
             var cleanList = item.ToDictionary(i => i.Key, i => i.Value?.ToString());
-            return Backend.Save(appId, cleanList);
+            return Backend.Init(appId, Log).Save(cleanList);
         }
 
         /// <summary>
@@ -88,15 +93,15 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpPost]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-        public bool AddGhost(int appId, string sourceStaticName) => Backend.CreateGhost(appId, sourceStaticName);
+        public bool AddGhost(int appId, string sourceStaticName) => Backend.Init(appId, Log).CreateGhost(sourceStaticName);
 
 
 
-	    [HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public void SetTitle(int appId, int contentTypeId, int attributeId) 
-            => Backend.SetTitle(appId, contentTypeId, attributeId);
+        public void SetTitle(int appId, int contentTypeId, int attributeId)
+            => Backend.Init(appId, Log).SetTitle(contentTypeId, attributeId);
 
 
         /// <summary>
@@ -105,7 +110,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [AllowAnonymous] // will do security check internally
         public HttpResponseMessage Json(int appId, string name)
-            => new Eav.WebApi.ContentExportApi(Log).DownloadTypeAsJson(new DnnUser(UserInfo), appId, name);
+            => _build<ContentExportApi>().Init(appId, Log).DownloadTypeAsJson(new DnnUser(UserInfo), name);
 
 
 
@@ -131,7 +136,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             var streams = new List<FileUploadDto>();
             for(var i = 0; i < files.Count; i++)
                 streams.Add(new FileUploadDto { Name = files[i].FileName, Stream = files[i].InputStream});
-            var result = Eav.Factory.Resolve<ImportContent>().Init(new DnnUser(UserInfo), Log)
+            var result = _build<ImportContent>().Init(new DnnUser(UserInfo), Log)
                 .ImportContentType(zoneId, appId, streams, PortalSettings.DefaultLanguage);
 
             return wrapLog("ok", result);

@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Immutable;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -23,6 +25,8 @@ namespace ToSic.Sxc.DataSources
         PreviousNames = new []{ "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent" })]
     public sealed partial class CmsBlock : DataSourceBase
     {
+        private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
+
         /// <inheritdoc />
         public override string LogId => "Sxc.CmsBDs";
 
@@ -51,28 +55,20 @@ namespace ToSic.Sxc.DataSources
         }
 
 
-        public CmsBlock()
+        public CmsBlock(Lazy<CmsRuntime> lazyCmsRuntime)
         {
-            Out.Add(Eav.Constants.DefaultStreamName, new DataStream(this, Eav.Constants.DefaultStreamName, GetContent));
-            Out.Add(ViewParts.ListContent, new DataStream(this, Eav.Constants.DefaultStreamName, GetListContent));
-
+            _lazyCmsRuntime = lazyCmsRuntime;
+            Provide(GetContent);
+            Provide(ViewParts.ListContent, GetHeader);
 			Configuration.Values.Add(InstanceIdKey, $"[Settings:{Settings.InstanceId}||[{InstanceLookupName}:{InstanceIdKey}]]");
         }
 
-        #region Cached properties for Content, Presentation etc. --> not necessary, as each stream auto-caches
-        private IEnumerable<IEntity> _content;
+        private ImmutableArray<IEntity> GetContent()
+            => GetStream(BlockConfiguration.Content, View.ContentItem,
+                BlockConfiguration.Presentation, View.PresentationItem, false);
 
-        private IEnumerable<IEntity> GetContent()
-            => _content ?? (_content = GetStream(BlockConfiguration.Content, View.ContentItem,
-                   BlockConfiguration.Presentation, View.PresentationItem, false));
-
-        private IEnumerable<IEntity> _listContent;
-
-        private IEnumerable<IEntity> GetListContent()
-            => _listContent ?? (_listContent = GetStream(BlockConfiguration.Header, View.HeaderItem,
-                   BlockConfiguration.HeaderPresentation, View.HeaderPresentationItem, true));
-
-        #endregion
-
+        private ImmutableArray<IEntity> GetHeader()
+            => GetStream(BlockConfiguration.Header, View.HeaderItem,
+                BlockConfiguration.HeaderPresentation, View.HeaderPresentationItem, true);
     }
 }

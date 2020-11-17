@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Web.WebApi.System
 {
@@ -26,9 +28,9 @@ namespace ToSic.Sxc.Web.WebApi.System
             {
                 Log.Add("getting content-type stats");
                 var entities = type == "all"
-                    ? appRead.Entities.All.ToList()
-                    : appRead.Entities.Get(type).ToList();
-                msg += p($"entities: {entities.Count}\n");
+                    ? appRead.Entities.All.ToImmutableArray() // .ToList()
+                    : appRead.Entities.Get(type).ToImmutableArray();
+                msg += p($"entities: {entities.Length}\n");
                 msg += "<table id='table'><thead>"
                     + tr(new[] { "#", "Id", "Guid", "Title", "Type", "Modified", "Owner", "Version", "Metadata", "Permissions" }, true)
                     + "</thead>"
@@ -114,7 +116,7 @@ namespace ToSic.Sxc.Web.WebApi.System
             else
                 throw CreateBadRequest("can't use entityid - must be number or guid");
 
-            var ser = new JsonSerializer(appRead.AppState, Log);
+            var ser = _serviceProvider.Build<JsonSerializer>().Init(appRead.AppState, Log);
             var json = ser.Serialize(ent);
 
             var msg = h1($"Entity Debug for {entity} in {appId}\n")

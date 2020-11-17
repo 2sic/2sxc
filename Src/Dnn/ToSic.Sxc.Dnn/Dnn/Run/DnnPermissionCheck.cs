@@ -15,6 +15,20 @@ namespace ToSic.Sxc.Dnn.Run
     /// </summary>
     public class DnnPermissionCheck: AppPermissionCheck
     {
+        #region Constructor / DI
+
+        private readonly Lazy<IZoneMapper> _zoneMapperLazy;
+        private IZoneMapper ZoneMapper => _zoneMapper ?? (_zoneMapper = _zoneMapperLazy.Value.Init(Log));
+        private IZoneMapper _zoneMapper;
+
+
+        public DnnPermissionCheck(Lazy<IZoneMapper> zoneMapperLazy) : base("Dnn.PrmChk")
+        {
+            _zoneMapperLazy = zoneMapperLazy;
+        }
+
+        #endregion
+
         public string CustomPermissionKey = ""; // "CONTENT";
 
         private readonly string _salPrefix = "SecurityAccessLevel.".ToLower();
@@ -30,14 +44,11 @@ namespace ToSic.Sxc.Dnn.Run
         private ModuleInfo _module;
 
 
-        public DnnPermissionCheck() : base("Dnn.PrmChk") { }
-
-
         protected override bool EnvironmentAllows(List<Grants> grants)
         {
             var logWrap = Log.Call(() => $"[{string.Join(",", grants)}]");
             var ok = UserIsSuperuser(); // superusers are always ok
-            if (!ok && CurrentZoneMatchesTenantZone())
+            if (!ok && CurrentZoneMatchesSiteZone())
                 ok = UserIsTenantAdmin()
                      || UserIsModuleAdmin()
                      || UserIsModuleEditor();
@@ -70,17 +81,15 @@ namespace ToSic.Sxc.Dnn.Run
         /// Verify that we're in the same zone, allowing admin/module checks
         /// </summary>
         /// <returns></returns>
-        private bool CurrentZoneMatchesTenantZone()
+        private bool CurrentZoneMatchesSiteZone()
         {
-            var wrapLog = Log.Call();
+            var wrapLog = Log.Call<bool>();
             // but is the current portal also the one we're asking about?
-            var env = Eav.Factory.Resolve<IAppEnvironment>();
-            if (Context.Tenant == null || Context.Tenant.Id == Eav.Constants.NullId) return false; // this is the case when running out-of http-context
-            if (AppIdentity == null) return true; // this is the case when an app hasn't been selected yet, so it's an empty module, must be on current portal
-            var pZone = env.ZoneMapper.GetZoneId(Context.Tenant);
+            if (Context.Tenant == null || Context.Tenant.Id == Eav.Constants.NullId) return wrapLog("no", false); // this is the case when running out-of http-context
+            if (AppIdentity == null) return wrapLog("yes", true); // this is the case when an app hasn't been selected yet, so it's an empty module, must be on current portal
+            var pZone = ZoneMapper.GetZoneId(Context.Tenant);
             var result = pZone == AppIdentity.ZoneId; // must match, to accept user as admin
-            wrapLog($"{result}");
-            return result;
+            return wrapLog($"{result}", result);
         }
 
         private bool UserIsModuleEditor()

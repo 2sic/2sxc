@@ -1,6 +1,7 @@
 ﻿
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using ToSic.Eav.Documentation;
 #if NET451
 using System.Web;
 #else
@@ -13,36 +14,29 @@ namespace ToSic.Sxc.Web
     /// Goal is that anything on this will be able to provide HttpContext operations as needed
     /// To abstract .net451 and .net core
     /// </summary>
+    [InternalApi_DoNotUse_MayChangeWithoutNotice]
     public interface IHttp
     {
+        /// <summary>
+        /// The standardized HttpContext. It's type changes depending on the framework it's running in
+        /// </summary>
         HttpContext Current { get; }
 
+        /// <summary>
+        /// The standardized" HttpRequest object. It's type changes depending on the framework it's running in. 
+        /// </summary>
         HttpRequest Request { get; }
 
-        NameValueCollection QueryString { get; }
+        /// <summary>
+        /// The standardized QueryString parameters so it works on all platforms
+        /// </summary>
+        NameValueCollection QueryStringParams { get; }
 
+        /// <summary>
+        /// QueryString params as KeyValue Pairs.
+        /// We don't use a dictionary, because sometimes the same key can occur twice.
+        /// </summary>
+        /// <returns></returns>
         List<KeyValuePair<string, string>> QueryStringKeyValuePairs();
-
-        /// <summary>
-        /// Get a full path like C:\...
-        /// </summary>
-        /// <param name="virtualPath"></param>
-        /// <returns></returns>
-        string MapPath(string virtualPath);
-
-        /// <summary>
-        /// Get an absolute path like /Portals/xyz
-        /// </summary>
-        /// <param name="virtualPath"></param>
-        /// <returns></returns>
-        string ToAbsolute(string virtualPath);
-
-        /// <summary>
-        /// Get an Absolute path like /portal/xyz and combine with another relative path
-        /// </summary>
-        /// <param name="basePath"></param>
-        /// <param name="relativePath"></param>
-        /// <returns></returns>
-        string Combine(string basePath, string relativePath);
     }
 }

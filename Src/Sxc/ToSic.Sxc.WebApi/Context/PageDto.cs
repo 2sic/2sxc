@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.WebApi.Usage.Dto;
-
-namespace ToSic.Sxc.WebApi.Context
+﻿namespace ToSic.Sxc.WebApi.Context
 {
     public class PageDto
     {
@@ -10,6 +8,6 @@ namespace ToSic.Sxc.WebApi.Context
         public string Title;
         public string Url;
         public bool Visible;
-        public TenantDto Portal;
+        public SiteDto Portal;
     }
 }

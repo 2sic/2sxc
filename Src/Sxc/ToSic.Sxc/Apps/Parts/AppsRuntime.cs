@@ -1,26 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Ui;
-using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Apps
 {
-    public class AppsRuntime: ZonePartRuntimeBase
+    public class AppsRuntime: ZonePartRuntimeBase<CmsZones, AppsRuntime>
     {
-        internal AppsRuntime(CmsZones cmsRuntime, ILog parentLog) : base(cmsRuntime, parentLog, "Cms.AppsRt")
-        {
-        }
+        #region Constructor / DI
 
-        public IEnumerable<AppUiInfo> GetSelectableApps(ITenant tenant, string filter)
+        public AppsRuntime(IServiceProvider serviceProvider) : base(serviceProvider, "Cms.AppsRt") { }
+
+        #endregion
+
+        public IList<AppUiInfo> GetSelectableApps(ISite site, string filter)
         {
-            Log.Add("get selectable apps");
+            var callLog = Log.Call<IList<AppUiInfo>>(filter);
             var list =
-                GetApps(tenant, null)
+                GetApps(site, null)
                     .Where(a => a.Name != Eav.Constants.ContentAppName)
                     .Where(a => !a.Hidden)
                     .Select(a => new AppUiInfo
@@ -30,9 +31,10 @@ namespace ToSic.Sxc.Apps
                         SupportsAjaxReload = a.Configuration?.EnableAjax ?? false,
                         Thumbnail = a.Thumbnail,
                         Version = a.Configuration?.Version?.ToString() ?? ""
-                    });
+                    })
+                    .ToList();
 
-            if (string.IsNullOrWhiteSpace(filter)) return list;
+            if (string.IsNullOrWhiteSpace(filter)) return callLog("unfiltered", list);
 
             // New feature in 10.27 - if app-list is provided, only return these
             var appNames = filter.Split(',')
@@ -42,21 +44,21 @@ namespace ToSic.Sxc.Apps
             list = list.Where(ap => appNames
                     .Any(name => string.Equals(name, ap.Name, StringComparison.InvariantCultureIgnoreCase)))
                 .ToList();
-            return list;
+            return callLog(null, list);
         }
 
         /// <summary>
         /// Returns all Apps for the current zone
         /// </summary>
         /// <returns></returns>
-        public List<IApp> GetApps(ITenant tenant, Func<Eav.Apps.App, IAppDataConfiguration> buildConfig)
+        public List<IApp> GetApps(ISite site, Func<Eav.Apps.App, IAppDataConfiguration> buildConfig)
         {
             var zId = ZoneRuntime.ZoneId;
-            var appIds = new ZoneRuntime(zId, Log).Apps;
+            var appIds = new ZoneRuntime().Init(zId, Log).Apps;
             return appIds
-                .Select(a => Factory.Resolve<App>()
-                    .PreInit(tenant)
-                    .Init(new AppIdentity(zId, a.Key), buildConfig, true, Log) as IApp)
+                .Select(a => ServiceProvider.Build<App>()
+                    .PreInit(site)
+                    .Init(new AppIdentity(zId, a.Key), buildConfig, Log) as IApp)
                 .OrderBy(a => a.Name)
                 .ToList();
         }

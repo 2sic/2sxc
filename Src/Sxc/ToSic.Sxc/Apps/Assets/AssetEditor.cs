@@ -3,13 +3,60 @@ using System.IO;
 using System.Text.RegularExpressions;
 using ToSic.Eav;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
 
 namespace ToSic.Sxc.Apps.Assets
 {
-    internal class AssetEditor : HasLog
+    public class AssetEditor : HasLog
     {
+        #region Constructor / DI
+
+        public AssetEditInfo EditInfo { get; set; }
+
+        private bool _userIsSuperUser;
+        private bool _userIsAdmin;
+        private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
+        private CmsRuntime _cmsRuntime;
+        private IApp _app;
+
+        public AssetEditor(Lazy<CmsRuntime> cmsRuntimeLazy) : base("Sxc.AstEdt")
+        {
+            _cmsRuntimeLazy = cmsRuntimeLazy;
+        }
+
+        public AssetEditor Init(IApp app, int templateId, bool isSuperUser, bool isAdmin, ILog parentLog)
+        {
+            InitShared(app, isSuperUser, isAdmin, parentLog);
+            var template = _cmsRuntime.Views.Get(templateId);
+            EditInfo = TemplateAssetsInfo(template);
+            return this;
+        }
+
+        public AssetEditor Init(IApp app, string path, bool isSuperUser, bool isAdmin, bool global, ILog parentLog)
+        {
+            InitShared(app, isSuperUser, isAdmin, parentLog);
+            EditInfo = new AssetEditInfo(_app.AppId, _app.Name, path, global);
+            return this;
+        }
+
+
+        private void InitShared(IApp app, bool isSuperUser, bool isAdmin, ILog parentLog)
+        {
+            Log.LinkTo(parentLog);
+            _app = app;
+            _userIsSuperUser = isSuperUser;
+            _userIsAdmin = isAdmin;
+
+            // todo: 2dm Views - see if we can get logger to flow
+            _cmsRuntime = _cmsRuntimeLazy.Value.Init(app, true, Log);
+        }
+
+        #endregion
+
+
+
         public const string TokenHtmlExtension = ".html";
         public const string DefaultTokenHtmlBody = @"<p>
     You successfully created your own template.
@@ -63,37 +110,6 @@ public class " + CsApiTemplateControllerName + @" : ToSic.Sxc.Dnn.ApiController
 
 }
 ";
-
-
-        public AssetEditInfo EditInfo { get; }
-
-        private readonly bool _userIsSuperUser;
-        private readonly bool _userIsAdmin;
-
-
-        private readonly IApp _app;
-
-        public AssetEditor(IApp app, int templateId, bool isSuperUser, bool isAdmin, ILog parentLog)
-            : base("Sxc.AstEdt", parentLog)
-        {
-            _app = app;
-            _userIsSuperUser = isSuperUser;
-            _userIsAdmin = isAdmin;
-
-            // todo: 2dm Views - see if we can get logger to flow
-            var template = new CmsRuntime(app, Log, true, false).Views.Get(templateId);
-            EditInfo = TemplateAssetsInfo(template);
-        }
-
-        public AssetEditor(IApp app, string path, bool isSuperUser, bool isAdmin, bool global, ILog parentLog)
-            : base("Sxc.AstEdt", parentLog)
-        {
-            _app = app;
-            _userIsSuperUser = isSuperUser;
-            _userIsAdmin = isAdmin;
-
-            EditInfo = new AssetEditInfo(_app.AppId, _app.Name, path, global);
-        }
 
         public AssetEditInfo EditInfoWithSource
 
@@ -156,7 +172,9 @@ public class " + CsApiTemplateControllerName + @" : ToSic.Sxc.Dnn.ApiController
             return t;
         }
 
-        public string InternalPath => Path.Combine(Factory.Resolve<TemplateHelpers>().Init(_app).AppPathRoot(EditInfo.LocationScope, true), EditInfo.FileName);
+        public string InternalPath => Path.Combine(
+            _cmsRuntime.ServiceProvider.Build<TemplateHelpers>().Init(_app, Log)
+                .AppPathRoot(EditInfo.LocationScope, PathTypes.PhysFull), EditInfo.FileName);
 
 
         /// <summary>
@@ -202,7 +220,8 @@ public class " + CsApiTemplateControllerName + @" : ToSic.Sxc.Dnn.ApiController
             if (File.Exists(absolutePath)) return false;
 
             // ensure the web.config exists (usually missing in the global area)
-            Factory.Resolve<TemplateHelpers>().Init(_app).EnsureTemplateFolderExists(EditInfo.LocationScope);
+            _cmsRuntime.ServiceProvider.Build<TemplateHelpers>().Init(_app, Log)
+                .EnsureTemplateFolderExists(EditInfo.LocationScope);
 
             // check if the folder to it already exists, or create it...
             var foundFolder = absolutePath.LastIndexOf("\\", StringComparison.InvariantCulture);

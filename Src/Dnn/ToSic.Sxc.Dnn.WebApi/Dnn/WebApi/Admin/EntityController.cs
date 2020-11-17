@@ -45,7 +45,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public IEnumerable<Dictionary<string, object>> List(int appId, string contentType) 
-            => EntityApi.GetOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.ReadSomething, Log)
+            => _build<EntityApi>()
+                .InitOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.ReadSomething, Log)
                 .GetEntitiesForAdmin(contentType);
 
 
@@ -54,7 +55,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         // todo: unsure why only Edit - is this used anywhere else than admin?
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, int id, int appId, bool force = false) 
-            => EntityApi.GetOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
+            => _build<EntityApi>()
+                .InitOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
                 .Delete(contentType, id, force);
 
         [HttpDelete]
@@ -62,7 +64,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         // todo: unsure why only Edit - is this used anywhere else than admin?
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, Guid guid, int appId, bool force = false)
-            => EntityApi.GetOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
+            => _build<EntityApi>()
+                .InitOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
                 .Delete(contentType, guid, force);
 
 
@@ -72,7 +75,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [AllowAnonymous] // will do security check internally
         public HttpResponseMessage Json(int appId, int id, string prefix, bool withMetadata)
-            => new ContentExportApi(Log).DownloadEntityAsJson(new DnnUser(UserInfo), appId, id, prefix, withMetadata);
+            => _build<ContentExportApi>().Init(appId, Log).DownloadEntityAsJson(new DnnUser(UserInfo), id, prefix, withMetadata);
 
         /// <summary>
         /// Used to be GET ContentExport/ExportContent
@@ -95,8 +98,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             string contentType,
             ExportSelection recordExport, ExportResourceReferenceMode resourcesReferences,
             ExportLanguageResolution languageReferences, string selectedIds = null)
-            => new ContentExportApi(Log).ExportContent(
-                new DnnUser(UserInfo), appId,
+            => _build<ContentExportApi>().Init(appId, Log).ExportContent(
+                new DnnUser(UserInfo),
                 language, defaultLanguage, contentType,
                 recordExport, resourcesReferences,
                 languageReferences, selectedIds);
@@ -109,7 +112,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public ContentImportResultDto XmlPreview(ContentImportArgsDto args)
-            => new ContentImportApi(Log).EvaluateContent(args);
+            => _build<ContentImportApi>().Init(args.AppId, Log).XmlPreview(args);
 
 
         /// <summary>
@@ -120,7 +123,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public ContentImportResultDto XmlUpload(ContentImportArgsDto args)
-            => new ContentImportApi(Log).ImportContent(args);
+            => _build<ContentImportApi>().Init(args.AppId, Log).XmlImport(args);
 
 
         /// <summary>
@@ -130,12 +133,12 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpPost]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public bool Upload(EntityImportDto args) => new ContentImportApi(Log).Import(args);
+        public bool Upload(EntityImportDto args) => _build<ContentImportApi>().Init(args.AppId, Log).Import(args);
 
 
         // New feature in 11.03 - Usage Statistics
         // not final yet, so no [HttpGet]
-        public dynamic Usage(int appId, Guid guid) => new EntityBackend().Init(Log).Usage(GetContext(), GetApp(appId), guid);
+        public dynamic Usage(int appId, Guid guid) => _build<EntityBackend>().Init(Log).Usage(GetContext(), GetApp(appId), guid);
 
     }
 }

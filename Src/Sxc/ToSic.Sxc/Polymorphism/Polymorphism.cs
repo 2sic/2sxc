@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
-using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Polymorphism
@@ -13,11 +12,9 @@ namespace ToSic.Sxc.Polymorphism
         public string Parameters;
         public string Rule;
         public IEntity Entity;
-        public Polymorphism(IDataSource data, ILog parentLog) : base("Plm.Managr", parentLog)
+        public Polymorphism(IEnumerable<IEntity> list, ILog parentLog) : base("Plm.Managr", parentLog)
         {
-            //if (!data.Out.ContainsKey(PolymorphismConstants.Name)) return;
-            Entity = data?.List?.FirstOrDefault(e => e.Type.Name == PolymorphismConstants.Name);
-            //Entity = data[PolymorphismConstants.Name].List.FirstOrDefault();
+            Entity = list?.FirstOrDefaultOfType(PolymorphismConstants.Name);// /*?*/.FirstOrDefault(e => e.Type.Name == PolymorphismConstants.Name);
             if (Entity == null) return;
 
             var rule = Entity.GetBestValue<string>(PolymorphismConstants.ModeField);
