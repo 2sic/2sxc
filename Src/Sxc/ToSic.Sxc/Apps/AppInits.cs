@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Apps
     {
         public static IApp Init(this App app, AppConfigDelegate confProvider, IAppIdentity appIdentity, ILog log, bool showDrafts = false)
         {
-            var buildConfig = confProvider.Build(showDrafts, new LookUpEngine(log));
+            var buildConfig = confProvider.Build(showDrafts/*, new LookUpEngine(log)*/);
             return app.Init(appIdentity, buildConfig, log);
         }
 

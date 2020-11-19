@@ -141,8 +141,10 @@ namespace ToSic.Sxc.Dnn
             log.Add($"Create App(z:{zoneId}, a:{appId}, tenantObj:{site != null}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
             var app = Eav.Factory.StaticBuild<App>();
             if (site != null) app.PreInit(site);
+            // TODO: 
+            //var lookupEngine = Eav.Factory.StaticBuild<IGetEngine>().Init(parentLog).GetEngine(0);
             var appStuff = app.Init(new AppIdentity(zoneId, appId), 
-                Eav.Factory.StaticBuild<AppConfigDelegate>().Init(parentLog).Build(showDrafts, new LookUpEngine(parentLog)),
+                Eav.Factory.StaticBuild<AppConfigDelegate>().Init(parentLog).Build(showDrafts),
                 parentLog);
             return appStuff;
         }
