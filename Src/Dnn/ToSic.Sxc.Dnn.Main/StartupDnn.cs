@@ -74,6 +74,7 @@ namespace ToSic.SexyContent
             services.AddTransient<SecurityChecksBase, DnnAdamSecurityChecks>();
 
             services.AddTransient<IGetEngine, GetDnnEngine>();
+            services.AddTransient<GetDnnEngine>();
             services.AddTransient<IFingerprint, DnnFingerprint>();
 
             // new in 11.07 - exception logger
