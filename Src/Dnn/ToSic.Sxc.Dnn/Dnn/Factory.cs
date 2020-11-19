@@ -1,4 +1,5 @@
-﻿using DotNetNuke.Entities.Modules;
+﻿using System;
+using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
@@ -24,14 +25,17 @@ namespace ToSic.Sxc.Dnn
         /// <summary>
         /// Get a Root CMS Block if you know the TabId and the ModId
         /// </summary>
-        /// <param name="tabId">The DNN tab id (page id)</param>
+        /// <param name="pageId">The DNN tab id (page id)</param>
         /// <param name="modId">The DNN Module id</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
-        public static IBlockBuilder CmsBlock(int tabId, int modId)
+        public static IBlockBuilder CmsBlock(int pageId, int modId)
         {
-            var moduleInfo = new ModuleController().GetModule(modId, tabId, false);
-            var instance = Eav.Factory.StaticBuild<DnnContainer>().Init(moduleInfo, null);
-            return CmsBlock(instance);
+            var moduleInfo = new ModuleController().GetModule(modId, pageId, false);
+            if (moduleInfo == null)
+                throw new Exception(
+                    $"Can't find module {modId} on page {pageId}. Maybe you accidentally reversed the order of the IDs?");
+            var container = Eav.Factory.StaticBuild<DnnContainer>().Init(moduleInfo, null);
+            return CmsBlock(container);
         }
 
         /// <summary>
