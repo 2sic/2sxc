@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Version>0.0.55</Version>
+    <Version>0.0.56</Version>
     <Product>ToSic.Sxc</Product>
     <Authors>ToSic</Authors>
     <Company>ToSic</Company>
@@ -19,7 +19,7 @@
     <!-- 2dm - this seems necessary to ensure that compiler DLLs are included in the output -->
     <!-- See: https://github.com/toddams/RazorLight/issues/294 and https://stackoverflow.com/questions/40426665/what-is-the-use-of-preservecompilationcontext-under-build-option-in-project-json -->
     <!-- also https://github.com/dotnet/aspnetcore/issues/14418 -->
-    <!-- but apparently we don't need it, bcause it's set when we activate dynamic razor compilation ... https://github.com/dotnet/aspnetcore/issues/20173 ??? --> 
+    <!-- but apparently we don't need it, bcause it's set when we activate dynamic razor compilation ... https://github.com/dotnet/aspnetcore/issues/20173 ??? -->
     <!--<PreserveCompilationReferences>true</PreserveCompilationReferences>
     <PreserveCompilationContext>true</PreserveCompilationContext>-->
   </PropertyGroup>
@@ -49,19 +49,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="3.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="5.0.0" />
+    <PackageReference Include="Oqtane.Server" Version="2.0.0" />
+    <PackageReference Include="Oqtane.Shared" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj" />
-    <ProjectReference Include="..\..\..\..\octane\oqtane.framework\Oqtane.Server\Oqtane.Server.csproj" />
-    <ProjectReference Include="..\..\..\..\octane\oqtane.framework\Oqtane.Shared\Oqtane.Shared.csproj" />
     <ProjectReference Include="..\..\Razor\ToSic.Sxc.Razor.Engine\ToSic.Sxc.Razor.Engine.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />

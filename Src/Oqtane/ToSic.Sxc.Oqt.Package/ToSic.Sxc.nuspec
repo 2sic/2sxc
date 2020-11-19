@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <AppIdentity>ToSic.Sxc</AppIdentity>
-    <version>0.0.2</version>
+    <version>0.0.56</version>
     <authors>2Sic</authors>
     <owners>2Sic</owners>
     <title>2sxc</title>
@@ -16,16 +16,16 @@
     <releaseNotes></releaseNotes>
     <summary></summary>
     <dependencies>
-      <dependency AppIdentity="Oqtane.Framework" version="1.0.4" />
+      <dependency id="Oqtane.Framework" version="2.0.0" />
     </dependencies>
   </metadata>
   <files>
-    <file src="..\ToSic.Sxc.OqtaneModule.Client\bin\Release\netstandard2.1\ToSic.*.dll" target="lib\netstandard2.1" />
-    <file src="..\ToSic.Sxc.OqtaneModule.Client\bin\Release\netstandard2.1\ToSic.*.pdb" target="lib\netstandard2.1" />
-    <file src="..\ToSic.Sxc.OqtaneModule.Server\bin\Release\netcoreapp3.1\ToSic.*.dll" target="lib\netcoreapp3.1" />
-    <file src="..\ToSic.Sxc.OqtaneModule.Server\bin\Release\netcoreapp3.1\ToSic.*.pdb" target="lib\netcoreapp3.1" />
-    <file src="..\ToSic.Sxc.OqtaneModule.Shared\bin\Release\netstandard2.1\ToSic.*.dll" target="lib\netstandard2.1" />
-    <file src="..\ToSic.Sxc.OqtaneModule.Shared\bin\Release\netstandard2.1\ToSic.*.pdb" target="lib\netstandard2.1" />
-    <file src="..\ToSic.Sxc.OqtaneModule.Server\wwwroot\**\*.*" target="wwwroot" />
+    <file src="..\ToSic.Sxc.Oqt.Client\bin\Release\net5.0\ToSic.*.dll" target="lib\netstandard2.1" />
+    <file src="..\ToSic.Sxc.Oqt.Client\bin\Release\net5.0\ToSic.*.pdb" target="lib\netstandard2.1" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\ToSic.*.dll" target="lib\netcoreapp3.1" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\ToSic.*.pdb" target="lib\netcoreapp3.1" />
+    <file src="..\ToSic.Sxc.Oqt.Shared\bin\Release\net5.0\\ToSic.*.dll" target="lib\netstandard2.1" />
+    <file src="..\ToSic.Sxc.Oqt.Shared\bin\Release\net5.0\\ToSic.*.pdb" target="lib\netstandard2.1" />
+    <file src="..\ToSic.Sxc.Oqt.Server\wwwroot\**\*.*" target="wwwroot" />
   </files>
 </package>
