@@ -55,7 +55,7 @@ namespace ToSic.SexyContent
             // new for .net standard
             services.AddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
             services.AddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
-            services.AddScoped<IEnvironment, DnnEnvironment>();
+            services.AddTransient<IEnvironment, DnnEnvironment>();
             services.AddTransient<IZoneMapper, DnnZoneMapper>();
 
             services.AddTransient<IClientDependencyOptimizer, DnnClientDependencyOptimizer>();

@@ -28,14 +28,28 @@ namespace ToSic.Sxc.Dnn
         /// <param name="pageId">The DNN tab id (page id)</param>
         /// <param name="modId">The DNN Module id</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
-        public static IBlockBuilder CmsBlock(int pageId, int modId)
+        public static IBlockBuilder CmsBlock(int pageId, int modId) => CmsBlock(pageId, modId, null);
+
+        /// <summary>
+        /// Get a Root CMS Block if you know the TabId and the ModId
+        /// </summary>
+        /// <param name="pageId">The DNN tab id (page id)</param>
+        /// <param name="modId">The DNN Module id</param>
+        /// <param name="parentLog">The parent log, optional</param>
+        /// <returns>An initialized CMS Block, ready to use/render</returns>
+        public static IBlockBuilder CmsBlock(int pageId, int modId, ILog parentLog)
         {
+            var wrapLog = parentLog?.Call($"{pageId}, {modId}");
             var moduleInfo = new ModuleController().GetModule(modId, pageId, false);
             if (moduleInfo == null)
-                throw new Exception(
-                    $"Can't find module {modId} on page {pageId}. Maybe you accidentally reversed the order of the IDs?");
-            var container = Eav.Factory.StaticBuild<DnnContainer>().Init(moduleInfo, null);
-            return CmsBlock(container);
+            {
+                var msg = $"Can't find module {modId} on page {pageId}. Maybe you reversed the ID-order?";
+                parentLog?.Add(msg);
+                throw new Exception(msg);
+            }
+            var container = Eav.Factory.StaticBuild<DnnContainer>().Init(moduleInfo, parentLog);
+            wrapLog?.Invoke("ok");
+            return CmsBlock(container, parentLog);
         }
 
         /// <summary>
