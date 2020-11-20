@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         {
             // this is to fix a dnn-bug, which adds a cookie to set the language
             // but always defaults to the main language, which is simply wrong. 
-            var cookies = global::System.Web.HttpContext.Current?.Response.Cookies;
+            var cookies = HttpContext.Current?.Response.Cookies;
             cookies?.Remove("language"); // try to remove, otherwise no exception will be thrown
         }
 

@@ -7,7 +7,8 @@
 
         public const string HeaderInstanceId = "moduleid";
         public const string HeaderContentBlockId = "ContentBlockId";
-        public const string HeaderPageId = "tabid";
+        public const string HeaderPageIdAsTabId = "tabid";
 
+        public const string HeaderPageId = "pageid";
     }
 }

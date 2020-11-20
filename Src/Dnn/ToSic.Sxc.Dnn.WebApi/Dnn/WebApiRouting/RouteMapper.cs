@@ -2,6 +2,7 @@
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using DotNetNuke.Web.Api;
+using ToSic.Sxc.Dnn.Providers;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Admin;
 using ToSic.Sxc.Dnn.WebApi.App;
@@ -95,7 +96,10 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             var config = GlobalConfiguration.Configuration;
             var previousSelector = config.Services.GetService(typeof(IHttpControllerSelector)) as IHttpControllerSelector;
             config.Services.Replace(typeof(IHttpControllerSelector), new AppApiControllerSelector(config) { PreviousSelector = previousSelector });
-            
+
+            // Attempt to add another Module Resolver to the list which will work with the header PageId instead of TabId
+            GlobalConfiguration.Configuration.AddTabAndModuleInfoProvider(new ModifiedTabAndModuleInfoProvider());
+
             // Also register Dependency-Injection here, since this will certainly run once early during boot
             // do this by accessing a setting, which registers everything
             Settings.EnsureSystemIsInitialized();
