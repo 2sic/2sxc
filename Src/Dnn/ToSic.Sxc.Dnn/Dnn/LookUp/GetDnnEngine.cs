@@ -11,21 +11,30 @@ namespace ToSic.Sxc.Dnn.LookUp
     /// Internally it asks DNN for the current Property-Access objects and prepares them for use in EAV.
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public class GetDnnEngine : IGetEngine
+    public class GetDnnEngine : HasLog<IGetEngine>, IGetEngine
     {
+        #region Constructor / Dependency Injection
+
+        public GetDnnEngine(): base("Dnn.LookUp")
+        {
+
+        }
+
+        #endregion
+
         /// <inheritdoc />
-        public ILookUpEngine GetEngine(int instanceId, ILog parentLog)
+        public ILookUpEngine GetEngine(int instanceId)
         {
             var portalSettings = PortalSettings.Current;
             return portalSettings == null 
-                ? new LookUpEngine(parentLog) 
-                : GenerateDnnBasedLookupEngine(portalSettings, instanceId, parentLog);
+                ? new LookUpEngine(Log) 
+                : GenerateDnnBasedLookupEngine(portalSettings, instanceId);
         }
 
         [PrivateApi]
-        public static LookUpEngine GenerateDnnBasedLookupEngine(PortalSettings portalSettings, int instanceId, ILog parentLog)
+        public LookUpEngine GenerateDnnBasedLookupEngine(PortalSettings portalSettings, int instanceId)
         {
-            var providers = new LookUpEngine(parentLog);
+            var providers = new LookUpEngine(Log);
             var dnnUsr = portalSettings.UserInfo;
             var dnnCult = Thread.CurrentThread.CurrentCulture;
             var dnn = new DnnTokenReplace(instanceId, portalSettings, dnnUsr);

@@ -55,7 +55,7 @@ namespace ToSic.SexyContent
             // new for .net standard
             services.AddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
             services.AddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
-            services.AddScoped<IEnvironment, DnnEnvironment>();
+            services.AddTransient<IEnvironment, DnnEnvironment>();
             services.AddTransient<IZoneMapper, DnnZoneMapper>();
 
             services.AddTransient<IClientDependencyOptimizer, DnnClientDependencyOptimizer>();
@@ -74,6 +74,7 @@ namespace ToSic.SexyContent
             services.AddTransient<SecurityChecksBase, DnnAdamSecurityChecks>();
 
             services.AddTransient<IGetEngine, GetDnnEngine>();
+            services.AddTransient<GetDnnEngine>();
             services.AddTransient<IFingerprint, DnnFingerprint>();
 
             // new in 11.07 - exception logger

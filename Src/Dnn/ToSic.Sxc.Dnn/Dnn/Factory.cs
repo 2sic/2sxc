@@ -1,4 +1,5 @@
-﻿using DotNetNuke.Entities.Modules;
+﻿using System;
+using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
@@ -24,14 +25,31 @@ namespace ToSic.Sxc.Dnn
         /// <summary>
         /// Get a Root CMS Block if you know the TabId and the ModId
         /// </summary>
-        /// <param name="tabId">The DNN tab id (page id)</param>
+        /// <param name="pageId">The DNN tab id (page id)</param>
         /// <param name="modId">The DNN Module id</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
-        public static IBlockBuilder CmsBlock(int tabId, int modId)
+        public static IBlockBuilder CmsBlock(int pageId, int modId) => CmsBlock(pageId, modId, null);
+
+        /// <summary>
+        /// Get a Root CMS Block if you know the TabId and the ModId
+        /// </summary>
+        /// <param name="pageId">The DNN tab id (page id)</param>
+        /// <param name="modId">The DNN Module id</param>
+        /// <param name="parentLog">The parent log, optional</param>
+        /// <returns>An initialized CMS Block, ready to use/render</returns>
+        public static IBlockBuilder CmsBlock(int pageId, int modId, ILog parentLog)
         {
-            var moduleInfo = new ModuleController().GetModule(modId, tabId, false);
-            var instance = Eav.Factory.StaticBuild<DnnContainer>().Init(moduleInfo, null);
-            return CmsBlock(instance);
+            var wrapLog = parentLog?.Call($"{pageId}, {modId}");
+            var moduleInfo = new ModuleController().GetModule(modId, pageId, false);
+            if (moduleInfo == null)
+            {
+                var msg = $"Can't find module {modId} on page {pageId}. Maybe you reversed the ID-order?";
+                parentLog?.Add(msg);
+                throw new Exception(msg);
+            }
+            var container = Eav.Factory.StaticBuild<DnnContainer>().Init(moduleInfo, parentLog);
+            wrapLog?.Invoke("ok");
+            return CmsBlock(container, parentLog);
         }
 
         /// <summary>
@@ -123,8 +141,10 @@ namespace ToSic.Sxc.Dnn
             log.Add($"Create App(z:{zoneId}, a:{appId}, tenantObj:{site != null}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
             var app = Eav.Factory.StaticBuild<App>();
             if (site != null) app.PreInit(site);
+            // TODO: 
+            //var lookupEngine = Eav.Factory.StaticBuild<IGetEngine>().Init(parentLog).GetEngine(0);
             var appStuff = app.Init(new AppIdentity(zoneId, appId), 
-                Eav.Factory.StaticBuild<AppConfigDelegate>().Init(parentLog).Build(showDrafts, new LookUpEngine(parentLog)),
+                Eav.Factory.StaticBuild<AppConfigDelegate>().Init(parentLog).Build(showDrafts),
                 parentLog);
             return appStuff;
         }

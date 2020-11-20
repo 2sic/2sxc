@@ -78,7 +78,7 @@ namespace ToSic.Sxc.LookUp
             var log = new Log("Stc.GetCnf", block?.Log);
 
             // Find the standard DNN property sources if PortalSettings object is available
-            var envLookups = _getEngineLazy.Value.GetEngine(moduleId, block?.Log);
+            var envLookups = _getEngineLazy.Value.Init(block?.Log).GetEngine(moduleId);
             log.Add($"Environment provided {envLookups.Sources.Count} sources");
 
             var provider = new LookUpEngine(envLookups, block?.Log);
