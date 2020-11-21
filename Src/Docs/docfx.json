@@ -17,7 +17,8 @@
             "**/XOLD-*/**",
             "**Mvc/Website/**",
             "**/ToSic.Sxc.Mvc/**",
-            "**/Oqtane/**"
+            "**/Oqtane/**",
+            "**/ToSic.Sxc.Razor.Engine/**"
 
           ]
         }
@@ -43,8 +44,10 @@
           "api/**.md",
           "how-to/**.md",
           "specs/**.md",
+          "web-api/**md",
           "specs/**.yml",
           "how-to/**.yml",
+          "web-api/**.yml",
           "toc.yml",
           "*.md",
           "api-meta.json"
@@ -59,6 +62,10 @@
       {
         "files": [
           "images/**",
+          "web-api/**.jpg",
+          "web-api/**.png",
+          "web-api/**.jpeg",
+          "web-api/**.svg",
           "/assets/**"
         ],
         "exclude": [

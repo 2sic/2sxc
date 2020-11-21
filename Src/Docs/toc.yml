@@ -1,9 +1,15 @@
 
 - name: Specs
   href: specs/
-  homepage: specs/index.md
+  # homepage: specs/index.md
 - name: How To
   href: how-to/
   topicUid: HowTo.Home
+- name: Web API
+  href: web-api/
+  # homepage: web-api/index.md
+  # topicUid: WebApi.Index
 - name: .net API
-  href: api/dot-net/index.html
+  # note: this strange path is where docfx put the yml files it generated from the code
+  href: obj/api/dot-net/
+  homepage: api/dot-net/index.md
