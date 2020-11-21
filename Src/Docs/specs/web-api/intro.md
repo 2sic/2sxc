@@ -39,29 +39,3 @@ Once you have opened the security on a standard endpoint or once you have create
 ## For Standard Endpoints: Set Security
 
 <iframe src="https://azing.org/2sxc/r/34pAzAF2?embed=1" width="100%" height="400" frameborder="0" allowfullscreen style="box-shadow: 0 1px 3px rgba(60,64,67,.3), 0 4px 8px 3px rgba(60,64,67,.15)"></iframe>
-
-## For Custom WebAPI: Write the Code
-
-TODO
-
-## Write the Endpoint-Client - usually in JavaScript
-
-TODO
-
-
-
-## Read also
-
-- [DotNet WebApi](xref:HowTo.WebApi)
-- [Concepts: Polymorphisms](xref:Specs.Cms.Polymorphism)
-
-## Demo App and further links
-
-You should find some code examples in this demo App
-
-- [REST and WebApi Tutorial](http://2sxc.org/en/apps/app/tutorial-javascript-rest-api-using-jquery-and-angularjs)
-
-## History
-
-1. Introduced in 2sxc ca. 5.x
-2. Enhanced with Polymorph Editions in 2sxc 9.35 (allowing subfolder/api)
