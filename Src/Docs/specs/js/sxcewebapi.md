@@ -91,7 +91,7 @@ In short:
 1. use `$2sxc(...).webApi.get(...)` or `$2sxc(...).webApi.post(...)` etc.
 2. for the path-parameter, use a path starting with `app/auto/api/[controller]/[action]` - 2sxc will take care of all the path resolutions if the path starts with `app/auto/api/` 
 
-You can read more about the [C# WebApi Server Side](xref:HowTo.WebApi)
+You can read more about the [C# WebApi Server Side](xref:WebApi.Custom)
 
 Short note: the WebAPIs work like classic javascript promises. So not like the data.on(event) implementation which is a bit special, this is very standard jQuery promise. 
 

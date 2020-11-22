@@ -28,7 +28,7 @@ This is the C# .net API Documentations, usually meant for Razor-Templates, custo
 
 ## Advanced APIs
 
-1. [WebService API](xref:HowTo.WebApi) to create your own web services in your apps
+1. [WebService API](xref:WebApi.Custom) to create your own web services in your apps
 1. [External API](xref:HowTo.External) to access 2sxc-instances on the server from WebForms or other MVC components
 1. [Content-Blocks API](xref:HowTo.Razor.Blocks) to render inner-content (see also the [concept](xref:Specs.Cms.InnerContent))
 

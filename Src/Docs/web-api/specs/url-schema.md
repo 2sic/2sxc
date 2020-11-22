@@ -167,14 +167,14 @@ The `[edition]` is relevant if you're using [Polymorphism](xref:Specs.Cms.Polymo
 
 ## Read also
 
-- [DotNet WebApi](xref:HowTo.WebApi)
+- [DotNet WebApi](xref:WebApi.Custom)
 - [Concepts: Polymorphisms](xref:Specs.Cms.Polymorphism)
 
 ## Demo App and further links
 
 You should find some code examples in this demo App
 
-- TODO: add ref to DNN razor example
+- [Razor Web API tutorials](xref:Tut.WebApi)
 - [REST and WebApi Tutorial](http://2sxc.org/en/apps/app/tutorial-javascript-rest-api-using-jquery-and-angularjs)
 - [Mobius Forms App](https://2sxc.org/en/apps/app/mobius-forms)
 

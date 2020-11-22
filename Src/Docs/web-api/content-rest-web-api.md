@@ -67,8 +67,8 @@ To use these endpoints for normal users, you would need to enable the permission
 
 ## Recommended Reading
 
-* [General WebApi Specs](xref:Specs.WebApi.Intro)
-* [URL Schema](xref:Specs.WebApi.UrlSchema)
+* [General WebApi Specs](xref:WebApi.Index)
+* [URL Schema](xref:WebApi.Specs.UrlSchema)
 
 
 

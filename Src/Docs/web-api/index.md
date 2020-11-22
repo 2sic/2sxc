@@ -59,30 +59,21 @@ Your 1-2-3 steps for using data endpoints are:
 
 1. Move specs/web-api index to here
 1. fix all links
-1. move how-to web-api
-1. fix all links
 1. Move 2sxc-wiki
 1. fix all links
 
 
 1. overview how it's used - 2sxc backend, various users - and in-2sxc help
-
-
-1. create page for Query REST
+1. create page for Query Read
 
 1. Create page for consuming Custom WebApis
 
 1. Create page for creating custom WebApis
-
-
 1. Create page about context & headers
-
-
 1. Create page about security
-
 1. Create page about JS API to use this?
 
-1. polymorphism in web-api
+1. create page about AsDynamic, AsList, AsEntity?
 
 ## Conventions Used 
 
@@ -99,10 +90,8 @@ You should find some code examples in this demo App
 
 ## Recommended Reading
 
-TODO: CHECK these links, fix
-
-* [Data CRUD API](xref:HowTo.WebApi.Content)
-* [DotNet WebApi](xref:HowTo.WebApi)
+* [Data CRUD API](xref:WebApi.Content)
+* [DotNet WebApi](xref:WebApi.Custom)
 * [Concepts: Polymorphisms](xref:Specs.Cms.Polymorphism)
 
 ## History

@@ -24,7 +24,7 @@ _New in 2sxc 9.35+_: you can now also create `api` folders as _subfolders_ to ru
   `[app-folder]/[edition]/api/YourController.cs`
   access url: `[api-root]/app/auto/[edition]/api/[Your]`
 
-Read more about urls in the [WebApi](xref:HowTo.WebApi.Intro) docs.
+Read more about urls in the [WebApi](xref:WebApi.Index) docs.
 
 
 
@@ -112,7 +112,7 @@ The `ApiController` provides various command / helpers to get you productiv. Mos
 ## Recommended Reading
 
 * [](xref:Tut.WebApi)
-* [WebApi](xref:HowTo.WebApi.Intro)
+* [WebApi](xref:WebApi.Index)
 * [Concepts: Polymorphisms](xref:Specs.Cms.Polymorphism)
 
 
