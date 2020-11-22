@@ -36,28 +36,37 @@ When the **server** receives the request, it too does important stuff.
 1. Then it returns the data in a simple **JSON** format
 
 
+## Get Started Step 1: Decide which Endpoint you need
+
+This checklist should help you decide:
+
+<iframe src="https://azing.org/2sxc/r/zhLnCg3e?embed=1" width="100%" height="400" frameborder="0" allowfullscreen style="box-shadow: 0 1px 3px rgba(60,64,67,.3), 0 4px 8px 3px rgba(60,64,67,.15)"></iframe>
+
+
 ## Getting Started
 
-To get started, we recommend the following steps:
+Your 1-2-3 steps for using data endpoints are:
 
-1. First review some tutorials and examples to get acquainted
-1. Usually you'll be more interested in reading data, for that you should read about
-  1. Getting lists of items / entities
-  1. Getting a single item/ entity
-  1. Security settings for reading data
-1. 
+1. Decide which endpoint you need
+1. Create / Publish the endpoint
+   1. For standard endpoints, set the permissions as you need them
+   1. For custom endpoints, write the C# code
+1. Write the code to read the data (typically in JavaScript)
+
 
 
 ## TODO: draft
 
 1. Move specs/web-api index to here
+1. fix all links
 1. move how-to web-api
+1. fix all links
 1. Move 2sxc-wiki
+1. fix all links
+
 
 1. overview how it's used - 2sxc backend, various users - and in-2sxc help
 
-
-1. create page for Content REST
 
 1. create page for Query REST
 
@@ -75,11 +84,26 @@ To get started, we recommend the following steps:
 
 1. polymorphism in web-api
 
-## Conventios Used 
+## Conventions Used 
 
 - [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) means that there is a url convention to access data like `.../blogposts/25`
 - [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) also specifies that an _HTTP GET_ is for reading, _HTTP POST_ is for writing, etc.
 - All the APIs use [JSON](https://en.wikipedia.org/wiki/JSON) for sending/receiving data. [This is the default schema](https://azing.org/2sxc/r/2zBGrCAd).
+
+
+## Demo App and further links
+
+You should find some code examples in this demo App
+* [REST and WebApi Tutorial](http://2sxc.org/en/apps/app/tutorial-javascript-rest-api-using-jquery-and-angularjs)
+* [Razor Web API tutorials](xref:Tut.WebApi)
+
+## Recommended Reading
+
+TODO: CHECK these links, fix
+
+* [Data CRUD API](xref:HowTo.WebApi.Content)
+* [DotNet WebApi](xref:HowTo.WebApi)
+* [Concepts: Polymorphisms](xref:Specs.Cms.Polymorphism)
 
 ## History
 

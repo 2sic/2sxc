@@ -1,8 +1,0 @@
-- name: Introduction
-  topicUid: HowTo.WebApi.Intro
-- name: Data CRUD WebAPI
-  topicUid: HowTo.WebApi.Content
-- name: Custom WebApi
-  topicUid: HowTo.WebApi
-- name: SaveInAdam
-  topicUid: HowTo.WebApi.SaveInAdam

@@ -1,15 +1,16 @@
 - name: 2sxc Web Api
   topicUid: WebApi.Index
 - name: Content Web Api
-  items:
-    - name: Content Web Api
-    - name: GET List of Items
-    - name: GET One Item
-    - name: POST New Item
-    - name: PUT Changes to an Item
-    - name: DELETE An Item
+  topicUid: WebApi.Content
 - name: Query Web Api
+  topicUid: WebApi.Query
 - name: Custom Web Api
+  topicUid: WebApi.Custom
+  items:
+    - name: Custom Web Api
+      topicUid: WebApi.Custom
+    - name: SaveInAdam Helper
+      topicUid: WebApi.Custom.DotNet.SaveInAdam
 - name: Detailed Specifications
   items: 
     - name: WebApi Url Schema

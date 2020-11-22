@@ -18,13 +18,10 @@ uid: WebApi.Specs.UrlSchema
 
 ## Finding the right URLs in the Admin-Dialogs _(new in v11.10)_
 
-In 2sxc 11.10 we added dialogs in the Admin-UI so it's easier to figure out the endpoints. These UIs also show sample code and everything. 
-
-<img src="./assets/admin-ui-data-rest-menu.jpg" width="100%">
-
-<img src="./assets/admin-ui-data-rest-dialog.jpg" width="100%">
-
-<img src="./assets/admin-ui-data-rest-urls.jpg" width="100%">
+> [!TIP]
+> <img src="../assets/admin-ui-data-rest-menu.jpg" width="40%" align="right" >
+> Starting in 2sxc 11.10+ the admin-UI has [built-in help](xref:WebApi.Help.AdminUiContentRest) to get started. These UIs also show sample code and everything.
+> So you probably don't need to read the stuff here and just go ahead with that. 
 
 > [!TIP]
 > In 2sxc 11.10 this dialog was introduced for the **Data** section, and we'll add similar sections for **Query** and **WebApi**. 
@@ -36,11 +33,11 @@ One of the most confusing aspects when using the REST API or custom WebApis is f
 
 Every 2sxc REST URL is built with the following parts:
 
-`[root]/app/[app-identity]/[part]/[specifics]`
+`[root]/app/[app-identity]/[app-part]/[specifics]`
 
-1. The `root` is determined by DNN and changes a bit by DNN version, portal, and language configuration. [more](#root)
-1. The `app-identity` says what app we're addressing. It's often `auto` for auto-detection, but when auto-detection isn't available, it's the app-folder name. [more](#app-identity)
-1. the `part` determines if we're accessing [content](#part-content), [query](#part-query) or [api](#part-api) of the app.
+1. The `root` is determined by DNN and changes a bit by DNN version, portal, and language configuration. [more](#part-1-the-root-path)
+1. The `app-identity` says what app we're addressing. It's often `auto` for auto-detection, but when auto-detection isn't available, it's the app-folder name. [more](#part-2-the-app-identity)
+1. the `app-part` determines if we're accessing [content](#part-3a-app-part-content), [query](#part-3b-app-part-query) or [api](#part-3c-app-part-custom-c-web-api) of the app.
 1. The `specifics` is a path part describing what exactly what we're accessing and varies depending on the API.
 
 
@@ -97,8 +94,9 @@ To access the same Glossary-App from elsewhere, like from the skin (for example,
 This applies to all endpoints like `content`, `query`, `api`.
 
 
-## Part 3a: The Part when using Content
+## Part 3: App-Part Content, Query or Web-Api
 
+### Part 3a: App-Part Content
 If your part is `content` then you're using the normal content/entity REST API. It supports all common HTTP verbs. In this case you have the following possibilities after `content/`:
 
 * `.../content/[YourContentType]` 
@@ -116,7 +114,7 @@ If your part is `content` then you're using the normal content/entity REST API. 
 > You can also configure permissions in ways that allow users to only create draft items
 > (which would then require an admin to publish it)
 
-### Content Example
+#### Content Example
 
 Assume you have the [blog-app](xref:App.Blog) installed and your JS would request a JSON from this endpoint (logged in as host, so security is not an issue):
 
@@ -128,7 +126,7 @@ Assume you have the [blog-app](xref:App.Blog) installed and your JS would reques
 1. HTTP POST to `[root-path]/app/auto/content/BlogPost/1050` with a POST body of `{ "Title": "changed title"}` would let you update the item 1050.
 
 
-## Part 3b: The Part when using Query
+### Part 3b: App-Part Query
 
 The Query endpoint can be accessed on `.../query/[your-query-name]`. Note that Query endpoints only support the HTTP-verb GET, since it's read-only. 
 
@@ -144,7 +142,7 @@ The Query endpoint can be accessed on `.../query/[your-query-name]`. Note that Q
 > So if you query has an ID-filter which expects a token `[QueryString:id]` you can also call your query like
 > `.../app/auto/query/GetWithId?id=27`
 
-### Query Example
+#### Query Example
 
 Assume you have the [blog-app](xref:App.Blog) installed and your JS would request a JSON from this endpoint (logged in as host, so security is not an issue):
 
@@ -154,7 +152,7 @@ This would run the pre-defined query and return the Blog Posts of the author _Da
 
 
 
-## Part 3c: The Part when using Custom C# Web Api
+### Part 3c: App-Part Custom C# Web Api
 
 Custom WebAPI use one of these schemas
 

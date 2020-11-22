@@ -46,10 +46,6 @@
 - topicUid: Specs.DataSources.Intro
   href: datasources/toc.yml
 
-- name: Web API Endpoints
-  topicUid: Specs.WebApi.Intro
-  href: web-api/toc.yml
-
 - name: System Configuration
   items:
     - name: Features Concept
