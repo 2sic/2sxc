@@ -44,8 +44,6 @@ namespace ToSic.SexyContent
             services.AddTransient<IContainer, DnnContainer>();
             services.AddTransient<DnnContainer>();
 
-
-
             // 
             services.AddTransient<IValueConverter, DnnValueConverter>();
 
@@ -55,7 +53,6 @@ namespace ToSic.SexyContent
             // new for .net standard
             services.AddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
             services.AddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
-            services.AddTransient<IEnvironment, DnnEnvironment>();
             services.AddTransient<IGetDefaultLanguage, DnnSite>();
             services.AddTransient<IZoneMapper, DnnZoneMapper>();
 

@@ -16,7 +16,6 @@ namespace ToSic.Sxc.Dnn.Run
     {
         #region Constructor and DI
 
-        private readonly IEnvironment _environment;
         private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
         private readonly IZoneMapper _zoneMapper;
 
@@ -24,14 +23,10 @@ namespace ToSic.Sxc.Dnn.Run
         /// Empty constructor for DI
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public DnnModuleUpdater(IEnvironment environment, 
-            Lazy<CmsRuntime> cmsRuntimeLazy, 
-            IZoneMapper zoneMapper) : base("Dnn.MapA2I")
+        public DnnModuleUpdater(Lazy<CmsRuntime> cmsRuntimeLazy, IZoneMapper zoneMapper) : base("Dnn.MapA2I")
         {
-            _environment = environment;
             _cmsRuntimeLazy = cmsRuntimeLazy;
             _zoneMapper = zoneMapper.Init(Log);
-            _environment.Init(Log);
         }
 
         #endregion

@@ -9,7 +9,7 @@ using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Dnn.Run
 {
-    [PrivateApi("should probably be changed once we have IUser<T>")]
+    [PrivateApi("still WIP")]
     public class DnnUser: IUser<UserInfo>
     {
         public DnnUser(UserInfo user = null)

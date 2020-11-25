@@ -28,9 +28,8 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddScoped<ILinkPaths, OqtLinkPaths>();
             services.AddTransient<IServerPaths, OqtServerPaths>();
 
-
-            services.AddTransient<IEnvironment, OqtEnvironment>();
             services.AddTransient<ISite, OqtSite>();
+            services.AddTransient<IUser, OqtUser>();
             services.AddTransient<IGetDefaultLanguage, OqtSite>();
             services.AddTransient<IZoneMapper, OqtZoneMapper>();
             services.AddTransient<AppPermissionCheck, OqtPermissionCheck>();

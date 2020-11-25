@@ -14,7 +14,6 @@ namespace ToSic.Sxc.Mvc
     {
         public static IServiceCollection AddSxcMvc(this IServiceCollection services)
         {
-            services.AddTransient<IEnvironment, MvcEnvironment>();
             services.AddTransient<ISite, MvcSite>();
             services.AddTransient<IGetDefaultLanguage, MvcSite>();
             services.AddTransient<IZoneMapper, MvcZoneMapper>();
