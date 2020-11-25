@@ -85,9 +85,9 @@ namespace ToSic.Sxc.Dnn.Run
         {
             var wrapLog = Log.Call<bool>();
             // but is the current portal also the one we're asking about?
-            if (Context.Tenant == null || Context.Tenant.Id == Eav.Constants.NullId) return wrapLog("no", false); // this is the case when running out-of http-context
+            if (Context.Site == null || Context.Site.Id == Eav.Constants.NullId) return wrapLog("no", false); // this is the case when running out-of http-context
             if (AppIdentity == null) return wrapLog("yes", true); // this is the case when an app hasn't been selected yet, so it's an empty module, must be on current portal
-            var pZone = ZoneMapper.GetZoneId(Context.Tenant);
+            var pZone = ZoneMapper.GetZoneId(Context.Site);
             var result = pZone == AppIdentity.ZoneId; // must match, to accept user as admin
             return wrapLog($"{result}", result);
         }

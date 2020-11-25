@@ -20,8 +20,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         private readonly Lazy<ViewsExportImport> _viewExportLazy;
         protected override string HistoryLogName => "Api.TmpCnt";
 
-        private ViewsBackend Backend => _viewsBackendLazy.Value.Init(GetContext().Tenant, GetUser(), Log);
-        private ViewsExportImport ExportImport => _viewExportLazy.Value.Init(GetContext().Tenant, GetUser(), Log);
+        private ViewsBackend Backend => _viewsBackendLazy.Value.Init(GetContext().Site, GetUser(), Log);
+        private ViewsExportImport ExportImport => _viewExportLazy.Value.Init(GetContext().Site, GetUser(), Log);
 
         public ViewController(StatefulControllerDependencies dependencies, 
             Lazy<ViewsBackend> viewsBackendLazy,
@@ -83,7 +83,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
             var streams = new List<FileUploadDto>();
             for (var i = 0; i < files.Count; i++)
                 streams.Add(new FileUploadDto { Name = files[i].FileName, Stream = files[i].OpenReadStream() });
-            var result = ExportImport.ImportView(zoneId, appId, streams, GetContext().Tenant.DefaultLanguage);
+            var result = ExportImport.ImportView(zoneId, appId, streams, GetContext().Site.DefaultLanguage);
             
             return wrapLog("ok", result);
         }

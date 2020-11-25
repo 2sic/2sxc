@@ -98,7 +98,7 @@ namespace ToSic.Sxc.Dnn.Run
         {
             Log.Add("update title");
 
-            var languages = _zoneMapper.CulturesWithState(block.Context.Tenant.Id, block.ZoneId);
+            var languages = _zoneMapper.CulturesWithState(block.Context.Site.Id, block.ZoneId);
 
             // Find Module for default language
             var moduleController = new ModuleController();
@@ -120,7 +120,7 @@ namespace ToSic.Sxc.Dnn.Run
 
                     // Find module for given Culture
                     var moduleByCulture = moduleController.GetModuleByCulture(originalModule.ModuleID,
-                        originalModule.TabID, block.Context.Tenant.Id,
+                        originalModule.TabID, block.Context.Site.Id,
                         DotNetNuke.Services.Localization.LocaleController.Instance.GetLocale(dimension.Key));
 
                     // Break if no title module found

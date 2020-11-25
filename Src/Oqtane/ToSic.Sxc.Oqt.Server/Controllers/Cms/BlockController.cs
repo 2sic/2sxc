@@ -111,7 +111,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         public IEnumerable<AppUiInfo> Apps(string apps = null)
         {
             // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
-            var tenant = GetContext().Tenant;// new DnnTenant(PortalSettings);
+            var tenant = GetContext().Site;// new DnnTenant(PortalSettings);
             return _cmsZonesLazy.Value.Init(tenant.ZoneId, Log).AppsRt.GetSelectableApps(tenant, apps)
                 .ToList();
         }

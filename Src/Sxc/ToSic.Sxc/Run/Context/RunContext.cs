@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Run.Context
         public PlatformContext Platform { get; }
 
         public SiteContext Site =>
-            _site ?? (_site = new SiteContext {Id = _root?.Block?.Context?.Tenant.Id ?? NullId});
+            _site ?? (_site = new SiteContext {Id = _root?.Block?.Context?.Site.Id ?? NullId});
         private SiteContext _site;
 
         public PageContext Page => _page ?? (_page = new PageContext {Id = _root?.Block?.Context?.Page.Id ?? NullId});

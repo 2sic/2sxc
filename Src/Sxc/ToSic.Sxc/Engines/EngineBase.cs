@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
-using ToSic.Eav;
-using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Run;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -78,7 +75,7 @@ namespace ToSic.Sxc.Engines
             CheckExpectedTemplateErrors();
 
             // check access permissions - before initializing or running data-code in the template
-            CheckTemplatePermissions(Block.Context.Tenant);
+            CheckTemplatePermissions(Block.Context.Site);
 
             // Run engine-internal init stuff
             Init();

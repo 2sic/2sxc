@@ -232,7 +232,7 @@ namespace ToSic.Sxc.Code
         {
             if (_adamAppContext == null) 
                 _adamAppContext = Block.Context.ServiceProvider.Build<AdamAppContext>()
-                    .Init(Block.Context.Tenant, App, Block, CompatibilityLevel, Log);
+                    .Init(Block.Context.Site, App, Block, CompatibilityLevel, Log);
             return _adamAppContext.FolderOfField(entity.EntityGuid, fieldName);
         }
         private AdamAppContext _adamAppContext;

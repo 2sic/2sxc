@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Blocks
             Log.Add("Real app specified, will load App object with Data");
 
             // Get App for this block
-            App = Context.ServiceProvider.Build<App>().PreInit(Context.Tenant)
+            App = Context.ServiceProvider.Build<App>().PreInit(Context.Site)
                 .Init(this, Context.ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(this, false), Log);
 
             // note: requires EditAllowed, which isn't ready till App is created

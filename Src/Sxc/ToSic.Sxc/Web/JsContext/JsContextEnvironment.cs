@@ -23,9 +23,9 @@ namespace ToSic.Sxc.Web.JsContext
 
         public JsContextEnvironment(string systemRootUrl, IInstanceContext ctx, IBlock block)
         {
-            WebsiteId = ctx.Tenant.Id;
+            WebsiteId = ctx.Site.Id;
 
-            WebsiteUrl = "//" + ctx.Tenant.Url + "/";
+            WebsiteUrl = "//" + ctx.Site.Url + "/";
 
             PageId = ctx.Page.Id;
             PageUrl = ctx.Page.Url;

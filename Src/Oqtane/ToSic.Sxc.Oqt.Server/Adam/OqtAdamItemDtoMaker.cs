@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         {
             var item = base.Create(original, state);
             if(item is AdamItemDto<TFolderId, TFolderId> typed)
-                item.Path = string.Format(OqtConstants.DownloadLinkTemplate, state.Block.Context.Tenant.Id, typed.Id);
+                item.Path = string.Format(OqtConstants.DownloadLinkTemplate, state.Block.Context.Site.Id, typed.Id);
 
             return item;
         }
@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         {
             var item = base.Create(folder, state);
             if (item is AdamItemDto<TFolderId, TFolderId> typed)
-                item.Path = "/" + state.Block.Context.Tenant.Id + "/api/file/download/" + typed.Id;
+                item.Path = "/" + state.Block.Context.Site.Id + "/api/file/download/" + typed.Id;
             return item;
         }
 

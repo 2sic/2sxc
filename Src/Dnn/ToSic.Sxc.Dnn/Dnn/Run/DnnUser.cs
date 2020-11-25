@@ -12,15 +12,8 @@ namespace ToSic.Sxc.Dnn.Run
     [PrivateApi("still WIP")]
     public class DnnUser: IUser<UserInfo>
     {
-        public DnnUser(/*UserInfo user = null*/)
+        public DnnUser()
         {
-            //UnwrappedContents = user ?? PortalSettings.Current?.UserInfo;
-        }
-
-        public DnnUser Wrap(UserInfo user)
-        {
-            _user = user;
-            return this;
         }
 
         private string GetUserIdentityToken ()

@@ -48,8 +48,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected override WebResourceDto GetSite() =>
             new WebResourceDto
             {
-                Id = _context.Tenant.Id,
-                Url = "//" + _context.Tenant.Url,
+                Id = _context.Site.Id,
+                Url = "//" + _context.Site.Url,
             };
 
         protected override WebResourceDto GetPage() =>

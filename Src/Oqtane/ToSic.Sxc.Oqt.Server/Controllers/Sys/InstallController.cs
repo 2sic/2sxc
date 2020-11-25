@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
         {
             var result = _envInstallerLazy.Value.Init(Log)
                 .GetAutoInstallPackagesUiUrl(
-                    GetContext().Tenant,
+                    GetContext().Site,
                     GetContext().Container,
                     isContentApp);
             return Json(result);
