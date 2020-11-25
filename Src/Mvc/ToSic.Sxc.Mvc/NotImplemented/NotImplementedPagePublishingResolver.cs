@@ -1,11 +1,11 @@
 ﻿using ToSic.Eav.Apps.Enums;
 using ToSic.Sxc.Cms.Publishing;
 
-namespace ToSic.Sxc.Mvc.Run
+namespace ToSic.Sxc.Mvc.NotImplemented
 {
-    internal class MvcPagePublishingResolver : PagePublishingResolverBase
+    internal class NotImplementedPagePublishingResolver : PagePublishingResolverBase
     {
-        public MvcPagePublishingResolver() : base("Mvc") { }
+        public NotImplementedPagePublishingResolver() : base("Mvc") { }
 
         protected override PublishingMode LookupRequirements(int instanceId) 
             => PublishingMode.DraftOptional;

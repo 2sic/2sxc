@@ -12,7 +12,7 @@
         An EAV Constant: @ToSic.Eav.Constants.ContentAppName
     </li>
     <li>
-        A DataSource Object: @(new ToSic.Eav.DataSources.DataSourceFactory(null).GetType().AssemblyQualifiedName)
+        A DataSource Object: @(new ToSic.Eav.DataSources.DataSourceFactory(this.HttpContext.RequestServices).GetType().AssemblyQualifiedName)
     </li>
     <li>
         Repository type Code: @(ToSic.Eav.Repositories.RepositoryTypes.Code)
@@ -34,7 +34,7 @@
         Timestamp : @(ToSic.Eav.Apps.State.Get(4).CacheTimestamp)
     </li>
     <li>
-        Items in it : @(ToSic.Eav.Apps.State.Get(4).List.Count())
+        Items in it : @(ToSic.Eav.Apps.State.Get(4).List.Count)
     </li>
     <li>
         First Item: Guid @(Model.EntityInBlog.EntityGuid) <br/>
@@ -46,7 +46,7 @@
     </li>
     <li>
         blog tags: @Model.BlogTags().List.Count() <br/>
-        first: @Model.BlogTags().List.First().GetBestTitle()
+        first: @Model.BlogTags().List.FirstOrDefault()?.GetBestTitle()
     </li>
     <li>
         App: @Model.BlogApp.AppGuid <br/>

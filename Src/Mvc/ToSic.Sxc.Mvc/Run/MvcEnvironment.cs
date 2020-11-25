@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Logging;
+﻿using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Mvc.TestStuff;
 using ToSic.Sxc.Web;

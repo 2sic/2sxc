@@ -17,14 +17,9 @@ namespace ToSic.Sxc.Mvc.Run
 
         public override int GetZoneId(int tenantId) => tenantId;
 
-        //public override int GetZoneId(ITenant tenant) => tenant.Id;
-
-        //public override IAppIdentity IdentityFromTenant(int tenantId, int appId) => new AppIdentity(tenantId, appId);
         
         public override ISite SiteOfZone(int zoneId) => new MvcSite(_http.Current, new MvcPortalSettings(zoneId));
 
-
-        //public ITenant Tenant(int zoneId) => new MvcTenant(new MvcPortalSettings());
 
         public override List<TempTempCulture> CulturesWithState(int tenantId, int zoneId)
         {

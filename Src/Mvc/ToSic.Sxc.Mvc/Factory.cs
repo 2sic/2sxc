@@ -2,7 +2,6 @@
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.Eav.LookUp;
 using ToSic.Eav.Run;
 using ToSic.Sxc.LookUp;
 using App = ToSic.Sxc.Apps.App;
@@ -22,8 +21,15 @@ namespace ToSic.Sxc.Mvc
         {
             var log = new Log("Mvc.Factry", parentLog);
             log.Add($"Create App(z:{zoneId}, a:{appId}, tenantObj:{site != null}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
-            var appStuff = Eav.Factory.Resolve<App>().Init(new AppIdentity(zoneId, appId),
-                Eav.Factory.Resolve<AppConfigDelegate>().Init(log).Build(showDrafts/*, new LookUpEngine(parentLog)*/), parentLog);
+            var app = Eav.Factory.StaticBuild<App>();
+            if (site != null) app.PreInit(site);
+
+            // debugging
+            var appIdentity = new AppIdentity(zoneId, appId);
+            var configDelegate = Eav.Factory.StaticBuild<AppConfigDelegate>().Init(parentLog).Build(showDrafts);
+
+            var appStuff = app.Init(appIdentity, configDelegate, parentLog);
+
             return appStuff;
         }
     }

@@ -2,17 +2,26 @@
 using ToSic.Eav.Run;
 using ToSic.Sxc.Run;
 
-namespace ToSic.Sxc.Mvc.Run
+namespace ToSic.Sxc.Mvc.NotImplemented
 {
-    public class MvcEnvironmentInstaller: HasLog, IEnvironmentInstaller
+    public class NotImplementedEnvironmentInstaller: HasLog, IEnvironmentInstaller
     {
+        public NotImplementedEnvironmentInstaller() : base("Mvc.Instll")
+        {
+        }
+
+        public IEnvironmentInstaller Init(ILog parent)
+        {
+            Log.LinkTo(parent);
+            return this;
+        }
+
+
         public string UpgradeMessages()
         {
             // for now, always assume installation worked
             return null;
         }
-
-        private bool IsUpgradeRunning => false;
 
         public bool ResumeAbortedUpgrade()
         {
@@ -26,14 +35,5 @@ namespace ToSic.Sxc.Mvc.Run
             return "mvc not implemented #todo #mvc";
         }
 
-        public MvcEnvironmentInstaller() : base("Mvc.Instll")
-        {
-        }
-
-        public IEnvironmentInstaller Init(ILog parent)
-        {
-            Log.LinkTo(parent);
-            return this;
-        }
     }
 }

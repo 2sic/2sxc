@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Persistence.Logging;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Run;
 
-namespace ToSic.Sxc.Mvc.Run
+namespace ToSic.Sxc.Mvc.NotImplemented
 {
-    public class MvcImportExportEnvironment: ImportExportEnvironmentBase
+    public class NotImplementedImportExportEnvironment: ImportExportEnvironmentBase
     {
-        public MvcImportExportEnvironment(Dependencies dependencies) : base(dependencies, "Mvc.IExEnv") { }
+        public NotImplementedImportExportEnvironment(Dependencies dependencies) : base(dependencies, "Mvc.IExEnv") { }
 
         public override List<Message> TransferFilesToSite(string sourceFolder, string destinationFolder) 
             => throw new NotImplementedException();
 
-        public override Version TenantVersion => typeof(MvcImportExportEnvironment).Assembly.GetName().Version;
+        public override Version TenantVersion => typeof(NotImplementedImportExportEnvironment).Assembly.GetName().Version;
 
         public override void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap)
         {
