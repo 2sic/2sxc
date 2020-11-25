@@ -78,7 +78,9 @@ namespace ToSic.Sxc.WebApi
             // Small WebApi Helpers
             services.TryAddTransient<IdentifierHelper>();
             services.TryAddTransient<ContentGroupList>();
-            services.TryAddTransient<SaveSecurity>();
+
+            // 2020-11-25 2dm don't think this is ever injected, and it doesn't have a DI constructor
+            //services.TryAddTransient<SaveSecurity>();
 
             // Helpers
             services.TryAddTransient<ImpExpHelpers>();

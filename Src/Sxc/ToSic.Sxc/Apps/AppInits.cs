@@ -1,7 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
-using ToSic.Eav.LookUp;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.LookUp;
@@ -12,7 +11,7 @@ namespace ToSic.Sxc.Apps
     {
         public static IApp Init(this App app, AppConfigDelegate confProvider, IAppIdentity appIdentity, ILog log, bool showDrafts = false)
         {
-            var buildConfig = confProvider.Build(showDrafts/*, new LookUpEngine(log)*/);
+            var buildConfig = confProvider.Build(showDrafts);
             return app.Init(appIdentity, buildConfig, log);
         }
 
