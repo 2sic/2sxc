@@ -62,7 +62,6 @@ namespace ToSic.SexyContent
             services.AddTransient<AppPermissionCheck, DnnPermissionCheck>();
 
             services.AddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
-            services.AddTransient<IRenderingHelper, DnnRenderingHelper>();
             services.AddTransient<IPlatformModuleUpdater, DnnModuleUpdater>();
             services.AddTransient<IEnvironmentInstaller, InstallationController>();
 

@@ -31,7 +31,6 @@ namespace ToSic.Sxc.Oqt.Server
 
             services.AddTransient<IEnvironment, OqtEnvironment>();
             services.AddTransient<ISite, OqtSite>();
-            services.AddTransient<IRenderingHelper, OqtRenderingHelper>();
             services.AddTransient<IZoneMapper, OqtZoneMapper>();
             services.AddTransient<AppPermissionCheck, OqtPermissionCheck>();
             services.AddTransient<DynamicCodeRoot, OqtaneDynamicCode>();

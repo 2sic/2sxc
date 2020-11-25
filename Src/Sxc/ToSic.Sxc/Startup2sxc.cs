@@ -6,6 +6,7 @@ using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc
 {
@@ -37,6 +38,9 @@ namespace ToSic.Sxc
             services.TryAddTransient<AppConfigDelegate>();
             services.TryAddTransient<App>();
             services.TryAddTransient<ImportExportEnvironmentBase.Dependencies>();
+
+            // Rendering
+            services.TryAddTransient<IRenderingHelper, RenderingHelper>();
 
             return services;
         }

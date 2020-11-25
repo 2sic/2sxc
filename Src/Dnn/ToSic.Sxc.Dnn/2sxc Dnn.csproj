@@ -122,7 +122,6 @@
     <Compile Include="Environment\Dnn7\DnnBusinessController.cs" />
     <Compile Include="Dnn\Run\DnnContainer.cs" />
     <Compile Include="Dnn\Run\DnnPermissionCheck.cs" />
-    <Compile Include="Dnn\Web\DnnRenderingHelpers.cs" />
     <Compile Include="Dnn\Run\DnnSite.cs" />
     <Compile Include="Dnn\Run\DnnValueConverter.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.Factory.cs" />

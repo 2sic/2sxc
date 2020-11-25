@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web;
 using Newtonsoft.Json;
+using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
@@ -9,13 +10,18 @@ using ToSic.Sxc.Web.JsContext;
 
 namespace ToSic.Sxc.Web
 {
-    public abstract class RenderingHelper: HasLog, IRenderingHelper
+    public class RenderingHelper: HasLog, IRenderingHelper
     {
         #region Constructors and DI
 
-        protected RenderingHelper(ILinkPaths linkPaths, string logName) : base(logName) => _linkPaths = linkPaths;
+        public RenderingHelper(ILinkPaths linkPaths, IEnvironmentLogger errorLogger) : base("Sxc.RndHlp")
+        {
+            _linkPaths = linkPaths;
+            _errorLogger = errorLogger;
+        }
 
         private readonly ILinkPaths _linkPaths;
+        private readonly IEnvironmentLogger _errorLogger;
 
         public IRenderingHelper Init(IBlock block, ILog parentLog)
         {
@@ -73,8 +79,7 @@ namespace ToSic.Sxc.Web
         {
             var intro = "Error";
             var msg = intro + ": " + ex;
-            if (addToEventLog)
-                LogToEnvironmentExceptions(ex);
+            if (addToEventLog) _errorLogger?.LogException(ex);
 
             if (!Context.User.IsSuperUser)
                 msg = visitorAlternateError ?? "error showing content";
@@ -94,7 +99,5 @@ namespace ToSic.Sxc.Web
 
         public string UiContextInfos() => JsonConvert.SerializeObject(new JsContextAll(AppRootPath, Block, Log));
 
-
-        protected abstract void LogToEnvironmentExceptions(Exception ex);
     }
 }

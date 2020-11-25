@@ -18,7 +18,6 @@ namespace ToSic.Sxc.Mvc
     {
         public static IServiceCollection AddNotImplemented(this IServiceCollection services)
         {
-            services.AddTransient<IRenderingHelper, NotImplementedRenderingHelper>();
             services.AddTransient<IEnvironmentInstaller, NotImplementedEnvironmentInstaller>();
             services.AddTransient<IGetEngine, NotImplementedGetLookupEngine>();
 
