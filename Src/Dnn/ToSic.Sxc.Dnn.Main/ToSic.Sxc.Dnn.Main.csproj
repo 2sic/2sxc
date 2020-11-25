@@ -79,7 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompilerDependencies.cs" />
-    <Compile Include="ConfigurationLoader.cs" />
+    <Compile Include="StartupDnn.cs" />
     <Compile Include="DnnWebForms\PagePicker.ascx.cs">
       <DependentUpon>PagePicker.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
