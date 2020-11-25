@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Primitives;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Mvc.Dev;
 using ToSic.Sxc.Mvc.Run;
 
@@ -17,8 +17,9 @@ namespace ToSic.Sxc.Mvc.WebApi
             //var publishing = HttpContext.RequestServices.Build<IPagePublishingResolver>();
 
             // in case the initial request didn't yet find a block builder, we need to create it now
+            var site = HttpContext.RequestServices.Build<ISite>().Init(TestIds.PrimaryZone);
             var context = // BlockBuilder?.Context ??
-                new InstanceContext(new MvcSite(HttpContext), new PageNull(), new ContainerNull(), 
+                new InstanceContext(site, new PageNull(), new ContainerNull(), 
                     new MvcUser(),
                     HttpContext.RequestServices, new InstancePublishingState());
             return context;

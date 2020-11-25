@@ -1,24 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Mvc.TestStuff;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Mvc.Run
 {
     public class MvcZoneMapper : ZoneMapperBase
     {
         /// <inheritdoc />
-        public MvcZoneMapper(IHttp http) : base("Mvc.ZoneMp")
+        public MvcZoneMapper(IServiceProvider serviceProvider) : base("Mvc.ZoneMp")
         {
-            _http = http;
+            _serviceProvider = serviceProvider;
         }
-        private readonly IHttp _http;
+
+        private readonly IServiceProvider _serviceProvider;
 
         public override int GetZoneId(int tenantId) => tenantId;
 
         
-        public override ISite SiteOfZone(int zoneId) => new MvcSite(_http.Current, new MvcPortalSettings(zoneId));
+        public override ISite SiteOfZone(int zoneId) => _serviceProvider.Build<ISite>().Init(zoneId);
 
 
         public override List<TempTempCulture> CulturesWithState(int tenantId, int zoneId)

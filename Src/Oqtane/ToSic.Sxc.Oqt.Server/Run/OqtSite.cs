@@ -17,12 +17,12 @@ namespace ToSic.Sxc.Oqt.Server.Run
     /// This is a Mvc implementation of a Tenant-object. 
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public class OqtSite: Site<Site>
+    public sealed class OqtSite: Site<Site>
     {
         /// <summary>
         /// Constructor for DI
         /// </summary>
-        public OqtSite(Lazy<ISiteRepository> siteRepository, Lazy<ITenantResolver> tenantResolver, Lazy<IServerPaths> serverPaths, Lazy<OqtZoneMapper> zoneMapper) : base(null)
+        public OqtSite(Lazy<ISiteRepository> siteRepository, Lazy<ITenantResolver> tenantResolver, Lazy<IServerPaths> serverPaths, Lazy<OqtZoneMapper> zoneMapper)
         {
             _siteRepository = siteRepository;
             _tenantResolver = tenantResolver;

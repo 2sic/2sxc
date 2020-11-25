@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Dnn.Run
     /// This is a DNN implementation of a Tenant-object. 
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public class DnnSite: Site<PortalSettings>
+    public sealed class DnnSite: Site<PortalSettings>
     {
         #region Constructors and DI
 
@@ -21,7 +21,10 @@ namespace ToSic.Sxc.Dnn.Run
         public DnnSite() : this(PortalSettings.Current) { }
 
         /// <inheritdoc />
-        public DnnSite(PortalSettings settings): base(GetBestPortalSettings(settings)) {}
+        public DnnSite(PortalSettings settings)
+        {
+            UnwrappedContents = GetBestPortalSettings(settings);
+        }
 
         /// <summary>
         /// Very special helper to work around a DNN issue

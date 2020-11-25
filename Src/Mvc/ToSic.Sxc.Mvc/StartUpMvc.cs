@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Mvc.Run;
 using ToSic.Sxc.Mvc.Web;
 using ToSic.Sxc.Mvc.WebApi.Adam;
@@ -34,7 +33,6 @@ namespace ToSic.Sxc.Mvc
             //sc.AddTransient<XmlExporter, DnnXmlExporter>();
             //sc.AddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
             //sc.AddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
-
 
             return services;
         }

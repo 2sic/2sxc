@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Mvc.TestStuff;
+using ToSic.Sxc.Mvc.Dev;
+using ToSic.Sxc.Mvc.Web;
 
 // #todo: not really multi-tenant, incl. url 
 
@@ -12,58 +13,47 @@ namespace ToSic.Sxc.Mvc.Run
     /// This is a Mvc implementation of a Tenant-object. 
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public class MvcSite : Site<MvcPortalSettings>
+    public sealed class MvcSite : Site<object>
     {
         /// <summary>
         /// Constructor for DI
         /// </summary>
         /// <param name="httpContextAccessor"></param>
-        public MvcSite(IHttpContextAccessor httpContextAccessor) : base(new MvcPortalSettings())
+        public MvcSite(IHttpContextAccessor httpContextAccessor)
         {
+            UnwrappedContents = null;
             HttpContext = httpContextAccessor.HttpContext;
         }
 
-        /// <summary>
-        /// Constructor for normal initialization
-        /// </summary>
-        /// <param name="httpContext"></param>
-        public MvcSite(HttpContext httpContext) : base(new MvcPortalSettings())
-        {
-            HttpContext = httpContext;
-        }
 
-        public MvcSite(HttpContext httpContext, MvcPortalSettings settings) : base(
-            settings ?? new MvcPortalSettings())
-        {
-            HttpContext = httpContext;
-        }
+        private HttpContext HttpContext { get; }
 
-        protected HttpContext HttpContext { get; }
-
-        public override ISite Init(int tenantId)
+        public override ISite Init(int siteId)
         {
-            UnwrappedContents = new MvcPortalSettings(tenantId);
+            _siteId = siteId;
             return this;
         }
 
         /// <inheritdoc />
-        public override string DefaultLanguage => UnwrappedContents.DefaultLanguage;
+        public override string DefaultLanguage => TestIds.DefaultLanguage;
 
         /// <inheritdoc />
-        public override int Id => UnwrappedContents.Id;
+        public override int Id => _siteId;
+
+        private int _siteId;
 
         // https://localhost:44361
         public override string Url => HttpContext?.Request.Host.ToString();
 
         /// <inheritdoc />
-        public override string Name => UnwrappedContents.Name;
+        public override string Name => "Dummy Site Name";
 
         [PrivateApi]
         public override string AppsRootPhysical => AppsRootPartial();
 
         private string AppsRootPartial()
         {
-            return Path.Combine(UnwrappedContents.HomePath, Settings.AppsRootFolder);
+            return Path.Combine(MvcConstants.WwwRoot, Settings.AppsRootFolder);
         }
 
         public override string AppsRootPhysicalFull => Eav.Factory.Resolve<IServerPaths>().FullAppPath(AppsRootPartial());
@@ -72,9 +62,9 @@ namespace ToSic.Sxc.Mvc.Run
         public override bool RefactorUserIsAdmin => false;
 
         /// <inheritdoc />
-        public override string ContentPath => UnwrappedContents.HomePath;
+        public override string ContentPath => MvcConstants.WwwRoot;
 
-        public override int ZoneId => UnwrappedContents.Id;
+        public override int ZoneId => _siteId;
 
     }
 }

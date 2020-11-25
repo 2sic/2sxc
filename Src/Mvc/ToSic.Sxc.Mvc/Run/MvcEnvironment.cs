@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Mvc.TestStuff;
+using ToSic.Sxc.Mvc.Dev;
 
 namespace ToSic.Sxc.Mvc.Run
 {
@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Mvc.Run
         {
         }
 
-        public string DefaultLanguage => new MvcPortalSettings().DefaultLanguage;
+        public string DefaultLanguage => TestIds.DefaultLanguage;
 
 
         public IUser User { get; } = new MvcUser();

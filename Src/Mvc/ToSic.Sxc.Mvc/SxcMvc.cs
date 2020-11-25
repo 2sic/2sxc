@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Mvc.Dev;
@@ -58,10 +59,11 @@ namespace ToSic.Sxc.Mvc
 
         public static InstanceContext CreateContext(HttpContext http, int zoneId, int pageId, int containerId, int appId, Guid blockGuid)
         {
-            var publishing = http.RequestServices.Build<IPagePublishingResolver>();
+            var sp = http.RequestServices;
+            var publishing = sp.Build<IPagePublishingResolver>();
 
             return new InstanceContext(
-                new MvcSite(http).Init(zoneId),
+                sp.Build<ISite>().Init(zoneId),
                 new SxcPage(pageId, null, http.RequestServices.Build<IHttp>().QueryStringKeyValuePairs()),
                 new MvcContainer(tenantId: zoneId, id: containerId, appId: appId, block: blockGuid),
                 new MvcUser(),

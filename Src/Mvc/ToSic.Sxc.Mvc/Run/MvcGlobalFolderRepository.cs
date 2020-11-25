@@ -17,15 +17,6 @@ namespace ToSic.Sxc.Mvc.Run
         public override List<string> RootPaths => new List<string>
         {
             _serverPaths.FullSystemPath("wwwroot/System/Sxc/.data"),
-            //"C:\\Projects\\poc-2sxc-mvc-website\\Website\\wwwroot\\System\\Sxc\\.data"
-            //BuildPath(Constants.FolderData),
-            //BuildPath(Constants.FolderDataBeta),
-            //BuildPath(Constants.FolderDataCustom)
         };
-
-        //private string BuildPath(string pathEnd) =>
-        //    HostingEnvironment.MapPath(System.IO.Path.Combine(Eav.ImportExport.Settings.ModuleDirectory,
-        //        pathEnd));
-
     }
 }
