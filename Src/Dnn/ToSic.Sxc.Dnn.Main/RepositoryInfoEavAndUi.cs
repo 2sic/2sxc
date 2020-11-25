@@ -16,7 +16,7 @@ namespace ToSic.SexyContent
     /// Is used by reflection, so you won't see any direct references to this anywhere
     /// </remarks>
     // ReSharper disable once UnusedMember.Global
-    public class RepositoryInfoEavAndUi: RepositoryInfoOfFolder
+    public class DnnGlobalFolderRepository: FolderBasedRepository
     {
         public override List<string> RootPaths => new List<string>
         {

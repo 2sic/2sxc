@@ -4,11 +4,11 @@ using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Mvc.Run
 {
-    public class MvcRepositoryInfoFileSystem: RepositoryInfoOfFolder
+    public class MvcGlobalFolderRepository: FolderBasedRepository
     {
         #region Constructor and DI
 
-        public MvcRepositoryInfoFileSystem(IServerPaths serverPaths) => _serverPaths = serverPaths;
+        public MvcGlobalFolderRepository(IServerPaths serverPaths) => _serverPaths = serverPaths;
 
         private readonly IServerPaths _serverPaths;
 

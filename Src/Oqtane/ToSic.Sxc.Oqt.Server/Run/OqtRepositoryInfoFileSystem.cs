@@ -4,11 +4,11 @@ using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtRepositoryInfoFileSystem : RepositoryInfoOfFolder
+    public class OqtGlobalFolderRepository : FolderBasedRepository
     {
         #region Constructor and DI
 
-        public OqtRepositoryInfoFileSystem(IServerPaths serverPaths) => _serverPaths = serverPaths;
+        public OqtGlobalFolderRepository(IServerPaths serverPaths) => _serverPaths = serverPaths;
 
         private readonly IServerPaths _serverPaths;
 
