@@ -15,7 +15,7 @@ namespace ToSic.SexyContent
     /// This way DNN will auto-run this code before anything else
     /// </summary>
     // ReSharper disable once UnusedMember.Global
-    public class StartUpDnnDependencyInjection : IServiceRouteMapper
+    public class StartUpDnn : IServiceRouteMapper
     {
         /// <summary>
         /// This will be called by DNN when loading the assemblies.

@@ -30,7 +30,7 @@ using ToSic.Sxc.WebForms.Web;
 namespace ToSic.SexyContent
 {
 
-    internal static class StartupDnn
+    internal static class StartUpDnnDi
     {
         public static IServiceCollection AddDnn(this IServiceCollection services, string appsCacheOverride)
         {
