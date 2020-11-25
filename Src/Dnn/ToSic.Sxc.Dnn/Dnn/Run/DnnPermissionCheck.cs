@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Dnn.Run
         private IZoneMapper _zoneMapper;
 
 
-        public DnnPermissionCheck(Lazy<IZoneMapper> zoneMapperLazy) : base("Dnn.PrmChk")
+        public DnnPermissionCheck(Lazy<IZoneMapper> zoneMapperLazy) : base(DnnConstants.LogName)
         {
             _zoneMapperLazy = zoneMapperLazy;
         }

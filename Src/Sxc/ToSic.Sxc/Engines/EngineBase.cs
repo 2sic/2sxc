@@ -75,7 +75,7 @@ namespace ToSic.Sxc.Engines
             CheckExpectedTemplateErrors();
 
             // check access permissions - before initializing or running data-code in the template
-            CheckTemplatePermissions(Block.Context.Site);
+            CheckTemplatePermissions(Block.Context.User);
 
             // Run engine-internal init stuff
             Init();
@@ -194,7 +194,7 @@ namespace ToSic.Sxc.Engines
             }
         }
 
-        private void CheckTemplatePermissions(ISite site)
+        private void CheckTemplatePermissions(IUser user)
         {
             // do security check IF security exists
             // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
@@ -202,7 +202,7 @@ namespace ToSic.Sxc.Engines
                 .ForItem(Block.Context, App, Template.Entity, Log);
 
             // Views only use permissions to prevent access, so only check if there are any configured permissions
-            if (site.RefactorUserIsAdmin || !templatePermissions.HasPermissions)
+            if (user.IsAdmin || !templatePermissions.HasPermissions)
                 return;
 
             if (!templatePermissions.UserMay(GrantSets.ReadSomething))

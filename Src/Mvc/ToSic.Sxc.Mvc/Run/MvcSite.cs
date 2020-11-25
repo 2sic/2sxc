@@ -58,8 +58,6 @@ namespace ToSic.Sxc.Mvc.Run
 
         public override string AppsRootPhysicalFull => Eav.Factory.Resolve<IServerPaths>().FullAppPath(AppsRootPartial());
 
-        [PrivateApi]
-        public override bool RefactorUserIsAdmin => false;
 
         /// <inheritdoc />
         public override string ContentPath => MvcConstants.WwwRoot;

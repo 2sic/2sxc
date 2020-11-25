@@ -39,7 +39,7 @@ namespace ToSic.SexyContent
             services.TryAddScoped<WebFormsHttp>();
 
             // Core Runtime Context Objects
-            services.AddTransient<IUser, DnnUser>();
+            services.AddScoped<IUser, DnnUser>();
             services.AddScoped<ISite, DnnSite>();
             services.AddTransient<IContainer, DnnContainer>();
             services.AddTransient<DnnContainer>();

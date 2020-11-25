@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtPermissionCheck: AppPermissionCheck
     {
-        public OqtPermissionCheck(): base($"{OqtConstants.OqtLogPrefix}.PrmChk") { }
+        public OqtPermissionCheck(): base(OqtConstants.OqtLogPrefix) { }
 
         // todo: #permissions
         protected override bool EnvironmentAllows(List<Grants> grants) => true;
@@ -22,6 +22,5 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return false;
         }
 
-        protected override IUser User => new OqtUser(WipConstants.NullUser);
     }
 }

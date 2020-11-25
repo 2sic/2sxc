@@ -12,9 +12,7 @@ namespace ToSic.Sxc.Dnn.Run
     [PrivateApi("still WIP")]
     public class DnnUser: IUser<UserInfo>
     {
-        public DnnUser()
-        {
-        }
+        public DnnUser() { }
 
         private string GetUserIdentityToken ()
         {
@@ -28,10 +26,20 @@ namespace ToSic.Sxc.Dnn.Run
         public string IdentityToken => GetUserIdentityToken();
 
         public List<int> Roles => _roles ?? (_roles = BuildRoleList());
+        private List<int> _roles;
+
         public bool IsSuperUser => UnwrappedContents?.IsSuperUser ?? false;
 
-        public bool IsAdmin => UnwrappedContents?.IsInRole(PortalSettings.Current?.AdministratorRoleName ?? "dummyrolename-if-no-portal") ?? false;
-        public bool IsDesigner => UnwrappedContents?.IsInRole(Settings.SexyContentGroupName) ?? false;
+        public bool IsAdmin => _isAdmin 
+                               ?? (_isAdmin = UnwrappedContents?.IsInRole(PortalSettings.Current?.AdministratorRoleName ?? "dummy-if-no-portal")) 
+                               ?? false;
+        private bool? _isAdmin; 
+
+        public bool IsDesigner => _isDesigner ?? (_isDesigner = UnwrappedContents?.IsInRole(Settings.SexyContentGroupName)) ?? false;
+        private bool? _isDesigner;
+
+        public UserInfo UnwrappedContents => _user ?? (_user = PortalSettings.Current?.UserInfo);
+        private UserInfo _user;
 
         private static List<int> BuildRoleList()
         {
@@ -49,10 +57,5 @@ namespace ToSic.Sxc.Dnn.Run
                 .Select(r => r.RoleID)
                 .ToList();
         }
-
-        private List<int> _roles;
-
-        public UserInfo UnwrappedContents => _user ?? (_user = PortalSettings.Current?.UserInfo);
-        private UserInfo _user;
     }
 }

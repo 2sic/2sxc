@@ -26,6 +26,8 @@ namespace Website.Plumbing
                     .AddSxcMvc()
                     .AddNotImplemented()
                     .AddSxcRazor()
+
+                    // probably the basics needed to read data
                     .AddSxcWebApi()
                     .AddSxcCore()
                     .AddEav();

@@ -93,10 +93,6 @@ namespace ToSic.Sxc.Dnn.Run
         [PrivateApi]
         public override string AppsRootPhysicalFull => HostingEnvironment.MapPath(AppsRootRelative);
 
-        [PrivateApi]
-        public override bool RefactorUserIsAdmin
-            => UnwrappedContents.UserInfo.IsInRole(UnwrappedContents.AdministratorRoleName);
-
         /// <inheritdoc />
         public override string ContentPath => UnwrappedContents.HomeDirectory;
 

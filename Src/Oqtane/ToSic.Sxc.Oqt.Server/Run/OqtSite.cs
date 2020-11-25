@@ -80,8 +80,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         [PrivateApi] public override string AppsRootPhysicalFull => _serverPaths.Value.FullAppPath(AppsRootPartial());
 
-        [PrivateApi]
-        public override bool RefactorUserIsAdmin => WipConstants.IsAdmin;
 
         /// <inheritdoc />
         public override string ContentPath
