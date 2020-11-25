@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
+using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Run;
@@ -42,6 +44,28 @@ namespace ToSic.Sxc
             // Rendering
             services.TryAddTransient<IRenderingHelper, RenderingHelper>();
 
+            // Add possibly missing fallbacks
+            services.AddSxcCoreFallbackServices();
+
+            return services;
+        }
+
+        /// <summary>
+        /// This will add Do-Nothing services which will take over if they are not provided by the main system
+        /// In general this will result in some features missing, which many platforms don't need or care about
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// All calls in here MUST use TryAddTransient, and never without the Try
+        /// </remarks>
+        public static IServiceCollection AddSxcCoreFallbackServices(this IServiceCollection services)
+        {
+            services.TryAddTransient<IEnvironmentInstaller, BasicEnvironmentInstaller>();
+            services.TryAddTransient<IPlatformModuleUpdater, BasicModuleUpdater>();
+            services.TryAddTransient<IPagePublishingResolver, BasicPagePublishingResolver>();
+            services.TryAddTransient<IImportExportEnvironment, BasicImportExportEnvironment>();
+            services.TryAddTransient<IPagePublishing, BasicPagePublishing>();
             return services;
         }
     }

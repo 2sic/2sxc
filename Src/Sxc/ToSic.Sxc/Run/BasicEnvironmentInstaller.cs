@@ -1,12 +1,12 @@
-﻿using ToSic.Eav.Logging;
+﻿using ToSic.Eav;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Run;
 
-namespace ToSic.Sxc.Mvc.NotImplemented
+namespace ToSic.Sxc.Run
 {
-    public class NotImplementedEnvironmentInstaller: HasLog, IEnvironmentInstaller
+    public class BasicEnvironmentInstaller: HasLog, IEnvironmentInstaller
     {
-        public NotImplementedEnvironmentInstaller() : base("Mvc.Instll")
+        public BasicEnvironmentInstaller() : base($"{LogNames.NotImplemented}.Instll")
         {
         }
 

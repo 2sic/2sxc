@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
     {
         #region Constructor / DI
 
-        public DnnXmlExporter(AdamAppContext<int, int> adamAppContext, XmlSerializer xmlSerializer): base(xmlSerializer)
+        public DnnXmlExporter(AdamAppContext<int, int> adamAppContext, XmlSerializer xmlSerializer): base(xmlSerializer, DnnConstants.LogName)
         {
             AdamAppContext = adamAppContext;
         }
@@ -28,7 +28,6 @@ namespace ToSic.Sxc.Dnn.ImportExport
         {
             var tenant = new DnnSite(PortalSettings.Current);
             var app = AdamAppContext.AppRuntime.ServiceProvider.Build<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
-            //AdamAppContext = new AdamAppContext<int, int>();
             AdamAppContext.Init(tenant, app, null, 10, Log);
             Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
 

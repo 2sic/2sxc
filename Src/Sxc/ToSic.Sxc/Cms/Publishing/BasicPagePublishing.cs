@@ -1,30 +1,21 @@
 ﻿using System;
+using ToSic.Eav;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Cms.Publishing;
 
-namespace ToSic.Sxc.Mvc.Run
+namespace ToSic.Sxc.Cms.Publishing
 {
-    internal class MvcPagePublishing : HasLog<IPagePublishing>, IPagePublishing
+    internal class BasicPagePublishing : HasLog<IPagePublishing>, IPagePublishing
     {
-        public MvcPagePublishing() : base("Mvc.Publsh") { }
+        public BasicPagePublishing() : base($"{LogNames.NotImplemented}.Publsh") { }
 
-        
         public void DoInsidePublishing(IInstanceContext context, Action<VersioningActionInfo> action)
         {
-            var containerId = context.Container.Id;
-            var userId = 0;
-            var enabled = context.Publishing.ForceDraft;
-            Log.Add($"DoInsidePublishing(module:{containerId}, user:{userId}, enabled:{enabled})");
-            if (enabled)
-            {
-                /* ignore */
-            }
-
+            var wrapLog = Log.Call();
             var versioningActionInfo = new VersioningActionInfo();
             action.Invoke(versioningActionInfo);
-            Log.Add("/DoInsidePublishing");
+            wrapLog(null);
         }
 
 
