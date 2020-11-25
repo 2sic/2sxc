@@ -24,15 +24,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
         private readonly IServiceProvider _serviceProvider;
         private readonly PortalSettings _portal;
         private readonly ModuleInfo _module;
-        private readonly UserInfo _user;
 
-        public DnnContextBuilder(IServiceProvider serviceProvider, PortalSettings portal, ModuleInfo module, UserInfo user = null, int? zoneId = null, IApp app = null)
+        public DnnContextBuilder(IServiceProvider serviceProvider, PortalSettings portal, ModuleInfo module /*, int? zoneId = null, IApp app = null */)
         {
             _serviceProvider = serviceProvider;
             _portal = portal;
             _module = module;
-            _user = user;
-            InitApp(zoneId, app);
+            InitApp(null, null);
         }
 
         #endregion
@@ -56,17 +54,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
                 All = language.All.ToDictionary(l => l.key, l => l.name),
             };
         }
-
-        //private UserDto GetUser()
-        //{
-        //    if (User == null) return null;
-        //    var tmp = new ClientInfosUser(User);
-        //    return new UserDto
-        //    {
-        //        CanDesign = tmp.CanDesign,
-        //        CanDevelop = tmp.CanDevelop
-        //    };
-        //}
 
         protected override WebResourceDto GetSystem() =>
             new WebResourceDto
@@ -94,7 +81,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
         protected override EnableDto GetEnable()
         {
             var isRealApp = App != null && App.AppGuid != Eav.Constants.DefaultAppName;
-            var tmp = _user == null ? null : new JsContextUser(new DnnUser(_user));
+            var tmp = new JsContextUser(new DnnUser());
             return new EnableDto
             {
                 AppPermissions = isRealApp,

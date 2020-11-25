@@ -56,11 +56,11 @@ namespace ToSic.Sxc.LookUp
             };
         }
 
-        /// <summary>
-        /// Generate a delegate which will be used to build the configuration based existing stuff
-        /// </summary>
-        internal Func<App, IAppDataConfiguration> Build(bool showDrafts, ILookUpEngine config) 
-            => appToUse => new AppDataConfiguration(showDrafts, config);
+        ///// <summary>
+        ///// Generate a delegate which will be used to build the configuration based existing stuff
+        ///// </summary>
+        //internal Func<App, IAppDataConfiguration> Build(bool showDrafts, ILookUpEngine config) 
+        //    => appToUse => new AppDataConfiguration(showDrafts, config);
 
         /// <summary>
         /// Generate a delegate which will be used to build a basic configuration with very little context

@@ -75,7 +75,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [AllowAnonymous] // will do security check internally
         public HttpResponseMessage Json(int appId, int id, string prefix, bool withMetadata)
-            => _build<ContentExportApi>().Init(appId, Log).DownloadEntityAsJson(new DnnUser(UserInfo), id, prefix, withMetadata);
+            => _build<ContentExportApi>().Init(appId, Log).DownloadEntityAsJson(new DnnUser(), id, prefix, withMetadata);
 
         /// <summary>
         /// Used to be GET ContentExport/ExportContent
@@ -99,7 +99,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             ExportSelection recordExport, ExportResourceReferenceMode resourcesReferences,
             ExportLanguageResolution languageReferences, string selectedIds = null)
             => _build<ContentExportApi>().Init(appId, Log).ExportContent(
-                new DnnUser(UserInfo),
+                new DnnUser(),
                 language, defaultLanguage, contentType,
                 recordExport, resourcesReferences,
                 languageReferences, selectedIds);

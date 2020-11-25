@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public AllInOneDto Load([FromBody] List<ItemIdentifier> items, int appId)
             => _build<EditLoadBackend>().Init(Log)
-                .Load(GetBlock(), new DnnContextBuilder(_serviceProvider, PortalSettings, ActiveModule, UserInfo), appId, items);
+                .Load(GetBlock(), new DnnContextBuilder(_serviceProvider, PortalSettings, ActiveModule), appId, items);
 
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]

@@ -50,13 +50,6 @@ namespace ToSic.SexyContent
                         "javascript:$2sxcActionMenuMapper(" + ModuleId + ").edit();", "test", true,
                         SecurityAccessLevel.Edit, true, false);
 
-                // Add Item
-                // 2020-04-21 2dm disabled this, as it doesn't make sense to have this in the DNN menu - since add can be used in each position
-                //if (BlockBuilder.View?.UseForList ?? false)
-                //    actions.Add(GetNextActionID(), LocalizeString("ActionAdd.Text"), "", "", "add.gif",
-                //        "javascript:$2sxcActionMenuMapper(" + ModuleId + ").addItem();", true, SecurityAccessLevel.Edit, true,
-                //        false);
-
                 // Change layout button
                 actions.Add(GetNextActionID(), LocalizeString("ActionChangeLayoutOrContent.Text"), "", "", "action_settings.gif",
                     "javascript:$2sxcActionMenuMapper(" + ModuleId + ").changeLayoutOrContent();", false,
@@ -64,8 +57,7 @@ namespace ToSic.SexyContent
             }
 
             if (DnnSecurity.SexyContentDesignersGroupConfigured(PortalId) &&
-                !new DnnUser(UserInfo).IsDesigner) return;
-                //!DnnSecurity.IsInSexyContentDesignersGroup(UserInfo)) return;
+                !new DnnUser().IsDesigner) return;
 
             // Edit Template Button
             if (appIsKnown && block.View != null)

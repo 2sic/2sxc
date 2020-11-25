@@ -12,14 +12,20 @@ namespace ToSic.Sxc.Dnn.Run
     [PrivateApi("still WIP")]
     public class DnnUser: IUser<UserInfo>
     {
-        public DnnUser(UserInfo user = null)
+        public DnnUser(/*UserInfo user = null*/)
         {
-            UnwrappedContents = user ?? PortalSettings.Current?.UserInfo;
+            //UnwrappedContents = user ?? PortalSettings.Current?.UserInfo;
         }
 
-        private static string GetUserIdentityToken ()
+        public DnnUser Wrap(UserInfo user)
         {
-            var userId = PortalSettings.Current?.UserId;
+            _user = user;
+            return this;
+        }
+
+        private string GetUserIdentityToken ()
+        {
+            var userId = UnwrappedContents?.UserID;
             var token = (userId ?? -1) == -1 ? "anonymous" : "dnn:userid=" + userId;
             return token;
         }
@@ -53,6 +59,7 @@ namespace ToSic.Sxc.Dnn.Run
 
         private List<int> _roles;
 
-        public UserInfo UnwrappedContents { get; }
+        public UserInfo UnwrappedContents => _user ?? (_user = PortalSettings.Current?.UserInfo);
+        private UserInfo _user;
     }
 }

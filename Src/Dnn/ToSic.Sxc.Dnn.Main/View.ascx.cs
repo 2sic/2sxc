@@ -21,7 +21,7 @@ namespace ToSic.SexyContent
                 var context = DnnContext.Create(
                     new DnnSite().Init(ModuleConfiguration.OwnerPortalID),
                     Eav.Factory.Resolve<DnnContainer>().Init(ModuleConfiguration, Log),
-                    new DnnUser(UserInfo),
+                    new DnnUser(),
                     Eav.Factory.GetServiceProvider());
                 return _block = Eav.Factory.Resolve<BlockFromModule>().Init(context, Log);
             }

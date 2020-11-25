@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
         public AppExportInfoDto Statistics(int zoneId, int appId)
-            => _build<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
+            => _build<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(), Log)
                 .GetAppInfo(appId, zoneId);
 
 
@@ -84,7 +84,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <returns></returns>
         [HttpGet]
         public HttpResponseMessage Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => _build<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
+            => _build<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(), Log)
                 .Export(appId, zoneId, includeContentGroups, resetAppGuid);
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [ValidateAntiForgeryToken]
         public bool SaveData(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => _build<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
+            => _build<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(), Log)
                 .SaveDataForVersionControl(appId, zoneId, includeContentGroups, resetAppGuid);
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
             PreventServerTimeout300();
             var result = _build<ResetApp>()
-                .Init(PortalSettings.PortalId, new DnnUser(UserInfo), Log)
+                .Init(PortalSettings.PortalId, new DnnUser(), Log)
                 .Reset(zoneId, appId, PortalSettings.DefaultLanguage);
 
             return wrapLog("ok", result);
@@ -136,7 +136,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
             if (request.Files.Count <= 0) return new ImportResultDto(false, "no files uploaded");
 
-            return _build<ImportApp>().Init(new DnnUser(UserInfo), Log)
+            return _build<ImportApp>().Init(new DnnUser(), Log)
                 .Import(zoneId, request["Name"], request.Files[0].InputStream);
         }
 
