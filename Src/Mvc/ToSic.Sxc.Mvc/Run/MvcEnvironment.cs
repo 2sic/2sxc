@@ -10,8 +10,6 @@ namespace ToSic.Sxc.Mvc.Run
         {
         }
 
-        public string DefaultLanguage => TestIds.DefaultLanguage;
-
 
         public IUser User { get; } = new MvcUser();
         

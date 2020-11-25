@@ -2,7 +2,6 @@
 using ToSic.Eav.Run;
 using ToSic.Sxc.Oqt.Server.Repository;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.Oqt.Shared.Dev;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
@@ -19,8 +18,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
             Log.LinkTo(parent);
             return this;
         }
-
-        public string DefaultLanguage => WipConstants.DefaultLanguage;
 
         public IUser User => new OqtUser(_userResolver.GetUser());
 

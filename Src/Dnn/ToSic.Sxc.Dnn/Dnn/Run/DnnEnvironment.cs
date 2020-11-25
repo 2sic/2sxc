@@ -28,7 +28,5 @@ namespace ToSic.Sxc.Dnn.Run
 
         public IUser User { get; } = new DnnUser();
 
-        public string DefaultLanguage => _site.DefaultLanguage;
-
     }
 }
