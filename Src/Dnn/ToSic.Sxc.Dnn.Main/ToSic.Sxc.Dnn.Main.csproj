@@ -111,7 +111,7 @@
     <Compile Include="Polymorphism\Koi.cs" />
     <Compile Include="Polymorphism\Permissions.cs" />
     <Compile Include="RepositoryInfoEavAndUi.cs" />
-    <Compile Include="StartupDnn.cs" />
+    <Compile Include="StartupDnnDi.cs" />
     <Compile Include="View.ascx.cs">
       <DependentUpon>View.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
