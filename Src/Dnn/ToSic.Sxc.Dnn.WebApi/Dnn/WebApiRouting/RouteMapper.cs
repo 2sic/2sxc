@@ -99,10 +99,6 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
 
             // Attempt to add another Module Resolver to the list which will work with the header PageId instead of TabId
             GlobalConfiguration.Configuration.AddTabAndModuleInfoProvider(new ModifiedTabAndModuleInfoProvider());
-
-            // Also register Dependency-Injection here, since this will certainly run once early during boot
-            // do this by accessing a setting, which registers everything
-            Settings.EnsureSystemIsInitialized();
         }
 
         private object RegisterOldRoutesBefore0810()

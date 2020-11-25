@@ -2,7 +2,6 @@
 using System.Web;
 using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
@@ -16,10 +15,6 @@ namespace ToSic.Sxc.Dnn.WebApi
     {
         protected DnnApiControllerWithFixes() 
 	    {
-            // ensure that the sql connection string is correct
-            // this is technically only necessary, when dnn just restarted and didn't already set this
-            Settings.EnsureSystemIsInitialized();
-
 	        // ensure that the call to this webservice doesn't reset the language in the cookie
 	        // this is a dnn-bug
 	        RemoveLanguageChangingCookie();

@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav;
 using ToSic.Sxc;
-using ToSic.Sxc.Mvc.Plumbing;
+using ToSic.Sxc.Mvc;
 using ToSic.Sxc.Razor.Engine;
 using ToSic.Sxc.WebApi;
 
@@ -19,11 +19,12 @@ namespace Website.Plumbing
 
         internal static void ConfigureIoC(IServiceCollection services)
         {
-            Factory.UseExistingServices(services);
-            Factory.ActivateNetCoreDi(services2 =>
+            ToSic.Eav.Factory.UseExistingServices(services);
+            ToSic.Eav.Factory.ActivateNetCoreDi(services2 =>
             {
                 services2
                     .AddSxcMvc()
+                    .AddNotImplemented()
                     .AddSxcRazor()
                     .AddSxcWebApi()
                     .AddSxcCore()

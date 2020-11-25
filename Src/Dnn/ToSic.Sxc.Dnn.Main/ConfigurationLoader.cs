@@ -1,49 +1,30 @@
-﻿using System;
-using System.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+﻿using System.Configuration;
+using DotNetNuke.Web.Api;
 using ToSic.Eav;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Environment;
-using ToSic.Eav.Apps.ImportExport;
-using ToSic.Eav.Apps.Security;
-using ToSic.Eav.Caching;
-using ToSic.Eav.LookUp;
-using ToSic.Eav.Persistence.Interfaces;
-using ToSic.Eav.Plumbing.Booting;
-using ToSic.Eav.Repositories;
-using ToSic.Eav.Run;
 using ToSic.SexyContent.Dnn920;
 using ToSic.Sxc;
-using ToSic.Sxc.Adam;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Dnn;
-using ToSic.Sxc.Dnn.Adam;
-using ToSic.Sxc.Dnn.Code;
-using ToSic.Sxc.Dnn.ImportExport;
-using ToSic.Sxc.Dnn.Install;
-using ToSic.Sxc.Dnn.LookUp;
-using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Dnn.WebApi;
-using ToSic.Sxc.Engines;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.Polymorphism;
-using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.Adam;
 using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.SexyContent
 {
-    /// <inheritdoc />
     /// <summary>
-    /// this configures unity (the IoC container)
-    /// Never call this directly! always go through Settings.Ensure...
+    /// This configures .net Core Dependency Injection
+    /// The StartUp is defined as an IServiceRouteMapper.
+    /// This way DNN will auto-run this code before anything else
     /// </summary>
     // ReSharper disable once UnusedMember.Global
-    public class ConfigurationLoader: IConfigurationLoader
+    public class StartUpDnnDependencyInjection : IServiceRouteMapper
     {
+        /// <summary>
+        /// This will be called by DNN when loading the assemblies.
+        /// We just want to trigger the DI-Configure
+        /// </summary>
+        /// <param name="mapRouteManager"></param>
+        public void RegisterRoutes(IMapRoute mapRouteManager) => Configure();
+
+
         private static bool _alreadyConfigured;
 
         /// <summary>
@@ -96,6 +77,7 @@ namespace ToSic.SexyContent
             Polymorphism.Add(new Koi());
             Polymorphism.Add(new Permissions());
         }
+
     }
 
 }
