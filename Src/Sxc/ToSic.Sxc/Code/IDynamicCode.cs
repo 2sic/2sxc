@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
@@ -28,6 +29,8 @@ namespace ToSic.Sxc.Code
 #pragma warning restore 618
     {
         [PrivateApi("WIP")] IBlock Block { get; }
+
+        [PrivateApi("internal")] IServiceProvider ServiceProvider { get; }
 
         /// <summary>
         /// A fully prepared <see cref="IApp"/> object letting you access all the data and queries in the current app. 

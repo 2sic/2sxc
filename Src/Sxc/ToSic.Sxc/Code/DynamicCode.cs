@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
@@ -32,6 +33,8 @@ namespace ToSic.Sxc.Code
         public IBlockDataSource Data => UnwrappedContents?.Data;
 
         [PrivateApi] public IBlock Block => UnwrappedContents?.Block;
+
+        [PrivateApi] public IServiceProvider ServiceProvider => UnwrappedContents?.ServiceProvider;
 
         /// <inheritdoc />
         /// <remarks>

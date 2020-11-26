@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Documentation;
+﻿using System;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
@@ -10,7 +11,9 @@ namespace ToSic.Sxc.Dnn.Code
     [PrivateApi]
     public class DnnDynamicCodeRoot : DynamicCodeRoot, IDnnDynamicCode, IHasDynCodeContext
     {
-        public DnnDynamicCodeRoot(): base("Dnn.DynCdRt") { }
+        public DnnDynamicCodeRoot(IServiceProvider serviceProvider): base(serviceProvider, "Dnn.DynCdRt")
+        {
+        }
 
         /// <summary>
         /// Standard constructor

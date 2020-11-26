@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using ToSic.Eav.Documentation;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Hybrid.Razor;
 
@@ -15,12 +16,14 @@ namespace ToSic.Sxc.Razor.Engine
 
     public partial class RazorEngine : EngineBase
     {
+        private readonly Lazy<DynamicCodeRoot> _dynCodeRootLazy;
         public IRazorRenderer RazorRenderer { get; }
 
         #region Constructor / DI
 
-        public RazorEngine(EngineBaseDependencies helpers, IRazorRenderer razorRenderer) : base(helpers)
+        public RazorEngine(EngineBaseDependencies helpers, IRazorRenderer razorRenderer, Lazy<DynamicCodeRoot> dynCodeRootLazy) : base(helpers)
         {
+            _dynCodeRootLazy = dynCodeRootLazy;
             RazorRenderer = razorRenderer;
         }
         
@@ -50,7 +53,7 @@ namespace ToSic.Sxc.Razor.Engine
             try
             {
                 if (string.IsNullOrEmpty(TemplatePath)) return null;
-                var dynCode = new Code.DynamicCodeRoot().Init(Block, Log);
+                var dynCode = _dynCodeRootLazy.Value.Init(Block, Log);
 
                 var result = await RazorRenderer.RenderToStringAsync(TemplatePath, new object(),
                     rzv =>

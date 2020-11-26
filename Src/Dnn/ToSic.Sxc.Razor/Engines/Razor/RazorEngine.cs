@@ -23,9 +23,14 @@ namespace ToSic.Sxc.Engines
     // ReSharper disable once UnusedMember.Global
     public partial class RazorEngine : EngineBase
     {
+        private readonly Lazy<DnnDynamicCodeRoot> _dnnDynCodeLazy;
+
         #region Constructor / DI
 
-        public RazorEngine(EngineBaseDependencies helpers) : base(helpers) { }
+        public RazorEngine(EngineBaseDependencies helpers, Lazy<DnnDynamicCodeRoot> dnnDynCodeLazy) : base(helpers)
+        {
+            _dnnDynCodeLazy = dnnDynCodeLazy;
+        }
 
         #endregion
 
@@ -126,7 +131,7 @@ namespace ToSic.Sxc.Engines
         private void InitHelpers(RazorComponentBase webPage, int compatibility)
         {
             webPage.Html = new Razor.HtmlHelper();
-            webPage.DynCode = new DnnDynamicCodeRoot().Init(Block, Log, compatibility);
+            webPage.DynCode = _dnnDynCodeLazy.Value.Init(Block, Log, compatibility);
 
             #region New in 10.25 - ensure jquery is not included by default
 

@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
     {
         #region DynCode 
 
-        protected Sxc.Code.DynamicCodeRoot DynCode => _dynCode ??= new Sxc.Code.DynamicCodeRoot().Init(Block, Log);
+        protected Sxc.Code.DynamicCodeRoot DynCode => _dynCode ??= HttpContext.RequestServices.Build<Code.DynamicCodeRoot>().Init(Block, Log);
         private Sxc.Code.DynamicCodeRoot _dynCode;
         #endregion
         public IBlock Block 
@@ -25,10 +25,10 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
                 var sp = HttpContext.RequestServices;
                 var context = new InstanceContext(
                     sp.Build<ISite>().Init(TestIds.PrimaryZone),
-                    new SxcPage(0, null, _serviceProvider.Build<IHttp>().QueryStringKeyValuePairs()), 
+                    new SxcPage(0, null, ServiceProvider.Build<IHttp>().QueryStringKeyValuePairs()), 
                     new MvcContainer(),
                     new MvcUser(),
-                    _serviceProvider, new InstancePublishingState()
+                    ServiceProvider, new InstancePublishingState()
                 );
                 _block = Eav.Factory.Resolve<BlockFromModule>().Init(context, Log);
                 return _block;

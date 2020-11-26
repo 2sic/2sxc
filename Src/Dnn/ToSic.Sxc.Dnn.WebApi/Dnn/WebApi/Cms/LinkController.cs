@@ -4,6 +4,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Cms;
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
 		public object GetFileByPath(string relativePath)
         {
-            var dnnDynamicCode = new DnnDynamicCodeRoot().Init(GetBlock(), Log);
+            var dnnDynamicCode = ServiceProvider.Build<DnnDynamicCodeRoot>().Init(GetBlock(), Log);
             var portal = dnnDynamicCode.Dnn.Portal;
             relativePath = relativePath.Replace(portal.HomeDirectory, "");
 			var file = FileManager.Instance.GetFile(portal.PortalId, relativePath);

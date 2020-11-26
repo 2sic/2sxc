@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
@@ -30,10 +30,15 @@ namespace ToSic.Sxc.Code
     [PublicApi_Stable_ForUseInYourCode]
     public /*abstract*/ class DynamicCodeRoot : HasLog, IDynamicCode
     {
-        public IBlock Block { get; private set; }
+        [PrivateApi] public IBlock Block { get; private set; }
+        [PrivateApi] public IServiceProvider ServiceProvider { get; }
 
-        public DynamicCodeRoot(): base("Sxc.DynCdR") { }
-        protected DynamicCodeRoot(string logName): base(logName) { }
+        public DynamicCodeRoot(IServiceProvider serviceProvider) : this(serviceProvider, "Sxc.DynCdR") { }
+
+        protected DynamicCodeRoot(IServiceProvider serviceProvider, string logName) : base(logName)
+        {
+            ServiceProvider = serviceProvider;
+        }
 
         [PrivateApi]
         public DynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)
