@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
+using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security;
@@ -40,7 +41,7 @@ namespace ToSic.Sxc.Dnn.Run
         /// In some cases the container is a ContainerNull object without ModuleInfo, so we must really do null-checks
         /// </remarks>
         protected ModuleInfo Module =>
-            _module ?? (_module = (Context.Container as Container<ModuleInfo>)?.UnwrappedContents);
+            _module ?? (_module = ((Context as IContextOfBlock)?.Container as Container<ModuleInfo>)?.UnwrappedContents);
         private ModuleInfo _module;
 
 

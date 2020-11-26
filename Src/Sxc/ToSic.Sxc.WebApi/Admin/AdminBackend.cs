@@ -14,7 +14,7 @@ namespace ToSic.Sxc.WebApi.Admin
         {
         }
 
-        public dynamic DialogSettings(IInstanceContext context, ContextBuilderBase contextBuilder, int appId)
+        public dynamic DialogSettings(IContextOfBlock context, ContextBuilderBase contextBuilder, int appId)
         {
             IApp app = null;
             // if we have an appid (we don't have it in an install-new-apps-scenario) check permissions

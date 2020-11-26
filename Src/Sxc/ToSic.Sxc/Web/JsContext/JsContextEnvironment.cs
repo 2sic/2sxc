@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Web.JsContext
 
         public bool IsEditable;
 
-        public JsContextEnvironment(string systemRootUrl, IInstanceContext ctx, IBlock block)
+        public JsContextEnvironment(string systemRootUrl, IContextOfBlock ctx, IBlock block)
         {
             WebsiteId = ctx.Site.Id;
 

@@ -21,12 +21,12 @@ namespace ToSic.Sxc.Oqt.Server.Run
             _oqtSite = oqtSite;
         }
 
-        public InstanceContext CreateContext(Module module, int pageId, ILog parentLog,
+        public ContextOfBlock CreateContext(Module module, int pageId, ILog parentLog,
             IServiceProvider serviceProvider)
         {
             var publishing = serviceProvider.Build<IPagePublishingResolver>();
 
-            return new InstanceContext(
+            return new ContextOfBlock(
                 _oqtSite,
                 new SxcPage(pageId, null, serviceProvider.Build<IHttp>().QueryStringKeyValuePairs()),
                 _oqtContainer.Init(module, parentLog),

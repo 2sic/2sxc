@@ -27,7 +27,7 @@ namespace ToSic.Sxc.WebApi.App
 
         #region In-Container-Context Queries
 
-        internal Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(IInstanceContext context, IBlock block, IApp app, string name, bool includeGuid, string stream, int? appId)
+        internal Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(IContextOfBlock context, IBlock block, IApp app, string name, bool includeGuid, string stream, int? appId)
         {
             var wrapLog = Log.Call($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
             //var dynamicCode = new DnnDynamicCode().Init(BlockBuilder, Log);
@@ -50,7 +50,7 @@ namespace ToSic.Sxc.WebApi.App
 
 
         internal Dictionary<string, IEnumerable<Dictionary<string, object>>> 
-            PublicQuery(IInstanceContext context, string appPath, string name, string stream, IBlock block)
+            PublicQuery(IContextOfBlock context, string appPath, string name, string stream, IBlock block)
         {
             var wrapLog = Log.Call($"path:{appPath}, name:{name}");
             if (string.IsNullOrEmpty(name))
@@ -70,7 +70,7 @@ namespace ToSic.Sxc.WebApi.App
 
 
         private static Dictionary<string, IEnumerable<Dictionary<string, object>>>
-            BuildQueryAndRun(IApp app, string name, string stream, bool includeGuid, IInstanceContext context, ILog log,
+            BuildQueryAndRun(IApp app, string name, string stream, bool includeGuid, IContextOfBlock context, ILog log,
                 bool userMayEdit)
         {
             var wrapLog = log.Call($"name:{name}, withModule:{context.Container.Id}");

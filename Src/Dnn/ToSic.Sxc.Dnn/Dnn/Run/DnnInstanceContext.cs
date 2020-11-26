@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Dnn.Run
     public class DnnContext
     {
 
-        public static InstanceContext Create(ISite site, IContainer container, IUser user, IServiceProvider serviceProvider, List<KeyValuePair<string, string>> overrideParams = null) 
+        public static ContextOfBlock Create(ISite site, IContainer container, IUser user, IServiceProvider serviceProvider, List<KeyValuePair<string, string>> overrideParams = null) 
         {
             // Collect / assemble page information
             var activeTab = (site as Site<PortalSettings>)?.UnwrappedContents?.ActiveTab;
@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Dnn.Run
             var page = new SxcPage(activeTab?.TabID ?? Eav.Constants.NullId, fullUrl, overrideParams);
 
             var publishing = serviceProvider.Build<IPagePublishingResolver>();
-            return new InstanceContext(site, page, container, user, serviceProvider, publishing.GetPublishingState(container.Id));
+            return new ContextOfBlock(site, page, container, user, serviceProvider, publishing.GetPublishingState(container.Id));
         }
 
     }

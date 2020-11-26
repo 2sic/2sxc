@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Blocks
             _bdsFactoryLazy = bdsFactoryLazy;
         }
 
-        protected void Init(IInstanceContext context, IAppIdentity appId, ILog parentLog)
+        protected void Init(IContextOfBlock context, IAppIdentity appId, ILog parentLog)
         {
             Init(parentLog);
             Context = context;
@@ -127,7 +127,7 @@ namespace ToSic.Sxc.Blocks
 
 
         /// <inheritdoc />
-        public IInstanceContext Context { get; protected set; }
+        public IContextOfBlock Context { get; protected set; }
 
 
 

@@ -14,7 +14,7 @@ namespace ToSic.Sxc.WebApi
     public abstract class BlockWebApiBackendBase<T>: HasLog where T: class
     {
         private readonly Lazy<CmsManager> _cmsManagerLazy;
-        protected IInstanceContext _context;
+        protected IContextOfBlock _context;
         protected IBlock _block;
         protected CmsManager CmsManager;
         protected IServiceProvider ServiceProvider;
@@ -25,7 +25,7 @@ namespace ToSic.Sxc.WebApi
             ServiceProvider = _cmsManagerLazy.Value.ServiceProvider;
         }
 
-        public T Init(IInstanceContext context, IBlock block, ILog parentLog)
+        public T Init(IContextOfBlock context, IBlock block, ILog parentLog)
         {
             Log.LinkTo(parentLog);
             _context = context;

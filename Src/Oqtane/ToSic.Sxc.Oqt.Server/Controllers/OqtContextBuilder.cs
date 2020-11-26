@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         }
 
         private readonly ILinkPaths _linkPaths;
-        private IInstanceContext _context;
+        private IContextOfBlock _context;
 
 
         protected override LanguageDto GetLanguage()

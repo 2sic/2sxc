@@ -54,15 +54,15 @@ namespace ToSic.Sxc.Mvc
             return block;
         }
 
-        private InstanceContext CreateContext(int zoneId, int pageId, int containerId, int appId, Guid blockGuid)
+        private ContextOfBlock CreateContext(int zoneId, int pageId, int containerId, int appId, Guid blockGuid)
             => CreateContext(_httpContext, zoneId, appId, containerId, appId, blockGuid);
 
-        public static InstanceContext CreateContext(HttpContext http, int zoneId, int pageId, int containerId, int appId, Guid blockGuid)
+        public static ContextOfBlock CreateContext(HttpContext http, int zoneId, int pageId, int containerId, int appId, Guid blockGuid)
         {
             var sp = http.RequestServices;
             var publishing = sp.Build<IPagePublishingResolver>();
 
-            return new InstanceContext(
+            return new ContextOfBlock(
                 sp.Build<ISite>().Init(zoneId),
                 new SxcPage(pageId, null, http.RequestServices.Build<IHttp>().QueryStringKeyValuePairs()),
                 new MvcContainer(tenantId: zoneId, id: containerId, appId: appId, block: blockGuid),

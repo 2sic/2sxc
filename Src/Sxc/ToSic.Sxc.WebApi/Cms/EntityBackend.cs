@@ -15,7 +15,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         // New feature in 11.03 - Usage Statistics
 
-        public dynamic Usage(IInstanceContext context, IApp app, Guid guid)
+        public dynamic Usage(IContextOfBlock context, IApp app, Guid guid)
         {
             var permCheck = ServiceProvider.Build<MultiPermissionsApp>().Init(context, app, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))

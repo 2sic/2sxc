@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         private readonly OqtTempInstanceContext _oqtTempInstanceContext;
         protected readonly IServiceProvider ServiceProvider;
 
-        protected IInstanceContext GetContext()
+        protected IContextOfBlock GetContext()
         {
             var block = GetBlock();
             if (block != null) return block.Context;

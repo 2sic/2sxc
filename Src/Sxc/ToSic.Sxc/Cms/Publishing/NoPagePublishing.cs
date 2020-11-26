@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Cms.Publishing
 
         #endregion
 
-        public void DoInsidePublishing(IInstanceContext context, Action<VersioningActionInfo> action)
+        public void DoInsidePublishing(IContextOfBlock context, Action<VersioningActionInfo> action)
         {
             var info = new VersioningActionInfo();
             action.Invoke(info);

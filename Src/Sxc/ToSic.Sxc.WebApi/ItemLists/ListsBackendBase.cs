@@ -47,7 +47,7 @@ namespace ToSic.Sxc.WebApi.ItemLists
 
 
         // TODO: probably should move from "backend" to a Manager
-        public void Replace(IInstanceContext context, Guid guid, string part, int index, int entityId, bool add = false)
+        public void Replace(IContextOfBlock context, Guid guid, string part, int index, int entityId, bool add = false)
         {
             var wrapLog = Log.Call($"target:{guid}, part:{part}, index:{index}, id:{entityId}");
             var versioning = CmsManager.ServiceProvider.Build<IPagePublishing>().Init(Log);
@@ -131,7 +131,7 @@ namespace ToSic.Sxc.WebApi.ItemLists
 
 
         // TODO: part should be handed in with all the relevant names! atm it's "content" in the content-block scenario
-        public bool Reorder(IInstanceContext context, Guid guid, List<EntityInListDto> list,  string part = null)
+        public bool Reorder(IContextOfBlock context, Guid guid, List<EntityInListDto> list,  string part = null)
         {
             Log.Add($"list for:{guid}, items:{list?.Count}");
             if (list == null) throw new ArgumentNullException(nameof(list));

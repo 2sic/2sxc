@@ -23,12 +23,12 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
                 if (_blockLoaded) return _block;
                 _blockLoaded = true;
                 var sp = HttpContext.RequestServices;
-                var context = new InstanceContext(
+                var context = new ContextOfBlock(
                     sp.Build<ISite>().Init(TestIds.PrimaryZone),
                     new SxcPage(0, null, ServiceProvider.Build<IHttp>().QueryStringKeyValuePairs()), 
                     new MvcContainer(),
                     new MvcUser(),
-                    ServiceProvider, new InstancePublishingState()
+                    ServiceProvider, new BlockPublishingState()
                 );
                 _block = Eav.Factory.Resolve<BlockFromModule>().Init(context, Log);
                 return _block;

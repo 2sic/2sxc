@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Cms.Publishing
 
         #endregion
 
-        public InstancePublishingState GetPublishingState(int instanceId) 
-            => new InstancePublishingState {ForceDraft = false, Mode = PublishingMode.DraftOptional};
+        public BlockPublishingState GetPublishingState(int instanceId) 
+            => new BlockPublishingState {ForceDraft = false, Mode = PublishingMode.DraftOptional};
     }
 }

@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Blocks.Views
         }
 
 
-        internal IView PickView(IBlock block, IView configView, IInstanceContext context, CmsRuntime cms)
+        internal IView PickView(IBlock block, IView configView, IContextOfBlock context, CmsRuntime cms)
         {
             //View = configView;
             // skip on ContentApp (not a feature there) or if not relevant or not yet initialized
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Blocks.Views
             return viewFromUrlParam ?? configView;
         }
 
-        private IView TryToGetTemplateBasedOnUrlParams(IInstanceContext context, CmsRuntime cms)
+        private IView TryToGetTemplateBasedOnUrlParams(IContextOfBlock context, CmsRuntime cms)
         {
             var wrapLog = Log.Call<IView>("template override - check");
             if (context.Page.Parameters == null) return wrapLog("no params", null);

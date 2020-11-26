@@ -44,7 +44,7 @@ namespace ToSic.Sxc.WebApi
         /// <returns></returns>
         internal IApp GetApp(int appId) => _build<Apps.App>().Init(ServiceProvider, appId, Log, GetBlock());
 
-        protected IInstanceContext GetContext()
+        protected IContextOfBlock GetContext()
         {
             // in case the initial request didn't yet find a block builder, we need to create it now
             var context = Block?.Context

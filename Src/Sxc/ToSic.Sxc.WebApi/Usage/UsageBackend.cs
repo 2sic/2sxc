@@ -21,7 +21,7 @@ namespace ToSic.Sxc.WebApi.Usage
             _cmsRuntime = cmsRuntime;
         }
 
-        public IEnumerable<ViewDto> ViewUsage(IInstanceContext context, int appId, Guid guid, 
+        public IEnumerable<ViewDto> ViewUsage(IContextOfBlock context, int appId, Guid guid, 
             Func<List<IView>, List<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
         {
             var wrapLog = Log.Call<IEnumerable<ViewDto>>($"{appId}, {guid}");

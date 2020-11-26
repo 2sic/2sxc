@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         #endregion
 
-        public void DoInsidePublishing(IInstanceContext context, Action<VersioningActionInfo> action)
+        public void DoInsidePublishing(IContextOfBlock context, Action<VersioningActionInfo> action)
         {
             var containerId = context.Container.Id;
             var userId = 0;

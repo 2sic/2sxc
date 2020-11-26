@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Web
         #endregion
 
 
-        protected IInstanceContext Context;
+        protected IContextOfBlock Context;
         protected IBlockBuilder BlockBuilder;
         protected IBlock Block;
         protected string AppRootPath;

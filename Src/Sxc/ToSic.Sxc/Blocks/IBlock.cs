@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Blocks
         /// <summary>
         /// The context we're running in, with tenant, container etc.
         /// </summary>
-        IInstanceContext Context { get; }
+        IContextOfBlock Context { get; }
 
         /// <summary>
         /// The view which will be used to render this block

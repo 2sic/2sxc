@@ -12,16 +12,16 @@ namespace ToSic.Sxc.Mvc.WebApi
     public abstract class SxcStatefullControllerBase: SxcStatelessControllerBase
     {
 
-        protected IInstanceContext GetContext()
+        protected IContextOfBlock GetContext()
         {
             //var publishing = HttpContext.RequestServices.Build<IPagePublishingResolver>();
 
             // in case the initial request didn't yet find a block builder, we need to create it now
             var site = HttpContext.RequestServices.Build<ISite>().Init(TestIds.PrimaryZone);
             var context = // BlockBuilder?.Context ??
-                new InstanceContext(site, new PageNull(), new ContainerNull(), 
+                new ContextOfBlock(site, new PageNull(), new ContainerNull(), 
                     new MvcUser(),
-                    HttpContext.RequestServices, new InstancePublishingState());
+                    HttpContext.RequestServices, new BlockPublishingState());
             return context;
         }
 

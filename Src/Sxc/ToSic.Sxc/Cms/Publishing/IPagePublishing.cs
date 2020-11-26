@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Cms.Publishing
         /// </summary>
         /// <param name="context"></param>
         /// <param name="action"></param>
-        void DoInsidePublishing(IInstanceContext context, Action<VersioningActionInfo> action);
+        void DoInsidePublishing(IContextOfBlock context, Action<VersioningActionInfo> action);
 
         ///// <summary>
         ///// Wraps an action inside publish of latest version.
