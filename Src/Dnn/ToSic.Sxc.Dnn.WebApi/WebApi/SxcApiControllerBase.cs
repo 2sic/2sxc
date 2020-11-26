@@ -25,7 +25,7 @@ namespace ToSic.Sxc.WebApi
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
-            Block = _serviceProvider.Build<DnnGetBlock>().GetCmsBlock(Request, true, Log);
+            Block = ServiceProvider.Build<DnnGetBlock>().GetCmsBlock(Request, true, Log);
         }
 
         [PrivateApi] public IBlock Block { get; private set; }
@@ -42,13 +42,13 @@ namespace ToSic.Sxc.WebApi
         /// </summary>
         /// <param name="appId"></param>
         /// <returns></returns>
-        internal IApp GetApp(int appId) => _build<Apps.App>().Init(_serviceProvider, appId, Log, GetBlock());
+        internal IApp GetApp(int appId) => _build<Apps.App>().Init(ServiceProvider, appId, Log, GetBlock());
 
         protected IInstanceContext GetContext()
         {
             // in case the initial request didn't yet find a block builder, we need to create it now
             var context = Block?.Context
-                          ?? DnnContext.Create(new DnnSite(PortalSettings), new ContainerNull(), new DnnUser(), _serviceProvider);
+                          ?? DnnContext.Create(new DnnSite(PortalSettings), new ContainerNull(), new DnnUser(), ServiceProvider);
             return context;
         }
 

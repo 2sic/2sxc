@@ -2,6 +2,7 @@
 using System.Web;
 using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
@@ -77,7 +78,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 
         protected void PreventServerTimeout300() => HttpContext.Current.Server.ScriptTimeout = 300;
 
-        protected IServiceProvider _serviceProvider => Eav.Factory.GetServiceProvider();
+        [PrivateApi] public IServiceProvider ServiceProvider => Eav.Factory.GetServiceProvider();
 
         protected T _build<T>() => Eav.Factory.GetServiceProvider().Build<T>();
 

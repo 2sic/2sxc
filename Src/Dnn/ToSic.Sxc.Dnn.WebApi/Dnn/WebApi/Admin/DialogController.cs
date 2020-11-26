@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             return _build<AdminBackend>().Init(Log).DialogSettings(
                 GetContext(),
                 new DnnContextBuilder(
-                    _serviceProvider,
+                    ServiceProvider,
                     PortalSettings.Current,
                     Request.FindModuleInfo()),
                 appId);

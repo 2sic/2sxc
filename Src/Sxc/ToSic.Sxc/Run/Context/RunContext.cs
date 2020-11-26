@@ -40,5 +40,6 @@ namespace ToSic.Sxc.Run.Context
         public ModuleContext Module =>
             _module ?? (_module = new ModuleContext {Id = _root?.Block?.Context?.Container?.Id ?? NullId});
         private ModuleContext _module;
+
     }
 }
