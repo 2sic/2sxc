@@ -16,8 +16,8 @@ namespace ToSic.Sxc.Dnn.Run
 
         private string GetUserIdentityToken ()
         {
-            var userId = UnwrappedContents?.UserID;
-            var token = (userId ?? -1) == -1 ? "anonymous" : "dnn:userid=" + userId;
+            var userId = Id;// UnwrappedContents?.UserID;
+            var token = userId == -1 ? "anonymous" : "dnn:userid=" + userId;
             return token;
         }
 
@@ -57,5 +57,9 @@ namespace ToSic.Sxc.Dnn.Run
                 .Select(r => r.RoleID)
                 .ToList();
         }
+
+        public int Id => UnwrappedContents?.UserID ?? -1;
+
+        public bool IsAnonymous => Id == -1;
     }
 }

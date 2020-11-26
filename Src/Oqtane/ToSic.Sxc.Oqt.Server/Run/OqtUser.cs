@@ -26,5 +26,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public bool IsAdmin => WipConstants.IsAdmin;
         public bool IsDesigner => WipConstants.IsDesigner;
         public User UnwrappedContents { get; }
+
+        public int Id => UnwrappedContents.UserId;
+
+        public bool IsAnonymous => (UnwrappedContents?.UserId ?? -1) != -1;
+
     }
 }
