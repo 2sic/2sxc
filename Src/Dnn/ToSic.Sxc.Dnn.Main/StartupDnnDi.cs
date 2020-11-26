@@ -39,52 +39,53 @@ namespace ToSic.SexyContent
             services.TryAddScoped<WebFormsHttp>();
 
             // Core Runtime Context Objects
-            services.AddScoped<IUser, DnnUser>();
-            services.AddScoped<ISite, DnnSite>();
-            services.AddTransient<IContainer, DnnContainer>();
-            services.AddTransient<DnnContainer>();
+            services.TryAddScoped<IUser, DnnUser>();
+            services.TryAddScoped<ISite, DnnSite>();
+            services.TryAddTransient<IContainer, DnnContainer>();
+            services.TryAddTransient<DnnContainer>();
 
             // 
-            services.AddTransient<IValueConverter, DnnValueConverter>();
+            services.TryAddTransient<IValueConverter, DnnValueConverter>();
 
-            services.AddTransient<XmlExporter, DnnXmlExporter>();
-            services.AddTransient<IImportExportEnvironment, DnnImportExportEnvironment>();
+            services.TryAddTransient<XmlExporter, DnnXmlExporter>();
+            services.TryAddTransient<IImportExportEnvironment, DnnImportExportEnvironment>();
 
             // new for .net standard
-            services.AddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
-            services.AddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
-            services.AddTransient<IGetDefaultLanguage, DnnSite>();
-            services.AddTransient<IZoneMapper, DnnZoneMapper>();
+            services.TryAddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
+            services.TryAddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
+            services.TryAddTransient<IGetDefaultLanguage, DnnSite>();
+            services.TryAddTransient<IZoneMapper, DnnZoneMapper>();
 
-            services.AddTransient<IClientDependencyOptimizer, DnnClientDependencyOptimizer>();
-            services.AddTransient<AppPermissionCheck, DnnPermissionCheck>();
+            services.TryAddTransient<IClientDependencyOptimizer, DnnClientDependencyOptimizer>();
+            services.TryAddTransient<AppPermissionCheck, DnnPermissionCheck>();
+            services.TryAddTransient<DnnPermissionCheck>();
 
-            services.AddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
-            services.AddTransient<DnnDynamicCodeRoot>();
-            services.AddTransient<IPlatformModuleUpdater, DnnModuleUpdater>();
-            services.AddTransient<IEnvironmentInstaller, InstallationController>();
+            services.TryAddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
+            services.TryAddTransient<DnnDynamicCodeRoot>();
+            services.TryAddTransient<IPlatformModuleUpdater, DnnModuleUpdater>();
+            services.TryAddTransient<IEnvironmentInstaller, InstallationController>();
 
             // ADAM 
-            services.AddTransient<IAdamFileSystem<int, int>, DnnAdamFileSystem>();
-            services.AddTransient<AdamAppContext, AdamAppContext<int, int>>();
+            services.TryAddTransient<IAdamFileSystem<int, int>, DnnAdamFileSystem>();
+            services.TryAddTransient<AdamAppContext, AdamAppContext<int, int>>();
 
             // new #2160
-            services.AddTransient<SecurityChecksBase, DnnAdamSecurityChecks>();
+            services.TryAddTransient<SecurityChecksBase, DnnAdamSecurityChecks>();
 
-            services.AddTransient<IGetEngine, GetDnnEngine>();
-            services.AddTransient<GetDnnEngine>();
-            services.AddTransient<IFingerprint, DnnFingerprint>();
+            services.TryAddTransient<IGetEngine, GetDnnEngine>();
+            services.TryAddTransient<GetDnnEngine>();
+            services.TryAddTransient<IFingerprint, DnnFingerprint>();
 
             // new in 11.07 - exception logger
-            services.AddTransient<IEnvironmentLogger, DnnEnvironmentLogger>();
+            services.TryAddTransient<IEnvironmentLogger, DnnEnvironmentLogger>();
 
             // new in 11.08 - provide Razor Engine and platform
-            services.AddTransient<IEngineFinder, DnnEngineFinder>();
-            services.AddSingleton<Sxc.Run.Context.PlatformContext, DnnPlatformContext>();
+            services.TryAddTransient<IEngineFinder, DnnEngineFinder>();
+            services.TryAddSingleton<Sxc.Run.Context.PlatformContext, DnnPlatformContext>();
 
             // add page publishing
-            services.AddTransient<IPagePublishing, Sxc.Dnn.Cms.DnnPagePublishing>();
-            services.AddTransient<IPagePublishingResolver, Sxc.Dnn.Cms.DnnPagePublishingResolver>();
+            services.TryAddTransient<IPagePublishing, Sxc.Dnn.Cms.DnnPagePublishing>();
+            services.TryAddTransient<IPagePublishingResolver, Sxc.Dnn.Cms.DnnPagePublishingResolver>();
 
             if (appsCacheOverride != null)
             {
