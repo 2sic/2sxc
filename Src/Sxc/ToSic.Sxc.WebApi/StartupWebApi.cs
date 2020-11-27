@@ -87,7 +87,7 @@ namespace ToSic.Sxc.WebApi
 
 
             // 11.08 - fallback in case not added
-            services.TryAddSingleton<Run.Context.PlatformContext>();
+            services.TryAddSingleton<Eav.Context.Platform>();
 
             return services;
         }

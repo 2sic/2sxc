@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Context;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
@@ -9,7 +10,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Run.Context;
+
 using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -198,7 +199,7 @@ namespace ToSic.Sxc.Code
 
         #region WIP Context
         [PrivateApi("still WIP")]
-        RunContext RunContext { get; }
+        ICmsContext CmsContext { get; }
 
         #endregion
     }

@@ -7,7 +7,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Edit.InPageEditingSystem;
-using ToSic.Sxc.Run.Context;
+
 using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -71,8 +71,8 @@ namespace ToSic.Sxc.Code
 
         #region Context WIP
 
-        [PrivateApi] public RunContext RunContext => _runContext ?? (_runContext = Block.Context.ServiceProvider.Build<RunContext>().Init(this));
-        private RunContext _runContext;
+        [PrivateApi] public ICmsContext CmsContext => _cmsContext ?? (_cmsContext = Block.Context.ServiceProvider.Build<CmsContext>().Init(this));
+        private ICmsContext _cmsContext;
 
         #endregion
     }

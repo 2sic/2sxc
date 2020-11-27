@@ -1,9 +1,9 @@
-﻿using ToSic.Sxc.Run.Context;
+﻿using ToSic.Eav.Context;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtPlatformContext: PlatformContext
+    public class OqtPlatformContext: Platform
     {
-        public OqtPlatformContext() => Type = PlatformTypes.Oqtane;
+        public OqtPlatformContext() => Type = PlatformType.Oqtane;
     }
 }

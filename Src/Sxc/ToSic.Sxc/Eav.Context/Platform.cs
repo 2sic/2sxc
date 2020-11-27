@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Documentation;
 
-namespace ToSic.Sxc.Run.Context
+// ReSharper disable once CheckNamespace
+namespace ToSic.Eav.Context
 {
     /// <summary>
     /// General platform information
@@ -9,12 +10,12 @@ namespace ToSic.Sxc.Run.Context
     /// This must be provided through Dependency Injection, Singleton, as it cannot change at runtime.
     /// </remarks>
     [WorkInProgressApi("Still WIP")]
-    public class PlatformContext
+    public class Platform
     {
         /// <summary>
         /// The platform type Id from the enumerator - so stored as an int.
         /// </summary>
-        public PlatformTypes Type;
+        public PlatformType Type;
 
         /// <summary>
         /// A nice name ID, like "Dnn" or "Oqtane"

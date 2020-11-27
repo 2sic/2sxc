@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
@@ -9,7 +10,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Run.Context;
+
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Mvc.RazorPages.Exp
@@ -97,7 +98,7 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
 
         #region RunContext - new in 11.08 or similar, not implemented in old base classes
 
-        public RunContext RunContext => DynCode.RunContext;
+        public ICmsContext CmsContext => DynCode.CmsContext;
 
         #endregion
     }

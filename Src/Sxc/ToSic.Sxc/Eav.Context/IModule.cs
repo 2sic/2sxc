@@ -10,15 +10,11 @@ namespace ToSic.Eav.Context
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
 
-    public interface IModule
+    public interface IModule: IModuleLight
     {
         [PrivateApi("Workaround till we have DI to inject the current container")]
         IModule Init(int id, ILog parentLog);
 
-        /// <summary>
-        /// Block ID
-        /// </summary>
-        int Id { get; }
 
         /// <summary>
         /// Determines if this is a the primary App (the content-app) as opposed to any additional app

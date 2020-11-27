@@ -9,7 +9,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Eav.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Run.Context;
+
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
@@ -145,7 +145,7 @@ namespace ToSic.Sxc.Hybrid.Razor
 
         #region RunContext WIP
 
-        [PrivateApi] public RunContext RunContext => DynCode?.RunContext;
+        [PrivateApi] public ICmsContext CmsContext => DynCode?.CmsContext;
 
         #endregion
     }

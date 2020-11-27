@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using ToSic.Eav.Context;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
@@ -9,7 +10,7 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Dnn.WebApi.Logging;
-using ToSic.Sxc.Run.Context;
+
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
@@ -123,7 +124,7 @@ namespace ToSic.Sxc.Dnn
 
         #region RunContext WiP
 
-        public RunContext RunContext => DynCode?.RunContext;
+        public ICmsContext CmsContext => DynCode?.CmsContext;
 
 
         #endregion

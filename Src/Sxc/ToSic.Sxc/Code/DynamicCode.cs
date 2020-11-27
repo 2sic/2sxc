@@ -1,10 +1,11 @@
 ﻿using System;
+using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Run.Context;
+
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Code
@@ -80,8 +81,8 @@ namespace ToSic.Sxc.Code
 
         #region Context WIP
 
-        public RunContext RunContext => UnwrappedContents?.RunContext;
+        public ICmsContext CmsContext => UnwrappedContents?.CmsContext;
 
-        #endregion
+        #endregion CmsContext  
     }
 }
