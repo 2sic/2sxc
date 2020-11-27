@@ -1,23 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Context;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Run
+namespace ToSic.Sxc.Context
 {
-    public class SxcPage: IPage
+    public class Page: IPage
     {
-        private readonly Lazy<IHttp> _httpLazy;
+        #region Constructor / DI
 
         /// <summary>
-        /// Empty constructor for DI
+        /// Constructor for DI
         /// </summary>
-        public SxcPage(Lazy<IHttp> httpLazy)
-        {
-            _httpLazy = httpLazy;
-        }
+        public Page(Lazy<IHttp> httpLazy) => _httpLazy = httpLazy;
+        private readonly Lazy<IHttp> _httpLazy;
+
+        #endregion
 
         public IPage Init(int id)
         {

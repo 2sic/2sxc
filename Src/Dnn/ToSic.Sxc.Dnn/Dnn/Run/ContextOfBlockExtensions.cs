@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Dnn.Run
             // the FullUrl will throw an error in DNN search scenarios
             try
             {
-                ((SxcPage)context.Page).Url = activeTab?.FullUrl;
+                ((Page)context.Page).Url = activeTab?.FullUrl;
             }
             catch
             {
