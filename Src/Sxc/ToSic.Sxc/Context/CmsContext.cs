@@ -1,8 +1,7 @@
-﻿using ToSic.Eav.Documentation;
-using ToSic.Sxc.Code;
+﻿using ToSic.Eav.Context;
+using ToSic.Eav.Documentation;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Eav.Context
+namespace ToSic.Sxc.Context
 {
     /// <summary>
     /// Runtime context information, used in dynamic code. Help the code to detect what environment it's in, what page etc.
@@ -24,6 +23,11 @@ namespace ToSic.Eav.Context
         }
         private IContextOfSite _context;
 
+        /// <summary>
+        /// System to extend the known context by more information if we're running inside a block
+        /// </summary>
+        /// <param name="newContext"></param>
+        /// <returns></returns>
         internal CmsContext Update(IContextOfSite newContext)
         {
             _context = newContext;
@@ -32,22 +36,9 @@ namespace ToSic.Eav.Context
             return this;
         }
 
-        private ICmsContext _cmsContextImplementation;
-
         #endregion
 
         public Platform Platform { get; }
-
-        //public SiteContext Site =>
-        //    _site ?? (_site = new SiteContext {Id = _root?.Block?.Context?.Site.Id ?? NullId});
-        //private SiteContext _site;
-
-        //public PageContext Page => _page ?? (_page = new PageContext {Id = _root?.Block?.Context?.Page.Id ?? NullId});
-        //private PageContext _page;
-
-        //public ModuleContext Module =>
-        //    _module ?? (_module = new ModuleContext {Id = _root?.Block?.Context?.Container?.Id ?? NullId});
-        //private ModuleContext _module;
 
         public ISiteLight Site => _context.Site as ISiteLight;
 

@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
 
-namespace ToSic.Eav.Context
+namespace ToSic.Sxc.Context
 {
     /// <summary>
     /// Public properties of the IUser for use in your own code

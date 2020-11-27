@@ -1,8 +1,7 @@
 ﻿using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Eav.Context
+namespace ToSic.Sxc.Context
 {
     public class ModuleNull: IModule
     {

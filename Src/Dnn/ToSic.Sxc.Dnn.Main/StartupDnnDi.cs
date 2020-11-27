@@ -14,6 +14,7 @@ using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Adam;
 using ToSic.Sxc.Dnn.Code;
@@ -84,7 +85,7 @@ namespace ToSic.SexyContent
 
             // new in 11.08 - provide Razor Engine and platform
             services.TryAddTransient<IEngineFinder, DnnEngineFinder>();
-            services.TryAddSingleton<Eav.Context.Platform, DnnPlatformContext>();
+            services.TryAddSingleton<Platform, DnnPlatformContext>();
 
             // add page publishing
             services.TryAddTransient<IPagePublishing, Sxc.Dnn.Cms.DnnPagePublishing>();

@@ -1,8 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
 
-
-// ReSharper disable once CheckNamespace
-namespace ToSic.Eav.Context
+namespace ToSic.Sxc.Context
 {
     [PublicApi]
     public interface ISiteLight

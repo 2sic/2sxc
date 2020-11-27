@@ -5,6 +5,7 @@ using ToSic.Eav.Run;
 using ToSic.Eav.WebApi;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.ImportExport;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Conversion;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
@@ -87,7 +88,7 @@ namespace ToSic.Sxc.WebApi
 
 
             // 11.08 - fallback in case not added
-            services.TryAddSingleton<Eav.Context.Platform>();
+            services.TryAddSingleton<Platform>();
 
             return services;
         }

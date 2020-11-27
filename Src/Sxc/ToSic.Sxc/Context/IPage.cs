@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Documentation;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Eav.Context
+namespace ToSic.Sxc.Context
 {
     // ReSharper disable once PossibleInterfaceMemberAmbiguity
     public interface IPage : IPageLight

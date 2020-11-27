@@ -8,6 +8,7 @@ using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Code;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -55,7 +56,7 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddTransient<IClientDependencyOptimizer, OqtClientDependencyOptimizer>();
             services.AddTransient<IValueConverter, OqtValueConverter>();
 
-            services.AddSingleton<Eav.Context.Platform, OqtPlatformContext>();
+            services.AddSingleton<Platform, OqtPlatformContext>();
 
             services.AddTransient<SecurityChecksBase, OqtAdamSecurityChecks>();
             services.AddTransient<IAdamFileSystem<int, int>, OqtAdamFileSystem>();

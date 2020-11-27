@@ -1,8 +1,8 @@
 ﻿using System;
+using ToSic.Eav.Context;
 using ToSic.Sxc.Cms.Publishing;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Eav.Context
+namespace ToSic.Sxc.Context
 {
     public class ContextOfBlock: ContextOfSite, IContextOfBlock
     {

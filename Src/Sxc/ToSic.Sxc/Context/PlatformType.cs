@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Eav.Context
+namespace ToSic.Sxc.Context
 {
     /// <summary>
     /// The types of platforms which 2sxc could be running on

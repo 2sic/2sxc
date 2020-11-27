@@ -3,8 +3,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Eav.Context
+namespace ToSic.Sxc.Context
 {
     /// <summary>
     /// A base implementation of the block information wrapping the CMS specific object along with it.
