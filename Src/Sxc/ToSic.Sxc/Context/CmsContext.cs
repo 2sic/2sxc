@@ -18,10 +18,17 @@ namespace ToSic.Sxc.Context
         /// </summary>
         public CmsContext(Platform platform, IContextOfSite context)
         {
-            _context = context;
+            Context = context;
             Platform = platform;
         }
-        private IContextOfSite _context;
+
+        /// <summary>
+        /// This is the real context - in case other things need to re-use it somewhere.
+        /// But we're not showing it on the public ICmsContext, as that's a very internal feature
+        /// which could change.
+        /// Note that this can contain an IContextOfSite, or an IContextOfBlock
+        /// </summary>
+        public IContextOfSite Context;
 
         /// <summary>
         /// System to extend the known context by more information if we're running inside a block
@@ -30,7 +37,7 @@ namespace ToSic.Sxc.Context
         /// <returns></returns>
         internal CmsContext Update(IContextOfSite newContext)
         {
-            _context = newContext;
+            Context = newContext;
             _page = null;
             _module = null;
             return this;
@@ -40,15 +47,15 @@ namespace ToSic.Sxc.Context
 
         public Platform Platform { get; }
 
-        public ISiteLight Site => _context.Site as ISiteLight;
+        public ISiteLight Site => Context.Site as ISiteLight;
 
-        public IPageLight Page => _page ?? (_page = (_context as IContextOfBlock)?.Page ?? new PageNull());
+        public IPageLight Page => _page ?? (_page = (Context as IContextOfBlock)?.Page ?? new PageNull());
         private IPage _page;
 
         public IModuleLight Module =>
-            _module ?? (_module = (_context as IContextOfBlock)?.Module ?? new ModuleNull());
+            _module ?? (_module = (Context as IContextOfBlock)?.Module ?? new ModuleNull());
         private IModule _module;
 
-        public IUserLight User => _context.User as IUserLight;
+        public IUserLight User => Context.User as IUserLight;
     }
 }
