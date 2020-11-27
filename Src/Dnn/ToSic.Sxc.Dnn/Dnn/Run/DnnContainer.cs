@@ -49,11 +49,11 @@ namespace ToSic.Sxc.Dnn.Run
 
 
         /// <inheritdoc />
-        public override int Id => UnwrappedContents.ModuleID;
+        public override int Id => UnwrappedContents?.ModuleID ?? Eav.Constants.NullId;
 
 
         /// <inheritdoc />
-        public override bool IsPrimary => UnwrappedContents.DesktopModule.ModuleName == "2sxc";
+        public override bool IsPrimary => (UnwrappedContents?.DesktopModule.ModuleName ?? "2sxc") == "2sxc";
 
 
         /// <inheritdoc />

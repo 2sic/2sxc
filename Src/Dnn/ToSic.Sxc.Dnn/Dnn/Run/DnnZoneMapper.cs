@@ -26,24 +26,24 @@ namespace ToSic.Sxc.Dnn.Run
         /// Always returns a valid value, as it will otherwise create one if it was missing
         /// ...if the tenant/portal exists
         /// </summary>
-        /// <param name="tenantId"></param>
+        /// <param name="siteId"></param>
         /// <returns></returns>
-        public override int GetZoneId(int tenantId)
+        public override int GetZoneId(int siteId)
         {
             // additional protection against invalid portalId which may come from bad dnn configs and execute in search-index mode
             // see https://github.com/2sic/2sxc/issues/1054
-            if (tenantId < 0)
-                throw new Exception("Can't get zone for invalid portal ID: " + tenantId);
+            if (siteId < 0)
+                throw new Exception("Can't get zone for invalid portal ID: " + siteId);
 
             //const string zoneSettingKey = Settings.PortalSettingsPrefix + "ZoneID";
-            var c = PortalController.Instance.GetPortalSettings(tenantId);
+            var c = PortalController.Instance.GetPortalSettings(siteId);
 
             // Create new zone automatically
             if (c.ContainsKey(Settings.PortalSettingZoneId)) return int.Parse(c[Settings.PortalSettingZoneId]);
 
-            var portalSettings = new PortalSettings(tenantId);
-            var zoneId = _zoneCreatorLazy.Value.Init(Log).Create(portalSettings.PortalName + " (Portal " + tenantId + ")");
-            PortalController.UpdatePortalSetting(tenantId, Settings.PortalSettingZoneId, zoneId.ToString());
+            var portalSettings = new PortalSettings(siteId);
+            var zoneId = _zoneCreatorLazy.Value.Init(Log).Create(portalSettings.PortalName + " (Portal " + siteId + ")");
+            PortalController.UpdatePortalSetting(siteId, Settings.PortalSettingZoneId, zoneId.ToString());
             return zoneId;
 
         }
@@ -55,12 +55,12 @@ namespace ToSic.Sxc.Dnn.Run
             var found = portals.Cast<PortalInfo>().Select(p =>
                 {
                     var set = pinst.GetPortalSettings(p.PortalID);
-                    if (!set.TryGetValue(Settings.PortalSettingZoneId, out string portalZonId)) return null;
-                    if (!int.TryParse(portalZonId, out int zid)) return null;
+                    if (!set.TryGetValue(Settings.PortalSettingZoneId, out var portalZoneId)) return null;
+                    if (!int.TryParse(portalZoneId, out var zid)) return null;
                     return zid == zoneId ? new PortalSettings(p) : null;
                 })
                 .FirstOrDefault(f => f != null);
-            return found != null ? new DnnSite(found) : null;
+            return found != null ? new DnnSite().Swap(found) : null;
         }
 
 
