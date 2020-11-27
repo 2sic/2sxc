@@ -10,12 +10,12 @@ namespace ToSic.Sxc.Run.Context
         /// <summary>
         /// The page it's running on + parameters for queries, url etc.
         /// </summary>
-        IPageInternal Page { get; }
+        IPage Page { get; }
 
         /// <summary>
         /// The container for our block, basically the module
         /// </summary>
-        IModuleInternal Container { get; }
+        IModule Container { get; }
 
         /// <summary>
         /// Publishing information about the current context

@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Razor.Engine
         }
 
         /// <inheritdoc />
-        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModuleInternal moduleInfo, DateTime beginDate)
+        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate)
         {
             //if (Webpage == null || searchInfos == null || searchInfos.Count <= 0) return;
 

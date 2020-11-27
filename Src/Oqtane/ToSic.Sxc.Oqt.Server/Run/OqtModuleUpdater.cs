@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             _lazyCmsRuntime = lazyCmsRuntime;
         }
 
-        public void SetAppId(IModuleInternal instance, int? appId)
+        public void SetAppId(IModule instance, int? appId)
         {
             Log.Add($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
             // Reset temporary template

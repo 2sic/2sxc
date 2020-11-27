@@ -117,7 +117,7 @@ namespace ToSic.Sxc.Hybrid.Razor
         }
 
         /// <inheritdoc />
-        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModuleInternal moduleInfo,
+        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo,
             DateTime beginDate)
         {
             // new in 2sxc 11, if it has not been overridden, then try to check if code has something for us.

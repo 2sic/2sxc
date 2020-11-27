@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Dnn.Install
         }
 
 
-        public string GetAutoInstallPackagesUiUrl(ISite site, IModuleInternal module, bool isContentApp)
+        public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool isContentApp)
         {
             var moduleInfo = (module as DnnModule)?.UnwrappedContents;
             var portal = (site as DnnSite)?.UnwrappedContents;

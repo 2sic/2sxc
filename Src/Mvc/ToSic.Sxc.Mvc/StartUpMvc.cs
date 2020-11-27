@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Mvc
         {
             services.AddTransient<ISite, MvcSite>();
             services.AddTransient<IGetDefaultLanguage, MvcSite>();
-            services.AddTransient<IModuleInternal, MvcContainer>();
+            services.AddTransient<IModule, MvcContainer>();
             services.AddTransient<IZoneMapper, MvcZoneMapper>();
             services.AddTransient<AppPermissionCheck, MvcPermissionCheck>();
             //services.AddTransient<DynamicCodeRoot, MvcDynamicCode>();

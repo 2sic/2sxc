@@ -15,9 +15,9 @@ namespace ToSic.Sxc.Dnn.Run
         /// Note that the context can be null, in which case it will have no module context, and default to the current portal
         /// </summary>
         /// <param name="moduleContext"></param>
-        public DnnContextOld(IModuleInternal moduleContext)
+        public DnnContextOld(IModule moduleContext)
         {
-            Module = (moduleContext as ModuleInternal<ModuleInfo>)?.UnwrappedContents;
+            Module = (moduleContext as Container<ModuleInfo>)?.UnwrappedContents;
             // note: this may be a bug, I assume it should be Module.OwnerPortalId
             Portal = PortalSettings.Current ?? 
                 (moduleContext != null ? new PortalSettings(Module.PortalID): null);

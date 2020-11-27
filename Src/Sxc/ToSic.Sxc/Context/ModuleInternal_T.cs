@@ -10,23 +10,23 @@ namespace ToSic.Sxc.Context
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public abstract class ModuleInternal<T>: HasLog, IModuleInternal, IWrapper<T> where T: class
+    public abstract class Container<T>: HasLog, IModule, IWrapper<T> where T: class
     {
         #region Constructors and DI
 
         /// <inheritdoc />
         public T UnwrappedContents { get; private set; }
 
-        protected ModuleInternal(string logName) : base(logName) { }
+        protected Container(string logName) : base(logName) { }
 
-        public IModuleInternal Init(T item, ILog parentLog)
+        public IModule Init(T item, ILog parentLog)
         {
             Log.LinkTo(parentLog);
             UnwrappedContents = item;
             return this;
         }
 
-        public abstract IModuleInternal Init(int id, ILog parentLog);
+        public abstract IModule Init(int id, ILog parentLog);
         #endregion
 
         /// <inheritdoc />

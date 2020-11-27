@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Dnn.Web
         /// <param name="searchInfos"></param>
         /// <param name="moduleInfo"></param>
         /// <param name="beginDate"></param>
-        void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModuleInternal moduleInfo,
+        void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo,
             DateTime beginDate);
 
         /// <summary>

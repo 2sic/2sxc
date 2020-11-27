@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Run
             return true;
         }
 
-        public string GetAutoInstallPackagesUiUrl(ISite site, IModuleInternal module, bool forContentApp)
+        public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp)
         {
             return "mvc not implemented #todo #mvc";
         }

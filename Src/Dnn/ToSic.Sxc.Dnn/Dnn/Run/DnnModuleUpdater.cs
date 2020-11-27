@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Dnn.Run
         #endregion
 
 
-        public void SetAppId(IModuleInternal instance, int? appId)
+        public void SetAppId(IModule instance, int? appId)
         {
             Log.Add($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
             // Reset temporary template
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Dnn.Run
 
             // ToDo: Should throw exception if a real BlockConfiguration exists
 
-            var module = (instance as ModuleInternal<ModuleInfo>).UnwrappedContents;
+            var module = (instance as Container<ModuleInfo>).UnwrappedContents;
             var zoneId = _zoneMapper.GetZoneId(module.OwnerPortalID);
 
             if (appId == Constants.AppIdEmpty || !appId.HasValue)

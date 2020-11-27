@@ -7,7 +7,7 @@ using ToSic.Sxc.Mvc.Dev;
 
 namespace ToSic.Sxc.Mvc.Run
 {
-    public class MvcContainer: IModuleInternal
+    public class MvcContainer: IModule
     {
         public MvcContainer() {}
 
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Mvc.Run
         }
 
         // Temp implementation, don't support im MVC
-        public IModuleInternal Init(int id, ILog parentLog) => throw new System.NotImplementedException();
+        public IModule Init(int id, ILog parentLog) => throw new System.NotImplementedException();
 
         /// <inheritdoc />
         public int Id { get; set; }
