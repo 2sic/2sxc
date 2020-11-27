@@ -7,6 +7,7 @@ using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Run.Context;
 
 namespace ToSic.SexyContent
 {
@@ -18,12 +19,8 @@ namespace ToSic.SexyContent
             {
                 if (_blockLoaded) return _block;
                 _blockLoaded = true;
-                var newCtx = Eav.Factory.Resolve<DnnContextOfBlock>().Init(ModuleConfiguration, Log);
-                //var context = DnnContextOfBlock.Create(
-                //    new DnnSite().Init(ModuleConfiguration.OwnerPortalID),
-                //    Eav.Factory.Resolve<DnnContainer>().Init(ModuleConfiguration, Log),
-                //    Eav.Factory.GetServiceProvider());
-                return _block = Eav.Factory.Resolve<BlockFromModule>().Init(/*context*/newCtx, Log);
+                var newCtx = Eav.Factory.Resolve<IContextOfBlock>().Init(ModuleConfiguration, Log);
+                return _block = Eav.Factory.Resolve<BlockFromModule>().Init(newCtx, Log);
             }
         }
         private IBlock _block;

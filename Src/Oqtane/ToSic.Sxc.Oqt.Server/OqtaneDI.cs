@@ -38,6 +38,7 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddTransient<IEnvironmentInstaller, OqtEnvironmentInstaller>();
             services.AddTransient<IGetEngine, OqtGetLookupEngine>();
             services.AddTransient<OqtContextBuilder>();
+            services.AddTransient<IContainer, OqtContainer>();
             services.AddTransient<OqtContainer>();
             services.AddTransient<OqtTempInstanceContext>();
             services.AddTransient<OqtSite>();

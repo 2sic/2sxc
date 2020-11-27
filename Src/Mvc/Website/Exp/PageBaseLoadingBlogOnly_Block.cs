@@ -1,13 +1,7 @@
-﻿using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Plumbing;
-using ToSic.Eav.Run;
+﻿using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Mvc.Dev;
-using ToSic.Sxc.Mvc.Run;
-using ToSic.Sxc.Run;
 using ToSic.Sxc.Run.Context;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Mvc.RazorPages.Exp
 {
@@ -24,16 +18,21 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
             {
                 if (_blockLoaded) return _block;
                 _blockLoaded = true;
-                var context = new ContextOfBlock(
-                    ServiceProvider,
-                    ServiceProvider.Build<ISite>().Init(TestIds.PrimaryZone),
-                    new MvcUser()
-                ).Init(
-                    ServiceProvider.Build<SxcPage>().Init(0),
-                    new MvcContainer(),
-                    new BlockPublishingState()
-                    );
-                _block = ServiceProvider.Build<BlockFromModule>().Init(context, Log);
+
+                var ctx = ServiceProvider.Build<ContextOfBlock>();
+                ctx.Site.Init(TestIds.PrimaryZone);
+                ctx.Site.Init(0);
+
+                //var context = new ContextOfBlock(
+                //    ServiceProvider,
+                //    ServiceProvider.Build<ISite>().Init(TestIds.PrimaryZone),
+                //    new MvcUser()
+                //).Init(
+                //    ServiceProvider.Build<SxcPage>().Init(0),
+                //    new MvcContainer(),
+                //    new BlockPublishingState()
+                //    );
+                _block = ServiceProvider.Build<BlockFromModule>().Init(ctx, Log);
                 return _block;
             }
         }

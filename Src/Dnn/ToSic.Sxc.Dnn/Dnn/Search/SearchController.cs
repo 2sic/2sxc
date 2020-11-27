@@ -17,6 +17,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Run.Context;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Search
@@ -58,7 +59,7 @@ namespace ToSic.Sxc.Search
             var cache = State.Cache;
             cache.Load(container.BlockIdentifier, site.DefaultLanguage);
 
-            var dnnContext = Eav.Factory.StaticBuild<DnnContextOfBlock>().Init(dnnModule, Log);
+            var dnnContext = Eav.Factory.StaticBuild<IContextOfBlock>().Init(dnnModule, Log);
             var modBlock = _serviceProvider.Build<BlockFromModule>()
                 .Init(dnnContext, Log);
                 //.Init(DnnContextOfBlock.Create(site, container, Eav.Factory.GetServiceProvider()), Log);

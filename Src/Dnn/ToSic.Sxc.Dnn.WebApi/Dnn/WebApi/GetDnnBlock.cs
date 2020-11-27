@@ -8,6 +8,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Dnn.WebApi
@@ -33,13 +34,8 @@ namespace ToSic.Sxc.Dnn.WebApi
             if (moduleInfo == null)
                 log.Add("context/module not found");
 
-            //var container = _serviceProvider.Build<DnnContainer>().Init(moduleInfo, log);
-            
-            //var tenant = new DnnSite().TrySwap(moduleInfo);
-
-            var context = _serviceProvider.Build<DnnContextOfBlock>().Init(moduleInfo, log); // DnnContextOfBlock.Create(tenant, container, _serviceProvider, GetOverrideParams(request));
+            var context = _serviceProvider.Build<IContextOfBlock>().Init(moduleInfo, log);
             context.Page.Parameters = GetOverrideParams(request);
-            //var context = DnnContextOfBlock.Create(tenant, container, _serviceProvider, GetOverrideParams(request));
             IBlock block = _serviceProvider.Build<BlockFromModule>().Init(context, log);
 
             // check if we need an inner block

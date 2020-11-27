@@ -48,8 +48,7 @@ namespace ToSic.Sxc.WebApi
         protected IContextOfBlock GetContext()
         {
             // in case the initial request didn't yet find a block builder, we need to create it now
-            var context = Block?.Context
-                          ?? ServiceProvider.Build<DnnContextOfBlock>(); // DnnContextOfBlock.Create(new DnnSite(), new ContainerNull(), ServiceProvider);
+            var context = Block?.Context ?? ServiceProvider.Build<IContextOfBlock>().InitPageOnly();
             return context;
         }
 

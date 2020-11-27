@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Adam
     /// </summary>
     [ApiController]
     [Route(WebApiConstants.WebApiRoot + "/app-content/{contentType}/{guid}/{field}/")]
-    public class AdamController : SxcStatefullControllerBase
+    public class AdamController : SxcStatefulControllerBase
     {
         private readonly AdamTransUpload<int, int> _adamUpload;
         private readonly AdamTransGetItems<string, string> _adamItems;

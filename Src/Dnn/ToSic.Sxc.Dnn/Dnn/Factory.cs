@@ -11,6 +11,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.LookUp;
+using ToSic.Sxc.Run.Context;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -70,7 +71,7 @@ namespace ToSic.Sxc.Dnn
         {
             var dnnModule = ((Container<ModuleInfo>)container)?.UnwrappedContents;
             //var tenant = new DnnSite().TrySwap(dnnModule); // Swap(new PortalSettings(dnnModule.OwnerPortalID));
-            var context = Eav.Factory.StaticBuild<DnnContextOfBlock>().Init(dnnModule, parentLog);
+            var context = Eav.Factory.StaticBuild<IContextOfBlock>().Init(dnnModule, parentLog);
             return Eav.Factory.StaticBuild<BlockFromModule>().Init(context, parentLog).BlockBuilder;
                 //.Init(DnnContextOfBlock.Create(tenant, container, Eav.Factory.GetServiceProvider()), parentLog).BlockBuilder;
         }

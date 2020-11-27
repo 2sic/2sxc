@@ -99,10 +99,10 @@
     <Compile Include="Dnn\Install\InstallationController_Statics.cs" />
     <Compile Include="Dnn\Pages\ModuleWithContent.cs" />
     <Compile Include="Dnn\Pages\Pages.cs" />
+    <Compile Include="Dnn\Run\ContextOfBlockExtensions.cs" />
     <Compile Include="Dnn\Run\DnnAppFileSystemLoader.cs" />
     <Compile Include="Dnn\Run\DnnContext.cs" />
     <Compile Include="Dnn\Factory.cs" />
-    <Compile Include="Dnn\Run\DnnInstanceContext.cs" />
     <Compile Include="Dnn\Run\DnnPage.cs" />
     <Compile Include="Dnn\Run\DnnPlatformContext.cs" />
     <Compile Include="Dnn\Web\DnnJsApiHeader.cs" />

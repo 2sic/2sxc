@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Run
             _httpLazy = httpLazy;
         }
 
-        public SxcPage Init(int id)
+        public IPage Init(int id)
         {
             Id = id;
             return this;
@@ -32,6 +32,6 @@ namespace ToSic.Sxc.Run
         }
         private List<KeyValuePair<string, string>> _parameters;
 
-        public string Url { get; protected set; } = Eav.Constants.UrlNotInitialized;
+        public string Url { get; set; } = Eav.Constants.UrlNotInitialized;
     }
 }

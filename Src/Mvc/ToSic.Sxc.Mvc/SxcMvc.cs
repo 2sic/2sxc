@@ -1,16 +1,12 @@
 ﻿using System;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
-using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Mvc.Dev;
 using ToSic.Sxc.Mvc.Run;
 using ToSic.Sxc.Mvc.Web;
-using ToSic.Sxc.Run;
 using ToSic.Sxc.Run.Context;
 
 namespace ToSic.Sxc.Mvc
@@ -27,7 +23,7 @@ namespace ToSic.Sxc.Mvc
             History.Add("sxc-mvc-view", Log);
         }
 
-        private HttpContext _httpContext;
+        private readonly HttpContext _httpContext;
         public MvcPageProperties PageProperties;
 
         #endregion
@@ -59,20 +55,26 @@ namespace ToSic.Sxc.Mvc
 
         public static IContextOfBlock CreateContext(IServiceProvider sp, int zoneId, int pageId, int containerId, int appId, Guid blockGuid)
         {
-            var publishing = sp.Build<IPagePublishingResolver>();
 
-            return new ContextOfBlock(
-                sp,
-                sp.Build<ISite>().Init(zoneId),
-                //new SxcPage(pageId, null, http.RequestServices.Build<IHttp>().QueryStringKeyValuePairs()),
-                //new MvcContainer(tenantId: zoneId, id: containerId, appId: appId, block: blockGuid),
-                new MvcUser()
-                //publishing.GetPublishingState(containerId)
-            ).Init(
-                sp.Build<SxcPage>().Init(pageId),
-                new MvcContainer(tenantId: zoneId, id: containerId, appId: appId, block: blockGuid),
-                publishing.GetPublishingState(containerId)
-            );
+            var ctx = sp.Build<ContextOfBlock>();
+            ctx.Site.Init(zoneId);
+            ctx.Page.Init(pageId);
+            ((MvcContainer) ctx.Container).Init(tenantId: zoneId, id: containerId, appId: appId, block: blockGuid);
+            return ctx;
+
+            //var publishing = sp.Build<IPagePublishingResolver>();
+            //return new ContextOfBlock(
+            //    sp,
+            //    sp.Build<ISite>().Init(zoneId),
+            //    //new SxcPage(pageId, null, http.RequestServices.Build<IHttp>().QueryStringKeyValuePairs()),
+            //    //new MvcContainer(tenantId: zoneId, id: containerId, appId: appId, block: blockGuid),
+            //    new MvcUser()
+            //    //publishing.GetPublishingState(containerId)
+            //).Init(
+            //    sp.Build<SxcPage>().Init(pageId),
+            //    new MvcContainer(tenantId: zoneId, id: containerId, appId: appId, block: blockGuid),
+            //    publishing.GetPublishingState(containerId)
+            //);
         }
     }
 }

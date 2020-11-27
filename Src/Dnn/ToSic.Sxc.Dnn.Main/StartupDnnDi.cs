@@ -48,8 +48,6 @@ namespace ToSic.SexyContent
 
             // 
             services.TryAddTransient<IValueConverter, DnnValueConverter>();
-            services.TryAddTransient<DnnContextOfBlock>();
-            services.TryAddTransient<IContextOfBlock, DnnContextOfBlock>();
 
             services.TryAddTransient<XmlExporter, DnnXmlExporter>();
             services.TryAddTransient<IImportExportEnvironment, DnnImportExportEnvironment>();

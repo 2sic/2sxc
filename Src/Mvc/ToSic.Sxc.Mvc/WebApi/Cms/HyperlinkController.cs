@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
 {
     [ApiController]
     [Route(WebApiConstants.WebApiRoot + "/dnn/[controller]/[action]")]
-    public class HyperlinkController: SxcStatefullControllerBase
+    public class HyperlinkController: SxcStatefulControllerBase
     {
         private readonly HyperlinkBackend<int, int> _hyperlinkBackend;
         public HyperlinkController(HyperlinkBackend<int, int> hyperlinkBackend)

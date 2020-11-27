@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
 {
     [Route(WebApiConstants.WebApiRoot + "/cms/edit/[action]")]
     [ApiController]
-    public class EditController: SxcStatefullControllerBase
+    public class EditController: SxcStatefulControllerBase
     {
         #region DI
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "UiCntr";
