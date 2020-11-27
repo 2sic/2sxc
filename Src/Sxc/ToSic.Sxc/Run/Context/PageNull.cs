@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Run.Context
 {
-    public class PageNull: IPage
+    public class PageNull: IPageInternal
     {
         public int Id { get; private set; } = Eav.Constants.NullId;
         public string Url => null;
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Run.Context
             set => _parameters = value;
         }
 
-        public IPage Init(int id)
+        public IPageInternal Init(int id)
         {
             Id = id;
             return this;

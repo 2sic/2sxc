@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Dnn
         public override void CustomizeData() { }
 
         /// <inheritdoc />
-        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo,
+        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModuleInternal moduleInfo,
             DateTime beginDate) { }
 
     }

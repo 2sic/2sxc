@@ -9,10 +9,10 @@ namespace ToSic.Sxc.Context
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
 
-    public interface IModule
+    public interface IModuleInternal
     {
         [PrivateApi("Workaround till we have DI to inject the current container")]
-        IModule Init(int id, ILog parentLog);
+        IModuleInternal Init(int id, ILog parentLog);
 
         /// <summary>
         /// Block ID

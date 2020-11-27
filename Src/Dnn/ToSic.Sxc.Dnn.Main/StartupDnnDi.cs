@@ -44,7 +44,7 @@ namespace ToSic.SexyContent
             // Core Runtime Context Objects
             services.TryAddScoped<IUser, DnnUser>();
             services.TryAddScoped<ISite, DnnSite>();
-            services.TryAddTransient<IModule, DnnModule>();
+            services.TryAddTransient<IModuleInternal, DnnModule>();
             services.TryAddTransient<DnnModule>();
 
             // 

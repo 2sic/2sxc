@@ -2,17 +2,17 @@
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Documentation;
 
-namespace ToSic.Sxc.Run.Context
+namespace ToSic.Sxc.Context
 {
     // ReSharper disable once PossibleInterfaceMemberAmbiguity
-    public interface IPage : IWebResource
+    public interface IPageInternal : IWebResource
     {
         /// <summary>
         /// These parameters can reconfigure what view is used or change
         /// </summary>
         [PrivateApi("wip")] List<KeyValuePair<string, string>> Parameters { get; set; }
 
-        IPage Init(int id);
+        IPageInternal Init(int id);
 
     }
 }

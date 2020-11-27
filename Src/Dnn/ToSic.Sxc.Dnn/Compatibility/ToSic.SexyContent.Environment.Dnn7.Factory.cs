@@ -27,7 +27,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             => Sxc.Dnn.Factory.CmsBlock(moduleInfo);
 
         [Obsolete("use ToSic.Sxc.Dnn.Factory.CmsBlock(...) instead")]
-        public static IBlockBuilder SxcInstanceForModule(IModule moduleInfo)
+        public static IBlockBuilder SxcInstanceForModule(IModuleInternal moduleInfo)
             => Sxc.Dnn.Factory.CmsBlock(moduleInfo);
 
 

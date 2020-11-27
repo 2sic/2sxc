@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Engines
         /// <param name="moduleInfo"></param>
         /// <param name="beginDate"></param>
         [PrivateApi]
-        void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate);
+        void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModuleInternal moduleInfo, DateTime beginDate);
 
         /// <summary>
         /// todo

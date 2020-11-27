@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Apps.Run;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Run
 {
-    public class SxcPage: IPage
+    public class SxcPage: IPageInternal
     {
         private readonly Lazy<IHttp> _httpLazy;
 
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.Run
             _httpLazy = httpLazy;
         }
 
-        public IPage Init(int id)
+        public IPageInternal Init(int id)
         {
             Id = id;
             return this;

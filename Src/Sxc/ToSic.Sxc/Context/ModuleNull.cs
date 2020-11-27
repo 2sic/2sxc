@@ -3,9 +3,9 @@ using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Context
 {
-    public class ModuleNull: IModule
+    public class ModuleNull: IModuleInternal
     {
-        public IModule Init(int id, ILog parentLog)
+        public IModuleInternal Init(int id, ILog parentLog)
         {
             // don't do anything
             return this;

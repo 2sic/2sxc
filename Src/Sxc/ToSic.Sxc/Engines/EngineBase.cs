@@ -123,7 +123,7 @@ namespace ToSic.Sxc.Engines
         public virtual void CustomizeData() {}
 
         /// <inheritdoc />
-        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo,
+        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModuleInternal moduleInfo,
             DateTime beginDate)
         {
         }

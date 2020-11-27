@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Oqt.Server
 {
     class WipConstServer
     {
-        public static IPage NullPage = new PageNull();
-        public static IModule NullContainer = new ModuleNull();
+        public static IPageInternal NullPage = new PageNull();
+        public static IModuleInternal NullContainer = new ModuleNull();
     }
 }

@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Dnn.Run
         /// In some cases the container is a ContainerNull object without ModuleInfo, so we must really do null-checks
         /// </remarks>
         protected ModuleInfo Module =>
-            _module ?? (_module = ((Context as IContextOfBlock)?.Container as Container<ModuleInfo>)?.UnwrappedContents);
+            _module ?? (_module = ((Context as IContextOfBlock)?.Container as ModuleInternal<ModuleInfo>)?.UnwrappedContents);
         private ModuleInfo _module;
 
 

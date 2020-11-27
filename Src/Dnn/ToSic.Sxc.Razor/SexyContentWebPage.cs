@@ -189,7 +189,7 @@ namespace ToSic.SexyContent.Razor
         public virtual void CustomizeData() {}
 
         /// <inheritdoc />
-        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo,
+        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModuleInternal moduleInfo,
             DateTime beginDate) { }
 
         [PrivateApi("this is the old signature, should still be supported")]

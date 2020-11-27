@@ -19,6 +19,6 @@ namespace ToSic.Sxc.Run
         /// <returns></returns>
         bool ResumeAbortedUpgrade();
 
-        string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp);
+        string GetAutoInstallPackagesUiUrl(ISite site, IModuleInternal module, bool forContentApp);
     }
 }

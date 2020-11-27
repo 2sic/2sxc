@@ -11,7 +11,7 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtContainer: Container<Module>
+    public class OqtContainer: ModuleInternal<Module>
     {
         private readonly SettingsHelper _settingsHelper;
         private readonly Lazy<OqtZoneMapper> _zoneMapperLazy;
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         }
 
         // Temp implementation, don't support im MVC
-        public override IModule Init(int id, ILog parentLog) => throw new NotImplementedException();
+        public override IModuleInternal Init(int id, ILog parentLog) => throw new NotImplementedException();
 
         /// <inheritdoc />
         public override int Id => _id;

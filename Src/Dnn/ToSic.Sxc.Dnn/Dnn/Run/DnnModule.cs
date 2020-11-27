@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Dnn.Run
     /// The DNN implementation of a Block Container (a Module).
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public class DnnModule: Container<ModuleInfo>, IHasLog
+    public class DnnModule: ModuleInternal<ModuleInfo>, IHasLog
     {
         private readonly Lazy<IZoneMapper> _zoneMapperLazy;
 
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Dnn.Run
         /// We don't use a Constructor because of DI
         /// So you must always call Init
         /// </summary>
-        public override IModule Init(int instanceId, ILog parentLog) 
+        public override IModuleInternal Init(int instanceId, ILog parentLog) 
         {
             var mod = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, false);
             return Init(mod, parentLog);

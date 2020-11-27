@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return true;
         }
 
-        public string GetAutoInstallPackagesUiUrl(ISite site, IModule container, bool forContentApp)
+        public string GetAutoInstallPackagesUiUrl(ISite site, IModuleInternal container, bool forContentApp)
         {
             return "oqtane not implemented #todo #mvc";
         }

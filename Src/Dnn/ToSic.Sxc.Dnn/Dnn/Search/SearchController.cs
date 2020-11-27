@@ -35,10 +35,10 @@ namespace ToSic.Sxc.Search
         /// Get search info for each dnn module containing 2sxc data
         /// </summary>
         /// <returns></returns>
-        public IList<SearchDocument> GetModifiedSearchDocuments(IModule module, DateTime beginDate)
+        public IList<SearchDocument> GetModifiedSearchDocuments(IModuleInternal module, DateTime beginDate)
         {
             var searchDocuments = new List<SearchDocument>();
-            var dnnModule = (module as Container<ModuleInfo>)?.UnwrappedContents;
+            var dnnModule = (module as ModuleInternal<ModuleInfo>)?.UnwrappedContents;
             // always log with method, to ensure errors are caught
             Log.Add($"start search for mod#{dnnModule?.ModuleID}");
 

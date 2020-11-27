@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Run.Context
         #region Constructor / DI
 
         public ContextOfBlock(IServiceProvider serviceProvider, ISite site, IUser user,
-            IPage page, IModule module, Lazy<IPagePublishingResolver> publishingResolver)
+            IPageInternal page, IModuleInternal module, Lazy<IPagePublishingResolver> publishingResolver)
             : base(serviceProvider, site, user)
         {
             Page = page;
@@ -23,10 +23,10 @@ namespace ToSic.Sxc.Run.Context
         #endregion
 
         /// <inheritdoc />
-        public IPage Page { get; set; }
+        public IPageInternal Page { get; set; }
 
         /// <inheritdoc />
-        public IModule Container { get; set; }
+        public IModuleInternal Container { get; set; }
 
         /// <inheritdoc />
         public BlockPublishingState Publishing => _publishing ?? (_publishing = _publishingResolver.Value.GetPublishingState(Container?.Id ?? -1));

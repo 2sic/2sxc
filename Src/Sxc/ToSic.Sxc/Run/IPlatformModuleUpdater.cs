@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Run
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="appId"></param>
-        void SetAppId(IModule instance, int? appId);
+        void SetAppId(IModuleInternal instance, int? appId);
 
         /// <summary>
         /// Set the preview view of the Container / Module

@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Run
         }
 
 
-        public void SetAppId(IModule instance, int? appId)
+        public void SetAppId(IModuleInternal instance, int? appId)
         {
             // do nothing
         }
