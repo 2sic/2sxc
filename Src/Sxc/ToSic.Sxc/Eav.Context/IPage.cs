@@ -2,7 +2,8 @@
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Documentation;
 
-namespace ToSic.Sxc.Run.Context
+// ReSharper disable once CheckNamespace
+namespace ToSic.Eav.Context
 {
     // ReSharper disable once PossibleInterfaceMemberAmbiguity
     public interface IPage : IWebResource

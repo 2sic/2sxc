@@ -2,7 +2,8 @@
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 
-namespace ToSic.Sxc.Context
+// ReSharper disable once CheckNamespace
+namespace ToSic.Eav.Context
 {
     /// <summary>
     /// A unit / block within the CMS. Contains all necessary identification to pass around. 
