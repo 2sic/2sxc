@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
             var result = _envInstallerLazy.Value.Init(Log)
                 .GetAutoInstallPackagesUiUrl(
                     GetContext().Site,
-                    GetContext().Container,
+                    GetContext().Module,
                     isContentApp);
             return Json(result);
         }
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
             PreventServerTimeout300();
 
             var oqtaneUser = GetContext().User;
-            var container = GetContext().Container;
+            var container = GetContext().Module;
             bool isApp = !container.IsPrimary;
 
             Log.Add("install package:" + packageUrl);

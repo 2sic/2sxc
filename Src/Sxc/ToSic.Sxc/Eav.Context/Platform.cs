@@ -9,7 +9,7 @@ namespace ToSic.Eav.Context
     /// <remarks>
     /// This must be provided through Dependency Injection, Singleton, as it cannot change at runtime.
     /// </remarks>
-    [WorkInProgressApi("Still WIP")]
+    [PrivateApi]
     public class Platform
     {
         /// <summary>

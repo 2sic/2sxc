@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Web.JsContext
             PageId = ctx.Page.Id;
             PageUrl = ctx.Page.Url;
 
-            InstanceId = ctx.Container.Id;
+            InstanceId = ctx.Module.Id;
 
             SxcVersion = Settings.Version.ToString();
 

@@ -27,7 +27,7 @@ namespace ToSic.Sxc.DataSources
             var view = block.View;
             var showDrafts = block.EditAllowed;
 
-            Log.Add($"mid#{block.Context.Container.Id}, draft:{showDrafts}, template:{block.View?.Name}");
+            Log.Add($"mid#{block.Context.Module.Id}, draft:{showDrafts}, template:{block.View?.Name}");
             // Get ModuleDataSource
             var dsFactory = _dataSourceFactory.Init(Log); // new DataSource(log);
             //var block = builder.Block;

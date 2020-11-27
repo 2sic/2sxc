@@ -117,7 +117,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             // Module tile is stored in PageModule, so we need moduleId and pageId to update it.
             var pageId = block.Context.Page.Id;
-            var moduleId = block.Context.Container.Id;
+            var moduleId = block.Context.Module.Id;
             var pageModule = _pageModuleRepository.GetPageModule(pageId, moduleId);
             pageModule.Title = titleItem.GetBestTitle();
             _pageModuleRepository.UpdatePageModule(pageModule);

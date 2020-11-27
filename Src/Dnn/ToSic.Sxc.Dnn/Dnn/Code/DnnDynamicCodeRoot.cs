@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Dnn.Code
     [PrivateApi]
     public class DnnDynamicCodeRoot : DynamicCodeRoot, IDnnDynamicCode, IHasDynCodeContext
     {
-        public DnnDynamicCodeRoot(IServiceProvider serviceProvider, IContextOfSite context): base(serviceProvider, context, DnnConstants.LogName)
+        public DnnDynamicCodeRoot(IServiceProvider serviceProvider, ICmsContext context): base(serviceProvider, context, DnnConstants.LogName)
         {
         }
 
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Dnn.Code
         {
             base.Init(block, parentLog, compatibility);
             // Init things than require module-info or similar, but not 2sxc
-            Dnn = new DnnContextOld(block?.Context.Container);
+            Dnn = new DnnContextOld(block?.Context.Module);
             Link = new DnnLinkHelper(Dnn);
             return this;
         }

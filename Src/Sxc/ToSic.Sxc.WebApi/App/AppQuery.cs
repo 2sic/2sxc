@@ -73,7 +73,7 @@ namespace ToSic.Sxc.WebApi.App
             BuildQueryAndRun(IApp app, string name, string stream, bool includeGuid, IContextOfSite context, ILog log,
                 bool userMayEdit)
         {
-            var wrapLog = log.Call($"name:{name}, withModule:{(context as IContextOfBlock)?.Container.Id}");
+            var wrapLog = log.Call($"name:{name}, withModule:{(context as IContextOfBlock)?.Module.Id}");
             var query = app.GetQuery(name);
 
             if (query == null)

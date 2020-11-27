@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Blocks
         {
             var wrapLog = Log.Call<T>();
 
-            ParentId = Context.Container.Id;
+            ParentId = Context.Module.Id;
             ContentBlockId = blockNumberUnsureIfNeeded;
 
             Log.Add($"parent#{ParentId}, content-block#{ContentBlockId}, z#{ZoneId}, a#{AppId}");
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Blocks
             // If no app yet, stop now with BlockBuilder created
             if (AppId == Eav.Constants.AppIdEmpty)
             {
-                var msg = $"stop a:{AppId}, container:{Context.Container.Id}, content-group:{Configuration?.Id}";
+                var msg = $"stop a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}";
                 return wrapLog(msg, this as T);
             }
 
@@ -79,12 +79,12 @@ namespace ToSic.Sxc.Blocks
             {
                 DataIsMissing = true;
                 App = null;
-                return wrapLog($"DataIsMissing a:{AppId}, container:{Context.Container.Id}, content-group:{Configuration?.Id}", this as T);
+                return wrapLog($"DataIsMissing a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}", this as T);
             }
 
             // use the content-group template, which already covers stored data + module-level stored settings
             View = new BlockViewLoader(Log).PickView(this, Configuration.View, Context, cms);
-            return wrapLog($"ok a:{AppId}, container:{Context.Container.Id}, content-group:{Configuration?.Id}", this as T);
+            return wrapLog($"ok a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}", this as T);
         }
 
         #endregion

@@ -52,6 +52,7 @@ namespace ToSic.Sxc
             services.TryAddTransient<ContextOfBlock>();
             services.TryAddTransient<IPage, SxcPage>();
             services.TryAddTransient<SxcPage>();
+            services.TryAddTransient<ICmsContext, CmsContext>();
 
             // Add possibly missing fallbacks
             services.AddSxcCoreFallbackServices();

@@ -1,7 +1,5 @@
-﻿using ToSic.Eav.Context;
-using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
-using static ToSic.Eav.Constants;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Eav.Context
@@ -10,23 +8,30 @@ namespace ToSic.Eav.Context
     /// Runtime context information, used in dynamic code. Help the code to detect what environment it's in, what page etc.
     /// This lets the code be platform agnostic, so that it works across implementations (Dnn, Oqtane, NopCommerce)
     /// </summary>
-    [WorkInProgressApi("Still WIP")]
+    [PrivateApi("we only show the interface in the docs")]
     public class CmsContext: ICmsContext
     {
+
         #region Constructor
 
         /// <summary>
         /// DI Constructor
         /// </summary>
-        /// <param name="platform"></param>
-        public CmsContext(Platform platform) => Platform = platform;
-
-        internal CmsContext Init(DynamicCodeRoot root)
+        public CmsContext(Platform platform, IContextOfSite context)
         {
-            _root = root;
+            _context = context;
+            Platform = platform;
+        }
+        private IContextOfSite _context;
+
+        internal CmsContext Update(IContextOfSite newContext)
+        {
+            _context = newContext;
+            _page = null;
+            _module = null;
             return this;
         }
-        private DynamicCodeRoot _root;
+
         private ICmsContext _cmsContextImplementation;
 
         #endregion
@@ -44,12 +49,15 @@ namespace ToSic.Eav.Context
         //    _module ?? (_module = new ModuleContext {Id = _root?.Block?.Context?.Container?.Id ?? NullId});
         //private ModuleContext _module;
 
-        public ISiteLight Site => _cmsContextImplementation.Site;
+        public ISiteLight Site => _context.Site;
 
-        public IPageLight Page => _cmsContextImplementation.Page;
+        public IPageLight Page => _page ?? (_page = (_context as IContextOfBlock)?.Page ?? new PageNull());
+        private IPage _page;
 
-        public IModuleLight Module => _cmsContextImplementation.Module;
+        public IModuleLight Module =>
+            _module ?? (_module = (_context as IContextOfBlock)?.Module ?? new ModuleNull());
+        private IModule _module;
 
-        public IUserLight User => _cmsContextImplementation.User;
+        public IUserLight User => _context.User;
     }
 }

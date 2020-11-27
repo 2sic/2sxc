@@ -198,6 +198,7 @@ namespace ToSic.Sxc.Code
         #endregion
 
         #region WIP Context
+
         [PrivateApi("still WIP")]
         ICmsContext CmsContext { get; }
 

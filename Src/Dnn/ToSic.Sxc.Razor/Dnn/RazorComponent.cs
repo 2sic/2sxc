@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Dnn
     /// Provides context infos like the Dnn object, helpers like Edit and much more. <br/>
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract partial class RazorComponent : Hybrid.Razor.RazorComponent, IRazorComponent //  RazorComponentBase, IRazorComponent
+    public abstract partial class RazorComponent : Hybrid.Razor.RazorComponent, IRazorComponent
     {
 
         #region Link, Edit, Dnn, App, Data
@@ -35,102 +35,5 @@ namespace ToSic.Sxc.Dnn
         //public IBlockDataSource Data => DynCode.Data;
 
         #endregion
-
-        //#region AsDynamic in many variations
-
-        ///// <inheritdoc/>
-        //public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => DynCode.AsDynamic(json, fallback);
-
-        ///// <inheritdoc/>
-        //public dynamic AsDynamic(IEntity entity) => DynCode.AsDynamic(entity);
-
-        ///// <inheritdoc/>
-        //public dynamic AsDynamic(dynamic dynamicEntity) => DynCode.AsDynamic(dynamicEntity);
-
-
-        //#endregion
-
-        //#region AsEntity
-        ///// <inheritdoc/>
-        //public IEntity AsEntity(dynamic dynamicEntity) => DynCode.AsEntity(dynamicEntity);
-        //#endregion
-
-        //#region AsList
-
-        ///// <inheritdoc />
-        //public IEnumerable<dynamic> AsList(dynamic list) => DynCode?.AsList(list);
-
-        //#endregion
-
-
-        //#region Data Source Stuff
-
-        ///// <inheritdoc/>
-        //public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
-        //    where T : IDataSource
-        //    => DynCode.CreateSource<T>(inSource, configurationProvider);
-
-        ///// <inheritdoc/>
-        //public T CreateSource<T>(IDataStream inStream) where T : IDataSource
-        //    => DynCode.CreateSource<T>(inStream);
-
-        //#endregion
-
-
-
-        //#region Content, Header, etc. and List
-        ///// <inheritdoc/>
-        //public dynamic Content => DynCode.Content;
-
-        ///// <inheritdoc />
-        //public dynamic Header => DynCode.Header;
-
-        //#endregion
-
-
-
-        //#region Customize Data, Search, and Purpose
-
-        ///// <inheritdoc />
-        //public virtual void CustomizeData()
-        //{
-        //    // new in 2sxc 11, if it has not been overridden, then try to check if code has something for us.
-        //    var code = CodeManager.CodeOrNull;
-        //    if (code == null) return;
-        //    if (code is RazorComponent codeAsRazor) codeAsRazor.CustomizeData();
-        //}
-
-        ///// <inheritdoc />
-        //public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
-        //    DateTime beginDate)
-        //{
-        //    // new in 2sxc 11, if it has not been overridden, then try to check if code has something for us.
-        //    var code = CodeManager.CodeOrNull;
-        //    if (code == null) return;
-        //    if (code is RazorComponent codeAsRazor) codeAsRazor.CustomizeSearch(searchInfos, moduleInfo, beginDate);
-        //}
-
-        ///// <inheritdoc />
-        //public Purpose Purpose { get; internal set; }
-
-        //#endregion
-
-
-        //#region Adam 
-
-        ///// <inheritdoc />
-        //public IFolder AsAdam(IDynamicEntity entity, string fieldName) => DynCode.AsAdam(entity, fieldName);
-
-
-        ///// <inheritdoc />
-        //public IFolder AsAdam(IEntity entity, string fieldName) => DynCode.AsAdam(entity, fieldName);
-
-        //#endregion
-
-        //#region RunContext WIP
-
-        //[PrivateApi] public ICmsContext CmsContext => DynCode?.RunContext;
-
-        //#endregion
     }
 }

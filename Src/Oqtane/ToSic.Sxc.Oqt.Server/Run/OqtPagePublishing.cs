@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public void DoInsidePublishing(IContextOfBlock context, Action<VersioningActionInfo> action)
         {
-            var containerId = context.Container.Id;
+            var containerId = context.Module.Id;
             var userId = 0;
             var enabled = false;// IsEnabled(containerId);
             Log.Add($"DoInsidePublishing(module:{containerId}, user:{userId}, enabled:{enabled})");

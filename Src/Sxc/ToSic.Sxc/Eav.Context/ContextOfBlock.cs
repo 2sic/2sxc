@@ -13,7 +13,7 @@ namespace ToSic.Eav.Context
             : base(serviceProvider, site, user)
         {
             Page = page;
-            Container = module;
+            Module = module;
             _publishingResolver = publishingResolver;
         }
         private readonly Lazy<IPagePublishingResolver> _publishingResolver;
@@ -24,13 +24,13 @@ namespace ToSic.Eav.Context
         public IPage Page { get; set; }
 
         /// <inheritdoc />
-        public IModule Container { get; set; }
+        public IModule Module { get; set; }
 
         /// <inheritdoc />
-        public BlockPublishingState Publishing => _publishing ?? (_publishing = _publishingResolver.Value.GetPublishingState(Container?.Id ?? -1));
+        public BlockPublishingState Publishing => _publishing ?? (_publishing = _publishingResolver.Value.GetPublishingState(Module?.Id ?? -1));
         private BlockPublishingState _publishing;
 
         /// <inheritdoc />
-        public new IContextOfSite Clone() => new ContextOfBlock(ServiceProvider, Site, User, Page, Container, _publishingResolver);
+        public new IContextOfSite Clone() => new ContextOfBlock(ServiceProvider, Site, User, Page, Module, _publishingResolver);
     }
 }

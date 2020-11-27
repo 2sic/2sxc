@@ -101,7 +101,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
             else
             {
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden)
-                    {ReasonPhrase = dataHandler.GeneratePleaseEnableDataError(GetContext().Container.Id)});
+                    {ReasonPhrase = dataHandler.GeneratePleaseEnableDataError(GetContext().Module.Id)});
             }
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new StringContent(json, Encoding.UTF8, "application/json");

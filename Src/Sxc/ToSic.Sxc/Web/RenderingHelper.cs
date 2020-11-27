@@ -94,7 +94,7 @@ namespace ToSic.Sxc.Web
 
             // add another, minimal id-wrapper for those cases where the rendering-wrapper is missing
             if (addMinimalWrapper)
-                msg = WrapInContext(msg, instanceId: Context.Container.Id, contentBlockId: Context.Container.Id);
+                msg = WrapInContext(msg, instanceId: Context.Module.Id, contentBlockId: Context.Module.Id);
 
             return msg;
         }

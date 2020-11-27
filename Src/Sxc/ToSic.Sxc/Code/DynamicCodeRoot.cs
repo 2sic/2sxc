@@ -1,9 +1,7 @@
 ﻿using System;
-using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Edit.InPageEditingSystem;
@@ -24,12 +22,10 @@ namespace ToSic.Sxc.Code
     {
         [PrivateApi] public IServiceProvider ServiceProvider { get; }
 
-        //public DynamicCodeRoot(IServiceProvider serviceProvider, IContextOfSite context) : this(serviceProvider, context, "Sxc") { }
-
-        protected DynamicCodeRoot(IServiceProvider serviceProvider, IContextOfSite context, string logPrefix) : base(logPrefix + ".DynCdR")
+        protected DynamicCodeRoot(IServiceProvider serviceProvider, ICmsContext cmsContext, string logPrefix) : base(logPrefix + ".DynCdR")
         {
             ServiceProvider = serviceProvider;
-            //Context = context;
+            CmsContext = cmsContext;
         }
 
         [PrivateApi]
@@ -40,12 +36,11 @@ namespace ToSic.Sxc.Code
                 return this;
 
             CompatibilityLevel = compatibility;
+            ((CmsContext) CmsContext).Update(block.Context);
             Block = block;
             App = Block.App;
             Data = Block.Data;
             Edit = new InPageEditingHelper(Block, Log);
-
-            //Context = block.Context;
 
             return this;
         }
@@ -71,8 +66,7 @@ namespace ToSic.Sxc.Code
 
         #region Context WIP
 
-        [PrivateApi] public ICmsContext CmsContext => _cmsContext ?? (_cmsContext = Block.Context.ServiceProvider.Build<CmsContext>().Init(this));
-        private ICmsContext _cmsContext;
+        [PrivateApi] public ICmsContext CmsContext { get; }
 
         #endregion
     }

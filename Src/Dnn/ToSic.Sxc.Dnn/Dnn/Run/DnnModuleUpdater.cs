@@ -104,7 +104,7 @@ namespace ToSic.Sxc.Dnn.Run
 
             // Find Module for default language
             var moduleController = new ModuleController();
-            var originalModule = moduleController.GetModule(block.Context.Container.Id);
+            var originalModule = moduleController.GetModule(block.Context.Module.Id);
 
             foreach (var dimension in languages)
             {

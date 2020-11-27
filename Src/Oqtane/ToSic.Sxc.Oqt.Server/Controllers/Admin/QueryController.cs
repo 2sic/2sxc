@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         public QueryRunDto Run(int appId, int id)
         {
             var block = GetBlock();
-            var instanceId = GetContext().Container.Id; // ?? 0;
+            var instanceId = GetContext().Module.Id; // ?? 0;
             var config = _configProviderLazy.Value.Init(Log).GetConfigProviderForModule(instanceId, block?.App, block);
             return _queryLazy.Value.Init(appId, Log).Run(appId, id, instanceId, config);
         }

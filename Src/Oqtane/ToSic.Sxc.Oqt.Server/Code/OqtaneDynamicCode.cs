@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Oqt.Server.Code
 {
     public class OqtaneDynamicCode: Sxc.Code.DynamicCodeRoot
     {
-        public OqtaneDynamicCode(IServiceProvider serviceProvider, IContextOfSite context): base(serviceProvider, context, OqtConstants.OqtLogPrefix)
+        public OqtaneDynamicCode(IServiceProvider serviceProvider, ICmsContext context): base(serviceProvider, context, OqtConstants.OqtLogPrefix)
         {
         }
 

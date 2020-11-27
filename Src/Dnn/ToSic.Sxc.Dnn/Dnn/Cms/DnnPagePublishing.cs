@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Dnn.Cms
 
         public void DoInsidePublishing(IContextOfBlock context, Action<VersioningActionInfo> action)
         {
-            var instanceId = context.Container.Id;
+            var instanceId = context.Module.Id;
             var userId = (context.User as DnnUser).UnwrappedContents.UserID;
             var enabled = context.Publishing.ForceDraft;
             Log.Add($"DoInsidePublishing(module:{instanceId}, user:{userId}, enabled:{enabled})");
@@ -91,7 +91,7 @@ namespace ToSic.Sxc.Dnn.Cms
                 var cb = _serviceProvider.Build<BlockFromModule>().Init(dnnContext, Log);
                     //.Init(DnnContextOfBlock.Create(tenant, container, _serviceProvider), Log);
 
-                Log.Add($"found dnn mod {dnnContext.Container.Id}, tenant {dnnContext.Site.Id}, cb exists: {cb.ContentGroupExists}");
+                Log.Add($"found dnn mod {dnnContext.Module.Id}, tenant {dnnContext.Site.Id}, cb exists: {cb.ContentGroupExists}");
                 if (cb.ContentGroupExists)
                 {
                     Log.Add("cb exists");

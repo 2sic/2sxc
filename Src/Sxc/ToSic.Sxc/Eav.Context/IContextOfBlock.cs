@@ -13,7 +13,7 @@ namespace ToSic.Eav.Context
         /// <summary>
         /// The container for our block, basically the module
         /// </summary>
-        IModule Container { get; }
+        IModule Module { get; }
 
         /// <summary>
         /// Publishing information about the current context

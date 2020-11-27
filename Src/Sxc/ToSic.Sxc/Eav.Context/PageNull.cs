@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Documentation;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Eav.Context
 {
+    [PrivateApi]
     public class PageNull: IPage
     {
         public int Id { get; private set; } = Eav.Constants.NullId;

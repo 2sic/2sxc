@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         {
             var ctx = serviceProvider.Build<ContextOfBlock>();
             ctx.Page.Init(pageId);
-            ((OqtContainer) ctx.Container).Init(module, parentLog);
+            ((OqtContainer) ctx.Module).Init(module, parentLog);
             return ctx;
             //var publishing = serviceProvider.Build<IPagePublishingResolver>();
             //return new ContextOfBlock(

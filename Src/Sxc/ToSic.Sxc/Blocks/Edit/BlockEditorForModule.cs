@@ -15,14 +15,14 @@ namespace ToSic.Sxc.Blocks.Edit
         private IPlatformModuleUpdater _platformModuleUpdater;
 
         protected override void SavePreviewTemplateId(Guid templateGuid)
-            => PlatformModuleUpdater.SetPreview(Block.Context.Container.Id, templateGuid);
+            => PlatformModuleUpdater.SetPreview(Block.Context.Module.Id, templateGuid);
 
 
         internal override void SetAppId(int? appId)
-            => PlatformModuleUpdater.SetAppId(Block.Context.Container, appId);
+            => PlatformModuleUpdater.SetAppId(Block.Context.Module, appId);
 
         internal override void EnsureLinkToContentGroup(Guid cgGuid)
-            => PlatformModuleUpdater.SetContentGroup(Block.Context.Container.Id, true, cgGuid);
+            => PlatformModuleUpdater.SetContentGroup(Block.Context.Module.Id, true, cgGuid);
 
         internal override void UpdateTitle(IEntity titleItem)
         {
