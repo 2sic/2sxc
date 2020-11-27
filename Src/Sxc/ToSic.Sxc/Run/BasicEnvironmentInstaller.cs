@@ -1,6 +1,8 @@
 ﻿using ToSic.Eav;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Context;
+using ToSic.Sxc.Run.Context;
 
 namespace ToSic.Sxc.Run
 {
@@ -30,7 +32,7 @@ namespace ToSic.Sxc.Run
             return true;
         }
 
-        public string GetAutoInstallPackagesUiUrl(ISite site, IContainer container, bool forContentApp)
+        public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp)
         {
             return "mvc not implemented #todo #mvc";
         }

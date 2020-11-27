@@ -14,6 +14,7 @@ using ToSic.Eav.LookUp;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Engines;
@@ -34,10 +35,10 @@ namespace ToSic.Sxc.Search
         /// Get search info for each dnn module containing 2sxc data
         /// </summary>
         /// <returns></returns>
-        public IList<SearchDocument> GetModifiedSearchDocuments(IContainer container, DateTime beginDate)
+        public IList<SearchDocument> GetModifiedSearchDocuments(IModule module, DateTime beginDate)
         {
             var searchDocuments = new List<SearchDocument>();
-            var dnnModule = (container as Container<ModuleInfo>)?.UnwrappedContents;
+            var dnnModule = (module as Container<ModuleInfo>)?.UnwrappedContents;
             // always log with method, to ensure errors are caught
             Log.Add($"start search for mod#{dnnModule?.ModuleID}");
 
@@ -47,7 +48,7 @@ namespace ToSic.Sxc.Search
             if (dnnModule == null) return searchDocuments;
 
             // New Context because Portal-Settings.Current is null
-            var appId = container.BlockIdentifier.AppId;
+            var appId = module.BlockIdentifier.AppId;
 
             if (appId == AppConstants.AppIdNotFound || appId == Eav.Constants.NullId) return searchDocuments;
 
@@ -57,7 +58,7 @@ namespace ToSic.Sxc.Search
 
             // Ensure cache builds up with correct primary language
             var cache = State.Cache;
-            cache.Load(container.BlockIdentifier, site.DefaultLanguage);
+            cache.Load(module.BlockIdentifier, site.DefaultLanguage);
 
             var dnnContext = Eav.Factory.StaticBuild<IContextOfBlock>().Init(dnnModule, Log);
             var modBlock = _serviceProvider.Build<BlockFromModule>()
@@ -138,7 +139,7 @@ namespace ToSic.Sxc.Search
             try
             {
                 engine.CustomizeSearch(searchInfoDictionary, 
-                    _serviceProvider.Build<DnnContainer>().Init(dnnModule, Log), beginDate);
+                    _serviceProvider.Build<DnnModule>().Init(dnnModule, Log), beginDate);
             }
             catch (Exception e)
             {

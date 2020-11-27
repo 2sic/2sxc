@@ -120,7 +120,7 @@
     <Compile Include="Dnn\Run\DnnModuleUpdater.cs" />
     <Compile Include="WebForms\Web\WebFormsHttp.cs" />
     <Compile Include="Environment\Dnn7\DnnBusinessController.cs" />
-    <Compile Include="Dnn\Run\DnnContainer.cs" />
+    <Compile Include="Dnn\Run\DnnModule.cs" />
     <Compile Include="Dnn\Run\DnnPermissionCheck.cs" />
     <Compile Include="Dnn\Run\DnnSite.cs" />
     <Compile Include="Dnn\Run\DnnValueConverter.cs" />

@@ -8,6 +8,7 @@ using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.LookUp;
@@ -48,7 +49,7 @@ namespace ToSic.Sxc.Dnn
                 parentLog?.Add(msg);
                 throw new Exception(msg);
             }
-            var container = Eav.Factory.StaticBuild<DnnContainer>().Init(moduleInfo, parentLog);
+            var container = Eav.Factory.StaticBuild<DnnModule>().Init(moduleInfo, parentLog);
             wrapLog?.Invoke("ok");
             return CmsBlock(container, parentLog);
         }
@@ -59,17 +60,17 @@ namespace ToSic.Sxc.Dnn
         /// <param name="moduleInfo">A DNN ModuleInfo object</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
         public static IBlockBuilder CmsBlock(ModuleInfo moduleInfo)
-            => CmsBlock(Eav.Factory.StaticBuild<DnnContainer>().Init(moduleInfo, null));
+            => CmsBlock(Eav.Factory.StaticBuild<DnnModule>().Init(moduleInfo, null));
 
         /// <summary>
         /// Get a Root CMS Block if you have the ModuleInfo object.
         /// </summary>
-        /// <param name="container"></param>
+        /// <param name="module"></param>
         /// <param name="parentLog">optional logger to attach to</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
-        public static IBlockBuilder CmsBlock(IContainer container, ILog parentLog = null)
+        public static IBlockBuilder CmsBlock(IModule module, ILog parentLog = null)
         {
-            var dnnModule = ((Container<ModuleInfo>)container)?.UnwrappedContents;
+            var dnnModule = ((Container<ModuleInfo>)module)?.UnwrappedContents;
             //var tenant = new DnnSite().TrySwap(dnnModule); // Swap(new PortalSettings(dnnModule.OwnerPortalID));
             var context = Eav.Factory.StaticBuild<IContextOfBlock>().Init(dnnModule, parentLog);
             return Eav.Factory.StaticBuild<BlockFromModule>().Init(context, parentLog).BlockBuilder;

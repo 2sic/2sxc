@@ -3,6 +3,8 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Entities.Users;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Context;
+using ToSic.Sxc.Run.Context;
 
 namespace ToSic.Sxc.Dnn.Run
 {
@@ -13,7 +15,7 @@ namespace ToSic.Sxc.Dnn.Run
         /// Note that the context can be null, in which case it will have no module context, and default to the current portal
         /// </summary>
         /// <param name="moduleContext"></param>
-        public DnnContextOld(IContainer moduleContext)
+        public DnnContextOld(IModule moduleContext)
         {
             Module = (moduleContext as Container<ModuleInfo>)?.UnwrappedContents;
             // note: this may be a bug, I assume it should be Module.OwnerPortalId

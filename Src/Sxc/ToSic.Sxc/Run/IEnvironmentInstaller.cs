@@ -1,5 +1,7 @@
 ﻿using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Context;
+using ToSic.Sxc.Run.Context;
 
 namespace ToSic.Sxc.Run
 {
@@ -17,6 +19,6 @@ namespace ToSic.Sxc.Run
         /// <returns></returns>
         bool ResumeAbortedUpgrade();
 
-        string GetAutoInstallPackagesUiUrl(ISite site, IContainer container, bool forContentApp);
+        string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp);
     }
 }

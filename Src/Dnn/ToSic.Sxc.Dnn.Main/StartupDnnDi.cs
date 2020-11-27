@@ -13,6 +13,7 @@ using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Adam;
 using ToSic.Sxc.Dnn.Code;
@@ -43,8 +44,8 @@ namespace ToSic.SexyContent
             // Core Runtime Context Objects
             services.TryAddScoped<IUser, DnnUser>();
             services.TryAddScoped<ISite, DnnSite>();
-            services.TryAddTransient<IContainer, DnnContainer>();
-            services.TryAddTransient<DnnContainer>();
+            services.TryAddTransient<IModule, DnnModule>();
+            services.TryAddTransient<DnnModule>();
 
             // 
             services.TryAddTransient<IValueConverter, DnnValueConverter>();

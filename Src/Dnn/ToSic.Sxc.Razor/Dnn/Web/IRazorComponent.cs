@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Code;
+using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.Search;
 
 // ReSharper disable UnusedMemberInSuper.Global
@@ -34,7 +36,7 @@ namespace ToSic.Sxc.Dnn.Web
         /// <param name="searchInfos"></param>
         /// <param name="moduleInfo"></param>
         /// <param name="beginDate"></param>
-        void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
+        void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo,
             DateTime beginDate);
 
         /// <summary>

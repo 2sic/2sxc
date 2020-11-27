@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Dnn.Run
         public static IContextOfBlock Init(this IContextOfBlock context, ModuleInfo dnnModule, ILog parentLog)
         {
             ((DnnSite)context.Site).TrySwap(dnnModule);
-            ((DnnContainer)context.Container).Init(dnnModule, parentLog);
+            ((DnnModule)context.Container).Init(dnnModule, parentLog);
             return InitPageOnly(context);
         }
 

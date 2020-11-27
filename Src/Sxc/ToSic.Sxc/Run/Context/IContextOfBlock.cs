@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Cms.Publishing;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Run.Context
 {
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.Run.Context
         /// <summary>
         /// The container for our block, basically the module
         /// </summary>
-        IContainer Container { get; }
+        IModule Container { get; }
 
         /// <summary>
         /// Publishing information about the current context

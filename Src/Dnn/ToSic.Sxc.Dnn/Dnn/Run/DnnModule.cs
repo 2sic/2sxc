@@ -6,6 +6,8 @@ using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Context;
+using ToSic.Sxc.Run.Context;
 
 namespace ToSic.Sxc.Dnn.Run
 {
@@ -13,13 +15,13 @@ namespace ToSic.Sxc.Dnn.Run
     /// The DNN implementation of a Block Container (a Module).
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public class DnnContainer: Container<ModuleInfo>, IHasLog
+    public class DnnModule: Container<ModuleInfo>, IHasLog
     {
         private readonly Lazy<IZoneMapper> _zoneMapperLazy;
 
         #region Constructors and DI
         
-        public DnnContainer(Lazy<IZoneMapper> zoneMapperLazy): base("Dnn.Contnr")
+        public DnnModule(Lazy<IZoneMapper> zoneMapperLazy): base("Dnn.Contnr")
         {
             _zoneMapperLazy = zoneMapperLazy;
         }
@@ -28,7 +30,7 @@ namespace ToSic.Sxc.Dnn.Run
         /// We don't use a Constructor because of DI
         /// So you must always call Init
         /// </summary>
-        public new DnnContainer Init(ModuleInfo item, ILog parentLog)
+        public new DnnModule Init(ModuleInfo item, ILog parentLog)
         {
             base.Init(item, parentLog);
             return this;
@@ -38,7 +40,7 @@ namespace ToSic.Sxc.Dnn.Run
         /// We don't use a Constructor because of DI
         /// So you must always call Init
         /// </summary>
-        public override IContainer Init(int instanceId, ILog parentLog) 
+        public override IModule Init(int instanceId, ILog parentLog) 
         {
             var mod = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, false);
             return Init(mod, parentLog);

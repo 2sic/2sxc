@@ -4,6 +4,8 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
+using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 
@@ -50,7 +52,7 @@ namespace ToSic.Sxc.Engines
         /// <param name="moduleInfo"></param>
         /// <param name="beginDate"></param>
         [PrivateApi]
-        void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo, DateTime beginDate);
+        void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate);
 
         /// <summary>
         /// todo

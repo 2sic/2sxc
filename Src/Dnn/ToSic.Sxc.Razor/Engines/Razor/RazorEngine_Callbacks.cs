@@ -5,8 +5,10 @@ using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Run;
 using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Search;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.Search;
 
 namespace ToSic.Sxc.Engines
@@ -18,7 +20,7 @@ namespace ToSic.Sxc.Engines
         public override void CustomizeData() => (Webpage as IRazorComponent)?.CustomizeData();
 
         /// <inheritdoc />
-        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo, DateTime beginDate)
+        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate)
         {
             if (Webpage == null || searchInfos == null || searchInfos.Count <= 0) return;
 

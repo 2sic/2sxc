@@ -6,6 +6,7 @@ using ToSic.Eav.LookUp;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Run.Context;
@@ -116,7 +117,7 @@ namespace ToSic.Sxc.Hybrid.Razor
         }
 
         /// <inheritdoc />
-        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
+        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo,
             DateTime beginDate)
         {
             // new in 2sxc 11, if it has not been overridden, then try to check if code has something for us.

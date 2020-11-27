@@ -4,6 +4,8 @@ using ToSic.Eav.Run;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
+using ToSic.Sxc.Context;
+using ToSic.Sxc.Run.Context;
 
 namespace ToSic.Sxc.DataSources
 {
@@ -33,7 +35,7 @@ namespace ToSic.Sxc.DataSources
             var cms = _lazyCmsRuntime.IsValueCreated
                 ? _lazyCmsRuntime.Value
                 : _lazyCmsRuntime.Value.Init(this, HasInstanceContext && userMayEdit, Log);
-            var container = sp.Build<IContainer>().Init(InstanceId.Value, Log);
+            var container = sp.Build<IModule>().Init(InstanceId.Value, Log);
             var blockId = container.BlockIdentifier;
             return wrapLog("ok", cms.Blocks.GetOrGeneratePreviewConfig(blockId));
         }

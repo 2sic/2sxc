@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
             _build<IEnvironmentInstaller>().Init(Log)
                 .GetAutoInstallPackagesUiUrl(
                     new DnnSite(),
-                    ServiceProvider.Build<DnnContainer>().Init(Request.FindModuleInfo(), Log), 
+                    ServiceProvider.Build<DnnModule>().Init(Request.FindModuleInfo(), Log), 
                     isContentApp);
 
 
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
             PreventServerTimeout300();
 
             Log.Add("install package:" + packageUrl);
-            var container = ServiceProvider.Build<DnnContainer>().Init(ActiveModule, Log);
+            var container = ServiceProvider.Build<DnnModule>().Init(ActiveModule, Log);
             var block = container.BlockIdentifier;
 
             var result = _build<ImportFromRemote>().Init(new DnnUser(), Log)

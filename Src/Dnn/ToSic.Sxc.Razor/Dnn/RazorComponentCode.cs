@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Context;
+using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.Search;
 
 namespace ToSic.Sxc.Dnn
@@ -32,7 +34,7 @@ namespace ToSic.Sxc.Dnn
         public override void CustomizeData() { }
 
         /// <inheritdoc />
-        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
+        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo,
             DateTime beginDate) { }
 
     }

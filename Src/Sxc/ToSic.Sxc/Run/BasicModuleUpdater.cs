@@ -4,6 +4,8 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
+using ToSic.Sxc.Run.Context;
 
 namespace ToSic.Sxc.Run
 {
@@ -23,7 +25,7 @@ namespace ToSic.Sxc.Run
         }
 
 
-        public void SetAppId(IContainer instance, int? appId)
+        public void SetAppId(IModule instance, int? appId)
         {
             // do nothing
         }

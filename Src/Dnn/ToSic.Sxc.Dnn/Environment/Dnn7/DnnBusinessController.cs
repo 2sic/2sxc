@@ -100,7 +100,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             {
                 var sp = Eav.Factory.GetServiceProvider();
                 return new SearchController(sp, Log).GetModifiedSearchDocuments(
-                    sp.Build<DnnContainer>().Init(moduleInfo, Log), beginDate);
+                    sp.Build<DnnModule>().Init(moduleInfo, Log), beginDate);
             }
             catch (Exception e)
             {

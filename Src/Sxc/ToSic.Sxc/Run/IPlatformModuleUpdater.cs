@@ -4,6 +4,8 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
+using ToSic.Sxc.Run.Context;
 
 namespace ToSic.Sxc.Run
 {
@@ -15,7 +17,7 @@ namespace ToSic.Sxc.Run
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="appId"></param>
-        void SetAppId(IContainer instance, int? appId);
+        void SetAppId(IModule instance, int? appId);
 
         /// <summary>
         /// Set the preview view of the Container / Module
