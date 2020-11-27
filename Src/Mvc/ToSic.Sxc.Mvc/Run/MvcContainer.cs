@@ -2,11 +2,12 @@
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Mvc.Dev;
 
 namespace ToSic.Sxc.Mvc.Run
 {
-    public class MvcContainer: IContainer
+    public class MvcContainer: IModule
     {
         public MvcContainer() {}
 
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.Mvc.Run
         }
 
         // Temp implementation, don't support im MVC
-        public IContainer Init(int id, ILog parentLog) => throw new System.NotImplementedException();
+        public IModule Init(int id, ILog parentLog) => throw new System.NotImplementedException();
 
         /// <inheritdoc />
         public int Id { get; set; }

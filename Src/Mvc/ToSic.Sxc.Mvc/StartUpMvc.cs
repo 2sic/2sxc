@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Mvc.Run;
 using ToSic.Sxc.Mvc.Web;
 using ToSic.Sxc.Mvc.WebApi.Adam;
@@ -16,7 +17,7 @@ namespace ToSic.Sxc.Mvc
         {
             services.AddTransient<ISite, MvcSite>();
             services.AddTransient<IGetDefaultLanguage, MvcSite>();
-            services.AddTransient<IContainer, MvcContainer>();
+            services.AddTransient<IModule, MvcContainer>();
             services.AddTransient<IZoneMapper, MvcZoneMapper>();
             services.AddTransient<AppPermissionCheck, MvcPermissionCheck>();
             //services.AddTransient<DynamicCodeRoot, MvcDynamicCode>();

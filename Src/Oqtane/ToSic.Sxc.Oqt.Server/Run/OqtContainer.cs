@@ -6,6 +6,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run
@@ -52,7 +53,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         }
 
         // Temp implementation, don't support im MVC
-        public override IContainer Init(int id, ILog parentLog) => throw new NotImplementedException();
+        public override IModule Init(int id, ILog parentLog) => throw new NotImplementedException();
 
         /// <inheritdoc />
         public override int Id => _id;

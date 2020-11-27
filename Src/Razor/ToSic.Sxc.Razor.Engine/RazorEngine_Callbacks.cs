@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Search;
 
 namespace ToSic.Sxc.Razor.Engine
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Razor.Engine
         }
 
         /// <inheritdoc />
-        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo, DateTime beginDate)
+        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate)
         {
             //if (Webpage == null || searchInfos == null || searchInfos.Count <= 0) return;
 
