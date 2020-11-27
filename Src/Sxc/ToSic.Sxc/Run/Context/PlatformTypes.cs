@@ -7,9 +7,10 @@ namespace ToSic.Sxc.Run.Context
     {
         Unknown = 0,
         None = 1,
-        Testing = 2,
-        Dnn = 3,
-        Oqtane = 4,
-        NopCommerce = 5,
+        Other = 2,
+        Testing = 3,
+        Dnn = 11,
+        Oqtane = 12,
+        NopCommerce = 21,
     }
 }

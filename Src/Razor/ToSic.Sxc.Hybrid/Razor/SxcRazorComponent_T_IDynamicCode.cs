@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
@@ -99,5 +100,6 @@ namespace ToSic.Sxc.Hybrid.Razor
 
         #endregion
 
+        //public IContextOfSite Context => DynCode.Context;
     }
 }

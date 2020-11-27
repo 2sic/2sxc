@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.Dnn.Code
     [PrivateApi]
     public class DnnDynamicCodeRoot : DynamicCodeRoot, IDnnDynamicCode, IHasDynCodeContext
     {
-        public DnnDynamicCodeRoot(IServiceProvider serviceProvider): base(serviceProvider, "Dnn.DynCdRt")
+        public DnnDynamicCodeRoot(IServiceProvider serviceProvider, IContextOfSite context): base(serviceProvider, context, DnnConstants.LogName)
         {
         }
 
