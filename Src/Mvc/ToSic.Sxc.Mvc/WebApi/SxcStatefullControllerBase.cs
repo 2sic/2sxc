@@ -4,8 +4,10 @@ using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Mvc.Dev;
 using ToSic.Sxc.Mvc.Run;
+using ToSic.Sxc.Run.Context;
 
 namespace ToSic.Sxc.Mvc.WebApi
 {
@@ -19,9 +21,8 @@ namespace ToSic.Sxc.Mvc.WebApi
             // in case the initial request didn't yet find a block builder, we need to create it now
             var site = HttpContext.RequestServices.Build<ISite>().Init(TestIds.PrimaryZone);
             var context = // BlockBuilder?.Context ??
-                new ContextOfBlock(site, new PageNull(), new ContainerNull(), 
-                    new MvcUser(),
-                    HttpContext.RequestServices, new BlockPublishingState());
+                new ContextOfBlock(HttpContext.RequestServices, site, new MvcUser())
+                    .Init(new PageNull(), new ContainerNull(), new BlockPublishingState());
             return context;
         }
 
@@ -40,7 +41,7 @@ namespace ToSic.Sxc.Mvc.WebApi
                 throw new Exception("No context found, cannot continue");
             }
 
-            var ctx = SxcMvc.CreateContext(HttpContext, instance.Zone, pageId, containerId, instance.App,
+            var ctx = SxcMvc.CreateContext(HttpContext.RequestServices, instance.Zone, pageId, containerId, instance.App,
                 instance.Block);
             IBlock block = HttpContext.RequestServices.Build<BlockFromModule>().Init(ctx, Log);
 

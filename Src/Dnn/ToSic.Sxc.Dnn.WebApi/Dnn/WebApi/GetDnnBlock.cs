@@ -33,13 +33,13 @@ namespace ToSic.Sxc.Dnn.WebApi
             if (moduleInfo == null)
                 log.Add("context/module not found");
 
-            var container = _serviceProvider.Build<DnnContainer>().Init(moduleInfo, log);
+            //var container = _serviceProvider.Build<DnnContainer>().Init(moduleInfo, log);
             
-            var tenant = moduleInfo == null
-                ? new DnnSite(null)
-                : new DnnSite().Init(moduleInfo.OwnerPortalID);
+            //var tenant = new DnnSite().TrySwap(moduleInfo);
 
-            var context = DnnContext.Create(tenant, container, new DnnUser(), _serviceProvider, GetOverrideParams(request));
+            var context = _serviceProvider.Build<DnnContextOfBlock>().Init(moduleInfo, log); // DnnContextOfBlock.Create(tenant, container, _serviceProvider, GetOverrideParams(request));
+            context.Page.Parameters = GetOverrideParams(request);
+            //var context = DnnContextOfBlock.Create(tenant, container, _serviceProvider, GetOverrideParams(request));
             IBlock block = _serviceProvider.Build<BlockFromModule>().Init(context, log);
 
             // check if we need an inner block

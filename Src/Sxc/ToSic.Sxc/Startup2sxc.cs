@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
@@ -8,6 +9,7 @@ using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc
@@ -43,6 +45,12 @@ namespace ToSic.Sxc
 
             // Rendering
             services.TryAddTransient<IRenderingHelper, RenderingHelper>();
+
+            // Context stuff
+            services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
+            services.TryAddTransient<ContextOfBlock>();
+            services.TryAddTransient<IPage, SxcPage>();
+            services.TryAddTransient<SxcPage>();
 
             // Add possibly missing fallbacks
             services.AddSxcCoreFallbackServices();

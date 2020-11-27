@@ -5,7 +5,6 @@ using DotNetNuke.Common;
 using DotNetNuke.Entities.Controllers;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
-using DotNetNuke.Entities.Users;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
@@ -22,13 +21,12 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
 
 
         private readonly IServiceProvider _serviceProvider;
-        private readonly PortalSettings _portal;
+        private readonly PortalSettings _portal = PortalSettings.Current;
         private readonly ModuleInfo _module;
 
-        public DnnContextBuilder(IServiceProvider serviceProvider, PortalSettings portal, ModuleInfo module /*, int? zoneId = null, IApp app = null */)
+        public DnnContextBuilder(IServiceProvider serviceProvider, ModuleInfo module)
         {
             _serviceProvider = serviceProvider;
-            _portal = portal;
             _module = module;
             InitApp(null, null);
         }
@@ -46,7 +44,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
         protected override LanguageDto GetLanguage()
         {
             if (_portal == null || ZoneId == 0) return null;
-            var language = new JsContextLanguage(_serviceProvider, new DnnSite(_portal), ZoneId);
+            var language = new JsContextLanguage(_serviceProvider, new DnnSite(), ZoneId);
             return new LanguageDto
             {
                 Current = language.Current,

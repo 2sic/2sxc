@@ -14,6 +14,7 @@ using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Run.Context;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Dnn.Cms
@@ -82,13 +83,14 @@ namespace ToSic.Sxc.Dnn.Cms
             {
                 // publish all entites of this content block
                 var dnnModule = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
-                var container = _serviceProvider.Build<DnnContainer>().Init(dnnModule, Log);
+                //var container = _serviceProvider.Build<DnnContainer>().Init(dnnModule, Log);
                 // must find tenant through module, as the Portal-Settings.Current is null in search mode
-                var tenant = new DnnSite().Init(dnnModule.OwnerPortalID);
-                var cb = _serviceProvider.Build<BlockFromModule>()
-                    .Init(DnnContext.Create(tenant, container, new DnnUser(), _serviceProvider), Log);
+                //var tenant = new DnnSite().Init(dnnModule.OwnerPortalID);
+                var dnnContext = _serviceProvider.Build<DnnContextOfBlock>().Init(dnnModule, Log);
+                var cb = _serviceProvider.Build<BlockFromModule>().Init(dnnContext, Log);
+                    //.Init(DnnContextOfBlock.Create(tenant, container, _serviceProvider), Log);
 
-                Log.Add($"found dnn mod {container.Id}, tenant {tenant.Id}, cb exists: {cb.ContentGroupExists}");
+                Log.Add($"found dnn mod {dnnContext.Container.Id}, tenant {dnnContext.Site.Id}, cb exists: {cb.ContentGroupExists}");
                 if (cb.ContentGroupExists)
                 {
                     Log.Add("cb exists");

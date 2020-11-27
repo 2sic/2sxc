@@ -11,7 +11,7 @@ using ToSic.Sxc.Mvc.Dev;
 using ToSic.Sxc.Mvc.Run;
 using ToSic.Sxc.Mvc.Web;
 using ToSic.Sxc.Run;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Run.Context;
 
 namespace ToSic.Sxc.Mvc
 {
@@ -54,20 +54,23 @@ namespace ToSic.Sxc.Mvc
             return block;
         }
 
-        private ContextOfBlock CreateContext(int zoneId, int pageId, int containerId, int appId, Guid blockGuid)
-            => CreateContext(_httpContext, zoneId, appId, containerId, appId, blockGuid);
+        private IContextOfBlock CreateContext(int zoneId, int pageId, int containerId, int appId, Guid blockGuid)
+            => CreateContext(_httpContext.RequestServices, zoneId, appId, containerId, appId, blockGuid);
 
-        public static ContextOfBlock CreateContext(HttpContext http, int zoneId, int pageId, int containerId, int appId, Guid blockGuid)
+        public static IContextOfBlock CreateContext(IServiceProvider sp, int zoneId, int pageId, int containerId, int appId, Guid blockGuid)
         {
-            var sp = http.RequestServices;
             var publishing = sp.Build<IPagePublishingResolver>();
 
             return new ContextOfBlock(
+                sp,
                 sp.Build<ISite>().Init(zoneId),
-                new SxcPage(pageId, null, http.RequestServices.Build<IHttp>().QueryStringKeyValuePairs()),
+                //new SxcPage(pageId, null, http.RequestServices.Build<IHttp>().QueryStringKeyValuePairs()),
+                //new MvcContainer(tenantId: zoneId, id: containerId, appId: appId, block: blockGuid),
+                new MvcUser()
+                //publishing.GetPublishingState(containerId)
+            ).Init(
+                sp.Build<SxcPage>().Init(pageId),
                 new MvcContainer(tenantId: zoneId, id: containerId, appId: appId, block: blockGuid),
-                new MvcUser(),
-                http.RequestServices, 
                 publishing.GetPublishingState(containerId)
             );
         }

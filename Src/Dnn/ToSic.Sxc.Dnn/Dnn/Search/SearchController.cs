@@ -51,14 +51,17 @@ namespace ToSic.Sxc.Search
             if (appId == AppConstants.AppIdNotFound || appId == Eav.Constants.NullId) return searchDocuments;
 
             // Since Portal-Settings.Current is null, instantiate with modules' portal id (which can be a different portal!)
-            var portalSettings = new PortalSettings(dnnModule.OwnerPortalID);
-            var tenant = new DnnSite(portalSettings);
+            //var portalSettings = new PortalSettings(dnnModule.OwnerPortalID);
+            var site = new DnnSite().TrySwap(dnnModule);//.Swap(portalSettings);
 
             // Ensure cache builds up with correct primary language
             var cache = State.Cache;
-            cache.Load(container.BlockIdentifier, tenant.DefaultLanguage);
+            cache.Load(container.BlockIdentifier, site.DefaultLanguage);
 
-            var modBlock = _serviceProvider.Build<BlockFromModule>().Init(DnnContext.Create(tenant, container, new DnnUser(), Eav.Factory.GetServiceProvider()), Log);
+            var dnnContext = Eav.Factory.StaticBuild<DnnContextOfBlock>().Init(dnnModule, Log);
+            var modBlock = _serviceProvider.Build<BlockFromModule>()
+                .Init(dnnContext, Log);
+                //.Init(DnnContextOfBlock.Create(site, container, Eav.Factory.GetServiceProvider()), Log);
 
             var language = dnnModule.CultureCode;
 
@@ -76,7 +79,7 @@ namespace ToSic.Sxc.Search
                 try
                 {
                     var getLookups = (GetDnnEngine)_serviceProvider.Build<GetDnnEngine>().Init(Log);
-                    var dnnLookUps = getLookups.GenerateDnnBasedLookupEngine(portalSettings, dnnModule.ModuleID);
+                    var dnnLookUps = getLookups.GenerateDnnBasedLookupEngine(site.UnwrappedContents, dnnModule.ModuleID);
                     ((LookUpEngine) dataSource.Configuration.LookUps).Link(dnnLookUps);
                 }
                 catch(Exception e)

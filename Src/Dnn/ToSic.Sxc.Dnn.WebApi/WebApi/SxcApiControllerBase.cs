@@ -7,6 +7,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.WebApi.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -48,7 +49,7 @@ namespace ToSic.Sxc.WebApi
         {
             // in case the initial request didn't yet find a block builder, we need to create it now
             var context = Block?.Context
-                          ?? DnnContext.Create(new DnnSite(PortalSettings), new ContainerNull(), new DnnUser(), ServiceProvider);
+                          ?? ServiceProvider.Build<DnnContextOfBlock>(); // DnnContextOfBlock.Create(new DnnSite(), new ContainerNull(), ServiceProvider);
             return context;
         }
 

@@ -2,9 +2,11 @@
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Mvc.Dev;
 using ToSic.Sxc.Mvc.Run;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Mvc.RazorPages.Exp
@@ -13,7 +15,7 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
     {
         #region DynCode 
 
-        protected Sxc.Code.DynamicCodeRoot DynCode => _dynCode ??= HttpContext.RequestServices.Build<Code.DynamicCodeRoot>().Init(Block, Log);
+        protected Sxc.Code.DynamicCodeRoot DynCode => _dynCode ??= ServiceProvider.Build<Code.DynamicCodeRoot>().Init(Block, Log);
         private Sxc.Code.DynamicCodeRoot _dynCode;
         #endregion
         public IBlock Block 
@@ -22,15 +24,16 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
             {
                 if (_blockLoaded) return _block;
                 _blockLoaded = true;
-                var sp = HttpContext.RequestServices;
                 var context = new ContextOfBlock(
-                    sp.Build<ISite>().Init(TestIds.PrimaryZone),
-                    new SxcPage(0, null, ServiceProvider.Build<IHttp>().QueryStringKeyValuePairs()), 
+                    ServiceProvider,
+                    ServiceProvider.Build<ISite>().Init(TestIds.PrimaryZone),
+                    new MvcUser()
+                ).Init(
+                    ServiceProvider.Build<SxcPage>().Init(0),
                     new MvcContainer(),
-                    new MvcUser(),
-                    ServiceProvider, new BlockPublishingState()
-                );
-                _block = Eav.Factory.Resolve<BlockFromModule>().Init(context, Log);
+                    new BlockPublishingState()
+                    );
+                _block = ServiceProvider.Build<BlockFromModule>().Init(context, Log);
                 return _block;
             }
         }

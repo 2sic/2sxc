@@ -36,7 +36,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
                 GetContext(),
                 new DnnContextBuilder(
                     ServiceProvider,
-                    PortalSettings.Current,
                     Request.FindModuleInfo()),
                 appId);
         }

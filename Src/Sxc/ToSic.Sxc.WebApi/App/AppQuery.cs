@@ -11,6 +11,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Conversion;
 using ToSic.Sxc.LookUp;
+using ToSic.Sxc.Run.Context;
 
 namespace ToSic.Sxc.WebApi.App
 {
@@ -27,11 +28,9 @@ namespace ToSic.Sxc.WebApi.App
 
         #region In-Container-Context Queries
 
-        internal Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(IContextOfBlock context, IBlock block, IApp app, string name, bool includeGuid, string stream, int? appId)
+        internal Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(IContextOfSite context, IBlock block, IApp app, string name, bool includeGuid, string stream, int? appId)
         {
             var wrapLog = Log.Call($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
-            //var dynamicCode = new DnnDynamicCode().Init(BlockBuilder, Log);
-            //var app = blockBuilder.App;
 
             // If no app available from context, check if an app-id was supplied in url
             // Note that it may only be an app from the current portal
@@ -70,10 +69,10 @@ namespace ToSic.Sxc.WebApi.App
 
 
         private static Dictionary<string, IEnumerable<Dictionary<string, object>>>
-            BuildQueryAndRun(IApp app, string name, string stream, bool includeGuid, IContextOfBlock context, ILog log,
+            BuildQueryAndRun(IApp app, string name, string stream, bool includeGuid, IContextOfSite context, ILog log,
                 bool userMayEdit)
         {
-            var wrapLog = log.Call($"name:{name}, withModule:{context.Container.Id}");
+            var wrapLog = log.Call($"name:{name}, withModule:{(context as IContextOfBlock)?.Container.Id}");
             var query = app.GetQuery(name);
 
             if (query == null)

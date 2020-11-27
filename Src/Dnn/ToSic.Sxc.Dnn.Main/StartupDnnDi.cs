@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Caching;
 using ToSic.Eav.LookUp;
@@ -23,6 +24,7 @@ using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebForms.Web;
@@ -46,6 +48,8 @@ namespace ToSic.SexyContent
 
             // 
             services.TryAddTransient<IValueConverter, DnnValueConverter>();
+            services.TryAddTransient<DnnContextOfBlock>();
+            services.TryAddTransient<IContextOfBlock, DnnContextOfBlock>();
 
             services.TryAddTransient<XmlExporter, DnnXmlExporter>();
             services.TryAddTransient<IImportExportEnvironment, DnnImportExportEnvironment>();

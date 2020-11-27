@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Web.Hosting;
+using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
@@ -18,24 +19,32 @@ namespace ToSic.Sxc.Dnn.Run
         /// DI Constructor, will get the current portal settings
         /// #TodoDI not ideal yet, as PortalSettings.current is still retrieved from global
         /// </summary>
-        public DnnSite() : this(PortalSettings.Current) { }
+        public DnnSite() => Swap(null);
 
-        /// <inheritdoc />
-        public DnnSite(PortalSettings settings)
+
+        public DnnSite Swap(PortalSettings settings)
         {
-            UnwrappedContents = GetBestPortalSettings(settings);
+            UnwrappedContents = KeepBestPortalSettings(settings);
+            return this;
+        }
+
+        public DnnSite TrySwap(ModuleInfo module)
+        {
+            if (module == null || module.OwnerPortalID < 0) return this;
+            var modulePortalSettings = new PortalSettings(module.OwnerPortalID);
+            return Swap(modulePortalSettings);
         }
 
         /// <summary>
         /// Very special helper to work around a DNN issue
         /// Reason is that PortalSettings.Current is always "perfect" and also contains root URLs and current Page
-        /// Other Portalsettings may not contain this (partially populated objects)
-        /// In case we're requesting a DnnTenant with incomplete Portalsettings
+        /// Other PortalSettings may not contain this (partially populated objects)
+        /// In case we're requesting a DnnTenant with incomplete PortalSettings
         /// we want to correct this here
         /// </summary>
         /// <param name="settings"></param>
         /// <returns></returns>
-        private static PortalSettings GetBestPortalSettings(PortalSettings settings)
+        private static PortalSettings KeepBestPortalSettings(PortalSettings settings)
         {
             // in case we don't have an HTTP Context with current portal settings, don't try anything
             if (PortalSettings.Current == null) return settings;
@@ -49,13 +58,13 @@ namespace ToSic.Sxc.Dnn.Run
         }
 
         /// <inheritdoc />
-        public override ISite Init(int tenantId)
+        public override ISite Init(int siteId)
         {
-            var newSettings = new PortalSettings(tenantId);
+            var newSettings = new PortalSettings(siteId);
             // only replace it if it's different - because the initial normal Portalsettings has more loaded values
-            if (newSettings.PortalId != (UnwrappedContents?.PortalId ?? -1))
-                UnwrappedContents = newSettings;
-            return this;
+            //if (newSettings.PortalId != (UnwrappedContents?.PortalId ?? -1))
+            //    UnwrappedContents = newSettings;
+            return Swap(newSettings);
         }
 
         #endregion

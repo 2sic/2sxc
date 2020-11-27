@@ -68,10 +68,11 @@ namespace ToSic.Sxc.Dnn
         /// <returns>An initialized CMS Block, ready to use/render</returns>
         public static IBlockBuilder CmsBlock(IContainer container, ILog parentLog = null)
         {
-            var dnnModule = ((Container<ModuleInfo>)container).UnwrappedContents;
-            var tenant = new DnnSite(new PortalSettings(dnnModule.OwnerPortalID));
-            return Eav.Factory.StaticBuild<BlockFromModule>()
-                .Init(DnnContext.Create(tenant, container, new DnnUser(), Eav.Factory.GetServiceProvider()), parentLog).BlockBuilder;
+            var dnnModule = ((Container<ModuleInfo>)container)?.UnwrappedContents;
+            //var tenant = new DnnSite().TrySwap(dnnModule); // Swap(new PortalSettings(dnnModule.OwnerPortalID));
+            var context = Eav.Factory.StaticBuild<DnnContextOfBlock>().Init(dnnModule, parentLog);
+            return Eav.Factory.StaticBuild<BlockFromModule>().Init(context, parentLog).BlockBuilder;
+                //.Init(DnnContextOfBlock.Create(tenant, container, Eav.Factory.GetServiceProvider()), parentLog).BlockBuilder;
         }
 
         /// <summary>
@@ -127,7 +128,7 @@ namespace ToSic.Sxc.Dnn
             bool unusedButKeepForApiStability = false, 
             bool showDrafts = false, 
             ILog parentLog = null) 
-            => App(Eav.Apps.App.AutoLookupZone, appId, new DnnSite(ownerPortalSettings), showDrafts, parentLog);
+            => App(Eav.Apps.App.AutoLookupZone, appId, new DnnSite().Swap(ownerPortalSettings), showDrafts, parentLog);
 
         [InternalApi_DoNotUse_MayChangeWithoutNotice]
         private static IApp App(
