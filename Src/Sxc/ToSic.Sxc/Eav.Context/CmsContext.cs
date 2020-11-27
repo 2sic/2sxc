@@ -49,7 +49,7 @@ namespace ToSic.Eav.Context
         //    _module ?? (_module = new ModuleContext {Id = _root?.Block?.Context?.Container?.Id ?? NullId});
         //private ModuleContext _module;
 
-        public ISiteLight Site => _context.Site;
+        public ISiteLight Site => _context.Site as ISiteLight;
 
         public IPageLight Page => _page ?? (_page = (_context as IContextOfBlock)?.Page ?? new PageNull());
         private IPage _page;
@@ -58,6 +58,6 @@ namespace ToSic.Eav.Context
             _module ?? (_module = (_context as IContextOfBlock)?.Module ?? new ModuleNull());
         private IModule _module;
 
-        public IUserLight User => _context.User;
+        public IUserLight User => _context.User as IUserLight;
     }
 }

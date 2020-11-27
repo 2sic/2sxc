@@ -11,7 +11,7 @@ using ToSic.Eav.Run;
 namespace ToSic.Sxc.Dnn.Run
 {
     [PrivateApi("still WIP")]
-    public class DnnUser: IUser<UserInfo>
+    public class DnnUser: IUser<UserInfo>, IUserLight
     {
         public DnnUser() { }
 
