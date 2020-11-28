@@ -38,7 +38,6 @@
 
   <ItemGroup>
     <Folder Include="Engine\" />
-    <Folder Include="Pages\Standalone\" />
     <Folder Include="wwwroot\adam\" />
     <Folder Include="wwwroot\System\" />
   </ItemGroup>

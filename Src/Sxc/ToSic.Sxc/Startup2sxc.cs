@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Context;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Cms.Publishing;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.LookUp;
@@ -77,6 +76,9 @@ namespace ToSic.Sxc
             services.TryAddTransient<IPagePublishingResolver, BasicPagePublishingResolver>();
             services.TryAddTransient<IImportExportEnvironment, BasicImportExportEnvironment>();
             services.TryAddTransient<IPagePublishing, BasicPagePublishing>();
+
+            // Code / Dynamic Code
+            services.TryAddTransient<DynamicCodeRoot, BasicDynamicCodeRoot>();
             return services;
         }
     }
