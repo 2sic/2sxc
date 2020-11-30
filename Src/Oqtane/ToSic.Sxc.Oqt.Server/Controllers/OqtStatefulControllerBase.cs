@@ -76,9 +76,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// </summary>
         /// <param name="appId"></param>
         /// <returns></returns>
-        internal IApp GetApp(int appId)
-        {
-            return ServiceProvider.Build<App>().Init(ServiceProvider, appId, Log, GetBlock());
-        }
+        internal IApp GetApp(int appId) => ServiceProvider.Build<App>().Init(ServiceProvider, appId, Log, GetBlock());
     }
 }

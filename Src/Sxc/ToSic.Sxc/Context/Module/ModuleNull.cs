@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.Run;
+﻿using System;
+using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Context
@@ -13,6 +14,8 @@ namespace ToSic.Sxc.Context
 
         public int Id => Eav.Constants.NullId;
         public bool IsPrimary => true;
-        public IBlockIdentifier BlockIdentifier => null;
+
+        public IBlockIdentifier BlockIdentifier =>
+            new BlockIdentifier(Eav.Constants.NullId, Eav.Constants.NullId, Guid.Empty, Guid.Empty);
     }
 }

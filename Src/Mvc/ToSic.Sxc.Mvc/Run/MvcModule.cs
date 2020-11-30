@@ -1,18 +1,16 @@
 ﻿using System;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Run;
-using ToSic.Eav.Context;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Mvc.Dev;
 
 namespace ToSic.Sxc.Mvc.Run
 {
-    public class MvcContainer: IModule
+    public class MvcModule: IModule
     {
-        public MvcContainer() {}
+        public MvcModule() {}
 
-        public MvcContainer Init(int? tenantId = null, int? id = null, int? appId = null, Guid? block = null)
+        public MvcModule Init(int? tenantId = null, int? id = null, int? appId = null, Guid? block = null)
         {
             TenantId = tenantId ?? TestIds.Blog.Zone;
             Id = id ?? TestIds.Blog.Container;

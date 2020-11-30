@@ -35,8 +35,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [HttpGet]
         public dynamic Settings(int appId)
         {
-            var block = GetBlock();
-            return HttpContext.RequestServices.Build<AdminBackend>().Init(Log).DialogSettings(GetContext(), _contextBuilder.Init(block), appId);
+            return HttpContext.RequestServices.Build<AdminBackend>().Init(Log)
+                .DialogSettings(GetContext(), _contextBuilder.Init(GetContext(), GetApp(appId)), appId);
         }
 
         #endregion

@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Mvc
             var ctx = sp.Build<ContextOfBlock>();
             ctx.Site.Init(zoneId);
             ctx.Page.Init(pageId);
-            ((MvcContainer) ctx.Module).Init(tenantId: zoneId, id: containerId, appId: appId, block: blockGuid);
+            ((MvcModule) ctx.Module).Init(tenantId: zoneId, id: containerId, appId: appId, block: blockGuid);
             return ctx;
 
             //var publishing = sp.Build<IPagePublishingResolver>();

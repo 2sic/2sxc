@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.Run;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Blocks;
@@ -17,15 +18,15 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             _linkPaths = linkPaths;
         }
 
-        internal OqtContextBuilder Init(IBlock block)
+        internal OqtContextBuilder Init(IContextOfSite ctx, IApp app = null)
         {
-            _context = block.Context;
-            InitApp(block.ZoneId, block.App);
+            _context = ctx;
+            InitApp(ctx.Site.ZoneId, app);
             return this;
         }
 
         private readonly ILinkPaths _linkPaths;
-        private IContextOfBlock _context;
+        private IContextOfSite _context;
 
 
         protected override LanguageDto GetLanguage()
@@ -58,7 +59,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected override WebResourceDto GetPage() =>
             new WebResourceDto
             {
-                Id = _context.Page.Id,
+                Id = (_context as IContextOfBlock)?.Page.Id ?? Eav.Constants.NullId,
             };
 
         protected override EnableDto GetEnable()
