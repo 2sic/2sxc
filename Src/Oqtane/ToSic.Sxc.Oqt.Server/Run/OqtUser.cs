@@ -12,7 +12,7 @@ using ToSic.Sxc.Oqt.Shared.Dev;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtUser: IUser<User>, IUserLight
+    public class OqtUser: IUser<User>, ICmsUser
     {
         private readonly IUserResolver _userResolver;
 

@@ -12,7 +12,7 @@ using ToSic.Sxc.Context;
 namespace ToSic.Sxc.Dnn.Run
 {
     [PrivateApi("still WIP")]
-    public class DnnUser: IUser<UserInfo>, IUserLight
+    public class DnnUser: IUser<UserInfo>, ICmsUser
     {
         public DnnUser() { }
 

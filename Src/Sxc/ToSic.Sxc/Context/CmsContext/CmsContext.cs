@@ -45,17 +45,17 @@ namespace ToSic.Sxc.Context
 
         #endregion
 
-        public Platform Platform { get; }
+        public ICmsPlatform Platform { get; }
 
-        public ISiteLight Site => Context.Site as ISiteLight;
+        public ICmsSite Site => Context.Site as ICmsSite;
 
-        public IPageLight Page => _page ?? (_page = (Context as IContextOfBlock)?.Page ?? new PageNull());
+        public ICmsPage Page => _page ?? (_page = (Context as IContextOfBlock)?.Page ?? new PageNull());
         private IPage _page;
 
-        public IModuleLight Module =>
+        public ICmsModule Module =>
             _module ?? (_module = (Context as IContextOfBlock)?.Module ?? new ModuleNull());
         private IModule _module;
 
-        public IUserLight User => Context.User as IUserLight;
+        public ICmsUser User => Context.User as ICmsUser;
     }
 }

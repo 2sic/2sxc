@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Context
     /// Public properties of the IUser for use in your own code
     /// </summary>
     [PublicApi]
-    public interface IUserLight
+    public interface ICmsUser
     {
         /// <summary>
         /// User Id as int. Works in DNN and Oqtane

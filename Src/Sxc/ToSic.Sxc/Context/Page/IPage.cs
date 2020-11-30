@@ -4,7 +4,7 @@ using ToSic.Eav.Documentation;
 namespace ToSic.Sxc.Context
 {
     // ReSharper disable once PossibleInterfaceMemberAmbiguity
-    public interface IPage : IPageLight
+    public interface IPage : ICmsPage
     {
         /// <summary>
         /// These parameters can reconfigure what view is used or change

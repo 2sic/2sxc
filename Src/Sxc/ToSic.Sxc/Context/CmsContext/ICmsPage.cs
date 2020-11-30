@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Context
 {
     [PublicApi]
-    public interface IPageLight
+    public interface ICmsPage
     {
         /// <summary>
         /// The Id of the page.

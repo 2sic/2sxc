@@ -10,23 +10,28 @@ namespace ToSic.Sxc.Context
     public interface ICmsContext
     {
         /// <summary>
-        /// Information about the Site (called Portal in DNN)
+        /// Information about the Module / Container which holds an 2sxc content block in the CMS
         /// </summary>
-        ISiteLight Site { get; }
+        ICmsModule Module { get; }
 
         /// <summary>
         /// Information about the Page (called Tab in DNN)
         /// </summary>
-        IPageLight Page { get; }
+        ICmsPage Page { get; }
 
         /// <summary>
-        /// Information about the Module / Container which holds an 2sxc content block in the CMS
+        /// Information about the platform that's currently running.
         /// </summary>
-        IModuleLight Module { get; }
+        ICmsPlatform Platform { get; }
+
+        /// <summary>
+        /// Information about the Site (called Portal in DNN)
+        /// </summary>
+        ICmsSite Site { get; }
 
         /// <summary>
         /// Information about the current user
         /// </summary>
-        IUserLight User { get; }
+        ICmsUser User { get; }
     }
 }

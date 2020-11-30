@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Context
 {
     [PublicApi]
-    public interface IModuleLight
+    public interface ICmsModule
     {
         /// <summary>
         /// The module id on the page. Corresponds to the Dnn ModuleId or the Oqtane Module Id.

@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Context
     /// This must be provided through Dependency Injection, Singleton, as it cannot change at runtime.
     /// </remarks>
     [WorkInProgressApi("Still WIP")]
-    public interface IPlatformLight
+    public interface ICmsPlatform
     {
         /// <summary>
         /// The platform type Id from the enumerator - so stored as an int.

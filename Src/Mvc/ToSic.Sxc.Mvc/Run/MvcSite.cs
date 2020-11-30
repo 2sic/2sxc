@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Mvc.Run
     /// This is a Mvc implementation of a Tenant-object. 
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public sealed class MvcSite : Site<object>, ISiteLight
+    public sealed class MvcSite : Site<object>, ICmsSite
     {
         /// <summary>
         /// Constructor for DI
