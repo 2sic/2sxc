@@ -44,5 +44,10 @@
     <Reference Include="System.Web" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Context\Site\" />
+    <Folder Include="Context\User\" />
+  </ItemGroup>
+
 
 </Project>
