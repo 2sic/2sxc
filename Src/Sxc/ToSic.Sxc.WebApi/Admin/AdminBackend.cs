@@ -20,12 +20,12 @@ namespace ToSic.Sxc.WebApi.Admin
         {
             IApp app = null;
             // if we have an appid (we don't have it in an install-new-apps-scenario) check permissions
-            if (appId != 0 && appId != Eav.Constants.AppIdEmpty)
+            if (appId != Eav.Constants.AppIdEmpty)
             {
-                var appAndPerms = ServiceProvider.Build<MultiPermissionsApp>().Init(context, GetApp(appId, null), Log);
+                app = GetApp(appId, null);
+                var appAndPerms = ServiceProvider.Build<MultiPermissionsApp>().Init(context, app, Log);
                 if (!appAndPerms.ZoneIsOfCurrentContextOrUserIsSuper(out var error))
                     throw HttpException.PermissionDenied(error);
-                app = appAndPerms.App;
             }
 
             var cb = contextBuilder.InitApp(app?.ZoneId ?? context.Site.ZoneId, app);

@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Data
                     return new HtmlString("");
 
                 // If we're not in a running context, of which we know the permissions, no toolbar
-                var userMayEdit = Block?.EditAllowed ?? false;
+                var userMayEdit = Block?.Context.EditAllowed ?? false;
 
                 if (!userMayEdit)
                     return new HtmlString("");

@@ -40,7 +40,7 @@ namespace ToSic.Sxc.WebApi.App
             if (app == null && appId != null)
                 app = ServiceProvider.Build<Apps.App>().Init(ServiceProvider, appId.Value, Log, showDrafts: context.User.IsSuperUser);
 
-            var result = BuildQueryAndRun(app, name, stream, includeGuid, context, Log, block?.EditAllowed ?? false);
+            var result = BuildQueryAndRun(app, name, stream, includeGuid, context, Log, block?.Context.EditAllowed ?? false);
             wrapLog(null);
             return result;
         }
@@ -61,7 +61,7 @@ namespace ToSic.Sxc.WebApi.App
                 ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(false), Log);
 
             // now just run the default query check and serializer
-            var result = BuildQueryAndRun(queryApp, name, stream, false, context, Log, block?.EditAllowed ?? false);
+            var result = BuildQueryAndRun(queryApp, name, stream, false, context, Log, block?.Context.EditAllowed ?? false);
             wrapLog(null);
             return result;
         }

@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             var block = GetBlock();
             var result = _loadBackend.Value
                 .Init(Log)
-                .Load(block, _contextBuilder.Init(block), appId, items);
+                .Load(block, _contextBuilder.Init(GetContext(), GetApp(appId)), appId, items);
             return result;
         }
 

@@ -35,9 +35,9 @@ namespace ToSic.Sxc.Blocks
             AppId = appId.AppId;
         }
 
-        protected T CompleteInit<T>(IBlockBuilder rootBuilder, IBlockIdentifier blockId, int blockNumberUnsureIfNeeded) where T : class
+        protected bool CompleteInit(IBlockBuilder rootBuilder, IBlockIdentifier blockId, int blockNumberUnsureIfNeeded) // where T : class
         {
-            var wrapLog = Log.Call<T>();
+            var wrapLog = Log.Call<bool>();
 
             ParentId = Context.Module.Id;
             ContentBlockId = blockNumberUnsureIfNeeded;
@@ -53,25 +53,28 @@ namespace ToSic.Sxc.Blocks
             if (AppId == AppConstants.AppIdNotFound || AppId == Eav.Constants.NullId)
             {
                 DataIsMissing = true;
-                return wrapLog("stop: app & data are missing", this as T);
+                return wrapLog("stop: app & data are missing", true);
             }
 
             // If no app yet, stop now with BlockBuilder created
             if (AppId == Eav.Constants.AppIdEmpty)
             {
                 var msg = $"stop a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}";
-                return wrapLog(msg, this as T);
+                return wrapLog(msg, true);
             }
 
 
             Log.Add("Real app specified, will load App object with Data");
 
             // Get App for this block
-            App = Context.ServiceProvider.Build<App>().PreInit(Context.Site)
+            Log.Add("About to create app");
+            App = Context.ServiceProvider.Build<App>()
+                .PreInit(Context.Site)
                 .Init(this, Context.ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(this, false), Log);
+            Log.Add("App created");
 
             // note: requires EditAllowed, which isn't ready till App is created
-            var cms = Context.ServiceProvider.Build<CmsRuntime>().Init(App, EditAllowed, Log);
+            var cms = Context.ServiceProvider.Build<CmsRuntime>().Init(App, Context.EditAllowed, Log);
 
             Configuration = cms.Blocks.GetOrGeneratePreviewConfig(blockId);
 
@@ -80,12 +83,12 @@ namespace ToSic.Sxc.Blocks
             {
                 DataIsMissing = true;
                 App = null;
-                return wrapLog($"DataIsMissing a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}", this as T);
+                return wrapLog($"DataIsMissing a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}", true);
             }
 
             // use the content-group template, which already covers stored data + module-level stored settings
             View = new BlockViewLoader(Log).PickView(this, Configuration.View, Context, cms);
-            return wrapLog($"ok a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}", this as T);
+            return wrapLog($"ok a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}", true);
         }
 
         #endregion
@@ -134,11 +137,18 @@ namespace ToSic.Sxc.Blocks
 
 
 
-        public IBlockDataSource Data => _dataSource
-                                        ?? (_dataSource = _bdsFactoryLazy.Value.Init(Log).GetBlockDataSource(this,
-                                            App?.ConfigurationProvider));
-                                        //?? (_dataSource = Block.GetBlockDataSource(this, View,
-                                        //    App?.ConfigurationProvider, Log));
+        public IBlockDataSource Data
+        {
+            get
+            {
+                if (_dataSource != null) return _dataSource;
+                Log.Add(
+                    $"About to load data source with possible app configuration provider. App is probably null: {App}");
+                _dataSource = _bdsFactoryLazy.Value.Init(Log).GetBlockDataSource(this, App?.ConfigurationProvider);
+                return _dataSource;
+            }
+        }
+
         // ReSharper disable once InconsistentNaming
         protected IBlockDataSource _dataSource;
 

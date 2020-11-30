@@ -96,7 +96,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
             {
                 var publishedStreams = dataSource.Publish.Streams;
                 var streamList = publishedStreams.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
-                json = dataHandler.GenerateJson(dataSource, streamList, block.EditAllowed);
+                json = dataHandler.GenerateJson(dataSource, streamList, block.Context.EditAllowed);
             }
             else
             {

@@ -1,10 +1,11 @@
 ﻿using System;
+using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Sxc.Cms.Publishing;
 
 namespace ToSic.Sxc.Context
 {
-    public class ContextOfBlock: ContextOfSite, IContextOfBlock
+    public class ContextOfBlock: ContextOfAppData, IContextOfBlock
     {
         #region Constructor / DI
 

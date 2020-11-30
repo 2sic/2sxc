@@ -37,11 +37,12 @@ namespace ToSic.Sxc.WebApi.Cms
             // do early permission check - but at this time it may be that we don't have the types yet
             // because they may be group/id combinations, without type information which we'll look up afterwards
             var appIdentity = State.Identity(null, appId);
-            items = _contentGroupList.Init(block, Log, appIdentity).ConvertListIndexToId(items);
+            items = _contentGroupList.Init(appIdentity, Log, block.Context.EditAllowed).ConvertListIndexToId(items);
 
             // now look up the types, and repeat security check with type-names
             // todo: 2020-03-20 new feat 11.01, may not check inner type permissions ATM
-            var permCheck = block.Context.ServiceProvider.Build<MultiPermissionsTypes>().Init(block.Context, GetApp(appId, block), items, Log);
+            var app = GetApp(appId, block);
+            var permCheck = ServiceProvider.Build<MultiPermissionsTypes>().Init(block.Context, app, items, Log);
             if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
@@ -102,7 +103,7 @@ namespace ToSic.Sxc.WebApi.Cms
             result.Features = FeaturesHelpers.FeatureListWithPermissionCheck(permCheck).ToList();
 
             // Attach context
-            result.Context = contextBuilder.InitApp(appIdentity.ZoneId, permCheck.App)
+            result.Context = contextBuilder.InitApp(appIdentity.ZoneId, app)
                 .Get(Ctx.AppBasic | Ctx.Language | Ctx.Site | Ctx.System);
 
             // done - return

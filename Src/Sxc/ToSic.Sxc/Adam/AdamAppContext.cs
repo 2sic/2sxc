@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Adam
             Site = site;
             _app = app;
             Block = block;
-            AppRuntime /*= new AppRuntime()*/.Init(app, block?.EditAllowed ?? false, null);
+            AppRuntime /*= new AppRuntime()*/.Init(app, block?.Context.EditAllowed ?? false, null);
             CompatibilityLevel = compatibility;
             callLog("ready");
             return this;

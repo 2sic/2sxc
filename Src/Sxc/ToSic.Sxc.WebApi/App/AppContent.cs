@@ -90,7 +90,7 @@ namespace ToSic.Sxc.WebApi.App
                 itm = getOne(appState.ListPublished);
             }
 
-            return InitEavAndSerializer(appIdentity.AppId, _block?.EditAllowed ?? false).Convert(itm);
+            return InitEavAndSerializer(appIdentity.AppId, _block?.Context.EditAllowed ?? false).Convert(itm);
         }
 
 
@@ -132,7 +132,7 @@ namespace ToSic.Sxc.WebApi.App
             else
                 realApp.Data.Update(id.Value, cleanedNewItem, userName);
 
-            return InitEavAndSerializer(appIdentity.AppId, _block?.EditAllowed ?? false)
+            return InitEavAndSerializer(appIdentity.AppId, _block?.Context.EditAllowed ?? false)
                 .Convert(realApp.Data.Immutable.One(id.Value));
         }
 

@@ -29,10 +29,11 @@ namespace ToSic.Sxc.Blocks
         ///// <param name="overrideParams">optional override parameters</param>
         public BlockFromModule Init(IContextOfBlock ctx, ILog parentLog)
         {
+            (ctx as ContextOfBlock)?.InitApp(ctx.Module.BlockIdentifier, parentLog);
             Init(ctx, ctx.Module.BlockIdentifier, parentLog);
             var wrapLog = Log.Call<BlockFromModule>();
             IsContentApp = ctx.Module.IsPrimary;
-            CompleteInit<BlockFromModule>(null, ctx.Module.BlockIdentifier, ctx.Module.Id);
+            CompleteInit(null, ctx.Module.BlockIdentifier, ctx.Module.Id);
             return wrapLog("ok", this);
         }
 

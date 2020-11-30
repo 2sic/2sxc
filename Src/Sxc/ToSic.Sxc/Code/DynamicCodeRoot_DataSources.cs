@@ -14,8 +14,7 @@ namespace ToSic.Sxc.Code
                (_configurationProvider = Data.Configuration.LookUps);
 
         internal DataSourceFactory DataSourceFactory => _dataSourceFactory ??
-                                                        (_dataSourceFactory = Block?.Context?.ServiceProvider
-                                                            .Build<DataSourceFactory>().Init(Log));
+                                                        (_dataSourceFactory = ServiceProvider.Build<DataSourceFactory>().Init(Log));
         private DataSourceFactory _dataSourceFactory;
 
 
@@ -29,7 +28,7 @@ namespace ToSic.Sxc.Code
             if (inSource != null)
                 return DataSourceFactory.GetDataSource<T>(inSource, inSource, configurationProvider);
 
-            var userMayEdit = Block.EditAllowed;
+            var userMayEdit = Block.Context.EditAllowed;
 
             var initialSource = DataSourceFactory.GetPublishing(
                 App, userMayEdit, ConfigurationProvider as LookUpEngine);

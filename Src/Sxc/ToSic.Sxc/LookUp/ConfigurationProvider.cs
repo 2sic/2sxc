@@ -37,7 +37,7 @@ namespace ToSic.Sxc.LookUp
             var log = new Log("Sxc.CnfPrv", block.Log);
             var wrapLog = log.Call($"{nameof(useExistingConfig)}:{useExistingConfig}");
             var containerId = block.Context.Module.Id;
-            var showDrafts = block.EditAllowed;
+            var showDrafts = block.Context.EditAllowed;
             var existingLookups = block.Data.Configuration.LookUps;
 
             wrapLog("ok");

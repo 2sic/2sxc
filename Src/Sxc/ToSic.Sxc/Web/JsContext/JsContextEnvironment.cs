@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Web.JsContext
 
             SxcRootUrl = systemRootUrl;
 
-            var userMayEdit = block?.EditAllowed ?? false;
+            var userMayEdit = block?.Context.EditAllowed ?? false;
 
             IsEditable = userMayEdit;
             parameters = block?.Context.Page.Parameters;

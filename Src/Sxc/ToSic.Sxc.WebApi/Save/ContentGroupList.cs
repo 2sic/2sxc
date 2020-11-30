@@ -15,33 +15,32 @@ using BlockEditorBase = ToSic.Sxc.Blocks.Edit.BlockEditorBase;
 
 namespace ToSic.Sxc.WebApi.Save
 {
-    public class ContentGroupList: SaveHelperBase<ContentGroupList>
+    public class ContentGroupList: HasLog
     {
         #region Constructor / DI
-        private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
-        private CmsRuntime CmsRuntime { get; set; }
-        private readonly Lazy<CmsManager> _cmsManagerLazy;
-        private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.Init(Block?.App, Log));
-        private CmsManager _cmsManager;
 
-        public ContentGroupList(Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> cmsManagerLazy) : base("Api.GrpPrc")
+        private readonly Lazy<CmsManager> _cmsManagerLazy;
+        private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.Init(_appIdentity, _withDrafts, Log));
+        private CmsManager _cmsManager;
+        private bool _withDrafts = false;
+
+        public ContentGroupList(Lazy<CmsManager> cmsManagerLazy) : base("Api.GrpPrc")
         {
-            _lazyCmsRuntime = lazyCmsRuntime;
             _cmsManagerLazy = cmsManagerLazy;
         }
 
-        public ContentGroupList Init(IBlock block, ILog log, IAppIdentity appIdentity)
+        public ContentGroupList Init(IAppIdentity appIdentity, ILog parentLog, bool withDraftsTemp)
         {
-            Init(block, log);
-            _appIdentity = appIdentity ?? block;
-            CmsRuntime = _lazyCmsRuntime.Value.Init(appIdentity, Block.EditAllowed, Log);
+            Log.LinkTo(parentLog);
+            _appIdentity = appIdentity;
+            _withDrafts = withDraftsTemp;
             return this;
         }
 
         private IAppIdentity _appIdentity;
         #endregion
 
-        internal bool IfChangesAffectListUpdateIt(List<BundleWithHeader<IEntity>> items, Dictionary<Guid, int> ids)
+        internal bool IfChangesAffectListUpdateIt(IBlock block, List<BundleWithHeader<IEntity>> items, Dictionary<Guid, int> ids)
         {
             var wrapLog = Log.Call<bool>();
             var groupItems = items.Where(i => i.Header.ListHas())
@@ -51,20 +50,23 @@ namespace ToSic.Sxc.WebApi.Save
             // if it's new, it has to be added to a group
             // only add if the header wants it, AND we started with ID unknown
             return groupItems.Any() 
-                ? wrapLog(null, PostSaveUpdateIdsInParent(ids, groupItems)) 
+                ? wrapLog(null, PostSaveUpdateIdsInParent(block, ids, groupItems)) 
                 : wrapLog("no additional group processing necessary", true);
         }
 
-        private BlockConfiguration GetBlockConfig(Guid blockGuid) => CmsRuntime.Blocks.GetBlockConfig(blockGuid);
-
-        private bool PostSaveUpdateIdsInParent(
+        private bool PostSaveUpdateIdsInParent(IBlock block,
             Dictionary<Guid, int> postSaveIds,
             IEnumerable<IGrouping<string, BundleWithHeader<IEntity>>> pairsOrSingleItems)
         {
             var wrapLog = Log.Call<bool>($"{_appIdentity.AppId}");
+
+            if (block == null) return wrapLog("no block, nothing to update", true);
+
+            // todo: if no block given, skip all this
+
             var sp = CmsManager.ServiceProvider;
             var app = sp.Build<Apps.App>().Init(_appIdentity, 
-                sp.Build<AppConfigDelegate>().Init(Log).Build(Block, true), Log);
+                sp.Build<AppConfigDelegate>().Init(Log).Build(block, true), Log);
 
             foreach (var bundle in pairsOrSingleItems)
             {
@@ -98,14 +100,14 @@ namespace ToSic.Sxc.WebApi.Save
                     : new[] {primaryItem.Header.Field};
 
                 if (willAdd) // this cannot be auto-detected, it must be specified
-                    CmsManager.Entities.FieldListAdd(entity, fieldPair, index, ids, Block.Context.Publishing.ForceDraft);
+                    CmsManager.Entities.FieldListAdd(entity, fieldPair, index, ids, block.Context.Publishing.ForceDraft);
                 else
-                    CmsManager.Entities.FieldListReplaceIfModified(entity, fieldPair, index, ids, Block.Context.Publishing.ForceDraft);
+                    CmsManager.Entities.FieldListReplaceIfModified(entity, fieldPair, index, ids, block.Context.Publishing.ForceDraft);
 
             }
 
             // update-module-title
-            BlockEditorBase.GetEditor(Block).UpdateTitle();
+            BlockEditorBase.GetEditor(block).UpdateTitle();
             return wrapLog("ok", true);
         }
 
@@ -157,7 +159,7 @@ namespace ToSic.Sxc.WebApi.Save
                 // Case one, it's a Content-Group (older model, probably drop soon)
                 if (identifier.Group != null)
                 {
-                    var contentGroup = GetBlockConfig(identifier.Group.Guid);
+                    var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(identifier.Group.Guid);
                     var contentTypeStaticName = (contentGroup.View as View)?
                                                 .GetTypeStaticName(identifier.Group.Part) ?? "";
 
@@ -175,7 +177,7 @@ namespace ToSic.Sxc.WebApi.Save
                 if (identifier.Parent != null && identifier.Field != null)
                 {
                     // look up type
-                    var target = Block.App.Data.Immutable.One(identifier.Parent.Value);
+                    var target = CmsManager.Read.AppState.List.One(identifier.Parent.Value);
                     var field = target.Type[identifier.Field];
                     identifier.ContentTypeName = field.EntityFieldItemTypePrimary();
                     newItems.Add(identifier);

@@ -58,7 +58,7 @@ namespace ToSic.SexyContent.Razor
 
         /// <inheritdoc />
         [PrivateApi("try to remove")]
-        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(DynCode.Block?.EditAllowed ?? false));
+        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(DynCode.Block?.Context.EditAllowed ?? false));
         private SxcHelper _sxc;
 
         [PrivateApi] public IBlock Block => DynCode.Block;
@@ -73,7 +73,7 @@ namespace ToSic.SexyContent.Razor
         /// <inheritdoc />
         public IBlockDataSource Data => DynCode.Data;
 
-        public RazorPermissions Permissions => new RazorPermissions(DynCode.Block?.EditAllowed ?? false);
+        public RazorPermissions Permissions => new RazorPermissions(DynCode.Block?.Context.EditAllowed ?? false);
 
         #region AsDynamic in many variations
 

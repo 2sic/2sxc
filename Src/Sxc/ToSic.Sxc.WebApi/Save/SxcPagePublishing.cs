@@ -40,13 +40,13 @@ namespace ToSic.Sxc.WebApi.Save
             Dictionary<Guid, int> postSaveIds = null;
 
             // The internal call which will be used further down
-            var groupList = _contentGroupList.Init(Block, Log, new AppIdentity(Eav.Apps.App.AutoLookupZone, appId));
+            var groupList = _contentGroupList.Init(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), Log, Block.Context.EditAllowed);
             Dictionary<Guid, int> SaveAndSaveGroupsInnerCall(Func<bool, Dictionary<Guid, int>> call,
                 bool forceSaveAsDraft)
             {
                 var ids = call.Invoke(forceSaveAsDraft);
                 // now assign all content-groups as needed
-                groupList.IfChangesAffectListUpdateIt(items, ids);
+                groupList.IfChangesAffectListUpdateIt(Block, items, ids);
                 return ids;
             }
 
@@ -56,9 +56,6 @@ namespace ToSic.Sxc.WebApi.Save
             {
                 Log.Add("partOfPage - save with publishing");
                 var versioning = _pagePublishing.Init(Log);
-                //var dnnContext = new DnnDynamicCode().Init(Block, Log);
-                //var instanceId = Block.Context.Container.Id;
-                //var userId = Block.Context.User.Guid;
                 versioning.DoInsidePublishing(Block.Context,
                     args => postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft));
             }
