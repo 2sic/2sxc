@@ -2,6 +2,9 @@
 
 namespace ToSic.Sxc.Context
 {
+    /// <summary>
+    /// The site context of the code - so basically which website / portal it's running on. 
+    /// </summary>
     [PublicApi]
     public interface ICmsSite
     {

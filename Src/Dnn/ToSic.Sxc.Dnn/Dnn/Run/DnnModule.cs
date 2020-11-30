@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Dnn.Run
     /// The DNN implementation of a Block Container (a Module).
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public class DnnModule: Container<ModuleInfo>, IHasLog
+    public class DnnModule: Module<ModuleInfo>, IHasLog
     {
         private readonly Lazy<IZoneMapper> _zoneMapperLazy;
 

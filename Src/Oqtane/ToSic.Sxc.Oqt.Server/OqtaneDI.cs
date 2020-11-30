@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddTransient<IClientDependencyOptimizer, OqtClientDependencyOptimizer>();
             services.AddTransient<IValueConverter, OqtValueConverter>();
 
-            services.AddSingleton<Platform, OqtPlatformContext>();
+            services.AddSingleton<IPlatform, OqtPlatformContext>();
 
             services.AddTransient<SecurityChecksBase, OqtAdamSecurityChecks>();
             services.AddTransient<IAdamFileSystem<int, int>, OqtAdamFileSystem>();

@@ -4,10 +4,10 @@ using ToSic.Eav.Documentation;
 namespace ToSic.Sxc.Context
 {
     [PrivateApi]
-    public class PageNull: IPage
+    public class PageUnknown: IPage
     {
         public int Id { get; private set; } = Eav.Constants.NullId;
-        public string Url => null;
+        public string Url => Eav.Constants.UrlNotInitialized;
 
         public List<KeyValuePair<string, string>> Parameters
         {

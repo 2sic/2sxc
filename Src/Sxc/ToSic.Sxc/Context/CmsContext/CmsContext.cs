@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Context
         /// <summary>
         /// DI Constructor
         /// </summary>
-        public CmsContext(Platform platform, IContextOfSite context)
+        public CmsContext(IPlatform platform, IContextOfSite context)
         {
             Context = context;
             Platform = platform;
@@ -49,11 +49,11 @@ namespace ToSic.Sxc.Context
 
         public ICmsSite Site => Context.Site as ICmsSite;
 
-        public ICmsPage Page => _page ?? (_page = (Context as IContextOfBlock)?.Page ?? new PageNull());
+        public ICmsPage Page => _page ?? (_page = (Context as IContextOfBlock)?.Page ?? new PageUnknown());
         private IPage _page;
 
         public ICmsModule Module =>
-            _module ?? (_module = (Context as IContextOfBlock)?.Module ?? new ModuleNull());
+            _module ?? (_module = (Context as IContextOfBlock)?.Module ?? new ModuleUnknown());
         private IModule _module;
 
         public ICmsUser User => Context.User as ICmsUser;

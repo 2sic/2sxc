@@ -3,7 +3,7 @@ using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Context
 {
-    public class ModuleNull: IModule
+    public class ModuleUnknown: IModule
     {
         public IModule Init(int id, ILog parentLog)
         {

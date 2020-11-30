@@ -9,12 +9,12 @@ namespace ToSic.Sxc.Context
     /// This must be provided through Dependency Injection, Singleton, as it cannot change at runtime.
     /// </remarks>
     [PrivateApi]
-    public class Platform: ICmsPlatform
+    public abstract class Platform: IPlatform
     {
         /// <summary>
         /// The platform type Id from the enumerator - so stored as an int.
         /// </summary>
-        public PlatformType Type { get; internal set; }
+        public abstract PlatformType Type { get; }
 
         /// <summary>
         /// A nice name ID, like "Dnn" or "Oqtane"

@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Context
 {
     /// <summary>
-    /// Public properties of the IUser for use in your own code
+    /// The user context of your code - so it's information about the user your code is using. 
     /// </summary>
     [PublicApi]
     public interface ICmsUser

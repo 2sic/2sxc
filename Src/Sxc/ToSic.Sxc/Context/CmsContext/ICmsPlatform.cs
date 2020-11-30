@@ -5,9 +5,6 @@ namespace ToSic.Sxc.Context
     /// <summary>
     /// General platform information
     /// </summary>
-    /// <remarks>
-    /// This must be provided through Dependency Injection, Singleton, as it cannot change at runtime.
-    /// </remarks>
     [WorkInProgressApi("Still WIP")]
     public interface ICmsPlatform
     {

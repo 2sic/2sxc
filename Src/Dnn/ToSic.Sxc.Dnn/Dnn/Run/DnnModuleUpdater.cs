@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Dnn.Run
 
             // ToDo: Should throw exception if a real BlockConfiguration exists
 
-            var module = (instance as Container<ModuleInfo>).UnwrappedContents;
+            var module = (instance as Module<ModuleInfo>).UnwrappedContents;
             var zoneId = _zoneMapper.GetZoneId(module.OwnerPortalID);
 
             if (appId == Constants.AppIdEmpty || !appId.HasValue)

@@ -9,15 +9,15 @@ namespace ToSic.Sxc.Context
     /// A base implementation of the block information wrapping the CMS specific object along with it.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public abstract class Container<T>: HasLog, IModule, IWrapper<T> where T: class
+    [PrivateApi("this is just fyi")]
+    public abstract class Module<T>: HasLog, IModule, IWrapper<T> where T: class
     {
         #region Constructors and DI
 
         /// <inheritdoc />
         public T UnwrappedContents { get; private set; }
 
-        protected Container(string logName) : base(logName) { }
+        protected Module(string logName) : base(logName) { }
 
         public IModule Init(T item, ILog parentLog)
         {

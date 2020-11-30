@@ -5,6 +5,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtPlatformContext: Platform
     {
-        public OqtPlatformContext() => Type = PlatformType.Oqtane;
+        public override PlatformType Type => PlatformType.Oqtane;
     }
 }

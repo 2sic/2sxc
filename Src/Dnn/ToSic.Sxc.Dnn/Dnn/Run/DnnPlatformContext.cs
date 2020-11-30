@@ -5,6 +5,6 @@ namespace ToSic.Sxc.Dnn.Run
 {
     public class DnnPlatformContext: Platform
     {
-        public DnnPlatformContext() => Type = PlatformType.Dnn;
+        public override PlatformType Type => PlatformType.Dnn;
     }
 }

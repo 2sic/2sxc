@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Context
     /// <summary>
     /// A unit / block within the CMS. Contains all necessary identification to pass around. 
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
+    [PrivateApi]
 
     public interface IModule: ICmsModule
     {

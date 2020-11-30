@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Dnn
         /// <returns>An initialized CMS Block, ready to use/render</returns>
         public static IBlockBuilder CmsBlock(IModule module, ILog parentLog = null)
         {
-            var dnnModule = ((Container<ModuleInfo>)module)?.UnwrappedContents;
+            var dnnModule = ((Module<ModuleInfo>)module)?.UnwrappedContents;
             //var tenant = new DnnSite().TrySwap(dnnModule); // Swap(new PortalSettings(dnnModule.OwnerPortalID));
             var context = Eav.Factory.StaticBuild<IContextOfBlock>().Init(dnnModule, parentLog);
             return Eav.Factory.StaticBuild<BlockFromModule>().Init(context, parentLog).BlockBuilder;

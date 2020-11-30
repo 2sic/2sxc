@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Engines
             if (!(Webpage is SexyContentWebPage asWebPage)) return;
             var oldSignature = searchInfos.ToDictionary(si => si.Key, si => si.Value.Cast<ISearchInfo>().ToList());
             asWebPage.CustomizeSearch(oldSignature,
-                ((Container<ModuleInfo>)moduleInfo).UnwrappedContents, beginDate);
+                ((Module<ModuleInfo>)moduleInfo).UnwrappedContents, beginDate);
             searchInfos.Clear();
             foreach (var item in oldSignature)
                 searchInfos.Add(item.Key, item.Value.Cast<ISearchItem>().ToList());

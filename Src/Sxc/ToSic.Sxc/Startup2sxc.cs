@@ -79,6 +79,10 @@ namespace ToSic.Sxc
 
             // Code / Dynamic Code
             services.TryAddTransient<DynamicCodeRoot, BasicDynamicCodeRoot>();
+
+            // 11.08 - fallback in case not added
+            services.TryAddSingleton<IPlatform, PlatformUnknown>();
+
             return services;
         }
     }

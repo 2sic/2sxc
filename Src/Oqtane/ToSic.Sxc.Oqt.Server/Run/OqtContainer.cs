@@ -12,7 +12,7 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtContainer: Container<Module>
+    public class OqtContainer: Module<Module>
     {
         private readonly SettingsHelper _settingsHelper;
         private readonly Lazy<OqtZoneMapper> _zoneMapperLazy;
