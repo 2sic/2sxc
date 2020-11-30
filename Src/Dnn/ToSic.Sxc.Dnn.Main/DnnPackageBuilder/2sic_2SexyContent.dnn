@@ -916,7 +916,8 @@
                       <pipeline defaultCommands="autorotate.default=true" />
                       <plugins>
                         <add name="DiskCache" />
-                        <add name="WebPEncoder" downloadnativedependencies="true"/>
+                        <!-- 2dm disabled webp again, because it caused too many issues in existing installations #2266 -->
+                        <!--<add name="WebPEncoder" downloadnativedependencies="true"/>-->
                       </plugins>
                     </resizer>
                   </node>
