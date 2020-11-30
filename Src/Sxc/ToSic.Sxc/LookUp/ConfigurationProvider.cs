@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Globalization;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -55,12 +52,6 @@ namespace ToSic.Sxc.LookUp
                 return new AppDataConfiguration(showDrafts, lookUpEngine);
             };
         }
-
-        ///// <summary>
-        ///// Generate a delegate which will be used to build the configuration based existing stuff
-        ///// </summary>
-        //internal Func<App, IAppDataConfiguration> Build(bool showDrafts, ILookUpEngine config) 
-        //    => appToUse => new AppDataConfiguration(showDrafts, config);
 
         /// <summary>
         /// Generate a delegate which will be used to build a basic configuration with very little context

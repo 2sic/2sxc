@@ -23,7 +23,7 @@ namespace ToSic.Sxc.WebApi.Cms
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
-            var appData = permCheck.App.Data;
+            var appData = app.Data;
             var item = appData.Immutable.One(guid);
             var relationships = item.Relationships.AllRelationships;
             // var result = relationships.Select(r => new EntityInRelationDto(r.))
