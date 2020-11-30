@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
-using ToSic.Eav.Context;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
@@ -24,7 +22,7 @@ namespace ToSic.Sxc.Hybrid.Razor
     /// The base class for Razor-Components in 2sxc 10+ <br/>
     /// Provides context infos like the Dnn object, helpers like Edit and much more. <br/>
     /// </summary>
-    [PublicApi_Stable_ForUseInYourCode]
+    [PrivateApi]
     public abstract partial class RazorComponent : RazorComponentBase //, IRazorComponent
     {
 
