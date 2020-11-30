@@ -35,8 +35,8 @@ namespace ToSic.Sxc.WebApi.Views
         private readonly IEnvironmentLogger _envLogger;
         private readonly Lazy<CmsManager> _cmsManagerLazy;
         private readonly Lazy<JsonBundleSerializer> _jsonBundleLazy;
-        private ISite _site;
-        private IUser _user;
+        private readonly ISite _site;
+        private readonly IUser _user;
 
         public ViewsExportImport(IServerPaths serverPaths, 
             TemplateHelpers appHelpers, 
@@ -55,11 +55,9 @@ namespace ToSic.Sxc.WebApi.Views
             _user = context.User;
         }
 
-        public ViewsExportImport Init(/*IContextOfSite ctx,*/ ILog parentLog)
+        public ViewsExportImport Init(ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            //_site = ctx.Site;
-            //_user = ctx.User;
             return this;
         }
 

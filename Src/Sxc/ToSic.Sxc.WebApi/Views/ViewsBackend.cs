@@ -15,8 +15,8 @@ namespace ToSic.Sxc.WebApi.Views
     public class ViewsBackend: HasLog
     {
         private readonly Lazy<CmsManager> _cmsManagerLazy;
-        private ISite _site;
-        private IUser _user;
+        private readonly ISite _site;
+        private readonly IUser _user;
 
         public ViewsBackend(Lazy<CmsManager> cmsManagerLazy, IContextOfSite context) : base("Bck.Views")
         {
@@ -26,11 +26,9 @@ namespace ToSic.Sxc.WebApi.Views
             _user = context.User;
         }
 
-        public ViewsBackend Init(/*IContextOfSite ctx,*/ ILog parentLog)
+        public ViewsBackend Init(ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            //_site = ctx.Site;
-            //_user = ctx.User;
             return this;
         }
 

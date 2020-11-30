@@ -8,7 +8,6 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Assets;
@@ -23,8 +22,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 	{
         protected override string HistoryLogName => "Api.TmpCnt";
 
-        private ViewsBackend Backend => _build<ViewsBackend>().Init(/*GetContext(),*/ Log);
-        private ViewsExportImport ExportImport => _build<ViewsExportImport>().Init(/*GetContext(),*/ Log);
+        private ViewsBackend Backend => _build<ViewsBackend>().Init(Log);
+        private ViewsExportImport ExportImport => _build<ViewsExportImport>().Init(Log);
 
         [HttpGet]
         [SupportedModules("2sxc,2sxc-app")]
