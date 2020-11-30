@@ -18,16 +18,19 @@ namespace ToSic.Sxc.WebApi.Views
         private ISite _site;
         private IUser _user;
 
-        public ViewsBackend(Lazy<CmsManager> cmsManagerLazy) : base("Bck.Views")
+        public ViewsBackend(Lazy<CmsManager> cmsManagerLazy, IContextOfSite context) : base("Bck.Views")
         {
             _cmsManagerLazy = cmsManagerLazy;
+
+            _site = context.Site;
+            _user = context.User;
         }
 
-        public ViewsBackend Init(IContextOfSite ctx, ILog parentLog)
+        public ViewsBackend Init(/*IContextOfSite ctx,*/ ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            _site = ctx.Site;
-            _user = ctx.User;
+            //_site = ctx.Site;
+            //_user = ctx.User;
             return this;
         }
 

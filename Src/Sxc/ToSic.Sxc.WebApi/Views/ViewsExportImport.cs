@@ -42,20 +42,24 @@ namespace ToSic.Sxc.WebApi.Views
             TemplateHelpers appHelpers, 
             IEnvironmentLogger envLogger,
             Lazy<CmsManager> cmsManagerLazy, 
-            Lazy<JsonBundleSerializer> jsonBundleLazy) : base("Bck.Views")
+            Lazy<JsonBundleSerializer> jsonBundleLazy, 
+            IContextOfSite context) : base("Bck.Views")
         {
             _serverPaths = serverPaths;
             _appHelpers = appHelpers;
             _envLogger = envLogger;
             _cmsManagerLazy = cmsManagerLazy;
             _jsonBundleLazy = jsonBundleLazy;
+
+            _site = context.Site;
+            _user = context.User;
         }
 
-        public ViewsExportImport Init(IContextOfSite ctx, ILog parentLog)
+        public ViewsExportImport Init(/*IContextOfSite ctx,*/ ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            _site = ctx.Site;
-            _user = ctx.User;
+            //_site = ctx.Site;
+            //_user = ctx.User;
             return this;
         }
 

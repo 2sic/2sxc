@@ -23,42 +23,35 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         private readonly OqtTempInstanceContext _oqtTempInstanceContext;
         protected readonly IServiceProvider ServiceProvider;
 
-        protected IContextOfBlock GetContext()
-        {
-            var block = GetBlock();
-            if (block != null) return block.Context;
+        protected IContextOfBlock GetContext() => GetBlock()?.Context ?? ServiceProvider.Build<IContextOfBlock>();
 
-            throw new Exception("todo - must figure out - should always have a block state...?");
+        protected IBlock GetBlock(bool allowNoContextFound = true) => _block ??= InitializeBlock(allowNoContextFound);
+        private IBlock _block;
 
-            //var alias = _tenantResolver.GetAlias();
-            //var context = new InstanceContext(_zoneMapper.TenantOfSite(alias.SiteId), WipConstServer.NullPage, WipConstServer.NullContainer, GetUser(), ServiceProvider);
-            //return context;
-        }
-
-        protected IBlock GetBlock(bool allowNoContextFound = true)
+        private IBlock InitializeBlock(bool allowNoContextFound)
         {
             var wrapLog = Log.Call<IBlock>($"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
 
-            var containerId = GetTypedHeader(WebApi.WebApiConstants.HeaderInstanceId, -1);
-            var contentblockId = GetTypedHeader(WebApi.WebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
+            var moduleId = GetTypedHeader(WebApi.WebApiConstants.HeaderInstanceId, -1);
+            var contentBlockId =
+                GetTypedHeader(WebApi.WebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
             var pageId = GetTypedHeader(WebApi.WebApiConstants.HeaderPageId, -1);
-            //var instance = TestIds.FindInstance(containerId);
 
-            if (containerId == -1 || pageId == -1)
+            if (moduleId == -1 || pageId == -1)
             {
                 if (allowNoContextFound) return wrapLog("not found", null);
                 throw new Exception("No context found, cannot continue");
             }
 
-            var module = _moduleRepository.GetModule(containerId);
-            var ctx = _oqtTempInstanceContext.CreateContext(module, pageId, Log, ServiceProvider);
+            var module = _moduleRepository.GetModule(moduleId);
+            var ctx = _oqtTempInstanceContext.CreateContext(pageId, module, Log);
             IBlock block = ServiceProvider.Build<BlockFromModule>().Init(ctx, Log);
 
             // only if it's negative, do we load the inner block
-            if (contentblockId > 0) return wrapLog("found", block);
+            if (contentBlockId > 0) return wrapLog("found", block);
 
-            Log.Add($"Inner Content: {contentblockId}");
-            block = ServiceProvider.Build<BlockFromEntity>().Init(block, contentblockId, Log);
+            Log.Add($"Inner Content: {contentBlockId}");
+            block = ServiceProvider.Build<BlockFromEntity>().Init(block, contentBlockId, Log);
             return wrapLog("found", block);
         }
 

@@ -20,8 +20,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         private readonly Lazy<ViewsExportImport> _viewExportLazy;
         protected override string HistoryLogName => "Api.TmpCnt";
 
-        private ViewsBackend Backend => _viewsBackendLazy.Value.Init(GetContext(), Log);
-        private ViewsExportImport ExportImport => _viewExportLazy.Value.Init(GetContext(), Log);
+        private ViewsBackend Backend => _viewsBackendLazy.Value.Init(/*GetContext(),*/ Log);
+        private ViewsExportImport ExportImport => _viewExportLazy.Value.Init(/*GetContext(),*/ Log);
 
         public ViewController(StatefulControllerDependencies dependencies, 
             Lazy<ViewsBackend> viewsBackendLazy,

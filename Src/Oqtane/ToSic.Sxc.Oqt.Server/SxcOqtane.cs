@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Oqt.Server
 
         private IBlock GetBlock()
         {
-            var context = _oqtTempInstanceContext.CreateContext(Module, Page.PageId, Log, _serviceProvider);
+            var context = _oqtTempInstanceContext.CreateContext(Page.PageId, Module, Log);
             var block = _serviceProvider.Build<BlockFromModule>().Init(context, Log);
             return block;
         }

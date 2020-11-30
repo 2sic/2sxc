@@ -23,8 +23,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 	{
         protected override string HistoryLogName => "Api.TmpCnt";
 
-        private ViewsBackend Backend => _build<ViewsBackend>().Init(GetContext(), Log);
-        private ViewsExportImport exportImport => _build<ViewsExportImport>().Init(GetContext(), Log);
+        private ViewsBackend Backend => _build<ViewsBackend>().Init(/*GetContext(),*/ Log);
+        private ViewsExportImport ExportImport => _build<ViewsExportImport>().Init(/*GetContext(),*/ Log);
 
         [HttpGet]
         [SupportedModules("2sxc,2sxc-app")]
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
         [HttpGet]
         [AllowAnonymous] // will do security check internally
-        public HttpResponseMessage Json(int appId, int viewId) => exportImport.DownloadViewAsJson(appId, viewId);
+        public HttpResponseMessage Json(int appId, int viewId) => ExportImport.DownloadViewAsJson(appId, viewId);
 
         /// <summary>
         /// Used to be POST ImportExport/ImportContent
@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             var streams = new List<FileUploadDto>();
             for (var i = 0; i < files.Count; i++)
                 streams.Add(new FileUploadDto { Name = files[i].FileName, Stream = files[i].InputStream });
-            var result = exportImport.ImportView(zoneId, appId, streams, PortalSettings.DefaultLanguage);
+            var result = ExportImport.ImportView(zoneId, appId, streams, PortalSettings.DefaultLanguage);
 
             return wrapLog("ok", result);
         }
