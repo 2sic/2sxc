@@ -1,9 +1,10 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Context
 {
-    public interface IContextOfAppData
+    public interface IContextOfAppData: IContextOfSite
     {
         void InitApp(IAppIdentity appIdentity, ILog parentLog);
 

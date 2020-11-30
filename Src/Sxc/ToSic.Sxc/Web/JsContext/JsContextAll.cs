@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Web.JsContext
         {
             var ctx = block.Context;
 
-            Environment = new JsContextEnvironment(systemRootUrl, ctx, block);
+            Environment = new JsContextEnvironment(systemRootUrl, ctx);
             Language = new JsContextLanguage(ctx.ServiceProvider, ctx.Site, block.ZoneId);
             User = new JsContextUser(ctx.User);
 

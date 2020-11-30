@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             [FromRoute] string appPath,
             [FromRoute] string name,
             [FromQuery] string stream = null
-        ) => _appQuery.Init(Log).PublicQuery(GetContext(), appPath, name, stream, GetBlock());
+        ) => _appQuery.Init(Log).PublicQuery(GetContext(), appPath, name, stream);
 
         [HttpGet("auto/query/{name}/{default}")]
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(
@@ -42,6 +42,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             [FromQuery] bool includeGuid = false,
             [FromQuery] string stream = null,
             [FromQuery] int? appId = null
-        ) => _appQuery.Init(Log).Query(GetContext(), GetBlock(), GetBlock().App, name, includeGuid, stream, appId);
+        ) => _appQuery.Init(Log).Query(GetContext(), GetBlock().App, name, includeGuid, stream, appId);
     }
 }

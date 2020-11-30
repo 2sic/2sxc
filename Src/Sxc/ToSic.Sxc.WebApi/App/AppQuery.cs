@@ -30,7 +30,7 @@ namespace ToSic.Sxc.WebApi.App
 
         #region In-Container-Context Queries
 
-        internal Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(IContextOfSite context, IBlock block, IApp app, string name, bool includeGuid, string stream, int? appId)
+        internal Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(IContextOfAppData context, IApp app, string name, bool includeGuid, string stream, int? appId)
         {
             var wrapLog = Log.Call($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
 
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.WebApi.App
             if (app == null && appId != null)
                 app = ServiceProvider.Build<Apps.App>().Init(ServiceProvider, appId.Value, Log, showDrafts: context.User.IsSuperUser);
 
-            var result = BuildQueryAndRun(app, name, stream, includeGuid, context, Log, block?.Context.EditAllowed ?? false);
+            var result = BuildQueryAndRun(app, name, stream, includeGuid, context, Log, context?.EditAllowed ?? false);
             wrapLog(null);
             return result;
         }
@@ -51,7 +51,7 @@ namespace ToSic.Sxc.WebApi.App
 
 
         internal Dictionary<string, IEnumerable<Dictionary<string, object>>> 
-            PublicQuery(IContextOfBlock context, string appPath, string name, string stream, IBlock block)
+            PublicQuery(IContextOfBlock context, string appPath, string name, string stream)
         {
             var wrapLog = Log.Call($"path:{appPath}, name:{name}");
             if (string.IsNullOrEmpty(name))
@@ -61,7 +61,7 @@ namespace ToSic.Sxc.WebApi.App
                 ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(false), Log);
 
             // now just run the default query check and serializer
-            var result = BuildQueryAndRun(queryApp, name, stream, false, context, Log, block?.Context.EditAllowed ?? false);
+            var result = BuildQueryAndRun(queryApp, name, stream, false, context, Log, context?.EditAllowed ?? false);
             wrapLog(null);
             return result;
         }
