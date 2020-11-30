@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
-    public class FeatureController : SxcStatefulControllerBase, IFeatureController
+    public class FeatureController : OqtStatefulControllerBase, IFeatureController
     {
         private readonly FeaturesBackend _featuresBackend;
         protected override string HistoryLogName => "Api.Feats";

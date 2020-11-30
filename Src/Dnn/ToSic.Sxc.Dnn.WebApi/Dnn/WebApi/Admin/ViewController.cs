@@ -23,8 +23,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 	{
         protected override string HistoryLogName => "Api.TmpCnt";
 
-        private ViewsBackend Backend => _build<ViewsBackend>().Init(new DnnSite(), new DnnUser(), Log);
-        private ViewsExportImport exportImport => _build<ViewsExportImport>().Init(new DnnSite(), new DnnUser(), Log);
+        private ViewsBackend Backend => _build<ViewsBackend>().Init(GetContext(), Log);
+        private ViewsExportImport exportImport => _build<ViewsExportImport>().Init(GetContext(), Log);
 
         [HttpGet]
         [SupportedModules("2sxc,2sxc-app")]

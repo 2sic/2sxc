@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using ToSic.Sxc.Oqt.Server.Repository;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Web.WebApi.System;
 
@@ -8,11 +7,11 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     [Route(WebApiConstants.WebApiStateRoot + "/sys/[controller]/[action]")]
     [ApiController]
-    public class InsightsController : SxcStatelessControllerBase
+    public class InsightsController : OqtStatelessControllerBase
     {
         private readonly Lazy<Insights> _lazyInsights;
 
-        public InsightsController(IUserResolver userResolver, Lazy<Insights> lazyInsights) : base(userResolver)
+        public InsightsController(Lazy<Insights> lazyInsights) : base()
         {
             _lazyInsights = lazyInsights;
         }

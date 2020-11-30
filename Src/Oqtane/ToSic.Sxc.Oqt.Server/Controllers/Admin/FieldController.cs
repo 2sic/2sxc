@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     [ValidateAntiForgeryToken]
     [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
     [Route(WebApiConstants.WebApiStateRoot + "/admin/field/[action]")]
-    public class FieldController : SxcStatefulControllerBase, IFieldController
+    public class FieldController : OqtStatefulControllerBase, IFieldController
     {
         private readonly Lazy<AppRuntime> _appRuntime;
         private readonly Lazy<ContentTypeApi> _ctApiLazy;

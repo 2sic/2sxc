@@ -2,19 +2,14 @@
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Oqt.Server.Repository;
-using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using Log = ToSic.Eav.Logging.Simple.Log;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
-    public abstract class SxcStatelessControllerBase : Controller, IHasLog
+    public abstract class OqtStatelessControllerBase : Controller, IHasLog
     {
-        private readonly IUserResolver _userResolver;
-
-        protected SxcStatelessControllerBase(IUserResolver userResolver)
+        protected OqtStatelessControllerBase()
         {
             // ReSharper disable once VirtualMemberCallInConstructor
             // todo: redesign so it works - in .net core the HttpContext isn't ready in the constructor
@@ -26,14 +21,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             _logWrapper = new LogWrapper(Log);
             // todo: get this to work
             // ControllerContext.HttpContext.Response.RegisterForDispose(_logWrapper);
-            _userResolver = userResolver;
         }
-
-        #region Dummy Content-Block, as still stateless
-
-        protected IBlock NoBlock => null;
-
-        #endregion
 
         /// <inheritdoc />
         public ILog Log { get; }
@@ -57,12 +45,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         //    TimerWrapLog(null);
         //    base.Dispose(disposing);
         //}
-
-        public OqtUser GetUser()
-        {
-            return new OqtUser(_userResolver.GetUser());
-        }
-
 
         #region Extend Time so Web Server doesn't time out
 

@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     [Route(WebApiConstants.WebApiStateRoot + "/cms/[controller]/[action]")]
     [ValidateAntiForgeryToken]
     //[Authorize(Policy = "EditModule")] // TODO: disabled
-    public class ListController : SxcStatefulControllerBase
+    public class ListController : OqtStatefulControllerBase
     {
         protected override string HistoryLogName => "Api.List";
 

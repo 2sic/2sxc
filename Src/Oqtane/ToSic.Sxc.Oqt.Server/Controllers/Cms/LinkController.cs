@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     [Route(WebApiConstants.WebApiStateRoot + "/cms/[controller]/[action]")]
     [ValidateAntiForgeryToken]
-    public class LinkController : SxcStatefulControllerBase
+    public class LinkController : OqtStatefulControllerBase
     {
         private readonly HyperlinkBackend<int, int> _hyperlinkBackend;
         protected override string HistoryLogName => "Api.LnkCnt";

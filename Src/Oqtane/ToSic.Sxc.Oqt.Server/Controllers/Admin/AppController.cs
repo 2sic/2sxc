@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     // [ValidateAntiForgeryToken] because the exports are called by the browser directly (new tab) 
     // we can't set this globally (only needed for imports)
     [Route(WebApiConstants.WebApiStateRoot + "/admin/app/[action]")]
-    public class AppController : SxcStatefulControllerBase, IAppController
+    public class AppController : OqtStatefulControllerBase, IAppController
     {
         private readonly Lazy<AppsBackend> _appsBackendLazy;
         private readonly Lazy<CmsZones> _cmsZonesLazy;

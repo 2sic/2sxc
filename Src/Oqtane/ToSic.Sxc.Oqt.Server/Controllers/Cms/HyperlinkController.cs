@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     [ApiController]
     [Route(WebApiConstants.WebApiStateRoot + "/dnn/[controller]/[action]")]
     [Route(WebApiConstants.WebApiStateRoot + "/cms/link/[action]")]
-    public class HyperlinkController: SxcStatefulControllerBase
+    public class HyperlinkController: OqtStatefulControllerBase
     {
         private readonly HyperlinkBackend<int, int> _hyperlinkBackend;
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "HypLnk";

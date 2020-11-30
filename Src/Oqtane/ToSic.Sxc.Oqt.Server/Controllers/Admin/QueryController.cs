@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     [ValidateAntiForgeryToken]
     [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
-    public class QueryController : SxcStatefulControllerBase, IQueryController
+    public class QueryController : OqtStatefulControllerBase, IQueryController
     {
         private readonly Lazy<QueryApi> _queryLazy;
         private readonly Lazy<CmsManager> _cmsManagerLazy;

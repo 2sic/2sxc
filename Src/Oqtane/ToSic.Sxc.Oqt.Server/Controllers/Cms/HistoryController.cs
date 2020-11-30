@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     [Route(WebApiConstants.WebApiStateRoot + "/cms/[controller]/[action]")]
     [ValidateAntiForgeryToken]
-    public class HistoryController : SxcStatefulControllerBase, IHistoryController
+    public class HistoryController : OqtStatefulControllerBase, IHistoryController
     {
         private readonly IdentifierHelper _idHelper;
         private readonly Lazy<AppManager> _appManagerLazy;

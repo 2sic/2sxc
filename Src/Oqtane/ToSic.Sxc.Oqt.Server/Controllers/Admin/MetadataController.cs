@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     [ValidateAntiForgeryToken]
     [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
-    public class MetadataController : SxcStatefulControllerBase, IMetadataController
+    public class MetadataController : OqtStatefulControllerBase, IMetadataController
     {
         protected override string HistoryLogName => "Api.Metadata";
 

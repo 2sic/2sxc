@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     [Route(WebApiConstants.WebApiStateRoot + "/admin/type/[action]")]
     //[ApiController]
     [ValidateAntiForgeryToken]
-    public class TypeController : SxcStatefulControllerBase, ITypeController
+    public class TypeController : OqtStatefulControllerBase, ITypeController
     {
         private readonly Lazy<ContentTypeApi> _ctApiLazy;
         private readonly Lazy<ContentExportApi> _contentExportLazy;

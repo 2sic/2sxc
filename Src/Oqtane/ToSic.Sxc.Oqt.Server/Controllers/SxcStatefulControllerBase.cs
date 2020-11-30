@@ -1,9 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.Primitives;
 using Oqtane.Repository;
-using ToSic.Eav;
-using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
@@ -13,10 +10,10 @@ using ToSic.Sxc.Oqt.Server.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
-    public abstract class SxcStatefulControllerBase: SxcStatelessControllerBase
+    public abstract class OqtStatefulControllerBase: OqtStatelessControllerBase
     {
 
-        protected SxcStatefulControllerBase(StatefulControllerDependencies dependencies) : base(dependencies.UserResolver)
+        protected OqtStatefulControllerBase(StatefulControllerDependencies dependencies) : base()
         {
             ServiceProvider = dependencies.ServiceProvider;
             _moduleRepository = dependencies.ModuleRepository;

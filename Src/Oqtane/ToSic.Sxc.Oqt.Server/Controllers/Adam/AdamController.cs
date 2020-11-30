@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Adam
     [ValidateAntiForgeryToken]
     //[Route(WebApiConstants.WebApiStateRoot + "/app-content/{contentType}/{guid:guid}/{field}/[action]")]
     [Route(WebApiConstants.WebApiStateRoot + "/app-content/{contentType}/{guid:guid}/{field}")]
-    public class AdamController : SxcStatefulControllerBase
+    public class AdamController : OqtStatefulControllerBase
     {
         private readonly Lazy<AdamTransUpload<int, int>> _adamUpload;
         private readonly Lazy<AdamTransGetItems<int, int>> _adamItems;

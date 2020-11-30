@@ -6,7 +6,6 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.WebApi.ImportExport;
@@ -24,11 +23,11 @@ namespace ToSic.Sxc.WebApi.Views
             _cmsManagerLazy = cmsManagerLazy;
         }
 
-        public ViewsBackend Init(ISite site, IUser user, ILog parentLog)
+        public ViewsBackend Init(IContextOfSite ctx, ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            _site = site;
-            _user = user;
+            _site = ctx.Site;
+            _user = ctx.User;
             return this;
         }
 

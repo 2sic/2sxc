@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     [AutoValidateAntiforgeryToken]
     [Route(WebApiConstants.WebApiStateRoot + "/cms/edit/[action]")]
     [ApiController]
-    public class EditController: SxcStatefulControllerBase
+    public class EditController: OqtStatefulControllerBase
     {
         #region DI
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "UiCntr";

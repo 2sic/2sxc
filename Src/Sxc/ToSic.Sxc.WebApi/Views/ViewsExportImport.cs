@@ -51,11 +51,11 @@ namespace ToSic.Sxc.WebApi.Views
             _jsonBundleLazy = jsonBundleLazy;
         }
 
-        public ViewsExportImport Init(ISite site, IUser user, ILog parentLog)
+        public ViewsExportImport Init(IContextOfSite ctx, ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            _site = site;
-            _user = user;
+            _site = ctx.Site;
+            _user = ctx.User;
             return this;
         }
 

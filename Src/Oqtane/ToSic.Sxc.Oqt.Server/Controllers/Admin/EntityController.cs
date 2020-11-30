@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     //[AllowAnonymous]
     //[DnnLogExceptions]
     [Route(WebApiConstants.WebApiStateRoot + "/admin/entity/[action]")]
-    public class EntityController : SxcStatefulControllerBase //, IEntitiesController // FIX: changed from interface to solve ambiguous DELETE routes.
+    public class EntityController : OqtStatefulControllerBase //, IEntitiesController // FIX: changed from interface to solve ambiguous DELETE routes.
     {
         private readonly Lazy<ContentExportApi>_contentExportLazy;
         private readonly Lazy<ContentImportApi> _contentImportLazy;

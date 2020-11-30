@@ -7,7 +7,7 @@ using ToSic.Sxc.WebApi.ImportExport;
 namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
 {
     [Route(WebApiConstants.WebApiStateRoot + "/sys/install/[action]")]
-    public class InstallController: SxcStatefulControllerBase
+    public class InstallController: OqtStatefulControllerBase
     {
         private readonly Lazy<IEnvironmentInstaller> _envInstallerLazy;
         private readonly Lazy<ImportFromRemote> _impFromRemoteLazy;

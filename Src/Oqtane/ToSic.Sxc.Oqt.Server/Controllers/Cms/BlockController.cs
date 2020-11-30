@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     [ValidateAntiForgeryToken]
     [ApiController]
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
-    public class BlockController : SxcStatefulControllerBase
+    public class BlockController : OqtStatefulControllerBase
     {
         private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
         private readonly Lazy<ContentBlockBackend> _blockBackendLazy;

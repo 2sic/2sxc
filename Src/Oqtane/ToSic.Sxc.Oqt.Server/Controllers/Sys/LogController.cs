@@ -5,7 +5,7 @@ using ToSic.Sxc.Oqt.Shared;
 namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
 {
     [Route(WebApiConstants.WebApiStateRoot + "/sys/[controller]/[action]")]
-    public class LogController: SxcStatefulControllerBase
+    public class LogController: OqtStatefulControllerBase
     {
         protected override string HistoryLogName => "Api.Log";
 
