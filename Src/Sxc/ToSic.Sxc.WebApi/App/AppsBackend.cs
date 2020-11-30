@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.LookUp;
 
 namespace ToSic.Sxc.WebApi.App
@@ -19,11 +17,11 @@ namespace ToSic.Sxc.WebApi.App
             _cmsZones = cmsZones;
         }
 
-        public List<AppDto> Apps(ISite site, IBlock block, int zoneId)
+        public List<AppDto> Apps(IContextOfAppData context)
         {
-            var cms = _cmsZones.Init(zoneId, Log);
-            var configurationBuilder = ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(block, true);
-            var list = cms.AppsRt.GetApps(site, configurationBuilder);
+            var cms = _cmsZones.Init(context.Site.ZoneId, Log);
+            var configurationBuilder = ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(context.EditAllowed);
+            var list = cms.AppsRt.GetApps(context.Site, configurationBuilder);
             return list.Select(a => new AppDto
             {
                 Id = a.AppId,

@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public List<AppDto> List(int zoneId)
-            => _appsBackendLazy.Value.Init(Log).Apps(GetContext().Site, GetBlock(), zoneId);
+            => _appsBackendLazy.Value.Init(Log).Apps(GetContext());
 
         [HttpDelete]
         [ValidateAntiForgeryToken]

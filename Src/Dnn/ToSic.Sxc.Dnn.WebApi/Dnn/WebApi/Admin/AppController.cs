@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public List<AppDto> List(int zoneId)
-            => _build<AppsBackend>().Init(Log).Apps(new DnnSite().Init(ActiveModule.OwnerPortalID), GetBlock(), zoneId);
+            => _build<AppsBackend>().Init(Log).Apps(GetContext());
 
         [HttpDelete]
         [ValidateAntiForgeryToken]

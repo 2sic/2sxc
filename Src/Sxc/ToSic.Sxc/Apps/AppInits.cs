@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Apps
 {
     public static class AppInits
     {
-        public static IApp Init(this App app, AppConfigDelegate confProvider, IAppIdentity appIdentity, ILog log, bool showDrafts = false)
+        public static IApp Init(this App app, AppConfigDelegate confProvider, IAppIdentity appIdentity, ILog log, bool showDrafts)
         {
             var buildConfig = confProvider.Build(showDrafts);
             return app.Init(appIdentity, buildConfig, log);
@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Apps
             var appIdentity = new AppIdentity(SystemRuntime.ZoneIdOfApp(appId), appId);
             var confProvider = sp.Build<AppConfigDelegate>().Init(log);
             if (optionalBlock == null) return app.Init(confProvider, appIdentity, log, showDrafts);
-            var buildConfig = confProvider.Build(optionalBlock, true);
+            var buildConfig = confProvider.Build(optionalBlock);
             return app.Init(appIdentity, buildConfig, log);
         }
     }

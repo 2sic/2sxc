@@ -46,10 +46,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public AllInOneDto Load([FromBody] List<ItemIdentifier> items, int appId)
         {
-            var block = GetBlock();
+            var context = GetContext();
             var result = _loadBackend.Value
                 .Init(Log)
-                .Load(block, _contextBuilder.Init(GetContext(), GetApp(appId)), appId, items);
+                .Load(context, _contextBuilder.Init(context, GetApp(appId)), appId, items);
             return result;
         }
 

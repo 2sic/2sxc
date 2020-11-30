@@ -22,6 +22,12 @@ namespace ToSic.Sxc.WebApi
         /// used for API calls to get the current app
         /// </summary>
         /// <returns></returns>
+        internal IApp GetApp(int appId, bool showDrafts) => ServiceProvider.Build<Apps.App>().Init(ServiceProvider, appId, Log, null, showDrafts);
+
+        /// <summary>
+        /// used for API calls to get the current app
+        /// </summary>
+        /// <returns></returns>
         internal IApp GetApp(int appId, IBlock optionalBlock) => ServiceProvider.Build<Apps.App>().Init(ServiceProvider, appId, Log, optionalBlock);
     }
 }

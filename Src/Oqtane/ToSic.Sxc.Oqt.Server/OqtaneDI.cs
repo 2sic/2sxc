@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddTransient<DynamicCodeRoot, OqtaneDynamicCode>();
             services.AddTransient<IPlatformModuleUpdater, OqtModuleUpdater>();
             services.AddTransient<IEnvironmentInstaller, OqtEnvironmentInstaller>();
-            services.AddTransient<IGetEngine, OqtGetLookupEngine>();
+            services.AddTransient<ILookUpEngineResolver, OqtGetLookupEngine>();
             services.AddTransient<OqtContextBuilder>();
             services.AddTransient<IModule, OqtContainer>();
             services.AddTransient<OqtContainer>();

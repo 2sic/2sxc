@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Blocks
             AppId = appId.AppId;
         }
 
-        protected bool CompleteInit(IBlockBuilder rootBuilder, IBlockIdentifier blockId, int blockNumberUnsureIfNeeded) // where T : class
+        protected bool CompleteInit(IBlockBuilder rootBuilder, IBlockIdentifier blockId, int blockNumberUnsureIfNeeded)
         {
             var wrapLog = Log.Call<bool>();
 
@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Blocks
             Log.Add("About to create app");
             App = Context.ServiceProvider.Build<App>()
                 .PreInit(Context.Site)
-                .Init(this, Context.ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(this, false), Log);
+                .Init(this, Context.ServiceProvider.Build<AppConfigDelegate>().Init(Log).BuildForNewBlock(Context, this), Log);
             Log.Add("App created");
 
             // note: requires EditAllowed, which isn't ready till App is created

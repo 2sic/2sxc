@@ -44,10 +44,11 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public AllInOneDto Load([FromBody] List<ItemIdentifier> items, int appId)
         {
+            var context = GetContext();
             var block = GetBlock();
             var result = _loadBackend.Value
                 .Init(Log)
-                .Load(block, _contextBuilder.Init(block), appId, items);
+                .Load(context, _contextBuilder.Init(block), appId, items);
             return result;
         }
 

@@ -76,7 +76,7 @@ namespace ToSic.SexyContent
             // new #2160
             services.TryAddTransient<SecurityChecksBase, DnnAdamSecurityChecks>();
 
-            services.TryAddTransient<IGetEngine, GetDnnEngine>();
+            services.TryAddTransient<ILookUpEngineResolver, GetDnnEngine>();
             services.TryAddTransient<GetDnnEngine>();
             services.TryAddTransient<IFingerprint, DnnFingerprint>();
 

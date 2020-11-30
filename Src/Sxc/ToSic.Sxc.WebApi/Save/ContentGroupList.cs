@@ -64,14 +64,13 @@ namespace ToSic.Sxc.WebApi.Save
 
             // todo: if no block given, skip all this
 
-            var sp = CmsManager.ServiceProvider;
-            var app = sp.Build<Apps.App>().Init(_appIdentity, 
-                sp.Build<AppConfigDelegate>().Init(Log).Build(block, true), Log);
+            //var sp = CmsManager.ServiceProvider;
+            //var app = sp.Build<Apps.App>().Init(_appIdentity, sp.Build<AppConfigDelegate>().Init(Log).Build(block), Log);
 
             foreach (var bundle in pairsOrSingleItems)
             {
                 Log.Add("processing:" + bundle.Key);
-                var entity = app.Data.Immutable.One(bundle.First().Header.ListParent());
+                var entity = CmsManager.Read.AppState.List.One(bundle.First().Header.ListParent()); // app.Data.Immutable.One(bundle.First().Header.ListParent());
                 var targetIsContentBlock = entity.Type.Name == BlocksRuntime.BlockTypeName;
                 
                 var primaryItem = targetIsContentBlock ? FindContentItem(bundle) : bundle.First();

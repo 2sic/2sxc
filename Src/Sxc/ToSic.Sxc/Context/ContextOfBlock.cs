@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Sxc.Cms.Publishing;
 
@@ -16,6 +15,7 @@ namespace ToSic.Sxc.Context
             Page = page;
             Module = module;
             _publishingResolver = publishingResolver;
+            Log.Rename("Sxc.CtxBlk");
         }
         private readonly Lazy<IPagePublishingResolver> _publishingResolver;
 

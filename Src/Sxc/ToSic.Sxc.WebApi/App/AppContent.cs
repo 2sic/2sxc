@@ -47,7 +47,7 @@ namespace ToSic.Sxc.WebApi.App
 
             // get the app - if we have the context from the request, use that, otherwise generate full app
             var app = _block == null
-                ? ServiceProvider.Build<Apps.App>().Init(ServiceProvider.Build<AppConfigDelegate>().Init(Log), appIdentity, Log)
+                ? ServiceProvider.Build<Apps.App>().Init(ServiceProvider.Build<AppConfigDelegate>().Init(Log), appIdentity, Log, false)
                 : GetApp(appIdentity.AppId, _block);
 
             // verify that read-access to these content-types is permitted

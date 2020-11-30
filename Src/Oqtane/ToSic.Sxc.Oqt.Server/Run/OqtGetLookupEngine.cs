@@ -6,13 +6,13 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtGetLookupEngine: HasLog<IGetEngine>, IGetEngine
+    public class OqtGetLookupEngine: HasLog<ILookUpEngineResolver>, ILookUpEngineResolver
     {
         public OqtGetLookupEngine() : base($"{OqtConstants.OqtLogPrefix}.LookUp")
         {
         }
 
-        public ILookUpEngine GetEngine(int instanceId/*, ILog parentLog*/)
+        public ILookUpEngine GetLookUpEngine(int instanceId/*, ILog parentLog*/)
         {
             return new LookUpEngine(Log);
         }
