@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.Primitives;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
@@ -11,6 +12,20 @@ namespace ToSic.Sxc.Mvc.WebApi
 {
     public abstract class SxcStatefulControllerBase: SxcStatelessControllerBase
     {
+        protected IContextOfSite GetSiteContext()
+        {
+            return HttpContext.RequestServices.Build<IContextOfSite>();
+        }
+
+
+        protected IContextOfApp GetAppContext(int appId)
+        {
+            // First get a normal basic context which is initialized with site, etc.
+            var appContext = HttpContext.RequestServices.Build<IContextOfApp>();
+            appContext.Init(Log);
+            appContext.ResetApp(appId);
+            return appContext;
+        }
 
         protected IContextOfBlock GetContext()
         {

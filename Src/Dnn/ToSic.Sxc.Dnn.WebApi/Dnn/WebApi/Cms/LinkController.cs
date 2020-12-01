@@ -47,6 +47,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 	    [HttpGet]
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
 		public string Resolve(string hyperlink, int appId, string contentType, Guid guid, string field) 
-            => _build<HyperlinkBackend<int, int>>().Init(Log).ResolveHyperlink(GetContext(), hyperlink, appId, contentType, guid, field);
+            => _build<HyperlinkBackend<int, int>>().Init(Log).ResolveHyperlink(appId, hyperlink, contentType, guid, field);
     }
 }

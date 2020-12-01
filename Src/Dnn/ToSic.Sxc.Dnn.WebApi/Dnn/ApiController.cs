@@ -5,6 +5,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
@@ -32,10 +33,8 @@ namespace ToSic.Sxc.Dnn
         /// <inheritdoc />
         public new IDnnContext Dnn => base.Dnn;
 
-        [PrivateApi("try to remove")]
-
-        [PrivateApi]
-        public int CompatibilityLevel => DynCode.CompatibilityLevel;
+        [PrivateApi] public IBlock Block => GetBlock();
+        [PrivateApi] public int CompatibilityLevel => DynCode.CompatibilityLevel;
 
         /// <inheritdoc />
         public IApp App => DynCode.App;

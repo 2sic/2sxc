@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Errors;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Adam
@@ -12,21 +12,24 @@ namespace ToSic.Sxc.WebApi.Adam
     public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>: HasLog where T : class
     {
         private readonly Lazy<AdamState<TFolderId, TFileId>> _adamState;
+        private readonly IContextOfApp _context;
 
         #region Constructor / DI
 
-        protected AdamTransactionBase(Lazy<AdamState<TFolderId, TFileId>> adamState, string logName) : base(logName)
+        protected AdamTransactionBase(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextOfApp context, string logName) : base(logName)
         {
             _adamState = adamState;
+            _context = context;
         }
 
-        public T Init(IContextOfApp context, int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot, ILog parentLog) 
+        public T Init(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot, ILog parentLog) 
             
         {
             Log.LinkTo(parentLog);
-            var logCall = Log.Call<T>($"app: {appId}, type: {contentType}, itemGuid: {itemGuid}, field: {field}, portalRoot: {usePortalRoot}");
+            _context.ResetApp(appId);
+            var logCall = Log.Call<T>($"app: {_context.AppState.Show()}, type: {contentType}, itemGuid: {itemGuid}, field: {field}, portalRoot: {usePortalRoot}");
             //State = new AdamState<TFolderId, TFileId>();
-            State.Init(context, appId, contentType, field, itemGuid, usePortalRoot, Log);
+            State.Init(_context, contentType, field, itemGuid, usePortalRoot, Log);
             return logCall(null, this as T);
         }
 

@@ -16,19 +16,22 @@ namespace ToSic.Sxc.WebApi.Cms
     public class EntityPickerBackend: WebApiBackendBase<EntityPickerBackend>
     {
         private readonly EntityPickerApi _entityPickerApi;
+        private readonly IContextOfApp _context;
 
-        public EntityPickerBackend(EntityPickerApi entityPickerApi, IServiceProvider serviceProvider) : base(serviceProvider, "BE.EntPck")
+        public EntityPickerBackend(EntityPickerApi entityPickerApi, IContextOfApp context, IServiceProvider serviceProvider) : base(serviceProvider, "BE.EntPck")
         {
             _entityPickerApi = entityPickerApi;
+            _context = context;
         }
 
 
-        public IEnumerable<EntityForPickerDto> GetAvailableEntities(IContextOfSite ctx, int appId, string[] items, string contentTypeName, int? dimensionId)
+        public IEnumerable<EntityForPickerDto> GetAvailableEntities(int appId, string[] items, string contentTypeName, int? dimensionId)
         {
+            _context.ResetApp(appId);
             // do security check
             var permCheck = string.IsNullOrEmpty(contentTypeName)
-                ? ServiceProvider.Build<MultiPermissionsApp>().Init(ctx, GetApp(appId, false), Log)
-                : ServiceProvider.Build<MultiPermissionsTypes>().Init(ctx, GetApp(appId, false), contentTypeName, Log);
+                ? ServiceProvider.Build<MultiPermissionsApp>().Init(_context, _context.AppState, Log)
+                : ServiceProvider.Build<MultiPermissionsTypes>().Init(_context, _context.AppState, contentTypeName, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 

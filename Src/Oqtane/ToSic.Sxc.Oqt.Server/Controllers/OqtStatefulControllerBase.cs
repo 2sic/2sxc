@@ -1,11 +1,14 @@
 ﻿using System;
 using Microsoft.Extensions.Primitives;
 using Oqtane.Repository;
+using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Run;
+using App = ToSic.Sxc.Apps.App;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
@@ -22,6 +25,23 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         private readonly IModuleRepository _moduleRepository;
         private readonly OqtTempInstanceContext _oqtTempInstanceContext;
         protected readonly IServiceProvider ServiceProvider;
+
+        protected IContextOfSite GetSiteContext()
+        {
+            return ServiceProvider.Build<IContextOfSite>();
+        }
+
+
+        protected IContextOfApp GetAppContext(int appId)
+        {
+            // First get a normal basic context which is initialized with site, etc.
+            var appContext = ServiceProvider.Build<IContextOfApp>();
+            appContext.Init(Log);
+            appContext.ResetApp(appId);
+            return appContext;
+        }
+
+
 
         protected IContextOfBlock GetContext() => GetBlock()?.Context ?? ServiceProvider.Build<IContextOfBlock>().Init(Log) as IContextOfBlock;
 

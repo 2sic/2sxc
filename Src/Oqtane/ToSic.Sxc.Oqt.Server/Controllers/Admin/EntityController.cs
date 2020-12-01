@@ -138,6 +138,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 
         // New feature in 11.03 - Usage Statistics
         // not final yet, so no [HttpGet]
-        public dynamic Usage(int appId, Guid guid) => _lazyEntityBackend.Value.Init(Log).Usage(GetContext(), GetApp(appId), guid);
+        public dynamic Usage(int appId, Guid guid) => _lazyEntityBackend.Value.Init(Log).Usage(GetAppContext(appId), guid);
     }
 }

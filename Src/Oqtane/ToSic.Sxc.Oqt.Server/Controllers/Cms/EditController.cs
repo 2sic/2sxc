@@ -73,7 +73,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         public IEnumerable<EntityForPickerDto> EntityPicker(int appId, [FromBody] string[] items,
             string contentTypeName = null, int? dimensionId = null)
             => EntityBackend.Init(Log)
-                .GetAvailableEntities(GetContext(), appId, items, contentTypeName, dimensionId);
+                .GetAvailableEntities(appId, items, contentTypeName, dimensionId);
 
     }
 }

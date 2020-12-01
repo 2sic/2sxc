@@ -5,6 +5,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
+using ToSic.Sxc.Context;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -15,14 +16,13 @@ namespace ToSic.Sxc.WebApi.Cms
 
         // New feature in 11.03 - Usage Statistics
 
-        public dynamic Usage(IContextOfSite context, IApp app, Guid guid)
+        public dynamic Usage(IContextOfApp context, Guid guid)
         {
-            var permCheck = ServiceProvider.Build<MultiPermissionsApp>().Init(context, app, Log);
+            var permCheck = ServiceProvider.Build<MultiPermissionsApp>().Init(context, context.AppState, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
-            var appData = app.Data;
-            var item = appData.Immutable.One(guid);
+            var item = context.AppState.List.One(guid);
             var relationships = item.Relationships.AllRelationships;
             // var result = relationships.Select(r => new EntityInRelationDto(r.))
             // todo: don't forget Metadata relationships

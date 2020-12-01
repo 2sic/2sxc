@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         public IEnumerable<EntityForPickerDto> EntityPicker([FromUri] int appId, [FromBody] string[] items,
             [FromUri] string contentTypeName = null, [FromUri] int? dimensionId = null)
             => _build<EntityPickerBackend>().Init(Log)
-                .GetAvailableEntities(GetContext(), appId, items, contentTypeName, dimensionId);
+                .GetAvailableEntities(appId, items, contentTypeName, dimensionId);
 
     }
 }

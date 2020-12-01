@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         public IActionResult Resolve(string hyperlink, int appId, string contentType = default, Guid guid = default, string field = default)
         {
             var result = _hyperlinkBackend.Init(Log)
-                .ResolveHyperlink(GetContext(), hyperlink, appId, contentType, guid, field);
+                .ResolveHyperlink(appId, hyperlink, contentType, guid, field);
             return Json(result);
         }
 
@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         public IActionResult ResolveHyperlink(string hyperlink, int appId, string contentType = default, Guid guid = default, string field = default)
         {
             var result = _hyperlinkBackend.Init(Log)
-                .ResolveHyperlink(GetContext(), hyperlink, appId, contentType, guid, field);
+                .ResolveHyperlink(appId, hyperlink, contentType, guid, field);
             return Json(result);
         }
     }

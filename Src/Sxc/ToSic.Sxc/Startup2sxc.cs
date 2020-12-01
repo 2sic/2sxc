@@ -50,6 +50,7 @@ namespace ToSic.Sxc
 
             // Context stuff
             services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
+            services.TryAddTransient<IContextOfApp, ContextOfApp>();
             services.TryAddTransient<ContextOfBlock>();
             services.TryAddTransient<IPage, Page>();
             services.TryAddTransient<Page>();

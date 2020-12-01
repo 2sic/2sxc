@@ -101,7 +101,7 @@ namespace ToSic.Sxc.WebApi
 
             var context = GetContext();
             return _build<AdamTransUpload<int, int>>()
-                .Init(context, context.AppState.AppId, contentType, guid.Value, field, false, Log)
+                .Init(context.AppState.AppId, contentType, guid.Value, field, false, Log)
                 .UploadOne(stream, fileName, subFolder, true);
         }
 

@@ -44,29 +44,41 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public IEnumerable<Dictionary<string, object>> List(int appId, string contentType) 
-            => _build<EntityApi>()
-                .InitOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.ReadSomething, Log)
+        public IEnumerable<Dictionary<string, object>> List(int appId, string contentType)
+        {
+            var appContext = GetAppContext(appId);
+            return _build<EntityApi>()
+                .InitOrThrowBasedOnGrants(appContext, appContext.AppState, contentType,
+                    GrantSets.ReadSomething, Log)
                 .GetEntitiesForAdmin(contentType);
+        }
 
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
         // todo: unsure why only Edit - is this used anywhere else than admin?
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void Delete(string contentType, int id, int appId, bool force = false) 
-            => _build<EntityApi>()
-                .InitOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
+        public void Delete(string contentType, int id, int appId, bool force = false)
+        {
+            var appContext = GetAppContext(appId);
+            _build<EntityApi>()
+                .InitOrThrowBasedOnGrants(appContext, appContext.AppState, contentType,
+                    GrantSets.DeleteSomething, Log)
                 .Delete(contentType, id, force);
+        }
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
         // todo: unsure why only Edit - is this used anywhere else than admin?
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, Guid guid, int appId, bool force = false)
-            => _build<EntityApi>()
-                .InitOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
+        {
+            var appContext = GetAppContext(appId);
+            _build<EntityApi>()
+                .InitOrThrowBasedOnGrants(appContext, appContext.AppState, contentType,
+                    GrantSets.DeleteSomething, Log)
                 .Delete(contentType, guid, force);
+        }
 
 
         /// <summary>
@@ -138,7 +150,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
         // New feature in 11.03 - Usage Statistics
         // not final yet, so no [HttpGet]
-        public dynamic Usage(int appId, Guid guid) => _build<EntityBackend>().Init(Log).Usage(GetContext(), GetApp(appId), guid);
+        public dynamic Usage(int appId, Guid guid) => _build<EntityBackend>().Init(Log).Usage(GetAppContext(appId), guid);
 
     }
 }

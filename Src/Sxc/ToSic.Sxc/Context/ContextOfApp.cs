@@ -9,17 +9,22 @@ namespace ToSic.Sxc.Context
 {
     public class ContextOfApp: ContextOfSite, IContextOfApp
     {
+        #region Constructor / DI
+
         public ContextOfApp(IServiceProvider serviceProvider, ISite site, IUser user) : base(serviceProvider, site, user)
         {
             Log.Rename("Sxc.CtxApp");
         }
 
+        #endregion
+
         public void ResetApp(IAppIdentity appIdentity)
         {
             if (AppIdentity == null || AppIdentity.AppId != appIdentity.AppId) 
                 AppIdentity = appIdentity;
-
         }
+
+        public void ResetApp(int appId) => ResetApp(State.Identity(Site.ZoneId, appId));
 
         protected virtual IAppIdentity AppIdentity
         {

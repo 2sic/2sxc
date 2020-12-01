@@ -29,15 +29,16 @@ namespace ToSic.Sxc.WebApi.Adam
         /// <summary>
         /// Initializes the object and performs all the initial security checks
         /// </summary>
-        public AdamState Init(IContextOfApp context, int appId, string contentType, string field, Guid guid, bool usePortalRoot, ILog parentLog)
+        public AdamState Init(IContextOfApp context, string contentType, string field, Guid guid, bool usePortalRoot, ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            var callLog = Log.Call<AdamState>($"field:{field}, guid:{guid}");
+            var appId = context.AppState.AppId;
+            var callLog = Log.Call<AdamState>($"app: {context.AppState.Show()}, field:{field}, guid:{guid}");
             Context = context;
 
             App = ServiceProvider.Build<Apps.App>().Init(ServiceProvider, appId, parentLog, context.UserMayEdit);
             Permissions = ServiceProvider.Build<MultiPermissionsTypes>()
-                .Init(context, App, contentType, Log);
+                .Init(context, context.AppState, contentType, Log);
 
             // only do checks on field/guid if it's actually accessing that, if it's on the portal root, don't.
             UseSiteRoot = usePortalRoot;

@@ -3,12 +3,13 @@ using System.IO;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
     public class AdamTransUpload<TFolderId, TFileId> : AdamTransactionBase<AdamTransUpload<TFolderId, TFileId>, TFolderId, TFileId>
     {
-        public AdamTransUpload(Lazy<AdamState<TFolderId, TFileId>> adamState) : base(adamState, "Adm.TrnUpl") { }
+        public AdamTransUpload(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextOfApp context) : base(adamState, context, "Adm.TrnUpl") { }
 
         internal UploadResultDto UploadOne(Stream stream, string subFolder, string fileName)
         {

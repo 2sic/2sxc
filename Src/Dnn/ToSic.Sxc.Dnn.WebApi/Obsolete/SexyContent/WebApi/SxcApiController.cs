@@ -6,6 +6,7 @@ using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Compatibility.Sxc;
@@ -47,9 +48,10 @@ namespace ToSic.SexyContent.WebApi
     {
         public new IDnnContext Dnn => base.Dnn;
 
-        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(Block?.Context.UserMayEdit ?? false));
+        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(GetContext()?.UserMayEdit ?? false));
         private SxcHelper _sxc;
 
+        [PrivateApi] public IBlock Block => GetBlock();
         [PrivateApi] public int CompatibilityLevel => DynCode.CompatibilityLevel;
 
         /// <inheritdoc />
