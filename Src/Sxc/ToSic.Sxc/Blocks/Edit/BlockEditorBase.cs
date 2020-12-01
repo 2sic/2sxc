@@ -4,7 +4,6 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
-using IApp = ToSic.Eav.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
@@ -89,7 +88,7 @@ namespace ToSic.Sxc.Blocks.Edit
 
             var hasPresentation = presEntity != null;
 
-            var appMan = GetAppManagerOrReuse(Block.App);// new AppManager(Block.App, Log);
+            var appMan = BlockAppManager();// new AppManager(Block.App, Log);
 
             // make sure we really have the draft item an not the live one
             var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;
@@ -104,8 +103,8 @@ namespace ToSic.Sxc.Blocks.Edit
             return true;
         }
 
-        protected AppManager GetAppManagerOrReuse(IApp appIdentity) =>
-            _appManager ?? (_appManager = _cmsManagerLazy.Value.Init(appIdentity, Log));
+        private AppManager BlockAppManager() =>
+            _appManager ?? (_appManager = _cmsManagerLazy.Value.Init(Block.App, Log));
         private AppManager _appManager;
 
 

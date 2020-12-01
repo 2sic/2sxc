@@ -18,7 +18,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public IContextOfBlock CreateContext(int pageId, Module module, ILog parentLog)
         {
-            var ctx = _serviceProvider.Build<ContextOfBlock>();
+            var ctx = _serviceProvider.Build<IContextOfBlock>();
+            ctx.Init(parentLog);
             ctx.Page.Init(pageId);
             ((OqtContainer) ctx.Module).Init(module, parentLog);
             return ctx;

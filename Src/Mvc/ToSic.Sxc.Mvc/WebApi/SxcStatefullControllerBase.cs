@@ -18,7 +18,8 @@ namespace ToSic.Sxc.Mvc.WebApi
 
             // in case the initial request didn't yet find a block builder, we need to create it now
             //var site = HttpContext.RequestServices.Build<ISite>().Init(TestIds.PrimaryZone);
-            var ctx = HttpContext.RequestServices.Build<ContextOfBlock>();
+            var ctx = HttpContext.RequestServices.Build<IContextOfBlock>();
+            ctx.Init(Log);
             ctx.Site.Init(TestIds.PrimaryZone);
             //ctx.Init(new PageNull(), new ContainerNull());
             //var context = // BlockBuilder?.Context ??

@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Apps;
-using IApp = ToSic.Eav.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
     internal class BlockEditorForEntity : BlockEditorBase
     {
-        public BlockEditorForEntity(IServiceProvider serviceProvider, Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> cmsManagerLazy) : base(serviceProvider, lazyCmsRuntime, cmsManagerLazy)
+        public BlockEditorForEntity(IServiceProvider serviceProvider, Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> outerBlockManagerLazy, Lazy<CmsManager> parentBlockManagerLazy) 
+            : base(serviceProvider, lazyCmsRuntime, outerBlockManagerLazy)
         {
+            _parentBlockManagerLazy = parentBlockManagerLazy;
         }
 
         #region methods which the entity-implementation must customize 
@@ -52,13 +53,13 @@ namespace ToSic.Sxc.Blocks.Edit
         private void UpdateValue(string key, object value) 
             => Update(new Dictionary<string, object> { { key, value } });
 
-        private void Update(Dictionary<string, object> newValues)
-        {
-            var app = ((BlockBase)Block).Parent.App;
-            GetAppManagerOrReuse(app)
-                .Entities.UpdateParts(Math.Abs(Block.ContentBlockId), newValues);
-        }
+        private void Update(Dictionary<string, object> newValues) 
+            => ParentBlockAppManager().Entities.UpdateParts(Math.Abs(Block.ContentBlockId), newValues);
 
+        protected AppManager ParentBlockAppManager() =>
+            _appManager ?? (_appManager = _parentBlockManagerLazy.Value.Init(((BlockBase)Block).Parent.App, Log));
+        private AppManager _appManager;
+        private readonly Lazy<CmsManager> _parentBlockManagerLazy;
 
         #endregion
 

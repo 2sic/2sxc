@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
-using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 
@@ -15,49 +14,47 @@ namespace ToSic.Sxc.Context
             Log.Rename("Sxc.CtxApp");
         }
 
-        public void InitApp(IAppIdentity appIdentity, ILog parentLog)
+        public void ResetApp(IAppIdentity appIdentity)
         {
-            Log.LinkTo(parentLog);
-            AppIdentity = appIdentity;
-            _showDrafts = null;
-            //LoadDataIfPossible();
+            if (AppIdentity == null || AppIdentity.AppId != appIdentity.AppId) 
+                AppIdentity = appIdentity;
+
         }
-        internal IAppIdentity AppIdentity;
+
+        protected virtual IAppIdentity AppIdentity
+        {
+            get => _appIdentity;
+            set
+            {
+                _appIdentity = value;
+                _appState = null;
+                _editAllowed = null;
+            }
+        }
+
+        private IAppIdentity _appIdentity;
 
         public bool EditAllowed
         {
             get
             {
-                if (_showDrafts.HasValue) return _showDrafts.Value;
+                if (_editAllowed.HasValue) return _editAllowed.Value;
                 var wrapLog = Log.Call<bool>();
                 if (AppState == null)
                 {
                     Log.Add("App is null. Will return false, but not cache so in future it may change.");
                     return wrapLog("missing", false);
                 }
-                _showDrafts = ServiceProvider.Build<AppPermissionCheck>()
+                _editAllowed = ServiceProvider.Build<AppPermissionCheck>()
                     .ForAppInInstance(this, AppState, Log)
                     .UserMay(GrantSets.WriteSomething);
-                return wrapLog($"{_showDrafts.Value}", _showDrafts.Value);
+                return wrapLog($"{_editAllowed.Value}", _editAllowed.Value);
             }
         }
-        private bool? _showDrafts;
+        private bool? _editAllowed;
 
         public AppState AppState => _appState ?? (_appState = AppIdentity == null ? null : State.Get(AppIdentity));
         private AppState _appState;
 
-        public int ZoneId => AppIdentity?.ZoneId ?? throw new Exception("App Identity not set yet");
-        public int AppId => AppIdentity?.AppId ?? throw new Exception("App Identity not set yet");
-
-
-        //public bool DataIsMissing { get; }
-
-        //private void LoadDataIfPossible()
-        //{
-        //    var wrapLog = Log.Call();
-        //    var appId = AppIdentity?.AppId;
-
-        //    wrapLog("ok");
-        //}
     }
 }

@@ -58,7 +58,8 @@ namespace ToSic.Sxc.Mvc
         public static IContextOfBlock CreateContext(IServiceProvider sp, int zoneId, int pageId, int containerId, int appId, Guid blockGuid)
         {
 
-            var ctx = sp.Build<ContextOfBlock>();
+            var ctx = sp.Build<IContextOfBlock>();
+            ctx.Init(null);
             ctx.Site.Init(zoneId);
             ctx.Page.Init(pageId);
             ((MvcModule) ctx.Module).Init(tenantId: zoneId, id: containerId, appId: appId, block: blockGuid);

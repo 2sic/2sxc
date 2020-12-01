@@ -82,7 +82,7 @@ namespace ToSic.Sxc.WebApi.Assets
             var isAdmin = _user.IsAdmin;
             var app = _app;
             if (appId != 0 && appId != app.AppId)
-                app = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), Log);
+                app = _serviceProvider.Build<Apps.App>().InitNoData(State.Identity(null, appId) /*new AppIdentity(Eav.Apps.App.AutoLookupZone, appId)*/, Log);
             var assetEditor = templateId != 0 && path == null
                 ? _serviceProvider.Build<AssetEditor>().Init(app, templateId, _user.IsSuperUser, isAdmin, Log)
                 : _serviceProvider.Build<AssetEditor>().Init(app, path, _user.IsSuperUser, isAdmin, global, Log);

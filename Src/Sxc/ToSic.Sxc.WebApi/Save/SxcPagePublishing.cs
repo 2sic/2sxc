@@ -40,7 +40,8 @@ namespace ToSic.Sxc.WebApi.Save
             Dictionary<Guid, int> postSaveIds = null;
 
             // The internal call which will be used further down
-            var groupList = _contentGroupList.Init(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), Log, Block.Context.EditAllowed);
+            var appIdentity = State.Identity(null, appId);
+            var groupList = _contentGroupList.Init(appIdentity, Log, Block.Context.EditAllowed);
             Dictionary<Guid, int> SaveAndSaveGroupsInnerCall(Func<bool, Dictionary<Guid, int>> call,
                 bool forceSaveAsDraft)
             {

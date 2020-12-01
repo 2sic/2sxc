@@ -1,15 +1,14 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Context
 {
-    public interface IContextOfApp: IContextOfSite, IAppIdentity
+    public interface IContextOfApp: IContextOfSite
     {
-        void InitApp(IAppIdentity appIdentity, ILog parentLog);
+        void ResetApp(IAppIdentity appIdentity);
 
         bool EditAllowed { get; }
 
-        //bool DataIsMissing { get; }
+        AppState AppState { get; }
     }
 }

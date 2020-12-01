@@ -47,10 +47,16 @@ namespace ToSic.Sxc.WebApi
 
         protected IContextOfBlock GetContext()
         {
+            if (_context != null) return _context;
+            if (Block?.Context != null) return _context = Block.Context;
             // in case the initial request didn't yet find a block builder, we need to create it now
-            var context = Block?.Context ?? ServiceProvider.Build<IContextOfBlock>().InitPageOnly();
-            return context;
+            _context = ServiceProvider.Build<IContextOfBlock>();
+            _context.Init(Log);
+            _context.InitPageOnly();
+            return _context;
         }
+
+        private IContextOfBlock _context;
 
         #endregion
     }

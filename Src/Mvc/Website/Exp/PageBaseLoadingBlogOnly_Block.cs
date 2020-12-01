@@ -21,7 +21,8 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
                 if (_blockLoaded) return _block;
                 _blockLoaded = true;
 
-                var ctx = ServiceProvider.Build<ContextOfBlock>();
+                var ctx = ServiceProvider.Build<IContextOfBlock>();
+                ctx.Init(Log);
                 ctx.Site.Init(TestIds.PrimaryZone);
                 ctx.Site.Init(0);
 
