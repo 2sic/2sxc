@@ -45,6 +45,11 @@ namespace ToSic.Sxc.Blocks
         string Location { get; }
 
         /// <summary>
+        /// Translates the location to tell us if it's a shared view (the template is in a shared location)
+        /// </summary>
+        bool IsShared { get; }
+
+        /// <summary>
         /// Determines if the view should behave as a list or not. Views that are lists also
         /// have Header configuration and treat content in a special way. 
         /// </summary>

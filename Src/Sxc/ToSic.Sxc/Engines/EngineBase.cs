@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Engines
             var view = Block.View;
             Log.LinkTo(parentLog);
 
-            var root = Helpers.TemplateHelpers.Init(Block.App, Log).AppPathRoot(view.Location, PathTypes.PhysRelative);
+            var root = Helpers.TemplateHelpers.Init(Block.App, Log).AppPathRoot(view.IsShared, PathTypes.PhysRelative);
             var subPath = view.Path;
             var templatePath = TryToFindPolymorphPath(root, view, subPath) 
                                ?? Helpers.LinkPaths.ToAbsolute(root + "/", subPath);

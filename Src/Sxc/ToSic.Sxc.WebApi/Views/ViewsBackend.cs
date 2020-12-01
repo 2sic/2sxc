@@ -54,6 +54,7 @@ namespace ToSic.Sxc.WebApi.Views
                 List = c.UseForList,
                 HasQuery = c.QueryRaw != null,
                 Used = c.Entity.Parents().Count,
+                IsShared = c.IsShared,
                 Permissions = new HasPermissionsDto {Count = c.Entity.Metadata.Permissions.Count()},
             });
             return templates;

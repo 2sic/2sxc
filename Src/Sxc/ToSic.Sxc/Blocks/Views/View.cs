@@ -64,6 +64,9 @@ namespace ToSic.Sxc.Blocks
         public bool IsHidden => Entity.GetBestValue<bool>(FieldIsHidden);
 
         public string Location => Entity.GetBestValue<string>(FieldLocation);
+
+        public bool IsShared => Location == Settings.TemplateLocations.HostFileSystem;
+
         public bool UseForList => Entity.GetBestValue<bool>(FieldUseList);
         public bool PublishData => Entity.GetBestValue<bool>(FieldPublishEnable);
         public string StreamsToPublish => Entity.GetBestValue<string>(FieldPublishStreams);

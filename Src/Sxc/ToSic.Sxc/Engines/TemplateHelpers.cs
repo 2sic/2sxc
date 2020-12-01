@@ -50,11 +50,10 @@ namespace ToSic.Sxc.Engines
         /// Creates a directory and copies the needed web.config for razor files
         /// if the directory does not exist.
         /// </summary>
-        /// <param name="templateLocation"></param>
-        public void EnsureTemplateFolderExists(string templateLocation)
+        public void EnsureTemplateFolderExists(bool isShared/* string templateLocation*/)
         {
-            var wrapLog = Log.Call(templateLocation);
-            var portalPath = templateLocation == Settings.TemplateLocations.HostFileSystem
+            var wrapLog = Log.Call($"{isShared}"/*templateLocation*/);
+            var portalPath = isShared// templateLocation == Settings.TemplateLocations.HostFileSystem
                 ? Path.Combine(ServerPaths.FullAppPath(Settings.PortalHostDirectory) ?? "", Settings.AppsRootFolder)
                 : App.Site.AppsRootPhysicalFull ?? "";// ServerPaths.FullAppPath(App.Tenant.AppsRootPhysical) ?? "";
             var sexyFolderPath = portalPath;
@@ -82,19 +81,16 @@ namespace ToSic.Sxc.Engines
             wrapLog("ok");
         }
 
-        public string AppPathRoot(bool global) =>
-            AppPathRoot(global
-                ? Settings.TemplateLocations.HostFileSystem
-                : Settings.TemplateLocations.PortalFileSystem, PathTypes.PhysFull);
+        public string AppPathRoot(bool global) => AppPathRoot(global, PathTypes.PhysFull);
 
         /// <summary>
         /// Returns the location where Templates are stored for the current app
         /// </summary>
-        public string AppPathRoot(string locationId, PathTypes pathType)
+        public string AppPathRoot(bool useSharedFileSystem, PathTypes pathType)
         {
-            var wrapLog = Log.Call<string>($"{locationId}, {pathType}");
+            var wrapLog = Log.Call<string>($"{useSharedFileSystem}, {pathType}");
             string basePath;
-            var useSharedFileSystem = locationId == Settings.TemplateLocations.HostFileSystem;
+            //var useSharedFileSystem = locationId == Settings.TemplateLocations.HostFileSystem;
             switch (pathType)
             {
                 case PathTypes.Link:
@@ -137,6 +133,6 @@ namespace ToSic.Sxc.Engines
             return viewPath1.Substring(0, viewPath1.LastIndexOf(".", StringComparison.Ordinal)) + ".png";
         }
 
-        public string ViewPath(IView view, PathTypes type) => AppPathRoot(view.Location, type) + "/" + view.Path;
+        public string ViewPath(IView view, PathTypes type) => AppPathRoot(view.IsShared, type) + "/" + view.Path;
     }
 }
