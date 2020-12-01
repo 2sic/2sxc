@@ -50,6 +50,12 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             @"api\/2sxc\/app\/[^/]+\/([^/]+\/)?api"
         };
 
+        private const string ApiErrPrefix = "2sxc Api Controller Finder Error: ";
+
+        private const string ApiErrGeneral = "Error selecting / compiling an API controller. ";
+        private const string ApiErrSuffix = "Check event-log, code and inner exception. ";
+
+
         /// <summary>
         /// Verify if this request is one which should be handled by this system
         /// </summary>
@@ -81,12 +87,17 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
 
             var routeData = request.GetRouteData();
             var controllerTypeName = routeData.Values[Names.Controller] + "Controller";
-            // Handle the app-api queries
+            
+            // Now Handle the 2sxc app-api queries
+
+            // 1. Figure out the Path, or show error for that
+            string appFolder = null;
             try
             {
-                var appFolder = Route.AppPathOrNull(routeData);
+                appFolder = Route.AppPathOrNull(routeData);
 
-                if(appFolder == null)
+                // only check for app folder if we don't have a context
+                if (appFolder == null)
                 {
                     log.Add("no folder found in url, will auto-detect");
                     var block = Eav.Factory.StaticBuild<DnnGetBlock>().GetCmsBlock(request, false, log);
@@ -94,7 +105,22 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
                 }
 
                 log.Add($"App Folder: {appFolder}");
+            }
+            catch (Exception appNameException)
+            {
+                const string msg = ApiErrPrefix + "Trying to find app name, unexpected error - possibly bad/invalid headers. " + ApiErrSuffix;
+                throw ReportToLogAndThrow(request, HttpStatusCode.BadRequest, appNameException, msg, wrapLog);
+            }
 
+            if (string.IsNullOrWhiteSpace(appFolder))
+            {
+                const string msg = ApiErrPrefix + "App name is unknown - tried to check name in url and tried app-detection using headers. " + ApiErrSuffix;
+                throw ReportToLogAndThrow(request, HttpStatusCode.BadRequest, new Exception(), msg, wrapLog);
+            }
+
+            var controllerPath = "";
+            try
+            {
                 // new for 2sxc 9.34 #1651
                 var edition = "";
                 if (routeData.Values.ContainsKey(Names.Edition))
@@ -110,7 +136,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
                 controllerFolder = controllerFolder.Replace("\\", @"/");
                 log.Add($"Controller Folder: {controllerFolder}");
 
-                var controllerPath = Path.Combine(controllerFolder + controllerTypeName + ".cs");
+                controllerPath = Path.Combine(controllerFolder + controllerTypeName + ".cs");
                 log.Add($"Controller Path: {controllerPath}");
 
                 // note: this may look like something you could optimize/cache the result, but that's a bad idea
@@ -127,22 +153,26 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
                     return wrapLog("ok", descriptor);
                 }
 
-                log.Add("path not found");
+                log.Add("path not found, error will be thrown in a moment");
             }
             catch (Exception e)
             {
-                var apiErrPrefix = "2sxc Api Controller Finder: " +
-                                   "Error selecting / compiling an API controller. " +
-                                   "Check event-log, code and inner exception. ";
-                var helpText = ErrorHelp.HelpText(e);
-                var exception = new Exception(apiErrPrefix + helpText, e);
-                DotNetNuke.Services.Exceptions.Exceptions.LogException(exception);
-                wrapLog("error", null);
-                throw new HttpResponseException(request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception.Message, e));
+                var msg = ApiErrPrefix + ApiErrGeneral + ApiErrSuffix;
+                throw ReportToLogAndThrow(request, HttpStatusCode.InternalServerError, e, msg, wrapLog);
             }
 
+            var msgfinal = $"2sxc Api Controller Finder: Controller {controllerTypeName} not found in app. " +
+                           $"We checked the virtual path '{controllerPath}'";
+            throw ReportToLogAndThrow(request, HttpStatusCode.NotFound, new Exception(), msgfinal, wrapLog);
+        }
+
+        private static HttpResponseException ReportToLogAndThrow(HttpRequestMessage request, HttpStatusCode code, Exception e, string msg, Func<string, HttpControllerDescriptor, HttpControllerDescriptor> wrapLog)
+        {
+            var helpText = ErrorHelp.HelpText(e);
+            var exception = new Exception(msg + helpText, e);
+            DotNetNuke.Services.Exceptions.Exceptions.LogException(exception);
             wrapLog("error", null);
-            throw new HttpResponseException(request.CreateErrorResponse(HttpStatusCode.NotFound, "2sxc Api Controller Finder: Controller " + controllerTypeName + " not found in app."));
+            return new HttpResponseException(request.CreateErrorResponse(code, exception.Message, e));
         }
 
         private static void AddToInsightsHistory(string url, ILog log)
