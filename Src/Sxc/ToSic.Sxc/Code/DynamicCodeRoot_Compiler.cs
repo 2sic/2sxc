@@ -16,7 +16,7 @@
                 $"{nameof(name)},{nameof(throwOnError)}");
 
             // Compile
-            var instance = new CodeCompiler(Block.Context.ServiceProvider, Log)
+            var instance = new CodeCompiler(ServiceProvider, Log)
                 .InstantiateClass(virtualPath, name, relativePath, throwOnError);
 
             // if it supports all our known context properties, attach them

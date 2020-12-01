@@ -26,7 +26,7 @@ namespace ToSic.Sxc.WebApi.Save
         #endregion
 
         internal Dictionary<Guid, int> SaveInPagePublishing(
-            IBlock block,
+            IBlock blockOrNull,
             int appId,
             List<BundleWithHeader<IEntity>> items,
             bool partOfPage,
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.WebApi.Save
             {
                 var ids = call.Invoke(forceSaveAsDraft);
                 // now assign all content-groups as needed
-                groupList.IfChangesAffectListUpdateIt(block, items, ids);
+                groupList.IfChangesAffectListUpdateIt(blockOrNull, items, ids);
                 return ids;
             }
 

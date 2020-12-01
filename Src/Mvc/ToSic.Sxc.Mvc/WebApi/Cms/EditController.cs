@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
         [HttpPost]
         // todo #mvcSec [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Dictionary<Guid, int> Save([FromBody] AllInOneDto package, int appId, bool partOfPage)
-            => _saveBackendLazy.Value.Init(GetBlock(), Log)
+            => _saveBackendLazy.Value.Init(GetContext(), GetBlock(), Log)
                 .Save(package, appId, partOfPage);
 
         /// <summary>

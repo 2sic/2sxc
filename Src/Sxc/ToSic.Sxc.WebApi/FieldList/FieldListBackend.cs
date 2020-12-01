@@ -46,7 +46,7 @@ namespace ToSic.Sxc.WebApi.FieldList
             _publishing.DoInsidePublishing(ContextOfAppOrBlock, args =>
             {
                 // determine versioning
-                var forceDraft = (ContextOfAppOrBlock as IContextOfBlock)?.Publishing.ForceDraft ?? false; //.Configuration.VersioningEnabled;
+                var forceDraft = (ContextOfAppOrBlock as IContextOfBlock)?.Publishing.ForceDraft ?? false;
                 // check field list (default to content-block fields)
                 var fieldList = fields?.Split(',').Select(f => f.Trim()).ToArray() ?? ViewParts.ContentPair;
                 action.Invoke(target, fieldList, forceDraft);

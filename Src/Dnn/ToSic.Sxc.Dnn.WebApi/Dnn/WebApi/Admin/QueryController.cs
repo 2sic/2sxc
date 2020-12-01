@@ -57,8 +57,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         {
             var block = GetBlock();
             var context = GetContext();
-            //var instanceId = ActiveModule?.ModuleID ?? 0;
-            var config = ServiceProvider.Build<AppConfigDelegate>().Init(Log).GetConfigProviderForModule(context, /*instanceId, */block?.App, block);
+            var config = ServiceProvider.Build<AppConfigDelegate>().Init(Log).GetConfigProviderForModule(context, block?.App, block);
             return _build<QueryApi>().Init(appId, Log).Run(appId, id, config);
         }
 

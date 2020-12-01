@@ -10,6 +10,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.WebApi.Save;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -26,15 +27,17 @@ namespace ToSic.Sxc.WebApi.Cms
             _appManagerLazy = appManagerLazy;
         }
 
-        public EditSaveBackend Init(IBlock block, ILog log)
+        public EditSaveBackend Init(IContextOfApp context, IBlock block, ILog log)
         {
             Init(log);
+            _context = context;
             _block = block;
-            _pagePublishing.Init(_block.Context, Log);
+            _pagePublishing.Init(context, Log);
             return this;
         }
 
         private IBlock _block;
+        private IContextOfApp _context;
         #endregion
 
         public Dictionary<Guid, int> Save(AllInOneDto package, int appId, bool partOfPage)
@@ -57,14 +60,14 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var appMan = _appManagerLazy.Value.Init(appId, Log);
             var appRead = appMan.Read;
-            var ser = _block.Context.ServiceProvider.Build<JsonSerializer>().Init(appRead.AppState, Log);
+            var ser = ServiceProvider.Build<JsonSerializer>().Init(appRead.AppState, Log);
             // Since we're importing directly into this app, we would prefer local content-types
             ser.PreferLocalAppTypes = true;
             validator.PrepareForEntityChecks(appRead);
 
             #region check if it's an update, and do more security checks then - shared with EntitiesController.Save
             // basic permission checks
-            var permCheck = new Save.SaveSecurity(_block.Context, Log)
+            var permCheck = new Save.SaveSecurity(_context, Log)
                 .DoPreSaveSecurityCheck(appId, package.Items);
 
             var foundItems = package.Items.Where(i => i.Entity.Id != 0 && i.Entity.Guid != Guid.Empty)
