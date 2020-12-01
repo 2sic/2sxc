@@ -5,6 +5,7 @@ using ToSic.Eav.Data;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.FieldList
 {
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.WebApi.FieldList
 
         #region constructor / DI
 
-        public FieldListBackend(IPagePublishing publishing, Lazy<CmsManager> cmsManagerLazy) : base(cmsManagerLazy, "Bck.FldLst") 
+        public FieldListBackend(IServiceProvider sp, IPagePublishing publishing, Lazy<CmsManager> cmsManagerLazy) : base(sp, cmsManagerLazy, "Bck.FldLst") 
             => _publishing = publishing.Init(Log);
 
         #endregion
@@ -42,10 +43,10 @@ namespace ToSic.Sxc.WebApi.FieldList
         private void ModifyList(IEntity target, string fields, Action<IEntity, string[], bool> action)
         {
             // use dnn versioning - items here are always part of list
-            _publishing.DoInsidePublishing(_context, args =>
+            _publishing.DoInsidePublishing(ContextOfAppOrBlock, args =>
             {
                 // determine versioning
-                var forceDraft = _block.Context.Publishing.ForceDraft; //.Configuration.VersioningEnabled;
+                var forceDraft = (ContextOfAppOrBlock as IContextOfBlock)?.Publishing.ForceDraft ?? false; //.Configuration.VersioningEnabled;
                 // check field list (default to content-block fields)
                 var fieldList = fields?.Split(',').Select(f => f.Trim()).ToArray() ?? ViewParts.ContentPair;
                 action.Invoke(target, fieldList, forceDraft);
@@ -54,7 +55,7 @@ namespace ToSic.Sxc.WebApi.FieldList
 
         private IEntity FindOrThrow(Guid? parent)
         {
-            var target = parent == null ? _block.Configuration.Entity : _block.App.Data.Immutable.One(parent.Value);
+            var target = parent == null ? _block.Configuration.Entity : ContextOfAppOrBlock.AppState.List.One(parent.Value);
             if (target == null) throw new Exception($"Can't find parent {parent}");
             return target;
         }

@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Web.JsContext
 
             SxcRootUrl = systemRootUrl;
 
-            var userMayEdit = ctx.EditAllowed;
+            var userMayEdit = ctx.UserMayEdit;
 
             IsEditable = userMayEdit;
             parameters = ctx.Page.Parameters;

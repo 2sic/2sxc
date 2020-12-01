@@ -21,8 +21,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
 		public object GetFileByPath(string relativePath)
         {
-            var dnnDynamicCode = ServiceProvider.Build<DnnDynamicCodeRoot>().Init(GetBlock(), Log);
-            var portal = dnnDynamicCode.Dnn.Portal;
+            //var dnnDynamicCode = ServiceProvider.Build<DnnDynamicCodeRoot>().Init(GetBlock(), Log);
+            var portal = PortalSettings; // dnnDynamicCode.Dnn.Portal;
             relativePath = relativePath.Replace(portal.HomeDirectory, "");
 			var file = FileManager.Instance.GetFile(portal.PortalId, relativePath);
             if (file == null) return null;
@@ -47,6 +47,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 	    [HttpGet]
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
 		public string Resolve(string hyperlink, int appId, string contentType, Guid guid, string field) 
-            => _build<HyperlinkBackend<int, int>>().Init(Log).ResolveHyperlink(GetBlock(), hyperlink, appId, contentType, guid, field);
+            => _build<HyperlinkBackend<int, int>>().Init(Log).ResolveHyperlink(GetContext(), hyperlink, appId, contentType, guid, field);
     }
 }

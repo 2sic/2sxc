@@ -31,7 +31,7 @@ namespace ToSic.Sxc.DataSources
             }
 
             var sp = DataSourceFactory.ServiceProvider;
-            var userMayEdit = HasInstanceContext && Block.Context.EditAllowed;
+            var userMayEdit = HasInstanceContext && Block.Context.UserMayEdit;
 
             var cms = _lazyCmsRuntime.IsValueCreated
                 ? _lazyCmsRuntime.Value

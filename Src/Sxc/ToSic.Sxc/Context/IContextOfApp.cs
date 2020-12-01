@@ -7,8 +7,6 @@ namespace ToSic.Sxc.Context
     {
         void ResetApp(IAppIdentity appIdentity);
 
-        bool EditAllowed { get; }
-
         AppState AppState { get; }
     }
 }

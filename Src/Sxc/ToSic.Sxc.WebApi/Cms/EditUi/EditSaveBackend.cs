@@ -30,7 +30,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             Init(log);
             _block = block;
-            _pagePublishing.Init(_block, Log);
+            _pagePublishing.Init(_block.Context, Log);
             return this;
         }
 
@@ -64,7 +64,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             #region check if it's an update, and do more security checks then - shared with EntitiesController.Save
             // basic permission checks
-            var permCheck = new Save.SaveSecurity(_block, Log)
+            var permCheck = new Save.SaveSecurity(_block.Context, Log)
                 .DoPreSaveSecurityCheck(appId, package.Items);
 
             var foundItems = package.Items.Where(i => i.Entity.Id != 0 && i.Entity.Guid != Guid.Empty)
@@ -112,8 +112,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             Log.Add("items to save generated, all data tests passed");
 
-            //var publishing = new SxcPagePublishing().Init(_block, Log);
-            return _pagePublishing.SaveInPagePublishing(appId, items, partOfPage,
+            return _pagePublishing.SaveInPagePublishing(_block, appId, items, partOfPage,
                     forceSaveAsDraft => DoSave(appMan, items, forceSaveAsDraft),
                     permCheck);
         }

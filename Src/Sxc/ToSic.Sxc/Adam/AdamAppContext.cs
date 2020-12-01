@@ -4,7 +4,6 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Blocks;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Adam
@@ -15,6 +14,7 @@ namespace ToSic.Sxc.Adam
     /// </summary>
     public abstract class AdamAppContext: HasLog, IContextAdamMaybe, ICompatibilityLevel
     {
+        public AdamMetadataMaker MetadataMaker { get; }
         private readonly Lazy<AppRuntime> _appRuntime;
         public AppRuntime AppRuntime => _appRuntime.Value;
         /// <summary>
@@ -23,23 +23,21 @@ namespace ToSic.Sxc.Adam
         /// always use the AppRuntime instead
         /// </summary>
         private IApp _app;
-        //public AppRuntime AppRuntime { get; private set; }
         public ISite Site { get; private set; }
-        public IBlock Block { get; private set;  }
         
-        protected AdamAppContext(Lazy<AppRuntime> appRuntime, string logName) : base(logName ?? "Adm.AppCtx")
+        protected AdamAppContext(Lazy<AppRuntime> appRuntime, AdamMetadataMaker metadataMaker, string logName) : base(logName ?? "Adm.AppCtx")
         {
+            MetadataMaker = metadataMaker;
             _appRuntime = appRuntime;
         }
 
-        public virtual AdamAppContext Init(ISite site, IApp app, IBlock block, int compatibility, ILog parentLog)
+        public virtual AdamAppContext Init(ISite site, IApp app, bool userMayEdit, int compatibility, ILog parentLog)
         {
             Log.LinkTo(parentLog);
             var callLog = Log.Call();
             Site = site;
             _app = app;
-            Block = block;
-            AppRuntime /*= new AppRuntime()*/.Init(app, block?.Context.EditAllowed ?? false, null);
+            AppRuntime.Init(app, userMayEdit, null);
             CompatibilityLevel = compatibility;
             callLog("ready");
             return this;

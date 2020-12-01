@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public string ResolveHyperlink(string hyperlink, int appId, string contentType = default, Guid guid = default, string field = default)
-            => /*new HyperlinkBackend<int, int>()*/_hyperlinkBackend.Init(Log).ResolveHyperlink(GetBlock(), hyperlink, appId, contentType, guid, field);
+            => _hyperlinkBackend.Init(Log).ResolveHyperlink(GetContext(), hyperlink, appId, contentType, guid, field);
 
     }
 }

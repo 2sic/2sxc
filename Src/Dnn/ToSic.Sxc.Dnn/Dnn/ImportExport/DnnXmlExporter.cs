@@ -1,5 +1,4 @@
-﻿using DotNetNuke.Entities.Portals;
-using DotNetNuke.Services.FileSystem;
+﻿using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.ImportExport.Environment;
@@ -28,7 +27,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
         {
             var tenant = new DnnSite();
             var app = AdamAppContext.AppRuntime.ServiceProvider.Build<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
-            AdamAppContext.Init(tenant, app, null, 10, Log);
+            AdamAppContext.Init(tenant, app, false, 10, Log);
             Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
 
             // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally

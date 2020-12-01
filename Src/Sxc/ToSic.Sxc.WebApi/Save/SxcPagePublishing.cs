@@ -6,6 +6,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
 
 namespace ToSic.Sxc.WebApi.Save
@@ -25,6 +26,7 @@ namespace ToSic.Sxc.WebApi.Save
         #endregion
 
         internal Dictionary<Guid, int> SaveInPagePublishing(
+            IBlock block,
             int appId,
             List<BundleWithHeader<IEntity>> items,
             bool partOfPage,
@@ -41,13 +43,13 @@ namespace ToSic.Sxc.WebApi.Save
 
             // The internal call which will be used further down
             var appIdentity = State.Identity(null, appId);
-            var groupList = _contentGroupList.Init(appIdentity, Log, Block.Context.EditAllowed);
+            var groupList = _contentGroupList.Init(appIdentity, Log, Context.UserMayEdit);
             Dictionary<Guid, int> SaveAndSaveGroupsInnerCall(Func<bool, Dictionary<Guid, int>> call,
                 bool forceSaveAsDraft)
             {
                 var ids = call.Invoke(forceSaveAsDraft);
                 // now assign all content-groups as needed
-                groupList.IfChangesAffectListUpdateIt(Block, items, ids);
+                groupList.IfChangesAffectListUpdateIt(block, items, ids);
                 return ids;
             }
 
@@ -57,7 +59,7 @@ namespace ToSic.Sxc.WebApi.Save
             {
                 Log.Add("partOfPage - save with publishing");
                 var versioning = _pagePublishing.Init(Log);
-                versioning.DoInsidePublishing(Block.Context,
+                versioning.DoInsidePublishing(Context,
                     args => postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft));
             }
             else

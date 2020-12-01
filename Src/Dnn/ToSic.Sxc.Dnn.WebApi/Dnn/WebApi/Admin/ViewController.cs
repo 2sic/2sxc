@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [SupportedModules("2sxc,2sxc-app")]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public IEnumerable<object> All(int appId) => Backend.GetAll(appId);
+        public IEnumerable<ViewDetailsDto> All(int appId) => Backend.GetAll(appId);
 
         [HttpGet]
         [SupportedModules("2sxc,2sxc-app")]

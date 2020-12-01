@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Persistence.Interfaces;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
@@ -53,6 +54,9 @@ namespace ToSic.Sxc
             services.TryAddTransient<IPage, Page>();
             services.TryAddTransient<Page>();
             services.TryAddTransient<ICmsContext, CmsContext>();
+
+            // Adam stuff
+            services.TryAddTransient<AdamMetadataMaker>();
 
             // Add possibly missing fallbacks
             services.AddSxcCoreFallbackServices();

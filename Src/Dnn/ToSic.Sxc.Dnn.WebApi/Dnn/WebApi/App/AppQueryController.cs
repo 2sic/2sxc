@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query([FromUri] string name, [FromUri] bool includeGuid = false, [FromUri] string stream = null, [FromUri] int? appId = null) 
-            => _build<AppQuery>().Init(Log).Query(GetContext(), GetBlock().App, name, includeGuid, stream, appId);
+            => _build<AppQuery>().Init(Log).Query(GetContext(), name, includeGuid, stream, appId);
 
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements

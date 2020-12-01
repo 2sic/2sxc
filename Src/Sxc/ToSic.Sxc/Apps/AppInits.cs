@@ -15,6 +15,13 @@ namespace ToSic.Sxc.Apps
             return app.Init(appIdentity, buildConfig, log);
         }
 
+        public static IApp Init(this App app, IServiceProvider sp, int appId, ILog log, bool showDrafts = false)
+        {
+            var appIdentity = new AppIdentity(SystemRuntime.ZoneIdOfApp(appId), appId);
+            var confProvider = sp.Build<AppConfigDelegate>().Init(log);
+            return app.Init(confProvider, appIdentity, log, showDrafts);
+        }
+
         public static IApp Init(this App app, IServiceProvider sp, int appId, ILog log, IBlock optionalBlock = null, bool showDrafts = false)
         {
             var appIdentity = new AppIdentity(SystemRuntime.ZoneIdOfApp(appId), appId);

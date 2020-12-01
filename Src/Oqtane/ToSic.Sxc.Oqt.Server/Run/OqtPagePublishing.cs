@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps.Environment;
-using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
@@ -22,9 +21,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         #endregion
 
-        public void DoInsidePublishing(IContextOfBlock context, Action<VersioningActionInfo> action)
+        public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
         {
-            var containerId = context.Module.Id;
+            var containerId = (context as IContextOfBlock)?.Module.Id ?? Eav.Constants.IdNotInitialized;
             var userId = 0;
             var enabled = false;// IsEnabled(containerId);
             Log.Add($"DoInsidePublishing(module:{containerId}, user:{userId}, enabled:{enabled})");

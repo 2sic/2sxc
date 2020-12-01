@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Code
             if (inSource != null)
                 return DataSourceFactory.GetDataSource<T>(inSource, inSource, configurationProvider);
 
-            var userMayEdit = Block.Context.EditAllowed;
+            var userMayEdit = Block.Context.UserMayEdit;
 
             var initialSource = DataSourceFactory.GetPublishing(
                 App, userMayEdit, ConfigurationProvider as LookUpEngine);

@@ -58,7 +58,7 @@ namespace ToSic.SexyContent
                     var msg = renderingHelper.DesignErrorMessage(ex, true, null, false, true);
                     try
                     {
-                        if (Block.Context.EditAllowed)
+                        if (Block.Context.UserMayEdit)
                             msg = renderingHelper.WrapInContext(msg,
                                 instanceId: Block.ParentId,
                                 contentBlockId: Block.ContentBlockId,

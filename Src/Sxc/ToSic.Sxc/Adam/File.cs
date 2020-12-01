@@ -10,19 +10,19 @@ namespace ToSic.Sxc.Adam
 #pragma warning restore 618
         IFile
     {
-        private AdamAppContext AppContext { get; }
+        private AdamAppContext AdamContext { get; }
 
-        public File(AdamAppContext appContext)
+        public File(AdamAppContext adamContext)
         {
-            AppContext = appContext;
+            AdamContext = adamContext;
         }
 
         #region Metadata
 
         /// <inheritdoc />
-        public dynamic Metadata => Adam.Metadata.GetFirstOrFake(AppContext, MetadataId);
+        public dynamic Metadata => AdamContext.MetadataMaker.GetFirstOrFake(AdamContext, MetadataId);
 
-        public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AppContext.AppRuntime, MetadataId) != null;
+        public bool HasMetadata => AdamContext.MetadataMaker.GetFirstMetadata(AdamContext.AppRuntime, MetadataId) != null;
 
         public MetadataFor MetadataId => _metadataKey ?? (_metadataKey = new MetadataFor
         {

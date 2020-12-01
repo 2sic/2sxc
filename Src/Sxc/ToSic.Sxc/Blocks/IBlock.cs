@@ -65,7 +65,5 @@ namespace ToSic.Sxc.Blocks
         [PrivateApi("naming not final")]
         bool ContentGroupExists { get; }
 
-        //[PrivateApi]
-        //bool EditAllowed { get; }
     }
 }

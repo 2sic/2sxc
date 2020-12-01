@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Dnn.Install
             {
                 // configure it
                 var tm = block.Context.ServiceProvider.Build<TemplateHelpers>().Init(block.App, block.Log);
-                tm.EnsureTemplateFolderExists(Settings.TemplateLocations.PortalFileSystem);
+                tm.EnsureTemplateFolderExists(false);
             }
         }
     }

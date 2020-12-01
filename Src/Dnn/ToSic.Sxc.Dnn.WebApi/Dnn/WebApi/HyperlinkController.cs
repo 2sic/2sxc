@@ -4,8 +4,6 @@ using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Cms;
 
@@ -21,8 +19,8 @@ namespace ToSic.Sxc.Dnn.WebApi
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
 		public object GetFileByPath(string relativePath)
         {
-            var dnnDynamicCode = ServiceProvider.Build<DnnDynamicCodeRoot>().Init(GetBlock(), Log);
-            var portal = dnnDynamicCode.Dnn.Portal;
+            //var dnnDynamicCode = ServiceProvider.Build<DnnDynamicCodeRoot>().Init(GetBlock(), Log);
+            var portal = PortalSettings;// dnnDynamicCode.Dnn.Portal;
             relativePath = relativePath.Replace(portal.HomeDirectory, "");
 			var file = FileManager.Instance.GetFile(portal.PortalId, relativePath);
             if (file == null) return null;
@@ -47,6 +45,6 @@ namespace ToSic.Sxc.Dnn.WebApi
 	    [HttpGet]
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
 		public string ResolveHyperlink(string hyperlink, int appId, string contentType, Guid guid, string field)
-            => _build<HyperlinkBackend<int, int>>().Init(Log).ResolveHyperlink(GetBlock(), hyperlink, appId, contentType, guid, field);
+            => _build<HyperlinkBackend<int, int>>().Init(Log).ResolveHyperlink(GetContext(), hyperlink, appId, contentType, guid, field);
     }
 }

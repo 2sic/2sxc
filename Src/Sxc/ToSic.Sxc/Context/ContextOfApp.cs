@@ -28,30 +28,30 @@ namespace ToSic.Sxc.Context
             {
                 _appIdentity = value;
                 _appState = null;
-                _editAllowed = null;
+                _userMayEdit = null;
             }
         }
 
         private IAppIdentity _appIdentity;
 
-        public bool EditAllowed
+        public override bool UserMayEdit
         {
             get
             {
-                if (_editAllowed.HasValue) return _editAllowed.Value;
+                if (_userMayEdit.HasValue) return _userMayEdit.Value;
                 var wrapLog = Log.Call<bool>();
                 if (AppState == null)
                 {
                     Log.Add("App is null. Will return false, but not cache so in future it may change.");
                     return wrapLog("missing", false);
                 }
-                _editAllowed = ServiceProvider.Build<AppPermissionCheck>()
+                _userMayEdit = ServiceProvider.Build<AppPermissionCheck>()
                     .ForAppInInstance(this, AppState, Log)
                     .UserMay(GrantSets.WriteSomething);
-                return wrapLog($"{_editAllowed.Value}", _editAllowed.Value);
+                return wrapLog($"{_userMayEdit.Value}", _userMayEdit.Value);
             }
         }
-        private bool? _editAllowed;
+        private bool? _userMayEdit;
 
         public AppState AppState => _appState ?? (_appState = AppIdentity == null ? null : State.Get(AppIdentity));
         private AppState _appState;

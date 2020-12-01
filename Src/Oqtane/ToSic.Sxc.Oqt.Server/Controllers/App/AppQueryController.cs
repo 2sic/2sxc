@@ -42,6 +42,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             [FromQuery] bool includeGuid = false,
             [FromQuery] string stream = null,
             [FromQuery] int? appId = null
-        ) => _appQuery.Init(Log).Query(GetContext(), GetBlock().App, name, includeGuid, stream, appId);
+        ) => _appQuery.Init(Log).Query(GetContext(), name, includeGuid, stream, appId);
     }
 }

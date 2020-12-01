@@ -33,6 +33,12 @@ namespace ToSic.Sxc.WebApi
 
         [PrivateApi] protected IBlock GetBlock() => Block;
 
+        /// <summary>
+        /// Temporary call to replace GetBlock, so we can gradually filter out the bad uses of Block
+        /// </summary>
+        /// <returns></returns>
+        [PrivateApi] protected IBlock BlockReallyUsedAsBlock() => Block;
+
         #region App-Helpers for anonyous access APIs
 
         internal AppOfRequest AppFinder => _appOfRequest ?? (_appOfRequest = _build<AppOfRequest>().Init(Log));
@@ -43,7 +49,7 @@ namespace ToSic.Sxc.WebApi
         /// </summary>
         /// <param name="appId"></param>
         /// <returns></returns>
-        internal IApp GetApp(int appId) => _build<Apps.App>().Init(ServiceProvider, appId, Log, GetBlock());
+        internal IApp GetApp(int appId) => _build<Apps.App>().Init(ServiceProvider, appId, Log, GetContext().UserMayEdit);
 
         protected IContextOfBlock GetContext()
         {

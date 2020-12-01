@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Dnn.WebApi
                 var originalFile = filesCollection[0];
                 var stream = originalFile.InputStream;
                 var fileName = originalFile.FileName;
-                var uploader = _build<AdamTransUpload<int, int>>().Init(GetBlock(), appId, contentType, guid, field, usePortalRoot, Log);
+                var uploader = _build<AdamTransUpload<int, int>>().Init(GetContext(), appId, contentType, guid, field, usePortalRoot, Log);
                 return uploader.UploadOne(stream, subFolder, fileName);
             }
             catch (HttpExceptionAbstraction he)
@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         public IEnumerable<AdamItemDto> Items(string contentType, Guid guid, string field, string folder = "")
         {
             // if app-path specified, use that app, otherwise use from context
-            var appId = GetBlock().AppId;
+            var appId = GetContext().AppState.AppId; // GetBlock().AppId;
             return Items(appId, contentType, guid, field, folder);
         }
 
@@ -78,7 +78,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         {
             var callLog = Log.Call<IEnumerable<AdamItemDto>>($"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
             var results = _build<AdamTransGetItems<int, int>>()
-                .Init(GetBlock(), appId, contentType, guid, field, usePortalRoot, Log)
+                .Init(GetContext(), appId, contentType, guid, field, usePortalRoot, Log)
                 .ItemsInField(subfolder);
             return callLog("ok",  results);
         }
@@ -87,21 +87,21 @@ namespace ToSic.Sxc.Dnn.WebApi
         public IEnumerable<AdamItemDto> Folder(int appId, string contentType, Guid guid, string field, string subfolder,
             string newFolder, bool usePortalRoot)
             => _build<AdamTransFolder<int, int>>()
-                .Init(GetBlock(), appId, contentType, guid, field, usePortalRoot, Log)
+                .Init(GetContext(), appId, contentType, guid, field, usePortalRoot, Log)
                 .Folder(subfolder, newFolder);
 
         [HttpGet]
         public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder,
             int id, bool usePortalRoot)
             => _build<AdamTransDelete<int, int>>()
-                .Init(GetBlock(), appId, contentType, guid, field, usePortalRoot, Log)
+                .Init(GetContext(), appId, contentType, guid, field, usePortalRoot, Log)
                 .Delete(subfolder, isFolder, id, id);
 
         [HttpGet]
         public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder,
             int id, string newName, bool usePortalRoot)
             => _build<AdamTransRename<int, int>>()
-                .Init(GetBlock(), appId, contentType, guid, field, usePortalRoot, Log)
+                .Init(GetContext(), appId, contentType, guid, field, usePortalRoot, Log)
                 .Rename(subfolder, isFolder, id, id, newName);
 
         #endregion

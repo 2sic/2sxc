@@ -21,11 +21,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     {
         protected override string HistoryLogName => "Api.Assets";
 
-        private AppAssetsBackend Backend() => _build<AppAssetsBackend>().Init(GetBlock().App, new DnnUser(), Log);
+        private AppAssetsBackend Backend() => _build<AppAssetsBackend>().Init(Log);
 
 
         [HttpGet]
-        public List<string> All(int appId, bool global = false, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false) 
+        public List<string> All(int appId, bool global, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false) 
             => Backend().List(appId, global, path, mask, withSubfolders, returnFolders);
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public AssetEditInfo Asset(int appId, 
             int templateId = 0, string path = null, // identifier is always one of these two
             bool global = false)
-            => Backend().Get(templateId, path, global, appId);
+            => Backend().Get(appId, templateId, path, global);
 
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpPost]
         public bool Create([FromUri] int appId, [FromUri] string path,
             [FromBody] FileContentsDto content, // note: as of 2020-09 the content is never submitted
-            bool global = false) 
+            bool global) 
             => Backend().Create(appId, path, content, global);
 
 
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             [FromUri] int templateId = 0, [FromUri] string path = null, // identifier is either template Id or path
             // todo w/SPM - global never seems to be used - must check why and if we remove or add to UI
             [FromUri] bool global = false) 
-            => Backend().Save(template, templateId, global, path, appId);
+            => Backend().Save(appId: appId, template: template, templateId: templateId, global: global, path: path);
 
     }
 }

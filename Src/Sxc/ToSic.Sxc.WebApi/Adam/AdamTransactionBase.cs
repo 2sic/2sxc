@@ -5,6 +5,7 @@ using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
@@ -19,13 +20,13 @@ namespace ToSic.Sxc.WebApi.Adam
             _adamState = adamState;
         }
 
-        public T Init(IBlock block, int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot, ILog parentLog) 
+        public T Init(IContextOfApp context, int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot, ILog parentLog) 
             
         {
             Log.LinkTo(parentLog);
             var logCall = Log.Call<T>($"app: {appId}, type: {contentType}, itemGuid: {itemGuid}, field: {field}, portalRoot: {usePortalRoot}");
             //State = new AdamState<TFolderId, TFileId>();
-            State.Init(block, appId, contentType, field, itemGuid, usePortalRoot, Log);
+            State.Init(context, appId, contentType, field, itemGuid, usePortalRoot, Log);
             return logCall(null, this as T);
         }
 

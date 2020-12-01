@@ -23,12 +23,12 @@ namespace ToSic.Sxc.WebApi.Cms
         }
 
 
-        public IEnumerable<EntityForPickerDto> GetAvailableEntities(IContextOfBlock ctx, int appId, string[] items, string contentTypeName, int? dimensionId)
+        public IEnumerable<EntityForPickerDto> GetAvailableEntities(IContextOfSite ctx, int appId, string[] items, string contentTypeName, int? dimensionId)
         {
             // do security check
             var permCheck = string.IsNullOrEmpty(contentTypeName)
-                ? ServiceProvider.Build<MultiPermissionsApp>().Init(ctx, GetApp(appId, null), Log)
-                : ServiceProvider.Build<MultiPermissionsTypes>().Init(ctx, GetApp(appId, null), contentTypeName, Log);
+                ? ServiceProvider.Build<MultiPermissionsApp>().Init(ctx, GetApp(appId, false), Log)
+                : ServiceProvider.Build<MultiPermissionsTypes>().Init(ctx, GetApp(appId, false), contentTypeName, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 

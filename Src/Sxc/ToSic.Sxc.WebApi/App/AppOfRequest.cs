@@ -4,7 +4,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.WebApi.App
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.WebApi.App
         /// Note that this will fail, if both appPath and context are missing
         /// </summary>
         /// <returns></returns>
-        internal IAppIdentity GetAppIdFromPathOrContext(string appPath, IBlock block)
+        internal IAppIdentity GetAppIdFromPathOrContext(string appPath, IContextOfApp context)
         {
             var wrapLog = Log.Call<IAppIdentity>($"{appPath}, ...", message: "detect app from query string parameters");
 
@@ -68,12 +68,9 @@ namespace ToSic.Sxc.WebApi.App
             if (appId != null) return wrapLog(appId.LogState(), appId);
 
 
-            Log.Add($"auto detect app and init eav - path:{appPath}, context null: {block == null}");
+            Log.Add($"auto detect app and init eav - path:{appPath}, context null: {context == null}");
             appId = appPath == null || appPath == "auto"
-                ? new AppIdentity(
-                    block?.ZoneId ??
-                    throw new ArgumentException("try to get app-id from context, but none found"),
-                    block.AppId)
+                ? context?.AppState ?? throw new ArgumentException("try to get app-id from context, but none found")
                 : GetAppIdFromPath(appPath);
 
             return wrapLog(appId.LogState(), appId);

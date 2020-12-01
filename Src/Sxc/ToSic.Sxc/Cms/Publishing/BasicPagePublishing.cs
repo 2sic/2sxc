@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Cms.Publishing
     {
         public BasicPagePublishing() : base($"{LogNames.NotImplemented}.Publsh") { }
 
-        public void DoInsidePublishing(IContextOfBlock context, Action<VersioningActionInfo> action)
+        public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
         {
             var wrapLog = Log.Call();
             var versioningActionInfo = new VersioningActionInfo();

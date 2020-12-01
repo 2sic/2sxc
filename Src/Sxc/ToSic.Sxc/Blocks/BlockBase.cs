@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Blocks
             Log.Add("App created");
 
             // note: requires EditAllowed, which isn't ready till App is created
-            var cms = Context.ServiceProvider.Build<CmsRuntime>().Init(App, Context.EditAllowed, Log);
+            var cms = Context.ServiceProvider.Build<CmsRuntime>().Init(App, Context.UserMayEdit, Log);
 
             Configuration = cms.Blocks.GetOrGeneratePreviewConfig(blockId);
 

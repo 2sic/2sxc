@@ -15,10 +15,10 @@ namespace ToSic.Sxc.Adam
         }
 
         /// <inheritdoc />
-        public dynamic Metadata => Adam.Metadata.GetFirstOrFake(AdamContext, MetadataId);
+        public dynamic Metadata => AdamContext.MetadataMaker.GetFirstOrFake(AdamContext, MetadataId);
 
         /// <inheritdoc />
-        public bool HasMetadata => Adam.Metadata.GetFirstMetadata(AdamContext.AppRuntime, MetadataId) != null;
+        public bool HasMetadata => AdamContext.MetadataMaker.GetFirstMetadata(AdamContext.AppRuntime, MetadataId) != null;
 
         public MetadataFor MetadataId => _metadataKey ?? (_metadataKey = new MetadataFor
         {

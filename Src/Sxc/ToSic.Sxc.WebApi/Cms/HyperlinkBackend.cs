@@ -4,7 +4,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Security;
-using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.WebApi.Cms
             _adamState = adamState;
         }
 
-		public string ResolveHyperlink(IBlock block, string hyperlink, int appId, string contentType, Guid guid, string field)
+		public string ResolveHyperlink(IContextOfApp context, string hyperlink, int appId, string contentType, Guid guid, string field)
 		{
 			try
 			{
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.WebApi.Cms
 				{
 					// page link - only resolve if the user has edit-permissions
 					// only people who have some full edit permissions may actually look up pages
-					var permCheckPage = ServiceProvider.Build<MultiPermissionsApp>().Init(block.Context, GetApp(appId, block), Log);
+					var permCheckPage = ServiceProvider.Build<MultiPermissionsApp>().Init(context, GetApp(appId, context.UserMayEdit), Log);
 					return permCheckPage.UserMayOnAll(GrantSets.WritePublished)
 						? resolved
 						: hyperlink;
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.WebApi.Cms
 				// file-check, more abilities to allow
 				// this will already do a ensure-or-throw inside it if outside of adam
                 var adamCheck = AdamState; // new AdamState<int, int>();
-                adamCheck.Init(block, appId, contentType, field, guid, isOutsideOfAdam, Log);
+                adamCheck.Init(context, appId, contentType, field, guid, isOutsideOfAdam, Log);
 				if (!adamCheck.Security.SuperUserOrAccessingItemFolder(resolved, out var exp))
 					throw exp;
 				if (!adamCheck.Security.UserIsPermittedOnField(GrantSets.ReadSomething, out exp))

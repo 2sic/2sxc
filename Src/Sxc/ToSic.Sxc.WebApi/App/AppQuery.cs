@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
@@ -9,7 +8,6 @@ using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Conversion;
 using ToSic.Sxc.LookUp;
@@ -30,17 +28,16 @@ namespace ToSic.Sxc.WebApi.App
 
         #region In-Container-Context Queries
 
-        internal Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(IContextOfApp context, IApp app, string name, bool includeGuid, string stream, int? appId)
+        internal Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(IContextOfApp context, string name, bool includeGuid, string stream, int? appId)
         {
             var wrapLog = Log.Call($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
 
             // If no app available from context, check if an app-id was supplied in url
             // Note that it may only be an app from the current portal
             // and security checks will run internally
-            if (app == null && appId != null)
-                app = ServiceProvider.Build<Apps.App>().Init(ServiceProvider, appId.Value, Log, showDrafts: context.User.IsSuperUser);
+            var app = ServiceProvider.Build<Apps.App>().Init(ServiceProvider, appId ?? context.AppState.AppId, Log, context.UserMayEdit);
 
-            var result = BuildQueryAndRun(app, name, stream, includeGuid, context, Log, context?.EditAllowed ?? false);
+            var result = BuildQueryAndRun(app, name, stream, includeGuid, context, Log, context.UserMayEdit);
             wrapLog(null);
             return result;
         }
@@ -61,7 +58,7 @@ namespace ToSic.Sxc.WebApi.App
                 ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(false), Log);
 
             // now just run the default query check and serializer
-            var result = BuildQueryAndRun(queryApp, name, stream, false, context, Log, context?.EditAllowed ?? false);
+            var result = BuildQueryAndRun(queryApp, name, stream, false, context, Log, context?.UserMayEdit ?? false);
             wrapLog(null);
             return result;
         }

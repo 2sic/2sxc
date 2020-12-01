@@ -7,7 +7,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.Adam
@@ -29,14 +29,15 @@ namespace ToSic.Sxc.WebApi.Adam
         /// <summary>
         /// Initializes the object and performs all the initial security checks
         /// </summary>
-        public AdamState Init(IBlock block, int appId, string contentType, string field, Guid guid, bool usePortalRoot, ILog parentLog)
+        public AdamState Init(IContextOfApp context, int appId, string contentType, string field, Guid guid, bool usePortalRoot, ILog parentLog)
         {
             Log.LinkTo(parentLog);
             var callLog = Log.Call<AdamState>($"field:{field}, guid:{guid}");
-            App = ServiceProvider.Build<Apps.App>().Init(ServiceProvider, appId, parentLog, block);
+            Context = context;
+
+            App = ServiceProvider.Build<Apps.App>().Init(ServiceProvider, appId, parentLog, context.UserMayEdit);
             Permissions = ServiceProvider.Build<MultiPermissionsTypes>()
-                .Init(block.Context, App, contentType, Log);
-            Block = block;
+                .Init(context, App, contentType, Log);
 
             // only do checks on field/guid if it's actually accessing that, if it's on the portal root, don't.
             UseSiteRoot = usePortalRoot;
@@ -88,7 +89,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
         internal IContentTypeAttribute Attribute;
 
-        internal IBlock Block;
+        internal IContextOfApp Context;
 
         public readonly Guid[] FeaturesForRestrictedUsers =
         {

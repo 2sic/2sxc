@@ -1,10 +1,8 @@
 ﻿using System;
 using ToSic.Eav.Apps.Environment;
-using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Context;
 
 
 namespace ToSic.Sxc.Cms.Publishing
@@ -18,7 +16,7 @@ namespace ToSic.Sxc.Cms.Publishing
         /// </summary>
         /// <param name="context"></param>
         /// <param name="action"></param>
-        void DoInsidePublishing(IContextOfBlock context, Action<VersioningActionInfo> action);
+        void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action);
 
         ///// <summary>
         ///// Wraps an action inside publish of latest version.

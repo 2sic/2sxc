@@ -99,9 +99,9 @@ namespace ToSic.Sxc.WebApi
             if (!Eav.Configuration.Features.EnabledOrException(feats, "can't save in ADAM", out var exp))
                 throw exp;
 
-            var block = GetBlock();
+            var context = GetContext();
             return _build<AdamTransUpload<int, int>>()
-                .Init(block, block.AppId, contentType, guid.Value, field, false, Log)
+                .Init(context, context.AppState.AppId, contentType, guid.Value, field, false, Log)
                 .UploadOne(stream, fileName, subFolder, true);
         }
 

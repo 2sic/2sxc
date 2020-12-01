@@ -20,7 +20,7 @@ namespace ToSic.Sxc.WebApi.App
         public List<AppDto> Apps(IContextOfApp context)
         {
             var cms = _cmsZones.Init(context.Site.ZoneId, Log);
-            var configurationBuilder = ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(context.EditAllowed);
+            var configurationBuilder = ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(context.UserMayEdit);
             var list = cms.AppsRt.GetApps(context.Site, configurationBuilder);
             return list.Select(a => new AppDto
             {

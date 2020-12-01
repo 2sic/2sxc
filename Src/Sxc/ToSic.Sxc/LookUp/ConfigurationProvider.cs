@@ -35,7 +35,7 @@ namespace ToSic.Sxc.LookUp
         /// </summary>
         internal Func<App, IAppDataConfiguration> BuildForNewBlock(IContextOfBlock context, IBlock block)
         {
-            var showDrafts = context.EditAllowed;
+            var showDrafts = context.UserMayEdit;
 
             var wrapLog = Log.Call($"showDrafts: {showDrafts}");
 
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.LookUp
         {
             var log = new Log("Sxc.CnfPrv", block.Log);
             var wrapLog = log.Call();
-            var showDrafts = block.Context.EditAllowed;
+            var showDrafts = block.Context.UserMayEdit;
             var existingLookups = block.Data.Configuration.LookUps;
 
             wrapLog("ok");

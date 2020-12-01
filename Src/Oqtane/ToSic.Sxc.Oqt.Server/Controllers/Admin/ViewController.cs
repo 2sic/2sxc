@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         //[SupportedModules("2sxc,2sxc-app")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
-        public IEnumerable<object> All(int appId) => Backend.GetAll(appId);
+        public IEnumerable<ViewDetailsDto> All(int appId) => Backend.GetAll(appId);
 
         [HttpGet]
         //[SupportedModules("2sxc,2sxc-app")]

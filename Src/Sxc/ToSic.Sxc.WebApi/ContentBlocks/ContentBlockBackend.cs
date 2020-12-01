@@ -12,7 +12,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
 
         #region constructor / DI
 
-        public ContentBlockBackend(IPagePublishing publishing, Lazy<CmsManager> cmsManagerLazy) : base(cmsManagerLazy, "Bck.FldLst") 
+        public ContentBlockBackend(IServiceProvider sp, IPagePublishing publishing, Lazy<CmsManager> cmsManagerLazy) : base(sp, cmsManagerLazy, "Bck.FldLst") 
             => _publishing = publishing.Init(Log);
 
         #endregion
@@ -25,7 +25,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
         {
             Log.Add($"add order:{index}");
             // use dnn versioning - this is always part of page
-            _publishing.DoInsidePublishing(_context, _ 
+            _publishing.DoInsidePublishing(ContextOfAppOrBlock, _ 
                 => CmsManager.Blocks.AddEmptyItem(_block.Configuration, index, _block.Context.Publishing.ForceDraft));
         }
 

@@ -7,10 +7,8 @@ namespace ToSic.Sxc.WebApi.InPage
 {
     public class AppViewPickerBackend: BlockWebApiBackendBase<AppViewPickerBackend>
     {
-        //private readonly Lazy<AppManager> _appManagerLazy;
-        public AppViewPickerBackend(Lazy<CmsManager> cmsManagerLazy) : base(cmsManagerLazy,"Bck.ViwApp")
+        public AppViewPickerBackend(IServiceProvider sp, Lazy<CmsManager> cmsManagerLazy) : base(sp, cmsManagerLazy,"Bck.ViwApp")
         {
-            //_appManagerLazy = appManagerLazy;
         }
 
 

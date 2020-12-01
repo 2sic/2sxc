@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Run
 
             // Copy all files in 2sexy folder to (portal file system) 2sexy folder
             var templateRoot = _dependencies.TemplateHelpers.Init(app, Log)
-                .AppPathRoot(Settings.TemplateLocations.PortalFileSystem, PathTypes.PhysFull);
+                .AppPathRoot(false, PathTypes.PhysFull);
             return templateRoot;
         }
 

@@ -7,8 +7,6 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Data;
-using ToSic.Eav.Plumbing;
-using ToSic.Eav.WebApi;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.App;
@@ -36,7 +34,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string appPath = null) 
-            => _build<AppContent>().Init(GetContext(), GetBlock(), Log).GetItems(contentType, appPath);
+            => _build<AppContent>().Init(GetContext(), Log).GetItems(contentType, appPath);
 
         #endregion
 
@@ -66,7 +64,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         /// <param name="appPath"></param>
         /// <returns></returns>
         private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string appPath) 
-            => _build<AppContent>().Init(GetContext(), GetBlock(), Log).GetOne(contentType, getOne, appPath);
+            => _build<AppContent>().Init(GetContext(), Log).GetOne(contentType, getOne, appPath);
 
         #endregion
 
@@ -84,7 +82,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
             // - not also that if ever you do support view switching, you will need to ensure security checks
 
             var dataHandler = new AppContentJsonForInstance();
-            var block = GetBlock();
+            var block = BlockReallyUsedAsBlock();
             // must access engine to ensure pre-processing of data has happened, 
             // especially if the cshtml contains a override void CustomizeData()
             var engine = block.BlockBuilder.GetEngine(Purpose.PublishData);  
@@ -96,7 +94,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
             {
                 var publishedStreams = dataSource.Publish.Streams;
                 var streamList = publishedStreams.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
-                json = dataHandler.GenerateJson(dataSource, streamList, block.Context.EditAllowed);
+                json = dataHandler.GenerateJson(dataSource, streamList, block.Context.UserMayEdit);
             }
             else
             {
@@ -116,7 +114,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         public Dictionary<string, object> CreateOrUpdate([FromUri] string contentType,
             [FromBody] Dictionary<string, object> newContentItem, [FromUri] int? id = null,
             [FromUri] string appPath = null)
-            => _build<AppContent>().Init(GetContext(), GetBlock(),Log)
+            => _build<AppContent>().Init(GetContext(), Log)
                 .CreateOrUpdate(contentType, newContentItem, id, appPath);
 
         #endregion
@@ -126,12 +124,12 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         [HttpDelete]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public void Delete(string contentType, int id, [FromUri] string appPath = null) 
-            => _build<AppContent>().Init(GetContext(), GetBlock(), Log).Delete(contentType, id, appPath);
+            => _build<AppContent>().Init(GetContext(), Log).Delete(contentType, id, appPath);
 
         [HttpDelete]
 	    [AllowAnonymous]   // will check security internally, so assume no requirements
         public void Delete(string contentType, Guid guid, [FromUri] string appPath = null) 
-            => _build<AppContent>().Init(GetContext(), GetBlock(), Log).Delete(contentType, guid, appPath);
+            => _build<AppContent>().Init(GetContext(), Log).Delete(contentType, guid, appPath);
 
         #endregion
 

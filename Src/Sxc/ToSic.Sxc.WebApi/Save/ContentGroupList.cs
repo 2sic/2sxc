@@ -4,12 +4,10 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.LookUp;
 using static System.StringComparison;
 using BlockEditorBase = ToSic.Sxc.Blocks.Edit.BlockEditorBase;
 

@@ -34,12 +34,14 @@ namespace ToSic.Sxc.Dnn.Cms
         
         #endregion
 
-        public void DoInsidePublishing(IContextOfBlock context, Action<VersioningActionInfo> action)
+        public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
         {
-            var instanceId = context.Module.Id;
-            var userId = (context.User as DnnUser).UnwrappedContents.UserID;
-            var enabled = context.Publishing.ForceDraft;
+            var possibleContextOfBlock = context as IContextOfBlock;
+            var enabled = possibleContextOfBlock?.Publishing.ForceDraft ?? false;
+            var instanceId = possibleContextOfBlock?.Module.Id ?? Eav.Constants.IdNotInitialized;
+            var userId = (context.User as DnnUser)?.UnwrappedContents.UserID ?? Eav.Constants.IdNotInitialized;
             Log.Add($"DoInsidePublishing(module:{instanceId}, user:{userId}, enabled:{enabled})");
+
             if (enabled)
             {
                 var moduleVersionSettings = new DnnPagePublishing.ModuleVersions(instanceId, Log);
