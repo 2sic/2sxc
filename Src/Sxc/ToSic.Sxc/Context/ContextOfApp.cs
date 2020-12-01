@@ -41,10 +41,7 @@ namespace ToSic.Sxc.Context
                 if (_userMayEdit.HasValue) return _userMayEdit.Value;
                 var wrapLog = Log.Call<bool>();
                 if (AppState == null)
-                {
-                    Log.Add("App is null. Will return false, but not cache so in future it may change.");
-                    return wrapLog("missing", false);
-                }
+                    return wrapLog("no app, use fallback", base.UserMayEdit);
                 _userMayEdit = ServiceProvider.Build<AppPermissionCheck>()
                     .ForAppInInstance(this, AppState, Log)
                     .UserMay(GrantSets.WriteSomething);
