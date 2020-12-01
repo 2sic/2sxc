@@ -3,7 +3,7 @@ using ToSic.Sxc.Cms.Publishing;
 
 namespace ToSic.Sxc.Context
 {
-    public interface IContextOfBlock: IContextOfSite, IContextOfAppData
+    public interface IContextOfBlock: IContextOfSite, IContextOfApp
     {
         /// <summary>
         /// The page it's running on + parameters for queries, url etc.

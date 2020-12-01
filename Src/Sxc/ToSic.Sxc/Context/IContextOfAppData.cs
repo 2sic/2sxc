@@ -4,7 +4,7 @@ using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Context
 {
-    public interface IContextOfAppData: IContextOfSite, IAppIdentity
+    public interface IContextOfApp: IContextOfSite, IAppIdentity
     {
         void InitApp(IAppIdentity appIdentity, ILog parentLog);
 

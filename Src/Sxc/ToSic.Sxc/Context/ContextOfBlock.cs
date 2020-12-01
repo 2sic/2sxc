@@ -4,7 +4,7 @@ using ToSic.Sxc.Cms.Publishing;
 
 namespace ToSic.Sxc.Context
 {
-    public class ContextOfBlock: ContextOfAppData, IContextOfBlock
+    public class ContextOfBlock: ContextOfApp, IContextOfBlock
     {
         #region Constructor / DI
 

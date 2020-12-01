@@ -8,9 +8,9 @@ using ToSic.Eav.Security.Permissions;
 
 namespace ToSic.Sxc.Context
 {
-    public class ContextOfAppData: ContextOfSite, IContextOfAppData
+    public class ContextOfApp: ContextOfSite, IContextOfApp
     {
-        public ContextOfAppData(IServiceProvider serviceProvider, ISite site, IUser user) : base(serviceProvider, site, user)
+        public ContextOfApp(IServiceProvider serviceProvider, ISite site, IUser user) : base(serviceProvider, site, user)
         {
             Log.Rename("Sxc.CtxApp");
         }
@@ -29,12 +29,22 @@ namespace ToSic.Sxc.Context
             get
             {
                 if (_showDrafts.HasValue) return _showDrafts.Value;
-                if (AppIdentity == null) throw new Exception("AppIdentity can't be null");
-                return (_showDrafts = ServiceProvider.Build<AppPermissionCheck>()
-                    .ForAppInInstance(this, AppIdentity, Log).UserMay(GrantSets.WriteSomething)).Value;
+                var wrapLog = Log.Call<bool>();
+                if (AppState == null)
+                {
+                    Log.Add("App is null. Will return false, but not cache so in future it may change.");
+                    return wrapLog("missing", false);
+                }
+                _showDrafts = ServiceProvider.Build<AppPermissionCheck>()
+                    .ForAppInInstance(this, AppState, Log)
+                    .UserMay(GrantSets.WriteSomething);
+                return wrapLog($"{_showDrafts.Value}", _showDrafts.Value);
             }
         }
         private bool? _showDrafts;
+
+        public AppState AppState => _appState ?? (_appState = AppIdentity == null ? null : State.Get(AppIdentity));
+        private AppState _appState;
 
         public int ZoneId => AppIdentity?.ZoneId ?? throw new Exception("App Identity not set yet");
         public int AppId => AppIdentity?.AppId ?? throw new Exception("App Identity not set yet");

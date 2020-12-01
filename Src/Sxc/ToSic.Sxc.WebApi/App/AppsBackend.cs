@@ -17,7 +17,7 @@ namespace ToSic.Sxc.WebApi.App
             _cmsZones = cmsZones;
         }
 
-        public List<AppDto> Apps(IContextOfAppData context)
+        public List<AppDto> Apps(IContextOfApp context)
         {
             var cms = _cmsZones.Init(context.Site.ZoneId, Log);
             var configurationBuilder = ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(context.EditAllowed);

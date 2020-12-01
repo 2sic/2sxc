@@ -30,7 +30,7 @@ namespace ToSic.Sxc.WebApi.App
 
         #region In-Container-Context Queries
 
-        internal Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(IContextOfAppData context, IApp app, string name, bool includeGuid, string stream, int? appId)
+        internal Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(IContextOfApp context, IApp app, string name, bool includeGuid, string stream, int? appId)
         {
             var wrapLog = Log.Call($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
 
