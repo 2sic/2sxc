@@ -112,7 +112,7 @@
     <Compile Include="Dnn\WebApi\Sys\InstallController.cs" />
     <Compile Include="Dnn\WebApi\Sys\LogController.cs" />
     <Compile Include="Dnn\WebApi\Cms\HistoryController.cs" />
-    <Compile Include="Dnn\WebApi\Context\DnnJsContextBuilder.cs" />
+    <Compile Include="Dnn\WebApi\Context\DnnUiContextBuilder.cs" />
     <Compile Include="Dnn\WebApi\Context\DnnContextDtoExtensions.cs" />
     <Compile Include="Dnn\WebApiRouting\Route.cs" />
     <Compile Include="Dnn\WebApiRouting\RouteParts.cs" />
