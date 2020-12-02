@@ -1,28 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Web.JsContext
 {
     public class JsContextLanguage
     {
+        private readonly Lazy<IZoneMapper> _zoneMapperLazy;
         public string Current;
         public string Primary;
         public IEnumerable<ClientInfoLanguage> All;
 
-        public JsContextLanguage(IServiceProvider serviceProvider, ISite site, int zoneId)
+        public JsContextLanguage(Lazy<IZoneMapper> zoneMapperLazy) => _zoneMapperLazy = zoneMapperLazy;
+
+        public JsContextLanguage Init(ISite site, int zoneId)
         {
             // Don't use PortalSettings, as that provides a wrong ps.CultureCode.ToLower();
             Current = System.Threading.Thread.CurrentThread.CurrentCulture.Name.ToLower();
             Primary = site.DefaultLanguage;
-            All = serviceProvider.Build<IZoneMapper>()
+            All = _zoneMapperLazy.Value
                 .CulturesWithState(site.Id, zoneId)
                 .Where(c => c.Active)
                 .Select(c => new ClientInfoLanguage { key = c.Key.ToLower(), name = c.Text });
+            return this;
         }
     }
 

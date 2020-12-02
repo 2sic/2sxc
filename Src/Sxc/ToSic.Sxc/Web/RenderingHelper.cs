@@ -2,9 +2,8 @@
 using System.Web;
 using Newtonsoft.Json;
 using ToSic.Eav.Apps.Environment;
-using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Run;
@@ -100,7 +99,7 @@ namespace ToSic.Sxc.Web
             return msg;
         }
 
-        public string UiContextInfos() => JsonConvert.SerializeObject(new JsContextAll(AppRootPath, Block, Log));
+        public string UiContextInfos() => JsonConvert.SerializeObject(Context.ServiceProvider.Build<JsContextAll>().Init(AppRootPath, Block, Log));
 
     }
 }

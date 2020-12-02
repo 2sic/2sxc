@@ -1,28 +1,52 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Security;
+using ToSic.Sxc.Web.JsContext;
 
 namespace ToSic.Sxc.WebApi.Context
 {
-    public abstract class UiContextBuilderBase: IUiContextBuilder
+    public class UiContextBuilderBase: IUiContextBuilder
     {
-        private readonly Apps.App _app;
 
-        protected UiContextBuilderBase(Apps.App app) => _app = app;
+        #region Dependencies 
+
+        public class Dependencies
+        {
+            public IContextOfSite SiteCtx { get; }
+            public JsContextLanguage JsCtx { get; }
+            public Apps.App AppToLaterInitialize { get; }
+
+            public Dependencies(IContextOfSite siteCtx, JsContextLanguage jsCtx, Apps.App appToLaterInitialize)
+            {
+                SiteCtx = siteCtx;
+                JsCtx = jsCtx;
+                AppToLaterInitialize = appToLaterInitialize;
+            }
+        }
+
+        #endregion
+
+        #region Constructor / DI
+
+        protected UiContextBuilderBase(Dependencies dependencies)
+        {
+            Deps = dependencies;
+            _appToLaterInitialize = dependencies.AppToLaterInitialize;
+        }
+        protected Dependencies Deps;
 
         protected int ZoneId;
         protected IApp App;
+        private readonly Apps.App _appToLaterInitialize;
 
-        protected IApp AppTemp;
+        #endregion
 
         public virtual IUiContextBuilder SetZoneAndApp(int zoneId, IAppIdentity app)
         {
-            App = app != null ? _app.InitNoData(app, null) : null;
-
-            if(zoneId == null) throw new ArgumentNullException(nameof(zoneId));
-            ZoneId = (int) zoneId;
+            ZoneId = zoneId;
+            App = app != null ? _appToLaterInitialize.InitNoData(app, null) : null;
             return this;
         }
 
@@ -43,14 +67,50 @@ namespace ToSic.Sxc.WebApi.Context
             return ctx;
         }
 
-        protected abstract LanguageDto GetLanguage();
+        protected virtual LanguageDto GetLanguage()
+        {
+            if (ZoneId == 0) return null;
+            var language = Deps.JsCtx.Init(Deps.SiteCtx.Site, ZoneId);
+            return new LanguageDto
+            {
+                Current = language.Current,
+                Primary = language.Primary,
+                All = language.All.ToDictionary(l => l.key, l => l.name),
+            };
+        }
 
-        protected abstract WebResourceDto GetSystem();
-        protected abstract WebResourceDto GetSite();
-        protected abstract WebResourceDto GetPage();
+        protected virtual WebResourceDto GetSystem() =>
+            new WebResourceDto
+            {
+                Url = "/"
+            };
 
-        protected abstract EnableDto GetEnable();
-        protected abstract string GetGettingStartedUrl();
+        protected virtual WebResourceDto GetSite() =>
+            new WebResourceDto
+            {
+                Id = Deps.SiteCtx.Site.Id,
+                Url = "//" + Deps.SiteCtx.Site.Url + "/",
+            };
+
+        protected virtual WebResourceDto GetPage() =>
+            new WebResourceDto
+            {
+                Id = Eav.Constants.NullId,
+            };
+
+        protected virtual EnableDto GetEnable()
+        {
+            var isRealApp = App != null && App.AppGuid != Eav.Constants.DefaultAppName;
+            var tmp = new JsContextUser(Deps.SiteCtx.User);
+            return new EnableDto
+            {
+                AppPermissions = isRealApp,
+                CodeEditor = tmp.CanDevelop,
+                Query = isRealApp,
+            };
+        }
+
+        protected virtual string GetGettingStartedUrl() => Eav.Constants.UrlNotInitialized;
 
         private AppDto GetApp(Ctx flags)
         {
@@ -65,7 +125,7 @@ namespace ToSic.Sxc.WebApi.Context
             if (!flags.HasFlag(Ctx.AppAdvanced)) return result;
 
             result.GettingStartedUrl = GetGettingStartedUrl();
-            result.Identifier = _app.AppGuid;
+            result.Identifier = _appToLaterInitialize.AppGuid;
             result.Permissions = new HasPermissionsDto {Count = App.Metadata.Permissions.Count()};
             return result;
         }

@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Linq;
 using System.Web;
 using DotNetNuke.Common;
 using DotNetNuke.Entities.Controllers;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Plumbing;
+using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Web.JsContext;
 using ToSic.Sxc.WebApi.Context;
 using Assembly = System.Reflection.Assembly;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Dnn.WebApi.Context
 {
@@ -20,15 +19,15 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
     {
         #region Constructor / DI
 
-        private readonly IServiceProvider _serviceProvider;
+        private readonly Lazy<IZoneMapper> _zoneMapper;
         private readonly IContextResolver _ctxResolver;
         private readonly PortalSettings _portal = PortalSettings.Current;
 
         private ModuleInfo Module => (_ctxResolver.BlockOrNull()?.Module as DnnModule)?.UnwrappedContents;
 
-        public DnnUiContextBuilder(IServiceProvider serviceProvider, IContextResolver ctxResolver, Apps.App app): base(app)
+        public DnnUiContextBuilder(Lazy<IZoneMapper> zoneMapper, IContextResolver ctxResolver, Dependencies deps): base(deps)
         {
-            _serviceProvider = serviceProvider;
+            _zoneMapper = zoneMapper;
             _ctxResolver = ctxResolver;
         }
 
@@ -38,21 +37,21 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
         {
             // check if we're providing context for missing app
             // in this case we must find the zone based on the portals.
-            if (zoneId == 0 && app == null) zoneId = _serviceProvider.Build<DnnZoneMapper>().Init(null).GetZoneId(_portal.PortalId);
+            if (zoneId == 0 && app == null) zoneId = _zoneMapper.Value.Init(null).GetZoneId(_portal.PortalId);
             return base.SetZoneAndApp(zoneId, app);
         }
 
-        protected override LanguageDto GetLanguage()
-        {
-            if (_portal == null || ZoneId == 0) return null;
-            var language = new JsContextLanguage(_serviceProvider, new DnnSite(), ZoneId);
-            return new LanguageDto
-            {
-                Current = language.Current,
-                Primary = language.Primary,
-                All = language.All.ToDictionary(l => l.key, l => l.name),
-            };
-        }
+        //protected override LanguageDto GetLanguage()
+        //{
+        //    if (_portal == null || ZoneId == 0) return null;
+        //    var language = Deps.JsCtx.Init(new DnnSite(), ZoneId);
+        //    return new LanguageDto
+        //    {
+        //        Current = language.Current,
+        //        Primary = language.Primary,
+        //        All = language.All.ToDictionary(l => l.key, l => l.name),
+        //    };
+        //}
 
         protected override WebResourceDto GetSystem() =>
             new WebResourceDto
@@ -77,17 +76,17 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
                     // but we can't get it from there directly
                 };
 
-        protected override EnableDto GetEnable()
-        {
-            var isRealApp = App != null && App.AppGuid != Eav.Constants.DefaultAppName;
-            var tmp = new JsContextUser(new DnnUser());
-            return new EnableDto
-            {
-                AppPermissions = isRealApp,
-                CodeEditor = tmp?.CanDevelop ?? false,
-                Query = isRealApp,
-            };
-        }
+        //protected override EnableDto GetEnable()
+        //{
+        //    var isRealApp = App != null && App.AppGuid != Eav.Constants.DefaultAppName;
+        //    var tmp = new JsContextUser(new DnnUser());
+        //    return new EnableDto
+        //    {
+        //        AppPermissions = isRealApp,
+        //        CodeEditor = tmp?.CanDevelop ?? false,
+        //        Query = isRealApp,
+        //    };
+        //}
 
         /// <summary>
         /// build a getting-started url which is used to correctly show the user infos like
@@ -96,13 +95,9 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
         /// redirects based on the app he's looking at, etc.
         /// </summary>
         /// <returns></returns>
-        public string GettingStartedUrl() => GetGettingStartedUrl();
-
         protected override string GetGettingStartedUrl()
         {
-            if (App == null) return "";
-            var app = App as Sxc.Apps.IApp;
-            if (app == null) return "";
+            if (!(App is IApp app)) return "";
 
             var gsUrl =
                 "//gettingstarted.2sxc.org/router.aspx?" +

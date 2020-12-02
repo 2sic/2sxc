@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Context
 {
     public class MvcContextBuilder: UiContextBuilderBase
     {
-        public MvcContextBuilder(ILinkPaths linkPaths, Apps.App app) : base(app)
+        public MvcContextBuilder(ILinkPaths linkPaths, Dependencies deps) : base(deps)
         {
             _linkPaths = linkPaths;
         }

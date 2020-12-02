@@ -13,6 +13,7 @@ using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Run;
 
 using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.JsContext;
 
 namespace ToSic.Sxc
 {
@@ -57,6 +58,10 @@ namespace ToSic.Sxc
             services.TryAddTransient<ICmsContext, CmsContext>();
             services.TryAddScoped<IContextResolver, ContextResolver>();
             services.TryAddTransient<AppIdResolver>();
+
+            // JS UI Context
+            services.TryAddTransient<JsContextAll>();
+            services.TryAddTransient<JsContextLanguage>();
 
             // Adam stuff
             services.TryAddTransient<AdamMetadataMaker>();

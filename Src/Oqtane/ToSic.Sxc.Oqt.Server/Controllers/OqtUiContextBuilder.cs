@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     public class OqtUiContextBuilder: UiContextBuilderBase
     {
-        public OqtUiContextBuilder(ILinkPaths linkPaths,IContextOfSite ctx, Apps.App app) : base(app)
+        public OqtUiContextBuilder(ILinkPaths linkPaths,IContextOfSite ctx, Dependencies deps) : base(deps)
         {
             _linkPaths = linkPaths;
             _context = ctx;

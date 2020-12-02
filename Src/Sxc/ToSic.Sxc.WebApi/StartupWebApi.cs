@@ -15,6 +15,7 @@ using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.Cms;
 using ToSic.Sxc.WebApi.ContentBlocks;
+using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.Features;
 using ToSic.Sxc.WebApi.ImportExport;
 using ToSic.Sxc.WebApi.InPage;
@@ -78,6 +79,11 @@ namespace ToSic.Sxc.WebApi
             // Small WebApi Helpers
             services.TryAddTransient<IdentifierHelper>();
             services.TryAddTransient<ContentGroupList>();
+
+            // js context / UI
+            services.TryAddTransient<IUiContextBuilder, UiContextBuilderBase>();
+            services.TryAddTransient<UiContextBuilderBase.Dependencies>();
+
 
             // 2020-11-25 2dm don't think this is ever injected, and it doesn't have a DI constructor
             //services.TryAddTransient<SaveSecurity>();
