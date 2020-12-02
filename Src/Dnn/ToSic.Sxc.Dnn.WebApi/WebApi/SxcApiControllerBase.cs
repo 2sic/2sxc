@@ -46,9 +46,6 @@ namespace ToSic.Sxc.WebApi
 
         #region App-Helpers for anonyous access APIs
 
-        internal AppIdResolver AppFinder => _appIdResolver ?? (_appIdResolver = _build<AppIdResolver>().Init(Log));
-        private AppIdResolver _appIdResolver;
-
         /// <summary>
         /// used for API calls to get the current app
         /// </summary>

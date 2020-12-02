@@ -8,6 +8,8 @@ namespace ToSic.Sxc.Context
 {
     public class ContextResolver: HasLog<IContextResolver>, IContextResolver
     {
+        #region Constructor / DI
+
         protected AppIdResolver AppIdResolver => _appIdResolver ?? (_appIdResolver = _appIdResolverLazy.Value.Init(Log));
         private AppIdResolver _appIdResolver;
         private readonly Lazy<AppIdResolver> _appIdResolverLazy;
@@ -19,6 +21,8 @@ namespace ToSic.Sxc.Context
             _appIdResolverLazy = appIdResolverLazy;
             ServiceProvider = serviceProvider;
         }
+
+        #endregion
 
         public IContextOfSite Site() => _site ?? (_site = ServiceProvider.Build<IContextOfSite>());
         private IContextOfSite _site;

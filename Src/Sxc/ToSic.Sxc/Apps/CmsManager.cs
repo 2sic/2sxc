@@ -2,6 +2,7 @@
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Apps
 {
@@ -18,6 +19,11 @@ namespace ToSic.Sxc.Apps
         public new CmsManager Init(IAppIdentity app, bool showDrafts, ILog parentLog)
         {
             base.Init(app, showDrafts, parentLog);
+            return this;
+        }
+        public CmsManager Init(IContextOfApp context, ILog parentLog)
+        {
+            base.Init(context.AppState, context.UserMayEdit, parentLog);
             return this;
         }
 

@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string appPath = null) 
-            => _build<AppContent>().Init(appPath, GetContext(), Log).GetItems(contentType, appPath);
+            => _build<AppContent>().Init(appPath, Log).GetItems(contentType, appPath);
 
         #endregion
 
@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         /// <param name="appPath"></param>
         /// <returns></returns>
         private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string appPath) 
-            => _build<AppContent>().Init(appPath, GetContext(), Log).GetOne(contentType, getOne, appPath);
+            => _build<AppContent>().Init(appPath, Log).GetOne(contentType, getOne, appPath);
 
         #endregion
 
@@ -99,7 +99,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
             else
             {
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden)
-                    {ReasonPhrase = dataHandler.GeneratePleaseEnableDataError(GetContext().Module.Id)});
+                    {ReasonPhrase = dataHandler.GeneratePleaseEnableDataError(ActiveModule.ModuleID)});
             }
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -114,7 +114,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         public Dictionary<string, object> CreateOrUpdate([FromUri] string contentType,
             [FromBody] Dictionary<string, object> newContentItem, [FromUri] int? id = null,
             [FromUri] string appPath = null)
-            => _build<AppContent>().Init(appPath, GetContext(), Log)
+            => _build<AppContent>().Init(appPath, Log)
                 .CreateOrUpdate(contentType, newContentItem, id, appPath);
 
         #endregion
@@ -124,12 +124,12 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         [HttpDelete]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public void Delete(string contentType, int id, [FromUri] string appPath = null) 
-            => _build<AppContent>().Init(appPath, GetContext(), Log).Delete(contentType, id, appPath);
+            => _build<AppContent>().Init(appPath, Log).Delete(contentType, id, appPath);
 
         [HttpDelete]
 	    [AllowAnonymous]   // will check security internally, so assume no requirements
         public void Delete(string contentType, Guid guid, [FromUri] string appPath = null) 
-            => _build<AppContent>().Init(appPath, GetContext(), Log).Delete(contentType, guid, appPath);
+            => _build<AppContent>().Init(appPath, Log).Delete(contentType, guid, appPath);
 
         #endregion
 

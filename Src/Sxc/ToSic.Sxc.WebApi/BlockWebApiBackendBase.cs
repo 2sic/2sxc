@@ -26,7 +26,7 @@ namespace ToSic.Sxc.WebApi
         protected IBlock RealBlock => _realBlock ?? (_realBlock = CtxResolver.RealBlockRequired());
         private IBlock _realBlock;
 
-        protected CmsManager CmsManagerOfBlock => _cmsManager ?? (_cmsManager = CmsManagerLazy.Value.Init(RealBlock.Context.AppState, RealBlock.Context.UserMayEdit, Log));
+        protected CmsManager CmsManagerOfBlock => _cmsManager ?? (_cmsManager = CmsManagerLazy.Value.Init(RealBlock.Context, Log));
         private CmsManager _cmsManager;
 
         #endregion

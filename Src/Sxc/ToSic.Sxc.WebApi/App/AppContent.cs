@@ -4,6 +4,7 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Conversion;
 using ToSic.Eav.Data;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
@@ -11,27 +12,37 @@ using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Helpers;
 using ToSic.Eav.WebApi.Security;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Conversion;
 
 namespace ToSic.Sxc.WebApi.App
 {
-    public class AppContent: BlockWebApiBackendWithContext<AppContent>
+    public class AppContent: WebApiBackendBase<AppContent>
     {
 
         #region Constructor / DI
+        protected IContextOfApp Context;
 
-        public AppContent(IServiceProvider sp, EntityApi entityApi, 
-            Lazy<CmsManager> cmsManagerLazy, 
-            Lazy<EntitiesToDictionary> entToDicLazy, IContextResolver ctxResolver) : base(sp, cmsManagerLazy, ctxResolver, "Sxc.ApiApC")
+        public AppContent(IServiceProvider sp, EntityApi entityApi, Lazy<EntitiesToDictionary> entToDicLazy, IContextResolver ctxResolver) : base(sp, "Sxc.ApiApC")
         {
             _entityApi = entityApi;
             _entToDicLazy = entToDicLazy;
+            _ctxResolver = ctxResolver;
+
         }
         private readonly EntityApi _entityApi;
         private readonly Lazy<EntitiesToDictionary> _entToDicLazy;
+        private readonly IContextResolver _ctxResolver;
 
+        public AppContent Init(string appName, ILog parentLog)
+        {
+            Log.LinkTo(parentLog);
+
+            // if app-path specified, use that app, otherwise use from context
+            Context = _ctxResolver.AppNameRouteBlock(appName);
+
+            return this;
+        }
         #endregion
 
 
@@ -40,14 +51,6 @@ namespace ToSic.Sxc.WebApi.App
         internal IEnumerable<Dictionary<string, object>> GetItems(string contentType, string appPath = null)
         {
             var wrapLog = Log.Call($"get entities type:{contentType}, path:{appPath}");
-
-            // if app-path specified, use that app, otherwise use from context
-            //var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, ContextOfAppOrBlock);
-
-            // get the app - if we have the context from the request, use that, otherwise generate full app
-            //var app = // _block == null
-            //    //? ServiceProvider.Build<Apps.App>().Init(ServiceProvider.Build<AppConfigDelegate>().Init(Log), appIdentity, Log, ContextOfAppOrBlock.UserMayEdit)
-            //    /*:*/ GetApp(appIdentity.AppId, ContextOfAppOrBlock.UserMayEdit);
 
             // verify that read-access to these content-types is permitted
             var permCheck = ThrowIfNotAllowedInType(contentType, GrantSets.ReadSomething, Context.AppState);
@@ -73,16 +76,9 @@ namespace ToSic.Sxc.WebApi.App
         {
             Log.Add($"get and serialize after security check type:{contentType}, path:{appPath}");
 
-            //var context = _ctxResolver.AppNameRouteBlock(appPath);
-
-            // if app-path specified, use that app, otherwise use from context
-            //var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, ContextOfAppOrBlock);
-
-            //var appState = State.Get(appIdentity.AppId);
-
             // first try to find in all entities incl. drafts
             var itm = getOne(Context.AppState.List);
-            var permCheck = ThrowIfNotAllowedInItem(itm, GrantSets.ReadSomething, GetApp(Context.AppState.AppId, Context.UserMayEdit));
+            var permCheck = ThrowIfNotAllowedInItem(itm, GrantSets.ReadSomething, Context.AppState);
 
             // in case draft wasn't allow, get again with more restricted permissions 
             if (!permCheck.EnsureAny(GrantSets.ReadDraft)) 
@@ -101,10 +97,8 @@ namespace ToSic.Sxc.WebApi.App
         {
             Log.Add($"create or update type:{contentType}, id:{id}, path:{appPath}");
 
-            //var context = _ctxResolver.AppNameRouteBlock(appPath);
 
             // if app-path specified, use that app, otherwise use from context
-            //var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, ContextOfAppOrBlock);
 
             // Check that this ID is actually of this content-type,
             // this throws an error if it's not the correct type
@@ -112,9 +106,8 @@ namespace ToSic.Sxc.WebApi.App
                 ? null
                 : Context.AppState.List.GetOrThrow(contentType, id.Value);
 
-            var realApp = GetApp(Context.AppState.AppId, Context.UserMayEdit);
-            if (itm == null) ThrowIfNotAllowedInType(contentType, Grants.Create.AsSet(), realApp);
-            else ThrowIfNotAllowedInItem(itm, Grants.Update.AsSet(), realApp);
+            if (itm == null) ThrowIfNotAllowedInType(contentType, Grants.Create.AsSet(), Context.AppState);
+            else ThrowIfNotAllowedInItem(itm, Grants.Update.AsSet(), Context.AppState);
 
             // Convert to case-insensitive dictionary just to be safe!
             newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.OrdinalIgnoreCase);
@@ -125,6 +118,7 @@ namespace ToSic.Sxc.WebApi.App
 
             var userName = Context.User.IdentityToken;
 
+            var realApp = GetApp(Context.AppState.AppId, Context.UserMayEdit);
             if (id == null)
             {
                 var entity = realApp.Data.Create(contentType, cleanedNewItem, userName);
@@ -159,17 +153,13 @@ namespace ToSic.Sxc.WebApi.App
             Log.Add($"delete id:{id}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
 
-            //var appId = AppFinder.GetAppIdFromPathOrContext(appPath, ContextOfAppOrBlock);
-
             // don't allow type "any" on this
             if (contentType == "any")
                 throw new Exception("type any not allowed with id-only, requires guid");
 
-            //var context = _ctxResolver.AppNameRouteBlock(appPath);
-
             var entityApi = _entityApi.Init(Context.AppState.AppId, true, Log);
             var itm = entityApi.AppRead.AppState.List.GetOrThrow(contentType, id);
-            ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), Context.AppState /*GetApp(appId.AppId, ContextOfAppOrBlock.UserMayEdit)*/);
+            ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), Context.AppState);
             entityApi.Delete(itm.Type.Name, id);
         }
 
@@ -177,13 +167,11 @@ namespace ToSic.Sxc.WebApi.App
         {
             Log.Add($"delete guid:{guid}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
-            //var appIdentity = AppFinder.GetAppIdFromPathOrContext(appPath, ContextOfAppOrBlock);
 
-            //var context = _ctxResolver.AppNameRouteBlock(appPath);
             var entityApi = _entityApi.Init(Context.AppState.AppId, Context.UserMayEdit, Log);
             var itm = Context.AppState.List.GetOrThrow(contentType == "any" ? null : contentType, guid);
 
-            ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), GetApp(Context.AppState.AppId, Context.UserMayEdit));
+            ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), Context.AppState);
 
             entityApi.Delete(itm.Type.Name, guid);
         }

@@ -23,22 +23,6 @@ namespace ToSic.Sxc.Context
 
         #endregion
 
-        ///// <summary>
-        ///// find the AppIdentity of an app which is referenced by a path
-        ///// </summary>
-        ///// <param name="appPath"></param>
-        ///// <returns></returns>
-        //internal IAppIdentity GetAppIdFromPath(string appPath)
-        //{
-        //    var wrapLog = Log.Call(appPath);
-        //    var zid = _zoneMapper.GetZoneId(_siteId);
-
-        //    // get app from AppName
-        //    var aid = new ZoneRuntime().Init(zid, Log).FindAppId(appPath, true);
-        //    wrapLog($"found app:{aid}");
-        //    return new AppIdentity(zid, aid);
-        //}
-
         /// <summary>
         /// New implementation to replace previous
         /// </summary>
@@ -54,30 +38,6 @@ namespace ToSic.Sxc.Context
             return wrapLog($"found app:{aid}", aid);
         }
 
-
-
-        ///// <summary>
-        ///// Retrieve the appId - either based on the parameter, or if missing, use context
-        ///// Note that this will fail, if both appPath and context are missing
-        ///// </summary>
-        ///// <returns></returns>
-        //internal IAppIdentity GetAppIdFromPathOrContext(string appPath, IContextOfApp context)
-        //{
-        //    var wrapLog = Log.Call<IAppIdentity>($"{appPath}, ...", message: "detect app from query string parameters");
-
-        //    // try to override detection based on additional zone/app-id in urls
-        //    var appId = GetAppIdFromRoute();
-
-        //    if (appId != null) return wrapLog(appId.LogState(), appId);
-
-
-        //    Log.Add($"auto detect app and init eav - path:{appPath}, context null: {context == null}");
-        //    appId = appPath == null || appPath == "auto"
-        //        ? context?.AppState ?? throw new ArgumentException("try to get app-id from context, but none found")
-        //        : GetAppIdFromPath(appPath);
-
-        //    return wrapLog(appId.LogState(), appId);
-        //}
 
         /// <summary>
         /// This will detect the app based on appid/zoneid params in the URL
