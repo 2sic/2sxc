@@ -22,16 +22,18 @@ namespace ToSic.Sxc.WebApi.Cms
     {
         private readonly EntityApi _entityApi;
         private readonly ContentGroupList _contentGroupList;
+        private readonly IUiContextBuilder _contextBuilder;
         private readonly IContextResolver _ctxResolver;
 
-        public EditLoadBackend(EntityApi entityApi, ContentGroupList contentGroupList, IServiceProvider serviceProvider, IContextResolver ctxResolver) : base(serviceProvider, "Cms.LoadBk")
+        public EditLoadBackend(EntityApi entityApi, ContentGroupList contentGroupList, IServiceProvider serviceProvider, IUiContextBuilder contextBuilder, IContextResolver ctxResolver) : base(serviceProvider, "Cms.LoadBk")
         {
             _entityApi = entityApi;
             _contentGroupList = contentGroupList;
+            _contextBuilder = contextBuilder;
             _ctxResolver = ctxResolver;
         }
 
-        public AllInOneDto Load(IUiContextBuilder contextBuilder, int appId, List<ItemIdentifier> items)
+        public AllInOneDto Load(int appId, List<ItemIdentifier> items)
         {
             // Security check
             var wraplog = Log.Call($"load many a#{appId}, items⋮{items.Count}");
@@ -107,9 +109,8 @@ namespace ToSic.Sxc.WebApi.Cms
             // also include UI features
             result.Features = FeaturesHelpers.FeatureListWithPermissionCheck(permCheck).ToList();
 
-            // Attach context
-            var app = GetApp(appId, showDrafts);
-            result.Context = contextBuilder.InitApp(appIdentity.ZoneId, app)
+            // Attach context, but only the minimum needed for the UI
+            result.Context = _contextBuilder.SetZoneAndApp(appIdentity.ZoneId, context.AppState)
                 .Get(Ctx.AppBasic | Ctx.Language | Ctx.Site | Ctx.System);
 
             // done - return

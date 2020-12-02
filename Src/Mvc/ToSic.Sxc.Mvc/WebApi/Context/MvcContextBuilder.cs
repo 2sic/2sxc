@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Context
 {
     public class MvcContextBuilder: UiContextBuilderBase
     {
-        public MvcContextBuilder(ILinkPaths linkPaths)
+        public MvcContextBuilder(ILinkPaths linkPaths, Apps.App app) : base(app)
         {
             _linkPaths = linkPaths;
         }
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Context
         internal MvcContextBuilder Init(IBlock block)
         {
             _context = block.Context;
-            InitApp(block.ZoneId, block.App);
+            SetZoneAndApp(block.ZoneId, block.App);
             return this;
         }
 

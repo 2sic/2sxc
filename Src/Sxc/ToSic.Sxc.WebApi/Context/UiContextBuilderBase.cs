@@ -8,13 +8,19 @@ namespace ToSic.Sxc.WebApi.Context
 {
     public abstract class UiContextBuilderBase: IUiContextBuilder
     {
+        private readonly Apps.App _app;
+
+        protected UiContextBuilderBase(Apps.App app) => _app = app;
+
         protected int ZoneId;
         protected IApp App;
 
+        protected IApp AppTemp;
 
-        public virtual IUiContextBuilder InitApp(int? zoneId, IApp app)
+        public virtual IUiContextBuilder SetZoneAndApp(int zoneId, IAppIdentity app)
         {
-            App = app;
+            App = app != null ? _app.InitNoData(app, null) : null;
+
             if(zoneId == null) throw new ArgumentNullException(nameof(zoneId));
             ZoneId = (int) zoneId;
             return this;
@@ -59,7 +65,7 @@ namespace ToSic.Sxc.WebApi.Context
             if (!flags.HasFlag(Ctx.AppAdvanced)) return result;
 
             result.GettingStartedUrl = GetGettingStartedUrl();
-            result.Identifier = App.AppGuid;
+            result.Identifier = _app.AppGuid;
             result.Permissions = new HasPermissionsDto {Count = App.Metadata.Permissions.Count()};
             return result;
         }

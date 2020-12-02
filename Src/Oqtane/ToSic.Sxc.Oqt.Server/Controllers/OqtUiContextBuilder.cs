@@ -11,16 +11,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     public class OqtUiContextBuilder: UiContextBuilderBase
     {
-        public OqtUiContextBuilder(ILinkPaths linkPaths)
+        public OqtUiContextBuilder(ILinkPaths linkPaths,IContextOfSite ctx, Apps.App app) : base(app)
         {
             _linkPaths = linkPaths;
-        }
-
-        internal OqtUiContextBuilder Init(IContextOfSite ctx, IApp app = null)
-        {
             _context = ctx;
-            InitApp(ctx.Site.ZoneId, app);
-            return this;
         }
 
         private readonly ILinkPaths _linkPaths;

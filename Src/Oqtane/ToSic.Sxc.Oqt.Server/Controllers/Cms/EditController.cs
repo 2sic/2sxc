@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             var context = GetContext();
             var result = _loadBackend.Value
                 .Init(Log)
-                .Load(_uiContextBuilder.Init(context, GetApp(appId)), appId, items);
+                .Load(appId, items);
             return result;
         }
 

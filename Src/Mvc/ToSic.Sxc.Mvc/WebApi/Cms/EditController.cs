@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
             var block = GetBlock();
             var result = _loadBackend.Value
                 .Init(Log)
-                .Load(_contextBuilder.Init(block), appId, items);
+                .Load(appId, items);
             return result;
         }
 

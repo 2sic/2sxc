@@ -11,13 +11,15 @@ namespace ToSic.Sxc.WebApi.Admin
     public class AdminBackend: WebApiBackendBase<AdminBackend>
     {
         private readonly IContextResolver _ctxResolver;
+        private readonly IUiContextBuilder UiContextBuilder;
 
-        public AdminBackend(IServiceProvider serviceProvider, IContextResolver ctxResolver) : base(serviceProvider, "Bck.Admin")
+        public AdminBackend(IServiceProvider serviceProvider, IContextResolver ctxResolver, IUiContextBuilder uiContextBuilder) : base(serviceProvider, "Bck.Admin")
         {
             _ctxResolver = ctxResolver;
+            UiContextBuilder = uiContextBuilder;
         }
 
-        public DialogContextStandalone DialogSettings(int appId, IUiContextBuilder uiContextBuilder)
+        public DialogContextStandalone DialogSettings(int appId)
         {            
             // reset app-id if we get a info-token like -100
             if (appId < 0) appId = Eav.Constants.AppIdEmpty;
@@ -32,8 +34,7 @@ namespace ToSic.Sxc.WebApi.Admin
                     throw HttpException.PermissionDenied(error);
             }
 
-            var app = appId != Eav.Constants.AppIdEmpty ? GetApp(appId, false) : null;
-            var cb = uiContextBuilder.InitApp(context.Site.ZoneId, app);
+            var cb = UiContextBuilder.SetZoneAndApp(context.Site.ZoneId, appContext?.AppState);
 
             return new DialogContextStandalone
             {

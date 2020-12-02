@@ -20,28 +20,26 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
     {
         #region Constructor / DI
 
-
         private readonly IServiceProvider _serviceProvider;
         private readonly IContextResolver _ctxResolver;
         private readonly PortalSettings _portal = PortalSettings.Current;
 
         private ModuleInfo Module => (_ctxResolver.BlockOrNull()?.Module as DnnModule)?.UnwrappedContents;
 
-        public DnnUiContextBuilder(IServiceProvider serviceProvider, IContextResolver ctxResolver)
+        public DnnUiContextBuilder(IServiceProvider serviceProvider, IContextResolver ctxResolver, Apps.App app): base(app)
         {
             _serviceProvider = serviceProvider;
             _ctxResolver = ctxResolver;
-            InitApp(null, null);
         }
 
         #endregion
 
-        public override IUiContextBuilder InitApp(int? zoneId, IApp app)
+        public override IUiContextBuilder SetZoneAndApp(int zoneId, IAppIdentity app)
         {
             // check if we're providing context for missing app
             // in this case we must find the zone based on the portals.
-            if ((zoneId ?? 0) == 0 && app == null) zoneId = _serviceProvider.Build<DnnZoneMapper>().Init(null).GetZoneId(_portal.PortalId);
-            return base.InitApp(zoneId, app);
+            if (zoneId == 0 && app == null) zoneId = _serviceProvider.Build<DnnZoneMapper>().Init(null).GetZoneId(_portal.PortalId);
+            return base.SetZoneAndApp(zoneId, app);
         }
 
         protected override LanguageDto GetLanguage()
