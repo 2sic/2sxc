@@ -18,11 +18,11 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     [ValidateAntiForgeryToken]
     public class DialogController : OqtStatefulControllerBase
     {
-        private readonly OqtJsContextBuilder _jsContextBuilder;
+        private readonly OqtUiContextBuilder _uiContextBuilder;
         protected override string HistoryLogName => "Api.SysCnt";
-        public DialogController(StatefulControllerDependencies dependencies, OqtJsContextBuilder jsContextBuilder) : base(dependencies)
+        public DialogController(StatefulControllerDependencies dependencies, OqtUiContextBuilder uiContextBuilder) : base(dependencies)
         {
-            _jsContextBuilder = jsContextBuilder;
+            _uiContextBuilder = uiContextBuilder;
         }
 
         #region Dialog Helpers
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         public DialogContextStandalone Settings(int appId)
         {
             return HttpContext.RequestServices.Build<AdminBackend>().Init(Log)
-                .DialogSettings(appId, _jsContextBuilder.Init(GetContext(), GetApp(appId)));
+                .DialogSettings(appId, _uiContextBuilder.Init(GetContext(), GetApp(appId)));
         }
 
         #endregion

@@ -6,13 +6,13 @@ using ToSic.Eav.WebApi.Security;
 
 namespace ToSic.Sxc.WebApi.Context
 {
-    public abstract class JsContextBuilderBase: IJsContextBuilder
+    public abstract class UiContextBuilderBase: IUiContextBuilder
     {
         protected int ZoneId;
         protected IApp App;
 
 
-        public virtual IJsContextBuilder InitApp(int? zoneId, IApp app)
+        public virtual IUiContextBuilder InitApp(int? zoneId, IApp app)
         {
             App = app;
             if(zoneId == null) throw new ArgumentNullException(nameof(zoneId));

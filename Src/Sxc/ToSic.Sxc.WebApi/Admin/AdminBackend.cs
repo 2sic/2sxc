@@ -17,7 +17,7 @@ namespace ToSic.Sxc.WebApi.Admin
             _ctxResolver = ctxResolver;
         }
 
-        public DialogContextStandalone DialogSettings(int appId, IJsContextBuilder jsContextBuilder)
+        public DialogContextStandalone DialogSettings(int appId, IUiContextBuilder uiContextBuilder)
         {            
             // reset app-id if we get a info-token like -100
             if (appId < 0) appId = Eav.Constants.AppIdEmpty;
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.WebApi.Admin
             }
 
             var app = appId != Eav.Constants.AppIdEmpty ? GetApp(appId, false) : null;
-            var cb = jsContextBuilder.InitApp(context.Site.ZoneId, app);
+            var cb = uiContextBuilder.InitApp(context.Site.ZoneId, app);
 
             return new DialogContextStandalone
             {

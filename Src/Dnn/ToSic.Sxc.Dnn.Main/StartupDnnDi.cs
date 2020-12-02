@@ -76,7 +76,7 @@ namespace ToSic.SexyContent
             services.TryAddTransient<AdamAppContext, AdamAppContext<int, int>>();
 
             // Settings
-            services.TryAddTransient<IJsContextBuilder, DnnJsContextBuilder>();
+            services.TryAddTransient<IUiContextBuilder, DnnUiContextBuilder>();
 
             // new #2160
             services.TryAddTransient<SecurityChecksBase, DnnAdamSecurityChecks>();

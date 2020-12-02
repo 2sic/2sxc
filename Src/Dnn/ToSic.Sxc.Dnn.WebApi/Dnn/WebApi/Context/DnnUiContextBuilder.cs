@@ -16,7 +16,7 @@ using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.Sxc.Dnn.WebApi.Context
 {
-    public sealed class DnnJsContextBuilder : JsContextBuilderBase
+    public sealed class DnnUiContextBuilder : UiContextBuilderBase
     {
         #region Constructor / DI
 
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
 
         private ModuleInfo Module => (_ctxResolver.BlockOrNull()?.Module as DnnModule)?.UnwrappedContents;
 
-        public DnnJsContextBuilder(IServiceProvider serviceProvider, IContextResolver ctxResolver)
+        public DnnUiContextBuilder(IServiceProvider serviceProvider, IContextResolver ctxResolver)
         {
             _serviceProvider = serviceProvider;
             _ctxResolver = ctxResolver;
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
 
         #endregion
 
-        public override IJsContextBuilder InitApp(int? zoneId, IApp app)
+        public override IUiContextBuilder InitApp(int? zoneId, IApp app)
         {
             // check if we're providing context for missing app
             // in this case we must find the zone based on the portals.

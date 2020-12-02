@@ -9,14 +9,14 @@ using ToSic.Sxc.WebApi.Context;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
-    public class OqtJsContextBuilder: JsContextBuilderBase
+    public class OqtUiContextBuilder: UiContextBuilderBase
     {
-        public OqtJsContextBuilder(ILinkPaths linkPaths)
+        public OqtUiContextBuilder(ILinkPaths linkPaths)
         {
             _linkPaths = linkPaths;
         }
 
-        internal OqtJsContextBuilder Init(IContextOfSite ctx, IApp app = null)
+        internal OqtUiContextBuilder Init(IContextOfSite ctx, IApp app = null)
         {
             _context = ctx;
             InitApp(ctx.Site.ZoneId, app);

@@ -31,7 +31,7 @@ namespace ToSic.Sxc.WebApi.Cms
             _ctxResolver = ctxResolver;
         }
 
-        public AllInOneDto Load(IJsContextBuilder contextBuilder, int appId, List<ItemIdentifier> items)
+        public AllInOneDto Load(IUiContextBuilder contextBuilder, int appId, List<ItemIdentifier> items)
         {
             // Security check
             var wraplog = Log.Call($"load many a#{appId}, items⋮{items.Count}");

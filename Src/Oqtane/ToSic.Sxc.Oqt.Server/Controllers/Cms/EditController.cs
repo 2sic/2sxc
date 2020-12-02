@@ -17,19 +17,19 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         #region DI
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "UiCntr";
 
-        public EditController(OqtJsContextBuilder jsContextBuilder,
+        public EditController(OqtUiContextBuilder uiContextBuilder,
             StatefulControllerDependencies dependencies,
             Lazy<EntityPickerBackend> entityBackend,
             Lazy<EditLoadBackend> loadBackend,
             Lazy<EditSaveBackend> saveBackendLazy) : base(dependencies)
         {
-            _jsContextBuilder = jsContextBuilder;
+            _uiContextBuilder = uiContextBuilder;
             _entityBackend = entityBackend;
             _loadBackend = loadBackend;
             _saveBackendLazy = saveBackendLazy;
         }
 
-        private readonly OqtJsContextBuilder _jsContextBuilder;
+        private readonly OqtUiContextBuilder _uiContextBuilder;
         private readonly Lazy<EntityPickerBackend> _entityBackend;
         private readonly Lazy<EditLoadBackend> _loadBackend;
         private readonly Lazy<EditSaveBackend> _saveBackendLazy;
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             var context = GetContext();
             var result = _loadBackend.Value
                 .Init(Log)
-                .Load(_jsContextBuilder.Init(context, GetApp(appId)), appId, items);
+                .Load(_uiContextBuilder.Init(context, GetApp(appId)), appId, items);
             return result;
         }
 
