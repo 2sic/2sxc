@@ -49,14 +49,14 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             var context = GetContext();
             var result = _loadBackend.Value
                 .Init(Log)
-                .Load(context, _jsContextBuilder.Init(context, GetApp(appId)), appId, items);
+                .Load(_jsContextBuilder.Init(context, GetApp(appId)), appId, items);
             return result;
         }
 
         [HttpPost]
         // todo #mvcSec [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Dictionary<Guid, int> Save([FromBody] AllInOneDto package, int appId, bool partOfPage)
-            => _saveBackendLazy.Value.Init(GetContext(), GetBlock(), Log)
+            => _saveBackendLazy.Value.Init(appId, Log)
                 .Save(package, appId, partOfPage);
 
         /// <summary>

@@ -46,21 +46,6 @@ namespace ToSic.Sxc.WebApi
 
         #region App-Helpers for anonyous access APIs
 
-        /// <summary>
-        /// used for API calls to get the current app
-        /// </summary>
-        /// <param name="appId"></param>
-        /// <returns></returns>
-        internal IApp GetApp(int appId) => _build<Apps.App>().Init(ServiceProvider, appId, Log, GetContext().UserMayEdit);
-
-        //protected IContextOfApp GetAppContext(int appId)
-        //{
-        //    // First get a normal basic context which is initialized with site, etc.
-        //    var appContext = ServiceProvider.Build<IContextOfApp>();
-        //    appContext.Init(Log);
-        //    appContext.ResetApp(appId);
-        //    return appContext;
-        //}
 
         protected IContextOfBlock GetContext()
         {

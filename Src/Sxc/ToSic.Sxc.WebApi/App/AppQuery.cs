@@ -30,16 +30,18 @@ namespace ToSic.Sxc.WebApi.App
 
         #region In-Container-Context Queries
 
-        internal Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(IContextOfApp context, string name, bool includeGuid, string stream, int? appId)
+        internal Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(int? appId, string name, bool includeGuid, string stream)
         {
             var wrapLog = Log.Call($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
+
+            var appCtx = appId != null ? _ctxResolver.App(appId.Value) : _ctxResolver.BlockRequired();
 
             // If no app available from context, check if an app-id was supplied in url
             // Note that it may only be an app from the current portal
             // and security checks will run internally
-            var app = ServiceProvider.Build<Apps.App>().Init(ServiceProvider, appId ?? context.AppState.AppId, Log, context.UserMayEdit);
+            var app = ServiceProvider.Build<Apps.App>().Init(ServiceProvider, appCtx.AppState.AppId, Log, appCtx.UserMayEdit);
 
-            var result = BuildQueryAndRun(app, name, stream, includeGuid, context, Log, context.UserMayEdit);
+            var result = BuildQueryAndRun(app, name, stream, includeGuid, appCtx, Log, appCtx.UserMayEdit);
             wrapLog(null);
             return result;
         }

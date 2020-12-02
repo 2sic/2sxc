@@ -49,6 +49,8 @@ namespace ToSic.Sxc.Context
 
         void AttachRealBlock(Func<IBlock> getBlock);
 
+        IBlock RealBlockOrNull();
+
         IBlock RealBlockRequired();
 
     }

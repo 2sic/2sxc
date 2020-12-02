@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Configuration;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
@@ -69,8 +70,8 @@ namespace ToSic.Sxc.Dnn.WebApi
         public IEnumerable<AdamItemDto> Items(string contentType, Guid guid, string field, string folder = "")
         {
             // if app-path specified, use that app, otherwise use from context
-            var appId = GetContext().AppState.AppId; // GetBlock().AppId;
-            return Items(appId, contentType, guid, field, folder);
+            const int AutoDetect = -1;
+            return Items(AutoDetect, contentType, guid, field, folder);
         }
 
         [HttpGet]

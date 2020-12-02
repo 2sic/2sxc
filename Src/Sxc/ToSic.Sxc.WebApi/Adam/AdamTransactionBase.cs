@@ -11,8 +11,7 @@ namespace ToSic.Sxc.WebApi.Adam
 {
     public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>: HasLog where T : class
     {
-        private readonly Lazy<AdamState<TFolderId, TFileId>> _adamState;
-        private readonly IContextResolver _ctxResolver;
+        public const int UseAppIdFromContext = -12456;
 
         #region Constructor / DI
 
@@ -21,12 +20,14 @@ namespace ToSic.Sxc.WebApi.Adam
             _adamState = adamState;
             _ctxResolver = ctxResolver.Init(Log);
         }
+        private readonly Lazy<AdamState<TFolderId, TFileId>> _adamState;
+        private readonly IContextResolver _ctxResolver;
 
         public T Init(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot, ILog parentLog) 
             
         {
             Log.LinkTo(parentLog);
-            var context = _ctxResolver.App(appId);
+            var context = appId > 0 ? _ctxResolver.App(appId) : _ctxResolver.AppNameRouteBlock(null);
             var logCall = Log.Call<T>($"app: {context.AppState.Show()}, type: {contentType}, itemGuid: {itemGuid}, field: {field}, portalRoot: {usePortalRoot}");
             State.Init(context, contentType, field, itemGuid, usePortalRoot, Log);
             return logCall(null, this as T);

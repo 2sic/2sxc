@@ -9,7 +9,6 @@ using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.WebApi.Save;
 
@@ -19,24 +18,27 @@ namespace ToSic.Sxc.WebApi.Cms
     {
         private readonly SxcPagePublishing _pagePublishing;
         private readonly Lazy<AppManager> _appManagerLazy;
+        private readonly IContextResolver _ctxResolver;
 
         #region Constructor / DI
-        public EditSaveBackend(SxcPagePublishing pagePublishing, Lazy<AppManager> appManagerLazy, IServiceProvider serviceProvider) : base(serviceProvider, "Cms.SaveBk")
+        public EditSaveBackend(SxcPagePublishing pagePublishing, Lazy<AppManager> appManagerLazy, IServiceProvider serviceProvider, IContextResolver ctxResolver) : base(serviceProvider, "Cms.SaveBk")
         {
             _pagePublishing = pagePublishing;
             _appManagerLazy = appManagerLazy;
+            _ctxResolver = ctxResolver;
         }
 
-        public EditSaveBackend Init(IContextOfApp context, IBlock block, ILog log)
+        public EditSaveBackend Init(int appId, ILog log)
         {
             Init(log);
-            _context = context;
-            _block = block;
-            _pagePublishing.Init(context, Log);
+
+            // The context should be from the block if there is one, because it affects saving/publishing
+            // Basically it can result in things being saved draft or titles being updated
+            _context = _ctxResolver.BlockOrNull() ?? _ctxResolver.App(appId); // context;
+            _pagePublishing.Init(_context, Log);
             return this;
         }
 
-        private IBlock _block;
         private IContextOfApp _context;
         #endregion
 
@@ -115,13 +117,13 @@ namespace ToSic.Sxc.WebApi.Cms
 
             Log.Add("items to save generated, all data tests passed");
 
-            return _pagePublishing.SaveInPagePublishing(_block, appId, items, partOfPage,
+            return _pagePublishing.SaveInPagePublishing(_ctxResolver.RealBlockOrNull(), appId, items, partOfPage,
                     forceSaveAsDraft => DoSave(appMan, items, forceSaveAsDraft),
                     permCheck);
         }
 
 
-        public Dictionary<Guid, int> DoSave(AppManager appMan, List<BundleWithHeader<IEntity>> items, bool forceSaveAsDraft)
+        private Dictionary<Guid, int> DoSave(AppManager appMan, List<BundleWithHeader<IEntity>> items, bool forceSaveAsDraft)
         {
             // only save entities that are
             // a) not in a group

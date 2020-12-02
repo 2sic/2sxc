@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using ToSic.Eav.DataSources;
 using System.IO;
 using System.Linq;
-using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Blocks;
@@ -17,7 +16,6 @@ using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Dnn.WebApi.Logging;
-
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
@@ -48,7 +46,7 @@ namespace ToSic.SexyContent.WebApi
     {
         public new IDnnContext Dnn => base.Dnn;
 
-        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(GetContext()?.UserMayEdit ?? false));
+        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(DynCode?.Block?.Context?.UserMayEdit ?? false));
         private SxcHelper _sxc;
 
         [PrivateApi] public IBlock Block => GetBlock();

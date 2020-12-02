@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Context;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Plumbing;
@@ -12,6 +11,7 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Compatibility;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.Features;
 using ToSic.Sxc.WebApi.Save;
@@ -22,17 +22,21 @@ namespace ToSic.Sxc.WebApi.Cms
     {
         private readonly EntityApi _entityApi;
         private readonly ContentGroupList _contentGroupList;
+        private readonly IContextResolver _ctxResolver;
 
-        public EditLoadBackend(EntityApi entityApi, ContentGroupList contentGroupList, IServiceProvider serviceProvider) : base(serviceProvider, "Cms.LoadBk")
+        public EditLoadBackend(EntityApi entityApi, ContentGroupList contentGroupList, IServiceProvider serviceProvider, IContextResolver ctxResolver) : base(serviceProvider, "Cms.LoadBk")
         {
             _entityApi = entityApi;
             _contentGroupList = contentGroupList;
+            _ctxResolver = ctxResolver;
         }
 
-        public AllInOneDto Load(IContextOfSite context, IJsContextBuilder contextBuilder, int appId, List<ItemIdentifier> items)
+        public AllInOneDto Load(IJsContextBuilder contextBuilder, int appId, List<ItemIdentifier> items)
         {
             // Security check
             var wraplog = Log.Call($"load many a#{appId}, items⋮{items.Count}");
+
+            var context = _ctxResolver.App(appId);
 
             var showDrafts = context.UserMayEdit;
 
@@ -43,8 +47,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // now look up the types, and repeat security check with type-names
             // todo: 2020-03-20 new feat 11.01, may not check inner type permissions ATM
-            var app = GetApp(appId, showDrafts);
-            var permCheck = ServiceProvider.Build<MultiPermissionsTypes>().Init(context, app, items, Log);
+            var permCheck = ServiceProvider.Build<MultiPermissionsTypes>().Init(context, context.AppState, items, Log);
             if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
@@ -105,6 +108,7 @@ namespace ToSic.Sxc.WebApi.Cms
             result.Features = FeaturesHelpers.FeatureListWithPermissionCheck(permCheck).ToList();
 
             // Attach context
+            var app = GetApp(appId, showDrafts);
             result.Context = contextBuilder.InitApp(appIdentity.ZoneId, app)
                 .Get(Ctx.AppBasic | Ctx.Language | Ctx.Site | Ctx.System);
 

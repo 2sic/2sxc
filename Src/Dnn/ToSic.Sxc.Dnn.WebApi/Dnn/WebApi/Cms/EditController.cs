@@ -22,12 +22,12 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public AllInOneDto Load([FromBody] List<ItemIdentifier> items, int appId)
             => _build<EditLoadBackend>().Init(Log)
-                .Load(GetContext(), _build<IJsContextBuilder>(), appId, items);
+                .Load(_build<IJsContextBuilder>(), appId, items);
 
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Dictionary<Guid, int> Save([FromBody] AllInOneDto package, int appId, bool partOfPage) 
-            => _build<EditSaveBackend>().Init(GetContext(), GetBlock(), Log)
+            => _build<EditSaveBackend>().Init(appId, Log)
                 .Save(package, appId, partOfPage);
 
         /// <summary>

@@ -50,7 +50,10 @@ namespace ToSic.Sxc.Context
         public void AttachRealBlock(Func<IBlock> getBlock) => _getBlock = getBlock;
         private Func<IBlock> _getBlock;
 
+        public IBlock RealBlockOrNull() => _getBlock?.Invoke();
+
         public IBlock RealBlockRequired() => _getBlock?.Invoke() ?? throw new Exception("Block required but missing. It was not attached");
+
 
         public IContextOfApp App(string nameOrPath) => App(AppIdResolver.GetAppIdFromPath(Site().Site.ZoneId, nameOrPath, true));
 
