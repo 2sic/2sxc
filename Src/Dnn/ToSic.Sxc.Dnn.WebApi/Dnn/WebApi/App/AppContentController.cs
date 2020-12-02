@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
             // - not also that if ever you do support view switching, you will need to ensure security checks
 
             var dataHandler = new AppContentJsonForInstance();
-            var block = BlockReallyUsedAsBlock();
+            var block = SharedContextResolver.RealBlockRequired();
             // must access engine to ensure pre-processing of data has happened, 
             // especially if the cshtml contains a override void CustomizeData()
             var engine = block.BlockBuilder.GetEngine(Purpose.PublishData);  

@@ -23,10 +23,10 @@ namespace ToSic.Sxc.WebApi
         private IContextOfApp _contextOfAppOrBlock;
         #region Block-Context Requiring properties
 
-        protected IBlock RealBlock => _realBlock ?? (_realBlock = CtxResolver.RealBlockRequired());
-        private IBlock _realBlock;
+        public IBlock Block => _block ?? (_block = CtxResolver.RealBlockRequired());
+        private IBlock _block;
 
-        protected CmsManager CmsManagerOfBlock => _cmsManager ?? (_cmsManager = CmsManagerLazy.Value.Init(RealBlock.Context, Log));
+        protected CmsManager CmsManagerOfBlock => _cmsManager ?? (_cmsManager = CmsManagerLazy.Value.Init(Block.Context, Log));
         private CmsManager _cmsManager;
 
         #endregion

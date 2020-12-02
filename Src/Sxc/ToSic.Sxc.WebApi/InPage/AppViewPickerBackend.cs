@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using ToSic.Eav.Apps.Ui;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Context;
 
@@ -14,14 +17,28 @@ namespace ToSic.Sxc.WebApi.InPage
         {
         }
 
-        public void SetAppId(int? appId) => BlockEditorBase.GetEditor(RealBlock).SetAppId(appId);
+        public void SetAppId(int? appId) => BlockEditorBase.GetEditor(Block).SetAppId(appId);
 
+        public IEnumerable<TemplateUiInfo> Templates() =>
+            Block?.App == null 
+                ? new TemplateUiInfo[0] 
+                : CmsManagerOfBlock?.Read.Views.GetCompatibleViews(Block?.App, Block?.Configuration);
+
+        public IEnumerable<AppUiInfo> Apps(string apps = null)
+        {
+            // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
+            var tenant = ContextOfBlock.Site;
+            return ServiceProvider.Build<CmsZones>().Init(tenant.ZoneId, Log)
+                .AppsRt
+                .GetSelectableApps(tenant, apps)
+                .ToList();
+        }
 
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {
             var callLog = Log.Call<Guid?>($"{templateId}, {forceCreateContentGroup}");
             ThrowIfNotAllowedInApp(GrantSets.WriteSomething);
-            return callLog("ok", BlockEditorBase.GetEditor(RealBlock).SaveTemplateId(templateId, forceCreateContentGroup));
+            return callLog("ok", BlockEditorBase.GetEditor(Block).SaveTemplateId(templateId, forceCreateContentGroup));
         }
 
         public bool Publish(int id)
@@ -33,6 +50,9 @@ namespace ToSic.Sxc.WebApi.InPage
         }
 
 
+
+
+
         public string Render(int templateId, string lang)
         {
             var callLog = Log.Call<string>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
@@ -42,10 +62,10 @@ namespace ToSic.Sxc.WebApi.InPage
             if (templateId > 0)
             {
                 var template = CmsManagerOfBlock.Read.Views.Get(templateId);
-                RealBlock.View = template;
+                Block.View = template;
             }
 
-            var rendered = RealBlock.BlockBuilder.Render();
+            var rendered = Block.BlockBuilder.Render();
             return callLog("ok", rendered);
         }
 

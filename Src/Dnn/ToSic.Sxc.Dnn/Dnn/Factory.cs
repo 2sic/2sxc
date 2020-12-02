@@ -70,10 +70,8 @@ namespace ToSic.Sxc.Dnn
         public static IBlockBuilder CmsBlock(IModule module, ILog parentLog = null)
         {
             var dnnModule = ((Module<ModuleInfo>)module)?.UnwrappedContents;
-            //var tenant = new DnnSite().TrySwap(dnnModule); // Swap(new PortalSettings(dnnModule.OwnerPortalID));
             var context = Eav.Factory.StaticBuild<IContextOfBlock>().Init(dnnModule, parentLog);
             return Eav.Factory.StaticBuild<BlockFromModule>().Init(context, parentLog).BlockBuilder;
-                //.Init(DnnContextOfBlock.Create(tenant, container, Eav.Factory.GetServiceProvider()), parentLog).BlockBuilder;
         }
 
         /// <summary>

@@ -1,14 +1,10 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
-using ToSic.Sxc.WebApi.App;
-using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi
 {
@@ -38,27 +34,27 @@ namespace ToSic.Sxc.WebApi
 
         [PrivateApi] protected IBlock GetBlock() => BlockOfRequest;
 
-        /// <summary>
-        /// Temporary call to replace GetBlock, so we can gradually filter out the bad uses of Block
-        /// </summary>
-        /// <returns></returns>
-        [PrivateApi] protected IBlock BlockReallyUsedAsBlock() => BlockOfRequest;
+        ///// <summary>
+        ///// Temporary call to replace GetBlock, so we can gradually filter out the bad uses of Block
+        ///// </summary>
+        ///// <returns></returns>
+        //[PrivateApi] protected IBlock BlockReallyUsedAsBlock() => BlockOfRequest;
 
         #region App-Helpers for anonyous access APIs
 
 
-        protected IContextOfBlock GetContext()
-        {
-            if (_context != null) return _context;
-            if (BlockOfRequest?.Context != null) return _context = BlockOfRequest.Context;
-            // in case the initial request didn't yet find a block builder, we need to create it now
-            _context = ServiceProvider.Build<IContextOfBlock>();
-            _context.Init(Log);
-            _context.InitPageOnly();
-            return _context;
-        }
+        //protected IContextOfBlock GetContext()
+        //{
+        //    if (_context != null) return _context;
+        //    if (BlockOfRequest?.Context != null) return _context = BlockOfRequest.Context;
+        //    // in case the initial request didn't yet find a block builder, we need to create it now
+        //    _context = ServiceProvider.Build<IContextOfBlock>();
+        //    _context.Init(Log);
+        //    _context.InitPageOnly();
+        //    return _context;
+        //}
 
-        private IContextOfBlock _context;
+        //private IContextOfBlock _context;
 
         #endregion
     }
