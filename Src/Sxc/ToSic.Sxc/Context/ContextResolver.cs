@@ -52,6 +52,11 @@ namespace ToSic.Sxc.Context
             return id <= Eav.Constants.AppIdEmpty ? null : App(id);
         }
 
+        public IContextOfApp App()
+        {
+
+        }
+
         private int GetAppIdFromPath(string appPath, bool required)
         {
             var wrapLog = Log.Call<int>(appPath);
