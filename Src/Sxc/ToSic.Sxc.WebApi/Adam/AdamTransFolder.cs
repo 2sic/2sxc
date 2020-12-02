@@ -9,7 +9,8 @@ namespace ToSic.Sxc.WebApi.Adam
 {
     public class AdamTransFolder<TFolderId, TFileId> : AdamTransactionBase<AdamTransFolder<TFolderId, TFileId>, TFolderId, TFileId>
     {
-        public AdamTransFolder(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextOfApp context) : base(adamState, context, "Adm.TrnFld") { }
+        public AdamTransFolder(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextResolver ctxResolver) : base(adamState, ctxResolver, "Adm.TrnFld") { }
+
         internal IList<AdamItemDto> Folder(string parentSubfolder, string newFolder)
         {
             var logCall = Log.Call<IList<AdamItemDto>>($"get folders for subfld:{parentSubfolder}, new:{newFolder}");

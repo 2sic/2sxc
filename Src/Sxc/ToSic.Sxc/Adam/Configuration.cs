@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Configuration;
-using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Adam
 {
@@ -21,12 +21,12 @@ namespace ToSic.Sxc.Adam
 
         private static string _adamAppRootFolder;
 
-        internal static Dictionary<string, string> AppReplacementMap(IApp app) => new Dictionary<string, string>
+        internal static Dictionary<string, string> AppReplacementMap(AppState app) => new Dictionary<string, string>
         {
             {"[AppFolder]", app.Folder},
             {"[ZoneId]", app.ZoneId.ToString()},
             {"[AppId]", app.AppId.ToString()},
-            {"[AppGuid]", app.AppGuid}
+            {"[AppGuid]", app.AppGuidName}
         };
 
         internal static string ReplaceInsensitive(this Dictionary<string, string> list, string mask)

@@ -6,7 +6,7 @@ namespace ToSic.Sxc.WebApi.Adam
 {
     public class AdamTransDelete<TFolderId, TFileId> : AdamTransactionBase<AdamTransDelete<TFolderId, TFileId>, TFolderId, TFileId>
     {
-        public AdamTransDelete(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextOfApp context) : base(adamState, context, "Adm.TrnDel") { }
+        public AdamTransDelete(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextResolver ctxResolver) : base(adamState, ctxResolver, "Adm.TrnDel") { }
 
         internal bool Delete(string parentSubfolder, bool isFolder, TFolderId id, TFileId fileId)
         {

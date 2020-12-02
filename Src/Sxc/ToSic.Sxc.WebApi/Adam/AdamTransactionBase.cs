@@ -12,24 +12,23 @@ namespace ToSic.Sxc.WebApi.Adam
     public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>: HasLog where T : class
     {
         private readonly Lazy<AdamState<TFolderId, TFileId>> _adamState;
-        private readonly IContextOfApp _context;
+        private readonly IContextResolver _ctxResolver;
 
         #region Constructor / DI
 
-        protected AdamTransactionBase(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextOfApp context, string logName) : base(logName)
+        protected AdamTransactionBase(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextResolver ctxResolver, string logName) : base(logName)
         {
             _adamState = adamState;
-            _context = context;
+            _ctxResolver = ctxResolver.Init(Log);
         }
 
         public T Init(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot, ILog parentLog) 
             
         {
             Log.LinkTo(parentLog);
-            _context.ResetApp(appId);
-            var logCall = Log.Call<T>($"app: {_context.AppState.Show()}, type: {contentType}, itemGuid: {itemGuid}, field: {field}, portalRoot: {usePortalRoot}");
-            //State = new AdamState<TFolderId, TFileId>();
-            State.Init(_context, contentType, field, itemGuid, usePortalRoot, Log);
+            var context = _ctxResolver.App(appId);
+            var logCall = Log.Call<T>($"app: {context.AppState.Show()}, type: {contentType}, itemGuid: {itemGuid}, field: {field}, portalRoot: {usePortalRoot}");
+            State.Init(context, contentType, field, itemGuid, usePortalRoot, Log);
             return logCall(null, this as T);
         }
 

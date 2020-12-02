@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
@@ -16,22 +14,22 @@ namespace ToSic.Sxc.WebApi.Cms
     public class EntityPickerBackend: WebApiBackendBase<EntityPickerBackend>
     {
         private readonly EntityPickerApi _entityPickerApi;
-        private readonly IContextOfApp _context;
+        private readonly IContextResolver _ctxResolver;
 
-        public EntityPickerBackend(EntityPickerApi entityPickerApi, IContextOfApp context, IServiceProvider serviceProvider) : base(serviceProvider, "BE.EntPck")
+        public EntityPickerBackend(EntityPickerApi entityPickerApi, IContextResolver ctxResolver, IServiceProvider serviceProvider) : base(serviceProvider, "BE.EntPck")
         {
             _entityPickerApi = entityPickerApi;
-            _context = context;
+            _ctxResolver = ctxResolver;
         }
 
 
         public IEnumerable<EntityForPickerDto> GetAvailableEntities(int appId, string[] items, string contentTypeName, int? dimensionId)
         {
-            _context.ResetApp(appId);
+            var context = _ctxResolver.App(appId);
             // do security check
             var permCheck = string.IsNullOrEmpty(contentTypeName)
-                ? ServiceProvider.Build<MultiPermissionsApp>().Init(_context, _context.AppState, Log)
-                : ServiceProvider.Build<MultiPermissionsTypes>().Init(_context, _context.AppState, contentTypeName, Log);
+                ? ServiceProvider.Build<MultiPermissionsApp>().Init(context, context.AppState, Log)
+                : ServiceProvider.Build<MultiPermissionsTypes>().Init(context, context.AppState, contentTypeName, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 

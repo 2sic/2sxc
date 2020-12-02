@@ -6,6 +6,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Xml;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
 using App = ToSic.Sxc.Apps.App;
 
@@ -13,10 +14,13 @@ namespace ToSic.Sxc.Dnn.ImportExport
 {
     public class DnnXmlExporter: XmlExporter
     {
+        private readonly IContextResolver _ctxResolver;
+
         #region Constructor / DI
 
-        public DnnXmlExporter(AdamAppContext<int, int> adamAppContext, XmlSerializer xmlSerializer): base(xmlSerializer, DnnConstants.LogName)
+        public DnnXmlExporter(AdamAppContext<int, int> adamAppContext, IContextResolver ctxResolver, XmlSerializer xmlSerializer): base(xmlSerializer, DnnConstants.LogName)
         {
+            _ctxResolver = ctxResolver.Init(Log);
             AdamAppContext = adamAppContext;
         }
 
@@ -25,9 +29,10 @@ namespace ToSic.Sxc.Dnn.ImportExport
 
         public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds, ILog parentLog)
         {
+            var context = _ctxResolver.App(appId);
             var tenant = new DnnSite();
             var app = AdamAppContext.AppRuntime.ServiceProvider.Build<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
-            AdamAppContext.Init(tenant, app, false, 10, Log);
+            AdamAppContext.Init(context, 10, Log);
             Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
 
             // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally

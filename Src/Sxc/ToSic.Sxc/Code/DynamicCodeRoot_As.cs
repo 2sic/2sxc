@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Code
         {
             if (_adamAppContext == null)
                 _adamAppContext = ServiceProvider.Build<AdamAppContext>()
-                    .Init(Block.Context.Site, App, Block.Context.UserMayEdit, CompatibilityLevel, Log);
+                    .Init(Block.Context, CompatibilityLevel, Log);
             return _adamAppContext.FolderOfField(entity.EntityGuid, fieldName);
         }
         private AdamAppContext _adamAppContext;

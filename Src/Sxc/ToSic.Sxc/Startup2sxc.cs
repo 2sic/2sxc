@@ -55,6 +55,7 @@ namespace ToSic.Sxc
             services.TryAddTransient<IPage, Page>();
             services.TryAddTransient<Page>();
             services.TryAddTransient<ICmsContext, CmsContext>();
+            services.TryAddScoped<IContextResolver, ContextResolver>();
 
             // Adam stuff
             services.TryAddTransient<AdamMetadataMaker>();

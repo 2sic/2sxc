@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Blocks;
-using IApp = ToSic.Sxc.Apps.IApp;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Adam
 {
@@ -13,14 +11,13 @@ namespace ToSic.Sxc.Adam
     {
 
         #region Constructor / DI
-        public AdamAppContext(Lazy<AppRuntime> appRuntime, AdamMetadataMaker metadataMaker) : base(appRuntime, metadataMaker, "Adm.ApCxTT")
+        public AdamAppContext(Lazy<AppRuntime> appRuntime, Lazy<AdamMetadataMaker> metadataMaker) : base(appRuntime, metadataMaker, "Adm.ApCxTT")
         {
         }
 
-        public override AdamAppContext Init(ISite site, IApp app, bool userMayEdit, int compatibility,
-            ILog parentLog)
+        public override AdamAppContext Init(IContextOfApp ctx, int compatibility, ILog parentLog)
         {
-            base.Init(site, app, userMayEdit, compatibility, parentLog);
+            base.Init(ctx, compatibility, parentLog);
             AdamFs = AppRuntime.ServiceProvider.Build<IAdamFileSystem<TFolderId, TFileId>>()
                 .Init(this, Log);
             return this;

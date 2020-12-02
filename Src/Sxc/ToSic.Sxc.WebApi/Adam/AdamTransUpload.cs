@@ -9,7 +9,7 @@ namespace ToSic.Sxc.WebApi.Adam
 {
     public class AdamTransUpload<TFolderId, TFileId> : AdamTransactionBase<AdamTransUpload<TFolderId, TFileId>, TFolderId, TFileId>
     {
-        public AdamTransUpload(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextOfApp context) : base(adamState, context, "Adm.TrnUpl") { }
+        public AdamTransUpload(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextResolver ctxResolver) : base(adamState, ctxResolver, "Adm.TrnUpl") { }
 
         internal UploadResultDto UploadOne(Stream stream, string subFolder, string fileName)
         {

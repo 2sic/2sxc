@@ -1,14 +1,16 @@
 ﻿using System;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Adam;
-using IApp = ToSic.Sxc.Apps.IApp;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
     public class AdamState<TFolderId, TFileId>: AdamState
     {
-        private readonly Lazy<AdamAppContext<TFolderId, TFileId>> _adamAppContext;
         internal AdamAppContext<TFolderId, TFileId> AdamAppContext => _adamAppContext.Value;
+        private readonly Lazy<AdamAppContext<TFolderId, TFileId>> _adamAppContext;
+
         public AdamState(Lazy<AdamAppContext<TFolderId, TFileId>> adamAppContext, IServiceProvider serviceProvider): base(serviceProvider, "Adm.StatTT")
         {
             _adamAppContext = adamAppContext;
@@ -16,15 +18,17 @@ namespace ToSic.Sxc.WebApi.Adam
 
         internal AdamOfBase<TFolderId, TFileId> ContainerContext;
 
-
-        protected override void Init(IApp app, Guid entityGuid, string fieldName, bool usePortalRoot)
+        public override AdamState Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, ILog parentLog)
         {
             Log.Add("PrepCore(...)");
-            AdamAppContext.Init(Permissions.Context.Site, app, Context?.UserMayEdit ?? false, 10, Log);
-                ContainerContext = usePortalRoot
+            AdamAppContext.Init(context, 10, Log);
+            ContainerContext = usePortalRoot
                 ? new AdamOfSite<TFolderId, TFileId>(AdamAppContext) as AdamOfBase<TFolderId, TFileId>
                 : new AdamOfField<TFolderId, TFileId>(AdamAppContext, entityGuid, fieldName);
+
+            return base.Init(context, contentType, fieldName, entityGuid, usePortalRoot, parentLog);
         }
+
 
         // temp
         public override AppRuntime AppRuntime => AdamAppContext.AppRuntime;
