@@ -6,9 +6,9 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
-using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Cms;
+using ToSic.Sxc.WebApi.Context;
 
 namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public AllInOneDto Load([FromBody] List<ItemIdentifier> items, int appId)
             => _build<EditLoadBackend>().Init(Log)
-                .Load(GetContext(), new DnnContextBuilder(ServiceProvider, ActiveModule), appId, items);
+                .Load(GetContext(), _build<IJsContextBuilder>(), appId, items);
 
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]

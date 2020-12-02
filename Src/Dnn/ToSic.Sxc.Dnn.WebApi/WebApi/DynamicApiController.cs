@@ -67,7 +67,7 @@ namespace ToSic.Sxc.WebApi
                 var appId = AppFinder.GetAppIdFromPath(routeAppPath).AppId;
                 // Look up if page publishing is enabled - if module context is not available, always false
                 Log.Add($"AppId: {appId}");
-                var app = Sxc.Dnn.Factory.App(appId, false, parentLog: Log);
+                var app = Factory.App(appId, false, parentLog: Log);
                 DynCode.LateAttachApp(app);
                 found = true;
             } catch { /* ignore */ }

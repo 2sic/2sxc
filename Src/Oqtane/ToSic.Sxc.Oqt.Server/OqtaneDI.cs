@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddTransient<IPlatformModuleUpdater, OqtModuleUpdater>();
             services.AddTransient<IEnvironmentInstaller, OqtEnvironmentInstaller>();
             services.AddTransient<ILookUpEngineResolver, OqtGetLookupEngine>();
-            services.AddTransient<OqtContextBuilder>();
+            services.AddTransient<OqtJsContextBuilder>();
             services.AddTransient<IModule, OqtContainer>();
             services.AddTransient<OqtContainer>();
             services.AddTransient<OqtTempInstanceContext>();

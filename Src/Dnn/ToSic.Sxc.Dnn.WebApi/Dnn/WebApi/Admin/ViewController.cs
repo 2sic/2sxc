@@ -81,8 +81,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public IEnumerable<ViewDto> Usage(int appId, Guid guid)
             => _build<UsageBackend>().Init(Log)
-                .ViewUsage(GetContext(), appId, guid,
-                    (views, blocks) =>
+                .ViewUsage(appId, guid, (views, blocks) =>
                     {
                         // create array with all 2sxc modules in this portal
                         var allMods = new Pages.Pages(Log).AllModulesWithContent(PortalSettings.PortalId);

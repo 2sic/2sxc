@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Mvc.WebApi.App
         [HttpGet("{contentType}")]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string appPath = null)
-            => Eav.Factory.Resolve<AppContent>().Init(GetContext(), Log).GetItems(contentType, appPath);
+            => Eav.Factory.Resolve<AppContent>().Init(appPath, GetContext(), Log).GetItems(contentType, appPath);
 
         #endregion
 
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Mvc.WebApi.App
         /// <param name="appPath"></param>
         /// <returns></returns>
         private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string appPath) 
-            => Eav.Factory.Resolve<AppContent>().Init(GetContext(), Log).GetOne(contentType, getOne, appPath);
+            => Eav.Factory.Resolve<AppContent>().Init(appPath, GetContext(), Log).GetOne(contentType, getOne, appPath);
 
         #endregion
 

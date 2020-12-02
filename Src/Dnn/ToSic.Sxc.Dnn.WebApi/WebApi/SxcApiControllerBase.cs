@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Context;
+﻿using System.Web.Http.Controllers;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
@@ -8,7 +7,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
-
 using ToSic.Sxc.WebApi.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -24,12 +22,18 @@ namespace ToSic.Sxc.WebApi
     {
         protected override string HistoryLogName => "Api.CntBas";
 
+        protected override void Initialize(HttpControllerContext controllerContext)
+        {
+            base.Initialize(controllerContext);
+            var sharedContextResolver = ServiceProvider.Build<IContextResolver>();
+            sharedContextResolver.AttachRealBlock(() => BlockOfRequest);
+            sharedContextResolver.AttachBlockContext(() => BlockOfRequest?.Context);
+        }
+
 
         private IBlock BlockOfRequest => _blockOfRequest ??
                                          (_blockOfRequest = ServiceProvider.Build<DnnGetBlock>().GetCmsBlock(Request, Log));
         private IBlock _blockOfRequest;
-
-        //[PrivateApi] public IBlock Block => _blockOfRequest;
 
         [PrivateApi] protected IBlock GetBlock() => BlockOfRequest;
 
@@ -51,14 +55,14 @@ namespace ToSic.Sxc.WebApi
         /// <returns></returns>
         internal IApp GetApp(int appId) => _build<Apps.App>().Init(ServiceProvider, appId, Log, GetContext().UserMayEdit);
 
-        protected IContextOfApp GetAppContext(int appId)
-        {
-            // First get a normal basic context which is initialized with site, etc.
-            var appContext = ServiceProvider.Build<IContextOfApp>();
-            appContext.Init(Log);
-            appContext.ResetApp(appId);
-            return appContext;
-        }
+        //protected IContextOfApp GetAppContext(int appId)
+        //{
+        //    // First get a normal basic context which is initialized with site, etc.
+        //    var appContext = ServiceProvider.Build<IContextOfApp>();
+        //    appContext.Init(Log);
+        //    appContext.ResetApp(appId);
+        //    return appContext;
+        //}
 
         protected IContextOfBlock GetContext()
         {

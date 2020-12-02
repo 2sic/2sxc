@@ -3,9 +3,9 @@ using ToSic.Eav.Apps;
 
 namespace ToSic.Sxc.WebApi.Context
 {
-    public interface IContextBuilder
+    public interface IJsContextBuilder
     {
-        IContextBuilder InitApp(int? zoneId, IApp app);
+        IJsContextBuilder InitApp(int? zoneId, IApp app);
         ContextDto Get(Ctx flags);
     }
 }

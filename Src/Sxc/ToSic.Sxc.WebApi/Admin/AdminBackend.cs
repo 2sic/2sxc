@@ -1,38 +1,51 @@
 ﻿using System;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.WebApi.Context;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
     public class AdminBackend: WebApiBackendBase<AdminBackend>
     {
-        public AdminBackend(IServiceProvider serviceProvider) : base(serviceProvider, "Bck.Admin")
+        private readonly IContextResolver _ctxResolver;
+
+        public AdminBackend(IServiceProvider serviceProvider, IContextResolver ctxResolver) : base(serviceProvider, "Bck.Admin")
         {
+            _ctxResolver = ctxResolver;
         }
 
-        public dynamic DialogSettings(IContextOfSite context, ContextBuilderBase contextBuilder, int appId)
-        {
-            IApp app = null;
+        public DialogContextStandalone DialogSettings(int appId, IJsContextBuilder jsContextBuilder)
+        {            
+            // reset app-id if we get a info-token like -100
+            if (appId < 0) appId = Eav.Constants.AppIdEmpty;
+
+            var appContext = appId != Eav.Constants.AppIdEmpty ? _ctxResolver.App(appId) : null;
+            var context = appContext ?? _ctxResolver.Site();
             // if we have an appid (we don't have it in an install-new-apps-scenario) check permissions
-            if (appId != Eav.Constants.AppIdEmpty)
+            if (appContext != null)
             {
-                app = GetApp(appId, false);
-                var appAndPerms = ServiceProvider.Build<MultiPermissionsApp>().Init(context, app, Log);
+                var appAndPerms = ServiceProvider.Build<MultiPermissionsApp>().Init(appContext, appContext.AppState, Log);
                 if (!appAndPerms.ZoneIsOfCurrentContextOrUserIsSuper(out var error))
                     throw HttpException.PermissionDenied(error);
             }
 
-            var cb = contextBuilder.InitApp(app?.ZoneId ?? context.Site.ZoneId, app);
+            var app = appId != Eav.Constants.AppIdEmpty ? GetApp(appId, false) : null;
+            var cb = jsContextBuilder.InitApp(context.Site.ZoneId, app);
 
-            return new
+            return new DialogContextStandalone
             {
                 Context = cb.Get(Ctx.All),
             };
         }
 
     }
+
+    public class DialogContextStandalone
+    {
+        public ContextDto Context { get; set; }
+    }
+
 }

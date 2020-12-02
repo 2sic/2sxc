@@ -1,8 +1,6 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.Run;
@@ -11,14 +9,14 @@ using ToSic.Sxc.WebApi.Context;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
-    public class OqtContextBuilder: ContextBuilderBase
+    public class OqtJsContextBuilder: JsContextBuilderBase
     {
-        public OqtContextBuilder(ILinkPaths linkPaths)
+        public OqtJsContextBuilder(ILinkPaths linkPaths)
         {
             _linkPaths = linkPaths;
         }
 
-        internal OqtContextBuilder Init(IContextOfSite ctx, IApp app = null)
+        internal OqtJsContextBuilder Init(IContextOfSite ctx, IApp app = null)
         {
             _context = ctx;
             InitApp(ctx.Site.ZoneId, app);

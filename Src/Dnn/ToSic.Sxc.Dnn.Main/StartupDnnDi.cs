@@ -24,11 +24,13 @@ using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
 
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi.Adam;
+using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebForms.Web;
 
 namespace ToSic.SexyContent
@@ -72,6 +74,9 @@ namespace ToSic.SexyContent
             // ADAM 
             services.TryAddTransient<IAdamFileSystem<int, int>, DnnAdamFileSystem>();
             services.TryAddTransient<AdamAppContext, AdamAppContext<int, int>>();
+
+            // Settings
+            services.TryAddTransient<IJsContextBuilder, DnnContextBuilder>();
 
             // new #2160
             services.TryAddTransient<SecurityChecksBase, DnnAdamSecurityChecks>();

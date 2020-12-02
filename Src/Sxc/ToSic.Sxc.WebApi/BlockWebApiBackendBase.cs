@@ -15,29 +15,38 @@ namespace ToSic.Sxc.WebApi
 {
     public abstract class BlockWebApiBackendBase<T>: WebApiBackendBase<BlockWebApiBackendBase<T>> where T: class
     {
-        private readonly Lazy<CmsManager> _cmsManagerLazy;
-        protected IContextOfApp ContextOfAppOrBlock;
-        protected IBlock _block;
-        protected CmsManager CmsManager;
+        public IContextResolver CtxResolver { get; }
+        protected readonly Lazy<CmsManager> CmsManagerLazy;
 
-        protected BlockWebApiBackendBase(IServiceProvider sp, Lazy<CmsManager> cmsManagerLazy, string logName) : base(sp, logName)
+        protected IContextOfApp ContextOfBlock =>
+            _contextOfAppOrBlock ?? (_contextOfAppOrBlock = CtxResolver.BlockRequired());
+        private IContextOfApp _contextOfAppOrBlock;
+        #region Block-Context Requiring properties
+
+        protected IBlock RealBlock => _realBlock ?? (_realBlock = CtxResolver.RealBlockRequired());
+        private IBlock _realBlock;
+
+        protected CmsManager CmsManagerOfBlock => _cmsManager ?? (_cmsManager = CmsManagerLazy.Value.Init(RealBlock.Context.AppState, RealBlock.Context.UserMayEdit, Log));
+        private CmsManager _cmsManager;
+
+        #endregion
+
+
+        protected BlockWebApiBackendBase(IServiceProvider sp, Lazy<CmsManager> cmsManagerLazy, IContextResolver ctxResolver, string logName) : base(sp, logName)
         {
-            _cmsManagerLazy = cmsManagerLazy;
+            CtxResolver = ctxResolver;
+            CmsManagerLazy = cmsManagerLazy;
         }
 
-        public T Init(IContextOfApp context, IBlock block, ILog parentLog)
+        public new T Init(ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            ContextOfAppOrBlock = context;
-            _block = block;
-            CmsManager = context.AppState == null ? null : _cmsManagerLazy.Value.Init(context.AppState, context.UserMayEdit, Log);
-
             return this as T;
         }
 
         protected void ThrowIfNotAllowedInApp(List<Grants> requiredGrants, IAppIdentity alternateApp = null)
         {
-            var permCheck = ServiceProvider.Build<MultiPermissionsApp>().Init(ContextOfAppOrBlock, alternateApp ?? ContextOfAppOrBlock.AppState, Log);
+            var permCheck = ServiceProvider.Build<MultiPermissionsApp>().Init(ContextOfBlock, alternateApp ?? ContextOfBlock.AppState, Log);
             if (!permCheck.EnsureAll(requiredGrants, out var error))
                 throw HttpException.PermissionDenied(error);
         }

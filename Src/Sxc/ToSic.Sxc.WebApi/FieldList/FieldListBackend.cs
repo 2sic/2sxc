@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
@@ -15,7 +14,7 @@ namespace ToSic.Sxc.WebApi.FieldList
 
         #region constructor / DI
 
-        public FieldListBackend(IServiceProvider sp, IPagePublishing publishing, Lazy<CmsManager> cmsManagerLazy) : base(sp, cmsManagerLazy, "Bck.FldLst") 
+        public FieldListBackend(IServiceProvider sp, IPagePublishing publishing, Lazy<CmsManager> cmsManagerLazy, IContextResolver ctxResolver) : base(sp, cmsManagerLazy, ctxResolver, "Bck.FldLst") 
             => _publishing = publishing.Init(Log);
 
         #endregion
@@ -23,7 +22,7 @@ namespace ToSic.Sxc.WebApi.FieldList
         public void ChangeOrder(Guid? parent, string fields, int index, int toIndex)
         {
             var wrapLog = Log.Call($"change order sort:{index}, dest:{toIndex}");
-            var entMan = CmsManager.Entities;
+            var entMan = CmsManagerOfBlock.Entities;
             ModifyList(FindOrThrow(parent), fields, 
                 (entity, fieldList, versioning) => entMan.FieldListMove(entity, fieldList, index, toIndex, versioning));
             wrapLog(null);
@@ -33,7 +32,7 @@ namespace ToSic.Sxc.WebApi.FieldList
         public void Remove(Guid? parent, string fields, int index)
         {
             var wrapLog = Log.Call($"remove from index:{index}");
-            var entMan = CmsManager.Entities;
+            var entMan = CmsManagerOfBlock.Entities;
             ModifyList(FindOrThrow(parent), fields, 
                 (entity, fieldList, versioning) => entMan.FieldListRemove(entity, fieldList, index, versioning));
             wrapLog(null);
@@ -43,10 +42,10 @@ namespace ToSic.Sxc.WebApi.FieldList
         private void ModifyList(IEntity target, string fields, Action<IEntity, string[], bool> action)
         {
             // use dnn versioning - items here are always part of list
-            _publishing.DoInsidePublishing(ContextOfAppOrBlock, args =>
+            _publishing.DoInsidePublishing(ContextOfBlock, args =>
             {
                 // determine versioning
-                var forceDraft = (ContextOfAppOrBlock as IContextOfBlock)?.Publishing.ForceDraft ?? false;
+                var forceDraft = (ContextOfBlock as IContextOfBlock)?.Publishing.ForceDraft ?? false;
                 // check field list (default to content-block fields)
                 var fieldList = fields?.Split(',').Select(f => f.Trim()).ToArray() ?? ViewParts.ContentPair;
                 action.Invoke(target, fieldList, forceDraft);
@@ -55,7 +54,7 @@ namespace ToSic.Sxc.WebApi.FieldList
 
         private IEntity FindOrThrow(Guid? parent)
         {
-            var target = parent == null ? _block.Configuration.Entity : ContextOfAppOrBlock.AppState.List.One(parent.Value);
+            var target = parent == null ? CtxResolver.RealBlockRequired().Configuration.Entity : ContextOfBlock.AppState.List.One(parent.Value);
             if (target == null) throw new Exception($"Can't find parent {parent}");
             return target;
         }

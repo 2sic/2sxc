@@ -4,10 +4,12 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.ImportExport.Options;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
@@ -34,6 +36,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 	{
         protected override string HistoryLogName => "Api.EntCnt";
 
+        private IContextResolver ContextResolver => _contextResolver ??
+                                                    (_contextResolver = ServiceProvider.Build<IContextResolver>()
+                                                        .Init(Log));
+        private IContextResolver _contextResolver;
+
         /// <summary>
         /// Used to be Entities/GetOllOfTypeForAdmin
         /// Used to be Entities/GetEntities
@@ -46,7 +53,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public IEnumerable<Dictionary<string, object>> List(int appId, string contentType)
         {
-            var appContext = GetAppContext(appId);
+            var appContext = ContextResolver.App(appId);
             return _build<EntityApi>()
                 .InitOrThrowBasedOnGrants(appContext, appContext.AppState, contentType,
                     GrantSets.ReadSomething, Log)
@@ -60,7 +67,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, int id, int appId, bool force = false)
         {
-            var appContext = GetAppContext(appId);
+            var appContext = ContextResolver.App(appId);
             _build<EntityApi>()
                 .InitOrThrowBasedOnGrants(appContext, appContext.AppState, contentType,
                     GrantSets.DeleteSomething, Log)
@@ -73,7 +80,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, Guid guid, int appId, bool force = false)
         {
-            var appContext = GetAppContext(appId);
+            var appContext = ContextResolver.App(appId);
             _build<EntityApi>()
                 .InitOrThrowBasedOnGrants(appContext, appContext.AppState, contentType,
                     GrantSets.DeleteSomething, Log)

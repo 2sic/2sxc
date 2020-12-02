@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected override string HistoryLogName => "Api.List";
 
         private readonly Lazy<FieldListBackend> _fieldListBackendLazy;
-        private FieldListBackend FieldBacked => _fieldBackend ??= _fieldListBackendLazy.Value.Init(GetContext(), GetBlock(), Log);
+        private FieldListBackend FieldBacked => _fieldBackend ??= _fieldListBackendLazy.Value.Init(Log);
         private FieldListBackend _fieldBackend;
         public ListController(StatefulControllerDependencies dependencies, Lazy<FieldListBackend> fieldListBackendLazy) : base(dependencies)
         {

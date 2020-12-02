@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 
         #region Block
 
-        private ContentBlockBackend Backend => _build<ContentBlockBackend>().Init(GetContext(), BlockReallyUsedAsBlock(), Log);
+        private ContentBlockBackend Backend => _build<ContentBlockBackend>().Init(Log);
 
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public new void App(int? appId)
-            => _build<AppViewPickerBackend>().Init(GetContext(), BlockReallyUsedAsBlock(), Log)
+            => _build<AppViewPickerBackend>().Init(Log)
                 .SetAppId(appId);
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Guid? Template(int templateId, bool forceCreateContentGroup)
-            => _build<AppViewPickerBackend>().Init(GetContext(), BlockReallyUsedAsBlock(), Log)
+            => _build<AppViewPickerBackend>().Init(Log)
                 .SaveTemplateId(templateId, forceCreateContentGroup);
 
         #endregion
@@ -144,7 +144,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
             Log.Add($"render template:{templateId}, lang:{lang}");
             try
             {
-                var rendered = _build<AppViewPickerBackend>().Init(GetContext(), BlockReallyUsedAsBlock(), Log).Render(templateId, lang);
+                var rendered = _build<AppViewPickerBackend>().Init(Log).Render(templateId, lang);
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new StringContent(rendered, Encoding.UTF8, "text/plain")

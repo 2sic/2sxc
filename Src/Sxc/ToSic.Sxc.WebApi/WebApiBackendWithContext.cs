@@ -15,15 +15,17 @@ namespace ToSic.Sxc.WebApi
     public abstract class BlockWebApiBackendWithContext<T>: WebApiBackendBase<BlockWebApiBackendWithContext<T>> where T: class
     {
         private readonly Lazy<CmsManager> _cmsManagerLazy;
+        private readonly IContextResolver _ctxResolver;
         protected IContextOfApp ContextOfAppOrBlock;
         protected CmsManager CmsManager;
 
-        protected BlockWebApiBackendWithContext(IServiceProvider sp, Lazy<CmsManager> cmsManagerLazy, string logName) : base(sp, logName)
+        protected BlockWebApiBackendWithContext(IServiceProvider sp, Lazy<CmsManager> cmsManagerLazy, IContextResolver ctxResolver, string logName) : base(sp, logName)
         {
             _cmsManagerLazy = cmsManagerLazy;
+            _ctxResolver = ctxResolver;
         }
 
-        public T Init(IContextOfApp context, ILog parentLog)
+        public T Init(string appName, IContextOfApp context, ILog parentLog)
         {
             Log.LinkTo(parentLog);
             ContextOfAppOrBlock = context;

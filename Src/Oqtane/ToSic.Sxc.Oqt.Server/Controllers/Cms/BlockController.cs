@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         #region Block
 
-        private ContentBlockBackend Backend => _backend ??= _blockBackendLazy.Value.Init(GetContext(), GetBlock(), Log);
+        private ContentBlockBackend Backend => _backend ??= _blockBackendLazy.Value.Init(Log);
         private ContentBlockBackend _backend;
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void App(int? appId)
-            => _viewPickerBackendLazy.Value.Init(GetContext(), GetBlock(), Log)
+            => _viewPickerBackendLazy.Value.Init(Log)
                 .SetAppId(appId);
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Guid? Template(int templateId, bool forceCreateContentGroup)
-            => _viewPickerBackendLazy.Value.Init(GetContext(), GetBlock(), Log)
+            => _viewPickerBackendLazy.Value.Init(Log)
                 .SaveTemplateId(templateId, forceCreateContentGroup);
 
         #endregion
@@ -170,7 +170,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             Log.Add($"render template:{templateId}, lang:{lang}");
             try
             {
-                var rendered = _appViewPickerBackendLazy.Value.Init(GetContext(), GetBlock(), Log).Render(templateId, lang);
+                var rendered = _appViewPickerBackendLazy.Value.Init(Log).Render(templateId, lang);
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new StringContent(rendered, Encoding.UTF8, "text/plain")

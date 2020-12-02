@@ -12,6 +12,7 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Helpers;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Conversion;
 
 namespace ToSic.Sxc.WebApi.App
@@ -23,7 +24,7 @@ namespace ToSic.Sxc.WebApi.App
 
         public AppContent(IServiceProvider sp, EntityApi entityApi, 
             Lazy<CmsManager> cmsManagerLazy, 
-            Lazy<EntitiesToDictionary> entToDicLazy) : base(sp, cmsManagerLazy, "Sxc.ApiApC")
+            Lazy<EntitiesToDictionary> entToDicLazy, IContextResolver ctxResolver) : base(sp, cmsManagerLazy, ctxResolver, "Sxc.ApiApC")
         {
             _entityApi = entityApi;
             _entToDicLazy = entToDicLazy;

@@ -8,6 +8,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Web.JsContext;
 using ToSic.Sxc.WebApi.Context;
@@ -15,25 +16,27 @@ using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.Sxc.Dnn.WebApi.Context
 {
-    internal sealed class DnnContextBuilder : ContextBuilderBase
+    public sealed class DnnContextBuilder : JsContextBuilderBase
     {
         #region Constructor / DI
 
 
         private readonly IServiceProvider _serviceProvider;
+        private readonly IContextResolver _ctxResolver;
         private readonly PortalSettings _portal = PortalSettings.Current;
-        private readonly ModuleInfo _module;
 
-        public DnnContextBuilder(IServiceProvider serviceProvider, ModuleInfo module)
+        private ModuleInfo Module => (_ctxResolver.BlockOrNull()?.Module as DnnModule)?.UnwrappedContents;
+
+        public DnnContextBuilder(IServiceProvider serviceProvider, IContextResolver ctxResolver)
         {
             _serviceProvider = serviceProvider;
-            _module = module;
+            _ctxResolver = ctxResolver;
             InitApp(null, null);
         }
 
         #endregion
 
-        public override IContextBuilder InitApp(int? zoneId, IApp app)
+        public override IJsContextBuilder InitApp(int? zoneId, IApp app)
         {
             // check if we're providing context for missing app
             // in this case we must find the zone based on the portals.
@@ -67,10 +70,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
             };
 
         protected override WebResourceDto GetPage() =>
-            _module == null ? null
+            Module == null ? null
                 : new WebResourceDto
                 {
-                    Id = _module.TabID,
+                    Id = Module.TabID,
                     // todo: maybe page url
                     // used to be on ps.ActiveTab.FullUrl;
                     // but we can't get it from there directly
@@ -107,15 +110,15 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
                 "//gettingstarted.2sxc.org/router.aspx?" +
                 $"DnnVersion={Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4)}" +
                 $"&2SexyContentVersion={Settings.ModuleVersion}" +
-                $"&ModuleName={_module.DesktopModule.ModuleName}" +
-                $"&ModuleId={_module.ModuleID}" +
+                $"&ModuleName={Module.DesktopModule.ModuleName}" +
+                $"&ModuleId={Module.ModuleID}" +
                 $"&PortalID={_portal.PortalId}" +
                 $"&ZoneID={app.ZoneId}" +
                 $"&DefaultLanguage={_portal.DefaultLanguage}" +
                 $"&CurrentLanguage={_portal.CultureCode}";
 
             // Add AppStaticName and Version
-            if (_module.DesktopModule.ModuleName != "2sxc")
+            if (Module.DesktopModule.ModuleName != "2sxc")
             {
                 gsUrl += "&AppGuid=" + app.AppGuid;
                 if (app.Configuration != null)

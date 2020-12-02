@@ -1,33 +1,34 @@
 ﻿using System;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.InPage
 {
     public class AppViewPickerBackend: BlockWebApiBackendBase<AppViewPickerBackend>
     {
-        public AppViewPickerBackend(IServiceProvider sp, Lazy<CmsManager> cmsManagerLazy) : base(sp, cmsManagerLazy,"Bck.ViwApp")
+
+        public AppViewPickerBackend(IServiceProvider sp, Lazy<CmsManager> cmsManagerLazy, IContextResolver ctxResolver) : base(sp, cmsManagerLazy, ctxResolver,"Bck.ViwApp")
         {
         }
 
-
-        public void SetAppId(int? appId) => BlockEditorBase.GetEditor(_block).SetAppId(appId);
+        public void SetAppId(int? appId) => BlockEditorBase.GetEditor(RealBlock).SetAppId(appId);
 
 
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {
             var callLog = Log.Call<Guid?>($"{templateId}, {forceCreateContentGroup}");
             ThrowIfNotAllowedInApp(GrantSets.WriteSomething);
-            return callLog("ok", BlockEditorBase.GetEditor(_block).SaveTemplateId(templateId, forceCreateContentGroup));
+            return callLog("ok", BlockEditorBase.GetEditor(RealBlock).SaveTemplateId(templateId, forceCreateContentGroup));
         }
 
         public bool Publish(int id)
         {
             var callLog = Log.Call<bool>($"{id}");
             ThrowIfNotAllowedInApp(GrantSets.WritePublished);
-            //_appManagerLazy.Value.Init(_block.App, Log)
-            CmsManager.Entities.Publish(id);
+            CmsManagerOfBlock.Entities.Publish(id);
             return callLog("ok", true);
         }
 
@@ -40,11 +41,11 @@ namespace ToSic.Sxc.WebApi.InPage
             // if a preview templateId was specified, swap to that
             if (templateId > 0)
             {
-                var template = CmsManager.Read.Views.Get(templateId);
-                _block.View = template;
+                var template = CmsManagerOfBlock.Read.Views.Get(templateId);
+                RealBlock.View = template;
             }
 
-            var rendered = _block.BlockBuilder.Render();
+            var rendered = RealBlock.BlockBuilder.Render();
             return callLog("ok", rendered);
         }
 

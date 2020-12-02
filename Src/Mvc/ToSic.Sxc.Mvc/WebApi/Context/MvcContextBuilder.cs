@@ -11,7 +11,7 @@ using ToSic.Sxc.WebApi.Context;
 
 namespace ToSic.Sxc.Mvc.WebApi.Context
 {
-    public class MvcContextBuilder: ContextBuilderBase
+    public class MvcContextBuilder: JsContextBuilderBase
     {
         public MvcContextBuilder(ILinkPaths linkPaths)
         {

@@ -21,6 +21,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             ServiceProvider = dependencies.ServiceProvider;
             _moduleRepository = dependencies.ModuleRepository;
             _oqtTempInstanceContext = dependencies.OqtTempInstanceContext;
+
+            dependencies.CtxResolver.AttachRealBlock(() => GetBlock());
+            dependencies.CtxResolver.AttachBlockContext(GetContext);
         }
         private readonly IModuleRepository _moduleRepository;
         private readonly OqtTempInstanceContext _oqtTempInstanceContext;

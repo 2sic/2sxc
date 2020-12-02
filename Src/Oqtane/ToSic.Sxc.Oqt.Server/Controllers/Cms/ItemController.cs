@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [HttpPost]
         //[Authorize(Policy = "ViewModule")] // TODO: disabled
         public bool Publish(int id)
-            => _appViewPickerBackendLazy.Value.Init(GetContext(), GetBlock(), Log)
+            => _appViewPickerBackendLazy.Value.Init(Log)
                 .Publish(id);
     }
 }

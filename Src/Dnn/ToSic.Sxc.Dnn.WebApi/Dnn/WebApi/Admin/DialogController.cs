@@ -1,11 +1,11 @@
 ﻿using System.Web.Http;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Admin;
+using ToSic.Sxc.WebApi.Context;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
@@ -28,17 +28,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <param name="appId"></param>
         /// <returns></returns>
         [HttpGet]
-        public dynamic Settings(int appId)
-        {
-            // reset app-id if we get a info-token like -100
-            if (appId < 0) appId = 0;
-            return _build<AdminBackend>().Init(Log).DialogSettings(
-                GetContext(),
-                new DnnContextBuilder(
-                    ServiceProvider,
-                    Request.FindModuleInfo()),
-                appId);
-        }
+        public DialogContextStandalone Settings(int appId) 
+            => _build<AdminBackend>().Init(Log).DialogSettings(appId, _build<IJsContextBuilder>());
 
         #endregion
 

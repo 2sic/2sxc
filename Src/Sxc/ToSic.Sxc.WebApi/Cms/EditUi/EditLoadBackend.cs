@@ -31,7 +31,7 @@ namespace ToSic.Sxc.WebApi.Cms
             _contentGroupList = contentGroupList;
         }
 
-        public AllInOneDto Load(IContextOfSite context, IContextBuilder contextBuilder, int appId, List<ItemIdentifier> items)
+        public AllInOneDto Load(IContextOfSite context, IJsContextBuilder contextBuilder, int appId, List<ItemIdentifier> items)
         {
             // Security check
             var wraplog = Log.Call($"load many a#{appId}, items⋮{items.Count}");

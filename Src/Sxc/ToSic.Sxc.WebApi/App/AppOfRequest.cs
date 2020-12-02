@@ -13,7 +13,7 @@ namespace ToSic.Sxc.WebApi.App
     /// This helps API calls to get the app which is currently needed
     /// It does not perform security checks ATM and maybe never will
     /// </summary>
-    internal class AppOfRequest: HasLog
+    internal class AppOfRequest: HasLog<AppOfRequest>
     {
         #region Constructor & DI 
 
@@ -25,15 +25,9 @@ namespace ToSic.Sxc.WebApi.App
         {
             _http = http;
             _siteId = site.Id;
-            _zoneMapper = zoneMapper;
+            _zoneMapper = zoneMapper.Init(Log);
         }
 
-        public AppOfRequest Init(ILog parentLog) 
-        {
-            Log.LinkTo(parentLog);
-            _zoneMapper.Init(Log);
-            return this;
-        }
         #endregion
 
         /// <summary>
@@ -41,6 +35,12 @@ namespace ToSic.Sxc.WebApi.App
         /// </summary>
         /// <param name="appPath"></param>
         /// <returns></returns>
+        ///
+        ///
+        /// TODO: WIP MOVING TO CONTEXT RESOLVER
+        ///
+        /// 
+        /// 
         internal IAppIdentity GetAppIdFromPath(string appPath)
         {
             var wrapLog = Log.Call(appPath);
