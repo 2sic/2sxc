@@ -23,18 +23,15 @@ namespace ToSic.Sxc.Dnn.WebApi
             _serviceProvider = serviceProvider;
         }
 
-        internal IBlock GetCmsBlock(HttpRequestMessage request, bool allowNoContextFound, ILog log)
+        internal IBlock GetCmsBlock(HttpRequestMessage request, ILog log)
         {
-            var wrapLog = log.Call<IBlock>($"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
+            var wrapLog = log.Call<IBlock>();
 
             var moduleInfo = request.FindModuleInfo();
 
-            if (allowNoContextFound & moduleInfo == null)
-                return wrapLog("request ModuleInfo not found, allowed", null);
-            
             if (moduleInfo == null)
-                log.Add("context/module not found");
-
+                return wrapLog("request ModuleInfo not found", null);
+            
             var context = _serviceProvider.Build<IContextOfBlock>().Init(moduleInfo, log);
             context.Page.Parameters = GetOverrideParams(request);
             IBlock block = _serviceProvider.Build<BlockFromModule>().Init(context, log);

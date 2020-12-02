@@ -100,21 +100,22 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
                 if (appFolder == null)
                 {
                     log.Add("no folder found in url, will auto-detect");
-                    var block = Eav.Factory.StaticBuild<DnnGetBlock>().GetCmsBlock(request, false, log);
-                    appFolder = block.App.Folder;
+                    var block = Eav.Factory.StaticBuild<DnnGetBlock>().GetCmsBlock(request, log);
+                    appFolder = block?.App?.Folder;
                 }
 
                 log.Add($"App Folder: {appFolder}");
             }
-            catch (Exception appNameException)
+            catch (Exception getBlockException)
             {
                 const string msg = ApiErrPrefix + "Trying to find app name, unexpected error - possibly bad/invalid headers. " + ApiErrSuffix;
-                throw ReportToLogAndThrow(request, HttpStatusCode.BadRequest, appNameException, msg, wrapLog);
+                throw ReportToLogAndThrow(request, HttpStatusCode.BadRequest, getBlockException, msg, wrapLog);
             }
 
             if (string.IsNullOrWhiteSpace(appFolder))
             {
-                const string msg = ApiErrPrefix + "App name is unknown - tried to check name in url and tried app-detection using headers. " + ApiErrSuffix;
+                const string msg = ApiErrPrefix + "App name is unknown - tried to check name in url (.../app/[app-name]/...) " +
+                                   "and tried app-detection using url-params/headers pageid/moduleid. " + ApiErrSuffix;
                 throw ReportToLogAndThrow(request, HttpStatusCode.BadRequest, new Exception(), msg, wrapLog);
             }
 

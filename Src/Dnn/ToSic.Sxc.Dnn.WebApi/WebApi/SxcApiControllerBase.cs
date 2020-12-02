@@ -26,7 +26,7 @@ namespace ToSic.Sxc.WebApi
 
 
         private IBlock BlockOfRequest => _blockOfRequest ??
-                                         (_blockOfRequest = ServiceProvider.Build<DnnGetBlock>().GetCmsBlock(Request, true, Log));
+                                         (_blockOfRequest = ServiceProvider.Build<DnnGetBlock>().GetCmsBlock(Request, Log));
         private IBlock _blockOfRequest;
 
         //[PrivateApi] public IBlock Block => _blockOfRequest;
