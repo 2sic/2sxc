@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Oqtane.Repository;
-using ToSic.Eav.Run;
-using ToSic.Sxc.Oqt.Server.Repository;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.App;
 
@@ -34,7 +31,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             [FromRoute] string appPath,
             [FromRoute] string name,
             [FromQuery] string stream = null
-        ) => _appQuery.Init(Log).PublicQuery(GetContext(), appPath, name, stream);
+        ) => _appQuery.Init(Log).PublicQuery(appPath, name, stream);
 
         [HttpGet("auto/query/{name}/{default}")]
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(

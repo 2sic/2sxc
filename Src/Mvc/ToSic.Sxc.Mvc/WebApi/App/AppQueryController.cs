@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Mvc.WebApi.App
             string appPath,
             string name,
             [FromQuery] string stream = null
-        ) => HttpContext.RequestServices.Build<AppQuery>().Init(Log).PublicQuery(GetContext(), appPath, name, stream);
+        ) => HttpContext.RequestServices.Build<AppQuery>().Init(Log).PublicQuery(appPath, name, stream);
 
     }
 }

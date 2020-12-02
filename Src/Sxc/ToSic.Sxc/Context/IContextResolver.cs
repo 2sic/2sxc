@@ -39,11 +39,17 @@ namespace ToSic.Sxc.Context
         /// <returns></returns>
         IContextOfApp BlockOrApp(int appId);
 
+        IContextOfApp AppOrBlock(string nameOrPath);
+
+        IContextOfApp AppOrNull(string nameOrPath);
+
+        IContextOfApp AppNameRouteBlock(string nameOrPath);
 
         void AttachBlockContext(Func<IContextOfBlock> getBlockContext);
 
         void AttachRealBlock(Func<IBlock> getBlock);
 
         IBlock RealBlockRequired();
+
     }
 }

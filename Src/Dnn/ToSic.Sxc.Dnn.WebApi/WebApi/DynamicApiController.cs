@@ -64,12 +64,17 @@ namespace ToSic.Sxc.WebApi
             try
             {
                 var routeAppPath = Route.AppPathOrNull(Request.GetRouteData());
-                var appId = AppFinder.GetAppIdFromPath(routeAppPath).AppId;
-                // Look up if page publishing is enabled - if module context is not available, always false
-                Log.Add($"AppId: {appId}");
-                var app = Factory.App(appId, false, parentLog: Log);
-                DynCode.LateAttachApp(app);
-                found = true;
+                var appId = SharedContextResolver.AppOrNull(routeAppPath)?.AppState.AppId ?? Eav.Constants.NullId;
+
+                if (appId != Eav.Constants.NullId)
+                {
+                    //var appId = AppFinder.GetAppIdFromPath(routeAppPath).AppId;
+                    // Look up if page publishing is enabled - if module context is not available, always false
+                    Log.Add($"AppId: {appId}");
+                    var app = Factory.App(appId, false, parentLog: Log);
+                    DynCode.LateAttachApp(app);
+                    found = true;
+                }
             } catch { /* ignore */ }
 
             wrapLog(found.ToString());

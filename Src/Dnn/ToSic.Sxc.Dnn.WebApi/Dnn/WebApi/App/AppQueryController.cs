@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery([FromUri] string appPath, [FromUri] string name, [FromUri] string stream = null) 
-            => _build<AppQuery>().Init(Log).PublicQuery(GetContext(), appPath, name, stream);
+            => _build<AppQuery>().Init(Log).PublicQuery(appPath, name, stream);
 
     }
 }

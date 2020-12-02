@@ -25,11 +25,12 @@ namespace ToSic.Sxc.WebApi
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
-            var sharedContextResolver = ServiceProvider.Build<IContextResolver>();
-            sharedContextResolver.AttachRealBlock(() => BlockOfRequest);
-            sharedContextResolver.AttachBlockContext(() => BlockOfRequest?.Context);
+            SharedContextResolver = ServiceProvider.Build<IContextResolver>();
+            SharedContextResolver.AttachRealBlock(() => BlockOfRequest);
+            SharedContextResolver.AttachBlockContext(() => BlockOfRequest?.Context);
         }
 
+        protected IContextResolver SharedContextResolver;
 
         private IBlock BlockOfRequest => _blockOfRequest ??
                                          (_blockOfRequest = ServiceProvider.Build<DnnGetBlock>().GetCmsBlock(Request, Log));
@@ -45,8 +46,8 @@ namespace ToSic.Sxc.WebApi
 
         #region App-Helpers for anonyous access APIs
 
-        internal AppOfRequest AppFinder => _appOfRequest ?? (_appOfRequest = _build<AppOfRequest>().Init(Log));
-        private AppOfRequest _appOfRequest;
+        internal AppIdResolver AppFinder => _appIdResolver ?? (_appIdResolver = _build<AppIdResolver>().Init(Log));
+        private AppIdResolver _appIdResolver;
 
         /// <summary>
         /// used for API calls to get the current app

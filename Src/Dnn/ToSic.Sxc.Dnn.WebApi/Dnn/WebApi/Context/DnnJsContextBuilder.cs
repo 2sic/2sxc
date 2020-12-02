@@ -16,7 +16,7 @@ using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.Sxc.Dnn.WebApi.Context
 {
-    public sealed class DnnContextBuilder : JsContextBuilderBase
+    public sealed class DnnJsContextBuilder : JsContextBuilderBase
     {
         #region Constructor / DI
 
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
 
         private ModuleInfo Module => (_ctxResolver.BlockOrNull()?.Module as DnnModule)?.UnwrappedContents;
 
-        public DnnContextBuilder(IServiceProvider serviceProvider, IContextResolver ctxResolver)
+        public DnnJsContextBuilder(IServiceProvider serviceProvider, IContextResolver ctxResolver)
         {
             _serviceProvider = serviceProvider;
             _ctxResolver = ctxResolver;

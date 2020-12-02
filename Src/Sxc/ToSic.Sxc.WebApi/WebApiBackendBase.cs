@@ -2,6 +2,7 @@
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.WebApi.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.WebApi
             ServiceProvider = serviceProvider;
         }
 
-        internal AppOfRequest AppFinder => ServiceProvider.Build<AppOfRequest>().Init(Log);
+        internal AppIdResolver AppFinder => ServiceProvider.Build<AppIdResolver>().Init(Log);
 
         /// <summary>
         /// used for API calls to get the current app

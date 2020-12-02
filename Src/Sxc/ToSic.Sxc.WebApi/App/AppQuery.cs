@@ -17,13 +17,15 @@ namespace ToSic.Sxc.WebApi.App
 {
     public class AppQuery: WebApiBackendBase<AppQuery>
     {
+
         #region Constructor / DI
 
-        public AppQuery(IServiceProvider serviceProvider) : base(serviceProvider, "Sxc.ApiApQ")
+        public AppQuery(IServiceProvider serviceProvider, IContextResolver ctxResolver) : base(serviceProvider, "Sxc.ApiApQ")
         {
-
+            _ctxResolver = ctxResolver;
         }
         
+        private readonly IContextResolver _ctxResolver;
         #endregion
 
         #region In-Container-Context Queries
@@ -47,18 +49,19 @@ namespace ToSic.Sxc.WebApi.App
         #region Public Queries
 
 
-        internal Dictionary<string, IEnumerable<Dictionary<string, object>>> 
-            PublicQuery(IContextOfBlock context, string appPath, string name, string stream)
+        internal Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(string appPath, string name, string stream)
         {
             var wrapLog = Log.Call($"path:{appPath}, name:{name}");
             if (string.IsNullOrEmpty(name))
                 throw HttpException.MissingParam(nameof(name));
-            var appIdentity = AppFinder.GetAppIdFromPath(appPath);
-            var queryApp = ServiceProvider.Build<Apps.App>().Init(appIdentity,
-                ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(false), Log);
+
+            var appCtx = _ctxResolver.AppOrBlock(appPath);
+
+            var queryApp = ServiceProvider.Build<Apps.App>().Init(appCtx.AppState,
+                ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(appCtx.UserMayEdit), Log);
 
             // now just run the default query check and serializer
-            var result = BuildQueryAndRun(queryApp, name, stream, false, context, Log, context?.UserMayEdit ?? false);
+            var result = BuildQueryAndRun(queryApp, name, stream, false, appCtx, Log, appCtx.UserMayEdit);
             wrapLog(null);
             return result;
         }

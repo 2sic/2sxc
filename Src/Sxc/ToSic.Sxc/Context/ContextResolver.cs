@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
@@ -9,14 +8,20 @@ namespace ToSic.Sxc.Context
 {
     public class ContextResolver: HasLog<IContextResolver>, IContextResolver
     {
+        protected AppIdResolver AppIdResolver => _appIdResolver ?? (_appIdResolver = _appIdResolverLazy.Value.Init(Log));
+        private AppIdResolver _appIdResolver;
+        private readonly Lazy<AppIdResolver> _appIdResolverLazy;
+
         private IServiceProvider ServiceProvider { get; }
 
-        public ContextResolver(IServiceProvider serviceProvider) : base("Sxc.CtxRes")
+        public ContextResolver(IServiceProvider serviceProvider, Lazy<AppIdResolver> appIdResolverLazy) : base("Sxc.CtxRes")
         {
+            _appIdResolverLazy = appIdResolverLazy;
             ServiceProvider = serviceProvider;
         }
 
-        public IContextOfSite Site() => ServiceProvider.Build<IContextOfSite>();
+        public IContextOfSite Site() => _site ?? (_site = ServiceProvider.Build<IContextOfSite>());
+        private IContextOfSite _site;
 
         public IContextOfApp App(int appId)
         {
@@ -41,33 +46,37 @@ namespace ToSic.Sxc.Context
         public void AttachRealBlock(Func<IBlock> getBlock) => _getBlock = getBlock;
         private Func<IBlock> _getBlock;
 
-        public IBlock RealBlockRequired() => _getBlock?.Invoke() ??
-                                             throw new Exception("Block required but not known. It was not attached");
+        public IBlock RealBlockRequired() => _getBlock?.Invoke() ?? throw new Exception("Block required but missing. It was not attached");
 
-        public IContextOfApp App(string appPathOrName) => App(GetAppIdFromPath(appPathOrName, true));
+        public IContextOfApp App(string nameOrPath) => App(AppIdResolver.GetAppIdFromPath(Site().Site.ZoneId, nameOrPath, true));
 
-        public IContextOfApp AppOrNull(string appPathOrName)
+        public IContextOfApp AppOrBlock(string nameOrPath) => AppOrNull(nameOrPath) ?? BlockRequired();
+
+        public IContextOfApp AppOrNull(string nameOrPath)
         {
-            var id = GetAppIdFromPath(appPathOrName, false);
+            if (string.IsNullOrWhiteSpace(nameOrPath)) return null;
+            var id = AppIdResolver.GetAppIdFromPath(Site().Site.ZoneId, nameOrPath, false);
             return id <= Eav.Constants.AppIdEmpty ? null : App(id);
         }
 
-        public IContextOfApp App()
+        public IContextOfApp AppNameRouteBlock(string nameOrPath)
         {
+            var ctx = AppOrNull(nameOrPath);
+            if (ctx != null) return ctx;
 
+            var identity = AppIdResolver.GetAppIdFromRoute();
+            if (identity != null)
+            {
+                ctx = ServiceProvider.Build<IContextOfApp>();
+                ctx.Init(Log);
+                ctx.ResetApp(identity);
+                return ctx;
+            }
+
+            ctx = BlockOrNull();
+            return ctx ?? throw new Exception($"Tried to auto detect app by name '{nameOrPath}', url params or block context, all failed.");
         }
 
-        private int GetAppIdFromPath(string appPath, bool required)
-        {
-            var wrapLog = Log.Call<int>(appPath);
-            var zid = Site().Site.ZoneId;
-            // get app from AppName
-            var aid = new ZoneRuntime().Init(zid, Log).FindAppId(appPath, true);
-            if(aid <= Eav.Constants.AppIdEmpty && required)
-                throw new Exception($"App required but can't find App based on the name '{appPath}'");
-
-            return wrapLog($"found app:{aid}", aid);
-        }
 
     }
 }
