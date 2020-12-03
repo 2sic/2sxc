@@ -6,11 +6,11 @@ using ToSic.Sxc.Mvc;
 using ToSic.Sxc.Razor.Engine;
 using ToSic.Sxc.WebApi;
 
-namespace Website.Plumbing
+namespace Website
 {
-    public class EavConfiguration
+    public class StartupEavAndSxc
     {
-        internal void ConfigureConnectionString(IConfiguration configuration)
+        internal static void ConfigureConnectionString(IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("SiteSqlServer");
             ToSic.Eav.Repository.Efc.Implementations.Configuration.SetConnectionString(connectionString);

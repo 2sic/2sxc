@@ -22,7 +22,7 @@ namespace Website
         {
             Configuration = configuration;
             HostEnvironment = environment;
-            new Plumbing.EavConfiguration().ConfigureConnectionString(configuration);
+            StartupEavAndSxc.ConfigureConnectionString(configuration);
         }
 
 
@@ -68,7 +68,7 @@ namespace Website
             services.AddTransient<IRazorPartialToStringRenderer, RazorPartialToStringRenderer>();
             //services.AddTransient<IRenderRazor, RenderRazor>();
 
-            Plumbing.EavConfiguration.ConfigureIoC(services);
+            StartupEavAndSxc.ConfigureIoC(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
