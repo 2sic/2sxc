@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav;
+using ToSic.Eav.Configuration;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc;
 using ToSic.Sxc.Mvc;
 using ToSic.Sxc.Razor.Engine;
@@ -10,14 +12,7 @@ namespace Website
 {
     public class StartupEavAndSxc
     {
-        internal static void ConfigureConnectionString(IConfiguration configuration)
-        {
-            var connectionString = configuration.GetConnectionString("SiteSqlServer");
-            ToSic.Eav.Configuration.Static.SetConnectionString(connectionString);
-            ToSic.Eav.Configuration.Static.SetFeaturesHelpLink("https://2sxc.org/help?tag=features", "https://2sxc.org/r/f/");
-        }
-
-        internal static void ConfigureIoC(IServiceCollection services)
+        internal static void ConfigureIoC(IServiceCollection services, IConfiguration configuration)
         {
             ToSic.Eav.Factory.UseExistingServices(services);
             ToSic.Eav.Factory.ActivateNetCoreDi(services2 =>
@@ -32,6 +27,9 @@ namespace Website
                     .AddSxcCore()
                     .AddEav();
             });
+
+            var connectionString = configuration.GetConnectionString("SiteSqlServer");
+            services.BuildServiceProvider().Build<IDbConfiguration>().ConnectionString = connectionString;
         }
     }
 }

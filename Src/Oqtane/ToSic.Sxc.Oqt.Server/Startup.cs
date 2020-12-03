@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using Oqtane.Infrastructure;
 using ToSic.Eav;
+using ToSic.Eav.Configuration;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Oqt.Server.RazorPages;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.Razor.Engine;
@@ -32,9 +34,6 @@ namespace ToSic.Sxc.Oqt.Server
             var devMode = Configuration["DevMode"];
             if (devMode == "SPM") TestIds.Dev4Spm = true;
 
-            var connectionString = Configuration.GetConnectionString("SiteSqlServer");
-            Eav.Configuration.Static.SetConnectionString(connectionString);
-            Eav.Configuration.Static.SetFeaturesHelpLink("https://2sxc.org/help?tag=features", "https://2sxc.org/r/f/");
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -67,6 +66,10 @@ namespace ToSic.Sxc.Oqt.Server
                     .AddSxcCore()
                     .AddEav();
             });
+
+
+            var connectionString = Configuration.GetConnectionString("SiteSqlServer");
+            services.BuildServiceProvider().Build<IDbConfiguration>().ConnectionString = connectionString;
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

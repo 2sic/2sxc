@@ -36,7 +36,6 @@ namespace ToSic.SexyContent
             if (_alreadyConfigured)
                 return;
 
-            ConfigureConnectionString();
             var appsCache = GetAppsCacheOverride();
             Factory.ActivateNetCoreDi(services =>
             {
@@ -45,11 +44,10 @@ namespace ToSic.SexyContent
                     .AddSxcWebApi()
                     .AddSxcCore()
                     .AddEav();
-
             });
+
             // now we should be able to instantiate registration of DB
-            var dbConfig = Factory.StaticBuild<IEavDbConfiguration>();
-            dbConfig.ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
+            Factory.StaticBuild<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
 
             // also register this because of a long DNN issue which was fixed, but we don't know if we're running in another version
             SharpZipLibRedirect.RegisterSharpZipLibRedirect();
@@ -57,13 +55,6 @@ namespace ToSic.SexyContent
             _alreadyConfigured = true;
         }
 
-
-        private void ConfigureConnectionString()
-        {
-            //var connectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
-            //Eav.Configuration.Static.SetConnectionString(connectionString);
-            Eav.Configuration.Static.SetFeaturesHelpLink("https://2sxc.org/help?tag=features", "https://2sxc.org/r/f/");
-        }
 
         /// <summary>
         /// Expects something like "ToSic.Sxc.Dnn.DnnAppsCacheFarm, ToSic.Sxc.Dnn.Enterprise" - namespaces + class, DLL name without extension
