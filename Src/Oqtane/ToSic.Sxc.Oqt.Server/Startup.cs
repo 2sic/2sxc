@@ -33,8 +33,8 @@ namespace ToSic.Sxc.Oqt.Server
             if (devMode == "SPM") TestIds.Dev4Spm = true;
 
             var connectionString = Configuration.GetConnectionString("SiteSqlServer");
-            Eav.Repository.Efc.Implementations.Configuration.SetConnectionString(connectionString);
-            Eav.Repository.Efc.Implementations.Configuration.SetFeaturesHelpLink("https://2sxc.org/help?tag=features", "https://2sxc.org/r/f/");
+            Eav.Configuration.Static.SetConnectionString(connectionString);
+            Eav.Configuration.Static.SetFeaturesHelpLink("https://2sxc.org/help?tag=features", "https://2sxc.org/r/f/");
         }
 
         public void ConfigureServices(IServiceCollection services)

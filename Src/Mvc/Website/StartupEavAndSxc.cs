@@ -13,8 +13,8 @@ namespace Website
         internal static void ConfigureConnectionString(IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("SiteSqlServer");
-            ToSic.Eav.Repository.Efc.Implementations.Configuration.SetConnectionString(connectionString);
-            ToSic.Eav.Repository.Efc.Implementations.Configuration.SetFeaturesHelpLink("https://2sxc.org/help?tag=features", "https://2sxc.org/r/f/");
+            ToSic.Eav.Configuration.Static.SetConnectionString(connectionString);
+            ToSic.Eav.Configuration.Static.SetFeaturesHelpLink("https://2sxc.org/help?tag=features", "https://2sxc.org/r/f/");
         }
 
         internal static void ConfigureIoC(IServiceCollection services)

@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
+using ToSic.Eav.Configuration;
 using ToSic.SexyContent.Dnn920;
 using ToSic.Sxc;
 using ToSic.Sxc.Polymorphism;
@@ -44,7 +45,13 @@ namespace ToSic.SexyContent
                     .AddSxcWebApi()
                     .AddSxcCore()
                     .AddEav();
+
             });
+            // now we should be able to instantiate registration of DB
+            var dbConfig = Factory.StaticBuild<IEavDbConfiguration>();
+            dbConfig.ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
+
+            // also register this because of a long DNN issue which was fixed, but we don't know if we're running in another version
             SharpZipLibRedirect.RegisterSharpZipLibRedirect();
             ConfigurePolymorphResolvers();
             _alreadyConfigured = true;
@@ -53,9 +60,9 @@ namespace ToSic.SexyContent
 
         private void ConfigureConnectionString()
         {
-            var connectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
-            Eav.Repository.Efc.Implementations.Configuration.SetConnectionString(connectionString);
-            Eav.Repository.Efc.Implementations.Configuration.SetFeaturesHelpLink("https://2sxc.org/help?tag=features", "https://2sxc.org/r/f/");
+            //var connectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
+            //Eav.Configuration.Static.SetConnectionString(connectionString);
+            Eav.Configuration.Static.SetFeaturesHelpLink("https://2sxc.org/help?tag=features", "https://2sxc.org/r/f/");
         }
 
         /// <summary>
