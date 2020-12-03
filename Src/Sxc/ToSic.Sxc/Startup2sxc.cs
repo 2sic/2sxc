@@ -86,7 +86,7 @@ namespace ToSic.Sxc
             services.TryAddTransient<IEnvironmentInstaller, BasicEnvironmentInstaller>();
             services.TryAddTransient<IPlatformModuleUpdater, BasicModuleUpdater>();
             services.TryAddTransient<IPagePublishingResolver, BasicPagePublishingResolver>();
-            services.TryAddTransient<IImportExportEnvironment, BasicImportExportEnvironment>();
+            //services.TryAddTransient<IImportExportEnvironment, BasicImportExportEnvironment>();
             services.TryAddTransient<IPagePublishing, BasicPagePublishing>();
 
             // Code / Dynamic Code
