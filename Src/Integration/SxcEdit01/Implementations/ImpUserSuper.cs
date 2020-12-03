@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ToSic.Eav.Context;
 
 namespace IntegrationSamples.SxcEdit01.Implementations
 {
-    public class ImpUserSuper: userbase
+    public class ImpUserSuper: IUser
     {
+        public int Id => 0;
+        public string IdentityToken => "impl-user:0";
+        public Guid? Guid => System.Guid.Empty;
+        public List<int> Roles => new List<int>();
+        public bool IsSuperUser => true;
+        public bool IsAdmin => true;
+        public bool IsDesigner => true;
+        public bool IsAnonymous => false;
     }
 }

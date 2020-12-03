@@ -5,9 +5,9 @@ using ToSic.Eav.Logging.Simple;
 
 namespace IntegrationSamples.SxcEdit01.Controllers
 {
-    public abstract class Int01StatelessControllerBase : ControllerBase, IHasLog
+    public abstract class IntStatelessControllerBase : ControllerBase, IHasLog
     {
-        protected Int01StatelessControllerBase()
+        protected IntStatelessControllerBase()
         {
             // ReSharper disable VirtualMemberCallInConstructor
             Log = new Log(HistoryLogName, null, $"Path: {HttpContext?.Request.GetDisplayUrl()}");

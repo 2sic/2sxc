@@ -2,11 +2,11 @@
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.WebApi.Admin;
 
-namespace IntegrationSamples.SxcEdit01.Controllers.Admin
+namespace IntegrationSamples.SxcEdit01.Controllers
 {
-    [Route(Int01Constants.DefaultRouteSchema)]
+    [Route(WebApiConstants.DefaultRouteRoot + "/admin" + WebApiConstants.DefaultRouteControllerAction)]
     [ApiController]
-    public class DialogController : Int01StatelessControllerBase
+    public class DialogController : IntStatelessControllerBase
     {
         protected override string HistoryLogName => "Api.SysCnt";
 

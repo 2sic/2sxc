@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Sxc.Web.WebApi.System;
 
-namespace IntegrationSamples.SxcEdit01.Controllers.Sys
+namespace IntegrationSamples.SxcEdit01.Controllers
 {
-    [Route(Int01Constants.DefaultRouteRoot + "/sys/[controller]/[action]")]
+    [Route(WebApiConstants.DefaultRouteRoot + "/sys/[controller]/[action]")]
     [ApiController]
-    public class InsightsController : Int01StatelessControllerBase
+    public class InsightsController : IntStatelessControllerBase
     {
         private readonly Lazy<Insights> _lazyInsights;
 

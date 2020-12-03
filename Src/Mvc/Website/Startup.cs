@@ -50,8 +50,7 @@ namespace Website
                 {
                     // this ensures that c# objects with Pascal-case keep that
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                    ToSic.Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings);
-                    //options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                    ToSic.Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings); // make sure dates are handled as we need them
                 })
                 .PartManager.ApplicationParts.Add(new AssemblyPart(typeof(SxcMvc).Assembly));
 
