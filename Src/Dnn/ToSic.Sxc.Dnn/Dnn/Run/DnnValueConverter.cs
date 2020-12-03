@@ -10,6 +10,7 @@ using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
+using ToSic.Eav.Data.ValueConverter;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Eav.Run.Basic;
@@ -50,7 +51,7 @@ namespace ToSic.Sxc.Dnn.Run
         {
             // Try file reference
             var fileInfo = FileManager.Instance.GetFile(_site.Id, potentialFilePath);
-            if (fileInfo != null) return BasicValueConverter.PrefixFile + BasicValueConverter.Separator + fileInfo.FileId;
+            if (fileInfo != null) return ValueConverterBase.PrefixFile + ValueConverterBase.Separator + fileInfo.FileId;
 
             // Try page / tab ID
             var tabController = new TabController();
@@ -59,7 +60,7 @@ namespace ToSic.Sxc.Dnn.Run
                                        .FirstOrDefault(tab => tab.TabPath == potentialFilePath);
 
             return tabInfo != null 
-                ? BasicValueConverter.PrefixPage + BasicValueConverter.Separator + tabInfo.TabID 
+                ? ValueConverterBase.PrefixPage + ValueConverterBase.Separator + tabInfo.TabID 
                 : potentialFilePath;
         }
 
@@ -85,7 +86,7 @@ namespace ToSic.Sxc.Dnn.Run
             var linkId = int.Parse(regularExpression.Groups["id"].Value);
             var urlParams = regularExpression.Groups["params"].Value ?? "";
 
-            var isPageLookup = linkType == BasicValueConverter.PrefixPage;
+            var isPageLookup = linkType == ValueConverterBase.PrefixPage;
             try
             {
                 var result = (isPageLookup

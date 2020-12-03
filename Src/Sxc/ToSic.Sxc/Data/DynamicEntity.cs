@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.ValueConverter;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
@@ -131,7 +132,7 @@ namespace ToSic.Sxc.Data
 
             // New mechanism to not use resolve-hyperlink
             if (result is string strResult 
-                && BasicValueConverter.CouldBeReference(strResult)
+                && ValueConverterBase.CouldBeReference(strResult)
                 && Entity.Attributes.ContainsKey(field) &&
                 Entity.Attributes[field].Type == Eav.Constants.DataTypeHyperlink)
             {
