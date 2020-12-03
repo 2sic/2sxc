@@ -81,12 +81,9 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<ContentGroupList>();
 
             // js context / UI
-            services.TryAddTransient<IUiContextBuilder, UiContextBuilderBase>();
+            services.TryAddTransient<IUiContextBuilder, UiContextBuilderUnknown>();
             services.TryAddTransient<UiContextBuilderBase.Dependencies>();
 
-
-            // 2020-11-25 2dm don't think this is ever injected, and it doesn't have a DI constructor
-            //services.TryAddTransient<SaveSecurity>();
 
             // Helpers
             services.TryAddTransient<ImpExpHelpers>();

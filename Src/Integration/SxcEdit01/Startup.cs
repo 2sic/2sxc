@@ -48,6 +48,9 @@ namespace IntegrationSamples.SxcEdit01
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+
+                // #2sxcIntegration - enable controllers
+                endpoints.MapControllers();
             });
         }
     }

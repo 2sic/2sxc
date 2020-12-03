@@ -12,9 +12,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\Cms\" />
     <Folder Include="wwwroot\system\" />
   </ItemGroup>
 
