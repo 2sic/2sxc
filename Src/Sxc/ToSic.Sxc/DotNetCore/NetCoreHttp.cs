@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿#if NETSTANDARD
+using System.Collections.Specialized;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using ToSic.Sxc.Web;
@@ -31,3 +32,5 @@ namespace ToSic.Sxc.DotNetCore.Web
 
     }
 }
+
+#endif

@@ -11,7 +11,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Run;
-
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.JsContext;
 
@@ -49,15 +48,17 @@ namespace ToSic.Sxc
             // Rendering
             services.TryAddTransient<IRenderingHelper, RenderingHelper>();
 
-            // Context stuff
+            // Context stuff in general
             services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
             services.TryAddTransient<IContextOfApp, ContextOfApp>();
             services.TryAddTransient<ContextOfBlock>();
             services.TryAddTransient<IPage, Page>();
             services.TryAddTransient<Page>();
             services.TryAddTransient<ICmsContext, CmsContext>();
+
+            // Context stuff, which is explicitly scoped
             services.TryAddScoped<IContextResolver, ContextResolver>();
-            services.TryAddTransient<AppIdResolver>();
+            services.TryAddScoped<AppIdResolver>();
 
             // JS UI Context
             services.TryAddTransient<JsContextAll>();
@@ -66,9 +67,20 @@ namespace ToSic.Sxc
             // Adam stuff
             services.TryAddTransient<AdamMetadataMaker>();
 
+            // WIP - add net-core specific stuff
+            services.AddSxcNetCore();
+
             // Add possibly missing fallbacks
             services.AddSxcCoreFallbackServices();
 
+            return services;
+        }
+
+        public static IServiceCollection AddSxcNetCore(this IServiceCollection services)
+        {
+#if NETSTANDARD
+            services.TryAddTransient<IHttp, ToSic.Sxc.DotNetCore.Web.NetCoreHttp>();
+#endif
             return services;
         }
 

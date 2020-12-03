@@ -7,6 +7,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
 {
     public class Int01Constants
     {
+        public const string DefaultRouteRoot = "api/sxc";
         public const string DefaultRouteSchema = "api/sxc/[controller]/[action]";
     }
 }
