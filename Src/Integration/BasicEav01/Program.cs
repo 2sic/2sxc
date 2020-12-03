@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace IntegrationSamples.ReadOnly
+namespace IntegrationSamples.BasicEav01
 {
     public class Program
     {

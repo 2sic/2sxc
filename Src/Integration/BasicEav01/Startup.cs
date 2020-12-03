@@ -1,20 +1,16 @@
-using IntegrationSamples.ReadOnly.Integration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace IntegrationSamples.ReadOnly
+namespace IntegrationSamples.BasicEav01
 {
     public class Startup
     {
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-
-            // #2sxcIntegration - call this to make sure 2sxc knows about the connection string
-            StartupEavAndSxc.ConfigureConnectionString(configuration);
         }
 
         public IConfiguration Configuration { get; }
@@ -25,7 +21,7 @@ namespace IntegrationSamples.ReadOnly
             services.AddRazorPages();
 
             // #2sxcIntegration
-            services.AddEavAndSxcIntegration();
+            services.AddEavAndSxcIntegration(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
