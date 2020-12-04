@@ -11,11 +11,11 @@ namespace ToSic.Sxc.Dnn.LookUp
     /// Internally it asks DNN for the current Property-Access objects and prepares them for use in EAV.
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public class GetDnnEngine : HasLog<ILookUpEngineResolver>, ILookUpEngineResolver
+    public class DnnLookUpEngineResolver : HasLog<ILookUpEngineResolver>, ILookUpEngineResolver
     {
         #region Constructor / Dependency Injection
 
-        public GetDnnEngine(): base("Dnn.LookUp")
+        public DnnLookUpEngineResolver(): base("Dnn.LookUp")
         {
 
         }

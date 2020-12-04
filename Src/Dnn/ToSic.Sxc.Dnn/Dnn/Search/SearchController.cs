@@ -81,7 +81,7 @@ namespace ToSic.Sxc.Search
                 Log.Add("Will try to attach dnn providers to DataSource LookUps");
                 try
                 {
-                    var getLookups = (GetDnnEngine)_serviceProvider.Build<GetDnnEngine>().Init(Log);
+                    var getLookups = (DnnLookUpEngineResolver)_serviceProvider.Build<DnnLookUpEngineResolver>().Init(Log);
                     var dnnLookUps = getLookups.GenerateDnnBasedLookupEngine(site.UnwrappedContents, dnnModule.ModuleID);
                     ((LookUpEngine) dataSource.Configuration.LookUps).Link(dnnLookUps);
                 }

@@ -82,8 +82,8 @@ namespace ToSic.SexyContent
             // new #2160
             services.TryAddTransient<SecurityChecksBase, DnnAdamSecurityChecks>();
 
-            services.TryAddTransient<ILookUpEngineResolver, GetDnnEngine>();
-            services.TryAddTransient<GetDnnEngine>();
+            services.TryAddTransient<ILookUpEngineResolver, DnnLookUpEngineResolver>();
+            services.TryAddTransient<DnnLookUpEngineResolver>();
             services.TryAddTransient<IFingerprint, DnnFingerprint>();
 
             // new in 11.07 - exception logger
