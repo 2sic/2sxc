@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Search;
 
@@ -17,8 +18,16 @@ namespace ToSic.Sxc.Dnn
         /// <inheritdoc />
         public override void CustomizeData() { }
 
+#pragma warning disable 618
         /// <inheritdoc />
-        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate) { }
+        [PrivateApi]
+        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate)
+        {
+            CustomizeSearch(searchInfos, moduleInfo as IContainer, beginDate);
+        }
+
+        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo, DateTime beginDate) { }
+#pragma warning restore 618
 
     }
 }
