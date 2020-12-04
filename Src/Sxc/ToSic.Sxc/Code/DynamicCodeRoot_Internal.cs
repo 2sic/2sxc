@@ -7,7 +7,10 @@ namespace ToSic.Sxc.Code
     public partial class DynamicCodeRoot
     {
         [PrivateApi]
-        internal void LateAttachApp(IApp app) => App = app;
+        internal void LateAttachApp(IApp app)
+        {
+            App = app;
+        }
 
         [PrivateApi]
         public int CompatibilityLevel { get; private set; }

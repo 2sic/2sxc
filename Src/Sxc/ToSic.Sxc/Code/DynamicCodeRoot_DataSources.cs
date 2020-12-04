@@ -1,6 +1,9 @@
-﻿using ToSic.Eav.DataSources;
+﻿using System;
+using ToSic.Eav.Context;
+using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Code
 {
@@ -10,8 +13,24 @@ namespace ToSic.Sxc.Code
         private ILookUpEngine _configurationProvider;
 
         internal ILookUpEngine ConfigurationProvider
-            => _configurationProvider ??
-               (_configurationProvider = Data.Configuration.LookUps);
+        {
+            get
+            {
+                // check already retrieved
+                if (_configurationProvider != null) return _configurationProvider;
+
+                // check if we have a block-context, in which case the lookups also know about the module
+                _configurationProvider = Data?.Configuration?.LookUps;
+                if (_configurationProvider != null) return _configurationProvider;
+
+                // otherwise try to fallback to the App configuration provider, which has a lot, but not the module-context
+                _configurationProvider = App?.ConfigurationProvider;
+                if (_configurationProvider != null) return _configurationProvider;
+
+                // show explanation what went wrong
+                throw new Exception("Tried to get Lookups for creating a data-source, but neither the module-context nor app is known.");
+            }
+        }
 
         internal DataSourceFactory DataSourceFactory => _dataSourceFactory ??
                                                         (_dataSourceFactory = ServiceProvider.Build<DataSourceFactory>().Init(Log));
@@ -28,7 +47,7 @@ namespace ToSic.Sxc.Code
             if (inSource != null)
                 return DataSourceFactory.GetDataSource<T>(inSource, inSource, configurationProvider);
 
-            var userMayEdit = Block.Context.UserMayEdit;
+            var userMayEdit = (CmsContext as CmsContext)?.Context?.UserMayEdit ?? false;
 
             var initialSource = DataSourceFactory.GetPublishing(
                 App, userMayEdit, ConfigurationProvider as LookUpEngine);

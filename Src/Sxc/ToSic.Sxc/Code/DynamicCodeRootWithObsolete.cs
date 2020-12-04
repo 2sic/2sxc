@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Code
             if (inSource != null)
                 return DynCode.DataSourceFactory.GetDataSource(typeName, inSource, inSource, lookUpEngine);
 
-            var userMayEdit = DynCode.Block.Context.UserMayEdit;
+            var userMayEdit = DynCode.Block?.Context?.UserMayEdit ?? false;
 
             var initialSource = DynCode.DataSourceFactory.GetPublishing(
                 DynCode.App, userMayEdit, DynCode.ConfigurationProvider as LookUpEngine);

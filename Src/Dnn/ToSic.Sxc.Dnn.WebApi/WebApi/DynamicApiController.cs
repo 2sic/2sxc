@@ -104,7 +104,7 @@ namespace ToSic.Sxc.WebApi
             if (!Eav.Configuration.Features.EnabledOrException(feats, "can't save in ADAM", out var exp))
                 throw exp;
 
-            var appId = DynCode?.App?.AppId ?? DynCode?.Block?.AppId ?? throw new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
+            var appId = DynCode?.Block?.AppId ?? DynCode?.App?.AppId ?? throw new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
             return _build<AdamTransUpload<int, int>>()
                 .Init(appId, contentType, guid.Value, field, false, Log)
                 .UploadOne(stream, fileName, subFolder, true);
