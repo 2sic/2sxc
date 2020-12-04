@@ -141,7 +141,7 @@
     <Compile Include="Dnn\Search\SearchController.cs" />
     <Compile Include="Dnn\Search\SearchIndexException.cs" />
     <Compile Include="Dnn\Run\DnnUser.cs" />
-    <Compile Include="Dnn\LookUp\GetDnnEngine.cs" />
+    <Compile Include="Dnn\LookUp\DnnLookUpEngineResolver.cs" />
     <Compile Include="Dnn\LookUp\TokenReplaceDnn.cs" />
     <Compile Include="Dnn\LookUp\LookUpInDnnPropertyAccess.cs" />
     <Compile Include="Dnn\Run\DnnZoneMapper.cs" />
