@@ -124,5 +124,7 @@ namespace ToSic.Sxc.Data
         /// </returns>
         dynamic Presentation { get; }
 
+        [PrivateApi]
+        string[] Dimensions { get; }
     }
 }

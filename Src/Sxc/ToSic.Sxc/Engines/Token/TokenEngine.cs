@@ -103,8 +103,8 @@ namespace ToSic.Sxc.Engines
             _tokenReplace = new TokenReplaceEav(confProv);
             
             // Add the Content and ListContent property sources used always
-            confProv.Add(new LookUpInDynamicEntity(SourcePropertyName.ListContent, _data.Header));
-            confProv.Add(new LookUpInDynamicEntity(SourcePropertyName.Content, _data.Content));
+            confProv.Add(new LookUpForTokenTemplate(SourcePropertyName.ListContent, _data.Header));
+            confProv.Add(new LookUpForTokenTemplate(SourcePropertyName.Content, _data.Content));
         }
 
 
@@ -159,7 +159,7 @@ namespace ToSic.Sxc.Engines
             {
                 // Create property sources for the current data item (for the current data item and its list information)
                 var propertySources = new Dictionary<string, ILookUp>();
-                propertySources.Add(sourceName, new LookUpInDynamicEntity(sourceName, _data.AsDynamic(dataItems.ElementAt(i)), i, itemsCount));
+                propertySources.Add(sourceName, new LookUpForTokenTemplate(sourceName, _data.AsDynamic(dataItems.ElementAt(i)), i, itemsCount));
                 builder.Append(RenderSection(template, propertySources));
             }
 

@@ -87,7 +87,7 @@ namespace ToSic.Sxc.Dnn.Install
             gettingStartedSrc += hostSettings.ContainsKey("GUID") ? "&DnnGUID=" + hostSettings["GUID"] : "";
             // Add Portal Default Language & current language
             gettingStartedSrc += "&DefaultLanguage="
-                                 + site.DefaultLanguage
+                                 + site.DefaultCultureCode
                                  + "&CurrentLanguage=" + portal.CultureCode;
 
             // Set src to iframe

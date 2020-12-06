@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
@@ -12,9 +11,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
-using ToSic.Eav.Context;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
@@ -59,7 +56,7 @@ namespace ToSic.Sxc.Search
 
             // Ensure cache builds up with correct primary language
             var cache = State.Cache;
-            cache.Load(module.BlockIdentifier, site.DefaultLanguage);
+            cache.Load(module.BlockIdentifier, site.DefaultCultureCode);
 
             var dnnContext = Eav.Factory.StaticBuild<IContextOfBlock>().Init(dnnModule, Log);
             var modBlock = _serviceProvider.Build<BlockFromModule>()

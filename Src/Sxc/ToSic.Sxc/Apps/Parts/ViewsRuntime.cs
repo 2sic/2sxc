@@ -23,11 +23,13 @@ namespace ToSic.Sxc.Apps
 
         private IValueConverter ValueConverter => _valConverter ?? (_valConverter = _valConverterLazy.Value);
         private readonly Lazy<IValueConverter> _valConverterLazy;
+        private readonly IZoneCultureResolver _cultureResolver;
         private IValueConverter _valConverter;
 
-        public ViewsRuntime(Lazy<IValueConverter> valConverterLazy) : base("Cms.ViewRd")
+        public ViewsRuntime(Lazy<IValueConverter> valConverterLazy, IZoneCultureResolver cultureResolver) : base("Cms.ViewRd")
         {
             _valConverterLazy = valConverterLazy;
+            _cultureResolver = cultureResolver;
         }
 
         #endregion
@@ -46,7 +48,7 @@ namespace ToSic.Sxc.Apps
 
         public IEnumerable<IView> GetAll() 
             => _all ?? (_all = ViewsDataSource().Immutable
-                   .Select(p => new View(p, Log))
+                   .Select(p => new View(p, _cultureResolver.CurrentCultureCode, Log))
                    .OrderBy(p => p.Name));
         private IEnumerable<IView> _all;
 
@@ -61,7 +63,7 @@ namespace ToSic.Sxc.Apps
             if(templateEntity == null)
 				throw new Exception("The template with id " + templateId + " does not exist.");
 
-			return new View(templateEntity, Log);
+			return new View(templateEntity, _cultureResolver.CurrentCultureCode, Log);
 		}
 
         public IView Get(Guid guid)
@@ -71,7 +73,7 @@ namespace ToSic.Sxc.Apps
             if (templateEntity == null)
                 throw new Exception("The template with id " + guid + " does not exist.");
 
-            return new View(templateEntity, Log);
+            return new View(templateEntity, _cultureResolver.CurrentCultureCode, Log);
         }
 
 

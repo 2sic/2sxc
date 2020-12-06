@@ -48,6 +48,7 @@ namespace ToSic.SexyContent
             // Core Runtime Context Objects
             services.TryAddScoped<IUser, DnnUser>();
             services.TryAddScoped<ISite, DnnSite>();
+            services.TryAddScoped<IZoneCultureResolver, DnnSite>();
             services.TryAddTransient<IModule, DnnModule>();
             services.TryAddTransient<DnnModule>();
 
@@ -60,7 +61,6 @@ namespace ToSic.SexyContent
             // new for .net standard
             services.TryAddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
             services.TryAddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
-            services.TryAddTransient<IGetDefaultLanguage, DnnSite>();
             services.TryAddTransient<IZoneMapper, DnnZoneMapper>();
 
             services.TryAddTransient<IClientDependencyOptimizer, DnnClientDependencyOptimizer>();

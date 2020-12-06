@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Oqt.Server
 
             services.AddTransient<ISite, OqtSite>();
             services.AddTransient<IUser, OqtUser>();
-            services.AddTransient<IGetDefaultLanguage, OqtSite>();
+            services.AddTransient<IZoneCultureResolver, OqtSite>();
             services.AddTransient<IZoneMapper, OqtZoneMapper>();
             services.AddTransient<AppPermissionCheck, OqtPermissionCheck>();
             services.AddTransient<DynamicCodeRoot, OqtaneDynamicCode>();

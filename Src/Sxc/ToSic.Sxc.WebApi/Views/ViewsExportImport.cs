@@ -28,7 +28,7 @@ using ToSic.Sxc.WebApi.Validation;
 
 namespace ToSic.Sxc.WebApi.Views
 {
-    public class ViewsExportImport: HasLog
+    public class ViewsExportImport: HasLog<ViewsExportImport>
     {
         private readonly IServerPaths _serverPaths;
         private readonly TemplateHelpers _appHelpers;
@@ -55,12 +55,6 @@ namespace ToSic.Sxc.WebApi.Views
             _user = context.User;
         }
 
-        public ViewsExportImport Init(ILog parentLog)
-        {
-            Log.LinkTo(parentLog);
-            return this;
-        }
-
         public HttpResponseMessage DownloadViewAsJson(int appId, int viewId)
         {
             var logCall = Log.Call($"{appId}, {viewId}");
@@ -73,7 +67,7 @@ namespace ToSic.Sxc.WebApi.Views
             };
 
             // Attach files
-            var view = new View(bundle.Entity, Log);
+            var view = new View(bundle.Entity, _site.CurrentCultureCode, Log);
 
             _appHelpers.Init(app, Log);
             if (!string.IsNullOrEmpty(view.Path))

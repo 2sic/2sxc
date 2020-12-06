@@ -17,9 +17,8 @@ namespace ToSic.Sxc.Web.JsContext
 
         public JsContextLanguage Init(ISite site, int zoneId)
         {
-            // Don't use PortalSettings, as that provides a wrong ps.CultureCode.ToLower();
-            Current = System.Threading.Thread.CurrentThread.CurrentCulture.Name.ToLower();
-            Primary = site.DefaultLanguage;
+            Current = site.CurrentCultureCode;
+            Primary = site.DefaultCultureCode;
             All = _zoneMapperLazy.Value
                 .CulturesWithState(site.Id, zoneId)
                 .Where(c => c.Active)

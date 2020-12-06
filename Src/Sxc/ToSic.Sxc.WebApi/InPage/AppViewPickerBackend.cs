@@ -56,7 +56,7 @@ namespace ToSic.Sxc.WebApi.InPage
         public string Render(int templateId, string lang)
         {
             var callLog = Log.Call<string>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
-            SetThreadCulture(lang);
+            //SetThreadCulture(lang);
 
             // if a preview templateId was specified, swap to that
             if (templateId > 0)
@@ -69,20 +69,22 @@ namespace ToSic.Sxc.WebApi.InPage
             return callLog("ok", rendered);
         }
 
-        /// <summary>
-        /// Try setting thread language to enable 2sxc to render the template in this language
-        /// </summary>
-        /// <param name="lang"></param>
-        private static void SetThreadCulture(string lang)
-        {
-            if (string.IsNullOrEmpty(lang)) return;
-            try
-            {
-                System.Threading.Thread.CurrentThread.CurrentCulture =
-                    System.Globalization.CultureInfo.GetCultureInfo(lang);
-            }
-            // Fallback / ignore if the language specified has not been found
-            catch (System.Globalization.CultureNotFoundException) { /* ignore */ }
-        }
+
+        // 2020-12-06 2dm v11.11 disable, as we shouldn't be using the thread-culture any more!
+        ///// <summary>
+        ///// Try setting thread language to enable 2sxc to render the template in this language
+        ///// </summary>
+        ///// <param name="lang"></param>
+        //private static void SetThreadCulture(string lang)
+        //{
+        //    if (string.IsNullOrEmpty(lang)) return;
+        //    try
+        //    {
+        //        System.Threading.Thread. CurrentThread.CurrentCulture =
+        //            System.Globalization.CultureInfo.GetCultureInfo(lang);
+        //    }
+        //    // Fallback / ignore if the language specified has not been found
+        //    catch (System.Globalization.CultureNotFoundException) { /* ignore */ }
+        //}
     }
 }

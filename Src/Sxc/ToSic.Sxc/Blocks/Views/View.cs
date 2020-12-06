@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
@@ -11,65 +10,65 @@ namespace ToSic.Sxc.Blocks
 {
     public partial class View: EntityBasedWithLog, IView
     {
+        #region Constructors
 
-        public View(IEntity templateEntity, ILog parentLog) : base(templateEntity, parentLog, "Sxc.View")
+        public View(IEntity templateEntity, string languageCode, ILog parentLog) : base(templateEntity, languageCode, parentLog, "Sxc.View")
         {
         }
+        
+        public View(IEntity templateEntity, string[] languageCodes, ILog parentLog) : base(templateEntity, languageCodes, parentLog, "Sxc.View")
+        {
+        }
+
+        #endregion
 
         private IEntity GetBestRelationship(string key) => Entity.Children(key).FirstOrDefault();
 
 
-        public string Name => 
-            Entity.GetBestValue<string>(FieldName, new[] {Thread.CurrentThread.CurrentUICulture.Name});
+        public string Name => Get(FieldName, "unknown name");
 
-        public string Path => Entity.GetBestValue<string>(FieldPath);
+        public string Path => Get(FieldPath, "");
 
-        public string ContentType  
-            => Entity.GetBestValue<string>(FieldContentType);
+        public string ContentType => Get(FieldContentType, "");
 
         public IEntity ContentItem => GetBestRelationship(FieldContentDemo);
 
-        public string PresentationType => Entity.GetBestValue<string>(FieldPresentationType);
+        public string PresentationType => Get(FieldPresentationType, "");
 
         public IEntity PresentationItem => GetBestRelationship(FieldPresentationItem);
 
-        public string HeaderType => Entity.GetBestValue<string>(FieldHeaderType);
+        public string HeaderType => Get(FieldHeaderType, "");
 
         public IEntity HeaderItem => GetBestRelationship(FieldHeaderItem);
 
-        public string HeaderPresentationType => Entity.GetBestValue<string>(FieldHeaderPresentationType);
+        public string HeaderPresentationType => Get(FieldHeaderPresentationType, "");
 
         public IEntity HeaderPresentationItem => GetBestRelationship(FieldHeaderPresentationItem);
 
-        public string Type => Entity.GetBestValue<string>(FieldType);
+        public string Type => Get(FieldType, "");
 
         [PrivateApi]
         internal string GetTypeStaticName(string groupPart)
         {
             switch (groupPart.ToLower())
             {
-                case ViewParts.ContentLower:
-                    return ContentType;
-                case ViewParts.PresentationLower:
-                    return PresentationType;
-                case ViewParts.ListContentLower:
-                    return HeaderType;
-                case ViewParts.ListPresentationLower:
-                    return HeaderPresentationType;
-                default:
-                    throw new NotSupportedException("Unknown group part: " + groupPart);
+                case ViewParts.ContentLower: return ContentType;
+                case ViewParts.PresentationLower: return PresentationType;
+                case ViewParts.ListContentLower: return HeaderType;
+                case ViewParts.ListPresentationLower: return HeaderPresentationType;
+                default: throw new NotSupportedException("Unknown group part: " + groupPart);
             }
         }
 
-        public bool IsHidden => Entity.GetBestValue<bool>(FieldIsHidden);
+        public bool IsHidden => Get(FieldIsHidden, false);
 
-        public string Location => Entity.GetBestValue<string>(FieldLocation);
+        public string Location => Get(FieldLocation, Settings.TemplateLocations.PortalFileSystem);
 
         public bool IsShared => Location == Settings.TemplateLocations.HostFileSystem;
 
-        public bool UseForList => Entity.GetBestValue<bool>(FieldUseList);
-        public bool PublishData => Entity.GetBestValue<bool>(FieldPublishEnable);
-        public string StreamsToPublish => Entity.GetBestValue<string>(FieldPublishStreams);
+        public bool UseForList => Get(FieldUseList, false);
+        public bool PublishData => Get(FieldPublishEnable, false);
+        public string StreamsToPublish => Get(FieldPublishStreams, "");
 
         [PrivateApi]
         public IEntity QueryRaw

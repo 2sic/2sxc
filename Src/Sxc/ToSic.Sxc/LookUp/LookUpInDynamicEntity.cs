@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
+using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Data;
@@ -16,20 +16,14 @@ namespace ToSic.Sxc.LookUp
     /// - repeater:isfirst
     /// - etc.
     /// </summary>
+    /// <remarks>
+    /// Only use this for Token templates, do not use for normal lookups which end up in data-sources.
+    /// The reason is that this tries to respect culture formatting, which will cause trouble (numbers with comma etc.) when trying to
+    /// use in other systems.
+    /// </remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public class LookUpInDynamicEntity : ILookUp
+    public partial class LookUpForTokenTemplate : ILookUp
 	{
-        public const string TokenRepeater = "Repeater";
-
-        public const string KeyIndex = "index";
-        public const string KeyIndex1 = "index1";
-        public const string KeyAlternator2 = "alternator2";
-        public const string KeyAlternator3 = "alternator3";
-        public const string KeyAlternator4 = "alternator4";
-        public const string KeyAlternator5 = "alternator5";
-        public const string KeyIsFirst = "isfirst";
-        public const string KeyIsLast = "islast";
-        public const string KeyCount = "count";
 
         private readonly IDynamicEntity _entity;
 		public string Name { get; }
@@ -38,7 +32,7 @@ namespace ToSic.Sxc.LookUp
 	    private readonly int _repeaterTotal;
         
         [PrivateApi]
-		public LookUpInDynamicEntity(string name, IDynamicEntity entity, int repeaterIndex = -1, int repeaterTotal = -1)
+		public LookUpForTokenTemplate(string name, IDynamicEntity entity, int repeaterIndex = -1, int repeaterTotal = -1)
 		{
 			Name = name;
 			_entity = entity;
@@ -51,9 +45,8 @@ namespace ToSic.Sxc.LookUp
         /// </summary>
         /// <param name="strPropertyName"></param>
         /// <param name="strFormat"></param>
-        /// <param name="formatProvider"></param>
         /// <returns></returns>
-        public string GetProperty(string strPropertyName, string strFormat, CultureInfo formatProvider)
+        private string GetProperty(string strPropertyName, string strFormat)
 		{
 			// Return empty string if Entity is null
 			if (_entity == null)
@@ -61,58 +54,33 @@ namespace ToSic.Sxc.LookUp
 
             var outputFormat = strFormat == string.Empty ? "g" : strFormat;
 
-            string repeaterHelper = null;
-            if (_repeaterIndex > -1 && strPropertyName.StartsWith(TokenRepeater + ":", StringComparison.OrdinalIgnoreCase))
-            {
-                switch (strPropertyName.Substring(TokenRepeater.Length + 1).ToLower())
-                {
-                    case KeyIndex:
-                        repeaterHelper = (_repeaterIndex).ToString();
-                        break;
-                    case KeyIndex1:
-                        repeaterHelper = (_repeaterIndex + 1).ToString();
-                        break;
-                    case KeyAlternator2:
-                        repeaterHelper = (_repeaterIndex%2).ToString();
-                        break;
-                    case KeyAlternator3:
-                        repeaterHelper = (_repeaterIndex%3).ToString();
-                        break;
-                    case KeyAlternator4:
-                        repeaterHelper = (_repeaterIndex%4).ToString();
-                        break;
-                    case KeyAlternator5:
-                        repeaterHelper = (_repeaterIndex%5).ToString();
-                        break;
-                    case KeyIsFirst:
-                        repeaterHelper = (_repeaterIndex == 0) ? "First" : "";
-                        break;
-                    case KeyIsLast:
-                        repeaterHelper = (_repeaterIndex == _repeaterTotal - 1) ? "Last" : "";
-                        break;
-                    case KeyCount:
-                        repeaterHelper = _repeaterTotal.ToString();
-                        break;
-                }
-            }
+            // If it's a repeater token for list index or something, get that first (or null)
+            // Otherwise just get the normal value
+            var valueObject = ResolveRepeaterTokens(strPropertyName) 
+                              ?? _entity.Get(strPropertyName);
 
-			var valueObject = repeaterHelper ?? _entity.Get(strPropertyName);
-
-			if (valueObject != null)
+            if (valueObject != null)
 			{
-				switch (valueObject.GetType().Name)
+				switch (Type.GetTypeCode(valueObject.GetType()))
 				{
-					case Eav.Constants.DataTypeString:
+					case TypeCode.String:
 						return LookUpBase.FormatString((string)valueObject, strFormat);
-					case Eav.Constants.DataTypeBoolean:
-						return ((bool)valueObject).ToString(formatProvider).ToLower();
-					case Eav.Constants.DataTypeDateTime:
-					case "Double":
-					case "Single":
-					case "Int32":
-					case "Int64":
-					case "Decimal":
-						return ((IFormattable)valueObject).ToString(outputFormat, formatProvider);
+					case TypeCode.Boolean:
+                        // #BreakingChange v11.11 - possible breaking change
+                        // previously it converted true/false to language specific values
+                        // but only in token templates (and previously also app-settings) which causes
+                        // the use to have to be language aware - very complex
+                        // I'm pretty sure this won't affect anybody
+                        // old: ((bool)valueObject).ToString(formatProvider).ToLower();
+                        return LookUpBase.Format((bool) valueObject) ;
+					case TypeCode.DateTime:
+					case TypeCode.Double:
+					case TypeCode.Single:
+                    case TypeCode.Int16:
+                    case TypeCode.Int32:
+                    case TypeCode.Int64:
+                    case TypeCode.Decimal:
+                        return ((IFormattable)valueObject).ToString(outputFormat, GetCultureInfo());
 					default:
 						return LookUpBase.FormatString(valueObject.ToString(), strFormat);
 				}
@@ -134,7 +102,7 @@ namespace ToSic.Sxc.LookUp
             var entity = list?.FirstOrDefault() ?? valueObject as IDynamicEntity;
 
             if (entity != null)
-                return new LookUpInDynamicEntity(null, entity).GetProperty(propertyMatch.Groups[2].Value, string.Empty, formatProvider);
+                return new LookUpForTokenTemplate(null, entity).GetProperty(propertyMatch.Groups[2].Value, string.Empty);
 
             #endregion
 
@@ -143,8 +111,11 @@ namespace ToSic.Sxc.LookUp
 
         }
 
+
+        private CultureInfo GetCultureInfo() => IZoneCultureResolverExtensions.SafeCurrentCultureInfo(_entity?.Dimensions);
+
         [PrivateApi]
-		public string Get(string key, string strFormat) => GetProperty(key, strFormat, Thread.CurrentThread.CurrentCulture);
+		public string Get(string key, string strFormat) => GetProperty(key, strFormat);
 
         /// <inheritdoc/>
         public virtual string Get(string key) => Get(key, "");

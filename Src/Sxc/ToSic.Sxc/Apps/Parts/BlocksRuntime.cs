@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
-using ToSic.Eav.DataSources;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 
@@ -12,23 +13,27 @@ namespace ToSic.Sxc.Apps
 {
     public class BlocksRuntime: PartOf<CmsRuntime, BlocksRuntime>
     {
+        private readonly IZoneCultureResolver _cultureResolver;
         public const string BlockTypeName = "2SexyContent-ContentGroup";
 
-        public BlocksRuntime() : base("Sxc.BlkRdr") { }
-
-        private IDataSource ContentGroupSource()
+        public BlocksRuntime(IZoneCultureResolver cultureResolver) : base("Sxc.BlkRdr")
         {
-            if (_contentGroupSource != null) return _contentGroupSource;
-            var dataSource = Parent.Data;
-            var onlyCGs = Parent.DataSourceFactory.GetDataSource<EntityTypeFilter>(Parent, dataSource);
-            onlyCGs.TypeName = BlockTypeName;
-            return _contentGroupSource = dataSource;
+            _cultureResolver = cultureResolver;
         }
-        private IDataSource _contentGroupSource;
+
+        //private IDataSource ContentGroupSource()
+        //{
+        //    if (_contentGroupSource != null) return _contentGroupSource;
+        //    var dataSource = Parent.Data;
+        //    var onlyCGs = Parent.DataSourceFactory.GetDataSource<EntityTypeFilter>(Parent, dataSource);
+        //    onlyCGs.TypeName = BlockTypeName;
+        //    return _contentGroupSource = dataSource;
+        //}
+        //private IDataSource _contentGroupSource;
 
         public List<BlockConfiguration> AllWithView()
         {
-            return Entities()
+            return ContentGroups()
                 .Select(b =>
                 {
                     var templateGuid = b.Children(ViewParts.ViewFieldInContentBlock)
@@ -39,23 +44,24 @@ namespace ToSic.Sxc.Apps
                         : null;
                 })
                 .Where(b => b != null)
-                .Select(e => new BlockConfiguration(e.Entity, Parent, Log))
+                .Select(e => new BlockConfiguration(e.Entity, Parent, _cultureResolver.CurrentCultureCode, Log))
                 .ToList();
         }
 
-        public IEnumerable<IEntity> Entities() => ContentGroupSource().Immutable;
+        public IImmutableList<IEntity> ContentGroups() => _contentGroups ?? (_contentGroups = Parent.Entities.Get(BlockTypeName).ToImmutableArray()); // ContentGroupSource().Immutable;
+        private IImmutableList<IEntity> _contentGroups;
 
         public BlockConfiguration GetBlockConfig(Guid contentGroupGuid)
         {
             var wrapLog = Log.Call($"get CG#{contentGroupGuid}");
-            // ToDo: Should use an indexed guid source
-            var groupEntity = Entities().One(contentGroupGuid);
+            var groupEntity = ContentGroups().One(contentGroupGuid);
             var found = groupEntity != null;
             wrapLog(found ? "found" : "missing");
             return found
-                ? new BlockConfiguration(groupEntity, Parent, Log)
-                : new BlockConfiguration(Guid.Empty, Parent, Log)
+                ? new BlockConfiguration(groupEntity, Parent, _cultureResolver.CurrentCultureCode, Log).WarnIfMissingData()
+                : new BlockConfiguration(null, Parent, _cultureResolver.CurrentCultureCode, Log)
                 {
+                    PreviewTemplateId = Guid.Empty,
                     DataIsMissing = true
                 };
         }
@@ -68,7 +74,7 @@ namespace ToSic.Sxc.Apps
             var createTempBlockForPreview = blockId.Guid == Guid.Empty;
             Log.Add($"{nameof(createTempBlockForPreview)}:{createTempBlockForPreview}");
             var result = createTempBlockForPreview
-                ? new BlockConfiguration(blockId.PreviewView, Parent, Log)
+                ? new BlockConfiguration(null, Parent, _cultureResolver.CurrentCultureCode, Log) {PreviewTemplateId = blockId.PreviewView}
                 : GetBlockConfig(blockId.Guid);
             wrapLog(null);
             return result;

@@ -1,8 +1,10 @@
 ﻿using System.Threading;
 using DotNetNuke.Entities.Portals;
+using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Dnn.LookUp
 {
@@ -13,12 +15,14 @@ namespace ToSic.Sxc.Dnn.LookUp
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public class DnnLookUpEngineResolver : HasLog<ILookUpEngineResolver>, ILookUpEngineResolver
     {
+
         #region Constructor / Dependency Injection
 
-        public DnnLookUpEngineResolver(): base("Dnn.LookUp")
+        public DnnLookUpEngineResolver(IZoneCultureResolver cultureResolver) : base("Dnn.LookUp")
         {
-
+            _cultureResolver = cultureResolver;
         }
+        private readonly IZoneCultureResolver _cultureResolver;
 
         #endregion
 
@@ -36,7 +40,7 @@ namespace ToSic.Sxc.Dnn.LookUp
         {
             var providers = new LookUpEngine(Log);
             var dnnUsr = portalSettings.UserInfo;
-            var dnnCult = Thread.CurrentThread.CurrentCulture;
+            var dnnCult = _cultureResolver.SafeCurrentCultureInfo();
             var dnn = new DnnTokenReplace(instanceId, portalSettings, dnnUsr);
             var stdSources = dnn.PropertySources;
             foreach (var propertyAccess in stdSources)

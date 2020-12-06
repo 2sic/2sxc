@@ -41,18 +41,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
             return base.SetZoneAndApp(zoneId, app);
         }
 
-        //protected override LanguageDto GetLanguage()
-        //{
-        //    if (_portal == null || ZoneId == 0) return null;
-        //    var language = Deps.JsCtx.Init(new DnnSite(), ZoneId);
-        //    return new LanguageDto
-        //    {
-        //        Current = language.Current,
-        //        Primary = language.Primary,
-        //        All = language.All.ToDictionary(l => l.key, l => l.name),
-        //    };
-        //}
-
         protected override WebResourceDto GetSystem() =>
             new WebResourceDto
             {

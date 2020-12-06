@@ -83,7 +83,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
             var streams = new List<FileUploadDto>();
             for (var i = 0; i < files.Count; i++)
                 streams.Add(new FileUploadDto { Name = files[i].FileName, Stream = files[i].OpenReadStream() });
-            var result = ExportImport.ImportView(zoneId, appId, streams, GetContext().Site.DefaultLanguage);
+            var result = ExportImport.ImportView(zoneId, appId, streams, GetContext().Site.DefaultCultureCode);
             
             return wrapLog("ok", result);
         }

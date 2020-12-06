@@ -37,7 +37,11 @@ namespace ToSic.Sxc.Mvc.Run
         }
 
         /// <inheritdoc />
-        public override string DefaultLanguage => TestIds.DefaultLanguage;
+        public override string DefaultCultureCode => TestIds.DefaultLanguage;
+
+        /// <inheritdoc />
+        public override string CurrentCultureCode => TestIds.DefaultLanguage;
+
 
         /// <inheritdoc />
         public override int Id => _siteId;

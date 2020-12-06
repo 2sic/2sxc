@@ -1,4 +1,5 @@
 ﻿@page
+@using ToSic.Eav.Plumbing
 @{
   ViewData["Title"] = "Eav.Core";
 }
@@ -19,7 +20,7 @@ Things which must work:
     An EAV Constant: @ToSic.Eav.Constants.ContentAppName
   </li>
   <li>
-    A DataSource Object: @(new ToSic.Eav.DataSources.DataSourceFactory(this.HttpContext.RequestServices).GetType().AssemblyQualifiedName)
+    A DataSource Object: @(HttpContext.RequestServices.Build<ToSic.Eav.DataSources.DataSourceFactory>().GetType().AssemblyQualifiedName)
   </li>
   <li>
     Repository type Code: @(ToSic.Eav.Repositories.RepositoryTypes.Code)

@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Apps
         public ViewsRuntime Views => _views ?? (_views = ServiceProvider.Build<ViewsRuntime>().Init(this, Log));
         private ViewsRuntime _views;
 
-        public BlocksRuntime Blocks => _blocks ?? (_blocks = new BlocksRuntime().Init(this, Log));
+        public BlocksRuntime Blocks => _blocks ?? (_blocks = ServiceProvider.Build<BlocksRuntime>().Init(this, Log));
         private BlocksRuntime _blocks;
     }
 }

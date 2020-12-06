@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Mvc
         public static IServiceCollection AddSxcMvc(this IServiceCollection services)
         {
             services.AddTransient<ISite, MvcSite>();
-            services.AddTransient<IGetDefaultLanguage, MvcSite>();
+            services.AddTransient<IZoneCultureResolver, MvcSite>();
             services.AddTransient<IModule, MvcModule>();
             services.AddTransient<IZoneMapper, MvcZoneMapper>();
             services.AddTransient<AppPermissionCheck, MvcPermissionCheck>();

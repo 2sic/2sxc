@@ -1,5 +1,6 @@
 ﻿@page
 @using ToSic.Eav.Persistence.Efc.Models
+@using ToSic.Eav.Plumbing
 @model Website.Pages.EavCoreModel
 @{
     ViewData["Title"] = "Eav.Core";
@@ -12,7 +13,7 @@
         An EAV Constant: @ToSic.Eav.Constants.ContentAppName
     </li>
     <li>
-        A DataSource Object: @(new ToSic.Eav.DataSources.DataSourceFactory(this.HttpContext.RequestServices).GetType().AssemblyQualifiedName)
+        A DataSource Object: @(HttpContext.RequestServices.Build<ToSic.Eav.DataSources.DataSourceFactory>().GetType().AssemblyQualifiedName)
     </li>
     <li>
         Repository type Code: @(ToSic.Eav.Repositories.RepositoryTypes.Code)

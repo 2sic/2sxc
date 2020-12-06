@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Data;
 
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Adam
             var meta = GetFirstMetadata(appContext.AppRuntime, mdId) 
                        ?? Build.FakeEntity(Eav.Constants.TransientAppId);
             var dynEnt = new DynamicEntity(meta,
-                new[] {Thread.CurrentThread.CurrentCulture.Name},
+                new[] {(appContext.AppContext?.Site).SafeCurrentCultureCode()},
                 appContext.CompatibilityLevel,
                 null) {ServiceProviderOrNull = _serviceProvider};
             return dynEnt;

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity)
-            => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, CompatibilityLevel, Block);
+            => new DynamicEntity(entity, new[] { CmsContext.SafeCurrentCultureCode() }, CompatibilityLevel, Block);
 
         /// <inheritdoc />
         public dynamic AsDynamic(dynamic dynamicEntity) => dynamicEntity;

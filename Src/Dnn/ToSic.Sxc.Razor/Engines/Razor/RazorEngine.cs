@@ -106,12 +106,12 @@ namespace ToSic.Sxc.Engines
             var objectValue = RuntimeHelpers.GetObjectValue(CreateWebPageInstance());
             // ReSharper disable once JoinNullCheckWithUsage
             if (objectValue == null)
-                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage found at '{0}' was not created.", TemplatePath));
+                throw new InvalidOperationException($"The webpage found at '{TemplatePath}' was not created.");
 
             Webpage = objectValue as RazorComponentBase;
 
             if (Webpage == null)
-                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage at '{0}' must derive from RazorComponentBase.", TemplatePath));
+                throw new InvalidOperationException($"The webpage at '{TemplatePath}' must derive from RazorComponentBase.");
 
             Webpage.Context = HttpContext;
             Webpage.VirtualPath = TemplatePath;

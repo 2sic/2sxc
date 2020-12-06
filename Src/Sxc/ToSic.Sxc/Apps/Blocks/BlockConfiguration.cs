@@ -8,44 +8,32 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Apps.Blocks
 {
-    // Todo: make an EntityBasedType
-    public class BlockConfiguration: HasLog, IAppIdentity
+    public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
     {
-        internal IEntity Entity;
         public  int ZoneId { get; }
         public  int AppId { get; }
         internal readonly bool ShowDrafts;
-        internal readonly Guid? PreviewTemplateId;
+        internal Guid? PreviewTemplateId;
 
         private readonly CmsRuntime _cmsRuntime;
 
-        public BlockConfiguration(IEntity contentGroupEntity, CmsRuntime cmsRuntime, ILog parentLog)
-            : this(cmsRuntime, parentLog, "constructor from entity")
+        public BlockConfiguration(IEntity entity, CmsRuntime cmsRuntime, string languageCode, ILog parentLog): base(entity, languageCode, parentLog, "Blk.Config")
         {
-            Entity = contentGroupEntity 
-                     ?? throw new Exception("BlockConfiguration entity is null. " +
-                                            "This usually happens when you are duplicating a site, and have not yet imported the other content/apps. " +
-                                            "If that is your issue, check 2sxc.org/help?tag=export-import");
-        }
-
-        /// <summary>
-        /// Instantiate a "temporary" BlockConfiguration with the specified templateId and no Content items
-        /// </summary>
-        public BlockConfiguration(Guid? previewTemplateId, CmsRuntime cmsRuntime, ILog parentLog)
-            : this(cmsRuntime, parentLog, "constructor empty")
-        {
-            PreviewTemplateId = previewTemplateId;
-        }
-
-        public BlockConfiguration(CmsRuntime cmsRuntime, ILog parentLog, string logNote)
-            : base("Blk.Config", new CodeRef(), parentLog, logNote)
-        {
+            Log.Add("Entity is " + (entity == null ? "" : "not") + " null");
             _cmsRuntime = cmsRuntime;
             ZoneId = cmsRuntime.ZoneId;
             AppId = cmsRuntime.AppId;
             ShowDrafts = cmsRuntime.ShowDrafts;
         }
-
+        
+        internal BlockConfiguration WarnIfMissingData()
+        {
+            if (Entity != null) return this;
+            throw new Exception("BlockConfiguration entity is null. " +
+                                "This usually happens when you are duplicating a site, and have not yet imported the other content/apps. " +
+                                "If that is your issue, check 2sxc.org/help?tag=export-import");
+        }
+        
         /// <summary>
         /// Returns true if a content group entity for this group really exists
         /// Means for example, that the app can't be changed anymore
@@ -68,21 +56,18 @@ namespace ToSic.Sxc.Apps.Blocks
                     ? _cmsRuntime.Data.Immutable.One(PreviewTemplateId.Value) // ToDo: Should use an indexed Guid filter
                     : Entity?.Children(ViewParts.ViewFieldInContentBlock).FirstOrDefault();
 
-                return _view = templateEntity == null ? null : new View(templateEntity, Log);
+                return _view = templateEntity == null ? null : new View(templateEntity, LookupLanguages, Log);
             }
         }
         private IView _view;
         
         #endregion
 
-
-
-        public int Id => Entity?.EntityId ?? 0;
-
-        public Guid Guid => Entity?.EntityGuid ?? Guid.Empty;
-
         #region Retrieve the lists - either as object or by the type-indexer
 
+        /// <summary>
+        /// Content is a bit special, it must always return a list with at least one null-item
+        /// </summary>
         public List<IEntity> Content
         {
             get
@@ -105,16 +90,11 @@ namespace ToSic.Sxc.Apps.Blocks
             {
                 switch (type.ToLower())
                 {
-                    case ViewParts.ContentLower:
-                        return Content;
-                    case ViewParts.PresentationLower: 
-                        return Presentation;
-                    case ViewParts.ListContentLower:
-                        return Header;
-                    case ViewParts.ListPresentationLower:
-                        return HeaderPresentation;
-                    default:
-                        throw new Exception("Type " + type + " not allowed");
+                    case ViewParts.ContentLower: return Content;
+                    case ViewParts.PresentationLower: return Presentation;
+                    case ViewParts.ListContentLower: return Header;
+                    case ViewParts.ListPresentationLower: return HeaderPresentation;
+                    default: throw new Exception("Type " + type + " not allowed");
                 }
             }
         }

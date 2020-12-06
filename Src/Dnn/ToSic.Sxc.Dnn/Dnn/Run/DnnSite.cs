@@ -4,7 +4,6 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Dnn.Run
@@ -27,6 +26,11 @@ namespace ToSic.Sxc.Dnn.Run
         public DnnSite Swap(PortalSettings settings)
         {
             UnwrappedContents = KeepBestPortalSettings(settings);
+
+            // reset language info to be sure to get it from the latest source
+            _currentCulture = null;
+            _defaultLanguage = null;
+
             return this;
         }
 
@@ -73,8 +77,28 @@ namespace ToSic.Sxc.Dnn.Run
 
 
         /// <inheritdoc />
-        public override string DefaultLanguage => _defaultLanguage ?? (_defaultLanguage = UnwrappedContents.DefaultLanguage.ToLowerInvariant());
+        public override string DefaultCultureCode => _defaultLanguage ?? (_defaultLanguage = UnwrappedContents?.DefaultLanguage?.ToLowerInvariant());
         private string _defaultLanguage;
+
+
+        public override string CurrentCultureCode
+        {
+            get
+            {
+                if (_currentCulture != null) return _currentCulture;
+
+                // First check if we know more about the site
+                var portal = UnwrappedContents;
+                var aliasCulture = portal?.PortalAlias?.CultureCode;
+                if (!string.IsNullOrWhiteSpace(aliasCulture)) return _currentCulture = aliasCulture.ToLowerInvariant();
+
+                // if alias is unknown, then we might be in search mode or something
+                return _currentCulture = portal?.CultureCode?.ToLowerInvariant();
+
+                // todo: maybe check thread?
+            }
+        }
+        private string _currentCulture;
 
         /// <inheritdoc />
         public override int Id => UnwrappedContents?.PortalId ?? Eav.Constants.NullId;

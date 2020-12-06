@@ -57,7 +57,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
         }
 
         /// <inheritdoc />
-        public override string DefaultLanguage => WipConstants.DefaultLanguage;
+        public override string DefaultCultureCode => WipConstants.DefaultLanguage;
+
+        /// <inheritdoc />
+        public override string CurrentCultureCode => WipConstants.DefaultLanguage;
 
         /// <inheritdoc />
         public override int Id => UnwrappedContents.SiteId;

@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Data
     public partial class DynamicEntity: IEquatable<IEntityWrapper>
     {
         [PrivateApi]
-        public IEntity _EntityForEqualityCheck { get; private set; }
+        public IEntity EntityForEqualityCheck { get; private set; }
 
         #region Changing comparison operation to internally compare the entities, not this wrapper
 

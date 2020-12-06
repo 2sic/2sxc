@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
             if (HttpContext.Request.Form.Files.Count <= 0) return new ImportResultDto(false, "no files uploaded");
             var file = HttpContext.Request.Form.Files[0];
             var result = _importContentLazy.Value.Init(GetContext().User, Log).Import(zoneId, appId, file.FileName,
-                file.OpenReadStream(), GetContext().Site.DefaultLanguage);
+                file.OpenReadStream(), GetContext().Site.DefaultCultureCode);
 
             return wrapLog("ok", result);
         }

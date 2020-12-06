@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Data
         }
 
         [PrivateApi]
-        protected readonly string[] Dimensions;
+        public string[] Dimensions { get; }
 
         [PrivateApi("Keep internal only - should never surface")]
         internal IBlock Block { get; }
@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Data
         protected void SetEntity(IEntity entity)
         {
             Entity = entity;
-            _EntityForEqualityCheck = (Entity as IEntityWrapper)?._EntityForEqualityCheck ?? Entity;
+            EntityForEqualityCheck = (Entity as IEntityWrapper)?.EntityForEqualityCheck ?? Entity;
         }
 
         /// <summary>

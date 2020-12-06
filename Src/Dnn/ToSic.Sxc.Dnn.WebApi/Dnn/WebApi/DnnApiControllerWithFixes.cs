@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 	    {
 	        // ensure that the call to this webservice doesn't reset the language in the cookie
 	        // this is a dnn-bug
-	        RemoveLanguageChangingCookie();
+	        //RemoveLanguageChangingCookie();
 
             // ReSharper disable once VirtualMemberCallInConstructor
             Log = new Log(HistoryLogName, null, $"Path: {HttpContext.Current?.Request?.Url?.AbsoluteUri}");
@@ -62,15 +62,15 @@ namespace ToSic.Sxc.Dnn.WebApi
         /// </summary>
         protected abstract string HistoryLogName { get; }
 
-        #region Helpers
+        #region Helpers - language changing cookie - removed 2020-12-06
 
-        internal static void RemoveLanguageChangingCookie()
-        {
-            // this is to fix a dnn-bug, which adds a cookie to set the language
-            // but always defaults to the main language, which is simply wrong. 
-            var cookies = HttpContext.Current?.Response.Cookies;
-            cookies?.Remove("language"); // try to remove, otherwise no exception will be thrown
-        }
+        //internal static void RemoveLanguageChangingCookie()
+        //{
+        //    // this is to fix a dnn-bug, which adds a cookie to set the language
+        //    // but always defaults to the main language, which is simply wrong. 
+        //    var cookies = HttpContext.Current?.Response.Cookies;
+        //    cookies?.Remove("language"); // try to remove, otherwise no exception will be thrown
+        //}
 
         #endregion
 
