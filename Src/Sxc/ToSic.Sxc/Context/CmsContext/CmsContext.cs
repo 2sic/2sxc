@@ -52,6 +52,9 @@ namespace ToSic.Sxc.Context
         public ICmsPage Page => _page ?? (_page = (Context as IContextOfBlock)?.Page ?? new PageUnknown());
         private IPage _page;
 
+        public ICmsCulture Culture => _culture ?? (_culture = new CmsCulture(this));
+        private ICmsCulture _culture;
+
         public ICmsModule Module =>
             _module ?? (_module = (Context as IContextOfBlock)?.Module ?? new ModuleUnknown());
         private IModule _module;

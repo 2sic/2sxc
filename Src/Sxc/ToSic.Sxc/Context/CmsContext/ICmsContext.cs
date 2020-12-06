@@ -10,6 +10,11 @@ namespace ToSic.Sxc.Context
     public interface ICmsContext
     {
         /// <summary>
+        /// Information about languages / culture of the current request
+        /// </summary>
+        ICmsCulture Culture { get; }
+
+        /// <summary>
         /// Information about the Module / Container which holds an 2sxc content block in the CMS
         /// </summary>
         ICmsModule Module { get; }
