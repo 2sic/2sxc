@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Code
                 if (_configurationProvider != null) return _configurationProvider;
 
                 // check if we have a block-context, in which case the lookups also know about the module
-                _configurationProvider = Data?.Configuration?.LookUps;
+                _configurationProvider = Data?.Configuration?.LookUpEngine;
                 if (_configurationProvider != null) return _configurationProvider;
 
                 // otherwise try to fallback to the App configuration provider, which has a lot, but not the module-context

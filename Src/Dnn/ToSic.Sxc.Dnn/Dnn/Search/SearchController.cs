@@ -73,14 +73,14 @@ namespace ToSic.Sxc.Search
             var dataSource = modBlock.Data;
 
             // 2020-03-12 Try to attach DNN Lookup Providers so query-params like [DateTime:Now] or [Portal:PortalId] will work
-            if (dataSource?.Configuration?.LookUps != null)
+            if (dataSource?.Configuration?.LookUpEngine != null)
             {
                 Log.Add("Will try to attach dnn providers to DataSource LookUps");
                 try
                 {
                     var getLookups = (DnnLookUpEngineResolver)_serviceProvider.Build<DnnLookUpEngineResolver>().Init(Log);
                     var dnnLookUps = getLookups.GenerateDnnBasedLookupEngine(site.UnwrappedContents, dnnModule.ModuleID);
-                    ((LookUpEngine) dataSource.Configuration.LookUps).Link(dnnLookUps);
+                    ((LookUpEngine) dataSource.Configuration.LookUpEngine).Link(dnnLookUps);
                 }
                 catch(Exception e)
                 {

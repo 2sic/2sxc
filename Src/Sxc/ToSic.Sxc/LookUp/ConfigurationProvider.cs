@@ -59,7 +59,7 @@ namespace ToSic.Sxc.LookUp
             var log = new Log("Sxc.CnfPrv", block.Log);
             var wrapLog = log.Call();
             var showDrafts = block.Context.UserMayEdit;
-            var existingLookups = block.Data.Configuration.LookUps;
+            var existingLookups = block.Data.Configuration.LookUpEngine;
 
             wrapLog("ok");
             return appToUse => new AppDataConfiguration(showDrafts, existingLookups);
