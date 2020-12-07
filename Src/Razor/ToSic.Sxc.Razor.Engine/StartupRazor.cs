@@ -17,7 +17,6 @@ namespace ToSic.Sxc.Razor.Engine
             services.TryAddTransient<IHttp, NetCoreHttp>();
 
             // Razor Parts
-            services.TryAddTransient<DynamicCodeRoot, DynamicCodeRoot>();
             services.TryAddTransient<IRazorCompiler, RazorCompiler>();
             services.TryAddTransient<IRazorRenderer, RazorRenderer>();
             services.TryAddTransient<IEngineFinder, RazorEngineFinder>();

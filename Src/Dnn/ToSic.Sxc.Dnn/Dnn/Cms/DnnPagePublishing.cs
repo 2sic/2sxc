@@ -7,13 +7,16 @@ using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Run;
+
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Dnn.Cms
@@ -31,12 +34,14 @@ namespace ToSic.Sxc.Dnn.Cms
         
         #endregion
 
-        public void DoInsidePublishing(IInstanceContext context, Action<VersioningActionInfo> action)
+        public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
         {
-            var instanceId = context.Container.Id;
-            var userId = (context.User as DnnUser).UnwrappedContents.UserID;
-            var enabled = context.Publishing.ForceDraft;
+            var possibleContextOfBlock = context as IContextOfBlock;
+            var enabled = possibleContextOfBlock?.Publishing.ForceDraft ?? false;
+            var instanceId = possibleContextOfBlock?.Module.Id ?? Eav.Constants.IdNotInitialized;
+            var userId = (context.User as DnnUser)?.UnwrappedContents.UserID ?? Eav.Constants.IdNotInitialized;
             Log.Add($"DoInsidePublishing(module:{instanceId}, user:{userId}, enabled:{enabled})");
+
             if (enabled)
             {
                 var moduleVersionSettings = new DnnPagePublishing.ModuleVersions(instanceId, Log);
@@ -82,13 +87,14 @@ namespace ToSic.Sxc.Dnn.Cms
             {
                 // publish all entites of this content block
                 var dnnModule = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
-                var container = _serviceProvider.Build<DnnContainer>().Init(dnnModule, Log);
+                //var container = _serviceProvider.Build<DnnContainer>().Init(dnnModule, Log);
                 // must find tenant through module, as the Portal-Settings.Current is null in search mode
-                var tenant = new DnnSite().Init(dnnModule.OwnerPortalID);
-                var cb = _serviceProvider.Build<BlockFromModule>()
-                    .Init(DnnContext.Create(tenant, container, new DnnUser(), _serviceProvider), Log);
+                //var tenant = new DnnSite().Init(dnnModule.OwnerPortalID);
+                var dnnContext = _serviceProvider.Build<IContextOfBlock>().Init(dnnModule, Log);
+                var cb = _serviceProvider.Build<BlockFromModule>().Init(dnnContext, Log);
+                    //.Init(DnnContextOfBlock.Create(tenant, container, _serviceProvider), Log);
 
-                Log.Add($"found dnn mod {container.Id}, tenant {tenant.Id}, cb exists: {cb.ContentGroupExists}");
+                Log.Add($"found dnn mod {dnnContext.Module.Id}, tenant {dnnContext.Site.Id}, cb exists: {cb.ContentGroupExists}");
                 if (cb.ContentGroupExists)
                 {
                     Log.Add("cb exists");

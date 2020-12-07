@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Run.Context;
+
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Hybrid.Razor
     /// The base class for Razor-Components in 2sxc 10+ <br/>
     /// Provides context infos like the Dnn object, helpers like Edit and much more. <br/>
     /// </summary>
-    [PublicApi_Stable_ForUseInYourCode]
+    [PrivateApi]
     public abstract partial class RazorComponent : RazorComponentBase //, IRazorComponent
     {
 
@@ -38,6 +38,8 @@ namespace ToSic.Sxc.Hybrid.Razor
         //public IDnnContext Dnn => DynCode.Dnn;
 
         [PrivateApi] public IBlock Block => throw new NotSupportedException("don't use this");
+
+        [PrivateApi] public IServiceProvider ServiceProvider => DynCode.ServiceProvider;
 
         [PrivateApi] public int CompatibilityLevel => DynCode.CompatibilityLevel;
 
@@ -114,7 +116,7 @@ namespace ToSic.Sxc.Hybrid.Razor
         }
 
         /// <inheritdoc />
-        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
+        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo,
             DateTime beginDate)
         {
             // new in 2sxc 11, if it has not been overridden, then try to check if code has something for us.
@@ -142,7 +144,7 @@ namespace ToSic.Sxc.Hybrid.Razor
 
         #region RunContext WIP
 
-        [PrivateApi] public RunContext RunContext => DynCode?.RunContext;
+        [PrivateApi] public ICmsContext CmsContext => DynCode?.CmsContext;
 
         #endregion
     }

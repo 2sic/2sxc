@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
@@ -7,9 +9,10 @@ using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Run.Context;
+
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Hybrid.Razor
@@ -95,9 +98,10 @@ namespace ToSic.Sxc.Hybrid.Razor
 
         #region Context WIP
 
-        public RunContext RunContext => DynCode.RunContext;
+        public ICmsContext CmsContext => DynCode.CmsContext;
 
         #endregion
 
+        //public IContextOfSite Context => DynCode.Context;
     }
 }

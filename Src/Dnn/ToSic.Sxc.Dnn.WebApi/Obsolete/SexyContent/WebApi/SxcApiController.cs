@@ -5,16 +5,17 @@ using System.IO;
 using System.Linq;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Compatibility.Sxc;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Dnn.WebApi.Logging;
-using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
@@ -45,9 +46,10 @@ namespace ToSic.SexyContent.WebApi
     {
         public new IDnnContext Dnn => base.Dnn;
 
-        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(Block?.EditAllowed ?? false));
+        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(DynCode?.Block?.Context?.UserMayEdit ?? false));
         private SxcHelper _sxc;
 
+        [PrivateApi] public IBlock Block => GetBlock();
         [PrivateApi] public int CompatibilityLevel => DynCode.CompatibilityLevel;
 
         /// <inheritdoc />
@@ -198,7 +200,7 @@ namespace ToSic.SexyContent.WebApi
 
         #region RunContext - new in 11.08 or similar, not implemented in old base classes
 
-        public RunContext RunContext => DynCode.RunContext;
+        public ICmsContext CmsContext => DynCode.CmsContext;
 
         #endregion
     }

@@ -6,6 +6,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
 
 namespace ToSic.Sxc.WebApi.Save
@@ -25,6 +26,7 @@ namespace ToSic.Sxc.WebApi.Save
         #endregion
 
         internal Dictionary<Guid, int> SaveInPagePublishing(
+            IBlock blockOrNull,
             int appId,
             List<BundleWithHeader<IEntity>> items,
             bool partOfPage,
@@ -40,13 +42,14 @@ namespace ToSic.Sxc.WebApi.Save
             Dictionary<Guid, int> postSaveIds = null;
 
             // The internal call which will be used further down
-            var groupList = _contentGroupList.Init(Block, Log, new AppIdentity(Eav.Apps.App.AutoLookupZone, appId));
+            var appIdentity = State.Identity(null, appId);
+            var groupList = _contentGroupList.Init(appIdentity, Log, Context.UserMayEdit);
             Dictionary<Guid, int> SaveAndSaveGroupsInnerCall(Func<bool, Dictionary<Guid, int>> call,
                 bool forceSaveAsDraft)
             {
                 var ids = call.Invoke(forceSaveAsDraft);
                 // now assign all content-groups as needed
-                groupList.IfChangesAffectListUpdateIt(items, ids);
+                groupList.IfChangesAffectListUpdateIt(blockOrNull, items, ids);
                 return ids;
             }
 
@@ -56,10 +59,7 @@ namespace ToSic.Sxc.WebApi.Save
             {
                 Log.Add("partOfPage - save with publishing");
                 var versioning = _pagePublishing.Init(Log);
-                //var dnnContext = new DnnDynamicCode().Init(Block, Log);
-                //var instanceId = Block.Context.Container.Id;
-                //var userId = Block.Context.User.Guid;
-                versioning.DoInsidePublishing(Block.Context,
+                versioning.DoInsidePublishing(Context,
                     args => postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft));
             }
             else

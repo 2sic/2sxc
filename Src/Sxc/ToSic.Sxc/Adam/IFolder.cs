@@ -4,7 +4,8 @@ using ToSic.Eav.Documentation;
 namespace ToSic.Sxc.Adam
 {
     /// <summary>
-    /// An ADAM (Automatic Digital Asset Management) folder
+    /// An ADAM (Automatic Digital Asset Management) folder.
+    /// This simple interface assumes that it uses int-IDs.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
     public interface IFolder: Eav.Apps.Assets.IFolder, IAsset

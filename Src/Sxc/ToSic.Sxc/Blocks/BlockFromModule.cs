@@ -1,8 +1,11 @@
 ﻿using System;
 using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
+
 
 namespace ToSic.Sxc.Blocks
 {
@@ -24,12 +27,12 @@ namespace ToSic.Sxc.Blocks
         /// <param name="ctx"></param>
         /// <param name="parentLog">a parent-log; can be null but where possible you should wire one up</param>
         ///// <param name="overrideParams">optional override parameters</param>
-        public BlockFromModule Init(IInstanceContext ctx, ILog parentLog)
+        public BlockFromModule Init(IContextOfBlock ctx, ILog parentLog)
         {
-            Init(ctx, ctx.Container.BlockIdentifier, parentLog);
+            Init(ctx, ctx.Module.BlockIdentifier, parentLog);
             var wrapLog = Log.Call<BlockFromModule>();
-            IsContentApp = ctx.Container.IsPrimary;
-            CompleteInit<BlockFromModule>(null, ctx.Container.BlockIdentifier, ctx.Container.Id);
+            IsContentApp = ctx.Module.IsPrimary;
+            CompleteInit(null, ctx.Module.BlockIdentifier, ctx.Module.Id);
             return wrapLog("ok", this);
         }
 

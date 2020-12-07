@@ -2,15 +2,16 @@
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.Eav.LookUp;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.LookUp;
+
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -47,7 +48,7 @@ namespace ToSic.Sxc.Dnn
                 parentLog?.Add(msg);
                 throw new Exception(msg);
             }
-            var container = Eav.Factory.StaticBuild<DnnContainer>().Init(moduleInfo, parentLog);
+            var container = Eav.Factory.StaticBuild<DnnModule>().Init(moduleInfo, parentLog);
             wrapLog?.Invoke("ok");
             return CmsBlock(container, parentLog);
         }
@@ -58,20 +59,19 @@ namespace ToSic.Sxc.Dnn
         /// <param name="moduleInfo">A DNN ModuleInfo object</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
         public static IBlockBuilder CmsBlock(ModuleInfo moduleInfo)
-            => CmsBlock(Eav.Factory.StaticBuild<DnnContainer>().Init(moduleInfo, null));
+            => CmsBlock(Eav.Factory.StaticBuild<DnnModule>().Init(moduleInfo, null));
 
         /// <summary>
         /// Get a Root CMS Block if you have the ModuleInfo object.
         /// </summary>
-        /// <param name="container"></param>
+        /// <param name="module"></param>
         /// <param name="parentLog">optional logger to attach to</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
-        public static IBlockBuilder CmsBlock(IContainer container, ILog parentLog = null)
+        public static IBlockBuilder CmsBlock(IModule module, ILog parentLog = null)
         {
-            var dnnModule = ((Container<ModuleInfo>)container).UnwrappedContents;
-            var tenant = new DnnSite(new PortalSettings(dnnModule.OwnerPortalID));
-            return Eav.Factory.StaticBuild<BlockFromModule>()
-                .Init(DnnContext.Create(tenant, container, new DnnUser(), Eav.Factory.GetServiceProvider()), parentLog).BlockBuilder;
+            var dnnModule = ((Module<ModuleInfo>)module)?.UnwrappedContents;
+            var context = Eav.Factory.StaticBuild<IContextOfBlock>().Init(dnnModule, parentLog);
+            return Eav.Factory.StaticBuild<BlockFromModule>().Init(context, parentLog).BlockBuilder;
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Dnn
         /// </summary>
         /// <param name="blockBuilder">CMS Block for which the helper is targeted. </param>
         /// <returns>A Code Helper based on <see cref="IDnnDynamicCode"/></returns>
-        public static IDnnDynamicCode DynamicCode(IBlockBuilder blockBuilder) => new DnnDynamicCodeRoot().Init(blockBuilder.Block, null);
+        public static IDnnDynamicCode DynamicCode(IBlockBuilder blockBuilder) => Eav.Factory.StaticBuild<DnnDynamicCodeRoot>().Init(blockBuilder.Block, null);
 
         /// <summary>
         /// Get a full app-object for accessing data of the app from outside
@@ -127,7 +127,7 @@ namespace ToSic.Sxc.Dnn
             bool unusedButKeepForApiStability = false, 
             bool showDrafts = false, 
             ILog parentLog = null) 
-            => App(Eav.Apps.App.AutoLookupZone, appId, new DnnSite(ownerPortalSettings), showDrafts, parentLog);
+            => App(Eav.Apps.App.AutoLookupZone, appId, new DnnSite().Swap(ownerPortalSettings), showDrafts, parentLog);
 
         [InternalApi_DoNotUse_MayChangeWithoutNotice]
         private static IApp App(
@@ -141,8 +141,6 @@ namespace ToSic.Sxc.Dnn
             log.Add($"Create App(z:{zoneId}, a:{appId}, tenantObj:{site != null}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
             var app = Eav.Factory.StaticBuild<App>();
             if (site != null) app.PreInit(site);
-            // TODO: 
-            //var lookupEngine = Eav.Factory.StaticBuild<IGetEngine>().Init(parentLog).GetEngine(0);
             var appStuff = app.Init(new AppIdentity(zoneId, appId), 
                 Eav.Factory.StaticBuild<AppConfigDelegate>().Init(parentLog).Build(showDrafts),
                 parentLog);

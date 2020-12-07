@@ -1,9 +1,10 @@
-﻿using ToSic.Sxc.Run.Context;
+﻿using ToSic.Eav.Context;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Dnn.Run
 {
-    public class DnnPlatformContext: PlatformContext
+    public class DnnPlatformContext: Platform
     {
-        public DnnPlatformContext() => Type = PlatformTypes.Dnn;
+        public override PlatformType Type => PlatformType.Dnn;
     }
 }

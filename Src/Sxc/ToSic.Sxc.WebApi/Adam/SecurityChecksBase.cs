@@ -129,7 +129,7 @@ namespace ToSic.Sxc.WebApi.Adam
         public bool FieldPermissionOk(List<Grants> requiredGrant)
         {
             var fieldPermissions = AdamState.ServiceProvider.Build<AppPermissionCheck>().ForAttribute(
-                AdamState.Permissions.Context, AdamState.Block.App, AdamState.Attribute, Log);
+                AdamState.Permissions.Context, AdamState.Context.AppState, AdamState.Attribute, Log);
 
             return fieldPermissions.UserMay(requiredGrant);
         }

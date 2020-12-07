@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     [ValidateAntiForgeryToken]
     [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
-    public class ZoneController : SxcStatefulControllerBase
+    public class ZoneController : OqtStatefulControllerBase
     {
         private readonly LanguagesBackend _languagesBackend;
         protected override string HistoryLogName => "Api.Zone";
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [HttpGet]
         public IList<SiteLanguageDto> GetLanguages() =>
             _languagesBackend.Init(Log)
-                .GetLanguages(GetContext().Tenant.Id);
+                .GetLanguages(GetContext().Site.Id);
 
         /// <summary>
         /// Enable / disable a language in the EAV
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         public void SwitchLanguage(string cultureCode, bool enable) =>
             _languagesBackend.Init(Log)
                 .Toggle(
-                    GetContext().Tenant.Id,
+                    GetContext().Site.Id,
                     cultureCode,
                     enable,
                     CultureInfo.GetCultureInfo(cultureCode).EnglishName);

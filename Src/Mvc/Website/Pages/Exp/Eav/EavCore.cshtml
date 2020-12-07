@@ -1,5 +1,6 @@
 ﻿@page
 @using ToSic.Eav.Persistence.Efc.Models
+@using ToSic.Eav.Plumbing
 @model Website.Pages.EavCoreModel
 @{
     ViewData["Title"] = "Eav.Core";
@@ -12,7 +13,7 @@
         An EAV Constant: @ToSic.Eav.Constants.ContentAppName
     </li>
     <li>
-        A DataSource Object: @(new ToSic.Eav.DataSources.DataSourceFactory(null).GetType().AssemblyQualifiedName)
+        A DataSource Object: @(HttpContext.RequestServices.Build<ToSic.Eav.DataSources.DataSourceFactory>().GetType().AssemblyQualifiedName)
     </li>
     <li>
         Repository type Code: @(ToSic.Eav.Repositories.RepositoryTypes.Code)
@@ -34,7 +35,7 @@
         Timestamp : @(ToSic.Eav.Apps.State.Get(4).CacheTimestamp)
     </li>
     <li>
-        Items in it : @(ToSic.Eav.Apps.State.Get(4).List.Count())
+        Items in it : @(ToSic.Eav.Apps.State.Get(4).List.Count)
     </li>
     <li>
         First Item: Guid @(Model.EntityInBlog.EntityGuid) <br/>
@@ -46,7 +47,7 @@
     </li>
     <li>
         blog tags: @Model.BlogTags().List.Count() <br/>
-        first: @Model.BlogTags().List.First().GetBestTitle()
+        first: @Model.BlogTags().List.FirstOrDefault()?.GetBestTitle()
     </li>
     <li>
         App: @Model.BlogApp.AppGuid <br/>

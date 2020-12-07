@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Logging;
-using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Save
 {
@@ -8,14 +8,14 @@ namespace ToSic.Sxc.WebApi.Save
     /// </summary>
     public abstract class SaveHelperBase<T>: HasLog where T: SaveHelperBase<T>
     {
-        internal IBlock Block;
+        internal IContextOfApp Context { get; private set; }
 
         protected SaveHelperBase(string logName)  : base( logName ) { }
 
-        public T Init(IBlock block, ILog parentLog)
+        public T Init(IContextOfApp context, ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            Block = block;
+            Context = context;
             return this as T;
         }
     }

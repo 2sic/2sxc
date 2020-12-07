@@ -1,9 +1,10 @@
 ﻿using System;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Adam
@@ -14,31 +15,31 @@ namespace ToSic.Sxc.Adam
     /// </summary>
     public abstract class AdamAppContext: HasLog, IContextAdamMaybe, ICompatibilityLevel
     {
-        private readonly Lazy<AppRuntime> _appRuntime;
+        public AdamMetadataMaker MetadataMaker => _metadataMakerLazy.Value;
+        private readonly Lazy<AdamMetadataMaker> _metadataMakerLazy;
+
         public AppRuntime AppRuntime => _appRuntime.Value;
-        /// <summary>
-        /// the app is only used to get folder / guid etc.
-        /// don't use it to access data! as the data should never have to be initialized for this to work
-        /// always use the AppRuntime instead
-        /// </summary>
-        private IApp _app;
-        //public AppRuntime AppRuntime { get; private set; }
+        private readonly Lazy<AppRuntime> _appRuntime;
+
+
+        public IContextOfApp AppContext { get; private set; }
+
         public ISite Site { get; private set; }
-        public IBlock Block { get; private set;  }
         
-        protected AdamAppContext(Lazy<AppRuntime> appRuntime, string logName) : base(logName ?? "Adm.AppCtx")
+        protected AdamAppContext(Lazy<AppRuntime> appRuntime, Lazy<AdamMetadataMaker> metadataMakerLazy, string logName) : base(logName ?? "Adm.AppCtx")
         {
             _appRuntime = appRuntime;
+            _metadataMakerLazy = metadataMakerLazy;
         }
 
-        public virtual AdamAppContext Init(ISite site, IApp app, IBlock block, int compatibility, ILog parentLog)
+        public virtual AdamAppContext Init(IContextOfApp ctx, int compatibility, ILog parentLog)
         {
             Log.LinkTo(parentLog);
+            AppContext = ctx;
+
             var callLog = Log.Call();
-            Site = site;
-            _app = app;
-            Block = block;
-            AppRuntime /*= new AppRuntime()*/.Init(app, block?.EditAllowed ?? false, null);
+            Site = AppContext.Site;
+            AppRuntime.Init(AppContext.AppState, AppContext.UserMayEdit, null);
             CompatibilityLevel = compatibility;
             callLog("ready");
             return this;
@@ -47,7 +48,7 @@ namespace ToSic.Sxc.Adam
         /// <summary>
         /// Path to the app assets
         /// </summary>
-        public string Path => _path ?? (_path = Configuration.AppReplacementMap(_app)
+        public string Path => _path ?? (_path = Configuration.AppReplacementMap(AppContext.AppState)
                                   .ReplaceInsensitive(Configuration.AdamAppRootFolder));
         private string _path;
 

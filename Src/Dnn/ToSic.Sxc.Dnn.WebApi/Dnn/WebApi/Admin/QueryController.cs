@@ -55,10 +55,9 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 	    [HttpGet]
 	    public QueryRunDto Run(int appId, int id)
         {
-            var block = GetBlock();
-            var instanceId = ActiveModule?.ModuleID ?? 0;
-            var config = _serviceProvider.Build<AppConfigDelegate>().Init(Log).GetConfigProviderForModule(instanceId, block?.App, block);
-            return _build<QueryApi>().Init(appId, Log).Run(appId, id, instanceId, config);
+            var block = SharedContextResolver.RealBlockRequired();
+            var config = ServiceProvider.Build<AppConfigDelegate>().Init(Log).GetConfigProviderForModule(block.Context, block.App, block);
+            return _build<QueryApi>().Init(appId, Log).Run(appId, id, config);
         }
 
         /// <summary>

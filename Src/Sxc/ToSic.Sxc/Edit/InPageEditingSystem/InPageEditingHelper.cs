@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         internal InPageEditingHelper(IBlock block, ILog parentLog = null) : base("Edt", parentLog ?? block?.Log)
         {
             Block = block;
-            Enabled = Block?.EditAllowed ?? false;
+            Enabled = Block?.Context.UserMayEdit ?? false;
             //BlockBuilder = block?.BlockBuilder;
         }
 

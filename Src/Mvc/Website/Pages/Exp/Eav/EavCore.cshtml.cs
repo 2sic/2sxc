@@ -1,9 +1,13 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Plumbing;
+using ToSic.Eav.Run;
+using ToSic.Sxc.Mvc.Dev;
 using ToSic.Sxc.Mvc.Run;
 
 namespace Website.Pages
@@ -42,7 +46,7 @@ namespace Website.Pages
             return dsFilter;
         }
 
-        public IApp BlogApp => _blogApp ??= ToSic.Sxc.Mvc.Factory.App(ZoneId, AppId, new MvcSite(HttpContext), false, null);
+        public IApp BlogApp => _blogApp ??= ToSic.Sxc.Mvc.Factory.App(ZoneId, AppId, DataSourceFactory.ServiceProvider.Build<ISite>().Init(TestIds.PrimaryZone), false, null);
         private IApp _blogApp;
     }
 }

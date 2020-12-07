@@ -26,4 +26,9 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="NotImplemented\" />
+    <Folder Include="TestStuff\" />
+  </ItemGroup>
+
 </Project>

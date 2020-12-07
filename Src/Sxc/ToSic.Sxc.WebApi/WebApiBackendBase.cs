@@ -2,8 +2,6 @@
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.WebApi.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi
@@ -16,12 +14,10 @@ namespace ToSic.Sxc.WebApi
             ServiceProvider = serviceProvider;
         }
 
-        internal AppOfRequest AppFinder => ServiceProvider.Build<AppOfRequest>().Init(Log);
-
         /// <summary>
         /// used for API calls to get the current app
         /// </summary>
         /// <returns></returns>
-        internal IApp GetApp(int appId, IBlock optionalBlock) => ServiceProvider.Build<Apps.App>().Init(ServiceProvider, appId, Log, optionalBlock);
+        internal IApp GetApp(int appId, bool showDrafts) => ServiceProvider.Build<Apps.App>().Init(ServiceProvider, appId, Log, null, showDrafts);
     }
 }

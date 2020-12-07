@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Web.Http.Controllers;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
@@ -35,7 +36,7 @@ namespace ToSic.Sxc.WebApi
             Log.Add($"HasBlock: {block != null}");
             // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
             // if it's null, use the log of this object
-            DynCode = new DnnDynamicCodeRoot().Init(block, Log);
+            DynCode = ServiceProvider.Build<DnnDynamicCodeRoot>().Init(block, Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (DynCode.App == null)
@@ -63,12 +64,17 @@ namespace ToSic.Sxc.WebApi
             try
             {
                 var routeAppPath = Route.AppPathOrNull(Request.GetRouteData());
-                var appId = AppFinder.GetAppIdFromPath(routeAppPath).AppId;
-                // Look up if page publishing is enabled - if module context is not available, always false
-                Log.Add($"AppId: {appId}");
-                var app = Sxc.Dnn.Factory.App(appId, false, parentLog: Log);
-                DynCode.LateAttachApp(app);
-                found = true;
+                var appId = SharedContextResolver.AppOrNull(routeAppPath)?.AppState.AppId ?? Eav.Constants.NullId;
+
+                if (appId != Eav.Constants.NullId)
+                {
+                    //var appId = AppFinder.GetAppIdFromPath(routeAppPath).AppId;
+                    // Look up if page publishing is enabled - if module context is not available, always false
+                    Log.Add($"AppId: {appId}");
+                    var app = Factory.App(appId, false, parentLog: Log);
+                    DynCode.LateAttachApp(app);
+                    found = true;
+                }
             } catch { /* ignore */ }
 
             wrapLog(found.ToString());
@@ -98,9 +104,9 @@ namespace ToSic.Sxc.WebApi
             if (!Eav.Configuration.Features.EnabledOrException(feats, "can't save in ADAM", out var exp))
                 throw exp;
 
-            var block = GetBlock();
+            var appId = DynCode?.Block?.AppId ?? DynCode?.App?.AppId ?? throw new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
             return _build<AdamTransUpload<int, int>>()
-                .Init(block, block.AppId, contentType, guid.Value, field, false, Log)
+                .Init(appId, contentType, guid.Value, field, false, Log)
                 .UploadOne(stream, fileName, subFolder, true);
         }
 

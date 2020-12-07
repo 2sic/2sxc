@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
-    public class FeatureController : SxcStatefulControllerBase, IFeatureController
+    public class FeatureController : OqtStatefulControllerBase, IFeatureController
     {
         private readonly FeaturesBackend _featuresBackend;
         protected override string HistoryLogName => "Api.Feats";
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
                    + $"&2SexyContentVersion={Settings.ModuleVersion}"
                    + $"&fp={HttpUtility.UrlEncode(Fingerprint.System)}"
                    + $"&DnnGuid={Guid.Empty}" // we can try to use oqt host user guid from aspnetcore identity
-                   + $"&ModuleId={GetContext().Container.Id}" // needed for callback later on
+                   + $"&ModuleId={GetContext().Module.Id}" // needed for callback later on
                    + "&destination=features";
         }
 

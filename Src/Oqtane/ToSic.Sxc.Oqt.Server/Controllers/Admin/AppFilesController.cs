@@ -14,12 +14,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     [ValidateAntiForgeryToken]
     [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
-    public class AppFilesController : SxcStatefulControllerBase
+    public class AppFilesController : OqtStatefulControllerBase
     {
         private readonly Lazy<AppAssetsBackend> _appAssetsLazy;
         protected override string HistoryLogName => "Api.Assets";
 
-        private AppAssetsBackend Backend() => _appAssetsLazy.Value.Init(GetBlock().App, GetContext().User, Log);
+        private AppAssetsBackend Backend() => _appAssetsLazy.Value.Init(Log);
 
         public AppFilesController(StatefulControllerDependencies dependencies, Lazy<AppAssetsBackend> appAssetsLazy) : base(dependencies)
         {
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [HttpGet]
         public List<string> All(
             [FromQuery] int appId,
-            [FromQuery] bool global = false,
+            [FromQuery] bool global,
             [FromQuery] string path = null,
             [FromQuery] string mask = "*.*",
             [FromQuery] bool withSubfolders = false,
@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
             [FromQuery] int templateId = 0,
             [FromQuery] string path = null, // identifier is always one of these two
             [FromQuery] bool global = false
-        ) => Backend().Get(templateId, path, global, appId);
+        ) => Backend().Get(appId, templateId, path, global);
 
         /// <summary>
         /// Create a new file (if it doesn't exist yet) and optionally prefill it with content
@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
             [FromQuery] int appId, 
             [FromQuery] string path,
             [FromBody] FileContentsDto content, // note: as of 2020-09 the content is never submitted
-            [FromQuery] bool global = false
+            [FromQuery] bool global
         ) => Backend().Create(appId, path, content, global);
 
         /// <summary>
@@ -85,6 +85,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
             [FromQuery] string path = null, // identifier is either template Id or path
             // todo w/SPM - global never seems to be used - must check why and if we remove or add to UI
             [FromQuery] bool global = false
-        ) => Backend().Save(template, templateId, global, path, appId);
+        ) => Backend().Save(appId, template, templateId, global, path);
     }
 }

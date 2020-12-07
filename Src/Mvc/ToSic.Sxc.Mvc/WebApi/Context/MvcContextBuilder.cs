@@ -1,16 +1,19 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Mvc.Dev;
 using ToSic.Sxc.Run;
+
 using ToSic.Sxc.WebApi.Context;
 
 namespace ToSic.Sxc.Mvc.WebApi.Context
 {
-    public class MvcContextBuilder: ContextBuilderBase
+    public class MvcContextBuilder: UiContextBuilderBase
     {
-        public MvcContextBuilder(ILinkPaths linkPaths)
+        public MvcContextBuilder(ILinkPaths linkPaths, Dependencies deps) : base(deps)
         {
             _linkPaths = linkPaths;
         }
@@ -18,12 +21,12 @@ namespace ToSic.Sxc.Mvc.WebApi.Context
         internal MvcContextBuilder Init(IBlock block)
         {
             _context = block.Context;
-            InitApp(block.ZoneId, block.App);
+            SetZoneAndApp(block.ZoneId, block.App);
             return this;
         }
 
         private readonly ILinkPaths _linkPaths;
-        private IInstanceContext _context;
+        private IContextOfBlock _context;
 
 
         protected override LanguageDto GetLanguage()
@@ -48,8 +51,8 @@ namespace ToSic.Sxc.Mvc.WebApi.Context
         protected override WebResourceDto GetSite() =>
             new WebResourceDto
             {
-                Id = _context.Tenant.Id,
-                Url = "//" + _context.Tenant.Url,
+                Id = _context.Site.Id,
+                Url = "//" + _context.Site.Url,
             };
 
         protected override WebResourceDto GetPage() =>

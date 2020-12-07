@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security;
@@ -8,36 +8,45 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
+
 
 namespace ToSic.Sxc.WebApi
 {
-    public abstract class BlockWebApiBackendBase<T>: HasLog where T: class
+    public abstract class BlockWebApiBackendBase<T>: WebApiBackendBase<BlockWebApiBackendBase<T>> where T: class
     {
-        private readonly Lazy<CmsManager> _cmsManagerLazy;
-        protected IInstanceContext _context;
-        protected IBlock _block;
-        protected CmsManager CmsManager;
-        protected IServiceProvider ServiceProvider;
+        public IContextResolver CtxResolver { get; }
+        protected readonly Lazy<CmsManager> CmsManagerLazy;
 
-        protected BlockWebApiBackendBase(Lazy<CmsManager> cmsManagerLazy, string logName) : base(logName)
+        protected IContextOfApp ContextOfBlock =>
+            _contextOfAppOrBlock ?? (_contextOfAppOrBlock = CtxResolver.BlockRequired());
+        private IContextOfApp _contextOfAppOrBlock;
+        #region Block-Context Requiring properties
+
+        public IBlock Block => _block ?? (_block = CtxResolver.RealBlockRequired());
+        private IBlock _block;
+
+        protected CmsManager CmsManagerOfBlock => _cmsManager ?? (_cmsManager = CmsManagerLazy.Value.Init(Block.Context, Log));
+        private CmsManager _cmsManager;
+
+        #endregion
+
+
+        protected BlockWebApiBackendBase(IServiceProvider sp, Lazy<CmsManager> cmsManagerLazy, IContextResolver ctxResolver, string logName) : base(sp, logName)
         {
-            _cmsManagerLazy = cmsManagerLazy;
-            ServiceProvider = _cmsManagerLazy.Value.ServiceProvider;
+            CtxResolver = ctxResolver;
+            CmsManagerLazy = cmsManagerLazy;
         }
 
-        public T Init(IInstanceContext context, IBlock block, ILog parentLog)
+        public new T Init(ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            _context = context;
-            _block = block;
-            CmsManager = _block?.App == null ? null : _cmsManagerLazy.Value.Init(_block.App, Log);
-
             return this as T;
         }
 
-        protected void ThrowIfNotAllowedInApp(List<Grants> requiredGrants, IApp alternateApp = null)
+        protected void ThrowIfNotAllowedInApp(List<Grants> requiredGrants, IAppIdentity alternateApp = null)
         {
-            var permCheck = ServiceProvider.Build<MultiPermissionsApp>().Init(_context, alternateApp ?? _block.App, Log);
+            var permCheck = ServiceProvider.Build<MultiPermissionsApp>().Init(ContextOfBlock, alternateApp ?? ContextOfBlock.AppState, Log);
             if (!permCheck.EnsureAll(requiredGrants, out var error))
                 throw HttpException.PermissionDenied(error);
         }

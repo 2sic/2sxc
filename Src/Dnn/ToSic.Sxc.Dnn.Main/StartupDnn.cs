@@ -1,107 +1,81 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.Apps.Environment;
-using ToSic.Eav.Apps.ImportExport;
-using ToSic.Eav.Apps.Security;
-using ToSic.Eav.Caching;
-using ToSic.Eav.LookUp;
-using ToSic.Eav.Persistence.Interfaces;
-using ToSic.Eav.Repositories;
-using ToSic.Eav.Run;
-using ToSic.Sxc.Adam;
-using ToSic.Sxc.Cms.Publishing;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Dnn;
-using ToSic.Sxc.Dnn.Adam;
-using ToSic.Sxc.Dnn.Code;
-using ToSic.Sxc.Dnn.ImportExport;
-using ToSic.Sxc.Dnn.Install;
-using ToSic.Sxc.Dnn.LookUp;
-using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Dnn.WebApi;
-using ToSic.Sxc.Engines;
-using ToSic.Sxc.Run;
-using ToSic.Sxc.Web;
-using ToSic.Sxc.WebApi.Adam;
-using ToSic.Sxc.WebForms.Web;
+﻿using System.Configuration;
+using DotNetNuke.Web.Api;
+using ToSic.Eav;
+using ToSic.Eav.Configuration;
+using ToSic.SexyContent.Dnn920;
+using ToSic.Sxc;
+using ToSic.Sxc.Polymorphism;
+using ToSic.Sxc.WebApi;
+using Factory = ToSic.Eav.Factory;
 
 namespace ToSic.SexyContent
 {
-
-    internal static class StartupDnn
+    /// <summary>
+    /// This configures .net Core Dependency Injection
+    /// The StartUp is defined as an IServiceRouteMapper.
+    /// This way DNN will auto-run this code before anything else
+    /// </summary>
+    // ReSharper disable once UnusedMember.Global
+    public class StartupDnn : IServiceRouteMapper
     {
-        public static IServiceCollection AddDnn(this IServiceCollection services, string appsCacheOverride)
+        /// <summary>
+        /// This will be called by DNN when loading the assemblies.
+        /// We just want to trigger the DI-Configure
+        /// </summary>
+        /// <param name="mapRouteManager"></param>
+        public void RegisterRoutes(IMapRoute mapRouteManager) => Configure();
+
+
+        private static bool _alreadyConfigured;
+
+        /// <summary>
+        /// Configure IoC for 2sxc. If it's already configured, do nothing.
+        /// </summary>
+        public void Configure()
         {
-            // WebForms implementations
-            services.TryAddScoped<IHttp, WebFormsHttp>();
-            services.TryAddScoped<WebFormsHttp>();
+            if (_alreadyConfigured)
+                return;
 
-            // Core Runtime Context Objects
-            services.AddTransient<IUser, DnnUser>();
-            services.AddScoped<ISite, DnnSite>();
-            services.AddTransient<IContainer, DnnContainer>();
-            services.AddTransient<DnnContainer>();
-
-
-
-            // 
-            services.AddTransient<IValueConverter, DnnValueConverter>();
-
-            services.AddTransient<XmlExporter, DnnXmlExporter>();
-            services.AddTransient<IImportExportEnvironment, DnnImportExportEnvironment>();
-
-            // new for .net standard
-            services.AddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
-            services.AddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
-            services.AddTransient<IEnvironment, DnnEnvironment>();
-            services.AddTransient<IZoneMapper, DnnZoneMapper>();
-
-            services.AddTransient<IClientDependencyOptimizer, DnnClientDependencyOptimizer>();
-            services.AddTransient<AppPermissionCheck, DnnPermissionCheck>();
-
-            services.AddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
-            services.AddTransient<IRenderingHelper, DnnRenderingHelper>();
-            services.AddTransient<IPlatformModuleUpdater, DnnModuleUpdater>();
-            services.AddTransient<IEnvironmentInstaller, InstallationController>();
-
-            // ADAM 
-            services.AddTransient<IAdamFileSystem<int, int>, DnnAdamFileSystem>();
-            services.AddTransient<AdamAppContext, AdamAppContext<int, int>>();
-
-            // new #2160
-            services.AddTransient<SecurityChecksBase, DnnAdamSecurityChecks>();
-
-            services.AddTransient<IGetEngine, GetDnnEngine>();
-            services.AddTransient<GetDnnEngine>();
-            services.AddTransient<IFingerprint, DnnFingerprint>();
-
-            // new in 11.07 - exception logger
-            services.AddTransient<IEnvironmentLogger, DnnEnvironmentLogger>();
-
-            // new in 11.08 - provide Razor Engine and platform
-            services.AddTransient<IEngineFinder, DnnEngineFinder>();
-            services.AddSingleton<Sxc.Run.Context.PlatformContext, DnnPlatformContext>();
-
-            // add page publishing
-            services.AddTransient<IPagePublishing, Sxc.Dnn.Cms.DnnPagePublishing>();
-            services.AddTransient<IPagePublishingResolver, Sxc.Dnn.Cms.DnnPagePublishingResolver>();
-
-            if (appsCacheOverride != null)
+            var appsCache = GetAppsCacheOverride();
+            Factory.ActivateNetCoreDi(services =>
             {
-                try
-                {
-                    var appsCacheType = Type.GetType(appsCacheOverride);
-                    services.TryAddSingleton(typeof(IAppsCache), appsCacheType);
-                }
-                catch
-                {
-                    /* ignore */
-                }
-            }
+                services
+                    .AddDnn(appsCache)
+                    .AddSxcWebApi()
+                    .AddSxcCore()
+                    .AddEav();
+            });
 
-            return services;
+            // now we should be able to instantiate registration of DB
+            Factory.StaticBuild<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
+
+            // also register this because of a long DNN issue which was fixed, but we don't know if we're running in another version
+            SharpZipLibRedirect.RegisterSharpZipLibRedirect();
+            ConfigurePolymorphResolvers();
+            _alreadyConfigured = true;
         }
+
+
+        /// <summary>
+        /// Expects something like "ToSic.Sxc.Dnn.DnnAppsCacheFarm, ToSic.Sxc.Dnn.Enterprise" - namespaces + class, DLL name without extension
+        /// </summary>
+        /// <returns></returns>
+        private string GetAppsCacheOverride()
+        {
+            var farmCacheName = ConfigurationManager.AppSettings["EavAppsCache"];
+            if (string.IsNullOrWhiteSpace(farmCacheName)) return null;
+            return farmCacheName;
+        }
+
+        /// <summary>
+        /// Configure all the known polymorph resolvers
+        /// </summary>
+        private void ConfigurePolymorphResolvers()
+        {
+            Polymorphism.Add(new Koi());
+            Polymorphism.Add(new Permissions());
+        }
+
     }
+
 }

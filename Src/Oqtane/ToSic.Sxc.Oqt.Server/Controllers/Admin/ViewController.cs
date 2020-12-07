@@ -14,14 +14,14 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 {
     [AllowAnonymous] // necessary at this level, because otherwise download would fail
     [Route(WebApiConstants.WebApiStateRoot + "/admin/view/[action]")]
-    public class ViewController : SxcStatefulControllerBase
+    public class ViewController : OqtStatefulControllerBase
     {
         private readonly Lazy<ViewsBackend> _viewsBackendLazy;
         private readonly Lazy<ViewsExportImport> _viewExportLazy;
         protected override string HistoryLogName => "Api.TmpCnt";
 
-        private ViewsBackend Backend => _viewsBackendLazy.Value.Init(GetContext().Tenant, GetUser(), Log);
-        private ViewsExportImport ExportImport => _viewExportLazy.Value.Init(GetContext().Tenant, GetUser(), Log);
+        private ViewsBackend Backend => _viewsBackendLazy.Value.Init(/*GetContext(),*/ Log);
+        private ViewsExportImport ExportImport => _viewExportLazy.Value.Init(/*GetContext(),*/ Log);
 
         public ViewController(StatefulControllerDependencies dependencies, 
             Lazy<ViewsBackend> viewsBackendLazy,
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         //[SupportedModules("2sxc,2sxc-app")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
-        public IEnumerable<object> All(int appId) => Backend.GetAll(appId);
+        public IEnumerable<ViewDetailsDto> All(int appId) => Backend.GetAll(appId);
 
         [HttpGet]
         //[SupportedModules("2sxc,2sxc-app")]
@@ -83,7 +83,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
             var streams = new List<FileUploadDto>();
             for (var i = 0; i < files.Count; i++)
                 streams.Add(new FileUploadDto { Name = files[i].FileName, Stream = files[i].OpenReadStream() });
-            var result = ExportImport.ImportView(zoneId, appId, streams, GetContext().Tenant.DefaultLanguage);
+            var result = ExportImport.ImportView(zoneId, appId, streams, GetContext().Site.DefaultCultureCode);
             
             return wrapLog("ok", result);
         }

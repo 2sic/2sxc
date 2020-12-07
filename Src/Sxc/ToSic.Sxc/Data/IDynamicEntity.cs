@@ -60,6 +60,24 @@ namespace ToSic.Sxc.Data
         /// <returns>An object which can be either a string, number, boolean or List&lt;IDynamicEntity&gt;, depending on the field type. Will return null if the field was not found. </returns>
         new dynamic Get(string name);
 
+
+        /// <summary>
+        /// Get a property using the string name. Only needed in special situations, as most cases can use the object.name directly
+        /// </summary>
+        /// <param name="name">the property name. </param>
+        /// <param name="dontRelyOnParameterOrder">
+        /// This should enforce the convention that all following parameters (which are optional) must explicitly use the parameter name.
+        /// So `Get("FirstName", "en")` won't work, you must use `Get("FirstName", language: "en")` and similar
+        /// </param>
+        /// <param name="language">Optional language code - like "de-ch" to prioritize that language</param>
+        /// <param name="convertLinks">Optionally turn off if links like file:72 are looked up to a real link. Default is true.</param>
+        /// <returns>a dynamically typed result, can be string, bool, etc.</returns>
+        dynamic Get(string name,
+            // ReSharper disable once MethodOverloadWithOptionalParameter
+            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string language = null,
+            bool convertLinks = true);
+
         /// <summary>
         /// Get the draft item of this item if this is a content-item which is published, and has a draft.
         /// </summary>
@@ -124,5 +142,7 @@ namespace ToSic.Sxc.Data
         /// </returns>
         dynamic Presentation { get; }
 
+        [PrivateApi]
+        string[] Dimensions { get; }
     }
 }

@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     [Route(WebApiConstants.WebApiStateRoot + "/cms/[controller]/[action]")]
     [ValidateAntiForgeryToken]
-    public class LinkController : SxcStatefulControllerBase
+    public class LinkController : OqtStatefulControllerBase
     {
         private readonly HyperlinkBackend<int, int> _hyperlinkBackend;
         protected override string HistoryLogName => "Api.LnkCnt";
@@ -50,6 +50,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [HttpGet]
         [Authorize(Policy = "ViewModule")]
         public string Resolve(string hyperlink, int appId, string contentType, Guid guid, string field)
-            => /*new HyperlinkBackend<int, int>()*/_hyperlinkBackend.Init(Log).ResolveHyperlink(GetBlock(), hyperlink, appId, contentType, guid, field);
+            => _hyperlinkBackend.Init(Log).ResolveHyperlink(appId, hyperlink, contentType, guid, field);
     }
 }

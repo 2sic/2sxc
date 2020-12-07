@@ -7,7 +7,7 @@ using ToSic.Sxc.WebApi.ImportExport;
 namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
 {
     [Route(WebApiConstants.WebApiStateRoot + "/sys/install/[action]")]
-    public class InstallController: SxcStatefulControllerBase
+    public class InstallController: OqtStatefulControllerBase
     {
         private readonly Lazy<IEnvironmentInstaller> _envInstallerLazy;
         private readonly Lazy<ImportFromRemote> _impFromRemoteLazy;
@@ -55,8 +55,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
         {
             var result = _envInstallerLazy.Value.Init(Log)
                 .GetAutoInstallPackagesUiUrl(
-                    GetContext().Tenant,
-                    GetContext().Container,
+                    GetContext().Site,
+                    GetContext().Module,
                     isContentApp);
             return Json(result);
         }
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
             PreventServerTimeout300();
 
             var oqtaneUser = GetContext().User;
-            var container = GetContext().Container;
+            var container = GetContext().Module;
             bool isApp = !container.IsPrimary;
 
             Log.Add("install package:" + packageUrl);

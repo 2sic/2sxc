@@ -1,7 +1,10 @@
 ﻿using System;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Context;
+
 
 namespace ToSic.Sxc.Cms.Publishing
 {
@@ -18,7 +21,7 @@ namespace ToSic.Sxc.Cms.Publishing
 
         #endregion
 
-        public void DoInsidePublishing(IInstanceContext context, Action<VersioningActionInfo> action)
+        public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
         {
             var info = new VersioningActionInfo();
             action.Invoke(info);

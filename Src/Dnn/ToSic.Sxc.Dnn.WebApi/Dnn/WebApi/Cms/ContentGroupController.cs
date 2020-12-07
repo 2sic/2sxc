@@ -17,16 +17,15 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public EntityInListDto Header(Guid guid) 
-            => _build<ListsBackendBase>().Init(GetBlock(), Log)
-                .HeaderItem(guid);
+            => Backend.HeaderItem(guid);
 
-        private ListsBackendBase Backend => _build<ListsBackendBase>().Init(GetBlock(), Log);
+        private ListsBackendBase Backend => _build<ListsBackendBase>().Init(Log);
 
         // TODO: shouldn't be part of ContentGroupController any more, as it's generic now
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Replace(Guid guid, string part, int index, int entityId, bool add = false)
-            => Backend.Replace(GetContext(), guid, part, index, entityId, add);
+            => Backend.Replace(guid, part, index, entityId, add);
 
 
         // TODO: WIP changing this from ContentGroup editing to any list editing
@@ -45,7 +44,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool ItemList([FromUri] Guid guid, List<EntityInListDto> list, [FromUri] string part = null)
-            => Backend.Reorder(GetContext(), guid, list, part);
+            => Backend.Reorder(guid, list, part);
 
     }
 }

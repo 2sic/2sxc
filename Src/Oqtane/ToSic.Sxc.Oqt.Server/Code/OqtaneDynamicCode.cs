@@ -1,12 +1,17 @@
-﻿using ToSic.Eav.Logging;
+﻿using System;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Code
 {
     public class OqtaneDynamicCode: Sxc.Code.DynamicCodeRoot
     {
-        public OqtaneDynamicCode(): base($"{OqtConstants.OqtLogPrefix}.CodeRt") { }
+        public OqtaneDynamicCode(IServiceProvider serviceProvider, ICmsContext context): base(serviceProvider, context, OqtConstants.OqtLogPrefix)
+        {
+        }
+
         public OqtaneDynamicCode Init(IBlock block, ILog parentLog) 
         {
             base.Init(block, parentLog, 10);

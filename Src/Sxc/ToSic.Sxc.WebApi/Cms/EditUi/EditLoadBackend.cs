@@ -10,8 +10,8 @@ using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Security;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Compatibility;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.Features;
 using ToSic.Sxc.WebApi.Save;
@@ -22,26 +22,34 @@ namespace ToSic.Sxc.WebApi.Cms
     {
         private readonly EntityApi _entityApi;
         private readonly ContentGroupList _contentGroupList;
+        private readonly IUiContextBuilder _contextBuilder;
+        private readonly IContextResolver _ctxResolver;
 
-        public EditLoadBackend(EntityApi entityApi, ContentGroupList contentGroupList, IServiceProvider serviceProvider) : base(serviceProvider, "Cms.LoadBk")
+        public EditLoadBackend(EntityApi entityApi, ContentGroupList contentGroupList, IServiceProvider serviceProvider, IUiContextBuilder contextBuilder, IContextResolver ctxResolver) : base(serviceProvider, "Cms.LoadBk")
         {
             _entityApi = entityApi;
             _contentGroupList = contentGroupList;
+            _contextBuilder = contextBuilder;
+            _ctxResolver = ctxResolver;
         }
 
-        public AllInOneDto Load(IBlock block, IContextBuilder contextBuilder, int appId, List<ItemIdentifier> items)
+        public AllInOneDto Load(int appId, List<ItemIdentifier> items)
         {
             // Security check
             var wraplog = Log.Call($"load many a#{appId}, items⋮{items.Count}");
 
+            var context = _ctxResolver.App(appId);
+
+            var showDrafts = context.UserMayEdit;
+
             // do early permission check - but at this time it may be that we don't have the types yet
             // because they may be group/id combinations, without type information which we'll look up afterwards
             var appIdentity = State.Identity(null, appId);
-            items = _contentGroupList.Init(block, Log, appIdentity).ConvertListIndexToId(items);
+            items = _contentGroupList.Init(appIdentity, Log, showDrafts).ConvertListIndexToId(items);
 
             // now look up the types, and repeat security check with type-names
             // todo: 2020-03-20 new feat 11.01, may not check inner type permissions ATM
-            var permCheck = block.Context.ServiceProvider.Build<MultiPermissionsTypes>().Init(block.Context, GetApp(appId, block), items, Log);
+            var permCheck = ServiceProvider.Build<MultiPermissionsTypes>().Init(context, context.AppState, items, Log);
             if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
@@ -101,8 +109,8 @@ namespace ToSic.Sxc.WebApi.Cms
             // also include UI features
             result.Features = FeaturesHelpers.FeatureListWithPermissionCheck(permCheck).ToList();
 
-            // Attach context
-            result.Context = contextBuilder.InitApp(appIdentity.ZoneId, permCheck.App)
+            // Attach context, but only the minimum needed for the UI
+            result.Context = _contextBuilder.SetZoneAndApp(appIdentity.ZoneId, context.AppState)
                 .Get(Ctx.AppBasic | Ctx.Language | Ctx.Site | Ctx.System);
 
             // done - return

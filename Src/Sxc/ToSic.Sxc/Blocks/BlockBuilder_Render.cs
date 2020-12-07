@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Blocks
                     if (Block.DataIsMissing)
                     {
                         Log.Add("content-block is missing data - will show error or just stop if not-admin-user");
-                        body = Block.EditAllowed
+                        body = Block.Context.UserMayEdit
                             ? "" // stop further processing
                             // end users should see server error as no js-side processing will happen
                             : RenderingHelper.DesignErrorMessage(

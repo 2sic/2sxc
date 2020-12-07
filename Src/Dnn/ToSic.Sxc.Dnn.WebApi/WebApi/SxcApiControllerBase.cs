@@ -1,14 +1,10 @@
 ﻿using System.Web.Http.Controllers;
-using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
-using ToSic.Sxc.WebApi.App;
-using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi
 {
@@ -25,33 +21,18 @@ namespace ToSic.Sxc.WebApi
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
-            Block = _serviceProvider.Build<DnnGetBlock>().GetCmsBlock(Request, true, Log);
+            SharedContextResolver = ServiceProvider.Build<IContextResolver>();
+            SharedContextResolver.AttachRealBlock(() => BlockOfRequest);
+            SharedContextResolver.AttachBlockContext(() => BlockOfRequest?.Context);
         }
 
-        [PrivateApi] public IBlock Block { get; private set; }
+        protected IContextResolver SharedContextResolver;
 
-        [PrivateApi] protected IBlock GetBlock() => Block;
+        private IBlock BlockOfRequest => _blockOfRequest ??
+                                         (_blockOfRequest = ServiceProvider.Build<DnnGetBlock>().GetCmsBlock(Request, Log));
+        private IBlock _blockOfRequest;
 
-        #region App-Helpers for anonyous access APIs
+        [PrivateApi] protected IBlock GetBlock() => BlockOfRequest;
 
-        internal AppOfRequest AppFinder => _appOfRequest ?? (_appOfRequest = _build<AppOfRequest>().Init(Log));
-        private AppOfRequest _appOfRequest;
-
-        /// <summary>
-        /// used for API calls to get the current app
-        /// </summary>
-        /// <param name="appId"></param>
-        /// <returns></returns>
-        internal IApp GetApp(int appId) => _build<Apps.App>().Init(_serviceProvider, appId, Log, GetBlock());
-
-        protected IInstanceContext GetContext()
-        {
-            // in case the initial request didn't yet find a block builder, we need to create it now
-            var context = Block?.Context
-                          ?? DnnContext.Create(new DnnSite(PortalSettings), new ContainerNull(), new DnnUser(), _serviceProvider);
-            return context;
-        }
-
-        #endregion
     }
 }

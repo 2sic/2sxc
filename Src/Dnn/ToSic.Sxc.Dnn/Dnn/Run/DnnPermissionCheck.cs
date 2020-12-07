@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
+using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Apps.Security;
+using ToSic.Eav.Context;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security;
+using ToSic.Sxc.Context;
+
 
 namespace ToSic.Sxc.Dnn.Run
 {
@@ -22,7 +26,7 @@ namespace ToSic.Sxc.Dnn.Run
         private IZoneMapper _zoneMapper;
 
 
-        public DnnPermissionCheck(Lazy<IZoneMapper> zoneMapperLazy) : base("Dnn.PrmChk")
+        public DnnPermissionCheck(Lazy<IZoneMapper> zoneMapperLazy) : base(DnnConstants.LogName)
         {
             _zoneMapperLazy = zoneMapperLazy;
         }
@@ -40,7 +44,7 @@ namespace ToSic.Sxc.Dnn.Run
         /// In some cases the container is a ContainerNull object without ModuleInfo, so we must really do null-checks
         /// </remarks>
         protected ModuleInfo Module =>
-            _module ?? (_module = (Context.Container as Container<ModuleInfo>)?.UnwrappedContents);
+            _module ?? (_module = ((Context as IContextOfBlock)?.Module as Module<ModuleInfo>)?.UnwrappedContents);
         private ModuleInfo _module;
 
 
@@ -85,9 +89,9 @@ namespace ToSic.Sxc.Dnn.Run
         {
             var wrapLog = Log.Call<bool>();
             // but is the current portal also the one we're asking about?
-            if (Context.Tenant == null || Context.Tenant.Id == Eav.Constants.NullId) return wrapLog("no", false); // this is the case when running out-of http-context
+            if (Context.Site == null || Context.Site.Id == Eav.Constants.NullId) return wrapLog("no", false); // this is the case when running out-of http-context
             if (AppIdentity == null) return wrapLog("yes", true); // this is the case when an app hasn't been selected yet, so it's an empty module, must be on current portal
-            var pZone = ZoneMapper.GetZoneId(Context.Tenant);
+            var pZone = ZoneMapper.GetZoneId(Context.Site);
             var result = pZone == AppIdentity.ZoneId; // must match, to accept user as admin
             return wrapLog($"{result}", result);
         }

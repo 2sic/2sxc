@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
@@ -12,11 +11,12 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Engines;
+
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Search
@@ -33,10 +33,10 @@ namespace ToSic.Sxc.Search
         /// Get search info for each dnn module containing 2sxc data
         /// </summary>
         /// <returns></returns>
-        public IList<SearchDocument> GetModifiedSearchDocuments(IContainer container, DateTime beginDate)
+        public IList<SearchDocument> GetModifiedSearchDocuments(IModule module, DateTime beginDate)
         {
             var searchDocuments = new List<SearchDocument>();
-            var dnnModule = (container as Container<ModuleInfo>)?.UnwrappedContents;
+            var dnnModule = (module as Module<ModuleInfo>)?.UnwrappedContents;
             // always log with method, to ensure errors are caught
             Log.Add($"start search for mod#{dnnModule?.ModuleID}");
 
@@ -46,19 +46,22 @@ namespace ToSic.Sxc.Search
             if (dnnModule == null) return searchDocuments;
 
             // New Context because Portal-Settings.Current is null
-            var appId = container.BlockIdentifier.AppId;
+            var appId = module.BlockIdentifier.AppId;
 
             if (appId == AppConstants.AppIdNotFound || appId == Eav.Constants.NullId) return searchDocuments;
 
             // Since Portal-Settings.Current is null, instantiate with modules' portal id (which can be a different portal!)
-            var portalSettings = new PortalSettings(dnnModule.OwnerPortalID);
-            var tenant = new DnnSite(portalSettings);
+            //var portalSettings = new PortalSettings(dnnModule.OwnerPortalID);
+            var site = new DnnSite().TrySwap(dnnModule);//.Swap(portalSettings);
 
             // Ensure cache builds up with correct primary language
             var cache = State.Cache;
-            cache.Load(container.BlockIdentifier, tenant.DefaultLanguage);
+            cache.Load(module.BlockIdentifier, site.DefaultCultureCode);
 
-            var modBlock = _serviceProvider.Build<BlockFromModule>().Init(DnnContext.Create(tenant, container, new DnnUser(), Eav.Factory.GetServiceProvider()), Log);
+            var dnnContext = Eav.Factory.StaticBuild<IContextOfBlock>().Init(dnnModule, Log);
+            var modBlock = _serviceProvider.Build<BlockFromModule>()
+                .Init(dnnContext, Log);
+                //.Init(DnnContextOfBlock.Create(site, container, Eav.Factory.GetServiceProvider()), Log);
 
             var language = dnnModule.CultureCode;
 
@@ -70,14 +73,14 @@ namespace ToSic.Sxc.Search
             var dataSource = modBlock.Data;
 
             // 2020-03-12 Try to attach DNN Lookup Providers so query-params like [DateTime:Now] or [Portal:PortalId] will work
-            if (dataSource?.Configuration?.LookUps != null)
+            if (dataSource?.Configuration?.LookUpEngine != null)
             {
                 Log.Add("Will try to attach dnn providers to DataSource LookUps");
                 try
                 {
-                    var getLookups = (GetDnnEngine)_serviceProvider.Build<GetDnnEngine>().Init(Log);
-                    var dnnLookUps = getLookups.GenerateDnnBasedLookupEngine(portalSettings, dnnModule.ModuleID);
-                    ((LookUpEngine) dataSource.Configuration.LookUps).Link(dnnLookUps);
+                    var getLookups = (DnnLookUpEngineResolver)_serviceProvider.Build<DnnLookUpEngineResolver>().Init(Log);
+                    var dnnLookUps = getLookups.GenerateDnnBasedLookupEngine(site.UnwrappedContents, dnnModule.ModuleID);
+                    ((LookUpEngine) dataSource.Configuration.LookUpEngine).Link(dnnLookUps);
                 }
                 catch(Exception e)
                 {
@@ -134,7 +137,7 @@ namespace ToSic.Sxc.Search
             try
             {
                 engine.CustomizeSearch(searchInfoDictionary, 
-                    _serviceProvider.Build<DnnContainer>().Init(dnnModule, Log), beginDate);
+                    _serviceProvider.Build<DnnModule>().Init(dnnModule, Log), beginDate);
             }
             catch (Exception e)
             {

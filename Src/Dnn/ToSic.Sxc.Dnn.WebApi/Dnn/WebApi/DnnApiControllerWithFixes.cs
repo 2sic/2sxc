@@ -2,7 +2,7 @@
 using System.Web;
 using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.Data;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
@@ -16,13 +16,9 @@ namespace ToSic.Sxc.Dnn.WebApi
     {
         protected DnnApiControllerWithFixes() 
 	    {
-            // ensure that the sql connection string is correct
-            // this is technically only necessary, when dnn just restarted and didn't already set this
-            Settings.EnsureSystemIsInitialized();
-
 	        // ensure that the call to this webservice doesn't reset the language in the cookie
 	        // this is a dnn-bug
-	        RemoveLanguageChangingCookie();
+	        //RemoveLanguageChangingCookie();
 
             // ReSharper disable once VirtualMemberCallInConstructor
             Log = new Log(HistoryLogName, null, $"Path: {HttpContext.Current?.Request?.Url?.AbsoluteUri}");
@@ -66,15 +62,15 @@ namespace ToSic.Sxc.Dnn.WebApi
         /// </summary>
         protected abstract string HistoryLogName { get; }
 
-        #region Helpers
+        #region Helpers - language changing cookie - removed 2020-12-06
 
-        internal static void RemoveLanguageChangingCookie()
-        {
-            // this is to fix a dnn-bug, which adds a cookie to set the language
-            // but always defaults to the main language, which is simply wrong. 
-            var cookies = global::System.Web.HttpContext.Current?.Response.Cookies;
-            cookies?.Remove("language"); // try to remove, otherwise no exception will be thrown
-        }
+        //internal static void RemoveLanguageChangingCookie()
+        //{
+        //    // this is to fix a dnn-bug, which adds a cookie to set the language
+        //    // but always defaults to the main language, which is simply wrong. 
+        //    var cookies = HttpContext.Current?.Response.Cookies;
+        //    cookies?.Remove("language"); // try to remove, otherwise no exception will be thrown
+        //}
 
         #endregion
 
@@ -82,7 +78,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 
         protected void PreventServerTimeout300() => HttpContext.Current.Server.ScriptTimeout = 300;
 
-        protected IServiceProvider _serviceProvider => Eav.Factory.GetServiceProvider();
+        [PrivateApi] public IServiceProvider ServiceProvider => Eav.Factory.GetServiceProvider();
 
         protected T _build<T>() => Eav.Factory.GetServiceProvider().Build<T>();
 

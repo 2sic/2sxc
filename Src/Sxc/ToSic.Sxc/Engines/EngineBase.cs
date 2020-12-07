@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
-using ToSic.Eav;
-using ToSic.Eav.Apps.Security;
+using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Run;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -58,7 +57,7 @@ namespace ToSic.Sxc.Engines
             var view = Block.View;
             Log.LinkTo(parentLog);
 
-            var root = Helpers.TemplateHelpers.Init(Block.App, Log).AppPathRoot(view.Location, PathTypes.PhysRelative);
+            var root = Helpers.TemplateHelpers.Init(Block.App, Log).AppPathRoot(view.IsShared, PathTypes.PhysRelative);
             var subPath = view.Path;
             var templatePath = TryToFindPolymorphPath(root, view, subPath) 
                                ?? Helpers.LinkPaths.ToAbsolute(root + "/", subPath);
@@ -78,7 +77,7 @@ namespace ToSic.Sxc.Engines
             CheckExpectedTemplateErrors();
 
             // check access permissions - before initializing or running data-code in the template
-            CheckTemplatePermissions(Block.Context.Tenant);
+            CheckTemplatePermissions(Block.Context.User);
 
             // Run engine-internal init stuff
             Init();
@@ -124,7 +123,7 @@ namespace ToSic.Sxc.Engines
         public virtual void CustomizeData() {}
 
         /// <inheritdoc />
-        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
+        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo,
             DateTime beginDate)
         {
         }
@@ -197,7 +196,7 @@ namespace ToSic.Sxc.Engines
             }
         }
 
-        private void CheckTemplatePermissions(ISite site)
+        private void CheckTemplatePermissions(IUser user)
         {
             // do security check IF security exists
             // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
@@ -205,7 +204,7 @@ namespace ToSic.Sxc.Engines
                 .ForItem(Block.Context, App, Template.Entity, Log);
 
             // Views only use permissions to prevent access, so only check if there are any configured permissions
-            if (site.RefactorUserIsAdmin || !templatePermissions.HasPermissions)
+            if (user.IsAdmin || !templatePermissions.HasPermissions)
                 return;
 
             if (!templatePermissions.UserMay(GrantSets.ReadSomething))

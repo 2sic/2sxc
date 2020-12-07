@@ -15,7 +15,6 @@ namespace ToSic.Sxc.Apps.Assets
         public string
             Name,
             Code,
-            LocationScope,// = Settings.TemplateLocations.PortalFileSystem,
             FileName,
             TypeContent,
             TypeContentPresentation,
@@ -26,6 +25,7 @@ namespace ToSic.Sxc.Apps.Assets
         public bool HasList;
         public bool HasApp;
         public int AppId;
+        public bool IsShared;
         public Dictionary<string, string> Streams = new Dictionary<string, string>();
 
         public string Extension => Path.GetExtension(FileName);
@@ -35,9 +35,7 @@ namespace ToSic.Sxc.Apps.Assets
             AppId = appId;
             FileName = fileName;
             HasApp = appName != Constants.ContentAppName;
-            LocationScope = global
-                ? Settings.TemplateLocations.HostFileSystem
-                : Settings.TemplateLocations.PortalFileSystem;
+            IsShared = global;
         }
 
         // check if this file is safe - meaning it can be edited by non-host users

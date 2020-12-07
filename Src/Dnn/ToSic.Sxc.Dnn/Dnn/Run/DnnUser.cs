@@ -4,23 +4,22 @@ using System.Linq;
 using System.Web.Security;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
+using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Dnn.Run
 {
-    [PrivateApi("should probably be changed once we have IUser<T>")]
-    public class DnnUser: IUser<UserInfo>
+    [PrivateApi("still WIP")]
+    public class DnnUser: IUser<UserInfo>, ICmsUser
     {
-        public DnnUser(UserInfo user = null)
-        {
-            UnwrappedContents = user ?? PortalSettings.Current?.UserInfo;
-        }
+        public DnnUser() { }
 
-        private static string GetUserIdentityToken ()
+        private string GetUserIdentityToken ()
         {
-            var userId = PortalSettings.Current?.UserId;
-            var token = (userId ?? -1) == -1 ? "anonymous" : "dnn:userid=" + userId;
+            var userId = Id;// UnwrappedContents?.UserID;
+            var token = userId == -1 ? "anonymous" : "dnn:userid=" + userId;
             return token;
         }
 
@@ -29,10 +28,20 @@ namespace ToSic.Sxc.Dnn.Run
         public string IdentityToken => GetUserIdentityToken();
 
         public List<int> Roles => _roles ?? (_roles = BuildRoleList());
+        private List<int> _roles;
+
         public bool IsSuperUser => UnwrappedContents?.IsSuperUser ?? false;
 
-        public bool IsAdmin => UnwrappedContents?.IsInRole(PortalSettings.Current?.AdministratorRoleName ?? "dummyrolename-if-no-portal") ?? false;
-        public bool IsDesigner => UnwrappedContents?.IsInRole(Settings.SexyContentGroupName) ?? false;
+        public bool IsAdmin => _isAdmin 
+                               ?? (_isAdmin = UnwrappedContents?.IsInRole(PortalSettings.Current?.AdministratorRoleName ?? "dummy-if-no-portal")) 
+                               ?? false;
+        private bool? _isAdmin; 
+
+        public bool IsDesigner => _isDesigner ?? (_isDesigner = UnwrappedContents?.IsInRole(Settings.SexyContentGroupName)) ?? false;
+        private bool? _isDesigner;
+
+        public UserInfo UnwrappedContents => _user ?? (_user = PortalSettings.Current?.UserInfo);
+        private UserInfo _user;
 
         private static List<int> BuildRoleList()
         {
@@ -51,8 +60,8 @@ namespace ToSic.Sxc.Dnn.Run
                 .ToList();
         }
 
-        private List<int> _roles;
+        public int Id => UnwrappedContents?.UserID ?? -1;
 
-        public UserInfo UnwrappedContents { get; }
+        public bool IsAnonymous => Id == -1;
     }
 }

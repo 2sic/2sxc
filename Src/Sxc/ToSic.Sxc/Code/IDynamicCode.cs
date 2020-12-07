@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using ToSic.Eav.Context;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
@@ -6,9 +8,10 @@ using ToSic.Eav.LookUp;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Run.Context;
+
 using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -28,6 +31,8 @@ namespace ToSic.Sxc.Code
 #pragma warning restore 618
     {
         [PrivateApi("WIP")] IBlock Block { get; }
+
+        [PrivateApi("internal")] IServiceProvider ServiceProvider { get; }
 
         /// <summary>
         /// A fully prepared <see cref="IApp"/> object letting you access all the data and queries in the current app. 
@@ -194,8 +199,9 @@ namespace ToSic.Sxc.Code
         #endregion
 
         #region WIP Context
+
         [PrivateApi("still WIP")]
-        RunContext RunContext { get; }
+        ICmsContext CmsContext { get; }
 
         #endregion
     }

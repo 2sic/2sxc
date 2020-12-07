@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using ToSic.Eav.Context;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
+using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Dnn.WebApi.Logging;
-using ToSic.Sxc.Run.Context;
+
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
@@ -30,10 +33,8 @@ namespace ToSic.Sxc.Dnn
         /// <inheritdoc />
         public new IDnnContext Dnn => base.Dnn;
 
-        [PrivateApi("try to remove")]
-
-        [PrivateApi]
-        public int CompatibilityLevel => DynCode.CompatibilityLevel;
+        [PrivateApi] public IBlock Block => GetBlock();
+        [PrivateApi] public int CompatibilityLevel => DynCode.CompatibilityLevel;
 
         /// <inheritdoc />
         public IApp App => DynCode.App;
@@ -123,7 +124,7 @@ namespace ToSic.Sxc.Dnn
 
         #region RunContext WiP
 
-        public RunContext RunContext => DynCode?.RunContext;
+        public ICmsContext CmsContext => DynCode?.CmsContext;
 
 
         #endregion

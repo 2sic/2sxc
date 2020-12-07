@@ -6,9 +6,9 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
-using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Cms;
+using ToSic.Sxc.WebApi.Context;
 
 namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
@@ -22,12 +22,12 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public AllInOneDto Load([FromBody] List<ItemIdentifier> items, int appId)
             => _build<EditLoadBackend>().Init(Log)
-                .Load(GetBlock(), new DnnContextBuilder(_serviceProvider, PortalSettings, ActiveModule, UserInfo), appId, items);
+                .Load(appId, items);
 
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Dictionary<Guid, int> Save([FromBody] AllInOneDto package, int appId, bool partOfPage) 
-            => _build<EditSaveBackend>().Init(GetBlock(), Log)
+            => _build<EditSaveBackend>().Init(appId, Log)
                 .Save(package, appId, partOfPage);
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         public IEnumerable<EntityForPickerDto> EntityPicker([FromUri] int appId, [FromBody] string[] items,
             [FromUri] string contentTypeName = null, [FromUri] int? dimensionId = null)
             => _build<EntityPickerBackend>().Init(Log)
-                .GetAvailableEntities(GetContext(), appId, items, contentTypeName, dimensionId);
+                .GetAvailableEntities(appId, items, contentTypeName, dimensionId);
 
     }
 }

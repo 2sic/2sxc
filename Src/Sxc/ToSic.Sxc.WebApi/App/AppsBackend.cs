@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.LookUp;
 
 namespace ToSic.Sxc.WebApi.App
@@ -12,17 +12,19 @@ namespace ToSic.Sxc.WebApi.App
     public class AppsBackend: WebApiBackendBase<AppsBackend>
     {
         private readonly CmsZones _cmsZones;
+        private readonly IContextOfSite _context;
 
-        public AppsBackend(CmsZones cmsZones, IServiceProvider serviceProvider) : base(serviceProvider, "Bck.Apps")
+        public AppsBackend(CmsZones cmsZones, IContextOfSite context, IServiceProvider serviceProvider) : base(serviceProvider, "Bck.Apps")
         {
             _cmsZones = cmsZones;
+            _context = context;
         }
 
-        public List<AppDto> Apps(ISite site, IBlock block, int zoneId)
+        public List<AppDto> Apps()
         {
-            var cms = _cmsZones.Init(zoneId, Log);
-            var configurationBuilder = ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(block, true);
-            var list = cms.AppsRt.GetApps(site, configurationBuilder);
+            var cms = _cmsZones.Init(_context.Site.ZoneId, Log);
+            var configurationBuilder = ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(_context.UserMayEdit);
+            var list = cms.AppsRt.GetApps(_context.Site, configurationBuilder);
             return list.Select(a => new AppDto
             {
                 Id = a.AppId,

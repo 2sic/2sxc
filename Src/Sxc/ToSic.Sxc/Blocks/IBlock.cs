@@ -1,10 +1,13 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Engines;
+
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks
@@ -32,7 +35,7 @@ namespace ToSic.Sxc.Blocks
         /// <summary>
         /// The context we're running in, with tenant, container etc.
         /// </summary>
-        IInstanceContext Context { get; }
+        IContextOfBlock Context { get; }
 
         /// <summary>
         /// The view which will be used to render this block
@@ -62,7 +65,5 @@ namespace ToSic.Sxc.Blocks
         [PrivateApi("naming not final")]
         bool ContentGroupExists { get; }
 
-        [PrivateApi]
-        bool EditAllowed { get; }
     }
 }

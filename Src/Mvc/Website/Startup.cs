@@ -11,8 +11,6 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using RazorPartialToString.Services;
 using ToSic.Sxc.Mvc;
-//using ToSic.Sxc.Mvc.Engines;
-
 
 namespace Website
 {
@@ -22,7 +20,6 @@ namespace Website
         {
             Configuration = configuration;
             HostEnvironment = environment;
-            new Plumbing.EavConfiguration().ConfigureConnectionString(configuration);
         }
 
 
@@ -53,8 +50,7 @@ namespace Website
                 {
                     // this ensures that c# objects with Pascal-case keep that
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                    ToSic.Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings);
-                    //options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                    ToSic.Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings); // make sure dates are handled as we need them
                 })
                 .PartManager.ApplicationParts.Add(new AssemblyPart(typeof(SxcMvc).Assembly));
 
@@ -68,7 +64,7 @@ namespace Website
             services.AddTransient<IRazorPartialToStringRenderer, RazorPartialToStringRenderer>();
             //services.AddTransient<IRenderRazor, RenderRazor>();
 
-            Plumbing.EavConfiguration.ConfigureIoC(services);
+            StartupEavAndSxc.ConfigureIoC(services, Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

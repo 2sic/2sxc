@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
 {
     [ApiController]
     [Route(WebApiConstants.WebApiRoot + "/dnn/[controller]/[action]")]
-    public class HyperlinkController: SxcStatefullControllerBase
+    public class HyperlinkController: SxcStatefulControllerBase
     {
         private readonly HyperlinkBackend<int, int> _hyperlinkBackend;
         public HyperlinkController(HyperlinkBackend<int, int> hyperlinkBackend)
@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public string ResolveHyperlink(string hyperlink, int appId, string contentType = default, Guid guid = default, string field = default)
-            => /*new HyperlinkBackend<int, int>()*/_hyperlinkBackend.Init(Log).ResolveHyperlink(GetBlock(), hyperlink, appId, contentType, guid, field);
+            => _hyperlinkBackend.Init(Log).ResolveHyperlink(appId, hyperlink, contentType, guid, field);
 
     }
 }

@@ -3,12 +3,15 @@ using System.Linq;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Run;
+
 
 namespace ToSic.Sxc.Dnn.Run
 {
@@ -16,7 +19,6 @@ namespace ToSic.Sxc.Dnn.Run
     {
         #region Constructor and DI
 
-        private readonly IEnvironment _environment;
         private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
         private readonly IZoneMapper _zoneMapper;
 
@@ -24,20 +26,16 @@ namespace ToSic.Sxc.Dnn.Run
         /// Empty constructor for DI
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public DnnModuleUpdater(IEnvironment environment, 
-            Lazy<CmsRuntime> cmsRuntimeLazy, 
-            IZoneMapper zoneMapper) : base("Dnn.MapA2I")
+        public DnnModuleUpdater(Lazy<CmsRuntime> cmsRuntimeLazy, IZoneMapper zoneMapper) : base("Dnn.MapA2I")
         {
-            _environment = environment;
             _cmsRuntimeLazy = cmsRuntimeLazy;
             _zoneMapper = zoneMapper.Init(Log);
-            _environment.Init(Log);
         }
 
         #endregion
 
 
-        public void SetAppId(IContainer instance, int? appId)
+        public void SetAppId(IModule instance, int? appId)
         {
             Log.Add($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
             // Reset temporary template
@@ -45,7 +43,7 @@ namespace ToSic.Sxc.Dnn.Run
 
             // ToDo: Should throw exception if a real BlockConfiguration exists
 
-            var module = (instance as Container<ModuleInfo>).UnwrappedContents;
+            var module = (instance as Module<ModuleInfo>).UnwrappedContents;
             var zoneId = _zoneMapper.GetZoneId(module.OwnerPortalID);
 
             if (appId == Constants.AppIdEmpty || !appId.HasValue)
@@ -103,11 +101,11 @@ namespace ToSic.Sxc.Dnn.Run
         {
             Log.Add("update title");
 
-            var languages = _zoneMapper.CulturesWithState(block.Context.Tenant.Id, block.ZoneId);
+            var languages = _zoneMapper.CulturesWithState(block.Context.Site.Id, block.ZoneId);
 
             // Find Module for default language
             var moduleController = new ModuleController();
-            var originalModule = moduleController.GetModule(block.Context.Container.Id);
+            var originalModule = moduleController.GetModule(block.Context.Module.Id);
 
             foreach (var dimension in languages)
             {
@@ -125,7 +123,7 @@ namespace ToSic.Sxc.Dnn.Run
 
                     // Find module for given Culture
                     var moduleByCulture = moduleController.GetModuleByCulture(originalModule.ModuleID,
-                        originalModule.TabID, block.Context.Tenant.Id,
+                        originalModule.TabID, block.Context.Site.Id,
                         DotNetNuke.Services.Localization.LocaleController.Instance.GetLocale(dimension.Key));
 
                     // Break if no title module found

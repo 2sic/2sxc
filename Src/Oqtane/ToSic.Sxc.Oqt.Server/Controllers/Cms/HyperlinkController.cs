@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     [ApiController]
     [Route(WebApiConstants.WebApiStateRoot + "/dnn/[controller]/[action]")]
     [Route(WebApiConstants.WebApiStateRoot + "/cms/link/[action]")]
-    public class HyperlinkController: SxcStatefulControllerBase
+    public class HyperlinkController: OqtStatefulControllerBase
     {
         private readonly HyperlinkBackend<int, int> _hyperlinkBackend;
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "HypLnk";
@@ -26,8 +26,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public IActionResult Resolve(string hyperlink, int appId, string contentType = default, Guid guid = default, string field = default)
         {
-            var result = /*new HyperlinkBackend<int, int>()*/_hyperlinkBackend.Init(Log)
-                .ResolveHyperlink(GetBlock(), hyperlink, appId, contentType, guid, field);
+            var result = _hyperlinkBackend.Init(Log)
+                .ResolveHyperlink(appId, hyperlink, contentType, guid, field);
             return Json(result);
         }
 
@@ -36,8 +36,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public IActionResult ResolveHyperlink(string hyperlink, int appId, string contentType = default, Guid guid = default, string field = default)
         {
-            var result = /* new HyperlinkBackend<int, int>()*/_hyperlinkBackend.Init(Log)
-                .ResolveHyperlink(GetBlock(), hyperlink, appId, contentType, guid, field);
+            var result = _hyperlinkBackend.Init(Log)
+                .ResolveHyperlink(appId, hyperlink, contentType, guid, field);
             return Json(result);
         }
     }

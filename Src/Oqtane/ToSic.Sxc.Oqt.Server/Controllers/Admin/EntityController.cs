@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     //[AllowAnonymous]
     //[DnnLogExceptions]
     [Route(WebApiConstants.WebApiStateRoot + "/admin/entity/[action]")]
-    public class EntityController : SxcStatefulControllerBase //, IEntitiesController // FIX: changed from interface to solve ambiguous DELETE routes.
+    public class EntityController : OqtStatefulControllerBase //, IEntitiesController // FIX: changed from interface to solve ambiguous DELETE routes.
     {
         private readonly Lazy<ContentExportApi>_contentExportLazy;
         private readonly Lazy<ContentImportApi> _contentImportLazy;
@@ -138,6 +138,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 
         // New feature in 11.03 - Usage Statistics
         // not final yet, so no [HttpGet]
-        public dynamic Usage(int appId, Guid guid) => _lazyEntityBackend.Value.Init(Log).Usage(GetContext(), GetApp(appId), guid);
+        public dynamic Usage(int appId, Guid guid) => _lazyEntityBackend.Value.Init(Log).Usage(appId, guid);
     }
 }

@@ -1,0 +1,32 @@
+﻿@page
+@using Microsoft.Extensions.Configuration
+@using ToSic.Eav.Apps
+@model PrivacyModel
+@inject IConfiguration Config
+@{
+  ViewData["Title"] = "Edit 2sxc data";
+
+  // Adjust these values to your testing environment
+  var zoneId = 2;
+  var appId = 78;
+  var appState = State.Get(appId);
+  var firstItem = appState.List.FirstOrDefault();
+}
+<h1>@ViewData["Title"]</h1>
+
+<script language="javascript">
+  function getSxc() {
+    return $2sxc({ zoneId: @zoneId, appId: @appId, pageId: 4427, moduleId: 9771 });
+  }
+</script>
+<p>
+  Try using the $2sxc js api
+</p>
+
+<ol>
+  <li>Check api works - <a href="/api/pong/pong" target="_blank">Test</a></li>
+  <li><a href="/api/sxc/sys/insights/help" target="_blank">Insights</a></li>
+  <li><a href="/api/sxc/Dialog/Settings?appId=@appId" target="_blank">Call Dialog/Settings?appId=@appId</a></li>
+  <li><a href="#" onclick="getSxc().manage.run('app')">Click to open app-dialog</a></li>
+  <li><a href="#" onclick="getSxc().manage.run('edit', { entityId: @firstItem.EntityId })">Click to open edit dialog</a></li>
+</ol>

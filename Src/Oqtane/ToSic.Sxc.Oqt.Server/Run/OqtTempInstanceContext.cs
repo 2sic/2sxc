@@ -1,38 +1,28 @@
 ﻿using System;
 using Oqtane.Models;
-using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Cms.Publishing;
-using ToSic.Sxc.Oqt.Shared.Dev;
-using ToSic.Sxc.Run;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Context;
+
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtTempInstanceContext
     {
-        private readonly OqtContainer _oqtContainer;
-        private readonly OqtSite _oqtSite;
+        private readonly IServiceProvider _serviceProvider;
 
-        public OqtTempInstanceContext(OqtContainer oqtContainer, OqtSite oqtSite)
+        public OqtTempInstanceContext(IServiceProvider serviceProvider)
         {
-            _oqtContainer = oqtContainer;
-            _oqtSite = oqtSite;
+            _serviceProvider = serviceProvider;
         }
 
-        public InstanceContext CreateContext(Module module, int pageId, ILog parentLog,
-            IServiceProvider serviceProvider)
+        public IContextOfBlock CreateContext(int pageId, Module module, ILog parentLog)
         {
-            var publishing = serviceProvider.Build<IPagePublishingResolver>();
-
-            return new InstanceContext(
-                _oqtSite,
-                new SxcPage(pageId, null, serviceProvider.Build<IHttp>().QueryStringKeyValuePairs()),
-                _oqtContainer.Init(module, parentLog),
-                new OqtUser(WipConstants.NullUser),
-                serviceProvider, publishing.GetPublishingState(module.ModuleId)
-            );
+            var ctx = _serviceProvider.Build<IContextOfBlock>();
+            ctx.Init(parentLog);
+            ctx.Page.Init(pageId);
+            ((OqtContainer) ctx.Module).Init(module, parentLog);
+            return ctx;
         }
     }
 }

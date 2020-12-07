@@ -1,5 +1,4 @@
-﻿using DotNetNuke.Entities.Portals;
-using DotNetNuke.Services.FileSystem;
+﻿using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.ImportExport.Environment;
@@ -7,6 +6,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Xml;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
 using App = ToSic.Sxc.Apps.App;
 
@@ -14,10 +14,13 @@ namespace ToSic.Sxc.Dnn.ImportExport
 {
     public class DnnXmlExporter: XmlExporter
     {
+        private readonly IContextResolver _ctxResolver;
+
         #region Constructor / DI
 
-        public DnnXmlExporter(AdamAppContext<int, int> adamAppContext, XmlSerializer xmlSerializer): base(xmlSerializer)
+        public DnnXmlExporter(AdamAppContext<int, int> adamAppContext, IContextResolver ctxResolver, XmlSerializer xmlSerializer): base(xmlSerializer, DnnConstants.LogName)
         {
+            _ctxResolver = ctxResolver.Init(Log);
             AdamAppContext = adamAppContext;
         }
 
@@ -26,14 +29,14 @@ namespace ToSic.Sxc.Dnn.ImportExport
 
         public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds, ILog parentLog)
         {
-            var tenant = new DnnSite(PortalSettings.Current);
+            var context = _ctxResolver.App(appId);
+            var tenant = new DnnSite();
             var app = AdamAppContext.AppRuntime.ServiceProvider.Build<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
-            //AdamAppContext = new AdamAppContext<int, int>();
-            AdamAppContext.Init(tenant, app, null, 10, Log);
+            AdamAppContext.Init(context, 10, Log);
             Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
 
             // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally
-            InitExportXDocument(tenant.DefaultLanguage, Settings.ModuleVersion);
+            InitExportXDocument(tenant.DefaultCultureCode, Settings.ModuleVersion);
 
             return this;
         }

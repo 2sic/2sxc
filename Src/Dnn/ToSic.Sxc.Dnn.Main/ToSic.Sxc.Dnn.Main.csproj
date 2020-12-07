@@ -79,7 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompilerDependencies.cs" />
-    <Compile Include="ConfigurationLoader.cs" />
+    <Compile Include="StartupDnn.cs" />
     <Compile Include="DnnWebForms\PagePicker.ascx.cs">
       <DependentUpon>PagePicker.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -110,8 +110,8 @@
     </Compile>
     <Compile Include="Polymorphism\Koi.cs" />
     <Compile Include="Polymorphism\Permissions.cs" />
-    <Compile Include="RepositoryInfoEavAndUi.cs" />
-    <Compile Include="StartupDnn.cs" />
+    <Compile Include="DnnGlobalFolderRepository.cs" />
+    <Compile Include="StartupDnnDi.cs" />
     <Compile Include="View.ascx.cs">
       <DependentUpon>View.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

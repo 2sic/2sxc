@@ -1,38 +1,52 @@
 ﻿using System;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.WebApi.Context;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
-    public partial class AdminBackend: WebApiBackendBase<AdminBackend>
+    public class AdminBackend: WebApiBackendBase<AdminBackend>
     {
-        public AdminBackend(IServiceProvider serviceProvider) : base(serviceProvider, "Bck.Admin")
+        private readonly IContextResolver _ctxResolver;
+        private readonly IUiContextBuilder UiContextBuilder;
+
+        public AdminBackend(IServiceProvider serviceProvider, IContextResolver ctxResolver, IUiContextBuilder uiContextBuilder) : base(serviceProvider, "Bck.Admin")
         {
+            _ctxResolver = ctxResolver;
+            UiContextBuilder = uiContextBuilder;
         }
 
-        public dynamic DialogSettings(IInstanceContext context, ContextBuilderBase contextBuilder, int appId)
-        {
-            IApp app = null;
+        public DialogContextStandalone DialogSettings(int appId)
+        {            
+            // reset app-id if we get a info-token like -100
+            if (appId < 0) appId = Eav.Constants.AppIdEmpty;
+
+            var appContext = appId != Eav.Constants.AppIdEmpty ? _ctxResolver.App(appId) : null;
+            var context = appContext ?? _ctxResolver.Site();
             // if we have an appid (we don't have it in an install-new-apps-scenario) check permissions
-            if (appId != 0 && appId != Eav.Constants.AppIdEmpty)
+            if (appContext != null)
             {
-                var appAndPerms = ServiceProvider.Build<MultiPermissionsApp>().Init(context, GetApp(appId, null), Log);
+                var appAndPerms = ServiceProvider.Build<MultiPermissionsApp>().Init(appContext, appContext.AppState, Log);
                 if (!appAndPerms.ZoneIsOfCurrentContextOrUserIsSuper(out var error))
                     throw HttpException.PermissionDenied(error);
-                app = appAndPerms.App;
             }
 
-            var cb = contextBuilder.InitApp(app?.ZoneId ?? context.Tenant.ZoneId, app);
+            var cb = UiContextBuilder.SetZoneAndApp(context.Site.ZoneId, appContext?.AppState);
 
-            return new
+            return new DialogContextStandalone
             {
                 Context = cb.Get(Ctx.All),
             };
         }
 
     }
+
+    public class DialogContextStandalone
+    {
+        public ContextDto Context { get; set; }
+    }
+
 }

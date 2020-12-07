@@ -1,0 +1,26 @@
+﻿using ToSic.Eav.Documentation;
+
+namespace ToSic.Sxc.Context
+{
+    /// <summary>
+    /// Information about the module context the code is running in.
+    /// </summary>
+    /// <remarks>
+    /// Note that the module context is the module for which the code is currently running.
+    /// In some scenarios (like Web-API scenarios) the code is running _for_ this module but _not on_ this module,
+    /// as it would then be running on a WebApi.
+    /// </remarks>
+    [PublicApi]
+    public interface ICmsModule
+    {
+        /// <summary>
+        /// The module id on the page. Corresponds to the Dnn ModuleId or the Oqtane Module Id.
+        /// </summary>
+        /// <remarks>
+        /// In some systems a module can be re-used on multiple pages, and possibly have different settings for re-used modules.
+        /// 2sxc doesn't use that, so the module id corresponds to the Dnn ModuleId and not the PageModuleId.  
+        /// </remarks>
+        /// <returns>The ID, unless unknown, in which case it's a negative number</returns>
+        int Id { get; }
+    }
+}

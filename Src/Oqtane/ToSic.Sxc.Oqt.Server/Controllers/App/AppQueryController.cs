@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Oqtane.Repository;
-using ToSic.Eav.Run;
-using ToSic.Sxc.Oqt.Server.Repository;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.App;
 
@@ -15,7 +12,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     [Route(WebApiConstants.WebApiStateRoot + "/app/")]
     [ApiController]
-    public class AppQueryController : SxcStatefulControllerBase
+    public class AppQueryController : OqtStatefulControllerBase
     {
         private readonly AppQuery _appQuery;
 
@@ -34,7 +31,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             [FromRoute] string appPath,
             [FromRoute] string name,
             [FromQuery] string stream = null
-        ) => _appQuery.Init(Log).PublicQuery(GetContext(), appPath, name, stream, NoBlock);
+        ) => _appQuery.Init(Log).PublicQuery(appPath, name, stream);
 
         [HttpGet("auto/query/{name}/{default}")]
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(
@@ -42,6 +39,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             [FromQuery] bool includeGuid = false,
             [FromQuery] string stream = null,
             [FromQuery] int? appId = null
-        ) => _appQuery.Init(Log).Query(GetContext(), GetBlock(), GetBlock().App, name, includeGuid, stream, appId);
+        ) => _appQuery.Init(Log).Query(appId, name, includeGuid, stream);
     }
 }

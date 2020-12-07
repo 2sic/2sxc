@@ -11,6 +11,7 @@ namespace ToSic.Sxc.Web.JsContext
 {
     public class JsContextAll : HasLog
     {
+        private readonly JsContextLanguage _jsLangCtx;
         public JsContextEnvironment Environment;
         public JsContextUser User;
         public JsContextLanguage Language;
@@ -21,13 +22,18 @@ namespace ToSic.Sxc.Web.JsContext
 
         public Ui Ui;
 
-        public JsContextAll(string systemRootUrl, IBlock block, ILog parentLog)
-            : base("Sxc.CliInf", parentLog, "building entire client-context")
+        public JsContextAll(JsContextLanguage jsLangCtx) : base("Sxc.CliInf")
         {
+            _jsLangCtx = jsLangCtx;
+        }
+
+        public JsContextAll Init(string systemRootUrl, IBlock block, ILog parentLog)
+        {
+            Log.LinkTo(parentLog);
             var ctx = block.Context;
 
-            Environment = new JsContextEnvironment(systemRootUrl, ctx, block);
-            Language = new JsContextLanguage(ctx.ServiceProvider, ctx.Tenant, block.ZoneId);
+            Environment = new JsContextEnvironment(systemRootUrl, ctx);
+            Language = _jsLangCtx.Init(ctx.Site, block.ZoneId);
             User = new JsContextUser(ctx.User);
 
             ContentBlock = new ClientInfoContentBlock(block, null, 0, ctx.Publishing.Mode);
@@ -35,6 +41,7 @@ namespace ToSic.Sxc.Web.JsContext
             Ui = new Ui(((BlockBuilder)block.BlockBuilder)?.UiAutoToolbar ?? false);
 
             error = new ClientInfosError(block);
+            return this;
         }
     }
 }

@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     // [ValidateAntiForgeryToken] because the exports are called by the browser directly (new tab) 
     // we can't set this globally (only needed for imports)
     [Route(WebApiConstants.WebApiStateRoot + "/admin/app/[action]")]
-    public class AppController : SxcStatefulControllerBase, IAppController
+    public class AppController : OqtStatefulControllerBase, IAppController
     {
         private readonly Lazy<AppsBackend> _appsBackendLazy;
         private readonly Lazy<CmsZones> _cmsZonesLazy;
@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public List<AppDto> List(int zoneId)
-            => _appsBackendLazy.Value.Init(Log).Apps(GetContext().Tenant, GetBlock(), zoneId);
+            => _appsBackendLazy.Value.Init(Log).Apps();
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
@@ -75,7 +75,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public AppExportInfoDto Statistics(int zoneId, int appId)
-            => _exportAppLazy.Value.Init(GetContext().Tenant.Id, GetContext().User, Log)
+            => _exportAppLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
                 .GetAppInfo(appId, zoneId);
 
 
@@ -99,7 +99,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <returns></returns>
         [HttpGet]
         public HttpResponseMessage Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => _exportAppLazy.Value.Init(GetContext().Tenant.Id, GetContext().User, Log)
+            => _exportAppLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
                 .Export(appId, zoneId, includeContentGroups, resetAppGuid);
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [HttpGet]
         [ValidateAntiForgeryToken]
         public bool SaveData(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => _exportAppLazy.Value.Init(GetContext().Tenant.Id, GetContext().User, Log)
+            => _exportAppLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
                 .SaveDataForVersionControl(appId, zoneId, includeContentGroups, resetAppGuid);
 
 

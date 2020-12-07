@@ -1,0 +1,49 @@
+﻿@page
+@using ToSic.Eav.Plumbing
+@{
+  ViewData["Title"] = "Eav.Core";
+}
+
+<h1>Standalone to open dialogs</h1>
+
+<script src="/system/sxc/js/2sxc.api.min.js"></script>
+<script src="/system/sxc/dist/inpage/inpage.min.js"></script>
+
+Things which must work:
+<ol>
+  <li>Scripts added</li>
+  <li>Page Context?</li>
+</ol>
+
+<ol>
+  <li>
+    An EAV Constant: @ToSic.Eav.Constants.ContentAppName
+  </li>
+  <li>
+    A DataSource Object: @(HttpContext.RequestServices.Build<ToSic.Eav.DataSources.DataSourceFactory>().GetType().AssemblyQualifiedName)
+  </li>
+  <li>
+    Repository type Code: @(ToSic.Eav.Repositories.RepositoryTypes.Code)
+  </li>
+  <li>
+    2sxc constant: @(ToSic.Sxc.Settings.PortalHostDirectory)
+  </li>
+  <li>
+    App Cache: @(ToSic.Eav.Factory.Resolve<ToSic.Eav.Caching.IAppsCache>().GetType().Name)
+  </li>
+</ol>
+<h2>State of App 4 (Blog)</h2>
+
+<ol>
+  <li>
+    Timestamp : @(ToSic.Eav.Apps.State.Get(4).CacheTimestamp)
+  </li>
+  <li>
+    Items in it : @(ToSic.Eav.Apps.State.Get(4).List.Count)
+  </li>
+  <li>
+    Query AllQueries: @ToSic.Eav.Apps.State.Get(4)  can't work yet, this object doesn't have queries!
+  </li>
+
+</ol>
+

@@ -97,6 +97,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dnn\Providers\ModifiedTabAndModuleInfoProvider.cs" />
     <Compile Include="Dnn\WebApi\Adam\DnnAdamSecurityChecks.cs" />
     <Compile Include="Dnn\ApiController.cs" />
     <Compile Include="Dnn\ApiController_Obsolete.cs" />
@@ -111,7 +112,7 @@
     <Compile Include="Dnn\WebApi\Sys\InstallController.cs" />
     <Compile Include="Dnn\WebApi\Sys\LogController.cs" />
     <Compile Include="Dnn\WebApi\Cms\HistoryController.cs" />
-    <Compile Include="Dnn\WebApi\Context\ContextBuilder.cs" />
+    <Compile Include="Dnn\WebApi\Context\DnnUiContextBuilder.cs" />
     <Compile Include="Dnn\WebApi\Context\DnnContextDtoExtensions.cs" />
     <Compile Include="Dnn\WebApiRouting\Route.cs" />
     <Compile Include="Dnn\WebApiRouting\RouteParts.cs" />

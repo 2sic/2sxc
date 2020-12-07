@@ -1,31 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Errors;
-using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
     public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>: HasLog where T : class
     {
-        private readonly Lazy<AdamState<TFolderId, TFileId>> _adamState;
+        public const int UseAppIdFromContext = -12456;
 
         #region Constructor / DI
 
-        protected AdamTransactionBase(Lazy<AdamState<TFolderId, TFileId>> adamState, string logName) : base(logName)
+        protected AdamTransactionBase(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextResolver ctxResolver, string logName) : base(logName)
         {
             _adamState = adamState;
+            _ctxResolver = ctxResolver.Init(Log);
         }
+        private readonly Lazy<AdamState<TFolderId, TFileId>> _adamState;
+        private readonly IContextResolver _ctxResolver;
 
-        public T Init(IBlock block, int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot, ILog parentLog) 
+        public T Init(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot, ILog parentLog) 
             
         {
             Log.LinkTo(parentLog);
-            var logCall = Log.Call<T>($"app: {appId}, type: {contentType}, itemGuid: {itemGuid}, field: {field}, portalRoot: {usePortalRoot}");
-            //State = new AdamState<TFolderId, TFileId>();
-            State.Init(block, appId, contentType, field, itemGuid, usePortalRoot, Log);
+            var context = appId > 0 ? _ctxResolver.App(appId) : _ctxResolver.AppNameRouteBlock(null);
+            var logCall = Log.Call<T>($"app: {context.AppState.Show()}, type: {contentType}, itemGuid: {itemGuid}, field: {field}, portalRoot: {usePortalRoot}");
+            State.Init(context, contentType, field, itemGuid, usePortalRoot, Log);
             return logCall(null, this as T);
         }
 

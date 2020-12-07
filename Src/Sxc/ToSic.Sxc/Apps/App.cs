@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Threading;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Run;
 using EavApp = ToSic.Eav.Apps.App;
@@ -75,7 +74,7 @@ namespace ToSic.Sxc.Apps
             {
                 var c = Configuration;
                 return c?.Entity != null ? new DynamicEntity(c.Entity, 
-                    new[] {Thread.CurrentThread.CurrentCulture.Name}, 
+                    new[] {Site.SafeCurrentCultureCode()}, 
                     10, 
                     null)
                     { ServiceProviderOrNull = DataSourceFactory.ServiceProvider } : null;
@@ -88,7 +87,7 @@ namespace ToSic.Sxc.Apps
             get
             {
                 if (!_settingsLoaded && AppSettings != null)
-                    _settings = new DynamicEntity(AppSettings, new[] {Thread.CurrentThread.CurrentCulture.Name},
+                    _settings = new DynamicEntity(AppSettings, new[] {Site.SafeCurrentCultureCode()},
                         10, null) {ServiceProviderOrNull = DataSourceFactory.ServiceProvider};
                 _settingsLoaded = true;
                 return _settings;
@@ -103,7 +102,7 @@ namespace ToSic.Sxc.Apps
             get
             {
                 if(!_resLoaded && AppResources!= null)
-                    _res = new DynamicEntity(AppResources, new[] {Thread.CurrentThread.CurrentCulture.Name}, 10, null)
+                    _res = new DynamicEntity(AppResources, new[] {Site.SafeCurrentCultureCode()}, 10, null)
                     { ServiceProviderOrNull = DataSourceFactory.ServiceProvider };
                 _resLoaded = true;
                 return _res;

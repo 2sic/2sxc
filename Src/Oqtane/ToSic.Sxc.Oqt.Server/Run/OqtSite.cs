@@ -2,8 +2,10 @@
 using System.IO;
 using Oqtane.Models;
 using Oqtane.Repository;
+using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Dev;
 
@@ -17,12 +19,12 @@ namespace ToSic.Sxc.Oqt.Server.Run
     /// This is a Mvc implementation of a Tenant-object. 
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public class OqtSite: Site<Site>
+    public sealed class OqtSite: Site<Site>, ICmsSite
     {
         /// <summary>
         /// Constructor for DI
         /// </summary>
-        public OqtSite(Lazy<ISiteRepository> siteRepository, Lazy<ITenantResolver> tenantResolver, Lazy<IServerPaths> serverPaths, Lazy<OqtZoneMapper> zoneMapper) : base(null)
+        public OqtSite(Lazy<ISiteRepository> siteRepository, Lazy<ITenantResolver> tenantResolver, Lazy<IServerPaths> serverPaths, Lazy<OqtZoneMapper> zoneMapper)
         {
             _siteRepository = siteRepository;
             _tenantResolver = tenantResolver;
@@ -55,7 +57,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
         }
 
         /// <inheritdoc />
-        public override string DefaultLanguage => WipConstants.DefaultLanguage;
+        public override string DefaultCultureCode => WipConstants.DefaultLanguage;
+
+        /// <inheritdoc />
+        public override string CurrentCultureCode => WipConstants.DefaultLanguage;
 
         /// <inheritdoc />
         public override int Id => UnwrappedContents.SiteId;
@@ -80,8 +85,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         [PrivateApi] public override string AppsRootPhysicalFull => _serverPaths.Value.FullAppPath(AppsRootPartial());
 
-        [PrivateApi]
-        public override bool RefactorUserIsAdmin => WipConstants.IsAdmin;
 
         /// <inheritdoc />
         public override string ContentPath

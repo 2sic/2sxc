@@ -1,9 +1,9 @@
-﻿using ToSic.Eav.Apps.Run;
+﻿using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Mvc.Run;
-using ToSic.Sxc.Run;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Context;
+using ToSic.Sxc.Mvc.Dev;
+
 
 namespace ToSic.Sxc.Mvc.RazorPages.Exp
 {
@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
     {
         #region DynCode 
 
-        protected Sxc.Code.DynamicCodeRoot DynCode => _dynCode ??= new Sxc.Code.DynamicCodeRoot().Init(Block, Log);
+        protected Sxc.Code.DynamicCodeRoot DynCode => _dynCode ??= ServiceProvider.Build<Code.DynamicCodeRoot>().Init(Block, Log);
         private Sxc.Code.DynamicCodeRoot _dynCode;
         #endregion
         public IBlock Block 
@@ -20,14 +20,22 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
             {
                 if (_blockLoaded) return _block;
                 _blockLoaded = true;
-                var context = new InstanceContext(
-                    new MvcSite(HttpContext),
-                    new SxcPage(0, null, _serviceProvider.Build<IHttp>().QueryStringKeyValuePairs()), 
-                    new MvcContainer(),
-                    new MvcUser(),
-                    _serviceProvider, new InstancePublishingState()
-                );
-                _block = Eav.Factory.Resolve<BlockFromModule>().Init(context, Log);
+
+                var ctx = ServiceProvider.Build<IContextOfBlock>();
+                ctx.Init(Log);
+                ctx.Site.Init(TestIds.PrimaryZone);
+                ctx.Site.Init(0);
+
+                //var context = new ContextOfBlock(
+                //    ServiceProvider,
+                //    ServiceProvider.Build<ISite>().Init(TestIds.PrimaryZone),
+                //    new MvcUser()
+                //).Init(
+                //    ServiceProvider.Build<SxcPage>().Init(0),
+                //    new MvcContainer(),
+                //    new BlockPublishingState()
+                //    );
+                _block = ServiceProvider.Build<BlockFromModule>().Init(ctx, Log);
                 return _block;
             }
         }

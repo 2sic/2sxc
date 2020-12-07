@@ -16,14 +16,14 @@ namespace ToSic.Sxc.Dnn.Install
         /// </summary>
         public void EnsureSiteIsConfigured(IBlock block, HttpServerUtility server)
         {
-            var sexyFolder = new DirectoryInfo(block.Context.Tenant.AppsRootPhysicalFull); //server.MapPath(block.Context.Tenant.AppsRootPhysical));
+            var sexyFolder = new DirectoryInfo(block.Context.Site.AppsRootPhysicalFull); //server.MapPath(block.Context.Tenant.AppsRootPhysical));
             var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, Eav.Constants.ContentAppName));
             var webConfigTemplate = new FileInfo(Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
             if (!(sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
             {
                 // configure it
                 var tm = block.Context.ServiceProvider.Build<TemplateHelpers>().Init(block.App, block.Log);
-                tm.EnsureTemplateFolderExists(Settings.TemplateLocations.PortalFileSystem);
+                tm.EnsureTemplateFolderExists(false);
             }
         }
     }

@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Mvc.WebApi.App
 {
     [Route(WebApiConstants.WebApiRoot + "/app/{appPath}/query/")]
     [ApiController]
-    public class AppQueryController : SxcStatefullControllerBase
+    public class AppQueryController : SxcStatefulControllerBase
     {
         #region DI / Constructor
         protected override string HistoryLogName => "App.AppQry";
@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Mvc.WebApi.App
             string appPath,
             string name,
             [FromQuery] string stream = null
-        ) => HttpContext.RequestServices.Build<AppQuery>().Init(Log).PublicQuery(GetContext(), appPath, name, stream, NoBlock);
+        ) => HttpContext.RequestServices.Build<AppQuery>().Init(Log).PublicQuery(appPath, name, stream);
 
     }
 }

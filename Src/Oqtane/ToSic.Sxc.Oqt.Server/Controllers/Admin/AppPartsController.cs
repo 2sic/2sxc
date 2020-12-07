@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     // [ValidateAntiForgeryToken] because the exports are called by the browser directly (new tab) 
     // we can't set this globally (only needed for imports)
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
-    public class AppPartsController : SxcStatefulControllerBase, IAppPartsController
+    public class AppPartsController : OqtStatefulControllerBase, IAppPartsController
     {
         private readonly Lazy<ExportContent> _exportContentLazy;
         private readonly Lazy<ImportContent> _importContentLazy;
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
         public ExportPartsOverviewDto Get(int zoneId, int appId, string scope)
-            => _exportContentLazy.Value.Init(GetContext().Tenant.Id, GetContext().User, Log)
+            => _exportContentLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
                 .PreExportSummary(appId, zoneId, scope);
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [HttpGet]
         public HttpResponseMessage Export(int zoneId, int appId, string contentTypeIdsString,
             string entityIdsString, string templateIdsString)
-            => _exportContentLazy.Value.Init(GetContext().Tenant.Id, GetContext().User, Log)
+            => _exportContentLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
                 .Export(appId, zoneId, contentTypeIdsString, entityIdsString, templateIdsString);
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
             if (HttpContext.Request.Form.Files.Count <= 0) return new ImportResultDto(false, "no files uploaded");
             var file = HttpContext.Request.Form.Files[0];
             var result = _importContentLazy.Value.Init(GetContext().User, Log).Import(zoneId, appId, file.FileName,
-                file.OpenReadStream(), GetContext().Tenant.DefaultLanguage);
+                file.OpenReadStream(), GetContext().Site.DefaultCultureCode);
 
             return wrapLog("ok", result);
         }

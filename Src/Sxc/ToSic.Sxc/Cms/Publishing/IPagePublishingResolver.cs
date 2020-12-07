@@ -5,6 +5,6 @@ namespace ToSic.Sxc.Cms.Publishing
 {
     public interface IPagePublishingResolver: IHasLog<IPagePublishingResolver>
     {
-        InstancePublishingState GetPublishingState(int instanceId);
+        BlockPublishingState GetPublishingState(int instanceId);
     }
 }

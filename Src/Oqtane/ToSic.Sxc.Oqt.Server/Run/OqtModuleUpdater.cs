@@ -3,11 +3,12 @@ using Oqtane.Shared;
 using System;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
 
@@ -38,7 +39,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             _lazyCmsRuntime = lazyCmsRuntime;
         }
 
-        public void SetAppId(IContainer instance, int? appId)
+        public void SetAppId(IModule instance, int? appId)
         {
             Log.Add($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
             // Reset temporary template
@@ -117,7 +118,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             // Module tile is stored in PageModule, so we need moduleId and pageId to update it.
             var pageId = block.Context.Page.Id;
-            var moduleId = block.Context.Container.Id;
+            var moduleId = block.Context.Module.Id;
             var pageModule = _pageModuleRepository.GetPageModule(pageId, moduleId);
             pageModule.Title = titleItem.GetBestTitle();
             _pageModuleRepository.UpdatePageModule(pageModule);

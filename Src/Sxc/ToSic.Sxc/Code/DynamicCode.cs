@@ -1,18 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Eav.LookUp;
-using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Data;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Run.Context;
+
 using ToSic.Sxc.Web;
-using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
-using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Code
 {
@@ -21,9 +16,8 @@ namespace ToSic.Sxc.Code
     /// It delegates all properties like App and methods like AsDynamic() to the parent item which initially caused it to be compiled.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract class DynamicCode : IDynamicCode, IWrapper<IDynamicCode>, ICoupledDynamicCode
+    public abstract partial class DynamicCode : IDynamicCode, IWrapper<IDynamicCode>, ICoupledDynamicCode
     {
-        [PrivateApi] public int CompatibilityLevel => UnwrappedContents?.CompatibilityLevel ?? 9;
 
         /// <inheritdoc />
         public IApp App => UnwrappedContents?.App;
@@ -31,7 +25,7 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public IBlockDataSource Data => UnwrappedContents?.Data;
 
-        [PrivateApi] public IBlock Block => UnwrappedContents?.Block;
+        [PrivateApi] public IServiceProvider ServiceProvider => UnwrappedContents?.ServiceProvider;
 
         /// <inheritdoc />
         /// <remarks>
@@ -55,53 +49,6 @@ namespace ToSic.Sxc.Code
 
         #endregion
 
-
-        #region AsDynamic and AsEntity
-
-        /// <inheritdoc />
-        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => UnwrappedContents?.AsDynamic(json, fallback);
-
-        /// <inheritdoc />
-        public dynamic AsDynamic(IEntity entity) => UnwrappedContents?.AsDynamic(entity);
-
-        /// <inheritdoc />
-        public dynamic AsDynamic(dynamic dynamicEntity) => UnwrappedContents?.AsDynamic(dynamicEntity);
-
-        /// <inheritdoc />
-        public IEntity AsEntity(dynamic dynamicEntity) => UnwrappedContents?.AsEntity(dynamicEntity);
-
-        #endregion
-
-        #region AsList
-
-        /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(dynamic list)
-            => UnwrappedContents?.AsList(list);
-
-
-        #endregion
-
-        #region CreateSource
-        /// <inheritdoc />
-        public T CreateSource<T>(IDataStream inStream) where T : IDataSource
-            => UnwrappedContents.CreateSource<T>(inStream);
-
-        /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
-            where T : IDataSource
-            => UnwrappedContents.CreateSource<T>(inSource, configurationProvider);
-
-        #endregion
-
-        #region AsAdam
-        /// <inheritdoc />
-        public IFolder AsAdam(IDynamicEntity entity, string fieldName)
-            => UnwrappedContents?.AsAdam(entity, fieldName);
-
-        /// <inheritdoc />
-        public IFolder AsAdam(IEntity entity, string fieldName)
-            => UnwrappedContents?.AsAdam(entity, fieldName);
-        #endregion
 
         #region Link and Edit
         /// <inheritdoc />
@@ -135,8 +82,8 @@ namespace ToSic.Sxc.Code
 
         #region Context WIP
 
-        public RunContext RunContext => UnwrappedContents?.RunContext;
+        public ICmsContext CmsContext => UnwrappedContents?.CmsContext;
 
-        #endregion
+        #endregion CmsContext  
     }
 }

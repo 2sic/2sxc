@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
+using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport;
 using ToSic.Eav.ImportExport.Json;
@@ -27,35 +28,31 @@ using ToSic.Sxc.WebApi.Validation;
 
 namespace ToSic.Sxc.WebApi.Views
 {
-    public class ViewsExportImport: HasLog
+    public class ViewsExportImport: HasLog<ViewsExportImport>
     {
         private readonly IServerPaths _serverPaths;
         private readonly TemplateHelpers _appHelpers;
         private readonly IEnvironmentLogger _envLogger;
         private readonly Lazy<CmsManager> _cmsManagerLazy;
         private readonly Lazy<JsonBundleSerializer> _jsonBundleLazy;
-        private ISite _site;
-        private IUser _user;
+        private readonly ISite _site;
+        private readonly IUser _user;
 
         public ViewsExportImport(IServerPaths serverPaths, 
             TemplateHelpers appHelpers, 
             IEnvironmentLogger envLogger,
             Lazy<CmsManager> cmsManagerLazy, 
-            Lazy<JsonBundleSerializer> jsonBundleLazy) : base("Bck.Views")
+            Lazy<JsonBundleSerializer> jsonBundleLazy, 
+            IContextOfSite context) : base("Bck.Views")
         {
             _serverPaths = serverPaths;
             _appHelpers = appHelpers;
             _envLogger = envLogger;
             _cmsManagerLazy = cmsManagerLazy;
             _jsonBundleLazy = jsonBundleLazy;
-        }
 
-        public ViewsExportImport Init(ISite site, IUser user, ILog parentLog)
-        {
-            Log.LinkTo(parentLog);
-            _site = site;
-            _user = user;
-            return this;
+            _site = context.Site;
+            _user = context.User;
         }
 
         public HttpResponseMessage DownloadViewAsJson(int appId, int viewId)
@@ -70,7 +67,7 @@ namespace ToSic.Sxc.WebApi.Views
             };
 
             // Attach files
-            var view = new View(bundle.Entity, Log);
+            var view = new View(bundle.Entity, _site.CurrentCultureCode, Log);
 
             _appHelpers.Init(app, Log);
             if (!string.IsNullOrEmpty(view.Path))

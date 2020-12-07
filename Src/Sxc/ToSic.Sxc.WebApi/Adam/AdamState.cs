@@ -6,9 +6,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
-using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
-using IApp = ToSic.Sxc.Apps.IApp;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
@@ -19,7 +17,6 @@ namespace ToSic.Sxc.WebApi.Adam
         public readonly IServiceProvider ServiceProvider;
         public SecurityChecksBase Security;
         public MultiPermissionsTypes Permissions;
-        public IApp App;
 
         protected AdamState(IServiceProvider serviceProvider, string logName) : base(logName ?? "Adm.State")
         {
@@ -29,21 +26,22 @@ namespace ToSic.Sxc.WebApi.Adam
         /// <summary>
         /// Initializes the object and performs all the initial security checks
         /// </summary>
-        public AdamState Init(IBlock block, int appId, string contentType, string field, Guid guid, bool usePortalRoot, ILog parentLog)
+        public virtual AdamState Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            var callLog = Log.Call<AdamState>($"field:{field}, guid:{guid}");
-            App = ServiceProvider.Build<Apps.App>().Init(ServiceProvider, appId, parentLog, block);
+            var appId = context.AppState.AppId;
+            var callLog = Log.Call<AdamState>($"app: {context.AppState.Show()}, field:{fieldName}, guid:{entityGuid}");
+            Context = context;
+
             Permissions = ServiceProvider.Build<MultiPermissionsTypes>()
-                .Init(block.Context, App, contentType, Log);
-            Block = block;
+                .Init(context, context.AppState, contentType, Log);
 
             // only do checks on field/guid if it's actually accessing that, if it's on the portal root, don't.
             UseSiteRoot = usePortalRoot;
             if (!usePortalRoot)
             {
-                ItemField = field;
-                ItemGuid = guid;
+                ItemField = fieldName;
+                ItemGuid = entityGuid;
             }
 
             Security = ServiceProvider.Build<SecurityChecksBase>().Init(this, usePortalRoot, Log);
@@ -55,17 +53,16 @@ namespace ToSic.Sxc.WebApi.Adam
                 throw HttpException.PermissionDenied(
                     $"low-permission users may not access this - {ToSic.Eav.Configuration.Features.MsgMissingSome(FeaturesForRestrictedUsers)}");
 
-            Init(App, guid, field, usePortalRoot);
+            if (string.IsNullOrEmpty(contentType) || string.IsNullOrEmpty(fieldName)) return callLog(null, this);
 
-            if (string.IsNullOrEmpty(contentType) || string.IsNullOrEmpty(field)) return callLog(null, this);
-
-            Attribute = Definition(appId, contentType, field);
+            Attribute = Definition(appId, contentType, fieldName);
             if (!Security.FileTypeIsOkForThisField(out var exp))
                 throw exp;
             return callLog(null, this);
         }
 
         #endregion
+
 
         // Temp
         public abstract AppRuntime AppRuntime { get; }
@@ -88,7 +85,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
         internal IContentTypeAttribute Attribute;
 
-        internal IBlock Block;
+        internal IContextOfApp Context;
 
         public readonly Guid[] FeaturesForRestrictedUsers =
         {
@@ -97,9 +94,6 @@ namespace ToSic.Sxc.WebApi.Adam
         };
 
 
-
-        #region Initialization methods
-
         private IContentTypeAttribute Definition(int appId, string contentType, string fieldName)
         {
             // try to find attribute definition - for later extra security checks
@@ -107,8 +101,5 @@ namespace ToSic.Sxc.WebApi.Adam
             return type[fieldName];
         }
 
-        protected abstract void Init(IApp app, Guid entityGuid, string fieldName, bool usePortalRoot);
-
-        #endregion
     }
 }

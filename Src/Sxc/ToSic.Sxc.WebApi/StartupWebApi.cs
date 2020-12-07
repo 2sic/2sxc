@@ -15,6 +15,7 @@ using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.Cms;
 using ToSic.Sxc.WebApi.ContentBlocks;
+using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.Features;
 using ToSic.Sxc.WebApi.ImportExport;
 using ToSic.Sxc.WebApi.InPage;
@@ -78,14 +79,14 @@ namespace ToSic.Sxc.WebApi
             // Small WebApi Helpers
             services.TryAddTransient<IdentifierHelper>();
             services.TryAddTransient<ContentGroupList>();
-            services.TryAddTransient<SaveSecurity>();
+
+            // js context / UI
+            services.TryAddTransient<IUiContextBuilder, UiContextBuilderUnknown>();
+            services.TryAddTransient<UiContextBuilderBase.Dependencies>();
+
 
             // Helpers
             services.TryAddTransient<ImpExpHelpers>();
-
-
-            // 11.08 - fallback in case not added
-            services.TryAddSingleton<Run.Context.PlatformContext>();
 
             return services;
         }

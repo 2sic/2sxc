@@ -1,34 +1,10 @@
 ﻿using System;
 using System.Reflection;
-using ToSic.Eav.Plumbing.Booting;
 
 namespace ToSic.Sxc
 {
     public partial class Settings
     {
-
-        #region System Initialization
-
-        /// <summary>
-        /// This is a placeholder method, please call it in code places where you must ensure that
-        /// everything is initialized, especially the EAV etc. 
-        /// Reason is that once this object is accessed statically, the (other) static initializer will be called
-        /// which will take care of all registration
-        /// 
-        /// This is a minor workaround, I'll try to find a cleaner way to do this some other time
-        /// Before it happened automatically, because we had all the constants as part of this object...
-        /// </summary>
-        public static void EnsureSystemIsInitialized() { }
-
-
-        /// <summary>
-        /// This is needed so when the application starts, we can configure our IoC container
-        /// It is automatically executed when the first variable on this class (constant, static, etc.)
-        /// is accessed. 
-        /// </summary>
-        static Settings() => Boot.RunBootSequence();
-
-        #endregion
 
         // Important note: always use static-readonly, NOT constant for .net 456
         // reason is that we must ensure that the static constructor is called 
@@ -84,7 +60,7 @@ namespace ToSic.Sxc
                 "11.07.01", // LTS
                 "11.07.02", // LTS
                 "11.07.03", // LTS
-                "11.10.00", "11.10.01",
+                "11.10.00", "11.10.01", "11.11.00",
             };
 
             // this is the last version which must run server-side change-code

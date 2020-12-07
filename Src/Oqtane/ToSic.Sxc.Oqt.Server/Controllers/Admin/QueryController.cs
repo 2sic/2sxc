@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     [ValidateAntiForgeryToken]
     [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
-    public class QueryController : SxcStatefulControllerBase, IQueryController
+    public class QueryController : OqtStatefulControllerBase, IQueryController
     {
         private readonly Lazy<QueryApi> _queryLazy;
         private readonly Lazy<CmsManager> _cmsManagerLazy;
@@ -67,9 +67,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         public QueryRunDto Run(int appId, int id)
         {
             var block = GetBlock();
-            var instanceId = GetContext().Container.Id; // ?? 0;
-            var config = _configProviderLazy.Value.Init(Log).GetConfigProviderForModule(instanceId, block?.App, block);
-            return _queryLazy.Value.Init(appId, Log).Run(appId, id, instanceId, config);
+            var context = GetContext();
+            var config = _configProviderLazy.Value.Init(Log).GetConfigProviderForModule(context, block?.App, block);
+            return _queryLazy.Value.Init(appId, Log).Run(appId, id, config);
         }
 
         /// <summary>

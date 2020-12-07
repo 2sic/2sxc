@@ -7,6 +7,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.WebApi;
 
@@ -21,25 +22,17 @@ namespace ToSic.Sxc.Dnn.WebApi
             _serviceProvider = serviceProvider;
         }
 
-        internal IBlock GetCmsBlock(HttpRequestMessage request, bool allowNoContextFound, ILog log)
+        internal IBlock GetCmsBlock(HttpRequestMessage request, ILog log)
         {
-            var wrapLog = log.Call<IBlock>($"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
+            var wrapLog = log.Call<IBlock>(useTimer: true);
 
             var moduleInfo = request.FindModuleInfo();
 
-            if (allowNoContextFound & moduleInfo == null)
-                return wrapLog("request ModuleInfo not found, allowed", null);
-            
             if (moduleInfo == null)
-                log.Add("context/module not found");
-
-            var container = _serviceProvider.Build<DnnContainer>().Init(moduleInfo, log);
+                return wrapLog("request ModuleInfo not found", null);
             
-            var tenant = moduleInfo == null
-                ? new DnnSite(null)
-                : new DnnSite().Init(moduleInfo.OwnerPortalID);
-
-            var context = DnnContext.Create(tenant, container, new DnnUser(), _serviceProvider, GetOverrideParams(request));
+            var context = _serviceProvider.Build<IContextOfBlock>().Init(moduleInfo, log);
+            context.Page.Parameters = GetOverrideParams(request);
             IBlock block = _serviceProvider.Build<BlockFromModule>().Init(context, log);
 
             // check if we need an inner block

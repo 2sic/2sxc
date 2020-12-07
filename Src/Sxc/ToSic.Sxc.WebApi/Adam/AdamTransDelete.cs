@@ -1,11 +1,12 @@
 ﻿using System;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
     public class AdamTransDelete<TFolderId, TFileId> : AdamTransactionBase<AdamTransDelete<TFolderId, TFileId>, TFolderId, TFileId>
     {
-        public AdamTransDelete(Lazy<AdamState<TFolderId, TFileId>> adamState) : base(adamState, "Adm.TrnDel") { }
+        public AdamTransDelete(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextResolver ctxResolver) : base(adamState, ctxResolver, "Adm.TrnDel") { }
 
         internal bool Delete(string parentSubfolder, bool isFolder, TFolderId id, TFileId fileId)
         {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Entities.Modules;
+using ToSic.Eav.Context;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
@@ -14,12 +15,12 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Compatibility.RazorPermissions;
 using ToSic.Sxc.Compatibility.Sxc;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Run.Context;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
@@ -57,10 +58,12 @@ namespace ToSic.SexyContent.Razor
 
         /// <inheritdoc />
         [PrivateApi("try to remove")]
-        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(DynCode.Block?.EditAllowed ?? false));
+        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(DynCode.Block?.Context.UserMayEdit ?? false));
         private SxcHelper _sxc;
 
         [PrivateApi] public IBlock Block => DynCode.Block;
+
+        [PrivateApi] public IServiceProvider ServiceProvider => DynCode.ServiceProvider;
 
         [PrivateApi] public int CompatibilityLevel => DynCode.CompatibilityLevel;
 
@@ -70,7 +73,7 @@ namespace ToSic.SexyContent.Razor
         /// <inheritdoc />
         public IBlockDataSource Data => DynCode.Data;
 
-        public RazorPermissions Permissions => new RazorPermissions(DynCode.Block?.EditAllowed ?? false);
+        public RazorPermissions Permissions => new RazorPermissions(DynCode.Block?.Context.UserMayEdit ?? false);
 
         #region AsDynamic in many variations
 
@@ -186,8 +189,7 @@ namespace ToSic.SexyContent.Razor
         public virtual void CustomizeData() {}
 
         /// <inheritdoc />
-        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
-            DateTime beginDate) { }
+        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate) { }
 
         [PrivateApi("this is the old signature, should still be supported")]
         public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate) { }
@@ -213,7 +215,7 @@ namespace ToSic.SexyContent.Razor
 
         #region RunContext - new in 11.08 or similar, not implemented in old base classes
 
-        public RunContext RunContext => DynCode.RunContext;
+        public ICmsContext CmsContext => DynCode.CmsContext;
 
         #endregion
 

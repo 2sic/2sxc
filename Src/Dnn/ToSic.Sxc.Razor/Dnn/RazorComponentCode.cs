@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Search;
 
 namespace ToSic.Sxc.Dnn
@@ -13,27 +14,20 @@ namespace ToSic.Sxc.Dnn
     [PublicApi_Stable_ForUseInYourCode]
     public abstract class RazorComponentCode: RazorComponent
     {
-        ///// <summary>
-        ///// This is called before rendering.
-        ///// CustomizeData has already happened at this moment.
-        ///// Override this method to also run any code automatically before rendering. <br/>
-        ///// </summary>
-        //public virtual void OnRender() { }
-
-        ///// <summary>
-        ///// Override this method to also run any code automatically after rendering. <br/>
-        ///// It's meant for things like setting page headers etc. <br/>
-        ///// Note that it's run at the end of the render-cycle.
-        ///// </summary>
-        //public virtual void OnRendered() { }
-
 
         /// <inheritdoc />
         public override void CustomizeData() { }
 
+#pragma warning disable 618
         /// <inheritdoc />
-        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
-            DateTime beginDate) { }
+        [PrivateApi]
+        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate)
+        {
+            CustomizeSearch(searchInfos, moduleInfo as IContainer, beginDate);
+        }
+
+        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo, DateTime beginDate) { }
+#pragma warning restore 618
 
     }
 }

@@ -8,7 +8,6 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Assets;
@@ -23,14 +22,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 	{
         protected override string HistoryLogName => "Api.TmpCnt";
 
-        private ViewsBackend Backend => _build<ViewsBackend>().Init(new DnnSite(PortalSettings), new DnnUser(UserInfo), Log);
-        private ViewsExportImport exportImport => _build<ViewsExportImport>().Init(new DnnSite(PortalSettings), new DnnUser(UserInfo), Log);
+        private ViewsBackend Backend => _build<ViewsBackend>().Init(Log);
+        private ViewsExportImport ExportImport => _build<ViewsExportImport>().Init(Log);
 
         [HttpGet]
         [SupportedModules("2sxc,2sxc-app")]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public IEnumerable<object> All(int appId) => Backend.GetAll(appId);
+        public IEnumerable<ViewDetailsDto> All(int appId) => Backend.GetAll(appId);
 
         [HttpGet]
         [SupportedModules("2sxc,2sxc-app")]
@@ -47,7 +46,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
         [HttpGet]
         [AllowAnonymous] // will do security check internally
-        public HttpResponseMessage Json(int appId, int viewId) => exportImport.DownloadViewAsJson(appId, viewId);
+        public HttpResponseMessage Json(int appId, int viewId) => ExportImport.DownloadViewAsJson(appId, viewId);
 
         /// <summary>
         /// Used to be POST ImportExport/ImportContent
@@ -71,7 +70,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             var streams = new List<FileUploadDto>();
             for (var i = 0; i < files.Count; i++)
                 streams.Add(new FileUploadDto { Name = files[i].FileName, Stream = files[i].InputStream });
-            var result = exportImport.ImportView(zoneId, appId, streams, PortalSettings.DefaultLanguage);
+            var result = ExportImport.ImportView(zoneId, appId, streams, PortalSettings.DefaultLanguage);
 
             return wrapLog("ok", result);
         }
@@ -82,8 +81,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public IEnumerable<ViewDto> Usage(int appId, Guid guid)
             => _build<UsageBackend>().Init(Log)
-                .ViewUsage(GetContext(), appId, guid,
-                    (views, blocks) =>
+                .ViewUsage(appId, guid, (views, blocks) =>
                     {
                         // create array with all 2sxc modules in this portal
                         var allMods = new Pages.Pages(Log).AllModulesWithContent(PortalSettings.PortalId);

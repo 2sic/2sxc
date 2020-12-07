@@ -19,6 +19,8 @@ namespace ToSic.Sxc.WebApi.Views
         public bool HasQuery { get; set; }
         public int Used { get; set; }
 
+        public bool IsShared { get; set; }
+
         public HasPermissionsDto Permissions { get; set; }
     }
 }

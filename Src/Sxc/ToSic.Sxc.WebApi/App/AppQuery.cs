@@ -1,45 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Apps.Security;
+using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Conversion;
 using ToSic.Sxc.LookUp;
+
 
 namespace ToSic.Sxc.WebApi.App
 {
     public class AppQuery: WebApiBackendBase<AppQuery>
     {
+
         #region Constructor / DI
 
-        public AppQuery(IServiceProvider serviceProvider) : base(serviceProvider, "Sxc.ApiApQ")
+        public AppQuery(IServiceProvider serviceProvider, IContextResolver ctxResolver) : base(serviceProvider, "Sxc.ApiApQ")
         {
-
+            _ctxResolver = ctxResolver;
         }
         
+        private readonly IContextResolver _ctxResolver;
         #endregion
 
         #region In-Container-Context Queries
 
-        internal Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(IInstanceContext context, IBlock block, IApp app, string name, bool includeGuid, string stream, int? appId)
+        internal Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(int? appId, string name, bool includeGuid, string stream)
         {
             var wrapLog = Log.Call($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
-            //var dynamicCode = new DnnDynamicCode().Init(BlockBuilder, Log);
-            //var app = blockBuilder.App;
+
+            var appCtx = appId != null ? _ctxResolver.App(appId.Value) : _ctxResolver.BlockRequired();
 
             // If no app available from context, check if an app-id was supplied in url
             // Note that it may only be an app from the current portal
             // and security checks will run internally
-            if (app == null && appId != null)
-                app = ServiceProvider.Build<Apps.App>().Init(ServiceProvider, appId.Value, Log, showDrafts: context.User.IsSuperUser);
+            var app = ServiceProvider.Build<Apps.App>().Init(ServiceProvider, appCtx.AppState.AppId, Log, appCtx.UserMayEdit);
 
-            var result = BuildQueryAndRun(app, name, stream, includeGuid, context, Log, block?.EditAllowed ?? false);
+            var result = BuildQueryAndRun(app, name, stream, includeGuid, appCtx, Log, appCtx.UserMayEdit);
             wrapLog(null);
             return result;
         }
@@ -49,18 +51,19 @@ namespace ToSic.Sxc.WebApi.App
         #region Public Queries
 
 
-        internal Dictionary<string, IEnumerable<Dictionary<string, object>>> 
-            PublicQuery(IInstanceContext context, string appPath, string name, string stream, IBlock block)
+        internal Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(string appPath, string name, string stream)
         {
             var wrapLog = Log.Call($"path:{appPath}, name:{name}");
             if (string.IsNullOrEmpty(name))
                 throw HttpException.MissingParam(nameof(name));
-            var appIdentity = AppFinder.GetAppIdFromPath(appPath);
-            var queryApp = ServiceProvider.Build<Apps.App>().Init(appIdentity,
-                ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(false), Log);
+
+            var appCtx = _ctxResolver.AppOrBlock(appPath);
+
+            var queryApp = ServiceProvider.Build<Apps.App>().Init(appCtx.AppState,
+                ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(appCtx.UserMayEdit), Log);
 
             // now just run the default query check and serializer
-            var result = BuildQueryAndRun(queryApp, name, stream, false, context, Log, block?.EditAllowed ?? false);
+            var result = BuildQueryAndRun(queryApp, name, stream, false, appCtx, Log, appCtx.UserMayEdit);
             wrapLog(null);
             return result;
         }
@@ -70,10 +73,10 @@ namespace ToSic.Sxc.WebApi.App
 
 
         private static Dictionary<string, IEnumerable<Dictionary<string, object>>>
-            BuildQueryAndRun(IApp app, string name, string stream, bool includeGuid, IInstanceContext context, ILog log,
+            BuildQueryAndRun(IApp app, string name, string stream, bool includeGuid, IContextOfSite context, ILog log,
                 bool userMayEdit)
         {
-            var wrapLog = log.Call($"name:{name}, withModule:{context.Container.Id}");
+            var wrapLog = log.Call($"name:{name}, withModule:{(context as IContextOfBlock)?.Module.Id}");
             var query = app.GetQuery(name);
 
             if (query == null)

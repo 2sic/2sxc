@@ -28,10 +28,10 @@ namespace ToSic.Sxc.Cms.Publishing
         /// <returns></returns>
         protected abstract PublishingMode LookupRequirements(int instanceId);
 
-        public InstancePublishingState GetPublishingState(int instanceId)
+        public BlockPublishingState GetPublishingState(int instanceId)
         {
             var mode = Requirements(instanceId);
-            return new InstancePublishingState { ForceDraft = mode == PublishingMode.DraftRequired, Mode = mode };
+            return new BlockPublishingState { ForceDraft = mode == PublishingMode.DraftRequired, Mode = mode };
         }
 
     }

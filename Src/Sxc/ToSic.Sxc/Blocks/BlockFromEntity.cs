@@ -3,6 +3,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 
 namespace ToSic.Sxc.Blocks
@@ -19,13 +20,15 @@ namespace ToSic.Sxc.Blocks
 
         public BlockFromEntity Init(IBlock parent, IEntity blockEntity, ILog parentLog)
         {
-            Init(parent.Context, parent, parentLog);
+            var ctx = parent.Context.Clone(Log) as IContextOfBlock;
+            Init(ctx, parent, parentLog);
             return CompleteInit(parent, blockEntity);
         }
 
         public BlockFromEntity Init(IBlock parent, int contentBlockId, ILog parentLog)
         {
-            Init(parent.Context, parent, parentLog);
+            var ctx = parent.Context.Clone(Log) as IContextOfBlock;
+            Init(ctx, parent, parentLog);
             var wrapLog = Log.Call<BlockFromEntity>($"{nameof(contentBlockId)}:{contentBlockId}");
             var blockEntity = GetBlockEntity(parent, contentBlockId);
             return wrapLog("ok", CompleteInit(parent, blockEntity));
@@ -36,12 +39,13 @@ namespace ToSic.Sxc.Blocks
             var wrapLog = Log.Call<BlockFromEntity>();
             Parent = parent;
             var blockId = LoadBlockDefinition(parent.ZoneId, blockEntity, Log);
+            Context.ResetApp(blockId);
 
             // Must override previous AppId, as that was of the container-block
             // but the current instance can be of another block
             AppId = blockId.AppId;
 
-            CompleteInit<BlockFromEntity>(parent.BlockBuilder, blockId, -blockEntity.EntityId);
+            CompleteInit(parent.BlockBuilder, blockId, -blockEntity.EntityId);
             return wrapLog("ok", this);
         }
         #endregion

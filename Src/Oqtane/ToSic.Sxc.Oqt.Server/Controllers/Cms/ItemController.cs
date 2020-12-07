@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     [Route(WebApiConstants.WebApiStateRoot + "/cms/[controller]/[action]")]
     [ValidateAntiForgeryToken]
-    public class ItemController : SxcStatefulControllerBase
+    public class ItemController : OqtStatefulControllerBase
     {
         private readonly Lazy<AppViewPickerBackend> _appViewPickerBackendLazy;
         protected override string HistoryLogName => "Api.Item";
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [HttpPost]
         //[Authorize(Policy = "ViewModule")] // TODO: disabled
         public bool Publish(int id)
-            => _appViewPickerBackendLazy.Value.Init(GetContext(), GetBlock(), Log)
+            => _appViewPickerBackendLazy.Value.Init(Log)
                 .Publish(id);
     }
 }

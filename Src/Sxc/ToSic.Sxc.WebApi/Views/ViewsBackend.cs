@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.WebApi.ImportExport;
@@ -15,19 +15,20 @@ namespace ToSic.Sxc.WebApi.Views
     public class ViewsBackend: HasLog
     {
         private readonly Lazy<CmsManager> _cmsManagerLazy;
-        private ISite _site;
-        private IUser _user;
+        private readonly ISite _site;
+        private readonly IUser _user;
 
-        public ViewsBackend(Lazy<CmsManager> cmsManagerLazy) : base("Bck.Views")
+        public ViewsBackend(Lazy<CmsManager> cmsManagerLazy, IContextOfSite context) : base("Bck.Views")
         {
             _cmsManagerLazy = cmsManagerLazy;
+
+            _site = context.Site;
+            _user = context.User;
         }
 
-        public ViewsBackend Init(ISite site, IUser user, ILog parentLog)
+        public ViewsBackend Init(ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            _site = site;
-            _user = user;
             return this;
         }
 
@@ -53,6 +54,7 @@ namespace ToSic.Sxc.WebApi.Views
                 List = c.UseForList,
                 HasQuery = c.QueryRaw != null,
                 Used = c.Entity.Parents().Count,
+                IsShared = c.IsShared,
                 Permissions = new HasPermissionsDto {Count = c.Entity.Metadata.Permissions.Count()},
             });
             return templates;

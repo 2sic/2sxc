@@ -4,9 +4,12 @@ using System.Web;
 using DotNetNuke.Common;
 using DotNetNuke.Entities.Controllers;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
+
 using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.Sxc.Dnn.Install
@@ -42,9 +45,9 @@ namespace ToSic.Sxc.Dnn.Install
         }
 
 
-        public string GetAutoInstallPackagesUiUrl(ISite site, IContainer container, bool isContentApp)
+        public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool isContentApp)
         {
-            var moduleInfo = (container as DnnContainer)?.UnwrappedContents;
+            var moduleInfo = (module as DnnModule)?.UnwrappedContents;
             var portal = (site as DnnSite)?.UnwrappedContents;
             if(moduleInfo == null || portal == null)
                 throw new ArgumentException("missing portal/module");
@@ -74,7 +77,7 @@ namespace ToSic.Sxc.Dnn.Install
                 + "&DnnVersion=" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4)
                 + "&2SexyContentVersion=" + Settings.ModuleVersion
                 + "&ModuleName=" + moduleInfo.DesktopModule.ModuleName
-                + "&ModuleId=" + container.Id
+                + "&ModuleId=" + module.Id
                 + "&PortalID=" + site.Id
                 + "&ZoneID=" + site.ZoneId;
             // ReSharper restore StringLiteralTypo
@@ -84,7 +87,7 @@ namespace ToSic.Sxc.Dnn.Install
             gettingStartedSrc += hostSettings.ContainsKey("GUID") ? "&DnnGUID=" + hostSettings["GUID"] : "";
             // Add Portal Default Language & current language
             gettingStartedSrc += "&DefaultLanguage="
-                                 + site.DefaultLanguage
+                                 + site.DefaultCultureCode
                                  + "&CurrentLanguage=" + portal.CultureCode;
 
             // Set src to iframe

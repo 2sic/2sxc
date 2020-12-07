@@ -139,7 +139,7 @@ public class " + CsApiTemplateControllerName + @" : ToSic.Sxc.Dnn.ApiController
                 throw new AccessViolationException("current user may not edit razor templates - requires super user");
 
             // if not super user, check if cross-portal storage (not allowed; super user only)
-            if (EditInfo.LocationScope != Settings.TemplateLocations.PortalFileSystem)
+            if (EditInfo.IsShared)
                 throw new AccessViolationException(
                     "current user may not edit templates in central storage - requires super user");
 
@@ -156,11 +156,9 @@ public class " + CsApiTemplateControllerName + @" : ToSic.Sxc.Dnn.ApiController
 
         private AssetEditInfo TemplateAssetsInfo(IView view)
         {
-            var t = new AssetEditInfo(_app.AppId, _app.Name, view.Path,
-                view.Location == Settings.TemplateLocations.HostFileSystem)
+            var t = new AssetEditInfo(_app.AppId, _app.Name, view.Path, view.IsShared)
             {
                 // Template specific properties, not really available in other files
-                LocationScope = view.Location,
                 Type = view.Type,
                 Name = view.Name,
                 HasList = view.UseForList,
@@ -174,7 +172,7 @@ public class " + CsApiTemplateControllerName + @" : ToSic.Sxc.Dnn.ApiController
 
         public string InternalPath => Path.Combine(
             _cmsRuntime.ServiceProvider.Build<TemplateHelpers>().Init(_app, Log)
-                .AppPathRoot(EditInfo.LocationScope, PathTypes.PhysFull), EditInfo.FileName);
+                .AppPathRoot(EditInfo.IsShared, PathTypes.PhysFull), EditInfo.FileName);
 
 
         /// <summary>
@@ -221,7 +219,7 @@ public class " + CsApiTemplateControllerName + @" : ToSic.Sxc.Dnn.ApiController
 
             // ensure the web.config exists (usually missing in the global area)
             _cmsRuntime.ServiceProvider.Build<TemplateHelpers>().Init(_app, Log)
-                .EnsureTemplateFolderExists(EditInfo.LocationScope);
+                .EnsureTemplateFolderExists(EditInfo.IsShared);
 
             // check if the folder to it already exists, or create it...
             var foundFolder = absolutePath.LastIndexOf("\\", StringComparison.InvariantCulture);

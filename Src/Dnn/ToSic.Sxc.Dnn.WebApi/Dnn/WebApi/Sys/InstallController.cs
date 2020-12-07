@@ -45,8 +45,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         public string RemoteWizardUrl(bool isContentApp) =>
             _build<IEnvironmentInstaller>().Init(Log)
                 .GetAutoInstallPackagesUiUrl(
-                    new DnnSite(PortalSettings),
-                    _serviceProvider.Build<DnnContainer>().Init(Request.FindModuleInfo(), Log), 
+                    new DnnSite(),
+                    ServiceProvider.Build<DnnModule>().Init(Request.FindModuleInfo(), Log), 
                     isContentApp);
 
 
@@ -63,10 +63,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
             PreventServerTimeout300();
 
             Log.Add("install package:" + packageUrl);
-            var container = _serviceProvider.Build<DnnContainer>().Init(ActiveModule, Log);
+            var container = ServiceProvider.Build<DnnModule>().Init(ActiveModule, Log);
             var block = container.BlockIdentifier;
 
-            var result = _build<ImportFromRemote>().Init(new DnnUser(UserInfo), Log)
+            var result = _build<ImportFromRemote>().Init(new DnnUser(), Log)
                 .InstallPackage(block.ZoneId, block.AppId, ActiveModule.DesktopModule.ModuleName == "2sxc-app", packageUrl);
 
             Log.Add("install completed with success:" + result.Item1);

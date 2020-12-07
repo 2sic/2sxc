@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.LookUp
 {
@@ -13,30 +14,32 @@ namespace ToSic.Sxc.LookUp
         private readonly IApp _app;
 
         #region Internal stuff to be able to supply sub-properties
-        private ILookUp _settings;
 
         private ILookUp Settings
         {
             get
             {
-                if(_settings == null && _app.Settings != null) 
-                    _settings = new LookUpInDynamicEntity("appsettings", _app.Settings);
-                return _settings;
-
+                if (_settings != null || _app.Settings == null) return _settings;
+                var dynEnt = _app.Settings as IDynamicEntity;
+                return _settings = new LookUpInEntity("appsettings", dynEnt?.Entity, dynEnt?.Dimensions);
             }
         }
+        private ILookUp _settings;
 
-        private LookUpInDynamicEntity _resources;
         private ILookUp Resources
         {
             get
             {
-                if(_resources == null && _app.Resources != null) 
-                    _resources = new LookUpInDynamicEntity("appresources", _app.Resources);
+                if (_resources == null && _app.Resources != null)
+                {
+                    var dynEnt = _app.Resources as IDynamicEntity;
+                    _resources = new LookUpInEntity("appresources", dynEnt?.Entity, dynEnt?.Dimensions);
+                }
                 return _resources;
 
             }
         }
+        private ILookUp _resources;
 
 
         #endregion

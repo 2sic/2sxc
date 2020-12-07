@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -11,8 +10,6 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Ui;
 using ToSic.SexyContent.WebApi;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.WebApi.ContentBlocks;
 using ToSic.Sxc.WebApi.InPage;
 
@@ -24,14 +21,17 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
     {
         protected override string HistoryLogName => "Api.Block";
 
-        protected CmsRuntime CmsRuntime => _cmsRuntime ?? (_cmsRuntime = base.App == null ? null : _build<CmsRuntime>()
-            .Init(base.App, true, Log));
+        protected CmsRuntime CmsRuntime => _cmsRuntime ?? (_cmsRuntime = base.App == null
+                ? null
+                : _build<CmsRuntime>().Init(base.App, true, Log)
+            );
         private CmsRuntime _cmsRuntime;
 
         #region Block
 
-        private ContentBlockBackend Backend => _build<ContentBlockBackend>().Init(GetContext(), GetBlock(), Log);
+        private ContentBlockBackend Backend => _build<ContentBlockBackend>().Init(Log);
 
+        private AppViewPickerBackend ViewBackend => _build<AppViewPickerBackend>().Init(Log);
 
         /// <summary>
         /// used to be GET Module/GenerateContentBlock
@@ -39,14 +39,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public new string Block(int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
-        {
-            var entityId = Backend.NewBlock(parentId, field, sortOrder, app, guid);
+            => Backend.NewBlockAndRender(parentId, field, sortOrder, app, guid);
 
-            // now return a rendered instance
-            var newContentBlock = _build<BlockFromEntity>().Init(GetBlock(), entityId, Log);
-            return newContentBlock.BlockBuilder.Render();
-
-        }
         #endregion
 
         #region BlockItems
@@ -69,9 +63,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         /// <param name="appId"></param>
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public new void App(int? appId)
-            => _build<AppViewPickerBackend>().Init(GetContext(), GetBlock(), Log)
-                .SetAppId(appId);
+        public new void App(int? appId) => ViewBackend.SetAppId(appId);
 
         /// <summary>
         /// used to be GET Module/GetSelectableApps
@@ -80,15 +72,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         /// <returns></returns>
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<AppUiInfo> Apps(string apps = null)
-        {
-            // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
-            var tenant = new DnnSite(PortalSettings);
-            return _build<CmsZones>().Init(tenant.ZoneId, Log)
-                .AppsRt
-                .GetSelectableApps(tenant, apps)
-                .ToList();
-        }
+        public IEnumerable<AppUiInfo> Apps(string apps = null) => ViewBackend.Apps(apps);
 
         #endregion
 
@@ -112,7 +96,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         /// <returns></returns>
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<TemplateUiInfo> Templates() => CmsRuntime?.Views.GetCompatibleViews(base.App, GetBlock().Configuration);
+        public IEnumerable<TemplateUiInfo> Templates() => ViewBackend.Templates();
 
         /// <summary>
         /// Used in InPage.js
@@ -123,9 +107,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         /// <returns></returns>
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        public Guid? Template(int templateId, bool forceCreateContentGroup)
-            => _build<AppViewPickerBackend>().Init(GetContext(), GetBlock(), Log)
-                .SaveTemplateId(templateId, forceCreateContentGroup);
+        public Guid? Template(int templateId, bool forceCreateContentGroup) => ViewBackend.SaveTemplateId(templateId, forceCreateContentGroup);
 
         #endregion
 
@@ -144,7 +126,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
             Log.Add($"render template:{templateId}, lang:{lang}");
             try
             {
-                var rendered = _build<AppViewPickerBackend>().Init(GetContext(), GetBlock(), Log).Render(templateId, lang);
+                var rendered = ViewBackend.Render(templateId, lang);
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new StringContent(rendered, Encoding.UTF8, "text/plain")

@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     [ValidateAntiForgeryToken]
     [ApiController]
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
-    public class ContentGroupController : SxcStatefulControllerBase
+    public class ContentGroupController : OqtStatefulControllerBase
     {
         private readonly Lazy<ListsBackendBase> _listBackendLazy;
         protected override string HistoryLogName => "Api.ConGrp";
@@ -20,19 +20,20 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             _listBackendLazy = listBackendLazy;
         }
 
+        private ListsBackendBase Backend => _listBackendLazy.Value.Init(Log);
+
+
         [HttpGet]
         //[Authorize(Policy = "EditModule")] // TODO: disabled
         public EntityInListDto Header(Guid guid)
-            => _listBackendLazy.Value.Init(GetBlock(), Log)
-                .HeaderItem(guid);
+            => Backend.HeaderItem(guid);
 
-        private ListsBackendBase Backend => _listBackendLazy.Value.Init(GetBlock(), Log);
 
         // TODO: shouldn't be part of ContentGroupController any more, as it's generic now
         [HttpPost]
         //[Authorize(Policy = "EditModule")]  // TODO: disabled
         public void Replace(Guid guid, string part, int index, int entityId, bool add = false)
-            => Backend.Replace(GetContext(), guid, part, index, entityId, add);
+            => Backend.Replace(guid, part, index, entityId, add);
 
 
         // TODO: WIP changing this from ContentGroup editing to any list editing
@@ -51,7 +52,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [HttpPost]
         //[Authorize(Policy = "EditModule")]  // TODO: disabled
         public bool ItemList([FromQuery] Guid guid, List<EntityInListDto> list, [FromQuery] string part = null)
-            => Backend.Reorder(GetContext(), guid, list, part);
+            => Backend.Reorder(guid, list, part);
 
     }
 }

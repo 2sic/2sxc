@@ -1,6 +1,7 @@
 ﻿using System;
 using Oqtane.Repository;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Repository;
 using ToSic.Sxc.Oqt.Server.Run;
 
@@ -12,6 +13,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     public class StatefulControllerDependencies
     {
         public IServiceProvider ServiceProvider { get; }
+        public IContextResolver CtxResolver { get; }
         internal readonly IZoneMapper ZoneMapper;
         internal readonly ITenantResolver TenantResolver;
         internal readonly IUserResolver UserResolver;
@@ -29,9 +31,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             //ISettingRepository settingRepository, 
             //OqtaneContainer oqtaneContainer, 
             OqtTempInstanceContext oqtTempInstanceContext,
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider,
+            IContextResolver ctxResolver
+            )
         {
             ServiceProvider = serviceProvider;
+            CtxResolver = ctxResolver;
             ZoneMapper = zoneMapper;
             TenantResolver = tenantResolver;
             UserResolver = userResolver;

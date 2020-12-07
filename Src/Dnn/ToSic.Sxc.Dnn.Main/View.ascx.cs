@@ -2,11 +2,14 @@
 using System.Diagnostics;
 using System.Web.UI;
 using DotNetNuke.Entities.Modules;
+using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
+
 
 namespace ToSic.SexyContent
 {
@@ -18,12 +21,8 @@ namespace ToSic.SexyContent
             {
                 if (_blockLoaded) return _block;
                 _blockLoaded = true;
-                var context = DnnContext.Create(
-                    new DnnSite().Init(ModuleConfiguration.OwnerPortalID),
-                    Eav.Factory.Resolve<DnnContainer>().Init(ModuleConfiguration, Log),
-                    new DnnUser(UserInfo),
-                    Eav.Factory.GetServiceProvider());
-                return _block = Eav.Factory.Resolve<BlockFromModule>().Init(context, Log);
+                var newCtx = Eav.Factory.Resolve<IContextOfBlock>().Init(ModuleConfiguration, Log);
+                return _block = Eav.Factory.Resolve<BlockFromModule>().Init(newCtx, Log);
             }
         }
         private IBlock _block;

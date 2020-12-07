@@ -1,9 +1,11 @@
 ﻿using System;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using ToSic.Eav.Context;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Context;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 // ReSharper disable once CheckNamespace
@@ -25,7 +27,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             => Sxc.Dnn.Factory.CmsBlock(moduleInfo);
 
         [Obsolete("use ToSic.Sxc.Dnn.Factory.CmsBlock(...) instead")]
-        public static IBlockBuilder SxcInstanceForModule(IContainer moduleInfo)
+        public static IBlockBuilder SxcInstanceForModule(IModule moduleInfo)
             => Sxc.Dnn.Factory.CmsBlock(moduleInfo);
 
 

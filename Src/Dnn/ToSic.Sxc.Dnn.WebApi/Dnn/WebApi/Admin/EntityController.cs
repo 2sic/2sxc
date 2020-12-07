@@ -4,10 +4,12 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.ImportExport.Options;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
@@ -34,6 +36,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 	{
         protected override string HistoryLogName => "Api.EntCnt";
 
+        private IContextResolver ContextResolver => _contextResolver ??
+                                                    (_contextResolver = ServiceProvider.Build<IContextResolver>()
+                                                        .Init(Log));
+        private IContextResolver _contextResolver;
+
         /// <summary>
         /// Used to be Entities/GetOllOfTypeForAdmin
         /// Used to be Entities/GetEntities
@@ -44,29 +51,41 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public IEnumerable<Dictionary<string, object>> List(int appId, string contentType) 
-            => _build<EntityApi>()
-                .InitOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.ReadSomething, Log)
+        public IEnumerable<Dictionary<string, object>> List(int appId, string contentType)
+        {
+            var appContext = ContextResolver.App(appId);
+            return _build<EntityApi>()
+                .InitOrThrowBasedOnGrants(appContext, appContext.AppState, contentType,
+                    GrantSets.ReadSomething, Log)
                 .GetEntitiesForAdmin(contentType);
+        }
 
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
         // todo: unsure why only Edit - is this used anywhere else than admin?
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void Delete(string contentType, int id, int appId, bool force = false) 
-            => _build<EntityApi>()
-                .InitOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
+        public void Delete(string contentType, int id, int appId, bool force = false)
+        {
+            var appContext = ContextResolver.App(appId);
+            _build<EntityApi>()
+                .InitOrThrowBasedOnGrants(appContext, appContext.AppState, contentType,
+                    GrantSets.DeleteSomething, Log)
                 .Delete(contentType, id, force);
+        }
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
         // todo: unsure why only Edit - is this used anywhere else than admin?
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, Guid guid, int appId, bool force = false)
-            => _build<EntityApi>()
-                .InitOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
+        {
+            var appContext = ContextResolver.App(appId);
+            _build<EntityApi>()
+                .InitOrThrowBasedOnGrants(appContext, appContext.AppState, contentType,
+                    GrantSets.DeleteSomething, Log)
                 .Delete(contentType, guid, force);
+        }
 
 
         /// <summary>
@@ -75,7 +94,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [AllowAnonymous] // will do security check internally
         public HttpResponseMessage Json(int appId, int id, string prefix, bool withMetadata)
-            => _build<ContentExportApi>().Init(appId, Log).DownloadEntityAsJson(new DnnUser(UserInfo), id, prefix, withMetadata);
+            => _build<ContentExportApi>().Init(appId, Log).DownloadEntityAsJson(new DnnUser(), id, prefix, withMetadata);
 
         /// <summary>
         /// Used to be GET ContentExport/ExportContent
@@ -99,7 +118,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             ExportSelection recordExport, ExportResourceReferenceMode resourcesReferences,
             ExportLanguageResolution languageReferences, string selectedIds = null)
             => _build<ContentExportApi>().Init(appId, Log).ExportContent(
-                new DnnUser(UserInfo),
+                new DnnUser(),
                 language, defaultLanguage, contentType,
                 recordExport, resourcesReferences,
                 languageReferences, selectedIds);
@@ -138,7 +157,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
         // New feature in 11.03 - Usage Statistics
         // not final yet, so no [HttpGet]
-        public dynamic Usage(int appId, Guid guid) => _build<EntityBackend>().Init(Log).Usage(GetContext(), GetApp(appId), guid);
+        public dynamic Usage(int appId, Guid guid) => _build<EntityBackend>().Init(Log).Usage(appId, guid);
 
     }
 }

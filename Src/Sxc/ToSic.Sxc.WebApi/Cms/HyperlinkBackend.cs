@@ -1,10 +1,11 @@
 ﻿using System;
 using ToSic.Eav.Apps.Adam;
+using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Security;
-using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -12,17 +13,20 @@ namespace ToSic.Sxc.WebApi.Cms
     public class HyperlinkBackend<TFolderId, TFileId>: WebApiBackendBase<HyperlinkBackend<TFolderId, TFileId>>
     {
         private readonly Lazy<AdamState<TFolderId, TFileId>> _adamState;
+        private readonly IContextResolver _ctxResolver;
         private AdamState<TFolderId, TFileId> AdamState => _adamState.Value;
 
-        public HyperlinkBackend(Lazy<AdamState<TFolderId, TFileId>> adamState, IServiceProvider serviceProvider) : base(serviceProvider, "Bck.HypLnk")
+        public HyperlinkBackend(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextResolver ctxResolver, IServiceProvider serviceProvider) : base(serviceProvider, "Bck.HypLnk")
         {
             _adamState = adamState;
+            _ctxResolver = ctxResolver.Init(Log);
         }
 
-		public string ResolveHyperlink(IBlock block, string hyperlink, int appId, string contentType, Guid guid, string field)
+		public string ResolveHyperlink(int appId, string hyperlink, string contentType, Guid guid, string field)
 		{
 			try
 			{
+				var context = _ctxResolver.App(appId);
 				// different security checks depending on the link-type
 				var lookupPage = hyperlink.Trim().StartsWith("page", StringComparison.OrdinalIgnoreCase);
 
@@ -34,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Cms
 				{
 					// page link - only resolve if the user has edit-permissions
 					// only people who have some full edit permissions may actually look up pages
-					var permCheckPage = ServiceProvider.Build<MultiPermissionsApp>().Init(block.Context, GetApp(appId, block), Log);
+					var permCheckPage = ServiceProvider.Build<MultiPermissionsApp>().Init(context, context.AppState, Log);
 					return permCheckPage.UserMayOnAll(GrantSets.WritePublished)
 						? resolved
 						: hyperlink;
@@ -49,7 +53,7 @@ namespace ToSic.Sxc.WebApi.Cms
 				// file-check, more abilities to allow
 				// this will already do a ensure-or-throw inside it if outside of adam
                 var adamCheck = AdamState; // new AdamState<int, int>();
-                adamCheck.Init(block, appId, contentType, field, guid, isOutsideOfAdam, Log);
+                adamCheck.Init(context, contentType, field, guid, isOutsideOfAdam, Log);
 				if (!adamCheck.Security.SuperUserOrAccessingItemFolder(resolved, out var exp))
 					throw exp;
 				if (!adamCheck.Security.UserIsPermittedOnField(GrantSets.ReadSomething, out exp))

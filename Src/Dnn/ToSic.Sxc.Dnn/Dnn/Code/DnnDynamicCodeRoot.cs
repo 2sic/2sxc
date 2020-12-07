@@ -1,7 +1,9 @@
-﻿using ToSic.Eav.Documentation;
+﻿using System;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 
@@ -10,7 +12,9 @@ namespace ToSic.Sxc.Dnn.Code
     [PrivateApi]
     public class DnnDynamicCodeRoot : DynamicCodeRoot, IDnnDynamicCode, IHasDynCodeContext
     {
-        public DnnDynamicCodeRoot(): base("Dnn.DynCdRt") { }
+        public DnnDynamicCodeRoot(IServiceProvider serviceProvider, ICmsContext context): base(serviceProvider, context, DnnConstants.LogName)
+        {
+        }
 
         /// <summary>
         /// Standard constructor
@@ -22,7 +26,7 @@ namespace ToSic.Sxc.Dnn.Code
         {
             base.Init(block, parentLog, compatibility);
             // Init things than require module-info or similar, but not 2sxc
-            Dnn = new DnnContextOld(block?.Context.Container);
+            Dnn = new DnnContextOld(block?.Context.Module);
             Link = new DnnLinkHelper(Dnn);
             return this;
         }

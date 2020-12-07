@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Context;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
+
 
 namespace ToSic.Sxc.Web.JsContext
 {
@@ -21,25 +24,25 @@ namespace ToSic.Sxc.Web.JsContext
 
         public bool IsEditable;
 
-        public JsContextEnvironment(string systemRootUrl, IInstanceContext ctx, IBlock block)
+        public JsContextEnvironment(string systemRootUrl, IContextOfBlock ctx)
         {
-            WebsiteId = ctx.Tenant.Id;
+            WebsiteId = ctx.Site.Id;
 
-            WebsiteUrl = "//" + ctx.Tenant.Url + "/";
+            WebsiteUrl = "//" + ctx.Site.Url + "/";
 
             PageId = ctx.Page.Id;
             PageUrl = ctx.Page.Url;
 
-            InstanceId = ctx.Container.Id;
+            InstanceId = ctx.Module.Id;
 
             SxcVersion = Settings.Version.ToString();
 
             SxcRootUrl = systemRootUrl;
 
-            var userMayEdit = block?.EditAllowed ?? false;
+            var userMayEdit = ctx.UserMayEdit;
 
             IsEditable = userMayEdit;
-            parameters = block?.Context.Page.Parameters;
+            parameters = ctx.Page.Parameters;
         }
     }
 

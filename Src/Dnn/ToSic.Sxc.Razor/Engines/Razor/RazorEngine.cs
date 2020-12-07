@@ -23,9 +23,14 @@ namespace ToSic.Sxc.Engines
     // ReSharper disable once UnusedMember.Global
     public partial class RazorEngine : EngineBase
     {
+        private readonly Lazy<DnnDynamicCodeRoot> _dnnDynCodeLazy;
+
         #region Constructor / DI
 
-        public RazorEngine(EngineBaseDependencies helpers) : base(helpers) { }
+        public RazorEngine(EngineBaseDependencies helpers, Lazy<DnnDynamicCodeRoot> dnnDynCodeLazy) : base(helpers)
+        {
+            _dnnDynCodeLazy = dnnDynCodeLazy;
+        }
 
         #endregion
 
@@ -101,12 +106,12 @@ namespace ToSic.Sxc.Engines
             var objectValue = RuntimeHelpers.GetObjectValue(CreateWebPageInstance());
             // ReSharper disable once JoinNullCheckWithUsage
             if (objectValue == null)
-                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage found at '{0}' was not created.", TemplatePath));
+                throw new InvalidOperationException($"The webpage found at '{TemplatePath}' was not created.");
 
             Webpage = objectValue as RazorComponentBase;
 
             if (Webpage == null)
-                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage at '{0}' must derive from RazorComponentBase.", TemplatePath));
+                throw new InvalidOperationException($"The webpage at '{TemplatePath}' must derive from RazorComponentBase.");
 
             Webpage.Context = HttpContext;
             Webpage.VirtualPath = TemplatePath;
@@ -126,7 +131,7 @@ namespace ToSic.Sxc.Engines
         private void InitHelpers(RazorComponentBase webPage, int compatibility)
         {
             webPage.Html = new Razor.HtmlHelper();
-            webPage.DynCode = new DnnDynamicCodeRoot().Init(Block, Log, compatibility);
+            webPage.DynCode = _dnnDynCodeLazy.Value.Init(Block, Log, compatibility);
 
             #region New in 10.25 - ensure jquery is not included by default
 

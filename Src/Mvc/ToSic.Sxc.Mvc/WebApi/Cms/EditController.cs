@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
 {
     [Route(WebApiConstants.WebApiRoot + "/cms/edit/[action]")]
     [ApiController]
-    public class EditController: SxcStatefullControllerBase
+    public class EditController: SxcStatefulControllerBase
     {
         #region DI
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "UiCntr";
@@ -44,17 +44,18 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public AllInOneDto Load([FromBody] List<ItemIdentifier> items, int appId)
         {
+            var context = GetContext();
             var block = GetBlock();
             var result = _loadBackend.Value
                 .Init(Log)
-                .Load(block, _contextBuilder.Init(block), appId, items);
+                .Load(appId, items);
             return result;
         }
 
         [HttpPost]
         // todo #mvcSec [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Dictionary<Guid, int> Save([FromBody] AllInOneDto package, int appId, bool partOfPage)
-            => _saveBackendLazy.Value.Init(GetBlock(), Log)
+            => _saveBackendLazy.Value.Init(appId, Log)
                 .Save(package, appId, partOfPage);
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
         public IEnumerable<EntityForPickerDto> EntityPicker(int appId, [FromBody] string[] items,
             string contentTypeName = null, int? dimensionId = null)
             => EntityBackend.Init(Log)
-                .GetAvailableEntities(GetContext(), appId, items, contentTypeName, dimensionId);
+                .GetAvailableEntities(appId, items, contentTypeName, dimensionId);
 
     }
 }

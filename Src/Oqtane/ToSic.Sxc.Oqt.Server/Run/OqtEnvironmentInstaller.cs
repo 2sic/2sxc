@@ -1,5 +1,7 @@
-﻿using ToSic.Eav.Logging;
+﻿using ToSic.Eav.Context;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
 
@@ -22,7 +24,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return true;
         }
 
-        public string GetAutoInstallPackagesUiUrl(ISite site, IContainer container, bool forContentApp)
+        public string GetAutoInstallPackagesUiUrl(ISite site, IModule container, bool forContentApp)
         {
             return "oqtane not implemented #todo #mvc";
         }

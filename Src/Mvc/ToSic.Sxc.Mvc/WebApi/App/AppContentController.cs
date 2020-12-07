@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.Data;
-using ToSic.Eav.WebApi;
 using ToSic.Sxc.WebApi.App;
 
 
@@ -14,20 +13,12 @@ namespace ToSic.Sxc.Mvc.WebApi.App
 {
     [ApiController]
     [Route(WebApiConstants.WebApiRoot + "/app/{appPath}/content/")]
-    public class AppContentController: SxcStatefullControllerBase
+    public class AppContentController: SxcStatefulControllerBase
     {
         #region DI / Constructor
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "AppCnt";
         
         #endregion
-
-        //private IInstanceContext GetContext()
-        //{
-        //    // in case the initial request didn't yet find a block builder, we need to create it now
-        //    var context = // BlockBuilder?.Context ??
-        //                  new InstanceContext(new MvcTenant(), new PageNull(), new ContainerNull(), new MvcUser());
-        //    return context;
-        //}
 
         #region Get List / all of a certain content-type
         /// <summary>
@@ -36,7 +27,7 @@ namespace ToSic.Sxc.Mvc.WebApi.App
         [HttpGet("{contentType}")]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string appPath = null)
-            => Eav.Factory.Resolve<AppContent>().Init(GetContext(), NoBlock, Log).GetItems(contentType, appPath);
+            => Eav.Factory.Resolve<AppContent>().Init(appPath, Log).GetItems(contentType, appPath);
 
         #endregion
 
@@ -68,7 +59,7 @@ namespace ToSic.Sxc.Mvc.WebApi.App
         /// <param name="appPath"></param>
         /// <returns></returns>
         private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string appPath) 
-            => Eav.Factory.Resolve<AppContent>().Init(GetContext(), NoBlock, Log).GetOne(contentType, getOne, appPath);
+            => Eav.Factory.Resolve<AppContent>().Init(appPath, Log).GetOne(contentType, getOne, appPath);
 
         #endregion
 

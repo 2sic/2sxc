@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     [ApiController]
     [Route( WebApiConstants.WebApiStateRoot + "/app/{appPath}/content/")]
-    public class AppContentController: SxcStatefulControllerBase
+    public class AppContentController: OqtStatefulControllerBase
     {
         private readonly Lazy<AppContent> _appContentLazy;
 
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [HttpGet("{contentType}")]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string appPath = null)
-            => _appContentLazy.Value.Init(GetContext(), NoBlock, Log).GetItems(contentType, appPath);
+            => _appContentLazy.Value.Init(appPath, Log).GetItems(contentType, appPath);
 
         #endregion
 
@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// <param name="appPath"></param>
         /// <returns></returns>
         private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string appPath)
-            => _appContentLazy.Value.Init(GetContext(), NoBlock, Log).GetOne(contentType, getOne, appPath);
+            => _appContentLazy.Value.Init(appPath, Log).GetOne(contentType, getOne, appPath);
 
         #endregion
 

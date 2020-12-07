@@ -1,27 +1,46 @@
 ﻿using System;
 using Microsoft.Extensions.Primitives;
-using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Cms.Publishing;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Mvc.Dev;
-using ToSic.Sxc.Mvc.Run;
+
 
 namespace ToSic.Sxc.Mvc.WebApi
 {
-    public abstract class SxcStatefullControllerBase: SxcStatelessControllerBase
+    public abstract class SxcStatefulControllerBase: SxcStatelessControllerBase
     {
+        protected IContextOfSite GetSiteContext()
+        {
+            return HttpContext.RequestServices.Build<IContextOfSite>();
+        }
 
-        protected IInstanceContext GetContext()
+
+        protected IContextOfApp GetAppContext(int appId)
+        {
+            // First get a normal basic context which is initialized with site, etc.
+            var appContext = HttpContext.RequestServices.Build<IContextOfApp>();
+            appContext.Init(Log);
+            appContext.ResetApp(appId);
+            return appContext;
+        }
+
+        protected IContextOfBlock GetContext()
         {
             //var publishing = HttpContext.RequestServices.Build<IPagePublishingResolver>();
 
             // in case the initial request didn't yet find a block builder, we need to create it now
-            var context = // BlockBuilder?.Context ??
-                new InstanceContext(new MvcSite(HttpContext), new PageNull(), new ContainerNull(), 
-                    new MvcUser(),
-                    HttpContext.RequestServices, new InstancePublishingState());
-            return context;
+            //var site = HttpContext.RequestServices.Build<ISite>().Init(TestIds.PrimaryZone);
+            var ctx = HttpContext.RequestServices.Build<IContextOfBlock>();
+            ctx.Init(Log);
+            ctx.Site.Init(TestIds.PrimaryZone);
+            //ctx.Init(new PageNull(), new ContainerNull());
+            //var context = // BlockBuilder?.Context ??
+            //    new ContextOfBlock(HttpContext.RequestServices, site, new MvcUser())
+            //        .Init(new PageNull(), new ContainerNull(), new BlockPublishingState());
+            return ctx;
         }
 
         protected IBlock GetBlock(bool allowNoContextFound = true)
@@ -39,7 +58,7 @@ namespace ToSic.Sxc.Mvc.WebApi
                 throw new Exception("No context found, cannot continue");
             }
 
-            var ctx = SxcMvc.CreateContext(HttpContext, instance.Zone, pageId, containerId, instance.App,
+            var ctx = SxcMvc.CreateContext(HttpContext.RequestServices, instance.Zone, pageId, containerId, instance.App,
                 instance.Block);
             IBlock block = HttpContext.RequestServices.Build<BlockFromModule>().Init(ctx, Log);
 

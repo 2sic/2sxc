@@ -25,9 +25,9 @@ namespace ToSic.Sxc.DataSources
         {
             // var log = new Log("DS.CreateV", parentLog, "will create view data source");
             var view = block.View;
-            var showDrafts = block.EditAllowed;
+            var showDrafts = block.Context.UserMayEdit;
 
-            Log.Add($"mid#{block.Context.Container.Id}, draft:{showDrafts}, template:{block.View?.Name}");
+            Log.Add($"mid#{block.Context.Module.Id}, draft:{showDrafts}, template:{block.View?.Name}");
             // Get ModuleDataSource
             var dsFactory = _dataSourceFactory.Init(Log); // new DataSource(log);
             //var block = builder.Block;

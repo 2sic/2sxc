@@ -1,8 +1,10 @@
 ﻿using System.IO;
 using System.Web.Hosting;
+using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Run;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Dnn.Run
 {
@@ -10,7 +12,7 @@ namespace ToSic.Sxc.Dnn.Run
     /// This is a DNN implementation of a Tenant-object. 
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public class DnnSite: Site<PortalSettings>
+    public sealed class DnnSite: Site<PortalSettings>, ICmsSite
     {
         #region Constructors and DI
 
@@ -18,21 +20,37 @@ namespace ToSic.Sxc.Dnn.Run
         /// DI Constructor, will get the current portal settings
         /// #TodoDI not ideal yet, as PortalSettings.current is still retrieved from global
         /// </summary>
-        public DnnSite() : this(PortalSettings.Current) { }
+        public DnnSite() => Swap(null);
 
-        /// <inheritdoc />
-        public DnnSite(PortalSettings settings): base(GetBestPortalSettings(settings)) {}
+
+        public DnnSite Swap(PortalSettings settings)
+        {
+            UnwrappedContents = KeepBestPortalSettings(settings);
+
+            // reset language info to be sure to get it from the latest source
+            _currentCulture = null;
+            _defaultLanguage = null;
+
+            return this;
+        }
+
+        public DnnSite TrySwap(ModuleInfo module)
+        {
+            if (module == null || module.OwnerPortalID < 0) return this;
+            var modulePortalSettings = new PortalSettings(module.OwnerPortalID);
+            return Swap(modulePortalSettings);
+        }
 
         /// <summary>
         /// Very special helper to work around a DNN issue
         /// Reason is that PortalSettings.Current is always "perfect" and also contains root URLs and current Page
-        /// Other Portalsettings may not contain this (partially populated objects)
-        /// In case we're requesting a DnnTenant with incomplete Portalsettings
+        /// Other PortalSettings may not contain this (partially populated objects)
+        /// In case we're requesting a DnnTenant with incomplete PortalSettings
         /// we want to correct this here
         /// </summary>
         /// <param name="settings"></param>
         /// <returns></returns>
-        private static PortalSettings GetBestPortalSettings(PortalSettings settings)
+        private static PortalSettings KeepBestPortalSettings(PortalSettings settings)
         {
             // in case we don't have an HTTP Context with current portal settings, don't try anything
             if (PortalSettings.Current == null) return settings;
@@ -46,21 +64,41 @@ namespace ToSic.Sxc.Dnn.Run
         }
 
         /// <inheritdoc />
-        public override ISite Init(int tenantId)
+        public override ISite Init(int siteId)
         {
-            var newSettings = new PortalSettings(tenantId);
+            var newSettings = new PortalSettings(siteId);
             // only replace it if it's different - because the initial normal Portalsettings has more loaded values
-            if (newSettings.PortalId != (UnwrappedContents?.PortalId ?? -1))
-                UnwrappedContents = newSettings;
-            return this;
+            //if (newSettings.PortalId != (UnwrappedContents?.PortalId ?? -1))
+            //    UnwrappedContents = newSettings;
+            return Swap(newSettings);
         }
 
         #endregion
 
 
         /// <inheritdoc />
-        public override string DefaultLanguage => _defaultLanguage ?? (_defaultLanguage = UnwrappedContents.DefaultLanguage.ToLowerInvariant());
+        public override string DefaultCultureCode => _defaultLanguage ?? (_defaultLanguage = UnwrappedContents?.DefaultLanguage?.ToLowerInvariant());
         private string _defaultLanguage;
+
+
+        public override string CurrentCultureCode
+        {
+            get
+            {
+                if (_currentCulture != null) return _currentCulture;
+
+                // First check if we know more about the site
+                var portal = UnwrappedContents;
+                var aliasCulture = portal?.PortalAlias?.CultureCode;
+                if (!string.IsNullOrWhiteSpace(aliasCulture)) return _currentCulture = aliasCulture.ToLowerInvariant();
+
+                // if alias is unknown, then we might be in search mode or something
+                return _currentCulture = portal?.CultureCode?.ToLowerInvariant();
+
+                // todo: maybe check thread?
+            }
+        }
+        private string _currentCulture;
 
         /// <inheritdoc />
         public override int Id => UnwrappedContents?.PortalId ?? Eav.Constants.NullId;
@@ -89,10 +127,6 @@ namespace ToSic.Sxc.Dnn.Run
 
         [PrivateApi]
         public override string AppsRootPhysicalFull => HostingEnvironment.MapPath(AppsRootRelative);
-
-        [PrivateApi]
-        public override bool RefactorUserIsAdmin
-            => UnwrappedContents.UserInfo.IsInRole(UnwrappedContents.AdministratorRoleName);
 
         /// <inheritdoc />
         public override string ContentPath => UnwrappedContents.HomeDirectory;

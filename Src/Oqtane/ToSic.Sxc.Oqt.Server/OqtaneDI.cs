@@ -1,12 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
+using ToSic.Eav.Context;
+using ToSic.Eav.Data;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Code;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -28,17 +30,17 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddScoped<ILinkPaths, OqtLinkPaths>();
             services.AddTransient<IServerPaths, OqtServerPaths>();
 
-
-            services.AddTransient<IEnvironment, OqtEnvironment>();
             services.AddTransient<ISite, OqtSite>();
-            services.AddTransient<IRenderingHelper, OqtRenderingHelper>();
+            services.AddTransient<IUser, OqtUser>();
+            services.AddTransient<IZoneCultureResolver, OqtSite>();
             services.AddTransient<IZoneMapper, OqtZoneMapper>();
             services.AddTransient<AppPermissionCheck, OqtPermissionCheck>();
             services.AddTransient<DynamicCodeRoot, OqtaneDynamicCode>();
             services.AddTransient<IPlatformModuleUpdater, OqtModuleUpdater>();
             services.AddTransient<IEnvironmentInstaller, OqtEnvironmentInstaller>();
-            services.AddTransient<IGetEngine, OqtGetLookupEngine>();
-            services.AddTransient<OqtContextBuilder>();
+            services.AddTransient<ILookUpEngineResolver, OqtGetLookupEngine>();
+            services.AddTransient<OqtUiContextBuilder>();
+            services.AddTransient<IModule, OqtContainer>();
             services.AddTransient<OqtContainer>();
             services.AddTransient<OqtTempInstanceContext>();
             services.AddTransient<OqtSite>();
@@ -54,7 +56,7 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddTransient<IClientDependencyOptimizer, OqtClientDependencyOptimizer>();
             services.AddTransient<IValueConverter, OqtValueConverter>();
 
-            services.AddSingleton<Sxc.Run.Context.PlatformContext, OqtPlatformContext>();
+            services.AddSingleton<IPlatform, OqtPlatformContext>();
 
             services.AddTransient<SecurityChecksBase, OqtAdamSecurityChecks>();
             services.AddTransient<IAdamFileSystem<int, int>, OqtAdamFileSystem>();

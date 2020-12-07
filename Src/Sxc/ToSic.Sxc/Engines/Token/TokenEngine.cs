@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using ToSic.Eav;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Plumbing;
@@ -12,7 +11,6 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Engines.Token;
 using ToSic.Sxc.LookUp;
-using ToSic.Sxc.Run;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Engines
@@ -101,12 +99,12 @@ namespace ToSic.Sxc.Engines
 
         private void InitTokenReplace()
         {
-            var confProv = Block.Context.ServiceProvider.Build<AppConfigDelegate>().Init(Log).GetConfigProviderForModule(Block.Context.Container.Id, Block.App, Block);
+            var confProv = Block.Context.ServiceProvider.Build<AppConfigDelegate>().Init(Log).GetConfigProviderForModule(Block.Context, Block.App, Block);
             _tokenReplace = new TokenReplaceEav(confProv);
             
             // Add the Content and ListContent property sources used always
-            confProv.Add(new LookUpInDynamicEntity(SourcePropertyName.ListContent, _data.Header));
-            confProv.Add(new LookUpInDynamicEntity(SourcePropertyName.Content, _data.Content));
+            confProv.Add(new LookUpForTokenTemplate(SourcePropertyName.ListContent, _data.Header));
+            confProv.Add(new LookUpForTokenTemplate(SourcePropertyName.Content, _data.Content));
         }
 
 
@@ -161,7 +159,7 @@ namespace ToSic.Sxc.Engines
             {
                 // Create property sources for the current data item (for the current data item and its list information)
                 var propertySources = new Dictionary<string, ILookUp>();
-                propertySources.Add(sourceName, new LookUpInDynamicEntity(sourceName, _data.AsDynamic(dataItems.ElementAt(i)), i, itemsCount));
+                propertySources.Add(sourceName, new LookUpForTokenTemplate(sourceName, _data.AsDynamic(dataItems.ElementAt(i)), i, itemsCount));
                 builder.Append(RenderSection(template, propertySources));
             }
 
