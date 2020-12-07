@@ -1,5 +1,5 @@
 ﻿using IntegrationSamples.SxcEdit01.Controllers;
-using IntegrationSamples.SxcEdit01.Implementations;
+using IntegrationSamples.SxcEdit01.Integration;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Configuration;
@@ -39,7 +39,7 @@ namespace IntegrationSamples.SxcEdit01
 
         internal static IServiceCollection AddImplementations(this IServiceCollection services)
         {
-            services.TryAddTransient<IUser, ImpUserSuper>();
+            services.TryAddTransient<IUser, IntUserSuper>();
             services.TryAddTransient<IntStatefulControllerBase.Dependencies>();
             return services;
         }

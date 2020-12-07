@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using IntegrationSamples.SxcEdit01.Implementations;
+using IntegrationSamples.SxcEdit01.Integration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.WebApi.Dto;

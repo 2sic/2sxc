@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using ToSic.Eav.Context;
 
-namespace IntegrationSamples.SxcEdit01.Implementations
+namespace IntegrationSamples.SxcEdit01.Integration
 {
-    public class ImpUserSuper: IUser
+    public class IntUserSuper: IUser
     {
         public int Id => 0;
         public string IdentityToken => "impl-user:0";
