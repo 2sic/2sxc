@@ -100,58 +100,60 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         public bool TryGetMember(string memberName, out object result)
         {
-            result = GetEntityValue(memberName);
+            result = _getValue(memberName);
             return true;
         }
 
-        [PrivateApi]
-        public object GetEntityValue(string field)
+        [PrivateApi("shouldn't be used, but it may be published by accident, so shouldn't be removed. ")]
+        [Obsolete("please use Get instead")]
+        public object GetEntityValue(string field) => _getValue(field);
+
+        private object _getValue(string field, string language = null, bool lookup = true)
         {
+            var defaultMode = language != null && lookup;
+
             #region check the two special cases Toolbar / Presentation which the EAV doesn't know
 
-            if (field == "Toolbar")
-#pragma warning disable 612
 #pragma warning disable 618
-                return Toolbar.ToString();
+            // ReSharper disable once ConvertIfStatementToSwitchStatement
+            if (field == "Toolbar") return Toolbar.ToString();
 #pragma warning restore 618
-#pragma warning restore 612
 
-            if (field == ViewParts.Presentation)
-                return GetPresentation;
+            if (field == ViewParts.Presentation) return GetPresentation;
 
             #endregion
+
+            // use the standard dimensions or overload
+            var dimsToUse = language == null ? Dimensions : new[] {language};
 
             // check Entity is null (in cases where null-objects are asked for properties)
             if (Entity == null) return null;
 
-            // check if we already have it in the cache
-            if (_valCache.ContainsKey(field)) return _valCache[field];
+            // check if we already have it in the cache - but only in normal lookups
+            if (defaultMode && _valCache.ContainsKey(field)) return _valCache[field];
 
-            var result = Entity.GetBestValue(field, Dimensions/*, true*/);
+            var result = Entity.GetBestValue(field, dimsToUse);
 
             // New mechanism to not use resolve-hyperlink
-            if (result is string strResult 
-                && ValueConverterBase.CouldBeReference(strResult)
-                && Entity.Attributes.ContainsKey(field) &&
-                Entity.Attributes[field].Type == Eav.Constants.DataTypeHyperlink)
-            {
-                result = ServiceProviderOrNull?.Build<IValueConverter>()?.ToValue(strResult, EntityGuid) ??
-                      result;
-            }
+            if (lookup && result is string strResult
+                       && ValueConverterBase.CouldBeReference(strResult)
+                       && Entity.Attributes.ContainsKey(field) &&
+                       Entity.Attributes[field].Type == Eav.Constants.DataTypeHyperlink)
+                result = ServiceProviderOrNull?.Build<IValueConverter>()?.ToValue(strResult, EntityGuid)
+                         ?? result;
 
             if (result is IEnumerable<IEntity> rel)
             {
-                var list = new DynamicEntityWithList(Entity, field, rel, Dimensions, CompatibilityLevel, Block);
+                var list = new DynamicEntityWithList(Entity, field, rel, dimsToUse, CompatibilityLevel, Block);
                 // special case: if it's a Dynamic Entity without block (like App.Settings)
                 // it needs the Service Provider from this object to work
                 if (Block == null) list.ServiceProviderOrNull = ServiceProviderOrNull;
                 result = list;
             }
 
-            _valCache.Add(field, result);
+            if(defaultMode) _valCache.Add(field, result);
             return result;
         }
-
         private readonly Dictionary<string, object> _valCache = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
@@ -159,14 +161,27 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="name">the property name. </param>
         /// <returns>a dynamically typed result, can be string, bool, etc.</returns>
-        public dynamic Get(string name) => GetEntityValue(name);
+        public dynamic Get(string name) => _getValue(name);
+
+
+        /// <inheritdoc/>
+        public dynamic Get(string name, 
+            // ReSharper disable once MethodOverloadWithOptionalParameter
+            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string language = null, 
+            bool convertLinks = true)
+        {
+            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Get",
+                $"{nameof(language)}, ... (optional)");
+            return _getValue(name, language, convertLinks);
+        }
 
         /// <inheritdoc />
         public dynamic Presentation => GetPresentation; 
 
         private IDynamicEntity GetPresentation
             => _presentation ?? (_presentation = Entity is EntityInBlock entityInGroup
-                   ? SubDynEntity(entityInGroup.Presentation) // new DynamicEntity(entityInGroup.Presentation, Dimensions, CompatibilityLevel, Block)
+                   ? SubDynEntity(entityInGroup.Presentation)
                    : null);
         private IDynamicEntity _presentation;
 
