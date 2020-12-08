@@ -42,8 +42,8 @@ namespace ToSic.Sxc.Dnn.Run
             {
                 Log.Add($"Trying to build path based on tenant. If it's in search mode, the {nameof(ISite)} will be missing. Id: {Site.Id}");
                 EnsureSiteIsLoadedWhenDiFails();
-                var fullPath = System.IO.Path.Combine(Site.AppsRootPhysicalFull, /*+ "/" +*/ path, /*+ "/" + */ Eav.Constants.FolderAppExtensions);
-                Path = fullPath;// HostingEnvironment.MapPath(fullPath);
+                var fullPath = System.IO.Path.Combine(Site.AppsRootPhysicalFull, path, Eav.Constants.FolderAppExtensions);
+                Path = fullPath;
                 Log.Add("System path:" + Path);
             }
             catch (Exception e)
@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Dnn.Run
         {
             if (Site.Id != Eav.Constants.NullId) return;
             Log.Add("TenantId not found. Must be in search mode, will try to find correct portalsettings");
-            Site = ZoneMapper.TenantOfApp(AppId);
+            Site = ZoneMapper.SiteOfApp(AppId);
         }
 
         IAppRepositoryLoader IAppRepositoryLoader.Init(int appId, string path, ILog log) => Init(appId, path, log) as IAppRepositoryLoader;
