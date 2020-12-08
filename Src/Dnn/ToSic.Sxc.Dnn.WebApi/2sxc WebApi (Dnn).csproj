@@ -106,7 +106,6 @@
     <Compile Include="Dnn\WebApi\Admin\FeaturesController.cs" />
     <Compile Include="Dnn\WebApi\Admin\ZoneController.cs" />
     <Compile Include="Dnn\WebApi\Cms\BlockController.cs" />
-    <Compile Include="Dnn\WebApi\Cms\LinkController.cs" />
     <Compile Include="Dnn\WebApi\Cms\ListController.cs" />
     <Compile Include="Dnn\WebApi\Cms\ItemController.cs" />
     <Compile Include="Dnn\WebApi\Sys\InstallController.cs" />
@@ -128,7 +127,6 @@
     <Compile Include="Dnn\WebApi\App\AppQueryController.cs" />
     <Compile Include="Dnn\WebApi\Cms\ContentGroupController.cs" />
     <Compile Include="Dnn\WebApi\DnnApiControllerWithFixes.cs" />
-    <Compile Include="Dnn\WebApi\HyperlinkController.cs" />
     <Compile Include="Dnn\WebApi\ModuleController.cs" />
     <Compile Include="Dnn\WebApi\Admin\TypeController.cs" />
     <Compile Include="Dnn\WebApi\Admin\EntityController.cs" />
