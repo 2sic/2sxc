@@ -40,7 +40,7 @@ namespace IntegrationSamples.SxcEdit01
 
             sp.Build<IDbConfiguration>().ConnectionString = connectionString;
             var hostingEnvironment = sp.Build<IHostEnvironment>();
-            sp.Build<IGlobalConfiguration>().DataFolder = Path.Combine(hostingEnvironment.ContentRootPath, "wwwroot\\system\\sxc\\.data");
+            sp.Build<IGlobalConfiguration>().GlobalFolder = Path.Combine(hostingEnvironment.ContentRootPath, "wwwroot\\system\\sxc");
         }
 
         internal static IServiceCollection AddImplementations(this IServiceCollection services)

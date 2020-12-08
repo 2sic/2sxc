@@ -2,7 +2,9 @@
 using System.IO;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
+using ToSic.Eav.Identity;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Dto;
@@ -11,21 +13,22 @@ namespace ToSic.Sxc.WebApi.ImportExport
 {
     public class ImportApp: HasLog
     {
+        #region DI Constructor
 
-        #region Constructor / DI
-
-        public ImportApp(IZoneMapper zoneMapper, IServerPaths serverPaths, IEnvironmentLogger envLogger, ZipImport zipImport) : base("Bck.Export")
+        public ImportApp(IZoneMapper zoneMapper, IServerPaths serverPaths, IEnvironmentLogger envLogger, ZipImport zipImport, IGlobalConfiguration globalConfiguration) : base("Bck.Export")
         {
             _zoneMapper = zoneMapper;
             _serverPaths = serverPaths;
             _envLogger = envLogger;
             _zipImport = zipImport;
+            _globalConfiguration = globalConfiguration;
         }
 
         private readonly IZoneMapper _zoneMapper;
         private readonly IServerPaths _serverPaths;
         private readonly IEnvironmentLogger _envLogger;
         private readonly ZipImport _zipImport;
+        private readonly IGlobalConfiguration _globalConfiguration;
         private IUser _user;
 
         public ImportApp Init(IUser user, ILog parentLog)
@@ -49,7 +52,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             try
             {
                 zipImport.Init(zoneId, null, _user.IsSuperUser, Log);
-                var temporaryDirectory = _serverPaths.FullSystemPath(Path.Combine(Eav.ImportExport.Settings.TemporaryDirectory, Guid.NewGuid().ToString().Substring(0, 8)));
+                var temporaryDirectory = Path.Combine(_globalConfiguration.TemporaryFolder, Mapper.GuidCompress(Guid.NewGuid()).Substring(0, 8));
 
                 // Increase script timeout to prevent timeouts
                 result.Success = zipImport.ImportZip(stream, temporaryDirectory, name);
