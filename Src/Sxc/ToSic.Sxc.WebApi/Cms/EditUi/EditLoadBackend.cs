@@ -21,7 +21,7 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public partial class EditLoadBackend: WebApiBackendBase<EditLoadBackend>
     {
-        private const int TempToMarkSingletonMetadata = 2000000000;
+        //private const int TempToMarkSingletonMetadata = 2000000000;
 
         #region DI Constructor
 
@@ -142,27 +142,31 @@ namespace ToSic.Sxc.WebApi.Cms
         /// new 2020-12-08 - correct entity-id with lookup of existing if marked as singleton
         /// Singleton-marker is temporarily a very large number 2'000'000'000
         /// </summary>
-        /// <param name="list"></param>
         private bool TryToAutoFindMetadataSingleton(List<ItemIdentifier> list, AppState appState)
         {
             var wrapLog = Log.Call<bool>();
 
             foreach (var header in list
-                .Where(header => header.EntityId == TempToMarkSingletonMetadata && header.For != null && !string.IsNullOrWhiteSpace(header.ContentTypeName)))
+                .Where(header => header.For?.Singleton == true && !string.IsNullOrWhiteSpace(header.ContentTypeName)))
             {
                 Log.Add("Found an entity with the auto-lookup marker");
                 // try to find metadata for this
                 var mdFor = header.For;
                 var type = _mdTargetTypes.GetId(mdFor.Target);
                 var mds = mdFor.Guid != null
-                    ? appState.Get(type, mdFor.Guid, header.ContentTypeName)
+                    ? appState.Get(type, mdFor.Guid.Value, header.ContentTypeName)
                     : mdFor.Number != null
-                        ? appState.Get(type, mdFor.Number, header.ContentTypeName)
+                        ? appState.Get(type, mdFor.Number.Value, header.ContentTypeName)
                         : appState.Get(type, mdFor.String, header.ContentTypeName);
 
-                var mdList = mds.ToList();
+                var mdList = mds.ToArray();
+                if (mdList.Length > 1)
+                {
+                    Log.Add($"Warning - looking for best metadata but found too many {mdList.Length}, will use first");
+                    // must now sort by ID otherwise the order may be different after a few save operations
+                    mdList = mdList.OrderBy(e => e.EntityId).ToArray();
+                }
                 header.EntityId = !mdList.Any() ? 0 : mdList.First().EntityId;
-                if (mdList.Count > 1) Log.Add($"Warning - looking for best metadata but found too many {mdList.Count}, will use first");
             }
 
             return wrapLog("ok", true);
