@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using System.Web.Hosting;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
@@ -48,6 +49,8 @@ namespace ToSic.SexyContent
 
             // now we should be able to instantiate registration of DB
             Factory.StaticBuild<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
+            Factory.StaticBuild<IGlobalConfiguration>().DataFolder 
+                = HostingEnvironment.MapPath(System.IO.Path.Combine(Eav.ImportExport.Settings.ModuleDirectory)); ;
 
             // also register this because of a long DNN issue which was fixed, but we don't know if we're running in another version
             SharpZipLibRedirect.RegisterSharpZipLibRedirect();

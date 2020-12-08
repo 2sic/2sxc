@@ -110,7 +110,6 @@
     </Compile>
     <Compile Include="Polymorphism\Koi.cs" />
     <Compile Include="Polymorphism\Permissions.cs" />
-    <Compile Include="DnnGlobalFolderRepository.cs" />
     <Compile Include="StartupDnnDi.cs" />
     <Compile Include="View.ascx.cs">
       <DependentUpon>View.ascx</DependentUpon>

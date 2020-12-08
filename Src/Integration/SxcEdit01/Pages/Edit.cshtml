@@ -7,8 +7,10 @@
   ViewData["Title"] = "Edit 2sxc data";
 
   // Adjust these values to your testing environment
-  var zoneId = 2;
-  var appId = 78;
+  var zoneId = 145; //2;
+  var appId = 1369; // 78;
+  var pageId = 4427;
+  var moduleId = 9771;
   var appState = State.Get(appId);
   var firstItem = appState.List.FirstOrDefault();
 }
@@ -16,11 +18,11 @@
 
 <script language="javascript">
   function getSxc() {
-    return $2sxc({ zoneId: @zoneId, appId: @appId, pageId: 4427, moduleId: 9771 });
+    return $2sxc({ zoneId: @zoneId, appId: @appId, pageId: @pageId, moduleId: @moduleId });
   }
 </script>
 <p>
-  Try using the $2sxc js api
+  Try using the $2sxc js api for @zoneId/@appId and page @pageId and module @moduleId - first item @firstItem.EntityId
 </p>
 
 <ol>
