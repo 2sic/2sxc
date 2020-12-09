@@ -154,10 +154,10 @@ namespace ToSic.Sxc.WebApi.Cms
                 var mdFor = header.For;
                 var type = _mdTargetTypes.GetId(mdFor.Target);
                 var mds = mdFor.Guid != null
-                    ? appState.Get(type, mdFor.Guid.Value, header.ContentTypeName)
+                    ? appState.GetMetadata(type, mdFor.Guid.Value, header.ContentTypeName)
                     : mdFor.Number != null
-                        ? appState.Get(type, mdFor.Number.Value, header.ContentTypeName)
-                        : appState.Get(type, mdFor.String, header.ContentTypeName);
+                        ? appState.GetMetadata(type, mdFor.Number.Value, header.ContentTypeName)
+                        : appState.GetMetadata(type, mdFor.String, header.ContentTypeName);
 
                 var mdList = mds.ToArray();
                 if (mdList.Length > 1)

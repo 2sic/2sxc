@@ -38,7 +38,7 @@
 @{
   var targetType = 10; // CMS object, maybe better something else, officially should be > 100
   var myItemId = 1234;
-  var md = appState.Get(targetType, myItemId);
+  var md = appState.GetMetadata(targetType, myItemId);
 }
 Found Metadata: @md.Count()
 <ol>

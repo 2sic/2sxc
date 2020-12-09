@@ -22,6 +22,12 @@ namespace ToSic.Sxc.Dnn.Run
         /// </summary>
         public DnnSite() => Swap(null);
 
+        /// <inheritdoc />
+        public override ISite Init(int siteId) => Swap(new PortalSettings(siteId));
+
+        #endregion
+
+        #region Swap new Portal Settings into this object
 
         public DnnSite Swap(PortalSettings settings)
         {
@@ -63,18 +69,10 @@ namespace ToSic.Sxc.Dnn.Run
             return settings;
         }
 
-        /// <inheritdoc />
-        public override ISite Init(int siteId)
-        {
-            var newSettings = new PortalSettings(siteId);
-            // only replace it if it's different - because the initial normal Portalsettings has more loaded values
-            //if (newSettings.PortalId != (UnwrappedContents?.PortalId ?? -1))
-            //    UnwrappedContents = newSettings;
-            return Swap(newSettings);
-        }
 
         #endregion
 
+        #region Culture / Languages
 
         /// <inheritdoc />
         public override string DefaultCultureCode => _defaultLanguage ?? (_defaultLanguage = UnwrappedContents?.DefaultLanguage?.ToLowerInvariant());
@@ -94,13 +92,13 @@ namespace ToSic.Sxc.Dnn.Run
 
                 // if alias is unknown, then we might be in search mode or something
                 return _currentCulture = portal?.CultureCode?.ToLowerInvariant();
-
-                // todo: maybe check thread?
             }
         }
         private string _currentCulture;
 
-        /// <inheritdoc />
+        #endregion
+
+        /// <inheritdoc cref="ISite.Id" />
         public override int Id => UnwrappedContents?.PortalId ?? Eav.Constants.NullId;
 
         /// <inheritdoc />

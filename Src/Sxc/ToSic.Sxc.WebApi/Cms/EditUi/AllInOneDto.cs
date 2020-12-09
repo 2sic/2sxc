@@ -46,6 +46,9 @@ namespace ToSic.Sxc.WebApi.Cms
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<JsonEntity> ContentTypeItems;
 
+        /// <summary>
+        /// The UI Context information
+        /// </summary>
         public ContextDto Context;
     }
 
