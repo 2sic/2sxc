@@ -68,7 +68,10 @@ wip
 </p>
 
 <p>
-  <a href="#" onclick="openMetadata(2742)">Edit Test for 2742</a>
+  @{
+    var tempId = 2742;
+  }
+  <a href="#" onclick="openMetadata(@tempId)">Edit Test for @tempId</a>
 </p>
 
 <hr />
