@@ -136,6 +136,7 @@
     <Content Include=".data-custom\readme.md" />
     <None Include=".databeta\readme.md" />
     <Content Include=".gitignore" />
+    <None Include="2sxc12-future-sql\Future-To-Test.SqlDataProvider.sql.dont-use-yet" />
     <Content Include="DnnPackageBuilder\Cleanup\flush.txt" />
     <Content Include="razorblade-old\bin\Connect.Razor.dll" />
     <Content Include="ClientScripts\ModuleEditor.js" />
