@@ -17,26 +17,21 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
     {
         protected override string HistoryLogName => "Api.Edit";
 
+        /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
             => _build<EditLoadBackend>().Init(Log)
                 .Load(appId, items);
 
+        /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage) 
             => _build<EditSaveBackend>().Init(appId, Log)
                 .Save(package, appId, partOfPage);
 
-        /// <summary>
-        /// Used to be GET Ui/GetAvailableEntities
-        /// </summary>
-        /// <param name="appId"></param>
-        /// <param name="items"></param>
-        /// <param name="contentTypeName"></param>
-        /// <param name="dimensionId"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
         [HttpPost]
         [AllowAnonymous] // security check happens internally
@@ -45,17 +40,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
             => _build<EntityPickerBackend>().Init(Log)
                 .GetAvailableEntities(appId, items, contentTypeName, dimensionId);
 
-        /// <summary>
-        /// This call will resolve links to files and to pages.
-        /// For page-resolving, it only needs Hyperlink and AppId.
-        /// For file resolves it needs the item context so it can verify that an item is in the ADAM folder of this object.
-        /// </summary>
-        /// <param name="link">The link to resolve - required. Can be a real link or a file:xx page:xx reference</param>
-        /// <param name="appId">App id to which this link (or or file/page) belongs to</param>
-        /// <param name="contentType">Content Type (optional). Relevant for checking ADAM links inside an item.</param>
-        /// <param name="guid">Item GUID (optional). Relevant for checking ADAM links inside an item.</param>
-        /// <param name="field">Item field (optional). Relevant for checking ADAM links inside an item.</param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public string LookupLink(string link, int appId, string contentType = default, Guid guid = default, string field = default)
