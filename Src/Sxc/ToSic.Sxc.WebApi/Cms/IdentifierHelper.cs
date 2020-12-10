@@ -5,13 +5,10 @@ using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public class IdentifierHelper: HasLog<IdentifierHelper> //: WebApiBackendBase<EntityBackend>
+    public class IdentifierHelper: HasLog<IdentifierHelper>
     {
+        public IdentifierHelper(CmsRuntime cmsRuntime) : base("Bck.IdHlpr") => _cmsRuntime = cmsRuntime;
         private readonly CmsRuntime _cmsRuntime;
-        public IdentifierHelper(CmsRuntime cmsRuntime) : base("Bck.IdHlpr")
-        {
-            _cmsRuntime = cmsRuntime;
-        }
 
         internal ItemIdentifier ResolveItemIdOfGroup(int appId, ItemIdentifier item, ILog log)
         {

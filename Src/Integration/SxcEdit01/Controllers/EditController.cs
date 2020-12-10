@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.WebApi.Cms;
 
 namespace IntegrationSamples.SxcEdit01.Controllers
@@ -12,7 +13,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
     //[AutoValidateAntiforgeryToken]
     [Route(WebApiConstants.DefaultRouteRoot + "/cms" + WebApiConstants.DefaultRouteControllerAction)]
     [ApiController]
-    public class EditController: IntStatefulControllerBase
+    public class EditController: IntStatefulControllerBase, IEditController
     {
         #region DI
         protected override string HistoryLogName => IntConstants.LogPrefix + ".UiCntr";
@@ -20,16 +21,19 @@ namespace IntegrationSamples.SxcEdit01.Controllers
         public EditController(Dependencies dependencies,
             Lazy<EntityPickerBackend> entityBackend,
             Lazy<EditLoadBackend> loadBackend,
-            Lazy<EditSaveBackend> saveBackendLazy) : base(dependencies)
+            Lazy<EditSaveBackend> saveBackendLazy,
+            Lazy<HyperlinkBackend<int, int>> linkBackendLazy) : base(dependencies)
         {
             _entityBackend = entityBackend;
             _loadBackend = loadBackend;
             _saveBackendLazy = saveBackendLazy;
+            _linkBackendLazy = linkBackendLazy;
         }
 
         private readonly Lazy<EntityPickerBackend> _entityBackend;
         private readonly Lazy<EditLoadBackend> _loadBackend;
         private readonly Lazy<EditSaveBackend> _saveBackendLazy;
+        private readonly Lazy<HyperlinkBackend<int, int>> _linkBackendLazy;
         private EntityPickerBackend EntityBackend => _entityBackend.Value;
 
         #endregion
@@ -48,24 +52,21 @@ namespace IntegrationSamples.SxcEdit01.Controllers
         [HttpPost]
         // todo #mvcSec [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
-            => _saveBackendLazy.Value.Init(appId, Log)
-                .Save(package, appId, partOfPage);
+            => _saveBackendLazy.Value.Init(appId, Log).Save(package, partOfPage);
 
-        /// <summary>
-        /// Used to be GET Ui/GetAvailableEntities
-        /// </summary>
-        /// <param name="appId"></param>
-        /// <param name="items"></param>
-        /// <param name="contentTypeName"></param>
-        /// <param name="dimensionId"></param>
-        /// <returns></returns>
         [HttpGet]
         [HttpPost]
         [AllowAnonymous] // security check happens internally
         public IEnumerable<EntityForPickerDto> EntityPicker(int appId, [FromBody] string[] items,
             string contentTypeName = null, int? dimensionId = null)
-            => EntityBackend.Init(Log)
-                .GetAvailableEntities(appId, items, contentTypeName, dimensionId);
+            => EntityBackend.Init(Log).GetAvailableEntities(appId, items, contentTypeName, dimensionId);
+
+        /// <inheritdoc />
+        [HttpGet]
+        // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        public string LookupLink(string link, int appId, string contentType = default, Guid guid = default, string field = default)
+            => _linkBackendLazy.Value.Init(Log).ResolveHyperlink(appId, link, contentType, guid, field);
+
 
     }
 }

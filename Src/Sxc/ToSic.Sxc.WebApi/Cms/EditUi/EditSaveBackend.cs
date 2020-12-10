@@ -17,22 +17,23 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public class EditSaveBackend : WebApiBackendBase<EditSaveBackend>
     {
-        private readonly SxcPagePublishing _pagePublishing;
-        private readonly Lazy<AppManager> _appManagerLazy;
-        private readonly IContextResolver _ctxResolver;
 
-        #region Constructor / DI
+        #region DI Constructor and Init
+
         public EditSaveBackend(SxcPagePublishing pagePublishing, Lazy<AppManager> appManagerLazy, IServiceProvider serviceProvider, IContextResolver ctxResolver) : base(serviceProvider, "Cms.SaveBk")
         {
             _pagePublishing = pagePublishing;
             _appManagerLazy = appManagerLazy;
             _ctxResolver = ctxResolver;
         }
+        private readonly SxcPagePublishing _pagePublishing;
+        private readonly Lazy<AppManager> _appManagerLazy;
+        private readonly IContextResolver _ctxResolver;
 
         public EditSaveBackend Init(int appId, ILog log)
         {
             Init(log);
-
+            _appId = appId;
             // The context should be from the block if there is one, because it affects saving/publishing
             // Basically it can result in things being saved draft or titles being updated
             _context = _ctxResolver.BlockOrNull() ?? _ctxResolver.App(appId); // context;
@@ -41,11 +42,12 @@ namespace ToSic.Sxc.WebApi.Cms
         }
 
         private IContextOfApp _context;
+        private int _appId;
         #endregion
 
-        public Dictionary<Guid, int> Save(EditDto package, int appId, bool partOfPage)
+        public Dictionary<Guid, int> Save(EditDto package, bool partOfPage)
         {
-            Log.Add($"save started with a#{appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
+            Log.Add($"save started with a#{_appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
 
             var validator = new SaveDataValidator(package, Log);
             // perform some basic validation checks
@@ -61,7 +63,7 @@ namespace ToSic.Sxc.WebApi.Cms
             //    appId = targetAppId;
             //}
 
-            var appMan = _appManagerLazy.Value.Init(appId, Log);
+            var appMan = _appManagerLazy.Value.Init(_appId, Log);
             var appRead = appMan.Read;
             var ser = ServiceProvider.Build<JsonSerializer>().Init(appRead.AppState, Log);
             // Since we're importing directly into this app, we would prefer local content-types
@@ -71,7 +73,7 @@ namespace ToSic.Sxc.WebApi.Cms
             #region check if it's an update, and do more security checks then - shared with EntitiesController.Save
             // basic permission checks
             var permCheck = new Save.SaveSecurity(_context, Log)
-                .DoPreSaveSecurityCheck(appId, package.Items);
+                .DoPreSaveSecurityCheck(_appId, package.Items);
 
             var foundItems = package.Items.Where(i => i.Entity.Id != 0 && i.Entity.Guid != Guid.Empty)
                 .Select(i => i.Entity.Guid != Guid.Empty
@@ -118,7 +120,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             Log.Add("items to save generated, all data tests passed");
 
-            return _pagePublishing.SaveInPagePublishing(_ctxResolver.RealBlockOrNull(), appId, items, partOfPage,
+            return _pagePublishing.SaveInPagePublishing(_ctxResolver.RealBlockOrNull(), _appId, items, partOfPage,
                     forceSaveAsDraft => DoSave(appMan, items, forceSaveAsDraft),
                     permCheck);
         }

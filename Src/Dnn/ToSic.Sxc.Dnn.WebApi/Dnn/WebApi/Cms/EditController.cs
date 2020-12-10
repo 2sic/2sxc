@@ -21,15 +21,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
-            => _build<EditLoadBackend>().Init(Log)
-                .Load(appId, items);
+            => _build<EditLoadBackend>().Init(Log).Load(appId, items);
 
         /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage) 
-            => _build<EditSaveBackend>().Init(appId, Log)
-                .Save(package, appId, partOfPage);
+            => _build<EditSaveBackend>().Init(appId, Log).Save(package, partOfPage);
 
         /// <inheritdoc />
         [HttpGet]
