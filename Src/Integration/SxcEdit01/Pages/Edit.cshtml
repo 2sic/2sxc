@@ -55,7 +55,7 @@ Found Metadata: @md.Count()
     const forRef = { Number: targetId, Target: 'CmsObject', Singleton: true };
     getSxc().manage.run('edit', {
       items: [
-        { ContentTypeName: 'MetadataGps', For: forRef, Operations: "mdsingleton" },
+        { ContentTypeName: 'MetadataGps', For: forRef, Operations: "mdsingleton", Prefill: { Color: "super-pink" } },
         { ContentTypeName: 'MetadataCar', For: forRef, Sfx: "mdsingleton" }
       ]
     });

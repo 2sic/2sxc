@@ -17,18 +17,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
     {
         protected override string HistoryLogName => "Api.History";
 
-        /// <summary>
-        /// Used to be POST Entities/History
-        /// </summary>
-        /// <param name="appId"></param>
-        /// <param name="item"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public List<ItemHistory> Get(int appId, [FromBody] ItemIdentifier item) 
             => _build<AppManager>().Init(appId, Log).Entities
                 .VersionHistory(_build<IdentifierHelper>().Init(Log).ResolveItemIdOfGroup(appId, item, Log).EntityId);
 
+        /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool Restore(int appId, int changeId, [FromBody] ItemIdentifier item)
