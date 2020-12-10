@@ -7,6 +7,7 @@ using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.Context;
@@ -42,7 +43,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private IContextOfApp _context;
         #endregion
 
-        public Dictionary<Guid, int> Save(AllInOneDto package, int appId, bool partOfPage)
+        public Dictionary<Guid, int> Save(EditDto package, int appId, bool partOfPage)
         {
             Log.Add($"save started with a#{appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
 

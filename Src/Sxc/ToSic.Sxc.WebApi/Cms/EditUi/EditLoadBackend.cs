@@ -8,6 +8,7 @@ using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Security;
@@ -47,7 +48,7 @@ namespace ToSic.Sxc.WebApi.Cms
         #endregion
 
 
-        public AllInOneDto Load(int appId, List<ItemIdentifier> items)
+        public EditDto Load(int appId, List<ItemIdentifier> items)
         {
             // Security check
             var wrapLog = Log.Call($"load many a#{appId}, items⋮{items.Count}");
@@ -69,7 +70,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 throw HttpException.PermissionDenied(error);
 
             // load items - similar
-            var result = new AllInOneDto();
+            var result = new EditDto();
             var entityApi = _entityApi.Init(appId, permCheck.EnsureAny(GrantSets.ReadDraft), Log);
             var typeRead = entityApi.AppRead.ContentTypes;
             var list = entityApi.GetEntitiesForEditing(items);

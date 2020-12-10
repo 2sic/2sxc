@@ -19,13 +19,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        public AllInOneDto Load([FromBody] List<ItemIdentifier> items, int appId)
+        public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
             => _build<EditLoadBackend>().Init(Log)
                 .Load(appId, items);
 
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        public Dictionary<Guid, int> Save([FromBody] AllInOneDto package, int appId, bool partOfPage) 
+        public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage) 
             => _build<EditSaveBackend>().Init(appId, Log)
                 .Save(package, appId, partOfPage);
 

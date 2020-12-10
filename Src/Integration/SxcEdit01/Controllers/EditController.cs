@@ -37,7 +37,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
 
         [HttpPost]
         [AllowAnonymous]   // will check security internally, so assume no requirements
-        public AllInOneDto Load([FromBody] List<ItemIdentifier> items, int appId)
+        public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
         {
             var result = _loadBackend.Value
                 .Init(Log)
@@ -47,7 +47,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
 
         [HttpPost]
         // todo #mvcSec [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        public Dictionary<Guid, int> Save([FromBody] AllInOneDto package, int appId, bool partOfPage)
+        public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
             => _saveBackendLazy.Value.Init(appId, Log)
                 .Save(package, appId, partOfPage);
 

@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
 
         [HttpPost]
         [AllowAnonymous]   // will check security internally, so assume no requirements
-        public AllInOneDto Load([FromBody] List<ItemIdentifier> items, int appId)
+        public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
         {
             var context = GetContext();
             var block = GetBlock();
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
 
         [HttpPost]
         // todo #mvcSec [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        public Dictionary<Guid, int> Save([FromBody] AllInOneDto package, int appId, bool partOfPage)
+        public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
             => _saveBackendLazy.Value.Init(appId, Log)
                 .Save(package, appId, partOfPage);
 
