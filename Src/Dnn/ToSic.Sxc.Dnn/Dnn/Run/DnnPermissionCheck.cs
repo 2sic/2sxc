@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
-using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Apps.Security;
-using ToSic.Eav.Context;
-using ToSic.Eav.Run;
 using ToSic.Eav.Security;
 using ToSic.Sxc.Context;
 
@@ -21,14 +18,8 @@ namespace ToSic.Sxc.Dnn.Run
     {
         #region Constructor / DI
 
-        private readonly Lazy<IZoneMapper> _zoneMapperLazy;
-        private IZoneMapper ZoneMapper => _zoneMapper ?? (_zoneMapper = _zoneMapperLazy.Value.Init(Log));
-        private IZoneMapper _zoneMapper;
-
-
-        public DnnPermissionCheck(Lazy<IZoneMapper> zoneMapperLazy) : base(DnnConstants.LogName)
+        public DnnPermissionCheck() : base(DnnConstants.LogName)
         {
-            _zoneMapperLazy = zoneMapperLazy;
         }
 
         #endregion
@@ -91,7 +82,7 @@ namespace ToSic.Sxc.Dnn.Run
             // but is the current portal also the one we're asking about?
             if (Context.Site == null || Context.Site.Id == Eav.Constants.NullId) return wrapLog("no", false); // this is the case when running out-of http-context
             if (AppIdentity == null) return wrapLog("yes", true); // this is the case when an app hasn't been selected yet, so it's an empty module, must be on current portal
-            var pZone = ZoneMapper.GetZoneId(Context.Site);
+            var pZone = Context.Site.ZoneId;
             var result = pZone == AppIdentity.ZoneId; // must match, to accept user as admin
             return wrapLog($"{result}", result);
         }

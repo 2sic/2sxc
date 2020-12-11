@@ -1,10 +1,11 @@
 ﻿using System;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Context
 {
-    public class ModuleUnknown: IModule
+    public class ModuleUnknown: IModule, IIsUnknown
     {
         public IModule Init(int id, ILog parentLog)
         {

@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Context
                 AppIdentity = appIdentity;
         }
 
-        public void ResetApp(int appId) => ResetApp(State.Identity(Site.ZoneId, appId));
+        public void ResetApp(int appId) => ResetApp(State.Identity(null /*Site.IsMultiZone ? null as int? : Site.ZoneId*/, appId));
 
         protected virtual IAppIdentity AppIdentity
         {

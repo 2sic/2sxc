@@ -6,8 +6,10 @@ using System.Xml.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.Identity;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Logging;
@@ -21,7 +23,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
     public class ImportContent: HasLog
     {
 
-        #region Constructor / DI
+        #region DI Constructor
 
         public ImportContent(IZoneMapper zoneMapper, 
             IServerPaths serverPaths, 
@@ -29,7 +31,8 @@ namespace ToSic.Sxc.WebApi.ImportExport
             Lazy<Import> importerLazy,
             Lazy<XmlImportWithFiles> xmlImportWithFilesLazy,
             ZipImport zipImport,
-            Lazy<JsonSerializer> jsonSerializerLazy) : base("Bck.Export")
+            Lazy<JsonSerializer> jsonSerializerLazy, 
+            IGlobalConfiguration globalConfiguration) : base("Bck.Export")
         {
             _zoneMapper = zoneMapper;
             _serverPaths = serverPaths;
@@ -38,6 +41,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             _xmlImportWithFilesLazy = xmlImportWithFilesLazy;
             _zipImport = zipImport;
             _jsonSerializerLazy = jsonSerializerLazy;
+            _globalConfiguration = globalConfiguration;
         }
 
         private readonly IZoneMapper _zoneMapper;
@@ -47,6 +51,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private readonly Lazy<XmlImportWithFiles> _xmlImportWithFilesLazy;
         private readonly ZipImport _zipImport;
         private readonly Lazy<JsonSerializer> _jsonSerializerLazy;
+        private readonly IGlobalConfiguration _globalConfiguration;
         private IUser _user;
 
         public ImportContent Init(IUser user, ILog parentLog)
@@ -72,8 +77,8 @@ namespace ToSic.Sxc.WebApi.ImportExport
                     var zipImport = _zipImport;
 
                     zipImport.Init(zoneId, appId, _user.IsSuperUser, Log);
-                    var temporaryDirectory = _serverPaths.FullSystemPath(Path.Combine(Eav.ImportExport.Settings.TemporaryDirectory,
-                        Guid.NewGuid().ToString()));
+                    var temporaryDirectory = Path.Combine(_globalConfiguration.TemporaryFolder, Mapper.GuidCompress(Guid.NewGuid()).Substring(0, 8));
+
                     result.Success = zipImport.ImportZip(stream, temporaryDirectory);
                     result.Messages.AddRange(zipImport.Messages);
                 }

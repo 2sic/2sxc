@@ -110,7 +110,6 @@
     </Compile>
     <Compile Include="Polymorphism\Koi.cs" />
     <Compile Include="Polymorphism\Permissions.cs" />
-    <Compile Include="DnnGlobalFolderRepository.cs" />
     <Compile Include="StartupDnnDi.cs" />
     <Compile Include="View.ascx.cs">
       <DependentUpon>View.ascx</DependentUpon>
@@ -137,6 +136,7 @@
     <Content Include=".data-custom\readme.md" />
     <None Include=".databeta\readme.md" />
     <Content Include=".gitignore" />
+    <None Include="2sxc12-future-sql\Future-To-Test.SqlDataProvider.sql.dont-use-yet" />
     <Content Include="DnnPackageBuilder\Cleanup\flush.txt" />
     <Content Include="razorblade-old\bin\Connect.Razor.dll" />
     <Content Include="ClientScripts\ModuleEditor.js" />

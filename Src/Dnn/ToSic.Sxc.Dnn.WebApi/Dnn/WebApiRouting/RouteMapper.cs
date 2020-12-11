@@ -70,13 +70,6 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             #endregion
 
 
-            #region API calls for app-sys, dnn, default
-            // System calls to app, dnn, default - just hyperlink controller, must remove asap in 11.09 or 11.10
-            AddTy("dnn",                    "dnn/" + TokenSet.ConAct,                    typeof(HyperlinkController)/*"ToSic.SexyContent.WebApi.Dnn"*/);
-            // 2020-11-12 ? unclear why this is here, I'm not sure if it's in used - will turn off for now - leave comment in till 2021-03
-            //AddNs("default", TokenSet.ConAct, StdNsWebApi);
-            #endregion
-
             #region New routes in 2sxc 11.06+ which should replace most previous internal routes
 
             // Replacement route for app-sys/AppContent/GetContentBlockData

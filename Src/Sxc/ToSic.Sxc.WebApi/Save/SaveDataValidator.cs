@@ -5,6 +5,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Builder;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Logging;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.WebApi.Cms;
@@ -15,10 +16,10 @@ namespace ToSic.Sxc.WebApi.Save
 {
     internal class SaveDataValidator: ValidatorBase
     {
-        public AllInOneDto Package;
+        public EditDto Package;
         internal AppRuntime AppRead;
 
-        public SaveDataValidator(AllInOneDto package, ILog parentLog) 
+        public SaveDataValidator(EditDto package, ILog parentLog) 
             : base("Val.Save", parentLog, "start save validator", nameof(SaveDataValidator))
         {
             Package = package;

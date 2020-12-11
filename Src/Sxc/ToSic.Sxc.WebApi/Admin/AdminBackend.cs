@@ -11,12 +11,12 @@ namespace ToSic.Sxc.WebApi.Admin
     public class AdminBackend: WebApiBackendBase<AdminBackend>
     {
         private readonly IContextResolver _ctxResolver;
-        private readonly IUiContextBuilder UiContextBuilder;
+        private readonly IUiContextBuilder _uiContextBuilder;
 
         public AdminBackend(IServiceProvider serviceProvider, IContextResolver ctxResolver, IUiContextBuilder uiContextBuilder) : base(serviceProvider, "Bck.Admin")
         {
             _ctxResolver = ctxResolver;
-            UiContextBuilder = uiContextBuilder;
+            _uiContextBuilder = uiContextBuilder;
         }
 
         public DialogContextStandalone DialogSettings(int appId)
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.WebApi.Admin
                     throw HttpException.PermissionDenied(error);
             }
 
-            var cb = UiContextBuilder.SetZoneAndApp(context.Site.ZoneId, appContext?.AppState);
+            var cb = _uiContextBuilder.SetZoneAndApp(context.Site.ZoneId, appContext?.AppState);
 
             return new DialogContextStandalone
             {

@@ -97,7 +97,7 @@ namespace ToSic.Sxc.Dnn.DataSources
 		private ImmutableArray<IEntity> GetList()
 		{
             Configuration.Parse();
-			var realTenant = _site.Id != Eav.Constants.NullId ? _site : _zoneMapper.Init(Log).TenantOfApp(AppId);
+			var realTenant = _site.Id != Eav.Constants.NullId ? _site : _zoneMapper.Init(Log).SiteOfApp(AppId);
 
 			var properties = Properties.Split(',').Select(p => p.Trim()).ToArray();
             var portalId = realTenant.Id;

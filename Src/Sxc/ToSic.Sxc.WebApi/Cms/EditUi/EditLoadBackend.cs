@@ -4,9 +4,11 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
+using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Security;
@@ -20,23 +22,36 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public partial class EditLoadBackend: WebApiBackendBase<EditLoadBackend>
     {
-        private readonly EntityApi _entityApi;
-        private readonly ContentGroupList _contentGroupList;
-        private readonly IUiContextBuilder _contextBuilder;
-        private readonly IContextResolver _ctxResolver;
+        //private const int TempToMarkSingletonMetadata = 2000000000;
 
-        public EditLoadBackend(EntityApi entityApi, ContentGroupList contentGroupList, IServiceProvider serviceProvider, IUiContextBuilder contextBuilder, IContextResolver ctxResolver) : base(serviceProvider, "Cms.LoadBk")
+        #region DI Constructor
+
+        public EditLoadBackend(EntityApi entityApi, ContentGroupList contentGroupList, 
+            IServiceProvider serviceProvider, 
+            IUiContextBuilder contextBuilder, 
+            IContextResolver ctxResolver, 
+            ITargetTypes mdTargetTypes) : base(serviceProvider, "Cms.LoadBk")
         {
             _entityApi = entityApi;
             _contentGroupList = contentGroupList;
             _contextBuilder = contextBuilder;
             _ctxResolver = ctxResolver;
+            _mdTargetTypes = mdTargetTypes;
         }
+        
+        private readonly EntityApi _entityApi;
+        private readonly ContentGroupList _contentGroupList;
+        private readonly IUiContextBuilder _contextBuilder;
+        private readonly IContextResolver _ctxResolver;
+        private readonly ITargetTypes _mdTargetTypes;
 
-        public AllInOneDto Load(int appId, List<ItemIdentifier> items)
+        #endregion
+
+
+        public EditDto Load(int appId, List<ItemIdentifier> items)
         {
             // Security check
-            var wraplog = Log.Call($"load many a#{appId}, items⋮{items.Count}");
+            var wrapLog = Log.Call($"load many a#{appId}, items⋮{items.Count}");
 
             var context = _ctxResolver.App(appId);
 
@@ -46,6 +61,7 @@ namespace ToSic.Sxc.WebApi.Cms
             // because they may be group/id combinations, without type information which we'll look up afterwards
             var appIdentity = State.Identity(null, appId);
             items = _contentGroupList.Init(appIdentity, Log, showDrafts).ConvertListIndexToId(items);
+            TryToAutoFindMetadataSingleton(items, context.AppState);
 
             // now look up the types, and repeat security check with type-names
             // todo: 2020-03-20 new feat 11.01, may not check inner type permissions ATM
@@ -54,7 +70,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 throw HttpException.PermissionDenied(error);
 
             // load items - similar
-            var result = new AllInOneDto();
+            var result = new EditDto();
             var entityApi = _entityApi.Init(appId, permCheck.EnsureAny(GrantSets.ReadDraft), Log);
             var typeRead = entityApi.AppRead.ContentTypes;
             var list = entityApi.GetEntitiesForEditing(items);
@@ -114,11 +130,47 @@ namespace ToSic.Sxc.WebApi.Cms
                 .Get(Ctx.AppBasic | Ctx.Language | Ctx.Site | Ctx.System);
 
             // done - return
-            wraplog($"ready, sending items:{result.Items.Count}, " +
+            wrapLog($"ready, sending items:{result.Items.Count}, " +
                     $"types:{result.ContentTypes.Count}, " +
                     $"inputs:{result.InputTypes.Count}, " +
                     $"feats:{result.Features.Count}");
             return result;
+        }
+
+
+
+        /// <summary>
+        /// new 2020-12-08 - correct entity-id with lookup of existing if marked as singleton
+        /// Singleton-marker is temporarily a very large number 2'000'000'000
+        /// </summary>
+        private bool TryToAutoFindMetadataSingleton(List<ItemIdentifier> list, AppState appState)
+        {
+            var wrapLog = Log.Call<bool>();
+
+            foreach (var header in list
+                .Where(header => header.For?.Singleton == true && !string.IsNullOrWhiteSpace(header.ContentTypeName)))
+            {
+                Log.Add("Found an entity with the auto-lookup marker");
+                // try to find metadata for this
+                var mdFor = header.For;
+                var type = _mdTargetTypes.GetId(mdFor.Target);
+                var mds = mdFor.Guid != null
+                    ? appState.GetMetadata(type, mdFor.Guid.Value, header.ContentTypeName)
+                    : mdFor.Number != null
+                        ? appState.GetMetadata(type, mdFor.Number.Value, header.ContentTypeName)
+                        : appState.GetMetadata(type, mdFor.String, header.ContentTypeName);
+
+                var mdList = mds.ToArray();
+                if (mdList.Length > 1)
+                {
+                    Log.Add($"Warning - looking for best metadata but found too many {mdList.Length}, will use first");
+                    // must now sort by ID otherwise the order may be different after a few save operations
+                    mdList = mdList.OrderBy(e => e.EntityId).ToArray();
+                }
+                header.EntityId = !mdList.Any() ? 0 : mdList.First().EntityId;
+            }
+
+            return wrapLog("ok", true);
         }
     }
 }

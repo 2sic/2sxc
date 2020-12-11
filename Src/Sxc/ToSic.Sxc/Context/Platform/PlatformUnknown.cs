@@ -1,6 +1,8 @@
-﻿namespace ToSic.Sxc.Context
+﻿using ToSic.Eav.Run;
+
+namespace ToSic.Sxc.Context
 {
-    public class PlatformUnknown: Platform
+    public class PlatformUnknown: Platform, IIsUnknown
     {
         public override PlatformType Type => PlatformType.Unknown;
     }

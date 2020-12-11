@@ -1,10 +1,12 @@
-﻿using IntegrationSamples.SxcEdit01.Controllers;
+﻿using System.IO;
+using IntegrationSamples.SxcEdit01.Controllers;
 using IntegrationSamples.SxcEdit01.Integration;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
@@ -33,8 +35,12 @@ namespace IntegrationSamples.SxcEdit01
                     .AddEav();
             });
 
+            var sp = services.BuildServiceProvider();
             var connectionString = configuration.GetConnectionString("SiteSqlServer");
-            services.BuildServiceProvider().Build<IDbConfiguration>().ConnectionString = connectionString;
+
+            sp.Build<IDbConfiguration>().ConnectionString = connectionString;
+            var hostingEnvironment = sp.Build<IHostEnvironment>();
+            sp.Build<IGlobalConfiguration>().GlobalFolder = Path.Combine(hostingEnvironment.ContentRootPath, "wwwroot\\system\\sxc");
         }
 
         internal static IServiceCollection AddImplementations(this IServiceCollection services)
