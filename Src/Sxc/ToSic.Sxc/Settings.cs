@@ -60,7 +60,7 @@ namespace ToSic.Sxc
                 "11.07.01", // LTS
                 "11.07.02", // LTS
                 "11.07.03", // LTS
-                "11.10.00", "11.10.01", "11.11.00", "11.11.01",
+                "11.10.00", "11.10.01", "11.11.00", "11.11.01", "11.11.02",
             };
 
             // this is the last version which must run server-side change-code
