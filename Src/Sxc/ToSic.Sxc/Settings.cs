@@ -19,8 +19,8 @@ namespace ToSic.Sxc
         public static readonly string ModuleVersion = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString("00") + "."
                                                       + Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString("00") + "."
                                                       + Assembly.GetExecutingAssembly().GetName().Version.Build.ToString("00");
-
-        public const string WebConfigTemplatePath = "~/DesktopModules/ToSIC_SexyContent/WebConfigTemplate.config";
+        
+        public const string WebConfigTemplateFile = "WebConfigTemplate.config";
         public const string WebConfigFileName = "web.config";
         public const string SexyContentGroupName = "2sxc designers";
         public const string AttributeSetScope = "2SexyContent";
@@ -38,8 +38,6 @@ namespace ToSic.Sxc
 
         public class Installation
         {
-            internal const string LogDirectory = "~/DesktopModules/ToSIC_SexyContent/Upgrade/Log/";
-
             // todo: Maybe this list can somehow be extracted from the module manifest or placed there...
             internal static readonly string[] UpgradeVersionList =
             {

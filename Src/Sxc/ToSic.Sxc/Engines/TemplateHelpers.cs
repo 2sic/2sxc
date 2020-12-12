@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
@@ -26,11 +27,11 @@ namespace ToSic.Sxc.Engines
         
         private IServerPaths ServerPaths { get; }
         public IApp App;
-        public TemplateHelpers(IServerPaths serverPaths, ILinkPaths linkPaths): base("Viw.Help")
+        public TemplateHelpers(IServerPaths serverPaths, ILinkPaths linkPaths, IGlobalConfiguration globalConfiguration): base("Viw.Help")
         {
             ServerPaths = serverPaths;
-            //_serverPaths = serverPaths;
             _linkPaths = linkPaths;
+            _globalConfiguration = globalConfiguration;
         }
 
         public TemplateHelpers Init(IApp app, ILog parentLog)
@@ -42,20 +43,19 @@ namespace ToSic.Sxc.Engines
 
         #endregion
 
-        //protected IServerPaths ServerPaths => _serverPaths ?? (_serverPaths = Factory.Resolve<IServerPaths>());
-        //private IServerPaths _serverPaths;
         private readonly ILinkPaths _linkPaths;
+        private readonly IGlobalConfiguration _globalConfiguration;
 
         /// <summary>
         /// Creates a directory and copies the needed web.config for razor files
         /// if the directory does not exist.
         /// </summary>
-        public void EnsureTemplateFolderExists(bool isShared/* string templateLocation*/)
+        public void EnsureTemplateFolderExists(bool isShared)
         {
-            var wrapLog = Log.Call($"{isShared}"/*templateLocation*/);
-            var portalPath = isShared// templateLocation == Settings.TemplateLocations.HostFileSystem
+            var wrapLog = Log.Call($"{isShared}");
+            var portalPath = isShared
                 ? Path.Combine(ServerPaths.FullAppPath(Settings.PortalHostDirectory) ?? "", Settings.AppsRootFolder)
-                : App.Site.AppsRootPhysicalFull ?? "";// ServerPaths.FullAppPath(App.Tenant.AppsRootPhysical) ?? "";
+                : App.Site.AppsRootPhysicalFull ?? "";
             var sexyFolderPath = portalPath;
 
             var sexyFolder = new DirectoryInfo(sexyFolderPath);
@@ -65,9 +65,8 @@ namespace ToSic.Sxc.Engines
 
             // Create web.config (copy from DesktopModules folder)
             if (!sexyFolder.GetFiles(Settings.WebConfigFileName).Any())
-            {
-                File.Copy(ServerPaths.FullSystemPath(Settings.WebConfigTemplatePath), Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
-            }
+                File.Copy(Path.Combine(_globalConfiguration.GlobalFolder, Settings.WebConfigTemplateFile),
+                    Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
 
             // Create a Content folder (or App Folder)
             if (string.IsNullOrEmpty(App.Folder))

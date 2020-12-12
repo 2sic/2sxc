@@ -16,14 +16,16 @@ namespace ToSic.Sxc.WebApi.Features
     {
         #region Constructor / DI
 
-        public FeaturesBackend(IServerPaths serverPaths, IZoneMapper zoneMapper, IServiceProvider serviceProvider) : base(serviceProvider, "Bck.Feats")
+        public FeaturesBackend(IServerPaths serverPaths, IZoneMapper zoneMapper, IServiceProvider serviceProvider, IGlobalConfiguration globalConfiguration) : base(serviceProvider, "Bck.Feats")
         {
             _serverPaths = serverPaths;
             _zoneMapper = zoneMapper;
+            _globalConfiguration = globalConfiguration;
         }
 
         private readonly IServerPaths _serverPaths;
         private readonly IZoneMapper _zoneMapper;
+        private readonly IGlobalConfiguration _globalConfiguration;
 
         public new FeaturesBackend Init(ILog parentLog)
         {
@@ -106,7 +108,7 @@ namespace ToSic.Sxc.WebApi.Features
         {
             try
             {
-                var configurationsPath = _serverPaths.FullAppPath("~/DesktopModules/ToSIC_SexyContent/" + Eav.Configuration.Features.FeaturesPath);
+                var configurationsPath = Path.Combine(_globalConfiguration.GlobalFolder, Eav.Configuration.Features.FeaturesPath);
 
                 if (!Directory.Exists(configurationsPath)) 
                     Directory.CreateDirectory(configurationsPath);

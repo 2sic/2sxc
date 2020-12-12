@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Dnn.Web
         public void RegisterClientDependencies(Page page, bool readJs, bool editJs, bool editCss)
         {
             var wrapLog = Log.Call($"-, {nameof(readJs)}:{readJs}, {nameof(editJs)}:{editJs}, {nameof(editCss)}:{editCss}");
-            var root = "~/desktopmodules/tosic_sexycontent/";
+            var root = DnnConstants.SysFolderRootVirtual;
             root = page.ResolveUrl(root);
             var ver = Settings.Version.ToString();
             var priority = (int) FileOrder.Js.DefaultPriority - 2;

@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Dnn.Web
                 siteRoot, 
                 apiRoot, 
                 AntiForgeryToken(),
-                VirtualPathUtility.ToAbsolute("~/desktopmodules/tosic_sexycontent/"));
+                VirtualPathUtility.ToAbsolute(DnnConstants.SysFolderRootVirtual));
 
             HtmlPage.AddMeta(InpageCms.MetaName, json);
             return wrapLog("added", true);

@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Dnn.Install
         private static string GenerateNewLogFileName()
         {
             var renamedLockFilePath =
-                HostingEnvironment.MapPath(Settings.Installation.LogDirectory +
+                HostingEnvironment.MapPath(DnnConstants.LogDirectory +
                                            DateTime.UtcNow.ToString(@"yyyy-MM-dd HH-mm-ss-fffffff") + "-" + System.Diagnostics.Process.GetCurrentProcess().Id + "-" + AppDomain.CurrentDomain.Id + ".log.resources");
             return renamedLockFilePath;
         }
@@ -66,21 +66,21 @@ namespace ToSic.Sxc.Dnn.Install
         {
             EnsureLogDirectoryExists();
 
-            var logFilePath = HostingEnvironment.MapPath(Settings.Installation.LogDirectory + version + ".resources");
+            var logFilePath = HostingEnvironment.MapPath(DnnConstants.LogDirectory + version + ".resources");
             if (appendToFile || !File.Exists(logFilePath))
                 File.AppendAllText(logFilePath, DateTime.UtcNow.ToString(@"yyyy-MM-ddTHH\:mm\:ss.fffffffzzz"), Encoding.UTF8);
         }
 
         private static void EnsureLogDirectoryExists()
         {
-            Directory.CreateDirectory(HostingEnvironment.MapPath(Settings.Installation.LogDirectory));
+            Directory.CreateDirectory(HostingEnvironment.MapPath(DnnConstants.LogDirectory));
         }
 
         internal void DeleteAllLogFiles()
         {
-            if (Directory.Exists(HostingEnvironment.MapPath(Settings.Installation.LogDirectory)))
+            if (Directory.Exists(HostingEnvironment.MapPath(DnnConstants.LogDirectory)))
             {
-                var files = new List<string>(Directory.GetFiles(HostingEnvironment.MapPath(Settings.Installation.LogDirectory)));
+                var files = new List<string>(Directory.GetFiles(HostingEnvironment.MapPath(DnnConstants.LogDirectory)));
                 files.ForEach(x =>
                 {
                     try
