@@ -56,9 +56,11 @@ namespace ToSic.Sxc.Dnn.Web
                                           ?.CompatibilityAutoLoadJQueryAndRVT
                                       ?? true;
             if (!addAntiForgeryToken) return;
+
+            // If we got this far, we want the old behavior which always enables headers etc.
             Log.Add(nameof(EnsurePre1025Behavior) + ": Activate Anti-Forgery for compatibility with old behavior");
             ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
-            Header.AddHeaders();
+            MustAddHeaders = true;
         }
 
 
@@ -79,7 +81,7 @@ namespace ToSic.Sxc.Dnn.Web
             {
                 Log.Add("add $2sxc api and headers");
                 RegisterJs(page, ver, root + InpageCms.CoreJs, true, priority);
-                Header.AddHeaders();
+                MustAddHeaders = true;
             }
 
             // add edit-js (commands, manage, etc.)
@@ -95,6 +97,22 @@ namespace ToSic.Sxc.Dnn.Web
 
             wrapLog("ok");
         }
+
+
+        #region DNN Bug with Current Culture
+
+        // We must add the _js header but we must wait beyond the initial page-load until Pre-Render
+        // Because for reasons unknown DNN (at least in V7.4+ but I think also in 9) doesn't have 
+        // the right PortalAlias and language set until then. 
+        // before that it assumes the PortalAlias is a the default alias, even if the url clearly shows another language
+        
+        protected bool MustAddHeaders = false;
+
+        public void AddHeaderAsNeeded()
+        {
+            if (MustAddHeaders) Header.AddHeaders();
+        }
+        #endregion
 
 
         /// <summary>

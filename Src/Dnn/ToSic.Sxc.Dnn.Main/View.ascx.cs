@@ -70,6 +70,10 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void Page_PreRender(object sender, EventArgs e)
         {
+            // New in 11.11.02 - DNN has a strange behavior where the current language isn't known till PreRender
+            // so we have to move adding the header ot here.
+            TryCatchAndLogToDnn(() => DnnClientResources.AddHeaderAsNeeded());
+
             _stopwatch?.Start();
             var callLog = Log.Call(useTimer: true);
             var headersAndScriptsAdded = false;
