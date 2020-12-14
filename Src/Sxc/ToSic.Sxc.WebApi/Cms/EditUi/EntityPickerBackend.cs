@@ -8,20 +8,21 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Context;
 
-
 namespace ToSic.Sxc.WebApi.Cms
 {
     public class EntityPickerBackend: WebApiBackendBase<EntityPickerBackend>
     {
-        private readonly EntityPickerApi _entityPickerApi;
-        private readonly IContextResolver _ctxResolver;
+        #region DI Constructor
 
         public EntityPickerBackend(EntityPickerApi entityPickerApi, IContextResolver ctxResolver, IServiceProvider serviceProvider) : base(serviceProvider, "BE.EntPck")
         {
             _entityPickerApi = entityPickerApi;
             _ctxResolver = ctxResolver;
         }
+        private readonly EntityPickerApi _entityPickerApi;
+        private readonly IContextResolver _ctxResolver;
 
+        #endregion
 
         public IEnumerable<EntityForPickerDto> GetAvailableEntities(int appId, string[] items, string contentTypeName)
         {
@@ -36,9 +37,7 @@ namespace ToSic.Sxc.WebApi.Cms
             // maybe in the future, ATM not relevant
             var withDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
 
-            return _entityPickerApi
-                .Init(Log)
-                .GetAvailableEntities(appId, items, contentTypeName, withDrafts);
+            return _entityPickerApi.Init(Log).GetAvailableEntities(appId, items, contentTypeName, withDrafts);
         }
     }
 }

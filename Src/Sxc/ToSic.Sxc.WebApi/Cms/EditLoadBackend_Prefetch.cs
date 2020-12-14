@@ -84,10 +84,11 @@ namespace ToSic.Sxc.WebApi.Cms
                     // Step 2: Check which ones have a link reference
                     .ToArray();
 
-                var backend = _entityPickerBackend.Init(Log);
-                var items = backend.GetAvailableEntities(appId, entities, null, true);
+                // stop here if nothing found, otherwise the backend will return all entities
+                if(!entities.Any()) return new List<EntityForPickerDto>();
 
-                // Step 3: return
+                var backend = _entityPickerBackend.Init(Log);
+                var items = backend.GetAvailableEntities(appId, entities, null, false);
                 return items.ToList();
             }
             catch
