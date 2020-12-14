@@ -65,11 +65,6 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         public object EntityTitle => Entity?.Title[Dimensions];
 
-        /// <inheritdoc />
-        public dynamic GetDraft() => new DynamicEntity(Entity?.GetDraft(), Dimensions, CompatibilityLevel, Block);
-        
-        /// <inheritdoc />
-        public dynamic GetPublished() => new DynamicEntity(Entity?.GetPublished(), Dimensions, CompatibilityLevel, Block);
 
         /// <inheritdoc />
         public bool IsDemoItem => Entity is EntityInBlock entInCg && entInCg.IsDemoItem;

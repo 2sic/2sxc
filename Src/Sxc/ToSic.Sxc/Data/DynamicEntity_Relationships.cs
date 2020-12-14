@@ -8,6 +8,14 @@ namespace ToSic.Sxc.Data
     public partial class DynamicEntity
     {
         /// <inheritdoc />
+        public dynamic GetDraft() => SubDynEntity(Entity?.GetDraft());
+        //public dynamic GetDraft() => new DynamicEntity(Entity?.GetDraft(), Dimensions, CompatibilityLevel, Block);
+
+        /// <inheritdoc />
+        public dynamic GetPublished() => SubDynEntity(Entity?.GetPublished());
+        //public dynamic GetPublished() => new DynamicEntity(Entity?.GetPublished(), Dimensions, CompatibilityLevel, Block);
+
+        /// <inheritdoc />
         public List<IDynamicEntity> Parents(string type = null, string field = null)
             => Entity.Parents(type, field)
                 .Select(SubDynEntity)
