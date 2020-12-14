@@ -109,7 +109,7 @@ namespace ToSic.Sxc.Data
 
         private object _getValue(string field, string language = null, bool lookup = true)
         {
-            var defaultMode = language != null && lookup;
+            var defaultMode = language == null && lookup;
 
             #region check the two special cases Toolbar / Presentation which the EAV doesn't know
 
