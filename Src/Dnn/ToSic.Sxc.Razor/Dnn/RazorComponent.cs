@@ -36,7 +36,9 @@ namespace ToSic.Sxc.Dnn
             // in 2sxc 11.11 the signature changed. 
             // so the engine will call this function
             // but the override will be the other one - so I must call that
+#pragma warning disable 618
             CustomizeSearch(searchInfos, moduleInfo as IContainer, beginDate);
+#pragma warning restore 618
         }
 
 #pragma warning disable 618

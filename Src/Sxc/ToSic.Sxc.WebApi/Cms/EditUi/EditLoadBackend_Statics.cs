@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data;
@@ -71,15 +72,40 @@ namespace ToSic.Sxc.WebApi.Cms
                        ?? typeRead.Get(i.Header.ContentTypeName))
                 .ToList();
 
-        internal static List<InputTypeInfo> GetNecessaryInputTypes(List<JsonContentType> types, ContentTypeRuntime typeRead)
+        internal List<InputTypeInfo> GetNecessaryInputTypes(List<JsonContentType> contentTypes, ContentTypeRuntime typeRead)
         {
-            var fields = types
+            var wrapLog = Log.Call<List<InputTypeInfo>>($"{nameof(contentTypes)}: {contentTypes.Count}");
+            var fields = contentTypes
                 .SelectMany(t => t.Attributes)
                 .Select(a => a.InputType)
-                .Distinct();
-            return typeRead.GetInputTypes()
+                .Distinct()
+                .ToList();
+
+            Log.Add("Found these input types to load: " + string.Join(", ", fields));
+
+            var allInputType = typeRead.GetInputTypes();
+
+            var found = allInputType
                 .Where(it => fields.Contains(it.Type))
                 .ToList();
+
+            if (found.Count == fields.Count) Log.Add("Found all");
+            else
+            {
+                Log.Add(
+                    $"It seems some input types were not found. Needed {fields.Count}, found {found.Count}. Will try to log details for this.");
+                try
+                {
+                    var notFound = fields.Where(field => found.All(fnd => fnd.Type != field));
+                    Log.Add("Didn't find: " + string.Join(",", notFound));
+                }
+                catch (Exception)
+                {
+                    Log.Add("Ran into problems logging missing input types.");
+                }
+            }
+
+            return wrapLog($"{found.Count}", found);
         }
 
         internal static IEntity ConstructEmptyEntity(int appId, ItemIdentifier header, ContentTypeRuntime typeRead)
