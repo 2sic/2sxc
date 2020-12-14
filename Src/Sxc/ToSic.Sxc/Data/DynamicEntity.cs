@@ -1,23 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Dynamic;
-using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Edit.Toolbar;
 using IEntity = ToSic.Eav.Data.IEntity;
-#if NET451
-using HtmlString = System.Web.HtmlString;
-using IHtmlString = System.Web.IHtmlString;
-#else
-using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
-using IHtmlString = Microsoft.AspNetCore.Html.IHtmlContent;
-#endif
-
-
 
 namespace ToSic.Sxc.Data
 {
@@ -33,30 +20,6 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         public int CompatibilityLevel { get; }
-
-        /// <inheritdoc />
-        [Obsolete("use Edit.Toolbar instead")]
-        [PrivateApi]
-        public HtmlString Toolbar {
-            get
-            {
-                // if it's neither in a running context nor in a running portal, no toolbar
-                if (Block == null)
-                    return new HtmlString("");
-
-                // If we're not in a running context, of which we know the permissions, no toolbar
-                var userMayEdit = Block?.Context.UserMayEdit ?? false;
-
-                if (!userMayEdit)
-                    return new HtmlString("");
-
-                if(CompatibilityLevel == 10)
-                    throw new Exception("content.Toolbar is deprecated in the new RazorComponent. Use @Edit.TagToolbar(content) or @Edit.Toolbar(content) instead. See https://r.2sxc.org/EditToolbar");
-
-                var toolbar = new ItemToolbar(Entity).Toolbar;
-                return new HtmlString(toolbar);
-            }
-        }
 
         [PrivateApi]
         public string[] Dimensions { get; }
@@ -91,109 +54,6 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         internal IServiceProvider ServiceProviderOrNull;
 
-        /// <inheritdoc />
-        [PrivateApi]
-        public override bool TryGetMember(GetMemberBinder binder, out object result)
-            => TryGetMember(binder.Name, out result);
-
-        [PrivateApi]
-        public bool TryGetMember(string memberName, out object result)
-        {
-            result = _getValue(memberName);
-            return true;
-        }
-
-        [PrivateApi("shouldn't be used, but it may be published by accident, so shouldn't be removed. ")]
-        [Obsolete("please use Get instead")]
-        public object GetEntityValue(string field) => _getValue(field);
-
-        private object _getValue(string field, string language = null, bool lookup = true)
-        {
-            var defaultMode = language == null && lookup;
-
-            #region check the two special cases Toolbar / Presentation which the EAV doesn't know
-
-#pragma warning disable 618
-            // ReSharper disable once ConvertIfStatementToSwitchStatement
-            if (field == "Toolbar") return Toolbar.ToString();
-#pragma warning restore 618
-
-            if (field == ViewParts.Presentation) return GetPresentation;
-
-            #endregion
-
-            // use the standard dimensions or overload
-            var dimsToUse = language == null ? Dimensions : new[] {language};
-
-            // check Entity is null (in cases where null-objects are asked for properties)
-            if (Entity == null) return null;
-
-            // check if we already have it in the cache - but only in normal lookups
-            if (defaultMode && _valCache.ContainsKey(field)) return _valCache[field];
-
-            var result = Entity.GetBestValue(field, dimsToUse);
-
-            // New mechanism to not use resolve-hyperlink
-            if (lookup && result is string strResult
-                       && ValueConverterBase.CouldBeReference(strResult)
-                       && Entity.Attributes.ContainsKey(field) &&
-                       Entity.Attributes[field].Type == Eav.Constants.DataTypeHyperlink)
-                result = ServiceProviderOrNull?.Build<IValueConverter>()?.ToValue(strResult, EntityGuid)
-                         ?? result;
-
-            if (result is IEnumerable<IEntity> rel)
-            {
-                var list = new DynamicEntityWithList(Entity, field, rel, dimsToUse, CompatibilityLevel, Block);
-                // special case: if it's a Dynamic Entity without block (like App.Settings)
-                // it needs the Service Provider from this object to work
-                if (Block == null) list.ServiceProviderOrNull = ServiceProviderOrNull;
-                result = list;
-            }
-
-            if(defaultMode) _valCache.Add(field, result);
-            return result;
-        }
-        private readonly Dictionary<string, object> _valCache = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
-
-        /// <summary>
-        /// Get a property using the string name. Only needed in special situations, as most cases can use the object.name directly
-        /// </summary>
-        /// <param name="name">the property name. </param>
-        /// <returns>a dynamically typed result, can be string, bool, etc.</returns>
-        public dynamic Get(string name) => _getValue(name);
-
-
-        /// <inheritdoc/>
-        public dynamic Get(string name, 
-            // ReSharper disable once MethodOverloadWithOptionalParameter
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
-            string language = null, 
-            bool convertLinks = true)
-        {
-            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Get",
-                $"{nameof(language)}, ... (optional)");
-            return _getValue(name, language, convertLinks);
-        }
-
-        /// <inheritdoc />
-        public dynamic Presentation => GetPresentation; 
-
-        private IDynamicEntity GetPresentation
-            => _presentation ?? (_presentation = Entity is EntityInBlock entityInGroup
-                   ? SubDynEntity(entityInGroup.Presentation)
-                   : null);
-        private IDynamicEntity _presentation;
-
-        [PrivateApi]
-        protected IDynamicEntity SubDynEntity(IEntity contents)
-        {
-            if (contents == null) return null;
-            var child = new DynamicEntity(contents, Dimensions, CompatibilityLevel, Block);
-            // special case: if it's a Dynamic Entity without block (like App.Settings)
-            // it needs the Service Provider from this object to work
-            if (Block == null && ServiceProviderOrNull != null) child.ServiceProviderOrNull = ServiceProviderOrNull;
-            return child;
-        }
 
 
         /// <inheritdoc />
@@ -214,29 +74,6 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         public bool IsDemoItem => Entity is EntityInBlock entInCg && entInCg.IsDemoItem;
 
-        [Obsolete]
-        [PrivateApi("probably we won't continue recommending to use this, but first we must provide an alternative")]
-        public IHtmlString Render()
-        {
-            if(CompatibilityLevel == 10)
-                throw new Exception("content.Render() is deprecated in the new RazorComponent. Use ToSic.Sxc.Blocks.Render.One(content) instead. See https://r.2sxc.org/EditToolbar");
 
-            return Blocks.Render.One(this);
-        }
-
-
-        /// <inheritdoc />
-        public List<IDynamicEntity> Parents(string type = null, string field = null)
-            => Entity.Parents(type, field)
-                .Select(e => new DynamicEntity(e, Dimensions, CompatibilityLevel, Block))
-                .Cast<IDynamicEntity>()
-                .ToList();
-
-        /// <inheritdoc />
-        public List<IDynamicEntity> Children(string field = null, string type = null)
-            => Entity.Children(field, type)
-                .Select(e => new DynamicEntity(e, Dimensions, CompatibilityLevel, Block))
-                .Cast<IDynamicEntity>()
-                .ToList();
     }
 }
