@@ -158,7 +158,7 @@ namespace ToSic.Sxc.WebApi.Cms
             {
                 result.Prefetch = TryToPrefectAdditionalData(appId, result);
             } 
-            catch (Exception e) { /* ignore */ throw; }
+            catch (Exception) { /* ignore */ }
 
             // done - return
             wrapLog($"ready, sending items:{result.Items.Count}, " +

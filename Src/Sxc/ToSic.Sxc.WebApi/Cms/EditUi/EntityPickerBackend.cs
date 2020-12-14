@@ -38,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             return _entityPickerApi
                 .Init(Log)
-                .GetAvailableEntities(appId, items, contentTypeName, withDrafts, null);
+                .GetAvailableEntities(appId, items, contentTypeName, withDrafts);
         }
     }
 }

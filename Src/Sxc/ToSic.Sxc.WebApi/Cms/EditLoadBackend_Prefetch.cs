@@ -85,7 +85,7 @@ namespace ToSic.Sxc.WebApi.Cms
                     .ToArray();
 
                 var backend = _entityPickerBackend.Init(Log);
-                var items = backend.GetAvailableEntities(appId, entities, null, true, null);
+                var items = backend.GetAvailableEntities(appId, entities, null, true);
 
                 // Step 3: return
                 return items.ToList();
