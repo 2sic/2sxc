@@ -57,9 +57,8 @@ namespace IntegrationSamples.SxcEdit01.Controllers
         [HttpGet]
         [HttpPost]
         [AllowAnonymous] // security check happens internally
-        public IEnumerable<EntityForPickerDto> EntityPicker(int appId, [FromBody] string[] items,
-            string contentTypeName = null, int? dimensionId = null)
-            => EntityBackend.Init(Log).GetAvailableEntities(appId, items, contentTypeName, dimensionId);
+        public IEnumerable<EntityForPickerDto> EntityPicker(int appId, [FromBody] string[] items, string contentTypeName = null)
+            => EntityBackend.Init(Log).GetAvailableEntities(appId, items, contentTypeName);
 
         /// <inheritdoc />
         [HttpGet]

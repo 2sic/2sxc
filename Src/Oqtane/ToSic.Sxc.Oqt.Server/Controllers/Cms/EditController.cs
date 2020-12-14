@@ -59,10 +59,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [HttpGet]
         [HttpPost]
         [AllowAnonymous] // security check happens internally
-        public IEnumerable<EntityForPickerDto> EntityPicker(int appId, [FromBody] string[] items,
-            string contentTypeName = null, int? dimensionId = null)
+        public IEnumerable<EntityForPickerDto> EntityPicker(int appId, [FromBody] string[] items, string contentTypeName = null)
             => EntityBackend.Init(Log)
-                .GetAvailableEntities(appId, items, contentTypeName, dimensionId);
+                .GetAvailableEntities(appId, items, contentTypeName);
 
 
         /// <inheritdoc />

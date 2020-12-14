@@ -34,9 +34,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [HttpPost]
         [AllowAnonymous] // security check happens internally
         public IEnumerable<EntityForPickerDto> EntityPicker([FromUri] int appId, [FromBody] string[] items,
-            [FromUri] string contentTypeName = null, [FromUri] int? dimensionId = null)
-            => _build<EntityPickerBackend>().Init(Log)
-                .GetAvailableEntities(appId, items, contentTypeName, dimensionId);
+            [FromUri] string contentTypeName = null)
+            => _build<EntityPickerBackend>().Init(Log).GetAvailableEntities(appId, items, contentTypeName);
 
         /// <inheritdoc />
         [HttpGet]
