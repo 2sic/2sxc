@@ -10,15 +10,17 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         public List<IDynamicEntity> Parents(string type = null, string field = null)
             => Entity.Parents(type, field)
-                .Select(e => new DynamicEntity(e, Dimensions, CompatibilityLevel, Block))
-                .Cast<IDynamicEntity>()
+                .Select(SubDynEntity)
+                //.Select(e => new DynamicEntity(e, Dimensions, CompatibilityLevel, Block))
+                //.Cast<IDynamicEntity>()
                 .ToList();
 
         /// <inheritdoc />
         public List<IDynamicEntity> Children(string field = null, string type = null)
             => Entity.Children(field, type)
-                .Select(e => new DynamicEntity(e, Dimensions, CompatibilityLevel, Block))
-                .Cast<IDynamicEntity>()
+                .Select(SubDynEntity)
+                //.Select(e => new DynamicEntity(e, Dimensions, CompatibilityLevel, Block))
+                //.Cast<IDynamicEntity>()
                 .ToList();
 
 
