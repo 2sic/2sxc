@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
-using ToSic.Eav.Apps;
 using ToSic.Eav.ImportExport;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Sxc.Blocks;
@@ -23,7 +22,7 @@ namespace ToSic.Sxc.Apps.ImportExport
 
             // The state must come from the DB, and not from the cache
             // Otherwise it will auto-initialize, which it shouldn't do when importing data
-            var appState = _repositoryLoader.AppState(AppId, Log);
+            var appState = _repositoryLoader.AppState(AppId, false);
 
             var viewsManager = _cmsManagerLazy.Value.InitWithState(appState, true, Log).Views;
 
@@ -53,7 +52,7 @@ namespace ToSic.Sxc.Apps.ImportExport
                     {
                         var entityGuid = Guid.Parse(demoEntityGuid);
                         if (RepositoryHasEntity(entityGuid))
-                            demoEntityId = GetLatestRepositoryId(entityGuid);//.EntityId;
+                            demoEntityId = GetLatestRepositoryId(entityGuid);
                         else
                             Messages.Add(new Message($"Demo Entity for Template \'{name}\' could not be found. (Guid: {demoEntityGuid})", Message.MessageTypes.Information));
 
@@ -80,7 +79,7 @@ namespace ToSic.Sxc.Apps.ImportExport
                     {
                         var entityGuid = Guid.Parse(queryEntityGuid.Value);
                         if (RepositoryHasEntity(entityGuid))
-                            queryEntityId = GetLatestRepositoryId(entityGuid);//.EntityId;
+                            queryEntityId = GetLatestRepositoryId(entityGuid);
                         else
                             Messages.Add(new Message($"Query Entity for Template \'{name}\' could not be found. (Guid: {queryEntityGuid.Value})", Message.MessageTypes.Information));
                     }

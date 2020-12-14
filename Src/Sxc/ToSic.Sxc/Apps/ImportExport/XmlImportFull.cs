@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Apps.ImportExport
             ITargetTypes metaTargetTypes) : base(importerLazy, dbDataForNewApp, dbDataForAppImport, importExportEnvironment, metaTargetTypes, "Sxc.XmlImp")
         {
             _cmsManagerLazy = cmsManagerLazy;
-            _repositoryLoader = repositoryLoader;
+            _repositoryLoader = repositoryLoader.Init(Log);
         }
 
         public new bool ImportXml(int zoneId, int appId, XDocument doc, bool leaveExistingValuesUntouched = true)
