@@ -174,7 +174,7 @@ namespace ToSic.Sxc.Web
         /// </remarks>
         /// <param name="url"></param>
         /// <returns></returns>
-        private static bool Is2SxcApiJs(string url) => url.ToLower()
+        private static bool Is2SxcApiJs(string url) => url.ToLowerInvariant()
             .Replace("\\", "/")
             .Contains("/js/2sxc.api");
 
@@ -192,7 +192,7 @@ namespace ToSic.Sxc.Web
 
         private int GetPriority(Match optMatch, int defValue)
         {
-            var priority = (optMatch.Groups["Priority"]?.Value ?? "true").ToLower();
+            var priority = (optMatch.Groups["Priority"]?.Value ?? "true").ToLowerInvariant();
             var prio = priority == "true" || priority == ""
                 ? defValue
                 : int.Parse(priority);

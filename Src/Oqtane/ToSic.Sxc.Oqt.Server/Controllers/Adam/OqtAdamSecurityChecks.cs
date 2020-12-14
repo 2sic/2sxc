@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Adam
             var extension = Path.GetExtension(fileName);
             return !string.IsNullOrEmpty(extension)
                 ;
-            //&& Host.AllowedExtensionWhitelist.IsAllowedExtension(extension.ToLower());
+            //&& Host.AllowedExtensionWhitelist.IsAllowedExtension(extension.ToLowerInvariant());
         }
 
         internal override bool CanEditFolder(IAsset item)

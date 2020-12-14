@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         private string OqtPositionName(string position)
         {
-            position = position.ToLower();
+            position = position.ToLowerInvariant();
 
             return position switch
             {

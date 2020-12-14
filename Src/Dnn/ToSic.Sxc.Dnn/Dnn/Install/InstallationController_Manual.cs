@@ -73,7 +73,7 @@ namespace ToSic.Sxc.Dnn.Install
             // Add DNN Version, 2SexyContent Version, module type, module id, Portal ID
             var gettingStartedSrc =
                 "//gettingstarted.2sxc.org/router.aspx?"
-                + "destination=autoconfigure" + (isContentApp ? Eav.Constants.ContentAppName.ToLower() : "app")
+                + "destination=autoconfigure" + (isContentApp ? Eav.Constants.ContentAppName.ToLowerInvariant() : "app")
                 + "&DnnVersion=" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4)
                 + "&2SexyContentVersion=" + Settings.ModuleVersion
                 + "&ModuleName=" + moduleInfo.DesktopModule.ModuleName

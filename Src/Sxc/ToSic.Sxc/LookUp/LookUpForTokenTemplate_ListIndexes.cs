@@ -21,7 +21,7 @@ namespace ToSic.Sxc.LookUp
             if (_repeaterIndex <= -1 || !strPropertyName.StartsWith(TokenRepeater + ":", OrdinalIgnoreCase))
                 return null;
 
-            switch (strPropertyName.Substring(TokenRepeater.Length + 1).ToLower())
+            switch (strPropertyName.Substring(TokenRepeater.Length + 1).ToLowerInvariant())
             {
                 case KeyIndex: return (_repeaterIndex).ToString();
                 case KeyIndex1: return (_repeaterIndex + 1).ToString();

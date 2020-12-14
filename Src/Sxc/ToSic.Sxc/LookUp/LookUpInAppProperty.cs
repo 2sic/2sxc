@@ -56,7 +56,7 @@ namespace ToSic.Sxc.LookUp
         /// <inheritdoc/>
         public override string Get(string key, string strFormat)
         {
-            key = key.ToLower();
+            key = key.ToLowerInvariant();
             if (key == "path")
                 return _app.Path;
             if (key == "physicalpath")
@@ -67,9 +67,9 @@ namespace ToSic.Sxc.LookUp
             if (subToken.HasSubtoken)
             {
                 var subProvider =
-                    (subToken.Source == "settings")
+                    subToken.Source == "settings"
                         ? Settings
-                        : (subToken.Source == "resources") ? Resources : null;
+                        : subToken.Source == "resources" ? Resources : null;
                 if (subProvider != null)
                     return subProvider.Get(subToken.Rest, strFormat);
             }

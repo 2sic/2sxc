@@ -36,7 +36,7 @@ namespace ToSic.Sxc.WebApi.App
                 var attrName = attrDef.Name;
                 if (!newContentItem.ContainsKey(attrName)) continue;
                 var foundValue = newContentItem[attrName];
-                switch (attrDef.Type.ToLower())
+                switch (attrDef.Type.ToLowerInvariant())
                 {
                     case "string":
                     case "hyperlink":

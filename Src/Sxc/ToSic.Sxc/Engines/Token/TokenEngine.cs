@@ -121,7 +121,7 @@ namespace ToSic.Sxc.Engines
             var repeatsRendered = new List<string>();
             foreach (Match match in repeatsMatches)
             {
-                repeatsRendered.Add(RenderRepeat(match.Groups[RegexToken.SourceName].Value.ToLower(), match.Groups[RegexToken.StreamName].Value, match.Groups[RegexToken.Template].Value));
+                repeatsRendered.Add(RenderRepeat(match.Groups[RegexToken.SourceName].Value.ToLowerInvariant(), match.Groups[RegexToken.StreamName].Value, match.Groups[RegexToken.Template].Value));
             }
 
             // Render sections between the <repeat>s (but before replace the <repeat>s and 

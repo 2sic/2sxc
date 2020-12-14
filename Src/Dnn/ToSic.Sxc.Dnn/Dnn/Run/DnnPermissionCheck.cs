@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Dnn.Run
 
         public string CustomPermissionKey = ""; // "CONTENT";
 
-        private readonly string _salPrefix = "SecurityAccessLevel.".ToLower();
+        private readonly string _salPrefix = "SecurityAccessLevel.".ToLowerInvariant();
 
         /// <summary>
         /// The DNN module on the container
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Dnn.Run
 
         protected override bool VerifyConditionOfEnvironment(string condition)
         {
-            if (!condition.ToLower().StartsWith(_salPrefix)) return false;
+            if (!condition.ToLowerInvariant().StartsWith(_salPrefix)) return false;
 
             var salWord = condition.Substring(_salPrefix.Length);
             var sal = (SecurityAccessLevel) Enum.Parse(typeof(SecurityAccessLevel), salWord);

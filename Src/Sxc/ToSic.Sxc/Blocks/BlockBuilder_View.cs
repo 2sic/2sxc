@@ -22,14 +22,14 @@ namespace ToSic.Sxc.Blocks
         //    var wrapLog = Log.Call<IView>("template override - check");
         //    if (Context.Page.Parameters == null) return wrapLog("no params", null);
 
-        //    var urlParameterDict = Context.Page.Parameters.ToDictionary(pair => pair.Key?.ToLower() ?? "", pair =>
-        //        $"{pair.Key}/{pair.Value}".ToLower());
+        //    var urlParameterDict = Context.Page.Parameters.ToDictionary(pair => pair.Key?.ToLowerInvariant() ?? "", pair =>
+        //        $"{pair.Key}/{pair.Value}".ToLowerInvariant());
 
         //    var allTemplates = new CmsRuntime(App, Log, UserMayEdit, false).Views.GetAll();
 
         //    foreach (var template in allTemplates.Where(t => !string.IsNullOrEmpty(t.UrlIdentifier)))
         //    {
-        //        var desiredFullViewName = template.UrlIdentifier.ToLower();
+        //        var desiredFullViewName = template.UrlIdentifier.ToLowerInvariant();
         //        if (desiredFullViewName.EndsWith("/.*"))   // match details/.* --> e.g. details/12
         //        {
         //            var keyName = desiredFullViewName.Substring(0, desiredFullViewName.Length - 3);

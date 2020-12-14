@@ -200,7 +200,7 @@ namespace ToSic.Sxc.WebApi.Save
             }
 
             // tell the UI that it should not actually use this data yet, keep it locked
-            if (!identifier.Group.Part.ToLower().Contains(ViewParts.PresentationLower))
+            if (!identifier.Group.Part.ToLowerInvariant().Contains(ViewParts.PresentationLower))
                 return;
 
             // the following steps are only for presentation items
@@ -212,7 +212,7 @@ namespace ToSic.Sxc.WebApi.Save
             identifier.Group.SlotIsEmpty = true; // if it is blank, then lock this one to begin with
 
             identifier.DuplicateEntity =
-                identifier.Group.Part.ToLower() == ViewParts.PresentationLower
+                identifier.Group.Part.ToLowerInvariant() == ViewParts.PresentationLower
                     ? blockConfiguration.View.PresentationItem?.EntityId
                     : blockConfiguration.View.HeaderPresentationItem?.EntityId;
         }

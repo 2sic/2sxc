@@ -21,7 +21,7 @@ namespace ToSic.Sxc.WebApi.Assets
             {
                 // .cs files - usually API controllers
                 case AssetEditor.CsExtension:
-                    if ((folder?.ToLower().IndexOf(AssetEditor.CsApiFolder, StringComparison.Ordinal) ?? -1) > -1)
+                    if ((folder?.ToLowerInvariant().IndexOf(AssetEditor.CsApiFolder, StringComparison.Ordinal) ?? -1) > -1)
                     {
                         var nameWithoutExt = name.Substring(0, name.Length - ext.Length);
                         content.Content =

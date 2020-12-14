@@ -13,7 +13,7 @@ namespace ToSic.SexyContent.EAV.FormlyEditUI.FieldTemplates.WebForms
 		protected void Page_Load(object sender, EventArgs e)
 		{
 			
-			switch (Request.QueryString["type"].ToLower())
+			switch (Request.QueryString["type"].ToLowerInvariant())
 			{
 				case "pagepicker":
 					var controlPagePicker = (PagePicker)LoadControl("~/DesktopModules/ToSIC_SexyContent/DnnWebForms/PagePicker.ascx");

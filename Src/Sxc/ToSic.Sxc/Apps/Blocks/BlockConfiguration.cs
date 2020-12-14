@@ -88,7 +88,7 @@ namespace ToSic.Sxc.Apps.Blocks
         {
             get
             {
-                switch (type.ToLower())
+                switch (type.ToLowerInvariant())
                 {
                     case ViewParts.ContentLower: return Content;
                     case ViewParts.PresentationLower: return Presentation;

@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Adam
         {
             var extension = Path.GetExtension(fileName);
             return !string.IsNullOrEmpty(extension)
-                   /*&& Host.AllowedExtensionWhitelist.IsAllowedExtension(extension.ToLower())*/;
+                   /*&& Host.AllowedExtensionWhitelist.IsAllowedExtension(extension.ToLowerInvariant())*/;
         }
 
         internal override bool CanEditFolder(Eav.Apps.Assets.IAsset item)

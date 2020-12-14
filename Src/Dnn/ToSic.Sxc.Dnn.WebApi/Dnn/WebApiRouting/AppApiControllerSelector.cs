@@ -64,12 +64,12 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
         private bool HandleRequestWithThisController(HttpRequestMessage request)
         {
             var routeData = request.GetRouteData();
-            var simpleMatch = AllowedRoutes.Any(a => routeData.Route.RouteTemplate.ToLower().Contains(a));
+            var simpleMatch = AllowedRoutes.Any(a => routeData.Route.RouteTemplate.ToLowerInvariant().Contains(a));
             if (simpleMatch)
                 return true;
 
             var rexMatch = RegExRoutes.Any(
-                a => new Regex(a, RegexOptions.None).IsMatch(routeData.Route.RouteTemplate.ToLower()) );
+                a => new Regex(a, RegexOptions.None).IsMatch(routeData.Route.RouteTemplate.ToLowerInvariant()) );
             return rexMatch;
 
         }
