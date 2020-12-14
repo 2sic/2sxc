@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Data
             if (field == "Toolbar") return Toolbar.ToString();
 #pragma warning restore 618
 
-            if (field == ViewParts.Presentation) return GetPresentation;
+            if (field == ViewParts.Presentation) return Presentation;
 
             #endregion
 

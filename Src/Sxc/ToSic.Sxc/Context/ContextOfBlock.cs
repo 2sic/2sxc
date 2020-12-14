@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Context
                 var identifier = Module?.BlockIdentifier;
                 if (identifier == null) return wrapLog("no mod-block-id", null);
                 AppIdentity = identifier;
-                return base.AppIdentity;
+                return wrapLog(null, base.AppIdentity);
             }
         }
 

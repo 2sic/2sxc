@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Adam
         /// <returns></returns>
         internal IEntity GetFirstMetadata(AppRuntime app, MetadataFor mdId)
             => app.Metadata
-                .Get(mdId.TargetType, mdId.KeyString) //(isFolder ? "folder:" : "file:") + id)
+                .Get(mdId.TargetType, mdId.KeyString)
                 .FirstOrDefault();
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Adam
             var meta = GetFirstMetadata(appContext.AppRuntime, mdId) 
                        ?? Build.FakeEntity(Eav.Constants.TransientAppId);
             var dynEnt = new DynamicEntity(meta,
-                new[] {(appContext.AppContext?.Site).SafeCurrentCultureCode()},
+                (appContext.AppContext?.Site).SafeLanguagePriorityCodes(),
                 appContext.CompatibilityLevel,
                 null) {ServiceProviderOrNull = _serviceProvider};
             return dynEnt;

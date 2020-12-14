@@ -30,13 +30,9 @@ namespace ToSic.Sxc.LookUp
         {
             get
             {
-                if (_resources == null && _app.Resources != null)
-                {
-                    var dynEnt = _app.Resources as IDynamicEntity;
-                    _resources = new LookUpInEntity("appresources", dynEnt?.Entity, dynEnt?.Dimensions);
-                }
-                return _resources;
-
+                if (_resources != null || _app.Resources == null) return _resources;
+                var dynEnt = _app.Resources as IDynamicEntity;
+                return _resources = new LookUpInEntity("appresources", dynEnt?.Entity, dynEnt?.Dimensions);
             }
         }
         private ILookUp _resources;
