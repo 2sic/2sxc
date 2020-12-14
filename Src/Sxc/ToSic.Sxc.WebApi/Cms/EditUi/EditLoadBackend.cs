@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json.V1;
@@ -24,21 +23,21 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public partial class EditLoadBackend: WebApiBackendBase<EditLoadBackend>
     {
-        //private const int TempToMarkSingletonMetadata = 2000000000;
-
         #region DI Constructor
 
         public EditLoadBackend(EntityApi entityApi, ContentGroupList contentGroupList, 
             IServiceProvider serviceProvider, 
             IUiContextBuilder contextBuilder, 
             IContextResolver ctxResolver, 
-            ITargetTypes mdTargetTypes) : base(serviceProvider, "Cms.LoadBk")
+            ITargetTypes mdTargetTypes,
+            IValueConverter valueConverter) : base(serviceProvider, "Cms.LoadBk")
         {
             _entityApi = entityApi;
             _contentGroupList = contentGroupList;
             _contextBuilder = contextBuilder;
             _ctxResolver = ctxResolver;
             _mdTargetTypes = mdTargetTypes;
+            _valueConverter = valueConverter;
         }
         
         private readonly EntityApi _entityApi;
@@ -46,6 +45,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly IUiContextBuilder _contextBuilder;
         private readonly IContextResolver _ctxResolver;
         private readonly ITargetTypes _mdTargetTypes;
+        private readonly IValueConverter _valueConverter;
 
         #endregion
 
@@ -150,6 +150,12 @@ namespace ToSic.Sxc.WebApi.Cms
             result.Context = _contextBuilder.SetZoneAndApp(appIdentity.ZoneId, context.AppState)
                 .Get(Ctx.AppBasic | Ctx.Language | Ctx.Site | Ctx.System);
 
+            try
+            {
+                result.Prefetch = TryToPrefectAdditionalData(result);
+            } 
+            catch (Exception) { /* ignore */ }
+
             // done - return
             wrapLog($"ready, sending items:{result.Items.Count}, " +
                     $"types:{result.ContentTypes.Count}, " +
@@ -159,10 +165,41 @@ namespace ToSic.Sxc.WebApi.Cms
         }
 
 
+        public EditPrefetchDto TryToPrefectAdditionalData(EditDto editData)
+        {
+            // Step 1: try to find hyperlinks
+            var links = editData.Items
+                .SelectMany(i 
+                    => i.Entity?.Attributes?.Hyperlink?.SelectMany(h 
+                        => h.Value.Select(linkAttrib 
+                            => new
+                            {
+                                i.Entity.Guid, 
+                                Link = linkAttrib.Value
+                            })))
+            // Step 2: Check which ones have a link reference
+                .Where(set => ValueConverterBase.CouldBeReference(set.Link))
+                .ToList();
+
+            // Step 3: Look them up
+            var result = links.ToDictionary(
+                s => s.Link,
+                s => _valueConverter.ToValue(s.Link, s.Guid)
+            );
+
+            // Step 4: return dictionary with these
+            return links.Any()
+                ? new EditPrefetchDto
+                {
+                    Links = result
+                }
+                : null;
+        }
+
+
 
         /// <summary>
         /// new 2020-12-08 - correct entity-id with lookup of existing if marked as singleton
-        /// Singleton-marker is temporarily a very large number 2'000'000'000
         /// </summary>
         private bool TryToAutoFindMetadataSingleton(List<ItemIdentifier> list, AppState appState)
         {
