@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using ToSic.Eav.Apps;
-using ToSic.Eav.ImportExport.Json;
+using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
@@ -17,6 +18,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.Features;
 using ToSic.Sxc.WebApi.Save;
+using JsonSerializer = ToSic.Eav.ImportExport.Json.JsonSerializer;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -101,6 +103,25 @@ namespace ToSic.Sxc.WebApi.Cms
             result.ContentTypes = types
                 .Select(ct => JsonSerializer.ToJson(ct, true))
                 .ToList();
+
+            //// TEMP DEBUG
+            //var inputTypes = types.SelectMany(t => t.Attributes.Select(a =>
+            //{
+            //    var Lookup = a.InputType();
+            //    var mdAll = a.Metadata.Where(md => md.Type.Is(Constants.MetadataFieldTypeAll)).ToList();
+            //    var MdAllCount = mdAll.Count;
+            //    var MdAllAttribCount = mdAll.FirstOrDefault()?.Attributes.Count;
+            //    var MdAllWithAttrib = mdAll.FirstOrDefault(md => md.Attributes.ContainsKey(Constants.MetadataFieldTypeAll));
+            //    var MdAllAttrib = MdAllWithAttrib?.GetBestValue<string>(Constants.MetadataFieldTypeAll);
+            //    var MdAllAttribZero = MdAllWithAttrib?.GetBestValue<string>(Constants.MetadataFieldTypeAll, new string[0]);
+            //    var MdAllAttribEmpty = MdAllWithAttrib?.GetBestValue<string>(Constants.MetadataFieldTypeAll, new []{""});
+            //    var MdAllAttribEn = MdAllWithAttrib?.GetBestValue<string>(Constants.MetadataFieldTypeAll, new[] { "en-us" });
+            //    var MdAllAttribTr = MdAllWithAttrib?.GetBestValue<string>(Constants.MetadataFieldTypeAll, new[] { "tr-tr" });
+            //    var MdAllType = a.Metadata.GetBestValue<string>(Constants.MetadataFieldAllInputType, Constants.MetadataFieldTypeAll);
+            //    return new {Lookup, MdAllCount, MdAllType, MdAllAttribCount, MdAllWithAttrib?.EntityId, MdAllAttrib, MdAllAttribZero, MdAllAttribEmpty, MdAllAttribEn, MdAllAttribTr };
+            //}));
+            //var serializedDebug = JsonConvert.SerializeObject(inputTypes);
+            //Log.Add("Test / debug: " + serializedDebug);
 
             // ensure that sub-properties of the content-types are included
             // this is for UI Formulas (children of @All) - WIP
