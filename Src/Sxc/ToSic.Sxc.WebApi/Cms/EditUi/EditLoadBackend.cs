@@ -30,7 +30,9 @@ namespace ToSic.Sxc.WebApi.Cms
             IUiContextBuilder contextBuilder, 
             IContextResolver ctxResolver, 
             ITargetTypes mdTargetTypes,
-            IValueConverter valueConverter) : base(serviceProvider, "Cms.LoadBk")
+            // for prefetch
+            IValueConverter valueConverter,
+            EntityPickerApi entityPickerBackend) : base(serviceProvider, "Cms.LoadBk")
         {
             _entityApi = entityApi;
             _contentGroupList = contentGroupList;
@@ -38,6 +40,7 @@ namespace ToSic.Sxc.WebApi.Cms
             _ctxResolver = ctxResolver;
             _mdTargetTypes = mdTargetTypes;
             _valueConverter = valueConverter;
+            _entityPickerBackend = entityPickerBackend;
         }
         
         private readonly EntityApi _entityApi;
@@ -46,6 +49,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly IContextResolver _ctxResolver;
         private readonly ITargetTypes _mdTargetTypes;
         private readonly IValueConverter _valueConverter;
+        private readonly EntityPickerApi _entityPickerBackend;
 
         #endregion
 
@@ -152,7 +156,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             try
             {
-                result.Prefetch = TryToPrefectAdditionalData(result);
+                result.Prefetch = TryToPrefectAdditionalData(appId, result);
             } 
             catch (Exception e) { /* ignore */ throw; }
 
@@ -165,50 +169,6 @@ namespace ToSic.Sxc.WebApi.Cms
         }
 
 
-        public EditPrefetchDto TryToPrefectAdditionalData(EditDto editData)
-        {
-            var links = PrefetchLinks(editData);
-
-            return links.Any()
-                ? new EditPrefetchDto
-                {
-                    Links = links
-                }
-                : null;
-        }
-
-        private Dictionary<string, string> PrefetchLinks(EditDto editData)
-        {
-            // Step 1: try to find hyperlinks
-            var bundlesHavingLinks = editData.Items
-                // Only these with hyperlinks
-                .Where(b => b.Entity?.Attributes?.Hyperlink?.Any() ?? false)
-                .Select(b => new
-                {
-                    b.Entity.Guid,
-                    b.Entity.Attributes.Hyperlink
-                });
-
-            var links = bundlesHavingLinks.SelectMany(set
-                    => set.Hyperlink.SelectMany(h
-                        => h.Value?.Select(linkAttrib
-                            => new
-                            {
-                                set.Guid,
-                                Link = linkAttrib.Value
-                            })))
-                .Where(set => set != null)
-                // Step 2: Check which ones have a link reference
-                .Where(set => ValueConverterBase.CouldBeReference(set.Link))
-                .ToList();
-
-            // Step 3: Look them up
-            // Step 4: return dictionary with these
-            return links.ToDictionary(
-                s => s.Link,
-                s => _valueConverter.ToValue(s.Link, s.Guid)
-            );
-        }
 
         /// <summary>
         /// new 2020-12-08 - correct entity-id with lookup of existing if marked as singleton

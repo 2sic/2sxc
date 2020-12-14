@@ -23,7 +23,7 @@ namespace ToSic.Sxc.WebApi.Cms
         }
 
 
-        public IEnumerable<EntityForPickerDto> GetAvailableEntities(int appId, string[] items, string contentTypeName, int? dimensionId)
+        public IEnumerable<EntityForPickerDto> GetAvailableEntities(int appId, string[] items, string contentTypeName)
         {
             var context = _ctxResolver.App(appId);
             // do security check
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             return _entityPickerApi
                 .Init(Log)
-                .GetAvailableEntities(appId, items, contentTypeName, withDrafts, dimensionId);
+                .GetAvailableEntities(appId, items, contentTypeName, withDrafts, null);
         }
     }
 }
