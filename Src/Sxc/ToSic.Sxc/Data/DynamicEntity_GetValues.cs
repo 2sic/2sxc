@@ -14,12 +14,12 @@ namespace ToSic.Sxc.Data
             var defaultMode = language == null && lookup;
 
             #region check the two special cases Toolbar / Presentation which the EAV doesn't know
-
-#pragma warning disable 618
+#if NETFRAMEWORK
             // ReSharper disable once ConvertIfStatementToSwitchStatement
+#pragma warning disable 618
             if (field == "Toolbar") return Toolbar.ToString();
 #pragma warning restore 618
-
+#endif
             if (field == ViewParts.Presentation) return Presentation;
 
             #endregion

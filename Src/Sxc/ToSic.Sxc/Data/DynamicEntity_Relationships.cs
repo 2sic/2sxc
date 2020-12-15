@@ -7,22 +7,14 @@ namespace ToSic.Sxc.Data
 {
     public partial class DynamicEntity
     {
-
         /// <inheritdoc />
         public List<IDynamicEntity> Parents(string type = null, string field = null)
-            => Entity.Parents(type, field)
-                .Select(SubDynEntity)
-                //.Select(e => new DynamicEntity(e, Dimensions, CompatibilityLevel, Block))
-                //.Cast<IDynamicEntity>()
-                .ToList();
+            => Entity.Parents(type, field).Select(SubDynEntity).ToList();
+
 
         /// <inheritdoc />
         public List<IDynamicEntity> Children(string field = null, string type = null)
-            => Entity.Children(field, type)
-                .Select(SubDynEntity)
-                //.Select(e => new DynamicEntity(e, Dimensions, CompatibilityLevel, Block))
-                //.Cast<IDynamicEntity>()
-                .ToList();
+            => Entity.Children(field, type).Select(SubDynEntity).ToList();
 
 
         [PrivateApi]
