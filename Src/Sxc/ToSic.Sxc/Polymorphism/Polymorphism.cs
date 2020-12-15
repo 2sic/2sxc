@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 
@@ -14,10 +13,10 @@ namespace ToSic.Sxc.Polymorphism
         public IEntity Entity;
         public Polymorphism(IEnumerable<IEntity> list, ILog parentLog) : base("Plm.Managr", parentLog)
         {
-            Entity = list?.FirstOrDefaultOfType(PolymorphismConstants.Name);// /*?*/.FirstOrDefault(e => e.Type.Name == PolymorphismConstants.Name);
+            Entity = list?.FirstOrDefaultOfType(PolymorphismConstants.Name);
             if (Entity == null) return;
 
-            var rule = Entity.GetBestValue<string>(PolymorphismConstants.ModeField);
+            var rule = Entity.Value<string>(PolymorphismConstants.ModeField);
 
             SplitRule(rule);
         }
