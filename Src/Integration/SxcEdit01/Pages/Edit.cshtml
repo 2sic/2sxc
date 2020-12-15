@@ -13,6 +13,8 @@
   var moduleId = 9771;
   var appState = State.Get(appId);
   var firstItem = appState.List.FirstOrDefault();
+
+  var itemWithImagesId = 128280;
 }
 <h1>@ViewData["Title"]</h1>
 
@@ -31,6 +33,12 @@
   <li><a href="/api/sxc/Dialog/Settings?appId=@appId" target="_blank">Call Dialog/Settings?appId=@appId</a></li>
   <li><a href="#" onclick="getSxc().manage.run('app')">Click to open app-dialog</a></li>
   <li><a href="#" onclick="getSxc().manage.run('edit', { entityId: @firstItem.EntityId })">Click to open edit dialog</a></li>
+</ol>
+
+<hr/>
+<h2>ADAM Images / Files</h2>
+<ol>
+  <li><a href="#" onclick="getSxc().manage.run('edit', { entityId: @itemWithImagesId })">Edit something with images!</a></li>
 </ol>
 
 <hr />

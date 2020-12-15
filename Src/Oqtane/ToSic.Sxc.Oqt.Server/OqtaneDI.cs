@@ -58,6 +58,7 @@ namespace ToSic.Sxc.Oqt.Server
 
             services.AddSingleton<IPlatform, OqtPlatformContext>();
 
+            // ADAM stuff
             services.AddTransient<SecurityChecksBase, OqtAdamSecurityChecks>();
             services.AddTransient<IAdamFileSystem<int, int>, OqtAdamFileSystem>();
             services.AddTransient(typeof(AdamItemDtoMaker<,>), typeof(OqtAdamItemDtoMaker<,>));
