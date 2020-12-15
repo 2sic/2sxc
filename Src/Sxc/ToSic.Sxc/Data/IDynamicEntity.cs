@@ -49,6 +49,13 @@ namespace ToSic.Sxc.Data
         /// </returns>
         new object EntityTitle { get; }
 
+
+        /// <summary>
+        /// The type name of the current entity. This provides the nice name like "Person" and not the technical internal StaticName
+        /// </summary>
+        string EntityType { get; }
+
+
         /// <summary>
         /// Get a value of the entity. Usually you will prefer the quick access like
         /// @content.FirstName - which will give you the same things as content.Get("FirstName").
@@ -78,6 +85,9 @@ namespace ToSic.Sxc.Data
             string language = null,
             bool convertLinks = true);
 
+
+        #region Publishing / Draft Information
+
         /// <summary>
         /// Get the draft item of this item if this is a content-item which is published, and has a draft.
         /// </summary>
@@ -89,6 +99,15 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <returns>Returns a dynamic entity if there is a draft, or null if there is no draft.</returns>
         new dynamic GetPublished();
+
+        // This property would also work on the normal dynamic interface, but we want them to appear in the documentation so we're adding them
+        /// <summary>
+        /// Tells us if this data item is published or still draft. Default is true.
+        /// </summary>
+        bool IsPublished { get; }
+
+        #endregion
+
 
         /// <summary>
         /// Many templates show demo data. If the template code must know if it's the demo item or

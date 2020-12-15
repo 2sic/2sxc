@@ -53,14 +53,7 @@ namespace ToSic.Sxc.Data
         /// </summary>
         [PrivateApi]
         internal IServiceProvider ServiceProviderOrNull;
-
-
-
-        /// <inheritdoc />
-        public int EntityId => Entity?.EntityId ?? 0;
-
-        /// <inheritdoc />
-        public Guid EntityGuid => Entity?.EntityGuid ?? Guid.Empty;
+        
 
         /// <inheritdoc />
         public object EntityTitle => Entity?.Title[Dimensions];
