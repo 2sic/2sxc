@@ -80,6 +80,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 
         [PrivateApi] public IServiceProvider ServiceProvider => Eav.Factory.GetServiceProvider();
 
+        /// <inheritdoc />
         public TService GetService<TService>() => Eav.Factory.GetServiceProvider().Build<TService>();
 
         #endregion

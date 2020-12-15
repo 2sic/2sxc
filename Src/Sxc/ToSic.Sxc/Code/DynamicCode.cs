@@ -1,12 +1,10 @@
 ﻿using System;
-using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
-
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Code
@@ -26,6 +24,9 @@ namespace ToSic.Sxc.Code
         public IBlockDataSource Data => UnwrappedContents?.Data;
 
         [PrivateApi] public IServiceProvider ServiceProvider => UnwrappedContents?.ServiceProvider;
+
+        /// <inheritdoc />
+        public TService GetService<TService>() => UnwrappedContents.GetService<TService>();
 
         /// <inheritdoc />
         /// <remarks>

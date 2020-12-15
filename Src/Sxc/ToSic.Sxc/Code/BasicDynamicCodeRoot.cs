@@ -1,12 +1,10 @@
-﻿using System;
-using ToSic.Eav;
-using ToSic.Sxc.Context;
+﻿using ToSic.Eav;
 
 namespace ToSic.Sxc.Code
 {
     public class BasicDynamicCodeRoot: DynamicCodeRoot
     {
-        public BasicDynamicCodeRoot(IServiceProvider serviceProvider, ICmsContext cmsContext) : base(serviceProvider, cmsContext, LogNames.Basic)
+        public BasicDynamicCodeRoot(Dependencies dependencies) : base(dependencies, LogNames.Basic)
         {
         }
     }

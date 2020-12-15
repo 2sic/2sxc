@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
                 if (_blockLoaded) return _block;
                 _blockLoaded = true;
 
-                var ctx = ServiceProvider.Build<IContextOfBlock>();
+                var ctx = GetService<IContextOfBlock>();
                 ctx.Init(Log);
                 ctx.Site.Init(TestIds.PrimaryZone);
                 ctx.Site.Init(0);
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
                 //    new MvcContainer(),
                 //    new BlockPublishingState()
                 //    );
-                _block = ServiceProvider.Build<BlockFromModule>().Init(ctx, Log);
+                _block = GetService<BlockFromModule>().Init(ctx, Log);
                 return _block;
             }
         }

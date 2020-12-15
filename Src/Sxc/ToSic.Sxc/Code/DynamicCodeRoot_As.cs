@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Code
         public IFolder AsAdam(IEntity entity, string fieldName)
         {
             if (_adamAppContext == null)
-                _adamAppContext = ServiceProvider.Build<AdamAppContext>()
+                _adamAppContext = GetService<AdamAppContext>()
                     .Init(Block.Context, CompatibilityLevel, Log);
             return _adamAppContext.FolderOfField(entity.EntityGuid, fieldName);
         }

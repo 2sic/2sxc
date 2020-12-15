@@ -37,7 +37,9 @@ namespace ToSic.Sxc.Hybrid.Razor
         [PrivateApi] public IBlock Block => throw new NotSupportedException("don't use this");
 
         [PrivateApi] public IServiceProvider ServiceProvider => DynCode.ServiceProvider;
-        [PrivateApi] public TService GetService<TService>() => DynCode.GetService<TService>();
+
+        /// <inheritdoc />
+        public TService GetService<TService>() => DynCode.GetService<TService>();
 
         [PrivateApi] public int CompatibilityLevel => DynCode.CompatibilityLevel;
 
