@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.ImportExport.Json;
+using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
@@ -17,26 +17,30 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.Features;
 using ToSic.Sxc.WebApi.Save;
+using JsonSerializer = ToSic.Eav.ImportExport.Json.JsonSerializer;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
     public partial class EditLoadBackend: WebApiBackendBase<EditLoadBackend>
     {
-        //private const int TempToMarkSingletonMetadata = 2000000000;
-
         #region DI Constructor
 
         public EditLoadBackend(EntityApi entityApi, ContentGroupList contentGroupList, 
             IServiceProvider serviceProvider, 
             IUiContextBuilder contextBuilder, 
             IContextResolver ctxResolver, 
-            ITargetTypes mdTargetTypes) : base(serviceProvider, "Cms.LoadBk")
+            ITargetTypes mdTargetTypes,
+            // for prefetch
+            IValueConverter valueConverter,
+            EntityPickerApi entityPickerBackend) : base(serviceProvider, "Cms.LoadBk")
         {
             _entityApi = entityApi;
             _contentGroupList = contentGroupList;
             _contextBuilder = contextBuilder;
             _ctxResolver = ctxResolver;
             _mdTargetTypes = mdTargetTypes;
+            _valueConverter = valueConverter;
+            _entityPickerBackend = entityPickerBackend;
         }
         
         private readonly EntityApi _entityApi;
@@ -44,6 +48,8 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly IUiContextBuilder _contextBuilder;
         private readonly IContextResolver _ctxResolver;
         private readonly ITargetTypes _mdTargetTypes;
+        private readonly IValueConverter _valueConverter;
+        private readonly EntityPickerApi _entityPickerBackend;
 
         #endregion
 
@@ -102,6 +108,25 @@ namespace ToSic.Sxc.WebApi.Cms
                 .Select(ct => JsonSerializer.ToJson(ct, true))
                 .ToList();
 
+            //// TEMP DEBUG
+            //var inputTypes = types.SelectMany(t => t.Attributes.Select(a =>
+            //{
+            //    var Lookup = a.InputType();
+            //    var mdAll = a.Metadata.Where(md => md.Type.Is(Constants.MetadataFieldTypeAll)).ToList();
+            //    var MdAllCount = mdAll.Count;
+            //    var MdAllAttribCount = mdAll.FirstOrDefault()?.Attributes.Count;
+            //    var MdAllWithAttrib = mdAll.FirstOrDefault(md => md.Attributes.ContainsKey(Constants.MetadataFieldTypeAll));
+            //    var MdAllAttrib = MdAllWithAttrib?.GetBestValue<string>(Constants.MetadataFieldTypeAll);
+            //    var MdAllAttribZero = MdAllWithAttrib?.GetBestValue<string>(Constants.MetadataFieldTypeAll, new string[0]);
+            //    var MdAllAttribEmpty = MdAllWithAttrib?.GetBestValue<string>(Constants.MetadataFieldTypeAll, new []{""});
+            //    var MdAllAttribEn = MdAllWithAttrib?.GetBestValue<string>(Constants.MetadataFieldTypeAll, new[] { "en-us" });
+            //    var MdAllAttribTr = MdAllWithAttrib?.GetBestValue<string>(Constants.MetadataFieldTypeAll, new[] { "tr-tr" });
+            //    var MdAllType = a.Metadata.GetBestValue<string>(Constants.MetadataFieldAllInputType, Constants.MetadataFieldTypeAll);
+            //    return new {Lookup, MdAllCount, MdAllType, MdAllAttribCount, MdAllWithAttrib?.EntityId, MdAllAttrib, MdAllAttribZero, MdAllAttribEmpty, MdAllAttribEn, MdAllAttribTr };
+            //}));
+            //var serializedDebug = JsonConvert.SerializeObject(inputTypes);
+            //Log.Add("Test / debug: " + serializedDebug);
+
             // ensure that sub-properties of the content-types are included
             // this is for UI Formulas (children of @All) - WIP
             // and the warning/error Regex specials - WIP
@@ -129,6 +154,12 @@ namespace ToSic.Sxc.WebApi.Cms
             result.Context = _contextBuilder.SetZoneAndApp(appIdentity.ZoneId, context.AppState)
                 .Get(Ctx.AppBasic | Ctx.Language | Ctx.Site | Ctx.System);
 
+            try
+            {
+                result.Prefetch = TryToPrefectAdditionalData(appId, result);
+            } 
+            catch (Exception) { /* ignore */ }
+
             // done - return
             wrapLog($"ready, sending items:{result.Items.Count}, " +
                     $"types:{result.ContentTypes.Count}, " +
@@ -141,7 +172,6 @@ namespace ToSic.Sxc.WebApi.Cms
 
         /// <summary>
         /// new 2020-12-08 - correct entity-id with lookup of existing if marked as singleton
-        /// Singleton-marker is temporarily a very large number 2'000'000'000
         /// </summary>
         private bool TryToAutoFindMetadataSingleton(List<ItemIdentifier> list, AppState appState)
         {

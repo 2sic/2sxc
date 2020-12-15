@@ -43,6 +43,12 @@ namespace ToSic.Sxc.Dnn.Web
             // register scripts and css
             RegisterClientDependencies(Page, readJs, editJs, editCss);
 
+            // New in 11.11.02 - DNN has a strange behavior where the current language isn't known till PreRender
+            // so we have to move adding the header to here.
+            // MustAddHeaders may have been set earlier by the engine, or now by the various js added
+            Log.Add($"{nameof(MustAddHeaders)}={MustAddHeaders}");
+            if (MustAddHeaders) Header.AddHeaders();
+
             return wrapLog("ok", true);
         }
 
@@ -56,9 +62,11 @@ namespace ToSic.Sxc.Dnn.Web
                                           ?.CompatibilityAutoLoadJQueryAndRVT
                                       ?? true;
             if (!addAntiForgeryToken) return;
+
+            // If we got this far, we want the old behavior which always enables headers etc.
             Log.Add(nameof(EnsurePre1025Behavior) + ": Activate Anti-Forgery for compatibility with old behavior");
             ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
-            Header.AddHeaders();
+            MustAddHeaders = true;
         }
 
 
@@ -66,7 +74,7 @@ namespace ToSic.Sxc.Dnn.Web
         public void RegisterClientDependencies(Page page, bool readJs, bool editJs, bool editCss)
         {
             var wrapLog = Log.Call($"-, {nameof(readJs)}:{readJs}, {nameof(editJs)}:{editJs}, {nameof(editCss)}:{editCss}");
-            var root = "~/desktopmodules/tosic_sexycontent/";
+            var root = DnnConstants.SysFolderRootVirtual;
             root = page.ResolveUrl(root);
             var ver = Settings.Version.ToString();
             var priority = (int) FileOrder.Js.DefaultPriority - 2;
@@ -79,7 +87,7 @@ namespace ToSic.Sxc.Dnn.Web
             {
                 Log.Add("add $2sxc api and headers");
                 RegisterJs(page, ver, root + InpageCms.CoreJs, true, priority);
-                Header.AddHeaders();
+                MustAddHeaders = true;
             }
 
             // add edit-js (commands, manage, etc.)
@@ -95,6 +103,18 @@ namespace ToSic.Sxc.Dnn.Web
 
             wrapLog("ok");
         }
+
+
+        #region DNN Bug with Current Culture
+
+        // We must add the _js header but we must wait beyond the initial page-load until Pre-Render
+        // Because for reasons unknown DNN (at least in V7.4+ but I think also in 9) doesn't have 
+        // the right PortalAlias and language set until then. 
+        // before that it assumes the PortalAlias is a the default alias, even if the url clearly shows another language
+
+        private bool MustAddHeaders { get; set; }
+
+        #endregion
 
 
         /// <summary>

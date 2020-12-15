@@ -71,7 +71,7 @@ namespace ToSic.Sxc.LookUp
                         // but only in token templates (and previously also app-settings) which causes
                         // the use to have to be language aware - very complex
                         // I'm pretty sure this won't affect anybody
-                        // old: ((bool)valueObject).ToString(formatProvider).ToLower();
+                        // old: ((bool)valueObject).ToString(formatProvider).ToLowerInvariant();
                         return LookUpBase.Format((bool) valueObject) ;
 					case TypeCode.DateTime:
 					case TypeCode.Double:
@@ -112,7 +112,7 @@ namespace ToSic.Sxc.LookUp
         }
 
 
-        private CultureInfo GetCultureInfo() => IZoneCultureResolverExtensions.SafeCurrentCultureInfo(_entity?.Dimensions);
+        private CultureInfo GetCultureInfo() => IZoneCultureResolverExtensions.SafeCultureInfo(_entity?.Dimensions);
 
         [PrivateApi]
 		public string Get(string key, string strFormat) => GetProperty(key, strFormat);

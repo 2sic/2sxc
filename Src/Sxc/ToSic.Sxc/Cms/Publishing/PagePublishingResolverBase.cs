@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using ToSic.Eav.Apps.Enums;
-using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Cms.Publishing
@@ -16,10 +15,10 @@ namespace ToSic.Sxc.Cms.Publishing
             if (Cache.ContainsKey(instanceId)) return wrapLog("in cache", Cache[instanceId]);
 
             var decision = LookupRequirements(instanceId);
-            Cache.Add(instanceId, decision);
+            Cache.TryAdd(instanceId, decision);
             return wrapLog("decision: ", decision);
         }
-        protected static readonly Dictionary<int, PublishingMode> Cache = new Dictionary<int, PublishingMode>();
+        protected static readonly ConcurrentDictionary<int, PublishingMode> Cache = new ConcurrentDictionary<int, PublishingMode>();
 
         /// <summary>
         /// The lookup must be implemented for each platform

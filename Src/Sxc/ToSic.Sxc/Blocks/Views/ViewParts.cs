@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Blocks
 
         public static string[] PickPair(string primaryField)
         {
-            string lowered = primaryField.ToLower();
+            string lowered = primaryField.ToLowerInvariant();
             if (lowered == ContentLower || lowered == PresentationLower) return ContentPair;
             if (lowered == ListContentLower || lowered == ListPresentationLower) return HeaderPair;
             throw new Exception($"tried to find field pair, but input was '{primaryField}' - can't figure it out.");

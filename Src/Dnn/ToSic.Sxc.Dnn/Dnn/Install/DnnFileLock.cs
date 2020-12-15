@@ -5,8 +5,8 @@ namespace ToSic.Sxc.Dnn.Install
 {
     internal class DnnFileLock
     {
-        internal string LockFileName => HostingEnvironment.MapPath(Settings.Installation.LogDirectory + "lock.resources");
-        internal string LockFolder => HostingEnvironment.MapPath(Settings.Installation.LogDirectory);
+        internal string LockFileName => HostingEnvironment.MapPath(DnnConstants.LogDirectory + "lock.resources");
+        internal string LockFolder => HostingEnvironment.MapPath(DnnConstants.LogDirectory);
         private FileStream _lockFile;
 
         internal FileStream Set()

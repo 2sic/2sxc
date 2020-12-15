@@ -81,7 +81,7 @@ namespace ToSic.Sxc.Blocks.Edit
             Log.Add($"publish part{part}, order:{sortOrder}");
             var contentGroup = BlockConfiguration;
             var contEntity = contentGroup[part][sortOrder];
-            var presKey = part.ToLower() == ViewParts.ContentLower 
+            var presKey = part.ToLowerInvariant() == ViewParts.ContentLower 
                 ? ViewParts.PresentationLower 
                 : ViewParts.ListPresentationLower;
             var presEntity = contentGroup[presKey][sortOrder];

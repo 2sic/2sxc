@@ -36,14 +36,14 @@ namespace ToSic.Sxc.Blocks.Views
             var wrapLog = Log.Call<IView>("template override - check");
             if (context.Page.Parameters == null) return wrapLog("no params", null);
 
-            var urlParameterDict = context.Page.Parameters.ToDictionary(pair => pair.Key?.ToLower() ?? "", pair =>
-                $"{pair.Key}/{pair.Value}".ToLower());
+            var urlParameterDict = context.Page.Parameters.ToDictionary(pair => pair.Key?.ToLowerInvariant() ?? "", pair =>
+                $"{pair.Key}/{pair.Value}".ToLowerInvariant());
 
             var allTemplates = cms.Views.GetAll();
 
             foreach (var template in allTemplates.Where(t => !string.IsNullOrEmpty(t.UrlIdentifier)))
             {
-                var desiredFullViewName = template.UrlIdentifier.ToLower();
+                var desiredFullViewName = template.UrlIdentifier.ToLowerInvariant();
                 if (desiredFullViewName.EndsWith("/.*"))   // match details/.* --> e.g. details/12
                 {
                     var keyName = desiredFullViewName.Substring(0, desiredFullViewName.Length - 3);

@@ -30,13 +30,9 @@ namespace ToSic.Sxc.LookUp
         {
             get
             {
-                if (_resources == null && _app.Resources != null)
-                {
-                    var dynEnt = _app.Resources as IDynamicEntity;
-                    _resources = new LookUpInEntity("appresources", dynEnt?.Entity, dynEnt?.Dimensions);
-                }
-                return _resources;
-
+                if (_resources != null || _app.Resources == null) return _resources;
+                var dynEnt = _app.Resources as IDynamicEntity;
+                return _resources = new LookUpInEntity("appresources", dynEnt?.Entity, dynEnt?.Dimensions);
             }
         }
         private ILookUp _resources;
@@ -56,7 +52,7 @@ namespace ToSic.Sxc.LookUp
         /// <inheritdoc/>
         public override string Get(string key, string strFormat)
         {
-            key = key.ToLower();
+            key = key.ToLowerInvariant();
             if (key == "path")
                 return _app.Path;
             if (key == "physicalpath")
@@ -67,9 +63,9 @@ namespace ToSic.Sxc.LookUp
             if (subToken.HasSubtoken)
             {
                 var subProvider =
-                    (subToken.Source == "settings")
+                    subToken.Source == "settings"
                         ? Settings
-                        : (subToken.Source == "resources") ? Resources : null;
+                        : subToken.Source == "resources" ? Resources : null;
                 if (subProvider != null)
                     return subProvider.Get(subToken.Rest, strFormat);
             }

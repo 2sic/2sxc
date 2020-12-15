@@ -63,14 +63,14 @@ namespace ToSic.Sxc.WebApi.Adam
             {
                 // just a-z characters
                 if (!hasNonAzChars.IsMatch(f))
-                    if (extension == f)
+                    if (string.Equals(extension,f, StringComparison.InvariantCultureIgnoreCase))
                         return wrapLog($"filter {f} matched filename {fileName}", true);
                     else
                         continue;
 
                 // could be regex or simple *.ext
                 if (f.StartsWith("*."))
-                    if (string.Equals(extension, f.Substring(2), StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(extension, f.Substring(2), StringComparison.InvariantCultureIgnoreCase))
                         return wrapLog($"filter {f} matched filename {fileName}", true);
                     else
                         continue;

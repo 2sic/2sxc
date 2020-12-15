@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity)
-            => new DynamicEntity(entity, new[] { CmsContext.SafeCurrentCultureCode() }, CompatibilityLevel, Block);
+            => new DynamicEntity(entity, CmsContext.SafeLanguagePriorityCodes(), CompatibilityLevel, Block);
 
         /// <inheritdoc />
         public dynamic AsDynamic(dynamic dynamicEntity) => dynamicEntity;
@@ -53,8 +53,6 @@ namespace ToSic.Sxc.Code
         }
 
         #endregion
-
-
 
 
         #region Adam

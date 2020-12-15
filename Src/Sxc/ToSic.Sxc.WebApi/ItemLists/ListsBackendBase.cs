@@ -81,7 +81,7 @@ namespace ToSic.Sxc.WebApi.ItemLists
         public ReplacementListDto GetReplacementOptions(Guid guid, string part, int index)
         {
             var wrapLog = Log.Call<ReplacementListDto>($"target:{guid}, part:{part}, index:{index}");
-            part = part.ToLower();
+            part = part.ToLowerInvariant();
 
             var itemList = FindContentGroupAndTypeName(guid, part, out var typeName)
                            ?? FindItemAndFieldTypeName(guid, part, out typeName);

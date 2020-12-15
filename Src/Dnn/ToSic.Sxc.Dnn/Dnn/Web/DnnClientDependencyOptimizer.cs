@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Dnn.Web
 
         private string DnnProviderName(string position/*, string defaultPosition*/)
         {
-            position = (/*optMatch.Groups["Position"]?.Value*/position /*?? defaultPosition*/).ToLower();
+            position = (/*optMatch.Groups["Position"]?.Value*/position /*?? defaultPosition*/).ToLowerInvariant();
 
             switch (position)
             {

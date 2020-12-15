@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Dnn.Install
         private bool IsUpgradeComplete(string version, string note = "")
         {
             _installLogger.LogStep(version, "IsUgradeComplete checking " + note, false);
-            var logFilePath = HostingEnvironment.MapPath(Settings.Installation.LogDirectory + version + ".resources");
+            var logFilePath = HostingEnvironment.MapPath(DnnConstants.LogDirectory + version + ".resources");
             var complete = File.Exists(logFilePath);
             _installLogger.LogStep(version, "IsUgradeComplete: " + complete, false);
             return complete;

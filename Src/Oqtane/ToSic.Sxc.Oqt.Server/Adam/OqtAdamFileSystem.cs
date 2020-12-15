@@ -124,7 +124,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             {
                 Name = Path.GetFileName(fileName),
                 FolderId = parent.Id,
-                Extension = fileInfo.Extension.ToLower().Replace(".", ""),
+                Extension = fileInfo.Extension.ToLowerInvariant().Replace(".", ""),
                 Size = (int)fileInfo.Length,
                 ImageHeight = 0,
                 ImageWidth = 0

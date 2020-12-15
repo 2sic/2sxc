@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
+using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Data;
@@ -73,22 +74,20 @@ namespace ToSic.Sxc.Apps
             get
             {
                 var c = Configuration;
-                return c?.Entity != null ? new DynamicEntity(c.Entity, 
-                    new[] {Site.SafeCurrentCultureCode()}, 
-                    10, 
-                    null)
-                    { ServiceProviderOrNull = DataSourceFactory.ServiceProvider } : null;
+                return c?.Entity != null ? MakeDynProperty(c.Entity) : null;
             }
         }
+
+        private dynamic MakeDynProperty(IEntity contents) =>
+            new DynamicEntity(contents, Site.SafeLanguagePriorityCodes(), 10, null)
+                {ServiceProviderOrNull = DataSourceFactory.ServiceProvider};
 
         /// <inheritdoc />
         public dynamic Settings
         {
             get
             {
-                if (!_settingsLoaded && AppSettings != null)
-                    _settings = new DynamicEntity(AppSettings, new[] {Site.SafeCurrentCultureCode()},
-                        10, null) {ServiceProviderOrNull = DataSourceFactory.ServiceProvider};
+                if (!_settingsLoaded && AppSettings != null) _settings = MakeDynProperty(AppSettings);
                 _settingsLoaded = true;
                 return _settings;
             }
@@ -101,9 +100,7 @@ namespace ToSic.Sxc.Apps
         {
             get
             {
-                if(!_resLoaded && AppResources!= null)
-                    _res = new DynamicEntity(AppResources, new[] {Site.SafeCurrentCultureCode()}, 10, null)
-                    { ServiceProviderOrNull = DataSourceFactory.ServiceProvider };
+                if (!_resLoaded && AppResources != null) _res = MakeDynProperty(AppResources);
                 _resLoaded = true;
                 return _res;
             }
@@ -112,8 +109,6 @@ namespace ToSic.Sxc.Apps
         private dynamic _res;
 
         #endregion
-
-
 
 
         #region Paths

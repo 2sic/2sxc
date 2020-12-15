@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Web.JsContext
             All = _zoneMapperLazy.Value
                 .CulturesWithState(site.Id, zoneId)
                 .Where(c => c.Active)
-                .Select(c => new ClientInfoLanguage { key = c.Key.ToLower(), name = c.Text });
+                .Select(c => new ClientInfoLanguage { key = c.Key.ToLowerInvariant(), name = c.Text });
             return this;
         }
     }

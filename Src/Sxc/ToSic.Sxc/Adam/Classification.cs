@@ -9,7 +9,7 @@
 
         public static string TypeName(string ext)
         {
-            switch (ext.ToLower())
+            switch (ext.ToLowerInvariant())
             {
                 case "png":
                 case "jpg":

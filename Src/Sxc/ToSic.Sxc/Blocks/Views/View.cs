@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Blocks
         [PrivateApi]
         internal string GetTypeStaticName(string groupPart)
         {
-            switch (groupPart.ToLower())
+            switch (groupPart.ToLowerInvariant())
             {
                 case ViewParts.ContentLower: return ContentType;
                 case ViewParts.PresentationLower: return PresentationType;

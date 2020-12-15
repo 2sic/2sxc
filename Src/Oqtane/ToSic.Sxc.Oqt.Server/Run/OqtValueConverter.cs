@@ -110,7 +110,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             if (!regularExpression.Success)
                 return originalValue;
 
-            var linkType = regularExpression.Groups["type"].Value.ToLower();
+            var linkType = regularExpression.Groups["type"].Value.ToLowerInvariant();
             var linkId = int.Parse(regularExpression.Groups["id"].Value);
             var urlParams = regularExpression.Groups["params"].Value ?? "";
 

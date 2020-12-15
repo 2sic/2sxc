@@ -124,7 +124,7 @@ namespace ToSic.Sxc.Dnn.DataSources
 				foreach (var property in properties)
 				{
 					string value;
-					switch (property.ToLower())
+					switch (property.ToLowerInvariant())
 					{
 						case "displayname":
 							value = user.DisplayName;
