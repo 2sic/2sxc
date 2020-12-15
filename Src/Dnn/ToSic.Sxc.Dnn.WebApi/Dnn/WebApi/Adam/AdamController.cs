@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Configuration;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
@@ -9,6 +8,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Adam;
+using ToSic.Sxc.WebApi.PublicApi;
 
 namespace ToSic.Sxc.Dnn.WebApi
 {
@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Dnn.WebApi
     [SupportedModules("2sxc,2sxc-app")]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]    // use view, all methods must re-check permissions
     [ValidateAntiForgeryToken]
-    public class AdamController : SxcApiControllerBase
+    public class AdamController : SxcApiControllerBase, IAdamController<int>
     {
         protected override string HistoryLogName => "Api.Adam";
 
@@ -66,6 +66,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         #region adam-file manager
 
         // test method to provide a public API for accessing adam items easily
+        // not sure if it is ever used
         [HttpGet]
         public IEnumerable<AdamItemDto> Items(string contentType, Guid guid, string field, string folder = "")
         {

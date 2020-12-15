@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Adam;
+using ToSic.Sxc.WebApi.PublicApi;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.Adam
 {
@@ -17,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Adam
     [ValidateAntiForgeryToken]
     //[Route(WebApiConstants.WebApiStateRoot + "/app-content/{contentType}/{guid:guid}/{field}/[action]")]
     [Route(WebApiConstants.WebApiStateRoot + "/app-content/{contentType}/{guid:guid}/{field}")]
-    public class AdamController : OqtStatefulControllerBase
+    public class AdamController : OqtStatefulControllerBase, IAdamController<int>
     {
         private readonly Lazy<AdamTransUpload<int, int>> _adamUpload;
         private readonly Lazy<AdamTransGetItems<int, int>> _adamItems;
@@ -89,13 +90,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Adam
 
         // test method to provide a public API for accessing adam items easily
         // todo #Oqtane not really implemented, not sure if needed
-        [HttpGet]
-        public IEnumerable<AdamItemDto> ItemsWithAppIdFromContext(string contentType, Guid guid, string field, string folder = "")
-        {
-            // if app-path specified, use that app, otherwise use from context
-            var appId = GetBlock().AppId;
-            return Items(appId, contentType, guid, field, folder);
-        }
+        //[HttpGet]
+        //public IEnumerable<AdamItemDto> ItemsWithAppIdFromContext(string contentType, Guid guid, string field, string folder = "")
+        //{
+        //    // if app-path specified, use that app, otherwise use from context
+        //    var appId = GetBlock().AppId;
+        //    return Items(appId, contentType, guid, field, folder);
+        //}
 
         [HttpGet("items")]
         public IEnumerable<AdamItemDto> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
