@@ -11,7 +11,7 @@ namespace ToSic.Sxc.WebApi.Adam
     {
         public AdamTransUpload(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextResolver ctxResolver) : base(adamState, ctxResolver, "Adm.TrnUpl") { }
 
-        internal UploadResultDto UploadOne(Stream stream, string subFolder, string fileName)
+        public UploadResultDto UploadOne(Stream stream, string subFolder, string fileName)
         {
             var file = UploadOne(stream, fileName, subFolder, false);
 
@@ -26,7 +26,7 @@ namespace ToSic.Sxc.WebApi.Adam
             };
         }
 
-        internal IFile UploadOne(Stream stream, string originalFileName, string subFolder, bool skipFieldAndContentTypePermissionCheck)
+        public IFile UploadOne(Stream stream, string originalFileName, string subFolder, bool skipFieldAndContentTypePermissionCheck)
         {
             Log.Add($"upload one subfold:{subFolder}, file: {originalFileName}");
 

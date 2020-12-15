@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         #endregion
 
-        internal override AdamItemDto Create(Sxc.Adam.File<TFolderId, TFileId> original, AdamState state)
+        public override AdamItemDto Create(Sxc.Adam.File<TFolderId, TFileId> original, AdamState state)
         {
             var item = base.Create(original, state);
             if(item is AdamItemDto<TFolderId, TFolderId> typed)
@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         }
 
 
-        internal override AdamItemDto Create(Sxc.Adam.Folder<TFolderId, TFileId> folder, AdamState state)
+        public override AdamItemDto Create(Sxc.Adam.Folder<TFolderId, TFileId> folder, AdamState state)
         {
             var item = base.Create(folder, state);
             if (item is AdamItemDto<TFolderId, TFolderId> typed)

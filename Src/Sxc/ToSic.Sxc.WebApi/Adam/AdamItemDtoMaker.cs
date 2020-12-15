@@ -6,7 +6,7 @@ namespace ToSic.Sxc.WebApi.Adam
     {
         #region Constructor / DI
 
-         public AdamItemDtoMaker(SecurityChecksBase security)
+        public AdamItemDtoMaker(SecurityChecksBase security)
         {
             _security = security;
         }
@@ -16,7 +16,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
         #endregion
 
-        internal virtual AdamItemDto Create(Sxc.Adam.File<TFolderId, TFileId> original, AdamState state)
+        public virtual AdamItemDto Create(Sxc.Adam.File<TFolderId, TFileId> original, AdamState state)
         {
             var item = new AdamItemDto<TFolderId, TFileId>(false, original.SysId, original.ParentSysId, original.FullName, original.Size,
                 original.Created, original.Modified)
@@ -31,7 +31,7 @@ namespace ToSic.Sxc.WebApi.Adam
         }
 
 
-        internal virtual AdamItemDto Create(Sxc.Adam.Folder<TFolderId, TFileId> folder, AdamState state)
+        public virtual AdamItemDto Create(Sxc.Adam.Folder<TFolderId, TFileId> folder, AdamState state)
         {
             // todo: AdamId
             var item = new AdamItemDto<TFolderId, TFolderId>(true, folder.SysId, folder.ParentSysId, folder.Name, 0, folder.Created,

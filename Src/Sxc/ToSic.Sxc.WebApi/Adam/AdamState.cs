@@ -85,7 +85,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
         internal IContentTypeAttribute Attribute;
 
-        internal IContextOfApp Context;
+        public IContextOfApp Context;
 
         public readonly Guid[] FeaturesForRestrictedUsers =
         {

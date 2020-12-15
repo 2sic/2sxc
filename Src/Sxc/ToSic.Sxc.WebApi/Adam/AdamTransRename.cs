@@ -9,7 +9,7 @@ namespace ToSic.Sxc.WebApi.Adam
     {
         public AdamTransRename(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextResolver ctxResolver) : base(adamState, ctxResolver, "Adm.TrnRen") { }
 
-        internal bool Rename(string parentSubfolder, bool isFolder, TFolderId folderId, TFileId fileId, string newName)
+        public bool Rename(string parentSubfolder, bool isFolder, TFolderId folderId, TFileId fileId, string newName)
         {
             Log.Add($"");
 

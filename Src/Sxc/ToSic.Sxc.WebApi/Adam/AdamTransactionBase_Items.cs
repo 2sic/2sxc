@@ -8,7 +8,7 @@ namespace ToSic.Sxc.WebApi.Adam
 {
     public partial class AdamTransactionBase<T, TFolderId, TFileId>
     {
-        internal IList<AdamItemDto> ItemsInField(string subFolderName)
+        public IList<AdamItemDto> ItemsInField(string subFolderName)
         {
             var wrapLog = Log.Call<IList<AdamItemDto>>($"Subfolder: {subFolderName}");
 

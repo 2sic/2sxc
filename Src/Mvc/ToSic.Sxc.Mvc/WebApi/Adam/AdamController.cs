@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.WebApi.Adam;
+using ToSic.Sxc.WebApi.PublicApi;
 
 // #todo: security checks on APIs still completely missing
 // #todo: upload not implemented yet
@@ -16,7 +17,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Adam
     /// </summary>
     [ApiController]
     [Route(WebApiConstants.WebApiRoot + "/app-content/{contentType}/{guid}/{field}/")]
-    public class AdamController : SxcStatefulControllerBase
+    public class AdamController : SxcStatefulControllerBase, IAdamController<int>
     {
         private readonly AdamTransUpload<int, int> _adamUpload;
         private readonly AdamTransGetItems<string, string> _adamItems;
@@ -84,13 +85,13 @@ namespace ToSic.Sxc.Mvc.WebApi.Adam
         #region adam-file manager
 
         // test method to provide a public API for accessing adam items easily
-        [HttpGet]
-        public IEnumerable<AdamItemDto> ItemsWithAppIdFromContext(string contentType, Guid guid, string field, string folder = "")
-        {
-            // if app-path specified, use that app, otherwise use from context
-            var appId = GetBlock().AppId;
-            return Items(appId, contentType, guid, field, folder);
-        }
+        //[HttpGet]
+        //public IEnumerable<AdamItemDto> ItemsWithAppIdFromContext(string contentType, Guid guid, string field, string folder = "")
+        //{
+        //    // if app-path specified, use that app, otherwise use from context
+        //    var appId = GetBlock().AppId;
+        //    return Items(appId, contentType, guid, field, folder);
+        //}
 
         [HttpGet("items")]
         public IEnumerable<AdamItemDto> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)

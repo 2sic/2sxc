@@ -20,14 +20,14 @@ namespace ToSic.Sxc.Dnn.WebApi
         /// mostly a copy from https://github.com/dnnsoftware/Dnn.Platform/blob/115ae75da6b152f77ad36312eb76327cdc55edd7/DNN%20Platform/Modules/Journal/FileUploadController.cs#L72
         /// </remarks>
         [AssertionMethod]
-        internal override bool SiteAllowsExtension(string fileName)
+        public override bool SiteAllowsExtension(string fileName)
         {
             var extension = Path.GetExtension(fileName);
             return !string.IsNullOrEmpty(extension)
                    && Host.AllowedExtensionWhitelist.IsAllowedExtension(extension.ToLowerInvariant());
         }
 
-        internal override bool CanEditFolder(IAsset item)
+        public override bool CanEditFolder(IAsset item)
         {
             var id = (item as IFolder)?.Id
                      ?? (item as IFile)?.ParentId

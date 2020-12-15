@@ -44,9 +44,9 @@ namespace ToSic.Sxc.WebApi.Adam
 
         #region Abstract methods to re-implement
 
-        internal abstract bool SiteAllowsExtension(string fileName);
+        public abstract bool SiteAllowsExtension(string fileName);
 
-        internal abstract bool CanEditFolder(IAsset item);
+        public abstract bool CanEditFolder(IAsset item);
 
         #endregion
 
