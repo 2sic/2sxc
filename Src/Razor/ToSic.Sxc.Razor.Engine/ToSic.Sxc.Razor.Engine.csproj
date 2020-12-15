@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
-    <Version>11.11.02</Version>
+    <Version>11.11.03</Version>
   </PropertyGroup>
 
   <ItemGroup>
