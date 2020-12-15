@@ -30,8 +30,6 @@ namespace ToSic.Sxc.Code
     {
         [PrivateApi("WIP")] IBlock Block { get; }
 
-        [PrivateApi("internal")] IServiceProvider ServiceProvider { get; }
-
         /// <summary>
         /// Get a service from the EAV / 2sxc Dependency Injection. 
         /// </summary>

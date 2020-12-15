@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
     {
         #region DynCode 
 
-        protected Sxc.Code.DynamicCodeRoot DynCode => _dynCode ??= ServiceProvider.Build<Code.DynamicCodeRoot>().Init(Block, Log);
+        protected Sxc.Code.DynamicCodeRoot DynCode => _dynCode ??= HttpContext.RequestServices.Build<Code.DynamicCodeRoot>().Init(Block, Log);
         private Sxc.Code.DynamicCodeRoot _dynCode;
         #endregion
         public IBlock Block 

@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Hybrid.Razor
 
         public DynamicCodeRoot DynCode
         {
-            get => _dynCode ??= ServiceProvider.Build<DynamicCodeRoot>().Init(Block, Log);
+            get => _dynCode ??= GetService<DynamicCodeRoot>().Init(Block, Log);
             set => _dynCode = value;
         }
 

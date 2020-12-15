@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Code;
 
@@ -48,7 +47,7 @@ namespace ToSic.Sxc.Hybrid.Razor
 
         protected void VerifyFileExists(string path)
         {
-            var pathFinder = ServiceProvider.Build<IServerPaths>();
+            var pathFinder = GetService<IServerPaths>();
             var finalPath = pathFinder.FullAppPath(path);
             if (!File.Exists(finalPath))
                 throw new FileNotFoundException("The shared file does not exist.", path);

@@ -39,11 +39,11 @@ namespace ToSic.Sxc.Code
 
         protected DynamicCodeRoot(Dependencies dependencies, string logPrefix) : base(logPrefix + ".DynCdR")
         {
-            ServiceProvider = dependencies.ServiceProvider;
+            _serviceProvider = dependencies.ServiceProvider;
             CmsContext = dependencies.CmsContext;
         }
 
-        [PrivateApi] public IServiceProvider ServiceProvider { get; }
+        private readonly IServiceProvider _serviceProvider;
         
         [PrivateApi] public ICmsContext CmsContext { get; }
 
@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Code
 
 
         /// <inheritdoc />
-        public TService GetService<TService>() => ServiceProvider.Build<TService>();
+        public TService GetService<TService>() => _serviceProvider.Build<TService>();
 
         [PrivateApi]
         public DynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)

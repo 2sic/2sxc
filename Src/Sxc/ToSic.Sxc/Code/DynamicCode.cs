@@ -23,8 +23,6 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public IBlockDataSource Data => UnwrappedContents?.Data;
 
-        [PrivateApi] public IServiceProvider ServiceProvider => UnwrappedContents?.ServiceProvider;
-
         /// <inheritdoc />
         public TService GetService<TService>() => UnwrappedContents.GetService<TService>();
 

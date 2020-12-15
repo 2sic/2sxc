@@ -2,7 +2,6 @@
 using System.Web;
 using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
@@ -16,10 +15,6 @@ namespace ToSic.Sxc.Dnn.WebApi
     {
         protected DnnApiControllerWithFixes() 
 	    {
-	        // ensure that the call to this webservice doesn't reset the language in the cookie
-	        // this is a dnn-bug
-	        //RemoveLanguageChangingCookie();
-
             // ReSharper disable once VirtualMemberCallInConstructor
             Log = new Log(HistoryLogName, null, $"Path: {HttpContext.Current?.Request?.Url?.AbsoluteUri}");
             TimerWrapLog = Log.Call(message: "timer", useTimer: true);
@@ -62,28 +57,14 @@ namespace ToSic.Sxc.Dnn.WebApi
         /// </summary>
         protected abstract string HistoryLogName { get; }
 
-        #region Helpers - language changing cookie - removed 2020-12-06
 
-        //internal static void RemoveLanguageChangingCookie()
-        //{
-        //    // this is to fix a dnn-bug, which adds a cookie to set the language
-        //    // but always defaults to the main language, which is simply wrong. 
-        //    var cookies = HttpContext.Current?.Response.Cookies;
-        //    cookies?.Remove("language"); // try to remove, otherwise no exception will be thrown
-        //}
-
-        #endregion
-
-        #region Extend Time so Web Server doesn't time out
-
+        /// <summary>
+        ///  Extend Time so Web Server doesn't time out
+        /// </summary>
         protected void PreventServerTimeout300() => HttpContext.Current.Server.ScriptTimeout = 300;
-
-        [PrivateApi] public IServiceProvider ServiceProvider => Eav.Factory.GetServiceProvider();
 
         /// <inheritdoc />
         public TService GetService<TService>() => Eav.Factory.GetServiceProvider().Build<TService>();
-
-        #endregion
 
     }
 }

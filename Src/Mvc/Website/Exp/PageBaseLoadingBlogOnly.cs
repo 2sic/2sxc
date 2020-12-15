@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Eav.Logging;
+﻿using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
 
@@ -7,8 +6,7 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
 {
     public abstract partial class PageBaseLoadingBlogOnly: Microsoft.AspNetCore.Mvc.RazorPages.Page, IHasLog
     {
-        public IServiceProvider ServiceProvider => HttpContext.RequestServices;
-        public TService GetService<TService>() => ServiceProvider.Build<TService>();
+        public TService GetService<TService>() => HttpContext.RequestServices.Build<TService>();
 
         #region Constructor / DI
         protected PageBaseLoadingBlogOnly()
