@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
         [HttpGet]
         public IList<SiteLanguageDto> GetLanguages() =>
-            _build<LanguagesBackend>().Init(Log)
+            GetService<LanguagesBackend>().Init(Log)
                 .GetLanguages(PortalSettings.PortalId);
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <returns></returns>
         [HttpGet]
         public void SwitchLanguage(string cultureCode, bool enable) =>
-            _build<LanguagesBackend>().Init(Log)
+            GetService<LanguagesBackend>().Init(Log)
                 .Toggle(
                     PortalSettings.PortalId,
                     cultureCode,

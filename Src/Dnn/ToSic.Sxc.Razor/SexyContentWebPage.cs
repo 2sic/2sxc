@@ -64,6 +64,7 @@ namespace ToSic.SexyContent.Razor
         [PrivateApi] public IBlock Block => DynCode.Block;
 
         [PrivateApi] public IServiceProvider ServiceProvider => DynCode.ServiceProvider;
+        [PrivateApi] public TService GetService<TService>() => DynCode.GetService<TService>();
 
         [PrivateApi] public int CompatibilityLevel => DynCode.CompatibilityLevel;
 

@@ -33,21 +33,21 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public List<AppDto> List(int zoneId)
-            => _build<AppsBackend>().Init(Log).Apps();
+            => GetService<AppsBackend>().Init(Log).Apps();
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public void App(int zoneId, int appId, bool fullDelete = true)
-            => _build<CmsZones>().Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId, fullDelete);
+            => GetService<CmsZones>().Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId, fullDelete);
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public void App(int zoneId, string name)
-            => _build<AppCreator>().Init(zoneId, Log).Create(name);
+            => GetService<AppCreator>().Init(zoneId, Log).Create(name);
 
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
         public AppExportInfoDto Statistics(int zoneId, int appId)
-            => _build<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(), Log)
+            => GetService<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(), Log)
                 .GetAppInfo(appId, zoneId);
 
 
@@ -84,7 +84,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <returns></returns>
         [HttpGet]
         public HttpResponseMessage Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => _build<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(), Log)
+            => GetService<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(), Log)
                 .Export(appId, zoneId, includeContentGroups, resetAppGuid);
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [ValidateAntiForgeryToken]
         public bool SaveData(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => _build<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(), Log)
+            => GetService<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(), Log)
                 .SaveDataForVersionControl(appId, zoneId, includeContentGroups, resetAppGuid);
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             var wrapLog = Log.Call<ImportResultDto>();
 
             PreventServerTimeout300();
-            var result = _build<ResetApp>()
+            var result = GetService<ResetApp>()
                 .Init(PortalSettings.PortalId, new DnnUser(), Log)
                 .Reset(zoneId, appId, PortalSettings.DefaultLanguage);
 
@@ -136,7 +136,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
             if (request.Files.Count <= 0) return new ImportResultDto(false, "no files uploaded");
 
-            return _build<ImportApp>().Init(new DnnUser(), Log)
+            return GetService<ImportApp>().Init(new DnnUser(), Log)
                 .Import(zoneId, request["Name"], request.Files[0].InputStream);
         }
 

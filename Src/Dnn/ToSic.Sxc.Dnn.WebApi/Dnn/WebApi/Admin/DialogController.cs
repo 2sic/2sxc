@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <returns></returns>
         [HttpGet]
         public DialogContextStandalone Settings(int appId) 
-            => _build<AdminBackend>().Init(Log).DialogSettings(appId);
+            => GetService<AdminBackend>().Init(Log).DialogSettings(appId);
 
         #endregion
 

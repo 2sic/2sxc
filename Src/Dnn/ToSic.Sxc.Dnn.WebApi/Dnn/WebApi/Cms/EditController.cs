@@ -21,13 +21,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
-            => _build<EditLoadBackend>().Init(Log).Load(appId, items);
+            => GetService<EditLoadBackend>().Init(Log).Load(appId, items);
 
         /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage) 
-            => _build<EditSaveBackend>().Init(appId, Log).Save(package, partOfPage);
+            => GetService<EditSaveBackend>().Init(appId, Log).Save(package, partOfPage);
 
         /// <inheritdoc />
         [HttpGet]
@@ -35,13 +35,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [AllowAnonymous] // security check happens internally
         public IEnumerable<EntityForPickerDto> EntityPicker([FromUri] int appId, [FromBody] string[] items,
             [FromUri] string contentTypeName = null)
-            => _build<EntityPickerBackend>().Init(Log).GetAvailableEntities(appId, items, contentTypeName);
+            => GetService<EntityPickerBackend>().Init(Log).GetAvailableEntities(appId, items, contentTypeName);
 
         /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public string LookupLink(string link, int appId, string contentType = default, Guid guid = default, string field = default)
-            => _build<HyperlinkBackend<int, int>>().Init(Log).ResolveHyperlink(appId, link, contentType, guid, field);
+            => GetService<HyperlinkBackend<int, int>>().Init(Log).ResolveHyperlink(appId, link, contentType, guid, field);
 
     }
 }

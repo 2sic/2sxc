@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     {
         protected override string HistoryLogName => "Api.Assets";
 
-        private AppAssetsBackend Backend() => _build<AppAssetsBackend>().Init(Log);
+        private AppAssetsBackend Backend() => GetService<AppAssetsBackend>().Init(Log);
 
 
         [HttpGet]

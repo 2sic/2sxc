@@ -23,15 +23,15 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 
         protected CmsRuntime CmsRuntime => _cmsRuntime ?? (_cmsRuntime = base.App == null
                 ? null
-                : _build<CmsRuntime>().Init(base.App, true, Log)
+                : GetService<CmsRuntime>().Init(base.App, true, Log)
             );
         private CmsRuntime _cmsRuntime;
 
         #region Block
 
-        private ContentBlockBackend Backend => _build<ContentBlockBackend>().Init(Log);
+        private ContentBlockBackend Backend => GetService<ContentBlockBackend>().Init(Log);
 
-        private AppViewPickerBackend ViewBackend => _build<AppViewPickerBackend>().Init(Log);
+        private AppViewPickerBackend ViewBackend => GetService<AppViewPickerBackend>().Init(Log);
 
         /// <summary>
         /// used to be GET Module/GenerateContentBlock
