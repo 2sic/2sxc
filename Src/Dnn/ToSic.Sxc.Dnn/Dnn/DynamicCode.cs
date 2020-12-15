@@ -18,23 +18,5 @@ namespace ToSic.Sxc.Dnn
 
         [PrivateApi] public DnnDynamicCodeRoot DynCode => (UnwrappedContents as IHasDynCodeContext)?.DynCode;
 
-        // 2020-10-27 2dm - probably not necessary any more, as functionally comparable to normal DynamicCode
-        //public new dynamic CreateInstance(string virtualPath,
-        //    string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
-        //    string name = null,
-        //    string relativePath = null,
-        //    bool throwOnError = true)
-        //{
-        //    var wrapLog = Log.Call<dynamic>($"{virtualPath}, ..., {name}, {relativePath}");
-        //    // usually we don't have a relative path, so we use the preset path from when this class was instantiated
-        //    relativePath = relativePath ?? CreateInstancePath;
-        //    var result = DynCode?.CreateInstance(virtualPath, dontRelyOnParameterOrder, name, relativePath, throwOnError);
-        //    if (result != null) return wrapLog("ok", result);
-
-        //    Log.Add("DynCode doesn't exist or returned null, will use standard CreateInstance");
-        //    result = base.CreateInstance(virtualPath, dontRelyOnParameterOrder, name, relativePath, throwOnError);
-
-        //    return wrapLog((result != null).ToString(), result);
-        //}
     }
 }
