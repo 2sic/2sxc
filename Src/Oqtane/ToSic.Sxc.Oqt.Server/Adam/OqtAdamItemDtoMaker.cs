@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Oqt.Shared;
+﻿using ToSic.Eav.WebApi.Dto;
+using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.Oqt.Server.Adam

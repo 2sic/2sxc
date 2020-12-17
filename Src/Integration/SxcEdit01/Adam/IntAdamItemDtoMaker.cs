@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.WebApi.Adam;
+﻿using ToSic.Eav.WebApi.Dto;
+using ToSic.Sxc.WebApi.Adam;
 
 namespace IntegrationSamples.SxcEdit01.Adam
 {
