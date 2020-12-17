@@ -23,6 +23,7 @@ namespace Website
                     .AddSxcRazor()
 
                     // probably the basics needed to read data
+                    .AddAdamWebApi<string, string>()
                     .AddSxcWebApi()
                     .AddSxcCore()
                     .AddEav();

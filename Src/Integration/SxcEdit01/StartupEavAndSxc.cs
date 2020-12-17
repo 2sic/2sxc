@@ -31,10 +31,12 @@ namespace IntegrationSamples.SxcEdit01
             Factory.UseExistingServices(services);
             Factory.ActivateNetCoreDi(services2 =>
             {
-                services2.AddSxcWebApi()
+                services2
                     .MvcSystemParts()
                     .AddAdam()
                     .AddImplementations()
+                    .AddAdamWebApi<string, string>()
+                    .AddSxcWebApi()
                     .AddSxcCore()
                     .AddEav();
             });

@@ -105,8 +105,8 @@ namespace ToSic.Sxc.WebApi.Cms
                     => set.Hyperlink.Select(h
                         =>
                     {
-                        var adamListMaker = ServiceProvider.Build<AdamTransGetItems<int, int>>()
-                            .Init(appId, set.ContentTypeName, set.Guid, h.Key, false, Log);
+                        var adamListMaker = ServiceProvider.Build<IAdamTransGetItems>();
+                        adamListMaker.Init(appId, set.ContentTypeName, set.Guid, h.Key, false, Log);
                         return new
                         {
                             set.Guid,

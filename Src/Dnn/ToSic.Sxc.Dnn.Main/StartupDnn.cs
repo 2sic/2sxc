@@ -43,6 +43,7 @@ namespace ToSic.SexyContent
             {
                 services
                     .AddDnn(appsCache)
+                    .AddAdamWebApi<int, int>()
                     .AddSxcWebApi()
                     .AddSxcCore()
                     .AddEav();

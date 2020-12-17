@@ -38,18 +38,6 @@ namespace ToSic.Sxc.WebApi
             // These are usually replaced by the target platform
             services.TryAddTransient<IClientDependencyOptimizer, BasicClientDependencyOptimizer>();
             
-            // Adam
-            services.TryAddTransient(typeof(AdamAppContext<,>));
-            services.TryAddTransient(typeof(AdamState<,>));
-            services.TryAddTransient(typeof(HyperlinkBackend<,>));
-            services.TryAddTransient(typeof(AdamTransGetItems<,>));
-            services.TryAddTransient(typeof(AdamTransDelete<,>));
-            services.TryAddTransient(typeof(AdamTransFolder<,>));
-            services.TryAddTransient(typeof(AdamTransUpload<,>));
-            services.TryAddTransient(typeof(AdamTransRename<,>));
-            services.TryAddTransient(typeof(AdamItemDtoMaker<,>));
-            services.TryAddTransient(typeof(AdamItemDtoMaker<,>.Dependencies));
-
             // Backends
             services.TryAddTransient<AppsBackend>();
             services.TryAddTransient<EntityPickerBackend>();
@@ -89,6 +77,26 @@ namespace ToSic.Sxc.WebApi
 
             // Helpers
             services.TryAddTransient<ImpExpHelpers>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddAdamWebApi<TFolder, TFile>(this IServiceCollection services)
+        {
+            // Adam
+            services.TryAddTransient(typeof(AdamAppContext<,>));
+            services.TryAddTransient(typeof(AdamState<,>));
+            services.TryAddTransient(typeof(HyperlinkBackend<,>));
+            services.TryAddTransient(typeof(AdamTransGetItems<,>));
+            services.TryAddTransient(typeof(AdamTransDelete<,>));
+            services.TryAddTransient(typeof(AdamTransFolder<,>));
+            services.TryAddTransient(typeof(AdamTransUpload<,>));
+            services.TryAddTransient(typeof(AdamTransRename<,>));
+            services.TryAddTransient(typeof(AdamItemDtoMaker<,>));
+            services.TryAddTransient(typeof(AdamItemDtoMaker<,>.Dependencies));
+
+            // Typed Adam
+            services.TryAddTransient<IAdamTransGetItems, AdamTransGetItems<TFolder, TFile>>();
 
             return services;
         }

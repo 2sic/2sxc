@@ -9,9 +9,9 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>: HasLog where T : class
+    public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>: HasLog, IAdamTransactionBase where T : AdamTransactionBase<T, TFolderId, TFileId>
     {
-        public const int UseAppIdFromContext = -12456;
+        //public const int UseAppIdFromContext = -12456;
 
         #region Constructor / DI
 
@@ -32,6 +32,12 @@ namespace ToSic.Sxc.WebApi.Adam
             State.Init(context, contentType, field, itemGuid, usePortalRoot, Log);
             return logCall(null, this as T);
         }
+
+        void IAdamTransactionBase.Init(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot, ILog parentLog)
+        {
+            Init(appId, contentType, itemGuid, field, usePortalRoot, parentLog);
+        }
+
 
         protected AdamState<TFolderId, TFileId> State => _adamState.Value;
 
@@ -57,5 +63,6 @@ namespace ToSic.Sxc.WebApi.Adam
             if(!EqualityComparer<TFolderId>.Default.Equals(target.ParentSysId, parentFolder.SysId))
                 throw HttpException.BadRequest(errPrefix + " - not found in folder");
         }
+
     }
 }
