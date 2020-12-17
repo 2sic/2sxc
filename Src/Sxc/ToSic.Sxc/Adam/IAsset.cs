@@ -28,6 +28,7 @@ namespace ToSic.Sxc.Adam
         /// <summary>
         /// Experimental
         /// </summary>
+        [PrivateApi]
         MetadataFor MetadataId { get; }
         #endregion
 

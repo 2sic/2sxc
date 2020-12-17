@@ -34,8 +34,8 @@ namespace ToSic.Sxc.WebApi.Adam
 
         #endregion
 
-        private const string ThumbnailPattern = "{0}?w=120&h=120&mode=crop";
-        private const string PreviewPattern = "{0}?w=800&h=800&mode=max";
+        private const string ThumbnailPattern = "{0}?w=120&h=120&mode=crop&urlSource=backend";
+        private const string PreviewPattern = "{0}?w=800&h=800&mode=max&urlSource=backend";
 
         public virtual AdamItemDto Create(Sxc.Adam.File<TFolderId, TFileId> original)
         {
@@ -47,6 +47,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 ThumbnailUrl = string.Format(ThumbnailPattern, url),
                 PreviewUrl = string.Format(PreviewPattern, url),
                 Url = url,
+                ReferenceId = original.MetadataId.KeyString,
                 AllowEdit = CanEditFolder(original)
             };
             // (original.StorageLocation == 0) ? original.Path : FileLinkClickController.Instance.GetFileLinkClick(original);
@@ -60,7 +61,8 @@ namespace ToSic.Sxc.WebApi.Adam
                 folder.Modified)
             {
                 Path = folder.Path,
-                AllowEdit = CanEditFolder(folder)
+                AllowEdit = CanEditFolder(folder),
+                ReferenceId = folder.MetadataId.KeyString,
             };
             return item;
         }
