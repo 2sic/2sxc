@@ -39,7 +39,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
         public virtual AdamItemDto Create(Sxc.Adam.File<TFolderId, TFileId> original)
         {
-            var url = Path.Combine(AdamBaseUrl, original.Path).Forwardslash();
+            var url = original.Url;// Path.Combine(AdamBaseUrl, original.Path).Forwardslash();
             var item = new AdamItemDto<TFolderId, TFileId>(false, original.SysId, original.ParentSysId, original.FullName, original.Size,
                 original.Created, original.Modified)
             {
@@ -67,7 +67,7 @@ namespace ToSic.Sxc.WebApi.Adam
             return item;
         }
 
-        private string AdamBaseUrl => _adamBaseUrl ?? (_adamBaseUrl = AdamState.Context.Site.ContentPath);
+        public virtual string AdamBaseUrl => _adamBaseUrl ?? (_adamBaseUrl = AdamState.Context.Site.ContentPath);
         private string _adamBaseUrl;
 
         private bool CanEditFolder(Eav.Apps.Assets.IAsset original)
