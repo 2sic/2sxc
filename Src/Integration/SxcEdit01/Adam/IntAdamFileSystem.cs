@@ -29,10 +29,11 @@ namespace IntegrationSamples.SxcEdit01.Adam
             return this;
         }
 
-
         protected AdamAppContext<string, string> AdamContext;
 
         #endregion
+
+
         // #todo MVC
         public int MaxUploadKb() => 25000;
 

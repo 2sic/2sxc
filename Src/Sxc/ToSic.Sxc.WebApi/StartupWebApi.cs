@@ -47,6 +47,8 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient(typeof(AdamTransFolder<,>));
             services.TryAddTransient(typeof(AdamTransUpload<,>));
             services.TryAddTransient(typeof(AdamTransRename<,>));
+            services.TryAddTransient(typeof(AdamItemDtoMaker<,>));
+            services.TryAddTransient(typeof(AdamItemDtoMaker<,>.Dependencies));
 
             // Backends
             services.TryAddTransient<AppsBackend>();

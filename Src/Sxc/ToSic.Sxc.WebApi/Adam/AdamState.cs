@@ -14,14 +14,13 @@ namespace ToSic.Sxc.WebApi.Adam
     {
         #region Constructor and DI
 
-        public readonly IServiceProvider ServiceProvider;
-        public SecurityChecksBase Security;
-        public MultiPermissionsTypes Permissions;
-
         protected AdamState(IServiceProvider serviceProvider, string logName) : base(logName ?? "Adm.State")
         {
             ServiceProvider = serviceProvider;
         }
+        public readonly IServiceProvider ServiceProvider;
+        public SecurityChecksBase Security;
+        public MultiPermissionsTypes Permissions;
 
         /// <summary>
         /// Initializes the object and performs all the initial security checks
@@ -49,9 +48,9 @@ namespace ToSic.Sxc.WebApi.Adam
             SecurityCheckHelpers.ThrowIfAccessingRootButNotAllowed(usePortalRoot, Security.UserIsRestricted);
 
             Log.Add("check if feature enabled");
-            if (Security.UserIsRestricted && !ToSic.Eav.Configuration.Features.Enabled(FeaturesForRestrictedUsers))
+            if (Security.UserIsRestricted && !Eav.Configuration.Features.Enabled(FeaturesForRestrictedUsers))
                 throw HttpException.PermissionDenied(
-                    $"low-permission users may not access this - {ToSic.Eav.Configuration.Features.MsgMissingSome(FeaturesForRestrictedUsers)}");
+                    $"low-permission users may not access this - {Eav.Configuration.Features.MsgMissingSome(FeaturesForRestrictedUsers)}");
 
             if (string.IsNullOrEmpty(contentType) || string.IsNullOrEmpty(fieldName)) return callLog(null, this);
 

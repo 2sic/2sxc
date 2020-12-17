@@ -4,10 +4,32 @@ namespace ToSic.Sxc.WebApi.Adam
 {
     public class AdamItemDto
     {
-        public bool IsFolder, AllowEdit;
-        public int Size, MetadataId;
-        public string Path, Name, Type;
-        public DateTime Created, Modified;
+        public bool IsFolder { get; }
+        public bool AllowEdit { get; set; }
+        public int Size { get; set; }
+        public int MetadataId { get; set; }
+
+        public string Path { get; set; }
+        public string Name { get; set; }
+        public string Type { get; set; }
+
+        public DateTime Created { get; }
+        public DateTime Modified { get; }
+
+        /// <summary>
+        /// Small preview thumbnail
+        /// </summary>
+        public string ThumbnailUrl { get; set; }
+
+        /// <summary>
+        /// Large preview
+        /// </summary>
+        public string PreviewUrl { get; set; }
+        
+        /// <summary>
+        /// Normal url to access the resource
+        /// </summary>
+        public string Url { get; set; }
 
         public AdamItemDto(bool isFolder, string name, int size, DateTime created, DateTime modified)
         {
