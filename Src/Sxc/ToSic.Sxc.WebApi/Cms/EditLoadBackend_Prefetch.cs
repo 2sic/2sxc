@@ -96,7 +96,7 @@ namespace ToSic.Sxc.WebApi.Cms
             }
         }
 
-        private Dictionary<string, IList<AdamItemDto>> PrefetchAdam(int appId, EditDto editData)
+        private Dictionary<string, IEnumerable<AdamItemDto>> PrefetchAdam(int appId, EditDto editData)
         {
             // Step 1: try to find hyperlink fields
             var bundlesHavingLinks = BundleWithLinkFields(editData);
@@ -111,7 +111,7 @@ namespace ToSic.Sxc.WebApi.Cms
                         {
                             set.Guid,
                             h.Key,
-                            Dic = adamListMaker.ItemsInField(string.Empty),
+                            Dic = adamListMaker.ItemsInField(string.Empty) as IEnumerable<AdamItemDto>,
                         };
                     }))
                 //.Where(set => set != null)
