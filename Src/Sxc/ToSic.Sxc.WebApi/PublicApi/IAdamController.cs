@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.WebApi.PublicApi

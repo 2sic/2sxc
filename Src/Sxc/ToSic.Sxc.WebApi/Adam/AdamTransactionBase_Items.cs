@@ -2,6 +2,7 @@
 using System.Linq;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.WebApi.Adam
@@ -42,7 +43,7 @@ namespace ToSic.Sxc.WebApi.Adam
             var dtoMaker = State.ServiceProvider.Build<AdamItemDtoMaker<TFolderId, TFileId>>().Init(State);
             var allDtos = new List<AdamItemDto>();
 
-            var currentFolderDto = dtoMaker.Create(currentFolder/*, State*/);
+            var currentFolderDto = dtoMaker.Create(currentFolder);
             currentFolderDto.Name = ".";
             currentFolderDto.MetadataId = currentFolder.Metadata.EntityId;
             allDtos.Insert(0, currentFolderDto);
@@ -63,7 +64,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 .Cast<File<TFolderId, TFileId>>()
                 .Select(f =>
                 {
-                    var dto = dtoMaker.Create(f/*, State*/);
+                    var dto = dtoMaker.Create(f);
                     dto.MetadataId = (int)f.Metadata.EntityId;
                     dto.Type = Classification.TypeName(f.Extension);
                     return dto;
