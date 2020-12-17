@@ -19,7 +19,7 @@ namespace ToSic.Sxc.WebApi.Adam
             ServiceProvider = serviceProvider;
         }
         public readonly IServiceProvider ServiceProvider;
-        public SecurityChecksBase Security;
+        public AdamSecurityChecksBase Security;
         public MultiPermissionsTypes Permissions;
 
         /// <summary>
@@ -43,9 +43,9 @@ namespace ToSic.Sxc.WebApi.Adam
                 ItemGuid = entityGuid;
             }
 
-            Security = ServiceProvider.Build<SecurityChecksBase>().Init(this, usePortalRoot, Log);
+            Security = ServiceProvider.Build<AdamSecurityChecksBase>().Init(this, usePortalRoot, Log);
 
-            SecurityCheckHelpers.ThrowIfAccessingRootButNotAllowed(usePortalRoot, Security.UserIsRestricted);
+            AdamSecurityCheckHelpers.ThrowIfAccessingRootButNotAllowed(usePortalRoot, Security.UserIsRestricted);
 
             Log.Add("check if feature enabled");
             if (Security.UserIsRestricted && !Eav.Configuration.Features.Enabled(FeaturesForRestrictedUsers))

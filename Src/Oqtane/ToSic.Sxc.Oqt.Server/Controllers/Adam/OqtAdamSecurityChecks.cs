@@ -7,7 +7,7 @@ using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.Adam
 {
-    public class OqtAdamSecurityChecks: SecurityChecksBase
+    public class OqtAdamSecurityChecks: AdamSecurityChecksBase
     {
         /// <summary>
         /// Helper to check extension based on DNN settings

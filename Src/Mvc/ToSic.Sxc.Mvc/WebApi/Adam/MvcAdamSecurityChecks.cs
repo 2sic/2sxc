@@ -6,7 +6,7 @@ using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.Mvc.WebApi.Adam
 {
-    public class MvcAdamSecurityChecks: SecurityChecksBase
+    public class MvcAdamSecurityChecks: AdamSecurityChecksBase
     {
         /// <summary>
         /// Helper to check extension based on DNN settings

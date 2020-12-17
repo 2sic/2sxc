@@ -9,7 +9,7 @@ using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.Dnn.WebApi
 {
-    public class DnnAdamSecurityChecks: SecurityChecksBase
+    public class DnnAdamSecurityChecks: AdamSecurityChecksBase
     {
         /// <summary>
         /// Helper to check extension based on DNN settings

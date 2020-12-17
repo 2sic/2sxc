@@ -72,7 +72,7 @@ namespace ToSic.Sxc.WebApi.Adam
             // note 2018-04-20 2dm: can't do this for wysiwyg, as it doesn't have a setting for allowed file-uploads
             var additionalFilter = State.Attribute.Metadata.GetBestValue<string>("FileFilter");
             if (!string.IsNullOrWhiteSpace(additionalFilter)
-                && !new SecurityCheckHelpers().Init(Log).CustomFileFilterOk(additionalFilter, fileName))
+                && !new AdamSecurityCheckHelpers().Init(Log).CustomFileFilterOk(additionalFilter, fileName))
                 throw HttpException.NotAllowedFileType(fileName, "field has custom file-filter, which doesn't match");
 
             #endregion

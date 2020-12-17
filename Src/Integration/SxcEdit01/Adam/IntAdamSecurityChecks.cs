@@ -6,7 +6,7 @@ using ToSic.Sxc.WebApi.Adam;
 
 namespace IntegrationSamples.SxcEdit01.Adam
 {
-    public class IntAdamSecurityChecks: SecurityChecksBase
+    public class IntAdamSecurityChecks: AdamSecurityChecksBase
     {
         /// <summary>
         /// Helper to check extension based on DNN settings

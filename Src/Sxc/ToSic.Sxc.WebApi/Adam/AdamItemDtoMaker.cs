@@ -11,8 +11,8 @@ namespace ToSic.Sxc.WebApi.Adam
 
         public class Dependencies
         {
-            public SecurityChecksBase Security { get; }
-            public Dependencies(SecurityChecksBase security)
+            public AdamSecurityChecksBase Security { get; }
+            public Dependencies(AdamSecurityChecksBase security)
             {
                 Security = security;
             }
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.WebApi.Adam
             return this;
         }
 
-        private readonly SecurityChecksBase _security;
+        private readonly AdamSecurityChecksBase _security;
         public AdamState AdamState;
 
         #endregion

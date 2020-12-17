@@ -8,11 +8,11 @@ using ToSic.Eav.WebApi.Errors;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    internal class SecurityCheckHelpers: HasLog<SecurityCheckHelpers>
+    internal class AdamSecurityCheckHelpers: HasLog<AdamSecurityCheckHelpers>
     {
         #region Constructors / DI
 
-        public SecurityCheckHelpers() : base("Sxc.AdmSec")
+        public AdamSecurityCheckHelpers() : base("Sxc.AdmSec")
         {
         }
 
