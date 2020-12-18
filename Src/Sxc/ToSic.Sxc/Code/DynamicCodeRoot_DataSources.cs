@@ -1,8 +1,6 @@
 ﻿using System;
-using ToSic.Eav.Context;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Code
@@ -33,7 +31,7 @@ namespace ToSic.Sxc.Code
         }
 
         internal DataSourceFactory DataSourceFactory => _dataSourceFactory ??
-                                                        (_dataSourceFactory = ServiceProvider.Build<DataSourceFactory>().Init(Log));
+                                                        (_dataSourceFactory = GetService<DataSourceFactory>().Init(Log));
         private DataSourceFactory _dataSourceFactory;
 
 

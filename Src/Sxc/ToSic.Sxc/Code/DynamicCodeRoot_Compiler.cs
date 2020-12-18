@@ -16,14 +16,11 @@
                 $"{nameof(name)},{nameof(throwOnError)}");
 
             // Compile
-            var instance = new CodeCompiler(ServiceProvider, Log)
+            var instance = new CodeCompiler(_serviceProvider, Log)
                 .InstantiateClass(virtualPath, name, relativePath, throwOnError);
 
             // if it supports all our known context properties, attach them
-            if (instance is ICoupledDynamicCode isShared)
-            {
-                isShared.DynamicCodeCoupling(this);
-            }
+            if (instance is ICoupledDynamicCode isShared) isShared.DynamicCodeCoupling(this);
 
             return wrap((instance != null).ToString(), instance);
         }

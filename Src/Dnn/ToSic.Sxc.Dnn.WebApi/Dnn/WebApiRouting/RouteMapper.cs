@@ -84,6 +84,10 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
 
             #endregion
 
+            // DNN: System calls to dnn - this is just for module delete
+            AddTy("dnn", "dnn/" + TokenSet.ConAct, typeof(ModuleController));
+
+
             // Add custom service locator into the chain of service-locators
             // this is needed to enable custom API controller lookup for the app-api
             var config = GlobalConfiguration.Configuration;
@@ -128,13 +132,17 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
 
 
         /// <summary>
-        /// Add with Defaults
+        /// Add WD - With Defaults
         /// </summary>
         void AddWD(string name, string url, object defaults, string[] namespaces)
         {
             defaults = StringToControllerDefaults(defaults);
             _mapRouteManager.MapHttpRoute(Mod2Sxc, name, url, defaults, namespaces);
         }
+
+        /// <summary>
+        /// Add WC - With Constraints
+        /// </summary>
         void AddWC(string name, string url, object defaults, object constraints, string[] namespaces)
         {
             defaults = StringToControllerDefaults(defaults);

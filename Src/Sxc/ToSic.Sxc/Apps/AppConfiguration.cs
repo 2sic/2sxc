@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Apps
             FieldVersion = "Version",
             FieldAllowRazor = "AllowRazorTemplates",
             FieldAllowToken = "AllowTokenTemplates",
-            FieldHidden = "Hidden",
+            //FieldHidden = "Hidden",
             FieldRequiredSxcVersion = "RequiredVersion",
             FieldRequiredDnnVersion = "RequiredDnnVersion",
             FieldSupportsAjax = "SupportsAjaxReload";
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Apps
 
         public bool EnableToken => Get(FieldAllowToken, false);
 
-        public bool IsHidden => Get(FieldHidden, false);
+        public bool IsHidden => Get(AppConstants.FieldHidden, false);
 
         public bool EnableAjax => Get(FieldSupportsAjax, false);
 

@@ -11,16 +11,16 @@ using IAsset = ToSic.Eav.Apps.Assets.IAsset;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    public abstract class SecurityChecksBase: HasLog
+    public abstract class AdamSecurityChecksBase: HasLog
     {
         #region DI / Constructor
 
-        protected SecurityChecksBase() : base("Sxc.TnScCk") { }
+        protected AdamSecurityChecksBase() : base("Sxc.TnScCk") { }
 
-        internal SecurityChecksBase Init(AdamState adamState, bool usePortalRoot, ILog parentLog)
+        internal AdamSecurityChecksBase Init(AdamState adamState, bool usePortalRoot, ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            var callLog = Log.Call<SecurityChecksBase>();
+            var callLog = Log.Call<AdamSecurityChecksBase>();
             AdamState = adamState;
 
             var firstChecker = AdamState.Permissions.PermissionCheckers.First().Value;
@@ -44,9 +44,9 @@ namespace ToSic.Sxc.WebApi.Adam
 
         #region Abstract methods to re-implement
 
-        internal abstract bool SiteAllowsExtension(string fileName);
+        public abstract bool SiteAllowsExtension(string fileName);
 
-        internal abstract bool CanEditFolder(IAsset item);
+        public abstract bool CanEditFolder(IAsset item);
 
         #endregion
 
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 return false;
             }
 
-            if (SecurityCheckHelpers.IsKnownRiskyExtension(fileName))
+            if (AdamSecurityCheckHelpers.IsKnownRiskyExtension(fileName))
             {
                 preparedException = HttpException.NotAllowedFileType(fileName, "This is a known risky file type.");
                 return false;
@@ -137,7 +137,7 @@ namespace ToSic.Sxc.WebApi.Adam
         internal bool SuperUserOrAccessingItemFolder(string path, out HttpExceptionAbstraction preparedException)
         {
             preparedException = null;
-            return !UserIsRestricted || SecurityCheckHelpers.DestinationIsInItem(AdamState.ItemGuid, AdamState.ItemField, path, out preparedException);
+            return !UserIsRestricted || AdamSecurityCheckHelpers.DestinationIsInItem(AdamState.ItemGuid, AdamState.ItemField, path, out preparedException);
         }
     }
 }

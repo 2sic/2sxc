@@ -8,7 +8,7 @@ namespace ToSic.Sxc.WebApi.Adam
     {
         public AdamTransDelete(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextResolver ctxResolver) : base(adamState, ctxResolver, "Adm.TrnDel") { }
 
-        internal bool Delete(string parentSubfolder, bool isFolder, TFolderId id, TFileId fileId)
+        public bool Delete(string parentSubfolder, bool isFolder, TFolderId id, TFileId fileId)
         {
             Log.Add($"delete");
             if (!State.Security.UserIsPermittedOnField(GrantSets.DeleteSomething, out var exp))

@@ -34,12 +34,10 @@ namespace ToSic.Sxc.Hybrid.Razor
         /// <inheritdoc />
         public IInPageEditingSystem Edit => DynCode.Edit;
 
-        ///// <inheritdoc />
-        //public IDnnContext Dnn => DynCode.Dnn;
-
         [PrivateApi] public IBlock Block => throw new NotSupportedException("don't use this");
 
-        [PrivateApi] public IServiceProvider ServiceProvider => DynCode.ServiceProvider;
+        /// <inheritdoc />
+        public TService GetService<TService>() => DynCode.GetService<TService>();
 
         [PrivateApi] public int CompatibilityLevel => DynCode.CompatibilityLevel;
 

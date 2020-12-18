@@ -80,7 +80,7 @@ namespace ToSic.SexyContent
             services.TryAddTransient<IUiContextBuilder, DnnUiContextBuilder>();
 
             // new #2160
-            services.TryAddTransient<SecurityChecksBase, DnnAdamSecurityChecks>();
+            services.TryAddTransient<AdamSecurityChecksBase, DnnAdamSecurityChecks>();
 
             services.TryAddTransient<ILookUpEngineResolver, DnnLookUpEngineResolver>();
             services.TryAddTransient<DnnLookUpEngineResolver>();

@@ -1,4 +1,7 @@
-﻿using ToSic.Eav.Security.Permissions;
+﻿using System.IO;
+using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.Helpers;
+using ToSic.Eav.WebApi.Dto;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
@@ -6,44 +9,82 @@ namespace ToSic.Sxc.WebApi.Adam
     {
         #region Constructor / DI
 
-         public AdamItemDtoMaker(SecurityChecksBase security)
+        public class Dependencies
         {
-            _security = security;
+            public AdamSecurityChecksBase Security { get; }
+            public Dependencies(AdamSecurityChecksBase security)
+            {
+                Security = security;
+            }
         }
 
-        private SecurityChecksBase _security;
+        public AdamItemDtoMaker(Dependencies dependencies)
+        {
+            _security = dependencies.Security;
+        }
 
+        public AdamItemDtoMaker<TFolderId, TFileId> Init(AdamState state)
+        {
+            AdamState = state;
+            return this;
+        }
+
+        private readonly AdamSecurityChecksBase _security;
+        public AdamState AdamState;
 
         #endregion
 
-        internal virtual AdamItemDto Create(Sxc.Adam.File<TFolderId, TFileId> original, AdamState state)
+        private const string ThumbnailPattern = "{0}?w=120&h=120&mode=crop&urlSource=backend";
+        private const string PreviewPattern = "{0}?w=800&h=800&mode=max&urlSource=backend";
+
+        public virtual AdamItemDto Create(Sxc.Adam.File<TFolderId, TFileId> original)
         {
+            var url = original.Url;// Path.Combine(AdamBaseUrl, original.Path).Forwardslash();
             var item = new AdamItemDto<TFolderId, TFileId>(false, original.SysId, original.ParentSysId, original.FullName, original.Size,
                 original.Created, original.Modified)
             {
                 Path = original.Path,
-                AllowEdit = state.UseSiteRoot
-                    ? _security.CanEditFolder(original)
-                    : !state.Security.UserIsRestricted || state.Security.FieldPermissionOk(GrantSets.WriteSomething)
+                ThumbnailUrl = string.Format(ThumbnailPattern, url),
+                PreviewUrl = string.Format(PreviewPattern, url),
+                Url = url,
+                ReferenceId = original.MetadataId.KeyString,
+                AllowEdit = CanEditFolder(original)
             };
             // (original.StorageLocation == 0) ? original.Path : FileLinkClickController.Instance.GetFileLinkClick(original);
             return item;
         }
 
 
-        internal virtual AdamItemDto Create(Sxc.Adam.Folder<TFolderId, TFileId> folder, AdamState state)
+        public virtual AdamItemDto Create(Sxc.Adam.Folder<TFolderId, TFileId> folder)
         {
-            // todo: AdamId
             var item = new AdamItemDto<TFolderId, TFolderId>(true, folder.SysId, folder.ParentSysId, folder.Name, 0, folder.Created,
                 folder.Modified)
             {
                 Path = folder.Path,
-                AllowEdit = state.UseSiteRoot
-                    ? _security.CanEditFolder(folder)
-                    : !state.Security.UserIsRestricted || state.Security.FieldPermissionOk(GrantSets.WriteSomething)
+                AllowEdit = CanEditFolder(folder),
+                ReferenceId = folder.MetadataId.KeyString,
             };
             return item;
         }
+
+        public virtual string AdamBaseUrl => _adamBaseUrl ?? (_adamBaseUrl = AdamState.Context.Site.ContentPath);
+        private string _adamBaseUrl;
+
+        private bool CanEditFolder(Eav.Apps.Assets.IAsset original)
+        {
+            return AdamState.UseSiteRoot
+                ? _security.CanEditFolder(original)
+                : ContextAllowsEdit;
+        }
+
+        /// <summary>
+        /// Do this check once only, as the result will never change during one lifecycle
+        /// </summary>
+        private bool ContextAllowsEdit 
+            => _contextAllowsEdit 
+               ?? (_contextAllowsEdit = !AdamState.Security.UserIsRestricted || AdamState.Security.FieldPermissionOk(GrantSets.WriteSomething)).Value;
+        private bool? _contextAllowsEdit;
+
 
     }
 }

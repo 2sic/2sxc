@@ -11,7 +11,7 @@ namespace ToSic.Sxc.WebApi.Adam
     {
         public AdamTransUpload(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextResolver ctxResolver) : base(adamState, ctxResolver, "Adm.TrnUpl") { }
 
-        internal UploadResultDto UploadOne(Stream stream, string subFolder, string fileName)
+        public UploadResultDto UploadOne(Stream stream, string subFolder, string fileName)
         {
             var file = UploadOne(stream, fileName, subFolder, false);
 
@@ -26,7 +26,7 @@ namespace ToSic.Sxc.WebApi.Adam
             };
         }
 
-        internal IFile UploadOne(Stream stream, string originalFileName, string subFolder, bool skipFieldAndContentTypePermissionCheck)
+        public IFile UploadOne(Stream stream, string originalFileName, string subFolder, bool skipFieldAndContentTypePermissionCheck)
         {
             Log.Add($"upload one subfold:{subFolder}, file: {originalFileName}");
 
@@ -72,7 +72,7 @@ namespace ToSic.Sxc.WebApi.Adam
             // note 2018-04-20 2dm: can't do this for wysiwyg, as it doesn't have a setting for allowed file-uploads
             var additionalFilter = State.Attribute.Metadata.GetBestValue<string>("FileFilter");
             if (!string.IsNullOrWhiteSpace(additionalFilter)
-                && !new SecurityCheckHelpers().Init(Log).CustomFileFilterOk(additionalFilter, fileName))
+                && !new AdamSecurityCheckHelpers().Init(Log).CustomFileFilterOk(additionalFilter, fileName))
                 throw HttpException.NotAllowedFileType(fileName, "field has custom file-filter, which doesn't match");
 
             #endregion

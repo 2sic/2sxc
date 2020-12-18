@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Context;
 
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.WebApi.Adam
     {
         public AdamTransFolder(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextResolver ctxResolver) : base(adamState, ctxResolver, "Adm.TrnFld") { }
 
-        internal IList<AdamItemDto> Folder(string parentSubfolder, string newFolder)
+        public IList<AdamItemDto> Folder(string parentSubfolder, string newFolder)
         {
             var logCall = Log.Call<IList<AdamItemDto>>($"get folders for subfld:{parentSubfolder}, new:{newFolder}");
             if (State.Security.UserIsRestricted && !State.Security.FieldPermissionOk(GrantSets.ReadSomething))

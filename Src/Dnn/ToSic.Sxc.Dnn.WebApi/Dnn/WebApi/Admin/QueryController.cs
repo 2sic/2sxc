@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// Get a Pipeline with DataSources
         /// </summary>
         [HttpGet]
-		public QueryDefinitionDto Get(int appId, int? id = null) => _build<QueryApi>().Init(appId, Log).Definition(appId, id);
+		public QueryDefinitionDto Get(int appId, int? id = null) => GetService<QueryApi>().Init(appId, Log).Definition(appId, id);
 
         /// <summary>
         /// Get installed DataSources from .NET Runtime but only those with [PipelineDesigner Attribute]
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 		/// <param name="id">PipelineEntityId</param>
 		[HttpPost]
 	    public QueryDefinitionDto Save([FromBody] QueryDefinitionDto data, int appId, int id)
-	        => _build<QueryApi>().Init(appId, Log).Save(data, appId, id);
+	        => GetService<QueryApi>().Init(appId, Log).Save(data, appId, id);
 
 
 	    /// <summary>
@@ -56,15 +56,15 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 	    public QueryRunDto Run(int appId, int id)
         {
             var block = SharedContextResolver.RealBlockRequired();
-            var config = ServiceProvider.Build<AppConfigDelegate>().Init(Log).GetConfigProviderForModule(block.Context, block.App, block);
-            return _build<QueryApi>().Init(appId, Log).Run(appId, id, config);
+            var config = GetService<AppConfigDelegate>().Init(Log).GetConfigProviderForModule(block.Context, block.App, block);
+            return GetService<QueryApi>().Init(appId, Log).Run(appId, id, config);
         }
 
         /// <summary>
 	    /// Clone a Pipeline with all DataSources and their configurations
 	    /// </summary>
 	    [HttpGet]
-	    public void Clone(int appId, int id) => _build<QueryApi>().Init(appId, Log).Clone(appId, id);
+	    public void Clone(int appId, int id) => GetService<QueryApi>().Init(appId, Log).Clone(appId, id);
 
 
         /// <summary>
@@ -72,10 +72,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// </summary>
         [HttpDelete]
         public bool Delete(int appId, int id)
-            => _build<CmsManager>().Init(State.Identity(null, appId), true, Log)
+            => GetService<CmsManager>().Init(State.Identity(null, appId), true, Log)
                 .DeleteQueryIfNotUsedByView(id, Log);
 
         [HttpPost]
-	    public bool Import(EntityImportDto args) => _build<QueryApi>().Init(args.AppId, Log).Import(args);
+	    public bool Import(EntityImportDto args) => GetService<QueryApi>().Init(args.AppId, Log).Import(args);
 	}
 }

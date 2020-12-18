@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Apps
             #region attach to the current list of items
 
             var cbEnt = Parent.AppState.List.One(parentId);
-            var blockList = ((IEnumerable<IEntity>)cbEnt.GetBestValue(field))?.ToList() ?? new List<IEntity>();
+            var blockList = cbEnt.Children(field);
 
             var intList = blockList.Select(b => b.EntityId).ToList();
             // add only if it's not already in the list (could happen if http requests are run again)

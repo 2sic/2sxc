@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Configuration;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Adam;
+using ToSic.Sxc.WebApi.PublicApi;
 
 namespace ToSic.Sxc.Dnn.WebApi
 {
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi
     [SupportedModules("2sxc,2sxc-app")]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]    // use view, all methods must re-check permissions
     [ValidateAntiForgeryToken]
-    public class AdamController : SxcApiControllerBase
+    public class AdamController : SxcApiControllerBase, IAdamController<int>
     {
         protected override string HistoryLogName => "Api.Adam";
 
@@ -49,7 +50,7 @@ namespace ToSic.Sxc.Dnn.WebApi
                 var originalFile = filesCollection[0];
                 var stream = originalFile.InputStream;
                 var fileName = originalFile.FileName;
-                var uploader = _build<AdamTransUpload<int, int>>().Init(appId, contentType, guid, field, usePortalRoot, Log);
+                var uploader = GetService<AdamTransUpload<int, int>>().Init(appId, contentType, guid, field, usePortalRoot, Log);
                 return uploader.UploadOne(stream, subFolder, fileName);
             }
             catch (HttpExceptionAbstraction he)
@@ -66,6 +67,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         #region adam-file manager
 
         // test method to provide a public API for accessing adam items easily
+        // not sure if it is ever used
         [HttpGet]
         public IEnumerable<AdamItemDto> Items(string contentType, Guid guid, string field, string folder = "")
         {
@@ -78,7 +80,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         public IEnumerable<AdamItemDto> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
         {
             var callLog = Log.Call<IEnumerable<AdamItemDto>>($"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
-            var results = _build<AdamTransGetItems<int, int>>()
+            var results = GetService<AdamTransGetItems<int, int>>()
                 .Init(appId, contentType, guid, field, usePortalRoot, Log)
                 .ItemsInField(subfolder);
             return callLog("ok",  results);
@@ -87,21 +89,21 @@ namespace ToSic.Sxc.Dnn.WebApi
         [HttpPost]
         public IEnumerable<AdamItemDto> Folder(int appId, string contentType, Guid guid, string field, string subfolder,
             string newFolder, bool usePortalRoot)
-            => _build<AdamTransFolder<int, int>>()
+            => GetService<AdamTransFolder<int, int>>()
                 .Init(appId, contentType, guid, field, usePortalRoot, Log)
                 .Folder(subfolder, newFolder);
 
         [HttpGet]
         public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder,
             int id, bool usePortalRoot)
-            => _build<AdamTransDelete<int, int>>()
+            => GetService<AdamTransDelete<int, int>>()
                 .Init(appId, contentType, guid, field, usePortalRoot, Log)
                 .Delete(subfolder, isFolder, id, id);
 
         [HttpGet]
         public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder,
             int id, string newName, bool usePortalRoot)
-            => _build<AdamTransRename<int, int>>()
+            => GetService<AdamTransRename<int, int>>()
                 .Init(appId, contentType, guid, field, usePortalRoot, Log)
                 .Rename(subfolder, isFolder, id, id, newName);
 

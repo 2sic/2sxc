@@ -1,12 +1,11 @@
 ﻿using System;
-using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Edit.InPageEditingSystem;
-
 using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -21,13 +20,38 @@ namespace ToSic.Sxc.Code
     [PublicApi_Stable_ForUseInYourCode]
     public abstract partial class DynamicCodeRoot : HasLog, IDynamicCode
     {
-        [PrivateApi] public IServiceProvider ServiceProvider { get; }
+        #region Constructor
 
-        protected DynamicCodeRoot(IServiceProvider serviceProvider, ICmsContext cmsContext, string logPrefix) : base(logPrefix + ".DynCdR")
+        /// <summary>
+        /// Helper class to ensure if dependencies change, inheriting objects don't need to change their signature
+        /// </summary>
+        public class Dependencies
         {
-            ServiceProvider = serviceProvider;
-            CmsContext = cmsContext;
+            public IServiceProvider ServiceProvider { get; }
+            public ICmsContext CmsContext { get; }
+
+            public Dependencies(IServiceProvider serviceProvider, ICmsContext cmsContext)
+            {
+                ServiceProvider = serviceProvider;
+                CmsContext = cmsContext;
+            }
         }
+
+        protected DynamicCodeRoot(Dependencies dependencies, string logPrefix) : base(logPrefix + ".DynCdR")
+        {
+            _serviceProvider = dependencies.ServiceProvider;
+            CmsContext = dependencies.CmsContext;
+        }
+
+        private readonly IServiceProvider _serviceProvider;
+        
+        [PrivateApi] public ICmsContext CmsContext { get; }
+
+        #endregion
+
+
+        /// <inheritdoc />
+        public TService GetService<TService>() => _serviceProvider.Build<TService>();
 
         [PrivateApi]
         public DynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)
@@ -61,14 +85,8 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc />
         public IInPageEditingSystem Edit { get; private set; }
-        #endregion
-
-
-
-        #region Context WIP
-
-        [PrivateApi] public ICmsContext CmsContext { get; }
 
         #endregion
+
     }
 }

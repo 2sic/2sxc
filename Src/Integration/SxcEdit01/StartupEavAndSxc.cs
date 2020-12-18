@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using IntegrationSamples.SxcEdit01.Adam;
 using IntegrationSamples.SxcEdit01.Controllers;
 using IntegrationSamples.SxcEdit01.Integration;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -13,7 +14,9 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.WebApi;
+using ToSic.Sxc.WebApi.Adam;
 
 namespace IntegrationSamples.SxcEdit01
 {
@@ -28,9 +31,12 @@ namespace IntegrationSamples.SxcEdit01
             Factory.UseExistingServices(services);
             Factory.ActivateNetCoreDi(services2 =>
             {
-                services2.AddSxcWebApi()
+                services2
                     .MvcSystemParts()
+                    .AddAdam()
                     .AddImplementations()
+                    .AddAdamWebApi<string, string>()
+                    .AddSxcWebApi()
                     .AddSxcCore()
                     .AddEav();
             });
@@ -47,6 +53,15 @@ namespace IntegrationSamples.SxcEdit01
         {
             services.TryAddTransient<IUser, IntUserSuper>();
             services.TryAddTransient<IntStatefulControllerBase.Dependencies>();
+            return services;
+        }
+        internal static IServiceCollection AddAdam(this IServiceCollection services)
+        {
+            // ADAM stuff
+            services.TryAddTransient<ISite, IntSite>();
+            services.TryAddTransient<AdamSecurityChecksBase, IntAdamSecurityChecks>();
+            services.TryAddTransient<IAdamFileSystem<string, string>, IntAdamFileSystem>();
+            services.TryAddTransient(typeof(AdamItemDtoMaker<,>), typeof(IntAdamItemDtoMaker<,>));
             return services;
         }
 

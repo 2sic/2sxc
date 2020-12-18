@@ -2,20 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
     public partial class EditLoadBackend
     {
 
-
         public EditPrefetchDto TryToPrefectAdditionalData(int appId, EditDto editData)
         {
             return new EditPrefetchDto
             {
                 Links = PrefetchLinks(editData),
-                Entities = PrefetchEntities(appId, editData)
+                Entities = PrefetchEntities(appId, editData),
+                Adam = PrefetchAdam(appId, editData),
             };
         }
 
@@ -23,15 +25,8 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             try
             {
-                // Step 1: try to find hyperlinks
-                var bundlesHavingLinks = editData.Items
-                    // Only these with hyperlinks
-                    .Where(b => b.Entity?.Attributes?.Hyperlink?.Any() ?? false)
-                    .Select(b => new
-                    {
-                        b.Entity.Guid,
-                        b.Entity.Attributes.Hyperlink
-                    });
+                // Step 1: try to find hyperlink fields
+                var bundlesHavingLinks = BundleWithLinkFields(editData);
 
                 var links = bundlesHavingLinks.SelectMany(set
                         => set.Hyperlink.SelectMany(h
@@ -62,13 +57,14 @@ namespace ToSic.Sxc.WebApi.Cms
             }
         }
 
+
         private List<EntityForPickerDto> PrefetchEntities(int appId, EditDto editData)
         {
             try
             {
-                // Step 1: try to find hyperlinks
+                // Step 1: try to find entity fields
                 var bundlesHavingEntities = editData.Items
-                    // Only these with hyperlinks
+                    // Only these with entity fields
                     .Where(b => b.Entity?.Attributes?.Entity?.Any() ?? false)
                     .Select(b => new
                     {
@@ -98,6 +94,52 @@ namespace ToSic.Sxc.WebApi.Cms
                     new EntityForPickerDto {Id = -1, Text = "Error occurred pre-fetching entities", Value = Guid.Empty}
                 };
             }
+        }
+
+        private Dictionary<string, IEnumerable<AdamItemDto>> PrefetchAdam(int appId, EditDto editData)
+        {
+            // Step 1: try to find hyperlink fields
+            var bundlesHavingLinks = BundleWithLinkFields(editData);
+
+            var links = bundlesHavingLinks.SelectMany(set
+                    => set.Hyperlink.Select(h
+                        =>
+                    {
+                        var adamListMaker = ServiceProvider.Build<IAdamTransGetItems>();
+                        adamListMaker.Init(appId, set.ContentTypeName, set.Guid, h.Key, false, Log);
+                        return new
+                        {
+                            set.Guid,
+                            h.Key,
+                            Dic = adamListMaker.ItemsInField(string.Empty) as IEnumerable<AdamItemDto>,
+                        };
+                    }))
+                //.Where(set => set != null)
+                // Step 2: Check which ones have a link reference
+                .ToDictionary(r => r.Key, r => r.Dic);
+
+            return links;
+        }
+
+        private static IEnumerable<BundleWithLinkField> BundleWithLinkFields(EditDto editData)
+        {
+            var bundlesHavingLinks = editData.Items
+                // Only these with hyperlinks
+                .Where(b => b.Entity?.Attributes?.Hyperlink?.Any() ?? false)
+                .Select(b => new BundleWithLinkField
+                {
+                    Guid = b.Entity.Guid,
+                    Hyperlink = b.Entity.Attributes.Hyperlink,
+                    ContentTypeName = b.Entity.Type.Name,
+                });
+            return bundlesHavingLinks;
+        }
+
+        private class BundleWithLinkField
+        {
+            public Guid Guid;
+            public Dictionary<string, Dictionary<string, string>> Hyperlink;
+            public string ContentTypeName;
         }
 
     }

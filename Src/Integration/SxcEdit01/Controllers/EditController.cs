@@ -64,7 +64,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
         [HttpGet]
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public string LookupLink(string link, int appId, string contentType = default, Guid guid = default, string field = default)
-            => _linkBackendLazy.Value.Init(Log).ResolveHyperlink(appId, link, contentType, guid, field);
+            => "\"" + _linkBackendLazy.Value.Init(Log).ResolveHyperlink(appId, link, contentType, guid, field) + "\"";
 
 
     }

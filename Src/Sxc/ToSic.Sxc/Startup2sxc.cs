@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
@@ -30,6 +29,9 @@ namespace ToSic.Sxc
             services.TryAddTransient<ViewsManager>();
             services.TryAddTransient<BlocksRuntime>();
             services.TryAddTransient<BlocksManager>();
+
+            // Code
+            services.TryAddTransient<DynamicCodeRoot.Dependencies>();
 
             // Block Editors
             services.TryAddTransient<BlockEditorForEntity>();

@@ -6,7 +6,7 @@ using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.Mvc.WebApi.Adam
 {
-    public class MvcAdamSecurityChecks: SecurityChecksBase
+    public class MvcAdamSecurityChecks: AdamSecurityChecksBase
     {
         /// <summary>
         /// Helper to check extension based on DNN settings
@@ -17,14 +17,14 @@ namespace ToSic.Sxc.Mvc.WebApi.Adam
         /// mostly a copy from https://github.com/dnnsoftware/Dnn.Platform/blob/115ae75da6b152f77ad36312eb76327cdc55edd7/DNN%20Platform/Modules/Journal/FileUploadController.cs#L72
         /// </remarks>
         [AssertionMethod]
-        internal override bool SiteAllowsExtension(string fileName)
+        public override bool SiteAllowsExtension(string fileName)
         {
             var extension = Path.GetExtension(fileName);
             return !string.IsNullOrEmpty(extension)
                    /*&& Host.AllowedExtensionWhitelist.IsAllowedExtension(extension.ToLowerInvariant())*/;
         }
 
-        internal override bool CanEditFolder(Eav.Apps.Assets.IAsset item)
+        public override bool CanEditFolder(Eav.Apps.Assets.IAsset item)
         {
             //var folder = FolderManager.Instance.GetFolder(folderId);
             //return folder != null && FolderPermissionController.CanAddFolder(folder as FolderInfo);

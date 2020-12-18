@@ -21,16 +21,16 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public List<ItemHistory> Get(int appId, [FromBody] ItemIdentifier item) 
-            => _build<AppManager>().Init(appId, Log).Entities
-                .VersionHistory(_build<IdentifierHelper>().Init(Log).ResolveItemIdOfGroup(appId, item, Log).EntityId);
+            => GetService<AppManager>().Init(appId, Log).Entities
+                .VersionHistory(GetService<IdentifierHelper>().Init(Log).ResolveItemIdOfGroup(appId, item, Log).EntityId);
 
         /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool Restore(int appId, int changeId, [FromBody] ItemIdentifier item)
         {
-            _build<AppManager>().Init(appId, Log).Entities
-                .VersionRestore(_build<IdentifierHelper>().Init(Log).ResolveItemIdOfGroup(appId, item, Log).EntityId, changeId);
+            GetService<AppManager>().Init(appId, Log).Entities
+                .VersionRestore(GetService<IdentifierHelper>().Init(Log).ResolveItemIdOfGroup(appId, item, Log).EntityId, changeId);
             return true;
         }
 

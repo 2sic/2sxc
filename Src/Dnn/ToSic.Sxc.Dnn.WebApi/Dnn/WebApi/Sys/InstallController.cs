@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.ImportExport;
@@ -28,7 +27,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         /// <returns></returns>
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-        public bool Resume() => _build<IEnvironmentInstaller>().ResumeAbortedUpgrade();
+        public bool Resume() => GetService<IEnvironmentInstaller>().ResumeAbortedUpgrade();
 
         #endregion
 
@@ -43,10 +42,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public string RemoteWizardUrl(bool isContentApp) =>
-            _build<IEnvironmentInstaller>().Init(Log)
+            GetService<IEnvironmentInstaller>().Init(Log)
                 .GetAutoInstallPackagesUiUrl(
                     new DnnSite(),
-                    ServiceProvider.Build<DnnModule>().Init(Request.FindModuleInfo(), Log), 
+                    GetService<DnnModule>().Init(Request.FindModuleInfo(), Log), 
                     isContentApp);
 
 
@@ -63,10 +62,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
             PreventServerTimeout300();
 
             Log.Add("install package:" + packageUrl);
-            var container = ServiceProvider.Build<DnnModule>().Init(ActiveModule, Log);
+            var container = GetService<DnnModule>().Init(ActiveModule, Log);
             var block = container.BlockIdentifier;
 
-            var result = _build<ImportFromRemote>().Init(new DnnUser(), Log)
+            var result = GetService<ImportFromRemote>().Init(new DnnUser(), Log)
                 .InstallPackage(block.ZoneId, block.AppId, ActiveModule.DesktopModule.ModuleName == "2sxc-app", packageUrl);
 
             Log.Add("install completed with success:" + result.Item1);

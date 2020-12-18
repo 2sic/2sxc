@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Context;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
@@ -11,7 +10,6 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
-
 using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -32,7 +30,12 @@ namespace ToSic.Sxc.Code
     {
         [PrivateApi("WIP")] IBlock Block { get; }
 
-        [PrivateApi("internal")] IServiceProvider ServiceProvider { get; }
+        /// <summary>
+        /// Get a service from the EAV / 2sxc Dependency Injection. 
+        /// </summary>
+        /// <typeparam name="TService">Interface (preferred) or Class which is needed</typeparam>
+        /// <returns>An object of the type or interface requested</returns>
+        TService GetService<TService>();
 
         /// <summary>
         /// A fully prepared <see cref="IApp"/> object letting you access all the data and queries in the current app. 

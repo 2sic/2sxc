@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
 
         #endregion
 
-        protected Sxc.Web.WebApi.System.Insights GetInsights => _build<Sxc.Web.WebApi.System.Insights>().Init(Log, ThrowIfNotSuperuser, HttpException.BadRequest);
+        protected Sxc.Web.WebApi.System.Insights GetInsights => GetService<Sxc.Web.WebApi.System.Insights>().Init(Log, ThrowIfNotSuperuser, HttpException.BadRequest);
 
         private void ThrowIfNotSuperuser()
         {

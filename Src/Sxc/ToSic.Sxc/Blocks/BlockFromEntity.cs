@@ -73,12 +73,12 @@ namespace ToSic.Sxc.Blocks
         /// <returns></returns>
         private IBlockIdentifier LoadBlockDefinition(int zoneId, IEntity blockDefinition, ILog log)
         {
-            var appName = blockDefinition.GetBestValue(CbPropertyApp)?.ToString() ?? "";
+            var appName = blockDefinition.Value<string>(CbPropertyApp) ?? "";
             IsContentApp = appName == Eav.Constants.DefaultAppName;
-            var temp = blockDefinition.GetBestValue(CbPropertyContentGroup)?.ToString() ?? "";
+            var temp = blockDefinition.Value<string>(CbPropertyContentGroup) ?? "";
             Guid.TryParse(temp, out var contentGroupGuid);
 
-            temp = blockDefinition.GetBestValue(ViewParts.TemplateContentType)?.ToString() ?? "";
+            temp = blockDefinition.Value<string>(ViewParts.TemplateContentType) ?? "";
             Guid.TryParse(temp, out var previewTemplateGuid);
 
             var appId = new ZoneRuntime().Init(zoneId, log).FindAppId(appName);

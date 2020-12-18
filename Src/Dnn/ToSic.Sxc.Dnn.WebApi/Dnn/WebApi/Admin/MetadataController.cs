@@ -15,6 +15,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     {
         [HttpGet]
         public IEnumerable<Dictionary<string, object>> Get(int appId, int targetType, string keyType, string key, string contentType)
-            => Eav.WebApi.MetadataApi.Get(ServiceProvider, appId, targetType, keyType, key, contentType);
+            => Eav.WebApi.MetadataApi.Get(Eav.Factory.GetServiceProvider(), appId, targetType, keyType, key, contentType);
     }
 }

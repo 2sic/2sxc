@@ -102,7 +102,7 @@ namespace ToSic.Sxc.Blocks
         }
         private bool _queryInitialized;
 
-        public string UrlIdentifier => Entity.GetBestValue<string>(FieldNameInUrl);
+        public string UrlIdentifier => Entity.Value<string>(FieldNameInUrl);
 
         /// <summary>
         /// Returns true if the current template uses Razor

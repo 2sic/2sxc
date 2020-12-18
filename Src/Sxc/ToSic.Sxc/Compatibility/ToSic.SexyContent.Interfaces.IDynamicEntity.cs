@@ -1,14 +1,6 @@
 ﻿using System;
-using System.Web;
+using ToSic.Eav.Documentation;
 using IEntity = ToSic.Eav.Data.IEntity;
-#if NET451
-using HtmlString = System.Web.HtmlString;
-using IHtmlString = System.Web.IHtmlString;
-#else
-using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
-using IHtmlString = Microsoft.AspNetCore.Html.IHtmlContent;
-#endif
-
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Interfaces
@@ -18,17 +10,22 @@ namespace ToSic.SexyContent.Interfaces
     /// We'll probably need to keep it alive so old code doesn't break
     /// But this interface shouldn't be enhanced or documented publicly
     /// </summary>
+    [PrivateApi("this was an old interface which must still work for compatibility, but shouldn't be used any more")]
     public interface IDynamicEntity
     {
+#if NETFRAMEWORK
         /// <summary>
         /// Deprecated - avoid using. Use Edit.Toolbar(object...) instead
         /// </summary>
         [Obsolete("Use Edit.Toolbar(...) instead")]
-        HtmlString Toolbar { get; }
+        [PrivateApi]
+        System.Web.IHtmlString Toolbar { get; }
 
 
         [Obsolete]
-        IHtmlString Render();
+        [PrivateApi]
+        System.Web.IHtmlString Render();
+#endif
 
         IEntity Entity { get; }
 
@@ -46,7 +43,5 @@ namespace ToSic.SexyContent.Interfaces
         dynamic GetPublished();
 
         bool IsDemoItem { get; }
-
-        //List<Sxc.Data.IDynamicEntity> Parents(string type = null, string field = null);
     }
 }

@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Oqt.Shared;
+﻿using ToSic.Eav.WebApi.Dto;
+using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.Oqt.Server.Adam
@@ -7,26 +8,26 @@ namespace ToSic.Sxc.Oqt.Server.Adam
     {
         #region Constructor / DI
 
-        public OqtAdamItemDtoMaker(SecurityChecksBase security): base(security) { }
+        public OqtAdamItemDtoMaker(Dependencies dependencies): base(dependencies) { }
 
 
         #endregion
 
-        internal override AdamItemDto Create(Sxc.Adam.File<TFolderId, TFileId> original, AdamState state)
+        public override AdamItemDto Create(Sxc.Adam.File<TFolderId, TFileId> original/*, AdamState state*/)
         {
-            var item = base.Create(original, state);
+            var item = base.Create(original/*, state*/);
             if(item is AdamItemDto<TFolderId, TFolderId> typed)
-                item.Path = string.Format(OqtConstants.DownloadLinkTemplate, state.Context.Site.Id, typed.Id);
+                item.Path = string.Format(OqtConstants.DownloadLinkTemplate, AdamState.Context.Site.Id, typed.Id);
 
             return item;
         }
 
 
-        internal override AdamItemDto Create(Sxc.Adam.Folder<TFolderId, TFileId> folder, AdamState state)
+        public override AdamItemDto Create(Sxc.Adam.Folder<TFolderId, TFileId> folder/*, AdamState state*/)
         {
-            var item = base.Create(folder, state);
+            var item = base.Create(folder/*, state*/);
             if (item is AdamItemDto<TFolderId, TFolderId> typed)
-                item.Path = "/" + state.Context.Site.Id + "/api/file/download/" + typed.Id;
+                item.Path = "/" + AdamState.Context.Site.Id + "/api/file/download/" + typed.Id;
             return item;
         }
 

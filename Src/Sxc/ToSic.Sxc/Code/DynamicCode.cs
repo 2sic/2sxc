@@ -1,12 +1,9 @@
-﻿using System;
-using ToSic.Eav.Context;
-using ToSic.Eav.Data;
+﻿using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
-
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Code
@@ -16,16 +13,29 @@ namespace ToSic.Sxc.Code
     /// It delegates all properties like App and methods like AsDynamic() to the parent item which initially caused it to be compiled.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract partial class DynamicCode : IDynamicCode, IWrapper<IDynamicCode>, ICoupledDynamicCode
+    public abstract partial class DynamicCode : HasLog, IDynamicCode, IWrapper<IDynamicCode>, ICoupledDynamicCode
     {
+        #region Constructor - NOT for DI
 
-        /// <inheritdoc />
-        public IApp App => UnwrappedContents?.App;
+        /// <summary>
+        /// Main constructor, may never have parameters, otherwise inheriting code will run into problems. 
+        /// </summary>
+        protected DynamicCode() : base("Sxc.DynCod")
+        {
 
-        /// <inheritdoc />
-        public IBlockDataSource Data => UnwrappedContents?.Data;
+        }
+        
+        #endregion
 
-        [PrivateApi] public IServiceProvider ServiceProvider => UnwrappedContents?.ServiceProvider;
+        #region Dynamic Code Coupling
+
+        [PrivateApi]
+        public virtual void DynamicCodeCoupling(IDynamicCode parent)
+        {
+            Log.LinkTo(parent?.Log);
+            Log.Call()(null);
+            UnwrappedContents = parent;
+        }
 
         /// <inheritdoc />
         /// <remarks>
@@ -33,12 +43,18 @@ namespace ToSic.Sxc.Code
         /// </remarks>
         public IDynamicCode UnwrappedContents { get; private set; }
 
-        [PrivateApi]
-        public virtual void DynamicCodeCoupling(IDynamicCode parent)
-        {
-            Log?.Call()(null);
-            UnwrappedContents = parent;
-        }
+        #endregion
+
+        /// <inheritdoc />
+        public IApp App => UnwrappedContents?.App;
+
+        /// <inheritdoc />
+        public IBlockDataSource Data => UnwrappedContents?.Data;
+
+        /// <inheritdoc />
+        public TService GetService<TService>() => UnwrappedContents.GetService<TService>();
+
+
 
         #region Content and Header
 
@@ -58,6 +74,7 @@ namespace ToSic.Sxc.Code
         #endregion
 
         #region SharedCode - must also map previous path to use here
+
         /// <inheritdoc />
         public string CreateInstancePath { get; set; }
 
@@ -77,8 +94,6 @@ namespace ToSic.Sxc.Code
         }
 
         #endregion
-
-        public ILog Log => UnwrappedContents?.Log;
 
         #region Context WIP
 
