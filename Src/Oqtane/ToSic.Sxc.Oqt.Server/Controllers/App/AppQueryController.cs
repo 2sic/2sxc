@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.App;
+using ToSic.Sxc.WebApi.PublicApi;
 
 // TODO: #MissingFeature
 // 1. Query from context / header
@@ -12,7 +13,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     [Route(WebApiConstants.WebApiStateRoot + "/app/")]
     [ApiController]
-    public class AppQueryController : OqtStatefulControllerBase
+    public class AppQueryController : OqtStatefulControllerBase, IAppQueryController
     {
         private readonly AppQuery _appQuery;
 
