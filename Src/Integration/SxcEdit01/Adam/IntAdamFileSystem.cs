@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ToSic.Eav.Context;
+using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
@@ -131,6 +132,10 @@ namespace IntegrationSamples.SxcEdit01.Adam
         {
             var f = new FileInfo(PathOnDrive(path));
             var directoryName = f.Directory.Name;
+
+            // WIP
+            var url = "/" + path.Replace("wwwroot\\", "").Forwardslash();
+
             return new File<string, string>(AdamContext)
             {
                 FullName = f.Name,
@@ -145,7 +150,7 @@ namespace IntegrationSamples.SxcEdit01.Adam
                 Created = f.CreationTime,
                 Modified = f.LastWriteTime,
                 Name = Path.GetFileNameWithoutExtension(f.Name),
-                Url = AdamContext.Site.ContentPath + directoryName + f.Name
+                Url =  url,// /*AdamContext.Site.ContentPath*/ Path.Combine(directoryName, f.Name).Forwardslash(),
             };
         }
 

@@ -15,8 +15,8 @@ namespace IntegrationSamples.SxcEdit01.Adam
         public override AdamItemDto Create(ToSic.Sxc.Adam.File<TFolderId, TFileId> original)
         {
             var item = base.Create(original);
-            if (item is AdamItemDto<TFolderId, TFolderId> typed)
-                item.Path = typed.Id.ToString()?.Replace("wwwroot\\", ""); // string.Format("todo/{0}/todo/{1}", state.Context.Site.Id, typed.Id);
+            //if (item is AdamItemDto<TFolderId, TFolderId> typed)
+            //    item.Path = typed.Id.ToString()?.Replace("wwwroot\\", ""); // string.Format("todo/{0}/todo/{1}", state.Context.Site.Id, typed.Id);
 
             return item;
         }
@@ -30,5 +30,6 @@ namespace IntegrationSamples.SxcEdit01.Adam
             return item;
         }
 
+        public override string AdamBaseUrl => "/";
     }
 }
