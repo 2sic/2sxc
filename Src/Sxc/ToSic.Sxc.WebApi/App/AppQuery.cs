@@ -30,7 +30,7 @@ namespace ToSic.Sxc.WebApi.App
 
         #region In-Container-Context Queries
 
-        internal Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(int? appId, string name, bool includeGuid, string stream)
+        public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(int? appId, string name, bool includeGuid, string stream)
         {
             var wrapLog = Log.Call($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
 
@@ -51,7 +51,7 @@ namespace ToSic.Sxc.WebApi.App
         #region Public Queries
 
 
-        internal Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(string appPath, string name, string stream)
+        public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(string appPath, string name, string stream)
         {
             var wrapLog = Log.Call($"path:{appPath}, name:{name}");
             if (string.IsNullOrEmpty(name))
