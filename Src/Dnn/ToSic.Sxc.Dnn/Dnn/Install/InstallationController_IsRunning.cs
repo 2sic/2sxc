@@ -3,7 +3,7 @@ using System.Web.Hosting;
 
 namespace ToSic.Sxc.Dnn.Install
 {
-    public partial class InstallationController
+    public partial class DnnInstallationController
     {
         private bool IsUpgradeComplete(string version, string note = "")
         {

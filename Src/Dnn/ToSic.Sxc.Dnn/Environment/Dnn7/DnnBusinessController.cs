@@ -88,7 +88,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public string UpgradeModule(string version)
         {
             Log.Add($"upgrade module - start for v:{version}");
-            var res = new InstallationController().UpgradeModule(version);
+            var res = new DnnInstallationController().UpgradeModule(version);
             Log.Add($"result:{res}");
             DnnLogging.LogToDnn("Upgrade", "ok", Log, force:true); // always log, this often causes hidden problems
             return res;

@@ -65,7 +65,7 @@ namespace ToSic.SexyContent
             services.TryAddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
             services.TryAddTransient<DnnDynamicCodeRoot>();
             services.TryAddTransient<IPlatformModuleUpdater, DnnModuleUpdater>();
-            services.TryAddTransient<IEnvironmentInstaller, InstallationController>();
+            services.TryAddTransient<IEnvironmentInstaller, DnnInstallationController>();
 
             // ADAM 
             services.TryAddTransient<IAdamFileSystem<int, int>, DnnAdamFileSystem>();

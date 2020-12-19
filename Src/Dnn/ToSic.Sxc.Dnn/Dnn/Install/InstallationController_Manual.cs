@@ -14,7 +14,7 @@ using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.Sxc.Dnn.Install
 {
-    public partial class InstallationController
+    public partial class DnnInstallationController
     {
 
         public bool ResumeAbortedUpgrade()

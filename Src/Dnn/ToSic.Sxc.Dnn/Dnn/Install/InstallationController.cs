@@ -10,7 +10,7 @@ using Exception = System.Exception;
 
 namespace ToSic.Sxc.Dnn.Install
 {
-    public partial class InstallationController: HasLog, IEnvironmentInstaller
+    public partial class DnnInstallationController: HasLog, IEnvironmentInstaller
     {
         public bool SaveUnimportantDetails = true;
 
@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Dnn.Install
         /// <summary>
         /// Instance initializers...
         /// </summary>
-        public InstallationController(): base("Dnn.InstCo")
+        public DnnInstallationController(): base("Dnn.InstCo")
         {
             _installLogger = new DnnInstallLogger(SaveUnimportantDetails);
             History.Add("installation", Log);
