@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Http;
 using ToSic.Sxc.Web;
 
 // ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.DotNetCore.Web
+namespace ToSic.Sxc.DotNet
 {
 
-    public class NetCoreHttp : HttpAbstractionBase, IHttp
+    public class HttpNetCore : HttpAbstractionBase, IHttp
     {
-        public NetCoreHttp(IHttpContextAccessor contextAccessor) => Current = contextAccessor.HttpContext;
+        public HttpNetCore(IHttpContextAccessor contextAccessor) => Current = contextAccessor.HttpContext;
 
         public override NameValueCollection QueryStringParams
         {

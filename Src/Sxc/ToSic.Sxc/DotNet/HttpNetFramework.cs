@@ -1,16 +1,17 @@
-﻿using System.Web;
+﻿#if NETFRAMEWORK
+using System.Web;
 using System.Collections.Specialized;
 using ToSic.Sxc.Web;
 
 
-namespace ToSic.Sxc.WebForms.Web
+namespace ToSic.Sxc.DotNet
 {
-    public class WebFormsHttp: HttpAbstractionBase, IHttp
+    public class HttpNetFramework: HttpAbstractionBase, IHttp
     {
         /// <summary>
         /// Empty constructor for DI
         /// </summary>
-        public WebFormsHttp() => Current = HttpContext.Current;
+        public HttpNetFramework() => Current = HttpContext.Current;
 
         #region Request and properties thereof
 
@@ -30,3 +31,4 @@ namespace ToSic.Sxc.WebForms.Web
 
     }
 }
+#endif

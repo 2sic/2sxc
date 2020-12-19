@@ -8,6 +8,7 @@ using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.DotNet;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
@@ -70,7 +71,7 @@ namespace ToSic.Sxc
             services.TryAddTransient<AdamMetadataMaker>();
 
             // WIP - add net-core specific stuff
-            services.AddSxcNetCore();
+            services.AddNetVariations();
 
             // Add possibly missing fallbacks
             services.AddSxcCoreFallbackServices();
@@ -78,10 +79,13 @@ namespace ToSic.Sxc
             return services;
         }
 
-        public static IServiceCollection AddSxcNetCore(this IServiceCollection services)
+        public static IServiceCollection AddNetVariations(this IServiceCollection services)
         {
 #if NETSTANDARD
-            services.TryAddTransient<IHttp, ToSic.Sxc.DotNetCore.Web.NetCoreHttp>();
+            services.TryAddTransient<IHttp, HttpNetCore>();
+#else
+            // WebForms implementations
+            services.TryAddScoped<IHttp, HttpNetFramework>();
 #endif
             return services;
         }
