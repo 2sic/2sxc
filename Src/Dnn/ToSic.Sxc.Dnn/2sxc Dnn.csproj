@@ -93,10 +93,10 @@
     <Compile Include="Dnn940\WebApiHttpControllerActivator.cs" />
     <Compile Include="Dnn\INeedsDynCodeContext.cs" />
     <Compile Include="Dnn\IHasDynCodeContext.cs" />
-    <Compile Include="Dnn\Install\InstallationController_IsRunning.cs" />
-    <Compile Include="Dnn\Install\InstallationController_Manual.cs" />
-    <Compile Include="Dnn\Install\InstallationController_Messages.cs" />
-    <Compile Include="Dnn\Install\InstallationController_Statics.cs" />
+    <Compile Include="Dnn\Install\DnnInstallationController_IsRunning.cs" />
+    <Compile Include="Dnn\Install\DnnInstallationController_Manual.cs" />
+    <Compile Include="Dnn\Install\DnnInstallationController_Messages.cs" />
+    <Compile Include="Dnn\Install\DnnInstallationController_Statics.cs" />
     <Compile Include="Dnn\Pages\ModuleWithContent.cs" />
     <Compile Include="Dnn\Pages\Pages.cs" />
     <Compile Include="Dnn\Run\ContextOfBlockExtensions.cs" />
@@ -128,7 +128,7 @@
     <Compile Include="Dnn\ImportExport\DnnImportExportEnvironment.cs" />
     <Compile Include="Dnn\ImportExport\DnnXmlExporter.cs" />
     <Compile Include="Dnn\Install\Helpers.cs" />
-    <Compile Include="Dnn\Install\InstallationController.cs" />
+    <Compile Include="Dnn\Install\DnnInstallationController.cs" />
     <Compile Include="Dnn\Install\DnnFileLock.cs" />
     <Compile Include="Dnn\Install\DnnInstallLogger.cs" />
     <Compile Include="Dnn\Install\InstallVersion.cs" />
