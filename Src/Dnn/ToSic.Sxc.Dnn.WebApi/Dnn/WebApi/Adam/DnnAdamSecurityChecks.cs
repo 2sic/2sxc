@@ -11,6 +11,8 @@ namespace ToSic.Sxc.Dnn.WebApi
 {
     public class DnnAdamSecurityChecks: AdamSecurityChecksBase
     {
+        public DnnAdamSecurityChecks() : base(DnnConstants.LogName) { }
+
         /// <summary>
         /// Helper to check extension based on DNN settings
         /// </summary>

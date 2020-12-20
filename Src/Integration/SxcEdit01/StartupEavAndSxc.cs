@@ -59,7 +59,6 @@ namespace IntegrationSamples.SxcEdit01
         {
             // ADAM stuff
             services.TryAddTransient<ISite, IntSite>();
-            services.TryAddTransient<AdamSecurityChecksBase, IntAdamSecurityChecks>();
             services.TryAddTransient<IAdamFileSystem<string, string>, IntAdamFileSystem>();
             services.TryAddTransient(typeof(AdamItemDtoMaker<,>), typeof(IntAdamItemDtoMaker<,>));
             return services;

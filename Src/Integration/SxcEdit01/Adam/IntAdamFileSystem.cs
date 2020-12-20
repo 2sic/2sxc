@@ -74,7 +74,7 @@ namespace IntegrationSamples.SxcEdit01.Adam
             if (path.Contains("..")) throw new ArgumentException("path may not contain ..", nameof(path));
             // check if it already has the root path attached, otherwise add
             path = path.StartsWith(AdamContext.Site.ContentPath) ? path : Path.Combine(AdamContext.Site.ContentPath, path);
-            path = path.Replace("//", "/").Replace("\\\\", "\\");
+            // path = path.Replace("//", "/").Replace("\\\\", "\\");
             return _serverPaths.FullContentPath(path);
         }
 

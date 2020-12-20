@@ -83,7 +83,10 @@ namespace ToSic.Sxc.WebApi
 
         public static IServiceCollection AddAdamWebApi<TFolder, TFile>(this IServiceCollection services)
         {
-            // Adam
+            // Adam Helpers - these will usually already be set from external
+            services.TryAddTransient<AdamSecurityChecksBase, AdamSecurityChecksBasic>();
+
+            // Adam Controllers etc.
             services.TryAddTransient(typeof(AdamAppContext<,>));
             services.TryAddTransient(typeof(AdamState<,>));
             services.TryAddTransient(typeof(HyperlinkBackend<,>));

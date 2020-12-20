@@ -15,7 +15,7 @@ namespace ToSic.Sxc.WebApi.Adam
     {
         #region DI / Constructor
 
-        protected AdamSecurityChecksBase() : base("Sxc.TnScCk") { }
+        protected AdamSecurityChecksBase(string logPrefix) : base("Sxc.TnScCk") { }
 
         internal AdamSecurityChecksBase Init(AdamState adamState, bool usePortalRoot, ILog parentLog)
         {
