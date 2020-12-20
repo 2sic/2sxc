@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ToSic.Sxc.Adam.FileSystem
+namespace ToSic.Sxc.Adam
 {
-    interface IAdamPaths
+    public interface IAdamPaths
     {
+        string PhysicalPath();
     }
 }

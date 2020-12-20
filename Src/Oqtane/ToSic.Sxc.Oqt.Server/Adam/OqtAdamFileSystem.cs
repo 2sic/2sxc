@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             FolderRepository = folderRepository;
         }
 
-        public IAdamFileSystem<int, int> Init(AdamAppContext<int, int> adamContext, ILog parentLog)
+        public IAdamFileSystem<int, int> Init(AdamManager<int, int> adamContext, ILog parentLog)
         {
             Log.LinkTo(parentLog);
             var wrapLog = Log.Call();
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             return this;
         }
 
-        protected AdamAppContext<int, int> AdamContext;
+        protected AdamManager<int, int> AdamContext;
 
         #endregion
 

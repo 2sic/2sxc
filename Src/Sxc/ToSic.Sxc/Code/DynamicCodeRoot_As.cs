@@ -65,12 +65,12 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public IFolder AsAdam(IEntity entity, string fieldName)
         {
-            if (_adamAppContext == null)
-                _adamAppContext = GetService<AdamAppContext>()
+            if (_adamManager == null)
+                _adamManager = GetService<AdamManager>()
                     .Init(Block.Context, CompatibilityLevel, Log);
-            return _adamAppContext.FolderOfField(entity.EntityGuid, fieldName);
+            return _adamManager.FolderOfField(entity.EntityGuid, fieldName);
         }
-        private AdamAppContext _adamAppContext;
+        private AdamManager _adamManager;
 
         #endregion
     }

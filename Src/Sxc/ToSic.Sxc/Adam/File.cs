@@ -10,9 +10,9 @@ namespace ToSic.Sxc.Adam
 #pragma warning restore 618
         IFile
     {
-        private AdamAppContext AdamContext { get; }
+        private AdamManager AdamContext { get; }
 
-        public File(AdamAppContext adamContext)
+        public File(AdamManager adamContext)
         {
             AdamContext = adamContext;
         }

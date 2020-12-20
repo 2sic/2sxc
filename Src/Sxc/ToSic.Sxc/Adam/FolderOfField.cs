@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Adam
     public class FolderOfField<TFolderId, TFileId> : Folder<TFolderId, TFileId>
     {
         //public ContainerBase AdamOfField { get; set; }
-        public FolderOfField(AdamAppContext<TFolderId, TFileId> adamContext, Guid entityGuid, string fieldName) 
+        public FolderOfField(AdamManager<TFolderId, TFileId> adamContext, Guid entityGuid, string fieldName) 
             : base(adamContext)
         {
             var adamOfField = new AdamOfField<TFolderId, TFileId>(AdamContext, entityGuid, fieldName);

@@ -69,7 +69,7 @@ namespace ToSic.SexyContent
 
             // ADAM 
             services.TryAddTransient<IAdamFileSystem<int, int>, DnnAdamFileSystem>();
-            services.TryAddTransient<AdamAppContext, AdamAppContext<int, int>>();
+            services.TryAddTransient<AdamManager, AdamManager<int, int>>();
 
             // Settings
             services.TryAddTransient<IUiContextBuilder, DnnUiContextBuilder>();

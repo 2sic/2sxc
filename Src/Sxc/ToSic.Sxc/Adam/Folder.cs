@@ -7,9 +7,9 @@ namespace ToSic.Sxc.Adam
 
     public class Folder<TFolderId, TFileId> : Eav.Apps.Assets.Folder<TFolderId, TFileId>, IFolder
     {
-        protected AdamAppContext<TFolderId, TFileId> AdamContext { get; set; }
+        protected AdamManager<TFolderId, TFileId> AdamContext { get; set; }
 
-        public Folder(AdamAppContext<TFolderId, TFileId> adamContext)
+        public Folder(AdamManager<TFolderId, TFileId> adamContext)
         {
             AdamContext = adamContext;
         }

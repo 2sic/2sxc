@@ -7,15 +7,15 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Adam
 {
-    public class AdamAppContext<TFolderId, TFileId>: AdamAppContext
+    public class AdamManager<TFolderId, TFileId>: AdamManager
     {
 
         #region Constructor / DI
-        public AdamAppContext(Lazy<AppRuntime> appRuntime, Lazy<AdamMetadataMaker> metadataMaker) : base(appRuntime, metadataMaker, "Adm.ApCxTT")
+        public AdamManager(Lazy<AppRuntime> appRuntime, Lazy<AdamMetadataMaker> metadataMaker) : base(appRuntime, metadataMaker, "Adm.ApCxTT")
         {
         }
 
-        public override AdamAppContext Init(IContextOfApp ctx, int compatibility, ILog parentLog)
+        public override AdamManager Init(IContextOfApp ctx, int compatibility, ILog parentLog)
         {
             base.Init(ctx, compatibility, parentLog);
             AdamFs = AppRuntime.ServiceProvider.Build<IAdamFileSystem<TFolderId, TFileId>>()

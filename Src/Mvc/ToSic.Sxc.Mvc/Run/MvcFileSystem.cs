@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Mvc.Run
 
         public MvcFileSystem(IServerPaths serverPaths) : base("Dnn.FilSys") => _serverPaths = serverPaths;
 
-        public IAdamFileSystem<string, string> Init(AdamAppContext<string, string> adamContext, ILog parentLog)
+        public IAdamFileSystem<string, string> Init(AdamManager<string, string> adamContext, ILog parentLog)
         {
             Log.LinkTo(parentLog);
             AdamContext = adamContext;
@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Mvc.Run
         }
 
 
-        protected AdamAppContext<string, string> AdamContext;
+        protected AdamManager<string, string> AdamContext;
 
         #endregion
         // #todo MVC

@@ -22,14 +22,14 @@ namespace ToSic.Sxc.Adam
         private readonly IServerPaths _serverPaths;
         private readonly ISite _site;
 
-        public IAdamFileSystem<string, string> Init(AdamAppContext<string, string> adamContext, ILog parentLog)
+        public IAdamFileSystem<string, string> Init(AdamManager<string, string> adamContext, ILog parentLog)
         {
             Log.LinkTo(parentLog);
             AdamContext = adamContext;
             return this;
         }
 
-        protected AdamAppContext<string, string> AdamContext;
+        protected AdamManager<string, string> AdamContext;
 
         #endregion
 

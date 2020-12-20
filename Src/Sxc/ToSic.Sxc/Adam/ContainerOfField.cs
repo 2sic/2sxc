@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Adam
         private readonly Guid _entityGuid;
         private readonly string _fieldName;
 
-        public AdamOfField(AdamAppContext<TFolderId, TFileId> appContext, Guid eGuid, string fName) : base(appContext)
+        public AdamOfField(AdamManager<TFolderId, TFileId> manager, Guid eGuid, string fName) : base(manager)
         {
             _entityGuid = eGuid;
             _fieldName = fName;
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Adam
 
         protected override string GeneratePath(string subFolder)
             => Configuration.ItemFolderMask
-                .Replace("[AdamRoot]", AppContext.Path)
+                .Replace("[AdamRoot]", Manager.Path)
                 .Replace("[Guid22]", Mapper.GuidCompress(_entityGuid))
                 .Replace("[FieldName]", _fieldName)
                 .Replace("[SubFolder]", subFolder) // often blank, so it will just be removed

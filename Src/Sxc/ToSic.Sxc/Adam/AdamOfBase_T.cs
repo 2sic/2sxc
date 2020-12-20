@@ -2,11 +2,11 @@
 {
     public abstract class AdamOfBase<TFolderId, TFileId>: ContainerBase
     {
-        protected AdamOfBase(AdamAppContext<TFolderId, TFileId> appContext)
+        protected AdamOfBase(AdamManager<TFolderId, TFileId> manager)
         {
-            AppContext = appContext;
+            Manager = manager;
         }
-        public readonly AdamAppContext<TFolderId, TFileId> AppContext;
+        public readonly AdamManager<TFolderId, TFileId> Manager;
 
 
         /// <summary>
@@ -16,7 +16,7 @@
         /// Will create the folder if it does not exist
         /// </remarks>
         internal Folder<TFolderId, TFileId> Folder(string subFolder, bool autoCreate)
-            => AppContext.Folder(GeneratePath(subFolder), autoCreate);
+            => Manager.Folder(GeneratePath(subFolder), autoCreate);
 
 
         /// <summary>

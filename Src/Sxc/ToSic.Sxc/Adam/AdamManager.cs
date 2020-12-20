@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Adam
     /// The app-context of ADAM
     /// In charge of managing assets inside this app
     /// </summary>
-    public abstract class AdamAppContext: HasLog, IContextAdamMaybe, ICompatibilityLevel
+    public abstract class AdamManager: HasLog, IContextAdamMaybe, ICompatibilityLevel
     {
         public AdamMetadataMaker MetadataMaker => _metadataMakerLazy.Value;
         private readonly Lazy<AdamMetadataMaker> _metadataMakerLazy;
@@ -25,13 +25,13 @@ namespace ToSic.Sxc.Adam
 
         public ISite Site { get; private set; }
         
-        protected AdamAppContext(Lazy<AppRuntime> appRuntime, Lazy<AdamMetadataMaker> metadataMakerLazy, string logName) : base(logName ?? "Adm.AppCtx")
+        protected AdamManager(Lazy<AppRuntime> appRuntime, Lazy<AdamMetadataMaker> metadataMakerLazy, string logName) : base(logName ?? "Adm.AppCtx")
         {
             _appRuntime = appRuntime;
             _metadataMakerLazy = metadataMakerLazy;
         }
 
-        public virtual AdamAppContext Init(IContextOfApp ctx, int compatibility, ILog parentLog)
+        public virtual AdamManager Init(IContextOfApp ctx, int compatibility, ILog parentLog)
         {
             Log.LinkTo(parentLog);
             AppContext = ctx;

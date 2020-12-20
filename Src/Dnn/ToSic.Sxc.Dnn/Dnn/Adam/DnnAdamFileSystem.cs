@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Dnn.Adam
 
         public DnnAdamFileSystem(): base("Dnn.FilSys") { }
 
-        public IAdamFileSystem<int, int> Init(AdamAppContext<int, int> adamContext, ILog parentLog)
+        public IAdamFileSystem<int, int> Init(AdamManager<int, int> adamContext, ILog parentLog)
         {
             Log.LinkTo(parentLog);
             var wrapLog = Log.Call();
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Dnn.Adam
         }
 
 
-        protected AdamAppContext<int, int> AdamContext;
+        protected AdamManager<int, int> AdamContext;
 
         #endregion
 

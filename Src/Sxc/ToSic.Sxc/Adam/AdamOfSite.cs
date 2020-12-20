@@ -6,7 +6,7 @@
     /// </summary>
     public class AdamOfSite<TFolderId, TFileId>: AdamOfBase<TFolderId, TFileId>
     {
-        public AdamOfSite(AdamAppContext<TFolderId, TFileId> appContext) : base(appContext)
+        public AdamOfSite(AdamManager<TFolderId, TFileId> manager) : base(manager)
         {
         }
 
