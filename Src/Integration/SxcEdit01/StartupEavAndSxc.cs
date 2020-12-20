@@ -59,6 +59,7 @@ namespace IntegrationSamples.SxcEdit01
         {
             // ADAM stuff
             services.TryAddTransient<ISite, IntSite>();
+            services.TryAddTransient<IAdamPaths, AdamPathsWwwroot>();
             return services;
         }
 

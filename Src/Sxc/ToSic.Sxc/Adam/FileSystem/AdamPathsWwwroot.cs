@@ -6,9 +6,9 @@ namespace ToSic.Sxc.Adam
     /// <summary>
     /// Basic AdamPaths resolver, assumes that files are in wwwroot/adam for now
     /// </summary>
-    public class AdamPathsBasic: AdamPathsBase
+    public class AdamPathsWwwroot: AdamPathsBase
     {
-        public AdamPathsBasic(IServerPaths serverPaths) : base(serverPaths, LogNames.Basic)
+        public AdamPathsWwwroot(IServerPaths serverPaths) : base(serverPaths, LogNames.Basic)
         {
         }
 

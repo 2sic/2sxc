@@ -6,7 +6,7 @@ using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Adam
 {
-    public abstract class AdamPathsBase: HasLog, IAdamPaths
+    public class AdamPathsBase: HasLog, IAdamPaths
     {
         #region DI Constructor & Init
 
@@ -26,10 +26,6 @@ namespace ToSic.Sxc.Adam
 
         #endregion
 
-        // todo: continue here
-        // test
-        // continue with the other commands
-
         public string PhysicalPath(string path)
         {
             if (path.Contains("..")) throw new ArgumentException("path may not contain ..", nameof(path));
@@ -40,23 +36,12 @@ namespace ToSic.Sxc.Adam
 
         public string RelativeFromAdam(string path)
         {
-            var pathForSearch = path.Forwardslash();
-            var adamPosition = pathForSearch.IndexOf("adam/", StringComparison.InvariantCultureIgnoreCase);
-            return adamPosition < 0 
+            var adamPosition = path.Forwardslash().IndexOf("adam/", StringComparison.InvariantCultureIgnoreCase);
+            return adamPosition <= 0 
                 ? path 
                 : path.Substring(adamPosition);
         }
 
-        //public string PhysicalPath(IAsset asset)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         public virtual string Url(string path) => Path.Combine(AdamManager.Site.ContentPath, path).Forwardslash();
-
-        //public string Url(IAsset asset)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }
