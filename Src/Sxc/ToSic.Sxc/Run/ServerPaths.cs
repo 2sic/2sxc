@@ -28,8 +28,8 @@ namespace ToSic.Sxc.Run
         /// <inheritdoc />
         public string FullAppPath(string virtualPath) => MapContentPath(virtualPath);
 
-        /// <inheritdoc />
-        public string FullSystemPath(string virtualPath) => MapContentPath(virtualPath);
+        ///// <inheritdoc />
+        //public string FullSystemPath(string virtualPath) => MapContentPath(virtualPath);
 
         /// <inheritdoc />
         public string FullContentPath(string virtualPath) => MapContentPath(virtualPath);

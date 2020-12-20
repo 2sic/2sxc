@@ -1,22 +1,23 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.Repositories;
-using ToSic.Eav.Run;
+﻿//using System.Collections.Generic;
+//using ToSic.Eav.Repositories;
+//using ToSic.Eav.Run;
 
-namespace ToSic.Sxc.Mvc.Run
-{
-    public class MvcGlobalFolderRepository: FolderBasedRepository
-    {
-        #region Constructor and DI
+//namespace ToSic.Sxc.Mvc.Run
+//{
+//    public class MvcGlobalFolderRepository: FolderBasedRepository
+//    {
+//        #region Constructor and DI
 
-        public MvcGlobalFolderRepository(IServerPaths serverPaths) => _serverPaths = serverPaths;
+//        public MvcGlobalFolderRepository(IServerPaths serverPaths) => _serverPaths = serverPaths;
 
-        private readonly IServerPaths _serverPaths;
+//        private readonly IServerPaths _serverPaths;
 
-        #endregion
+//        #endregion
 
-        public override List<string> RootPaths => new List<string>
-        {
-            _serverPaths.FullSystemPath("wwwroot/System/Sxc/.data"),
-        };
-    }
-}
+//        public override List<string> RootPaths => new List<string>
+//        {
+//            // todo: fix, as FullSystemPath should now come from Configuration
+//            //_serverPaths.FullSystemPath("wwwroot/System/Sxc/.data"),
+//        };
+//    }
+//}
