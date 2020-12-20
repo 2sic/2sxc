@@ -45,7 +45,8 @@ namespace ToSic.Sxc.WebApi.Adam
 
             Security = ServiceProvider.Build<AdamSecurityChecksBase>().Init(this, usePortalRoot, Log);
 
-            AdamSecurityCheckHelpers.ThrowIfAccessingRootButNotAllowed(usePortalRoot, Security.UserIsRestricted);
+            if (Security.MustThrowIfAccessingRootButNotAllowed(usePortalRoot, out var exception))
+                throw exception;
 
             Log.Add("check if feature enabled");
             if (Security.UserIsRestricted && !Eav.Configuration.Features.Enabled(FeaturesForRestrictedUsers))

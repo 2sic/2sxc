@@ -5,6 +5,7 @@ using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security;
+using ToSic.Eav.Security.Files;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
 using IAsset = ToSic.Eav.Apps.Assets.IAsset;
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.WebApi.Adam
     {
         #region DI / Constructor
 
-        protected AdamSecurityChecksBase(string logPrefix) : base("Sxc.TnScCk") { }
+        protected AdamSecurityChecksBase(string logPrefix) : base($"{logPrefix}.TnScCk") { }
 
         internal AdamSecurityChecksBase Init(AdamState adamState, bool usePortalRoot, ILog parentLog)
         {
@@ -58,7 +59,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 return false;
             }
 
-            if (AdamSecurityCheckHelpers.IsKnownRiskyExtension(fileName))
+            if (FileNames.IsKnownRiskyExtension(fileName))// AdamSecurityCheckHelpers.IsKnownRiskyExtension(fileName))
             {
                 preparedException = HttpException.NotAllowedFileType(fileName, "This is a known risky file type.");
                 return false;
@@ -137,7 +138,30 @@ namespace ToSic.Sxc.WebApi.Adam
         internal bool SuperUserOrAccessingItemFolder(string path, out HttpExceptionAbstraction preparedException)
         {
             preparedException = null;
-            return !UserIsRestricted || AdamSecurityCheckHelpers.DestinationIsInItem(AdamState.ItemGuid, AdamState.ItemField, path, out preparedException);
+            return !UserIsRestricted || DestinationIsInItem(AdamState.ItemGuid, AdamState.ItemField, path, out preparedException);
         }
+
+        private static bool DestinationIsInItem(Guid guid, string field, string path, out HttpExceptionAbstraction preparedException)
+        {
+            var inAdam = Sxc.Adam.Security.PathIsInItemAdam(guid, field, path);
+            preparedException = inAdam
+                ? null
+                : HttpException.PermissionDenied("Can't access a resource which is not part of this item.");
+            return inAdam;
+        }
+
+
+        internal bool MustThrowIfAccessingRootButNotAllowed(bool usePortalRoot, out HttpExceptionAbstraction preparedException)
+        {
+            if (usePortalRoot && UserIsRestricted)
+            {
+                preparedException = HttpException.BadRequest("you may only create draft-data, so file operations outside of ADAM is not allowed");
+                return true;
+            }
+
+            preparedException = null;
+            return false;
+        }
+
     }
 }

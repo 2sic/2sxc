@@ -7,7 +7,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    public class AdamTransUpload<TFolderId, TFileId> : AdamTransactionBase<AdamTransUpload<TFolderId, TFileId>, TFolderId, TFileId>
+    public partial class AdamTransUpload<TFolderId, TFileId>: AdamTransactionBase<AdamTransUpload<TFolderId, TFileId>, TFolderId, TFileId>
     {
         public AdamTransUpload(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextResolver ctxResolver) : base(adamState, ctxResolver, "Adm.TrnUpl") { }
 
@@ -72,7 +72,7 @@ namespace ToSic.Sxc.WebApi.Adam
             // note 2018-04-20 2dm: can't do this for wysiwyg, as it doesn't have a setting for allowed file-uploads
             var additionalFilter = State.Attribute.Metadata.GetBestValue<string>("FileFilter");
             if (!string.IsNullOrWhiteSpace(additionalFilter)
-                && !new AdamSecurityCheckHelpers().Init(Log).CustomFileFilterOk(additionalFilter, fileName))
+                && !CustomFileFilterOk(additionalFilter, fileName))
                 throw HttpException.NotAllowedFileType(fileName, "field has custom file-filter, which doesn't match");
 
             #endregion

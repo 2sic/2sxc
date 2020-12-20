@@ -1,52 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
-using ToSic.Eav.Logging;
-using ToSic.Eav.Security.Files;
-using ToSic.Eav.WebApi.Errors;
+using System.Threading.Tasks;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    internal class AdamSecurityCheckHelpers: HasLog<AdamSecurityCheckHelpers>
+    public partial class AdamTransUpload<TFolderId, TFileId>
     {
-        #region Constructors / DI
-
-        public AdamSecurityCheckHelpers() : base("Sxc.AdmSec")
-        {
-        }
-
-
-        #endregion
-
-        #region Simple Static Checks
-
-        
-
-
-        internal static bool DestinationIsInItem(Guid guid, string field, string path, out HttpExceptionAbstraction preparedException)
-        {
-            var inAdam = Sxc.Adam.Security.PathIsInItemAdam(guid, field, path);
-            preparedException = inAdam
-                ? null
-                : HttpException.PermissionDenied("Can't access a resource which is not part of this item.");
-            return inAdam;
-        }
-
-        //[AssertionMethod]
-        internal static bool IsKnownRiskyExtension(string fileName)
-            => FileNames.IsKnownRiskyExtension(fileName);
-
-        //[AssertionMethod]
-        internal static void ThrowIfAccessingRootButNotAllowed(bool usePortalRoot, bool userIsRestricted)
-        {
-            if (usePortalRoot && userIsRestricted)
-                throw HttpException.BadRequest("you may only create draft-data, so file operations outside of ADAM is not allowed");
-        }
-
-
-        #endregion
-
         #region More Checks
 
         internal bool CustomFileFilterOk(string additionalFilter, string fileName)
@@ -63,7 +26,7 @@ namespace ToSic.Sxc.WebApi.Adam
             {
                 // just a-z characters
                 if (!hasNonAzChars.IsMatch(f))
-                    if (string.Equals(extension,f, StringComparison.InvariantCultureIgnoreCase))
+                    if (string.Equals(extension, f, StringComparison.InvariantCultureIgnoreCase))
                         return wrapLog($"filter {f} matched filename {fileName}", true);
                     else
                         continue;
@@ -92,5 +55,6 @@ namespace ToSic.Sxc.WebApi.Adam
         }
 
         #endregion
+
     }
 }
