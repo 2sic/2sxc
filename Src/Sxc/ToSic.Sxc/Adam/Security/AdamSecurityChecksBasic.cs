@@ -19,6 +19,6 @@ namespace ToSic.Sxc.Adam
         /// <returns></returns>
         public override bool SiteAllowsExtension(string fileName) => true;
 
-        public override bool CanEditFolder(Eav.Apps.Assets.IAsset item) => AdamState.Context.UserMayEdit;
+        public override bool CanEditFolder(Eav.Apps.Assets.IAsset item) => AdamContext.Context.UserMayEdit;
     }
 }

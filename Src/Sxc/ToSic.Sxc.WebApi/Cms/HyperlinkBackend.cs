@@ -13,11 +13,11 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public class HyperlinkBackend<TFolderId, TFileId>: WebApiBackendBase<HyperlinkBackend<TFolderId, TFileId>>
     {
-        private readonly Lazy<AdamState<TFolderId, TFileId>> _adamState;
+        private readonly Lazy<AdamContext<TFolderId, TFileId>> _adamState;
         private readonly IContextResolver _ctxResolver;
-        private AdamState<TFolderId, TFileId> AdamState => _adamState.Value;
+        private AdamContext<TFolderId, TFileId> AdamContext => _adamState.Value;
 
-        public HyperlinkBackend(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextResolver ctxResolver, IServiceProvider serviceProvider) : base(serviceProvider, "Bck.HypLnk")
+        public HyperlinkBackend(Lazy<AdamContext<TFolderId, TFileId>> adamState, IContextResolver ctxResolver, IServiceProvider serviceProvider) : base(serviceProvider, "Bck.HypLnk")
         {
             _adamState = adamState;
             _ctxResolver = ctxResolver.Init(Log);
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
 				// file-check, more abilities to allow
 				// this will already do a ensure-or-throw inside it if outside of adam
-                var adamCheck = AdamState; // new AdamState<int, int>();
+                var adamCheck = AdamContext; // new AdamState<int, int>();
                 adamCheck.Init(context, contentType, field, guid, isOutsideOfAdam, Log);
 				if (!adamCheck.Security.SuperUserOrAccessingItemFolder(resolved, out var exp))
 					throw exp;

@@ -9,27 +9,31 @@ using ToSic.Sxc.Context;
 namespace ToSic.Sxc.Adam
 {
     /// <summary>
-    /// The app-context of ADAM
-    /// In charge of managing assets inside this app
+    /// The Manager of ADAM
+    /// In charge of managing assets inside this app - finding them, creating them etc.
     /// </summary>
-    public abstract class AdamManager: HasLog, IContextAdamMaybe, ICompatibilityLevel
+    /// <remarks>
+    /// It's abstract, because there will be a typed implementation inheriting this
+    /// </remarks>
+    public abstract class AdamManager: HasLog, ICompatibilityLevel
     {
+        #region Constructor for inheritance
+
+        protected AdamManager(Lazy<AppRuntime> appRuntimeLazy, Lazy<AdamMetadataMaker> metadataMakerLazy, string logName) : base(logName ?? "Adm.Managr")
+        {
+            _appRuntimeLazy = appRuntimeLazy;
+            _metadataMakerLazy = metadataMakerLazy;
+        }
+        
         public AdamMetadataMaker MetadataMaker => _metadataMakerLazy.Value;
         private readonly Lazy<AdamMetadataMaker> _metadataMakerLazy;
 
-        public AppRuntime AppRuntime => _appRuntime.Value;
-        private readonly Lazy<AppRuntime> _appRuntime;
+        public AppRuntime AppRuntime => _appRuntimeLazy.Value;
+        private readonly Lazy<AppRuntime> _appRuntimeLazy;
 
+        #endregion
 
-        public IContextOfApp AppContext { get; private set; }
-
-        public ISite Site { get; private set; }
-        
-        protected AdamManager(Lazy<AppRuntime> appRuntime, Lazy<AdamMetadataMaker> metadataMakerLazy, string logName) : base(logName ?? "Adm.AppCtx")
-        {
-            _appRuntime = appRuntime;
-            _metadataMakerLazy = metadataMakerLazy;
-        }
+        #region Init
 
         public virtual AdamManager Init(IContextOfApp ctx, int compatibility, ILog parentLog)
         {
@@ -43,6 +47,14 @@ namespace ToSic.Sxc.Adam
             callLog("ready");
             return this;
         }
+        
+        public IContextOfApp AppContext { get; private set; }
+
+        public ISite Site { get; private set; }
+        
+        #endregion
+
+
 
         /// <summary>
         /// Path to the app assets

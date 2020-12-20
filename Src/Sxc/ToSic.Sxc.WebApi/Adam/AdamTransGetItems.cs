@@ -10,6 +10,6 @@ namespace ToSic.Sxc.WebApi.Adam
     /// </summary>
     public class AdamTransGetItems<TFolderId, TFileId> : AdamTransactionBase<AdamTransGetItems<TFolderId, TFileId>, TFolderId, TFileId>, IAdamTransGetItems
     {
-        public AdamTransGetItems(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextResolver ctxResolver) : base(adamState, ctxResolver, "Adm.TrnItm") { }
+        public AdamTransGetItems(Lazy<AdamContext<TFolderId, TFileId>> adamState, IContextResolver ctxResolver) : base(adamState, ctxResolver, "Adm.TrnItm") { }
     }
 }

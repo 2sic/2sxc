@@ -14,24 +14,24 @@ namespace ToSic.Sxc.WebApi.Adam
             var wrapLog = Log.Call<IList<AdamItemDto>>($"Subfolder: {subFolderName}");
 
             Log.Add("starting permissions checks");
-            if (State.Security.UserIsRestricted && !State.Security.FieldPermissionOk(GrantSets.ReadSomething))
+            if (AdamContext.Security.UserIsRestricted && !AdamContext.Security.FieldPermissionOk(GrantSets.ReadSomething))
                 return wrapLog("user is restricted, and doesn't have permissions on field - return null", null);
 
             // check that if the user should only see drafts, he doesn't see items of published data
-            if (!State.Security.UserIsNotRestrictedOrItemIsDraft(State.ItemGuid, out _))
+            if (!AdamContext.Security.UserIsNotRestrictedOrItemIsDraft(AdamContext.ItemGuid, out _))
                 return wrapLog("user is restricted (no read-published rights) and item is published - return null", null);
 
             Log.Add("first permission checks passed");
 
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
-            State.ContainerContext.Folder();
+            AdamContext.ContainerContext.Folder();
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var currentFolder = State.ContainerContext.Folder(subFolderName, false);
+            var currentFolder = AdamContext.ContainerContext.Folder(subFolderName, false);
 
             // ensure that it's super user, or the folder is really part of this item
-            if (!State.Security.SuperUserOrAccessingItemFolder(currentFolder.Path, out var exp))
+            if (!AdamContext.Security.SuperUserOrAccessingItemFolder(currentFolder.Path, out var exp))
             {
                 Log.Add("user is not super-user and folder doesn't seem to be an ADAM folder of this item - will throw");
                 throw exp;
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.WebApi.Adam
             var subfolders = currentFolder.Folders.ToList();
             var files = currentFolder.Files.ToList();
 
-            var dtoMaker = State.ServiceProvider.Build<AdamItemDtoMaker<TFolderId, TFileId>>().Init(State);
+            var dtoMaker = AdamContext.ServiceProvider.Build<AdamItemDtoMaker<TFolderId, TFileId>>().Init(AdamContext);
             var allDtos = new List<AdamItemDto>();
 
             var currentFolderDto = dtoMaker.Create(currentFolder);

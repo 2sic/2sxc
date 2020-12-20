@@ -8,23 +8,23 @@ namespace ToSic.Sxc.WebApi.Adam
 {
     public class AdamTransRename<TFolderId, TFileId> : AdamTransactionBase<AdamTransRename<TFolderId, TFileId>, TFolderId, TFileId>
     {
-        public AdamTransRename(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextResolver ctxResolver) : base(adamState, ctxResolver, "Adm.TrnRen") { }
+        public AdamTransRename(Lazy<AdamContext<TFolderId, TFileId>> adamState, IContextResolver ctxResolver) : base(adamState, ctxResolver, "Adm.TrnRen") { }
 
         public bool Rename(string parentSubfolder, bool isFolder, TFolderId folderId, TFileId fileId, string newName)
         {
             Log.Add($"");
 
-            if (!State.Security.UserIsPermittedOnField(GrantSets.WriteSomething, out var exp))
+            if (!AdamContext.Security.UserIsPermittedOnField(GrantSets.WriteSomething, out var exp))
                 throw exp;
 
             // check that if the user should only see drafts, he doesn't see items of published data
-            if (!State.Security.UserIsNotRestrictedOrItemIsDraft(State.ItemGuid, out var permissionException))
+            if (!AdamContext.Security.UserIsNotRestrictedOrItemIsDraft(AdamContext.ItemGuid, out var permissionException))
                 throw permissionException;
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var parent = State.ContainerContext.Folder(parentSubfolder, false); // as IFolder<TFolderId, TFileId>;
+            var parent = AdamContext.ContainerContext.Folder(parentSubfolder, false); // as IFolder<TFolderId, TFileId>;
 
-            var fs = State.AdamManager.AdamFs;
+            var fs = AdamContext.AdamManager.AdamFs;
             if (isFolder)
             {
                 var target = fs.GetFolder(folderId);

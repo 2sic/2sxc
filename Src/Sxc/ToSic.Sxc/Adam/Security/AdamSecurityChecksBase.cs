@@ -17,13 +17,13 @@ namespace ToSic.Sxc.Adam
 
         protected AdamSecurityChecksBase(string logPrefix) : base($"{logPrefix}.TnScCk") { }
 
-        internal AdamSecurityChecksBase Init(AdamState adamState, bool usePortalRoot, ILog parentLog)
+        internal AdamSecurityChecksBase Init(AdamContext adamContext, bool usePortalRoot, ILog parentLog)
         {
             Log.LinkTo(parentLog);
             var callLog = Log.Call<AdamSecurityChecksBase>();
-            AdamState = adamState;
+            AdamContext = adamContext;
 
-            var firstChecker = AdamState.Permissions.PermissionCheckers.First().Value;
+            var firstChecker = AdamContext.Permissions.PermissionCheckers.First().Value;
             var userMayAdminSomeFiles = firstChecker.UserMay(GrantSets.WritePublished);
             var userMayAdminSiteFiles = firstChecker.GrantedBecause == Conditions.EnvironmentGlobal ||
                                         firstChecker.GrantedBecause == Conditions.EnvironmentInstance;
@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Adam
             return callLog(null, this);
         }
 
-        internal AdamState AdamState;
+        internal AdamContext AdamContext;
         public bool UserIsRestricted;
 
         #endregion
@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Adam
             if (!UserIsRestricted || FieldPermissionOk(GrantSets.ReadPublished)) return true;
 
             // check if the data is public
-            var itm = AdamState.AppRuntime.Entities.Get(guid);
+            var itm = AdamContext.AppRuntime.Entities.Get(guid);
             if (!(itm?.IsPublished ?? false)) return true;
 
             exp = HttpException.PermissionDenied(Log.Add("user is restricted and may not see published, but item exists and is published - not allowed"));
@@ -89,13 +89,13 @@ namespace ToSic.Sxc.Adam
         internal bool FileTypeIsOkForThisField(out HttpExceptionAbstraction preparedException)
         {
             var wrapLog = Log.Call<bool>();
-            var fieldDef = AdamState.Attribute;
+            var fieldDef = AdamContext.Attribute;
             bool result;
             // check if this field exists and is actually a file-field or a string (wysiwyg) field
             if (fieldDef == null || !(fieldDef.Type != Eav.Constants.DataTypeHyperlink ||
                                       fieldDef.Type != Eav.Constants.DataTypeString))
             {
-                preparedException = HttpException.BadRequest("Requested field '" + AdamState.ItemField + "' type doesn't allow upload");
+                preparedException = HttpException.BadRequest("Requested field '" + AdamContext.ItemField + "' type doesn't allow upload");
                 Log.Add($"field type:{fieldDef?.Type} - does not allow upload");
                 result = false;
             }
@@ -128,8 +128,8 @@ namespace ToSic.Sxc.Adam
         /// </summary>
         public bool FieldPermissionOk(List<Grants> requiredGrant)
         {
-            var fieldPermissions = AdamState.ServiceProvider.Build<AppPermissionCheck>().ForAttribute(
-                AdamState.Permissions.Context, AdamState.Context.AppState, AdamState.Attribute, Log);
+            var fieldPermissions = AdamContext.ServiceProvider.Build<AppPermissionCheck>().ForAttribute(
+                AdamContext.Permissions.Context, AdamContext.Context.AppState, AdamContext.Attribute, Log);
 
             return fieldPermissions.UserMay(requiredGrant);
         }
@@ -137,7 +137,7 @@ namespace ToSic.Sxc.Adam
         internal bool SuperUserOrAccessingItemFolder(string path, out HttpExceptionAbstraction preparedException)
         {
             preparedException = null;
-            return !UserIsRestricted || DestinationIsInItem(AdamState.ItemGuid, AdamState.ItemField, path, out preparedException);
+            return !UserIsRestricted || DestinationIsInItem(AdamContext.ItemGuid, AdamContext.ItemField, path, out preparedException);
         }
 
         private static bool DestinationIsInItem(Guid guid, string field, string path, out HttpExceptionAbstraction preparedException)

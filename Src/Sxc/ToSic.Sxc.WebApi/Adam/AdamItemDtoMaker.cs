@@ -22,14 +22,14 @@ namespace ToSic.Sxc.WebApi.Adam
             _security = dependencies.Security;
         }
 
-        public AdamItemDtoMaker<TFolderId, TFileId> Init(AdamState state)
+        public AdamItemDtoMaker<TFolderId, TFileId> Init(AdamContext adamContext)
         {
-            AdamState = state;
+            AdamContext = adamContext;
             return this;
         }
 
         private readonly AdamSecurityChecksBase _security;
-        public AdamState AdamState;
+        public AdamContext AdamContext;
 
         #endregion
 
@@ -68,7 +68,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
         private bool CanEditFolder(Eav.Apps.Assets.IAsset original)
         {
-            return AdamState.UseSiteRoot
+            return AdamContext.UseSiteRoot
                 ? _security.CanEditFolder(original)
                 : ContextAllowsEdit;
         }
@@ -78,7 +78,7 @@ namespace ToSic.Sxc.WebApi.Adam
         /// </summary>
         private bool ContextAllowsEdit 
             => _contextAllowsEdit 
-               ?? (_contextAllowsEdit = !AdamState.Security.UserIsRestricted || AdamState.Security.FieldPermissionOk(GrantSets.WriteSomething)).Value;
+               ?? (_contextAllowsEdit = !AdamContext.Security.UserIsRestricted || AdamContext.Security.FieldPermissionOk(GrantSets.WriteSomething)).Value;
         private bool? _contextAllowsEdit;
 
 

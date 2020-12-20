@@ -10,11 +10,17 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Adam
 {
-    public abstract class AdamState: HasLog
+    /// <summary>
+    /// The context of ADAM operations - containing site, app, field, entity-guid etc.
+    /// </summary>
+    /// <remarks>
+    /// It's abstract, because there will be a typed implementation inheriting this
+    /// </remarks>
+    public abstract class AdamContext: HasLog
     {
         #region Constructor and DI
 
-        protected AdamState(IServiceProvider serviceProvider, string logName) : base(logName ?? "Adm.State")
+        protected AdamContext(IServiceProvider serviceProvider, string logName) : base(logName ?? "Adm.Ctx")
         {
             ServiceProvider = serviceProvider;
         }
@@ -22,14 +28,18 @@ namespace ToSic.Sxc.Adam
         public AdamSecurityChecksBase Security;
         public MultiPermissionsTypes Permissions;
 
+        #endregion
+        
+        #region Init
+        
         /// <summary>
         /// Initializes the object and performs all the initial security checks
         /// </summary>
-        public virtual AdamState Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, ILog parentLog)
+        public virtual AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, ILog parentLog)
         {
             Log.LinkTo(parentLog);
             var appId = context.AppState.AppId;
-            var callLog = Log.Call<AdamState>($"app: {context.AppState.Show()}, field:{fieldName}, guid:{entityGuid}");
+            var callLog = Log.Call<AdamContext>($"app: {context.AppState.Show()}, field:{fieldName}, guid:{entityGuid}");
             Context = context;
 
             Permissions = ServiceProvider.Build<MultiPermissionsTypes>()
@@ -55,7 +65,7 @@ namespace ToSic.Sxc.Adam
 
             if (string.IsNullOrEmpty(contentType) || string.IsNullOrEmpty(fieldName)) return callLog(null, this);
 
-            Attribute = Definition(appId, contentType, fieldName);
+            Attribute = AttributeDefinition(appId, contentType, fieldName);
             if (!Security.FileTypeIsOkForThisField(out var exp))
                 throw exp;
             return callLog(null, this);
@@ -94,9 +104,11 @@ namespace ToSic.Sxc.Adam
         };
 
 
-        private IContentTypeAttribute Definition(int appId, string contentType, string fieldName)
+        /// <summary>
+        /// try to find attribute definition - for later extra security checks
+        /// </summary>
+        private IContentTypeAttribute AttributeDefinition(int appId, string contentType, string fieldName)
         {
-            // try to find attribute definition - for later extra security checks
             var type = State.Get(appId).GetContentType(contentType);
             return type[fieldName];
         }
