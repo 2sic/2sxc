@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ToSic.Eav;
-using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Adam
 {
@@ -14,28 +12,25 @@ namespace ToSic.Sxc.Adam
     {
         #region Constructor / DI / Init
 
-        public AdamFileSystemBasic(IServerPaths serverPaths, ISite site) : base(LogNames.Basic)
+        public AdamFileSystemBasic(IAdamPaths adamPaths) : base(LogNames.Basic)
         {
-            _serverPaths = serverPaths;
-            _site = site;
+            _adamPaths = adamPaths;
         }
-        private readonly IServerPaths _serverPaths;
-        private readonly ISite _site;
+        private readonly IAdamPaths _adamPaths;
 
-        public IAdamFileSystem<string, string> Init(AdamManager<string, string> adamContext, ILog parentLog)
+        public IAdamFileSystem<string, string> Init(AdamManager<string, string> adamManager, ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            AdamContext = adamContext;
+            AdamManager = adamManager;
+            _adamPaths.Init(adamManager, Log);
             return this;
         }
 
-        protected AdamManager<string, string> AdamContext;
+        protected AdamManager<string, string> AdamManager;
 
         #endregion
 
 
-
-        // #todo MVC
         public int MaxUploadKb() => MaxUploadKbDefault;
 
         public File<string, string> GetFile(string fileId)
@@ -59,7 +54,7 @@ namespace ToSic.Sxc.Adam
             var callLog = Log.Call<File<string, string>>($"..., ..., {fileName}, {ensureUniqueName}");
             if (ensureUniqueName)
                 fileName = FindUniqueFileName(parent, fileName);
-            var fullContentPath = Path.Combine(AdamContext.Site.ContentPath, parent.Path);
+            var fullContentPath = _adamPaths.PhysicalPath(parent.Path);
             Directory.CreateDirectory(fullContentPath);
             var filePath = Path.Combine(fullContentPath, fileName);
             using (var stream = new FileStream(filePath, FileMode.Create))
@@ -69,29 +64,19 @@ namespace ToSic.Sxc.Adam
             var fileInfo = GetFile(filePath);
 
             return callLog("ok", fileInfo);
-            throw new NotImplementedException();
         }
 
         public void AddFolder(string path)
         {
-            path = PathOnDrive(path);
+            path = _adamPaths.PhysicalPath(path);
             Directory.CreateDirectory(path);
         }
 
         public bool FolderExists(string path)
         {
-            var serverPath = PathOnDrive(path);
+            var serverPath = _adamPaths.PhysicalPath(path);
             var exists = Directory.Exists(serverPath);
             return exists;
-        }
-
-        private string PathOnDrive(string path)
-        {
-            if (path.Contains("..")) throw new ArgumentException("path may not contain ..", nameof(path));
-            // check if it already has the root path attached, otherwise add
-            path = path.StartsWith(AdamContext.Site.ContentPath) ? path : Path.Combine(AdamContext.Site.ContentPath, path);
-            // path = path.Replace("//", "/").Replace("\\\\", "\\");
-            return _serverPaths.FullContentPath(path);
         }
 
         public Folder<string, string> GetFolder(string folderId) => AdamFolder(AdjustPathToSiteRoot(folderId));
@@ -104,8 +89,9 @@ namespace ToSic.Sxc.Adam
 
         private string AdjustPathToSiteRoot(string path)
         {
+            path = path.Backslash();
             return path.StartsWith("adam", StringComparison.CurrentCultureIgnoreCase)
-                ? Path.Combine(_site.ContentPath, path)
+                ? _adamPaths.PhysicalPath(path)
                 : path;
         }
 
@@ -129,10 +115,10 @@ namespace ToSic.Sxc.Adam
         {
             var callLog = Log.Call<string>($"..., {fileName}");
 
-            var folder = parentFolder; //FolderRepository.GetFolder(parentFolder.AsOqt().SysId);
+            var folder = parentFolder;
             var name = Path.GetFileNameWithoutExtension(fileName);
             var ext = Path.GetExtension(fileName);
-            for (var i = 1; i < MaxSameFileRetries && File.Exists(Path.Combine(AdamContext.Site.ContentPath, folder.Path, Path.GetFileName(fileName))); i++)
+            for (var i = 1; i < MaxSameFileRetries && File.Exists(_adamPaths.PhysicalPath(Path.Combine(folder.Path, Path.GetFileName(fileName)))); i++)
                 fileName = $"{name}-{i}{ext}";
 
             return callLog(fileName, fileName);
@@ -145,27 +131,28 @@ namespace ToSic.Sxc.Adam
 
         private Folder<string, string> AdamFolder(string path)
         {
-            var f = new DirectoryInfo(PathOnDrive(path));
+            var f = new DirectoryInfo(_adamPaths.PhysicalPath(path));
 
-            return new Folder<string, string>(AdamContext)
+            var relativePath = _adamPaths.PhysicalRelative(path);
+            return new Folder<string, string>(AdamManager)
             {
-                Path = path,
-                SysId = path,
+                Path = relativePath,
+                SysId = relativePath,
                 ParentSysId = FindParentPath(path),
                 Name = f.Name,
                 Created = f.CreationTime,
                 Modified = f.LastWriteTime,
 
-                Url = AdamContext.Site.ContentPath + path,
+                Url = _adamPaths.Url(relativePath),
             };
         }
 
         private static string FindParentPath(string path)
         {
-            var cleanedPath = path.TrimEnd('/').TrimEnd('\\');
-            var prevSlashF = cleanedPath.LastIndexOf('/');
-            var prevSlashB = cleanedPath.LastIndexOf('\\');
-            var lastSlash = prevSlashB > prevSlashF ? prevSlashB : prevSlashF;
+            var cleanedPath = path.Forwardslash().TrimEnd('/');
+            var lastSlash /*prevSlashF*/ = cleanedPath.LastIndexOf('/');
+            //var prevSlashB = cleanedPath.LastIndexOf('\\');
+            //var lastSlash = prevSlashB > prevSlashF ? prevSlashB : prevSlashF;
             var parentPath = lastSlash == -1 ? "" : cleanedPath.Substring(0, lastSlash);
             return parentPath;
         }
@@ -173,26 +160,25 @@ namespace ToSic.Sxc.Adam
 
         private File<string, string> FileToAdam(string path)
         {
-            var f = new FileInfo(PathOnDrive(path));
+            var f = new FileInfo(_adamPaths.PhysicalPath(path));
             var directoryName = f.Directory.Name;
 
-            // WIP
-            var url = "/" + path.Replace("wwwroot\\", "").Forwardslash();
+            var relativePath = _adamPaths.PhysicalRelative(path);
 
-            return new File<string, string>(AdamContext)
+            return new File<string, string>(AdamManager)
             {
                 FullName = f.Name,
                 Extension = f.Extension.TrimStart('.'),
                 Size = Convert.ToInt32(f.Length),
-                SysId = path,
+                SysId = relativePath,
                 Folder = directoryName,
-                ParentSysId = path.Replace(f.Name, ""),
-                Path = path,
+                ParentSysId = relativePath.Replace(f.Name, ""),
+                Path = relativePath,
 
                 Created = f.CreationTime,
                 Modified = f.LastWriteTime,
                 Name = Path.GetFileNameWithoutExtension(f.Name),
-                Url =  url,
+                Url =  _adamPaths.Url(relativePath),
             };
         }
 

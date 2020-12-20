@@ -1,13 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Adam
 {
     public interface IAdamPaths
     {
-        string PhysicalPath();
+        IAdamPaths Init(AdamManager adamManager, ILog parentLog);
+
+        string PhysicalPath(string path);
+
+        string PhysicalRelative(string path);
+        
+        //string PhysicalPath(IAsset asset);
+
+        string Url(string path);
+        
+        //string Url(IAsset asset);
     }
 }
