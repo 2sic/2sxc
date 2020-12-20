@@ -6,6 +6,11 @@ using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Adam
 {
+    /// <summary>
+    /// Basic implementation of the ADAM file system.
+    /// This is string-based, not with environment IDs.
+    /// It's primarily meant for standalone implementations or as a template for other integrations. 
+    /// </summary>
     public partial class AdamFileSystemBasic: AdamFileSystemBase<string, string>, IAdamFileSystem<string, string>
     {
         #region Constructor / DI / Init

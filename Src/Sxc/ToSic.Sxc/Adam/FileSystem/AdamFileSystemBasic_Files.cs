@@ -7,18 +7,21 @@ namespace ToSic.Sxc.Adam
 {
     public partial class AdamFileSystemBasic
     {
+        /// <inheritdoc />
         public File<string, string> GetFile(string fileId)
         {
             var dir = EnsurePhysicalPath(fileId);
             return ToAdamFile(dir);
         }
 
+        /// <inheritdoc />
         public List<File<string, string>> GetFiles(IFolder folder)
         {
             var dir = Directory.GetFiles(EnsurePhysicalPath(folder.Path));
             return dir.Select(ToAdamFile).ToList();
         }
 
+        /// <inheritdoc />
         public void Rename(IFile file, string newName)
         {
             var callLog = Log.Call();
@@ -26,7 +29,7 @@ namespace ToSic.Sxc.Adam
             callLog(null);
         }
 
-
+        /// <inheritdoc />
         public void Delete(IFile file)
         {
             var callLog = Log.Call();
@@ -34,6 +37,7 @@ namespace ToSic.Sxc.Adam
             callLog(null);
         }
 
+        /// <inheritdoc />
         public File<string, string> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
         {
             var callLog = Log.Call<File<string, string>>($"..., ..., {fileName}, {ensureUniqueName}");
