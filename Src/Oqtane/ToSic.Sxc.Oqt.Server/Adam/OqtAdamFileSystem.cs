@@ -70,21 +70,10 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 var path = Path.Combine(_oqtServerPaths.FullContentPath(AdamContext.Site.ContentPath), file.Path);
 
                 var currentFilePath = Path.Combine(path, file.FullName);
-                if (!System.IO.File.Exists(currentFilePath))
+                if (TryToRenameFile(newName, currentFilePath, path))
                 {
-                    callLog($"Can't rename because source file do not exists {currentFilePath}");
                     return;
                 }
-
-                var newFilePath = Path.Combine(path, newName);
-                if (!System.IO.File.Exists(newFilePath))
-                {
-                    callLog($"Can't rename because file with new name already exists {newFilePath}");
-                    return;
-                }
-
-                System.IO.File.Move(currentFilePath, newFilePath);
-                Log.Add($"File renamed {currentFilePath} to {newFilePath}");
 
                 var dnnFile = FileRepository.GetFile(file.AsOqt().SysId);
                 dnnFile.Name = newName;
@@ -97,6 +86,27 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             {
                 callLog($"Error:{e.Message}; {e.InnerException}");
             }
+        }
+
+        private bool TryToRenameFile(string newName, string fullPath, string path)
+        {
+            var callLog = Log.Call($"{newName}");
+            if (!System.IO.File.Exists(fullPath))
+            {
+                callLog($"Can't rename because source file do not exists {fullPath}");
+                return true;
+            }
+
+            var newFilePath = Path.Combine(path, newName);
+            if (!System.IO.File.Exists(newFilePath))
+            {
+                callLog($"Can't rename because file with new name already exists {newFilePath}");
+                return true;
+            }
+
+            System.IO.File.Move(fullPath, newFilePath);
+            Log.Add($"File renamed {fullPath} to {newFilePath}");
+            return false;
         }
 
         public void Delete(IFile file)

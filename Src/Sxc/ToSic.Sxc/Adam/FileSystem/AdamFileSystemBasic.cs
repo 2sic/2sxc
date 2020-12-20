@@ -45,15 +45,42 @@ namespace ToSic.Sxc.Adam
             return dir.Select(FileToAdam).ToList();
         }
 
-        public void Rename(IFile file, string newName) => throw new NotImplementedException();
+        public void Rename(IFile file, string newName)
+        {
+            var callLog = Log.Call();
+            TryToRenameFile(_adamPaths.PhysicalPath(file.Path), newName);
+            callLog(null);
+        }
 
-        public void Delete(IFile file) => throw new NotImplementedException();
+        private bool TryToRenameFile(string originalWithPath, string newName)
+        {
+            var callLog = Log.Call<bool>($"{newName}");
+            
+            if (!File.Exists(originalWithPath))
+                return callLog($"Can't rename because source file do not exists {originalWithPath}", false);
+
+            AdamPathsBase.ThrowIfPathContainsDotDot(newName);
+            var path = FindParentPath(originalWithPath);
+            var newFilePath = Path.Combine(path, newName);
+            if (File.Exists(newFilePath))
+                return callLog($"Can't rename because file with new name already exists {newFilePath}", false);
+
+            File.Move(originalWithPath, newFilePath);
+            return callLog($"File renamed", true);
+        }
+
+
+        public void Delete(IFile file)
+        {
+            var callLog = Log.Call();
+            File.Delete(_adamPaths.PhysicalPath(file.Path));
+            callLog(null);
+        }
 
         public File<string, string> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
         {
             var callLog = Log.Call<File<string, string>>($"..., ..., {fileName}, {ensureUniqueName}");
-            if (ensureUniqueName)
-                fileName = FindUniqueFileName(parent, fileName);
+            if (ensureUniqueName) fileName = FindUniqueFileName(parent, fileName);
             var fullContentPath = _adamPaths.PhysicalPath(parent.Path);
             Directory.CreateDirectory(fullContentPath);
             var filePath = Path.Combine(fullContentPath, fileName);
@@ -138,7 +165,7 @@ namespace ToSic.Sxc.Adam
             {
                 Path = relativePath,
                 SysId = relativePath,
-                ParentSysId = FindParentPath(path),
+                ParentSysId = FindParentUrl(path),
                 Name = f.Name,
                 Created = f.CreationTime,
                 Modified = f.LastWriteTime,
@@ -147,14 +174,17 @@ namespace ToSic.Sxc.Adam
             };
         }
 
-        private static string FindParentPath(string path)
+        private static string FindParentUrl(string path)
         {
             var cleanedPath = path.Forwardslash().TrimEnd('/');
-            var lastSlash /*prevSlashF*/ = cleanedPath.LastIndexOf('/');
-            //var prevSlashB = cleanedPath.LastIndexOf('\\');
-            //var lastSlash = prevSlashB > prevSlashF ? prevSlashB : prevSlashF;
-            var parentPath = lastSlash == -1 ? "" : cleanedPath.Substring(0, lastSlash);
-            return parentPath;
+            var lastSlash = cleanedPath.LastIndexOf('/');
+            return lastSlash == -1 ? "" : cleanedPath.Substring(0, lastSlash);
+        }
+        private static string FindParentPath(string path)
+        {
+            var cleanedPath = path.Backslash().TrimEnd('\\');
+            var lastSlash = cleanedPath.LastIndexOf('\\');
+            return lastSlash == -1 ? "" : cleanedPath.Substring(0, lastSlash);
         }
 
 
@@ -163,22 +193,23 @@ namespace ToSic.Sxc.Adam
             var f = new FileInfo(_adamPaths.PhysicalPath(path));
             var directoryName = f.Directory.Name;
 
+            // todo: unclear if we need both, but we need the url for the compare-if-same-path
             var relativePath = _adamPaths.RelativeFromAdam(path);
-
+            var relativeUrl = relativePath.Forwardslash();
             return new File<string, string>(AdamManager)
             {
                 FullName = f.Name,
                 Extension = f.Extension.TrimStart('.'),
                 Size = Convert.ToInt32(f.Length),
-                SysId = relativePath,
+                SysId = relativeUrl,// f.Name,
                 Folder = directoryName,
-                ParentSysId = relativePath.Replace(f.Name, ""),
+                ParentSysId = relativeUrl.Replace(f.Name, ""),
                 Path = relativePath,
 
                 Created = f.CreationTime,
                 Modified = f.LastWriteTime,
                 Name = Path.GetFileNameWithoutExtension(f.Name),
-                Url =  _adamPaths.Url(relativePath),
+                Url =  _adamPaths.Url(relativeUrl),
             };
         }
 

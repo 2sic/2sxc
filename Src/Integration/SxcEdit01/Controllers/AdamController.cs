@@ -18,7 +18,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
     /// </summary>
     [ApiController]
     [Route(WebApiConstants.DefaultRouteRoot + "/app-content/{contentType}/{guid}/{field}/")]
-    public class AdamController : IntStatefulControllerBase, IAdamController<int>
+    public class AdamController : IntStatefulControllerBase, IAdamController<string>
     {
         private readonly AdamTransUpload<string, string> _adamUpload;
         private readonly AdamTransGetItems<string, string> _adamItems;
@@ -112,16 +112,16 @@ namespace IntegrationSamples.SxcEdit01.Controllers
                 .Folder(subfolder, newFolder);
 
         [HttpGet("delete")]
-        public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot) 
+        public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, string id, bool usePortalRoot) 
             => _adamDelete
                 .Init(appId, contentType, guid, field, usePortalRoot, Log)
-                .Delete(subfolder, isFolder, id.ToString(), id.ToString());
+                .Delete(subfolder, isFolder, id, id.ToString());
 
         [HttpGet("rename")]
-        public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot) 
+        public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, string id, string newName, bool usePortalRoot) 
             => _adamRename
                 .Init(appId, contentType, guid, field, usePortalRoot, Log)
-                .Rename(subfolder, isFolder, id.ToString(), id.ToString(), newName);
+                .Rename(subfolder, isFolder, id, id.ToString(), newName);
 
         #endregion
 

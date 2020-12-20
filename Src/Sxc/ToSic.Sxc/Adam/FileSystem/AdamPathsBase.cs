@@ -26,12 +26,20 @@ namespace ToSic.Sxc.Adam
 
         #endregion
 
+        
+        
         public string PhysicalPath(string path)
         {
-            if (path.Contains("..")) throw new ArgumentException("path may not contain ..", nameof(path));
+            ThrowIfPathContainsDotDot(path);
             // check if it already has the root path attached, otherwise add
             path = path.StartsWith(AdamManager.Site.ContentPath) ? path : Path.Combine(AdamManager.Site.ContentPath, path);
             return _serverPaths.FullContentPath(path.Backslash());
+        }
+
+        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
+        public static void ThrowIfPathContainsDotDot(string path)
+        {
+            if (path.Contains("..")) throw new ArgumentException("path may not contain ..", nameof(path));
         }
 
         public string RelativeFromAdam(string path)
