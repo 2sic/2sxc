@@ -4,8 +4,11 @@ using DotNetNuke.Entities.Host;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
 using JetBrains.Annotations;
-using ToSic.Eav.Apps.Assets;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.WebApi.Adam;
+using IAsset = ToSic.Eav.Apps.Assets.IAsset;
+using IFile = ToSic.Eav.Apps.Assets.IFile;
+using IFolder = ToSic.Eav.Apps.Assets.IFolder;
 
 namespace ToSic.Sxc.Dnn.WebApi
 {

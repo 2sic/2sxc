@@ -1,10 +1,9 @@
 ﻿using System;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 
-namespace ToSic.Sxc.WebApi.Adam
+namespace ToSic.Sxc.Adam
 {
     public class AdamState<TFolderId, TFileId>: AdamState
     {

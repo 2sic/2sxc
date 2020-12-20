@@ -5,7 +5,6 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Context;
-using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Adam
 {

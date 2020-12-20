@@ -5,6 +5,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Adam
@@ -51,7 +52,7 @@ namespace ToSic.Sxc.WebApi.Adam
         /// <param name="target"></param>
         /// <param name="errPrefix"></param>
         [AssertionMethod]
-        protected void VerifySecurityAndStructure(Folder<TFolderId, TFileId> parentFolder, IAssetWithParentSysId<TFolderId> target, string errPrefix)
+        protected void VerifySecurityAndStructure(Eav.Apps.Assets.Folder<TFolderId, TFileId> parentFolder, IAssetWithParentSysId<TFolderId> target, string errPrefix)
         {
             // In case the primary file system is used (usePortalRoot) then also check higher permissions
             if (State.UseSiteRoot && !State.Security.CanEditFolder(target)) 

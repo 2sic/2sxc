@@ -2,6 +2,7 @@
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.WebApi.Adam
 {

@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav;
-using ToSic.Eav.Apps.Assets;
 
-namespace ToSic.Sxc.WebApi.Adam
+namespace ToSic.Sxc.Adam
 {
     /// <summary>
     /// This is a simple AdamSecurityChecks which doesn't know much about the environment but works to get started.
@@ -20,6 +19,6 @@ namespace ToSic.Sxc.WebApi.Adam
         /// <returns></returns>
         public override bool SiteAllowsExtension(string fileName) => true;
 
-        public override bool CanEditFolder(IAsset item) => AdamState.Context.UserMayEdit;
+        public override bool CanEditFolder(Eav.Apps.Assets.IAsset item) => AdamState.Context.UserMayEdit;
     }
 }

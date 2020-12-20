@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Adam

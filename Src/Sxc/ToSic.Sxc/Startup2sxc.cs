@@ -69,6 +69,7 @@ namespace ToSic.Sxc
 
             // Adam stuff
             services.TryAddTransient<AdamMetadataMaker>();
+            services.TryAddTransient<AdamSecurityChecksBase, AdamSecurityChecksBasic>();
 
             // WIP - add net-core specific stuff
             services.AddNetVariations();

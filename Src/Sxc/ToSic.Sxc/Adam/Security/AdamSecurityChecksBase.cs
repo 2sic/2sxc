@@ -8,9 +8,8 @@ using ToSic.Eav.Security;
 using ToSic.Eav.Security.Files;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
-using IAsset = ToSic.Eav.Apps.Assets.IAsset;
 
-namespace ToSic.Sxc.WebApi.Adam
+namespace ToSic.Sxc.Adam
 {
     public abstract class AdamSecurityChecksBase: HasLog
     {
@@ -47,7 +46,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
         public abstract bool SiteAllowsExtension(string fileName);
 
-        public abstract bool CanEditFolder(IAsset item);
+        public abstract bool CanEditFolder(Eav.Apps.Assets.IAsset item);
 
         #endregion
 

@@ -8,7 +8,7 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Context;
 
-namespace ToSic.Sxc.WebApi.Adam
+namespace ToSic.Sxc.Adam
 {
     public abstract class AdamState: HasLog
     {
