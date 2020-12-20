@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Adam
 
         string PhysicalPath(string path);
 
-        string PhysicalRelative(string path);
+        string RelativeFromAdam(string path);
         
         //string PhysicalPath(IAsset asset);
 

@@ -35,10 +35,10 @@ namespace ToSic.Sxc.Adam
             if (path.Contains("..")) throw new ArgumentException("path may not contain ..", nameof(path));
             // check if it already has the root path attached, otherwise add
             path = path.StartsWith(AdamManager.Site.ContentPath) ? path : Path.Combine(AdamManager.Site.ContentPath, path);
-            return _serverPaths.FullContentPath(path);
+            return _serverPaths.FullContentPath(path.Backslash());
         }
 
-        public string PhysicalRelative(string path)
+        public string RelativeFromAdam(string path)
         {
             var pathForSearch = path.Forwardslash();
             var adamPosition = pathForSearch.IndexOf("adam/", StringComparison.InvariantCultureIgnoreCase);

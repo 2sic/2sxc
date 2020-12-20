@@ -133,7 +133,7 @@ namespace ToSic.Sxc.Adam
         {
             var f = new DirectoryInfo(_adamPaths.PhysicalPath(path));
 
-            var relativePath = _adamPaths.PhysicalRelative(path);
+            var relativePath = _adamPaths.RelativeFromAdam(path);
             return new Folder<string, string>(AdamManager)
             {
                 Path = relativePath,
@@ -163,7 +163,7 @@ namespace ToSic.Sxc.Adam
             var f = new FileInfo(_adamPaths.PhysicalPath(path));
             var directoryName = f.Directory.Name;
 
-            var relativePath = _adamPaths.PhysicalRelative(path);
+            var relativePath = _adamPaths.RelativeFromAdam(path);
 
             return new File<string, string>(AdamManager)
             {
