@@ -88,6 +88,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             }
         }
 
+        // TODO: try to inherit from AdamFileSystemBasic and use the TryToRename from there
         private bool TryToRenameFile(string newName, string fullPath, string path)
         {
             var callLog = Log.Call($"{newName}");
@@ -98,7 +99,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             }
 
             var newFilePath = Path.Combine(path, newName);
-            if (!System.IO.File.Exists(newFilePath))
+            if (System.IO.File.Exists(newFilePath))
             {
                 callLog($"Can't rename because file with new name already exists {newFilePath}");
                 return true;
