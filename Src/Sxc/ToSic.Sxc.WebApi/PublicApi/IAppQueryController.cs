@@ -11,10 +11,32 @@ namespace ToSic.Sxc.WebApi.PublicApi
     /// </remarks>
     public interface IAppQueryController
     {
-        // will check security internally, so assume no requirements
+        /// <summary>
+        /// GET a public query by name, with some minimal options.
+        /// Assumes that the context is given in the app-headers.
+        /// </summary>
+        /// <param name="name">Query name - ideally without spaces or special characters (required)</param>
+        /// <param name="includeGuid">Include GUID IDs of the items retrieved (optional)</param>
+        /// <param name="stream">Stream names - leave empty or * for all. Comma separated if multiple. (optional)</param>
+        /// <param name="appId">AppId to use in case we want to specify an app (optional)</param>
+        /// <remarks>
+        /// will check security internally, so assume the endpoint doesn't need to check security first
+        /// </remarks>
+        /// <returns></returns>
         Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(string name, bool includeGuid = false, string stream = null, int? appId = null);
 
-        // will check security internally, so assume no requirements
+        /// <summary>
+        /// GET a public query from an app in a specific path.
+        /// The App-Path is for identifying the app itself, and is usually in the middle of the route.
+        /// Example: [root]/app/[appPath]/query/[name]
+        /// </summary>
+        /// <param name="appPath">app-folder name (required)</param>
+        /// <param name="name">Query name - ideally without spaces or special characters (required)</param>
+        /// <param name="stream">Stream names - leave empty or * for all. Comma separated if multiple. (optional)</param>
+        /// <remarks>
+        /// will check security internally, so assume the endpoint doesn't need to check security first
+        /// </remarks>
+        /// <returns></returns>
         Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(string appPath, string name, string stream = null);
     }
 }

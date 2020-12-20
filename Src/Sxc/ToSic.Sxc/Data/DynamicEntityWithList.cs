@@ -20,10 +20,14 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         protected List<IDynamicEntity> DynEntities;
 
+        // ReSharper disable once NotAccessedField.Local
+        private string _debugFieldName;
+
         [PrivateApi]
         internal DynamicEntityWithList(IEntity parent, string field, IEnumerable<IEntity> entities, string[] dimensions, int compatibility, IBlock block) 
             : base(null, dimensions, compatibility, block)
         {
+            _debugFieldName = field; // remember name in case we do debugging and need to know what list was accessed
             var index = 0;
             DynEntities = entities
                 .Select(e =>
