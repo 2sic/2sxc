@@ -36,9 +36,9 @@ namespace ToSic.Sxc.WebApi.Adam
         private const string ThumbnailPattern = "{0}?w=120&h=120&mode=crop&urlSource=backend";
         private const string PreviewPattern = "{0}?w=800&h=800&mode=max&urlSource=backend";
 
-        public virtual AdamItemDto Create(Sxc.Adam.File<TFolderId, TFileId> original)
+        public virtual AdamItemDto Create(File<TFolderId, TFileId> original)
         {
-            var url = original.Url;// Path.Combine(AdamBaseUrl, original.Path).Forwardslash();
+            var url = original.Url;
             var item = new AdamItemDto<TFolderId, TFileId>(false, original.SysId, original.ParentSysId, original.FullName, original.Size,
                 original.Created, original.Modified)
             {
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.WebApi.Adam
         }
 
 
-        public virtual AdamItemDto Create(Sxc.Adam.Folder<TFolderId, TFileId> folder)
+        public virtual AdamItemDto Create(Folder<TFolderId, TFileId> folder)
         {
             var item = new AdamItemDto<TFolderId, TFolderId>(true, folder.SysId, folder.ParentSysId, folder.Name, 0, folder.Created,
                 folder.Modified)

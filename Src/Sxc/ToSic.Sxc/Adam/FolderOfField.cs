@@ -8,15 +8,13 @@ namespace ToSic.Sxc.Adam
     /// </summary>
     public class FolderOfField<TFolderId, TFileId> : Folder<TFolderId, TFileId>
     {
-        //public ContainerBase AdamOfField { get; set; }
-        public FolderOfField(AdamManager<TFolderId, TFileId> adamContext, Guid entityGuid, string fieldName) 
-            : base(adamContext)
+        public FolderOfField(AdamManager<TFolderId, TFileId> adamManager, Guid entityGuid, string fieldName): base(adamManager)
         {
-            var adamOfField = new AdamOfField<TFolderId, TFileId>(AdamContext, entityGuid, fieldName);
+            var adamOfField = new AdamOfField<TFolderId, TFileId>(AdamManager, entityGuid, fieldName);
 
-            if (!AdamContext.Exists(adamOfField.Root)) return;
+            if (!AdamManager.Exists(adamOfField.Root)) return;
 
-            var f = AdamContext.Folder(adamOfField.Root);
+            var f = AdamManager.Folder(adamOfField.Root);
             if (f == null) return;
 
             Path = f.Path;
@@ -29,10 +27,6 @@ namespace ToSic.Sxc.Adam
             Name = f.Name;
             Url = f.Url;
         }
-
-        // 2020-09-12 2dm removed, I don't think it's surfaced anywhere
-        // and the only public use is an IFolder, so it shouldn't be seen elsewhere
-        //private bool Exists => AdamContext.Exists(AdamOfField.Root);
 
     }
 

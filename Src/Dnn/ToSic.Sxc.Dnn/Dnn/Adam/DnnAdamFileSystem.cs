@@ -17,11 +17,11 @@ namespace ToSic.Sxc.Dnn.Adam
 
         public DnnAdamFileSystem(): base("Dnn.FilSys") { }
 
-        public IAdamFileSystem<int, int> Init(AdamManager<int, int> adamContext, ILog parentLog)
+        public IAdamFileSystem<int, int> Init(AdamManager<int, int> adamManager, ILog parentLog)
         {
             Log.LinkTo(parentLog);
             var wrapLog = Log.Call();
-            AdamContext = adamContext;
+            AdamContext = adamManager;
             wrapLog("ok");
             return this;
         }
