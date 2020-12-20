@@ -88,7 +88,7 @@ namespace ToSic.Sxc.Dnn.Adam
             var dnnFolder = _dnnFolders.GetFolder(parentFolder.AsDnn().SysId);
             var name = Path.GetFileNameWithoutExtension(fileName);
             var ext = Path.GetExtension(fileName);
-            for (var i = 1; i < 1000 && _dnnFiles.FileExists(dnnFolder, Path.GetFileName(fileName)); i++)
+            for (var i = 1; i < AdamFileSystemBasic.MaxSameFileRetries && _dnnFiles.FileExists(dnnFolder, Path.GetFileName(fileName)); i++)
                 fileName = $"{name}-{i}{ext}";
 
             return callLog(fileName, fileName);

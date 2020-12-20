@@ -119,8 +119,10 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             {
                 body.CopyTo(stream);
             }
-            FileInfo fileInfo = new FileInfo(filePath);
-            File newAdamFile = new File()
+            var fileInfo = new FileInfo(filePath);
+            
+            // register into oqtane
+            var oqtFileData = new File
             {
                 Name = Path.GetFileName(fileName),
                 FolderId = parent.Id,
@@ -129,8 +131,8 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 ImageHeight = 0,
                 ImageWidth = 0
             };
-            var dnnFile = FileRepository.AddFile(newAdamFile);
-            return callLog("ok", GetFile(dnnFile.FileId));
+            var oqtFile = FileRepository.AddFile(oqtFileData);
+            return callLog("ok", GetFile(oqtFile.FileId));
         }
 
         /// <summary>
@@ -147,7 +149,8 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             var dnnFolder = FolderRepository.GetFolder(parentFolder.AsOqt().SysId);
             var name = Path.GetFileNameWithoutExtension(fileName);
             var ext = Path.GetExtension(fileName);
-            for (var i = 1; i < 1000 && System.IO.File.Exists(Path.Combine(_oqtServerPaths.FullContentPath(AdamContext.Site.ContentPath), dnnFolder.Path, Path.GetFileName(fileName))); i++)
+            for (var i = 1; i < AdamFileSystemBasic.MaxSameFileRetries 
+                            && System.IO.File.Exists(Path.Combine(_oqtServerPaths.FullContentPath(AdamContext.Site.ContentPath), dnnFolder.Path, Path.GetFileName(fileName))); i++)
                 fileName = $"{name}-{i}{ext}";
 
             return callLog(fileName, fileName);

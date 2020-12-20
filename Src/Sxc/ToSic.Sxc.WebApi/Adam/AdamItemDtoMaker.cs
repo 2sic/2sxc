@@ -1,6 +1,4 @@
-﻿using System.IO;
-using ToSic.Eav.Security.Permissions;
-using ToSic.Eav.Helpers;
+﻿using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Adam;
 
@@ -67,9 +65,6 @@ namespace ToSic.Sxc.WebApi.Adam
             };
             return item;
         }
-
-        public virtual string AdamBaseUrl => _adamBaseUrl ?? (_adamBaseUrl = AdamState.Context.Site.ContentPath);
-        private string _adamBaseUrl;
 
         private bool CanEditFolder(Eav.Apps.Assets.IAsset original)
         {

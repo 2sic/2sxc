@@ -2,20 +2,19 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ToSic.Eav;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Adam;
 
-namespace IntegrationSamples.SxcEdit01.Adam
+namespace ToSic.Sxc.Adam
 {
-    public class IntAdamFileSystem: HasLog, IAdamFileSystem<string, string>
+    public class AdamFileSystemBasic: AdamFileSystemBase<string, string>, IAdamFileSystem<string, string>
     {
-
         #region Constructor / DI / Init
 
-        public IntAdamFileSystem(IServerPaths serverPaths, ISite site) : base("Int.FilSys")
+        public AdamFileSystemBasic(IServerPaths serverPaths, ISite site) : base(LogNames.Basic)
         {
             _serverPaths = serverPaths;
             _site = site;
@@ -35,8 +34,9 @@ namespace IntegrationSamples.SxcEdit01.Adam
         #endregion
 
 
+
         // #todo MVC
-        public int MaxUploadKb() => 25000;
+        public int MaxUploadKb() => MaxUploadKbDefault;
 
         public File<string, string> GetFile(string fileId)
         {
@@ -54,7 +54,23 @@ namespace IntegrationSamples.SxcEdit01.Adam
 
         public void Delete(IFile file) => throw new NotImplementedException();
 
-        public File<string, string> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName) => throw new NotImplementedException();
+        public File<string, string> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
+        {
+            var callLog = Log.Call<File<string, string>>($"..., ..., {fileName}, {ensureUniqueName}");
+            if (ensureUniqueName)
+                fileName = FindUniqueFileName(parent, fileName);
+            var fullContentPath = Path.Combine(AdamContext.Site.ContentPath, parent.Path);
+            Directory.CreateDirectory(fullContentPath);
+            var filePath = Path.Combine(fullContentPath, fileName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                body.CopyTo(stream);
+            }
+            var fileInfo = GetFile(filePath);
+
+            return callLog("ok", fileInfo);
+            throw new NotImplementedException();
+        }
 
         public void AddFolder(string path)
         {
@@ -99,7 +115,34 @@ namespace IntegrationSamples.SxcEdit01.Adam
 
         public Folder<string, string> Get(string path) => AdamFolder(path);
 
-        #region DnnToAdam
+
+        #region Helpers
+
+        /// <summary>
+        /// When uploading a new file, we must verify that the name isn't used. 
+        /// If it is used, walk through numbers to make a new name which isn't used. 
+        /// </summary>
+        /// <param name="parentFolder"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public string FindUniqueFileName(IFolder parentFolder, string fileName)
+        {
+            var callLog = Log.Call<string>($"..., {fileName}");
+
+            var folder = parentFolder; //FolderRepository.GetFolder(parentFolder.AsOqt().SysId);
+            var name = Path.GetFileNameWithoutExtension(fileName);
+            var ext = Path.GetExtension(fileName);
+            for (var i = 1; i < MaxSameFileRetries && File.Exists(Path.Combine(AdamContext.Site.ContentPath, folder.Path, Path.GetFileName(fileName))); i++)
+                fileName = $"{name}-{i}{ext}";
+
+            return callLog(fileName, fileName);
+        }
+
+
+        #endregion
+
+        #region PathToAdam
+
         private Folder<string, string> AdamFolder(string path)
         {
             var f = new DirectoryInfo(PathOnDrive(path));
@@ -143,14 +186,13 @@ namespace IntegrationSamples.SxcEdit01.Adam
                 Size = Convert.ToInt32(f.Length),
                 SysId = path,
                 Folder = directoryName,
-                ParentSysId = path.Replace(f.Name, "", StringComparison.InvariantCultureIgnoreCase), // "todo mvc",// Constants.NullId,
-
+                ParentSysId = path.Replace(f.Name, ""),
                 Path = path,
 
                 Created = f.CreationTime,
                 Modified = f.LastWriteTime,
                 Name = Path.GetFileNameWithoutExtension(f.Name),
-                Url =  url,// /*AdamContext.Site.ContentPath*/ Path.Combine(directoryName, f.Name).Forwardslash(),
+                Url =  url,
             };
         }
 

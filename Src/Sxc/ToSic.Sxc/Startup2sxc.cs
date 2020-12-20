@@ -102,6 +102,7 @@ namespace ToSic.Sxc
         /// </remarks>
         public static IServiceCollection AddSxcCoreFallbackServices(this IServiceCollection services)
         {
+            // basic environment, pages, modules etc.
             services.TryAddTransient<IEnvironmentInstaller, BasicEnvironmentInstaller>();
             services.TryAddTransient<IPlatformModuleUpdater, BasicModuleUpdater>();
             services.TryAddTransient<IPagePublishingResolver, BasicPagePublishingResolver>();
@@ -110,9 +111,12 @@ namespace ToSic.Sxc
             // Code / Dynamic Code
             services.TryAddTransient<DynamicCodeRoot, BasicDynamicCodeRoot>();
             services.TryAddTransient<IModule, ModuleUnknown>();
-
+            
             // 11.08 - fallback in case not added
             services.TryAddSingleton<IPlatform, PlatformUnknown>();
+
+            // ADAM basics
+            services.TryAddTransient<IAdamFileSystem<string, string>, AdamFileSystemBasic>();
 
             return services;
         }
