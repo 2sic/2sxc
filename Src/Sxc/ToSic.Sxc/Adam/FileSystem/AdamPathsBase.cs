@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using ToSic.Eav;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
@@ -10,6 +11,11 @@ namespace ToSic.Sxc.Adam
     {
         #region DI Constructor & Init
 
+        public AdamPathsBase(IServerPaths serverPaths) : this(serverPaths, LogNames.Basic)
+        {
+
+        }
+        
         protected AdamPathsBase(IServerPaths serverPaths, string logPrefix) : base($"{logPrefix}.AdmPth")
         {
             _serverPaths = serverPaths;
