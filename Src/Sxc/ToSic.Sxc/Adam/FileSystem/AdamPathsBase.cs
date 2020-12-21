@@ -7,7 +7,7 @@ using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Adam
 {
-    public class AdamPathsBase: HasLog, IAdamPaths
+    public class AdamPathsBase : HasLog, IAdamPaths
     {
         #region DI Constructor & Init
 
@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Adam
         {
 
         }
-        
+
         protected AdamPathsBase(IServerPaths serverPaths, string logPrefix) : base($"{logPrefix}.AdmPth")
         {
             _serverPaths = serverPaths;
@@ -32,11 +32,15 @@ namespace ToSic.Sxc.Adam
 
         #endregion
 
-        
-        
+
+
         public string PhysicalPath(string path)
         {
             ThrowIfPathContainsDotDot(path);
+
+            // check if it's already a physical path
+            if (Path.IsPathRooted(path)) return path;
+
             // check if it already has the root path attached, otherwise add
             path = path.StartsWith(AdamManager.Site.ContentPath) ? path : Path.Combine(AdamManager.Site.ContentPath, path);
             return _serverPaths.FullContentPath(path.Backslash());
@@ -51,8 +55,8 @@ namespace ToSic.Sxc.Adam
         public string RelativeFromAdam(string path)
         {
             var adamPosition = path.Forwardslash().IndexOf("adam/", StringComparison.InvariantCultureIgnoreCase);
-            return adamPosition <= 0 
-                ? path 
+            return adamPosition <= 0
+                ? path
                 : path.Substring(adamPosition);
         }
 
