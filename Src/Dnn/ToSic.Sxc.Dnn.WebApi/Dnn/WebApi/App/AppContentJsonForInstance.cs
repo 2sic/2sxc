@@ -70,7 +70,8 @@ namespace ToSic.Sxc.Dnn.WebApi.App
             }
 
             // Helper to provide old interface with "EntityId" and "EntityTitle" instead of 
-            // "Id" and "Title"
+            // 'Id' and 'Title'
+            // ReSharper disable once MemberCanBePrivate.Local
             public class SerializableRelationshipOld
             {
                 public int? EntityId;

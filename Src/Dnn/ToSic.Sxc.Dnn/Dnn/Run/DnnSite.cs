@@ -98,7 +98,8 @@ namespace ToSic.Sxc.Dnn.Run
 
         #endregion
 
-        /// <inheritdoc cref="ISite.Id" />
+        // ReSharper disable once InheritdocInvalidUsage
+        /// <inheritdoc />
         public override int Id => UnwrappedContents?.PortalId ?? Eav.Constants.NullId;
 
         /// <inheritdoc />

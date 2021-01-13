@@ -111,7 +111,7 @@ namespace ToSic.Sxc.WebApi.Cms
         internal static IEntity ConstructEmptyEntity(int appId, ItemIdentifier header, ContentTypeRuntime typeRead)
         {
             var type = typeRead.Get(header.ContentTypeName);
-            var ent = EntityBuilder.EntityWithAttributes(appId, header.Guid, header.EntityId, 0, type);
+            var ent = EntityBuilder.EntityTemplate(appId, header.Guid, header.EntityId, 0, type);
             return ent;
         }
     }
