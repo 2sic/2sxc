@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using ToSic.Eav;
+using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
@@ -52,6 +53,7 @@ namespace IntegrationSamples.SxcEdit01
         internal static IServiceCollection AddImplementations(this IServiceCollection services)
         {
             services.TryAddTransient<IUser, IntUserSuper>();
+            services.TryAddTransient<AppPermissionCheck, IntAppPermissionCheck>();
             services.TryAddTransient<IntStatefulControllerBase.Dependencies>();
             return services;
         }
