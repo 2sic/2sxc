@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Code
             if (_adamManager == null)
                 _adamManager = GetService<AdamManager>()
                     .Init(Block.Context, CompatibilityLevel, Log);
-            return _adamManager.FolderOfField(entity.EntityGuid, fieldName);
+            return _adamManager.Folder(entity, fieldName);
         }
         private AdamManager _adamManager;
 

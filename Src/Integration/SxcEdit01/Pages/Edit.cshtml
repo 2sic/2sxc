@@ -1,6 +1,10 @@
 ﻿@page
 @using Microsoft.Extensions.Configuration
 @using ToSic.Eav.Apps
+@using ToSic.Eav.Data
+@using ToSic.Eav.Logging.Simple
+@using ToSic.Sxc.Adam
+@using ToSic.Sxc.Context
 @model PrivacyModel
 @inject IConfiguration Config
 @{
@@ -35,16 +39,43 @@
   <li><a href="#" onclick="getSxc().manage.run('edit', { entityId: @firstItem.EntityId })">Click to open edit dialog</a></li>
 </ol>
 
-<hr/>
+<hr />
 <h2>ADAM Images / Files</h2>
 <ol>
   <li><a href="#" onclick="getSxc().manage.run('edit', { entityId: @itemWithImagesId })">Edit something with images!</a></li>
+</ol>
+@{
+  // This is the same as the AsAdam implementation
+
+  // Create a log-object (optional) which is used to track what the code does
+  // could also just be null
+  var log = new Log("My.Log");
+
+  // Get the App execution context since our code here doesn't have it
+  var appContext = ToSic.Eav.Factory.Resolve<IContextOfApp>();
+  appContext.Init(log);
+  appContext.ResetApp(appId);
+
+  // Now get the adam-manager, which will give us the AdamFolder object
+  var adamManager = ToSic.Eav.Factory.Resolve<AdamManager<string, string>>();
+  adamManager.Init(appContext, 10, log);
+
+  // Now get the folder (which is what AsAdam would return)
+  var entityWithAdam = appState.List.One(itemWithImagesId);
+  var folder = adamManager.Folder(entityWithAdam, "ImageLibrary");
+}
+<h3>Files</h3>
+<ol>
+  @foreach (var img in folder.Files)
+  {
+    <li>@img.Url</li>
+  }
 </ol>
 
 <hr />
 <h2>Metadata</h2>
 @{
-  var targetType = 10; // CMS object, maybe better something else, officially should be > 100
+var targetType = 10; // CMS object, maybe better something else, officially should be > 100
   var myItemId = 1234;
   var md = appState.GetMetadata(targetType, myItemId);
 }

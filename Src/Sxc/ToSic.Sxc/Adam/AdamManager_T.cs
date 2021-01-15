@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Context;
@@ -69,8 +70,10 @@ namespace ToSic.Sxc.Adam
 
         public Export<TFolderId, TFileId> Export => new Export<TFolderId, TFileId>(this);
 
-        internal override IFolder FolderOfField(Guid entityGuid, string fieldName) 
+        public override IFolder Folder(Guid entityGuid, string fieldName) 
             => new FolderOfField<TFolderId, TFileId>(this, entityGuid, fieldName);
+        
+        public override IFolder Folder(IEntity entity, string fieldName) => Folder( entity.EntityGuid, fieldName);
 
         #endregion
     }

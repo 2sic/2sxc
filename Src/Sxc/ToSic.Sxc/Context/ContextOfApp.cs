@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Context
         {
             Log.Rename("Sxc.CtxApp");
         }
-
+        
         #endregion
 
         public void ResetApp(IAppIdentity appIdentity)

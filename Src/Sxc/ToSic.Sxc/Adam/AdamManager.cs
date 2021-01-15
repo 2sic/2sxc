@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
+using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
@@ -70,8 +71,10 @@ namespace ToSic.Sxc.Adam
 
         #region Properties the base class already provides, but must be implemented at inheritance
 
-        internal abstract IFolder FolderOfField(Guid entityGuid, string fieldName);
+        public abstract IFolder Folder(Guid entityGuid, string fieldName);
 
+        public abstract IFolder Folder(IEntity entity, string fieldName);
+        
         #endregion
     }
 }
