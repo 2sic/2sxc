@@ -23,13 +23,13 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
         /// <summary>
         /// GUID of parent
         /// </summary>
-        [JsonProperty("parentGuid")]
+        [JsonProperty("parentGuid", NullValueHandling = NullValueHandling.Ignore)]
         public Guid? ParentGuid { get; }
         
         /// <summary>
         /// Field it's being referenced in
         /// </summary>
-        [JsonProperty("parentField")]
+        [JsonProperty("parentField", NullValueHandling = NullValueHandling.Ignore)]
         public string ParentField { get; }
         
         /// <summary>
@@ -48,16 +48,16 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
         {
             Id = contentBlock.ContentBlockId;
             
-            // try to get more information about the block
-            var specsEntity = (contentBlock as BlockFromEntity)?.Entity as EntityInBlock;
-
-            ParentGuid = specsEntity?.Parent;
-            ParentField = specsEntity?.Field;
-            ParentIndex = specsEntity?.SortOrder ?? 0;
-            PublishingMode = publishingMode.ToString();
-
             // if the CBID is the Mod-Id, then it's part of page
             PartOfPage = contentBlock.ParentId == contentBlock.ContentBlockId;
+            
+            PublishingMode = publishingMode.ToString();
+            
+            // try to get more information about the block
+            if (!((contentBlock as BlockFromEntity)?.Entity is EntityInBlock specsEntity)) return;
+            ParentGuid = specsEntity.Parent;
+            ParentField = specsEntity.Field;
+            ParentIndex = specsEntity.SortOrder;
         }
     }
 

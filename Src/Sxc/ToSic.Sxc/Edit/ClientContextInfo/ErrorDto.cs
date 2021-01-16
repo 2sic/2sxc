@@ -1,16 +1,17 @@
-﻿using ToSic.Sxc.Blocks;
+﻿using Newtonsoft.Json;
+using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Edit.ClientContextInfo
 {
-    public class ClientInfosError
+    public class ErrorDto
     {
-        // ReSharper disable once InconsistentNaming
-        public string type;
+        [JsonProperty("type")]
+        public string Type { get; }
 
-        internal ClientInfosError(IBlock cb)
+        internal ErrorDto(IBlock cb)
         {
             if (cb.DataIsMissing)
-                type = "DataIsMissing";
+                Type = "DataIsMissing";
         }
     }
 }

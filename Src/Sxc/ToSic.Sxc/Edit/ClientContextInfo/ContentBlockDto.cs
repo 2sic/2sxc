@@ -5,7 +5,7 @@ using static Newtonsoft.Json.NullValueHandling;
 
 namespace ToSic.Sxc.Edit.ClientContextInfo
 {
-    public class ContentBlockDto : ClientInfoEntity
+    public class ContentBlockDto : EntityDto
     {
         public bool IsCreated;
         public bool IsList;

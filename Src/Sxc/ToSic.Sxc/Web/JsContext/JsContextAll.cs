@@ -18,9 +18,9 @@ namespace ToSic.Sxc.Web.JsContext
         [JsonProperty("contentBlock")]
         public ContentBlockDto ContentBlock;
         // ReSharper disable once InconsistentNaming
-        public ClientInfosError error;
+        public ErrorDto error;
 
-        public Ui Ui;
+        public UiDto Ui;
 
         public JsContextAll(JsContextLanguage jsLangCtx) : base("Sxc.CliInf")
         {
@@ -38,9 +38,9 @@ namespace ToSic.Sxc.Web.JsContext
 
             ContentBlockReference = new ContentBlockReferenceDto(block, ctx.Publishing.Mode);
             ContentBlock = new ContentBlockDto(block);
-            Ui = new Ui(((BlockBuilder)block.BlockBuilder)?.UiAutoToolbar ?? false);
+            Ui = new UiDto(((BlockBuilder)block.BlockBuilder)?.UiAutoToolbar ?? false);
 
-            error = new ClientInfosError(block);
+            error = new ErrorDto(block);
             return this;
         }
     }

@@ -2,11 +2,11 @@
 
 namespace ToSic.Sxc.Edit.ClientContextInfo
 {
-    public abstract class ClientInfoEntity
+    public abstract class EntityDto
     {
-        public int ZoneId;  // the zone of the content-block
-        public int AppId;   // the zone of the content-block
-        public Guid Guid;   // the entity-guid of the content-block
-        public int Id;      // the entity-id of the content-block
+        public int ZoneId { get; protected set; }  // the zone of the content-block
+        public int AppId { get; protected set; }   // the zone of the content-block
+        public Guid Guid { get; protected set; }   // the entity-guid of the content-block
+        public int Id { get; protected set; }      // the entity-id of the content-block
     }
 }
