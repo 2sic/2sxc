@@ -13,6 +13,12 @@ namespace ToSic.Sxc.Blocks
         internal const string CbPropertyApp = "App";
         internal const string CbPropertyTitle = "Title";
         internal const string CbPropertyContentGroup = "ContentGroup";
+
+        /// <summary>
+        /// This is the entity that was used to configure the block
+        /// We need it for later operations, like mentioning what index it was on in a list
+        /// </summary>
+        public IEntity Entity;
         
         #region Constructor and DI
 
@@ -22,7 +28,8 @@ namespace ToSic.Sxc.Blocks
         {
             var ctx = parent.Context.Clone(Log) as IContextOfBlock;
             Init(ctx, parent, parentLog);
-            return CompleteInit(parent, blockEntity);
+            var wrapLog = Log.Call<BlockFromEntity>($"{nameof(blockEntity)}:{blockEntity.EntityId}");
+            return wrapLog(null, CompleteInit(parent, blockEntity));
         }
 
         public BlockFromEntity Init(IBlock parent, int contentBlockId, ILog parentLog)
@@ -31,12 +38,13 @@ namespace ToSic.Sxc.Blocks
             Init(ctx, parent, parentLog);
             var wrapLog = Log.Call<BlockFromEntity>($"{nameof(contentBlockId)}:{contentBlockId}");
             var blockEntity = GetBlockEntity(parent, contentBlockId);
-            return wrapLog("ok", CompleteInit(parent, blockEntity));
+            return wrapLog(null, CompleteInit(parent, blockEntity));
         }
 
         private BlockFromEntity CompleteInit(IBlock parent, IEntity blockEntity)
         {
             var wrapLog = Log.Call<BlockFromEntity>();
+            Entity = blockEntity;
             Parent = parent;
             var blockId = LoadBlockDefinition(parent.ZoneId, blockEntity, Log);
             Context.ResetApp(blockId);

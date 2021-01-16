@@ -5,7 +5,7 @@ using static Newtonsoft.Json.NullValueHandling;
 
 namespace ToSic.Sxc.Edit.ClientContextInfo
 {
-    public class ClientInfoContentGroup : ClientInfoEntity
+    public class ContentBlockDto : ClientInfoEntity
     {
         public bool IsCreated;
         public bool IsList;
@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
         [JsonProperty(NullValueHandling = Ignore)]
         public string TemplateEdition;
 
-        public ClientInfoContentGroup(IBlock block)
+        public ContentBlockDto(IBlock block)
         {
             //var block = blockBuilder.Block;
             IsCreated = block.ContentGroupExists;

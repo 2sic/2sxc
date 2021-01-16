@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Data
         public EntityInBlock(IEntity baseEntity, Guid? parentGuid, string field = null, int index = 0) : base(baseEntity)
         {
             Parent = parentGuid;
-            Fields = field;
+            Field = field;
             SortOrder = index;
         }
 
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Data
         internal bool IsDemoItem { get; set; }
 
         /// <inheritdoc />
-        public string Fields { get; set; }
+        public string Field { get; set; }
 
         /// <inheritdoc />
         public Guid? Parent { get; set; }
