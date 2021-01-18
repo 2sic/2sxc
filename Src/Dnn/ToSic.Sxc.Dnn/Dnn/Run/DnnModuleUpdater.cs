@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Dnn.Run
             var module = (instance as Module<ModuleInfo>).UnwrappedContents;
             var zoneId = _zoneMapper.GetZoneId(module.OwnerPortalID);
 
-            if (appId == Constants.AppIdEmpty || !appId.HasValue)
+            if (appId == Eav.Constants.AppIdEmpty || !appId.HasValue)
                 UpdateInstanceSettingForAllLanguages(instance.Id, Settings.ModuleSettingApp, null, Log);
             else
             {

@@ -3,7 +3,6 @@ using Oqtane.Shared;
 using System;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
@@ -51,7 +50,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var module = _moduleRepository.GetModule(instance.Id);
             var zoneId = _zoneMapper.Init(Log).GetZoneId(module.SiteId);
 
-            if (appId == Constants.AppIdEmpty || !appId.HasValue)
+            if (appId == Eav.Constants.AppIdEmpty || !appId.HasValue)
                 UpdateInstanceSetting(instance.Id, Settings.ModuleSettingApp, null, Log);
             else
             {

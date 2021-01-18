@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         protected override void Initialize(HttpControllerContext controllerContext)
 	    {
             // Add the logger to the request, in case it's needed in error-reporting
-	        controllerContext.Request.Properties.Add(Constants.EavLogKey, Log);
+	        controllerContext.Request.Properties.Add(DnnConstants.EavLogKey, Log);
 	        base.Initialize(controllerContext);
         }
 

@@ -17,14 +17,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Logging
             // try to access log created so far
             try
             {
-                if (context.Request?.Properties.ContainsKey(Constants.EavLogKey) ?? false)
+                if (context.Request?.Properties.ContainsKey(DnnConstants.EavLogKey) ?? false)
                 {
                     // must to ContainsKey checks, otherwise we get too many errors which is a problem while debugging
-                    var log = context.Request.Properties.ContainsKey(Constants.EavLogKey)
-                        ? context.Request.Properties[Constants.EavLogKey] as ILog
+                    var log = context.Request.Properties.ContainsKey(DnnConstants.EavLogKey)
+                        ? context.Request.Properties[DnnConstants.EavLogKey] as ILog
                         : null;
-                    var dnnContext = context.Request.Properties.ContainsKey(Constants.DnnContextKey) 
-                        ? context.Request.Properties[Constants.DnnContextKey] as DnnContextOld
+                    var dnnContext = context.Request.Properties.ContainsKey(DnnConstants.DnnContextKey) 
+                        ? context.Request.Properties[DnnConstants.DnnContextKey] as DnnContextOld
                         : null;
                     DnnLogging.LogToDnn("2sxc-Api", "Auto-Log Exception", log, dnnContext, force: true);
                 }

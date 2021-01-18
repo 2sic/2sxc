@@ -11,5 +11,21 @@
 
         internal const string LogDirectory = SysFolderRootVirtual + "Upgrade/Log/";
 
+        public const string DnnContextKey = "DnnContext";
+        
+        /// <summary>
+        /// The ID in the current HTTP request for storing the EAV log object
+        /// </summary>
+        public const string EavLogKey = "EavLog";
+        
+        /// <summary>
+        /// Application Setting key to enable extended logging
+        /// </summary>
+        public const string AdvancedLoggingEnabledKey = "2sxc-enable-extended-logging";
+        
+        /// <summary>
+        /// Application Setting key to ensure extended logging will expire
+        /// </summary>
+        public const string AdvancedLoggingTillKey = "2sxc-extended-logging-expires";
     }
 }

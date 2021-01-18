@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Apps.Assets
         {
             AppId = appId;
             FileName = fileName;
-            HasApp = appName != Constants.ContentAppName;
+            HasApp = appName != Eav.Constants.ContentAppName;
             IsShared = global;
         }
 
