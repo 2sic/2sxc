@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using DotNetNuke.Entities.Modules;
+using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
@@ -36,20 +36,9 @@ namespace ToSic.Sxc.Dnn
 
         #region Diagnostics stuff
 
-        public int MaxSearchErrors = 10;
+        public static int SearchErrorsMax = 10;
 
-        private const string ThreadSlotErrorCount = "2sxcSearchErrorCount";
-
-        private int SearchErrorCount
-        {
-            get
-            {
-                var count = Thread.GetData(Thread.GetNamedDataSlot(ThreadSlotErrorCount));
-                if (count == null) return 0;
-                return (int)count;
-            }
-            set => Thread.SetData(Thread.GetNamedDataSlot(ThreadSlotErrorCount), value);
-        }
+        public static int SearchErrorsCount { get; set; }
 
         #endregion
 
@@ -62,7 +51,7 @@ namespace ToSic.Sxc.Dnn
                 if (_publishing != null) return Publishing;
 
                 // if publishing is used, make sure it's in the log-history
-                _publishing = Eav.Factory.Resolve<Sxc.Dnn.Cms.DnnPagePublishing>().Init(Log);
+                _publishing = Eav.Factory.Resolve<Cms.DnnPagePublishing>().Init(Log);
                 History.Add("dnn-publishing", Log);
                 return _publishing;
             }
@@ -126,19 +115,30 @@ namespace ToSic.Sxc.Dnn
             }
             catch (Exception e)
             {
-                var errCount = SearchErrorCount++;
-                if (errCount < MaxSearchErrors)
-                    throw new SearchIndexException(moduleInfo, e, nameof(DnnBusinessController));
-                if (errCount == MaxSearchErrors)
-                    throw new SearchIndexException(moduleInfo,
-                        new Exception($"Hit {MaxSearchErrors} SearchIndex exceptions in 2sxc modules, will stop reporting them to not flood the error log. \n" +
-                                      $"To start reporting again up to {MaxSearchErrors} just restart the application. \n" +
-                                      $"To show more errors change 'ToSic.Sxc.Dnn.{nameof(DnnBusinessController)}.{nameof(MaxSearchErrors)}' to a higher number in some code of yours like in a temporary razor view. " +
-                                      $"Note that in the meantime, the count may already be higher. You can always get that from {nameof(SearchErrorCount)}."),
-                        nameof(DnnBusinessController));
-                // ignore errors after 10
+                AddSearchExceptionToLog(moduleInfo, e, nameof(DnnBusinessController));
                 return new List<SearchDocument>();
             }
+        }
+
+        public static void AddSearchExceptionToLog(ModuleInfo moduleInfo, Exception e, string nameOfSource)
+        {
+            var errCount = SearchErrorsCount++;
+            // ignore errors after 10
+            if (errCount > SearchErrorsMax) return;
+            
+            if (errCount == SearchErrorsMax)
+            {
+                Exceptions.LogException(new SearchIndexException(moduleInfo,
+                    new Exception(
+                        $"Hit {SearchErrorsMax} SearchIndex exceptions in 2sxc modules, will stop reporting them to not flood the error log. \n" +
+                        $"To start reporting again up to {SearchErrorsMax} just restart the application. \n" +
+                        $"To show more errors change 'ToSic.Sxc.Dnn.{nameof(DnnBusinessController)}.{nameof(SearchErrorsMax)}' to a higher number in some code of yours like in a temporary razor view. " +
+                        $"Note that in the meantime, the count may already be higher. You can always get that from {nameof(SearchErrorsCount)}."),
+                    nameOfSource, errCount, SearchErrorsMax));
+                return;
+            }
+
+            Exceptions.LogException(new SearchIndexException(moduleInfo, e, nameOfSource, errCount, SearchErrorsMax));
         }
 
         #endregion

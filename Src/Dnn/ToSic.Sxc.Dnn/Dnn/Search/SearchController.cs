@@ -13,6 +13,7 @@ using ToSic.Eav.LookUp;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Engines;
@@ -96,7 +97,7 @@ namespace ToSic.Sxc.Search
             }
             catch (Exception e) // Catch errors here, because of references to Request etc.
             {
-                Exceptions.LogException(new SearchIndexException(dnnModule, e, nameof(SearchController)));
+                DnnBusinessController.AddSearchExceptionToLog(dnnModule, e, nameof(SearchController));
             }
 
             var searchInfoDictionary = new Dictionary<string, List<ISearchItem>>();
@@ -138,7 +139,7 @@ namespace ToSic.Sxc.Search
             }
             catch (Exception e)
             {
-                Exceptions.LogException(new SearchIndexException(dnnModule, e, nameof(SearchController)));
+                DnnBusinessController.AddSearchExceptionToLog(dnnModule, e, nameof(SearchController));
             }
 
             // add it to insights / history. It will only be preserved, if the inner code ran a Log.Preserve = true;

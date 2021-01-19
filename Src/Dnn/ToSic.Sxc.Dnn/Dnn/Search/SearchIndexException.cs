@@ -10,8 +10,8 @@ namespace ToSic.Sxc.Search
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public class SearchIndexException : Exception
     {
-        public SearchIndexException(ModuleInfo module, Exception innerException, string source)
+        public SearchIndexException(ModuleInfo module, Exception innerException, string source, int count, int max)
             : base(
-                $"Search: Error in '{source}' while indexing module {module.ModuleID} on tab {module.TabID}, portal {module.PortalID}", innerException) { }
+                $"Search: Error #{count} of {max} in '{source}' while indexing module {module.ModuleID} on tab {module.TabID}, portal {module.PortalID}", innerException) { }
     }
 }
