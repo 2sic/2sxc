@@ -19,6 +19,8 @@ namespace ToSic.Sxc.Dnn
     /// </summary>
     public class DnnBusinessController : ModuleSearchBase, IUpgradeable, IVersionable
     {
+        #region Constructor (not DI)
+
         /// <summary>
         /// Constructor overload for DotNetNuke
         /// (BusinessController needs a parameterless constructor)
@@ -27,8 +29,29 @@ namespace ToSic.Sxc.Dnn
         {
             Log = new Log("DNN.BusCon", null, "starting");
         }
-
+        
         private ILog Log { get; }
+
+        #endregion
+
+        #region Diagnostics stuff
+
+        public int MaxSearchErrors = 10;
+
+        private const string ThreadSlotErrorCount = "2sxcSearchErrorCount";
+
+        private int SearchErrorCount
+        {
+            get
+            {
+                var count = Thread.GetData(Thread.GetNamedDataSlot(ThreadSlotErrorCount));
+                if (count == null) return 0;
+                return (int)count;
+            }
+            set => Thread.SetData(Thread.GetNamedDataSlot(ThreadSlotErrorCount), value);
+        }
+
+        #endregion
 
         #region DNN Interface Members - search, upgrade, versionable
 
@@ -103,12 +126,15 @@ namespace ToSic.Sxc.Dnn
             }
             catch (Exception e)
             {
-                var errCount = ErrorCount++;
-                if (errCount < 10)
+                var errCount = SearchErrorCount++;
+                if (errCount < MaxSearchErrors)
                     throw new SearchIndexException(moduleInfo, e, nameof(DnnBusinessController));
-                if (errCount == 10)
+                if (errCount == MaxSearchErrors)
                     throw new SearchIndexException(moduleInfo,
-                        new Exception("Hit 10 SearchIndex exceptions in 2sxc modules, will stop reporting them to not flood the error log."),
+                        new Exception($"Hit {MaxSearchErrors} SearchIndex exceptions in 2sxc modules, will stop reporting them to not flood the error log. \n" +
+                                      $"To start reporting again up to {MaxSearchErrors} just restart the application. \n" +
+                                      $"To show more errors change 'ToSic.Sxc.Dnn.{nameof(DnnBusinessController)}.{nameof(MaxSearchErrors)}' to a higher number in some code of yours like in a temporary razor view. " +
+                                      $"Note that in the meantime, the count may already be higher. You can always get that from {nameof(SearchErrorCount)}."),
                         nameof(DnnBusinessController));
                 // ignore errors after 10
                 return new List<SearchDocument>();
@@ -117,21 +143,5 @@ namespace ToSic.Sxc.Dnn
 
         #endregion
 
-        #region Count Exceptions, don't overload the error log
-
-        private const string ThreadSlotErrorCount = "2sxcSearchErrorCount";
-
-        private int ErrorCount
-        {
-            get
-            {
-                var count = Thread.GetData(Thread.GetNamedDataSlot(ThreadSlotErrorCount));
-                if (count == null) return 0;
-                return (int) count;
-            }
-            set => Thread.SetData(Thread.GetNamedDataSlot(ThreadSlotErrorCount), value);
-        }
-
-        #endregion
     }
 }
