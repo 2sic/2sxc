@@ -50,9 +50,7 @@ namespace ToSic.Sxc.Search
 
             if (appId == AppConstants.AppIdNotFound || appId == Eav.Constants.NullId) return searchDocuments;
 
-            // Since Portal-Settings.Current is null, instantiate with modules' portal id (which can be a different portal!)
-            //var portalSettings = new PortalSettings(dnnModule.OwnerPortalID);
-            var site = new DnnSite().TrySwap(dnnModule);//.Swap(portalSettings);
+            var site = new DnnSite().TrySwap(dnnModule);
 
             // Ensure cache builds up with correct primary language
             var cache = State.Cache;
@@ -61,7 +59,6 @@ namespace ToSic.Sxc.Search
             var dnnContext = Eav.Factory.StaticBuild<IContextOfBlock>().Init(dnnModule, Log);
             var modBlock = _serviceProvider.Build<BlockFromModule>()
                 .Init(dnnContext, Log);
-                //.Init(DnnContextOfBlock.Create(site, container, Eav.Factory.GetServiceProvider()), Log);
 
             var language = dnnModule.CultureCode;
 
@@ -99,7 +96,7 @@ namespace ToSic.Sxc.Search
             }
             catch (Exception e) // Catch errors here, because of references to Request etc.
             {
-                Exceptions.LogException(new SearchIndexException(dnnModule, e));
+                Exceptions.LogException(new SearchIndexException(dnnModule, e, nameof(SearchController)));
             }
 
             var searchInfoDictionary = new Dictionary<string, List<ISearchItem>>();
@@ -141,7 +138,7 @@ namespace ToSic.Sxc.Search
             }
             catch (Exception e)
             {
-                Exceptions.LogException(new SearchIndexException(dnnModule, e));
+                Exceptions.LogException(new SearchIndexException(dnnModule, e, nameof(SearchController)));
             }
 
             // add it to insights / history. It will only be preserved, if the inner code ran a Log.Preserve = true;

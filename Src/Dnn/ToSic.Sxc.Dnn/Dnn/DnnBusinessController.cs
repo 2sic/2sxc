@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search.Entities;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
@@ -11,8 +11,7 @@ using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Search;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.SexyContent.Environment.Dnn7
+namespace ToSic.Sxc.Dnn
 {
     /// <summary>
     /// This is the connector-class which DNN consults when it needs to know things about a module
@@ -104,8 +103,33 @@ namespace ToSic.SexyContent.Environment.Dnn7
             }
             catch (Exception e)
             {
-                throw new SearchIndexException(moduleInfo, e);
+                var errCount = ErrorCount++;
+                if (errCount < 10)
+                    throw new SearchIndexException(moduleInfo, e, nameof(DnnBusinessController));
+                if (errCount == 10)
+                    throw new SearchIndexException(moduleInfo,
+                        new Exception("Hit 10 SearchIndex exceptions in 2sxc modules, will stop reporting them to not flood the error log."),
+                        nameof(DnnBusinessController));
+                // ignore errors after 10
+                return new List<SearchDocument>();
             }
+        }
+
+        #endregion
+
+        #region Count Exceptions, don't overload the error log
+
+        private const string ThreadSlotErrorCount = "2sxcSearchErrorCount";
+
+        private int ErrorCount
+        {
+            get
+            {
+                var count = Thread.GetData(Thread.GetNamedDataSlot(ThreadSlotErrorCount));
+                if (count == null) return 0;
+                return (int) count;
+            }
+            set => Thread.SetData(Thread.GetNamedDataSlot(ThreadSlotErrorCount), value);
         }
 
         #endregion

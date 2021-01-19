@@ -10,7 +10,8 @@ namespace ToSic.Sxc.Search
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public class SearchIndexException : Exception
     {
-        public SearchIndexException(ModuleInfo moduleInfo, Exception innerException)
-            : base("Search: Error while indexing module " + moduleInfo.ModuleID + " on tab " + moduleInfo.TabID + ", portal " + moduleInfo.PortalID, innerException) { }
+        public SearchIndexException(ModuleInfo module, Exception innerException, string source)
+            : base(
+                $"Search: Error in '{source}' while indexing module {module.ModuleID} on tab {module.TabID}, portal {module.PortalID}", innerException) { }
     }
 }
