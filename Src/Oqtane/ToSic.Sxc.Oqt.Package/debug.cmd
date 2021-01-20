@@ -13,7 +13,7 @@ XCOPY "..\ToSic.Sxc.Oqt.Server\bin\Debug\net5.0\ToSic.*.pdb" "%OqtaneBin%" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\Debug\net5.0\Microsoft.AspNetCore.Mvc.Razor.*.dll" "%OqtaneBin%" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\Debug\net5.0\Microsoft.AspNetCore.Razor.*" "%OqtaneBin%" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\Debug\net5.0\Microsoft.CodeAnalys*.*" "%OqtaneBin%" /Y
-@REM XCOPY "..\ToSic.Sxc.Oqt.Server\bin\Debug\net5.0\Microsoft.Extensions.DependencyModel.dll" "%OqtaneBin%" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\Debug\net5.0\Microsoft.Extensions.DependencyModel.dll" "%OqtaneBin%" /Y
 
 @Echo Copying refs folder for runtime compilation of Razor cshtml
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\Debug\net5.0\refs\*.dll" "%OqtaneBin%refs\" /Y
@@ -36,7 +36,7 @@ robocopy /mir "..\..\Data\.databeta\ " "%BuildTarget%\.databeta\ "
 robocopy /mir "..\..\Data\.data-custom\ " "%BuildTarget%\.data-custom\ "
 
 @REM ... find better source
-@REM @set Dev2sxcAssets=C:\Projects\2sxc\2sxc\Src\Mvc\Website\wwwroot
+@set Dev2sxcAssets=C:\Projects\2sxc\2sxc\Src\Mvc\Website\wwwroot
 
 @REM Copy 2sxc JS stuff
 robocopy /mir "%Dev2sxcAssets%\js\ " "%BuildTarget%\js\ "
