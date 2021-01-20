@@ -43,7 +43,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="&#xD;&#xA;@set BuildTarget=$(ProjectDir)wwwroot\System\Sxc&#xD;&#xA;&#xD;&#xA;@REM Copy the data folders&#xD;&#xA;robocopy /mir &quot;$(ProjectDir)..\..\Data\.data\ &quot; &quot;%25BuildTarget%25\.data\ &quot;&#xD;&#xA;robocopy /mir &quot;$(ProjectDir)..\..\Data\.databeta\ &quot; &quot;%25BuildTarget%25\.databeta\ &quot;&#xD;&#xA;robocopy /mir &quot;$(ProjectDir)..\..\Data\.data-custom\ &quot; &quot;%25BuildTarget%25\.data-custom\ &quot;&#xD;&#xA;&#xD;&#xA;@REM Copy 2sxc JS stuff&#xD;&#xA;robocopy /mir &quot;$(Dev2sxcAssets)\js\ &quot; &quot;%25BuildTarget%25\js\ &quot;&#xD;&#xA;robocopy /mir &quot;$(Dev2sxcAssets)\dist\ &quot; &quot;%25BuildTarget%25\dist\ &quot;&#xD;&#xA;robocopy /mir &quot;$(Dev2sxcAssets)\system\ &quot; &quot;%25BuildTarget%25\system\ &quot;&#xD;&#xA;&#xD;&#xA;@echo Copied all files to this Website target: '%25BuildTarget%25'&#xD;&#xA;&#xD;&#xA;" />
+    <Exec Command="@set BuildTarget=$(ProjectDir)wwwroot\System\Sxc&#xD;&#xA;&#xD;&#xA;@REM Copy the data folders&#xD;&#xA;robocopy /mir $(ProjectDir)..\..\Data\.data\ %25BuildTarget%25\.data\&#xD;&#xA;robocopy /mir $(ProjectDir)..\..\Data\.databeta\ %25BuildTarget%25\.databeta\&#xD;&#xA;robocopy /mir $(ProjectDir)..\..\Data\.data-custom\ %25BuildTarget%25\.data-custom\&#xD;&#xA;&#xD;&#xA;@REM Copy 2sxc JS stuff&#xD;&#xA;robocopy /mir $(Dev2sxcAssets)\js\ %25BuildTarget%25\js\&#xD;&#xA;robocopy /mir $(Dev2sxcAssets)\dist\ %25BuildTarget%25\dist\&#xD;&#xA;robocopy /mir $(Dev2sxcAssets)\system\ %25BuildTarget%25\system\&#xD;&#xA;&#xD;&#xA;@echo Copied all files to this Website target: '%25BuildTarget%25'" />
   </Target>
 
 </Project>
