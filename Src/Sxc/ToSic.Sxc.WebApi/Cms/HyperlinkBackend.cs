@@ -2,12 +2,10 @@
 using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -27,7 +25,7 @@ namespace ToSic.Sxc.WebApi.Cms
 		{
 			try
 			{
-				var context = _ctxResolver.App(appId);
+				var context = _ctxResolver.BlockOrApp(appId);
 				// different security checks depending on the link-type
 				var lookupPage = hyperlink.Trim().StartsWith("page", StringComparison.OrdinalIgnoreCase);
 

@@ -34,7 +34,7 @@ namespace ToSic.Sxc.WebApi.App
         {
             var wrapLog = Log.Call($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
 
-            var appCtx = appId != null ? _ctxResolver.App(appId.Value) : _ctxResolver.BlockRequired();
+            var appCtx = appId != null ? _ctxResolver.BlockOrApp(appId.Value) : _ctxResolver.BlockRequired();
 
             // If no app available from context, check if an app-id was supplied in url
             // Note that it may only be an app from the current portal

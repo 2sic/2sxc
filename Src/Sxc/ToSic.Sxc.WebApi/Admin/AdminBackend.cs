@@ -24,7 +24,7 @@ namespace ToSic.Sxc.WebApi.Admin
             // reset app-id if we get a info-token like -100
             if (appId < 0) appId = Eav.Constants.AppIdEmpty;
 
-            var appContext = appId != Eav.Constants.AppIdEmpty ? _ctxResolver.App(appId) : null;
+            var appContext = appId != Eav.Constants.AppIdEmpty ? _ctxResolver.BlockOrApp(appId) : null;
             var context = appContext ?? _ctxResolver.Site();
             // if we have an appid (we don't have it in an install-new-apps-scenario) check permissions
             if (appContext != null)

@@ -20,7 +20,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         public dynamic Usage(int appId, Guid guid)
         {
-            var context = _ctxResolver.App(appId);
+            var context = _ctxResolver.BlockOrApp(appId);
             var permCheck = ServiceProvider.Build<MultiPermissionsApp>().Init(context, context.AppState, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);

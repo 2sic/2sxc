@@ -28,7 +28,7 @@ namespace ToSic.Sxc.WebApi.Adam
             
         {
             Log.LinkTo(parentLog);
-            var context = appId > 0 ? _ctxResolver.App(appId) : _ctxResolver.AppNameRouteBlock(null);
+            var context = appId > 0 ? _ctxResolver.BlockOrApp(appId) : _ctxResolver.AppNameRouteBlock(null);
             var logCall = Log.Call<T>($"app: {context.AppState.Show()}, type: {contentType}, itemGuid: {itemGuid}, field: {field}, portalRoot: {usePortalRoot}");
             AdamContext.Init(context, contentType, field, itemGuid, usePortalRoot, Log);
             return logCall(null, this as T);

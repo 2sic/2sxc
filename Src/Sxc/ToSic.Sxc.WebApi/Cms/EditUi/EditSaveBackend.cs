@@ -36,7 +36,7 @@ namespace ToSic.Sxc.WebApi.Cms
             _appId = appId;
             // The context should be from the block if there is one, because it affects saving/publishing
             // Basically it can result in things being saved draft or titles being updated
-            _context = _ctxResolver.BlockOrApp(appId); // _ctxResolver.BlockOrNull() ?? _ctxResolver.App(appId); // context;
+            _context = _ctxResolver.BlockOrApp(appId);
             _pagePublishing.Init(_context, Log);
             return this;
         }

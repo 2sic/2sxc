@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public IEnumerable<Dictionary<string, object>> List(int appId, string contentType)
         {
-            var appContext = ContextResolver.App(appId);
+            var appContext = ContextResolver.BlockOrApp(appId);
             return GetService<EntityApi>()
                 .InitOrThrowBasedOnGrants(appContext, appContext.AppState, contentType,
                     GrantSets.ReadSomething, Log)
@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, int id, int appId, bool force = false)
         {
-            var appContext = ContextResolver.App(appId);
+            var appContext = ContextResolver.BlockOrApp(appId);
             GetService<EntityApi>()
                 .InitOrThrowBasedOnGrants(appContext, appContext.AppState, contentType,
                     GrantSets.DeleteSomething, Log)
@@ -78,7 +78,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, Guid guid, int appId, bool force = false)
         {
-            var appContext = ContextResolver.App(appId);
+            var appContext = ContextResolver.BlockOrApp(appId);
             GetService<EntityApi>()
                 .InitOrThrowBasedOnGrants(appContext, appContext.AppState, contentType,
                     GrantSets.DeleteSomething, Log)

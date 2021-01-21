@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Dnn.Run
             }
         }
 
-        private TabInfo _tab;
+        //private TabInfo _tab;
 
         public PortalSettings Portal { get; }
 

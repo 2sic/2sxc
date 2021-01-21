@@ -26,7 +26,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         public IEnumerable<EntityForPickerDto> GetAvailableEntities(int appId, string[] items, string contentTypeName)
         {
-            var context = _ctxResolver.App(appId);
+            var context = _ctxResolver.BlockOrApp(appId);
             // do security check
             var permCheck = string.IsNullOrEmpty(contentTypeName)
                 ? ServiceProvider.Build<MultiPermissionsApp>().Init(context, context.AppState, Log)
