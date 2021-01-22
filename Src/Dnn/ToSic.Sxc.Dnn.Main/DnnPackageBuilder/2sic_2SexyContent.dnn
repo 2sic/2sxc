@@ -925,8 +925,6 @@
                   <!-- register the WebP Mime Type - seems complicated, but copied from DNNs registration of svg  https://github.com/dnnsoftware/Dnn.Platform/blob/c35fdc7fb75db0438f3b872ce4e279e3ea73e7c2/Dnn.AdminExperience/Library/Dnn.PersonaBar.UI/Dnn.PersonaBar.UI.dnn#L68-L97 -->
                   <node path="/configuration/system.webServer" targetpath="/configuration/system.webServer/staticContent" action="update" collision="ignore">
                     <staticContent>
-                      <remove fileExtension=".webp" />
-                      <mimeMap fileExtension=".webp" mimeType="image/webp" />
                     </staticContent>
                   </node>
                   <node path="/configuration/system.webServer/staticContent/remove[@fileExtension='.webp']" action="remove" />
