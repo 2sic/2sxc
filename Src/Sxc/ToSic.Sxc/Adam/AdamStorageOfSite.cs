@@ -4,9 +4,9 @@
     /// A container for the tenant (top level)
     /// For browsing the tenants content files
     /// </summary>
-    public class AdamOfSite<TFolderId, TFileId>: AdamStorage<TFolderId, TFileId>
+    public class AdamStorageOfSite<TFolderId, TFileId>: AdamStorage<TFolderId, TFileId>
     {
-        public AdamOfSite(AdamManager<TFolderId, TFileId> manager) : base(manager)
+        public AdamStorageOfSite(AdamManager<TFolderId, TFileId> manager) : base(manager)
         {
         }
 

@@ -20,12 +20,15 @@ namespace ToSic.Sxc.Adam
 
 
         protected override string GeneratePath(string subFolder)
-            => Configuration.ItemFolderMask
+        {
+            var callLog = Log.Call<string>(subFolder);
+            var result = Configuration.ItemFolderMask
                 .Replace("[AdamRoot]", Manager.Path)
                 .Replace("[Guid22]", Mapper.GuidCompress(_entityGuid))
                 .Replace("[FieldName]", _fieldName)
                 .Replace("[SubFolder]", subFolder) // often blank, so it will just be removed
-                .Replace("//", "/"); // sometimes has duplicate slashes if subfolder blank but sub-sub is given
-
+                .Replace("//", "/");
+            return callLog(result, result);
+        }
     }
 }

@@ -16,7 +16,12 @@
         /// Will create the folder if it does not exist
         /// </remarks>
         internal Folder<TFolderId, TFileId> Folder(string subFolder, bool autoCreate)
-            => Log.Intercept($"{nameof(Folder)}({subFolder}, {autoCreate})", () => Manager.Folder(GeneratePath(subFolder), autoCreate));
+        {
+            var callLog = Log.Call($"{nameof(Folder)}(\"{subFolder}\", {autoCreate})");
+            var fld = Manager.Folder(GeneratePath(subFolder), autoCreate);
+            callLog("ok");
+            return fld;
+        }
 
 
         /// <summary>
