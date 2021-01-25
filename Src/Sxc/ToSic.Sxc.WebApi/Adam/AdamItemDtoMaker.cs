@@ -1,7 +1,6 @@
-﻿using System.IO;
-using ToSic.Eav.Security.Permissions;
-using ToSic.Eav.Helpers;
+﻿using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
@@ -23,23 +22,23 @@ namespace ToSic.Sxc.WebApi.Adam
             _security = dependencies.Security;
         }
 
-        public AdamItemDtoMaker<TFolderId, TFileId> Init(AdamState state)
+        public AdamItemDtoMaker<TFolderId, TFileId> Init(AdamContext adamContext)
         {
-            AdamState = state;
+            AdamContext = adamContext;
             return this;
         }
 
         private readonly AdamSecurityChecksBase _security;
-        public AdamState AdamState;
+        public AdamContext AdamContext;
 
         #endregion
 
         private const string ThumbnailPattern = "{0}?w=120&h=120&mode=crop&urlSource=backend";
         private const string PreviewPattern = "{0}?w=800&h=800&mode=max&urlSource=backend";
 
-        public virtual AdamItemDto Create(Sxc.Adam.File<TFolderId, TFileId> original)
+        public virtual AdamItemDto Create(File<TFolderId, TFileId> original)
         {
-            var url = original.Url;// Path.Combine(AdamBaseUrl, original.Path).Forwardslash();
+            var url = original.Url;
             var item = new AdamItemDto<TFolderId, TFileId>(false, original.SysId, original.ParentSysId, original.FullName, original.Size,
                 original.Created, original.Modified)
             {
@@ -55,7 +54,7 @@ namespace ToSic.Sxc.WebApi.Adam
         }
 
 
-        public virtual AdamItemDto Create(Sxc.Adam.Folder<TFolderId, TFileId> folder)
+        public virtual AdamItemDto Create(Folder<TFolderId, TFileId> folder)
         {
             var item = new AdamItemDto<TFolderId, TFolderId>(true, folder.SysId, folder.ParentSysId, folder.Name, 0, folder.Created,
                 folder.Modified)
@@ -67,12 +66,9 @@ namespace ToSic.Sxc.WebApi.Adam
             return item;
         }
 
-        public virtual string AdamBaseUrl => _adamBaseUrl ?? (_adamBaseUrl = AdamState.Context.Site.ContentPath);
-        private string _adamBaseUrl;
-
         private bool CanEditFolder(Eav.Apps.Assets.IAsset original)
         {
-            return AdamState.UseSiteRoot
+            return AdamContext.UseSiteRoot
                 ? _security.CanEditFolder(original)
                 : ContextAllowsEdit;
         }
@@ -82,7 +78,7 @@ namespace ToSic.Sxc.WebApi.Adam
         /// </summary>
         private bool ContextAllowsEdit 
             => _contextAllowsEdit 
-               ?? (_contextAllowsEdit = !AdamState.Security.UserIsRestricted || AdamState.Security.FieldPermissionOk(GrantSets.WriteSomething)).Value;
+               ?? (_contextAllowsEdit = !AdamContext.Security.UserIsRestricted || AdamContext.Security.FieldPermissionOk(GrantSets.WriteSomething)).Value;
         private bool? _contextAllowsEdit;
 
 

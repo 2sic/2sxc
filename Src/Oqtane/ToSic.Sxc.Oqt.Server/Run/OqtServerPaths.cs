@@ -15,8 +15,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public string FullAppPath(string virtualPath) => FullContentPath(virtualPath);
 
 
-        public string FullSystemPath(string virtualPath) => Path.Combine(_hostingEnvironment.WebRootPath, NoLeadingSlashes(virtualPath));
-
         public string FullContentPath(string virtualPath)
         {
             var path = NoLeadingSlashes(virtualPath);

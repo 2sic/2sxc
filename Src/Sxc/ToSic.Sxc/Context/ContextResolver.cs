@@ -39,7 +39,19 @@ namespace ToSic.Sxc.Context
 
         public IContextOfBlock BlockOrNull() => BlockContext;
 
-        public IContextOfApp BlockOrApp(int appId) => BlockContext ?? App(appId);
+        public IContextOfApp BlockOrApp(int appId)
+        {
+            // get the current block context
+            var ctx = BlockContext;
+            
+            // if there is a block context, make sure it's of the requested app (or no app was specified)
+            // then return that
+            if(ctx != null && (ctx.AppState.AppId == appId || appId > 1)) return ctx;
+            
+            // if block was found but we're working on another app (like through app-admin)
+            // then ignore block permissions / context and only return app
+            return App(appId);
+        }
 
         private IContextOfBlock BlockContext => _blockContext ?? (_blockContext = _getBlockContext?.Invoke());
         private IContextOfBlock _blockContext;

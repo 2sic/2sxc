@@ -73,11 +73,11 @@ namespace ToSic.Sxc.Dnn.Run
         public static bool EnableLogging(ConcurrentDictionary<object, object> props)
         {
             if (props == null) return false;
-            if (!props.TryGetValue(Constants.AdvancedLoggingEnabledKey, out var enabled)) return false;
+            if (!props.TryGetValue(DnnConstants.AdvancedLoggingEnabledKey, out var enabled)) return false;
             if (!(enabled is bool)) return false;
             if (!(bool)enabled) return false;
 
-            if (!props.TryGetValue(Constants.AdvancedLoggingTillKey, out var till)) return false;
+            if (!props.TryGetValue(DnnConstants.AdvancedLoggingTillKey, out var till)) return false;
             if (!(till is DateTime)) return false;
             if (((DateTime)till).CompareTo(DateTime.Now) <= 0) return false;
             return true;
@@ -94,9 +94,9 @@ namespace ToSic.Sxc.Dnn.Run
                 duration = MaxDuration;
 
             var prop = GlobalConfiguration.Configuration.Properties;
-            prop.GetOrAdd(Constants.AdvancedLoggingEnabledKey, duration > 0);
+            prop.GetOrAdd(DnnConstants.AdvancedLoggingEnabledKey, duration > 0);
             var timeout = DateTime.Now.AddMinutes(duration);
-            prop.AddOrUpdate(Constants.AdvancedLoggingTillKey, timeout, (a, b) => timeout);
+            prop.AddOrUpdate(DnnConstants.AdvancedLoggingTillKey, timeout, (a, b) => timeout);
             return $"Extended logging activated for {duration} minutes to {timeout}";
         }
     }

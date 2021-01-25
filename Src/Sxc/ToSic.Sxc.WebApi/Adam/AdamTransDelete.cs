@@ -1,27 +1,28 @@
 ﻿using System;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
     public class AdamTransDelete<TFolderId, TFileId> : AdamTransactionBase<AdamTransDelete<TFolderId, TFileId>, TFolderId, TFileId>
     {
-        public AdamTransDelete(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextResolver ctxResolver) : base(adamState, ctxResolver, "Adm.TrnDel") { }
+        public AdamTransDelete(Lazy<AdamContext<TFolderId, TFileId>> adamState, IContextResolver ctxResolver) : base(adamState, ctxResolver, "Adm.TrnDel") { }
 
         public bool Delete(string parentSubfolder, bool isFolder, TFolderId id, TFileId fileId)
         {
             Log.Add($"delete");
-            if (!State.Security.UserIsPermittedOnField(GrantSets.DeleteSomething, out var exp))
+            if (!AdamContext.Security.UserIsPermittedOnField(GrantSets.DeleteSomething, out var exp))
                 throw exp;
 
             // check that if the user should only see drafts, he doesn't see items of published data
-            if (!State.Security.UserIsNotRestrictedOrItemIsDraft(State.ItemGuid, out var permissionException))
+            if (!AdamContext.Security.UserIsNotRestrictedOrItemIsDraft(AdamContext.ItemGuid, out var permissionException))
                 throw permissionException;
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var parent = State.ContainerContext.Folder(parentSubfolder, false); // as IFolder<TFolderId, TFileId>;
+            var parent = AdamContext.ContainerContext.Folder(parentSubfolder, false); // as IFolder<TFolderId, TFileId>;
 
-            var fs = State.AdamAppContext.AdamFs;
+            var fs = AdamContext.AdamManager.AdamFs;
             if (isFolder)
             {
                 var target = fs.GetFolder(id);

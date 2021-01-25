@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Edit.Toolbar
                 // only set parent if not empty - as it's always a valid int and wouldn't be null
                 {
                     parent = editingData.Parent;
-                    fields = editingData.Fields;
+                    fields = editingData.Field;
                     entityId = entity.EntityId;
                     contentType = entity.Type.Name;
                 }

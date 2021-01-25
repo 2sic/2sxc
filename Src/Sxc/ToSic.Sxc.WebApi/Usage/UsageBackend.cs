@@ -26,7 +26,7 @@ namespace ToSic.Sxc.WebApi.Usage
         public IEnumerable<ViewDto> ViewUsage(int appId, Guid guid, Func<List<IView>, List<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
         {
             var wrapLog = Log.Call<IEnumerable<ViewDto>>($"{appId}, {guid}");
-            var context = _ctxResolver.App(appId);
+            var context = _ctxResolver.BlockOrApp(appId);
 
             // extra security to only allow zone change if host user
             var permCheck = ServiceProvider.Build<MultiPermissionsApp>().Init(context, context.AppState, Log);

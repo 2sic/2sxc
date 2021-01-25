@@ -18,14 +18,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Logging
             {
                 var reqProps = actionContext.Request.Properties;
                 // check if we have any logging details for this request
-                if (!reqProps.ContainsKey(Constants.EavLogKey)) return;
+                if (!reqProps.ContainsKey(DnnConstants.EavLogKey)) return;
 
                 if (reqProps.ContainsKey(AlreadyLogged)) return;
 
-                var log = reqProps[Constants.EavLogKey] as ILog;
+                var log = reqProps[DnnConstants.EavLogKey] as ILog;
 
                 // check if we have additional context information (portal, module, etc.)
-                reqProps.TryGetValue(Constants.DnnContextKey, out var dnnContext);
+                reqProps.TryGetValue(DnnConstants.DnnContextKey, out var dnnContext);
 
                 DnnLogging.LogToDnn("2sxc-Api", 
                     actionContext.Request.RequestUri.PathAndQuery, 

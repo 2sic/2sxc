@@ -8,22 +8,24 @@ namespace ToSic.Sxc.Data
     public partial class DynamicEntityWithList : IList<object>
     {
         #region Implemented features as read-only List
+
         IEnumerator<object> IEnumerable<object>.GetEnumerator() => DynEntities.GetEnumerator();
         public bool Contains(object item) => DynEntities.Contains(item);
 
         public int IndexOf(object item) => DynEntities.IndexOf(item as IDynamicEntity);
-        #endregion
-
-        #region Not implemented IList interfaces
-
-        public void Add(object item) => throw new NotImplementedException();
-
         public void CopyTo(object[] array, int arrayIndex)
         {
             var target = new IDynamicEntity[DynEntities.Count];
             DynEntities.CopyTo(target, arrayIndex);
             target.CopyTo(array, arrayIndex);
         }
+
+        #endregion
+
+        #region Not implemented IList interfaces
+
+        public void Add(object item) => throw new NotImplementedException();
+
 
         public bool Remove(object item) => throw new NotImplementedException();
 

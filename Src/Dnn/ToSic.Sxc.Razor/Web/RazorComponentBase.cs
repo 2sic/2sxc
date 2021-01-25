@@ -3,6 +3,7 @@ using System.Web.Hosting;
 using System.Web.WebPages;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
@@ -91,20 +92,19 @@ namespace ToSic.Sxc.Web
         #region IHasLog
 
         /// <inheritdoc />
-        public ILog Log => DynCode.Log;
+        public ILog Log => _log ?? (_log = new Log("Dyn.Temp"));
 
+        private ILog _log;
         #endregion
 
         public void DynamicCodeCoupling(IDynamicCode parent)
         {
+            if (!(parent is DnnDynamicCodeRoot isDynCode)) return;
+            
+            DynCode = isDynCode;
+            _log = new Log("Rzr.Comp", DynCode?.Log);
             var wrapLog = Log.Call();
-            var parentIsDynCode = false;
-            if (parent is DnnDynamicCodeRoot isDynCode)
-            {
-                DynCode = isDynCode;
-                parentIsDynCode = true;
-            }
-            wrapLog(parentIsDynCode.ToString());
+            wrapLog("ok");
         }
     }
 

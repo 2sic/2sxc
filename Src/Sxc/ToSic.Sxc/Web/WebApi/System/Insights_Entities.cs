@@ -28,11 +28,11 @@ namespace ToSic.Sxc.Web.WebApi.System
             {
                 Log.Add("getting content-type stats");
                 var entities = type == "all"
-                    ? appRead.Entities.All.ToImmutableArray() // .ToList()
+                    ? appRead.Entities.All.ToImmutableArray()
                     : appRead.Entities.Get(type).ToImmutableArray();
                 msg += p($"entities: {entities.Length}\n");
                 msg += "<table id='table'><thead>"
-                    + tr(new[] { "#", "Id", "Guid", "Title", "Type", "Modified", "Owner", "Version", "Metadata", "Permissions" }, true)
+                    + tr(new[] { "#", "Id", Eav.Constants.SysFieldGuid, Eav.Constants.SysFieldTitle, "Type", "Modified", "Owner", "Version", "Metadata", "Permissions" }, true)
                     + "</thead>"
                     + "<tbody>";
                 var count = 0;

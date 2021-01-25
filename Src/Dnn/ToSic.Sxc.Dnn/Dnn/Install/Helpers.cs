@@ -1,10 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Web;
-using System.Xml.Linq;
-using ToSic.Eav.Apps.ImportExport;
-using ToSic.Eav.Logging;
+﻿using System.IO;
 
 namespace ToSic.Sxc.Dnn.Install
 {

@@ -2,21 +2,20 @@
 using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Security;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
     public class HyperlinkBackend<TFolderId, TFileId>: WebApiBackendBase<HyperlinkBackend<TFolderId, TFileId>>
     {
-        private readonly Lazy<AdamState<TFolderId, TFileId>> _adamState;
+        private readonly Lazy<AdamContext<TFolderId, TFileId>> _adamState;
         private readonly IContextResolver _ctxResolver;
-        private AdamState<TFolderId, TFileId> AdamState => _adamState.Value;
+        private AdamContext<TFolderId, TFileId> AdamContext => _adamState.Value;
 
-        public HyperlinkBackend(Lazy<AdamState<TFolderId, TFileId>> adamState, IContextResolver ctxResolver, IServiceProvider serviceProvider) : base(serviceProvider, "Bck.HypLnk")
+        public HyperlinkBackend(Lazy<AdamContext<TFolderId, TFileId>> adamState, IContextResolver ctxResolver, IServiceProvider serviceProvider) : base(serviceProvider, "Bck.HypLnk")
         {
             _adamState = adamState;
             _ctxResolver = ctxResolver.Init(Log);
@@ -26,7 +25,7 @@ namespace ToSic.Sxc.WebApi.Cms
 		{
 			try
 			{
-				var context = _ctxResolver.App(appId);
+				var context = _ctxResolver.BlockOrApp(appId);
 				// different security checks depending on the link-type
 				var lookupPage = hyperlink.Trim().StartsWith("page", StringComparison.OrdinalIgnoreCase);
 
@@ -52,7 +51,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
 				// file-check, more abilities to allow
 				// this will already do a ensure-or-throw inside it if outside of adam
-                var adamCheck = AdamState; // new AdamState<int, int>();
+                var adamCheck = AdamContext; // new AdamState<int, int>();
                 adamCheck.Init(context, contentType, field, guid, isOutsideOfAdam, Log);
 				if (!adamCheck.Security.SuperUserOrAccessingItemFolder(resolved, out var exp))
 					throw exp;

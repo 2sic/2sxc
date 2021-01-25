@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             FolderRepository = folderRepository;
         }
 
-        public IAdamFileSystem<int, int> Init(AdamAppContext<int, int> adamContext, ILog parentLog)
+        public IAdamFileSystem<int, int> Init(AdamManager<int, int> adamContext, ILog parentLog)
         {
             Log.LinkTo(parentLog);
             var wrapLog = Log.Call();
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             return this;
         }
 
-        protected AdamAppContext<int, int> AdamContext;
+        protected AdamManager<int, int> AdamContext;
 
         #endregion
 
@@ -70,21 +70,10 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 var path = Path.Combine(_oqtServerPaths.FullContentPath(AdamContext.Site.ContentPath), file.Path);
 
                 var currentFilePath = Path.Combine(path, file.FullName);
-                if (!System.IO.File.Exists(currentFilePath))
+                if (TryToRenameFile(newName, currentFilePath, path))
                 {
-                    callLog($"Can't rename because source file do not exists {currentFilePath}");
                     return;
                 }
-
-                var newFilePath = Path.Combine(path, newName);
-                if (!System.IO.File.Exists(newFilePath))
-                {
-                    callLog($"Can't rename because file with new name already exists {newFilePath}");
-                    return;
-                }
-
-                System.IO.File.Move(currentFilePath, newFilePath);
-                Log.Add($"File renamed {currentFilePath} to {newFilePath}");
 
                 var dnnFile = FileRepository.GetFile(file.AsOqt().SysId);
                 dnnFile.Name = newName;
@@ -97,6 +86,28 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             {
                 callLog($"Error:{e.Message}; {e.InnerException}");
             }
+        }
+
+        // TODO: try to inherit from AdamFileSystemBasic and use the TryToRename from there
+        private bool TryToRenameFile(string newName, string fullPath, string path)
+        {
+            var callLog = Log.Call($"{newName}");
+            if (!System.IO.File.Exists(fullPath))
+            {
+                callLog($"Can't rename because source file do not exists {fullPath}");
+                return true;
+            }
+
+            var newFilePath = Path.Combine(path, newName);
+            if (System.IO.File.Exists(newFilePath))
+            {
+                callLog($"Can't rename because file with new name already exists {newFilePath}");
+                return true;
+            }
+
+            System.IO.File.Move(fullPath, newFilePath);
+            Log.Add($"File renamed {fullPath} to {newFilePath}");
+            return false;
         }
 
         public void Delete(IFile file)
@@ -119,8 +130,10 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             {
                 body.CopyTo(stream);
             }
-            FileInfo fileInfo = new FileInfo(filePath);
-            File newAdamFile = new File()
+            var fileInfo = new FileInfo(filePath);
+            
+            // register into oqtane
+            var oqtFileData = new File
             {
                 Name = Path.GetFileName(fileName),
                 FolderId = parent.Id,
@@ -129,8 +142,8 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 ImageHeight = 0,
                 ImageWidth = 0
             };
-            var dnnFile = FileRepository.AddFile(newAdamFile);
-            return callLog("ok", GetFile(dnnFile.FileId));
+            var oqtFile = FileRepository.AddFile(oqtFileData);
+            return callLog("ok", GetFile(oqtFile.FileId));
         }
 
         /// <summary>
@@ -147,7 +160,8 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             var dnnFolder = FolderRepository.GetFolder(parentFolder.AsOqt().SysId);
             var name = Path.GetFileNameWithoutExtension(fileName);
             var ext = Path.GetExtension(fileName);
-            for (var i = 1; i < 1000 && System.IO.File.Exists(Path.Combine(_oqtServerPaths.FullContentPath(AdamContext.Site.ContentPath), dnnFolder.Path, Path.GetFileName(fileName))); i++)
+            for (var i = 1; i < AdamFileSystemBasic.MaxSameFileRetries 
+                            && System.IO.File.Exists(Path.Combine(_oqtServerPaths.FullContentPath(AdamContext.Site.ContentPath), dnnFolder.Path, Path.GetFileName(fileName))); i++)
                 fileName = $"{name}-{i}{ext}";
 
             return callLog(fileName, fileName);

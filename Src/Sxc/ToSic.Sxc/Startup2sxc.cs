@@ -8,6 +8,7 @@ using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.DotNet;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
@@ -68,9 +69,11 @@ namespace ToSic.Sxc
 
             // Adam stuff
             services.TryAddTransient<AdamMetadataMaker>();
+            services.TryAddTransient<AdamSecurityChecksBase, AdamSecurityChecksBasic>();
+            services.TryAddTransient<IAdamPaths, AdamPathsBase>();
 
             // WIP - add net-core specific stuff
-            services.AddSxcNetCore();
+            services.AddNetVariations();
 
             // Add possibly missing fallbacks
             services.AddSxcCoreFallbackServices();
@@ -78,10 +81,13 @@ namespace ToSic.Sxc
             return services;
         }
 
-        public static IServiceCollection AddSxcNetCore(this IServiceCollection services)
+        public static IServiceCollection AddNetVariations(this IServiceCollection services)
         {
 #if NETSTANDARD
-            services.TryAddTransient<IHttp, ToSic.Sxc.DotNetCore.Web.NetCoreHttp>();
+            services.TryAddTransient<IHttp, HttpNetCore>();
+#else
+            // WebForms implementations
+            services.TryAddScoped<IHttp, HttpNetFramework>();
 #endif
             return services;
         }
@@ -97,6 +103,7 @@ namespace ToSic.Sxc
         /// </remarks>
         public static IServiceCollection AddSxcCoreFallbackServices(this IServiceCollection services)
         {
+            // basic environment, pages, modules etc.
             services.TryAddTransient<IEnvironmentInstaller, BasicEnvironmentInstaller>();
             services.TryAddTransient<IPlatformModuleUpdater, BasicModuleUpdater>();
             services.TryAddTransient<IPagePublishingResolver, BasicPagePublishingResolver>();
@@ -105,9 +112,12 @@ namespace ToSic.Sxc
             // Code / Dynamic Code
             services.TryAddTransient<DynamicCodeRoot, BasicDynamicCodeRoot>();
             services.TryAddTransient<IModule, ModuleUnknown>();
-
+            
             // 11.08 - fallback in case not added
             services.TryAddSingleton<IPlatform, PlatformUnknown>();
+
+            // ADAM basics
+            services.TryAddTransient<IAdamFileSystem<string, string>, AdamFileSystemBasic>();
 
             return services;
         }

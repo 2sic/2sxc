@@ -18,21 +18,21 @@ namespace ToSic.Sxc.Dnn.ImportExport
 
         #region Constructor / DI
 
-        public DnnXmlExporter(AdamAppContext<int, int> adamAppContext, IContextResolver ctxResolver, XmlSerializer xmlSerializer): base(xmlSerializer, DnnConstants.LogName)
+        public DnnXmlExporter(AdamManager<int, int> adamManager, IContextResolver ctxResolver, XmlSerializer xmlSerializer): base(xmlSerializer, DnnConstants.LogName)
         {
             _ctxResolver = ctxResolver.Init(Log);
-            AdamAppContext = adamAppContext;
+            AdamManager = adamManager;
         }
 
         private readonly IFileManager _dnnFiles = FileManager.Instance;
-        internal AdamAppContext<int, int> AdamAppContext { get; }
+        internal AdamManager<int, int> AdamManager { get; }
 
         public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds, ILog parentLog)
         {
             var context = _ctxResolver.App(appId);
             var tenant = new DnnSite();
-            var app = AdamAppContext.AppRuntime.ServiceProvider.Build<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
-            AdamAppContext.Init(context, 10, Log);
+            var app = AdamManager.AppRuntime.ServiceProvider.Build<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
+            AdamManager.Init(context, 10, Log);
             Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
 
             // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally
@@ -46,11 +46,11 @@ namespace ToSic.Sxc.Dnn.ImportExport
         public override void AddFilesToExportQueue()
         {
             // Add Adam Files To Export Queue
-            var adamIds = AdamAppContext.Export.AppFiles;
+            var adamIds = AdamManager.Export.AppFiles;
             adamIds.ForEach(AddFileAndFolderToQueue);
 
             // also add folders in adam - because empty folders may also have metadata assigned
-            var adamFolders = AdamAppContext.Export.AppFolders;
+            var adamFolders = AdamManager.Export.AppFolders;
             adamFolders.ForEach(ReferencedFolderIds.Add);
         }
 

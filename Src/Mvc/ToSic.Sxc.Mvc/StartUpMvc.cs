@@ -27,8 +27,6 @@ namespace ToSic.Sxc.Mvc
             // MVC Specific stuff
             services.AddScoped<MvcPageProperties>();
 
-            services.AddTransient<AdamSecurityChecksBase, MvcAdamSecurityChecks>();
-
             // Add SxcEngineTest
             services.AddTransient<SxcMvc>();
             services.AddTransient<IAdamFileSystem<string, string>, MvcFileSystem>();

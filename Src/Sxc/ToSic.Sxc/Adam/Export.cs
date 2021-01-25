@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Adam
 
         private readonly IAdamFileSystem<TFolderId, TFileId> _envFs;
 
-        public Export(AdamAppContext<TFolderId, TFileId> adm)
+        public Export(AdamManager<TFolderId, TFileId> adm)
         {
             _root = adm.RootFolder;
             _envFs = adm.AdamFs;

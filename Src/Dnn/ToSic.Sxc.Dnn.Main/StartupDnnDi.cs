@@ -28,11 +28,10 @@ using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
-
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.Context;
-using ToSic.Sxc.WebForms.Web;
+
 
 namespace ToSic.SexyContent
 {
@@ -41,10 +40,6 @@ namespace ToSic.SexyContent
     {
         public static IServiceCollection AddDnn(this IServiceCollection services, string appsCacheOverride)
         {
-            // WebForms implementations
-            services.TryAddScoped<IHttp, WebFormsHttp>();
-            services.TryAddScoped<WebFormsHttp>();
-
             // Core Runtime Context Objects
             services.TryAddScoped<IUser, DnnUser>();
             services.TryAddScoped<ISite, DnnSite>();
@@ -70,11 +65,11 @@ namespace ToSic.SexyContent
             services.TryAddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
             services.TryAddTransient<DnnDynamicCodeRoot>();
             services.TryAddTransient<IPlatformModuleUpdater, DnnModuleUpdater>();
-            services.TryAddTransient<IEnvironmentInstaller, InstallationController>();
+            services.TryAddTransient<IEnvironmentInstaller, DnnInstallationController>();
 
             // ADAM 
             services.TryAddTransient<IAdamFileSystem<int, int>, DnnAdamFileSystem>();
-            services.TryAddTransient<AdamAppContext, AdamAppContext<int, int>>();
+            services.TryAddTransient<AdamManager, AdamManager<int, int>>();
 
             // Settings
             services.TryAddTransient<IUiContextBuilder, DnnUiContextBuilder>();

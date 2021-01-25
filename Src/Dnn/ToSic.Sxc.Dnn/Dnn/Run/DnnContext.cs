@@ -26,7 +26,31 @@ namespace ToSic.Sxc.Dnn.Run
 
         public ModuleInfo Module { get; }
 
-        public TabInfo Tab => Portal?.ActiveTab;
+        /// <summary>
+        /// This used to just be
+        /// </summary>
+        public TabInfo Tab
+        {
+            get
+            {
+                return Portal?.ActiveTab;
+                // Experimental, trying to fix https://github.com/2sic/2sxc/issues/2315
+                // wasn't successful - the SkinPath was always empty with all variations of the code...
+                //if (_tab != null) return _tab;
+                //_tab = Portal?.ActiveTab;
+                //if (Portal == null || _tab == null) return null;
+                
+                //// check if tab info is fully populated
+                //if (string.IsNullOrEmpty(_tab.SkinPath))
+                //{
+                //    var tabController = new TabController();
+                //    _tab = tabController.GetTab(_tab.TabID, Portal.PortalId);
+                //}
+                //return _tab;
+            }
+        }
+
+        //private TabInfo _tab;
 
         public PortalSettings Portal { get; }
 

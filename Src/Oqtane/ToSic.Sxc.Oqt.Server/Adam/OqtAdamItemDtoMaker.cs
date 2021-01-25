@@ -13,21 +13,21 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         #endregion
 
-        public override AdamItemDto Create(Sxc.Adam.File<TFolderId, TFileId> original/*, AdamState state*/)
+        public override AdamItemDto Create(Sxc.Adam.File<TFolderId, TFileId> original)
         {
-            var item = base.Create(original/*, state*/);
+            var item = base.Create(original);
             if(item is AdamItemDto<TFolderId, TFolderId> typed)
-                item.Path = string.Format(OqtConstants.DownloadLinkTemplate, AdamState.Context.Site.Id, typed.Id);
+                item.Path = string.Format(OqtConstants.DownloadLinkTemplate, AdamContext.Context.Site.Id, typed.Id);
 
             return item;
         }
 
 
-        public override AdamItemDto Create(Sxc.Adam.Folder<TFolderId, TFileId> folder/*, AdamState state*/)
+        public override AdamItemDto Create(Sxc.Adam.Folder<TFolderId, TFileId> folder)
         {
             var item = base.Create(folder/*, state*/);
             if (item is AdamItemDto<TFolderId, TFolderId> typed)
-                item.Path = "/" + AdamState.Context.Site.Id + "/api/file/download/" + typed.Id;
+                item.Path = "/" + AdamContext.Context.Site.Id + "/api/file/download/" + typed.Id;
             return item;
         }
 

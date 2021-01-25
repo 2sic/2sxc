@@ -95,11 +95,12 @@ namespace ToSic.Sxc.Conversion
 	    private void AddEditInfo(IEntity entity, Dictionary<string, object> dictionary)
 	    {
             // Add additional information in case we're in edit mode
-            var userMayEdit = WithEdit;// Cms?.UserMayEdit ?? false;
+            var userMayEdit = WithEdit;
 
 	        if (!userMayEdit) return;
 
-	        dictionary.Add(Constants.JsonModifiedNodeName, entity.Modified);
+            // 2021-01-18 disabled, as it's already always added. 
+	        //dictionary.Add(Constants.JsonModifiedNodeName, entity.Modified);
 	        var title = entity.GetBestTitle(Languages);
 	        if (string.IsNullOrEmpty(title))
 	            title = "(no title)";

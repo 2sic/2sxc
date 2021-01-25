@@ -33,13 +33,13 @@ namespace ToSic.Sxc.Adam
         /// <summary>
         /// Get the first metadata entity of an item - or return a fake one instead
         /// </summary>
-        internal IDynamicEntity GetFirstOrFake(AdamAppContext appContext, MetadataFor mdId)
+        internal IDynamicEntity GetFirstOrFake(AdamManager manager, MetadataFor mdId)
         {
-            var meta = GetFirstMetadata(appContext.AppRuntime, mdId) 
+            var meta = GetFirstMetadata(manager.AppRuntime, mdId) 
                        ?? Build.FakeEntity(Eav.Constants.TransientAppId);
             var dynEnt = new DynamicEntity(meta,
-                (appContext.AppContext?.Site).SafeLanguagePriorityCodes(),
-                appContext.CompatibilityLevel,
+                (manager.AppContext?.Site).SafeLanguagePriorityCodes(),
+                manager.CompatibilityLevel,
                 null) {ServiceProviderOrNull = _serviceProvider};
             return dynEnt;
         }

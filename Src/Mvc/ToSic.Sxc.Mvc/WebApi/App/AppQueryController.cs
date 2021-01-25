@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.WebApi.App;
+using ToSic.Sxc.WebApi.PublicApi;
+using NotImplementedException = System.NotImplementedException;
 
 // TODO: #MissingFeature
 // 1. Query from context / header
@@ -12,13 +14,18 @@ namespace ToSic.Sxc.Mvc.WebApi.App
 {
     [Route(WebApiConstants.WebApiRoot + "/app/{appPath}/query/")]
     [ApiController]
-    public class AppQueryController : SxcStatefulControllerBase
+    public class AppQueryController : SxcStatefulControllerBase, IAppQueryController
     {
         #region DI / Constructor
         protected override string HistoryLogName => "App.AppQry";
 
         #endregion
 
+
+        public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(string name, bool includeGuid = false, string stream = null, int? appId = null)
+        {
+            throw new NotImplementedException();
+        }
 
         [HttpGet("{name}")]
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(

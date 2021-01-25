@@ -59,7 +59,7 @@ namespace ToSic.Sxc.WebApi.Cms
             // Security check
             var wrapLog = Log.Call($"load many a#{appId}, items⋮{items.Count}");
 
-            var context = _ctxResolver.App(appId);
+            var context = _ctxResolver.BlockOrApp(appId);
 
             var showDrafts = context.UserMayEdit;
 

@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Http;
-using ToSic.Eav.Context;
+﻿using ToSic.Eav.Context;
 
 namespace IntegrationSamples.SxcEdit01.Adam
 {

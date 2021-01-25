@@ -1,10 +1,6 @@
-﻿using ToSic.Eav;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Run;
+﻿using Newtonsoft.Json;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Edit.ClientContextInfo;
 
 namespace ToSic.Sxc.Web.JsContext
@@ -15,12 +11,16 @@ namespace ToSic.Sxc.Web.JsContext
         public JsContextEnvironment Environment;
         public JsContextUser User;
         public JsContextLanguage Language;
-        public ClientInfoContentBlock ContentBlock; // todo: still not sure if these should be separate...
-        public ClientInfoContentGroup ContentGroup;
+        
+        [JsonProperty("contentBlockReference")]
+        public ContentBlockReferenceDto ContentBlockReference; // todo: still not sure if these should be separate...
+        
+        [JsonProperty("contentBlock")]
+        public ContentBlockDto ContentBlock;
         // ReSharper disable once InconsistentNaming
-        public ClientInfosError error;
+        public ErrorDto error;
 
-        public Ui Ui;
+        public UiDto Ui;
 
         public JsContextAll(JsContextLanguage jsLangCtx) : base("Sxc.CliInf")
         {
@@ -36,11 +36,11 @@ namespace ToSic.Sxc.Web.JsContext
             Language = _jsLangCtx.Init(ctx.Site, block.ZoneId);
             User = new JsContextUser(ctx.User);
 
-            ContentBlock = new ClientInfoContentBlock(block, null, 0, ctx.Publishing.Mode);
-            ContentGroup = new ClientInfoContentGroup(block);
-            Ui = new Ui(((BlockBuilder)block.BlockBuilder)?.UiAutoToolbar ?? false);
+            ContentBlockReference = new ContentBlockReferenceDto(block, ctx.Publishing.Mode);
+            ContentBlock = new ContentBlockDto(block);
+            Ui = new UiDto(((BlockBuilder)block.BlockBuilder)?.UiAutoToolbar ?? false);
 
-            error = new ClientInfosError(block);
+            error = new ErrorDto(block);
             return this;
         }
     }

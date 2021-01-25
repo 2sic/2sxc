@@ -7,18 +7,18 @@ namespace ToSic.Sxc.Adam
 
     public class Folder<TFolderId, TFileId> : Eav.Apps.Assets.Folder<TFolderId, TFileId>, IFolder
     {
-        protected AdamAppContext<TFolderId, TFileId> AdamContext { get; set; }
+        protected AdamManager<TFolderId, TFileId> AdamManager { get; set; }
 
-        public Folder(AdamAppContext<TFolderId, TFileId> adamContext)
+        public Folder(AdamManager<TFolderId, TFileId> adamManager)
         {
-            AdamContext = adamContext;
+            AdamManager = adamManager;
         }
 
         /// <inheritdoc />
-        public dynamic Metadata => AdamContext.MetadataMaker.GetFirstOrFake(AdamContext, MetadataId);
+        public dynamic Metadata => AdamManager.MetadataMaker.GetFirstOrFake(AdamManager, MetadataId);
 
         /// <inheritdoc />
-        public bool HasMetadata => AdamContext.MetadataMaker.GetFirstMetadata(AdamContext.AppRuntime, MetadataId) != null;
+        public bool HasMetadata => AdamManager.MetadataMaker.GetFirstMetadata(AdamManager.AppRuntime, MetadataId) != null;
 
         public MetadataFor MetadataId => _metadataKey ?? (_metadataKey = new MetadataFor
         {
@@ -36,20 +36,20 @@ namespace ToSic.Sxc.Adam
 
         /// <inheritdoc />
         public override bool HasChildren 
-            => _hasChildren ?? (_hasChildren = AdamContext.AdamFs.GetFiles(this).Any() 
-                                               || AdamContext.AdamFs.GetFolders(this).Any()).Value;
+            => _hasChildren ?? (_hasChildren = AdamManager.AdamFs.GetFiles(this).Any() 
+                                               || AdamManager.AdamFs.GetFolders(this).Any()).Value;
         private bool? _hasChildren;
 
 
         /// <inheritdoc />
-        public IEnumerable<IFolder> Folders => _folders ?? (_folders = AdamContext.AdamFs.GetFolders(this)); 
+        public IEnumerable<IFolder> Folders => _folders ?? (_folders = AdamManager.AdamFs.GetFolders(this)); 
 
         private IEnumerable<IFolder> _folders;
 
 
         /// <inheritdoc/>
         public IEnumerable<IFile> Files 
-            => _files ?? (_files = AdamContext.AdamFs.GetFiles(this));
+            => _files ?? (_files = AdamManager.AdamFs.GetFiles(this));
         private IEnumerable<IFile> _files;
     }
 }

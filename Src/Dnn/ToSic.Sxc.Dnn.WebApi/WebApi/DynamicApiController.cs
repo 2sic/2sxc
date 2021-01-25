@@ -45,7 +45,7 @@ namespace ToSic.Sxc.WebApi
             }
 
             // must run this after creating AppAndDataHelpers
-            controllerContext.Request.Properties.Add(Constants.DnnContextKey, Dnn); 
+            controllerContext.Request.Properties.Add(DnnConstants.DnnContextKey, Dnn); 
 
             if(controllerContext.Request.Properties.TryGetValue(CodeCompiler.SharedCodeRootPathKeyInCache, out var value))
                 CreateInstancePath = value as string;

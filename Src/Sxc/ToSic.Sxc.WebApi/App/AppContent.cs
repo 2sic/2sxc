@@ -48,7 +48,7 @@ namespace ToSic.Sxc.WebApi.App
 
         #region Get Items
 
-        internal IEnumerable<Dictionary<string, object>> GetItems(string contentType, string appPath = null)
+        public IEnumerable<Dictionary<string, object>> GetItems(string contentType, string appPath = null)
         {
             var wrapLog = Log.Call($"get entities type:{contentType}, path:{appPath}");
 
@@ -72,7 +72,7 @@ namespace ToSic.Sxc.WebApi.App
         /// ...then process/finish
         /// </summary>
         /// <returns></returns>
-        internal Dictionary<string, object> GetOne(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string appPath)
+        public Dictionary<string, object> GetOne(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string appPath)
         {
             Log.Add($"get and serialize after security check type:{contentType}, path:{appPath}");
 
@@ -93,7 +93,7 @@ namespace ToSic.Sxc.WebApi.App
         #region CreateOrUpdate
 
 
-        internal Dictionary<string, object> CreateOrUpdate(string contentType, Dictionary<string, object> newContentItem, int? id = null, string appPath = null)
+        public Dictionary<string, object> CreateOrUpdate(string contentType, Dictionary<string, object> newContentItem, int? id = null, string appPath = null)
         {
             Log.Add($"create or update type:{contentType}, id:{id}, path:{appPath}");
 
@@ -148,7 +148,7 @@ namespace ToSic.Sxc.WebApi.App
 
         #region Delete
 
-        internal void Delete(string contentType, int id, string appPath)
+        public void Delete(string contentType, int id, string appPath)
         {
             Log.Add($"delete id:{id}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
@@ -163,7 +163,7 @@ namespace ToSic.Sxc.WebApi.App
             entityApi.Delete(itm.Type.Name, id);
         }
 
-        internal void Delete(string contentType, Guid guid, string appPath)
+        public void Delete(string contentType, Guid guid, string appPath)
         {
             Log.Add($"delete guid:{guid}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
