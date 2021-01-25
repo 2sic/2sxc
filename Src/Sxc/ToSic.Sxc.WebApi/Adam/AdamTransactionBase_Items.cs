@@ -23,13 +23,12 @@ namespace ToSic.Sxc.WebApi.Adam
 
             Log.Add("first permission checks passed");
 
-
             // get root and at the same time auto-create the core folder in case it's missing (important)
-            AdamContext.ContainerContext.Folder();
-
+            AdamContext.AdamRoot.Folder();
+            
             // try to see if we can get into the subfolder - will throw error if missing
-            var currentFolder = AdamContext.ContainerContext.Folder(subFolderName, false);
-
+            var currentFolder = AdamContext.AdamRoot.Folder(subFolderName, false);
+            
             // ensure that it's super user, or the folder is really part of this item
             if (!AdamContext.Security.SuperUserOrAccessingItemFolder(currentFolder.Path, out var exp))
             {

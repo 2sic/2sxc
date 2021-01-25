@@ -20,11 +20,11 @@ namespace ToSic.Sxc.WebApi.Adam
                 return null;
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
-            var folder = AdamContext.ContainerContext.Folder();
+            var folder = AdamContext.AdamRoot.Folder();
 
             // try to see if we can get into the subfolder - will throw error if missing
             if (!string.IsNullOrEmpty(parentSubfolder))
-                folder = AdamContext.ContainerContext.Folder(parentSubfolder, false);
+                folder = AdamContext.AdamRoot.Folder(parentSubfolder, false);
 
             // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
             if (AdamContext.UseSiteRoot && !AdamContext.Security.CanEditFolder(folder))
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 : Path.Combine(parentSubfolder, newFolder).Replace("\\", "/");
 
             // now access the subfolder, creating it if missing (which is what we want
-            AdamContext.ContainerContext.Folder(newFolderPath, true);
+            AdamContext.AdamRoot.Folder(newFolderPath, true);
 
             return logCall("ok", ItemsInField(parentSubfolder));
         }

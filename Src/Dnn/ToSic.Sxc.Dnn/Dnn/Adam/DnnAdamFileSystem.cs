@@ -145,8 +145,11 @@ namespace ToSic.Sxc.Dnn.Adam
             callLog("ok");
         }
 
-        public Folder<int, int> Get(string path) 
-            => DnnToAdam(_dnnFolders.GetFolder(AdamContext.Site.Id, path));
+        public Folder<int, int> Get(string path)
+        {
+            var callLog = Log.Call<Folder<int, int>>(path);
+            return callLog(null, DnnToAdam(_dnnFolders.GetFolder(AdamContext.Site.Id, path)));
+        }
 
         public List<Folder<int, int>> GetFolders(IFolder folder)
         {
@@ -189,41 +192,57 @@ namespace ToSic.Sxc.Dnn.Adam
         #endregion
 
         #region DnnToAdam
-        private Folder<int, int> DnnToAdam(IFolderInfo f)
-            => new Folder<int, int>(AdamContext)
+
+        private const string ErrorDnnObjectNull = "Tried to create Adam object but the original is invalid. " +
+                                                    "Probably the DNN file system is out of sync. " +
+                                                    "Re-Sync in the DNN files recursively (in Admin - Files) and the error should go away. ";
+
+        private Folder<int, int> DnnToAdam(IFolderInfo dnnFolderInfo)
+        {
+            var callLog = Log.Call<Folder<int, int>>();
+            
+            if (dnnFolderInfo == null) throw new ArgumentNullException(nameof(dnnFolderInfo), ErrorDnnObjectNull);
+
+            return callLog(null, new Folder<int, int>(AdamContext)
             {
-                Path = f.FolderPath,
-                SysId = f.FolderID,
-                
-                ParentSysId = f.ParentID,
+                Path = dnnFolderInfo.FolderPath,
+                SysId = dnnFolderInfo.FolderID,
 
-                Name = f.DisplayName,
-                Created = f.CreatedOnDate,
-                Modified = f.LastModifiedOnDate,
-                Url = AdamContext.Site.ContentPath + f.FolderPath,
-            };
+                ParentSysId = dnnFolderInfo.ParentID,
+
+                Name = dnnFolderInfo.DisplayName,
+                Created = dnnFolderInfo.CreatedOnDate,
+                Modified = dnnFolderInfo.LastModifiedOnDate,
+                Url = AdamContext.Site.ContentPath + dnnFolderInfo.FolderPath,
+            });
+        }
 
 
+        private File<int, int> DnnToAdam(IFileInfo dnnFileInfo)
+        {
+            var callLog = Log.Call<File<int, int>>();
+            
+            if (dnnFileInfo == null) throw new ArgumentNullException(nameof(dnnFileInfo), ErrorDnnObjectNull);
 
-        private File<int, int> DnnToAdam(IFileInfo f)
-            => new File<int, int>(AdamContext)
+            return callLog(null, new File<int, int>(AdamContext)
             {
-                FullName = f.FileName,
-                Extension = f.Extension,
-                Size = f.Size,
-                SysId = f.FileId,
-                Folder = f.Folder,
-                ParentSysId = f.FolderId,
+                FullName = dnnFileInfo.FileName,
+                Extension = dnnFileInfo.Extension,
+                Size = dnnFileInfo.Size,
+                SysId = dnnFileInfo.FileId,
+                Folder = dnnFileInfo.Folder,
+                ParentSysId = dnnFileInfo.FolderId,
 
-                Path = f.RelativePath,
+                Path = dnnFileInfo.RelativePath,
 
-                Created = f.CreatedOnDate,
-                Modified = f.LastModifiedOnDate,
-                Name = Path.GetFileNameWithoutExtension(f.FileName),
-                Url = f.StorageLocation == 0
-                    ? AdamContext.Site.ContentPath + f.Folder + f.FileName
-                    : FileLinkClickController.Instance.GetFileLinkClick(f)
-            };
+                Created = dnnFileInfo.CreatedOnDate,
+                Modified = dnnFileInfo.LastModifiedOnDate,
+                Name = Path.GetFileNameWithoutExtension(dnnFileInfo.FileName),
+                Url = dnnFileInfo.StorageLocation == 0
+                    ? AdamContext.Site.ContentPath + dnnFileInfo.Folder + dnnFileInfo.FileName
+                    : FileLinkClickController.Instance.GetFileLinkClick(dnnFileInfo)
+            });
+        }
 
         #endregion
     }

@@ -1,8 +1,8 @@
 ﻿namespace ToSic.Sxc.Adam
 {
-    public abstract class AdamOfBase<TFolderId, TFileId>: ContainerBase
+    public abstract class AdamStorage<TFolderId, TFileId>: AdamStorage
     {
-        protected AdamOfBase(AdamManager<TFolderId, TFileId> manager)
+        protected AdamStorage(AdamManager<TFolderId, TFileId> manager): base("Adm.Base")
         {
             Manager = manager;
         }
@@ -16,7 +16,12 @@
         /// Will create the folder if it does not exist
         /// </remarks>
         internal Folder<TFolderId, TFileId> Folder(string subFolder, bool autoCreate)
-            => Manager.Folder(GeneratePath(subFolder), autoCreate);
+        {
+            var callLog = Log.Call($"{nameof(Folder)}(\"{subFolder}\", {autoCreate})");
+            var fld = Manager.Folder(GeneratePath(subFolder), autoCreate);
+            callLog("ok");
+            return fld;
+        }
 
 
         /// <summary>

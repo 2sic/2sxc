@@ -10,11 +10,12 @@ namespace ToSic.Sxc.Adam
     {
         public FolderOfField(AdamManager<TFolderId, TFileId> adamManager, Guid entityGuid, string fieldName): base(adamManager)
         {
-            var adamOfField = new AdamOfField<TFolderId, TFileId>(AdamManager, entityGuid, fieldName);
+            var rootOfField = new AdamStorageOfField<TFolderId, TFileId>(AdamManager, entityGuid, fieldName);
+            rootOfField.Init(adamManager.Log);
 
-            if (!AdamManager.Exists(adamOfField.Root)) return;
+            if (!AdamManager.Exists(rootOfField.Root)) return;
 
-            var f = AdamManager.Folder(adamOfField.Root);
+            var f = AdamManager.Folder(rootOfField.Root);
             if (f == null) return;
 
             Path = f.Path;
