@@ -1,15 +1,12 @@
-﻿namespace ToSic.Sxc.Adam
+﻿using ToSic.Eav.Logging;
+
+namespace ToSic.Sxc.Adam
 {
-    public abstract class ContainerBase
+    public abstract class AdamStorage: HasLog<AdamStorage>
     {
-        //public readonly AdamAppContext AppContext;
-
-        //protected ContainerBase(AdamAppContext appContext)
-        //{
-        //    AppContext = appContext;
-        //}
-
-
+        protected AdamStorage(string logName) : base(logName)
+        {
+        }
 
         /// <summary>
         /// Root of this container

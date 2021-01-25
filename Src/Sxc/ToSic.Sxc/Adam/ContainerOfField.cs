@@ -7,12 +7,12 @@ namespace ToSic.Sxc.Adam
     /// Container of the assets of a field
     /// each entity+field combination has its own container for assets
     /// </summary>
-    public class AdamOfField<TFolderId, TFileId>: AdamOfBase<TFolderId, TFileId>
+    public class AdamStorageOfField<TFolderId, TFileId>: AdamStorage<TFolderId, TFileId>
     {
         private readonly Guid _entityGuid;
         private readonly string _fieldName;
 
-        public AdamOfField(AdamManager<TFolderId, TFileId> manager, Guid eGuid, string fName) : base(manager)
+        public AdamStorageOfField(AdamManager<TFolderId, TFileId> manager, Guid eGuid, string fName) : base(manager)
         {
             _entityGuid = eGuid;
             _fieldName = fName;

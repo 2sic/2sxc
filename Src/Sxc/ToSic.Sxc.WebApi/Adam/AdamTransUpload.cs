@@ -44,10 +44,10 @@ namespace ToSic.Sxc.WebApi.Adam
                     throw permissionException;
             }
 
-            var folder = AdamContext.ContainerContext.Folder();
+            var folder = AdamContext.AdamRoot.Folder();
 
             if (!string.IsNullOrEmpty(subFolder))
-                folder = AdamContext.ContainerContext.Folder(subFolder, false);
+                folder = AdamContext.AdamRoot.Folder(subFolder, false);
 
             // start with a security check...
             var fs = AdamContext.AdamManager.AdamFs;

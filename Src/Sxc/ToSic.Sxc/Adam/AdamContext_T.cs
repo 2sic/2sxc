@@ -16,17 +16,21 @@ namespace ToSic.Sxc.Adam
             _adamManagerLazy = adamManagerLazy;
         }
 
-        internal AdamOfBase<TFolderId, TFileId> ContainerContext;
+        internal AdamStorage<TFolderId, TFileId> AdamRoot;
 
         public override AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, ILog parentLog)
         {
-            Log.Add("PrepCore(...)");
+            Log.LinkTo(parentLog);
+            var logCall = Log.Call<AdamContext>($"usePortalRoot: {usePortalRoot}");
             AdamManager.Init(context, 10, Log);
-            ContainerContext = usePortalRoot
-                ? new AdamOfSite<TFolderId, TFileId>(AdamManager) as AdamOfBase<TFolderId, TFileId>
-                : new AdamOfField<TFolderId, TFileId>(AdamManager, entityGuid, fieldName);
+            AdamRoot = usePortalRoot
+                ? new AdamOfSite<TFolderId, TFileId>(AdamManager) as AdamStorage<TFolderId, TFileId>
+                : new AdamStorageOfField<TFolderId, TFileId>(AdamManager, entityGuid, fieldName);
+            AdamRoot.Init(Log);
 
-            return base.Init(context, contentType, fieldName, entityGuid, usePortalRoot, parentLog);
+            base.Init(context, contentType, fieldName, entityGuid, usePortalRoot, parentLog);
+            
+            return logCall(null, this);
         }
 
 
