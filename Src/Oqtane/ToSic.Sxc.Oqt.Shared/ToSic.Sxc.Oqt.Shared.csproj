@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <Version>0.0.56</Version>
+    <Version>0.0.57</Version>
     <Product>ToSic.Sxc</Product>
     <Authors>ToSic</Authors>
     <Company>ToSic</Company>

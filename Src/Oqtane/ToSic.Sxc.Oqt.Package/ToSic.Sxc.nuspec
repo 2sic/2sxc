@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <AppIdentity>ToSic.Sxc</AppIdentity>
-    <version>0.0.56</version>
+    <version>0.0.57</version>
     <authors>2Sic</authors>
     <owners>2Sic</owners>
     <title>2sxc</title>

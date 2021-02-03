@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Oqt.App
                         await interop.IncludeMeta("sxc-tmp-context-id", "name", aAndH.ContextMetaName, aAndH.ContextMetaContents(), "id");
 
                     // Lets load all 2sxc js dependencies (js / styles)
-                    // Not done the official Oqtane way, because that asks for the scripts before 
+                    // Not done the official Oqtane way, because that asks for the scripts before
                     // the razor component reported what it needs
                     foreach (var resource in aAndH.Scripts())
                         await interop.IncludeScript("", resource, "", "", "", "head", "");
