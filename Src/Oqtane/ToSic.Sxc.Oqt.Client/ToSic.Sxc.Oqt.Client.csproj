@@ -4,11 +4,11 @@
     <TargetFramework>net5.0</TargetFramework>
     <RazorLangVersion>3.0</RazorLangVersion>
     <Version>0.0.57</Version>
-    <Authors>ToSic</Authors>
-    <Company>ToSic</Company>
+    <Authors>2sic</Authors>
+    <Company>2sic</Company>
     <Description>2sic 2sxc Oqtane</Description>
     <Product>ToSic.Sxc</Product>
-    <Copyright>ToSic</Copyright>
+    <Copyright>2sic</Copyright>
     <AssemblyName>ToSic.Sxc.Oqtane.Client</AssemblyName>
   </PropertyGroup>
 

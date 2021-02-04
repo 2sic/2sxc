@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <AssemblyName>ToSic.Sxc.Oqtane.Package</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

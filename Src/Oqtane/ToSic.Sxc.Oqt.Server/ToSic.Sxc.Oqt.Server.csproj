@@ -6,10 +6,10 @@
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <Version>0.0.57</Version>
     <Product>ToSic.Sxc</Product>
-    <Authors>ToSic</Authors>
-    <Company>ToSic</Company>
+    <Authors>2sic</Authors>
+    <Company>2sic</Company>
     <Description>2sic 2sxc Oqtane POC</Description>
-    <Copyright>ToSic</Copyright>
+    <Copyright>2sic</Copyright>
     <AssemblyName>ToSic.Sxc.Oqtane.Server</AssemblyName>
     <!--2dm I think we need this to include DLLs-->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
@@ -44,7 +44,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Scripts\ToSic.Sxc.0.0.1.sql" />
+    <EmbeddedResource Include="Scripts\ToSic.Sxc.0.0.57.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.Uninstall.sql" />
   </ItemGroup>
 
