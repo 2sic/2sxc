@@ -79,11 +79,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Oqt.Shared", "Oqt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Oqt.Package", "Oqtane\ToSic.Sxc.Oqt.Package\ToSic.Sxc.Oqt.Package.csproj", "{8885C3AD-A7D0-4725-BF28-23C55522083E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oqtane.Server", "..\..\octane\oqtane.framework\Oqtane.Server\Oqtane.Server.csproj", "{1F1C0F04-736D-4A4D-A324-8FCA8C373738}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oqtane.Server", "..\..\oqtane\oqtane.framework\Oqtane.Server\Oqtane.Server.csproj", "{1F1C0F04-736D-4A4D-A324-8FCA8C373738}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oqtane.Shared", "..\..\octane\oqtane.framework\Oqtane.Shared\Oqtane.Shared.csproj", "{748C1FF5-D9A0-4F8D-A113-0D1C54791CE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oqtane.Shared", "..\..\oqtane\oqtane.framework\Oqtane.Shared\Oqtane.Shared.csproj", "{748C1FF5-D9A0-4F8D-A113-0D1C54791CE8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oqtane.Client", "..\..\octane\oqtane.framework\Oqtane.Client\Oqtane.Client.csproj", "{62B0A822-C3ED-436E-A67B-8E99A7E89B24}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oqtane.Client", "..\..\oqtane\oqtane.framework\Oqtane.Client\Oqtane.Client.csproj", "{62B0A822-C3ED-436E-A67B-8E99A7E89B24}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Razor.Engine", "Razor\ToSic.Sxc.Razor.Engine\ToSic.Sxc.Razor.Engine.csproj", "{9269847A-20A1-4F72-9E14-36BFE0323632}"
 EndProject
@@ -91,7 +91,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Hybrid", "Razor\T
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Razor", "Razor", "{DD59EAFD-02D1-4285-B8BE-D2DD40536304}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oqtane.Upgrade", "..\..\octane\oqtane.framework\Oqtane.Upgrade\Oqtane.Upgrade.csproj", "{5F8069F1-FB03-40D4-B76E-838AB2555A8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oqtane.Upgrade", "..\..\oqtane\oqtane.framework\Oqtane.Upgrade\Oqtane.Upgrade.csproj", "{5F8069F1-FB03-40D4-B76E-838AB2555A8D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2sxc Docs Generator", "..\..\2sxc-docs\2sxc Docs Generator\2sxc Docs Generator.csproj", "{991006CF-1F50-4A9B-A5B2-A17A1624BF38}"
 EndProject
