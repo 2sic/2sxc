@@ -1,4 +1,4 @@
-@set Dev2sxcOqtaneRoot=c:\Projects\2sxc\octane\oqtane.framework\Oqtane.Server\
+@set Dev2sxcOqtaneRoot=c:\Projects\2sxc\oqtane\oqtane.framework\Oqtane.Server\
 @set OqtaneBin=%Dev2sxcOqtaneRoot%bin\Debug\netcoreapp3.1\
 
 @REM 2sxc Oqtane - Client
@@ -28,7 +28,7 @@ XCOPY "..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc\*" "%Dev2sxcOqtaneRoot%
 
 
 
-@set BuildTarget=c:\Projects\2sxc\octane\oqtane.framework\Oqtane.Server\wwwroot\Modules\ToSic.Sxc
+@set BuildTarget=c:\Projects\2sxc\oqtane\oqtane.framework\Oqtane.Server\wwwroot\Modules\ToSic.Sxc
 
 @REM Copy the data folders
 robocopy /mir "..\..\Data\.data\ " "%BuildTarget%\.data\ "
