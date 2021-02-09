@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj" />
-    <ProjectReference Include="..\..\..\..\octane\oqtane.framework\Oqtane.Shared\Oqtane.Shared.csproj" />
+    <ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Shared\Oqtane.Shared.csproj" />
   </ItemGroup>
 
 </Project>
