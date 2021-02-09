@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.IO;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using Oqtane.Infrastructure;
 using ToSic.Eav;
@@ -68,9 +70,14 @@ namespace ToSic.Sxc.Oqt.Server
                     .AddEav();
             });
 
+            var sp = services.BuildServiceProvider();
 
             var connectionString = Configuration.GetConnectionString("SiteSqlServer");
-            services.BuildServiceProvider().Build<IDbConfiguration>().ConnectionString = connectionString;
+            sp.Build<IDbConfiguration>().ConnectionString = connectionString;
+
+            var hostingEnvironment = sp.Build<IHostEnvironment>();
+            sp.Build<IGlobalConfiguration>().GlobalFolder = Path.Combine(hostingEnvironment.ContentRootPath, "wwwroot\\Modules\\ToSic.Sxc");
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
