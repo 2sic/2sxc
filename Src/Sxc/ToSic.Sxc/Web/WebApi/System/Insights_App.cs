@@ -104,7 +104,7 @@ namespace ToSic.Sxc.Web.WebApi.System
 
                 msg += h2("History");
 
-                var list = pkg.CacheStatistics.History.Aggregate("", (current, timestamp) 
+                var list = pkg.CacheStatistics.History.Reverse().Aggregate("", (current, timestamp) 
                     => current + li(timestamp + " = " + timestamp.ToReadable()));
 
                 msg += ol(list);
