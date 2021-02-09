@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Entities.Modules;
-using ToSic.Eav.Context;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.Run;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc.Adam;
@@ -84,7 +82,7 @@ namespace ToSic.SexyContent.Razor
 
 
         /// <inheritdoc />
-        public dynamic AsDynamic(dynamic dynamicEntity) => DynCode.AsDynamic(dynamicEntity);
+        public dynamic AsDynamic(object dynamicEntity) => DynCode.AsDynamic(dynamicEntity);
 
         // todo: only in "old" controller, not in new one
         /// <inheritdoc />
@@ -98,7 +96,7 @@ namespace ToSic.SexyContent.Razor
         public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DynCode.AsList(stream.Immutable);
 
         /// <inheritdoc />
-        public IEntity AsEntity(dynamic dynamicEntity) => DynCode.AsEntity(dynamicEntity);
+        public IEntity AsEntity(object dynamicEntity) => DynCode.AsEntity(dynamicEntity);
 
 
         /// <inheritdoc />
@@ -110,7 +108,7 @@ namespace ToSic.SexyContent.Razor
         #region AsList (experimental)
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(dynamic list)
+        public IEnumerable<dynamic> AsList(object list)
             => throw new Exception("AsList is a new feature in 2sxc 10.20. To use it, change your template type to " + nameof(RazorComponent) + " see https://r.2sxc.org/RazorComponent");
 
         #endregion

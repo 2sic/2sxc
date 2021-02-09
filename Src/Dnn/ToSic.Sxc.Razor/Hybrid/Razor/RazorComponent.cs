@@ -8,7 +8,6 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
-
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
@@ -58,20 +57,20 @@ namespace ToSic.Sxc.Hybrid.Razor
         public dynamic AsDynamic(IEntity entity) => DynCode.AsDynamic(entity);
 
         /// <inheritdoc/>
-        public dynamic AsDynamic(dynamic dynamicEntity) => DynCode.AsDynamic(dynamicEntity);
+        public dynamic AsDynamic(object dynamicEntity) => DynCode.AsDynamic(dynamicEntity);
 
 
         #endregion
 
         #region AsEntity
         /// <inheritdoc/>
-        public IEntity AsEntity(dynamic dynamicEntity) => DynCode.AsEntity(dynamicEntity);
+        public IEntity AsEntity(object dynamicEntity) => DynCode.AsEntity(dynamicEntity);
         #endregion
 
         #region AsList
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(dynamic list) => DynCode?.AsList(list);
+        public IEnumerable<dynamic> AsList(object list) => DynCode.AsList(list);
 
         #endregion
 
@@ -142,7 +141,7 @@ namespace ToSic.Sxc.Hybrid.Razor
 
         #region RunContext WIP
 
-        [PrivateApi] public ICmsContext CmsContext => DynCode?.CmsContext;
+        [PrivateApi] public ICmsContext CmsContext => DynCode.CmsContext;
 
         #endregion
     }

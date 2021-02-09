@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
@@ -153,7 +152,7 @@ namespace ToSic.Sxc.Code
         /// </summary>
         /// <param name="dynamicEntity">the original object</param>
         /// <returns>a dynamic object for easier coding</returns>
-        dynamic AsDynamic(dynamic dynamicEntity);
+        dynamic AsDynamic(object dynamicEntity);
 
         #endregion
 
@@ -164,7 +163,7 @@ namespace ToSic.Sxc.Code
         /// </summary>
         /// <param name="dynamicEntity">the wrapped IEntity</param>
         /// <returns>A normal IEntity</returns>
-        IEntity AsEntity(dynamic dynamicEntity);
+        IEntity AsEntity(object dynamicEntity);
 
         #endregion
 
@@ -177,7 +176,7 @@ namespace ToSic.Sxc.Code
         /// Can also be a <see cref="IDataSource"/> in which case it uses the default stream. </param>
         /// <remarks>Added in 2sxc 10.21.00</remarks>
         /// <returns>a list of <see cref="IDynamicEntity"/> objects</returns>
-        IEnumerable<dynamic> AsList(dynamic list);
+        IEnumerable<dynamic> AsList(object list);
 
         #endregion
 

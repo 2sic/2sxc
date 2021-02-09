@@ -21,17 +21,17 @@ namespace ToSic.Sxc.Code
         public dynamic AsDynamic(IEntity entity) => UnwrappedContents?.AsDynamic(entity);
 
         /// <inheritdoc />
-        public dynamic AsDynamic(dynamic dynamicEntity) => UnwrappedContents?.AsDynamic(dynamicEntity);
+        public dynamic AsDynamic(object dynamicEntity) => UnwrappedContents?.AsDynamic(dynamicEntity);
 
         /// <inheritdoc />
-        public IEntity AsEntity(dynamic dynamicEntity) => UnwrappedContents?.AsEntity(dynamicEntity);
+        public IEntity AsEntity(object dynamicEntity) => UnwrappedContents?.AsEntity(dynamicEntity);
 
         #endregion
 
         #region AsList
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(dynamic list)
+        public IEnumerable<dynamic> AsList(object list)
             => UnwrappedContents?.AsList(list);
 
 

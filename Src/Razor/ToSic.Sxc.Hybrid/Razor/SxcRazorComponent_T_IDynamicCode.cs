@@ -55,20 +55,20 @@ namespace ToSic.Sxc.Hybrid.Razor
         public dynamic AsDynamic(IEntity entity) => DynCode.AsDynamic(entity);
 
         /// <inheritdoc/>
-        public dynamic AsDynamic(dynamic dynamicEntity) => DynCode.AsDynamic(dynamicEntity);
+        public dynamic AsDynamic(object dynamicEntity) => DynCode.AsDynamic(dynamicEntity);
 
 
         #endregion
 
         #region AsEntity
         /// <inheritdoc/>
-        public IEntity AsEntity(dynamic dynamicEntity) => DynCode.AsEntity(dynamicEntity);
+        public IEntity AsEntity(object dynamicEntity) => DynCode.AsEntity(dynamicEntity);
         #endregion
 
         #region AsList
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(dynamic list) => DynCode?.AsList(list);
+        public IEnumerable<dynamic> AsList(object list) => DynCode.AsList(list);
 
         public T CreateSource<T>(IDataStream inStream) where T : IDataSource
         {

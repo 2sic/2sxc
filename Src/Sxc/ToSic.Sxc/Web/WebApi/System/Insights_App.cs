@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Caching;
 
 namespace ToSic.Sxc.Web.WebApi.System
 {
@@ -85,7 +86,7 @@ namespace ToSic.Sxc.Web.WebApi.System
                 return message;
 
             Log.Add($"debug app-internals for {appId}");
-            var appRead = AppRt(appId);// new AppRuntime(appId.Value, true, Log);
+            var appRead = AppRt(appId);
             var pkg = appRead.AppState;
 
             var msg = h1($"App internals for {appId}");
@@ -94,11 +95,19 @@ namespace ToSic.Sxc.Web.WebApi.System
                 Log.Add("general stats");
                 msg += p(
                     ToBr($"AppId: {pkg.AppId}\n"
-                         + $"Timestamp: {pkg.CacheTimestamp}\n"
-                         + $"Update Count: {pkg.CacheUpdateCount}\n"
+                         + $"Timestamp First : {pkg.CacheStatistics.FirstTimestamp} = {pkg.CacheStatistics.FirstTimestamp.ToReadable()}\n"
+                         + $"Timestamp Current: {pkg.CacheStatistics.CacheTimestamp} = {pkg.CacheStatistics.CacheTimestamp.ToReadable()}\n"
+                         + $"Update Count: {pkg.CacheStatistics.ResetCount}\n"
                          + $"Dyn Update Count: {pkg.DynamicUpdatesCount}\n"
                          + "\n")
                 );
+
+                msg += h2("History");
+
+                var list = pkg.CacheStatistics.History.Reverse().Aggregate("", (current, timestamp) 
+                    => current + li(timestamp + " = " + timestamp.ToReadable()));
+
+                msg += ol(list);
             }
             catch { /* ignore */ }
 

@@ -19,8 +19,6 @@ namespace ToSic.SexyContent
         IApp App { get; }
         IBlockDataSource Data { get; }
 
-        //SxcHelper Sxc { get; }
-
         /// <summary>
         /// Transform a IEntity to a DynamicEntity as dynamic object
         /// </summary>
@@ -34,29 +32,14 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="dynamicEntity"></param>
         /// <returns></returns>
-        dynamic AsDynamic(dynamic dynamicEntity);
-
-
-        ///// <summary>
-        ///// In case AsDynamic is used with Data["name"]
-        ///// </summary>
-        ///// <returns></returns>
-        //IEnumerable<dynamic> AsDynamic(IDataStream stream);
+        dynamic AsDynamic(object dynamicEntity);
 
         /// <summary>
         /// Transform a DynamicEntity dynamic object back to a IEntity instance
         /// </summary>
         /// <param name="dynamicEntity"></param>
         /// <returns></returns>
-        IEntity AsEntity(dynamic dynamicEntity);
-
-        ///// <summary>
-        ///// Returns a list of DynamicEntities
-        ///// </summary>
-        ///// <param name="entities">List of entities</param>
-        ///// <returns></returns>
-        //IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities);
-
+        IEntity AsEntity(object dynamicEntity);
 
         #region Create Data Sources
         /// <summary>
