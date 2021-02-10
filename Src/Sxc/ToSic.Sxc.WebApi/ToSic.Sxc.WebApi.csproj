@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net451;netstandard2.0</TargetFrameworks>
     <RootNamespace>ToSic.Sxc.WebApi</RootNamespace>
-    <Version>11.11.04</Version>
+    <Version>11.11.05</Version>
   </PropertyGroup>
 
   <ItemGroup>
