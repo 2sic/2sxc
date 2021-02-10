@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
@@ -9,7 +10,9 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.DotNet;
 using ToSic.Sxc.Oqt.Server.Adam;
+using ToSic.Sxc.Oqt.Server.Blazor;
 using ToSic.Sxc.Oqt.Server.Code;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.Adam;
@@ -72,7 +75,10 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddTransient<ISxcOqtane, SxcOqtane>();
             services.AddTransient<StatefulControllerDependencies>();
 
-            // Plumbing: enable lazy services Dependency Injection
+
+            // Experimental - it seems that Blazor hides the url params in the request
+            services.TryAddTransient<IHttp, HttpBlazor>();
+
 
             return services;
         }
