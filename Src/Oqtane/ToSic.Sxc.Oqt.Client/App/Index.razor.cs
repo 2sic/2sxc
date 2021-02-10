@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Shared.Run;
 
@@ -15,12 +16,40 @@ namespace ToSic.Sxc.Oqt.App
         [Inject]
         public ISxcOqtane SxcEngine { get; set; }
 
+        [Inject]
+        public NavigationManager NavigationManager { get; set; }
+
+        string urlparameters;
+        string querystring;
+        string anchor;
+
         public override List<Resource> Resources => new List<Resource>();
 
         protected override async Task OnInitializedAsync()
         {
+            (urlparameters, querystring, anchor) = Utilities.ParseParameters(NavigationManager.Uri);
+            // Subscribe to LocationChanged event.
+            NavigationManager.LocationChanged += HandleLocationChanged;
+
             // prepare the html / headers
             SxcEngine.Prepare(PageState.Site, PageState.Page, ModuleState);
+        }
+
+        public void Dispose()
+        {
+            NavigationManager.LocationChanged -= HandleLocationChanged;
+        }
+
+
+        /// <summary>
+        /// Handle router LocationChanged event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+
+        private void HandleLocationChanged(object sender, LocationChangedEventArgs args)
+        {
+            (urlparameters, querystring, anchor) = Utilities.ParseParameters(args.Location);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
