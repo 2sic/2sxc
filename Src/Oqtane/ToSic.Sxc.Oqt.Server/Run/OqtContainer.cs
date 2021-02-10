@@ -4,7 +4,6 @@ using Oqtane.Models;
 using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Context;
@@ -12,7 +11,7 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtContainer: Module<Module>
+    public class OqtModule: Module<Module>
     {
         private readonly SettingsHelper _settingsHelper;
         private readonly Lazy<OqtZoneMapper> _zoneMapperLazy;
@@ -20,13 +19,13 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private IZoneMapper _zoneMapper;
         private Dictionary<string, string> _settings;
 
-        public OqtContainer(SettingsHelper settingsHelper, Lazy<OqtZoneMapper> zoneMapperLazy) : base ($"{OqtConstants.OqtLogPrefix}.Cont")
+        public OqtModule(SettingsHelper settingsHelper, Lazy<OqtZoneMapper> zoneMapperLazy) : base ($"{OqtConstants.OqtLogPrefix}.Cont")
         {
             _settingsHelper = settingsHelper;
             _zoneMapperLazy = zoneMapperLazy;
         }
 
-        public new OqtContainer Init(Module module, ILog parentLog)
+        public new OqtModule Init(Module module, ILog parentLog)
         {
             var wrapLog = Log.Call($"id:{module.ModuleId}");
             base.Init(module, parentLog);
