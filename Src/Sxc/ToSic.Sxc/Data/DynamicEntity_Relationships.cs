@@ -18,15 +18,10 @@ namespace ToSic.Sxc.Data
 
 
         [PrivateApi]
-        protected IDynamicEntity SubDynEntity(IEntity contents)
-        {
-            if (contents == null) return null;
-            var child = new DynamicEntity(contents, Dimensions, CompatibilityLevel, Block);
-            // special case: if it's a Dynamic Entity without block (like App.Settings)
-            // it needs the Service Provider from this object to work
-            if (Block == null && ServiceProviderOrNull != null) child.ServiceProviderOrNull = ServiceProviderOrNull;
-            return child;
-        }
-
+        protected IDynamicEntity SubDynEntity(IEntity contents) =>
+            contents == null 
+                ? null
+                // Note: if it's a Dynamic Entity without block (like App.Settings) it needs the Service Provider
+                : new DynamicEntity(contents, Dimensions, CompatibilityLevel, Block, _serviceProviderOrNull);
     }
 }

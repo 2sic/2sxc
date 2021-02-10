@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity)
-            => new DynamicEntity(entity, CmsContext.SafeLanguagePriorityCodes(), CompatibilityLevel, Block);
+            => new DynamicEntity(entity, CmsContext.SafeLanguagePriorityCodes(), CompatibilityLevel, Block, _serviceProvider);
 
         /// <inheritdoc />
         public dynamic AsDynamic(object dynamicEntity) => dynamicEntity;

@@ -40,17 +40,13 @@ namespace ToSic.Sxc.Data
                        && ValueConverterBase.CouldBeReference(strResult)
                        && Entity.Attributes.ContainsKey(field) &&
                        Entity.Attributes[field].Type == Eav.Constants.DataTypeHyperlink)
-                result = ServiceProviderOrNull?.Build<IValueConverter>()?.ToValue(strResult, EntityGuid)
+                result = _serviceProviderOrNull?.Build<IValueConverter>()?.ToValue(strResult, EntityGuid)
                          ?? result;
 
             if (result is IEnumerable<IEntity> rel)
-            {
-                var list = new DynamicEntityWithList(Entity, field, rel, dimsToUse, CompatibilityLevel, Block);
-                // special case: if it's a Dynamic Entity without block (like App.Settings)
-                // it needs the Service Provider from this object to work
-                if (Block == null) list.ServiceProviderOrNull = ServiceProviderOrNull;
-                result = list;
-            }
+                // Note: if it's a Dynamic Entity without block (like App.Settings) it needs the Service Provider from this object to work
+                result = new DynamicEntityWithList(Entity, field, rel, dimsToUse, CompatibilityLevel, Block,
+                    _serviceProviderOrNull);
 
             if (defaultMode) _valCache.Add(field, result);
             return result;

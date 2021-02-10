@@ -31,13 +31,13 @@ namespace ToSic.Sxc.Data
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
         [PrivateApi]
-        public DynamicEntity(IEntity entity, string[] dimensions, int compatibility, IBlock block)
+        public DynamicEntity(IEntity entity, string[] dimensions, int compatibility, IBlock block, IServiceProvider serviceProvider)
         {
             SetEntity(entity);
             Dimensions = dimensions;
             CompatibilityLevel = compatibility;
             Block = block;
-            ServiceProviderOrNull = Block?.Context?.ServiceProvider;
+            _serviceProviderOrNull = Block?.Context?.ServiceProvider ?? serviceProvider;
         }
 
         [PrivateApi]
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Data
         /// But in rare cases (like when the App.Resources is a DynamicEntity) it must be injected separately.
         /// </summary>
         [PrivateApi]
-        internal IServiceProvider ServiceProviderOrNull;
+        private readonly IServiceProvider _serviceProviderOrNull;
         
 
         /// <inheritdoc />

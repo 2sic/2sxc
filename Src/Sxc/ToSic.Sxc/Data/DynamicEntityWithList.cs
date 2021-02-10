@@ -24,8 +24,15 @@ namespace ToSic.Sxc.Data
         private string _debugFieldName;
 
         [PrivateApi]
-        internal DynamicEntityWithList(IEntity parent, string field, IEnumerable<IEntity> entities, string[] dimensions, int compatibility, IBlock block) 
-            : base(null, dimensions, compatibility, block)
+        internal DynamicEntityWithList(
+            IEntity parent, 
+            string field, 
+            IEnumerable<IEntity> entities, 
+            string[] dimensions, 
+            int compatibility, 
+            IBlock block, 
+            IServiceProvider serviceProvider) 
+            : base(null, dimensions, compatibility, block, serviceProvider)
         {
             _debugFieldName = field; // remember name in case we do debugging and need to know what list was accessed
             var index = 0;

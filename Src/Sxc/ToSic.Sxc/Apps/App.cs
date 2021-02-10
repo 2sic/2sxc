@@ -79,8 +79,7 @@ namespace ToSic.Sxc.Apps
         }
 
         private dynamic MakeDynProperty(IEntity contents) =>
-            new DynamicEntity(contents, Site.SafeLanguagePriorityCodes(), 10, null)
-                {ServiceProviderOrNull = DataSourceFactory.ServiceProvider};
+            new DynamicEntity(contents, Site.SafeLanguagePriorityCodes(), 10, null, DataSourceFactory.ServiceProvider);
 
         /// <inheritdoc />
         public dynamic Settings
