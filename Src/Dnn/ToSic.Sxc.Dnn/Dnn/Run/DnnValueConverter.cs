@@ -117,7 +117,7 @@ namespace ToSic.Sxc.Dnn.Run
                 var filePath = Path.Combine(new PortalSettings(fileInfo.PortalId).HomeDirectory ?? "", fileInfo.RelativePath ?? "");
 
                 // return linkclick url for secure and other not standard folder locations
-                var result = (fileInfo.StorageLocation == 0) ? filePath : FileLinkClickController.Instance.GetFileLinkClick(fileInfo);
+                var result = fileInfo.StorageLocation == 0 ? filePath : FileLinkClickController.Instance.GetFileLinkClick(fileInfo);
 
                 // optionally do extra security checks (new in 10.02)
                 if (!Features.Enabled(FeatureIds.BlockFileIdLookupIfNotInSameApp)) return result;

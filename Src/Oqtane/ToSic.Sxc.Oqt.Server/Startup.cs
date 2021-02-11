@@ -71,7 +71,10 @@ namespace ToSic.Sxc.Oqt.Server
             });
 
             var sp = services.BuildServiceProvider();
-            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            // STV
+            // var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            // 2dm
+            var connectionString = Configuration.GetConnectionString("SiteSqlServer");
             sp.Build<IDbConfiguration>().ConnectionString = connectionString;
             var hostingEnvironment = sp.Build<IHostEnvironment>();
             sp.Build<IGlobalConfiguration>().GlobalFolder = Path.Combine(hostingEnvironment.ContentRootPath, "wwwroot\\Modules\\ToSic.Sxc");

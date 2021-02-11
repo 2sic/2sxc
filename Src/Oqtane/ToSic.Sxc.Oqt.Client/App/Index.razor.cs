@@ -26,27 +26,24 @@ namespace ToSic.Sxc.Oqt.App
             // Subscribe to LocationChanged event.
             NavigationManager.LocationChanged += HandleLocationChanged;
 
-            // prepare the html / headers
-            SxcEngine.Prepare(PageState.Site, PageState.Page, ModuleState);
+            Initialize2sxcContentBlock();
         }
 
-        public void Dispose()
-        {
-            NavigationManager.LocationChanged -= HandleLocationChanged;
-        }
+        /// <summary>
+        /// prepare the html / headers for later rendering
+        /// </summary>
+        private void Initialize2sxcContentBlock() => SxcEngine.Prepare(PageState.Site, PageState.Page, ModuleState);
+
+        public void Dispose() => NavigationManager.LocationChanged -= HandleLocationChanged;
 
 
         /// <summary>
         /// Handle router LocationChanged event.
+        /// This is important if the url changes like /product --> /product?details=27
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-
-        private void HandleLocationChanged(object sender, LocationChangedEventArgs args)
-        {
-            // prepare the html / headers
-            SxcEngine.Prepare(PageState.Site, PageState.Page, ModuleState);
-        }
+        private void HandleLocationChanged(object sender, LocationChangedEventArgs args) => Initialize2sxcContentBlock();
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
