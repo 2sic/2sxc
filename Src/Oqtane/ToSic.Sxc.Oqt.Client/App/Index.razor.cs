@@ -50,6 +50,9 @@ namespace ToSic.Sxc.Oqt.App
         private void HandleLocationChanged(object sender, LocationChangedEventArgs args)
         {
             (urlparameters, querystring, anchor) = Utilities.ParseParameters(args.Location);
+
+            // prepare the html / headers
+            SxcEngine.Prepare(PageState.Site, PageState.Page, ModuleState);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)

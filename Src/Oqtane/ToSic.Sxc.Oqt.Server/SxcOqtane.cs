@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Oqt.Server
     public class SxcOqtane: HasLog, ISxcOqtane
     {
         #region Constructor and DI
-        
+
         public SxcOqtane(OqtAssetsAndHeaders assetsAndHeaders, RazorReferenceManager debugRefMan, OqtTempInstanceContext oqtTempInstanceContext, IServiceProvider serviceProvider
             ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
         {
@@ -42,11 +42,11 @@ namespace ToSic.Sxc.Oqt.Server
         #region Prepare
 
         /// <summary>
-        /// Prepare must always be the first thing to be called - to ensure that afterwards both headers and html are known. 
+        /// Prepare must always be the first thing to be called - to ensure that afterwards both headers and html are known.
         /// </summary>
         public void Prepare(Site site, Oqtane.Models.Page page, Module module)
         {
-            if (_renderDone) throw new Exception("already prepared this module");
+            //if (_renderDone) throw new Exception("already prepared this module");
 
             Site = site;
             Page = page;
