@@ -1,4 +1,4 @@
-@Echo ConfigurationName %ConfigurationName%
+@REM the build folder (Debug or DebugOqtane) must be passed in as a parameter
 @set BuildFolder=%1
 @set Dev2sxcOqtaneRoot=c:\Projects\2sxc\oqtane\oqtane.framework\Oqtane.Server\
 @set OqtaneBin=%Dev2sxcOqtaneRoot%bin\%BuildFolder%\net5.0\
@@ -27,18 +27,13 @@ XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net5.0\ToSic.*.pdb" "%OqtaneBin
 @REM 2sxc Oqtane - Client Assets
 XCOPY "..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc\*" "%Dev2sxcOqtaneRoot%wwwroot\Modules\ToSic.Sxc\" /Y /S /I
 
-
-
-
+@REM the target for js, css, json etc.
 @set BuildTarget=c:\Projects\2sxc\oqtane\oqtane.framework\Oqtane.Server\wwwroot\Modules\ToSic.Sxc
 
 @REM Copy the data folders
 robocopy /mir "..\..\Data\.data\ " "%BuildTarget%\.data\ "
 robocopy /mir "..\..\Data\.databeta\ " "%BuildTarget%\.databeta\ "
 robocopy /mir "..\..\Data\.data-custom\ " "%BuildTarget%\.data-custom\ "
-
-@REM ... find better source
-@REM don't use this, the path is already in the env-variables @set Dev2sxcAssets=C:\Projects\2sxc\2sxc\Src\Mvc\Website\wwwroot
 
 @REM Copy 2sxc JS stuff
 robocopy /mir "%Dev2sxcAssets%\js\ " "%BuildTarget%\js\ "
