@@ -19,15 +19,10 @@ namespace ToSic.Sxc.Oqt.App
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
-        string urlparameters;
-        string querystring;
-        string anchor;
-
         public override List<Resource> Resources => new List<Resource>();
 
         protected override async Task OnInitializedAsync()
         {
-            (urlparameters, querystring, anchor) = Utilities.ParseParameters(NavigationManager.Uri);
             // Subscribe to LocationChanged event.
             NavigationManager.LocationChanged += HandleLocationChanged;
 
@@ -49,8 +44,6 @@ namespace ToSic.Sxc.Oqt.App
 
         private void HandleLocationChanged(object sender, LocationChangedEventArgs args)
         {
-            (urlparameters, querystring, anchor) = Utilities.ParseParameters(args.Location);
-
             // prepare the html / headers
             SxcEngine.Prepare(PageState.Site, PageState.Page, ModuleState);
         }
