@@ -5,6 +5,7 @@
     <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
     <AnalysisLevel>none</AnalysisLevel>
+    <Configurations>Debug;Release;DebugOqtane</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

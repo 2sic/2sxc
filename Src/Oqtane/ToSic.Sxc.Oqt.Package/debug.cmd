@@ -43,6 +43,6 @@ robocopy /mir "%Dev2sxcAssets%\js\ " "%BuildTarget%\js\ "
 robocopy /mir "%Dev2sxcAssets%\dist\ " "%BuildTarget%\dist\ "
 robocopy /mir "%Dev2sxcAssets%\system\ " "%BuildTarget%\system\ "
 
-@echo Copied all files to this Website target: '%BuildTarget%'
+@echo Copied all files to this Website target: '%BuildTarget%' in mode Debug
 
 

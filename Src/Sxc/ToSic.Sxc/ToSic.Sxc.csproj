@@ -10,6 +10,7 @@
     <AssemblyVersion>11.11.05.*</AssemblyVersion>
     <Deterministic>false</Deterministic>
     <NoWarn>7035</NoWarn>
+    <Configurations>Debug;Release;DebugOqtane</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

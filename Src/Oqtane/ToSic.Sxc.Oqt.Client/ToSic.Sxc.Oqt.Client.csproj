@@ -10,6 +10,7 @@
     <Product>ToSic.Sxc</Product>
     <Copyright>2sic</Copyright>
     <AssemblyName>ToSic.Sxc.Oqtane.Client</AssemblyName>
+    <Configurations>Debug;Release;DebugOqtane</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

@@ -4,6 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
     <Version>11.11.05</Version>
+    <Configurations>Debug;Release;DebugOqtane</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

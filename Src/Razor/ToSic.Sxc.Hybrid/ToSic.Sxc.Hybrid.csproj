@@ -4,6 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Version>11.11.05</Version>
+    <Configurations>Debug;Release;DebugOqtane</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
