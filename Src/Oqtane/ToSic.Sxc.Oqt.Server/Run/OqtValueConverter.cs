@@ -8,22 +8,16 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Oqt.Server.Adam;
-using ToSic.Sxc.Run;
-
-// todo: nothing here is tested yet!
+using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
     /// <summary>
-    /// The DNN implementation of the <see cref="IValueConverter"/> which converts "file:22" or "page:5" to the url,
+    /// The Oqtane implementation of the <see cref="IValueConverter"/> which converts "file:22" or "page:5" to the url,
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public class OqtValueConverter : IValueConverter
     {
-        private readonly Lazy<ILinkPaths> _linkPaths;
-        private ILinkPaths LinkPaths => _linkPaths.Value;
-
         public Lazy<IFileRepository> FileRepository { get; }
         public Lazy<IFolderRepository> FolderRepository { get; }
         public Lazy<ITenantResolver> TenantResolver { get; }
@@ -37,10 +31,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
             Lazy<IFolderRepository> folderRepository, 
             Lazy<ITenantResolver> tenantResolver,
             Lazy<IPageRepository> pageRepository,
-            Lazy<IServerPaths> serverPaths,
-            Lazy<ILinkPaths> linkPaths)
+            Lazy<IServerPaths> serverPaths
+            )
         {
-            _linkPaths = linkPaths;
             FileRepository = fileRepository;
             FolderRepository = folderRepository;
             TenantResolver = tenantResolver;
@@ -81,7 +74,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             {
                 // Try file reference
                 var fileName = Path.GetFileNameWithoutExtension(pathAsFolder);
-                var files = FileRepository.Value.GetFiles(folder.FolderId); //, potentialFilePath);
+                var files = FileRepository.Value.GetFiles(folder.FolderId);
                 var fileInfo = files.FirstOrDefault(f => f.Name == fileName);
                 if (fileInfo != null) return "file:" + fileInfo.FileId;
             }
@@ -144,20 +137,17 @@ namespace ToSic.Sxc.Oqt.Server.Run
             #region special handling of issues in case something in the background is broken
             try
             {
-                var filePath = LinkPaths.ToAbsolute(Path.Combine(fileInfo.Folder.Path, fileInfo.Name));
-                // = Path.Combine(new PortalSettings(fileInfo.PortalId)?.HomeDirectory ?? "", fileInfo?.RelativePath ?? "");
+                var filePath = Path.Combine(fileInfo.Folder.Path, fileInfo.Name/*)*/).Forwardslash();
 
                 var siteId = TenantResolver.Value.GetAlias().SiteId;
 
-                // return linkclick url for secure and other not standard folder locations
-                //var result = (fileInfo.StorageLocation == 0) ? filePath : FileLinkClickController.Instance.GetFileLinkClick(fileInfo);
-                var result = $"/{siteId}/api/sxc/{filePath}".PrefixSlash().Forwardslash();
+                var result = $"/{siteId}/api/sxc{filePath.PrefixSlash()}".Forwardslash();
 
                 // optionally do extra security checks (new in 10.02)
                 if (!Features.Enabled(FeatureIds.BlockFileIdLookupIfNotInSameApp)) return result;
 
                 // check if it's in this item. We won't check the field, just the item, so the field is ""
-                return !Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", filePath)
+                return !Security.PathIsInItemAdam(itemGuid, "", filePath)
                     ? null
                     : result;
             }

@@ -34,7 +34,8 @@ namespace ToSic.Sxc.Adam
 
 
         /// <summary>
-        /// The path to this asset as used from external access
+        /// The path to this asset as used from external access.
+        /// Must be a full url beginning with a "/" like "/Portals/0/adam/..."
         /// </summary>
         /// <returns>The url to this asset</returns>
         string Url { get; }
