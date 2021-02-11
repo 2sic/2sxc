@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="IF $(ConfigurationName) == Debug (debug.cmd)" />
-    <Exec Command="IF $(ConfigurationName) == DebugOqtane (debug.cmd)" />
+    <Exec Command="IF $(ConfigurationName) == Debug (debug.cmd Debug)" />
+    <Exec Command="IF $(ConfigurationName) == DebugOqtane (debug.cmd DebugOqtane)" />
     <Exec Command="IF $(ConfigurationName) == Release (release.cmd)" />
   </Target>
 
