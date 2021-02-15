@@ -103,9 +103,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
             if (!regularExpression.Success)
                 return originalValue;
 
-            var linkType = regularExpression.Groups["type"].Value.ToLowerInvariant();
-            var linkId = int.Parse(regularExpression.Groups["id"].Value);
-            var urlParams = regularExpression.Groups["params"].Value ?? "";
+            var linkType = regularExpression.Groups[ValueConverterBase.RegExType].Value.ToLowerInvariant();
+            var linkId = int.Parse(regularExpression.Groups[ValueConverterBase.RegExId].Value);
+            var urlParams = regularExpression.Groups[ValueConverterBase.RegExParams].Value ?? "";
 
             var isPageLookup = linkType == ValueConverterBase.PrefixPage;
             try
