@@ -9,7 +9,8 @@ namespace ToSic.Sxc.WebApi.Adam
 {
     public partial class AdamTransactionBase<T, TFolderId, TFileId>
     {
-        public IList<AdamItemDto> ItemsInField(string subFolderName)
+        /// <inheritdoc />
+        public IList<AdamItemDto> ItemsInField(string subFolderName, bool autoCreate = true)
         {
             var wrapLog = Log.Call<IList<AdamItemDto>>($"Subfolder: {subFolderName}");
 
@@ -23,9 +24,16 @@ namespace ToSic.Sxc.WebApi.Adam
 
             Log.Add("first permission checks passed");
 
-            // get root and at the same time auto-create the core folder in case it's missing (important)
-            AdamContext.AdamRoot.Folder();
+            // This will contain the list of items
+            var allDtos = new List<AdamItemDto>();
             
+            // get root and at the same time auto-create the core folder in case it's missing (important)
+            var root = AdamContext.AdamRoot.Folder(autoCreate);
+
+            // if no root exists then quit now
+            if (!autoCreate && root == null) 
+                return wrapLog("no folder", allDtos);
+
             // try to see if we can get into the subfolder - will throw error if missing
             var currentFolder = AdamContext.AdamRoot.Folder(subFolderName, false);
             
@@ -40,7 +48,6 @@ namespace ToSic.Sxc.WebApi.Adam
             var files = currentFolder.Files.ToList();
 
             var dtoMaker = AdamContext.ServiceProvider.Build<AdamItemDtoMaker<TFolderId, TFileId>>().Init(AdamContext);
-            var allDtos = new List<AdamItemDto>();
 
             var currentFolderDto = dtoMaker.Create(currentFolder);
             currentFolderDto.Name = ".";

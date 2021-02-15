@@ -62,10 +62,13 @@ namespace ToSic.Sxc.Adam
                 if (autoCreate)
                     Add(pathToCheck);
                 else
-                    throw new Exception("subfolder " + pathToCheck + "not found");
+                {
+                    Log.Add($"subfolder {pathToCheck} not found");
+                    return callLog("not found", null);
+                }
             }
 
-            return callLog(null, Folder(path));
+            return callLog("ok", Folder(path));
         }
 
         #region Type specific results which the base class already offers the interface to
