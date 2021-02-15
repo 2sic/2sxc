@@ -43,5 +43,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         public string LookupLink(string link, int appId, string contentType = default, Guid guid = default, string field = default)
             => GetService<HyperlinkBackend<int, int>>().Init(Log).ResolveHyperlink(appId, link, contentType, guid, field);
 
+        /// <inheritdoc />
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        public LinkInfoDto LookupLinkPro(string link, int appId, string contentType = default, Guid guid = default, string field = default)
+            => GetService<HyperlinkBackend<int, int>>().Init(Log).LookupHyperlink(appId, link, contentType, guid, field);
     }
 }
