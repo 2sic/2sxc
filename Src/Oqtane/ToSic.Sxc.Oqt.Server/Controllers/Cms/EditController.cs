@@ -18,21 +18,18 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         #region DI
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "UiCntr";
 
-        public EditController(OqtUiContextBuilder uiContextBuilder,
-            StatefulControllerDependencies dependencies,
+        public EditController(StatefulControllerDependencies dependencies,
             Lazy<EntityPickerBackend> entityBackend,
             Lazy<EditLoadBackend> loadBackend,
             Lazy<EditSaveBackend> saveBackendLazy,
             Lazy<HyperlinkBackend<int, int>> linkBackendLazy) : base(dependencies)
         {
-            _uiContextBuilder = uiContextBuilder;
             _entityBackend = entityBackend;
             _loadBackend = loadBackend;
             _saveBackendLazy = saveBackendLazy;
             _linkBackendLazy = linkBackendLazy;
         }
 
-        private readonly OqtUiContextBuilder _uiContextBuilder;
         private readonly Lazy<EntityPickerBackend> _entityBackend;
         private readonly Lazy<EditLoadBackend> _loadBackend;
         private readonly Lazy<EditSaveBackend> _saveBackendLazy;
