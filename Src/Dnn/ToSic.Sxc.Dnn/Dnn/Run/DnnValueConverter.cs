@@ -75,7 +75,7 @@ namespace ToSic.Sxc.Dnn.Run
 
             // new
             var resultString = originalValue;
-            var regularExpression = Regex.Match(resultString, @"^(?<type>(file|page)):(?<id>[0-9]+)(?<params>(\?|\#).*)?$", RegexOptions.IgnoreCase);
+            var regularExpression = Regex.Match(resultString, ValueConverterBase.RegExToDetectConvertable, RegexOptions.IgnoreCase);
 
             if (!regularExpression.Success)
                 return originalValue;

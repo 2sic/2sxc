@@ -107,7 +107,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var linkId = int.Parse(regularExpression.Groups["id"].Value);
             var urlParams = regularExpression.Groups["params"].Value ?? "";
 
-            var isPageLookup = linkType == "page";
+            var isPageLookup = linkType == ValueConverterBase.PrefixPage;
             try
             {
                 var result = (isPageLookup

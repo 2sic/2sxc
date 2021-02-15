@@ -27,7 +27,7 @@ namespace ToSic.Sxc.WebApi.Cms
 			{
 				var context = _ctxResolver.BlockOrApp(appId);
 				// different security checks depending on the link-type
-				var lookupPage = hyperlink.Trim().StartsWith("page", StringComparison.OrdinalIgnoreCase);
+				var lookupPage = hyperlink.Trim().StartsWith(ValueConverterBase.PrefixPage, StringComparison.OrdinalIgnoreCase);
 
 				// look it up first, because we need to know if the result is in ADAM or not (different security scenario)
 				var conv = ServiceProvider.Build<IValueConverter>();
