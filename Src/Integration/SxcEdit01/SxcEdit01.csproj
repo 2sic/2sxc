@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
     <RootNamespace>IntegrationSamples.SxcEdit01</RootNamespace>
-    <Configurations>Debug;Release;DebugOqtane</Configurations>
+    <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
