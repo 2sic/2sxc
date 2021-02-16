@@ -11,6 +11,7 @@ using Oqtane.Infrastructure;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 using ToSic.Sxc.Oqt.Server.RazorPages;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.Razor.Engine;
@@ -78,6 +79,9 @@ namespace ToSic.Sxc.Oqt.Server
             sp.Build<IDbConfiguration>().ConnectionString = connectionString;
             var hostingEnvironment = sp.Build<IHostEnvironment>();
             sp.Build<IGlobalConfiguration>().GlobalFolder = Path.Combine(hostingEnvironment.ContentRootPath, "wwwroot\\Modules\\ToSic.Sxc");
+
+            // 2sxc Oqtane blob services for Imageflow.
+            services.AddImageflowOqtaneBlobService();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
