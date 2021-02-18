@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.Data;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.App;
 
 
-// TODO: #MissingFeature not yet implemented create/update/delete
 // TODO: #MissingFeature not yet implemented GetContext using current context
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
@@ -53,7 +56,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                 return GetAndSerializeOneAfterSecurityChecks(contentType,
                     entityApi => entityApi.GetOrThrow(contentType, guid), appPath);
 
+#pragma warning disable S112 // General exceptions should never be thrown
             throw new Exception("id neither int/guid, can't process");
+#pragma warning restore S112 // General exceptions should never be thrown
         }
 
 
@@ -67,6 +72,42 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// <returns></returns>
         private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string appPath)
             => _appContentLazy.Value.Init(appPath, Log).GetOne(contentType, getOne, appPath);
+
+        #endregion
+
+        #region Create
+
+        [HttpPost]
+        [AllowAnonymous] // will check security internally, so assume no requirements
+        public Dictionary<string, object> CreateOrUpdate([FromRoute] string contentType,
+            [FromBody] Dictionary<string, object> newContentItem, [FromQuery] int? id = null,
+            [FromQuery] string appPath = null)
+            => _appContentLazy.Value.Init(appPath, Log)
+                .CreateOrUpdate(contentType, newContentItem, id, appPath);
+
+        #endregion
+
+        #region Delete
+        [HttpDelete]
+        [AllowAnonymous]   // will check security internally, so assume no requirements
+        public void Delete([FromRoute] string contentType, [FromRoute] string id, [FromQuery] string appPath = null)
+        {
+            if (int.TryParse(id, out var intId))
+            {
+                _appContentLazy.Value.Init(appPath, Log).Delete(contentType, intId, appPath);
+                return;
+            }
+
+            if (Guid.TryParse(id, out var guid))
+            {
+                _appContentLazy.Value.Init(appPath, Log).Delete(contentType, guid, appPath);
+                return;
+            }
+
+#pragma warning disable S112 // General exceptions should never be thrown
+            throw new Exception("id neither int/guid, can't process");
+#pragma warning restore S112 // General exceptions should never be thrown
+        }
 
         #endregion
 
