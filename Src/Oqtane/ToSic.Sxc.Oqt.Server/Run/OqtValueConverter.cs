@@ -1,7 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Oqtane.Enums;
+using Oqtane.Infrastructure;
 using Oqtane.Repository;
+using Oqtane.Shared;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
@@ -22,15 +25,17 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public Lazy<ITenantResolver> TenantResolver { get; }
         public Lazy<IPageRepository> PageRepository { get; }
         public Lazy<IServerPaths> ServerPaths { get; }
+        public Lazy<ILogManager> Logger { get; }
 
         #region DI Constructor
 
         public OqtValueConverter(
-            Lazy<IFileRepository> fileRepository, 
-            Lazy<IFolderRepository> folderRepository, 
+            Lazy<IFileRepository> fileRepository,
+            Lazy<IFolderRepository> folderRepository,
             Lazy<ITenantResolver> tenantResolver,
             Lazy<IPageRepository> pageRepository,
-            Lazy<IServerPaths> serverPaths
+            Lazy<IServerPaths> serverPaths,
+            Lazy<ILogManager> logger
             )
         {
             FileRepository = fileRepository;
@@ -38,6 +43,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             TenantResolver = tenantResolver;
             PageRepository = pageRepository;
             ServerPaths = serverPaths;
+            Logger = logger;
         }
 
 
@@ -121,8 +127,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             catch (Exception e)
             {
                 var wrappedEx = new Exception("Error when trying to lookup a friendly url of \"" + originalValue + "\"", e);
-                // TODO SPM: find out if we can log to Oqtane, otherwise add a WIP reference here for exceptions
-                //Exceptions.LogException(wrappedEx);
+                Logger.Value.Log(LogLevel.Error, this, LogFunction.Other, wrappedEx.Message);
                 return originalValue;
             }
 
