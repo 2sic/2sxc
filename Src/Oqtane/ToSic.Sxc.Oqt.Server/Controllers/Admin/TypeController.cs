@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         private readonly Lazy<ContentExportApi> _contentExportLazy;
         protected override string HistoryLogName => "Api.Types";
 
-        public TypeController(StatefulControllerDependencies dependencies, 
+        public TypeController(StatefulControllerDependencies dependencies,
             Lazy<ContentTypeApi> ctApiLazy,
             Lazy<ContentExportApi> contentExportLazy
             ) : base(dependencies)
@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         // 2019-11-15 2dm special change: item to be Dictionary<string, object> because in DNN 9.4
         // it causes problems when a content-type has metadata, where a value then is a deeper object
         // in future, the JS front-end should send something clearer and not the whole object
-        public bool Save(int appId, Dictionary<string, object> item)
+        public bool Save(int appId, [FromBody] Dictionary<string, object> item)
         {
             var cleanList = item.ToDictionary(i => i.Key, i => i.Value?.ToString());
             return _ctApiLazy.Value.Init(appId, Log).Save(cleanList);
