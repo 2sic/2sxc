@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Context
             
             // if there is a block context, make sure it's of the requested app (or no app was specified)
             // then return that
-            if(ctx != null && (ctx.AppState.AppId == appId || appId > 1)) return ctx;
+            if(ctx != null && (appId == 0 || appId == ctx.AppState.AppId)) return ctx;
             
             // if block was found but we're working on another app (like through app-admin)
             // then ignore block permissions / context and only return app
