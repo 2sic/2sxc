@@ -101,6 +101,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         /// <returns></returns>
         private string TryToResolveOqtCodeToLink(Guid itemGuid, string originalValue)
         {
+            if (string.IsNullOrEmpty(originalValue)) return originalValue;
             // new
             var resultString = originalValue;
             var parts = new ValueConverterBase.LinkParts(resultString);
