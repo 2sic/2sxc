@@ -43,11 +43,11 @@ namespace ToSic.Sxc.Context
         {
             // get the current block context
             var ctx = BlockContext;
-            
+
             // if there is a block context, make sure it's of the requested app (or no app was specified)
             // then return that
-            if(ctx != null && (appId == 0 || appId == ctx.AppState.AppId)) return ctx;
-            
+            if(ctx != null && (appId == 0 || appId == ctx.AppState?.AppId)) return ctx;
+
             // if block was found but we're working on another app (like through app-admin)
             // then ignore block permissions / context and only return app
             return App(appId);
