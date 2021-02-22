@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     /// Proxy Class to the EAV EntitiesController (Web API Controller)
     /// </summary>
     /// <remarks>
-    /// Because the JSON call is made in a new window, they won't contain any http-headers like module-id or security token. 
+    /// Because the JSON call is made in a new window, they won't contain any http-headers like module-id or security token.
     /// So we can't use the classic protection attributes like:
     /// - [SupportedModules("2sxc,2sxc-app")]
     /// - [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         private readonly Lazy<EntityApi> _lazyEntityApi;
         private readonly Lazy<EntityBackend> _lazyEntityBackend;
         protected override string HistoryLogName => "Api.EntCnt";
-        public EntityController(StatefulControllerDependencies dependencies, 
+        public EntityController(StatefulControllerDependencies dependencies,
             Lazy<EntityApi> lazyEntityApi,
             Lazy<EntityBackend> lazyEntityBackend,
             Lazy<ContentExportApi> contentExportLazy,
@@ -138,6 +138,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 
         // New feature in 11.03 - Usage Statistics
         // not final yet, so no [HttpGet]
-        public dynamic Usage(int appId, Guid guid) => _lazyEntityBackend.Value.Init(Log).Usage(appId, guid);
+        //public dynamic Usage(int appId, Guid guid) => _lazyEntityBackend.Value.Init(Log).Usage(appId, guid);
     }
 }

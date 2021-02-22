@@ -2,11 +2,16 @@
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Run;
 #if NET451
 using System.Web.Compilation;
+#endif
+#if NETSTANDARD
+using ToSic.Sxc.Code.Builder;
 #endif
 
 
@@ -28,7 +33,7 @@ namespace ToSic.Sxc.Code
         public const string CsFileExtension = ".cs";
         public const string CsHtmlFileExtension = ".cshtml";
         public const string SharedCodeRootPathKeyInCache = "SharedCodeRootPath";
-        
+
         internal object InstantiateClass(string virtualPath, string className = null, string relativePath = null, bool throwOnError = true)
         {
             var wrapLog = Log.Call($"{virtualPath}, {nameof(className)}:{className}, {nameof(relativePath)}:{relativePath}, {throwOnError}");
@@ -53,6 +58,7 @@ namespace ToSic.Sxc.Code
             {
 #if NETSTANDARD
                 throw new Exception("On-the Fly / Runtime Compile Not Yet Implemented in .net standard #TodoNetStandard");
+
 #else
                 compiledType = BuildManager.GetCompiledType(virtualPath);
 #endif
@@ -67,13 +73,15 @@ namespace ToSic.Sxc.Code
 
                 Assembly assembly;
 #if NETSTANDARD
-                throw new Exception("On-the Fly / Runtime Compile Not Yet Implemented in .net standard #TodoNetStandard");
+                var fullPath = _serviceProvider.Build<IServerPaths>().FullContentPath(virtualPath.Backslash());
+                var compiledAssembly = new Compiler().Compile(fullPath, className);
+                assembly = new Runner().Load(compiledAssembly);
 #else
                 assembly = BuildManager.GetCompiledAssembly(virtualPath);
 #endif
                 compiledType = assembly.GetType(className, throwOnError, true);
 
-                if (compiledType == null) 
+                if (compiledType == null)
                     errorMsg = $"didn't find type '{className}' in {virtualPath}";
             }
             else
