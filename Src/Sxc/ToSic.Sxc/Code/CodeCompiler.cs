@@ -71,18 +71,24 @@ namespace ToSic.Sxc.Code
                 // if no name provided, use the name which is the same as the file name
                 className = className ?? Path.GetFileNameWithoutExtension(virtualPath) ?? "unknown";
 
-                Assembly assembly;
+                Assembly assembly = null;
 #if NETSTANDARD
                 var fullPath = _serviceProvider.Build<IServerPaths>().FullContentPath(virtualPath.Backslash());
                 var compiledAssembly = new Compiler().Compile(fullPath, className);
-                assembly = new Runner().Load(compiledAssembly);
+                if (compiledAssembly == null)
+                    errorMsg = $"can't compile '{className}' in {virtualPath}";
+                else
+                    assembly = new Runner().Load(compiledAssembly);
 #else
                 assembly = BuildManager.GetCompiledAssembly(virtualPath);
 #endif
-                compiledType = assembly.GetType(className, throwOnError, true);
+                if (errorMsg == null)
+                {
+                    compiledType = assembly?.GetType(className, throwOnError, true);
 
-                if (compiledType == null)
-                    errorMsg = $"didn't find type '{className}' in {virtualPath}";
+                    if (compiledType == null)
+                        errorMsg = $"didn't find type '{className}' in {virtualPath}";
+                }
             }
             else
                 errorMsg = $"Error: given path '{virtualPath}' doesn't point to a .cs or .cshtml";
