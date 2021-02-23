@@ -1,3 +1,4 @@
+// #define NETSTANDARD
 #if NETSTANDARD
 using System;
 using System.Collections.Generic;
@@ -63,11 +64,17 @@ namespace ToSic.Sxc.Code.Builder
             var references = new List<MetadataReference>
             {
                 MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                //MetadataReference.CreateFromFile(typeof(Class).Assembly.Location)
+                MetadataReference.CreateFromFile(Assembly.Load("netstandard, Version=2.0.0.0").Location)
             };
 
             Assembly.GetEntryAssembly()?.GetReferencedAssemblies().ToList()
                 .ForEach(a => references.Add(MetadataReference.CreateFromFile(Assembly.Load(a).Location)));
+
+            // Add references to all dll's in bin folder.
+            var dllLocation = AppContext.BaseDirectory;
+            var dllPath = Path.GetDirectoryName(dllLocation);
+            foreach (string dllFile in Directory.GetFiles(dllPath, "*.dll"))
+                references.Add(MetadataReference.CreateFromFile(dllFile));
 
             return CSharpCompilation.Create($"{className}.dll",
                 new[] { parsedSyntaxTree },
