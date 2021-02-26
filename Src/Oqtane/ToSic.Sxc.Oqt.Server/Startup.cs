@@ -13,6 +13,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 using ToSic.Sxc.Oqt.Server.RazorPages;
+using ToSic.Sxc.Oqt.Server.Wip;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.Razor.Engine;
 using ToSic.Sxc.WebApi;
@@ -52,8 +53,8 @@ namespace ToSic.Sxc.Oqt.Server
                     // this ensures that c# objects with Pascal-case keep that
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                     Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings);
-                });
-            //.PartManager.ApplicationParts.Add(new AssemblyPart(typeof(SxcMvc).Assembly));
+                })
+                .ConfigureApplicationPartManager(m => m.FeatureProviders.Add(new RemoteControllerFeatureProvider(services)));
 
             // enable use of UrlHelper for AbsolutePath
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
