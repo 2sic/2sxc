@@ -30,36 +30,26 @@ namespace ToSic.Sxc.Oqt.Server.Wip
             var tenantsRoot = Path.Combine(hostingEnvironment.ContentRootPath, @"Content\Tenants");
 
             if (string.IsNullOrWhiteSpace(tenantsRoot) || !Directory.Exists(tenantsRoot)) return;
-            foreach (var tenant in Directory.GetDirectories(tenantsRoot, "*.*", SearchOption.TopDirectoryOnly))
+            foreach (var apiFolderPath in Directory.GetDirectories(tenantsRoot, @"api", SearchOption.AllDirectories))
             {
-                var sitesPath = Path.Combine(tenant, "Sites");
-                if (!Directory.Exists(sitesPath)) continue;
-                foreach (var site in Directory.GetDirectories(sitesPath, "*.*", SearchOption.TopDirectoryOnly))
+                foreach (var apiFile in Directory.GetFiles(apiFolderPath, "*.cs", SearchOption.TopDirectoryOnly))
                 {
-                    var sxcAppPath = Path.Combine(site, "2sxc");
-                    if (!Directory.Exists(sxcAppPath)) continue;
-                    foreach (var app in Directory.GetDirectories(sxcAppPath, "*.*", SearchOption.TopDirectoryOnly))
+                    var apiCode = System.IO.File.ReadAllText(apiFile);
+                    if (string.IsNullOrWhiteSpace(apiCode)) continue;
+
+                    // TODO: better class naming to ensure uniqueness
+                    var className = $"DynCode_{System.IO.Path.GetFileNameWithoutExtension(apiFile)}";
+
+                    var compiledAssembly = new Compiler().Compile(apiFile, className);
+                    if (compiledAssembly == null) continue;
+
+                    var assembly = new Runner().Load(compiledAssembly);
+
+                    var candidates = assembly.GetExportedTypes();
+
+                    foreach (var candidate in candidates)
                     {
-                        var apiFolderPath = Path.Combine(app, "api");
-                        if (!Directory.Exists(apiFolderPath)) continue;
-                        foreach (var apiFile in Directory.GetFiles(apiFolderPath, "*.cs", SearchOption.TopDirectoryOnly))
-                        {
-                            var apiCode = System.IO.File.ReadAllText(apiFile);
-                            if (string.IsNullOrWhiteSpace(apiCode)) continue;
-                            var className = $"DynCode_{System.IO.Path.GetFileNameWithoutExtension(tenant)}_{System.IO.Path.GetFileNameWithoutExtension(site)}_{System.IO.Path.GetFileNameWithoutExtension(app)}_{System.IO.Path.GetFileNameWithoutExtension(apiFile)}";
-
-                            var compiledAssembly = new Compiler().Compile(apiFile, className);
-                            if (compiledAssembly == null) continue;
-
-                            var assembly = new Runner().Load(compiledAssembly);
-
-                            var candidates = assembly.GetExportedTypes();
-
-                            foreach (var candidate in candidates)
-                            {
-                                feature.Controllers.Add(candidate.GetTypeInfo());
-                            }
-                        }
+                        feature.Controllers.Add(candidate.GetTypeInfo());
                     }
                 }
             }
