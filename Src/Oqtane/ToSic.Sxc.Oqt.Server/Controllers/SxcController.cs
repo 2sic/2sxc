@@ -9,6 +9,10 @@ using ToSic.Sxc.Oqt.Server.Repository;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
+    /// <summary>
+    /// DELETE THIS - NOT IN USE.
+    /// This is just example how to create typical Oqtane Controller.
+    /// </summary>
     [Route("{alias}/api/[controller]")]
     public class SxcController : Controller
     {
