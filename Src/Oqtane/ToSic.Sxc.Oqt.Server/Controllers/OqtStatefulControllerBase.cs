@@ -1,11 +1,12 @@
-﻿using System;
-using Microsoft.Extensions.Primitives;
+﻿using Microsoft.Extensions.Primitives;
 using Oqtane.Repository;
+using System;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Oqt.Server.Code;
 using ToSic.Sxc.Oqt.Server.Run;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -13,7 +14,8 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
-    public abstract class OqtStatefulControllerBase: OqtStatelessControllerBase
+    // TODO: replace oqtane dynamic code implementation with hybrid implementation
+    public abstract class OqtStatefulControllerBase: OqtStatelessControllerBase, IHasOqtaneDynamicCodeContext
     {
 
         protected OqtStatefulControllerBase(StatefulControllerDependencies dependencies) : base()
@@ -43,8 +45,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             appContext.ResetApp(appId);
             return appContext;
         }
-
-
 
         protected IContextOfBlock GetContext() => GetBlock()?.Context ?? ServiceProvider.Build<IContextOfBlock>().Init(Log) as IContextOfBlock;
 
@@ -85,7 +85,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
             try
             {
-                return (T) Convert.ChangeType(valueString.ToString(), typeof(T));
+                return (T)Convert.ChangeType(valueString.ToString(), typeof(T));
             }
             catch
             {
@@ -100,5 +100,18 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// <param name="appId"></param>
         /// <returns></returns>
         internal IApp GetApp(int appId) => ServiceProvider.Build<App>().Init(ServiceProvider, appId, Log, GetBlock());
+
+        public string CreateInstancePath { get; set; }
+
+        public OqtaneDynamicCode DynCode => _dynCode ??= ServiceProvider.Build<OqtaneDynamicCode>().Init(GetBlock(), Log);
+        private OqtaneDynamicCode _dynCode;
+
+        protected dynamic CreateInstance(string virtualPath,
+            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string name = null,
+            string relativePath = null,
+            bool throwOnError = true) =>
+            DynCode.CreateInstance(virtualPath, dontRelyOnParameterOrder, name,
+                CreateInstancePath, throwOnError);
     }
 }
