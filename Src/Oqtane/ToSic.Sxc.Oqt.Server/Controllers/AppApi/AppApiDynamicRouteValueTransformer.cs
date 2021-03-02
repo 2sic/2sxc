@@ -105,7 +105,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             //controllerFolder = controllerFolder.Replace("\\", @"/");
             log.Add($"Controller Folder: {controllerFolder}");
 
-            controllerPath = Path.Combine(controllerFolder + controllerTypeName + ".cs");
+            controllerPath = Path.Combine(controllerFolder, controllerTypeName + ".cs");
             log.Add($"Controller Path: {controllerPath}");
 
             // note: this may look like something you could optimize/cache the result, but that's a bad idea
