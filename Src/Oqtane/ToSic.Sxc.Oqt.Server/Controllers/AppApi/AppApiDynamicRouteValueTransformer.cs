@@ -1,29 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 using Oqtane.Infrastructure;
 using Oqtane.Repository;
 using ToSic.Eav.Context;
-using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Builder;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Code;
 using ToSic.Sxc.Oqt.Server.Run;
 
-namespace ToSic.Sxc.Oqt.Server.Controllers.WebApiRouting
+namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {
     public class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer, IHasOqtaneDynamicCodeContext
     {
@@ -33,9 +30,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.WebApiRouting
         private readonly ITenantResolver _tenantResolver;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly ILogManager _logger;
+        private readonly ApplicationPartManager _partManager;
         public HttpRequest Request { get; private set; }
 
-        public AppApiDynamicRouteValueTransformer(StatefulControllerDependencies dependencies, ITenantResolver tenantResolver, IWebHostEnvironment hostingEnvironment, ILogManager logger)
+        public AppApiDynamicRouteValueTransformer(StatefulControllerDependencies dependencies, ITenantResolver tenantResolver, IWebHostEnvironment hostingEnvironment, ILogManager logger, ApplicationPartManager partManager)
         {
             ServiceProvider = dependencies.ServiceProvider;
             _moduleRepository = dependencies.ModuleRepository;
@@ -43,6 +41,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.WebApiRouting
             _tenantResolver = tenantResolver;
             _hostingEnvironment = hostingEnvironment;
             _logger = logger;
+            _partManager = partManager;
             Log = new Log(HistoryLogName, null);
             History.Add(HistoryLogGroup, Log);
             dependencies.CtxResolver.AttachRealBlock(() => GetBlock());
@@ -59,11 +58,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.WebApiRouting
         {
             Request = httpContext.Request;
 
-            //alias
-            //appFolder
-            //controller
-            //action
-
             if (!values.ContainsKey("alias") || !values.ContainsKey("appFolder") || !values.ContainsKey("controller") || !values.ContainsKey("action")) return values;
 
             var aliasId = int.Parse((string)values["alias"]);
@@ -73,94 +67,90 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.WebApiRouting
 
             // Log this lookup and add to history for insights
             var log = new Log("Sxc.TransformAsync", null, $"alias:{aliasId},app:{appFolder},ctrl:{controller},act:{action}");
-            var wrapLog = log.Call<AppApiDynamicRouteValueTransformer>();
+            var wrapLog = log.Call<RouteValueDictionary>();
 
             //try
             //{
-                var controllerTypeName = $"{controller}Controller";
+            var controllerTypeName = $"{controller}Controller";
 
-                // 1. Figure out the Path, or show error for that
+            // 1. Figure out the Path, or show error for that
 
-                //// only check for app folder if we don't have a context
-                //if (appFolder == null)
-                //{
-                //    log.Add("no folder found in url, will auto-detect");
-                //    var block = Eav.Factory.StaticBuild<DnnGetBlock>().GetCmsBlock(Request, log);
-                //    appFolder = block?.App?.Folder;
-                //}
-
-                log.Add($"App Folder: {appFolder}");
-
-                var controllerPath = "";
-
-                // new for 2sxc 9.34 #1651
-                var edition = "";
-                if (values.ContainsKey("edition"))
-                    edition = values["edition"].ToString();
-                if (!string.IsNullOrEmpty(edition))
-                    edition += "/";
-
-                log.Add($"Edition: {edition}");
-
-
-                var alias = _tenantResolver.GetAlias();
-                var aliasPart = $@"Content\Tenants\{alias.TenantId}\Sites\{alias.SiteId}\2sxc";
-
-                var controllerFolder = Path.Combine(aliasPart, appFolder, edition + "api/");
-
-                //controllerFolder = controllerFolder.Replace("\\", @"/");
-                log.Add($"Controller Folder: {controllerFolder}");
-
-                controllerPath = Path.Combine(controllerFolder + controllerTypeName + ".cs");
-                log.Add($"Controller Path: {controllerPath}");
-
-                // note: this may look like something you could optimize/cache the result, but that's a bad idea
-                // because when the file changes, the type-object will be different, so please don't optimize :)
-                var absolutePath = Path.Combine(_hostingEnvironment.ContentRootPath, controllerPath);
-                log.Add($"Absolute Path: {absolutePath}");
-                if (System.IO.File.Exists(absolutePath))
-                {
-                    //var instance = DynCode.CreateInstance(virtualPath: $"/{controllerPath.Forwardslash()}");
-                    //_defaultControllerFactory.CreateController()
-                    //var assembly = BuildManager.GetCompiledAssembly(controllerPath);
-                    //var type = assembly.GetType(controllerTypeName, true, true);
-
-                    // help with path resolution for compilers running inside the created controller
-                    //Request?.HttpContext.Items.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
-
-                    //var descriptor = new HttpControllerDescriptor(_config, type.Name, type);
-                    //return wrapLog("ok", descriptor);
-                }
-
-                //log.Add("path not found, error will be thrown in a moment");
-                //return NotFound();
-
-                // ***********************************************************
-                //var fullFilePath = ContentFileHelper.GetCodePath(_hostingEnvironment.ContentRootPath,
-                //    alias, Route, $"{appFolder}/api/", $"{controllerTypeName}.cs");
-                //if (string.IsNullOrEmpty(fullFilePath)) return NotFound();
-
-                //var fileBytes = System.IO.File.ReadAllBytes(fullFilePath);
-                //var mimeType = ContentFileHelper.GetMimeType(fullFilePath);
-
-                //return mimeType.StartsWith("image") ? File(fileBytes, mimeType) :
-                //    new FileContentResult(fileBytes, mimeType) { FileDownloadName = Path.GetFileName(fullFilePath) };
-            //}
-            //catch
+            //// only check for app folder if we don't have a context
+            //if (appFolder == null)
             //{
-            //    //return NotFound();
+            //    log.Add("no folder found in url, will auto-detect");
+            //    var block = Eav.Factory.StaticBuild<DnnGetBlock>().GetCmsBlock(Request, log);
+            //    appFolder = block?.App?.Folder;
             //}
 
-            //var language = (string)values["language"];
-            //var controller = await _translationDatabase.Resolve(language, (string)values["controller"]);
-            //if (controller == null) return values;
-            //values["controller"] = controller;
+            log.Add($"App Folder: {appFolder}");
 
-            //var action = await _translationDatabase.Resolve(language, (string)values["action"]);
-            //if (action == null) return values;
-            //values["action"] = action;
+            var controllerPath = "";
 
-            return values;
+            // new for 2sxc 9.34 #1651
+            var edition = "";
+            if (values.ContainsKey("edition"))
+                edition = values["edition"].ToString();
+            if (!string.IsNullOrEmpty(edition))
+                edition += "/";
+
+            log.Add($"Edition: {edition}");
+
+
+            var alias = _tenantResolver.GetAlias();
+            var aliasPart = $@"Content\Tenants\{alias.TenantId}\Sites\{alias.SiteId}\2sxc";
+
+            var controllerFolder = Path.Combine(aliasPart, appFolder, edition + @"api");
+
+            //controllerFolder = controllerFolder.Replace("\\", @"/");
+            log.Add($"Controller Folder: {controllerFolder}");
+
+            controllerPath = Path.Combine(controllerFolder + controllerTypeName + ".cs");
+            log.Add($"Controller Path: {controllerPath}");
+
+            // note: this may look like something you could optimize/cache the result, but that's a bad idea
+            // because when the file changes, the type-object will be different, so please don't optimize :)
+            var apiFile = Path.Combine(_hostingEnvironment.ContentRootPath, controllerPath);
+            log.Add($"Absolute Path: {apiFile}");
+
+            // Check for AppApi file
+            if (!System.IO.File.Exists(apiFile)) return wrapLog("Error, AppApi file is missing.", values);
+
+            // Check for AppApi source code
+            var apiCode = System.IO.File.ReadAllText(apiFile);
+            if (string.IsNullOrWhiteSpace(apiCode)) return wrapLog("Error, AppApi code is missing.", values);
+
+            var className = $"DynCode_{controllerFolder.Replace(@"\","_")}_{System.IO.Path.GetFileNameWithoutExtension(apiFile)}";
+            log.Add($"Class Name: {className}");
+
+            // Remove older version of AppApi Controller
+            var dllName = $"{className}.dll";
+            foreach (var applicationPart in _partManager.ApplicationParts)
+            {
+                if (!applicationPart.Name.Equals(dllName)) continue;
+
+                log.Add($"Remove ApplicationPart: {dllName}");
+                _partManager.ApplicationParts.Remove(applicationPart);
+            }
+
+            // Build new AppApi Controller
+            log.Add($"Compile assembly: {apiFile}, {className}");
+            var compiledAssembly = new Compiler().Compile(apiFile, className);
+            if (compiledAssembly == null) return wrapLog("Error, Can't compile AppApi code", values);
+
+            var assembly = new Runner().Load(compiledAssembly);
+
+            // Register new AppApi Controller
+            log.Add($"Add ApplicationPart: {dllName}");
+            _partManager.ApplicationParts.Add(new AssemblyPart(assembly));
+            // Notify change
+            AppApiActionDescriptorChangeProvider.Instance.HasChanged = true;
+            AppApiActionDescriptorChangeProvider.Instance.TokenSource.Cancel();
+
+            // help with path resolution for compilers running inside the created controller
+            Request?.HttpContext.Items.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
+
+            return wrapLog("ok", values);
         }
 
         public string CreateInstancePath { get; set; }
@@ -200,10 +190,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.WebApiRouting
         {
             var wrapLog = Log.Call<IBlock>($"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
 
-            var moduleId = GetTypedHeader(WebApi.WebApiConstants.HeaderInstanceId, -1);
+            var moduleId = GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderInstanceId, -1);
             var contentBlockId =
-                GetTypedHeader(WebApi.WebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
-            var pageId = GetTypedHeader(WebApi.WebApiConstants.HeaderPageId, -1);
+                GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
+            var pageId = GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderPageId, -1);
 
             if (moduleId == -1 || pageId == -1)
             {

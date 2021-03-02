@@ -12,10 +12,9 @@ using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
-using ToSic.Sxc.Oqt.Server.Controllers.WebApiRouting;
+using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Server.InspectMiddleware;
 using ToSic.Sxc.Oqt.Server.RazorPages;
-using ToSic.Sxc.Oqt.Server.Wip;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.Razor.Engine;
 using ToSic.Sxc.WebApi;
@@ -55,8 +54,8 @@ namespace ToSic.Sxc.Oqt.Server
                     // this ensures that c# objects with Pascal-case keep that
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                     Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings);
-                })
-                .ConfigureApplicationPartManager(m => m.FeatureProviders.Add(new RemoteControllerFeatureProvider(services)));
+                });
+                //.ConfigureApplicationPartManager(m => m.FeatureProviders.Add(new RemoteControllerFeatureProvider(services)));
 
             // enable use of UrlHelper for AbsolutePath
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
@@ -88,6 +87,8 @@ namespace ToSic.Sxc.Oqt.Server
             // WIP: stv
             //services.AddConditionalMiddlewareBeforeEndpoints();
             services.AddScoped<AppApiDynamicRouteValueTransformer>();
+            services.AddSingleton<IActionDescriptorChangeProvider>(AppApiActionDescriptorChangeProvider.Instance);
+            services.AddSingleton(AppApiActionDescriptorChangeProvider.Instance);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
