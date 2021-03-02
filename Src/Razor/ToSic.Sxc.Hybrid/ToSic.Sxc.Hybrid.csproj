@@ -11,4 +11,8 @@
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="WebApi\" />
+  </ItemGroup>
+
 </Project>
