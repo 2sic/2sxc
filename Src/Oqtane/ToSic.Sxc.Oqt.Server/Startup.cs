@@ -13,7 +13,6 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
-using ToSic.Sxc.Oqt.Server.InspectMiddleware;
 using ToSic.Sxc.Oqt.Server.RazorPages;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.Razor.Engine;
