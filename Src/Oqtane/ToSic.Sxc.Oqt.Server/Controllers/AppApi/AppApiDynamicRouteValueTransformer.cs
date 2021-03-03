@@ -1,14 +1,16 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
-using Oqtane.Infrastructure;
 using Oqtane.Repository;
+using System;
+using System.Collections.Concurrent;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
@@ -22,27 +24,30 @@ using ToSic.Sxc.Oqt.Server.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {
+    /// <summary>
+    /// Enable dynamically manipulating of route value to select a 2sxc app api dynamic code controller action.
+    /// </summary>
     public class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer, IHasOqtaneDynamicCodeContext
     {
+        private ConcurrentDictionary<string, bool> CompiledAppApiControllers { get; }
         public IServiceProvider ServiceProvider { get; private set; }
         private readonly IModuleRepository _moduleRepository;
         private readonly OqtTempInstanceContext _oqtTempInstanceContext;
         private readonly ITenantResolver _tenantResolver;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly ILogManager _logger;
         private readonly ApplicationPartManager _partManager;
         public HttpRequest Request { get; private set; }
 
-        public AppApiDynamicRouteValueTransformer(StatefulControllerDependencies dependencies, ITenantResolver tenantResolver, IWebHostEnvironment hostingEnvironment, ILogManager logger, ApplicationPartManager partManager)
+        public AppApiDynamicRouteValueTransformer(StatefulControllerDependencies dependencies, ITenantResolver tenantResolver, IWebHostEnvironment hostingEnvironment, ApplicationPartManager partManager, AppApiFileSystemWatcher appApiFileSystemWatcher)
         {
+            CompiledAppApiControllers = appApiFileSystemWatcher.CompiledAppApiControllers;
             ServiceProvider = dependencies.ServiceProvider;
             _moduleRepository = dependencies.ModuleRepository;
             _oqtTempInstanceContext = dependencies.OqtTempInstanceContext;
             _tenantResolver = tenantResolver;
             _hostingEnvironment = hostingEnvironment;
-            _logger = logger;
             _partManager = partManager;
-            Log = new Log(HistoryLogName, null);
+            Log = new Log(HistoryLogName, null, "AppApiDynamicRouteValueTransformer");
             History.Add(HistoryLogGroup, Log);
             dependencies.CtxResolver.AttachRealBlock(() => GetBlock());
             dependencies.CtxResolver.AttachBlockContext(GetContext);
@@ -58,100 +63,130 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
         {
             Request = httpContext.Request;
 
-            if (!values.ContainsKey("alias") || !values.ContainsKey("appFolder") || !values.ContainsKey("controller") || !values.ContainsKey("action")) return values;
+            var wrapLog = Log.Call<RouteValueDictionary>();
 
+            // Check required route values: alias, appFolder, controller, action.
+            if (!values.ContainsKey("alias")) return wrapLog("Error: missing required 'alias' route value", values);
             var aliasId = int.Parse((string)values["alias"]);
+
+            if (!values.ContainsKey("appFolder")) return wrapLog("Error: missing required 'appFolder' route value", values);
             var appFolder = (string)values["appFolder"];
+
+            if (!values.ContainsKey("controller")) return wrapLog("Error: missing required 'controller' route value", values);
             var controller = (string)values["controller"];
+
+            if (!values.ContainsKey("action")) return wrapLog("Error: missing required 'action' route value", values);
             var action = (string)values["action"];
 
-            // Log this lookup and add to history for insights
-            var log = new Log("Sxc.TransformAsync", null, $"alias:{aliasId},app:{appFolder},ctrl:{controller},act:{action}");
-            var wrapLog = log.Call<RouteValueDictionary>();
+            Log.Add($"TransformAsync route required values are present, alias:{aliasId}, app:{appFolder}, ctrl:{controller}, act:{action}.");
 
-            //try
-            //{
             var controllerTypeName = $"{controller}Controller";
+            Log.Add($"Controller TypeName: {controllerTypeName}");
 
-            // 1. Figure out the Path, or show error for that
-
-            //// only check for app folder if we don't have a context
-            //if (appFolder == null)
-            //{
-            //    log.Add("no folder found in url, will auto-detect");
-            //    var block = Eav.Factory.StaticBuild<DnnGetBlock>().GetCmsBlock(Request, log);
-            //    appFolder = block?.App?.Folder;
-            //}
-
-            log.Add($"App Folder: {appFolder}");
-
-            var controllerPath = "";
-
-            // new for 2sxc 9.34 #1651
-            var edition = "";
-            if (values.ContainsKey("edition"))
-                edition = values["edition"].ToString();
-            if (!string.IsNullOrEmpty(edition))
-                edition += "/";
-
-            log.Add($"Edition: {edition}");
-
+            var edition = GetEdition(values);
+            Log.Add($"Edition: {edition}");
 
             var alias = _tenantResolver.GetAlias();
             var aliasPart = $@"Content\Tenants\{alias.TenantId}\Sites\{alias.SiteId}\2sxc";
 
             var controllerFolder = Path.Combine(aliasPart, appFolder, edition + @"api");
-
             //controllerFolder = controllerFolder.Replace("\\", @"/");
-            log.Add($"Controller Folder: {controllerFolder}");
+            Log.Add($"Controller Folder: {controllerFolder}");
 
-            controllerPath = Path.Combine(controllerFolder, controllerTypeName + ".cs");
-            log.Add($"Controller Path: {controllerPath}");
+            var controllerPath = Path.Combine(controllerFolder, controllerTypeName + ".cs");
+            Log.Add($"Controller Path: {controllerPath}");
 
             // note: this may look like something you could optimize/cache the result, but that's a bad idea
             // because when the file changes, the type-object will be different, so please don't optimize :)
             var apiFile = Path.Combine(_hostingEnvironment.ContentRootPath, controllerPath);
-            log.Add($"Absolute Path: {apiFile}");
+            Log.Add($"Absolute Path: {apiFile}");
 
-            // Check for AppApi file
-            if (!System.IO.File.Exists(apiFile)) return wrapLog("Error, AppApi file is missing.", values);
+            var className = $"DynCode_{controllerFolder.Replace(@"\", "_")}_{System.IO.Path.GetFileNameWithoutExtension(apiFile)}";
+            Log.Add($"Class Name: {className}");
 
-            // Check for AppApi source code
-            var apiCode = System.IO.File.ReadAllText(apiFile);
-            if (string.IsNullOrWhiteSpace(apiCode)) return wrapLog("Error, AppApi code is missing.", values);
-
-            var className = $"DynCode_{controllerFolder.Replace(@"\","_")}_{System.IO.Path.GetFileNameWithoutExtension(apiFile)}";
-            log.Add($"Class Name: {className}");
+            var dllName = $"{className}.dll";
+            Log.Add($"Dll Name: {dllName}");
 
             // Remove older version of AppApi Controller
-            var dllName = $"{className}.dll";
-            foreach (var applicationPart in _partManager.ApplicationParts)
+            if (CompiledAppApiControllers.TryGetValue(apiFile, out var updated))
             {
-                if (!applicationPart.Name.Equals(dllName)) continue;
-
-                log.Add($"Remove ApplicationPart: {dllName}");
-                _partManager.ApplicationParts.Remove(applicationPart);
+                Log.Add($"CompiledAppApiControllers have value: {updated} for: {apiFile}.");
+                if (updated) RemoveController(dllName, apiFile);
             }
+            else
+                Log.Add($"In CompiledAppApiControllers can't get value for: {apiFile}.");
+
+            // Check for AppApi file
+            if (!File.Exists(apiFile)) return wrapLog($"Error, missing AppApi file {apiFile}.", values);
+
+            // Check for AppApi source code
+            var apiCode = await File.ReadAllTextAsync(apiFile);
+            if (string.IsNullOrWhiteSpace(apiCode)) return wrapLog($"Error, missing AppApi code in file {apiFile}.", values);
+
+            if (!CompiledAppApiControllers.TryAdd(apiFile, false))
+                return wrapLog($"ok, nothing to do, AppApi Controller is already compiled and added to ApplicationPart: {apiFile}.", values);
 
             // Build new AppApi Controller
-            log.Add($"Compile assembly: {apiFile}, {className}");
+            Log.Add($"Compile assembly: {apiFile}, {className}");
             var compiledAssembly = new Compiler().Compile(apiFile, className);
-            if (compiledAssembly == null) return wrapLog("Error, Can't compile AppApi code", values);
+            if (compiledAssembly == null) return wrapLog("Error, can't compile AppApi code.", values);
 
             var assembly = new Runner().Load(compiledAssembly);
 
             // Register new AppApi Controller
-            log.Add($"Add ApplicationPart: {dllName}");
-            _partManager.ApplicationParts.Add(new AssemblyPart(assembly));
-            // Notify change
-            AppApiActionDescriptorChangeProvider.Instance.HasChanged = true;
-            AppApiActionDescriptorChangeProvider.Instance.TokenSource.Cancel();
+            AddController(dllName, assembly);
 
             // help with path resolution for compilers running inside the created controller
             Request?.HttpContext.Items.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
 
-            return wrapLog("ok", values);
+            return wrapLog($"ok, Controller is compiled and added to ApplicationParts: {apiFile}.", values);
         }
+
+        private static string GetEdition(RouteValueDictionary values)
+        {
+            // new for 2sxc 9.34 #1651
+            var edition = "";
+            if (values.ContainsKey("edition")) edition = values["edition"].ToString();
+            if (!string.IsNullOrEmpty(edition)) edition += "/";
+            return edition;
+        }
+
+        private void AddController(string dllName, Assembly assembly)
+        {
+            Log.Add($"Add ApplicationPart: {dllName}");
+            _partManager.ApplicationParts.Add(new AssemblyPart(assembly));
+            // Notify change
+            NotifyChange();
+        }
+
+        private void RemoveController(string dllName, string apiFile)
+        {
+            Log.Add($"In ApplicationParts, find AppApi controller: {dllName}.");
+            var applicationPart = _partManager.ApplicationParts.FirstOrDefault(a => a.Name.Equals(dllName));
+            if (applicationPart != null)
+            {
+                Log.Add($"From ApplicationParts, remove AppApi controller: {dllName}.");
+                _partManager.ApplicationParts.Remove(applicationPart);
+                NotifyChange();
+
+                Log.Add(CompiledAppApiControllers.TryRemove(apiFile, out var removeValue)
+                    ? $"Value removed: {removeValue} for {apiFile}."
+                    : $"Error, can't remove value for {apiFile}.");
+            }
+            else
+            {
+                Log.Add($"In ApplicationParts, can't find AppApi controller: {dllName}");
+            }
+        }
+
+        private static void NotifyChange()
+        {
+            // Notify change
+            AppApiActionDescriptorChangeProvider.Instance.HasChanged = true;
+            AppApiActionDescriptorChangeProvider.Instance.TokenSource.Cancel();
+        }
+
+        // TODO: wip, re-factor code bellow to avoid code duplication.
 
         public string CreateInstancePath { get; set; }
 

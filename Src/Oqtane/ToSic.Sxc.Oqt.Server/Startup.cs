@@ -85,9 +85,11 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddImageflowOqtaneBlobService();
             // WIP: stv
             //services.AddConditionalMiddlewareBeforeEndpoints();
+            services.AddSingleton<AppApiFileSystemWatcher>();
             services.AddScoped<AppApiDynamicRouteValueTransformer>();
             services.AddSingleton<IActionDescriptorChangeProvider>(AppApiActionDescriptorChangeProvider.Instance);
             services.AddSingleton(AppApiActionDescriptorChangeProvider.Instance);
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
