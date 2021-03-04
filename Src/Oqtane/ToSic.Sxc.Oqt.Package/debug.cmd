@@ -29,6 +29,7 @@ XCOPY "..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc\*" "%Dev2sxcOqtaneRoot%
 
 @REM nuget dependences
 XCOPY "..\..\packages\imazen.common\0.5.6\lib\netstandard2.0\Imazen.Common.dll" "%OqtaneBin%" /Y
+XCOPY "..\..\packages\system.drawing.common\5.0.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll" "%OqtaneBin%" /Y
 
 @REM the target for js, css, json etc.
 @set BuildTarget=c:\Projects\2sxc\oqtane\oqtane.framework\Oqtane.Server\wwwroot\Modules\ToSic.Sxc

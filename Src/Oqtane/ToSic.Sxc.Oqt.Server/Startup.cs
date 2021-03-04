@@ -26,7 +26,6 @@ namespace ToSic.Sxc.Oqt.Server
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment HostEnvironment { get; set; }
 
-
         public Startup()
         {
             var builder = new ConfigurationBuilder()
@@ -54,7 +53,6 @@ namespace ToSic.Sxc.Oqt.Server
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                     Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings);
                 });
-                //.ConfigureApplicationPartManager(m => m.FeatureProviders.Add(new RemoteControllerFeatureProvider(services)));
 
             // enable use of UrlHelper for AbsolutePath
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
@@ -83,8 +81,8 @@ namespace ToSic.Sxc.Oqt.Server
 
             // 2sxc Oqtane blob services for Imageflow.
             services.AddImageflowOqtaneBlobService();
-            // WIP: stv
-            //services.AddConditionalMiddlewareBeforeEndpoints();
+
+            services.AddSingleton<AppApiFileSystemWatcher>();
             services.AddScoped<AppApiDynamicRouteValueTransformer>();
             services.AddSingleton<IActionDescriptorChangeProvider>(AppApiActionDescriptorChangeProvider.Instance);
             services.AddSingleton(AppApiActionDescriptorChangeProvider.Instance);
