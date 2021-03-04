@@ -35,9 +35,9 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <param name="target">
         /// The content-item this toolbar is for, can be null. <br/>
-        /// Usually a @HowTo.DynamicCode.DynamicEntity?text=DynamicEntity or a @HowTo.DynamicCode.Entity?text=Entity
+        /// Usually a @NetCode.DynamicCode.DynamicEntity?text=DynamicEntity or a @NetCode.DynamicCode.Entity?text=Entity
         /// </param>
-        /// <param name="noParameterOrder">see @HowTo.DynamicCode.NamedParameters</param>
+        /// <param name="noParameterOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="actions">
         /// List of actions on this toolbar. If null, will use default actions for this item.
         /// If provided, must be comma-separated action-names - see @Specs.Js.Commands.
@@ -77,9 +77,9 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <param name="target">
         /// The content-item this toolbar is for, can be null. <br/>
-        /// Usually a @HowTo.DynamicCode.DynamicEntity?text=DynamicEntity or a @HowTo.DynamicCode.Entity?text=Entity
+        /// Usually a @NetCode.DynamicCode.DynamicEntity?text=DynamicEntity or a @HowTo.DynamicCode.Entity?text=Entity
         /// </param>
-        /// <param name="noParameterOrder">see @HowTo.DynamicCode.NamedParameters</param>
+        /// <param name="noParameterOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="actions">
         /// List of actions on this toolbar. If null, will use default actions for this item.
         /// If provided, must be comma-separated action-names - see @Specs.Js.Commands.
@@ -121,7 +121,7 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <param name="target">The content-item for which the new context should be.
         /// This item usually has a field which has @Specs.Cms.InnerContent</param>
-        /// <param name="noParameterOrder">see @HowTo.DynamicCode.NamedParameters</param>
+        /// <param name="noParameterOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="field">the field of this content-item, which contains the inner-content-items</param>
         /// <param name="contentType">type name used for 'new' items in a toolbar - usually for inner-content and list-contexts</param>
         /// <param name="newGuid">the guid of a new item - use null for auto-generate</param>
@@ -146,7 +146,7 @@ namespace ToSic.Sxc.Web
         /// This is mainly meant for internal use
         /// </summary>
         /// <param name="content">the string / tags to wrap</param>
-        /// <param name="noParameterOrder">see @HowTo.DynamicCode.NamedParameters</param>
+        /// <param name="noParameterOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="tag">optional tag to use for the wrapper, default is div</param>
         /// <param name="full">include full context (default is partial context only)</param>
         /// <param name="enableEdit">include information needed for editing</param>
@@ -168,9 +168,9 @@ namespace ToSic.Sxc.Web
         );
 
         /// <summary>
-        /// Ensure that the UI will load the correct assets to enable editing. See @HowTo.Razor.Edit.Enable?text=How+to+use+Edit.Enable
+        /// Ensure that the UI will load the correct assets to enable editing. See @NetCode.Razor.Edit.Enable?text=How+to+use+Edit.Enable
         /// </summary>
-        /// <param name="noParameterOrder">see @HowTo.DynamicCode.NamedParameters</param>
+        /// <param name="noParameterOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="js">optional, default false. automatically true if `api` or `forms` is true<br/>
         /// Will add the basic JS APIs ($2sxc) usually for enabling WebApi calls from your JS code. <br/>
         /// _added in v10.20_
