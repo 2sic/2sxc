@@ -109,7 +109,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 var dllName = $"{className}.dll";
                 Log.Add($"Dll Name: {dllName}");
 
-                // Remove older version of AppApi Controller
+                // If we have a key (that controller is compiled and registered, but not updated) controller was prepared before, so just return values.
+                // Alternatively remove older version of AppApi controller (if we got updated flag from file system watcher).
                 if (CompiledAppApiControllers.TryGetValue(apiFile, out var updated))
                 {
                     Log.Add($"CompiledAppApiControllers have value: {updated} for: {apiFile}.");
@@ -138,16 +139,17 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
                 var assembly = new Runner().Load(compiledAssembly);
 
-                // Register new AppApi Controller
+                // Add new key to concurrent dictionary, before registering new AppAPi controller.
+                if(!CompiledAppApiControllers.TryAdd(apiFile, false))
+                    return wrapLog($"Error, while adding key {apiFile} to concurrent dictionary, so will not register AppApi Controller to avoid duplicate controller routes.", values);
+
+                // Register new AppApi Controller.
                 AddController(dllName, assembly);
 
                 // help with path resolution for compilers running inside the created controller
                 Request?.HttpContext.Items.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
 
-                return wrapLog(CompiledAppApiControllers.TryAdd(apiFile, false)
-                    ? $"ok, Controller is compiled and added to ApplicationParts: {apiFile}."
-                    : $"Error, while adding key {apiFile} to concurrent dictionary after AppApi Controller is compiled and added to ApplicationPart."
-                    , values);
+                return wrapLog($"ok, Controller is compiled and added to ApplicationParts: {apiFile}.", values);
             }
             catch (Exception e)
             {
