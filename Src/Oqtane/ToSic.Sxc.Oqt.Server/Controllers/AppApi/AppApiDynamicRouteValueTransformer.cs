@@ -80,66 +80,79 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
             Log.Add($"TransformAsync route required values are present, alias:{aliasId}, app:{appFolder}, ctrl:{controller}, act:{action}.");
 
-            var controllerTypeName = $"{controller}Controller";
-            Log.Add($"Controller TypeName: {controllerTypeName}");
-
-            var edition = GetEdition(values);
-            Log.Add($"Edition: {edition}");
-
-            var alias = _tenantResolver.GetAlias();
-            var aliasPart = $@"Content\Tenants\{alias.TenantId}\Sites\{alias.SiteId}\2sxc";
-
-            var controllerFolder = Path.Combine(aliasPart, appFolder, edition + @"api");
-            //controllerFolder = controllerFolder.Replace("\\", @"/");
-            Log.Add($"Controller Folder: {controllerFolder}");
-
-            var controllerPath = Path.Combine(controllerFolder, controllerTypeName + ".cs");
-            Log.Add($"Controller Path: {controllerPath}");
-
-            // note: this may look like something you could optimize/cache the result, but that's a bad idea
-            // because when the file changes, the type-object will be different, so please don't optimize :)
-            var apiFile = Path.Combine(_hostingEnvironment.ContentRootPath, controllerPath);
-            Log.Add($"Absolute Path: {apiFile}");
-
-            var className = $"DynCode_{controllerFolder.Replace(@"\", "_")}_{System.IO.Path.GetFileNameWithoutExtension(apiFile)}";
-            Log.Add($"Class Name: {className}");
-
-            var dllName = $"{className}.dll";
-            Log.Add($"Dll Name: {dllName}");
-
-            // Remove older version of AppApi Controller
-            if (CompiledAppApiControllers.TryGetValue(apiFile, out var updated))
+            try
             {
-                Log.Add($"CompiledAppApiControllers have value: {updated} for: {apiFile}.");
-                if (updated) RemoveController(dllName, apiFile);
+                var controllerTypeName = $"{controller}Controller";
+                Log.Add($"Controller TypeName: {controllerTypeName}");
+
+                var edition = GetEdition(values);
+                Log.Add($"Edition: {edition}");
+
+                var alias = _tenantResolver.GetAlias();
+                var aliasPart = $@"Content\Tenants\{alias.TenantId}\Sites\{alias.SiteId}\2sxc";
+
+                var controllerFolder = Path.Combine(aliasPart, appFolder, edition + @"api");
+                //controllerFolder = controllerFolder.Replace("\\", @"/");
+                Log.Add($"Controller Folder: {controllerFolder}");
+
+                var controllerPath = Path.Combine(controllerFolder, controllerTypeName + ".cs");
+                Log.Add($"Controller Path: {controllerPath}");
+
+                // note: this may look like something you could optimize/cache the result, but that's a bad idea
+                // because when the file changes, the type-object will be different, so please don't optimize :)
+                var apiFile = Path.Combine(_hostingEnvironment.ContentRootPath, controllerPath);
+                Log.Add($"Absolute Path: {apiFile}");
+
+                var className = $"DynCode_{controllerFolder.Replace(@"\", "_")}_{System.IO.Path.GetFileNameWithoutExtension(apiFile)}";
+                Log.Add($"Class Name: {className}");
+
+                var dllName = $"{className}.dll";
+                Log.Add($"Dll Name: {dllName}");
+
+                // Remove older version of AppApi Controller
+                if (CompiledAppApiControllers.TryGetValue(apiFile, out var updated))
+                {
+                    Log.Add($"CompiledAppApiControllers have value: {updated} for: {apiFile}.");
+                    if (updated)
+                        RemoveController(dllName, apiFile);
+                    else
+                        return wrapLog(
+                            $"ok, nothing to do, AppApi Controller is already compiled and added to ApplicationPart: {apiFile}.",
+                            values);
+                }
+                else
+                    Log.Add($"We need to prepare controller for: {apiFile}.");
+
+
+                // Check for AppApi file
+                if (!File.Exists(apiFile)) return wrapLog($"Error, missing AppApi file {apiFile}.", values);
+
+                // Check for AppApi source code
+                var apiCode = await File.ReadAllTextAsync(apiFile);
+                if (string.IsNullOrWhiteSpace(apiCode)) return wrapLog($"Error, missing AppApi code in file {apiFile}.", values);
+
+                // Build new AppApi Controller
+                Log.Add($"Compile assembly: {apiFile}, {className}");
+                var compiledAssembly = new Compiler().Compile(apiFile, className);
+                if (compiledAssembly == null) return wrapLog("Error, can't compile AppApi code.", values);
+
+                var assembly = new Runner().Load(compiledAssembly);
+
+                // Register new AppApi Controller
+                AddController(dllName, assembly);
+
+                // help with path resolution for compilers running inside the created controller
+                Request?.HttpContext.Items.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
+
+                return wrapLog(CompiledAppApiControllers.TryAdd(apiFile, false)
+                    ? $"ok, Controller is compiled and added to ApplicationParts: {apiFile}."
+                    : $"Error, while adding key {apiFile} to concurrent dictionary after AppApi Controller is compiled and added to ApplicationPart."
+                    , values);
             }
-            else
-                Log.Add($"In CompiledAppApiControllers can't get value for: {apiFile}.");
-
-            // Check for AppApi file
-            if (!File.Exists(apiFile)) return wrapLog($"Error, missing AppApi file {apiFile}.", values);
-
-            // Check for AppApi source code
-            var apiCode = await File.ReadAllTextAsync(apiFile);
-            if (string.IsNullOrWhiteSpace(apiCode)) return wrapLog($"Error, missing AppApi code in file {apiFile}.", values);
-
-            if (!CompiledAppApiControllers.TryAdd(apiFile, false))
-                return wrapLog($"ok, nothing to do, AppApi Controller is already compiled and added to ApplicationPart: {apiFile}.", values);
-
-            // Build new AppApi Controller
-            Log.Add($"Compile assembly: {apiFile}, {className}");
-            var compiledAssembly = new Compiler().Compile(apiFile, className);
-            if (compiledAssembly == null) return wrapLog("Error, can't compile AppApi code.", values);
-
-            var assembly = new Runner().Load(compiledAssembly);
-
-            // Register new AppApi Controller
-            AddController(dllName, assembly);
-
-            // help with path resolution for compilers running inside the created controller
-            Request?.HttpContext.Items.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
-
-            return wrapLog($"ok, Controller is compiled and added to ApplicationParts: {apiFile}.", values);
+            catch (Exception e)
+            {
+                return wrapLog($"Error, unexpected error {e.Message} while preparing controller.", values);
+            }
         }
 
         private static string GetEdition(RouteValueDictionary values)
