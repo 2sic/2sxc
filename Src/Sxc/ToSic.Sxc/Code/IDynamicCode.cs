@@ -200,9 +200,15 @@ namespace ToSic.Sxc.Code
         T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null) where T : IDataSource;
         #endregion
 
-        #region WIP Context
+        #region Context WIP v11.11 / 11.12
 
-        [PrivateApi("still WIP")]
+        /// <summary>
+        /// The CmsContext tells you about the environment, like what page and module we're running in.
+        /// It's supposed to replace the Dnn object in Razor and WebAPI code.
+        /// </summary>
+        /// <remarks>
+        /// New in v11.11
+        /// </remarks>
         ICmsContext CmsContext { get; }
 
         #endregion
