@@ -1,12 +1,16 @@
-﻿using Microsoft.Extensions.Primitives;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Primitives;
 using Oqtane.Repository;
 using System;
 using System.IO;
+using Microsoft.Extensions.DependencyInjection;
+using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Code;
 using ToSic.Sxc.Oqt.Server.Run;
@@ -18,28 +22,34 @@ using IApp = ToSic.Sxc.Apps.IApp;
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     // TODO: replace oqtane dynamic code implementation with hybrid implementation
-    public abstract class OqtStatefulControllerBase: OqtStatelessControllerBase, IHasOqtaneDynamicCodeContext
+    public abstract class OqtControllerBase : OqtStatelessControllerBase, IHasOqtaneDynamicCodeContext
     {
-        protected readonly IServiceProvider ServiceProvider;
-        private readonly IModuleRepository _moduleRepository;
-        private readonly OqtTempInstanceContext _oqtTempInstanceContext;
+        protected IServiceProvider ServiceProvider;
+        private IModuleRepository _moduleRepository;
+        private OqtTempInstanceContext _oqtTempInstanceContext;
 
-        protected OqtStatefulControllerBase(StatefulControllerDependencies dependencies) : base()
+        public override void OnActionExecuting(ActionExecutingContext context)
         {
-            ServiceProvider = dependencies.ServiceProvider;
-            _moduleRepository = dependencies.ModuleRepository;
-            _oqtTempInstanceContext = dependencies.OqtTempInstanceContext;
+            ServiceProvider = context.HttpContext.RequestServices;
 
-            dependencies.CtxResolver.AttachRealBlock(() => GetBlock());
-            dependencies.CtxResolver.AttachBlockContext(GetContext);
+            base.OnActionExecuting(context);
+
+            _moduleRepository = ServiceProvider.Build<IModuleRepository>(typeof(IModuleRepository));
+            _oqtTempInstanceContext = ServiceProvider.Build<OqtTempInstanceContext>(typeof(OqtTempInstanceContext));
+            DynCode = ServiceProvider.Build<OqtaneDynamicCode>().Init(GetBlock(), Log);
+            var stxResolver = ServiceProvider.Build<IContextResolver>(typeof(IContextResolver));
+            stxResolver.AttachRealBlock(() => GetBlock());
+            stxResolver.AttachBlockContext(GetContext);
+
+            // Latter used as path for DynCode.CreateInstance.
+            if (context.HttpContext.Items.TryGetValue(CodeCompiler.SharedCodeRootPathKeyInCache, out var createInstancePath))
+                CreateInstancePath = createInstancePath as string;
         }
-
 
         protected IContextOfSite GetSiteContext()
         {
             return ServiceProvider.Build<IContextOfSite>();
         }
-
 
         protected IContextOfApp GetAppContext(int appId)
         {
@@ -50,7 +60,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             return appContext;
         }
 
-        protected IContextOfBlock GetContext() => GetBlock()?.Context ?? ServiceProvider.Build<IContextOfBlock>().Init(Log) as IContextOfBlock;
+        protected IContextOfBlock GetContext() => GetBlock()?.Context ?? Factory.Resolve(typeof(IContextOfBlock)) as IContextOfBlock;
 
         protected IBlock GetBlock(bool allowNoContextFound = true) => _block ??= InitializeBlock(allowNoContextFound);
         private IBlock _block;
@@ -60,8 +70,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             var wrapLog = Log.Call<IBlock>($"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
 
             var moduleId = GetTypedHeader(WebApi.WebApiConstants.HeaderInstanceId, -1);
-            var contentBlockId =
-                GetTypedHeader(WebApi.WebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
+            var contentBlockId = GetTypedHeader(WebApi.WebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
             var pageId = GetTypedHeader(WebApi.WebApiConstants.HeaderPageId, -1);
 
             if (moduleId == -1 || pageId == -1)
@@ -84,7 +93,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         private T GetTypedHeader<T>(string headerName, T fallback)
         {
-            var valueString = Request.Headers[headerName];
+            var valueString = HttpContext.Request.Headers[headerName];
             if (valueString == StringValues.Empty) return fallback;
 
             try
@@ -107,16 +116,14 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         public string CreateInstancePath { get; set; }
 
-        public OqtaneDynamicCode DynCode => _dynCode ??= ServiceProvider.Build<OqtaneDynamicCode>().Init(GetBlock(), Log);
-        private OqtaneDynamicCode _dynCode;
+        public OqtaneDynamicCode DynCode { get; set; }
 
-        protected dynamic CreateInstance(string virtualPath,
+        public dynamic CreateInstance(string virtualPath,
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string name = null,
             string relativePath = null,
             bool throwOnError = true) =>
-            DynCode.CreateInstance(virtualPath, dontRelyOnParameterOrder, name,
-                CreateInstancePath, throwOnError);
+            DynCode.CreateInstance(virtualPath, dontRelyOnParameterOrder, name, CreateInstancePath, throwOnError);
 
         #region Adam - Shared Code Across the APIs (prevent duplicate code)
 
