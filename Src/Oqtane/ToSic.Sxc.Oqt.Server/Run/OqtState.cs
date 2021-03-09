@@ -13,18 +13,24 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtState
     {
-        public HttpContext HttpContext { get; }
+        public Func<HttpRequest> GetRequest { get; }
         public ILog Log { get; }
         public IServiceProvider ServiceProvider { get; }
-        private readonly IModuleRepository _moduleRepository;
-        private readonly OqtTempInstanceContext _oqtTempInstanceContext;
+        private IModuleRepository _moduleRepository;
+        private OqtTempInstanceContext _oqtTempInstanceContext;
         private IBlock _block;
 
-        public OqtState(HttpContext httpContext, ILog log)
+        public OqtState(Func<HttpRequest> getRequest, IServiceProvider serviceProvider, ILog log)
         {
-            this.HttpContext = httpContext;
-            this.Log = log;
-            this.ServiceProvider = httpContext.RequestServices;
+            GetRequest = getRequest;
+            ServiceProvider = serviceProvider;
+            Log = log;
+
+            InitServices();
+        }
+
+        private void InitServices()
+        {
             _moduleRepository = ServiceProvider.Build<IModuleRepository>(typeof(IModuleRepository));
             _oqtTempInstanceContext = ServiceProvider.Build<OqtTempInstanceContext>(typeof(OqtTempInstanceContext));
         }
@@ -74,7 +80,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         private T GetTypedHeader<T>(string headerName, T fallback)
         {
-            var valueString = HttpContext.Request.Headers[headerName];
+            var valueString = GetRequest().Headers[headerName];
             if (valueString == StringValues.Empty) return fallback;
 
             try
