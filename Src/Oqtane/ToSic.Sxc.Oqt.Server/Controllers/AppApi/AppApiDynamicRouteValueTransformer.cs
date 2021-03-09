@@ -14,6 +14,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Builder;
+using ToSic.Sxc.Oqt.Server.Plumbing;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {
@@ -153,7 +154,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
         private void AddController(string dllName, Assembly assembly)
         {
             Log.Add($"Add ApplicationPart: {dllName}");
-            _partManager.ApplicationParts.Add(new AssemblyPart(assembly));
+            _partManager.ApplicationParts.Add(new CompilationReferencesProvider(assembly));
             // Notify change
             NotifyChange();
         }
