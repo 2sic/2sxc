@@ -6,9 +6,9 @@ using Log = ToSic.Eav.Logging.Simple.Log;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
-    public abstract class OqtStatelessControllerBase : Controller, IHasLog
+    public abstract class OqtControllerBase : Controller, IHasLog
     {
-        protected OqtStatelessControllerBase()
+        protected OqtControllerBase()
         {
             // ReSharper disable once VirtualMemberCallInConstructor
             // todo: redesign so it works - in .net core the HttpContext isn't ready in the constructor

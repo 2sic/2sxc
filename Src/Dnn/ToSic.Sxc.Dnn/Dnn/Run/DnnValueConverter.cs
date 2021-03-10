@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using DotNetNuke.Common;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
@@ -75,24 +74,27 @@ namespace ToSic.Sxc.Dnn.Run
 
             // new
             var resultString = originalValue;
-            var regularExpression = Regex.Match(resultString, @"^(?<type>(file|page)):(?<id>[0-9]+)(?<params>(\?|\#).*)?$", RegexOptions.IgnoreCase);
 
-            if (!regularExpression.Success)
+            var parts = new ValueConverterBase.LinkParts(resultString);
+            
+            // var regularExpression = Regex.Match(resultString, ValueConverterBase.RegExToDetectConvertable, RegexOptions.IgnoreCase);
+
+            if (!parts.IsMatch) // regularExpression.Success)
                 return originalValue;
 
-            var linkType = regularExpression.Groups["type"].Value.ToLowerInvariant();
-            var linkId = int.Parse(regularExpression.Groups["id"].Value);
-            var urlParams = regularExpression.Groups["params"].Value ?? "";
+            //var linkType = regularExpression.Groups[ValueConverterBase.RegExType].Value.ToLowerInvariant();
+            //var linkId = int.Parse(regularExpression.Groups[ValueConverterBase.RegExId].Value);
+            //var urlParams = regularExpression.Groups[ValueConverterBase.RegExParams].Value ?? "";
 
-            var isPageLookup = linkType == ValueConverterBase.PrefixPage;
+            //var isPageLookup = linkType == ValueConverterBase.PrefixPage;
             try
             {
-                var result = (isPageLookup
-                                 ? ResolvePageLink(linkId)
-                                 : ResolveFileLink(linkId, itemGuid))
+                var result = (parts.IsPage // isPageLookup
+                                 ? ResolvePageLink(parts.Id)
+                                 : ResolveFileLink(parts.Id, itemGuid))
                              ?? originalValue;
 
-                return result + (result == originalValue ? "" : urlParams);
+                return result + (result == originalValue ? "" : parts.Params);
             }
             catch (Exception e)
             {
@@ -117,7 +119,7 @@ namespace ToSic.Sxc.Dnn.Run
                 var filePath = Path.Combine(new PortalSettings(fileInfo.PortalId).HomeDirectory ?? "", fileInfo.RelativePath ?? "");
 
                 // return linkclick url for secure and other not standard folder locations
-                var result = (fileInfo.StorageLocation == 0) ? filePath : FileLinkClickController.Instance.GetFileLinkClick(fileInfo);
+                var result = fileInfo.StorageLocation == 0 ? filePath : FileLinkClickController.Instance.GetFileLinkClick(fileInfo);
 
                 // optionally do extra security checks (new in 10.02)
                 if (!Features.Enabled(FeatureIds.BlockFileIdLookupIfNotInSameApp)) return result;

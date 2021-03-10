@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Oqtane.Controllers;
 using Oqtane.Models;
+using Oqtane.Repository;
 using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Context;
@@ -12,21 +13,23 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtContainer: Module<Module>
+    public class OqtModule: Module<Module>
     {
         private readonly SettingsHelper _settingsHelper;
         private readonly Lazy<OqtZoneMapper> _zoneMapperLazy;
+        private readonly IModuleRepository _moduleRepository;
         private IZoneMapper ZoneMapper => _zoneMapper ??= _zoneMapperLazy.Value.Init(Log);
         private IZoneMapper _zoneMapper;
         private Dictionary<string, string> _settings;
 
-        public OqtContainer(SettingsHelper settingsHelper, Lazy<OqtZoneMapper> zoneMapperLazy) : base ($"{OqtConstants.OqtLogPrefix}.Cont")
+        public OqtModule(SettingsHelper settingsHelper, Lazy<OqtZoneMapper> zoneMapperLazy, IModuleRepository moduleRepository) : base ($"{OqtConstants.OqtLogPrefix}.Cont")
         {
             _settingsHelper = settingsHelper;
             _zoneMapperLazy = zoneMapperLazy;
+            _moduleRepository = moduleRepository;
         }
 
-        public new OqtContainer Init(Module module, ILog parentLog)
+        public new OqtModule Init(Module module, ILog parentLog)
         {
             var wrapLog = Log.Call($"id:{module.ModuleId}");
             base.Init(module, parentLog);
@@ -50,11 +53,15 @@ namespace ToSic.Sxc.Oqt.Server.Run
         {
             if (module == null) return;
             // note that it's "ToSic.Sxc.Oqt.App, ToSic.Sxc.Oqtane.Client" or "ToSic.Sxc.Oqt.Content, ToSic.Sxc.Oqtane.Client"
-            _isPrimary = module.ModuleDefinitionName.Contains(".Content"); 
+            _isPrimary = module.ModuleDefinitionName.Contains(".Content");
         }
 
         // Temp implementation, don't support im MVC
-        public override IModule Init(int id, ILog parentLog) => throw new NotImplementedException();
+        public override IModule Init(int id, ILog parentLog)
+        {
+            var module = _moduleRepository.GetModule(id);
+            return Init(module, parentLog);
+        }
 
         /// <inheritdoc />
         public override int Id => _id;

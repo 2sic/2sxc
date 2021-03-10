@@ -1,11 +1,9 @@
 ﻿using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Admin;
-using ToSic.Sxc.WebApi.Context;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {

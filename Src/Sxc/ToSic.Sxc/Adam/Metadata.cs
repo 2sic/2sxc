@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Adam
             var dynEnt = new DynamicEntity(meta,
                 (manager.AppContext?.Site).SafeLanguagePriorityCodes(),
                 manager.CompatibilityLevel,
-                null) {ServiceProviderOrNull = _serviceProvider};
+                null, _serviceProvider);
             return dynEnt;
         }
 

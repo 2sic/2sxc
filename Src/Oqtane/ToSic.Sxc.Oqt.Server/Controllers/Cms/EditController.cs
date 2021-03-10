@@ -18,21 +18,18 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         #region DI
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "UiCntr";
 
-        public EditController(OqtUiContextBuilder uiContextBuilder,
-            StatefulControllerDependencies dependencies,
+        public EditController(StatefulControllerDependencies dependencies,
             Lazy<EntityPickerBackend> entityBackend,
             Lazy<EditLoadBackend> loadBackend,
             Lazy<EditSaveBackend> saveBackendLazy,
             Lazy<HyperlinkBackend<int, int>> linkBackendLazy) : base(dependencies)
         {
-            _uiContextBuilder = uiContextBuilder;
             _entityBackend = entityBackend;
             _loadBackend = loadBackend;
             _saveBackendLazy = saveBackendLazy;
             _linkBackendLazy = linkBackendLazy;
         }
 
-        private readonly OqtUiContextBuilder _uiContextBuilder;
         private readonly Lazy<EntityPickerBackend> _entityBackend;
         private readonly Lazy<EditLoadBackend> _loadBackend;
         private readonly Lazy<EditSaveBackend> _saveBackendLazy;
@@ -69,6 +66,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public string LookupLink(string link, int appId, string contentType = default, Guid guid = default, string field = default)
             => _linkBackendLazy.Value.Init(Log).ResolveHyperlink(appId, link, contentType, guid, field);
+        /// <inheritdoc />
+        
+        [HttpGet]
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
+            => _linkBackendLazy.Value.Init(Log).LookupHyperlink(appId, link, contentType, guid, field);
 
     }
 }

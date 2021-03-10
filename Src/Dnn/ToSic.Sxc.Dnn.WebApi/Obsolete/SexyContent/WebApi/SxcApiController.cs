@@ -77,7 +77,7 @@ namespace ToSic.SexyContent.WebApi
         public dynamic AsDynamic(IEntity entity) => DynCode.AsDynamic(entity);
 
         /// <inheritdoc />
-        public dynamic AsDynamic(dynamic dynamicEntity) => DynCode.AsDynamic(dynamicEntity);
+        public dynamic AsDynamic(object dynamicEntity) => DynCode.AsDynamic(dynamicEntity);
 
         /// <inheritdoc />
         [PrivateApi("old api, only available in old API controller")]
@@ -87,7 +87,7 @@ namespace ToSic.SexyContent.WebApi
         public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DynCode.AsList(stream.Immutable);
 
         /// <inheritdoc />
-        public IEntity AsEntity(dynamic dynamicEntity) =>  DynCode.AsEntity(dynamicEntity);
+        public IEntity AsEntity(object dynamicEntity) =>  DynCode.AsEntity(dynamicEntity);
 
         /// <inheritdoc />
         public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) =>  DynCode.AsList(entities);
@@ -111,7 +111,7 @@ namespace ToSic.SexyContent.WebApi
         #region AsList - only in newer APIs
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(dynamic list)
+        public IEnumerable<dynamic> AsList(object list)
             => throw new Exception("AsList is a new feature in 2sxc 10.20. To use it, change your template type to " + nameof(ApiController) + " see https://r.2sxc.org/RazorComponent");
 
         #endregion

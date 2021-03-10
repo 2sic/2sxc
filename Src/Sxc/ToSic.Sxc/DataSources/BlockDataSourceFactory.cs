@@ -10,14 +10,18 @@ namespace ToSic.Sxc.DataSources
 {
     public class BlockDataSourceFactory: HasLog<BlockDataSourceFactory>
     {
-        private readonly DataSourceFactory _dataSourceFactory;
-        private readonly Lazy<Query> _queryLazy;
+        #region Constructor
 
         public BlockDataSourceFactory(DataSourceFactory dataSourceFactory, Lazy<Query> queryLazy): base("Sxc.BDsFct")
         {
-            _dataSourceFactory = dataSourceFactory;
+            _dataSourceFactory = dataSourceFactory.Init(Log);
             _queryLazy = queryLazy;
         }
+
+        private readonly DataSourceFactory _dataSourceFactory;
+        private readonly Lazy<Query> _queryLazy;
+
+        #endregion
 
 
         [PrivateApi]

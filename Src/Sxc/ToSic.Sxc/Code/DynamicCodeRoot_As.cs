@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
@@ -21,21 +20,21 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity)
-            => new DynamicEntity(entity, CmsContext.SafeLanguagePriorityCodes(), CompatibilityLevel, Block);
+            => new DynamicEntity(entity, CmsContext.SafeLanguagePriorityCodes(), CompatibilityLevel, Block, _serviceProvider);
 
         /// <inheritdoc />
-        public dynamic AsDynamic(dynamic dynamicEntity) => dynamicEntity;
+        public dynamic AsDynamic(object dynamicEntity) => dynamicEntity;
 
 
         /// <inheritdoc />
-        public IEntity AsEntity(dynamic dynamicEntity) => ((IDynamicEntity)dynamicEntity).Entity;
+        public IEntity AsEntity(object dynamicEntity) => ((IDynamicEntity)dynamicEntity).Entity;
 
         #endregion
 
         #region AsList
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(dynamic list)
+        public IEnumerable<dynamic> AsList(object list)
         {
             switch (list)
             {

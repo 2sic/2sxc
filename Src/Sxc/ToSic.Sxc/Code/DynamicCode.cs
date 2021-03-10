@@ -95,8 +95,9 @@ namespace ToSic.Sxc.Code
 
         #endregion
 
-        #region Context WIP
+        #region Context WIP v11.11 / 11.12
 
+        /// <inheritdoc />
         public ICmsContext CmsContext => UnwrappedContents?.CmsContext;
 
         #endregion CmsContext  

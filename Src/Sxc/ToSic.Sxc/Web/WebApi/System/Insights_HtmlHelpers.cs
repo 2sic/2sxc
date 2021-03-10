@@ -14,6 +14,8 @@ namespace ToSic.Sxc.Web.WebApi.System
         private static string h2(string content) => Tag("h2", content);
 
         private static string li(string content) => Tag("li", content);
+        private static string ol(string content) => Tag("ol", content);
+        private static string ul(string content) => Tag("ul", content);
         private static string a(string content, string link, bool newWindow = false) => Tag("a", content, Atr("href", link) + (newWindow ? Atr("target", "_blank") : ""));
 
         private static string p(string content) => Tag("p", content);

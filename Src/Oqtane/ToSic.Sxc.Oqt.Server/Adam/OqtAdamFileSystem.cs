@@ -18,17 +18,19 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 {
     public class OqtAdamFileSystem : HasLog, IAdamFileSystem<int, int>
     {
-        private readonly IServerPaths _oqtServerPaths;
-        public IFileRepository FileRepository { get; }
-        public IFolderRepository FolderRepository { get; }
+        private readonly IServerPaths _serverPaths;
+        private readonly IAdamPaths _adamPaths;
+        public IFileRepository OqtFileRepository { get; }
+        public IFolderRepository OqtFolderRepository { get; }
 
         #region Constructor / DI / Init
 
-        public OqtAdamFileSystem(IFileRepository fileRepository, IFolderRepository folderRepository, IServerPaths oqtServerPaths) : base("Dnn.FilSys")
+        public OqtAdamFileSystem(IFileRepository oqtFileRepository, IFolderRepository oqtFolderRepository, IServerPaths serverPaths, IAdamPaths adamPaths) : base("Dnn.FilSys")
         {
-            _oqtServerPaths = oqtServerPaths;
-            FileRepository = fileRepository;
-            FolderRepository = folderRepository;
+            _serverPaths = serverPaths;
+            _adamPaths = adamPaths;
+            OqtFileRepository = oqtFileRepository;
+            OqtFolderRepository = oqtFolderRepository;
         }
 
         public IAdamFileSystem<int, int> Init(AdamManager<int, int> adamContext, ILog parentLog)
@@ -36,6 +38,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             Log.LinkTo(parentLog);
             var wrapLog = Log.Call();
             AdamContext = adamContext;
+            _adamPaths.Init(adamContext, Log);
             wrapLog("ok");
             return this;
         }
@@ -58,7 +61,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         public File<int, int> GetFile(int fileId)
         {
-            var file = FileRepository.GetFile(fileId);
+            var file = OqtFileRepository.GetFile(fileId);
             return OqtToAdam(file);
         }
 
@@ -67,7 +70,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             var callLog = Log.Call();
             try
             {
-                var path = Path.Combine(_oqtServerPaths.FullContentPath(AdamContext.Site.ContentPath), file.Path);
+                var path = Path.Combine(_serverPaths.FullContentPath(AdamContext.Site.ContentPath), file.Path);
 
                 var currentFilePath = Path.Combine(path, file.FullName);
                 if (TryToRenameFile(newName, currentFilePath, path))
@@ -75,9 +78,9 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                     return;
                 }
 
-                var dnnFile = FileRepository.GetFile(file.AsOqt().SysId);
+                var dnnFile = OqtFileRepository.GetFile(file.AsOqt().SysId);
                 dnnFile.Name = newName;
-                FileRepository.UpdateFile(dnnFile);
+                OqtFileRepository.UpdateFile(dnnFile);
                 Log.Add($"VirtualFile {dnnFile.FileId} renamed to {dnnFile.Name}");
 
                 callLog("ok");
@@ -113,8 +116,8 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         public void Delete(IFile file)
         {
             var callLog = Log.Call();
-            var dnnFile = FileRepository.GetFile(file.AsOqt().SysId);
-            FileRepository.DeleteFile(dnnFile.FileId);
+            var dnnFile = OqtFileRepository.GetFile(file.AsOqt().SysId);
+            OqtFileRepository.DeleteFile(dnnFile.FileId);
             callLog("ok");
         }
 
@@ -123,7 +126,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             var callLog = Log.Call<File<int, int>>($"..., ..., {fileName}, {ensureUniqueName}");
             if (ensureUniqueName)
                 fileName = FindUniqueFileName(parent, fileName);
-            var fullContentPath = Path.Combine(_oqtServerPaths.FullContentPath(AdamContext.Site.ContentPath), parent.Path);
+            var fullContentPath = Path.Combine(_serverPaths.FullContentPath(AdamContext.Site.ContentPath), parent.Path);
             Directory.CreateDirectory(fullContentPath);
             var filePath = Path.Combine(fullContentPath, fileName);
             using (var stream = new FileStream(filePath, FileMode.Create))
@@ -142,7 +145,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 ImageHeight = 0,
                 ImageWidth = 0
             };
-            var oqtFile = FileRepository.AddFile(oqtFileData);
+            var oqtFile = OqtFileRepository.AddFile(oqtFileData);
             return callLog("ok", GetFile(oqtFile.FileId));
         }
 
@@ -157,11 +160,11 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         {
             var callLog = Log.Call<string>($"..., {fileName}");
 
-            var dnnFolder = FolderRepository.GetFolder(parentFolder.AsOqt().SysId);
+            var dnnFolder = OqtFolderRepository.GetFolder(parentFolder.AsOqt().SysId);
             var name = Path.GetFileNameWithoutExtension(fileName);
             var ext = Path.GetExtension(fileName);
             for (var i = 1; i < AdamFileSystemBasic.MaxSameFileRetries 
-                            && System.IO.File.Exists(Path.Combine(_oqtServerPaths.FullContentPath(AdamContext.Site.ContentPath), dnnFolder.Path, Path.GetFileName(fileName))); i++)
+                            && System.IO.File.Exists(Path.Combine(_serverPaths.FullContentPath(AdamContext.Site.ContentPath), dnnFolder.Path, Path.GetFileName(fileName))); i++)
                 fileName = $"{name}-{i}{ext}";
 
             return callLog(fileName, fileName);
@@ -176,7 +179,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         public bool FolderExists(string path) => GetOqtFolderByName(path) != null;
 
-        private Folder GetOqtFolderByName(string path) => FolderRepository.GetFolder(AdamContext.Site.Id, path.Backslash());
+        private Folder GetOqtFolderByName(string path) => OqtFolderRepository.GetFolder(AdamContext.Site.Id, path.Backslash());
 
 
         public void AddFolder(string path)
@@ -226,17 +229,17 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 IsSystem = true,
                 Permissions = new List<Permission>
                 {
-                    new Permission(PermissionNames.View, Oqtane.Shared.Constants.AllUsersRole, true),
+                    new Permission(PermissionNames.View, Oqtane.Shared.RoleNames.Everyone, true),
                 }.EncodePermissions()
             };
-            FolderRepository.AddFolder(newVirtualFolder);
+            OqtFolderRepository.AddFolder(newVirtualFolder);
             return newVirtualFolder;
         }
 
         public void Rename(IFolder folder, string newName)
         {
             var callLog = Log.Call($"..., {newName}");
-            var fld = FolderRepository.GetFolder(folder.AsOqt().SysId);
+            var fld = OqtFolderRepository.GetFolder(folder.AsOqt().SysId);
             WipConstants.AdamNotImplementedYet();
             Log.Add("Not implement yet in Oqtane");
             //FolderRepository.RenameFolder(fld, newName);
@@ -246,7 +249,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         public void Delete(IFolder folder)
         {
             var callLog = Log.Call();
-            FolderRepository.DeleteFolder(folder.AsOqt().SysId);
+            OqtFolderRepository.DeleteFolder(folder.AsOqt().SysId);
             callLog("ok");
         }
 
@@ -258,7 +261,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             var fldObj = GetOqtFolder(folder.AsOqt().SysId);
             if(fldObj == null) return new List<Folder<int, int>>();
 
-            var firstList = FolderRepository.GetFolders(fldObj.FolderId);
+            var firstList = OqtFolderRepository.GetFolders(fldObj.FolderId);
             var folders = firstList?.Select(OqtToAdam).ToList()
                           ?? new List<Folder<int, int>>();
             return callLog($"{folders.Count}", folders);
@@ -270,18 +273,18 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         #region Oqtane typed calls
 
-        private Folder GetOqtFolder(int folderId) => FolderRepository.GetFolder(folderId);
+        private Folder GetOqtFolder(int folderId) => OqtFolderRepository.GetFolder(folderId);
 
 
         public List<File<int, int>> GetFiles(IFolder folder)
         {
             var callLog = Log.Call<List<File<int, int>>>();
-            var fldObj = FolderRepository.GetFolder(folder.AsOqt().SysId);
+            var fldObj = OqtFolderRepository.GetFolder(folder.AsOqt().SysId);
             // sometimes the folder doesn't exist for whatever reason
             if (fldObj == null) return  new List<File<int, int>>();
 
             // try to find the files
-            var firstList = FileRepository.GetFiles(fldObj.FolderId);
+            var firstList = OqtFileRepository.GetFiles(fldObj.FolderId);
             var files = firstList?.Select(OqtToAdam).ToList()
                      ?? new List<File<int, int>>();
             return callLog($"{files.Count}", files);
@@ -293,7 +296,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         private Folder<int, int> OqtToAdam(Folder f)
             => new Folder<int, int>(AdamContext)
             {
-                Path = f.Path,
+                Path = _adamPaths.Url(f.Path),
                 SysId = f.FolderId,
                 
                 ParentSysId = f.ParentId ?? WipConstants.ParentFolderNotFound,
@@ -301,13 +304,14 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 Name = f.Name,
                 Created = f.CreatedOn,
                 Modified = f.ModifiedOn,
-                Url = AdamContext.Site.ContentPath + f.Path,
+                Url = _adamPaths.Url(f.Path.Forwardslash())
             };
 
 
 
         private File<int, int> OqtToAdam(File f)
-            => new File<int, int>(AdamContext)
+        {
+            var adamFile = new File<int, int>(AdamContext)
             {
                 FullName = f.Name,
                 Extension = f.Extension,
@@ -316,15 +320,15 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 Folder = f.Folder.Name,
                 ParentSysId = f.FolderId,
 
-                Path = f.Folder.Path,
+                Path = _adamPaths.Url(f.Folder.Path),
 
                 Created = f.CreatedOn,
                 Modified = f.ModifiedOn,
                 Name = Path.GetFileNameWithoutExtension(f.Name),
-                Url = // f.StorageLocation == 0
-                    /*?*/ AdamContext.Site.ContentPath + f.Folder + f.Name
-                    //: FileLinkClickController.Instance.GetFileLinkClick(f)
+                Url = _adamPaths.Url(Path.Combine(f.Folder.Path, f.Name).Forwardslash())
             };
+            return adamFile;
+        }
 
         #endregion
     }

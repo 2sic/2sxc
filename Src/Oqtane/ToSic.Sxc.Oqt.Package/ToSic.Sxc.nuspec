@@ -1,31 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <AppIdentity>ToSic.Sxc</AppIdentity>
-    <version>0.0.2</version>
-    <authors>2Sic</authors>
-    <owners>2Sic</owners>
+    <id>ToSic.Sxc</id>
+    <version>0.0.59</version>
+    <authors>2sic</authors>
+    <owners>2sic</owners>
     <title>2sxc</title>
     <description>2sxc is a Oqtane module to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
-    <copyright>2Sic</copyright>
+    <copyright>2sic</copyright>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">MIT</license>
-    <projectUrl>https://github.com/oqtane/oqtane.framework</projectUrl>
-    <iconUrl>https://www.oqtane.org/Portals/0/icon.jpg</iconUrl>
+    <projectUrl>https://github.com/2sic/2sxc</projectUrl>
+    <repository type="git" url="https://github.com/2sic/2sxc.git" branch="master" />
+    <iconUrl>https://raw.githubusercontent.com/wiki/2sic/2sxc/assets/logos/2sxc11/2sxc_V11.png</iconUrl>
+    <icon>images\2sxc_V11.png</icon>
     <tags>oqtane module</tags>
-    <releaseNotes></releaseNotes>
-    <summary></summary>
+    <releaseNotes>POC</releaseNotes>
+    <summary>2sxc 11 - CMS &amp; App-Engine for Oqtane</summary>
     <dependencies>
-      <dependency AppIdentity="Oqtane.Framework" version="1.0.4" />
+      <dependency id="Oqtane.Framework" version="2.0.0" />
+      <dependency id="ToSic.Imageflow.Oqtane" version="1.0.3" />
     </dependencies>
+    <frameworkReferences>
+      <group targetFramework="net5.0">
+        <frameworkReference name="System.Drawing.Common" />
+      </group>
+    </frameworkReferences>
   </metadata>
   <files>
-    <file src="..\ToSic.Sxc.OqtaneModule.Client\bin\Release\netstandard2.1\ToSic.*.dll" target="lib\netstandard2.1" />
-    <file src="..\ToSic.Sxc.OqtaneModule.Client\bin\Release\netstandard2.1\ToSic.*.pdb" target="lib\netstandard2.1" />
-    <file src="..\ToSic.Sxc.OqtaneModule.Server\bin\Release\netcoreapp3.1\ToSic.*.dll" target="lib\netcoreapp3.1" />
-    <file src="..\ToSic.Sxc.OqtaneModule.Server\bin\Release\netcoreapp3.1\ToSic.*.pdb" target="lib\netcoreapp3.1" />
-    <file src="..\ToSic.Sxc.OqtaneModule.Shared\bin\Release\netstandard2.1\ToSic.*.dll" target="lib\netstandard2.1" />
-    <file src="..\ToSic.Sxc.OqtaneModule.Shared\bin\Release\netstandard2.1\ToSic.*.pdb" target="lib\netstandard2.1" />
-    <file src="..\ToSic.Sxc.OqtaneModule.Server\wwwroot\**\*.*" target="wwwroot" />
+    <file src="images\2sxc_V11.png" target="images\" />
+    <file src="..\ToSic.Sxc.Oqt.Client\bin\Release\net5.0\ToSic.*.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Client\bin\Release\net5.0\ToSic.*.pdb" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\ToSic.*.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\ToSic.*.pdb" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Shared\bin\Release\net5.0\ToSic.*.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Shared\bin\Release\net5.0\ToSic.*.pdb" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\wwwroot\**\*.*" target="wwwroot" />
+    <!-- 3rd party dependencies -->
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\CsvHelper.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\ICSharpCode.SharpZipLib.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Razor.Language.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Server.Kestrel.Https.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.CodeAnalysis.CSharp.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.CodeAnalysis.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.CodeAnalysis.Razor.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.Extensions.DependencyModel.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\System.Net.Http.Formatting.dll" target="lib\net5.0" />
+    <!-- ToSic.Imageflow.Oqtane 1.0.3 -->
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\lib\net5.0\ToSic.Imageflow.Oqt.Server.Oqtane.dll" target="lib\net5.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\lib\net5.0\ToSic.Imageflow.Oqt.Server.Oqtane.pdb" target="lib\net5.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\lib\net5.0\Imageflow.*" target="lib\net5.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\lib\net5.0\Imazen.*" target="lib\net5.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\lib\net5.0\Microsoft.IO.*" target="lib\net5.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\runtimes\win*\**\*imageflow.*" target="runtimes" />
   </files>
 </package>

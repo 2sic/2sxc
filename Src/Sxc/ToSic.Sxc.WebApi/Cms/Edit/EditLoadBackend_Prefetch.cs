@@ -29,7 +29,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 var bundlesHavingLinks = BundleWithLinkFields(editData);
 
                 var links = bundlesHavingLinks.SelectMany(set
-                        => set.Hyperlink.SelectMany(h
+                        => set.HyperlinkFields.SelectMany(h
                             => h.Value?.Select(linkAttrib
                                 => new
                                 {
@@ -99,46 +99,73 @@ namespace ToSic.Sxc.WebApi.Cms
         private Dictionary<string, IEnumerable<AdamItemDto>> PrefetchAdam(int appId, EditDto editData)
         {
             // Step 1: try to find hyperlink fields
-            var bundlesHavingLinks = BundleWithLinkFields(editData);
+            var bundlesHavingLinks = BundleWithLinkFields(editData, true);
 
-            var links = bundlesHavingLinks.SelectMany(set
-                    => set.Hyperlink.Select(h
+            var bundlesWithAllKeys = bundlesHavingLinks.Select(set =>
+            {
+                var keys = new List<string>();
+                var hKeys = set.HyperlinkFields?.Select(h => h.Key);
+                if (hKeys != null) keys.AddRange(hKeys);
+                var sKeys = set.StringFields?.Select(s => s.Key);
+                if (sKeys != null) keys.AddRange(sKeys);
+                return new
+                {
+                    Set = set,
+                    Keys = keys
+                };
+            });
+
+            var links = bundlesWithAllKeys.SelectMany(selector: bundle
+                    =>
+                {
+                    var set = bundle.Set;
+                    return bundle.Keys.Select(key
                         =>
                     {
                         var adamListMaker = ServiceProvider.Build<IAdamTransGetItems>();
-                        adamListMaker.Init(appId, set.ContentTypeName, set.Guid, h.Key, false, Log);
+                        adamListMaker.Init(appId, set.ContentTypeName, set.Guid, key, false, Log);
                         return new
                         {
                             set.Guid,
-                            h.Key,
-                            Dic = adamListMaker.ItemsInField(string.Empty) as IEnumerable<AdamItemDto>,
+                            Key = key,
+                            Dic = adamListMaker.ItemsInField(string.Empty, false) as IEnumerable<AdamItemDto>,
                         };
-                    }))
-                //.Where(set => set != null)
+                    });
+                })
+                // skip empty bits to avoid UI from relying on these nodes to always exist
+                .Where(r => r.Dic.Any())
+
                 // Step 2: Check which ones have a link reference
                 .ToDictionary(r => r.Key, r => r.Dic);
 
             return links;
         }
 
-        private static IEnumerable<BundleWithLinkField> BundleWithLinkFields(EditDto editData)
+        private static List<BundleWithLinkField> BundleWithLinkFields(EditDto editData, bool includeStringFields = false)
         {
             var bundlesHavingLinks = editData.Items
                 // Only these with hyperlinks
-                .Where(b => b.Entity?.Attributes?.Hyperlink?.Any() ?? false)
+                .Where(b =>
+                {
+                    var hasLinks = b.Entity?.Attributes?.Hyperlink?.Any() ?? false;
+                    var hasString = includeStringFields && (b.Entity?.Attributes?.String?.Any() ?? false);
+                    return hasLinks || hasString;
+                })
                 .Select(b => new BundleWithLinkField
                 {
                     Guid = b.Entity.Guid,
-                    Hyperlink = b.Entity.Attributes.Hyperlink,
+                    HyperlinkFields = b.Entity.Attributes.Hyperlink,
+                    StringFields = b.Entity.Attributes.String,
                     ContentTypeName = b.Entity.Type.Name,
                 });
-            return bundlesHavingLinks;
+            return bundlesHavingLinks.ToList();
         }
 
         private class BundleWithLinkField
         {
             public Guid Guid;
-            public Dictionary<string, Dictionary<string, string>> Hyperlink;
+            public Dictionary<string, Dictionary<string, string>> HyperlinkFields;
+            public Dictionary<string, Dictionary<string, string>> StringFields;
             public string ContentTypeName;
         }
 

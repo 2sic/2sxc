@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
@@ -9,7 +10,9 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.DotNet;
 using ToSic.Sxc.Oqt.Server.Adam;
+using ToSic.Sxc.Oqt.Server.Blazor;
 using ToSic.Sxc.Oqt.Server.Code;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.Adam;
@@ -28,51 +31,55 @@ namespace ToSic.Sxc.Oqt.Server
         public static IServiceCollection AddSxcOqtane(this IServiceCollection services)
         {
             services.AddScoped<ILinkPaths, OqtLinkPaths>();
-            services.AddTransient<IServerPaths, OqtServerPaths>();
+            services.TryAddTransient<IServerPaths, OqtServerPaths>();
 
-            services.AddTransient<ISite, OqtSite>();
-            services.AddTransient<IUser, OqtUser>();
-            services.AddTransient<IZoneCultureResolver, OqtSite>();
-            services.AddTransient<IZoneMapper, OqtZoneMapper>();
-            services.AddTransient<AppPermissionCheck, OqtPermissionCheck>();
-            services.AddTransient<DynamicCodeRoot, OqtaneDynamicCode>();
-            services.AddTransient<IPlatformModuleUpdater, OqtModuleUpdater>();
-            services.AddTransient<IEnvironmentInstaller, OqtEnvironmentInstaller>();
-            services.AddTransient<ILookUpEngineResolver, OqtGetLookupEngine>();
-            services.AddTransient<OqtUiContextBuilder>();
-            services.AddTransient<IModule, OqtContainer>();
-            services.AddTransient<OqtContainer>();
-            services.AddTransient<OqtTempInstanceContext>();
-            services.AddTransient<OqtSite>();
-            services.AddTransient<OqtZoneMapper>();
-            services.AddTransient<SettingsHelper>();
+            services.TryAddTransient<ISite, OqtSite>();
+            services.TryAddTransient<IUser, OqtUser>();
+            services.TryAddTransient<IZoneCultureResolver, OqtSite>();
+            services.TryAddTransient<IZoneMapper, OqtZoneMapper>();
+            services.TryAddTransient<AppPermissionCheck, OqtPermissionCheck>();
+            services.TryAddTransient<DynamicCodeRoot, OqtaneDynamicCode>();
+            services.TryAddTransient<IPlatformModuleUpdater, OqtModuleUpdater>();
+            services.TryAddTransient<IEnvironmentInstaller, OqtEnvironmentInstaller>();
+            services.TryAddTransient<ILookUpEngineResolver, OqtGetLookupEngine>();
+            services.TryAddTransient<OqtUiContextBuilder>();
+            services.TryAddTransient<IModule, OqtModule>();
+            services.TryAddTransient<OqtModule>();
+            services.TryAddTransient<OqtTempInstanceContext>();
+            services.TryAddTransient<OqtSite>();
+            services.TryAddTransient<OqtZoneMapper>();
+            services.TryAddTransient<SettingsHelper>();
             //// add page publishing
-            services.AddTransient<IPagePublishing, OqtPagePublishing>();
-            services.AddTransient<IPagePublishingResolver, OqtPagePublishingResolver>();
+            services.TryAddTransient<IPagePublishing, OqtPagePublishing>();
+            services.TryAddTransient<IPagePublishingResolver, OqtPagePublishingResolver>();
 
             //// Oqtane Specific stuff
             services.AddScoped<OqtAssetsAndHeaders>();
-            services.AddTransient<SxcOqtane>();
-            services.AddTransient<IClientDependencyOptimizer, OqtClientDependencyOptimizer>();
-            services.AddTransient<IValueConverter, OqtValueConverter>();
+            services.TryAddTransient<SxcOqtane>();
+            services.TryAddTransient<IClientDependencyOptimizer, OqtClientDependencyOptimizer>();
+            services.TryAddTransient<IValueConverter, OqtValueConverter>();
 
             services.AddSingleton<IPlatform, OqtPlatformContext>();
 
             // ADAM stuff
-            services.AddTransient<IAdamFileSystem<int, int>, OqtAdamFileSystem>();
-            services.AddTransient(typeof(AdamItemDtoMaker<,>), typeof(OqtAdamItemDtoMaker<,>));
+            services.TryAddTransient<IAdamPaths, OqtAdamPaths>();
+            services.TryAddTransient<IAdamFileSystem<int, int>, OqtAdamFileSystem>();
+            services.TryAddTransient(typeof(AdamItemDtoMaker<,>), typeof(OqtAdamItemDtoMaker<,>));
 
             //// Still pending...
-            ////sc.AddTransient<XmlExporter, DnnXmlExporter>();
-            services.AddTransient<IImportExportEnvironment, OqtImportExportEnvironment>();
-            //sc.AddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
-            //sc.AddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
+            ////sc.TryAddTransient<XmlExporter, DnnXmlExporter>();
+            services.TryAddTransient<IImportExportEnvironment, OqtImportExportEnvironment>();
+            //sc.TryAddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
+            //sc.TryAddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
 
             // 2020-10-22 2dm test
-            services.AddTransient<ISxcOqtane, SxcOqtane>();
-            services.AddTransient<StatefulControllerDependencies>();
+            services.TryAddTransient<ISxcOqtane, SxcOqtane>();
+            services.TryAddTransient<StatefulControllerDependencies>();
 
-            // Plumbing: enable lazy services Dependency Injection
+
+            // Experimental - it seems that Blazor hides the url params in the request
+            services.TryAddTransient<IHttp, HttpBlazor>();
+
 
             return services;
         }

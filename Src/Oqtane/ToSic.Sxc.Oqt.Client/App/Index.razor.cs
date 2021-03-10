@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Shared.Run;
 
@@ -15,13 +16,34 @@ namespace ToSic.Sxc.Oqt.App
         [Inject]
         public ISxcOqtane SxcEngine { get; set; }
 
+        [Inject]
+        public NavigationManager NavigationManager { get; set; }
+
         public override List<Resource> Resources => new List<Resource>();
 
         protected override async Task OnInitializedAsync()
         {
-            // prepare the html / headers
-            SxcEngine.Prepare(PageState.Site, PageState.Page, ModuleState);
+            // Subscribe to LocationChanged event.
+            NavigationManager.LocationChanged += HandleLocationChanged;
+
+            Initialize2sxcContentBlock();
         }
+
+        /// <summary>
+        /// prepare the html / headers for later rendering
+        /// </summary>
+        private void Initialize2sxcContentBlock() => SxcEngine.Prepare(PageState.Site, PageState.Page, ModuleState);
+
+        public void Dispose() => NavigationManager.LocationChanged -= HandleLocationChanged;
+
+
+        /// <summary>
+        /// Handle router LocationChanged event.
+        /// This is important if the url changes like /product --> /product?details=27
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void HandleLocationChanged(object sender, LocationChangedEventArgs args) => Initialize2sxcContentBlock();
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -41,7 +63,7 @@ namespace ToSic.Sxc.Oqt.App
                         await interop.IncludeMeta("sxc-tmp-context-id", "name", aAndH.ContextMetaName, aAndH.ContextMetaContents(), "id");
 
                     // Lets load all 2sxc js dependencies (js / styles)
-                    // Not done the official Oqtane way, because that asks for the scripts before 
+                    // Not done the official Oqtane way, because that asks for the scripts before
                     // the razor component reported what it needs
                     foreach (var resource in aAndH.Scripts())
                         await interop.IncludeScript("", resource, "", "", "", "head", "");

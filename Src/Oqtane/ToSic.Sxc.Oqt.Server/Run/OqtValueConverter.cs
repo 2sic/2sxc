@@ -1,51 +1,49 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
+using Oqtane.Enums;
+using Oqtane.Infrastructure;
 using Oqtane.Repository;
+using Oqtane.Shared;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Oqt.Server.Adam;
-using ToSic.Sxc.Run;
-
-// todo: nothing here is tested yet!
+using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
     /// <summary>
-    /// The DNN implementation of the <see cref="IValueConverter"/> which converts "file:22" or "page:5" to the url,
+    /// The Oqtane implementation of the <see cref="IValueConverter"/> which converts "file:22" or "page:5" to the url,
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public class OqtValueConverter : IValueConverter
     {
-        private readonly Lazy<ILinkPaths> _linkPaths;
-        private ILinkPaths LinkPaths => _linkPaths.Value;
-
         public Lazy<IFileRepository> FileRepository { get; }
         public Lazy<IFolderRepository> FolderRepository { get; }
         public Lazy<ITenantResolver> TenantResolver { get; }
         public Lazy<IPageRepository> PageRepository { get; }
         public Lazy<IServerPaths> ServerPaths { get; }
+        public Lazy<ILogManager> Logger { get; }
 
         #region DI Constructor
 
         public OqtValueConverter(
-            Lazy<IFileRepository> fileRepository, 
-            Lazy<IFolderRepository> folderRepository, 
+            Lazy<IFileRepository> fileRepository,
+            Lazy<IFolderRepository> folderRepository,
             Lazy<ITenantResolver> tenantResolver,
             Lazy<IPageRepository> pageRepository,
             Lazy<IServerPaths> serverPaths,
-            Lazy<ILinkPaths> linkPaths)
+            Lazy<ILogManager> logger
+            )
         {
-            _linkPaths = linkPaths;
             FileRepository = fileRepository;
             FolderRepository = folderRepository;
             TenantResolver = tenantResolver;
             PageRepository = pageRepository;
             ServerPaths = serverPaths;
+            Logger = logger;
         }
 
 
@@ -81,7 +79,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             {
                 // Try file reference
                 var fileName = Path.GetFileNameWithoutExtension(pathAsFolder);
-                var files = FileRepository.Value.GetFiles(folder.FolderId); //, potentialFilePath);
+                var files = FileRepository.Value.GetFiles(folder.FolderId);
                 var fileInfo = files.FirstOrDefault(f => f.Name == fileName);
                 if (fileInfo != null) return "file:" + fileInfo.FileId;
             }
@@ -103,32 +101,34 @@ namespace ToSic.Sxc.Oqt.Server.Run
         /// <returns></returns>
         private string TryToResolveOqtCodeToLink(Guid itemGuid, string originalValue)
         {
+            if (string.IsNullOrEmpty(originalValue)) return originalValue;
             // new
             var resultString = originalValue;
-            var regularExpression = Regex.Match(resultString, @"^(?<type>(file|page)):(?<id>[0-9]+)(?<params>(\?|\#).*)?$", RegexOptions.IgnoreCase);
+            var parts = new ValueConverterBase.LinkParts(resultString);
 
-            if (!regularExpression.Success)
+            //var regularExpression = Regex.Match(resultString, ValueConverterBase.RegExToDetectConvertable, RegexOptions.IgnoreCase);
+
+            if (!parts.IsMatch) // regularExpression.Success)
                 return originalValue;
 
-            var linkType = regularExpression.Groups["type"].Value.ToLowerInvariant();
-            var linkId = int.Parse(regularExpression.Groups["id"].Value);
-            var urlParams = regularExpression.Groups["params"].Value ?? "";
+            //var linkType = regularExpression.Groups[ValueConverterBase.RegExType].Value.ToLowerInvariant();
+            //var linkId = int.Parse(regularExpression.Groups[ValueConverterBase.RegExId].Value);
+            //var urlParams = regularExpression.Groups[ValueConverterBase.RegExParams].Value ?? "";
 
-            var isPageLookup = linkType == "page";
+            //var isPageLookup = linkType == ValueConverterBase.PrefixPage;
             try
             {
-                var result = (isPageLookup
-                                 ? ResolvePageLink(linkId)
-                                 : ResolveFileLink(linkId, itemGuid))
+                var result = (parts.IsPage // isPageLookup
+                                 ? ResolvePageLink(parts.Id)
+                                 : ResolveFileLink(parts.Id, itemGuid))
                              ?? originalValue;
 
-                return result + (result == originalValue ? "" : urlParams);
+                return result + (result == originalValue ? "" : parts.Params);
             }
             catch (Exception e)
             {
                 var wrappedEx = new Exception("Error when trying to lookup a friendly url of \"" + originalValue + "\"", e);
-                // TODO SPM: find out if we can log to Oqtane, otherwise add a WIP reference here for exceptions
-                //Exceptions.LogException(wrappedEx);
+                Logger.Value.Log(LogLevel.Error, this, LogFunction.Other, wrappedEx.Message);
                 return originalValue;
             }
 
@@ -144,20 +144,17 @@ namespace ToSic.Sxc.Oqt.Server.Run
             #region special handling of issues in case something in the background is broken
             try
             {
-                var filePath = LinkPaths.ToAbsolute(Path.Combine(fileInfo.Folder.Path, fileInfo.Name));
-                // = Path.Combine(new PortalSettings(fileInfo.PortalId)?.HomeDirectory ?? "", fileInfo?.RelativePath ?? "");
+                var filePath = Path.Combine(fileInfo.Folder.Path, fileInfo.Name/*)*/).Forwardslash();
 
                 var siteId = TenantResolver.Value.GetAlias().SiteId;
 
-                // return linkclick url for secure and other not standard folder locations
-                //var result = (fileInfo.StorageLocation == 0) ? filePath : FileLinkClickController.Instance.GetFileLinkClick(fileInfo);
-                var result = $"/{siteId}/api/sxc/{filePath}".PrefixSlash().Forwardslash();
+                var result = $"/{siteId}/api/sxc{filePath.PrefixSlash()}".Forwardslash();
 
                 // optionally do extra security checks (new in 10.02)
                 if (!Features.Enabled(FeatureIds.BlockFileIdLookupIfNotInSameApp)) return result;
 
                 // check if it's in this item. We won't check the field, just the item, so the field is ""
-                return !Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", filePath)
+                return !Security.PathIsInItemAdam(itemGuid, "", filePath)
                     ? null
                     : result;
             }

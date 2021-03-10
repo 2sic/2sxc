@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Oqt.Server.Page
 
         public string ContextMetaName => InpageCms.MetaName;
 
-        private string AntiForgeryToken() 
+        private string AntiForgeryToken()
             => _antiForgery.GetAndStoreTokens(_httpContextAccessor.HttpContext).RequestToken;
     }
 }

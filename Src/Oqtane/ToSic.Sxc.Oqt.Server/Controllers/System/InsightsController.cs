@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     [Route(WebApiConstants.WebApiStateRoot + "/sys/[controller]/[action]")]
     [ApiController]
-    public class InsightsController : OqtStatelessControllerBase
+    public class InsightsController : OqtControllerBase
     {
         private readonly Lazy<Insights> _lazyInsights;
 

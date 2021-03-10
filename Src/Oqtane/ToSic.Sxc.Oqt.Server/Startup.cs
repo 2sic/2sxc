@@ -1,14 +1,18 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.IO;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using Oqtane.Infrastructure;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
+using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Server.RazorPages;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.Razor.Engine;
@@ -21,7 +25,6 @@ namespace ToSic.Sxc.Oqt.Server
     {
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment HostEnvironment { get; set; }
-
 
         public Startup()
         {
@@ -50,7 +53,6 @@ namespace ToSic.Sxc.Oqt.Server
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                     Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings);
                 });
-            //.PartManager.ApplicationParts.Add(new AssemblyPart(typeof(SxcMvc).Assembly));
 
             // enable use of UrlHelper for AbsolutePath
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
@@ -68,15 +70,38 @@ namespace ToSic.Sxc.Oqt.Server
                     .AddEav();
             });
 
-
+            var sp = services.BuildServiceProvider();
+            // STV
+            // var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            // 2dm
             var connectionString = Configuration.GetConnectionString("SiteSqlServer");
-            services.BuildServiceProvider().Build<IDbConfiguration>().ConnectionString = connectionString;
+            sp.Build<IDbConfiguration>().ConnectionString = connectionString;
+            var hostingEnvironment = sp.Build<IHostEnvironment>();
+            sp.Build<IGlobalConfiguration>().GlobalFolder = Path.Combine(hostingEnvironment.ContentRootPath, "wwwroot\\Modules\\ToSic.Sxc");
+
+            // 2sxc Oqtane blob services for Imageflow.
+            services.AddImageflowOqtaneBlobService();
+
+            services.AddSingleton<AppApiFileSystemWatcher>();
+            services.AddScoped<AppApiDynamicRouteValueTransformer>();
+            services.AddSingleton<IActionDescriptorChangeProvider>(AppApiActionDescriptorChangeProvider.Instance);
+            services.AddSingleton(AppApiActionDescriptorChangeProvider.Instance);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             HostEnvironment = env;
             //_contentRootPath = env.ContentRootPath;
+
+            // WIP: stv - this is hacky :-(
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDynamicControllerRoute<AppApiDynamicRouteValueTransformer>("{alias}/api/sxc/app/{appFolder}/{edition}/api/{controller}/{action}");
+                endpoints.MapDynamicControllerRoute<AppApiDynamicRouteValueTransformer>("{alias}/api/sxc/app/{appFolder}/api/{controller}/{action}");
+            });
         }
 
         // Workaround because of initialization issues with razor pages

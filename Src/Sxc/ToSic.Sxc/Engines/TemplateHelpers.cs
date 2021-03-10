@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Engines
 
         #region Constructor / DI
 
-        
+
         private IServerPaths ServerPaths { get; }
         public IApp App;
         public TemplateHelpers(IServerPaths serverPaths, ILinkPaths linkPaths, IGlobalConfiguration globalConfiguration): base("Viw.Help")
@@ -63,10 +63,15 @@ namespace ToSic.Sxc.Engines
             // Create 2sxc folder if it does not exists
             sexyFolder.Create();
 
-            // Create web.config (copy from DesktopModules folder)
-            if (!sexyFolder.GetFiles(Settings.WebConfigFileName).Any())
-                File.Copy(Path.Combine(_globalConfiguration.GlobalFolder, Settings.WebConfigTemplateFile),
+            // Create web.config (copy from DesktopModules folder, but only if is there, and for Oqtane is not)
+            // Note that DNN needs it because many razor file don't use @inherits and the web.config contains the default class
+            // but in Oqtane we'll require that to work
+            var webConfigTempletFilePath = Path.Combine(_globalConfiguration.GlobalFolder, Settings.WebConfigTemplateFile);
+            if (File.Exists(webConfigTempletFilePath) && !sexyFolder.GetFiles(Settings.WebConfigFileName).Any())
+            {
+                File.Copy(webConfigTempletFilePath,
                     Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
+            }
 
             // Create a Content folder (or App Folder)
             if (string.IsNullOrEmpty(App.Folder))
