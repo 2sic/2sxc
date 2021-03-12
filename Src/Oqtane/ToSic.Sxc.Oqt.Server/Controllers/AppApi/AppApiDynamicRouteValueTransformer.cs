@@ -10,11 +10,14 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Builder;
 using ToSic.Sxc.Oqt.Server.Plumbing;
+using ToSic.Sxc.Oqt.Shared;
+using File = System.IO.File;
+using Log = ToSic.Eav.Logging.Simple.Log;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {
@@ -76,11 +79,11 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 var alias = _tenantResolver.GetAlias();
                 var aliasPart = $@"Content\Tenants\{alias.TenantId}\Sites\{alias.SiteId}\2sxc";
 
-                var controllerFolder = Path.Combine(aliasPart, appFolder, edition + @"api");
+                var controllerFolder = Path.Combine(aliasPart, appFolder, edition.Backslash(), "api");
                 //controllerFolder = controllerFolder.Replace("\\", @"/");
                 Log.Add($"Controller Folder: {controllerFolder}");
 
-                var area = $"{alias.SiteId}/api/sxc/app/{appFolder}";
+                var area = $"{alias.SiteId}/{OqtConstants.ApiAppLinkPart}/{appFolder}/{edition}api";
                 values.Add("area", area);
                 Log.Add($"Area: {area}");
 
@@ -125,9 +128,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 if (string.IsNullOrWhiteSpace(apiCode)) return wrapLog($"Error, missing AppApi code in file {apiFile}.", values);
 
                 // Add Area and Router attributes
-                // TODO: c# source code manipulation - move it to proper place, make it production robust
-                var routerAttribute = $"[Area(\"{alias.SiteId}/api/sxc/app/{appFolder}\")] [Route(\"{{area:exists}}{alias.SiteId}/api/sxc/app/{appFolder}/{edition}api/[controller]\")]";
-                apiCode = apiCode.Replace("public class", $"{routerAttribute}\npublic class");
+                Log.Add($"Add Area and Router attributes");
+                apiCode = Compiler.PrepareApiCode(apiCode, alias.SiteId, appFolder, edition);
 
                 // Build new AppApi Controller
                 Log.Add($"Compile assembly: {apiFile}, {className}");
@@ -150,6 +152,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 return wrapLog($"Error, unexpected error {e.Message} while preparing controller.", values);
             }
         }
+
+
 
         private static string GetEdition(RouteValueDictionary values)
         {

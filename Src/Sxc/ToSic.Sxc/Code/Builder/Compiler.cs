@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
@@ -29,6 +30,26 @@ namespace ToSic.Sxc.Code.Builder
             var sourceCode = File.ReadAllText(filepath);
 
             return CompileSourceCode(sourceCode, className);
+        }
+
+        // Custom 2sxc App Api c# source code manipulation.
+        public static string PrepareApiCode(string apiCode, int siteId, string appFolder, string edition)
+        {
+            try
+            {
+                // Prepare source code for Area and Route attributes.
+                var routeAttributes =
+                    $"[Area(\"{siteId}/api/sxc/app/{appFolder}/{edition}api\")]\n[Route(\"{{area:exists}}{siteId}/api/sxc/app/{appFolder}/{edition}api/[controller]\")]";
+                const string findPublicClass = @"\bpublic\s+\bclass";
+                var timeSpan = TimeSpan.FromMilliseconds(100);
+                // Modify c# code for custom 2sxc App Api.
+                // Append Area and Route attributes to public class.
+                return Regex.Replace(apiCode, findPublicClass, $"{routeAttributes}\npublic class", RegexOptions.None, timeSpan);
+            }
+            catch
+            {
+                return apiCode;
+            }
         }
 
         public byte[] CompileSourceCode(string sourceCode, string className)

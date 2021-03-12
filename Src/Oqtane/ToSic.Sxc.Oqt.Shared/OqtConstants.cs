@@ -15,6 +15,8 @@
 
         public static string AppRootPublicBase = "Tenants\\{0}\\Sites\\{1}\\";
 
+        public const string ApiAppLinkPart = "api/sxc/app";
+
         // todo: must later replace the 1 with {0} for string-replaces to work
         public const string AppAssetsLinkRoot = "/{0}/api/sxc/app-assets";
 
