@@ -1,15 +1,14 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using JetBrains.Annotations;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
@@ -25,6 +24,13 @@ using IFolder = ToSic.Sxc.Adam.IFolder;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
+    /// <summary>
+    /// Custom base controller class for custom dynamic 2sxc app api controllers.
+    /// It is without dependencies in class constructor, commonly provided with DI.
+    /// </summary>
+    [ApiController]
+    //[Route("{alias}/api/sxc/app/{appFolder}/{edition?}/api/[controller]")]
+    //[Route("[area]/api/[controller]")]
     public abstract class ApiController : OqtControllerBase, IHasOqtaneDynamicCodeContext /*, DynamicApiController, IHttpController, IDisposable, IHasDynCodeContext, IDynamicWebApi, IDnnDynamicCode, IDynamicCode, ICreateInstance, ICompatibilityLevel, IHasLog, IDynamicCodeBeforeV10*/
     {
         protected IServiceProvider ServiceProvider { get; private set; }
@@ -33,6 +39,11 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         private OqtState _oqtState;
 
+        /// <summary>
+        /// Our custom dynamic 2sxc app api controllers, depends on event OnActionExecuting to provide dependencies (without DI in constructor).
+        /// </summary>
+        /// <param name="context"></param>
+        [NonAction]
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             base.OnActionExecuting(context);
@@ -67,15 +78,19 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         #region AsDynamic implementations
         /// <inheritdoc/>
+        [NonAction]
         public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => DynCode?.AsDynamic(json, fallback);
 
         /// <inheritdoc />
+        [NonAction]
         public dynamic AsDynamic(IEntity entity) => DynCode?.AsDynamic(entity);
 
         /// <inheritdoc />
+        [NonAction]
         public dynamic AsDynamic(object dynamicEntity) => DynCode?.AsDynamic(dynamicEntity);
 
         /// <inheritdoc />
+        [NonAction]
         public IEntity AsEntity(object dynamicEntity) => DynCode?.AsEntity(dynamicEntity);
 
         #endregion
@@ -83,6 +98,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         #region AsList
 
         /// <inheritdoc />
+        [NonAction]
         public IEnumerable<dynamic> AsList(object list) => DynCode?.AsList(list);
 
         #endregion
@@ -90,11 +106,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         #region CreateSource implementations
 
         /// <inheritdoc />
+        [NonAction]
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             where T : IDataSource
             => DynCode.CreateSource<T>(inSource, configurationProvider);
 
         /// <inheritdoc />
+        [NonAction]
         public T CreateSource<T>(IDataStream inStream) where T : IDataSource
             => DynCode.CreateSource<T>(inStream);
 
@@ -114,9 +132,11 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         #region Adam
 
         /// <inheritdoc />
+        [NonAction]
         public IFolder AsAdam(IDynamicEntity entity, string fieldName) => DynCode?.AsAdam(AsEntity(entity), fieldName);
 
         /// <inheritdoc />
+        [NonAction]
         public IFolder AsAdam(IEntity entity, string fieldName) => DynCode?.AsAdam(entity, fieldName);
 
 
@@ -125,6 +145,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// <summary>
         /// See docs of official interface <see cref="IDynamicWebApi"/>
         /// </summary>
+        [NonAction]
         public Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             Stream stream = null,
             string fileName = null,
@@ -165,6 +186,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         public string CreateInstancePath { get; set; }
 
+        [NonAction]
         public dynamic CreateInstance(string virtualPath,
             string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string name = null,

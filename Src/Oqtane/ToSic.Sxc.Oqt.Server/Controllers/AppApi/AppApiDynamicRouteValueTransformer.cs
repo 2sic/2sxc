@@ -80,6 +80,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 //controllerFolder = controllerFolder.Replace("\\", @"/");
                 Log.Add($"Controller Folder: {controllerFolder}");
 
+                var area = $"{alias.SiteId}/api/sxc/app/{appFolder}";
+                values.Add("area", area);
+                Log.Add($"Area: {area}");
+
                 var controllerPath = Path.Combine(controllerFolder, controllerTypeName + ".cs");
                 Log.Add($"Controller Path: {controllerPath}");
 
@@ -120,9 +124,14 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 var apiCode = await File.ReadAllTextAsync(apiFile);
                 if (string.IsNullOrWhiteSpace(apiCode)) return wrapLog($"Error, missing AppApi code in file {apiFile}.", values);
 
+                // Add Area and Router attributes
+                // TODO: c# source code manipulation - move it to proper place, make it production robust
+                var routerAttribute = $"[Area(\"{alias.SiteId}/api/sxc/app/{appFolder}\")] [Route(\"{{area:exists}}{alias.SiteId}/api/sxc/app/{appFolder}/{edition}api/[controller]\")]";
+                apiCode = apiCode.Replace("public class", $"{routerAttribute}\npublic class");
+
                 // Build new AppApi Controller
                 Log.Add($"Compile assembly: {apiFile}, {className}");
-                var compiledAssembly = new Compiler().Compile(apiFile, className);
+                var compiledAssembly = new Compiler().CompileSourceCode(apiCode, className);
                 if (compiledAssembly == null) return wrapLog("Error, can't compile AppApi code.", values);
 
                 var assembly = new Runner().Load(compiledAssembly);
