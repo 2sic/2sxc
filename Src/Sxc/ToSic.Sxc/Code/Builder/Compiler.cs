@@ -24,10 +24,16 @@ namespace ToSic.Sxc.Code.Builder
         }
         public byte[] Compile(string filepath, string className)
         {
-            var wrapLog = Log.Call($"{filepath}");
             Log.Add($"Starting compilation of: '{filepath}'");
 
             var sourceCode = File.ReadAllText(filepath);
+
+            return CompileSourceCode(sourceCode, className);
+        }
+
+        public byte[] CompileSourceCode(string sourceCode, string className)
+        {
+            var wrapLog = Log.Call($"Source code compilation: {className}.");
             using (var peStream = new MemoryStream())
             {
                 var result = GenerateCode(sourceCode, className).Emit(peStream);

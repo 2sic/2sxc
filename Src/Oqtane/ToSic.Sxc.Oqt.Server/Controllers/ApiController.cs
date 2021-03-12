@@ -29,7 +29,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     /// It is without dependencies in class constructor, commonly provided with DI.
     /// </summary>
     [ApiController]
-    [Route("{alias}/api/sxc/app/{appFolder}/{edition?}/api/[controller]")]
+    //[Route("{alias}/api/sxc/app/{appFolder}/{edition?}/api/[controller]")]
+    //[Route("[area]/api/[controller]")]
     public abstract class ApiController : OqtControllerBase, IHasOqtaneDynamicCodeContext /*, DynamicApiController, IHttpController, IDisposable, IHasDynCodeContext, IDynamicWebApi, IDnnDynamicCode, IDynamicCode, ICreateInstance, ICompatibilityLevel, IHasLog, IDynamicCodeBeforeV10*/
     {
         protected IServiceProvider ServiceProvider { get; private set; }
