@@ -6,6 +6,11 @@ using Log = ToSic.Eav.Logging.Simple.Log;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
+    /// <summary>
+    /// Api controllers normally should inherit ControllerBase but we have a special case of inhering from Controller.
+    /// It is because our custom dynamic 2sxc app api controllers (without constructor), depends on event OnActionExecuting
+    /// to provide dependencies (without DI in constructor).
+    /// </summary>
     public abstract class OqtControllerBase : Controller, IHasLog
     {
         protected OqtControllerBase()
