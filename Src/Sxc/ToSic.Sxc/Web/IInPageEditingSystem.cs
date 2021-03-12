@@ -117,10 +117,10 @@ namespace ToSic.Sxc.Web
         /// Get html-attributes to mark the current context
         /// these will be added to a wrapper tag (usually a div)
         /// so that in-page editing knows what the context is <br/>
-        /// Please read more about @Specs.Cms.InnerContent
+        /// Please read more about [](xref:Basics.Cms.InnerContent.Index)
         /// </summary>
         /// <param name="target">The content-item for which the new context should be.
-        /// This item usually has a field which has @Specs.Cms.InnerContent</param>
+        /// This item usually has a field which has [](xref:Basics.Cms.InnerContent.Index)</param>
         /// <param name="noParameterOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="field">the field of this content-item, which contains the inner-content-items</param>
         /// <param name="contentType">type name used for 'new' items in a toolbar - usually for inner-content and list-contexts</param>
