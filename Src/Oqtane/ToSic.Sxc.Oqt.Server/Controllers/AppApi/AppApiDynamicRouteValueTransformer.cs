@@ -127,8 +127,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 var apiCode = await File.ReadAllTextAsync(apiFile);
                 if (string.IsNullOrWhiteSpace(apiCode)) return wrapLog($"Error, missing AppApi code in file {apiFile}.", values);
 
-                // Add Area and Router attributes
-                Log.Add($"Add Area and Router attributes");
+                // Add Area and Route attributes
+                Log.Add($"Add Area and Route attributes");
                 apiCode = Compiler.PrepareApiCode(apiCode, alias.SiteId, appFolder, edition);
 
                 // Build new AppApi Controller
