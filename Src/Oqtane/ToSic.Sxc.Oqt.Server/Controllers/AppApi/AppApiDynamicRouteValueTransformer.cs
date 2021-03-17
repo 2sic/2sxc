@@ -127,16 +127,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 var apiCode = await File.ReadAllTextAsync(apiFile);
                 if (string.IsNullOrWhiteSpace(apiCode)) return wrapLog($"Error, missing AppApi code in file {apiFile}.", values);
 
-                // Add Area and Route attributes
-                Log.Add($"Add Area and Route attributes");
-                apiCode = Compiler.PrepareApiCode(apiCode, alias.SiteId, appFolder, edition);
-
                 // Build new AppApi Controller
                 Log.Add($"Compile assembly: {apiFile}, {className}");
-                var compiledAssembly = new Compiler().CompileSourceCode(apiCode, className);
-                if (compiledAssembly == null) return wrapLog("Error, can't compile AppApi code.", values);
-
-                var assembly = new Runner().Load(compiledAssembly);
+                var assembly = new Compiler().CompileApiCode(apiFile, className, alias.SiteId, appFolder, edition);
 
                 // Add new key to concurrent dictionary, before registering new AppAPi controller.
                 if (!_compiledAppApiControllers.TryAdd(apiFile, false))

@@ -1,14 +1,17 @@
-// #define NETSTANDARD
+//#define NETSTANDARD
 #if NETSTANDARD
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Emit;
+using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Loader;
+using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Text;
 using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Code.Builder
@@ -23,17 +26,31 @@ namespace ToSic.Sxc.Code.Builder
         {
 
         }
-        public byte[] Compile(string filepath, string className)
+        public Assembly Compile(string filepath, string className)
         {
             Log.Add($"Starting compilation of: '{filepath}'");
 
             var sourceCode = File.ReadAllText(filepath);
 
-            return CompileSourceCode(sourceCode, className);
+            return CompileSourceCode(filepath, sourceCode, className);
         }
 
+        // TODO: This is tmp implementation, it will be replaced latter
+        public Assembly CompileApiCode(string filepath, string className, int siteId, string appFolder, string edition)
+        {
+            Log.Add($"Starting compilation of: '{filepath}'");
+
+            var sourceCode = File.ReadAllText(filepath);
+
+            // Add Area and Route attributes
+            sourceCode = PrepareApiCode(sourceCode, siteId, appFolder, edition);
+
+            return CompileSourceCode(filepath, sourceCode, className);
+        }
+
+        // TODO: This is tmp implementation.
         // Custom 2sxc App Api c# source code manipulation.
-        public static string PrepareApiCode(string apiCode, int siteId, string appFolder, string edition)
+        private static string PrepareApiCode(string apiCode, int siteId, string appFolder, string edition)
         {
             try
             {
@@ -52,41 +69,66 @@ namespace ToSic.Sxc.Code.Builder
             }
         }
 
-        public byte[] CompileSourceCode(string sourceCode, string className)
+        public Assembly CompileSourceCode(string path, string sourceCode, string className)
         {
             var wrapLog = Log.Call($"Source code compilation: {className}.");
+            var encoding = Encoding.UTF8;
+            var symbolsName = $"{className}.pdb";
             using (var peStream = new MemoryStream())
+            using (var symbolsStream = new MemoryStream())
             {
-                var result = GenerateCode(sourceCode, className).Emit(peStream);
+                var emitOptions = new EmitOptions(
+                    debugInformationFormat: DebugInformationFormat.PortablePdb,
+                    pdbFilePath: symbolsName);
+
+                var buffer = encoding.GetBytes(sourceCode);
+                var sourceText = SourceText.From(buffer, buffer.Length, encoding, canBeEmbedded: true);
+
+                var embeddedTexts = new List<EmbeddedText>
+                {
+                    EmbeddedText.FromSource(path, sourceText),
+                };
+
+                var result = GenerateCode(path, sourceText, className).Emit(peStream,
+                    pdbStream: symbolsStream,
+                    embeddedTexts: embeddedTexts,
+                    options: emitOptions);
 
                 if (!result.Success)
                 {
                     wrapLog("Compilation done with error.");
+
+                    var errors = new List<string>();
 
                     var failures = result.Diagnostics.Where(diagnostic => diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error);
 
                     foreach (var diagnostic in failures)
                     {
                         Log.Add("{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
+                        errors.Add($"{diagnostic.Id}: {diagnostic.GetMessage()}");
                     }
 
-                    return null;
+                    // return null;
+                    throw new Exception(String.Join("\n", errors));
                 }
 
                 wrapLog("Compilation done without any error.");
 
                 peStream.Seek(0, SeekOrigin.Begin);
+                // return peStream.ToArray();
+                symbolsStream?.Seek(0, SeekOrigin.Begin);
 
-                return peStream.ToArray();
+                var assembly = AssemblyLoadContext.Default.LoadFromStream(peStream, symbolsStream);
+                return assembly;
             }
         }
 
-        public static CSharpCompilation GenerateCode(string sourceCode, string className)
+        public static CSharpCompilation GenerateCode(string path, SourceText sourceCode, string className)
         {
-            var codeString = SourceText.From(sourceCode);
+            //var codeString = SourceText.From(sourceCode);
             var options = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp9);
 
-            var parsedSyntaxTree = SyntaxFactory.ParseSyntaxTree(codeString, options);
+            var parsedSyntaxTree = SyntaxFactory.ParseSyntaxTree(sourceCode, options, path);
 
             var references = new List<MetadataReference>
             {
@@ -103,11 +145,14 @@ namespace ToSic.Sxc.Code.Builder
             foreach (string dllFile in Directory.GetFiles(dllPath, "*.dll"))
                 references.Add(MetadataReference.CreateFromFile(dllFile));
 
-            return CSharpCompilation.Create($"{className}.dll",
+            var assemblyName = $"{className}.dll";
+            var symbolsName = $"{className}.pdb";
+
+            return CSharpCompilation.Create(assemblyName,
                 new[] { parsedSyntaxTree },
                 references: references,
                 options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
-                    optimizationLevel: OptimizationLevel.Release,
+                    optimizationLevel: OptimizationLevel.Debug,
                     assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default));
         }
     }
