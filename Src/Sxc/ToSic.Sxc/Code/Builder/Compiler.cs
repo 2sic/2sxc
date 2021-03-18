@@ -26,60 +26,61 @@ namespace ToSic.Sxc.Code.Builder
         {
 
         }
-        public Assembly Compile(string filepath, string className)
+        public Assembly Compile(string filePath, string dllName)
         {
-            Log.Add($"Starting compilation of: '{filepath}'");
+            Log.Add($"Starting compilation of: '{filePath}'");
 
-            var sourceCode = File.ReadAllText(filepath);
+            var sourceCode = File.ReadAllText(filePath);
 
-            return CompileSourceCode(filepath, sourceCode, className);
+            return CompileSourceCode(filePath, sourceCode, dllName);
         }
 
-        // TODO: This is tmp implementation, it will be replaced latter
-        public Assembly CompileApiCode(string filepath, string className, int siteId, string appFolder, string edition)
+        //// TODO: This is tmp implementation, it will be replaced latter
+        //public Assembly CompileApiCode(string filePath, string dllName, int siteId, string appFolder, string edition)
+        //{
+        //    Log.Add($"Starting compilation of: '{filePath}'");
+
+        //    var sourceCode = File.ReadAllText(filePath);
+
+        //    // stv: commented because it will be implemented in different way
+        //    //// Add Area and Route attributes
+        //    // sourceCode = PrepareApiCode(sourceCode, siteId, appFolder, edition);
+
+        //    return CompileSourceCode(filePath, sourceCode, dllName);
+        //}
+
+        //// TODO: This is tmp implementation.
+        //// Custom 2sxc App Api c# source code manipulation.
+        //private static string PrepareApiCode(string apiCode, int siteId, string appFolder, string edition)
+        //{
+        //    try
+        //    {
+        //        // Prepare source code for Area and Route attributes.
+        //        var routeAttributes =
+        //            $"[Area(\"{siteId}/api/sxc/app/{appFolder}/{edition}api\")]\n[Route(\"{{area:exists}}{siteId}/api/sxc/app/{appFolder}/{edition}api/[controller]\")]";
+        //        const string findPublicClass = @"\bpublic\s+\bclass";
+        //        var timeSpan = TimeSpan.FromMilliseconds(100);
+        //        // Modify c# code for custom 2sxc App Api.
+        //        // Append Area and Route attributes to public class.
+        //        return Regex.Replace(apiCode, findPublicClass, $"{routeAttributes}\npublic class", RegexOptions.None, timeSpan);
+        //    }
+        //    catch
+        //    {
+        //        return apiCode;
+        //    }
+        //}
+
+        public Assembly CompileSourceCode(string path, string sourceCode, string dllName)
         {
-            Log.Add($"Starting compilation of: '{filepath}'");
-
-            var sourceCode = File.ReadAllText(filepath);
-
-            // Add Area and Route attributes
-            sourceCode = PrepareApiCode(sourceCode, siteId, appFolder, edition);
-
-            return CompileSourceCode(filepath, sourceCode, className);
-        }
-
-        // TODO: This is tmp implementation.
-        // Custom 2sxc App Api c# source code manipulation.
-        private static string PrepareApiCode(string apiCode, int siteId, string appFolder, string edition)
-        {
-            try
-            {
-                // Prepare source code for Area and Route attributes.
-                var routeAttributes =
-                    $"[Area(\"{siteId}/api/sxc/app/{appFolder}/{edition}api\")]\n[Route(\"{{area:exists}}{siteId}/api/sxc/app/{appFolder}/{edition}api/[controller]\")]";
-                const string findPublicClass = @"\bpublic\s+\bclass";
-                var timeSpan = TimeSpan.FromMilliseconds(100);
-                // Modify c# code for custom 2sxc App Api.
-                // Append Area and Route attributes to public class.
-                return Regex.Replace(apiCode, findPublicClass, $"{routeAttributes}\npublic class", RegexOptions.None, timeSpan);
-            }
-            catch
-            {
-                return apiCode;
-            }
-        }
-
-        public Assembly CompileSourceCode(string path, string sourceCode, string className)
-        {
-            var wrapLog = Log.Call($"Source code compilation: {className}.");
+            var wrapLog = Log.Call($"Source code compilation: {dllName}.");
             var encoding = Encoding.UTF8;
-            var symbolsName = $"{className}.pdb";
+            var pdbName = $"{dllName}.pdb";
             using (var peStream = new MemoryStream())
-            using (var symbolsStream = new MemoryStream())
+            using (var pdbStream = new MemoryStream())
             {
-                var emitOptions = new EmitOptions(
+                var options = new EmitOptions(
                     debugInformationFormat: DebugInformationFormat.PortablePdb,
-                    pdbFilePath: symbolsName);
+                    pdbFilePath: pdbName);
 
                 var buffer = encoding.GetBytes(sourceCode);
                 var sourceText = SourceText.From(buffer, buffer.Length, encoding, canBeEmbedded: true);
@@ -89,10 +90,10 @@ namespace ToSic.Sxc.Code.Builder
                     EmbeddedText.FromSource(path, sourceText),
                 };
 
-                var result = GenerateCode(path, sourceText, className).Emit(peStream,
-                    pdbStream: symbolsStream,
+                var result = GenerateCode(path, sourceText, dllName).Emit(peStream,
+                    pdbStream,
                     embeddedTexts: embeddedTexts,
-                    options: emitOptions);
+                    options: options);
 
                 if (!result.Success)
                 {
@@ -116,14 +117,14 @@ namespace ToSic.Sxc.Code.Builder
 
                 peStream.Seek(0, SeekOrigin.Begin);
                 // return peStream.ToArray();
-                symbolsStream?.Seek(0, SeekOrigin.Begin);
+                pdbStream?.Seek(0, SeekOrigin.Begin);
 
-                var assembly = AssemblyLoadContext.Default.LoadFromStream(peStream, symbolsStream);
+                var assembly = AssemblyLoadContext.Default.LoadFromStream(peStream, pdbStream);
                 return assembly;
             }
         }
 
-        public static CSharpCompilation GenerateCode(string path, SourceText sourceCode, string className)
+        public static CSharpCompilation GenerateCode(string path, SourceText sourceCode, string dllName)
         {
             //var codeString = SourceText.From(sourceCode);
             var options = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp9);
@@ -145,10 +146,9 @@ namespace ToSic.Sxc.Code.Builder
             foreach (string dllFile in Directory.GetFiles(dllPath, "*.dll"))
                 references.Add(MetadataReference.CreateFromFile(dllFile));
 
-            var assemblyName = $"{className}.dll";
-            var symbolsName = $"{className}.pdb";
+            var peName = $"{dllName}.dll";
 
-            return CSharpCompilation.Create(assemblyName,
+            return CSharpCompilation.Create(peName,
                 new[] { parsedSyntaxTree },
                 references: references,
                 options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
