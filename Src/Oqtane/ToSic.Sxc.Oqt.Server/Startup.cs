@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -8,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using Oqtane.Infrastructure;
+using System.IO;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
@@ -91,17 +91,22 @@ namespace ToSic.Sxc.Oqt.Server
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             HostEnvironment = env;
-            //_contentRootPath = env.ContentRootPath;
 
-            // WIP: stv - this is hacky :-(
-            app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapDynamicControllerRoute<AppApiDynamicRouteValueTransformer>("{alias}/api/sxc/app/{appFolder}/{edition}/api/{controller}/{action}");
-                endpoints.MapDynamicControllerRoute<AppApiDynamicRouteValueTransformer>("{alias}/api/sxc/app/{appFolder}/api/{controller}/{action}");
-            });
+            app.UseAppApi();
+
+            //// routing middleware
+            //app.UseRouting();
+
+            //app.UseAuthentication();
+            //app.UseAuthorization();
+
+            //// endpoint mapping
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapControllers();
+            //    //endpoints.MapDynamicControllerRoute<AppApiDynamicRouteValueTransformer>("{alias}/api/sxc/app/{appFolder}/api/{controller}/{action}", null, 0);
+            //    //endpoints.MapDynamicControllerRoute<AppApiDynamicRouteValueTransformer>("{alias}/api/sxc/app/{appFolder}/{edition}/api/{controller}/{action}", null, 0);
+            //});
         }
 
         // Workaround because of initialization issues with razor pages

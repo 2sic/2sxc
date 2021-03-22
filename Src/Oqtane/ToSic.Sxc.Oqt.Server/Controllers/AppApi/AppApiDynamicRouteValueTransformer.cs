@@ -72,6 +72,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             {
                 var controllerTypeName = $"{controller}Controller";
                 Log.Add($"Controller TypeName: {controllerTypeName}");
+                values.Add("controllerTypeName", controllerTypeName);
 
                 var edition = GetEdition(values);
                 Log.Add($"Edition: {edition}");
@@ -84,8 +85,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 Log.Add($"Controller Folder: {controllerFolder}");
 
                 var area = $"{alias.SiteId}/{OqtConstants.ApiAppLinkPart}/{appFolder}/{edition}api";
-                values.Add("area", area);
                 Log.Add($"Area: {area}");
+                values.Add("area", area);
 
                 var controllerPath = Path.Combine(controllerFolder, controllerTypeName + ".cs");
                 Log.Add($"Controller Path: {controllerPath}");
@@ -95,11 +96,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 var apiFile = Path.Combine(_hostingEnvironment.ContentRootPath, controllerPath);
                 Log.Add($"Absolute Path: {apiFile}");
 
-                var className = $"DynCode_{controllerFolder.Replace(@"\", "_")}_{System.IO.Path.GetFileNameWithoutExtension(apiFile)}";
-                Log.Add($"Class Name: {className}");
-
-                var dllName = $"{className}.dll";
+                var dllName = $"DynCode_{controllerFolder.Replace(@"\", "_")}_{System.IO.Path.GetFileNameWithoutExtension(apiFile)}";
                 Log.Add($"Dll Name: {dllName}");
+                values.Add("dllName", dllName);
 
                 // help with path resolution for compilers running inside the created controller
                 request?.HttpContext.Items.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
@@ -127,23 +126,17 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 var apiCode = await File.ReadAllTextAsync(apiFile);
                 if (string.IsNullOrWhiteSpace(apiCode)) return wrapLog($"Error, missing AppApi code in file {apiFile}.", values);
 
-                // Add Area and Router attributes
-                Log.Add($"Add Area and Router attributes");
-                apiCode = Compiler.PrepareApiCode(apiCode, alias.SiteId, appFolder, edition);
-
                 // Build new AppApi Controller
-                Log.Add($"Compile assembly: {apiFile}, {className}");
-                var compiledAssembly = new Compiler().CompileSourceCode(apiCode, className);
-                if (compiledAssembly == null) return wrapLog("Error, can't compile AppApi code.", values);
-
-                var assembly = new Runner().Load(compiledAssembly);
+                Log.Add($"Compile assembly: {apiFile}, {dllName}");
+                //var assembly = new Compiler().CompileApiCode(apiFile, dllName, alias.SiteId, appFolder, edition);
+                var assembly = new Compiler().Compile(apiFile, dllName);
 
                 // Add new key to concurrent dictionary, before registering new AppAPi controller.
                 if (!_compiledAppApiControllers.TryAdd(apiFile, false))
                     return wrapLog($"Error, while adding key {apiFile} to concurrent dictionary, so will not register AppApi Controller to avoid duplicate controller routes.", values);
 
-                // Register new AppApi Controller.
-                AddController(dllName, assembly);
+                //// Register new AppApi Controller.
+                //AddController(dllName, assembly);
 
                 return wrapLog($"ok, Controller is compiled and added to ApplicationParts: {apiFile}.", values);
             }
