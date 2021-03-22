@@ -139,7 +139,7 @@ namespace ToSic.Sxc.WebApi.App
         {
             Log.Add($"init eav for a#{appId}");
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
-            var ser = _entToDicLazy.Value.EnableGuids();// Eav.WebApi.Helpers.Serializers.GetSerializerWithGuidEnabled();
+            var ser = _entToDicLazy.Value.EnableGuids();
             ((DataToDictionary)ser).WithEdit = userMayEdit;
             return ser;
         }

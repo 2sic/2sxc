@@ -53,7 +53,7 @@ namespace ToSic.Sxc.WebApi.App
 
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(string appPath, string name, string stream)
         {
-            var wrapLog = Log.Call($"path:{appPath}, name:{name}");
+            var wrapLog = Log.Call($"path:{appPath}, name:{name}, stream: {stream}");
             if (string.IsNullOrEmpty(name))
                 throw HttpException.MissingParam(nameof(name));
 

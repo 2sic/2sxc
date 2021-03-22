@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Code
             {
                 Log.Add($"Error: {hasErrorMessage}");
                 wrapLog("failed");
-                if(throwOnError) throw new Exception(hasErrorMessage);
+                if (throwOnError) throw new Exception(hasErrorMessage);
                 return null;
             }
 
@@ -74,11 +74,14 @@ namespace ToSic.Sxc.Code
                 Assembly assembly = null;
 #if NETSTANDARD
                 var fullPath = _serviceProvider.Build<IServerPaths>().FullContentPath(virtualPath.Backslash());
-                var compiledAssembly = new Compiler().Compile(fullPath, className);
-                if (compiledAssembly == null)
+                try
+                {
+                    assembly = new Compiler().Compile(fullPath, className);
+                }
+                catch
+                {
                     errorMsg = $"can't compile '{className}' in {virtualPath}";
-                else
-                    assembly = new Runner().Load(compiledAssembly);
+                }
 #else
                 assembly = BuildManager.GetCompiledAssembly(virtualPath);
 #endif

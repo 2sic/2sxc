@@ -10,11 +10,14 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Builder;
 using ToSic.Sxc.Oqt.Server.Plumbing;
+using ToSic.Sxc.Oqt.Shared;
+using File = System.IO.File;
+using Log = ToSic.Eav.Logging.Simple.Log;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {
@@ -69,6 +72,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             {
                 var controllerTypeName = $"{controller}Controller";
                 Log.Add($"Controller TypeName: {controllerTypeName}");
+                values.Add("controllerTypeName", controllerTypeName);
 
                 var edition = GetEdition(values);
                 Log.Add($"Edition: {edition}");
@@ -76,13 +80,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 var alias = _tenantResolver.GetAlias();
                 var aliasPart = $@"Content\Tenants\{alias.TenantId}\Sites\{alias.SiteId}\2sxc";
 
-                var controllerFolder = Path.Combine(aliasPart, appFolder, edition + @"api");
+                var controllerFolder = Path.Combine(aliasPart, appFolder, edition.Backslash(), "api");
                 //controllerFolder = controllerFolder.Replace("\\", @"/");
                 Log.Add($"Controller Folder: {controllerFolder}");
 
-                var area = $"{alias.SiteId}/api/sxc/app/{appFolder}";
-                values.Add("area", area);
+                var area = $"{alias.SiteId}/{OqtConstants.ApiAppLinkPart}/{appFolder}/{edition}api";
                 Log.Add($"Area: {area}");
+                values.Add("area", area);
 
                 var controllerPath = Path.Combine(controllerFolder, controllerTypeName + ".cs");
                 Log.Add($"Controller Path: {controllerPath}");
@@ -92,11 +96,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 var apiFile = Path.Combine(_hostingEnvironment.ContentRootPath, controllerPath);
                 Log.Add($"Absolute Path: {apiFile}");
 
-                var className = $"DynCode_{controllerFolder.Replace(@"\", "_")}_{System.IO.Path.GetFileNameWithoutExtension(apiFile)}";
-                Log.Add($"Class Name: {className}");
-
-                var dllName = $"{className}.dll";
+                var dllName = $"DynCode_{controllerFolder.Replace(@"\", "_")}_{System.IO.Path.GetFileNameWithoutExtension(apiFile)}";
                 Log.Add($"Dll Name: {dllName}");
+                values.Add("dllName", dllName);
 
                 // help with path resolution for compilers running inside the created controller
                 request?.HttpContext.Items.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
@@ -124,24 +126,17 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 var apiCode = await File.ReadAllTextAsync(apiFile);
                 if (string.IsNullOrWhiteSpace(apiCode)) return wrapLog($"Error, missing AppApi code in file {apiFile}.", values);
 
-                // Add Area and Router attributes
-                // TODO: c# source code manipulation - move it to proper place, make it production robust
-                var routerAttribute = $"[Area(\"{alias.SiteId}/api/sxc/app/{appFolder}\")] [Route(\"{{area:exists}}{alias.SiteId}/api/sxc/app/{appFolder}/{edition}api/[controller]\")]";
-                apiCode = apiCode.Replace("public class", $"{routerAttribute}\npublic class");
-
                 // Build new AppApi Controller
-                Log.Add($"Compile assembly: {apiFile}, {className}");
-                var compiledAssembly = new Compiler().CompileSourceCode(apiCode, className);
-                if (compiledAssembly == null) return wrapLog("Error, can't compile AppApi code.", values);
-
-                var assembly = new Runner().Load(compiledAssembly);
+                Log.Add($"Compile assembly: {apiFile}, {dllName}");
+                //var assembly = new Compiler().CompileApiCode(apiFile, dllName, alias.SiteId, appFolder, edition);
+                var assembly = new Compiler().Compile(apiFile, dllName);
 
                 // Add new key to concurrent dictionary, before registering new AppAPi controller.
                 if (!_compiledAppApiControllers.TryAdd(apiFile, false))
                     return wrapLog($"Error, while adding key {apiFile} to concurrent dictionary, so will not register AppApi Controller to avoid duplicate controller routes.", values);
 
-                // Register new AppApi Controller.
-                AddController(dllName, assembly);
+                //// Register new AppApi Controller.
+                //AddController(dllName, assembly);
 
                 return wrapLog($"ok, Controller is compiled and added to ApplicationParts: {apiFile}.", values);
             }
@@ -150,6 +145,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 return wrapLog($"Error, unexpected error {e.Message} while preparing controller.", values);
             }
         }
+
+
 
         private static string GetEdition(RouteValueDictionary values)
         {

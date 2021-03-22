@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Blocks
     /// <summary>
     /// Block-Rendering system. It's responsible for taking a Block and delivering HTML for the output. <br/>
     /// It's used for InnerContent, so that Razor-Code can easily render additional content blocks. <br/>
-    /// See also [](xref:Specs.Cms.InnerContent)
+    /// See also [](xref:Basics.Cms.InnerContent.Index)
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
     public class Render

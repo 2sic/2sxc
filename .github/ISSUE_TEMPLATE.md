@@ -6,7 +6,8 @@ IF YOU DON'T FILL OUT THE FOLLOWING INFORMATION WE MIGHT CLOSE YOUR ISSUE WITHOU
 <!-- remove lines which don't apply  -->
 [x] bug report => search github for a similar issue before submitting 
 [x] feature request
-[x] support request => do not submit here, see https://2sxc.org/en/blog/post/moving-discussions-from-codeplex-to-stack-overflow
+[x] support request => use stackoverflow and tag with 2sxc https://stackoverflow.com/questions/tagged/2sxc
+[x] security issue => do not submit here but on https://2sxc.org/en/contact
 [x] not sure
 
 **...about**   <!-- remove lines which don't apply  -->

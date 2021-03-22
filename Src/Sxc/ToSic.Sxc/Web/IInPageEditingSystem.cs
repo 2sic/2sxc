@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Web
         /// <param name="noParameterOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="actions">
         /// List of actions on this toolbar. If null, will use default actions for this item.
-        /// If provided, must be comma-separated action-names - see @Specs.Js.Commands.
+        /// If provided, must be comma-separated action-names - see [](xref:JsCode.Commands.Index).
         /// </param>
         /// <param name="contentType">Content-type of this toolbar, used when it has `new` or `add` buttons.
         /// This allows you to create a button for a new "Category" and another button for a new "BlogPost" etc.
@@ -52,11 +52,11 @@ namespace ToSic.Sxc.Web
         /// </param>
         /// <param name="toolbar">
         /// Full manual toolbar configuration. Setting this will cause `actions` to be ignored. <br/>
-        /// See @Specs.Js.Toolbar.Js
+        /// See [](xref:Basics.Browser.EditUx.Toolbars.Index)
         /// </param>
         /// <param name="settings">
         /// Toolbar settings controlling hover etc. <br/>
-        /// See @Specs.Js.Toolbar.Settings
+        /// See [](xref:JsCode.Toolbars.Settings)
         /// </param>
         /// <returns>If the user is an editor, it returns HTML UL tag containing all the toolbar configuration.</returns>
         /// <remarks>
@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Web
         /// <param name="noParameterOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="actions">
         /// List of actions on this toolbar. If null, will use default actions for this item.
-        /// If provided, must be comma-separated action-names - see @Specs.Js.Commands.
+        /// If provided, must be comma-separated action-names - see [](xref:JsCode.Commands.Index).
         /// </param>
         /// <param name="contentType">Content-type of this toolbar, used when it has `new` or `add` buttons.
         /// This allows you to create a button for a new "Category" and another button for a new "BlogPost" etc.
@@ -94,11 +94,11 @@ namespace ToSic.Sxc.Web
         /// </param>
         /// <param name="toolbar">
         /// Full manual toolbar configuration. Setting this will cause `actions` to be ignored. <br/>
-        /// See @Specs.Js.Toolbar.Js
+        /// See [](xref:Basics.Browser.EditUx.Toolbars.Index)
         /// </param>
         /// <param name="settings">
         /// Toolbar settings controlling hover etc. <br/>
-        /// See @Specs.Js.Toolbar.Settings
+        /// See [](xref:JsCode.Toolbars.Settings)
         /// </param>
         /// <returns>If the user is an editor, it returns the attribute containing all the toolbar configuration.</returns>
         /// <remarks>
@@ -117,10 +117,10 @@ namespace ToSic.Sxc.Web
         /// Get html-attributes to mark the current context
         /// these will be added to a wrapper tag (usually a div)
         /// so that in-page editing knows what the context is <br/>
-        /// Please read more about @Specs.Cms.InnerContent
+        /// Please read more about [](xref:Basics.Cms.InnerContent.Index)
         /// </summary>
         /// <param name="target">The content-item for which the new context should be.
-        /// This item usually has a field which has @Specs.Cms.InnerContent</param>
+        /// This item usually has a field which has [](xref:Basics.Cms.InnerContent.Index)</param>
         /// <param name="noParameterOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="field">the field of this content-item, which contains the inner-content-items</param>
         /// <param name="contentType">type name used for 'new' items in a toolbar - usually for inner-content and list-contexts</param>
@@ -180,7 +180,7 @@ namespace ToSic.Sxc.Web
         /// <param name="forms">optional, default false. <br/>
         ///     Ensures javascripts are loaded enabling forms to open</param>
         /// <param name="context">optional, default false. <br/>
-        ///     If context (@Specs.Cms.EditContext) should be added, to ensure in-instance data editing</param>
+        ///     If context ([](xref:Basics.Browser.EditUx.EditContext)) should be added, to ensure in-instance data editing</param>
         /// <param name="autoToolbar">optional, default false. <br/>
         ///     Disables the automatic generation of a toolbar (this is important, as there usually won't be a toolbar in public pages, which would then trigger the fallback-toolbar to be generated)</param>
         /// <param name="styles">optional, default false. <br/>
