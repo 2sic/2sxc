@@ -62,13 +62,10 @@ namespace ToSic.Sxc.WebApi.Save
 
             // todo: if no block given, skip all this
 
-            //var sp = CmsManager.ServiceProvider;
-            //var app = sp.Build<Apps.App>().Init(_appIdentity, sp.Build<AppConfigDelegate>().Init(Log).Build(block), Log);
-
             foreach (var bundle in pairsOrSingleItems)
             {
                 Log.Add("processing:" + bundle.Key);
-                var entity = CmsManager.Read.AppState.List.One(bundle.First().Header.ListParent()); // app.Data.Immutable.One(bundle.First().Header.ListParent());
+                var entity = CmsManager.Read.AppState.List.One(bundle.First().Header.ListParent());
                 var targetIsContentBlock = entity.Type.Name == BlocksRuntime.BlockTypeName;
                 
                 var primaryItem = targetIsContentBlock ? FindContentItem(bundle) : bundle.First();
@@ -80,18 +77,10 @@ namespace ToSic.Sxc.WebApi.Save
 
                 var index = primaryItem.Header.ListIndex();
 
-                // add or update slots
-                //var itemIsReallyNew = primaryItem.EntityId == 0; // only really add if it's really new
-                var willAdd = primaryItem.Header.ListAdd();// && itemIsReallyNew;
+                var willAdd = primaryItem.Header.ListAdd();
 
-                // 2019-07-01 2dm needed to add this, because new-save already gives it an ID
-                //if (primaryItem.Header.ReallyAddBecauseAlreadyVerified != null)
-                //    willAdd = primaryItem.Header.ReallyAddBecauseAlreadyVerified.Value;
+                Log.Add($"will add: {willAdd}; Group.Add:{primaryItem.Header.Add}; EntityId:{primaryItem.Entity.EntityId}");
 
-                Log.Add($"will add: {willAdd}; " + // add-pre-verified:{primaryItem.Header.ReallyAddBecauseAlreadyVerified}; " +
-                        $"Group.Add:{primaryItem.Header.Add}; EntityId:{primaryItem.Entity.EntityId}");
-
-                //var cms = new CmsManager().Init(app, Log);
                 var fieldPair = targetIsContentBlock
                     ? ViewParts.PickPair(primaryItem.Header.Group.Part)
                     : new[] {primaryItem.Header.Field};
