@@ -19,8 +19,10 @@ namespace ToSic.Sxc.Dnn.DataSources
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
 	[VisualQuery(
-        GlobalName = "ToSic.Sxc.Dnn.DataSources.DnnUserProfile, ToSic.Sxc.Dnn",
+        NiceName = "Dnn User Profiles",
+        Icon = "face",
         Type = DataSourceType.Source, 
+        GlobalName = "ToSic.Sxc.Dnn.DataSources.DnnUserProfile, ToSic.Sxc.Dnn",
         DynamicOut = true,
 	    ExpectsDataOfType = "|Config ToSic.SexyContent.DataSources.DnnUserProfileDataSource",
         PreviousNames = new []

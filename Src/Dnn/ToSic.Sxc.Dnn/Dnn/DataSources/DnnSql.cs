@@ -9,10 +9,11 @@ namespace ToSic.Sxc.Dnn.DataSources
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
 	[VisualQuery(
-        GlobalName = "ToSic.Sxc.Dnn.DataSources.DnnSql, ToSic.Sxc.Dnn",
+        NiceName = "Dnn SQL",
+        Icon = "dynamic_form",
         Type = DataSourceType.Source, 
+        GlobalName = "ToSic.Sxc.Dnn.DataSources.DnnSql, ToSic.Sxc.Dnn",
         DynamicOut = false,
-        Icon = "database",
         PreviousNames = new []
         {
             "ToSic.SexyContent.DataSources.DnnSqlDataSource, ToSic.SexyContent",
