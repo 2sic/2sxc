@@ -10,6 +10,7 @@ namespace ToSic.Sxc.Dnn.DataSources
     [PublicApi_Stable_ForUseInYourCode]
 	[VisualQuery(
         NiceName = "Dnn SQL",
+        UiHint = "Data from the Dnn database",
         Icon = "dynamic_form",
         Type = DataSourceType.Source, 
         GlobalName = "ToSic.Sxc.Dnn.DataSources.DnnSql, ToSic.Sxc.Dnn",

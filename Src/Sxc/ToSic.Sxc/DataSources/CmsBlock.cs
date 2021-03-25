@@ -19,6 +19,7 @@ namespace ToSic.Sxc.DataSources
     [PublicApi_Stable_ForUseInYourCode]
     [VisualQuery(
         NiceName = "CMS Block",
+        UiHint = "Data for this CMS block (instance/module)",
         Icon = "recent_actors",
         Type = DataSourceType.Source, 
         GlobalName = "ToSic.Sxc.DataSources.CmsBlock, ToSic.Sxc",

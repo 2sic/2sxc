@@ -20,6 +20,7 @@ namespace ToSic.Sxc.Dnn.DataSources
     [PublicApi_Stable_ForUseInYourCode]
 	[VisualQuery(
         NiceName = "Dnn User Profiles",
+        UiHint = "Users profiles of specified users in Dnn",
         Icon = "face",
         Type = DataSourceType.Source, 
         GlobalName = "ToSic.Sxc.Dnn.DataSources.DnnUserProfile, ToSic.Sxc.Dnn",
