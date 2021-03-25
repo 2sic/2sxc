@@ -36,9 +36,7 @@ namespace ToSic.Sxc.Conversion
         ///// <param name="languages"></param>
 	    public DataToDictionary(bool withEdit)
         {
-            //Cms = cmsInstance;
             WithEdit = withEdit;
-            //Languages = languages;
         }
 
 
@@ -99,8 +97,6 @@ namespace ToSic.Sxc.Conversion
 
 	        if (!userMayEdit) return;
 
-            // 2021-01-18 disabled, as it's already always added. 
-	        //dictionary.Add(Constants.JsonModifiedNodeName, entity.Modified);
 	        var title = entity.GetBestTitle(Languages);
 	        if (string.IsNullOrEmpty(title))
 	            title = "(no title)";
