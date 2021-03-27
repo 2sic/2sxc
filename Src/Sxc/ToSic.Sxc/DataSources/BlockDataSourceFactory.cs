@@ -33,11 +33,9 @@ namespace ToSic.Sxc.DataSources
 
             Log.Add($"mid#{block.Context.Module.Id}, draft:{showDrafts}, template:{block.View?.Name}");
             // Get ModuleDataSource
-            var dsFactory = _dataSourceFactory.Init(Log); // new DataSource(log);
-            //var block = builder.Block;
+            var dsFactory = _dataSourceFactory.Init(Log);
             var initialSource = dsFactory.GetPublishing(block, showDrafts, configurationProvider);
             var moduleDataSource = dsFactory.GetDataSource<CmsBlock>(initialSource);
-            //moduleDataSource.InstanceId = instanceId;
 
             moduleDataSource.OverrideView = view;
             moduleDataSource.UseSxcInstanceContentGroup = true;
@@ -64,7 +62,6 @@ namespace ToSic.Sxc.DataSources
                     var query = _queryLazy.Value.Init(block.App.ZoneId, block.App.AppId, view.Query.Entity, configurationProvider, showDrafts, viewDataSource, Log);
                     Log.Add("attaching");
                     viewDataSource.SetOut(query);
-                    //viewDataSource.Out = query.Out;
                 }
             }
             else
