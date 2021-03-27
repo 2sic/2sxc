@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
                 .Where(k => source.Out.ContainsKey(k))
                 .ToDictionary(k => k, s => new
                 {
-                    List = source.Out[s].Immutable.Select(c => ser.PrepareOldFormat(c)).ToList()
+                    List = source.Out[s].List.Select(c => ser.PrepareOldFormat(c)).ToList()
                 });
 
             return JsonConvert.SerializeObject(y);

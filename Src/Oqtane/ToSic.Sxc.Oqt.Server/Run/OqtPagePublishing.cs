@@ -52,8 +52,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, IBlockDataSource data, string key)
         {
-            var cont = data.Out.ContainsKey(key) ? data[key]?.Immutable/*?.ToList()*/ : null;
-            Log.Add($"TryToAddStream(..., ..., key:{key}), found:{cont != null} add⋮{cont?.Count ?? 0}");
+            var cont = data.Out.ContainsKey(key) ? data[key]?.List : null;
+            Log.Add($"TryToAddStream(..., ..., key:{key}), found:{cont != null} add⋮{cont?.Count() ?? 0}");
             if (cont != null) list = list.Concat(cont);
             return list;
         }
