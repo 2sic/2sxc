@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Code
             if (Data == null || Block.View == null) return;
             if (!Data.Out.ContainsKey(Eav.Constants.DefaultStreamName)) return;
 
-            var entities = Data.Immutable; //.ToList();
+            var entities = Data.List; //.ToList();
             if (entities.Any()) _content = AsDynamic(entities.First());
 
         }

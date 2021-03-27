@@ -84,7 +84,7 @@ namespace ToSic.Sxc.Code
             if (DynCode.Data == null || DynCode.Block.View == null) return;
             if (!DynCode.Data.Out.ContainsKey(Eav.Constants.DefaultStreamName)) return;
 
-            var entities = DynCode.Data.Immutable.ToList();
+            var entities = DynCode.Data.List.ToList();
             //if (entities.Any()) _content = AsDynamic(entities.First());
 
             _list = entities.Select(GetElementFromEntity).ToList();

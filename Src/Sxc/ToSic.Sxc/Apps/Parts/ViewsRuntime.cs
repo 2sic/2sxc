@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Apps
 		}
 
         public IEnumerable<IView> GetAll() 
-            => _all ?? (_all = ViewsDataSource().Immutable
+            => _all ?? (_all = ViewsDataSource().List
                    .Select(p => new View(p, _cultureResolver.CurrentCultureCode, Log))
                    .OrderBy(p => p.Name));
         private IEnumerable<IView> _all;
@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Apps
 
         public IView Get(int templateId)
 		{
-            var templateEntity = ViewsDataSource().Immutable.One(templateId);
+            var templateEntity = ViewsDataSource().List.One(templateId);
 
             if(templateEntity == null)
 				throw new Exception("The template with id " + templateId + " does not exist.");
@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Apps
 
         public IView Get(Guid guid)
         {
-            var templateEntity = ViewsDataSource().Immutable.One(guid);
+            var templateEntity = ViewsDataSource().List.One(guid);
 
             if (templateEntity == null)
                 throw new Exception("The template with id " + guid + " does not exist.");
