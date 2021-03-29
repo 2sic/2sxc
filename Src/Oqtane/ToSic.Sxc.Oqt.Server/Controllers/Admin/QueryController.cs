@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.DataSources.Catalog;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
@@ -48,7 +47,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// Get installed DataSources from .NET Runtime but only those with [PipelineDesigner Attribute]
         /// </summary>
         [HttpGet]
-        public IEnumerable<DataSourceDto> DataSources() => new DataSourceCatalog(Log).QueryDataSources();// QueryRuntime.QueryDataSources();
+        public IEnumerable<DataSourceDto> DataSources() => new DataSourceCatalog(Log).QueryDataSources();
 
         /// <summary>
         /// Save Pipeline
