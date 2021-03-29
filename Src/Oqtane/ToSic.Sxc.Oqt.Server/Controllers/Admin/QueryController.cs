@@ -64,12 +64,26 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// Query the Result of a Pipeline using Test-Parameters
         /// </summary>
         [HttpGet]
-        public QueryRunDto Run(int appId, int id)
+        public QueryRunDto Run(int appId, int id, int top = 0)
         {
+            // todo: the first three lines should be in the QueryApi backend, but ATM that's still in EAV and is missing some objects
             var block = GetBlock();
             var context = GetContext();
             var config = _configProviderLazy.Value.Init(Log).GetConfigProviderForModule(context, block?.App, block);
-            return _queryLazy.Value.Init(appId, Log).Run(appId, id, config);
+            return _queryLazy.Value.Init(appId, Log).Run(appId, id, top, config);
+        }
+        
+        /// <summary>
+        /// Query the Result of a Pipeline using Test-Parameters
+        /// </summary>
+        [HttpGet]
+        public QueryRunDto DebugStream(int appId, int id, string from, string @out, int top = 25)
+        {
+            // todo: the first three lines should be in the QueryApi backend, but ATM that's still in EAV and is missing some objects
+            var block = GetBlock();
+            var context = GetContext();
+            var config = _configProviderLazy.Value.Init(Log).GetConfigProviderForModule(context, block?.App, block);
+            return _queryLazy.Value.Init(appId, Log).DebugStream(appId, id, top, config, from, @out);
         }
 
         /// <summary>

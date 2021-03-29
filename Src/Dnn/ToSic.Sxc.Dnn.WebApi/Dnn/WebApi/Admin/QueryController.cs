@@ -52,12 +52,12 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 	    /// Query the Result of a Pipeline using Test-Parameters
 	    /// </summary>
 	    [HttpGet]
-	    public QueryRunDto Run(int appId, int id)
+	    public QueryRunDto Run(int appId, int id, int top = 0)
         {
             // todo: the first two lines should be in the QueryApi backend, but ATM that's still in EAV and is missing some objects
             var block = SharedContextResolver.RealBlockRequired();
             var config = GetService<AppConfigDelegate>().Init(Log).GetConfigProviderForModule(block.Context, block.App, block);
-            return GetService<QueryApi>().Init(appId, Log).Run(appId, id, config);
+            return GetService<QueryApi>().Init(appId, Log).Run(appId, id, top, config);
         }
         
         // Experimental
@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             // todo: the first two lines should be in the QueryApi backend, but ATM that's still in EAV and is missing some objects
             var block = SharedContextResolver.RealBlockRequired();
             var config = GetService<AppConfigDelegate>().Init(Log).GetConfigProviderForModule(block.Context, block.App, block);
-            return GetService<QueryApi>().Init(appId, Log).DebugStream(appId, id, config, from, @out, top);
+            return GetService<QueryApi>().Init(appId, Log).DebugStream(appId, id, top, config, @from, @out);
         }
 
         /// <summary>
