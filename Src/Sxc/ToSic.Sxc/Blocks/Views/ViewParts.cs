@@ -13,10 +13,31 @@ namespace ToSic.Sxc.Blocks
         public const string Presentation = "Presentation";
         public const string PresentationLower = "presentation";
 
-        public static string[] ContentPair = { Content, Presentation };
-        public static string[] HeaderPair = {ListContent, ListPresentation};
 
-        public static string[] PickPair(string primaryField)
+
+        private const string ListContent = "ListContent";
+        public const string ListContentLower = "listcontent";
+        public static readonly string FieldHeader = ListContent;
+
+        // todo: not implemented in tokens just yet
+        public const string Header = "Header";
+        public const string HeaderLower = "header";
+
+        public const string ListPresentation = "ListPresentation";
+        public const string ListPresentationLower = "listpresentation";
+        public static readonly string FieldHeaderPresentation = "ListPresentation";
+
+        // Stream Names
+        public static string StreamHeader = Header;
+        public static string StreamHeaderOld = ListPresentation;
+        
+
+        #region Field Pairs for saving / loading
+
+        public static string[] ContentPair = { Content, Presentation };
+        public static string[] HeaderPair = { FieldHeader, FieldHeaderPresentation };
+
+        public static string[] PickFieldPair(string primaryField)
         {
             var lowered = primaryField.ToLowerInvariant();
             switch (lowered)
@@ -34,14 +55,7 @@ namespace ToSic.Sxc.Blocks
         }
 
 
-        public const string ListContent = "ListContent";
-        public const string ListContentLower = "listcontent";
+        #endregion
 
-        // todo: not implemented in tokens just yet
-        public const string Header = "Header";
-        public const string HeaderLower = "header";
-
-        public const string ListPresentation = "ListPresentation";
-        public const string ListPresentationLower = "listpresentation";
     }
 }

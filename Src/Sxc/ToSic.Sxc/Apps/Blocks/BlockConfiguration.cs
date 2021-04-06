@@ -80,7 +80,7 @@ namespace ToSic.Sxc.Apps.Blocks
 
         public List<IEntity> Presentation => Entity?.Children(ViewParts.Presentation) ?? new List<IEntity>();
 
-        public List<IEntity> Header => Entity?.Children(ViewParts.ListContent) ?? new List<IEntity>();
+        public List<IEntity> Header => Entity?.Children(ViewParts.FieldHeader) ?? new List<IEntity>();
 
         public List<IEntity> HeaderPresentation => Entity?.Children(ViewParts.ListPresentation) ?? new List<IEntity>();
 

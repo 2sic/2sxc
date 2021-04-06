@@ -24,8 +24,8 @@ namespace ToSic.Sxc.Apps
 		            {ViewParts.TemplateContentType, new List<int> {templateId}},
 		            {ViewParts.Content, new List<int>()},
 		            {ViewParts.Presentation, new List<int>()},
-		            {ViewParts.ListContent, new List<int>()},
-		            {ViewParts.ListPresentation, new List<int>()}
+		            {ViewParts.FieldHeader, new List<int>()},
+		            {ViewParts.FieldHeaderPresentation, new List<int>()}
 		        }).Item2; // new guid
 		    }
 		    else

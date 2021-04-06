@@ -63,6 +63,7 @@ namespace ToSic.Sxc.DataSources
         {
             _lazyCmsRuntime = lazyCmsRuntime;
             Provide(GetContent);
+            Provide(ViewParts.Header, GetHeader);
             Provide(ViewParts.ListContent, GetHeader);
 			Configuration.Values.Add(InstanceIdKey, $"[Settings:{Settings.InstanceId}||[{InstanceLookupName}:{InstanceIdKey}]]");
         }

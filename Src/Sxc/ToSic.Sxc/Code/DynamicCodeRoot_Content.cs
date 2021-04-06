@@ -28,7 +28,10 @@ namespace ToSic.Sxc.Code
             {
                 if (_header != null || _headerTried) return _header;
                 _headerTried = true;
-                return _header = TryToBuildFirstOfStream(ViewParts.ListContent);
+                _header = TryToBuildFirstOfStream(ViewParts.StreamHeader);
+                if (_header != null) return _header;
+                Log.Add($"Header not yet found in {ViewParts.StreamHeader}, will try {ViewParts.StreamHeaderOld}");
+                return _header = TryToBuildFirstOfStream(ViewParts.StreamHeaderOld);
             }
         }
         private dynamic _header;

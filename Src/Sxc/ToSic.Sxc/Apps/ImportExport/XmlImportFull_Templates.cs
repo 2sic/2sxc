@@ -149,7 +149,7 @@ namespace ToSic.Sxc.Apps.ImportExport
 
                     var listContentTypeStaticName = "";
                     var listContentDemoEntityId = new int?();
-                    var listContentDefault = templateDefaults.FirstOrDefault(t => t.ItemType == ViewParts.ListContent);
+                    var listContentDefault = templateDefaults.FirstOrDefault(t => t.ItemType == ViewParts.FieldHeader);
                     if (listContentDefault != null)
                     {
                         listContentTypeStaticName = listContentDefault.ContentTypeStaticName;
@@ -158,7 +158,7 @@ namespace ToSic.Sxc.Apps.ImportExport
 
                     var listPresentationTypeStaticName = "";
                     var listPresentationDemoEntityId = new int?();
-                    var listPresentationDefault = templateDefaults.FirstOrDefault(t => t.ItemType == ViewParts.ListPresentation);
+                    var listPresentationDefault = templateDefaults.FirstOrDefault(t => t.ItemType == ViewParts.FieldHeaderPresentation);
                     if (listPresentationDefault != null)
                     {
                         listPresentationTypeStaticName = listPresentationDefault.ContentTypeStaticName;

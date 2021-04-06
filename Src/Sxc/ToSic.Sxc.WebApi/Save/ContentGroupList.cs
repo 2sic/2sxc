@@ -100,7 +100,7 @@ namespace ToSic.Sxc.WebApi.Save
         private static BundleWithHeader<T> FindContentItem<T>(IGrouping<string, BundleWithHeader<T>> bundle)
         {
             var primaryItem = bundle.FirstOrDefault(e => string.Equals(e.Header.Group.Part, ViewParts.Content, OrdinalIgnoreCase)) 
-                   ?? bundle.FirstOrDefault(e => string.Equals(e.Header.Group.Part, ViewParts.ListContent, OrdinalIgnoreCase));
+                   ?? bundle.FirstOrDefault(e => string.Equals(e.Header.Group.Part, ViewParts.FieldHeader, OrdinalIgnoreCase));
             if (primaryItem == null)
                 throw new Exception("unexpected group-entity assignment, cannot figure it out");
             return primaryItem;
