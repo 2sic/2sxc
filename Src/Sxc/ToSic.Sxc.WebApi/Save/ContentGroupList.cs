@@ -82,7 +82,7 @@ namespace ToSic.Sxc.WebApi.Save
                 Log.Add($"will add: {willAdd}; Group.Add:{primaryItem.Header.Add}; EntityId:{primaryItem.Entity.EntityId}");
 
                 var fieldPair = targetIsContentBlock
-                    ? ViewParts.PickPair(primaryItem.Header.Group.Part)
+                    ? ViewParts.PickFieldPair(primaryItem.Header.Group.Part)
                     : new[] {primaryItem.Header.Field};
 
                 if (willAdd) // this cannot be auto-detected, it must be specified
