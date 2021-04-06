@@ -18,10 +18,19 @@ namespace ToSic.Sxc.Blocks
 
         public static string[] PickPair(string primaryField)
         {
-            string lowered = primaryField.ToLowerInvariant();
-            if (lowered == ContentLower || lowered == PresentationLower) return ContentPair;
-            if (lowered == ListContentLower || lowered == ListPresentationLower) return HeaderPair;
-            throw new Exception($"tried to find field pair, but input was '{primaryField}' - can't figure it out.");
+            var lowered = primaryField.ToLowerInvariant();
+            switch (lowered)
+            {
+                case ContentLower:
+                case PresentationLower:
+                    return ContentPair;
+                case ListContentLower:
+                case ListPresentationLower:
+                case HeaderLower:   // new in 11.13, trying to move away from ListContent naming
+                    return HeaderPair;
+                default:
+                    throw new Exception($"tried to find field pair, but input was '{primaryField}' - can't figure it out.");
+            }
         }
 
 

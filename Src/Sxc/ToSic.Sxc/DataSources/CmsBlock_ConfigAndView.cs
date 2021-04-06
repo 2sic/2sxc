@@ -1,10 +1,7 @@
 ﻿using System;
-using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
 
 
@@ -27,7 +24,7 @@ namespace ToSic.Sxc.DataSources
             if (!InstanceId.HasValue)
             {
                 wrapLog("Error, no module-id", null);
-                throw new Exception("Looking up BlockConfiguration failed because ModuleId is null.");
+                throw new Exception($"{nameof(LoadBlockConfiguration)} failed because ModuleId is null.");
             }
 
             var sp = DataSourceFactory.ServiceProvider;
