@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Blocks
 
         // Stream Names
         public static string StreamHeader = Header;
-        public static string StreamHeaderOld = ListPresentation;
+        public static string StreamHeaderOld = ListContent;
         
 
         #region Field Pairs for saving / loading
