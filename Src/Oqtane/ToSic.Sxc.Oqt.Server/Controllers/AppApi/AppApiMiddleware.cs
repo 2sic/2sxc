@@ -1,68 +1,80 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Oqtane.Repository;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {
-    public class AppApiMiddleware
+    public class AppApiMiddleware: IHasLog
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<AppApiMiddleware> _logger;
-
-        public AppApiMiddleware(RequestDelegate next, ILogger<AppApiMiddleware> logger)
+        public AppApiMiddleware()
         {
-            _next = next;
-            _logger = logger;
+            Log = new Log(HistoryLogName, null, "AppApiMiddleware");
+            History.Add(HistoryLogGroup, Log);
         }
+
+        public ILog Log { get; }
+        protected string HistoryLogGroup { get; } = "app-api";
+        protected string HistoryLogName => "App.api.mdl";
+
         public async Task Invoke(HttpContext context, [FromServices] AppApiDynamicRouteValueTransformer appApiDynamicRouteValueTransformer)
         {
-            var s = new Stopwatch();
-            s.Start();
+            var values = await appApiDynamicRouteValueTransformer.TransformAsync(context, context.Request.RouteValues);
+            Log.Add($"get values: {values.Count}");
 
-            // stv: POC!!!
-
-            var values = AppApiMiddlewareExtension.GetValues(context);
-            values = await appApiDynamicRouteValueTransformer.TransformAsync(context, values);
-            _logger.LogInformation($"stv app api values: { values}");
             var routeData = new RouteData(values);
 
-            var assembly = AppDomain.CurrentDomain.GetAssemblies().First(a => a.FullName != null && a.FullName.StartsWith($"{values["dllName"]}"));
-            var controllerType = assembly.GetTypes().First();
-            var actionDescriptor = new ControllerActionDescriptor();
-            actionDescriptor.ControllerTypeInfo = controllerType.GetTypeInfo();
-            actionDescriptor.ControllerName = controllerType.Name;
-            actionDescriptor.MethodInfo = controllerType.GetMethod("Hello");
-            actionDescriptor.ActionName = actionDescriptor.MethodInfo.Name;
+            var actionDescriptorCollectionProvider = context.RequestServices.GetRequiredService<IActionDescriptorCollectionProvider>();
 
-            var actionContext = new ActionContext(context, routeData, actionDescriptor);
+            var actionSelector = context.RequestServices.GetRequiredService<IActionSelector>();
 
-            var actionInvokerFactory = context.RequestServices.GetRequiredService<IActionInvokerFactory>();
+            var routeContext = new RouteContext(context);
+            routeContext.RouteData = routeData;
 
-            var actionInvoker = actionInvokerFactory.CreateInvoker(actionContext);
+            // default selector can not select correct candidates for app api
+            //var candidates = actionSelector.SelectCandidates(routeContext);
 
-            await actionInvoker.InvokeAsync();
+            var displayName = GetDisplayName(values);
+            Log.Add($"app-api: {displayName}");
 
-            s.Stop();
-            var result = s.ElapsedMilliseconds;
-            _logger.LogInformation($"stv time needed: { result}");
+            // our custom selector for app api methods
+            var candidates = actionDescriptorCollectionProvider.ActionDescriptors.Items.Where(
+                i => string.Equals(i.DisplayName, displayName, StringComparison.OrdinalIgnoreCase)
+            ).ToList();
 
-            // execute the rest of the pipeline
-            await _next(context);
+            Log.Add(candidates.Count > 0
+                ? $"ok, have candidates: {candidates.Count}"
+                : $"error, missing candidates: {candidates.Count}");
+
+            try
+            {
+                Log.Add($"actionDescriptor SelectBestCandidate");
+                var actionDescriptor = actionSelector.SelectBestCandidate(routeContext, candidates);
+
+                var actionContext = new ActionContext(context, routeData, actionDescriptor);
+
+                var actionInvokerFactory = context.RequestServices.GetRequiredService<IActionInvokerFactory>();
+
+                var actionInvoker = actionInvokerFactory.CreateInvoker(actionContext);
+
+                Log.Add($"invoke app api");
+                await actionInvoker.InvokeAsync();
+            }
+            catch (Exception e)
+            {
+                Log.Exception(e);
+            }
+        }
+
+        private static string GetDisplayName(RouteValueDictionary values)
+        {
+            return $"{values["controllerTypeName"]}.{values["action"]} ({values["dllName"]}.dll)";
         }
     }
 }

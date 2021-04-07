@@ -135,8 +135,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 if (!_compiledAppApiControllers.TryAdd(apiFile, false))
                     return wrapLog($"Error, while adding key {apiFile} to concurrent dictionary, so will not register AppApi Controller to avoid duplicate controller routes.", values);
 
-                //// Register new AppApi Controller.
-                //AddController(dllName, assembly);
+                // Register new AppApi Controller.
+                AddController(dllName, assembly);
 
                 return wrapLog($"ok, Controller is compiled and added to ApplicationParts: {apiFile}.", values);
             }
