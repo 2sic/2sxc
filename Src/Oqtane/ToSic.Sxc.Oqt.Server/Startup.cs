@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Configuration;
@@ -10,9 +10,6 @@ using Newtonsoft.Json.Serialization;
 using Oqtane.Infrastructure;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Routing;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
@@ -87,10 +84,8 @@ namespace ToSic.Sxc.Oqt.Server
             // 2sxc Oqtane blob services for Imageflow.
             services.AddImageflowOqtaneBlobService();
 
-            services.AddSingleton<AppApiFileSystemWatcher>();
-            services.AddScoped<AppApiDynamicRouteValueTransformer>();
-            services.AddSingleton<IActionDescriptorChangeProvider>(AppApiActionDescriptorChangeProvider.Instance);
-            services.AddSingleton(AppApiActionDescriptorChangeProvider.Instance);
+            // 2sxc Oqtane dyncode app api.
+            services.AddAppApi();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -106,20 +101,28 @@ namespace ToSic.Sxc.Oqt.Server
             // endpoint mapping
             app.UseEndpoints(endpoints =>
             {
-                endpoints.Map("{alias}/api/sxc/app/{appFolder}/api/{controller}/{action}", UseAppApi);
-                endpoints.Map("{alias}/api/sxc/app/{appFolder}/{edition}/api/{controller}/{action}", UseAppApi);
-                //endpoints.MapDynamicControllerRoute<AppApiDynamicRouteValueTransformer>("{alias}/api/sxc/app/{appFolder}/api/{controller}/{action}", null, 0);
-                //endpoints.MapDynamicControllerRoute<AppApiDynamicRouteValueTransformer>("{alias}/api/sxc/app/{appFolder}/{edition}/api/{controller}/{action}", null, 1);
+                endpoints.Map("{alias}/api/sxc/app/{appFolder}/api/{controller}/{action}", AppApiMiddleware.UseAppApi);
+                endpoints.Map("{alias}/api/sxc/app/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.UseAppApi);
             });
         }
 
-        private async Task UseAppApi(HttpContext context)
-        {
-            var appApiMiddleware2 = new AppApiMiddleware();
-            var appApiDynamicRouteValueTransformer = context.RequestServices.GetService<AppApiDynamicRouteValueTransformer>();
-            await appApiMiddleware2.Invoke(context, appApiDynamicRouteValueTransformer);
-        }
+        //private async Task UseAppApi(HttpContext context)
+        //{
+        //    var appApiDynamicRouteValueTransformer = context.RequestServices.GetService<AppApiDynamicRouteValueTransformer>();
+        //    if (appApiDynamicRouteValueTransformer == null) return;
 
+        //    var values = await appApiDynamicRouteValueTransformer.TransformAsync(context, context.Request.RouteValues);
+
+        //    var appApiControllerManager = context.RequestServices.GetService<AppApiControllerManager>();
+        //    if (appApiControllerManager == null) return;
+
+        //    if (!await appApiControllerManager.PrepareController(values)) return;
+
+        //    var apiMiddleware = context.RequestServices.GetService<AppApiMiddleware>();
+        //    if (apiMiddleware == null) return;
+
+        //    await apiMiddleware.Invoke(context, values);
+        //}
 
         // Workaround because of initialization issues with razor pages
         //private static string _contentRootPath;

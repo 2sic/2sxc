@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using ToSic.Eav.Logging;
@@ -11,7 +12,7 @@ using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {
-    public class AppApiMiddleware: IHasLog
+    public class AppApiMiddleware : IHasLog
     {
         public AppApiMiddleware()
         {
@@ -21,11 +22,25 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
         public ILog Log { get; }
         protected string HistoryLogGroup { get; } = "app-api";
-        protected string HistoryLogName => "App.api.mdl";
+        protected static string HistoryLogName => "Middleware";
 
-        public async Task Invoke(HttpContext context, [FromServices] AppApiDynamicRouteValueTransformer appApiDynamicRouteValueTransformer)
+        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
+        public static async Task UseAppApi(HttpContext context)
         {
+            // Transform route values.
+            var appApiDynamicRouteValueTransformer = context.RequestServices.GetService<AppApiDynamicRouteValueTransformer>();
             var values = await appApiDynamicRouteValueTransformer.TransformAsync(context, context.Request.RouteValues);
+
+            // Compile and register dyncode app api controller.
+            var appApiControllerManager = context.RequestServices.GetService<AppApiControllerManager>();
+            if (!await appApiControllerManager.PrepareController(values)) return;
+
+            // Invoke controller action.
+            await new AppApiMiddleware().Invoke(context, values);
+        }
+
+        private async Task Invoke(HttpContext context, RouteValueDictionary values)
+        {
             Log.Add($"get values: {values.Count}");
 
             var routeData = new RouteData(values);
@@ -34,10 +49,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
             var actionSelector = context.RequestServices.GetRequiredService<IActionSelector>();
 
-            var routeContext = new RouteContext(context);
-            routeContext.RouteData = routeData;
+            var routeContext = new RouteContext(context)
+            {
+                RouteData = routeData
+            };
 
-            // default selector can not select correct candidates for app api
+            // default selector can not select correct candidates from dyncode app api
             //var candidates = actionSelector.SelectCandidates(routeContext);
 
             var displayName = GetDisplayName(values);
@@ -63,7 +80,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
                 var actionInvoker = actionInvokerFactory.CreateInvoker(actionContext);
 
-                Log.Add($"invoke app api");
+                Log.Add($"invoke app api action");
                 await actionInvoker.InvokeAsync();
             }
             catch (Exception e)
