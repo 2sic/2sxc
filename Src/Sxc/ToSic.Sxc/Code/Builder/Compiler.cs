@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.Loader;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -70,6 +71,10 @@ namespace ToSic.Sxc.Code.Builder
         //    }
         //}
 
+        // Ensure that can't be kept alive by stack slot references (real- or JIT-introduced locals).
+        // That could keep the SimpleUnloadableAssemblyLoadContext alive and prevent the unload.
+        [MethodImpl(MethodImplOptions.NoInlining)]
+
         public Assembly CompileSourceCode(string path, string sourceCode, string dllName)
         {
             var wrapLog = Log.Call($"Source code compilation: {dllName}.");
@@ -109,24 +114,23 @@ namespace ToSic.Sxc.Code.Builder
                         errors.Add($"{diagnostic.Id}: {diagnostic.GetMessage()}");
                     }
 
-                    // return null;
                     throw new Exception(String.Join("\n", errors));
                 }
 
                 wrapLog("Compilation done without any error.");
 
                 peStream.Seek(0, SeekOrigin.Begin);
-                // return peStream.ToArray();
                 pdbStream?.Seek(0, SeekOrigin.Begin);
 
-                var assembly = AssemblyLoadContext.Default.LoadFromStream(peStream, pdbStream);
+                var assemblyLoadContext = new SimpleUnloadableAssemblyLoadContext();
+                var assembly = assemblyLoadContext.LoadFromStream(peStream, pdbStream);
+
                 return assembly;
             }
         }
 
         public static CSharpCompilation GenerateCode(string path, SourceText sourceCode, string dllName)
         {
-            //var codeString = SourceText.From(sourceCode);
             var options = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp9);
 
             var parsedSyntaxTree = SyntaxFactory.ParseSyntaxTree(sourceCode, options, path);
