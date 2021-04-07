@@ -72,7 +72,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
             // Build new AppApi Controller
             Log.Add($"Compile assembly: {apiFile}, {dllName}");
-            //var assembly = new Compiler().CompileApiCode(apiFile, dllName, alias.SiteId, appFolder, edition);
             var assembly = new Compiler().Compile(apiFile, dllName);
 
             // Add new key to concurrent dictionary, before registering new AppAPi controller.
