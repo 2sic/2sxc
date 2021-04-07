@@ -28,7 +28,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     /// Custom base controller class for custom dynamic 2sxc app api controllers.
     /// It is without dependencies in class constructor, commonly provided with DI.
     /// </summary>
-    [ApiController]
     public abstract class ApiController : OqtControllerBase, IHasOqtaneDynamicCodeContext /*, DynamicApiController, IHttpController, IDisposable, IHasDynCodeContext, IDynamicWebApi, IDnnDynamicCode, IDynamicCode, ICreateInstance, ICompatibilityLevel, IHasLog, IDynamicCodeBeforeV10*/
     {
         protected IServiceProvider ServiceProvider { get; private set; }
