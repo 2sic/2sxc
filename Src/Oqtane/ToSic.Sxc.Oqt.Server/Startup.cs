@@ -106,24 +106,6 @@ namespace ToSic.Sxc.Oqt.Server
             });
         }
 
-        //private async Task UseAppApi(HttpContext context)
-        //{
-        //    var appApiDynamicRouteValueTransformer = context.RequestServices.GetService<AppApiDynamicRouteValueTransformer>();
-        //    if (appApiDynamicRouteValueTransformer == null) return;
-
-        //    var values = await appApiDynamicRouteValueTransformer.TransformAsync(context, context.Request.RouteValues);
-
-        //    var appApiControllerManager = context.RequestServices.GetService<AppApiControllerManager>();
-        //    if (appApiControllerManager == null) return;
-
-        //    if (!await appApiControllerManager.PrepareController(values)) return;
-
-        //    var apiMiddleware = context.RequestServices.GetService<AppApiMiddleware>();
-        //    if (apiMiddleware == null) return;
-
-        //    await apiMiddleware.Invoke(context, values);
-        //}
-
         // Workaround because of initialization issues with razor pages
         //private static string _contentRootPath;
 
