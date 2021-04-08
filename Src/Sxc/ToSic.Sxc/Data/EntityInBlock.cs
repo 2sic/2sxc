@@ -16,9 +16,6 @@ namespace ToSic.Sxc.Data
         }
 
 
-        public static EntityInBlock PlaceHolder(IEntity parent, string field)
-            => new EntityInBlock(Build.FakeEntity(parent.AppId), parent.EntityGuid, field, 0);
-
         /// <summary>
         /// Sort order in the content-group, because it's often accessed by index
         /// </summary>
