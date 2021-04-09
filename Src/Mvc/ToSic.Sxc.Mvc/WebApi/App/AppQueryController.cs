@@ -22,17 +22,24 @@ namespace ToSic.Sxc.Mvc.WebApi.App
         #endregion
 
 
-        public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(string name, bool includeGuid = false, string stream = null, int? appId = null)
-        {
-            throw new NotImplementedException();
-        }
+        [HttpGet("{name}")]
+        [HttpPost("{name}")]
+        public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(
+            string name,
+            AppQueryParameters more,
+            bool includeGuid = false,
+            string stream = null,
+            int? appId = null
+        ) => HttpContext.RequestServices.Build<AppQuery>().Init(Log).Query(appId, name, includeGuid, stream, more);
 
         [HttpGet("{name}")]
+        [HttpPost("{name}")]
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(
             string appPath,
             string name,
+            AppQueryParameters more,
             [FromQuery] string stream = null
-        ) => HttpContext.RequestServices.Build<AppQuery>().Init(Log).PublicQuery(appPath, name, stream);
+        ) => HttpContext.RequestServices.Build<AppQuery>().Init(Log).PublicQuery(appPath, name, stream, more);
 
     }
 }

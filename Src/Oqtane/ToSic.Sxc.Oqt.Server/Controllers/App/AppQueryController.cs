@@ -29,18 +29,22 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         #endregion
 
         [HttpGet("{appPath}/query/{name}/{default}")]
+        [HttpPost("{appPath}/query/{name}/{default}")]
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(
             [FromRoute] string appPath,
             [FromRoute] string name,
+            AppQueryParameters more,
             [FromQuery] string stream = null
-        ) => _appQuery.Value.Init(Log).PublicQuery(appPath, name, stream);
+        ) => _appQuery.Value.Init(Log).PublicQuery(appPath, name, stream, more);
 
         [HttpGet("auto/query/{name}/{default}")]
+        [HttpPost("auto/query/{name}/{default}")]
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(
             [FromRoute] string name,
+            AppQueryParameters more,
             [FromQuery] bool includeGuid = false,
             [FromQuery] string stream = null,
             [FromQuery] int? appId = null
-        ) => _appQuery.Value.Init(Log).Query(appId, name, includeGuid, stream);
+        ) => _appQuery.Value.Init(Log).Query(appId, name, includeGuid, stream, more);
     }
 }

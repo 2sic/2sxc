@@ -19,14 +19,24 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         #endregion
 
         [HttpGet]
-        [AllowAnonymous]   // will check security internally, so assume no requirements
-        public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query([FromUri] string name, [FromUri] bool includeGuid = false, [FromUri] string stream = null, [FromUri] int? appId = null) 
-            => GetService<AppQuery>().Init(Log).Query(appId, name, includeGuid, stream);
+        [HttpPost]
+        [AllowAnonymous] // will check security internally, so assume no requirements
+        public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query([FromUri] string name,
+            [FromBody] AppQueryParameters more,
+            [FromUri] bool includeGuid = false,
+            [FromUri] string stream = null,
+            [FromUri] int? appId = null
+        ) => GetService<AppQuery>().Init(Log).Query(appId, name, includeGuid, stream, more);
 
         [HttpGet]
-        [AllowAnonymous]   // will check security internally, so assume no requirements
-        public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery([FromUri] string appPath, [FromUri] string name, [FromUri] string stream = null) 
-            => GetService<AppQuery>().Init(Log).PublicQuery(appPath, name, stream);
+        [HttpPost]
+        [AllowAnonymous] // will check security internally, so assume no requirements
+        public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(
+            [FromUri] string appPath,
+            [FromUri] string name,
+            [FromBody] AppQueryParameters more,
+            [FromUri] string stream = null
+        ) => GetService<AppQuery>().Init(Log).PublicQuery(appPath, name, stream, more);
 
     }
 }

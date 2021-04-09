@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ToSic.Sxc.WebApi.App;
 
 namespace ToSic.Sxc.WebApi.PublicApi
 {
@@ -16,6 +17,7 @@ namespace ToSic.Sxc.WebApi.PublicApi
         /// Assumes that the context is given in the app-headers.
         /// </summary>
         /// <param name="name">Query name - ideally without spaces or special characters (required)</param>
+        /// <param name="more">Additional parameters / filters etc. which would not fit into the url</param>
         /// <param name="includeGuid">Include GUID IDs of the items retrieved (optional)</param>
         /// <param name="stream">Stream names - leave empty or * for all. Comma separated if multiple. (optional)</param>
         /// <param name="appId">AppId to use in case we want to specify an app (optional)</param>
@@ -23,7 +25,13 @@ namespace ToSic.Sxc.WebApi.PublicApi
         /// will check security internally, so assume the endpoint doesn't need to check security first
         /// </remarks>
         /// <returns></returns>
-        Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(string name, bool includeGuid = false, string stream = null, int? appId = null);
+        Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(
+            string name, 
+            AppQueryParameters more,
+            bool includeGuid = false, 
+            string stream = null, 
+            int? appId = null
+            );
 
         /// <summary>
         /// GET a public query from an app in a specific path.
@@ -32,11 +40,17 @@ namespace ToSic.Sxc.WebApi.PublicApi
         /// </summary>
         /// <param name="appPath">app-folder name (required)</param>
         /// <param name="name">Query name - ideally without spaces or special characters (required)</param>
+        /// <param name="more">Additional parameters / filters etc. which would not fit into the url</param>
         /// <param name="stream">Stream names - leave empty or * for all. Comma separated if multiple. (optional)</param>
         /// <remarks>
         /// will check security internally, so assume the endpoint doesn't need to check security first
         /// </remarks>
         /// <returns></returns>
-        Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(string appPath, string name, string stream = null);
+        Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(
+            string appPath, 
+            string name, 
+            AppQueryParameters more,
+            string stream = null
+        );
     }
 }
