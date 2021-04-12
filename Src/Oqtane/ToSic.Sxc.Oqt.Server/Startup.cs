@@ -101,8 +101,8 @@ namespace ToSic.Sxc.Oqt.Server
             // endpoint mapping
             app.UseEndpoints(endpoints =>
             {
-                endpoints.Map("{alias}/api/sxc/app/{appFolder}/api/{controller}/{action}", AppApiMiddleware.UseAppApi);
-                endpoints.Map("{alias}/api/sxc/app/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.UseAppApi);
+                endpoints.Map("{alias}/api/sxc/app/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map("{alias}/api/sxc/app/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
             });
         }
 

@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddSingleton<AppApiFileSystemWatcher>();
             services.AddScoped<AppApiDynamicRouteValueTransformer>();
             services.AddScoped<AppApiControllerManager>();
-            services.AddScoped<AppApiMiddleware>();
+            services.AddScoped<AppApiActionInvoker>();
 
             return services;
         }
