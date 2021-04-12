@@ -61,13 +61,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             var displayName = GetDisplayName(values);
             Log.Add($"app-api: {displayName}");
 
-
-            var anyValuesCount = GetAnyValuesCount(values);
-
             // our custom selector for app api methods
             var candidates = actionDescriptorCollectionProvider.ActionDescriptors.Items.Where(
                 i => string.Equals(i.DisplayName, displayName, StringComparison.OrdinalIgnoreCase)
-                                    && i.Parameters.Count(p => p?.BindingInfo?.BindingSource?.DisplayName !="Body") == anyValuesCount
             ).ToList();
 
             Log.Add(candidates.Count > 0
@@ -81,24 +77,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
                 var actionContext = new ActionContext(context, routeData, actionDescriptor);
 
-                //string template = actionContext.ActionDescriptor.AttributeRouteInfo.Template;
-                //string queryString = actionContext.HttpContext.Request.QueryString.Value;
-                //var routes = new RouteData(context.Request.RouteValues);
-                ////var routes = context.GetRouteData();
-                //var id = context.GetRouteValue("id");
-                //var id2 = routes?.Values["id"]?.ToString();
-
-                //var controllerContext = new ControllerContext(actionContext);
-
-                //if (!controllerContext.ActionDescriptor.RouteValues.TryGetValue("area", out var area))
-                //    controllerContext.ActionDescriptor.RouteValues.Add("area", (string)values["area"]);
-
-                // Map catch all route values as endpoint params.
-                NaiveRouteParametersMapping(values, actionDescriptor, routeData);
-
-                //var area = controllerContext.ActionDescriptor.RouteValues["area"];
-                //var actionName = controllerContext.ActionDescriptor.ActionName;
-                //var controllerName = controllerContext.ActionDescriptor.ControllerName;
+                // Map query string values as endpoint parameters.
+                MapQueryStringValuesAsEndpointParameters(actionContext, actionDescriptor, routeData);
 
                 var actionInvokerFactory = context.RequestServices.GetRequiredService<IActionInvokerFactory>();
 
@@ -113,23 +93,14 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             }
         }
 
-        private static void NaiveRouteParametersMapping(RouteValueDictionary values, ActionDescriptor actionDescriptor, RouteData routeData)
+        private static void MapQueryStringValuesAsEndpointParameters(ActionContext actionContext, ActionDescriptor actionDescriptor, RouteData routeData)
         {
-            var any = (string) values["any"];
-            if (string.IsNullOrWhiteSpace(any)) return;
-
-            var anyValues = any.Split("/").ToList();
-            for (var i = 0; i < actionDescriptor.Parameters.Count; i++)
+            foreach (var t in actionDescriptor.Parameters)
             {
-                var parameter = actionDescriptor.Parameters[i];
-                if (anyValues.Count > i) routeData.Values.TryAdd(parameter.Name, anyValues[i]);
+                var key = t.Name;
+                var value = actionContext.HttpContext.Request.Query[key];
+                routeData.Values.TryAdd(key, value);
             }
-        }
-
-        private static int GetAnyValuesCount(RouteValueDictionary values)
-        {
-            var any = (string)values["any"];
-            return string.IsNullOrWhiteSpace(any) ? 0 : any.Split("/").ToList().Count;
         }
 
         private static string GetDisplayName(RouteValueDictionary values)
