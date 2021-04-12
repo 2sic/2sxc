@@ -64,6 +64,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             // our custom selector for app api methods
             var candidates = actionDescriptorCollectionProvider.ActionDescriptors.Items.Where(
                 i => string.Equals(i.DisplayName, displayName, StringComparison.OrdinalIgnoreCase)
+                     // Ensure to have at least one HttpMethods attribute on the app api endpoint.
+                     && i.ActionConstraints != null
+                     && i.ActionConstraints.Any(c => (c.ToString() ?? "").Contains("HttpMethodActionConstraint"))
             ).ToList();
 
             Log.Add(candidates.Count > 0
