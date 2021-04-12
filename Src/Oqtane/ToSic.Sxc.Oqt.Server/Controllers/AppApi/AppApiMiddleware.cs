@@ -7,6 +7,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 
@@ -60,9 +61,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             var displayName = GetDisplayName(values);
             Log.Add($"app-api: {displayName}");
 
+
+            var anyValuesCount = GetAnyValuesCount(values);
+
             // our custom selector for app api methods
             var candidates = actionDescriptorCollectionProvider.ActionDescriptors.Items.Where(
                 i => string.Equals(i.DisplayName, displayName, StringComparison.OrdinalIgnoreCase)
+                                    && i.Parameters.Count(p => p?.BindingInfo?.BindingSource?.DisplayName !="Body") == anyValuesCount
             ).ToList();
 
             Log.Add(candidates.Count > 0
@@ -76,6 +81,25 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
                 var actionContext = new ActionContext(context, routeData, actionDescriptor);
 
+                //string template = actionContext.ActionDescriptor.AttributeRouteInfo.Template;
+                //string queryString = actionContext.HttpContext.Request.QueryString.Value;
+                //var routes = new RouteData(context.Request.RouteValues);
+                ////var routes = context.GetRouteData();
+                //var id = context.GetRouteValue("id");
+                //var id2 = routes?.Values["id"]?.ToString();
+
+                //var controllerContext = new ControllerContext(actionContext);
+
+                //if (!controllerContext.ActionDescriptor.RouteValues.TryGetValue("area", out var area))
+                //    controllerContext.ActionDescriptor.RouteValues.Add("area", (string)values["area"]);
+
+                // Map catch all route values as endpoint params.
+                NaiveRouteParametersMapping(values, actionDescriptor, routeData);
+
+                //var area = controllerContext.ActionDescriptor.RouteValues["area"];
+                //var actionName = controllerContext.ActionDescriptor.ActionName;
+                //var controllerName = controllerContext.ActionDescriptor.ControllerName;
+
                 var actionInvokerFactory = context.RequestServices.GetRequiredService<IActionInvokerFactory>();
 
                 var actionInvoker = actionInvokerFactory.CreateInvoker(actionContext);
@@ -87,6 +111,25 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             {
                 Log.Exception(e);
             }
+        }
+
+        private static void NaiveRouteParametersMapping(RouteValueDictionary values, ActionDescriptor actionDescriptor, RouteData routeData)
+        {
+            var any = (string) values["any"];
+            if (string.IsNullOrWhiteSpace(any)) return;
+
+            var anyValues = any.Split("/").ToList();
+            for (var i = 0; i < actionDescriptor.Parameters.Count; i++)
+            {
+                var parameter = actionDescriptor.Parameters[i];
+                if (anyValues.Count > i) routeData.Values.TryAdd(parameter.Name, anyValues[i]);
+            }
+        }
+
+        private static int GetAnyValuesCount(RouteValueDictionary values)
+        {
+            var any = (string)values["any"];
+            return string.IsNullOrWhiteSpace(any) ? 0 : any.Split("/").ToList().Count;
         }
 
         private static string GetDisplayName(RouteValueDictionary values)
