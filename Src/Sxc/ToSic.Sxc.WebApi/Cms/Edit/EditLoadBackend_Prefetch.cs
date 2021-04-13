@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.WebApi.Adam;
@@ -20,43 +19,6 @@ namespace ToSic.Sxc.WebApi.Cms
                 Adam = PrefetchAdam(appId, editData),
             };
         }
-
-        private Dictionary<string, string> PrefetchLinks(EditDto editData)
-        {
-            try
-            {
-                // Step 1: try to find hyperlink fields
-                var bundlesHavingLinks = BundleWithLinkFields(editData);
-
-                var links = bundlesHavingLinks.SelectMany(set
-                        => set.HyperlinkFields.SelectMany(h
-                            => h.Value?.Select(linkAttrib
-                                => new
-                                {
-                                    set.Guid,
-                                    Link = linkAttrib.Value
-                                })))
-                    .Where(set => set != null)
-                    // Step 2: Check which ones have a link reference
-                    .Where(set => ValueConverterBase.CouldBeReference(set.Link))
-                    .ToList();
-
-                // Step 3: Look them up
-                // Step 4: return dictionary with these
-                return links.ToDictionary(
-                    s => s.Link,
-                    s => _valueConverter.ToValue(s.Link, s.Guid)
-                );
-            }
-            catch
-            {
-                return new Dictionary<string, string>
-                {
-                    {"Error", "An error occurred pre-fetching the links"}
-                };
-            }
-        }
-
 
         private List<EntityForPickerDto> PrefetchEntities(int appId, EditDto editData)
         {
@@ -96,7 +58,7 @@ namespace ToSic.Sxc.WebApi.Cms
             }
         }
 
-        private Dictionary<string, IEnumerable<AdamItemDto>> PrefetchAdam(int appId, EditDto editData)
+        private Dictionary<string, Dictionary<string, IEnumerable<AdamItemDto>>> PrefetchAdam(int appId, EditDto editData)
         {
             // Step 1: try to find hyperlink fields
             var bundlesHavingLinks = BundleWithLinkFields(editData, true);
@@ -115,59 +77,38 @@ namespace ToSic.Sxc.WebApi.Cms
                 };
             });
 
-            var links = bundlesWithAllKeys.SelectMany(selector: bundle
-                    =>
-                {
-                    var set = bundle.Set;
-                    return bundle.Keys.Select(key
-                        =>
-                    {
-                        var adamListMaker = ServiceProvider.Build<IAdamTransGetItems>();
-                        adamListMaker.Init(appId, set.ContentTypeName, set.Guid, key, false, Log);
-                        return new
-                        {
-                            set.Guid,
-                            Key = key,
-                            Dic = adamListMaker.ItemsInField(string.Empty, false) as IEnumerable<AdamItemDto>,
-                        };
-                    });
-                })
-                // skip empty bits to avoid UI from relying on these nodes to always exist
-                .Where(r => r.Dic.Any())
-
-                // Step 2: Check which ones have a link reference
-                .ToDictionary(r => r.Key, r => r.Dic);
+            var links = bundlesWithAllKeys
+                .GroupBy(b => b.Set.Guid)
+                .ToDictionary(
+                    b => b.Key.ToString(),
+                    b =>
+                        b.SelectMany(selector: bundle =>
+                            {
+                                var set = bundle.Set;
+                                return bundle.Keys.Select(key =>
+                                {
+                                    var adamListMaker = ServiceProvider.Build<IAdamTransGetItems>();
+                                    adamListMaker.Init(appId, set.ContentTypeName, set.Guid, key, false, Log);
+                                    return new
+                                    {
+                                        Key = key,
+                                        Dic = adamListMaker.ItemsInField(string.Empty, false) as
+                                            IEnumerable<AdamItemDto>,
+                                    };
+                                });
+                            })
+                            // skip empty bits to avoid UI from relying on these nodes to always exist
+                            .Where(r => r.Dic.Any())
+                            // Make distinct by key - temporary disabled, as key = field and should never be duplicate
+                            //.GroupBy(r => r.Key)
+                            //.Select(g => g.First())
+                            // Step 2: Check which ones have a link reference
+                            .ToDictionary(r => r.Key, r => r.Dic)
+                        );
 
             return links;
         }
 
-        private static List<BundleWithLinkField> BundleWithLinkFields(EditDto editData, bool includeStringFields = false)
-        {
-            var bundlesHavingLinks = editData.Items
-                // Only these with hyperlinks
-                .Where(b =>
-                {
-                    var hasLinks = b.Entity?.Attributes?.Hyperlink?.Any() ?? false;
-                    var hasString = includeStringFields && (b.Entity?.Attributes?.String?.Any() ?? false);
-                    return hasLinks || hasString;
-                })
-                .Select(b => new BundleWithLinkField
-                {
-                    Guid = b.Entity.Guid,
-                    HyperlinkFields = b.Entity.Attributes.Hyperlink,
-                    StringFields = b.Entity.Attributes.String,
-                    ContentTypeName = b.Entity.Type.Name,
-                });
-            return bundlesHavingLinks.ToList();
-        }
-
-        private class BundleWithLinkField
-        {
-            public Guid Guid;
-            public Dictionary<string, Dictionary<string, string>> HyperlinkFields;
-            public Dictionary<string, Dictionary<string, string>> StringFields;
-            public string ContentTypeName;
-        }
-
     }
+    
 }
