@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -9,27 +10,26 @@ namespace ToSic.Sxc.WebApi.Cms
     public partial class EditLoadBackend
     {
 
-        private Dictionary<string, string> PrefetchLinks(EditDto editData)
+        private Dictionary<string, LinkInfoDto> PrefetchLinks(int appId, EditDto editData)
         {
             try
             {
                 // Step 1: try to find hyperlink fields
                 var bundlesHavingLinks = BundleWithLinkFields(editData);
 
-                var links = bundlesHavingLinks.SelectMany(set
-                        => set.HyperlinkFields.SelectMany(h
-                            => h.Value?.Select(linkAttrib
-                                => new
-                                {
-                                    Link = linkAttrib.Value,
-                                    Converted = TryToConvertOrErrorText(linkAttrib.Value, set.Guid),
-                                })))
+                var links = bundlesHavingLinks
+                    .SelectMany(set => set.HyperlinkFields
+                        .SelectMany(h => h.Value?.Select(linkAttrib => new
+                        {
+                            Link = linkAttrib.Value,
+                            Converted = TryToConvertOrErrorText(appId, set.ContentTypeName, h.Key, linkAttrib.Value, set.Guid),
+                        })))
                     .Where(set => set != null)
                     // Step 2: Check which ones have a link reference
                     .Where(set => ValueConverterBase.CouldBeReference(set.Link))
                     // Make distinct by Link
                     .GroupBy(l => l.Link)
-                    .Select( g=> g.First())
+                    .Select(g => g.First())
                     .ToList();
 
 
@@ -41,26 +41,26 @@ namespace ToSic.Sxc.WebApi.Cms
             }
             catch (Exception ex)
             {
-                return new Dictionary<string, string>
+                return new Dictionary<string, LinkInfoDto>
                 {
-                    {"Error", "An error occurred pre-fetching the links " + ex.Message}
+                    {"Error", new LinkInfoDto { Value = "An error occurred pre-fetching the links " + ex.Message } }
                 };
             }
         }
 
-        private string TryToConvertOrErrorText(string value, Guid entityGuid)
+        private LinkInfoDto TryToConvertOrErrorText(int appId, string contentType, string field, string value, Guid entityGuid)
         {
-            string converted;
             try
             {
-                converted = _valueConverter.ToValue(value, entityGuid);
+                var hlnkBackend = ServiceProvider.Build<HyperlinkBackend<int, int>>().Init(Log);
+                var result = hlnkBackend.LookupHyperlink(appId, value, contentType, entityGuid, field);
+                return result;// _valueConverter.ToValue(value, entityGuid);
             }
             catch
             {
-                converted = "error";
+                return new LinkInfoDto  { Value = "error" };
+                //return "error";
             }
-
-            return converted;
         }
 
 
@@ -86,6 +86,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         private class BundleWithLinkField
         {
+            public int AppId;
             public Guid Guid;
             public Dictionary<string, Dictionary<string, string>> HyperlinkFields;
             public Dictionary<string, Dictionary<string, string>> StringFields;

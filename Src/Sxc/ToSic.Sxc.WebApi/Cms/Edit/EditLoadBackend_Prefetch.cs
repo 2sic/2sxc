@@ -14,7 +14,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             return new EditPrefetchDto
             {
-                Links = PrefetchLinks(editData),
+                Links = PrefetchLinks(appId, editData),
                 Entities = PrefetchEntities(appId, editData),
                 Adam = PrefetchAdam(appId, editData),
             };
@@ -82,26 +82,13 @@ namespace ToSic.Sxc.WebApi.Cms
                 .ToDictionary(
                     b => b.Key.ToString(),
                     b =>
-                        b.SelectMany(selector: bundle =>
+                        b.SelectMany(selector: bundle => bundle.Keys.Select(key => new
                             {
-                                var set = bundle.Set;
-                                return bundle.Keys.Select(key =>
-                                {
-                                    var adamListMaker = ServiceProvider.Build<IAdamTransGetItems>();
-                                    adamListMaker.Init(appId, set.ContentTypeName, set.Guid, key, false, Log);
-                                    return new
-                                    {
-                                        Key = key,
-                                        Dic = adamListMaker.ItemsInField(string.Empty, false) as
-                                            IEnumerable<AdamItemDto>,
-                                    };
-                                });
-                            })
+                                Key = key,
+                                Dic = GetAdamListOfItems(appId, bundle.Set, key),
+                            }))
                             // skip empty bits to avoid UI from relying on these nodes to always exist
                             .Where(r => r.Dic.Any())
-                            // Make distinct by key - temporary disabled, as key = field and should never be duplicate
-                            //.GroupBy(r => r.Key)
-                            //.Select(g => g.First())
                             // Step 2: Check which ones have a link reference
                             .ToDictionary(r => r.Key, r => r.Dic)
                         );
@@ -109,6 +96,13 @@ namespace ToSic.Sxc.WebApi.Cms
             return links;
         }
 
+        private IEnumerable<AdamItemDto> GetAdamListOfItems(int appId, BundleWithLinkField set, string key)
+        {
+            var adamListMaker = ServiceProvider.Build<IAdamTransGetItems>();
+            adamListMaker.Init(appId, set.ContentTypeName, set.Guid, key, false, Log);
+            var dic = adamListMaker.ItemsInField(string.Empty, false) as IEnumerable<AdamItemDto>;
+            return dic;
+        }
     }
     
 }
