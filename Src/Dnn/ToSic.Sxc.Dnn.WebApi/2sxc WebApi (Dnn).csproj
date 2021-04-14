@@ -122,6 +122,7 @@
     <Compile Include="Dnn\WebApi\Admin\AppPartsController.cs" />
     <Compile Include="Dnn\WebApi\Admin\FieldController.cs" />
     <Compile Include="Dnn\WebApi\Admin\FeaturesController.cs" />
+    <Compile Include="Dnn\WebApi\Admin\ApiExplorerController.cs" />
     <Compile Include="Dnn\WebApi\Admin\ZoneController.cs" />
     <Compile Include="Dnn\WebApi\Cms\BlockController.cs" />
     <Compile Include="Dnn\WebApi\Cms\ListController.cs" />
