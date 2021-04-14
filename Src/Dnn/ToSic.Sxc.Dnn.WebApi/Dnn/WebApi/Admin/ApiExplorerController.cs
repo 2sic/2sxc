@@ -1,4 +1,5 @@
 ﻿using DotNetNuke.Common.Utilities;
+using DotNetNuke.Web.Api;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,9 +11,6 @@ using System.Text;
 using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Http;
-using System.Web.Http.Controllers;
-using DotNetNuke.Web.Api;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApiRouting;
@@ -29,15 +27,15 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
         public HttpResponseMessage GetAppApi(string controllerPath)
         {
-            var log = new Log("Api.Explorer", null, Request?.RequestUri?.AbsoluteUri);
-            var wrapLog = log.Call<HttpResponseMessage>();
+            Log.Add($"Api.Explorer path: {Request?.RequestUri?.AbsoluteUri}");
+            var wrapLog = Log.Call<HttpResponseMessage>();
 
-            log.Add($"Controller Path from appRoot: {controllerPath}");
+            Log.Add($"Controller Path from appRoot: {controllerPath}");
 
             try
             {
                 var controllerVirtualPath = Path.Combine(GetAppFolderRelative(), controllerPath);
-                log.Add($"Controller Virtual Path: {controllerVirtualPath}");
+                Log.Add($"Controller Virtual Path: {controllerVirtualPath}");
 
                 if (!File.Exists(HostingEnvironment.MapPath(controllerVirtualPath)))
                 {
@@ -104,9 +102,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
         private string GetAppFolderRelative()
         {
-            var log = new Log("Api.Explorer.AppFolder", null, Request?.RequestUri?.AbsoluteUri);
-
-            var wrapLog = log.Call<string>();
+            var wrapLog = Log.Call<string>();
 
             var routeData = Request.GetRouteData();
 
@@ -119,12 +115,12 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
                 // only check for app folder if we don't have a context
                 if (appFolder == null)
                 {
-                    log.Add("no folder found in url, will auto-detect");
-                    var block = Eav.Factory.StaticBuild<DnnGetBlock>().GetCmsBlock(Request, log);
+                    Log.Add("no folder found in url, will auto-detect");
+                    var block = Eav.Factory.StaticBuild<DnnGetBlock>().GetCmsBlock(Request, Log);
                     appFolder = block?.App?.Folder;
                 }
 
-                log.Add($"App Folder: {appFolder}");
+                Log.Add($"App Folder: {appFolder}");
             }
             catch (Exception getBlockException)
             {
