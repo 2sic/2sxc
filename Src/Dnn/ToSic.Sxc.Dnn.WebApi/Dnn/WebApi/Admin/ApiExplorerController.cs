@@ -10,9 +10,9 @@ using System.Text;
 using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Http;
-using System.Web.Http.Controllers;
+using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Helpers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApiRouting;
@@ -20,6 +20,8 @@ using ToSic.Sxc.Dnn.WebApiRouting;
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
     [AllowAnonymous]
+    [ValidateAntiForgeryToken]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public class ApiExplorerController : DnnApiControllerWithFixes
     {
         protected override string HistoryLogName => "Api.Explorer";
@@ -27,46 +29,67 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         private const string ErrPrefix = "Api Explorer Controller Finder Error: ";
         private const string ErrSuffix = "Check event-log, code and inner exception. ";
 
-        public HttpResponseMessage GetAppApi(string controllerPath)
+        [HttpGet]
+        public HttpResponseMessage Inspect(string path)
         {
-            var log = new Log("Api.Explorer", null, Request?.RequestUri?.AbsoluteUri);
-            var wrapLog = log.Call<HttpResponseMessage>();
+            // @STV: most classes have a Log, you should not really create a new one because it will be missing in the insights
+            //var log = new Log("Api.Explorer", null, Request?.RequestUri?.AbsoluteUri);
+            
+            var wrapLog = Log.Call<HttpResponseMessage>();
 
-            log.Add($"Controller Path from appRoot: {controllerPath}");
+            Log.Add($"Controller Path from appRoot: {path}");
+
+            if (string.IsNullOrWhiteSpace(path) || path.Contains(".."))
+            {
+                var msg = $"Error: bad parameter {path}";
+                return wrapLog(msg, Request.CreateErrorResponse(HttpStatusCode.InternalServerError, msg));
+            }
+
+            // Ensure make windows path slashes to make later work easier
+            path = path.Backslash();
+            
 
             try
             {
-                var controllerVirtualPath = Path.Combine(GetAppFolderRelative(), controllerPath);
-                log.Add($"Controller Virtual Path: {controllerVirtualPath}");
+                var controllerVirtualPath = Path.Combine(GetAppFolderRelative(), path);
+                Log.Add($"Controller Virtual Path: {controllerVirtualPath}");
 
                 if (!File.Exists(HostingEnvironment.MapPath(controllerVirtualPath)))
                 {
-                    return wrapLog($"Error: can't find controller {controllerVirtualPath}", Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error: can't find controller."));
+                    var msg = $"Error: can't find controller {controllerVirtualPath}";
+                    return wrapLog(msg, Request.CreateErrorResponse(HttpStatusCode.InternalServerError, msg));
                 }
 
                 var assembly = BuildManager.GetCompiledAssembly(controllerVirtualPath);
 
-                var apiControllers = assembly.DefinedTypes.Where(a =>
-                    a.BaseType == typeof(ApiController)
-                    || a.BaseType == typeof(DnnApiController));
+                // @STV - Had to optimize to only get the type which has the name of the controller-class file, not all classes
+                // also don't just get our ApiControllers - any valid API controller would do
+                //var apiControllers = assembly.DefinedTypes.Where(a =>
+                //    a.BaseType == typeof(ApiController)
+                //    || a.BaseType == typeof(DnnApiController));
+                
+                var controllerName = path.Substring(path.LastIndexOf('\\') + 1);
+                controllerName = controllerName.Substring(0, controllerName.IndexOf('.'));
+                var controller = assembly.DefinedTypes.FirstOrDefault(a => controllerName.Equals(a.Name, StringComparison.InvariantCultureIgnoreCase));
 
-                var json = apiControllers.Select(controller => new
+                var controllerDto = controller == null ? null : new
                 {
                     controller = controller.Name,
-                    methods = controller.GetMethods().Where(methodInfo => methodInfo.IsPublic && !methodInfo.IsSpecialName && GetHttpVerbs(methodInfo).Count > 0).Select(methodInfo => new
+                    actions = controller.GetMethods().Where(methodInfo => methodInfo.IsPublic && !methodInfo.IsSpecialName && GetHttpVerbs(methodInfo).Count > 0).Select(methodInfo => new
                     {
-                        action = methodInfo.Name,
-                        httpMethods = GetHttpVerbs(methodInfo),
-                        parametres = methodInfo.GetParameters().Select(p => new
+                        name = methodInfo.Name,
+                        verbs = GetHttpVerbs(methodInfo).Select(m => m.ToUpperInvariant()),
+                        parameters = methodInfo.GetParameters().Select(p => new
                         {
                             name = p.Name,
-                            type = p.ParameterType.FullName,
+                            type = JsTypeName(p.ParameterType),
                             defaultValue = p.DefaultValue,
-                            isOptional = p.IsOptional
+                            isOptional = p.IsOptional,
                         }),
-                        returnType = methodInfo.ReturnType.FullName,
+                        returns = JsTypeName(methodInfo.ReturnType),
                     })
-                }).ToJson();
+                };
+                var json = controllerDto.ToJson();
 
                 var responseMessage = Request.CreateResponse(HttpStatusCode.OK);
 
@@ -84,29 +107,63 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         {
             var httpMethods = new List<string>();
 
-            var getAttribute = methodInfo.GetCustomAttributes(typeof(HttpGetAttribute)).FirstOrDefault() as HttpGetAttribute;
-            if (getAttribute != null) httpMethods.Add(getAttribute.HttpMethods[0].Method.ToUpperInvariant());
+            // @STV - better use pattern matching, shorter, simpler (Resharper) - before was more like this:
+            //var acceptVerbsAttribute = methodInfo.GetCustomAttributes(typeof(AcceptVerbsAttribute)).FirstOrDefault() as AcceptVerbsAttribute;
+            //if (acceptVerbsAttribute != null) httpMethods.AddRange(acceptVerbsAttribute.HttpMethods.Select(m => m.Method));
 
-            var postAttribute = methodInfo.GetCustomAttributes(typeof(HttpPostAttribute)).FirstOrDefault() as HttpPostAttribute;
-            if (postAttribute != null) httpMethods.Add(postAttribute.HttpMethods[0].Method.ToUpperInvariant());
+            if (methodInfo.GetCustomAttributes(typeof(HttpGetAttribute)).FirstOrDefault() is HttpGetAttribute getAttribute) 
+                httpMethods.Add(getAttribute.HttpMethods[0].Method);
 
-            var putAttribute = methodInfo.GetCustomAttributes(typeof(HttpPutAttribute)).FirstOrDefault() as HttpPutAttribute;
-            if (putAttribute != null) httpMethods.Add(putAttribute.HttpMethods[0].Method.ToUpperInvariant());
+            if (methodInfo.GetCustomAttributes(typeof(HttpPostAttribute)).FirstOrDefault() is HttpPostAttribute postAttribute) 
+                httpMethods.Add(postAttribute.HttpMethods[0].Method);
 
-            var deleteAttribute = methodInfo.GetCustomAttributes(typeof(HttpDeleteAttribute)).FirstOrDefault() as HttpDeleteAttribute;
-            if (deleteAttribute != null) httpMethods.Add(deleteAttribute.HttpMethods[0].Method.ToUpperInvariant());
+            if (methodInfo.GetCustomAttributes(typeof(HttpPutAttribute)).FirstOrDefault() is HttpPutAttribute putAttribute)
+                httpMethods.Add(putAttribute.HttpMethods[0].Method);
 
-            var acceptVerbsAttribute = methodInfo.GetCustomAttributes(typeof(AcceptVerbsAttribute)).FirstOrDefault() as AcceptVerbsAttribute;
-            if (acceptVerbsAttribute != null) httpMethods.AddRange(acceptVerbsAttribute.HttpMethods.Select(m => m.Method.ToUpperInvariant()));
+            if (methodInfo.GetCustomAttributes(typeof(HttpDeleteAttribute)).FirstOrDefault() is HttpDeleteAttribute deleteAttribute)
+                httpMethods.Add(deleteAttribute.HttpMethods[0].Method);
+
+            if (methodInfo.GetCustomAttributes(typeof(AcceptVerbsAttribute)).FirstOrDefault() is AcceptVerbsAttribute acceptVerbsAttribute)
+                httpMethods.AddRange(acceptVerbsAttribute.HttpMethods.Select(m => m.Method));
 
             return httpMethods;
         }
 
+        /// <summary>
+        /// Give common type names a simple naming and only return the original for more complex types
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private string JsTypeName(Type type)
+        {
+            if (type.IsGenericType)
+            {
+                var mainName = type.Name;
+                if (mainName.Contains("`")) mainName = mainName.Substring(0, mainName.IndexOf('`'));
+                var parts = type.GenericTypeArguments.Select(t => JsTypeName(t));
+                return $"{mainName}<{string.Join(", ", parts)}>";
+            }
+
+            if (type.IsArray) return JsTypeName(type.GetElementType()) + "[]";
+            
+            if (type == typeof(string)) return "string";
+            if (type == typeof(int)) return "int";
+            if (type == typeof(long)) return "long int";
+            if (type == typeof(decimal)) return "decimal";
+            if (type == typeof(float)) return "float";
+            if (type == typeof(bool)) return "boolean";
+            if (type == typeof(DateTime)) return "datetime as string";
+            if (type == typeof(Guid)) return "guid as string";
+            // in case we don't know let's just return the hardcore name
+            return type.FullName;
+        }
+
+        // @STV - this feels like very duplicate code 
         private string GetAppFolderRelative()
         {
-            var log = new Log("Api.Explorer.AppFolder", null, Request?.RequestUri?.AbsoluteUri);
+            //var log = new Log("Api.Explorer.AppFolder", null, Request?.RequestUri?.AbsoluteUri);
 
-            var wrapLog = log.Call<string>();
+            var wrapLog = Log.Call<string>();
 
             var routeData = Request.GetRouteData();
 
@@ -119,12 +176,12 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
                 // only check for app folder if we don't have a context
                 if (appFolder == null)
                 {
-                    log.Add("no folder found in url, will auto-detect");
-                    var block = Eav.Factory.StaticBuild<DnnGetBlock>().GetCmsBlock(Request, log);
+                    Log.Add("no folder found in url, will auto-detect");
+                    var block = Eav.Factory.StaticBuild<DnnGetBlock>().GetCmsBlock(Request, Log);
                     appFolder = block?.App?.Folder;
                 }
 
-                log.Add($"App Folder: {appFolder}");
+                Log.Add($"App Folder: {appFolder}");
             }
             catch (Exception getBlockException)
             {
