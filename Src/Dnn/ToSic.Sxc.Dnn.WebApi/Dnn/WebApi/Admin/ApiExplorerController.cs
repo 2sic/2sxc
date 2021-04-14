@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
                 var json = apiControllers.Select(controller => new
                 {
                     controller = controller.Name,
-                    methods = controller.GetMethods().Where(methodInfo => methodInfo.IsPublic && !methodInfo.IsSpecialName).Select(methodInfo => new
+                    methods = controller.GetMethods().Where(methodInfo => methodInfo.IsPublic && !methodInfo.IsSpecialName && GetHttpVerbs(methodInfo).Count > 0).Select(methodInfo => new
                     {
                         action = methodInfo.Name,
                         httpMethods = GetHttpVerbs(methodInfo),
