@@ -1,6 +1,7 @@
 ﻿using DotNetNuke.Common.Utilities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -9,7 +10,12 @@ using System.Text;
 using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Http;
+using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.Logging.Simple;
+using ToSic.Sxc.Code;
+using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Dnn.WebApiRouting;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
@@ -18,11 +24,27 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     {
         protected override string HistoryLogName => "Api.Explorer";
 
+        private const string ErrPrefix = "Api Explorer Controller Finder Error: ";
+        private const string ErrSuffix = "Check event-log, code and inner exception. ";
+
         public HttpResponseMessage GetAppApi(string controllerPath)
         {
+            var log = new Log("Api.Explorer", null, Request?.RequestUri?.AbsoluteUri);
+            var wrapLog = log.Call<HttpResponseMessage>();
+
+            log.Add($"Controller Path from appRoot: {controllerPath}");
+
             try
             {
-                var assembly = BuildManager.GetCompiledAssembly(controllerPath);
+                var controllerVirtualPath = Path.Combine(GetAppFolderRelative(), controllerPath);
+                log.Add($"Controller Virtual Path: {controllerVirtualPath}");
+
+                if (!File.Exists(HostingEnvironment.MapPath(controllerVirtualPath)))
+                {
+                    return wrapLog($"Error: can't find controller {controllerVirtualPath}", Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error: can't find controller."));
+                }
+
+                var assembly = BuildManager.GetCompiledAssembly(controllerVirtualPath);
 
                 var apiControllers = assembly.DefinedTypes.Where(a =>
                     a.BaseType == typeof(ApiController)
@@ -50,11 +72,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
                 responseMessage.Content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                return responseMessage;
+                return wrapLog("ok", responseMessage);
             }
             catch (Exception exc)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exc);
+                return wrapLog($"Error: {exc.Message}.", Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exc));
             }
         }
 
@@ -78,6 +100,59 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             if (acceptVerbsAttribute != null) httpMethods.AddRange(acceptVerbsAttribute.HttpMethods.Select(m => m.Method.ToUpperInvariant()));
 
             return httpMethods;
+        }
+
+        private string GetAppFolderRelative()
+        {
+            var log = new Log("Api.Explorer.AppFolder", null, Request?.RequestUri?.AbsoluteUri);
+
+            var wrapLog = log.Call<string>();
+
+            var routeData = Request.GetRouteData();
+
+            // Figure out the Path, or show error for that.
+            string appFolder = null;
+            try
+            {
+                appFolder = Route.AppPathOrNull(routeData);
+
+                // only check for app folder if we don't have a context
+                if (appFolder == null)
+                {
+                    log.Add("no folder found in url, will auto-detect");
+                    var block = Eav.Factory.StaticBuild<DnnGetBlock>().GetCmsBlock(Request, log);
+                    appFolder = block?.App?.Folder;
+                }
+
+                log.Add($"App Folder: {appFolder}");
+            }
+            catch (Exception getBlockException)
+            {
+                const string msg = ErrPrefix + "Trying to find app name, unexpected error - possibly bad/invalid headers. " + ErrSuffix;
+                throw ReportToLogAndThrow(Request, HttpStatusCode.BadRequest, getBlockException, msg, wrapLog);
+            }
+
+            if (string.IsNullOrWhiteSpace(appFolder))
+            {
+                const string msg = ErrPrefix + "App name is unknown - tried to check name in url (.../app/[app-name]/...) " +
+                                   "and tried app-detection using url-params/headers pageid/moduleid. " + ErrSuffix;
+                throw ReportToLogAndThrow(Request, HttpStatusCode.BadRequest, new Exception(msg), msg, wrapLog);
+            }
+
+            var tenant = Eav.Factory.StaticBuild<DnnSite>();
+            var appFolderRelative = Path.Combine(tenant.AppsRootRelative, appFolder);
+            appFolderRelative = appFolderRelative.Replace("\\", @"/");
+
+            return wrapLog($"Ok, App Folder Relative: {appFolderRelative}", appFolderRelative);
+        }
+
+        private static HttpResponseException ReportToLogAndThrow(HttpRequestMessage request, HttpStatusCode code, Exception e, string msg, Func<string, string, string> wrapLog)
+        {
+            var helpText = ErrorHelp.HelpText(e);
+            var exception = new Exception(msg + helpText, e);
+            DotNetNuke.Services.Exceptions.Exceptions.LogException(exception);
+            wrapLog("error", null);
+            return new HttpResponseException(request.CreateErrorResponse(code, exception.Message, e));
         }
 
         //public HttpResponseMessage Get(string relativePath = "")
