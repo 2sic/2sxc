@@ -12,7 +12,6 @@ using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Http;
 using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
 using ToSic.Eav.Helpers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Run;
