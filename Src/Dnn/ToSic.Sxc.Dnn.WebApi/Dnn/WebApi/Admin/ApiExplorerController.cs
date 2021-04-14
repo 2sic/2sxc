@@ -19,7 +19,6 @@ using ToSic.Sxc.Dnn.WebApiRouting;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
-    [AllowAnonymous]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public class ApiExplorerController : DnnApiControllerWithFixes
@@ -62,7 +61,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
                 var assembly = BuildManager.GetCompiledAssembly(controllerVirtualPath);
 
-                // @STV - Had to optimize to only get the type which has the name of the controller-class file, not all classes
+                // @STV - I Had to optimize to only get the type which has the name of the controller-class file, not all classes
                 // also don't just get our ApiControllers - any valid API controller would do
                 //var apiControllers = assembly.DefinedTypes.Where(a =>
                 //    a.BaseType == typeof(ApiController)
@@ -72,6 +71,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
                 controllerName = controllerName.Substring(0, controllerName.IndexOf('.'));
                 var controller = assembly.DefinedTypes.FirstOrDefault(a => controllerName.Equals(a.Name, StringComparison.InvariantCultureIgnoreCase));
 
+                // TODO: @STV pls assemble a SecurityDtoTemp for the class...
+                
                 var controllerDto = controller == null ? null : new
                 {
                     controller = controller.Name,
@@ -85,22 +86,32 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
                             type = JsTypeName(p.ParameterType),
                             defaultValue = p.DefaultValue,
                             isOptional = p.IsOptional,
+                            isBody = IsBody(p),
+                            // TODO: @STV PLS GET the security for the current method, and merge correctly with the class-security
+                            // to then give each method the full security info that applies to it
+                            // eg: if class has require-verification then the method requires it too
+                            // eg: if class doesn't have allow-anonymous and method has it, it still won't happen because the class prevents it (i think...)
+                            security = new SecurityDtoTemp(),
                         }),
                         returns = JsTypeName(methodInfo.ReturnType),
                     })
                 };
-                var json = controllerDto.ToJson();
 
                 var responseMessage = Request.CreateResponse(HttpStatusCode.OK);
-
-                responseMessage.Content = new StringContent(json, Encoding.UTF8, "application/json");
-
+                responseMessage.Content = new StringContent(controllerDto.ToJson(), Encoding.UTF8, "application/json");
                 return wrapLog("ok", responseMessage);
             }
             catch (Exception exc)
             {
                 return wrapLog($"Error: {exc.Message}.", Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exc));
             }
+        }
+
+        #region Inspect parameters / attributes
+
+        private static bool IsBody(ParameterInfo paramInfo)
+        {
+            return paramInfo.CustomAttributes.Any(ca => ca.AttributeType == typeof(FromBodyAttribute));
         }
 
         private static List<string> GetHttpVerbs(MethodInfo methodInfo)
@@ -129,6 +140,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             return httpMethods;
         }
 
+        #endregion
+
         /// <summary>
         /// Give common type names a simple naming and only return the original for more complex types
         /// </summary>
@@ -136,6 +149,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <returns></returns>
         private string JsTypeName(Type type)
         {
+            // Case 1: Generic type - get the main type and then recursively get the nice names for the parts
             if (type.IsGenericType)
             {
                 var mainName = type.Name;
@@ -144,8 +158,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
                 return $"{mainName}<{string.Join(", ", parts)}>";
             }
 
+            // Case 2: Array - get inner type and add []
             if (type.IsArray) return JsTypeName(type.GetElementType()) + "[]";
             
+            // Case 3: Most common basic types
             if (type == typeof(string)) return "string";
             if (type == typeof(int)) return "int";
             if (type == typeof(long)) return "long int";
@@ -154,15 +170,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             if (type == typeof(bool)) return "boolean";
             if (type == typeof(DateTime)) return "datetime as string";
             if (type == typeof(Guid)) return "guid as string";
-            // in case we don't know let's just return the hardcore name
+            
+            // Case 4: Unknown - in case we don't know let's just return the difficult name
             return type.FullName;
         }
 
         // @STV - this feels like very duplicate code 
         private string GetAppFolderRelative()
         {
-            //var log = new Log("Api.Explorer.AppFolder", null, Request?.RequestUri?.AbsoluteUri);
-
             var wrapLog = Log.Call<string>();
 
             var routeData = Request.GetRouteData();
@@ -178,6 +193,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
                 {
                     Log.Add("no folder found in url, will auto-detect");
                     var block = Eav.Factory.StaticBuild<DnnGetBlock>().GetCmsBlock(Request, Log);
+                    // TODO: @STV - probably better to just use App.PhysicalPath - pls check - will probably make everything easier
                     appFolder = block?.App?.Folder;
                 }
 
@@ -249,4 +265,18 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         //    }
         //}
     }
+
+
+    public class SecurityDtoTemp
+    {
+        public bool? allowAnonymous { get; set; }
+        public bool? requireVerificationToken { get; set; }
+
+        public bool? superUser { get; set; }
+
+        public bool? admin { get; set; }
+
+    }
 }
+
+
