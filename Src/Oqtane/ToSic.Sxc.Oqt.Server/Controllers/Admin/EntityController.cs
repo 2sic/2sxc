@@ -55,14 +55,14 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <returns></returns>
         [HttpGet]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
         public IEnumerable<Dictionary<string, object>> List(int appId, string contentType)
             => _lazyEntityApi.Value.InitOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.ReadSomething, Log)
                 .GetEntitiesForAdmin(contentType);
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
         public void Delete([FromQuery] string contentType, [FromQuery] int? id, [FromQuery] Guid? guid, [FromQuery] int appId, [FromQuery] bool force = false)
         {
             if (id.HasValue) _lazyEntityApi.Value.InitOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)

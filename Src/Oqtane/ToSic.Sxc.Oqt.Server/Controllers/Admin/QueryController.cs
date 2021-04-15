@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     /// Proxy Class to the EAV PipelineDesignerController (Web API Controller)
     /// </summary>
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+    [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
     public class QueryController : OqtStatefulControllerBase, IQueryController
     {

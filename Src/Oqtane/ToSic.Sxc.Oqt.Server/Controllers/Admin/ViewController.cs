@@ -41,19 +41,19 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [HttpGet]
         //[SupportedModules("2sxc,2sxc-app")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
         public IEnumerable<ViewDetailsDto> All(int appId) => Backend.GetAll(appId);
 
         [HttpGet]
         //[SupportedModules("2sxc,2sxc-app")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
         public PolymorphismDto Polymorphism(int appId) => HttpContext.RequestServices.Build<PolymorphismBackend>().Init(Log).Polymorphism(appId);
 
         [HttpGet, HttpDelete]
         //[SupportedModules("2sxc,2sxc-app")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
         public bool Delete(int appId, int id) => Backend.Delete(appId, id);
 
         [HttpGet]
@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
         public ImportResultDto Import(int zoneId, int appId)
         {
             var wrapLog = Log.Call<ImportResultDto>();

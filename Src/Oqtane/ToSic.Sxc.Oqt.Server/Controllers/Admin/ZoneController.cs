@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     /// This one supplies portal-wide (or cross-portal) settings / configuration
     /// </summary>
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+    [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
     public class ZoneController : OqtStatefulControllerBase
     {
