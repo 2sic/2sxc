@@ -31,9 +31,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         public HttpResponseMessage Inspect(string path)
         {
-            // @STV: most classes have a Log, you should not really create a new one because it will be missing in the insights
-            //var log = new Log("Api.Explorer", null, Request?.RequestUri?.AbsoluteUri);
-            
             var wrapLog = Log.Call<HttpResponseMessage>();
 
             Log.Add($"Controller Path from appRoot: {path}");
@@ -46,7 +43,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
             // Ensure make windows path slashes to make later work easier
             path = path.Backslash();
-            
 
             try
             {
@@ -61,18 +57,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
                 var assembly = BuildManager.GetCompiledAssembly(controllerVirtualPath);
 
-                // @STV - I Had to optimize to only get the type which has the name of the controller-class file, not all classes
-                // also don't just get our ApiControllers - any valid API controller would do
-                //var apiControllers = assembly.DefinedTypes.Where(a =>
-                //    a.BaseType == typeof(ApiController)
-                //    || a.BaseType == typeof(DnnApiController));
-                
+
+                // STV: check for case when file name is not the same as the controller name.
                 var controllerName = path.Substring(path.LastIndexOf('\\') + 1);
                 controllerName = controllerName.Substring(0, controllerName.IndexOf('.'));
                 var controller = assembly.DefinedTypes.FirstOrDefault(a => controllerName.Equals(a.Name, StringComparison.InvariantCultureIgnoreCase));
 
-                // TODO: @STV pls assemble a SecurityDtoTemp for the class...
-                
+                // TODO: @STV pls assemble a SecurityDto for the class...
+
                 var controllerDto = controller == null ? null : new
                 {
                     controller = controller.Name,
@@ -87,12 +79,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
                             defaultValue = p.DefaultValue,
                             isOptional = p.IsOptional,
                             isBody = IsBody(p),
-                            // TODO: @STV PLS GET the security for the current method, and merge correctly with the class-security
-                            // to then give each method the full security info that applies to it
-                            // eg: if class has require-verification then the method requires it too
-                            // eg: if class doesn't have allow-anonymous and method has it, it still won't happen because the class prevents it (i think...)
-                            security = new SecurityDtoTemp(),
                         }),
+                        security = GetSecurity(controller, methodInfo),
                         returns = JsTypeName(methodInfo.ReturnType),
                     })
                 };
@@ -118,14 +106,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         {
             var httpMethods = new List<string>();
 
-            // @STV - better use pattern matching, shorter, simpler (Resharper) - before was more like this:
-            //var acceptVerbsAttribute = methodInfo.GetCustomAttributes(typeof(AcceptVerbsAttribute)).FirstOrDefault() as AcceptVerbsAttribute;
-            //if (acceptVerbsAttribute != null) httpMethods.AddRange(acceptVerbsAttribute.HttpMethods.Select(m => m.Method));
-
-            if (methodInfo.GetCustomAttributes(typeof(HttpGetAttribute)).FirstOrDefault() is HttpGetAttribute getAttribute) 
+            if (methodInfo.GetCustomAttributes(typeof(HttpGetAttribute)).FirstOrDefault() is HttpGetAttribute getAttribute)
                 httpMethods.Add(getAttribute.HttpMethods[0].Method);
 
-            if (methodInfo.GetCustomAttributes(typeof(HttpPostAttribute)).FirstOrDefault() is HttpPostAttribute postAttribute) 
+            if (methodInfo.GetCustomAttributes(typeof(HttpPostAttribute)).FirstOrDefault() is HttpPostAttribute postAttribute)
                 httpMethods.Add(postAttribute.HttpMethods[0].Method);
 
             if (methodInfo.GetCustomAttributes(typeof(HttpPutAttribute)).FirstOrDefault() is HttpPutAttribute putAttribute)
@@ -138,6 +122,47 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
                 httpMethods.AddRange(acceptVerbsAttribute.HttpMethods.Select(m => m.Method));
 
             return httpMethods;
+        }
+
+        private static SecurityDto GetSecurity(TypeInfo controllerInfo, MethodInfo methodInfo)
+        {
+            var allowAnonymous =
+                (controllerInfo.GetCustomAttributes(typeof(AllowAnonymousAttribute)).FirstOrDefault() is AllowAnonymousAttribute)
+                || (methodInfo.GetCustomAttributes(typeof(AllowAnonymousAttribute)).FirstOrDefault() is AllowAnonymousAttribute);
+
+            var dnnAnonymous =
+                (controllerInfo.GetCustomAttributes(typeof(DnnModuleAuthorizeAttribute)).FirstOrDefault() is DnnModuleAuthorizeAttribute att1 && att1.AccessLevel == SecurityAccessLevel.Anonymous)
+                || (methodInfo.GetCustomAttributes(typeof(DnnModuleAuthorizeAttribute)).FirstOrDefault() is DnnModuleAuthorizeAttribute att2 && att2.AccessLevel == SecurityAccessLevel.Anonymous);
+
+            var requireVerificationToken =
+                (controllerInfo.GetCustomAttributes(typeof(ValidateAntiForgeryTokenAttribute)).FirstOrDefault() is ValidateAntiForgeryTokenAttribute)
+                || (methodInfo.GetCustomAttributes(typeof(ValidateAntiForgeryTokenAttribute)).FirstOrDefault() is ValidateAntiForgeryTokenAttribute);
+
+            var superUser =
+                (controllerInfo.GetCustomAttributes(typeof(DnnModuleAuthorizeAttribute)).FirstOrDefault() is DnnModuleAuthorizeAttribute att3 && att3.AccessLevel == SecurityAccessLevel.Host)
+                 || (methodInfo.GetCustomAttributes(typeof(DnnModuleAuthorizeAttribute)).FirstOrDefault() is DnnModuleAuthorizeAttribute att4 && att4.AccessLevel == SecurityAccessLevel.Host);
+
+            var admin =
+                (controllerInfo.GetCustomAttributes(typeof(DnnModuleAuthorizeAttribute)).FirstOrDefault() is DnnModuleAuthorizeAttribute att5 && att5.AccessLevel == SecurityAccessLevel.Admin)
+                 || (methodInfo.GetCustomAttributes(typeof(DnnModuleAuthorizeAttribute)).FirstOrDefault() is DnnModuleAuthorizeAttribute att6 && att6.AccessLevel == SecurityAccessLevel.Admin);
+
+            var dnnModuleAuthorize =
+                (controllerInfo.GetCustomAttributes(typeof(DnnModuleAuthorizeAttribute)).FirstOrDefault() is DnnModuleAuthorizeAttribute)
+                || (methodInfo.GetCustomAttributes(typeof(DnnModuleAuthorizeAttribute)).FirstOrDefault() is DnnModuleAuthorizeAttribute);
+
+            var supportedModulesAttribute =
+                (controllerInfo.GetCustomAttributes(typeof(SupportedModulesAttribute)).FirstOrDefault() is SupportedModulesAttribute)
+                || (methodInfo.GetCustomAttributes(typeof(SupportedModulesAttribute)).FirstOrDefault() is SupportedModulesAttribute);
+
+
+            return new SecurityDto
+            {
+                allowAnonymous = (allowAnonymous || dnnAnonymous && !superUser && !admin),
+                requireVerificationToken = requireVerificationToken,
+                superUser = superUser && !allowAnonymous,
+                admin = admin && !allowAnonymous,
+                requireContext = dnnModuleAuthorize && !allowAnonymous || supportedModulesAttribute,
+            };
         }
 
         #endregion
@@ -160,7 +185,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
             // Case 2: Array - get inner type and add []
             if (type.IsArray) return JsTypeName(type.GetElementType()) + "[]";
-            
+
             // Case 3: Most common basic types
             if (type == typeof(string)) return "string";
             if (type == typeof(int)) return "int";
@@ -170,12 +195,12 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             if (type == typeof(bool)) return "boolean";
             if (type == typeof(DateTime)) return "datetime as string";
             if (type == typeof(Guid)) return "guid as string";
-            
+
             // Case 4: Unknown - in case we don't know let's just return the difficult name
             return type.FullName;
         }
 
-        // @STV - this feels like very duplicate code 
+        // @STV - this feels like very duplicate code
         private string GetAppFolderRelative()
         {
             var wrapLog = Log.Call<string>();
@@ -267,7 +292,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     }
 
 
-    public class SecurityDtoTemp
+    public class SecurityDto
     {
         public bool? allowAnonymous { get; set; }
         public bool? requireVerificationToken { get; set; }
@@ -275,6 +300,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public bool? superUser { get; set; }
 
         public bool? admin { get; set; }
+
+        public bool? requireContext { get; set; }
 
     }
 }
