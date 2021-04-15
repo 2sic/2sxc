@@ -122,7 +122,7 @@
     <Compile Include="Dnn\AppFolderUtilities.cs" />
     <Compile Include="Dnn\WebApi\Admin\AppPartsController.cs" />
     <Compile Include="Dnn\WebApi\Admin\FieldController.cs" />
-    <Compile Include="Dnn\WebApi\Admin\FeaturesController.cs" />
+    <Compile Include="Dnn\WebApi\Admin\FeatureController.cs" />
     <Compile Include="Dnn\WebApi\Admin\ApiExplorerController.cs" />
     <Compile Include="Dnn\WebApi\Admin\ZoneController.cs" />
     <Compile Include="Dnn\WebApi\Cms\BlockController.cs" />
@@ -148,8 +148,8 @@
     <Compile Include="Dnn\WebApi\Cms\ContentGroupController.cs" />
     <Compile Include="Dnn\WebApi\DnnApiControllerWithFixes.cs" />
     <Compile Include="Dnn\WebApi\ModuleController.cs" />
-    <Compile Include="Dnn\WebApi\Admin\TypeController.cs" />
-    <Compile Include="Dnn\WebApi\Admin\EntityController.cs" />
+    <Compile Include="Dnn\WebApi\Admin\TypesController.cs" />
+    <Compile Include="Dnn\WebApi\Admin\EntitiesController.cs" />
     <Compile Include="Dnn\WebApi\Admin\MetadataController.cs" />
     <Compile Include="Dnn\WebApi\Admin\QueryController.cs" />
     <Compile Include="Dnn\WebApi\GetDnnBlock.cs" />
@@ -159,7 +159,7 @@
     <Compile Include="Obsolete\SexyContent\WebApi\SxcApiController.cs" />
     <Compile Include="Dnn\WebApi\Logging\DnnLogExceptions.cs" />
     <Compile Include="Dnn\WebApi\Admin\DialogController.cs" />
-    <Compile Include="Dnn\WebApi\Admin\ViewController.cs" />
+    <Compile Include="Dnn\WebApi\Admin\ViewsController.cs" />
     <Compile Include="Dnn\WebApi\App\AppContentJsonForInstance.cs" />
   </ItemGroup>
   <ItemGroup>
