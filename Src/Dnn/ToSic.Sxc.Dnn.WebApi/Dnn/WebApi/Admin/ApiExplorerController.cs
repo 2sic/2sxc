@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
                 if (!File.Exists(HostingEnvironment.MapPath(controllerVirtualPath)))
                 {
-                    var msg = $"Error: can't find controller {controllerVirtualPath}";
+                    var msg = $"Error: can't find controller file: {controllerVirtualPath}";
                     return wrapLog(msg, Request.CreateErrorResponse(HttpStatusCode.InternalServerError, msg));
                 }
 
@@ -62,11 +62,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
                 var controller = assembly.DefinedTypes.FirstOrDefault(a => controllerName.Equals(a.Name, StringComparison.InvariantCultureIgnoreCase));
                 if (controller == null)
                 {
-                    var msg = $"Error: Can't find controller: {controllerName} in file {Path.GetFileNameWithoutExtension(path)}. This can happen if the controller does not have the same name as the file.";
+                    var msg = $"Error: can't find controller class: {controllerName} in file {Path.GetFileNameWithoutExtension(path)}. This can happen if the controller class does not have the same name as the file.";
                     return wrapLog(msg, Request.CreateErrorResponse(HttpStatusCode.InternalServerError, msg));
                 }
 
-                var controllerDto = controller == null ? null : new
+                var controllerDto = new
                 {
                     controller = controller.Name,
                     actions = controller.GetMethods().Where(methodInfo => methodInfo.IsPublic && !methodInfo.IsSpecialName && GetHttpVerbs(methodInfo).Count > 0).Select(methodInfo => new
