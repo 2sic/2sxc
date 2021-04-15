@@ -3,7 +3,6 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -14,6 +13,7 @@ using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Http;
 using ToSic.Eav.Helpers;
+using ToSic.Sxc.WebApi.ApiExplorer;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
@@ -61,24 +61,36 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
                     return wrapLog(msg, Request.CreateErrorResponse(HttpStatusCode.InternalServerError, msg));
                 }
 
-                var controllerDto = new
+                var controllerSecurity = GetSecurity(controller);
+                var controllerDto = new ApiControllerDto
                 {
                     controller = controller.Name,
-                    actions = controller.GetMethods().Where(methodInfo => methodInfo.IsPublic && !methodInfo.IsSpecialName && GetHttpVerbs(methodInfo).Count > 0).Select(methodInfo => new
-                    {
-                        name = methodInfo.Name,
-                        verbs = GetHttpVerbs(methodInfo).Select(m => m.ToUpperInvariant()),
-                        parameters = methodInfo.GetParameters().Select(p => new
+                    actions = controller.GetMethods()
+                        .Where(methodInfo => methodInfo.IsPublic
+                                             && !methodInfo.IsSpecialName
+                                             && GetHttpVerbs(methodInfo).Count > 0)
+                        .Select(methodInfo =>
                         {
-                            name = p.Name,
-                            type = JsTypeName(p.ParameterType),
-                            defaultValue = p.DefaultValue,
-                            isOptional = p.IsOptional,
-                            isBody = IsBody(p),
+                            var methodSecurity = GetSecurity(methodInfo);
+                            var mergedSecurity = MergeSecurity(controllerSecurity, methodSecurity);
+                            return new ApiActionDto
+                            {
+                                name = methodInfo.Name,
+                                verbs = GetHttpVerbs(methodInfo).Select(m => m.ToUpperInvariant()),
+                                parameters = methodInfo.GetParameters().Select(p => new ApiActionParamDto
+                                {
+                                    name = p.Name,
+                                    type = ApiExplorerJs.JsTypeName(p.ParameterType),
+                                    defaultValue = p.DefaultValue,
+                                    isOptional = p.IsOptional,
+                                    isBody = IsBody(p),
+                                }).ToArray(),
+                                security = methodSecurity,
+                                mergedSecurity = mergedSecurity,
+                                returns = ApiExplorerJs.JsTypeName(methodInfo.ReturnType),
+                            };
                         }),
-                        security = GetSecurity(controller, methodInfo),
-                        returns = JsTypeName(methodInfo.ReturnType),
-                    })
+                    security = controllerSecurity
                 };
 
                 var responseMessage = Request.CreateResponse(HttpStatusCode.OK);
@@ -91,6 +103,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             }
         }
 
+
+
+
+
         #region Inspect parameters / attributes
 
         private static bool IsBody(ParameterInfo paramInfo)
@@ -102,8 +118,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         {
             var httpMethods = new List<string>();
 
-            if (methodInfo.GetCustomAttributes(typeof(HttpGetAttribute)).FirstOrDefault() is HttpGetAttribute getAttribute)
-                httpMethods.Add(getAttribute.HttpMethods[0].Method);
+            // @STV TODO: Pls use this method in all the code - it's shorter and less duplicate/error prone
+            // Also applies to GetSecurity below
+            var getAtt = methodInfo.GetCustomAttribute<HttpGetAttribute>();
+            if (getAtt != null) httpMethods.Add(getAtt.HttpMethods[0].Method);
+            // old
+            //if (methodInfo.GetCustomAttributes(typeof(HttpGetAttribute)).FirstOrDefault() is HttpGetAttribute getAttribute)
+            //    httpMethods.Add(getAttribute.HttpMethods[0].Method);
 
             if (methodInfo.GetCustomAttributes(typeof(HttpPostAttribute)).FirstOrDefault() is HttpPostAttribute postAttribute)
                 httpMethods.Add(postAttribute.HttpMethods[0].Method);
@@ -120,7 +141,50 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             return httpMethods;
         }
 
-        private static SecurityDto GetSecurity(TypeInfo controllerInfo, MethodInfo methodInfo)
+        private static ApiSecurityDto GetSecurity(MemberInfo member)
+        {
+            var dnnAuthList = member.GetCustomAttributes<DnnModuleAuthorizeAttribute>().ToList();
+            
+            return new ApiSecurityDto
+            {
+                ignoreSecurity = member.GetCustomAttribute<AllowAnonymousAttribute>() != null,
+                allowAnonymous = dnnAuthList.Any(a => a.AccessLevel == SecurityAccessLevel.Anonymous),
+                requireVerificationToken = member.GetCustomAttribute<ValidateAntiForgeryTokenAttribute>() != null,
+                superUser = dnnAuthList.Any(a => a.AccessLevel == SecurityAccessLevel.Host),
+                admin = dnnAuthList.Any(a => a.AccessLevel == SecurityAccessLevel.Admin),
+                edit = dnnAuthList.Any(a => a.AccessLevel == SecurityAccessLevel.Edit),
+                view = dnnAuthList.Any(a => a.AccessLevel == SecurityAccessLevel.View),
+                // if it has any dnn authorize attributes or supported-modules it needs the context
+                requireContext = dnnAuthList.Any() || member.GetCustomAttribute<SupportedModulesAttribute>() != null,
+            };
+        }
+        private static ApiSecurityDto MergeSecurity(ApiSecurityDto contSec, ApiSecurityDto methSec)
+        {
+            // TODO: @STV - if the method requires admin, and the controller has dnn-anonymous or requires edit, are both required, or just the method?
+            var ignoreSecurity = contSec.ignoreSecurity || contSec.ignoreSecurity;
+            var view = !ignoreSecurity && (contSec.view || methSec.view);
+            var edit = !ignoreSecurity && (view || contSec.edit || methSec.edit);
+            var admin = !ignoreSecurity && (edit || contSec.admin || methSec.admin);
+            var superUser = !ignoreSecurity && (admin || contSec.superUser || methSec.superUser);
+
+            // TODO: @STV - does it need context, if security is ignored?
+            var requireContext = !ignoreSecurity && (contSec.requireContext || methSec.requireContext);
+
+
+            return new ApiSecurityDto
+            {
+                ignoreSecurity = ignoreSecurity,
+                allowAnonymous = ignoreSecurity || contSec.allowAnonymous || methSec.allowAnonymous,
+                requireVerificationToken = !ignoreSecurity && (contSec.requireVerificationToken || methSec.requireVerificationToken),
+                view = view,
+                edit = edit,
+                admin = admin,
+                superUser = superUser,
+                requireContext = requireContext,
+            };
+        }
+
+        private static ApiSecurityDto GetSecurityOld(TypeInfo controllerInfo, MethodInfo methodInfo)
         {
             var allowAnonymous =
                 (controllerInfo.GetCustomAttributes(typeof(AllowAnonymousAttribute)).FirstOrDefault() is AllowAnonymousAttribute)
@@ -151,7 +215,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
                 || (methodInfo.GetCustomAttributes(typeof(SupportedModulesAttribute)).FirstOrDefault() is SupportedModulesAttribute);
 
 
-            return new SecurityDto
+            return new ApiSecurityDto
             {
                 allowAnonymous = (allowAnonymous || dnnAnonymous && !superUser && !admin),
                 requireVerificationToken = requireVerificationToken,
@@ -160,41 +224,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
                 requireContext = dnnModuleAuthorize && !allowAnonymous || supportedModulesAttribute,
             };
         }
-
         #endregion
 
-        /// <summary>
-        /// Give common type names a simple naming and only return the original for more complex types
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        private string JsTypeName(Type type)
-        {
-            // Case 1: Generic type - get the main type and then recursively get the nice names for the parts
-            if (type.IsGenericType)
-            {
-                var mainName = type.Name;
-                if (mainName.Contains("`")) mainName = mainName.Substring(0, mainName.IndexOf('`'));
-                var parts = type.GenericTypeArguments.Select(t => JsTypeName(t));
-                return $"{mainName}<{string.Join(", ", parts)}>";
-            }
-
-            // Case 2: Array - get inner type and add []
-            if (type.IsArray) return JsTypeName(type.GetElementType()) + "[]";
-
-            // Case 3: Most common basic types
-            if (type == typeof(string)) return "string";
-            if (type == typeof(int)) return "int";
-            if (type == typeof(long)) return "long int";
-            if (type == typeof(decimal)) return "decimal";
-            if (type == typeof(float)) return "float";
-            if (type == typeof(bool)) return "boolean";
-            if (type == typeof(DateTime)) return "datetime as string";
-            if (type == typeof(Guid)) return "guid as string";
-
-            // Case 4: Unknown - in case we don't know let's just return the difficult name
-            return type.FullName;
-        }
 
         //public HttpResponseMessage Get(string relativePath = "")
         //{
@@ -234,21 +265,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         //}
     }
 
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public class SecurityDto
-    {
-#pragma warning disable IDE1006 // Naming Styles
-        public bool? allowAnonymous { get; set; }
 
-        public bool? requireVerificationToken { get; set; }
-
-        public bool? superUser { get; set; }
-
-        public bool? admin { get; set; }
-
-        public bool? requireContext { get; set; }
-#pragma warning restore IDE1006 // Naming Styles
-    }
 }
 
 
