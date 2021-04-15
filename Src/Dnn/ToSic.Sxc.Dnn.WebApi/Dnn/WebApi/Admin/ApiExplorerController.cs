@@ -57,13 +57,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
                 var assembly = BuildManager.GetCompiledAssembly(controllerVirtualPath);
 
-
-                // STV: check for case when file name is not the same as the controller name.
                 var controllerName = path.Substring(path.LastIndexOf('\\') + 1);
                 controllerName = controllerName.Substring(0, controllerName.IndexOf('.'));
                 var controller = assembly.DefinedTypes.FirstOrDefault(a => controllerName.Equals(a.Name, StringComparison.InvariantCultureIgnoreCase));
-
-                // TODO: @STV pls assemble a SecurityDto for the class...
+                if (controller == null)
+                {
+                    var msg = $"Error: Can't find controller: {controllerName} in file {Path.GetFileNameWithoutExtension(path)}. This can happen if the controller does not have the same name as the file.";
+                    return wrapLog(msg, Request.CreateErrorResponse(HttpStatusCode.InternalServerError, msg));
+                }
 
                 var controllerDto = controller == null ? null : new
                 {
