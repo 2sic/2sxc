@@ -162,10 +162,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         {
             // TODO: @STV - if the method requires admin, and the controller has dnn-anonymous or requires edit, are both required, or just the method?
             var ignoreSecurity = contSec.ignoreSecurity || contSec.ignoreSecurity;
-            var view = !ignoreSecurity && (contSec.view || methSec.view);
-            var edit = !ignoreSecurity && (view || contSec.edit || methSec.edit);
-            var admin = !ignoreSecurity && (edit || contSec.admin || methSec.admin);
-            var superUser = !ignoreSecurity && (admin || contSec.superUser || methSec.superUser);
+            var view = ignoreSecurity || contSec.view || methSec.view;
+            var edit = ignoreSecurity || view || contSec.edit || methSec.edit;
+            var admin = ignoreSecurity || edit || contSec.admin || methSec.admin;
+            var superUser = ignoreSecurity || admin || contSec.superUser || methSec.superUser;
 
             // TODO: @STV - does it need context, if security is ignored?
             var requireContext = !ignoreSecurity && (contSec.requireContext || methSec.requireContext);
