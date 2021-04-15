@@ -119,6 +119,7 @@
     <Compile Include="Dnn\WebApi\Adam\DnnAdamSecurityChecks.cs" />
     <Compile Include="Dnn\ApiController.cs" />
     <Compile Include="Dnn\ApiController_Obsolete.cs" />
+    <Compile Include="Dnn\AppFolderUtilities.cs" />
     <Compile Include="Dnn\WebApi\Admin\AppPartsController.cs" />
     <Compile Include="Dnn\WebApi\Admin\FieldController.cs" />
     <Compile Include="Dnn\WebApi\Admin\FeaturesController.cs" />

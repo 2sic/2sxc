@@ -1,7 +1,9 @@
 ﻿using DotNetNuke.Common.Utilities;
+using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -11,11 +13,7 @@ using System.Text;
 using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Http;
-using DotNetNuke.Security;
 using ToSic.Eav.Helpers;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Dnn.WebApiRouting;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
@@ -24,9 +22,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     public class ApiExplorerController : DnnApiControllerWithFixes
     {
         protected override string HistoryLogName => "Api.Explorer";
-
-        private const string ErrPrefix = "Api Explorer Controller Finder Error: ";
-        private const string ErrSuffix = "Check event-log, code and inner exception. ";
 
         [HttpGet]
         public HttpResponseMessage Inspect(string path)
@@ -46,7 +41,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
             try
             {
-                var controllerVirtualPath = Path.Combine(GetAppFolderRelative(), path);
+                var controllerVirtualPath = Path.Combine(AppFolderUtilities.GetAppFolderVirtualPath(Request, Log), path);
                 Log.Add($"Controller Virtual Path: {controllerVirtualPath}");
 
                 if (!File.Exists(HostingEnvironment.MapPath(controllerVirtualPath)))
@@ -201,59 +196,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             return type.FullName;
         }
 
-        // @STV - this feels like very duplicate code
-        private string GetAppFolderRelative()
-        {
-            var wrapLog = Log.Call<string>();
-
-            var routeData = Request.GetRouteData();
-
-            // Figure out the Path, or show error for that.
-            string appFolder = null;
-            try
-            {
-                appFolder = Route.AppPathOrNull(routeData);
-
-                // only check for app folder if we don't have a context
-                if (appFolder == null)
-                {
-                    Log.Add("no folder found in url, will auto-detect");
-                    var block = Eav.Factory.StaticBuild<DnnGetBlock>().GetCmsBlock(Request, Log);
-                    // TODO: @STV - probably better to just use App.PhysicalPath - pls check - will probably make everything easier
-                    appFolder = block?.App?.Folder;
-                }
-
-                Log.Add($"App Folder: {appFolder}");
-            }
-            catch (Exception getBlockException)
-            {
-                const string msg = ErrPrefix + "Trying to find app name, unexpected error - possibly bad/invalid headers. " + ErrSuffix;
-                throw ReportToLogAndThrow(Request, HttpStatusCode.BadRequest, getBlockException, msg, wrapLog);
-            }
-
-            if (string.IsNullOrWhiteSpace(appFolder))
-            {
-                const string msg = ErrPrefix + "App name is unknown - tried to check name in url (.../app/[app-name]/...) " +
-                                   "and tried app-detection using url-params/headers pageid/moduleid. " + ErrSuffix;
-                throw ReportToLogAndThrow(Request, HttpStatusCode.BadRequest, new Exception(msg), msg, wrapLog);
-            }
-
-            var tenant = Eav.Factory.StaticBuild<DnnSite>();
-            var appFolderRelative = Path.Combine(tenant.AppsRootRelative, appFolder);
-            appFolderRelative = appFolderRelative.Replace("\\", @"/");
-
-            return wrapLog($"Ok, App Folder Relative: {appFolderRelative}", appFolderRelative);
-        }
-
-        private static HttpResponseException ReportToLogAndThrow(HttpRequestMessage request, HttpStatusCode code, Exception e, string msg, Func<string, string, string> wrapLog)
-        {
-            var helpText = ErrorHelp.HelpText(e);
-            var exception = new Exception(msg + helpText, e);
-            DotNetNuke.Services.Exceptions.Exceptions.LogException(exception);
-            wrapLog("error", null);
-            return new HttpResponseException(request.CreateErrorResponse(code, exception.Message, e));
-        }
-
         //public HttpResponseMessage Get(string relativePath = "")
         //{
         //    try
@@ -279,7 +221,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         //            })
         //        }).ToJson();
 
-        //        var responseMessage = Request.CreateResponse(HttpStatusCode.OK);
+        //        var responseMessage = request.CreateResponse(HttpStatusCode.OK);
 
         //        responseMessage.Content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -287,15 +229,17 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         //    }
         //    catch (Exception exc)
         //    {
-        //        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exc);
+        //        return request.CreateErrorResponse(HttpStatusCode.InternalServerError, exc);
         //    }
         //}
     }
 
-
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class SecurityDto
     {
+#pragma warning disable IDE1006 // Naming Styles
         public bool? allowAnonymous { get; set; }
+
         public bool? requireVerificationToken { get; set; }
 
         public bool? superUser { get; set; }
@@ -303,7 +247,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public bool? admin { get; set; }
 
         public bool? requireContext { get; set; }
-
+#pragma warning restore IDE1006 // Naming Styles
     }
 }
 
