@@ -1,0 +1,24 @@
+﻿// ReSharper disable InconsistentNaming
+
+using System.Collections.Generic;
+
+namespace ToSic.Sxc.WebApi.ApiExplorer
+{
+    public class ApiSecurityDto
+    {
+        public bool? allowAnonymous { get; set; }
+
+        public bool? requireVerificationToken { get; set; }
+
+        public bool? superUser { get; set; }
+
+        public bool? admin { get; set; }
+        public bool? edit { get; set; }
+        
+        public bool? view { get; set; }
+
+        public bool? requireContext { get; set; }
+
+        public List<string> messages { get; set; } = new List<string>();
+    }
+}
