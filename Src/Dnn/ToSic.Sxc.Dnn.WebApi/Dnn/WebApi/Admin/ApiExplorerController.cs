@@ -157,109 +157,28 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         }
         private static ApiSecurityDto MergeSecurity(ApiSecurityDto contSec, ApiSecurityDto methSec)
         {
-            // TODO: @STV - if the method requires admin, and the controller has dnn-anonymous or requires edit, are both required, or just the method?
-            var ignoreSecurity = contSec.ignoreSecurity || contSec.ignoreSecurity;
-            var view = ignoreSecurity || contSec.view || methSec.view;
-            var edit = ignoreSecurity || view || contSec.edit || methSec.edit;
-            var admin = ignoreSecurity || edit || contSec.admin || methSec.admin;
-            var superUser = ignoreSecurity || admin || contSec.superUser || methSec.superUser;
-
-            // TODO: @STV - does it need context, if security is ignored?
-            var requireContext = !ignoreSecurity && (contSec.requireContext || methSec.requireContext);
-
+            var ignoreSecurity = contSec.ignoreSecurity || methSec.ignoreSecurity;
+            var allowAnonymous = contSec.allowAnonymous || methSec.allowAnonymous;
+            var view = contSec.view || methSec.view;
+            var edit = contSec.edit || methSec.edit;
+            var admin = contSec.admin || methSec.admin;
+            var superUser = contSec.superUser || methSec.superUser;
+            var requireContext =  contSec.requireContext || methSec.requireContext;
 
             return new ApiSecurityDto
             {
                 ignoreSecurity = ignoreSecurity,
-                allowAnonymous = ignoreSecurity || contSec.allowAnonymous || methSec.allowAnonymous,
+                allowAnonymous = ignoreSecurity || allowAnonymous && !view && !edit && !admin && !superUser,
+                view = ignoreSecurity || (allowAnonymous || view) && !edit && !admin && !superUser,
+                edit = ignoreSecurity || (allowAnonymous || view || edit) && !admin && !superUser,
+                admin = ignoreSecurity || (allowAnonymous || view || edit || admin) && !superUser,
+                superUser = ignoreSecurity || allowAnonymous || view || edit || admin || superUser,
+                requireContext = !ignoreSecurity && requireContext,
                 requireVerificationToken = !ignoreSecurity && (contSec.requireVerificationToken || methSec.requireVerificationToken),
-                view = view,
-                edit = edit,
-                admin = admin,
-                superUser = superUser,
-                requireContext = requireContext,
             };
         }
 
-        private static ApiSecurityDto GetSecurityOld(TypeInfo controllerInfo, MethodInfo methodInfo)
-        {
-            var allowAnonymous =
-                (controllerInfo.GetCustomAttributes(typeof(AllowAnonymousAttribute)).FirstOrDefault() is AllowAnonymousAttribute)
-                || (methodInfo.GetCustomAttributes(typeof(AllowAnonymousAttribute)).FirstOrDefault() is AllowAnonymousAttribute);
-
-            var dnnAnonymous =
-                (controllerInfo.GetCustomAttributes(typeof(DnnModuleAuthorizeAttribute)).FirstOrDefault() is DnnModuleAuthorizeAttribute att1 && att1.AccessLevel == SecurityAccessLevel.Anonymous)
-                || (methodInfo.GetCustomAttributes(typeof(DnnModuleAuthorizeAttribute)).FirstOrDefault() is DnnModuleAuthorizeAttribute att2 && att2.AccessLevel == SecurityAccessLevel.Anonymous);
-
-            var requireVerificationToken =
-                (controllerInfo.GetCustomAttributes(typeof(ValidateAntiForgeryTokenAttribute)).FirstOrDefault() is ValidateAntiForgeryTokenAttribute)
-                || (methodInfo.GetCustomAttributes(typeof(ValidateAntiForgeryTokenAttribute)).FirstOrDefault() is ValidateAntiForgeryTokenAttribute);
-
-            var superUser =
-                (controllerInfo.GetCustomAttributes(typeof(DnnModuleAuthorizeAttribute)).FirstOrDefault() is DnnModuleAuthorizeAttribute att3 && att3.AccessLevel == SecurityAccessLevel.Host)
-                 || (methodInfo.GetCustomAttributes(typeof(DnnModuleAuthorizeAttribute)).FirstOrDefault() is DnnModuleAuthorizeAttribute att4 && att4.AccessLevel == SecurityAccessLevel.Host);
-
-            var admin =
-                (controllerInfo.GetCustomAttributes(typeof(DnnModuleAuthorizeAttribute)).FirstOrDefault() is DnnModuleAuthorizeAttribute att5 && att5.AccessLevel == SecurityAccessLevel.Admin)
-                 || (methodInfo.GetCustomAttributes(typeof(DnnModuleAuthorizeAttribute)).FirstOrDefault() is DnnModuleAuthorizeAttribute att6 && att6.AccessLevel == SecurityAccessLevel.Admin);
-
-            var dnnModuleAuthorize =
-                (controllerInfo.GetCustomAttributes(typeof(DnnModuleAuthorizeAttribute)).FirstOrDefault() is DnnModuleAuthorizeAttribute)
-                || (methodInfo.GetCustomAttributes(typeof(DnnModuleAuthorizeAttribute)).FirstOrDefault() is DnnModuleAuthorizeAttribute);
-
-            var supportedModulesAttribute =
-                (controllerInfo.GetCustomAttributes(typeof(SupportedModulesAttribute)).FirstOrDefault() is SupportedModulesAttribute)
-                || (methodInfo.GetCustomAttributes(typeof(SupportedModulesAttribute)).FirstOrDefault() is SupportedModulesAttribute);
-
-
-            return new ApiSecurityDto
-            {
-                allowAnonymous = (allowAnonymous || dnnAnonymous && !superUser && !admin),
-                requireVerificationToken = requireVerificationToken,
-                superUser = superUser && !allowAnonymous,
-                admin = admin && !allowAnonymous,
-                requireContext = dnnModuleAuthorize && !allowAnonymous || supportedModulesAttribute,
-            };
-        }
         #endregion
-
-
-        //public HttpResponseMessage Get(string relativePath = "")
-        //{
-        //    try
-        //    {
-        //        var apiExplorer = GlobalConfiguration.Configuration.Services.GetApiExplorer();
-
-        //        var apis = apiExplorer.ApiDescriptions.Where(api => api.RelativePath.Contains(relativePath));
-
-        //        var json = apis.Select(api => new
-        //        {
-        //            id = api.ID,
-        //            relativePath = api.RelativePath,
-        //            httpMethod = api.HttpMethod,
-        //            controller = api.ActionDescriptor.ControllerDescriptor.ControllerName,
-        //            action = api.ActionDescriptor.ActionName,
-        //            parametres = api.ParameterDescriptions.Select(p => new
-        //            {
-        //                name = p.Name,
-        //                source = p.Source.ToString(),
-        //                type = p.ParameterDescriptor.ParameterType.FullName,
-        //                defaultValue = p.ParameterDescriptor.DefaultValue,
-        //                isOptional = p.ParameterDescriptor.IsOptional
-        //            })
-        //        }).ToJson();
-
-        //        var responseMessage = request.CreateResponse(HttpStatusCode.OK);
-
-        //        responseMessage.Content = new StringContent(json, Encoding.UTF8, "application/json");
-
-        //        return responseMessage;
-        //    }
-        //    catch (Exception exc)
-        //    {
-        //        return request.CreateErrorResponse(HttpStatusCode.InternalServerError, exc);
-        //    }
-        //}
     }
 
 
