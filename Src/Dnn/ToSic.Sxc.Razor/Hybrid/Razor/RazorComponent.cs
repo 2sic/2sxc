@@ -18,7 +18,7 @@ using IEntity = ToSic.Eav.Data.IEntity;
 namespace ToSic.Sxc.Hybrid.Razor
 {
     /// <summary>
-    /// The base class for Razor-Components in 2sxc 10+ <br/>
+    /// The base class for Hybrid Razor-Components in 2sxc 12 <br/>
     /// Provides context infos like the Dnn object, helpers like Edit and much more. <br/>
     /// </summary>
     [PrivateApi]

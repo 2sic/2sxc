@@ -167,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Hybrid\readme.md" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
