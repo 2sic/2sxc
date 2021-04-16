@@ -118,33 +118,30 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         {
             var httpMethods = new List<string>();
 
-            // @STV TODO: Pls use this method in all the code - it's shorter and less duplicate/error prone
-            // Also applies to GetSecurity below
             var getAtt = methodInfo.GetCustomAttribute<HttpGetAttribute>();
             if (getAtt != null) httpMethods.Add(getAtt.HttpMethods[0].Method);
-            // old
-            //if (methodInfo.GetCustomAttributes(typeof(HttpGetAttribute)).FirstOrDefault() is HttpGetAttribute getAttribute)
-            //    httpMethods.Add(getAttribute.HttpMethods[0].Method);
 
-            if (methodInfo.GetCustomAttributes(typeof(HttpPostAttribute)).FirstOrDefault() is HttpPostAttribute postAttribute)
-                httpMethods.Add(postAttribute.HttpMethods[0].Method);
+            var postAtt = methodInfo.GetCustomAttribute<HttpPostAttribute>();
+            if (postAtt != null) httpMethods.Add(postAtt.HttpMethods[0].Method);
 
-            if (methodInfo.GetCustomAttributes(typeof(HttpPutAttribute)).FirstOrDefault() is HttpPutAttribute putAttribute)
-                httpMethods.Add(putAttribute.HttpMethods[0].Method);
+            var putAtt = methodInfo.GetCustomAttribute<HttpPutAttribute>();
+            if (putAtt != null) httpMethods.Add(putAtt.HttpMethods[0].Method);
 
-            if (methodInfo.GetCustomAttributes(typeof(HttpDeleteAttribute)).FirstOrDefault() is HttpDeleteAttribute deleteAttribute)
-                httpMethods.Add(deleteAttribute.HttpMethods[0].Method);
+            var deleteAtt = methodInfo.GetCustomAttribute<HttpDeleteAttribute>();
+            if (deleteAtt != null) httpMethods.Add(deleteAtt.HttpMethods[0].Method);
 
-            if (methodInfo.GetCustomAttributes(typeof(AcceptVerbsAttribute)).FirstOrDefault() is AcceptVerbsAttribute acceptVerbsAttribute)
-                httpMethods.AddRange(acceptVerbsAttribute.HttpMethods.Select(m => m.Method));
+            var acceptVerbsAtt = methodInfo.GetCustomAttribute<AcceptVerbsAttribute>();
+            if (acceptVerbsAtt != null) httpMethods.AddRange(acceptVerbsAtt.HttpMethods.Select(m => m.Method));
 
             return httpMethods;
         }
 
+
+
         private static ApiSecurityDto GetSecurity(MemberInfo member)
         {
             var dnnAuthList = member.GetCustomAttributes<DnnModuleAuthorizeAttribute>().ToList();
-            
+
             return new ApiSecurityDto
             {
                 ignoreSecurity = member.GetCustomAttribute<AllowAnonymousAttribute>() != null,
