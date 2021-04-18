@@ -20,10 +20,10 @@ namespace ToSic.Sxc.Hybrid.Razor
 
         #region Content, Header, etc. and List
         /// <inheritdoc/>
-        public dynamic Content => DynCode.Content;
+        public dynamic Content => _DynCodeRoot.Content;
 
         /// <inheritdoc />
-        public dynamic Header => DynCode.Header;
+        public dynamic Header => _DynCodeRoot.Header;
 
         #endregion
 
@@ -31,44 +31,44 @@ namespace ToSic.Sxc.Hybrid.Razor
         #region Link, Edit, App, Data
 
         /// <inheritdoc />
-        public ILinkHelper Link => DynCode.Link;
+        public ILinkHelper Link => _DynCodeRoot.Link;
 
         /// <inheritdoc />
-        public IInPageEditingSystem Edit => DynCode.Edit;
+        public IInPageEditingSystem Edit => _DynCodeRoot.Edit;
 
-        [PrivateApi] public int CompatibilityLevel => DynCode.CompatibilityLevel;
-
-        /// <inheritdoc />
-        public IApp App => DynCode.App;
+        [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
 
         /// <inheritdoc />
-        public IBlockDataSource Data => DynCode.Data;
+        public IApp App => _DynCodeRoot.App;
+
+        /// <inheritdoc />
+        public IBlockDataSource Data => _DynCodeRoot.Data;
 
         #endregion
 
         #region AsDynamic in many variations
 
         /// <inheritdoc/>
-        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => DynCode.AsDynamic(json, fallback);
+        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => _DynCodeRoot.AsDynamic(json, fallback);
 
         /// <inheritdoc/>
-        public dynamic AsDynamic(IEntity entity) => DynCode.AsDynamic(entity);
+        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.AsDynamic(entity);
 
         /// <inheritdoc/>
-        public dynamic AsDynamic(object dynamicEntity) => DynCode.AsDynamic(dynamicEntity);
+        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.AsDynamic(dynamicEntity);
 
 
         #endregion
 
         #region AsEntity
         /// <inheritdoc/>
-        public IEntity AsEntity(object dynamicEntity) => DynCode.AsEntity(dynamicEntity);
+        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot.AsEntity(dynamicEntity);
         #endregion
 
         #region AsList
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(object list) => DynCode.AsList(list);
+        public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot.AsList(list);
 
         public T CreateSource<T>(IDataStream inStream) where T : IDataSource
         {
@@ -86,17 +86,17 @@ namespace ToSic.Sxc.Hybrid.Razor
         #region Adam 
 
         /// <inheritdoc />
-        public IFolder AsAdam(IDynamicEntity entity, string fieldName) => DynCode.AsAdam(entity, fieldName);
+        public IFolder AsAdam(IDynamicEntity entity, string fieldName) => _DynCodeRoot.AsAdam(entity, fieldName);
 
 
         /// <inheritdoc />
-        public IFolder AsAdam(IEntity entity, string fieldName) => DynCode.AsAdam(entity, fieldName);
+        public IFolder AsAdam(IEntity entity, string fieldName) => _DynCodeRoot.AsAdam(entity, fieldName);
 
         #endregion
 
         #region Context WIP
 
-        public ICmsContext CmsContext => DynCode.CmsContext;
+        public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
 
         #endregion
 

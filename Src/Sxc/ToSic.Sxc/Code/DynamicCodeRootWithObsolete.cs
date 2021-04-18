@@ -13,8 +13,8 @@ namespace ToSic.Sxc.Code
     [PrivateApi]
     public class DynamicCodeObsolete
     {
-        public DynamicCodeRoot DynCode;
-        public DynamicCodeObsolete(DynamicCodeRoot dynCode)
+        public IDynamicCodeRoot DynCode;
+        public DynamicCodeObsolete(IDynamicCodeRoot dynCode)
         {
             DynCode = dynCode;
         }

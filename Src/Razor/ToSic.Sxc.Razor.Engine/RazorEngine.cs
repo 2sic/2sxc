@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Hybrid.Razor;
+using ToSic.Sxc.Hybrid;
 
 namespace ToSic.Sxc.Razor.Engine
 {
@@ -58,12 +58,9 @@ namespace ToSic.Sxc.Razor.Engine
                 var result = await RazorRenderer.RenderToStringAsync(TemplatePath, new object(),
                     rzv =>
                     {
-                        if (rzv.RazorPage is ISxcRazorComponent asSxc)
-                        {
-                            asSxc.DynCode = dynCode;
-                            asSxc.Purpose = Purpose;
-
-                        }
+                        if (rzv.RazorPage is not IHybridRazorComponent asSxc) return;
+                        asSxc._DynCodeRoot = dynCode;
+                        //asSxc.Purpose = Purpose;
                     });
                 var writer = new StringWriter();
                 await writer.WriteAsync(result);
@@ -71,7 +68,7 @@ namespace ToSic.Sxc.Razor.Engine
             }
             catch (Exception maybeIEntityCast)
             {
-                Code.ErrorHelp.AddHelpIfKnownError(maybeIEntityCast);
+                ErrorHelp.AddHelpIfKnownError(maybeIEntityCast);
                 throw;
             }
 

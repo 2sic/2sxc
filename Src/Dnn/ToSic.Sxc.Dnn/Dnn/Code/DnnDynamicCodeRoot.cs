@@ -8,7 +8,7 @@ using ToSic.Sxc.Dnn.Web;
 namespace ToSic.Sxc.Dnn.Code
 {
     [PrivateApi]
-    public class DnnDynamicCodeRoot : DynamicCodeRoot, IDnnDynamicCode, IHasDynCodeContext
+    public class DnnDynamicCodeRoot : DynamicCodeRoot, IDnnDynamicCode, IHasDynamicCodeRoot
     {
         public DnnDynamicCodeRoot(Dependencies dependencies): base(dependencies, DnnConstants.LogName) { }
 
@@ -32,6 +32,6 @@ namespace ToSic.Sxc.Dnn.Code
         /// </summary>
         public IDnnContext Dnn { get; private set; }
 
-        public DnnDynamicCodeRoot DynCode => this;
+        //public IDynamicCodeRoot _DynCodeRoot => this;
     }
 }

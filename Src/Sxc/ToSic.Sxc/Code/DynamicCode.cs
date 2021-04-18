@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Code
         #region Dynamic Code Coupling
 
         [PrivateApi]
-        public virtual void DynamicCodeCoupling(IDynamicCode parent)
+        public virtual void DynamicCodeCoupling(IDynamicCodeRoot parent)
         {
             Log.LinkTo(parent?.Log);
             Log.Call()(null);
@@ -42,6 +42,8 @@ namespace ToSic.Sxc.Code
         /// The parent of this object. It's not called Parent but uses an exotic name to ensure that your code won't accidentally create a property with the same name.
         /// </remarks>
         public IDynamicCode UnwrappedContents { get; private set; }
+
+        [PrivateApi] public IDynamicCodeRoot _DynCodeRoot => (UnwrappedContents as IHasDynamicCodeRoot)?._DynCodeRoot;
 
         #endregion
 

@@ -109,8 +109,6 @@
     <Compile Include="Dnn920\SharpZipLibRedirect.cs" />
     <Compile Include="Dnn940\RegisterWebApiActivator.cs" />
     <Compile Include="Dnn940\WebApiHttpControllerActivator.cs" />
-    <Compile Include="Dnn\INeedsDynCodeContext.cs" />
-    <Compile Include="Dnn\IHasDynCodeContext.cs" />
     <Compile Include="Dnn\Install\DnnInstallationController_IsRunning.cs" />
     <Compile Include="Dnn\Install\DnnInstallationController_Manual.cs" />
     <Compile Include="Dnn\Install\DnnInstallationController_Messages.cs" />

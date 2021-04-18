@@ -5,7 +5,6 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Web;
 using File = System.IO.File;
@@ -18,12 +17,12 @@ namespace ToSic.Sxc.Web
     /// It only contains internal wiring stuff, so not to be published
     /// </summary>
     [PrivateApi("internal class only!")]
-    public abstract class RazorComponentBase: WebPageBase, ICreateInstance, IHasLog, IHasDynCodeContext, INeedsDynCodeContext, ICoupledDynamicCode
+    public abstract class RazorComponentBase: WebPageBase, ICreateInstance, IHasLog, ICoupledDynamicCode
     {
         public IHtmlHelper Html { get; internal set; }
 
         [PrivateApi]
-        public DnnDynamicCodeRoot DynCode { get; set; }
+        public IDynamicCodeRoot _DynCodeRoot { get; set; }
 
 
         /// <summary>
@@ -43,7 +42,7 @@ namespace ToSic.Sxc.Web
 
             // Forward the context
             Html = typedParent.Html;
-            DynCode = typedParent.DynCode;
+            _DynCodeRoot = typedParent._DynCodeRoot;
             try
             {
                 Log.Add("@RenderPage:" + VirtualPath);
@@ -68,7 +67,7 @@ namespace ToSic.Sxc.Web
             var path = NormalizePath(virtualPath);
             VerifyFileExists(path);
             var result = path.EndsWith(CodeCompiler.CsFileExtension)
-                ? DynCode.CreateInstance(path, dontRelyOnParameterOrder, name, null, throwOnError)
+                ? _DynCodeRoot.CreateInstance(path, dontRelyOnParameterOrder, name, null, throwOnError)
                 : CreateInstanceCshtml(path);
             return wrapLog("ok", result);
         }
@@ -97,12 +96,12 @@ namespace ToSic.Sxc.Web
         private ILog _log;
         #endregion
 
-        public void DynamicCodeCoupling(IDynamicCode parent)
+        public void DynamicCodeCoupling(IDynamicCodeRoot parent)
         {
-            if (!(parent is DnnDynamicCodeRoot isDynCode)) return;
+            if (!(parent is IDynamicCodeRoot isDynCode)) return;
             
-            DynCode = isDynCode;
-            _log = new Log("Rzr.Comp", DynCode?.Log);
+            _DynCodeRoot = isDynCode;
+            _log = new Log("Rzr.Comp", _DynCodeRoot?.Log);
             var wrapLog = Log.Call();
             wrapLog("ok");
         }

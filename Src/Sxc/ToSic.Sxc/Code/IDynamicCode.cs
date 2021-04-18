@@ -212,5 +212,16 @@ namespace ToSic.Sxc.Code
         ICmsContext CmsContext { get; }
 
         #endregion
+
+        #region Accessor to Root
+
+        /// <summary>
+        /// The dynamic code root which many dynamic code objects need to access prepared context, state etc.
+        /// </summary>
+        [PrivateApi("internal, for passing around context!")]
+        // ReSharper disable once InconsistentNaming
+        IDynamicCodeRoot _DynCodeRoot { get; }
+
+        #endregion
     }
 }

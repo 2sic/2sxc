@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Code
     /// Note that other DynamicCode objects like RazorComponent or ApiController reference this object for all the interface methods of <see cref="IDynamicCode"/>.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract partial class DynamicCodeRoot : HasLog, IDynamicCode
+    public abstract partial class DynamicCodeRoot : HasLog, IDynamicCodeRoot, IDynamicCode
     {
         #region Constructor
 
@@ -85,6 +85,12 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc />
         public IInPageEditingSystem Edit { get; private set; }
+
+        #endregion
+
+        #region Accessor to Root
+        
+        [PrivateApi] public IDynamicCodeRoot _DynCodeRoot => this;
 
         #endregion
 

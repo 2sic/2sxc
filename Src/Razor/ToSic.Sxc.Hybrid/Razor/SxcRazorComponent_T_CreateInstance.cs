@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Hybrid.Razor
             //return "all is ok with " + virtualPath + "(" + path + ")";
             
             return path.EndsWith(CodeCompiler.CsFileExtension)
-                ? DynCode.CreateInstance(path, dontRelyOnParameterOrder, name, null, throwOnError)
+                ? _DynCodeRoot.CreateInstance(path, dontRelyOnParameterOrder, name, null, throwOnError)
                 : throw new NotImplementedException(); 
             // CreateInstanceCshtml(path);
         }

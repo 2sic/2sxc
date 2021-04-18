@@ -1,11 +1,13 @@
-﻿using ToSic.Sxc.Dnn;
+﻿using ToSic.Eav.Documentation;
+using ToSic.Sxc.Dnn;
 
-namespace ToSic.Sxc.Hybrid.Razor
+namespace ToSic.Sxc.Hybrid
 {
     public partial class RazorComponent
     {
-        internal CodeManager CodeManager => _codeManager ?? (_codeManager = new CodeManager(this));
-        private CodeManager _codeManager;
+        [PrivateApi]
+        internal RazorCodeManager CodeManager => _codeManager ?? (_codeManager = new RazorCodeManager(this));
+        private RazorCodeManager _codeManager;
 
         /// <summary>
         /// Code-Behind of this .cshtml file - located in a file with the same name but ending in .code.cshtml

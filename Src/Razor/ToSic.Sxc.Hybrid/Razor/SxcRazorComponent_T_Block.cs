@@ -1,21 +1,20 @@
 ﻿using System;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Hybrid.Razor
 {
-    public partial class RazorComponent<TModel>: ISxcRazorComponent
+    public partial class RazorComponent<TModel>: IHybridRazorComponent
     {
         #region DynCode
 
-        public DynamicCodeRoot DynCode
+        public IDynamicCodeRoot _DynCodeRoot
         {
             get => _dynCode ??= GetService<DynamicCodeRoot>().Init(Block, Log);
             set => _dynCode = value;
         }
 
-        private DynamicCodeRoot _dynCode;
+        private IDynamicCodeRoot _dynCode;
         #endregion
 
         public virtual IBlock Block 

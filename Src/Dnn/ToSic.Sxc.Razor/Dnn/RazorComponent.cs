@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Search;
-
 
 namespace ToSic.Sxc.Dnn
 {
@@ -15,35 +15,32 @@ namespace ToSic.Sxc.Dnn
     /// Provides context infos like the Dnn object, helpers like Edit and much more. <br/>
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract partial class RazorComponent : Hybrid.Razor.RazorComponent, IRazorComponent
+    public abstract partial class RazorComponent : Hybrid.RazorComponent, IRazorComponent
     {
 
-        #region Link, Edit, Dnn, App, Data
-
         /// <inheritdoc />
-        public IDnnContext Dnn => DynCode.Dnn;
-
-
-        #endregion
+        public IDnnContext Dnn => (_DynCodeRoot as IDnnDynamicCode)?.Dnn;
 
         #region CustomizeSearch corrections
 
         /// <inheritdoc />
         [PrivateApi]
-        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo,
+        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo,
             DateTime beginDate)
         {
             // in 2sxc 11.11 the signature changed. 
             // so the engine will call this function
             // but the override will be the other one - so I must call that
-#pragma warning disable 618
+            // unless of course this method was overridden by the final inheriting RazorComponent
+#pragma warning disable 618 // disable warning about IContainer being obsolete
             CustomizeSearch(searchInfos, moduleInfo as IContainer, beginDate);
 #pragma warning restore 618
         }
 
-#pragma warning disable 618
         [PrivateApi]
+#pragma warning disable 618 // disable warning about IContainer being obsolete
         public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
+#pragma warning restore 618
             DateTime beginDate)
         {
             // new in 2sxc 11, if it has not been overridden, then try to check if code has something for us.
@@ -51,7 +48,6 @@ namespace ToSic.Sxc.Dnn
             if (code == null) return;
             if (code is RazorComponent codeAsRazor) codeAsRazor.CustomizeSearch(searchInfos, moduleInfo, beginDate);
         }
-#pragma warning restore 618
 
 
         #endregion

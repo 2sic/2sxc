@@ -9,7 +9,5 @@ namespace ToSic.Sxc.Code
 
         [PrivateApi] public IBlock Block => UnwrappedContents?.Block;
 
-
-        //public IContextOfSite Context => ((IDynamicCodeInternal)UnwrappedContents).Context;
     }
 }

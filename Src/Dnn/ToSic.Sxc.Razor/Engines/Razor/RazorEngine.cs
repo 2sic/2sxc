@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Configuration;
-using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Web;
@@ -131,7 +130,7 @@ namespace ToSic.Sxc.Engines
         private void InitHelpers(RazorComponentBase webPage, int compatibility)
         {
             webPage.Html = new Razor.HtmlHelper();
-            webPage.DynCode = _dnnDynCodeLazy.Value.Init(Block, Log, compatibility);
+            webPage._DynCodeRoot = _dnnDynCodeLazy.Value.Init(Block, Log, compatibility);
 
             #region New in 10.25 - ensure jquery is not included by default
 

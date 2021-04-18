@@ -1,12 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Hybrid.Razor;
+using ToSic.Sxc.Hybrid;
 using ToSic.Sxc.Mvc;
-using ToSic.Sxc.Mvc.Dev;
-//using ToSic.Sxc.Mvc.Engines;
-using ToSic.Sxc.Mvc.RazorPages;
 using ToSic.Sxc.Mvc.Web;
 using ToSic.Sxc.Razor.Engine;
 
@@ -39,11 +35,11 @@ namespace Website.Pages.RenderPartial
                     Subject = "This is the subject"
                 }, rzv =>
                 {
-                    if (rzv.RazorPage is ISxcRazorComponent asSxc)
+                    if (rzv.RazorPage is IHybridRazorComponent asSxc)
                     {
-                        asSxc.DynCode = dynCode;
+                        asSxc._DynCodeRoot = dynCode;
                         //asSxc.VirtualPath = path;
-                        asSxc.Purpose = Purpose.WebView;
+                        //asSxc.Purpose = Purpose.WebView;
                     }
                 });
         }

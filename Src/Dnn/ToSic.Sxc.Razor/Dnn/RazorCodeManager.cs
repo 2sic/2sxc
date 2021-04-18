@@ -5,10 +5,10 @@ using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Dnn
 {
-    public class CodeManager: HasLog
+    public class RazorCodeManager: HasLog
     {
-        public Hybrid.Razor.RazorComponent Parent;
-        public CodeManager(Hybrid.Razor.RazorComponent parent): base("Rzr.Code", parent.Log)
+        public Hybrid.RazorComponent Parent;
+        public RazorCodeManager(Hybrid.RazorComponent parent): base("Rzr.Code", parent.Log)
         {
             Parent = parent;
         }
@@ -22,11 +22,6 @@ namespace ToSic.Sxc.Dnn
         /// Determines if code has been compiled (or at least attempted)
         /// </summary>
         protected bool BuildComplete;
-
-        ///// <summary>
-        ///// Switch to determine if we're accessing from internal, or from the rendering page
-        ///// </summary>
-        //private bool _codeAccessIsFromCshtml = true;
 
         /// <summary>
         /// Copy of any exception thrown when compiling the code
