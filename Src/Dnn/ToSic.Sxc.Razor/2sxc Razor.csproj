@@ -121,7 +121,6 @@
     <Compile Include="Dnn\beta\InheritRazorComponent.cs" />
     <Compile Include="Dnn\RazorCodeManager.cs" />
     <Compile Include="Dnn\RazorComponentCode.cs" />
-    <Compile Include="Dnn\RazorComponent_Code.cs" />
     <Compile Include="Dnn\RazorComponent_Customize.cs" />
     <Compile Include="Dnn\Run\DnnEngineFinder.cs" />
     <Compile Include="Dnn\Web\IRazorComponent.cs" />
@@ -132,7 +131,6 @@
     <Compile Include="Hybrid\Razor\RazorComponent_Code.cs" />
     <Compile Include="Hybrid\Razor\RazorComponent_Obsolete.cs" />
     <Compile Include="Web\RazorComponentBase.cs" />
-    <Compile Include="Dnn\RazorComponent_Obsolete.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engines\Razor\HtmlHelper.cs" />
     <Compile Include="Engines\Razor\RazorEngine.cs" />
