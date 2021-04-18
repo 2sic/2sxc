@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Hybrid
+﻿namespace ToSic.Custom
 {
     public abstract class RazorComponent: RazorComponent<object>
     {

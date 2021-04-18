@@ -1,7 +1,8 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Sxc.Dnn;
 
-namespace ToSic.Sxc.Hybrid
+// ReSharper disable once CheckNamespace
+namespace ToSic.Custom
 {
     public partial class RazorComponent
     {

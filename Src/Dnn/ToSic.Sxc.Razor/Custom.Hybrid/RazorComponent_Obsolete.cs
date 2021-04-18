@@ -5,7 +5,8 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 
-namespace ToSic.Sxc.Hybrid
+ // ReSharper disable once CheckNamespace
+ namespace ToSic.Custom
 {
     // Important Note
     // The new hybrid implementation doesn't actually need this

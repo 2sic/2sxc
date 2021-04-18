@@ -1,6 +1,7 @@
 ﻿using ToSic.Sxc.Code;
+using ToSic.Sxc.Hybrid;
 
-namespace ToSic.Sxc.Hybrid
+namespace ToSic.Custom
 {
     public partial class RazorComponent<TModel>: IHybridRazorComponent
     {

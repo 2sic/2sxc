@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
@@ -12,7 +11,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Hybrid
+namespace ToSic.Custom
 {
     public partial class RazorComponent<TModel> : IDynamicCode
     {

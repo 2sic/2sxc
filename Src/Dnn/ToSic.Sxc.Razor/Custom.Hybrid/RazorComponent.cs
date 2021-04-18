@@ -6,13 +6,15 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Hybrid;
 using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 
-namespace ToSic.Sxc.Hybrid
+// ReSharper disable once CheckNamespace
+namespace ToSic.Custom
 {
     /// <summary>
     /// The base class for Hybrid Razor-Components in 2sxc 12 <br/>

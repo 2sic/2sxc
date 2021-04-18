@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Hybrid
+﻿namespace ToSic.Custom
 {
     /// <summary>
     /// Dummy model that doesn't do anything
