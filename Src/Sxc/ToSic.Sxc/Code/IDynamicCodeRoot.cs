@@ -2,6 +2,7 @@
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Code
 {
@@ -12,6 +13,8 @@ namespace ToSic.Sxc.Code
     [PrivateApi]
     public interface IDynamicCodeRoot : IDynamicCode
     {
+        [PrivateApi("WIP")] IBlock Block { get; }
+
         [PrivateApi]
         ILookUpEngine ConfigurationProvider { get; }
         

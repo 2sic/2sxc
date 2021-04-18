@@ -23,12 +23,8 @@ namespace ToSic.Sxc.Code
     /// Important for dynamic code files like Razor or WebApi. Note that there are many overloads to ensure that AsDynamic and AsEntity "just work" even if you give them the original data. 
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-#pragma warning disable 618
     public interface IDynamicCode: ICreateInstance, ICompatibilityLevel, IHasLog // inherit from old namespace to ensure compatibility
-#pragma warning restore 618
     {
-        [PrivateApi("WIP")] IBlock Block { get; }
-
         /// <summary>
         /// Get a service from the EAV / 2sxc Dependency Injection. 
         /// </summary>

@@ -49,6 +49,9 @@ namespace ToSic.SexyContent.WebApi
         public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(_DynCodeRoot?.Block?.Context?.UserMayEdit ?? false));
         private SxcHelper _sxc;
 
+        /// <summary>
+        /// Old API - probably never used, but we shouldn't remove it as we could break some existing code out there
+        /// </summary>
         [PrivateApi] public IBlock Block => GetBlock();
         [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
 

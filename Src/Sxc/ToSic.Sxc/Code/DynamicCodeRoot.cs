@@ -63,9 +63,9 @@ namespace ToSic.Sxc.Code
             CompatibilityLevel = compatibility;
             ((CmsContext) CmsContext).Update(block.Context);
             Block = block;
-            App = Block.App;
-            Data = Block.Data;
-            Edit = new InPageEditingHelper(Block, Log);
+            App = block.App;
+            Data = block.Data;
+            Edit = new InPageEditingHelper(block, Log);
 
             return this;
         }

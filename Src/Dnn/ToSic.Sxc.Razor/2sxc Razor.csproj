@@ -130,6 +130,7 @@
     <Compile Include="Engines\Razor\RazorEngine_Callbacks.cs" />
     <Compile Include="Hybrid\Razor\RazorComponent.cs" />
     <Compile Include="Hybrid\Razor\RazorComponent_Code.cs" />
+    <Compile Include="Hybrid\Razor\RazorComponent_Obsolete.cs" />
     <Compile Include="Web\RazorComponentBase.cs" />
     <Compile Include="Dnn\RazorComponent_Obsolete.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

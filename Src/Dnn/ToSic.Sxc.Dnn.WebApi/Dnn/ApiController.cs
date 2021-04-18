@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Dnn
         /// <inheritdoc />
         public new IDnnContext Dnn => base.Dnn;
 
-        [PrivateApi] public IBlock Block => GetBlock();
+        [PrivateApi] public IBlock _Block => GetBlock();
         [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
 
         /// <inheritdoc />

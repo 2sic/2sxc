@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Hybrid
         /// <inheritdoc />
         public IInPageEditingSystem Edit => _DynCodeRoot.Edit;
 
-        [PrivateApi] public IBlock Block => throw new NotSupportedException("don't use this");
+        [PrivateApi] public IBlock _Block => throw new NotSupportedException("don't use this");
 
         /// <inheritdoc />
         public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();

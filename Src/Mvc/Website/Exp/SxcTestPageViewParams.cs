@@ -49,15 +49,15 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
         #endregion
 
 
-        public override IBlock Block 
-        {
-            get
-            {
-                if (_block != null) return _block;
-                _block = SxcMvc.CreateBlock(TestIds.PrimaryZone, PageId, Id, AppId, BlockGuid, Log);
-                return _block;
-            }
-        }
+        //public override IBlock Block 
+        //{
+        //    get
+        //    {
+        //        if (_block != null) return _block;
+        //        _block = SxcMvc.CreateBlock(TestIds.PrimaryZone, PageId, Id, AppId, BlockGuid, Log);
+        //        return _block;
+        //    }
+        //}
 
     }
 }
