@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Hybrid
     /// The base class for Hybrid Razor-Components in 2sxc 12 <br/>
     /// Provides context objects like CmsContext, helpers like Edit and much more. <br/>
     /// </summary>
-    [PrivateApi]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("As of now just fyi, should be finalized for 2sxc 12")]
     public abstract partial class RazorComponent : RazorComponentBase, IHybridRazorComponent
     {
 
