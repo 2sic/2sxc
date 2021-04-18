@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc.Razor.Internal;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Hybrid.Razor;
+using ToSic.Sxc.Hybrid;
 using ToSic.Sxc.Mvc.Dev;
 
 namespace ToSic.Sxc.Mvc.RazorPages.Exp

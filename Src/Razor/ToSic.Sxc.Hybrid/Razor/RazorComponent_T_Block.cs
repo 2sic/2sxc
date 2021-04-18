@@ -1,8 +1,6 @@
-﻿using System;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code;
+﻿using ToSic.Sxc.Code;
 
-namespace ToSic.Sxc.Hybrid.Razor
+namespace ToSic.Sxc.Hybrid
 {
     public partial class RazorComponent<TModel>: IHybridRazorComponent
     {

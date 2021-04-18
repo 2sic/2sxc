@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Hybrid
     // which would result in errors on AsDynamic(some-object) even though it should just work
     public partial class RazorComponent
     {
-        // Obsolete stuff - not supported any more in RazorPage10 - maybe re-activate to show helpfull error messages
+        // Obsolete stuff - not supported any more in RazorPage10 - maybe re-activate to show helpful error messages
 
         #region Shared Code Block between RazorComponent_Obsolete and ApiController_Obsolete
 

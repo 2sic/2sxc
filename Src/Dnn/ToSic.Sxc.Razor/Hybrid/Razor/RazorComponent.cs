@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
@@ -18,7 +16,7 @@ namespace ToSic.Sxc.Hybrid
 {
     /// <summary>
     /// The base class for Hybrid Razor-Components in 2sxc 12 <br/>
-    /// Provides context infos like the Dnn object, helpers like Edit and much more. <br/>
+    /// Provides context objects like CmsContext, helpers like Edit and much more. <br/>
     /// </summary>
     [PrivateApi]
     public abstract partial class RazorComponent : RazorComponentBase, IHybridRazorComponent
@@ -31,8 +29,6 @@ namespace ToSic.Sxc.Hybrid
 
         /// <inheritdoc />
         public IInPageEditingSystem Edit => _DynCodeRoot.Edit;
-
-        [PrivateApi] public IBlock _Block => throw new NotSupportedException("don't use this");
 
         /// <inheritdoc />
         public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ToSic.Sxc.Hybrid.Razor
+﻿namespace ToSic.Sxc.Hybrid
 {
     public abstract class RazorComponent: RazorComponent<object>
     {

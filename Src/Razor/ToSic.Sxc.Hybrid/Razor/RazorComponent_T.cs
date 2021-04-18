@@ -6,7 +6,7 @@ using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 
-namespace ToSic.Sxc.Hybrid.Razor
+namespace ToSic.Sxc.Hybrid
 {
     // test, doesn't do anything yet
     public abstract partial class RazorComponent<TModel>: Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>

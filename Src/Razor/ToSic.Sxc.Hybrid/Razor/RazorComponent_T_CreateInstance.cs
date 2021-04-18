@@ -3,7 +3,7 @@ using System.IO;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Code;
 
-namespace ToSic.Sxc.Hybrid.Razor
+namespace ToSic.Sxc.Hybrid
 {
     public partial class RazorComponent<TModel>
     {

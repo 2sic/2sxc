@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Hybrid.Razor
+﻿namespace ToSic.Sxc.Hybrid
 {
     /// <summary>
     /// Dummy model that doesn't do anything

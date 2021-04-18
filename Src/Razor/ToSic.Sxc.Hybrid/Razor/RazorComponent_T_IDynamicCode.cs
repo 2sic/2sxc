@@ -10,10 +10,9 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
-
 using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Hybrid.Razor
+namespace ToSic.Sxc.Hybrid
 {
     public partial class RazorComponent<TModel> : IDynamicCode
     {
@@ -70,15 +69,12 @@ namespace ToSic.Sxc.Hybrid.Razor
         /// <inheritdoc />
         public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot.AsList(list);
 
-        public T CreateSource<T>(IDataStream inStream) where T : IDataSource
-        {
-            throw new NotImplementedException();
-        }
+        public T CreateSource<T>(IDataStream inStream) where T : IDataSource 
+            => _DynCodeRoot.CreateSource<T>(inStream);
 
-        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null) where T : IDataSource
-        {
-            throw new NotImplementedException();
-        }
+        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
+            where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
 
         #endregion
