@@ -127,9 +127,9 @@
     <Compile Include="Dnn\Web\IHtmlHelper.cs" />
     <Compile Include="Dnn\RazorComponent.cs" />
     <Compile Include="Engines\Razor\RazorEngine_Callbacks.cs" />
-    <Compile Include="Hybrid\Razor\RazorComponent.cs" />
-    <Compile Include="Hybrid\Razor\RazorComponent_Code.cs" />
-    <Compile Include="Hybrid\Razor\RazorComponent_Obsolete.cs" />
+    <Compile Include="Custom.Hybrid\RazorComponent.cs" />
+    <Compile Include="Custom.Hybrid\RazorComponent_Code.cs" />
+    <Compile Include="Custom.Hybrid\RazorComponent_Obsolete.cs" />
     <Compile Include="Web\RazorComponentBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engines\Razor\HtmlHelper.cs" />
@@ -166,7 +166,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Hybrid\readme.md" />
+    <None Include="Custom.Hybrid\readme.md" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
