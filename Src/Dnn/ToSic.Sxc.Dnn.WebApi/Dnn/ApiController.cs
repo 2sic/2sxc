@@ -31,7 +31,10 @@ namespace ToSic.Sxc.Dnn
         /// <inheritdoc />
         public new IDnnContext Dnn => base.Dnn;
 
-        [PrivateApi] public IBlock _Block => GetBlock();
+        /// <summary>
+        ///  Probably obsolete, but a bit risky to just remove
+        /// </summary>
+        [PrivateApi] public IBlock Block => GetBlock();
         [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
 
         /// <inheritdoc />
