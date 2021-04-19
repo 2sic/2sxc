@@ -15,5 +15,22 @@ namespace ToSic.Sxc.Mvc.Run
         public bool IsAdmin => true;
         public bool IsDesigner => true;
         public bool IsAnonymous => false;
+
+        #region New Permission properties for v12
+
+        /// <inheritdoc />
+        // This is a hopefully clearer implementation of what the user can do
+        public bool IsSiteAdmin => IsAdmin;
+
+        /// <inheritdoc />
+        // This is a hopefully clearer implementation of what the user can do
+        public bool IsSiteDeveloper => IsDesigner;
+
+        /// <inheritdoc />
+        // This is a hopefully clearer implementation of what the user can do
+        public bool IsSystemAdmin => IsSuperUser;
+
+        #endregion
+
     }
 }

@@ -39,6 +39,22 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public bool IsAdmin => WipConstants.IsAdmin;
         public bool IsDesigner => WipConstants.IsDesigner;
 
+        #region New Permission properties for v12
+
+        /// <inheritdoc />
+        // This is a hopefully clearer implementation of what the user can do
+        public bool IsSiteAdmin => IsAdmin;
+
+        /// <inheritdoc />
+        // This is a hopefully clearer implementation of what the user can do
+        public bool IsSiteDeveloper => IsDesigner;
+
+        /// <inheritdoc />
+        // This is a hopefully clearer implementation of what the user can do
+        public bool IsSystemAdmin => IsSuperUser;
+
+        #endregion
+
         public User UnwrappedContents
         {
             get => _unwrappedUser ??= _userResolver.GetUser();

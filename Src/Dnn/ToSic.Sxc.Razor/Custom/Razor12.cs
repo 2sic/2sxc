@@ -113,7 +113,7 @@ namespace ToSic.Custom
 
         #region CmsContext
 
-        [PrivateApi] public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
+        public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
 
         #endregion
     }

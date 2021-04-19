@@ -30,6 +30,22 @@ namespace ToSic.Sxc.Dnn.Run
         public List<int> Roles => _roles ?? (_roles = BuildRoleList());
         private List<int> _roles;
 
+        #region New Permission properties for v12
+
+        /// <inheritdoc />
+        // This is a hopefully clearer implementation of what the user can do
+        public bool IsSiteAdmin => IsAdmin;
+
+        /// <inheritdoc />
+        // This is a hopefully clearer implementation of what the user can do
+        public bool IsSiteDeveloper => IsDesigner;
+        
+        /// <inheritdoc />
+        // This is a hopefully clearer implementation of what the user can do
+        public bool IsSystemAdmin => IsSuperUser;
+
+        #endregion
+        
         public bool IsSuperUser => UnwrappedContents?.IsSuperUser ?? false;
 
         public bool IsAdmin => _isAdmin 
