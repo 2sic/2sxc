@@ -51,9 +51,13 @@ namespace ToSic.Sxc.Oqt.App
             {
                 await base.OnAfterRenderAsync(firstRender);
 
-                if (PageState.Runtime == Runtime.Server)
-                {
-                    var interop = new Interop(JSRuntime);
+
+                // TODO: Runtime check is commented because of breaking issue in Oqtane v2.0.1
+                // https://github.com/oqtane/oqtane.framework/pull/916
+                // Runtime.Server enum is moved from Oqtane.UI to Oqtane.Shared namespace.
+                //if (PageState.Runtime == Runtime.Server)
+                //{
+                var interop = new Interop(JSRuntime);
 
                     #region 2sxc Standard Assets and Header
 
@@ -99,7 +103,7 @@ namespace ToSic.Sxc.Oqt.App
 
 
                     #endregion
-                }
+                //}
             }
         }
     }
