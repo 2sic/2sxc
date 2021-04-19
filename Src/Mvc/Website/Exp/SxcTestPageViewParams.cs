@@ -7,7 +7,7 @@ using ToSic.Sxc.Mvc.Dev;
 
 namespace ToSic.Sxc.Mvc.RazorPages.Exp
 {
-    public abstract class SxcTestPageViewParams<TModel>: RazorComponent<TModel>
+    public abstract class SxcTestPageViewParams<TModel>: Razor12<TModel>
     {
         [RazorInject]
         public SxcMvc SxcMvc { get; set; }

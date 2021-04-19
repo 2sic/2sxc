@@ -3,7 +3,7 @@ using ToSic.Sxc.Hybrid;
 
 namespace ToSic.Custom
 {
-    public partial class RazorComponent<TModel>: IHybridRazorComponent
+    public partial class Razor12<TModel>: IHybridRazorComponent
     {
         #region DynCode
 

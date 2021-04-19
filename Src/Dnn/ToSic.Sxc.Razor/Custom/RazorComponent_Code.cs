@@ -4,7 +4,7 @@ using ToSic.Sxc.Dnn;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Custom
 {
-    public partial class RazorComponent
+    public partial class Razor12
     {
         [PrivateApi]
         internal RazorCodeManager CodeManager => _codeManager ?? (_codeManager = new RazorCodeManager(this));

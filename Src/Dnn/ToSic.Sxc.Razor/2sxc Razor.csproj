@@ -127,7 +127,7 @@
     <Compile Include="Dnn\Web\IHtmlHelper.cs" />
     <Compile Include="Dnn\RazorComponent.cs" />
     <Compile Include="Engines\Razor\RazorEngine_Callbacks.cs" />
-    <Compile Include="Custom\RazorComponent.cs" />
+    <Compile Include="Custom\Razor12.cs" />
     <Compile Include="Custom\RazorComponent_Code.cs" />
     <Compile Include="Custom\RazorComponent_Obsolete.cs" />
     <Compile Include="Web\RazorComponentBase.cs" />

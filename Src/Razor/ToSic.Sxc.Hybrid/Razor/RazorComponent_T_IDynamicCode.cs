@@ -13,7 +13,7 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Custom
 {
-    public partial class RazorComponent<TModel> : IDynamicCode
+    public partial class Razor12<TModel> : IDynamicCode
     {
 
         #region Content, Header, etc. and List

@@ -5,7 +5,7 @@ using ToSic.Sxc.Code;
 
 namespace ToSic.Custom
 {
-    public partial class RazorComponent<TModel>
+    public partial class Razor12<TModel>
     {
         public string CreateInstancePath
         {

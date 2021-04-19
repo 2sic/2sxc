@@ -21,7 +21,7 @@ namespace ToSic.Custom
     /// Provides context objects like CmsContext, helpers like Edit and much more. <br/>
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("As of now just fyi, should be finalized for 2sxc 12")]
-    public abstract partial class RazorComponent : RazorComponentBase, IHybridRazorComponent
+    public abstract partial class Razor12 : RazorComponentBase, IHybridRazorComponent
     {
 
         #region Link, Edit, Dnn, App, Data

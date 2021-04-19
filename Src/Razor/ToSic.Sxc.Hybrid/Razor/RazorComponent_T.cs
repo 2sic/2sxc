@@ -9,7 +9,7 @@ using ToSic.Sxc.Blocks;
 namespace ToSic.Custom
 {
     // test, doesn't do anything yet
-    public abstract partial class RazorComponent<TModel>: Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>
+    public abstract partial class Razor12<TModel>: Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>
     {
         #region Constructor / DI
 
@@ -28,7 +28,7 @@ namespace ToSic.Custom
         public TService GetService<TService>() => ServiceProvider.Build<TService>();
 
 
-        protected RazorComponent()
+        protected Razor12()
         {
             Log = new Log("Mvc.SxcRzr");
         }
