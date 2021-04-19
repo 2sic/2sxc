@@ -5,8 +5,8 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Engines.Razor;
 using File = System.IO.File;
 
 namespace ToSic.Sxc.Web
@@ -40,8 +40,10 @@ namespace ToSic.Sxc.Web
             // Return if parent page is not a SexyContentWebPage
             if (!(parentPage is RazorComponentBase typedParent)) return;
 
+            // New in v12: the HtmlHelper must know about this page from now on, so we can't re-use the one from the parent
+            Html = new HtmlHelper(this); // typedParent.Html;
+            
             // Forward the context
-            Html = typedParent.Html;
             _DynCodeRoot = typedParent._DynCodeRoot;
             try
             {
