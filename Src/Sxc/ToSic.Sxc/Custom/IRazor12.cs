@@ -1,10 +1,11 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
 
-namespace ToSic.Sxc.Hybrid
+// ReSharper disable once CheckNamespace
+namespace ToSic.Custom
 {
     [PrivateApi("not sure yet if this will stay in Hybrid or go to Web.Razor or something, so keep it private for now")]
-    public interface IHybridRazorComponent: IDynamicCode
+    public interface IRazor12: IDynamicCode
     {
         /// <summary>
         /// For Razor components we need to ensure that we can set/update the _DynCodeRoot
@@ -13,6 +14,9 @@ namespace ToSic.Sxc.Hybrid
         // ReSharper disable once InconsistentNaming
         new IDynamicCodeRoot _DynCodeRoot { set; }
 
+        
+        [PrivateApi]
+        dynamic DynamicModel { get; }
         //Purpose Purpose { get; set; }
 
     }

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ToSic.Custom;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Hybrid;
 using ToSic.Sxc.Mvc;
 using ToSic.Sxc.Mvc.Web;
 using ToSic.Sxc.Razor.Engine;
@@ -35,7 +35,7 @@ namespace Website.Pages.RenderPartial
                     Subject = "This is the subject"
                 }, rzv =>
                 {
-                    if (rzv.RazorPage is IHybridRazorComponent asSxc)
+                    if (rzv.RazorPage is IRazor12 asSxc)
                     {
                         asSxc._DynCodeRoot = dynCode;
                         //asSxc.VirtualPath = path;

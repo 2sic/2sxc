@@ -1,9 +1,8 @@
 ﻿using ToSic.Sxc.Code;
-using ToSic.Sxc.Hybrid;
 
 namespace ToSic.Custom
 {
-    public partial class Razor12<TModel>: IHybridRazorComponent
+    public partial class Razor12<TModel>: IRazor12
     {
         #region DynCode
 

@@ -6,7 +6,6 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Hybrid;
 using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -21,7 +20,7 @@ namespace ToSic.Custom
     /// Provides context objects like CmsContext, helpers like Edit and much more. <br/>
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("As of now just fyi, should be finalized for 2sxc 12")]
-    public abstract partial class Razor12 : RazorComponentBase, IHybridRazorComponent
+    public abstract partial class Razor12 : RazorComponentBase, IRazor12
     {
 
         #region Link, Edit, Dnn, App, Data

@@ -4,7 +4,6 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Blocks;
 
 namespace ToSic.Custom
 {
@@ -27,7 +26,9 @@ namespace ToSic.Custom
         [PrivateApi]
         public TService GetService<TService>() => ServiceProvider.Build<TService>();
 
-
+        /// <summary>
+        /// Constructor - only available for inheritance
+        /// </summary>
         protected Razor12()
         {
             Log = new Log("Mvc.SxcRzr");
@@ -36,7 +37,7 @@ namespace ToSic.Custom
         public ILog Log { get; }
         #endregion
 
-        public Purpose Purpose { get; set; }
+        //public Purpose Purpose { get; set; }
 
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using ToSic.Custom;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Hybrid;
 
 namespace ToSic.Sxc.Razor.Engine
 {
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Razor.Engine
                 var result = await RazorRenderer.RenderToStringAsync(TemplatePath, new object(),
                     rzv =>
                     {
-                        if (rzv.RazorPage is not IHybridRazorComponent asSxc) return;
+                        if (rzv.RazorPage is not IRazor12 asSxc) return;
                         asSxc._DynCodeRoot = dynCode;
                         //asSxc.Purpose = Purpose;
                     });
