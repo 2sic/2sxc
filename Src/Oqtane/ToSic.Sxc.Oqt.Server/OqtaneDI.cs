@@ -16,6 +16,7 @@ using ToSic.Sxc.Oqt.Server.Blazor;
 using ToSic.Sxc.Oqt.Server.Code;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.Adam;
+using ToSic.Sxc.Oqt.Server.Extensions.Koi;
 using ToSic.Sxc.Oqt.Server.Page;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared.Run;
@@ -79,6 +80,13 @@ namespace ToSic.Sxc.Oqt.Server
 
             // Experimental - it seems that Blazor hides the url params in the request
             services.TryAddTransient<IHttp, HttpBlazor>();
+
+            // new in v12 - integrate KOI - experimental!
+            try
+            {
+                services.ActivateKoi2Di();
+            }
+            catch { /* ignore */ }
 
 
             return services;
