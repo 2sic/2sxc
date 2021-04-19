@@ -68,8 +68,7 @@ namespace ToSic.Sxc.Apps.Assets
         public const string CodeCshtmlExtension = ".code.cshtml";
         public const string CshtmlPrefix = "_";
 
-        // TODO: this is DNN specific razor cshtml template. We could make Hybrid version that is working in Oqtane and DNN, or solve it in some other way.
-        public const string DefaultCshtmlBody = @"@inherits ToSic.Sxc.Dnn.RazorComponent
+        public const string DefaultCshtmlBody = @"@inherits ToSic.Custom.Razor12
 
 <div @Edit.TagToolbar(Content)>
     Put your content here
