@@ -10,12 +10,12 @@ namespace ToSic.Sxc.Oqt.Server.Code
     /// The class then also has AsDynamic(...) and AsList(...) commands like a normal razor page.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract class DynamicCode : Sxc.Code.DynamicCode, IOqtaneDynamicCode, IHasOqtaneDynamicCodeContext
+    public abstract class DynamicCode : Sxc.Code.DynamicCode, IOqtaneDynamicCode //, IHasOqtaneDynamicCodeContext
     {
-        /// <inheritdoc />
-        /// TODO: WIP
+        ///// <inheritdoc />
+        ///// TODO: WIP
         //public IOqtContext Oqt => DynCode?.Oqt;
 
-        [PrivateApi] public OqtaneDynamicCode DynCode => (UnwrappedContents as IHasOqtaneDynamicCodeContext)?.DynCode;
+        //[PrivateApi] public OqtaneDynamicCodeRoot _DynCodeRoot => (UnwrappedContents as IHasOqtaneDynamicCodeContext)?._DynCodeRoot;
     }
 }

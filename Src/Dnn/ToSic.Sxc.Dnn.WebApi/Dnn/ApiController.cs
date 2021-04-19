@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using ToSic.Custom;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
@@ -9,7 +10,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.Dnn
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
     [DnnLogExceptions]
-    public abstract partial class ApiController : DynamicApiController, IDynamicWebApi
+    public abstract partial class ApiController : Api12, /*DynamicApiController,*/ IDnnDynamicWebApi, IDynamicWebApi
     {
         /// <inheritdoc />
         public new IDnnContext Dnn => base.Dnn;
@@ -35,99 +36,99 @@ namespace ToSic.Sxc.Dnn
         ///  Probably obsolete, but a bit risky to just remove
         /// </summary>
         [PrivateApi] public IBlock Block => GetBlock();
-        [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
+        //[PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
 
-        /// <inheritdoc />
-        public IApp App => _DynCodeRoot.App;
+        ///// <inheritdoc />
+        //public IApp App => _DynCodeRoot.App;
 
-        /// <inheritdoc />
-        public IBlockDataSource Data => _DynCodeRoot.Data;
-
-
-        #region AsDynamic implementations
-        /// <inheritdoc/>
-        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => _DynCodeRoot.AsDynamic(json, fallback);
-
-        /// <inheritdoc />
-        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.AsDynamic(entity);
-
-        /// <inheritdoc />
-        public dynamic AsDynamic(object dynamicEntity) =>  _DynCodeRoot.AsDynamic(dynamicEntity);
-
-        /// <inheritdoc />
-        public IEntity AsEntity(object dynamicEntity) =>  _DynCodeRoot.AsEntity(dynamicEntity);
-
-        #endregion
-
-        #region AsList
-
-        /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.AsList(list);
-
-        #endregion
+        ///// <inheritdoc />
+        //public IBlockDataSource Data => _DynCodeRoot.Data;
 
 
-        #region CreateSource implementations
+        //#region AsDynamic implementations
+        ///// <inheritdoc/>
+        //public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => _DynCodeRoot.AsDynamic(json, fallback);
 
-        /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
-            where T : IDataSource
-            =>  _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
+        ///// <inheritdoc />
+        //public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.AsDynamic(entity);
 
-        /// <inheritdoc />
-	    public T CreateSource<T>(IDataStream inStream) where T : IDataSource 
-            => _DynCodeRoot.CreateSource<T>(inStream);
+        ///// <inheritdoc />
+        //public dynamic AsDynamic(object dynamicEntity) =>  _DynCodeRoot.AsDynamic(dynamicEntity);
 
-        #endregion
+        ///// <inheritdoc />
+        //public IEntity AsEntity(object dynamicEntity) =>  _DynCodeRoot.AsEntity(dynamicEntity);
 
-        #region Content, Presentation & List
+        //#endregion
 
-        /// <inheritdoc />
-        public dynamic Content => _DynCodeRoot.Content;
+     //   #region AsList
 
-        /// <inheritdoc />
-        public dynamic Header => _DynCodeRoot.Header;
+     //   /// <inheritdoc />
+     //   public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.AsList(list);
 
-
-        #endregion
+     //   #endregion
 
 
-        #region Adam
+     //   #region CreateSource implementations
 
-        /// <inheritdoc />
-        public IFolder AsAdam(IDynamicEntity entity, string fieldName) => _DynCodeRoot.AsAdam(AsEntity(entity), fieldName);
+     //   /// <inheritdoc />
+     //   public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
+     //       where T : IDataSource
+     //       =>  _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
-        /// <inheritdoc />
-        public IFolder AsAdam(IEntity entity, string fieldName) => _DynCodeRoot.AsAdam(entity, fieldName);
+     //   /// <inheritdoc />
+	    //public T CreateSource<T>(IDataStream inStream) where T : IDataSource 
+     //       => _DynCodeRoot.CreateSource<T>(inStream);
 
+     //   #endregion
 
-        /// <inheritdoc />
-        public new Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
-            Stream stream = null,
-            string fileName = null,
-            string contentType = null,
-            Guid? guid = null,
-            string field = null,
-            string subFolder = "")
-            => base.SaveInAdam(dontRelyOnParameterOrder, stream, fileName, contentType, guid, field, subFolder);
+     //   #region Content, Presentation & List
 
-        #endregion
+     //   /// <inheritdoc />
+     //   public dynamic Content => _DynCodeRoot.Content;
 
-        #region Link & Edit - added to API in 2sxc 10.01
-
-        /// <inheritdoc />
-        public ILinkHelper Link => _DynCodeRoot?.Link;
-
-        /// <inheritdoc />
-        public IInPageEditingSystem Edit => _DynCodeRoot?.Edit;
-
-        #endregion
-
-        #region RunContext WiP
-
-        public ICmsContext CmsContext => _DynCodeRoot?.CmsContext;
+     //   /// <inheritdoc />
+     //   public dynamic Header => _DynCodeRoot.Header;
 
 
-        #endregion
+     //   #endregion
+
+
+     //   #region Adam
+
+     //   /// <inheritdoc />
+     //   public IFolder AsAdam(IDynamicEntity entity, string fieldName) => _DynCodeRoot.AsAdam(AsEntity(entity), fieldName);
+
+     //   /// <inheritdoc />
+     //   public IFolder AsAdam(IEntity entity, string fieldName) => _DynCodeRoot.AsAdam(entity, fieldName);
+
+
+     //   /// <inheritdoc />
+     //   public new Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+     //       Stream stream = null,
+     //       string fileName = null,
+     //       string contentType = null,
+     //       Guid? guid = null,
+     //       string field = null,
+     //       string subFolder = "")
+     //       => base.SaveInAdam(dontRelyOnParameterOrder, stream, fileName, contentType, guid, field, subFolder);
+
+     //   #endregion
+
+     //   #region Link & Edit - added to API in 2sxc 10.01
+
+     //   /// <inheritdoc />
+     //   public ILinkHelper Link => _DynCodeRoot?.Link;
+
+     //   /// <inheritdoc />
+     //   public IInPageEditingSystem Edit => _DynCodeRoot?.Edit;
+
+     //   #endregion
+
+     //   #region RunContext WiP
+
+     //   public ICmsContext CmsContext => _DynCodeRoot?.CmsContext;
+
+
+     //   #endregion
     }
 }

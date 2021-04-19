@@ -13,26 +13,29 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Oqt.Server.Code;
+using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Adam;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
-namespace ToSic.Sxc.Oqt.Server.Controllers
+// ReSharper disable once CheckNamespace
+namespace ToSic.Custom
 {
     /// <summary>
     /// Custom base controller class for custom dynamic 2sxc app api controllers.
     /// It is without dependencies in class constructor, commonly provided with DI.
     /// </summary>
-    public abstract class ApiController : OqtControllerBase, IHasOqtaneDynamicCodeContext /*, DynamicApiController, IHttpController, IDisposable, IHasDynCodeContext, IDynamicWebApi, IDnnDynamicCode, IDynamicCode, ICreateInstance, ICompatibilityLevel, IHasLog, IDynamicCodeBeforeV10*/
+    public abstract class Api12 : OqtControllerBase, IDynamicCode, IDynamicWebApi /*, IHasOqtaneDynamicCodeContext*/ /*, DynamicApiController, IHttpController, IDisposable, IHasDynCodeContext, IDynamicWebApi, IDnnDynamicCode, IDynamicCode, ICreateInstance, ICompatibilityLevel, IHasLog, IDynamicCodeBeforeV10*/
     {
         protected IServiceProvider ServiceProvider { get; private set; }
 
-        protected override string HistoryLogName { get; } = "oqt-api-controller";
+        [PrivateApi]
+        protected override string HistoryLogName { get; } = "web-api";
 
         private OqtState _oqtState;
 
@@ -52,7 +55,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
             var getBlock = _oqtState.GetBlock(true);
 
-            DynCode = ServiceProvider.Build<OqtaneDynamicCode>().Init(getBlock, Log);
+            _DynCodeRoot = ServiceProvider.Build<DynamicCodeRoot>().Init(getBlock, Log);
 
             var stxResolver = ServiceProvider.Build<IContextResolver>(typeof(IContextResolver));
             stxResolver.AttachRealBlock(() => getBlock);
@@ -63,32 +66,35 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         }
 
 
-        public OqtaneDynamicCode DynCode { get; set; }
+        // ReSharper disable once InconsistentNaming
+        public IDynamicCodeRoot _DynCodeRoot { get; set; }
 
-        [PrivateApi] public int CompatibilityLevel => DynCode.CompatibilityLevel;
+        [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
+
+        public TService GetService<TService>() => ServiceProvider.Build<TService>();
 
         /// <inheritdoc />
-        public IApp App => DynCode?.App;
+        public IApp App => _DynCodeRoot?.App;
 
         /// <inheritdoc />
-        public IBlockDataSource Data => DynCode?.Data;
+        public IBlockDataSource Data => _DynCodeRoot?.Data;
 
         #region AsDynamic implementations
         /// <inheritdoc/>
         [NonAction]
-        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => DynCode?.AsDynamic(json, fallback);
+        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => _DynCodeRoot?.AsDynamic(json, fallback);
 
         /// <inheritdoc />
         [NonAction]
-        public dynamic AsDynamic(IEntity entity) => DynCode?.AsDynamic(entity);
+        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot?.AsDynamic(entity);
 
         /// <inheritdoc />
         [NonAction]
-        public dynamic AsDynamic(object dynamicEntity) => DynCode?.AsDynamic(dynamicEntity);
+        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot?.AsDynamic(dynamicEntity);
 
         /// <inheritdoc />
         [NonAction]
-        public IEntity AsEntity(object dynamicEntity) => DynCode?.AsEntity(dynamicEntity);
+        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot?.AsEntity(dynamicEntity);
 
         #endregion
 
@@ -96,7 +102,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         /// <inheritdoc />
         [NonAction]
-        public IEnumerable<dynamic> AsList(object list) => DynCode?.AsList(list);
+        public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.AsList(list);
 
         #endregion
 
@@ -106,22 +112,22 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [NonAction]
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             where T : IDataSource
-            => DynCode.CreateSource<T>(inSource, configurationProvider);
+            => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
         /// <inheritdoc />
         [NonAction]
         public T CreateSource<T>(IDataStream inStream) where T : IDataSource
-            => DynCode.CreateSource<T>(inStream);
+            => _DynCodeRoot.CreateSource<T>(inStream);
 
         #endregion
 
         #region Content, Presentation & List
 
         /// <inheritdoc />
-        public dynamic Content => DynCode?.Content;
+        public dynamic Content => _DynCodeRoot?.Content;
 
         /// <inheritdoc />
-        public dynamic Header => DynCode?.Header;
+        public dynamic Header => _DynCodeRoot?.Header;
 
 
         #endregion
@@ -130,11 +136,11 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         /// <inheritdoc />
         [NonAction]
-        public IFolder AsAdam(IDynamicEntity entity, string fieldName) => DynCode?.AsAdam(AsEntity(entity), fieldName);
+        public IFolder AsAdam(IDynamicEntity entity, string fieldName) => _DynCodeRoot?.AsAdam(AsEntity(entity), fieldName);
 
         /// <inheritdoc />
         [NonAction]
-        public IFolder AsAdam(IEntity entity, string fieldName) => DynCode?.AsAdam(entity, fieldName);
+        public IFolder AsAdam(IEntity entity, string fieldName) => _DynCodeRoot?.AsAdam(entity, fieldName);
 
 
         // Adam - Shared Code Across the APIs (prevent duplicate code)
@@ -161,7 +167,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             if (!Eav.Configuration.Features.EnabledOrException(feats, "can't save in ADAM", out var exp))
                 throw exp;
 
-            var appId = DynCode?.Block?.AppId ?? DynCode?.App?.AppId ?? throw new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
+            var appId = _DynCodeRoot?.Block?.AppId ?? _DynCodeRoot?.App?.AppId ?? throw new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
             return ServiceProvider.Build<AdamTransUpload<int, int>>(typeof(AdamTransUpload<int, int>))
                 .Init(appId, contentType, guid.Value, field, false, Log)
                 .UploadOne(stream, fileName, subFolder, true);
@@ -172,10 +178,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         #region Link & Edit - added to API in 2sxc 10.01
 
         /// <inheritdoc />
-        public ILinkHelper Link => DynCode?.Link;
+        public ILinkHelper Link => _DynCodeRoot?.Link;
 
         /// <inheritdoc />
-        public IInPageEditingSystem Edit => DynCode?.Edit;
+        public IInPageEditingSystem Edit => _DynCodeRoot?.Edit;
 
         #endregion
 
@@ -189,7 +195,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             string name = null,
             string relativePath = null,
             bool throwOnError = true) =>
-            DynCode.CreateInstance(virtualPath, dontRelyOnParameterOrder, name, CreateInstancePath, throwOnError);
+            _DynCodeRoot.CreateInstance(virtualPath, dontRelyOnParameterOrder, name, CreateInstancePath, throwOnError);
 
         #endregion
 
@@ -200,7 +206,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         #region RunContext WiP
 
-        public ICmsContext CmsContext => DynCode?.CmsContext;
+        public ICmsContext CmsContext => _DynCodeRoot?.CmsContext;
 
 
         #endregion

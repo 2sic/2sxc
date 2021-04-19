@@ -15,6 +15,7 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
@@ -38,6 +39,7 @@ namespace ToSic.SexyContent.WebApi
     [DnnLogExceptions]
     public abstract class SxcApiController : 
         DynamicApiController, 
+        IDnnDynamicWebApi,
         IDynamicWebApi, 
         IDynamicCodeBeforeV10,
 #pragma warning disable 618
