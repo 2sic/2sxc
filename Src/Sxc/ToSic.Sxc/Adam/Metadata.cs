@@ -13,10 +13,12 @@ namespace ToSic.Sxc.Adam
     public class AdamMetadataMaker
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly Lazy<IDataBuilder> _dataBuilderLazy;
 
-        public AdamMetadataMaker(IServiceProvider serviceProvider)
+        public AdamMetadataMaker(IServiceProvider serviceProvider, Lazy<IDataBuilder> dataBuilderLazy)
         {
             _serviceProvider = serviceProvider;
+            _dataBuilderLazy = dataBuilderLazy;
         }
 
         /// <summary>
@@ -36,7 +38,7 @@ namespace ToSic.Sxc.Adam
         internal IDynamicEntity GetFirstOrFake(AdamManager manager, MetadataFor mdId)
         {
             var meta = GetFirstMetadata(manager.AppRuntime, mdId) 
-                       ?? Build.FakeEntity(Eav.Constants.TransientAppId);
+                       ?? _dataBuilderLazy.Value.FakeEntity(Eav.Constants.TransientAppId);
             var dynEnt = new DynamicEntity(meta,
                 (manager.AppContext?.Site).SafeLanguagePriorityCodes(),
                 manager.CompatibilityLevel,

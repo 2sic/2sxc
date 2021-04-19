@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     /// </summary>
     //[SupportedModules("2sxc,2sxc-app")]
     //   [DnnLogExceptions]
-    [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+    [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
     [AutoValidateAntiforgeryToken]
     [Route(WebApiConstants.WebApiStateRoot + "/admin/type/[action]")]
     //[ApiController]
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 
         [HttpGet]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
         public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
             => _ctApiLazy.Value.Init(appId, Log).Get(scope, withStatistics);
 
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// </summary>
         [HttpGet]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
         public IDictionary<string, string> Scopes(int appId)
             => State.Get(appId).ContentTypes.GetAllScopesWithLabels(); // new AppRuntime().Init(State.Identity(null, appId), false, Log).ContentTypes.ScopesWithLabels();
 
@@ -58,17 +58,17 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// </summary>
         [HttpGet]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
         public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) => _ctApiLazy.Value.Init(appId, Log).GetSingle(contentTypeId, scope);
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
         public bool Delete(int appId, string staticName) => _ctApiLazy.Value.Init(appId, Log).Delete(staticName);
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
         // 2019-11-15 2dm special change: item to be Dictionary<string, object> because in DNN 9.4
         // it causes problems when a content-type has metadata, where a value then is a deeper object
         // in future, the JS front-end should send something clearer and not the whole object
@@ -86,12 +86,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.Constants.HostRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Host)]
         public bool AddGhost(int appId, string sourceStaticName) => _ctApiLazy.Value.Init(appId, Log).CreateGhost(sourceStaticName);
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
         public void SetTitle(int appId, int contentTypeId, int attributeId)
             => _ctApiLazy.Value.Init(appId, Log).SetTitle(contentTypeId, attributeId);
 

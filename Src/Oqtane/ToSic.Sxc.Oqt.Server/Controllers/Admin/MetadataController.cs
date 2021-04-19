@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 {
     /// <inheritdoc cref="IMetadataController" />
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+    [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
     public class MetadataController : OqtStatefulControllerBase, IMetadataController
     {

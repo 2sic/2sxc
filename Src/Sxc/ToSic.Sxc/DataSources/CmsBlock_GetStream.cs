@@ -37,7 +37,7 @@ namespace ToSic.Sxc.DataSources
                 }
 
                 var entitiesToDeliver = new List<IEntity>();
-                var originals = In[Eav.Constants.DefaultStreamName].Immutable;//.ToList();
+                var originals = GetInStream();
                 int i = 0, entityId = 0, prevIdForErrorReporting = 0;
                 try
                 {
@@ -99,6 +99,22 @@ namespace ToSic.Sxc.DataSources
             {
                 throw new Exception("Error loading items of a module - probably the module-id is incorrect - happens a lot with test-values on visual queries.", ex);
             }
+        }
+
+        private ImmutableList<IEntity> GetInStream()
+        {
+            var callLog = Log.Call<ImmutableList<IEntity>>();
+            
+            // Check if in not connected, in which case we must find it yourself
+            if (!In.ContainsKey(Eav.Constants.DefaultStreamName))
+            {
+                var showDrafts = Block?.Context?.UserMayEdit ?? false;
+                Log.Add($"In not attached, will auto-attach with showDrafts: {showDrafts}");
+                var publishing = DataSourceFactory.GetPublishing(this, showDrafts, Configuration.LookUpEngine);
+                Attach(publishing);
+            }
+
+            return callLog(null, In[Eav.Constants.DefaultStreamName].List.ToImmutableList());
         }
 
         private static IEntity GetPresentationEntity(IReadOnlyCollection<IEntity> originals, IReadOnlyList<IEntity> presItems, int itemIndex, IEntity demo, int entityId)

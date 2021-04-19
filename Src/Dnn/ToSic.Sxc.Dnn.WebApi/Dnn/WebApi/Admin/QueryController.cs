@@ -3,8 +3,7 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
-using ToSic.Eav.Plumbing;
+using ToSic.Eav.DataSources.Catalog;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
@@ -36,7 +35,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// Get installed DataSources from .NET Runtime but only those with [PipelineDesigner Attribute]
         /// </summary>
         [HttpGet]
-        public IEnumerable<QueryRuntime.DataSourceInfo> DataSources() => QueryRuntime.QueryDataSources();
+        public IEnumerable<DataSourceDto> DataSources() => new DataSourceCatalog(Log).QueryDataSources();
 
 		/// <summary>
 		/// Save Pipeline
@@ -53,11 +52,22 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 	    /// Query the Result of a Pipeline using Test-Parameters
 	    /// </summary>
 	    [HttpGet]
-	    public QueryRunDto Run(int appId, int id)
+	    public QueryRunDto Run(int appId, int id, int top = 0)
         {
+            // todo: the first two lines should be in the QueryApi backend, but ATM that's still in EAV and is missing some objects
             var block = SharedContextResolver.RealBlockRequired();
             var config = GetService<AppConfigDelegate>().Init(Log).GetConfigProviderForModule(block.Context, block.App, block);
-            return GetService<QueryApi>().Init(appId, Log).Run(appId, id, config);
+            return GetService<QueryApi>().Init(appId, Log).Run(appId, id, top, config);
+        }
+        
+        // Experimental
+        [HttpGet]
+        public QueryRunDto DebugStream(int appId, int id, string from, string @out, int top = 25)
+        {
+            // todo: the first two lines should be in the QueryApi backend, but ATM that's still in EAV and is missing some objects
+            var block = SharedContextResolver.RealBlockRequired();
+            var config = GetService<AppConfigDelegate>().Init(Log).GetConfigProviderForModule(block.Context, block.App, block);
+            return GetService<QueryApi>().Init(appId, Log).DebugStream(appId, id, top, config, @from, @out);
         }
 
         /// <summary>

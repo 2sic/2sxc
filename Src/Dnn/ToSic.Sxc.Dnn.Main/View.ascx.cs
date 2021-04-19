@@ -39,7 +39,7 @@ namespace ToSic.SexyContent
             // add to insights-history for analytic
             History.Add("module", Log);
             _stopwatch = Stopwatch.StartNew();
-            _entireLog = Log.Call(message: $"Page:{TabId} '{Page?.Title}', Instance:{ModuleId} '{ModuleConfiguration.ModuleTitle}'");
+            _entireLog = Log.Call(message: $"Page:{TabId} '{Page?.Title}', Instance:{ModuleId} '{ModuleConfiguration.ModuleTitle}'", useTimer: true);
             var callLog = Log.Call(useTimer: true);
             // always do this, part of the guarantee that everything will work
             // 2020-01-06 2sxc 10.25 - moved away to DnnRenderingHelpers
@@ -93,7 +93,7 @@ namespace ToSic.SexyContent
                 DnnClientResources?.AddEverything();
             callLog(null);
             _stopwatch?.Stop();
-            _entireLog?.Invoke($"⌚ {_stopwatch?.ElapsedMilliseconds:##.##}ms");
+            _entireLog?.Invoke("✔"); //$"⌚ {_stopwatch?.ElapsedMilliseconds:##.##}ms");
         }
 
         private string RenderViewAndGatherJsCssSpecs()

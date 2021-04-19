@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <returns></returns>
         [HttpGet]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
         public ExportPartsOverviewDto Get(int zoneId, int appId, string scope)
             => _exportContentLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
                 .PreExportSummary(appId, zoneId, scope);
@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
         public ImportResultDto Import(int zoneId, int appId)
         {
             var wrapLog = Log.Call<ImportResultDto>();

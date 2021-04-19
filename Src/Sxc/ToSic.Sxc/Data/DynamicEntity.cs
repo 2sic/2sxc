@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Data
         /// But in rare cases (like when the App.Resources is a DynamicEntity) it must be injected separately.
         /// </summary>
         [PrivateApi]
-        private readonly IServiceProvider _serviceProviderOrNull;
+        protected readonly IServiceProvider _serviceProviderOrNull;
         
 
         /// <inheritdoc />

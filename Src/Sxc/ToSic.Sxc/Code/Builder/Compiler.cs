@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.Loader;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -35,40 +36,9 @@ namespace ToSic.Sxc.Code.Builder
             return CompileSourceCode(filePath, sourceCode, dllName);
         }
 
-        //// TODO: This is tmp implementation, it will be replaced latter
-        //public Assembly CompileApiCode(string filePath, string dllName, int siteId, string appFolder, string edition)
-        //{
-        //    Log.Add($"Starting compilation of: '{filePath}'");
-
-        //    var sourceCode = File.ReadAllText(filePath);
-
-        //    // stv: commented because it will be implemented in different way
-        //    //// Add Area and Route attributes
-        //    // sourceCode = PrepareApiCode(sourceCode, siteId, appFolder, edition);
-
-        //    return CompileSourceCode(filePath, sourceCode, dllName);
-        //}
-
-        //// TODO: This is tmp implementation.
-        //// Custom 2sxc App Api c# source code manipulation.
-        //private static string PrepareApiCode(string apiCode, int siteId, string appFolder, string edition)
-        //{
-        //    try
-        //    {
-        //        // Prepare source code for Area and Route attributes.
-        //        var routeAttributes =
-        //            $"[Area(\"{siteId}/api/sxc/app/{appFolder}/{edition}api\")]\n[Route(\"{{area:exists}}{siteId}/api/sxc/app/{appFolder}/{edition}api/[controller]\")]";
-        //        const string findPublicClass = @"\bpublic\s+\bclass";
-        //        var timeSpan = TimeSpan.FromMilliseconds(100);
-        //        // Modify c# code for custom 2sxc App Api.
-        //        // Append Area and Route attributes to public class.
-        //        return Regex.Replace(apiCode, findPublicClass, $"{routeAttributes}\npublic class", RegexOptions.None, timeSpan);
-        //    }
-        //    catch
-        //    {
-        //        return apiCode;
-        //    }
-        //}
+        // Ensure that can't be kept alive by stack slot references (real- or JIT-introduced locals).
+        // That could keep the SimpleUnloadableAssemblyLoadContext alive and prevent the unload.
+        [MethodImpl(MethodImplOptions.NoInlining)]
 
         public Assembly CompileSourceCode(string path, string sourceCode, string dllName)
         {
@@ -109,24 +79,23 @@ namespace ToSic.Sxc.Code.Builder
                         errors.Add($"{diagnostic.Id}: {diagnostic.GetMessage()}");
                     }
 
-                    // return null;
                     throw new Exception(String.Join("\n", errors));
                 }
 
                 wrapLog("Compilation done without any error.");
 
                 peStream.Seek(0, SeekOrigin.Begin);
-                // return peStream.ToArray();
                 pdbStream?.Seek(0, SeekOrigin.Begin);
 
-                var assembly = AssemblyLoadContext.Default.LoadFromStream(peStream, pdbStream);
+                var assemblyLoadContext = new SimpleUnloadableAssemblyLoadContext();
+                var assembly = assemblyLoadContext.LoadFromStream(peStream, pdbStream);
+
                 return assembly;
             }
         }
 
         public static CSharpCompilation GenerateCode(string path, SourceText sourceCode, string dllName)
         {
-            //var codeString = SourceText.From(sourceCode);
             var options = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp9);
 
             var parsedSyntaxTree = SyntaxFactory.ParseSyntaxTree(sourceCode, options, path);

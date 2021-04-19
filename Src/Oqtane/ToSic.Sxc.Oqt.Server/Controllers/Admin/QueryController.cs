@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.DataSources.Catalog;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     /// Proxy Class to the EAV PipelineDesignerController (Web API Controller)
     /// </summary>
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+    [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
     public class QueryController : OqtStatefulControllerBase, IQueryController
     {
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// Get installed DataSources from .NET Runtime but only those with [PipelineDesigner Attribute]
         /// </summary>
         [HttpGet]
-        public IEnumerable<QueryRuntime.DataSourceInfo> DataSources() => QueryRuntime.QueryDataSources();
+        public IEnumerable<DataSourceDto> DataSources() => new DataSourceCatalog(Log).QueryDataSources();
 
         /// <summary>
         /// Save Pipeline
@@ -64,12 +64,26 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// Query the Result of a Pipeline using Test-Parameters
         /// </summary>
         [HttpGet]
-        public QueryRunDto Run(int appId, int id)
+        public QueryRunDto Run(int appId, int id, int top = 0)
         {
+            // todo: the first three lines should be in the QueryApi backend, but ATM that's still in EAV and is missing some objects
             var block = GetBlock();
             var context = GetContext();
             var config = _configProviderLazy.Value.Init(Log).GetConfigProviderForModule(context, block?.App, block);
-            return _queryLazy.Value.Init(appId, Log).Run(appId, id, config);
+            return _queryLazy.Value.Init(appId, Log).Run(appId, id, top, config);
+        }
+        
+        /// <summary>
+        /// Query the Result of a Pipeline using Test-Parameters
+        /// </summary>
+        [HttpGet]
+        public QueryRunDto DebugStream(int appId, int id, string from, string @out, int top = 25)
+        {
+            // todo: the first three lines should be in the QueryApi backend, but ATM that's still in EAV and is missing some objects
+            var block = GetBlock();
+            var context = GetContext();
+            var config = _configProviderLazy.Value.Init(Log).GetConfigProviderForModule(context, block?.App, block);
+            return _queryLazy.Value.Init(appId, Log).DebugStream(appId, id, top, config, from, @out);
         }
 
         /// <summary>

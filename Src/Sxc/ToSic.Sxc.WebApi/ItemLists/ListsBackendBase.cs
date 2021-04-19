@@ -45,7 +45,7 @@ namespace ToSic.Sxc.WebApi.ItemLists
 
 
         // TODO: probably should move from "backend" to a Manager
-        public void Replace(/*IContextOfBlock context,*/ Guid guid, string part, int index, int entityId, bool add = false)
+        public void Replace(Guid guid, string part, int index, int entityId, bool add = false)
         {
             var wrapLog = Log.Call($"target:{guid}, part:{part}, index:{index}, id:{entityId}");
             var versioning = CmsManager.ServiceProvider.Build<IPagePublishing>().Init(Log);
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.WebApi.ItemLists
                 if (entity.Type.Name == BlocksRuntime.BlockTypeName)
                 {
                     if (string.Equals(part, ViewParts.Content, OrdinalIgnoreCase)) part = ViewParts.Content;
-                    if (string.Equals(part, ViewParts.ListContent, OrdinalIgnoreCase)) part = ViewParts.ListContent;
+                    if (string.Equals(part, ViewParts.FieldHeader, OrdinalIgnoreCase)) part = ViewParts.FieldHeader;
                 }
 
                 var forceDraft = Context.Publishing.ForceDraft;

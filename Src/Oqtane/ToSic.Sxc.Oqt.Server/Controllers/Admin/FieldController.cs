@@ -12,7 +12,7 @@ using ToSic.Sxc.Oqt.Shared;
 namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 {
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+    [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
     [Route(WebApiConstants.WebApiStateRoot + "/admin/field/[action]")]
     public class FieldController : OqtStatefulControllerBase, IFieldController
     {

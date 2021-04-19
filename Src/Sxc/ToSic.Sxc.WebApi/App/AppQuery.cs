@@ -17,6 +17,7 @@ namespace ToSic.Sxc.WebApi.App
 {
     public class AppQuery: WebApiBackendBase<AppQuery>
     {
+        private const string AllStreams = "*";
 
         #region Constructor / DI
 
@@ -30,7 +31,7 @@ namespace ToSic.Sxc.WebApi.App
 
         #region In-Container-Context Queries
 
-        public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(int? appId, string name, bool includeGuid, string stream)
+        public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(int? appId, string name, bool includeGuid, string stream, AppQueryParameters more)
         {
             var wrapLog = Log.Call($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
 
@@ -41,7 +42,7 @@ namespace ToSic.Sxc.WebApi.App
             // and security checks will run internally
             var app = ServiceProvider.Build<Apps.App>().Init(ServiceProvider, appCtx.AppState.AppId, Log, appCtx.UserMayEdit);
 
-            var result = BuildQueryAndRun(app, name, stream, includeGuid, appCtx, Log, appCtx.UserMayEdit);
+            var result = BuildQueryAndRun(app, name, stream, includeGuid, appCtx,  appCtx.UserMayEdit, more);
             wrapLog(null);
             return result;
         }
@@ -51,7 +52,7 @@ namespace ToSic.Sxc.WebApi.App
         #region Public Queries
 
 
-        public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(string appPath, string name, string stream)
+        public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(string appPath, string name, string stream, AppQueryParameters more)
         {
             var wrapLog = Log.Call($"path:{appPath}, name:{name}, stream: {stream}");
             if (string.IsNullOrEmpty(name))
@@ -63,7 +64,7 @@ namespace ToSic.Sxc.WebApi.App
                 ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(appCtx.UserMayEdit), Log);
 
             // now just run the default query check and serializer
-            var result = BuildQueryAndRun(queryApp, name, stream, false, appCtx, Log, appCtx.UserMayEdit);
+            var result = BuildQueryAndRun(queryApp, name, stream, false, appCtx, appCtx.UserMayEdit, more);
             wrapLog(null);
             return result;
         }
@@ -72,11 +73,16 @@ namespace ToSic.Sxc.WebApi.App
         #endregion
 
 
-        private static Dictionary<string, IEnumerable<Dictionary<string, object>>>
-            BuildQueryAndRun(IApp app, string name, string stream, bool includeGuid, IContextOfSite context, ILog log,
-                bool userMayEdit)
+        private Dictionary<string, IEnumerable<Dictionary<string, object>>> BuildQueryAndRun(
+                IApp app, 
+                string name, 
+                string stream, 
+                bool includeGuid, 
+                IContextOfSite context, 
+                bool userMayEdit,
+                AppQueryParameters more)
         {
-            var wrapLog = log.Call($"name:{name}, withModule:{(context as IContextOfBlock)?.Module.Id}");
+            var wrapLog = Log.Call($"name:{name}, stream:{stream}, withModule:{(context as IContextOfBlock)?.Module.Id}");
             var query = app.GetQuery(name);
 
             if (query == null)
@@ -86,8 +92,8 @@ namespace ToSic.Sxc.WebApi.App
                 throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, msg, "query not found");
             }
 
-            var permissionChecker = context.ServiceProvider.Build<AppPermissionCheck>().ForItem(context, appIdentity: app,
-                targetItem: query.Definition.Entity, parentLog: log);
+            var permissionChecker = context.ServiceProvider.Build<AppPermissionCheck>()
+                .ForItem(context, app, query.Definition.Entity, Log);
             var readExplicitlyAllowed = permissionChecker.UserMay(GrantSets.ReadSomething);
 
             var isAdmin = context.User.IsAdmin;
@@ -101,7 +107,8 @@ namespace ToSic.Sxc.WebApi.App
             }
 
             var serializer = new DataToDictionary(userMayEdit) { WithGuid = includeGuid };
-            var result = serializer.Convert(query, stream?.Split(','));
+            if (stream == AllStreams) stream = null;
+            var result = serializer.Convert(query, stream?.Split(','), more?.Guids);
             wrapLog(null);
             return result;
         }

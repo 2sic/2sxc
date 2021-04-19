@@ -47,12 +47,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
         /// The group name for log entries in insights.
         /// Helps group various calls by use case.
         /// </summary>
-        protected string HistoryLogGroup { get; } = "app-api-fs-watcher";
+        protected string HistoryLogGroup { get; } = "app-api";
 
         /// <summary>
         /// The name of the logger in insights.
         /// /// </summary>
-        protected string HistoryLogName => "App.Api.FileSystemWatcher";
+        protected string HistoryLogName => "FileSystemWatcher";
 
         public void Dispose()
         {

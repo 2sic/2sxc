@@ -14,7 +14,6 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 
 namespace ToSic.Sxc.Dnn.WebApiRouting
@@ -37,10 +36,9 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
 
 
 
-
         public IDictionary<string, HttpControllerDescriptor> GetControllerMapping() => PreviousSelector.GetControllerMapping();
 
-        private static readonly string[] AllowedRoutes = {"desktopmodules/2sxc/api/app-api/", "api/2sxc/app-api/"}; // old routes, dnn 7/8 & dnn 9 
+        private static readonly string[] AllowedRoutes = {"desktopmodules/2sxc/api/app-api/", "api/2sxc/app-api/"}; // old routes, dnn 7/8 & dnn 9
 
 
         // new in 2sxc 9.34 #1651 - added "([^/]+\/)?" to allow an optional edition parameter
@@ -51,7 +49,6 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
         };
 
         private const string ApiErrPrefix = "2sxc Api Controller Finder Error: ";
-
         private const string ApiErrGeneral = "Error selecting / compiling an API controller. ";
         private const string ApiErrSuffix = "Check event-log, code and inner exception. ";
 
@@ -86,38 +83,13 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
                 return wrapLog("upstream", PreviousSelector.SelectController(request));
 
             var routeData = request.GetRouteData();
+
             var controllerTypeName = routeData.Values[Names.Controller] + "Controller";
-            
+
             // Now Handle the 2sxc app-api queries
 
-            // 1. Figure out the Path, or show error for that
-            string appFolder = null;
-            try
-            {
-                appFolder = Route.AppPathOrNull(routeData);
-
-                // only check for app folder if we don't have a context
-                if (appFolder == null)
-                {
-                    log.Add("no folder found in url, will auto-detect");
-                    var block = Eav.Factory.StaticBuild<DnnGetBlock>().GetCmsBlock(request, log);
-                    appFolder = block?.App?.Folder;
-                }
-
-                log.Add($"App Folder: {appFolder}");
-            }
-            catch (Exception getBlockException)
-            {
-                const string msg = ApiErrPrefix + "Trying to find app name, unexpected error - possibly bad/invalid headers. " + ApiErrSuffix;
-                throw ReportToLogAndThrow(request, HttpStatusCode.BadRequest, getBlockException, msg, wrapLog);
-            }
-
-            if (string.IsNullOrWhiteSpace(appFolder))
-            {
-                const string msg = ApiErrPrefix + "App name is unknown - tried to check name in url (.../app/[app-name]/...) " +
-                                   "and tried app-detection using url-params/headers pageid/moduleid. " + ApiErrSuffix;
-                throw ReportToLogAndThrow(request, HttpStatusCode.BadRequest, new Exception(), msg, wrapLog);
-            }
+            // Figure out the Path, or show error for that
+            var appFolder = AppFolderUtilities.GetAppFolder(request, log, wrapLog);
 
             var controllerPath = "";
             try
@@ -159,21 +131,12 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             catch (Exception e)
             {
                 var msg = ApiErrPrefix + ApiErrGeneral + ApiErrSuffix;
-                throw ReportToLogAndThrow(request, HttpStatusCode.InternalServerError, e, msg, wrapLog);
+                throw AppFolderUtilities.ReportToLogAndThrow(request, HttpStatusCode.InternalServerError, e, msg, wrapLog);
             }
 
-            var msgfinal = $"2sxc Api Controller Finder: Controller {controllerTypeName} not found in app. " +
+            var msgFinal = $"2sxc Api Controller Finder: Controller {controllerTypeName} not found in app. " +
                            $"We checked the virtual path '{controllerPath}'";
-            throw ReportToLogAndThrow(request, HttpStatusCode.NotFound, new Exception(), msgfinal, wrapLog);
-        }
-
-        private static HttpResponseException ReportToLogAndThrow(HttpRequestMessage request, HttpStatusCode code, Exception e, string msg, Func<string, HttpControllerDescriptor, HttpControllerDescriptor> wrapLog)
-        {
-            var helpText = ErrorHelp.HelpText(e);
-            var exception = new Exception(msg + helpText, e);
-            DotNetNuke.Services.Exceptions.Exceptions.LogException(exception);
-            wrapLog("error", null);
-            return new HttpResponseException(request.CreateErrorResponse(code, exception.Message, e));
+            throw AppFolderUtilities.ReportToLogAndThrow(request, HttpStatusCode.NotFound, new Exception(), msgFinal, wrapLog);
         }
 
         private static void AddToInsightsHistory(string url, ILog log)

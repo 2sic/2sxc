@@ -82,7 +82,7 @@ namespace ToSic.Sxc.WebApi.Save
                 Log.Add($"will add: {willAdd}; Group.Add:{primaryItem.Header.Add}; EntityId:{primaryItem.Entity.EntityId}");
 
                 var fieldPair = targetIsContentBlock
-                    ? ViewParts.PickPair(primaryItem.Header.Group.Part)
+                    ? ViewParts.PickFieldPair(primaryItem.Header.Group.Part)
                     : new[] {primaryItem.Header.Field};
 
                 if (willAdd) // this cannot be auto-detected, it must be specified
@@ -100,7 +100,7 @@ namespace ToSic.Sxc.WebApi.Save
         private static BundleWithHeader<T> FindContentItem<T>(IGrouping<string, BundleWithHeader<T>> bundle)
         {
             var primaryItem = bundle.FirstOrDefault(e => string.Equals(e.Header.Group.Part, ViewParts.Content, OrdinalIgnoreCase)) 
-                   ?? bundle.FirstOrDefault(e => string.Equals(e.Header.Group.Part, ViewParts.ListContent, OrdinalIgnoreCase));
+                   ?? bundle.FirstOrDefault(e => string.Equals(e.Header.Group.Part, ViewParts.FieldHeader, OrdinalIgnoreCase));
             if (primaryItem == null)
                 throw new Exception("unexpected group-entity assignment, cannot figure it out");
             return primaryItem;

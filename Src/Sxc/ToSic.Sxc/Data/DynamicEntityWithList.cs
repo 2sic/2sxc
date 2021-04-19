@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Data
@@ -46,7 +47,7 @@ namespace ToSic.Sxc.Data
                 .ToList();
             SetEntity(DynEntities.FirstOrDefault()?.Entity
                      // check empty list - create a dummy Entity so toolbars will know what to do
-                     ?? EntityInBlock.PlaceHolder(parent, field));
+                     ?? PlaceHolder(parent, field));
         }
 
         public IEnumerator<IDynamicEntity> GetEnumerator() => DynEntities.GetEnumerator();
@@ -58,8 +59,15 @@ namespace ToSic.Sxc.Data
         public IDynamicEntity this[int index]
         {
             get => DynEntities[index];
-            // setter is for IList<IDynamicEntity>
+            // note: set must be defined for IList<IDynamicEntity>
             set => throw new NotImplementedException();
+        }
+
+        public EntityInBlock PlaceHolder(IEntity parent, string field)
+        {
+            var sp = _serviceProviderOrNull ?? Eav.Factory.GetServiceProvider();
+            var builder = sp.Build<IDataBuilder>();
+            return new EntityInBlock(builder.FakeEntity(parent.AppId), parent.EntityGuid, field, 0);
         }
     }
 }

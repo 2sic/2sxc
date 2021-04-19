@@ -28,18 +28,18 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// Used to be GET System/Features
         /// </summary>
         [HttpGet]
-        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
         public IEnumerable<Feature> List(bool reload = false) => _featuresBackend.Init(Log).GetAll(reload);
 
         /// <summary>
         /// Used to be GET System/ManageFeaturesUrl
         /// </summary>
         [HttpGet]
-        [Authorize(Roles = Oqtane.Shared.Constants.HostRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Host)]
         public string RemoteManageUrl()
         {
             WipConstants.DontDoAnythingImplementLater();
-            
+
             return "//gettingstarted.2sxc.org/router.aspx?"
                    + $"DnnVersion={Oqtane.Shared.Constants.Version}"
                    + $"&2SexyContentVersion={Settings.ModuleVersion}"
@@ -53,9 +53,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// Used to be GET System/SaveFeatures
         /// </summary>
         [HttpPost]
-        [Authorize(Roles = Oqtane.Shared.Constants.HostRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Host)]
         public bool Save([FromBody] FeaturesDto featuresManagementResponse) =>
             _featuresBackend.Init(Log).SaveFeatures(featuresManagementResponse);
-        
+
     }
 }

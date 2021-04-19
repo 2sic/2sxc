@@ -19,10 +19,12 @@ namespace ToSic.Sxc.Dnn.DataSources
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
 	[VisualQuery(
-        GlobalName = "ToSic.Sxc.Dnn.DataSources.DnnUserProfile, ToSic.Sxc.Dnn",
+        NiceName = "Dnn User Profiles",
+        UiHint = "Users profiles of specified users in Dnn",
+        Icon = "face",
         Type = DataSourceType.Source, 
-        DynamicOut = true,
-	    ExpectsDataOfType = "|Config ToSic.SexyContent.DataSources.DnnUserProfileDataSource",
+        GlobalName = "ToSic.Sxc.Dnn.DataSources.DnnUserProfile, ToSic.Sxc.Dnn",
+        ExpectsDataOfType = "|Config ToSic.SexyContent.DataSources.DnnUserProfileDataSource",
         PreviousNames = new []
         {
             "ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource, ToSic.SexyContent"
@@ -81,7 +83,6 @@ namespace ToSic.Sxc.Dnn.DataSources
 		public DnnUserProfile(ISite site, IZoneMapper zoneMapper)
 		{
 			Provide(GetList);
-            //Out.Add(Eav.Constants.DefaultStreamName, new DataStream(this, Eav.Constants.DefaultStreamName, GetList));
 			Configuration.Values.Add(UserIdsKey, UserIdsDefaultKeyToken);
 			Configuration.Values.Add(PropertiesKey, PropertiesDefaultKeyToken);
 			Configuration.Values.Add(ContentTypeKey, ContentTypeDefaultToken);

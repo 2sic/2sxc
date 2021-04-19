@@ -48,19 +48,19 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 
         [HttpGet]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
         public List<AppDto> List(int zoneId)
             => _appsBackendLazy.Value.Init(Log).Apps();
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
         public void App(int zoneId, int appId, bool fullDelete = true)
             => _cmsZonesLazy.Value.Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId, fullDelete);
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
         public void App(int zoneId, string name)
             => _appBuilderLazy.Value.Init(zoneId, Log).Create(name);
 
@@ -73,7 +73,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <returns></returns>
         [HttpGet]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
         public AppExportInfoDto Statistics(int zoneId, int appId)
             => _exportAppLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
                 .GetAppInfo(appId, zoneId);
@@ -81,7 +81,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 
         [HttpGet]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
         public bool FlushCache(int zoneId, int appId)
         {
             var wrapLog = Log.Call<bool>($"{zoneId}, {appId}");
@@ -123,7 +123,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
         public ImportResultDto Import(int zoneId)
         {
             Log.Add("import app start");

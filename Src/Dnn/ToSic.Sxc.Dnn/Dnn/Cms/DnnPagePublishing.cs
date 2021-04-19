@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
@@ -147,7 +148,7 @@ namespace ToSic.Sxc.Dnn.Cms
 
         private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, IBlockDataSource data, string key)
         {
-            var cont = data.Out.ContainsKey(key) ? data[key]?.Immutable : null;
+            var cont = data.Out.ContainsKey(key) ? data[key]?.List?.ToImmutableList() : null;
             Log.Add($"TryToAddStream(..., ..., key:{key}), found:{cont != null} add⋮{cont?.Count ?? 0}" );
             if (cont != null) list = list.Concat(cont);
             return list;

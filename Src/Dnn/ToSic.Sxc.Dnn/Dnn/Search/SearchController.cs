@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -106,7 +107,7 @@ namespace ToSic.Sxc.Search
             foreach (var stream in dataSource.Out.Where(p => p.Key != ViewParts.Presentation && p.Key != ViewParts.ListPresentation))
             {
                 
-                var entities = stream.Value.Immutable;
+                var entities = stream.Value.List.ToImmutableList();
                 var searchInfoList = searchInfoDictionary[stream.Key] = new List<ISearchItem>();
 
                 searchInfoList.AddRange(entities.Select(entity =>

@@ -21,15 +21,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     /// Proxy Class to the EAV EntitiesController (Web API Controller)
     /// </summary>
     /// <remarks>
-    /// Because the JSON call is made in a new window, they won't contain any http-headers like module-id or security token. 
-    /// So we can't use the classic protection attributes like:
+    /// Because download JSON call is made in a new window, they won't contain any http-headers like module-id or security token. 
+    /// So we can't use the classic protection attributes to the class like:
     /// - [SupportedModules("2sxc,2sxc-app")]
     /// - [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     /// - [ValidateAntiForgeryToken]
-    /// Instead, the method itself must do additional security checking.
+    /// Instead, each method must have all attributes, or do additional security checking.
     /// Security checking is possible, because the cookie still contains user information
     /// </remarks>
-    [AllowAnonymous]
     [DnnLogExceptions]
 	public class EntityController : SxcApiControllerBase, IEntitiesController
 	{
@@ -39,16 +38,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             => _contextResolver ?? (_contextResolver = GetService<IContextResolver>().Init(Log));
         private IContextResolver _contextResolver;
 
-        /// <summary>
-        /// Used to be Entities/GetOllOfTypeForAdmin
-        /// Used to be Entities/GetEntities
-        /// </summary>
-        /// <param name="appId"></param>
-        /// <param name="contentType"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         [HttpGet]
         [ValidateAntiForgeryToken]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<Dictionary<string, object>> List(int appId, string contentType)
         {
             var appContext = ContextResolver.BlockOrApp(appId);
@@ -59,9 +52,9 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         }
 
 
+        /// <inheritdoc/>
         [HttpDelete]
         [ValidateAntiForgeryToken]
-        // todo: unsure why only Edit - is this used anywhere else than admin?
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, int id, int appId, bool force = false)
         {
@@ -72,9 +65,9 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
                 .Delete(contentType, id, force);
         }
 
+        /// <inheritdoc/>
         [HttpDelete]
         [ValidateAntiForgeryToken]
-        // todo: unsure why only Edit - is this used anywhere else than admin?
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, Guid guid, int appId, bool force = false)
         {
@@ -86,9 +79,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         }
 
 
-        /// <summary>
-        /// Used to be GET ContentExport/DownloadEntityAsJson
-        /// </summary>
+        /// <inheritdoc/>
         [HttpGet]
         [AllowAnonymous] // will do security check internally
         public HttpResponseMessage Json(int appId, int id, string prefix, bool withMetadata)
@@ -106,6 +97,9 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <param name="languageReferences"></param>
         /// <param name="selectedIds"></param>
         /// <returns></returns>
+        /// <remarks>
+        /// This can't be in the interface, because the return-type is not .net core compatible. 
+        /// </remarks>
         [HttpGet]
         [AllowAnonymous] // will do security check internally
         public HttpResponseMessage Download(
@@ -121,10 +115,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
                 recordExport, resourcesReferences,
                 languageReferences, selectedIds);
 
-        /// <summary>
-        /// This seems to be for XML import of a list
-        /// Used to be POST ContentImport/EvaluateContent
-        /// </summary>
+        /// <inheritdoc/>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -132,28 +123,21 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             => GetService<ContentImportApi>().Init(args.AppId, Log).XmlPreview(args);
 
 
-        /// <summary>
-        /// This seems to be for XML import of a list
-        /// Used to be POST ContentImport/ImportContent
-        /// </summary>
+        /// <inheritdoc/>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public ContentImportResultDto XmlUpload(ContentImportArgsDto args)
             => GetService<ContentImportApi>().Init(args.AppId, Log).XmlImport(args);
 
-
-        /// <summary>
-        /// This is the single-item json import
-        /// Used to be POST ContentImport/Import
-        /// </summary>
+        /// <inheritdoc/>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool Upload(EntityImportDto args) => GetService<ContentImportApi>().Init(args.AppId, Log).Import(args);
 
 
-        // New feature in 11.03 - Usage Statistics
+        /// <inheritdoc/>
         // not final yet, so no [HttpGet]
         public dynamic Usage(int appId, Guid guid) => GetService<EntityBackend>().Init(Log).Usage(appId, guid);
 

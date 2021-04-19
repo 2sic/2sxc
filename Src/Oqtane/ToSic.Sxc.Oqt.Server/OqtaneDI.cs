@@ -26,7 +26,7 @@ using ToSic.Sxc.WebApi.Adam;
 namespace ToSic.Sxc.Oqt.Server
 {
     // ReSharper disable once InconsistentNaming
-    static class OqtaneDI
+    static partial class OqtaneDI
     {
         public static IServiceCollection AddSxcOqtane(this IServiceCollection services)
         {

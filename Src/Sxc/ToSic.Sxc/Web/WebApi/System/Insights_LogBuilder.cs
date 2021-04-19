@@ -194,7 +194,7 @@ namespace ToSic.Sxc.Web.WebApi.System
                    + " - "
                    + HtmlEncode(e.Message)
                    + (e.Result != null
-                       ? ResStart + e.Result + ResEnd
+                       ? $"{ResStart}{HtmlEncode(e.Result)}{ResEnd}"
                        : string.Empty)
                    + ShowTime(e)
                    + (e.Code != null

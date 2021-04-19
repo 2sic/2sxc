@@ -18,9 +18,13 @@ namespace ToSic.Sxc.DataSources
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
     [VisualQuery(
-        GlobalName = "ToSic.Sxc.DataSources.CmsBlock, ToSic.Sxc",
+        NiceName = "CMS Block",
+        UiHint = "Data for this CMS Block (instance/module)",
+        Icon = "recent_actors",
         Type = DataSourceType.Source, 
+        GlobalName = "ToSic.Sxc.DataSources.CmsBlock, ToSic.Sxc",
         ExpectsDataOfType = "7c2b2bc2-68c6-4bc3-ba18-6e6b5176ba02",
+        In = new []{Eav.Constants.DefaultStreamName},
         HelpLink = "https://docs.2sxc.org/api/dot-net/ToSic.Sxc.DataSources.CmsBlock.html",
         PreviousNames = new []{ "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent" })]
     public sealed partial class CmsBlock : DataSourceBase
@@ -59,7 +63,8 @@ namespace ToSic.Sxc.DataSources
         {
             _lazyCmsRuntime = lazyCmsRuntime;
             Provide(GetContent);
-            Provide(ViewParts.ListContent, GetHeader);
+            Provide(ViewParts.StreamHeader, GetHeader);
+            Provide(ViewParts.StreamHeaderOld, GetHeader);
 			Configuration.Values.Add(InstanceIdKey, $"[Settings:{Settings.InstanceId}||[{InstanceLookupName}:{InstanceIdKey}]]");
         }
 

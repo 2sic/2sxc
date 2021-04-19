@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -153,7 +154,7 @@ namespace ToSic.Sxc.Engines
             if (!DataSource.Out.ContainsKey(streamName))
                 throw new ArgumentException("Was not able to implement REPEAT because I could not find Data:" + streamName + ". Please check spelling the pipeline delivering data to this template.");
 
-            var dataItems = DataSource[streamName].Immutable;
+            var dataItems = DataSource[streamName].List.ToImmutableList();
             var itemsCount = dataItems.Count;
             for (var i = 0; i < itemsCount; i++)
             {

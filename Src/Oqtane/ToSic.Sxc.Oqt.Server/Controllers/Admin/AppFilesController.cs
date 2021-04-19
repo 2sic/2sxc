@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     /// This one supplies portal-wide (or cross-portal) settings / configuration
     /// </summary>
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = Oqtane.Shared.Constants.AdminRole)]
+    [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
     public class AppFilesController : OqtStatefulControllerBase
     {
@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <returns></returns>
         [HttpPost]
         public bool Create(
-            [FromQuery] int appId, 
+            [FromQuery] int appId,
             [FromQuery] string path,
             [FromBody] FileContentsDto content, // note: as of 2020-09 the content is never submitted
             [FromQuery] bool global
@@ -79,9 +79,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <returns></returns>
         [HttpPost]
         public bool Asset(
-            [FromQuery] int appId, 
+            [FromQuery] int appId,
             [FromBody] AssetEditInfo template,
-            [FromQuery] int templateId = 0, 
+            [FromQuery] int templateId = 0,
             [FromQuery] string path = null, // identifier is either template Id or path
             // todo w/SPM - global never seems to be used - must check why and if we remove or add to UI
             [FromQuery] bool global = false
