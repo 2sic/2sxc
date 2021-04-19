@@ -964,18 +964,18 @@
     <!-- Keep the 4th version number part as it is needed to prevent "repair install" message that DNN
       shows when upgrading 2sxc: https://github.com/2sic/2sxc/issues/1555
       -->
-    <package name="Connect.Dnn.Koi" type="Library" version="01.03.00.01">
+    <package name="Connect.Dnn.Koi" type="Library" version="02.00.00.01">
       <friendlyName>DnnConnect Koi</friendlyName>
       <description>Koi</description>
       <iconFile>icon.png</iconFile>
       <owner>
-        <name>dnn-connect.org</name>
+        <name>DNN Connect and 2sic/2sxc</name>
         <organization>dnn-connect.org</organization>
-        <url>https://2sxc.org/</url>
+        <url>https://connect-koi.net/</url>
         <email>info@2sxc.org</email>
       </owner>
-      <license src="koi\License.txt"/>
-      <releaseNotes src="koi\ReleaseNotes.txt"/>
+      <license src="koi\License.txt"></license>
+      <releaseNotes src="koi\ReleaseNotes.txt"></releaseNotes>
       <azureCompatible>true</azureCompatible>
       <dependencies>
         <dependency type="CoreVersion">07.00.02</dependency>
@@ -1004,7 +1004,6 @@
         </component>
       </components>
     </package>
-
 
 
 

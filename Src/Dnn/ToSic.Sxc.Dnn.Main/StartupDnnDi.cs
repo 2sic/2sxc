@@ -105,6 +105,12 @@ namespace ToSic.SexyContent
                 }
             }
 
+            // new in v12 - different way to integrate KOI - experimental!
+            try
+            {
+                services.ActivateKoi2Di();
+            } catch { /* ignore */ }
+
             return services;
         }
     }
