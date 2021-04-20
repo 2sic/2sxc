@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Code
     /// <summary>
     /// Base class for any dynamic code root objects. <br/>
     /// Root objects are the ones compiled by 2sxc - like the RazorComponent or ApiController. <br/>
-    /// If you create code for dynamic compilation, you'll always inherit from ToSic.Sxc.Dnn.DynamicCode. 
+    /// If you create code for dynamic compilation, you'll always inherit from ToSic.Sxc.Dnn.DynamicCode.
     /// Note that other DynamicCode objects like RazorComponent or ApiController reference this object for all the interface methods of <see cref="IDynamicCode"/>.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
@@ -29,11 +29,13 @@ namespace ToSic.Sxc.Code
         {
             public IServiceProvider ServiceProvider { get; }
             public ICmsContext CmsContext { get; }
+            public ILinkHelper LinkHelper { get; }
 
-            public Dependencies(IServiceProvider serviceProvider, ICmsContext cmsContext)
+            public Dependencies(IServiceProvider serviceProvider, ICmsContext cmsContext, ILinkHelper linkHelper)
             {
                 ServiceProvider = serviceProvider;
                 CmsContext = cmsContext;
+                LinkHelper = linkHelper;
             }
         }
 
@@ -41,10 +43,11 @@ namespace ToSic.Sxc.Code
         {
             _serviceProvider = dependencies.ServiceProvider;
             CmsContext = dependencies.CmsContext;
+            Link = dependencies.LinkHelper;
         }
 
         private readonly IServiceProvider _serviceProvider;
-        
+
         [PrivateApi] public ICmsContext CmsContext { get; }
 
         #endregion
@@ -80,7 +83,7 @@ namespace ToSic.Sxc.Code
         public ILinkHelper Link { get; protected set; }
 
 
-        
+
         #region Edit
 
         /// <inheritdoc />
@@ -89,7 +92,7 @@ namespace ToSic.Sxc.Code
         #endregion
 
         #region Accessor to Root
-        
+
         [PrivateApi] public IDynamicCodeRoot _DynCodeRoot => this;
 
         #endregion

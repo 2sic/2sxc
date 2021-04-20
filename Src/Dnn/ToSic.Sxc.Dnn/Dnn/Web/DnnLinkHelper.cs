@@ -11,11 +11,14 @@ namespace ToSic.Sxc.Dnn.Web
     [PublicApi_Stable_ForUseInYourCode]
     public class DnnLinkHelper: ILinkHelper
     {
-        private readonly IDnnContext _dnn;
+        private IDnnContext _dnn;
 
-        public DnnLinkHelper(IDnnContext dnn)
+        public DnnLinkHelper() { }
+
+        public DnnLinkHelper Init(IDnnContext dnn)
         {
             _dnn = dnn;
+            return this;
         }
 
         /// <inheritdoc />

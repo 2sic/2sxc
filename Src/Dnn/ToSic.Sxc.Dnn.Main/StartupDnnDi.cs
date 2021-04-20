@@ -47,7 +47,7 @@ namespace ToSic.SexyContent
             services.TryAddTransient<IModule, DnnModule>();
             services.TryAddTransient<DnnModule>();
 
-            // 
+            //
             services.TryAddTransient<IValueConverter, DnnValueConverter>();
 
             services.TryAddTransient<XmlExporter, DnnXmlExporter>();
@@ -62,12 +62,13 @@ namespace ToSic.SexyContent
             services.TryAddTransient<AppPermissionCheck, DnnPermissionCheck>();
             services.TryAddTransient<DnnPermissionCheck>();
 
+            services.TryAddTransient<ILinkHelper, DnnLinkHelper>();
             services.TryAddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
             services.TryAddTransient<DnnDynamicCodeRoot>();
             services.TryAddTransient<IPlatformModuleUpdater, DnnModuleUpdater>();
             services.TryAddTransient<IEnvironmentInstaller, DnnInstallationController>();
 
-            // ADAM 
+            // ADAM
             services.TryAddTransient<IAdamFileSystem<int, int>, DnnAdamFileSystem>();
             services.TryAddTransient<AdamManager, AdamManager<int, int>>();
 
