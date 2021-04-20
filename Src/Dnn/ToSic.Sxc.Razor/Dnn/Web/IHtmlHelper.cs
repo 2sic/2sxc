@@ -4,7 +4,8 @@ using ToSic.Eav.Documentation;
 namespace ToSic.Sxc.Dnn.Web
 {
     /// <summary>
-    /// helper to quickly "raw" some html
+    /// Helper to quickly "raw" some html.
+    /// **Important**: When using Oqtane, the Html object has many more features - check the .net documentation. 
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
     public interface IHtmlHelper

@@ -42,6 +42,12 @@ XCOPY "..\..\packages\imazen.common\0.5.6\lib\netstandard2.0\Imazen.Common.dll" 
 @Echo(
 @Echo Copy Koi DLLs
 XCOPY "..\..\..\Dependencies\Koi\netstandard2.0\Connect.Koi.dll" "%OqtaneBin%" /Y
+XCOPY "..\..\..\Dependencies\Koi\netstandard2.0\Connect.Koi.pdb" "%OqtaneBin%" /Y
+
+@Echo(
+@Echo Copy RazorBlade DLLs from Debug
+XCOPY "..\..\..\Dependencies\RazorBlade\Debug\netstandard2.0\ToSic.Razor.dll" "%OqtaneBin%" /Y
+XCOPY "..\..\..\Dependencies\RazorBlade\Debug\netstandard2.0\ToSic.Razor.pdb" "%OqtaneBin%" /Y
 
 @Echo(
 @Echo the target for js, css, json etc.
