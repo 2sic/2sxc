@@ -31,6 +31,12 @@ XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net5.0\ToSic.*.dll" "%OqtaneBin
 XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net5.0\ToSic.*.pdb" "%OqtaneBin%" /Y
 
 @Echo(
+@Echo 2sxc Oqtane - Compatibility Shim for DotNetNuke / System.Web.Http
+XCOPY "..\Compatibility.Shim.DotNetNuke\bin\Debug\net5.0\Compatibility.Shim.DotNetNuke.dll" "%OqtaneBin%" /Y
+XCOPY "..\Compatibility.Shim.DotNetNuke\bin\Debug\net5.0\Compatibility.Shim.DotNetNuke.pdb" "%OqtaneBin%" /Y
+
+
+@Echo(
 @Echo 2sxc Oqtane - Client Assets
 XCOPY "..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc\*" "%Dev2sxcOqtaneRoot%wwwroot\Modules\ToSic.Sxc\" /Y /S /I
 
