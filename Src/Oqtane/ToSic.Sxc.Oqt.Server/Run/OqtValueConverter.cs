@@ -154,7 +154,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 if (!Features.Enabled(FeatureIds.BlockFileIdLookupIfNotInSameApp)) return result;
 
                 // check if it's in this item. We won't check the field, just the item, so the field is ""
-                return !Security.PathIsInItemAdam(itemGuid, "", filePath)
+                return !ToSic.Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", filePath)
                     ? null
                     : result;
             }
