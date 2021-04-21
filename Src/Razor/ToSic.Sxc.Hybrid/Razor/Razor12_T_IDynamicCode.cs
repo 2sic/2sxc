@@ -29,7 +29,7 @@ namespace ToSic.Custom
         #region Link, Edit, App, Data
 
         /// <inheritdoc />
-        public ILinkHelper Link => _DynCodeRoot.Link;
+        public ILinkHelper Link => ((IOqtLinkHelper)_DynCodeRoot.Link).Init(this as Razor12);
 
         /// <inheritdoc />
         public IInPageEditingSystem Edit => _DynCodeRoot.Edit;
@@ -68,7 +68,7 @@ namespace ToSic.Custom
         /// <inheritdoc />
         public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot.AsList(list);
 
-        public T CreateSource<T>(IDataStream inStream) where T : IDataSource 
+        public T CreateSource<T>(IDataStream inStream) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(inStream);
 
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
@@ -78,7 +78,7 @@ namespace ToSic.Custom
 
         #endregion
 
-        #region Adam 
+        #region Adam
 
         /// <inheritdoc />
         public IFolder AsAdam(IDynamicEntity entity, string fieldName) => _DynCodeRoot.AsAdam(entity, fieldName);
@@ -95,5 +95,10 @@ namespace ToSic.Custom
 
         #endregion
 
+    }
+
+    public interface IOqtLinkHelper : ILinkHelper
+    {
+        ILinkHelper Init(Razor12 razorPage);
     }
 }
