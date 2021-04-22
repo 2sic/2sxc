@@ -55,9 +55,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
             Log.Add(candidates.Count > 0
                 ? $"ok, have candidates: {candidates.Count}"
-                : $"error, missing candidates: {candidates.Count}");
+                : $"error, missing candidates: {candidates.Count}, can't find right method for action: {values["action"]} on controller: {values["controller"]}.");
 
-            if (candidates.Count == 0) throw new ArgumentException($"Error, missing candidates: {candidates.Count}");
+            if (candidates.Count == 0) throw new ArgumentException($"Can't find right method for action: {values["action"]} on controller: {values["controller"]}.");
 
             Log.Add($"actionDescriptor SelectBestCandidate");
             var actionDescriptor = actionSelector.SelectBestCandidate(routeContext, candidates);

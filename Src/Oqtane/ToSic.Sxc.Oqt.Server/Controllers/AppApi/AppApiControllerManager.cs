@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
             // Check for AppApi file
             if (!File.Exists(apiFile))
-                throw new IOException($"Error, missing AppApi file {apiFile}.");
+                throw new IOException($"Error, missing AppApi file {Path.GetFileName(apiFile)}.");
 
             // note: this may look like something you could optimize/cache the result, but that's a bad idea
             // because when the file changes, the type-object will be different, so please don't optimize :)
@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             // Check for AppApi source code
             var apiCode = await File.ReadAllTextAsync(apiFile);
             if (string.IsNullOrWhiteSpace(apiCode))
-                throw new IOException($"Error, missing AppApi code in file {apiFile}.");
+                throw new IOException($"Error, missing AppApi code in file {Path.GetFileName(apiFile)}.");
 
             // Build new AppApi Controller
             Log.Add($"Compile assembly: {apiFile}, {dllName}");

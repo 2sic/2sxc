@@ -80,7 +80,7 @@ namespace ToSic.Sxc.Code
                 }
                 catch
                 {
-                    errorMsg = $"can't compile '{className}' in {virtualPath}";
+                    errorMsg = $"can't compile '{className}' in {Path.GetFileName(virtualPath)}";
                 }
 #else
                 assembly = BuildManager.GetCompiledAssembly(virtualPath);
@@ -90,11 +90,11 @@ namespace ToSic.Sxc.Code
                     compiledType = assembly?.GetType(className, throwOnError, true);
 
                     if (compiledType == null)
-                        errorMsg = $"didn't find type '{className}' in {virtualPath}";
+                        errorMsg = $"didn't find type '{className}' in {Path.GetFileName(virtualPath)}";
                 }
             }
             else
-                errorMsg = $"Error: given path '{virtualPath}' doesn't point to a .cs or .cshtml";
+                errorMsg = $"Error: given path '{Path.GetFileName(virtualPath)}' doesn't point to a .cs or .cshtml";
 
             if (errorMsg != null)
             {

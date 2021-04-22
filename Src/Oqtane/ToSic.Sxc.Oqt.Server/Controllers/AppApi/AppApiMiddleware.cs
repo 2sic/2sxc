@@ -31,12 +31,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             catch (ArgumentException e)
             {
                 context.Response.StatusCode = 404;
-                await context.Response.WriteAsync($"Not found! {e.Message}");
+                await context.Response.WriteAsync($"404 Not Found - {e.Message}");
             }
             catch (Exception e)
             {
                 context.Response.StatusCode = 500;
-                await context.Response.WriteAsync($"Error! {e.Message}");
+                await context.Response.WriteAsync($"500 Internal Server Error - {e.Message}");
             }
         }
     }
