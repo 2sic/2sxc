@@ -80,7 +80,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
             // Add new key to concurrent dictionary, before registering new AppAPi controller.
             if (!_compiledAppApiControllers.TryAdd(apiFile, false))
-                throw new IOException($"Error, while adding key {apiFile} to concurrent dictionary, so will not register AppApi Controller to avoid duplicate controller routes.");
+                throw new IOException($"Error, can't register updated controller {Path.GetFileName(apiFile)} because older controller is already registered. Please try again in few moments.");
 
             // Register new AppApi Controller.
             AddController(dllName, assembly);
