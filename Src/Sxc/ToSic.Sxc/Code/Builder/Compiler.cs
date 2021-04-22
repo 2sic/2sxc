@@ -96,7 +96,9 @@ namespace ToSic.Sxc.Code.Builder
 
         public static CSharpCompilation GenerateCode(string path, SourceText sourceCode, string dllName)
         {
-            var options = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp9);
+            var options = CSharpParseOptions.Default
+                .WithLanguageVersion(LanguageVersion.CSharp9)
+                .WithPreprocessorSymbols("OQTANE");
 
             var parsedSyntaxTree = SyntaxFactory.ParseSyntaxTree(sourceCode, options, path);
 
