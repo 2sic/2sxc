@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>ToSic.Sxc</id>
-    <version>0.0.59</version>
+    <version>11.90.0</version>
     <authors>2sic</authors>
     <owners>2sic</owners>
     <title>2sxc</title>
@@ -18,9 +18,12 @@
     <releaseNotes>POC</releaseNotes>
     <summary>2sxc 11 - CMS &amp; App-Engine for Oqtane</summary>
     <dependencies>
-      <dependency id="Oqtane.Framework" version="2.0.0" />
+      <dependency id="Oqtane.Framework" version="2.0.2" />
       <dependency id="ToSic.Imageflow.Oqtane" version="1.0.3" />
     </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="Microsoft.AspNetCore.Antiforgery" targetFramework="net5.0" />
+    </frameworkAssemblies>
     <frameworkReferences>
       <group targetFramework="net5.0">
         <frameworkReference name="System.Drawing.Common" />
@@ -35,8 +38,11 @@
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\ToSic.*.pdb" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Shared\bin\Release\net5.0\ToSic.*.dll" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Shared\bin\Release\net5.0\ToSic.*.pdb" target="lib\net5.0" />
+    <file src="..\Compatibility.Shim.DotNetNuke\bin\Release\net5.0\Compatibility.Shim.DotNetNuke.dll" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Server\wwwroot\**\*.*" target="wwwroot" />
     <!-- 3rd party dependencies -->
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\refs\**\*.*" target="refs" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Connect.Koi.dll" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\CsvHelper.dll" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\ICSharpCode.SharpZipLib.dll" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll" target="lib\net5.0" />
