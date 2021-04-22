@@ -8,7 +8,6 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
@@ -28,13 +27,6 @@ namespace ToSic.Custom
     [DnnLogExceptions]
     public abstract partial class Api12: DynamicApiController, IDynamicCode, IDynamicWebApi, IHasDynamicCodeRoot
     {
-        ///// <inheritdoc />
-        //public new IDnnContext Dnn => base.Dnn;
-
-        ///// <summary>
-        /////  Probably obsolete, but a bit risky to just remove
-        ///// </summary>
-        //[PrivateApi] public IBlock Block => GetBlock();
         [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
 
         /// <inheritdoc />
