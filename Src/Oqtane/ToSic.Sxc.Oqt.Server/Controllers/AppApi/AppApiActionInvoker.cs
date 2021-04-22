@@ -57,27 +57,22 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 ? $"ok, have candidates: {candidates.Count}"
                 : $"error, missing candidates: {candidates.Count}");
 
-            try
-            {
-                Log.Add($"actionDescriptor SelectBestCandidate");
-                var actionDescriptor = actionSelector.SelectBestCandidate(routeContext, candidates);
+            if (candidates.Count == 0) throw new ArgumentException($"Error, missing candidates: {candidates.Count}");
 
-                var actionContext = new ActionContext(context, routeData, actionDescriptor);
+            Log.Add($"actionDescriptor SelectBestCandidate");
+            var actionDescriptor = actionSelector.SelectBestCandidate(routeContext, candidates);
 
-                // Map query string values as endpoint parameters.
-                MapQueryStringValuesAsEndpointParameters(actionContext, actionDescriptor, routeData);
+            var actionContext = new ActionContext(context, routeData, actionDescriptor);
 
-                var actionInvokerFactory = context.RequestServices.GetRequiredService<IActionInvokerFactory>();
+            // Map query string values as endpoint parameters.
+            MapQueryStringValuesAsEndpointParameters(actionContext, actionDescriptor, routeData);
 
-                var actionInvoker = actionInvokerFactory.CreateInvoker(actionContext);
+            var actionInvokerFactory = context.RequestServices.GetRequiredService<IActionInvokerFactory>();
 
-                Log.Add($"invoke app api action");
-                await actionInvoker.InvokeAsync();
-            }
-            catch (Exception e)
-            {
-                Log.Exception(e);
-            }
+            var actionInvoker = actionInvokerFactory.CreateInvoker(actionContext);
+
+            Log.Add($"invoke app api action");
+            await actionInvoker.InvokeAsync();
         }
 
         private static void MapQueryStringValuesAsEndpointParameters(ActionContext actionContext, ActionDescriptor actionDescriptor, RouteData routeData)

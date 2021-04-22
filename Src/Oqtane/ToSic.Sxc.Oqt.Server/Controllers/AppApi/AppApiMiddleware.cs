@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
@@ -11,17 +11,33 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         public static async Task InvokeAsync(HttpContext context)
         {
-            // Transform route values.
-            var appApiDynamicRouteValueTransformer = context.RequestServices.GetService<AppApiDynamicRouteValueTransformer>();
-            var values = await appApiDynamicRouteValueTransformer.TransformAsync(context, context.Request.RouteValues);
+            //context.Response.ContentType = "application/json";
 
-            // Compile and register dyncode app api controller.
-            var appApiControllerManager = context.RequestServices.GetService<AppApiControllerManager>();
-            if (!await appApiControllerManager.PrepareController(values)) return;
+            try
+            {
+                // Transform route values.
+                var appApiDynamicRouteValueTransformer = context.RequestServices.GetService<AppApiDynamicRouteValueTransformer>();
+                var values = await appApiDynamicRouteValueTransformer.TransformAsync(context, context.Request.RouteValues);
 
-            // Invoke controller action.
-            var appApiActionInvoker = context.RequestServices.GetService<AppApiActionInvoker>();
-            await appApiActionInvoker.Invoke(context, values);
+                // Compile and register dyncode app api controller.
+                var appApiControllerManager = context.RequestServices.GetService<AppApiControllerManager>();
+                if (!await appApiControllerManager.PrepareController(values))
+                    throw new ArgumentException("Error, can't compile controller.");
+
+                // Invoke controller action.
+                var appApiActionInvoker = context.RequestServices.GetService<AppApiActionInvoker>();
+                await appApiActionInvoker.Invoke(context, values);
+            }
+            catch (ArgumentException e)
+            {
+                context.Response.StatusCode = 404;
+                await context.Response.WriteAsync($"Not found! {e.Message}");
+            }
+            catch (Exception e)
+            {
+                context.Response.StatusCode = 500;
+                await context.Response.WriteAsync($"Error! {e.Message}");
+            }
         }
     }
 }

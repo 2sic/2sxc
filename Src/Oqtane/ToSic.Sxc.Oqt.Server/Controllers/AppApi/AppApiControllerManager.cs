@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
+﻿using System;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Routing;
 using System.Collections.Concurrent;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -61,14 +63,16 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             Log.Add($"We need to prepare controller for: {apiFile}.");
 
             // Check for AppApi file
-            if (!File.Exists(apiFile)) return wrapLog($"Error, missing AppApi file {apiFile}.", false);
+            if (!File.Exists(apiFile))
+                throw new IOException($"Error, missing AppApi file {apiFile}.");
 
             // note: this may look like something you could optimize/cache the result, but that's a bad idea
             // because when the file changes, the type-object will be different, so please don't optimize :)
 
             // Check for AppApi source code
             var apiCode = await File.ReadAllTextAsync(apiFile);
-            if (string.IsNullOrWhiteSpace(apiCode)) return wrapLog($"Error, missing AppApi code in file {apiFile}.", false);
+            if (string.IsNullOrWhiteSpace(apiCode))
+                throw new IOException($"Error, missing AppApi code in file {apiFile}.");
 
             // Build new AppApi Controller
             Log.Add($"Compile assembly: {apiFile}, {dllName}");
@@ -76,7 +80,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
             // Add new key to concurrent dictionary, before registering new AppAPi controller.
             if (!_compiledAppApiControllers.TryAdd(apiFile, false))
-                return wrapLog($"Error, while adding key {apiFile} to concurrent dictionary, so will not register AppApi Controller to avoid duplicate controller routes.", false);
+                throw new IOException($"Error, while adding key {apiFile} to concurrent dictionary, so will not register AppApi Controller to avoid duplicate controller routes.");
 
             // Register new AppApi Controller.
             AddController(dllName, assembly);

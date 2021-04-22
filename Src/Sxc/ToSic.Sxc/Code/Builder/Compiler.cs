@@ -78,7 +78,7 @@ namespace ToSic.Sxc.Code.Builder
                         errors.Add($"{diagnostic.Id}: {diagnostic.GetMessage()}");
                     }
 
-                    throw new Exception(String.Join("\n", errors));
+                    throw new IOException(String.Join("\n", errors));
                 }
 
                 wrapLog("Compilation done without any error.");
