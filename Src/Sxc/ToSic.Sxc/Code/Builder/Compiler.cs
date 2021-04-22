@@ -1,4 +1,3 @@
-//#define NETSTANDARD
 #if NETSTANDARD
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
