@@ -1,63 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using JetBrains.Annotations;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualBasic.CompilerServices;
-using Oqtane.Models;
-using Oqtane.Repository;
+﻿using Oqtane.Repository;
 using Oqtane.Shared;
+using System;
+using System.Linq;
 using ToSic.Custom;
-using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Context;
-using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Web;
 using Log = ToSic.Eav.Logging.Simple.Log;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
     /// <summary>
-    /// The DNN implementation of the <see cref="ILinkHelper"/>.
+    /// The Oqtane implementation of the <see cref="ILinkHelper"/>.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
     public class OqtLinkHelper : IOqtLinkHelper, IHasLog
     {
         public Razor12 RazorPage { get; set; }
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ITenantRepository _tenantRepository;
-        private readonly IAliasRepository _aliasRepository;
+        private readonly Lazy<IAliasRepository> _aliasRepositoryLazy;
         private readonly IPageRepository _pageRepository;
-        private readonly ISiteRepository _siteRepository;
         private readonly SiteState _siteState;
 
         public OqtLinkHelper(
-            IHttpContextAccessor httpContextAccessor,
-            ITenantRepository tenantRepository,
-            IAliasRepository aliasRepository,
+            Lazy<IAliasRepository> aliasRepositoryLazy,
             IPageRepository pageRepository,
-            ISiteRepository siteRepository,
-            SiteState siteState,
-            IValueConverter OqtValueConverter
-            )
+            SiteState siteState
+        )
         {
             Log = new Log("OqtLinkHelper");
+            // TODO: logging
 
-            _httpContextAccessor = httpContextAccessor;
-            _tenantRepository = tenantRepository;
-            _aliasRepository = aliasRepository;
+            _aliasRepositoryLazy = aliasRepositoryLazy;
             _pageRepository = pageRepository;
-            _siteRepository = siteRepository;
             _siteState = siteState;
         }
 
@@ -76,32 +50,27 @@ namespace ToSic.Sxc.Oqt.Server.Run
             if (requiresNamedParameters != null)
                 throw new Exception("The Link.To can only be used with named parameters. try Link.To( parameters: \"tag=daniel&sort=up\") instead.");
 
-            //var tenantResolver =
-            //    new TenantResolver(_httpContextAccessor, _aliasRepository, _tenantRepository, _siteState);
-            //var tenant = tenantResolver.GetTenant();
-            //var alias2 = tenantResolver.GetAlias();
-            var siteId = RazorPage._DynCodeRoot.CmsContext.Site.Id;
-            var site = ((OqtSite)RazorPage._DynCodeRoot.CmsContext.Site).UnwrappedContents;
-            //var site = _siteRepository.GetSite(siteId);
-            var alias = _aliasRepository.GetAliases().FirstOrDefault(a => a.SiteId == siteId);
-            var page2sxc = RazorPage._DynCodeRoot.CmsContext.Page;
-            var currentPageId = RazorPage._DynCodeRoot.CmsContext.Page.Id;
-            //var page = _pageRepository.GetPage(pageId ?? currentPageId);
+            var siteId = RazorPage._DynCodeRoot?.CmsContext?.Site?.Id;
+            if (siteId == null)
+                throw new Exception("Error, SiteId is unknown.");
 
-            var r = Utilities.NavigateUrl(alias.Path, "a11", parameters);
-            return r;
+            // HACK: This is workaround to get PageRepository working, because it depends on TenantResolver
+            // that is not working in this context (it works in api controllers).
+            _siteState.Alias ??= _aliasRepositoryLazy.Value.GetAliases().FirstOrDefault(a => a.SiteId == siteId);
 
-            //Tenant tenant = _tenantResolver.GetTenant();
-            //var alias = _siteState?.Alias; //_tenantResolver.GetAlias();
-            //var page = _pageRepository.GetPage(pageId ?? 0);
+            var alias = _siteState.Alias;
+            if (alias == null)
+                throw new Exception("Error, Alias is unknown.");
 
-            //var r = Utilities.NavigateUrl(alias?.Path ?? "", page?.Path ?? "", parameters);
-            //return r;
+            var currentPageId = RazorPage._DynCodeRoot?.CmsContext?.Page?.Id;
 
-            //return parametersToUse == null
-            //    ? _dnn.Tab.FullUrl
-            //    : DotNetNuke.Common.Globals.NavigateURL(targetPage, "", parametersToUse);
+            var pid = pageId ?? currentPageId;
+            if (pid == null)
+                throw new Exception($"Error, PageId is unknown, pageId: {pageId}, currentPageId: {currentPageId} .");
 
+            var page = _pageRepository.GetPage(pid.Value);
+
+            return Utilities.NavigateUrl(alias.Path, page.Path, parameters);
         }
 
         /// <inheritdoc />
