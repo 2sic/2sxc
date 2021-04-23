@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http;
 using Oqtane.Shared;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
@@ -66,7 +67,7 @@ namespace ToSic.Sxc.Oqt.Server.Page
             var wrapLog = Log.Call<string>();
 
             var pageId = Parent?.Page.PageId ?? -1;
-            var siteRoot = GetSiteRoot();
+            var siteRoot = GetSiteRoot(_siteState);
             var apiRoot = siteRoot + WebApiConstants.ApiRoot + "/";
             var result = InpageCms.JsApiJson(pageId, siteRoot, apiRoot, AntiForgeryToken(), OqtConstants.UiRoot + "/");
             return wrapLog("ok", result);
@@ -77,6 +78,8 @@ namespace ToSic.Sxc.Oqt.Server.Page
         private string AntiForgeryToken()
             => _antiForgery.GetAndStoreTokens(_httpContextAccessor.HttpContext).RequestToken;
 
-        private string GetSiteRoot() => _siteState?.Alias?.Name == null ? OqtConstants.SiteRoot : new Uri($"http://{_siteState.Alias.Name}/").AbsolutePath.SuffixSlash();
+        [PrivateApi]
+        public static string GetSiteRoot(SiteState siteState)
+            => siteState?.Alias?.Name == null ? OqtConstants.SiteRoot : new Uri($"http://{siteState.Alias.Name}/").AbsolutePath.SuffixSlash();
     }
 }

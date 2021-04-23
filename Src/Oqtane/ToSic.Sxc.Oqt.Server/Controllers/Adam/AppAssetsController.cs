@@ -17,8 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Adam
     {
         public override string Route => "adam";
 
-        public AppAssetsController(ITenantResolver tenantResolver, IWebHostEnvironment hostingEnvironment,
-            ILogManager logger) : base(tenantResolver, hostingEnvironment, logger)
+        public AppAssetsController(IWebHostEnvironment hostingEnvironment, ILogManager logger) : base(hostingEnvironment, logger)
         {
 
         }

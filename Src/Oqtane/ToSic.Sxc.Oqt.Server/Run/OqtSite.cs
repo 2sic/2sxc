@@ -2,21 +2,23 @@
 using System.IO;
 using Oqtane.Models;
 using Oqtane.Repository;
+using Oqtane.Shared;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Oqt.Server.Page;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Dev;
 
 // todo: #Oqtane
-// - url 
+// - url
 
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
     /// <summary>
-    /// This is a Mvc implementation of a Tenant-object. 
+    /// This is a Mvc implementation of a Tenant-object.
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public sealed class OqtSite: Site<Site>, ICmsSite
@@ -24,17 +26,19 @@ namespace ToSic.Sxc.Oqt.Server.Run
         /// <summary>
         /// Constructor for DI
         /// </summary>
-        public OqtSite(Lazy<ISiteRepository> siteRepository, Lazy<ITenantResolver> tenantResolver, Lazy<IServerPaths> serverPaths, Lazy<OqtZoneMapper> zoneMapper)
+        public OqtSite(Lazy<ISiteRepository> siteRepository, Lazy<ITenantResolver> tenantResolver, Lazy<IServerPaths> serverPaths, Lazy<OqtZoneMapper> zoneMapper, Lazy<SiteState> siteStateLazy)
         {
             _siteRepository = siteRepository;
             _tenantResolver = tenantResolver;
             _serverPaths = serverPaths;
             _zoneMapper = zoneMapper;
+            _siteStateLazy = siteStateLazy;
         }
         private readonly Lazy<ISiteRepository> _siteRepository;
         private readonly Lazy<ITenantResolver> _tenantResolver;
         private readonly Lazy<IServerPaths> _serverPaths;
         private readonly Lazy<OqtZoneMapper> _zoneMapper;
+        private readonly Lazy<SiteState> _siteStateLazy;
 
         public OqtSite Init(Site settings)
         {
@@ -44,7 +48,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public override Site UnwrappedContents
         {
-            get => _unwrapped ??= _siteRepository.Value.GetSite(_tenantResolver.Value.GetAlias().SiteId);
+            get => _unwrapped ??= _siteRepository.Value.GetSite((_siteStateLazy.Value.Alias ?? _tenantResolver.Value.GetAlias()).SiteId);
             protected set => _unwrapped = value;
         }
         private Site _unwrapped;
@@ -63,7 +67,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public override string CurrentCultureCode => WipConstants.DefaultLanguage;
 
         /// <inheritdoc />
-        public override int Id => UnwrappedContents.SiteId;
+        public override int Id => _siteStateLazy.Value.Alias?.SiteId ?? UnwrappedContents.SiteId;
 
         // Todo: #Oqtane
         public override string Url => WipConstants.HttpUrlRoot;
@@ -81,7 +85,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         }
 
         [PrivateApi]
-        public override string AppsRootLink => Path.Combine(string.Format(OqtConstants.AppAssetsLinkRoot, Id.ToString()));
+        public override string AppsRootLink => OqtAssetsAndHeaders.GetSiteRoot(_siteStateLazy.Value) + OqtConstants.AppAssetsLinkRoot;
 
         [PrivateApi] public override string AppsRootPhysicalFull => _serverPaths.Value.FullAppPath(AppsRootPartial());
 

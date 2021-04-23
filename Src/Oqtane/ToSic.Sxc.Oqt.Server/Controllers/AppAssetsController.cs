@@ -21,36 +21,27 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     [Route("{alias:int}/api/[controller]")]
     [Route(WebApiConstants.WebApiStateRoot + "/app-assets")]
 
-    public class AppAssetsController : Controller
+    public class AppAssetsController : OqtControllerBase
     {
         public virtual string Route => "default";
         private readonly ILogManager _logger;
-        private readonly ITenantResolver _tenantResolver;
         private readonly IWebHostEnvironment _hostingEnvironment;
 
-
-        public AppAssetsController(ITenantResolver tenantResolver, IWebHostEnvironment hostingEnvironment, ILogManager logger)
+        public AppAssetsController(IWebHostEnvironment hostingEnvironment, ILogManager logger)
         {
-            _tenantResolver = tenantResolver;
             _hostingEnvironment = hostingEnvironment;
             _logger = logger;
         }
 
-        // GET: 1/api/adam/ping
-        [HttpGet("ping")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S3400:Methods should not return constants", Justification = "<Pending>")]
-        public string Ping()
-        {
-            return $"pong: {Route}";
-        }
+        protected override string HistoryLogName { get; }
 
-        // GET /api/appAssets/{appName}/{filePath}
+
         [HttpGet("{appName}/{*filePath}")]
         public IActionResult GetFile(string appName, string filePath)
         {
             try
             {
-                var alias = _tenantResolver.GetAlias();
+                var alias = SiteState.Alias;
                 var fullFilePath = ContentFileHelper.GetFilePath(_hostingEnvironment.ContentRootPath, alias, Route, appName, filePath);
                 if (string.IsNullOrEmpty(fullFilePath)) return NotFound();
 

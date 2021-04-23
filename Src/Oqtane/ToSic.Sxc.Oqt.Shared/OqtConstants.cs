@@ -17,8 +17,7 @@
 
         public const string ApiAppLinkPart = "api/sxc/app";
 
-        // todo: must later replace the 1 with {0} for string-replaces to work
-        public const string AppAssetsLinkRoot = "/{0}/api/sxc/app-assets";
+        public const string AppAssetsLinkRoot = WebApiConstants.ApiRoot + "/app-assets";
 
         // Adam / Download
         public const string DownloadLinkTemplate = "/{0}/api/file/download/{1}";
