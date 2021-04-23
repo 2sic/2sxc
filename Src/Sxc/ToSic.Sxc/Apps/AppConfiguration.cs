@@ -26,6 +26,7 @@ namespace ToSic.Sxc.Apps
             //FieldHidden = "Hidden",
             FieldRequiredSxcVersion = "RequiredVersion",
             FieldRequiredDnnVersion = "RequiredDnnVersion",
+            FieldRequiredOqtaneVersion = "RequiredOqtaneVersion",
             FieldSupportsAjax = "SupportsAjaxReload";
 
         [PrivateApi]
@@ -63,5 +64,9 @@ namespace ToSic.Sxc.Apps
             Version.TryParse(Get(FieldRequiredDnnVersion, ""), out var version)
                 ? version
                 : new Version();
+        
+        public Version RequiredOqtane => Version.TryParse(Get(FieldRequiredOqtaneVersion, ""), out var version)
+            ? version
+            : new Version();
     }
 }
