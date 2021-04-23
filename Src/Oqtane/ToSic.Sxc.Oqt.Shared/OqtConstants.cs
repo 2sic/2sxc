@@ -38,5 +38,6 @@
 
         // Logging constants
         public const string OqtLogPrefix = "Oct";
+        public const string LogName = "Oqt";
     }
 }

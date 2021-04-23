@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
@@ -65,7 +66,7 @@ namespace ToSic.Sxc.Oqt.Server
             services.TryAddTransient(typeof(AdamItemDtoMaker<,>), typeof(OqtAdamItemDtoMaker<,>));
 
             //// Still pending...
-            ////sc.TryAddTransient<XmlExporter, DnnXmlExporter>();
+            services.TryAddTransient<XmlExporter, OqtXmlExporter>();
             services.TryAddTransient<IImportExportEnvironment, OqtImportExportEnvironment>();
             //sc.TryAddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
             //sc.TryAddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
