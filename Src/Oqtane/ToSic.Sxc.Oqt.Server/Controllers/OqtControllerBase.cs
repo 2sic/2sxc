@@ -64,12 +64,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
             var siteId = -1;
 
-            // get aliasId identifier based on request
+            // get siteId identifier based on request
             var segments = request.Path.Value.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-            if (segments != null && segments.Length > 1 && (segments[1] == "api" || segments[1] == "pages") && segments[0] != "~")
-            {
-                siteId = int.Parse(segments[0]);
-            }
+            if (segments != null && segments.Length > 1 && (segments[1] == "api" || segments[1] == "pages") && segments[0] != "~" && int.TryParse(segments[0], out var areaId))
+                siteId = areaId; // 2sxc UI sends siteId instead of areaId that is common in Oqtane.
 
             // get the alias
             var aliasRepository = serviceProvider.Build<IAliasRepository>();

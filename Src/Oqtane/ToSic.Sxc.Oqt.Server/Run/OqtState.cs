@@ -46,8 +46,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return appContext;
         }
 
-        //public IContextOfBlock GetContext() => GetBlock()?.Context ?? Factory.Resolve(typeof(IContextOfBlock)) as IContextOfBlock;
-
         public IContextOfBlock GetContext() => GetBlock()?.Context ?? ServiceProvider.Build<IContextOfBlock>().Init(Log) as IContextOfBlock;
 
         public IBlock GetBlock(bool allowNoContextFound = true) => _block ??= InitializeBlock(allowNoContextFound);
