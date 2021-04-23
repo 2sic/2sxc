@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http;
+using Oqtane.Shared;
+using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit;
@@ -14,13 +16,15 @@ namespace ToSic.Sxc.Oqt.Server.Page
     {
         #region Constructor and DI
 
-        public OqtAssetsAndHeaders(IAntiforgery antiForgery, IHttpContextAccessor httpContextAccessor) : base($"{OqtConstants.OqtLogPrefix}.AssHdr")
+        public OqtAssetsAndHeaders(IAntiforgery antiForgery, IHttpContextAccessor httpContextAccessor, SiteState siteState) : base($"{OqtConstants.OqtLogPrefix}.AssHdr")
         {
             _antiForgery = antiForgery;
             _httpContextAccessor = httpContextAccessor;
+            _siteState = siteState;
         }
         private readonly IAntiforgery _antiForgery;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly SiteState _siteState;
 
 
         public void Init(SxcOqtane parent)
@@ -62,7 +66,7 @@ namespace ToSic.Sxc.Oqt.Server.Page
             var wrapLog = Log.Call<string>();
 
             var pageId = Parent?.Page.PageId ?? -1;
-            var siteRoot = OqtConstants.SiteRoot;
+            var siteRoot = GetSiteRoot();
             var apiRoot = siteRoot + WebApiConstants.ApiRoot + "/";
             var result = InpageCms.JsApiJson(pageId, siteRoot, apiRoot, AntiForgeryToken(), OqtConstants.UiRoot + "/");
             return wrapLog("ok", result);
@@ -72,5 +76,7 @@ namespace ToSic.Sxc.Oqt.Server.Page
 
         private string AntiForgeryToken()
             => _antiForgery.GetAndStoreTokens(_httpContextAccessor.HttpContext).RequestToken;
+
+        private string GetSiteRoot() => _siteState?.Alias?.Name == null ? OqtConstants.SiteRoot : new Uri($"http://{_siteState.Alias.Name}/").AbsolutePath.SuffixSlash();
     }
 }
