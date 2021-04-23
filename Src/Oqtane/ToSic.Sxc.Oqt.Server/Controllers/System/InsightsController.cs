@@ -5,7 +5,14 @@ using ToSic.Sxc.Web.WebApi.System;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
+    // Release routes
+    [Route(WebApiConstants.ApiRoot + "/sys/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot2 + "/sys/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot3 + "/sys/[controller]/[action]")]
+
+    // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/sys/[controller]/[action]")]
+
     [ApiController]
     public class InsightsController : OqtControllerBase
     {

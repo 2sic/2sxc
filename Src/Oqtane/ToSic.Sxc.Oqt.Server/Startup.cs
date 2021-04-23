@@ -20,6 +20,7 @@ using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.Razor.Engine;
 using ToSic.Sxc.WebApi;
 using Factory = ToSic.Eav.Factory;
+using WebApiConstants = ToSic.Sxc.Oqt.Shared.WebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server
 {
@@ -101,8 +102,17 @@ namespace ToSic.Sxc.Oqt.Server
             // endpoint mapping
             app.UseEndpoints(endpoints =>
             {
-                endpoints.Map("{alias}/api/sxc/app/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map("{alias}/api/sxc/app/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                // Release routes
+                endpoints.Map(WebApiConstants.AppRoot + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.AppRoot + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.AppRoot2 + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.AppRoot2 + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.AppRoot3 + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.AppRoot3 + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+
+                // Beta routes
+                endpoints.Map(WebApiConstants.WebApiStateRoot + "/app/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.WebApiStateRoot + "/app/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
             });
         }
 

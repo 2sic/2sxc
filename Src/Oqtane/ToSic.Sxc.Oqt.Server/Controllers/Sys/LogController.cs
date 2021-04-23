@@ -4,6 +4,12 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
 {
+    // Release routes
+    [Route(WebApiConstants.ApiRoot + "/sys/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot2 + "/sys/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot3 + "/sys/[controller]/[action]")]
+
+    // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/sys/[controller]/[action]")]
     public class LogController: OqtStatefulControllerBase
     {

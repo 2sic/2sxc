@@ -20,8 +20,15 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     //   [DnnLogExceptions]
     [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
     [AutoValidateAntiforgeryToken]
+
+    // Release routes
+    [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot2 + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot3 + "/admin/[controller]/[action]")]
+
+    // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/admin/type/[action]")]
-    //[ApiController]
+
     [ValidateAntiForgeryToken]
     public class TypeController : OqtStatefulControllerBase, ITypeController
     {

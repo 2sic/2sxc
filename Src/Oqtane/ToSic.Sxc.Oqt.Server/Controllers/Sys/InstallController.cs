@@ -6,6 +6,12 @@ using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
 {
+    // Release routes
+    [Route(WebApiConstants.ApiRoot + "/sys/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot2 + "/sys/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot3 + "/sys/[controller]/[action]")]
+
+    // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/sys/install/[action]")]
     public class InstallController: OqtStatefulControllerBase
     {
@@ -23,7 +29,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
         #region System Installation
 
         public InstallController(
-            StatefulControllerDependencies dependencies, 
+            StatefulControllerDependencies dependencies,
             Lazy<IEnvironmentInstaller> envInstallerLazy,
             Lazy<ImportFromRemote> impFromRemoteLazy) : base(dependencies)
         {
@@ -45,7 +51,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
         #region App / Content Package Installation
 
         /// <summary>
-        /// Before this was GET Module/RemoteInstallDialogUrl 
+        /// Before this was GET Module/RemoteInstallDialogUrl
         /// </summary>
         /// <param name="isContentApp"></param>
         /// <returns></returns>

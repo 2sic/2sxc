@@ -44,32 +44,43 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// </summary>
         protected abstract string HistoryLogName { get; }
 
+        protected SiteState SiteState { get; private set; }
+
 
         [NonAction]
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             base.OnActionExecuting(context);
 
-            // HACK: This is hack because we are using siteId instead of aliasId in our controller
             var serviceProvider = context.HttpContext.RequestServices;
-            var siteState = serviceProvider.Build<SiteState>(typeof(SiteState));
+            SiteState = serviceProvider.Build<SiteState>();
 
             // background processes can pass in an alias using the SiteState service
-            if (siteState.Alias != null) return;
+            if (SiteState.Alias != null) return;
+
+            var request = context.HttpContext.Request;
+            var host = $"{request.Host}";
+            var url = $"{request.Host}{request.Path}";
 
             var siteId = -1;
 
             // get aliasId identifier based on request
-            var segments = context?.HttpContext?.Request?.Path.Value.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            var segments = request.Path.Value.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
             if (segments != null && segments.Length > 1 && (segments[1] == "api" || segments[1] == "pages") && segments[0] != "~")
             {
                 siteId = int.Parse(segments[0]);
             }
 
             // get the alias
-            var aliasRepository = serviceProvider.Build<IAliasRepository>(typeof(IAliasRepository));
+            var aliasRepository = serviceProvider.Build<IAliasRepository>();
             var aliases = aliasRepository.GetAliases().ToList(); // cached
-            if (siteId != -1) siteState.Alias = aliases.FirstOrDefault(item => item.SiteId == siteId);
+            if (siteId != -1)
+                SiteState.Alias = aliases.OrderBy(a => a.Name)
+                    .FirstOrDefault(a => a.SiteId == siteId && a.Name.StartsWith(host));
+            else
+                SiteState.Alias = aliases.OrderByDescending(a => a.Name.Length)
+                    .ThenBy(a => a.Name)
+                    .FirstOrDefault(a => url.StartsWith(a.Name));
         }
 
         #region Extend Time so Web Server doesn't time out - not really implemented ATM

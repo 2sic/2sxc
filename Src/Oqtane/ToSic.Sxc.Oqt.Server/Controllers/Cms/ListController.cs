@@ -5,7 +5,14 @@ using ToSic.Sxc.WebApi.FieldList;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
+    // Release routes
+    [Route(WebApiConstants.ApiRoot + "/cms/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot2 + "/cms/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot3 + "/cms/[controller]/[action]")]
+
+    // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/cms/[controller]/[action]")]
+
     [ValidateAntiForgeryToken]
     //[Authorize(Policy = "EditModule")] // TODO: disabled
     public class ListController : OqtStatefulControllerBase

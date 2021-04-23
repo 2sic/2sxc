@@ -16,6 +16,13 @@ using ToSic.Sxc.WebApi.App;
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     [ApiController]
+
+    // Release routes
+    [Route(WebApiConstants.AppRoot+ "/{appPath}/content")]
+    [Route(WebApiConstants.AppRoot2+ "/{appPath}/content")]
+    [Route(WebApiConstants.AppRoot3 + "/{appPath}/content")]
+
+    // Beta routes
     [Route( WebApiConstants.WebApiStateRoot + "/app/{appPath}/content/")]
     public class AppContentController: OqtStatefulControllerBase
     {

@@ -13,6 +13,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 {
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
+
+    // Release routes
+    [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot2 + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot3 + "/admin/[controller]/[action]")]
+
+    // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
     public class FeatureController : OqtStatefulControllerBase, IFeatureController
     {

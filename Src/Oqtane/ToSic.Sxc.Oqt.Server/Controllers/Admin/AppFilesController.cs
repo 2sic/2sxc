@@ -13,6 +13,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     /// </summary>
     [ValidateAntiForgeryToken]
     [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+
+    // Release routes
+    [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot2 + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot3 + "/admin/[controller]/[action]")]
+
+    // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
     public class AppFilesController : OqtStatefulControllerBase
     {

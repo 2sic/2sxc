@@ -12,7 +12,15 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     //   [DnnLogExceptions]
     //   [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [AutoValidateAntiforgeryToken]
+
+    // Release routes
+    [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot2 + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot3 + "/admin/[controller]/[action]")]
+
+    // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/admin/dialog/[action]")]
+
     [ApiController]
 
     [ValidateAntiForgeryToken]

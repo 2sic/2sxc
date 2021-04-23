@@ -6,7 +6,14 @@ using ToSic.Sxc.WebApi.ItemLists;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
+    // Release routes
+    [Route(WebApiConstants.ApiRoot + "/cms/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot2 + "/cms/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot3 + "/cms/[controller]/[action]")]
+
+    // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/cms/[controller]/[action]")]
+
     [ValidateAntiForgeryToken]
     [ApiController]
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]

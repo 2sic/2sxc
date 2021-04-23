@@ -12,7 +12,14 @@ using ToSic.Sxc.WebApi.PublicApi;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
+    // Release routes
+    [Route(WebApiConstants.AppRoot)]
+    [Route(WebApiConstants.AppRoot2)]
+    [Route(WebApiConstants.AppRoot3)]
+
+    // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/app/")]
+
     [ApiController]
     public class AppQueryController : OqtStatefulControllerBase, IAppQueryController
     {

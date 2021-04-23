@@ -17,8 +17,15 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 {
     // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)] can't be used, because it forces the security
     // token, which fails in the cases where the url is called using get, which should result in a download
-    // [ValidateAntiForgeryToken] because the exports are called by the browser directly (new tab) 
+    // [ValidateAntiForgeryToken] because the exports are called by the browser directly (new tab)
     // we can't set this globally (only needed for imports)
+
+    // Release routes
+    [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot2 + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot3 + "/admin/[controller]/[action]")]
+
+    // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/admin/app/[action]")]
     public class AppController : OqtStatefulControllerBase, IAppController
     {
@@ -30,7 +37,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         private readonly Lazy<AppCreator> _appBuilderLazy;
         protected override string HistoryLogName => "Api.App";
 
-        public AppController(StatefulControllerDependencies dependencies, 
+        public AppController(StatefulControllerDependencies dependencies,
             Lazy<AppsBackend> appsBackendLazy,
             Lazy<CmsZones> cmsZonesLazy,
             Lazy<ExportApp> exportAppLazy,

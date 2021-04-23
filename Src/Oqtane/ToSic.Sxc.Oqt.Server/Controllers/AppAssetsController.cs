@@ -2,16 +2,25 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Infrastructure;
 using Oqtane.Repository;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using ToSic.Oqt.Helpers;
+using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
-    [Route("{alias}/api/[controller]")]
-    //[Route("{alias}/api/sxc/adam")]
-    [Route("{alias}/api/sxc/app-assets")]
+    // Release routes
+    [Route(WebApiConstants.ApiRoot + "/[controller]")]
+    [Route(WebApiConstants.ApiRoot2 + "/[controller]")]
+    [Route(WebApiConstants.ApiRoot3 + "/[controller]")]
+
+    [Route(WebApiConstants.ApiRoot + "/app-assets")]
+    [Route(WebApiConstants.ApiRoot2 + "/app-assets")]
+    [Route(WebApiConstants.ApiRoot3 + "/app-assets")]
+
+    // Beta routes
+    [Route("{alias:int}/api/[controller]")]
+    [Route(WebApiConstants.WebApiStateRoot + "/app-assets")]
+
     public class AppAssetsController : Controller
     {
         public virtual string Route => "default";

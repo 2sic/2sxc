@@ -18,6 +18,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     /// </summary>
     [ValidateAntiForgeryToken]
     [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+
+    // Release routes
+    [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot2 + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot3 + "/admin/[controller]/[action]")]
+
+    // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
     public class QueryController : OqtStatefulControllerBase, IQueryController
     {
@@ -26,7 +33,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         private readonly Lazy<AppConfigDelegate> _configProviderLazy;
         protected override string HistoryLogName => "Api.Query";
 
-        public QueryController(StatefulControllerDependencies dependencies, 
+        public QueryController(StatefulControllerDependencies dependencies,
             Lazy<QueryApi> queryLazy,
             Lazy<CmsManager> cmsManagerLazy,
             Lazy<AppConfigDelegate> configProviderLazy
@@ -72,7 +79,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
             var config = _configProviderLazy.Value.Init(Log).GetConfigProviderForModule(context, block?.App, block);
             return _queryLazy.Value.Init(appId, Log).Run(appId, id, top, config);
         }
-        
+
         /// <summary>
         /// Query the Result of a Pipeline using Test-Parameters
         /// </summary>
@@ -87,9 +94,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         }
 
         /// <summary>
-	    /// Clone a Pipeline with all DataSources and their configurations
-	    /// </summary>
-	    [HttpGet]
+        /// Clone a Pipeline with all DataSources and their configurations
+        /// </summary>
+        [HttpGet]
         public void Clone(int appId, int id) => _queryLazy.Value.Init(appId, Log).Clone(appId, id);
 
 

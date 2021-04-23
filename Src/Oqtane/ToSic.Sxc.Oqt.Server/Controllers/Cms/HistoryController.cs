@@ -10,7 +10,14 @@ using ToSic.Sxc.WebApi.Cms;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
+    // Release routes
+    [Route(WebApiConstants.ApiRoot + "/cms/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot2 + "/cms/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot3 + "/cms/[controller]/[action]")]
+
+    // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/cms/[controller]/[action]")]
+
     [ValidateAntiForgeryToken]
     public class HistoryController : OqtStatefulControllerBase, IHistoryController
     {
@@ -18,7 +25,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         private readonly Lazy<AppManager> _appManagerLazy;
         protected override string HistoryLogName => "Api.History";
 
-        public HistoryController(StatefulControllerDependencies dependencies, 
+        public HistoryController(StatefulControllerDependencies dependencies,
             IdentifierHelper idHelper,
             Lazy<AppManager> appManagerLazy) : base(dependencies)
         {

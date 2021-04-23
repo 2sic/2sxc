@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         //private readonly IFileManager _dnnFiles = FileManager.Instance;
         internal AdamManager<int, int> AdamManager { get; }
 
-        private string _appName;
+        private string _appFolder;
 
         public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds, ILog parentLog)
         {
@@ -73,7 +73,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var app = AdamManager.AppRuntime.ServiceProvider.Build<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
 
             // needed for TenantFileItem path resolving
-            _appName = app.Name;
+            _appFolder = app.Folder;
 
             AdamManager.Init(context, 10, Log);
             Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
@@ -135,7 +135,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var filePath = Path.Combine(file?.Folder.Path.Backslash(), file.Name);
 
             var alias = _oqtTenantResolverLazy.Value.GetAlias();
-            var absolutePath = ContentFileHelper.GetFilePath(_hostingEnvironment.ContentRootPath, alias, "default", _appName, filePath);
+            var absolutePath = ContentFileHelper.GetFilePath(_hostingEnvironment.ContentRootPath, alias, "default", _appFolder, filePath);
 
             return new TenantFileItem
             {

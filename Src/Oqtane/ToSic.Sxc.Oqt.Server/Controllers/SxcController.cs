@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     /// DELETE THIS - NOT IN USE.
     /// This is just example how to create typical Oqtane Controller.
     /// </summary>
-    [Route("{alias}/api/[controller]")]
+    [Route("{alias:int}/api-test-ignore/[controller]")]
     public class SxcController : Controller
     {
         private readonly ISxcRepository _SxcRepository;

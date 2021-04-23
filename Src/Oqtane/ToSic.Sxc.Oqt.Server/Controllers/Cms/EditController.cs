@@ -11,7 +11,15 @@ using ToSic.Sxc.WebApi.Cms;
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     [AutoValidateAntiforgeryToken]
+
+    // Release routes
+    [Route(WebApiConstants.ApiRoot + "/cms/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot2 + "/cms/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot3 + "/cms/[controller]/[action]")]
+
+    // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/cms/edit/[action]")]
+
     [ApiController]
     public class EditController: OqtStatefulControllerBase, IEditController
     {
@@ -45,7 +53,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         [HttpPost]
         [AllowAnonymous]   // will check security internally, so assume no requirements
-        public EditDto Load([FromBody] List<ItemIdentifier> items, int appId) 
+        public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
             => _loadBackend.Value.Init(Log).Load(appId, items);
 
         [HttpPost]

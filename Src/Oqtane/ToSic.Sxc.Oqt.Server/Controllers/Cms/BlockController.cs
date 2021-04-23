@@ -15,7 +15,14 @@ using ToSic.Sxc.WebApi.InPage;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
+    // Release routes
+    [Route(WebApiConstants.ApiRoot + "/cms/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot2 + "/cms/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot3 + "/cms/[controller]/[action]")]
+
+    // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/cms/block/[action]")]
+
     [ValidateAntiForgeryToken]
     [ApiController]
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
@@ -28,7 +35,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         private readonly Lazy<AppViewPickerBackend> _appViewPickerBackendLazy;
         protected override string HistoryLogName => "Api.Block";
         public BlockController(StatefulControllerDependencies dependencies,
-            Lazy<CmsRuntime> lazyCmsRuntime, 
+            Lazy<CmsRuntime> lazyCmsRuntime,
             Lazy<ContentBlockBackend> blockBackendLazy,
             Lazy<AppViewPickerBackend> viewPickerBackendLazy,
             Lazy<CmsZones> cmsZonesLazy,

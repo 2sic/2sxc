@@ -13,6 +13,13 @@ using ToSic.Sxc.WebApi.Views;
 namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 {
     [AllowAnonymous] // necessary at this level, because otherwise download would fail
+
+    // Release routes
+    [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot2 + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot3 + "/admin/[controller]/[action]")]
+
+    // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/admin/view/[action]")]
     public class ViewController : OqtStatefulControllerBase
     {
@@ -23,7 +30,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         private ViewsBackend Backend => _viewsBackendLazy.Value.Init(/*GetContext(),*/ Log);
         private ViewsExportImport ExportImport => _viewExportLazy.Value.Init(/*GetContext(),*/ Log);
 
-        public ViewController(StatefulControllerDependencies dependencies, 
+        public ViewController(StatefulControllerDependencies dependencies,
             Lazy<ViewsBackend> viewsBackendLazy,
             Lazy<ViewsExportImport> viewExportLazy) : base(dependencies)
         {
@@ -84,7 +91,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
             for (var i = 0; i < files.Count; i++)
                 streams.Add(new FileUploadDto { Name = files[i].FileName, Stream = files[i].OpenReadStream() });
             var result = ExportImport.ImportView(zoneId, appId, streams, GetContext().Site.DefaultCultureCode);
-            
+
             return wrapLog("ok", result);
         }
     }

@@ -11,8 +11,15 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 {
     // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)] can't be used, because it forces the security
     // token, which fails in the cases where the url is called using get, which should result in a download
-    // [ValidateAntiForgeryToken] because the exports are called by the browser directly (new tab) 
+    // [ValidateAntiForgeryToken] because the exports are called by the browser directly (new tab)
     // we can't set this globally (only needed for imports)
+
+    // Release routes
+    [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot2 + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot3 + "/admin/[controller]/[action]")]
+
+    // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
     public class AppPartsController : OqtStatefulControllerBase, IAppPartsController
     {
@@ -20,7 +27,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         private readonly Lazy<ImportContent> _importContentLazy;
         protected override string HistoryLogName => "Api.AParts";
 
-        public AppPartsController(StatefulControllerDependencies dependencies, 
+        public AppPartsController(StatefulControllerDependencies dependencies,
             Lazy<ExportContent> exportContentLazy,
             Lazy<ImportContent> importContentLazy) : base(dependencies)
         {

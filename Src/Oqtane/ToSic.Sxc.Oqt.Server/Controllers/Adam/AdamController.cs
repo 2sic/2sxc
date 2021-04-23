@@ -17,8 +17,16 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Adam
     //[SupportedModules("2sxc,2sxc-app")]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]    // use view, all methods must re-check permissions
     [ValidateAntiForgeryToken]
+
+    // Release routes
+    [Route(WebApiConstants.ApiRoot + "/app-content/{contentType}/{guid:guid}/{field}")]
+    [Route(WebApiConstants.ApiRoot2 + "/app-content/{contentType}/{guid:guid}/{field}")]
+    [Route(WebApiConstants.ApiRoot3 + "/app-content/{contentType}/{guid:guid}/{field}")]
+
+    // Beta routes
     //[Route(WebApiConstants.WebApiStateRoot + "/app-content/{contentType}/{guid:guid}/{field}/[action]")]
     [Route(WebApiConstants.WebApiStateRoot + "/app-content/{contentType}/{guid:guid}/{field}")]
+
     public class AdamController : OqtStatefulControllerBase, IAdamController<int>
     {
         private readonly Lazy<AdamTransUpload<int, int>> _adamUpload;
@@ -110,19 +118,19 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Adam
         }
 
         [HttpPost("folder")]
-        public IEnumerable<AdamItemDto> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot) 
+        public IEnumerable<AdamItemDto> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
             => _adamFolders.Value
                 .Init(appId, contentType, guid, field, usePortalRoot, Log)
                 .Folder(subfolder, newFolder);
 
         [HttpGet("delete")]
-        public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot) 
+        public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot)
             => _adamDelete.Value
                 .Init(appId, contentType, guid, field, usePortalRoot, Log)
                 .Delete(subfolder, isFolder, id, id);
 
         [HttpGet("rename")]
-        public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot) 
+        public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot)
             => _adamRename.Value
                 .Init(appId, contentType, guid, field, usePortalRoot, Log)
                 .Rename(subfolder, isFolder, id, id, newName);
