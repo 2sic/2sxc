@@ -74,11 +74,12 @@ namespace ToSic.Sxc.Oqt.Server
             });
 
             var sp = services.BuildServiceProvider();
-            // STV
-            // var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            // 2dm
-            var connectionString = Configuration.GetConnectionString("SiteSqlServer");
+
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            // Special case to use DNN database connection string (appsettings.local.json).
+            //var connectionString = Configuration.GetConnectionString("SiteSqlServer");
             sp.Build<IDbConfiguration>().ConnectionString = connectionString;
+
             var hostingEnvironment = sp.Build<IHostEnvironment>();
             sp.Build<IGlobalConfiguration>().GlobalFolder = Path.Combine(hostingEnvironment.ContentRootPath, "wwwroot\\Modules\\ToSic.Sxc");
 
