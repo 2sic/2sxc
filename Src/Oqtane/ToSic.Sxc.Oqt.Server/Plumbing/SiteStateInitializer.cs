@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
         /// Will initialize the SiteState if it has not been initialized yet
         /// </summary>
         /// <returns></returns>
-        internal bool InitIfEmpty() //SiteState SiteState, HttpContext httpContext, Lazy<IAliasRepository> AliasRepositoryLazy)
+        internal bool InitIfEmpty()
         {
             // This would indicate it was called improperly, because we need the shared SiteState variable to work properly
             if (SiteState == null) throw new ArgumentNullException(nameof(SiteState));

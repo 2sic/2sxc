@@ -99,21 +99,26 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
         private void RemoveController(string dllName, string apiFile)
         {
             Log.Add($"In ApplicationParts, find AppApi controller: {dllName}.");
-            var applicationPart = _partManager.ApplicationParts.FirstOrDefault(a => a.Name.Equals($"{dllName}.dll"));
-            if (applicationPart != null)
-            {
-                Log.Add($"From ApplicationParts, remove AppApi controller: {dllName}.");
-                _partManager.ApplicationParts.Remove(applicationPart);
-                NotifyChange();
+            // In edge cases the part may be already registered more than once, so we want to really clean all
+            var applicationParts = _partManager.ApplicationParts
+                .Where(a => a.Name.Equals($"{dllName}.dll"))
+                .ToList();
 
-                Log.Add(_compiledAppApiControllers.TryRemove(apiFile, out var removeValue)
-                    ? $"Value removed: {removeValue} for {apiFile}."
-                    : $"Error, can't remove value for {apiFile}.");
+            if (applicationParts.Any())
+            {
+                foreach (var applicationPart in applicationParts)
+                {
+                    Log.Add($"From ApplicationParts, remove AppApi controller: {dllName}.");
+                    _partManager.ApplicationParts.Remove(applicationPart);
+
+                    Log.Add(_compiledAppApiControllers.TryRemove(apiFile, out var removeValue)
+                        ? $"Value removed: {removeValue} for {apiFile}."
+                        : $"Error, can't remove value for {apiFile}.");
+                }
+                NotifyChange();
             }
             else
-            {
                 Log.Add($"In ApplicationParts, can't find AppApi controller: {dllName}");
-            }
         }
 
         private static void NotifyChange()
