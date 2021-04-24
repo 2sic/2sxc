@@ -47,14 +47,14 @@ namespace ToSic.Sxc.Mvc.Web
         public string ContextHeader()
         {
             var wrapLog = Log.Call<string>();
-            
+
             var pageId = 0;
             var siteRoot = MvcConstants.SiteRoot;
             var apiRoot = siteRoot + WebApi.WebApiConstants.WebApiRoot + "/";
-            var json = InpageCms.JsApiJson(pageId, siteRoot, apiRoot, AntiForgeryToken(), MvcConstants.UiRoot);
+            var json = InpageCms.JsApiJson(pageId, siteRoot, apiRoot, apiRoot,AntiForgeryToken(), MvcConstants.UiRoot);
 
             var meta = Tag.Meta().Name(InpageCms.MetaName).Content(json).ToString();
-            
+
             return wrapLog(meta, meta);
         }
 
