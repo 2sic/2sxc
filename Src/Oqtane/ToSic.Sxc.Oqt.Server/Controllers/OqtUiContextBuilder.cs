@@ -1,7 +1,8 @@
-﻿using ToSic.Eav.Apps;
+﻿using Oqtane.Shared;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Oqt.Server.Page;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.Run;
 
@@ -11,14 +12,16 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     public class OqtUiContextBuilder: UiContextBuilderBase
     {
-        public OqtUiContextBuilder(ILinkPaths linkPaths,IContextOfSite ctx, Dependencies deps) : base(deps)
+        public OqtUiContextBuilder(ILinkPaths linkPaths,IContextOfSite ctx, SiteState siteState, Dependencies deps) : base(deps)
         {
             _linkPaths = linkPaths;
             _context = ctx;
+            _siteState = siteState;
         }
 
         private readonly ILinkPaths _linkPaths;
         private IContextOfSite _context;
+        private readonly SiteState _siteState;
 
 
         protected override LanguageDto GetLanguage()
@@ -56,12 +59,19 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         protected override EnableDto GetEnable()
         {
-            return new EnableDto
+            return new()
             {
                 AppPermissions = true,
                 CodeEditor = true,
                 Query = true
             };
+        }
+
+        protected override AppDto GetApp(Ctx flags)
+        {
+            var appDto = base.GetApp(flags);
+            appDto.Api = OqtAssetsAndHeaders.GetSiteRoot(_siteState);
+            return appDto;
         }
 
         protected override string GetGettingStartedUrl() => "#todo-not-yet-implemented-getting-started";

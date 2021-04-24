@@ -112,7 +112,7 @@ namespace ToSic.Sxc.WebApi.Context
 
         protected virtual string GetGettingStartedUrl() => Eav.Constants.UrlNotInitialized;
 
-        private AppDto GetApp(Ctx flags)
+        protected virtual AppDto GetApp(Ctx flags)
         {
             if (App == null) return null;
             var result = new AppDto

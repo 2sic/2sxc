@@ -9,6 +9,7 @@ using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.WebApi.Context;
 using Assembly = System.Reflection.Assembly;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -64,17 +65,18 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
                     // but we can't get it from there directly
                 };
 
-        //protected override EnableDto GetEnable()
-        //{
-        //    var isRealApp = App != null && App.AppGuid != Eav.Constants.DefaultAppName;
-        //    var tmp = new JsContextUser(new DnnUser());
-        //    return new EnableDto
-        //    {
-        //        AppPermissions = isRealApp,
-        //        CodeEditor = tmp?.CanDevelop ?? false,
-        //        Query = isRealApp,
-        //    };
-        //}
+        protected override AppDto GetApp(Ctx flags)
+        {
+            var appDto = base.GetApp(flags);
+            string apiRoot = null;
+            try
+            {
+                var roots = DnnJsApiHeader.GetApiRoots();
+                apiRoot = roots.Item2;
+            } catch { /* ignore */ }
+            appDto.Api = apiRoot;
+            return appDto;
+        }
 
         /// <summary>
         /// build a getting-started url which is used to correctly show the user infos like

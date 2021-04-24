@@ -21,6 +21,7 @@ using ToSic.Sxc.Oqt.Shared.Run;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi.Adam;
+using ToSic.Sxc.WebApi.Context;
 
 namespace ToSic.Sxc.Oqt.Server
 {
@@ -42,7 +43,7 @@ namespace ToSic.Sxc.Oqt.Server
             services.TryAddTransient<IPlatformModuleUpdater, OqtModuleUpdater>();
             services.TryAddTransient<IEnvironmentInstaller, OqtEnvironmentInstaller>();
             services.TryAddTransient<ILookUpEngineResolver, OqtGetLookupEngine>();
-            services.TryAddTransient<OqtUiContextBuilder>();
+            services.TryAddTransient<IUiContextBuilder, OqtUiContextBuilder>();
             services.TryAddTransient<IModule, OqtModule>();
             services.TryAddTransient<OqtModule>();
             services.TryAddTransient<OqtTempInstanceContext>();

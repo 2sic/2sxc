@@ -63,6 +63,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             #endregion
 
 
+            // TODO: GET `auto` to work
 
             // Ensure required route values: alias, appFolder, controller, action.
             if (!values.ContainsKey("appFolder")) throw new ArgumentException($"Error: missing required 'appFolder' route value.", nameof(values));
