@@ -1,4 +1,5 @@
-﻿using Oqtane.Shared;
+﻿using System.Reflection;
+using Oqtane.Shared;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Context;
@@ -74,6 +75,17 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             return appDto;
         }
 
-        protected override string GetGettingStartedUrl() => "#todo-not-yet-implemented-getting-started";
+        protected override string GetGettingStartedUrl()
+        {
+            var gsUrl =
+                BaseGettingStartedUrl("Oqt",
+                    Assembly.GetAssembly(typeof(SiteState)).GetName().Version.ToString(4),
+                    "2sxc", // todo
+                    0, // todo
+                    "un-un", // todo _portal.DefaultLanguage,
+                    "un-un"); // todo _portal.CultureCode);
+
+            return gsUrl; //  "#todo-not-yet-implemented-getting-started";
+        }
     }
 }

@@ -90,17 +90,24 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
             if (!(App is IApp app)) return "";
 
             var gsUrl =
-                "//gettingstarted.2sxc.org/router.aspx?" +
-                $"DnnVersion={Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4)}" +
-                $"&2SexyContentVersion={Settings.ModuleVersion}" +
-                $"&ModuleName={Module.DesktopModule.ModuleName}" +
-                $"&ModuleId={Module.ModuleID}" +
-                $"&PortalID={_portal.PortalId}" +
-                $"&ZoneID={app.ZoneId}" +
-                $"&DefaultLanguage={_portal.DefaultLanguage}" +
-                $"&CurrentLanguage={_portal.CultureCode}";
+                BaseGettingStartedUrl("Dnn",
+                    Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4),
+                    Module.DesktopModule.ModuleName,
+                    Module.ModuleID,
+                    _portal.DefaultLanguage,
+                    _portal.CultureCode);
+            //"//gettingstarted.2sxc.org/router.aspx?" +
+                //"Platform=Dnn" +
+                //$"SysVersion={Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4)}" +
+                //$"&SxcVersion={Settings.ModuleVersion}" +
+                //$"&ModuleName={Module.DesktopModule.ModuleName}" +
+                //$"&ModuleId={Module.ModuleID}" +
+                //$"&SiteId={_portal.PortalId}" +
+                //$"&ZoneID={app.ZoneId}" +
+                //$"&DefaultLanguage={_portal.DefaultLanguage}" +
+                //$"&CurrentLanguage={_portal.CultureCode}";
 
-            // Add AppStaticName and Version
+            // Add AppStaticName and Version if _not_ the primary content-app
             if (Module.DesktopModule.ModuleName != "2sxc")
             {
                 gsUrl += "&AppGuid=" + app.AppGuid;
@@ -109,7 +116,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
             }
 
             var hostSettings = HostController.Instance.GetSettingsDictionary();
-            gsUrl += hostSettings.ContainsKey("GUID") ? "&DnnGUID=" + hostSettings["GUID"] : "";
+            gsUrl += hostSettings.ContainsKey("GUID") ? "&SysGUID=" + hostSettings["GUID"] : "";
             return gsUrl;
         }
     }

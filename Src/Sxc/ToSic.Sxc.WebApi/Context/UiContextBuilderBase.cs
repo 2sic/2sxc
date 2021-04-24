@@ -112,6 +112,22 @@ namespace ToSic.Sxc.WebApi.Context
 
         protected virtual string GetGettingStartedUrl() => Eav.Constants.UrlNotInitialized;
 
+        protected string BaseGettingStartedUrl(string platform, string sysVersion, string moduleName, int moduleId, string primaryLang, string currentLang)
+        {
+            var gsUrl =
+                "//gettingstarted.2sxc.org/router.aspx?" +
+                $"Platform={platform}" +
+                $"&SysVersion={sysVersion}" +
+                $"&SxcVersion={Settings.ModuleVersion}" +
+                $"&ModuleName={moduleName}" +
+                $"&ModuleId={moduleId}" +
+                $"&SiteId={Deps.SiteCtx.Site.Id}" +
+                $"&ZoneID={Deps.AppToLaterInitialize?.ZoneId}" +
+                $"&DefaultLanguage={primaryLang}" +
+                $"&CurrentLanguage={currentLang}";
+            return gsUrl;
+        }
+
         protected virtual AppDto GetApp(Ctx flags)
         {
             if (App == null) return null;
