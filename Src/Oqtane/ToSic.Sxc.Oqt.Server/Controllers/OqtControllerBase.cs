@@ -65,16 +65,19 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             var siteId = -1;
 
             // get siteId identifier based on request
+            // TODO: REMOVE THIS CODE AS SOON AS THE ui DOESN'T USE IDs ANY MORE - wip ca. mid May 2021
             var segments = request.Path.Value.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
             if (segments != null && segments.Length > 1 && (segments[1] == "api" || segments[1] == "pages") && segments[0] != "~" && int.TryParse(segments[0], out var areaId))
                 siteId = areaId; // 2sxc UI sends siteId instead of areaId that is common in Oqtane.
 
-            // get the alias
+            // New: Get the Site Alias based on the URL
             var aliasRepository = serviceProvider.Build<IAliasRepository>();
             var aliases = aliasRepository.GetAliases().ToList(); // cached
             if (siteId != -1)
                 SiteState.Alias = aliases.OrderBy(a => a.Name)
                     .FirstOrDefault(a => a.SiteId == siteId && a.Name.StartsWith(host));
+
+            // TODO: REMOVE THIS CODE AS SOON AS THE ui DOESN'T USE IDs ANY MORE - wip ca. mid May 2021
             else
                 SiteState.Alias = aliases.OrderByDescending(a => a.Name.Length)
                     .ThenBy(a => a.Name)
