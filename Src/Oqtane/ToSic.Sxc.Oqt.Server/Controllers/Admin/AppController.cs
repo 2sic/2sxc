@@ -1,8 +1,7 @@
-﻿using System;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.WebApi.Dto;
@@ -105,9 +104,11 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <param name="resetAppGuid"></param>
         /// <returns></returns>
         [HttpGet]
-        public HttpResponseMessage Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => _exportAppLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
+        public IActionResult Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
+        {
+            return _exportAppLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
                 .Export(appId, zoneId, includeContentGroups, resetAppGuid);
+        }
 
         /// <summary>
         /// Used to be GET ImportExport/ExportForVersionControl
