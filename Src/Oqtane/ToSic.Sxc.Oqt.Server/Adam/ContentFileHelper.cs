@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.StaticFiles;
@@ -24,6 +25,11 @@ namespace ToSic.Oqt.Helpers
             return contentType;
         }
 
+        public static string GetFilePath(string contentRootPath, Alias alias, string filePath)
+        {
+            return GetFilePath(contentRootPath, alias, string.Empty,  string.Empty, filePath);
+        }
+
         public static string GetFilePath(string contentRootPath, Alias alias, string route, string appName, string filePath)
         {
             // Oqtane path and file name validation.
@@ -41,15 +47,17 @@ namespace ToSic.Oqt.Helpers
             // Validate for alias.
             if (alias == null) return string.Empty;
 
+            var aliasPart = $@"Content\Tenants\{alias.TenantId}\Sites\{alias.SiteId}\";
+
             var folder = GetFolderFromRoute(route);
 
-            var aliasPart = $@"Content\Tenants\{alias.TenantId}\Sites\{alias.SiteId}\{folder}";
-
-            var fullFilePath = Path.Combine(contentRootPath, aliasPart, appName, filePath).Backslash();
+            var fullFilePath = Path.Combine(contentRootPath, aliasPart, folder, appName, filePath).Backslash();
 
             // Check that file exist in file system.
             return System.IO.File.Exists(fullFilePath) ? fullFilePath : string.Empty;
         }
+
+
 
         public static bool IsKnownRiskyExtension(string fileName)
         {
@@ -61,6 +69,7 @@ namespace ToSic.Oqt.Helpers
         {
             return route switch
             {
+                "" => "",
                 "adam" => "adam",
                 "sxc" => "2sxc",
                 _ => "2sxc"

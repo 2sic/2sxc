@@ -129,19 +129,17 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         protected override TenantFileItem ResolveFile(int fileId)
         {
-            var serverPaths = _oqtServerPathsLazy.Value;
             var fileController = _fileRepositoryLazy.Value;
             var file = fileController.GetFile(fileId);
-            var filePath = Path.Combine(file?.Folder.Path.Backslash(), file.Name);
-
+            var relativePath = Path.Combine(file?.Folder.Path.Backslash(), file.Name);
             var alias = _oqtTenantResolverLazy.Value.GetAlias();
-            var absolutePath = ContentFileHelper.GetFilePath(_hostingEnvironment.ContentRootPath, alias, "default", _appFolder, filePath);
+            var path = ContentFileHelper.GetFilePath(_hostingEnvironment.ContentRootPath, alias, relativePath);
 
             return new TenantFileItem
             {
                 Id = fileId,
-                RelativePath = absolutePath,
-                Path = serverPaths.FullContentPath(absolutePath)
+                RelativePath = relativePath,
+                Path = path
             };
         }
 
