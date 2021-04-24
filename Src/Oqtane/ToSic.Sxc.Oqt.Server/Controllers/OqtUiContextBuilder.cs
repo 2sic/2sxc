@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected override AppDto GetApp(Ctx flags)
         {
             var appDto = base.GetApp(flags);
-            appDto.Api = OqtAssetsAndHeaders.GetSiteRoot(_siteState);
+            if (appDto != null) appDto.Api = OqtAssetsAndHeaders.GetSiteRoot(_siteState);
             return appDto;
         }
 

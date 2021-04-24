@@ -16,7 +16,7 @@ using IO = System.IO;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtImportExportEnvironment: ImportExportEnvironmentBase
+    public class OqtImportExportEnvironment : ImportExportEnvironmentBase
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly Lazy<ISiteRepository> _siteRepository;
@@ -162,7 +162,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                         Log.Add($"{folder.Key} / {folder.Value} is empty");
                         continue;
                     }
-                    var directory = IO.Path.GetDirectoryName(folder.Value)?.Replace('\\', '/');
+                    var directory = IO.Path.GetDirectoryName(folder.Value);
                     if (directory == null)
                     {
                         Log.Add($"Parent folder of folder {folder.Value} doesn't exist");
@@ -192,7 +192,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         /*** TODO: refactor code clones ***/
         private File Add(Folder parent, IO.Stream body, string fileName, OqtSite oqtSite)
         {
-            var callLog = Log.Call<File>($"..., ..., {fileName}");
+            var callLog = Log.Call<File>($"Add {fileName}, folderId:{parent.FolderId}, siteId {oqtSite.Id}");
 
             var fullContentPath = IO.Path.Combine(_oqtServerPaths.FullContentPath(oqtSite.ContentPath), parent.Path);
             IO.Directory.CreateDirectory(fullContentPath);
@@ -221,15 +221,15 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         private bool FileExists(Folder folderInfo, string fileName) => GetFile(folderInfo, fileName) != null;
 
-        private File GetFile(Folder folderInfo, string fileName) => _oqtFileRepository
-            .GetFiles(folderInfo.FolderId)
-            .FirstOrDefault(f => f.Name.Equals(fileName, StringComparison.InvariantCultureIgnoreCase));
+        private File GetFile(Folder folderInfo, string fileName)
+            => _oqtFileRepository.GetFiles(folderInfo.FolderId)
+                .FirstOrDefault(f => f.Name.Equals(fileName, StringComparison.OrdinalIgnoreCase));
 
-        private Folder GetOqtFolderByName(string path) => _oqtFolderRepository.GetFolder(Site.Id, path.Backslash());
+        private Folder GetOqtFolderByName(string path) => _oqtFolderRepository.GetFolder(Site.Id, EnsureOqtaneFolderFormat(path));
 
         private Folder AddFolder(string path)
         {
-            path = path.Backslash();
+            path = EnsureOqtaneFolderFormat(path);
             var callLog = Log.Call<Folder>(path);
 
             if (FolderExists(path)) return callLog("error, missing folder", null);
@@ -237,7 +237,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             try
             {
                 // find parent
-                var pathWithPretendFileName = path.TrimEnd().TrimEnd('/').TrimEnd('\\');
+                var pathWithPretendFileName = path.TrimEnd('\\');
                 var parent = IO.Path.GetDirectoryName(pathWithPretendFileName) + IO.Path.DirectorySeparatorChar;
                 var subfolder = IO.Path.GetFileName(pathWithPretendFileName);
                 var parentFolder = GetOqtFolderByName(parent) ?? GetOqtFolderByName("");
@@ -261,6 +261,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             return callLog("?", null);
         }
+
+        // ensure backslash on the end of path, but not on the start
+        private string EnsureOqtaneFolderFormat(string path)
+            => (path.Trim().Backslash().TrimEnd('\\') + '\\').TrimStart('\\');
 
         private Folder CreateVirtualFolder(Folder parentFolder, string path, string folder)
         {
