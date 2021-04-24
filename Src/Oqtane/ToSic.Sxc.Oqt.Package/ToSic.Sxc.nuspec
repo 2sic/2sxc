@@ -38,7 +38,7 @@
     <file src="..\Compatibility.Shim.DotNetNuke\bin\Release\net5.0\Compatibility.Shim.DotNetNuke.dll" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Server\wwwroot\**\*.*" target="wwwroot" />
     <!-- 3rd party dependencies -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\refs\**\*.*" target="refs" />
+    <!--<file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\refs\**\*.*" target="refs" />-->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Connect.Koi.dll" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\CsvHelper.dll" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\ICSharpCode.SharpZipLib.dll" target="lib\net5.0" />

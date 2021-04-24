@@ -44,6 +44,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Scripts\ToSic.Sxc.0.0.1.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\ToSic.Sxc.0.0.1.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.11.90.0.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.Uninstall.sql" />
   </ItemGroup>
