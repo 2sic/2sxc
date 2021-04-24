@@ -6,9 +6,13 @@ using Oqtane.Repository;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Oqtane.Models;
+using Oqtane.Shared;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
 using Log = ToSic.Eav.Logging.Simple.Log;
 
@@ -40,10 +44,27 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
         {
             var wrapLog = Log.Call<RouteValueDictionary>();
 
-            // Check required route values: alias, appFolder, controller, action.
-            if (!values.ContainsKey("alias")) throw new ArgumentException($"Error: missing required 'alias' route value.", nameof(values));
-            var aliasId = int.Parse((string)values["alias"]);
+            #region Ensure required alias
+            Alias alias;
+            if (values.ContainsKey("alias"))
+            {
+                //var aliasId = int.Parse((string) values["alias"]);
+                alias = _tenantResolver.GetAlias();
+            }
+            else
+            {
+                var serviceProvider = httpContext.RequestServices;
+                var siteStateInitializer = serviceProvider.Build<SiteStateInitializer>();
+                //var aliasRepositoryLazy = serviceProvider.Build<Lazy<IAliasRepository>>();
+                siteStateInitializer.InitIfEmpty(); //siteState, httpContext, aliasRepositoryLazy);
+                alias = siteStateInitializer.SiteState.Alias ?? throw new ArgumentException($"Error: missing required 'alias' route value.", nameof(values));
+            }
+            var aliasPart = $@"Content\Tenants\{alias.TenantId}\Sites\{alias.SiteId}\2sxc";
+            #endregion
 
+
+
+            // Ensure required route values: alias, appFolder, controller, action.
             if (!values.ContainsKey("appFolder")) throw new ArgumentException($"Error: missing required 'appFolder' route value.", nameof(values));
             var appFolder = (string)values["appFolder"];
 
@@ -53,7 +74,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             if (!values.ContainsKey("action")) throw new ArgumentException($"Error: missing required 'action' route value.", nameof(values));
             var action = (string)values["action"];
 
-            Log.Add($"TransformAsync route required values are present, alias:{aliasId}, app:{appFolder}, ctrl:{controller}, act:{action}.");
+            Log.Add($"TransformAsync route required values are present, alias:{alias.AliasId}, app:{appFolder}, ctrl:{controller}, act:{action}.");
 
             var controllerTypeName = $"{controller}Controller";
             Log.Add($"Controller TypeName: {controllerTypeName}");
@@ -62,8 +83,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             var edition = GetEdition(values);
             Log.Add($"Edition: {edition}");
 
-            var alias = _tenantResolver.GetAlias();
-            var aliasPart = $@"Content\Tenants\{alias.TenantId}\Sites\{alias.SiteId}\2sxc";
 
             var controllerFolder = Path.Combine(aliasPart, appFolder, edition.Backslash(), "api");
             Log.Add($"Controller Folder: {controllerFolder}");

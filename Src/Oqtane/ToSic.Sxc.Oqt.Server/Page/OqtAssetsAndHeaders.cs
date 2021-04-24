@@ -69,7 +69,8 @@ namespace ToSic.Sxc.Oqt.Server.Page
             var pageId = Parent?.Page.PageId ?? -1;
             var siteRoot = GetSiteRoot(_siteState);
             var apiRoot = siteRoot + WebApiConstants.ApiRoot + "/";
-            var result = InpageCms.JsApiJson(pageId, siteRoot, apiRoot, AntiForgeryToken(), OqtConstants.UiRoot + "/");
+            var appApiRoot = siteRoot; // without "app/" because the UI will add that later on
+            var result = InpageCms.JsApiJson(pageId, siteRoot, apiRoot, appApiRoot, AntiForgeryToken(), OqtConstants.UiRoot + "/");
             return wrapLog("ok", result);
         }
 

@@ -5,8 +5,10 @@ using Oqtane.Repository;
 using Oqtane.Shared;
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using Log = ToSic.Eav.Logging.Simple.Log;
 
@@ -60,7 +62,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
             var request = context.HttpContext.Request;
             var host = $"{request.Host}";
-            var url = $"{request.Host}{request.Path}";
 
             var siteId = -1;
 
@@ -71,17 +72,18 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                 siteId = areaId; // 2sxc UI sends siteId instead of areaId that is common in Oqtane.
 
             // New: Get the Site Alias based on the URL
-            var aliasRepository = serviceProvider.Build<IAliasRepository>();
-            var aliases = aliasRepository.GetAliases().ToList(); // cached
-            if (siteId != -1)
+            var aliasRepositoryLazy = serviceProvider.Build<Lazy<IAliasRepository>>();
+            if (siteId == -1)
+                serviceProvider.Build<SiteStateInitializer>().InitIfEmpty();
+            //SiteStateInitializer.InitIfEmpty(SiteState, context.HttpContext, aliasRepositoryLazy);
+            // TODO: REMOVE THIS CODE AS SOON AS THE ui DOESN'T USE IDs ANY MORE - wip ca. mid May 2021
+            else
+            {
+                var aliases = aliasRepositoryLazy.Value.GetAliases().ToList(); // cached
                 SiteState.Alias = aliases.OrderBy(a => a.Name)
                     .FirstOrDefault(a => a.SiteId == siteId && a.Name.StartsWith(host));
 
-            // TODO: REMOVE THIS CODE AS SOON AS THE ui DOESN'T USE IDs ANY MORE - wip ca. mid May 2021
-            else
-                SiteState.Alias = aliases.OrderByDescending(a => a.Name.Length)
-                    .ThenBy(a => a.Name)
-                    .FirstOrDefault(a => url.StartsWith(a.Name));
+            }
         }
 
         #region Extend Time so Web Server doesn't time out - not really implemented ATM
@@ -89,6 +91,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected void PreventServerTimeout300() => WipConstants.DontDoAnythingImplementLater();
 
         #endregion
+        
+        
     }
+    
 
 }

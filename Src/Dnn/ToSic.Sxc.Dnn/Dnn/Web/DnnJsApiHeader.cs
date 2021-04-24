@@ -32,11 +32,17 @@ namespace ToSic.Sxc.Dnn.Web
                 ? $"desktopmodules/{InpageCms.ExtensionPlaceholder}/api/"
                 : $"api/{InpageCms.ExtensionPlaceholder}/");
 
+            // appApiRoot is the same as apiRoot - the UI will add "app" to it later on 
+            // but app-api root shouldn't contain generic modules-name, as it's always 2sxc
+            var appApiRoot = apiRoot;
+            appApiRoot = appApiRoot.Replace(InpageCms.ExtensionPlaceholder, "2sxc"); 
+            
             var portal = PortalSettings.Current;
             var json = InpageCms.JsApiJson(
                 portal.ActiveTab.TabID, 
                 siteRoot, 
                 apiRoot, 
+                appApiRoot,
                 AntiForgeryToken(),
                 VirtualPathUtility.ToAbsolute(DnnConstants.SysFolderRootVirtual));
 

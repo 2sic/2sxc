@@ -15,6 +15,7 @@ using ToSic.Sxc.Oqt.Server.Blazor;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Extensions.Koi;
 using ToSic.Sxc.Oqt.Server.Page;
+using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared.Run;
 using ToSic.Sxc.Run;
@@ -75,6 +76,8 @@ namespace ToSic.Sxc.Oqt.Server
             services.TryAddTransient<ISxcOqtane, SxcOqtane>();
             services.TryAddTransient<StatefulControllerDependencies>();
 
+            // Site State Initializer for APIs etc. to ensure that the SiteState exists and is correctly preloaded
+            services.TryAddTransient<SiteStateInitializer>();
 
             // Experimental - it seems that Blazor hides the url params in the request
             services.TryAddTransient<IHttp, HttpBlazor>();

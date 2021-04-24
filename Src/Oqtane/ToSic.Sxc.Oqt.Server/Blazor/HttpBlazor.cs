@@ -35,9 +35,10 @@ namespace ToSic.Sxc.Oqt.Server.Blazor
 
                 // this must behave differently in an API call, as the navigation manager will not be initialized
                 // but all the params will really be in the query
-                if (Current.Request.Path.Value?.Contains($"/{WebApiConstants.WebApiRoot}/") == true)
+                if (Current.Request.Path.Value?.Contains("_blazor") == false)
+                //if (Current.Request.Path.Value?.Contains($"/{WebApiConstants.WebApiRoot}/") == true)
                 {
-                    var paramList = new NameValueCollection();
+                        var paramList = new NameValueCollection();
                     Request.Query.ToList().ForEach(i => paramList.Add(i.Key, i.Value));
                     return _queryStringValues = paramList;
                 }
