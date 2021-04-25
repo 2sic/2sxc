@@ -81,7 +81,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private string AppsRootPartial()
         {
             var site = UnwrappedContents;
-            return Path.Combine(OqtConstants.ContentSubfolder, string.Format(OqtConstants.AppRootPublicBase, site.TenantId, site.SiteId), Settings.AppsRootFolder);
+            return string.Format(OqtConstants.AppRootPublicBase, site.TenantId, site.SiteId);
         }
 
         [PrivateApi]
@@ -96,7 +96,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             get
             {
                 var site = UnwrappedContents;
-                return Path.Combine(OqtConstants.ContentSubfolder, string.Format(OqtConstants.AppRootPublicBase, site.TenantId, site.SiteId));
+                return string.Format(OqtConstants.ContentRootPublicBase, site.TenantId, site.SiteId);
             }
         }
 

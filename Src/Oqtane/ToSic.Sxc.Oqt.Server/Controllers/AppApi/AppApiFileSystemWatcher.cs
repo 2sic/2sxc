@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.IO;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             Log = new Log(HistoryLogName, null, "new AppApiFileSystemWatcher()");
             History.Add(HistoryLogGroup, Log);
 
-            var appApiSource = Path.Combine(hostingEnvironment.ContentRootPath, @"Content\Tenants");
+            var appApiSource = Path.Combine(hostingEnvironment.ContentRootPath, OqtConstants.AppRoot);
 
             _watcher = new FileSystemWatcher
             {

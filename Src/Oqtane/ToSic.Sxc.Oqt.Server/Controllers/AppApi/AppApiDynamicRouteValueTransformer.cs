@@ -2,12 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
+using Oqtane.Models;
 using Oqtane.Repository;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Oqtane.Models;
-using Oqtane.Shared;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
@@ -59,11 +58,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 siteStateInitializer.InitIfEmpty(); //siteState, httpContext, aliasRepositoryLazy);
                 alias = siteStateInitializer.SiteState.Alias ?? throw new ArgumentException($"Error: missing required 'alias' route value.", nameof(values));
             }
-            var aliasPart = $@"Content\Tenants\{alias.TenantId}\Sites\{alias.SiteId}\2sxc";
+            var aliasPart = string.Format(OqtConstants.AppRootPublicBase, alias.TenantId, alias.SiteId);
             #endregion
 
 
-            // TODO: GET `auto` to work
+
+            // TODO: stv GET `auto` to work
 
             // Ensure required route values: alias, appFolder, controller, action.
             if (!values.ContainsKey("appFolder")) throw new ArgumentException($"Error: missing required 'appFolder' route value.", nameof(values));

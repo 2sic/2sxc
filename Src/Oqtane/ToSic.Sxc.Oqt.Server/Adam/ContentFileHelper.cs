@@ -47,19 +47,17 @@ namespace ToSic.Oqt.Helpers
             // Validate for alias.
             if (alias == null) return string.Empty;
 
-            // TODO: stv moving aps
-
-            var aliasPart = $@"{OqtConstants.ContentSubfolder}\Tenants\{alias.TenantId}\Sites\{alias.SiteId}\";
-
-            var folder = GetFolderFromRoute(route);
-
-            var fullFilePath = Path.Combine(contentRootPath, aliasPart, folder, appName, filePath).Backslash();
+            var fullFilePath = route switch
+            {
+                "" => AdamPathWithoutAppName(contentRootPath, alias, filePath),
+                "adam" => AdamPath(contentRootPath, alias, appName, filePath),
+                "sxc" => SxcPath(contentRootPath, alias, appName, filePath),
+                _ => SxcPath(contentRootPath, alias, appName, filePath),
+            };
 
             // Check that file exist in file system.
             return System.IO.File.Exists(fullFilePath) ? fullFilePath : string.Empty;
         }
-
-
 
         public static bool IsKnownRiskyExtension(string fileName)
         {
@@ -67,15 +65,14 @@ namespace ToSic.Oqt.Helpers
             return !string.IsNullOrEmpty(extension) && RiskyDetector.IsMatch(extension);
         }
 
-        public static string GetFolderFromRoute(string route)
-        {
-            return route switch
-            {
-                "" => "",
-                "adam" => "adam",
-                "sxc" => "2sxc",
-                _ => "2sxc"
-            };
-        }
+        private static string AdamPathWithoutAppName(string contentRootPath, Alias alias, string filePath)
+            => Path.Combine(contentRootPath, string.Format(OqtConstants.AppRootPublicBase, alias.TenantId, alias.SiteId), filePath).Backslash();
+
+        private static string AdamPath(string contentRootPath, Alias alias, string appName, string filePath)
+            => Path.Combine(contentRootPath, string.Format(OqtConstants.ContentRootPublicBase, alias.TenantId, alias.SiteId), "adam", appName, filePath).Backslash();
+
+        private static string SxcPath(string contentRootPath, Alias alias, string appName, string filePath)
+            => Path.Combine(contentRootPath, string.Format(OqtConstants.AppRootPublicBase, alias.TenantId, alias.SiteId), appName, filePath).Backslash();
+
     }
 }
