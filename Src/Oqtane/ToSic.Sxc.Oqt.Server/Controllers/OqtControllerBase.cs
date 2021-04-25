@@ -5,7 +5,6 @@ using Oqtane.Repository;
 using Oqtane.Shared;
 using System;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Oqt.Server.Plumbing;
@@ -24,11 +23,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected OqtControllerBase()
         {
             // ReSharper disable once VirtualMemberCallInConstructor
-            // todo: redesign so it works - in .net core the HttpContext isn't ready in the constructor
-            Log = new Log(HistoryLogName, null, $"Path: {HttpContext?.Request.GetDisplayUrl()}");
+            Log = new Log(HistoryLogName, null, $"OqtControllerBase");
             // ReSharper disable once VirtualMemberCallInConstructor
             History.Add(HistoryLogGroup, Log);
-            // todo: get this to work
         }
 
         /// <inheritdoc />
@@ -52,6 +49,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [NonAction]
         public override void OnActionExecuting(ActionExecutingContext context)
         {
+            Log.Add($"Url: {context.HttpContext.Request.GetDisplayUrl()}");
+
             base.OnActionExecuting(context);
 
             var serviceProvider = context.HttpContext.RequestServices;
@@ -91,9 +90,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected void PreventServerTimeout300() => WipConstants.DontDoAnythingImplementLater();
 
         #endregion
-        
-        
+
+
     }
-    
+
 
 }
