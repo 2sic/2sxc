@@ -1,10 +1,10 @@
-using System;
-using System.IO;
-using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.StaticFiles;
 using Oqtane.Models;
 using Oqtane.Shared;
+using System.IO;
+using System.Text.RegularExpressions;
 using ToSic.Eav.Helpers;
+using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Oqt.Helpers
 {
@@ -47,7 +47,9 @@ namespace ToSic.Oqt.Helpers
             // Validate for alias.
             if (alias == null) return string.Empty;
 
-            var aliasPart = $@"Content\Tenants\{alias.TenantId}\Sites\{alias.SiteId}\";
+            // TODO: stv moving aps
+
+            var aliasPart = $@"{OqtConstants.ContentSubfolder}\Tenants\{alias.TenantId}\Sites\{alias.SiteId}\";
 
             var folder = GetFolderFromRoute(route);
 
