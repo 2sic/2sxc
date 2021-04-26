@@ -4,9 +4,9 @@ using ToSic.Sxc.Oqt.Shared;
 namespace ToSic.Sxc.Oqt.Server.Controllers.Assets
 {
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/assets/{appName}")]
-    [Route(WebApiConstants.ApiRoot2 + "/assets/{appName}")]
-    [Route(WebApiConstants.ApiRoot3 + "/assets/{appName}")]
+    [Route(WebApiConstants.AppRoot + "/{appName}/assets")]
+    [Route(WebApiConstants.AppRoot2 + "/{appName}/assets")]
+    [Route(WebApiConstants.AppRoot3 + "/{appName}/assets")]
 
     // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/assets/{appName}")]
