@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.WebApi.Dto;
@@ -10,7 +11,6 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.ImportExport;
-using AppDto = ToSic.Sxc.WebApi.App.AppDto;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 {
@@ -34,6 +34,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         private readonly Lazy<ImportApp> _importAppLazy;
         private readonly Lazy<AppManager> _appManagerLazy;
         private readonly Lazy<AppCreator> _appBuilderLazy;
+        private readonly Lazy<ResetApp> _resetAppLazy;
         protected override string HistoryLogName => "Api.App";
 
         public AppController(StatefulControllerDependencies dependencies,
@@ -42,7 +43,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
             Lazy<ExportApp> exportAppLazy,
             Lazy<ImportApp> importAppLazy,
             Lazy<AppManager> appManagerLazy,
-            Lazy<AppCreator> appBuilderLazy) : base(dependencies)
+            Lazy<AppCreator> appBuilderLazy,
+            Lazy<ResetApp> resetAppLazy
+            ) : base(dependencies)
         {
             _appsBackendLazy = appsBackendLazy;
             _cmsZonesLazy = cmsZonesLazy;
@@ -50,6 +53,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
             _importAppLazy = importAppLazy;
             _appManagerLazy = appManagerLazy;
             _appBuilderLazy = appBuilderLazy;
+            _resetAppLazy = resetAppLazy;
         }
 
         [HttpGet]
@@ -109,6 +113,23 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
             return _exportAppLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
                 .Export(appId, zoneId, includeContentGroups, resetAppGuid);
         }
+
+        /// <inheritdoc />
+        [HttpPost]
+        [Authorize(Roles = RoleNames.Host)]
+        [ValidateAntiForgeryToken]
+        public ImportResultDto Reset(int zoneId, int appId)
+        {
+            var wrapLog = Log.Call<ImportResultDto>();
+
+            PreventServerTimeout300();
+            var result = _resetAppLazy.Value
+                .Init(GetContext().Site.Id, GetContext().User, Log)
+                .Reset(zoneId, appId, GetContext().Site.DefaultCultureCode);
+
+            return wrapLog("ok", result);
+        }
+
 
         /// <summary>
         /// Used to be GET ImportExport/ExportForVersionControl
