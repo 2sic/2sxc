@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Run
+﻿using System;
+
+namespace ToSic.Sxc.Run
 {
     public interface ILinkPaths
     {
@@ -7,5 +9,7 @@
         string ToAbsolute(string virtualPath);
 
         string ToAbsolute(string virtualPath, string subPath);
+
+        string AppAsset(string virtualPath);
     }
 }

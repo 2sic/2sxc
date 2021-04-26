@@ -33,5 +33,10 @@ namespace ToSic.Sxc.Run
 #endif
         }
 
+        public string AppAsset(string virtualPath)
+        {
+            return ToAbsolute(virtualPath);
+        }
+
     }
 }
