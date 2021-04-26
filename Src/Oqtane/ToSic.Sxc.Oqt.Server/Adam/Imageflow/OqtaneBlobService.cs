@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ToSic.Oqt.Helpers;
+using ToSic.Sxc.Oqt.Server.Plumbing;
 using File = System.IO.File;
 
 namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
@@ -49,12 +50,14 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
 
             // Get alias.
             using var scope = _serviceProvider.CreateScope();
-            var tenantResolver = scope.ServiceProvider.GetRequiredService<ITenantResolver>();
+            var siteStateInitializer = scope.ServiceProvider.GetRequiredService<SiteStateInitializer>();
+            siteStateInitializer.InitIfEmpty();
+            var alias = siteStateInitializer.SiteState.Alias;
+
             var hostingEnvironment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
-            var alias = tenantResolver.GetAlias();
 
             // Build physicalPath.
-            var physicalPath = ContentFileHelper.GetFilePath(hostingEnvironment.ContentRootPath, alias, route, appName, filePath);
+            var physicalPath = ContentFileHelper.GetFilePath(hostingEnvironment.ContentRootPath, alias, filePath);
             if (string.IsNullOrEmpty(physicalPath)) throw new BlobMissingException($"Oqtane blob \"{filePath}\" not found.");
 
             return new BlobProviderFile()
