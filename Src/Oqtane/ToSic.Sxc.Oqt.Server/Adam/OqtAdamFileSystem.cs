@@ -126,7 +126,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             var callLog = Log.Call<File<int, int>>($"..., ..., {fileName}, {ensureUniqueName}");
             if (ensureUniqueName)
                 fileName = FindUniqueFileName(parent, fileName);
-            var fullContentPath = Path.Combine(_serverPaths.FullContentPath(AdamContext.Site.ContentPath), parent.Path);
+            var fullContentPath = _serverPaths.FullContentPath(parent.Path);
             Directory.CreateDirectory(fullContentPath);
             var filePath = Path.Combine(fullContentPath, fileName);
             using (var stream = new FileStream(filePath, FileMode.Create))
@@ -134,7 +134,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 body.CopyTo(stream);
             }
             var fileInfo = new FileInfo(filePath);
-            
+
             // register into oqtane
             var oqtFileData = new File
             {
@@ -150,8 +150,8 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         }
 
         /// <summary>
-        /// When uploading a new file, we must verify that the name isn't used. 
-        /// If it is used, walk through numbers to make a new name which isn't used. 
+        /// When uploading a new file, we must verify that the name isn't used.
+        /// If it is used, walk through numbers to make a new name which isn't used.
         /// </summary>
         /// <param name="parentFolder"></param>
         /// <param name="fileName"></param>
@@ -163,7 +163,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             var dnnFolder = OqtFolderRepository.GetFolder(parentFolder.AsOqt().SysId);
             var name = Path.GetFileNameWithoutExtension(fileName);
             var ext = Path.GetExtension(fileName);
-            for (var i = 1; i < AdamFileSystemBasic.MaxSameFileRetries 
+            for (var i = 1; i < AdamFileSystemBasic.MaxSameFileRetries
                             && System.IO.File.Exists(Path.Combine(_serverPaths.FullContentPath(AdamContext.Site.ContentPath), dnnFolder.Path, Path.GetFileName(fileName))); i++)
                 fileName = $"{name}-{i}{ext}";
 
@@ -175,7 +175,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
 
         #region Folders
-        
+
 
         public bool FolderExists(string path) => GetOqtFolderByName(path) != null;
 
@@ -296,9 +296,9 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         private Folder<int, int> OqtToAdam(Folder f)
             => new Folder<int, int>(AdamContext)
             {
-                Path = _adamPaths.Url(f.Path),
+                Path = ((OqtAdamPaths)_adamPaths).Path(f.Path),
                 SysId = f.FolderId,
-                
+
                 ParentSysId = f.ParentId ?? WipConstants.ParentFolderNotFound,
 
                 Name = f.Name,
@@ -320,7 +320,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 Folder = f.Folder.Name,
                 ParentSysId = f.FolderId,
 
-                Path = _adamPaths.Url(f.Folder.Path),
+                Path = ((OqtAdamPaths)_adamPaths).Path(f.Folder.Path),
 
                 Created = f.CreatedOn,
                 Modified = f.ModifiedOn,

@@ -15,9 +15,9 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
     {
         private const string Prefix = "/";
         private const string Adam = "adam";
-        private const string AdamPath = "/api/sxc/adam/";
+        private const string AdamPath = "/app/";
         private const string Sxc = "sxc";
-        private const string SxcPath = "/api/sxc/sxc/";
+        private const string SxcPath = "/api/sxc/";
 
         private readonly IServiceProvider _serviceProvider;
 
