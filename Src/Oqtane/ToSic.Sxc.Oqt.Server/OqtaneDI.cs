@@ -51,6 +51,7 @@ namespace ToSic.Sxc.Oqt.Server
             services.TryAddTransient<OqtSite>();
             services.TryAddTransient<OqtZoneMapper>();
             services.TryAddTransient<SettingsHelper>();
+
             //// add page publishing
             services.TryAddTransient<IPagePublishing, OqtPagePublishing>();
             services.TryAddTransient<IPagePublishingResolver, OqtPagePublishingResolver>();
@@ -83,6 +84,9 @@ namespace ToSic.Sxc.Oqt.Server
 
             // Experimental - it seems that Blazor hides the url params in the request
             services.TryAddTransient<IHttp, HttpBlazor>();
+
+            // Resolve appFolder when appName is "auto"
+            services.TryAddTransient<OqtAppFolder>();
 
             // new in v12 - integrate KOI - experimental!
             try

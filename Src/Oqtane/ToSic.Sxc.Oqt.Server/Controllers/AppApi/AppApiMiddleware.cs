@@ -11,8 +11,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         public static async Task InvokeAsync(HttpContext context)
         {
-            //context.Response.ContentType = "application/json";
-
             try
             {
                 // Transform route values.

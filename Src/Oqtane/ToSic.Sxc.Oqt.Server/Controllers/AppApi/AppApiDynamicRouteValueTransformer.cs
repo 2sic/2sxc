@@ -12,6 +12,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Oqt.Server.Plumbing;
+using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
 using Log = ToSic.Eav.Logging.Simple.Log;
 
@@ -24,11 +25,16 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
     {
         private readonly ITenantResolver _tenantResolver;
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly Lazy<OqtAppFolder> _oqtAppFolderLazy;
 
-        public AppApiDynamicRouteValueTransformer(ITenantResolver tenantResolver, IWebHostEnvironment hostingEnvironment)
+        public AppApiDynamicRouteValueTransformer(
+            ITenantResolver tenantResolver,
+            IWebHostEnvironment hostingEnvironment,
+            Lazy<OqtAppFolder> oqtAppFolderLazy)
         {
             _tenantResolver = tenantResolver;
             _hostingEnvironment = hostingEnvironment;
+            _oqtAppFolderLazy = oqtAppFolderLazy;
             Log = new Log(HistoryLogName, null, "AppApiDynamicRouteValueTransformer");
             History.Add(HistoryLogGroup, Log);
         }
@@ -61,13 +67,11 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             var aliasPart = string.Format(OqtConstants.AppRootPublicBase, alias.TenantId, alias.SiteId);
             #endregion
 
-
-
-            // TODO: stv GET `auto` to work
-
             // Ensure required route values: alias, appFolder, controller, action.
             if (!values.ContainsKey("appFolder")) throw new ArgumentException($"Error: missing required 'appFolder' route value.", nameof(values));
             var appFolder = (string)values["appFolder"];
+            if (appFolder == "auto") appFolder = _oqtAppFolderLazy.Value.GetAppFolder();
+
 
             if (!values.ContainsKey("controller")) throw new ArgumentException($"Error: missing required 'controller' route value.", nameof(values));
             var controller = (string)values["controller"];
