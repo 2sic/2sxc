@@ -66,7 +66,7 @@ namespace ToSic.Oqt.Helpers
         }
 
         private static string AdamPathWithoutAppName(string contentRootPath, Alias alias, string filePath)
-            => Path.Combine(contentRootPath, string.Format(OqtConstants.AppRootPublicBase, alias.TenantId, alias.SiteId), filePath).Backslash();
+            => Path.Combine(contentRootPath, string.Format(OqtConstants.ContentRootPublicBase, alias.TenantId, alias.SiteId), filePath).Backslash();
 
         private static string AdamPath(string contentRootPath, Alias alias, string appName, string filePath)
             => Path.Combine(contentRootPath, string.Format(OqtConstants.ContentRootPublicBase, alias.TenantId, alias.SiteId), "adam", appName, filePath).Backslash();
