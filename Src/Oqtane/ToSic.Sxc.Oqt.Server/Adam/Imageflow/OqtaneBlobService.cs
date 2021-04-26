@@ -20,6 +20,12 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
         private const string Sxc = "sxc";
         private const string SxcPath = "/assets/";
 
+
+        private const string BetaPath = "/api/sxc/";
+        private const string BetaAdamPath = BetaPath + "adam/";
+        private const string BetaSxcPath = BetaPath + "sxc/";
+
+
         private readonly IServiceProvider _serviceProvider;
 
         public OqtaneBlobService(IServiceProvider serviceProvider)
@@ -37,13 +43,16 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
 
         public async Task<IBlobData> Fetch(string virtualPath)
         {
-            if (!SupportsPath(virtualPath))
-            {
-                return null;
-            }
+            if (!SupportsPath(virtualPath)) return null;
 
             // Get appName and filePath.
-            if (GetAppNameAndFilePath(virtualPath, out var appName, out var filePath)) return null;
+            var appName = string.Empty;
+            var filePath = string.Empty;
+            Boolean rez = false;
+            rez = ContainsBetaPath(virtualPath)
+                ? GetBetaAppNameAndFilePath(virtualPath, out appName, out filePath)
+                : GetAppNameAndFilePath(virtualPath, out appName, out filePath);
+            if (rez) return null;
 
             // Get route.
             var route = GetRoute(virtualPath);
@@ -74,7 +83,6 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
             var temp = "app/";
             appName = string.Empty;
             filePath = string.Empty;
-
             // get appName
             var prefixStart = virtualPath.IndexOf(temp, StringComparison.OrdinalIgnoreCase);
             appName = virtualPath.Substring(prefixStart + temp.Length).TrimStart('/');
@@ -98,7 +106,35 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
         private static bool ContainsSxcPath(string virtualPath)
             => virtualPath.Contains(SxcPath, StringComparison.OrdinalIgnoreCase);
 
-        private static string GetRoute(string virtualPath) => ContainsAdamPath(virtualPath) ? Adam :
-            ContainsSxcPath(virtualPath) ? Sxc : string.Empty;
+        private static bool GetBetaAppNameAndFilePath(string virtualPath, out string appName, out string filePath)
+        {
+            var path = string.Empty;
+            appName = string.Empty;
+            filePath = string.Empty;
+
+            if (ContainsBetaAdamPath(virtualPath)) path = AdamPath;
+            if (ContainsBetaSxcPath(virtualPath)) path = SxcPath;
+            var prefixStart = virtualPath.IndexOf(path, StringComparison.OrdinalIgnoreCase);
+            var appNameAndFilePath = virtualPath.Substring(prefixStart + path.Length).TrimStart('/');
+            var indexOfSlash = appNameAndFilePath.IndexOf('/');
+            if (indexOfSlash < 1) return true;
+
+            appName = appNameAndFilePath.Substring(0, indexOfSlash);
+            filePath = appNameAndFilePath.Substring(indexOfSlash + 1);
+
+            return false;
+        }
+
+        private static bool ContainsBetaPath(string virtualPath)
+            => virtualPath.Contains(BetaPath, StringComparison.OrdinalIgnoreCase);
+        private static bool ContainsBetaAdamPath(string virtualPath)
+            => virtualPath.Contains(BetaAdamPath, StringComparison.OrdinalIgnoreCase);
+
+        private static bool ContainsBetaSxcPath(string virtualPath)
+            => virtualPath.Contains(BetaSxcPath, StringComparison.OrdinalIgnoreCase);
+
+        private static string GetRoute(string virtualPath)
+            => (ContainsAdamPath(virtualPath) || ContainsBetaAdamPath(virtualPath)) ? Adam :
+                (ContainsSxcPath(virtualPath) || ContainsBetaSxcPath(virtualPath)) ? Sxc : string.Empty;
     }
 }
