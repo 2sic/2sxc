@@ -5,6 +5,7 @@
     <LangVersion>latest</LangVersion>
     <Version>11.90.00</Version>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
+    <RootNamespace>Custom.Hybrid</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

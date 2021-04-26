@@ -17,7 +17,7 @@ using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
 // ReSharper disable once CheckNamespace
-namespace ToSic.Custom
+namespace Custom.Hybrid
 {
     /// <summary>
     /// This is the base class for all custom API Controllers. <br/>
@@ -94,7 +94,7 @@ namespace ToSic.Custom
 
 
         /// <inheritdoc />
-        public new Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+        public new ToSic.Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = ToSic.Eav.Constants.RandomProtectionParameter,
             Stream stream = null,
             string fileName = null,
             string contentType = null,

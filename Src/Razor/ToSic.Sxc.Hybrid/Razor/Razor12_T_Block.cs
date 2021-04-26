@@ -1,10 +1,11 @@
 ﻿using System.Threading.Tasks;
+using Custom.Hybrid;
 using Microsoft.AspNetCore.Mvc.Razor.Internal;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ToSic.Sxc.Code;
 
 
-namespace ToSic.Custom
+namespace Custom.Hybrid
 {
     public partial class Razor12<TModel>: IRazor12
     {

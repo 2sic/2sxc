@@ -7,8 +7,8 @@ namespace ToSic.Sxc.Dnn
 {
     public class RazorCodeManager: HasLog
     {
-        public Custom.Razor12 Parent;
-        public RazorCodeManager(ToSic.Custom.Razor12 parent): base("Rzr.Code", parent.Log)
+        public Custom.Hybrid.Razor12 Parent;
+        public RazorCodeManager(Custom.Hybrid.Razor12 parent): base("Rzr.Code", parent.Log)
         {
             Parent = parent;
         }

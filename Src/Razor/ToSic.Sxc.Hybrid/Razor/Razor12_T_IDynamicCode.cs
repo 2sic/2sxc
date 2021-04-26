@@ -11,7 +11,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Web;
 
-namespace ToSic.Custom
+namespace Custom.Hybrid
 {
     public partial class Razor12<TModel> : IDynamicCode
     {
@@ -97,6 +97,7 @@ namespace ToSic.Custom
 
     }
 
+    [PrivateApi]
     public interface IOqtLinkHelper : ILinkHelper
     {
         ILinkHelper Init(Razor12 razorPage);

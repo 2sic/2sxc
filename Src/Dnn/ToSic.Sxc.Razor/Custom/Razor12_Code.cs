@@ -2,7 +2,7 @@
 using ToSic.Sxc.Dnn;
 
 // ReSharper disable once CheckNamespace
-namespace ToSic.Custom
+namespace Custom.Hybrid
 {
     public partial class Razor12
     {

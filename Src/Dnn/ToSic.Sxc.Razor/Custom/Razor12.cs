@@ -13,7 +13,7 @@ using IEntity = ToSic.Eav.Data.IEntity;
 
 
 // ReSharper disable once CheckNamespace
-namespace ToSic.Custom
+namespace Custom.Hybrid
 {
     /// <summary>
     /// The base class for Hybrid Razor-Components in 2sxc 12 <br/>

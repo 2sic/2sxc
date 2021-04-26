@@ -5,7 +5,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
 
-namespace ToSic.Custom
+namespace Custom.Hybrid
 {
     // test, doesn't do anything yet
     public abstract partial class Razor12<TModel>: Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>

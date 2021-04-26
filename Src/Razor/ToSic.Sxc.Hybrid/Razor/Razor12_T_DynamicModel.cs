@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Data;
 
-namespace ToSic.Custom
+namespace Custom.Hybrid
 {
     public partial class Razor12<TModel>
     {

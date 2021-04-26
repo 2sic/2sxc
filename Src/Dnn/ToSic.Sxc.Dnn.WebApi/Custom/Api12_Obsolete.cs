@@ -7,7 +7,7 @@ using ToSic.Eav.LookUp;
 using ToSic.Sxc.Compatibility;
 
 // ReSharper disable once CheckNamespace
-namespace ToSic.Custom
+namespace Custom.Hybrid
 {
     public partial class Api12: IDynamicCodeBeforeV10
     {
@@ -30,18 +30,18 @@ namespace ToSic.Custom
 
         [PrivateApi]
         [Obsolete("for compatibility only, will throw error with instructions how to fix. Cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(Eav.Interfaces.IEntity entity)
+        public dynamic AsDynamic(ToSic.Eav.Interfaces.IEntity entity)
             => throw new Exception($"AsDynamic(Eav.Interfaces.IEntity) {NotSupportedIn10}. Please cast your data to ToSic.Eav.Data.IEntity.");
 
 
         [PrivateApi]
         [Obsolete("for compatibility only, will throw error with instructions how to fix. Cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair)
+        public dynamic AsDynamic(KeyValuePair<int, ToSic.Eav.Interfaces.IEntity> entityKeyValuePair)
             => throw new Exception($"AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity>) {NotSupportedIn10}. Please cast your data to ToSic.Eav.Data.IEntity.");
 
         [PrivateApi]
         [Obsolete("for compatibility only, will throw error with instructions how to fix. Cast your entities to ToSic.Eav.Data.IEntity")]
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities)
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities)
             => throw new Exception($"AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) {NotSupportedIn10}. Please cast your data to ToSic.Eav.Data.IEntity.");
 
         #endregion

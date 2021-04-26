@@ -3,7 +3,7 @@ using System.IO;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Code;
 
-namespace ToSic.Custom
+namespace Custom.Hybrid
 {
     public partial class Razor12<TModel>
     {
@@ -19,7 +19,7 @@ namespace ToSic.Custom
         /// </summary>
         /// <returns></returns>
         public dynamic CreateInstance(string virtualPath,
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = ToSic.Eav.Constants.RandomProtectionParameter,
             string name = null,
             string relativePath = null,
             bool throwOnError = true)
