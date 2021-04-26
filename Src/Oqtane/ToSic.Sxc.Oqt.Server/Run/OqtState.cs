@@ -31,8 +31,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         private void InitServices()
         {
-            _moduleRepository = ServiceProvider.Build<IModuleRepository>(typeof(IModuleRepository));
-            _oqtTempInstanceContext = ServiceProvider.Build<OqtTempInstanceContext>(typeof(OqtTempInstanceContext));
+            _moduleRepository = ServiceProvider.Build<IModuleRepository>();
+            _oqtTempInstanceContext = ServiceProvider.Build<OqtTempInstanceContext>();
         }
 
         public IContextOfSite GetSiteContext() => ServiceProvider.Build<IContextOfSite>();

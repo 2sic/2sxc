@@ -57,7 +57,7 @@ namespace ToSic.Custom
 
             _DynCodeRoot = ServiceProvider.Build<DynamicCodeRoot>().Init(getBlock, Log);
 
-            var stxResolver = ServiceProvider.Build<IContextResolver>(typeof(IContextResolver));
+            var stxResolver = ServiceProvider.Build<IContextResolver>();
             stxResolver.AttachRealBlock(() => getBlock);
             stxResolver.AttachBlockContext(() => _oqtState.GetContext());
 
@@ -168,7 +168,7 @@ namespace ToSic.Custom
                 throw exp;
 
             var appId = _DynCodeRoot?.Block?.AppId ?? _DynCodeRoot?.App?.AppId ?? throw new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
-            return ServiceProvider.Build<AdamTransUpload<int, int>>(typeof(AdamTransUpload<int, int>))
+            return ServiceProvider.Build<AdamTransUpload<int, int>>()
                 .Init(appId, contentType, guid.Value, field, false, Log)
                 .UploadOne(stream, fileName, subFolder, true);
         }
