@@ -30,11 +30,6 @@ XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\refs\*.dll" "%OqtaneBin%
 XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net5.0\ToSic.*.dll" "%OqtaneBin%" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net5.0\ToSic.*.pdb" "%OqtaneBin%" /Y
 
-@Echo(
-@Echo 2sxc Oqtane - Compatibility Shim for DotNetNuke / System.Web.Http
-XCOPY "..\Compatibility.Shim.DotNetNuke\bin\Debug\net5.0\Compatibility.Shim.DotNetNuke.dll" "%OqtaneBin%" /Y
-XCOPY "..\Compatibility.Shim.DotNetNuke\bin\Debug\net5.0\Compatibility.Shim.DotNetNuke.pdb" "%OqtaneBin%" /Y
-
 ::@Echo(
 ::@Echo 2sxc Oqtane - ImportExport Assets
 ::XCOPY "..\..\..\..\..\2sxc-dnn742\Website\DesktopModules\ToSIC_SexyContent\ImportExport\*" "..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc\ImportExport" /Y /S /I

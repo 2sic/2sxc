@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Compatibility.Shim.DotNetNuke\Compatibility.Shim.DotNetNuke.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Oqt.Client\ToSic.Sxc.Oqt.Client.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Oqt.Server\ToSic.Sxc.Oqt.Server.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Oqt.Shared\ToSic.Sxc.Oqt.Shared.csproj" />
