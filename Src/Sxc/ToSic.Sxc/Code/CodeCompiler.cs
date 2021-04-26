@@ -78,8 +78,9 @@ namespace ToSic.Sxc.Code
                 {
                     assembly = new Compiler().Compile(fullPath, className);
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Log.Exception(ex);
                     errorMsg = $"can't compile '{className}' in {Path.GetFileName(virtualPath)}";
                 }
 #else
