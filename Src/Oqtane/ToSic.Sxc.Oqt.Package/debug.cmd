@@ -22,6 +22,10 @@ XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\Microsoft.CodeAnalys*.*"
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\Microsoft.Extensions.DependencyModel.dll" "%OqtaneBin%" /Y
 
 @Echo(
+@Echo 2sxc Oqtane - ICSharpCode.SharpZipLib.dll
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\ICSharpCode.SharpZipLib.dll" "%OqtaneBin%" /Y
+
+@Echo(
 @Echo Copying refs folder for runtime compilation of Razor cshtml
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\refs\*.dll" "%OqtaneBin%refs\" /Y
 
