@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public Lazy<ITenantResolver> TenantResolver { get; }
         public Lazy<IPageRepository> PageRepository { get; }
         public Lazy<IServerPaths> ServerPaths { get; }
-        public Lazy<ILogManager> Logger { get; }
+        //public Lazy<ILogManager> Logger { get; }
 
         #region DI Constructor
 
@@ -34,8 +34,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
             Lazy<IFolderRepository> folderRepository,
             Lazy<ITenantResolver> tenantResolver,
             Lazy<IPageRepository> pageRepository,
-            Lazy<IServerPaths> serverPaths,
-            Lazy<ILogManager> logger
+            Lazy<IServerPaths> serverPaths
+            //Lazy<ILogManager> logger
             )
         {
             FileRepository = fileRepository;
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             TenantResolver = tenantResolver;
             PageRepository = pageRepository;
             ServerPaths = serverPaths;
-            Logger = logger;
+            //Logger = logger;
         }
 
 
@@ -127,8 +127,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
             }
             catch (Exception e)
             {
-                var wrappedEx = new Exception("Error when trying to lookup a friendly url of \"" + originalValue + "\"", e);
-                Logger.Value.Log(LogLevel.Error, this, LogFunction.Other, wrappedEx.Message);
+                // 2021-04-26 2dm: We can't log errors here
+                // - on one hand we would flood the logs
+                // - on the other hand we have issues that if this happens during json-creation of a web-api, the Logger often can't find the DB/SiteState
+                //var wrappedEx = new Exception("Error when trying to lookup a friendly url of \"" + originalValue + "\"", e);
+                //Logger.Value.Log(LogLevel.Error, this, LogFunction.Other, wrappedEx.Message);
                 return originalValue;
             }
 
