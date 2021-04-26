@@ -32,14 +32,12 @@ namespace Custom.Hybrid
             
             return path.EndsWith(CodeCompiler.CsFileExtension)
                 ? _DynCodeRoot.CreateInstance(path, dontRelyOnParameterOrder, name, null, throwOnError)
-                : throw new NotImplementedException(); 
-            // CreateInstanceCshtml(path);
+                : CreateInstanceCshtml(path);
         }
 
         protected dynamic CreateInstanceCshtml(string path)
         {
-            
-            throw new NotImplementedException();
+            throw new NotImplementedException("CreateInstance with .cshtml files is not supported in Oqtane. We're still trying to find a solution, but ATM it doesn't work. Use a .cs file instead. ");
             //var webPage = this. CreateInstanceFromVirtualPath(path);
             //webPage.ConfigurePage(this);
             //return webPage;
