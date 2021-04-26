@@ -2,7 +2,6 @@
 using System.Security.Cryptography;
 using System.Text;
 using DotNetNuke.Application;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 

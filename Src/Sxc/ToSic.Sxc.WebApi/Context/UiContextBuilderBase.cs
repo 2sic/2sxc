@@ -119,10 +119,11 @@ namespace ToSic.Sxc.WebApi.Context
                 $"Platform={platform}" +
                 $"&SysVersion={sysVersion}" +
                 $"&SxcVersion={Settings.ModuleVersion}" +
-                $"&ModuleName={moduleName}" +
+                //$"&ModuleName={moduleName}" +
                 $"&ModuleId={moduleId}" +
                 $"&SiteId={Deps.SiteCtx.Site.Id}" +
                 $"&ZoneID={Deps.AppToLaterInitialize?.ZoneId}" +
+
                 $"&DefaultLanguage={primaryLang}" +
                 $"&CurrentLanguage={currentLang}";
             return gsUrl;

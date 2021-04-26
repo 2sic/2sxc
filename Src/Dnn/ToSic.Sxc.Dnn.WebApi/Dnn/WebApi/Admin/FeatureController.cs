@@ -5,7 +5,9 @@ using DotNetNuke.Application;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.Features;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
@@ -45,14 +47,20 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// </remarks>
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-        public string RemoteManageUrl() =>
-            "//gettingstarted.2sxc.org/router.aspx?"
-            + $"DnnVersion={DotNetNukeContext.Current.Application.Version.ToString(4)}"
-            + $"&2SexyContentVersion={Settings.ModuleVersion}"
-            + $"&fp={HttpUtility.UrlEncode(Fingerprint.System)}"
-            + $"&DnnGuid={DotNetNuke.Entities.Host.Host.GUID}"
-            + $"&ModuleId={Request.FindModuleInfo().ModuleID}" // needed for callback later on
-            + "&destination=features";
+        public string RemoteManageUrl()
+        {
+            var site = GetService<ISite>();
+            var module = Request.FindModuleInfo();
+            var link = new WipRemoteRouterLink().LinkToRemoteRouter(RemoteDestinations.Features,
+                "Dnn",
+                DotNetNukeContext.Current.Application.Version.ToString(4),
+                DotNetNuke.Entities.Host.Host.GUID,
+                site,
+                module.ModuleID,
+                app: null,
+                module.DesktopModule.ModuleName == "2sxc");
+            return link;
+        }
 
         /// <summary>
         /// Used to be POST updated features JSON configuration.

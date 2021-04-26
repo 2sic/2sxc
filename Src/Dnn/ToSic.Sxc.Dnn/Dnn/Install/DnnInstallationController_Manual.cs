@@ -2,14 +2,12 @@
 using System.Linq;
 using System.Web;
 using DotNetNuke.Common;
-using DotNetNuke.Entities.Controllers;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
-
+using ToSic.Sxc.Run;
 using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.Sxc.Dnn.Install
@@ -68,27 +66,14 @@ namespace ToSic.Sxc.Dnn.Install
                 }
                 catch { /* ignore */ }
             
-            // ReSharper disable StringLiteralTypo
-            // Add desired destination
-            // Add DNN Version, 2SexyContent Version, module type, module id, Portal ID
-            var gettingStartedSrc =
-                "//gettingstarted.2sxc.org/router.aspx?"
-                + "destination=autoconfigure" + (isContentApp ? Eav.Constants.ContentAppName.ToLowerInvariant() : "app")
-                + "&DnnVersion=" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4)
-                + "&2SexyContentVersion=" + Settings.ModuleVersion
-                + "&ModuleName=" + moduleInfo.DesktopModule.ModuleName
-                + "&ModuleId=" + module.Id
-                + "&PortalID=" + site.Id
-                + "&ZoneID=" + site.ZoneId;
-            // ReSharper restore StringLiteralTypo
-
-            // Add DNN Guid
-            var hostSettings = HostController.Instance.GetSettingsDictionary();
-            gettingStartedSrc += hostSettings.ContainsKey("GUID") ? "&DnnGUID=" + hostSettings["GUID"] : "";
-            // Add Portal Default Language & current language
-            gettingStartedSrc += "&DefaultLanguage="
-                                 + site.DefaultCultureCode
-                                 + "&CurrentLanguage=" + portal.CultureCode;
+            var gettingStartedSrc = new WipRemoteRouterLink().LinkToRemoteRouter(
+                RemoteDestinations.AutoConfigure, 
+                "Dnn",
+                Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4),
+                DotNetNuke.Entities.Host.Host.GUID, site,
+                module.Id,
+                app: null,
+                isContentApp);
 
             // Set src to iframe
             return gettingStartedSrc;

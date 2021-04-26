@@ -10,6 +10,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.Context;
 using Assembly = System.Reflection.Assembly;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -89,34 +90,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
         {
             if (!(App is IApp app)) return "";
 
-            var gsUrl =
-                BaseGettingStartedUrl("Dnn",
-                    Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4),
-                    Module.DesktopModule.ModuleName,
-                    Module.ModuleID,
-                    _portal.DefaultLanguage,
-                    _portal.CultureCode);
-            //"//gettingstarted.2sxc.org/router.aspx?" +
-                //"Platform=Dnn" +
-                //$"SysVersion={Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4)}" +
-                //$"&SxcVersion={Settings.ModuleVersion}" +
-                //$"&ModuleName={Module.DesktopModule.ModuleName}" +
-                //$"&ModuleId={Module.ModuleID}" +
-                //$"&SiteId={_portal.PortalId}" +
-                //$"&ZoneID={app.ZoneId}" +
-                //$"&DefaultLanguage={_portal.DefaultLanguage}" +
-                //$"&CurrentLanguage={_portal.CultureCode}";
-
-            // Add AppStaticName and Version if _not_ the primary content-app
-            if (Module.DesktopModule.ModuleName != "2sxc")
-            {
-                gsUrl += "&AppGuid=" + app.AppGuid;
-                if (app.Configuration != null)
-                    gsUrl += $"&AppVersion={app.Configuration.Version}&AppOriginalId={app.Configuration.OriginalId}";
-            }
-
-            var hostSettings = HostController.Instance.GetSettingsDictionary();
-            gsUrl += hostSettings.ContainsKey("GUID") ? "&SysGUID=" + hostSettings["GUID"] : "";
+            var gsUrl = new WipRemoteRouterLink().LinkToRemoteRouter(
+                RemoteDestinations.GettingStarted,
+                "Dnn",
+                Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4),
+                DotNetNuke.Entities.Host.Host.GUID, Deps.SiteCtx.Site,
+                Module.ModuleID,
+                app,
+                Module.DesktopModule.ModuleName == "2sxc");
             return gsUrl;
         }
     }
