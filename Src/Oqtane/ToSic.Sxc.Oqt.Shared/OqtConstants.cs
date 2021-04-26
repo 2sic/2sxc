@@ -7,9 +7,9 @@
     {
         public const string SiteKeyForZoneId = "EavZone";
 
-        public const string AppRoot = "2sxc\\Tenants";
+        public const string AppRoot = "2sxc";
 
-        public const string AppRootPublicBase = AppRoot + "\\{0}\\Sites\\{1}\\2sxc";
+        public const string AppRootPublicBase = AppRoot + "\\{0}\\2sxc";
 
         public const string ContentSubfolder = "Content";
 
@@ -32,7 +32,7 @@
         //public const string WwwRoot = "wwwroot/";
 
         // Logging constants
-        public const string OqtLogPrefix = "Oct";
+        public const string OqtLogPrefix = "Oqt";
         public const string LogName = "Oqt";
     }
 }

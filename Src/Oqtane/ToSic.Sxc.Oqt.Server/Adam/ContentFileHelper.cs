@@ -72,7 +72,7 @@ namespace ToSic.Oqt.Helpers
             => Path.Combine(contentRootPath, string.Format(OqtConstants.ContentRootPublicBase, alias.TenantId, alias.SiteId), "adam", appName, filePath).Backslash();
 
         private static string SxcPath(string contentRootPath, Alias alias, string appName, string filePath)
-            => Path.Combine(contentRootPath, string.Format(OqtConstants.AppRootPublicBase, alias.TenantId, alias.SiteId), appName, filePath).Backslash();
+            => Path.Combine(contentRootPath, string.Format(OqtConstants.AppRootPublicBase, alias.SiteId), appName, filePath).Backslash();
 
     }
 }

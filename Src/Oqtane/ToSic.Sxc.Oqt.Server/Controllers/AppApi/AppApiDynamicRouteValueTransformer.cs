@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 siteStateInitializer.InitIfEmpty(); //siteState, httpContext, aliasRepositoryLazy);
                 alias = siteStateInitializer.SiteState.Alias ?? throw new ArgumentException($"Error: missing required 'alias' route value.", nameof(values));
             }
-            var aliasPart = string.Format(OqtConstants.AppRootPublicBase, alias.TenantId, alias.SiteId);
+            var aliasPart = string.Format(OqtConstants.AppRootPublicBase, alias.SiteId);
             #endregion
 
             // Ensure required route values: alias, appFolder, controller, action.
