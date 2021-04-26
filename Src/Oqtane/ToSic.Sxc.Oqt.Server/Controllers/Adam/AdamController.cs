@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.PublicApi;
@@ -19,9 +20,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Adam
     [ValidateAntiForgeryToken]
 
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/app-content/{contentType}/{guid:guid}/{field}")]
-    [Route(WebApiConstants.ApiRoot2 + "/app-content/{contentType}/{guid:guid}/{field}")]
-    [Route(WebApiConstants.ApiRoot3 + "/app-content/{contentType}/{guid:guid}/{field}")]
+    [Route(WebApiConstants.AppRoot + "/{appName}/content/{contentType}/{guid:guid}/{field}")]
+    [Route(WebApiConstants.AppRoot2 + "/{appName}/content/{contentType}/{guid:guid}/{field}")]
+    [Route(WebApiConstants.AppRoot3 + "/{appName}/content/{contentType}/{guid:guid}/{field}")]
 
     // Beta routes
     //[Route(WebApiConstants.WebApiStateRoot + "/app-content/{contentType}/{guid:guid}/{field}/[action]")]

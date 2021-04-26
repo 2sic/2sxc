@@ -19,7 +19,6 @@
 
         public const string AppAssetsLinkRoot = WebApiConstants.ApiRoot + "/app-assets";
 
-        // TODO: stv nice api Adam / Download
         public const string DownloadLinkTemplate = "/{0}/api/file/download/{1}";
 
         public const string UserTokenPrefix = "oqt";

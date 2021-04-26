@@ -2,6 +2,8 @@
 {
     public static class WebApiConstants
     {
+        public const string Auto = "auto";
+
         // Release routes
         public const string ApiRoot = "api/sxc";
         public const string ApiRoot2 = "{path-or-language}/api/sxc";

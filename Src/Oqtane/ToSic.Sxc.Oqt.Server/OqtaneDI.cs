@@ -87,6 +87,7 @@ namespace ToSic.Sxc.Oqt.Server
 
             // Resolve appFolder when appName is "auto"
             services.TryAddTransient<OqtAppFolder>();
+            services.TryAddTransient<AppAssetsDependencies>();
 
             // new in v12 - integrate KOI - experimental!
             try

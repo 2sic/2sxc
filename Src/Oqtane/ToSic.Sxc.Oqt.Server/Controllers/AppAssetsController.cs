@@ -1,46 +1,51 @@
+using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Infrastructure;
 using Oqtane.Repository;
 using System.IO;
 using ToSic.Oqt.Helpers;
+using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/[controller]")]
-    [Route(WebApiConstants.ApiRoot2 + "/[controller]")]
-    [Route(WebApiConstants.ApiRoot3 + "/[controller]")]
+    [Route(WebApiConstants.ApiRoot + "/[controller]/{appName}")]
+    [Route(WebApiConstants.ApiRoot2 + "/[controller]/{appName}")]
+    [Route(WebApiConstants.ApiRoot3 + "/[controller]/{appName}")]
 
-    [Route(WebApiConstants.ApiRoot + "/app-assets")]
-    [Route(WebApiConstants.ApiRoot2 + "/app-assets")]
-    [Route(WebApiConstants.ApiRoot3 + "/app-assets")]
+    [Route(WebApiConstants.ApiRoot + "/app-assets/{appName}")]
+    [Route(WebApiConstants.ApiRoot2 + "/app-assets/{appName}")]
+    [Route(WebApiConstants.ApiRoot3 + "/app-assets/{appName}")]
 
     // Beta routes
-    [Route("{alias:int}/api/[controller]")]
-    [Route(WebApiConstants.WebApiStateRoot + "/app-assets")]
+    [Route("{alias:int}/api/[controller]/{appName}")]
+    [Route(WebApiConstants.WebApiStateRoot + "/app-assets/{appName}")]
 
     public class AppAssetsController : OqtControllerBase
     {
         public virtual string Route => "default";
         private readonly ILogManager _logger;
+        private readonly Lazy<OqtAppFolder> _oqtAppFolderLazy;
         private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public AppAssetsController(IWebHostEnvironment hostingEnvironment, ILogManager logger)
+        public AppAssetsController(AppAssetsDependencies dependencies)
         {
-            _hostingEnvironment = hostingEnvironment;
-            _logger = logger;
+            _hostingEnvironment = dependencies.HostingEnvironment;
+            _oqtAppFolderLazy = dependencies.OqtAppFolderLazy;
+            _logger = dependencies.Logger;
         }
 
         protected override string HistoryLogName { get; }
 
-
-        [HttpGet("{appName}/{*filePath}")]
-        public IActionResult GetFile(string appName, string filePath)
+        [HttpGet("{*filePath}")]
+        public IActionResult GetFile([FromRoute] string appName, [FromRoute] string filePath)
         {
             try
             {
+                if (appName == WebApiConstants.Auto) appName = _oqtAppFolderLazy.Value.GetAppFolder();
+
                 var alias = SiteState.Alias;
                 var fullFilePath = ContentFileHelper.GetFilePath(_hostingEnvironment.ContentRootPath, alias, Route, appName, filePath);
                 if (string.IsNullOrEmpty(fullFilePath)) return NotFound();

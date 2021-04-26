@@ -1,23 +1,20 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Oqtane.Infrastructure;
-using Oqtane.Repository;
+﻿using Microsoft.AspNetCore.Mvc;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.Adam
 {
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/adam")]
-    [Route(WebApiConstants.ApiRoot2 + "/adam")]
-    [Route(WebApiConstants.ApiRoot3 + "/adam")]
+    [Route(WebApiConstants.AppRoot + "/{appName}/adam")]
+    [Route(WebApiConstants.AppRoot2 + "/{appName}/adam")]
+    [Route(WebApiConstants.AppRoot3 + "/{appName}/adam")]
 
     // Beta routes
-    [Route(WebApiConstants.WebApiStateRoot + "/adam")]
+    [Route(WebApiConstants.WebApiStateRoot + "/adam/{appName}")]
     public class AppAssetsController: ToSic.Sxc.Oqt.Server.Controllers.AppAssetsController
     {
         public override string Route => "adam";
 
-        public AppAssetsController(IWebHostEnvironment hostingEnvironment, ILogManager logger) : base(hostingEnvironment, logger)
+        public AppAssetsController(AppAssetsDependencies dependencies) : base(dependencies)
         {
 
         }

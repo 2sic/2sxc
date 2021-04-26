@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             // Ensure required route values: alias, appFolder, controller, action.
             if (!values.ContainsKey("appFolder")) throw new ArgumentException($"Error: missing required 'appFolder' route value.", nameof(values));
             var appFolder = (string)values["appFolder"];
-            if (appFolder == "auto") appFolder = _oqtAppFolderLazy.Value.GetAppFolder();
+            if (appFolder == WebApiConstants.Auto) appFolder = _oqtAppFolderLazy.Value.GetAppFolder();
 
 
             if (!values.ContainsKey("controller")) throw new ArgumentException($"Error: missing required 'controller' route value.", nameof(values));

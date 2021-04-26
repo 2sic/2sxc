@@ -1,23 +1,20 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Oqtane.Infrastructure;
-using Oqtane.Repository;
+﻿using Microsoft.AspNetCore.Mvc;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.Assets
 {
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/assets")]
-    [Route(WebApiConstants.ApiRoot2 + "/assets")]
-    [Route(WebApiConstants.ApiRoot3 + "/assets")]
+    [Route(WebApiConstants.ApiRoot + "/assets/{appName}")]
+    [Route(WebApiConstants.ApiRoot2 + "/assets/{appName}")]
+    [Route(WebApiConstants.ApiRoot3 + "/assets/{appName}")]
 
     // Beta routes
-    [Route(WebApiConstants.WebApiStateRoot +"/assets")]
+    [Route(WebApiConstants.WebApiStateRoot + "/assets/{appName}")]
     public class AppAssetsController: ToSic.Sxc.Oqt.Server.Controllers.AppAssetsController
     {
         public override string Route => "assets";
 
-        public AppAssetsController(IWebHostEnvironment hostingEnvironment, ILogManager logger) : base(hostingEnvironment, logger)
+        public AppAssetsController(AppAssetsDependencies dependencies) : base(dependencies)
         { }
     }
 }
