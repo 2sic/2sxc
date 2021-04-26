@@ -9,7 +9,7 @@
 
         public const string AppRoot = "2sxc";
 
-        public const string AppRootPublicBase = AppRoot + "\\{0}\\2sxc";
+        public const string AppRootPublicBase = AppRoot + "\\{0}";
 
         public const string ContentSubfolder = "Content";
 
