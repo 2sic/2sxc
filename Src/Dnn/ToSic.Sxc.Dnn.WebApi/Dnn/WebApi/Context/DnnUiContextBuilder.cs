@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
                     // but we can't get it from there directly
                 };
 
-        protected override AppDto GetApp(Ctx flags)
+        protected override ContextAppDto GetApp(Ctx flags)
         {
             var appDto = base.GetApp(flags);
             string apiRoot = null;

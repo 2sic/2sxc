@@ -67,11 +67,11 @@ namespace ToSic.Sxc.WebApi.Context
             return ctx;
         }
 
-        protected virtual LanguageDto GetLanguage()
+        protected virtual ContextLanguageDto GetLanguage()
         {
             if (ZoneId == 0) return null;
             var language = Deps.JsCtx.Init(Deps.SiteCtx.Site, ZoneId);
-            return new LanguageDto
+            return new ContextLanguageDto
             {
                 Current = language.Current,
                 Primary = language.Primary,
@@ -98,11 +98,11 @@ namespace ToSic.Sxc.WebApi.Context
                 Id = Eav.Constants.NullId,
             };
 
-        protected virtual EnableDto GetEnable()
+        protected virtual ContextEnableDto GetEnable()
         {
             var isRealApp = App != null && App.AppGuid != Eav.Constants.DefaultAppName;
             var tmp = new JsContextUser(Deps.SiteCtx.User);
-            return new EnableDto
+            return new ContextEnableDto
             {
                 AppPermissions = isRealApp,
                 CodeEditor = tmp.CanDevelop,
@@ -112,10 +112,10 @@ namespace ToSic.Sxc.WebApi.Context
 
         protected virtual string GetGettingStartedUrl() => Eav.Constants.UrlNotInitialized;
 
-        protected virtual AppDto GetApp(Ctx flags)
+        protected virtual ContextAppDto GetApp(Ctx flags)
         {
             if (App == null) return null;
-            var result = new AppDto
+            var result = new ContextAppDto
             {
                 Id = App.AppId,
                 Url = (App as Apps.IApp)?.Path,

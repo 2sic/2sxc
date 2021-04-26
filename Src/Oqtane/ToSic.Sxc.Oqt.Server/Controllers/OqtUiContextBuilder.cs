@@ -26,9 +26,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         private readonly SiteState _siteState;
 
 
-        protected override LanguageDto GetLanguage()
+        protected override ContextLanguageDto GetLanguage()
         {
-            return new LanguageDto
+            return new ContextLanguageDto
             {
                 Current = WipConstants.DefaultLanguage,
                 Primary = WipConstants.DefaultLanguage,
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                 Id = (_context as IContextOfBlock)?.Page.Id ?? Eav.Constants.NullId,
             };
 
-        protected override EnableDto GetEnable()
+        protected override ContextEnableDto GetEnable()
         {
             return new()
             {
@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             };
         }
 
-        protected override AppDto GetApp(Ctx flags)
+        protected override ContextAppDto GetApp(Ctx flags)
         {
             var appDto = base.GetApp(flags);
             if (appDto != null) appDto.Api = OqtAssetsAndHeaders.GetSiteRoot(_siteState);
