@@ -85,7 +85,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         }
 
         [PrivateApi]
-        public override string AppsRootLink => OqtAssetsAndHeaders.GetSiteRoot(_siteStateLazy.Value) + OqtConstants.AppAssetsLinkRoot;
+        public override string AppsRootLink => OqtAssetsAndHeaders.GetSiteRoot(_siteStateLazy.Value) + WebApiConstants.AppRoot + "/";
 
         [PrivateApi] public override string AppsRootPhysicalFull => _serverPaths.Value.FullAppPath(AppsRootPartial());
 

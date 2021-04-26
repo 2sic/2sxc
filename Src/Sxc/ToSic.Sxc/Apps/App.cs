@@ -112,7 +112,7 @@ namespace ToSic.Sxc.Apps
 
         #region Paths
         /// <inheritdoc />
-        public string Path => _path ?? (_path = _linkPaths.ToAbsolute(System.IO.Path.Combine(Site.AppsRootLink, Folder)));
+        public string Path => _path ?? (_path = _linkPaths.AppAsset(System.IO.Path.Combine(Site.AppsRootLink, Folder)));
         private string _path;
 
         /// <inheritdoc />
@@ -120,6 +120,6 @@ namespace ToSic.Sxc.Apps
 
         #endregion
 
-        
+
     }
 }

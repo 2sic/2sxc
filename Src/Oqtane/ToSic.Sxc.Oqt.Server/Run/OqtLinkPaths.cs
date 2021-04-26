@@ -26,8 +26,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private string toWebAbsolute(string virtualPath)
         {
             virtualPath = virtualPath.TrimStart('~');
-            //if (!virtualPath.StartsWith('/') && !virtualPath.StartsWith('\\'))
-            //    virtualPath = "/" + virtualPath;
             return virtualPath.PrefixSlash().Forwardslash();
         }
 
@@ -38,6 +36,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public string ToAbsolute(string virtualPath, string subPath)
         {
             return toWebAbsolute(Path.Combine(virtualPath, subPath));
+        }
+
+        public string AppAsset(string virtualPath)
+        {
+            return toWebAbsolute(virtualPath + "/assets");
         }
 
 

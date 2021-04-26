@@ -11,6 +11,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Oqt.Server.Plumbing;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
@@ -25,7 +26,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public Lazy<ITenantResolver> TenantResolver { get; }
         public Lazy<IPageRepository> PageRepository { get; }
         public Lazy<IServerPaths> ServerPaths { get; }
-        //public Lazy<ILogManager> Logger { get; }
+        public Lazy<SiteStateInitializer> SiteStateInitializerLazy { get; }
+        public Lazy<ILogManager> Logger { get; }
 
         #region DI Constructor
 
@@ -34,8 +36,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
             Lazy<IFolderRepository> folderRepository,
             Lazy<ITenantResolver> tenantResolver,
             Lazy<IPageRepository> pageRepository,
-            Lazy<IServerPaths> serverPaths
-            //Lazy<ILogManager> logger
+            Lazy<IServerPaths> serverPaths,
+            Lazy<SiteStateInitializer> siteStateInitializerLazy,
+            Lazy<ILogManager> logger
             )
         {
             FileRepository = fileRepository;
@@ -43,7 +46,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
             TenantResolver = tenantResolver;
             PageRepository = pageRepository;
             ServerPaths = serverPaths;
-            //Logger = logger;
+            SiteStateInitializerLazy = siteStateInitializerLazy;
+            Logger = logger;
         }
 
 
@@ -147,17 +151,26 @@ namespace ToSic.Sxc.Oqt.Server.Run
             #region special handling of issues in case something in the background is broken
             try
             {
-                var filePath = Path.Combine(fileInfo.Folder.Path, fileInfo.Name/*)*/).Forwardslash();
+                SiteStateInitializerLazy.Value.InitIfEmpty();
+                var alias = SiteStateInitializerLazy.Value.SiteState.Alias;
 
-                var siteId = TenantResolver.Value.GetAlias().SiteId;
+                var pathInAdam = Path.Combine(fileInfo.Folder.Path, fileInfo.Name/*)*/).Forwardslash();
 
-                var result = $"/{siteId}/api/sxc{filePath.PrefixSlash()}".Forwardslash();
+                // get appName and filePath
+                var adamFolder = "adam/";
+                var prefixStart = pathInAdam.IndexOf(adamFolder, StringComparison.OrdinalIgnoreCase);
+                pathInAdam = pathInAdam.Substring(prefixStart + adamFolder.Length).TrimStart('/');
+                var indexOfSlash = pathInAdam.IndexOf('/');
+                var appName = pathInAdam.Substring(0, indexOfSlash);
+                var filePath = pathInAdam.Substring(indexOfSlash).TrimStart('/');
+
+                var result = $"{alias.Path}/app/{appName}/adam/{filePath}";
 
                 // optionally do extra security checks (new in 10.02)
                 if (!Features.Enabled(FeatureIds.BlockFileIdLookupIfNotInSameApp)) return result;
 
                 // check if it's in this item. We won't check the field, just the item, so the field is ""
-                return !Security.PathIsInItemAdam(itemGuid, "", filePath)
+                return !Security.PathIsInItemAdam(itemGuid, "", pathInAdam)
                     ? null
                     : result;
             }
