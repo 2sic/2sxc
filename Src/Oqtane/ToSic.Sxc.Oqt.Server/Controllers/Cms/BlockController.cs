@@ -172,16 +172,22 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// </summary>
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public HttpResponseMessage Render(int templateId, string lang)
+        public IActionResult Render(int templateId, string lang)
         {
             Log.Add($"render template:{templateId}, lang:{lang}");
             try
             {
                 var rendered = _appViewPickerBackendLazy.Value.Init(Log).Render(templateId, lang);
-                return new HttpResponseMessage(HttpStatusCode.OK)
+                return new ContentResult
                 {
-                    Content = new StringContent(rendered, Encoding.UTF8, "text/plain")
+                    Content = rendered,
+                    ContentType = "text/plain"
+                    // rendered, Encoding.UTF8, "text/plain"
                 };
+                //return new HttpResponseMessage(HttpStatusCode.OK)
+                //{
+                //    Content = new StringContent(rendered, Encoding.UTF8, "text/plain")
+                //};
             }
             catch
             {
