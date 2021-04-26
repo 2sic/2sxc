@@ -16,9 +16,9 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
     {
         private const string Prefix = "/";
         private const string Adam = "adam";
-        private const string AdamPath = "/app/";
+        private const string AdamPath = "/adam/";
         private const string Sxc = "sxc";
-        private const string SxcPath = "/api/sxc/";
+        private const string SxcPath = "/assets/";
 
         private readonly IServiceProvider _serviceProvider;
 
@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
             var hostingEnvironment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
 
             // Build physicalPath.
-            var physicalPath = ContentFileHelper.GetFilePath(hostingEnvironment.ContentRootPath, alias, filePath);
+            var physicalPath = ContentFileHelper.GetFilePath(hostingEnvironment.ContentRootPath, alias, route, appName, filePath);
             if (string.IsNullOrEmpty(physicalPath)) throw new BlobMissingException($"Oqtane blob \"{filePath}\" not found.");
 
             return new BlobProviderFile()
@@ -70,19 +70,24 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
 
         private static bool GetAppNameAndFilePath(string virtualPath, out string appName, out string filePath)
         {
-            var path = string.Empty;
+            // setup
+            var temp = "app/";
             appName = string.Empty;
             filePath = string.Empty;
 
-            if (ContainsAdamPath(virtualPath)) path = AdamPath;
-            if (ContainsSxcPath(virtualPath)) path = SxcPath;
-            var prefixStart = virtualPath.IndexOf(path, StringComparison.OrdinalIgnoreCase);
-            var appNameAndFilePath = virtualPath.Substring(prefixStart + path.Length).TrimStart('/');
-            var indexOfSlash = appNameAndFilePath.IndexOf('/');
+            // get appName
+            var prefixStart = virtualPath.IndexOf(temp, StringComparison.OrdinalIgnoreCase);
+            appName = virtualPath.Substring(prefixStart + temp.Length).TrimStart('/');
+            var indexOfSlash = appName.IndexOf('/');
             if (indexOfSlash < 1) return true;
+            appName = appName.Substring(0, indexOfSlash);
 
-            appName = appNameAndFilePath.Substring(0, indexOfSlash);
-            filePath = appNameAndFilePath.Substring(indexOfSlash + 1);
+            // get filePath
+            if (ContainsAdamPath(virtualPath)) temp = AdamPath;
+            if (ContainsSxcPath(virtualPath)) temp = SxcPath;
+            var find = virtualPath.IndexOf(temp);
+            if (find < 1) return true;
+            filePath = virtualPath.Substring(find + temp.Length).TrimStart('/');
 
             return false;
         }
