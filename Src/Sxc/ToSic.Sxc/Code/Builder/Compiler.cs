@@ -97,7 +97,7 @@ namespace ToSic.Sxc.Code.Builder
         {
             var options = CSharpParseOptions.Default
                 .WithLanguageVersion(LanguageVersion.CSharp9)
-                .WithPreprocessorSymbols("OQTANE");
+                .WithPreprocessorSymbols("OQTANE", "NETCOREAPP", "NET5_0");
 
             var parsedSyntaxTree = SyntaxFactory.ParseSyntaxTree(sourceCode, options, path);
 
