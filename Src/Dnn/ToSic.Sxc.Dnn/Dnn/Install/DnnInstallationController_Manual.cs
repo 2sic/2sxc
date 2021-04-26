@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Dnn.Install
         }
 
 
-        public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool isContentApp)
+        public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp)
         {
             var moduleInfo = (module as DnnModule)?.UnwrappedContents;
             var portal = (site as DnnSite)?.UnwrappedContents;
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Dnn.Install
             // it should only be allowed, if the current situation is either
             // Content - and no views exist (even invisible ones)
             // App - and no apps exist - this is already checked on client side, so I won't include a check here
-            if (isContentApp)
+            if (forContentApp)
                 try
                 {
                     var primaryAppId = new ZoneRuntime().Init(site.ZoneId, Log).DefaultAppId;
@@ -70,10 +70,11 @@ namespace ToSic.Sxc.Dnn.Install
                 RemoteDestinations.AutoConfigure, 
                 "Dnn",
                 Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4),
-                DotNetNuke.Entities.Host.Host.GUID, site,
+                DotNetNuke.Entities.Host.Host.GUID, 
+                site,
                 module.Id,
                 app: null,
-                isContentApp);
+                forContentApp);
 
             // Set src to iframe
             return gettingStartedSrc;

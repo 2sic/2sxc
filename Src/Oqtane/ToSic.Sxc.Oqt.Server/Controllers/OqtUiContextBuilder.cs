@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using Oqtane.Shared;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Dto;
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     public class OqtUiContextBuilder: UiContextBuilderBase
     {
-        public OqtUiContextBuilder(ILinkPaths linkPaths,IContextOfSite ctx, SiteState siteState, Dependencies deps) : base(deps)
+        public OqtUiContextBuilder(ILinkPaths linkPaths, IContextOfSite ctx, SiteState siteState, Dependencies deps) : base(deps)
         {
             _linkPaths = linkPaths;
             _context = ctx;
@@ -77,15 +78,30 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         protected override string GetGettingStartedUrl()
         {
-            var gsUrl =
-                BaseGettingStartedUrl("Oqt",
-                    Assembly.GetAssembly(typeof(SiteState)).GetName().Version.ToString(4),
-                    "2sxc", // todo
-                    0, // todo
-                    "un-un", // todo _portal.DefaultLanguage,
-                    "un-un"); // todo _portal.CultureCode);
+            var blockCtx = _context as IContextOfBlock; // may be null!
+            var x = _siteState.Alias.TenantId;
+            
+            var gsUrl = new WipRemoteRouterLink().LinkToRemoteRouter(
+                RemoteDestinations.GettingStarted,
+                "Oqt",
+                Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),
+                Guid.Empty.ToString(),  // TODO: Oqt doesn't seem to have a system guid - Dnn had DotNetNuke.Entities.Host.Host.GUID, 
+                Deps.SiteCtx.Site,
+                blockCtx?.Module.Id ?? 0, // TODO: V12 - REQUIRED FOR CALLBACK TO WORK
+                Deps.AppToLaterInitialize,
+                true // TODO: V12 - must be set so installer works properly // Module.DesktopModule.ModuleName == "2sxc"
+                );
+            return gsUrl;
 
-            return gsUrl; //  "#todo-not-yet-implemented-getting-started";
+            //var gsUrl =
+            //    BaseGettingStartedUrl("Oqt",
+            //        Assembly.GetAssembly(typeof(SiteState)).GetName().Version.ToString(4),
+            //        "2sxc", // todo
+            //        blockCtx?.Module.Id ?? 0, // todo
+            //        "un-un", // todo _portal.DefaultLanguage,
+            //        "un-un"); // todo _portal.CultureCode);
+
+            //return gsUrl; //  "#todo-not-yet-implemented-getting-started";
         }
     }
 }

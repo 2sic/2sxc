@@ -94,7 +94,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
                 RemoteDestinations.GettingStarted,
                 "Dnn",
                 Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4),
-                DotNetNuke.Entities.Host.Host.GUID, Deps.SiteCtx.Site,
+                DotNetNuke.Entities.Host.Host.GUID, 
+                Deps.SiteCtx.Site,
                 Module.ModuleID,
                 app,
                 Module.DesktopModule.ModuleName == "2sxc");

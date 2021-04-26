@@ -43,6 +43,7 @@ namespace ToSic.Sxc.Oqt.Server
             services.TryAddTransient<IPlatformModuleUpdater, OqtModuleUpdater>();
             services.TryAddTransient<IEnvironmentInstaller, OqtEnvironmentInstaller>();
             services.TryAddTransient<ILookUpEngineResolver, OqtGetLookupEngine>();
+            services.TryAddTransient<IFingerprint, OqtFingerprintWip>();
             services.TryAddTransient<IUiContextBuilder, OqtUiContextBuilder>();
             services.TryAddTransient<IModule, OqtModule>();
             services.TryAddTransient<OqtModule>();

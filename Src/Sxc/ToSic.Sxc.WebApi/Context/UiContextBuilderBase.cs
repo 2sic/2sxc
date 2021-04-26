@@ -16,7 +16,7 @@ namespace ToSic.Sxc.WebApi.Context
         {
             public IContextOfSite SiteCtx { get; }
             public JsContextLanguage JsCtx { get; }
-            public Apps.App AppToLaterInitialize { get; }
+            public Apps.IApp AppToLaterInitialize { get; }
 
             public Dependencies(IContextOfSite siteCtx, JsContextLanguage jsCtx, Apps.App appToLaterInitialize)
             {
@@ -39,14 +39,14 @@ namespace ToSic.Sxc.WebApi.Context
 
         protected int ZoneId;
         protected IApp App;
-        private readonly Apps.App _appToLaterInitialize;
+        private readonly Apps.IApp _appToLaterInitialize;
 
         #endregion
 
         public virtual IUiContextBuilder SetZoneAndApp(int zoneId, IAppIdentity app)
         {
             ZoneId = zoneId;
-            App = app != null ? _appToLaterInitialize.InitNoData(app, null) : null;
+            App = app != null ? (_appToLaterInitialize as Apps.App)?.InitNoData(app, null) : null;
             return this;
         }
 
@@ -111,23 +111,6 @@ namespace ToSic.Sxc.WebApi.Context
         }
 
         protected virtual string GetGettingStartedUrl() => Eav.Constants.UrlNotInitialized;
-
-        protected string BaseGettingStartedUrl(string platform, string sysVersion, string moduleName, int moduleId, string primaryLang, string currentLang)
-        {
-            var gsUrl =
-                "//gettingstarted.2sxc.org/router.aspx?" +
-                $"Platform={platform}" +
-                $"&SysVersion={sysVersion}" +
-                $"&SxcVersion={Settings.ModuleVersion}" +
-                //$"&ModuleName={moduleName}" +
-                $"&ModuleId={moduleId}" +
-                $"&SiteId={Deps.SiteCtx.Site.Id}" +
-                $"&ZoneID={Deps.AppToLaterInitialize?.ZoneId}" +
-
-                $"&DefaultLanguage={primaryLang}" +
-                $"&CurrentLanguage={currentLang}";
-            return gsUrl;
-        }
 
         protected virtual AppDto GetApp(Ctx flags)
         {
