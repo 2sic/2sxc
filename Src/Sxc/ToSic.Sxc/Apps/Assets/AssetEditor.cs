@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Text.RegularExpressions;
-using ToSic.Eav;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
@@ -55,65 +54,18 @@ namespace ToSic.Sxc.Apps.Assets
 
         #endregion
 
-
-
         public const string TokenHtmlExtension = ".html";
-        public const string DefaultTokenHtmlBody = @"<p>
-    You successfully created your own template.
-    Start editing it by hovering the ""Manage"" button and opening the ""Edit Template"" dialog.
-</p>";
-
-
+        
         public const string CshtmlExtension = ".cshtml";
         public const string CodeCshtmlExtension = ".code.cshtml";
         public const string CshtmlPrefix = "_";
-
-        public const string DefaultCshtmlBody = @"@inherits ToSic.Custom.Razor12
-
-<div @Edit.TagToolbar(Content)>
-    Put your content here
-</div>";
-
-        public const string DefaultCodeCshtmlBody = @"@inherits ToSic.Sxc.Dnn.RazorComponentCode
-
-@functions {
-  public string Hello() {
-    return ""Hello from inner code"";
-  }
-}
-
-@helper ShowDiv(string message) {
-  <div>@message</div>
-}
-";
-
+        
         public const string CsExtension = ".cs";
 
         public const string CsApiFolder = "api";
 
-        public const string CsApiTemplateControllerName = "PleaseRenameController";
-        // copied from the razor tutorial
-        public const string DefaultCsBody = @"using System.Web.Http;		// this enables [HttpGet] and [AllowAnonymous]
-using DotNetNuke.Web.Api;	// this is to verify the AntiForgeryToken
-
-[AllowAnonymous]			// define that all commands can be accessed without a login
-[ValidateAntiForgeryToken]	// protects the API from users not on your site (CSRF protection)
-// Inherit from ToSic.Custom.Api12 to get features like App, Data...
-// see https://docs.2sxc.org/api/dot-net/ToSic.Custom.Api12.html and https://docs.2sxc.org/web-api/custom/index.html
-public class " + CsApiTemplateControllerName + @" : ToSic.Custom.Api12
-{
-
-    [HttpGet]				// [HttpGet] says we're listening to GET requests
-    public string Hello()
-    {
-        return ""Hello from the controller with ValidateAntiForgeryToken in /api"";
-    }
-
-}
-";
 
         public AssetEditInfo EditInfoWithSource
-
         {
             get
             {

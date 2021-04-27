@@ -25,7 +25,7 @@ namespace ToSic.Sxc.WebApi.Assets
                     {
                         var nameWithoutExt = name.Substring(0, name.Length - ext.Length);
                         content.Content =
-                            AssetEditor.DefaultCsBody.Replace(AssetEditor.CsApiTemplateControllerName, nameWithoutExt);
+                            AssetTemplates.DefaultWebApiBody.Replace(AssetTemplates.CsApiTemplateControllerName, nameWithoutExt);
                     }
                     break;
 
@@ -41,15 +41,15 @@ namespace ToSic.Sxc.WebApi.Assets
 
                         // first check the code-extension, because it's longer but also would contain the non-code extension
                         if (name.EndsWith(AssetEditor.CodeCshtmlExtension))
-                            content.Content = AssetEditor.DefaultCodeCshtmlBody;
+                            content.Content = AssetTemplates.DefaultCodeCshtmlBody;
                         else if (name.EndsWith(AssetEditor.CshtmlExtension))
-                            content.Content = AssetEditor.DefaultCshtmlBody;
+                            content.Content = AssetTemplates.DefaultCshtmlBody;
                         break;
                     }
 
                 // .html files (Tokens)
                 case AssetEditor.TokenHtmlExtension:
-                    content.Content = AssetEditor.DefaultTokenHtmlBody;
+                    content.Content = AssetTemplates.DefaultTokenHtmlBody;
                     break;
             }
 
