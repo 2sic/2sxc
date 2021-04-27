@@ -18,7 +18,7 @@ using ToSic.Eav.LookUp;
 
         #region Shared Code Block between RazorComponent_Obsolete and ApiController_Obsolete
 
-        private const string NotSupportedIn10 = "is not supported in RazorPage";
+        private const string NotSupportedIn10 = "is not supported in Razor12 or RazorComponent (v10)";
 
         #region Obsolete CreateSource
 

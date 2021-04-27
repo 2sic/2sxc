@@ -1,10 +1,8 @@
 ﻿using ToSic.Eav.Documentation;
-using ToSic.Sxc.Dnn;
 
-// ReSharper disable once CheckNamespace
-namespace Custom.Hybrid
+namespace ToSic.Sxc.Dnn
 {
-    public partial class Razor12
+    public abstract partial class RazorComponent
     {
         [PrivateApi]
         internal RazorCodeManager CodeManager => _codeManager ?? (_codeManager = new RazorCodeManager(this));
@@ -14,5 +12,6 @@ namespace Custom.Hybrid
         /// Code-Behind of this .cshtml file - located in a file with the same name but ending in .code.cshtml
         /// </summary>
         public dynamic Code => CodeManager.CodeOrException;
+
     }
 }
