@@ -84,7 +84,7 @@ namespace ToSic.Sxc.Engines
 
         #endregion
 
-        private DynamicCodeRoot _data;
+        private IDynamicCodeRoot _data;
 
         private TokenReplaceEav _tokenReplace;
 

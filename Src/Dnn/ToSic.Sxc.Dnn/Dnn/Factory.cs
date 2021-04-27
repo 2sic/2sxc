@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Dnn
         /// </summary>
         /// <param name="blockBuilder">CMS Block for which the helper is targeted. </param>
         /// <returns>A Code Helper based on <see cref="IDnnDynamicCode"/></returns>
-        public static IDnnDynamicCode DynamicCode(IBlockBuilder blockBuilder) => Eav.Factory.StaticBuild<DnnDynamicCodeRoot>().Init(blockBuilder.Block, null);
+        public static IDnnDynamicCode DynamicCode(IBlockBuilder blockBuilder) => Eav.Factory.StaticBuild<DnnDynamicCodeRoot>().Init(blockBuilder.Block, null) as DnnDynamicCodeRoot;
 
         /// <summary>
         /// Get a full app-object for accessing data of the app from outside

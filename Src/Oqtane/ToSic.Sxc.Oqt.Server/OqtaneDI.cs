@@ -10,9 +10,11 @@ using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Cms.Publishing;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Blazor;
+using ToSic.Sxc.Oqt.Server.Code;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Extensions.Koi;
 using ToSic.Sxc.Oqt.Server.Page;
@@ -40,7 +42,7 @@ namespace ToSic.Sxc.Oqt.Server
             services.TryAddTransient<IZoneMapper, OqtZoneMapper>();
             services.TryAddTransient<AppPermissionCheck, OqtPermissionCheck>();
             services.TryAddTransient<ILinkHelper, OqtLinkHelper>();
-            // services.TryAddTransient<DynamicCodeRoot, OqtaneDynamicCodeRoot>();
+            services.TryAddTransient<DynamicCodeRoot, OqtaneDynamicCodeRoot>();
             services.TryAddTransient<IPlatformModuleUpdater, OqtModuleUpdater>();
             services.TryAddTransient<IEnvironmentInstaller, OqtEnvironmentInstaller>();
             services.TryAddTransient<ILookUpEngineResolver, OqtGetLookupEngine>();
@@ -68,7 +70,8 @@ namespace ToSic.Sxc.Oqt.Server
             // ADAM stuff
             services.TryAddTransient<IAdamPaths, OqtAdamPaths>();
             services.TryAddTransient<IAdamFileSystem<int, int>, OqtAdamFileSystem>();
-            services.TryAddTransient(typeof(AdamItemDtoMaker<,>), typeof(OqtAdamItemDtoMaker<,>));
+            services.TryAddTransient<AdamManager, AdamManager<int, int>>();
+            //services.TryAddTransient(typeof(AdamItemDtoMaker<,>), typeof(OqtAdamItemDtoMaker<,>));
 
             //// Still pending...
             services.TryAddTransient<XmlExporter, OqtXmlExporter>();

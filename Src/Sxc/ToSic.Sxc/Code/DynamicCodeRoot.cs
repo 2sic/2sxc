@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Code
         public TService GetService<TService>() => _serviceProvider.Build<TService>();
 
         [PrivateApi]
-        public DynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)
+        public virtual IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)
         {
             Log.LinkTo(parentLog ?? block?.Log);
             if (block == null)
