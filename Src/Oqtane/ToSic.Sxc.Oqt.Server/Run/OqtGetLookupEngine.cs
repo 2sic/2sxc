@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Logging;
+﻿using System.Collections.Generic;
+using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Oqt.Shared;
 
@@ -14,7 +15,16 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public ILookUpEngine GetLookUpEngine(int instanceId/*, ILog parentLog*/)
         {
-            return new LookUpEngine(Log);
+            var providers = new LookUpEngine(Log);
+
+            var dummy = new Dictionary<string, string>();
+            dummy.Add("Ivo", "Ivić");
+            dummy.Add("Pero","Perić");
+            ;
+            providers.Add(new LookUpInDictionary("dummy", dummy));
+            return providers;
         }
+
+
     }
 }
