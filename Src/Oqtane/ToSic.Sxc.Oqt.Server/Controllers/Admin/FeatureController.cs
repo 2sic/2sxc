@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
             var ctx = GetContext();
             var site = ctx.Site;
             var module = ctx.Module;
-            
+
             //var module = Request.FindModuleInfo();
             var link = new WipRemoteRouterLink().LinkToRemoteRouter(RemoteDestinations.Features,
                 "Dnn",
@@ -70,6 +70,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
                 module.Id,
                 app: null,
                 false // TODO: NOT SURE HOW TO DETECT CONTENT-APP IN OQTANE
+                                // (Oqtane.Models.Module)module.ModuleDefinitionName.Contains(".Content")
                 );
             return link;
 

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources.Catalog;
 using ToSic.Eav.WebApi;
@@ -17,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     /// Proxy Class to the EAV PipelineDesignerController (Web API Controller)
     /// </summary>
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+    [Authorize(Roles = RoleNames.Admin)]
 
     // Release routes
     [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]

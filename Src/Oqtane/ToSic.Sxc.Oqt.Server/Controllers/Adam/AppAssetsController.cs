@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Adam
 
     // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/adam/{appName}")]
-    public class AppAssetsController: ToSic.Sxc.Oqt.Server.Controllers.AppAssetsController
+    public class AppAssetsController: Controllers.AppAssetsController
     {
         public override string Route => "adam";
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Oqtane.Shared;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Context;
@@ -16,7 +18,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Adam
     /// Then we can reduce security access level to anonymous, because each method will do the security check
     /// </summary>
     //[SupportedModules("2sxc,2sxc-app")]
-    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]    // use view, all methods must re-check permissions
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)] // use view, all methods must re-check permissions
+    [Authorize(Roles = RoleNames.Everyone)]
+    // TODO: 2DM please check permissions
     [ValidateAntiForgeryToken]
 
     // Release routes

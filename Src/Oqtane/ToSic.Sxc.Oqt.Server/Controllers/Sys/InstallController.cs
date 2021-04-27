@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Oqtane.Shared;
+using System;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.ImportExport;
@@ -43,6 +45,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
         /// <returns></returns>
         [HttpGet]
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+        [Authorize(Roles = RoleNames.Host)]
         public bool Resume() => _envInstallerLazy.Value.ResumeAbortedUpgrade();
 
         #endregion
@@ -57,6 +60,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
         /// <returns></returns>
         [HttpGet]
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [Authorize(Roles = RoleNames.Admin)]
         public IActionResult RemoteWizardUrl(bool isContentApp)
         {
             var result = _envInstallerLazy.Value.Init(Log)
@@ -74,7 +78,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
         /// <returns></returns>
         [HttpPost]
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        // [ValidateAntiForgeryToken] // now activate this, as it's post now, previously not, because this is a GET and can't include the RVT
+        [Authorize(Roles = RoleNames.Admin)]
+        [ValidateAntiForgeryToken] // now activate this, as it's post now, previously not, because this is a GET and can't include the RVT
         public IActionResult RemotePackage(string packageUrl)
         {
             PreventServerTimeout300();

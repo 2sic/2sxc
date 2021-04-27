@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using Oqtane.Shared;
 using ToSic.Eav.ImportExport.Options;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
@@ -24,8 +25,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     /// Instead, the method itself must do additional security checking.
     /// Security checking is possible, because the cookie still contains user information
     /// </remarks>
-    //[AllowAnonymous]
     //[DnnLogExceptions]
+
     // Release routes
     [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]
     [Route(WebApiConstants.ApiRoot2 + "/admin/[controller]/[action]")]
@@ -61,14 +62,16 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <returns></returns>
         [HttpGet]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [Authorize(Roles = RoleNames.Admin)]
         public IEnumerable<Dictionary<string, object>> List(int appId, string contentType)
             => _lazyEntityApi.Value.InitOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.ReadSomething, Log)
                 .GetEntitiesForAdmin(contentType);
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [Authorize(Roles = RoleNames.Admin)]
         public void Delete([FromQuery] string contentType, [FromQuery] int? id, [FromQuery] Guid? guid, [FromQuery] int appId, [FromQuery] bool force = false)
         {
             if (id.HasValue) _lazyEntityApi.Value.InitOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
@@ -119,7 +122,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "EditModule")]
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [Authorize(Roles = RoleNames.Admin)]
         public ContentImportResultDto XmlPreview(ContentImportArgsDto args)
             => _contentImportLazy.Value.Init(args.AppId, Log).XmlPreview(args);
 
@@ -129,7 +133,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "EditModule")]
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [Authorize(Roles = RoleNames.Admin)]
         public ContentImportResultDto XmlUpload(ContentImportArgsDto args)
             => _contentImportLazy.Value.Init(args.AppId, Log).XmlImport(args);
 
@@ -139,7 +144,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "EditModule")]
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [Authorize(Roles = RoleNames.Admin)]
         public bool Upload(EntityImportDto args) => _contentImportLazy.Value.Init(args.AppId, Log).Import(args);
 
         // New feature in 11.03 - Usage Statistics

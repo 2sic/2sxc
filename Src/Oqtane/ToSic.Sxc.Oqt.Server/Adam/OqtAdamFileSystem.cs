@@ -229,7 +229,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 IsSystem = true,
                 Permissions = new List<Permission>
                 {
-                    new Permission(PermissionNames.View, Oqtane.Shared.RoleNames.Everyone, true),
+                    new Permission(PermissionNames.View, RoleNames.Everyone, true),
                 }.EncodePermissions()
             };
             OqtFolderRepository.AddFolder(newVirtualFolder);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.App;
@@ -12,6 +13,12 @@ using ToSic.Sxc.WebApi.PublicApi;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// In charge of delivering Pipeline-Queries on the fly
+    /// They will only be delivered if the security is confirmed - it must be publicly available
+    /// </summary>
+    
     // Release routes
     [Route(WebApiConstants.AppRoot)]
     [Route(WebApiConstants.AppRoot2)]
@@ -21,6 +28,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     [Route(WebApiConstants.WebApiStateRoot + "/app/")]
 
     [ApiController]
+
+    [AllowAnonymous]
     public class AppQueryController : OqtStatefulControllerBase, IAppQueryController
     {
         private readonly Lazy<AppQuery> _appQuery;
@@ -37,6 +46,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         [HttpGet("{appPath}/query/{name}/{stream?}")]
         [HttpPost("{appPath}/query/{name}/{stream?}")]
+        [AllowAnonymous] // will check security internally, so assume no requirements
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(
             [FromRoute] string appPath,
             [FromRoute] string name,
@@ -46,6 +56,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         [HttpGet("auto/query/{name}/{stream?}")]
         [HttpPost("auto/query/{name}/{stream?}")]
+        [AllowAnonymous] // will check security internally, so assume no requirements
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(
             [FromRoute] string name,
             AppQueryParameters more,

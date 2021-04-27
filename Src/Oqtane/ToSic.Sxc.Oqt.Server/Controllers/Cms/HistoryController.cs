@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Oqtane.Shared;
+using System;
 using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Persistence.Versions;
@@ -40,12 +42,14 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// <param name="item"></param>
         /// <returns></returns>
         [HttpPost]
-        //[Authorize(Policy = "EditModule")]  // TODO: disabled
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [Authorize(Roles = RoleNames.Admin)]
         public List<ItemHistory> Get(int appId, [FromBody] ItemIdentifier item)
             => _appManagerLazy.Value.Init(appId, Log).Entities.VersionHistory(_idHelper.Init(Log).ResolveItemIdOfGroup(appId, item, Log).EntityId);
 
         [HttpPost]
-        //[Authorize(Policy = "EditModule")]  // TODO: disabled
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [Authorize(Roles = RoleNames.Admin)]
         public bool Restore(int appId, int changeId, [FromBody] ItemIdentifier item)
         {
             _appManagerLazy.Value.Init(appId, Log).Entities.VersionRestore(_idHelper.Init(Log).ResolveItemIdOfGroup(appId, item, Log).EntityId, changeId);
