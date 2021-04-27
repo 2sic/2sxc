@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.Assets
 {
+    [Authorize(Policy = PolicyNames.ViewModule)] // use view, all methods must re-check permissions
+
     // Release routes
     [Route(WebApiConstants.AppRoot + "/{appName}/assets")]
     [Route(WebApiConstants.AppRoot2 + "/{appName}/assets")]

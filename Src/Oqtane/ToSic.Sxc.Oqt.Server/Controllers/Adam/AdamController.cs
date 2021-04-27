@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Adam
     /// Then we can reduce security access level to anonymous, because each method will do the security check
     /// </summary>
     //[SupportedModules("2sxc,2sxc-app")]
-    [Authorize(Policy = PolicyNames.ViewModule)]   // use view, all methods must re-check permissions
+    [Authorize(Policy = PolicyNames.ViewModule)] // use view, all methods must re-check permissions
     [ValidateAntiForgeryToken]
 
     // Release routes
