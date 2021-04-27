@@ -24,13 +24,13 @@ using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
 // ReSharper disable once CheckNamespace
-namespace ToSic.Custom
+namespace Custom.Hybrid
 {
     /// <summary>
     /// Custom base controller class for custom dynamic 2sxc app api controllers.
     /// It is without dependencies in class constructor, commonly provided with DI.
     /// </summary>
-    public abstract class Api12 : OqtControllerBase, IDynamicCode, IDynamicWebApi /*, IHasOqtaneDynamicCodeContext*/ /*, DynamicApiController, IHttpController, IDisposable, IHasDynCodeContext, IDynamicWebApi, IDnnDynamicCode, IDynamicCode, ICreateInstance, ICompatibilityLevel, IHasLog, IDynamicCodeBeforeV10*/
+    public abstract class Api12 : OqtControllerBase, IDynamicCode, IDynamicWebApi
     {
         protected IServiceProvider ServiceProvider { get; private set; }
 
@@ -149,7 +149,7 @@ namespace ToSic.Custom
         /// See docs of official interface <see cref="IDynamicWebApi"/>
         /// </summary>
         [NonAction]
-        public Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+        public ToSic.Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = ToSic.Eav.Constants.RandomProtectionParameter,
             Stream stream = null,
             string fileName = null,
             string contentType = null,
@@ -157,14 +157,14 @@ namespace ToSic.Custom
             string field = null,
             string subFolder = "")
         {
-            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "SaveInAdam",
+            ToSic.Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "SaveInAdam",
                 $"{nameof(stream)},{nameof(fileName)},{nameof(contentType)},{nameof(guid)},{nameof(field)},{nameof(subFolder)} (optional)");
 
             if (stream == null || fileName == null || contentType == null || guid == null || field == null)
                 throw new Exception();
 
             var feats = new[] { FeatureIds.UseAdamInWebApi, FeatureIds.PublicUpload };
-            if (!Eav.Configuration.Features.EnabledOrException(feats, "can't save in ADAM", out var exp))
+            if (!ToSic.Eav.Configuration.Features.EnabledOrException(feats, "can't save in ADAM", out var exp))
                 throw exp;
 
             var appId = _DynCodeRoot?.Block?.AppId ?? _DynCodeRoot?.App?.AppId ?? throw new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
@@ -191,7 +191,7 @@ namespace ToSic.Custom
 
         [NonAction]
         public dynamic CreateInstance(string virtualPath,
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = ToSic.Eav.Constants.RandomProtectionParameter,
             string name = null,
             string relativePath = null,
             bool throwOnError = true) =>
