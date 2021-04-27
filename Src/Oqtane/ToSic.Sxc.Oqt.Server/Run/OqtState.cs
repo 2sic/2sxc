@@ -8,6 +8,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Web.Parameters;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
@@ -67,6 +68,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             var module = _moduleRepository.GetModule(moduleId);
             var ctx = _oqtTempInstanceContext.CreateContext(pageId, module, Log);
+            // WebAPI calls can contain the original parameters that made the page, so that views can respect that
+            ctx.Page.Parameters = OriginalParameters.GetOverrideParams(ctx.Page.Parameters);
             IBlock block = ServiceProvider.Build<BlockFromModule>().Init(ctx, Log);
 
             // only if it's negative, do we load the inner block
