@@ -15,6 +15,8 @@ namespace ToSic.Sxc.Polymorphism
             var wrapLog = log.Call<string>(parameters);
             if (!string.Equals(parameters, ModeCssFramework, InvariantCultureIgnoreCase)) 
                 return wrapLog("unknown param", null);
+            // Note: this is still using the global object which we want to get rid of
+            // But to use DI, we must refactor Polymorphism
             var cssFramework = Connect.Koi.Koi.Css;
             return wrapLog(cssFramework, cssFramework);
         }

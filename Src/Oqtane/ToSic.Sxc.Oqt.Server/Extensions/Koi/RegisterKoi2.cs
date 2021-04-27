@@ -10,8 +10,7 @@ namespace ToSic.Sxc.Oqt.Server.Extensions.Koi
         public static IServiceCollection ActivateKoi2Di(this IServiceCollection services)
         {
             services.TryAddTransient<KoiCss.Dependencies>();
-            services.TryAddTransient<ICssInfo, KoiCss>();
-            services.TryAddTransient<ICssBuilder, KoiCss>();
+            services.TryAddTransient<ICss, KoiCss>();
             services.TryAddTransient<Connect.Koi.Detectors.ICssFrameworkDetector, OqtKoiCssFrameworkDetector>();
             return services;
         }
