@@ -56,8 +56,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         [HttpPost]
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        [Authorize(Roles = RoleNames.Everyone)]
-        // TODO: 2DM please check permissions
+        [Authorize(Roles = RoleNames.Admin)]
         public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
             => _saveBackendLazy.Value.Init(appId, Log).Save(package, partOfPage);
 
