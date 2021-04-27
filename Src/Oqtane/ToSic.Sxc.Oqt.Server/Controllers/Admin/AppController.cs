@@ -108,6 +108,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <param name="resetAppGuid"></param>
         /// <returns></returns>
         [HttpGet]
+        // TODO: stv - no security attribute
         public IActionResult Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
         {
             return _exportAppLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
@@ -141,6 +142,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <returns></returns>
         [HttpGet]
         [ValidateAntiForgeryToken]
+        // TODO: stv - no security attribute
         public bool SaveData(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
             => _exportAppLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
                 .SaveDataForVersionControl(appId, zoneId, includeContentGroups, resetAppGuid);

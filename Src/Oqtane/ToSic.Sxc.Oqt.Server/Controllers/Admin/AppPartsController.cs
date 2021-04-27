@@ -61,6 +61,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <param name="templateIdsString"></param>
         /// <returns></returns>
         [HttpGet]
+        // TODO: stv - no security attribute
         public HttpResponseMessage Export(int zoneId, int appId, string contentTypeIdsString,
             string entityIdsString, string templateIdsString)
             => _exportContentLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)

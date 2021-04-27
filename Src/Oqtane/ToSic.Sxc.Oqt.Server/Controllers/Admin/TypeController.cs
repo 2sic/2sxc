@@ -41,18 +41,15 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     {
         private readonly Lazy<ContentTypeApi> _ctApiLazy;
         private readonly Lazy<ContentExportApi> _contentExportLazy;
-        private readonly Lazy<IServiceProvider> _serviceProvider;
         protected override string HistoryLogName => "Api.Types";
 
         public TypeController(StatefulControllerDependencies dependencies,
             Lazy<ContentTypeApi> ctApiLazy,
-            Lazy<ContentExportApi> contentExportLazy,
-            Lazy<IServiceProvider> serviceProvider
-            ) : base(dependencies)
+            Lazy<ContentExportApi> contentExportLazy
+        ) : base(dependencies)
         {
             _ctApiLazy = ctApiLazy;
             _contentExportLazy = contentExportLazy;
-            _serviceProvider = serviceProvider;
         }
 
         [HttpGet]
@@ -143,8 +140,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
             var streams = new List<FileUploadDto>();
             for (var i = 0; i < files.Count; i++)
                 streams.Add(new FileUploadDto { Name = files[i].FileName, Stream = files[i].OpenReadStream() });
-            var result = _serviceProvider.Value.Build<ImportContent>().Init(GetContext().User, Log)
-                .ImportContentType(zoneId, appId, streams, WipConstants.DefaultLanguage);
+            var result = HttpContext.RequestServices.Build<ImportContent>().Init(GetContext().User, Log)
+                .ImportContentType(zoneId, appId, streams, GetContext().Site.DefaultCultureCode);
 
             return wrapLog("ok", result);
         }

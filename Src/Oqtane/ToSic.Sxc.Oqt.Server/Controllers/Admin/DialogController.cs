@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Oqtane.Shared;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Admin;
@@ -9,8 +11,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     /// This one supplies portal-wide (or cross-portal) settings / configuration
     /// </summary>
     //[SupportedModules("2sxc,2sxc-app")]
-    //   [DnnLogExceptions]
-    //   [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //[DnnLogExceptions]
+    [Authorize(Roles = RoleNames.Admin)]
     [AutoValidateAntiforgeryToken]
 
     // Release routes

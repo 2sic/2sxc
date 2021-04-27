@@ -8,6 +8,8 @@ using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Assets;
+using ToSic.Sxc.WebApi.Context;
+using ToSic.Sxc.WebApi.Usage;
 using ToSic.Sxc.WebApi.Views;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
@@ -36,13 +38,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         {
             _viewsBackendLazy = viewsBackendLazy;
             _viewExportLazy = viewExportLazy;
-        }
-
-        [HttpGet]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S3400:Methods should not return constants", Justification = "<Pending>")]
-        public string Ping()
-        {
-            return "pong";
         }
 
         [HttpGet]
@@ -94,5 +89,31 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 
             return wrapLog("ok", result);
         }
+
+        ///// <summary>
+        ///// Get usage statistics for entities so the UI can guide the user
+        ///// to find out if data is being used or if it can be safely deleted.
+        ///// </summary>
+        ///// <param name="appId">App ID</param>
+        ///// <param name="guid">Guid of the Entity</param>
+        ///// <returns></returns>
+        ///// <remarks>
+        ///// New in 2sxc 11.11
+        ///// </remarks>
+        //[HttpGet]
+        ////[SupportedModules("2sxc,2sxc-app")]
+        //[ValidateAntiForgeryToken]
+        //[Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+        // TODO: implement Usage
+        //public IEnumerable<ViewDto> Usage(int appId, Guid guid)
+        //    => HttpContext.RequestServices.Build<UsageBackend>().Init(Log)
+        //        .ViewUsage(appId, guid, (views, blocks) =>
+        //        {
+        //            // create array with all 2sxc modules in this portal
+        //            var allMods = new Pages.Pages(Log).AllModulesWithContent(GetContext().Site.Id);
+        //            Log.Add($"Found {allMods.Count} modules");
+
+        //            return views.Select(vwb => new ViewDto().Init(vwb, blocks, allMods));
+        //        });
     }
 }
