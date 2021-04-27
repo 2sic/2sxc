@@ -77,7 +77,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// <inheritdoc />
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        [Authorize(Roles = RoleNames.Everyone)]
+        //[Authorize(Roles = RoleNames.Everyone)] commented because of http403 issue
         // TODO: 2DM please check permissions
         public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
             => _linkBackendLazy.Value.Init(Log).LookupHyperlink(appId, link, contentType, guid, field);

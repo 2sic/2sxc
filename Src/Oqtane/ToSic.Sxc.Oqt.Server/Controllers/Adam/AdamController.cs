@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Adam
     /// </summary>
     //[SupportedModules("2sxc,2sxc-app")]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)] // use view, all methods must re-check permissions
-    [Authorize(Roles = RoleNames.Everyone)]
+    //[Authorize(Roles = RoleNames.Everyone)] commented because of http403 issue
     // TODO: 2DM please check permissions
     [ValidateAntiForgeryToken]
 
