@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Web.Hosting;
 using System.Web.WebPages;
 using ToSic.Eav.Documentation;
@@ -74,8 +75,14 @@ namespace ToSic.Sxc.Web
             return wrapLog("ok", result);
         }
 
+        [PrivateApi]
+        // ReSharper disable once InconsistentNaming
+        protected string _ErrorWhenUsingCreateInstanceCshtml = null;
+        
         protected dynamic CreateInstanceCshtml(string path)
         {
+            if (_ErrorWhenUsingCreateInstanceCshtml != null)
+                throw new NotImplementedException(_ErrorWhenUsingCreateInstanceCshtml);
             var webPage = (RazorComponentBase)CreateInstanceFromVirtualPath(path);
             webPage.ConfigurePage(this);
             return webPage;

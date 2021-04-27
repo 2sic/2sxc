@@ -57,13 +57,12 @@ namespace ToSic.Sxc.Code
             if (isCshtml && string.IsNullOrEmpty(className))
             {
 #if NETSTANDARD
-                throw new Exception("On-the Fly / Runtime Compile Not Yet Implemented in .net standard #TodoNetStandard");
-
+                throw new Exception("Runtime Compile of .cshtml is Not Implemented in .net standard / core");
 #else
                 compiledType = BuildManager.GetCompiledType(virtualPath);
-#endif
                 if (compiledType == null)
                     errorMsg = $"Couldn't create instance of {virtualPath}. Compiled type == null";
+#endif
             }
             // compile .cs files
             else if (isCs || isCshtml)
@@ -81,7 +80,7 @@ namespace ToSic.Sxc.Code
                 catch (Exception ex)
                 {
                     Log.Exception(ex);
-                    errorMsg = $"can't compile '{className}' in {Path.GetFileName(virtualPath)}";
+                    errorMsg = $"Error: Can't compile '{className}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. ";
                 }
 #else
                 assembly = BuildManager.GetCompiledAssembly(virtualPath);
@@ -91,7 +90,7 @@ namespace ToSic.Sxc.Code
                     compiledType = assembly?.GetType(className, throwOnError, true);
 
                     if (compiledType == null)
-                        errorMsg = $"didn't find type '{className}' in {Path.GetFileName(virtualPath)}";
+                        errorMsg = $"Error: Didn't find type '{className}' in {Path.GetFileName(virtualPath)}";
                 }
             }
             else

@@ -28,7 +28,6 @@ namespace Custom.Hybrid
             if (directory == null) throw new Exception("Current directory seems to be null");
             var path = System.IO.Path.Combine(directory, virtualPath);
             VerifyFileExists(path);
-            //return "all is ok with " + virtualPath + "(" + path + ")";
             
             return path.EndsWith(CodeCompiler.CsFileExtension)
                 ? _DynCodeRoot.CreateInstance(path, dontRelyOnParameterOrder, name, null, throwOnError)
@@ -38,9 +37,6 @@ namespace Custom.Hybrid
         protected dynamic CreateInstanceCshtml(string path)
         {
             throw new NotImplementedException("CreateInstance with .cshtml files is not supported in Oqtane. We're still trying to find a solution, but ATM it doesn't work. Use a .cs file instead. ");
-            //var webPage = this. CreateInstanceFromVirtualPath(path);
-            //webPage.ConfigurePage(this);
-            //return webPage;
         }
 
         protected void VerifyFileExists(string path)

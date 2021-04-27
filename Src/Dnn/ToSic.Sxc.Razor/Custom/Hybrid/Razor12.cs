@@ -22,6 +22,12 @@ namespace Custom.Hybrid
     [InternalApi_DoNotUse_MayChangeWithoutNotice("As of now just fyi, should be finalized for 2sxc 12")]
     public abstract partial class Razor12 : RazorComponentBase, IRazor12
     {
+        [PrivateApi("Hide this, no need to publish; would only confuse users")]
+        protected Razor12()
+        {
+            // Set the error message to ensure that this will not work in Hybrid razor
+            _ErrorWhenUsingCreateInstanceCshtml = "using CreateInstance(*.cshtml) is not supported in Hybrid Razor. Use .cs files instead.";
+        }
 
         #region Link, Edit, Dnn, App, Data
 

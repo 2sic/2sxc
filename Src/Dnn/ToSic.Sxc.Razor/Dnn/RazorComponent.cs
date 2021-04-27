@@ -17,6 +17,12 @@ namespace ToSic.Sxc.Dnn
     [PublicApi_Stable_ForUseInYourCode]
     public abstract partial class RazorComponent : Custom.Hybrid.Razor12, IRazorComponent
     {
+        [PrivateApi("Hide this, no need to publish; would only confuse users")]
+        protected RazorComponent()
+        {
+            // Enable CreateInstanceCshtml in anything that inherits these classes
+            _ErrorWhenUsingCreateInstanceCshtml = null;
+        }
 
         /// <inheritdoc />
         public IDnnContext Dnn => (_DynCodeRoot as IDnnDynamicCode)?.Dnn;
