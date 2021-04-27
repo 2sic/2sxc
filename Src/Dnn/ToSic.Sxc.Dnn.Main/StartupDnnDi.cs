@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.Run;
@@ -13,6 +13,7 @@ using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Repositories;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
@@ -29,7 +30,6 @@ using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
-using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.Context;
 
 
@@ -92,6 +92,9 @@ namespace ToSic.SexyContent
             // add page publishing
             services.TryAddTransient<IPagePublishing, Sxc.Dnn.Cms.DnnPagePublishing>();
             services.TryAddTransient<IPagePublishingResolver, Sxc.Dnn.Cms.DnnPagePublishingResolver>();
+
+            // Asset Templates
+            services.TryAddTransient<IAssetTemplates, DnnAssetTemplates>();
 
             if (appsCacheOverride != null)
             {

@@ -8,6 +8,7 @@ using ToSic.Eav.LookUp;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Adam;
@@ -88,6 +89,9 @@ namespace ToSic.Sxc.Oqt.Server
             // Resolve appFolder when appName is "auto"
             services.TryAddTransient<OqtAppFolder>();
             services.TryAddTransient<AppAssetsDependencies>();
+
+            // Asset Templates
+            services.TryAddTransient<IAssetTemplates, OwtAssetTemplates>();
 
             // new in v12 - integrate KOI - experimental!
             try
