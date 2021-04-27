@@ -20,8 +20,9 @@ namespace ToSic.Sxc.Dnn
         [PrivateApi("Hide this, no need to publish; would only confuse users")]
         protected RazorComponent()
         {
-            // Enable CreateInstanceCshtml in anything that inherits these classes
+            // Enable CreateInstanceCshtml and RenderPage in anything that inherits these classes
             _ErrorWhenUsingCreateInstanceCshtml = null;
+            _ErrorWhenUsingRenderPage = null;
         }
 
         /// <inheritdoc />

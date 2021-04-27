@@ -3,6 +3,7 @@ using System.Web;
 using System.Web.WebPages;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Engines.Razor
 {
@@ -12,9 +13,9 @@ namespace ToSic.Sxc.Engines.Razor
     [PrivateApi]
     public class HtmlHelper: IHtmlHelper
     {
-        private readonly WebPageBase _page;
+        private readonly RazorComponentBase _page;
 
-        public HtmlHelper(WebPageBase page)
+        public HtmlHelper(RazorComponentBase page)
         {
             _page = page;
         }
@@ -39,6 +40,6 @@ namespace ToSic.Sxc.Engines.Razor
         /// <param name="data"></param>
         /// <returns></returns>
         public IHtmlString Partial(string path, params object[] data) 
-            => _page.RenderPage(path, data);
+            => _page.BaseRenderPage(path, data);
     }
 }

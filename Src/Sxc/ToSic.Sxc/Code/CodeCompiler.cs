@@ -87,10 +87,20 @@ namespace ToSic.Sxc.Code
 #endif
                 if (errorMsg == null)
                 {
-                    compiledType = assembly?.GetType(className, throwOnError, true);
+                    var possibleErrorMessage =
+                        $"Error: Didn't find type '{className}' in {Path.GetFileName(virtualPath)}. Maybe the class name doesn't match the file name. ";
+                    try
+                    {
+                        compiledType = assembly?.GetType(className, throwOnError, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Add(possibleErrorMessage);
+                        if(throwOnError) throw new TypeLoadException(possibleErrorMessage, ex);
+                    }
 
                     if (compiledType == null)
-                        errorMsg = $"Error: Didn't find type '{className}' in {Path.GetFileName(virtualPath)}";
+                        errorMsg = possibleErrorMessage;
                 }
             }
             else

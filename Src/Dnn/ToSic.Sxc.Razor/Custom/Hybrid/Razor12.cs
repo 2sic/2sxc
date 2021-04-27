@@ -26,7 +26,8 @@ namespace Custom.Hybrid
         protected Razor12()
         {
             // Set the error message to ensure that this will not work in Hybrid razor
-            _ErrorWhenUsingCreateInstanceCshtml = "using CreateInstance(*.cshtml) is not supported in Hybrid Razor. Use .cs files instead.";
+            _ErrorWhenUsingCreateInstanceCshtml = "CreateInstance(*.cshtml) is not supported in Hybrid Razor. Use .cs files instead.";
+            _ErrorWhenUsingRenderPage = "RenderPage(...) is not supported in Hybrid Razor. Use Html.Partial(...) instead.";
         }
 
         #region Link, Edit, Dnn, App, Data

@@ -138,6 +138,7 @@
     <Compile Include="Compatibility\RazorPermissions\RazorPermissions.cs" />
     <Compile Include="SexyContentWebPage.cs" />
     <Compile Include="SexyContentWebPageOfT.cs" />
+    <Compile Include="Web\RazorComponentBase_RenderPage.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">

@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Web
     /// It only contains internal wiring stuff, so not to be published
     /// </summary>
     [PrivateApi("internal class only!")]
-    public abstract class RazorComponentBase: WebPageBase, ICreateInstance, IHasLog, ICoupledDynamicCode
+    public abstract partial class RazorComponentBase: WebPageBase, ICreateInstance, IHasLog, ICoupledDynamicCode
     {
         public IHtmlHelper Html { get; internal set; }
 
