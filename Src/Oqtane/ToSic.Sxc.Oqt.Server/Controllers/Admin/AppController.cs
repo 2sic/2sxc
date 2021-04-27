@@ -58,19 +58,19 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 
         [HttpGet]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+        [Authorize(Roles = RoleNames.Admin)]
         public List<AppDto> List(int zoneId)
             => _appsBackendLazy.Value.Init(Log).Apps();
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+        [Authorize(Roles = RoleNames.Admin)]
         public void App(int zoneId, int appId, bool fullDelete = true)
             => _cmsZonesLazy.Value.Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId, fullDelete);
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+        [Authorize(Roles = RoleNames.Admin)]
         public void App(int zoneId, string name)
             => _appBuilderLazy.Value.Init(zoneId, Log).Create(name);
 
@@ -83,7 +83,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <returns></returns>
         [HttpGet]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+        [Authorize(Roles = RoleNames.Admin)]
         public AppExportInfoDto Statistics(int zoneId, int appId)
             => _exportAppLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
                 .GetAppInfo(appId, zoneId);
@@ -91,7 +91,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 
         [HttpGet]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+        [Authorize(Roles = RoleNames.Admin)]
         public bool FlushCache(int zoneId, int appId)
         {
             var wrapLog = Log.Call<bool>($"{zoneId}, {appId}");
@@ -108,7 +108,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <param name="resetAppGuid"></param>
         /// <returns></returns>
         [HttpGet]
-        // TODO: stv - no security attribute
         public IActionResult Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
         {
             return _exportAppLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
@@ -142,7 +141,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <returns></returns>
         [HttpGet]
         [ValidateAntiForgeryToken]
-        // TODO: stv - no security attribute
         public bool SaveData(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
             => _exportAppLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
                 .SaveDataForVersionControl(appId, zoneId, includeContentGroups, resetAppGuid);
@@ -154,7 +152,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+        [Authorize(Roles = RoleNames.Admin)]
         public ImportResultDto Import(int zoneId)
         {
             Log.Add("import app start");

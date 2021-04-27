@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Oqtane.Shared;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
@@ -46,18 +47,17 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         #endregion
 
-
-        [HttpGet]
-        [AllowAnonymous]   // will check security internally, so assume no requirements
-        public string Ping() => "test ping";
-
         [HttpPost]
+        // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         [AllowAnonymous]   // will check security internally, so assume no requirements
+        // TODO: 2DM please check permissions
         public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
             => _loadBackend.Value.Init(Log).Load(appId, items);
 
         [HttpPost]
-        // todo #mvcSec [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        [Authorize(Roles = RoleNames.Everyone)]
+        // TODO: 2DM please check permissions
         public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
             => _saveBackendLazy.Value.Init(appId, Log).Save(package, partOfPage);
 
@@ -78,6 +78,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// <inheritdoc />
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        [Authorize(Roles = RoleNames.Everyone)]
+        // TODO: 2DM please check permissions
         public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
             => _linkBackendLazy.Value.Init(Log).LookupHyperlink(appId, link, contentType, guid, field);
 

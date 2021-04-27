@@ -278,7 +278,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 IsSystem = true,
                 Permissions = new List<Permission>
                 {
-                    new Permission(PermissionNames.View, Oqtane.Shared.RoleNames.Everyone, true),
+                    new Permission(PermissionNames.View, RoleNames.Everyone, true),
                 }.EncodePermissions()
             };
             _oqtFolderRepository.AddFolder(newVirtualFolder);

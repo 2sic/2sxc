@@ -1,10 +1,10 @@
-﻿using System;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Oqtane.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using Oqtane.Models;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Persistence.Logging;
@@ -12,9 +12,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
-using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.WebApi.Assets;
 using ToSic.Sxc.WebApi.ImportExport;
 
@@ -25,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     /// </summary>
     //[SupportedModules("2sxc,2sxc-app")]
     //[DnnLogExceptions]
-    [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+    [Authorize(Roles = RoleNames.Admin)]
     [AutoValidateAntiforgeryToken]
 
     // Release routes
@@ -54,7 +52,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 
         [HttpGet]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+        [Authorize(Roles = RoleNames.Admin)]
         public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
             => _ctApiLazy.Value.Init(appId, Log).Get(scope, withStatistics);
 
@@ -63,7 +61,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// </summary>
         [HttpGet]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+        [Authorize(Roles = RoleNames.Admin)]
         public IDictionary<string, string> Scopes(int appId)
             => State.Get(appId).ContentTypes.GetAllScopesWithLabels(); // new AppRuntime().Init(State.Identity(null, appId), false, Log).ContentTypes.ScopesWithLabels();
 
@@ -72,17 +70,17 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// </summary>
         [HttpGet]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+        [Authorize(Roles = RoleNames.Admin)]
         public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) => _ctApiLazy.Value.Init(appId, Log).GetSingle(contentTypeId, scope);
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+        [Authorize(Roles = RoleNames.Admin)]
         public bool Delete(int appId, string staticName) => _ctApiLazy.Value.Init(appId, Log).Delete(staticName);
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+        [Authorize(Roles = RoleNames.Admin)]
         // 2019-11-15 2dm special change: item to be Dictionary<string, object> because in DNN 9.4
         // it causes problems when a content-type has metadata, where a value then is a deeper object
         // in future, the JS front-end should send something clearer and not the whole object
@@ -100,12 +98,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.RoleNames.Host)]
+        [Authorize(Roles = RoleNames.Host)]
         public bool AddGhost(int appId, string sourceStaticName) => _ctApiLazy.Value.Init(appId, Log).CreateGhost(sourceStaticName);
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+        [Authorize(Roles = RoleNames.Admin)]
         public void SetTitle(int appId, int contentTypeId, int attributeId)
             => _ctApiLazy.Value.Init(appId, Log).SetTitle(contentTypeId, attributeId);
 
@@ -126,7 +124,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+        [Authorize(Roles = RoleNames.Admin)]
 
         public ImportResultDto Import(int zoneId, int appId)
         {

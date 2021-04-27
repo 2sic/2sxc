@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
 
@@ -11,6 +13,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
 
     // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/sys/[controller]/[action]")]
+
+    // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    [Authorize(Roles = RoleNames.Admin)]
     public class LogController: OqtStatefulControllerBase
     {
         protected override string HistoryLogName => "Api.Log";

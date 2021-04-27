@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.WebApi;
@@ -12,7 +13,7 @@ using ToSic.Sxc.Oqt.Shared;
 namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 {
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+    [Authorize(Roles = RoleNames.Admin)]
 
     // Release routes
     [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]

@@ -70,6 +70,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// <inheritdoc />
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [Authorize(Roles = RoleNames.Admin)]
         public string Block(int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
         {
             var entityId = Backend.NewBlock(parentId, field, sortOrder, app, guid);
@@ -86,8 +87,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// used to be GET Module/AddItem
         /// </summary>
         [HttpPost]
-        //[Authorize(Policy = PolicyNames.EditModule)]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [Authorize(Roles = RoleNames.Admin)]
         public IActionResult Item(int? index = null)
         {
             Backend.AddItem(index);
@@ -105,6 +106,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// <param name="appId"></param>
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [Authorize(Roles = RoleNames.Admin)]
         public void App(int? appId)
             => _viewPickerBackendLazy.Value.Init(Log)
                 .SetAppId(appId);
@@ -116,6 +118,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// <returns></returns>
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [Authorize(Roles = RoleNames.Admin)]
         public IEnumerable<AppUiInfo> Apps(string apps = null)
         {
             // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
@@ -131,6 +134,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// <inheritdoc />
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [Authorize(Roles = RoleNames.Admin)]
         public IEnumerable<ContentTypeUiInfo> ContentTypes() => CmsRuntime?.Views.GetContentTypesWithStatus();
 
         #endregion
@@ -143,6 +147,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// <returns></returns>
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [Authorize(Roles = RoleNames.Admin)]
         public IEnumerable<TemplateUiInfo> Templates() => CmsRuntime?.Views.GetCompatibleViews(ContextApp, GetBlock().Configuration);
 
         /// <summary>
@@ -154,6 +159,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// <returns></returns>
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        [Authorize(Roles = RoleNames.Everyone)]
+        // TODO: 2DM please check permissions
         public Guid? Template(int templateId, bool forceCreateContentGroup)
             => _viewPickerBackendLazy.Value.Init(Log)
                 .SaveTemplateId(templateId, forceCreateContentGroup);
@@ -164,6 +171,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// <inheritdoc />
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [Authorize(Roles = RoleNames.Admin)]
         public IActionResult Render(int templateId, string lang)
         {
             Log.Add($"render template:{templateId}, lang:{lang}");
@@ -183,7 +191,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             }
             catch
             {
-				//Exceptions.LogException(e);
+                //Exceptions.LogException(e);
                 throw;
             }
         }
@@ -191,6 +199,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// <inheritdoc />
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [Authorize(Roles = RoleNames.Admin)]
         public bool Publish(string part, int index) => Backend.PublishPart(part, index);
 
     }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using Microsoft.AspNetCore.Authorization;
+using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.InPage;
 
@@ -31,7 +33,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPost]
-        //[Authorize(Policy = "ViewModule")] // TODO: disabled
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        [Authorize(Roles = RoleNames.Admin)]
+        // TODO: 2DM please check permissions
         public bool Publish(int id)
             => _appViewPickerBackendLazy.Value.Init(Log)
                 .Publish(id);

@@ -5,7 +5,9 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.Assets
 {
-    [Authorize(Policy = PolicyNames.ViewModule)] // use view, all methods must re-check permissions
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)] // use view, all methods must re-check permissions
+    [Authorize(Roles = RoleNames.Everyone)]
+    // TODO: 2DM please check permissions
 
     // Release routes
     [Route(WebApiConstants.AppRoot + "/{appName}/assets")]
@@ -14,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Assets
 
     // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/assets/{appName}")]
-    public class AppAssetsController: ToSic.Sxc.Oqt.Server.Controllers.AppAssetsController
+    public class AppAssetsController: Controllers.AppAssetsController
     {
         public override string Route => "assets";
 

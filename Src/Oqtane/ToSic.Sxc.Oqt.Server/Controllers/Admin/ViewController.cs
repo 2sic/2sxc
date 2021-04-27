@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using Oqtane.Shared;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
@@ -43,19 +44,19 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [HttpGet]
         //[SupportedModules("2sxc,2sxc-app")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+        [Authorize(Roles = RoleNames.Admin)]
         public IEnumerable<ViewDetailsDto> All(int appId) => Backend.GetAll(appId);
 
         [HttpGet]
         //[SupportedModules("2sxc,2sxc-app")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+        [Authorize(Roles = RoleNames.Admin)]
         public PolymorphismDto Polymorphism(int appId) => HttpContext.RequestServices.Build<PolymorphismBackend>().Init(Log).Polymorphism(appId);
 
         [HttpGet, HttpDelete]
         //[SupportedModules("2sxc,2sxc-app")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+        [Authorize(Roles = RoleNames.Admin)]
         public bool Delete(int appId, int id) => Backend.Delete(appId, id);
 
         [HttpGet]
@@ -71,7 +72,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+        [Authorize(Roles = RoleNames.Admin)]
         public ImportResultDto Import(int zoneId, int appId)
         {
             var wrapLog = Log.Call<ImportResultDto>();
@@ -103,7 +104,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         //[HttpGet]
         ////[SupportedModules("2sxc,2sxc-app")]
         //[ValidateAntiForgeryToken]
-        //[Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+        //[Authorize(Roles = RoleNames.Admin)]
         // TODO: implement Usage
         //public IEnumerable<ViewDto> Usage(int appId, Guid guid)
         //    => HttpContext.RequestServices.Build<UsageBackend>().Init(Log)

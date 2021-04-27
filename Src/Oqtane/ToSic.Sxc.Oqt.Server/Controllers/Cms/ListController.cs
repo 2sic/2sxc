@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Oqtane.Shared;
 using System;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.FieldList;
@@ -14,7 +16,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     [Route(WebApiConstants.WebApiStateRoot + "/cms/[controller]/[action]")]
 
     [ValidateAntiForgeryToken]
-    //[Authorize(Policy = "EditModule")] // TODO: disabled
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    [Authorize(Roles = RoleNames.Admin)]
     public class ListController : OqtStatefulControllerBase
     {
         protected override string HistoryLogName => "Api.List";
