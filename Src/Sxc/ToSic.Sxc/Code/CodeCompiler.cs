@@ -134,7 +134,7 @@ namespace ToSic.Sxc.Code
                 return "no path/name provided";
 
             // if path relative, merge with shared code path
-            virtualPath = virtualPath.Replace("\\", "/");
+            virtualPath = virtualPath.ForwardSlash();// .Replace("\\", "/");
             if (!virtualPath.StartsWith("/"))
             {
                 Log.Add($"Trying to resolve relative path: '{virtualPath}' using '{relativePath}'");
@@ -142,9 +142,10 @@ namespace ToSic.Sxc.Code
                     return "Unexpected null value on relativePath";
 
                 // if necessary, add trailing slash
-                if (!relativePath.EndsWith("/"))
-                    relativePath += "/";
-                virtualPath = _serviceProvider.Build<ILinkPaths>().ToAbsolute(relativePath, virtualPath);
+                //if (!relativePath.EndsWith("/"))
+                relativePath = relativePath.SuffixSlash();// += "/";
+                //virtualPath = _serviceProvider.Build<ILinkPaths>().ToAbsolute(Path.Combine(relativePath, virtualPath));
+                virtualPath = Path.Combine(relativePath, virtualPath).ToAbsolutePathForwardSlash();
                 Log.Add($"final virtual path: '{virtualPath}'");
             }
 

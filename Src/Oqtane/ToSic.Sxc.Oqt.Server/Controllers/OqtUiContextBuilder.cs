@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected override WebResourceDto GetSystem() =>
             new WebResourceDto
             {
-                Url = _linkPaths.ToAbsolute("~/")
+                Url = _linkPaths.AsSeenFromTheDomainRoot("~/")
             };
 
         protected override WebResourceDto GetSite() =>

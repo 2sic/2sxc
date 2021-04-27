@@ -5,6 +5,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Dnn.Run
 {
@@ -122,6 +123,10 @@ namespace ToSic.Sxc.Dnn.Run
         [PrivateApi]
         public override string AppsRootPhysical => AppsRootRelative;
 
+
+        [PrivateApi]
+        public override string AppAssetsLinkTemplate => AppsRootPhysical + "/" + LinkPaths.AppFolderPlaceholder;
+        
         internal string AppsRootRelative => Path.Combine(UnwrappedContents.HomeDirectory, Settings.AppsRootFolder);
 
         [PrivateApi]

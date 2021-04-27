@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         public override string Url(string path)
         {
             // Convert path to url.
-            string url = path.Forwardslash();
+            string url = path.ForwardSlash();
             var parts = url.Split("/").ToList();
             if (parts[0] == "adam")
             {

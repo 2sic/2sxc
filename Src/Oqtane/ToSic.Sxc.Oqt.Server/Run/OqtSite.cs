@@ -10,6 +10,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Page;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Dev;
+using ToSic.Sxc.Run;
 
 // todo: #Oqtane
 // - url
@@ -85,7 +86,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
         }
 
         [PrivateApi]
-        public override string AppsRootLink => OqtAssetsAndHeaders.GetSiteRoot(_siteStateLazy.Value) + WebApiConstants.AppRoot + "/";
+        public override string AppAssetsLinkTemplate => OqtAssetsAndHeaders.GetSiteRoot(_siteStateLazy.Value) 
+                                                        + WebApiConstants.AppRoot + "/" + LinkPaths.AppFolderPlaceholder + "/assets";
 
         [PrivateApi] public override string AppsRootPhysicalFull => _serverPaths.Value.FullAppPath(AppsRootPartial());
 

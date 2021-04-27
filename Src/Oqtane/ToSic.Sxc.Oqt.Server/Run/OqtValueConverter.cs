@@ -88,7 +88,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 if (fileInfo != null) return "file:" + fileInfo.FileId;
             }
 
-            var pathAsPageLink = potentialFilePath.Forwardslash().TrimEnd('/').TrimStart('/'); // no trailing slashes
+            var pathAsPageLink = potentialFilePath.ForwardSlash().TrimEnd('/').TrimStart('/'); // no trailing slashes
             // Try page / tab ID
             var page = PageRepository.Value.GetPage(pathAsPageLink, site.SiteId);
             return page != null
@@ -154,7 +154,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 SiteStateInitializerLazy.Value.InitIfEmpty();
                 var alias = SiteStateInitializerLazy.Value.SiteState.Alias;
 
-                var pathInAdam = Path.Combine(fileInfo.Folder.Path, fileInfo.Name/*)*/).Forwardslash();
+                var pathInAdam = Path.Combine(fileInfo.Folder.Path, fileInfo.Name/*)*/).ForwardSlash();
 
                 // get appName and filePath
                 var adamFolder = "adam/";

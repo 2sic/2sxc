@@ -54,12 +54,12 @@ namespace ToSic.Sxc.Adam
 
         public string RelativeFromAdam(string path)
         {
-            var adamPosition = path.Forwardslash().IndexOf("adam/", StringComparison.InvariantCultureIgnoreCase);
+            var adamPosition = path.ForwardSlash().IndexOf("adam/", StringComparison.InvariantCultureIgnoreCase);
             return adamPosition <= 0
                 ? path
                 : path.Substring(adamPosition);
         }
 
-        public virtual string Url(string path) => Path.Combine(AdamManager.Site.ContentPath, path).Forwardslash();
+        public virtual string Url(string path) => Path.Combine(AdamManager.Site.ContentPath, path).ForwardSlash();
     }
 }

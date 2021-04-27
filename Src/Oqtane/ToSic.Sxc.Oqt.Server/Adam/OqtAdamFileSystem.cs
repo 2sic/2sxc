@@ -304,7 +304,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 Name = f.Name,
                 Created = f.CreatedOn,
                 Modified = f.ModifiedOn,
-                Url = _adamPaths.Url(f.Path.Forwardslash())
+                Url = _adamPaths.Url(f.Path.ForwardSlash())
             };
 
 
@@ -325,7 +325,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 Created = f.CreatedOn,
                 Modified = f.ModifiedOn,
                 Name = Path.GetFileNameWithoutExtension(f.Name),
-                Url = _adamPaths.Url(Path.Combine(f.Folder.Path, f.Name).Forwardslash())
+                Url = _adamPaths.Url(Path.Combine(f.Folder.Path, f.Name).ForwardSlash())
             };
             return adamFile;
         }

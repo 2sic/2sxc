@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 
 namespace ToSic.Sxc.Run
 {
@@ -6,10 +7,14 @@ namespace ToSic.Sxc.Run
     {
         //string ToAppRoot(int appId, string appFolder);
 
-        string ToAbsolute(string virtualPath);
+        string AsSeenFromTheDomainRoot(string virtualPath);
 
-        string ToAbsolute(string virtualPath, string subPath);
+        //string ToAbsolute(string virtualPath, string subPath);
 
-        string AppAsset(string virtualPath);
+        //string AppAsset(string virtualPath);
+
+        //string AppAssetsBase(ISite site, IApp app);
+        
+        // string AbsoluteToAppRootWip()
     }
 }
