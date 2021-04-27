@@ -35,8 +35,11 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// <param name="index"></param>
         /// <param name="toIndex"></param>
         [HttpPost]
-        public void Move(Guid? parent, string fields, int index, int toIndex)
-            => FieldBacked.ChangeOrder(parent, fields, index, toIndex);
+        public IActionResult Move(Guid? parent, string fields, int index, int toIndex)
+        {
+            FieldBacked.ChangeOrder(parent, fields, index, toIndex);
+            return new NoContentResult();
+        }
 
         /// <summary>
         /// Used to be Get Module/RemoveFromList
@@ -45,7 +48,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// <param name="fields"></param>
         /// <param name="index"></param>
         [HttpDelete]
-        public void Delete(Guid? parent, string fields, int index)
-            => FieldBacked.Remove(parent, fields, index);
+        public IActionResult Delete(Guid? parent, string fields, int index)
+        {
+            FieldBacked.Remove(parent, fields, index);
+            return new NoContentResult();
+        }
     }
 }
