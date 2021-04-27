@@ -8,6 +8,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Oqt.Server.Page;
+using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
@@ -20,13 +21,15 @@ namespace ToSic.Sxc.Oqt.Server
     {
         #region Constructor and DI
 
-        public SxcOqtane(OqtAssetsAndHeaders assetsAndHeaders, RazorReferenceManager debugRefMan, OqtTempInstanceContext oqtTempInstanceContext, IServiceProvider serviceProvider
+        public SxcOqtane(OqtAssetsAndHeaders assetsAndHeaders, RazorReferenceManager debugRefMan, OqtTempInstanceContext oqtTempInstanceContext,
+            IServiceProvider serviceProvider, Lazy<SiteStateInitializer> siteStateInitializerLazy
             ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
         {
             _assetsAndHeaders = assetsAndHeaders;
             _debugRefMan = debugRefMan;
             _oqtTempInstanceContext = oqtTempInstanceContext;
             _serviceProvider = serviceProvider;
+            _siteStateInitializerLazy = siteStateInitializerLazy;
             // add log to history!
             History.Add("oqt-view", Log);
         }
@@ -36,6 +39,7 @@ namespace ToSic.Sxc.Oqt.Server
         private readonly RazorReferenceManager _debugRefMan;
         private readonly OqtTempInstanceContext _oqtTempInstanceContext;
         private readonly IServiceProvider _serviceProvider;
+        private readonly Lazy<SiteStateInitializer> _siteStateInitializerLazy;
 
         #endregion
 
@@ -47,6 +51,9 @@ namespace ToSic.Sxc.Oqt.Server
         public void Prepare(Site site, Oqtane.Models.Page page, Module module)
         {
             //if (_renderDone) throw new Exception("already prepared this module");
+
+            // set SiteState.Alias early as possible
+            _siteStateInitializerLazy.Value.InitIfEmpty();
 
             Site = site;
             Page = page;
