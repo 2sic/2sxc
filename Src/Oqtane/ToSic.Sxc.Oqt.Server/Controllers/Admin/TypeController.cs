@@ -4,12 +4,19 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using Oqtane.Models;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
+using ToSic.Eav.Persistence.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Oqt.Shared.Dev;
+using ToSic.Sxc.WebApi.Assets;
+using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 {
@@ -17,7 +24,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     /// This one supplies portal-wide (or cross-portal) settings / configuration
     /// </summary>
     //[SupportedModules("2sxc,2sxc-app")]
-    //   [DnnLogExceptions]
+    //[DnnLogExceptions]
     [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
     [AutoValidateAntiforgeryToken]
 
@@ -34,15 +41,18 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     {
         private readonly Lazy<ContentTypeApi> _ctApiLazy;
         private readonly Lazy<ContentExportApi> _contentExportLazy;
+        private readonly Lazy<IServiceProvider> _serviceProvider;
         protected override string HistoryLogName => "Api.Types";
 
         public TypeController(StatefulControllerDependencies dependencies,
             Lazy<ContentTypeApi> ctApiLazy,
-            Lazy<ContentExportApi> contentExportLazy
+            Lazy<ContentExportApi> contentExportLazy,
+            Lazy<IServiceProvider> serviceProvider
             ) : base(dependencies)
         {
             _ctApiLazy = ctApiLazy;
             _contentExportLazy = contentExportLazy;
+            _serviceProvider = serviceProvider;
         }
 
         [HttpGet]
@@ -109,5 +119,34 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         [AllowAnonymous] // will do security check internally
         public HttpResponseMessage Json(int appId, string name)
             => _contentExportLazy.Value.Init(appId, Log).DownloadTypeAsJson(GetContext().User, name);
+
+        /// <summary>
+        /// Used to be POST ImportExport/ImportContent
+        /// </summary>
+        /// <remarks>
+        /// New in 2sxc 11.07
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = Oqtane.Shared.RoleNames.Admin)]
+
+        public ImportResultDto Import(int zoneId, int appId)
+        {
+            var wrapLog = Log.Call<ImportResultDto>();
+
+            PreventServerTimeout300();
+            if (HttpContext.Request.Form.Files.Count <= 0)
+                return new ImportResultDto(false, "no file uploaded", Message.MessageTypes.Error);
+
+            var files = HttpContext.Request.Form.Files;
+            var streams = new List<FileUploadDto>();
+            for (var i = 0; i < files.Count; i++)
+                streams.Add(new FileUploadDto { Name = files[i].FileName, Stream = files[i].OpenReadStream() });
+            var result = _serviceProvider.Value.Build<ImportContent>().Init(GetContext().User, Log)
+                .ImportContentType(zoneId, appId, streams, WipConstants.DefaultLanguage);
+
+            return wrapLog("ok", result);
+        }
     }
 }
