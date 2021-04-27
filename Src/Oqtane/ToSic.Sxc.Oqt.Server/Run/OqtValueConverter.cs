@@ -164,7 +164,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 var appName = pathInAdam.Substring(0, indexOfSlash);
                 var filePath = pathInAdam.Substring(indexOfSlash).TrimStart('/');
 
-                var result = $"{alias.Path}/app/{appName}/adam/{filePath}";
+                var result = $"{alias.Path}/app/{appName}/adam/{filePath}".PrefixSlash();
 
                 // optionally do extra security checks (new in 10.02)
                 if (!Features.Enabled(FeatureIds.BlockFileIdLookupIfNotInSameApp)) return result;
