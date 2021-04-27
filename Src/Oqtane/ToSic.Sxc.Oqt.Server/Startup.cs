@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Configuration;
@@ -9,7 +8,6 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using Oqtane.Infrastructure;
 using System.IO;
-using System.Threading.Tasks;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
@@ -47,8 +45,13 @@ namespace ToSic.Sxc.Oqt.Server
             // try to enable dynamic razor compiling - still WIP
             new StartUpRazorPages().ConfigureServices(services);
 
+            // TODO: STV - MAKE SURE OUR CONTROLLERS RULES ONLY APPLY TO OURS, NOT TO override rules on normal Oqtane controllers
             // enable webapi - include all controllers in the Sxc.Mvc assembly
-            services.AddControllers(options => { options.AllowEmptyInputInBodyModelBinding = true; })
+            services
+                .AddControllers(options =>
+                {
+                    options.AllowEmptyInputInBodyModelBinding = true;
+                })
                 // This is needed to preserve compatibility with previous api usage
                 .AddNewtonsoftJson(options =>
                 {

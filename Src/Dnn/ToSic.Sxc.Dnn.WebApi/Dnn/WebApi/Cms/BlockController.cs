@@ -10,6 +10,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Ui;
 using ToSic.SexyContent.WebApi;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.WebApi.Cms;
 using ToSic.Sxc.WebApi.ContentBlocks;
 using ToSic.Sxc.WebApi.InPage;
 
@@ -17,7 +18,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
     [ValidateAntiForgeryToken]
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
-    public class BlockController : SxcApiController
+    public class BlockController : SxcApiController, IBlockController<HttpResponseMessage>
     {
         protected override string HistoryLogName => "Api.Block";
 
@@ -45,9 +46,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 
         #region BlockItems
 
-        /// <summary>
-        /// used to be GET Module/AddItem
-        /// </summary>
+        /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Item([FromUri] int? index = null) => Backend.AddItem(index);
@@ -57,19 +56,12 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 
         #region App
 
-        /// <summary>
-        /// used to be GET Module/SetAppId
-        /// </summary>
-        /// <param name="appId"></param>
+        /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public new void App(int? appId) => ViewBackend.SetAppId(appId);
 
-        /// <summary>
-        /// used to be GET Module/GetSelectableApps
-        /// </summary>
-        /// <param name="apps"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<AppUiInfo> Apps(string apps = null) => ViewBackend.Apps(apps);
@@ -78,10 +70,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 
         #region Types
 
-        /// <summary>
-        /// used to be GET Module/GetSelectableContentTypes
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<ContentTypeUiInfo> ContentTypes() => CmsRuntime?.Views.GetContentTypesWithStatus();
@@ -90,21 +79,12 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 
         #region Templates
 
-        /// <summary>
-        /// used to be GET Module/GetSelectableTemplates
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<TemplateUiInfo> Templates() => ViewBackend.Templates();
 
-        /// <summary>
-        /// Used in InPage.js
-        /// used to be GET Module/SaveTemplateId
-        /// </summary>
-        /// <param name="templateId"></param>
-        /// <param name="forceCreateContentGroup"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Guid? Template(int templateId, bool forceCreateContentGroup) => ViewBackend.SaveTemplateId(templateId, forceCreateContentGroup);
@@ -112,13 +92,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         #endregion
 
 
-        /// <summary>
-        /// used to be GET Module/RenderTemplate
-        /// js changed
-        /// </summary>
-        /// <summary>
-        /// Used in InPage.js
-        /// </summary>
+        /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public HttpResponseMessage Render([FromUri] int templateId, [FromUri] string lang)
@@ -139,9 +113,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
             }
         }
 
-        /// <summary>
-        /// Used to be GET Module/Publish
-        /// </summary>
+        /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool Publish(string part, int index) => Backend.PublishPart(part, index);

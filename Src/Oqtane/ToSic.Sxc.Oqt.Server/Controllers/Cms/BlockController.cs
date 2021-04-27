@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Oqtane.Shared;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
@@ -26,7 +25,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     [ValidateAntiForgeryToken]
     [ApiController]
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
-    public class BlockController : OqtStatefulControllerBase
+    public class BlockController : OqtStatefulControllerBase, ToSic.Sxc.WebApi.Cms.IBlockController<IActionResult>
     {
         private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
         private readonly Lazy<ContentBlockBackend> _blockBackendLazy;
@@ -68,9 +67,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         private ContentBlockBackend Backend => _backend ??= _blockBackendLazy.Value.Init(Log);
         private ContentBlockBackend _backend;
 
-        /// <summary>
-        /// used to be GET Module/GenerateContentBlock
-        /// </summary>
+        /// <inheritdoc />
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public string Block(int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
@@ -85,13 +82,17 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         #endregion
 
         #region BlockItems
-
         /// <summary>
         /// used to be GET Module/AddItem
         /// </summary>
         [HttpPost]
+        //[Authorize(Policy = PolicyNames.EditModule)]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void Item(int? index = null) => Backend.AddItem(index);
+        public IActionResult Item(int? index = null)
+        {
+            Backend.AddItem(index);
+            return new NoContentResult();
+        }
 
         #endregion
 
@@ -127,10 +128,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         #region Types
 
-        /// <summary>
-        /// used to be GET Module/GetSelectableContentTypes
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<ContentTypeUiInfo> ContentTypes() => CmsRuntime?.Views.GetContentTypesWithStatus();
@@ -163,13 +161,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         #endregion
 
 
-        /// <summary>
-        /// used to be GET Module/RenderTemplate
-        /// js changed
-        /// </summary>
-        /// <summary>
-        /// Used in InPage.js
-        /// </summary>
+        /// <inheritdoc />
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IActionResult Render(int templateId, string lang)
@@ -196,9 +188,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             }
         }
 
-        /// <summary>
-        /// Used to be GET Module/Publish
-        /// </summary>
+        /// <inheritdoc />
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool Publish(string part, int index) => Backend.PublishPart(part, index);
