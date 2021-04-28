@@ -32,6 +32,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             providers.Add(new LookUpInDictionary("dummy", dummy));
 
             providers.Add(_lookUpInQueryString.Value.Init("QueryString"));
+            providers.Add(new DateTimeLookUps().Init("DateTime"));
 
             return providers;
         }
@@ -43,7 +44,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
     public class LookUpInQueryString : LookUpBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private  IQueryCollection _source;
+        private IQueryCollection _source;
 
         public LookUpInQueryString(IHttpContextAccessor httpContextAccessor)
         {
@@ -61,6 +62,22 @@ namespace ToSic.Sxc.Oqt.Server.Run
             _source ??= _httpContextAccessor?.HttpContext?.Request.Query;
             if (_source == null) return string.Empty;
             return _source.TryGetValue(key, out var result) ? result.ToString() : string.Empty;
+        }
+    }
+
+    public class DateTimeLookUps : LookUpBase
+    {
+        public DateTimeLookUps Init(string name)
+        {
+            Name = name;
+            return this;
+        }
+
+        public override string Get(string key, string format)
+        {
+            return string.Equals(key, "Now", StringComparison.InvariantCultureIgnoreCase)
+                ? DateTime.Now.ToString(format)
+                : string.Empty;
         }
     }
 }
