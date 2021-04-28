@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             var page = _pageRepository.GetPage(pid.Value);
 
-            return Utilities.NavigateUrl(alias.Path, page.Path, parameters);
+            return Oqtane.Shared.Utilities.NavigateUrl(alias.Path, page.Path, parameters);
         }
 
         private Alias GetRightAlias()
