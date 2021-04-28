@@ -3,6 +3,8 @@ using Oqtane.Shared;
 using System;
 using System.Linq;
 using Custom.Hybrid;
+using Microsoft.AspNetCore.Http;
+using Oqtane.Models;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Web;
@@ -17,11 +19,13 @@ namespace ToSic.Sxc.Oqt.Server.Run
     public class OqtLinkHelper : IOqtLinkHelper, IHasLog
     {
         public Razor12 RazorPage { get; set; }
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly Lazy<IAliasRepository> _aliasRepositoryLazy;
         private readonly IPageRepository _pageRepository;
         private readonly SiteState _siteState;
 
         public OqtLinkHelper(
+            IHttpContextAccessor httpContextAccessor,
             Lazy<IAliasRepository> aliasRepositoryLazy,
             IPageRepository pageRepository,
             SiteState siteState
@@ -30,6 +34,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             Log = new Log("OqtLinkHelper");
             // TODO: logging
 
+            _httpContextAccessor = httpContextAccessor;
             _aliasRepositoryLazy = aliasRepositoryLazy;
             _pageRepository = pageRepository;
             _siteState = siteState;
@@ -50,17 +55,12 @@ namespace ToSic.Sxc.Oqt.Server.Run
             if (requiresNamedParameters != null)
                 throw new Exception("The Link.To can only be used with named parameters. try Link.To( parameters: \"tag=daniel&sort=up\") instead.");
 
-            var siteId = RazorPage._DynCodeRoot?.CmsContext?.Site?.Id;
-            if (siteId == null)
-                throw new Exception("Error, SiteId is unknown.");
+            // It looks that SiteState.Alias have wrong alias, so we can't use it. Try to get right one for link helper.
+            var alias = GetRightAlias();
 
-            // HACK: This is workaround to get PageRepository working, because it depends on TenantResolver
+            // This is workaround to get PageRepository working, because it depends on TenantResolver
             // that is not working in this context (it works in api controllers).
-            _siteState.Alias ??= _aliasRepositoryLazy.Value.GetAliases().FirstOrDefault(a => a.SiteId == siteId);
-
-            var alias = _siteState.Alias;
-            if (alias == null)
-                throw new Exception("Error, Alias is unknown.");
+            _siteState.Alias = alias;
 
             var currentPageId = RazorPage._DynCodeRoot?.CmsContext?.Page?.Id;
 
@@ -71,6 +71,31 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var page = _pageRepository.GetPage(pid.Value);
 
             return Utilities.NavigateUrl(alias.Path, page.Path, parameters);
+        }
+
+        private Alias GetRightAlias()
+        {
+            // This httpContext is from _blazor, so we can use host, but can't use path (it is always _blazor).
+            var request = _httpContextAccessor?.HttpContext?.Request;
+            if (request == null)
+                throw new Exception("Error, HttpContext is unknown.");
+
+            var url = $"{request.Host}";
+
+            var siteId = RazorPage._DynCodeRoot?.CmsContext?.Site?.Id;
+            if (siteId == null)
+                throw new Exception("Error, SiteId is unknown.");
+
+            // Get right Alias.
+            var alias = _aliasRepositoryLazy.Value.GetAliases()
+                .OrderByDescending(a => a.Name.Length)
+                .ThenBy(a => a.Name)
+                .FirstOrDefault(a => a.SiteId == siteId && a.Name.StartsWith(url, StringComparison.InvariantCultureIgnoreCase));
+
+            if (alias == null)
+                throw new Exception("Error, Alias is unknown.");
+
+            return alias;
         }
 
         /// <inheritdoc />
