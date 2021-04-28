@@ -28,11 +28,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var dummy = new Dictionary<string, string>();
             dummy.Add("Ivo", "Ivić");
             dummy.Add("Pero","Perić");
-
             providers.Add(new LookUpInDictionary("dummy", dummy));
 
-            providers.Add(_lookUpInQueryString.Value.Init("QueryString"));
-            providers.Add(new DateTimeLookUps().Init("DateTime"));
+            providers.Add(_lookUpInQueryString.Value);
+            providers.Add(new DateTimeLookUps());
+            providers.Add(new TicksLookUps());
 
             return providers;
         }
@@ -48,13 +48,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public LookUpInQueryString(IHttpContextAccessor httpContextAccessor)
         {
+            Name = "QueryString";
             _httpContextAccessor = httpContextAccessor;
-        }
-
-        public LookUpInQueryString Init(string name)
-        {
-            Name = name;
-            return this;
         }
 
         public override string Get(string key, string format)
@@ -67,17 +62,37 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
     public class DateTimeLookUps : LookUpBase
     {
-        public DateTimeLookUps Init(string name)
+        public DateTimeLookUps()
         {
-            Name = name;
-            return this;
+            Name = "DateTime";
         }
 
         public override string Get(string key, string format)
         {
-            return string.Equals(key, "Now", StringComparison.InvariantCultureIgnoreCase)
-                ? DateTime.Now.ToString(format)
-                : string.Empty;
+            return key.ToLowerInvariant() switch
+            {
+                "now" => DateTime.Now.ToString(format),
+                _ => string.Empty
+            };
+        }
+    }
+
+    public class TicksLookUps : LookUpBase
+    {
+        public TicksLookUps()
+        {
+            Name = "Ticks";
+        }
+
+        public override string Get(string key, string format)
+        {
+            return key.ToLowerInvariant() switch
+            {
+                "now" => DateTime.Now.Ticks.ToString(format),
+                "today" => DateTime.Today.Ticks.ToString(format),
+                "ticksperday" => TimeSpan.TicksPerDay.ToString(format),
+                _ => string.Empty
+            };
         }
     }
 }
