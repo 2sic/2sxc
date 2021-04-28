@@ -6,7 +6,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Engines;
 
-namespace ToSic.Sxc.Razor.Engine
+namespace ToSic.Sxc.Razor
 {
     /// <summary>
     /// The razor engine, which compiles / runs engine templates

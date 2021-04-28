@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using ToSic.Custom;
+using Custom.Hybrid;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Mvc;
 using ToSic.Sxc.Mvc.Web;
-using ToSic.Sxc.Razor.Engine;
+using ToSic.Sxc.Razor;
 
 namespace Website.Pages.RenderPartial
 {
@@ -47,5 +47,5 @@ namespace Website.Pages.RenderPartial
 
         public string InnerRender;
     }
-    
+
 }

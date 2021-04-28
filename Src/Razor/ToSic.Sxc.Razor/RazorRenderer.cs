@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace ToSic.Sxc.Razor.Engine
+namespace ToSic.Sxc.Razor
 {
     public class RazorRenderer : IRazorRenderer
     {

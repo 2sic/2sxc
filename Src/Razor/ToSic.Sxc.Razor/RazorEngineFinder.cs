@@ -1,7 +1,7 @@
 ﻿using System;
 using ToSic.Sxc.Engines;
 
-namespace ToSic.Sxc.Razor.Engine
+namespace ToSic.Sxc.Razor
 {
     public class RazorEngineFinder : IEngineFinder
     {

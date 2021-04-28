@@ -1,4 +1,4 @@
-﻿namespace ToSic.Custom
+﻿namespace ToSic.Sxc.Razor.Razor
 {
     /// <summary>
     /// Dummy model that doesn't do anything

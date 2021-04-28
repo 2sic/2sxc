@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 
-namespace ToSic.Sxc.Razor.Engine
+namespace ToSic.Sxc.Razor
 {
     public interface IRazorCompiler
     {

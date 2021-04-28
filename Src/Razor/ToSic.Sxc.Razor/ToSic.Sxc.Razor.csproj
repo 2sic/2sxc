@@ -18,7 +18,6 @@
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
-    <ProjectReference Include="..\ToSic.Sxc.Hybrid\ToSic.Custom.csproj" />
   </ItemGroup>
 
   <ItemGroup>

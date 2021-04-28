@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Search;
 
-namespace ToSic.Sxc.Razor.Engine
+namespace ToSic.Sxc.Razor
 {
     public partial class RazorEngine
     {

@@ -5,7 +5,7 @@ using ToSic.Sxc.Engines;
 using ToSic.Sxc.Razor.Engine.DbgWip;
 using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Razor.Engine
+namespace ToSic.Sxc.Razor
 {
     // ReSharper disable once InconsistentNaming
     public static class StartupRazor
