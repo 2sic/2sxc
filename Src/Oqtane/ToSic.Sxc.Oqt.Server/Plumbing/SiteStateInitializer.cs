@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
+using System;
+using System.Linq;
 
 namespace ToSic.Sxc.Oqt.Server.Plumbing
 {
     public class SiteStateInitializer
     {
-        public SiteState SiteState { get; set; }
+        public SiteState SiteState { get; }
         public IHttpContextAccessor HttpContextAccessor { get; }
         public Lazy<IAliasRepository> AliasRepositoryLazy { get; }
 
