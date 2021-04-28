@@ -55,8 +55,8 @@ namespace ToSic.Sxc.Oqt.Server
         {
             //if (_renderDone) throw new Exception("already prepared this module");
 
-            // set SiteState.Alias early as possible
-            _siteStateInitializerLazy.Value.InitIfEmpty();
+            // commented because SiteState is already available on Client.
+            //_siteStateInitializerLazy.Value.InitIfEmpty();
 
             // HACK: STV
             if (page != null) _httpContextAccessor?.HttpContext?.Items.TryAdd("PageForLookUp", page);
