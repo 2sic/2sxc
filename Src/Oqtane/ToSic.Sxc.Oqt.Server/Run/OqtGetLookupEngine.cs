@@ -1,4 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Oqt.Shared;
@@ -9,8 +14,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtGetLookupEngine: HasLog<ILookUpEngineResolver>, ILookUpEngineResolver
     {
-        public OqtGetLookupEngine() : base($"{OqtConstants.OqtLogPrefix}.LookUp")
+        private readonly Lazy<LookUpInQueryString> _lookUpInQueryString;
+
+        public OqtGetLookupEngine(Lazy<LookUpInQueryString> lookUpInQueryString) : base($"{OqtConstants.OqtLogPrefix}.LookUp")
         {
+            _lookUpInQueryString = lookUpInQueryString;
         }
 
         public ILookUpEngine GetLookUpEngine(int instanceId/*, ILog parentLog*/)
@@ -20,11 +28,39 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var dummy = new Dictionary<string, string>();
             dummy.Add("Ivo", "Ivić");
             dummy.Add("Pero","Perić");
-            ;
+
             providers.Add(new LookUpInDictionary("dummy", dummy));
+
+            providers.Add(_lookUpInQueryString.Value.Init("QueryString"));
+
             return providers;
         }
 
 
+    }
+
+
+    public class LookUpInQueryString : LookUpBase
+    {
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private  IQueryCollection _source;
+
+        public LookUpInQueryString(IHttpContextAccessor httpContextAccessor)
+        {
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        public LookUpInQueryString Init(string name)
+        {
+            Name = name;
+            return this;
+        }
+
+        public override string Get(string key, string format)
+        {
+            _source ??= _httpContextAccessor?.HttpContext?.Request.Query;
+            if (_source == null) return string.Empty;
+            return _source.TryGetValue(key, out var result) ? result.ToString() : string.Empty;
+        }
     }
 }

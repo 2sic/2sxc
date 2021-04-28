@@ -96,6 +96,9 @@ namespace ToSic.Sxc.Oqt.Server
             // Asset Templates
             services.TryAddTransient<IAssetTemplates, OwtAssetTemplates>();
 
+            // Lookup
+            services.TryAddTransient<LookUpInQueryString>();
+
             // new in v12 - integrate KOI - experimental!
             try
             {
