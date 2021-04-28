@@ -25,7 +25,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 
     [ApiController]
 
-    [ValidateAntiForgeryToken]
     public class DialogController : OqtStatefulControllerBase
     {
         protected override string HistoryLogName => "Api.SysCnt";
