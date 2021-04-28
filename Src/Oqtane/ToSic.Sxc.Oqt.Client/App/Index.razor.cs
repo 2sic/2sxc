@@ -21,20 +21,29 @@ namespace ToSic.Sxc.Oqt.App
 
         public override List<Resource> Resources => new List<Resource>();
 
-        protected override async Task OnInitializedAsync()
-        {
-            // Subscribe to LocationChanged event.
-            NavigationManager.LocationChanged += HandleLocationChanged;
+        //protected override async Task OnInitializedAsync()
+        //{
+        //    await base.OnInitializedAsync();
 
+        //    // Subscribe to LocationChanged event.
+        //    NavigationManager.LocationChanged += HandleLocationChanged;
+
+        //    Initialize2sxcContentBlock();
+        //}
+
+        protected override Task OnParametersSetAsync()
+        {
             Initialize2sxcContentBlock();
+
+            return base.OnParametersSetAsync();
         }
 
         /// <summary>
         /// prepare the html / headers for later rendering
         /// </summary>
-        private void Initialize2sxcContentBlock() => SxcEngine.Prepare(PageState.Site, PageState.Page, ModuleState);
+        private void Initialize2sxcContentBlock() => SxcEngine.Prepare(PageState.Alias, PageState.Site, PageState.Page, ModuleState);
 
-        public void Dispose() => NavigationManager.LocationChanged -= HandleLocationChanged;
+        //public void Dispose() => NavigationManager.LocationChanged -= HandleLocationChanged;
 
 
         /// <summary>

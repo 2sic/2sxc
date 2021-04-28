@@ -20,12 +20,15 @@ namespace ToSic.Sxc.Oqt.Server
 {
     public class SxcOqtane: HasLog, ISxcOqtane
     {
+        public SiteState SiteState { get; }
+
         #region Constructor and DI
 
         public SxcOqtane(OqtAssetsAndHeaders assetsAndHeaders, RazorReferenceManager debugRefMan, OqtTempInstanceContext oqtTempInstanceContext,
-            IServiceProvider serviceProvider, Lazy<SiteStateInitializer> siteStateInitializerLazy, IHttpContextAccessor httpContextAccessor
+            IServiceProvider serviceProvider, Lazy<SiteStateInitializer> siteStateInitializerLazy, IHttpContextAccessor httpContextAccessor, SiteState siteState
             ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
         {
+            SiteState = siteState;
             _assetsAndHeaders = assetsAndHeaders;
             _debugRefMan = debugRefMan;
             _oqtTempInstanceContext = oqtTempInstanceContext;
@@ -51,18 +54,15 @@ namespace ToSic.Sxc.Oqt.Server
         /// <summary>
         /// Prepare must always be the first thing to be called - to ensure that afterwards both headers and html are known.
         /// </summary>
-        public void Prepare(Site site, Oqtane.Models.Page page, Module module)
+        public void Prepare(Alias alias, Site site, Oqtane.Models.Page page, Module module)
         {
             //if (_renderDone) throw new Exception("already prepared this module");
 
             // commented because SiteState is already available on Client.
             //_siteStateInitializerLazy.Value.InitIfEmpty();
+            SiteState.Alias = alias;
 
-            // HACK: STV
-            if (page != null) _httpContextAccessor?.HttpContext?.Items.TryAdd("PageForLookUp", page);
-            // HACK: STV and wrong!!!!!
-            if (module != null) _httpContextAccessor?.HttpContext?.Items.TryAdd("ModuleForLookUp", module);
-
+            Alias = alias;
             Site = site;
             Page = page;
             Module = module;
@@ -79,8 +79,15 @@ namespace ToSic.Sxc.Oqt.Server
                 Content = a.Content,
             }).ToList();
             _renderDone = true;
+
+
+            // HACKS: STV POC - indirectly share information
+            if (alias != null) _httpContextAccessor?.HttpContext?.Items.TryAdd("AliasFor2sxc", alias);
+            if (page != null) _httpContextAccessor?.HttpContext?.Items.TryAdd("PageForLookUp", page);
+            if (module != null) _httpContextAccessor?.HttpContext?.Items.TryAdd("ModuleForLookUp", module);
         }
 
+        internal Alias Alias;
         internal Site Site;
         internal Oqtane.Models.Page Page;
         internal Module Module;
