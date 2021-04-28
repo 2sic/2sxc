@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+﻿using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
+using Oqtane.Repository;
+using Oqtane.Shared;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
+using ToSic.Sxc.Oqt.Server.Plumbing;
+using ToSic.Sxc.Oqt.Server.Repository;
 using ToSic.Sxc.Oqt.Shared;
+using Log = ToSic.Eav.Logging.Simple.Log;
 
 // TODO: #Oqtane - must provide additional sources like Context (http) etc.
 
@@ -14,39 +18,49 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtGetLookupEngine: HasLog<ILookUpEngineResolver>, ILookUpEngineResolver
     {
-        private readonly Lazy<LookUpInQueryString> _lookUpInQueryString;
+        private readonly Lazy<QueryStringLookUp> _queryStringLookUp;
+        private readonly Lazy<SiteLookUp> _siteLookUp;
+        private readonly Lazy<PageLookUp> _pageLookUp;
+        private readonly Lazy<ModuleLookUp> _moduleLookUp;
+        private readonly Lazy<UserLookUp> _userLookUp;
 
-        public OqtGetLookupEngine(Lazy<LookUpInQueryString> lookUpInQueryString) : base($"{OqtConstants.OqtLogPrefix}.LookUp")
+        public OqtGetLookupEngine(
+            Lazy<QueryStringLookUp> queryStringLookUp,
+            Lazy<SiteLookUp> siteLookUp,
+            Lazy<PageLookUp> pageLookUp,
+            Lazy<ModuleLookUp> moduleLookUp,
+            Lazy<UserLookUp> userLookUp) : base($"{OqtConstants.OqtLogPrefix}.LookUp")
         {
-            _lookUpInQueryString = lookUpInQueryString;
+            _queryStringLookUp = queryStringLookUp;
+            _siteLookUp = siteLookUp;
+            _pageLookUp = pageLookUp;
+            _moduleLookUp = moduleLookUp;
+            _userLookUp = userLookUp;
         }
 
         public ILookUpEngine GetLookUpEngine(int instanceId/*, ILog parentLog*/)
         {
             var providers = new LookUpEngine(Log);
 
-            var dummy = new Dictionary<string, string>();
-            dummy.Add("Ivo", "Ivić");
-            dummy.Add("Pero","Perić");
-            providers.Add(new LookUpInDictionary("dummy", dummy));
+            providers.Add(_queryStringLookUp.Value);
+            providers.Add(new DateTimeLookUp());
+            providers.Add(new TicksLookUp());
 
-            providers.Add(_lookUpInQueryString.Value);
-            providers.Add(new DateTimeLookUps());
-            providers.Add(new TicksLookUps());
+            providers.Add(_siteLookUp.Value);
+            providers.Add(_pageLookUp.Value);
+            providers.Add(_moduleLookUp.Value);
+            providers.Add(_userLookUp.Value);
 
             return providers;
         }
-
-
     }
 
-
-    public class LookUpInQueryString : LookUpBase
+    public class QueryStringLookUp : LookUpBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private IQueryCollection _source;
 
-        public LookUpInQueryString(IHttpContextAccessor httpContextAccessor)
+        public QueryStringLookUp(IHttpContextAccessor httpContextAccessor)
         {
             Name = "QueryString";
             _httpContextAccessor = httpContextAccessor;
@@ -60,9 +74,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
         }
     }
 
-    public class DateTimeLookUps : LookUpBase
+    public class DateTimeLookUp : LookUpBase
     {
-        public DateTimeLookUps()
+        public DateTimeLookUp()
         {
             Name = "DateTime";
         }
@@ -77,9 +91,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
         }
     }
 
-    public class TicksLookUps : LookUpBase
+    public class TicksLookUp : LookUpBase
     {
-        public TicksLookUps()
+        public TicksLookUp()
         {
             Name = "Ticks";
         }
@@ -94,5 +108,144 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 _ => string.Empty
             };
         }
+    }
+
+    public abstract class ReflectionLookUpBase : LookUpBase, IHasLog
+    {
+        protected object Source { get; set; }
+        private readonly BindingFlags _bindingFlags;
+
+        protected ReflectionLookUpBase(BindingFlags bindingFlags = BindingFlags.Instance)
+        {
+            Log ??= new Log($"{OqtConstants.OqtLogPrefix}.{Name}LookUp");
+            _bindingFlags = bindingFlags;
+        }
+
+        public ReflectionLookUpBase Init(ILog parent)
+        {
+            Log.LinkTo(parent);
+            return this;
+        }
+
+        public ILog Log { get; }
+
+        [CanBeNull]
+        public abstract object GetSource();
+
+        public override string Get(string key, string format)
+        {
+            Source ??= GetSource();
+            return Source == null ? string.Empty : GetValue(key, format);
+        }
+
+        private string GetValue(string key, string format)
+        {
+            try
+            {
+                var type = Source.GetType();
+                var propertyInfo = type.GetProperty(key, BindingFlags.Public | BindingFlags.IgnoreCase | _bindingFlags);
+                return propertyInfo != null ? string.Format($"{propertyInfo.GetValue(Source)}", format) : string.Empty;
+            }
+            catch (Exception e)
+            {
+                // TODO: WIP - make better exception handling
+                return $"Error getting value for key:{key}. {e.Message}";
+            }
+        }
+    }
+
+    public class SiteLookUp : ReflectionLookUpBase
+    {
+        public SiteState SiteState { get; }
+        private readonly Lazy<SiteStateInitializer> _siteStateInitializer;
+        private readonly Lazy<SiteRepository> _siteRepository;
+
+        public SiteLookUp(Lazy<SiteStateInitializer> siteStateInitializer, SiteState siteState, Lazy<SiteRepository> siteRepository)
+        {
+            Name = "Site";
+            SiteState = siteState;
+            _siteStateInitializer = siteStateInitializer;
+            _siteRepository = siteRepository;
+        }
+
+        public override object GetSource()
+        {
+            if (!_siteStateInitializer.Value.InitIfEmpty()) return string.Empty;
+            var site = _siteRepository.Value.GetSite(SiteState.Alias.SiteId);
+            //var oqtSite = _serviceProvider.Build<OqtSite>().Init(site);
+
+            return site;
+        }
+    }
+
+    public class PageLookUp : ReflectionLookUpBase
+    {
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        //private readonly IServiceProvider _serviceProvider;
+        //private HttpRequest _GetRequest() => _httpContextAccessor.HttpContext.Request;
+        private IDictionary<object, object?> _items;
+
+        public PageLookUp(IHttpContextAccessor httpContextAccessor/*, IServiceProvider serviceProvider*/)
+        {
+            Name = "Page";
+
+            _httpContextAccessor = httpContextAccessor;
+            //_serviceProvider = serviceProvider;
+        }
+
+        public override object GetSource()
+        {
+            //var oqtState = new OqtState(_GetRequest, _serviceProvider, Log);
+            //var ctx = oqtState.GetContext();
+            //return ctx.Page;
+
+            // HACK: WIP
+            _items ??= _httpContextAccessor?.HttpContext.Items;
+            if (_items == null) return null;
+
+            return !_items.TryGetValue(Name + "ForLookUp", out var source) ? null : source;
+        }
+    }
+
+    public class ModuleLookUp : ReflectionLookUpBase
+    {
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        //private readonly IServiceProvider _serviceProvider;
+        //private HttpRequest _GetRequest() => _httpContextAccessor.HttpContext.Request;
+        private IDictionary<object, object?> _items;
+
+        public ModuleLookUp(IHttpContextAccessor httpContextAccessor/*, IServiceProvider serviceProvider*/)
+        {
+            Name = "Module";
+
+            _httpContextAccessor = httpContextAccessor;
+            //_serviceProvider = serviceProvider;
+        }
+
+        public override object GetSource() {
+            //var oqtState = new OqtState(_GetRequest, _serviceProvider, Log);
+            //var ctx = oqtState.GetContext();
+            //var module = (OqtModule)ctx.Module;
+            //return module;
+
+            // HACK: WIP
+            _items ??= _httpContextAccessor?.HttpContext.Items;
+            if (_items == null) return null;
+
+            return !_items.TryGetValue(Name + "ForLookUp", out var source) ? null : source;
+        }
+    }
+
+    public class UserLookUp : ReflectionLookUpBase
+    {
+        private readonly Lazy<IUserResolver> _userResolver;
+
+        public UserLookUp(Lazy<IUserResolver> userResolver) : base(BindingFlags.Instance)
+        {
+            Name = "User";
+            _userResolver = userResolver;
+        }
+
+        public override object GetSource() => _userResolver.Value.GetUser();
     }
 }

@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Http;
 using Oqtane.Models;
 using Oqtane.Shared;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server
         #region Constructor and DI
 
         public SxcOqtane(OqtAssetsAndHeaders assetsAndHeaders, RazorReferenceManager debugRefMan, OqtTempInstanceContext oqtTempInstanceContext,
-            IServiceProvider serviceProvider, Lazy<SiteStateInitializer> siteStateInitializerLazy
+            IServiceProvider serviceProvider, Lazy<SiteStateInitializer> siteStateInitializerLazy, IHttpContextAccessor httpContextAccessor
             ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
         {
             _assetsAndHeaders = assetsAndHeaders;
@@ -30,6 +31,7 @@ namespace ToSic.Sxc.Oqt.Server
             _oqtTempInstanceContext = oqtTempInstanceContext;
             _serviceProvider = serviceProvider;
             _siteStateInitializerLazy = siteStateInitializerLazy;
+            _httpContextAccessor = httpContextAccessor;
             // add log to history!
             History.Add("oqt-view", Log);
         }
@@ -40,6 +42,7 @@ namespace ToSic.Sxc.Oqt.Server
         private readonly OqtTempInstanceContext _oqtTempInstanceContext;
         private readonly IServiceProvider _serviceProvider;
         private readonly Lazy<SiteStateInitializer> _siteStateInitializerLazy;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         #endregion
 
@@ -54,6 +57,11 @@ namespace ToSic.Sxc.Oqt.Server
 
             // set SiteState.Alias early as possible
             _siteStateInitializerLazy.Value.InitIfEmpty();
+
+            // HACK: STV
+            if (page != null) _httpContextAccessor?.HttpContext?.Items.TryAdd("PageForLookUp", page);
+            // HACK: STV and wrong!!!!!
+            if (module != null) _httpContextAccessor?.HttpContext?.Items.TryAdd("ModuleForLookUp", module);
 
             Site = site;
             Page = page;
