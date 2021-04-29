@@ -24,6 +24,7 @@ namespace ToSic.Sxc.Oqt.App
 
         private string RenderedUri { get; set; }
         private string RenderedPage { get; set; }
+        private bool NewDataArrived { get; set; }
 
 
         public override List<Resource> Resources => new List<Resource>();
@@ -50,6 +51,7 @@ namespace ToSic.Sxc.Oqt.App
                 else
                     RenderedPage = NavigationManager.Uri;
                 await Initialize2sxcContentBlock();
+                NewDataArrived = true;
             }
 
             await base.OnParametersSetAsync();
@@ -89,8 +91,11 @@ namespace ToSic.Sxc.Oqt.App
             {
                 await base.OnAfterRenderAsync(firstRender);
 
-                if (PageState.Runtime == Oqtane.Shared.Runtime.Server && SxcOqtaneDto != null/* && 1 == 0*/)
+                // 2sxc part should be executed only if new 2sxc data arrived from server (ounce per view)
+                if (NewDataArrived && PageState.Runtime == Oqtane.Shared.Runtime.Server && SxcOqtaneDto != null/* && 1 == 0*/)
                 {
+                    NewDataArrived = false;
+
                     var interop = new Interop(JSRuntime);
 
                     #region 2sxc Standard Assets and Header
