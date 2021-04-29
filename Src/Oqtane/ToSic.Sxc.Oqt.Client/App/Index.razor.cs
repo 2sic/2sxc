@@ -1,4 +1,5 @@
-﻿using Oqtane.Models;
+﻿using System;
+using Oqtane.Models;
 using Oqtane.UI;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,10 @@ namespace ToSic.Sxc.Oqt.App
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
+        private string RenderedUri { get; set; }
+        private string RenderedPage { get; set; }
+
+
         public override List<Resource> Resources => new List<Resource>();
 
         public SxcOqtaneDto SxcOqtaneDto { get; set; }
@@ -31,13 +36,21 @@ namespace ToSic.Sxc.Oqt.App
 
         //    // Subscribe to LocationChanged event.
         //    NavigationManager.LocationChanged += HandleLocationChanged;
-
-        //    await Initialize2sxcContentBlock();
         //}
 
         protected override async Task OnParametersSetAsync()
         {
-            await Initialize2sxcContentBlock();
+
+            // Call 2sxc engine only when is necesary to render control.
+            if (string.IsNullOrEmpty(RenderedUri) || (!NavigationManager.Uri.Equals(RenderedUri, StringComparison.InvariantCultureIgnoreCase) && NavigationManager.Uri.StartsWith(RenderedPage, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                RenderedUri = NavigationManager.Uri;
+                if (NavigationManager.Uri.IndexOf("?") > -1)
+                    RenderedPage = NavigationManager.Uri.Substring(0, NavigationManager.Uri.IndexOf("?"));
+                else
+                    RenderedPage = NavigationManager.Uri;
+                await Initialize2sxcContentBlock();
+            }
 
             await base.OnParametersSetAsync();
         }
@@ -65,7 +78,10 @@ namespace ToSic.Sxc.Oqt.App
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        //private void HandleLocationChanged(object sender, LocationChangedEventArgs args) => Initialize2sxcContentBlock(); //.RunSynchronously();
+        //private void HandleLocationChanged(object sender, LocationChangedEventArgs args)
+        //{
+        //    var log = $"{sender} {args}";
+        //} //Initialize2sxcContentBlock(); //.RunSynchronously();
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
