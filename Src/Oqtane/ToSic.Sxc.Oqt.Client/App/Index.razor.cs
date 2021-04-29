@@ -23,36 +23,36 @@ namespace ToSic.Sxc.Oqt.App
 
         public override List<Resource> Resources => new List<Resource>();
 
-        public SxcOqtaneDto SxcEngine { get; set; }
+        public SxcOqtaneDto SxcOqtaneDto { get; set; }
 
-        //protected override void OnInitialized()
-        //{
-        //    base.OnInitialized();
-
-        //    // Subscribe to LocationChanged event.
-        //    NavigationManager.LocationChanged += HandleLocationChanged;
-
-        //    Initialize2sxcContentBlock();
-        //}
-
-        protected override void OnParametersSet()
+        protected override async Task OnInitializedAsync()
         {
-            Initialize2sxcContentBlock();
+            base.OnInitializedAsync();
 
-            //SxcEngine = SxcOqtaneService.Prepare(PageState.Alias.AliasId, PageState.Site.SiteId, PageState.Page.PageId, ModuleState.ModuleId);
+            // Subscribe to LocationChanged event.
+            NavigationManager.LocationChanged += HandleLocationChanged;
 
-            base.OnParametersSet();
+            await Initialize2sxcContentBlock();
         }
+
+        //protected override async Task OnParametersSetAsync()
+        //{
+        //    await Initialize2sxcContentBlock();
+
+        //    //SxcOqtaneDto = SxcOqtaneService.Prepare(PageState.Alias.AliasId, PageState.Site.SiteId, PageState.Page.PageId, ModuleState.ModuleId);
+
+        //    await base.OnParametersSetAsync();
+        //}
 
         /// <summary>
         /// prepare the html / headers for later rendering
         /// </summary>
-        private void Initialize2sxcContentBlock()
+        private async Task Initialize2sxcContentBlock()
         {
-            SxcEngine = SxcOqtaneService.Prepare(PageState.Alias.AliasId, PageState.Site.SiteId, PageState.Page.PageId, ModuleState.ModuleId);
+            SxcOqtaneDto = await SxcOqtaneService.PrepareAsync(PageState.Alias.AliasId, PageState.Site.SiteId, PageState.Page.PageId, ModuleState.ModuleId);
         }
 
-        //public void Dispose() => NavigationManager.LocationChanged -= HandleLocationChanged;
+        public void Dispose() => NavigationManager.LocationChanged -= HandleLocationChanged;
 
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Oqt.App
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        //private void HandleLocationChanged(object sender, LocationChangedEventArgs args) => Initialize2sxcContentBlock();
+        private void HandleLocationChanged(object sender, LocationChangedEventArgs args) => Initialize2sxcContentBlock();
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -69,24 +69,24 @@ namespace ToSic.Sxc.Oqt.App
             {
                 await base.OnAfterRenderAsync(firstRender);
 
-                if (PageState.Runtime == Oqtane.Shared.Runtime.Server && SxcEngine != null)
+                if (PageState.Runtime == Oqtane.Shared.Runtime.Server && SxcOqtaneDto != null/* && 1 == 0*/)
                 {
                     var interop = new Interop(JSRuntime);
 
                     #region 2sxc Standard Assets and Header
 
                     // Add Context-Meta first, because it should be available when $2sxc loads
-                    var aAndH = SxcEngine.AssetsAndHeaders;
-                    if (aAndH.AddContextMeta)
-                        await interop.IncludeMeta("sxc-tmp-context-id", "name", aAndH.ContextMetaName, aAndH.ContextMetaContents(), "id");
+
+                    if (SxcOqtaneDto.AddContextMeta)
+                        await interop.IncludeMeta("sxc-tmp-context-id", "name", SxcOqtaneDto.ContextMetaName, SxcOqtaneDto.ContextMetaContents, "id");
 
                     // Lets load all 2sxc js dependencies (js / styles)
                     // Not done the official Oqtane way, because that asks for the scripts before
                     // the razor component reported what it needs
-                    foreach (var resource in aAndH.Scripts())
+                    foreach (var resource in SxcOqtaneDto.Scripts)
                         await interop.IncludeScript("", resource, "", "", "", "head", "");
 
-                    foreach (var style in aAndH.Styles())
+                    foreach (var style in SxcOqtaneDto.Styles)
                         await interop.IncludeLink("", "stylesheet", style, "text/css", "", "", "");
 
                     #endregion
@@ -94,7 +94,7 @@ namespace ToSic.Sxc.Oqt.App
                     #region External resources requested by the razor template
 
                     // External resources = independent files (so not inline JS in the template)
-                    var externalResources = SxcEngine.Resources.Where(r => r.IsExternal).ToArray();
+                    var externalResources = SxcOqtaneDto.Resources.Where(r => r.IsExternal).ToArray();
 
                     // 1. Style Sheets, ideally before JS
                     await interop.IncludeLinks(externalResources
@@ -111,7 +111,7 @@ namespace ToSic.Sxc.Oqt.App
                         .ToArray());
 
                     // 3. Inline JS code which was extracted from the template
-                    var inlineResources = SxcEngine.Resources.Where(r => !r.IsExternal).ToArray();
+                    var inlineResources = SxcOqtaneDto.Resources.Where(r => !r.IsExternal).ToArray();
                     foreach (var inline in inlineResources)
                         await interop.IncludeScript("", "", "", "", inline.Content, "body", "");
 

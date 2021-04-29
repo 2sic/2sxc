@@ -65,7 +65,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             module.ModuleDefinition = moduleDefinitions.Find(item => item.ModuleDefinitionName == module.ModuleDefinitionName);
             module.Settings = _settings.Value.GetSettings(EntityNames.Module, moduleId).ToDictionary(setting => setting.SettingName, setting => setting.SettingValue);
 
-            return _sxcOqtane.Value.Prepare(alias, site, page, module);
+            var rez = _sxcOqtane.Value.Prepare(alias, site, page, module);
+
+            // HACK: TODO...
+            rez.Resources = null;
+
+            return rez;
         }
     }
 }

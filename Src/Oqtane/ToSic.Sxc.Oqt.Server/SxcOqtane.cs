@@ -18,7 +18,7 @@ using ToSic.Sxc.Razor.Engine.DbgWip;
 
 namespace ToSic.Sxc.Oqt.Server
 {
-    public class SxcOqtane: HasLog, ISxcOqtane
+    public class SxcOqtane : HasLog, ISxcOqtane
     {
         public SiteState SiteState { get; }
 
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Oqt.Server
             Block = GetBlock();
 
             _assetsAndHeaders.Init(this);
-            GeneratedHtml = (MarkupString) Block.BlockBuilder.Render();
+            GeneratedHtml = /*(MarkupString)*/ Block.BlockBuilder.Render() ;
             Resources = Block.BlockBuilder.Assets.Select(a => new SxcResource
             {
                 ResourceType = a.IsJs ? ResourceType.Script : ResourceType.Stylesheet,
@@ -87,9 +87,13 @@ namespace ToSic.Sxc.Oqt.Server
 
             return new SxcOqtaneDto
             {
-                AssetsAndHeaders = AssetsAndHeaders,
                 GeneratedHtml = GeneratedHtml,
                 Resources = Resources,
+                AddContextMeta = AssetsAndHeaders.AddContextMeta,
+                ContextMetaName = AssetsAndHeaders.ContextMetaName,
+                ContextMetaContents = AssetsAndHeaders.ContextMetaContents(),
+                Scripts = AssetsAndHeaders.Scripts().ToList(),
+                Styles = AssetsAndHeaders.Styles().ToList(),
             };
         }
 
@@ -100,7 +104,7 @@ namespace ToSic.Sxc.Oqt.Server
         internal IBlock Block;
 
         private bool _renderDone;
-        private MarkupString GeneratedHtml { get; set; }
+        private string GeneratedHtml { get; set; }
 
         private List<SxcResource> Resources { get; set; }
 
