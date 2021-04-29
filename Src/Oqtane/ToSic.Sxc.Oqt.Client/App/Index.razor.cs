@@ -5,10 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.AspNetCore.WebUtilities;
 using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Client.Services;
 using ToSic.Sxc.Oqt.Shared.Models;
-using ToSic.Sxc.Oqt.Shared.Run;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Oqt.App
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Oqt.App
 
         protected override async Task OnInitializedAsync()
         {
-            base.OnInitializedAsync();
+            await base.OnInitializedAsync();
 
             // Subscribe to LocationChanged event.
             NavigationManager.LocationChanged += HandleLocationChanged;
@@ -49,7 +49,13 @@ namespace ToSic.Sxc.Oqt.App
         /// </summary>
         private async Task Initialize2sxcContentBlock()
         {
-            SxcOqtaneDto = await SxcOqtaneService.PrepareAsync(PageState.Alias.AliasId, PageState.Site.SiteId, PageState.Page.PageId, ModuleState.ModuleId);
+            var urlQuery = NavigationManager.ToAbsoluteUri(NavigationManager.Uri).Query;
+            SxcOqtaneDto = await SxcOqtaneService.PrepareAsync(
+                PageState.Alias.AliasId, 
+                PageState.Site.SiteId, 
+                PageState.Page.PageId, 
+                ModuleState.ModuleId,
+                QueryHelpers.ParseQuery(urlQuery));
         }
 
         public void Dispose() => NavigationManager.LocationChanged -= HandleLocationChanged;
@@ -61,7 +67,7 @@ namespace ToSic.Sxc.Oqt.App
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void HandleLocationChanged(object sender, LocationChangedEventArgs args) => Initialize2sxcContentBlock();
+        private void HandleLocationChanged(object sender, LocationChangedEventArgs args) => Initialize2sxcContentBlock(); //.RunSynchronously();
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {

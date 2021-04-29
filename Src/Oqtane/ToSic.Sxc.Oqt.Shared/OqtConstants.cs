@@ -34,5 +34,8 @@
         // Logging constants
         public const string OqtLogPrefix = "Oqt";
         public const string LogName = "Oqt";
+        
+        // Special Oqtane constants missing in Oqtane
+        public const string EntityIdParam = "entityid";
     }
 }

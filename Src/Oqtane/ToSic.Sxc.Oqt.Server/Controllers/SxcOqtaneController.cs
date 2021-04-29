@@ -1,17 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Oqtane.Enums;
 using Oqtane.Infrastructure;
-using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Server.Repository;
+using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Oqt.Shared.Run;
 
@@ -47,15 +42,15 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             _moduleDefinitions = moduleDefinitions;
             _settings = settings;
 
-            if (accessor.HttpContext.Request.Query.ContainsKey("entityid"))
+            if (accessor.HttpContext.Request.Query.ContainsKey(OqtConstants.EntityIdParam))
             {
-                _entityId = int.Parse(accessor.HttpContext.Request.Query["entityid"]);
+                _entityId = int.Parse(accessor.HttpContext.Request.Query[OqtConstants.EntityIdParam]);
             }
         }
 
         [HttpGet("Prepare")]
         //[Authorize(Policy = "ViewModule")]
-        public SxcOqtaneDto Prepare([FromQuery] int aliasId, [FromQuery] int siteId, [FromQuery] int pageId, [FromQuery] int moduleId)
+        public SxcOqtaneDto Prepare([FromQuery] int aliasId, [FromQuery] int siteId, [FromQuery] int pageId, [FromQuery] int moduleId, [FromQuery] string originalParameters)
         {
             var alias = _aliases.Value.GetAlias(aliasId);
             var site = _sites.Value.GetSite(siteId);

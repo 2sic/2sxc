@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Oqt.App
             ReleaseVersions = "0.0.1,11.90.0",
             Dependencies = "ToSic.Sxc.Oqtane.Shared",
             Categories = "Common",
-            Runtimes = "Server",
+            //Runtimes = "Server",
         };
     }
     /*

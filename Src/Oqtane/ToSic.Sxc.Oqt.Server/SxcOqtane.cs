@@ -15,6 +15,7 @@ using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Oqt.Shared.Run;
 using ToSic.Sxc.Razor.Engine.DbgWip;
+using ToSic.Sxc.Web.Parameters;
 
 namespace ToSic.Sxc.Oqt.Server
 {
@@ -114,8 +115,10 @@ namespace ToSic.Sxc.Oqt.Server
 
         private IBlock GetBlock()
         {
-            var context = _oqtTempInstanceContext.CreateContext(Page.PageId, Module, Log);
-            var block = _serviceProvider.Build<BlockFromModule>().Init(context, Log);
+            // note: this feels like duplicate code to OqtState.cs - must find out why and how to streamline
+            var ctx = _oqtTempInstanceContext.CreateContext(Page.PageId, Module, Log);
+            ctx.Page.Parameters = OriginalParameters.GetOverrideParams(ctx.Page.Parameters);
+            var block = _serviceProvider.Build<BlockFromModule>().Init(ctx, Log);
             return block;
         }
 
