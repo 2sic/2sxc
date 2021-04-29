@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Oqt.Server
             History.Add("oqt-view", Log);
         }
 
-        public IOqtAssetsAndHeader AssetsAndHeaders => _assetsAndHeaders;
+        private IOqtAssetsAndHeader AssetsAndHeaders => _assetsAndHeaders;
         private readonly OqtAssetsAndHeaders _assetsAndHeaders;
         private readonly RazorReferenceManager _debugRefMan;
         private readonly OqtTempInstanceContext _oqtTempInstanceContext;
@@ -54,12 +54,16 @@ namespace ToSic.Sxc.Oqt.Server
         /// <summary>
         /// Prepare must always be the first thing to be called - to ensure that afterwards both headers and html are known.
         /// </summary>
-        public void Prepare(Alias alias, Site site, Oqtane.Models.Page page, Module module)
+        public SxcOqtaneDto Prepare(Alias alias, Site site, Oqtane.Models.Page page, Module module)
         {
             //if (_renderDone) throw new Exception("already prepared this module");
 
+            // HACKS: STV POC - indirectly share information
+            if (alias != null) _httpContextAccessor?.HttpContext?.Items.TryAdd("AliasFor2sxc", alias);
+            if (page != null) _httpContextAccessor?.HttpContext?.Items.TryAdd("PageForLookUp", page);
+            if (module != null) _httpContextAccessor?.HttpContext?.Items.TryAdd("ModuleForLookUp", module);
+
             // commented because SiteState is already available on Client.
-            //_siteStateInitializerLazy.Value.InitIfEmpty();
             SiteState.Alias = alias;
 
             Alias = alias;
@@ -78,13 +82,15 @@ namespace ToSic.Sxc.Oqt.Server
                 IsExternal = a.IsExternal,
                 Content = a.Content,
             }).ToList();
+
             _renderDone = true;
 
-
-            // HACKS: STV POC - indirectly share information
-            if (alias != null) _httpContextAccessor?.HttpContext?.Items.TryAdd("AliasFor2sxc", alias);
-            if (page != null) _httpContextAccessor?.HttpContext?.Items.TryAdd("PageForLookUp", page);
-            if (module != null) _httpContextAccessor?.HttpContext?.Items.TryAdd("ModuleForLookUp", module);
+            return new SxcOqtaneDto
+            {
+                AssetsAndHeaders = AssetsAndHeaders,
+                GeneratedHtml = GeneratedHtml,
+                Resources = Resources,
+            };
         }
 
         internal Alias Alias;
@@ -94,9 +100,9 @@ namespace ToSic.Sxc.Oqt.Server
         internal IBlock Block;
 
         private bool _renderDone;
-        public MarkupString GeneratedHtml { get; private set; }
+        private MarkupString GeneratedHtml { get; set; }
 
-        public List<SxcResource> Resources { get; private set; }
+        private List<SxcResource> Resources { get; set; }
 
         #endregion
 

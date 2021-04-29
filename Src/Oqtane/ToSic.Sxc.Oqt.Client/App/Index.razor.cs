@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Oqtane.Shared;
+using ToSic.Sxc.Oqt.Client.Services;
+using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Oqt.Shared.Run;
 
 // ReSharper disable once CheckNamespace
@@ -14,16 +16,18 @@ namespace ToSic.Sxc.Oqt.App
     public partial class Index
     {
         [Inject]
-        public ISxcOqtane SxcEngine { get; set; }
+        public ISxcOqtaneService SxcOqtaneService { get; set; }
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
         public override List<Resource> Resources => new List<Resource>();
 
-        //protected override async Task OnInitializedAsync()
+        public SxcOqtaneDto SxcEngine { get; set; }
+
+        //protected override void OnInitialized()
         //{
-        //    await base.OnInitializedAsync();
+        //    base.OnInitialized();
 
         //    // Subscribe to LocationChanged event.
         //    NavigationManager.LocationChanged += HandleLocationChanged;
@@ -31,17 +35,22 @@ namespace ToSic.Sxc.Oqt.App
         //    Initialize2sxcContentBlock();
         //}
 
-        protected override Task OnParametersSetAsync()
+        protected override void OnParametersSet()
         {
             Initialize2sxcContentBlock();
 
-            return base.OnParametersSetAsync();
+            //SxcEngine = SxcOqtaneService.Prepare(PageState.Alias.AliasId, PageState.Site.SiteId, PageState.Page.PageId, ModuleState.ModuleId);
+
+            base.OnParametersSet();
         }
 
         /// <summary>
         /// prepare the html / headers for later rendering
         /// </summary>
-        private void Initialize2sxcContentBlock() => SxcEngine.Prepare(PageState.Alias, PageState.Site, PageState.Page, ModuleState);
+        private void Initialize2sxcContentBlock()
+        {
+            SxcEngine = SxcOqtaneService.Prepare(PageState.Alias.AliasId, PageState.Site.SiteId, PageState.Page.PageId, ModuleState.ModuleId);
+        }
 
         //public void Dispose() => NavigationManager.LocationChanged -= HandleLocationChanged;
 
@@ -52,7 +61,7 @@ namespace ToSic.Sxc.Oqt.App
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void HandleLocationChanged(object sender, LocationChangedEventArgs args) => Initialize2sxcContentBlock();
+        //private void HandleLocationChanged(object sender, LocationChangedEventArgs args) => Initialize2sxcContentBlock();
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -60,7 +69,7 @@ namespace ToSic.Sxc.Oqt.App
             {
                 await base.OnAfterRenderAsync(firstRender);
 
-                if (PageState.Runtime == Oqtane.Shared.Runtime.Server)
+                if (PageState.Runtime == Oqtane.Shared.Runtime.Server && SxcEngine != null)
                 {
                     var interop = new Interop(JSRuntime);
 
