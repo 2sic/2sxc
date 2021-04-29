@@ -75,20 +75,21 @@ namespace ToSic.Sxc.Oqt.Server
             Block = GetBlock();
 
             _assetsAndHeaders.Init(this);
-            GeneratedHtml = /*(MarkupString)*/ Block.BlockBuilder.Render() ;
+            var generatedHtml = Block.BlockBuilder.Render() ;
             Resources = Block.BlockBuilder.Assets.Select(a => new SxcResource
             {
                 ResourceType = a.IsJs ? ResourceType.Script : ResourceType.Stylesheet,
                 Url = a.Url,
                 IsExternal = a.IsExternal,
                 Content = a.Content,
+                UniqueId = a.Id
             }).ToList();
 
-            _renderDone = true;
+            //_renderDone = true;
 
             return new SxcOqtaneDto
             {
-                GeneratedHtml = GeneratedHtml,
+                GeneratedHtml = generatedHtml,
                 Resources = Resources,
                 AddContextMeta = AssetsAndHeaders.AddContextMeta,
                 ContextMetaName = AssetsAndHeaders.ContextMetaName,
@@ -104,8 +105,8 @@ namespace ToSic.Sxc.Oqt.Server
         internal Module Module;
         internal IBlock Block;
 
-        private bool _renderDone;
-        private string GeneratedHtml { get; set; }
+        //private bool _renderDone;
+        //private string GeneratedHtml { get; set; }
 
         private List<SxcResource> Resources { get; set; }
 

@@ -8,12 +8,14 @@ namespace ToSic.Sxc.Oqt.Shared.Models
         ///// Can be "body" or "head"
         ///// </summary>
         //public string Location = "body";
+        
+        public string UniqueId { get; set; }
 
         /// <summary>
         /// For the contents of a script tag
         /// </summary>
-        public string Content;
+        public string Content { get; set; }
 
-        public bool IsExternal = true;
+        public bool IsExternal { get; set; }= true;
     }
 }
