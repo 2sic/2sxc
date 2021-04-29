@@ -1,10 +1,10 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Security.Policy;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Dnn.LookUp
 {
@@ -45,6 +45,26 @@ namespace ToSic.Sxc.Dnn.LookUp
             var stdSources = dnn.PropertySources;
             foreach (var propertyAccess in stdSources)
                 providers.Add(new LookUpInDnnPropertyAccess(propertyAccess.Key, propertyAccess.Value, dnnUsr, dnnCult));
+            
+            if(providers.HasSource("querystring"))
+                providers.Add(new LookUpInLookUps("query", providers.Sources["querystring"]));
+
+            if (providers.HasSource("module"))
+            {
+                var original = providers.Sources["module"];
+                var mid = original.Get("moduleid");
+                var preferred = new LookUpInDictionary("module", new Dictionary<string, string> {{"id", mid}});
+                providers.Sources["module"] = new LookUpInLookUps("module", preferred, original);
+            }
+            
+            // add site - id & guid
+            
+            // add page - id only for now or maybe guid 
+            
+            
+            // Not implemented: Tenant
+                
+            
             return providers;
         }
     }
