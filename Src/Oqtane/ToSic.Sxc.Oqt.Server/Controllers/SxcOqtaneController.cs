@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             var rez = _sxcOqtane.Value.Prepare(alias, site, page, module);
 
             // HACK: TODO...
-            rez.Resources = null;
+            //rez.Resources = null;
 
             return rez;
         }

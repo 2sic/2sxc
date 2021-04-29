@@ -4,10 +4,10 @@ namespace ToSic.Sxc.Oqt.Shared.Models
 {
     public class SxcResource: Resource
     {
-        /// <summary>
-        /// Can be "body" or "head"
-        /// </summary>
-        public string Location = "body";
+        ///// <summary>
+        ///// Can be "body" or "head"
+        ///// </summary>
+        //public string Location = "body";
 
         /// <summary>
         /// For the contents of a script tag
