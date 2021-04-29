@@ -159,7 +159,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// <returns></returns>
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        [Authorize(Roles = RoleNames.Registered)]
+        //[Authorize(Roles = RoleNames.Registered)]
+        [Authorize(Roles = RoleNames.Admin)]
         // TODO: 2DM please check permissions
         public Guid? Template(int templateId, bool forceCreateContentGroup)
             => _viewPickerBackendLazy.Value.Init(Log)

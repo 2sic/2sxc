@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Oqt.App
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender)
+            //if (firstRender)
             {
                 await base.OnAfterRenderAsync(firstRender);
 
