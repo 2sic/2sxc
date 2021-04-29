@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Context
         /// <summary>
         /// These parameters can reconfigure what view is used or change
         /// </summary>
-        [PrivateApi("wip")] List<KeyValuePair<string, string>> Parameters { get; set; }
+        [PrivateApi("wip")] List<KeyValuePair<string, string>> ParametersInternalOld { get; set; }
 
         IPage Init(int id);
 

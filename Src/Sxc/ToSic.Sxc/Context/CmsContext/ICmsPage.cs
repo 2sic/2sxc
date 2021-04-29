@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Documentation;
+﻿using System.Collections.Generic;
+using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Context
 {
@@ -18,6 +19,12 @@ namespace ToSic.Sxc.Context
         /// Corresponds to the Dnn TabId
         /// </summary>
         int Id { get; }
-
+        
+        /// <summary>
+        /// The page parameters, cross-platform.
+        /// Use this for easy access to url parameters like ?id=xyz
+        /// with `CmsContext.Page.Parameters["id"]` as a replacement for `Request.QueryString["id"]`
+        /// </summary>
+        IReadOnlyDictionary<string, string> Parameters { get; }
     }
 }

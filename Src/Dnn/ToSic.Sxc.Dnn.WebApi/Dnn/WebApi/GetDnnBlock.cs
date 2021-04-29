@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Dnn.WebApi
             // WebAPI calls can contain the original parameters that made the page, so that views can respect that
             // Probably replace with OriginalParameters.GetOverrideParams(context.Page.Parameters);
             // once it has proven stable in Oqtane
-            context.Page.Parameters = GetOverrideParams(request);
+            context.Page.ParametersInternalOld = GetOverrideParams(request);
             IBlock block = _serviceProvider.Build<BlockFromModule>().Init(context, log);
 
             // check if we need an inner block

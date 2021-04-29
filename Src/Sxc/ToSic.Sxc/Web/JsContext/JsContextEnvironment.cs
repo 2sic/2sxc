@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Web.JsContext
             var userMayEdit = ctx.UserMayEdit;
 
             IsEditable = userMayEdit;
-            parameters = ctx.Page.Parameters?.Where(p => p.Key != OriginalParameters.NameInUrlForOriginalParameters);
+            parameters = ctx.Page.ParametersInternalOld?.Where(p => p.Key != OriginalParameters.NameInUrlForOriginalParameters);
         }
     }
 

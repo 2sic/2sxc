@@ -117,7 +117,7 @@ namespace ToSic.Sxc.Oqt.Server
         {
             // note: this feels like duplicate code to OqtState.cs - must find out why and how to streamline
             var ctx = _oqtTempInstanceContext.CreateContext(Page.PageId, Module, Log);
-            ctx.Page.Parameters = OriginalParameters.GetOverrideParams(ctx.Page.Parameters);
+            ctx.Page.ParametersInternalOld = OriginalParameters.GetOverrideParams(ctx.Page.ParametersInternalOld);
             var block = _serviceProvider.Build<BlockFromModule>().Init(ctx, Log);
             return block;
         }

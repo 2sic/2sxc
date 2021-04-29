@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var module = _moduleRepository.GetModule(moduleId);
             var ctx = _oqtTempInstanceContext.CreateContext(pageId, module, Log);
             // WebAPI calls can contain the original parameters that made the page, so that views can respect that
-            ctx.Page.Parameters = OriginalParameters.GetOverrideParams(ctx.Page.Parameters);
+            ctx.Page.ParametersInternalOld = OriginalParameters.GetOverrideParams(ctx.Page.ParametersInternalOld);
             IBlock block = ServiceProvider.Build<BlockFromModule>().Init(ctx, Log);
 
             // only if it's negative, do we load the inner block
