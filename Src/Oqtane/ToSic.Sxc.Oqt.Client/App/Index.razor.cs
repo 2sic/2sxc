@@ -25,24 +25,22 @@ namespace ToSic.Sxc.Oqt.App
 
         public SxcOqtaneDto SxcOqtaneDto { get; set; }
 
-        protected override async Task OnInitializedAsync()
-        {
-            await base.OnInitializedAsync();
-
-            // Subscribe to LocationChanged event.
-            NavigationManager.LocationChanged += HandleLocationChanged;
-
-            await Initialize2sxcContentBlock();
-        }
-
-        //protected override async Task OnParametersSetAsync()
+        //protected override async Task OnInitializedAsync()
         //{
+        //    await base.OnInitializedAsync();
+
+        //    // Subscribe to LocationChanged event.
+        //    NavigationManager.LocationChanged += HandleLocationChanged;
+
         //    await Initialize2sxcContentBlock();
-
-        //    //SxcOqtaneDto = SxcOqtaneService.Prepare(PageState.Alias.AliasId, PageState.Site.SiteId, PageState.Page.PageId, ModuleState.ModuleId);
-
-        //    await base.OnParametersSetAsync();
         //}
+
+        protected override async Task OnParametersSetAsync()
+        {
+            await Initialize2sxcContentBlock();
+
+            await base.OnParametersSetAsync();
+        }
 
         /// <summary>
         /// prepare the html / headers for later rendering
@@ -51,14 +49,14 @@ namespace ToSic.Sxc.Oqt.App
         {
             var urlQuery = NavigationManager.ToAbsoluteUri(NavigationManager.Uri).Query;
             SxcOqtaneDto = await SxcOqtaneService.PrepareAsync(
-                PageState.Alias.AliasId, 
-                PageState.Site.SiteId, 
-                PageState.Page.PageId, 
+                PageState.Alias.AliasId,
+                PageState.Site.SiteId,
+                PageState.Page.PageId,
                 ModuleState.ModuleId,
                 QueryHelpers.ParseQuery(urlQuery));
         }
 
-        public void Dispose() => NavigationManager.LocationChanged -= HandleLocationChanged;
+        //public void Dispose() => NavigationManager.LocationChanged -= HandleLocationChanged;
 
 
         /// <summary>
@@ -67,7 +65,7 @@ namespace ToSic.Sxc.Oqt.App
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void HandleLocationChanged(object sender, LocationChangedEventArgs args) => Initialize2sxcContentBlock(); //.RunSynchronously();
+        //private void HandleLocationChanged(object sender, LocationChangedEventArgs args) => Initialize2sxcContentBlock(); //.RunSynchronously();
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
