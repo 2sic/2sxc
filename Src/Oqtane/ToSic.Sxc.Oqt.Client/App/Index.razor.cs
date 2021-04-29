@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.WebUtilities;
 using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Client.Services;
@@ -46,10 +45,10 @@ namespace ToSic.Sxc.Oqt.App
             if (string.IsNullOrEmpty(RenderedUri) || (!NavigationManager.Uri.Equals(RenderedUri, StringComparison.InvariantCultureIgnoreCase) && NavigationManager.Uri.StartsWith(RenderedPage, StringComparison.InvariantCultureIgnoreCase)))
             {
                 RenderedUri = NavigationManager.Uri;
-                if (NavigationManager.Uri.IndexOf("?") > -1)
-                    RenderedPage = NavigationManager.Uri.Substring(0, NavigationManager.Uri.IndexOf("?"));
-                else
-                    RenderedPage = NavigationManager.Uri;
+                var indexOfQuestion = NavigationManager.Uri.IndexOf("?", StringComparison.Ordinal);
+                RenderedPage = indexOfQuestion > -1 
+                    ? NavigationManager.Uri.Substring(0, indexOfQuestion) 
+                    : NavigationManager.Uri;
                 await Initialize2sxcContentBlock();
                 NewDataArrived = true;
             }
@@ -124,21 +123,43 @@ namespace ToSic.Sxc.Oqt.App
                     // 1. Style Sheets, ideally before JS
                     await interop.IncludeLinks(externalResources
                         .Where(r => r.ResourceType == ResourceType.Stylesheet)
-                        .Select(a => new { rel = "stylesheet", href = a.Url, type = "text/css" })
+                        .Select(a => new
+                        {
+                            id = string.IsNullOrWhiteSpace(a.UniqueId) ? null : a.UniqueId, 
+                            rel = "stylesheet", 
+                            href = a.Url, 
+                            type = "text/css"
+                        })
                         .Cast<object>()
                         .ToArray());
 
                     // 2. Scripts - usually libraries etc.
-                    await interop.IncludeScripts(externalResources
+                    // Important: the IncludeScripts works very different from LoadScript - it uses LoadJS and bundles
+                    var bundleId = "module-bundle-" + PageState.ModuleId;
+                    var includeScripts = externalResources
                         .Where(r => r.ResourceType == ResourceType.Script)
-                        .Select(a => new { href = a.Url, location = a.Location })
+                        .Select(a => new
+                        {
+                            bundle = bundleId,
+                            id = string.IsNullOrWhiteSpace(a.UniqueId) ? null : a.UniqueId,
+                            href = a.Url,
+                            location = a.Location,
+                            integrity = "", // bug in Oqtane, needs to be an empty string to not throw errors
+                        })
                         .Cast<object>()
-                        .ToArray());
+                        .ToArray();
+                    if (includeScripts.Any()) await interop.IncludeScripts(includeScripts);
 
                     // 3. Inline JS code which was extracted from the template
                     var inlineResources = SxcOqtaneDto.Resources.Where(r => !r.IsExternal).ToArray();
                     foreach (var inline in inlineResources)
-                        await interop.IncludeScript("", "", "", "", inline.Content, "body", "");
+                        await interop.IncludeScript(string.IsNullOrWhiteSpace(inline.UniqueId) ? null : inline.UniqueId,
+                            "",
+                            "",
+                            "",
+                            inline.Content,
+                            "body",
+                            "");
 
 
                     #endregion
