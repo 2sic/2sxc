@@ -14,7 +14,7 @@ using ToSic.Sxc.WebApi.Features;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 {
-    [ValidateAntiForgeryToken]
+    //[ValidateAntiForgeryToken]
 
     // Release routes
     [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]

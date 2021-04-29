@@ -43,19 +43,19 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 
         [HttpGet]
         //[SupportedModules("2sxc,2sxc-app")]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public IEnumerable<ViewDetailsDto> All(int appId) => Backend.GetAll(appId);
 
         [HttpGet]
         //[SupportedModules("2sxc,2sxc-app")]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public PolymorphismDto Polymorphism(int appId) => HttpContext.RequestServices.Build<PolymorphismBackend>().Init(Log).Polymorphism(appId);
 
         [HttpGet, HttpDelete]
         //[SupportedModules("2sxc,2sxc-app")]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public bool Delete(int appId, int id) => Backend.Delete(appId, id);
 
@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// </remarks>
         /// <returns></returns>
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public ImportResultDto Import(int zoneId, int appId)
         {
@@ -103,7 +103,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         ///// </remarks>
         //[HttpGet]
         ////[SupportedModules("2sxc,2sxc-app")]
-        //[ValidateAntiForgeryToken]
+        ////[ValidateAntiForgeryToken]
         //[Authorize(Roles = RoleNames.Admin)]
         // TODO: implement Usage
         //public IEnumerable<ViewDto> Usage(int appId, Guid guid)

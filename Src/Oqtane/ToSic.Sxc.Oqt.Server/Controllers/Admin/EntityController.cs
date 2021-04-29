@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
     /// So we can't use the classic protection attributes like:
     /// - [SupportedModules("2sxc,2sxc-app")]
     /// - [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    /// - [ValidateAntiForgeryToken]
+    /// - //[ValidateAntiForgeryToken]
     /// Instead, the method itself must do additional security checking.
     /// Security checking is possible, because the cookie still contains user information
     /// </remarks>
@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <param name="contentType"></param>
         /// <returns></returns>
         [HttpGet]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
         public IEnumerable<Dictionary<string, object>> List(int appId, string contentType)
@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
                 .GetEntitiesForAdmin(contentType);
 
         [HttpDelete]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
         public void Delete([FromQuery] string contentType, [FromQuery] int? id, [FromQuery] Guid? guid, [FromQuery] int appId, [FromQuery] bool force = false)
@@ -121,7 +121,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// Used to be POST ContentImport/EvaluateContent
         /// </summary>
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
         public ContentImportResultDto XmlPreview(ContentImportArgsDto args)
@@ -132,7 +132,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// Used to be POST ContentImport/ImportContent
         /// </summary>
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
         public ContentImportResultDto XmlUpload(ContentImportArgsDto args)
@@ -143,7 +143,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// Used to be POST ContentImport/Import
         /// </summary>
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
         public bool Upload(EntityImportDto args) => _contentImportLazy.Value.Init(args.AppId, Log).Import(args);

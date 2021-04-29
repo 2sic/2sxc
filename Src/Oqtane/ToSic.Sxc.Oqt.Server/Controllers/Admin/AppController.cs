@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 {
     // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)] can't be used, because it forces the security
     // token, which fails in the cases where the url is called using get, which should result in a download
-    // [ValidateAntiForgeryToken] because the exports are called by the browser directly (new tab)
+    // //[ValidateAntiForgeryToken] because the exports are called by the browser directly (new tab)
     // we can't set this globally (only needed for imports)
 
     // Release routes
@@ -57,19 +57,19 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         }
 
         [HttpGet]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public List<AppDto> List(int zoneId)
             => _appsBackendLazy.Value.Init(Log).Apps();
 
         [HttpDelete]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public void App(int zoneId, int appId, bool fullDelete = true)
             => _cmsZonesLazy.Value.Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId, fullDelete);
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public void App(int zoneId, string name)
             => _appBuilderLazy.Value.Init(zoneId, Log).Create(name);
@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <param name="zoneId"></param>
         /// <returns></returns>
         [HttpGet]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public AppExportInfoDto Statistics(int zoneId, int appId)
             => _exportAppLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
@@ -90,7 +90,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 
 
         [HttpGet]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public bool FlushCache(int zoneId, int appId)
         {
@@ -117,7 +117,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <inheritdoc />
         [HttpPost]
         [Authorize(Roles = RoleNames.Host)]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ImportResultDto Reset(int zoneId, int appId)
         {
             var wrapLog = Log.Call<ImportResultDto>();
@@ -140,7 +140,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// <param name="resetAppGuid"></param>
         /// <returns></returns>
         [HttpGet]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public bool SaveData(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
             => _exportAppLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
                 .SaveDataForVersionControl(appId, zoneId, includeContentGroups, resetAppGuid);
@@ -151,7 +151,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public ImportResultDto Import(int zoneId)
         {

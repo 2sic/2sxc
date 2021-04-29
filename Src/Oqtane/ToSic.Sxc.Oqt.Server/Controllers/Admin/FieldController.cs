@@ -12,7 +12,7 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
 {
-    [ValidateAntiForgeryToken]
+    //[ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
 
     // Release routes
