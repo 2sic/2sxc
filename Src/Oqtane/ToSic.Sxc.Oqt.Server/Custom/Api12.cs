@@ -51,7 +51,7 @@ namespace Custom.Hybrid
             var httpContext = context.HttpContext;
             ServiceProvider = httpContext.RequestServices;
             HttpRequest GetRequest() => httpContext.Request;
-            _oqtState = new OqtState(GetRequest, ServiceProvider, Log);
+            _oqtState = ServiceProvider.Build<OqtState>().Init(GetRequest);
 
             var getBlock = _oqtState.GetBlock(true);
 

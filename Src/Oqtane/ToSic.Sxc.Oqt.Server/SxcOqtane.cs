@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Oqt.Server
         #region Constructor and DI
 
         public SxcOqtane(OqtAssetsAndHeaders assetsAndHeaders, RazorReferenceManager debugRefMan, OqtTempInstanceContext oqtTempInstanceContext,
-            IServiceProvider serviceProvider, Lazy<SiteStateInitializer> siteStateInitializerLazy, IHttpContextAccessor httpContextAccessor, SiteState siteState
+            IServiceProvider serviceProvider, Lazy<SiteStateInitializer> siteStateInitializerLazy, IHttpContextAccessor httpContextAccessor, SiteState siteState, Lazy<OqtState> oqtState
             ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
         {
             SiteState = siteState;
@@ -36,6 +36,7 @@ namespace ToSic.Sxc.Oqt.Server
             _serviceProvider = serviceProvider;
             _siteStateInitializerLazy = siteStateInitializerLazy;
             _httpContextAccessor = httpContextAccessor;
+            _oqtState = oqtState;
             // add log to history!
             History.Add("oqt-view", Log);
         }
@@ -47,6 +48,7 @@ namespace ToSic.Sxc.Oqt.Server
         private readonly IServiceProvider _serviceProvider;
         private readonly Lazy<SiteStateInitializer> _siteStateInitializerLazy;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly Lazy<OqtState> _oqtState;
 
         #endregion
 
@@ -69,7 +71,7 @@ namespace ToSic.Sxc.Oqt.Server
             Page = page;
             Module = module;
 
-            Block = GetBlock();
+            Block = _oqtState.Value.GetBlock(page.PageId, module, Log);
 
             _assetsAndHeaders.Init(this);
             var generatedHtml = Block.BlockBuilder.Render() ;
@@ -110,16 +112,6 @@ namespace ToSic.Sxc.Oqt.Server
         #endregion
 
         public string Test() => _debugRefMan.CompilationReferences.Count.ToString();
-
-        private IBlock GetBlock()
-        {
-            // note: this feels like duplicate code to OqtState.cs - must find out why and how to streamline
-            var ctx = _oqtTempInstanceContext.CreateContext(Page.PageId, Module, Log);
-            ctx.Page.ParametersInternalOld = OriginalParameters.GetOverrideParams(ctx.Page.ParametersInternalOld);
-            var block = _serviceProvider.Build<BlockFromModule>().Init(ctx, Log);
-            return block;
-        }
-
 
     }
 }

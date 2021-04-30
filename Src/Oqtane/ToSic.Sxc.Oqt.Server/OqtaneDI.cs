@@ -54,6 +54,8 @@ namespace ToSic.Sxc.Oqt.Server
             services.TryAddTransient<OqtSite>();
             services.TryAddTransient<OqtZoneMapper>();
             services.TryAddTransient<SettingsHelper>();
+            services.TryAddTransient<IPage, OqtPage>();
+            services.TryAddTransient<OqtState>();
 
             //// add page publishing
             services.TryAddTransient<IPagePublishing, OqtPagePublishing>();

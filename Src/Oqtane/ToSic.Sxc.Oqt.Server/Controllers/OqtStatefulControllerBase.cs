@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected OqtStatefulControllerBase(StatefulControllerDependencies dependencies) : base()
         {
             ServiceProvider = dependencies.ServiceProvider;
-            _oqtState = new OqtState(GetRequest, ServiceProvider, Log);
+            _oqtState = dependencies.OqtState.Value.Init(GetRequest);
 
             dependencies.CtxResolver.AttachRealBlock(() => GetBlock());
             dependencies.CtxResolver.AttachBlockContext(GetContext);

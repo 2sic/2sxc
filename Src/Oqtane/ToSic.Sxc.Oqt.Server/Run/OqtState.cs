@@ -4,36 +4,50 @@ using Microsoft.Extensions.Primitives;
 using Oqtane.Repository;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Web.Parameters;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtState
+    public class OqtState: HasLog
     {
-        public Func<HttpRequest> GetRequest { get; }
-        public ILog Log { get; }
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public Func<HttpRequest> GetRequest { get; private set; }
         public IServiceProvider ServiceProvider { get; }
         private IModuleRepository _moduleRepository;
         private OqtTempInstanceContext _oqtTempInstanceContext;
         private IBlock _block;
 
-        public OqtState(Func<HttpRequest> getRequest, IServiceProvider serviceProvider, ILog log)
+        public OqtState(IHttpContextAccessor httpContextAccessor, IServiceProvider serviceProvider) : base($"{OqtConstants.OqtLogPrefix}.State")
         {
-            GetRequest = getRequest;
+            _httpContextAccessor = httpContextAccessor;
             ServiceProvider = serviceProvider;
-            Log = log;
 
             InitServices();
+
+            // Default implementation
+            GetRequest = GetRequestDefault;
         }
 
         private void InitServices()
         {
             _moduleRepository = ServiceProvider.Build<IModuleRepository>();
             _oqtTempInstanceContext = ServiceProvider.Build<OqtTempInstanceContext>();
+        }
+
+        // Default implementation for GetRequest().
+        private HttpRequest GetRequestDefault() => _httpContextAccessor?.HttpContext?.Request;
+
+        public OqtState Init(Func<HttpRequest> getRequest)
+        {
+            GetRequest = getRequest; // Replace default implementation.
+
+            return this;
         }
 
         public IContextOfSite GetSiteContext() => ServiceProvider.Build<IContextOfSite>();
@@ -49,6 +63,15 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public IContextOfBlock GetContext() => _context ??= GetBlock()?.Context ?? ServiceProvider.Build<IContextOfBlock>().Init(Log) as IContextOfBlock;
         private IContextOfBlock _context;
+
+        public IBlock GetBlock(int pageId, Oqtane.Models.Module module, ILog log)
+        {
+            var ctx = _oqtTempInstanceContext.CreateContext(pageId, module, log);
+            // WebAPI calls can contain the original parameters that made the page, so that views can respect that
+            ctx.Page.ParametersInternalOld = OriginalParameters.GetOverrideParams(ctx.Page.ParametersInternalOld);
+            var block = ServiceProvider.Build<BlockFromModule>().Init(ctx, log);
+            return block;
+        }
 
         public IBlock GetBlock(bool allowNoContextFound = true) => _block ??= InitializeBlock(allowNoContextFound);
 
@@ -67,10 +90,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
             }
 
             var module = _moduleRepository.GetModule(moduleId);
-            var ctx = _oqtTempInstanceContext.CreateContext(pageId, module, Log);
-            // WebAPI calls can contain the original parameters that made the page, so that views can respect that
-            ctx.Page.ParametersInternalOld = OriginalParameters.GetOverrideParams(ctx.Page.ParametersInternalOld);
-            IBlock block = ServiceProvider.Build<BlockFromModule>().Init(ctx, Log);
+
+            IBlock block = GetBlock(pageId, module, Log);
 
             // only if it's negative, do we load the inner block
             if (contentBlockId > 0) return wrapLog("found", block);

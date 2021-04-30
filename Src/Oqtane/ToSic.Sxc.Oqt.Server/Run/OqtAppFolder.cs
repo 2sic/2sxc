@@ -7,21 +7,16 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtAppFolder: HasLog<OqtAppFolder>
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly Lazy<OqtState> _oqtState;
 
-
-        public OqtAppFolder(IHttpContextAccessor httpContextAccessor, IServiceProvider serviceProvider) : base($"{OqtConstants.OqtLogPrefix}.AppFolder")
+        public OqtAppFolder(Lazy<OqtState> oqtState) : base($"{OqtConstants.OqtLogPrefix}.AppFolder")
         {
-            _httpContextAccessor = httpContextAccessor;
-            _serviceProvider = serviceProvider;
+            _oqtState = oqtState;
         }
 
         public string GetAppFolder()
         {
-            HttpRequest GetRequest() =>  _httpContextAccessor.HttpContext.Request;
-            var oqtState = new OqtState(GetRequest, _serviceProvider, Log);
-            var ctx = oqtState.GetContext();
+            var ctx = _oqtState.Value.GetContext();
             return ctx.AppState.Folder;
         }
     }
