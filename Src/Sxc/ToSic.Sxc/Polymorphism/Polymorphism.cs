@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ToSic.Eav.Data;
+using ToSic.Eav.DataSources;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Polymorphism
 {
@@ -74,5 +77,12 @@ namespace ToSic.Sxc.Polymorphism
         /// </summary>
         /// <param name="resolver"></param>
         public static void Add(IResolver resolver) => Resolvers.Add(resolver.Name, resolver);
+
+        private static List<IResolver> Cache { get; } = AssemblyHandling
+            .FindInherited(typeof(IResolver))
+            .Select(t => new DataSourceInfo(t))
+            .ToList();
+
+
     }
 }
