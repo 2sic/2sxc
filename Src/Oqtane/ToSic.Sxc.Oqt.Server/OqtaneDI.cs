@@ -105,7 +105,7 @@ namespace ToSic.Sxc.Oqt.Server
             services.TryAddTransient<SiteLookUp>();
             services.TryAddTransient<PageLookUp>();
             services.TryAddTransient<ModuleLookUp>();
-            services.TryAddTransient<UserLookUp>();
+            services.TryAddScoped<UserLookUp>();
 
             // Polymorphism Resolvers
             services.TryAddTransient<Sxc.Polymorphism.Koi>();

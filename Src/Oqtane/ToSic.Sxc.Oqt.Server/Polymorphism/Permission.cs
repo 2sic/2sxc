@@ -1,31 +1,18 @@
-﻿using System;
-using System.Linq;
-using Oqtane.Models;
-using Oqtane.Repository;
-using Oqtane.Shared;
+﻿using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Oqt.Server.Repository;
 using ToSic.Sxc.Polymorphism;
 using static System.StringComparison;
-
 
 namespace ToSic.Sxc.Oqt.Server.Polymorphism
 {
     [PolymorphResolver("Permissions")]
     public class Permissions : IResolver
     {
-        private readonly Lazy<IUserResolver> _userResolver;
-        private readonly Lazy<IUserRoleRepository> _userRoleRepository;
-        private readonly Lazy<IRoleRepository> _roleRepository;
-        public User User { get; private set;}
-        public int? HostRoleId { get; private set; }
-        public bool? HaveHost { get; private set; }
+        private readonly IUser _oqtUser;
 
-        public Permissions(Lazy<IUserResolver> userResolver, Lazy<IUserRoleRepository> userRoleRepository, Lazy<IRoleRepository> roleRepository)
+        public Permissions(IUser oqtUser)
         {
-            _userResolver = userResolver;
-            _userRoleRepository = userRoleRepository;
-            _roleRepository = roleRepository;
+            _oqtUser = oqtUser;
         }
 
         public string Name => "Permissions";
@@ -37,19 +24,9 @@ namespace ToSic.Sxc.Oqt.Server.Polymorphism
             var wrapLog = log.Call<string>();
             if (!string.Equals(parameters, ModeIsSuperUser, InvariantCultureIgnoreCase))
                 return wrapLog("unknown param", null);
-            var isSuper = IsHost();
+            var isSuper = _oqtUser.IsSuperUser;
             var result = isSuper ? "staging" : "live";
             return wrapLog(result, result);
-        }
-
-        public bool IsHost()
-        {
-            User ??= _userResolver.Value.GetUser();
-            HostRoleId ??= _roleRepository.Value.GetRoles(User.SiteId, true)
-                .FirstOrDefault(item => item.Name == RoleNames.Host).RoleId;
-            HaveHost ??= _userRoleRepository.Value.GetUserRoles(User.UserId, User.SiteId)
-                .Any(r => r.RoleId == HostRoleId);
-            return HaveHost ?? false;
         }
     }
 }

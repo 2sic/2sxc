@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Oqt.Shared
+﻿using System.Threading;
+
+namespace ToSic.Sxc.Oqt.Shared
 {
     /// <summary>
     /// This should only contain constants which should really be final, no WIP or similar
@@ -37,5 +39,7 @@
         
         // Special Oqtane constants missing in Oqtane
         public const string EntityIdParam = "entityid";
+
+        public const int Unknown = -1;
     }
 }

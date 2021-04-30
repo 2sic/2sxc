@@ -4,6 +4,8 @@ using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using Oqtane.Models;
+using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Oqt.Server.Plumbing;
@@ -108,35 +110,34 @@ namespace ToSic.Sxc.Oqt.Server.Run
         }
     }
 
+
     public class UserLookUp : LookUpBase
     {
-        private readonly Lazy<IUserResolver> _userResolver;
-        private readonly Lazy<IUserRepository> _userRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private Oqtane.Models.User User { get; set; }
-        private Oqtane.Models.User UserDB { get; set; }
+        private readonly OqtUser _oqtUser;
 
-        public UserLookUp(Lazy<IUserResolver> userResolver, Lazy<IUserRepository> userRepository, IHttpContextAccessor httpContextAccessor)
+        public UserLookUp(IUser oqtUser)
         {
             Name = "User";
-            _userResolver = userResolver;
-            _userRepository = userRepository;
-            _httpContextAccessor = httpContextAccessor;
+
+            _oqtUser = oqtUser as OqtUser;
         }
 
         public override string Get(string key, string format)
         {
             try
             {
-                User ??= _userResolver.Value.GetUser();
-
                 return key.ToLowerInvariant() switch
                 {
-                    "id" => $"{User.UserId}",
-                    "username" => $"{User.Username}",
-                    "displayname" => $"{(UserDB ??=_userRepository.Value.GetUser(User.UserId))?.DisplayName}",
-                    "email" => $"{(UserDB ??= _userRepository.Value.GetUser(User.UserId))?.Email}",
-                    "guid" => $"{_httpContextAccessor?.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value}",
+                    "id" => $"{_oqtUser.Id}",
+                    "username" => $"{_oqtUser.UnwrappedContents.Username}",
+                    "displayname" => $"{_oqtUser.UnwrappedContents.DisplayName}",
+                    "email" => $"{_oqtUser.UnwrappedContents.Email}",
+                    "guid" => $"{_oqtUser.Guid}",
+
+                    //"issuperuser" => $"{_oqtUser.IsSuperUser}",
+                    //"isadmin" => $"{_oqtUser.IsAdmin}",
+                    //"isanonymous" => $"{_oqtUser.IsAnonymous}",
+
                     _ => string.Empty
                 };
             }
