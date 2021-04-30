@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Oqt.Shared.Dev
         public static Dictionary<string,string> EmptyLanguages = new Dictionary<string, string>();
         public static List<TempTempCulture> EmptyCultureList = new List<TempTempCulture>();
 
-        public static string ContentRoot = "/content-wip/";
+        //public static string ContentRoot = "/content-wip/";
 
         public static string HttpUrlRoot = "http://test-test/";
 
