@@ -200,15 +200,19 @@ namespace ToSic.Sxc.Oqt.Server.Run
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         //private readonly IServiceProvider _serviceProvider;
+        private readonly Lazy<SiteState> _siteState;
+
+
         //private HttpRequest _GetRequest() => _httpContextAccessor.HttpContext.Request;
         private IDictionary<object, object?> _items;
         protected Oqtane.Models.Page Page { get; set; }
 
-        public PageLookUp(IHttpContextAccessor httpContextAccessor/*, IServiceProvider serviceProvider*/)
+        public PageLookUp(IHttpContextAccessor httpContextAccessor/*, IServiceProvider serviceProvider*/, Lazy<SiteState> siteState)
         {
             Name = "Page";
 
             _httpContextAccessor = httpContextAccessor;
+            _siteState = siteState;
             //_serviceProvider = serviceProvider;
         }
 
@@ -234,6 +238,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 return key.ToLowerInvariant() switch
                 {
                     "id" => $"{Page.PageId}",
+                    "url" => (_httpContextAccessor.HttpContext != null && _siteState?.Value?.Alias != null) ? $"{_httpContextAccessor.HttpContext?.Request.Scheme}://{_siteState?.Value?.Alias?.Path}/{Page.Path}" : string.Empty,
                     _ => string.Empty
                 };
             }
