@@ -55,6 +55,15 @@ namespace ToSic.Sxc.Polymorphism
             }
         }
 
+        // TODO: STATIC LIST OF ResolverTypes
+        // - on first access will ask plumbing for all IResolvers
+        // - then check the attributes to see what name they have
+        // - add to list
+        // 
+        // Afterwards
+        // When a resolver is needed, get it from the factory
+        // Note: Almost identical setup exists for DataSources - DataSourceCatalog
+
         /// <summary>
         /// The global list of resolvers, used in checking what edition to return
         /// </summary>
