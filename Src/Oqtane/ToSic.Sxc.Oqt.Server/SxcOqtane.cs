@@ -64,9 +64,6 @@ namespace ToSic.Sxc.Oqt.Server
             if (page != null) _httpContextAccessor?.HttpContext?.Items.TryAdd("PageForLookUp", page);
             if (module != null) _httpContextAccessor?.HttpContext?.Items.TryAdd("ModuleForLookUp", module);
 
-            // commented because SiteState is already available on Client.
-            SiteState.Alias = alias;
-
             Alias = alias;
             Site = site;
             Page = page;

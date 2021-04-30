@@ -28,9 +28,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         private readonly Lazy<IModuleRepository> _modules;
         private readonly Lazy<IModuleDefinitionRepository> _moduleDefinitions;
         private readonly Lazy<ISettingRepository> _settings;
+        private readonly Lazy<SiteState> _siteState;
         protected int _entityId = -1;
 
-        public SxcOqtaneController(ISxcRepository sxcRepository, ILogManager logger, IHttpContextAccessor accessor, Lazy<ISxcOqtane> sxcOqtane, Lazy<IAliasRepository> aliases, Lazy<ISiteRepository> sites, Lazy<IPageRepository> pages, Lazy<IModuleRepository> modules, Lazy<IModuleDefinitionRepository> moduleDefinitions, Lazy<ISettingRepository> settings)
+        public SxcOqtaneController(ISxcRepository sxcRepository, ILogManager logger, IHttpContextAccessor accessor, Lazy<ISxcOqtane> sxcOqtane, Lazy<IAliasRepository> aliases, Lazy<ISiteRepository> sites, Lazy<IPageRepository> pages, Lazy<IModuleRepository> modules, Lazy<IModuleDefinitionRepository> moduleDefinitions, Lazy<ISettingRepository> settings, Lazy<SiteState> siteState)
         {
             _sxcRepository = sxcRepository;
             _logger = logger;
@@ -41,6 +42,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             _modules = modules;
             _moduleDefinitions = moduleDefinitions;
             _settings = settings;
+            _siteState = siteState;
 
             if (accessor.HttpContext.Request.Query.ContainsKey(OqtConstants.EntityIdParam))
             {
@@ -53,6 +55,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         public SxcOqtaneDto Prepare([FromQuery] int aliasId, [FromQuery] int siteId, [FromQuery] int pageId, [FromQuery] int moduleId, [FromQuery] string originalParameters)
         {
             var alias = _aliases.Value.GetAlias(aliasId);
+
+            // Store Alias in SiteState for background processing.
+            if (_siteState.Value != null) _siteState.Value.Alias = alias;
+
             var site = _sites.Value.GetSite(siteId);
             var page = _pages.Value.GetPage(pageId); // TODO: probably need to add security related to user
             var module = _modules.Value.GetModule(moduleId);
