@@ -46,5 +46,15 @@ namespace ToSic.Sxc.Dnn.Web
             return basePath.Substring(0, basePath.IndexOf(randomxyz, StringComparison.Ordinal));
 
         }
+
+        public string Api(string noParameterOrder = Eav.Constants.RandomProtectionParameter, string path = null)
+        {
+            // TODO: STV
+            // 1. if path starts with / remove that
+            // 2. if it starts with "app/" or "api/" or "some-edition/api" or "app/some-edition/api" should always behave the same
+            // 3. should then return a full link (without domain) to the app endpoint
+            // Make sure to access an object or code which already does this work, like the stuff which generates the in-page js context or something
+            throw new NotImplementedException();
+        }
     }
 }
