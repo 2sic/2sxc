@@ -1,22 +1,20 @@
-﻿using JetBrains.Annotations;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Oqtane.Repository;
 using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
+using System.Security.Claims;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Repository;
 using ToSic.Sxc.Oqt.Shared;
-using Log = ToSic.Eav.Logging.Simple.Log;
 
 // TODO: #Oqtane - must provide additional sources like Context (http) etc.
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtGetLookupEngine: HasLog<ILookUpEngineResolver>, ILookUpEngineResolver
+    public class OqtGetLookupEngine : HasLog<ILookUpEngineResolver>, ILookUpEngineResolver
     {
         private readonly Lazy<QueryStringLookUp> _queryStringLookUp;
         private readonly Lazy<SiteLookUp> _siteLookUp;
@@ -110,61 +108,43 @@ namespace ToSic.Sxc.Oqt.Server.Run
         }
     }
 
-    public abstract class ReflectionLookUpBase : LookUpBase, IHasLog
-    {
-        protected object Source { get; set; }
-        private readonly BindingFlags _bindingFlags;
-
-        protected ReflectionLookUpBase(BindingFlags bindingFlags = BindingFlags.Instance)
-        {
-            Log ??= new Log($"{OqtConstants.OqtLogPrefix}.{Name}LookUp");
-            _bindingFlags = bindingFlags;
-        }
-
-        public ReflectionLookUpBase Init(ILog parent)
-        {
-            Log.LinkTo(parent);
-            return this;
-        }
-
-        public ILog Log { get; }
-
-        [CanBeNull]
-        public abstract object GetSource();
-
-        public override string Get(string key, string format)
-        {
-            Source ??= GetSource();
-            return Source == null ? string.Empty : GetValue(key, format);
-        }
-
-        private string GetValue(string key, string format)
-        {
-            try
-            {
-                var type = Source.GetType();
-                var propertyInfo = type.GetProperty(key, BindingFlags.Public | BindingFlags.IgnoreCase | _bindingFlags);
-                return propertyInfo != null ? string.Format($"{propertyInfo.GetValue(Source)}", format) : string.Empty;
-            }
-            catch (Exception e)
-            {
-                // TODO: WIP - make better exception handling
-                return $"Error getting value for key:{key}. {e.Message}";
-            }
-        }
-    }
-
-    public class UserLookUp : ReflectionLookUpBase
+    public class UserLookUp : LookUpBase
     {
         private readonly Lazy<IUserResolver> _userResolver;
+        private readonly Lazy<IUserRepository> _userRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private Oqtane.Models.User User { get; set; }
+        private Oqtane.Models.User UserDB { get; set; }
 
-        public UserLookUp(Lazy<IUserResolver> userResolver) : base(BindingFlags.Instance)
+        public UserLookUp(Lazy<IUserResolver> userResolver, Lazy<IUserRepository> userRepository, IHttpContextAccessor httpContextAccessor)
         {
             Name = "User";
             _userResolver = userResolver;
+            _userRepository = userRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public override object GetSource() => _userResolver.Value.GetUser();
+        public override string Get(string key, string format)
+        {
+            try
+            {
+                User ??= _userResolver.Value.GetUser();
+
+                return key.ToLowerInvariant() switch
+                {
+                    "id" => $"{User.UserId}",
+                    "username" => $"{User.Username}",
+                    "displayname" => $"{(UserDB ??=_userRepository.Value.GetUser(User.UserId))?.DisplayName}",
+                    "email" => $"{(UserDB ??= _userRepository.Value.GetUser(User.UserId))?.Email}",
+                    "guid" => $"{_httpContextAccessor?.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value}",
+                    _ => string.Empty
+                };
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
     }
 
     public class ModuleLookUp : LookUpBase
@@ -199,13 +179,20 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public override string Get(string key, string format)
         {
-            Module ??= GetSource();
-
-            return key.ToLowerInvariant() switch
+            try
             {
-                "id" => $"{Module.ModuleId}",
-                _ => string.Empty
-            };
+                Module ??= GetSource();
+
+                return key.ToLowerInvariant() switch
+                {
+                    "id" => $"{Module.ModuleId}",
+                    _ => string.Empty
+                };
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
     }
 
@@ -213,15 +200,19 @@ namespace ToSic.Sxc.Oqt.Server.Run
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         //private readonly IServiceProvider _serviceProvider;
+        private readonly Lazy<SiteState> _siteState;
+
+
         //private HttpRequest _GetRequest() => _httpContextAccessor.HttpContext.Request;
         private IDictionary<object, object?> _items;
-        protected Oqtane.Models.Page page { get; set; }
+        protected Oqtane.Models.Page Page { get; set; }
 
-        public PageLookUp(IHttpContextAccessor httpContextAccessor/*, IServiceProvider serviceProvider*/)
+        public PageLookUp(IHttpContextAccessor httpContextAccessor/*, IServiceProvider serviceProvider*/, Lazy<SiteState> siteState)
         {
             Name = "Page";
 
             _httpContextAccessor = httpContextAccessor;
+            _siteState = siteState;
             //_serviceProvider = serviceProvider;
         }
 
@@ -240,20 +231,28 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public override string Get(string key, string format)
         {
-            page ??= GetSource();
-
-            return key.ToLowerInvariant() switch
+            try
             {
-                "id" => $"{page.PageId}",
-                _ => string.Empty
-            };
+                Page ??= GetSource();
+
+                return key.ToLowerInvariant() switch
+                {
+                    "id" => $"{Page.PageId}",
+                    "url" => (_httpContextAccessor.HttpContext != null && _siteState?.Value?.Alias != null) ? $"{_httpContextAccessor.HttpContext?.Request.Scheme}://{_siteState?.Value?.Alias?.Path}/{Page.Path}" : string.Empty,
+                    _ => string.Empty
+                };
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
     }
 
     public class SiteLookUp : LookUpBase
     {
         public SiteState SiteState { get; }
-        protected Oqtane.Models.Site site { get; set; }
+        protected Oqtane.Models.Site Site { get; set; }
         private readonly Lazy<SiteStateInitializer> _siteStateInitializer;
         private readonly Lazy<SiteRepository> _siteRepository;
 
@@ -276,14 +275,21 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public override string Get(string key, string format)
         {
-            site ??= GetSource();
-
-            return key.ToLowerInvariant() switch
+            try
             {
-                "id" => $"{site.SiteId}",
-                "guid" => $"{site.SiteGuid}",
-                _ => string.Empty
-            };
+                Site ??= GetSource();
+
+                return key.ToLowerInvariant() switch
+                {
+                    "id" => $"{Site.SiteId}",
+                    "guid" => $"{Site.SiteGuid}",
+                    _ => string.Empty
+                };
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
     }
 
