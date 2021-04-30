@@ -17,5 +17,11 @@
         public const string WebApiStateRoot = "{alias:int}/api/sxc";
 
         public const string MvcApiLogPrefix = "MAP.";
+
+        // QueryStringKeys
+        public const string QueryStringAliasId = "aliasid";
+        public const string QueryStringSiteId = "siteid";
+        public const string QueryStringPageId = "pageid";
+        public const string QueryStringModuleId = "moduleid";
     }
 }

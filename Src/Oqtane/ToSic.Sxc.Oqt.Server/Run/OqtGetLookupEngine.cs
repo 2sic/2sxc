@@ -198,35 +198,20 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
     public class PageLookUp : LookUpBase
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        //private readonly IServiceProvider _serviceProvider;
-        private readonly Lazy<SiteState> _siteState;
-
-
-        //private HttpRequest _GetRequest() => _httpContextAccessor.HttpContext.Request;
-        private IDictionary<object, object?> _items;
+        private readonly Lazy<OqtState> _oqtState;
         protected Oqtane.Models.Page Page { get; set; }
 
-        public PageLookUp(IHttpContextAccessor httpContextAccessor/*, IServiceProvider serviceProvider*/, Lazy<SiteState> siteState)
+        public PageLookUp(Lazy<OqtState> oqtState)
         {
             Name = "Page";
 
-            _httpContextAccessor = httpContextAccessor;
-            _siteState = siteState;
-            //_serviceProvider = serviceProvider;
+            _oqtState = oqtState;
         }
 
         public Oqtane.Models.Page GetSource()
         {
-            //var oqtState = new OqtState(_GetRequest, _serviceProvider, Log);
-            //var ctx = oqtState.GetContext();
-            //return ctx.Page;
-
-            // HACK: WIP
-            _items ??= _httpContextAccessor?.HttpContext.Items;
-            if (_items == null) return null;
-
-            return !_items.TryGetValue(Name + "ForLookUp", out var page) ? null : page as Oqtane.Models.Page;
+            var ctx = _oqtState.Value.GetContext();
+            return ((OqtPage) ctx.Page).UnwrappedContents;
         }
 
         public override string Get(string key, string format)
@@ -238,7 +223,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 return key.ToLowerInvariant() switch
                 {
                     "id" => $"{Page.PageId}",
-                    "url" => (_siteState?.Value?.Alias != null) ? $"//{_siteState?.Value?.Alias?.Path}/{Page.Path}" : string.Empty,
+                    "url" => $"{Page.Url}",
                     _ => string.Empty
                 };
             }

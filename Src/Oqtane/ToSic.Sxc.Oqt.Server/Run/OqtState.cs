@@ -85,12 +85,22 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             if (moduleId == -1 || pageId == -1)
             {
-                if (allowNoContextFound) return wrapLog("not found", null);
-                throw new Exception("No context found, cannot continue");
+                moduleId = GetQueryString(WebApiConstants.QueryStringModuleId, -1);
+                pageId = GetQueryString(WebApiConstants.QueryStringPageId, -1);
+
+                if (moduleId == -1 || pageId == -1)
+                {
+                    if (allowNoContextFound) return wrapLog("not found", null);
+                    throw new Exception("No context found, cannot continue");
+
+                }
+
+                var moduleQS = _moduleRepository.GetModule(moduleId);
+                IBlock blockQS = GetBlock(pageId, moduleQS, Log);
+                return wrapLog("found in query string", blockQS);
             }
 
             var module = _moduleRepository.GetModule(moduleId);
-
             IBlock block = GetBlock(pageId, module, Log);
 
             // only if it's negative, do we load the inner block
@@ -104,6 +114,21 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private T GetTypedHeader<T>(string headerName, T fallback)
         {
             var valueString = GetRequest().Headers[headerName];
+            if (valueString == StringValues.Empty) return fallback;
+
+            try
+            {
+                return (T)Convert.ChangeType(valueString.ToString(), typeof(T));
+            }
+            catch
+            {
+                return fallback;
+            }
+        }
+
+        private T GetQueryString<T>(string key, T fallback)
+        {
+            var valueString = GetRequest().Query[key];
             if (valueString == StringValues.Empty) return fallback;
 
             try
