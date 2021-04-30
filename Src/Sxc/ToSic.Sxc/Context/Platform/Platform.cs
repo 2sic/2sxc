@@ -19,6 +19,6 @@ namespace ToSic.Sxc.Context
         /// <summary>
         /// A nice name ID, like "Dnn" or "Oqtane"
         /// </summary>
-        public string TypeName => Type.ToString();
+        public string Name => Type.ToString();
     }
 }
