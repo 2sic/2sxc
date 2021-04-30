@@ -238,7 +238,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 return key.ToLowerInvariant() switch
                 {
                     "id" => $"{Page.PageId}",
-                    "url" => (_httpContextAccessor.HttpContext != null && _siteState?.Value?.Alias != null) ? $"{_httpContextAccessor.HttpContext?.Request.Scheme}://{_siteState?.Value?.Alias?.Path}/{Page.Path}" : string.Empty,
+                    "url" => (_siteState?.Value?.Alias != null) ? $"//{_siteState?.Value?.Alias?.Path}/{Page.Path}" : string.Empty,
                     _ => string.Empty
                 };
             }
