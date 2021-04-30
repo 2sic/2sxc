@@ -105,9 +105,9 @@ namespace ToSic.Sxc.Oqt.Server
             services.TryAddTransient<ModuleLookUp>();
             services.TryAddTransient<UserLookUp>();
 
-            //
-            services.TryAddTransient<ToSic.Sxc.Polymorphism.Koi>();
-            //services.TryAddTransient<ToSic.Sxc.Polymorphism.Permissions>();
+            // Polymorphism Resolvers
+            services.TryAddTransient<Polymorphism.Koi>();
+            services.TryAddTransient<Permissions>();
 
             // new in v12 - integrate KOI - experimental!
             try
