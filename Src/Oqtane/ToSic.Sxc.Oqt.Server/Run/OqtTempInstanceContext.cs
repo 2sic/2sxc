@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         {
             var ctx = _serviceProvider.Build<IContextOfBlock>();
             ctx.Init(parentLog);
-            ctx.Page.Init(pageId);
+            ((OqtPage)ctx.Page).Init(pageId);
             ((OqtModule) ctx.Module).Init(module, parentLog);
             return ctx;
         }
