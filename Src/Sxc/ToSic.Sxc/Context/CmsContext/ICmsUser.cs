@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Context
         int Id { get; }
 
         /// <summary>
-        /// Information if the current user is Site Admininstrator.
+        /// Information if the current user is Site Administrator.
         /// Basically this means a user has very high permissions - incl. the ability
         /// to create users in a site etc.
         /// </summary>

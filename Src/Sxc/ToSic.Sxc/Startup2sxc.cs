@@ -77,6 +77,9 @@ namespace ToSic.Sxc
 
             // Add possibly missing fallbacks
             services.AddSxcCoreFallbackServices();
+            
+            // Polymorphism
+            services.TryAddTransient<Polymorphism.Polymorphism>();
 
             return services;
         }

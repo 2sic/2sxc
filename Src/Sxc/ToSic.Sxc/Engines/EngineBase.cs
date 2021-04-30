@@ -88,7 +88,7 @@ namespace ToSic.Sxc.Engines
         private string TryToFindPolymorphPath(string root, IView view, string subPath)
         {
             var wrapLog = Log.Call<string>($"{root}, {subPath}");
-            var polymorph = new Polymorphism.Polymorphism(Block.App.Data.List, Log);
+            var polymorph = Helpers.Polymorphism.Init(Block.App.Data.List, Log); // new Polymorphism.Polymorphism(Block.App.Data.List, Log);
             var edition = polymorph.Edition();
             if (edition == null) return wrapLog("no edition detected", null);
             Log.Add($"edition {edition} detected");

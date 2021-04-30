@@ -8,12 +8,17 @@ namespace ToSic.Sxc.Engines
 {
     public class EngineBaseDependencies
     {
+        public Polymorphism.Polymorphism Polymorphism { get; }
+
         public EngineBaseDependencies(IServerPaths serverPaths, 
             ILinkPaths linkPaths, 
             TemplateHelpers templateHelpers, 
             IClientDependencyOptimizer clientDependencyOptimizer,
-            Lazy<AppPermissionCheck> appPermCheckLazy)
+            Lazy<AppPermissionCheck> appPermCheckLazy,
+            Polymorphism.Polymorphism polymorphism
+            )
         {
+            Polymorphism = polymorphism;
             ServerPaths = serverPaths;
             LinkPaths = linkPaths;
             TemplateHelpers = templateHelpers;
