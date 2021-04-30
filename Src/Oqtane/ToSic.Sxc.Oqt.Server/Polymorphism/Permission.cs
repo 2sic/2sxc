@@ -9,7 +9,7 @@ using ToSic.Sxc.Polymorphism;
 using static System.StringComparison;
 
 
-namespace ToSic.Sxc.Oqt.Server.Run
+namespace ToSic.Sxc.Oqt.Server.Polymorphism
 {
     [PolymorphResolver("Permissions")]
     public class Permissions : IResolver

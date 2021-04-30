@@ -19,6 +19,7 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Extensions.Koi;
 using ToSic.Sxc.Oqt.Server.Page;
 using ToSic.Sxc.Oqt.Server.Plumbing;
+using ToSic.Sxc.Oqt.Server.Polymorphism;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared.Run;
 using ToSic.Sxc.Run;
@@ -36,8 +37,14 @@ namespace ToSic.Sxc.Oqt.Server
             services.AddScoped<ILinkPaths, OqtLinkPaths>();
             services.TryAddTransient<IServerPaths, OqtServerPaths>();
 
-            services.TryAddTransient<ISite, OqtSite>();
-            services.TryAddTransient<IUser, OqtUser>();
+            services.TryAddScoped<ISite, OqtSite>();
+            services.TryAddScoped<IPage, OqtPage>();
+            services.TryAddScoped<OqtSite>();
+            services.TryAddScoped<IUser, OqtUser>();
+            services.TryAddTransient<IModule, OqtModule>();
+            services.TryAddTransient<OqtModule>();
+            services.TryAddTransient<OqtTempInstanceContext>();
+
             services.TryAddTransient<IZoneCultureResolver, OqtSite>();
             services.TryAddTransient<IZoneMapper, OqtZoneMapper>();
             services.TryAddTransient<AppPermissionCheck, OqtPermissionCheck>();
@@ -48,14 +55,9 @@ namespace ToSic.Sxc.Oqt.Server
             services.TryAddTransient<ILookUpEngineResolver, OqtGetLookupEngine>();
             services.TryAddTransient<IFingerprint, OqtFingerprintWip>();
             services.TryAddTransient<IUiContextBuilder, OqtUiContextBuilder>();
-            services.TryAddTransient<IModule, OqtModule>();
-            services.TryAddTransient<OqtModule>();
-            services.TryAddTransient<OqtTempInstanceContext>();
-            services.TryAddTransient<OqtSite>();
+
             services.TryAddTransient<OqtZoneMapper>();
             services.TryAddTransient<SettingsHelper>();
-            services.TryAddTransient<IPage, OqtPage>();
-            services.TryAddTransient<OqtState>();
 
             //// add page publishing
             services.TryAddTransient<IPagePublishing, OqtPagePublishing>();
@@ -106,8 +108,8 @@ namespace ToSic.Sxc.Oqt.Server
             services.TryAddTransient<UserLookUp>();
 
             // Polymorphism Resolvers
-            services.TryAddTransient<Polymorphism.Koi>();
-            services.TryAddTransient<Permissions>();
+            services.TryAddTransient<Sxc.Polymorphism.Koi>();
+            services.TryAddTransient<Polymorphism.Permissions>();
 
             // new in v12 - integrate KOI - experimental!
             try
