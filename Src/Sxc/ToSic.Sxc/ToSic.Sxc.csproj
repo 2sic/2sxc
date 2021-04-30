@@ -49,4 +49,10 @@
     <Reference Include="System.Web" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Connect.Koi">
+      <HintPath>..\..\..\Dependencies\Koi\netstandard2.0\Connect.Koi.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
