@@ -7,6 +7,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Edit;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Run;
@@ -70,7 +71,14 @@ namespace ToSic.Sxc.Oqt.Server.Page
             var siteRoot = GetSiteRoot(_siteState);
             var apiRoot = siteRoot + WebApiConstants.ApiRoot + "/";
             var appApiRoot = siteRoot; // without "app/" because the UI will add that later on
-            var result = InpageCms.JsApiJson(pageId, siteRoot, apiRoot, appApiRoot, AntiForgeryToken(), OqtConstants.UiRoot + "/");
+            var result = InpageCms.JsApiJson(
+                PlatformType.Oqtane.ToString(),
+                pageId, 
+                siteRoot, 
+                apiRoot, 
+                appApiRoot, 
+                AntiForgeryToken(), 
+                OqtConstants.UiRoot + "/");
             return wrapLog("ok", result);
         }
 

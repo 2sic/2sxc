@@ -9,6 +9,7 @@ using DotNetNuke.Framework;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Edit;
 
 namespace ToSic.Sxc.Dnn.Web
@@ -33,6 +34,7 @@ namespace ToSic.Sxc.Dnn.Web
             
             var portal = PortalSettings.Current;
             var json = InpageCms.JsApiJson(
+                PlatformType.Dnn.ToString(),
                 portal.ActiveTab.TabID, 
                 siteRoot, 
                 apiRoots.Item1, 
