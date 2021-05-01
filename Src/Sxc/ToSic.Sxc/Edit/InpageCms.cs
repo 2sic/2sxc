@@ -13,7 +13,7 @@
         public static string JsApiJson(string platform, int pageId, string siteRoot, string apiRoot, string appApiRoot, string rvt, string uiRoot)
         {
             var json = "{"
-                       + $"\"platform\": {platform.ToLowerInvariant()},"
+                       + $"\"platform\": \"{platform.ToLowerInvariant()}\","
                        + $"\"page\": {pageId},"
                        + $"\"root\": \"{siteRoot}\","
                        + $"\"api\": \"{apiRoot}\","
