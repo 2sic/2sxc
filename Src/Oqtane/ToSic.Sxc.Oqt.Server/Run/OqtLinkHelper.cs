@@ -1,10 +1,7 @@
-﻿using Oqtane.Repository;
+﻿using Custom.Hybrid;
+using Oqtane.Repository;
 using Oqtane.Shared;
 using System;
-using System.Linq;
-using Custom.Hybrid;
-using Microsoft.AspNetCore.Http;
-using Oqtane.Models;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
@@ -21,14 +18,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
     public class OqtLinkHelper : IOqtLinkHelper, IHasLog
     {
         public Razor12 RazorPage { get; set; }
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly Lazy<IAliasRepository> _aliasRepositoryLazy;
         private readonly IPageRepository _pageRepository;
         private readonly SiteState _siteState;
 
         public OqtLinkHelper(
-            IHttpContextAccessor httpContextAccessor,
-            Lazy<IAliasRepository> aliasRepositoryLazy,
             IPageRepository pageRepository,
             SiteState siteState
         )
@@ -36,8 +29,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
             Log = new Log("OqtLinkHelper");
             // TODO: logging
 
-            _httpContextAccessor = httpContextAccessor;
-            _aliasRepositoryLazy = aliasRepositoryLazy;
             _pageRepository = pageRepository;
             _siteState = siteState;
         }
@@ -67,7 +58,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             var page = _pageRepository.GetPage(pid.Value);
 
-            return Oqtane.Shared.Utilities.NavigateUrl(alias.Path, page.Path, parameters);
+            return Utilities.NavigateUrl(alias.Path, page.Path, parameters);
         }
 
         /// <inheritdoc />
