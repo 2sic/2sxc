@@ -46,9 +46,6 @@ namespace ToSic.Sxc.Dnn.LookUp
             foreach (var propertyAccess in stdSources)
                 providers.Add(new LookUpInDnnPropertyAccess(propertyAccess.Key, propertyAccess.Value, dnnUsr, dnnCult));
 
-            if(providers.HasSource("querystring"))
-                providers.Add(new LookUpInLookUps("query", providers.Sources["querystring"]));
-
             if (providers.HasSource("module"))
             {
                 var original = providers.Sources["module"];

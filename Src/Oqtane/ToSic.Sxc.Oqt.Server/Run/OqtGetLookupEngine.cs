@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public QueryStringLookUp(IHttpContextAccessor httpContextAccessor)
         {
-            Name = "Query";
+            Name = "QueryString";
             _httpContextAccessor = httpContextAccessor;
         }
 
