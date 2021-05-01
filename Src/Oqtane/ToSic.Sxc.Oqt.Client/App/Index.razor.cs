@@ -4,6 +4,7 @@ using Oqtane.Shared;
 using Oqtane.UI;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.Client.Services;
@@ -60,13 +61,24 @@ namespace ToSic.Sxc.Oqt.App
         /// </summary>
         private async Task Initialize2sxcContentBlock()
         {
+            var culture = CultureInfo.CurrentUICulture.Name;
+            //if (string.IsNullOrEmpty(culture)) culture = await GetUserSelectedCultureFromCookie();
+
             var urlQuery = NavigationManager.ToAbsoluteUri(NavigationManager.Uri).Query;
             ViewResults = await OqtSxcRenderService.PrepareAsync(
                 PageState.Alias.AliasId,
                 PageState.Page.PageId,
                 ModuleState.ModuleId,
+                culture,
                 urlQuery);
         }
+
+        //private async Task<string> GetUserSelectedCultureFromCookie()
+        //{
+        //    var interop = new Interop(JSRuntime);
+        //    var localizationCookie = await interop.GetCookie(CookieRequestCultureProvider.DefaultCookieName);
+        //    return CookieRequestCultureProvider.ParseCookieValue(localizationCookie).UICultures[0].Value;
+        //}
 
         //public void Dispose() => NavigationManager.LocationChanged -= HandleLocationChanged;
 

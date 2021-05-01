@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Oqtane.Models;
+﻿using Oqtane.Models;
 using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
@@ -7,7 +6,6 @@ using System.Linq;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Oqt.Server.Page;
-using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
@@ -18,21 +16,14 @@ namespace ToSic.Sxc.Oqt.Server
 {
     public class SxcOqtane : HasLog, ISxcOqtane
     {
-        public SiteState SiteState { get; }
-
         #region Constructor and DI
 
-        public SxcOqtane(OqtAssetsAndHeaders assetsAndHeaders, RazorReferenceManager debugRefMan, OqtTempInstanceContext oqtTempInstanceContext,
-            IServiceProvider serviceProvider, Lazy<SiteStateInitializer> siteStateInitializerLazy, IHttpContextAccessor httpContextAccessor, SiteState siteState, Lazy<OqtState> oqtState
+        public SxcOqtane(OqtAssetsAndHeaders assetsAndHeaders, RazorReferenceManager debugRefMan, Lazy<OqtState> oqtState
             ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
         {
-            SiteState = siteState;
+
             _assetsAndHeaders = assetsAndHeaders;
             _debugRefMan = debugRefMan;
-            _oqtTempInstanceContext = oqtTempInstanceContext;
-            _serviceProvider = serviceProvider;
-            _siteStateInitializerLazy = siteStateInitializerLazy;
-            _httpContextAccessor = httpContextAccessor;
             _oqtState = oqtState;
             // add log to history!
             History.Add("oqt-view", Log);
@@ -41,10 +32,6 @@ namespace ToSic.Sxc.Oqt.Server
         private IOqtAssetsAndHeader AssetsAndHeaders => _assetsAndHeaders;
         private readonly OqtAssetsAndHeaders _assetsAndHeaders;
         private readonly RazorReferenceManager _debugRefMan;
-        private readonly OqtTempInstanceContext _oqtTempInstanceContext;
-        private readonly IServiceProvider _serviceProvider;
-        private readonly Lazy<SiteStateInitializer> _siteStateInitializerLazy;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly Lazy<OqtState> _oqtState;
 
         #endregion
@@ -57,10 +44,6 @@ namespace ToSic.Sxc.Oqt.Server
         public OqtViewResultsDto Prepare(Alias alias, Site site, Oqtane.Models.Page page, Module module)
         {
             //if (_renderDone) throw new Exception("already prepared this module");
-
-            // HACKS: STV POC - indirectly share information
-            if (alias != null) _httpContextAccessor?.HttpContext?.Items.TryAdd("AliasFor2sxc", alias);
-            if (module != null) _httpContextAccessor?.HttpContext?.Items.TryAdd("ModuleForLookUp", module);
 
             Alias = alias;
             Site = site;

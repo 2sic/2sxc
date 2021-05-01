@@ -16,13 +16,12 @@ namespace ToSic.Sxc.Oqt.Client.Services
             _siteState = siteState;
         }
 
-        private string Apiurl => CreateApiUrl(_siteState.Alias, "SxcOqtane");
+        private string Apiurl => CreateApiUrl(_siteState.Alias, "OqtSxcRender");
 
-        public async Task<OqtViewResultsDto> PrepareAsync(int aliasId, int pageId, int moduleId,
+        public async Task<OqtViewResultsDto> PrepareAsync(int aliasId, int pageId, int moduleId, string culture,
             string query)
         {
-            return await GetJsonAsync<OqtViewResultsDto>(CreateAuthorizationPolicyUrl($"{Apiurl}/{aliasId}/{pageId}/{moduleId}/Prepare{query}", moduleId));
-
+            return await GetJsonAsync<OqtViewResultsDto>(CreateAuthorizationPolicyUrl($"{Apiurl}/{aliasId}/{pageId}/{moduleId}/{culture}/Prepare{query}", moduleId));
         }
     }
 }

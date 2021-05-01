@@ -1,16 +1,17 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using Oqtane.Infrastructure;
 using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Page;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Run
@@ -21,23 +22,34 @@ namespace ToSic.Sxc.Oqt.Server.Run
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public sealed class OqtSite: Site<Site>, ICmsSite
     {
+        #region Constructor and DI
+
         /// <summary>
         /// Constructor for DI
         /// </summary>
-        public OqtSite(Lazy<ISiteRepository> siteRepository,
+        public OqtSite(SiteState siteState,
+            Lazy<ISiteRepository> siteRepository,
             Lazy<IServerPaths> serverPaths,
             Lazy<OqtZoneMapper> zoneMapper,
-            SiteState siteState)
+            Lazy<ILocalizationManager> localizationManager,
+            Lazy<ILanguageRepository> languageRepository)
         {
+            _siteState = siteState;
             _siteRepository = siteRepository;
             _serverPaths = serverPaths;
             _zoneMapper = zoneMapper;
-            _siteState = siteState;
+            _localizationManager = localizationManager;
+            _languageRepository = languageRepository;
         }
+        private readonly SiteState _siteState;
         private readonly Lazy<ISiteRepository> _siteRepository;
         private readonly Lazy<IServerPaths> _serverPaths;
         private readonly Lazy<OqtZoneMapper> _zoneMapper;
-        private readonly SiteState _siteState;
+        private readonly Lazy<ILocalizationManager> _localizationManager;
+        private readonly Lazy<ILanguageRepository> _languageRepository;
+
+        #endregion
+
 
         public OqtSite Init(Site site)
         {
@@ -59,11 +71,28 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private Site _unwrapped;
         private Alias Alias => _siteState.Alias;
 
-        /// <inheritdoc />
-        public override string DefaultCultureCode => WipConstants.DefaultLanguage;
+        // List of cultures that are enabled for this site (from database).
+        public List<string> SupportedCultures => _supportedCultures ??=
+            _languageRepository.Value.GetLanguages(Alias.SiteId).Select(l => l.Code).ToList();
+        private List<string> _supportedCultures;
+
+        // All localizations that are installed in system (/code/Oqtane.Client.resources.dll) but default English is missing in the list.
+        public List<string> AllSupportedCultures => _allSupportedCultures ??= _localizationManager.Value.GetSupportedCultures().ToList();
+        private List<string> _allSupportedCultures;
+
+        // When culture code is not provided for selected default language, use "en-US".
+        public string DefaultLanguageCode => _defaultLanguageCode ??=
+            (_languageRepository.Value.GetLanguages(Alias.SiteId).FirstOrDefault(l => l.IsDefault)?.Code ?? "en-US");
+        private string _defaultLanguageCode;
 
         /// <inheritdoc />
-        public override string CurrentCultureCode => WipConstants.DefaultLanguage;
+        public override string DefaultCultureCode =>
+            _defaultCultureCode ??= _localizationManager.Value.GetDefaultCulture() ?? "en-US";
+        private string _defaultCultureCode;
+
+        /// <inheritdoc />
+        public override string CurrentCultureCode => _currentCultureCode ??= (CultureInfo.DefaultThreadCurrentUICulture?.Name ?? DefaultCultureCode);
+        private string _currentCultureCode;
 
         /// <inheritdoc />
         public override int Id => UnwrappedContents.SiteId;

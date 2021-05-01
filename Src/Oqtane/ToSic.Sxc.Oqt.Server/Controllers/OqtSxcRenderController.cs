@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Repository;
@@ -10,19 +12,11 @@ using ToSic.Sxc.Oqt.Shared.Run;
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     [Route("{alias:int}/api/[controller]")]
-    public class SxcOqtaneController : Controller
+    public class OqtSxcRenderController : Controller
     {
-        private readonly ISxcOqtane _sxcOqtane;
-        private readonly IAliasRepository _aliases;
-        private readonly ISiteRepository _sites;
-        private readonly IPageRepository _pages;
-        private readonly IModuleRepository _modules;
-        private readonly IModuleDefinitionRepository _moduleDefinitions;
-        private readonly ISettingRepository _settings;
-        private readonly SiteState _siteState;
-        protected int _entityId = -1;
+        #region Constructor and DI
 
-        public SxcOqtaneController(IHttpContextAccessor accessor,
+        public OqtSxcRenderController(IHttpContextAccessor accessor,
             ISxcOqtane sxcOqtane,
             IAliasRepository aliases,
             ISiteRepository sites,
@@ -32,6 +26,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             ISettingRepository settings,
             SiteState siteState)
         {
+            _accessor = accessor;
             _sxcOqtane = sxcOqtane;
             _aliases = aliases;
             _sites = sites;
@@ -47,14 +42,30 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             }
         }
 
-        [HttpGet("{aliasId}/{pageId}/{moduleId}/Prepare")]
+        private readonly IHttpContextAccessor _accessor;
+        private readonly ISxcOqtane _sxcOqtane;
+        private readonly IAliasRepository _aliases;
+        private readonly ISiteRepository _sites;
+        private readonly IPageRepository _pages;
+        private readonly IModuleRepository _modules;
+        private readonly IModuleDefinitionRepository _moduleDefinitions;
+        private readonly ISettingRepository _settings;
+        private readonly SiteState _siteState;
+        protected int _entityId = -1;
+
+        #endregion
+
+        [HttpGet("{aliasId:int}/{pageId:int}/{moduleId:int}/{culture}/Prepare")]
         //[Authorize(Policy = "ViewModule")]
-        public OqtViewResultsDto Prepare([FromRoute] int aliasId, [FromRoute] int pageId, [FromRoute] int moduleId, [FromQuery] string originalParameters)
+        public OqtViewResultsDto Prepare([FromRoute] int aliasId, [FromRoute] int pageId, [FromRoute] int moduleId, [FromRoute] string culture, [FromQuery] string originalParameters)
         {
             var alias = _aliases.GetAlias(aliasId);
 
             // Store Alias in SiteState for background processing.
             if (_siteState != null) _siteState.Alias = alias;
+
+            // Set User culture
+            if (culture != CultureInfo.CurrentUICulture.Name) SetCulture(culture);
 
             var site = _sites.GetSite(alias.SiteId);
             var page = _pages.GetPage(pageId); // TODO: probably need to add security related to user
@@ -63,7 +74,18 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             module.ModuleDefinition = moduleDefinitions.Find(item => item.ModuleDefinitionName == module.ModuleDefinitionName);
             module.Settings = _settings.GetSettings(EntityNames.Module, moduleId).ToDictionary(setting => setting.SettingName, setting => setting.SettingValue);
 
+            // HACKS: STV POC - indirectly share information
+            if (alias != null) _accessor.HttpContext.Items.TryAdd("AliasFor2sxc", alias);
+            if (module != null) _accessor.HttpContext.Items.TryAdd("ModuleForLookUp", module);
+
             return _sxcOqtane.Prepare(alias, site, page, module);
+        }
+
+        private static void SetCulture(string culture)
+        {
+            var cultureInfo = CultureInfo.GetCultureInfo(culture);
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
         }
     }
 }
