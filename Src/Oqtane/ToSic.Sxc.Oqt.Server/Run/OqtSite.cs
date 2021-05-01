@@ -71,24 +71,15 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private Site _unwrapped;
         private Alias Alias => _siteState.Alias;
 
-        // List of cultures that are enabled for this site (from database).
-        public List<string> SupportedCultures => _supportedCultures ??=
-            _languageRepository.Value.GetLanguages(Alias.SiteId).Select(l => l.Code).ToList();
-        private List<string> _supportedCultures;
-
-        // All localizations that are installed in system (/code/Oqtane.Client.resources.dll) but default English is missing in the list.
-        public List<string> AllSupportedCultures => _allSupportedCultures ??= _localizationManager.Value.GetSupportedCultures().ToList();
-        private List<string> _allSupportedCultures;
+        /// <inheritdoc />
+        public override string DefaultCultureCode =>
+            _defaultCultureCode ??= _localizationManager.Value.GetDefaultCulture() ?? "en-us";
+        private string _defaultCultureCode;
 
         // When culture code is not provided for selected default language, use "en-US".
         public string DefaultLanguageCode => _defaultLanguageCode ??=
-            (_languageRepository.Value.GetLanguages(Alias.SiteId).FirstOrDefault(l => l.IsDefault)?.Code ?? "en-US");
+            (_languageRepository.Value.GetLanguages(_siteState.Alias.SiteId).FirstOrDefault(l => l.IsDefault)?.Code ?? "en-us");
         private string _defaultLanguageCode;
-
-        /// <inheritdoc />
-        public override string DefaultCultureCode =>
-            _defaultCultureCode ??= _localizationManager.Value.GetDefaultCulture() ?? "en-US";
-        private string _defaultCultureCode;
 
         /// <inheritdoc />
         public override string CurrentCultureCode => _currentCultureCode ??= (CultureInfo.DefaultThreadCurrentUICulture?.Name ?? DefaultCultureCode);
