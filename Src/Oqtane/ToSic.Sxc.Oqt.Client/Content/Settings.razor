@@ -4,27 +4,27 @@
 @inject ISettingService SettingService
 
 <table class="table table-borderless">
-    <tr>
+@*    <tr>
         <td>
             <Label For="value" HelpText="Enter a value">Name: </Label>
         </td>
         <td>
             <input id="value" type="text" class="form-control" @bind="@_value" />
         </td>
-    </tr>
+    </tr>*@
 </table>
 
 @code {
-    public override string Title => "Sxc Settings";
+    public override string Title => "2sxc Content Settings";
 
-    string _value;
+    @*string _value;*@
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            Dictionary<string, string> settings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
-            _value = SettingService.GetSetting(settings, "SettingName", "");
+@*            Dictionary<string, string> settings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
+            _value = SettingService.GetSetting(settings, "SettingName", "");*@
         }
         catch (Exception ex)
         {
@@ -36,9 +36,9 @@
     {
         try
         {
-            Dictionary<string, string> settings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
+@*            Dictionary<string, string> settings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
             SettingService.SetSetting(settings, "SettingName", _value);
-            await SettingService.UpdateModuleSettingsAsync(settings, ModuleState.ModuleId);
+            await SettingService.UpdateModuleSettingsAsync(settings, ModuleState.ModuleId);*@
         }
         catch (Exception ex)
         {
