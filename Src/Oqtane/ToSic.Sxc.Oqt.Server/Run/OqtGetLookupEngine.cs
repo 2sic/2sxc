@@ -1,28 +1,21 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
-using System.Security.Claims;
-using Oqtane.Models;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Oqt.Server.Plumbing;
-using ToSic.Sxc.Oqt.Server.Repository;
 using ToSic.Sxc.Oqt.Shared;
 
-// TODO: #Oqtane - must provide additional sources like Context (http) etc.
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtGetLookupEngine : HasLog<ILookUpEngineResolver>, ILookUpEngineResolver
     {
-        private readonly Lazy<QueryStringLookUp> _queryStringLookUp;
-        private readonly Lazy<SiteLookUp> _siteLookUp;
-        private readonly Lazy<PageLookUp> _pageLookUp;
-        private readonly Lazy<ModuleLookUp> _moduleLookUp;
-        private readonly Lazy<UserLookUp> _userLookUp;
+        #region Constructor and DI
 
         public OqtGetLookupEngine(
             Lazy<QueryStringLookUp> queryStringLookUp,
@@ -37,6 +30,13 @@ namespace ToSic.Sxc.Oqt.Server.Run
             _moduleLookUp = moduleLookUp;
             _userLookUp = userLookUp;
         }
+        private readonly Lazy<QueryStringLookUp> _queryStringLookUp;
+        private readonly Lazy<SiteLookUp> _siteLookUp;
+        private readonly Lazy<PageLookUp> _pageLookUp;
+        private readonly Lazy<ModuleLookUp> _moduleLookUp;
+        private readonly Lazy<UserLookUp> _userLookUp;
+
+        #endregion
 
         public ILookUpEngine GetLookUpEngine(int instanceId/*, ILog parentLog*/)
         {
@@ -110,7 +110,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
         }
     }
 
-
     public class UserLookUp : LookUpBase
     {
         private readonly OqtUser _oqtUser;
@@ -164,7 +163,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             //_serviceProvider = serviceProvider;
         }
 
-        public Oqtane.Models.Module GetSource()
+        public Module GetSource()
         {
             //var oqtState = new OqtState(_GetRequest, _serviceProvider, Log);
             //var ctx = oqtState.GetContext();
