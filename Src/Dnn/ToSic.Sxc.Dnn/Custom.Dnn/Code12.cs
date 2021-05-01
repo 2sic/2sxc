@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Documentation;
 
 // ReSharper disable once CheckNamespace
-namespace Custom.Hybrid
+namespace Custom.Dnn
 {
     /// <summary>
     /// This is the base class for custom code (.cs) files in your Apps.

@@ -115,12 +115,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Custom\Api12.cs" />
-    <Compile Include="Custom\Api12_Obsolete.cs" />
+    <Compile Include="Custom\Dnn\Api12.cs" />
+    <Compile Include="Custom\Hybrid\Api12.cs" />
+    <Compile Include="Custom\Hybrid\Api12_Obsolete.cs" />
     <Compile Include="Dnn\Providers\ModifiedTabAndModuleInfoProvider.cs" />
     <Compile Include="Dnn\WebApi\Adam\DnnAdamSecurityChecks.cs" />
     <Compile Include="Dnn\ApiController.cs" />
-    <Compile Include="Dnn\ApiController_Obsolete.cs" />
     <Compile Include="Dnn\AppFolderUtilities.cs" />
     <Compile Include="Dnn\WebApi\Admin\AppPartsController.cs" />
     <Compile Include="Dnn\WebApi\Admin\FieldController.cs" />

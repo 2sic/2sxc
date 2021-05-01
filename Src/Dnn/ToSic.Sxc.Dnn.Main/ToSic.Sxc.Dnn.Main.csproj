@@ -165,8 +165,6 @@
     <Content Include="DnnWebForms\Wysiwyg.ascx" />
     <Content Include="Extensions\404.png" />
     <Content Include="Extensions\ImageResizer\ImageResizer.txt" />
-    <Content Include="icon-app-black.png" />
-    <Content Include="icon-black.png" />
     <Content Include="DnnWebForms\Skins\QuickEdit.ascx" />
     <Content Include="icon-app.png" />
     <Content Include="icon.png" />

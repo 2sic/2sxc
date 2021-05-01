@@ -118,6 +118,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Compatibility\Dnn8Bugs.cs" />
+    <Compile Include="Custom\Dnn\Razor12.cs" />
+    <Compile Include="Custom\Dnn\Razor12Code.cs" />
     <Compile Include="Custom\Hybrid\Razor12_DynamicModel.cs" />
     <Compile Include="Dnn\beta\InheritRazorComponent.cs" />
     <Compile Include="Dnn\RazorCodeManager.cs" />

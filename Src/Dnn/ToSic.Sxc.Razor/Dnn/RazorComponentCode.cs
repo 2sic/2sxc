@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using ToSic.Eav.Documentation;
-using ToSic.Eav.Run;
-using ToSic.Sxc.Context;
-using ToSic.Sxc.Search;
+﻿using ToSic.Eav.Documentation;
+using Custom.Dnn;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -12,22 +8,22 @@ namespace ToSic.Sxc.Dnn
     /// Use it to move logic / functions etc. into a kind of code-behind razor instead of as part of your view-template.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract class RazorComponentCode: RazorComponent
+    public abstract class RazorComponentCode: Razor12Code
     {
 
-        /// <inheritdoc />
-        public override void CustomizeData() { }
+//        /// <inheritdoc />
+//        public override void CustomizeData() { }
 
-#pragma warning disable 618
-        /// <inheritdoc />
-        [PrivateApi]
-        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate)
-        {
-            CustomizeSearch(searchInfos, moduleInfo as IContainer, beginDate);
-        }
+//#pragma warning disable 618
+//        /// <inheritdoc />
+//        [PrivateApi]
+//        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate)
+//        {
+//            CustomizeSearch(searchInfos, moduleInfo as IContainer, beginDate);
+//        }
 
-        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo, DateTime beginDate) { }
-#pragma warning restore 618
+//        public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo, DateTime beginDate) { }
+//#pragma warning restore 618
 
     }
 }
