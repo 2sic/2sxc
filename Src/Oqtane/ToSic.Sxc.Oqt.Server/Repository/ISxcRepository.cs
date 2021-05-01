@@ -4,10 +4,10 @@ namespace ToSic.Sxc.Oqt.Server.Repository
 {
     public interface ISxcRepository
     {
-        IEnumerable<Shared.Models.Sxc> GetSxcs(int ModuleId);
-        Shared.Models.Sxc GetSxc(int SxcId);
-        Shared.Models.Sxc AddSxc(Shared.Models.Sxc Sxc);
-        Shared.Models.Sxc UpdateSxc(Shared.Models.Sxc Sxc);
+        IEnumerable<Shared.Models.SxcRepositoryObjectUnclearIfUsed> GetSxcs(int ModuleId);
+        Shared.Models.SxcRepositoryObjectUnclearIfUsed GetSxc(int SxcId);
+        Shared.Models.SxcRepositoryObjectUnclearIfUsed AddSxc(Shared.Models.SxcRepositoryObjectUnclearIfUsed sxcRepositoryObjectUnclearIfUsed);
+        Shared.Models.SxcRepositoryObjectUnclearIfUsed UpdateSxc(Shared.Models.SxcRepositoryObjectUnclearIfUsed sxcRepositoryObjectUnclearIfUsed);
         void DeleteSxc(int SxcId);
     }
 }

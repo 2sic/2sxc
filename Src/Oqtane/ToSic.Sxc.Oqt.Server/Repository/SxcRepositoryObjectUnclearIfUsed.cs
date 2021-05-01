@@ -5,7 +5,7 @@ using Oqtane.Models;
 namespace ToSic.Sxc.Oqt.Shared.Models
 {
     [Table("ToSicSxc")]
-    public class Sxc : IAuditable
+    public class SxcRepositoryObjectUnclearIfUsed : IAuditable
     {
         public int SxcId { get; set; }
         public int ModuleId { get; set; }

@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Oqt.Server.Repository
 {
     public class SxcContext : DBContextBase, IService
     {
-        public virtual DbSet<Shared.Models.Sxc> Sxc { get; set; }
+        public virtual DbSet<Shared.Models.SxcRepositoryObjectUnclearIfUsed> Sxc { get; set; }
 
         public SxcContext(ITenantResolver tenantResolver, IHttpContextAccessor accessor) : base(tenantResolver, accessor)
         {

@@ -14,34 +14,34 @@ namespace ToSic.Sxc.Oqt.Server.Repository
             _db = context;
         }
 
-        public IEnumerable<Shared.Models.Sxc> GetSxcs(int ModuleId)
+        public IEnumerable<Shared.Models.SxcRepositoryObjectUnclearIfUsed> GetSxcs(int ModuleId)
         {
             return _db.Sxc.Where(item => item.ModuleId == ModuleId);
         }
 
-        public Shared.Models.Sxc GetSxc(int SxcId)
+        public Shared.Models.SxcRepositoryObjectUnclearIfUsed GetSxc(int SxcId)
         {
             return _db.Sxc.Find(SxcId);
         }
 
-        public Shared.Models.Sxc AddSxc(Shared.Models.Sxc Sxc)
+        public Shared.Models.SxcRepositoryObjectUnclearIfUsed AddSxc(Shared.Models.SxcRepositoryObjectUnclearIfUsed sxcRepositoryObjectUnclearIfUsed)
         {
-            _db.Sxc.Add(Sxc);
+            _db.Sxc.Add(sxcRepositoryObjectUnclearIfUsed);
             _db.SaveChanges();
-            return Sxc;
+            return sxcRepositoryObjectUnclearIfUsed;
         }
 
-        public Shared.Models.Sxc UpdateSxc(Shared.Models.Sxc Sxc)
+        public Shared.Models.SxcRepositoryObjectUnclearIfUsed UpdateSxc(Shared.Models.SxcRepositoryObjectUnclearIfUsed sxcRepositoryObjectUnclearIfUsed)
         {
-            _db.Entry(Sxc).State = EntityState.Modified;
+            _db.Entry(sxcRepositoryObjectUnclearIfUsed).State = EntityState.Modified;
             _db.SaveChanges();
-            return Sxc;
+            return sxcRepositoryObjectUnclearIfUsed;
         }
 
         public void DeleteSxc(int SxcId)
         {
-            Shared.Models.Sxc Sxc = _db.Sxc.Find(SxcId);
-            _db.Sxc.Remove(Sxc);
+            Shared.Models.SxcRepositoryObjectUnclearIfUsed sxcRepositoryObjectUnclearIfUsed = _db.Sxc.Find(SxcId);
+            _db.Sxc.Remove(sxcRepositoryObjectUnclearIfUsed);
             _db.SaveChanges();
         }
     }

@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Oqt.Server.Manager
         public string ExportModule(Module module)
         {
             string content = "";
-            List<Shared.Models.Sxc> Sxcs = _SxcRepository.GetSxcs(module.ModuleId).ToList();
+            List<Shared.Models.SxcRepositoryObjectUnclearIfUsed> Sxcs = _SxcRepository.GetSxcs(module.ModuleId).ToList();
             if (Sxcs != null)
             {
                 content = JsonSerializer.Serialize(Sxcs);
@@ -43,16 +43,16 @@ namespace ToSic.Sxc.Oqt.Server.Manager
 
         public void ImportModule(Module module, string content, string version)
         {
-            List<Shared.Models.Sxc> Sxcs = null;
+            List<Shared.Models.SxcRepositoryObjectUnclearIfUsed> Sxcs = null;
             if (!string.IsNullOrEmpty(content))
             {
-                Sxcs = JsonSerializer.Deserialize<List<Shared.Models.Sxc>>(content);
+                Sxcs = JsonSerializer.Deserialize<List<Shared.Models.SxcRepositoryObjectUnclearIfUsed>>(content);
             }
             if (Sxcs != null)
             {
                 foreach(var Sxc in Sxcs)
                 {
-                    _SxcRepository.AddSxc(new Shared.Models.Sxc { ModuleId = module.ModuleId, Name = Sxc.Name });
+                    _SxcRepository.AddSxc(new Shared.Models.SxcRepositoryObjectUnclearIfUsed { ModuleId = module.ModuleId, Name = Sxc.Name });
                 }
             }
         }
