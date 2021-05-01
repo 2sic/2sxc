@@ -52,6 +52,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         protected override bool VerifyConditionOfEnvironment(string condition)
         {
+            // This terms are historic from DNN
             if (condition.Equals("SecurityAccessLevel.Anonymous", StringComparison.InvariantCultureIgnoreCase))
                 return true;
 
@@ -86,11 +87,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
         }
 
         private bool UserIsModuleEditor()
-            => Log.Intercept(nameof(UserIsModuleEditor),
+            => _userIsModuleEditor ??= Log.Intercept(nameof(UserIsModuleEditor),
                 () =>
                 {
                     if (Module == null) return false;
-                    // This seems to throw errors during search :(
                     try
                     {
                         return _userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, Module.ModuleId, PermissionNames.Edit);
@@ -101,9 +101,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
                     }
                 });
 
+        private bool? _userIsModuleEditor;
+
         private bool UserIsModuleAdmin()
             => Log.Intercept(nameof(UserIsModuleAdmin),
-                () => Module != null && _userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, Module.ModuleId, PermissionNames.Edit));
+                UserIsModuleEditor);
 
     }
 }
