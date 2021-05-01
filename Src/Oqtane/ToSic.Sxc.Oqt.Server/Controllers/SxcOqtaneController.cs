@@ -47,16 +47,16 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             }
         }
 
-        [HttpGet("Prepare")]
+        [HttpGet("{aliasId}/{pageId}/{moduleId}/Prepare")]
         //[Authorize(Policy = "ViewModule")]
-        public OqtViewResultsDto Prepare([FromQuery] int aliasId, [FromQuery] int siteId, [FromQuery] int pageId, [FromQuery] int moduleId, [FromQuery] string originalParameters)
+        public OqtViewResultsDto Prepare([FromRoute] int aliasId, [FromRoute] int pageId, [FromRoute] int moduleId, [FromQuery] string originalParameters)
         {
             var alias = _aliases.GetAlias(aliasId);
 
             // Store Alias in SiteState for background processing.
             if (_siteState != null) _siteState.Alias = alias;
 
-            var site = _sites.GetSite(siteId);
+            var site = _sites.GetSite(alias.SiteId);
             var page = _pages.GetPage(pageId); // TODO: probably need to add security related to user
             var module = _modules.GetModule(moduleId);
             var moduleDefinitions = _moduleDefinitions.GetModuleDefinitions(module.SiteId).ToList();

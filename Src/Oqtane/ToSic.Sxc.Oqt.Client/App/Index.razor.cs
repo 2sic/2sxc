@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Components;
 using Oqtane.Models;
+using Oqtane.Shared;
 using Oqtane.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.WebUtilities;
-using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Client.Services;
 using ToSic.Sxc.Oqt.Shared.Models;
 
@@ -16,7 +15,7 @@ namespace ToSic.Sxc.Oqt.App
     public partial class Index
     {
         [Inject]
-        public ISxcOqtaneService SxcOqtaneService { get; set; }
+        public IOqtSxcRenderService OqtSxcRenderService { get; set; }
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
@@ -62,12 +61,11 @@ namespace ToSic.Sxc.Oqt.App
         private async Task Initialize2sxcContentBlock()
         {
             var urlQuery = NavigationManager.ToAbsoluteUri(NavigationManager.Uri).Query;
-            ViewResults = await SxcOqtaneService.PrepareAsync(
+            ViewResults = await OqtSxcRenderService.PrepareAsync(
                 PageState.Alias.AliasId,
-                PageState.Site.SiteId,
                 PageState.Page.PageId,
                 ModuleState.ModuleId,
-                QueryHelpers.ParseQuery(urlQuery));
+                urlQuery);
         }
 
         //public void Dispose() => NavigationManager.LocationChanged -= HandleLocationChanged;
