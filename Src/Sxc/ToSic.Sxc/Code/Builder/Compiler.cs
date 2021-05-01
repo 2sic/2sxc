@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Code.Builder
     // https://laurentkempe.com/2019/02/18/dynamically-compile-and-run-code-using-dotNET-Core-3.0/
     public class Compiler : HasLog
     {
-        public Compiler() : base("Sys.DynamicRun.Cmpl")
+        public Compiler() : base("Sys.CodCpl")
         {
 
         }

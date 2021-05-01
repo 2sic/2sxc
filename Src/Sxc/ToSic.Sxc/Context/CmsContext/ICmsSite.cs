@@ -14,5 +14,15 @@ namespace ToSic.Sxc.Context
         /// </summary>
         int Id { get; }
 
+        /// <summary>
+        /// The site url without protocol. Can be variation of any such examples:
+        /// 
+        /// - website.org
+        /// - www.website.org
+        /// - website.org/products
+        /// - website.org/en-us
+        /// - website.org/products/en-us
+        /// </summary>
+        string Url { get; }
     }
 }

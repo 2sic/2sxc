@@ -80,7 +80,7 @@ namespace ToSic.Sxc.Code
                 catch (Exception ex)
                 {
                     Log.Exception(ex);
-                    errorMsg = $"Error: Can't compile '{className}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. ";
+                    errorMsg = $"Error: Can't compile '{className}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. " + ex.Message;
                 }
 #else
                 assembly = BuildManager.GetCompiledAssembly(virtualPath);
