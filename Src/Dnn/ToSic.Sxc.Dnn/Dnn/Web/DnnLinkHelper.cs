@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Helpers;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Web;
 
@@ -47,14 +48,25 @@ namespace ToSic.Sxc.Dnn.Web
 
         }
 
-        public string Api(string noParameterOrder = Eav.Constants.RandomProtectionParameter, string path = null)
+        public string Api(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, string path = null)
         {
-            // TODO: STV
-            // 1. if path starts with / remove that
-            // 2. if it starts with "app/" or "api/" or "some-edition/api" or "app/some-edition/api" should always behave the same
-            // 3. should then return a full link (without domain) to the app endpoint
-            // Make sure to access an object or code which already does this work, like the stuff which generates the in-page js context or something
-            throw new NotImplementedException();
+            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Api", $"{nameof(path)}");
+
+            if (string.IsNullOrEmpty(path)) return string.Empty;
+
+            path = path.ForwardSlash();
+            path = path.TrimPrefixSlash();
+
+            if (path.PrefixSlash().ToLowerInvariant().Contains("/app/"))
+                throw new ArgumentException("Error, path shouldn't have \"app\" part in it. It is expected to be relative to application root.");
+
+            //if (!path.PrefixSlash().ToLowerInvariant().Contains("/api/"))
+            //    throw new ArgumentException("Error, path should have \"api\" part in it.");
+
+            // TODO: build url with 'app'/'applicationName'
+
+            var apiRoot = DnnJsApiHeader.GetApiRoots().Item2.TrimLastSlash();
+            return $"{apiRoot}/{path}";
         }
     }
 }

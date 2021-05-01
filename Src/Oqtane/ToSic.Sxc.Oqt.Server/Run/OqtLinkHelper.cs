@@ -6,7 +6,9 @@ using Custom.Hybrid;
 using Microsoft.AspNetCore.Http;
 using Oqtane.Models;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Oqt.Server.Page;
 using ToSic.Sxc.Web;
 using Log = ToSic.Eav.Logging.Simple.Log;
 
@@ -55,12 +57,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             if (requiresNamedParameters != null)
                 throw new Exception("The Link.To can only be used with named parameters. try Link.To( parameters: \"tag=daniel&sort=up\") instead.");
 
-            // It looks that SiteState.Alias have wrong alias, so we can't use it. Try to get right one for link helper.
-            var alias = GetRightAlias();
-
-            // This is workaround to get PageRepository working, because it depends on TenantResolver
-            // that is not working in this context (it works in api controllers).
-            _siteState.Alias = alias;
+            var alias = _siteState.Alias;
 
             var currentPageId = RazorPage._DynCodeRoot?.CmsContext?.Page?.Id;
 
@@ -73,31 +70,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return Oqtane.Shared.Utilities.NavigateUrl(alias.Path, page.Path, parameters);
         }
 
-        private Alias GetRightAlias()
-        {
-            // This httpContext is from _blazor, so we can use host, but can't use path (it is always _blazor).
-            var request = _httpContextAccessor?.HttpContext?.Request;
-            if (request == null)
-                throw new Exception("Error, HttpContext is unknown.");
-
-            var url = $"{request.Host}";
-
-            var siteId = RazorPage._DynCodeRoot?.CmsContext?.Site?.Id;
-            if (siteId == null)
-                throw new Exception("Error, SiteId is unknown.");
-
-            // Get right Alias.
-            var alias = _aliasRepositoryLazy.Value.GetAliases()
-                .OrderByDescending(a => a.Name.Length)
-                .ThenBy(a => a.Name)
-                .FirstOrDefault(a => a.SiteId == siteId && a.Name.StartsWith(url, StringComparison.InvariantCultureIgnoreCase));
-
-            if (alias == null)
-                throw new Exception("Error, Alias is unknown.");
-
-            return alias;
-        }
-
         /// <inheritdoc />
         public string Base()
         {
@@ -107,14 +79,25 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return basePath.Substring(0, basePath.IndexOf(randomxyz, StringComparison.Ordinal));
         }
 
-        public string Api(string noParameterOrder = Eav.Constants.RandomProtectionParameter, string path = null)
+        public string Api(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, string path = null)
         {
-            // TODO: STV
-            // 1. if path starts with / remove that
-            // 2. if it starts with "app/" or "api/" or "some-edition/api" or "app/some-edition/api" should always behave the same
-            // 3. should then return a full link (without domain) to the app endpoint
-            // Make sure to access an object or code which already does this work, like the stuff which generates the in-page js context or something
-            throw new NotImplementedException();
+            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Api", $"{nameof(path)}");
+
+            if (string.IsNullOrEmpty(path)) return string.Empty;
+
+            path = path.ForwardSlash();
+            path = path.TrimPrefixSlash();
+
+            //if (path.PrefixSlash().ToLowerInvariant().Contains("/app/"))
+            //    throw new ArgumentException("Error, path shouldn't have \"app\" part in it. It is expected to be relative to application root.");
+
+            //if (!path.PrefixSlash().ToLowerInvariant().Contains("/api/"))
+            //    throw new ArgumentException("Error, path should have \"api\" part in it.");
+
+            // TODO: build url with 'app'/'applicationName'
+
+            var siteRoot = OqtAssetsAndHeaders.GetSiteRoot(_siteState).TrimLastSlash();
+            return $"{siteRoot}/{path}";
         }
     }
 }

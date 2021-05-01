@@ -33,11 +33,11 @@ namespace ToSic.Sxc.Web
         /// Creates a link to an API endpoint.
         /// Useful for APIs which return downloads or similar. 
         /// </summary>
-        /// <param name="noParameterOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="dontRelyOnParameterOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="path">API path, like `api/vCard?id=27` or `app/api/my?id=27`</param>
         /// <returns></returns>
         string Api(
-            string noParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
             string path = null
         );
     }
