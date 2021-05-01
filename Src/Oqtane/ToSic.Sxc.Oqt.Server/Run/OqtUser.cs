@@ -58,13 +58,14 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private User GetUser()
         {
             var identity = _userResolver.Value.GetUser();
+            if (identity.UserId == -1) return identity;
             var user = _userRepository.Value.GetUser(identity.UserId);
-            user.Roles = identity?.Roles;
+            user.Roles = identity.Roles;
             user.SiteId = _siteState?.Alias?.SiteId ?? identity.SiteId;
             return user;
         }
 
-        public int Id => (UnwrappedContents?.UserId ?? OqtConstants.Unknown);
+        public int Id => UnwrappedContents?.UserId ?? -1;
 
         public string IdentityToken => $"{OqtConstants.UserTokenPrefix}:{Id}";
 
@@ -97,7 +98,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         #endregion
 
-        public bool IsAnonymous => Id == OqtConstants.Unknown;
+        public bool IsAnonymous => Id == -1;
 
 
         #region Private methods
