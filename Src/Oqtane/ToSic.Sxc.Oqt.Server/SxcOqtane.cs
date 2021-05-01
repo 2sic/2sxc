@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Oqtane.Models;
 using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Oqt.Server.Page;
 using ToSic.Sxc.Oqt.Server.Plumbing;
@@ -15,7 +13,6 @@ using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Oqt.Shared.Run;
 using ToSic.Sxc.Razor.Engine.DbgWip;
-using ToSic.Sxc.Web.Parameters;
 
 namespace ToSic.Sxc.Oqt.Server
 {
@@ -57,7 +54,7 @@ namespace ToSic.Sxc.Oqt.Server
         /// <summary>
         /// Prepare must always be the first thing to be called - to ensure that afterwards both headers and html are known.
         /// </summary>
-        public SxcOqtaneDto Prepare(Alias alias, Site site, Oqtane.Models.Page page, Module module)
+        public OqtViewResultsDto Prepare(Alias alias, Site site, Oqtane.Models.Page page, Module module)
         {
             //if (_renderDone) throw new Exception("already prepared this module");
 
@@ -85,15 +82,15 @@ namespace ToSic.Sxc.Oqt.Server
 
             //_renderDone = true;
 
-            return new SxcOqtaneDto
+            return new OqtViewResultsDto
             {
-                GeneratedHtml = generatedHtml,
-                Resources = Resources,
-                AddContextMeta = AssetsAndHeaders.AddContextMeta,
-                ContextMetaName = AssetsAndHeaders.ContextMetaName,
-                ContextMetaContents = AssetsAndHeaders.ContextMetaContents(),
-                Scripts = AssetsAndHeaders.Scripts().ToList(),
-                Styles = AssetsAndHeaders.Styles().ToList(),
+                Html = generatedHtml,
+                TemplateResources = Resources,
+                //AddContextMeta = AssetsAndHeaders.AddContextMeta,
+                SxcContextMetaName = AssetsAndHeaders.AddContextMeta ? AssetsAndHeaders.ContextMetaName : null,
+                SxcContextMetaContents = AssetsAndHeaders.AddContextMeta ? AssetsAndHeaders.ContextMetaContents(): null,
+                SxcScripts = AssetsAndHeaders.Scripts().ToList(),
+                SxcStyles = AssetsAndHeaders.Styles().ToList(),
             };
         }
 

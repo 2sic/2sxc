@@ -1,7 +1,6 @@
 @* ReSharper disable once CheckNamespace *@
 @namespace ToSic.Sxc.Oqt.Content
 @inherits ToSic.Sxc.Oqt.App.Index
-
-<div x-style="border: aqua 2px dotted">
-    @((MarkupString)SxcOqtaneDto?.GeneratedHtml)
-</div>
+@* Show an error message from backend if something very central fails. Template errors will be in the normal Html *@
+@((MarkupString)ViewResults?.ErrorMessage)
+@((MarkupString)ViewResults?.Html)

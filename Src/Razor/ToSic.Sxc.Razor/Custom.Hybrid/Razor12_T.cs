@@ -5,9 +5,10 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
 
+// ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
 {
-    // test, doesn't do anything yet
+    [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
     public abstract partial class Razor12<TModel>: Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>
     {
         #region Constructor / DI
@@ -36,8 +37,6 @@ namespace Custom.Hybrid
 
         public ILog Log { get; }
         #endregion
-
-        //public Purpose Purpose { get; set; }
 
     }
 }

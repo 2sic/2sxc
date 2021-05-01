@@ -1,4 +1,4 @@
-﻿using Oqtane.Documentation;
+﻿using ToSic.Eav.Documentation;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Oqtane

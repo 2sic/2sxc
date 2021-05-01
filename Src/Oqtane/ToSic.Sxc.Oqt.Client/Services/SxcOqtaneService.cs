@@ -22,14 +22,14 @@ namespace ToSic.Sxc.Oqt.Client.Services
 
         private string Apiurl => CreateApiUrl(_siteState.Alias, "SxcOqtane");
 
-        public async Task<SxcOqtaneDto> PrepareAsync(int aliasId, int siteId, int pageId, int moduleId,
+        public async Task<OqtViewResultsDto> PrepareAsync(int aliasId, int siteId, int pageId, int moduleId,
             Dictionary<string, StringValues> query)
         {
             var queryIn2SxcStructure =
                 query.Select(q => new KeyValuePair<string, string>(q.Key, q.Value.FirstOrDefault()));
             var originalParameters = JsonSerializer.Serialize(queryIn2SxcStructure);
 
-            return await GetJsonAsync<SxcOqtaneDto>($"{Apiurl}/Prepare?entityid={moduleId}&aliasId={aliasId}&siteId={siteId}" +
+            return await GetJsonAsync<OqtViewResultsDto>($"{Apiurl}/Prepare?entityid={moduleId}&aliasId={aliasId}&siteId={siteId}" +
                                                     $"&pageId={pageId}&moduleId={moduleId}&originalparameters={originalParameters}");
         }
 

@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Oqt.App
 
         public override List<Resource> Resources => new List<Resource>();
 
-        public SxcOqtaneDto SxcOqtaneDto { get; set; }
+        public OqtViewResultsDto ViewResults { get; set; }
 
         //protected override async Task OnInitializedAsync()
         //{
@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Oqt.App
         private async Task Initialize2sxcContentBlock()
         {
             var urlQuery = NavigationManager.ToAbsoluteUri(NavigationManager.Uri).Query;
-            SxcOqtaneDto = await SxcOqtaneService.PrepareAsync(
+            ViewResults = await SxcOqtaneService.PrepareAsync(
                 PageState.Alias.AliasId,
                 PageState.Site.SiteId,
                 PageState.Page.PageId,
@@ -91,7 +91,7 @@ namespace ToSic.Sxc.Oqt.App
                 await base.OnAfterRenderAsync(firstRender);
 
                 // 2sxc part should be executed only if new 2sxc data arrived from server (ounce per view)
-                if (NewDataArrived && PageState.Runtime == Oqtane.Shared.Runtime.Server && SxcOqtaneDto != null/* && 1 == 0*/)
+                if (NewDataArrived && PageState.Runtime == Oqtane.Shared.Runtime.Server && ViewResults != null/* && 1 == 0*/)
                 {
                     NewDataArrived = false;
 
@@ -100,17 +100,16 @@ namespace ToSic.Sxc.Oqt.App
                     #region 2sxc Standard Assets and Header
 
                     // Add Context-Meta first, because it should be available when $2sxc loads
-
-                    if (SxcOqtaneDto.AddContextMeta)
-                        await interop.IncludeMeta("sxc-tmp-context-id", "name", SxcOqtaneDto.ContextMetaName, SxcOqtaneDto.ContextMetaContents, "id");
+                    if (ViewResults.SxcContextMetaName != null)
+                        await interop.IncludeMeta("sxc-context-meta", "name", ViewResults.SxcContextMetaName, ViewResults.SxcContextMetaContents, "id");
 
                     // Lets load all 2sxc js dependencies (js / styles)
                     // Not done the official Oqtane way, because that asks for the scripts before
                     // the razor component reported what it needs
-                    foreach (var resource in SxcOqtaneDto.Scripts)
+                    foreach (var resource in ViewResults.SxcScripts)
                         await interop.IncludeScript("", resource, "", "", "", "head", "");
 
-                    foreach (var style in SxcOqtaneDto.Styles)
+                    foreach (var style in ViewResults.SxcStyles)
                         await interop.IncludeLink("", "stylesheet", style, "text/css", "", "", "");
 
                     #endregion
@@ -118,7 +117,7 @@ namespace ToSic.Sxc.Oqt.App
                     #region External resources requested by the razor template
 
                     // External resources = independent files (so not inline JS in the template)
-                    var externalResources = SxcOqtaneDto.Resources.Where(r => r.IsExternal).ToArray();
+                    var externalResources = ViewResults.TemplateResources.Where(r => r.IsExternal).ToArray();
 
                     // 1. Style Sheets, ideally before JS
                     await interop.IncludeLinks(externalResources
@@ -151,7 +150,7 @@ namespace ToSic.Sxc.Oqt.App
                     if (includeScripts.Any()) await interop.IncludeScripts(includeScripts);
 
                     // 3. Inline JS code which was extracted from the template
-                    var inlineResources = SxcOqtaneDto.Resources.Where(r => !r.IsExternal).ToArray();
+                    var inlineResources = ViewResults.TemplateResources.Where(r => !r.IsExternal).ToArray();
                     foreach (var inline in inlineResources)
                         await interop.IncludeScript(string.IsNullOrWhiteSpace(inline.UniqueId) ? null : inline.UniqueId,
                             "",

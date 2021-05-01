@@ -30,6 +30,7 @@ namespace Custom.Hybrid
     /// Custom base controller class for custom dynamic 2sxc app api controllers.
     /// It is without dependencies in class constructor, commonly provided with DI.
     /// </summary>
+    [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
     public abstract class Api12 : OqtControllerBase, IDynamicCode, IDynamicWebApi
     {
         protected IServiceProvider ServiceProvider { get; private set; }

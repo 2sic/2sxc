@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Oqt.Shared.Run
 {
     public interface ISxcOqtane
     {
-        SxcOqtaneDto Prepare(Alias alias, Site site, Page page, Module module);
+        OqtViewResultsDto Prepare(Alias alias, Site site, Page page, Module module);
 
         //MarkupString GeneratedHtml { get; }
 

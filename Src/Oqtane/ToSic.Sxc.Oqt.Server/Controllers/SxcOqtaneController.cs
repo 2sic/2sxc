@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         [HttpGet("Prepare")]
         //[Authorize(Policy = "ViewModule")]
-        public SxcOqtaneDto Prepare([FromQuery] int aliasId, [FromQuery] int siteId, [FromQuery] int pageId, [FromQuery] int moduleId, [FromQuery] string originalParameters)
+        public OqtViewResultsDto Prepare([FromQuery] int aliasId, [FromQuery] int siteId, [FromQuery] int pageId, [FromQuery] int moduleId, [FromQuery] string originalParameters)
         {
             var alias = _aliases.Value.GetAlias(aliasId);
 

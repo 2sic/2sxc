@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Oqt.Client.Services
 {
     public interface ISxcOqtaneService
     {
-        Task<SxcOqtaneDto> PrepareAsync(int aliasId, int siteId, int pageId, int moduleId, Dictionary<string, StringValues> originalParameters);
+        Task<OqtViewResultsDto> PrepareAsync(int aliasId, int siteId, int pageId, int moduleId, Dictionary<string, StringValues> originalParameters);
 
         //SxcOqtaneDto Prepare(int aliasId, int siteId, int pageId, int moduleId);
     }
