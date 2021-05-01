@@ -1,40 +1,37 @@
-using System;
-using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Oqtane.Infrastructure;
 using Oqtane.Repository;
 using Oqtane.Shared;
-using ToSic.Sxc.Oqt.Server.Repository;
+using System.Linq;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Oqt.Shared.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
-    /// <summary>
-    /// DELETE THIS - NOT IN USE.
-    /// This is just example how to create typical Oqtane Controller.
-    /// </summary>
-    [Microsoft.AspNetCore.Mvc.Route("{alias:int}/api/[controller]")]
+    [Route("{alias:int}/api/[controller]")]
     public class SxcOqtaneController : Controller
     {
-        private readonly ISxcRepository _sxcRepository;
-        private readonly ILogManager _logger;
-        private readonly Lazy<ISxcOqtane> _sxcOqtane;
-        private readonly Lazy<IAliasRepository> _aliases;
-        private readonly Lazy<ISiteRepository> _sites;
-        private readonly Lazy<IPageRepository> _pages;
-        private readonly Lazy<IModuleRepository> _modules;
-        private readonly Lazy<IModuleDefinitionRepository> _moduleDefinitions;
-        private readonly Lazy<ISettingRepository> _settings;
-        private readonly Lazy<SiteState> _siteState;
+        private readonly ISxcOqtane _sxcOqtane;
+        private readonly IAliasRepository _aliases;
+        private readonly ISiteRepository _sites;
+        private readonly IPageRepository _pages;
+        private readonly IModuleRepository _modules;
+        private readonly IModuleDefinitionRepository _moduleDefinitions;
+        private readonly ISettingRepository _settings;
+        private readonly SiteState _siteState;
         protected int _entityId = -1;
 
-        public SxcOqtaneController(ISxcRepository sxcRepository, ILogManager logger, IHttpContextAccessor accessor, Lazy<ISxcOqtane> sxcOqtane, Lazy<IAliasRepository> aliases, Lazy<ISiteRepository> sites, Lazy<IPageRepository> pages, Lazy<IModuleRepository> modules, Lazy<IModuleDefinitionRepository> moduleDefinitions, Lazy<ISettingRepository> settings, Lazy<SiteState> siteState)
+        public SxcOqtaneController(IHttpContextAccessor accessor,
+            ISxcOqtane sxcOqtane,
+            IAliasRepository aliases,
+            ISiteRepository sites,
+            IPageRepository pages,
+            IModuleRepository modules,
+            IModuleDefinitionRepository moduleDefinitions,
+            ISettingRepository settings,
+            SiteState siteState)
         {
-            _sxcRepository = sxcRepository;
-            _logger = logger;
             _sxcOqtane = sxcOqtane;
             _aliases = aliases;
             _sites = sites;
@@ -54,24 +51,19 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         //[Authorize(Policy = "ViewModule")]
         public OqtViewResultsDto Prepare([FromQuery] int aliasId, [FromQuery] int siteId, [FromQuery] int pageId, [FromQuery] int moduleId, [FromQuery] string originalParameters)
         {
-            var alias = _aliases.Value.GetAlias(aliasId);
+            var alias = _aliases.GetAlias(aliasId);
 
             // Store Alias in SiteState for background processing.
-            if (_siteState.Value != null) _siteState.Value.Alias = alias;
+            if (_siteState != null) _siteState.Alias = alias;
 
-            var site = _sites.Value.GetSite(siteId);
-            var page = _pages.Value.GetPage(pageId); // TODO: probably need to add security related to user
-            var module = _modules.Value.GetModule(moduleId);
-            var moduleDefinitions = _moduleDefinitions.Value.GetModuleDefinitions(module.SiteId).ToList();
+            var site = _sites.GetSite(siteId);
+            var page = _pages.GetPage(pageId); // TODO: probably need to add security related to user
+            var module = _modules.GetModule(moduleId);
+            var moduleDefinitions = _moduleDefinitions.GetModuleDefinitions(module.SiteId).ToList();
             module.ModuleDefinition = moduleDefinitions.Find(item => item.ModuleDefinitionName == module.ModuleDefinitionName);
-            module.Settings = _settings.Value.GetSettings(EntityNames.Module, moduleId).ToDictionary(setting => setting.SettingName, setting => setting.SettingValue);
+            module.Settings = _settings.GetSettings(EntityNames.Module, moduleId).ToDictionary(setting => setting.SettingName, setting => setting.SettingValue);
 
-            var rez = _sxcOqtane.Value.Prepare(alias, site, page, module);
-
-            // HACK: TODO...
-            //rez.Resources = null;
-
-            return rez;
+            return _sxcOqtane.Prepare(alias, site, page, module);
         }
     }
 }

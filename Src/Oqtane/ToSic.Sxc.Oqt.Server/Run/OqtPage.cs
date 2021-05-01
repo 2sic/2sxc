@@ -10,12 +10,12 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtPage : Context.Page, IWrapper<Oqtane.Models.Page>
     {
-        private readonly Lazy<SiteState> _siteState;
+        private readonly SiteState _siteState;
         private readonly Lazy<IAliasRepository> _aliasRepository;
         private readonly Lazy<IPageRepository> _pages;
         public Alias Alias { get; set; }
 
-        public OqtPage(Lazy<IHttp> httpBlazor, Lazy<SiteState> siteState, Lazy<IAliasRepository> aliasRepository, Lazy<IPageRepository> pages) : base(httpBlazor)
+        public OqtPage(Lazy<IHttp> httpBlazor, SiteState siteState, Lazy<IAliasRepository> aliasRepository, Lazy<IPageRepository> pages) : base(httpBlazor)
         {
             _siteState = siteState;
             _aliasRepository = aliasRepository;
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         private Alias GetAlias(int siteId)
         {
-            Alias ??= _siteState.Value.Alias;
+            Alias ??= _siteState.Alias;
             if (Alias != null && Alias.SiteId == siteId) return Alias;
             Alias = _aliasRepository.Value.GetAliases().OrderBy(a => a.Name).FirstOrDefault(a => a.SiteId == siteId); // best guess
             return Alias;
