@@ -16,13 +16,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtState: HasLog
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        public Func<HttpRequest> GetRequest { get; private set; }
-        public IServiceProvider ServiceProvider { get; }
-        private IModuleRepository _moduleRepository;
-        private OqtTempInstanceContext _oqtTempInstanceContext;
-        private IBlock _block;
-
         public OqtState(IHttpContextAccessor httpContextAccessor, IServiceProvider serviceProvider) : base($"{OqtConstants.OqtLogPrefix}.State")
         {
             _httpContextAccessor = httpContextAccessor;
@@ -33,6 +26,14 @@ namespace ToSic.Sxc.Oqt.Server.Run
             // Default implementation
             GetRequest = GetRequestDefault;
         }
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public IServiceProvider ServiceProvider { get; }
+
+        private IModuleRepository _moduleRepository;
+        private OqtTempInstanceContext _oqtTempInstanceContext;
+
+        public Func<HttpRequest> GetRequest { get; private set; }
+        private IBlock _block;
 
         private void InitServices()
         {
@@ -85,8 +86,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             if (moduleId == -1 || pageId == -1)
             {
-                moduleId = GetQueryString(WebApiConstants.QueryStringModuleId, -1);
-                pageId = GetQueryString(WebApiConstants.QueryStringPageId, -1);
+                moduleId = GetRouteValuesString<int>(WebApiConstants.RouteModuleId, -1);
+                pageId = GetRouteValuesString<int>(WebApiConstants.RoutePageId, -1);
 
                 if (moduleId == -1 || pageId == -1)
                 {
@@ -97,7 +98,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
                 var moduleQS = _moduleRepository.GetModule(moduleId);
                 IBlock blockQS = GetBlock(pageId, moduleQS, Log);
-                return wrapLog("found in query string", blockQS);
+                return wrapLog("found in route values", blockQS);
             }
 
             var module = _moduleRepository.GetModule(moduleId);
@@ -126,9 +127,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
             }
         }
 
-        private T GetQueryString<T>(string key, T fallback)
+        private T GetRouteValuesString<T>(string key, T fallback)
         {
-            var valueString = GetRequest().Query[key];
+            var valueString = GetRequest().RouteValues[key];
             if (valueString == StringValues.Empty) return fallback;
 
             try
