@@ -1,5 +1,4 @@
-﻿using Oqtane.Infrastructure;
-using Oqtane.Models;
+﻿using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
 using System;
@@ -22,8 +21,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public sealed class OqtSite: Site<Site>, ICmsSite
     {
-        #region Constructor and DI
-
         /// <summary>
         /// Constructor for DI
         /// </summary>
@@ -31,24 +28,19 @@ namespace ToSic.Sxc.Oqt.Server.Run
             Lazy<ISiteRepository> siteRepository,
             Lazy<IServerPaths> serverPaths,
             Lazy<OqtZoneMapper> zoneMapper,
-            Lazy<ILocalizationManager> localizationManager,
-            Lazy<ILanguageRepository> languageRepository)
+            Lazy<OqtCulture> oqtCulture)
         {
             _siteState = siteState;
             _siteRepository = siteRepository;
             _serverPaths = serverPaths;
             _zoneMapper = zoneMapper;
-            _localizationManager = localizationManager;
-            _languageRepository = languageRepository;
+            _oqtCulture = oqtCulture;
         }
         private readonly SiteState _siteState;
         private readonly Lazy<ISiteRepository> _siteRepository;
         private readonly Lazy<IServerPaths> _serverPaths;
         private readonly Lazy<OqtZoneMapper> _zoneMapper;
-        private readonly Lazy<ILocalizationManager> _localizationManager;
-        private readonly Lazy<ILanguageRepository> _languageRepository;
-
-        #endregion
+        private readonly Lazy<OqtCulture> _oqtCulture;
 
 
         public OqtSite Init(Site site)
@@ -72,17 +64,14 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private Alias Alias => _siteState.Alias;
 
         /// <inheritdoc />
-        public override string DefaultCultureCode =>
-            _defaultCultureCode ??= _localizationManager.Value.GetDefaultCulture() ?? "en-us";
+        public override string DefaultCultureCode => _defaultCultureCode ??= _oqtCulture.Value.DefaultCultureCode;
         private string _defaultCultureCode;
 
-        // When culture code is not provided for selected default language, use "en-US".
-        public string DefaultLanguageCode => _defaultLanguageCode ??=
-            (_languageRepository.Value.GetLanguages(_siteState.Alias.SiteId).FirstOrDefault(l => l.IsDefault)?.Code ?? "en-us");
+        public string DefaultLanguageCode => _defaultLanguageCode ??= _oqtCulture.Value.DefaultLanguageCode(Alias.SiteId);
         private string _defaultLanguageCode;
 
         /// <inheritdoc />
-        public override string CurrentCultureCode => _currentCultureCode ??= (CultureInfo.DefaultThreadCurrentUICulture?.Name ?? DefaultCultureCode);
+        public override string CurrentCultureCode => _currentCultureCode ??= _oqtCulture.Value.CurrentCultureCode;
         private string _currentCultureCode;
 
         /// <inheritdoc />

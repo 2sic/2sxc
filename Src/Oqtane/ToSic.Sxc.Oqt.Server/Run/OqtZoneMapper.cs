@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Oqtane.Infrastructure;
 using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
@@ -17,34 +17,25 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtZoneMapper : ZoneMapperBase
     {
-        #region Constructor and DI
-
         /// <inheritdoc />
         public OqtZoneMapper(ISiteRepository siteRepository, 
             ISettingRepository settingRepository, 
             IServiceProvider serviceProvider,
             Lazy<ZoneCreator> zoneCreatorLazy,
-            Lazy<ILocalizationManager> localizationManager,
-            Lazy<ILanguageRepository> languageRepository,
-            SiteState siteState) : base($"{OqtConstants.OqtLogPrefix}.ZoneMp")
+            OqtCulture oqtCulture) : base($"{OqtConstants.OqtLogPrefix}.ZoneMp")
         {
             _siteRepository = siteRepository;
             _settingRepository = settingRepository;
             _serviceProvider = serviceProvider;
             _zoneCreatorLazy = zoneCreatorLazy;
-            _localizationManager = localizationManager;
-            _languageRepository = languageRepository;
-            _siteState = siteState;
+            _oqtCulture = oqtCulture;
         }
         private readonly ISiteRepository _siteRepository;
         private readonly ISettingRepository _settingRepository;
         private readonly IServiceProvider _serviceProvider;
         private readonly Lazy<ZoneCreator> _zoneCreatorLazy;
-        private readonly Lazy<ILocalizationManager> _localizationManager;
-        private readonly Lazy<ILanguageRepository> _languageRepository;
-        private readonly SiteState _siteState;
+        private readonly OqtCulture _oqtCulture;
 
-        #endregion
 
         public override int GetZoneId(int tenantId)
         {
@@ -96,30 +87,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return found != null ? _serviceProvider.Build<OqtSite>().Init(found) : null;
         }
 
-        public override List<TempTempCulture> CulturesWithState(int tenantId, int zoneId) => _supportedCultures ??= GetSupportedCultures(tenantId, zoneId);
+        public override List<TempTempCulture> CulturesWithState(int tenantId, int zoneId) => _supportedCultures ??= _oqtCulture.GetSupportedCultures(tenantId);
         private List<TempTempCulture> _supportedCultures;
-        
-        public List<TempTempCulture> GetSupportedCultures(int tenantId, int zoneId)
-        {
-            //return new List<TempTempCulture>
-            //{
-            //    new TempTempCulture(WipConstants.DefaultLanguage, WipConstants.DefaultLanguageText, true)
-            //};
-            //return WipConstants.EmptyCultureList;
-
-
-            // All localizations that are installed in system (/code/Oqtane.Client.resources.dll) but default English is missing in the list.
-            string[] allSupportedCultures = _localizationManager.Value.GetSupportedCultures();
-
-            // List of cultures that are enabled for this site (from database).
-            var supportedCultures = _languageRepository.Value.GetLanguages(tenantId)
-                .Select(c => new TempTempCulture(c.Code, c.Name, allSupportedCultures.Contains(c.Code)))
-                .ToList();
-
-            // Oqtane v2.0.2: Add English, because it is missing in list.
-            supportedCultures.Add(new TempTempCulture("en-us", "English", true));
-
-            return supportedCultures.OrderBy(c => c.Key).ToList();
-        }
     }
 }

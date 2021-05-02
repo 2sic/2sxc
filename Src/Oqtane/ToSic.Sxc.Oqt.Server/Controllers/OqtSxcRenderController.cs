@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Repository;
 using Oqtane.Shared;
 using System.Linq;
+using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Oqt.Shared.Run;
@@ -14,8 +15,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     [Route("{alias:int}/api/[controller]")]
     public class OqtSxcRenderController : Controller
     {
-        #region Constructor and DI
-
         public OqtSxcRenderController(IHttpContextAccessor accessor,
             ISxcOqtane sxcOqtane,
             IAliasRepository aliases,
@@ -53,7 +52,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         private readonly SiteState _siteState;
         protected int _entityId = -1;
 
-        #endregion
 
         [HttpGet("{aliasId:int}/{pageId:int}/{moduleId:int}/{culture}/Prepare")]
         //[Authorize(Policy = "ViewModule")]
@@ -65,7 +63,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             if (_siteState != null) _siteState.Alias = alias;
 
             // Set User culture
-            if (culture != CultureInfo.CurrentUICulture.Name) SetCulture(culture);
+            if (culture != CultureInfo.CurrentUICulture.Name) OqtCulture.SetCulture(culture);
 
             var site = _sites.GetSite(alias.SiteId);
             var page = _pages.GetPage(pageId); // TODO: probably need to add security related to user
@@ -79,13 +77,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             if (module != null) _accessor.HttpContext.Items.TryAdd("ModuleForLookUp", module);
 
             return _sxcOqtane.Prepare(alias, site, page, module);
-        }
-
-        private static void SetCulture(string culture)
-        {
-            var cultureInfo = CultureInfo.GetCultureInfo(culture);
-            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
-            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
         }
     }
 }

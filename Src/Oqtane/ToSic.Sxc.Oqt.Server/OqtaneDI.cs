@@ -19,12 +19,10 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Extensions.Koi;
 using ToSic.Sxc.Oqt.Server.Page;
 using ToSic.Sxc.Oqt.Server.Plumbing;
-using ToSic.Sxc.Oqt.Server.Polymorphism;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared.Run;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
-using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.Context;
 
 namespace ToSic.Sxc.Oqt.Server
@@ -47,6 +45,7 @@ namespace ToSic.Sxc.Oqt.Server
 
             services.TryAddTransient<IZoneCultureResolver, OqtSite>();
             services.TryAddTransient<IZoneMapper, OqtZoneMapper>();
+            services.TryAddTransient<OqtZoneMapper>();
             services.TryAddTransient<AppPermissionCheck, OqtPermissionCheck>();
             services.TryAddTransient<ILinkHelper, OqtLinkHelper>();
             services.TryAddTransient<DynamicCodeRoot, OqtaneDynamicCodeRoot>();
@@ -55,8 +54,7 @@ namespace ToSic.Sxc.Oqt.Server
             services.TryAddTransient<ILookUpEngineResolver, OqtGetLookupEngine>();
             services.TryAddTransient<IFingerprint, OqtFingerprintWip>();
             services.TryAddTransient<IUiContextBuilder, OqtUiContextBuilder>();
-
-            services.TryAddTransient<OqtZoneMapper>();
+            services.TryAddTransient<OqtCulture>();
             services.TryAddTransient<SettingsHelper>();
 
             //// add page publishing
