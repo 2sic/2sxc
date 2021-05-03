@@ -86,9 +86,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
             //    throw new ArgumentException("Error, path should have \"api\" part in it.");
 
             // TODO: build url with 'app'/'applicationName'
-
+            
+            // TODO: centralize how the API path is calculated
             var siteRoot = OqtAssetsAndHeaders.GetSiteRoot(_siteState).TrimLastSlash();
-            return $"{siteRoot}/{path}";
+            return $"{siteRoot}/app/{RazorPage.App.Folder}/{path}";
         }
     }
 }
