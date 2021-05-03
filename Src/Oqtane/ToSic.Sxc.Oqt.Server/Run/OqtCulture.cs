@@ -4,6 +4,9 @@ using System.Globalization;
 using System.Linq;
 using Oqtane.Infrastructure;
 using Oqtane.Repository;
+using ToSic.Eav.Apps;
+using ToSic.Eav.Data;
+using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Run
@@ -26,26 +29,20 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public  string CurrentCultureCode => CultureInfo.DefaultThreadCurrentUICulture?.Name ?? DefaultCultureCode;
 
-        public List<TempTempCulture> GetSupportedCultures(int siteId)
+        public List<TempTempCulture> GetSupportedCultures(int siteId, List<DimensionDefinition>  availableEavLanguages)
         {
-            //return new List<TempTempCulture>
-            //{
-            //    new TempTempCulture(WipConstants.DefaultLanguage, WipConstants.DefaultLanguageText, true)
-            //};
-            //return WipConstants.EmptyCultureList;
-
             // List of localizations enabled in Oqtane site.
             var siteCultures = _languageRepository.Value.GetLanguages(siteId)
-                .Select(l => string.IsNullOrEmpty(l.Code) ? "en-US" : l.Code).ToList(); // default English is missing code in Oqtane v2.0.2.
-
-            // All localizations that are installed in system (/code/Oqtane.Client.resources.dll) but default English is missing in the list.            
-            var supportedCultures = _localizationManager.Value.GetSupportedCultures()
-                .Union(new List<string>{"en-US"}).Distinct() // Add English, because it is missing in list in Oqtane v2.0.2.
+                .Select(l => string.IsNullOrEmpty(l.Code) ? "en-US" : l.Code).ToList() // default English is missing code in Oqtane v2.0.2.
                 .Select(c => CultureInfo.GetCultureInfo(c))
-                .Select(c => new TempTempCulture(c.Name.ToLowerInvariant(), c.EnglishName, siteCultures.Contains(c.Name, StringComparer.InvariantCultureIgnoreCase)))
+                .Select(c => new TempTempCulture(
+                    c.Name.ToLowerInvariant(), 
+                    c.EnglishName, 
+                    availableEavLanguages.Any(a => a.Active && a.Matches(c.Name))
+                    ))
                 .ToList();
             
-            return supportedCultures.OrderBy(c => c.Key).ToList();
+            return siteCultures.OrderByDescending(c => c.Key == DefaultLanguageCode(siteId)).ToList();
         }
 
         public static void SetCulture(string culture)
