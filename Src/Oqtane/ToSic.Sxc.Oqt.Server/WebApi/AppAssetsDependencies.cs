@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using System;
+using Microsoft.AspNetCore.Hosting;
 using Oqtane.Infrastructure;
-using System;
 using ToSic.Sxc.Oqt.Server.Run;
 
-namespace ToSic.Sxc.Oqt.Server.Controllers
+namespace ToSic.Sxc.Oqt.Server.WebApi
 {
     public class AppAssetsDependencies
     {

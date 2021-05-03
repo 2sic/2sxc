@@ -6,10 +6,11 @@ using Oqtane.Shared;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Cms;
 
-namespace ToSic.Sxc.Oqt.Server.Controllers
+namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
 {
     ////[ValidateAntiForgeryToken]
 

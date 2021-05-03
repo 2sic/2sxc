@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.InPage;
 
-namespace ToSic.Sxc.Oqt.Server.Controllers
+namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
 {
     // Release routes
     [Route(WebApiConstants.ApiRoot + "/cms/[controller]/[action]")]

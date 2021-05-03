@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Admin;
 
-namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
+namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
     /// <summary>
     /// This one supplies portal-wide (or cross-portal) settings / configuration

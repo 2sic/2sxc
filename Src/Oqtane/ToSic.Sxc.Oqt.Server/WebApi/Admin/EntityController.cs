@@ -1,17 +1,18 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.ImportExport.Options;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Cms;
 
-namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
+namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
     /// <summary>
     /// Proxy Class to the EAV EntitiesController (Web API Controller)

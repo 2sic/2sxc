@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using Oqtane.Shared;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 
-namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
+namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
     /// <inheritdoc cref="IMetadataController" />
     //[ValidateAntiForgeryToken]

@@ -1,15 +1,16 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.Data;
+using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.App;
 
 
 // TODO: #MissingFeature not yet implemented GetContext using current context
 
-namespace ToSic.Sxc.Oqt.Server.Controllers
+namespace ToSic.Sxc.Oqt.Server.WebApi.App
 {
     [ApiController]
 

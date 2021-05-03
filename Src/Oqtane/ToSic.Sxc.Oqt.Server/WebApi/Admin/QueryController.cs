@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources.Catalog;
@@ -10,9 +10,10 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.LookUp;
+using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 
-namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
+namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
     /// <summary>
     /// Proxy Class to the EAV PipelineDesignerController (Web API Controller)

@@ -1,18 +1,19 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.ImportExport;
 
-namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
+namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
     // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)] can't be used, because it forces the security
     // token, which fails in the cases where the url is called using get, which should result in a download

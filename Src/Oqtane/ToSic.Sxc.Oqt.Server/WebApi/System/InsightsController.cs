@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Web.WebApi.System;
 
-namespace ToSic.Sxc.Oqt.Server.Controllers
+namespace ToSic.Sxc.Oqt.Server.WebApi
 {
     // Release routes
     [Route(WebApiConstants.ApiRoot + "/sys/[controller]/[action]")]

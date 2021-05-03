@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Oqtane.Shared;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
-using ToSic.Sxc.Context;
+using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.PublicApi;
 
-namespace ToSic.Sxc.Oqt.Server.Controllers.Adam
+namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
 {
     /// <summary>
     /// Direct access to app-content items, simple manipulations etc.

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ToSic.Sxc.Oqt.Shared;
 
-namespace ToSic.Sxc.Oqt.Server.Controllers.Adam
+namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
 {
     // Release routes
     [Route(WebApiConstants.AppRoot + "/{appName}/adam")]
@@ -10,13 +10,16 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.Adam
 
     // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/adam/{appName}")]
-    public class AppAssetsController: Controllers.AppAssetsController
+    public class AppAssetsController: WebApi.AppAssetsControllerBase
     {
+        protected override string HistoryLogName => "Oqt.AppAdm";
+        
         public override string Route => "adam";
 
         public AppAssetsController(AppAssetsDependencies dependencies) : base(dependencies)
         {
 
         }
+
     }
 }

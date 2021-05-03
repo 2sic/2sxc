@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using System;
+using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.ImportExport;
 
-namespace ToSic.Sxc.Oqt.Server.Controllers.Sys
+namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
     // Release routes
     [Route(WebApiConstants.ApiRoot + "/sys/[controller]/[action]")]

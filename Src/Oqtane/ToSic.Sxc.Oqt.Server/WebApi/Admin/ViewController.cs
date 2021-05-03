@@ -1,19 +1,18 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Assets;
-using ToSic.Sxc.WebApi.Context;
-using ToSic.Sxc.WebApi.Usage;
 using ToSic.Sxc.WebApi.Views;
 
-namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
+namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
     [AllowAnonymous] // necessary at this level, because otherwise download would fail
 

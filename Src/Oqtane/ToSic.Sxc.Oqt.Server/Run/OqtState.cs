@@ -80,9 +80,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
         {
             var wrapLog = Log.Call<IBlock>($"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
 
-            var moduleId = GetTypedHeader(WebApi.WebApiConstants.HeaderInstanceId, -1);
-            var contentBlockId = GetTypedHeader(WebApi.WebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
-            var pageId = GetTypedHeader(WebApi.WebApiConstants.HeaderPageId, -1);
+            var moduleId = GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderInstanceId, -1);
+            var contentBlockId = GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
+            var pageId = GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderPageId, -1);
 
             if (moduleId == -1 || pageId == -1)
             {

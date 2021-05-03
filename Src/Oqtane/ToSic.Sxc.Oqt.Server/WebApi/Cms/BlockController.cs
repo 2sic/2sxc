@@ -8,11 +8,12 @@ using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.ContentBlocks;
 using ToSic.Sxc.WebApi.InPage;
 
-namespace ToSic.Sxc.Oqt.Server.Controllers
+namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
 {
     // Release routes
     [Route(WebApiConstants.ApiRoot + "/cms/[controller]/[action]")]

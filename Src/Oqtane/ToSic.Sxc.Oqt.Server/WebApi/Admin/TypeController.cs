@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Oqtane.Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Persistence.Logging;
@@ -12,11 +12,12 @@ using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Assets;
 using ToSic.Sxc.WebApi.ImportExport;
 
-namespace ToSic.Sxc.Oqt.Server.Controllers.Admin
+namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
     /// <summary>
     /// This one supplies portal-wide (or cross-portal) settings / configuration

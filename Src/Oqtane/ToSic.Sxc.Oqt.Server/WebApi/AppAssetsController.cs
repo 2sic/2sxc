@@ -1,43 +1,41 @@
 using System;
+using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Infrastructure;
-using Oqtane.Repository;
-using System.IO;
 using ToSic.Oqt.Helpers;
+using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
 
-namespace ToSic.Sxc.Oqt.Server.Controllers
+namespace ToSic.Sxc.Oqt.Server.WebApi
 {
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/[controller]/{appName}")]
-    [Route(WebApiConstants.ApiRoot2 + "/[controller]/{appName}")]
-    [Route(WebApiConstants.ApiRoot3 + "/[controller]/{appName}")]
+    //[Route(WebApiConstants.ApiRoot + "/[controller]/{appName}")]
+    //[Route(WebApiConstants.ApiRoot2 + "/[controller]/{appName}")]
+    //[Route(WebApiConstants.ApiRoot3 + "/[controller]/{appName}")]
 
-    [Route(WebApiConstants.ApiRoot + "/app-assets/{appName}")]
-    [Route(WebApiConstants.ApiRoot2 + "/app-assets/{appName}")]
-    [Route(WebApiConstants.ApiRoot3 + "/app-assets/{appName}")]
+    //[Route(WebApiConstants.ApiRoot + "/app-assets/{appName}")]
+    //[Route(WebApiConstants.ApiRoot2 + "/app-assets/{appName}")]
+    //[Route(WebApiConstants.ApiRoot3 + "/app-assets/{appName}")]
 
     // Beta routes
-    [Route("{alias:int}/api/[controller]/{appName}")]
-    [Route(WebApiConstants.WebApiStateRoot + "/app-assets/{appName}")]
+    //[Route("{alias:int}/api/[controller]/{appName}")]
+    //[Route(WebApiConstants.WebApiStateRoot + "/app-assets/{appName}")]
 
-    public class AppAssetsController : OqtControllerBase
+    public abstract class AppAssetsControllerBase : OqtControllerBase
     {
         public virtual string Route => "default";
         private readonly ILogManager _logger;
         private readonly Lazy<OqtAppFolder> _oqtAppFolderLazy;
         private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public AppAssetsController(AppAssetsDependencies dependencies)
+        protected AppAssetsControllerBase(AppAssetsDependencies dependencies)
         {
             _hostingEnvironment = dependencies.HostingEnvironment;
             _oqtAppFolderLazy = dependencies.OqtAppFolderLazy;
             _logger = dependencies.Logger;
         }
-
-        protected override string HistoryLogName { get; }
 
         [HttpGet("{*filePath}")]
         public IActionResult GetFile([FromRoute] string appName, [FromRoute] string filePath)

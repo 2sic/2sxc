@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.PublicApi;
@@ -11,7 +12,7 @@ using ToSic.Sxc.WebApi.PublicApi;
 // 2. GetContext using current context
 // 3. Verify that additional query params would affect query results
 
-namespace ToSic.Sxc.Oqt.Server.Controllers
+namespace ToSic.Sxc.Oqt.Server.WebApi.App
 {
     /// <inheritdoc />
     /// <summary>

@@ -1,16 +1,17 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using System;
-using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Cms;
 
-namespace ToSic.Sxc.Oqt.Server.Controllers
+namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
 {
     // Release routes
     [Route(WebApiConstants.ApiRoot + "/cms/[controller]/[action]")]
