@@ -22,8 +22,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             InitServices();
 
-            // Default implementation
-            GetRequest = GetRequestDefault;
+            //// Default implementation
+            //GetRequest = GetRequestDefault;
         }
         private readonly IHttpContextAccessor _httpContextAccessor;
         public IServiceProvider ServiceProvider { get; }
@@ -31,7 +31,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private IModuleRepository _moduleRepository;
         private OqtTempInstanceContext _oqtTempInstanceContext;
 
-        public Func<HttpRequest> GetRequest { get; private set; }
         private IBlock _block;
 
         private void InitServices()
@@ -41,14 +40,14 @@ namespace ToSic.Sxc.Oqt.Server.Run
         }
 
         // Default implementation for GetRequest().
-        private HttpRequest GetRequestDefault() => _httpContextAccessor?.HttpContext?.Request;
+        private HttpRequest Request => _httpContextAccessor?.HttpContext?.Request;
 
-        public OqtState Init(Func<HttpRequest> getRequest)
-        {
-            GetRequest = getRequest; // Replace default implementation.
+        //public OqtState Init(Func<HttpRequest> getRequest)
+        //{
+        //    Request = getRequest; // Replace default implementation.
 
-            return this;
-        }
+        //    return this;
+        //}
 
         public IContextOfSite GetSiteContext() => ServiceProvider.Build<IContextOfSite>();
 
@@ -113,7 +112,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         private T GetTypedHeader<T>(string headerName, T fallback)
         {
-            var valueString = GetRequest().Headers[headerName];
+            var valueString = _httpContextAccessor.HttpContext.Request.Headers[headerName];
             if (valueString == StringValues.Empty) return fallback;
 
             try
@@ -128,7 +127,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         private T GetQueryString<T>(string key, T fallback)
         {
-            var valueString = GetRequest().Query[key];
+            var valueString = _httpContextAccessor.HttpContext.Request.Query[key];
             if (valueString == StringValues.Empty) return fallback;
 
             try
@@ -142,7 +141,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         }
         private T GetRouteValuesString<T>(string key, T fallback)
         {
-            var valueString = GetRequest().RouteValues[key];
+            var valueString = _httpContextAccessor.HttpContext.Request.RouteValues[key];
             if (valueString == StringValues.Empty) return fallback;
 
             try

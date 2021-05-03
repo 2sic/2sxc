@@ -27,13 +27,11 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             ServiceProvider = context.HttpContext.RequestServices;
             var dependencies = ServiceProvider.Build<StatefulControllerDependencies>();
 
-            _oqtState = dependencies.OqtState.Value.Init(GetRequest);
+            _oqtState = dependencies.OqtState.Value;
 
             dependencies.CtxResolver.AttachRealBlock(() => GetBlock());
             dependencies.CtxResolver.AttachBlockContext(GetContext);
         }
-
-        private HttpRequest GetRequest() => Request;
 
         protected IContextOfBlock GetContext() => _oqtState.GetContext();
 
