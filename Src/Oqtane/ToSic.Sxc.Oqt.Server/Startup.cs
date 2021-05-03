@@ -12,6 +12,7 @@ using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
+using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Server.StartUp;
 using ToSic.Sxc.Oqt.Shared.Dev;
@@ -51,6 +52,7 @@ namespace ToSic.Sxc.Oqt.Server
                 .AddControllers(options =>
                 {
                     options.AllowEmptyInputInBodyModelBinding = true;
+                    options.Filters.Add(new HttpResponseExceptionFilter());
                 })
                 // This is needed to preserve compatibility with previous api usage
                 .AddNewtonsoftJson(options =>
@@ -96,6 +98,15 @@ namespace ToSic.Sxc.Oqt.Server
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             HostEnvironment = env;
+
+            if (env.IsDevelopment())
+            {
+                app.UseExceptionHandler("/error-local-development");
+            }
+            else
+            {
+                app.UseExceptionHandler("/error");
+            }
 
             // routing middleware
             app.UseRouting();
