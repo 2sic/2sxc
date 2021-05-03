@@ -92,7 +92,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         {
             if (_supportedCultures != null) return _supportedCultures;
             var availableEavLanguages = new ZoneRuntime().Init(zoneId, Log).Languages(true);
-            _supportedCultures ??= _oqtCulture.GetSupportedCultures(tenantId, availableEavLanguages);
+            _supportedCultures = _oqtCulture.GetSupportedCultures(tenantId, availableEavLanguages);
             return _supportedCultures;
         }
         private List<TempTempCulture> _supportedCultures;

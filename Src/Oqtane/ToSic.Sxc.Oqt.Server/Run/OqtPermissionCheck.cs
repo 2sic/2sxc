@@ -18,14 +18,14 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly Lazy<IUserPermissions> _userPermissions;
         private readonly Lazy<IUser> _oqtUser;
-        private readonly OqtState _oqtState;
+        //private readonly OqtState _oqtState;
 
-        public OqtPermissionCheck(IHttpContextAccessor httpContextAccessor, Lazy<IUserPermissions> userPermissions, Lazy<IUser> oqtUser, OqtState oqtState) : base(OqtConstants.OqtLogPrefix)
+        public OqtPermissionCheck(IHttpContextAccessor httpContextAccessor, Lazy<IUserPermissions> userPermissions, Lazy<IUser> oqtUser/*, OqtState oqtState*/) : base(OqtConstants.OqtLogPrefix)
         {
             _httpContextAccessor = httpContextAccessor;
             _userPermissions = userPermissions;
             _oqtUser = oqtUser;
-            _oqtState = oqtState.Init(Log);
+            //_oqtState = oqtState.Init(Log);
         }
 
         /// <summary>
@@ -33,9 +33,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
         /// </summary>
         public ClaimsPrincipal ClaimsPrincipal => _httpContextAccessor.HttpContext?.User;
 
-        protected int ModuleId => _moduleId ??= _oqtState.GetContext().Module.Id;
-                /*((OqtModule)_oqtState.GetContext().Module).UnwrappedContents*/ /*((Context as IContextOfBlock)?.Module as Module<Module>)?.UnwrappedContents*/
-        private int? _moduleId;
+        protected IModule Module => _module ??= (Context as IContextOfBlock)?.Module; /*_oqtState.GetContext().Module*/ 
+        private IModule _module;
 
         protected override bool EnvironmentAllows(List<Grants> grants)
         {
@@ -56,11 +55,13 @@ namespace ToSic.Sxc.Oqt.Server.Run
             if (condition.Equals("SecurityAccessLevel.Anonymous", StringComparison.InvariantCultureIgnoreCase))
                 return true;
 
+            var m = Module;
+
             if (condition.Equals("SecurityAccessLevel.View", StringComparison.InvariantCultureIgnoreCase))
-                return _moduleId != null && _userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, ModuleId, PermissionNames.View);
+                return m != null && _userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, m.Id, PermissionNames.View);
 
             if (condition.Equals("SecurityAccessLevel.Edit", StringComparison.InvariantCultureIgnoreCase))
-                return _moduleId != null && _userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, ModuleId, PermissionNames.Edit);
+                return m != null && _userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, m.Id, PermissionNames.Edit);
 
             if (condition.Equals("SecurityAccessLevel.Admin", StringComparison.InvariantCultureIgnoreCase))
                 return _oqtUser.Value.IsAdmin;
@@ -90,10 +91,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
             => _userIsModuleEditor ??= Log.Intercept(nameof(UserIsModuleEditor),
                 () =>
                 {
-                    if (_moduleId == null) return false;
+                    if (Module == null) return false;
                     try
                     {
-                        return _userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, ModuleId, PermissionNames.Edit);
+                        return _userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, Module.Id, PermissionNames.Edit);
                     }
                     catch
                     {
