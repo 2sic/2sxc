@@ -32,7 +32,7 @@ namespace ToSic.Sxc.DataSources
             List<TabInfo> pages;
             try
             {
-                pages = TabController.GetPortalTabs(siteId, 0, false, false);
+                pages = TabController.GetPortalTabs(siteId, 0, false, true);
             }
             catch (Exception ex)
             {
