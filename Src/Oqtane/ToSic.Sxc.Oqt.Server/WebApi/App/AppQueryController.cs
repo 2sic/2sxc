@@ -28,9 +28,10 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
     // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/app/")]
 
-    [ApiController]
+    //[ApiController]
 
-    [AllowAnonymous]
+    //[AllowAnonymous]
+    [Produces("application/json")]
     public class AppQueryController : OqtStatefulControllerBase, IAppQueryController
     {
         private readonly Lazy<AppQuery> _appQuery;
@@ -45,8 +46,10 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
 
         #endregion
 
-        [HttpGet("{appPath}/query/{name}/{stream?}")]
-        [HttpPost("{appPath}/query/{name}/{stream?}")]
+        [HttpGet("{appPath}/query/{name}")]
+        [HttpGet("{appPath}/query/{name}/{stream}")]
+        [HttpPost("{appPath}/query/{name}")]
+        [HttpPost("{appPath}/query/{name}/{stream}")]
         [AllowAnonymous] // will check security internally, so assume no requirements
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(
             [FromRoute] string appPath,
@@ -55,7 +58,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
             [FromRoute] string stream = null
         ) => _appQuery.Value.Init(Log).PublicQuery(appPath, name, stream, more);
 
+        [HttpGet("auto/query/{name}")]
         [HttpGet("auto/query/{name}/{stream?}")]
+        [HttpPost("auto/query/{name}")]
         [HttpPost("auto/query/{name}/{stream?}")]
         [AllowAnonymous] // will check security internally, so assume no requirements
         public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(
