@@ -26,10 +26,10 @@ namespace ToSic.Sxc.DataSources.CmsBases
 
         #endregion
 
-        #region Configuration properties todo
+        #region Configuration properties - As of now no properties ATM
 
 
-        public int Root { get; set; } = 0;
+        //public int Root { get; set; } = 0;
 
 
         #endregion

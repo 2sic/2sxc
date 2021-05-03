@@ -12,7 +12,7 @@ namespace ToSic.Sxc.DataSources
     /// <summary>
     /// Deliver a list of pages from the current platform (Dnn or Oqtane)
     /// </summary>
-    [PrivateApi]
+    [PublicApi]
     [VisualQuery(
         ExpectsDataOfType = VqExpectsDataOfType,
         GlobalName = VqGlobalName,
