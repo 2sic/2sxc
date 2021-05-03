@@ -19,6 +19,7 @@ namespace ToSic.Oqt.Helpers
         
         public static string GetMimeType(string fileName)
         {
+            if (string.IsNullOrWhiteSpace(fileName)) return FallbackMimeType;
             var provider = new FileExtensionContentTypeProvider();
             if (!provider.TryGetContentType(fileName, out var contentType)) 
                 contentType = FallbackMimeType;

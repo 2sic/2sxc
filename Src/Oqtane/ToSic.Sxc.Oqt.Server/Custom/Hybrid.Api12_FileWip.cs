@@ -41,19 +41,15 @@ namespace Custom.Hybrid
                     throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, $"Can't force download without a {nameof(fileDownloadName)} or a real {nameof(virtualPath)}", "Not Found");
             }
 
+            // Try to figure out file mime type as needed
+            if (string.IsNullOrWhiteSpace(contentType))
+                contentType = ContentFileHelper.GetMimeType(fileDownloadName ?? virtualPath);
+            
             // check if this may just be a call to the built in file, which has two strings
             // this can only be possible if only the virtualPath and contentType were set
             if (!string.IsNullOrWhiteSpace(virtualPath))
-            {
-                if (string.IsNullOrWhiteSpace(contentType))
-                    contentType = ContentFileHelper.GetMimeType(virtualPath);
                 return base.File(virtualPath, contentType, fileDownloadName);
-            }
 
-            // All other cases, use fallback type
-            if (string.IsNullOrWhiteSpace(contentType))
-                contentType = ContentFileHelper.FallbackMimeType;
-            
             if (contents is Stream streamBody)
                 return base.File(streamBody, contentType, fileDownloadName);
             
@@ -66,6 +62,13 @@ namespace Custom.Hybrid
             throw new ArgumentException("Tried to provide file download but couldn't find content");
         }
 
+        
+        private void Test()
+        {
+            var x = base.Content("");
+            var y = base.Ok();
+            var z = base.Redirect("todo");
+        }
 
         #endregion
 
