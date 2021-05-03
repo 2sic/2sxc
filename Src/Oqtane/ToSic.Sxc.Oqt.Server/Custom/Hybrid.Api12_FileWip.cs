@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Oqt.Helpers;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -22,12 +23,18 @@ namespace Custom.Hybrid
             string virtualPath = null, // important: this is the virtualPath, but it should not have the same name, to not confuse the compiler with same sounding param names
             string contentType = null,
             string fileDownloadName = null,
-            Stream stream = null,
-            string body = null
+            object contents = null // can be stream, string or byte[]
             )
         {
             ToSic.Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, nameof(File), "");
 
+            // Check initial conflicting values
+            var contentCount = (contents != null ? 1 : 0) + (virtualPath != null ? 1 : 0);
+            if (contentCount == 0)
+                throw new ArgumentException("None of the provided parameters give content for the file to return.");
+            if (contentCount > 1)
+                throw new ArgumentException($"Multiple file setting properties like '{nameof(contents)}' or '{nameof(virtualPath)}' have a value - only one can be provided.");
+            
             // Set reallyForceDownload based on forceDownload and file name
             var reallyForceDownload = download == true || !string.IsNullOrWhiteSpace(fileDownloadName);
 
@@ -42,13 +49,29 @@ namespace Custom.Hybrid
 
             // check if this may just be a call to the built in file, which has two strings
             // this can only be possible if only the virtualPath and contentType were set
-            if (!string.IsNullOrWhiteSpace(virtualPath) && !string.IsNullOrWhiteSpace(contentType))
-                return string.IsNullOrWhiteSpace(fileDownloadName)
-                    ? base.File(virtualPath, contentType)
-                    : base.File(virtualPath, contentType, fileDownloadName);
+            if (!string.IsNullOrWhiteSpace(virtualPath))
+            {
+                if (string.IsNullOrWhiteSpace(contentType))
+                    contentType = ContentFileHelper.GetMimeType(virtualPath);
+                return base.File(virtualPath, contentType, fileDownloadName);
+            }
 
-            return null;
+            // All other cases, use fallback type
+            if (string.IsNullOrWhiteSpace(contentType))
+                contentType = ContentFileHelper.FallbackMimeType;
+            
+            if (contents is Stream streamBody)
+                return base.File(streamBody, contentType, fileDownloadName);
+            
+            if(contents is string stringBody) 
+                contents = System.Text.Encoding.UTF8.GetBytes(stringBody);
+
+            if(contents is byte[] charBody)
+                return base.File(charBody, contentType, fileDownloadName);
+
+            throw new ArgumentException("Tried to provide file download but couldn't find content");
         }
+
 
         #endregion
 
