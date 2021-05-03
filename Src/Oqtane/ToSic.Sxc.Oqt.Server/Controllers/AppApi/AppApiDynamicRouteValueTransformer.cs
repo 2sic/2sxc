@@ -27,6 +27,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly Lazy<OqtAppFolder> _oqtAppFolderLazy;
 
+        public const string HttpContextKeyForAppFolder = "SxcAppFolderName";
+
         public AppApiDynamicRouteValueTransformer(
             ITenantResolver tenantResolver,
             IWebHostEnvironment hostingEnvironment,
@@ -35,7 +37,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             _tenantResolver = tenantResolver;
             _hostingEnvironment = hostingEnvironment;
             _oqtAppFolderLazy = oqtAppFolderLazy;
-            Log = new Log(HistoryLogName, null, "AppApiDynamicRouteValueTransformer");
+            Log = new Log(HistoryLogName, null, nameof(AppApiDynamicRouteValueTransformer));
             History.Add(HistoryLogGroup, Log);
         }
 
@@ -110,6 +112,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             // help with path resolution for compilers running inside the created controller
             httpContext.Request?.HttpContext.Items.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
 
+            httpContext.Request?.HttpContext.Items.Add(HttpContextKeyForAppFolder, appFolder);
+            
             return wrapLog($"ok, TransformAsync route required values are prepared", values);
         }
 

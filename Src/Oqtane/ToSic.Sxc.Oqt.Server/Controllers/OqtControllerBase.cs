@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Http.Extensions;
+﻿using System;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Oqtane.Shared;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Oqt.Server.Plumbing;
@@ -25,6 +25,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             History.Add(HistoryLogGroup, Log);
         }
 
+        protected IServiceProvider ServiceProvider;
+
         /// <inheritdoc />
         public ILog Log { get; }
 
@@ -40,46 +42,27 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// </summary>
         protected abstract string HistoryLogName { get; }
 
-        protected SiteState SiteState { get; private set; }
+        //protected SiteState SiteState { get; private set; }
 
 
+        /// <summary>
+        /// Initializer - just ensure SiteState is initialized thanks to our paths
+        /// </summary>
+        /// <param name="context"></param>
         [NonAction]
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            Log.Add($"Url: {context.HttpContext.Request.GetDisplayUrl()}");
+            var wrapLog = Log.Call($"Url: {context.HttpContext.Request.GetDisplayUrl()}");
 
             base.OnActionExecuting(context);
 
-            var serviceProvider = context.HttpContext.RequestServices;
-            SiteState = serviceProvider.Build<SiteState>();
+            ServiceProvider = context.HttpContext.RequestServices;
+            //SiteState = serviceProvider.Build<SiteState>();
 
-            // background processes can pass in an alias using the SiteState service
-            if (SiteState.Alias != null) return;
-
-            //var request = context.HttpContext.Request;
-            //var host = $"{request.Host}";
-
-            //var siteId = -1;
-
-            //// get siteId identifier based on request
-            //// TODO: REMOVE THIS CODE AS SOON AS THE ui DOESN'T USE IDs ANY MORE - wip ca. mid May 2021
-            //var segments = request.Path.Value.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-            //if (segments != null && segments.Length > 1 && (segments[1] == "api" || segments[1] == "pages") && segments[0] != "~" && int.TryParse(segments[0], out var areaId))
-            //    siteId = areaId; // 2sxc UI sends siteId instead of areaId that is common in Oqtane.
-
-            // New: Get the Site Alias based on the URL
-            //var aliasRepositoryLazy = serviceProvider.Build<Lazy<IAliasRepository>>();
-            //if (siteId == -1)
-                serviceProvider.Build<SiteStateInitializer>().InitIfEmpty();
-            //SiteStateInitializer.InitIfEmpty(SiteState, context.HttpContext, aliasRepositoryLazy);
-            //// TODO: REMOVE THIS CODE AS SOON AS THE ui DOESN'T USE IDs ANY MORE - wip ca. mid May 2021
-            //else
-            //{
-            //    var aliases = aliasRepositoryLazy.Value.GetAliases().ToList(); // cached
-            //    SiteState.Alias = aliases.OrderBy(a => a.Name)
-            //        .FirstOrDefault(a => a.SiteId == siteId && a.Name.StartsWith(host));
-
-            //}
+            //// background processes can pass in an alias using the SiteState service
+            //if (SiteState.Alias == null)
+            ServiceProvider.Build<SiteStateInitializer>().InitIfEmpty();
+            wrapLog(null);
         }
 
         #region Extend Time so Web Server doesn't time out - not really implemented ATM

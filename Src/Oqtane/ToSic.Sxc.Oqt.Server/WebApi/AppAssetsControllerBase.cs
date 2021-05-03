@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Infrastructure;
+using Oqtane.Shared;
 using ToSic.Oqt.Helpers;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Run;
@@ -13,15 +14,17 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
     public abstract class AppAssetsControllerBase : OqtControllerBase
     {
         public virtual string Route => "default";
-        private readonly ILogManager _logger;
+        //private readonly ILogManager _logger;
         private readonly Lazy<OqtAppFolder> _oqtAppFolderLazy;
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly SiteState _siteState;
 
         protected AppAssetsControllerBase(AppAssetsDependencies dependencies)
         {
             _hostingEnvironment = dependencies.HostingEnvironment;
             _oqtAppFolderLazy = dependencies.OqtAppFolderLazy;
-            _logger = dependencies.Logger;
+            _siteState = dependencies.SiteState;
+            //_logger = dependencies.Logger;
         }
 
         [HttpGet("{*filePath}")]
@@ -31,7 +34,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
             {
                 if (appName == WebApiConstants.Auto) appName = _oqtAppFolderLazy.Value.GetAppFolder();
 
-                var alias = SiteState.Alias;
+                var alias = _siteState.Alias;
                 var fullFilePath = ContentFileHelper.GetFilePath(_hostingEnvironment.ContentRootPath, alias, Route, appName, filePath);
                 if (string.IsNullOrEmpty(fullFilePath)) return NotFound();
 

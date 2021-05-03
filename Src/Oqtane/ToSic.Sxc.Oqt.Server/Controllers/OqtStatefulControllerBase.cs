@@ -1,7 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
@@ -13,30 +10,30 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     public abstract class OqtStatefulControllerBase : OqtControllerBase
     {
-        protected IServiceProvider ServiceProvider;
-        private OqtState _oqtState;
-
-        protected OqtStatefulControllerBase() : base() { }
+        //protected IServiceProvider ServiceProvider;
+        protected OqtState OqtState;
+        protected IContextResolver CtxResolver;
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            Log.Add($"Url: {context.HttpContext.Request.GetDisplayUrl()}");
+            var wrapLog = Log.Call();
 
             base.OnActionExecuting(context);
 
-            ServiceProvider = context.HttpContext.RequestServices;
+            //ServiceProvider = context.HttpContext.RequestServices;
             var dependencies = ServiceProvider.Build<StatefulControllerDependencies>();
 
-            _oqtState = dependencies.OqtState.Value;
-
-            dependencies.CtxResolver.AttachRealBlock(() => GetBlock());
-            dependencies.CtxResolver.AttachBlockContext(GetContext);
+            OqtState = dependencies.OqtState.Init(Log);
+            CtxResolver = dependencies.CtxResolver;
+            CtxResolver.AttachRealBlock(() => GetBlock());
+            CtxResolver.AttachBlockContext(GetContext);
+            wrapLog(null);
         }
 
-        protected IContextOfBlock GetContext() => _oqtState.GetContext();
+        protected IContextOfBlock GetContext() => OqtState.GetContext();
 
-        protected IBlock GetBlock(bool allowNoContextFound = true) => _oqtState.GetBlock(allowNoContextFound);
+        protected IBlock GetBlock(bool allowNoContextFound = true) => OqtState.GetBlock(allowNoContextFound);
 
-        protected IApp GetApp(int appId) => _oqtState.GetApp(appId);
+        protected IApp GetApp(int appId) => OqtState.GetApp(appId);
     }
 }

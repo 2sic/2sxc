@@ -20,13 +20,13 @@ namespace ToSic.Sxc.Oqt.Server.Block
     {
         #region Constructor and DI
 
-        public OqtSxcViewBuilder(OqtAssetsAndHeaders assetsAndHeaders, RazorReferenceManager debugRefMan, Lazy<OqtState> oqtState
+        public OqtSxcViewBuilder(OqtAssetsAndHeaders assetsAndHeaders, RazorReferenceManager debugRefMan, OqtState oqtState
             ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
         {
 
             _assetsAndHeaders = assetsAndHeaders;
             _debugRefMan = debugRefMan;
-            _oqtState = oqtState;
+            _oqtState = oqtState.Init(Log);
             // add log to history!
             History.Add("oqt-view", Log);
         }
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Oqt.Server.Block
         private IOqtAssetsAndHeader AssetsAndHeaders => _assetsAndHeaders;
         private readonly OqtAssetsAndHeaders _assetsAndHeaders;
         private readonly RazorReferenceManager _debugRefMan;
-        private readonly Lazy<OqtState> _oqtState;
+        private readonly OqtState _oqtState;
 
         #endregion
 
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Oqt.Server.Block
             Page = page;
             Module = module;
 
-            Block = _oqtState.Value.GetBlock(page.PageId, module, Log);
+            Block = _oqtState.GetBlockOfModule(page.PageId, module);
 
             _assetsAndHeaders.Init(this);
             var generatedHtml = Block.BlockBuilder.Render() ;

@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.Context;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
@@ -13,11 +14,13 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.Oqt.Server.Run;
+using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Adam;
+using App = ToSic.Eav.DataSources.App;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -31,14 +34,14 @@ namespace Custom.Hybrid
     /// It is without dependencies in class constructor, commonly provided with DI.
     /// </summary>
     [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
-    public abstract class Api12 : OqtControllerBase, IDynamicCode, IDynamicWebApi
+    public abstract partial class Api12 : OqtStatefulControllerBase, IDynamicCode, IDynamicWebApi
     {
-        protected IServiceProvider ServiceProvider { get; private set; }
+        //protected IServiceProvider ServiceProvider { get; private set; }
 
         [PrivateApi]
         protected override string HistoryLogName { get; } = "web-api";
 
-        private OqtState _oqtState;
+        //private OqtState _oqtState;
 
         /// <summary>
         /// Our custom dynamic 2sxc app api controllers, depends on event OnActionExecuting to provide dependencies (without DI in constructor).
@@ -49,22 +52,70 @@ namespace Custom.Hybrid
         {
             base.OnActionExecuting(context);
 
-            var httpContext = context.HttpContext;
-            ServiceProvider = httpContext.RequestServices;
+            _DynCodeRoot = ServiceProvider.Build<DynamicCodeRoot>().Init(OqtState.GetBlock(true), Log);
 
-            _oqtState = ServiceProvider.Build<OqtState>();
+            // In case SxcBlock was null, there is no instance, but we may still need the app
+            if (_DynCodeRoot.App == null)
+            {
+                Log.Add("DynCode.App is null");
+                TryToAttachAppFromUrlParams(context);
+            }
 
-            var getBlock = _oqtState.GetBlock(true);
-
-            _DynCodeRoot = ServiceProvider.Build<DynamicCodeRoot>().Init(getBlock, Log);
-
-            var stxResolver = ServiceProvider.Build<IContextResolver>();
-            stxResolver.AttachRealBlock(() => getBlock);
-            stxResolver.AttachBlockContext(() => _oqtState.GetContext());
-
+            // Ensure the Api knows what path it's on, in case it will
+            // create instances of .cs files
             if (context.HttpContext.Items.TryGetValue(CodeCompiler.SharedCodeRootPathKeyInCache, out var createInstancePath))
                 CreateInstancePath = createInstancePath as string;
         }
+
+        private void TryToAttachAppFromUrlParams(ActionExecutingContext context)
+        {
+            var wrapLog = Log.Call();
+            var found = false;
+            try
+            {
+                // Handed in from the App-API Transformer
+                context.HttpContext.Items.TryGetValue(AppApiDynamicRouteValueTransformer.HttpContextKeyForAppFolder, out var routeAppPathObj);
+                if (routeAppPathObj == null) return;
+                var routeAppPath = routeAppPathObj.ToString();
+                
+                var appId = CtxResolver.AppOrNull(routeAppPath)?.AppState.AppId ?? ToSic.Eav.Constants.NullId;
+
+                if (appId != ToSic.Eav.Constants.NullId)
+                {
+                    // Look up if page publishing is enabled - if module context is not available, always false
+                    Log.Add($"AppId: {appId}");
+                    var app = LoadAppOnly(appId, CtxResolver.Site().Site);
+                    _DynCodeRoot.LateAttachApp(app);
+                    found = true;
+                }
+            }
+            catch { /* ignore */ }
+
+            wrapLog(found.ToString());
+        }
+
+        /// <summary>
+        /// Only load the app in case we don't have a module context
+        /// </summary>
+        /// <param name="appId"></param>
+        /// <param name="site"></param>
+        /// <returns></returns>
+        private IApp LoadAppOnly(int appId, ISite site)
+        {
+            var wrapLog = Log.Call<IApp>($"{appId}");
+            var zoneId = ToSic.Eav.Apps.App.AutoLookupZone;
+            var showDrafts = false;
+            // var log = new Log("Dnn.Factry", parentLog);
+            // log.Add($"Create App(z:{zoneId}, a:{appId}, showDrafts: {showDrafts})");
+            var app = ServiceProvider.Build<ToSic.Sxc.Apps.App>();
+            app.PreInit(site);
+            var appStuff = app.Init(new AppIdentity(zoneId, appId),
+                ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(showDrafts),
+                Log);
+            return wrapLog(null, appStuff);
+        }
+
+
 
 
         // ReSharper disable once InconsistentNaming
@@ -200,15 +251,55 @@ namespace Custom.Hybrid
 
         #endregion
 
-        /// <inheritdoc />
-        /// TODO: make Oqt implementation
-        //public new IDnnContext Dnn => base.Dnn;
 
-
-        #region RunContext WiP
+        #region CmsContext
 
         public ICmsContext CmsContext => _DynCodeRoot?.CmsContext;
 
+
+        #endregion
+
+        #region Experimental
+
+        public object Test()
+        {
+            return "test test test";
+            // return File("filename",)
+        }
+
+        public object File(string dontRelyOnParameterOrder = ToSic.Eav.Constants.RandomProtectionParameter,
+            // Important: the second parameter should _not_ be a string, otherwise the signature looks the same as the built-in File(...) method
+            bool? download = null,
+            string virtualPath = null, // important: this is the virtualPath, but it should not have the same name, to not confuse the compiler with same sounding param names
+            string contentType = null,
+            string fileDownloadName = null,
+            Stream stream = null,
+            string body = null
+            )
+        {
+            ToSic.Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, nameof(File), "");
+
+            // Set reallyForceDownload based on forceDownload and file name
+            var reallyForceDownload = download == true || !string.IsNullOrWhiteSpace(fileDownloadName);
+
+            // check if we should force a download, but maybe fileDownloadName is empty
+            if (reallyForceDownload && string.IsNullOrWhiteSpace(fileDownloadName))
+            {
+                // try to guess name based on virtualPath name
+                fileDownloadName = !string.IsNullOrWhiteSpace(virtualPath) ? Path.GetFileName(virtualPath) : null;
+                if (string.IsNullOrWhiteSpace(fileDownloadName))
+                    throw new ArgumentException($"Can't force download without a {nameof(fileDownloadName)} or a real {nameof(virtualPath)}");
+            }
+            
+            // check if this may just be a call to the built in file, which has two strings
+            // this can only be possible if only the virtualPath and contentType were set
+            if (!string.IsNullOrWhiteSpace(virtualPath) && !string.IsNullOrWhiteSpace(contentType))
+                return string.IsNullOrWhiteSpace(fileDownloadName)
+                    ? base.File(virtualPath, contentType)
+                    : base.File(virtualPath, contentType, fileDownloadName);
+            
+            return null;
+        }
 
         #endregion
     }

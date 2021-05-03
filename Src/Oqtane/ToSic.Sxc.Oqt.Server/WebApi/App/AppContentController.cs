@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
         #region DI / Constructor
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "AppCnt";
 
-        public AppContentController(StatefulControllerDependencies dependencies, Lazy<AppContent> appContentLazy) : base()
+        public AppContentController(Lazy<AppContent> appContentLazy)
         {
             _appContentLazy = appContentLazy;
         }

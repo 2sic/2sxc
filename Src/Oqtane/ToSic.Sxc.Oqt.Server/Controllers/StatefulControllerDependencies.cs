@@ -19,8 +19,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         //internal readonly IModuleDefinitionRepository ModuleDefinitionRepository;
         //internal readonly ISettingRepository SettingRepository;
         //private readonly OqtaneContainer _oqtaneContainer;
-        internal readonly OqtTempInstanceContext OqtTempInstanceContext;
-        internal readonly Lazy<OqtState> OqtState;
+        //internal readonly OqtTempInstanceContext OqtTempInstanceContext;
+        internal readonly OqtState OqtState;
 
         public StatefulControllerDependencies(IZoneMapper zoneMapper,
             ITenantResolver tenantResolver,
@@ -28,10 +28,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             IModuleRepository moduleRepository,
             //ISettingRepository settingRepository,
             //OqtaneContainer oqtaneContainer,
-            OqtTempInstanceContext oqtTempInstanceContext,
+            //OqtTempInstanceContext oqtTempInstanceContext,
             IServiceProvider serviceProvider,
             IContextResolver ctxResolver,
-            Lazy<OqtState> oqtState)
+            OqtState oqtState)
         {
             ServiceProvider = serviceProvider;
             CtxResolver = ctxResolver;
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             ModuleRepository = moduleRepository;
             //SettingRepository = settingRepository;
             //_oqtaneContainer = oqtaneContainer;
-            OqtTempInstanceContext = oqtTempInstanceContext;
+            //OqtTempInstanceContext = oqtTempInstanceContext;
             OqtState = oqtState;
         }
     }

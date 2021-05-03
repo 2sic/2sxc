@@ -40,7 +40,8 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddScoped<IUser, OqtUser>();
             services.TryAddTransient<IModule, OqtModule>();
             services.TryAddTransient<OqtModule>();
-            services.TryAddTransient<OqtTempInstanceContext>();
+            services.TryAddScoped<OqtState>();
+            //services.TryAddTransient<OqtTempInstanceContext>();
 
             services.TryAddTransient<IZoneCultureResolver, OqtSite>();
             services.TryAddTransient<IZoneMapper, OqtZoneMapper>();
