@@ -85,8 +85,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             if (moduleId == -1 || pageId == -1)
             {
-                moduleId = GetRouteValuesString<int>(WebApiConstants.RouteModuleId, -1);
-                pageId = GetRouteValuesString<int>(WebApiConstants.RoutePageId, -1);
+                moduleId = GetQueryString<int>(WebApiConstants.ModuleId, GetRouteValuesString<int>(WebApiConstants.ModuleId, -1));
+                pageId = GetQueryString<int>(WebApiConstants.PageId,GetRouteValuesString<int>(WebApiConstants.PageId, -1));
 
                 if (moduleId == -1 || pageId == -1)
                 {
@@ -126,6 +126,20 @@ namespace ToSic.Sxc.Oqt.Server.Run
             }
         }
 
+        private T GetQueryString<T>(string key, T fallback)
+        {
+            var valueString = GetRequest().Query[key];
+            if (valueString == StringValues.Empty) return fallback;
+
+            try
+            {
+                return (T)Convert.ChangeType(valueString.ToString(), typeof(T));
+            }
+            catch
+            {
+                return fallback;
+            }
+        }
         private T GetRouteValuesString<T>(string key, T fallback)
         {
             var valueString = GetRequest().RouteValues[key];

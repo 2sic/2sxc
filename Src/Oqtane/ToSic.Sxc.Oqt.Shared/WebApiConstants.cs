@@ -19,7 +19,7 @@
         public const string MvcApiLogPrefix = "MAP.";
 
         // QueryStringKeys
-        public const string RoutePageId = "pageid";
-        public const string RouteModuleId = "moduleid";
+        public const string PageId = "pageid";
+        public const string ModuleId = "moduleid";
     }
 }
