@@ -6,10 +6,12 @@ using Oqtane.Models;
 using Oqtane.Repository;
 using System;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
@@ -64,21 +66,25 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 var siteStateInitializer = serviceProvider.Build<SiteStateInitializer>();
                 //var aliasRepositoryLazy = serviceProvider.Build<Lazy<IAliasRepository>>();
                 siteStateInitializer.InitIfEmpty(); //siteState, httpContext, aliasRepositoryLazy);
-                alias = siteStateInitializer.SiteState.Alias ?? throw new ArgumentException($"Error: missing required 'alias' route value.", nameof(values));
+                alias = siteStateInitializer.SiteState.Alias 
+                        ?? throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, $"Error: missing required 'alias' route value.", "Not Found");
             }
             var aliasPart = string.Format(OqtConstants.AppRootPublicBase, alias.SiteId);
             #endregion
 
             // Ensure required route values: alias, appFolder, controller, action.
-            if (!values.ContainsKey("appFolder")) throw new ArgumentException($"Error: missing required 'appFolder' route value.", nameof(values));
+            if (!values.ContainsKey("appFolder"))
+                throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, $"Error: missing required 'appFolder' route value.", "Not Found");
             var appFolder = (string)values["appFolder"];
             if (appFolder == WebApiConstants.Auto) appFolder = _oqtAppFolderLazy.Value.GetAppFolder();
 
 
-            if (!values.ContainsKey("controller")) throw new ArgumentException($"Error: missing required 'controller' route value.", nameof(values));
+            if (!values.ContainsKey("controller"))
+                throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, $"Error: missing required 'controller' route value.", "Not Found");
             var controller = (string)values["controller"];
 
-            if (!values.ContainsKey("action")) throw new ArgumentException($"Error: missing required 'action' route value.", nameof(values));
+            if (!values.ContainsKey("action"))
+                throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, $"Error: missing required 'action' route value.", "Not Found");
             var action = (string)values["action"];
 
             Log.Add($"TransformAsync route required values are present, alias:{alias.AliasId}, app:{appFolder}, ctrl:{controller}, act:{action}.");

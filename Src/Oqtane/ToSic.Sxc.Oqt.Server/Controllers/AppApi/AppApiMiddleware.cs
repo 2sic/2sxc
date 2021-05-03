@@ -2,8 +2,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using ToSic.Eav.WebApi.Errors;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {
@@ -21,26 +23,16 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 // Compile and register dyncode app api controller.
                 var appApiControllerManager = context.RequestServices.GetService<AppApiControllerManager>();
                 if (!await appApiControllerManager.PrepareController(values))
-                    throw new ArgumentException("Error, can't compile controller.");
+                    throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, "Error, can't compile controller.", "Not Found");
 
                 // Invoke controller action.
                 var appApiActionInvoker = context.RequestServices.GetService<AppApiActionInvoker>();
                 await appApiActionInvoker.Invoke(context, values);
             }
-            //catch (UnauthorizedAccessException e)
-            //{
-            //    context.Response.StatusCode = 401;
-            //    await context.Response.WriteAsync($"401 Unauthenticated");
-            //}
-            catch (ForbiddenException e)
+            catch (HttpExceptionAbstraction e)
             {
-                context.Response.StatusCode = 403;
-                await context.Response.WriteAsync($"403 Forbidden");
-            }
-            catch (ArgumentException e)
-            {
-                context.Response.StatusCode = 404;
-                await context.Response.WriteAsync($"404 Not Found - {e.Message}");
+                context.Response.StatusCode = e.Status;
+                await context.Response.WriteAsync($"{e.Status} - {e.Message}");
             }
             catch (Exception e)
             {
@@ -49,15 +41,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             }
         }
 
-        [Serializable()]
-        public class ForbiddenException : System.Exception
-        {
-            public ForbiddenException() : base() { }
-            public ForbiddenException(string message) : base(message) { }
-            public ForbiddenException(string message, System.Exception inner) : base(message, inner) { }
 
-            // A constructor is needed for serialization when an exception propagates from a remoting server to the client. 
-            protected ForbiddenException(SerializationInfo info, StreamingContext context) { }
-        }
     }
 }

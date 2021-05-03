@@ -4,13 +4,15 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Oqtane.Security;
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
-using Oqtane.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Oqt.Server.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
@@ -60,7 +62,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 ? $"ok, have candidates: {candidates.Count}"
                 : $"error, missing candidates: {candidates.Count}, can't find right method for action: {values["action"]} on controller: {values["controller"]}.");
 
-            if (candidates.Count == 0) throw new ArgumentException($"Can't find right method for action: {values["action"]} on controller: {values["controller"]}.");
+            if (candidates.Count == 0) throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, $"Can't find right method for action: {values["action"]} on controller: {values["controller"]}.", "Not Found");
 
             Log.Add($"actionDescriptor SelectBestCandidate");
             var actionDescriptor = actionSelector.SelectBestCandidate(routeContext, candidates);
@@ -101,13 +103,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                     var isAuthorized = UserSecurity.IsAuthorized(((OqtUser) user).UnwrappedContents, authorize.Roles);
                     Log.Add($"check security for roles: {authorize}, is {isAuthorized}");
                     authorized &= isAuthorized;
-                    if (authorized == false) throw new AppApiMiddleware.ForbiddenException();
+                    if (authorized == false) throw new HttpExceptionAbstraction(HttpStatusCode.Forbidden, "Forbidden", "Forbidden");
                 }
-                // TODO: check security for policy
-                //if (!string.IsNullOrEmpty(authorize.Policy))
-                //{
-                // TODO: check security based on policy and module permissions
-                //}
             }
         }
 

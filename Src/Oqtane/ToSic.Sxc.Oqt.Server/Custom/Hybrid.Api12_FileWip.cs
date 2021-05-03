@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Net;
+using ToSic.Eav.WebApi.Errors;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -35,7 +37,7 @@ namespace Custom.Hybrid
                 // try to guess name based on virtualPath name
                 fileDownloadName = !string.IsNullOrWhiteSpace(virtualPath) ? Path.GetFileName(virtualPath) : null;
                 if (string.IsNullOrWhiteSpace(fileDownloadName))
-                    throw new ArgumentException($"Can't force download without a {nameof(fileDownloadName)} or a real {nameof(virtualPath)}");
+                    throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, $"Can't force download without a {nameof(fileDownloadName)} or a real {nameof(virtualPath)}", "Not Found");
             }
 
             // check if this may just be a call to the built in file, which has two strings
