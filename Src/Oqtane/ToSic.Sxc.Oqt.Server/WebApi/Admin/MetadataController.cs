@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     {
         protected override string HistoryLogName => "Api.Metadata";
 
-        public MetadataController(StatefulControllerDependencies dependencies) : base(dependencies)
+        public MetadataController(StatefulControllerDependencies dependencies) : base()
         { }
 
         [HttpGet]

@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
             Lazy<EntityPickerBackend> entityBackend,
             Lazy<EditLoadBackend> loadBackend,
             Lazy<EditSaveBackend> saveBackendLazy,
-            Lazy<HyperlinkBackend<int, int>> linkBackendLazy) : base(dependencies)
+            Lazy<HyperlinkBackend<int, int>> linkBackendLazy) : base()
         {
             _entityBackend = entityBackend;
             _loadBackend = loadBackend;

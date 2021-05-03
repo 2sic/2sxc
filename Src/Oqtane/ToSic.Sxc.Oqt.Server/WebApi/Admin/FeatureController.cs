@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         private readonly ISite _site;
         protected override string HistoryLogName => "Api.Feats";
 
-        public FeatureController(StatefulControllerDependencies dependencies, FeaturesBackend featuresBackend, ISite site) : base(dependencies)
+        public FeatureController(StatefulControllerDependencies dependencies, FeaturesBackend featuresBackend, ISite site) : base()
         {
             _featuresBackend = featuresBackend;
             _site = site;

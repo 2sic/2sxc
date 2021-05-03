@@ -1,5 +1,8 @@
 ﻿using System;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Mvc.Filters;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Run;
@@ -10,12 +13,20 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     public abstract class OqtStatefulControllerBase : OqtControllerBase
     {
-        protected readonly IServiceProvider ServiceProvider;
-        private readonly OqtState _oqtState;
+        protected IServiceProvider ServiceProvider;
+        private OqtState _oqtState;
 
-        protected OqtStatefulControllerBase(StatefulControllerDependencies dependencies) : base()
+        protected OqtStatefulControllerBase() : base() { }
+
+        public override void OnActionExecuting(ActionExecutingContext context)
         {
-            ServiceProvider = dependencies.ServiceProvider;
+            Log.Add($"Url: {context.HttpContext.Request.GetDisplayUrl()}");
+
+            base.OnActionExecuting(context);
+
+            ServiceProvider = context.HttpContext.RequestServices;
+            var dependencies = ServiceProvider.Build<StatefulControllerDependencies>();
+
             _oqtState = dependencies.OqtState.Value.Init(GetRequest);
 
             dependencies.CtxResolver.AttachRealBlock(() => GetBlock());

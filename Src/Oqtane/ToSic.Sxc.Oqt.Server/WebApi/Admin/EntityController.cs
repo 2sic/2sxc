@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             Lazy<EntityApi> lazyEntityApi,
             Lazy<EntityBackend> lazyEntityBackend,
             Lazy<ContentExportApi> contentExportLazy,
-            Lazy<ContentImportApi> contentImportLazy) : base(dependencies)
+            Lazy<ContentImportApi> contentImportLazy) : base()
         {
             _contentExportLazy = contentExportLazy;
             _contentImportLazy = contentImportLazy;

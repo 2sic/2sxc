@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
         public AppPartsController(StatefulControllerDependencies dependencies,
             Lazy<ExportContent> exportContentLazy,
-            Lazy<ImportContent> importContentLazy) : base(dependencies)
+            Lazy<ImportContent> importContentLazy) : base()
         {
             _exportContentLazy = exportContentLazy;
             _importContentLazy = importContentLazy;

@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
             Lazy<AdamTransGetItems<int, int>> adamItems,
             Lazy<AdamTransFolder<int, int>> adamFolders,
             Lazy<AdamTransDelete<int, int>> adamDelete,
-            Lazy<AdamTransRename<int, int>> adamRename) : base(dependencies)
+            Lazy<AdamTransRename<int, int>> adamRename) : base()
         {
             _adamUpload = adamUpload;
             _adamItems = adamItems;

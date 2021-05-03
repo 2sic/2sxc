@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         private readonly Lazy<ListsBackendBase> _listBackendLazy;
         protected override string HistoryLogName => "Api.ConGrp";
         public ContentGroupController(StatefulControllerDependencies dependencies,
-            Lazy<ListsBackendBase> listBackendLazy) : base(dependencies)
+            Lazy<ListsBackendBase> listBackendLazy) : base()
         {
             _listBackendLazy = listBackendLazy;
         }

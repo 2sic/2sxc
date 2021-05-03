@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     public class DialogController : OqtStatefulControllerBase
     {
         protected override string HistoryLogName => "Api.SysCnt";
-        public DialogController(StatefulControllerDependencies dependencies) : base(dependencies)
+        public DialogController(StatefulControllerDependencies dependencies) : base()
         {
         }
 

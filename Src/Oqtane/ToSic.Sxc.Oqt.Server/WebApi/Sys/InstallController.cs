@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
         public InstallController(
             StatefulControllerDependencies dependencies,
             Lazy<IEnvironmentInstaller> envInstallerLazy,
-            Lazy<ImportFromRemote> impFromRemoteLazy) : base(dependencies)
+            Lazy<ImportFromRemote> impFromRemoteLazy) : base()
         {
             _envInstallerLazy = envInstallerLazy;
             _impFromRemoteLazy = impFromRemoteLazy;

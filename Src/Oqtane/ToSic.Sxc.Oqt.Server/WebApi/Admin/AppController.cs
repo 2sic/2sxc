@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             Lazy<AppManager> appManagerLazy,
             Lazy<AppCreator> appBuilderLazy,
             Lazy<ResetApp> resetAppLazy
-            ) : base(dependencies)
+            ) : base()
         {
             _appsBackendLazy = appsBackendLazy;
             _cmsZonesLazy = cmsZonesLazy;

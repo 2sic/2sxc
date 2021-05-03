@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
     {
         protected override string HistoryLogName => "Api.Log";
 
-        public LogController(StatefulControllerDependencies dependencies) : base(dependencies)
+        public LogController(StatefulControllerDependencies dependencies) : base()
         { }
 
         #region Enable extended logging

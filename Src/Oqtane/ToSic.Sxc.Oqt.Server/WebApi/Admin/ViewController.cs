@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
         public ViewController(StatefulControllerDependencies dependencies,
             Lazy<ViewsBackend> viewsBackendLazy,
-            Lazy<ViewsExportImport> viewExportLazy) : base(dependencies)
+            Lazy<ViewsExportImport> viewExportLazy) : base()
         {
             _viewsBackendLazy = viewsBackendLazy;
             _viewExportLazy = viewExportLazy;

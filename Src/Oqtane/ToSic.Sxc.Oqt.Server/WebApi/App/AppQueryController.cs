@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
         #region DI / Constructor
         protected override string HistoryLogName => "App.AppQry";
 
-        public AppQueryController(StatefulControllerDependencies dependencies, Lazy<AppQuery> appQuery) : base(dependencies)
+        public AppQueryController(StatefulControllerDependencies dependencies, Lazy<AppQuery> appQuery) : base()
         {
             _appQuery = appQuery;
         }

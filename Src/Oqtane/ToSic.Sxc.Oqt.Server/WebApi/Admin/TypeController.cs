@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         public TypeController(StatefulControllerDependencies dependencies,
             Lazy<ContentTypeApi> ctApiLazy,
             Lazy<ContentExportApi> contentExportLazy
-        ) : base(dependencies)
+        ) : base()
         {
             _ctApiLazy = ctApiLazy;
             _contentExportLazy = contentExportLazy;

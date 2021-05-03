@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
 
         public HistoryController(StatefulControllerDependencies dependencies,
             IdentifierHelper idHelper,
-            Lazy<AppManager> appManagerLazy) : base(dependencies)
+            Lazy<AppManager> appManagerLazy) : base()
         {
             _idHelper = idHelper;
             _appManagerLazy = appManagerLazy;

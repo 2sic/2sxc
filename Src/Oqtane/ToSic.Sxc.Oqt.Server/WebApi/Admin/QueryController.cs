@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             Lazy<QueryApi> queryLazy,
             Lazy<CmsManager> cmsManagerLazy,
             Lazy<AppConfigDelegate> configProviderLazy
-            ) : base(dependencies)
+            ) : base()
         {
             _queryLazy = queryLazy;
             _cmsManagerLazy = cmsManagerLazy;

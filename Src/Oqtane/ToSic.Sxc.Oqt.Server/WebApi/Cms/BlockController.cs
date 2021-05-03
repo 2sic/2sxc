@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
             Lazy<ContentBlockBackend> blockBackendLazy,
             Lazy<AppViewPickerBackend> viewPickerBackendLazy,
             Lazy<CmsZones> cmsZonesLazy,
-            Lazy<AppViewPickerBackend> appViewPickerBackendLazy) : base(dependencies)
+            Lazy<AppViewPickerBackend> appViewPickerBackendLazy) : base()
         {
             _lazyCmsRuntime = lazyCmsRuntime;
             _blockBackendLazy = blockBackendLazy;
