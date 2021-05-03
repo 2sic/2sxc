@@ -9,7 +9,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Oqt.Server.Page;
+using ToSic.Sxc.Oqt.Server.Block;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
 

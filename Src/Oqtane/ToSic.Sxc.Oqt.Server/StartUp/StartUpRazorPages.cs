@@ -5,7 +5,7 @@ using Microsoft.Extensions.FileProviders;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
 
-namespace ToSic.Sxc.Oqt.Server.RazorPages
+namespace ToSic.Sxc.Oqt.Server.StartUp
 {
     /// <summary>
     /// Still experimental. Getting Razor Pages to compile seems very, very difficult

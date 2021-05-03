@@ -4,7 +4,6 @@ using Microsoft.Extensions.Primitives;
 using Oqtane.Repository;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;

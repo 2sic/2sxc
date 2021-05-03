@@ -12,8 +12,9 @@ using ToSic.Sxc.Edit;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Run;
 
-namespace ToSic.Sxc.Oqt.Server.Page
+namespace ToSic.Sxc.Oqt.Server.Block
 {
+    [PrivateApi]
     public class OqtAssetsAndHeaders: HasLog, IOqtAssetsAndHeader
     {
         #region Constructor and DI
@@ -29,13 +30,13 @@ namespace ToSic.Sxc.Oqt.Server.Page
         private readonly SiteState _siteState;
 
 
-        public void Init(SxcOqtane parent)
+        public void Init(OqtSxcViewBuilder parent)
         {
             Parent = parent;
             BlockBuilder = parent?.Block?.BlockBuilder as BlockBuilder;
         }
 
-        protected SxcOqtane Parent;
+        protected OqtSxcViewBuilder Parent;
         protected BlockBuilder BlockBuilder;
 
         #endregion
@@ -43,7 +44,6 @@ namespace ToSic.Sxc.Oqt.Server.Page
         public bool AddContextMeta => AddJsCore || AddJsEdit;
 
         private bool AddJsCore => BlockBuilder?.UiAddJsApi ?? false;
-        //public bool AddJsAdvanced = true;
         private bool AddJsEdit => BlockBuilder?.UiAddEditApi ?? false;
         private bool AddCssEdit => BlockBuilder?.UiAddEditUi ?? false;
 

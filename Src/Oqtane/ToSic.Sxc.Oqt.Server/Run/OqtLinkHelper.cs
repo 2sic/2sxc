@@ -5,7 +5,7 @@ using System;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Oqt.Server.Page;
+using ToSic.Sxc.Oqt.Server.Block;
 using ToSic.Sxc.Web;
 using Log = ToSic.Eav.Logging.Simple.Log;
 

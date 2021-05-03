@@ -13,11 +13,8 @@ using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Adam;
-using ToSic.Sxc.Oqt.Server.Blazor;
-using ToSic.Sxc.Oqt.Server.Code;
+using ToSic.Sxc.Oqt.Server.Block;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.Oqt.Server.Extensions.Koi;
-using ToSic.Sxc.Oqt.Server.Page;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.WebApi;
@@ -26,7 +23,7 @@ using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi.Context;
 
-namespace ToSic.Sxc.Oqt.Server
+namespace ToSic.Sxc.Oqt.Server.StartUp
 {
     // ReSharper disable once InconsistentNaming
     static partial class OqtaneDI
@@ -64,7 +61,7 @@ namespace ToSic.Sxc.Oqt.Server
 
             //// Oqtane Specific stuff
             services.AddScoped<OqtAssetsAndHeaders>();
-            services.TryAddTransient<SxcOqtane>();
+            services.TryAddTransient<OqtSxcViewBuilder>();
             services.TryAddTransient<IClientDependencyOptimizer, OqtClientDependencyOptimizer>();
             services.TryAddTransient<IValueConverter, OqtValueConverter>();
 
@@ -83,7 +80,7 @@ namespace ToSic.Sxc.Oqt.Server
             //sc.TryAddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
 
             // 2020-10-22 2dm test
-            services.TryAddTransient<ISxcOqtane, SxcOqtane>();
+            services.TryAddTransient<ISxcOqtane, OqtSxcViewBuilder>();
             services.TryAddTransient<StatefulControllerDependencies>();
 
             // Site State Initializer for APIs etc. to ensure that the SiteState exists and is correctly preloaded

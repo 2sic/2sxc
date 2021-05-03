@@ -1,8 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Connect.Koi;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Connect.Koi; 
+using ToSic.Sxc.Oqt.Server.Extensions.Koi;
 
-namespace ToSic.Sxc.Oqt.Server.Extensions.Koi
+namespace ToSic.Sxc.Oqt.Server.StartUp
 {
     public static class RegisterKoi2
     {

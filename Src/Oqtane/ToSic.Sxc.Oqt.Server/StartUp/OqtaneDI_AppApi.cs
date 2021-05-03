@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 
-namespace ToSic.Sxc.Oqt.Server
+namespace ToSic.Sxc.Oqt.Server.StartUp
 {
     // ReSharper disable once InconsistentNaming
     static partial class OqtaneDI

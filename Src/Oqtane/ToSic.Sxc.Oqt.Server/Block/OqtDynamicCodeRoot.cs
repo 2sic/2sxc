@@ -6,7 +6,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
 
-namespace ToSic.Sxc.Oqt.Server.Code
+namespace ToSic.Sxc.Oqt.Server.Block
 {
     [PrivateApi]
     public class OqtaneDynamicCodeRoot : DynamicCodeRoot

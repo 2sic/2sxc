@@ -1,25 +1,26 @@
-﻿using Oqtane.Models;
-using Oqtane.Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Oqtane.Models;
+using Oqtane.Shared;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Oqt.Server.Page;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Oqt.Shared.Run;
 using ToSic.Sxc.Razor.Engine.DbgWip;
 
-namespace ToSic.Sxc.Oqt.Server
+namespace ToSic.Sxc.Oqt.Server.Block
 {
-    public class SxcOqtane : HasLog, ISxcOqtane
+    [PrivateApi]
+    public class OqtSxcViewBuilder : HasLog, ISxcOqtane
     {
         #region Constructor and DI
 
-        public SxcOqtane(OqtAssetsAndHeaders assetsAndHeaders, RazorReferenceManager debugRefMan, Lazy<OqtState> oqtState
+        public OqtSxcViewBuilder(OqtAssetsAndHeaders assetsAndHeaders, RazorReferenceManager debugRefMan, Lazy<OqtState> oqtState
             ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
         {
 

@@ -3,10 +3,9 @@ using System.Linq;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
-using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Oqt.Server.Blazor
+namespace ToSic.Sxc.Oqt.Server.Plumbing
 {
     /// <summary>
     /// This is responsible for providing the current HTTP context to the application.

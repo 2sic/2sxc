@@ -4,7 +4,7 @@ using Oqtane.Shared;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Oqt.Server.Page;
+using ToSic.Sxc.Oqt.Server.Block;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.Run;
 
