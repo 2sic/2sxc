@@ -11,12 +11,6 @@ namespace Custom.Hybrid
     {
         #region Experimental
 
-        public object Test()
-        {
-            return "test test test";
-            // return File("filename",)
-        }
-
         public object File(string dontRelyOnParameterOrder = ToSic.Eav.Constants.RandomProtectionParameter,
             // Important: the second parameter should _not_ be a string, otherwise the signature looks the same as the built-in File(...) method
             bool? download = null,
