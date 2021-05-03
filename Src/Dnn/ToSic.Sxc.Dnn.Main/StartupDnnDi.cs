@@ -108,6 +108,9 @@ namespace ToSic.SexyContent
                     /* ignore */
                 }
             }
+            
+            // new in v12 - .net specific code compiler
+            services.TryAddTransient<CodeCompiler, CodeCompilerNetFull>();
 
             // new in v12 - different way to integrate KOI - experimental!
             try

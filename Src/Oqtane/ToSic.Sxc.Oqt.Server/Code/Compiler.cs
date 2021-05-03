@@ -1,20 +1,17 @@
-#if NETSTANDARD
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Emit;
-using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.Loader;
 using System.Text;
-using System.Text.RegularExpressions;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Emit;
+using Microsoft.CodeAnalysis.Text;
 using ToSic.Eav.Logging;
 
-namespace ToSic.Sxc.Code.Builder
+namespace ToSic.Sxc.Oqt.Server.Code
 {
 
     // Code is based on DynamicRun by Laurent Kempé
@@ -127,4 +124,3 @@ namespace ToSic.Sxc.Code.Builder
         }
     }
 }
-#endif

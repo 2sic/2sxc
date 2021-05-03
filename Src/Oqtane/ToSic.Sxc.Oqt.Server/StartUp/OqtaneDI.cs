@@ -14,6 +14,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Block;
+using ToSic.Sxc.Oqt.Server.Code;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
@@ -106,6 +107,10 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             // Polymorphism Resolvers
             services.TryAddTransient<Sxc.Polymorphism.Koi>();
             services.TryAddTransient<Polymorphism.Permissions>();
+
+
+            // new in v12 - .net specific code compiler
+            services.TryAddTransient<CodeCompiler, CodeCompilerNetCore>();
 
             // new in v12 - integrate KOI - experimental!
             try

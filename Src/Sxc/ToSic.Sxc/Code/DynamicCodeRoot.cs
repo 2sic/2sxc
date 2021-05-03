@@ -30,22 +30,26 @@ namespace ToSic.Sxc.Code
             public IServiceProvider ServiceProvider { get; }
             public ICmsContext CmsContext { get; }
             public ILinkHelper LinkHelper { get; }
+            public Lazy<CodeCompiler> CodeCompilerLazy { get; }
 
-            public Dependencies(IServiceProvider serviceProvider, ICmsContext cmsContext, ILinkHelper linkHelper)
+            public Dependencies(IServiceProvider serviceProvider, ICmsContext cmsContext, ILinkHelper linkHelper, Lazy<CodeCompiler> codeCompilerLazy)
             {
                 ServiceProvider = serviceProvider;
                 CmsContext = cmsContext;
                 LinkHelper = linkHelper;
+                CodeCompilerLazy = codeCompilerLazy;
             }
         }
 
         protected DynamicCodeRoot(Dependencies dependencies, string logPrefix) : base(logPrefix + ".DynCdR")
         {
+            Deps = dependencies;
             _serviceProvider = dependencies.ServiceProvider;
             CmsContext = dependencies.CmsContext;
             Link = dependencies.LinkHelper;
         }
 
+        private readonly Dependencies Deps;
         private readonly IServiceProvider _serviceProvider;
 
         [PrivateApi] public ICmsContext CmsContext { get; }

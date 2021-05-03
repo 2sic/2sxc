@@ -1,8 +1,7 @@
-﻿#if NETSTANDARD
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.Loader;
 
-namespace ToSic.Sxc.Code.Builder
+namespace ToSic.Sxc.Oqt.Server.Code
 {
 
     // Create a collectible AssemblyLoadContext
@@ -19,4 +18,3 @@ namespace ToSic.Sxc.Code.Builder
         }
     }
 }
-#endif

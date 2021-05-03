@@ -16,7 +16,12 @@
                 $"{nameof(name)},{nameof(throwOnError)}");
 
             // Compile
-            var instance = new CodeCompiler(_serviceProvider, Log)
+            var compiler = Deps.CodeCompilerLazy.IsValueCreated
+                ? Deps.CodeCompilerLazy.Value
+                : Deps.CodeCompilerLazy.Value.Init(Log);
+            var instance = compiler
+                //new CodeCompiler(_serviceProvider)
+                //.Init(Log)
                 .InstantiateClass(virtualPath, name, relativePath, throwOnError);
 
             // if it supports all our known context properties, attach them
