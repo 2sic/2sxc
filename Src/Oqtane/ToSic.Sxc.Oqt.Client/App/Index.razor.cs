@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Oqtane.Modules;
 using ToSic.Sxc.Oqt.Client.Services;
 using ToSic.Sxc.Oqt.Shared.Models;
 
@@ -46,8 +47,8 @@ namespace ToSic.Sxc.Oqt.App
             {
                 RenderedUri = NavigationManager.Uri;
                 var indexOfQuestion = NavigationManager.Uri.IndexOf("?", StringComparison.Ordinal);
-                RenderedPage = indexOfQuestion > -1 
-                    ? NavigationManager.Uri.Substring(0, indexOfQuestion) 
+                RenderedPage = indexOfQuestion > -1
+                    ? NavigationManager.Uri.Substring(0, indexOfQuestion)
                     : NavigationManager.Uri;
                 await Initialize2sxcContentBlock();
                 NewDataArrived = true;
@@ -71,6 +72,8 @@ namespace ToSic.Sxc.Oqt.App
                 ModuleState.ModuleId,
                 culture,
                 urlQuery);
+
+            if (!string.IsNullOrEmpty(ViewResults.ErrorMessage)) AddModuleMessage(ViewResults.ErrorMessage, MessageType.Warning);
         }
 
         //private async Task<string> GetUserSelectedCultureFromCookie()
@@ -116,60 +119,64 @@ namespace ToSic.Sxc.Oqt.App
                     // Lets load all 2sxc js dependencies (js / styles)
                     // Not done the official Oqtane way, because that asks for the scripts before
                     // the razor component reported what it needs
-                    foreach (var resource in ViewResults.SxcScripts)
-                        await interop.IncludeScript("", resource, "", "", "", "head", "");
+                    if (ViewResults.SxcScripts != null)
+                        foreach (var resource in ViewResults.SxcScripts)
+                            await interop.IncludeScript("", resource, "", "", "", "head", "");
 
-                    foreach (var style in ViewResults.SxcStyles)
-                        await interop.IncludeLink("", "stylesheet", style, "text/css", "", "", "");
+                    if (ViewResults.SxcStyles != null)
+                        foreach (var style in ViewResults.SxcStyles)
+                            await interop.IncludeLink("", "stylesheet", style, "text/css", "", "", "");
 
                     #endregion
 
                     #region External resources requested by the razor template
 
-                    // External resources = independent files (so not inline JS in the template)
-                    var externalResources = ViewResults.TemplateResources.Where(r => r.IsExternal).ToArray();
+                    if (ViewResults.TemplateResources != null)
+                    {
+                        // External resources = independent files (so not inline JS in the template)
+                        var externalResources = ViewResults.TemplateResources.Where(r => r.IsExternal).ToArray();
 
-                    // 1. Style Sheets, ideally before JS
-                    await interop.IncludeLinks(externalResources
-                        .Where(r => r.ResourceType == ResourceType.Stylesheet)
-                        .Select(a => new
-                        {
-                            id = string.IsNullOrWhiteSpace(a.UniqueId) ? null : a.UniqueId, 
-                            rel = "stylesheet", 
-                            href = a.Url, 
-                            type = "text/css"
+                        // 1. Style Sheets, ideally before JS
+                        await interop.IncludeLinks(externalResources
+                            .Where(r => r.ResourceType == ResourceType.Stylesheet)
+                            .Select(a => new
+                            {
+                                id = string.IsNullOrWhiteSpace(a.UniqueId) ? null : a.UniqueId,
+                                rel = "stylesheet",
+                                href = a.Url,
+                                type = "text/css"
+                            })
+                            .Cast<object>()
+                            .ToArray());
+
+                        // 2. Scripts - usually libraries etc.
+                        // Important: the IncludeScripts works very different from LoadScript - it uses LoadJS and bundles
+                        var bundleId = "module-bundle-" + PageState.ModuleId;
+                        var includeScripts = externalResources
+                            .Where(r => r.ResourceType == ResourceType.Script)
+                            .Select(a => new
+                            {
+                                bundle = bundleId,
+                                id = string.IsNullOrWhiteSpace(a.UniqueId) ? null : a.UniqueId,
+                                href = a.Url,
+                                location = a.Location,
+                                integrity = "", // bug in Oqtane, needs to be an empty string to not throw errors
                         })
-                        .Cast<object>()
-                        .ToArray());
+                            .Cast<object>()
+                            .ToArray();
+                        if (includeScripts.Any()) await interop.IncludeScripts(includeScripts);
 
-                    // 2. Scripts - usually libraries etc.
-                    // Important: the IncludeScripts works very different from LoadScript - it uses LoadJS and bundles
-                    var bundleId = "module-bundle-" + PageState.ModuleId;
-                    var includeScripts = externalResources
-                        .Where(r => r.ResourceType == ResourceType.Script)
-                        .Select(a => new
-                        {
-                            bundle = bundleId,
-                            id = string.IsNullOrWhiteSpace(a.UniqueId) ? null : a.UniqueId,
-                            href = a.Url,
-                            location = a.Location,
-                            integrity = "", // bug in Oqtane, needs to be an empty string to not throw errors
-                        })
-                        .Cast<object>()
-                        .ToArray();
-                    if (includeScripts.Any()) await interop.IncludeScripts(includeScripts);
-
-                    // 3. Inline JS code which was extracted from the template
-                    var inlineResources = ViewResults.TemplateResources.Where(r => !r.IsExternal).ToArray();
-                    foreach (var inline in inlineResources)
-                        await interop.IncludeScript(string.IsNullOrWhiteSpace(inline.UniqueId) ? null : inline.UniqueId,
-                            "",
-                            "",
-                            "",
-                            inline.Content,
-                            "body",
-                            "");
-
+                        // 3. Inline JS code which was extracted from the template
+                        var inlineResources = ViewResults.TemplateResources.Where(r => !r.IsExternal).ToArray();
+                        foreach (var inline in inlineResources)
+                            await interop.IncludeScript(string.IsNullOrWhiteSpace(inline.UniqueId) ? null : inline.UniqueId,
+                                "",
+                                "",
+                                "",
+                                inline.Content,
+                                "body",
+                                "");
+                    }
 
                     #endregion
                 }

@@ -2,6 +2,7 @@
 using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
@@ -44,6 +45,9 @@ namespace ToSic.Sxc.Oqt.Server
         public OqtViewResultsDto Prepare(Alias alias, Site site, Oqtane.Models.Page page, Module module)
         {
             //if (_renderDone) throw new Exception("already prepared this module");
+            
+            // Check for this error before even trying to build a view, and otherwise return this object if Refs are missing.
+            if (CheckForRefs(out var oqtViewResultsDto)) return oqtViewResultsDto;
 
             Alias = alias;
             Site = site;
@@ -92,5 +96,22 @@ namespace ToSic.Sxc.Oqt.Server
 
         public string Test() => _debugRefMan.CompilationReferences.Count.ToString();
 
+        private static bool CheckForRefs(out OqtViewResultsDto oqtViewResultsDto)
+        {
+            var errorMessage = string.Empty;
+            
+            // Check for "refs" folder.
+            // https://github.com/oqtane/oqtane.framework/issues/1272
+            var dllLocation = AppContext.BaseDirectory;
+            var refsPath = Path.Combine(dllLocation, "refs");
+            if (!Directory.Exists(refsPath)) errorMessage  = "<strong>Warning:</strong> The \"refs\" folder is missing. Please ensure that <strong>Dependencies.zip</strong> is unzipped as explained in the installation recipe <a href=\"https://azing.org/2sxc/r/fOG3aByY\" target=\"new\">https://azing.org/2sxc/r/fOG3aByY</a>.";
+
+            oqtViewResultsDto = new OqtViewResultsDto
+            {
+                ErrorMessage = errorMessage,
+            };
+
+            return !string.IsNullOrEmpty(errorMessage);
+        }
     }
 }
