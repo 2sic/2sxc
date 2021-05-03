@@ -149,32 +149,21 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
     public class ModuleLookUp : LookUpBase
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        //private readonly IServiceProvider _serviceProvider;
-        //private HttpRequest _GetRequest() => _httpContextAccessor.HttpContext.Request;
-        private IDictionary<object, object?> _items;
+        private readonly OqtState _oqtState;
         private Oqtane.Models.Module Module { get; set; }
 
-        public ModuleLookUp(IHttpContextAccessor httpContextAccessor/*, IServiceProvider serviceProvider*/)
+        public ModuleLookUp(OqtState oqtState)
         {
             Name = "Module";
 
-            _httpContextAccessor = httpContextAccessor;
-            //_serviceProvider = serviceProvider;
+            _oqtState = oqtState;
         }
 
         public Module GetSource()
         {
-            //var oqtState = new OqtState(_GetRequest, _serviceProvider, Log);
-            //var ctx = oqtState.GetContext();
-            //var module = (OqtModule)ctx.Module;
-            //return module;
-
-            // HACK: WIP
-            _items ??= _httpContextAccessor?.HttpContext.Items;
-            if (_items == null) return null;
-
-            return !_items.TryGetValue(Name + "ForLookUp", out var module) ? null : module as Oqtane.Models.Module;
+            var ctx = _oqtState.GetContext();
+            var module = (OqtModule)ctx.Module;
+            return module.UnwrappedContents;
         }
 
         public override string Get(string key, string format)

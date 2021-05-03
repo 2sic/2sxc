@@ -74,7 +74,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
             // HACKS: STV POC - indirectly share information
             if (alias != null) _accessor.HttpContext.Items.TryAdd("AliasFor2sxc", alias);
-            if (module != null) _accessor.HttpContext.Items.TryAdd("ModuleForLookUp", module);
 
             return _sxcOqtane.Prepare(alias, site, page, module);
         }
