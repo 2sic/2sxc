@@ -7,8 +7,11 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Oqtane.Security;
+using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Sxc.Oqt.Server.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {
@@ -62,6 +65,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             Log.Add($"actionDescriptor SelectBestCandidate");
             var actionDescriptor = actionSelector.SelectBestCandidate(routeContext, candidates);
 
+            // Check security attributes.
+            CheckSecurityAttributes(context, actionDescriptor);
+
             var actionContext = new ActionContext(context, routeData, actionDescriptor);
 
             // Map query string values as endpoint parameters.
@@ -73,6 +79,36 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
             Log.Add($"invoke app api action");
             await actionInvoker.InvokeAsync();
+        }
+
+        private void CheckSecurityAttributes(HttpContext context, ActionDescriptor actionDescriptor)
+        {
+            Log.Add($"checking security");
+
+            var user = context.RequestServices.GetRequiredService<IUser>();
+            Log.Add($"userId: {user.Id}");
+
+            var authorized = true;
+
+            foreach (var authorize in actionDescriptor.EndpointMetadata
+                .Where(a => a.GetType() == typeof(Microsoft.AspNetCore.Authorization.AuthorizeAttribute))
+                .Select(a => ((Microsoft.AspNetCore.Authorization.AuthorizeAttribute) a))
+            )
+            {
+                // check security for roles
+                if (!string.IsNullOrEmpty(authorize.Roles))
+                {
+                    var isAuthorized = UserSecurity.IsAuthorized(((OqtUser) user).UnwrappedContents, authorize.Roles);
+                    Log.Add($"check security for roles: {authorize}, is {isAuthorized}");
+                    authorized &= isAuthorized;
+                    if (authorized == false) throw new AppApiMiddleware.ForbiddenException();
+                }
+                // TODO: check security for policy
+                //if (!string.IsNullOrEmpty(authorize.Policy))
+                //{
+                // TODO: check security based on policy and module permissions
+                //}
+            }
         }
 
         private static void MapQueryStringValuesAsEndpointParameters(ActionContext actionContext, ActionDescriptor actionDescriptor, RouteData routeData)

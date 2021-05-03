@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
@@ -26,6 +27,16 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 var appApiActionInvoker = context.RequestServices.GetService<AppApiActionInvoker>();
                 await appApiActionInvoker.Invoke(context, values);
             }
+            //catch (UnauthorizedAccessException e)
+            //{
+            //    context.Response.StatusCode = 401;
+            //    await context.Response.WriteAsync($"401 Unauthenticated");
+            //}
+            catch (ForbiddenException e)
+            {
+                context.Response.StatusCode = 403;
+                await context.Response.WriteAsync($"403 Forbidden");
+            }
             catch (ArgumentException e)
             {
                 context.Response.StatusCode = 404;
@@ -36,6 +47,17 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 context.Response.StatusCode = 500;
                 await context.Response.WriteAsync($"500 Internal Server Error - {e.Message}");
             }
+        }
+
+        [Serializable()]
+        public class ForbiddenException : System.Exception
+        {
+            public ForbiddenException() : base() { }
+            public ForbiddenException(string message) : base(message) { }
+            public ForbiddenException(string message, System.Exception inner) : base(message, inner) { }
+
+            // A constructor is needed for serialization when an exception propagates from a remoting server to the client. 
+            protected ForbiddenException(SerializationInfo info, StreamingContext context) { }
         }
     }
 }
