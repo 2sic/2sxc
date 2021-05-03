@@ -156,8 +156,6 @@
     <Content Include="DnnPackageBuilder\Cleanup\flush.txt" />
     <Content Include="razorblade-old\bin\Connect.Razor.dll" />
     <Content Include="ClientScripts\ModuleEditor.js" />
-    <Content Include="DnnPackageBuilder\icon-app.png" />
-    <Content Include="DnnPackageBuilder\icon.png" />
     <Content Include="DnnPackageBuilder\license.txt" />
     <Content Include="DnnPackageBuilder\ReleaseNotes.txt" />
     <Content Include="DnnWebForms\PagePicker.ascx" />
@@ -166,8 +164,8 @@
     <Content Include="Extensions\404.png" />
     <Content Include="Extensions\ImageResizer\ImageResizer.txt" />
     <Content Include="DnnWebForms\Skins\QuickEdit.ascx" />
-    <Content Include="icon-app.png" />
-    <Content Include="icon.png" />
+    <Content Include="DnnPackageBuilder\icon-app.png" />
+    <Content Include="DnnPackageBuilder\icon.png" />
     <Content Include="Extensions\Thumbnailer.aspx" />
     <Content Include="Extensions\ToSic_vCard\vCard.ashx" />
     <Content Include="koi\bin\Connect.Dnn.Koi.dll" />
