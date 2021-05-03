@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Oqtane.Repository;
 using Oqtane.Shared;
-using System;
-using System.Linq;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Oqt.Server.Plumbing;
@@ -59,30 +56,30 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             // background processes can pass in an alias using the SiteState service
             if (SiteState.Alias != null) return;
 
-            var request = context.HttpContext.Request;
-            var host = $"{request.Host}";
+            //var request = context.HttpContext.Request;
+            //var host = $"{request.Host}";
 
-            var siteId = -1;
+            //var siteId = -1;
 
-            // get siteId identifier based on request
-            // TODO: REMOVE THIS CODE AS SOON AS THE ui DOESN'T USE IDs ANY MORE - wip ca. mid May 2021
-            var segments = request.Path.Value.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-            if (segments != null && segments.Length > 1 && (segments[1] == "api" || segments[1] == "pages") && segments[0] != "~" && int.TryParse(segments[0], out var areaId))
-                siteId = areaId; // 2sxc UI sends siteId instead of areaId that is common in Oqtane.
+            //// get siteId identifier based on request
+            //// TODO: REMOVE THIS CODE AS SOON AS THE ui DOESN'T USE IDs ANY MORE - wip ca. mid May 2021
+            //var segments = request.Path.Value.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            //if (segments != null && segments.Length > 1 && (segments[1] == "api" || segments[1] == "pages") && segments[0] != "~" && int.TryParse(segments[0], out var areaId))
+            //    siteId = areaId; // 2sxc UI sends siteId instead of areaId that is common in Oqtane.
 
             // New: Get the Site Alias based on the URL
-            var aliasRepositoryLazy = serviceProvider.Build<Lazy<IAliasRepository>>();
-            if (siteId == -1)
+            //var aliasRepositoryLazy = serviceProvider.Build<Lazy<IAliasRepository>>();
+            //if (siteId == -1)
                 serviceProvider.Build<SiteStateInitializer>().InitIfEmpty();
             //SiteStateInitializer.InitIfEmpty(SiteState, context.HttpContext, aliasRepositoryLazy);
-            // TODO: REMOVE THIS CODE AS SOON AS THE ui DOESN'T USE IDs ANY MORE - wip ca. mid May 2021
-            else
-            {
-                var aliases = aliasRepositoryLazy.Value.GetAliases().ToList(); // cached
-                SiteState.Alias = aliases.OrderBy(a => a.Name)
-                    .FirstOrDefault(a => a.SiteId == siteId && a.Name.StartsWith(host));
+            //// TODO: REMOVE THIS CODE AS SOON AS THE ui DOESN'T USE IDs ANY MORE - wip ca. mid May 2021
+            //else
+            //{
+            //    var aliases = aliasRepositoryLazy.Value.GetAliases().ToList(); // cached
+            //    SiteState.Alias = aliases.OrderBy(a => a.Name)
+            //        .FirstOrDefault(a => a.SiteId == siteId && a.Name.StartsWith(host));
 
-            }
+            //}
         }
 
         #region Extend Time so Web Server doesn't time out - not really implemented ATM
