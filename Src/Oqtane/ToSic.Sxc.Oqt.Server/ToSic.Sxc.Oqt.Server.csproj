@@ -36,11 +36,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="RazorPages\IIsSxcRazorPage.cs" />
-    <Compile Remove="RazorPages\SxcRazorPage.cs" />
-    <Compile Remove="RazorPages\SxcRazorPage_Block.cs" />
-    <Compile Remove="RazorPages\SxcRazorPage_CreateInstance.cs" />
-    <Compile Remove="RazorPages\SxcRazorPage_IDynamicCode.cs" />
+    <Compile Remove="StartUp\IIsSxcRazorPage.cs" />
+    <Compile Remove="StartUp\SxcRazorPage.cs" />
+    <Compile Remove="StartUp\SxcRazorPage_Block.cs" />
+    <Compile Remove="StartUp\SxcRazorPage_CreateInstance.cs" />
+    <Compile Remove="StartUp\SxcRazorPage_IDynamicCode.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -83,5 +83,9 @@
     <Reference Include="ToSic.Razor">
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\netstandard2.0\ToSic.Razor.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Code\" />
   </ItemGroup>
 </Project>

@@ -10,19 +10,6 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi
 {
-    // Release routes
-    //[Route(WebApiConstants.ApiRoot + "/[controller]/{appName}")]
-    //[Route(WebApiConstants.ApiRoot2 + "/[controller]/{appName}")]
-    //[Route(WebApiConstants.ApiRoot3 + "/[controller]/{appName}")]
-
-    //[Route(WebApiConstants.ApiRoot + "/app-assets/{appName}")]
-    //[Route(WebApiConstants.ApiRoot2 + "/app-assets/{appName}")]
-    //[Route(WebApiConstants.ApiRoot3 + "/app-assets/{appName}")]
-
-    // Beta routes
-    //[Route("{alias:int}/api/[controller]/{appName}")]
-    //[Route(WebApiConstants.WebApiStateRoot + "/app-assets/{appName}")]
-
     public abstract class AppAssetsControllerBase : OqtControllerBase
     {
         public virtual string Route => "default";
