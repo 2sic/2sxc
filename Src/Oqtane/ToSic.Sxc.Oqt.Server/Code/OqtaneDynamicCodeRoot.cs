@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
@@ -7,7 +8,7 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Code
 {
-    // TODO: remove, because we will use dynamic code hybrid implementation
+    [PrivateApi]
     public class OqtaneDynamicCodeRoot : DynamicCodeRoot
     {
         private readonly Lazy<SiteStateInitializer> _siteStateInitializerLazy;
