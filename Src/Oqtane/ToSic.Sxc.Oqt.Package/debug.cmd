@@ -40,7 +40,7 @@ XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net5.0\ToSic.*.pdb" "%OqtaneBin
 
 @Echo(
 @Echo 2sxc Oqtane - Client Assets
-XCOPY "..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc\*" "%Dev2sxcOqtaneRoot%wwwroot\Modules\ToSic.Sxc\" /Y /S /I
+XCOPY "..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc\*" "%Dev2sxcOqtaneRoot%wwwroot\Modules\ToSic.Sxc\" /Y /S /I /exclude:".map"
 
 @Echo(
 @Echo nuget dependencies - Imazen ImageFlow
@@ -69,9 +69,9 @@ robocopy /mir "..\..\Data\.data-custom\ " "%BuildTarget%\.data-custom\ "
 
 @Echo(
 @Echo Copy 2sxc JS stuff
-robocopy /mir "%Dev2sxcAssets%\js\ " "%BuildTarget%\js\ "
-robocopy /mir "%Dev2sxcAssets%\dist\ " "%BuildTarget%\dist\ "
-robocopy /mir "%Dev2sxcAssets%\system\ " "%BuildTarget%\system\ "
+robocopy /mir "%Dev2sxcAssets%\js\ " "%BuildTarget%\js\ " /xf *.map
+robocopy /mir "%Dev2sxcAssets%\dist\ " "%BuildTarget%\dist\ " /xf *.map
+robocopy /mir "%Dev2sxcAssets%\system\ " "%BuildTarget%\system\ " /xf *.map
 
 @Echo(
 @echo Copied all files to this Website target: '%BuildTarget%' in mode Debug
