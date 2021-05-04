@@ -2,7 +2,7 @@
 using System.IO;
 using System.Net;
 using ToSic.Eav.WebApi.Errors;
-using ToSic.Oqt.Helpers;
+using ToSic.Sxc.Oqt.Server.Adam;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -11,7 +11,7 @@ namespace Custom.Hybrid
     {
         #region Experimental
 
-        public object File(string dontRelyOnParameterOrder = ToSic.Eav.Constants.RandomProtectionParameter,
+        public dynamic File(string dontRelyOnParameterOrder = ToSic.Eav.Constants.RandomProtectionParameter,
             // Important: the second parameter should _not_ be a string, otherwise the signature looks the same as the built-in File(...) method
             bool? download = null,
             string virtualPath = null, // important: this is the virtualPath, but it should not have the same name, to not confuse the compiler with same sounding param names

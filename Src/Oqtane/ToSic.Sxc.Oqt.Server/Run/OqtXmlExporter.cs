@@ -4,14 +4,11 @@ using Microsoft.AspNetCore.Hosting;
 using Oqtane.Repository;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
-using ToSic.Eav.Data;
 using ToSic.Eav.Helpers;
-using ToSic.Eav.ImportExport;
 using ToSic.Eav.ImportExport.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Xml;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Adam;
@@ -23,14 +20,14 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
     public class OqtXmlExporter : XmlExporter
     {
-        private readonly IServiceProvider _serviceProvider;
+        //private readonly IServiceProvider _serviceProvider;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly Lazy<ISiteRepository> _siteRepositoryLazy;
+        //private readonly Lazy<ISiteRepository> _siteRepositoryLazy;
         private readonly Lazy<IFileRepository> _fileRepositoryLazy;
         private readonly Lazy<IFolderRepository> _folderRepositoryLazy;
-        private readonly Lazy<IServerPaths> _oqtServerPathsLazy;
+        //private readonly Lazy<IServerPaths> _oqtServerPathsLazy;
         private readonly Lazy<ITenantResolver> _oqtTenantResolverLazy;
-        private readonly Lazy<IValueConverter> _oqtValueConverterLazy;
+        //private readonly Lazy<IValueConverter> _oqtValueConverterLazy;
         private readonly IContextResolver _ctxResolver;
 
         #region Constructor / DI
@@ -39,23 +36,24 @@ namespace ToSic.Sxc.Oqt.Server.Run
             AdamManager<int, int> adamManager,
             IContextResolver ctxResolver,
             XmlSerializer xmlSerializer,
-            IServiceProvider serviceProvider,
+            //IServiceProvider serviceProvider,
             IWebHostEnvironment hostingEnvironment,
             Lazy<IFileRepository> fileRepositoryLazy,
             Lazy<IFolderRepository> folderRepositoryLazy,
-            Lazy<IServerPaths> oqtServerPathsLazy,
-            Lazy<ISiteRepository> siteRepositoryLazy,
-            Lazy<ITenantResolver> oqtTenantResolverLazy,
-            Lazy<IValueConverter> oqtValueConverterLazy) : base(xmlSerializer, OqtConstants.LogName)
+            //Lazy<IServerPaths> oqtServerPathsLazy,
+            //Lazy<ISiteRepository> siteRepositoryLazy,
+            Lazy<ITenantResolver> oqtTenantResolverLazy
+            //Lazy<IValueConverter> oqtValueConverterLazy
+            ) : base(xmlSerializer, OqtConstants.LogName)
         {
-            _serviceProvider = serviceProvider;
+            //_serviceProvider = serviceProvider;
             _hostingEnvironment = hostingEnvironment;
-            _siteRepositoryLazy = siteRepositoryLazy;
+            //_siteRepositoryLazy = siteRepositoryLazy;
             _fileRepositoryLazy = fileRepositoryLazy;
             _folderRepositoryLazy = folderRepositoryLazy;
-            _oqtServerPathsLazy = oqtServerPathsLazy;
+            //_oqtServerPathsLazy = oqtServerPathsLazy;
             _oqtTenantResolverLazy = oqtTenantResolverLazy;
-            _oqtValueConverterLazy = oqtValueConverterLazy;
+            //_oqtValueConverterLazy = oqtValueConverterLazy;
             _ctxResolver = ctxResolver.Init(Log);
             AdamManager = adamManager;
         }

@@ -117,7 +117,9 @@
   <ItemGroup>
     <Compile Include="Custom\Dnn\Api12.cs" />
     <Compile Include="Custom\Hybrid\Api12.cs" />
+    <Compile Include="Custom\Hybrid\Api12_DynamicWebApi.cs" />
     <Compile Include="Custom\Hybrid\Api12_Obsolete.cs" />
+    <Compile Include="Custom\Hybrid\Api12_Responses.cs" />
     <Compile Include="Dnn\Providers\ModifiedTabAndModuleInfoProvider.cs" />
     <Compile Include="Dnn\WebApi\Adam\DnnAdamSecurityChecks.cs" />
     <Compile Include="Dnn\ApiController.cs" />
@@ -139,6 +141,7 @@
     <Compile Include="Dnn\WebApi\Context\DnnContextDtoExtensions.cs" />
     <Compile Include="Dnn\WebApiRouting\Route.cs" />
     <Compile Include="Dnn\WebApiRouting\RouteParts.cs" />
+    <Compile Include="Obsolete\SexyContent\WebApi\SxcApiController_NotImplemented.cs" />
     <Compile Include="WebApi\DynamicApiController.cs" />
     <Compile Include="Dnn\WebApi\Cms\EditController.cs" />
     <Compile Include="Dnn\WebApi\Sys\InsightsController.cs" />

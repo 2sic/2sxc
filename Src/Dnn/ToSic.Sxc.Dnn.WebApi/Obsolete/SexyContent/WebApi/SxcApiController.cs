@@ -37,7 +37,7 @@ namespace ToSic.SexyContent.WebApi
     /// safer because it can't accidentally mix the App with a different appId in the params
     /// </summary>
     [DnnLogExceptions]
-    public abstract class SxcApiController : 
+    public abstract partial class SxcApiController : 
         DynamicApiController, 
         IDnnDynamicWebApi,
         IDynamicWebApi, 
