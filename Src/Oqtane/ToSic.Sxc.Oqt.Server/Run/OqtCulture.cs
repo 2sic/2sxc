@@ -22,10 +22,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private readonly Lazy<ILanguageRepository> _languageRepository;
 
         /// <inheritdoc />
-        public string DefaultCultureCode => _localizationManager.Value.GetDefaultCulture() ?? "en-us";
+        public string DefaultCultureCode => _localizationManager.Value.GetDefaultCulture() ?? "en-US";
 
         // When culture code is not provided for selected default language, use "en-US".
-        public string DefaultLanguageCode(int siteId) => (_languageRepository.Value.GetLanguages(siteId).FirstOrDefault(l => l.IsDefault)?.Code ?? "en-us");
+        public string DefaultLanguageCode(int siteId) => (_languageRepository.Value.GetLanguages(siteId).FirstOrDefault(l => l.IsDefault)?.Code ?? "en-US");
 
         public  string CurrentCultureCode => CultureInfo.DefaultThreadCurrentUICulture?.Name ?? DefaultCultureCode;
 
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 .Select(l => string.IsNullOrEmpty(l.Code) ? "en-US" : l.Code).ToList() // default English is missing code in Oqtane v2.0.2.
                 .Select(c => CultureInfo.GetCultureInfo(c))
                 .Select(c => new TempTempCulture(
-                    c.Name.ToLowerInvariant(), 
+                    c.Name, 
                     c.EnglishName, 
                     availableEavLanguages.Any(a => a.Active && a.Matches(c.Name))
                     ))
