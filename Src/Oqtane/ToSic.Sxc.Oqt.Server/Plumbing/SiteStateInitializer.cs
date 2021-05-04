@@ -20,6 +20,20 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
             HttpContextAccessor = httpContextAccessor;
             AliasRepositoryLazy = aliasRepositoryLazy;
         }
+        
+        /// <summary>
+        /// Use this from inner code, which must always have an initialized state.
+        /// Usually this has been ensured at the very top - when razor starts or when WebApi start
+        /// </summary>
+        public SiteState InitializedState 
+        {
+            get
+            {
+                if (SiteState.Alias != null) return SiteState;
+                InitIfEmpty();
+                return SiteState;
+            }
+        }
 
         /// <summary>
         /// Will initialize the SiteState if it has not been initialized yet

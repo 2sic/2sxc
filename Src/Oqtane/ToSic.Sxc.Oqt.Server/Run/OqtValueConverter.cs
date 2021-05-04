@@ -1,10 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Oqtane.Enums;
-using Oqtane.Infrastructure;
+using Oqtane.Models;
 using Oqtane.Repository;
-using Oqtane.Shared;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
@@ -27,7 +25,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public Lazy<IPageRepository> PageRepository { get; }
         public Lazy<IServerPaths> ServerPaths { get; }
         public Lazy<SiteStateInitializer> SiteStateInitializerLazy { get; }
-        public Lazy<ILogManager> Logger { get; }
 
         #region DI Constructor
 
@@ -37,8 +34,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             Lazy<ITenantResolver> tenantResolver,
             Lazy<IPageRepository> pageRepository,
             Lazy<IServerPaths> serverPaths,
-            Lazy<SiteStateInitializer> siteStateInitializerLazy,
-            Lazy<ILogManager> logger
+            Lazy<SiteStateInitializer> siteStateInitializerLazy
             )
         {
             FileRepository = fileRepository;
@@ -47,9 +43,19 @@ namespace ToSic.Sxc.Oqt.Server.Run
             PageRepository = pageRepository;
             ServerPaths = serverPaths;
             SiteStateInitializerLazy = siteStateInitializerLazy;
-            Logger = logger;
         }
 
+        protected Alias Alias
+        {
+            get
+            {
+                if (_alias != null) return _alias;
+                _alias = SiteStateInitializerLazy.Value.InitializedState.Alias;
+                return _alias;
+            }
+        }
+
+        private Alias _alias;
 
         #endregion
 
@@ -72,13 +78,13 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private string TryToResolveOneLinkToInternalOqtCode(string potentialFilePath)
         {
             // find site
-            var site = TenantResolver.Value.GetAlias();
+            //var site = TenantResolver.Value.GetAlias();
 
             // Try to find the Folder
             // todo: check if it has /Content/Tenant/1/Site/1 etc.
             var pathAsFolder = potentialFilePath.Backslash();
             var folderPath = Path.GetDirectoryName(pathAsFolder);
-            var folder = FolderRepository.Value.GetFolder(site.SiteId, folderPath);
+            var folder = FolderRepository.Value.GetFolder(Alias.SiteId, folderPath);
             if (folder != null)
             {
                 // Try file reference
@@ -90,7 +96,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             var pathAsPageLink = potentialFilePath.ForwardSlash().TrimEnd('/').TrimStart('/'); // no trailing slashes
             // Try page / tab ID
-            var page = PageRepository.Value.GetPage(pathAsPageLink, site.SiteId);
+            var page = PageRepository.Value.GetPage(pathAsPageLink, Alias.SiteId);
             return page != null
                 ? "page:" + page.PageId
                 : potentialFilePath;
@@ -151,8 +157,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
             #region special handling of issues in case something in the background is broken
             try
             {
-                SiteStateInitializerLazy.Value.InitIfEmpty();
-                var alias = SiteStateInitializerLazy.Value.SiteState.Alias;
+                // SiteStateInitializerLazy.Value.InitIfEmpty();
+                //var alias = SiteStateInitializerLazy.Value.InitializedState.Alias; // SiteStateInitializerLazy.Value.SiteState.Alias;
 
                 var pathInAdam = Path.Combine(fileInfo.Folder.Path, fileInfo.Name/*)*/).ForwardSlash();
 
@@ -164,7 +170,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 var appName = pathInAdam.Substring(0, indexOfSlash);
                 var filePath = pathInAdam.Substring(indexOfSlash).TrimStart('/');
 
-                var result = $"{alias.Path}/app/{appName}/adam/{filePath}".PrefixSlash();
+                var result = $"{Alias.Path}/app/{appName}/adam/{filePath}".PrefixSlash();
 
                 // optionally do extra security checks (new in 10.02)
                 if (!Features.Enabled(FeatureIds.BlockFileIdLookupIfNotInSameApp)) return result;
@@ -188,7 +194,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var page = pageResolver.GetPage(id);
             if (page == null) return null;
 
-            return "/" + page.Path;
+            return $"/{Alias.Path}/{page.Path}";
 
             //var psCurrent = PortalSettings.Current;
             //var psPage = psCurrent;

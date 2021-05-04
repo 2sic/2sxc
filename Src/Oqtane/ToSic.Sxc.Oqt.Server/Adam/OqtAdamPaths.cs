@@ -39,8 +39,8 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 parts[1] = "adam";
 
                 // Insert alias path.
-                _siteStateInitializer.InitIfEmpty();
-                var alias = _siteStateInitializer.SiteState.Alias;
+                //_siteStateInitializer.InitIfEmpty();
+                var alias = _siteStateInitializer.InitializedState.Alias;// _siteStateInitializer.SiteState.Alias;
                 var aliasPath = alias.Path;
                 parts.Insert(0, $"{aliasPath}/app");
 

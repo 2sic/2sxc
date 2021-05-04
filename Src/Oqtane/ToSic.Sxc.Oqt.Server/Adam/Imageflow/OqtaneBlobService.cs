@@ -60,8 +60,8 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
             // Get alias.
             using var scope = _serviceProvider.CreateScope();
             var siteStateInitializer = scope.ServiceProvider.GetRequiredService<SiteStateInitializer>();
-            siteStateInitializer.InitIfEmpty();
-            var alias = siteStateInitializer.SiteState.Alias;
+            //siteStateInitializer.InitIfEmpty();
+            var alias = siteStateInitializer.InitializedState.Alias; // siteStateInitializer.SiteState.Alias;
 
             var hostingEnvironment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
 

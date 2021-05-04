@@ -65,8 +65,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 var serviceProvider = httpContext.RequestServices;
                 var siteStateInitializer = serviceProvider.Build<SiteStateInitializer>();
                 //var aliasRepositoryLazy = serviceProvider.Build<Lazy<IAliasRepository>>();
-                siteStateInitializer.InitIfEmpty(); //siteState, httpContext, aliasRepositoryLazy);
-                alias = siteStateInitializer.SiteState.Alias 
+                //siteStateInitializer.InitIfEmpty(); //siteState, httpContext, aliasRepositoryLazy);
+                alias = siteStateInitializer.InitializedState.Alias // siteStateInitializer.SiteState.Alias 
                         ?? throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, $"Error: missing required 'alias' route value.", "Not Found");
             }
             var aliasPart = string.Format(OqtConstants.AppRootPublicBase, alias.SiteId);
