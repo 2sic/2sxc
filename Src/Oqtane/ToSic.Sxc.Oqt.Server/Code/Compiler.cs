@@ -19,7 +19,8 @@ namespace ToSic.Sxc.Oqt.Server.Code
     // https://laurentkempe.com/2019/02/18/dynamically-compile-and-run-code-using-dotNET-Core-3.0/
     public class Compiler : HasLog
     {
-        private static List<MetadataReference> References { get; set; }
+        private static List<MetadataReference> References => _references ??= GetMetadataReferences();
+        private static List<MetadataReference> _references;
 
         public Compiler() : base("Sys.CodCpl")
         {
@@ -100,9 +101,6 @@ namespace ToSic.Sxc.Oqt.Server.Code
 
             var parsedSyntaxTree = SyntaxFactory.ParseSyntaxTree(sourceCode, options, path);
             var peName = $"{dllName}.dll";
-
-            // Cache references.
-            References ??= GetMetadataReferences();
 
             return CSharpCompilation.Create(peName,
                 new[] { parsedSyntaxTree },
