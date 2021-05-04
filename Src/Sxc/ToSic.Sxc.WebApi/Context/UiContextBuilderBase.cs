@@ -75,7 +75,7 @@ namespace ToSic.Sxc.WebApi.Context
             {
                 Current = language.Current,
                 Primary = language.Primary,
-                All = language.All.ToDictionary(l => l.key, l => l.name),
+                All = language.All.ToDictionary(l => l.key.ToLowerInvariant(), l => l.name),
             };
         }
 

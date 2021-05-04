@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using Oqtane.Shared;
 using ToSic.Eav.Context;
+using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Block;
+using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.Run;
 
@@ -14,31 +17,38 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     public class OqtUiContextBuilder: UiContextBuilderBase
     {
-        public OqtUiContextBuilder(ILinkPaths linkPaths, IContextOfSite ctx, SiteState siteState, Dependencies deps) : base(deps)
+        public OqtUiContextBuilder(ILinkPaths linkPaths, IContextOfSite ctx, SiteState siteState, Dependencies deps, OqtCulture oqtCulture, IZoneMapper OqtZoneMapper) : base(deps)
         {
             _linkPaths = linkPaths;
             _context = ctx;
             _siteState = siteState;
+            _oqtCulture = oqtCulture;
+            _oqtZoneMapper = OqtZoneMapper;
         }
 
         private readonly ILinkPaths _linkPaths;
         private IContextOfSite _context;
         private readonly SiteState _siteState;
+        private readonly OqtCulture _oqtCulture;
+        private readonly IZoneMapper _oqtZoneMapper;
 
 
-        protected override ContextLanguageDto GetLanguage()
-        {
-            return new ContextLanguageDto
-            {
-                Current = WipConstants.DefaultLanguage,
-                Primary = WipConstants.DefaultLanguage,
-                //All = new Dictionary<string, string>
-                //{
-                //    {WipConstants.DefaultLanguage, WipConstants.DefaultLanguageText}
-                //}
-                All = WipConstants.EmptyLanguages,
-            };
-        }
+        //protected override ContextLanguageDto GetLanguage()
+        //{
+        //    return new ContextLanguageDto
+        //    {
+        //        Current = _oqtCulture.CurrentCultureCode,
+        //        Primary = _oqtCulture.DefaultCultureCode,
+        //        //All = new Dictionary<string, string>
+        //        //{
+        //        //    {WipConstants.DefaultLanguage, WipConstants.DefaultLanguageText}
+        //        //}
+        //        All = _oqtZoneMapper.CulturesWithState(_context.Site.Id, _context.Site.ZoneId)
+        //            .Where(c => c.Active)
+        //            .AsEnumerable()
+        //            .ToDictionary(l => l.Key, l => l.Text),
+        //    };
+        //}
 
         protected override WebResourceDto GetSystem() =>
             new WebResourceDto

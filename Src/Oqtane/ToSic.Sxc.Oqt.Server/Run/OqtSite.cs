@@ -67,11 +67,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public override string DefaultCultureCode => _defaultCultureCode ??= _oqtCulture.Value.DefaultCultureCode;
         private string _defaultCultureCode;
 
-        public string DefaultLanguageCode => _defaultLanguageCode ??= _oqtCulture.Value.DefaultLanguageCode(Alias.SiteId);
+        public string DefaultLanguageCode => _defaultLanguageCode ??= _oqtCulture.Value.DefaultLanguageCode(Alias.SiteId).ToLowerInvariant();
         private string _defaultLanguageCode;
 
         /// <inheritdoc />
-        public override string CurrentCultureCode => _currentCultureCode ??= _oqtCulture.Value.CurrentCultureCode;
+        public override string CurrentCultureCode => _currentCultureCode ??= _oqtCulture.Value.CurrentCultureCode.ToLowerInvariant();
         private string _currentCultureCode;
 
         /// <inheritdoc />
