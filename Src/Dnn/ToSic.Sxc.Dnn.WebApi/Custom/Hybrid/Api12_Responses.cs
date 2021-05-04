@@ -69,7 +69,9 @@ namespace Custom.Hybrid
         public dynamic Redirect(string url)
         {
             if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
-            return Request.CreateResponse(HttpStatusCode.Redirect, url);
+            var response = Request.CreateResponse(HttpStatusCode.Redirect);
+            response.Headers.Location = new Uri(url);
+            return response;
         }
 
         /// <summary>
@@ -82,7 +84,9 @@ namespace Custom.Hybrid
         public dynamic RedirectPermanent(string url)
         {
             if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
-            return Request.CreateResponse(HttpStatusCode.MovedPermanently, url);
+            var response = Request.CreateResponse(HttpStatusCode.MovedPermanently);
+            response.Headers.Location = new Uri(url);
+            return response;
         }
 
 
