@@ -6,6 +6,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Oqt.Server.Block;
+using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Web;
 using Log = ToSic.Eav.Logging.Simple.Log;
 
@@ -19,18 +20,18 @@ namespace ToSic.Sxc.Oqt.Server.Run
     {
         public Razor12 RazorPage { get; set; }
         private readonly IPageRepository _pageRepository;
-        private readonly SiteState _siteState;
+        private readonly SiteStateInitializer _siteStateInitializer;
 
         public OqtLinkHelper(
             IPageRepository pageRepository,
-            SiteState siteState
+            SiteStateInitializer siteStateInitializer
         )
         {
             Log = new Log("OqtLinkHelper");
             // TODO: logging
 
             _pageRepository = pageRepository;
-            _siteState = siteState;
+            _siteStateInitializer = siteStateInitializer;
         }
 
         public ILinkHelper Init(Razor12 razorPage)
@@ -48,7 +49,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             if (requiresNamedParameters != null)
                 throw new Exception("The Link.To can only be used with named parameters. try Link.To( parameters: \"tag=daniel&sort=up\") instead.");
 
-            var alias = _siteState.Alias;
+            var alias = _siteStateInitializer.InitializedState.Alias;
 
             var currentPageId = RazorPage._DynCodeRoot?.CmsContext?.Page?.Id;
 
@@ -58,7 +59,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             var page = _pageRepository.GetPage(pid.Value);
 
-            return Utilities.NavigateUrl(alias.Path, page.Path, parameters);
+            return Utilities.NavigateUrl(alias.Path, page.Path, parameters ?? string.Empty);
         }
 
         /// <inheritdoc />
@@ -88,7 +89,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             // TODO: build url with 'app'/'applicationName'
             
             // TODO: centralize how the API path is calculated
-            var siteRoot = OqtAssetsAndHeaders.GetSiteRoot(_siteState).TrimLastSlash();
+            var siteRoot = OqtAssetsAndHeaders.GetSiteRoot(_siteStateInitializer.InitializedState).TrimLastSlash();
             return $"{siteRoot}/app/{RazorPage.App.Folder}/{path}";
         }
     }
