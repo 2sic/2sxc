@@ -100,7 +100,7 @@ namespace ToSic.Sxc.Oqt.Server.Code
 
             var references = new List<MetadataReference>
             {
-                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+                //MetadataReference.CreateFromFile(typeof(object).Assembly.Location), // Commented because it solves error when "refs" are referenced.
                 MetadataReference.CreateFromFile(Assembly.Load("netstandard, Version=2.0.0.0").Location)
             };
 
@@ -112,6 +112,16 @@ namespace ToSic.Sxc.Oqt.Server.Code
             var dllPath = Path.GetDirectoryName(dllLocation);
             foreach (string dllFile in Directory.GetFiles(dllPath, "*.dll"))
                 references.Add(MetadataReference.CreateFromFile(dllFile));
+            foreach (string dllFile in Directory.GetFiles(Path.Combine(dllPath, "refs"), "*.dll"))
+                references.Add(MetadataReference.CreateFromFile(dllFile));
+
+            //var rootRefs = Directory.GetFiles(dllPath, "*.dll");
+            //var rootRefFiles = rootRefs.Select(r => Path.GetFileName(r));
+            //var refsRefs = Directory.GetFiles(Path.Combine(dllPath, "refs"), "*.dll");
+            //var missingRefsRefs = refsRefs.Where(r => !rootRefFiles.Contains(Path.GetFileName(r)));
+            //foreach (string dllFile in missingRefsRefs)
+            //    references.Add(MetadataReference.CreateFromFile(dllFile));
+            // references.Add(MetadataReference.CreateFromFile(Path.Combine(dllPath, "refs", "Microsoft.AspNetCore.Html.Abstractions.dll")));
 
             var peName = $"{dllName}.dll";
 
