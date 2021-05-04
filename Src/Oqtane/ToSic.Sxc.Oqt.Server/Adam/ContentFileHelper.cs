@@ -1,19 +1,19 @@
+using System.IO;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.StaticFiles;
 using Oqtane.Models;
 using Oqtane.Shared;
-using System.IO;
-using System.Text.RegularExpressions;
 using ToSic.Eav.Helpers;
 using ToSic.Sxc.Oqt.Shared;
 
-namespace ToSic.Oqt.Helpers
+namespace ToSic.Sxc.Oqt.Server.Adam
 {
     public static class ContentFileHelper
     {
-        public static readonly Regex RiskyDetector = new Regex(RiskyExtensionsAll);
+        public static readonly Regex RiskyDetector = ToSic.Eav.Security.Files.FileNames.RiskyDownloadDetector;// new Regex(RiskyExtensionsAll);
 
-        public const string RiskyExtensionsAll =
-            @"^\.\s*(ade|adp|app|bas|bat|chm|class|cmd|com|cpl|crt|dll|exe|fxp|hlp|hta|ins|isp|jse|lnk|mda|mdb|mde|mdt|mdw|mdz|msc|msi|msp|mst|ops|pcd|pif|prf|prg|reg|scf|scr|sct|shb|shs|url|vb|vbe|vbs|wsc|wsf|wsh|cshtml|vbhtml|cs|ps[0-9]|ascx|aspx|asmx|config|inc|html|sql|bin|iso|asp|sh|php([0-9])?|pl|cgi|386|torrent|jar|vbscript|cer|csr|jsp|drv|sys|csh|inf|htaccess|htpasswd|ksh)\s*$";
+        //public const string RiskyExtensionsAll =
+        //    @"^\.\s*(ade|adp|app|bas|bat|chm|class|cmd|com|cpl|crt|dll|exe|fxp|hlp|hta|ins|isp|jse|lnk|mda|mdb|mde|mdt|mdw|mdz|msc|msi|msp|mst|ops|pcd|pif|prf|prg|reg|scf|scr|sct|shb|shs|url|vb|vbe|vbs|wsc|wsf|wsh|cshtml|vbhtml|cs|ps[0-9]|ascx|aspx|asmx|config|inc|html|sql|bin|iso|asp|sh|php([0-9])?|pl|cgi|386|torrent|jar|vbscript|cer|csr|jsp|drv|sys|csh|inf|htaccess|htpasswd|ksh)\s*$";
 
         public const string FallbackMimeType = "application/octet-stream";
         
