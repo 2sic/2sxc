@@ -19,6 +19,8 @@ namespace ToSic.Sxc.Oqt.Server.Code
     // https://laurentkempe.com/2019/02/18/dynamically-compile-and-run-code-using-dotNET-Core-3.0/
     public class Compiler : HasLog
     {
+        private static List<MetadataReference> References { get; set; }
+
         public Compiler() : base("Sys.CodCpl")
         {
 
@@ -97,7 +99,21 @@ namespace ToSic.Sxc.Oqt.Server.Code
                 .WithPreprocessorSymbols("OQTANE", "NETCOREAPP", "NET5_0");
 
             var parsedSyntaxTree = SyntaxFactory.ParseSyntaxTree(sourceCode, options, path);
+            var peName = $"{dllName}.dll";
 
+            // Cache references.
+            References ??= GetMetadataReferences();
+
+            return CSharpCompilation.Create(peName,
+                new[] { parsedSyntaxTree },
+                references: References,
+                options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
+                    optimizationLevel: OptimizationLevel.Debug,
+                    assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default));
+        }
+
+        private static List<MetadataReference> GetMetadataReferences()
+        {
             var references = new List<MetadataReference>
             {
                 //MetadataReference.CreateFromFile(typeof(object).Assembly.Location), // Commented because it solves error when "refs" are referenced.
@@ -114,7 +130,8 @@ namespace ToSic.Sxc.Oqt.Server.Code
                 references.Add(MetadataReference.CreateFromFile(dllFile));
             foreach (string dllFile in Directory.GetFiles(Path.Combine(dllPath, "refs"), "*.dll"))
                 references.Add(MetadataReference.CreateFromFile(dllFile));
-
+            return references;
+            
             //var rootRefs = Directory.GetFiles(dllPath, "*.dll");
             //var rootRefFiles = rootRefs.Select(r => Path.GetFileName(r));
             //var refsRefs = Directory.GetFiles(Path.Combine(dllPath, "refs"), "*.dll");
@@ -122,15 +139,6 @@ namespace ToSic.Sxc.Oqt.Server.Code
             //foreach (string dllFile in missingRefsRefs)
             //    references.Add(MetadataReference.CreateFromFile(dllFile));
             // references.Add(MetadataReference.CreateFromFile(Path.Combine(dllPath, "refs", "Microsoft.AspNetCore.Html.Abstractions.dll")));
-
-            var peName = $"{dllName}.dll";
-
-            return CSharpCompilation.Create(peName,
-                new[] { parsedSyntaxTree },
-                references: references,
-                options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
-                    optimizationLevel: OptimizationLevel.Debug,
-                    assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default));
         }
     }
 }
