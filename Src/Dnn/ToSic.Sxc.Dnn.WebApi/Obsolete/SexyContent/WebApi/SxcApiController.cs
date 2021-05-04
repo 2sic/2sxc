@@ -12,14 +12,11 @@ using ToSic.Sxc.Compatibility.Sxc;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
-using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
@@ -63,18 +60,6 @@ namespace ToSic.SexyContent.WebApi
         /// <inheritdoc />
         public IBlockDataSource Data => _DynCodeRoot.Data;
 
-        #region new AsDynamic - not supported
-
-        /// <inheritdoc/>
-        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson)
-            => throw new Exception("The AsDynamic(string) is a new feature in 2sxc 10.20. To use it, change your base class. See https://r.2sxc.org/RazorComponent");
-
-        ///// <inheritdoc/>
-        //public IEnumerable<dynamic> AsDynamic(IDataSource source)
-        //    => throw new Exception("The AsDynamic(string) is a new feature in 2sxc 10.20. To use it, change your base class. See https://r.2sxc.org/RazorComponent");
-
-
-        #endregion
 
         #region AsDynamic implementations
 
@@ -113,13 +98,6 @@ namespace ToSic.SexyContent.WebApi
         public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => _DynCodeRoot.AsList(entities.Cast<IEntity>());
         #endregion
 
-        #region AsList - only in newer APIs
-
-        /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(object list)
-            => throw new Exception("AsList is a new feature in 2sxc 10.20. To use it, change your template type to " + nameof(ApiController) + " see https://r.2sxc.org/RazorComponent");
-
-        #endregion
 
         #region CreateSource implementations
         [Obsolete]
