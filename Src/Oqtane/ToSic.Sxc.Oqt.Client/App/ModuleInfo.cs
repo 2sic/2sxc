@@ -9,9 +9,9 @@ namespace ToSic.Sxc.Oqt.App
         {
             Name = "App",
             Description = "2sxc helps create designed, cross-platform content",
-            Version = "11.90.0",
+            Version = "12.00.00",
             ServerManagerType = "ToSic.Sxc.Oqt.Server.Manager.SxcManager, ToSic.Sxc.Oqtane.Server",
-            ReleaseVersions = "0.0.1,11.90.0",
+            ReleaseVersions = "0.0.1,12.00.00",
             Dependencies = "ToSic.Sxc.Oqtane.Shared",
             Categories = "Common",
             //Runtimes = "Server",
@@ -19,6 +19,6 @@ namespace ToSic.Sxc.Oqt.App
     }
     /*
      * 0.0.1 - Oqtane db fix for https://github.com/oqtane/oqtane.framework/issues/1269 (probably we will remove latter).
-     * 11.90.0 - 2sxc oqtane module pre-release.
+     * 12.00.00 - 2sxc oqtane module first release.
      */
 }

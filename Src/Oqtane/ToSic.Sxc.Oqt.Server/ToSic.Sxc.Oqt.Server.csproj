@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Version>11.90.0</Version>
+    <Version>12.00.00</Version>
     <Product>ToSic.Sxc</Product>
     <Authors>2sic</Authors>
     <Company>2sic</Company>
@@ -49,7 +49,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Scripts\ToSic.Sxc.0.0.1.sql" />
-    <EmbeddedResource Include="Scripts\ToSic.Sxc.11.90.0.sql" />
+    <EmbeddedResource Include="Scripts\ToSic.Sxc.12.00.00.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.Uninstall.sql" />
   </ItemGroup>
 
