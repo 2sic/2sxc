@@ -6,9 +6,9 @@ robocopy /mir "..\..\Data\.databeta\ " "%BuildTarget%\.databeta\ "
 robocopy /mir "..\..\Data\.data-custom\ " "%BuildTarget%\.data-custom\ "
 
 @REM Copy 2sxc JS stuff
-robocopy /mir "%Dev2sxcAssets%\js\ " "%BuildTarget%\js\ "
-robocopy /mir "%Dev2sxcAssets%\dist\ " "%BuildTarget%\dist\ "
-robocopy /mir "%Dev2sxcAssets%\system\ " "%BuildTarget%\system\ "
+robocopy /mir "%Dev2sxcAssets%\js\ " "%BuildTarget%\js\ " /xf *.map
+robocopy /mir "%Dev2sxcAssets%\dist\ " "%BuildTarget%\dist\ " /xf *.map
+robocopy /mir "%Dev2sxcAssets%\system\ " "%BuildTarget%\system\ " /xf *.map
 
 @REM Copy ImportExpor assets
 robocopy /mir "..\..\..\..\..\2sxc-dnn742\Website\DesktopModules\ToSIC_SexyContent\ImportExport\ " "%BuildTarget%\system\ImportExport\ "
