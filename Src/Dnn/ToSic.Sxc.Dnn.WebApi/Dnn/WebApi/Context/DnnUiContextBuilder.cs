@@ -69,13 +69,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
         protected override ContextAppDto GetApp(Ctx flags)
         {
             var appDto = base.GetApp(flags);
-            string apiRoot = null;
+            // If no app is selected yet, then there is no information to return
+            if (appDto == null) return null;
+
             try
             {
                 var roots = DnnJsApiHeader.GetApiRoots();
-                apiRoot = roots.Item2;
+                appDto.Api = roots.Item2;
             } catch { /* ignore */ }
-            appDto.Api = apiRoot;
             return appDto;
         }
 
