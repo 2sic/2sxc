@@ -35,7 +35,7 @@
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\ToSic.*.pdb" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Shared\bin\Release\net5.0\ToSic.*.dll" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Shared\bin\Release\net5.0\ToSic.*.pdb" target="lib\net5.0" />
-    <file src="..\ToSic.Sxc.Oqt.Server\wwwroot\**\*.*" target="wwwroot" />
+    <file src="..\ToSic.Sxc.Oqt.Server\wwwroot\**\*.*" exclude="**\*.map;" target="wwwroot" />
     <!-- 3rd party dependencies -->
     <!--<file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\refs\**\*.*" target="refs" />-->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Connect.Koi.dll" target="lib\net5.0" />
