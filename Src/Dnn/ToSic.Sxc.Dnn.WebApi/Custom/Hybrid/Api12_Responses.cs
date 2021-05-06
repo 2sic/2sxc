@@ -12,9 +12,9 @@ namespace Custom.Hybrid
     {
 
         /// <summary>
-        /// Creates a <see cref="OkResult"/> object that produces an empty <see cref="StatusCodes.Status200OK"/> response.
+        /// Creates a .net-core like `OkResult` object that produces an empty .net-core like `StatusCodes.Status200OK` response.
         /// </summary>
-        /// <returns>The created <see cref="OkResult"/> for the response.</returns>
+        /// <returns>The created .net-core like `OkResult` for the response.</returns>
         [NonAction]
         public dynamic Ok()
         {
@@ -22,10 +22,10 @@ namespace Custom.Hybrid
         }
 
         /// <summary>
-        /// Creates an <see cref="OkObjectResult"/> object that produces an <see cref="StatusCodes.Status200OK"/> response.
+        /// Creates an .net-core like `OkObjectResult` object that produces an .net-core like `StatusCodes.Status200OK` response.
         /// </summary>
         /// <param name="value">The content value to format in the entity body.</param>
-        /// <returns>The created <see cref="OkObjectResult"/> for the response.</returns>
+        /// <returns>The created .net-core like `OkObjectResult` for the response.</returns>
         [NonAction]
         // maybe ??? low priority
         public dynamic Ok(object value)
@@ -34,10 +34,10 @@ namespace Custom.Hybrid
         }
 
         /// <summary>
-        /// Creates a <see cref="NoContentResult"/> object that produces an empty
-        /// <see cref="StatusCodes.Status204NoContent"/> response.
+        /// Creates a .net-core like `NoContentResult` object that produces an empty
+        /// .net-core like `StatusCodes.Status204NoContent` response.
         /// </summary>
-        /// <returns>The created <see cref="NoContentResult"/> object for the response.</returns>
+        /// <returns>The created .net-core like `NoContentResult` object for the response.</returns>
         [NonAction]
         public dynamic NoContent()
         {
@@ -60,11 +60,11 @@ namespace Custom.Hybrid
         // Note that .net core has ca. 30 variants - we probably just need 2
 
         /// <summary>
-        /// Creates a <see cref="RedirectResult"/> object that redirects (<see cref="StatusCodes.Status302Found"/>)
+        /// Creates a .net-core like `RedirectResult` object that redirects (.net-core like `StatusCodes.Status302Found`)
         /// to the specified <paramref name="url"/>.
         /// </summary>
         /// <param name="url">The URL to redirect to.</param>
-        /// <returns>The created <see cref="RedirectResult"/> for the response.</returns>
+        /// <returns>The created .net-core like `RedirectResult` for the response.</returns>
         [NonAction]
         public dynamic Redirect(string url)
         {
@@ -75,11 +75,11 @@ namespace Custom.Hybrid
         }
 
         /// <summary>
-        /// Creates a <see cref="RedirectResult"/> object with <see cref="RedirectResult.Permanent"/> set to true
-        /// (<see cref="StatusCodes.Status301MovedPermanently"/>) using the specified <paramref name="url"/>.
+        /// Creates a .net-core like `RedirectResult` object with .net-core like `RedirectResult.Permanent` set to true
+        /// (.net-core like `StatusCodes.Status301MovedPermanently`) using the specified <paramref name="url"/>.
         /// </summary>
         /// <param name="url">The URL to redirect to.</param>
-        /// <returns>The created <see cref="RedirectResult"/> for the response.</returns>
+        /// <returns>The created .net-core like `RedirectResult` for the response.</returns>
         [NonAction]
         public dynamic RedirectPermanent(string url)
         {
@@ -97,10 +97,10 @@ namespace Custom.Hybrid
 
         #region StatusCode - low priority
         /// <summary>
-        /// Creates a <see cref="StatusCodeResult"/> object by specifying a <paramref name="statusCode"/>.
+        /// Creates a .net-core like `StatusCodeResult` object by specifying a <paramref name="statusCode"/>.
         /// </summary>
         /// <param name="statusCode">The status code to set on the response.</param>
-        /// <returns>The created <see cref="StatusCodeResult"/> object for the response.</returns>
+        /// <returns>The created .net-core like `StatusCodeResult` object for the response.</returns>
         [NonAction]
         public dynamic StatusCode(int statusCode)
         {
@@ -108,11 +108,11 @@ namespace Custom.Hybrid
         }
 
         /// <summary>
-        /// Creates a <see cref="ObjectResult"/> object by specifying a <paramref name="statusCode"/> and <paramref name="value"/>
+        /// Creates a .net-core like `ObjectResult` object by specifying a <paramref name="statusCode"/> and <paramref name="value"/>
         /// </summary>
         /// <param name="statusCode">The status code to set on the response.</param>
-        /// <param name="value">The value to set on the <see cref="ObjectResult"/>.</param>
-        /// <returns>The created <see cref="ObjectResult"/> object for the response.</returns>
+        /// <param name="value">The value to set on the .net-core like `ObjectResult"/>.</param>
+        /// <returns>The created .net-core like `ObjectResult` object for the response.</returns>
         [NonAction]
         public dynamic StatusCode(int statusCode, object value)
             => Request.CreateResponse((HttpStatusCode)statusCode, value);
@@ -120,86 +120,86 @@ namespace Custom.Hybrid
 
 
         /// <summary>
-        /// Creates an <see cref="UnauthorizedResult"/> that produces an <see cref="StatusCodes.Status401Unauthorized"/> response.
+        /// Creates an .net-core like `UnauthorizedResult` that produces an .net-core like `StatusCodes.Status401Unauthorized` response.
         /// </summary>
-        /// <returns>The created <see cref="UnauthorizedResult"/> for the response.</returns>
+        /// <returns>The created .net-core like `UnauthorizedResult` for the response.</returns>
         [NonAction]
         public dynamic Unauthorized()
             => Request.CreateResponse(HttpStatusCode.Unauthorized);
 
         /// <summary>
-        /// Creates an <see cref="UnauthorizedObjectResult"/> that produces a <see cref="StatusCodes.Status401Unauthorized"/> response.
+        /// Creates an .net-core like `UnauthorizedObjectResult` that produces a .net-core like `StatusCodes.Status401Unauthorized` response.
         /// </summary>
-        /// <returns>The created <see cref="UnauthorizedObjectResult"/> for the response.</returns>
+        /// <returns>The created .net-core like `UnauthorizedObjectResult` for the response.</returns>
         [NonAction]
         public dynamic Unauthorized(object value)
             => Request.CreateResponse(HttpStatusCode.Unauthorized, value);
 
         /// <summary>
-        /// Creates an <see cref="NotFoundResult"/> that produces a <see cref="StatusCodes.Status404NotFound"/> response.
+        /// Creates an .net-core like `NotFoundResult` that produces a .net-core like `StatusCodes.Status404NotFound` response.
         /// </summary>
-        /// <returns>The created <see cref="NotFoundResult"/> for the response.</returns>
+        /// <returns>The created .net-core like `NotFoundResult` for the response.</returns>
         [NonAction]
         public dynamic NotFound()
             => Request.CreateResponse(HttpStatusCode.NotFound);
 
         /// <summary>
-        /// Creates an <see cref="NotFoundObjectResult"/> that produces a <see cref="StatusCodes.Status404NotFound"/> response.
+        /// Creates an .net-core like `NotFoundObjectResult` that produces a .net-core like `StatusCodes.Status404NotFound` response.
         /// </summary>
-        /// <returns>The created <see cref="NotFoundObjectResult"/> for the response.</returns>
+        /// <returns>The created .net-core like `NotFoundObjectResult` for the response.</returns>
         [NonAction]
         public dynamic NotFound(object value)
             => Request.CreateResponse(HttpStatusCode.NotFound, value);
 
         /// <summary>
-        /// Creates an <see cref="BadRequestResult"/> that produces a <see cref="StatusCodes.Status400BadRequest"/> response.
+        /// Creates an .net-core like `BadRequestResult` that produces a .net-core like `StatusCodes.Status400BadRequest` response.
         /// </summary>
-        /// <returns>The created <see cref="BadRequestResult"/> for the response.</returns>
+        /// <returns>The created .net-core like `BadRequestResult` for the response.</returns>
         [NonAction]
         public dynamic BadRequest()
             => Request.CreateResponse(HttpStatusCode.BadRequest);
 
         ///// <summary>
-        ///// Creates an <see cref="BadRequestObjectResult"/> that produces a <see cref="StatusCodes.Status400BadRequest"/> response.
+        ///// Creates an .net-core like `BadRequestObjectResult` that produces a .net-core like `StatusCodes.Status400BadRequest` response.
         ///// </summary>
         ///// <param name="error">An error object to be returned to the client.</param>
-        ///// <returns>The created <see cref="BadRequestObjectResult"/> for the response.</returns>
+        ///// <returns>The created .net-core like `BadRequestObjectResult` for the response.</returns>
         //[NonAction]
         //public dynamic BadRequest(object error)
         //    => throw new NotImplementedException();
 
         ///// <summary>
-        ///// Creates an <see cref="BadRequestObjectResult"/> that produces a <see cref="StatusCodes.Status400BadRequest"/> response.
+        ///// Creates an .net-core like `BadRequestObjectResult` that produces a .net-core like `StatusCodes.Status400BadRequest` response.
         ///// </summary>
-        ///// <param name="modelState">The <see cref="ModelStateDictionary" /> containing errors to be returned to the client.</param>
-        ///// <returns>The created <see cref="BadRequestObjectResult"/> for the response.</returns>
+        ///// <param name="modelState">The .net-core like `ModelStateDictionary" /> containing errors to be returned to the client.</param>
+        ///// <returns>The created .net-core like `BadRequestObjectResult` for the response.</returns>
         //[NonAction]
         //public dynamic BadRequest(object modelState)
         //    => throw new NotImplementedException();
 
         #region
         /// <summary>
-        /// Creates an <see cref="ConflictResult"/> that produces a <see cref="StatusCodes.Status409Conflict"/> response.
+        /// Creates an .net-core like `ConflictResult` that produces a .net-core like `StatusCodes.Status409Conflict` response.
         /// </summary>
-        /// <returns>The created <see cref="ConflictResult"/> for the response.</returns>
+        /// <returns>The created .net-core like `ConflictResult` for the response.</returns>
         [NonAction]
         public dynamic Conflict()
             => Request.CreateResponse(HttpStatusCode.Conflict);
 
         /// <summary>
-        /// Creates an <see cref="ConflictObjectResult"/> that produces a <see cref="StatusCodes.Status409Conflict"/> response.
+        /// Creates an .net-core like `ConflictObjectResult` that produces a .net-core like `StatusCodes.Status409Conflict` response.
         /// </summary>
         /// <param name="error">Contains errors to be returned to the client.</param>
-        /// <returns>The created <see cref="ConflictObjectResult"/> for the response.</returns>
+        /// <returns>The created .net-core like `ConflictObjectResult` for the response.</returns>
         [NonAction]
         public dynamic Conflict(object error)
             => Request.CreateResponse(HttpStatusCode.Conflict, error);
 
         ///// <summary>
-        ///// Creates an <see cref="ConflictObjectResult"/> that produces a <see cref="StatusCodes.Status409Conflict"/> response.
+        ///// Creates an .net-core like `ConflictObjectResult` that produces a .net-core like `StatusCodes.Status409Conflict` response.
         ///// </summary>
-        ///// <param name="modelState">The <see cref="ModelStateDictionary" /> containing errors to be returned to the client.</param>
-        ///// <returns>The created <see cref="ConflictObjectResult"/> for the response.</returns>
+        ///// <param name="modelState">The .net-core like `ModelStateDictionary" /> containing errors to be returned to the client.</param>
+        ///// <returns>The created .net-core like `ConflictObjectResult` for the response.</returns>
         //[NonAction]
         //public dynamic Conflict(ModelStateDictionary modelState)
         //    => new ConflictObjectResult(modelState);
@@ -216,29 +216,29 @@ namespace Custom.Hybrid
         #region Accepted
 
         /// <summary>
-        /// Creates a <see cref="AcceptedResult"/> object that produces an <see cref="StatusCodes.Status202Accepted"/> response.
+        /// Creates a .net-core like `AcceptedResult` object that produces an .net-core like `StatusCodes.Status202Accepted` response.
         /// </summary>
-        /// <returns>The created <see cref="AcceptedResult"/> for the response.</returns>
+        /// <returns>The created .net-core like `AcceptedResult` for the response.</returns>
         [NonAction]
         public dynamic Accepted()
             => Request.CreateResponse(HttpStatusCode.Accepted);
 
         // All other accepted - don't implement
         ///// <summary>
-        ///// Creates a <see cref="AcceptedResult"/> object that produces an <see cref="StatusCodes.Status202Accepted"/> response.
+        ///// Creates a .net-core like `AcceptedResult` object that produces an .net-core like `StatusCodes.Status202Accepted` response.
         ///// </summary>
         ///// <param name="value">The optional content value to format in the entity body; may be null.</param>
-        ///// <returns>The created <see cref="AcceptedResult"/> for the response.</returns>
+        ///// <returns>The created .net-core like `AcceptedResult` for the response.</returns>
         //[NonAction]
         //public dynamic Accepted(object value)
         //    => new AcceptedResult(location: null, value: value);
 
         ///// <summary>
-        ///// Creates a <see cref="AcceptedResult"/> object that produces an <see cref="StatusCodes.Status202Accepted"/> response.
+        ///// Creates a .net-core like `AcceptedResult` object that produces an .net-core like `StatusCodes.Status202Accepted` response.
         ///// </summary>
         ///// <param name="uri">The optional URI with the location at which the status of requested content can be monitored.
         ///// May be null.</param>
-        ///// <returns>The created <see cref="AcceptedResult"/> for the response.</returns>
+        ///// <returns>The created .net-core like `AcceptedResult` for the response.</returns>
         //[NonAction]
         //public dynamic Accepted(Uri uri)
         //{
@@ -251,31 +251,31 @@ namespace Custom.Hybrid
         //}
 
         ///// <summary>
-        ///// Creates a <see cref="AcceptedResult"/> object that produces an <see cref="StatusCodes.Status202Accepted"/> response.
+        ///// Creates a .net-core like `AcceptedResult` object that produces an .net-core like `StatusCodes.Status202Accepted` response.
         ///// </summary>
         ///// <param name="uri">The optional URI with the location at which the status of requested content can be monitored.
         ///// May be null.</param>
-        ///// <returns>The created <see cref="AcceptedResult"/> for the response.</returns>
+        ///// <returns>The created .net-core like `AcceptedResult` for the response.</returns>
         //[NonAction]
         //public dynamic Accepted(string uri)
         //    => new AcceptedResult(location: uri, value: null);
 
         ///// <summary>
-        ///// Creates a <see cref="AcceptedResult"/> object that produces an <see cref="StatusCodes.Status202Accepted"/> response.
+        ///// Creates a .net-core like `AcceptedResult` object that produces an .net-core like `StatusCodes.Status202Accepted` response.
         ///// </summary>
         ///// <param name="uri">The URI with the location at which the status of requested content can be monitored.</param>
         ///// <param name="value">The optional content value to format in the entity body; may be null.</param>
-        ///// <returns>The created <see cref="AcceptedResult"/> for the response.</returns>
+        ///// <returns>The created .net-core like `AcceptedResult` for the response.</returns>
         //[NonAction]
         //public dynamic Accepted(string uri, object value)
         //    => new AcceptedResult(uri, value);
 
         ///// <summary>
-        ///// Creates a <see cref="AcceptedResult"/> object that produces an <see cref="StatusCodes.Status202Accepted"/> response.
+        ///// Creates a .net-core like `AcceptedResult` object that produces an .net-core like `StatusCodes.Status202Accepted` response.
         ///// </summary>
         ///// <param name="uri">The URI with the location at which the status of requested content can be monitored.</param>
         ///// <param name="value">The optional content value to format in the entity body; may be null.</param>
-        ///// <returns>The created <see cref="AcceptedResult"/> for the response.</returns>
+        ///// <returns>The created .net-core like `AcceptedResult` for the response.</returns>
         //[NonAction]
         //public dynamic Accepted(Uri uri, object value)
         //{
@@ -290,12 +290,12 @@ namespace Custom.Hybrid
 
         #region Challenge - only one implemented
         ///// <summary>
-        ///// Creates a <see cref="ChallengeResult"/>.
+        ///// Creates a .net-core like `ChallengeResult"/>.
         ///// </summary>
-        ///// <returns>The created <see cref="ChallengeResult"/> for the response.</returns>
+        ///// <returns>The created .net-core like `ChallengeResult` for the response.</returns>
         ///// <remarks>
-        ///// The behavior of this method depends on the <see cref="IAuthenticationService"/> in use.
-        ///// <see cref="StatusCodes.Status401Unauthorized"/> and <see cref="StatusCodes.Status403Forbidden"/>
+        ///// The behavior of this method depends on the .net-core like `IAuthenticationService` in use.
+        ///// .net-core like `StatusCodes.Status401Unauthorized` and .net-core like `StatusCodes.Status403Forbidden"/>
         ///// are among likely status results.
         ///// </remarks>
         //[NonAction]
@@ -305,11 +305,11 @@ namespace Custom.Hybrid
 
         #region Forbid - only one implemented
         /// <summary>
-        /// Creates a <see cref="ForbidResult"/> (<see cref="StatusCodes.Status403Forbidden"/> by default).
+        /// Creates a .net-core like `ForbidResult` (.net-core like `StatusCodes.Status403Forbidden` by default).
         /// </summary>
-        /// <returns>The created <see cref="ForbidResult"/> for the response.</returns>
+        /// <returns>The created .net-core like `ForbidResult` for the response.</returns>
         /// <remarks>
-        /// Some authentication schemes, such as cookies, will convert <see cref="StatusCodes.Status403Forbidden"/> to
+        /// Some authentication schemes, such as cookies, will convert .net-core like `StatusCodes.Status403Forbidden` to
         /// a redirect to show a login page.
         /// </remarks>
         [NonAction]

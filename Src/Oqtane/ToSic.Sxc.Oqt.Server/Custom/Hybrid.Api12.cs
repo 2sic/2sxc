@@ -90,8 +90,6 @@ namespace Custom.Hybrid
             var wrapLog = Log.Call<IApp>($"{appId}");
             var zoneId = ToSic.Eav.Apps.App.AutoLookupZone;
             var showDrafts = false;
-            // var log = new Log("Dnn.Factry", parentLog);
-            // log.Add($"Create App(z:{zoneId}, a:{appId}, showDrafts: {showDrafts})");
             var app = ServiceProvider.Build<ToSic.Sxc.Apps.App>();
             app.PreInit(site);
             var appStuff = app.Init(new AppIdentity(zoneId, appId),
