@@ -4,11 +4,16 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Oqtane.Security;
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.WebApi.Errors;
+using ToSic.Sxc.Oqt.Server.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {
@@ -55,28 +60,51 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
             Log.Add(candidates.Count > 0
                 ? $"ok, have candidates: {candidates.Count}"
-                : $"error, missing candidates: {candidates.Count}");
+                : $"error, missing candidates: {candidates.Count}, can't find right method for action: {values["action"]} on controller: {values["controller"]}.");
 
-            try
+            if (candidates.Count == 0) throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, $"Can't find right method for action: {values["action"]} on controller: {values["controller"]}.", "Not Found");
+
+            Log.Add($"actionDescriptor SelectBestCandidate");
+            var actionDescriptor = actionSelector.SelectBestCandidate(routeContext, candidates);
+
+            // Check security attributes.
+            CheckSecurityAttributes(context, actionDescriptor);
+
+            var actionContext = new ActionContext(context, routeData, actionDescriptor);
+
+            // Map query string values as endpoint parameters.
+            MapQueryStringValuesAsEndpointParameters(actionContext, actionDescriptor, routeData);
+
+            var actionInvokerFactory = context.RequestServices.GetRequiredService<IActionInvokerFactory>();
+
+            var actionInvoker = actionInvokerFactory.CreateInvoker(actionContext);
+
+            Log.Add($"invoke app api action");
+            await actionInvoker.InvokeAsync();
+        }
+
+        private void CheckSecurityAttributes(HttpContext context, ActionDescriptor actionDescriptor)
+        {
+            Log.Add($"checking security");
+
+            var user = context.RequestServices.GetRequiredService<IUser>();
+            Log.Add($"userId: {user.Id}");
+
+            var authorized = true;
+
+            foreach (var authorize in actionDescriptor.EndpointMetadata
+                .Where(a => a.GetType() == typeof(Microsoft.AspNetCore.Authorization.AuthorizeAttribute))
+                .Select(a => ((Microsoft.AspNetCore.Authorization.AuthorizeAttribute) a))
+            )
             {
-                Log.Add($"actionDescriptor SelectBestCandidate");
-                var actionDescriptor = actionSelector.SelectBestCandidate(routeContext, candidates);
-
-                var actionContext = new ActionContext(context, routeData, actionDescriptor);
-
-                // Map query string values as endpoint parameters.
-                MapQueryStringValuesAsEndpointParameters(actionContext, actionDescriptor, routeData);
-
-                var actionInvokerFactory = context.RequestServices.GetRequiredService<IActionInvokerFactory>();
-
-                var actionInvoker = actionInvokerFactory.CreateInvoker(actionContext);
-
-                Log.Add($"invoke app api action");
-                await actionInvoker.InvokeAsync();
-            }
-            catch (Exception e)
-            {
-                Log.Exception(e);
+                // check security for roles
+                if (!string.IsNullOrEmpty(authorize.Roles))
+                {
+                    var isAuthorized = UserSecurity.IsAuthorized(((OqtUser) user).UnwrappedContents, authorize.Roles);
+                    Log.Add($"check security for roles: {authorize}, is {isAuthorized}");
+                    authorized &= isAuthorized;
+                    if (authorized == false) throw new HttpExceptionAbstraction(HttpStatusCode.Forbidden, "Forbidden", "Forbidden");
+                }
             }
         }
 

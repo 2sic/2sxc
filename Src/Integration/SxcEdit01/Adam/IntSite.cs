@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Context;
+using ToSic.Sxc.Run;
 
 namespace IntegrationSamples.SxcEdit01.Adam
 {
@@ -12,7 +13,7 @@ namespace IntegrationSamples.SxcEdit01.Adam
 
         public string AppsRootPhysicalFull => "todo apps root physical full not set";
 
-        public string AppsRootLink => "todo apps root link not set";
+        public string AppAssetsLinkTemplate => "todo apps root link not set/" + LinkPaths.AppFolderPlaceholder;
 
         public string ContentPath => "wwwroot";
 

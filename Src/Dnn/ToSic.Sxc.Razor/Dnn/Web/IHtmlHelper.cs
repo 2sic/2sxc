@@ -4,7 +4,8 @@ using ToSic.Eav.Documentation;
 namespace ToSic.Sxc.Dnn.Web
 {
     /// <summary>
-    /// helper to quickly "raw" some html
+    /// Helper to quickly "raw" some html.
+    /// **Important**: When using Oqtane, the Html object has many more features - check the .net documentation. 
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
     public interface IHtmlHelper
@@ -16,5 +17,14 @@ namespace ToSic.Sxc.Dnn.Web
         /// An HtmlString object which will be not be html-encoded when added to a page with @Html.Raw(...)
         /// </returns>
         HtmlString Raw(object stringHtml);
+
+        /// <summary>
+        /// Experimental support for Html.Partial to mimic API in .net Core 5
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP for v12")]
+        IHtmlString Partial(string path, params object[] data);
     }
 }

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>ToSic.Sxc</id>
-    <version>0.0.59</version>
+    <version>12.00.00</version>
     <authors>2sic</authors>
     <owners>2sic</owners>
     <title>2sxc</title>
@@ -15,10 +15,10 @@
     <iconUrl>https://raw.githubusercontent.com/wiki/2sic/2sxc/assets/logos/2sxc11/2sxc_V11.png</iconUrl>
     <icon>images\2sxc_V11.png</icon>
     <tags>oqtane module</tags>
-    <releaseNotes>POC</releaseNotes>
-    <summary>2sxc 11 - CMS &amp; App-Engine for Oqtane</summary>
+    <releaseNotes>release</releaseNotes>
+    <summary>2sxc 12 - CMS &amp; App-Engine for Oqtane</summary>
     <dependencies>
-      <dependency id="Oqtane.Framework" version="2.0.0" />
+      <dependency id="Oqtane.Framework" version="2.0.2" />
       <dependency id="ToSic.Imageflow.Oqtane" version="1.0.3" />
     </dependencies>
     <frameworkReferences>
@@ -35,8 +35,10 @@
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\ToSic.*.pdb" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Shared\bin\Release\net5.0\ToSic.*.dll" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Shared\bin\Release\net5.0\ToSic.*.pdb" target="lib\net5.0" />
-    <file src="..\ToSic.Sxc.Oqt.Server\wwwroot\**\*.*" target="wwwroot" />
+    <file src="..\ToSic.Sxc.Oqt.Server\wwwroot\**\*.*" exclude="**\*.map;" target="wwwroot" />
     <!-- 3rd party dependencies -->
+    <!--<file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\refs\**\*.*" target="refs" />-->
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Connect.Koi.dll" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\CsvHelper.dll" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\ICSharpCode.SharpZipLib.dll" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll" target="lib\net5.0" />

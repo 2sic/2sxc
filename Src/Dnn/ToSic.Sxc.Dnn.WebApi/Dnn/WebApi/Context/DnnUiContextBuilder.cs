@@ -9,6 +9,8 @@ using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.Context;
 using Assembly = System.Reflection.Assembly;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -64,17 +66,19 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
                     // but we can't get it from there directly
                 };
 
-        //protected override EnableDto GetEnable()
-        //{
-        //    var isRealApp = App != null && App.AppGuid != Eav.Constants.DefaultAppName;
-        //    var tmp = new JsContextUser(new DnnUser());
-        //    return new EnableDto
-        //    {
-        //        AppPermissions = isRealApp,
-        //        CodeEditor = tmp?.CanDevelop ?? false,
-        //        Query = isRealApp,
-        //    };
-        //}
+        protected override ContextAppDto GetApp(Ctx flags)
+        {
+            var appDto = base.GetApp(flags);
+            // If no app is selected yet, then there is no information to return
+            if (appDto == null) return null;
+
+            try
+            {
+                var roots = DnnJsApiHeader.GetApiRoots();
+                appDto.Api = roots.Item2;
+            } catch { /* ignore */ }
+            return appDto;
+        }
 
         /// <summary>
         /// build a getting-started url which is used to correctly show the user infos like
@@ -87,27 +91,15 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
         {
             if (!(App is IApp app)) return "";
 
-            var gsUrl =
-                "//gettingstarted.2sxc.org/router.aspx?" +
-                $"DnnVersion={Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4)}" +
-                $"&2SexyContentVersion={Settings.ModuleVersion}" +
-                $"&ModuleName={Module.DesktopModule.ModuleName}" +
-                $"&ModuleId={Module.ModuleID}" +
-                $"&PortalID={_portal.PortalId}" +
-                $"&ZoneID={app.ZoneId}" +
-                $"&DefaultLanguage={_portal.DefaultLanguage}" +
-                $"&CurrentLanguage={_portal.CultureCode}";
-
-            // Add AppStaticName and Version
-            if (Module.DesktopModule.ModuleName != "2sxc")
-            {
-                gsUrl += "&AppGuid=" + app.AppGuid;
-                if (app.Configuration != null)
-                    gsUrl += $"&AppVersion={app.Configuration.Version}&AppOriginalId={app.Configuration.OriginalId}";
-            }
-
-            var hostSettings = HostController.Instance.GetSettingsDictionary();
-            gsUrl += hostSettings.ContainsKey("GUID") ? "&DnnGUID=" + hostSettings["GUID"] : "";
+            var gsUrl = new WipRemoteRouterLink().LinkToRemoteRouter(
+                RemoteDestinations.GettingStarted,
+                "Dnn",
+                Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4),
+                DotNetNuke.Entities.Host.Host.GUID, 
+                Deps.SiteCtx.Site,
+                Module.ModuleID,
+                app,
+                Module.DesktopModule.ModuleName == "2sxc");
             return gsUrl;
         }
     }

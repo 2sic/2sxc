@@ -4,10 +4,10 @@
     <TargetFrameworks>net451;netstandard2.0</TargetFrameworks>
     <RootNamespace>ToSic.Sxc</RootNamespace>
     <AssemblyName>ToSic.Sxc</AssemblyName>
-    <Version>11.22.00</Version>
+    <Version>12.00.00</Version>
     <!-- This assembly must NOT be deterministic, as the build version is used somewhere -->
     <!-- It's the only assembly where this matters -->
-    <AssemblyVersion>11.22.00.*</AssemblyVersion>
+    <AssemblyVersion>12.00.00.*</AssemblyVersion>
     <Deterministic>false</Deterministic>
     <NoWarn>7035</NoWarn>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
@@ -47,6 +47,12 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Web" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Connect.Koi">
+      <HintPath>..\..\..\Dependencies\Koi\netstandard2.0\Connect.Koi.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

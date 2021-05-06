@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Dnn
 
             var tenant = Eav.Factory.StaticBuild<DnnSite>();
 
-            var appFolderVirtualPath = Path.Combine(tenant.AppsRootRelative, appFolder).Forwardslash();
+            var appFolderVirtualPath = Path.Combine(tenant.AppsRootRelative, appFolder).ForwardSlash();
 
             return wrapLog($"Ok, AppFolder Virtual Path: {appFolderVirtualPath}", appFolderVirtualPath);
         }

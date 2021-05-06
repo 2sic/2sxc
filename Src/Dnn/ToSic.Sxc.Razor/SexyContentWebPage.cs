@@ -17,6 +17,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Search;
@@ -43,65 +44,69 @@ namespace ToSic.SexyContent.Razor
     {
         #region Helpers linked through AppAndData Helpers
 
-        public ILinkHelper Link => DynCode.Link;
+        public ILinkHelper Link => _DynCodeRoot.Link;
 
+        [PrivateApi] public dynamic DynamicModel => throw new NotImplementedException($"{nameof(DynamicModel)} not implemented on {nameof(SexyContentWebPage)}. Use a newer base class to leverage this. ");
 
         /// <summary>
         /// Helper commands to enable in-page editing functionality
         /// Use it to check if edit is enabled, generate context-json infos and provide toolbar buttons
         /// </summary>
-        public IInPageEditingSystem Edit => DynCode.Edit;
+        public IInPageEditingSystem Edit => _DynCodeRoot.Edit;
 
-        public IDnnContext Dnn => DynCode.Dnn;
+        public IDnnContext Dnn => (_DynCodeRoot as DnnDynamicCodeRoot)?.Dnn;
 
         /// <inheritdoc />
         [PrivateApi("try to remove")]
-        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(DynCode.Block?.Context.UserMayEdit ?? false));
+        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(_DynCodeRoot.Block?.Context.UserMayEdit ?? false));
         private SxcHelper _sxc;
 
-        [PrivateApi] public IBlock Block => DynCode.Block;
+        /// <summary>
+        /// Old API - probably never used, but we shouldn't remove it as we could break some existing code out there
+        /// </summary>
+        [PrivateApi] public IBlock Block => _DynCodeRoot.Block;
 
         /// <inheritdoc />
-        public TService GetService<TService>() => DynCode.GetService<TService>();
+        public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
 
-        [PrivateApi] public int CompatibilityLevel => DynCode.CompatibilityLevel;
-
-        /// <inheritdoc />
-        public new IApp App => DynCode.App;
+        [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
 
         /// <inheritdoc />
-        public IBlockDataSource Data => DynCode.Data;
+        public new IApp App => _DynCodeRoot.App;
 
-        public RazorPermissions Permissions => new RazorPermissions(DynCode.Block?.Context.UserMayEdit ?? false);
+        /// <inheritdoc />
+        public IBlockDataSource Data => _DynCodeRoot.Data;
+
+        public RazorPermissions Permissions => new RazorPermissions(_DynCodeRoot.Block?.Context.UserMayEdit ?? false);
 
         #region AsDynamic in many variations
 
         /// <inheritdoc />
         [Obsolete]
-        public dynamic AsDynamic(IEntity entity) => DynCode.AsDynamic(entity);
+        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.AsDynamic(entity);
 
 
         /// <inheritdoc />
-        public dynamic AsDynamic(object dynamicEntity) => DynCode.AsDynamic(dynamicEntity);
+        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.AsDynamic(dynamicEntity);
 
         // todo: only in "old" controller, not in new one
         /// <inheritdoc />
         [Obsolete]
-        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => DynCode.AsDynamic(entityKeyValuePair.Value);
+        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => _DynCodeRoot.AsDynamic(entityKeyValuePair.Value);
 
 
 
         /// <inheritdoc />
         [Obsolete]
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DynCode.AsList(stream.List);
+        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => _DynCodeRoot.AsList(stream.List);
 
         /// <inheritdoc />
-        public IEntity AsEntity(object dynamicEntity) => DynCode.AsEntity(dynamicEntity);
+        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot.AsEntity(dynamicEntity);
 
 
         /// <inheritdoc />
         [Obsolete]
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => DynCode.AsList(entities);
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => _DynCodeRoot.AsList(entities);
 
         #endregion
 
@@ -117,16 +122,16 @@ namespace ToSic.SexyContent.Razor
         #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => DynCode.AsDynamic(entity as IEntity);
+        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => _DynCodeRoot.AsDynamic(entity as IEntity);
 
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => DynCode.AsDynamic(entityKeyValuePair.Value as IEntity);
+        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => _DynCodeRoot.AsDynamic(entityKeyValuePair.Value as IEntity);
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => DynCode.AsList(entities.Cast<IEntity>());
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => _DynCodeRoot.AsList(entities.Cast<IEntity>());
         #endregion
 
 
@@ -134,24 +139,24 @@ namespace ToSic.SexyContent.Razor
         /// <inheritdoc />
         [Obsolete]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null)
-            => new DynamicCodeObsolete(DynCode).CreateSource(typeName, inSource, lookUpEngine);
+            => new DynamicCodeObsolete(_DynCodeRoot).CreateSource(typeName, inSource, lookUpEngine);
 
         /// <inheritdoc />
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             where T : IDataSource
-            => DynCode.CreateSource<T>(inSource, configurationProvider);
+            => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
         /// <inheritdoc />
         public T CreateSource<T>(IDataStream inStream) where T : IDataSource
-            => DynCode.CreateSource<T>(inStream);
+            => _DynCodeRoot.CreateSource<T>(inStream);
 
         #endregion
 
         #region Content, Header, etc. and List
-        public dynamic Content => DynCode.Content;
+        public dynamic Content => _DynCodeRoot.Content;
 
         [Obsolete("use Content.Presentation instead")]
-        public dynamic Presentation => DynCode.Content?.Presentation;
+        public dynamic Presentation => _DynCodeRoot.Content?.Presentation;
 
         /// <summary>
         /// We are blocking this property on purpose, so that people will want to migrate to the new RazorComponent
@@ -162,13 +167,13 @@ namespace ToSic.SexyContent.Razor
 
 #pragma warning disable 618
         [Obsolete("Use Header instead")]
-        public dynamic ListContent => DynCode.Header;
+        public dynamic ListContent => _DynCodeRoot.Header;
 
         [Obsolete("Use Header.Presentation instead")]
-        public dynamic ListPresentation => DynCode.Header?.Presentation;
+        public dynamic ListPresentation => _DynCodeRoot.Header?.Presentation;
 
         [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in a future version")]
-        public List<Element> List => _list ?? (_list =new DynamicCodeObsolete(DynCode).ElementList);
+        public List<Element> List => _list ?? (_list =new DynamicCodeObsolete(_DynCodeRoot).ElementList);
         [Obsolete("don't use any more")]
         private List<Element> _list;
 #pragma warning restore 618
@@ -204,17 +209,17 @@ namespace ToSic.SexyContent.Razor
         #region Adam 
 
         /// <inheritdoc />
-        public IFolder AsAdam(IDynamicEntity entity, string fieldName) => DynCode.AsAdam(entity, fieldName);
+        public IFolder AsAdam(IDynamicEntity entity, string fieldName) => _DynCodeRoot.AsAdam(entity, fieldName);
 
 
         /// <inheritdoc />
-        public IFolder AsAdam(IEntity entity, string fieldName) => DynCode.AsAdam(entity, fieldName);
+        public IFolder AsAdam(IEntity entity, string fieldName) => _DynCodeRoot.AsAdam(entity, fieldName);
 
         #endregion
 
         #region RunContext - new in 11.08 or similar, not implemented in old base classes
 
-        public ICmsContext CmsContext => DynCode.CmsContext;
+        public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
 
         #endregion
 

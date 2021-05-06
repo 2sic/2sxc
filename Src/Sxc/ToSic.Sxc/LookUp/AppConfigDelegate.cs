@@ -26,7 +26,7 @@ namespace ToSic.Sxc.LookUp
             _getEngineLazy = getEngineLazy;
             _httpLazy = httpLazy;
         }
-        
+
 
         #endregion
 
@@ -98,17 +98,19 @@ namespace ToSic.Sxc.LookUp
                 // new
                 var paramList = new NameValueCollection();
                 var ctxWithPage = context as IContextOfBlock;
-                if (ctxWithPage?.Page.Parameters != null)
-                    foreach (var pair in ctxWithPage.Page.Parameters)
+                if (ctxWithPage?.Page.ParametersInternalOld != null)
+                    foreach (var pair in ctxWithPage.Page.ParametersInternalOld)
                         paramList.Add(pair.Key, pair.Value);
                 else
                     paramList = http.QueryStringParams;
-                provider.Add(new LookUpInNameValueCollection("querystring", paramList));
+                provider.Add(new LookUpInNameValueCollection("query", paramList));
+
 
                 // old
 #if NET451
-                provider.Add(new LookUpInNameValueCollection("server", http.Request.ServerVariables));
+                provider.Add(new LookUpInNameValueCollection("querystring", paramList));
                 provider.Add(new LookUpInNameValueCollection("form", http.Request.Form));
+                //provider.Add(new LookUpInNameValueCollection("server", http.Request.ServerVariables)); // deprecated
 #else
                 // "Not Yet Implemented in .net standard #TodoNetStandard" - might not actually support this
 #endif

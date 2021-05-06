@@ -5,6 +5,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
@@ -57,10 +58,11 @@ namespace ToSic.Sxc.Engines
             var view = Block.View;
             Log.LinkTo(parentLog);
 
-            var root = Helpers.TemplateHelpers.Init(Block.App, Log).AppPathRoot(view.IsShared, PathTypes.PhysRelative);
+            var appPathRootInInstallation = Helpers.TemplateHelpers.Init(Block.App, Log).AppPathRoot(view.IsShared, PathTypes.PhysRelative);
             var subPath = view.Path;
-            var templatePath = TryToFindPolymorphPath(root, view, subPath) 
-                               ?? Helpers.LinkPaths.ToAbsolute(root + "/", subPath);
+            var templatePath = TryToFindPolymorphPath(appPathRootInInstallation, view, subPath)
+                               //?? Helpers.LinkPaths.ToAbsolute(Path.Combine(appPathRootInInstallation, subPath));
+                               ?? Path.Combine(appPathRootInInstallation, subPath).ToAbsolutePathForwardSlash();
 
             // Throw Exception if Template does not exist
             if (!File.Exists(Helpers.ServerPaths.FullAppPath(templatePath)))
@@ -86,12 +88,13 @@ namespace ToSic.Sxc.Engines
         private string TryToFindPolymorphPath(string root, IView view, string subPath)
         {
             var wrapLog = Log.Call<string>($"{root}, {subPath}");
-            var polymorph = new Polymorphism.Polymorphism(Block.App.Data.List, Log);
+            var polymorph = Helpers.Polymorphism.Init(Block.App.Data.List, Log); // new Polymorphism.Polymorphism(Block.App.Data.List, Log);
             var edition = polymorph.Edition();
             if (edition == null) return wrapLog("no edition detected", null);
             Log.Add($"edition {edition} detected");
 
-            var testPath = Helpers.LinkPaths.ToAbsolute($"{root}/{edition}/", subPath);
+            //var testPath = Helpers.LinkPaths.ToAbsolute(Path.Combine(root, edition, subPath));
+            var testPath = Path.Combine(root, edition, subPath).ToAbsolutePathForwardSlash();
             if (File.Exists(Helpers.ServerPaths.FullAppPath(testPath)))
             {
                 view.Edition = edition;
@@ -103,7 +106,8 @@ namespace ToSic.Sxc.Engines
             if (firstSlash == -1) return wrapLog($"edition {edition} not found", null);
 
             subPath = subPath.Substring(firstSlash + 1);
-            testPath = Helpers.LinkPaths.ToAbsolute($"{root}/{edition}/", subPath);
+            //testPath = Helpers.LinkPaths.ToAbsolute(Path.Combine(root, edition, subPath));
+            testPath = Path.Combine(root, edition, subPath).ToAbsolutePathForwardSlash();
             if (File.Exists(Helpers.ServerPaths.FullAppPath(testPath)))
             {
                 view.Edition = edition;

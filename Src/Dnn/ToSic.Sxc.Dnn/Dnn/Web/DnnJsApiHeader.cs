@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Helpers;
 using DotNetNuke.Application;
@@ -8,6 +9,7 @@ using DotNetNuke.Framework;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Edit;
 
 namespace ToSic.Sxc.Dnn.Web
@@ -27,21 +29,37 @@ namespace ToSic.Sxc.Dnn.Web
             var siteRoot = ServicesFramework.GetServiceFrameworkRoot();
             if (string.IsNullOrEmpty(siteRoot)) return wrapLog("no path", false);
 
-            var dnnVersion = DotNetNukeContext.Current.Application.Version.Major;
-            var apiRoot = siteRoot + (dnnVersion < 9
-                ? $"desktopmodules/{InpageCms.ExtensionPlaceholder}/api/"
-                : $"api/{InpageCms.ExtensionPlaceholder}/");
+            var apiRoots = GetApiRoots(siteRoot);
 
+            
             var portal = PortalSettings.Current;
             var json = InpageCms.JsApiJson(
+                PlatformType.Dnn.ToString(),
                 portal.ActiveTab.TabID, 
                 siteRoot, 
-                apiRoot, 
+                apiRoots.Item1, 
+                apiRoots.Item2,
                 AntiForgeryToken(),
                 VirtualPathUtility.ToAbsolute(DnnConstants.SysFolderRootVirtual));
 
             HtmlPage.AddMeta(InpageCms.MetaName, json);
             return wrapLog("added", true);
+        }
+
+        internal static Tuple<string, string> GetApiRoots(string siteRoot = null)
+        {
+            siteRoot = siteRoot ?? ServicesFramework.GetServiceFrameworkRoot();
+            var dnnVersion = DotNetNukeContext.Current.Application.Version.Major;
+            var apiRoot = siteRoot + (dnnVersion < 9
+                ? $"desktopmodules/{InpageCms.ExtensionPlaceholder}/api/"
+                : $"api/{InpageCms.ExtensionPlaceholder}/");
+
+            // appApiRoot is the same as apiRoot - the UI will add "app" to it later on 
+            // but app-api root shouldn't contain generic modules-name, as it's always 2sxc
+            var appApiRoot = apiRoot;
+            appApiRoot = appApiRoot.Replace(InpageCms.ExtensionPlaceholder, "2sxc");
+
+            return new Tuple<string,string>(apiRoot, appApiRoot);
         }
 
         private const string KeyToMarkAdded = "2sxcApiHeadersAdded";

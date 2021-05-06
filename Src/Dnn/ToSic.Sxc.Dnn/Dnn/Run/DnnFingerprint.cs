@@ -2,7 +2,6 @@
 using System.Security.Cryptography;
 using System.Text;
 using DotNetNuke.Application;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 
@@ -16,15 +15,18 @@ namespace ToSic.Sxc.Dnn.Run
     {
         public string GetSystemFingerprint()
         {
-            var hostGuid = DotNetNuke.Entities.Host.Host.GUID;
+            var sysGuid = DotNetNuke.Entities.Host.Host.GUID;
 
-            var mainVersionDnn = DotNetNukeContext.Current.Application.Version.ToString(1);
+            var mainVersionSys = DotNetNukeContext.Current.Application.Version.ToString(1);
 
             var mainVersion2Sxc = Settings.Version.ToString(1);
 
             var dbName = getDbName();
 
-            var fingerprint = $"guid={hostGuid}&vdnn={mainVersionDnn}&v2sxc={mainVersion2Sxc}&db={dbName}";
+            // todo: probably add &sys=dnn
+            // todo: probably change &vdnn to be &vsys
+            // Wait with these changes till we're sure we don't break stuff; ATM the fingerprint isn't critical yet
+            var fingerprint = $"guid={sysGuid}&vdnn={mainVersionSys}&v2sxc={mainVersion2Sxc}&db={dbName}";
 
             return Hash(fingerprint);
         }
@@ -38,7 +40,7 @@ namespace ToSic.Sxc.Dnn.Run
             return connBuilder.InitialCatalog;
         }
 
-        public static string Hash(string randomString)
+        private static string Hash(string randomString)
         {
             var hash = new StringBuilder();
             using (var crypt = new SHA256Managed())

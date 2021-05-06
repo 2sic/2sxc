@@ -1,0 +1,55 @@
+﻿<dotnetnuke type="Package" version="5.0">
+  <packages>
+    <package name="2sxc_App_BySomeone_DoesSomething" type="Module" version="00.00.00">
+      <friendlyName>This is a 2sxc App for DNN</friendlyName>
+      <description>This is a 2sxc App, not a DNN Module. This is a good thing, but you're trying to install it the wrong way :) - pls visit http://2sxc.org/en/help?tag=install-app </description>
+      <!--<iconFile>DesktopModules\ToSIC_Imazen_ImageResizer\icon.png</iconFile>-->
+      <owner>
+        <name>The App Author</name>
+        <organization>App Author</organization>
+        <url>http://2sxc.org/</url>
+        <email>info@2sxc.org</email>
+      </owner>
+      <license src="License.txt"></license>
+      <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
+      <azureCompatible>true</azureCompatible>
+      <dependencies>
+        <!-- this is the minimum requirement for 2sxc -->
+        <dependency type="CoreVersion">07.02.00</dependency>
+      </dependencies>
+      <components>
+        <!--<component type="Script">
+          <scripts>
+            <basePath>DesktopModules\ToSIC_Imazen_ImageResizer</basePath>
+          </scripts>
+        </component>
+        <component type="Assembly">
+          <assemblies>
+            <basePath>bin</basePath>
+            <assembly>
+              <name>ImageResizer.dll</name>
+            </assembly>
+            <assembly>
+              <name>ImageResizer.Plugins.DiskCache.dll</name>
+            </assembly>
+          </assemblies>
+        </component>
+
+        <component type="File">
+          <files>
+            <basePath>DesktopModules/ToSIC_Imazen_ImageResizer</basePath>
+            <file>
+              <name>icon.png</name>
+            </file>
+            <file>
+              <name>License.txt</name>
+            </file>
+            <file>
+              <name>ReleaseNotes.txt</name>
+            </file>
+          </files>
+        </component>-->
+			</components>
+    </package>
+  </packages>
+</dotnetnuke>

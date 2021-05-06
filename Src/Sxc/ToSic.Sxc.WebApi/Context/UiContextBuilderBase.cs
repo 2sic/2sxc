@@ -16,7 +16,7 @@ namespace ToSic.Sxc.WebApi.Context
         {
             public IContextOfSite SiteCtx { get; }
             public JsContextLanguage JsCtx { get; }
-            public Apps.App AppToLaterInitialize { get; }
+            public Apps.IApp AppToLaterInitialize { get; }
 
             public Dependencies(IContextOfSite siteCtx, JsContextLanguage jsCtx, Apps.App appToLaterInitialize)
             {
@@ -39,14 +39,14 @@ namespace ToSic.Sxc.WebApi.Context
 
         protected int ZoneId;
         protected IApp App;
-        private readonly Apps.App _appToLaterInitialize;
+        private readonly Apps.IApp _appToLaterInitialize;
 
         #endregion
 
         public virtual IUiContextBuilder SetZoneAndApp(int zoneId, IAppIdentity app)
         {
             ZoneId = zoneId;
-            App = app != null ? _appToLaterInitialize.InitNoData(app, null) : null;
+            App = app != null ? (_appToLaterInitialize as Apps.App)?.InitNoData(app, null) : null;
             return this;
         }
 
@@ -67,15 +67,15 @@ namespace ToSic.Sxc.WebApi.Context
             return ctx;
         }
 
-        protected virtual LanguageDto GetLanguage()
+        protected virtual ContextLanguageDto GetLanguage()
         {
             if (ZoneId == 0) return null;
             var language = Deps.JsCtx.Init(Deps.SiteCtx.Site, ZoneId);
-            return new LanguageDto
+            return new ContextLanguageDto
             {
                 Current = language.Current,
                 Primary = language.Primary,
-                All = language.All.ToDictionary(l => l.key, l => l.name),
+                All = language.All.ToDictionary(l => l.key.ToLowerInvariant(), l => l.name),
             };
         }
 
@@ -98,11 +98,11 @@ namespace ToSic.Sxc.WebApi.Context
                 Id = Eav.Constants.NullId,
             };
 
-        protected virtual EnableDto GetEnable()
+        protected virtual ContextEnableDto GetEnable()
         {
             var isRealApp = App != null && App.AppGuid != Eav.Constants.DefaultAppName;
             var tmp = new JsContextUser(Deps.SiteCtx.User);
-            return new EnableDto
+            return new ContextEnableDto
             {
                 AppPermissions = isRealApp,
                 CodeEditor = tmp.CanDevelop,
@@ -112,10 +112,10 @@ namespace ToSic.Sxc.WebApi.Context
 
         protected virtual string GetGettingStartedUrl() => Eav.Constants.UrlNotInitialized;
 
-        private AppDto GetApp(Ctx flags)
+        protected virtual ContextAppDto GetApp(Ctx flags)
         {
             if (App == null) return null;
-            var result = new AppDto
+            var result = new ContextAppDto
             {
                 Id = App.AppId,
                 Url = (App as Apps.IApp)?.Path,

@@ -78,6 +78,9 @@ namespace ToSic.Sxc
 
             // Add possibly missing fallbacks
             services.AddSxcCoreFallbackServices();
+            
+            // Polymorphism
+            services.TryAddTransient<Polymorphism.Polymorphism>();
 
             // Security
             services.TryAddTransient<IInputSanitizer, InputSanitizer>();

@@ -1,24 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Polymorphism
 {
     public class Polymorphism: HasLog
     {
+        private readonly IServiceProvider _serviceProvider;
         public string Resolver;
         public string Parameters;
         public string Rule;
         public IEntity Entity;
-        public Polymorphism(IEnumerable<IEntity> list, ILog parentLog) : base("Plm.Managr", parentLog)
+       
+        public Polymorphism(IServiceProvider serviceProvider) : base("Plm.Managr")
         {
+            _serviceProvider = serviceProvider;
+        }
+
+        public Polymorphism Init(IEnumerable<IEntity> list, ILog parentLog)
+        {
+            Log.LinkTo(parentLog);
             Entity = list?.FirstOrDefaultOfType(PolymorphismConstants.Name);
-            if (Entity == null) return;
+            if (Entity == null) return this;
 
             var rule = Entity.Value<string>(PolymorphismConstants.ModeField);
 
             SplitRule(rule);
+            return this;
         }
 
         /// <summary>
@@ -41,10 +52,12 @@ namespace ToSic.Sxc.Polymorphism
             {
                 if (string.IsNullOrEmpty(Resolver)) return wrapLog("no resolver", null);
 
-                if (!Resolvers.TryGetValue(Resolver, out var edResolver))
+                var rInfo = Cache.FirstOrDefault(r => r.Name.Equals(Resolver, StringComparison.InvariantCultureIgnoreCase));
+                if (rInfo == null)
                     return wrapLog("resolver not found", null);
                 Log.Add($"resolver for {Resolver} found");
-                var result = edResolver.Edition(Parameters, Log);
+                var editionResolver = (IResolver)_serviceProvider.GetService(rInfo.Type);
+                var result = editionResolver.Edition(Parameters, Log);
 
                 return wrapLog(null, result);
             }
@@ -55,15 +68,31 @@ namespace ToSic.Sxc.Polymorphism
             }
         }
 
-        /// <summary>
-        /// The global list of resolvers, used in checking what edition to return
-        /// </summary>
-        public static Dictionary<string, IResolver> Resolvers = new Dictionary<string, IResolver>(StringComparer.InvariantCultureIgnoreCase);
+        // TODO: STATIC LIST OF ResolverTypes
+        // - on first access will ask plumbing for all IResolvers
+        // - then check the attributes to see what name they have
+        // - add to list
+        // 
+        // Afterwards
+        // When a resolver is needed, get it from the factory
+        // Note: Almost identical setup exists for DataSources - DataSourceCatalog
 
-        /// <summary>
-        /// Register a resolver
-        /// </summary>
-        /// <param name="resolver"></param>
-        public static void Add(IResolver resolver) => Resolvers.Add(resolver.Name, resolver);
+        ///// <summary>
+        ///// The global list of resolvers, used in checking what edition to return
+        ///// </summary>
+        //public static Dictionary<string, IResolver> Resolvers = new Dictionary<string, IResolver>(StringComparer.InvariantCultureIgnoreCase);
+
+        ///// <summary>
+        ///// Register a resolver
+        ///// </summary>
+        ///// <param name="resolver"></param>
+        //public static void Add(IResolver resolver) => Resolvers.Add(resolver.Name, resolver);
+
+        private static List<ResolverInfo> Cache { get; } = AssemblyHandling
+            .FindInherited(typeof(IResolver))
+            .Select(t => new ResolverInfo(t))
+            .ToList();
+
+
     }
 }

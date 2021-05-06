@@ -1,4 +1,4 @@
-﻿@inherits ToSic.Sxc.Hybrid.Razor.RazorComponent<TModel>
+﻿@inherits ToSic.Custom.Razor12<TModel>
 @{
     ViewData["Title"] = "Default";
 }
@@ -17,7 +17,7 @@ Content Title: @Content.Title
 
 <ol>
     <li>
-        App: @App (AppId: @Block.App.AppId) <br />
+        App: @App (AppId: @App.AppId) <br />
         Items: @App.Data (@App.Data.List.Count())<br />
     </li>
     <li>

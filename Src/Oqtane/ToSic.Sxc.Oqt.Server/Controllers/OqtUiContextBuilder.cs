@@ -1,7 +1,13 @@
-﻿using ToSic.Eav.Apps;
+﻿using System;
+using System.Linq;
+using System.Reflection;
+using Oqtane.Shared;
 using ToSic.Eav.Context;
+using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Oqt.Server.Block;
+using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.Run;
 
@@ -11,34 +17,43 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     public class OqtUiContextBuilder: UiContextBuilderBase
     {
-        public OqtUiContextBuilder(ILinkPaths linkPaths,IContextOfSite ctx, Dependencies deps) : base(deps)
+        public OqtUiContextBuilder(ILinkPaths linkPaths, IContextOfSite ctx, SiteState siteState, Dependencies deps, OqtCulture oqtCulture, IZoneMapper OqtZoneMapper) : base(deps)
         {
             _linkPaths = linkPaths;
             _context = ctx;
+            _siteState = siteState;
+            _oqtCulture = oqtCulture;
+            _oqtZoneMapper = OqtZoneMapper;
         }
 
         private readonly ILinkPaths _linkPaths;
         private IContextOfSite _context;
+        private readonly SiteState _siteState;
+        private readonly OqtCulture _oqtCulture;
+        private readonly IZoneMapper _oqtZoneMapper;
 
 
-        protected override LanguageDto GetLanguage()
-        {
-            return new LanguageDto
-            {
-                Current = WipConstants.DefaultLanguage,
-                Primary = WipConstants.DefaultLanguage,
-                //All = new Dictionary<string, string>
-                //{
-                //    {WipConstants.DefaultLanguage, WipConstants.DefaultLanguageText}
-                //}
-                All = WipConstants.EmptyLanguages,
-            };
-        }
+        //protected override ContextLanguageDto GetLanguage()
+        //{
+        //    return new ContextLanguageDto
+        //    {
+        //        Current = _oqtCulture.CurrentCultureCode,
+        //        Primary = _oqtCulture.DefaultCultureCode,
+        //        //All = new Dictionary<string, string>
+        //        //{
+        //        //    {WipConstants.DefaultLanguage, WipConstants.DefaultLanguageText}
+        //        //}
+        //        All = _oqtZoneMapper.CulturesWithState(_context.Site.Id, _context.Site.ZoneId)
+        //            .Where(c => c.Active)
+        //            .AsEnumerable()
+        //            .ToDictionary(l => l.Key, l => l.Text),
+        //    };
+        //}
 
         protected override WebResourceDto GetSystem() =>
             new WebResourceDto
             {
-                Url = _linkPaths.ToAbsolute("~/")
+                Url = _linkPaths.AsSeenFromTheDomainRoot("~/")
             };
 
         protected override WebResourceDto GetSite() =>
@@ -54,9 +69,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                 Id = (_context as IContextOfBlock)?.Page.Id ?? Eav.Constants.NullId,
             };
 
-        protected override EnableDto GetEnable()
+        protected override ContextEnableDto GetEnable()
         {
-            return new EnableDto
+            return new()
             {
                 AppPermissions = true,
                 CodeEditor = true,
@@ -64,6 +79,39 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             };
         }
 
-        protected override string GetGettingStartedUrl() => "#todo-not-yet-implemented-getting-started";
+        protected override ContextAppDto GetApp(Ctx flags)
+        {
+            var appDto = base.GetApp(flags);
+            if (appDto != null) appDto.Api = OqtAssetsAndHeaders.GetSiteRoot(_siteState);
+            return appDto;
+        }
+
+        protected override string GetGettingStartedUrl()
+        {
+            var blockCtx = _context as IContextOfBlock; // may be null!
+            var x = _siteState.Alias.TenantId;
+            
+            var gsUrl = new WipRemoteRouterLink().LinkToRemoteRouter(
+                RemoteDestinations.GettingStarted,
+                "Oqt",
+                Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),
+                Guid.Empty.ToString(),  // TODO: Oqt doesn't seem to have a system guid - Dnn had DotNetNuke.Entities.Host.Host.GUID, 
+                Deps.SiteCtx.Site,
+                blockCtx?.Module.Id ?? 0, // TODO: V12 - REQUIRED FOR CALLBACK TO WORK
+                Deps.AppToLaterInitialize,
+                true // TODO: V12 - must be set so installer works properly // Module.DesktopModule.ModuleName == "2sxc"
+                );
+            return gsUrl;
+
+            //var gsUrl =
+            //    BaseGettingStartedUrl("Oqt",
+            //        Assembly.GetAssembly(typeof(SiteState)).GetName().Version.ToString(4),
+            //        "2sxc", // todo
+            //        blockCtx?.Module.Id ?? 0, // todo
+            //        "un-un", // todo _portal.DefaultLanguage,
+            //        "un-un"); // todo _portal.CultureCode);
+
+            //return gsUrl; //  "#todo-not-yet-implemented-getting-started";
+        }
     }
 }

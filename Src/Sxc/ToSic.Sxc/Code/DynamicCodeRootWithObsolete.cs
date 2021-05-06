@@ -13,10 +13,10 @@ namespace ToSic.Sxc.Code
     [PrivateApi]
     public class DynamicCodeObsolete
     {
-        public DynamicCodeRoot DynCode;
-        public DynamicCodeObsolete(DynamicCodeRoot dynCode)
+        private readonly IDynamicCodeRoot _root;
+        public DynamicCodeObsolete(IDynamicCodeRoot dynCode)
         {
-            DynCode = dynCode;
+            _root = dynCode;
         }
 
         //[PrivateApi]
@@ -41,16 +41,16 @@ namespace ToSic.Sxc.Code
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null)
         {
             if (lookUpEngine == null)
-                lookUpEngine = DynCode.ConfigurationProvider;
+                lookUpEngine = _root.ConfigurationProvider;
 
             if (inSource != null)
-                return DynCode.DataSourceFactory.GetDataSource(typeName, inSource, inSource, lookUpEngine);
+                return _root.DataSourceFactory.GetDataSource(typeName, inSource, inSource, lookUpEngine);
 
-            var userMayEdit = DynCode.Block?.Context?.UserMayEdit ?? false;
+            var userMayEdit = _root.Block?.Context?.UserMayEdit ?? false;
 
-            var initialSource = DynCode.DataSourceFactory.GetPublishing(
-                DynCode.App, userMayEdit, DynCode.ConfigurationProvider as LookUpEngine);
-            return typeName != "" ? DynCode.DataSourceFactory.GetDataSource(typeName, initialSource, initialSource, lookUpEngine) : initialSource;
+            var initialSource = _root.DataSourceFactory.GetPublishing(
+                _root.App, userMayEdit, _root.ConfigurationProvider as LookUpEngine);
+            return typeName != "" ? _root.DataSourceFactory.GetDataSource(typeName, initialSource, initialSource, lookUpEngine) : initialSource;
         }
 
 
@@ -78,13 +78,13 @@ namespace ToSic.Sxc.Code
         /// </remarks>
         private void TryToBuildElementList()
         {
-            DynCode.Log.Add("try to build old List");
+            _root.Log.Add("try to build old List");
             _list = new List<Element>();
 
-            if (DynCode.Data == null || DynCode.Block.View == null) return;
-            if (!DynCode.Data.Out.ContainsKey(Eav.Constants.DefaultStreamName)) return;
+            if (_root.Data == null || _root.Block.View == null) return;
+            if (!_root.Data.Out.ContainsKey(Eav.Constants.DefaultStreamName)) return;
 
-            var entities = DynCode.Data.List.ToList();
+            var entities = _root.Data.List.ToList();
             //if (entities.Any()) _content = AsDynamic(entities.First());
 
             _list = entities.Select(GetElementFromEntity).ToList();
@@ -94,13 +94,13 @@ namespace ToSic.Sxc.Code
                 var el = new Element
                 {
                     EntityId = e.EntityId,
-                    Content = DynCode.AsDynamic(e)
+                    Content = _root.AsDynamic(e)
                 };
 
                 if (e is EntityInBlock c)
                 {
                     el.GroupId = c.GroupId;
-                    el.Presentation = c.Presentation == null ? null : DynCode.AsDynamic(c.Presentation);
+                    el.Presentation = c.Presentation == null ? null : _root.AsDynamic(c.Presentation);
                     el.SortOrder = c.SortOrder;
                 }
 

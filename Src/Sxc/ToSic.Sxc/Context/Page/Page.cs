@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using ToSic.Sxc.Context.Query;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Context
@@ -24,12 +26,16 @@ namespace ToSic.Sxc.Context
 
         public int Id { get; private set; } = Eav.Constants.NullId;
 
-        public List<KeyValuePair<string, string>> Parameters
+        public List<KeyValuePair<string, string>> ParametersInternalOld
         {
-            get => _parameters ?? (_parameters = _httpLazy.Value?.QueryStringKeyValuePairs() ?? new List<KeyValuePair<string, string>>());
-            set => _parameters = value ?? _parameters;
+            get => _paramsInternalOld ?? (_paramsInternalOld = _httpLazy.Value?.QueryStringKeyValuePairs() ?? new List<KeyValuePair<string, string>>());
+            set => _paramsInternalOld = value ?? _paramsInternalOld;
         }
-        private List<KeyValuePair<string, string>> _parameters;
+        private List<KeyValuePair<string, string>> _paramsInternalOld;
+
+        public IReadOnlyDictionary<string, string> Parameters => _parameters ?? (_parameters = new Parameters(_httpLazy.Value?.QueryStringParams));
+        private IReadOnlyDictionary<string, string> _parameters;
+
 
         public string Url { get; set; } = Eav.Constants.UrlNotInitialized;
     }

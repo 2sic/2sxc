@@ -99,8 +99,10 @@
   <ItemGroup>
     <Compile Include="Compatibility\Sxc\OldDataToDictionaryWrapper.cs" />
     <Compile Include="Compatibility\Sxc\SxcHelper.cs" />
+    <Compile Include="Custom.Dnn\Code12.cs" />
     <Compile Include="Dnn\Adam\DnnAdam.cs" />
     <Compile Include="Dnn\Cms\DnnPagePublishingResolver.cs" />
+    <Compile Include="Dnn\Code\IDnnDynamicCodeAdditions.cs" />
     <Compile Include="Dnn\DnnConstants.cs" />
     <Compile Include="Dnn\DnnEnvironmentLogger.cs" />
     <Compile Include="Dnn\DynamicCode.cs" />
@@ -109,8 +111,6 @@
     <Compile Include="Dnn920\SharpZipLibRedirect.cs" />
     <Compile Include="Dnn940\RegisterWebApiActivator.cs" />
     <Compile Include="Dnn940\WebApiHttpControllerActivator.cs" />
-    <Compile Include="Dnn\INeedsDynCodeContext.cs" />
-    <Compile Include="Dnn\IHasDynCodeContext.cs" />
     <Compile Include="Dnn\Install\DnnInstallationController_IsRunning.cs" />
     <Compile Include="Dnn\Install\DnnInstallationController_Manual.cs" />
     <Compile Include="Dnn\Install\DnnInstallationController_Messages.cs" />
@@ -125,7 +125,6 @@
     <Compile Include="Dnn\Run\DnnPlatformContext.cs" />
     <Compile Include="Dnn\Web\DnnJsApiHeader.cs" />
     <Compile Include="Dnn\Web\DnnClientResources.cs" />
-    <Compile Include="Dnn\Web\IDynamicWebApi.cs" />
     <Compile Include="Dnn\Code\IDnnDynamicCode.cs" />
     <Compile Include="Dnn\Run\DnnSecurity.cs" />
     <Compile Include="Dnn\Code\DnnDynamicCodeRoot.cs" />
@@ -165,6 +164,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Dnn\Install\DnnSiteSettings.cs" />
     <Compile Include="Dnn\Search\SearchItem.cs" />
+    <Compile Include="ToSic.Sxc.Code\CodeCompilerNetFull.cs" />
+    <Compile Include="ToSic.Sxc.DataSources\Pages.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">
@@ -202,8 +203,6 @@
     <None Include="packages.config" />
     <None Include="Dnn\Search\readme.md" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Environment\Dnn7\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

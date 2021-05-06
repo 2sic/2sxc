@@ -1,8 +1,7 @@
-﻿using System;
-using Oqtane.Repository;
+﻿using Oqtane.Repository;
+using System;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Oqt.Server.Repository;
 using ToSic.Sxc.Oqt.Server.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
@@ -16,35 +15,34 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         public IContextResolver CtxResolver { get; }
         internal readonly IZoneMapper ZoneMapper;
         internal readonly ITenantResolver TenantResolver;
-        internal readonly IUserResolver UserResolver;
         internal readonly IModuleRepository ModuleRepository;
         //internal readonly IModuleDefinitionRepository ModuleDefinitionRepository;
         //internal readonly ISettingRepository SettingRepository;
         //private readonly OqtaneContainer _oqtaneContainer;
-        internal readonly OqtTempInstanceContext OqtTempInstanceContext;
+        //internal readonly OqtTempInstanceContext OqtTempInstanceContext;
+        internal readonly OqtState OqtState;
 
-        public StatefulControllerDependencies(IZoneMapper zoneMapper, 
-            ITenantResolver tenantResolver, 
-            IUserResolver userResolver, 
+        public StatefulControllerDependencies(IZoneMapper zoneMapper,
+            ITenantResolver tenantResolver,
             //IModuleDefinitionRepository moduleDefinitionRepository,
             IModuleRepository moduleRepository,
-            //ISettingRepository settingRepository, 
-            //OqtaneContainer oqtaneContainer, 
-            OqtTempInstanceContext oqtTempInstanceContext,
+            //ISettingRepository settingRepository,
+            //OqtaneContainer oqtaneContainer,
+            //OqtTempInstanceContext oqtTempInstanceContext,
             IServiceProvider serviceProvider,
-            IContextResolver ctxResolver
-            )
+            IContextResolver ctxResolver,
+            OqtState oqtState)
         {
             ServiceProvider = serviceProvider;
             CtxResolver = ctxResolver;
             ZoneMapper = zoneMapper;
             TenantResolver = tenantResolver;
-            UserResolver = userResolver;
             //ModuleDefinitionRepository = moduleDefinitionRepository;
             ModuleRepository = moduleRepository;
             //SettingRepository = settingRepository;
             //_oqtaneContainer = oqtaneContainer;
-            OqtTempInstanceContext = oqtTempInstanceContext;
+            //OqtTempInstanceContext = oqtTempInstanceContext;
+            OqtState = oqtState;
         }
     }
 }

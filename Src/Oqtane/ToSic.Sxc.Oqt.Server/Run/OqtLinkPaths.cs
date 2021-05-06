@@ -1,8 +1,9 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
-using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Run;
 
 
@@ -26,20 +27,20 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private string toWebAbsolute(string virtualPath)
         {
             virtualPath = virtualPath.TrimStart('~');
-            //if (!virtualPath.StartsWith('/') && !virtualPath.StartsWith('\\'))
-            //    virtualPath = "/" + virtualPath;
-            return virtualPath.PrefixSlash().Forwardslash();
+            return virtualPath.PrefixSlash().ForwardSlash();
         }
 
-        public string ToAbsolute(string virtualPath)
+        public string AsSeenFromTheDomainRoot(string virtualPath)
         {
             return toWebAbsolute(virtualPath);
         }
-        public string ToAbsolute(string virtualPath, string subPath)
-        {
-            return toWebAbsolute(Path.Combine(virtualPath, subPath));
-        }
+        //public string ToAbsolute(string virtualPath, string subPath)
+        //{
+        //    return toWebAbsolute(Path.Combine(virtualPath, subPath));
+        //}
 
+        //public string AppAssetsBase(ISite site, IApp app) 
+        //    => toWebAbsolute(site.AppAssetsLinkTemplate.Replace(LinkPaths.AppFolderPlaceholder, app.Folder));
 
         #endregion
     }

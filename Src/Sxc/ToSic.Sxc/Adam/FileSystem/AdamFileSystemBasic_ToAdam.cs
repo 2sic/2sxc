@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Adam
 
             // todo: unclear if we need both, but we need the url for the compare-if-same-path
             var relativePath = _adamPaths.RelativeFromAdam(path);
-            var relativeUrl = relativePath.Forwardslash();
+            var relativeUrl = relativePath.ForwardSlash();
             return new File<string, string>(AdamManager)
             {
                 FullName = f.Name,
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Adam
 
         private static string FindParentUrl(string path)
         {
-            var cleanedPath = path.Forwardslash().TrimEnd('/');
+            var cleanedPath = path.ForwardSlash().TrimEnd('/');
             var lastSlash = cleanedPath.LastIndexOf('/');
             return lastSlash == -1 ? "" : cleanedPath.Substring(0, lastSlash);
         }

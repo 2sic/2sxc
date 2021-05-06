@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Http.Extensions;
+﻿using System;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using Log = ToSic.Eav.Logging.Simple.Log;
 
@@ -16,16 +20,15 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected OqtControllerBase()
         {
             // ReSharper disable once VirtualMemberCallInConstructor
-            // todo: redesign so it works - in .net core the HttpContext isn't ready in the constructor
-            Log = new Log(HistoryLogName, null, $"Path: {HttpContext?.Request.GetDisplayUrl()}");
+            Log = new Log(HistoryLogName, null, $"OqtControllerBase");
             // ReSharper disable once VirtualMemberCallInConstructor
             History.Add(HistoryLogGroup, Log);
-            // todo: get this to work
         }
+
+        protected IServiceProvider ServiceProvider;
 
         /// <inheritdoc />
         public ILog Log { get; }
-
 
         /// <summary>
         /// The group name for log entries in insights.
@@ -39,11 +42,37 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// </summary>
         protected abstract string HistoryLogName { get; }
 
+        //protected SiteState SiteState { get; private set; }
+
+
+        /// <summary>
+        /// Initializer - just ensure SiteState is initialized thanks to our paths
+        /// </summary>
+        /// <param name="context"></param>
+        [NonAction]
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            var wrapLog = Log.Call($"Url: {context.HttpContext.Request.GetDisplayUrl()}");
+
+            base.OnActionExecuting(context);
+
+            ServiceProvider = context.HttpContext.RequestServices;
+            //SiteState = serviceProvider.Build<SiteState>();
+
+            //// background processes can pass in an alias using the SiteState service
+            //if (SiteState.Alias == null)
+            ServiceProvider.Build<SiteStateInitializer>().InitIfEmpty();
+            wrapLog(null);
+        }
+
         #region Extend Time so Web Server doesn't time out - not really implemented ATM
 
         protected void PreventServerTimeout300() => WipConstants.DontDoAnythingImplementLater();
 
         #endregion
+
+
     }
+
 
 }

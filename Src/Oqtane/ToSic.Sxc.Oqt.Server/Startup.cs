@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Configuration;
@@ -9,17 +8,18 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using Oqtane.Infrastructure;
 using System.IO;
-using System.Threading.Tasks;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
+using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
-using ToSic.Sxc.Oqt.Server.RazorPages;
+using ToSic.Sxc.Oqt.Server.StartUp;
 using ToSic.Sxc.Oqt.Shared.Dev;
-using ToSic.Sxc.Razor.Engine;
+using ToSic.Sxc.Razor;
 using ToSic.Sxc.WebApi;
 using Factory = ToSic.Eav.Factory;
+using WebApiConstants = ToSic.Sxc.Oqt.Shared.WebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server
 {
@@ -46,8 +46,14 @@ namespace ToSic.Sxc.Oqt.Server
             // try to enable dynamic razor compiling - still WIP
             new StartUpRazorPages().ConfigureServices(services);
 
+            // TODO: STV - MAKE SURE OUR CONTROLLERS RULES ONLY APPLY TO OURS, NOT TO override rules on normal Oqtane controllers
             // enable webapi - include all controllers in the Sxc.Mvc assembly
-            services.AddControllers(options => { options.AllowEmptyInputInBodyModelBinding = true; })
+            services
+                .AddControllers(options =>
+                {
+                    options.AllowEmptyInputInBodyModelBinding = true;
+                    options.Filters.Add(new HttpResponseExceptionFilter());
+                })
                 // This is needed to preserve compatibility with previous api usage
                 .AddNewtonsoftJson(options =>
                 {
@@ -73,11 +79,12 @@ namespace ToSic.Sxc.Oqt.Server
             });
 
             var sp = services.BuildServiceProvider();
-            // STV
-            // var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            // 2dm
-            var connectionString = Configuration.GetConnectionString("SiteSqlServer");
+
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            // Special case to use DNN database connection string (appsettings.local.json).
+            //var connectionString = Configuration.GetConnectionString("SiteSqlServer");
             sp.Build<IDbConfiguration>().ConnectionString = connectionString;
+
             var hostingEnvironment = sp.Build<IHostEnvironment>();
             sp.Build<IGlobalConfiguration>().GlobalFolder = Path.Combine(hostingEnvironment.ContentRootPath, "wwwroot\\Modules\\ToSic.Sxc");
 
@@ -92,6 +99,15 @@ namespace ToSic.Sxc.Oqt.Server
         {
             HostEnvironment = env;
 
+            if (env.IsDevelopment())
+            {
+                app.UseExceptionHandler("/error-local-development");
+            }
+            else
+            {
+                app.UseExceptionHandler("/error");
+            }
+
             // routing middleware
             app.UseRouting();
 
@@ -101,8 +117,20 @@ namespace ToSic.Sxc.Oqt.Server
             // endpoint mapping
             app.UseEndpoints(endpoints =>
             {
-                endpoints.Map("{alias}/api/sxc/app/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map("{alias}/api/sxc/app/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                // Release routes
+                endpoints.Map(WebApiConstants.AppRoot + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.AppRoot + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.AppRoot2 + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.AppRoot2 + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.AppRoot3 + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.AppRoot3 + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+
+                // Beta routes
+                endpoints.Map(WebApiConstants.WebApiStateRoot + "/app/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.WebApiStateRoot + "/app/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+
+                // Fallback route for 2sxc UI
+                endpoints.MapFallbackToFile("/Modules/ToSic.Sxc/dist/ng-edit/", "/Modules/ToSic.Sxc/dist/ng-edit/index.html");
             });
         }
 

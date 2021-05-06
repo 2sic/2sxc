@@ -12,13 +12,11 @@ using ToSic.Sxc.Compatibility.Sxc;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
-using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
@@ -36,8 +34,9 @@ namespace ToSic.SexyContent.WebApi
     /// safer because it can't accidentally mix the App with a different appId in the params
     /// </summary>
     [DnnLogExceptions]
-    public abstract class SxcApiController : 
+    public abstract partial class SxcApiController : 
         DynamicApiController, 
+        IDnnDynamicWebApi,
         IDynamicWebApi, 
         IDynamicCodeBeforeV10,
 #pragma warning disable 618
@@ -46,88 +45,72 @@ namespace ToSic.SexyContent.WebApi
     {
         public new IDnnContext Dnn => base.Dnn;
 
-        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(DynCode?.Block?.Context?.UserMayEdit ?? false));
+        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(_DynCodeRoot?.Block?.Context?.UserMayEdit ?? false));
         private SxcHelper _sxc;
 
+        /// <summary>
+        /// Old API - probably never used, but we shouldn't remove it as we could break some existing code out there
+        /// </summary>
         [PrivateApi] public IBlock Block => GetBlock();
-        [PrivateApi] public int CompatibilityLevel => DynCode.CompatibilityLevel;
+        [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
 
         /// <inheritdoc />
-        public IApp App => DynCode.App;
+        public IApp App => _DynCodeRoot.App;
 
         /// <inheritdoc />
-        public IBlockDataSource Data => DynCode.Data;
+        public IBlockDataSource Data => _DynCodeRoot.Data;
 
-        #region new AsDynamic - not supported
-
-        /// <inheritdoc/>
-        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson)
-            => throw new Exception("The AsDynamic(string) is a new feature in 2sxc 10.20. To use it, change your base class. See https://r.2sxc.org/RazorComponent");
-
-        ///// <inheritdoc/>
-        //public IEnumerable<dynamic> AsDynamic(IDataSource source)
-        //    => throw new Exception("The AsDynamic(string) is a new feature in 2sxc 10.20. To use it, change your base class. See https://r.2sxc.org/RazorComponent");
-
-
-        #endregion
 
         #region AsDynamic implementations
 
         /// <inheritdoc />
-        public dynamic AsDynamic(IEntity entity) => DynCode.AsDynamic(entity);
+        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.AsDynamic(entity);
 
         /// <inheritdoc />
-        public dynamic AsDynamic(object dynamicEntity) => DynCode.AsDynamic(dynamicEntity);
+        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.AsDynamic(dynamicEntity);
 
         /// <inheritdoc />
         [PrivateApi("old api, only available in old API controller")]
-        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => DynCode.AsDynamic(entityKeyValuePair.Value);
+        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => _DynCodeRoot.AsDynamic(entityKeyValuePair.Value);
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => DynCode.AsList(stream.List);
+        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => _DynCodeRoot.AsList(stream.List);
 
         /// <inheritdoc />
-        public IEntity AsEntity(object dynamicEntity) =>  DynCode.AsEntity(dynamicEntity);
+        public IEntity AsEntity(object dynamicEntity) =>  _DynCodeRoot.AsEntity(dynamicEntity);
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) =>  DynCode.AsList(entities);
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) =>  _DynCodeRoot.AsList(entities);
         #endregion
 
         #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => DynCode.AsDynamic(entity as IEntity);
+        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => _DynCodeRoot.AsDynamic(entity as IEntity);
 
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => DynCode.AsDynamic(entityKeyValuePair.Value as IEntity);
+        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => _DynCodeRoot.AsDynamic(entityKeyValuePair.Value as IEntity);
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => DynCode.AsList(entities.Cast<IEntity>());
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => _DynCodeRoot.AsList(entities.Cast<IEntity>());
         #endregion
 
-        #region AsList - only in newer APIs
-
-        /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(object list)
-            => throw new Exception("AsList is a new feature in 2sxc 10.20. To use it, change your template type to " + nameof(ApiController) + " see https://r.2sxc.org/RazorComponent");
-
-        #endregion
 
         #region CreateSource implementations
         [Obsolete]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,
 	        ILookUpEngine lookUpEngine = null)
-	        => new DynamicCodeObsolete(DynCode).CreateSource(typeName, inSource, lookUpEngine);
+	        => new DynamicCodeObsolete(_DynCodeRoot).CreateSource(typeName, inSource, lookUpEngine);
 
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             where T : IDataSource
-            =>  DynCode.CreateSource<T>(inSource, configurationProvider);
+            =>  _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
 	    public T CreateSource<T>(IDataStream inStream) where T : IDataSource 
-            => DynCode.CreateSource<T>(inStream);
+            => _DynCodeRoot.CreateSource<T>(inStream);
 
         #endregion
 
@@ -135,27 +118,27 @@ namespace ToSic.SexyContent.WebApi
         /// <summary>
         /// content item of the current view
         /// </summary>
-        public dynamic Content => DynCode.Content;
+        public dynamic Content => _DynCodeRoot.Content;
 
         /// <summary>
         /// presentation item of the content-item. 
         /// </summary>
         [Obsolete("please use Content.Presentation instead")]
-        public dynamic Presentation => DynCode.Content?.Presentation;
+        public dynamic Presentation => _DynCodeRoot.Content?.Presentation;
 
-        public dynamic Header => DynCode.Header;
+        public dynamic Header => _DynCodeRoot.Header;
 
         [Obsolete("use Header instead")]
-	    public dynamic ListContent => DynCode.Header;
+	    public dynamic ListContent => _DynCodeRoot.Header;
 
         /// <summary>
         /// presentation item of the content-item. 
         /// </summary>
         [Obsolete("please use Header.Presentation instead")]
-	    public dynamic ListPresentation => DynCode.Header?.Presentation;
+	    public dynamic ListPresentation => _DynCodeRoot.Header?.Presentation;
 
         [Obsolete("This is an old way used to loop things. Use Data[\"Default\"] instead. Will be removed in 2sxc v10")]
-        public List<Element> List => new DynamicCodeObsolete(DynCode).ElementList;
+        public List<Element> List => new DynamicCodeObsolete(_DynCodeRoot).ElementList;
 
         #endregion
 
@@ -164,10 +147,10 @@ namespace ToSic.SexyContent.WebApi
 
         /// <inheritdoc />
         public IFolder AsAdam(IDynamicEntity entity, string fieldName)
-	        => DynCode.AsAdam(AsEntity(entity), fieldName);
+	        => _DynCodeRoot.AsAdam(AsEntity(entity), fieldName);
 
         /// <inheritdoc />
-        public IFolder AsAdam(IEntity entity, string fieldName) => DynCode.AsAdam(entity, fieldName);
+        public IFolder AsAdam(IEntity entity, string fieldName) => _DynCodeRoot.AsAdam(entity, fieldName);
 
 
         /// <summary>
@@ -193,14 +176,14 @@ namespace ToSic.SexyContent.WebApi
         #endregion
 
         #region Link & Edit - added in 2sxc 10.01
-        public ILinkHelper Link => DynCode?.Link;
-        public IInPageEditingSystem Edit => DynCode?.Edit;
+        public ILinkHelper Link => _DynCodeRoot?.Link;
+        public IInPageEditingSystem Edit => _DynCodeRoot?.Edit;
 
         #endregion
 
         #region RunContext - new in 11.08 or similar, not implemented in old base classes
 
-        public ICmsContext CmsContext => DynCode.CmsContext;
+        public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
 
         #endregion
     }

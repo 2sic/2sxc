@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
@@ -94,30 +95,33 @@ namespace ToSic.Sxc.Engines
         {
             var wrapLog = Log.Call<string>($"{useSharedFileSystem}, {pathType}");
             string basePath;
-            //var useSharedFileSystem = locationId == Settings.TemplateLocations.HostFileSystem;
             switch (pathType)
             {
                 case PathTypes.Link:
                     basePath = useSharedFileSystem
-                        ? _linkPaths.ToAbsolute(Settings.PortalHostDirectory, Settings.AppsRootFolder)
-                        : App.Site.AppsRootLink;
+                        //? _linkPaths.ToAbsolute(Path.Combine(Settings.PortalHostDirectory, Settings.AppsRootFolder))
+                        ? Path.Combine(Settings.PortalHostDirectory, Settings.AppsRootFolder, App.Folder).ToAbsolutePathForwardSlash()
+                        : App.Path;
                     break;
                 case PathTypes.PhysRelative:
                     basePath = useSharedFileSystem
-                        ? _linkPaths.ToAbsolute(Settings.PortalHostDirectory, Settings.AppsRootFolder)
-                        : App.Site.AppsRootPhysical;
+                        //? _linkPaths.ToAbsolute(Path.Combine(Settings.PortalHostDirectory, Settings.AppsRootFolder))
+                        ? Path.Combine(Settings.PortalHostDirectory, Settings.AppsRootFolder, App.Folder).ToAbsolutePathForwardSlash()
+                        : Path.Combine(App.Site.AppsRootPhysical, App.Folder);
                     break;
                 case PathTypes.PhysFull:
                     basePath = useSharedFileSystem
-                        ? ServerPaths.FullAppPath(Path.Combine(Settings.PortalHostDirectory, Settings.AppsRootFolder))
-                        : App.Site.AppsRootPhysicalFull;
+                        ? ServerPaths.FullAppPath(Path.Combine(Settings.PortalHostDirectory, Settings.AppsRootFolder, App.Folder))
+                        : Path.Combine(App.Site.AppsRootPhysicalFull, App.Folder);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(pathType), pathType, null);
             }
 
-            var finalPath = Path.Combine(basePath, App.Folder);
-            return wrapLog(finalPath, finalPath);
+            //var finalPath = basePath.Contains(LinkPaths.AppFolderPlaceholder)
+            //    ? basePath.Replace(LinkPaths.AppFolderPlaceholder, App.Folder)
+            //    : Path.Combine(basePath, App.Folder);
+            return wrapLog(basePath, basePath);
         }
 
         public string IconPathOrNull(IView view, PathTypes type)
@@ -137,6 +141,6 @@ namespace ToSic.Sxc.Engines
             return viewPath1.Substring(0, viewPath1.LastIndexOf(".", StringComparison.Ordinal)) + ".png";
         }
 
-        public string ViewPath(IView view, PathTypes type) => AppPathRoot(view.IsShared, type) + "/" + view.Path;
+        public string ViewPath(IView view, PathTypes type) => Path.Combine(AppPathRoot(view.IsShared, type), view.Path);
     }
 }

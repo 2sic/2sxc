@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Helpers;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Web;
 
@@ -11,11 +12,14 @@ namespace ToSic.Sxc.Dnn.Web
     [PublicApi_Stable_ForUseInYourCode]
     public class DnnLinkHelper: ILinkHelper
     {
-        private readonly IDnnContext _dnn;
+        private IDnnContext _dnn;
 
-        public DnnLinkHelper(IDnnContext dnn)
+        public DnnLinkHelper() { }
+
+        public DnnLinkHelper Init(IDnnContext dnn)
         {
             _dnn = dnn;
+            return this;
         }
 
         /// <inheritdoc />
@@ -42,6 +46,27 @@ namespace ToSic.Sxc.Dnn.Web
             var basePath = To(parameters: randomxyz + "=1");
             return basePath.Substring(0, basePath.IndexOf(randomxyz, StringComparison.Ordinal));
 
+        }
+
+        public string Api(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, string path = null)
+        {
+            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Api", $"{nameof(path)}");
+
+            if (string.IsNullOrEmpty(path)) return string.Empty;
+
+            path = path.ForwardSlash();
+            path = path.TrimPrefixSlash();
+
+            if (path.PrefixSlash().ToLowerInvariant().Contains("/app/"))
+                throw new ArgumentException("Error, path shouldn't have \"app\" part in it. It is expected to be relative to application root.");
+
+            //if (!path.PrefixSlash().ToLowerInvariant().Contains("/api/"))
+            //    throw new ArgumentException("Error, path should have \"api\" part in it.");
+
+            // TODO: build url with 'app'/'applicationName'
+
+            var apiRoot = DnnJsApiHeader.GetApiRoots().Item2.TrimLastSlash();
+            return $"{apiRoot}/{path}";
         }
     }
 }

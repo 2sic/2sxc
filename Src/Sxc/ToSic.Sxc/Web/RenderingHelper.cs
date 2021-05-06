@@ -28,10 +28,10 @@ namespace ToSic.Sxc.Web
         public IRenderingHelper Init(IBlock block, ILog parentLog)
         {
             this.LinkLog(parentLog);
-            var appRoot = _linkPaths.ToAbsolute("~/");
+            //var appRoot = _linkPaths.ToAbsolute("~/");
             Block = block;
             Context = block.Context;
-            AppRootPath = appRoot;
+            AppRootPath = _linkPaths.AsSeenFromTheDomainRoot("~/");
 
             return this;
         }

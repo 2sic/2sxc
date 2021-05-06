@@ -1,12 +1,15 @@
-﻿using Oqtane.Models;
+﻿using Microsoft.AspNetCore.Components;
+using Oqtane.Models;
+using Oqtane.Shared;
 using Oqtane.UI;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Routing;
-using Oqtane.Shared;
-using ToSic.Sxc.Oqt.Shared.Run;
+using Oqtane.Modules;
+using ToSic.Sxc.Oqt.Client.Services;
+using ToSic.Sxc.Oqt.Shared.Models;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Oqt.App
@@ -14,27 +17,73 @@ namespace ToSic.Sxc.Oqt.App
     public partial class Index
     {
         [Inject]
-        public ISxcOqtane SxcEngine { get; set; }
+        public IOqtSxcRenderService OqtSxcRenderService { get; set; }
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
+        private string RenderedUri { get; set; }
+        private string RenderedPage { get; set; }
+        private bool NewDataArrived { get; set; }
+
+
         public override List<Resource> Resources => new List<Resource>();
 
-        protected override async Task OnInitializedAsync()
-        {
-            // Subscribe to LocationChanged event.
-            NavigationManager.LocationChanged += HandleLocationChanged;
+        public OqtViewResultsDto ViewResults { get; set; }
 
-            Initialize2sxcContentBlock();
+        //protected override async Task OnInitializedAsync()
+        //{
+        //    await base.OnInitializedAsync();
+
+        //    // Subscribe to LocationChanged event.
+        //    NavigationManager.LocationChanged += HandleLocationChanged;
+        //}
+
+        protected override async Task OnParametersSetAsync()
+        {
+
+            // Call 2sxc engine only when is necesary to render control.
+            if (string.IsNullOrEmpty(RenderedUri) || (!NavigationManager.Uri.Equals(RenderedUri, StringComparison.InvariantCultureIgnoreCase) && NavigationManager.Uri.StartsWith(RenderedPage, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                RenderedUri = NavigationManager.Uri;
+                var indexOfQuestion = NavigationManager.Uri.IndexOf("?", StringComparison.Ordinal);
+                RenderedPage = indexOfQuestion > -1
+                    ? NavigationManager.Uri.Substring(0, indexOfQuestion)
+                    : NavigationManager.Uri;
+                await Initialize2sxcContentBlock();
+                NewDataArrived = true;
+            }
+
+            await base.OnParametersSetAsync();
         }
 
         /// <summary>
         /// prepare the html / headers for later rendering
         /// </summary>
-        private void Initialize2sxcContentBlock() => SxcEngine.Prepare(PageState.Site, PageState.Page, ModuleState);
+        private async Task Initialize2sxcContentBlock()
+        {
+            var culture = CultureInfo.CurrentUICulture.Name;
+            //if (string.IsNullOrEmpty(culture)) culture = await GetUserSelectedCultureFromCookie();
 
-        public void Dispose() => NavigationManager.LocationChanged -= HandleLocationChanged;
+            var urlQuery = NavigationManager.ToAbsoluteUri(NavigationManager.Uri).Query;
+            ViewResults = await OqtSxcRenderService.PrepareAsync(
+                PageState.Alias.AliasId,
+                PageState.Page.PageId,
+                ModuleState.ModuleId,
+                culture,
+                urlQuery);
+
+            if (!string.IsNullOrEmpty(ViewResults.ErrorMessage)) AddModuleMessage(ViewResults.ErrorMessage, MessageType.Warning);
+        }
+
+        //private async Task<string> GetUserSelectedCultureFromCookie()
+        //{
+        //    var interop = new Interop(JSRuntime);
+        //    var localizationCookie = await interop.GetCookie(CookieRequestCultureProvider.DefaultCookieName);
+        //    return CookieRequestCultureProvider.ParseCookieValue(localizationCookie).UICultures[0].Value;
+        //}
+
+        //public void Dispose() => NavigationManager.LocationChanged -= HandleLocationChanged;
 
 
         /// <summary>
@@ -43,60 +92,91 @@ namespace ToSic.Sxc.Oqt.App
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void HandleLocationChanged(object sender, LocationChangedEventArgs args) => Initialize2sxcContentBlock();
+        //private void HandleLocationChanged(object sender, LocationChangedEventArgs args)
+        //{
+        //    var log = $"{sender} {args}";
+        //} //Initialize2sxcContentBlock(); //.RunSynchronously();
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender)
+            //if (firstRender)
             {
                 await base.OnAfterRenderAsync(firstRender);
 
-                if (PageState.Runtime == Runtime.Server)
+                // 2sxc part should be executed only if new 2sxc data arrived from server (ounce per view)
+                if (NewDataArrived && PageState.Runtime == Oqtane.Shared.Runtime.Server && ViewResults != null/* && 1 == 0*/)
                 {
+                    NewDataArrived = false;
+
                     var interop = new Interop(JSRuntime);
 
                     #region 2sxc Standard Assets and Header
 
                     // Add Context-Meta first, because it should be available when $2sxc loads
-                    var aAndH = SxcEngine.AssetsAndHeaders;
-                    if (aAndH.AddContextMeta)
-                        await interop.IncludeMeta("sxc-tmp-context-id", "name", aAndH.ContextMetaName, aAndH.ContextMetaContents(), "id");
+                    if (ViewResults.SxcContextMetaName != null)
+                        await interop.IncludeMeta("sxc-context-meta", "name", ViewResults.SxcContextMetaName, ViewResults.SxcContextMetaContents, "id");
 
                     // Lets load all 2sxc js dependencies (js / styles)
                     // Not done the official Oqtane way, because that asks for the scripts before
                     // the razor component reported what it needs
-                    foreach (var resource in aAndH.Scripts())
-                        await interop.IncludeScript("", resource, "", "", "", "head", "");
+                    if (ViewResults.SxcScripts != null)
+                        foreach (var resource in ViewResults.SxcScripts)
+                            await interop.IncludeScript("", resource, "", "", "", "head", "");
 
-                    foreach (var style in aAndH.Styles())
-                        await interop.IncludeLink("", "stylesheet", style, "text/css", "", "", "");
+                    if (ViewResults.SxcStyles != null)
+                        foreach (var style in ViewResults.SxcStyles)
+                            await interop.IncludeLink("", "stylesheet", style, "text/css", "", "", "");
 
                     #endregion
 
                     #region External resources requested by the razor template
 
-                    // External resources = independent files (so not inline JS in the template)
-                    var externalResources = SxcEngine.Resources.Where(r => r.IsExternal).ToArray();
+                    if (ViewResults.TemplateResources != null)
+                    {
+                        // External resources = independent files (so not inline JS in the template)
+                        var externalResources = ViewResults.TemplateResources.Where(r => r.IsExternal).ToArray();
 
-                    // 1. Style Sheets, ideally before JS
-                    await interop.IncludeLinks(externalResources
-                        .Where(r => r.ResourceType == ResourceType.Stylesheet)
-                        .Select(a => new { rel = "stylesheet", href = a.Url, type = "text/css" })
-                        .Cast<object>()
-                        .ToArray());
+                        // 1. Style Sheets, ideally before JS
+                        await interop.IncludeLinks(externalResources
+                            .Where(r => r.ResourceType == ResourceType.Stylesheet)
+                            .Select(a => new
+                            {
+                                id = string.IsNullOrWhiteSpace(a.UniqueId) ? null : a.UniqueId,
+                                rel = "stylesheet",
+                                href = a.Url,
+                                type = "text/css"
+                            })
+                            .Cast<object>()
+                            .ToArray());
 
-                    // 2. Scripts - usually libraries etc.
-                    await interop.IncludeScripts(externalResources
-                        .Where(r => r.ResourceType == ResourceType.Script)
-                        .Select(a => new { href = a.Url, location = a.Location })
-                        .Cast<object>()
-                        .ToArray());
+                        // 2. Scripts - usually libraries etc.
+                        // Important: the IncludeScripts works very different from LoadScript - it uses LoadJS and bundles
+                        var bundleId = "module-bundle-" + PageState.ModuleId;
+                        var includeScripts = externalResources
+                            .Where(r => r.ResourceType == ResourceType.Script)
+                            .Select(a => new
+                            {
+                                bundle = bundleId,
+                                id = string.IsNullOrWhiteSpace(a.UniqueId) ? null : a.UniqueId,
+                                href = a.Url,
+                                location = a.Location,
+                                integrity = "", // bug in Oqtane, needs to be an empty string to not throw errors
+                        })
+                            .Cast<object>()
+                            .ToArray();
+                        if (includeScripts.Any()) await interop.IncludeScripts(includeScripts);
 
-                    // 3. Inline JS code which was extracted from the template
-                    var inlineResources = SxcEngine.Resources.Where(r => !r.IsExternal).ToArray();
-                    foreach (var inline in inlineResources)
-                        await interop.IncludeScript("", "", "", "", inline.Content, "body", "");
-
+                        // 3. Inline JS code which was extracted from the template
+                        var inlineResources = ViewResults.TemplateResources.Where(r => !r.IsExternal).ToArray();
+                        foreach (var inline in inlineResources)
+                            await interop.IncludeScript(string.IsNullOrWhiteSpace(inline.UniqueId) ? null : inline.UniqueId,
+                                "",
+                                "",
+                                "",
+                                inline.Content,
+                                "body",
+                                "");
+                    }
 
                     #endregion
                 }

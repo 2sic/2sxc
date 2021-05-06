@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using System.Web.Hosting;
 using DotNetNuke.Web.Api;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.SexyContent.Dnn920;
@@ -47,6 +48,11 @@ namespace ToSic.SexyContent
                     .AddSxcWebApi()
                     .AddSxcCore()
                     .AddEav();
+                
+                // temp polymorphism - later put into AddPolymorphism
+                services.TryAddTransient<Koi>();
+                services.TryAddTransient<Permissions>();
+                
             });
 
             // now we should be able to instantiate registration of DB
@@ -57,7 +63,11 @@ namespace ToSic.SexyContent
 
             // also register this because of a long DNN issue which was fixed, but we don't know if we're running in another version
             SharpZipLibRedirect.RegisterSharpZipLibRedirect();
+            
+            // Polymorphism
+            // todo: remove this later
             ConfigurePolymorphResolvers();
+
             _alreadyConfigured = true;
         }
 
@@ -78,8 +88,8 @@ namespace ToSic.SexyContent
         /// </summary>
         private void ConfigurePolymorphResolvers()
         {
-            Polymorphism.Add(new Koi());
-            Polymorphism.Add(new Permissions());
+            //Polymorphism.Add(new Koi());
+            //Polymorphism.Add(new Permissions());
         }
 
     }

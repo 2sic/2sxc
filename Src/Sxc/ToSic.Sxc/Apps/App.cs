@@ -1,8 +1,10 @@
 ﻿using System;
+using System.IO;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Run;
@@ -111,15 +113,18 @@ namespace ToSic.Sxc.Apps
 
 
         #region Paths
+
         /// <inheritdoc />
-        public string Path => _path ?? (_path = _linkPaths.ToAbsolute(System.IO.Path.Combine(Site.AppsRootLink, Folder)));
+        public string Path => _path ?? (_path = Site.AppAssetsLinkTemplate
+            .Replace(LinkPaths.AppFolderPlaceholder, Folder)
+            .ToAbsolutePathForwardSlash()); // // .AppAsset(System.IO.Path.Combine(Site.AppsRootLink, Folder)));
         private string _path;
 
         /// <inheritdoc />
-        public string Thumbnail => System.IO.File.Exists(PhysicalPath + IconFile) ? Path + IconFile : null;
+        public string Thumbnail => File.Exists(PhysicalPath + IconFile) ? Path + IconFile : null;
 
         #endregion
 
-        
+
     }
 }
