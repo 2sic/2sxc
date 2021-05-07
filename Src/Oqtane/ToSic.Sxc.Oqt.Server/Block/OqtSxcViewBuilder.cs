@@ -105,7 +105,7 @@ namespace ToSic.Sxc.Oqt.Server.Block
             // https://github.com/oqtane/oqtane.framework/issues/1272
             var dllLocation = AppContext.BaseDirectory;
             var refsPath = Path.Combine(dllLocation, "refs");
-            if (!Directory.Exists(refsPath)) errorMessage  = "<strong>Warning:</strong> The \"refs\" folder is missing. Please ensure that <strong>Dependencies.zip</strong> is unzipped as explained in the installation recipe <a href=\"https://azing.org/2sxc/r/fOG3aByY\" target=\"new\">https://azing.org/2sxc/r/fOG3aByY</a>.";
+            if (!Directory.Exists(refsPath)) errorMessage  = "<strong>Warning:</strong> The \"refs\" folder is missing. Please ensure that <strong>Razor.Compiler.Dependencies.zip</strong> is unzipped as explained in the installation recipe <a href=\"https://azing.org/2sxc/r/fOG3aByY\" target=\"new\">https://azing.org/2sxc/r/fOG3aByY</a>.";
 
             oqtViewResultsDto = new OqtViewResultsDto
             {
