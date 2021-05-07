@@ -10,6 +10,7 @@ namespace Custom.Hybrid
     {
         #region Experimental
 
+
         public dynamic File(string dontRelyOnParameterOrder = ToSic.Eav.Constants.RandomProtectionParameter,
             // Important: the second parameter should _not_ be a string, otherwise the signature looks the same as the built-in File(...) method
             bool? download = null,
@@ -19,7 +20,7 @@ namespace Custom.Hybrid
             object contents = null // can be stream, string or byte[]
             )
         {
-            fileDownloadName = CustomApiHelpers.FileParamsFileInitialCheck(dontRelyOnParameterOrder, download, virtualPath, fileDownloadName, contents);
+            fileDownloadName = CustomApiHelpers.FileParamsInitialCheck(dontRelyOnParameterOrder, download, virtualPath, fileDownloadName, contents);
 
             // Try to figure out file mime type as needed
             if (string.IsNullOrWhiteSpace(contentType))
@@ -31,10 +32,18 @@ namespace Custom.Hybrid
                 return base.File(virtualPath, contentType, fileDownloadName);
 
             if (contents is Stream streamBody)
-                return base.File(streamBody, contentType, fileDownloadName);
+            {
+                contentType = CustomApiHelpers.XmlContentTypeFromContent(CustomApiHelpers.IsValidXml(streamBody), contentType);
+                var x = base.File(streamBody, contentType, fileDownloadName);
+
+                return x;
+            }
             
-            if(contents is string stringBody) 
+            if(contents is string stringBody)
+            {
                 contents = System.Text.Encoding.UTF8.GetBytes(stringBody);
+                contentType = CustomApiHelpers.XmlContentTypeFromContent(CustomApiHelpers.IsValidXml(stringBody), contentType);
+            }
 
             if(contents is byte[] charBody)
                 return base.File(charBody, contentType, fileDownloadName);

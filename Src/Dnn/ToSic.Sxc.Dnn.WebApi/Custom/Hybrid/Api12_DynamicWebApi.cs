@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -31,13 +32,19 @@ namespace Custom.Hybrid
             // check if this may just be a call to the built in file, which has two strings
             // this can only be possible if only the virtualPath and contentType were set
             if (!string.IsNullOrWhiteSpace(virtualPath))
-                content = new StreamContent(new FileStream(HttpContext.Current.Server.MapPath(virtualPath), FileMode.Open));
+                content = new StreamContent(new FileStream(HttpContext.Current.Server.MapPath(virtualPath), FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
 
             if (contents is Stream streamBody)
+            {
                 content = new StreamContent(streamBody);
+                contentType = CustomApiHelpers.XmlContentTypeFromContent(CustomApiHelpers.IsValidXml(streamBody), contentType);
+            }
             
-            if(contents is string stringBody) 
+            if(contents is string stringBody)
+            {
                 content = new ByteArrayContent(System.Text.Encoding.UTF8.GetBytes(stringBody));
+                contentType = CustomApiHelpers.XmlContentTypeFromContent(CustomApiHelpers.IsValidXml(stringBody), contentType);
+            }
 
             if (contents is byte[] charBody)
                 content = new ByteArrayContent(charBody);
