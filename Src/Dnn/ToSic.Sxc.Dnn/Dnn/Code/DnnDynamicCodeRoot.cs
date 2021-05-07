@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Dnn.Code
             base.Init(block, parentLog, compatibility);
             // Init things than require module-info or similar, but not 2sxc
             Dnn = new DnnContextOld(block?.Context.Module);
-            ((DnnLinkHelper)Link).Init(Dnn);
+            ((DnnLinkHelper)Link).Init(Dnn, App);
             return this;
         }
 
