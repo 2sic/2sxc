@@ -1,8 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Net;
-using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Oqt.Server.Adam;
+using ToSic.Sxc.WebApi;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -20,26 +19,7 @@ namespace Custom.Hybrid
             object contents = null // can be stream, string or byte[]
             )
         {
-            ToSic.Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, nameof(File), "");
-
-            // Check initial conflicting values
-            var contentCount = (contents != null ? 1 : 0) + (virtualPath != null ? 1 : 0);
-            if (contentCount == 0)
-                throw new ArgumentException("None of the provided parameters give content for the file to return.");
-            if (contentCount > 1)
-                throw new ArgumentException($"Multiple file setting properties like '{nameof(contents)}' or '{nameof(virtualPath)}' have a value - only one can be provided.");
-            
-            // Set reallyForceDownload based on forceDownload and file name
-            var reallyForceDownload = download == true || !string.IsNullOrWhiteSpace(fileDownloadName);
-
-            // check if we should force a download, but maybe fileDownloadName is empty
-            if (reallyForceDownload && string.IsNullOrWhiteSpace(fileDownloadName))
-            {
-                // try to guess name based on virtualPath name
-                fileDownloadName = !string.IsNullOrWhiteSpace(virtualPath) ? Path.GetFileName(virtualPath) : null;
-                if (string.IsNullOrWhiteSpace(fileDownloadName))
-                    throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, $"Can't force download without a {nameof(fileDownloadName)} or a real {nameof(virtualPath)}", "Not Found");
-            }
+            fileDownloadName = CustomApiHelpers.FileParamsFileInitialCheck(dontRelyOnParameterOrder, download, virtualPath, fileDownloadName, contents);
 
             // Try to figure out file mime type as needed
             if (string.IsNullOrWhiteSpace(contentType))
