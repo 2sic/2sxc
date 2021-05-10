@@ -17,8 +17,6 @@ namespace ToSic.Sxc.Dnn.Web
         private IDnnContext _dnn;
         private IApp _app;
 
-        public DnnLinkHelper() { }
-
         public DnnLinkHelper Init(IDnnContext dnn, IApp app)
         {
             _dnn = dnn;
@@ -46,7 +44,7 @@ namespace ToSic.Sxc.Dnn.Web
             // Move queryString part from 'api' to 'parameters'.
             LinkHelpers.NormalizeQueryString(ref api, ref parameters);
 
-            var path = (parameters == null) ? api : $"{api}?{parameters}";
+            var path = parameters == null ? api : $"{api}?{parameters}";
 
             return Api(path: path);
         }
