@@ -85,6 +85,15 @@ namespace ToSic.Sxc.WebApi
             return isValidXml;
         }
 
+        public static bool IsValidXml(byte[] body)
+        {
+            // load the data into a memory stream
+            using (var stream = new MemoryStream(body))
+            {
+                return IsValidXml(stream);
+            }
+        }
+
         public static bool IsMinimallyValidXml(XmlReader disposable)
         {
             using (var xmlReader = disposable)

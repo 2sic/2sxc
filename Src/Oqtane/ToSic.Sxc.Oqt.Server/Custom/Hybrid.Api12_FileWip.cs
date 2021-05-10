@@ -31,24 +31,20 @@ namespace Custom.Hybrid
             if (!string.IsNullOrWhiteSpace(virtualPath))
                 return base.File(virtualPath, contentType, fileDownloadName);
 
-            if (contents is Stream streamBody)
+            switch (contents)
             {
-                contentType = CustomApiHelpers.XmlContentTypeFromContent(CustomApiHelpers.IsValidXml(streamBody), contentType);
-                var x = base.File(streamBody, contentType, fileDownloadName);
-
-                return x;
+                case string stringBody:
+                    contentType = CustomApiHelpers.XmlContentTypeFromContent(CustomApiHelpers.IsValidXml(stringBody), contentType);
+                    return base.File( System.Text.Encoding.UTF8.GetBytes(stringBody), contentType, fileDownloadName);
+                case Stream streamBody:
+                    contentType = CustomApiHelpers.XmlContentTypeFromContent(CustomApiHelpers.IsValidXml(streamBody), contentType);
+                    return base.File(streamBody, contentType, fileDownloadName);
+                case byte[] charBody:
+                    contentType = CustomApiHelpers.XmlContentTypeFromContent(CustomApiHelpers.IsValidXml(charBody), contentType);
+                    return base.File(charBody, contentType, fileDownloadName);
+                default:
+                    throw new ArgumentException("Tried to provide file download but couldn't find content");
             }
-            
-            if(contents is string stringBody)
-            {
-                contents = System.Text.Encoding.UTF8.GetBytes(stringBody);
-                contentType = CustomApiHelpers.XmlContentTypeFromContent(CustomApiHelpers.IsValidXml(stringBody), contentType);
-            }
-
-            if(contents is byte[] charBody)
-                return base.File(charBody, contentType, fileDownloadName);
-
-            throw new ArgumentException("Tried to provide file download but couldn't find content");
         }
 
         

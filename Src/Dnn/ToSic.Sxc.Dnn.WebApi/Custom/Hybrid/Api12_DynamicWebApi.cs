@@ -34,20 +34,23 @@ namespace Custom.Hybrid
             if (!string.IsNullOrWhiteSpace(virtualPath))
                 content = new StreamContent(new FileStream(HttpContext.Current.Server.MapPath(virtualPath), FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
 
-            if (contents is Stream streamBody)
+            var isValidXml = false;
+            switch (contents)
             {
-                content = new StreamContent(streamBody);
-                contentType = CustomApiHelpers.XmlContentTypeFromContent(CustomApiHelpers.IsValidXml(streamBody), contentType);
+                case string stringBody:
+                    content = new ByteArrayContent(System.Text.Encoding.UTF8.GetBytes(stringBody));
+                    isValidXml = CustomApiHelpers.IsValidXml(stringBody);
+                    break;
+                case Stream streamBody:
+                    content = new StreamContent(streamBody);
+                    isValidXml = CustomApiHelpers.IsValidXml(streamBody);
+                    break;
+                case byte[] charBody:
+                    content = new ByteArrayContent(charBody);
+                    isValidXml = CustomApiHelpers.IsValidXml(charBody);
+                    break;
             }
-            
-            if(contents is string stringBody)
-            {
-                content = new ByteArrayContent(System.Text.Encoding.UTF8.GetBytes(stringBody));
-                contentType = CustomApiHelpers.XmlContentTypeFromContent(CustomApiHelpers.IsValidXml(stringBody), contentType);
-            }
-
-            if (contents is byte[] charBody)
-                content = new ByteArrayContent(charBody);
+            contentType = CustomApiHelpers.XmlContentTypeFromContent(isValidXml, contentType);
 
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = content;
