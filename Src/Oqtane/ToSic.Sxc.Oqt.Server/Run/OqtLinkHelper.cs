@@ -65,7 +65,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private string ApiNavigateUrl(string api, string parameters)
         {
             // Move queryString part from 'api' to 'parameters'.
-            LinkHelpers.NormalizeQueryString(ref api, ref parameters);
+            parameters = LinkHelpers.NormalizeQueryString(api, parameters);
+            api = LinkHelpers.RemoveQueryString(api);
 
             var alias = _siteStateInitializer.InitializedState.Alias;
             return Utilities.NavigateUrl(alias.Path, _linkPaths.ApiFromSiteRoot(RazorPage.App.Folder, api).TrimPrefixSlash(),

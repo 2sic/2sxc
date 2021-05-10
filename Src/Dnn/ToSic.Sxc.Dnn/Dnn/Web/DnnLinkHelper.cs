@@ -42,7 +42,8 @@ namespace ToSic.Sxc.Dnn.Web
             api = api.TrimPrefixSlash();
 
             // Move queryString part from 'api' to 'parameters'.
-            LinkHelpers.NormalizeQueryString(ref api, ref parameters);
+            parameters = LinkHelpers.NormalizeQueryString(api, parameters);
+            api = LinkHelpers.RemoveQueryString(api);
 
             var path = parameters == null ? api : $"{api}?{parameters}";
 
