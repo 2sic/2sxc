@@ -64,13 +64,15 @@ namespace ToSic.Sxc.Oqt.Server.Run
         // Prepare Api link.
         private string ApiNavigateUrl(string api, string parameters)
         {
-            // Move queryString part from 'api' to 'parameters'.
-            parameters = LinkHelpers.NormalizeQueryString(api, parameters);
-            api = LinkHelpers.RemoveQueryString(api);
-
             var alias = _siteStateInitializer.InitializedState.Alias;
-            return Utilities.NavigateUrl(alias.Path, _linkPaths.ApiFromSiteRoot(RazorPage.App.Folder, api).TrimPrefixSlash(),
-                parameters ?? string.Empty);
+            
+            var pathWithQueryString = LinkHelpers.CombineApiWithQueryString(
+                _linkPaths.ApiFromSiteRoot(RazorPage.App.Folder, api).TrimPrefixSlash(),
+                parameters);
+
+            var (path, queryString, anchor) = Utilities.ParseParameters(pathWithQueryString);
+
+            return Utilities.NavigateUrl(alias.Path, path, queryString);
         }
 
         // Prepare Page link.

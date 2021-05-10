@@ -3,32 +3,15 @@
     public class LinkHelpers
     {
         /**
-         * Move queryString part from 'api' to 'parameters'.
+         * Combine api with query string.
          */
-        public static string NormalizeQueryString(string api, string queryString)
+        public static string CombineApiWithQueryString(string api, string queryString)
         {
-            if (api == null) return queryString; // nothing to do
+            queryString = queryString?.TrimStart('?').TrimStart('&');
 
-            // clean beginning of queryString
-            if (!string.IsNullOrEmpty(queryString)) queryString = queryString.TrimStart('?').TrimStart('&');
-
-            var queryStringDelimiterPosition = api.IndexOf("?");
-            if (queryStringDelimiterPosition <= -1) return queryString; // nothing to do
-
-            return (string.IsNullOrEmpty(queryString))
-                ? $"{api.Substring(queryStringDelimiterPosition + 1)}"
-                : $"{api.Substring(queryStringDelimiterPosition + 1)}&{queryString}";
-        }
-
-        /**
-         * Remove queryString part from 'api'.
-         */
-        public static string RemoveQueryString(string api)
-        {
-            if (api == null) return api; // nothing to do
-
-            var queryStringDelimiterPosition = api.IndexOf("?");
-            return queryStringDelimiterPosition <= -1 ? api : api.Substring(0, queryStringDelimiterPosition);
+            // combine api with query string
+            return string.IsNullOrEmpty(queryString) ? api :
+                api?.IndexOf("?") > 0 ? $"{api}&{queryString}" : $"{api}?{queryString}";
         }
     }
 }

@@ -29,25 +29,12 @@ namespace ToSic.Sxc.Dnn.Web
         {
             // prevent incorrect use without named parameters
             Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
-            
-            if (api == null)
-            {
-                var targetPage = pageId ?? _dnn.Tab.TabID;
 
-                var parametersToUse = parameters;
-                return parametersToUse == null
-                    ? _dnn.Tab.FullUrl
-                    : DotNetNuke.Common.Globals.NavigateURL(targetPage, "", parametersToUse);
-            }
-            api = api.TrimPrefixSlash();
+            if (api != null) return Api(path: LinkHelpers.CombineApiWithQueryString(api.TrimPrefixSlash(), parameters));
 
-            // Move queryString part from 'api' to 'parameters'.
-            parameters = LinkHelpers.NormalizeQueryString(api, parameters);
-            api = LinkHelpers.RemoveQueryString(api);
-
-            var path = parameters == null ? api : $"{api}?{parameters}";
-
-            return Api(path: path);
+            return parameters == null
+                ? _dnn.Tab.FullUrl
+                : DotNetNuke.Common.Globals.NavigateURL(pageId ?? _dnn.Tab.TabID, "", parameters);
         }
 
         /// <inheritdoc />
