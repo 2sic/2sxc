@@ -70,9 +70,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 _linkPaths.ApiFromSiteRoot(RazorPage.App.Folder, api).TrimPrefixSlash(),
                 parameters);
 
-            var (path, queryString, anchor) = Utilities.ParseParameters(pathWithQueryString);
-
-            return Utilities.NavigateUrl(alias.Path, path, queryString);
+            return $"{alias.Path}/{pathWithQueryString}";
         }
 
         // Prepare Page link.
