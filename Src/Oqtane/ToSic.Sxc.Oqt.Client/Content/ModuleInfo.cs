@@ -9,9 +9,9 @@ namespace ToSic.Sxc.Oqt.Content
         {
             Name = "Content",
             Description = "2sxc helps create designed, cross-platform content",
-            Version = "12.00.00",
+            Version = "12.00.01",
             ServerManagerType = "ToSic.Sxc.Oqt.Server.Manager.SxcManager, ToSic.Sxc.Oqtane.Server",
-            ReleaseVersions = "12.00.00",
+            ReleaseVersions = "12.00.01",
             Dependencies = "ToSic.Sxc.Oqtane.Shared",
             Categories = "Common",
             //Runtimes = "Server",
