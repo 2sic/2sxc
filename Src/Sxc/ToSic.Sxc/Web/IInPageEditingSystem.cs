@@ -179,6 +179,7 @@ namespace ToSic.Sxc.Web
         ///     If JS etc. should be included to enable editing API - ensures javascripts are loaded enabling commands to run</param>
         /// <param name="forms">optional, default false. <br/>
         ///     Ensures javascripts are loaded enabling forms to open</param>
+        /// <param name="turnOn">activate turnOn script helpers - this is BETA / WIP</param>
         /// <param name="context">optional, default false. <br/>
         ///     If context ([](xref:Basics.Browser.EditUx.EditContext)) should be added, to ensure in-instance data editing</param>
         /// <param name="autoToolbar">optional, default false. <br/>
@@ -194,6 +195,7 @@ namespace ToSic.Sxc.Web
         string Enable(string noParameterOrder = Eav.Constants.RandomProtectionParameter,
             bool? js = null,
             bool? api = null, 
+            bool? turnOn = null,
             bool? forms = null,
             bool? context = null,
             bool? autoToolbar = null,

@@ -52,6 +52,8 @@ namespace ToSic.Sxc.Oqt.Server.Block
             var list = new List<string>();
             if (AddJsCore) list.Add($"{OqtConstants.UiRoot}/{InpageCms.CoreJs}");
             if (AddJsEdit) list.Add($"{OqtConstants.UiRoot}/{InpageCms.EditJs}");
+            if(BlockBuilder.NamedScriptsWIP?.Contains(BlockBuilder.JsTurnOn) ?? false)
+                list.Add($"{OqtConstants.UiRoot}/{InpageCms.TurnOnJs}");
             return list;
         }
 
