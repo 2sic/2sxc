@@ -77,7 +77,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
         [HttpPost]
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [Authorize(Roles = RoleNames.Admin)]
-        //[ValidateAntiForgeryToken] // now activate this, as it's post now, previously not, because this is a GET and can't include the RVT
+        [ValidateAntiForgeryToken]
         public IActionResult RemotePackage(string packageUrl)
         {
             PreventServerTimeout300();

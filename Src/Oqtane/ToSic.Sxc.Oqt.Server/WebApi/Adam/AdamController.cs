@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)] // use view, all methods must re-check permissions
     //[Authorize(Roles = RoleNames.Everyone)] commented because of http403 issue
     // TODO: 2DM please check permissions
-    //[ValidateAntiForgeryToken]
+    [ValidateAntiForgeryToken]
 
     // Release routes
     [Route(WebApiConstants.AppRoot + "/{appName}/content/{contentType}/{guid:guid}/{field}")]

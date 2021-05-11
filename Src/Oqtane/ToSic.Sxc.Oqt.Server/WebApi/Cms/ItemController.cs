@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/cms/[controller]/[action]")]
 
-    //[ValidateAntiForgeryToken]
+    [ValidateAntiForgeryToken]
     public class ItemController : OqtStatefulControllerBase
     {
         private readonly Lazy<AppViewPickerBackend> _appViewPickerBackendLazy;

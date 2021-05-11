@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     /// <summary>
     /// Proxy Class to the EAV PipelineDesignerController (Web API Controller)
     /// </summary>
-    //[ValidateAntiForgeryToken]
+    [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
 
     // Release routes

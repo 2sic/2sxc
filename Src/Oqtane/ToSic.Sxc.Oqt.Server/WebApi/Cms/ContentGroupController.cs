@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/cms/[controller]/[action]")]
 
-    //[ValidateAntiForgeryToken]
+    [ValidateAntiForgeryToken]
     [ApiController]
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
     public class ContentGroupController : OqtStatefulControllerBase

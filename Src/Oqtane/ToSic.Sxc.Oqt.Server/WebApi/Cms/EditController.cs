@@ -12,8 +12,6 @@ using ToSic.Sxc.WebApi.Cms;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
 {
-    ////[ValidateAntiForgeryToken]
-
     // Release routes
     [Route(WebApiConstants.ApiRoot + "/cms/[controller]/[action]")]
     [Route(WebApiConstants.ApiRoot2 + "/cms/[controller]/[action]")]
@@ -22,7 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/cms/edit/[action]")]
 
-    ////[ValidateAntiForgeryToken]
+    [ValidateAntiForgeryToken]
 
     [ApiController]
     public class EditController: OqtStatefulControllerBase, IEditController

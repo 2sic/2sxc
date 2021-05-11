@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/cms/[controller]/[action]")]
 
-    //[ValidateAntiForgeryToken]
+    [ValidateAntiForgeryToken]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
     public class ListController : OqtStatefulControllerBase

@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/cms/[controller]/[action]")]
 
-    //[ValidateAntiForgeryToken]
+    [ValidateAntiForgeryToken]
     public class HistoryController : OqtStatefulControllerBase, IHistoryController
     {
         private readonly IdentifierHelper _idHelper;

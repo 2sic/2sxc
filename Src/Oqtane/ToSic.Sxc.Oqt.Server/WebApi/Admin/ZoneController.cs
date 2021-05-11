@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     /// <summary>
     /// This one supplies portal-wide (or cross-portal) settings / configuration
     /// </summary>
-    //[ValidateAntiForgeryToken]
+    [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
     // Release routes
     [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]
