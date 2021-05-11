@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Oqt.Server
                 .AddControllers(options =>
                 {
                     options.AllowEmptyInputInBodyModelBinding = true;
-                    options.Filters.Add(new HttpResponseExceptionFilter());
+                   // options.Filters.Add(new HttpResponseExceptionFilter()); // Added with attribute
                 })
                 // This is needed to preserve compatibility with previous api usage
                 .AddNewtonsoftJson(options =>
