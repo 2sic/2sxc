@@ -18,53 +18,19 @@ namespace ToSic.Sxc.Oqt.Server.Run
         {
             _httpContextAccessor = httpContextAccessor;
             ServiceProvider = serviceProvider;
-
-            //InitServices();
-
-            //// Default implementation
-            //GetRequest = GetRequestDefault;
         }
         private readonly IHttpContextAccessor _httpContextAccessor;
         public IServiceProvider ServiceProvider { get; }
 
         private IModuleRepository ModuleRepository => _moduleRepository ??= ServiceProvider.Build<IModuleRepository>();
         private IModuleRepository _moduleRepository;
-        //private OqtTempInstanceContext _oqtTempInstanceContext;
-
-
-        //private void InitServices()
-        //{
-        //    _moduleRepository = ServiceProvider.Build<IModuleRepository>();
-        //    //_oqtTempInstanceContext = ServiceProvider.Build<OqtTempInstanceContext>();
-        //}
-
-        // Default implementation for GetRequest().
-        //private HttpRequest Request => _httpContextAccessor?.HttpContext?.Request;
-
-        //public OqtState Init(Func<HttpRequest> getRequest)
-        //{
-        //    Request = getRequest; // Replace default implementation.
-
-        //    return this;
-        //}
-
-        //public IContextOfSite GetSiteContext() => ServiceProvider.Build<IContextOfSite>();
-
-        //public IContextOfApp GetAppContext(int appId)
-        //{
-        //    // First get a normal basic context which is initialized with site, etc.
-        //    var appContext = ServiceProvider.Build<IContextOfApp>();
-        //    appContext.Init(Log);
-        //    appContext.ResetApp(appId);
-        //    return appContext;
-        //}
+        
 
         public IContextOfBlock GetContext() => _context ??= GetBlock()?.Context ?? ServiceProvider.Build<IContextOfBlock>().Init(Log) as IContextOfBlock;
         private IContextOfBlock _context;
 
         public IBlock GetBlockOfModule(int pageId, Module module)
         {
-            //var ctx = TempInstanceContext_CreateContext(pageId, module);
             var ctx = ServiceProvider.Build<IContextOfBlock>();
             ctx.Init(Log);
             ((OqtPage)ctx.Page).Init(pageId);
@@ -75,16 +41,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
             _block = ServiceProvider.Build<BlockFromModule>().Init(ctx, Log);
             return _block;
         }
-
-
-        //public IContextOfBlock TempInstanceContext_CreateContext(int pageId, Module module)
-        //{
-        //    var ctx = ServiceProvider.Build<IContextOfBlock>();
-        //    ctx.Init(Log);
-        //    ((OqtPage)ctx.Page).Init(pageId);
-        //    ((OqtModule)ctx.Module).Init(module, Log);
-        //    return ctx;
-        //}
 
         public IBlock GetBlock(bool allowNoContextFound = true)
         {
@@ -116,9 +72,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 }
 
                 Log.Add($"Found page/module {pageId}/{moduleId} in route");
-                //var moduleQs = ModuleRepository.GetModule(moduleId);
-                //var blockQs = GetBlockOfModule(pageId, moduleQs);
-                //return wrapLog("found in route values", blockQs);
             }
 
             var module = ModuleRepository.GetModule(moduleId);

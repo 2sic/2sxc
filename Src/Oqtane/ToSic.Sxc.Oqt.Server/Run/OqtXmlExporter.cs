@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             //Lazy<ISiteRepository> siteRepositoryLazy,
             Lazy<ITenantResolver> oqtTenantResolverLazy
             //Lazy<IValueConverter> oqtValueConverterLazy
-            ) : base(xmlSerializer, OqtConstants.LogName)
+            ) : base(xmlSerializer, OqtConstants.OqtLogPrefix)
         {
             //_serviceProvider = serviceProvider;
             _hostingEnvironment = hostingEnvironment;

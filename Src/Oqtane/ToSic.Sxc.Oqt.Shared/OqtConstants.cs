@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-namespace ToSic.Sxc.Oqt.Shared
+﻿namespace ToSic.Sxc.Oqt.Shared
 {
     /// <summary>
     /// This should only contain constants which should really be final, no WIP or similar
@@ -19,8 +17,6 @@ namespace ToSic.Sxc.Oqt.Shared
 
         public const string ApiAppLinkPart = "api/sxc/app";
 
-        public const string AppAssetsLinkRoot = WebApiConstants.ApiRoot + "/app-assets";
-
         public const string DownloadLinkTemplate = "/{0}/api/file/download/{1}";
 
         public const string UserTokenPrefix = "oqt";
@@ -30,12 +26,8 @@ namespace ToSic.Sxc.Oqt.Shared
         // #uncertain: maybe should be more dynamic
         public const string SiteRoot = "/";
 
-        // not yet sure what this is needed for...
-        //public const string WwwRoot = "wwwroot/";
-
         // Logging constants
         public const string OqtLogPrefix = "Oqt";
-        public const string LogName = "Oqt";
         
         // Special Oqtane constants missing in Oqtane
         public const string EntityIdParam = "entityid";
