@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ToSic.Sxc.Oqt.Shared.Run
+namespace ToSic.Sxc.Oqt.Server.Run
 {
     public interface IOqtAssetsAndHeader
     {
