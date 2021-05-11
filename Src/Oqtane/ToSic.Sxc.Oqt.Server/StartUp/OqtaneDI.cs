@@ -81,9 +81,8 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             //sc.TryAddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
             //sc.TryAddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
 
-            // 2020-10-22 2dm test
+            // View Builder
             services.TryAddTransient<ISxcOqtane, OqtSxcViewBuilder>();
-            services.TryAddTransient<StatefulControllerDependencies>();
 
             // Site State Initializer for APIs etc. to ensure that the SiteState exists and is correctly preloaded
             services.TryAddTransient<SiteStateInitializer>();

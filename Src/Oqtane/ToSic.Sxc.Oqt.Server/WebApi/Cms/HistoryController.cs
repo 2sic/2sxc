@@ -28,9 +28,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         private readonly Lazy<AppManager> _appManagerLazy;
         protected override string HistoryLogName => "Api.History";
 
-        public HistoryController(StatefulControllerDependencies dependencies,
-            IdentifierHelper idHelper,
-            Lazy<AppManager> appManagerLazy) : base()
+        public HistoryController(IdentifierHelper idHelper, Lazy<AppManager> appManagerLazy)
         {
             _idHelper = idHelper;
             _appManagerLazy = appManagerLazy;

@@ -30,11 +30,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         #region DI
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "UiCntr";
 
-        public EditController(StatefulControllerDependencies dependencies,
+        public EditController(
             Lazy<EntityPickerBackend> entityBackend,
             Lazy<EditLoadBackend> loadBackend,
             Lazy<EditSaveBackend> saveBackendLazy,
-            Lazy<HyperlinkBackend<int, int>> linkBackendLazy) : base()
+            Lazy<HyperlinkBackend<int, int>> linkBackendLazy)
         {
             _entityBackend = entityBackend;
             _loadBackend = loadBackend;

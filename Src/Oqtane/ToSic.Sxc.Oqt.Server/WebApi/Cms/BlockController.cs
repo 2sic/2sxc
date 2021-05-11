@@ -34,12 +34,12 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         private readonly Lazy<CmsZones> _cmsZonesLazy;
         private readonly Lazy<AppViewPickerBackend> _appViewPickerBackendLazy;
         protected override string HistoryLogName => "Api.Block";
-        public BlockController(StatefulControllerDependencies dependencies,
+        public BlockController(
             Lazy<CmsRuntime> lazyCmsRuntime,
             Lazy<ContentBlockBackend> blockBackendLazy,
             Lazy<AppViewPickerBackend> viewPickerBackendLazy,
             Lazy<CmsZones> cmsZonesLazy,
-            Lazy<AppViewPickerBackend> appViewPickerBackendLazy) : base()
+            Lazy<AppViewPickerBackend> appViewPickerBackendLazy)
         {
             _lazyCmsRuntime = lazyCmsRuntime;
             _blockBackendLazy = blockBackendLazy;

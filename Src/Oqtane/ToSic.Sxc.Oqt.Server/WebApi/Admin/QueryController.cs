@@ -35,11 +35,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         private readonly Lazy<AppConfigDelegate> _configProviderLazy;
         protected override string HistoryLogName => "Api.Query";
 
-        public QueryController(StatefulControllerDependencies dependencies,
-            Lazy<QueryApi> queryLazy,
-            Lazy<CmsManager> cmsManagerLazy,
-            Lazy<AppConfigDelegate> configProviderLazy
-            ) : base()
+        public QueryController(Lazy<QueryApi> queryLazy, Lazy<CmsManager> cmsManagerLazy, Lazy<AppConfigDelegate> configProviderLazy)
         {
             _queryLazy = queryLazy;
             _cmsManagerLazy = cmsManagerLazy;

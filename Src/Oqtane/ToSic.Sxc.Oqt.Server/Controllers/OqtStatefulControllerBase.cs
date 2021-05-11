@@ -10,7 +10,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     public abstract class OqtStatefulControllerBase : OqtControllerBase
     {
-        //protected IServiceProvider ServiceProvider;
         protected OqtState OqtState;
         protected IContextResolver CtxResolver;
 
@@ -19,12 +18,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             var wrapLog = Log.Call();
 
             base.OnActionExecuting(context);
-
-            //ServiceProvider = context.HttpContext.RequestServices;
-            var dependencies = ServiceProvider.Build<StatefulControllerDependencies>();
-
-            OqtState = dependencies.OqtState.Init(Log);
-            CtxResolver = dependencies.CtxResolver;
+            
+            OqtState = ServiceProvider.Build<OqtState>().Init(Log) ;// dependencies.OqtState.Init(Log);
+            CtxResolver = ServiceProvider.Build<IContextResolver>() ;// dependencies.CtxResolver;
             CtxResolver.AttachRealBlock(() => GetBlock());
             CtxResolver.AttachBlockContext(GetContext);
             wrapLog(null);

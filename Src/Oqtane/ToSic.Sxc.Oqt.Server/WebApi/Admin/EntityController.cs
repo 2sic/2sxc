@@ -10,7 +10,6 @@ using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.WebApi.Cms;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -40,18 +39,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         private readonly Lazy<ContentExportApi>_contentExportLazy;
         private readonly Lazy<ContentImportApi> _contentImportLazy;
         private readonly Lazy<EntityApi> _lazyEntityApi;
-        private readonly Lazy<EntityBackend> _lazyEntityBackend;
         protected override string HistoryLogName => "Api.EntCnt";
-        public EntityController(StatefulControllerDependencies dependencies,
-            Lazy<EntityApi> lazyEntityApi,
-            Lazy<EntityBackend> lazyEntityBackend,
-            Lazy<ContentExportApi> contentExportLazy,
-            Lazy<ContentImportApi> contentImportLazy) : base()
+        
+        public EntityController(Lazy<EntityApi> lazyEntityApi, Lazy<ContentExportApi> contentExportLazy, Lazy<ContentImportApi> contentImportLazy)
         {
             _contentExportLazy = contentExportLazy;
             _contentImportLazy = contentImportLazy;
             _lazyEntityApi = lazyEntityApi;
-            _lazyEntityBackend = lazyEntityBackend;
         }
 
         /// <summary>

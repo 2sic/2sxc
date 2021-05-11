@@ -22,8 +22,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         private readonly Lazy<AppViewPickerBackend> _appViewPickerBackendLazy;
         protected override string HistoryLogName => "Api.Item";
 
-        public ItemController(StatefulControllerDependencies dependencies,
-            Lazy<AppViewPickerBackend> appViewPickerBackendLazy) : base()
+        public ItemController(Lazy<AppViewPickerBackend> appViewPickerBackendLazy)
         {
             _appViewPickerBackendLazy = appViewPickerBackendLazy;
         }

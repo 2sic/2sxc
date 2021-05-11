@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         private readonly LanguagesBackend _languagesBackend;
         protected override string HistoryLogName => "Api.Zone";
 
-        public ZoneController(StatefulControllerDependencies dependencies, LanguagesBackend languagesBackend) : base()
+        public ZoneController(LanguagesBackend languagesBackend)
         {
             _languagesBackend = languagesBackend;
         }

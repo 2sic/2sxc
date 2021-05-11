@@ -41,12 +41,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
         #region Constructor / DI
 
         public AdamController(
-            StatefulControllerDependencies dependencies,
             Lazy<AdamTransUpload<int, int>> adamUpload,
             Lazy<AdamTransGetItems<int, int>> adamItems,
             Lazy<AdamTransFolder<int, int>> adamFolders,
             Lazy<AdamTransDelete<int, int>> adamDelete,
-            Lazy<AdamTransRename<int, int>> adamRename) : base()
+            Lazy<AdamTransRename<int, int>> adamRename)
         {
             _adamUpload = adamUpload;
             _adamItems = adamItems;

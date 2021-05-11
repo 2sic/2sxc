@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
 using Oqtane.Shared;
 using ToSic.Eav.Context;
-using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Block;
-using ToSic.Sxc.Oqt.Server.Run;
-using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.Run;
 
 using ToSic.Sxc.WebApi.Context;
@@ -17,20 +13,16 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     public class OqtUiContextBuilder: UiContextBuilderBase
     {
-        public OqtUiContextBuilder(ILinkPaths linkPaths, IContextOfSite ctx, SiteState siteState, Dependencies deps, OqtCulture oqtCulture, IZoneMapper OqtZoneMapper) : base(deps)
+        public OqtUiContextBuilder(ILinkPaths linkPaths, IContextOfSite ctx, SiteState siteState, Dependencies deps) : base(deps)
         {
             _linkPaths = linkPaths;
             _context = ctx;
             _siteState = siteState;
-            _oqtCulture = oqtCulture;
-            _oqtZoneMapper = OqtZoneMapper;
         }
 
         private readonly ILinkPaths _linkPaths;
         private IContextOfSite _context;
         private readonly SiteState _siteState;
-        private readonly OqtCulture _oqtCulture;
-        private readonly IZoneMapper _oqtZoneMapper;
 
 
         //protected override ContextLanguageDto GetLanguage()

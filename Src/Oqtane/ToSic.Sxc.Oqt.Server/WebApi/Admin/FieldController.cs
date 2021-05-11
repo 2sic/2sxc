@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         private readonly Lazy<AppRuntime> _appRuntime;
         private readonly Lazy<ContentTypeApi> _ctApiLazy;
         protected override string HistoryLogName => "Api.Fields";
-        public FieldController(StatefulControllerDependencies dependencies, Lazy<AppRuntime> appRuntime, Lazy<ContentTypeApi> ctApiLazy) : base()
+        public FieldController(Lazy<AppRuntime> appRuntime, Lazy<ContentTypeApi> ctApiLazy)
         {
             _appRuntime = appRuntime;
             _ctApiLazy = ctApiLazy;

@@ -29,9 +29,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         private readonly Lazy<ImportContent> _importContentLazy;
         protected override string HistoryLogName => "Api.AParts";
 
-        public AppPartsController(StatefulControllerDependencies dependencies,
-            Lazy<ExportContent> exportContentLazy,
-            Lazy<ImportContent> importContentLazy) : base()
+        public AppPartsController(Lazy<ExportContent> exportContentLazy, Lazy<ImportContent> importContentLazy)
         {
             _exportContentLazy = exportContentLazy;
             _importContentLazy = importContentLazy;

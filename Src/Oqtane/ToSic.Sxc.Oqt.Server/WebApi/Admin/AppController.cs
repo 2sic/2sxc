@@ -33,26 +33,23 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         private readonly Lazy<CmsZones> _cmsZonesLazy;
         private readonly Lazy<ExportApp> _exportAppLazy;
         private readonly Lazy<ImportApp> _importAppLazy;
-        private readonly Lazy<AppManager> _appManagerLazy;
         private readonly Lazy<AppCreator> _appBuilderLazy;
         private readonly Lazy<ResetApp> _resetAppLazy;
         protected override string HistoryLogName => "Api.App";
 
-        public AppController(StatefulControllerDependencies dependencies,
+        public AppController(
             Lazy<AppsBackend> appsBackendLazy,
             Lazy<CmsZones> cmsZonesLazy,
             Lazy<ExportApp> exportAppLazy,
             Lazy<ImportApp> importAppLazy,
-            Lazy<AppManager> appManagerLazy,
             Lazy<AppCreator> appBuilderLazy,
             Lazy<ResetApp> resetAppLazy
-            ) : base()
+            )
         {
             _appsBackendLazy = appsBackendLazy;
             _cmsZonesLazy = cmsZonesLazy;
             _exportAppLazy = exportAppLazy;
             _importAppLazy = importAppLazy;
-            _appManagerLazy = appManagerLazy;
             _appBuilderLazy = appBuilderLazy;
             _resetAppLazy = resetAppLazy;
         }

@@ -42,8 +42,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// </summary>
         protected abstract string HistoryLogName { get; }
 
-        //protected SiteState SiteState { get; private set; }
-
 
         /// <summary>
         /// Initializer - just ensure SiteState is initialized thanks to our paths
@@ -57,10 +55,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             base.OnActionExecuting(context);
 
             ServiceProvider = context.HttpContext.RequestServices;
-            //SiteState = serviceProvider.Build<SiteState>();
 
             //// background processes can pass in an alias using the SiteState service
-            //if (SiteState.Alias == null)
             ServiceProvider.Build<SiteStateInitializer>().InitIfEmpty();
             wrapLog(null);
         }

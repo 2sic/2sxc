@@ -42,10 +42,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         private readonly Lazy<ContentExportApi> _contentExportLazy;
         protected override string HistoryLogName => "Api.Types";
 
-        public TypeController(StatefulControllerDependencies dependencies,
-            Lazy<ContentTypeApi> ctApiLazy,
-            Lazy<ContentExportApi> contentExportLazy
-        ) : base()
+        public TypeController(Lazy<ContentTypeApi> ctApiLazy, Lazy<ContentExportApi> contentExportLazy)
         {
             _ctApiLazy = ctApiLazy;
             _contentExportLazy = contentExportLazy;

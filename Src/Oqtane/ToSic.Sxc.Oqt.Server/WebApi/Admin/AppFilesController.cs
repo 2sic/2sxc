@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
         private AppAssetsBackend Backend() => _appAssetsLazy.Value.Init(Log);
 
-        public AppFilesController(StatefulControllerDependencies dependencies, Lazy<AppAssetsBackend> appAssetsLazy) : base()
+        public AppFilesController(Lazy<AppAssetsBackend> appAssetsLazy)
         {
             _appAssetsLazy = appAssetsLazy;
         }

@@ -32,9 +32,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         private ViewsBackend Backend => _viewsBackendLazy.Value.Init(/*GetContext(),*/ Log);
         private ViewsExportImport ExportImport => _viewExportLazy.Value.Init(/*GetContext(),*/ Log);
 
-        public ViewController(StatefulControllerDependencies dependencies,
-            Lazy<ViewsBackend> viewsBackendLazy,
-            Lazy<ViewsExportImport> viewExportLazy) : base()
+        public ViewController(Lazy<ViewsBackend> viewsBackendLazy, Lazy<ViewsExportImport> viewExportLazy)
         {
             _viewsBackendLazy = viewsBackendLazy;
             _viewExportLazy = viewExportLazy;

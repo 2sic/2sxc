@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         private readonly Lazy<FieldListBackend> _fieldListBackendLazy;
         private FieldListBackend FieldBacked => _fieldBackend ??= _fieldListBackendLazy.Value.Init(Log);
         private FieldListBackend _fieldBackend;
-        public ListController(StatefulControllerDependencies dependencies, Lazy<FieldListBackend> fieldListBackendLazy) : base()
+        public ListController(Lazy<FieldListBackend> fieldListBackendLazy)
         {
             _fieldListBackendLazy = fieldListBackendLazy;
         }

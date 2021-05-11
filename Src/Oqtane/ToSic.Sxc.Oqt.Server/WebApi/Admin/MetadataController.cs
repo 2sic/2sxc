@@ -23,9 +23,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     {
         protected override string HistoryLogName => "Api.Metadata";
 
-        public MetadataController(StatefulControllerDependencies dependencies) : base()
-        { }
-
         [HttpGet]
         public IEnumerable<Dictionary<string, object>> Get(int appId, int targetType, string keyType, string key, string contentType)
             => Eav.WebApi.MetadataApi.Get(ServiceProvider, appId, targetType, keyType, key, contentType);
