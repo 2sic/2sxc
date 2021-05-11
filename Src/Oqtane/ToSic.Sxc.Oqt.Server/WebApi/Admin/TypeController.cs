@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     //[SupportedModules("2sxc,2sxc-app")]
     //[DnnLogExceptions]
     [Authorize(Roles = RoleNames.Admin)]
-    //[AutoValidateAntiforgeryToken]
+    [AutoValidateAntiforgeryToken]
 
     // Release routes
     [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]
