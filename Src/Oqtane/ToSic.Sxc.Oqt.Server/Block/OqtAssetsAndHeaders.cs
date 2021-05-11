@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Antiforgery;
-using Microsoft.AspNetCore.Http;
+//using Microsoft.AspNetCore.Antiforgery;
+//using Microsoft.AspNetCore.Http;
 using Oqtane.Shared;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
@@ -19,14 +19,14 @@ namespace ToSic.Sxc.Oqt.Server.Block
     {
         #region Constructor and DI
 
-        public OqtAssetsAndHeaders(IAntiforgery antiForgery, IHttpContextAccessor httpContextAccessor, SiteState siteState) : base($"{OqtConstants.OqtLogPrefix}.AssHdr")
+        public OqtAssetsAndHeaders(/*IAntiforgery antiForgery, IHttpContextAccessor httpContextAccessor,*/ SiteState siteState) : base($"{OqtConstants.OqtLogPrefix}.AssHdr")
         {
-            _antiForgery = antiForgery;
-            _httpContextAccessor = httpContextAccessor;
+            //_antiForgery = antiForgery;
+            //_httpContextAccessor = httpContextAccessor;
             _siteState = siteState;
         }
-        private readonly IAntiforgery _antiForgery;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        //private readonly IAntiforgery _antiForgery;
+        //private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly SiteState _siteState;
 
 
@@ -86,8 +86,9 @@ namespace ToSic.Sxc.Oqt.Server.Block
 
         public string ContextMetaName => InpageCms.MetaName;
 
-        private string AntiForgeryToken()
-            => _antiForgery.GetAndStoreTokens(_httpContextAccessor.HttpContext).RequestToken;
+        private string AntiForgeryToken() => ""; // 2021-05-11 the Token given by IAntiforgery is always wrong, so better keep it empty
+                                                 // Reason is probably that at this moment the render-request is running in another HttpContext
+                                                 // => _antiForgery.GetAndStoreTokens(_httpContextAccessor.HttpContext).RequestToken;
 
         [PrivateApi]
         public static string GetSiteRoot(SiteState siteState)
