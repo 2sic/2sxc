@@ -48,12 +48,12 @@ namespace ToSic.Sxc.Oqt.Server
 
             // TODO: STV - MAKE SURE OUR CONTROLLERS RULES ONLY APPLY TO OURS, NOT TO override rules on normal Oqtane controllers
             // enable webapi - include all controllers in the Sxc.Mvc assembly
-            services
-                .AddControllers(options =>
-                {
-                    options.AllowEmptyInputInBodyModelBinding = true;
-                    // options.Filters.Add(new HttpResponseExceptionFilter()); // Added with attribute
-                });
+            //services
+            //    .AddControllers(options =>
+            //    {
+            //        // options.AllowEmptyInputInBodyModelBinding = true; // Added with attribute
+            //        // options.Filters.Add(new HttpResponseExceptionFilter()); // Added with attribute
+            //    });
                 // This is needed to preserve compatibility with previous api usage
                 //.AddNewtonsoftJson(options =>
                 //{

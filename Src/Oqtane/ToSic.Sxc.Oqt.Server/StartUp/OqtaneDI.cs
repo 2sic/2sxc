@@ -116,6 +116,9 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             // action filter for exceptions
             services.AddTransient<HttpResponseExceptionFilter>();
 
+            // action filter instead of global option AllowEmptyInputInBodyModelBinding = true
+            services.AddTransient<OptionalBodyFilter>();
+
             // new in v12 - .net specific code compiler
             services.TryAddTransient<CodeCompiler, CodeCompilerNetCore>();
 

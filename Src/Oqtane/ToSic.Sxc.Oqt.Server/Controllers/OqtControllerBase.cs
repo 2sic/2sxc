@@ -16,6 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     /// to provide dependencies (without DI in constructor).
     /// </summary>
     [NewtonsoftJsonFormatter] // This is needed to preserve compatibility with previous api usage
+    [ServiceFilter(typeof(OptionalBodyFilter))] // Instead of global options.AllowEmptyInputInBodyModelBinding = true;
     [ServiceFilter(typeof(HttpResponseExceptionFilter))]
     public abstract class OqtControllerBase : Controller, IHasLog
     {
