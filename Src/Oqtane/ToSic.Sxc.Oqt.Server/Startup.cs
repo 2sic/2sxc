@@ -15,7 +15,6 @@ using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Server.StartUp;
-using ToSic.Sxc.Oqt.Shared.Dev;
 using ToSic.Sxc.Razor;
 using ToSic.Sxc.WebApi;
 using Factory = ToSic.Eav.Factory;
@@ -30,14 +29,15 @@ namespace ToSic.Sxc.Oqt.Server
 
         public Startup()
         {
+            // TODO: SPM - pls check if this is still relevant, I assume not
             var builder = new ConfigurationBuilder()
                 //.SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile("appsettings.local.json", optional: true, reloadOnChange: true);
             Configuration = builder.Build();
 
-            var devMode = Configuration["DevMode"];
-            if (devMode == "SPM") TestIds.Dev4Spm = true;
+            //var devMode = Configuration["DevMode"];
+            //if (devMode == "SPM") TestIds.Dev4Spm = true;
 
         }
 
