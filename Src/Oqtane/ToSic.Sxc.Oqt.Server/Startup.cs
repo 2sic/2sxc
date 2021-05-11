@@ -29,16 +29,10 @@ namespace ToSic.Sxc.Oqt.Server
 
         public Startup()
         {
-            // TODO: SPM - pls check if this is still relevant, I assume not
+            // Configuration is used to provide Master tenant sql connection string to 2sxc eav.
             var builder = new ConfigurationBuilder()
-                //.SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile("appsettings.local.json", optional: true, reloadOnChange: true);
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
             Configuration = builder.Build();
-
-            //var devMode = Configuration["DevMode"];
-            //if (devMode == "SPM") TestIds.Dev4Spm = true;
-
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -48,23 +42,20 @@ namespace ToSic.Sxc.Oqt.Server
 
             // TODO: STV - MAKE SURE OUR CONTROLLERS RULES ONLY APPLY TO OURS, NOT TO override rules on normal Oqtane controllers
             // enable webapi - include all controllers in the Sxc.Mvc assembly
-            services
-                .AddControllers(options =>
-                {
-                    options.AllowEmptyInputInBodyModelBinding = true;
-                    options.Filters.Add(new HttpResponseExceptionFilter());
-                })
+            //services
+            //    .AddControllers(options =>
+            //    {
+            //        // options.AllowEmptyInputInBodyModelBinding = true; // Added with attribute
+            //        // options.Filters.Add(new HttpResponseExceptionFilter()); // Added with attribute
+            //    });
                 // This is needed to preserve compatibility with previous api usage
-                .AddNewtonsoftJson(options =>
-                {
-                    // this ensures that c# objects with Pascal-case keep that
-                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                    Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings);
-                });
+                //.AddNewtonsoftJson(options =>
+                //{
+                //    // this ensures that c# objects with Pascal-case keep that
+                //    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                //    Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings);
+                //});
 
-            // enable use of UrlHelper for AbsolutePath
-            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-            services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
 
             Factory.UseExistingServices(services);
             Factory.ActivateNetCoreDi(services2 =>
@@ -75,24 +66,19 @@ namespace ToSic.Sxc.Oqt.Server
                     .AddAdamWebApi<int, int>()
                     .AddSxcWebApi()
                     .AddSxcCore()
-                    .AddEav();
+                    .AddEav()
+                    .AddAppApi(); // 2sxc Oqtane dyncode app api.
             });
 
             var sp = services.BuildServiceProvider();
 
-            var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            // Special case to use DNN database connection string (appsettings.local.json).
-            //var connectionString = Configuration.GetConnectionString("SiteSqlServer");
-            sp.Build<IDbConfiguration>().ConnectionString = connectionString;
+            sp.Build<IDbConfiguration>().ConnectionString = Configuration.GetConnectionString("DefaultConnection");
 
             var hostingEnvironment = sp.Build<IHostEnvironment>();
             sp.Build<IGlobalConfiguration>().GlobalFolder = Path.Combine(hostingEnvironment.ContentRootPath, "wwwroot\\Modules\\ToSic.Sxc");
 
             // 2sxc Oqtane blob services for Imageflow.
             services.AddImageflowOqtaneBlobService();
-
-            // 2sxc Oqtane dyncode app api.
-            services.AddAppApi();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -15,6 +15,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     /// It is because our custom dynamic 2sxc app api controllers (without constructor), depends on event OnActionExecuting
     /// to provide dependencies (without DI in constructor).
     /// </summary>
+    [NewtonsoftJsonFormatter] // This is needed to preserve compatibility with previous api usage
+    [ServiceFilter(typeof(OptionalBodyFilter))] // Instead of global options.AllowEmptyInputInBodyModelBinding = true;
+    [ServiceFilter(typeof(HttpResponseExceptionFilter))]
     public abstract class OqtControllerBase : Controller, IHasLog
     {
         protected OqtControllerBase()

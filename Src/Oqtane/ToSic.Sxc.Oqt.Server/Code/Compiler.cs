@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Caching;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -26,20 +27,29 @@ namespace ToSic.Sxc.Oqt.Server.Code
         {
 
         }
+
+
+
         public Assembly Compile(string filePath, string dllName)
         {
             Log.Add($"Starting compilation of: '{filePath}'");
 
             var sourceCode = File.ReadAllText(filePath);
 
-            return CompileSourceCode(filePath, sourceCode, dllName);
+            var cache = MemoryCache.Default;
+            var assembly = cache[filePath.ToLowerInvariant()] as Assembly;
+            if (assembly != null) return assembly;
+            assembly = CompileSourceCode(filePath, sourceCode, dllName);
+            if (assembly != null)
+                cache.Set(filePath.ToLowerInvariant(), assembly, GetCacheItemPolicy(filePath));
+            return assembly;
         }
 
         // Ensure that can't be kept alive by stack slot references (real- or JIT-introduced locals).
         // That could keep the SimpleUnloadableAssemblyLoadContext alive and prevent the unload.
         [MethodImpl(MethodImplOptions.NoInlining)]
 
-        public Assembly CompileSourceCode(string path, string sourceCode, string dllName)
+        private Assembly CompileSourceCode(string path, string sourceCode, string dllName)
         {
             var wrapLog = Log.Call($"Source code compilation: {dllName}.");
             var encoding = Encoding.UTF8;
@@ -93,7 +103,7 @@ namespace ToSic.Sxc.Oqt.Server.Code
             }
         }
 
-        public static CSharpCompilation GenerateCode(string path, SourceText sourceCode, string dllName)
+        private static CSharpCompilation GenerateCode(string path, SourceText sourceCode, string dllName)
         {
             var options = CSharpParseOptions.Default
                 .WithLanguageVersion(LanguageVersion.CSharp9)
@@ -137,6 +147,21 @@ namespace ToSic.Sxc.Oqt.Server.Code
             //foreach (string dllFile in missingRefsRefs)
             //    references.Add(MetadataReference.CreateFromFile(dllFile));
             // references.Add(MetadataReference.CreateFromFile(Path.Combine(dllPath, "refs", "Microsoft.AspNetCore.Html.Abstractions.dll")));
+        }
+
+        private CacheItemPolicy GetCacheItemPolicy(string filePath)
+        {
+            var filePaths = new List<string> { filePath };
+
+            // expire cache item if not used in 30 min
+            var cacheItemPolicy = new CacheItemPolicy
+            {
+                SlidingExpiration = TimeSpan.FromMinutes(30)
+            };
+            // expire cache item on CS file change
+            cacheItemPolicy.ChangeMonitors.Add(new
+                HostFileChangeMonitor(filePaths));
+            return cacheItemPolicy;
         }
     }
 }
