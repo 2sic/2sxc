@@ -52,19 +52,16 @@ namespace ToSic.Sxc.Oqt.Server
                 .AddControllers(options =>
                 {
                     options.AllowEmptyInputInBodyModelBinding = true;
-                   // options.Filters.Add(new HttpResponseExceptionFilter()); // Added with attribute
-                })
-                // This is needed to preserve compatibility with previous api usage
-                .AddNewtonsoftJson(options =>
-                {
-                    // this ensures that c# objects with Pascal-case keep that
-                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                    Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings);
+                    // options.Filters.Add(new HttpResponseExceptionFilter()); // Added with attribute
                 });
+                // This is needed to preserve compatibility with previous api usage
+                //.AddNewtonsoftJson(options =>
+                //{
+                //    // this ensures that c# objects with Pascal-case keep that
+                //    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                //    Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings);
+                //});
 
-            // enable use of UrlHelper for AbsolutePath
-            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-            services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
 
             Factory.UseExistingServices(services);
             Factory.ActivateNetCoreDi(services2 =>

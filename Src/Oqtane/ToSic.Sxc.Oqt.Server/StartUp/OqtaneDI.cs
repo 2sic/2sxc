@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.Security;
@@ -107,6 +109,12 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddTransient<Sxc.Polymorphism.Koi>();
             services.TryAddTransient<Polymorphism.Permissions>();
 
+            // enable use of UrlHelper for AbsolutePath
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
+
+            // action filter for exceptions
+            services.AddTransient<HttpResponseExceptionFilter>();
 
             // new in v12 - .net specific code compiler
             services.TryAddTransient<CodeCompiler, CodeCompilerNetCore>();
