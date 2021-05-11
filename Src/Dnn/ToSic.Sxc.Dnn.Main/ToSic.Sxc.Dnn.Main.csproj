@@ -272,6 +272,13 @@
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MSBuildTasks">
+      <Version>1.5.0.235</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -348,26 +355,35 @@ xcopy "$(ProjectDir)WebConfigTemplate.config" "%25BuildTarget%25\" /y
   </PropertyGroup>
   <!-- Run the DNN Package Builder after every build -->
   <Import Project="BuildScripts\ModulePackage.Targets" />
-  <Import Project="..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets" Condition="Exists('..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" />
+  <!--<Import Project="..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets" Condition="Exists('..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets'))" />
-  </Target>
+  </Target>-->
   <Target Name="TestMessages" BeforeTargets="PrepareForBuild">
-    <Message Text="Debug Messages created by 2dm" Importance="High" ></Message>
-    <Message Text="Configuration=$(Configuration)" Importance="High" ></Message>
-    <Message Text="Platform=$(Platform)" Importance="High" ></Message>
-    <Message Text="Configuration|Platform='$(Configuration)|$(Platform)'" Importance="High" ></Message>
-    <Message Text="OutputPath=$(OutputPath)" Importance="High"></Message>
+    <Message Text="Debug Messages created by 2dm" Importance="High">
+    </Message>
+    <Message Text="Configuration=$(Configuration)" Importance="High">
+    </Message>
+    <Message Text="Platform=$(Platform)" Importance="High">
+    </Message>
+    <Message Text="Configuration|Platform='$(Configuration)|$(Platform)'" Importance="High">
+    </Message>
+    <Message Text="OutputPath=$(OutputPath)" Importance="High">
+    </Message>
   </Target>
   <Target Name="TestMessages2" BeforeTargets="Build">
-    <Message Text="Debug Messages created by 2dm" Importance="High" ></Message>
-    <Message Text="Configuration=$(Configuration)" Importance="High" ></Message>
-    <Message Text="Platform=$(Platform)" Importance="High" ></Message>
-    <Message Text="Configuration|Platform='$(Configuration)|$(Platform)'" Importance="High" ></Message>
-    <Message Text="OutputPath=$(OutputPath)" Importance="High"></Message>
+    <Message Text="Debug Messages created by 2dm" Importance="High">
+    </Message>
+    <Message Text="Configuration=$(Configuration)" Importance="High">
+    </Message>
+    <Message Text="Platform=$(Platform)" Importance="High">
+    </Message>
+    <Message Text="Configuration|Platform='$(Configuration)|$(Platform)'" Importance="High">
+    </Message>
+    <Message Text="OutputPath=$(OutputPath)" Importance="High">
+    </Message>
   </Target>
-
 </Project>
