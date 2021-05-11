@@ -23,4 +23,8 @@
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Run\" />
+  </ItemGroup>
+
 </Project>
