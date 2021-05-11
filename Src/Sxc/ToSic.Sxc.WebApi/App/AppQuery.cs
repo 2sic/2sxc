@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
-using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
@@ -37,10 +36,13 @@ namespace ToSic.Sxc.WebApi.App
 
             var appCtx = appId != null ? _ctxResolver.BlockOrApp(appId.Value) : _ctxResolver.BlockRequired();
 
+            // If the appId wasn't specified or == to the Block-AppId, then also include block info to enable more data-sources like CmsBlock
+            var maybeBlock = appId == null || appId == appCtx.AppState.AppId ? _ctxResolver.RealBlockOrNull() : null;
+
             // If no app available from context, check if an app-id was supplied in url
             // Note that it may only be an app from the current portal
             // and security checks will run internally
-            var app = ServiceProvider.Build<Apps.App>().Init(ServiceProvider, appCtx.AppState.AppId, Log, appCtx.UserMayEdit);
+            var app = ServiceProvider.Build<Apps.App>().Init(ServiceProvider, appCtx.AppState.AppId, Log, maybeBlock, appCtx.UserMayEdit);
 
             var result = BuildQueryAndRun(app, name, stream, includeGuid, appCtx,  appCtx.UserMayEdit, more);
             wrapLog(null);
