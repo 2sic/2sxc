@@ -56,8 +56,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         {
             // todo: the first two lines should be in the QueryApi backend, but ATM that's still in EAV and is missing some objects
             var block = SharedContextResolver.RealBlockRequired();
-            var config = GetService<AppConfigDelegate>().Init(Log).GetConfigProviderForModule(block.Context, block.App, block);
-            return GetService<QueryApi>().Init(appId, Log).Run(appId, id, top, config);
+            var blockLookUps = GetService<AppConfigDelegate>().Init(Log).GetConfigProviderForModule(block.Context, block.App, block);
+            return GetService<QueryApi>().Init(appId, Log).Run(appId, id, top, blockLookUps);
         }
         
         // Experimental
