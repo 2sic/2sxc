@@ -26,11 +26,14 @@ using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.Dnn.WebApi.Admin;
 using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.WebApi.ApiExplorer;
 using ToSic.Sxc.WebApi.Context;
+using ToSic.Sxc.WebApi.Plumbing;
 
 
 namespace ToSic.SexyContent
@@ -72,8 +75,10 @@ namespace ToSic.SexyContent
             services.TryAddTransient<IAdamFileSystem<int, int>, DnnAdamFileSystem>();
             services.TryAddTransient<AdamManager, AdamManager<int, int>>();
 
-            // Settings
+            // Settings / WebApi stuff
             services.TryAddTransient<IUiContextBuilder, DnnUiContextBuilder>();
+            services.TryAddTransient<IApiInspector, DnnApiInspector>();
+            services.TryAddScoped<ResponseMaker, DnnResponseMaker>(); // must be scoped, as the api-controller must init this for use in other parts
 
             // new #2160
             services.TryAddTransient<AdamSecurityChecksBase, DnnAdamSecurityChecks>();

@@ -120,11 +120,13 @@
     <Compile Include="Custom\Hybrid\Api12_DynamicWebApi.cs" />
     <Compile Include="Custom\Hybrid\Api12_Obsolete.cs" />
     <Compile Include="Custom\Hybrid\Api12_Responses.cs" />
+    <Compile Include="Dnn\DnnResponseMaker.cs" />
     <Compile Include="Dnn\Providers\ModifiedTabAndModuleInfoProvider.cs" />
     <Compile Include="Dnn\WebApi\Adam\DnnAdamSecurityChecks.cs" />
     <Compile Include="Dnn\ApiController.cs" />
     <Compile Include="Dnn\AppFolderUtilities.cs" />
     <Compile Include="Dnn\WebApi\Admin\AppPartsController.cs" />
+    <Compile Include="Dnn\WebApi\Admin\DnnApiInspector.cs" />
     <Compile Include="Dnn\WebApi\Admin\FieldController.cs" />
     <Compile Include="Dnn\WebApi\Admin\FeatureController.cs" />
     <Compile Include="Dnn\WebApi\Admin\ApiExplorerController.cs" />
