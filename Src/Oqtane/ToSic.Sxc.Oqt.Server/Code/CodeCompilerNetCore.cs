@@ -22,6 +22,7 @@ namespace ToSic.Sxc.Oqt.Server.Code
         protected override Assembly GetAssembly(string virtualPath, string className)
         {
             var fullPath = ServiceProvider.Build<IServerPaths>().FullContentPath(virtualPath.Backslash());
+            fullPath = NormalizeFullFilePath(fullPath);
             try
             {
                 return new Compiler().Compile(fullPath, className);
@@ -35,6 +36,14 @@ namespace ToSic.Sxc.Oqt.Server.Code
             }
 
             return null;
+        }
+
+        /**
+         * Normalize full file path, so it is without redirections like "../" in "dir1/dir2/../file.cs"
+         */
+        protected string NormalizeFullFilePath(string fullPath)
+        {
+            return new FileInfo(fullPath).FullName;
         }
     }
 }
