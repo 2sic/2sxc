@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 alias = siteStateInitializer.InitializedState.Alias // siteStateInitializer.SiteState.Alias 
                         ?? throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, $"Error: missing required 'alias' route value.", "Not Found");
             }
-            var aliasPart = string.Format(OqtConstants.AppRootPublicBase, alias.SiteId);
+            var aliasPart = OqtServerPaths.GetAppRootWithSiteId(alias.SiteId);
             #endregion
 
             // Ensure required route values: alias, appFolder, controller, action.
@@ -111,7 +111,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             Log.Add($"Absolute Path: {apiFile}");
             values.Add("apiFile", apiFile);
 
-            var dllName = $"DynCode_{controllerFolder.Replace(@"\", "_")}_{System.IO.Path.GetFileNameWithoutExtension(apiFile)}";
+            var dllName = GetDllName(controllerFolder, apiFile);
             Log.Add($"Dll Name: {dllName}");
             values.Add("dllName", dllName);
 
@@ -121,6 +121,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             httpContext.Request?.HttpContext.Items.Add(HttpContextKeyForAppFolder, appFolder);
             
             return wrapLog($"ok, TransformAsync route required values are prepared", values);
+        }
+
+        public static string GetDllName(string controllerFolder, string apiFile)
+        {
+            return
+                $"DynCode_{controllerFolder.Replace(@"\", "_")}_{System.IO.Path.GetFileNameWithoutExtension(apiFile)}";
         }
 
         private static string GetEdition(RouteValueDictionary values)

@@ -21,9 +21,12 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.WebApi;
+using ToSic.Sxc.Oqt.Server.WebApi.Admin;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.WebApi.ApiExplorer;
 using ToSic.Sxc.WebApi.Context;
+using ToSic.Sxc.WebApi.Plumbing;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp
 {
@@ -121,6 +124,10 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
             // new in v12 - .net specific code compiler
             services.TryAddTransient<CodeCompiler, CodeCompilerNetCore>();
+
+            // APiExplorer
+            services.TryAddTransient<IApiInspector, OqtApiInspector>();
+            services.TryAddScoped<ResponseMaker, OqtResponseMaker>();
 
             // new in v12 - integrate KOI - experimental!
             try

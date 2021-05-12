@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Oqt.Server.Code
         /**
          * Normalize full file path, so it is without redirections like "../" in "dir1/dir2/../file.cs"
          */
-        protected string NormalizeFullFilePath(string fullPath)
+        public static string NormalizeFullFilePath(string fullPath)
         {
             return new FileInfo(fullPath).FullName;
         }
