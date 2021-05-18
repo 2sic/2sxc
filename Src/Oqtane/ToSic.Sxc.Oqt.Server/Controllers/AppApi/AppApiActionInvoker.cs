@@ -4,16 +4,13 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Oqtane.Security;
 using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.WebApi.Errors;
-using ToSic.Sxc.Oqt.Server.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {
@@ -67,10 +64,11 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             Log.Add($"actionDescriptor SelectBestCandidate");
             var actionDescriptor = actionSelector.SelectBestCandidate(routeContext, candidates);
 
-            // Check security attributes.
-            CheckSecurityAttributes(context, actionDescriptor);
-
             var actionContext = new ActionContext(context, routeData, actionDescriptor);
+
+            // Check security.
+            await AppApiSecurity.AuthorizeAsync(actionContext);
+            //AppApiSecurity.AuthorizeAsync2(actionContext);
 
             // Map query string values as endpoint parameters.
             MapQueryStringValuesAsEndpointParameters(actionContext, actionDescriptor, routeData);
@@ -83,30 +81,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             await actionInvoker.InvokeAsync();
         }
 
-        private void CheckSecurityAttributes(HttpContext context, ActionDescriptor actionDescriptor)
-        {
-            Log.Add($"checking security");
 
-            var user = context.RequestServices.GetRequiredService<IUser>();
-            Log.Add($"userId: {user.Id}");
 
-            var authorized = true;
-
-            foreach (var authorize in actionDescriptor.EndpointMetadata
-                .Where(a => a.GetType() == typeof(Microsoft.AspNetCore.Authorization.AuthorizeAttribute))
-                .Select(a => ((Microsoft.AspNetCore.Authorization.AuthorizeAttribute) a))
-            )
-            {
-                // check security for roles
-                if (!string.IsNullOrEmpty(authorize.Roles))
-                {
-                    var isAuthorized = UserSecurity.IsAuthorized(((OqtUser) user).UnwrappedContents, authorize.Roles);
-                    Log.Add($"check security for roles: {authorize}, is {isAuthorized}");
-                    authorized &= isAuthorized;
-                    if (authorized == false) throw new HttpExceptionAbstraction(HttpStatusCode.Forbidden, "Forbidden", "Forbidden");
-                }
-            }
-        }
 
         private static void MapQueryStringValuesAsEndpointParameters(ActionContext actionContext, ActionDescriptor actionDescriptor, RouteData routeData)
         {
