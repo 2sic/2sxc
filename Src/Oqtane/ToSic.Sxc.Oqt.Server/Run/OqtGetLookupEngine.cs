@@ -3,11 +3,14 @@ using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Web.Parameters;
 
 
 namespace ToSic.Sxc.Oqt.Server.Run
@@ -69,7 +72,27 @@ namespace ToSic.Sxc.Oqt.Server.Run
         {
             _source ??= _httpContextAccessor?.HttpContext?.Request.Query;
             if (_source == null) return string.Empty;
+
+            // Special handling when having original parameters in query string.
+            var overrideParam = GetOverrideParam(key);
+            if (!string.IsNullOrEmpty(overrideParam)) return overrideParam;
+
             return _source.TryGetValue(key, out var result) ? result.ToString() : string.Empty;
+        }
+
+        private string GetOverrideParam(string key)
+        {
+            if (!_source.TryGetValue(OriginalParameters.NameInUrlForOriginalParameters, out var queryStringValue))
+                return string.Empty;
+
+            var originalParams = new List<KeyValuePair<string, string>> 
+                { new(OriginalParameters.NameInUrlForOriginalParameters, queryStringValue.ToString()) };
+
+            var overrideParams = OriginalParameters.GetOverrideParams(originalParams)
+                .Where(l => l.Key == key.ToLowerInvariant())
+                .ToList();
+
+            return overrideParams.Any() ? overrideParams.First().Value : string.Empty;
         }
     }
 
