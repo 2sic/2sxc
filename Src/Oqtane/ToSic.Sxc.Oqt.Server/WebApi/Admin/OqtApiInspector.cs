@@ -61,9 +61,10 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
                 superUser = oqtAuthList.Any(a => a.Roles == RoleNames.Host),
                 admin = oqtAuthList.Any(a => a.Roles == RoleNames.Admin),
-                //edit = oqtAuthList.Any(a => a.Roles == SecurityAccessLevel.Edit),
-                //view = oqtAuthList.Any(a => a.Roles == SecurityAccessLevel.View),
-                // if it has any authorize attributes or supported-modules it needs the context
+                edit = oqtAuthList.Any(a => a.Policy == PolicyNames.EditModule),
+                view = oqtAuthList.Any(a => a.Policy == PolicyNames.ViewModule),
+                
+                // Supported-modules attribute do not exist in Oqtane
                 requireContext = oqtAuthList.Any() /*|| member.GetCustomAttribute<SupportedModulesAttribute>() != null*/,
             };
         }
