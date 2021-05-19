@@ -83,7 +83,7 @@ namespace Custom.Hybrid
         #region Content, Presentation & List
 
         /// <inheritdoc />
-        public dynamic Content => _DynCodeRoot?.Content;
+        public new dynamic Content => _DynCodeRoot?.Content;
 
         /// <inheritdoc />
         public dynamic Header => _DynCodeRoot?.Header;

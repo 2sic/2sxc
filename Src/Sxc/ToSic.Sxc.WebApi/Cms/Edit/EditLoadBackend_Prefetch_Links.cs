@@ -86,7 +86,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         private class BundleWithLinkField
         {
-            public int AppId;
+            //public int AppId;
             public Guid Guid;
             public Dictionary<string, Dictionary<string, string>> HyperlinkFields;
             public Dictionary<string, Dictionary<string, string>> StringFields;

@@ -1,13 +1,7 @@
-﻿using System.IO;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Context;
-using ToSic.Eav.Helpers;
-#if NET451
+﻿#if NET451
 using System.Web;
-using System.Web.Hosting;
 #else
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
 #endif
 
 namespace ToSic.Sxc.Run

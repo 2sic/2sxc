@@ -135,7 +135,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
                 return result + (result == originalValue ? "" : parts.Params);
             }
-            catch (Exception e)
+            catch /*(Exception e)*/
             {
                 // 2021-04-26 2dm: We can't log errors here
                 // - on one hand we would flood the logs
