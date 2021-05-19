@@ -67,8 +67,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             var actionContext = new ActionContext(context, routeData, actionDescriptor);
 
             // Check security.
-            await AppApiSecurity.AuthorizeAsync(actionContext);
-            //AppApiSecurity.AuthorizeAsync2(actionContext);
+            await AppApiSecurity.Invoke(actionContext);
 
             // Map query string values as endpoint parameters.
             MapQueryStringValuesAsEndpointParameters(actionContext, actionDescriptor, routeData);
@@ -80,9 +79,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             Log.Add($"invoke app api action");
             await actionInvoker.InvokeAsync();
         }
-
-
-
 
         private static void MapQueryStringValuesAsEndpointParameters(ActionContext actionContext, ActionDescriptor actionDescriptor, RouteData routeData)
         {
