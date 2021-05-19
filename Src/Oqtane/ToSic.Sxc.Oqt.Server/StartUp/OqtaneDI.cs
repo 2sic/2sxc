@@ -46,6 +46,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddTransient<IModule, OqtModule>();
             services.TryAddTransient<OqtModule>();
             services.TryAddScoped<OqtState>();
+            services.TryAddScoped<RequestHelper>();
             //services.TryAddTransient<OqtTempInstanceContext>();
 
             services.TryAddTransient<IZoneCultureResolver, OqtSite>();

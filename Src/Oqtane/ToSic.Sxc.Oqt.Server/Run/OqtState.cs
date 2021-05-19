@@ -52,17 +52,20 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private IBlock _block;
         private bool _triedToGetBlock;
 
+        private RequestHelper RequestHelper => _requestHelper ??= ServiceProvider.Build<RequestHelper>();
+        private RequestHelper _requestHelper;
+
         private IBlock InitializeBlock(bool allowNoContextFound)
         {
             var wrapLog = Log.Call<IBlock>($"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
 
-            var moduleId = GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderInstanceId, -1);
-            var pageId = GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderPageId, -1);
+            var moduleId = RequestHelper.GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderInstanceId, -1);
+            var pageId = RequestHelper.GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderPageId, -1);
 
             if (moduleId == -1 || pageId == -1)
             {
-                moduleId = GetQueryString(WebApiConstants.ModuleId, GetRouteValuesString(WebApiConstants.ModuleId, -1));
-                pageId = GetQueryString(WebApiConstants.PageId,GetRouteValuesString(WebApiConstants.PageId, -1));
+                moduleId = RequestHelper.GetQueryString(WebApiConstants.ModuleId, RequestHelper.GetRouteValuesString(WebApiConstants.ModuleId, -1));
+                pageId = RequestHelper.GetQueryString(WebApiConstants.PageId,RequestHelper.GetRouteValuesString(WebApiConstants.PageId, -1));
 
                 if (moduleId == -1 || pageId == -1)
                 {
@@ -78,7 +81,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var block = GetBlockOfModule(pageId, module);
 
             // only if it's negative, do we load the inner block
-            var contentBlockId = GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
+            var contentBlockId = RequestHelper.GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
             if (contentBlockId >= 0) return wrapLog("found block", block);
 
             Log.Add($"Inner Content: {contentBlockId}");
