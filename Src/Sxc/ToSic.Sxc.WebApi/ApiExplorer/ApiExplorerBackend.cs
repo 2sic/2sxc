@@ -117,6 +117,12 @@ namespace ToSic.Sxc.WebApi.ApiExplorer
             var admin = contSec.admin || methSec.admin;
             var superUser = contSec.superUser || methSec.superUser;
             var requireContext = contSec.requireContext || methSec.requireContext;
+            // AntiForgeryToken attributes on method prevails over attributes on class (last attribute wins)
+            var requireVerificationToken =
+                (methSec._validateAntiForgeryToken || methSec._autoValidateAntiforgeryToken ||
+                 methSec._ignoreAntiforgeryToken)
+                    ? methSec.requireVerificationToken
+                    : contSec.requireVerificationToken;
 
             var result = new ApiSecurityDto
             {
@@ -127,8 +133,7 @@ namespace ToSic.Sxc.WebApi.ApiExplorer
                 admin = ignoreSecurity || (allowAnonymous || view || edit || admin) && !superUser,
                 superUser = ignoreSecurity || allowAnonymous || view || edit || admin || superUser,
                 requireContext = !ignoreSecurity && requireContext,
-                requireVerificationToken = !ignoreSecurity &&
-                                           (contSec.requireVerificationToken || methSec.requireVerificationToken),
+                requireVerificationToken = !ignoreSecurity && requireVerificationToken,
             };
             return wrapLog(null, result);
         }
