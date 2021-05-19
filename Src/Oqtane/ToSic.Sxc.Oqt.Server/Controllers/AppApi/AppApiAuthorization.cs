@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {
@@ -14,8 +16,24 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
      * For reference, original AuthorizationMiddleware class is commented on the bottom of this file.
      * Our version is made because endpoint metadata is provided from our custom ActionContext.
      */
-    internal class AppApiSecurity
+    public class AppApiAuthorization: IHasLog
     {
+        public AppApiAuthorization()
+        {
+            Log = new Log(HistoryLogName, null, "AppApiAuthorization");
+            History.Add(HistoryLogGroup, Log);
+        }
+
+        public AppApiAuthorization Init(RequestDelegate next)
+        {
+            _next = next;
+            return this;
+        }
+
+        public ILog Log { get; }
+        protected string HistoryLogGroup { get; } = "app-api";
+        protected static string HistoryLogName => "Authorization";
+
         private const string SuppressUseHttpContextAsAuthorizationResource = "Microsoft.AspNetCore.Authorization.SuppressUseHttpContextAsAuthorizationResource";
 
         // Property key is used by Endpoint routing to determine if Authorization has run
@@ -23,13 +41,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
         private static readonly object AuthorizationMiddlewareWithEndpointInvokedValue = new object();
 
-        // ReSharper disable once InconsistentNaming
-        private static readonly RequestDelegate _next = (HttpContext _) => Task.CompletedTask;
+        private RequestDelegate _next = (HttpContext _) => Task.CompletedTask;
 
         /**
          * Invoke is adjusted to work with ActionContext instead of HttpContext in AuthorizationMiddleware.
          */
-        internal static async Task Invoke(ActionContext actionContext)
+        public async Task Invoke(ActionContext actionContext)
         {
             if (actionContext == null)
             {
@@ -59,7 +76,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             var authorizeData = actionContext.ActionDescriptor.EndpointMetadata.OfType<IAuthorizeData>() ?? Array.Empty<IAuthorizeData>();
             var policy = await AuthorizationPolicy.CombineAsync(policyProvider, authorizeData);
             if (policy == null)
+            {
+                await _next(context);
                 return;
+            }
 
             // Policy evaluator has transient lifetime so it fetched from request services instead of injecting in constructor
             var policyEvaluator = context.RequestServices.GetRequiredService<IPolicyEvaluator>();

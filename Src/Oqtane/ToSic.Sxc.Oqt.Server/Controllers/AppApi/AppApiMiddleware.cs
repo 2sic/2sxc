@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using ToSic.Eav.WebApi.Errors;
 
@@ -25,9 +24,20 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 if (!await appApiControllerManager.PrepareController(values))
                     throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, "Error, can't compile controller.", "Not Found");
 
-                // Invoke controller action.
-                var appApiActionInvoker = context.RequestServices.GetService<AppApiActionInvoker>();
-                await appApiActionInvoker.Invoke(context, values);
+                // Provide ActionContext.
+                var appApiActionContext = context.RequestServices.GetService<AppApiActionContext>();
+                var actionContext = appApiActionContext.Provide(context, values);
+
+                async Task InvokeActionAfterAuthorization(HttpContext context)
+                {
+                    // Invoke controller action.
+                    var appApiActionInvoker = context.RequestServices.GetService<AppApiActionInvoker>();
+                    await appApiActionInvoker.Invoke(actionContext);
+                }
+
+                // Check security.
+                var appApiAuthorization = context.RequestServices.GetService<AppApiAuthorization>().Init(InvokeActionAfterAuthorization);
+                await appApiAuthorization.Invoke(actionContext);
             }
             catch (HttpExceptionAbstraction e)
             {
