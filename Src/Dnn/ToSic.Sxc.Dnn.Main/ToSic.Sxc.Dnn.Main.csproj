@@ -264,12 +264,12 @@
     <Content Include="BuildScripts\readme.md" />
     <Content Include="koi\Resources.zip" />
     <Content Include=".data\readme.md" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\00.99.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\09.03.00.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\09.07.00.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\12.00.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\require-2sxc-9.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\Uninstall.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\09.07.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\00.99.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\12.00.00.SqlDataProvider" />
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
