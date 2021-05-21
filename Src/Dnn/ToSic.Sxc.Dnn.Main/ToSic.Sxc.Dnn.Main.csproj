@@ -96,6 +96,7 @@
   <ItemGroup>
     <Compile Include="ActivateKoi2DependencyInjection.cs" />
     <Compile Include="CompilerDependencies.cs" />
+    <Compile Include="DnnBusinessController.cs" />
     <Compile Include="StartupDnn.cs" />
     <Compile Include="DnnWebForms\PagePicker.ascx.cs">
       <DependentUpon>PagePicker.ascx</DependentUpon>
