@@ -19,6 +19,7 @@ namespace ToSic.Sxc.Oqt.App
     }
     /*
      * 0.0.1 - Oqtane db fix for https://github.com/oqtane/oqtane.framework/issues/1269 (probably we will remove latter).
-     * 12.01.00 - 2sxc oqtane module first release.
+     * 12.00.00 - 2sxc oqtane module first release.
+     * 12.01.00 - 2sxc oqtane module minor release.
      */
 }
