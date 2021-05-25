@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
+using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Adam
 {
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.Adam
 
         public MetadataFor MetadataId => _metadataKey ?? (_metadataKey = new MetadataFor
         {
-            TargetType = Eav.Constants.MetadataForCmsObject,
+            TargetType = (int)TargetTypes.CmsItem,
             KeyString = "folder:" + SysId
         });
         private MetadataFor _metadataKey;
