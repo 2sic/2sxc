@@ -87,5 +87,11 @@ namespace ToSic.Sxc.Blocks
         /// </summary>
         [PrivateApi]
         string Edition { get; set; }
+
+
+        [PrivateApi("WIP 12.02")] IEntity Resources { get; }
+
+        [PrivateApi("WIP 12.02")] IEntity Settings { get; }
+
     }
 }

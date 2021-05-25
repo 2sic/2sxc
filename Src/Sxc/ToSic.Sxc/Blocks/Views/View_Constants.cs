@@ -23,6 +23,10 @@
         internal const string FieldPipeline = "Pipeline";
         internal const string FieldNameInUrl = "ViewNameInUrl";
         internal const string TypeRazorValue = "C# Razor";
+        
+        // new / WIP 12.02
+        internal const string FieldSettings = "Settings";
+        internal const string FieldResources = "Resources";
 
         // kind of almost unused, deprecated stuff
         internal const string FieldPublishEnable = "PublishData";

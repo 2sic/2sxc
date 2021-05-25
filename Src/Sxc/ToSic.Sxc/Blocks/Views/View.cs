@@ -62,9 +62,9 @@ namespace ToSic.Sxc.Blocks
 
         public bool IsHidden => Get(FieldIsHidden, false);
 
-        public string Location => Get(FieldLocation, Settings.TemplateLocations.PortalFileSystem);
+        public string Location => Get(FieldLocation, Sxc.Settings.TemplateLocations.PortalFileSystem);
 
-        public bool IsShared => Location == Settings.TemplateLocations.HostFileSystem;
+        public bool IsShared => Location == Sxc.Settings.TemplateLocations.HostFileSystem;
 
         public bool UseForList => Get(FieldUseList, false);
         public bool PublishData => Get(FieldPublishEnable, false);
@@ -112,5 +112,11 @@ namespace ToSic.Sxc.Blocks
 
         [PrivateApi]
         public string Edition { get; set; }
+        
+        [PrivateApi("WIP 12.02")]
+        public IEntity Resources => GetBestRelationship(FieldResources);
+
+        [PrivateApi("WIP 12.02")]
+        public IEntity Settings => GetBestRelationship(FieldSettings);
     }
 }
