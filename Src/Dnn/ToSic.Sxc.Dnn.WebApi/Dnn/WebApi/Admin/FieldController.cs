@@ -4,6 +4,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Data;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.WebApi;
@@ -43,6 +44,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 	    [HttpGet]
         public List<InputTypeInfo> InputTypes(int appId) => GetService<AppRuntime>().Init(State.Identity(null, appId), true, Log).ContentTypes.GetInputTypes();
 
+        /// <inheritdoc />
+        [HttpGet]
+        public Dictionary<string, string> ReservedNames() => FieldConstants.ReservedNames;
+        
         /// <summary>
         /// Used to be GET ContentType/AddField
         /// </summary>

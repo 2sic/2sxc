@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Data;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
@@ -53,6 +54,10 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// </summary>
 	    [HttpGet]
         public List<InputTypeInfo> InputTypes(int appId) => _appRuntime.Value.Init(State.Identity(null, appId), true, Log).ContentTypes.GetInputTypes();
+
+        /// <inheritdoc />
+        [HttpGet]
+        public Dictionary<string, string> ReservedNames() => FieldConstants.ReservedNames;
 
         /// <summary>
         /// Used to be GET ContentType/AddField
