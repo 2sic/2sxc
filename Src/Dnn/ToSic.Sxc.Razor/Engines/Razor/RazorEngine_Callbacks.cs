@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Entities.Modules;
-using ToSic.Eav.Context;
-using ToSic.Eav.Run;
 using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc.Context;

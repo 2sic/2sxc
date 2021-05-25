@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Version>0.0.59</Version>
+    <Version>12.01.00</Version>
     <Product>ToSic.Sxc</Product>
     <Authors>2sic</Authors>
     <Company>2sic</Company>
@@ -24,7 +24,6 @@
     <!--<PreserveCompilationReferences>true</PreserveCompilationReferences>
     <PreserveCompilationContext>true</PreserveCompilationContext>-->
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Remove="Engines\**" />
     <Compile Remove="RazorPartialToString\**" />
@@ -37,15 +36,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="RazorPages\IIsSxcRazorPage.cs" />
-    <Compile Remove="RazorPages\SxcRazorPage.cs" />
-    <Compile Remove="RazorPages\SxcRazorPage_Block.cs" />
-    <Compile Remove="RazorPages\SxcRazorPage_CreateInstance.cs" />
-    <Compile Remove="RazorPages\SxcRazorPage_IDynamicCode.cs" />
+    <Compile Remove="StartUp\IIsSxcRazorPage.cs" />
+    <Compile Remove="StartUp\SxcRazorPage.cs" />
+    <Compile Remove="StartUp\SxcRazorPage_Block.cs" />
+    <Compile Remove="StartUp\SxcRazorPage_CreateInstance.cs" />
+    <Compile Remove="StartUp\SxcRazorPage_IDynamicCode.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Scripts\ToSic.Sxc.0.0.57.sql" />
+    <None Remove="Scripts\ToSic.Sxc.0.0.1.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\ToSic.Sxc.0.0.1.sql" />
+    <EmbeddedResource Include="Scripts\ToSic.Sxc.12.00.00.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.Uninstall.sql" />
   </ItemGroup>
 
@@ -59,22 +63,25 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Localization" Version="5.0.0" />
-    <PackageReference Include="Oqtane.Server" Version="2.0.0" />
-    <PackageReference Include="Oqtane.Shared" Version="2.0.0" />
+    <PackageReference Include="Oqtane.Server" Version="2.0.2" />
+    <PackageReference Include="Oqtane.Shared" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj" />
-    <ProjectReference Include="..\..\Razor\ToSic.Sxc.Razor.Engine\ToSic.Sxc.Razor.Engine.csproj" />
+    <ProjectReference Include="..\..\Razor\ToSic.Sxc.Razor\ToSic.Sxc.Razor.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Oqt.Shared\ToSic.Sxc.Oqt.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Connect.Koi">
+      <HintPath>..\..\..\Dependencies\Koi\netstandard2.0\Connect.Koi.dll</HintPath>
+    </Reference>
     <Reference Include="ToSic.Razor">
-      <HintPath>..\..\..\Dependencies\RazorBlade\netstandard2.0\ToSic.Razor.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\RazorBlade\Release\netstandard2.0\ToSic.Razor.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

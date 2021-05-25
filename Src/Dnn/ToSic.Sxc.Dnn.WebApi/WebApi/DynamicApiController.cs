@@ -8,7 +8,6 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Dnn.WebApiRouting;
 using ToSic.Sxc.WebApi.Adam;
@@ -24,7 +23,7 @@ namespace ToSic.Sxc.WebApi
     /// </summary>
     [PrivateApi]
     [DnnLogExceptions]
-    public abstract class DynamicApiController : SxcApiControllerBase, ICreateInstance, IHasDynCodeContext
+    public abstract class DynamicApiController : SxcApiControllerBase, ICreateInstance, IHasDynamicCodeRoot
     {
         protected override string HistoryLogName => "Api.DynApi";
 
@@ -35,10 +34,10 @@ namespace ToSic.Sxc.WebApi
             Log.Add($"HasBlock: {block != null}");
             // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
             // if it's null, use the log of this object
-            DynCode = GetService<DnnDynamicCodeRoot>().Init(block, Log);
+            _DynCodeRoot = GetService<DnnDynamicCodeRoot>().Init(block, Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
-            if (DynCode.App == null)
+            if (_DynCodeRoot.App == null)
             {
                 Log.Add("DynCode.App is null");
                 TryToAttachAppFromUrlParams();
@@ -52,9 +51,9 @@ namespace ToSic.Sxc.WebApi
         }
 
         [PrivateApi]
-        public DnnDynamicCodeRoot DynCode { get; private set; }
+        public IDynamicCodeRoot _DynCodeRoot { get; private set; }
 
-        public IDnnContext Dnn => DynCode.Dnn;
+        public IDnnContext Dnn => (_DynCodeRoot as DnnDynamicCodeRoot)?.Dnn;
 
         private void TryToAttachAppFromUrlParams()
         {
@@ -67,11 +66,10 @@ namespace ToSic.Sxc.WebApi
 
                 if (appId != Eav.Constants.NullId)
                 {
-                    //var appId = AppFinder.GetAppIdFromPath(routeAppPath).AppId;
                     // Look up if page publishing is enabled - if module context is not available, always false
                     Log.Add($"AppId: {appId}");
                     var app = Factory.App(appId, false, parentLog: Log);
-                    DynCode.LateAttachApp(app);
+                    _DynCodeRoot.LateAttachApp(app);
                     found = true;
                 }
             } catch { /* ignore */ }
@@ -103,7 +101,7 @@ namespace ToSic.Sxc.WebApi
             if (!Eav.Configuration.Features.EnabledOrException(feats, "can't save in ADAM", out var exp))
                 throw exp;
 
-            var appId = DynCode?.Block?.AppId ?? DynCode?.App?.AppId ?? throw new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
+            var appId = _DynCodeRoot?.Block?.AppId ?? _DynCodeRoot?.App?.AppId ?? throw new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
             return GetService<AdamTransUpload<int, int>>()
                 .Init(appId, contentType, guid.Value, field, false, Log)
                 .UploadOne(stream, fileName, subFolder, true);
@@ -118,7 +116,7 @@ namespace ToSic.Sxc.WebApi
             string name = null, 
             string relativePath = null, 
             bool throwOnError = true) =>
-            DynCode.CreateInstance(virtualPath, dontRelyOnParameterOrder, name,
+            _DynCodeRoot.CreateInstance(virtualPath, dontRelyOnParameterOrder, name,
                 CreateInstancePath, throwOnError);
     }
 }

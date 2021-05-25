@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <Reference Include="ToSic.Razor">
-      <HintPath>..\..\..\Dependencies\RazorBlade\netstandard2.0\ToSic.Razor.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\RazorBlade\Release\netstandard2.0\ToSic.Razor.dll</HintPath>
     </Reference>
   </ItemGroup>
 

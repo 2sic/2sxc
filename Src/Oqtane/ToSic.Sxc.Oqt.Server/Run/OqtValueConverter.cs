@@ -1,16 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Oqtane.Enums;
-using Oqtane.Infrastructure;
+using Oqtane.Models;
 using Oqtane.Repository;
-using Oqtane.Shared;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Oqt.Server.Plumbing;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
@@ -25,7 +24,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public Lazy<ITenantResolver> TenantResolver { get; }
         public Lazy<IPageRepository> PageRepository { get; }
         public Lazy<IServerPaths> ServerPaths { get; }
-        public Lazy<ILogManager> Logger { get; }
+        public Lazy<SiteStateInitializer> SiteStateInitializerLazy { get; }
 
         #region DI Constructor
 
@@ -35,7 +34,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             Lazy<ITenantResolver> tenantResolver,
             Lazy<IPageRepository> pageRepository,
             Lazy<IServerPaths> serverPaths,
-            Lazy<ILogManager> logger
+            Lazy<SiteStateInitializer> siteStateInitializerLazy
             )
         {
             FileRepository = fileRepository;
@@ -43,9 +42,20 @@ namespace ToSic.Sxc.Oqt.Server.Run
             TenantResolver = tenantResolver;
             PageRepository = pageRepository;
             ServerPaths = serverPaths;
-            Logger = logger;
+            SiteStateInitializerLazy = siteStateInitializerLazy;
         }
 
+        protected Alias Alias
+        {
+            get
+            {
+                if (_alias != null) return _alias;
+                _alias = SiteStateInitializerLazy.Value.InitializedState.Alias;
+                return _alias;
+            }
+        }
+
+        private Alias _alias;
 
         #endregion
 
@@ -68,13 +78,13 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private string TryToResolveOneLinkToInternalOqtCode(string potentialFilePath)
         {
             // find site
-            var site = TenantResolver.Value.GetAlias();
+            //var site = TenantResolver.Value.GetAlias();
 
             // Try to find the Folder
             // todo: check if it has /Content/Tenant/1/Site/1 etc.
             var pathAsFolder = potentialFilePath.Backslash();
             var folderPath = Path.GetDirectoryName(pathAsFolder);
-            var folder = FolderRepository.Value.GetFolder(site.SiteId, folderPath);
+            var folder = FolderRepository.Value.GetFolder(Alias.SiteId, folderPath);
             if (folder != null)
             {
                 // Try file reference
@@ -84,9 +94,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 if (fileInfo != null) return "file:" + fileInfo.FileId;
             }
 
-            var pathAsPageLink = potentialFilePath.Forwardslash().TrimEnd('/').TrimStart('/'); // no trailing slashes
+            var pathAsPageLink = potentialFilePath.ForwardSlash().TrimEnd('/').TrimStart('/'); // no trailing slashes
             // Try page / tab ID
-            var page = PageRepository.Value.GetPage(pathAsPageLink, site.SiteId);
+            var page = PageRepository.Value.GetPage(pathAsPageLink, Alias.SiteId);
             return page != null
                 ? "page:" + page.PageId
                 : potentialFilePath;
@@ -125,10 +135,13 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
                 return result + (result == originalValue ? "" : parts.Params);
             }
-            catch (Exception e)
+            catch /*(Exception e)*/
             {
-                var wrappedEx = new Exception("Error when trying to lookup a friendly url of \"" + originalValue + "\"", e);
-                Logger.Value.Log(LogLevel.Error, this, LogFunction.Other, wrappedEx.Message);
+                // 2021-04-26 2dm: We can't log errors here
+                // - on one hand we would flood the logs
+                // - on the other hand we have issues that if this happens during json-creation of a web-api, the Logger often can't find the DB/SiteState
+                //var wrappedEx = new Exception("Error when trying to lookup a friendly url of \"" + originalValue + "\"", e);
+                //Logger.Value.Log(LogLevel.Error, this, LogFunction.Other, wrappedEx.Message);
                 return originalValue;
             }
 
@@ -144,17 +157,26 @@ namespace ToSic.Sxc.Oqt.Server.Run
             #region special handling of issues in case something in the background is broken
             try
             {
-                var filePath = Path.Combine(fileInfo.Folder.Path, fileInfo.Name/*)*/).Forwardslash();
+                // SiteStateInitializerLazy.Value.InitIfEmpty();
+                //var alias = SiteStateInitializerLazy.Value.InitializedState.Alias; // SiteStateInitializerLazy.Value.SiteState.Alias;
 
-                var siteId = TenantResolver.Value.GetAlias().SiteId;
+                var pathInAdam = Path.Combine(fileInfo.Folder.Path, fileInfo.Name/*)*/).ForwardSlash();
 
-                var result = $"/{siteId}/api/sxc{filePath.PrefixSlash()}".Forwardslash();
+                // get appName and filePath
+                var adamFolder = "adam/";
+                var prefixStart = pathInAdam.IndexOf(adamFolder, StringComparison.OrdinalIgnoreCase);
+                pathInAdam = pathInAdam.Substring(prefixStart + adamFolder.Length).TrimStart('/');
+                var indexOfSlash = pathInAdam.IndexOf('/');
+                var appName = pathInAdam.Substring(0, indexOfSlash);
+                var filePath = pathInAdam.Substring(indexOfSlash).TrimStart('/');
+
+                var result = $"{Alias.Path}/app/{appName}/adam/{filePath}".PrefixSlash();
 
                 // optionally do extra security checks (new in 10.02)
                 if (!Features.Enabled(FeatureIds.BlockFileIdLookupIfNotInSameApp)) return result;
 
                 // check if it's in this item. We won't check the field, just the item, so the field is ""
-                return !ToSic.Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", filePath)
+                return !ToSic.Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", pathInAdam)
                     ? null
                     : result;
             }
@@ -172,7 +194,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var page = pageResolver.GetPage(id);
             if (page == null) return null;
 
-            return "/" + page.Path;
+            return $"/{Alias.Path}/{page.Path}";
 
             //var psCurrent = PortalSettings.Current;
             //var psPage = psCurrent;

@@ -10,17 +10,21 @@ namespace ToSic.Sxc.WebApi.Assets
 {
     public partial class AppAssetsBackend: HasLog<AppAssetsBackend>
     {
+
         #region Constructor / DI
 
         private readonly TemplateHelpers _templateHelpers;
         private readonly Lazy<AssetEditor> _assetEditorLazy;
+        private readonly IAssetTemplates _assetTemplates;
         private readonly IServiceProvider _serviceProvider;
         private readonly IUser _user;
 
-        public AppAssetsBackend(TemplateHelpers templateHelpers, IUser user, Lazy<AssetEditor> assetEditorLazy, IServiceProvider serviceProvider) : base("Bck.Assets")
+        public AppAssetsBackend(TemplateHelpers templateHelpers, IUser user, Lazy<AssetEditor> assetEditorLazy, IAssetTemplates assetTemplates, IServiceProvider serviceProvider) : base("Bck.Assets")
         {
+
             _templateHelpers = templateHelpers;
             _assetEditorLazy = assetEditorLazy;
+            _assetTemplates = assetTemplates;
             _serviceProvider = serviceProvider;
             _user = user;
         }

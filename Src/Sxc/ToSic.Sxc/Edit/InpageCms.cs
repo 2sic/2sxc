@@ -9,13 +9,18 @@
 
         public const string EditJs = "dist/inpage/inpage.min.js";
         public const string EditCss = "dist/inpage/inpage.min.css";
+        
+        // WIP
+        public const string TurnOnJs = "dist/turnOn/turn-on.js";
 
-        public static string JsApiJson(int pageId, string siteRoot, string apiRoot, string rvt, string uiRoot)
+        public static string JsApiJson(string platform, int pageId, string siteRoot, string apiRoot, string appApiRoot, string rvt, string uiRoot)
         {
             var json = "{"
+                       + $"\"platform\": \"{platform.ToLowerInvariant()}\","
                        + $"\"page\": {pageId},"
                        + $"\"root\": \"{siteRoot}\","
                        + $"\"api\": \"{apiRoot}\","
+                       + $"\"appApi\": \"{appApiRoot}\", "
                        + $"\"rvt\": \"{rvt}\", "
                        + $"\"uiRoot\": \"{uiRoot}\""
                        + "}";

@@ -1,8 +1,12 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Razor;
+using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
-using ToSic.Sxc.Oqt.Server.Adam;
+using ToSic.Sxc.Oqt.Server.Block;
+using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Run;
 
 
@@ -10,14 +14,16 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtLinkPaths: ILinkPaths
     {
-        public OqtLinkPaths(IHttpContextAccessor contextAccessor, IWebHostEnvironment hostingEnvironment)
+        public OqtLinkPaths(IHttpContextAccessor contextAccessor, IWebHostEnvironment hostingEnvironment, SiteStateInitializer siteStateInitializer)
         {
             _contextAccessor = contextAccessor;
             _hostingEnvironment = hostingEnvironment;
+            _siteStateInitializer = siteStateInitializer;
         }
 
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly SiteStateInitializer _siteStateInitializer;
         public HttpContext Current => _contextAccessor.HttpContext;
 
         #region Paths
@@ -26,21 +32,36 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private string toWebAbsolute(string virtualPath)
         {
             virtualPath = virtualPath.TrimStart('~');
-            //if (!virtualPath.StartsWith('/') && !virtualPath.StartsWith('\\'))
-            //    virtualPath = "/" + virtualPath;
-            return virtualPath.PrefixSlash().Forwardslash();
+            return virtualPath.PrefixSlash().ForwardSlash();
         }
 
-        public string ToAbsolute(string virtualPath)
+        public string AsSeenFromTheDomainRoot(string virtualPath)
         {
             return toWebAbsolute(virtualPath);
         }
-        public string ToAbsolute(string virtualPath, string subPath)
+        //public string ToAbsolute(string virtualPath, string subPath)
+        //{
+        //    return toWebAbsolute(Path.Combine(virtualPath, subPath));
+        //}
+
+        //public string AppAssetsBase(ISite site, IApp app) 
+        //    => toWebAbsolute(site.AppAssetsLinkTemplate.Replace(LinkPaths.AppFolderPlaceholder, app.Folder));
+
+        public string ApiFromSiteRoot(string appFolder, string apiPath)
         {
-            return toWebAbsolute(Path.Combine(virtualPath, subPath));
+            return $"/app/{appFolder}/{apiPath}";
         }
 
+        public string AppFromTheDomainRoot(string appFolder, string pagePath)
+        {
+            var siteRoot = OqtAssetsAndHeaders.GetSiteRoot(_siteStateInitializer.InitializedState).TrimLastSlash();
+            return AppFromTheDomainRoot(siteRoot, appFolder, pagePath);
+        }
 
+        public string AppFromTheDomainRoot(string siteRoot, string appFolder, string pagePath)
+        {
+            return $"{siteRoot}/app/{appFolder}/{pagePath}";
+        }
         #endregion
     }
 }

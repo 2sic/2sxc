@@ -2,6 +2,9 @@
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+#if NETSTANDARD
+using Microsoft.AspNetCore.Mvc;
+#endif
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
@@ -17,7 +20,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
     public class ExportApp: HasLog
     {
 
-        #region Constructor / DI
+#region Constructor / DI
 
         public ExportApp(IZoneMapper zoneMapper, ZipExport zipExport, CmsRuntime cmsRuntime) : base("Bck.Export")
         {
@@ -41,7 +44,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             return this;
         }
 
-        #endregion
+#endregion
 
 
         public AppExportInfoDto GetAppInfo(int appId, int zoneId)
@@ -72,9 +75,6 @@ namespace ToSic.Sxc.WebApi.ImportExport
             };
         }
 
-
-
-
         public bool SaveDataForVersionControl(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
         {
             Log.Add($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
@@ -89,7 +89,11 @@ namespace ToSic.Sxc.WebApi.ImportExport
             return true;
         }
 
-        public HttpResponseMessage Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
+#if NETSTANDARD
+        public IActionResult Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
+#else
+    public HttpResponseMessage Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
+#endif
         {
             Log.Add($"export app z#{zoneId}, a#{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
             SecurityHelpers.ThrowIfNotAdmin(_user); // must happen inside here, as it's opened as a new browser window, so not all headers exist
@@ -103,13 +107,19 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var fileName =
                 $"2sxcApp_{currentApp.NameWithoutSpecialChars()}_{currentApp.VersionSafe()}{addOnWhenContainingContent}.zip";
             Log.Add($"file name:{fileName}");
+
             using (var fileStream = zipExport.ExportApp(includeContentGroups, resetAppGuid))
             {
+
                 var fileBytes = fileStream.ToArray();
                 Log.Add("will stream so many bytes:" + fileBytes.Length);
-                return HttpFileHelper.GetAttachmentHttpResponseMessage(fileName, "application/octet-stream", new MemoryStream(fileBytes));
+                var mimeType = "application/octet-stream";
+#if NETSTANDARD
+                return new FileContentResult(fileBytes, mimeType) { FileDownloadName = fileName };
+#else
+                return HttpFileHelper.GetAttachmentHttpResponseMessage(fileName, mimeType, new MemoryStream(fileBytes));
+#endif
             }
         }
-
     }
 }

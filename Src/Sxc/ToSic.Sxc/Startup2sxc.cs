@@ -11,7 +11,6 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DotNet;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Run;
-using ToSic.Sxc.Security;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.JsContext;
 
@@ -78,10 +77,10 @@ namespace ToSic.Sxc
 
             // Add possibly missing fallbacks
             services.AddSxcCoreFallbackServices();
-
-            // Security
-            services.TryAddTransient<IInputSanitizer, InputSanitizer>();
             
+            // Polymorphism
+            services.TryAddTransient<Polymorphism.Polymorphism>();
+
             return services;
         }
 

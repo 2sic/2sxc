@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Context;
 
@@ -10,7 +11,8 @@ namespace ToSic.Sxc.Code
         #region DataSource and ConfigurationProvider (for DS) section
         private ILookUpEngine _configurationProvider;
 
-        internal ILookUpEngine ConfigurationProvider
+        [PrivateApi]
+        public ILookUpEngine ConfigurationProvider
         {
             get
             {
@@ -30,7 +32,8 @@ namespace ToSic.Sxc.Code
             }
         }
 
-        internal DataSourceFactory DataSourceFactory => _dataSourceFactory ??
+        [PrivateApi]
+        public DataSourceFactory DataSourceFactory => _dataSourceFactory ??
                                                         (_dataSourceFactory = GetService<DataSourceFactory>().Init(Log));
         private DataSourceFactory _dataSourceFactory;
 

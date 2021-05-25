@@ -118,26 +118,29 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Compatibility\Dnn8Bugs.cs" />
+    <Compile Include="Custom\Dnn\Razor12.cs" />
+    <Compile Include="Custom\Dnn\Razor12Code.cs" />
+    <Compile Include="Custom\Hybrid\Razor12_DynamicModel.cs" />
     <Compile Include="Dnn\beta\InheritRazorComponent.cs" />
-    <Compile Include="Dnn\CodeManager.cs" />
+    <Compile Include="Dnn\RazorCodeManager.cs" />
     <Compile Include="Dnn\RazorComponentCode.cs" />
     <Compile Include="Dnn\RazorComponent_Code.cs" />
+    <Compile Include="Dnn\RazorComponent_Customize.cs" />
     <Compile Include="Dnn\Run\DnnEngineFinder.cs" />
     <Compile Include="Dnn\Web\IRazorComponent.cs" />
     <Compile Include="Dnn\Web\IHtmlHelper.cs" />
     <Compile Include="Dnn\RazorComponent.cs" />
     <Compile Include="Engines\Razor\RazorEngine_Callbacks.cs" />
-    <Compile Include="Hybrid\Razor\RazorComponent.cs" />
-    <Compile Include="Hybrid\Razor\RazorComponent_Code.cs" />
-    <Compile Include="Hybrid\Razor\RazorComponent_Obsolete.cs" />
+    <Compile Include="Custom\Hybrid\Razor12.cs" />
+    <Compile Include="Custom\Hybrid\Razor12_Obsolete.cs" />
     <Compile Include="Web\RazorComponentBase.cs" />
-    <Compile Include="Dnn\RazorComponent_Obsolete.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engines\Razor\HtmlHelper.cs" />
     <Compile Include="Engines\Razor\RazorEngine.cs" />
     <Compile Include="Compatibility\RazorPermissions\RazorPermissions.cs" />
     <Compile Include="SexyContentWebPage.cs" />
     <Compile Include="SexyContentWebPageOfT.cs" />
+    <Compile Include="Web\RazorComponentBase_RenderPage.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">
@@ -167,7 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Hybrid\readme.md" />
+    <None Include="Custom\readme.md" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

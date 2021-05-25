@@ -5,6 +5,7 @@ using static System.StringComparison;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Polymorphism
 {
+    [PolymorphResolver("Permissions")]
     public class Permissions: IResolver
     {
         public string Name => "Permissions";

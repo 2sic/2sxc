@@ -3,17 +3,14 @@
   <PropertyGroup>
     <TargetFrameworks>net451;netstandard2.0</TargetFrameworks>
     <RootNamespace>ToSic.Sxc.WebApi</RootNamespace>
-    <Version>11.22.00</Version>
+    <Version>12.01.00</Version>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Helpers\**" />
-    <Compile Remove="Plumbing\**" />
     <EmbeddedResource Remove="Helpers\**" />
-    <EmbeddedResource Remove="Plumbing\**" />
     <None Remove="Helpers\**" />
-    <None Remove="Plumbing\**" />
   </ItemGroup>
 
   <ItemGroup>

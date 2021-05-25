@@ -8,7 +8,7 @@ using ToSic.Sxc.Dnn.Web;
 namespace ToSic.Sxc.Dnn.Code
 {
     [PrivateApi]
-    public class DnnDynamicCodeRoot : DynamicCodeRoot, IDnnDynamicCode, IHasDynCodeContext
+    public class DnnDynamicCodeRoot : DynamicCodeRoot, Sxc.Code.IDynamicCode, IDnnDynamicCode, IHasDynamicCodeRoot
     {
         public DnnDynamicCodeRoot(Dependencies dependencies): base(dependencies, DnnConstants.LogName) { }
 
@@ -18,12 +18,12 @@ namespace ToSic.Sxc.Dnn.Code
         /// <param name="block">CMS Block which provides context and maybe some edit-allowed info.</param>
         /// <param name="parentLog">parent logger for logging what's happening</param>
         /// <param name="compatibility">compatibility level - changes behaviour if level 9 or 10</param>
-        public new DnnDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)
+        public /*new*/ override IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)
         {
             base.Init(block, parentLog, compatibility);
             // Init things than require module-info or similar, but not 2sxc
             Dnn = new DnnContextOld(block?.Context.Module);
-            Link = new DnnLinkHelper(Dnn);
+            ((DnnLinkHelper)Link).Init(Dnn, App);
             return this;
         }
 
@@ -32,6 +32,6 @@ namespace ToSic.Sxc.Dnn.Code
         /// </summary>
         public IDnnContext Dnn { get; private set; }
 
-        public DnnDynamicCodeRoot DynCode => this;
+        //public IDynamicCodeRoot _DynCodeRoot => this;
     }
 }

@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Context;
-using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Mvc.Dev;
@@ -11,8 +10,8 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
     {
         #region DynCode 
 
-        protected Sxc.Code.DynamicCodeRoot DynCode => _dynCode ??= HttpContext.RequestServices.Build<Code.DynamicCodeRoot>().Init(Block, Log);
-        private Sxc.Code.DynamicCodeRoot _dynCode;
+        public Sxc.Code.IDynamicCodeRoot _DynCodeRoot => _dynCode ??= HttpContext.RequestServices.Build<Code.DynamicCodeRoot>().Init(Block, Log);
+        private Sxc.Code.IDynamicCodeRoot _dynCode;
         #endregion
         public IBlock Block 
         {

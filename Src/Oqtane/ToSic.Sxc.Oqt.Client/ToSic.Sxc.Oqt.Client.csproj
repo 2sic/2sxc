@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <RazorLangVersion>3.0</RazorLangVersion>
-    <Version>0.0.59</Version>
+    <Version>12.01.00</Version>
     <Authors>2sic</Authors>
     <Company>2sic</Company>
     <Description>2sic 2sxc Oqtane</Description>
@@ -20,8 +20,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Localization" Version="5.0.0" />
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
-    <PackageReference Include="Oqtane.Client" Version="2.0.0" />
-    <PackageReference Include="Oqtane.Shared" Version="2.0.0" />
+    <PackageReference Include="Oqtane.Client" Version="2.0.2" />
+    <PackageReference Include="Oqtane.Shared" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>

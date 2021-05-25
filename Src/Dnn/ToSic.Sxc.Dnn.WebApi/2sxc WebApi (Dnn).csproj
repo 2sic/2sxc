@@ -115,12 +115,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Custom\Dnn\Api12.cs" />
+    <Compile Include="Custom\Hybrid\Api12.cs" />
+    <Compile Include="Custom\Hybrid\Api12_DynamicWebApi.cs" />
+    <Compile Include="Custom\Hybrid\Api12_Obsolete.cs" />
+    <Compile Include="Custom\Hybrid\Api12_Responses.cs" />
+    <Compile Include="Dnn\DnnResponseMaker.cs" />
     <Compile Include="Dnn\Providers\ModifiedTabAndModuleInfoProvider.cs" />
     <Compile Include="Dnn\WebApi\Adam\DnnAdamSecurityChecks.cs" />
     <Compile Include="Dnn\ApiController.cs" />
-    <Compile Include="Dnn\ApiController_Obsolete.cs" />
     <Compile Include="Dnn\AppFolderUtilities.cs" />
     <Compile Include="Dnn\WebApi\Admin\AppPartsController.cs" />
+    <Compile Include="Dnn\WebApi\Admin\DnnApiInspector.cs" />
     <Compile Include="Dnn\WebApi\Admin\FieldController.cs" />
     <Compile Include="Dnn\WebApi\Admin\FeatureController.cs" />
     <Compile Include="Dnn\WebApi\Admin\ApiExplorerController.cs" />
@@ -128,6 +134,8 @@
     <Compile Include="Dnn\WebApi\Cms\BlockController.cs" />
     <Compile Include="Dnn\WebApi\Cms\ListController.cs" />
     <Compile Include="Dnn\WebApi\Cms\ItemController.cs" />
+    <Compile Include="Dnn\WebApi\DnnAssetTemplates.cs" />
+    <Compile Include="Dnn\WebApi\IDnnDynamicWebApi.cs" />
     <Compile Include="Dnn\WebApi\Sys\InstallController.cs" />
     <Compile Include="Dnn\WebApi\Sys\LogController.cs" />
     <Compile Include="Dnn\WebApi\Cms\HistoryController.cs" />
@@ -135,6 +143,7 @@
     <Compile Include="Dnn\WebApi\Context\DnnContextDtoExtensions.cs" />
     <Compile Include="Dnn\WebApiRouting\Route.cs" />
     <Compile Include="Dnn\WebApiRouting\RouteParts.cs" />
+    <Compile Include="Obsolete\SexyContent\WebApi\SxcApiController_NotImplemented.cs" />
     <Compile Include="WebApi\DynamicApiController.cs" />
     <Compile Include="Dnn\WebApi\Cms\EditController.cs" />
     <Compile Include="Dnn\WebApi\Sys\InsightsController.cs" />
@@ -198,12 +207,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Hybrid\readme.md" />
+    <None Include="Custom\readme.md" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Hybrid\WebApi\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Custom.Hybrid;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Dnn.Web
     /// All DNN Razor Pages inherit from this class
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public interface IRazorComponent: IDnnDynamicCode
+    public interface IRazorComponent: IDnnDynamicCode, IRazor12
     {
         /// <summary>
         /// Helper for Html.Raw - for creating raw html output which doesn't encode &gt; and &lt;

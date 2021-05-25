@@ -23,12 +23,8 @@ namespace ToSic.Sxc.Code
     /// Important for dynamic code files like Razor or WebApi. Note that there are many overloads to ensure that AsDynamic and AsEntity "just work" even if you give them the original data. 
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-#pragma warning disable 618
     public interface IDynamicCode: ICreateInstance, ICompatibilityLevel, IHasLog // inherit from old namespace to ensure compatibility
-#pragma warning restore 618
     {
-        [PrivateApi("WIP")] IBlock Block { get; }
-
         /// <summary>
         /// Get a service from the EAV / 2sxc Dependency Injection. 
         /// </summary>
@@ -210,6 +206,17 @@ namespace ToSic.Sxc.Code
         /// New in v11.11
         /// </remarks>
         ICmsContext CmsContext { get; }
+
+        #endregion
+
+        #region Accessor to Root
+
+        /// <summary>
+        /// The dynamic code root which many dynamic code objects need to access prepared context, state etc.
+        /// </summary>
+        [PrivateApi("internal, for passing around context!")]
+        // ReSharper disable once InconsistentNaming
+        IDynamicCodeRoot _DynCodeRoot { get; }
 
         #endregion
     }

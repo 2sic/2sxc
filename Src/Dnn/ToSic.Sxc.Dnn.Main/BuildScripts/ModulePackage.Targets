@@ -67,6 +67,9 @@
       <InstallInclude Include="**\*.aspx" Exclude="@(DefaultExclude)" />
       <!-- all js + css + html etc. stuff from assets-->
       <InstallInclude Include="$(Dev2sxcAssets)\**\*.*" Exclude="$(Dev2sxcAssets)\**\*.map" />
+      
+      <!-- WIP - turnOn map files must be included for now-->
+      <InstallInclude Include="$(Dev2sxcAssets)\dist\turnOn\*.*" />
 
       <!-- all global types and queries -->
       <InstallInclude Include="..\..\Data\**\.data\**\*.json" Exclude="@(DefaultExclude)" />

@@ -75,6 +75,10 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.1.0" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Connect.Dnn.Koi, Version=1.3.0.27054, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>koi\bin\Connect.Dnn.Koi.dll</HintPath>
+    </Reference>
     <Reference Include="Connect.Koi, Version=1.0.4.14722, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Dependencies\Koi\Connect.Koi.dll</HintPath>
@@ -90,7 +94,9 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivateKoi2DependencyInjection.cs" />
     <Compile Include="CompilerDependencies.cs" />
+    <Compile Include="DnnBusinessController.cs" />
     <Compile Include="StartupDnn.cs" />
     <Compile Include="DnnWebForms\PagePicker.ascx.cs">
       <DependentUpon>PagePicker.ascx</DependentUpon>
@@ -120,7 +126,6 @@
     <Compile Include="DnnWebForms\Skins\QuickEdit.ascx.designer.cs">
       <DependentUpon>QuickEdit.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Polymorphism\Koi.cs" />
     <Compile Include="Polymorphism\Permissions.cs" />
     <Compile Include="StartupDnnDi.cs" />
     <Compile Include="View.ascx.cs">
@@ -152,8 +157,6 @@
     <Content Include="DnnPackageBuilder\Cleanup\flush.txt" />
     <Content Include="razorblade-old\bin\Connect.Razor.dll" />
     <Content Include="ClientScripts\ModuleEditor.js" />
-    <Content Include="DnnPackageBuilder\icon-app.png" />
-    <Content Include="DnnPackageBuilder\icon.png" />
     <Content Include="DnnPackageBuilder\license.txt" />
     <Content Include="DnnPackageBuilder\ReleaseNotes.txt" />
     <Content Include="DnnWebForms\PagePicker.ascx" />
@@ -161,11 +164,9 @@
     <Content Include="DnnWebForms\Wysiwyg.ascx" />
     <Content Include="Extensions\404.png" />
     <Content Include="Extensions\ImageResizer\ImageResizer.txt" />
-    <Content Include="icon-app-black.png" />
-    <Content Include="icon-black.png" />
     <Content Include="DnnWebForms\Skins\QuickEdit.ascx" />
-    <Content Include="icon-app.png" />
-    <Content Include="icon.png" />
+    <Content Include="DnnPackageBuilder\icon-app.png" />
+    <Content Include="DnnPackageBuilder\icon.png" />
     <Content Include="Extensions\Thumbnailer.aspx" />
     <Content Include="Extensions\ToSic_vCard\vCard.ashx" />
     <Content Include="koi\bin\Connect.Dnn.Koi.dll" />
@@ -267,10 +268,18 @@
     <Content Include="DnnPackageBuilder\SqlDataProvider\00.99.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\09.03.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\09.07.00.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\12.00.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\require-2sxc-9.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\Uninstall.SqlDataProvider" />
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MSBuildTasks">
+      <Version>1.5.0.235</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -348,26 +357,35 @@ xcopy "$(ProjectDir)WebConfigTemplate.config" "%25BuildTarget%25\" /y
   </PropertyGroup>
   <!-- Run the DNN Package Builder after every build -->
   <Import Project="BuildScripts\ModulePackage.Targets" />
-  <Import Project="..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets" Condition="Exists('..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" />
+  <!--<Import Project="..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets" Condition="Exists('..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets'))" />
-  </Target>
+  </Target>-->
   <Target Name="TestMessages" BeforeTargets="PrepareForBuild">
-    <Message Text="Debug Messages created by 2dm" Importance="High" ></Message>
-    <Message Text="Configuration=$(Configuration)" Importance="High" ></Message>
-    <Message Text="Platform=$(Platform)" Importance="High" ></Message>
-    <Message Text="Configuration|Platform='$(Configuration)|$(Platform)'" Importance="High" ></Message>
-    <Message Text="OutputPath=$(OutputPath)" Importance="High"></Message>
+    <Message Text="Debug Messages created by 2dm" Importance="High">
+    </Message>
+    <Message Text="Configuration=$(Configuration)" Importance="High">
+    </Message>
+    <Message Text="Platform=$(Platform)" Importance="High">
+    </Message>
+    <Message Text="Configuration|Platform='$(Configuration)|$(Platform)'" Importance="High">
+    </Message>
+    <Message Text="OutputPath=$(OutputPath)" Importance="High">
+    </Message>
   </Target>
   <Target Name="TestMessages2" BeforeTargets="Build">
-    <Message Text="Debug Messages created by 2dm" Importance="High" ></Message>
-    <Message Text="Configuration=$(Configuration)" Importance="High" ></Message>
-    <Message Text="Platform=$(Platform)" Importance="High" ></Message>
-    <Message Text="Configuration|Platform='$(Configuration)|$(Platform)'" Importance="High" ></Message>
-    <Message Text="OutputPath=$(OutputPath)" Importance="High"></Message>
+    <Message Text="Debug Messages created by 2dm" Importance="High">
+    </Message>
+    <Message Text="Configuration=$(Configuration)" Importance="High">
+    </Message>
+    <Message Text="Platform=$(Platform)" Importance="High">
+    </Message>
+    <Message Text="Configuration|Platform='$(Configuration)|$(Platform)'" Importance="High">
+    </Message>
+    <Message Text="OutputPath=$(OutputPath)" Importance="High">
+    </Message>
   </Target>
-
 </Project>

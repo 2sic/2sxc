@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Web.Parameters;
 
 
 namespace ToSic.Sxc.Web.JsContext
@@ -39,7 +41,7 @@ namespace ToSic.Sxc.Web.JsContext
             var userMayEdit = ctx.UserMayEdit;
 
             IsEditable = userMayEdit;
-            parameters = ctx.Page.Parameters;
+            parameters = ctx.Page.ParametersInternalOld?.Where(p => p.Key != OriginalParameters.NameInUrlForOriginalParameters);
         }
     }
 

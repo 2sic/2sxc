@@ -7,9 +7,7 @@ namespace ToSic.Sxc.Code
     {
         [PrivateApi] public int CompatibilityLevel => UnwrappedContents?.CompatibilityLevel ?? 9;
 
-        [PrivateApi] public IBlock Block => UnwrappedContents?.Block;
+        //[PrivateApi] public IBlock _Block => UnwrappedContents?._Block;
 
-
-        //public IContextOfSite Context => ((IDynamicCodeInternal)UnwrappedContents).Context;
     }
 }

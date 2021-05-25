@@ -1,12 +1,12 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc.Razor.Internal;
+using ToSic.Custom;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Hybrid.Razor;
 using ToSic.Sxc.Mvc.Dev;
 
 namespace ToSic.Sxc.Mvc.RazorPages.Exp
 {
-    public abstract class SxcTestPageViewParams<TModel>: RazorComponent<TModel>
+    public abstract class SxcTestPageViewParams<TModel>: Razor12<TModel>
     {
         [RazorInject]
         public SxcMvc SxcMvc { get; set; }
@@ -49,15 +49,15 @@ namespace ToSic.Sxc.Mvc.RazorPages.Exp
         #endregion
 
 
-        public override IBlock Block 
-        {
-            get
-            {
-                if (_block != null) return _block;
-                _block = SxcMvc.CreateBlock(TestIds.PrimaryZone, PageId, Id, AppId, BlockGuid, Log);
-                return _block;
-            }
-        }
+        //public override IBlock Block 
+        //{
+        //    get
+        //    {
+        //        if (_block != null) return _block;
+        //        _block = SxcMvc.CreateBlock(TestIds.PrimaryZone, PageId, Id, AppId, BlockGuid, Log);
+        //        return _block;
+        //    }
+        //}
 
     }
 }

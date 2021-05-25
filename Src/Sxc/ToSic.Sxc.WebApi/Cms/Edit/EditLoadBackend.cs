@@ -80,7 +80,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var entityApi = _entityApi.Init(appId, permCheck.EnsureAny(GrantSets.ReadDraft), Log);
             var typeRead = entityApi.AppRead.ContentTypes;
             var list = entityApi.GetEntitiesForEditing(items);
-            var jsonSerializer = ServiceProvider.Build<JsonSerializer>();
+            var jsonSerializer = ServiceProvider.Build<JsonSerializer>().Init(entityApi.AppRead.AppState, Log);
             result.Items = list.Select(e => new BundleWithHeader<JsonEntity>
             {
                 Header = e.Header,
@@ -104,9 +104,11 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // load content-types
             var types = UsedTypes(list, typeRead);
-            result.ContentTypes = types
-                .Select(ct => JsonSerializer.ToJson(ct, true))
-                .ToList();
+            var jsonTypes = types.Select(t => jsonSerializer.ToPackage(t, true)).ToList();
+            result.ContentTypes = jsonTypes.Select(t => t.ContentType).ToList();
+                //types
+                //.Select(ct => jsonSerializer.ToJson(ct, true))
+                //.ToList();
 
             //// TEMP DEBUG
             //var inputTypes = types.SelectMany(t => t.Attributes.Select(a =>
@@ -130,14 +132,16 @@ namespace ToSic.Sxc.WebApi.Cms
             // ensure that sub-properties of the content-types are included
             // this is for UI Formulas (children of @All) - WIP
             // and the warning/error Regex specials - WIP
-            var entList = types.SelectMany(
-                // in all Content-Type attributes like title, body etc.
-                t => t.Attributes.SelectMany(
-                    // check all metadata of these attributes - get possible sub-entities attached
-                    a => a.Metadata.SelectMany(m => m.Children())
-                )
-            );
-            result.ContentTypeItems = entList.Select(e => jsonSerializer.ToJson(e, 0, Log)).ToList();
+            
+            //var entList = types.SelectMany(
+            //    // in all Content-Type attributes like title, body etc.
+            //    t => t.Attributes.SelectMany(
+            //        // check all metadata of these attributes - get possible sub-entities attached
+            //        a => a.Metadata.SelectMany(m => m.Children())
+            //    )
+            //);
+            //result.ContentTypeItems = entList.Select(e => jsonSerializer.ToJson(e, 0)).ToList();
+            result.ContentTypeItems = jsonTypes.SelectMany(t => t.Entities).ToList();
 
             // Fix not-supported input-type names; map to correct name
             result.ContentTypes

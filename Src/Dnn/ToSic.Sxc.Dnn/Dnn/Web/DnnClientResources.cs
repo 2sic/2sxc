@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System.Collections.Generic;
+using System.Web;
 using System.Web.UI;
 using DotNetNuke.Application;
 using DotNetNuke.Framework;
@@ -41,7 +42,7 @@ namespace ToSic.Sxc.Dnn.Web
             Log.Add("user is editor, or template requested js/css, will add client material");
 
             // register scripts and css
-            RegisterClientDependencies(Page, readJs, editJs, editCss);
+            RegisterClientDependencies(Page, readJs, editJs, editCss, BlockBuilder?.NamedScriptsWIP);
 
             // New in 11.11.02 - DNN has a strange behavior where the current language isn't known till PreRender
             // so we have to move adding the header to here.
@@ -71,7 +72,7 @@ namespace ToSic.Sxc.Dnn.Web
 
 
 
-        public void RegisterClientDependencies(Page page, bool readJs, bool editJs, bool editCss)
+        public void RegisterClientDependencies(Page page, bool readJs, bool editJs, bool editCss, List<string> namedScripts = null)
         {
             var wrapLog = Log.Call($"-, {nameof(readJs)}:{readJs}, {nameof(editJs)}:{editJs}, {nameof(editCss)}:{editCss}");
             var root = DnnConstants.SysFolderRootVirtual;
@@ -100,6 +101,9 @@ namespace ToSic.Sxc.Dnn.Web
                 JavaScript.RequestRegistration(CommonJs.jQuery);
                 ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
             }
+
+            if (namedScripts?.Contains(BlockBuilder.JsTurnOn) ?? false)
+                RegisterJs(page, ver, root + InpageCms.TurnOnJs, true, priority + 10);
 
             wrapLog("ok");
         }

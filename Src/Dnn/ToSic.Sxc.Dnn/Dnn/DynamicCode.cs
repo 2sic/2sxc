@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 
@@ -11,12 +12,10 @@ namespace ToSic.Sxc.Dnn
     /// The class then also has AsDynamic(...) and AsList(...) commands like a normal razor page.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract class DynamicCode : Sxc.Code.DynamicCode, IDnnDynamicCode, IHasDynCodeContext
+    public abstract class DynamicCode : Sxc.Code.DynamicCode, Sxc.Code.IDynamicCode, IDnnDynamicCode
     {
         /// <inheritdoc />
-        public IDnnContext Dnn => DynCode?.Dnn;
-
-        [PrivateApi] public DnnDynamicCodeRoot DynCode => (UnwrappedContents as IHasDynCodeContext)?.DynCode;
+        public IDnnContext Dnn => (_DynCodeRoot as DnnDynamicCodeRoot)?.Dnn;
 
     }
 }

@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Documentation;
-using ToSic.Sxc.Dnn.Run;
 
 namespace ToSic.Sxc.Dnn.Code
 {
@@ -8,15 +7,15 @@ namespace ToSic.Sxc.Dnn.Code
     /// It's important, because if 2sxc also runs on other CMS platforms, then the Dnn Context won't be available, so it's in a separate interface.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public interface IDnnDynamicCode : Sxc.Code.IDynamicCode
+    public interface IDnnDynamicCode : Sxc.Code.IDynamicCode, IDnnDynamicCodeAdditions
     {
-        /// <summary>
-        /// The DNN context.  
-        /// </summary>
-        /// <returns>
-        /// The DNN context.
-        /// </returns>
-        IDnnContext Dnn { get; }
+        ///// <summary>
+        ///// The DNN context.  
+        ///// </summary>
+        ///// <returns>
+        ///// The DNN context.
+        ///// </returns>
+        //IDnnContext Dnn { get; }
 
     }
 }

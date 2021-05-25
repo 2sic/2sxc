@@ -12,6 +12,7 @@ using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Basic;
 using ToSic.Sxc.Web.WebApi.System;
 using ToSic.Sxc.WebApi.Adam;
+using ToSic.Sxc.WebApi.ApiExplorer;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.Cms;
 using ToSic.Sxc.WebApi.ContentBlocks;
@@ -19,6 +20,7 @@ using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.Features;
 using ToSic.Sxc.WebApi.ImportExport;
 using ToSic.Sxc.WebApi.InPage;
+using ToSic.Sxc.WebApi.Languages;
 using ToSic.Sxc.WebApi.Save;
 using ToSic.Sxc.WebApi.Usage;
 
@@ -48,6 +50,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<ContentBlockBackend>();
             services.TryAddTransient<FeaturesBackend>();
             services.TryAddTransient<UsageBackend>();
+            services.TryAddTransient<LanguagesBackend>();
 
             // APIs
             services.TryAddTransient<EntityPickerApi>();
@@ -55,6 +58,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<QueryApi>();
             services.TryAddTransient<ContentExportApi>();
             services.TryAddTransient<ContentImportApi>();
+            services.TryAddTransient<ApiExplorerBackend>();
 
             // Internal API helpers
             services.TryAddTransient<EntityApi>();

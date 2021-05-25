@@ -14,11 +14,11 @@ namespace ToSic.Sxc.Code
     /// <summary>
     /// Base class for any dynamic code root objects. <br/>
     /// Root objects are the ones compiled by 2sxc - like the RazorComponent or ApiController. <br/>
-    /// If you create code for dynamic compilation, you'll always inherit from ToSic.Sxc.Dnn.DynamicCode. 
+    /// If you create code for dynamic compilation, you'll always inherit from ToSic.Sxc.Dnn.DynamicCode.
     /// Note that other DynamicCode objects like RazorComponent or ApiController reference this object for all the interface methods of <see cref="IDynamicCode"/>.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract partial class DynamicCodeRoot : HasLog, IDynamicCode
+    public abstract partial class DynamicCodeRoot : HasLog, IDynamicCodeRoot, IDynamicCode
     {
         #region Constructor
 
@@ -29,22 +29,29 @@ namespace ToSic.Sxc.Code
         {
             public IServiceProvider ServiceProvider { get; }
             public ICmsContext CmsContext { get; }
+            public ILinkHelper LinkHelper { get; }
+            public Lazy<CodeCompiler> CodeCompilerLazy { get; }
 
-            public Dependencies(IServiceProvider serviceProvider, ICmsContext cmsContext)
+            public Dependencies(IServiceProvider serviceProvider, ICmsContext cmsContext, ILinkHelper linkHelper, Lazy<CodeCompiler> codeCompilerLazy)
             {
                 ServiceProvider = serviceProvider;
                 CmsContext = cmsContext;
+                LinkHelper = linkHelper;
+                CodeCompilerLazy = codeCompilerLazy;
             }
         }
 
         protected DynamicCodeRoot(Dependencies dependencies, string logPrefix) : base(logPrefix + ".DynCdR")
         {
+            Deps = dependencies;
             _serviceProvider = dependencies.ServiceProvider;
             CmsContext = dependencies.CmsContext;
+            Link = dependencies.LinkHelper;
         }
 
+        private readonly Dependencies Deps;
         private readonly IServiceProvider _serviceProvider;
-        
+
         [PrivateApi] public ICmsContext CmsContext { get; }
 
         #endregion
@@ -54,7 +61,7 @@ namespace ToSic.Sxc.Code
         public TService GetService<TService>() => _serviceProvider.Build<TService>();
 
         [PrivateApi]
-        public DynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)
+        public virtual IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)
         {
             Log.LinkTo(parentLog ?? block?.Log);
             if (block == null)
@@ -63,9 +70,9 @@ namespace ToSic.Sxc.Code
             CompatibilityLevel = compatibility;
             ((CmsContext) CmsContext).Update(block.Context);
             Block = block;
-            App = Block.App;
-            Data = Block.Data;
-            Edit = new InPageEditingHelper(Block, Log);
+            App = block.App;
+            Data = block.Data;
+            Edit = new InPageEditingHelper(block, Log);
 
             return this;
         }
@@ -80,11 +87,17 @@ namespace ToSic.Sxc.Code
         public ILinkHelper Link { get; protected set; }
 
 
-        
+
         #region Edit
 
         /// <inheritdoc />
         public IInPageEditingSystem Edit { get; private set; }
+
+        #endregion
+
+        #region Accessor to Root
+
+        [PrivateApi] public IDynamicCodeRoot _DynCodeRoot => this;
 
         #endregion
 

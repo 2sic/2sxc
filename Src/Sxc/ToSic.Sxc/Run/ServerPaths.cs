@@ -9,6 +9,10 @@ using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Run
 {
+    /// <summary>
+    /// In the default implementation, all things have the same root so content-path and app-path
+    /// are calculated the same way.
+    /// </summary>
     public class ServerPaths: IServerPaths
     {
 #if NETSTANDARD

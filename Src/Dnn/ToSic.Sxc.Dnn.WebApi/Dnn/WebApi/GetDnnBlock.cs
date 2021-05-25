@@ -9,6 +9,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Web.Parameters;
 using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Dnn.WebApi
@@ -32,7 +33,10 @@ namespace ToSic.Sxc.Dnn.WebApi
                 return wrapLog("request ModuleInfo not found", null);
             
             var context = _serviceProvider.Build<IContextOfBlock>().Init(moduleInfo, log);
-            context.Page.Parameters = GetOverrideParams(request);
+            // WebAPI calls can contain the original parameters that made the page, so that views can respect that
+            // Probably replace with OriginalParameters.GetOverrideParams(context.Page.Parameters);
+            // once it has proven stable in Oqtane
+            context.Page.ParametersInternalOld = GetOverrideParams(request);
             IBlock block = _serviceProvider.Build<BlockFromModule>().Init(context, log);
 
             // check if we need an inner block
@@ -59,7 +63,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         {
             List<KeyValuePair<string, string>> urlParams = null;
             var requestParams = request.GetQueryNameValuePairs();
-            var origParams = requestParams.Where(p => p.Key == "originalparameters").ToList();
+            var origParams = requestParams.Where(p => p.Key == OriginalParameters.NameInUrlForOriginalParameters).ToList();
             if (origParams.Any())
             {
                 var paramSet = origParams.First().Value;
@@ -74,18 +78,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         }
 
 
-        /// <summary>
-        /// Workaround for deserializing KeyValuePair - it requires lowercase properties (case sensitive), 
-        /// which seems to be a issue in some Newtonsoft.Json versions: http://stackoverflow.com/questions/11266695/json-net-case-insensitive-property-deserialization
-        /// </summary>
-        // ReSharper disable once ClassNeverInstantiated.Local
-        private class UpperCaseStringKeyValuePair
-        {
-            // ReSharper disable UnusedAutoPropertyAccessor.Local
-            public string Key { get; set; }
-            public string Value { get; set; }
-            // ReSharper restore UnusedAutoPropertyAccessor.Local
-        }
+
 
     }
 

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
@@ -20,17 +22,21 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public OqtZoneMapper(ISiteRepository siteRepository, 
             ISettingRepository settingRepository, 
             IServiceProvider serviceProvider,
-            Lazy<ZoneCreator> zoneCreatorLazy) : base($"{OqtConstants.OqtLogPrefix}.ZoneMp")
+            Lazy<ZoneCreator> zoneCreatorLazy,
+            OqtCulture oqtCulture) : base($"{OqtConstants.OqtLogPrefix}.ZoneMp")
         {
             _siteRepository = siteRepository;
             _settingRepository = settingRepository;
             _serviceProvider = serviceProvider;
             _zoneCreatorLazy = zoneCreatorLazy;
+            _oqtCulture = oqtCulture;
         }
         private readonly ISiteRepository _siteRepository;
         private readonly ISettingRepository _settingRepository;
         private readonly IServiceProvider _serviceProvider;
         private readonly Lazy<ZoneCreator> _zoneCreatorLazy;
+        private readonly OqtCulture _oqtCulture;
+
 
         public override int GetZoneId(int tenantId)
         {
@@ -56,7 +62,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 SettingValue = zoneId.ToString()
             });
             return zoneId;
-
         }
 
         private bool HasZoneId(int tenantId, out int i)
@@ -83,15 +88,13 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return found != null ? _serviceProvider.Build<OqtSite>().Init(found) : null;
         }
 
-        // TODO: #Oqtane
         public override List<TempTempCulture> CulturesWithState(int tenantId, int zoneId)
         {
-            //return new List<TempTempCulture>
-            //{
-            //    new TempTempCulture(WipConstants.DefaultLanguage, WipConstants.DefaultLanguageText, true)
-            //};
-            return WipConstants.EmptyCultureList;
+            if (_supportedCultures != null) return _supportedCultures;
+            var availableEavLanguages = new ZoneRuntime().Init(zoneId, Log).Languages(true);
+            _supportedCultures = _oqtCulture.GetSupportedCultures(tenantId, availableEavLanguages);
+            return _supportedCultures;
         }
-
+        private List<TempTempCulture> _supportedCultures;
     }
 }

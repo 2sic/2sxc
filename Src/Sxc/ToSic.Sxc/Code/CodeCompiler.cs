@@ -2,30 +2,22 @@
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
-using ToSic.Eav.Run;
-using ToSic.Sxc.Run;
-#if NET451
-using System.Web.Compilation;
-#endif
-#if NETSTANDARD
-using ToSic.Sxc.Code.Builder;
-#endif
-
 
 namespace ToSic.Sxc.Code
 {
-    public class CodeCompiler: HasLog
+    [PrivateApi]
+    public abstract class CodeCompiler: HasLog<CodeCompiler>
     {
-        private readonly IServiceProvider _serviceProvider;
+        protected readonly IServiceProvider ServiceProvider;
 
         #region Constructor / DI
 
-        internal CodeCompiler(IServiceProvider serviceProvider, ILog parentLog) : base("Sys.CsCmpl", parentLog)
+        internal CodeCompiler(IServiceProvider serviceProvider) : base("Sys.CsCmpl")
         {
-            _serviceProvider = serviceProvider;
+            ServiceProvider = serviceProvider;
         }
 
         #endregion
@@ -34,10 +26,12 @@ namespace ToSic.Sxc.Code
         public const string CsHtmlFileExtension = ".cshtml";
         public const string SharedCodeRootPathKeyInCache = "SharedCodeRootPath";
 
+        protected string ErrorMessage;
+
         internal object InstantiateClass(string virtualPath, string className = null, string relativePath = null, bool throwOnError = true)
         {
             var wrapLog = Log.Call($"{virtualPath}, {nameof(className)}:{className}, {nameof(relativePath)}:{relativePath}, {throwOnError}");
-            string errorMsg = null;
+            //string ErrorMessage = null;
 
             // Perform various checks on the path values
             var hasErrorMessage = CheckIfPathsOkAndCleanUp(ref virtualPath, relativePath);
@@ -56,14 +50,7 @@ namespace ToSic.Sxc.Code
             Type compiledType = null;
             if (isCshtml && string.IsNullOrEmpty(className))
             {
-#if NETSTANDARD
-                throw new Exception("On-the Fly / Runtime Compile Not Yet Implemented in .net standard #TodoNetStandard");
-
-#else
-                compiledType = BuildManager.GetCompiledType(virtualPath);
-#endif
-                if (compiledType == null)
-                    errorMsg = $"Couldn't create instance of {virtualPath}. Compiled type == null";
+                compiledType = GetCsHtmlType(virtualPath);
             }
             // compile .cs files
             else if (isCs || isCshtml)
@@ -71,36 +58,34 @@ namespace ToSic.Sxc.Code
                 // if no name provided, use the name which is the same as the file name
                 className = className ?? Path.GetFileNameWithoutExtension(virtualPath) ?? "unknown";
 
-                Assembly assembly = null;
-#if NETSTANDARD
-                var fullPath = _serviceProvider.Build<IServerPaths>().FullContentPath(virtualPath.Backslash());
-                try
+                var assembly = GetAssembly(virtualPath, className);
+
+                if (ErrorMessage == null)
                 {
-                    assembly = new Compiler().Compile(fullPath, className);
-                }
-                catch
-                {
-                    errorMsg = $"can't compile '{className}' in {virtualPath}";
-                }
-#else
-                assembly = BuildManager.GetCompiledAssembly(virtualPath);
-#endif
-                if (errorMsg == null)
-                {
-                    compiledType = assembly?.GetType(className, throwOnError, true);
+                    var possibleErrorMessage =
+                        $"Error: Didn't find type '{className}' in {Path.GetFileName(virtualPath)}. Maybe the class name doesn't match the file name. ";
+                    try
+                    {
+                        compiledType = assembly?.GetType(className, throwOnError, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Add(possibleErrorMessage);
+                        if(throwOnError) throw new TypeLoadException(possibleErrorMessage, ex);
+                    }
 
                     if (compiledType == null)
-                        errorMsg = $"didn't find type '{className}' in {virtualPath}";
+                        ErrorMessage = possibleErrorMessage;
                 }
             }
             else
-                errorMsg = $"Error: given path '{virtualPath}' doesn't point to a .cs or .cshtml";
+                ErrorMessage = $"Error: given path '{Path.GetFileName(virtualPath)}' doesn't point to a .cs or .cshtml";
 
-            if (errorMsg != null)
+            if (ErrorMessage != null)
             {
-                Log.Add(errorMsg + $"; throw error: {throwOnError}");
+                Log.Add(ErrorMessage + $"; throw error: {throwOnError}");
                 wrapLog("failed");
-                if (throwOnError) throw new Exception(errorMsg);
+                if (throwOnError) throw new Exception(ErrorMessage);
                 return null;
             }
 
@@ -111,6 +96,12 @@ namespace ToSic.Sxc.Code
             return instance;
 
         }
+
+        protected abstract Assembly GetAssembly(string virtualPath, string className);
+
+
+        protected abstract Type GetCsHtmlType(string virtualPath);
+
 
         /// <summary>
         /// Check the path and perform various corrections
@@ -124,7 +115,7 @@ namespace ToSic.Sxc.Code
                 return "no path/name provided";
 
             // if path relative, merge with shared code path
-            virtualPath = virtualPath.Replace("\\", "/");
+            virtualPath = virtualPath.ForwardSlash();// .Replace("\\", "/");
             if (!virtualPath.StartsWith("/"))
             {
                 Log.Add($"Trying to resolve relative path: '{virtualPath}' using '{relativePath}'");
@@ -132,9 +123,10 @@ namespace ToSic.Sxc.Code
                     return "Unexpected null value on relativePath";
 
                 // if necessary, add trailing slash
-                if (!relativePath.EndsWith("/"))
-                    relativePath += "/";
-                virtualPath = _serviceProvider.Build<ILinkPaths>().ToAbsolute(relativePath, virtualPath);
+                //if (!relativePath.EndsWith("/"))
+                relativePath = relativePath.SuffixSlash();// += "/";
+                //virtualPath = _serviceProvider.Build<ILinkPaths>().ToAbsolute(Path.Combine(relativePath, virtualPath));
+                virtualPath = Path.Combine(relativePath, virtualPath).ToAbsolutePathForwardSlash();
                 Log.Add($"final virtual path: '{virtualPath}'");
             }
 

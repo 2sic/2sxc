@@ -59,6 +59,10 @@ namespace ToSic.Sxc.Web
 
                 var optMatch = OptimizeDetection.Match(match.Value);
 
+                // Also get the ID (new in v12)
+                var idMatches = IdDetection.Match(match.Value);
+                var id = idMatches.Success ? idMatches.Groups["Id"].Value : null;
+
                 // todo: ATM the priority and type is only detected in the Regex which expects "enable-optimizations"
                 // ...so to improve this code, we would have to use 2 regexs - one for detecting "enable-optimizations" 
                 // ...and another for the priority etc.
@@ -81,7 +85,7 @@ namespace ToSic.Sxc.Web
 
                 // Register, then remember to remove later on
                 var url = FixUrlWithSpaces(match.Groups["Src"].Value);
-                Assets.Add(new ClientAssetInfo { IsJs = false, PosInPage = posInPage, Priority = priority, Url = url });
+                Assets.Add(new ClientAssetInfo { Id = id, IsJs = false, PosInPage = posInPage, Priority = priority, Url = url });
                 styleMatchesToRemove.Add(match);
             }
 
@@ -109,6 +113,10 @@ namespace ToSic.Sxc.Web
                     scriptMatchesToRemove.Add(match);
                     continue;
                 }
+                
+                // Also get the ID (new in v12)
+                var idMatches = IdDetection.Match(match.Value);
+                var id = idMatches.Success ? idMatches.Groups["Id"].Value : null;
 
                 var providerName = "body";
                 var priority = JsDefaultPriority;
@@ -131,7 +139,7 @@ namespace ToSic.Sxc.Web
                 }
 
                 // Register, then add to remove-queue
-                Assets.Add(new ClientAssetInfo { IsJs = true, PosInPage = providerName, Priority = priority, Url = url });
+                Assets.Add(new ClientAssetInfo { Id = id, IsJs = true, PosInPage = providerName, Priority = priority, Url = url });
                 scriptMatchesToRemove.Add(match);
             }
 
@@ -209,12 +217,14 @@ namespace ToSic.Sxc.Web
         private const string ScriptContentFormula = @"<script[^>]*>(?<Content>(.|\n)*?)</script[^>]*>";
         private const string StyleSrcFormula = "<link\\s([^>]*)href=('|\")(?<Src>.*?)('|\")([^>]*)(>.*?</link>|/?>)";
         private const string StyleRelFormula = "('|\"|\\s)rel=('|\")stylesheet('|\")";
+        private const string IdFormula = "('|\"|\\s)id=('|\")(?<Id>.*?)('|\")";
 
         internal static readonly Regex ScriptSrcDetection = new Regex(ScriptSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline);
         internal static readonly Regex ScriptContentDetection = new Regex(ScriptContentFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline);
         internal static readonly Regex StyleDetection = new Regex(StyleSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline);
         internal static readonly Regex StyleRelDetect = new Regex(StyleRelFormula, RegexOptions.IgnoreCase);
         internal static readonly Regex OptimizeDetection = new Regex(ClientDependencyRegex, RegexOptions.IgnoreCase);
+        internal static readonly Regex IdDetection = new Regex(IdFormula, RegexOptions.IgnoreCase);
 
         #endregion
 

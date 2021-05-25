@@ -87,7 +87,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var items = package.Items.Select(i =>
             {
-                var ent = ser.Deserialize(i.Entity, false, false) as Entity;
+                var ent = (Entity) ser.Deserialize(i.Entity, false, false);
 
                 var index = package.Items.IndexOf(i); // index is helpful in case of errors
                 if (!validator.EntityIsOk(index, ent, out exp))

@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.Run;
@@ -13,6 +13,7 @@ using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Repositories;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
@@ -25,12 +26,14 @@ using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.Dnn.WebApi.Admin;
 using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
-using ToSic.Sxc.WebApi.Adam;
+using ToSic.Sxc.WebApi.ApiExplorer;
 using ToSic.Sxc.WebApi.Context;
+using ToSic.Sxc.WebApi.Plumbing;
 
 
 namespace ToSic.SexyContent
@@ -47,7 +50,7 @@ namespace ToSic.SexyContent
             services.TryAddTransient<IModule, DnnModule>();
             services.TryAddTransient<DnnModule>();
 
-            // 
+            //
             services.TryAddTransient<IValueConverter, DnnValueConverter>();
 
             services.TryAddTransient<XmlExporter, DnnXmlExporter>();
@@ -62,17 +65,20 @@ namespace ToSic.SexyContent
             services.TryAddTransient<AppPermissionCheck, DnnPermissionCheck>();
             services.TryAddTransient<DnnPermissionCheck>();
 
+            services.TryAddTransient<ILinkHelper, DnnLinkHelper>();
             services.TryAddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
             services.TryAddTransient<DnnDynamicCodeRoot>();
             services.TryAddTransient<IPlatformModuleUpdater, DnnModuleUpdater>();
             services.TryAddTransient<IEnvironmentInstaller, DnnInstallationController>();
 
-            // ADAM 
+            // ADAM
             services.TryAddTransient<IAdamFileSystem<int, int>, DnnAdamFileSystem>();
             services.TryAddTransient<AdamManager, AdamManager<int, int>>();
 
-            // Settings
+            // Settings / WebApi stuff
             services.TryAddTransient<IUiContextBuilder, DnnUiContextBuilder>();
+            services.TryAddTransient<IApiInspector, DnnApiInspector>();
+            services.TryAddScoped<ResponseMaker, DnnResponseMaker>(); // must be scoped, as the api-controller must init this for use in other parts
 
             // new #2160
             services.TryAddTransient<AdamSecurityChecksBase, DnnAdamSecurityChecks>();
@@ -92,6 +98,9 @@ namespace ToSic.SexyContent
             services.TryAddTransient<IPagePublishing, Sxc.Dnn.Cms.DnnPagePublishing>();
             services.TryAddTransient<IPagePublishingResolver, Sxc.Dnn.Cms.DnnPagePublishingResolver>();
 
+            // Asset Templates
+            services.TryAddTransient<IAssetTemplates, DnnAssetTemplates>();
+
             if (appsCacheOverride != null)
             {
                 try
@@ -104,6 +113,15 @@ namespace ToSic.SexyContent
                     /* ignore */
                 }
             }
+            
+            // new in v12 - .net specific code compiler
+            services.TryAddTransient<CodeCompiler, CodeCompilerNetFull>();
+
+            // new in v12 - different way to integrate KOI - experimental!
+            try
+            {
+                services.ActivateKoi2Di();
+            } catch { /* ignore */ }
 
             return services;
         }

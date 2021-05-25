@@ -15,7 +15,7 @@ using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.ImportExport;
-using AppDto = ToSic.Sxc.WebApi.App.AppDto;
+using AppDto = ToSic.Eav.WebApi.Dto.AppDto;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
@@ -101,10 +101,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             => GetService<ExportApp>().Init(PortalSettings.PortalId, new DnnUser(), Log)
                 .SaveDataForVersionControl(appId, zoneId, includeContentGroups, resetAppGuid);
 
-        /// <summary>
-        /// Reset an App to the last xml state
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
         [ValidateAntiForgeryToken]
