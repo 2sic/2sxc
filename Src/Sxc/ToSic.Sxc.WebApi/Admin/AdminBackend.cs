@@ -38,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Admin
 
             return new DialogContextStandalone
             {
-                Context = cb.Get(Ctx.All),
+                Context = cb.Get(Ctx.All, CtxEnable.All),
             };
         }
 

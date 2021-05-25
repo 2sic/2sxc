@@ -50,7 +50,8 @@ namespace ToSic.Sxc.WebApi.Context
             return this;
         }
 
-        public ContextDto Get(Ctx flags)
+        /// <inheritdoc />
+        public ContextDto Get(Ctx flags, CtxEnable enableFlags)
         {
             var ctx = new ContextDto();
             // logic for activating each part
@@ -59,7 +60,8 @@ namespace ToSic.Sxc.WebApi.Context
             // 3. This also means if the switch is off, it's off
             if (flags.HasFlag(Ctx.AppBasic) | flags.HasFlag(Ctx.AppAdvanced))
                 ctx.App = GetApp(flags);
-            if (flags.HasFlag(Ctx.Enable)) ctx.Enable = GetEnable();
+            //if (flags.HasFlag(Ctx.Enable)) 
+            if(enableFlags != CtxEnable.None) ctx.Enable = GetEnable(enableFlags);
             if (flags.HasFlag(Ctx.Language)) ctx.Language = GetLanguage();
             if (flags.HasFlag(Ctx.Page)) ctx.Page = GetPage();
             if (flags.HasFlag(Ctx.Site)) ctx.Site = GetSite();
@@ -98,16 +100,22 @@ namespace ToSic.Sxc.WebApi.Context
                 Id = Eav.Constants.NullId,
             };
 
-        protected virtual ContextEnableDto GetEnable()
+        protected virtual ContextEnableDto GetEnable(CtxEnable ctx)
         {
             var isRealApp = App != null && App.AppGuid != Eav.Constants.DefaultAppName;
             var tmp = new JsContextUser(Deps.SiteCtx.User);
-            return new ContextEnableDto
-            {
-                AppPermissions = isRealApp,
-                CodeEditor = tmp.CanDevelop,
-                Query = isRealApp,
-            };
+            var dto = new ContextEnableDto();
+            if (ctx.HasFlag(CtxEnable.AppPermissions)) dto.AppPermissions = isRealApp;
+            if (ctx.HasFlag(CtxEnable.CodeEditor)) dto.CodeEditor = tmp.CanDevelop;
+            if(ctx.HasFlag(CtxEnable.Query)) dto.Query = isRealApp && tmp.CanDevelop;
+            if (ctx.HasFlag(CtxEnable.FormulaSave)) dto.FormulaSave = tmp.CanDevelop;
+            return dto;
+            //return new ContextEnableDto
+            //{
+            //    AppPermissions = isRealApp,
+            //    CodeEditor = tmp.CanDevelop,
+            //    Query = isRealApp,
+            //};
         }
 
         protected virtual string GetGettingStartedUrl() => Eav.Constants.UrlNotInitialized;
