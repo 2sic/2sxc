@@ -26,7 +26,7 @@ namespace ToSic.Sxc.WebApi
         /// <param name="field"></param>
         /// <param name="subFolder"></param>
         /// <returns></returns>
-        IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+        IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             Stream stream = null,
             string fileName = null,
             string contentType = null,
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.WebApi
         /// <param name="fileDownloadName">Download name. If provided, it will try to force download/save on the browser. </param>
         /// <param name="contents">Content of the result - a string, byte[] or stream to include.</param>
         /// <returns></returns>
-        dynamic File(string dontRelyOnParameterOrder = ToSic.Eav.Constants.RandomProtectionParameter,
+        dynamic File(string dontRelyOnParameterOrder = ToSic.Eav.Parameters.Protector,
             // Important: the second parameter should _not_ be a string, otherwise the signature looks the same as the built-in File(...) method
             bool? download = null,
             string virtualPath =

@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Web
         /// <param name="api">optional api url "api/my?id=something"</param>
         /// <returns></returns>
         string To(
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             int? pageId = null,
             string parameters = null,
             string api = null

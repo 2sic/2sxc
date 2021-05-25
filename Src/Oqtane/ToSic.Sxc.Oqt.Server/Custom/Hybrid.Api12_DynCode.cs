@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
@@ -108,7 +109,7 @@ namespace Custom.Hybrid
         /// See docs of official interface <see cref="IDynamicWebApi"/>
         /// </summary>
         [NonAction]
-        public ToSic.Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = ToSic.Eav.Constants.RandomProtectionParameter,
+        public ToSic.Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = Parameters.Protector,
             Stream stream = null,
             string fileName = null,
             string contentType = null,
@@ -116,7 +117,7 @@ namespace Custom.Hybrid
             string field = null,
             string subFolder = "")
         {
-            ToSic.Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "SaveInAdam",
+            Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "SaveInAdam",
                 $"{nameof(stream)},{nameof(fileName)},{nameof(contentType)},{nameof(guid)},{nameof(field)},{nameof(subFolder)} (optional)");
 
             if (stream == null || fileName == null || contentType == null || guid == null || field == null)
@@ -150,7 +151,7 @@ namespace Custom.Hybrid
 
         [NonAction]
         public dynamic CreateInstance(string virtualPath,
-            string dontRelyOnParameterOrder = ToSic.Eav.Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = Parameters.Protector,
             string name = null,
             string relativePath = null,
             bool throwOnError = true) =>

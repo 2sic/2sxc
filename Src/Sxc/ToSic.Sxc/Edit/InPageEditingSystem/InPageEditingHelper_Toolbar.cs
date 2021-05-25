@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
         /// <inheritdoc />
         public HtmlString Toolbar(object target = null, 
-            string noParameterOrder = Eav.Constants.RandomProtectionParameter, 
+            string noParameterOrder = Eav.Parameters.Protector, 
             string actions = null, 
             string contentType = null, 
             object prefill = null, 
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
         /// <inheritdoc/>
         public HtmlString TagToolbar(object target = null,
-            string noParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string noParameterOrder = Eav.Parameters.Protector,
             string actions = null,
             string contentType = null,
             object prefill = null,
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         {
             Log.Add($"context toolbar - enabled:{Enabled}; inline{inTag}");
             if (!Enabled) return null;
-            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Toolbar", $"{nameof(actions)},{nameof(contentType)},{nameof(prefill)},{nameof(toolbar)},{nameof(settings)}");
+            Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Toolbar", $"{nameof(actions)},{nameof(contentType)},{nameof(prefill)},{nameof(toolbar)},{nameof(settings)}");
 
             // ensure that internally we always process it as an entity
             var eTarget = target as IEntity ?? (target as IDynamicEntity)?.Entity;

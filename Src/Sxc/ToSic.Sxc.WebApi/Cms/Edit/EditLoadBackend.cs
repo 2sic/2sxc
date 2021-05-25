@@ -146,7 +146,7 @@ namespace ToSic.Sxc.WebApi.Cms
             // Fix not-supported input-type names; map to correct name
             result.ContentTypes
                 .ForEach(jt => jt.Attributes
-                    .ForEach(at => at.InputType = InputTypes.MapInputTypeV10(at.InputType)));
+                    .ForEach(at => at.InputType = Compatibility.InputTypes.MapInputTypeV10(at.InputType)));
 
             // load input-field configurations
             result.InputTypes = GetNecessaryInputTypes(result.ContentTypes, typeRead);

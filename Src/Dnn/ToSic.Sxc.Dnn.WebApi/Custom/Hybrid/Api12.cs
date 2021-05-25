@@ -94,7 +94,7 @@ namespace Custom.Hybrid
 
 
         /// <inheritdoc />
-        public new ToSic.Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = ToSic.Eav.Constants.RandomProtectionParameter,
+        public new ToSic.Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = ToSic.Eav.Parameters.Protector,
             Stream stream = null,
             string fileName = null,
             string contentType = null,

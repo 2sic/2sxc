@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Web
 
 
         public string WrapInContext(string content,
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             int instanceId = 0,
             int contentBlockId = 0,
             bool editContext = false,
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Web
             bool autoToolbar = false,
             bool addLineBreaks = true)
         {
-            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes", $"{nameof(instanceId)},{nameof(contentBlockId)},{nameof(editContext)},{nameof(tag)},{nameof(autoToolbar)},{nameof(addLineBreaks)}");
+            Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes", $"{nameof(instanceId)},{nameof(contentBlockId)},{nameof(editContext)},{nameof(tag)},{nameof(autoToolbar)},{nameof(addLineBreaks)}");
 
             var contextAttribs = ContextAttributes(instanceId, contentBlockId, editContext);
 

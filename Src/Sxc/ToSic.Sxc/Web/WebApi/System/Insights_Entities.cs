@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Web.WebApi.System
                     : appRead.Entities.Get(type).ToImmutableArray();
                 msg += p($"entities: {entities.Length}\n");
                 msg += "<table id='table'><thead>"
-                    + tr(new[] { "#", "Id", Eav.Constants.SysFieldGuid, Eav.Constants.SysFieldTitle, "Type", "Modified", "Owner", "Version", "Metadata", "Permissions" }, true)
+                    + tr(new[] { "#", "Id", Eav.Data.Attributes.GuidNiceName, Eav.Data.Attributes.TitleNiceName, "Type", "Modified", "Owner", "Version", "Metadata", "Permissions" }, true)
                     + "</thead>"
                     + "<tbody>";
                 var count = 0;

@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Data
             if (lookup && result is string strResult
                        && ValueConverterBase.CouldBeReference(strResult)
                        && Entity.Attributes.ContainsKey(field) &&
-                       Entity.Attributes[field].Type == Eav.Constants.DataTypeHyperlink)
+                       Entity.Attributes[field].Type == DataTypes.Hyperlink)
                 result = _serviceProviderOrNull?.Build<IValueConverter>()?.ToValue(strResult, EntityGuid)
                          ?? result;
 
@@ -64,11 +64,11 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc/>
         public dynamic Get(string name,
             // ReSharper disable once MethodOverloadWithOptionalParameter
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             string language = null,
             bool convertLinks = true)
         {
-            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Get",
+            Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Get",
                 $"{nameof(language)}, ... (optional)");
             return _getValue(name, language, convertLinks);
         }

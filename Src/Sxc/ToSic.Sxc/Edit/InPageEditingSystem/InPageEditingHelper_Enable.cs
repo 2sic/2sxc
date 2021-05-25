@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             bool? turnOn = null, // WIP experimental
             bool? forms = null, bool? context = null, bool? autoToolbar = null, bool? styles = null)
         {
-            Eav.Constants.ProtectAgainstMissingParameterNames(noParameterOrder, "Enable", $"{nameof(js)},{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
+            Eav.Parameters.ProtectAgainstMissingParameterNames(noParameterOrder, "Enable", $"{nameof(js)},{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
 
             // check if feature enabled - if more than the api is needed
             // extend this list if new parameters are added

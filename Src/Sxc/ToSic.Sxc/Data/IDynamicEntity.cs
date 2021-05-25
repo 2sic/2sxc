@@ -81,7 +81,7 @@ namespace ToSic.Sxc.Data
         /// <returns>a dynamically typed result, can be string, bool, etc.</returns>
         dynamic Get(string name,
             // ReSharper disable once MethodOverloadWithOptionalParameter
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             string language = null,
             bool convertLinks = true);
 

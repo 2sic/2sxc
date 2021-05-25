@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
         /// <inheritdoc />
         [HttpGet]
-        public Dictionary<string, string> ReservedNames() => FieldConstants.ReservedNames;
+        public Dictionary<string, string> ReservedNames() => Attributes.ReservedNames;
 
         /// <summary>
         /// Used to be GET ContentType/AddField

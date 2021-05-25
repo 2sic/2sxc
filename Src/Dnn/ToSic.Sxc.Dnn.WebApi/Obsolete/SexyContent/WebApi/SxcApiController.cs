@@ -164,7 +164,7 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="field"></param>
         /// <param name="subFolder"></param>
         /// <returns></returns>
-        public new Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+        public new Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             Stream stream = null,
             string fileName = null,
             string contentType = null,

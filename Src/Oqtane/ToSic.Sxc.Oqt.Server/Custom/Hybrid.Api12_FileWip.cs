@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using ToSic.Eav;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.WebApi;
 
@@ -11,7 +12,7 @@ namespace Custom.Hybrid
         #region Experimental
 
 
-        public dynamic File(string dontRelyOnParameterOrder = ToSic.Eav.Constants.RandomProtectionParameter,
+        public dynamic File(string dontRelyOnParameterOrder = Parameters.Protector,
             // Important: the second parameter should _not_ be a string, otherwise the signature looks the same as the built-in File(...) method
             bool? download = null,
             string virtualPath = null, // important: this is the virtualPath, but it should not have the same name, to not confuse the compiler with same sounding param names

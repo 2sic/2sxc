@@ -83,7 +83,7 @@ namespace ToSic.Sxc.WebApi
         /// <summary>
         /// See docs of official interface <see cref="IDynamicWebApi"/>
         /// </summary>
-        public Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, 
+        public Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Parameters.Protector, 
             Stream stream = null, 
             string fileName = null, 
             string contentType = null, 
@@ -91,7 +91,7 @@ namespace ToSic.Sxc.WebApi
             string field = null,
             string subFolder = "")
         {
-            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "SaveInAdam", 
+            Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "SaveInAdam", 
                 $"{nameof(stream)},{nameof(fileName)},{nameof(contentType)},{nameof(guid)},{nameof(field)},{nameof(subFolder)} (optional)");
 
             if(stream == null || fileName == null || contentType == null || guid == null || field == null)
@@ -112,7 +112,7 @@ namespace ToSic.Sxc.WebApi
         public string CreateInstancePath { get; set; }
 
         public dynamic CreateInstance(string virtualPath, 
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             string name = null, 
             string relativePath = null, 
             bool throwOnError = true) =>

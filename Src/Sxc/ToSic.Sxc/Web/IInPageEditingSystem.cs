@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Web
         /// 1. Added in 2sxc 8.04
         /// </remarks>
         HtmlString Toolbar(object target = null,
-            string noParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string noParameterOrder = Eav.Parameters.Protector,
             string actions = null,
             string contentType = null,
             object prefill = null,
@@ -106,7 +106,7 @@ namespace ToSic.Sxc.Web
         /// 1. Added in 2sxc 9.40
         /// </remarks>
         HtmlString TagToolbar(object target = null,
-            string noParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string noParameterOrder = Eav.Parameters.Protector,
             string actions = null,
             string contentType = null,
             object prefill = null,
@@ -134,7 +134,7 @@ namespace ToSic.Sxc.Web
         /// 1. Enhanced with apps in 10.27
         /// </remarks>
         HtmlString ContextAttributes(IDynamicEntity target, 
-            string noParameterOrder = Eav.Constants.RandomProtectionParameter, 
+            string noParameterOrder = Eav.Parameters.Protector, 
             string field = null, 
             string contentType = null,
             Guid? newGuid = null,
@@ -159,7 +159,7 @@ namespace ToSic.Sxc.Web
         /// </remarks>
         [PrivateApi]
         HtmlString WrapInContext(object content,
-            string noParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string noParameterOrder = Eav.Parameters.Protector,
             string tag = Constants.DefaultContextTag,
             bool full = false,
             bool? enableEdit = null,
@@ -192,7 +192,7 @@ namespace ToSic.Sxc.Web
         /// 1. Introduced in 2sxc 9.30
         /// 2. Enhanced with parameter jsApi in 10.20
         /// </remarks>
-        string Enable(string noParameterOrder = Eav.Constants.RandomProtectionParameter,
+        string Enable(string noParameterOrder = Eav.Parameters.Protector,
             bool? js = null,
             bool? api = null, 
             bool? turnOn = null,
