@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Code
                 return this;
 
             CompatibilityLevel = compatibility;
-            ((CmsContext) CmsContext).Update(block, this);
+            ((CmsContext) CmsContext).Update(this, block);
             Block = block;
             App = block.App;
             Data = block.Data;

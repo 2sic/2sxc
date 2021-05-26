@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Context
         /// System to extend the known context by more information if we're running inside a block
         /// </summary>
         /// <returns></returns>
-        internal CmsContext Update(IBlock block, IDynamicCode dynCode)
+        internal CmsContext Update(IDynamicCode dynCode, IBlock block)
         {
             _dynCode = dynCode;
             _block = block;
