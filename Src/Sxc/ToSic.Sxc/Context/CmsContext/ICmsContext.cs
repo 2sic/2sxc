@@ -41,9 +41,9 @@ namespace ToSic.Sxc.Context
         
         
         /// <summary>
-        /// WIP - probably for 12.02
+        /// Experimental feature for 12.02 - not final. Provides View-information.
         /// </summary>
-        [PrivateApi]
+        /// <remarks>New in v12.02, WIP</remarks>
         ICmsView View { get; }
     }
 }

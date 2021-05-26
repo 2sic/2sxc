@@ -2,7 +2,12 @@
 
 namespace ToSic.Sxc.Context
 {
-    [PrivateApi("Experimental")]
+    /// <summary>
+    /// View context information - this is Experimental / BETA WIP
+    /// </summary>
+    /// <remarks>
+    /// Added in 2sxc 12.02
+    /// </remarks>
     public interface ICmsView
     {
         /// <summary>
@@ -21,22 +26,18 @@ namespace ToSic.Sxc.Context
         string Edition { get; }
         
         /// <summary>
-        /// The Configuration Entity
+        /// The Configuration Entity of the View
         /// </summary>
-        [PrivateApi]
         dynamic Configuration { get; }
 
         /// <summary>
-        /// Possible i18n Resources for this View WIP
+        /// Custom Language Resources for this View
         /// </summary>
-        [PrivateApi]
         dynamic Resources { get; }
 
         /// <summary>
-        /// Possible Settings for this View WIP
-        /// If we do implement it, it's meant for views which share the same template file
+        /// Custom Settings for this View
         /// </summary>
-        [PrivateApi]
         dynamic Settings { get; }
     }
 }
