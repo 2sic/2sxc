@@ -70,17 +70,7 @@ namespace ToSic.Sxc.Blocks
         // 2021-05-28 doesn't seem used anywhere, so we'll inline - delete in ca. 1 month or so
         //private string Location => Get(FieldLocation, AppAssets.AppInSite);
 
-        public bool IsShared
-        {
-            get
-            {
-                if (_isShared != null) return _isShared.Value;
-                var loc = Get(FieldLocation, AppAssets.AppInSite);
-                _isShared = loc == AppAssets.HostFileSystem || loc == AppAssets.AppInGlobal;
-                return _isShared.Value;
-            }
-        }
-
+        public bool IsShared => _isShared ?? (_isShared = AppAssets.IsShared(Get(FieldLocation, AppAssets.AppInSite))).Value;
         private bool? _isShared;
 
         public bool UseForList => Get(FieldUseList, false);

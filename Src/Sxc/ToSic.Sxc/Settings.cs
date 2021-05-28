@@ -27,16 +27,6 @@ namespace ToSic.Sxc
 
         internal static readonly string AttributeSetStaticNameContentBlockTypeName = "ContentGroupReference";
 
-        /// <summary>
-        /// Collection of Template Locations
-        /// </summary>
-        //public class TemplateLocations
-        //{
-        //    public const string PortalFileSystem = "Portal File System";
-        //    public const string HostFileSystem = "Host File System";
-        //}
-        
-        
 
         public class Installation
         {
