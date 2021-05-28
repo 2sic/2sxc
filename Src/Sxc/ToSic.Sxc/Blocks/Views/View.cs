@@ -4,6 +4,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Apps.Assets;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Blocks
@@ -66,9 +67,21 @@ namespace ToSic.Sxc.Blocks
 
         public bool IsHidden => Get(FieldIsHidden, false);
 
-        public string Location => Get(FieldLocation, Sxc.Settings.TemplateLocations.PortalFileSystem);
+        // 2021-05-28 doesn't seem used anywhere, so we'll inline - delete in ca. 1 month or so
+        //private string Location => Get(FieldLocation, AppAssets.AppInSite);
 
-        public bool IsShared => Location == Sxc.Settings.TemplateLocations.HostFileSystem;
+        public bool IsShared
+        {
+            get
+            {
+                if (_isShared != null) return _isShared.Value;
+                var loc = Get(FieldLocation, AppAssets.AppInSite);
+                _isShared = loc == AppAssets.HostFileSystem || loc == AppAssets.AppInGlobal;
+                return _isShared.Value;
+            }
+        }
+
+        private bool? _isShared;
 
         public bool UseForList => Get(FieldUseList, false);
         public bool PublishData => Get(FieldPublishEnable, false);
