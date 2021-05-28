@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Context
         /// If the system is single-language, it will often just be an empty string "".
         /// <br/>
         /// <br/>
-        /// Use in Razor: `CmsContext.Culture.DefaultCulture`
+        /// Use in Razor: `CmsContext.Culture.DefaultCode`
         /// </summary>
         /// <remarks>
         /// 1. It's always lower-case.
