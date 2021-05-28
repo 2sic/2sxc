@@ -13,38 +13,53 @@ namespace ToSic.Sxc.Context
     {
         /// <summary>
         /// View configuration ID
+        /// 
+        /// 🪒 Use in Razor: `CmsContext.View.Id`
         /// </summary>
         int Id { get; }
-        
+
         /// <summary>
-        /// Name of the view as configured
+        /// Name of the view as configured - note that because of i18n it could be different depending on the language.
+        /// To clearly identify a view, use the <see cref="Identifier"/> or <see cref="Settings"/>
+        /// 
+        /// 🪒 Use in Razor: `CmsContext.View.Name`
         /// </summary>
         string Name { get; }
-        
+
         /// <summary>
         /// An optional identifier which the View configuration can provide.
         /// Use this when you want to use the same template but make minor changes based on the View selected (like change the number of columns).
         /// Usually you will use either this OR the <see cref="Settings"/>
+        /// 
+        /// 🪒 Use in Razor: `CmsContext.View.Identifier`
         /// </summary>
         string Identifier { get; }
-        
+
         /// <summary>
-        /// Edition used - if any
+        /// Edition used - if any. Otherwise empty string. 
+        /// 
+        /// 🪒 Use in Razor: `CmsContext.View.Edition`
         /// </summary>
         string Edition { get; }
-        
+
         /// <summary>
         /// The Configuration Entity of the View
+        /// 
+        /// 🪒 Use in Razor: `CmsContext.View.Configuration.Icon`
         /// </summary>
         dynamic Configuration { get; }
 
         /// <summary>
         /// Custom Language Resources for this View
+        /// 
+        /// 🪒 Use in Razor: `CmsContext.View.Resources.CtaButtonLabel`
         /// </summary>
         dynamic Resources { get; }
 
         /// <summary>
         /// Custom Settings for this View
+        /// 
+        /// 🪒 Use in Razor: `CmsContext.View.Settings.ItemsPerRow`
         /// </summary>
         dynamic Settings { get; }
     }

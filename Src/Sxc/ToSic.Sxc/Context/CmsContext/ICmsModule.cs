@@ -14,9 +14,13 @@ namespace ToSic.Sxc.Context
     public interface ICmsModule
     {
         /// <summary>
-        /// The module id on the page. Corresponds to the Dnn ModuleId or the Oqtane Module Id.
+        /// The module id on the page. 
+        /// 
+        /// 🪒 Use in Razor: `CmsContext.Module.Id`
         /// </summary>
         /// <remarks>
+        /// Corresponds to the Dnn ModuleId or the Oqtane Module Id.
+        /// 
         /// In some systems a module can be re-used on multiple pages, and possibly have different settings for re-used modules.
         /// 2sxc doesn't use that, so the module id corresponds to the Dnn ModuleId and not the PageModuleId.  
         /// </remarks>

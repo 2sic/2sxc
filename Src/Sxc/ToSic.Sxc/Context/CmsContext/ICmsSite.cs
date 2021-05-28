@@ -10,8 +10,12 @@ namespace ToSic.Sxc.Context
     {
         /// <summary>
         /// The Id of the site in systems like DNN and Oqtane.
-        /// In DNN this is the same as the PortalId
+        /// 
+        /// 🪒 Use in Razor: `CmsContext.Site.Id`
         /// </summary>
+        /// <remarks>
+        /// In DNN this is the same as the `PortalId`
+        /// </remarks>
         int Id { get; }
 
         /// <summary>
@@ -22,6 +26,8 @@ namespace ToSic.Sxc.Context
         /// - website.org/products
         /// - website.org/en-us
         /// - website.org/products/en-us
+        /// 
+        /// 🪒 Use in Razor: `CmsContext.Site.Url`
         /// </summary>
         string Url { get; }
     }
