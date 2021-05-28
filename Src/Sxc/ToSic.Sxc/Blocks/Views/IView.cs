@@ -16,6 +16,18 @@ namespace ToSic.Sxc.Blocks
         string Name { get; }
 
         /// <summary>
+        /// An optional unique identifier for this View configuration. 
+        /// </summary>
+        /// <remarks>New in 12.02</remarks>
+        string Identifier { get; }
+        
+        /// <summary>
+        /// An optional Icon for this View configuration. Would be used instead of the file name in the App-folder. WIP
+        /// </summary>
+        /// <remarks>New in 12.02</remarks>
+        string Icon { get; }
+        
+        /// <summary>
         /// Path to the template
         /// </summary>
         string Path { get; }

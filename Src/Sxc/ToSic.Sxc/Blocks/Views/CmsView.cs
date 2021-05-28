@@ -24,6 +24,9 @@ namespace ToSic.Sxc.Blocks
         public string Name => _view?.Name ?? "";
 
         /// <inheritdoc />
+        public string Identifier => _view?.Identifier ?? "";
+
+        /// <inheritdoc />
         public string Edition => _view?.Edition;
 
         /// <inheritdoc />

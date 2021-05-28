@@ -1,12 +1,9 @@
 ﻿using System.Linq;
-using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 
-
-namespace ToSic.Sxc.Blocks.Views
+namespace ToSic.Sxc.Blocks
 {
     /// <summary>
     /// This contains the logic to decide which view a block will have

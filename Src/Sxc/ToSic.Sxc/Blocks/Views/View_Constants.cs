@@ -6,6 +6,10 @@
         public const string TemplateIcon = "Icon"; // temp public, needed in 2sxc for now...
 
         internal const string FieldName = "Name";
+        
+        internal const string FieldIdentifier = "Identifier";
+        internal const string FieldIcon = "Icon";
+       
         internal const string FieldPath = "Path";
         internal const string FieldContentType = "ContentTypeStaticName";
         internal const string FieldContentDemo = "ContentDemoEntity";

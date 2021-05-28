@@ -8,6 +8,7 @@ namespace ToSic.Sxc.Context
     /// <remarks>
     /// Added in 2sxc 12.02
     /// </remarks>
+    [PublicApi]
     public interface ICmsView
     {
         /// <summary>
@@ -19,6 +20,13 @@ namespace ToSic.Sxc.Context
         /// Name of the view as configured
         /// </summary>
         string Name { get; }
+        
+        /// <summary>
+        /// An optional identifier which the View configuration can provide.
+        /// Use this when you want to use the same template but make minor changes based on the View selected (like change the number of columns).
+        /// Usually you will use either this OR the <see cref="Settings"/>
+        /// </summary>
+        string Identifier { get; }
         
         /// <summary>
         /// Edition used - if any

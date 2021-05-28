@@ -27,6 +27,10 @@ namespace ToSic.Sxc.Blocks
 
         public string Name => Get(FieldName, "unknown name");
 
+        public string Identifier => Get(FieldIdentifier, "");
+        
+        public string Icon => Get(FieldIcon, "");
+
         public string Path => Get(FieldPath, "");
 
         public string ContentType => Get(FieldContentType, "");
