@@ -9,8 +9,6 @@ namespace ToSic.Sxc
         // Important note: always use static-readonly, NOT constant for .net 456
         // reason is that we must ensure that the static constructor is called
         // whenever anything is accessed
-
-        public const string PortalHostDirectory = "~/Portals/_default/";
         public const string AppsRootFolder = "2sxc";
         public const string PortalSettingsPrefix = "ToSIC_SexyContent_";
         public const string PortalSettingZoneId = PortalSettingsPrefix + "ZoneID";

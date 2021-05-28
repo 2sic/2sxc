@@ -13,6 +13,11 @@ namespace ToSic.Sxc.Dnn.Run
 {
     public class DnnZoneMapper : ZoneMapperBase
     {
+        /// <summary>
+        /// This is the name of the setting in the PortalSettings pointing to the zone of this portal
+        /// </summary>
+        private const string PortalSettingZoneId = "ToSIC_SexyContent_ZoneID";
+
         private readonly Lazy<ZoneCreator> _zoneCreatorLazy;
 
         /// <inheritdoc />
@@ -40,11 +45,11 @@ namespace ToSic.Sxc.Dnn.Run
             var c = PortalController.Instance.GetPortalSettings(siteId);
 
             // Create new zone automatically
-            if (c.ContainsKey(Settings.PortalSettingZoneId)) return int.Parse(c[Settings.PortalSettingZoneId]);
+            if (c.ContainsKey(PortalSettingZoneId)) return int.Parse(c[PortalSettingZoneId]);
 
             var portalSettings = new PortalSettings(siteId);
             var zoneId = _zoneCreatorLazy.Value.Init(Log).Create(portalSettings.PortalName + " (Portal " + siteId + ")");
-            PortalController.UpdatePortalSetting(siteId, Settings.PortalSettingZoneId, zoneId.ToString());
+            PortalController.UpdatePortalSetting(siteId, PortalSettingZoneId, zoneId.ToString());
             return zoneId;
 
         }
@@ -56,7 +61,7 @@ namespace ToSic.Sxc.Dnn.Run
             var found = portals.Cast<PortalInfo>().Select(p =>
                 {
                     var set = pinst.GetPortalSettings(p.PortalID);
-                    if (!set.TryGetValue(Settings.PortalSettingZoneId, out var portalZoneId)) return null;
+                    if (!set.TryGetValue(PortalSettingZoneId, out var portalZoneId)) return null;
                     if (!int.TryParse(portalZoneId, out var zid)) return null;
                     return zid == zoneId ? new PortalSettings(p) : null;
                 })

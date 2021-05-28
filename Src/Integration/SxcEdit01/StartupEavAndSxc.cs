@@ -47,7 +47,9 @@ namespace IntegrationSamples.SxcEdit01
 
             sp.Build<IDbConfiguration>().ConnectionString = connectionString;
             var hostingEnvironment = sp.Build<IHostEnvironment>();
-            sp.Build<IGlobalConfiguration>().GlobalFolder = Path.Combine(hostingEnvironment.ContentRootPath, "wwwroot\\system\\sxc");
+            var globalConfig = sp.Build<IGlobalConfiguration>();
+            globalConfig.GlobalFolder = Path.Combine(hostingEnvironment.ContentRootPath, "wwwroot\\system\\sxc");
+            globalConfig.GlobalSiteFolder = "todo - global apps not implemented yet";
         }
 
         internal static IServiceCollection AddImplementations(this IServiceCollection services)

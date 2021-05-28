@@ -9,7 +9,6 @@ using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Engines
 {
@@ -30,10 +29,9 @@ namespace ToSic.Sxc.Engines
 
         private IServerPaths ServerPaths { get; }
         public IApp App;
-        public TemplateHelpers(IServerPaths serverPaths, ILinkPaths linkPaths, IGlobalConfiguration globalConfiguration, Lazy<IValueConverter> iconConverterLazy): base("Viw.Help")
+        public TemplateHelpers(IServerPaths serverPaths, IGlobalConfiguration globalConfiguration, Lazy<IValueConverter> iconConverterLazy): base("Viw.Help")
         {
             ServerPaths = serverPaths;
-            _linkPaths = linkPaths;
             _globalConfiguration = globalConfiguration;
             _iconConverterLazy = iconConverterLazy;
         }
@@ -47,7 +45,6 @@ namespace ToSic.Sxc.Engines
 
         #endregion
 
-        private readonly ILinkPaths _linkPaths;
         private readonly IGlobalConfiguration _globalConfiguration;
         private readonly Lazy<IValueConverter> _iconConverterLazy;
 
@@ -59,7 +56,7 @@ namespace ToSic.Sxc.Engines
         {
             var wrapLog = Log.Call($"{isShared}");
             var portalPath = isShared
-                ? Path.Combine(ServerPaths.FullAppPath(Settings.PortalHostDirectory) ?? "", Settings.AppsRootFolder)
+                ? Path.Combine(ServerPaths.FullAppPath(_globalConfiguration.GlobalSiteFolder) ?? "", Settings.AppsRootFolder)
                 : App.Site.AppsRootPhysicalFull ?? "";
             var sexyFolderPath = portalPath;
 
@@ -104,18 +101,18 @@ namespace ToSic.Sxc.Engines
                 case PathTypes.Link:
                     basePath = global
                         //? _linkPaths.ToAbsolute(Path.Combine(Settings.PortalHostDirectory, Settings.AppsRootFolder))
-                        ? Path.Combine(Settings.PortalHostDirectory, Settings.AppsRootFolder, App.Folder).ToAbsolutePathForwardSlash()
+                        ? Path.Combine(_globalConfiguration.GlobalSiteFolder, Settings.AppsRootFolder, App.Folder).ToAbsolutePathForwardSlash()
                         : App.Path;
                     break;
                 case PathTypes.PhysRelative:
                     basePath = global
                         //? _linkPaths.ToAbsolute(Path.Combine(Settings.PortalHostDirectory, Settings.AppsRootFolder))
-                        ? Path.Combine(Settings.PortalHostDirectory, Settings.AppsRootFolder, App.Folder).ToAbsolutePathForwardSlash()
+                        ? Path.Combine(_globalConfiguration.GlobalSiteFolder, Settings.AppsRootFolder, App.Folder).ToAbsolutePathForwardSlash()
                         : Path.Combine(App.Site.AppsRootPhysical, App.Folder);
                     break;
                 case PathTypes.PhysFull:
                     basePath = global
-                        ? ServerPaths.FullAppPath(Path.Combine(Settings.PortalHostDirectory, Settings.AppsRootFolder, App.Folder))
+                        ? ServerPaths.FullAppPath(Path.Combine(_globalConfiguration.GlobalSiteFolder, Settings.AppsRootFolder, App.Folder))
                         : Path.Combine(App.Site.AppsRootPhysicalFull, App.Folder);
                     break;
                 default:
