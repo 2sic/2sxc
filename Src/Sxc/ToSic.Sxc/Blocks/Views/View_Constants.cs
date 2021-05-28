@@ -3,7 +3,7 @@
 
     public partial class View 
     {
-        public const string TemplateIcon = "Icon"; // temp public, needed in 2sxc for now...
+        public const string ContentTypeFieldIcon = "Icon"; // temp public, needed in 2sxc for now...
 
         internal const string FieldName = "Name";
         

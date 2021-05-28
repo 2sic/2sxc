@@ -34,6 +34,12 @@ namespace ToSic.Sxc.WebApi.InPage
                 .ToList();
         }
 
+        public IEnumerable<ContentTypeUiInfo> ContentTypes()
+        {
+            var appPath = Block?.App?.Path ?? "";
+            return CmsManagerOfBlock?.Read.Views.GetContentTypesWithStatus(appPath);
+        }
+
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {
             var callLog = Log.Call<Guid?>($"{templateId}, {forceCreateContentGroup}");
@@ -69,22 +75,5 @@ namespace ToSic.Sxc.WebApi.InPage
             return callLog("ok", rendered);
         }
 
-
-        // 2020-12-06 2dm v11.11 disable, as we shouldn't be using the thread-culture any more!
-        ///// <summary>
-        ///// Try setting thread language to enable 2sxc to render the template in this language
-        ///// </summary>
-        ///// <param name="lang"></param>
-        //private static void SetThreadCulture(string lang)
-        //{
-        //    if (string.IsNullOrEmpty(lang)) return;
-        //    try
-        //    {
-        //        System.Threading.Thread. CurrentThread.CurrentCulture =
-        //            System.Globalization.CultureInfo.GetCultureInfo(lang);
-        //    }
-        //    // Fallback / ignore if the language specified has not been found
-        //    catch (System.Globalization.CultureNotFoundException) { /* ignore */ }
-        //}
     }
 }

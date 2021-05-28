@@ -144,8 +144,9 @@ namespace ToSic.Sxc.Engines
                 var iconInConfig = view.Icon;
                 
                 // If we have the App:Path in front, replace as expected, but never on global
-                if (iconInConfig.StartsWith(AppAssets.AppPathPlaceholder, StringComparison.OrdinalIgnoreCase))
-                    return AppPathRoot(false, type) + iconInConfig.Substring(AppAssets.AppPathPlaceholder.Length);
+                if (AppPathTokenDetected(iconInConfig))
+                    return AppPathTokenReplace(iconInConfig, AppPathRoot(false, type));
+                // AppPathRoot(false, type) + iconInConfig.Substring(AppAssets.AppPathPlaceholder.Length);
                 
                 // If not, we must assume it's file:## placeholder and we can only convert to relative link
                 if (type == PathTypes.Link) return _iconConverterLazy.Value.ToValue(iconInConfig, view.Guid);
@@ -158,5 +159,13 @@ namespace ToSic.Sxc.Engines
         }
 
         public string ViewPath(IView view, PathTypes type) => Path.Combine(AppPathRoot(view.IsShared, type), view.Path);
+
+        public static bool AppPathTokenDetected(string iconInConfig) =>
+            (iconInConfig ?? "").StartsWith(AppAssets.AppPathPlaceholder, StringComparison.OrdinalIgnoreCase);
+
+        public static string AppPathTokenReplace(string iconInConfig, string appPath) =>
+            AppPathTokenDetected(iconInConfig)
+                ? appPath + iconInConfig.Substring(AppAssets.AppPathPlaceholder.Length)
+                : iconInConfig;
     }
 }

@@ -73,7 +73,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<ContentTypeUiInfo> ContentTypes() => CmsRuntime?.Views.GetContentTypesWithStatus();
+        public IEnumerable<ContentTypeUiInfo> ContentTypes() => ViewBackend.ContentTypes(); //  CmsRuntime?.Views.GetContentTypesWithStatus();
 
         #endregion
 

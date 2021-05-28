@@ -10,8 +10,6 @@ namespace ToSic.Sxc
         // reason is that we must ensure that the static constructor is called
         // whenever anything is accessed
         public const string AppsRootFolder = "2sxc";
-        public const string PortalSettingsPrefix = "ToSIC_SexyContent_";
-        public const string PortalSettingZoneId = PortalSettingsPrefix + "ZoneID";
         public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
 
         public static readonly string ModuleVersion = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString("00") + "."
