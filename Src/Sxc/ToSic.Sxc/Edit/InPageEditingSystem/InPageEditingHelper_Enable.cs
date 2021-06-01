@@ -18,7 +18,6 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
         /// <inheritdoc/>
         public string Enable(string noParameterOrder = "random-y023n", bool? js = null, bool? api = null,
-            bool? turnOn = null, // WIP experimental
             bool? forms = null, bool? context = null, bool? autoToolbar = null, bool? styles = null)
         {
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParameterOrder, "Enable", $"{nameof(js)},{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
@@ -42,9 +41,6 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             if (api.HasValue || forms.HasValue)
                 hostWithInternals.UiAddEditApi = (api ?? false) || (forms ?? false);
 
-            if(turnOn.HasValue && turnOn.Value)
-                hostWithInternals.NamedScriptsWIP.Add(BlockBuilder.JsTurnOn);
-            
             if (styles.HasValue)
                 hostWithInternals.UiAddEditUi = styles.Value;
 

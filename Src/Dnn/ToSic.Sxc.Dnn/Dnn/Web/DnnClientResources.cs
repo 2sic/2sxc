@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Dnn.Web
 {
     public class DnnClientResources: HasLog
     {
-        private readonly IPageFeaturesManager _pfm;
+        private readonly IPageFeaturesManager _pageFm;
         private readonly IPageService _pageService;
         protected BlockBuilder BlockBuilder;
         protected Page Page;
@@ -25,9 +25,9 @@ namespace ToSic.Sxc.Dnn.Web
         /// <summary>
         /// DI Constructor
         /// </summary>
-        public DnnClientResources(IPageFeaturesManager pfm, IPageService pageService): base("Dnn.JsCss")
+        public DnnClientResources(IPageFeaturesManager pageFm, IPageService pageService): base("Dnn.JsCss")
         {
-            _pfm = pfm;
+            _pageFm = pageFm;
             _pageService = pageService;
         }
         
@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Dnn.Web
                 Log.Add("Try to get new specs from IPageService");
                 var features = _pageService.Features.GetKeysAndFlush();
                 Log.Add($"Got {features.Count} items");
-                var unfolded = _pfm.GetWithDependents(features);
+                var unfolded = _pageFm.GetWithDependents(features);
                 Log.Add($"Got unfolded features {unfolded.Count}");
                 _features = unfolded;
                 wrapLog("ok");
@@ -76,7 +76,7 @@ namespace ToSic.Sxc.Dnn.Web
             Log.Add("user is editor, or template requested js/css, will add client material");
 
             // register scripts and css
-            RegisterClientDependencies(Page, readJs, editJs, editCss, BlockBuilder?.NamedScriptsWIP);
+            RegisterClientDependencies(Page, readJs, editJs, editCss);
 
             // New in 11.11.02 - DNN has a strange behavior where the current language isn't known till PreRender
             // so we have to move adding the header to here.
@@ -136,7 +136,7 @@ namespace ToSic.Sxc.Dnn.Web
                 ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
             }
 
-            if (Features.Contains(BuiltInFeatures.TurnOn) || (namedScripts?.Contains(BlockBuilder.JsTurnOn) ?? false))
+            if (Features.Contains(BuiltInFeatures.TurnOn))
                 RegisterJs(page, ver, root + InpageCms.TurnOnJs, true, priority + 10);
 
             wrapLog("ok");

@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Web.PageFeatures
                 if (!added.Any()) break;
                 collected.AddRange(added);
             }
-            return collected;
+            return collected.Distinct().ToList();
         }
 
         private List<IPageFeature> GetMissingDependencies(List<IPageFeature> target, List<IPageFeature> toCheck)

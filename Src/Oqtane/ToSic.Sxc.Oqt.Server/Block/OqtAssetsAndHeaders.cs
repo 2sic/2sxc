@@ -11,6 +11,8 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Edit;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.Oqt.Server.Block
 {
@@ -19,15 +21,15 @@ namespace ToSic.Sxc.Oqt.Server.Block
     {
         #region Constructor and DI
 
-        public OqtAssetsAndHeaders(/*IAntiforgery antiForgery, IHttpContextAccessor httpContextAccessor,*/ SiteState siteState) : base($"{OqtConstants.OqtLogPrefix}.AssHdr")
+        public OqtAssetsAndHeaders(SiteState siteState, IPageService pageService, IPageFeaturesManager pageFm) : base($"{OqtConstants.OqtLogPrefix}.AssHdr")
         {
-            //_antiForgery = antiForgery;
-            //_httpContextAccessor = httpContextAccessor;
             _siteState = siteState;
+            _pageService = pageService;
+            _pageFm = pageFm;
         }
-        //private readonly IAntiforgery _antiForgery;
-        //private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly SiteState _siteState;
+        private readonly IPageService _pageService;
+        private readonly IPageFeaturesManager _pageFm;
 
 
         public void Init(OqtSxcViewBuilder parent)
@@ -52,7 +54,9 @@ namespace ToSic.Sxc.Oqt.Server.Block
             var list = new List<string>();
             if (AddJsCore) list.Add($"{OqtConstants.UiRoot}/{InpageCms.CoreJs}");
             if (AddJsEdit) list.Add($"{OqtConstants.UiRoot}/{InpageCms.EditJs}");
-            if(BlockBuilder.NamedScriptsWIP?.Contains(BlockBuilder.JsTurnOn) ?? false)
+            //if(BlockBuilder.NamedScriptsWIP?.Contains(BlockBuilder.JsTurnOn) ?? false)
+            // New in 12.02 - TODO: VERIFY IT WORK @SPM (I haven't verified this yet)
+            if(Features.Contains(BuiltInFeatures.TurnOn))
                 list.Add($"{OqtConstants.UiRoot}/{InpageCms.TurnOnJs}");
             return list;
         }
@@ -93,5 +97,25 @@ namespace ToSic.Sxc.Oqt.Server.Block
         [PrivateApi]
         public static string GetSiteRoot(SiteState siteState)
             => siteState?.Alias?.Name == null ? OqtConstants.SiteRoot : new Uri($"http://{siteState.Alias.Name}/").AbsolutePath.SuffixSlash();
+
+        internal List<IPageFeature> Features
+        {
+            get
+            {
+                if (_features != null) return _features;
+                var wrapLog = Log.Call();
+                Log.Add("Try to get new specs from IPageService");
+                var features = _pageService.Features.GetKeysAndFlush();
+                Log.Add($"Got {features.Count} items");
+                var unfolded = _pageFm.GetWithDependents(features);
+                Log.Add($"Got unfolded features {unfolded.Count}");
+                _features = unfolded;
+                wrapLog("ok");
+                return _features;
+            }
+        }
+
+        private List<IPageFeature> _features;
+
     }
 }

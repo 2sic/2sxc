@@ -172,14 +172,13 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <param name="noParameterOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="js">optional, default false. automatically true if `api` or `forms` is true<br/>
-        /// Will add the basic JS APIs ($2sxc) usually for enabling WebApi calls from your JS code. <br/>
-        /// _added in v10.20_
+        ///     Will add the basic JS APIs ($2sxc) usually for enabling WebApi calls from your JS code. <br/>
+        ///     _added in v10.20_
         /// </param>
         /// <param name="api">optional, default false. automatically true, if `forms` is true<br/>
         ///     If JS etc. should be included to enable editing API - ensures javascripts are loaded enabling commands to run</param>
         /// <param name="forms">optional, default false. <br/>
         ///     Ensures javascripts are loaded enabling forms to open</param>
-        /// <param name="turnOn">activate turnOn script helpers - this is BETA / WIP</param>
         /// <param name="context">optional, default false. <br/>
         ///     If context ([](xref:Basics.Browser.EditUx.EditContext)) should be added, to ensure in-instance data editing</param>
         /// <param name="autoToolbar">optional, default false. <br/>
@@ -192,10 +191,9 @@ namespace ToSic.Sxc.Web
         /// 1. Introduced in 2sxc 9.30
         /// 2. Enhanced with parameter jsApi in 10.20
         /// </remarks>
-        string Enable(string noParameterOrder = Eav.Parameters.Protector,
+        string Enable(string noParameterOrder = "random-y023n",
             bool? js = null,
-            bool? api = null, 
-            bool? turnOn = null,
+            bool? api = null,
             bool? forms = null,
             bool? context = null,
             bool? autoToolbar = null,

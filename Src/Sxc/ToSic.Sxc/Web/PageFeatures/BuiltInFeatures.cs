@@ -15,7 +15,7 @@
         });
 
         public static PageFeature EditUi =
-            new PageFeature("2sxc.EditUi", "2sxc inpage editing UIs / Toolbar", requires: new[]
+            new PageFeature("2sxc.EditUi", "2sxc InPage editing UIs / Toolbar", requires: new[]
             {
                 Core.Key, 
                 EditApi.Key
