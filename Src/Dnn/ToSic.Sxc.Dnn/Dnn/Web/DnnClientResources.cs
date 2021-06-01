@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Web;
 using System.Web.UI;
 using DotNetNuke.Application;
 using DotNetNuke.Framework;
@@ -10,31 +9,66 @@ using DotNetNuke.Web.Client.Providers;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit;
+using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.Dnn.Web
 {
     public class DnnClientResources: HasLog
     {
+        private readonly IPageFeaturesManager _pfm;
+        private readonly IPageService _pageService;
         protected BlockBuilder BlockBuilder;
         protected Page Page;
         protected DnnJsApiHeader Header;
 
-        public DnnClientResources(Page page, IBlockBuilder blockBuilder, ILog parentLog) : base("Dnn.JsCss", parentLog)
+        /// <summary>
+        /// DI Constructor
+        /// </summary>
+        public DnnClientResources(IPageFeaturesManager pfm, IPageService pageService): base("Dnn.JsCss")
         {
+            _pfm = pfm;
+            _pageService = pageService;
+        }
+        
+        public DnnClientResources Init(Page page, IBlockBuilder blockBuilder, ILog parentLog) // : base("Dnn.JsCss", parentLog)
+        {
+            Log.LinkTo(parentLog);
             Page = page;
             BlockBuilder = blockBuilder as BlockBuilder;
             Header = new DnnJsApiHeader(Log);
+            return this;
         }
+
+
+        internal List<IPageFeature> Features
+        {
+            get
+            {
+                if (_features != null) return _features;
+                var wrapLog = Log.Call();
+                Log.Add("Try to get new specs from IPageService");
+                var features = _pageService.Features.GetKeysAndFlush();
+                Log.Add($"Got {features.Count} items");
+                var unfolded = _pfm.GetWithDependents(features);
+                Log.Add($"Got unfolded features {unfolded.Count}");
+                _features = unfolded;
+                wrapLog("ok");
+                return _features;
+            }
+        }
+
+        private List<IPageFeature> _features;
 
         public bool AddEverything()
         {
             var wrapLog = Log.Call<bool>();
 
             // normal scripts
-            var editJs = BlockBuilder?.UiAddEditApi ?? false;
+            var editJs = Features.Contains(BuiltInFeatures.EditApi) || (BlockBuilder?.UiAddEditApi ?? false);
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            var readJs = BlockBuilder?.UiAddJsApi ?? editJs;
-            var editCss = BlockBuilder?.UiAddEditUi ?? false;
+            var readJs = Features.Contains(BuiltInFeatures.Core) || (BlockBuilder?.UiAddJsApi ?? editJs);
+            var editCss = Features.Contains(BuiltInFeatures.EditUi) || (BlockBuilder?.UiAddEditUi ?? false);
 
             if (!readJs && !editJs && !editCss)
                 return wrapLog("nothing added", true);
@@ -102,7 +136,7 @@ namespace ToSic.Sxc.Dnn.Web
                 ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
             }
 
-            if (namedScripts?.Contains(BlockBuilder.JsTurnOn) ?? false)
+            if (Features.Contains(BuiltInFeatures.TurnOn) || (namedScripts?.Contains(BlockBuilder.JsTurnOn) ?? false))
                 RegisterJs(page, ver, root + InpageCms.TurnOnJs, true, priority + 10);
 
             wrapLog("ok");
@@ -121,10 +155,10 @@ namespace ToSic.Sxc.Dnn.Web
         #endregion
 
 
-        /// <summary>
-        /// Return true if the URL is a debug URL
-        /// </summary>
-        private static bool IsDebugUrl(HttpRequest request) => string.IsNullOrEmpty(request.QueryString["debug"]);
+        ///// <summary>
+        ///// Return true if the URL is a debug URL
+        ///// </summary>
+        //private static bool IsDebugUrl(HttpRequest request) => string.IsNullOrEmpty(request.QueryString["debug"]);
 
 
         #region add scripts / css with bypassing the official ClientResourceManager

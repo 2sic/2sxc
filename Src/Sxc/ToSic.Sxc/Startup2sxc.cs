@@ -4,7 +4,6 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
-using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
@@ -13,10 +12,11 @@ using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.JsContext;
+using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc
 {
-    public static class StartupSxc
+    public static partial class StartupSxc
     {
         public static IServiceCollection AddSxcCore(this IServiceCollection services)
         {
@@ -81,6 +81,10 @@ namespace ToSic.Sxc
             // Polymorphism
             services.TryAddTransient<Polymorphism.Polymorphism>();
 
+            // new in v12.02 - PageService & Page Features
+            services.TryAddScoped<IPageService, Web.PageService.Page>();
+            services.TryAddSingleton<IPageFeaturesManager, PageFeaturesManager>();
+
             return services;
         }
 
@@ -94,35 +98,6 @@ namespace ToSic.Sxc
 #endif
             return services;
         }
-
-        /// <summary>
-        /// This will add Do-Nothing services which will take over if they are not provided by the main system
-        /// In general this will result in some features missing, which many platforms don't need or care about
-        /// </summary>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        /// <remarks>
-        /// All calls in here MUST use TryAddTransient, and never without the Try
-        /// </remarks>
-        public static IServiceCollection AddSxcCoreFallbackServices(this IServiceCollection services)
-        {
-            // basic environment, pages, modules etc.
-            services.TryAddTransient<IEnvironmentInstaller, BasicEnvironmentInstaller>();
-            services.TryAddTransient<IPlatformModuleUpdater, BasicModuleUpdater>();
-            services.TryAddTransient<IPagePublishingResolver, BasicPagePublishingResolver>();
-            services.TryAddTransient<IPagePublishing, BasicPagePublishing>();
-
-            // Code / Dynamic Code
-            services.TryAddTransient<DynamicCodeRoot, BasicDynamicCodeRoot>();
-            services.TryAddTransient<IModule, ModuleUnknown>();
-            
-            // 11.08 - fallback in case not added
-            services.TryAddSingleton<IPlatform, PlatformUnknown>();
-
-            // ADAM basics
-            services.TryAddTransient<IAdamFileSystem<string, string>, AdamFileSystemBasic>();
-
-            return services;
-        }
+        
     }
 }

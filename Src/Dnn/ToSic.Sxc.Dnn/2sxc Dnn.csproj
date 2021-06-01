@@ -89,11 +89,13 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="ToSic.Razor">
-      <HintPath>..\..\..\Dependencies\RazorBlade\ToSic.Razor.dll</HintPath>
+    <Reference Include="ToSic.Razor, Version=3.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net40\ToSic.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="ToSic.Razor.Dnn">
-      <HintPath>..\..\..\Dependencies\RazorBlade\ToSic.Razor.Dnn.dll</HintPath>
+    <Reference Include="ToSic.Razor.Dnn, Version=3.4.0.35380, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net40\ToSic.Razor.Dnn.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +125,7 @@
     <Compile Include="Dnn\Factory.cs" />
     <Compile Include="Dnn\Run\DnnPage.cs" />
     <Compile Include="Dnn\Run\DnnPlatformContext.cs" />
+    <Compile Include="Dnn\Services\DnnPageChanges.cs" />
     <Compile Include="Dnn\Web\DnnJsApiHeader.cs" />
     <Compile Include="Dnn\Web\DnnClientResources.cs" />
     <Compile Include="Dnn\Code\IDnnDynamicCode.cs" />

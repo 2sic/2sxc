@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Web.UI;
 using DotNetNuke.Entities.Modules;
-using ToSic.Eav.Context;
+using ToSic.Eav;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Blocks;
@@ -54,7 +54,7 @@ namespace ToSic.SexyContent
             TryCatchAndLogToDnn(() =>
             {
                 EnsureCmsBlockAndPortalIsReady();
-                DnnClientResources = new DnnClientResources(Page, Block?.BlockBuilder, Log);
+                DnnClientResources = Factory.StaticBuild<DnnClientResources>()/* new DnnClientResources()*/.Init(Page, Block?.BlockBuilder, Log);
                 DnnClientResources.EnsurePre1025Behavior();
             }, callLog);
             _stopwatch.Stop();
