@@ -141,13 +141,21 @@ namespace ToSic.Sxc.Search
 
             if (useCustomViewController)
             {
-                // TODO: 
-            } 
+                // TODO: STV
+                // 1. Get and compile the view.ViewController
+                // 2. Check if it implements ToSic.Sxc.Search.ICustomizeSearch - otherwise just return the empty search results as shown above
+                // 3. Make sure it has the full context if it's based on DynamicCode (like Code12)
+                // 4. Call CustomizeSearch in a try/catch
+                // Make sure you add extensive logging
+                // Test :)
+            }
             else 
             {
                 // check if the cshtml has search customizations
                 try
                 {
+                    if (engine == null)
+                        throw new Exception("engine==null in classic search. This should never happen.");
                     engine.CustomizeSearch(searchInfoDictionary, 
                         _serviceProvider.Build<DnnModule>().Init(dnnModule, Log), beginDate);
                 }
