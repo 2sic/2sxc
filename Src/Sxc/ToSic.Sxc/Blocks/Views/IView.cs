@@ -106,5 +106,8 @@ namespace ToSic.Sxc.Blocks
 
         [PrivateApi("WIP 12.02")] IEntity Settings { get; }
 
+        [PrivateApi("WIP 12.02")] bool SearchIndexingDisabled { get; }
+        [PrivateApi("WIP 12.02")] string ViewController { get; }
+
     }
 }

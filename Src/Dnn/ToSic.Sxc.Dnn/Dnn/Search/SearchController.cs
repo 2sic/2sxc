@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
@@ -43,7 +42,7 @@ namespace ToSic.Sxc.Search
             Log.Add($"start search for mod#{dnnModule?.ModuleID}");
 
             // turn off logging into history by default - the template code can reactivate this if desired
-            Log.Preserve = false;
+            Log.Preserve = true; // TODO: WIP KEEP ACTIVE TILL V12.02 IMPLEMENTED
 
             if (dnnModule == null) return searchDocuments;
 
@@ -67,6 +66,8 @@ namespace ToSic.Sxc.Search
             var view = modBlock.View;
 
             if (view == null) return searchDocuments;
+            if (view.SearchIndexingDisabled) return searchDocuments; // new in 12.02
+            var useCustomViewController = !string.IsNullOrWhiteSpace(view.ViewController); // new in 12.02
 
             // This list will hold all EAV entities to be indexed
             var dataSource = modBlock.Data;
@@ -87,18 +88,24 @@ namespace ToSic.Sxc.Search
                 }
             }
 
+            // We only need the engine if we're in classic mode
+            IEngine engine = null;
 
-            var engine = EngineFactory.CreateEngine(view);
-            engine.Init(modBlock, Purpose.IndexingForSearch, Log);
-
-            // see if data customization inside the cshtml works
-            try
+            // Only run CustomizeData() if we're in the older, classic model of search-indexing
+            // The new model v12.02 won't need this
+            if (!useCustomViewController)
             {
-                engine.CustomizeData();
-            }
-            catch (Exception e) // Catch errors here, because of references to Request etc.
-            {
-                DnnBusinessController.AddSearchExceptionToLog(dnnModule, e, nameof(SearchController));
+                engine = EngineFactory.CreateEngine(view);
+                engine.Init(modBlock, Purpose.IndexingForSearch, Log);
+                // see if data customization inside the cshtml works
+                try
+                {
+                    engine.CustomizeData();
+                }
+                catch (Exception e) // Catch errors here, because of references to Request etc.
+                {
+                    DnnBusinessController.AddSearchExceptionToLog(dnnModule, e, nameof(SearchController));
+                }
             }
 
             var searchInfoDictionary = new Dictionary<string, List<ISearchItem>>();
@@ -132,15 +139,22 @@ namespace ToSic.Sxc.Search
                 }));
             }
 
-            // check if the cshtml has search customizations
-            try
+            if (useCustomViewController)
             {
-                engine.CustomizeSearch(searchInfoDictionary, 
-                    _serviceProvider.Build<DnnModule>().Init(dnnModule, Log), beginDate);
-            }
-            catch (Exception e)
+                // TODO: 
+            } 
+            else 
             {
-                DnnBusinessController.AddSearchExceptionToLog(dnnModule, e, nameof(SearchController));
+                // check if the cshtml has search customizations
+                try
+                {
+                    engine.CustomizeSearch(searchInfoDictionary, 
+                        _serviceProvider.Build<DnnModule>().Init(dnnModule, Log), beginDate);
+                }
+                catch (Exception e)
+                {
+                    DnnBusinessController.AddSearchExceptionToLog(dnnModule, e, nameof(SearchController));
+                }
             }
 
             // add it to insights / history. It will only be preserved, if the inner code ran a Log.Preserve = true;

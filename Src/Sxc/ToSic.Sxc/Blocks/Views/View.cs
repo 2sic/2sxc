@@ -125,5 +125,11 @@ namespace ToSic.Sxc.Blocks
 
         [PrivateApi("WIP 12.02")]
         public IEntity Settings => GetBestRelationship(FieldSettings);
+
+        [PrivateApi("WIP 12.02")]
+        public bool SearchIndexingDisabled => Get(FieldSearchDisabled, false);
+
+        [PrivateApi("WIP 12.02")]
+        public string ViewController => Get(FieldViewController, "");
     }
 }

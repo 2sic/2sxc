@@ -31,6 +31,8 @@
         // new / WIP 12.02
         internal const string FieldSettings = "Settings";
         internal const string FieldResources = "Resources";
+        internal const string FieldViewController = "ViewController";
+        internal const string FieldSearchDisabled = "SearchIndexingDisabled";
 
         // kind of almost unused, deprecated stuff
         internal const string FieldPublishEnable = "PublishData";
