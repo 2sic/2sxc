@@ -1,14 +1,11 @@
 ﻿using Newtonsoft.Json;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Web;
 #if NET451
 using HtmlString = System.Web.HtmlString;
 #else
-using System.Web;
 using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
-using IHtmlString = Microsoft.AspNetCore.Html.IHtmlContent;
 #endif
 
 namespace ToSic.Sxc.Edit.InPageEditingSystem

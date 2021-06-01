@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Data;
 #if NET451
@@ -176,9 +175,9 @@ namespace ToSic.Sxc.Web
         ///     _added in v10.20_
         /// </param>
         /// <param name="api">optional, default false. automatically true, if `forms` is true<br/>
-        ///     If JS etc. should be included to enable editing API - ensures javascripts are loaded enabling commands to run</param>
+        ///     If JS etc. should be included to enable editing API - ensures JavaScripts are loaded enabling commands to run</param>
         /// <param name="forms">optional, default false. <br/>
-        ///     Ensures javascripts are loaded enabling forms to open</param>
+        ///     Ensures JavaScripts are loaded enabling forms to open</param>
         /// <param name="context">optional, default false. <br/>
         ///     If context ([](xref:Basics.Browser.EditUx.EditContext)) should be added, to ensure in-instance data editing</param>
         /// <param name="autoToolbar">optional, default false. <br/>
@@ -190,6 +189,7 @@ namespace ToSic.Sxc.Web
         /// **History** <br/>
         /// 1. Introduced in 2sxc 9.30
         /// 2. Enhanced with parameter jsApi in 10.20
+        /// 3. Being deprecated in 12.02, as you should now use the IPageService instead for most of these features
         /// </remarks>
         string Enable(string noParameterOrder = Eav.Parameters.Protector,
             bool? js = null,

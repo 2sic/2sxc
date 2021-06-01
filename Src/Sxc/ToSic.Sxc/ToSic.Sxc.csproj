@@ -70,8 +70,4 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Custom\Services\" />
-  </ItemGroup>
-
 </Project>
