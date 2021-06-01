@@ -191,7 +191,7 @@ namespace ToSic.Sxc.Web
         /// 1. Introduced in 2sxc 9.30
         /// 2. Enhanced with parameter jsApi in 10.20
         /// </remarks>
-        string Enable(string noParameterOrder = "random-y023n",
+        string Enable(string noParameterOrder = Eav.Parameters.Protector,
             bool? js = null,
             bool? api = null,
             bool? forms = null,
