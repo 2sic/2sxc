@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Web.Hosting;
+using DotNetNuke.Common;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Context;
@@ -128,6 +129,7 @@ namespace ToSic.Sxc.Dnn.Run
         public override string AppAssetsLinkTemplate => AppsRootPhysical + "/" + LinkPaths.AppFolderPlaceholder;
         
         internal string AppsRootRelative => Path.Combine(UnwrappedContents.HomeDirectory, Settings.AppsRootFolder);
+        internal string SharedAppsRootRelative => Path.Combine(Globals.HostPath, Settings.AppsRootFolder);
 
         [PrivateApi]
         public override string AppsRootPhysicalFull => HostingEnvironment.MapPath(AppsRootRelative);

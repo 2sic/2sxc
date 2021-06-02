@@ -155,7 +155,7 @@ namespace ToSic.Sxc.Search
                 {
                     // 1. Get and compile the view.ViewController
                     var codeCompiler = _serviceProvider.Build<CodeCompiler>();
-                    var path = Path.Combine(site.AppsRootRelative, dnnContext.AppState.Folder).ForwardSlash();
+                    var path = Path.Combine(view.IsShared ? site.SharedAppsRootRelative : site.AppsRootRelative, dnnContext.AppState.Folder).ForwardSlash();
                     Log.Add($"compile ViewController class on path: {path}/{view.ViewController}");
                     var instance = codeCompiler.InstantiateClass(view.ViewController, null, path, true);
                     Log.Add("got instance of compiled ViewController class");
