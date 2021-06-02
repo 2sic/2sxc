@@ -64,8 +64,6 @@ namespace ToSic.Sxc.Apps.Assets
 
         public const string CsApiFolder = "api";
 
-        public const string PurposeAuto = "auto";
-
         public struct PurposeType
         {
             public const string Auto = "auto";
