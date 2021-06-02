@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Search
             Log.Add($"start search for mod#{dnnModule?.ModuleID}");
 
             // turn off logging into history by default - the template code can reactivate this if desired
-            Log.Preserve = true; // TODO: WIP KEEP ACTIVE TILL V12.02 IMPLEMENTED
+            Log.Preserve = false;
 
             if (dnnModule == null) return searchDocuments;
 
@@ -156,16 +156,17 @@ namespace ToSic.Sxc.Search
                     // 1. Get and compile the view.ViewController
                     var codeCompiler = _serviceProvider.Build<CodeCompiler>();
                     var path = Path.Combine(site.AppsRootRelative, dnnContext.AppState.Folder).ForwardSlash();
-                    Log.Add($"path: {path}/{view.ViewController}");
+                    Log.Add($"compile ViewController class on path: {path}/{view.ViewController}");
                     var instance = codeCompiler.InstantiateClass(view.ViewController, null, path, true);
+                    Log.Add("got instance of compiled ViewController class");
 
                     // 2. Check if it implements ToSic.Sxc.Search.ICustomizeSearch - otherwise just return the empty search results as shown above
-                    if (!(instance is ICustomizeSearch customizeSearch)) return wrapLog("exit, class do not implements implements ToSic.Sxc.Search.ICustomizeSearch", searchDocuments);
+                    if (!(instance is ICustomizeSearch customizeSearch)) return wrapLog("exit, class do not implements ICustomizeSearch", searchDocuments);
 
                     // 3. Make sure it has the full context if it's based on DynamicCode (like Code12)
                     if (instance is DynamicCode instanceWithContext)
                     {
-                        Log.Add($"attach context");
+                        Log.Add($"attach DynamicCode context to class instance");
                         var parentDynamicCodeRoot = _serviceProvider.Build<DnnDynamicCodeRoot>().Init(modBlock, Log);
                         instanceWithContext.DynamicCodeCoupling(parentDynamicCodeRoot);
                     }
