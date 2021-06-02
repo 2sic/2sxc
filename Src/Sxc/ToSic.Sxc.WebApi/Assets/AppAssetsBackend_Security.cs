@@ -7,7 +7,14 @@ namespace ToSic.Sxc.WebApi.Assets
 {
     public partial class AppAssetsBackend
     {
-        private string SanitizePathAndContent(string path, FileContentsDto content)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="content"></param>
+        /// <param name="purpose">razor;token;search;api;auto</param>
+        /// <returns></returns>
+        private string SanitizePathAndContent(string path, FileContentsDto content, string purpose)
         {
             var name = Path.GetFileName(path);
             var folder = Path.GetDirectoryName(path);
@@ -30,8 +37,10 @@ namespace ToSic.Sxc.WebApi.Assets
                     else
                     {
                         var nameWithoutExt = name.Substring(0, name.Length - ext.Length);
-                        content.Content =
-                            _assetTemplates.GetTemplate(AssetTemplateType.CsCode).Replace(AssetTemplates.CsCodeTemplateName, nameWithoutExt);
+                        content.Content = _assetTemplates.GetTemplate(purpose == AssetEditor.PurposeType.Search
+                                ? AssetTemplateType.CustomSearchCsCode
+                                : AssetTemplateType.CsCode)
+                            .Replace(AssetTemplates.CsCodeTemplateName, nameWithoutExt);
                     }
                     break;
 
