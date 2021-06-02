@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -8,23 +10,29 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
+using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn;
+using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Run;
+using DynamicCode = ToSic.Sxc.Code.DynamicCode;
 
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Search
 {
-    internal class SearchController: HasLog
+    internal class SearchController : HasLog
     {
         private readonly IServiceProvider _serviceProvider;
+
         public SearchController(IServiceProvider serviceProvider, ILog parentLog) : base("DNN.Search", parentLog)
         {
             _serviceProvider = serviceProvider;
@@ -80,9 +88,9 @@ namespace ToSic.Sxc.Search
                 {
                     var getLookups = (DnnLookUpEngineResolver)_serviceProvider.Build<DnnLookUpEngineResolver>().Init(Log);
                     var dnnLookUps = getLookups.GenerateDnnBasedLookupEngine(site.UnwrappedContents, dnnModule.ModuleID);
-                    ((LookUpEngine) dataSource.Configuration.LookUpEngine).Link(dnnLookUps);
+                    ((LookUpEngine)dataSource.Configuration.LookUpEngine).Link(dnnLookUps);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Log.Add("Ran into an issue with an error: " + e.Message);
                 }
@@ -113,7 +121,7 @@ namespace ToSic.Sxc.Search
             // Get DNN SearchDocuments from 2Sexy SearchInfos
             foreach (var stream in dataSource.Out.Where(p => p.Key != ViewParts.Presentation && p.Key != ViewParts.ListPresentation))
             {
-                
+
                 var entities = stream.Value.List.ToImmutableList();
                 var searchInfoList = searchInfoDictionary[stream.Key] = new List<ISearchItem>();
 
@@ -126,8 +134,8 @@ namespace ToSic.Sxc.Search
                         Description = "",
                         Body = GetJoinedAttributes(entity, language),
                         Title = entity.Title?[language]?.ToString() ?? "(no title)",
-                        ModifiedTimeUtc = (entity.Modified == DateTime.MinValue 
-                            ? DateTime.Now.Date.AddHours(DateTime.Now.Hour) 
+                        ModifiedTimeUtc = (entity.Modified == DateTime.MinValue
+                            ? DateTime.Now.Date.AddHours(DateTime.Now.Hour)
                             : entity.Modified).ToUniversalTime(),
                         UniqueKey = "2sxc-" + dnnModule.ModuleID + "-" + (entity.EntityGuid != new Guid() ? entity.EntityGuid.ToString() : (stream.Key + "-" + entity.EntityId)),
                         IsActive = true,
@@ -141,22 +149,47 @@ namespace ToSic.Sxc.Search
 
             if (useCustomViewController)
             {
-                // TODO: STV
-                // 1. Get and compile the view.ViewController
-                // 2. Check if it implements ToSic.Sxc.Search.ICustomizeSearch - otherwise just return the empty search results as shown above
-                // 3. Make sure it has the full context if it's based on DynamicCode (like Code12)
-                // 4. Call CustomizeSearch in a try/catch
-                // Make sure you add extensive logging
-                // Test :)
+                var wrapLog = Log.Call<List<SearchDocument>>($"useCustomViewController: {useCustomViewController}");
+                
+                try
+                {
+                    // 1. Get and compile the view.ViewController
+                    var codeCompiler = _serviceProvider.Build<CodeCompiler>();
+                    var path = Path.Combine(site.AppsRootRelative, dnnContext.AppState.Folder).ForwardSlash();
+                    Log.Add($"path: {path}/{view.ViewController}");
+                    var instance = codeCompiler.InstantiateClass(view.ViewController, null, path, true);
+
+                    // 2. Check if it implements ToSic.Sxc.Search.ICustomizeSearch - otherwise just return the empty search results as shown above
+                    if (!(instance is ICustomizeSearch customizeSearch)) return wrapLog("exit, class do not implements implements ToSic.Sxc.Search.ICustomizeSearch", searchDocuments);
+
+                    // 3. Make sure it has the full context if it's based on DynamicCode (like Code12)
+                    if (instance is DynamicCode instanceWithContext)
+                    {
+                        Log.Add($"attach context");
+                        var parentDynamicCodeRoot = _serviceProvider.Build<DnnDynamicCodeRoot>().Init(modBlock, Log);
+                        instanceWithContext.DynamicCodeCoupling(parentDynamicCodeRoot);
+                    }
+
+                    // 4. Call CustomizeSearch in a try/catch
+                    var dm = _serviceProvider.Build<DnnModule>().Init(dnnModule, Log);
+                    Log.Add($"execute CustomizeSearch");
+                    customizeSearch.CustomizeSearch(searchInfoDictionary, dm, beginDate);
+                    wrapLog("OK, executed CustomizeSearch", null);
+                }
+                catch (Exception e)
+                {
+                    wrapLog($"Error: {e.Message}, {e.InnerException}", null);
+                    DnnBusinessController.AddSearchExceptionToLog(dnnModule, e, nameof(SearchController));
+                }
             }
-            else 
+            else
             {
                 // check if the cshtml has search customizations
                 try
                 {
                     if (engine == null)
                         throw new Exception("engine==null in classic search. This should never happen.");
-                    engine.CustomizeSearch(searchInfoDictionary, 
+                    engine.CustomizeSearch(searchInfoDictionary,
                         _serviceProvider.Build<DnnModule>().Init(dnnModule, Log), beginDate);
                 }
                 catch (Exception e)
@@ -172,7 +205,7 @@ namespace ToSic.Sxc.Search
             foreach (var searchInfoList in searchInfoDictionary)
             {
                 // Filter by Date - take only SearchDocuments that changed since beginDate
-                var searchDocumentsToAdd = searchInfoList.Value.Where(p => p.ModifiedTimeUtc >= beginDate.ToUniversalTime()).Select(p => (SearchDocument) p);
+                var searchDocumentsToAdd = searchInfoList.Value.Where(p => p.ModifiedTimeUtc >= beginDate.ToUniversalTime()).Select(p => (SearchDocument)p);
                 searchDocuments.AddRange(searchDocumentsToAdd);
             }
 
