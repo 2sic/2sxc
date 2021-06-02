@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Search
     /// You can also inherit from a DynamicCode base class (like Code12) if you need more functionality. 
     /// </summary>
     [WorkInProgressApi("Still WIP in 12.02")]
-    interface ICustomizeSearch
+    public interface ICustomizeSearch
     {
         /// <summary>
         /// Will be called by the search indexer to pre-process the results. 
