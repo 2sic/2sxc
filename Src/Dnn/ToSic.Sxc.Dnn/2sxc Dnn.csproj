@@ -91,11 +91,10 @@
     <Reference Include="System.Xml" />
     <Reference Include="ToSic.Razor, Version=3.2.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net40\ToSic.Razor.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net45\ToSic.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="ToSic.Razor.Dnn, Version=3.4.0.35380, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net40\ToSic.Razor.Dnn.dll</HintPath>
+    <Reference Include="ToSic.Razor.Dnn">
+      <HintPath>..\..\..\Dependencies\RazorBlade\Dnn\ToSic.Razor.Dnn.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
