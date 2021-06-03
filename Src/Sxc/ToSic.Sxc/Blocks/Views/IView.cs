@@ -106,8 +106,23 @@ namespace ToSic.Sxc.Blocks
 
         [PrivateApi("WIP 12.02")] IEntity Settings { get; }
 
-        [PrivateApi("WIP 12.02")] bool SearchIndexingDisabled { get; }
-        [PrivateApi("WIP 12.02")] string ViewController { get; }
+        /// <summary>
+        /// Determines if search indexing should be disabled - so this view will not provide search data.
+        /// </summary>
+        bool SearchIndexingDisabled { get; }
+        
+        /// <summary>
+        /// The external class which should be compiled / used to customize search.
+        /// 
+        /// In future this could do more, which is why it's called ViewController and not SearchController or something. 
+        /// </summary>
+        string ViewController { get; }
 
+        /// <summary>
+        /// Streams which should be included in the search index.
+        /// If empty will use all streams.
+        /// CSV
+        /// </summary>
+        string SearchIndexingStreams {get;}
     }
 }

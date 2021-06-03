@@ -33,6 +33,7 @@
         internal const string FieldResources = "Resources";
         internal const string FieldViewController = "ViewController";
         internal const string FieldSearchDisabled = "SearchIndexingDisabled";
+        internal const string FieldSearchStreams = "SearchIndexingStreams";
 
         // kind of almost unused, deprecated stuff
         internal const string FieldPublishEnable = "PublishData";
