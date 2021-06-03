@@ -7,11 +7,7 @@ namespace ToSic.Sxc.Web
 {
 
     /// <summary>
-    /// Make changes to the page - usually from Razor. This is cross-platform and works for Dnn and Oqtane (Oqtane WIP)
-    ///
-    /// This is just the interface. When a system implements it, you can get it through Dependency Injection.
-    ///
-    /// Example: in 2sxc 12+ you can use `var page = GetService&lt;IPageService&gt;()` and then work with the resulting object.
+    /// Make changes to the page - usually from Razor.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
     public interface IPageService
