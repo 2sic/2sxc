@@ -62,8 +62,7 @@ namespace ToSic.Sxc.Search
 
             // Ensure cache builds up with correct primary language
             // In case it's not loaded yet
-            var cache = State.Cache;
-            cache.Load(module.BlockIdentifier, DnnSite.DefaultCultureCode);
+            State.Cache.Load(module.BlockIdentifier, DnnSite.DefaultCultureCode);
 
             var dnnContext = Eav.Factory.StaticBuild<IContextOfBlock>().Init(DnnModule, Log);
             Block = _serviceProvider.Build<BlockFromModule>().Init(dnnContext, Log);
