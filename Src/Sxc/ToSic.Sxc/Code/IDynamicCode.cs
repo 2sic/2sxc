@@ -30,6 +30,7 @@ namespace ToSic.Sxc.Code
         /// </summary>
         /// <typeparam name="TService">Interface (preferred) or Class which is needed</typeparam>
         /// <returns>An object of the type or interface requested</returns>
+        /// <remarks>Added in 2sxc 11.11</remarks>
         TService GetService<TService>();
 
         /// <summary>
