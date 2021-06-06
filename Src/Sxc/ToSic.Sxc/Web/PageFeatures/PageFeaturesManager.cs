@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Web.PageFeatures
 {
@@ -41,6 +42,20 @@ namespace ToSic.Sxc.Web.PageFeatures
             // Reset the read-only dictionary
             Features = new ReadOnlyDictionary<string, IPageFeature>(_features);
         }
+
+        //public List<IPageFeature> GetWithDependents(IPageService pageService, ILog log)
+        //{
+        //    // if (_features != null) return _features;
+        //    var wrapLog = log.Call<List<IPageFeature>>();
+        //    log.Add("Try to get new specs from IPageService");
+        //    var features = pageService.Features.GetKeysAndFlush();
+        //    log.Add($"Got {features.Count} items");
+        //    var unfolded = GetWithDependents(features);
+        //    log.Add($"Got unfolded features {unfolded.Count}");
+        //    // _features = unfolded;
+        //    return wrapLog("ok", unfolded);
+        //}
+
 
         public List<IPageFeature> GetWithDependents(List<string> keys)
         {

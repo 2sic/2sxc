@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-//using Microsoft.AspNetCore.Antiforgery;
-//using Microsoft.AspNetCore.Http;
 using Oqtane.Shared;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Edit;
-using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.PageFeatures;
@@ -17,18 +13,18 @@ using ToSic.Sxc.Web.PageFeatures;
 namespace ToSic.Sxc.Oqt.Server.Block
 {
     [PrivateApi]
-    public class OqtAssetsAndHeaders: HasLog, IOqtAssetsAndHeader
+    public partial class OqtAssetsAndHeaders: HasLog
     {
         #region Constructor and DI
 
         public OqtAssetsAndHeaders(SiteState siteState, IPageService pageService, IPageFeaturesManager pageFm) : base($"{OqtConstants.OqtLogPrefix}.AssHdr")
         {
             _siteState = siteState;
-            _pageService = pageService;
+            PageService = pageService;
             _pageFm = pageFm;
         }
         private readonly SiteState _siteState;
-        private readonly IPageService _pageService;
+        private IPageService PageService { get; }
         private readonly IPageFeaturesManager _pageFm;
 
 
@@ -43,12 +39,15 @@ namespace ToSic.Sxc.Oqt.Server.Block
 
         #endregion
 
-        public bool AddContextMeta => AddJsCore || AddJsEdit;
 
         private bool AddJsCore => BlockBuilder?.UiAddJsApi ?? false;
         private bool AddJsEdit => BlockBuilder?.UiAddEditApi ?? false;
         private bool AddCssEdit => BlockBuilder?.UiAddEditUi ?? false;
 
+        /// <summary>
+        /// The JavaScripts needed
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<string> Scripts()
         {
             var list = new List<string>();
@@ -61,61 +60,25 @@ namespace ToSic.Sxc.Oqt.Server.Block
             return list;
         }
 
+        /// <summary>
+        /// The styles to add
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<string> Styles()
         {
             if (!AddCssEdit) return Array.Empty<string>();
             var list = new List<string>  { $"{OqtConstants.UiRoot}/{InpageCms.EditCss}" };
             return list;
-
         }
-
-        public string ContextMetaContents()
-        {
-            var wrapLog = Log.Call<string>();
-
-            var pageId = Parent?.Page.PageId ?? -1;
-            var siteRoot = GetSiteRoot(_siteState);
-            var apiRoot = siteRoot + WebApiConstants.ApiRoot + "/";
-            var appApiRoot = siteRoot; // without "app/" because the UI will add that later on
-            var result = InpageCms.JsApiJson(
-                PlatformType.Oqtane.ToString(),
-                pageId, 
-                siteRoot, 
-                apiRoot, 
-                appApiRoot, 
-                AntiForgeryToken(), 
-                OqtConstants.UiRoot + "/");
-            return wrapLog("ok", result);
-        }
-
-        public string ContextMetaName => InpageCms.MetaName;
-
-        private string AntiForgeryToken() => ""; // 2021-05-11 the Token given by IAntiforgery is always wrong, so better keep it empty
-                                                 // Reason is probably that at this moment the render-request is running in another HttpContext
-                                                 // => _antiForgery.GetAndStoreTokens(_httpContextAccessor.HttpContext).RequestToken;
 
         [PrivateApi]
         public static string GetSiteRoot(SiteState siteState)
             => siteState?.Alias?.Name == null ? OqtConstants.SiteRoot : new Uri($"http://{siteState.Alias.Name}/").AbsolutePath.SuffixSlash();
 
-        internal List<IPageFeature> Features
-        {
-            get
-            {
-                if (_features != null) return _features;
-                var wrapLog = Log.Call();
-                Log.Add("Try to get new specs from IPageService");
-                var features = _pageService.Features.GetKeysAndFlush();
-                Log.Add($"Got {features.Count} items");
-                var unfolded = _pageFm.GetWithDependents(features);
-                Log.Add($"Got unfolded features {unfolded.Count}");
-                _features = unfolded;
-                wrapLog("ok");
-                return _features;
-            }
-        }
-
+        internal List<IPageFeature> Features => _features ??= PageService.Features.GetWithDependentsAndFlush(Log);
         private List<IPageFeature> _features;
+
+
 
     }
 }

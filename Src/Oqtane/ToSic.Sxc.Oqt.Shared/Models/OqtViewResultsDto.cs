@@ -19,11 +19,6 @@ namespace ToSic.Sxc.Oqt.Shared.Models
         /// </summary>
         public List<SxcResource> TemplateResources { get; set; }
 
-        ///// <summary>
-        ///// Determines if the context header is needed
-        ///// </summary>
-        //public bool AddContextMeta { get; set; }
-
         /// <summary>
         /// The Context meta name tag - null if not needed
         /// </summary>
@@ -46,5 +41,10 @@ namespace ToSic.Sxc.Oqt.Shared.Models
         /// </summary>
         /// <returns></returns>
         public List<string> SxcStyles { get; set; }
+        
+        /// <summary>
+        /// List of page property changes as specified
+        /// </summary>
+        public IEnumerable<OqtPagePropertyChanges> PageProperties { get; set; }
     }
 }

@@ -1,8 +1,10 @@
-﻿namespace ToSic.Sxc.Web.PageService
-{
-    public interface IPageChangeApplicator
-    {
-        IPageService PageService { get; }
-        int Apply();
-    }
-}
+﻿//using ToSic.Eav.Logging;
+
+//namespace ToSic.Sxc.Web.PageService
+//{
+//    public interface IPageChangeApplicator: IHasLog<IPageChangeApplicator>
+//    {
+//        IPageService PageService { get; }
+//        int Apply();
+//    }
+//}

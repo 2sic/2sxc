@@ -83,6 +83,7 @@ namespace ToSic.Sxc
 
             // new in v12.02 - PageService & Page Features
             services.TryAddScoped<IPageService, Web.PageService.Page>();
+            services.TryAddTransient<IPageFeatures, PageFeatures>();
             services.TryAddSingleton<IPageFeaturesManager, PageFeaturesManager>();
 
             return services;

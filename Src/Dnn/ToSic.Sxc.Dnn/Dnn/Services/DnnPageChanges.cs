@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Razor.Dnn;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.PageService;
@@ -7,11 +7,11 @@ using ToSic.Sxc.Web.PageService;
 namespace ToSic.Sxc.Dnn.Services
 {
     [PrivateApi]
-    public class DnnPageChanges : IPageChangeApplicator
+    public class DnnPageChanges : HasLog<DnnPageChanges> // , IPageChangeApplicator
     {
         public IPageService PageService { get; }
 
-        public DnnPageChanges(IPageService pageChanges)
+        public DnnPageChanges(IPageService pageChanges): base($"{DnnConstants.LogName}.PgeCng")
         {
             PageService = pageChanges;
         }
@@ -19,12 +19,13 @@ namespace ToSic.Sxc.Dnn.Services
 
         public int Apply()
         {
+            var wrapLog = Log.Call<int>();
             // If we get something invalid, return 0 (nothing changed)
             if (!(PageService is IChangeQueue changes)) return 0;
 
             var dnnPage = new DnnHtmlPage();
-
-            foreach (var p in changes.PropertyChanges)
+            var props = changes.GetPropertyChangesAndFlush();
+            foreach (var p in props)
                 switch (p.Property)
                 {
                     case PageProperties.Base:
@@ -43,25 +44,27 @@ namespace ToSic.Sxc.Dnn.Services
                         //    throw new ArgumentOutOfRangeException();
                 }
 
-            var count = changes.PropertyChanges.Count;
+            var count = props.Count;
 
-            // Once processed clean up, in case the same object (scoped) is used again, and we want to ensure it won't be processed again
-            foreach (var p in changes.PropertyChanges.ToArray()) // ToArray important to "copy" so we can do removes afterwards
-                changes.PropertyChanges.Remove(p);
+            //// Once processed clean up, in case the same object (scoped) is used again, and we want to ensure it won't be processed again
+            //foreach (var p in changes.PropertyChanges.ToArray()) // ToArray important to "copy" so we can do removes afterwards
+            //    changes.PropertyChanges.Remove(p);
 
             // Note: we're not implementing replace etc. in DNN
             // ATM there's no reason to, maybe some other time
-            foreach (var h in changes.Headers)
+            var headChanges = changes.GetHeadChangesAndFlush();
+            foreach (var h in headChanges)
                 dnnPage.AddToHead(h.Tag);
 
-            count += changes.Headers.Count;
+            count += headChanges.Count;
 
             // Clean up
-            foreach (var h in changes.Headers.ToArray())
-                changes.Headers.Remove(h);
+            //foreach (var h in changes.Headers.ToArray())
+            //    changes.Headers.Remove(h);
 
-            return count;
+            return wrapLog($"{changes}", count);
         }
+
 
     }
 }

@@ -16,7 +16,6 @@ namespace ToSic.Sxc.Dnn.Web
 {
     public class DnnClientResources: HasLog
     {
-        private readonly IPageFeaturesManager _pageFm;
         private readonly IPageService _pageService;
         protected BlockBuilder BlockBuilder;
         protected Page Page;
@@ -25,9 +24,8 @@ namespace ToSic.Sxc.Dnn.Web
         /// <summary>
         /// DI Constructor
         /// </summary>
-        public DnnClientResources(IPageFeaturesManager pageFm, IPageService pageService): base("Dnn.JsCss")
+        public DnnClientResources(IPageService pageService): base($"{DnnConstants.LogName}.JsCss")
         {
-            _pageFm = pageFm;
             _pageService = pageService;
         }
         
@@ -41,23 +39,17 @@ namespace ToSic.Sxc.Dnn.Web
         }
 
 
-        internal List<IPageFeature> Features
-        {
-            get
-            {
-                if (_features != null) return _features;
-                var wrapLog = Log.Call();
-                Log.Add("Try to get new specs from IPageService");
-                var features = _pageService.Features.GetKeysAndFlush();
-                Log.Add($"Got {features.Count} items");
-                var unfolded = _pageFm.GetWithDependents(features);
-                Log.Add($"Got unfolded features {unfolded.Count}");
-                _features = unfolded;
-                wrapLog("ok");
-                return _features;
-            }
-        }
+        internal List<IPageFeature> Features => _features ?? (_features = _pageService.Features.GetWithDependentsAndFlush(Log));
 
+        //var wrapLog = Log.Call();
+        //Log.Add("Try to get new specs from IPageService");
+        //var features = _pageService.Features.GetKeysAndFlush();
+        //Log.Add($"Got {features.Count} items");
+        //var unfolded = _pageFm.GetWithDependents(features);
+        //Log.Add($"Got unfolded features {unfolded.Count}");
+        //_features = unfolded;
+        //wrapLog("ok");
+        //return _features;
         private List<IPageFeature> _features;
 
         public bool AddEverything()

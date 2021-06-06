@@ -3,19 +3,19 @@ using System.Web;
 using DotNetNuke.Web.Client;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using DotNetNuke.Web.Client.Providers;
+using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Web;
-using ToSic.Sxc.Web.PageService;
 using Page = System.Web.UI.Page;
 
 namespace ToSic.Sxc.Dnn.Web
 {
     public class DnnClientDependencyOptimizer: ClientDependencyOptimizer
     {
-        private readonly IPageChangeApplicator _pageChanges;
+        private readonly DnnPageChanges _pageChanges;
 
-        public DnnClientDependencyOptimizer(IPageChangeApplicator pageChanges)
+        public DnnClientDependencyOptimizer(DnnPageChanges pageChanges)
         {
-            _pageChanges = pageChanges;
+            _pageChanges = pageChanges.Init(Log);
         }
 
         public override Tuple<string, bool> Process(string renderedTemplate)
@@ -43,9 +43,24 @@ namespace ToSic.Sxc.Dnn.Web
                 else ClientResourceManager.RegisterStyleSheet(page, a.Url, a.Priority, DnnProviderName(a.PosInPage));
             });
 
-            Log.Add("Will apply RazorBlade changes");
+            Log.Add("Will apply PageChanges");
             var changes = _pageChanges.Apply();
-            Log.Add($"Done - {changes} changes");
+
+            Log.Add("Apply Header Status-Code changes as needed");
+            var pageServiceWithInternals = _pageChanges.PageService as Sxc.Web.PageService.Page;
+            if (page?.Response != null && pageServiceWithInternals?.HttpStatusCode != null)
+            {
+                var code = pageServiceWithInternals.HttpStatusCode.Value;
+                Log.Add($"Custom status code '{code}'. Will set and also TrySkipIisCustomErrors");
+                page.Response.StatusCode = code;
+                // Skip IIS & upstream redirects to a custom 404 so the Dnn page is preserved
+                page.Response.TrySkipIisCustomErrors = true;
+                if (pageServiceWithInternals.HttpStatusMessage != null)
+                {
+                    Log.Add($"Custom status Description '{pageServiceWithInternals.HttpStatusMessage}'.");
+                    page.Response.StatusDescription = pageServiceWithInternals.HttpStatusMessage;
+                }
+            }
             
             return wrapLog("ok", new Tuple<string, bool>(renderedTemplate, include2SxcJs));
         }

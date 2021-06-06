@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Web.PageService
         }
         
         [PrivateApi]
-        public IPageFeatures Features => _features ?? (_features = new PageFeatures.PageFeatures());
-        private IPageFeatures _features;
+        public IPageFeatures Features { get; } // => _features ?? (_features = new PageFeatures.PageFeatures(this));
+        // private IPageFeatures _features; 
     }
 }

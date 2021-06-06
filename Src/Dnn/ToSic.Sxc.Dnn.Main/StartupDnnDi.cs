@@ -32,11 +32,9 @@ using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
-using ToSic.Sxc.Web.PageService;
 using ToSic.Sxc.WebApi.ApiExplorer;
 using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.Plumbing;
-using Page = ToSic.Sxc.Web.PageService.Page;
 
 
 namespace ToSic.SexyContent
@@ -127,7 +125,8 @@ namespace ToSic.SexyContent
             } catch { /* ignore */ }
             
             // new in v12.02 - RazorBlade DI
-            services.TryAddScoped<IPageChangeApplicator, DnnPageChanges>();
+            //services.TryAddScoped<IPageChangeApplicator, DnnPageChanges>();
+            services.TryAddScoped<DnnPageChanges, DnnPageChanges>();
             services.TryAddTransient<DnnClientResources>();
 
             return services;
