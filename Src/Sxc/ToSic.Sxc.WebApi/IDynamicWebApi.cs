@@ -16,7 +16,7 @@ namespace ToSic.Sxc.WebApi
     {
         /// <summary>
         /// Save a file from a stream (usually an upload from the browser) into an adam-field of an item.
-        /// Read more about this in the the [WebAPI docs for SaveInAdam](xref:WebApi.Custom.DotNet.SaveInAdam)
+        /// Read more about this in the the [WebAPI docs for SaveInAdam](xref:NetCode.WebApi.DotNet.SaveInAdam)
         /// </summary>
         /// <param name="dontRelyOnParameterOrder">ensure that all parameters use names, so the api can change in future</param>
         /// <param name="stream">the stream</param>
