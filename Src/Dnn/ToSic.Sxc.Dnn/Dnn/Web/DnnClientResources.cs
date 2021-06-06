@@ -128,6 +128,12 @@ namespace ToSic.Sxc.Dnn.Web
                 ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
             }
 
+            if(Features.Contains(BuiltInFeatures.JQuery))
+                JavaScript.RequestRegistration(CommonJs.jQuery);
+            
+            if(Features.Contains(BuiltInFeatures.JQueryUi))
+                JavaScript.RequestRegistration(CommonJs.jQueryUI);
+            
             if (Features.Contains(BuiltInFeatures.TurnOn))
                 RegisterJs(page, ver, root + InpageCms.TurnOnJs, true, priority + 10);
 

@@ -57,6 +57,19 @@ namespace ToSic.Sxc.Oqt.Server.Block
             // New in 12.02 - TODO: VERIFY IT WORK @SPM (I haven't verified this yet)
             if(Features.Contains(BuiltInFeatures.TurnOn))
                 list.Add($"{OqtConstants.UiRoot}/{InpageCms.TurnOnJs}");
+
+            if (Features.Contains(BuiltInFeatures.JQuery))
+            {
+                // v12.02 don't do anything yet, Oqtane always includes jQuery as of now
+                // list.Add($"{OqtConstants.UiRoot}/{InpageCms.TurnOnJs}");
+            }
+            
+            if (Features.Contains(BuiltInFeatures.JQueryUi))
+            {
+                // TODO: SPM - please find a proper place to add this from a CDN in a matching version as is in Oqtane
+            }
+            
+            
             return list;
         }
 
