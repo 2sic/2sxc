@@ -17,26 +17,13 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         public IEntity Entity { get; private set; }
 
-        [PrivateApi]
-        public int CompatibilityLevel { get; }
-
-        //[PrivateApi]
-        //public string[] Dimensions { get; }
-
-        [PrivateApi("Keep internal only - should never surface")]
-        internal IBlock Block { get; }
-
         /// <summary>
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
         [PrivateApi]
-        public DynamicEntity(IEntity entity, string[] dimensions, int compatibility, IBlock block, IServiceProvider serviceProvider): base(block, serviceProvider, dimensions)
+        public DynamicEntity(IEntity entity, string[] dimensions, int compatibility, IBlock block, IServiceProvider serviceProvider): base(block, serviceProvider, dimensions, compatibility)
         {
             SetEntity(entity);
-            //Dimensions = dimensions;
-            CompatibilityLevel = compatibility;
-            Block = block;
-            //_serviceProviderOrNull = Block?.Context?.ServiceProvider ?? serviceProvider;
         }
 
         [PrivateApi]
@@ -46,13 +33,6 @@ namespace ToSic.Sxc.Data
             EntityForEqualityCheck = (Entity as IEntityWrapper)?.EntityForEqualityCheck ?? Entity;
         }
 
-        ///// <summary>
-        ///// Very internal implementation - we need this to allow the IValueProvider to be created, and normally it's provided by the Block context.
-        ///// But in rare cases (like when the App.Resources is a DynamicEntity) it must be injected separately.
-        ///// </summary>
-        //[PrivateApi]
-        //protected readonly IServiceProvider _serviceProviderOrNull;
-        
 
         /// <inheritdoc />
         public object EntityTitle => Entity?.Title[Dimensions];

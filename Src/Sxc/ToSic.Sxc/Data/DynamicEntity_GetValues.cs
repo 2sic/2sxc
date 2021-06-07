@@ -33,15 +33,7 @@ namespace ToSic.Sxc.Data
             if (defaultMode && _valCache.ContainsKey(field)) return _valCache[field];
 
             var resultSet = Entity.ValueAndType(field, dimsToUse);
-            var result = resultSet.Item1; // Entity.GetBestValue(field, dimsToUse);
-
-            // New mechanism to not use resolve-hyperlink
-            if (lookup && result is string strResult
-                       && ValueConverterBase.CouldBeReference(strResult)
-                       // && Entity.Attributes.ContainsKey(field) && Entity.Attributes[field].Type == DataTypes.Hyperlink
-                       && resultSet.Item2 == DataTypes.Hyperlink
-                       )
-                result = ValueConverterOrNull?.ToValue(strResult, EntityGuid) ?? result;
+            var result = ValueAutoConverted(resultSet, lookup, Entity, field, dimsToUse);
 
             if (result is IEnumerable<IEntity> rel)
                 // Note: if it's a Dynamic Entity without block (like App.Settings) it needs the Service Provider from this object to work
@@ -51,6 +43,8 @@ namespace ToSic.Sxc.Data
             if (defaultMode) _valCache.Add(field, result);
             return result;
         }
+
+
         private readonly Dictionary<string, object> _valCache = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
 
 

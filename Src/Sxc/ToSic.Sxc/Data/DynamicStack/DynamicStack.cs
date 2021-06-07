@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Data
     [PrivateApi("WIP")]
     public class DynamicStack: DynamicEntityBase, IWrapper<IEntityStack>
     {
-        public DynamicStack(IBlock block, IServiceProvider serviceProvider, string[] dimensions, params IEntity[] entities) : base(block, serviceProvider, dimensions)
+        public DynamicStack(IBlock block, IServiceProvider serviceProvider, string[] dimensions, params IEntity[] entities) : base(block, serviceProvider, dimensions, 10)
         {
             var stack = new EntityStack();
             stack.Init(dimensions, entities);
@@ -21,7 +21,10 @@ namespace ToSic.Sxc.Data
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            result = UnwrappedContents.Value(binder.Name);
+            var foundSet = UnwrappedContents.ValueAndMore(binder.Name);
+            result = foundSet.Item1;
+            if (result != null) result = ValueAutoConverted(new Tuple<object, string>(foundSet.Item1, foundSet.Item2), 
+                true, foundSet.Item3, binder.Name, Dimensions);
             return true;
         }
 
