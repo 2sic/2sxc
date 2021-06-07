@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Oqt.Server.Block
             if (AddJsCore) list.Add($"{OqtConstants.UiRoot}/{InpageCms.CoreJs}");
             if (AddJsEdit) list.Add($"{OqtConstants.UiRoot}/{InpageCms.EditJs}");
             //if(BlockBuilder.NamedScriptsWIP?.Contains(BlockBuilder.JsTurnOn) ?? false)
-            // New in 12.02 - TODO: VERIFY IT WORK @SPM (I haven't verified this yet)
+            // New in 12.02
             if(Features.Contains(BuiltInFeatures.TurnOn))
                 list.Add($"{OqtConstants.UiRoot}/{InpageCms.TurnOnJs}");
 
