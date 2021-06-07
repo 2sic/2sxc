@@ -9,11 +9,6 @@
         {
             JQuery.Key
         });
-        // Note: officially published
-        public static PageFeature JQueryUi = new PageFeature("jQuery.Ui", "jQuery UI library", requires: new []
-        {
-            JQuery.Key
-        });
 
         public static PageFeature PageContext = new PageFeature("2sxc.PageContext", "the $2sxc headers in the page so everything works");
 

@@ -66,14 +66,6 @@ namespace ToSic.Sxc.Oqt.Server.Block
                 // list.Add($"{OqtConstants.UiRoot}/{InpageCms.TurnOnJs}");
             }
 
-            if (Features.Contains(BuiltInFeatures.JQueryUi))
-            {
-                // TODO: SPM - please find a proper place to add this from a CDN in a matching version as is in Oqtane
-                // /*! jQuery UI - v1.12.1 - 2016-09-14
-                list.Add($"https://code.jquery.com/ui/1.12.1/jquery-ui.min.js");
-            }
-
-
             return list;
         }
 
