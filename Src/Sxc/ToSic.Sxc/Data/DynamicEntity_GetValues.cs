@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Data;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Data
@@ -33,15 +32,16 @@ namespace ToSic.Sxc.Data
             // check if we already have it in the cache - but only in normal lookups
             if (defaultMode && _valCache.ContainsKey(field)) return _valCache[field];
 
-            var result = Entity.GetBestValue(field, dimsToUse);
+            var resultSet = Entity.ValueAndType(field, dimsToUse);
+            var result = resultSet.Item1; // Entity.GetBestValue(field, dimsToUse);
 
             // New mechanism to not use resolve-hyperlink
             if (lookup && result is string strResult
                        && ValueConverterBase.CouldBeReference(strResult)
-                       && Entity.Attributes.ContainsKey(field) &&
-                       Entity.Attributes[field].Type == DataTypes.Hyperlink)
-                result = _serviceProviderOrNull?.Build<IValueConverter>()?.ToValue(strResult, EntityGuid)
-                         ?? result;
+                       // && Entity.Attributes.ContainsKey(field) && Entity.Attributes[field].Type == DataTypes.Hyperlink
+                       && resultSet.Item2 == DataTypes.Hyperlink
+                       )
+                result = ValueConverterOrNull?.ToValue(strResult, EntityGuid) ?? result;
 
             if (result is IEnumerable<IEntity> rel)
                 // Note: if it's a Dynamic Entity without block (like App.Settings) it needs the Service Provider from this object to work
@@ -53,6 +53,9 @@ namespace ToSic.Sxc.Data
         }
         private readonly Dictionary<string, object> _valCache = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
 
+
+        
+        
         /// <summary>
         /// Get a property using the string name. Only needed in special situations, as most cases can use the object.name directly
         /// </summary>

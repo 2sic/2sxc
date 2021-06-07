@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Dynamic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
@@ -13,7 +12,7 @@ namespace ToSic.Sxc.Data
     /// Note that it will provide many things not listed here, usually things like `.Image`, `.FirstName` etc. based on your ContentType.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public partial class DynamicEntity : DynamicObject, IDynamicEntity, ICompatibilityLevel
+    public partial class DynamicEntity : DynamicEntityBase, IDynamicEntity, ICompatibilityLevel
     {
         [PrivateApi]
         public IEntity Entity { get; private set; }
@@ -21,8 +20,8 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         public int CompatibilityLevel { get; }
 
-        [PrivateApi]
-        public string[] Dimensions { get; }
+        //[PrivateApi]
+        //public string[] Dimensions { get; }
 
         [PrivateApi("Keep internal only - should never surface")]
         internal IBlock Block { get; }
@@ -31,13 +30,13 @@ namespace ToSic.Sxc.Data
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
         [PrivateApi]
-        public DynamicEntity(IEntity entity, string[] dimensions, int compatibility, IBlock block, IServiceProvider serviceProvider)
+        public DynamicEntity(IEntity entity, string[] dimensions, int compatibility, IBlock block, IServiceProvider serviceProvider): base(block, serviceProvider, dimensions)
         {
             SetEntity(entity);
-            Dimensions = dimensions;
+            //Dimensions = dimensions;
             CompatibilityLevel = compatibility;
             Block = block;
-            _serviceProviderOrNull = Block?.Context?.ServiceProvider ?? serviceProvider;
+            //_serviceProviderOrNull = Block?.Context?.ServiceProvider ?? serviceProvider;
         }
 
         [PrivateApi]
@@ -47,12 +46,12 @@ namespace ToSic.Sxc.Data
             EntityForEqualityCheck = (Entity as IEntityWrapper)?.EntityForEqualityCheck ?? Entity;
         }
 
-        /// <summary>
-        /// Very internal implementation - we need this to allow the IValueProvider to be created, and normally it's provided by the Block context.
-        /// But in rare cases (like when the App.Resources is a DynamicEntity) it must be injected separately.
-        /// </summary>
-        [PrivateApi]
-        protected readonly IServiceProvider _serviceProviderOrNull;
+        ///// <summary>
+        ///// Very internal implementation - we need this to allow the IValueProvider to be created, and normally it's provided by the Block context.
+        ///// But in rare cases (like when the App.Resources is a DynamicEntity) it must be injected separately.
+        ///// </summary>
+        //[PrivateApi]
+        //protected readonly IServiceProvider _serviceProviderOrNull;
         
 
         /// <inheritdoc />
