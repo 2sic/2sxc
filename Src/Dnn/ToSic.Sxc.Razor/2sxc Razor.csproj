@@ -121,6 +121,7 @@
     <Compile Include="Custom\Dnn\Razor12.cs" />
     <Compile Include="Custom\Dnn\Razor12Code.cs" />
     <Compile Include="Custom\Hybrid\Razor12_DynamicModel.cs" />
+    <Compile Include="Custom\Hybrid\Razor12_WIP.cs" />
     <Compile Include="Dnn\beta\InheritRazorComponent.cs" />
     <Compile Include="Dnn\RazorCodeManager.cs" />
     <Compile Include="Dnn\RazorComponentCode.cs" />
