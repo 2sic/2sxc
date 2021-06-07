@@ -181,9 +181,15 @@ namespace ToSic.SexyContent.WebApi
 
         #endregion
 
-        #region RunContext - new in 11.08 or similar, not implemented in old base classes
+        #region CmsContext
 
         public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
+
+        [PrivateApi("WIP 12.02")]
+        public dynamic Resources => _DynCodeRoot.Resources;
+
+        [PrivateApi("WIP 12.02")]
+        public dynamic Settings => _DynCodeRoot.Settings;
 
         #endregion
     }
