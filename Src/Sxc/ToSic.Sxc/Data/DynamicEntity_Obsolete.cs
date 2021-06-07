@@ -14,16 +14,16 @@ namespace ToSic.Sxc.Data
             get
             {
                 // if it's neither in a running context nor in a running portal, no toolbar
-                if (Block == null)
+                if (_Dependencies.Block == null)
                     return new System.Web.HtmlString("");
 
                 // If we're not in a running context, of which we know the permissions, no toolbar
-                var userMayEdit = Block?.Context.UserMayEdit ?? false;
+                var userMayEdit = _Dependencies.Block?.Context.UserMayEdit ?? false;
 
                 if (!userMayEdit)
                     return new System.Web.HtmlString("");
 
-                if (CompatibilityLevel == 10)
+                if (_Dependencies.CompatibilityLevel == 10)
                     throw new Exception("content.Toolbar is deprecated in the new RazorComponent. Use @Edit.TagToolbar(content) or @Edit.Toolbar(content) instead. See https://r.2sxc.org/EditToolbar");
 
                 var toolbar = new ToSic.Sxc.Edit.Toolbar.ItemToolbar(Entity).Toolbar;
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Data
         [PrivateApi("probably we won't continue recommending to use this, but first we must provide an alternative")]
         public System.Web.IHtmlString Render()
         {
-            if (CompatibilityLevel == 10)
+            if (_Dependencies.CompatibilityLevel == 10)
                 throw new Exception("content.Render() is deprecated in the new RazorComponent. Use ToSic.Sxc.Blocks.Render.One(content) instead. See https://r.2sxc.org/EditToolbar");
 
             return Blocks.Render.One(this);

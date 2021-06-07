@@ -22,6 +22,6 @@ namespace ToSic.Sxc.Data
             contents == null 
                 ? null
                 // Note: if it's a Dynamic Entity without block (like App.Settings) it needs the Service Provider
-                : new DynamicEntity(contents, Dimensions, CompatibilityLevel, Block, _serviceProviderOrNull);
+                : new DynamicEntity(contents, _Dependencies);
     }
 }

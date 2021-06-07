@@ -161,7 +161,11 @@ namespace ToSic.Sxc.Data
         /// </returns>
         dynamic Presentation { get; }
 
+        //[PrivateApi]
+        //string[] Dimensions { get; }
+        
         [PrivateApi]
-        string[] Dimensions { get; }
+        // ReSharper disable once InconsistentNaming
+        DynamicEntityDependencies _Dependencies { get; }
     }
 }

@@ -9,10 +9,10 @@ namespace ToSic.Sxc.Data
     [PrivateApi("WIP")]
     public class DynamicStack: DynamicEntityBase, IWrapper<IEntityStack>
     {
-        public DynamicStack(IBlock block, IServiceProvider serviceProvider, string[] dimensions, params IEntity[] entities) : base(block, serviceProvider, dimensions, 10)
+        public DynamicStack(DynamicEntityDependencies dependencies /*IBlock block, IServiceProvider serviceProvider, string[] dimensions*/, params IEntity[] entities) : base(dependencies)
         {
             var stack = new EntityStack();
-            stack.Init(dimensions, entities);
+            stack.Init(dependencies.Dimensions, entities);
             UnwrappedContents = stack;
         }
         
@@ -23,8 +23,8 @@ namespace ToSic.Sxc.Data
         {
             var foundSet = UnwrappedContents.ValueAndMore(binder.Name);
             result = foundSet.Item1;
-            if (result != null) result = ValueAutoConverted(new Tuple<object, string>(foundSet.Item1, foundSet.Item2), 
-                true, foundSet.Item3, binder.Name, Dimensions);
+            if (result != null) result = ValueAutoConverted(foundSet .Item1, foundSet.Item2, 
+                true, foundSet.Item3, binder.Name);
             return true;
         }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Data;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Data
@@ -24,7 +23,7 @@ namespace ToSic.Sxc.Data
             #endregion
 
             // use the standard dimensions or overload
-            var dimsToUse = language == null ? Dimensions : new[] { language };
+            var dimsToUse = language == null ? _Dependencies.Dimensions : new[] { language };
 
             // check Entity is null (in cases where null-objects are asked for properties)
             if (Entity == null) return null;
@@ -33,17 +32,11 @@ namespace ToSic.Sxc.Data
             if (defaultMode && _valCache.ContainsKey(field)) return _valCache[field];
 
             var resultSet = Entity.ValueAndType(field, dimsToUse);
-            var result = ValueAutoConverted(resultSet, lookup, Entity, field, dimsToUse);
-
-            if (result is IEnumerable<IEntity> rel)
-                // Note: if it's a Dynamic Entity without block (like App.Settings) it needs the Service Provider from this object to work
-                result = new DynamicEntityWithList(Entity, field, rel, dimsToUse, CompatibilityLevel, Block,
-                    _serviceProviderOrNull);
+            var result = ValueAutoConverted(resultSet.Item1, resultSet.Item2, lookup, Entity, field);
 
             if (defaultMode) _valCache.Add(field, result);
             return result;
         }
-
 
         private readonly Dictionary<string, object> _valCache = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
 

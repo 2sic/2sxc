@@ -19,8 +19,13 @@ namespace ToSic.Sxc.Code
         public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => DynamicJacket.AsDynamicJacket(json, fallback);
 
         /// <inheritdoc />
-        public dynamic AsDynamic(IEntity entity)
-            => new DynamicEntity(entity, CmsContext.SafeLanguagePriorityCodes(), CompatibilityLevel, Block, _serviceProvider);
+        public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, DynamicEntityDependencies);
+
+        private DynamicEntityDependencies DynamicEntityDependencies =>
+            _dynamicEntityDependencies
+            ?? (_dynamicEntityDependencies = new DynamicEntityDependencies(Block, _serviceProvider,
+                CmsContext.SafeLanguagePriorityCodes(), CompatibilityLevel));
+        private DynamicEntityDependencies _dynamicEntityDependencies;
 
         /// <inheritdoc />
         public dynamic AsDynamic(object dynamicEntity) => dynamicEntity;

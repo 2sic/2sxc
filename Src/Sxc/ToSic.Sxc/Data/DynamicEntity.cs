@@ -1,8 +1,5 @@
-﻿using System;
-using ToSic.Eav.Data;
+﻿using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Run;
-using ToSic.Sxc.Blocks;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Data
@@ -12,7 +9,7 @@ namespace ToSic.Sxc.Data
     /// Note that it will provide many things not listed here, usually things like `.Image`, `.FirstName` etc. based on your ContentType.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public partial class DynamicEntity : DynamicEntityBase, IDynamicEntity, ICompatibilityLevel
+    public partial class DynamicEntity : DynamicEntityBase, IDynamicEntity
     {
         [PrivateApi]
         public IEntity Entity { get; private set; }
@@ -21,7 +18,7 @@ namespace ToSic.Sxc.Data
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
         [PrivateApi]
-        public DynamicEntity(IEntity entity, string[] dimensions, int compatibility, IBlock block, IServiceProvider serviceProvider): base(block, serviceProvider, dimensions, compatibility)
+        public DynamicEntity(IEntity entity, DynamicEntityDependencies dependencies): base(dependencies)
         {
             SetEntity(entity);
         }
@@ -35,7 +32,7 @@ namespace ToSic.Sxc.Data
 
 
         /// <inheritdoc />
-        public object EntityTitle => Entity?.Title[Dimensions];
+        public object EntityTitle => Entity?.Title[_Dependencies.Dimensions];
 
 
         /// <inheritdoc />

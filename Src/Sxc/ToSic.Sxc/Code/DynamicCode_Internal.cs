@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Documentation;
-using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Code
 {
