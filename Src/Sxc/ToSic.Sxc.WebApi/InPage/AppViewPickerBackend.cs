@@ -36,7 +36,10 @@ namespace ToSic.Sxc.WebApi.InPage
 
         public IEnumerable<ContentTypeUiInfo> ContentTypes()
         {
-            var appPath = Block?.App?.Path ?? "";
+            // nothing to do without app
+            if (Block?.App == null) return null;
+
+            var appPath = Block.App.Path ?? "";
             return CmsManagerOfBlock?.Read.Views.GetContentTypesWithStatus(appPath);
         }
 
