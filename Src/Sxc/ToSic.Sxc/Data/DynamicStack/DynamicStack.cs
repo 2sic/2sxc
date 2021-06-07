@@ -2,14 +2,13 @@
 using System.Dynamic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
-using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Data
 {
     [PrivateApi("WIP")]
     public class DynamicStack: DynamicEntityBase, IWrapper<IEntityStack>
     {
-        public DynamicStack(DynamicEntityDependencies dependencies /*IBlock block, IServiceProvider serviceProvider, string[] dimensions*/, params IEntity[] entities) : base(dependencies)
+        public DynamicStack(DynamicEntityDependencies dependencies, params IEntity[] entities) : base(dependencies)
         {
             var stack = new EntityStack();
             stack.Init(dependencies.Dimensions, entities);
@@ -21,10 +20,20 @@ namespace ToSic.Sxc.Data
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            var foundSet = UnwrappedContents.ValueAndMore(binder.Name);
+            var field = binder.Name;
+            
+            // check if we already have it in the cache - but only in normal lookups
+            if (_ValueCache.ContainsKey(field))
+            {
+                result = _ValueCache[field];
+                return true;
+            }
+
+            var foundSet = UnwrappedContents.ValueAndMore(field);
             result = foundSet.Item1;
-            if (result != null) result = ValueAutoConverted(foundSet .Item1, foundSet.Item2, 
-                true, foundSet.Item3, binder.Name);
+            if (result != null) result = ValueAutoConverted(result, foundSet.Item2, true, foundSet.Item3, field);
+            _ValueCache.Add(field, result);
+            
             return true;
         }
 

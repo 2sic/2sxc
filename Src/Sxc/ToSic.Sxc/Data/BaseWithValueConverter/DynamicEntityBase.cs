@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
@@ -13,6 +14,8 @@ namespace ToSic.Sxc.Data
         // ReSharper disable once InconsistentNaming
         public DynamicEntityDependencies _Dependencies { get; }
 
+        protected readonly Dictionary<string, object> _ValueCache = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+
 
         protected object ValueAutoConverted(object result, string dataType, bool lookup, IEntity entity, string field)
         {
@@ -22,11 +25,10 @@ namespace ToSic.Sxc.Data
                        && ValueConverterBase.CouldBeReference(strResult))
                 result = _Dependencies.ValueConverterOrNull?.ToValue(strResult, entity.EntityGuid) ?? result;
 
-            if (result is IEnumerable<IEntity> children)
-                // note 2021-06-07 previously in created sub-entities with modified language-list; I think this is wrong
-                result = new DynamicEntityWithList(entity, field, children, _Dependencies);
-
-            return result;
+            // note 2021-06-07 previously in created sub-entities with modified language-list; I think this is wrong
+            return result is IEnumerable<IEntity> children
+                ? new DynamicEntityWithList(entity, field, children, _Dependencies)
+                : result;
         }
 
     }

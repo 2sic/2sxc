@@ -29,16 +29,16 @@ namespace ToSic.Sxc.Data
             if (Entity == null) return null;
 
             // check if we already have it in the cache - but only in normal lookups
-            if (defaultMode && _valCache.ContainsKey(field)) return _valCache[field];
+            if (defaultMode && _ValueCache.ContainsKey(field)) return _ValueCache[field];
 
             var resultSet = Entity.ValueAndType(field, dimsToUse);
             var result = ValueAutoConverted(resultSet.Item1, resultSet.Item2, lookup, Entity, field);
 
-            if (defaultMode) _valCache.Add(field, result);
+            if (defaultMode) _ValueCache.Add(field, result);
             return result;
         }
 
-        private readonly Dictionary<string, object> _valCache = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+        //private readonly Dictionary<string, object> _valCache = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
 
 
         
