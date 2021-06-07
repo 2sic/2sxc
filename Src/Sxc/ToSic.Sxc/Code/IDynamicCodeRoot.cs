@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Code
 {
     /// <summary>
     /// This is the same as IDynamicCode, but the root object. 
-    /// We create another interface to ensure we don't accidentally pass around a sub-object where the root is really neede.
+    /// We create another interface to ensure we don't accidentally pass around a sub-object where the root is really needed.
     /// </summary>
     [PrivateApi]
     public interface IDynamicCodeRoot : IDynamicCode
@@ -23,5 +23,6 @@ namespace ToSic.Sxc.Code
 
         [PrivateApi]
         void LateAttachApp(IApp app);
+        
     }
 }

@@ -197,7 +197,7 @@ namespace ToSic.Sxc.Code
         T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null) where T : IDataSource;
         #endregion
 
-        #region Context WIP v11.11 / 11.12
+        #region Context
 
         /// <summary>
         /// The CmsContext tells you about the environment, like what page and module we're running in.
@@ -207,6 +207,16 @@ namespace ToSic.Sxc.Code
         /// New in v11.11
         /// </remarks>
         ICmsContext CmsContext { get; }
+
+        #endregion
+
+        #region Resources and Settings WIP 12.02
+
+        [PrivateApi("WIP")]
+        dynamic Resources { get; }
+        
+        [PrivateApi("WIP")]
+        dynamic Settings { get; }
 
         #endregion
 

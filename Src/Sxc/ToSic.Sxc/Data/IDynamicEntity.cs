@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Data
     /// </blockquote>
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public partial interface IDynamicEntity: SexyContent.Interfaces.IDynamicEntity, IEntityWrapper
+    public partial interface IDynamicEntity: SexyContent.Interfaces.IDynamicEntity, IEntityWrapper, IDynamicEntityGet
     {
         /// <summary>
         /// The underlying entity which provides all the data for the DynamicEntity
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Data
         /// </summary>
         string EntityType { get; }
 
-
+        /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity and IDynamicEntityGet */
         /// <summary>
         /// Get a value of the entity. Usually you will prefer the quick access like
         /// @content.FirstName - which will give you the same things as content.Get("FirstName").
@@ -68,6 +68,7 @@ namespace ToSic.Sxc.Data
         new dynamic Get(string name);
 
 
+        /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity and IDynamicEntityGet */
         /// <summary>
         /// Get a property using the string name. Only needed in special situations, as most cases can use the object.name directly
         /// </summary>
@@ -79,7 +80,7 @@ namespace ToSic.Sxc.Data
         /// <param name="language">Optional language code - like "de-ch" to prioritize that language</param>
         /// <param name="convertLinks">Optionally turn off if links like file:72 are looked up to a real link. Default is true.</param>
         /// <returns>a dynamically typed result, can be string, bool, etc.</returns>
-        dynamic Get(string name,
+        new dynamic Get(string name,
             // ReSharper disable once MethodOverloadWithOptionalParameter
             string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             string language = null,
