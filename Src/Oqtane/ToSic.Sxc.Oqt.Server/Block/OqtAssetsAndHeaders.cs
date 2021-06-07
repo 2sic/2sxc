@@ -61,15 +61,19 @@ namespace ToSic.Sxc.Oqt.Server.Block
             if (Features.Contains(BuiltInFeatures.JQuery))
             {
                 // v12.02 don't do anything yet, Oqtane always includes jQuery as of now
+                // https://code.jquery.com/jquery-3.5.1.slim.min.js
+                // "slim" version excludes ajax and effects modules
                 // list.Add($"{OqtConstants.UiRoot}/{InpageCms.TurnOnJs}");
             }
-            
+
             if (Features.Contains(BuiltInFeatures.JQueryUi))
             {
                 // TODO: SPM - please find a proper place to add this from a CDN in a matching version as is in Oqtane
+                // /*! jQuery UI - v1.12.1 - 2016-09-14
+                list.Add($"https://code.jquery.com/ui/1.12.1/jquery-ui.min.js");
             }
-            
-            
+
+
             return list;
         }
 
