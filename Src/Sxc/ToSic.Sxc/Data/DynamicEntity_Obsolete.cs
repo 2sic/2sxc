@@ -40,12 +40,12 @@ namespace ToSic.Sxc.Data
 
             return Blocks.Render.One(this);
         }
-#endif
 
         [PrivateApi("shouldn't be used, but it may be published by accident, so shouldn't be removed. ")]
         [Obsolete("please use Get instead")]
         public object GetEntityValue(string field) => _getValue(field);
 
+#endif
 
     }
 }

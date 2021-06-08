@@ -6,7 +6,7 @@ using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Data
 {
-    public abstract class DynamicEntityBase: DynamicObject, IDynamicEntityGet
+    public abstract class DynamicEntityBase: DynamicObject, IDynamicEntityGet, IPropertyLookup
     {
         protected DynamicEntityBase(DynamicEntityDependencies dependencies) => _Dependencies = dependencies;
 
@@ -29,20 +29,20 @@ namespace ToSic.Sxc.Data
             // check if we already have it in the cache - but only in default languages
             if (defaultMode && _ValueCache.ContainsKey(field)) return _ValueCache[field];
 
-            var resultSet = _getValueRaw(field, dimsToUse);// Entity.ValueAndType(field, dimsToUse);
+            var resultSet = FindPropertyInternal(field, dimsToUse);
 
             // check Entity is null (in cases where null-objects are asked for properties)
             if (resultSet == null) return null;
 
-            var result = ValueAutoConverted(resultSet.Item1, resultSet.Item2, lookup, resultSet.Item3, field);
+            var result = ValueAutoConverted(resultSet, lookup, field);
 
             // cache result, but only if using default languages
             if (defaultMode) _ValueCache.Add(field, result);
             return result;
         }
 
-        [PrivateApi]
-        protected abstract Tuple<object, string, IEntity, string> _getValueRaw(string field, string[] dimensions);
+        [PrivateApi("Internal")]
+        public abstract PropertyRequest FindPropertyInternal(string field, string[] dimensions);
         
         /// <inheritdoc/>
         public dynamic Get(string name) => _getValue(name);
@@ -60,19 +60,32 @@ namespace ToSic.Sxc.Data
         }
 
 
-        protected object ValueAutoConverted(object result, string dataType, bool lookup, IEntity entity, string field)
+        protected object ValueAutoConverted(PropertyRequest original, bool lookup, string field)
         {
+            var result = original.Result;
+            var parent = original.Source as IEntity;
             // New mechanism to not use resolve-hyperlink
-            if (lookup && result is string strResult
-                       && dataType == DataTypes.Hyperlink
+            if (lookup && original.Result is string strResult
+                       && original.FieldType == DataTypes.Hyperlink
                        && ValueConverterBase.CouldBeReference(strResult))
-                result = _Dependencies.ValueConverterOrNull?.ToValue(strResult, entity.EntityGuid) ?? result;
+                result = _Dependencies.ValueConverterOrNull?.ToValue(strResult, parent?.EntityGuid ?? Guid.Empty) ?? result;
 
             // note 2021-06-07 previously in created sub-entities with modified language-list; I think this is wrong
+            // Note 2021-06-08 if the parent is _not_ an IEntity, this will throw an error. Could happen in the DynamicStack, but that should never have such children
             return result is IEnumerable<IEntity> children
-                ? new DynamicEntityWithList(entity, field, children, _Dependencies)
+                ? new DynamicEntityWithList(parent, field, children, _Dependencies)
                 : result;
         }
+
+        
+        /// <summary>
+        /// Generate a dynamic entity based on an IEntity.
+        /// Used in various cases where a property would return an IEntity, and the Razor should be able to continue in dynamic syntax
+        /// </summary>
+        /// <param name="contents"></param>
+        /// <returns></returns>
+        [PrivateApi]
+        protected IDynamicEntity SubDynEntity(IEntity contents) => contents == null ? null : new DynamicEntity(contents, _Dependencies);
 
     }
 }

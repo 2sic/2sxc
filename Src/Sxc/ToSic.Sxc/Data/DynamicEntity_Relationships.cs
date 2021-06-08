@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Data;
-using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Data
 {
@@ -17,11 +15,11 @@ namespace ToSic.Sxc.Data
             => Entity.Children(field, type).Select(SubDynEntity).ToList();
 
 
-        [PrivateApi]
-        protected IDynamicEntity SubDynEntity(IEntity contents) =>
-            contents == null 
-                ? null
-                // Note: if it's a Dynamic Entity without block (like App.Settings) it needs the Service Provider
-                : new DynamicEntity(contents, _Dependencies);
+        //[PrivateApi]
+        //protected IDynamicEntity SubDynEntity(IEntity contents) =>
+        //    contents == null 
+        //        ? null
+        //        // Note: if it's a Dynamic Entity without block (like App.Settings) it needs the Service Provider
+        //        : new DynamicEntity(contents, _Dependencies);
     }
 }

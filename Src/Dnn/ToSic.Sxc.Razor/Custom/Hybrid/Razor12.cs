@@ -121,6 +121,12 @@ namespace Custom.Hybrid
 
         public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
 
+        [PrivateApi("WIP 12.02")]
+        public dynamic Resources => _DynCodeRoot.Resources;
+
+        [PrivateApi("WIP 12.02")]
+        public dynamic Settings => _DynCodeRoot.Settings;
+
         #endregion
     }
 }
