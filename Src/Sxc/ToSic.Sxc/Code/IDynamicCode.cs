@@ -223,9 +223,25 @@ namespace ToSic.Sxc.Code
 
         #region Resources and Settings WIP 12.02
 
+        /// <summary>
+        /// Resources for this Scenario. This is a dynamic object based on the <see cref="IDynamicStack"/>.
+        ///
+        /// It will combine both the Resources of the View and the App. The View-Resources will have priority. In future it may also include some global Resources. 
+        /// 
+        /// 🪒 Use in Razor: `@Resources.CtaButtonLabel`
+        /// </summary>
+        /// <remarks>New in 12.02 - WIP</remarks>
         [PrivateApi("WIP")]
         dynamic Resources { get; }
-        
+
+        /// <summary>
+        /// Settings for this Scenario. This is a dynamic object based on the <see cref="IDynamicStack"/>.
+        /// 
+        /// It will combine both the Settings of the View and the App. The View-Settings will have priority. In future it may also include some global Settings. 
+        /// 
+        /// 🪒 Use in Razor: `Settings.ItemsPerRow`
+        /// </summary>
+        /// <remarks>New in 12.02 - WIP</remarks>
         [PrivateApi("WIP")]
         dynamic Settings { get; }
 
