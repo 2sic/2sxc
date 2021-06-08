@@ -32,7 +32,8 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public dynamic AsDynamic(object dynamicEntity) => dynamicEntity;
 
-        [PrivateApi("WIP")]
+        /// <inheritdoc />
+        [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic AsDynamic(params object[] entities)
         {
             if (entities == null || !entities.Any()) return null;

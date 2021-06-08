@@ -1,19 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using ToSic.Eav.Data;
-using ToSic.Eav.Documentation;
-using IEntity = ToSic.Eav.Data.IEntity;
+﻿using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Data
 {
     /// <summary>
-    /// This is a wrapper for IEntity objects. It provides nicer access to underlying properties
-    /// and automatically handles things like multi-language etc.
-    /// The underlying IEntity <see cref="IEntity"/> is in the Entity property. 
-    /// <blockquote>
-    /// Normally you will use it without caring about these internals. <br/>
-    /// Please check @HowTo.DynamicCode.DynamicEntity
-    /// </blockquote>
+    /// This is minor cross-concerns aspect of Dynamic-Entity-like objects
     /// </summary>
     [PrivateApi]
     public interface IDynamicEntityGet
@@ -50,35 +40,5 @@ namespace ToSic.Sxc.Data
             string language = null,
             bool convertLinks = true);
 
-        
-
-        //#region parents / children
-
-        ///// <summary>
-        ///// A dynamic list of entities which point to this item. Important for LINQ style querying or just
-        ///// working with various lists. Note that for getting child items of this item you
-        ///// can just use the properties, like content.Authors. <br/>
-        ///// Please check the tutorials on 2sxc.org/dnn-tutorials/ for more info. 
-        ///// </summary>
-        ///// <param name="type">Optional type filter - would only return items of this type. </param>
-        ///// <param name="field">Optional field filter - would only return items that point to the current item in a specific field name.</param>
-        ///// <returns>A list of all items pointing here (filtered), converted to DynamicEntity for convenience.</returns>
-        ///// <remarks>New in 9.42 - note also that the parameter-order is reversed to the Children()</remarks>
-        //List<IDynamicEntity> Parents(string type = null, string field = null);
-
-        ///// <summary>
-        ///// A dynamic list of sub-items. Important for LINQ style querying or just
-        ///// working with various lists. Note that for getting child items of this item you
-        ///// can just use the properties, like content.Authors. <br/>
-        ///// But using Children("Authors", typeName) gives you the ability to restrict to a type.  <br/>
-        ///// Please check the tutorials on 2sxc.org/dnn-tutorials/ for more info. 
-        ///// </summary>
-        ///// <param name="type">Optional type filter - would only return items of this type. </param>
-        ///// <param name="field">Optional field filter - would only return items that point to the current item in a specific field name.</param>
-        ///// <returns>A list of all items pointing here (filtered), converted to DynamicEntity for convenience.</returns>
-        ///// <remarks>New in 10.21.00 - note also that the parameter-order is reversed to the Parents()</remarks>
-        //List<IDynamicEntity> Children(string field = null, string type = null);
-        //#endregion 
-        
     }
 }

@@ -103,10 +103,12 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public ICmsContext CmsContext => UnwrappedContents?.CmsContext;
 
-        [PrivateApi("WIP 12.02")]
+        /// <inheritdoc />
+        [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic Resources => UnwrappedContents?.Resources;
 
-        [PrivateApi("WIP 12.02")]
+        /// <inheritdoc />
+        [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic Settings => UnwrappedContents?.Settings;
 
         #endregion CmsContext  

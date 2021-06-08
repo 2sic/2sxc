@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Code
     public partial class DynamicCodeRoot
     {
         /// <inheritdoc />
-        [PrivateApi("WIP")]
+        [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic Resources => _resources ?? (_resources = new DynamicStack(
                 new DynamicEntityDependencies(Block,
                     DataSourceFactory.ServiceProvider,
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Code
         private dynamic _resources;
 
         /// <inheritdoc />
-        [PrivateApi("WIP")]
+        [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic Settings => _settings ?? (_settings = new DynamicStack(
                 new DynamicEntityDependencies(_DynCodeRoot.Block,
                     _DynCodeRoot.DataSourceFactory.ServiceProvider,

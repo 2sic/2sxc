@@ -8,12 +8,11 @@ namespace ToSic.Sxc.Blocks
     [PrivateApi("Hide implementation")]
     public class CmsView: ICmsView, IWrapper<IView>
     {
-        public CmsView(/*IDynamicCode dynCode,*/ IBlock block)
+        public CmsView(IBlock block)
         {
-            //_dynCode = dynCode;
             UnwrappedContents = block?.View;
         }
-        //private readonly IDynamicCode _dynCode;
+
         [PrivateApi]
         public IView UnwrappedContents { get; }
 
@@ -28,30 +27,6 @@ namespace ToSic.Sxc.Blocks
 
         /// <inheritdoc />
         public string Edition => UnwrappedContents?.Edition;
-
-        ///// <inheritdoc />
-        //public dynamic Configuration => _configuration ?? (_configuration = MakeDynamic(_view.Entity));
-        //private dynamic _configuration;
-
-        ///// <inheritdoc />
-        //public dynamic Resources => _resources ?? (_resources = MakeDynamic(_view?.Resources));
-        //private dynamic _resources;
-
-        ///// <inheritdoc />
-        //public dynamic Settings => _settings ?? (_settings = MakeDynamic(_view?.Settings));
-        //private dynamic _settings;
-
-        #region Internal code to construct dynamic entities on the View
-
-        //private dynamic MakeDynamic(IEntity entity) => _dynCode.AsDynamic(entity ?? FakeEntity);
-
-        //private IDataBuilder Builder => _builder ?? (_builder = _dynCode.GetService<IDataBuilder>());
-        //private IDataBuilder _builder;
-
-        //private IEntity FakeEntity => _fakeEntity ?? (_fakeEntity = Builder.FakeEntity(_dynCode.App?.AppId ?? 0));
-        //private IEntity _fakeEntity;
-        
-        #endregion
 
     }
 }

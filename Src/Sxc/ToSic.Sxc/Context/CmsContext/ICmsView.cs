@@ -42,25 +42,5 @@ namespace ToSic.Sxc.Context
         /// </summary>
         string Edition { get; }
 
-        ///// <summary>
-        ///// The Configuration Entity of the View. 
-        ///// 
-        ///// 🪒 Use in Razor: `CmsContext.View.Configuration.Icon`
-        ///// </summary>
-        //dynamic Configuration { get; }
-
-        ///// <summary>
-        ///// Custom Language Resources for this View
-        ///// 
-        ///// 🪒 Use in Razor: `CmsContext.View.Resources.CtaButtonLabel`
-        ///// </summary>
-        //dynamic Resources { get; }
-
-        ///// <summary>
-        ///// Custom Settings for this View
-        ///// 
-        ///// 🪒 Use in Razor: `CmsContext.View.Settings.ItemsPerRow`
-        ///// </summary>
-        //dynamic Settings { get; }
     }
 }

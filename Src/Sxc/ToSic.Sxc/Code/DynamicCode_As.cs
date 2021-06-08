@@ -24,7 +24,8 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public dynamic AsDynamic(object dynamicEntity) => UnwrappedContents?.AsDynamic(dynamicEntity);
 
-        [PrivateApi("WIP")]
+        /// <inheritdoc />
+        [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic AsDynamic(params object[] entities) => UnwrappedContents?.AsDynamic(entities);
 
         /// <inheritdoc />

@@ -55,7 +55,8 @@ namespace Custom.Hybrid
         /// <inheritdoc/>
         public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.AsDynamic(dynamicEntity);
 
-        [PrivateApi("WIP")]
+        /// <inheritdoc/>
+        [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.AsDynamic(entities);
 
 
@@ -94,12 +95,15 @@ namespace Custom.Hybrid
 
         #region CmsContext 
 
+        /// <inheritdoc />
         public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
 
-        [PrivateApi("WIP 12.02")]
+        /// <inheritdoc />
+        [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic Resources => _DynCodeRoot.Resources;
 
-        [PrivateApi("WIP 12.02")]
+        /// <inheritdoc />
+        [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic Settings => _DynCodeRoot.Settings;
 
         #endregion

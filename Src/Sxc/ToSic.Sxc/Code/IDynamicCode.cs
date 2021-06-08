@@ -5,7 +5,6 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
@@ -152,14 +151,14 @@ namespace ToSic.Sxc.Code
         dynamic AsDynamic(object dynamicEntity);
 
         /// <summary>
-        /// Convert a dynamic entity and return itself again. This is so coders don't have to worry if the original object was an <see cref="IEntity"/> or a <see cref="IDynamicEntity"/> in the first place. 
+        /// Convert one or many Entities and Dynamic entities into an <see cref="IDynamicStack"/>
         /// </summary>
-        /// <param name="entities">the original object</param>
+        /// <param name="entities">one or more source object</param>
         /// <returns>a dynamic object for easier coding</returns>
         /// <remarks>
         /// New in 12.02 - WIP
         /// </remarks>
-        [PrivateApi("WIP")]
+        [PublicApi("Careful - still Experimental in 12.02")]
         dynamic AsDynamic(params object[] entities);
         
         #endregion
@@ -231,7 +230,7 @@ namespace ToSic.Sxc.Code
         /// 🪒 Use in Razor: `@Resources.CtaButtonLabel`
         /// </summary>
         /// <remarks>New in 12.02 - WIP</remarks>
-        [PrivateApi("WIP")]
+        [PublicApi("Careful - still Experimental in 12.02")]
         dynamic Resources { get; }
 
         /// <summary>
@@ -242,7 +241,7 @@ namespace ToSic.Sxc.Code
         /// 🪒 Use in Razor: `Settings.ItemsPerRow`
         /// </summary>
         /// <remarks>New in 12.02 - WIP</remarks>
-        [PrivateApi("WIP")]
+        [PublicApi("Careful - still Experimental in 12.02")]
         dynamic Settings { get; }
 
         #endregion
