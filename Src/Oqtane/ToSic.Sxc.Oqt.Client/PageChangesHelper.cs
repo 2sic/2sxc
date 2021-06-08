@@ -1,7 +1,8 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Oqtane.Shared;
+﻿using Oqtane.Shared;
 using Oqtane.UI;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Client
@@ -57,13 +58,59 @@ namespace ToSic.Sxc.Oqt.Client
 
         public static async Task UpdatePageProperties(OqtViewResultsDto viewResults, PageState pageState, Interop interop)
         {
-            // TODO: STV
-            // 1. Go through Page Properties
-            // 2. For base - ignore for now as we don't know what side-effects this could have
-            // 3. For Title/Keywords/Description try to
-            //    1. Check if we have a replacement token - if yes, try to replace it
-            //    2. If not, try to prefix / suffix / replace depending on the property
-            
+            // Go through Page Properties
+            foreach (var pagePropertyChanges in viewResults.PageProperties)
+            {
+                switch (pagePropertyChanges.Property)
+                {
+                    case OqtPageProperties.Title:
+                        var title = await interop.GetTitleValue();
+                        await interop.UpdateTitle(UpdateProperty(title, pagePropertyChanges));
+                        break;
+                    case OqtPageProperties.Keywords:
+                        var keywords = await interop.GetMetaTagContentByName("KEYWORDS");
+                        await interop.IncludeMeta("MetaKeywords", "name", "KEYWORDS", UpdateProperty(keywords, pagePropertyChanges), "id");
+                        break;
+                    case OqtPageProperties.Description:
+                        var description = await interop.GetMetaTagContentByName("DESCRIPTION");
+                        await interop.IncludeMeta("MetaDescription", "name", "DESCRIPTION", UpdateProperty(description, pagePropertyChanges), "id");
+                        break;
+                    case OqtPageProperties.Base:
+                        // For base - ignore for now as we don't know what side-effects this could have
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
+        public static string UpdateProperty(string original, OqtPagePropertyChanges change)
+        {
+            if (string.IsNullOrEmpty(original)) return change.Value ?? original;
+
+            // 1. Check if we have a replacement token - if yes, try to replace it
+            if (!string.IsNullOrEmpty(change.Placeholder))
+            {
+                var pos = original.IndexOf(change.Placeholder, StringComparison.InvariantCultureIgnoreCase);
+                if (pos >= 0)
+                {
+                    var suffixPos = pos + change.Placeholder.Length;
+                    var suffix = (suffixPos < original.Length ? original.Substring(suffixPos) : "");
+                    return original.Substring(0, pos) + change.Value + suffix;
+                }
+
+                if (change.Change == OqtPagePropertyOperation.ReplaceOrSkip) return original;
+            }
+
+            // 2. If not, try to prefix / suffix / replace depending on the property
+            return change.Change switch
+            {
+                OqtPagePropertyOperation.Replace => change.Value ?? original,
+                OqtPagePropertyOperation.Suffix => $"{original}{change.Value}",
+                OqtPagePropertyOperation.Prefix => $"{change.Value}{original}",
+                OqtPagePropertyOperation.ReplaceOrSkip => original,
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
     }
 }

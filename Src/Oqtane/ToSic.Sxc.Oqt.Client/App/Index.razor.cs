@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Oqtane.Models;
-using Oqtane.UI;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Oqtane.Modules;
+using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Client;
 using ToSic.Sxc.Oqt.Client.Services;
 using ToSic.Sxc.Oqt.Shared.Models;
@@ -27,7 +27,10 @@ namespace ToSic.Sxc.Oqt.App
         private bool NewDataArrived { get; set; }
 
 
-        public override List<Resource> Resources => new List<Resource>();
+        public override List<Resource> Resources => new()
+        {
+            new Resource { ResourceType = ResourceType.Script, Url = "Modules/ToSic.Sxc/Module.js" }
+        };
 
         public OqtViewResultsDto ViewResults { get; set; }
 
