@@ -10,6 +10,7 @@ namespace ToSic.Sxc.Apps.Assets
         CsHtmlCode,
         CsCode,
         WebApi,
-        Token
+        Token,
+        CustomSearchCsCode,
     }
 }

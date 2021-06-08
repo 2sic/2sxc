@@ -125,7 +125,7 @@ namespace ToSic.Sxc.Apps
 
 
         // todo: check if this call could be replaced with the normal ContentTypeController.Get to prevent redundant code
-        public IEnumerable<ContentTypeUiInfo> GetContentTypesWithStatus()
+        public IEnumerable<ContentTypeUiInfo> GetContentTypesWithStatus(string appPath)
         {
             var templates = GetAll().ToList();
             var visible = templates.Where(t => !t.IsHidden).ToList();
@@ -137,11 +137,14 @@ namespace ToSic.Sxc.Apps
                 .Select(ct =>
                 {
                     var metadata = ct.Metadata.Description;
+                    var thumbnail = ValueConverter.ToValue(metadata?.Value<string>(View.ContentTypeFieldIcon));
+                    if (TemplateHelpers.AppPathTokenDetected(thumbnail))
+                        thumbnail = TemplateHelpers.AppPathTokenReplace(thumbnail, appPath);
                     return new ContentTypeUiInfo {
                         StaticName = ct.StaticName,
                         Name = ct.Name,
                         IsHidden = visible.All(t => t.ContentType != ct.StaticName),   // must check if *any* template is visible, otherwise tell the UI that it's hidden
-                        Thumbnail = ValueConverter.ToValue(metadata?.Value<string>(View.TemplateIcon)),
+                        Thumbnail = thumbnail,
                         Metadata = serializer.Convert(metadata)
                     };
                 });

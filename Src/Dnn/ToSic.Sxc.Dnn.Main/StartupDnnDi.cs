@@ -24,6 +24,7 @@ using ToSic.Sxc.Dnn.ImportExport;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Admin;
@@ -122,6 +123,11 @@ namespace ToSic.SexyContent
             {
                 services.ActivateKoi2Di();
             } catch { /* ignore */ }
+            
+            // new in v12.02 - RazorBlade DI
+            //services.TryAddScoped<IPageChangeApplicator, DnnPageChanges>();
+            services.TryAddScoped<DnnPageChanges, DnnPageChanges>();
+            services.TryAddTransient<DnnClientResources>();
 
             return services;
         }

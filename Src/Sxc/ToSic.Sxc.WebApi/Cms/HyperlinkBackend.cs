@@ -74,6 +74,10 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             try
             {
+                // nothing to resolve
+                if (string.IsNullOrEmpty(hyperlink))
+                    return new LinkInfoDto { Value = hyperlink };
+
                 var context = _ctxResolver.BlockOrApp(appId);
                 // different security checks depending on the link-type
                 var lookupPage = hyperlink.Trim().StartsWith(ValueConverterBase.PrefixPage, StringComparison.OrdinalIgnoreCase);

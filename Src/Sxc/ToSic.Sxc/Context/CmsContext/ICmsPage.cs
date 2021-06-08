@@ -16,14 +16,20 @@ namespace ToSic.Sxc.Context
     {
         /// <summary>
         /// The Id of the page.
-        /// Corresponds to the Dnn TabId
+        /// 
+        /// 🪒 Use in Razor: `CmsContext.Page.Type`
         /// </summary>
+        /// <remarks>
+        /// Corresponds to the Dnn `TabId` or the Oqtane `Page.PageId`
+        /// </remarks>
         int Id { get; }
         
         /// <summary>
         /// The page parameters, cross-platform.
         /// Use this for easy access to url parameters like ?id=xyz
         /// with `CmsContext.Page.Parameters["id"]` as a replacement for `Request.QueryString["id"]`
+        /// 
+        /// 🪒 Use in Razor: `CmsContext.Page.Parameters["id"]`
         /// </summary>
         IReadOnlyDictionary<string, string> Parameters { get; }
     }

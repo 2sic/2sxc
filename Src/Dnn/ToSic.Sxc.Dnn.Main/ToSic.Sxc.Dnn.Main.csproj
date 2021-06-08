@@ -92,6 +92,14 @@
     <Reference Include="System" />
     <Reference Include="System.Web" />
     <Reference Include="System.Configuration" />
+    <Reference Include="ToSic.Razor, Version=3.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net40\ToSic.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="ToSic.Razor.Dnn, Version=3.5.0.38911, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net40\ToSic.Razor.Dnn.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActivateKoi2DependencyInjection.cs" />

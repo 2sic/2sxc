@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Dnn.Cms
     {
         #region DI Constructors and More
         
-        public DnnPagePublishingResolver(): base("Dnn") { }
+        public DnnPagePublishingResolver(): base(DnnConstants.LogName) { }
         
         #endregion
 

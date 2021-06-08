@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Code
         /// <returns>An object of the class in the file</returns>
         /// <remarks>Note that the C# code which we are creating an instance of inherits from <see cref="DynamicCode"/> then it will automatically be initialized to support App, AsDynamic etc.</remarks>
         dynamic CreateInstance(string virtualPath, 
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, 
+            string dontRelyOnParameterOrder = Eav.Parameters.Protector, 
             string name = null,
             string relativePath = null,
             bool throwOnError = true);

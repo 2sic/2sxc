@@ -3,9 +3,13 @@
 
     public partial class View 
     {
-        public const string TemplateIcon = "Icon"; // temp public, needed in 2sxc for now...
+        public const string ContentTypeFieldIcon = "Icon"; // temp public, needed in 2sxc for now...
 
         internal const string FieldName = "Name";
+        
+        internal const string FieldIdentifier = "Identifier";
+        internal const string FieldIcon = "Icon";
+       
         internal const string FieldPath = "Path";
         internal const string FieldContentType = "ContentTypeStaticName";
         internal const string FieldContentDemo = "ContentDemoEntity";
@@ -23,6 +27,13 @@
         internal const string FieldPipeline = "Pipeline";
         internal const string FieldNameInUrl = "ViewNameInUrl";
         internal const string TypeRazorValue = "C# Razor";
+        
+        // new / WIP 12.02
+        internal const string FieldSettings = "Settings";
+        internal const string FieldResources = "Resources";
+        internal const string FieldViewController = "ViewController";
+        internal const string FieldSearchDisabled = "SearchIndexingDisabled";
+        internal const string FieldSearchStreams = "SearchIndexingStreams";
 
         // kind of almost unused, deprecated stuff
         internal const string FieldPublishEnable = "PublishData";

@@ -24,8 +24,8 @@ namespace ToSic.Sxc.Context.Query
             {
                 if (_originalsAsDic != null) return _originalsAsDic;
                 _originalsAsDic = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
-                foreach (var key in _originalsAsDic.Keys) 
-                    _originalsAsDic[key] = _originals[key];
+                foreach (var key in _originals.Keys) 
+                    _originalsAsDic[key.ToString()] = _originals[key.ToString()];
                 return _originalsAsDic;
             }
         }

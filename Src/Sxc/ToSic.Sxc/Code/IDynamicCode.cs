@@ -5,7 +5,6 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
@@ -30,6 +29,7 @@ namespace ToSic.Sxc.Code
         /// </summary>
         /// <typeparam name="TService">Interface (preferred) or Class which is needed</typeparam>
         /// <returns>An object of the type or interface requested</returns>
+        /// <remarks>Added in 2sxc 11.11</remarks>
         TService GetService<TService>();
 
         /// <summary>
@@ -150,6 +150,17 @@ namespace ToSic.Sxc.Code
         /// <returns>a dynamic object for easier coding</returns>
         dynamic AsDynamic(object dynamicEntity);
 
+        /// <summary>
+        /// Convert one or many Entities and Dynamic entities into an <see cref="IDynamicStack"/>
+        /// </summary>
+        /// <param name="entities">one or more source object</param>
+        /// <returns>a dynamic object for easier coding</returns>
+        /// <remarks>
+        /// New in 12.02 - WIP
+        /// </remarks>
+        [PublicApi("Careful - still Experimental in 12.02")]
+        dynamic AsDynamic(params object[] entities);
+        
         #endregion
 
         #region AsEntity
@@ -196,7 +207,7 @@ namespace ToSic.Sxc.Code
         T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null) where T : IDataSource;
         #endregion
 
-        #region Context WIP v11.11 / 11.12
+        #region Context
 
         /// <summary>
         /// The CmsContext tells you about the environment, like what page and module we're running in.
@@ -206,6 +217,32 @@ namespace ToSic.Sxc.Code
         /// New in v11.11
         /// </remarks>
         ICmsContext CmsContext { get; }
+
+        #endregion
+
+        #region Resources and Settings WIP 12.02
+
+        /// <summary>
+        /// Resources for this Scenario. This is a dynamic object based on the <see cref="IDynamicStack"/>.
+        ///
+        /// It will combine both the Resources of the View and the App. The View-Resources will have priority. In future it may also include some global Resources. 
+        /// 
+        /// 🪒 Use in Razor: `@Resources.CtaButtonLabel`
+        /// </summary>
+        /// <remarks>New in 12.02 - WIP</remarks>
+        [PublicApi("Careful - still Experimental in 12.02")]
+        dynamic Resources { get; }
+
+        /// <summary>
+        /// Settings for this Scenario. This is a dynamic object based on the <see cref="IDynamicStack"/>.
+        /// 
+        /// It will combine both the Settings of the View and the App. The View-Settings will have priority. In future it may also include some global Settings. 
+        /// 
+        /// 🪒 Use in Razor: `Settings.ItemsPerRow`
+        /// </summary>
+        /// <remarks>New in 12.02 - WIP</remarks>
+        [PublicApi("Careful - still Experimental in 12.02")]
+        dynamic Settings { get; }
 
         #endregion
 

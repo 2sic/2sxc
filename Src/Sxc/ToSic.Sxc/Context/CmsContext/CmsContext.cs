@@ -1,5 +1,7 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
+using ToSic.Sxc.Blocks;
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Context
 {
@@ -33,15 +35,18 @@ namespace ToSic.Sxc.Context
         /// <summary>
         /// System to extend the known context by more information if we're running inside a block
         /// </summary>
-        /// <param name="newContext"></param>
         /// <returns></returns>
-        internal CmsContext Update(IContextOfSite newContext)
+        internal CmsContext Update(IBlock block)
         {
-            Context = newContext;
+            //_dynCode = dynCode;
+            _block = block;
+            Context = block.Context;
             _page = null;
             _module = null;
             return this;
         }
+
+        private IBlock _block;
 
         #endregion
 
@@ -55,10 +60,13 @@ namespace ToSic.Sxc.Context
         public ICmsCulture Culture => _culture ?? (_culture = new CmsCulture(this));
         private ICmsCulture _culture;
 
-        public ICmsModule Module =>
-            _module ?? (_module = (Context as IContextOfBlock)?.Module ?? new ModuleUnknown());
+        public ICmsModule Module => _module ?? (_module = (Context as IContextOfBlock)?.Module ?? new ModuleUnknown());
         private IModule _module;
 
         public ICmsUser User => Context.User as ICmsUser;
+
+        [PrivateApi]
+        public ICmsView View => _view ?? (_view = new CmsView(_block));
+        private ICmsView _view;
     }
 }

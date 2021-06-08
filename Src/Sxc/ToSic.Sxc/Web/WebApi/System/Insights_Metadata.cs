@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Web.WebApi.System
             {
                 msg += p($"Assigned Items: {metadata.Count}\n");
                 msg += "<table id='table'><thead>"
-                       + tr(new[] { "#", "Id", Eav.Constants.SysFieldTitle, "Content-Type", "Target", "Key" }, true)
+                       + tr(new[] { "#", "Id", Eav.Data.Attributes.TitleNiceName, "Content-Type", "Target", "Key" }, true)
                        + "</thead>"
                        + "<tbody>";
                 var count = 0;

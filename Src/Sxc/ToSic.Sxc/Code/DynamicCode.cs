@@ -15,6 +15,7 @@ namespace ToSic.Sxc.Code
     [PublicApi_Stable_ForUseInYourCode]
     public abstract partial class DynamicCode : HasLog, IDynamicCode, IWrapper<IDynamicCode>, ICoupledDynamicCode
     {
+
         #region Constructor - NOT for DI
 
         /// <summary>
@@ -82,7 +83,7 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc />
         public dynamic CreateInstance(string virtualPath, 
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             string name = null,
             string relativePath = null,
             bool throwOnError = true)
@@ -97,10 +98,18 @@ namespace ToSic.Sxc.Code
 
         #endregion
 
-        #region Context WIP v11.11 / 11.12
+        #region Context, Settings, Resources
 
         /// <inheritdoc />
         public ICmsContext CmsContext => UnwrappedContents?.CmsContext;
+
+        /// <inheritdoc />
+        [PublicApi("Careful - still Experimental in 12.02")]
+        public dynamic Resources => UnwrappedContents?.Resources;
+
+        /// <inheritdoc />
+        [PublicApi("Careful - still Experimental in 12.02")]
+        public dynamic Settings => UnwrappedContents?.Settings;
 
         #endregion CmsContext  
     }

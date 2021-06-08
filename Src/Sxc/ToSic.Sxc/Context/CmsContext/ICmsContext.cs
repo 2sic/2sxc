@@ -38,5 +38,12 @@ namespace ToSic.Sxc.Context
         /// Information about the current user
         /// </summary>
         ICmsUser User { get; }
+        
+        
+        /// <summary>
+        /// Experimental feature for 12.02 - not final. Provides View-information.
+        /// </summary>
+        /// <remarks>New in v12.02, WIP</remarks>
+        ICmsView View { get; }
     }
 }

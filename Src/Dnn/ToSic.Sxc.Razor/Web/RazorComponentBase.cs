@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <returns></returns>
         public dynamic CreateInstance(string virtualPath,
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             string name = null,
             string relativePath = null,
             bool throwOnError = true)

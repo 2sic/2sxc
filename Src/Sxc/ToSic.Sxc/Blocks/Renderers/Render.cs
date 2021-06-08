@@ -33,17 +33,17 @@ namespace ToSic.Sxc.Blocks
         /// <param name="newGuid">Internal: this is the guid given to the item when being created in this block. Important for the inner-content functionality to work. </param>
         /// <returns></returns>
         public static IHtmlString One(DynamicEntity dynParent,
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             IDynamicEntity item = null, 
             string field = null,
             Guid? newGuid = null)
         {
-            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, nameof(One), $"{nameof(item)},{nameof(field)},{nameof(newGuid)}");
+            Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, nameof(One), $"{nameof(item)},{nameof(field)},{nameof(newGuid)}");
             if (item == null)
                 item = dynParent;
             
             return new HtmlString(field == null
-                ? Simple.Render(dynParent.Block, item.Entity) // with edit-context
+                ? Simple.Render(dynParent._Dependencies.Block, item.Entity) // with edit-context
                 : Simple.RenderWithEditContext(dynParent, item, field, newGuid) + "<b>data-list-context</b>"); // data-list-context (no edit-context)
         }
 
@@ -58,13 +58,13 @@ namespace ToSic.Sxc.Blocks
         /// <param name="apps">BETA / WIP</param>
         /// <returns></returns>
         public static IHtmlString All(DynamicEntity context,
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             string field = null, 
             string apps = null,
             int max = 100,
             string merge = null)
         {
-            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, nameof(All), $"{nameof(field)},{nameof(merge)}");
+            Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, nameof(All), $"{nameof(field)},{nameof(merge)}");
             if (field == null)
                 throw new ArgumentNullException(nameof(field));
 

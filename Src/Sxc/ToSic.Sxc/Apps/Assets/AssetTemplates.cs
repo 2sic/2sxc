@@ -36,6 +36,9 @@ namespace ToSic.Sxc.Apps.Assets
                 case AssetTemplateType.Token:
                     result = DefaultTokenHtmlBody;
                     break;
+                case AssetTemplateType.CustomSearchCsCode:
+                    result = CustomsSearchCsCode;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -62,6 +65,8 @@ namespace ToSic.Sxc.Apps.Assets
         public const string CsCodeTemplateName = "PleaseRenameClass";
 
         internal abstract string DefaultCsCode { get; }
+
+        internal abstract string CustomsSearchCsCode { get; }
 
 
     }

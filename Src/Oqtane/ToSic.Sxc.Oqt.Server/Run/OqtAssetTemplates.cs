@@ -58,5 +58,7 @@ public class FunctionsBasic: Custom.Hybrid.Code12 {
     }
 }
 ";
+
+        internal override string CustomsSearchCsCode => "Custom search code not implemented in Oqtane, as Oqtane doesn't have a search index.";
     }
 }

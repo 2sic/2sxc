@@ -6,13 +6,13 @@
 
         /// <inheritdoc />
         public virtual dynamic CreateInstance(string virtualPath,
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             string name = null,
             string relativePath = null,
             bool throwOnError = true)
         {
             var wrap = Log.Call<dynamic>($"{virtualPath}, {name}, {relativePath}, {throwOnError}");
-            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "CreateInstance",
+            Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "CreateInstance",
                 $"{nameof(name)},{nameof(throwOnError)}");
 
             // Compile

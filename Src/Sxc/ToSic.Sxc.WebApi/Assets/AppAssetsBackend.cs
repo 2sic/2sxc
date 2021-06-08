@@ -49,9 +49,9 @@ namespace ToSic.Sxc.WebApi.Assets
             return wrapLog(null, true);
         }
 
-        public bool Create(int appId, string path, FileContentsDto content, bool global = false)
+        public bool Create(int appId, string path, FileContentsDto content, string purpose, bool global = false)
         {
-            Log.Add($"create a#{appId}, path:{path}, global:{global}, cont-length:{content.Content?.Length}");
+            Log.Add($"create a#{appId}, path:{path}, global:{global}, purpose:{purpose}, cont-length:{content.Content?.Length}");
             path = path.Replace("/", "\\");
 
             var thisApp = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), Log);
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.WebApi.Assets
             if (content.Content == null)
                 content.Content = "";
 
-            path = SanitizePathAndContent(path, content);
+            path = SanitizePathAndContent(path, content, purpose);
 
             var isAdmin = _user.IsAdmin;
             var assetEditor = _assetEditorLazy.Value.Init(thisApp, path, _user.IsSuperUser, isAdmin, global, Log);

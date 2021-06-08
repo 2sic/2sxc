@@ -47,6 +47,10 @@ namespace Custom.Hybrid
         public dynamic AsDynamic(object dynamicEntity) =>  _DynCodeRoot.AsDynamic(dynamicEntity);
 
         /// <inheritdoc />
+        [PublicApi("Careful - still Experimental in 12.02")]
+        public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.AsDynamic(entities);
+
+        /// <inheritdoc />
         public IEntity AsEntity(object dynamicEntity) =>  _DynCodeRoot.AsEntity(dynamicEntity);
 
         #endregion
@@ -94,7 +98,7 @@ namespace Custom.Hybrid
 
 
         /// <inheritdoc />
-        public new ToSic.Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = ToSic.Eav.Constants.RandomProtectionParameter,
+        public new ToSic.Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = ToSic.Eav.Parameters.Protector,
             Stream stream = null,
             string fileName = null,
             string contentType = null,
@@ -117,8 +121,16 @@ namespace Custom.Hybrid
 
         #region RunContext WiP
 
+        /// <inheritdoc />
         public ICmsContext CmsContext => _DynCodeRoot?.CmsContext;
 
+        /// <inheritdoc />
+        [PublicApi("Careful - still Experimental in 12.02")]
+        public dynamic Resources => _DynCodeRoot.Resources;
+
+        /// <inheritdoc />
+        [PublicApi("Careful - still Experimental in 12.02")]
+        public dynamic Settings => _DynCodeRoot.Settings;
 
         #endregion
     }

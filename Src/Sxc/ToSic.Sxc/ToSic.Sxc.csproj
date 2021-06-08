@@ -4,10 +4,10 @@
     <TargetFrameworks>net451;netstandard2.0</TargetFrameworks>
     <RootNamespace>ToSic.Sxc</RootNamespace>
     <AssemblyName>ToSic.Sxc</AssemblyName>
-    <Version>12.01.00</Version>
+    <Version>12.02.00</Version>
     <!-- This assembly must NOT be deterministic, as the build version is used somewhere -->
     <!-- It's the only assembly where this matters -->
-    <AssemblyVersion>12.01.00.*</AssemblyVersion>
+    <AssemblyVersion>12.02.00.*</AssemblyVersion>
     <Deterministic>false</Deterministic>
     <NoWarn>7035</NoWarn>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
@@ -52,6 +52,21 @@
   <ItemGroup>
     <Reference Include="Connect.Koi">
       <HintPath>..\..\..\Dependencies\Koi\netstandard2.0\Connect.Koi.dll</HintPath>
+    </Reference>
+    <Reference Include="ToSic.Razor">
+      <HintPath>..\..\..\Dependencies\RazorBlade\Release\netstandard2.0\ToSic.Razor.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <Reference Include="ToSic.Razor">
+      <HintPath>..\..\..\Dependencies\RazorBlade\Release\netstandard2.0\ToSic.Razor.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net451'">
+    <Reference Include="ToSic.Razor">
+      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net45\ToSic.Razor.dll</HintPath>
     </Reference>
   </ItemGroup>
 

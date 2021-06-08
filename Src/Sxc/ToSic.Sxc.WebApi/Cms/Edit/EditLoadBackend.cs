@@ -12,7 +12,6 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Security;
-using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.Features;
@@ -146,7 +145,7 @@ namespace ToSic.Sxc.WebApi.Cms
             // Fix not-supported input-type names; map to correct name
             result.ContentTypes
                 .ForEach(jt => jt.Attributes
-                    .ForEach(at => at.InputType = InputTypes.MapInputTypeV10(at.InputType)));
+                    .ForEach(at => at.InputType = Compatibility.InputTypes.MapInputTypeV10(at.InputType)));
 
             // load input-field configurations
             result.InputTypes = GetNecessaryInputTypes(result.ContentTypes, typeRead);
@@ -156,7 +155,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // Attach context, but only the minimum needed for the UI
             result.Context = _contextBuilder.SetZoneAndApp(appIdentity.ZoneId, context.AppState)
-                .Get(Ctx.AppBasic | Ctx.Language | Ctx.Site | Ctx.System);
+                .Get(Ctx.AppBasic | Ctx.Language | Ctx.Site | Ctx.System, CtxEnable.FormulaSave);
 
             try
             {

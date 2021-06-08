@@ -12,7 +12,7 @@ namespace ToSic.Sxc.WebApi
         public static string FileParamsInitialCheck(string dontRelyOnParameterOrder, bool? download, string virtualPath,
             string fileDownloadName, object contents)
         {
-            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, nameof(File), nameof(download) + "," + nameof(virtualPath) + "," + nameof(fileDownloadName) + "," + nameof(contents));
+            Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, nameof(File), nameof(download) + "," + nameof(virtualPath) + "," + nameof(fileDownloadName) + "," + nameof(contents));
 
             // Check initial conflicting values
             CheckInitialConflictingValues(virtualPath, contents);

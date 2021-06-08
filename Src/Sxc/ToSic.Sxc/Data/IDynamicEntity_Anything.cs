@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Documentation;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnassignedGetOnlyAutoProperty
 
 namespace ToSic.Sxc.Data
 {
-    [PublicApi_Stable_ForUseInYourCode]
+    /* IMPORTANT: These are just fake properties for documentation - Keep in Sync between IDynamicEntity and IDynamicStack */
+    
     public partial interface IDynamicEntity
     {
 

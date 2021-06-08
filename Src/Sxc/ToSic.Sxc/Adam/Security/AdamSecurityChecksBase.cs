@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps.Security;
+using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security;
@@ -92,8 +93,8 @@ namespace ToSic.Sxc.Adam
             var fieldDef = AdamContext.Attribute;
             bool result;
             // check if this field exists and is actually a file-field or a string (wysiwyg) field
-            if (fieldDef == null || !(fieldDef.Type != Eav.Constants.DataTypeHyperlink ||
-                                      fieldDef.Type != Eav.Constants.DataTypeString))
+            if (fieldDef == null || !(fieldDef.Type != DataTypes.Hyperlink ||
+                                      fieldDef.Type != DataTypes.String))
             {
                 preparedException = HttpException.BadRequest("Requested field '" + AdamContext.ItemField + "' type doesn't allow upload");
                 Log.Add($"field type:{fieldDef?.Type} - does not allow upload");

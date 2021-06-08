@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Data
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Data
     /// You will usually do things like `AsDynamic(jsonString).FirstName` etc.
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic, don't use this directly")]
-    public partial class DynamicJacket: DynamicJacketBase<JObject>
+    public partial class DynamicJacket: DynamicJacketBase<JObject>, IPropertyLookup
     {
         /// <inheritdoc />
         [PrivateApi]
@@ -30,6 +31,14 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <returns>the string names of the keys</returns>
         public override IEnumerator<object> GetEnumerator() => UnwrappedContents.Properties().Select(p => p.Name).GetEnumerator();
+
+        /// <inheritdoc />
+        [PrivateApi("Internal")]
+        public PropertyRequest FindPropertyInternal(string fieldName, string[] languages)
+        {
+            var result = FindValueOrNull(fieldName, StringComparison.InvariantCultureIgnoreCase);
+            return new PropertyRequest {Result = result, FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic"};
+        }
 
 
         /// <summary>

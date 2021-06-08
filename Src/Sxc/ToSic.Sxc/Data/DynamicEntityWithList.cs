@@ -29,11 +29,13 @@ namespace ToSic.Sxc.Data
             IEntity parent, 
             string field, 
             IEnumerable<IEntity> entities, 
-            string[] dimensions, 
-            int compatibility, 
-            IBlock block, 
-            IServiceProvider serviceProvider) 
-            : base(null, dimensions, compatibility, block, serviceProvider)
+            //string[] dimensions, 
+            //int compatibility, 
+            //IBlock block, 
+            //IServiceProvider serviceProvider,
+            DynamicEntityDependencies dependencies
+            ) 
+            : base(null, dependencies) // dimensions, compatibility, block, serviceProvider)
         {
             _debugFieldName = field; // remember name in case we do debugging and need to know what list was accessed
             var index = 0;
@@ -65,7 +67,7 @@ namespace ToSic.Sxc.Data
 
         public EntityInBlock PlaceHolder(IEntity parent, string field)
         {
-            var sp = _serviceProviderOrNull ?? Eav.Factory.GetServiceProvider();
+            var sp = _Dependencies.ServiceProviderOrNull ?? Eav.Factory.GetServiceProvider();
             var builder = sp.Build<IDataBuilder>();
             return new EntityInBlock(builder.FakeEntity(parent.AppId), parent.EntityGuid, field, 0);
         }

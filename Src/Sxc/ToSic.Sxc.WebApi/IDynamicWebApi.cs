@@ -8,7 +8,7 @@ using ToSic.Sxc.Adam;
 namespace ToSic.Sxc.WebApi
 {
     /// <summary>
-    /// This interface extends the IAppAndDataHelpers with the DNN Context.
+    /// This interface extends WebAPIs with File-Save helpers.
     /// It's important, because if 2sxc also runs on other CMS platforms, then the Dnn Context won't be available, so it's in a separate interface.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
@@ -16,7 +16,7 @@ namespace ToSic.Sxc.WebApi
     {
         /// <summary>
         /// Save a file from a stream (usually an upload from the browser) into an adam-field of an item.
-        /// Read more about this in the the [WebAPI docs for SaveInAdam](xref:WebApi.Custom.DotNet.SaveInAdam)
+        /// Read more about this in the the [WebAPI docs for SaveInAdam](xref:NetCode.WebApi.DotNet.SaveInAdam)
         /// </summary>
         /// <param name="dontRelyOnParameterOrder">ensure that all parameters use names, so the api can change in future</param>
         /// <param name="stream">the stream</param>
@@ -26,7 +26,7 @@ namespace ToSic.Sxc.WebApi
         /// <param name="field"></param>
         /// <param name="subFolder"></param>
         /// <returns></returns>
-        IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+        IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             Stream stream = null,
             string fileName = null,
             string contentType = null,
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.WebApi
         /// <param name="fileDownloadName">Download name. If provided, it will try to force download/save on the browser. </param>
         /// <param name="contents">Content of the result - a string, byte[] or stream to include.</param>
         /// <returns></returns>
-        dynamic File(string dontRelyOnParameterOrder = ToSic.Eav.Constants.RandomProtectionParameter,
+        dynamic File(string dontRelyOnParameterOrder = ToSic.Eav.Parameters.Protector,
             // Important: the second parameter should _not_ be a string, otherwise the signature looks the same as the built-in File(...) method
             bool? download = null,
             string virtualPath =

@@ -18,7 +18,7 @@ namespace ToSic.SexyContent.ContentBlocks
     {
         [Obsolete]
         public static IHtmlString One(DynamicEntity context,
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             IDynamicEntity item = null,
             string field = null,
             Guid? newGuid = null)
@@ -26,7 +26,7 @@ namespace ToSic.SexyContent.ContentBlocks
 
         [Obsolete]
         public static IHtmlString All(DynamicEntity context,
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             string field = null,
             string merge = null)
             => Sxc.Blocks.Render.All(context, dontRelyOnParameterOrder, field: field, merge: merge);

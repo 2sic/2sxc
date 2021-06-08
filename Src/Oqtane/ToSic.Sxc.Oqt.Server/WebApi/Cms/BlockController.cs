@@ -30,20 +30,20 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     {
         private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
         private readonly Lazy<ContentBlockBackend> _blockBackendLazy;
-        private readonly Lazy<AppViewPickerBackend> _viewPickerBackendLazy;
+        private readonly Lazy<AppViewPickerBackend> _viewsBackendLazy;
         private readonly Lazy<CmsZones> _cmsZonesLazy;
         private readonly Lazy<AppViewPickerBackend> _appViewPickerBackendLazy;
         protected override string HistoryLogName => "Api.Block";
         public BlockController(
             Lazy<CmsRuntime> lazyCmsRuntime,
             Lazy<ContentBlockBackend> blockBackendLazy,
-            Lazy<AppViewPickerBackend> viewPickerBackendLazy,
+            Lazy<AppViewPickerBackend> viewsBackendLazy,
             Lazy<CmsZones> cmsZonesLazy,
             Lazy<AppViewPickerBackend> appViewPickerBackendLazy)
         {
             _lazyCmsRuntime = lazyCmsRuntime;
             _blockBackendLazy = blockBackendLazy;
-            _viewPickerBackendLazy = viewPickerBackendLazy;
+            _viewsBackendLazy = viewsBackendLazy;
             _cmsZonesLazy = cmsZonesLazy;
             _appViewPickerBackendLazy = appViewPickerBackendLazy;
         }
@@ -109,7 +109,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
         public void App(int? appId)
-            => _viewPickerBackendLazy.Value.Init(Log)
+            => _viewsBackendLazy.Value.Init(Log)
                 .SetAppId(appId);
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
-        public IEnumerable<ContentTypeUiInfo> ContentTypes() => CmsRuntime?.Views.GetContentTypesWithStatus();
+        public IEnumerable<ContentTypeUiInfo> ContentTypes() => _viewsBackendLazy.Value.ContentTypes(); //  CmsRuntime?.Views.GetContentTypesWithStatus();
 
         #endregion
 
@@ -149,7 +149,10 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
-        public IEnumerable<TemplateUiInfo> Templates() => CmsRuntime?.Views.GetCompatibleViews(ContextApp, GetBlock().Configuration);
+        // TODO: SPM - why is this code different from the Dnn ? that uses the ViewsBackend
+        // I changed it, but didn't test yet
+        public IEnumerable<TemplateUiInfo> Templates() => _viewsBackendLazy.Value.Init(Log).Templates();
+            // => CmsRuntime?.Views.GetCompatibleViews(ContextApp, GetBlock().Configuration);
 
         /// <summary>
         /// Used in InPage.js
@@ -164,7 +167,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         [Authorize(Roles = RoleNames.Admin)]
         // TODO: 2DM please check permissions
         public Guid? Template(int templateId, bool forceCreateContentGroup)
-            => _viewPickerBackendLazy.Value.Init(Log)
+            => _viewsBackendLazy.Value.Init(Log)
                 .SaveTemplateId(templateId, forceCreateContentGroup);
 
         #endregion

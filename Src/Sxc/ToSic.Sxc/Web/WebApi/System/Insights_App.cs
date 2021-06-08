@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Web.WebApi.System
             var zones = cache.Zones.OrderBy(z => z.Key);
 
             msg += "<table id='table'><thead>"
-                + tr(new[] { "Zone", "App", Eav.Constants.SysFieldGuid, "InCache", "Name", "Folder", "Details", "Actions" }, true)
+                + tr(new[] { "Zone", "App", Eav.Data.Attributes.GuidNiceName, "InCache", "Name", "Folder", "Details", "Actions" }, true)
                 + "</thead>"
                 + "<tbody>";
             foreach (var zone in zones)

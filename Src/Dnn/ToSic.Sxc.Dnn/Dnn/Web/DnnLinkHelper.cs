@@ -25,10 +25,10 @@ namespace ToSic.Sxc.Dnn.Web
         }
 
         /// <inheritdoc />
-        public string To(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, int? pageId = null, string parameters = null, string api = null)
+        public string To(string dontRelyOnParameterOrder = Eav.Parameters.Protector, int? pageId = null, string parameters = null, string api = null)
         {
             // prevent incorrect use without named parameters
-            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
+            Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
 
             if (api != null) return Api(path: LinkHelpers.CombineApiWithQueryString(api.TrimPrefixSlash(), parameters));
 
@@ -46,9 +46,9 @@ namespace ToSic.Sxc.Dnn.Web
             return basePath.Substring(0, basePath.IndexOf(randomxyz, StringComparison.Ordinal));
         }
 
-        private string Api(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter, string path = null)
+        private string Api(string dontRelyOnParameterOrder = Eav.Parameters.Protector, string path = null)
         {
-            Eav.Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Api", $"{nameof(path)}");
+            Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Api", $"{nameof(path)}");
 
             if (string.IsNullOrEmpty(path)) return string.Empty;
 

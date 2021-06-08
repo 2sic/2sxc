@@ -10,6 +10,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.File;
 using ToSic.Eav.Repositories;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Apps.Assets;
 
 namespace ToSic.Sxc.Dnn.Run
 {
@@ -90,7 +91,7 @@ namespace ToSic.Sxc.Dnn.Run
                     var niceName = NiceName(name);
                     // TODO: use metadata information if available
                     return new InputTypeInfo(fullName, niceName, "Extension Field", "", false,
-                        $"[App:Path]/{Eav.Constants.FolderAppExtensions}/{name}/{JsFile}", false);
+                        $"{AppAssets.AppPathPlaceholder}/{Eav.Constants.FolderAppExtensions}/{name}/{JsFile}", false);
                 })
                 .ToList();
             return wrapLog(null, types);

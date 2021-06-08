@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Web
         IRenderingHelper Init(IBlock block, ILog parentLog);
 
         string WrapInContext(string content,
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             int instanceId = 0, 
             int contentBlockId = 0, 
             bool editContext = false, 

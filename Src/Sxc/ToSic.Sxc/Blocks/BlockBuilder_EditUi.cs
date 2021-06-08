@@ -1,7 +1,4 @@
 ﻿
-
-using System.Collections.Generic;
-
 namespace ToSic.Sxc.Blocks
 {
     public partial class BlockBuilder
@@ -79,9 +76,5 @@ namespace ToSic.Sxc.Blocks
 
         private bool? _uiAutoToolbar;
 
-
-        internal List<string> NamedScriptsWIP = new List<string>();
-
-        internal const string JsTurnOn = "turnOn";
     }
 }

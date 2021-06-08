@@ -18,6 +18,6 @@ namespace ToSic.Sxc.WebApi.Context
         /// </summary>
         /// <param name="flags"></param>
         /// <returns></returns>
-        ContextDto Get(Ctx flags);
+        ContextDto Get(Ctx flags, CtxEnable enableFlags);
     }
 }

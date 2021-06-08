@@ -17,11 +17,10 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         #region Scripts and CSS includes
 
         /// <inheritdoc/>
-        public string Enable(string noParameterOrder = "random-y023n", bool? js = null, bool? api = null,
-            bool? turnOn = null, // WIP experimental
+        public string Enable(string noParameterOrder = Eav.Parameters.Protector, bool? js = null, bool? api = null,
             bool? forms = null, bool? context = null, bool? autoToolbar = null, bool? styles = null)
         {
-            Eav.Constants.ProtectAgainstMissingParameterNames(noParameterOrder, "Enable", $"{nameof(js)},{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
+            Eav.Parameters.ProtectAgainstMissingParameterNames(noParameterOrder, "Enable", $"{nameof(js)},{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
 
             // check if feature enabled - if more than the api is needed
             // extend this list if new parameters are added
@@ -42,9 +41,6 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             if (api.HasValue || forms.HasValue)
                 hostWithInternals.UiAddEditApi = (api ?? false) || (forms ?? false);
 
-            if(turnOn.HasValue && turnOn.Value)
-                hostWithInternals.NamedScriptsWIP.Add(BlockBuilder.JsTurnOn);
-            
             if (styles.HasValue)
                 hostWithInternals.UiAddEditUi = styles.Value;
 

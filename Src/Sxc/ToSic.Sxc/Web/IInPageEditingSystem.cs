@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Data;
 #if NET451
@@ -64,7 +63,7 @@ namespace ToSic.Sxc.Web
         /// 1. Added in 2sxc 8.04
         /// </remarks>
         HtmlString Toolbar(object target = null,
-            string noParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string noParameterOrder = Eav.Parameters.Protector,
             string actions = null,
             string contentType = null,
             object prefill = null,
@@ -106,7 +105,7 @@ namespace ToSic.Sxc.Web
         /// 1. Added in 2sxc 9.40
         /// </remarks>
         HtmlString TagToolbar(object target = null,
-            string noParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string noParameterOrder = Eav.Parameters.Protector,
             string actions = null,
             string contentType = null,
             object prefill = null,
@@ -134,7 +133,7 @@ namespace ToSic.Sxc.Web
         /// 1. Enhanced with apps in 10.27
         /// </remarks>
         HtmlString ContextAttributes(IDynamicEntity target, 
-            string noParameterOrder = Eav.Constants.RandomProtectionParameter, 
+            string noParameterOrder = Eav.Parameters.Protector, 
             string field = null, 
             string contentType = null,
             Guid? newGuid = null,
@@ -159,7 +158,7 @@ namespace ToSic.Sxc.Web
         /// </remarks>
         [PrivateApi]
         HtmlString WrapInContext(object content,
-            string noParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string noParameterOrder = Eav.Parameters.Protector,
             string tag = Constants.DefaultContextTag,
             bool full = false,
             bool? enableEdit = null,
@@ -172,14 +171,13 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <param name="noParameterOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="js">optional, default false. automatically true if `api` or `forms` is true<br/>
-        /// Will add the basic JS APIs ($2sxc) usually for enabling WebApi calls from your JS code. <br/>
-        /// _added in v10.20_
+        ///     Will add the basic JS APIs ($2sxc) usually for enabling WebApi calls from your JS code. <br/>
+        ///     _added in v10.20_
         /// </param>
         /// <param name="api">optional, default false. automatically true, if `forms` is true<br/>
-        ///     If JS etc. should be included to enable editing API - ensures javascripts are loaded enabling commands to run</param>
+        ///     If JS etc. should be included to enable editing API - ensures JavaScripts are loaded enabling commands to run</param>
         /// <param name="forms">optional, default false. <br/>
-        ///     Ensures javascripts are loaded enabling forms to open</param>
-        /// <param name="turnOn">activate turnOn script helpers - this is BETA / WIP</param>
+        ///     Ensures JavaScripts are loaded enabling forms to open</param>
         /// <param name="context">optional, default false. <br/>
         ///     If context ([](xref:Basics.Browser.EditUx.EditContext)) should be added, to ensure in-instance data editing</param>
         /// <param name="autoToolbar">optional, default false. <br/>
@@ -191,11 +189,11 @@ namespace ToSic.Sxc.Web
         /// **History** <br/>
         /// 1. Introduced in 2sxc 9.30
         /// 2. Enhanced with parameter jsApi in 10.20
+        /// 3. Being deprecated in 12.02, as you should now use the IPageService instead for most of these features
         /// </remarks>
-        string Enable(string noParameterOrder = Eav.Constants.RandomProtectionParameter,
+        string Enable(string noParameterOrder = Eav.Parameters.Protector,
             bool? js = null,
-            bool? api = null, 
-            bool? turnOn = null,
+            bool? api = null,
             bool? forms = null,
             bool? context = null,
             bool? autoToolbar = null,

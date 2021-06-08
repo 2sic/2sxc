@@ -89,6 +89,10 @@ namespace ToSic.SexyContent.Razor
         /// <inheritdoc />
         public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.AsDynamic(dynamicEntity);
 
+        /// <inheritdoc />
+        [PublicApi("Careful - still Experimental in 12.02")]
+        public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.AsDynamic(entities);
+
         // todo: only in "old" controller, not in new one
         /// <inheritdoc />
         [Obsolete]
@@ -217,9 +221,18 @@ namespace ToSic.SexyContent.Razor
 
         #endregion
 
-        #region RunContext - new in 11.08 or similar, not implemented in old base classes
+        #region CmsContext
 
+        /// <inheritdoc />
         public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
+
+        /// <inheritdoc />
+        [PublicApi("Careful - still Experimental in 12.02")]
+        public dynamic Resources => _DynCodeRoot.Resources;
+
+        /// <inheritdoc />
+        [PublicApi("Careful - still Experimental in 12.02")]
+        public dynamic Settings => _DynCodeRoot.Settings;
 
         #endregion
 

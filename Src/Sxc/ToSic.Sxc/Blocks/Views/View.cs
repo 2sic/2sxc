@@ -4,6 +4,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Apps.Assets;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Blocks
@@ -26,6 +27,10 @@ namespace ToSic.Sxc.Blocks
 
 
         public string Name => Get(FieldName, "unknown name");
+
+        public string Identifier => Get(FieldIdentifier, "");
+        
+        public string Icon => Get(FieldIcon, "");
 
         public string Path => Get(FieldPath, "");
 
@@ -62,9 +67,11 @@ namespace ToSic.Sxc.Blocks
 
         public bool IsHidden => Get(FieldIsHidden, false);
 
-        public string Location => Get(FieldLocation, Settings.TemplateLocations.PortalFileSystem);
+        // 2021-05-28 doesn't seem used anywhere, so we'll inline - delete in ca. 1 month or so
+        //private string Location => Get(FieldLocation, AppAssets.AppInSite);
 
-        public bool IsShared => Location == Settings.TemplateLocations.HostFileSystem;
+        public bool IsShared => _isShared ?? (_isShared = AppAssets.IsShared(Get(FieldLocation, AppAssets.AppInSite))).Value;
+        private bool? _isShared;
 
         public bool UseForList => Get(FieldUseList, false);
         public bool PublishData => Get(FieldPublishEnable, false);
@@ -112,5 +119,20 @@ namespace ToSic.Sxc.Blocks
 
         [PrivateApi]
         public string Edition { get; set; }
+        
+        [PrivateApi("WIP 12.02")]
+        public IEntity Resources => GetBestRelationship(FieldResources);
+
+        [PrivateApi("WIP 12.02")]
+        public IEntity Settings => GetBestRelationship(FieldSettings);
+
+        /// <inheritdoc />
+        public bool SearchIndexingDisabled => Get(FieldSearchDisabled, false);
+
+        /// <inheritdoc />
+        public string ViewController => Get(FieldViewController, "");
+
+        /// <inheritdoc />
+        public string SearchIndexingStreams => Get(FieldSearchStreams, "");
     }
 }

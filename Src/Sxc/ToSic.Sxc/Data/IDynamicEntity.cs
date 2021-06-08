@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Data
     /// </blockquote>
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public partial interface IDynamicEntity: SexyContent.Interfaces.IDynamicEntity, IEntityWrapper
+    public partial interface IDynamicEntity: SexyContent.Interfaces.IDynamicEntity, IEntityWrapper, IDynamicEntityGet
     {
         /// <summary>
         /// The underlying entity which provides all the data for the DynamicEntity
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Data
         /// </summary>
         string EntityType { get; }
 
-
+        /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityGet and IDynamicStack */
         /// <summary>
         /// Get a value of the entity. Usually you will prefer the quick access like
         /// @content.FirstName - which will give you the same things as content.Get("FirstName").
@@ -68,20 +68,21 @@ namespace ToSic.Sxc.Data
         new dynamic Get(string name);
 
 
+        /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityGet and IDynamicStack */
         /// <summary>
         /// Get a property using the string name. Only needed in special situations, as most cases can use the object.name directly
         /// </summary>
         /// <param name="name">the property name. </param>
         /// <param name="dontRelyOnParameterOrder">
         /// This should enforce the convention that all following parameters (which are optional) must explicitly use the parameter name.
-        /// So `Get("FirstName", "en")` won't work, you must use `Get("FirstName", language: "en")` and similar
+        /// So <code>Get("FirstName", "en")</code> won't work, you must use <code>Get("FirstName", language: "en")</code> and similar
         /// </param>
         /// <param name="language">Optional language code - like "de-ch" to prioritize that language</param>
         /// <param name="convertLinks">Optionally turn off if links like file:72 are looked up to a real link. Default is true.</param>
         /// <returns>a dynamically typed result, can be string, bool, etc.</returns>
-        dynamic Get(string name,
+        new dynamic Get(string name,
             // ReSharper disable once MethodOverloadWithOptionalParameter
-            string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             string language = null,
             bool convertLinks = true);
 
@@ -161,7 +162,11 @@ namespace ToSic.Sxc.Data
         /// </returns>
         dynamic Presentation { get; }
 
+        //[PrivateApi]
+        //string[] Dimensions { get; }
+        
         [PrivateApi]
-        string[] Dimensions { get; }
+        // ReSharper disable once InconsistentNaming
+        DynamicEntityDependencies _Dependencies { get; }
     }
 }

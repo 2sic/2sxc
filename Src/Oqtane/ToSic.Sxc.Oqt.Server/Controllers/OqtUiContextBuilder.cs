@@ -61,15 +61,15 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                 Id = (_context as IContextOfBlock)?.Page.Id ?? Eav.Constants.NullId,
             };
 
-        protected override ContextEnableDto GetEnable()
-        {
-            return new()
-            {
-                AppPermissions = true,
-                CodeEditor = true,
-                Query = true
-            };
-        }
+        //protected override ContextEnableDto GetEnable()
+        //{
+        //    return new()
+        //    {
+        //        AppPermissions = true,
+        //        CodeEditor = true,
+        //        Query = true
+        //    };
+        //}
 
         protected override ContextAppDto GetApp(Ctx flags)
         {
@@ -94,16 +94,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                 true // TODO: V12 - must be set so installer works properly // Module.DesktopModule.ModuleName == "2sxc"
                 );
             return gsUrl;
-
-            //var gsUrl =
-            //    BaseGettingStartedUrl("Oqt",
-            //        Assembly.GetAssembly(typeof(SiteState)).GetName().Version.ToString(4),
-            //        "2sxc", // todo
-            //        blockCtx?.Module.Id ?? 0, // todo
-            //        "un-un", // todo _portal.DefaultLanguage,
-            //        "un-un"); // todo _portal.CultureCode);
-
-            //return gsUrl; //  "#todo-not-yet-implemented-getting-started";
         }
     }
 }

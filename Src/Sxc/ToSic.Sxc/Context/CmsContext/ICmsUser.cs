@@ -9,7 +9,8 @@ namespace ToSic.Sxc.Context
     public interface ICmsUser
     {
         /// <summary>
-        /// User Id as int. Works in DNN and Oqtane
+        /// User Id as int. Works in DNN and Oqtane.
+        /// Use in Razor: `CmsContext.User.Id`
         /// </summary>
         int Id { get; }
 
@@ -17,6 +18,8 @@ namespace ToSic.Sxc.Context
         /// Information if the current user is Site Administrator.
         /// Basically this means a user has very high permissions - incl. the ability
         /// to create users in a site etc.
+        /// 
+        /// 🪒 Use in Razor: `CmsContext.User.IsSiteAdmin`
         /// </summary>
         /// <remarks>
         /// These are not the highest possible privileges
@@ -25,11 +28,13 @@ namespace ToSic.Sxc.Context
         /// New in 2sxc 12
         /// </remarks>
         bool IsSiteAdmin { get; }
-        
+
         /// <summary>
         /// Information if the current user is System Administrator.
         /// Basically this means a user has maximum permissions - incl. the ability
-        /// to install additional components or do dangerous things like edit razor. 
+        /// to install additional components or do dangerous things like edit razor.
+        /// 
+        /// 🪒 Use in Razor: `CmsContext.User.isSystemAdmin`
         /// </summary>
         /// <remarks>
         /// New in 2sxc 12
@@ -40,7 +45,9 @@ namespace ToSic.Sxc.Context
         /// <summary>
         /// Information if the current user is Developer on the current site.
         /// Basically this means a user has maximum site permissions - incl. the ability
-        /// to install additional components or do dangerous things like edit razor. 
+        /// to install additional components or do dangerous things like edit razor.
+        /// 
+        /// 🪒 Use in Razor: `CmsContext.User.IsSiteDeveloper`
         /// </summary>
         /// <remarks>
         /// These are not the highest possible privileges

@@ -64,6 +64,14 @@ namespace ToSic.Sxc.Apps.Assets
 
         public const string CsApiFolder = "api";
 
+        public struct PurposeType
+        {
+            public const string Auto = "auto";
+            public const string Razor = "razor";
+            public const string Token = "token";
+            public const string Api = "api";
+            public const string Search = "search";
+        }
 
         public AssetEditInfo EditInfoWithSource
         {

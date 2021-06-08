@@ -1,7 +1,4 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Context;
-
-namespace ToSic.Sxc.Run
+﻿namespace ToSic.Sxc.Run
 {
     public interface ILinkPaths
     {

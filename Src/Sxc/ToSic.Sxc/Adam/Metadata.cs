@@ -39,12 +39,20 @@ namespace ToSic.Sxc.Adam
         {
             var meta = GetFirstMetadata(manager.AppRuntime, mdId) 
                        ?? _dataBuilderLazy.Value.FakeEntity(Eav.Constants.TransientAppId);
-            var dynEnt = new DynamicEntity(meta,
-                (manager.AppContext?.Site).SafeLanguagePriorityCodes(),
-                manager.CompatibilityLevel,
-                null, _serviceProvider);
+            //var dynEnt = new DynamicEntity(meta,
+            //    (manager.AppContext?.Site).SafeLanguagePriorityCodes(),
+            //    manager.CompatibilityLevel,
+            //    null, _serviceProvider);
+            var dynEnt = new DynamicEntity(meta, DynamicEntityDependencies(manager));
             return dynEnt;
         }
+
+        private DynamicEntityDependencies DynamicEntityDependencies(AdamManager manager) =>
+            _dynamicEntityDependencies
+            ?? (_dynamicEntityDependencies = new DynamicEntityDependencies(null, _serviceProvider,
+                (manager.AppContext?.Site).SafeLanguagePriorityCodes(), manager.CompatibilityLevel));
+        private DynamicEntityDependencies _dynamicEntityDependencies;
+
 
     }
 }

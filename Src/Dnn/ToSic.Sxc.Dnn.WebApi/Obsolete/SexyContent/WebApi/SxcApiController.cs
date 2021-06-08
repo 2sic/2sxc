@@ -70,6 +70,10 @@ namespace ToSic.SexyContent.WebApi
         public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.AsDynamic(dynamicEntity);
 
         /// <inheritdoc />
+        [PublicApi("Careful - still Experimental in 12.02")]
+        public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.AsDynamic(entities);
+
+        /// <inheritdoc />
         [PrivateApi("old api, only available in old API controller")]
         public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => _DynCodeRoot.AsDynamic(entityKeyValuePair.Value);
 
@@ -164,7 +168,7 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="field"></param>
         /// <param name="subFolder"></param>
         /// <returns></returns>
-        public new Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Constants.RandomProtectionParameter,
+        public new Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             Stream stream = null,
             string fileName = null,
             string contentType = null,
@@ -181,9 +185,18 @@ namespace ToSic.SexyContent.WebApi
 
         #endregion
 
-        #region RunContext - new in 11.08 or similar, not implemented in old base classes
+        #region CmsContext
 
+        /// <inheritdoc />
         public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
+
+        /// <inheritdoc />
+        [PublicApi("Careful - still Experimental in 12.02")]
+        public dynamic Resources => _DynCodeRoot.Resources;
+
+        /// <inheritdoc />
+        [PublicApi("Careful - still Experimental in 12.02")]
+        public dynamic Settings => _DynCodeRoot.Settings;
 
         #endregion
     }

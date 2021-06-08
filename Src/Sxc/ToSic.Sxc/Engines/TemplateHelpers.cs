@@ -2,12 +2,13 @@
 using System.IO;
 using System.Linq;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.Data;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Engines
 {
@@ -28,11 +29,11 @@ namespace ToSic.Sxc.Engines
 
         private IServerPaths ServerPaths { get; }
         public IApp App;
-        public TemplateHelpers(IServerPaths serverPaths, ILinkPaths linkPaths, IGlobalConfiguration globalConfiguration): base("Viw.Help")
+        public TemplateHelpers(IServerPaths serverPaths, IGlobalConfiguration globalConfiguration, Lazy<IValueConverter> iconConverterLazy): base("Viw.Help")
         {
             ServerPaths = serverPaths;
-            _linkPaths = linkPaths;
             _globalConfiguration = globalConfiguration;
+            _iconConverterLazy = iconConverterLazy;
         }
 
         public TemplateHelpers Init(IApp app, ILog parentLog)
@@ -44,8 +45,8 @@ namespace ToSic.Sxc.Engines
 
         #endregion
 
-        private readonly ILinkPaths _linkPaths;
         private readonly IGlobalConfiguration _globalConfiguration;
+        private readonly Lazy<IValueConverter> _iconConverterLazy;
 
         /// <summary>
         /// Creates a directory and copies the needed web.config for razor files
@@ -55,7 +56,7 @@ namespace ToSic.Sxc.Engines
         {
             var wrapLog = Log.Call($"{isShared}");
             var portalPath = isShared
-                ? Path.Combine(ServerPaths.FullAppPath(Settings.PortalHostDirectory) ?? "", Settings.AppsRootFolder)
+                ? Path.Combine(ServerPaths.FullAppPath(_globalConfiguration.GlobalSiteFolder) ?? "", Settings.AppsRootFolder)
                 : App.Site.AppsRootPhysicalFull ?? "";
             var sexyFolderPath = portalPath;
 
@@ -91,27 +92,27 @@ namespace ToSic.Sxc.Engines
         /// <summary>
         /// Returns the location where Templates are stored for the current app
         /// </summary>
-        public string AppPathRoot(bool useSharedFileSystem, PathTypes pathType)
+        public string AppPathRoot(bool global, PathTypes pathType)
         {
-            var wrapLog = Log.Call<string>($"{useSharedFileSystem}, {pathType}");
+            var wrapLog = Log.Call<string>($"{global}, {pathType}");
             string basePath;
             switch (pathType)
             {
                 case PathTypes.Link:
-                    basePath = useSharedFileSystem
+                    basePath = global
                         //? _linkPaths.ToAbsolute(Path.Combine(Settings.PortalHostDirectory, Settings.AppsRootFolder))
-                        ? Path.Combine(Settings.PortalHostDirectory, Settings.AppsRootFolder, App.Folder).ToAbsolutePathForwardSlash()
+                        ? Path.Combine(_globalConfiguration.GlobalSiteFolder, Settings.AppsRootFolder, App.Folder).ToAbsolutePathForwardSlash()
                         : App.Path;
                     break;
                 case PathTypes.PhysRelative:
-                    basePath = useSharedFileSystem
+                    basePath = global
                         //? _linkPaths.ToAbsolute(Path.Combine(Settings.PortalHostDirectory, Settings.AppsRootFolder))
-                        ? Path.Combine(Settings.PortalHostDirectory, Settings.AppsRootFolder, App.Folder).ToAbsolutePathForwardSlash()
+                        ? Path.Combine(_globalConfiguration.GlobalSiteFolder, Settings.AppsRootFolder, App.Folder).ToAbsolutePathForwardSlash()
                         : Path.Combine(App.Site.AppsRootPhysical, App.Folder);
                     break;
                 case PathTypes.PhysFull:
-                    basePath = useSharedFileSystem
-                        ? ServerPaths.FullAppPath(Path.Combine(Settings.PortalHostDirectory, Settings.AppsRootFolder, App.Folder))
+                    basePath = global
+                        ? ServerPaths.FullAppPath(Path.Combine(_globalConfiguration.GlobalSiteFolder, Settings.AppsRootFolder, App.Folder))
                         : Path.Combine(App.Site.AppsRootPhysicalFull, App.Folder);
                     break;
                 default:
@@ -137,10 +138,34 @@ namespace ToSic.Sxc.Engines
 
         private string IconPath(IView view, PathTypes type)
         {
+            // See if we have an icon - but only if we need the link
+            if(!string.IsNullOrWhiteSpace(view.Icon))
+            {
+                var iconInConfig = view.Icon;
+                
+                // If we have the App:Path in front, replace as expected, but never on global
+                if (AppPathTokenDetected(iconInConfig))
+                    return AppPathTokenReplace(iconInConfig, AppPathRoot(false, type));
+                // AppPathRoot(false, type) + iconInConfig.Substring(AppAssets.AppPathPlaceholder.Length);
+                
+                // If not, we must assume it's file:## placeholder and we can only convert to relative link
+                if (type == PathTypes.Link) return _iconConverterLazy.Value.ToValue(iconInConfig, view.Guid);
+
+                // Otherwise ignore the request and proceed by standard
+            }
+
             var viewPath1 = ViewPath(view, type);
             return viewPath1.Substring(0, viewPath1.LastIndexOf(".", StringComparison.Ordinal)) + ".png";
         }
 
         public string ViewPath(IView view, PathTypes type) => Path.Combine(AppPathRoot(view.IsShared, type), view.Path);
+
+        public static bool AppPathTokenDetected(string iconInConfig) =>
+            (iconInConfig ?? "").StartsWith(AppAssets.AppPathPlaceholder, StringComparison.OrdinalIgnoreCase);
+
+        public static string AppPathTokenReplace(string iconInConfig, string appPath) =>
+            AppPathTokenDetected(iconInConfig)
+                ? appPath + iconInConfig.Substring(AppAssets.AppPathPlaceholder.Length)
+                : iconInConfig;
     }
 }

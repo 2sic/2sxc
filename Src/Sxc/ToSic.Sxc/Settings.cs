@@ -9,11 +9,7 @@ namespace ToSic.Sxc
         // Important note: always use static-readonly, NOT constant for .net 456
         // reason is that we must ensure that the static constructor is called
         // whenever anything is accessed
-
-        public const string PortalHostDirectory = "~/Portals/_default/";
         public const string AppsRootFolder = "2sxc";
-        public const string PortalSettingsPrefix = "ToSIC_SexyContent_";
-        public const string PortalSettingZoneId = PortalSettingsPrefix + "ZoneID";
         public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
 
         public static readonly string ModuleVersion = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString("00") + "."
@@ -27,14 +23,6 @@ namespace ToSic.Sxc
 
         internal static readonly string AttributeSetStaticNameContentBlockTypeName = "ContentGroupReference";
 
-        /// <summary>
-        /// Collection of Template Locations
-        /// </summary>
-        public class TemplateLocations
-        {
-            public const string PortalFileSystem = "Portal File System";
-            public const string HostFileSystem = "Host File System";
-        }
 
         public class Installation
         {
@@ -60,7 +48,7 @@ namespace ToSic.Sxc
                 "11.07.03", // LTS
                 "11.10.00", "11.10.01", "11.11.00", "11.11.01", "11.11.02", "11.11.03", "11.11.04", "11.12.00", "11.12.01", "11.20.00", "11.22.00",
                 "11.22.00", // LTS
-                "12.00.00", "12.01.00"
+                "12.00.00", "12.01.00", "12.02.00"
             };
 
             // this is the last version which must run server-side change-code

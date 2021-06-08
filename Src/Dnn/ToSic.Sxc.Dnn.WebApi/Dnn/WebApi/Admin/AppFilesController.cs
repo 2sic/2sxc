@@ -50,12 +50,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <param name="path"></param>
         /// <param name="content"></param>
         /// <param name="global">this determines, if the app-file store is the global in _default or the local in the current app</param>
+        /// <param name="purpose">auto;razor;token;api;search</param>
         /// <returns></returns>
         [HttpPost]
         public bool Create([FromUri] int appId, [FromUri] string path,
             [FromBody] FileContentsDto content, // note: as of 2020-09 the content is never submitted
-            bool global) 
-            => Backend().Create(appId, path, content, global);
+            bool global, [FromUri] string purpose = AssetEditor.PurposeType.Auto) 
+            => Backend().Create(appId, path, content, purpose, global);
 
 
 

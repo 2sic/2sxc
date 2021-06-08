@@ -112,7 +112,7 @@ namespace ToSic.Sxc.LookUp
         }
 
 
-        private CultureInfo GetCultureInfo() => IZoneCultureResolverExtensions.SafeCultureInfo(_entity?.Dimensions);
+        private CultureInfo GetCultureInfo() => IZoneCultureResolverExtensions.SafeCultureInfo(_entity?._Dependencies.Dimensions);
 
         [PrivateApi]
 		public string Get(string key, string strFormat) => GetProperty(key, strFormat);

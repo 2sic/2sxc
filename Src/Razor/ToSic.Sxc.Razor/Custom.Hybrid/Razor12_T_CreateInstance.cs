@@ -19,7 +19,7 @@ namespace Custom.Hybrid
         /// </summary>
         /// <returns></returns>
         public dynamic CreateInstance(string virtualPath,
-            string dontRelyOnParameterOrder = ToSic.Eav.Constants.RandomProtectionParameter,
+            string dontRelyOnParameterOrder = ToSic.Eav.Parameters.Protector,
             string name = null,
             string relativePath = null,
             bool throwOnError = true)
