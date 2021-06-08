@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Web.PageFeatures
         {
             Register(
                 BuiltInFeatures.JQuery,
-                BuiltInFeatures.JQuerySlim,
+                //BuiltInFeatures.JQuerySlim,
                 BuiltInFeatures.PageContext,
                 BuiltInFeatures.Core,
                 BuiltInFeatures.EditApi,
