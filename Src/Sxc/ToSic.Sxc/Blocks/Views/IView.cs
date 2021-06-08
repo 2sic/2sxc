@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Blocks
 {

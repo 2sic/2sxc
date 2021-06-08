@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Data
     /// </summary>
     /// <typeparam name="T">The underlying type, either a JObject or a JToken</typeparam>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic, don't use this directly")]
-    public abstract class DynamicJacketBase<T>: DynamicObject, IReadOnlyList<object>, IWrapper<T>
+    public abstract class DynamicJacketBase<T>: DynamicObject, IReadOnlyList<object>, IWrapper<T>// , IPropertyLookup
     {
         /// <summary>
         /// The underlying data, in case it's needed for various internal operations.
@@ -49,6 +49,8 @@ namespace ToSic.Sxc.Data
         /// <returns>the inner json string</returns>
         public override string ToString() => UnwrappedContents.ToString();
 
+        //public abstract PropertyRequest FindPropertyInternal(string fieldName, string[] languages);
+
         /// <inheritdoc />
         public int Count => ((IList) UnwrappedContents).Count;
 
@@ -57,7 +59,7 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="index"></param>
         /// <returns>a <see cref="System.NotImplementedException"/></returns>
-        public virtual object this[int index] => throw new System.NotImplementedException();
+        public abstract object this[int index] { get; }
 
         /// <summary>
         /// Fake property binder - just ensure that simple properties don't cause errors. <br/>

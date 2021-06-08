@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Context
 {
@@ -36,9 +35,9 @@ namespace ToSic.Sxc.Context
         /// System to extend the known context by more information if we're running inside a block
         /// </summary>
         /// <returns></returns>
-        internal CmsContext Update(IDynamicCode dynCode, IBlock block)
+        internal CmsContext Update(/*IDynamicCode dynCode,*/ IBlock block)
         {
-            _dynCode = dynCode;
+            //_dynCode = dynCode;
             _block = block;
             Context = block.Context;
             _page = null;
@@ -46,7 +45,7 @@ namespace ToSic.Sxc.Context
             return this;
         }
 
-        private IDynamicCode _dynCode;
+        //private IDynamicCode _dynCode;
         private IBlock _block;
 
         #endregion
@@ -68,7 +67,7 @@ namespace ToSic.Sxc.Context
         public ICmsUser User => Context.User as ICmsUser;
 
         [PrivateApi]
-        public ICmsView View => _view ?? (_view = new CmsView(_dynCode, _block));
+        public ICmsView View => _view ?? (_view = new CmsView(/*_dynCode, */_block));
         private ICmsView _view;
     }
 }

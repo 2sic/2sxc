@@ -6,7 +6,6 @@ using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Data
 {
-    [PublicApi_Stable_ForUseInYourCode]
     public partial interface IDynamicEntity
     {
 

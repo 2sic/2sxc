@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Context
 
         /// <summary>
         /// Name of the view as configured - note that because of i18n it could be different depending on the language.
-        /// To clearly identify a view, use the <see cref="Identifier"/> or <see cref="Settings"/>
+        /// To clearly identify a view, use the <see cref="Identifier"/> or use `Settings`
         /// 
         /// 🪒 Use in Razor: `CmsContext.View.Name`
         /// </summary>
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Context
         /// <summary>
         /// An optional identifier which the View configuration can provide.
         /// Use this when you want to use the same template but make minor changes based on the View selected (like change the number of columns).
-        /// Usually you will use either this OR the <see cref="Settings"/>
+        /// Usually you will use either this OR the `Settings`
         /// 
         /// 🪒 Use in Razor: `CmsContext.View.Identifier`
         /// </summary>
@@ -42,25 +42,25 @@ namespace ToSic.Sxc.Context
         /// </summary>
         string Edition { get; }
 
-        /// <summary>
-        /// The Configuration Entity of the View
-        /// 
-        /// 🪒 Use in Razor: `CmsContext.View.Configuration.Icon`
-        /// </summary>
-        dynamic Configuration { get; }
+        ///// <summary>
+        ///// The Configuration Entity of the View. 
+        ///// 
+        ///// 🪒 Use in Razor: `CmsContext.View.Configuration.Icon`
+        ///// </summary>
+        //dynamic Configuration { get; }
 
-        /// <summary>
-        /// Custom Language Resources for this View
-        /// 
-        /// 🪒 Use in Razor: `CmsContext.View.Resources.CtaButtonLabel`
-        /// </summary>
-        dynamic Resources { get; }
+        ///// <summary>
+        ///// Custom Language Resources for this View
+        ///// 
+        ///// 🪒 Use in Razor: `CmsContext.View.Resources.CtaButtonLabel`
+        ///// </summary>
+        //dynamic Resources { get; }
 
-        /// <summary>
-        /// Custom Settings for this View
-        /// 
-        /// 🪒 Use in Razor: `CmsContext.View.Settings.ItemsPerRow`
-        /// </summary>
-        dynamic Settings { get; }
+        ///// <summary>
+        ///// Custom Settings for this View
+        ///// 
+        ///// 🪒 Use in Razor: `CmsContext.View.Settings.ItemsPerRow`
+        ///// </summary>
+        //dynamic Settings { get; }
     }
 }

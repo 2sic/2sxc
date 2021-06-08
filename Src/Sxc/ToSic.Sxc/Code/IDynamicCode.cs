@@ -151,6 +151,17 @@ namespace ToSic.Sxc.Code
         /// <returns>a dynamic object for easier coding</returns>
         dynamic AsDynamic(object dynamicEntity);
 
+        /// <summary>
+        /// Convert a dynamic entity and return itself again. This is so coders don't have to worry if the original object was an <see cref="IEntity"/> or a <see cref="IDynamicEntity"/> in the first place. 
+        /// </summary>
+        /// <param name="entities">the original object</param>
+        /// <returns>a dynamic object for easier coding</returns>
+        /// <remarks>
+        /// New in 12.02 - WIP
+        /// </remarks>
+        [PrivateApi("WIP")]
+        dynamic AsDynamic(params object[] entities);
+        
         #endregion
 
         #region AsEntity
@@ -197,7 +208,7 @@ namespace ToSic.Sxc.Code
         T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null) where T : IDataSource;
         #endregion
 
-        #region Context WIP v11.11 / 11.12
+        #region Context
 
         /// <summary>
         /// The CmsContext tells you about the environment, like what page and module we're running in.
@@ -207,6 +218,32 @@ namespace ToSic.Sxc.Code
         /// New in v11.11
         /// </remarks>
         ICmsContext CmsContext { get; }
+
+        #endregion
+
+        #region Resources and Settings WIP 12.02
+
+        /// <summary>
+        /// Resources for this Scenario. This is a dynamic object based on the <see cref="IDynamicStack"/>.
+        ///
+        /// It will combine both the Resources of the View and the App. The View-Resources will have priority. In future it may also include some global Resources. 
+        /// 
+        /// 🪒 Use in Razor: `@Resources.CtaButtonLabel`
+        /// </summary>
+        /// <remarks>New in 12.02 - WIP</remarks>
+        [PrivateApi("WIP")]
+        dynamic Resources { get; }
+
+        /// <summary>
+        /// Settings for this Scenario. This is a dynamic object based on the <see cref="IDynamicStack"/>.
+        /// 
+        /// It will combine both the Settings of the View and the App. The View-Settings will have priority. In future it may also include some global Settings. 
+        /// 
+        /// 🪒 Use in Razor: `Settings.ItemsPerRow`
+        /// </summary>
+        /// <remarks>New in 12.02 - WIP</remarks>
+        [PrivateApi("WIP")]
+        dynamic Settings { get; }
 
         #endregion
 
