@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Data
     /// Please check @HowTo.DynamicCode.DynamicEntity
     /// </blockquote>
     /// </summary>
-    // [PublicApi_Stable_ForUseInYourCode]
+    [PrivateApi]
     public interface IDynamicEntityGet
     {
 

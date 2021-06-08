@@ -7,7 +7,7 @@ using ToSic.Eav.Documentation;
 namespace ToSic.Sxc.Data
 {
     [PrivateApi("WIP")]
-    public class DynamicStack: DynamicEntityBase, IWrapper<IPropertyStack>, IDynamicEntityGet, IDynamicStack
+    public partial class DynamicStack: DynamicEntityBase, IWrapper<IPropertyStack>, IDynamicStack
     {
         public DynamicStack(DynamicEntityDependencies dependencies, params KeyValuePair<string, IPropertyLookup>[] entities) : base(dependencies)
         {

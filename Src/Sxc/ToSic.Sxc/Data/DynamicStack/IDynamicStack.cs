@@ -8,10 +8,10 @@ namespace ToSic.Sxc.Data
     /// </summary>
     /// <remarks>New in 12.02</remarks>
     [PublicApi("Careful - still WIP in 12.02")]
-    public interface IDynamicStack: IDynamicEntityGet
+    public partial interface IDynamicStack
     {
         /// <summary>
-        /// Get a dynamic object
+        /// Get a source object which is used in the stack. Returned as a dynamic object. 
         /// </summary>
         /// <param name="name"></param>
         /// <returns>A dynamic object like a <see cref="IDynamicEntity"/> or similar, can also be null if the source isn't found. </returns>
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="name"></param>
         /// <returns>An object which can be either a string, number, boolean or List&lt;IDynamicEntity&gt;, depending on the field type. Will return null if the field was not found. </returns>
-        new dynamic Get(string name);
+        dynamic Get(string name);
 
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityGet and IDynamicStack */
         /// <summary>
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Data
         /// <param name="language">Optional language code - like "de-ch" to prioritize that language</param>
         /// <param name="convertLinks">Optionally turn off if links like file:72 are looked up to a real link. Default is true.</param>
         /// <returns>a dynamically typed result, can be string, bool, etc.</returns>
-        new dynamic Get(string name,
+        dynamic Get(string name,
             // ReSharper disable once MethodOverloadWithOptionalParameter
             string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             string language = null,

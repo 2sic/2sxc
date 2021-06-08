@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Data
 {
     /* IMPORTANT: These are just fake properties for documentation - Keep in Sync between IDynamicEntity and IDynamicStack */
     
-    public partial interface IDynamicEntity
+    public partial interface IDynamicStack
     {
 
         /// <summary>
