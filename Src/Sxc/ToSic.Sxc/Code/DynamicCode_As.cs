@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
@@ -22,6 +23,9 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc />
         public dynamic AsDynamic(object dynamicEntity) => UnwrappedContents?.AsDynamic(dynamicEntity);
+
+        [PrivateApi("WIP")]
+        public dynamic AsDynamic(params object[] entities) => UnwrappedContents?.AsDynamic(entities);
 
         /// <inheritdoc />
         public IEntity AsEntity(object dynamicEntity) => UnwrappedContents?.AsEntity(dynamicEntity);

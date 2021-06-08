@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
@@ -29,6 +31,27 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc />
         public dynamic AsDynamic(object dynamicEntity) => dynamicEntity;
+
+        [PrivateApi("WIP")]
+        public dynamic AsDynamic(params object[] entities)
+        {
+            if (entities == null || !entities.Any()) return null;
+            if (entities.Length == 1)
+            {
+                var first = entities[0];
+                if (first is IDynamicEntity dynEntity) return dynEntity;
+                if (first is IEntity entity) return new DynamicEntity(entity, DynamicEntityDependencies);
+                // Unknown, just return it and hope for the best
+                // probably not a good solution
+                return first;
+            }
+            // New case: many items found, must create a stack
+            var sources = entities
+                .Select(e => e as IPropertyLookup)
+                .Where(e => e !=null)
+                .Select(e => new KeyValuePair<string, IPropertyLookup>(null, e));
+            return new DynamicStack(DynamicEntityDependencies, sources.ToArray());
+        }
 
 
         /// <inheritdoc />

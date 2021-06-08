@@ -69,6 +69,9 @@ namespace ToSic.SexyContent.WebApi
         /// <inheritdoc />
         public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.AsDynamic(dynamicEntity);
 
+        [PrivateApi("WIP")]
+        public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.AsDynamic(entities);
+
         /// <inheritdoc />
         [PrivateApi("old api, only available in old API controller")]
         public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => _DynCodeRoot.AsDynamic(entityKeyValuePair.Value);

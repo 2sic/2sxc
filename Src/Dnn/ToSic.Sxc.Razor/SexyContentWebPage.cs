@@ -89,6 +89,9 @@ namespace ToSic.SexyContent.Razor
         /// <inheritdoc />
         public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.AsDynamic(dynamicEntity);
 
+        [PrivateApi("WIP")]
+        public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.AsDynamic(entities);
+
         // todo: only in "old" controller, not in new one
         /// <inheritdoc />
         [Obsolete]

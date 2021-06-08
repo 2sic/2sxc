@@ -52,8 +52,11 @@ namespace Custom.Hybrid
         [NonAction]
         public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot?.AsDynamic(dynamicEntity);
 
-        /// <inheritdoc />
         [NonAction]
+        [PrivateApi("WIP")]
+        public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.AsDynamic(entities);
+
+        /// <inheritdoc />
         public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot?.AsEntity(dynamicEntity);
 
         #endregion

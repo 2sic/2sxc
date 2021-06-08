@@ -151,6 +151,17 @@ namespace ToSic.Sxc.Code
         /// <returns>a dynamic object for easier coding</returns>
         dynamic AsDynamic(object dynamicEntity);
 
+        /// <summary>
+        /// Convert a dynamic entity and return itself again. This is so coders don't have to worry if the original object was an <see cref="IEntity"/> or a <see cref="IDynamicEntity"/> in the first place. 
+        /// </summary>
+        /// <param name="entities">the original object</param>
+        /// <returns>a dynamic object for easier coding</returns>
+        /// <remarks>
+        /// New in 12.02 - WIP
+        /// </remarks>
+        [PrivateApi("WIP")]
+        dynamic AsDynamic(params object[] entities);
+        
         #endregion
 
         #region AsEntity
