@@ -20,6 +20,7 @@ XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\Microsoft.AspNetCore.Mvc
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\Microsoft.AspNetCore.Razor.*" "%OqtaneBin%" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\Microsoft.CodeAnalys*.*" "%OqtaneBin%" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\Microsoft.Extensions.DependencyModel.dll" "%OqtaneBin%" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\System.Data.SqlClient.dll" "%OqtaneBin%" /Y
 
 @Echo(
 @Echo 2sxc Oqtane - ICSharpCode.SharpZipLib.dll
