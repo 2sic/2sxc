@@ -67,7 +67,7 @@
     <PackageReference Include="Microsoft.Extensions.Localization" Version="5.0.0" />
     <PackageReference Include="Oqtane.Server" Version="2.0.2" />
     <PackageReference Include="Oqtane.Shared" Version="2.0.2" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
   </ItemGroup>
 
   <ItemGroup>
