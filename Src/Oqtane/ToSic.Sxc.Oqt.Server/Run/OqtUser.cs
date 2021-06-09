@@ -105,8 +105,16 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var roles = _httpContextAccessor.HttpContext.User.Claims.Where(item => item.Type == ClaimTypes.Role).Aggregate("", (current, claim) => current + (claim.Value + ";"));
             if (roles != "") roles = ";" + roles;
             user.Roles = roles;
-            Guid = new Guid($"{_httpContextAccessor?.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value}");
+            
+            Guid = GetUserGuid();
             return user;
+        }
+
+        public Guid? GetUserGuid()
+        {
+            // Sometimes user guid is not available.
+            var guidValue = $"{_httpContextAccessor?.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value}";
+            return System.Guid.TryParse(guidValue, out var result) ? result : null;
         }
 
         #endregion
