@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         const string FallbackLanguageCode = "en-us";
         /// <inheritdoc />
-        public string DefaultCultureCode => _localizationManager.Value.GetDefaultCulture().ToLowerInvariant() ?? FallbackLanguageCode;
+        public string DefaultCultureCode => MapTwoLetterCulture(_localizationManager.Value.GetDefaultCulture().ToLowerInvariant()) ?? FallbackLanguageCode;
 
         // When culture code is not provided for selected default language, use defaultLanguageCode.
         public string DefaultLanguageCode(int siteId)
@@ -50,9 +50,36 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public static void SetCulture(string culture)
         {
-            var cultureInfo = CultureInfo.GetCultureInfo(culture);
+            var cultureInfo = CultureInfo.GetCultureInfo(MapTwoLetterCulture(culture));
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+        }
+
+        public static string MapTwoLetterCulture(string culture)
+        {
+            if (string.IsNullOrEmpty(culture)) return FallbackLanguageCode;
+
+            if (culture.Length > 3) return culture;
+
+            // 1. For "en" return "en-us".
+            if (culture.ToLowerInvariant() == "en") return FallbackLanguageCode;
+
+            // 2. For other cultures first find is there simple de-de culture
+            var simpleLanguageCode = CultureInfo.GetCultures(CultureTypes.AllCultures)
+                    .FirstOrDefault(c => c.Name.ToLowerInvariant() == $"{culture}-{culture}");
+
+            if (simpleLanguageCode != null) return simpleLanguageCode.Name.ToLowerInvariant();
+
+            // 3. If not, find first in list and return
+            var firstLanguageCode = CultureInfo.GetCultures(CultureTypes.AllCultures)
+                .OrderBy(c => c.Name)
+                .FirstOrDefault(c => c.TwoLetterISOLanguageName.ToLowerInvariant() == culture 
+                                     && c.IsNeutralCulture == false);
+
+            if (firstLanguageCode != null) return firstLanguageCode.Name.ToLowerInvariant();
+
+            // 4. Fallback
+            return FallbackLanguageCode;
         }
     }
 }
