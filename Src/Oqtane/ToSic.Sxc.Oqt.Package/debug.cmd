@@ -20,6 +20,7 @@ XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\Microsoft.AspNetCore.Mvc
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\Microsoft.AspNetCore.Razor.*" "%OqtaneBin%" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\Microsoft.CodeAnalys*.*" "%OqtaneBin%" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\Microsoft.Extensions.DependencyModel.dll" "%OqtaneBin%" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\System.Data.SqlClient.dll" "%OqtaneBin%" /Y
 
 @Echo(
 @Echo 2sxc Oqtane - ICSharpCode.SharpZipLib.dll
@@ -41,6 +42,10 @@ XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net5.0\ToSic.*.pdb" "%OqtaneBin
 @Echo(
 @Echo 2sxc Oqtane - Client Assets
 XCOPY "..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc\*" "%Dev2sxcOqtaneRoot%wwwroot\Modules\ToSic.Sxc\" /Y /S /I
+
+@Echo(
+@Echo 2sxc Oqtane - System.Data.SqlClient - version used in Oqt 2.0.2
+XCOPY "..\..\packages\system.data.sqlclient\4.6.0\lib\netcoreapp2.1\System.Data.SqlClient.dll" "%OqtaneBin%" /Y
 
 @Echo(
 @Echo nuget dependencies - Imazen ImageFlow

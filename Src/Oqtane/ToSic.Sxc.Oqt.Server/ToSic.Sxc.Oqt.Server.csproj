@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Version>12.02.00</Version>
+    <Version>12.02.01</Version>
     <Product>ToSic.Sxc</Product>
     <Authors>2sic</Authors>
     <Company>2sic</Company>
@@ -45,9 +45,11 @@
 
   <ItemGroup>
     <None Remove="Scripts\ToSic.Sxc.0.0.1.sql" />
+    <None Remove="Scripts\ToSic.Sxc.12.02.01.sql" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Scripts\ToSic.Sxc.12.02.01.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.0.0.1.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.12.00.00.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.Uninstall.sql" />
@@ -65,6 +67,7 @@
     <PackageReference Include="Microsoft.Extensions.Localization" Version="5.0.0" />
     <PackageReference Include="Oqtane.Server" Version="2.0.2" />
     <PackageReference Include="Oqtane.Shared" Version="2.0.2" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
   </ItemGroup>
 
   <ItemGroup>
