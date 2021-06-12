@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace ToSic.Sxc.Web.PageService
 {
-    public partial class Page
+    public partial class PageService
     {
         public IList<PagePropertyChange> PropertyChanges { get; } = new List<PagePropertyChange>();
         

@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Web.PageService
 {
-    public partial class Page
+    public partial class PageService
     {
         /// <inheritdoc />
         public void AddJsonLd(string jsonString)

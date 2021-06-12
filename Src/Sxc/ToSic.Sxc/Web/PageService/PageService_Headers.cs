@@ -6,7 +6,7 @@ using ToSic.Razor.Markup;
 
 namespace ToSic.Sxc.Web.PageService
 {
-    public partial class Page
+    public partial class PageService
     {
         public IList<HeadChange> Headers { get; } = new List<HeadChange>();
         public IList<HeadChange> GetHeadChangesAndFlush()

@@ -82,7 +82,7 @@ namespace ToSic.Sxc
             services.TryAddTransient<Polymorphism.Polymorphism>();
 
             // new in v12.02 - PageService & Page Features
-            services.TryAddScoped<IPageService, Web.PageService.Page>();
+            services.TryAddScoped<IPageService, Web.PageService.PageService>();
             services.TryAddTransient<IPageFeatures, PageFeatures>();
             services.TryAddSingleton<IPageFeaturesManager, PageFeaturesManager>();
 

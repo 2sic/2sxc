@@ -23,7 +23,12 @@ namespace ToSic.Sxc.Web.PageFeatures
         }
        
         /// <inheritdoc />
-        public void Activate(params string[] keys) => ActiveKeys.AddRange(keys.Where(k => !string.IsNullOrWhiteSpace(k)));
+        public void Activate(params string[] keys)
+        {
+            var realKeys = keys.Where(k => !string.IsNullOrWhiteSpace(k));
+            ActiveKeys.AddRange(realKeys);
+            
+        }
 
         public List<string> ActiveKeys { get; } = new List<string>();
         

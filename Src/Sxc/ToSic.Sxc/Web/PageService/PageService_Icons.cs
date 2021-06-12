@@ -4,7 +4,7 @@ using ToSic.Razor.Internals.Page;
 
 namespace ToSic.Sxc.Web.PageService
 {
-    public partial class Page
+    public partial class PageService
     {
         /// <inheritdoc />
         public void AddIcon(string path, string doNotRelyOnParameterOrder = ToSic.Eav.Parameters.Protector, string rel = "",

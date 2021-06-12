@@ -3,9 +3,9 @@ using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Web.PageService
 {
-    public partial class Page: IPageService, IChangeQueue
+    public partial class PageService: IPageService, IChangeQueue
     {
-        public Page(IPageFeatures features)
+        public PageService(IPageFeatures features)
         {
             Features = features.Init(this);
         }

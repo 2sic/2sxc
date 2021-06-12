@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.UI;
 using DotNetNuke.Application;
 using DotNetNuke.Framework;
@@ -41,15 +42,6 @@ namespace ToSic.Sxc.Dnn.Web
 
         internal List<IPageFeature> Features => _features ?? (_features = _pageService.Features.GetWithDependentsAndFlush(Log));
 
-        //var wrapLog = Log.Call();
-        //Log.Add("Try to get new specs from IPageService");
-        //var features = _pageService.Features.GetKeysAndFlush();
-        //Log.Add($"Got {features.Count} items");
-        //var unfolded = _pageFm.GetWithDependents(features);
-        //Log.Add($"Got unfolded features {unfolded.Count}");
-        //_features = unfolded;
-        //wrapLog("ok");
-        //return _features;
         private List<IPageFeature> _features;
 
         public bool AddEverything()
@@ -62,8 +54,8 @@ namespace ToSic.Sxc.Dnn.Web
             var readJs = Features.Contains(BuiltInFeatures.Core) || (BlockBuilder?.UiAddJsApi ?? editJs);
             var editCss = Features.Contains(BuiltInFeatures.EditUi) || (BlockBuilder?.UiAddEditUi ?? false);
 
-            if (!readJs && !editJs && !editCss)
-                return wrapLog("nothing added", true);
+            if (!readJs && !editJs && !editCss && !Features.Any())
+                return wrapLog("nothing to add", true);
 
             Log.Add("user is editor, or template requested js/css, will add client material");
 
