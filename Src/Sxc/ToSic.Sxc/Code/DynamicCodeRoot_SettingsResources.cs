@@ -9,14 +9,18 @@ namespace ToSic.Sxc.Code
 {
     public partial class DynamicCodeRoot
     {
+        internal const string SourceNameView = "View";
+        internal const string SourceNameApp = "App";
+        internal const string SourceNamePreset = "Preset";
+        
         /// <inheritdoc />
         [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic Resources => _resources ?? (_resources = new DynamicStack(
                 new DynamicEntityDependencies(Block,
                     DataSourceFactory.ServiceProvider,
                     CmsContext.SafeLanguagePriorityCodes()),
-                new KeyValuePair<string, IPropertyLookup>("View", Block?.View?.Resources),
-                new KeyValuePair<string, IPropertyLookup>("App", App?.Resources?.Entity))
+                new KeyValuePair<string, IPropertyLookup>(SourceNameView, Block?.View?.Resources),
+                new KeyValuePair<string, IPropertyLookup>(SourceNameApp, App?.Resources?.Entity))
             );
         private dynamic _resources;
 
@@ -26,8 +30,9 @@ namespace ToSic.Sxc.Code
                 new DynamicEntityDependencies(_DynCodeRoot.Block,
                     _DynCodeRoot.DataSourceFactory.ServiceProvider,
                     CmsContext.SafeLanguagePriorityCodes()),
-                new KeyValuePair<string, IPropertyLookup>("View", _DynCodeRoot.Block?.View?.Settings),
-                new KeyValuePair<string, IPropertyLookup>("App", _DynCodeRoot.App?.Settings?.Entity))
+                new KeyValuePair<string, IPropertyLookup>(SourceNameView, _DynCodeRoot.Block?.View?.Settings),
+                new KeyValuePair<string, IPropertyLookup>(SourceNameApp, _DynCodeRoot.App?.Settings?.Entity),
+                new KeyValuePair<string, IPropertyLookup>(SourceNamePreset, Eav.Configuration.Global.Settings))
             );
         private dynamic _settings;
     }

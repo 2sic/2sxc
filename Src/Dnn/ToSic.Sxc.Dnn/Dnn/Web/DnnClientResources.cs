@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Dnn.Web
             _pageService = pageService;
         }
         
-        public DnnClientResources Init(Page page, IBlockBuilder blockBuilder, ILog parentLog) // : base("Dnn.JsCss", parentLog)
+        public DnnClientResources Init(Page page, IBlockBuilder blockBuilder, ILog parentLog)
         {
             Log.LinkTo(parentLog);
             Page = page;
@@ -140,12 +140,6 @@ namespace ToSic.Sxc.Dnn.Web
         private bool MustAddHeaders { get; set; }
 
         #endregion
-
-
-        ///// <summary>
-        ///// Return true if the URL is a debug URL
-        ///// </summary>
-        //private static bool IsDebugUrl(HttpRequest request) => string.IsNullOrEmpty(request.QueryString["debug"]);
 
 
         #region add scripts / css with bypassing the official ClientResourceManager
