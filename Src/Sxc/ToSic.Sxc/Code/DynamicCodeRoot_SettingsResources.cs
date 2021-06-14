@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Context;
@@ -12,6 +13,10 @@ namespace ToSic.Sxc.Code
         internal const string SourceNameView = "View";
         internal const string SourceNameApp = "App";
         internal const string SourceNameAppSystem = "AppSystem";
+        internal const string SourceNameSite = "Site";
+        internal const string SourceNameSiteSystem = "SiteSystem";
+        internal const string SourceNameGlobal = "Global";
+        internal const string SourceNameGlobalSystem = "GlobalSystem";
         internal const string SourceNamePreset = "Preset";
         
         /// <inheritdoc />
@@ -27,15 +32,48 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc />
         [PublicApi("Careful - still Experimental in 12.02")]
-        public dynamic Settings => _settings ?? (_settings = new DynamicStack(
-                new DynamicEntityDependencies(_DynCodeRoot.Block,
-                    _DynCodeRoot.DataSourceFactory.ServiceProvider,
-                    CmsContext.SafeLanguagePriorityCodes()),
-                new KeyValuePair<string, IPropertyLookup>(SourceNameView, _DynCodeRoot.Block?.View?.Settings),
-                new KeyValuePair<string, IPropertyLookup>(SourceNameApp, _DynCodeRoot.App?.Settings?.Entity),
-                new KeyValuePair<string, IPropertyLookup>(SourceNameAppSystem, (_DynCodeRoot.App as Eav.Apps.App)?.AppState.SystemSettings),
-                new KeyValuePair<string, IPropertyLookup>(SourceNamePreset, Eav.Configuration.Global.Settings))
-            );
+        public dynamic Settings
+        {
+            get
+            {
+                if (_settings != null) return _settings;
+                var currentAppState = (_DynCodeRoot.App as App)?.AppState;
+                var primaryAppState = State.Get(State.Identity(App.ZoneId, null));
+                var globalAppState = State.Get(State.Identity(null, null));
+
+                var sources = new List<KeyValuePair<string, IPropertyLookup>>();
+
+                void AddIfNotNull(string name, IPropertyLookup lookup)
+                {
+                    if(lookup!=null) sources.Add(new KeyValuePair<string, IPropertyLookup>(name, lookup));
+                }
+                
+                // View level
+                AddIfNotNull(SourceNameView, _DynCodeRoot.Block?.View?.Settings);
+                
+                // App level
+                AddIfNotNull(SourceNameApp, _DynCodeRoot.App?.Settings?.Entity);
+                AddIfNotNull(SourceNameAppSystem, currentAppState?.SystemSettingsApp);
+                
+                // Site level
+                AddIfNotNull(SourceNameSite, primaryAppState?.SiteSettingsCustom);
+                AddIfNotNull(SourceNameSiteSystem, primaryAppState?.SystemSettingsSite);
+                
+                // Global
+                AddIfNotNull(SourceNameGlobal, globalAppState?.GlobalSettingsCustom);
+                AddIfNotNull(SourceNameGlobalSystem, globalAppState?.SystemSettingsApp);
+                
+                // System Presets
+                AddIfNotNull(SourceNamePreset, Eav.Configuration.Global.Settings);
+                
+                return _settings = new DynamicStack(
+                        new DynamicEntityDependencies(_DynCodeRoot.Block,
+                            _DynCodeRoot.DataSourceFactory.ServiceProvider,
+                            CmsContext.SafeLanguagePriorityCodes()),
+                        sources.ToArray());
+            }
+        }
+
         private dynamic _settings;
     }
 }
