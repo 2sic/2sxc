@@ -11,6 +11,7 @@ namespace ToSic.Sxc.Code
     {
         internal const string SourceNameView = "View";
         internal const string SourceNameApp = "App";
+        internal const string SourceNameAppSystem = "AppSystem";
         internal const string SourceNamePreset = "Preset";
         
         /// <inheritdoc />
@@ -32,6 +33,7 @@ namespace ToSic.Sxc.Code
                     CmsContext.SafeLanguagePriorityCodes()),
                 new KeyValuePair<string, IPropertyLookup>(SourceNameView, _DynCodeRoot.Block?.View?.Settings),
                 new KeyValuePair<string, IPropertyLookup>(SourceNameApp, _DynCodeRoot.App?.Settings?.Entity),
+                new KeyValuePair<string, IPropertyLookup>(SourceNameAppSystem, (_DynCodeRoot.App as Eav.Apps.App)?.AppState.SystemSettings),
                 new KeyValuePair<string, IPropertyLookup>(SourceNamePreset, Eav.Configuration.Global.Settings))
             );
         private dynamic _settings;
