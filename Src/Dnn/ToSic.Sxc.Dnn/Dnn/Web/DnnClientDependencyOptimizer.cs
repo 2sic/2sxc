@@ -45,13 +45,14 @@ namespace ToSic.Sxc.Dnn.Web
 
             Log.Add("Will apply PageChanges");
             var changes = _pageChanges.Apply();
+            Log.Add($"Applied {changes} changes");
 
-            Log.Add("Apply Header Status-Code changes as needed");
+            Log.Add("Will apply Header Status-Code changes if needed");
             var pageServiceWithInternals = _pageChanges.PageService as Sxc.Web.PageService.PageService;
             if (page?.Response != null && pageServiceWithInternals?.HttpStatusCode != null)
             {
                 var code = pageServiceWithInternals.HttpStatusCode.Value;
-                Log.Add($"Custom status code '{code}'. Will set and also TrySkipIisCustomErrors");
+                Log.Add($"Custom status code '{code}'. Will set and also {nameof(page.Response.TrySkipIisCustomErrors)}");
                 page.Response.StatusCode = code;
                 // Skip IIS & upstream redirects to a custom 404 so the Dnn page is preserved
                 page.Response.TrySkipIisCustomErrors = true;
