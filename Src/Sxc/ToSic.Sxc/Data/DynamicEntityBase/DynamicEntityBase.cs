@@ -7,7 +7,7 @@ using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Data
 {
-    public abstract class DynamicEntityBase: DynamicObject, IDynamicEntityGet, IPropertyLookup
+    public abstract class DynamicEntityBase: DynamicObject, IDynamicEntityBase, IPropertyLookup
     {
         protected DynamicEntityBase(DynamicEntityDependencies dependencies) => _Dependencies = dependencies;
 
@@ -18,11 +18,12 @@ namespace ToSic.Sxc.Data
         // ReSharper disable once InconsistentNaming
         protected readonly Dictionary<string, object> _ValueCache = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
 
-        protected bool _debug;
+        /// <inheritdoc />
         public void SetDebug(bool debug) => _debug = debug;
+        protected bool _debug;
         
         [PrivateApi]
-        protected virtual object _getValue(string field, string language = null, bool lookup = true)
+        protected virtual object GetInternal(string field, string language = null, bool lookup = true)
         {
             var log = _debug ? _Dependencies.LogOrNull : null;
             var safeWrap = log.SafeCall<object>($"{nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookup)}:{lookup}", "Debug active");
@@ -61,7 +62,7 @@ namespace ToSic.Sxc.Data
         public abstract PropertyRequest FindPropertyInternal(string field, string[] dimensions, ILog parentLogOrNull);
         
         /// <inheritdoc/>
-        public dynamic Get(string name) => _getValue(name);
+        public dynamic Get(string name) => GetInternal(name);
 
         /// <inheritdoc/>
         public dynamic Get(string name,
@@ -76,7 +77,7 @@ namespace ToSic.Sxc.Data
             
             var debugBefore = _debug;
             if (debug != null) _debug = debug.Value;
-            var result = _getValue(name, language, convertLinks);
+            var result = GetInternal(name, language, convertLinks);
             if (debug != null) _debug = debugBefore;
             
             return result;

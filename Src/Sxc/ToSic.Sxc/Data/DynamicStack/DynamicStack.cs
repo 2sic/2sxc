@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Data
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            result = _getValue(binder.Name);
+            result = GetInternal(binder.Name);
             return true;
         }
 

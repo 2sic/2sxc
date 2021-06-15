@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Data
     public partial class DynamicEntity
     {
         [PrivateApi]
-        protected override object _getValue(string field, string language = null, bool lookup = true)
+        protected override object GetInternal(string field, string language = null, bool lookup = true)
         {
             #region check the two special cases Toolbar / Presentation which the EAV doesn't know
 #if NETFRAMEWORK
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Data
 
             #endregion
 
-            return base._getValue(field, language, lookup);
+            return base.GetInternal(field, language, lookup);
         }
 
         [PrivateApi("Internal")]

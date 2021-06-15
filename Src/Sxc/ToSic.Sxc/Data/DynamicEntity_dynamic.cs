@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         public bool TryGetMember(string memberName, out object result)
         {
-            result = _getValue(memberName);
+            result = GetInternal(memberName);
             return true;
         }
 
