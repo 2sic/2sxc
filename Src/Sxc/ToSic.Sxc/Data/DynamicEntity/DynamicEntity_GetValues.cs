@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Data
         public override PropertyRequest FindPropertyInternal(string field, string[] dimensions, ILog parentLogOrNull)
         {
             var logOrNull = parentLogOrNull.SubLogOrNull("Sxc.DynEnt");
-            var wrapLog = logOrNull.SafeCall<PropertyRequest>(null);
+            var wrapLog = logOrNull.SafeCall<PropertyRequest>();
             // check Entity is null (in cases where null-objects are asked for properties)
             if (Entity == null) return wrapLog("no entity", null);
             var t = Entity.FindPropertyInternal(field, dimensions, logOrNull);

@@ -5,7 +5,6 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Data
 {
@@ -29,13 +28,9 @@ namespace ToSic.Sxc.Data
             IEntity parent, 
             string field, 
             IEnumerable<IEntity> entities, 
-            //string[] dimensions, 
-            //int compatibility, 
-            //IBlock block, 
-            //IServiceProvider serviceProvider,
             DynamicEntityDependencies dependencies
             ) 
-            : base(null, dependencies) // dimensions, compatibility, block, serviceProvider)
+            : base(null, dependencies)
         {
             _debugFieldName = field; // remember name in case we do debugging and need to know what list was accessed
             var index = 0;
