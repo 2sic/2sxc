@@ -110,7 +110,7 @@ namespace ToSic.Sxc.WebApi.App
             else ThrowIfNotAllowedInItem(itm, Grants.Update.AsSet(), Context.AppState);
 
             // Convert to case-insensitive dictionary just to be safe!
-            newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.OrdinalIgnoreCase);
+            newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.InvariantCultureIgnoreCase);
 
             // Now create the cleaned up import-dictionary so we can create a new entity
             var cleanedNewItem = new AppContentEntityBuilder(Log)

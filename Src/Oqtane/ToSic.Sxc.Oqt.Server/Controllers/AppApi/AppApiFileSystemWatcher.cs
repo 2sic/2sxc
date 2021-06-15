@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
     {
         private readonly FileSystemWatcher _watcher;
 
-        public readonly ConcurrentDictionary<string, bool> CompiledAppApiControllers = new(StringComparer.OrdinalIgnoreCase);
+        public readonly ConcurrentDictionary<string, bool> CompiledAppApiControllers = new(StringComparer.InvariantCultureIgnoreCase);
 
         public AppApiFileSystemWatcher(IHostEnvironment hostingEnvironment)
         {
