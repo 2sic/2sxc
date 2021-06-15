@@ -49,5 +49,14 @@ namespace ToSic.Sxc.Data
             bool convertLinks = true,
             bool? debug = null
         );
+
+
+        /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityGet and IDynamicStack */
+        /// <summary>
+        /// Activate debugging, so that you'll see details in [Insights](xref:NetCode.Debug.Insights.Index) how the value was retrieved.
+        /// </summary>
+        /// <param name="debug"></param>
+        void SetDebug(bool debug);
+
     }
 }
