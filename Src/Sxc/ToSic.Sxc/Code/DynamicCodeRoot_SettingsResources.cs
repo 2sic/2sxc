@@ -32,12 +32,12 @@ namespace ToSic.Sxc.Code
                 if (_settings != null) return _settings;
                 var currentAppState = ((App)_DynCodeRoot.App).AppState;
 
-                var sources = new List<KeyValuePair<string, IPropertyLookup>>();
-                
-                // View level
-                if (_DynCodeRoot.Block?.View?.Settings != null)
-                    sources.Add(new KeyValuePair<string, IPropertyLookup>(PartView, _DynCodeRoot.Block?.View?.Settings));
-                
+                var sources = new List<KeyValuePair<string, IPropertyLookup>>
+                {
+                    // View level - always add, no matter if null
+                    new KeyValuePair<string, IPropertyLookup>(PartView, _DynCodeRoot.Block?.View?.Settings)
+                };
+
                 // All in the App and below
                 sources.AddRange(currentAppState.SettingsInApp.SettingsStackForThisApp());
                 
