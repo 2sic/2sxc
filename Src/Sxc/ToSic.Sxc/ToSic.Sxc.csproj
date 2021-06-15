@@ -70,9 +70,4 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Data\DynamicEntity\" />
-    <Folder Include="Data\DynamicEntityWithList\" />
-  </ItemGroup>
-
 </Project>
