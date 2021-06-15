@@ -4,9 +4,11 @@ using System.Dynamic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Data
 {
+    
     [PrivateApi("WIP")]
     public partial class DynamicStack: DynamicEntityBase, IWrapper<IPropertyStack>, IDynamicStack
     {
@@ -35,17 +37,21 @@ namespace ToSic.Sxc.Data
         }
 
         [PrivateApi("Internal")]
-        public override PropertyRequest FindPropertyInternal(string field, string[] dimensions)
+        public override PropertyRequest FindPropertyInternal(string field, string[] dimensions, ILog parentLogOrNull)
         {
-            var result = UnwrappedContents.FindPropertyInternal(field, dimensions);
-            if (result == null) return null;
+            var logOrNull = parentLogOrNull.SubLogOrNull("Sxc.DynStk");
+
+            var wrapLog = logOrNull.SafeCall<PropertyRequest>();
+            var result = UnwrappedContents.FindPropertyInternal(field, dimensions, logOrNull);
+            if (result == null) return wrapLog("null", null);
             
-            if (!(result.Result is IEnumerable<IEntity> entityChildren)) return result;
+            if (!(result.Result is IEnumerable<IEntity> entityChildren)) 
+                return wrapLog("not entity-list", result);
             
             var navigationWrapped = entityChildren.Select(e =>
                 new EntityWithStackNavigation(e, UnwrappedContents, field, result.SourceIndex)).ToList();
             result.Result = navigationWrapped;
-            return result;
+            return wrapLog(null, result);
         }
 
         public override bool TrySetMember(SetMemberBinder binder, object value)

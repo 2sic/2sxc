@@ -8,6 +8,11 @@ namespace ToSic.Sxc.Data
     [PrivateApi]
     public interface IDynamicEntityGet
     {
+        /// <summary>
+        /// Activate debugging, so that you'll see details in [Insights](xref:NetCode.Debug.Insights.Index) how the value was retrieved.
+        /// </summary>
+        /// <param name="debug"></param>
+        void SetDebug(bool debug);
 
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityGet and IDynamicStack */
         /// <summary>
@@ -33,12 +38,15 @@ namespace ToSic.Sxc.Data
         /// </param>
         /// <param name="language">Optional language code - like "de-ch" to prioritize that language</param>
         /// <param name="convertLinks">Optionally turn off if links like file:72 are looked up to a real link. Default is true.</param>
+        /// <param name="debug">Set true to see more details in [Insights](xref:NetCode.Debug.Insights.Index) how the value was retrieved.</param>
         /// <returns>a dynamically typed result, can be string, bool, etc.</returns>
         dynamic Get(string name,
             // ReSharper disable once MethodOverloadWithOptionalParameter
             string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             string language = null,
-            bool convertLinks = true);
+            bool convertLinks = true,
+            bool? debug = null
+        );
 
     }
 }

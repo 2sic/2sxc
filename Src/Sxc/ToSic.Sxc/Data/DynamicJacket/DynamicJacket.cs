@@ -5,6 +5,7 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Data
 {
@@ -34,9 +35,9 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         [PrivateApi("Internal")]
-        public PropertyRequest FindPropertyInternal(string fieldName, string[] languages)
+        public PropertyRequest FindPropertyInternal(string fieldName, string[] languages, ILog parentLogOrNull)
         {
-            var result = FindValueOrNull(fieldName, StringComparison.InvariantCultureIgnoreCase);
+            var result = FindValueOrNull(fieldName, StringComparison.InvariantCultureIgnoreCase, parentLogOrNull);
             return new PropertyRequest {Result = result, FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic"};
         }
 
@@ -50,7 +51,7 @@ namespace ToSic.Sxc.Data
         /// <param name="key">the key, case-insensitive</param>
         /// <returns>A value (string, int etc.), <see cref="DynamicJacket"/> or <see cref="DynamicJacketList"/></returns>
         public object this[string key] 
-            => FindValueOrNull(key, StringComparison.InvariantCultureIgnoreCase);
+            => FindValueOrNull(key, StringComparison.InvariantCultureIgnoreCase, null);
 
         /// <summary>
         /// Access the properties of this object.
@@ -61,7 +62,7 @@ namespace ToSic.Sxc.Data
         public object this[string key, bool caseSensitive]
             => FindValueOrNull(key, caseSensitive 
                 ? StringComparison.Ordinal
-                : StringComparison.InvariantCultureIgnoreCase);
+                : StringComparison.InvariantCultureIgnoreCase, null);
 
 
         #region Private TryGetMember
@@ -74,12 +75,12 @@ namespace ToSic.Sxc.Data
         /// <returns>always returns true, to avoid errors</returns>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            result = FindValueOrNull(binder.Name, StringComparison.InvariantCultureIgnoreCase);
+            result = FindValueOrNull(binder.Name, StringComparison.InvariantCultureIgnoreCase, null);
             // always say it was found to prevent runtime errors
             return true;
         }
 
-        private object FindValueOrNull(string name, StringComparison comparison)
+        private object FindValueOrNull(string name, StringComparison comparison, ILog parentLogOrNull)
         {
             if (UnwrappedContents == null || !UnwrappedContents.HasValues)
                 return null;

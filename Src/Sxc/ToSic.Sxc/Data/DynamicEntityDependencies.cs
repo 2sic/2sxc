@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 
@@ -13,19 +14,20 @@ namespace ToSic.Sxc.Data
     [PrivateApi("this should all stay internal and never be public")]
     public class DynamicEntityDependencies
     {
-        internal DynamicEntityDependencies(IBlock block, IServiceProvider serviceProvider, string[] dimensions, int compatibility = 10)
+        internal DynamicEntityDependencies(IBlock block, IServiceProvider serviceProvider, string[] dimensions, ILog log, int compatibility = 10)
         {
             Dimensions = dimensions;
+            LogOrNull = log;
             CompatibilityLevel = compatibility;
             Block = block;
             ServiceProviderOrNull = block?.Context?.ServiceProvider ?? serviceProvider;
-
         }
         
         internal IBlock Block { get; }
 
 
         public string[] Dimensions { get; }
+        public ILog LogOrNull { get; }
 
         internal int CompatibilityLevel { get; }
 

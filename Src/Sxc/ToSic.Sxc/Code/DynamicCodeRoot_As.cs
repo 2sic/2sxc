@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Code
         private DynamicEntityDependencies DynamicEntityDependencies =>
             _dynamicEntityDependencies
             ?? (_dynamicEntityDependencies = new DynamicEntityDependencies(Block, _serviceProvider,
-                CmsContext.SafeLanguagePriorityCodes(), CompatibilityLevel));
+                CmsContext.SafeLanguagePriorityCodes(), Log, CompatibilityLevel));
         private DynamicEntityDependencies _dynamicEntityDependencies;
 
         /// <inheritdoc />
