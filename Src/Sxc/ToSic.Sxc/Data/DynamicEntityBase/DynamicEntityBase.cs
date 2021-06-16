@@ -119,7 +119,9 @@ namespace ToSic.Sxc.Data
         /// <param name="contents"></param>
         /// <returns></returns>
         [PrivateApi]
-        protected IDynamicEntity SubDynEntity(IEntity contents) => contents == null ? null : new DynamicEntity(contents, _Dependencies);
+        protected IDynamicEntity SubDynEntity(IEntity contents) => SubDynEntity(contents, _Dependencies);
 
+        internal static IDynamicEntity SubDynEntity(IEntity contents, DynamicEntityDependencies dependencies) 
+            => contents == null ? null : new DynamicEntity(contents, dependencies);
     }
 }

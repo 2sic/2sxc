@@ -9,11 +9,11 @@ namespace ToSic.Sxc.Data
     {
         #region Implemented features as read-only List
         public bool IsReadOnly => true;
-        public bool Contains(IDynamicEntity item) => DynEntities.Contains(item);
+        public bool Contains(IDynamicEntity item) => ListHelper.DynEntities.Contains(item);
 
-        public void CopyTo(IDynamicEntity[] array, int arrayIndex) => DynEntities.CopyTo(array, arrayIndex);
+        public void CopyTo(IDynamicEntity[] array, int arrayIndex) => ListHelper.DynEntities.CopyTo(array, arrayIndex);
 
-        public int IndexOf(IDynamicEntity item) => DynEntities.IndexOf(item);
+        public int IndexOf(IDynamicEntity item) => ListHelper.DynEntities.IndexOf(item);
 
         #endregion
 

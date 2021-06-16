@@ -21,40 +21,47 @@ namespace ToSic.Sxc.Data
     [PrivateApi]
     public partial class DynamicEntityWithList: DynamicEntity, IReadOnlyList<IDynamicEntity>
     {
-        [PrivateApi]
-        protected List<IDynamicEntity> DynEntities {
-            get
-            {
-                if (_list != null) return _list;
-                var index = 0;
-                _list = _listEntities != null // note: ATM as of 2021-06-16 this can never happen, but it will in future for single-entity use
-                    ? _listEntities
-                        .Select(e =>
-                        {
-                            // we create an Entity with some metadata-decoration, so that toolbars know it's part of a list
-                            var blockEntity = new EntityInBlock(e, _parent.EntityGuid, _parentField, index++);
-                            return SubDynEntity(blockEntity);
-                        })
-                        .ToList()
-                    : new List<IDynamicEntity> {this};
-                return _list;
-            }
-        }
+        //[PrivateApi] protected List<IDynamicEntity> DynEntities => ListHelper.DynEntities;
+        
+        //[PrivateApi]
+        //protected List<IDynamicEntity> DynEntities {
+        //    get
+        //    {
+        //        if (_list != null) return _list;
+        //        var index = 0;
+        //        _list = _listEntities != null // note: ATM as of 2021-06-16 this can never happen, but it will in future for single-entity use
+        //            ? _listEntities
+        //                .Select(e =>
+        //                {
+        //                    // we create an Entity with some metadata-decoration, so that toolbars know it's part of a list
+        //                    var blockEntity = new EntityInBlock(e, _parent.EntityGuid, _parentField, index++);
+        //                    return SubDynEntity(blockEntity);
+        //                })
+        //                .ToList()
+        //            : new List<IDynamicEntity> {this};
+        //        return _list;
+        //    }
+        //}
 
-        private List<IDynamicEntity> _list;
-        private readonly IEntity[] _listEntities;
+        //private List<IDynamicEntity> _list;
+        //private readonly IEntity[] _listEntities;
 
         // ReSharper disable once NotAccessedField.Local
-        private readonly IEntity _parent;
-        private readonly string _parentField;
+        //private readonly IEntity _parent;
+        //private readonly string _parentField;
+        internal readonly DynamicEntityListHelper ListHelper;
 
         [PrivateApi]
         internal DynamicEntityWithList(IEntity parent, string field, IEnumerable<IEntity> entities, DynamicEntityDependencies dependencies) 
             : base(null, dependencies)
         {
-            _parent = parent;
-            _parentField = field;
-            _listEntities = entities.ToArray();
+            // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
+            SetEntity(entities.FirstOrDefault() ?? PlaceHolder(parent, field));
+            
+            ListHelper = new DynamicEntityListHelper(parent, field, entities, dependencies);
+            //_parent = parent;
+            //_parentField = field;
+            //_listEntities = entities.ToArray();
             //var index = 0;
             //DynEntities = _listEntities
             //    .Select(e =>
@@ -64,20 +71,18 @@ namespace ToSic.Sxc.Data
             //        return SubDynEntity(blockEntity);
             //    })
             //    .ToList();
-            SetEntity(_listEntities.FirstOrDefault() //?.Entity
-                     // check empty list - create a dummy Entity so toolbars will know what to do
-                     ?? PlaceHolder(parent, field));
+
         }
 
-        public IEnumerator<IDynamicEntity> GetEnumerator() => DynEntities.GetEnumerator();
+        public IEnumerator<IDynamicEntity> GetEnumerator() => ListHelper.DynEntities.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public int Count => _listEntities.Length;
+        public int Count => ListHelper.DynEntities.Count;
 
         public IDynamicEntity this[int index]
         {
-            get => DynEntities[index];
+            get => ListHelper.DynEntities[index];
             // note: set must be defined for IList<IDynamicEntity>
             set => throw new NotImplementedException();
         }

@@ -9,14 +9,14 @@ namespace ToSic.Sxc.Data
     {
         #region Implemented features as read-only List
 
-        IEnumerator<object> IEnumerable<object>.GetEnumerator() => DynEntities.GetEnumerator();
-        public bool Contains(object item) => DynEntities.Contains(item);
+        IEnumerator<object> IEnumerable<object>.GetEnumerator() => ListHelper.DynEntities.GetEnumerator();
+        public bool Contains(object item) => ListHelper.DynEntities.Contains(item);
 
-        public int IndexOf(object item) => DynEntities.IndexOf(item as IDynamicEntity);
+        public int IndexOf(object item) => ListHelper.DynEntities.IndexOf(item as IDynamicEntity);
         public void CopyTo(object[] array, int arrayIndex)
         {
-            var target = new IDynamicEntity[DynEntities.Count];
-            DynEntities.CopyTo(target, arrayIndex);
+            var target = new IDynamicEntity[ListHelper.DynEntities.Count];
+            ListHelper.DynEntities.CopyTo(target, arrayIndex);
             target.CopyTo(array, arrayIndex);
         }
 

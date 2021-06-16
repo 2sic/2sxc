@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Data
             var logOrNull = parentLogOrNull.SubLogOrNull("Sxc.DynLst");
             var wrapLog = logOrNull.SafeCall<PropertyRequest>();
 
-            var dynEntityWithTitle = DynEntities.FirstOrDefault(de =>
+            var dynEntityWithTitle = ListHelper.DynEntities.FirstOrDefault(de =>
                 field.Equals(de.EntityTitle.ToString(), StringComparison.InvariantCultureIgnoreCase));
 
             if (dynEntityWithTitle == null) return wrapLog("no matching child", propRequest);
