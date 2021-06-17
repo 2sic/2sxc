@@ -28,5 +28,9 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         public string AnyStringProperty { get; }
+
+
+        /// <inheritdoc />
+        public IEnumerable<DynamicEntity> AnyTitleOfAnEntityInTheList { get; }
     }
 }
