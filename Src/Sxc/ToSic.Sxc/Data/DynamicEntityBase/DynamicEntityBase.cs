@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
@@ -104,8 +105,8 @@ namespace ToSic.Sxc.Data
             // Note 2021-06-08 if the parent is _not_ an IEntity, this will throw an error. Could happen in the DynamicStack, but that should never have such children
             if (result is IEnumerable<IEntity> children)
             {
-                log.SafeAdd($"Convert entity list to {nameof(DynamicEntityWithList)}");
-                result = new DynamicEntityWithList(parent, field, children, _Dependencies);
+                log.SafeAdd($"Convert entity list as {nameof(DynamicEntity)}");
+                result = new DynamicEntity(children.ToArray(), parent, field, _Dependencies);
             }
             
             return safeWrap(null, result);

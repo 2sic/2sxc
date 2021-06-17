@@ -1,4 +1,6 @@
-﻿using ToSic.Eav.Data;
+﻿using System;
+using System.Linq;
+using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
@@ -31,10 +33,51 @@ namespace ToSic.Sxc.Data
             var wrapLog = logOrNull.SafeCall<PropertyRequest>();
             // check Entity is null (in cases where null-objects are asked for properties)
             if (Entity == null) return wrapLog("no entity", null);
-            var t = Entity.FindPropertyInternal(field, dimensions, logOrNull);
-            t.Name = "dynamic";
-            return wrapLog(null, t);
+            var propRequest = Entity.FindPropertyInternal(field, dimensions, logOrNull);
+            if (propRequest.IsFinal)
+            {
+                propRequest.Name = "dynamic";
+                return wrapLog(null, propRequest);
+            }
+
+            return TryToNavigateToEntityInList(field, parentLogOrNull) ?? propRequest;
         }
 
+
+        /// <summary>
+        /// Special case on entity lists v12.03
+        /// If nothing was found so far, try to see if we could find a child-entity with a title matching the field
+        /// </summary>
+        /// <param name="field"></param>
+        /// <param name="parentLogOrNull"></param>
+        /// <returns></returns>
+        private PropertyRequest TryToNavigateToEntityInList(string field, ILog parentLogOrNull)
+        {
+            var logOrNull = parentLogOrNull.SubLogOrNull("Sxc.DynLst");
+            var wrapLog = logOrNull.SafeCall<PropertyRequest>();
+
+            try
+            {
+                var dynEntityWithTitle = _ListHelper.DynEntities.FirstOrDefault(de =>
+                    field.Equals(de.EntityTitle.ToString(), StringComparison.InvariantCultureIgnoreCase));
+
+                if (dynEntityWithTitle == null) return wrapLog("no matching child", null);
+
+                var result = new PropertyRequest
+                {
+                    FieldType = DataTypes.Entity,
+                    Name = field,
+                    Result = dynEntityWithTitle,
+                    Source = this,
+                    SourceIndex = 0
+                };
+
+                return wrapLog("named-entity", result);
+            }
+            catch
+            {
+                return wrapLog("error", null);
+            }
+        }
     }
 }

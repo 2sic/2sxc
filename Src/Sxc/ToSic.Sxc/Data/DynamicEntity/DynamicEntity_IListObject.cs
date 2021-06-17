@@ -4,19 +4,20 @@ using System.Linq;
 
 namespace ToSic.Sxc.Data
 {
-    // backward compatible enumeration interface for people using IList<dynamic>
-    public partial class DynamicEntityWithList : IList<object>
+    // Backward compatible enumeration interface for people using IList<dynamic>
+    
+    public partial class DynamicEntity: IList<object>
     {
         #region Implemented features as read-only List
 
-        IEnumerator<object> IEnumerable<object>.GetEnumerator() => ListHelper.DynEntities.GetEnumerator();
-        public bool Contains(object item) => ListHelper.DynEntities.Contains(item);
+        IEnumerator<object> IEnumerable<object>.GetEnumerator() => _ListHelper.DynEntities.GetEnumerator();
+        public bool Contains(object item) => _ListHelper.DynEntities.Contains(item);
 
-        public int IndexOf(object item) => ListHelper.DynEntities.IndexOf(item as IDynamicEntity);
+        public int IndexOf(object item) => _ListHelper.DynEntities.IndexOf(item as IDynamicEntity);
         public void CopyTo(object[] array, int arrayIndex)
         {
-            var target = new IDynamicEntity[ListHelper.DynEntities.Count];
-            ListHelper.DynEntities.CopyTo(target, arrayIndex);
+            var target = new IDynamicEntity[_ListHelper.DynEntities.Count];
+            _ListHelper.DynEntities.CopyTo(target, arrayIndex);
             target.CopyTo(array, arrayIndex);
         }
 
@@ -39,5 +40,6 @@ namespace ToSic.Sxc.Data
             get => (this as IList<IDynamicEntity>)[index];
             set => throw new NotImplementedException();
         }
+
     }
 }

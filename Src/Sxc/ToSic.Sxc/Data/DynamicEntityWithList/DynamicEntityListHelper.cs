@@ -12,8 +12,8 @@ namespace ToSic.Sxc.Data
     [PrivateApi]
     internal class DynamicEntityListHelper
     {
-        public readonly IEntity Parent;
-        public readonly string Field;
+        public readonly IEntity ParentOrNull;
+        public readonly string FieldOrNull;
         private readonly DynamicEntityDependencies _dependencies;
 
         public DynamicEntityListHelper(IDynamicEntity singleItem, DynamicEntityDependencies dependencies)
@@ -23,10 +23,10 @@ namespace ToSic.Sxc.Data
 
         }
         
-        public DynamicEntityListHelper(IEntity parent, string field, IEnumerable<IEntity> entities, DynamicEntityDependencies dependencies)
+        public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull,  DynamicEntityDependencies dependencies)
         {
-            Parent = parent ?? throw new ArgumentNullException(nameof(parent));
-            Field = field ?? throw new ArgumentNullException(nameof(field));
+            ParentOrNull = parentOrNull; // ?? throw new ArgumentNullException(nameof(parentOrNull));
+            FieldOrNull = fieldOrNull; // ?? throw new ArgumentNullException(nameof(fieldOrNull));
             _dependencies = dependencies ?? throw new ArgumentNullException(nameof(dependencies));
             _entities = entities?.ToArray() ?? throw new ArgumentNullException(nameof(entities));
         }
@@ -41,14 +41,20 @@ namespace ToSic.Sxc.Data
             {
                 // Case #1 & Case #2- already created before or because of Single-Item
                 if (_list != null) return _list;
-                
+
                 // Case #3 - Real sub-list
+                // If it has a parent, it should apply numbering to the things inside
+                // If not, it's coming from a stream or something and shouldn't do that
+                var reWrapWithListNumbering = ParentOrNull != null;
+
                 var index = 0;
                 return _list = _entities
                     .Select(e =>
                     {
-                        // we create an Entity with some metadata-decoration, so that toolbars know it's part of a list
-                        var blockEntity = new EntityInBlock(e, Parent.EntityGuid, Field, index++);
+                        // If we should re-wrap, we create an Entity with some metadata-decoration, so that toolbars know it's part of a list
+                        var blockEntity = reWrapWithListNumbering
+                            ? new EntityInBlock(e, ParentOrNull.EntityGuid, FieldOrNull, index++)
+                            : e;
                         return DynamicEntityBase.SubDynEntity(blockEntity, _dependencies);
                     })
                     .ToList();

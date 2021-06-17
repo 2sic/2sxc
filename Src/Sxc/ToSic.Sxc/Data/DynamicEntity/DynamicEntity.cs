@@ -1,5 +1,8 @@
-﻿using ToSic.Eav.Data;
+﻿using System.Collections.Generic;
+using System.Linq;
+using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Data
@@ -21,7 +24,26 @@ namespace ToSic.Sxc.Data
         public DynamicEntity(IEntity entity, DynamicEntityDependencies dependencies): base(dependencies)
         {
             SetEntity(entity);
+
+            // WIP new in 12.03
+            _ListHelper = new DynamicEntityListHelper(this, dependencies);
         }
+
+        internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, DynamicEntityDependencies dependencies): base(dependencies)
+        {
+            // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
+            SetEntity(list.FirstOrDefault() ?? PlaceHolder(parent, field));
+            _ListHelper = new DynamicEntityListHelper(list, parent, field, dependencies);
+        }
+
+        private EntityInBlock PlaceHolder(IEntity parent, string field)
+        {
+            var sp = _Dependencies.ServiceProviderOrNull ?? Eav.Factory.GetServiceProvider();
+            var builder = sp.Build<IDataBuilder>();
+            return new EntityInBlock(builder.FakeEntity(parent.AppId), parent.EntityGuid, field, 0);
+        }
+
+
 
         [PrivateApi]
         protected void SetEntity(IEntity entity)
@@ -29,6 +51,9 @@ namespace ToSic.Sxc.Data
             Entity = entity;
             EntityForEqualityCheck = (Entity as IEntityWrapper)?.EntityForEqualityCheck ?? Entity;
         }
+
+        // ReSharper disable once InconsistentNaming
+        internal readonly DynamicEntityListHelper _ListHelper;
 
 
         /// <inheritdoc />
