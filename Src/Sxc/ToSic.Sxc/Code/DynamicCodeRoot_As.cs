@@ -73,6 +73,8 @@ namespace ToSic.Sxc.Code
                     return AsList(dsEntities[Eav.Constants.DefaultStreamName]);
                 case IEnumerable<IEntity> iEntities:
                     return iEntities.Select(e => AsDynamic(e));
+                case IEnumerable<IDynamicEntity> dynIDynEnt:
+                    return dynIDynEnt;
                 case IEnumerable<dynamic> dynEntities:
                     return dynEntities;
                 default:

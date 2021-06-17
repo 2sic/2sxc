@@ -174,7 +174,7 @@ namespace ToSic.Sxc.Code
 
         #endregion
 
-        #region AsList 
+        #region AsList
 
         /// <summary>
         /// Converts a list of <see cref="IEntity"/> objects into a list of <see cref="IDynamicEntity"/> objects. 
