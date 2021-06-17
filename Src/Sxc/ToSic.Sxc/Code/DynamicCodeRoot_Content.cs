@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Code
 {
@@ -43,10 +44,11 @@ namespace ToSic.Sxc.Code
             if (Data == null || Block.View == null) return wrapLog("no data/block", null);
             if (!Data.Out.ContainsKey(sourceStream)) return wrapLog("stream not found", null);
 
-            var first = Data[sourceStream].List.FirstOrDefault();
-            return first == null 
+            var list = Data[sourceStream].List;
+            //var first = list.FirstOrDefault();
+            return !list.Any() // first == null 
                 ? wrapLog("first is null", null) 
-                : wrapLog("found", AsDynamic(first));
+                : wrapLog("found", new DynamicEntity(list, null, null, DynamicEntityDependencies));
         }
 
         #endregion
