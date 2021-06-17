@@ -24,6 +24,11 @@ namespace ToSic.Sxc.Data
         public dynamic GetSource(string name)
         {
             var source = UnwrappedContents.GetSource(name);
+            return SourceToDynamicEntity(source);
+        }
+
+        private IDynamicEntity SourceToDynamicEntity(IPropertyLookup source)
+        {
             if (source == null) return null;
             if (source is IDynamicEntity dynEnt) return dynEnt;
             if (source is IEntity ent) return SubDynEntity(ent);
