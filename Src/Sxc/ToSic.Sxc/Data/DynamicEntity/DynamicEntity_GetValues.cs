@@ -40,7 +40,16 @@ namespace ToSic.Sxc.Data
                 return wrapLog(null, propRequest);
             }
 
-            return TryToNavigateToEntityInList(field, parentLogOrNull) ?? propRequest;
+            var dynChildField = Entity.Type?.DynamicChildrenField;
+            
+            if (string.IsNullOrEmpty(dynChildField))
+                return propRequest; // TryToNavigateToEntityInList(field, parentLogOrNull) ?? propRequest;
+            
+            var childField = Get(dynChildField);
+            if (childField == null) return propRequest;
+            if (!(childField is DynamicEntity dynamicChild)) return propRequest; // TryToNavigateToEntityInList(field, parentLogOrNull) ?? propRequest;
+            
+            return dynamicChild.TryToNavigateToEntityInList(field, logOrNull) ?? propRequest;
         }
 
 
@@ -51,7 +60,7 @@ namespace ToSic.Sxc.Data
         /// <param name="field"></param>
         /// <param name="parentLogOrNull"></param>
         /// <returns></returns>
-        private PropertyRequest TryToNavigateToEntityInList(string field, ILog parentLogOrNull)
+        internal PropertyRequest TryToNavigateToEntityInList(string field, ILog parentLogOrNull)
         {
             var logOrNull = parentLogOrNull.SubLogOrNull("Sxc.DynLst");
             var wrapLog = logOrNull.SafeCall<PropertyRequest>();
