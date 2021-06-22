@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
@@ -35,32 +34,17 @@ namespace ToSic.Sxc.Data
             return null;
         }
 
-        public override bool TryGetMember(GetMemberBinder binder, out object result)
-        {
-            result = GetInternal(binder.Name);
-            return true;
-        }
-
         [PrivateApi("Internal")]
         public override PropertyRequest FindPropertyInternal(string field, string[] dimensions, ILog parentLogOrNull)
         {
             var logOrNull = parentLogOrNull.SubLogOrNull("Sxc.DynStk");
 
-            var wrapLog = logOrNull.SafeCall<PropertyRequest>();
+            var wrapLog = logOrNull.SafeCall<PropertyRequest>($"{nameof(field)}: {field}", "DynamicStack");
             var result = UnwrappedContents.FindPropertyInternal(field, dimensions, logOrNull);
-            if (result == null) return wrapLog("null", null);
-            
-            if (!(result.Result is IEnumerable<IEntity> entityChildren)) 
-                return wrapLog("not entity-list", result);
-            
-            var navigationWrapped = entityChildren.Select(e =>
-                new EntityWithStackNavigation(e, UnwrappedContents, field, result.SourceIndex)).ToList();
-            result.Result = navigationWrapped;
-            return wrapLog(null, result);
+            return wrapLog(result == null ? "null" : "ok", result);
         }
 
         public override bool TrySetMember(SetMemberBinder binder, object value)
             => throw new NotImplementedException($"Setting a value on {nameof(DynamicStack)} is not supported");
-
     }
 }

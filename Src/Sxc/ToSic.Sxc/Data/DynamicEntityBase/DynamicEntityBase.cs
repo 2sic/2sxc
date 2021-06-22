@@ -8,7 +8,7 @@ using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Data
 {
-    public abstract class DynamicEntityBase: DynamicObject, IDynamicEntityBase, IPropertyLookup
+    public abstract partial class DynamicEntityBase : DynamicObject, IDynamicEntityBase, IPropertyLookup
     {
         protected DynamicEntityBase(DynamicEntityDependencies dependencies) => _Dependencies = dependencies;
 
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Data
         protected virtual object GetInternal(string field, string language = null, bool lookup = true)
         {
             var log = _debug ? _Dependencies.LogOrNull : null;
-            var safeWrap = log.SafeCall<object>($"{nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookup)}:{lookup}", "Debug active");
+            var safeWrap = log.SafeCall<object>($"Type: {GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookup)}:{lookup}", "Debug: true");
             // This determines if we should access & store in cache
             var defaultMode = language == null && lookup;
 
@@ -106,7 +106,9 @@ namespace ToSic.Sxc.Data
             if (result is IEnumerable<IEntity> children)
             {
                 log.SafeAdd($"Convert entity list as {nameof(DynamicEntity)}");
-                result = new DynamicEntity(children.ToArray(), parent, field, _Dependencies);
+                var dynEnt = new DynamicEntity(children.ToArray(), parent, field, _Dependencies);
+                if(_debug) dynEnt.SetDebug(_debug);
+                result = dynEnt;
             }
             
             return safeWrap(null, result);
@@ -120,9 +122,14 @@ namespace ToSic.Sxc.Data
         /// <param name="contents"></param>
         /// <returns></returns>
         [PrivateApi]
-        protected IDynamicEntity SubDynEntity(IEntity contents) => SubDynEntity(contents, _Dependencies);
+        protected IDynamicEntity SubDynEntity(IEntity contents) => SubDynEntity(contents, _Dependencies, _debug);
 
-        internal static IDynamicEntity SubDynEntity(IEntity contents, DynamicEntityDependencies dependencies) 
-            => contents == null ? null : new DynamicEntity(contents, dependencies);
+        internal static IDynamicEntity SubDynEntity(IEntity contents, DynamicEntityDependencies dependencies, bool? debug)
+        {
+            if (contents == null) return null;
+            var result = new DynamicEntity(contents, dependencies);
+            if(debug == true) result.SetDebug(true);
+            return result;
+        }
     }
 }

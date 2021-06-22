@@ -35,9 +35,9 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         [PrivateApi("Internal")]
-        public PropertyRequest FindPropertyInternal(string fieldName, string[] languages, ILog parentLogOrNull)
+        public PropertyRequest FindPropertyInternal(string field, string[] languages, ILog parentLogOrNull)
         {
-            var result = FindValueOrNull(fieldName, StringComparison.InvariantCultureIgnoreCase, parentLogOrNull);
+            var result = FindValueOrNull(field, StringComparison.InvariantCultureIgnoreCase, parentLogOrNull);
             return new PropertyRequest {Result = result, FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic"};
         }
 

@@ -3,8 +3,7 @@ using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Data
 {
-    // These are all the bits needed by a DynamicObject in .net
-    public partial class DynamicEntity
+    public partial class DynamicEntityBase
     {
         /// <inheritdoc />
         [PrivateApi]
@@ -12,7 +11,7 @@ namespace ToSic.Sxc.Data
             => TryGetMember(binder.Name, out result);
 
         [PrivateApi]
-        public bool TryGetMember(string memberName, out object result)
+        internal bool TryGetMember(string memberName, out object result)
         {
             result = GetInternal(memberName);
             return true;

@@ -15,20 +15,23 @@ namespace ToSic.Sxc.Data
         public readonly IEntity ParentOrNull;
         public readonly string FieldOrNull;
         private readonly DynamicEntityDependencies _dependencies;
+        
+        private Func<bool?> _getDebug;
 
-        public DynamicEntityListHelper(IDynamicEntity singleItem, DynamicEntityDependencies dependencies)
+        public DynamicEntityListHelper(IDynamicEntity singleItem, Func<bool?> getDebug, DynamicEntityDependencies dependencies)
         {
             _list = new List<IDynamicEntity> {singleItem ?? throw new ArgumentException(nameof(singleItem))};
             _dependencies = dependencies ?? throw new ArgumentNullException(nameof(dependencies));
-
+            _getDebug = getDebug;
         }
         
-        public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull,  DynamicEntityDependencies dependencies)
+        public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull, Func<bool?> getDebug,  DynamicEntityDependencies dependencies)
         {
-            ParentOrNull = parentOrNull; // ?? throw new ArgumentNullException(nameof(parentOrNull));
-            FieldOrNull = fieldOrNull; // ?? throw new ArgumentNullException(nameof(fieldOrNull));
+            ParentOrNull = parentOrNull;
+            FieldOrNull = fieldOrNull;
             _dependencies = dependencies ?? throw new ArgumentNullException(nameof(dependencies));
             _entities = entities?.ToArray() ?? throw new ArgumentNullException(nameof(entities));
+            _getDebug = getDebug;
         }
         
         private List<IDynamicEntity> _list;
@@ -48,6 +51,7 @@ namespace ToSic.Sxc.Data
                 var reWrapWithListNumbering = ParentOrNull != null;
 
                 var index = 0;
+                var debug = _getDebug?.Invoke();
                 return _list = _entities
                     .Select(e =>
                     {
@@ -55,7 +59,7 @@ namespace ToSic.Sxc.Data
                         var blockEntity = reWrapWithListNumbering
                             ? new EntityInBlock(e, ParentOrNull.EntityGuid, FieldOrNull, index++)
                             : e;
-                        return DynamicEntityBase.SubDynEntity(blockEntity, _dependencies);
+                        return DynamicEntityBase.SubDynEntity(blockEntity, _dependencies, debug);
                     })
                     .ToList();
             }
