@@ -28,13 +28,11 @@ namespace ToSic.Sxc.Data
         public override PropertyRequest FindPropertyInternal(string field, string[] dimensions, ILog parentLogOrNull)
         {
             var logOrNull = parentLogOrNull.SubLogOrNull("Sxc.DynEnt");
-            var safeWrap = logOrNull.SafeCall<PropertyRequest>($"{nameof(field)}", "DynEntity");
+            var safeWrap = logOrNull.SafeCall<PropertyRequest>($"{nameof(field)}: {field}", "DynEntity");
             // check Entity is null (in cases where null-objects are asked for properties)
             if (Entity == null) return safeWrap("no entity", null);
             var propRequest = Entity.FindPropertyInternal(field, dimensions, logOrNull);
 
-            //// In special edge-cases (Settings with Sub-List Navigation) the result
-            //if (propRequest.Result is IEntity entityResult) propRequest.Result = SubDynEntity(entityResult);
             return safeWrap(null, propRequest);
         }
 
