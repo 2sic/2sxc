@@ -33,16 +33,6 @@ namespace ToSic.Sxc.Data
             if (Entity == null) return safeWrap("no entity", null);
             var propRequest = Entity.FindPropertyInternal(field, dimensions, logOrNull);
 
-            // Note 2021-06-22 believe this isn't necessary any more, because it already happens at the EntityWithStackNav level
-            //if (!propRequest.IsFinal)
-            //{
-            //    var result = Entity.TryToNavigateToEntityInList(field, this, logOrNull);
-            //    logOrNull?.SafeAdd(result == null ? "not-found" : "entity-in-list");
-            //    propRequest = result ?? propRequest;
-            //}
-            //else
-                propRequest.Name = "dynamic";
-
             //// In special edge-cases (Settings with Sub-List Navigation) the result
             //if (propRequest.Result is IEntity entityResult) propRequest.Result = SubDynEntity(entityResult);
             return safeWrap(null, propRequest);

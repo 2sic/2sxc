@@ -63,11 +63,6 @@ namespace ToSic.Sxc.Data
                 return safeWrap("link-conversion", result);
             }
 
-            // In special edge-cases (Settings with Sub-List Navigation) the result is already an Entity, but must be made dynamic
-            if (result is IEntity entityResult)
-                return safeWrap("entity, now dyn", SubDynEntity(entityResult));
-
-
             // note 2021-06-07 previously in created sub-entities with modified language-list; I think this is wrong
             // Note 2021-06-08 if the parent is _not_ an IEntity, this will throw an error. Could happen in the DynamicStack, but that should never have such children
             if (result is IEnumerable<IEntity> children)
