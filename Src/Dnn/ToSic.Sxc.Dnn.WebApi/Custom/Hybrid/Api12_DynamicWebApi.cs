@@ -55,8 +55,14 @@ namespace Custom.Hybrid
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = content;
             response.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
-            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-            response.Content.Headers.ContentDisposition.FileName = fileDownloadName;
+            // TODO: STV - make sure this is the same in Oqtane
+            if (download == false)
+                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("inline");
+            else
+            {
+                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                response.Content.Headers.ContentDisposition.FileName = fileDownloadName;
+            }
 
             return response;
         }
