@@ -3,13 +3,14 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Web;
 using ToSic.Sxc.WebApi;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
 {
-    public abstract partial class Api12: IDynamicWebApi
+    public abstract partial class Api12 : IDynamicWebApi
     {
         /// <inheritdoc />
         public dynamic File(string dontRelyOnParameterOrder = ToSic.Eav.Parameters.Protector,
@@ -54,15 +55,19 @@ namespace Custom.Hybrid
 
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = content;
-            response.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
-            // TODO: STV - make sure this is the same in Oqtane
-            if (download == false)
-                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("inline");
-            else
+
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType)
             {
-                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-                response.Content.Headers.ContentDisposition.FileName = fileDownloadName;
-            }
+                CharSet = Encoding.UTF8.WebName
+            };
+
+            // TODO: STV - make sure this is the same in Oqtane
+            response.Content.Headers.ContentDisposition = (download == false)
+                ? new ContentDispositionHeaderValue("inline")
+                : new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = fileDownloadName
+                };
 
             return response;
         }
