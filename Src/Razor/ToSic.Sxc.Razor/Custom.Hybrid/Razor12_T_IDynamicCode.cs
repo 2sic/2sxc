@@ -29,7 +29,7 @@ namespace Custom.Hybrid
         #region Link, Edit, App, Data
 
         /// <inheritdoc />
-        public ILinkHelper Link => ((IOqtLinkHelper)_DynCodeRoot.Link).Init(this as Razor12);
+        public ILinkHelper Link => _DynCodeRoot.Link;
 
         /// <inheritdoc />
         public IInPageEditingSystem Edit => _DynCodeRoot.Edit;
@@ -110,9 +110,9 @@ namespace Custom.Hybrid
 
     }
 
-    [PrivateApi]
-    public interface IOqtLinkHelper : ILinkHelper
-    {
-        ILinkHelper Init(Razor12 razorPage);
-    }
+    //[PrivateApi]
+    //public interface IOqtLinkHelper : ILinkHelper
+    //{
+    //    ILinkHelper Init(Razor12 razorPage);
+    //}
 }

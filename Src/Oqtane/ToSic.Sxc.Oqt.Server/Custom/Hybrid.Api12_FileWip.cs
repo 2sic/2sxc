@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Xml;
 using ToSic.Eav;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.WebApi;
@@ -34,6 +35,12 @@ namespace Custom.Hybrid
 
             switch (contents)
             {
+                case XmlDocument xmlDoc:
+                    var xmlStream = new MemoryStream();
+                    xmlDoc.Save(xmlStream);
+                    xmlStream.Position = 0;
+                    contentType = CustomApiHelpers.XmlContentTypeFromContent(true, contentType);
+                    return base.File(xmlStream, contentType, fileDownloadName);
                 case string stringBody:
                     contentType = CustomApiHelpers.XmlContentTypeFromContent(CustomApiHelpers.IsValidXml(stringBody), contentType);
                     return base.File( System.Text.Encoding.UTF8.GetBytes(stringBody), contentType, fileDownloadName);
