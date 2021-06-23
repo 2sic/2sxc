@@ -70,9 +70,12 @@ namespace ToSic.Sxc.Code
             CompatibilityLevel = compatibility;
             ((CmsContext) CmsContext).Update(block);
             Block = block;
-            App = block.App;
+            //App = block.App;
             Data = block.Data;
             Edit = new InPageEditingHelper(block, Log);
+
+            //Link.Init(block?.Context, App);
+            AttachAppAndInitLink(block.App);
 
             return this;
         }

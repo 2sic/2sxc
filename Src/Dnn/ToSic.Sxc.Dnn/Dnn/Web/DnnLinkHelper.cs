@@ -2,6 +2,7 @@
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.WebApi;
@@ -17,11 +18,15 @@ namespace ToSic.Sxc.Dnn.Web
         private IDnnContext _dnn;
         private IApp _app;
 
-        public DnnLinkHelper Init(IDnnContext dnn, IApp app)
+        public DnnLinkHelper(IDnnContext DnnContextOld)
         {
-            _dnn = dnn;
+            _dnn = DnnContextOld;
+        }
+
+        public void Init(IContextOfBlock context, IApp app)
+        {
+            ((DnnContextOld) _dnn).Init(context?.Module);
             _app = app;
-            return this;
         }
 
         /// <inheritdoc />

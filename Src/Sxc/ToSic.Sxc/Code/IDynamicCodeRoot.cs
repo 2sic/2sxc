@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Code
         DataSourceFactory DataSourceFactory { get; }
 
         [PrivateApi]
-        void LateAttachApp(IApp app);
+        void AttachAppAndInitLink(IApp app);
         
     }
 }

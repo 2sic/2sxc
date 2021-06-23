@@ -1,4 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Web
 {
@@ -28,5 +30,8 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <returns></returns>
         string Base();
+
+        [PrivateApi]
+        void Init(IContextOfBlock context, IApp app);
     }
 }
