@@ -18,6 +18,7 @@ namespace ToSic.Sxc.Dnn.Web
         private IDnnContext _dnn;
         private IApp _app;
 
+        [PrivateApi]
         public DnnLinkHelper(IDnnContext DnnContextOld)
         {
             _dnn = DnnContextOld;
