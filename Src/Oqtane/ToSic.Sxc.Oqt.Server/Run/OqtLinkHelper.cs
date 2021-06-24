@@ -6,6 +6,7 @@ using ToSic.Eav;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Oqt.Server.Block;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Run;
@@ -19,12 +20,14 @@ namespace ToSic.Sxc.Oqt.Server.Run
     /// The Oqtane implementation of the <see cref="ILinkHelper"/>.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public class OqtLinkHelper : IOqtLinkHelper, IHasLog
+    public class OqtLinkHelper : ILinkHelper, IHasLog
     {
         public Razor12 RazorPage { get; set; }
         private readonly IPageRepository _pageRepository;
         private readonly SiteStateInitializer _siteStateInitializer;
         private readonly OqtLinkPaths _linkPaths;
+        private IApp _app;
+        private Context.IContextOfBlock _context;
 
         public OqtLinkHelper(
             IPageRepository pageRepository,
@@ -40,12 +43,12 @@ namespace ToSic.Sxc.Oqt.Server.Run
             _linkPaths = linkPaths as OqtLinkPaths;
         }
 
-        public ILinkHelper Init(Razor12 razorPage)
+        public void Init(Context.IContextOfBlock context, IApp app)
         {
-            RazorPage = razorPage;
-            return this;
+            _context = context;
+            _app = app;
         }
-
+        
         public ILog Log { get; }
 
         /// <inheritdoc />
@@ -68,7 +71,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var alias = _siteStateInitializer.InitializedState.Alias;
             
             var pathWithQueryString = LinkHelpers.CombineApiWithQueryString(
-                _linkPaths.ApiFromSiteRoot(RazorPage.App.Folder, api).TrimPrefixSlash(),
+                _linkPaths.ApiFromSiteRoot(_app.Folder, api).TrimPrefixSlash(),
                 parameters);
 
             return $"{alias.Path}/{pathWithQueryString}";
@@ -78,7 +81,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private string PageNavigateUrl(int? pageId, string parameters)
         {
             // Use current pageId, if pageId is not specified.
-            var currentPageId = RazorPage._DynCodeRoot?.CmsContext?.Page?.Id;
+            var currentPageId = _context?.Page?.Id;
             var pid = pageId ?? currentPageId;
             if (pid == null)
                 throw new Exception($"Error, PageId is unknown, pageId: {pageId}, currentPageId: {currentPageId} .");
