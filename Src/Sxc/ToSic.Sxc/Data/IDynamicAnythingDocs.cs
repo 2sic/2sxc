@@ -24,21 +24,21 @@ namespace ToSic.Sxc.Data
         /// </summary>
         DateTime AnyDateTimeProperty { get; }
 
-        /// <summary>
-        /// A Dynamic Entity always contains an item of your data - a book, person, blog-post or a piece of content.
-        /// Since the object is dynamic, you can just use `.Tags` or whatever other property your item has.
-        /// If it's contains relationships, it will just magically work and return a list of further `DynamicEntity` objects.
-        /// If it doesn't exist, it will return null. 
-        /// </summary>
-        /// <remarks>
-        /// Very often you'll want to use LINQ to further sort or query these items.
-        /// But the Razor compiler cannot know that it got a list, so using `.Any()` or similar fails.
-        /// To fix this, put an `AsList` around it - a bit like `AsList(myThing.Tags)`.
-        /// Sometimes you'll also need to help a bit more with `AsList(myThings.Tags as object)`.
-        /// Now you can do things like `var tags = AsList(myThings.Tags as object); if (myTags.Any()) {...}`
-        /// Read more about this in the [Dnn LINQ Tutorials](https://2sxc.org/dnn-tutorials/en/razor/linq/home)
-        /// </remarks>
-        IEnumerable<DynamicEntity> AnyChildrenProperty { get; }
+        ///// <summary>
+        ///// A Dynamic Entity always contains an item of your data - a book, person, blog-post or a piece of content.
+        ///// Since the object is dynamic, you can just use `.Tags` or whatever other property your item has.
+        ///// If it's contains relationships, it will just magically work and return a list of further `DynamicEntity` objects.
+        ///// If it doesn't exist, it will return null. 
+        ///// </summary>
+        ///// <remarks>
+        ///// Very often you'll want to use LINQ to further sort or query these items.
+        ///// But the Razor compiler cannot know that it got a list, so using `.Any()` or similar fails.
+        ///// To fix this, put an `AsList` around it - a bit like `AsList(myThing.Tags)`.
+        ///// Sometimes you'll also need to help a bit more with `AsList(myThings.Tags as object)`.
+        ///// Now you can do things like `var tags = AsList(myThings.Tags as object); if (myTags.Any()) {...}`
+        ///// Read more about this in the [Dnn LINQ Tutorials](https://2sxc.org/dnn-tutorials/en/razor/linq/home)
+        ///// </remarks>
+        //IEnumerable<DynamicEntity> AnyChildrenProperty { get; }
 
         /// <summary>
         /// A Dynamic Entity always contains an item of your data - a book, person, blog-post or a piece of content.

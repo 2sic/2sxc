@@ -13,25 +13,24 @@ namespace ToSic.Sxc.Dnn.Web
     /// The DNN implementation of the <see cref="ILinkHelper"/>.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public class DnnLinkHelper : ILinkHelper
+    public class DnnLinkHelper : LinkHelper, ILinkHelper
     {
-        private IDnnContext _dnn;
-        private IApp _app;
+        [PrivateApi] private readonly IDnnContext _dnn;
 
         [PrivateApi]
-        public DnnLinkHelper(IDnnContext DnnContextOld)
+        public DnnLinkHelper(IDnnContext dnnContext)
         {
-            _dnn = DnnContextOld;
+            _dnn = dnnContext;
         }
 
-        public void Init(IContextOfBlock context, IApp app)
+        public override void Init(IContextOfBlock context, IApp app)
         {
+            base.Init(context, app);
             ((DnnContextOld) _dnn).Init(context?.Module);
-            _app = app;
         }
 
         /// <inheritdoc />
-        public string To(string dontRelyOnParameterOrder = Eav.Parameters.Protector, int? pageId = null, string parameters = null, string api = null)
+        public override string To(string dontRelyOnParameterOrder = Eav.Parameters.Protector, int? pageId = null, string parameters = null, string api = null)
         {
             // prevent incorrect use without named parameters
             Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
@@ -41,15 +40,6 @@ namespace ToSic.Sxc.Dnn.Web
             return parameters == null
                 ? _dnn.Tab.FullUrl
                 : DotNetNuke.Common.Globals.NavigateURL(pageId ?? _dnn.Tab.TabID, "", parameters);
-        }
-
-        /// <inheritdoc />
-        public string Base()
-        {
-            // helper to generate a base path which is also valid on home (special DNN behaviour)
-            const string randomxyz = "this-should-never-exist-in-the-url";
-            var basePath = To(parameters: randomxyz + "=1");
-            return basePath.Substring(0, basePath.IndexOf(randomxyz, StringComparison.Ordinal));
         }
 
         private string Api(string dontRelyOnParameterOrder = Eav.Parameters.Protector, string path = null)
@@ -69,7 +59,7 @@ namespace ToSic.Sxc.Dnn.Web
 
             var apiRoot = DnnJsApiHeader.GetApiRoots().Item2.TrimLastSlash();
 
-            return $"{apiRoot}/app/{_app.Folder}/{path}";
+            return $"{apiRoot}/app/{App.Folder}/{path}";
         }
     }
 }

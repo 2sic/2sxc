@@ -8,8 +8,11 @@ namespace ToSic.Sxc.Web
     /// Helpers to create links with parameters or base-tag links (important for SPAs)
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public interface ILinkHelper //: SexyContent.Interfaces.ILinkHelper    // inherits from old namespace for compatibility 
+    public interface ILinkHelper
     {
+        [PrivateApi("Internal")]
+        void Init(IContextOfBlock context, IApp app);
+        
         /// <summary>
         /// returns a link to the current page with parameters resolved in a way that DNN wants it
         /// </summary>
@@ -31,7 +34,22 @@ namespace ToSic.Sxc.Web
         /// <returns></returns>
         string Base();
 
+
         [PrivateApi]
-        void Init(IContextOfBlock context, IApp app);
+        string Img(
+            string url = null,
+            object settings = null,
+            object factor = null,
+            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
+            object width = null,
+            object height = null,
+            object quality = null,
+            string mode = null,
+            string scale = null,
+            string format = null,
+            object maxWidth = null,
+            object maxHeight = null,
+            object aspectRatio = null);
+
     }
 }

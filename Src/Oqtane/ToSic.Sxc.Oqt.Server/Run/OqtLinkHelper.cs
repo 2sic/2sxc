@@ -7,12 +7,10 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Oqt.Server.Block;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.WebApi;
-using Log = ToSic.Eav.Logging.Simple.Log;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
@@ -20,13 +18,13 @@ namespace ToSic.Sxc.Oqt.Server.Run
     /// The Oqtane implementation of the <see cref="ILinkHelper"/>.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public class OqtLinkHelper : ILinkHelper, IHasLog
+    public class OqtLinkHelper : LinkHelper, ILinkHelper, IHasLog
     {
         public Razor12 RazorPage { get; set; }
         private readonly IPageRepository _pageRepository;
         private readonly SiteStateInitializer _siteStateInitializer;
         private readonly OqtLinkPaths _linkPaths;
-        private IApp _app;
+        //private IApp App;
         private Context.IContextOfBlock _context;
 
         public OqtLinkHelper(
@@ -35,7 +33,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             ILinkPaths linkPaths
         )
         {
-            Log = new Log("OqtLinkHelper");
+            //Log = new Log("OqtLinkHelper");
             // TODO: logging
 
             _pageRepository = pageRepository;
@@ -43,16 +41,16 @@ namespace ToSic.Sxc.Oqt.Server.Run
             _linkPaths = linkPaths as OqtLinkPaths;
         }
 
-        public void Init(Context.IContextOfBlock context, IApp app)
+        public override void Init(Context.IContextOfBlock context, IApp app)
         {
+            base.Init(context, app);
             _context = context;
-            _app = app;
         }
         
-        public ILog Log { get; }
+        //public ILog Log { get; }
 
         /// <inheritdoc />
-        public string To(string dontRelyOnParameterOrder = Parameters.Protector, int? pageId = null, string parameters = null, string api = null)
+        public override string To(string dontRelyOnParameterOrder = Parameters.Protector, int? pageId = null, string parameters = null, string api = null)
         {
             // prevent incorrect use without named parameters
             Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
@@ -71,7 +69,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var alias = _siteStateInitializer.InitializedState.Alias;
             
             var pathWithQueryString = LinkHelpers.CombineApiWithQueryString(
-                _linkPaths.ApiFromSiteRoot(_app.Folder, api).TrimPrefixSlash(),
+                _linkPaths.ApiFromSiteRoot(App.Folder, api).TrimPrefixSlash(),
                 parameters);
 
             return $"{alias.Path}/{pathWithQueryString}";
@@ -93,13 +91,5 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return Utilities.NavigateUrl(alias.Path, page.Path, parameters ?? string.Empty);
         }
 
-        /// <inheritdoc />
-        public string Base()
-        {
-            // helper to generate a base path which is also valid on home (special DNN behaviour)
-            const string randomxyz = "this-should-never-exist-in-the-url";
-            var basePath = To(parameters: randomxyz + "=1");
-            return basePath.Substring(0, basePath.IndexOf(randomxyz, StringComparison.Ordinal));
-        }
     }
 }
