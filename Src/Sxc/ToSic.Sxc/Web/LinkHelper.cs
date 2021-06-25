@@ -53,55 +53,56 @@ namespace ToSic.Sxc.Web
             Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, $"{nameof(Image)}", $"{nameof(url)},{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
             // check common mistakes
             const string messageOnlyOneOrNone = "only one or none of these should be provided, other can be zero";
-            if (factor != null) {
-                if(width != null) 
-                    throw new ArgumentOutOfRangeException($"{nameof(factor)},{nameof(width)}", messageOnlyOneOrNone);
-                if (height != null && ImgResizeLinker.ToNullOrString(height) != "0")
-                    throw new ArgumentOutOfRangeException($"{nameof(factor)},{nameof(height)}", messageOnlyOneOrNone);
-                if(aspectRatio != null && ImgResizeLinker.ToNullOrString(aspectRatio) != "0") 
-                    throw new ArgumentOutOfRangeException($"{nameof(factor)},{nameof(aspectRatio)}", messageOnlyOneOrNone);
-            }
 
             if (aspectRatio != null && height != null)
                 throw new ArgumentOutOfRangeException($"{nameof(aspectRatio)},{nameof(height)}", messageOnlyOneOrNone);
 
-            // todo
-            // - handle aspectratio
+            // Try to pre-process parameters and prefer them
+            var wParam = ImgResizeLinker.IntOrNull(width);
+            var hParam = ImgResizeLinker.IntOrNull(height);
+            
 
             // Pre-Clean the values - all as strings
             var getSettings = settings as ICanGetNameNotFinal;
-            string wToUse = ImgResizeLinker.KeepBestParam(width, getSettings?.Get("Width"));
-            string hToUse = ImgResizeLinker.KeepBestParam(height, getSettings?.Get("Height"));
-            string arToUse = ImgResizeLinker.KeepBestParam(aspectRatio, getSettings?.Get("AspectRatio"));
-            string qToUse = ImgResizeLinker.KeepBestParam(quality, getSettings?.Get("Quality"));
+            int wSafe = wParam ?? ImgResizeLinker.IntOrNull(getSettings?.Get("Width")) ?? 0;
+            int hSafe = hParam ?? ImgResizeLinker.IntOrNull(getSettings?.Get("Height")) ?? 0;
+
+            
+            var factorFinal = ImgResizeLinker.FloatOrNull(factor) ?? 0;
+            var arFinal = ImgResizeLinker.FloatOrNull(aspectRatio) 
+                          ?? ImgResizeLinker.IntOrNull(getSettings?.Get("AspectRatio")) ?? 0;
+
+
+            // if either param h/w was null, then do a rescaling on the param which comes from the settings
+            // But ignore the other one!
+            Tuple<int, int> resizedNew = factorFinal != 0 && (wParam == null || hParam == null)
+                ? ImgResizeLinker.Rescale(wSafe, hSafe, factorFinal, arFinal, wParam == null, hParam == null)
+                : new Tuple<int, int>(wSafe, hSafe);
+
+            resizedNew = ImgResizeLinker.KeepInRangeProportional(resizedNew);
+            
+            var formToUse = ImgResizeLinker.RealStringOrNull(format);
+
+            // Aspects which aren't affected by scale
+            var qFinal = ImgResizeLinker.IntOrNull(quality)
+                         ?? ImgResizeLinker.IntOrNull(getSettings?.Get("Quality")) ?? 0;
             string mToUse = ImgResizeLinker.KeepBestParam(resizeMode, getSettings?.Get("ResizeMode"));
             string sToUse = ImgResizeLinker.KeepBestParam(scaleMode, getSettings?.Get("ScaleMode"));
-            string formToUse = ImgResizeLinker.KeepBestParam(format, null);
-            string factToUse = ImgResizeLinker.KeepBestParam(factor, null);
-            //string maxW = ImgResizeLinker.KeepBestParam(maxWidth, null);
-            //string maxH = ImgResizeLinker.KeepBestParam(maxHeight, null);
-            
-            // Range checks - all will then be 0, max, or in between
-            var wInt = ImgResizeLinker.ImgKeepInRange(wToUse, ImgResizeLinker.MaxSize); // max of ImageResizer.net
-            var hInt = ImgResizeLinker.ImgKeepInRange(hToUse, ImgResizeLinker.MaxSize);
-            //var maxWint = ImgResizeLinker.ImgKeepInRange(maxW, ImgResizeLinker.MaxSize);
-            //var maxHint = ImgResizeLinker.ImgKeepInRange(maxH, ImgResizeLinker.MaxSize);
-            var qInt = ImgResizeLinker.ImgKeepInRange(qToUse, ImgResizeLinker.MaxQuality);
-
-            Tuple<int,int> resized = ImgResizeLinker.Rescale(wInt, hInt, factToUse, arToUse);
 
             var resizer = new List<KeyValuePair<string, string>>();
-            ImgAddIfRelevant(resizer, "w", resized.Item1, "0");
-            ImgAddIfRelevant(resizer, "h", resized.Item2, "0");
-            ImgAddIfRelevant(resizer, "quality", qInt, "0");
+            ImgAddIfRelevant(resizer, "w", resizedNew.Item1, "0");
+            ImgAddIfRelevant(resizer, "h", resizedNew.Item2, "0");
+            ImgAddIfRelevant(resizer, "quality", qFinal, "0");
             ImgAddIfRelevant(resizer, "mode", mToUse);
             ImgAddIfRelevant(resizer, "scale", ImgResizeLinker.CorrectScales(sToUse));
             ImgAddIfRelevant(resizer, "format", ImgResizeLinker.CorrectFormats(formToUse));
-            //ImgAddIfRelevant(resizer, "maxwidth", maxWint, "0");
-            //ImgAddIfRelevant(resizer, "maxheight", maxHint, "0");
 
             var urlParams = string.Join("&", resizer.Select(pair => pair.Key + "=" + pair.Value));
-            return Tags.SafeUrl(url + "?" + urlParams).ToString();
+            if (!string.IsNullOrWhiteSpace(urlParams)) urlParams = "?" + urlParams;
+            
+            // todo: in future also try to combine existing params - so if the url already has a "?..." we should merge these
+            
+            return Tags.SafeUrl(url + urlParams).ToString();
         }
 
 

@@ -42,10 +42,11 @@ namespace ToSic.Sxc.Web
         /// 
         /// - All params are optional.
         /// - Some combinations are not valid - like setting a factor and a width doesn't make sense and will throw an error
+        /// - Most parameters if set to 0 will cause a reset so that this aspect is not in the URL
         /// </summary>
         /// <param name="url">The image url. Use an empty string if you want to just get the params for re-use.</param>
         /// <param name="settings">A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings </param>
-        /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5</param>
+        /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. It only affects sizes from the settings.</param>
         /// <param name="dontRelyOnParameterOrder">a helper to ensure that you must use named parameters. You shouldn't give it anything, but you must use all others like parameters: "id=47&amp;name=42"</param>
         /// <param name="width">Optional width parameter. Cannot be used if `factor` is set. Usually takes the default from the `settings`.</param>
         /// <param name="height">Optional height parameter. Can only be 0 if `factor` is set, no not specify a height. Usually takes the default from the `settings`.</param>
