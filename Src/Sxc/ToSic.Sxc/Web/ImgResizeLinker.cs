@@ -95,9 +95,10 @@ namespace ToSic.Sxc.Web
                     return "upscaleonly";
                 case "both":
                     return "both";
-                case null:
                 case "down":
                 case "downscaleonly":
+                    return "downscaleonly";
+                case null:
                 default: 
                     return null;
             }
