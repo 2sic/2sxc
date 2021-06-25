@@ -1,4 +1,5 @@
 ﻿using Custom.Hybrid;
+using Microsoft.AspNetCore.Http;
 using Oqtane.Repository;
 using Oqtane.Shared;
 using System;
@@ -23,6 +24,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public Razor12 RazorPage { get; set; }
         private readonly IPageRepository _pageRepository;
         private readonly SiteStateInitializer _siteStateInitializer;
+        private readonly IHttpContextAccessor _contextAccessor;
         private readonly OqtLinkPaths _linkPaths;
         //private IApp App;
         private Context.IContextOfBlock _context;
@@ -30,6 +32,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public OqtLinkHelper(
             IPageRepository pageRepository,
             SiteStateInitializer siteStateInitializer,
+            IHttpContextAccessor contextAccessor,
             ILinkPaths linkPaths
         )
         {
@@ -38,6 +41,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             _pageRepository = pageRepository;
             _siteStateInitializer = siteStateInitializer;
+            _contextAccessor = contextAccessor;
             _linkPaths = linkPaths as OqtLinkPaths;
         }
 
@@ -64,19 +68,23 @@ namespace ToSic.Sxc.Oqt.Server.Run
         }
 
         // Prepare Api link.
-        private string ApiNavigateUrl(string api, string parameters)
+        private string ApiNavigateUrl(string api, string parameters, bool absoluteUrl = true)
         {
             var alias = _siteStateInitializer.InitializedState.Alias;
             
             var pathWithQueryString = LinkHelpers.CombineApiWithQueryString(
-                _linkPaths.ApiFromSiteRoot(App.Folder, api).TrimPrefixSlash(),
+                _linkPaths.ApiFromSiteRoot(App.Folder, api),
                 parameters);
 
-            return $"{alias.Path}/{pathWithQueryString}";
+            var relativePath = string.IsNullOrEmpty(alias.Path)
+                ? pathWithQueryString
+                : $"/{alias.Path}{pathWithQueryString}";
+
+            return absoluteUrl ? $"{GetDomainName()}{relativePath}" : relativePath;
         }
 
         // Prepare Page link.
-        private string PageNavigateUrl(int? pageId, string parameters)
+        private string PageNavigateUrl(int? pageId, string parameters, bool absoluteUrl = true)
         {
             // Use current pageId, if pageId is not specified.
             var currentPageId = _context?.Page?.Id;
@@ -88,8 +96,19 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             var alias = _siteStateInitializer.InitializedState.Alias;
 
-            return Utilities.NavigateUrl(alias.Path, page.Path, parameters ?? string.Empty);
+            var relativePath = Utilities.NavigateUrl(alias.Path, page.Path, parameters ?? string.Empty); // NavigateUrl do not works with absolute links
+
+            return absoluteUrl ? $"{GetDomainName()}{relativePath}" : relativePath;
         }
 
+        private string GetDomainName()
+        {
+            var scheme = _contextAccessor?.HttpContext?.Request?.Scheme ?? "http";
+            var alias = _siteStateInitializer.InitializedState.Alias;
+            var domainName = string.IsNullOrEmpty(alias.Path)
+                ? alias.Name
+                : alias.Name.Substring(0, alias.Name.Length - alias.Path.Length - 1);
+            return  $"{scheme}://{domainName}";
+        }
     }
 }
