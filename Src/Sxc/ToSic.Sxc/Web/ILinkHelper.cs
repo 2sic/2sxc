@@ -56,7 +56,8 @@ namespace ToSic.Sxc.Web
         /// <param name="aspectRatio">Aspect Ratio width/height, only relevant if a `factor` is supplied. Usually takes default from the `settings` or is ignored. </param>
         /// <remarks>
         /// Usually a factor is applied to create a link which is possibly 50% of the content-width or similar.
-        /// In these cases the height is not applied but the aspectRatio is used, which usually comes from `settings` if any were provided. 
+        /// In these cases the height is not applied but the aspectRatio is used, which usually comes from `settings` if any were provided.
+        /// New in 2sxc 12.03
         /// </remarks>
         /// <returns></returns>
         [PrivateApi]
