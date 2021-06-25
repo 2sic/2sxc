@@ -36,14 +36,14 @@ namespace ToSic.Sxc.Dnn.Web
             // prevent incorrect use without named parameters
             Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
 
-            if (api != null) return Api(path: LinkHelpers.CombineApiWithQueryString(api.TrimPrefixSlash(), parameters), absoluteUrl: true);
+            if (api != null) return Api(path: LinkHelpers.CombineApiWithQueryString(api.TrimPrefixSlash(), parameters));
 
             return parameters == null
                 ? _dnn.Tab.FullUrl
-                : DotNetNuke.Common.Globals.NavigateURL(pageId ?? _dnn.Tab.TabID, "", parameters);
+                : DotNetNuke.Common.Globals.NavigateURL(pageId ?? _dnn.Tab.TabID, "", parameters); // NavigateURL returns absolute links
         }
 
-        private string Api(string dontRelyOnParameterOrder = Eav.Parameters.Protector, string path = null, bool absoluteUrl = false)
+        private string Api(string dontRelyOnParameterOrder = Eav.Parameters.Protector, string path = null, bool absoluteUrl = true)
         {
             Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Api", $"{nameof(path)}");
 
@@ -60,9 +60,14 @@ namespace ToSic.Sxc.Dnn.Web
 
             var apiRoot = DnnJsApiHeader.GetApiRoots().Item2.TrimLastSlash();
 
-            var domainName = absoluteUrl ? HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) : string.Empty;
+            var relativePath = $"{apiRoot}/app/{App.Folder}/{path}";    
 
-            return $"{domainName}{apiRoot}/app/{App.Folder}/{path}";
+            return absoluteUrl ? $"{GetDomainName()}{relativePath}" : relativePath;
+        }
+
+        private string GetDomainName()
+        {
+            return HttpContext.Current?.Request?.Url?.GetLeftPart(UriPartial.Authority) ?? string.Empty;
         }
     }
 }
