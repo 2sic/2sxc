@@ -51,6 +51,14 @@ namespace ToSic.Sxc.Oqt.Server.Block
         public IEnumerable<string> Scripts()
         {
             var list = new List<string>();
+
+            // TODO: This is quick fix, because Features are empty.
+            // v12.03, Oqtane 2.2 with Bootstrap 5 do not includes jQuery any more
+            // as Oqtane 2.1 with Bootstrap 4
+            // https://code.jquery.com/jquery-3.5.1.slim.min.js
+            // "slim" version excludes ajax and effects modules
+            list.Add($"//code.jquery.com/jquery-3.5.1.slim.min.js");
+
             if (AddJsCore) list.Add($"{OqtConstants.UiRoot}/{InpageCms.CoreJs}");
             if (AddJsEdit) list.Add($"{OqtConstants.UiRoot}/{InpageCms.EditJs}");
             //if(BlockBuilder.NamedScriptsWIP?.Contains(BlockBuilder.JsTurnOn) ?? false)
@@ -60,10 +68,11 @@ namespace ToSic.Sxc.Oqt.Server.Block
 
             if (Features.Contains(BuiltInFeatures.JQuery))
             {
-                // v12.02 don't do anything yet, Oqtane always includes jQuery as of now
+                // v12.03, Oqtane 2.2 with Bootstrap 5 do not includes jQuery any more
+                // as Oqtane 2.1 with Bootstrap 4
                 // https://code.jquery.com/jquery-3.5.1.slim.min.js
                 // "slim" version excludes ajax and effects modules
-                // list.Add($"{OqtConstants.UiRoot}/{InpageCms.TurnOnJs}");
+                list.Add($"//code.jquery.com/jquery-3.5.1.slim.min.js");
             }
 
             return list;
