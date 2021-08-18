@@ -27,5 +27,10 @@
         /// Application Setting key to ensure extended logging will expire
         /// </summary>
         public const string AdvancedLoggingTillKey = "2sxc-extended-logging-expires";
+
+        /// <summary>
+        /// AntiForgery token header name
+        /// </summary>
+        public const string AntiForgeryTokenHeaderName = "RequestVerificationToken";
     }
 }
