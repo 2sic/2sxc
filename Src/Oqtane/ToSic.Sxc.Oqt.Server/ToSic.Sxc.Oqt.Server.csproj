@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Version>12.03.00</Version>
+    <Version>12.04.00</Version>
     <Product>ToSic.Sxc</Product>
     <Authors>2sic</Authors>
     <Company>2sic</Company>
@@ -45,7 +45,7 @@
 
   <ItemGroup>
     <None Remove="Scripts\ToSic.Sxc.0.0.1.sql" />
-    <None Remove="Scripts\ToSic.Sxc.12.03.00.sql" />
+    <None Remove="Scripts\ToSic.Sxc.12.04.00.sql" />
   </ItemGroup>
 
   <ItemGroup>
