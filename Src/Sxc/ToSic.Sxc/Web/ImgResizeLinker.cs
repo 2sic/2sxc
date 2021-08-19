@@ -23,22 +23,13 @@ namespace ToSic.Sxc.Web
             // Try to pre-process parameters and prefer them
             var parms = new Tuple<int?, int?>(IntOrNull(width), IntOrNull(height));
             IfDebugLogPair("Params", parms);
-            //var wParam = IntOrNull(width);
-            //var hParam = IntOrNull(height);
-            //if (Debug) Log.Add($"Params W:{wParam}, H:{hParam}");
 
             // Pre-Clean the values - all as strings
-            //var wSettings = getSettings?.Get("Width");
-            //var hSettings = getSettings?.Get("Height");
             var set = new Tuple<dynamic, dynamic>(getSettings?.Get("Width"), getSettings?.Get("Height"));
             if(getSettings!=null) IfDebugLogPair("Settings", set);
-            //if (Debug && getSettings != null) Log.Add($"Settings W: {wSettings}, H: {hSettings}");
 
-            //int wSafe = wParam ?? IntOrNull(wSettings) ?? 0;
-            //int hSafe = hParam ?? IntOrNull(hSettings) ?? 0;
             var safe = new Tuple<int, int>(parms.Item1 ?? IntOrNull(set.Item1) ?? 0, parms.Item2 ?? IntOrNull(set.Item2) ?? 0);
             IfDebugLogPair("Safe", safe);
-            //if (Debug) Log.Add($"Safe W:{wSafe}, H:{hSafe}");
 
 
             var factorFinal = FloatOrNull(factor) ?? 0;
@@ -49,11 +40,10 @@ namespace ToSic.Sxc.Web
             // if either param h/w was null, then do a rescaling on the param which comes from the settings
             // But ignore the other one!
             var rescale = factorFinal != 0 && (parms.Item1 == null || parms.Item2 == null);
-            Tuple<int, int> resizedNew = rescale // factorFinal != 0 && (wParam == null || hParam == null)
-                ? Rescale(safe.Item1, safe.Item2, factorFinal, arFinal, parms.Item1 == null, parms.Item2 == null)
-                : safe;// new Tuple<int, int>(wSafe, hSafe);
+            Tuple<int, int> resizedNew = rescale
+                ? Rescale(safe/*.Item1, safe.Item2*/, factorFinal, arFinal, parms.Item1 == null, parms.Item2 == null)
+                : safe;
             IfDebugLogPair("Rescale", resizedNew);
-            // if (Debug) Log.Add($"Rescale: {resizedNew}; W:{resizedNew.Item1}, H:{resizedNew.Item2}");
 
             resizedNew = KeepInRangeProportional(resizedNew);
             return resizedNew;
@@ -115,28 +105,28 @@ namespace ToSic.Sxc.Web
             return (float)doubleValue;
         }
 
-        internal Tuple<int, int> Rescale(int width, int height, float factor, float aspectRatio, bool scaleW, bool scaleH)
+        internal Tuple<int, int> Rescale(Tuple<int, int> dims, /*int width, int height,*/ float factor, float aspectRatio, bool scaleW, bool scaleH)
         {
             var maybeLog = Debug ? Log : null;
             var wrapLog = maybeLog.SafeCall<Tuple<int, int>>();
 
             // Check if we have nothing to rescale
             string msgWhyNoRescale = null;
-            if (width == 0 && height == 0) msgWhyNoRescale = "w/h == 0";
+            if (dims.Item1 == 0 && dims.Item2 == 0) msgWhyNoRescale = "w/h == 0";
             if (factor == 0f || Math.Abs(factor - 1) < 0.01) msgWhyNoRescale = "Factor is 0 or 1";
             if (!scaleW && !scaleH) msgWhyNoRescale = "h/w shouldn't be scaled";
-            if (msgWhyNoRescale != null) 
-                return wrapLog(msgWhyNoRescale + ", no changes", new Tuple<int, int>(width, height));
+            if (msgWhyNoRescale != null)
+                return wrapLog(msgWhyNoRescale + ", no changes", dims);// new Tuple<int, int>(width, height));
             
             // Figure out height/width, as we're resizing, we respect the aspect ratio, unless there is none or height shouldn't be set
-            var newW = !scaleW ? width : width * factor;
-            float newH = height;
-            var doScaleH = scaleH && height != 0;
+            var newW = !scaleW ? dims.Item1 : dims.Item1 * factor;
+            float newH = dims.Item2;
+            var doScaleH = scaleH && dims.Item2 != 0;
             var useAspectRatio = aspectRatio == 0 || !(Math.Abs(aspectRatio - 1) < 0.01);
 
             maybeLog.SafeAdd($"ScaleW: {scaleW}, ScaleH: {scaleH}, Really-ScaleH:{doScaleH}, Use Aspect Ratio:{useAspectRatio}");
 
-            if (doScaleH) newH = useAspectRatio ? newW / aspectRatio : height * factor;
+            if (doScaleH) newH = useAspectRatio ? newW / aspectRatio : dims.Item2 * factor;
 
             // new - don't check here
             var intW = (int)newW;
