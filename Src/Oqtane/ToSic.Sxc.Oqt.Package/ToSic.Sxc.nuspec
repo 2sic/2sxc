@@ -18,7 +18,7 @@
     <releaseNotes>release</releaseNotes>
     <summary>2sxc 12 - CMS &amp; App-Engine for Oqtane</summary>
     <dependencies>
-      <dependency id="Oqtane.Framework" version="2.0.2" />
+      <dependency id="Oqtane.Framework" version="2.2.0" />
       <dependency id="ToSic.Imageflow.Oqtane" version="1.0.3" />
     </dependencies>
     <frameworkReferences>
