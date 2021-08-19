@@ -13,7 +13,7 @@ using ToSic.Sxc.Web.PageFeatures;
 namespace ToSic.Sxc.Oqt.Server.Block
 {
     [PrivateApi]
-    public partial class OqtAssetsAndHeaders: HasLog
+    public partial class OqtAssetsAndHeaders : HasLog
     {
         #region Constructor and DI
 
@@ -32,6 +32,10 @@ namespace ToSic.Sxc.Oqt.Server.Block
         {
             Parent = parent;
             BlockBuilder = parent?.Block?.BlockBuilder as BlockBuilder;
+
+            // Temp added here. It should be automatic later.
+            if (AddJsCore) PageService.Activate(new[] { BuiltInFeatures.Core.Key });
+            if (AddJsEdit) PageService.Activate(new[] { BuiltInFeatures.EditApi.Key });
         }
 
         protected OqtSxcViewBuilder Parent;
@@ -52,28 +56,21 @@ namespace ToSic.Sxc.Oqt.Server.Block
         {
             var list = new List<string>();
 
-            // TODO: This is quick fix, because Features are empty.
             // v12.03, Oqtane 2.2 with Bootstrap 5 do not includes jQuery any more
             // as Oqtane 2.1 with Bootstrap 4
-            // https://code.jquery.com/jquery-3.5.1.slim.min.js
-            // "slim" version excludes ajax and effects modules
-            list.Add($"//code.jquery.com/jquery-3.5.1.slim.min.js");
+            if (Features.Contains(BuiltInFeatures.JQuery))
+                list.Add($"//code.jquery.com/jquery-3.5.1.min.js");
 
-            if (AddJsCore) list.Add($"{OqtConstants.UiRoot}/{InpageCms.CoreJs}");
-            if (AddJsEdit) list.Add($"{OqtConstants.UiRoot}/{InpageCms.EditJs}");
+            if (Features.Contains(BuiltInFeatures.Core))
+                list.Add($"{OqtConstants.UiRoot}/{InpageCms.CoreJs}");
+
+            if (Features.Contains(BuiltInFeatures.EditApi))
+                list.Add($"{OqtConstants.UiRoot}/{InpageCms.EditJs}");
+
             //if(BlockBuilder.NamedScriptsWIP?.Contains(BlockBuilder.JsTurnOn) ?? false)
             // New in 12.02
-            if(Features.Contains(BuiltInFeatures.TurnOn))
+            if (Features.Contains(BuiltInFeatures.TurnOn))
                 list.Add($"{OqtConstants.UiRoot}/{InpageCms.TurnOnJs}");
-
-            if (Features.Contains(BuiltInFeatures.JQuery))
-            {
-                // v12.03, Oqtane 2.2 with Bootstrap 5 do not includes jQuery any more
-                // as Oqtane 2.1 with Bootstrap 4
-                // https://code.jquery.com/jquery-3.5.1.slim.min.js
-                // "slim" version excludes ajax and effects modules
-                list.Add($"//code.jquery.com/jquery-3.5.1.slim.min.js");
-            }
 
             return list;
         }
@@ -85,7 +82,7 @@ namespace ToSic.Sxc.Oqt.Server.Block
         public IEnumerable<string> Styles()
         {
             if (!AddCssEdit) return Array.Empty<string>();
-            var list = new List<string>  { $"{OqtConstants.UiRoot}/{InpageCms.EditCss}" };
+            var list = new List<string> { $"{OqtConstants.UiRoot}/{InpageCms.EditCss}" };
             return list;
         }
 
