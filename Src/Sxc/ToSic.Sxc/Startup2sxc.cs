@@ -86,6 +86,9 @@ namespace ToSic.Sxc
             services.TryAddTransient<IPageFeatures, PageFeatures>();
             services.TryAddSingleton<IPageFeaturesManager, PageFeaturesManager>();
 
+            // new in v12.02/12.04 Image Link Resize Helper
+            services.TryAddTransient<ImgResizeLinker>();
+
             return services;
         }
 

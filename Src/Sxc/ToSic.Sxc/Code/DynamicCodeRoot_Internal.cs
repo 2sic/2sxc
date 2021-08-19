@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Code
         public void AttachAppAndInitLink(IApp app)
         {
             App = app;
-            Link.Init(Block?.Context, App);
+            Link.Init(Block?.Context, App, Log);
         }
 
         [PrivateApi]

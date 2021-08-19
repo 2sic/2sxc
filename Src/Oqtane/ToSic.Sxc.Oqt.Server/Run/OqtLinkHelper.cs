@@ -5,7 +5,6 @@ using Oqtane.Shared;
 using System;
 using ToSic.Eav;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Oqt.Server.Plumbing;
@@ -19,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
     /// The Oqtane implementation of the <see cref="ILinkHelper"/>.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public class OqtLinkHelper : LinkHelper, ILinkHelper, IHasLog
+    public class OqtLinkHelper : LinkHelper
     {
         public Razor12 RazorPage { get; set; }
         private readonly IPageRepository _pageRepository;
@@ -33,8 +32,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
             IPageRepository pageRepository,
             SiteStateInitializer siteStateInitializer,
             IHttpContextAccessor contextAccessor,
-            ILinkPaths linkPaths
-        )
+            ILinkPaths linkPaths,
+            ImgResizeLinker imgLinker
+        ) : base(imgLinker)
         {
             //Log = new Log("OqtLinkHelper");
             // TODO: logging
@@ -45,9 +45,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
             _linkPaths = linkPaths as OqtLinkPaths;
         }
 
-        public override void Init(Context.IContextOfBlock context, IApp app)
+        public override void Init(Context.IContextOfBlock context, IApp app, ILog parentLog)
         {
-            base.Init(context, app);
+            base.Init(context, app, parentLog);
             _context = context;
         }
         

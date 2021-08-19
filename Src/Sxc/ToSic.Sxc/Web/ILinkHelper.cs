@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.Web
     public interface ILinkHelper
     {
         [PrivateApi("Internal")]
-        void Init(IContextOfBlock context, IApp app);
+        void Init(IContextOfBlock context, IApp app, ILog parentLog);
         
         /// <summary>
         /// returns a link to the current page with parameters resolved in a way that DNN wants it
@@ -37,7 +38,7 @@ namespace ToSic.Sxc.Web
         /// <summary>
         /// Generate an Image-Resizing link base on presets or custom parameters.  
         /// It will also ensure that the final url is safe, so it will encode umlauts, spaces etc.
-        ///
+        /// 
         /// Note that you can basically just use presets, or set every parameter manually.
         /// 
         /// - All params are optional.
@@ -55,6 +56,7 @@ namespace ToSic.Sxc.Web
         /// <param name="scaleMode">Optional scale-mode to allow up-scaling images like `up` or `both`. Usually takes the default from the `settings`.</param>
         /// <param name="format">Optional file format like `jpg` or `png`</param>
         /// <param name="aspectRatio">Aspect Ratio width/height, only relevant if a `factor` is supplied. Usually takes default from the `settings` or is ignored. </param>
+        /// <param name="debug">Set to true to activate detailed logging into insights</param>
         /// <remarks>
         /// Usually a factor is applied to create a link which is possibly 50% of the content-width or similar.
         /// In these cases the height is not applied but the aspectRatio is used, which usually comes from `settings` if any were provided.
@@ -77,5 +79,11 @@ namespace ToSic.Sxc.Web
             //object maxHeight = null,
             object aspectRatio = null);
 
+        /// <summary>
+        /// WIP v12.04 - not final
+        /// Should activate debugging for Link helpers
+        /// </summary>
+        /// <param name="debug"></param>
+        void SetDebug(bool debug);
     }
 }

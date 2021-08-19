@@ -2,6 +2,7 @@
 using System.Web;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
@@ -14,19 +15,19 @@ namespace ToSic.Sxc.Dnn.Web
     /// The DNN implementation of the <see cref="ILinkHelper"/>.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public class DnnLinkHelper : LinkHelper, ILinkHelper
+    public class DnnLinkHelper : LinkHelper
     {
         [PrivateApi] private readonly IDnnContext _dnn;
 
         [PrivateApi]
-        public DnnLinkHelper(IDnnContext dnnContext)
+        public DnnLinkHelper(IDnnContext dnnContext, ImgResizeLinker imgLinker): base(imgLinker)
         {
             _dnn = dnnContext;
         }
 
-        public override void Init(IContextOfBlock context, IApp app)
+        public override void Init(IContextOfBlock context, IApp app, ILog parentLog)
         {
-            base.Init(context, app);
+            base.Init(context, app, parentLog);
             ((DnnContextOld) _dnn).Init(context?.Module);
         }
 

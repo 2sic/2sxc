@@ -13,13 +13,21 @@ namespace ToSic.Sxc.Web
     [PrivateApi]
     public abstract class LinkHelper: HasLog, ILinkHelper
     {
+        private ImgResizeLinker ImgLinker { get; }
         [PrivateApi] protected IApp App;
 
-        protected LinkHelper() : base("Sxc.LnkHlp") { }
+        protected LinkHelper(ImgResizeLinker imgLinker) : base($"{Constants.SxcLogName}.LnkHlp")
+        {
+            ImgLinker = imgLinker.Init(Log);
+        }
 
-        public virtual void Init(IContextOfBlock context, IApp app) => App = app;
+        public virtual void Init(IContextOfBlock context, IApp app, ILog parentLog)
+        {
+            Log.LinkTo(parentLog);
+            App = app;
+        }
 
-        
+
         /// <inheritdoc />
         public abstract string To(string dontRelyOnParameterOrder = Eav.Parameters.Protector, 
             int? pageId = null,
@@ -36,12 +44,12 @@ namespace ToSic.Sxc.Web
             return basePath.Substring(0, basePath.IndexOf(randomxyz, StringComparison.InvariantCultureIgnoreCase));
         }
 
+        /// <inheritdoc />
         [PrivateApi]
         public string Image(string url = null,
             object settings = null,
             object factor = null,
-            string dontRelyOnParameterOrder =
-                "Rule: all params must be named (https://r.2sxc.org/named-params), Example: \'enable: true, version: 10\'",
+            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             object width = null,
             object height = null,
             object quality = null,
@@ -50,44 +58,30 @@ namespace ToSic.Sxc.Web
             string format = null,
             object aspectRatio = null)
         {
+            var wrapLog = (_debug ? Log : null).SafeCall($"{nameof(url)}:{url}");
             Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, $"{nameof(Image)}", $"{nameof(url)},{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
+            
             // check common mistakes
-            const string messageOnlyOneOrNone = "only one or none of these should be provided, other can be zero";
-
             if (aspectRatio != null && height != null)
+            {
+                wrapLog?.Invoke("error");
+                const string messageOnlyOneOrNone = "only one or none of these should be provided, other can be zero";
                 throw new ArgumentOutOfRangeException($"{nameof(aspectRatio)},{nameof(height)}", messageOnlyOneOrNone);
+            }
 
-            // Try to pre-process parameters and prefer them
-            var wParam = ImgResizeLinker.IntOrNull(width);
-            var hParam = ImgResizeLinker.IntOrNull(height);
-            
-
-            // Pre-Clean the values - all as strings
+            // Check if the settings is the expected type or null/other type
             var getSettings = settings as ICanGetNameNotFinal;
-            int wSafe = wParam ?? ImgResizeLinker.IntOrNull(getSettings?.Get("Width")) ?? 0;
-            int hSafe = hParam ?? ImgResizeLinker.IntOrNull(getSettings?.Get("Height")) ?? 0;
+            if (_debug) Log.Add($"Has Settings:{getSettings != null}");
 
-            
-            var factorFinal = ImgResizeLinker.FloatOrNull(factor) ?? 0;
-            var arFinal = ImgResizeLinker.FloatOrNull(aspectRatio) 
-                          ?? ImgResizeLinker.IntOrNull(getSettings?.Get("AspectRatio")) ?? 0;
+            var resizedNew = ImgLinker.FigureOutBestWidthAndHeight(width, height, factor, aspectRatio, getSettings);
 
-
-            // if either param h/w was null, then do a rescaling on the param which comes from the settings
-            // But ignore the other one!
-            Tuple<int, int> resizedNew = factorFinal != 0 && (wParam == null || hParam == null)
-                ? ImgResizeLinker.Rescale(wSafe, hSafe, factorFinal, arFinal, wParam == null, hParam == null)
-                : new Tuple<int, int>(wSafe, hSafe);
-
-            resizedNew = ImgResizeLinker.KeepInRangeProportional(resizedNew);
-            
-            var formToUse = ImgResizeLinker.RealStringOrNull(format);
+            var formToUse = ImgLinker.RealStringOrNull(format);
 
             // Aspects which aren't affected by scale
-            var qFinal = ImgResizeLinker.IntOrNull(quality)
-                         ?? ImgResizeLinker.IntOrNull(getSettings?.Get("Quality")) ?? 0;
-            string mToUse = ImgResizeLinker.KeepBestParam(resizeMode, getSettings?.Get("ResizeMode"));
-            string sToUse = ImgResizeLinker.KeepBestParam(scaleMode, getSettings?.Get("ScaleMode"));
+            var qFinal = ImgLinker.IntOrNull(quality)
+                         ?? ImgLinker.IntOrNull(getSettings?.Get("Quality")) ?? 0;
+            string mToUse = ImgLinker.KeepBestParam(resizeMode, getSettings?.Get("ResizeMode"));
+            string sToUse = ImgLinker.KeepBestParam(scaleMode, getSettings?.Get("ScaleMode"));
 
             var resizer = new List<KeyValuePair<string, string>>();
             ImgAddIfRelevant(resizer, "w", resizedNew.Item1, "0");
@@ -101,18 +95,36 @@ namespace ToSic.Sxc.Web
             if (!string.IsNullOrWhiteSpace(urlParams)) urlParams = "?" + urlParams;
             
             // todo: in future also try to combine existing params - so if the url already has a "?..." we should merge these
-            
-            return Tags.SafeUrl(url + urlParams).ToString();
+
+            var result = Tags.SafeUrl(url + urlParams).ToString();
+            wrapLog?.Invoke(result);
+            return result;
+        }
+
+        private bool _debug;
+        public void SetDebug(bool debug)
+        {
+            _debug = debug;
+            // Set logging on ImageResizeHelper
+            ImgLinker.Debug = debug;
         }
 
 
-        private void ImgAddIfRelevant(ICollection<KeyValuePair<string, string>> resizer, string key, object value, string irrelevant = "")
+        private bool ImgAddIfRelevant(ICollection<KeyValuePair<string, string>> resizer, string key, object value, string irrelevant = "")
         {
-            if (key == null || value == null) return;
+            var wrapLog = (_debug ? Log : null).SafeCall<bool>();
+            if (key == null || value == null)
+                return wrapLog($"Won't add '{key}', since key or value are null", false);
+
             var strValue = value.ToString();
-            if (string.IsNullOrEmpty(strValue)) return;
-            if (strValue.Equals(irrelevant, StringComparison.InvariantCultureIgnoreCase)) return;
+            if (string.IsNullOrEmpty(strValue))
+                return wrapLog($"Won't add '{key}' since value as string would be null", false);
+
+            if (strValue.Equals(irrelevant, StringComparison.InvariantCultureIgnoreCase)) 
+                return wrapLog($"Won't add '{key}' since value would be irrelevant", false);
+
             resizer.Add(new KeyValuePair<string, string>(key, strValue));
+            return wrapLog($"Added key {key}", true);
         }
     }
 }
