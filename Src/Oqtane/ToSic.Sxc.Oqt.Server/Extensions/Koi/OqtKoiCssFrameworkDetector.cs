@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.Extensions.Koi
             var oqtaneVersion = GetOqtaneVersion();
 
             // bs5 for 2.2
-            if (oqtaneVersion.Major >= 2 & oqtaneVersion.Minor >= 2)
+            if (oqtaneVersion >= new Version(2,2))
                 return Connect.Koi.CssFrameworks.Bootstrap5;
 
             // bs4 for < 2.2
