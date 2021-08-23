@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Data
     /// It will try to find a value inside each source in the order the Sources are managed. 
     /// </summary>
     /// <remarks>New in 12.02</remarks>
-    [PublicApi("Careful - still Experimental in 12.02")]
+    [PublicApi]
     public partial interface IDynamicStack
     {
         /// <summary>
