@@ -54,5 +54,18 @@ namespace ToSic.Sxc.Data
         private IValueConverter _valueConverterOrNull;
         private bool _triedToBuildValueConverter;
 
+
+        internal IDataBuilder DataBuilder
+        {
+            get
+            {
+                if (_dataBuilder != null) return _dataBuilder;
+                var sp = ServiceProviderOrNull ?? Eav.Factory.GetServiceProvider();
+                _dataBuilder = sp.Build<IDataBuilder>();
+                return _dataBuilder;
+            }
+        }
+
+        private IDataBuilder _dataBuilder;
     }
 }

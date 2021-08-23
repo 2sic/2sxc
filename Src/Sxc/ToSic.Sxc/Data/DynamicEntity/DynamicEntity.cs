@@ -38,11 +38,9 @@ namespace ToSic.Sxc.Data
 
         private EntityInBlock PlaceHolder(IEntity parent, string field)
         {
-            var sp = _Dependencies.ServiceProviderOrNull ?? Eav.Factory.GetServiceProvider();
-            var builder = sp.Build<IDataBuilder>();
-            return new EntityInBlock(builder.FakeEntity(parent.AppId), parent.EntityGuid, field, 0);
+            var dummyEntity = _Dependencies.DataBuilder.FakeEntity(parent.AppId);
+            return new EntityInBlock(dummyEntity, parent.EntityGuid, field, 0);
         }
-
 
 
         [PrivateApi]
