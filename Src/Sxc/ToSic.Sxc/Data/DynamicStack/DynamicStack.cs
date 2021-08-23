@@ -22,7 +22,10 @@ namespace ToSic.Sxc.Data
 
         public dynamic GetSource(string name)
         {
-            var source = UnwrappedContents.GetSource(name);
+            var source = UnwrappedContents.GetSource(name)
+                         // If not found, create a fake one
+                         ?? _Dependencies.DataBuilder.FakeEntity(_Dependencies.Block?.AppId ?? 0);
+
             return SourceToDynamicEntity(source);
         }
 

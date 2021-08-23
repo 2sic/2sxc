@@ -14,7 +14,10 @@ namespace ToSic.Sxc.Data
         /// Get a source object which is used in the stack. Returned as a dynamic object. 
         /// </summary>
         /// <param name="name"></param>
-        /// <returns>A dynamic object like a <see cref="IDynamicEntity"/> or similar, can also be null if the source isn't found. </returns>
+        /// <returns>A dynamic object like a <see cref="IDynamicEntity"/> or similar. If not found, it will return a source which just-works, but doesn't have data. </returns>
+        /// <remarks>
+        /// Added in 2sxc 12.03
+        /// </remarks>
         dynamic GetSource(string name);
         
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityGet and IDynamicStack */
