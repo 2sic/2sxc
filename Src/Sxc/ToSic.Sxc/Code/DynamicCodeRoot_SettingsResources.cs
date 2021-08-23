@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Code
     public partial class DynamicCodeRoot
     {
         /// <inheritdoc />
-        [PublicApi("Careful - still Experimental in 12.02")]
+        [PublicApi]
         public dynamic Resources => _resources ?? (_resources = new DynamicStack(
                 DynamicEntityDependencies,
                 new KeyValuePair<string, IPropertyLookup>(PartView, Block?.View?.Resources),
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Code
         private dynamic _resources;
 
         /// <inheritdoc />
-        [PublicApi("Careful - still Experimental in 12.02")]
+        [PublicApi]
         public dynamic Settings
         {
             get

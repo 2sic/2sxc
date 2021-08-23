@@ -229,8 +229,8 @@ namespace ToSic.Sxc.Code
         /// 
         /// 🪒 Use in Razor: `@Resources.CtaButtonLabel`
         /// </summary>
-        /// <remarks>New in 12.02 - WIP</remarks>
-        [PublicApi("Careful - still Experimental in 12.02")]
+        /// <remarks>New in 12.03</remarks>
+        [PublicApi]
         dynamic Resources { get; }
 
         /// <summary>
@@ -240,8 +240,8 @@ namespace ToSic.Sxc.Code
         /// 
         /// 🪒 Use in Razor: `Settings.ItemsPerRow`
         /// </summary>
-        /// <remarks>New in 12.02 - WIP</remarks>
-        [PublicApi("Careful - still Experimental in 12.02")]
+        /// <remarks>New in 12.03</remarks>
+        [PublicApi]
         dynamic Settings { get; }
 
         #endregion
