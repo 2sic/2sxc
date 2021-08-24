@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 
@@ -45,5 +46,12 @@ namespace ToSic.Sxc.Data
             if(debug == true) result.SetDebug(true);
             return result;
         }
+
+        #region WIP Debug system
+
+        [PrivateApi("Internal")]
+        public abstract List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull);
+
+        #endregion
     }
 }

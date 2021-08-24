@@ -1,4 +1,6 @@
-﻿using ToSic.Eav.Documentation;
+﻿using System.Collections.Generic;
+using ToSic.Eav.Documentation;
+using ToSic.Sxc.Data.Dump;
 
 namespace ToSic.Sxc.Data
 {

@@ -1,4 +1,7 @@
-﻿using ToSic.Eav.Data;
+﻿using System.Collections.Generic;
+using System.Linq;
+using ToSic.Eav.Data;
+using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
@@ -34,6 +37,19 @@ namespace ToSic.Sxc.Data
             var propRequest = Entity.FindPropertyInternal(field, dimensions, logOrNull);
 
             return safeWrap(null, propRequest);
+        }
+
+        [PrivateApi("WIP / internal")]
+        public override List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull)
+        {
+            if (Entity == null || !Entity.Attributes.Any()) return new List<PropertyDumpItem>();
+
+            return Entity._Dump(languages, path, parentLogOrNull);
+            //var result =
+            //    Entity.Attributes
+            //        .Select(att => new PropertyDumpItem { Path = path + att.Key, Value = Get(att.Key) })
+            //        .ToList();
+            //return result;
         }
 
     }

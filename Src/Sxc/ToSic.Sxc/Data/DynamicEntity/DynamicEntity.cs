@@ -2,7 +2,7 @@
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Data.Dump;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Data
@@ -54,13 +54,14 @@ namespace ToSic.Sxc.Data
         internal readonly DynamicEntityListHelper _ListHelper;
 
 
+        // ReSharper disable once InheritdocInvalidUsage
         /// <inheritdoc />
         public object EntityTitle => Entity?.Title[_Dependencies.Dimensions];
 
 
+        // ReSharper disable once InheritdocInvalidUsage
         /// <inheritdoc />
         public bool IsDemoItem => Entity is EntityInBlock entInCg && entInCg.IsDemoItem;
-
 
     }
 }

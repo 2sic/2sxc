@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 
@@ -39,6 +40,12 @@ namespace ToSic.Sxc.Data
         {
             var result = FindValueOrNull(field, StringComparison.InvariantCultureIgnoreCase, parentLogOrNull);
             return new PropertyRequest {Result = result, FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic"};
+        }
+
+        [PrivateApi("internal")]
+        public List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull)
+        {
+            return new List<PropertyDumpItem>() { new PropertyDumpItem() { Path = "Not supported on DynamicJacket" } };
         }
 
 

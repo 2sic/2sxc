@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Data
 {
-    
-    [PrivateApi("WIP")]
+    [PrivateApi("Keep implementation hidden, only publish interface")]
     public partial class DynamicStack: DynamicEntityBase, IWrapper<IPropertyStack>, IDynamicStack
     {
         public DynamicStack(DynamicEntityDependencies dependencies, params KeyValuePair<string, IPropertyLookup>[] entities) : base(dependencies)
@@ -45,6 +45,13 @@ namespace ToSic.Sxc.Data
             var wrapLog = logOrNull.SafeCall<PropertyRequest>($"{nameof(field)}: {field}", "DynamicStack");
             var result = UnwrappedContents.FindPropertyInternal(field, dimensions, logOrNull);
             return wrapLog(result == null ? "null" : "ok", result);
+        }
+
+        [PrivateApi("Internal")]
+        public override List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull)
+        {
+            if (UnwrappedContents == null) return new List<PropertyDumpItem>();
+            return UnwrappedContents._Dump(languages, path, parentLogOrNull);
         }
 
         public override bool TrySetMember(SetMemberBinder binder, object value)
