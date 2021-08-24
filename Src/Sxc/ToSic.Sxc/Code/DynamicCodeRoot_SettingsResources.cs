@@ -13,12 +13,23 @@ namespace ToSic.Sxc.Code
     {
         /// <inheritdoc />
         [PublicApi]
-        public dynamic Resources => _resources ?? (_resources = new DynamicStack(
-                AppConstants.RootNameResources,
-                DynamicEntityDependencies,
-                new KeyValuePair<string, IPropertyLookup>(PartView, Block?.View?.Resources),
-                new KeyValuePair<string, IPropertyLookup>(PartApp, App?.Resources?.Entity))
-            );
+        public dynamic Resources
+        {
+            get
+            {
+                if (_resources != null) return _resources;
+                var appState = ((App)_DynCodeRoot.App).AppState;
+
+                return _resources ?? (_resources = new DynamicStack(
+                        AppConstants.RootNameResources,
+                        DynamicEntityDependencies,
+                        appState.SettingsInApp.GetStack(false, _DynCodeRoot.Block?.View?.Resources).ToArray())
+                        //new KeyValuePair<string, IPropertyLookup>(PartView, Block?.View?.Resources),
+                        //new KeyValuePair<string, IPropertyLookup>(PartApp, App?.Resources?.Entity))
+                    );
+            }
+        }
+
         private dynamic _resources;
 
         /// <inheritdoc />
@@ -28,12 +39,12 @@ namespace ToSic.Sxc.Code
             get
             {
                 if (_settings != null) return _settings;
-                var currentAppState = ((App)_DynCodeRoot.App).AppState;
+                var appState = ((App)_DynCodeRoot.App).AppState;
                 
                 return _settings = new DynamicStack(
                     AppConstants.RootNameSettings,
                     DynamicEntityDependencies,
-                    currentAppState.SettingsInApp.SettingsStack(_DynCodeRoot.Block?.View?.Settings).ToArray());
+                    appState.SettingsInApp.GetStack(true, _DynCodeRoot.Block?.View?.Settings).ToArray());
             }
         }
 

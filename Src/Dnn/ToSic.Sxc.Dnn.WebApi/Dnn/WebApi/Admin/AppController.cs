@@ -121,7 +121,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
-        // TODO: PROTECTED ONCE READY
         public List<StackInfoDto> GetStack(int appId, string part, string key = null, Guid? view = null) 
             => GetService<AppStackBackend>().GetAll(appId, part ?? AppConstants.RootNameSettings, key, view, null);
 
