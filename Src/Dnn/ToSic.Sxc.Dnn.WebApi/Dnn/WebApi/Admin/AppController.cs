@@ -6,7 +6,6 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Apps;
@@ -14,6 +13,7 @@ using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.App;
+using ToSic.Sxc.WebApi.AppStack;
 using ToSic.Sxc.WebApi.ImportExport;
 using AppDto = ToSic.Eav.WebApi.Dto.AppDto;
 
@@ -115,6 +115,16 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
                 .Reset(zoneId, appId, PortalSettings.DefaultLanguage);
 
             return wrapLog("ok", result);
+        }
+
+        [HttpGet]
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        //[ValidateAntiForgeryToken]
+        // TODO: PROTECTED ONCE READY
+        public List<StackInfoDto> GetStack(int appId, string part = null)
+        {
+            var backend = GetService<AppStackBackend>();
+            return backend.GetStack(appId, part ?? AppConstants.RootNameSettings, null, null);
         }
 
         /// <summary>

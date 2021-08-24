@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Data
         [PrivateApi("internal")]
         public List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull)
         {
-            return new List<PropertyDumpItem>() { new PropertyDumpItem() { Path = "Not supported on DynamicJacket" } };
+            return new List<PropertyDumpItem> { new PropertyDumpItem { Path = "Not supported on DynamicJacket" } };
         }
 
 

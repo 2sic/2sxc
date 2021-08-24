@@ -5,12 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.App;
+using ToSic.Sxc.WebApi.AppStack;
 using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
@@ -35,6 +37,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         private readonly Lazy<ImportApp> _importAppLazy;
         private readonly Lazy<AppCreator> _appBuilderLazy;
         private readonly Lazy<ResetApp> _resetAppLazy;
+        private readonly IServiceProvider _serviceProvider;
         protected override string HistoryLogName => "Api.App";
 
         public AppController(
@@ -43,7 +46,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             Lazy<ExportApp> exportAppLazy,
             Lazy<ImportApp> importAppLazy,
             Lazy<AppCreator> appBuilderLazy,
-            Lazy<ResetApp> resetAppLazy
+            Lazy<ResetApp> resetAppLazy,
+            IServiceProvider serviceProvider
             )
         {
             _appsBackendLazy = appsBackendLazy;
@@ -52,6 +56,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             _importAppLazy = importAppLazy;
             _appBuilderLazy = appBuilderLazy;
             _resetAppLazy = resetAppLazy;
+            _serviceProvider = serviceProvider;
         }
 
         [HttpGet]
@@ -128,6 +133,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             return wrapLog("ok", result);
         }
 
+        [HttpGet]
+        //[ValidateAntiForgeryToken]
+
+        public List<StackInfoDto> GetStack(int appId, string part = null) =>
+            _serviceProvider.Build<AppStackBackend>()
+                .GetStack(appId, part ?? AppConstants.RootNameSettings, null, null);
+
 
         /// <summary>
         /// Used to be GET ImportExport/ExportForVersionControl
@@ -138,7 +150,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// <param name="resetAppGuid"></param>
         /// <returns></returns>
         [HttpGet]
-        [ValidateAntiForgeryToken]
+        //[Authorize(Roles = RoleNames.Admin)]
+        //[ValidateAntiForgeryToken]
         public bool SaveData(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
             => _exportAppLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
                 .SaveDataForVersionControl(appId, zoneId, includeContentGroups, resetAppGuid);

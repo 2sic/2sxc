@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Code
                 .Select(e => e as IPropertyLookup)
                 .Where(e => e !=null)
                 .Select(e => new KeyValuePair<string, IPropertyLookup>(null, e));
-            return new DynamicStack(DynamicEntityDependencies, sources.ToArray());
+            return new DynamicStack("unknown", DynamicEntityDependencies, sources.ToArray());
         }
 
 

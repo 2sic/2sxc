@@ -14,6 +14,7 @@ using ToSic.Sxc.Web.WebApi.System;
 using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.ApiExplorer;
 using ToSic.Sxc.WebApi.App;
+using ToSic.Sxc.WebApi.AppStack;
 using ToSic.Sxc.WebApi.Cms;
 using ToSic.Sxc.WebApi.ContentBlocks;
 using ToSic.Sxc.WebApi.Context;
@@ -69,6 +70,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<ImportApp>();
             services.TryAddTransient<ImportContent>();
             services.TryAddTransient<ResetApp>();
+            services.TryAddTransient<AppStackBackend>();
 
             // Small WebApi Helpers
             services.TryAddTransient<IdentifierHelper>();

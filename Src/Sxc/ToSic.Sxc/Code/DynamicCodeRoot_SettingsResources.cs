@@ -14,6 +14,7 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         [PublicApi]
         public dynamic Resources => _resources ?? (_resources = new DynamicStack(
+                AppConstants.RootNameResources,
                 DynamicEntityDependencies,
                 new KeyValuePair<string, IPropertyLookup>(PartView, Block?.View?.Resources),
                 new KeyValuePair<string, IPropertyLookup>(PartApp, App?.Resources?.Entity))
@@ -38,7 +39,10 @@ namespace ToSic.Sxc.Code
                 // All in the App and below
                 sources.AddRange(currentAppState.SettingsInApp.SettingsStackForThisApp());
                 
-                return _settings = new DynamicStack(DynamicEntityDependencies, sources.ToArray());
+                return _settings = new DynamicStack(
+                    AppConstants.RootNameSettings,
+                    DynamicEntityDependencies, 
+                    sources.ToArray());
             }
         }
 

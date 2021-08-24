@@ -43,13 +43,7 @@ namespace ToSic.Sxc.Data
         public override List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull)
         {
             if (Entity == null || !Entity.Attributes.Any()) return new List<PropertyDumpItem>();
-
             return Entity._Dump(languages, path, parentLogOrNull);
-            //var result =
-            //    Entity.Attributes
-            //        .Select(att => new PropertyDumpItem { Path = path + att.Key, Value = Get(att.Key) })
-            //        .ToList();
-            //return result;
         }
 
     }

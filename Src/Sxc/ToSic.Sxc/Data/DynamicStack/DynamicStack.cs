@@ -11,10 +11,10 @@ namespace ToSic.Sxc.Data
     [PrivateApi("Keep implementation hidden, only publish interface")]
     public partial class DynamicStack: DynamicEntityBase, IWrapper<IPropertyStack>, IDynamicStack
     {
-        public DynamicStack(DynamicEntityDependencies dependencies, params KeyValuePair<string, IPropertyLookup>[] entities) : base(dependencies)
+        public DynamicStack(string name, DynamicEntityDependencies dependencies, params KeyValuePair<string, IPropertyLookup>[] entities) : base(dependencies)
         {
             var stack = new PropertyStack();
-            stack.Init(entities);
+            stack.Init(name, entities);
             UnwrappedContents = stack;
         }
         
@@ -47,11 +47,13 @@ namespace ToSic.Sxc.Data
             return wrapLog(result == null ? "null" : "ok", result);
         }
 
+        [PrivateApi]
+
         [PrivateApi("Internal")]
         public override List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull)
         {
-            if (UnwrappedContents == null) return new List<PropertyDumpItem>();
-            return UnwrappedContents._Dump(languages, path, parentLogOrNull);
+            return UnwrappedContents?._Dump(languages, path, parentLogOrNull)
+                   ?? new List<PropertyDumpItem>();
         }
 
         public override bool TrySetMember(SetMemberBinder binder, object value)
