@@ -37,7 +37,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         private readonly Lazy<ImportApp> _importAppLazy;
         private readonly Lazy<AppCreator> _appBuilderLazy;
         private readonly Lazy<ResetApp> _resetAppLazy;
-        private readonly IServiceProvider _serviceProvider;
         protected override string HistoryLogName => "Api.App";
 
         public AppController(
@@ -46,8 +45,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             Lazy<ExportApp> exportAppLazy,
             Lazy<ImportApp> importAppLazy,
             Lazy<AppCreator> appBuilderLazy,
-            Lazy<ResetApp> resetAppLazy,
-            IServiceProvider serviceProvider
+            Lazy<ResetApp> resetAppLazy
             )
         {
             _appsBackendLazy = appsBackendLazy;
@@ -56,7 +54,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             _importAppLazy = importAppLazy;
             _appBuilderLazy = appBuilderLazy;
             _resetAppLazy = resetAppLazy;
-            _serviceProvider = serviceProvider;
         }
 
         [HttpGet]
@@ -134,11 +131,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         }
 
         [HttpGet]
-        //[ValidateAntiForgeryToken]
-
-        public List<StackInfoDto> GetStack(int appId, string part = null) =>
-            _serviceProvider.Build<AppStackBackend>()
-                .GetStack(appId, part ?? AppConstants.RootNameSettings, null, null);
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = RoleNames.Admin)]
+        public List<StackInfoDto> GetStack(int appId, string part, string key = null, Guid? view = null) =>
+            ServiceProvider.Build<AppStackBackend>()
+                .GetAll(appId, part ?? AppConstants.RootNameSettings, key, view, null);
 
 
         /// <summary>
@@ -150,8 +147,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// <param name="resetAppGuid"></param>
         /// <returns></returns>
         [HttpGet]
-        //[Authorize(Roles = RoleNames.Admin)]
-        //[ValidateAntiForgeryToken]
+        [Authorize(Roles = RoleNames.Admin)]
+        [ValidateAntiForgeryToken]
         public bool SaveData(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
             => _exportAppLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
                 .SaveDataForVersionControl(appId, zoneId, includeContentGroups, resetAppGuid);

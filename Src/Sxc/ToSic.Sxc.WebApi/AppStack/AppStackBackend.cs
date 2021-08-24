@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Debug;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.AppStack
@@ -23,38 +25,73 @@ namespace ToSic.Sxc.WebApi.AppStack
         private readonly IContextResolver _ctxResolver;
         #endregion
 
-        public List<StackInfoDto> GetStack(int appId, string name, string forView, string[] languages)
+        public List<StackInfoDto> GetAll(int appId, string part, string key, Guid? viewGuid, string[] languages)
         {
-            // ensure name is known
-            if (!AppConstants.RootNameSettings.Equals(name, StringComparison.InvariantCultureIgnoreCase))
-                throw new Exception($"Parameter '{nameof(name)}' must be {AppConstants.RootNameSettings}");
+            var results = GetStackDump(appId, part, viewGuid, languages);
 
-            // Todo: get app 
+            if (!string.IsNullOrEmpty(key))
+            {
+                var relevant = results.FirstOrDefault(r => r.Path.Equals(key, StringComparison.InvariantCultureIgnoreCase));
+                if (relevant == null) return new List<StackInfoDto>();
+                results = relevant.AllOptions;
+            }
+
+            return results
+                .Select(r => new StackInfoDto(r))
+                .ToList();
+        }
+
+        //public List<StackInfoDto> GetKey(int appId, string part, string forView, string key, string[] languages)
+        //{
+        //    var results = GetStackDump(appId, part, languages);
+
+        //    var relevant = results.FirstOrDefault(r => r.Path.Equals(key, StringComparison.InvariantCultureIgnoreCase));
+        //    if (relevant == null) return new List<StackInfoDto>();
+
+
+        //    return relevant.AllOptions
+        //        .Select(r => new StackInfoDto(r))
+        //        .ToList();
+        //}
+
+        private List<PropertyDumpItem> GetStackDump(int appId, string name, Guid? viewGuid, string[] languages)
+        {
+            // Ensure name is known
+            string realName = null;
+            if (AppConstants.RootNameSettings.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+                realName = AppConstants.RootNameSettings;
+            if (AppConstants.RootNameResources.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+                realName = AppConstants.RootNameResources;
+            if (realName == null)
+                throw new Exception(
+                    $"Parameter '{nameof(name)}' must be {AppConstants.RootNameSettings} or {AppConstants.RootNameResources}");
+
+            // Get app 
             var appState = _ctxResolver.App(appId).AppState;
 
-            // todo: build settings
-            var sources = appState.SettingsInApp.SettingsStackForThisApp();
+            // Correct languages
+            if (languages == null || !languages.Any())
+                languages = _cmsContext.SafeLanguagePriorityCodes();
+
+            IEntity viewStackPart = null;
+            if (viewGuid != null)
+            {
+                var viewEnt = appState.List.One(viewGuid.Value);
+                if (viewEnt == null) throw new Exception($"Tried to get view but not found. Guid was {viewGuid}");
+                var view = new View(viewEnt, languages, Log);
+
+                viewStackPart = realName == AppConstants.RootNameSettings ? view.Settings : view.Resources;
+            }
+
+            // Build Sources List
+            var sources = appState.SettingsInApp.SettingsStack(viewStackPart);
             var settings = new PropertyStack();
             settings.Init(AppConstants.RootNameSettings, sources.ToArray());
 
-            if (languages == null || !languages.Any()) 
-                languages = _cmsContext.SafeLanguagePriorityCodes();
 
-            // todo: generate...
+            // Dump results
             var results = settings._Dump(languages, null, Log);
-
-            return results
-                .Select(r => new StackInfoDto()
-                {
-                    Path = r.Path,
-                    Priority = r.SourcePriority,
-                    Source = r.SourceName,
-                    TotalResults = r.AllOptions?.Count ?? 0,
-                    Type = r.Property.FieldType,
-                    Value = r.Property.Result
-                })
-                .ToList();
+            return results;
         }
-        
     }
 }

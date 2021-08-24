@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
@@ -118,14 +119,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         }
 
         [HttpGet]
-        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        //[ValidateAntiForgeryToken]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [ValidateAntiForgeryToken]
         // TODO: PROTECTED ONCE READY
-        public List<StackInfoDto> GetStack(int appId, string part = null)
-        {
-            var backend = GetService<AppStackBackend>();
-            return backend.GetStack(appId, part ?? AppConstants.RootNameSettings, null, null);
-        }
+        public List<StackInfoDto> GetStack(int appId, string part, string key = null, Guid? view = null) 
+            => GetService<AppStackBackend>().GetAll(appId, part ?? AppConstants.RootNameSettings, key, view, null);
 
         /// <summary>
         /// Used to be POST ImportExport/ImportApp
