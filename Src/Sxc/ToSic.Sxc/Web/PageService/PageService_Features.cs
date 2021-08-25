@@ -3,6 +3,7 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.Web.PageService
@@ -15,6 +16,7 @@ namespace ToSic.Sxc.Web.PageService
         {
             var webRes = WebResources;
 
+            // TODO: CONTINUE HERE - NOW wEBrESOURCES IS A dYNAMIC AND WE SHOULD EASILY WORK WITH IT
             if (webRes != null)
             {
                 var siteContext = CtxResolver.Site();
@@ -56,7 +58,7 @@ namespace ToSic.Sxc.Web.PageService
             PageServiceShared.Activate(keys);
         }
 
-        private IEntity WebResources
+        private DynamicEntity WebResources
         {
             get
             {
@@ -64,32 +66,36 @@ namespace ToSic.Sxc.Web.PageService
                 var settings = SettingsStack;
                 if (settings != null)
                 {
-                    var resources = settings.FindPropertyInternal("WebResources", new string[] { null }, null);
-                    if (resources.FieldType == DataTypes.Entity && resources.Result is IEnumerable<IEntity> webResEntities)
-                        _webResources = webResEntities.FirstOrDefault();
+                    var resources = settings.Get("WebResources"); // .FindPropertyInternal("WebResources", new string[] { null }, null);
+                    if(resources != null)
+                        _webResources = resources as DynamicEntity;
+                    //if (resources.FieldType == DataTypes.Entity && resources.Result is IEnumerable<IEntity> webResEntities)
+                    //    _webResources = webResEntities.FirstOrDefault();
                 }
                 _alreadyTriedToFindWebResources = true;
                 return _webResources;
             }
         }
-        private IEntity _webResources;
+        private DynamicEntity _webResources;
         private bool _alreadyTriedToFindWebResources;
 
-        private PropertyStack SettingsStack => _settingsStack ?? (_settingsStack = LoadSettings());
-        private PropertyStack _settingsStack;
+        private DynamicStack SettingsStack => _settingsStack ?? (_settingsStack = LoadSettings());
+        private DynamicStack _settingsStack;
 
-        private PropertyStack LoadSettings()
+        private DynamicStack LoadSettings()
         {
+            return CodeRoot?.Settings as DynamicStack;
+
             // Since the IPageService is used in templates, this should always return something real
             // But just to be sure, we'll go for the null-check
-            var maybeBlock = CtxResolver.BlockOrNull();
-            var appState = maybeBlock?.AppState;
-            var sources = appState?.SettingsInApp.GetStack(true, null);
-            if (sources == null) return null;
-            var settings = new PropertyStack();
-            settings.Init(AppConstants.RootNameSettings, sources.ToArray());
+            //var maybeBlock = CtxResolver.BlockOrNull();
+            //var appState = maybeBlock?.AppState;
+            //var sources = appState?.SettingsInApp.GetStack(true, null);
+            //if (sources == null) return null;
+            //var settings = new PropertyStack();
+            //settings.Init(AppConstants.RootNameSettings, sources.ToArray());
 
-            return settings;
+            //return settings;
         }
     }
 }

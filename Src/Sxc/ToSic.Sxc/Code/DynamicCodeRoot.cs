@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Code
         {
             var newService = _serviceProvider.Build<TService>();
             if(newService is INeedsCodeRoot newWithNeeds)
-                newWithNeeds.AddBlockContext(Block);
+                newWithNeeds.AddBlockContext(this);
 
             return newService;
         }
