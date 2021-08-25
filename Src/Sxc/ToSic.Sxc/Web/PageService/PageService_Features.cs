@@ -1,6 +1,9 @@
-﻿using ToSic.Eav.Apps;
+﻿using System.Collections.Generic;
+using System.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.Web.PageService
 {
@@ -10,14 +13,67 @@ namespace ToSic.Sxc.Web.PageService
         /// <inheritdoc />
         public void Activate(params string[] keys)
         {
-            //var settings = SettingsStack;
-            //if (settings != null)
-            //{
-            //    var resources = settings.FindPropertyInternal("WebResources", null, null);
-            //}
+            var webRes = WebResources;
+
+            if (webRes != null)
+            {
+                var siteContext = CtxResolver.Site();
+                var languages = siteContext.Site.SafeLanguagePriorityCodes();
+                var keysToRemove = new List<string>();
+                foreach (var key in keys)
+                {
+                    var resSettingsProperty = webRes.FindPropertyInternal(key, languages, null);
+                    if (!resSettingsProperty.IsFinal || !(resSettingsProperty.Result is IEnumerable<IEntity> listSettings)) continue;
+                    
+                    var resSettings = listSettings.FirstOrDefault();
+                    if (resSettings == null) continue;
+
+                    var enabledProp = resSettings.FindPropertyInternal("Enabled", languages, null);
+                    if (!enabledProp.IsFinal || enabledProp.FieldType != DataTypes.Boolean) continue;
+
+                    var enabled = enabledProp.Result as bool?;
+                    if (enabled == false) continue;
+
+                    var htmlProp = resSettings.FindPropertyInternal("Html", languages, null);
+                    if (!htmlProp.IsFinal || enabledProp.FieldType != DataTypes.String) continue;
+
+                    var html = htmlProp.Result as string;
+                    if (html == null) continue;
+
+                    // all ok so far
+                    keysToRemove.Add(key);
+                    (PageServiceShared.Features as PageFeatures.PageFeatures).ManualFeatures.Add(new PageFeature(
+                        key, 
+                        "manual",
+                        "manual-description",
+                        html: html));
+                }
+
+                // drop keys which were already taken care of
+                keys = keys.Where(k => !keysToRemove.Contains(k)).ToArray();
+            }
 
             PageServiceShared.Activate(keys);
         }
+
+        private IEntity WebResources
+        {
+            get
+            {
+                if (_alreadyTriedToFindWebResources) return _webResources;
+                var settings = SettingsStack;
+                if (settings != null)
+                {
+                    var resources = settings.FindPropertyInternal("WebResources", new string[] { null }, null);
+                    if (resources.FieldType == DataTypes.Entity && resources.Result is IEnumerable<IEntity> webResEntities)
+                        _webResources = webResEntities.FirstOrDefault();
+                }
+                _alreadyTriedToFindWebResources = true;
+                return _webResources;
+            }
+        }
+        private IEntity _webResources;
+        private bool _alreadyTriedToFindWebResources;
 
         private PropertyStack SettingsStack => _settingsStack ?? (_settingsStack = LoadSettings());
         private PropertyStack _settingsStack;
@@ -28,8 +84,6 @@ namespace ToSic.Sxc.Web.PageService
             // But just to be sure, we'll go for the null-check
             var maybeBlock = CtxResolver.BlockOrNull();
             var appState = maybeBlock?.AppState;
-            var siteContext = CtxResolver.Site();
-            var languages = siteContext.Site.SafeLanguagePriorityCodes();
             var sources = appState?.SettingsInApp.GetStack(true, null);
             if (sources == null) return null;
             var settings = new PropertyStack();

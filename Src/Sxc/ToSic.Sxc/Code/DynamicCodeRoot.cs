@@ -58,7 +58,14 @@ namespace ToSic.Sxc.Code
 
 
         /// <inheritdoc />
-        public TService GetService<TService>() => _serviceProvider.Build<TService>();
+        public TService GetService<TService>()
+        {
+            var newService = _serviceProvider.Build<TService>();
+            if(newService is INeedsCodeRoot newWithNeeds)
+                newWithNeeds.AddBlockContext(Block);
+
+            return newService;
+        }
 
         [PrivateApi]
         public virtual IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)

@@ -15,10 +15,12 @@ namespace ToSic.Sxc.Web.PageFeatures
             List<Link> styleFiles = null,
             List<Script> scripts = null, 
             List<Style> styles = null,
-            string[] requires = null)
+            string[] requires = null,
+            string html = null)
         {
             Key = key ?? throw new Exception("key is required");
             Name = name ?? throw new Exception("name is required");
+            Html = html;
             Description = description ?? "";
             ScriptFiles = scriptFiles ?? new List<Script>();
             StyleFiles = styleFiles ?? new List<Link>();
@@ -36,7 +38,9 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// Name of this feature. 
         /// </summary>
         public string Name { get; }
-        
+
+        public string Html { get; }
+
         /// <summary>
         /// Nice description of the feature.
         /// </summary>

@@ -30,6 +30,9 @@ namespace ToSic.Sxc.Web.PageFeatures
             
         }
 
+
+        public List<IPageFeature> ManualFeatures { get; } = new List<IPageFeature>();
+
         public List<string> ActiveKeys { get; } = new List<string>();
         
         
