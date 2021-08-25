@@ -9,18 +9,18 @@ namespace ToSic.Sxc.Web.PageFeatures
     public class PageFeatures: IPageFeatures
     {
         private readonly IPageFeaturesManager _pfm;
-        public IPageService Parent { get; private set; }
+        //public IPageService Parent { get; private set; }
         
         public PageFeatures(IPageFeaturesManager pfm)
         {
             _pfm = pfm;
         }
         
-        public IPageFeatures Init(IPageService parent)
-        {
-            Parent = parent;
-            return this;
-        }
+        //public IPageFeatures Init(IPageService parent)
+        //{
+        //    Parent = parent;
+        //    return this;
+        //}
        
         /// <inheritdoc />
         public void Activate(params string[] keys)
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Web.PageFeatures
             // if (_features != null) return _features;
             var wrapLog = log.Call<List<IPageFeature>>();
             log.Add("Try to get new specs from IPageService");
-            var features = Parent.Features.GetKeysAndFlush();
+            var features = GetKeysAndFlush();
             log.Add($"Got {features.Count} items");
             var unfolded = _pfm.GetWithDependents(features);
             log.Add($"Got unfolded features {unfolded.Count}");

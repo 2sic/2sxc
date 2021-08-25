@@ -9,13 +9,19 @@ namespace ToSic.Sxc.Web.PageService
     /// </summary>
     public partial class PageServiceShared: IChangeQueue
     {
+        public PageServiceShared(IPageFeatures features)
+        {
+            Features = features;
+        }
+        
+
         /// <summary>
         /// How the changes given to this object should be processed.
         /// </summary>
         [WorkInProgressApi("not final yet")]
         public PageChangeModes ChangeMode { get; set; } = PageChangeModes.Auto;
 
-        [PrivateApi]
+        [PrivateApi("not final yet")]
         protected PageChangeModes GetMode(PageChangeModes modeForAuto)
         {
             switch (ChangeMode)

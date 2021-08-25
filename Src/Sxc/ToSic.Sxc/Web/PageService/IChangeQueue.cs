@@ -23,5 +23,8 @@ namespace ToSic.Sxc.Web.PageService
 
         int? HttpStatusCode { get; set; }
         string HttpStatusMessage { get; set; }
+
+        IPageFeatures Features { get; }
+
     }
 }

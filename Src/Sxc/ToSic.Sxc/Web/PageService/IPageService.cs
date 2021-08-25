@@ -146,8 +146,8 @@ namespace ToSic.Sxc.Web
         /// <param name="keys"></param>
         void Activate(params string[] keys);
 
-        [PrivateApi]
-        IPageFeatures Features { get; }
+        //[PrivateApi]
+        //IPageFeatures Features { get; }
 
         #endregion
     }

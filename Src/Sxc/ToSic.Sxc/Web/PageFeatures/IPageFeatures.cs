@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Web
     [PrivateApi("not public ATM")]
     public interface IPageFeatures
     {
-        IPageFeatures Init(IPageService pageService);
+        //IPageFeatures Init(IPageService pageService);
         
         void Activate(params string[] keys);
         

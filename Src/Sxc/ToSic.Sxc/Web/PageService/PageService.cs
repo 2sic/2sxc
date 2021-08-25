@@ -1,15 +1,17 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Web.PageService
 {
     public partial class PageService: IPageService
     {
         public PageServiceShared PageServiceShared { get; }
+        public IContextResolver CtxResolver { get; }
 
-        public PageService(IPageFeatures features, PageServiceShared pageServiceShared)
+        public PageService(PageServiceShared pageServiceShared, IContextResolver ctxResolver)
         {
             PageServiceShared = pageServiceShared;
-            Features = features.Init(this);
+            CtxResolver = ctxResolver;
         }
 
         /// <summary>

@@ -5,7 +5,8 @@ using ToSic.Razor.Html5;
 namespace ToSic.Sxc.Web.PageFeatures
 {
     /// <summary>
-    /// A feature describes something that can be enabled on a page. It can be a script, some css, an inline JS or combinations thereof. 
+    /// A feature describes something that can be enabled on a page. It can be a script, some css, an inline JS or combinations thereof.
+    /// This is just the information which is prepared. It will be in a list of features to activate.
     /// </summary>
     public class PageFeature : IPageFeature
     {

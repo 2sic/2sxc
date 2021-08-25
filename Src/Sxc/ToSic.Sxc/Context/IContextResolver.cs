@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Context
 {
     /// <summary>
     /// This provides other systems with a context
-    /// Note that it's important to always make this scoped, not transient, as there is some re-use after initialization
+    /// Note that it's important to always make this **Scoped**, not transient, as there is some re-use after initialization
     /// </summary>
     public interface IContextResolver: IHasLog<IContextResolver>
     {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.WebApi.Dto;
@@ -15,13 +16,11 @@ namespace ToSic.Sxc.WebApi.AppStack
 
         #region Constructor / DI
 
-        public AppStackBackend(IServiceProvider serviceProvider, ICmsContext cmsContext, IContextResolver ctxResolver) : base(serviceProvider, "Sxc.ApiApQ")
+        public AppStackBackend(IServiceProvider serviceProvider, IContextResolver ctxResolver) : base(serviceProvider, "Sxc.ApiApQ")
         {
-            _cmsContext = cmsContext;
             _ctxResolver = ctxResolver;
         }
 
-        private readonly ICmsContext _cmsContext;
         private readonly IContextResolver _ctxResolver;
         #endregion
 
@@ -55,10 +54,11 @@ namespace ToSic.Sxc.WebApi.AppStack
 
             // Get app 
             var appState = _ctxResolver.App(appId).AppState;
+            var siteContext = _ctxResolver.Site();
 
             // Correct languages
             if (languages == null || !languages.Any())
-                languages = _cmsContext.SafeLanguagePriorityCodes();
+                languages = siteContext.Site.SafeLanguagePriorityCodes();
 
             IEntity viewStackPart = null;
             if (viewGuid != null)

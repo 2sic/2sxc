@@ -18,15 +18,15 @@ namespace ToSic.Sxc.Oqt.Server.Block
     {
         #region Constructor and DI
 
-        public OqtAssetsAndHeaders(SiteState siteState, IPageService pageService, PageServiceShared pageServiceShared, IPageFeaturesManager pageFm) : base($"{OqtConstants.OqtLogPrefix}.AssHdr")
+        public OqtAssetsAndHeaders(SiteState siteState, /*IPageService pageService,*/ PageServiceShared pageServiceShared, IPageFeaturesManager pageFm) : base($"{OqtConstants.OqtLogPrefix}.AssHdr")
         {
             _siteState = siteState;
-            PageService = pageService;
+            //PageService = pageService;
             PageServiceShared = pageServiceShared;
             _pageFm = pageFm;
         }
         private readonly SiteState _siteState;
-        private IPageService PageService { get; }
+        //private IPageService PageService { get; }
         public PageServiceShared PageServiceShared { get; }
         private readonly IPageFeaturesManager _pageFm;
 
@@ -37,8 +37,8 @@ namespace ToSic.Sxc.Oqt.Server.Block
             BlockBuilder = parent?.Block?.BlockBuilder as BlockBuilder;
 
             // Temp added here. It should be automatic later.
-            if (AddJsCore) PageService.Activate(new[] { BuiltInFeatures.Core.Key });
-            if (AddJsEdit) PageService.Activate(new[] { BuiltInFeatures.EditApi.Key });
+            if (AddJsCore) PageServiceShared.Activate(BuiltInFeatures.Core.Key);
+            if (AddJsEdit) PageServiceShared.Activate(BuiltInFeatures.EditApi.Key);
         }
 
         protected OqtSxcViewBuilder Parent;
@@ -93,7 +93,7 @@ namespace ToSic.Sxc.Oqt.Server.Block
         public static string GetSiteRoot(SiteState siteState)
             => siteState?.Alias?.Name == null ? OqtConstants.SiteRoot : new Uri($"http://{siteState.Alias.Name}/").AbsolutePath.SuffixSlash();
 
-        internal List<IPageFeature> Features => _features ??= PageService.Features.GetWithDependentsAndFlush(Log);
+        internal List<IPageFeature> Features => _features ??= /*PageService*/PageServiceShared.Features.GetWithDependentsAndFlush(Log);
         private List<IPageFeature> _features;
 
 

@@ -12,12 +12,14 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.PageFeatures;
+using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Dnn.Web
 {
     public class DnnClientResources: HasLog
     {
-        private readonly IPageService _pageService;
+        public PageServiceShared PageServiceShared { get; }
+        //private readonly IPageService _pageService;
         protected BlockBuilder BlockBuilder;
         protected Page Page;
         protected DnnJsApiHeader Header;
@@ -25,9 +27,10 @@ namespace ToSic.Sxc.Dnn.Web
         /// <summary>
         /// DI Constructor
         /// </summary>
-        public DnnClientResources(IPageService pageService): base($"{DnnConstants.LogName}.JsCss")
+        public DnnClientResources(/*IPageService pageService,*/ PageServiceShared pageServiceShared): base($"{DnnConstants.LogName}.JsCss")
         {
-            _pageService = pageService;
+            PageServiceShared = pageServiceShared;
+            //_pageService = pageService;
         }
         
         public DnnClientResources Init(Page page, IBlockBuilder blockBuilder, ILog parentLog)
@@ -40,7 +43,7 @@ namespace ToSic.Sxc.Dnn.Web
         }
 
 
-        internal List<IPageFeature> Features => _features ?? (_features = _pageService.Features.GetWithDependentsAndFlush(Log));
+        internal List<IPageFeature> Features => _features ?? (_features = /*_pageService*/PageServiceShared.Features.GetWithDependentsAndFlush(Log));
 
         private List<IPageFeature> _features;
 
