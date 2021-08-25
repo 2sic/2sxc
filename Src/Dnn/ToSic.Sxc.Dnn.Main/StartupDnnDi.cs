@@ -127,7 +127,7 @@ namespace ToSic.SexyContent
             
             // new in v12.02 - RazorBlade DI
             //services.TryAddScoped<IPageChangeApplicator, DnnPageChanges>();
-            services.TryAddScoped<DnnPageChanges, DnnPageChanges>();
+            services.TryAddScoped<DnnPageChanges>();
             services.TryAddTransient<DnnClientResources>();
 
             return services;

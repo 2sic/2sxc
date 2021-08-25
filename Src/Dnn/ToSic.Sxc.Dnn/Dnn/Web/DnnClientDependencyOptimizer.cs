@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Dnn.Web
             Log.Add($"Applied {changes} changes");
 
             Log.Add("Will apply Header Status-Code changes if needed");
-            var pageServiceWithInternals = _pageChanges.PageService as Sxc.Web.PageService.PageService;
+            var pageServiceWithInternals = _pageChanges.PageServiceShared; // as Sxc.Web.PageService.PageService;
             if (page?.Response != null && pageServiceWithInternals?.HttpStatusCode != null)
             {
                 var code = pageServiceWithInternals.HttpStatusCode.Value;

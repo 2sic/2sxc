@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.Block
         {
             var wrapLog = Log.Call<IEnumerable<OqtPagePropertyChanges>>();
             // If we get something invalid, return 0 (nothing changed)
-            if (!(PageService is IChangeQueue changes)) return wrapLog($"not {nameof(IChangeQueue)}", new OqtPagePropertyChanges[] { });
+            if (!(PageServiceShared is IChangeQueue changes)) return wrapLog($"not {nameof(IChangeQueue)}", new OqtPagePropertyChanges[] { });
 
             var props = changes.GetPropertyChangesAndFlush();
             var result = new List<OqtPagePropertyChanges>();

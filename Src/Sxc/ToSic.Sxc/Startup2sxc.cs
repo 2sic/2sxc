@@ -13,6 +13,7 @@ using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.JsContext;
 using ToSic.Sxc.Web.PageFeatures;
+using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc
 {
@@ -82,7 +83,8 @@ namespace ToSic.Sxc
             services.TryAddTransient<Polymorphism.Polymorphism>();
 
             // new in v12.02 - PageService & Page Features
-            services.TryAddScoped<IPageService, Web.PageService.PageService>();
+            services.TryAddTransient<IPageService, PageService>();  // must be unique per module where it's used
+            services.TryAddScoped<PageServiceShared>();             // must be scoped / shared across all modules
             services.TryAddTransient<IPageFeatures, PageFeatures>();
             services.TryAddSingleton<IPageFeaturesManager, PageFeaturesManager>();
 

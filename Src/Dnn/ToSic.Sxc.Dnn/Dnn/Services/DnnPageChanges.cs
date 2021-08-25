@@ -9,11 +9,13 @@ namespace ToSic.Sxc.Dnn.Services
     [PrivateApi]
     public class DnnPageChanges : HasLog<DnnPageChanges> // , IPageChangeApplicator
     {
-        public IPageService PageService { get; }
+        //public IPageService PageService { get; }
+        public PageServiceShared PageServiceShared { get; }
 
-        public DnnPageChanges(IPageService pageChanges): base($"{DnnConstants.LogName}.PgeCng")
+        public DnnPageChanges(/*IPageService pageChanges,*/ PageServiceShared pageServiceShared): base($"{DnnConstants.LogName}.PgeCng")
         {
-            PageService = pageChanges;
+            //PageService = pageChanges;
+            PageServiceShared = pageServiceShared;
         }
 
 
@@ -21,10 +23,10 @@ namespace ToSic.Sxc.Dnn.Services
         {
             var wrapLog = Log.Call<int>();
             // If we get something invalid, return 0 (nothing changed)
-            if (!(PageService is IChangeQueue changes)) return 0;
+            // if (!(PageServiceShared != null /*is IChangeQueue changes*/)) return wrapLog(null, 0);
 
             var dnnPage = new DnnHtmlPage();
-            var props = changes.GetPropertyChangesAndFlush();
+            var props = PageServiceShared.GetPropertyChangesAndFlush();
             foreach (var p in props)
                 switch (p.Property)
                 {
@@ -52,7 +54,7 @@ namespace ToSic.Sxc.Dnn.Services
 
             // Note: we're not implementing replace etc. in DNN
             // ATM there's no reason to, maybe some other time
-            var headChanges = changes.GetHeadChangesAndFlush();
+            var headChanges = PageServiceShared.GetHeadChangesAndFlush();
             foreach (var h in headChanges)
                 dnnPage.AddToHead(h.Tag);
 
@@ -62,7 +64,7 @@ namespace ToSic.Sxc.Dnn.Services
             //foreach (var h in changes.Headers.ToArray())
             //    changes.Headers.Remove(h);
 
-            return wrapLog($"{changes}", count);
+            return wrapLog($"{count}", count);
         }
 
 

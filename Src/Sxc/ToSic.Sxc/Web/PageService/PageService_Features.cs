@@ -6,11 +6,8 @@ namespace ToSic.Sxc.Web.PageService
     {
 
         /// <inheritdoc />
-        public void Activate(params string[] keys)
-        {
-            Features.Activate(keys);
-        }
-        
+        public void Activate(params string[] keys) => Features.Activate(keys);
+
         [PrivateApi]
         public IPageFeatures Features { get; }
     }

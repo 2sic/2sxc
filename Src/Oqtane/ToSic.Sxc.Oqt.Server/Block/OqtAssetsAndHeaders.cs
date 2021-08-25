@@ -9,6 +9,7 @@ using ToSic.Sxc.Edit;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.PageFeatures;
+using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Oqt.Server.Block
 {
@@ -17,14 +18,16 @@ namespace ToSic.Sxc.Oqt.Server.Block
     {
         #region Constructor and DI
 
-        public OqtAssetsAndHeaders(SiteState siteState, IPageService pageService, IPageFeaturesManager pageFm) : base($"{OqtConstants.OqtLogPrefix}.AssHdr")
+        public OqtAssetsAndHeaders(SiteState siteState, IPageService pageService, PageServiceShared pageServiceShared, IPageFeaturesManager pageFm) : base($"{OqtConstants.OqtLogPrefix}.AssHdr")
         {
             _siteState = siteState;
             PageService = pageService;
+            PageServiceShared = pageServiceShared;
             _pageFm = pageFm;
         }
         private readonly SiteState _siteState;
         private IPageService PageService { get; }
+        public PageServiceShared PageServiceShared { get; }
         private readonly IPageFeaturesManager _pageFm;
 
 
