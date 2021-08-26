@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Web.PageService
             // 1. Try to add manual resources from WebResources
             // This must happen in the IPageService which is per-module
             // The PageServiceShared cannot do this, because it doesn't have the WebResources which vary by module
-            if (WebResources != null) 
+            if (!(WebResources is null)) // special problem: DynamicEntity null-compare isn't quite right, don't! use !=
                 keys = AddManualResources(keys);
 
             // 2. If any keys are left, they are probably preconfigured keys, so add them now
