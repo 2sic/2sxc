@@ -1,20 +1,18 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Razor.Blade;
 using ToSic.Razor.Dnn;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Dnn.Services
 {
     [PrivateApi]
-    public class DnnPageChanges : HasLog<DnnPageChanges> // , IPageChangeApplicator
+    public class DnnPageChanges : HasLog<DnnPageChanges>
     {
-        //public IPageService PageService { get; }
         public PageServiceShared PageServiceShared { get; }
 
-        public DnnPageChanges(/*IPageService pageChanges,*/ PageServiceShared pageServiceShared): base($"{DnnConstants.LogName}.PgeCng")
+        public DnnPageChanges(PageServiceShared pageServiceShared): base($"{DnnConstants.LogName}.PgeCng")
         {
-            //PageService = pageChanges;
             PageServiceShared = pageServiceShared;
         }
 
@@ -22,8 +20,6 @@ namespace ToSic.Sxc.Dnn.Services
         public int Apply()
         {
             var wrapLog = Log.Call<int>();
-            // If we get something invalid, return 0 (nothing changed)
-            // if (!(PageServiceShared != null /*is IChangeQueue changes*/)) return wrapLog(null, 0);
 
             var dnnPage = new DnnHtmlPage();
             var props = PageServiceShared.GetPropertyChangesAndFlush();
@@ -48,21 +44,23 @@ namespace ToSic.Sxc.Dnn.Services
 
             var count = props.Count;
 
-            //// Once processed clean up, in case the same object (scoped) is used again, and we want to ensure it won't be processed again
-            //foreach (var p in changes.PropertyChanges.ToArray()) // ToArray important to "copy" so we can do removes afterwards
-            //    changes.PropertyChanges.Remove(p);
-
             // Note: we're not implementing replace etc. in DNN
             // ATM there's no reason to, maybe some other time
             var headChanges = PageServiceShared.GetHeadChangesAndFlush();
             foreach (var h in headChanges)
                 dnnPage.AddToHead(h.Tag);
 
-            count += headChanges.Count;
+            // New in 12.04 - Add features which have HTML only
+            // Todo STV: Repeat this in Oqtane
+            // In the page the code would be like this:
+            // var pageService = GetService<ToSic.Sxc.Web.IPageService>();
+            // pageService.Activate("fancybox4");
+            // This will add a header for the sources of these features
+            PageServiceShared.Features
+                .ManualFeaturesGetNew()
+                .ForEach(f => dnnPage.AddToHead(Tag.Custom(f.Html)));
 
-            // Clean up
-            //foreach (var h in changes.Headers.ToArray())
-            //    changes.Headers.Remove(h);
+            count += headChanges.Count;
 
             return wrapLog($"{count}", count);
         }

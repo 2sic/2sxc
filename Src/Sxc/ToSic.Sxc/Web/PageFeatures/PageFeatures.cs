@@ -9,19 +9,12 @@ namespace ToSic.Sxc.Web.PageFeatures
     public class PageFeatures: IPageFeatures
     {
         private readonly IPageFeaturesManager _pfm;
-        //public IPageService Parent { get; private set; }
         
         public PageFeatures(IPageFeaturesManager pfm)
         {
             _pfm = pfm;
         }
-        
-        //public IPageFeatures Init(IPageService parent)
-        //{
-        //    Parent = parent;
-        //    return this;
-        //}
-       
+
         /// <inheritdoc />
         public void Activate(params string[] keys)
         {
@@ -30,13 +23,36 @@ namespace ToSic.Sxc.Web.PageFeatures
             
         }
 
+        private List<IPageFeature> ManualFeatures { get; } = new List<IPageFeature>();
 
-        public List<IPageFeature> ManualFeatures { get; } = new List<IPageFeature>();
+        public void ManualFeatureAdd(IPageFeature newFeature) => ManualFeatures.Add(newFeature);
 
-        public List<string> ActiveKeys { get; } = new List<string>();
+        public List<IPageFeature> ManualFeaturesGetNew()
+        {
+            // Filter out the ones which were already added in a previous round
+            var newFeatures = ManualFeatures
+                .GroupBy(f => f.Key)
+                .Where(g => g.All(f => !f.AlreadyProcessed)) // only keep the groups which only have false
+                .Select(g => g.First())
+                .ToList();
+
+            // Mark the new ones as processed now, so they won't be processed in future
+            newFeatures.ForEach(f => f.AlreadyProcessed = true);
+            return newFeatures;
+        }
+
+
+
+
+
+
+
+
+
+
+        private List<string> ActiveKeys { get; } = new List<string>();
         
-        
-        public List<string> GetKeysAndFlush()
+        private List<string> GetKeysAndFlush()
         {
             var keys = ActiveKeys.ToArray().ToList();
             ActiveKeys.Clear();

@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Documentation;
 using ToSic.Razor.Html5;
 
 namespace ToSic.Sxc.Web.PageFeatures
 {
+    [PrivateApi]
     public interface IPageFeature
     {
         /// <summary>
@@ -20,14 +22,18 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// </summary>
         string Description { get; }
 
-        IList<Script> ScriptFiles { get; }
-        IList<Script> Scripts { get; }
-        IList<Link> StyleFiles { get; }
-        IList<Style> Styles { get; }
+        string Html { get; }
+
+        //IList<Script> ScriptFiles { get; }
+        //IList<Script> Scripts { get; }
+        //IList<Link> StyleFiles { get; }
+        //IList<Style> Styles { get; }
 
         /// <summary>
         /// List of other features required to run this feature.
         /// </summary>
         IEnumerable<string> Requires { get; }
+
+        bool AlreadyProcessed { get; set; }
     }
 }

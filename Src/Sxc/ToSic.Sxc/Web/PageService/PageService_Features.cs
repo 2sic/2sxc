@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Eav.Data;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.PageFeatures;
 
@@ -19,32 +17,40 @@ namespace ToSic.Sxc.Web.PageService
             // TODO: CONTINUE HERE - NOW wEBrESOURCES IS A dYNAMIC AND WE SHOULD EASILY WORK WITH IT
             if (webRes != null)
             {
-                var siteContext = CtxResolver.Site();
-                var languages = siteContext.Site.SafeLanguagePriorityCodes();
+                //var siteContext = CtxResolver.Site();
+                //var languages = siteContext.Site.SafeLanguagePriorityCodes();
                 var keysToRemove = new List<string>();
                 foreach (var key in keys)
                 {
-                    var resSettingsProperty = webRes.FindPropertyInternal(key, languages, null);
-                    if (!resSettingsProperty.IsFinal || !(resSettingsProperty.Result is IEnumerable<IEntity> listSettings)) continue;
+                    var resConfig = webRes.Get(key) as DynamicEntity;
+                    if(resConfig == null) continue;
+
+                    var enabled = resConfig.Get("Enabled") as bool?;
+
+
+                    //var resSettingsProperty = webRes.FindPropertyInternal(key, languages, null);
+                    //if (!resSettingsProperty.IsFinal || !(resSettingsProperty.Result is IEnumerable<IEntity> listSettings)) continue;
                     
-                    var resSettings = listSettings.FirstOrDefault();
-                    if (resSettings == null) continue;
+                    //var resSettings = listSettings.FirstOrDefault();
+                    //if (resSettings == null) continue;
 
-                    var enabledProp = resSettings.FindPropertyInternal("Enabled", languages, null);
-                    if (!enabledProp.IsFinal || enabledProp.FieldType != DataTypes.Boolean) continue;
+                    //var enabledProp = resSettings.FindPropertyInternal("Enabled", languages, null);
+                    //if (!enabledProp.IsFinal || enabledProp.FieldType != DataTypes.Boolean) continue;
 
-                    var enabled = enabledProp.Result as bool?;
+                    //var enabled = enabledProp.Result as bool?;
                     if (enabled == false) continue;
 
-                    var htmlProp = resSettings.FindPropertyInternal("Html", languages, null);
-                    if (!htmlProp.IsFinal || enabledProp.FieldType != DataTypes.String) continue;
+                    //var htmlProp = resSettings.FindPropertyInternal("Html", languages, null);
+                    //if (!htmlProp.IsFinal || enabledProp.FieldType != DataTypes.String) continue;
+                    //var html = htmlProp.Result as string;
 
-                    var html = htmlProp.Result as string;
+                    var html = resConfig.Get("Html") as string;
+
                     if (html == null) continue;
 
                     // all ok so far
                     keysToRemove.Add(key);
-                    (PageServiceShared.Features as PageFeatures.PageFeatures).ManualFeatures.Add(new PageFeature(
+                    PageServiceShared.Features.ManualFeatureAdd(new PageFeature(
                         key, 
                         "manual",
                         "manual-description",
@@ -55,7 +61,8 @@ namespace ToSic.Sxc.Web.PageService
                 keys = keys.Where(k => !keysToRemove.Contains(k)).ToArray();
             }
 
-            PageServiceShared.Activate(keys);
+            if (keys.Any())
+                PageServiceShared.Activate(keys);
         }
 
         private DynamicEntity WebResources

@@ -10,11 +10,14 @@ namespace ToSic.Sxc.Web.PageFeatures
     /// </summary>
     public class PageFeature : IPageFeature
     {
-        public PageFeature(string key, string name, string description = null, 
-            List<Script> scriptFiles = null, 
-            List<Link> styleFiles = null,
-            List<Script> scripts = null, 
-            List<Style> styles = null,
+        public PageFeature(
+            string key, 
+            string name, 
+            string description = null, 
+            //List<Script> scriptFiles = null, 
+            //List<Link> styleFiles = null,
+            //List<Script> scripts = null, 
+            //List<Style> styles = null,
             string[] requires = null,
             string html = null)
         {
@@ -22,10 +25,10 @@ namespace ToSic.Sxc.Web.PageFeatures
             Name = name ?? throw new Exception("name is required");
             Html = html;
             Description = description ?? "";
-            ScriptFiles = scriptFiles ?? new List<Script>();
-            StyleFiles = styleFiles ?? new List<Link>();
-            Scripts = scripts ?? new List<Script>();
-            Styles = styles ?? new List<Style>();
+            //ScriptFiles = scriptFiles ?? new List<Script>();
+            //StyleFiles = styleFiles ?? new List<Link>();
+            //Scripts = scripts ?? new List<Script>();
+            //Styles = styles ?? new List<Style>();
             Requires = requires ?? new string[0];
         }
         
@@ -46,17 +49,19 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// </summary>
         public string Description { get; }
 
-        public IList<Script> ScriptFiles { get; }
+        //public IList<Script> ScriptFiles { get; }
 
-        public IList<Script> Scripts { get; }
+        //public IList<Script> Scripts { get; }
 
-        public IList<Link> StyleFiles { get; }
+        //public IList<Link> StyleFiles { get; }
 
-        public IList<Style> Styles { get; }
+        //public IList<Style> Styles { get; }
         
         /// <summary>
         /// List of other features required to run this feature.
         /// </summary>
         public IEnumerable<string> Requires { get; }
+
+        public bool AlreadyProcessed { get; set; }
     }
 }
