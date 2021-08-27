@@ -13,16 +13,18 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     public class OqtUiContextBuilder: UiContextBuilderBase
     {
-        public OqtUiContextBuilder(ILinkPaths linkPaths, IContextOfSite ctx, SiteState siteState, Dependencies deps) : base(deps)
+        public OqtUiContextBuilder(ILinkPaths linkPaths, IContextOfSite ctx, SiteState siteState, WipRemoteRouterLink remoteRouterLink, Dependencies deps) : base(deps)
         {
             _linkPaths = linkPaths;
             _context = ctx;
             _siteState = siteState;
+            _remoteRouterLink = remoteRouterLink;
         }
 
         private readonly ILinkPaths _linkPaths;
         private IContextOfSite _context;
         private readonly SiteState _siteState;
+        private readonly WipRemoteRouterLink _remoteRouterLink;
 
 
         //protected override ContextLanguageDto GetLanguage()
@@ -83,7 +85,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             var blockCtx = _context as IContextOfBlock; // may be null!
             var x = _siteState.Alias.TenantId;
             
-            var gsUrl = new WipRemoteRouterLink().LinkToRemoteRouter(
+            var gsUrl = _remoteRouterLink.LinkToRemoteRouter(
                 RemoteDestinations.GettingStarted,
                 "Oqt",
                 Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),

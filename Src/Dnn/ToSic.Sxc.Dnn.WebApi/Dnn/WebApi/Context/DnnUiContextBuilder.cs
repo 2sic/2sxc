@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Web;
 using DotNetNuke.Common;
-using DotNetNuke.Entities.Controllers;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
@@ -23,14 +22,16 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
 
         private readonly Lazy<IZoneMapper> _zoneMapper;
         private readonly IContextResolver _ctxResolver;
+        private readonly WipRemoteRouterLink _remoteRouterLink;
         private readonly PortalSettings _portal = PortalSettings.Current;
 
         private ModuleInfo Module => (_ctxResolver.BlockOrNull()?.Module as DnnModule)?.UnwrappedContents;
 
-        public DnnUiContextBuilder(Lazy<IZoneMapper> zoneMapper, IContextResolver ctxResolver, Dependencies deps): base(deps)
+        public DnnUiContextBuilder(Lazy<IZoneMapper> zoneMapper, IContextResolver ctxResolver, WipRemoteRouterLink remoteRouterLink, Dependencies deps) : base(deps)
         {
             _zoneMapper = zoneMapper;
             _ctxResolver = ctxResolver;
+            _remoteRouterLink = remoteRouterLink;
         }
 
         #endregion
@@ -91,7 +92,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
         {
             if (!(App is IApp app)) return "";
 
-            var gsUrl = new WipRemoteRouterLink().LinkToRemoteRouter(
+            var gsUrl = _remoteRouterLink.LinkToRemoteRouter(
                 RemoteDestinations.GettingStarted,
                 "Dnn",
                 Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4),

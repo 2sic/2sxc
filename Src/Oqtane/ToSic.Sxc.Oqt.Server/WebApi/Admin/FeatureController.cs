@@ -27,12 +27,14 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     {
         private readonly FeaturesBackend _featuresBackend;
         private readonly ISite _site;
+        private readonly WipRemoteRouterLink _remoteRouterLink;
         protected override string HistoryLogName => "Api.Feats";
 
-        public FeatureController(FeaturesBackend featuresBackend, ISite site)
+        public FeatureController(FeaturesBackend featuresBackend, ISite site, WipRemoteRouterLink remoteRouterLink)
         {
             _featuresBackend = featuresBackend;
             _site = site;
+            _remoteRouterLink = remoteRouterLink;
         }
 
         /// <summary>
@@ -62,7 +64,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             var module = ctx.Module;
 
             //var module = Request.FindModuleInfo();
-            var link = new WipRemoteRouterLink().LinkToRemoteRouter(RemoteDestinations.Features,
+            var link = _remoteRouterLink.LinkToRemoteRouter(RemoteDestinations.Features,
                 "Dnn",
                 Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),
                 Guid.Empty.ToString(),

@@ -93,6 +93,9 @@ namespace ToSic.Sxc
             // new in v12.02/12.04 Image Link Resize Helper
             services.TryAddTransient<ImgResizeLinker>();
 
+            // WIP - objects which are not really final
+            services.TryAddTransient<WipRemoteRouterLink>();
+
             return services;
         }
 

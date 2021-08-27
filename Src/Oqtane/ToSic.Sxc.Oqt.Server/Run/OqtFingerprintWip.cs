@@ -24,6 +24,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public string GetSystemFingerprint()
         {
+            if (_fingerprintCache != null) return _fingerprintCache;
+
             var systemGuid = Guid.Empty;
 
             var mainVersion = Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.Major.ToString();
@@ -34,8 +36,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             var fingerprint = $"guid={systemGuid}&sys=oqt&vsys={mainVersion}&v2sxc={mainVersion2Sxc}&db={dbName}";
 
-            return Hash(fingerprint);
+            return _fingerprintCache = Hash(fingerprint);
         }
+
+        private static string _fingerprintCache;
 
         private static string Hash(string randomString)
         {

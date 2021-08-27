@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Run
@@ -11,9 +12,11 @@ namespace ToSic.Sxc.Run
     [PrivateApi]
     public class WipRemoteRouterLink
     {
-        public WipRemoteRouterLink()
-        {
+        public IFingerprint Fingerprint { get; }
 
+        public WipRemoteRouterLink(IFingerprint fingerprint)
+        {
+            Fingerprint = fingerprint;
         }
         
         public string LinkToRemoteRouter(RemoteDestinations destination, 
@@ -47,7 +50,7 @@ namespace ToSic.Sxc.Run
                 link += $"&AppVersion={app.Configuration.Version}"
                         + $"&AppOriginalId={app.Configuration.OriginalId}";
 
-            link += "&fp=" + System.Net.WebUtility.UrlEncode(Fingerprint.System)?.ToLowerInvariant();
+            link += "&fp=" + System.Net.WebUtility.UrlEncode(Fingerprint.GetSystemFingerprint())?.ToLowerInvariant();
             return link;
         }
 

@@ -15,10 +15,12 @@ namespace ToSic.Sxc.Oqt.Server.Run
     public class OqtEnvironmentInstaller: HasLog<IEnvironmentInstaller>, IEnvironmentInstaller
     {
         private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
+        private readonly WipRemoteRouterLink _remoteRouterLink;
 
-        public OqtEnvironmentInstaller(Lazy<CmsRuntime> cmsRuntimeLazy): base($"{OqtConstants.OqtLogPrefix}.Instll")
+        public OqtEnvironmentInstaller(Lazy<CmsRuntime> cmsRuntimeLazy, WipRemoteRouterLink remoteRouterLink): base($"{OqtConstants.OqtLogPrefix}.Instll")
         {
             _cmsRuntimeLazy = cmsRuntimeLazy;
+            _remoteRouterLink = remoteRouterLink;
         }
 
 
@@ -56,7 +58,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 }
                 catch { /* ignore */ }
 
-            var link = new WipRemoteRouterLink().LinkToRemoteRouter(
+            var link = _remoteRouterLink.LinkToRemoteRouter(
                 RemoteDestinations.AutoConfigure,
                 "Oqt",
                 Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),
