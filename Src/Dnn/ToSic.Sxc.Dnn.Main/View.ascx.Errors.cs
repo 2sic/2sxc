@@ -54,7 +54,7 @@ namespace ToSic.SexyContent
                     // 2. Try to show nice message on screen
 
                     // first get a rendering helper - but since BlockBuilder may be null, create a new one
-                    var renderingHelper = Factory.Resolve<IRenderingHelper>().Init(Block, Log);
+                    var renderingHelper = Factory.ObsoleteResolveUseOnlyInDnnOrTests<IRenderingHelper>().Init(Block, Log);
                     var msg = renderingHelper.DesignErrorMessage(ex, true, null, false, true);
                     try
                     {

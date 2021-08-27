@@ -21,8 +21,8 @@ namespace ToSic.SexyContent
             {
                 if (_blockLoaded) return _block;
                 _blockLoaded = true;
-                var newCtx = Eav.Factory.Resolve<IContextOfBlock>().Init(ModuleConfiguration, Log);
-                return _block = Eav.Factory.Resolve<BlockFromModule>().Init(newCtx, Log);
+                var newCtx = Factory.ObsoleteResolveUseOnlyInDnnOrTests<IContextOfBlock>().Init(ModuleConfiguration, Log);
+                return _block = Factory.ObsoleteResolveUseOnlyInDnnOrTests<BlockFromModule>().Init(newCtx, Log);
             }
         }
         private IBlock _block;

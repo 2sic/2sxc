@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Dnn
                 if (_publishing != null) return Publishing;
 
                 // if publishing is used, make sure it's in the log-history
-                _publishing = Eav.Factory.Resolve<Cms.DnnPagePublishing>().Init(Log);
+                _publishing = Eav.Factory.ObsoleteResolveUseOnlyInDnnOrTests<Cms.DnnPagePublishing>().Init(Log);
                 History.Add("dnn-publishing", Log);
                 return _publishing;
             }

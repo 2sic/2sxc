@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// Get installed DataSources from .NET Runtime but only those with [PipelineDesigner Attribute]
         /// </summary>
         [HttpGet]
-        public IEnumerable<DataSourceDto> DataSources() => new DataSourceCatalog(Log).QueryDataSources();
+        public IEnumerable<DataSourceDto> DataSources() => GetService<QueryApi>().Init(0, Log).DataSources(); // new DataSourceCatalog(Log).QueryDataSources();
 
 		/// <summary>
 		/// Save Pipeline

@@ -94,7 +94,6 @@ namespace ToSic.SexyContent
 
             // new in 11.08 - provide Razor Engine and platform
             services.TryAddTransient<IRazorEngine, RazorEngine>();
-            //services.TryAddTransient<RazorEngine>();
             services.TryAddSingleton<IPlatform, DnnPlatformContext>();
 
             // add page publishing
