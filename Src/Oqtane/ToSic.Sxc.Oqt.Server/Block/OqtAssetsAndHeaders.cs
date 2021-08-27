@@ -33,10 +33,6 @@ namespace ToSic.Sxc.Oqt.Server.Block
         {
             Parent = parent;
             BlockBuilder = parent?.Block?.BlockBuilder as BlockBuilder;
-
-            // Temp added here. It should be automatic later.
-            //if (AddJsCore) PageServiceShared.Activate(BuiltInFeatures.Core.Key);
-            //if (AddJsEdit) PageServiceShared.Activate(BuiltInFeatures.EditApi.Key);
         }
 
         protected OqtSxcViewBuilder Parent;
@@ -97,27 +93,14 @@ namespace ToSic.Sxc.Oqt.Server.Block
         private List<IPageFeature> _features;
 
         /// <summary>
-        /// The JavaScripts needed
+        /// Manual features adding html snippet (scripts and styles) to header in Oqtane
         /// </summary>
         /// <returns></returns>
         public IEnumerable<string> GetPageHeadUpdates()
         {
             var headUpdates = new List<string>();
-
-            // TODO: STV, remove dummy test
-            var dummyTest = "<link data-enableoptimizations=\"bottom\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css\" integrity=\"sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\" /> <script defer async data-enableoptimizations=\"bottom\" src=\"https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js\" integrity=\"sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\"></script>";
-            headUpdates.Add(dummyTest);
-
-            // TODO: STV WIP...
-            //_oqtClientDependencyOptimizer.Process(dummyTest);
-
-            //var x = PageService
-            foreach (var f in PageServiceShared.Features.ManualFeaturesGetNew())
-            {
-                headUpdates.Add(f.Html);
-                // TODO: STV alternative - check OqtClientDependencyOptimizer.Process to extract js and script files
-            }
-
+            PageServiceShared.Features.ManualFeaturesGetNew()
+                .ForEach(f => headUpdates.Add(f.Html));
             return headUpdates;
         }
 

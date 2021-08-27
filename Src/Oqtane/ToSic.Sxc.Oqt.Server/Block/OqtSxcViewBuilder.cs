@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Oqtane.Models;
 using Oqtane.Shared;
 using ToSic.Eav.Documentation;
@@ -15,21 +16,22 @@ namespace ToSic.Sxc.Oqt.Server.Block
     [PrivateApi]
     public class OqtSxcViewBuilder : HasLog, ISxcOqtane
     {
+        public IClientDependencyOptimizer OqtClientDependencyOptimizer { get; }
+
         #region Constructor and DI
 
         public OqtSxcViewBuilder(OqtAssetsAndHeaders assetsAndHeaders, OqtState oqtState, IClientDependencyOptimizer oqtClientDependencyOptimizer) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
         {
-
             _assetsAndHeaders = assetsAndHeaders;
-            _oqtClientDependencyOptimizer = oqtClientDependencyOptimizer.Init(Log);
             _oqtState = oqtState.Init(Log);
+            OqtClientDependencyOptimizer = oqtClientDependencyOptimizer.Init(Log);
             // add log to history!
             History.Add("oqt-view", Log);
         }
 
         private OqtAssetsAndHeaders AssetsAndHeaders => _assetsAndHeaders;
         private readonly OqtAssetsAndHeaders _assetsAndHeaders;
-        private readonly IClientDependencyOptimizer _oqtClientDependencyOptimizer;
+
         private readonly OqtState _oqtState;
 
         #endregion
@@ -53,6 +55,11 @@ namespace ToSic.Sxc.Oqt.Server.Block
 
             _assetsAndHeaders.Init(this);
             var generatedHtml = Block.BlockBuilder.Render() ;
+
+            var pageHeadAssets = PageHeadAssets();
+            if (pageHeadAssets.Count > 0)
+                Block.BlockBuilder.Assets.AddRange(pageHeadAssets);
+
             var resources = Block.BlockBuilder.Assets.Select(a => new SxcResource
             {
                 ResourceType = a.IsJs ? ResourceType.Script : ResourceType.Stylesheet,
@@ -61,13 +68,6 @@ namespace ToSic.Sxc.Oqt.Server.Block
                 Content = a.Content,
                 UniqueId = a.Id
             }).ToList();
-
-            var pageHeadUpdates = AssetsAndHeaders.GetPageHeadUpdates().ToList();
-            foreach (var html in pageHeadUpdates)
-            {
-
-                _oqtClientDependencyOptimizer.Process(html);
-            }
 
             return new OqtViewResultsDto
             {
@@ -78,8 +78,14 @@ namespace ToSic.Sxc.Oqt.Server.Block
                 SxcScripts = AssetsAndHeaders.Scripts().ToList(),
                 SxcStyles = AssetsAndHeaders.Styles().ToList(),
                 PageProperties = AssetsAndHeaders.GetPagePropertyChanges(),
-                PageHeadUpdates = pageHeadUpdates,
             };
+        }
+
+        private List<ClientAssetInfo> PageHeadAssets()
+        {
+            AssetsAndHeaders.GetPageHeadUpdates().ToList()
+                .ForEach(html => OqtClientDependencyOptimizer.Process(html));
+            return OqtClientDependencyOptimizer.Assets;
         }
 
         internal Alias Alias;
