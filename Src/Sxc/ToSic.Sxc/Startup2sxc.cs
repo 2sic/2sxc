@@ -8,6 +8,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DotNet;
+using ToSic.Sxc.Engines;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
@@ -51,6 +52,7 @@ namespace ToSic.Sxc
 
             // Rendering
             services.TryAddTransient<IRenderingHelper, RenderingHelper>();
+            services.TryAddTransient<TokenEngine>();
 
             // Context stuff in general
             services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
