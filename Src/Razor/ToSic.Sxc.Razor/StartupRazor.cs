@@ -19,6 +19,7 @@ namespace ToSic.Sxc.Razor
             services.TryAddTransient<IRazorCompiler, RazorCompiler>();
             services.TryAddTransient<IRazorRenderer, RazorRenderer>();
             services.TryAddTransient<IEngineFinder, RazorEngineFinder>();
+            services.TryAddTransient<RazorEngine>();
 
             // debugging
             services.TryAddTransient<RazorReferenceManager>();

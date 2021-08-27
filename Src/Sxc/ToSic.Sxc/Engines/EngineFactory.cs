@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav;
 using ToSic.Sxc.Blocks;
 
@@ -12,14 +13,14 @@ namespace ToSic.Sxc.Engines
             Razor = 1
         }
 
-        public static IEngine CreateEngine(IView view)
+        public static IEngine CreateEngine(IServiceProvider serviceProvider, IView view)
         {
             var engineType = view.IsRazor ? RazorEngine : typeof(TokenEngine);
             
             if (engineType == null)
                 throw new Exception("Error: Could not find the template engine to parse this template.");
 
-            return Factory.Resolve(engineType) as IEngine;
+            return serviceProvider.GetRequiredService(engineType) as IEngine; //Factory.Resolve(engineType) as IEngine;
         }
 
         /// <summary>

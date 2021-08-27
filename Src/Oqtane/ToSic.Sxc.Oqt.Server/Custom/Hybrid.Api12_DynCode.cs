@@ -31,7 +31,7 @@ namespace Custom.Hybrid
 
         [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
 
-        public TService GetService<TService>() => ServiceProvider.Build<TService>();
+        public TService GetService<TService>() => _DynCodeRoot.GetService<TService>(); // ServiceProvider.Build<TService>();
 
         /// <inheritdoc />
         public IApp App => _DynCodeRoot?.App;

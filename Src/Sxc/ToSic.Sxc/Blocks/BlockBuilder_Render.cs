@@ -126,7 +126,7 @@ namespace ToSic.Sxc.Blocks
             if (_engine != null) return _engine;
             // edge case: view hasn't been built/configured yet, so no engine to find/attach
             if (Block.View == null) return null;
-            _engine = EngineFactory.CreateEngine(Block.View);
+            _engine = EngineFactory.CreateEngine(Block.Context.ServiceProvider, Block.View);
             _engine.Init(Block, renderingPurpose, Log);
             return _engine;
         }

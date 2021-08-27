@@ -8,6 +8,7 @@ using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Oqt.Server.Block
 {
@@ -16,10 +17,11 @@ namespace ToSic.Sxc.Oqt.Server.Block
     {
         #region Constructor and DI
 
-        public OqtSxcViewBuilder(OqtAssetsAndHeaders assetsAndHeaders, OqtState oqtState) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
+        public OqtSxcViewBuilder(OqtAssetsAndHeaders assetsAndHeaders, OqtState oqtState, IClientDependencyOptimizer oqtClientDependencyOptimizer) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
         {
 
             _assetsAndHeaders = assetsAndHeaders;
+            _oqtClientDependencyOptimizer = oqtClientDependencyOptimizer.Init(Log);
             _oqtState = oqtState.Init(Log);
             // add log to history!
             History.Add("oqt-view", Log);
@@ -27,6 +29,7 @@ namespace ToSic.Sxc.Oqt.Server.Block
 
         private OqtAssetsAndHeaders AssetsAndHeaders => _assetsAndHeaders;
         private readonly OqtAssetsAndHeaders _assetsAndHeaders;
+        private readonly IClientDependencyOptimizer _oqtClientDependencyOptimizer;
         private readonly OqtState _oqtState;
 
         #endregion
@@ -59,6 +62,13 @@ namespace ToSic.Sxc.Oqt.Server.Block
                 UniqueId = a.Id
             }).ToList();
 
+            var pageHeadUpdates = AssetsAndHeaders.GetPageHeadUpdates().ToList();
+            foreach (var html in pageHeadUpdates)
+            {
+
+                _oqtClientDependencyOptimizer.Process(html);
+            }
+
             return new OqtViewResultsDto
             {
                 Html = generatedHtml,
@@ -68,6 +78,7 @@ namespace ToSic.Sxc.Oqt.Server.Block
                 SxcScripts = AssetsAndHeaders.Scripts().ToList(),
                 SxcStyles = AssetsAndHeaders.Styles().ToList(),
                 PageProperties = AssetsAndHeaders.GetPagePropertyChanges(),
+                PageHeadUpdates = pageHeadUpdates,
             };
         }
 

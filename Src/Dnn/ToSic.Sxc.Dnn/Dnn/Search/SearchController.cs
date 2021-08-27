@@ -132,7 +132,7 @@ namespace ToSic.Sxc.Search
                 {
                     /* Old mode v06.02 - 12.01 using the Engine or Razor which customizes */
                     // Build the engine, as that's responsible for calling inner search stuff
-                    var engine = EngineFactory.CreateEngine(Block.View);
+                    var engine = EngineFactory.CreateEngine(Eav.Factory.GetServiceProvider(),  Block.View);
                     engine.Init(Block, Purpose.IndexingForSearch, Log);
                     
                     // Only run CustomizeData() if we're in the older, classic model of search-indexing

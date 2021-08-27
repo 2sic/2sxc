@@ -140,6 +140,9 @@ namespace ToSic.Sxc.Oqt.App
                     if (ViewResults.PageProperties?.Any() ?? false)
                         await PageChangesHelper.UpdatePageProperties(ViewResults, PageState, interop);
 
+                    if (ViewResults.PageHeadUpdates?.Any() ?? false)
+                        await PageChangesHelper.AppendPageHead(ViewResults, interop);
+
                     #endregion
                 }
             }

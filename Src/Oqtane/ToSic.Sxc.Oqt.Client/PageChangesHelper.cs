@@ -112,5 +112,13 @@ namespace ToSic.Sxc.Oqt.Client
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
+
+        public static async Task AppendPageHead(OqtViewResultsDto viewResults, Interop interop)
+        {
+            foreach (var html in viewResults.PageHeadUpdates)
+            {
+                await interop.HeadAppend(html);
+            }
+        }
     }
 }

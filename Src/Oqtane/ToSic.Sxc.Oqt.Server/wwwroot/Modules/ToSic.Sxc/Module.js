@@ -13,4 +13,8 @@ ToSic.Sxc = {
             return "";
         }
     },
+    headAppend: function (html) {
+        // TODO: STV, append if already not exist 
+        return document.head.innerHTML += html;
+    }
 };

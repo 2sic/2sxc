@@ -46,5 +46,11 @@ namespace ToSic.Sxc.Oqt.Shared.Models
         /// List of page property changes as specified
         /// </summary>
         public IEnumerable<OqtPagePropertyChanges> PageProperties { get; set; }
+
+        /// <summary>
+        /// The html code to add page head
+        /// </summary>
+        /// <returns></returns>
+        public List<string> PageHeadUpdates { get; set; }
     }
 }
