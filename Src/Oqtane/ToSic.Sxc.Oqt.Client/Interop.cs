@@ -36,19 +36,5 @@ namespace ToSic.Sxc.Oqt.Client
                 return new ValueTask<string>(Task.FromResult(string.Empty));
             }
         }
-
-        public ValueTask<string> HeadAppend(string name)
-        {
-            try
-            {
-                return _jsRuntime.InvokeAsync<string>(
-                    "ToSic.Sxc.headAppend",
-                    name);
-            }
-            catch
-            {
-                return new ValueTask<string>(Task.FromResult(string.Empty));
-            }
-        }
     }
 }
