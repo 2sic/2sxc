@@ -26,11 +26,17 @@ namespace ToSic.Sxc.Dnn.Run
         /// </summary>
         /// <param name="site">DI injected param</param>
         /// <param name="zoneMapper">DI injected param</param>
-        public DnnAppFileSystemLoader(ISite site, IZoneMapper zoneMapper): base("Dnn.AppStf")
+        public DnnAppFileSystemLoader(ISite site, IZoneMapper zoneMapper, Lazy<FileSystemLoader> fslLazy): base("Dnn.AppStf")
         {
             Site = site;
             ZoneMapper = zoneMapper;
+            _fslLazy = fslLazy;
         }
+
+        protected ISite Site;
+        protected readonly IZoneMapper ZoneMapper;
+        private readonly Lazy<FileSystemLoader> _fslLazy;
+
 
         public IAppFileSystemLoader Init(int appId, string path, ILog log)
         {
@@ -69,8 +75,6 @@ namespace ToSic.Sxc.Dnn.Run
 
         public string Path { get; set; }
 
-        protected ISite Site;
-        protected readonly IZoneMapper ZoneMapper;
 
         public List<InputTypeInfo> InputTypes()
         {
@@ -137,7 +141,7 @@ namespace ToSic.Sxc.Dnn.Run
         private IEnumerable<IContentType> LoadTypesFromOneExtensionPath(string extensionPath, IEntitiesSource entitiesSource)
         {
             var wrapLog = Log.Call<IList<IContentType>>(extensionPath);
-            var fsLoader = new FileSystemLoader(extensionPath, RepositoryTypes.Folder, true, entitiesSource, Log);
+            var fsLoader = _fslLazy.Value.Init(extensionPath, RepositoryTypes.Folder, true, entitiesSource, Log);
             var types = fsLoader.ContentTypes();
             return wrapLog("ok", types);
         }
