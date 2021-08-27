@@ -76,7 +76,7 @@ namespace ToSic.Sxc.Oqt.Server
             globalConfig.GlobalSiteFolder = "todo - global apps not implemented yet";
 
             // Load features from configuration
-            sp.Build<FeaturesLoader>().Reload();
+            sp.Build<SystemLoader>().StartUp();
 
             // 2sxc Oqtane blob services for Imageflow.
             services.AddImageflowOqtaneBlobService();

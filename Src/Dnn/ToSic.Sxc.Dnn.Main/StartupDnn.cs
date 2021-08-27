@@ -63,7 +63,7 @@ namespace ToSic.SexyContent
             globalConfig.GlobalSiteFolder = "~/Portals/_default/";
 
             // Load features from configuration
-            Factory.StaticBuild<FeaturesLoader>().Reload();
+            Factory.StaticBuild<SystemLoader>().StartUp();
 
             // also register this because of a long DNN issue which was fixed, but we don't know if we're running in another version
             SharpZipLibRedirect.RegisterSharpZipLibRedirect();

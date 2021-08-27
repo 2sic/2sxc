@@ -17,18 +17,18 @@ namespace ToSic.Sxc.WebApi.Features
         #region Constructor / DI
 
         public FeaturesBackend(IZoneMapper zoneMapper, IServiceProvider serviceProvider, 
-            IGlobalConfiguration globalConfiguration, IFeaturesConfiguration features, FeaturesLoader featuresLoader) : base(serviceProvider, "Bck.Feats")
+            IGlobalConfiguration globalConfiguration, IFeaturesConfiguration features, SystemLoader systemLoader) : base(serviceProvider, "Bck.Feats")
         {
             _zoneMapper = zoneMapper;
             _globalConfiguration = globalConfiguration;
             _features = features;
-            _featuresLoader = featuresLoader;
+            _systemLoader = systemLoader;
         }
 
         private readonly IZoneMapper _zoneMapper;
         private readonly IGlobalConfiguration _globalConfiguration;
         private readonly IFeaturesConfiguration _features;
-        private readonly FeaturesLoader _featuresLoader;
+        private readonly SystemLoader _systemLoader;
 
         public new FeaturesBackend Init(ILog parentLog)
         {
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.WebApi.Features
 
         public IEnumerable<Feature> GetAll(bool reload)
         {
-            if (reload) _featuresLoader.Reload();
+            if (reload) _systemLoader.Reload();
             return Eav.Configuration.Features.All;
         }
 
@@ -57,10 +57,7 @@ namespace ToSic.Sxc.WebApi.Features
 
             // then take the newFeatures (it should be a json)
             // and save to /desktopmodules/.data-custom/configurations/features.json
-            if (!SaveFeature(featuresManagementResponse.Msg.Features)) return false;
-
-            // when done, reset features
-            _featuresLoader.Reload();
+            if (!SaveFeaturesAndReload(featuresManagementResponse.Msg.Features)) return false;
 
             return true;
         }
@@ -68,7 +65,7 @@ namespace ToSic.Sxc.WebApi.Features
 
         #region Helper Functions
 
-        public bool SaveFeature(string features)
+        private bool SaveFeaturesAndReload(string features)
         {
             try
             {
@@ -80,7 +77,7 @@ namespace ToSic.Sxc.WebApi.Features
                 var featureFilePath = Path.Combine(configurationsPath, Eav.Configuration.Features.FeaturesJson);
 
                 File.WriteAllText(featureFilePath, features);
-                _featuresLoader.Reload();
+                _systemLoader.Reload();
                 return true;
             }
             catch (Exception)
