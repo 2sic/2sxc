@@ -21,8 +21,8 @@ namespace ToSic.SexyContent
             {
                 if (_blockLoaded) return _block;
                 _blockLoaded = true;
-                var newCtx = Factory.ObsoleteResolveUseOnlyInDnnOrTests<IContextOfBlock>().Init(ModuleConfiguration, Log);
-                return _block = Factory.ObsoleteResolveUseOnlyInDnnOrTests<BlockFromModule>().Init(newCtx, Log);
+                var newCtx = Factory.StaticBuild<IContextOfBlock>().Init(ModuleConfiguration, Log);
+                return _block = Factory.StaticBuild<BlockFromModule>().Init(newCtx, Log);
             }
         }
         private IBlock _block;
@@ -54,7 +54,7 @@ namespace ToSic.SexyContent
             TryCatchAndLogToDnn(() =>
             {
                 EnsureCmsBlockAndPortalIsReady();
-                DnnClientResources = Factory.StaticBuild<DnnClientResources>()/* new DnnClientResources()*/.Init(Page, Block?.BlockBuilder, Log);
+                DnnClientResources = Factory.StaticBuild<DnnClientResources>().Init(Page, Block?.BlockBuilder, Log);
                 DnnClientResources.EnsurePre1025Behavior();
             }, callLog);
             _stopwatch.Stop();
