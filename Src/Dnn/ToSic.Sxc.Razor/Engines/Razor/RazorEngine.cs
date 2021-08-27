@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Engines
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     [EngineDefinition(Name = "Razor")]
     // ReSharper disable once UnusedMember.Global
-    public partial class RazorEngine : EngineBase
+    public partial class RazorEngine : EngineBase, IRazorEngine
     {
         private readonly Lazy<DnnDynamicCodeRoot> _dnnDynCodeLazy;
 

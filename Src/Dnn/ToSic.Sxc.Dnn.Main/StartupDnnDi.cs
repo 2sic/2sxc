@@ -93,8 +93,8 @@ namespace ToSic.SexyContent
             services.TryAddTransient<IEnvironmentLogger, DnnEnvironmentLogger>();
 
             // new in 11.08 - provide Razor Engine and platform
-            services.TryAddTransient<IEngineFinder, DnnEngineFinder>();
-            services.TryAddTransient<RazorEngine>();
+            services.TryAddTransient<IRazorEngine, RazorEngine>();
+            //services.TryAddTransient<RazorEngine>();
             services.TryAddSingleton<IPlatform, DnnPlatformContext>();
 
             // add page publishing
