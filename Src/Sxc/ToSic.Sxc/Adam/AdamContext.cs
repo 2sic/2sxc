@@ -60,8 +60,12 @@ namespace ToSic.Sxc.Adam
 
             Log.Add("check if feature enabled");
             if (Security.UserIsRestricted && !Eav.Configuration.Features.Enabled(FeaturesForRestrictedUsers))
+            {
+                var msg = ServiceProvider.Build<Features>().MsgMissingSome(FeaturesForRestrictedUsers); // Eav.Configuration.Features.MsgMissingSome(FeaturesForRestrictedUsers)
                 throw HttpException.PermissionDenied(
-                    $"low-permission users may not access this - {Eav.Configuration.Features.MsgMissingSome(FeaturesForRestrictedUsers)}");
+                    $"low-permission users may not access this - {msg}");
+
+            }
 
             if (string.IsNullOrEmpty(contentType) || string.IsNullOrEmpty(fieldName)) return callLog(null, this);
 

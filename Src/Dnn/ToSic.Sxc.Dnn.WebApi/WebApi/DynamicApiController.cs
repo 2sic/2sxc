@@ -79,7 +79,7 @@ namespace ToSic.Sxc.WebApi
 
 
         #region Adam - Shared Code Across the APIs (prevent duplicate code)
-
+        // TODO: STV - duplicate code with DynamicApiController and Hybrid.Api12_DynCode
         /// <summary>
         /// See docs of official interface <see cref="IDynamicWebApi"/>
         /// </summary>
@@ -98,7 +98,9 @@ namespace ToSic.Sxc.WebApi
                 throw new Exception();
 
             var feats = new[]{FeatureIds.UseAdamInWebApi, FeatureIds.PublicUpload};
-            if (!Eav.Configuration.Features.EnabledOrException(feats, "can't save in ADAM", out var exp))
+            var features = GetService<Eav.Configuration.Features>();
+
+            if (!/*Eav.Configuration.Features*/features.EnabledOrException(feats, "can't save in ADAM", out var exp))
                 throw exp;
 
             var appId = _DynCodeRoot?.Block?.AppId ?? _DynCodeRoot?.App?.AppId ?? throw new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known.");

@@ -1,7 +1,8 @@
 ﻿using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
-using Feats = ToSic.Eav.Configuration.Features;
+// using Feats = ToSic.Eav.Configuration.Features;
 
 namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
@@ -27,7 +28,8 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             if (forms.HasValue || styles.HasValue || context.HasValue || autoToolbar.HasValue)
             {
                 var feats = new[] {FeatureIds.PublicForms};
-                if (!Feats.EnabledOrException(feats, "public forms not available", out var exp))
+                var features = Block.Context.ServiceProvider.Build<Features>();
+                if (!/*Feats*/features.EnabledOrException(feats, "public forms not available", out var exp))
                     throw exp;
             }
 
