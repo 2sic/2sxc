@@ -17,7 +17,6 @@ using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Adam;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.ImportExport;
@@ -38,7 +37,7 @@ using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.Plumbing;
 
 
-namespace ToSic.SexyContent
+namespace ToSic.Sxc.Dnn.StartUp
 {
 
     internal static class StartupDnnDi

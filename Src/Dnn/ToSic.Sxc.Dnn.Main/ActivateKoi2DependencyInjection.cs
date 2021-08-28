@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace ToSic.SexyContent
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Dnn.StartUp
 {
     public static class ActivateKoi2DependencyInjection
     {

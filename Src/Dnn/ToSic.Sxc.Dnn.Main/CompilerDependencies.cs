@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.WebApi;
 
-namespace ToSic.SexyContent
+namespace ToSic.Sxc.Dnn.StartUp
 {
     /// <summary>
     /// This is a dummy code which just ensures that this project

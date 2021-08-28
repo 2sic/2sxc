@@ -11,7 +11,7 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ToSic.SexyContent</RootNamespace>
+    <RootNamespace>ToSic.Sxc.Dnn</RootNamespace>
     <AssemblyName>ToSic.SexyContent</AssemblyName>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -211,6 +211,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Extensions\ImageResizer\bin\" />
+    <Folder Include="StartUp\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">

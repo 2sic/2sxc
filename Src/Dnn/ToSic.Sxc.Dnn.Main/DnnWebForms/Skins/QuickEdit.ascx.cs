@@ -10,9 +10,7 @@ namespace ToSic.SexyContent.DnnWebForms.Skins
         {
             if(DotNetNuke.Security.Permissions.TabPermissionController.HasTabPermission("EDIT"))
                 Factory.StaticBuild<DnnClientResources>()
-                /*new DnnClientResources()*/
-                .Init(Page, null, null)
-                // new DnnRenderingHelpers(null, null)
+                    .Init(Page, null, null)
                     .RegisterClientDependencies(Page, true, true, true);
         }
     }
