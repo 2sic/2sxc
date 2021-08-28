@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         protected void PreventServerTimeout300() => HttpContext.Current.Server.ScriptTimeout = 300;
 
         /// <inheritdoc />
-        public TService GetService<TService>() => Eav.Factory.GetServiceProvider().Build<TService>();
+        public TService GetService<TService>() => Eav.Factory.StaticBuild<TService>();
 
     }
 }

@@ -6,6 +6,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DotNet;
 using ToSic.Sxc.Engines;
@@ -35,6 +36,7 @@ namespace ToSic.Sxc
 
             // Code
             services.TryAddTransient<DynamicCodeRoot.Dependencies>();
+            services.TryAddTransient<DynamicEntityDependencies>();
 
             // Block Editors
             services.TryAddTransient<BlockEditorForEntity>();

@@ -2,7 +2,6 @@
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Data
@@ -14,58 +13,40 @@ namespace ToSic.Sxc.Data
     [PrivateApi("this should all stay internal and never be public")]
     public class DynamicEntityDependencies
     {
-        internal DynamicEntityDependencies(IBlock block, IServiceProvider serviceProvider, string[] dimensions, ILog log, int compatibility = 10)
+        public DynamicEntityDependencies(Lazy<IDataBuilder> dataBuilderLazy, Lazy<IValueConverter> valueConverterLazy)
+        {
+            _dataBuilderLazy = dataBuilderLazy;
+            _valueConverterLazy = valueConverterLazy;
+        }
+
+        internal DynamicEntityDependencies Init(IBlock block, string[] dimensions, ILog log, int compatibility = 10)
         {
             Dimensions = dimensions;
             LogOrNull = log;
             CompatibilityLevel = compatibility;
             Block = block;
-            ServiceProviderOrNull = block?.Context?.ServiceProvider ?? serviceProvider;
+            return this;
         }
         
-        internal IBlock Block { get; }
+        internal IBlock Block { get; private set; }
 
+        internal string[] Dimensions { get; private set; }
 
-        public string[] Dimensions { get; }
-        public ILog LogOrNull { get; }
+        internal ILog LogOrNull { get; private set; }
 
-        internal int CompatibilityLevel { get; }
+        internal int CompatibilityLevel { get; private set; }
 
-
-        /// <summary>
-        /// Very internal implementation - we need this to allow the IValueProvider to be created, and normally it's provided by the Block context.
-        /// But in rare cases (like when the App.Resources is a DynamicEntity) it must be injected separately.
-        /// </summary>
-        internal readonly IServiceProvider ServiceProviderOrNull;
 
         /// <summary>
         /// The ValueConverter is used to parse links in the format like "file:72"
         /// </summary>
         [PrivateApi]
-        internal IValueConverter ValueConverterOrNull
-        {
-            get
-            {
-                if (_valueConverterOrNull != null || _triedToBuildValueConverter) return _valueConverterOrNull;
-                _triedToBuildValueConverter = true;
-                return _valueConverterOrNull = ServiceProviderOrNull?.Build<IValueConverter>();
-            }
-        }
-        private IValueConverter _valueConverterOrNull;
-        private bool _triedToBuildValueConverter;
+        internal IValueConverter ValueConverterOrNull => _valueConverterLazy.Value;
+        private readonly Lazy<IValueConverter> _valueConverterLazy;
 
 
-        internal IDataBuilder DataBuilder
-        {
-            get
-            {
-                if (_dataBuilder != null) return _dataBuilder;
-                var sp = ServiceProviderOrNull ?? Eav.Factory.GetServiceProvider();
-                _dataBuilder = sp.Build<IDataBuilder>();
-                return _dataBuilder;
-            }
-        }
+        internal IDataBuilder DataBuilder => _dataBuilderLazy.Value;
 
-        private IDataBuilder _dataBuilder;
+        private readonly Lazy<IDataBuilder> _dataBuilderLazy;
     }
 }

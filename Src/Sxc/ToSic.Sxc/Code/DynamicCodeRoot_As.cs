@@ -3,6 +3,7 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
@@ -25,7 +26,7 @@ namespace ToSic.Sxc.Code
 
         private DynamicEntityDependencies DynamicEntityDependencies =>
             _dynamicEntityDependencies
-            ?? (_dynamicEntityDependencies = new DynamicEntityDependencies(Block, _serviceProvider,
+            ?? (_dynamicEntityDependencies = _serviceProvider.Build<DynamicEntityDependencies>().Init(Block, 
                 CmsContext.SafeLanguagePriorityCodes(), Log, CompatibilityLevel));
         private DynamicEntityDependencies _dynamicEntityDependencies;
 

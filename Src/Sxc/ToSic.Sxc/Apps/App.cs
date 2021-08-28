@@ -6,6 +6,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Run;
 using EavApp = ToSic.Eav.Apps.App;
@@ -21,9 +22,8 @@ namespace ToSic.Sxc.Apps
     {
         #region DI Constructors
 
-        public App(AppDependencies dependencies, ILinkPaths linkPaths) : base(dependencies, "App.SxcApp")
+        public App(AppDependencies dependencies) : base(dependencies, "App.SxcApp")
         {
-            _linkPaths = linkPaths;
         }
 
         public App PreInit(ISite site)
@@ -59,13 +59,11 @@ namespace ToSic.Sxc.Apps
         #endregion
 
 
-        private readonly ILinkPaths _linkPaths;
-
         #region Dynamic Properties: Configuration, Settings, Resources
         /// <inheritdoc />
-        public AppConfiguration Configuration => _appConfig
-                                                 // Create config object. Note that AppConfiguration could be null, then it would use default values
-                                                 ?? (_appConfig = new AppConfiguration(AppConfiguration, Log));
+        public AppConfiguration Configuration
+            // Create config object. Note that AppConfiguration could be null, then it would use default values
+            => _appConfig ?? (_appConfig = new AppConfiguration(AppConfiguration, Log));
 
         private AppConfiguration _appConfig;
 
@@ -80,9 +78,15 @@ namespace ToSic.Sxc.Apps
             }
         }
 
-        private dynamic MakeDynProperty(IEntity contents) =>
-            //new DynamicEntity(contents, Site.SafeLanguagePriorityCodes(), 10, null, DataSourceFactory.ServiceProvider);
-            new DynamicEntity(contents, new DynamicEntityDependencies(null, DataSourceFactory.ServiceProvider, Site.SafeLanguagePriorityCodes(), Log));
+        private dynamic MakeDynProperty(IEntity contents) => new DynamicEntity(contents, DynamicEntityDependencies);
+
+        // TODO: THIS CAN PROBABLY BE IMPROVED
+        // TO GET THE DynamicEntityDependencies from the DynamicCodeRoot which creates the App...? 
+        // ATM it's a bit limited, for example it probably cannot resolve links
+        private DynamicEntityDependencies DynamicEntityDependencies
+            => _dynamicEntityDependencies ?? (_dynamicEntityDependencies = DataSourceFactory.ServiceProvider
+                .Build<DynamicEntityDependencies>().Init(null, Site.SafeLanguagePriorityCodes(), Log));
+        private DynamicEntityDependencies _dynamicEntityDependencies;
 
         /// <inheritdoc />
         public dynamic Settings

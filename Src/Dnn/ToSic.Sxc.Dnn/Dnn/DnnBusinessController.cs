@@ -111,7 +111,7 @@ namespace ToSic.Sxc.Dnn
             {
                 var sp = Eav.Factory.GetServiceProvider();
                 return new SearchController(sp, Log).GetModifiedSearchDocuments(
-                    sp.Build<DnnModule>().Init(moduleInfo, Log), beginDate);
+                    Eav.Factory.StaticBuild<DnnModule>().Init(moduleInfo, Log), beginDate);
             }
             catch (Exception e)
             {
