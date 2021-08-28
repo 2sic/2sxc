@@ -31,6 +31,7 @@ using ToSic.Sxc.Dnn.WebApi.Admin;
 using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi.ApiExplorer;
 using ToSic.Sxc.WebApi.Context;
@@ -129,6 +130,9 @@ namespace ToSic.SexyContent
             //services.TryAddScoped<IPageChangeApplicator, DnnPageChanges>();
             services.TryAddScoped<DnnPageChanges>();
             services.TryAddTransient<DnnClientResources>();
+
+            // v12.04 - proper DI for SearchController
+            services.TryAddTransient<SearchController>();
 
             return services;
         }

@@ -33,11 +33,16 @@ namespace ToSic.Sxc.Search
     /// This will construct data for the search indexer in DNN.
     /// It's created once for each module which will be indexed
     /// </summary>
-    internal class SearchController : HasLog
+    /// <remarks>
+    /// ATM it's DNN only (because Oqtane doesn't have search indexing)
+    /// But the code is 99% clean, so it would be easy to split into dnn/Oqtane versions once ready.
+    /// The only difference seems to be exception logging. 
+    /// </remarks>
+    public class SearchController : HasLog<SearchController>
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public SearchController(IServiceProvider serviceProvider, ILog parentLog) : base("DNN.Search", parentLog)
+        public SearchController(IServiceProvider serviceProvider) : base("DNN.Search")
         {
             _serviceProvider = serviceProvider;
         }
@@ -64,7 +69,7 @@ namespace ToSic.Sxc.Search
             // In case it's not loaded yet
             State.Cache.Load(module.BlockIdentifier, DnnSite.DefaultCultureCode);
 
-            var dnnContext = Eav.Factory.StaticBuild<IContextOfBlock>().Init(DnnModule, Log);
+            var dnnContext = _serviceProvider.Build<IContextOfBlock>().Init(DnnModule, Log);
             Block = _serviceProvider.Build<BlockFromModule>().Init(dnnContext, Log);
             
             if (Block.View == null) return wrapLog("cancel", "no view");
@@ -132,7 +137,7 @@ namespace ToSic.Sxc.Search
                 {
                     /* Old mode v06.02 - 12.01 using the Engine or Razor which customizes */
                     // Build the engine, as that's responsible for calling inner search stuff
-                    var engine = EngineFactory.CreateEngine(Eav.Factory.GetServiceProvider(),  Block.View);
+                    var engine = EngineFactory.CreateEngine(_serviceProvider,  Block.View);
                     engine.Init(Block, Purpose.IndexingForSearch, Log);
                     
                     // Only run CustomizeData() if we're in the older, classic model of search-indexing

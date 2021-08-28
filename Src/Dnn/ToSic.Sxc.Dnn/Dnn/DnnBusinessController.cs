@@ -109,9 +109,13 @@ namespace ToSic.Sxc.Dnn
         {
             try
             {
-                var sp = Eav.Factory.GetServiceProvider();
-                return new SearchController(sp, Log).GetModifiedSearchDocuments(
-                    Eav.Factory.StaticBuild<DnnModule>().Init(moduleInfo, Log), beginDate);
+                // changed 2021-08-28 / 2dm / 2sxc 12.04 - must verify that it works without issues
+                // TODO: STV pls verify, then remove this comment
+                return Eav.Factory.StaticBuild<SearchController>().Init(Log)
+                    .GetModifiedSearchDocuments(Eav.Factory.StaticBuild<DnnModule>().Init(moduleInfo, Log), beginDate);
+                //var sp = Eav.Factory.GetServiceProvider();
+                //return new SearchController(sp, Log).Init(Log).GetModifiedSearchDocuments(
+                //    Eav.Factory.StaticBuild<DnnModule>().Init(moduleInfo, Log), beginDate);
             }
             catch (Exception e)
             {
