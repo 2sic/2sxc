@@ -62,8 +62,8 @@ namespace ToSic.Sxc.Search
             // New Context because Portal-Settings.Current is null
             var appId = module.BlockIdentifier.AppId;
             if (appId == AppConstants.AppIdNotFound || appId == Eav.Constants.NullId) return wrapLog("cancel", "no app id");
-            
-            DnnSite = new DnnSite().TrySwap(DnnModule);
+
+            DnnSite = _serviceProvider.Build<DnnSite>().TrySwap(DnnModule); // new DnnSite().TrySwap(DnnModule);
 
             // Ensure cache builds up with correct primary language
             // In case it's not loaded yet

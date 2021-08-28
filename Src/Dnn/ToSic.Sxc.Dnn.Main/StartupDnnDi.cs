@@ -51,6 +51,7 @@ namespace ToSic.SexyContent
             services.TryAddScoped<IZoneCultureResolver, DnnSite>();
             services.TryAddTransient<IModule, DnnModule>();
             services.TryAddTransient<DnnModule>();
+            services.TryAddTransient<DnnSite>();
 
             //
             services.TryAddTransient<IValueConverter, DnnValueConverter>();

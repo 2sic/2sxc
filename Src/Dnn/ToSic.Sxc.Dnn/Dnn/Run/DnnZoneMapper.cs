@@ -7,6 +7,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Dnn.Run
@@ -18,13 +19,15 @@ namespace ToSic.Sxc.Dnn.Run
         /// </summary>
         private const string PortalSettingZoneId = "ToSIC_SexyContent_ZoneID";
 
-        private readonly Lazy<ZoneCreator> _zoneCreatorLazy;
-
         /// <inheritdoc />
-        public DnnZoneMapper(Lazy<ZoneCreator> zoneCreatorLazy) : base("DNN.ZoneMp")
+        public DnnZoneMapper(IServiceProvider spForNewSites, Lazy<ZoneCreator> zoneCreatorLazy) : base("DNN.ZoneMp")
         {
+            _spForNewSites = spForNewSites;
             _zoneCreatorLazy = zoneCreatorLazy;
         }
+        private readonly IServiceProvider _spForNewSites;
+        private readonly Lazy<ZoneCreator> _zoneCreatorLazy;
+
 
         /// <inheritdoc />
         /// <summary>
@@ -66,7 +69,7 @@ namespace ToSic.Sxc.Dnn.Run
                     return zid == zoneId ? new PortalSettings(p) : null;
                 })
                 .FirstOrDefault(f => f != null);
-            return found != null ? new DnnSite().Swap(found) : null;
+            return found != null ? _spForNewSites.Build<DnnSite>()/* new DnnSite()*/.Swap(found) : null;
         }
 
 

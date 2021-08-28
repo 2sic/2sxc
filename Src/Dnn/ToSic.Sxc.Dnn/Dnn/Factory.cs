@@ -123,12 +123,13 @@ namespace ToSic.Sxc.Dnn
         /// <param name="showDrafts">Show draft items - usually false for visitors, true for editors/admins.</param>
         /// <param name="parentLog">optional logger to attach to</param>
         /// <returns>An initialized App object which you can use to access App.Data</returns>
-        public static IApp App(int appId, 
-            PortalSettings ownerPortalSettings, 
-            bool unusedButKeepForApiStability = false, 
-            bool showDrafts = false, 
-            ILog parentLog = null) 
-            => App(Eav.Apps.App.AutoLookupZone, appId, new DnnSite().Swap(ownerPortalSettings), showDrafts, parentLog);
+        public static IApp App(int appId,
+            PortalSettings ownerPortalSettings,
+            bool unusedButKeepForApiStability = false,
+            bool showDrafts = false,
+            ILog parentLog = null)
+            => App(Eav.Apps.App.AutoLookupZone, appId,
+                Eav.Factory.StaticBuild<DnnSite>() /*new DnnSite()*/.Swap(ownerPortalSettings), showDrafts, parentLog);
 
         [InternalApi_DoNotUse_MayChangeWithoutNotice]
         private static IApp App(
