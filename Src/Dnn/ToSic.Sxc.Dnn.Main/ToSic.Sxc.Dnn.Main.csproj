@@ -158,10 +158,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include=".data-custom\readme.md" />
-    <None Include=".databeta\readme.md" />
     <Content Include=".gitignore" />
-    <None Include="2sxc12-future-sql\Future-To-Test.SqlDataProvider.sql.dont-use-yet" />
     <Content Include="DnnPackageBuilder\Cleanup\flush.txt" />
     <Content Include="razorblade-old\bin\Connect.Razor.dll" />
     <Content Include="ClientScripts\ModuleEditor.js" />
@@ -213,9 +210,6 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include=".data-custom\configurations\" />
-    <Folder Include=".data-custom\contenttypes\" />
-    <Folder Include=".databeta\queries\" />
     <Folder Include="Extensions\ImageResizer\bin\" />
   </ItemGroup>
   <ItemGroup>
@@ -261,7 +255,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include=".databeta\contenttypes\json.y48d849d6-b83d-4001-96e5-79da0833e84e.json" />
     <Content Include="BuildScripts\ModulePackage.Targets">
       <SubType>Designer</SubType>
     </Content>
@@ -272,7 +265,6 @@
     <Content Include="DnnPackageBuilder\readme.md" />
     <Content Include="BuildScripts\readme.md" />
     <Content Include="koi\Resources.zip" />
-    <Content Include=".data\readme.md" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\00.99.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\09.03.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\09.07.00.SqlDataProvider" />
