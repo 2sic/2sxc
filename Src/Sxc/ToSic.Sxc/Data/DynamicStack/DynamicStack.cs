@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Data
         {
             var source = UnwrappedContents.GetSource(name)
                          // If not found, create a fake one
-                         ?? _Dependencies.DataBuilder.FakeEntity(_Dependencies.Block?.AppId ?? 0);
+                         ?? _Dependencies.DataBuilder.FakeEntity(_Dependencies.BlockOrNull?.AppId ?? 0);
 
             return SourceToDynamicEntity(source);
         }

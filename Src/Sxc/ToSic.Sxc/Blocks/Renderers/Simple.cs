@@ -49,10 +49,10 @@ namespace ToSic.Sxc.Blocks.Renderers
         internal static string RenderWithEditContext(DynamicEntity dynParent, IDynamicEntity subItem, string cbFieldName,  Guid? newGuid = null, IInPageEditingSystem edit = null)
         {
             if (edit == null)
-                edit = new InPageEditingHelper(dynParent._Dependencies.Block);
+                edit = new InPageEditingHelper(dynParent._Dependencies.BlockOrNull);
 
             var attribs = edit.ContextAttributes(dynParent, field: cbFieldName, newGuid: newGuid);
-            var inner = subItem == null ? "": Render(dynParent._Dependencies.Block, subItem.Entity).ToString();
+            var inner = subItem == null ? "": Render(dynParent._Dependencies.BlockOrNull, subItem.Entity).ToString();
             var cbClasses = edit.Enabled ? WrapperSingleItem : "";
             return string.Format(WrapperTemplate, new object[] { cbClasses, attribs, inner});
         }
@@ -63,11 +63,11 @@ namespace ToSic.Sxc.Blocks.Renderers
             var found = dynParent.TryGetMember(fieldName, out var objFound);
             if (found && objFound is IList<DynamicEntity> items)
                 foreach (var cb in items)
-                    innerBuilder.Append(Render(cb._Dependencies.Block, cb.Entity));
+                    innerBuilder.Append(Render(cb._Dependencies.BlockOrNull, cb.Entity));
 
             // create edit object if missing...to re-use of the parent
             //if (edit == null)
-            IInPageEditingSystem edit = new InPageEditingHelper(dynParent._Dependencies.Block);
+            IInPageEditingSystem edit = new InPageEditingHelper(dynParent._Dependencies.BlockOrNull);
 
             return string.Format(WrapperTemplate, new object[]
             {

@@ -14,11 +14,11 @@ namespace ToSic.Sxc.Data
             get
             {
                 // if it's neither in a running context nor in a running portal, no toolbar
-                if (_Dependencies.Block == null)
+                if (_Dependencies.BlockOrNull == null)
                     return new System.Web.HtmlString("");
 
                 // If we're not in a running context, of which we know the permissions, no toolbar
-                var userMayEdit = _Dependencies.Block?.Context.UserMayEdit ?? false;
+                var userMayEdit = _Dependencies.BlockOrNull?.Context.UserMayEdit ?? false;
 
                 if (!userMayEdit)
                     return new System.Web.HtmlString("");

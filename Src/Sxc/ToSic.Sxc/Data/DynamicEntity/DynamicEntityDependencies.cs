@@ -19,16 +19,16 @@ namespace ToSic.Sxc.Data
             _valueConverterLazy = valueConverterLazy;
         }
 
-        internal DynamicEntityDependencies Init(IBlock block, string[] dimensions, ILog log, int compatibility = 10)
+        internal DynamicEntityDependencies Init(IBlock blockOrNull, string[] dimensions, ILog log, int compatibility = 10)
         {
             Dimensions = dimensions;
             LogOrNull = log;
             CompatibilityLevel = compatibility;
-            Block = block;
+            BlockOrNull = blockOrNull;
             return this;
         }
         
-        internal IBlock Block { get; private set; }
+        internal IBlock BlockOrNull { get; private set; }
 
         internal string[] Dimensions { get; private set; }
 
