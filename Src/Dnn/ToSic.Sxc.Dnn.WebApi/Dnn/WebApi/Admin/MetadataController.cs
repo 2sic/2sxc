@@ -2,6 +2,7 @@
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.WebApi;
 
@@ -15,6 +16,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     {
         [HttpGet]
         public IEnumerable<Dictionary<string, object>> Get(int appId, int targetType, string keyType, string key, string contentType)
-            => Eav.WebApi.MetadataApi.Get(Eav.Factory.GetServiceProvider(), appId, targetType, keyType, key, contentType);
+            => GetService<MetadataBackend>().Get(appId, targetType, keyType, key, contentType);
     }
 }
