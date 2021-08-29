@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Web.UI;
 using DotNetNuke.Entities.Modules;
-using ToSic.Eav;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Blocks;
@@ -10,8 +9,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 
-
-namespace ToSic.SexyContent
+namespace ToSic.Sxc.Dnn
 {
     public partial class View : PortalModuleBase, IActionable
     {
@@ -21,8 +19,8 @@ namespace ToSic.SexyContent
             {
                 if (_blockLoaded) return _block;
                 _blockLoaded = true;
-                var newCtx = Factory.StaticBuild<IContextOfBlock>().Init(ModuleConfiguration, Log);
-                return _block = Factory.StaticBuild<BlockFromModule>().Init(newCtx, Log);
+                var newCtx = Eav.Factory.StaticBuild<IContextOfBlock>().Init(ModuleConfiguration, Log);
+                return _block = Eav.Factory.StaticBuild<BlockFromModule>().Init(newCtx, Log);
             }
         }
         private IBlock _block;
@@ -54,7 +52,7 @@ namespace ToSic.SexyContent
             TryCatchAndLogToDnn(() =>
             {
                 EnsureCmsBlockAndPortalIsReady();
-                DnnClientResources = Factory.StaticBuild<DnnClientResources>().Init(Page, Block?.BlockBuilder, Log);
+                DnnClientResources = Eav.Factory.StaticBuild<DnnClientResources>().Init(Page, Block?.BlockBuilder, Log);
                 DnnClientResources.EnsurePre1025Behavior();
             }, callLog);
             _stopwatch.Stop();

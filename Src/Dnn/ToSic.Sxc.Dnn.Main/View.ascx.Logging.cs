@@ -1,7 +1,7 @@
 ﻿using System.Web.Http;
 using ToSic.Sxc.Dnn.Run;
 
-namespace ToSic.SexyContent
+namespace ToSic.Sxc.Dnn
 {
     public partial class View
     {

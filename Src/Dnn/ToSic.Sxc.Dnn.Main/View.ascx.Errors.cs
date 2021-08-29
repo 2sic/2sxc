@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Web.UI;
 using DotNetNuke.Services.Exceptions;
-using ToSic.Eav;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Web;
 
-namespace ToSic.SexyContent
+namespace ToSic.Sxc.Dnn
 {
     public partial class View
     {
@@ -54,7 +53,7 @@ namespace ToSic.SexyContent
                     // 2. Try to show nice message on screen
 
                     // first get a rendering helper - but since BlockBuilder may be null, create a new one
-                    var renderingHelper = Factory.StaticBuild<IRenderingHelper>().Init(Block, Log);
+                    var renderingHelper = Eav.Factory.StaticBuild<IRenderingHelper>().Init(Block, Log);
                     var msg = renderingHelper.DesignErrorMessage(ex, true, null, false, true);
                     try
                     {
