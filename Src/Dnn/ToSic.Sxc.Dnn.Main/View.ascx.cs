@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Dnn
         protected DnnClientResources DnnClientResources;
 
 
-        /// <summary>s
+        /// <summary>
         /// Process View if a Template has been set
         /// </summary>
         /// <param name="sender"></param>
@@ -91,7 +91,7 @@ namespace ToSic.Sxc.Dnn
                 DnnClientResources?.AddEverything();
             callLog(null);
             _stopwatch?.Stop();
-            _entireLog?.Invoke("✔"); //$"⌚ {_stopwatch?.ElapsedMilliseconds:##.##}ms");
+            _entireLog?.Invoke("✔");
         }
 
         private string RenderViewAndGatherJsCssSpecs()
