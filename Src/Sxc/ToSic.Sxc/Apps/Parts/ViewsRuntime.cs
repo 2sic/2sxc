@@ -11,6 +11,7 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Conversion;
 using ToSic.Sxc.Engines;
 
 // note: not sure if the final namespace should be Sxc.Apps or Sxc.Views
@@ -23,12 +24,14 @@ namespace ToSic.Sxc.Apps
         private IValueConverter ValueConverter => _valConverter ?? (_valConverter = _valConverterLazy.Value);
         private readonly Lazy<IValueConverter> _valConverterLazy;
         private readonly IZoneCultureResolver _cultureResolver;
+        private readonly IDataToDictionary _dataToDictionary;
         private IValueConverter _valConverter;
 
-        public ViewsRuntime(Lazy<IValueConverter> valConverterLazy, IZoneCultureResolver cultureResolver) : base("Cms.ViewRd")
+        public ViewsRuntime(Lazy<IValueConverter> valConverterLazy, IZoneCultureResolver cultureResolver, IDataToDictionary dataToDictionary) : base("Cms.ViewRd")
         {
             _valConverterLazy = valConverterLazy;
             _cultureResolver = cultureResolver;
+            _dataToDictionary = dataToDictionary;
         }
 
         #endregion
@@ -129,7 +132,7 @@ namespace ToSic.Sxc.Apps
         {
             var templates = GetAll().ToList();
             var visible = templates.Where(t => !t.IsHidden).ToList();
-            var serializer = new EntitiesToDictionary();
+            // var serializer = new EntitiesToDictionary();
 
             return Parent.ContentTypes.All.OfScope(Settings.AttributeSetScope) 
                 .Where(ct => templates.Any(t => t.ContentType == ct.StaticName)) // must exist in at least 1 template
@@ -145,7 +148,7 @@ namespace ToSic.Sxc.Apps
                         Name = ct.Name,
                         IsHidden = visible.All(t => t.ContentType != ct.StaticName),   // must check if *any* template is visible, otherwise tell the UI that it's hidden
                         Thumbnail = thumbnail,
-                        Metadata = serializer.Convert(metadata)
+                        Metadata = _dataToDictionary/* serializer*/.Convert(metadata)
                     };
                 });
         }

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Sxc.Conversion;
@@ -9,14 +11,17 @@ namespace ToSic.Sxc.Compatibility.Sxc
     /// <summary>
     /// This is for compatibility - old code had a Sxc.Serializer.Prepare code which should still work
     /// </summary>
+    // Important: Changed Dictionary... to IDictionary in 12.04 2021-08-29 - may cause issues, but probably shouldn't
+    [Obsolete]
     public class OldDataToDictionaryWrapper
     {
         public OldDataToDictionaryWrapper(bool userMayEdit)
         {
-            _converter = new DataToDictionary(userMayEdit);
+            _converter = Factory.ObsoleteBuild<IDataToDictionary>(); // new DataToDictionary(userMayEdit);
+            _converter.WithEdit = userMayEdit;
         }
 
-        private readonly DataToDictionary _converter;
+        private readonly IDataToDictionary _converter;
 
         public IEnumerable<IDictionary<string, object>> Prepare(IEnumerable<dynamic> dynamicList)
             => _converter.Convert(dynamicList);
@@ -24,11 +29,11 @@ namespace ToSic.Sxc.Compatibility.Sxc
         public IDictionary<string, object> Prepare(IDynamicEntity dynamicEntity)
             => _converter.Convert(dynamicEntity);
 
-        public Dictionary<string, IEnumerable<Dictionary<string, object>>> Prepare(IDataSource source,
+        public IDictionary<string, IEnumerable<IDictionary<string, object>>> Prepare(IDataSource source,
             IEnumerable<string> streams = null)
             => _converter.Convert(source, streams);
 
-        public Dictionary<string, IEnumerable<Dictionary<string, object>>> Prepare(IDataSource source, string streams)
+        public IDictionary<string, IEnumerable<IDictionary<string, object>>> Prepare(IDataSource source, string streams)
             => _converter.Convert(source, streams);
 
         public IEnumerable<IDictionary<string, object>> Prepare(IDataStream stream)
@@ -40,7 +45,7 @@ namespace ToSic.Sxc.Compatibility.Sxc
         public IEnumerable<IDictionary<string, object>> Prepare(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities)
             => _converter.Convert(entities);
 
-        public Dictionary<string, object> Prepare(IEntity entity)
+        public IDictionary<string, object> Prepare(IEntity entity)
             => _converter.Convert(entity);
 
     }

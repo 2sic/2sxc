@@ -23,7 +23,9 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         internal string GenerateJson(IDataSource source, string[] streamsToPublish, bool userMayEdit)
         {
 #pragma warning disable 612
-            var ser = new OldContentBlockJsonSerialization(userMayEdit);
+#pragma warning disable 618
+            var ser = new OldContentBlockJsonSerialization(Eav.Factory.ObsoleteBuild<EntitiesToDictionaryBase.Dependencies>(), userMayEdit);
+#pragma warning restore 618
 #pragma warning restore 612
 
             var y = streamsToPublish
@@ -39,12 +41,13 @@ namespace ToSic.Sxc.Dnn.WebApi.App
 
         private class OldContentBlockJsonSerialization : DataToDictionary
         {
-            public OldContentBlockJsonSerialization(bool withEdit) : base(withEdit)
-            { }
+            public OldContentBlockJsonSerialization(Dependencies dependencies, bool withEdit) : base(dependencies)
+            {
+                WithEdit = withEdit;
+            }
 
             internal Dictionary<string, object> PrepareOldFormat(IEntity entity)
             {
-                // var ser = new Serializer(SxcInstance, _dimensions);
                 var dicNew = GetDictionaryFromEntity(entity);
                 var dicToSerialize = ConvertNewSerRelToOldSerRel(dicNew);
 
@@ -54,7 +57,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
             }
 
 
-            private Dictionary<string, object> ConvertNewSerRelToOldSerRel(Dictionary<string, object> dicNew)
+            private Dictionary<string, object> ConvertNewSerRelToOldSerRel(IDictionary<string, object> dicNew)
             {
                 // find all items which are of type List<SerializableRelationship>
                 // then convert to EntityId and EntityTitle to conform to "old" format

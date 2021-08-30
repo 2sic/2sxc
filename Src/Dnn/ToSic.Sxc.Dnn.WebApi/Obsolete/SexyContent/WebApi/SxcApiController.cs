@@ -45,7 +45,9 @@ namespace ToSic.SexyContent.WebApi
     {
         public new IDnnContext Dnn => base.Dnn;
 
+        [Obsolete]
         public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(_DynCodeRoot?.Block?.Context?.UserMayEdit ?? false));
+        [Obsolete]
         private SxcHelper _sxc;
 
         /// <summary>

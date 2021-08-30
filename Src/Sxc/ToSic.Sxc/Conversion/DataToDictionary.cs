@@ -13,20 +13,30 @@ namespace ToSic.Sxc.Conversion
 {
     /// <summary>
     /// Convert various types of entities (standalone, dynamic, in streams, etc.) to Dictionaries <br/>
-    /// Mainly used for serialization scenarios, like in WebApis
+    /// Mainly used for serialization scenarios, like in WebApis.
+    /// 
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public class DataToDictionary: Eav.Conversion.EntitiesToDictionary, IDynamicEntityTo<IDictionary<string, object>>
+    public class DataToDictionary: Eav.Conversion.EntitiesToDictionary, IDataToDictionary // IDynamicEntityTo<IDictionary<string, object>>
     {
         /// <summary>
         /// Determines if we should use edit-information
         /// </summary>
-        public bool WithEdit { get; internal set; }
+        [PrivateApi("Note: wasn't private till 2sxc 12.04, very low risk of it being published. Set was always internal")]
+        public bool WithEdit { get; set; }
 
         /// <summary>
         /// Standard constructor, important for opening this class in dependency-injection
         /// </summary>
         [PrivateApi]
+	    public DataToDictionary(Dependencies dependencies): base(dependencies) { }
+
+#if NETFRAMEWORK
+        /// <summary>
+        /// Standard constructor, important for opening this class in dependency-injection
+        /// </summary>
+        [PrivateApi]
+        [Obsolete("only keep in case external code was using this in apps ca. 2sxc 11. v12+ should use CreateService")]
 	    public DataToDictionary() { }
 
         /// <summary>
@@ -34,16 +44,18 @@ namespace ToSic.Sxc.Conversion
         /// </summary>
         /// <param name="withEdit">Include editing information in serialized result</param>
         ///// <param name="languages"></param>
-	    public DataToDictionary(bool withEdit)
+        [Obsolete]
+        public DataToDictionary(bool withEdit)
         {
             WithEdit = withEdit;
         }
+#endif
 
 
         #region Convert statements expecting dynamic objects - extending the EAV Prepare variations
 
-	    /// <inheritdoc />
-	    public IEnumerable<IDictionary<string, object>> Convert(IEnumerable<dynamic> dynamicList)
+        /// <inheritdoc />
+        public IEnumerable<IDictionary<string, object>> Convert(IEnumerable<dynamic> dynamicList)
         {
             if (dynamicList is IDataStream stream) return base.Convert(stream);
 
@@ -68,7 +80,7 @@ namespace ToSic.Sxc.Conversion
 
 
         [PrivateApi]
-        protected override Dictionary<string, object> GetDictionaryFromEntity(IEntity entity)
+        protected override IDictionary<string, object> GetDictionaryFromEntity(IEntity entity)
 		{
             // Do groundwork
             var dictionary = base.GetDictionaryFromEntity(entity);
@@ -81,7 +93,7 @@ namespace ToSic.Sxc.Conversion
 
         #region to enhance serializable IEntities with 2sxc specific infos
 
-        private void AddPresentation(IEntity entity, Dictionary<string, object> dictionary)
+        private void AddPresentation(IEntity entity, IDictionary<string, object> dictionary)
         {
             // Add full presentation object if it has one...because there we need more than just id/title
             if (!(entity is EntityInBlock entityInGroup) || dictionary.ContainsKey(ViewParts.Presentation)) return;
@@ -90,7 +102,7 @@ namespace ToSic.Sxc.Conversion
                 dictionary.Add(ViewParts.Presentation, GetDictionaryFromEntity(entityInGroup.Presentation));
         }
 
-	    private void AddEditInfo(IEntity entity, Dictionary<string, object> dictionary)
+	    private void AddEditInfo(IEntity entity, IDictionary<string, object> dictionary)
 	    {
             // Add additional information in case we're in edit mode
             var userMayEdit = WithEdit;

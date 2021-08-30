@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         /// </summary>
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements
-        public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string appPath = null) 
+        public IEnumerable<IDictionary<string, object>> GetEntities(string contentType, string appPath = null) 
             => GetService<AppContent>().Init(appPath, Log).GetItems(contentType, appPath);
 
         #endregion
@@ -42,14 +42,14 @@ namespace ToSic.Sxc.Dnn.WebApi.App
 
 	    [HttpGet]
 	    [AllowAnonymous] // will check security internally, so assume no requirements
-	    public Dictionary<string, object> GetOne(string contentType, int id, string appPath = null)
+	    public IDictionary<string, object> GetOne(string contentType, int id, string appPath = null)
 	        => GetAndSerializeOneAfterSecurityChecks(contentType,
                 entityApi => entityApi.GetOrThrow(contentType, id), appPath);
 
 
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements
-        public Dictionary<string, object> GetOne(string contentType, Guid guid, string appPath = null)
+        public IDictionary<string, object> GetOne(string contentType, Guid guid, string appPath = null)
             => GetAndSerializeOneAfterSecurityChecks(contentType,
                 entityApi => entityApi.GetOrThrow(contentType, guid), appPath);
         
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         /// <param name="getOne"></param>
         /// <param name="appPath"></param>
         /// <returns></returns>
-        private Dictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string appPath) 
+        private IDictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string appPath) 
             => GetService<AppContent>().Init(appPath, Log).GetOne(contentType, getOne, appPath);
 
         #endregion
@@ -111,7 +111,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
 
         [HttpPost]
         [AllowAnonymous] // will check security internally, so assume no requirements
-        public Dictionary<string, object> CreateOrUpdate([FromUri] string contentType,
+        public IDictionary<string, object> CreateOrUpdate([FromUri] string contentType,
             [FromBody] Dictionary<string, object> newContentItem, [FromUri] int? id = null,
             [FromUri] string appPath = null)
             => GetService<AppContent>().Init(appPath, Log)

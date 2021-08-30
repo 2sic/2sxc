@@ -8,7 +8,6 @@ using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Adam
 {
-    // todo: rename file in a #TodoRename refactoring
     /// <summary>
     /// Helpers to get the metadata for ADAM items
     /// </summary>

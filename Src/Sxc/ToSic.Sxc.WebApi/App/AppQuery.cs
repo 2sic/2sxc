@@ -20,17 +20,20 @@ namespace ToSic.Sxc.WebApi.App
 
         #region Constructor / DI
 
-        public AppQuery(IServiceProvider serviceProvider, IContextResolver ctxResolver) : base(serviceProvider, "Sxc.ApiApQ")
+        public AppQuery(IServiceProvider serviceProvider, IContextResolver ctxResolver, IDataToDictionary dataToDictionary) : base(serviceProvider, "Sxc.ApiApQ")
         {
             _ctxResolver = ctxResolver;
+            _dataToDictionary = dataToDictionary;
         }
         
         private readonly IContextResolver _ctxResolver;
+        private readonly IDataToDictionary _dataToDictionary;
+
         #endregion
 
         #region In-Container-Context Queries
 
-        public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(int? appId, string name, bool includeGuid, string stream, AppQueryParameters more)
+        public IDictionary<string, IEnumerable<IDictionary<string, object>>> Query(int? appId, string name, bool includeGuid, string stream, AppQueryParameters more)
         {
             var wrapLog = Log.Call($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
 
@@ -54,7 +57,7 @@ namespace ToSic.Sxc.WebApi.App
         #region Public Queries
 
 
-        public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(string appPath, string name, string stream, AppQueryParameters more)
+        public IDictionary<string, IEnumerable<IDictionary<string, object>>> PublicQuery(string appPath, string name, string stream, AppQueryParameters more)
         {
             var wrapLog = Log.Call($"path:{appPath}, name:{name}, stream: {stream}");
             if (string.IsNullOrEmpty(name))
@@ -75,7 +78,7 @@ namespace ToSic.Sxc.WebApi.App
         #endregion
 
 
-        private Dictionary<string, IEnumerable<Dictionary<string, object>>> BuildQueryAndRun(
+        private IDictionary<string, IEnumerable<IDictionary<string, object>>> BuildQueryAndRun(
                 IApp app, 
                 string name, 
                 string stream, 
@@ -108,7 +111,10 @@ namespace ToSic.Sxc.WebApi.App
                 throw new HttpExceptionAbstraction(HttpStatusCode.Unauthorized, msg, "Request not allowed");
             }
 
-            var serializer = new DataToDictionary(userMayEdit) { WithGuid = includeGuid };
+            //var serializer = new DataToDictionary(userMayEdit) { WithGuid = includeGuid };
+            var serializer = _dataToDictionary;
+            serializer.WithEdit = userMayEdit;
+            serializer.WithGuid = includeGuid;
             if (stream == AllStreams) stream = null;
             var result = serializer.Convert(query, stream?.Split(','), more?.Guids);
             wrapLog(null);

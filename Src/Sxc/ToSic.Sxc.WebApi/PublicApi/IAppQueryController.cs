@@ -25,7 +25,7 @@ namespace ToSic.Sxc.WebApi.PublicApi
         /// will check security internally, so assume the endpoint doesn't need to check security first
         /// </remarks>
         /// <returns></returns>
-        Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(
+        IDictionary<string, IEnumerable<IDictionary<string, object>>> Query(
             string name, 
             AppQueryParameters more,
             bool includeGuid = false, 
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.WebApi.PublicApi
         /// will check security internally, so assume the endpoint doesn't need to check security first
         /// </remarks>
         /// <returns></returns>
-        Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(
+        IDictionary<string, IEnumerable<IDictionary<string, object>>> PublicQuery(
             string appPath, 
             string name, 
             AppQueryParameters more,

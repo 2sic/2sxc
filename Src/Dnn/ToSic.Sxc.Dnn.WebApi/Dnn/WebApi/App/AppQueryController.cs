@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         [HttpGet]
         [HttpPost]
         [AllowAnonymous] // will check security internally, so assume no requirements
-        public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query([FromUri] string name,
+        public IDictionary<string, IEnumerable<IDictionary<string, object>>> Query([FromUri] string name,
             [FromBody] AppQueryParameters more,
             [FromUri] bool includeGuid = false,
             [FromUri] string stream = null,
@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         [HttpGet]
         [HttpPost]
         [AllowAnonymous] // will check security internally, so assume no requirements
-        public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(
+        public IDictionary<string, IEnumerable<IDictionary<string, object>>> PublicQuery(
             [FromUri] string appPath,
             [FromUri] string name,
             [FromBody] AppQueryParameters more,

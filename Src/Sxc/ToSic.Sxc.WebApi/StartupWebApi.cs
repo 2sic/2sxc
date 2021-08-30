@@ -32,8 +32,9 @@ namespace ToSic.Sxc.WebApi
         public static IServiceCollection AddSxcWebApi(this IServiceCollection services)
         {
             // The top version should be deprecated soon, so we just use DataToDictionary or an Interface instead
-            services.TryAddTransient<Eav.Conversion.EntitiesToDictionary, DataToDictionary>();
+            services.TryAddTransient<Eav.Conversion.EntitiesToDictionary, DataToDictionary>(); // this is needed for all the EAV uses of conversion
             services.TryAddTransient<DataToDictionary>(); // WIP, not public, should use interface instead
+            services.TryAddTransient<IDataToDictionary, DataToDictionary>();
 
             services.TryAddScoped<ILinkPaths, LinkPaths>();
             services.TryAddTransient<IServerPaths, ServerPaths>();
