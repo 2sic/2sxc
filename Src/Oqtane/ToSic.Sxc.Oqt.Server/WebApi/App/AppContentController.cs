@@ -92,9 +92,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
         #endregion
 
         #region Delete
-        [HttpDelete]
+        [HttpDelete("{contentType}/{id}")]
         [AllowAnonymous]   // will check security internally, so assume no requirements
-        public void Delete([FromRoute] string contentType, [FromRoute] string id, [FromQuery] string appPath = null)
+        public void Delete(string contentType, string id, string appPath = null)
         {
             if (int.TryParse(id, out var intId))
             {
