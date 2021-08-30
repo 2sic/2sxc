@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Dnn
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        private static T Build<T>() => Eav.Factory.StaticBuild<T>();
+        private static T StaticBuild<T>() => Eav.Factory.StaticBuild<T>();
 
         /// <summary>
         /// Get a Root CMS Block if you know the TabId and the ModId
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Dnn
                 parentLog?.Add(msg);
                 throw new Exception(msg);
             }
-            var container = Build<DnnModule>().Init(moduleInfo, parentLog);
+            var container = StaticBuild<DnnModule>().Init(moduleInfo, parentLog);
             wrapLog?.Invoke("ok");
             return CmsBlock(container, parentLog);
         }
@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Dnn
         /// <param name="moduleInfo">A DNN ModuleInfo object</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
         public static IBlockBuilder CmsBlock(ModuleInfo moduleInfo)
-            => CmsBlock(Build<DnnModule>().Init(moduleInfo, null));
+            => CmsBlock(StaticBuild<DnnModule>().Init(moduleInfo, null));
 
         /// <summary>
         /// Get a Root CMS Block if you have the ModuleInfo object.
@@ -77,8 +77,8 @@ namespace ToSic.Sxc.Dnn
         public static IBlockBuilder CmsBlock(IModule module, ILog parentLog = null)
         {
             var dnnModule = ((Module<ModuleInfo>)module)?.UnwrappedContents;
-            var context = Build<IContextOfBlock>().Init(dnnModule, parentLog);
-            return Build<BlockFromModule>().Init(context, parentLog).BlockBuilder;
+            var context = StaticBuild<IContextOfBlock>().Init(dnnModule, parentLog);
+            return StaticBuild<BlockFromModule>().Init(context, parentLog).BlockBuilder;
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace ToSic.Sxc.Dnn
         /// <param name="blockBuilder">CMS Block for which the helper is targeted. </param>
         /// <returns>A Code Helper based on <see cref="IDnnDynamicCode"/></returns>
         public static IDnnDynamicCode DynamicCode(IBlockBuilder blockBuilder) 
-            => Build<DnnDynamicCodeRoot>().Init(blockBuilder.Block, null) as DnnDynamicCodeRoot;
+            => StaticBuild<DnnDynamicCodeRoot>().Init(blockBuilder.Block, null) as DnnDynamicCodeRoot;
 
         /// <summary>
         /// Get a full app-object for accessing data of the app from outside
@@ -136,7 +136,7 @@ namespace ToSic.Sxc.Dnn
             bool showDrafts = false,
             ILog parentLog = null)
             => App(Eav.Apps.App.AutoLookupZone, appId,
-                Build<DnnSite>() /*new DnnSite()*/.Swap(ownerPortalSettings), showDrafts, parentLog);
+                StaticBuild<DnnSite>() /*new DnnSite()*/.Swap(ownerPortalSettings), showDrafts, parentLog);
 
         [InternalApi_DoNotUse_MayChangeWithoutNotice]
         private static IApp App(
@@ -148,10 +148,10 @@ namespace ToSic.Sxc.Dnn
         {
             var log = new Log("Dnn.Factry", parentLog);
             log.Add($"Create App(z:{zoneId}, a:{appId}, tenantObj:{site != null}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
-            var app = Build<App>();
+            var app = StaticBuild<App>();
             if (site != null) app.PreInit(site);
             var appStuff = app.Init(new AppIdentity(zoneId, appId), 
-                Build<AppConfigDelegate>().Init(parentLog).Build(showDrafts),
+                StaticBuild<AppConfigDelegate>().Init(parentLog).Build(showDrafts),
                 parentLog);
             return appStuff;
         }
