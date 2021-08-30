@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Context.Query
         }
         public IEnumerator<KeyValuePair<string, StringValues>> GetEnumerator()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -24,17 +24,17 @@ namespace ToSic.Sxc.Context.Query
 
         public bool ContainsKey(string key)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public bool TryGetValue(string key, out StringValues value)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public int Count { get; }
         public ICollection<string> Keys { get; }
 
-        public StringValues this[string key] => throw new NotImplementedException();
+        public StringValues this[string key] => throw new NotSupportedException();
     }
 }

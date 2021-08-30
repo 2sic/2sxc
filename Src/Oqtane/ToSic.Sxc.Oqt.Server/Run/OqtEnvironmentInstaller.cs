@@ -35,7 +35,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public bool ResumeAbortedUpgrade()
         {
             // don't do anything for now
-            // throw new NotImplementedException();
             return true;
         }
 

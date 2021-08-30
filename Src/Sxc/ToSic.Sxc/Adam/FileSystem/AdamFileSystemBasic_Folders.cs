@@ -33,10 +33,10 @@ namespace ToSic.Sxc.Adam
 
 
         /// <inheritdoc />
-        public void Rename(IFolder folder, string newName) => throw new NotImplementedException();
+        public void Rename(IFolder folder, string newName) => throw new NotSupportedException();
 
         /// <inheritdoc />
-        public void Delete(IFolder folder) => throw new NotImplementedException();
+        public void Delete(IFolder folder) => throw new NotSupportedException();
 
         /// <inheritdoc />
         public Folder<string, string> Get(string path) => ToAdamFolder(path);

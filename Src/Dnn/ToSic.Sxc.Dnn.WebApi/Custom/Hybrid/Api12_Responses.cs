@@ -47,7 +47,7 @@ namespace Custom.Hybrid
         #region Content (ca. 5 overloads) can't be implemented, because it conflicts with our property "Content"
         //public dynamic Content(string content)
         //{
-        //    throw new NotImplementedException();
+        //    throw new NotSupportedException();
         //}
 
         //public dynamic Content(string content, string contentType)
@@ -166,7 +166,7 @@ namespace Custom.Hybrid
         ///// <returns>The created .net-core like `BadRequestObjectResult` for the response.</returns>
         //[NonAction]
         //public dynamic BadRequest(object error)
-        //    => throw new NotImplementedException();
+        //    => throw new NotSupportedException();
 
         ///// <summary>
         ///// Creates an .net-core like `BadRequestObjectResult` that produces a .net-core like `StatusCodes.Status400BadRequest` response.
@@ -175,7 +175,7 @@ namespace Custom.Hybrid
         ///// <returns>The created .net-core like `BadRequestObjectResult` for the response.</returns>
         //[NonAction]
         //public dynamic BadRequest(object modelState)
-        //    => throw new NotImplementedException();
+        //    => throw new NotSupportedException();
 
         #region
         /// <summary>

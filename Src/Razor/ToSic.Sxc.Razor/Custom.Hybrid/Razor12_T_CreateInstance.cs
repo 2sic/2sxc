@@ -36,7 +36,7 @@ namespace Custom.Hybrid
 
         protected dynamic CreateInstanceCshtml(string path)
         {
-            throw new NotImplementedException("CreateInstance with .cshtml files is not supported in Oqtane. We're still trying to find a solution, but ATM it doesn't work. Use a .cs file instead. ");
+            throw new NotSupportedException("CreateInstance with .cshtml files is not supported in Oqtane. We're still trying to find a solution, but ATM it doesn't work. Use a .cs file instead. ");
         }
 
         protected void VerifyFileExists(string path)

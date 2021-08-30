@@ -46,7 +46,7 @@ namespace ToSic.SexyContent.Razor
 
         public ILinkHelper Link => _DynCodeRoot.Link;
 
-        [PrivateApi] public dynamic DynamicModel => throw new NotImplementedException($"{nameof(DynamicModel)} not implemented on {nameof(SexyContentWebPage)}. Use a newer base class to leverage this. ");
+        [PrivateApi] public dynamic DynamicModel => throw new NotSupportedException($"{nameof(DynamicModel)} not implemented on {nameof(SexyContentWebPage)}. Use a newer base class to leverage this. ");
 
         /// <summary>
         /// Helper commands to enable in-page editing functionality

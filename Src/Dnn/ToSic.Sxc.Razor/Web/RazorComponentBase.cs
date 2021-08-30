@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Web
         protected dynamic CreateInstanceCshtml(string path)
         {
             if (_ErrorWhenUsingCreateInstanceCshtml != null)
-                throw new NotImplementedException(_ErrorWhenUsingCreateInstanceCshtml);
+                throw new NotSupportedException(_ErrorWhenUsingCreateInstanceCshtml);
             var webPage = (RazorComponentBase)CreateInstanceFromVirtualPath(path);
             webPage.ConfigurePage(this);
             return webPage;
