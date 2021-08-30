@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.ImportExport;
 using ToSic.Eav.Metadata;
@@ -21,7 +22,8 @@ namespace ToSic.Sxc.Apps.ImportExport
             Lazy<DbDataController> dbDataForAppImport,
             IImportExportEnvironment importExportEnvironment, 
             IRepositoryLoader repositoryLoader,
-            ITargetTypes metaTargetTypes) : base(importerLazy, dbDataForNewApp, dbDataForAppImport, importExportEnvironment, metaTargetTypes, "Sxc.XmlImp")
+            ITargetTypes metaTargetTypes,
+            SystemManager systemManager) : base(importerLazy, dbDataForNewApp, dbDataForAppImport, importExportEnvironment, metaTargetTypes, systemManager, "Sxc.XmlImp")
         {
             _cmsManagerLazy = cmsManagerLazy;
             _repositoryLoader = repositoryLoader.Init(Log);

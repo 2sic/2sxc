@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.DataSources;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 
@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Apps
 {
     public class CmsRuntime: AppRuntime
     {
-        public CmsRuntime(DataSourceFactory dataSourceFactory) : base(dataSourceFactory, "Sxc.CmsRt") { }
+        public CmsRuntime(AppRuntimeDependencies dependencies) : base(dependencies, "Sxc.CmsRt") { }
 
         public new CmsRuntime Init(IAppIdentity app, bool showDrafts, ILog parentLog) 
             => base.Init(app, showDrafts, parentLog) as CmsRuntime;

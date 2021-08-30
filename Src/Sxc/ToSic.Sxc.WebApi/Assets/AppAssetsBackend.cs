@@ -13,21 +13,27 @@ namespace ToSic.Sxc.WebApi.Assets
 
         #region Constructor / DI
 
-        private readonly TemplateHelpers _templateHelpers;
-        private readonly Lazy<AssetEditor> _assetEditorLazy;
-        private readonly IAssetTemplates _assetTemplates;
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IUser _user;
-
-        public AppAssetsBackend(TemplateHelpers templateHelpers, IUser user, Lazy<AssetEditor> assetEditorLazy, IAssetTemplates assetTemplates, IServiceProvider serviceProvider) : base("Bck.Assets")
+        public AppAssetsBackend(TemplateHelpers templateHelpers,
+            IUser user, 
+            Lazy<AssetEditor> assetEditorLazy, 
+            IAssetTemplates assetTemplates, 
+            IServiceProvider serviceProvider,
+            IAppStates appStates) : base("Bck.Assets")
         {
 
             _templateHelpers = templateHelpers;
             _assetEditorLazy = assetEditorLazy;
             _assetTemplates = assetTemplates;
             _serviceProvider = serviceProvider;
+            _appStates = appStates;
             _user = user;
         }
+        private readonly TemplateHelpers _templateHelpers;
+        private readonly Lazy<AssetEditor> _assetEditorLazy;
+        private readonly IAssetTemplates _assetTemplates;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IAppStates _appStates;
+        private readonly IUser _user;
 
         #endregion
 
@@ -71,7 +77,7 @@ namespace ToSic.Sxc.WebApi.Assets
         {
             var wrapLog = Log.Call<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
             var isAdmin = _user.IsAdmin;
-            var app = _serviceProvider.Build<Apps.App>().InitNoData(State.Identity(null, appId), Log);
+            var app = _serviceProvider.Build<Apps.App>().InitNoData(_appStates.Identity(null, appId), Log);
             var assetEditor = templateId != 0 && path == null
                 ? _serviceProvider.Build<AssetEditor>().Init(app, templateId, _user.IsSuperUser, isAdmin, Log)
                 : _serviceProvider.Build<AssetEditor>().Init(app, path, _user.IsSuperUser, isAdmin, global, Log);

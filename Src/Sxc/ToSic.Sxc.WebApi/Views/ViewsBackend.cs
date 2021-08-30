@@ -15,12 +15,14 @@ namespace ToSic.Sxc.WebApi.Views
     public class ViewsBackend: HasLog
     {
         private readonly Lazy<CmsManager> _cmsManagerLazy;
+        private readonly IAppStates _appStates;
         private readonly ISite _site;
         private readonly IUser _user;
 
-        public ViewsBackend(Lazy<CmsManager> cmsManagerLazy, IContextOfSite context) : base("Bck.Views")
+        public ViewsBackend(Lazy<CmsManager> cmsManagerLazy, IContextOfSite context, IAppStates appStates) : base("Bck.Views")
         {
             _cmsManagerLazy = cmsManagerLazy;
+            _appStates = appStates;
 
             _site = context.Site;
             _user = context.User;
@@ -36,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Views
         public IEnumerable<ViewDetailsDto> GetAll(int appId)
         {
             Log.Add($"get all a#{appId}");
-            var cms = _cmsManagerLazy.Value.Init(State.Identity(null, appId), true, Log).Read;
+            var cms = _cmsManagerLazy.Value.Init(_appStates.Identity(null, appId), true, Log).Read;
 
             var attributeSetList = cms.ContentTypes.All.OfScope(Settings.AttributeSetScope).ToList();
             var templateList = cms.Views.GetAll().ToList();

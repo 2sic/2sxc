@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public IDictionary<string, string> Scopes(int appId)
-            => State.Get(appId).ContentTypes.GetAllScopesWithLabels(); // new AppRuntime().Init(State.Identity(null, appId), false, Log).ContentTypes.ScopesWithLabels();
+            => _ctApiLazy.Value.Init(appId, Log).Scopes();
 
         /// <summary>
         /// Used to be GET ContentTypes/Scopes

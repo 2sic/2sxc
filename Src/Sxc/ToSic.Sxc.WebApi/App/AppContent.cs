@@ -114,7 +114,7 @@ namespace ToSic.Sxc.WebApi.App
 
             // Now create the cleaned up import-dictionary so we can create a new entity
             var cleanedNewItem = new AppContentEntityBuilder(Log)
-                .CreateEntityDictionary(contentType, newContentItem, Context.AppState.AppId);
+                .CreateEntityDictionary(contentType, newContentItem, Context.AppState/*.AppId*/);
 
             var userName = Context.User.IdentityToken;
 

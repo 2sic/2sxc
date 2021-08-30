@@ -61,7 +61,6 @@ namespace ToSic.Sxc.Engines
             var appPathRootInInstallation = Helpers.TemplateHelpers.Init(Block.App, Log).AppPathRoot(view.IsShared, PathTypes.PhysRelative);
             var subPath = view.Path;
             var templatePath = TryToFindPolymorphPath(appPathRootInInstallation, view, subPath)
-                               //?? Helpers.LinkPaths.ToAbsolute(Path.Combine(appPathRootInInstallation, subPath));
                                ?? Path.Combine(appPathRootInInstallation, subPath).ToAbsolutePathForwardSlash();
 
             // Throw Exception if Template does not exist
@@ -88,12 +87,11 @@ namespace ToSic.Sxc.Engines
         private string TryToFindPolymorphPath(string root, IView view, string subPath)
         {
             var wrapLog = Log.Call<string>($"{root}, {subPath}");
-            var polymorph = Helpers.Polymorphism.Init(Block.App.Data.List, Log); // new Polymorphism.Polymorphism(Block.App.Data.List, Log);
+            var polymorph = Helpers.Polymorphism.Init(Block.App.Data.List, Log);
             var edition = polymorph.Edition();
             if (edition == null) return wrapLog("no edition detected", null);
             Log.Add($"edition {edition} detected");
 
-            //var testPath = Helpers.LinkPaths.ToAbsolute(Path.Combine(root, edition, subPath));
             var testPath = Path.Combine(root, edition, subPath).ToAbsolutePathForwardSlash();
             if (File.Exists(Helpers.ServerPaths.FullAppPath(testPath)))
             {
@@ -106,7 +104,6 @@ namespace ToSic.Sxc.Engines
             if (firstSlash == -1) return wrapLog($"edition {edition} not found", null);
 
             subPath = subPath.Substring(firstSlash + 1);
-            //testPath = Helpers.LinkPaths.ToAbsolute(Path.Combine(root, edition, subPath));
             testPath = Path.Combine(root, edition, subPath).ToAbsolutePathForwardSlash();
             if (File.Exists(Helpers.ServerPaths.FullAppPath(testPath)))
             {
@@ -149,7 +146,7 @@ namespace ToSic.Sxc.Engines
                 return AlternateRendering;
 
             var renderedTemplate = RenderTemplate();
-            var depMan = Helpers.ClientDependencyOptimizer;// Factory.Resolve<IClientDependencyOptimizer>();
+            var depMan = Helpers.ClientDependencyOptimizer;
             var result = depMan.Process(renderedTemplate);
             ActivateJsApi = result.Item2;
             return result.Item1;
@@ -166,7 +163,7 @@ namespace ToSic.Sxc.Engines
             if (Template == null)
                 throw new RenderingException("Template Configuration Missing");
 
-            if (Template.ContentType != "" && Eav.Apps.State.Get(App).GetContentType(Template.ContentType) == null)
+            if (Template.ContentType != "" && Helpers.AppStatesLazy.Value.Get(App).GetContentType(Template.ContentType) == null)
                 throw new RenderingException("The contents of this module cannot be displayed because I couldn't find the assigned content-type.");
         }
 

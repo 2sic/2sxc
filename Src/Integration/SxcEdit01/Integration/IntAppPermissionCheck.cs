@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Security;
 
@@ -6,7 +7,7 @@ namespace IntegrationSamples.SxcEdit01.Integration
 {
     public class IntAppPermissionCheck: AppPermissionCheck
     {
-        public IntAppPermissionCheck() : base(IntConstants.LogPrefix)
+        public IntAppPermissionCheck(IAppStates appStates) : base(appStates, IntConstants.LogPrefix)
         {
         }
 

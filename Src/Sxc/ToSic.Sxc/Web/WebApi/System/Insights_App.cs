@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Web.WebApi.System
                         var appIdentity = new AppIdentity(zone.Value.ZoneId, a.Key);
                         var inCache = cache.Has(appIdentity);
                         var appState = inCache
-                            ? State.Get(appIdentity)
+                            ? _appStates.Get(appIdentity)
                             : null;
                         return new
                         {

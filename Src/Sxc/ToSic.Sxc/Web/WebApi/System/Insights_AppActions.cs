@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.Apps;
-
-namespace ToSic.Sxc.Web.WebApi.System
+﻿namespace ToSic.Sxc.Web.WebApi.System
 {
     public partial class Insights
     {
@@ -11,7 +9,7 @@ namespace ToSic.Sxc.Web.WebApi.System
             if (appId == null)
                 return "please add appid to the url parameters";
 
-            SystemManager.Purge(appId.Value, Log);
+            SystemManager.Init(Log).PurgeApp(appId.Value);
 
             return $"app {appId} has been purged";
         }

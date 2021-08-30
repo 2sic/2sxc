@@ -14,14 +14,15 @@ namespace ToSic.Sxc.WebApi.Save
     public class SxcPagePublishing: SaveHelperBase<SxcPagePublishing>
     {
         #region Constructor / DI
-        private readonly ContentGroupList _contentGroupList;
-        private readonly IPagePublishing _pagePublishing;
-
-        public SxcPagePublishing(ContentGroupList contentGroupList, IPagePublishing pagePublishing) : base("Sxc.PgPubl")
+        public SxcPagePublishing(ContentGroupList contentGroupList, IPagePublishing pagePublishing, IAppStates appStates) : base("Sxc.PgPubl")
         {
             _contentGroupList = contentGroupList;
             _pagePublishing = pagePublishing;
+            _appStates = appStates;
         }
+        private readonly ContentGroupList _contentGroupList;
+        private readonly IPagePublishing _pagePublishing;
+        private readonly IAppStates _appStates;
 
         #endregion
 
@@ -42,7 +43,7 @@ namespace ToSic.Sxc.WebApi.Save
             Dictionary<Guid, int> postSaveIds = null;
 
             // The internal call which will be used further down
-            var appIdentity = State.Identity(null, appId);
+            var appIdentity = _appStates.Identity(null, appId);
             var groupList = _contentGroupList.Init(appIdentity, Log, Context.UserMayEdit);
             Dictionary<Guid, int> SaveAndSaveGroupsInnerCall(Func<bool, Dictionary<Guid, int>> call,
                 bool forceSaveAsDraft)

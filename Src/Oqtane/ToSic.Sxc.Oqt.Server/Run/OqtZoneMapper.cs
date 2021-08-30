@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Oqtane.Models;
@@ -12,7 +11,6 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.Oqt.Shared.Dev;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
@@ -23,7 +21,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
             ISettingRepository settingRepository, 
             IServiceProvider serviceProvider,
             Lazy<ZoneCreator> zoneCreatorLazy,
-            OqtCulture oqtCulture) : base($"{OqtConstants.OqtLogPrefix}.ZoneMp")
+            OqtCulture oqtCulture, 
+            IAppStates appStates) : base(appStates, $"{OqtConstants.OqtLogPrefix}.ZoneMp")
         {
             _siteRepository = siteRepository;
             _settingRepository = settingRepository;

@@ -37,6 +37,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         private readonly Lazy<ImportApp> _importAppLazy;
         private readonly Lazy<AppCreator> _appBuilderLazy;
         private readonly Lazy<ResetApp> _resetAppLazy;
+        private readonly Lazy<SystemManager> _systemManagerLazy;
         protected override string HistoryLogName => "Api.App";
 
         public AppController(
@@ -45,8 +46,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             Lazy<ExportApp> exportAppLazy,
             Lazy<ImportApp> importAppLazy,
             Lazy<AppCreator> appBuilderLazy,
-            Lazy<ResetApp> resetAppLazy
-            )
+            Lazy<ResetApp> resetAppLazy,
+            Lazy<SystemManager> systemManagerLazy)
         {
             _appsBackendLazy = appsBackendLazy;
             _cmsZonesLazy = cmsZonesLazy;
@@ -54,6 +55,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             _importAppLazy = importAppLazy;
             _appBuilderLazy = appBuilderLazy;
             _resetAppLazy = resetAppLazy;
+            _systemManagerLazy = systemManagerLazy;
         }
 
         [HttpGet]
@@ -95,7 +97,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         public bool FlushCache(int zoneId, int appId)
         {
             var wrapLog = Log.Call<bool>($"{zoneId}, {appId}");
-            SystemManager.Purge(zoneId, appId, log: Log);
+            _systemManagerLazy.Value.Init(Log).Purge(zoneId, appId);
+            // SystemManager.Purge(zoneId, appId, log: Log);
             return wrapLog("ok", true);
         }
 

@@ -35,6 +35,7 @@ namespace ToSic.Sxc.WebApi.Views
         private readonly IEnvironmentLogger _envLogger;
         private readonly Lazy<CmsManager> _cmsManagerLazy;
         private readonly Lazy<JsonBundleSerializer> _jsonBundleLazy;
+        private readonly IAppStates _appStates;
         private readonly ISite _site;
         private readonly IUser _user;
 
@@ -43,13 +44,15 @@ namespace ToSic.Sxc.WebApi.Views
             IEnvironmentLogger envLogger,
             Lazy<CmsManager> cmsManagerLazy, 
             Lazy<JsonBundleSerializer> jsonBundleLazy, 
-            IContextOfSite context) : base("Bck.Views")
+            IContextOfSite context,
+            IAppStates appStates) : base("Bck.Views")
         {
             _serverPaths = serverPaths;
             _appHelpers = appHelpers;
             _envLogger = envLogger;
             _cmsManagerLazy = cmsManagerLazy;
             _jsonBundleLazy = jsonBundleLazy;
+            _appStates = appStates;
 
             _site = context.Site;
             _user = context.User;
@@ -115,7 +118,7 @@ namespace ToSic.Sxc.WebApi.Views
 
                 // 1. create the views
                 var serializer = _jsonBundleLazy.Value;
-                serializer.Init(State.Get(app), Log);
+                serializer.Init(_appStates.Get(app), Log);
 
                 var bundles = files.Select(f => serializer.Deserialize(f.Contents)).ToList();
 

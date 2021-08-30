@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public bool FlushCache(int zoneId, int appId)
         {
             var wrapLog = Log.Call<bool>($"{zoneId}, {appId}");
-            SystemManager.Purge(zoneId, appId, log: Log);
+            GetService<SystemManager>().Init(Log).Purge(zoneId, appId);
             return wrapLog("ok", true);
         }
 

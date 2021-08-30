@@ -10,9 +10,14 @@ namespace ToSic.Sxc.Context
     {
         #region Constructor / DI
 
-        public ContextOfBlock(IServiceProvider serviceProvider, ISite site, IUser user,
-            IPage page, IModule module, Lazy<IPagePublishingResolver> publishingResolver)
-            : base(serviceProvider, site, user)
+        public ContextOfBlock(
+            IServiceProvider serviceProvider, 
+            ISite site, 
+            IUser user,
+            IPage page, 
+            IModule module, 
+            Lazy<IPagePublishingResolver> publishingResolver, IAppStates appStates)
+            : base(serviceProvider, site, user, appStates)
         {
             Page = page;
             Module = module;
@@ -51,7 +56,7 @@ namespace ToSic.Sxc.Context
         private BlockPublishingState _publishing;
 
         /// <inheritdoc />
-        public new IContextOfSite Clone(ILog parentLog) => new ContextOfBlock(ServiceProvider, Site, User, Page, Module, _publishingResolver)
+        public new IContextOfSite Clone(ILog parentLog) => new ContextOfBlock(ServiceProvider, Site, User, Page, Module, _publishingResolver, AppStates)
             .Init(parentLog);
     }
 }

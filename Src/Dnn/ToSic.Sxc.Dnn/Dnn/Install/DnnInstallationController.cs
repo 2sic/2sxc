@@ -140,11 +140,14 @@ namespace ToSic.Sxc.Dnn.Install
             return version;
         }
 
+        // Note 2dm 2021-08-30
+        // I'm not sure what this actually does - I believe it was old code which captured some special issues when upgrading from pre-7 to 7
+        // I'm pretty sure we could just remove this, but when we do it we must test it, so don't just delete it
         private void MaybeResetUpgradeLogsToStartAgainFromV1()
         {
             _installLogger.LogStep("", "Maybe reset logs start");
             // this condition only applies, if 2sxc upgrade 7 didn't happen yet
-            var appState = State.Get(new AppIdentity(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId));
+            var appState = Eav.Factory.StaticBuild<IAppStates>()/* State*/.Get(new AppIdentity(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId));
             if (appState.GetContentType(Eav.ImportExport.Settings.TemplateContentType) != null) return;
 
             _installLogger.LogStep("", "Will reset all logs now");

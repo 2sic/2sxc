@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Security;
 using ToSic.Sxc.Context;
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.Dnn.Run
     {
         #region Constructor / DI
 
-        public DnnPermissionCheck() : base(DnnConstants.LogName)
+        public DnnPermissionCheck(IAppStates appStates) : base(appStates, DnnConstants.LogName)
         {
         }
 

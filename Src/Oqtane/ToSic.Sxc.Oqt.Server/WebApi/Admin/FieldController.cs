@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// Used to be GET ContentType/InputTypes
         /// </summary>
 	    [HttpGet]
-        public List<InputTypeInfo> InputTypes(int appId) => _appRuntime.Value.Init(State.Identity(null, appId), true, Log).ContentTypes.GetInputTypes();
+        public List<InputTypeInfo> InputTypes(int appId) => _appRuntime.Value.Init(appId, true, Log).ContentTypes.GetInputTypes();
 
         /// <inheritdoc />
         [HttpGet]

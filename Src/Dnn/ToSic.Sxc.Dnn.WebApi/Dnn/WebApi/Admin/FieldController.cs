@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// Used to be GET ContentType/InputTypes
         /// </summary>
 	    [HttpGet]
-        public List<InputTypeInfo> InputTypes(int appId) => GetService<AppRuntime>().Init(State.Identity(null, appId), true, Log).ContentTypes.GetInputTypes();
+        public List<InputTypeInfo> InputTypes(int appId) => GetService<AppRuntime>().Init(appId, true, Log).ContentTypes.GetInputTypes();
 
         /// <inheritdoc />
         [HttpGet]

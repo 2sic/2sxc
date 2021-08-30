@@ -11,11 +11,13 @@ namespace ToSic.Sxc.Context
     {
         #region Constructor / DI
 
-        public ContextOfApp(IServiceProvider serviceProvider, ISite site, IUser user) : base(serviceProvider, site, user)
+        public ContextOfApp(IServiceProvider serviceProvider, ISite site, IUser user, IAppStates appStates) : base(serviceProvider, site, user)
         {
+            AppStates = appStates;
             Log.Rename("Sxc.CtxApp");
         }
-        
+        protected readonly IAppStates AppStates;
+
         #endregion
 
         public void ResetApp(IAppIdentity appIdentity)
@@ -24,7 +26,7 @@ namespace ToSic.Sxc.Context
                 AppIdentity = appIdentity;
         }
 
-        public void ResetApp(int appId) => ResetApp(State.Identity(null /*Site.IsMultiZone ? null as int? : Site.ZoneId*/, appId));
+        public void ResetApp(int appId) => ResetApp(AppStates.Identity(null, appId));
 
         protected virtual IAppIdentity AppIdentity
         {
@@ -55,7 +57,7 @@ namespace ToSic.Sxc.Context
         }
         private bool? _userMayEdit;
 
-        public AppState AppState => _appState ?? (_appState = AppIdentity == null ? null : State.Get(AppIdentity));
+        public AppState AppState => _appState ?? (_appState = AppIdentity == null ? null : AppStates.Get(AppIdentity));
         private AppState _appState;
 
     }

@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Run;
-using ToSic.Eav.WebApi;
+//using ToSic.Eav.WebApi;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.ImportExport;
 using ToSic.Sxc.Conversion;
@@ -58,15 +58,15 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<LanguagesBackend>();
 
             // APIs
-            services.TryAddTransient<EntityPickerApi>();
-            services.TryAddTransient<ContentTypeApi>();
-            services.TryAddTransient<QueryApi>();
-            services.TryAddTransient<ContentExportApi>();
-            services.TryAddTransient<ContentImportApi>();
+            //services.TryAddTransient<EntityPickerApi>();
+            //services.TryAddTransient<ContentTypeApi>();
+            //services.TryAddTransient<QueryApi>();
+            //services.TryAddTransient<ContentExportApi>();
+            //services.TryAddTransient<ContentImportApi>();
             services.TryAddTransient<ApiExplorerBackend>();
 
             // Internal API helpers
-            services.TryAddTransient<EntityApi>();
+            //services.TryAddTransient<EntityApi>();
             services.TryAddTransient<Insights>();
             services.TryAddTransient<AppContent>();
             services.TryAddTransient<SxcPagePublishing>();
@@ -88,7 +88,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<ImpExpHelpers>();
 
             // Eav.WebApi
-            services.TryAddTransient<MetadataBackend>();
+            //services.TryAddTransient<MetadataBackend>();
 
             return services;
         }

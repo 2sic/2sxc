@@ -64,7 +64,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public IDictionary<string, string> Scopes(int appId)
-            => State.Get(appId).ContentTypes.GetAllScopesWithLabels();
+            => Backend.Init(appId, Log).Scopes();
+            //=> State.Get(appId).ContentTypes.GetAllScopesWithLabels();
 
         /// <summary>
         /// Used to be GET ContentTypes.

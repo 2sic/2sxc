@@ -4,12 +4,14 @@
 @model PrivacyModel
 @inject IConfiguration Config
 @{
-  ViewData["Title"] = "First Read Data from EAV";
+    ViewData["Title"] = "First Read Data from EAV";
 
-  // Adjust these values to your testing environment
-  var zoneId = 2;
-  var appId = 78;
-  var appState = State.Get(appId);
+    // Adjust these values to your testing environment
+    var zoneId = 2;
+    var appId = 78;
+  #pragma warning disable 618
+  var appState = ToSic.Eav.Factory.ObsoleteBuild<IAppStates>()/* State*/.Get(appId);
+  #pragma warning restore 618
   var firstItem = appState.List.FirstOrDefault();
 }
 <h1>@ViewData["Title"]</h1>
