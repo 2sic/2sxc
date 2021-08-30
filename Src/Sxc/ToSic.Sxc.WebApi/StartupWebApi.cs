@@ -83,10 +83,12 @@ namespace ToSic.Sxc.WebApi
             // js context / UI
             services.TryAddTransient<IUiContextBuilder, UiContextBuilderUnknown>();
             services.TryAddTransient<UiContextBuilderBase.Dependencies>();
-
-
+            
             // Helpers
             services.TryAddTransient<ImpExpHelpers>();
+
+            // Eav.WebApi
+            services.TryAddTransient<MetadataBackend>();
 
             return services;
         }
