@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Dnn.Install
             if (forContentApp)
                 try
                 {
-                    var primaryAppId = new ZoneRuntime().Init(site.ZoneId, Log).DefaultAppId;
+                    var primaryAppId = Eav.Factory.StaticBuild<IAppStates>().DefaultAppId(site.ZoneId); // .Init(site.ZoneId, Log).DefaultAppId;
                     // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                     var contentViews = Eav.Factory.StaticBuild<CmsRuntime>()
                         .Init(new AppIdentity(site.ZoneId, primaryAppId), false, Log)

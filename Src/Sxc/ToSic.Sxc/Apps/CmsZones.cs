@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Apps
 
         private readonly Lazy<AppsRuntime> _appsRuntimeLazy;
         private readonly Lazy<AppsManager> _appsManagerLazy;
-        public CmsZones(Lazy<AppsRuntime> appsRuntimeLazy, Lazy<AppsManager> appsManagerLazy) : base("Sxc.ZoneRt")
+        public CmsZones(Lazy<AppsRuntime> appsRuntimeLazy, Lazy<AppsManager> appsManagerLazy, IAppStates appStates) : base("Sxc.ZoneRt")
         {
             _appsRuntimeLazy = appsRuntimeLazy;
             _appsManagerLazy = appsManagerLazy;

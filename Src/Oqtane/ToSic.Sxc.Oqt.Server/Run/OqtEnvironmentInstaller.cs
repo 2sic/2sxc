@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             if (forContentApp)
                 try
                 {
-                    var primaryAppId = new ZoneRuntime().Init(site.ZoneId, Log).DefaultAppId;
+                    var primaryAppId = _appStates.DefaultAppId(site.ZoneId); // new ZoneRuntime().Init(site.ZoneId, Log).DefaultAppId;
                     // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                     var contentViews = _cmsRuntimeLazy.Value //  Eav.Factory.Resolve<CmsRuntime>()
                         .Init(_appStates.Identity(null, primaryAppId), false, Log)

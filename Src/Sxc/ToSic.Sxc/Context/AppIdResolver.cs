@@ -14,12 +14,13 @@ namespace ToSic.Sxc.Context
     {
         #region Constructor & DI
 
-        private readonly IHttp _http;
-
-        public AppIdResolver(IHttp http): base("Api.FindAp")
+        public AppIdResolver(IHttp http, AppFinder appFinder): base("Api.FindAp")
         {
             _http = http;
+            _appFinder = appFinder.Init(Log);
         }
+        private readonly IHttp _http;
+        private readonly AppFinder _appFinder;
 
         #endregion
 
@@ -31,7 +32,7 @@ namespace ToSic.Sxc.Context
         {
             var wrapLog = Log.Call<int>($"{zoneId}, {appPath}, {required}");
             // get app from AppName
-            var aid = new ZoneRuntime().Init(zoneId, Log).FindAppId(appPath, true);
+            var aid = _appFinder/* _zoneRuntime.Init(zoneId, Log)*/.FindAppId(zoneId, appPath, true);
             if (aid <= Eav.Constants.AppIdEmpty && required)
                 throw new Exception($"App required but can't find App based on the name '{appPath}'");
 

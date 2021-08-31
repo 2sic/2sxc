@@ -23,7 +23,8 @@ namespace ToSic.Sxc.Apps.ImportExport
             IImportExportEnvironment importExportEnvironment, 
             IRepositoryLoader repositoryLoader,
             ITargetTypes metaTargetTypes,
-            SystemManager systemManager) : base(importerLazy, dbDataForNewApp, dbDataForAppImport, importExportEnvironment, metaTargetTypes, systemManager, "Sxc.XmlImp")
+            SystemManager systemManager,
+            IAppStates appStates) : base(importerLazy, dbDataForNewApp, dbDataForAppImport, importExportEnvironment, metaTargetTypes, systemManager, appStates, "Sxc.XmlImp")
         {
             _cmsManagerLazy = cmsManagerLazy;
             _repositoryLoader = repositoryLoader.Init(Log);

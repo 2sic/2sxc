@@ -17,8 +17,8 @@ namespace ToSic.Sxc.Dnn.ImportExport
     {
         #region Constructor / DI
 
-        public DnnXmlExporter(IServiceProvider serviceProvider, ISite site, AdamManager<int, int> adamManager, IContextResolver ctxResolver, XmlSerializer xmlSerializer)
-            : base(xmlSerializer, DnnConstants.LogName)
+        public DnnXmlExporter(IServiceProvider serviceProvider, ISite site, AdamManager<int, int> adamManager, IContextResolver ctxResolver, XmlSerializer xmlSerializer, IAppStates appStates)
+            : base(xmlSerializer, appStates, DnnConstants.LogName)
         {
             _serviceProvider = serviceProvider;
             _site = site;

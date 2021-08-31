@@ -42,9 +42,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
             Lazy<IFolderRepository> folderRepositoryLazy,
             //Lazy<IServerPaths> oqtServerPathsLazy,
             //Lazy<ISiteRepository> siteRepositoryLazy,
-            Lazy<ITenantResolver> oqtTenantResolverLazy
+            Lazy<ITenantResolver> oqtTenantResolverLazy,
             //Lazy<IValueConverter> oqtValueConverterLazy
-            ) : base(xmlSerializer, OqtConstants.OqtLogPrefix)
+            IAppStates appStates
+            ) : base(xmlSerializer, appStates, OqtConstants.OqtLogPrefix)
         {
             //_serviceProvider = serviceProvider;
             _hostingEnvironment = hostingEnvironment;
