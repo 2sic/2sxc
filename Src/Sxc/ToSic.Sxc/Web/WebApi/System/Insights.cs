@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Caching;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 
@@ -10,14 +11,16 @@ namespace ToSic.Sxc.Web.WebApi.System
 
         #region Constructor / DI
 
-        public Insights(IServiceProvider serviceProvider, IAppStates appStates, SystemManager systemManager) : base("Api.SysIns")
+        public Insights(IServiceProvider serviceProvider, IAppStates appStates, SystemManager systemManager, IAppsCache appsCache) : base("Api.SysIns")
         {
             _serviceProvider = serviceProvider;
             _appStates = appStates;
+            _appsCache = appsCache;
             SystemManager = systemManager.Init(Log);
         }
         private readonly IServiceProvider _serviceProvider;
         private readonly IAppStates _appStates;
+        private readonly IAppsCache _appsCache;
         protected readonly SystemManager SystemManager;
 
 

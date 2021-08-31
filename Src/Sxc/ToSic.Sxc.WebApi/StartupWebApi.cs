@@ -39,6 +39,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddScoped<ILinkPaths, LinkPaths>();
             services.TryAddTransient<IServerPaths, ServerPaths>();
             services.TryAddTransient<XmlImportWithFiles, XmlImportFull>();
+            services.TryAddTransient<XmlImportWithFiles.Dependencies>();
             services.TryAddTransient<TemplateHelpers, TemplateHelpers>();
             services.TryAddTransient<EngineBaseDependencies>();
 

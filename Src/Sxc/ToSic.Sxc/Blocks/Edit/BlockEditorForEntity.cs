@@ -8,10 +8,11 @@ namespace ToSic.Sxc.Blocks.Edit
 {
     internal class BlockEditorForEntity : BlockEditorBase
     {
-        public BlockEditorForEntity(IServiceProvider serviceProvider, Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> outerBlockManagerLazy, Lazy<CmsManager> parentBlockManagerLazy) 
+        public BlockEditorForEntity(IServiceProvider serviceProvider, Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> outerBlockManagerLazy, Lazy<CmsManager> parentBlockManagerLazy, IAppStates appStates) 
             : base(serviceProvider, lazyCmsRuntime, outerBlockManagerLazy)
         {
             _parentBlockManagerLazy = parentBlockManagerLazy;
+            _appStates = appStates;
         }
 
         #region methods which the entity-implementation must customize 
@@ -29,9 +30,9 @@ namespace ToSic.Sxc.Blocks.Edit
             var appName = "";
             if (appId.HasValue)
             {
-                var cache = State.Cache;
-                var zoneAppId = cache.GetIdentity(null, appId);
-                appName = cache.Zones[zoneAppId.ZoneId].Apps[appId.Value];
+                //var cache = State.Cache;
+                var zoneAppId = _appStates.Identity(null, appId); // cache.GetIdentity(null, appId);
+                appName = _appStates.AppIdentifier(zoneAppId.ZoneId, zoneAppId.AppId); // cache.Zones[zoneAppId.ZoneId].Apps[appId.Value];
             }
             UpdateValue(BlockFromEntity.CbPropertyApp, appName);
         }
@@ -60,6 +61,7 @@ namespace ToSic.Sxc.Blocks.Edit
             _appManager ?? (_appManager = _parentBlockManagerLazy.Value.Init(((BlockBase)Block).Parent.App, Log));
         private AppManager _appManager;
         private readonly Lazy<CmsManager> _parentBlockManagerLazy;
+        private readonly IAppStates _appStates;
 
         #endregion
 

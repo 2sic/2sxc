@@ -8,6 +8,7 @@ using System.Web;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Caching;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Helpers;
@@ -40,12 +41,14 @@ namespace ToSic.Sxc.Search
     /// </remarks>
     public class SearchController : HasLog<SearchController>
     {
-        private readonly IServiceProvider _serviceProvider;
-
-        public SearchController(IServiceProvider serviceProvider) : base("DNN.Search")
+        public SearchController(IServiceProvider serviceProvider, IAppsCache appsCache) : base("DNN.Search")
         {
             _serviceProvider = serviceProvider;
+            _appsCache = appsCache;
         }
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IAppsCache _appsCache;
+
 
         /// <summary>
         /// Initialize all values which are needed - or return a text with the info why we must stop. 
@@ -67,7 +70,7 @@ namespace ToSic.Sxc.Search
 
             // Ensure cache builds up with correct primary language
             // In case it's not loaded yet
-            State.Cache.Load(module.BlockIdentifier, DnnSite.DefaultCultureCode);
+            _appsCache/*State.Cache*/.Load(module.BlockIdentifier, DnnSite.DefaultCultureCode);
 
             var dnnContext = _serviceProvider.Build<IContextOfBlock>().Init(DnnModule, Log);
             Block = _serviceProvider.Build<BlockFromModule>().Init(dnnContext, Log);

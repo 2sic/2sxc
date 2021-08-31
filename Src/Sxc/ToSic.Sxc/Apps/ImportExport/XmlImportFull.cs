@@ -16,15 +16,18 @@ namespace ToSic.Sxc.Apps.ImportExport
         private readonly Lazy<CmsManager> _cmsManagerLazy;
         private readonly IRepositoryLoader _repositoryLoader;
 
-        public XmlImportFull(Lazy<Import> importerLazy, 
-            Lazy<CmsManager> cmsManagerLazy, 
-            Lazy<DbDataController> dbDataForNewApp,
-            Lazy<DbDataController> dbDataForAppImport,
-            IImportExportEnvironment importExportEnvironment, 
-            IRepositoryLoader repositoryLoader,
-            ITargetTypes metaTargetTypes,
-            SystemManager systemManager,
-            IAppStates appStates) : base(importerLazy, dbDataForNewApp, dbDataForAppImport, importExportEnvironment, metaTargetTypes, systemManager, appStates, "Sxc.XmlImp")
+        public XmlImportFull(
+            Dependencies dependencies,
+            Lazy<CmsManager> cmsManagerLazy,
+            IRepositoryLoader repositoryLoader
+            //Lazy<Import> importerLazy, 
+            //Lazy<DbDataController> dbDataForNewApp,
+            //Lazy<DbDataController> dbDataForAppImport,
+            //IImportExportEnvironment importExportEnvironment, 
+            //ITargetTypes metaTargetTypes,
+            //SystemManager systemManager,
+            //IAppStates appStates
+            ) : base(dependencies, /*importerLazy, dbDataForNewApp, dbDataForAppImport, importExportEnvironment, metaTargetTypes, systemManager, appStates,*/ "Sxc.XmlImp")
         {
             _cmsManagerLazy = cmsManagerLazy;
             _repositoryLoader = repositoryLoader.Init(Log);
