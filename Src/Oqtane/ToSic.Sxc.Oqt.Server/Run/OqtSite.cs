@@ -1,15 +1,12 @@
 ﻿using Oqtane.Models;
 using Oqtane.Repository;
-using Oqtane.Shared;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Block;
+using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
 
@@ -24,19 +21,20 @@ namespace ToSic.Sxc.Oqt.Server.Run
         /// <summary>
         /// Constructor for DI
         /// </summary>
-        public OqtSite(SiteState siteState,
+        public OqtSite(SiteStateInitializer siteStateInitializer,
             Lazy<ISiteRepository> siteRepository,
             Lazy<IServerPaths> serverPaths,
             Lazy<OqtZoneMapper> zoneMapper,
             Lazy<OqtCulture> oqtCulture)
         {
-            _siteState = siteState;
+            _siteStateInitializer = siteStateInitializer;
             _siteRepository = siteRepository;
             _serverPaths = serverPaths;
             _zoneMapper = zoneMapper;
             _oqtCulture = oqtCulture;
         }
-        private readonly SiteState _siteState;
+
+        private readonly SiteStateInitializer _siteStateInitializer;
         private readonly Lazy<ISiteRepository> _siteRepository;
         private readonly Lazy<IServerPaths> _serverPaths;
         private readonly Lazy<OqtZoneMapper> _zoneMapper;
@@ -61,7 +59,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             protected set => _unwrapped = value;
         }
         private Site _unwrapped;
-        private Alias Alias => _siteState.Alias;
+        private Alias Alias => _siteStateInitializer.InitializedState.Alias;
 
         /// <inheritdoc />
         public override string DefaultCultureCode => _defaultCultureCode ??= _oqtCulture.Value.DefaultCultureCode;
@@ -86,7 +84,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public override string AppsRootPhysical => string.Format(OqtConstants.AppRootPublicBase, Id);
 
         [PrivateApi]
-        public override string AppAssetsLinkTemplate => OqtAssetsAndHeaders.GetSiteRoot(_siteState)
+        public override string AppAssetsLinkTemplate => OqtAssetsAndHeaders.GetSiteRoot(_siteStateInitializer.InitializedState)
                                                         + WebApiConstants.AppRoot + "/" + LinkPaths.AppFolderPlaceholder + "/assets";
 
         [PrivateApi] public override string AppsRootPhysicalFull => _serverPaths.Value.FullAppPath(AppsRootPhysical);

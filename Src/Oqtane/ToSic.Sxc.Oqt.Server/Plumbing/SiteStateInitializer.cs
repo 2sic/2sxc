@@ -9,14 +9,14 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
 {
     public class SiteStateInitializer
     {
-        public SiteState SiteState { get; }
+        public Lazy<SiteState> SiteStateLazy { get; }
         public IHttpContextAccessor HttpContextAccessor { get; }
         public Lazy<IAliasRepository> AliasRepositoryLazy { get; }
 
-        public SiteStateInitializer(SiteState siteState, IHttpContextAccessor httpContextAccessor,
+        public SiteStateInitializer(Lazy<SiteState> siteStateLazy, IHttpContextAccessor httpContextAccessor,
             Lazy<IAliasRepository> aliasRepositoryLazy)
         {
-            SiteState = siteState;
+            SiteStateLazy = siteStateLazy;
             HttpContextAccessor = httpContextAccessor;
             AliasRepositoryLazy = aliasRepositoryLazy;
         }
@@ -29,9 +29,9 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
         {
             get
             {
-                if (SiteState.Alias != null) return SiteState;
+                if (SiteStateLazy.Value?.Alias != null) return SiteStateLazy.Value;
                 InitIfEmpty();
-                return SiteState;
+                return SiteStateLazy.Value;
             }
         }
 
@@ -41,11 +41,13 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
         /// <returns></returns>
         internal bool InitIfEmpty(int? siteId = null)
         {
+            var siteState = SiteStateLazy.Value;
+
             // This would indicate it was called improperly, because we need the shared SiteState variable to work properly
-            if (SiteState == null) throw new ArgumentNullException(nameof(SiteState));
+            if (siteState == null) throw new ArgumentNullException(nameof(siteState));
 
             // Check if alias already set, in which case we skip this
-            if (SiteState.Alias != null) return true;
+            if (siteState.Alias != null) return true;
 
             // For anything else we need the httpContext, otherwise skip
             var request = HttpContextAccessor?.HttpContext?.Request;
@@ -55,7 +57,7 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
             object alias = null;
             if ((HttpContextAccessor?.HttpContext?.Items.TryGetValue("AliasFor2sxc", out alias) ?? false) && alias != null)
             {
-                SiteState.Alias = (Alias) alias;
+                siteState.Alias = (Alias) alias;
                 return false;
             }
 
@@ -67,11 +69,11 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
                 var aliases = AliasRepositoryLazy.Value.GetAliases().ToList(); // cached by Oqtane
 
                 if (siteId.HasValue) // acceptable solution
-                    SiteState.Alias = aliases.OrderByDescending(a => a.Name.Length)
+                    siteState.Alias = aliases.OrderByDescending(a => a.Name.Length)
                         .ThenBy(a => a.Name)
                         .FirstOrDefault(a => a.SiteId == siteId.Value && a.Name.StartsWith(url, StringComparison.InvariantCultureIgnoreCase));
                 else // fallback solution, wrong site is possible
-                    SiteState.Alias = aliases.OrderByDescending(a => a.Name)
+                    siteState.Alias = aliases.OrderByDescending(a => a.Name)
                         .FirstOrDefault(a => a.Name.StartsWith(url, StringComparison.InvariantCultureIgnoreCase));
             }
             else // great solution
@@ -79,12 +81,12 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
                 var url = $"{request.Host}{request.Path}";
 
                 var aliases = AliasRepositoryLazy.Value.GetAliases().ToList(); // cached by Oqtane
-                SiteState.Alias = aliases.OrderByDescending(a => a.Name.Length)
+                siteState.Alias = aliases.OrderByDescending(a => a.Name.Length)
                     .ThenBy(a => a.Name)
                     .FirstOrDefault(a => url.StartsWith(a.Name, StringComparison.InvariantCultureIgnoreCase));
             }
 
-            return SiteState.Alias != null;
+            return siteState.Alias != null;
         }
 
     }
