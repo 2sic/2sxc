@@ -56,6 +56,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<FeaturesBackend>();
             services.TryAddTransient<UsageBackend>();
             services.TryAddTransient<LanguagesBackend>();
+            services.TryAddTransient<QueryBackend>();
 
             // APIs
             //services.TryAddTransient<EntityPickerApi>();
