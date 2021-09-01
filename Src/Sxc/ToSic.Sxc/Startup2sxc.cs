@@ -59,7 +59,7 @@ namespace ToSic.Sxc
             // Context stuff in general
             services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
             services.TryAddTransient<IContextOfApp, ContextOfApp>();
-            services.TryAddTransient<ContextOfBlock>();
+            // 2021-09-01 2dm seems unused services.TryAddTransient<ContextOfBlock>();
             services.TryAddTransient<IPage, Page>();
             services.TryAddTransient<Page>();
             services.TryAddTransient<ICmsContext, CmsContext>();

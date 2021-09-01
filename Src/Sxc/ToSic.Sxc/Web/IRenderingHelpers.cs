@@ -1,9 +1,11 @@
 ﻿using System;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Web
 {
+    [PrivateApi("Internal only")]
     public interface IRenderingHelper
     {
         IRenderingHelper Init(IBlock block, ILog parentLog);
@@ -14,7 +16,7 @@ namespace ToSic.Sxc.Web
             int contentBlockId = 0, 
             bool editContext = false, 
             string tag = "div",
-            bool autoToolbar = false,
+            // 2021-09-01 not used bool autoToolbar = false,
             bool addLineBreaks = true);
 
         string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos);

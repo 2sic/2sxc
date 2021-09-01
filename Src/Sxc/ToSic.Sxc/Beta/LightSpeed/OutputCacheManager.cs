@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Beta.LightSpeed
     {
         internal const string GlobalCacheRoot = "2sxc.Lightspeed.";
 
-        public bool IsEnabled => true;
+        public bool IsEnabled => false;
 
         public bool HasCache(int moduleId)
         {
@@ -21,7 +21,6 @@ namespace ToSic.Sxc.Beta.LightSpeed
         {
             var expiration = new TimeSpan(0, 0, 30);
             var policy = new CacheItemPolicy { SlidingExpiration = expiration };
-            //var data = new OutputCacheItem { Html = item };
             Cache.Add(new CacheItem(GlobalCacheRoot + moduleId, data), policy);
             CachedIds[moduleId] = true;
         }

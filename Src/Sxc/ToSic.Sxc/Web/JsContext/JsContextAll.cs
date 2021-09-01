@@ -2,6 +2,7 @@
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit.ClientContextInfo;
+using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.Web.JsContext
 {
@@ -39,6 +40,7 @@ namespace ToSic.Sxc.Web.JsContext
             ContentBlockReference = new ContentBlockReferenceDto(block, ctx.Publishing.Mode);
             ContentBlock = new ContentBlockDto(block);
             Ui = new UiDto(((BlockBuilder)block.BlockBuilder)?.UiAutoToolbar ?? false);
+            // Ui = new UiDto((block.BlockBuilder.Run().Features.Contains(BuiltInFeatures.AutoToolbarGlobal)));// ?? false);
 
             error = new ErrorDto(block);
             return this;

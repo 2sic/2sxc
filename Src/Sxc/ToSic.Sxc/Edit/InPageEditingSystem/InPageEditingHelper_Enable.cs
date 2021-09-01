@@ -2,6 +2,8 @@
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Web.PageFeatures;
+
 // using Feats = ToSic.Eav.Configuration.Features;
 
 namespace ToSic.Sxc.Edit.InPageEditingSystem
@@ -25,7 +27,8 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
             // check if feature enabled - if more than the api is needed
             // extend this list if new parameters are added
-            if (forms.HasValue || styles.HasValue || context.HasValue || autoToolbar.HasValue)
+            // 2021-09-1 2dm- I think this was a bug, it checked for many more things but the feature-form check is only important for the form
+            if (forms == true) // .HasValue || styles.HasValue || context.HasValue || autoToolbar.HasValue)
             {
                 var feats = new[] {FeatureIds.PublicForms};
                 var features = Block.Context.ServiceProvider.Build<Features>();
@@ -36,21 +39,35 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             // find the root host, as this is the one we must tell what js etc. we need
             var hostWithInternals = (BlockBuilder) Block.BlockBuilder.RootBuilder;
 
-            if (js.HasValue || api.HasValue || forms.HasValue)
-                hostWithInternals.UiAddJsApi = (js ?? false) || (api ?? false) || (forms ?? false);
+            var psf = Block?.Context?.PageServiceShared;
+
+            if (js == true || api ==true || forms == true)
+            {
+                psf?.Activate(BuiltInFeatures.Core.Key);
+                //hostWithInternals.UiAddJsApi = (js ?? false) || (api ?? false) || (forms ?? false);
+            }
 
             // only update the values if true, otherwise leave untouched
-            if (api.HasValue || forms.HasValue)
-                hostWithInternals.UiAddEditApi = (api ?? false) || (forms ?? false);
+            if (api == true || forms == true)
+            {
+                psf?.Activate(BuiltInFeatures.EditApi.Key);
+                //hostWithInternals.UiAddEditApi = (api ?? false) || (forms ?? false);
+            }
 
             if (styles.HasValue)
-                hostWithInternals.UiAddEditUi = styles.Value;
+            {
+                psf?.Activate(BuiltInFeatures.EditUi.Key);
+                //hostWithInternals.UiAddEditUi = styles.Value;
+            }
 
             if (context.HasValue)
                 hostWithInternals.UiAddEditContext = context.Value;
 
             if (autoToolbar.HasValue)
+            {
+                psf?.Activate(BuiltInFeatures.AutoToolbarGlobal.Key);
                 hostWithInternals.UiAutoToolbar = autoToolbar.Value;
+            }
 
             return null;
         }

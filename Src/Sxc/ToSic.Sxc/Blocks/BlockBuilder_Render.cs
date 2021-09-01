@@ -1,10 +1,10 @@
 ﻿using System;
-using ToSic.Eav;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -17,8 +17,46 @@ namespace ToSic.Sxc.Blocks
             _rendHelp ?? (_rendHelp = Block.Context.ServiceProvider.Build<IRenderingHelper>().Init(Block, Log));
         private IRenderingHelper _rendHelp;
 
+        public string Render() => Run().Html;
 
-        public string Render()
+        public RenderResultWIP Run()
+        {
+            if (_result != null) return _result;
+            var wrapLog = Log.Call<RenderResultWIP>();
+            try
+            {
+                var result = new RenderResultWIP
+                {
+                    Html = RenderInternal(),
+                    ModuleId = Block.ParentId
+                };
+
+                result.DependentApps.Add(Block.AppId);
+
+                result.Assets = Assets;
+                if (Block.Context.UserMayEdit)
+                {
+                    Block.Context.PageServiceShared.Activate(BuiltInFeatures.EditApi.Key);
+                    Block.Context.PageServiceShared.Activate(BuiltInFeatures.AutoToolbarGlobal.Key);
+                }
+
+                result.Features = Block.Context.PageServiceShared.Features.GetWithDependentsAndFlush(Log);
+
+                result.Ready = true;
+                _result = result;
+            }
+            catch (Exception ex)
+            {
+                Log.Add("Error!");
+                Log.Exception(ex);
+            }
+
+            return wrapLog(null, _result);
+        }
+
+        private RenderResultWIP _result = null;
+
+        private string RenderInternal()
         {
           var wrapLog = Log.Call<string>();
 
@@ -60,10 +98,12 @@ namespace ToSic.Sxc.Blocks
                             if (engine.ActivateJsApi)
                             {
                                 Log.Add("template referenced 2sxc.api JS in script-tag: will enable");
-                                if (RootBuilder is BlockBuilder parentBlock) parentBlock.UiAddJsApi = engine.ActivateJsApi;
+                                // 2021-09-01 before: if (RootBuilder is BlockBuilder parentBlock) parentBlock.UiAddJsApi = engine.ActivateJsApi;
+                                // todo: should change this, so the param isn't in ActivateJsApi but clearer
+                                Block.Context.PageServiceShared.Features.Activate(BuiltInFeatures.Core.Key);
                             }
 
-                            TransferEngineAssets(engine);
+                            TransferEngineAssetsToParent(engine);
                         }
                         else body = "";
                     }
@@ -78,8 +118,7 @@ namespace ToSic.Sxc.Blocks
                     ? RenderingHelper.WrapInContext(body,
                         instanceId: Block.ParentId,
                         contentBlockId: Block.ContentBlockId,
-                        editContext: UiAddEditContext,
-                        autoToolbar: UiAutoToolbar)
+                        editContext: UiAddEditContext)
                     : body;
                 #endregion
 
@@ -87,6 +126,7 @@ namespace ToSic.Sxc.Blocks
             }
             catch (Exception ex)
             {
+                // TODO: CRITICAL - this will also result in wrapping, so it should be in run, not in render-internal
                 return wrapLog("error", RenderingHelper.DesignErrorMessage(ex, true,
                     null, true, true));
             }

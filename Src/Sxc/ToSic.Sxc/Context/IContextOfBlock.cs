@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Sxc.Cms.Publishing;
+using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Context
 {
@@ -19,5 +20,11 @@ namespace ToSic.Sxc.Context
         /// Publishing information about the current context
         /// </summary>
         BlockPublishingState Publishing { get; }
+
+        /// <summary>
+        /// WIP
+        /// </summary>
+        PageServiceShared PageServiceShared { get; }
+
     }
 }

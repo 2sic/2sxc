@@ -1,15 +1,12 @@
-﻿using System.Collections.Generic;
-using ToSic.Sxc.Web;
-using ToSic.Sxc.Web.PageFeatures;
+﻿using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Beta.LightSpeed
 {
     public class OutputCacheItem
     {
-        public string Html;
+        public RenderResultWIP Data;
+
         public bool EnforcePre1025 = true;
-        public List<IPageFeature> Features;
-        public List<ClientAssetInfo> Assets;
 
     }
 }

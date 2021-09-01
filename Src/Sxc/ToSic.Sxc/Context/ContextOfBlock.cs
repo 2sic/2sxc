@@ -1,11 +1,14 @@
 ﻿using System;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Cms.Publishing;
+using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Context
 {
+    [PrivateApi("Internal stuff, not for public use")]
     public class ContextOfBlock: ContextOfApp, IContextOfBlock
     {
         #region Constructor / DI
@@ -16,11 +19,14 @@ namespace ToSic.Sxc.Context
             IUser user,
             IPage page, 
             IModule module, 
-            Lazy<IPagePublishingResolver> publishingResolver, IAppStates appStates)
+            Lazy<IPagePublishingResolver> publishingResolver,
+            PageServiceShared pageServiceShared,
+            IAppStates appStates)
             : base(serviceProvider, site, user, appStates)
         {
             Page = page;
             Module = module;
+            PageServiceShared = pageServiceShared;
             _publishingResolver = publishingResolver;
             Log.Rename("Sxc.CtxBlk");
         }
@@ -51,12 +57,14 @@ namespace ToSic.Sxc.Context
         /// <inheritdoc />
         public IModule Module { get; }
 
+        public PageServiceShared PageServiceShared { get; }
+
         /// <inheritdoc />
         public BlockPublishingState Publishing => _publishing ?? (_publishing = _publishingResolver.Value.GetPublishingState(Module?.Id ?? -1));
         private BlockPublishingState _publishing;
 
         /// <inheritdoc />
-        public new IContextOfSite Clone(ILog parentLog) => new ContextOfBlock(ServiceProvider, Site, User, Page, Module, _publishingResolver, AppStates)
+        public new IContextOfSite Clone(ILog parentLog) => new ContextOfBlock(ServiceProvider, Site, User, Page, Module, _publishingResolver, PageServiceShared, AppStates)
             .Init(parentLog);
     }
 }

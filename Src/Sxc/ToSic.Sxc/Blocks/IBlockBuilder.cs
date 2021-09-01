@@ -19,6 +19,9 @@ namespace ToSic.Sxc.Blocks
         /// <returns></returns>
         string Render();
 
+        [PrivateApi]
+        RenderResultWIP Run();
+
         /// <summary>
         /// The real block / unit of content which will be rendered. 
         /// </summary>

@@ -61,8 +61,7 @@ namespace ToSic.Sxc.Dnn
                             msg = renderingHelper.WrapInContext(msg,
                                 instanceId: Block.ParentId,
                                 contentBlockId: Block.ContentBlockId,
-                                editContext: true,
-                                autoToolbar: true);
+                                editContext: true);
                     }
                     catch { /* ignore */ }
 

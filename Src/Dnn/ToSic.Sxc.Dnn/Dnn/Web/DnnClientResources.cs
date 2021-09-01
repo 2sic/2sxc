@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Dnn.Web
         }
 
 
-        internal List<IPageFeature> Features => _features ?? (_features = PageServiceShared.Features.GetWithDependentsAndFlush(Log));
+        internal List<IPageFeature> Features => _features ?? (_features = BlockBuilder?.Run().Features ?? new List<IPageFeature>());// PageServiceShared.Features.GetWithDependentsAndFlush(Log));
         private List<IPageFeature> _features;
 
         public List<IPageFeature> AddEverything(List<IPageFeature> features = null)
@@ -50,13 +50,13 @@ namespace ToSic.Sxc.Dnn.Web
             // auto-detect Blockbuilder params
             if (features == null)
             {
-                var activateEditApi = BlockBuilder?.UiAddEditApi ?? false;
-                if (activateEditApi)
-                    PageServiceShared.Features.Activate(BuiltInFeatures.EditApi.Key);
-                if(BlockBuilder?.UiAddJsApi ?? activateEditApi)
-                    PageServiceShared.Features.Activate(BuiltInFeatures.Core.Key);
-                if (BlockBuilder?.UiAddEditUi ?? false)
-                    PageServiceShared.Features.Activate(BuiltInFeatures.EditUi.Key);
+                //var activateEditApi = BlockBuilder?.UiAddEditApi ?? false;
+                //if (activateEditApi)
+                //    PageServiceShared.Features.Activate(BuiltInFeatures.EditApi.Key);
+                //if(BlockBuilder?.UiAddJsApi ?? activateEditApi)
+                //    PageServiceShared.Features.Activate(BuiltInFeatures.Core.Key);
+                //if (BlockBuilder?.UiAddEditUi ?? false)
+                //    PageServiceShared.Features.Activate(BuiltInFeatures.EditUi.Key);
             
                 // now get expanded list and flush in the PageServiceShared;
                 features = Features;

@@ -41,9 +41,9 @@ namespace ToSic.Sxc.Oqt.Server.Block
         #endregion
 
 
-        private bool AddJsCore => Features.Contains(BuiltInFeatures.Core) || (BlockBuilder?.UiAddJsApi ?? AddJsEdit); //BlockBuilder?.UiAddJsApi ?? false;
-        private bool AddJsEdit => Features.Contains(BuiltInFeatures.EditApi) || (BlockBuilder?.UiAddEditApi ?? false);  // BlockBuilder?.UiAddEditApi ?? false;
-        private bool AddCssEdit => Features.Contains(BuiltInFeatures.EditUi) || (BlockBuilder?.UiAddEditUi ?? false);  // BlockBuilder?.UiAddEditUi ?? false;
+        private bool AddJsCore => Features.Contains(BuiltInFeatures.Core); // || (BlockBuilder?.UiAddJsApi ?? AddJsEdit); //BlockBuilder?.UiAddJsApi ?? false;
+        private bool AddJsEdit => Features.Contains(BuiltInFeatures.EditApi); // || (BlockBuilder?.UiAddEditApi ?? false);  // BlockBuilder?.UiAddEditApi ?? false;
+        private bool AddCssEdit => Features.Contains(BuiltInFeatures.EditUi); // || (BlockBuilder?.UiAddEditUi ?? false);  // BlockBuilder?.UiAddEditUi ?? false;
 
         /// <summary>
         /// The JavaScripts needed
@@ -89,7 +89,7 @@ namespace ToSic.Sxc.Oqt.Server.Block
         public static string GetSiteRoot(SiteState siteState)
             => siteState?.Alias?.Name == null ? OqtConstants.SiteRoot : new Uri($"http://{siteState.Alias.Name}/").AbsolutePath.SuffixSlash();
 
-        internal List<IPageFeature> Features => _features ??= /*PageService*/PageServiceShared.Features.GetWithDependentsAndFlush(Log);
+        internal List<IPageFeature> Features => _features ??= BlockBuilder?.Run().Features ?? new List<IPageFeature>(); // PageServiceShared.Features.GetWithDependentsAndFlush(Log);
         private List<IPageFeature> _features;
 
         /// <summary>
