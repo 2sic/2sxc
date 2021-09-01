@@ -1,7 +1,14 @@
-﻿using ToSic.Eav.Documentation;
+﻿using System.Collections.Generic;
+using System.Web.UI;
+using DotNetNuke.Web.Client.ClientResourceManagement;
+using DotNetNuke.Web.Client.Providers;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Dnn;
+using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Dnn.Services
@@ -16,13 +23,35 @@ namespace ToSic.Sxc.Dnn.Services
             PageServiceShared = pageServiceShared;
         }
 
+        public int Apply(Page page, RenderResultWIP renderResult)
+        {
+            Log.Add("Will apply PageChanges");
+            //var changes = _pageChanges.Apply(_pageChanges.PageServiceShared.GetPropertyChangesAndFlush());
 
-        public int Apply()
+            if (renderResult == null) return 0;
+
+            var dnnPage = new DnnHtmlPage();
+
+            AttachAssetsWIP(renderResult.Assets, page);
+            var count = Apply(dnnPage, renderResult.PageChanges);
+
+            var headChanges = ApplyToHead(dnnPage, renderResult.HeadChanges);
+
+            var manualChanges = ManualFeatures(dnnPage, renderResult.ManualChanges);
+
+            Log.Add("Will apply Header Status-Code changes if needed");
+            ApplyHttpStatus(page, renderResult);
+
+            count += headChanges + manualChanges;
+            Log.Add($"Applied {count} changes");
+            return count;
+        }
+
+        public int Apply(DnnHtmlPage dnnPage, IList<PagePropertyChange> props)
         {
             var wrapLog = Log.Call<int>();
 
-            var dnnPage = new DnnHtmlPage();
-            var props = PageServiceShared.GetPropertyChangesAndFlush();
+            props = props ?? PageServiceShared.GetPropertyChangesAndFlush();
             foreach (var p in props)
                 switch (p.Property)
                 {
@@ -44,27 +73,74 @@ namespace ToSic.Sxc.Dnn.Services
 
             var count = props.Count;
 
-            // Note: we're not implementing replace etc. in DNN
-            // ATM there's no reason to, maybe some other time
-            var headChanges = PageServiceShared.GetHeadChangesAndFlush();
-            foreach (var h in headChanges)
-                dnnPage.AddToHead(h.Tag);
 
+
+            return wrapLog($"{count}", count);
+        }
+
+        private int ManualFeatures(DnnHtmlPage dnnPage, IList<IPageFeature> feats)
+        {
             // New in 12.04 - Add features which have HTML only
             // Todo STV: Repeat this in Oqtane
             // In the page the code would be like this:
             // var pageService = GetService<ToSic.Sxc.Web.IPageService>();
             // pageService.Activate("fancybox4");
             // This will add a header for the sources of these features
-            PageServiceShared.Features
-                .ManualFeaturesGetNew()
-                .ForEach(f => dnnPage.AddToHead(Tag.Custom(f.Html)));
-
-            count += headChanges.Count;
-
-            return wrapLog($"{count}", count);
+            //var feats = PageServiceShared.Features.ManualFeaturesGetNew();
+            foreach (var f in feats) dnnPage.AddToHead(Tag.Custom(f.Html));
+            return feats.Count;
         }
 
+        private int ApplyToHead(DnnHtmlPage dnnPage, IList<HeadChange> headChanges)
+        {
+            // Note: we're not implementing replace etc. in DNN
+            // ATM there's no reason to, maybe some other time
+            //var headChanges = PageServiceShared.GetHeadChangesAndFlush();
+            foreach (var h in headChanges)
+                dnnPage.AddToHead(h.Tag);
+            return headChanges.Count;
+        }
+
+        private void ApplyHttpStatus(Page page, RenderResultWIP result)
+        {
+            var pageServiceWithInternals = result; // _pageChanges.PageServiceShared; // as Sxc.Web.PageService.PageService;
+            if (page?.Response != null && pageServiceWithInternals?.HttpStatusCode != null)
+            {
+                var code = pageServiceWithInternals.HttpStatusCode.Value;
+                Log.Add($"Custom status code '{code}'. Will set and also {nameof(page.Response.TrySkipIisCustomErrors)}");
+                page.Response.StatusCode = code;
+                // Skip IIS & upstream redirects to a custom 404 so the Dnn page is preserved
+                page.Response.TrySkipIisCustomErrors = true;
+                if (pageServiceWithInternals.HttpStatusMessage != null)
+                {
+                    Log.Add($"Custom status Description '{pageServiceWithInternals.HttpStatusMessage}'.");
+                    page.Response.StatusDescription = pageServiceWithInternals.HttpStatusMessage;
+                }
+            }
+        }
+
+
+        public void AttachAssetsWIP(List<ClientAssetInfo> ass, Page page)
+        {
+            ass.ForEach(a =>
+            {
+                if (a.IsJs) ClientResourceManager.RegisterScript(page, a.Url, a.Priority, DnnProviderName(a.PosInPage));
+                else ClientResourceManager.RegisterStyleSheet(page, a.Url, a.Priority, DnnProviderName(a.PosInPage));
+            });
+        }
+
+        private string DnnProviderName(string position)
+        {
+            position = position.ToLowerInvariant();
+
+            switch (position)
+            {
+                case "body": return DnnBodyProvider.DefaultName;
+                case "head": return DnnPageHeaderProvider.DefaultName;
+                case "bottom": return DnnFormBottomProvider.DefaultName;
+            }
+            return "";
+        }
 
     }
 }

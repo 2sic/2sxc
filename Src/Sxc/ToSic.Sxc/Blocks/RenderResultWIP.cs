@@ -2,6 +2,7 @@
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.PageFeatures;
+using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -32,6 +33,16 @@ namespace ToSic.Sxc.Blocks
         /// Assets which must be added to the page
         /// </summary>
         public List<ClientAssetInfo> Assets;
+
+        public IList<PagePropertyChange> PageChanges;
+
+        public IList<HeadChange> HeadChanges;
+
+        public IList<IPageFeature> ManualChanges;
+
+        public int? HttpStatusCode;
+        public string HttpStatusMessage;
+
 
         /// <summary>
         /// WIP Additional infos

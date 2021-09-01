@@ -8,6 +8,7 @@ using ToSic.Sxc.Beta.LightSpeed;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Web;
 
@@ -110,8 +111,8 @@ namespace ToSic.Sxc.Dnn
                     // in this case assets & page settings were not applied
                     try
                     {
-                        var pageDependencies = Eav.Factory.StaticBuild<IClientDependencyOptimizer>();
-                        ((DnnClientDependencyOptimizer)pageDependencies).AttachAssetsWIP(data.Assets, Page); // note: if Assets == null, it will take the default
+                        var pageChanges = Eav.Factory.StaticBuild<DnnPageChanges>();
+                        pageChanges.Apply(Page, data); // note: if Assets == null, it will take the default
                     }
                     catch{ /* ignore */ }
 

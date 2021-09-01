@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Oqt.Server.Block
             Block = _oqtState.GetBlockOfModule(page.PageId, module);
 
             _assetsAndHeaders.Init(this);
-            var generatedHtml = Block.BlockBuilder.Render() ;
+            var generatedHtml = Block.BlockBuilder.Render(); // TODO: RUN INSTEAD OF Render
 
             var pageHeadAssets = PageHeadAssets();
             if (pageHeadAssets.Count > 0)

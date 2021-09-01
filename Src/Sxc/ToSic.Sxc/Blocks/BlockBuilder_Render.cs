@@ -34,13 +34,22 @@ namespace ToSic.Sxc.Blocks
                 result.DependentApps.Add(Block.AppId);
 
                 result.Assets = Assets;
+                var pss = Block.Context.PageServiceShared;
+                // Page Features
                 if (Block.Context.UserMayEdit)
                 {
-                    Block.Context.PageServiceShared.Activate(BuiltInFeatures.EditApi.Key);
-                    Block.Context.PageServiceShared.Activate(BuiltInFeatures.AutoToolbarGlobal.Key);
+                    pss.Activate(BuiltInFeatures.EditApi.Key);
+                    pss.Activate(BuiltInFeatures.AutoToolbarGlobal.Key);
                 }
+                result.Features = pss.Features.GetWithDependentsAndFlush(Log);
 
-                result.Features = Block.Context.PageServiceShared.Features.GetWithDependentsAndFlush(Log);
+                // Head & Page Changes
+                result.HeadChanges = pss.GetHeadChangesAndFlush();
+                result.PageChanges = pss.GetPropertyChangesAndFlush();
+                result.ManualChanges = pss.Features.ManualFeaturesGetNew();
+
+                result.HttpStatusCode = pss.HttpStatusCode;
+                result.HttpStatusMessage = pss.HttpStatusMessage;
 
                 result.Ready = true;
                 _result = result;
@@ -54,7 +63,7 @@ namespace ToSic.Sxc.Blocks
             return wrapLog(null, _result);
         }
 
-        private RenderResultWIP _result = null;
+        private RenderResultWIP _result;
 
         private string RenderInternal()
         {
