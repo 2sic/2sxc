@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Dnn.Install
 {
     public class DnnSiteSettings
     {
-        // todo: try to cache the result of settings-stored in a static variable, this full check
+        // todo: #performance try to cache the result of settings-stored in a static variable, this full check
         // todo: shouldn't have to happen every time
 
         /// <summary>

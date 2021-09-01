@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Web;
 using DotNetNuke.Web.Client;
 using DotNetNuke.Web.Client.ClientResourceManagement;
@@ -37,11 +38,7 @@ namespace ToSic.Sxc.Dnn.Web
             renderedTemplate = ExtractStyles(renderedTemplate);
 
             // Add to DNN
-            Assets.ForEach(a =>
-            {
-                if(a.IsJs) ClientResourceManager.RegisterScript(page, a.Url, a.Priority, DnnProviderName(a.PosInPage));
-                else ClientResourceManager.RegisterStyleSheet(page, a.Url, a.Priority, DnnProviderName(a.PosInPage));
-            });
+            AttachAssetsWIP(Assets, page);
 
             Log.Add("Will apply PageChanges");
             var changes = _pageChanges.Apply();
@@ -64,6 +61,15 @@ namespace ToSic.Sxc.Dnn.Web
             }
             
             return wrapLog("ok", new Tuple<string, bool>(renderedTemplate, include2SxcJs));
+        }
+
+        public void AttachAssetsWIP(List<ClientAssetInfo> ass, Page page)
+        {
+            ass.ForEach(a =>
+            {
+                if (a.IsJs) ClientResourceManager.RegisterScript(page, a.Url, a.Priority, DnnProviderName(a.PosInPage));
+                else ClientResourceManager.RegisterStyleSheet(page, a.Url, a.Priority, DnnProviderName(a.PosInPage));
+            });
         }
 
 

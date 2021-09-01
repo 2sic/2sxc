@@ -10,7 +10,6 @@ using DotNetNuke.Web.Client.Providers;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
 
@@ -19,7 +18,6 @@ namespace ToSic.Sxc.Dnn.Web
     public class DnnClientResources: HasLog
     {
         public PageServiceShared PageServiceShared { get; }
-        //private readonly IPageService _pageService;
         protected BlockBuilder BlockBuilder;
         protected Page Page;
         protected DnnJsApiHeader Header;
@@ -27,10 +25,9 @@ namespace ToSic.Sxc.Dnn.Web
         /// <summary>
         /// DI Constructor
         /// </summary>
-        public DnnClientResources(/*IPageService pageService,*/ PageServiceShared pageServiceShared): base($"{DnnConstants.LogName}.JsCss")
+        public DnnClientResources(PageServiceShared pageServiceShared): base($"{DnnConstants.LogName}.JsCss")
         {
             PageServiceShared = pageServiceShared;
-            //_pageService = pageService;
         }
         
         public DnnClientResources Init(Page page, IBlockBuilder blockBuilder, ILog parentLog)
@@ -43,27 +40,42 @@ namespace ToSic.Sxc.Dnn.Web
         }
 
 
-        internal List<IPageFeature> Features => _features ?? (_features = /*_pageService*/PageServiceShared.Features.GetWithDependentsAndFlush(Log));
-
+        internal List<IPageFeature> Features => _features ?? (_features = PageServiceShared.Features.GetWithDependentsAndFlush(Log));
         private List<IPageFeature> _features;
 
-        public bool AddEverything()
+        public List<IPageFeature> AddEverything(List<IPageFeature> features = null)
         {
-            var wrapLog = Log.Call<bool>();
+            var wrapLog = Log.Call<List<IPageFeature>>();
+            // temporary solution, till the features are correctly activated in the block
+            // auto-detect Blockbuilder params
+            if (features == null)
+            {
+                var activateEditApi = BlockBuilder?.UiAddEditApi ?? false;
+                if (activateEditApi)
+                    PageServiceShared.Features.Activate(BuiltInFeatures.EditApi.Key);
+                if(BlockBuilder?.UiAddJsApi ?? activateEditApi)
+                    PageServiceShared.Features.Activate(BuiltInFeatures.Core.Key);
+                if (BlockBuilder?.UiAddEditUi ?? false)
+                    PageServiceShared.Features.Activate(BuiltInFeatures.EditUi.Key);
+            
+                // now get expanded list and flush in the PageServiceShared;
+                features = Features;
+            }
+
 
             // normal scripts
-            var editJs = Features.Contains(BuiltInFeatures.EditApi) || (BlockBuilder?.UiAddEditApi ?? false);
+            var editJs = features.Contains(BuiltInFeatures.EditApi); // || (BlockBuilder?.UiAddEditApi ?? false);
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            var readJs = Features.Contains(BuiltInFeatures.Core) || (BlockBuilder?.UiAddJsApi ?? editJs);
-            var editCss = Features.Contains(BuiltInFeatures.EditUi) || (BlockBuilder?.UiAddEditUi ?? false);
+            var readJs = features.Contains(BuiltInFeatures.Core); // || (BlockBuilder?.UiAddJsApi ?? editJs);
+            var editCss = features.Contains(BuiltInFeatures.EditUi); // || (BlockBuilder?.UiAddEditUi ?? false);
 
-            if (!readJs && !editJs && !editCss && !Features.Any())
-                return wrapLog("nothing to add", true);
+            if (!readJs && !editJs && !editCss && !features.Any())
+                return wrapLog("nothing to add", features);
 
             Log.Add("user is editor, or template requested js/css, will add client material");
 
             // register scripts and css
-            RegisterClientDependencies(Page, readJs, editJs, editCss);
+            RegisterClientDependencies(Page, readJs, editJs, editCss, features);
 
             // New in 11.11.02 - DNN has a strange behavior where the current language isn't known till PreRender
             // so we have to move adding the header to here.
@@ -71,31 +83,43 @@ namespace ToSic.Sxc.Dnn.Web
             Log.Add($"{nameof(MustAddHeaders)}={MustAddHeaders}");
             if (MustAddHeaders) Header.AddHeaders();
 
-            return wrapLog("ok", true);
+            return wrapLog("ok", features);
         }
 
 
-        public void EnsurePre1025Behavior()
+        public void EnforcePre1025Behavior()
         {
             // new in 10.25 - by default jQuery isn't loaded!
             // but any old behaviour, incl. no-view defined, etc. should activate compatibility
-            var addAntiForgeryToken = BlockBuilder
-                                          ?.GetEngine(Purpose.WebView)
-                                          ?.CompatibilityAutoLoadJQueryAndRVT
-                                      ?? true;
-            if (!addAntiForgeryToken) return;
+            //if (!NeedsPre1025Behavior()) return false;
 
             // If we got this far, we want the old behavior which always enables headers etc.
-            Log.Add(nameof(EnsurePre1025Behavior) + ": Activate Anti-Forgery for compatibility with old behavior");
+            Log.Add(nameof(EnforcePre1025Behavior) + ": Activate Anti-Forgery for compatibility with old behavior");
             ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
             MustAddHeaders = true;
         }
 
+        /// <summary>
+        /// new in 10.25 - by default now jQuery isn't loaded!
+        /// but any old behaviour, incl. no-view defined, etc. should activate compatibility
+        /// </summary>
+        /// <returns></returns>
+        public bool NeedsPre1025Behavior()
+        {
+            var alwaysNeedsAntiForgeryAndHeader = BlockBuilder
+                                          ?.GetEngine(Purpose.WebView)
+                                          ?.CompatibilityAutoLoadJQueryAndRVT
+                                      ?? true;
+            return alwaysNeedsAntiForgeryAndHeader;
+        }
 
 
-        public void RegisterClientDependencies(Page page, bool readJs, bool editJs, bool editCss, List<string> namedScripts = null)
+        public void RegisterClientDependencies(Page page, bool readJs, bool editJs, bool editCss, List<IPageFeature> overrideFeatures = null)
         {
             var wrapLog = Log.Call($"-, {nameof(readJs)}:{readJs}, {nameof(editJs)}:{editJs}, {nameof(editCss)}:{editCss}");
+
+            var features = overrideFeatures ?? Features;
+
             var root = DnnConstants.SysFolderRootVirtual;
             root = page.ResolveUrl(root);
             var ver = Settings.Version.ToString();
@@ -123,10 +147,10 @@ namespace ToSic.Sxc.Dnn.Web
                 ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
             }
 
-            if(Features.Contains(BuiltInFeatures.JQuery))
+            if(features.Contains(BuiltInFeatures.JQuery))
                 JavaScript.RequestRegistration(CommonJs.jQuery);
             
-            if (Features.Contains(BuiltInFeatures.TurnOn))
+            if (features.Contains(BuiltInFeatures.TurnOn))
                 RegisterJs(page, ver, root + InpageCms.TurnOnJs, true, priority + 10);
 
             wrapLog("ok");

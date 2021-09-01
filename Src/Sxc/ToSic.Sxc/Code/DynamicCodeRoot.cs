@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
@@ -66,6 +67,10 @@ namespace ToSic.Sxc.Code
 
             return newService;
         }
+
+        [PrivateApi]
+        internal Dictionary<string, object> PiggyBackers => _piggyBackers ?? (_piggyBackers = new Dictionary<string, object>());
+        [PrivateApi] private Dictionary<string, object> _piggyBackers;
 
         [PrivateApi]
         public virtual IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)
