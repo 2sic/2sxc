@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Blocks
                 // Page Features
                 if (Block.Context.UserMayEdit)
                 {
-                    pss.Activate(BuiltInFeatures.EditApi.Key);
+                    pss.Activate(BuiltInFeatures.EditUi.Key);
                     pss.Activate(BuiltInFeatures.AutoToolbarGlobal.Key);
                 }
                 result.Features = pss.Features.GetWithDependentsAndFlush(Log);
