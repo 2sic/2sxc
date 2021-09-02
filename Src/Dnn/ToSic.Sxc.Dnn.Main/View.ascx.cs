@@ -7,6 +7,7 @@ using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Beta.LightSpeed;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Web;
@@ -73,7 +74,7 @@ namespace ToSic.Sxc.Dnn
             // ensure everything is ready and that we know if we should activate the client-dependency
             TryCatchAndLogToDnn(() =>
             {
-                if (checkPortalIsReady) EnsureCmsBlockAndPortalIsReady();
+                if (checkPortalIsReady) new DnnReadyCheckTurbo(this, Log).EnsureSiteAndAppFoldersAreReady(Block);
                 DnnClientResources = Eav.Factory.StaticBuild<DnnClientResources>()
                     .Init(Page, requiresPre1025Behavior == false ? null : Block?.BlockBuilder, Log);
                 var needsPre1025Behavior = requiresPre1025Behavior ?? DnnClientResources.NeedsPre1025Behavior();

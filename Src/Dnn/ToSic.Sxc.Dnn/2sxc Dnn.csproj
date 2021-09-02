@@ -164,7 +164,7 @@
     <Compile Include="Dnn\LookUp\LookUpInDnnPropertyAccess.cs" />
     <Compile Include="Dnn\Run\DnnZoneMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Dnn\Install\DnnSiteSettings.cs" />
+    <Compile Include="Dnn\Install\DnnReadyCheckTurbo.cs" />
     <Compile Include="Dnn\Search\SearchItem.cs" />
     <Compile Include="ToSic.Sxc.Code\CodeCompilerNetFull.cs" />
     <Compile Include="ToSic.Sxc.DataSources\Pages.cs" />
