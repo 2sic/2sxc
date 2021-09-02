@@ -75,6 +75,9 @@ namespace ToSic.Sxc.Oqt.Server
             globalConfig.GlobalFolder = Path.Combine(hostingEnvironment.ContentRootPath, "wwwroot\\Modules\\ToSic.Sxc");
             globalConfig.GlobalSiteFolder = "todo - global apps not implemented yet";
 
+            // Load features from configuration
+            sp.Build<SystemLoader>().StartUp();
+
             // 2sxc Oqtane blob services for Imageflow.
             services.AddImageflowOqtaneBlobService();
         }

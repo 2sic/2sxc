@@ -12,12 +12,14 @@ namespace ToSic.Sxc.Run
 
         public class Dependencies
         {
+            internal readonly IAppStates AppStates;
             internal readonly ISite Site;
             internal readonly App NewApp;
             internal readonly TemplateHelpers TemplateHelpers;
 
-            public Dependencies(ISite site, App newApp, TemplateHelpers templateHelpers)
+            public Dependencies(ISite site, App newApp, TemplateHelpers templateHelpers, IAppStates appStates)
             {
+                AppStates = appStates;
                 Site = site;
                 NewApp = newApp;
                 TemplateHelpers = templateHelpers;
@@ -29,7 +31,7 @@ namespace ToSic.Sxc.Run
         /// <summary>
         /// DI Constructor
         /// </summary>
-        protected ImportExportEnvironmentBase(Dependencies dependencies, string logName) : base(dependencies.Site, logName)
+        protected ImportExportEnvironmentBase(Dependencies dependencies, string logName) : base(dependencies.Site, dependencies.AppStates, logName)
         {
             _dependencies = dependencies;
         }

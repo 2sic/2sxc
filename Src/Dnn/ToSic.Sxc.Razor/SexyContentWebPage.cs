@@ -46,7 +46,7 @@ namespace ToSic.SexyContent.Razor
 
         public ILinkHelper Link => _DynCodeRoot.Link;
 
-        [PrivateApi] public dynamic DynamicModel => throw new NotImplementedException($"{nameof(DynamicModel)} not implemented on {nameof(SexyContentWebPage)}. Use a newer base class to leverage this. ");
+        [PrivateApi] public dynamic DynamicModel => throw new NotSupportedException($"{nameof(DynamicModel)} not implemented on {nameof(SexyContentWebPage)}. Use a newer base class to leverage this. ");
 
         /// <summary>
         /// Helper commands to enable in-page editing functionality
@@ -56,10 +56,14 @@ namespace ToSic.SexyContent.Razor
 
         public IDnnContext Dnn => (_DynCodeRoot as DnnDynamicCodeRoot)?.Dnn;
 
+#pragma warning disable 612
         /// <inheritdoc />
-        [PrivateApi("try to remove")]
+        [PrivateApi("never public, shouldn't be in use elsewhere")]
+        [Obsolete]
         public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(_DynCodeRoot.Block?.Context.UserMayEdit ?? false));
+        [Obsolete]
         private SxcHelper _sxc;
+#pragma warning restore 612
 
         /// <summary>
         /// Old API - probably never used, but we shouldn't remove it as we could break some existing code out there

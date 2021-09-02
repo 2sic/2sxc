@@ -1,15 +1,16 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Web;
+using System.Xml;
 using ToSic.Sxc.WebApi;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
 {
-    public abstract partial class Api12: IDynamicWebApi
+    public abstract partial class Api12 : IDynamicWebApi
     {
         /// <inheritdoc />
         public dynamic File(string dontRelyOnParameterOrder = ToSic.Eav.Parameters.Protector,
@@ -27,40 +28,60 @@ namespace Custom.Hybrid
             if (string.IsNullOrWhiteSpace(contentType))
                 contentType = MimeMapping.GetMimeMapping(fileDownloadName ?? virtualPath);
 
-            HttpContent content = new ByteArrayContent(System.Text.Encoding.UTF8.GetBytes(string.Empty));
+            HttpContent httpContent = new ByteArrayContent(Encoding.UTF8.GetBytes(string.Empty));
 
             // check if this may just be a call to the built in file, which has two strings
             // this can only be possible if only the virtualPath and contentType were set
             if (!string.IsNullOrWhiteSpace(virtualPath))
-                content = new StreamContent(new FileStream(HttpContext.Current.Server.MapPath(virtualPath), FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+                httpContent = new StreamContent(new FileStream(HttpContext.Current.Server.MapPath(virtualPath), FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
 
+            Encoding encoding = Encoding.UTF8;
             var isValidXml = false;
             switch (contents)
             {
+                case XmlDocument xmlDoc:
+                    var xmlStream = new MemoryStream();
+                    xmlDoc.Save(xmlStream);
+                    xmlStream.Position = 0;
+                    httpContent = new StreamContent(xmlStream);
+                    isValidXml = true;
+                    encoding = CustomApiHelpers.GetEncoding(xmlDoc);
+                    break;
                 case string stringBody:
-                    content = new ByteArrayContent(System.Text.Encoding.UTF8.GetBytes(stringBody));
+                    httpContent = new ByteArrayContent(encoding.GetBytes(stringBody));
                     isValidXml = CustomApiHelpers.IsValidXml(stringBody);
+                    encoding = CustomApiHelpers.GetEncoding(stringBody);
                     break;
                 case Stream streamBody:
-                    content = new StreamContent(streamBody);
+                    httpContent = new StreamContent(streamBody);
                     isValidXml = CustomApiHelpers.IsValidXml(streamBody);
+                    encoding = CustomApiHelpers.GetEncoding(streamBody);
                     break;
                 case byte[] charBody:
-                    content = new ByteArrayContent(charBody);
+                    httpContent = new ByteArrayContent(charBody);
                     isValidXml = CustomApiHelpers.IsValidXml(charBody);
+                    encoding = CustomApiHelpers.GetEncoding(charBody);
                     break;
             }
             contentType = CustomApiHelpers.XmlContentTypeFromContent(isValidXml, contentType);
 
             var response = Request.CreateResponse(HttpStatusCode.OK);
-            response.Content = content;
-            response.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
-            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-            response.Content.Headers.ContentDisposition.FileName = fileDownloadName;
+            response.Content = httpContent;
+
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType)
+            {
+                CharSet = encoding.WebName
+            };
+
+            // TODO: STV - make sure this is the same in Oqtane
+            response.Content.Headers.ContentDisposition = (download == false)
+                ? new ContentDispositionHeaderValue("inline")
+                : new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = fileDownloadName
+                };
 
             return response;
         }
-
-
     }
 }

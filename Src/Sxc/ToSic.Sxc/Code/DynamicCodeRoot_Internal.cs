@@ -7,9 +7,10 @@ namespace ToSic.Sxc.Code
     public partial class DynamicCodeRoot
     {
         [PrivateApi]
-        public void LateAttachApp(IApp app)
+        public void AttachAppAndInitLink(IApp app)
         {
             App = app;
+            Link.Init(Block?.Context, App, Log);
         }
 
         [PrivateApi]

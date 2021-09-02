@@ -22,9 +22,9 @@ namespace ToSic.Sxc.Web.WebApi.System
             ThrowIfNotSuperUser();
 
             var msg = h1("Apps In Cache");
-            var cache = State.Cache;
+            //var cache = State.Cache;
 
-            var zones = cache.Zones.OrderBy(z => z.Key);
+            var zones = _appsCache.Zones.OrderBy(z => z.Key);
 
             msg += "<table id='table'><thead>"
                 + tr(new[] { "Zone", "App", Eav.Data.Attributes.GuidNiceName, "InCache", "Name", "Folder", "Details", "Actions" }, true)
@@ -36,9 +36,9 @@ namespace ToSic.Sxc.Web.WebApi.System
                     .Select(a =>
                     {
                         var appIdentity = new AppIdentity(zone.Value.ZoneId, a.Key);
-                        var inCache = cache.Has(appIdentity);
+                        var inCache = _appsCache.Has(appIdentity);
                         var appState = inCache
-                            ? State.Get(appIdentity)
+                            ? _appStates.Get(appIdentity)
                             : null;
                         return new
                         {

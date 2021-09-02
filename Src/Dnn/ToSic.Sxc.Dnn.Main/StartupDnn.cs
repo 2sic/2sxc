@@ -5,13 +5,10 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.SexyContent.Dnn920;
-using ToSic.Sxc;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.WebApi;
-using Factory = ToSic.Eav.Factory;
 
-namespace ToSic.SexyContent
+namespace ToSic.Sxc.Dnn.StartUp
 {
     /// <summary>
     /// This configures .net Core Dependency Injection
@@ -40,7 +37,7 @@ namespace ToSic.SexyContent
                 return;
 
             var appsCache = GetAppsCacheOverride();
-            Factory.ActivateNetCoreDi(services =>
+            Eav.Factory.ActivateNetCoreDi(services =>
             {
                 services
                     .AddDnn(appsCache)
@@ -56,11 +53,14 @@ namespace ToSic.SexyContent
             });
 
             // now we should be able to instantiate registration of DB
-            Factory.StaticBuild<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
-            var globalConfig = Factory.StaticBuild<IGlobalConfiguration>();
+            Eav.Factory.StaticBuild<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
+            var globalConfig = Eav.Factory.StaticBuild<IGlobalConfiguration>();
 
             globalConfig.GlobalFolder = HostingEnvironment.MapPath(DnnConstants.SysFolderRootVirtual);
             globalConfig.GlobalSiteFolder = "~/Portals/_default/";
+
+            // Load features from configuration
+            Eav.Factory.StaticBuild<SystemLoader>().StartUp();
 
             // also register this because of a long DNN issue which was fixed, but we don't know if we're running in another version
             SharpZipLibRedirect.RegisterSharpZipLibRedirect();

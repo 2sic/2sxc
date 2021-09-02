@@ -10,11 +10,13 @@ namespace ToSic.Sxc.Apps
     {
         #region Constructor / DI
 
-        public AppsManager(Lazy<ZoneManager> zoneManagerLazy, IServiceProvider serviceProvider) : base(serviceProvider, "Cms.AppsRt")
+        public AppsManager(Lazy<ZoneManager> zoneManagerLazy, IServiceProvider serviceProvider, IAppStates appStates) : base(serviceProvider, "Cms.AppsRt")
         {
             _zoneManagerLazy = zoneManagerLazy;
+            _appStates = appStates;
         }
         private readonly Lazy<ZoneManager> _zoneManagerLazy;
+        private readonly IAppStates _appStates;
 
         #endregion
 
@@ -23,8 +25,13 @@ namespace ToSic.Sxc.Apps
         {
             var zoneId = ZoneRuntime.ZoneId;
             // check portal assignment and that it's not the default app
-            if (appId == ZoneRuntime.DefaultAppId)
+            // enable restore for DefaultApp
+            if (appId == _appStates.DefaultAppId(zoneId) /*ZoneRuntime.DefaultAppId*/ && fullDelete)
                 throw new Exception("The default app of a zone cannot be removed.");
+
+            const int specialGlobalAppOld = 1; // it was used in older 2sxc version, and have to be preserved
+            if (appId == specialGlobalAppOld)
+                throw new Exception("The special old global app cannot be removed.");
 
             // todo: maybe verify the app is of this portal; I assume delete will fail anyhow otherwise
 

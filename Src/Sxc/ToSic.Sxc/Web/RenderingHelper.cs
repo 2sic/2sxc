@@ -51,10 +51,10 @@ namespace ToSic.Sxc.Web
             int contentBlockId = 0,
             bool editContext = false,
             string tag = Constants.DefaultContextTag,
-            bool autoToolbar = false,
+            // bool autoToolbar = false,
             bool addLineBreaks = true)
         {
-            Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes", $"{nameof(instanceId)},{nameof(contentBlockId)},{nameof(editContext)},{nameof(tag)},{nameof(autoToolbar)},{nameof(addLineBreaks)}");
+            Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes", $"{nameof(instanceId)},{nameof(contentBlockId)},{nameof(editContext)},{nameof(tag)},{nameof(addLineBreaks)}");
 
             var contextAttribs = ContextAttributes(instanceId, contentBlockId, editContext);
 

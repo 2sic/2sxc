@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ToSic.SexyContent {
+namespace ToSic.Sxc.Dnn {
     
     
     public partial class View {

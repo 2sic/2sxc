@@ -194,7 +194,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var page = pageResolver.GetPage(id);
             if (page == null) return null;
 
-            return $"/{Alias.Path}/{page.Path}";
+            return string.IsNullOrEmpty(Alias.Path) ? $"/{page.Path}" : $"/{Alias.Path}/{page.Path}";
 
             //var psCurrent = PortalSettings.Current;
             //var psPage = psCurrent;

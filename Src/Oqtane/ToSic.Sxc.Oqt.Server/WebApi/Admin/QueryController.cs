@@ -11,7 +11,8 @@ using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.WebApi;
+using WebApiConstants = ToSic.Sxc.Oqt.Shared.WebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -30,12 +31,12 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
     public class QueryController : OqtStatefulControllerBase, IQueryController
     {
-        private readonly Lazy<QueryApi> _queryLazy;
+        private readonly Lazy<QueryBackend> _queryLazy;
         private readonly Lazy<CmsManager> _cmsManagerLazy;
         private readonly Lazy<AppConfigDelegate> _configProviderLazy;
         protected override string HistoryLogName => "Api.Query";
 
-        public QueryController(Lazy<QueryApi> queryLazy, Lazy<CmsManager> cmsManagerLazy, Lazy<AppConfigDelegate> configProviderLazy)
+        public QueryController(Lazy<QueryBackend> queryLazy, Lazy<CmsManager> cmsManagerLazy, Lazy<AppConfigDelegate> configProviderLazy)
         {
             _queryLazy = queryLazy;
             _cmsManagerLazy = cmsManagerLazy;
@@ -52,7 +53,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// Get installed DataSources from .NET Runtime but only those with [PipelineDesigner Attribute]
         /// </summary>
         [HttpGet]
-        public IEnumerable<DataSourceDto> DataSources() => new DataSourceCatalog(Log).QueryDataSources();
+        public IEnumerable<DataSourceDto> DataSources() => _queryLazy.Value.Init(0, Log).DataSources();
 
         /// <summary>
         /// Save Pipeline
@@ -103,8 +104,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// </summary>
         [HttpDelete]
         public bool Delete(int appId, int id)
-            => _cmsManagerLazy.Value.Init(State.Identity(null, appId), true, Log)
-                .DeleteQueryIfNotUsedByView(id, Log);
+            => ((QueryBackend)_queryLazy.Value.Init(appId, Log)).DeleteIfUnused(appId, id);
+            //=> _cmsManagerLazy.Value.Init(State.Identity(null, appId), true, Log)
+        //    .DeleteQueryIfNotUsedByView(id, Log);
 
         [HttpPost]
         public bool Import(EntityImportDto args) => _queryLazy.Value.Init(args.AppId, Log).Import(args);

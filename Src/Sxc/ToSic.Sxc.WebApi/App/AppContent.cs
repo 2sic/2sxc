@@ -48,7 +48,7 @@ namespace ToSic.Sxc.WebApi.App
 
         #region Get Items
 
-        public IEnumerable<Dictionary<string, object>> GetItems(string contentType, string appPath = null)
+        public IEnumerable<IDictionary<string, object>> GetItems(string contentType, string appPath = null)
         {
             var wrapLog = Log.Call($"get entities type:{contentType}, path:{appPath}");
 
@@ -72,7 +72,7 @@ namespace ToSic.Sxc.WebApi.App
         /// ...then process/finish
         /// </summary>
         /// <returns></returns>
-        public Dictionary<string, object> GetOne(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string appPath)
+        public IDictionary<string, object> GetOne(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string appPath)
         {
             Log.Add($"get and serialize after security check type:{contentType}, path:{appPath}");
 
@@ -93,7 +93,7 @@ namespace ToSic.Sxc.WebApi.App
         #region CreateOrUpdate
 
 
-        public Dictionary<string, object> CreateOrUpdate(string contentType, Dictionary<string, object> newContentItem, int? id = null, string appPath = null)
+        public IDictionary<string, object> CreateOrUpdate(string contentType, Dictionary<string, object> newContentItem, int? id = null, string appPath = null)
         {
             Log.Add($"create or update type:{contentType}, id:{id}, path:{appPath}");
 
@@ -110,11 +110,11 @@ namespace ToSic.Sxc.WebApi.App
             else ThrowIfNotAllowedInItem(itm, Grants.Update.AsSet(), Context.AppState);
 
             // Convert to case-insensitive dictionary just to be safe!
-            newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.OrdinalIgnoreCase);
+            newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.InvariantCultureIgnoreCase);
 
             // Now create the cleaned up import-dictionary so we can create a new entity
             var cleanedNewItem = new AppContentEntityBuilder(Log)
-                .CreateEntityDictionary(contentType, newContentItem, Context.AppState.AppId);
+                .CreateEntityDictionary(contentType, newContentItem, Context.AppState/*.AppId*/);
 
             var userName = Context.User.IdentityToken;
 

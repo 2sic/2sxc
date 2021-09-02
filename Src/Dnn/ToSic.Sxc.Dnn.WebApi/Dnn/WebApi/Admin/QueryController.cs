@@ -29,15 +29,15 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// Get a Pipeline with DataSources
         /// </summary>
         [HttpGet]
-		public QueryDefinitionDto Get(int appId, int? id = null) => GetService<QueryApi>().Init(appId, Log).Definition(appId, id);
+		public QueryDefinitionDto Get(int appId, int? id = null) => GetService<QueryBackend>().Init(appId, Log).Definition(appId, id);
 
         /// <summary>
         /// Get installed DataSources from .NET Runtime but only those with [PipelineDesigner Attribute]
         /// </summary>
         [HttpGet]
-        public IEnumerable<DataSourceDto> DataSources() => new DataSourceCatalog(Log).QueryDataSources();
+        public IEnumerable<DataSourceDto> DataSources() => GetService<QueryBackend>().Init(0, Log).DataSources();
 
-		/// <summary>
+        /// <summary>
 		/// Save Pipeline
 		/// </summary>
 		/// <param name="data">JSON object { pipeline: pipeline, dataSources: dataSources }</param>
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 		/// <param name="id">PipelineEntityId</param>
 		[HttpPost]
 	    public QueryDefinitionDto Save([FromBody] QueryDefinitionDto data, int appId, int id)
-	        => GetService<QueryApi>().Init(appId, Log).Save(data, appId, id);
+	        => GetService<QueryBackend>().Init(appId, Log).Save(data, appId, id);
 
 
 	    /// <summary>
@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             // todo: the first two lines should be in the QueryApi backend, but ATM that's still in EAV and is missing some objects
             var block = SharedContextResolver.RealBlockRequired();
             var blockLookUps = GetService<AppConfigDelegate>().Init(Log).GetConfigProviderForModule(block.Context, block.App, block);
-            return GetService<QueryApi>().Init(appId, Log).Run(appId, id, top, blockLookUps);
+            return GetService<QueryBackend>().Init(appId, Log).Run(appId, id, top, blockLookUps);
         }
         
         // Experimental
@@ -67,14 +67,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             // todo: the first two lines should be in the QueryApi backend, but ATM that's still in EAV and is missing some objects
             var block = SharedContextResolver.RealBlockRequired();
             var config = GetService<AppConfigDelegate>().Init(Log).GetConfigProviderForModule(block.Context, block.App, block);
-            return GetService<QueryApi>().Init(appId, Log).DebugStream(appId, id, top, config, @from, @out);
+            return GetService<QueryBackend>().Init(appId, Log).DebugStream(appId, id, top, config, @from, @out);
         }
 
         /// <summary>
 	    /// Clone a Pipeline with all DataSources and their configurations
 	    /// </summary>
 	    [HttpGet]
-	    public void Clone(int appId, int id) => GetService<QueryApi>().Init(appId, Log).Clone(appId, id);
+	    public void Clone(int appId, int id) => GetService<QueryBackend>().Init(appId, Log).Clone(appId, id);
 
 
         /// <summary>
@@ -82,10 +82,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// </summary>
         [HttpDelete]
         public bool Delete(int appId, int id)
-            => GetService<CmsManager>().Init(State.Identity(null, appId), true, Log)
-                .DeleteQueryIfNotUsedByView(id, Log);
+            => ((QueryBackend)GetService<QueryBackend>().Init(appId, Log)).DeleteIfUnused(appId, id);
+            //=> GetService<CmsManager>().Init(State.Identity(null, appId), true, Log)
+            //    .DeleteQueryIfNotUsedByView(id, Log);
 
         [HttpPost]
-	    public bool Import(EntityImportDto args) => GetService<QueryApi>().Init(args.AppId, Log).Import(args);
+	    public bool Import(EntityImportDto args) => GetService<QueryBackend>().Init(args.AppId, Log).Import(args);
 	}
 }

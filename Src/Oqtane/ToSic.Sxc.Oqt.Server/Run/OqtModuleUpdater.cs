@@ -20,6 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private readonly IModuleRepository _moduleRepository;
         private readonly IPageModuleRepository _pageModuleRepository;
         private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
+        private readonly IAppStates _appStates;
 
         /// <summary>
         /// Empty constructor for DI
@@ -29,13 +30,14 @@ namespace ToSic.Sxc.Oqt.Server.Run
             OqtZoneMapper zoneMapper, 
             IModuleRepository moduleRepository,
             IPageModuleRepository pageModuleRepository,
-            Lazy<CmsRuntime> lazyCmsRuntime) : base($"{OqtConstants.OqtLogPrefix}.MapA2I")
+            Lazy<CmsRuntime> lazyCmsRuntime, IAppStates appStates) : base($"{OqtConstants.OqtLogPrefix}.MapA2I")
         {
             _settingsHelper = settingsHelper;
             _zoneMapper = zoneMapper.Init(Log) as OqtZoneMapper;
             _moduleRepository = moduleRepository;
             _pageModuleRepository = pageModuleRepository;
             _lazyCmsRuntime = lazyCmsRuntime;
+            _appStates = appStates;
         }
 
         public void SetAppId(IModule instance, int? appId)
@@ -54,7 +56,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 UpdateInstanceSetting(instance.Id, Settings.ModuleSettingApp, null, Log);
             else
             {
-                var appName = State.Zones[zoneId].Apps[appId.Value];
+                var appName = _appStates.AppIdentifier(zoneId, appId.Value);//  State.Zones[zoneId].Apps[appId.Value];
                 UpdateInstanceSetting(instance.Id, Settings.ModuleSettingApp, appName, Log);
             }
 

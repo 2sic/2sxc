@@ -13,7 +13,8 @@
         // WIP
         public const string TurnOnJs = "dist/turnOn/turn-on.js";
 
-        public static string JsApiJson(string platform, int pageId, string siteRoot, string apiRoot, string appApiRoot, string rvt, string uiRoot)
+        public static string JsApiJson(string platform, int pageId, string siteRoot, string apiRoot, string appApiRoot,
+            string uiRoot, string rvtHeader, string rvt)
         {
             var json = "{"
                        + $"\"platform\": \"{platform.ToLowerInvariant()}\","
@@ -21,8 +22,9 @@
                        + $"\"root\": \"{siteRoot}\","
                        + $"\"api\": \"{apiRoot}\","
                        + $"\"appApi\": \"{appApiRoot}\", "
-                       + $"\"rvt\": \"{rvt}\", "
-                       + $"\"uiRoot\": \"{uiRoot}\""
+                       + $"\"uiRoot\": \"{uiRoot}\", "
+                       + $"\"rvtHeader\": \"{rvtHeader}\", "
+                       + $"\"rvt\": \"{rvt}\""
                        + "}";
             return json;
         }

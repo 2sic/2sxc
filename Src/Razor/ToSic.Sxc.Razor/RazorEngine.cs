@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Razor
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     [EngineDefinition(Name = "Razor")]
 
-    public partial class RazorEngine : EngineBase
+    public partial class RazorEngine : EngineBase, IRazorEngine
     {
         private readonly Lazy<DynamicCodeRoot> _dynCodeRootLazy;
         public IRazorRenderer RazorRenderer { get; }

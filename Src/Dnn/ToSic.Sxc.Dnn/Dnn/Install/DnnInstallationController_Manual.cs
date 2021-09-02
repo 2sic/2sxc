@@ -57,16 +57,16 @@ namespace ToSic.Sxc.Dnn.Install
             if (forContentApp)
                 try
                 {
-                    var primaryAppId = new ZoneRuntime().Init(site.ZoneId, Log).DefaultAppId;
+                    var primaryAppId = Eav.Factory.StaticBuild<IAppStates>().DefaultAppId(site.ZoneId); // .Init(site.ZoneId, Log).DefaultAppId;
                     // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
-                    var contentViews = Eav.Factory.Resolve<CmsRuntime>()
-                        .Init(State.Identity(null, primaryAppId), false, Log)
+                    var contentViews = Eav.Factory.StaticBuild<CmsRuntime>()
+                        .Init(new AppIdentity(site.ZoneId, primaryAppId), false, Log)
                         .Views.GetAll();
                     if (contentViews.Any()) return null;
                 }
                 catch { /* ignore */ }
             
-            var gettingStartedSrc = new WipRemoteRouterLink().LinkToRemoteRouter(
+            var gettingStartedSrc = Eav.Factory.StaticBuild<WipRemoteRouterLink>().LinkToRemoteRouter(
                 RemoteDestinations.AutoConfigure, 
                 "Dnn",
                 Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4),

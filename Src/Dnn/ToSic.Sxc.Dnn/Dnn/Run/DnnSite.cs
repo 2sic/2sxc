@@ -1,10 +1,12 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Web.Hosting;
 using DotNetNuke.Common;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Run;
 
@@ -16,13 +18,19 @@ namespace ToSic.Sxc.Dnn.Run
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public sealed class DnnSite: Site<PortalSettings>, ICmsSite
     {
+
         #region Constructors and DI
 
         /// <summary>
         /// DI Constructor, will get the current portal settings
         /// #TodoDI not ideal yet, as PortalSettings.current is still retrieved from global
         /// </summary>
-        public DnnSite() => Swap(null);
+        public DnnSite(Lazy<IZoneMapper> zoneMapperLazy)
+        {
+            _zoneMapperLazy = zoneMapperLazy;
+            Swap(null);
+        }
+        private readonly Lazy<IZoneMapper> _zoneMapperLazy;
 
         /// <inheritdoc />
         public override ISite Init(int siteId) => Swap(new PortalSettings(siteId));
@@ -143,7 +151,7 @@ namespace ToSic.Sxc.Dnn.Run
                 if(_zoneId != null) return _zoneId.Value;
                 // check if id is negative; 0 is a valid tenant id
                 if (Id < 0) return (_zoneId = Eav.Constants.NullId).Value;
-                _zoneId = Eav.Factory.Resolve<DnnZoneMapper>().Init(null).GetZoneId(Id);
+                _zoneId = _zoneMapperLazy.Value /*Eav.Factory.StaticBuild<DnnZoneMapper>()*/.Init(null).GetZoneId(Id);
                 return _zoneId.Value;
             }
         }

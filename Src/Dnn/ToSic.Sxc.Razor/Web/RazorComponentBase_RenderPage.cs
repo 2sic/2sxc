@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Web
         public override HelperResult RenderPage(string path, params object[] data)
         {
             if (_ErrorWhenUsingRenderPage != null)
-                throw new NotImplementedException(_ErrorWhenUsingRenderPage);
+                throw new NotSupportedException(_ErrorWhenUsingRenderPage);
             return base.RenderPage(path, data);
         }
 

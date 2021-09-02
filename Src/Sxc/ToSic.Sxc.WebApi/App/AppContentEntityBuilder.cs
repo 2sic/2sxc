@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 
@@ -17,15 +18,12 @@ namespace ToSic.Sxc.WebApi.App
         /// <summary>
         /// Construct an import-friendly, type-controlled value-dictionary to create or update an entity
         /// </summary>
-        /// <param name="contentType"></param>
-        /// <param name="newContentItem"></param>
-        /// <param name="appId"></param>
         /// <returns></returns>
-        public Dictionary<string, object> CreateEntityDictionary(string contentType, Dictionary<string, object> newContentItem, int appId)
+        public Dictionary<string, object> CreateEntityDictionary(string contentType, Dictionary<string, object> newContentItem, AppState appState/* int appId*/)
         {
-            Log.Add($"create ent dic a#{appId}, type:{contentType}");
+            Log.Add($"create ent dic a#{appState.AppId}, type:{contentType}");
             // Retrieve content-type definition and check all the fields that this content-type has
-            var appState = Eav.Apps.State.Get(appId);
+            //var appState = Eav.Apps.State.Get(appId);
             var listOfTypes = appState.GetContentType(contentType);
             var attribs = listOfTypes.Attributes;
 

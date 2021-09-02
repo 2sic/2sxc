@@ -1,28 +1,34 @@
-﻿using DotNetNuke.Services.FileSystem;
+﻿using System;
+using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Context;
 using ToSic.Eav.ImportExport.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Xml;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Dnn.Run;
 using App = ToSic.Sxc.Apps.App;
 
 namespace ToSic.Sxc.Dnn.ImportExport
 {
     public class DnnXmlExporter: XmlExporter
     {
-        private readonly IContextResolver _ctxResolver;
-
         #region Constructor / DI
 
-        public DnnXmlExporter(AdamManager<int, int> adamManager, IContextResolver ctxResolver, XmlSerializer xmlSerializer): base(xmlSerializer, DnnConstants.LogName)
+        public DnnXmlExporter(IServiceProvider serviceProvider, ISite site, AdamManager<int, int> adamManager, IContextResolver ctxResolver, XmlSerializer xmlSerializer, IAppStates appStates)
+            : base(xmlSerializer, appStates, DnnConstants.LogName)
         {
+            _serviceProvider = serviceProvider;
+            _site = site;
             _ctxResolver = ctxResolver.Init(Log);
             AdamManager = adamManager;
         }
+        private readonly IServiceProvider _serviceProvider;
+        private readonly ISite _site;
+        private readonly IContextResolver _ctxResolver;
+
 
         private readonly IFileManager _dnnFiles = FileManager.Instance;
         internal AdamManager<int, int> AdamManager { get; }
@@ -30,13 +36,13 @@ namespace ToSic.Sxc.Dnn.ImportExport
         public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds, ILog parentLog)
         {
             var context = _ctxResolver.App(appId);
-            var tenant = new DnnSite();
-            var app = AdamManager.AppRuntime.ServiceProvider.Build<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
+            //var tenant = new DnnSite();
+            var app = _serviceProvider.Build<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
             AdamManager.Init(context, 10, Log);
             Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
 
             // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally
-            InitExportXDocument(tenant.DefaultCultureCode, Settings.ModuleVersion);
+            InitExportXDocument(_site.DefaultCultureCode/* tenant.DefaultCultureCode*/, Settings.ModuleVersion);
 
             return this;
         }

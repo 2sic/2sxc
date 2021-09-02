@@ -1,30 +1,57 @@
-﻿using ToSic.Eav.Documentation;
+﻿using System.Collections.Generic;
+using System.Web.UI;
+using DotNetNuke.Web.Client.ClientResourceManagement;
+using DotNetNuke.Web.Client.Providers;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Razor.Blade;
 using ToSic.Razor.Dnn;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Dnn.Services
 {
     [PrivateApi]
-    public class DnnPageChanges : HasLog<DnnPageChanges> // , IPageChangeApplicator
+    public class DnnPageChanges : HasLog<DnnPageChanges>
     {
-        public IPageService PageService { get; }
+        public PageServiceShared PageServiceShared { get; }
 
-        public DnnPageChanges(IPageService pageChanges): base($"{DnnConstants.LogName}.PgeCng")
+        public DnnPageChanges(PageServiceShared pageServiceShared): base($"{DnnConstants.LogName}.PgeCng")
         {
-            PageService = pageChanges;
+            PageServiceShared = pageServiceShared;
         }
 
-
-        public int Apply()
+        public int Apply(Page page, RenderResultWIP renderResult)
         {
-            var wrapLog = Log.Call<int>();
-            // If we get something invalid, return 0 (nothing changed)
-            if (!(PageService is IChangeQueue changes)) return 0;
+            Log.Add("Will apply PageChanges");
+            //var changes = _pageChanges.Apply(_pageChanges.PageServiceShared.GetPropertyChangesAndFlush());
+
+            if (renderResult == null) return 0;
 
             var dnnPage = new DnnHtmlPage();
-            var props = changes.GetPropertyChangesAndFlush();
+
+            AttachAssetsWIP(renderResult.Assets, page);
+            var count = Apply(dnnPage, renderResult.PageChanges);
+
+            var headChanges = ApplyToHead(dnnPage, renderResult.HeadChanges);
+
+            var manualChanges = ManualFeatures(dnnPage, renderResult.ManualChanges);
+
+            Log.Add("Will apply Header Status-Code changes if needed");
+            ApplyHttpStatus(page, renderResult);
+
+            count += headChanges + manualChanges;
+            Log.Add($"Applied {count} changes");
+            return count;
+        }
+
+        public int Apply(DnnHtmlPage dnnPage, IList<PagePropertyChange> props)
+        {
+            var wrapLog = Log.Call<int>();
+
+            props = props ?? PageServiceShared.GetPropertyChangesAndFlush();
             foreach (var p in props)
                 switch (p.Property)
                 {
@@ -46,25 +73,74 @@ namespace ToSic.Sxc.Dnn.Services
 
             var count = props.Count;
 
-            //// Once processed clean up, in case the same object (scoped) is used again, and we want to ensure it won't be processed again
-            //foreach (var p in changes.PropertyChanges.ToArray()) // ToArray important to "copy" so we can do removes afterwards
-            //    changes.PropertyChanges.Remove(p);
 
-            // Note: we're not implementing replace etc. in DNN
-            // ATM there's no reason to, maybe some other time
-            var headChanges = changes.GetHeadChangesAndFlush();
-            foreach (var h in headChanges)
-                dnnPage.AddToHead(h.Tag);
 
-            count += headChanges.Count;
-
-            // Clean up
-            //foreach (var h in changes.Headers.ToArray())
-            //    changes.Headers.Remove(h);
-
-            return wrapLog($"{changes}", count);
+            return wrapLog($"{count}", count);
         }
 
+        private int ManualFeatures(DnnHtmlPage dnnPage, IList<IPageFeature> feats)
+        {
+            // New in 12.04 - Add features which have HTML only
+            // Todo STV: Repeat this in Oqtane
+            // In the page the code would be like this:
+            // var pageService = GetService<ToSic.Sxc.Web.IPageService>();
+            // pageService.Activate("fancybox4");
+            // This will add a header for the sources of these features
+            //var feats = PageServiceShared.Features.ManualFeaturesGetNew();
+            foreach (var f in feats) dnnPage.AddToHead(Tag.Custom(f.Html));
+            return feats.Count;
+        }
+
+        private int ApplyToHead(DnnHtmlPage dnnPage, IList<HeadChange> headChanges)
+        {
+            // Note: we're not implementing replace etc. in DNN
+            // ATM there's no reason to, maybe some other time
+            //var headChanges = PageServiceShared.GetHeadChangesAndFlush();
+            foreach (var h in headChanges)
+                dnnPage.AddToHead(h.Tag);
+            return headChanges.Count;
+        }
+
+        private void ApplyHttpStatus(Page page, RenderResultWIP result)
+        {
+            var pageServiceWithInternals = result; // _pageChanges.PageServiceShared; // as Sxc.Web.PageService.PageService;
+            if (page?.Response != null && pageServiceWithInternals?.HttpStatusCode != null)
+            {
+                var code = pageServiceWithInternals.HttpStatusCode.Value;
+                Log.Add($"Custom status code '{code}'. Will set and also {nameof(page.Response.TrySkipIisCustomErrors)}");
+                page.Response.StatusCode = code;
+                // Skip IIS & upstream redirects to a custom 404 so the Dnn page is preserved
+                page.Response.TrySkipIisCustomErrors = true;
+                if (pageServiceWithInternals.HttpStatusMessage != null)
+                {
+                    Log.Add($"Custom status Description '{pageServiceWithInternals.HttpStatusMessage}'.");
+                    page.Response.StatusDescription = pageServiceWithInternals.HttpStatusMessage;
+                }
+            }
+        }
+
+
+        public void AttachAssetsWIP(List<ClientAssetInfo> ass, Page page)
+        {
+            ass.ForEach(a =>
+            {
+                if (a.IsJs) ClientResourceManager.RegisterScript(page, a.Url, a.Priority, DnnProviderName(a.PosInPage));
+                else ClientResourceManager.RegisterStyleSheet(page, a.Url, a.Priority, DnnProviderName(a.PosInPage));
+            });
+        }
+
+        private string DnnProviderName(string position)
+        {
+            position = position.ToLowerInvariant();
+
+            switch (position)
+            {
+                case "body": return DnnBodyProvider.DefaultName;
+                case "head": return DnnPageHeaderProvider.DefaultName;
+                case "bottom": return DnnFormBottomProvider.DefaultName;
+            }
+            return "";
+        }
 
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System;
-using ToSic.Eav;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -17,8 +17,55 @@ namespace ToSic.Sxc.Blocks
             _rendHelp ?? (_rendHelp = Block.Context.ServiceProvider.Build<IRenderingHelper>().Init(Block, Log));
         private IRenderingHelper _rendHelp;
 
+        public string Render() => Run().Html;
 
-        public string Render()
+        public RenderResultWIP Run()
+        {
+            if (_result != null) return _result;
+            var wrapLog = Log.Call<RenderResultWIP>();
+            try
+            {
+                var result = new RenderResultWIP
+                {
+                    Html = RenderInternal(),
+                    ModuleId = Block.ParentId
+                };
+
+                result.DependentApps.Add(Block.AppId);
+
+                result.Assets = Assets;
+                var pss = Block.Context.PageServiceShared;
+                // Page Features
+                if (Block.Context.UserMayEdit)
+                {
+                    pss.Activate(BuiltInFeatures.EditUi.Key);
+                    pss.Activate(BuiltInFeatures.AutoToolbarGlobal.Key);
+                }
+                result.Features = pss.Features.GetWithDependentsAndFlush(Log);
+
+                // Head & Page Changes
+                result.HeadChanges = pss.GetHeadChangesAndFlush();
+                result.PageChanges = pss.GetPropertyChangesAndFlush();
+                result.ManualChanges = pss.Features.ManualFeaturesGetNew();
+
+                result.HttpStatusCode = pss.HttpStatusCode;
+                result.HttpStatusMessage = pss.HttpStatusMessage;
+
+                result.Ready = true;
+                _result = result;
+            }
+            catch (Exception ex)
+            {
+                Log.Add("Error!");
+                Log.Exception(ex);
+            }
+
+            return wrapLog(null, _result);
+        }
+
+        private RenderResultWIP _result;
+
+        private string RenderInternal()
         {
           var wrapLog = Log.Call<string>();
 
@@ -60,10 +107,12 @@ namespace ToSic.Sxc.Blocks
                             if (engine.ActivateJsApi)
                             {
                                 Log.Add("template referenced 2sxc.api JS in script-tag: will enable");
-                                if (RootBuilder is BlockBuilder parentBlock) parentBlock.UiAddJsApi = engine.ActivateJsApi;
+                                // 2021-09-01 before: if (RootBuilder is BlockBuilder parentBlock) parentBlock.UiAddJsApi = engine.ActivateJsApi;
+                                // todo: should change this, so the param isn't in ActivateJsApi but clearer
+                                Block.Context.PageServiceShared.Features.Activate(BuiltInFeatures.Core.Key);
                             }
 
-                            TransferEngineAssets(engine);
+                            TransferEngineAssetsToParent(engine);
                         }
                         else body = "";
                     }
@@ -78,8 +127,7 @@ namespace ToSic.Sxc.Blocks
                     ? RenderingHelper.WrapInContext(body,
                         instanceId: Block.ParentId,
                         contentBlockId: Block.ContentBlockId,
-                        editContext: UiAddEditContext,
-                        autoToolbar: UiAutoToolbar)
+                        editContext: UiAddEditContext)
                     : body;
                 #endregion
 
@@ -126,7 +174,7 @@ namespace ToSic.Sxc.Blocks
             if (_engine != null) return _engine;
             // edge case: view hasn't been built/configured yet, so no engine to find/attach
             if (Block.View == null) return null;
-            _engine = EngineFactory.CreateEngine(Block.View);
+            _engine = EngineFactory.CreateEngine(Block.Context.ServiceProvider, Block.View);
             _engine.Init(Block, renderingPurpose, Log);
             return _engine;
         }

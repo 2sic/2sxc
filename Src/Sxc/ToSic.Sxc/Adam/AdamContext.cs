@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Adam
         public virtual AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            var appId = context.AppState.AppId;
+            //var appId = context.AppState.AppId;
             var callLog = Log.Call<AdamContext>($"app: {context.AppState.Show()}, field:{fieldName}, guid:{entityGuid}");
             Context = context;
 
@@ -60,12 +60,16 @@ namespace ToSic.Sxc.Adam
 
             Log.Add("check if feature enabled");
             if (Security.UserIsRestricted && !Eav.Configuration.Features.Enabled(FeaturesForRestrictedUsers))
+            {
+                var msg = ServiceProvider.Build<Features>().MsgMissingSome(FeaturesForRestrictedUsers);
                 throw HttpException.PermissionDenied(
-                    $"low-permission users may not access this - {Eav.Configuration.Features.MsgMissingSome(FeaturesForRestrictedUsers)}");
+                    $"low-permission users may not access this - {msg}");
+
+            }
 
             if (string.IsNullOrEmpty(contentType) || string.IsNullOrEmpty(fieldName)) return callLog(null, this);
 
-            Attribute = AttributeDefinition(appId, contentType, fieldName);
+            Attribute = AttributeDefinition(context.AppState, /*appId, */contentType, fieldName);
             if (!Security.FileTypeIsOkForThisField(out var exp))
                 throw exp;
             return callLog(null, this);
@@ -107,9 +111,9 @@ namespace ToSic.Sxc.Adam
         /// <summary>
         /// try to find attribute definition - for later extra security checks
         /// </summary>
-        private IContentTypeAttribute AttributeDefinition(int appId, string contentType, string fieldName)
+        private IContentTypeAttribute AttributeDefinition(AppState appState/*, int appId*/, string contentType, string fieldName)
         {
-            var type = State.Get(appId).GetContentType(contentType);
+            var type = appState /*State.Get(appId)*/.GetContentType(contentType);
             return type[fieldName];
         }
 

@@ -20,12 +20,13 @@ namespace ToSic.Sxc.DataSources
         [PrivateApi("older use case, probably don't publish")]
         public DataPublishing Publish { get; }= new DataPublishing();
 
+#pragma warning disable 618
         [Obsolete("Old property on this data source, should really not be used at all. Will be removed in 2sxc 12")]
         [PrivateApi]
-        public CacheWithGetContentType Cache 
-            => _cache ?? (_cache = new CacheWithGetContentType(Eav.Apps.State.Get(this)));
+        public CacheWithGetContentType Cache => _cache ?? (_cache = new CacheWithGetContentType(Eav.Apps.State.Get(this)));
         [Obsolete]
         private CacheWithGetContentType _cache;
+#pragma warning restore 618
 
         
         internal void SetOut(Query querySource) => Out = querySource.Out;

@@ -5,12 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.App;
+using ToSic.Sxc.WebApi.AppStack;
 using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
@@ -35,6 +37,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         private readonly Lazy<ImportApp> _importAppLazy;
         private readonly Lazy<AppCreator> _appBuilderLazy;
         private readonly Lazy<ResetApp> _resetAppLazy;
+        private readonly Lazy<SystemManager> _systemManagerLazy;
         protected override string HistoryLogName => "Api.App";
 
         public AppController(
@@ -43,8 +46,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             Lazy<ExportApp> exportAppLazy,
             Lazy<ImportApp> importAppLazy,
             Lazy<AppCreator> appBuilderLazy,
-            Lazy<ResetApp> resetAppLazy
-            )
+            Lazy<ResetApp> resetAppLazy,
+            Lazy<SystemManager> systemManagerLazy)
         {
             _appsBackendLazy = appsBackendLazy;
             _cmsZonesLazy = cmsZonesLazy;
@@ -52,6 +55,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             _importAppLazy = importAppLazy;
             _appBuilderLazy = appBuilderLazy;
             _resetAppLazy = resetAppLazy;
+            _systemManagerLazy = systemManagerLazy;
         }
 
         [HttpGet]
@@ -93,7 +97,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         public bool FlushCache(int zoneId, int appId)
         {
             var wrapLog = Log.Call<bool>($"{zoneId}, {appId}");
-            SystemManager.Purge(zoneId, appId, log: Log);
+            _systemManagerLazy.Value.Init(Log).Purge(zoneId, appId);
+            // SystemManager.Purge(zoneId, appId, log: Log);
             return wrapLog("ok", true);
         }
 
@@ -128,6 +133,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             return wrapLog("ok", result);
         }
 
+        [HttpGet]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = RoleNames.Admin)]
+        public List<StackInfoDto> GetStack(int appId, string part, string key = null, Guid? view = null) =>
+            ServiceProvider.Build<AppStackBackend>()
+                .GetAll(appId, part ?? AppConstants.RootNameSettings, key, view, null);
+
 
         /// <summary>
         /// Used to be GET ImportExport/ExportForVersionControl
@@ -138,6 +150,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// <param name="resetAppGuid"></param>
         /// <returns></returns>
         [HttpGet]
+        [Authorize(Roles = RoleNames.Admin)]
         [ValidateAntiForgeryToken]
         public bool SaveData(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
             => _exportAppLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)

@@ -82,5 +82,12 @@ namespace ToSic.Sxc.Data
         /// </remarks>
         string AnyStringProperty { get; }
 
+        /// <summary>
+        /// If this DynamicEntity carries a list of items (for example a `BlogPost.Tags` which behaves as the first Tag, but also carries all the tags in it)
+        /// Then you can also use DynamicCode to directly navigate to a sub-item, like `Blogs.Tags.WebDesign`. 
+        /// </summary>
+        /// <remarks>New in 12.03</remarks>
+        IEnumerable<DynamicEntity> AnyTitleOfAnEntityInTheList { get; }
+
     }
 }

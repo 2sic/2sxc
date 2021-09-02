@@ -1,17 +1,16 @@
 ﻿using Custom.Hybrid;
+using Microsoft.AspNetCore.Http;
 using Oqtane.Repository;
 using Oqtane.Shared;
 using System;
 using ToSic.Eav;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Oqt.Server.Block;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.WebApi;
-using Log = ToSic.Eav.Logging.Simple.Log;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
@@ -19,37 +18,43 @@ namespace ToSic.Sxc.Oqt.Server.Run
     /// The Oqtane implementation of the <see cref="ILinkHelper"/>.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public class OqtLinkHelper : IOqtLinkHelper, IHasLog
+    public class OqtLinkHelper : LinkHelper
     {
         public Razor12 RazorPage { get; set; }
         private readonly IPageRepository _pageRepository;
         private readonly SiteStateInitializer _siteStateInitializer;
+        private readonly IHttpContextAccessor _contextAccessor;
         private readonly OqtLinkPaths _linkPaths;
+        //private IApp App;
+        private Context.IContextOfBlock _context;
 
         public OqtLinkHelper(
             IPageRepository pageRepository,
             SiteStateInitializer siteStateInitializer,
-            ILinkPaths linkPaths
-        )
+            IHttpContextAccessor contextAccessor,
+            ILinkPaths linkPaths,
+            ImgResizeLinker imgLinker
+        ) : base(imgLinker)
         {
-            Log = new Log("OqtLinkHelper");
+            //Log = new Log("OqtLinkHelper");
             // TODO: logging
 
             _pageRepository = pageRepository;
             _siteStateInitializer = siteStateInitializer;
+            _contextAccessor = contextAccessor;
             _linkPaths = linkPaths as OqtLinkPaths;
         }
 
-        public ILinkHelper Init(Razor12 razorPage)
+        public override void Init(Context.IContextOfBlock context, IApp app, ILog parentLog)
         {
-            RazorPage = razorPage;
-            return this;
+            base.Init(context, app, parentLog);
+            _context = context;
         }
-
-        public ILog Log { get; }
+        
+        //public ILog Log { get; }
 
         /// <inheritdoc />
-        public string To(string dontRelyOnParameterOrder = Parameters.Protector, int? pageId = null, string parameters = null, string api = null)
+        public override string To(string dontRelyOnParameterOrder = Parameters.Protector, int? pageId = null, string parameters = null, string api = null)
         {
             // prevent incorrect use without named parameters
             Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
@@ -63,22 +68,26 @@ namespace ToSic.Sxc.Oqt.Server.Run
         }
 
         // Prepare Api link.
-        private string ApiNavigateUrl(string api, string parameters)
+        private string ApiNavigateUrl(string api, string parameters, bool absoluteUrl = true)
         {
             var alias = _siteStateInitializer.InitializedState.Alias;
             
             var pathWithQueryString = LinkHelpers.CombineApiWithQueryString(
-                _linkPaths.ApiFromSiteRoot(RazorPage.App.Folder, api).TrimPrefixSlash(),
+                _linkPaths.ApiFromSiteRoot(App.Folder, api),
                 parameters);
 
-            return $"{alias.Path}/{pathWithQueryString}";
+            var relativePath = string.IsNullOrEmpty(alias.Path)
+                ? pathWithQueryString
+                : $"/{alias.Path}{pathWithQueryString}";
+
+            return absoluteUrl ? $"{GetDomainName()}{relativePath}" : relativePath;
         }
 
         // Prepare Page link.
-        private string PageNavigateUrl(int? pageId, string parameters)
+        private string PageNavigateUrl(int? pageId, string parameters, bool absoluteUrl = true)
         {
             // Use current pageId, if pageId is not specified.
-            var currentPageId = RazorPage._DynCodeRoot?.CmsContext?.Page?.Id;
+            var currentPageId = _context?.Page?.Id;
             var pid = pageId ?? currentPageId;
             if (pid == null)
                 throw new Exception($"Error, PageId is unknown, pageId: {pageId}, currentPageId: {currentPageId} .");
@@ -87,16 +96,19 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             var alias = _siteStateInitializer.InitializedState.Alias;
 
-            return Utilities.NavigateUrl(alias.Path, page.Path, parameters ?? string.Empty);
+            var relativePath = Utilities.NavigateUrl(alias.Path, page.Path, parameters ?? string.Empty); // NavigateUrl do not works with absolute links
+
+            return absoluteUrl ? $"{GetDomainName()}{relativePath}" : relativePath;
         }
 
-        /// <inheritdoc />
-        public string Base()
+        private string GetDomainName()
         {
-            // helper to generate a base path which is also valid on home (special DNN behaviour)
-            const string randomxyz = "this-should-never-exist-in-the-url";
-            var basePath = To(parameters: randomxyz + "=1");
-            return basePath.Substring(0, basePath.IndexOf(randomxyz, StringComparison.Ordinal));
+            var scheme = _contextAccessor?.HttpContext?.Request?.Scheme ?? "http";
+            var alias = _siteStateInitializer.InitializedState.Alias;
+            var domainName = string.IsNullOrEmpty(alias.Path)
+                ? alias.Name
+                : alias.Name.Substring(0, alias.Name.Length - alias.Path.Length - 1);
+            return  $"{scheme}://{domainName}";
         }
     }
 }

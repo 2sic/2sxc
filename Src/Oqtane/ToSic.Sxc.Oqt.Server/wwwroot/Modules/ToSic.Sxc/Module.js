@@ -12,5 +12,5 @@ ToSic.Sxc = {
         } else {
             return "";
         }
-    },
+    }
 };

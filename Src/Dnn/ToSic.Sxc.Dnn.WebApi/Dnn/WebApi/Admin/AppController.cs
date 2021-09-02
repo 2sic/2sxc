@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
@@ -6,7 +7,6 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Apps;
@@ -14,6 +14,7 @@ using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.App;
+using ToSic.Sxc.WebApi.AppStack;
 using ToSic.Sxc.WebApi.ImportExport;
 using AppDto = ToSic.Eav.WebApi.Dto.AppDto;
 
@@ -70,7 +71,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public bool FlushCache(int zoneId, int appId)
         {
             var wrapLog = Log.Call<bool>($"{zoneId}, {appId}");
-            SystemManager.Purge(zoneId, appId, log: Log);
+            GetService<SystemManager>().Init(Log).Purge(zoneId, appId);
             return wrapLog("ok", true);
         }
 
@@ -116,6 +117,12 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
             return wrapLog("ok", result);
         }
+
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [ValidateAntiForgeryToken]
+        public List<StackInfoDto> GetStack(int appId, string part, string key = null, Guid? view = null) 
+            => GetService<AppStackBackend>().GetAll(appId, part ?? AppConstants.RootNameSettings, key, view, null);
 
         /// <summary>
         /// Used to be POST ImportExport/ImportApp

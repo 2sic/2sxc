@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.Run;
@@ -17,7 +18,6 @@ using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Adam;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.ImportExport;
@@ -31,13 +31,14 @@ using ToSic.Sxc.Dnn.WebApi.Admin;
 using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.Search;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi.ApiExplorer;
 using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.Plumbing;
 
 
-namespace ToSic.SexyContent
+namespace ToSic.Sxc.Dnn.StartUp
 {
 
     internal static class StartupDnnDi
@@ -50,6 +51,7 @@ namespace ToSic.SexyContent
             services.TryAddScoped<IZoneCultureResolver, DnnSite>();
             services.TryAddTransient<IModule, DnnModule>();
             services.TryAddTransient<DnnModule>();
+            services.TryAddTransient<DnnSite>();
 
             //
             services.TryAddTransient<IValueConverter, DnnValueConverter>();
@@ -66,6 +68,7 @@ namespace ToSic.SexyContent
             services.TryAddTransient<AppPermissionCheck, DnnPermissionCheck>();
             services.TryAddTransient<DnnPermissionCheck>();
 
+            services.TryAddTransient<IDnnContext, DnnContextOld>();
             services.TryAddTransient<ILinkHelper, DnnLinkHelper>();
             services.TryAddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
             services.TryAddTransient<DnnDynamicCodeRoot>();
@@ -92,7 +95,7 @@ namespace ToSic.SexyContent
             services.TryAddTransient<IEnvironmentLogger, DnnEnvironmentLogger>();
 
             // new in 11.08 - provide Razor Engine and platform
-            services.TryAddTransient<IEngineFinder, DnnEngineFinder>();
+            services.TryAddTransient<IRazorEngine, RazorEngine>();
             services.TryAddSingleton<IPlatform, DnnPlatformContext>();
 
             // add page publishing
@@ -126,8 +129,11 @@ namespace ToSic.SexyContent
             
             // new in v12.02 - RazorBlade DI
             //services.TryAddScoped<IPageChangeApplicator, DnnPageChanges>();
-            services.TryAddScoped<DnnPageChanges, DnnPageChanges>();
+            services.TryAddScoped<DnnPageChanges>();
             services.TryAddTransient<DnnClientResources>();
+
+            // v12.04 - proper DI for SearchController
+            services.TryAddTransient<SearchController>();
 
             return services;
         }

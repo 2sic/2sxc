@@ -26,13 +26,14 @@ namespace ToSic.Sxc.Oqt.Server.Block
             var apiRoot = siteRoot + WebApiConstants.ApiRoot + "/";
             var appApiRoot = siteRoot; // without "app/" because the UI will add that later on
             var result = InpageCms.JsApiJson(
-                PlatformType.Oqtane.ToString(),
-                pageId, 
-                siteRoot, 
-                apiRoot, 
-                appApiRoot, 
-                AntiForgeryToken(), 
-                OqtConstants.UiRoot + "/");
+                platform: PlatformType.Oqtane.ToString(),
+                pageId: pageId, 
+                siteRoot: siteRoot, 
+                apiRoot: apiRoot, 
+                appApiRoot: appApiRoot, 
+                uiRoot: OqtConstants.UiRoot + "/",
+                rvtHeader: Oqtane.Shared.Constants.AntiForgeryTokenHeaderName,
+                rvt: AntiForgeryToken());
             return wrapLog("ok", result);
         }
 

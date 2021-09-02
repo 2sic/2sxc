@@ -9,26 +9,50 @@ namespace ToSic.Sxc.Web.PageFeatures
     public class PageFeatures: IPageFeatures
     {
         private readonly IPageFeaturesManager _pfm;
-        public IPageService Parent { get; private set; }
         
         public PageFeatures(IPageFeaturesManager pfm)
         {
             _pfm = pfm;
         }
-        
-        public IPageFeatures Init(IPageService parent)
-        {
-            Parent = parent;
-            return this;
-        }
-       
-        /// <inheritdoc />
-        public void Activate(params string[] keys) => ActiveKeys.AddRange(keys.Where(k => !string.IsNullOrWhiteSpace(k)));
 
-        public List<string> ActiveKeys { get; } = new List<string>();
+        /// <inheritdoc />
+        public void Activate(params string[] keys)
+        {
+            var realKeys = keys.Where(k => !string.IsNullOrWhiteSpace(k));
+            ActiveKeys.AddRange(realKeys);
+            
+        }
+
+        private List<IPageFeature> ManualFeatures { get; } = new List<IPageFeature>();
+
+        public void ManualFeatureAdd(IPageFeature newFeature) => ManualFeatures.Add(newFeature);
+
+        public List<IPageFeature> ManualFeaturesGetNew()
+        {
+            // Filter out the ones which were already added in a previous round
+            var newFeatures = ManualFeatures
+                .GroupBy(f => f.Key)
+                .Where(g => g.All(f => !f.AlreadyProcessed)) // only keep the groups which only have false
+                .Select(g => g.First())
+                .ToList();
+
+            // Mark the new ones as processed now, so they won't be processed in future
+            newFeatures.ForEach(f => f.AlreadyProcessed = true);
+            return newFeatures;
+        }
+
+
+
+
+
+
+
+
+
+
+        private List<string> ActiveKeys { get; } = new List<string>();
         
-        
-        public List<string> GetKeysAndFlush()
+        private List<string> GetKeysAndFlush()
         {
             var keys = ActiveKeys.ToArray().ToList();
             ActiveKeys.Clear();
@@ -40,7 +64,7 @@ namespace ToSic.Sxc.Web.PageFeatures
             // if (_features != null) return _features;
             var wrapLog = log.Call<List<IPageFeature>>();
             log.Add("Try to get new specs from IPageService");
-            var features = Parent.Features.GetKeysAndFlush();
+            var features = GetKeysAndFlush();
             log.Add($"Got {features.Count} items");
             var unfolded = _pfm.GetWithDependents(features);
             log.Add($"Got unfolded features {unfolded.Count}");

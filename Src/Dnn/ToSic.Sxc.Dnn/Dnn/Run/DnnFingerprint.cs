@@ -15,6 +15,8 @@ namespace ToSic.Sxc.Dnn.Run
     {
         public string GetSystemFingerprint()
         {
+            if (_fingerprintCache != null) return _fingerprintCache;
+
             var sysGuid = DotNetNuke.Entities.Host.Host.GUID;
 
             var mainVersionSys = DotNetNukeContext.Current.Application.Version.ToString(1);
@@ -28,8 +30,10 @@ namespace ToSic.Sxc.Dnn.Run
             // Wait with these changes till we're sure we don't break stuff; ATM the fingerprint isn't critical yet
             var fingerprint = $"guid={sysGuid}&vdnn={mainVersionSys}&v2sxc={mainVersion2Sxc}&db={dbName}";
 
-            return Hash(fingerprint);
+            return _fingerprintCache = Hash(fingerprint);
         }
+
+        private static string _fingerprintCache;
 
         private string getDbName()
         {

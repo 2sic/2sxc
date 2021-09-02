@@ -29,7 +29,7 @@ namespace ToSic.Sxc.WebApi.Save
             var permCheck = sp.Build<MultiPermissionsTypes>().Init(Context, app, items.Select(i => i.Header).ToList(), Log);
             if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
                 throw HttpException.PermissionDenied(error);
-            if (!permCheck.UserCanWriteAndPublicFormsEnabled(out _, out error))
+            if (!permCheck.UserCanWriteAndPublicFormsEnabled(Context.ServiceProvider, out _, out error))
                 throw HttpException.PermissionDenied(error);
 
             Log.Add("passed security checks");

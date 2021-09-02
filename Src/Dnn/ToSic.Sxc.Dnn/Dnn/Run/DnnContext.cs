@@ -2,8 +2,6 @@
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Entities.Users;
-using ToSic.Eav.Context;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Context;
 
 
@@ -16,15 +14,18 @@ namespace ToSic.Sxc.Dnn.Run
         /// Note that the context can be null, in which case it will have no module context, and default to the current portal
         /// </summary>
         /// <param name="moduleContext"></param>
-        public DnnContextOld(IModule moduleContext)
+        public DnnContextOld Init(IModule moduleContext)
         {
             Module = (moduleContext as Module<ModuleInfo>)?.UnwrappedContents;
             // note: this may be a bug, I assume it should be Module.OwnerPortalId
             Portal = PortalSettings.Current ?? 
                 (moduleContext != null ? new PortalSettings(Module.PortalID): null);
+            return this;
         }
 
-        public ModuleInfo Module { get; }
+
+
+        public ModuleInfo Module { get; private set; }
 
         /// <summary>
         /// This used to just be
@@ -52,7 +53,7 @@ namespace ToSic.Sxc.Dnn.Run
 
         //private TabInfo _tab;
 
-        public PortalSettings Portal { get; }
+        public PortalSettings Portal { get; private set; }
 
         public UserInfo User => Portal.UserInfo;
     }

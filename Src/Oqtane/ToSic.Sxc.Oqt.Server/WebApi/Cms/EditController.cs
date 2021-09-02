@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Oqtane.Shared;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
@@ -64,9 +67,18 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         [HttpGet]
         [HttpPost]
         [AllowAnonymous] // security check happens internally
-        public IEnumerable<EntityForPickerDto> EntityPicker(int appId, [FromBody] string[] items, string contentTypeName = null)
-            => EntityBackend.Init(Log)
+        public async Task<IEnumerable<EntityForPickerDto>> EntityPicker(int appId, 
+            /*[FromBody] string[] items,*/ string contentTypeName = null) // [FromBody] is commented because it is sometimes null and options.AllowEmptyInputInBodyModelBinding = true is not working
+        {
+            // get body as json (using this complicated way to read body because it is sometimes null and
+            // options.AllowEmptyInputInBodyModelBinding = true or similar solutions are not working)
+            using var reader = new StreamReader(Request.Body);
+            var body = await reader.ReadToEndAsync();
+            var items = JsonConvert.DeserializeObject<string[]>(body);
+
+            return EntityBackend.Init(Log)
                 .GetAvailableEntities(appId, items, contentTypeName);
+        }
 
         // 2021-04-13 2dm should be unused now
         ///// <inheritdoc />

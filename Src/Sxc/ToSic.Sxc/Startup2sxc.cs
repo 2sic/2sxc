@@ -6,13 +6,16 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DotNet;
+using ToSic.Sxc.Engines;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.JsContext;
 using ToSic.Sxc.Web.PageFeatures;
+using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc
 {
@@ -33,6 +36,7 @@ namespace ToSic.Sxc
 
             // Code
             services.TryAddTransient<DynamicCodeRoot.Dependencies>();
+            services.TryAddTransient<DynamicEntityDependencies>();
 
             // Block Editors
             services.TryAddTransient<BlockEditorForEntity>();
@@ -50,11 +54,12 @@ namespace ToSic.Sxc
 
             // Rendering
             services.TryAddTransient<IRenderingHelper, RenderingHelper>();
+            services.TryAddTransient<TokenEngine>();
 
             // Context stuff in general
             services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
             services.TryAddTransient<IContextOfApp, ContextOfApp>();
-            services.TryAddTransient<ContextOfBlock>();
+            // 2021-09-01 2dm seems unused services.TryAddTransient<ContextOfBlock>();
             services.TryAddTransient<IPage, Page>();
             services.TryAddTransient<Page>();
             services.TryAddTransient<ICmsContext, CmsContext>();
@@ -82,9 +87,16 @@ namespace ToSic.Sxc
             services.TryAddTransient<Polymorphism.Polymorphism>();
 
             // new in v12.02 - PageService & Page Features
-            services.TryAddScoped<IPageService, Web.PageService.Page>();
+            services.TryAddTransient<IPageService, PageService>();  // must be unique per module where it's used
+            services.TryAddScoped<PageServiceShared>();             // must be scoped / shared across all modules
             services.TryAddTransient<IPageFeatures, PageFeatures>();
             services.TryAddSingleton<IPageFeaturesManager, PageFeaturesManager>();
+
+            // new in v12.02/12.04 Image Link Resize Helper
+            services.TryAddTransient<ImgResizeLinker>();
+
+            // WIP - objects which are not really final
+            services.TryAddTransient<WipRemoteRouterLink>();
 
             return services;
         }

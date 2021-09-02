@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Logging;
-using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.Web.PageService
 {
@@ -22,6 +20,11 @@ namespace ToSic.Sxc.Web.PageService
         /// <returns></returns>
         IList<HeadChange> GetHeadChangesAndFlush();
 
-    }
 
+        int? HttpStatusCode { get; set; }
+        string HttpStatusMessage { get; set; }
+
+        IPageFeatures Features { get; }
+
+    }
 }

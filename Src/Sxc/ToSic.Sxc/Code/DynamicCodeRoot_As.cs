@@ -3,6 +3,7 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
@@ -25,8 +26,8 @@ namespace ToSic.Sxc.Code
 
         private DynamicEntityDependencies DynamicEntityDependencies =>
             _dynamicEntityDependencies
-            ?? (_dynamicEntityDependencies = new DynamicEntityDependencies(Block, _serviceProvider,
-                CmsContext.SafeLanguagePriorityCodes(), CompatibilityLevel));
+            ?? (_dynamicEntityDependencies = _serviceProvider.Build<DynamicEntityDependencies>().Init(Block, 
+                CmsContext.SafeLanguagePriorityCodes(), Log, CompatibilityLevel));
         private DynamicEntityDependencies _dynamicEntityDependencies;
 
         /// <inheritdoc />
@@ -51,7 +52,7 @@ namespace ToSic.Sxc.Code
                 .Select(e => e as IPropertyLookup)
                 .Where(e => e !=null)
                 .Select(e => new KeyValuePair<string, IPropertyLookup>(null, e));
-            return new DynamicStack(DynamicEntityDependencies, sources.ToArray());
+            return new DynamicStack("unknown", DynamicEntityDependencies, sources.ToArray());
         }
 
 
@@ -73,6 +74,8 @@ namespace ToSic.Sxc.Code
                     return AsList(dsEntities[Eav.Constants.DefaultStreamName]);
                 case IEnumerable<IEntity> iEntities:
                     return iEntities.Select(e => AsDynamic(e));
+                case IEnumerable<IDynamicEntity> dynIDynEnt:
+                    return dynIDynEnt;
                 case IEnumerable<dynamic> dynEntities:
                     return dynEntities;
                 default:

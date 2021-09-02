@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Oqtane.Models;
 using Oqtane.Security;
 using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.Security;
@@ -20,7 +20,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private readonly Lazy<IUser> _oqtUser;
         //private readonly OqtState _oqtState;
 
-        public OqtPermissionCheck(IHttpContextAccessor httpContextAccessor, Lazy<IUserPermissions> userPermissions, Lazy<IUser> oqtUser/*, OqtState oqtState*/) : base(OqtConstants.OqtLogPrefix)
+        public OqtPermissionCheck(IHttpContextAccessor httpContextAccessor, 
+            Lazy<IUserPermissions> userPermissions, 
+            Lazy<IUser> oqtUser/*, OqtState oqtState*/,
+            IAppStates appStates
+            ) : base(appStates, OqtConstants.OqtLogPrefix)
         {
             _httpContextAccessor = httpContextAccessor;
             _userPermissions = userPermissions;

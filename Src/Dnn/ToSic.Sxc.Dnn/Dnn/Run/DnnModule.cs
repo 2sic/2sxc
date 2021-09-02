@@ -18,14 +18,19 @@ namespace ToSic.Sxc.Dnn.Run
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public class DnnModule: Module<ModuleInfo>, IHasLog
     {
-        private readonly Lazy<IZoneMapper> _zoneMapperLazy;
-
         #region Constructors and DI
         
-        public DnnModule(Lazy<IZoneMapper> zoneMapperLazy): base("Dnn.Contnr")
+        public DnnModule(Lazy<IZoneMapper> zoneMapperLazy, Lazy<ZoneRuntime> zoneRuntimeLazy, IAppStates appStates, Lazy<AppFinder> appFinderLazy): base("Dnn.Contnr")
         {
             _zoneMapperLazy = zoneMapperLazy;
+            _zoneRuntimeLazy = zoneRuntimeLazy;
+            _appStates = appStates;
+            _appFinderLazy = appFinderLazy;
         }
+        private readonly Lazy<IZoneMapper> _zoneMapperLazy;
+        private readonly Lazy<ZoneRuntime> _zoneRuntimeLazy;
+        private readonly IAppStates _appStates;
+        private readonly Lazy<AppFinder> _appFinderLazy;
 
         /// <summary>
         /// We don't use a Constructor because of DI
@@ -94,17 +99,17 @@ namespace ToSic.Sxc.Dnn.Run
             var module = UnwrappedContents ?? throw new Exception("instance is not ModuleInfo");
 
             var msg = $"get appid from instance for Z:{zoneId} Mod:{module.ModuleID}";
-            var zoneRt = new ZoneRuntime().Init(zoneId, Log);
+            //var zoneRt = _zoneRuntimeLazy.Value.Init(zoneId, Log);
             if (IsPrimary)
             {
-                var appId = zoneRt.DefaultAppId;
+                var appId = _appStates.DefaultAppId(zoneId); // zoneRt.DefaultAppId;
                 return wrapLog($"{msg} - use Default app: {appId}", appId);
             }
 
             if (module.ModuleSettings.ContainsKey(Settings.ModuleSettingApp))
             {
                 var guid = module.ModuleSettings[Settings.ModuleSettingApp].ToString();
-                var appId = zoneRt.FindAppId(guid);
+                var appId = _appFinderLazy.Value.Init(Log)/* zoneRt*/.FindAppId(zoneId, guid);
                 return wrapLog($"{msg} AppG:{guid} = app:{appId}", appId);
             }
 

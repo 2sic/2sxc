@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Caching;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 
@@ -7,14 +8,20 @@ namespace ToSic.Sxc.Web.WebApi.System
 {
     public partial class Insights: HasLog
     {
-        private readonly IServiceProvider _serviceProvider;
 
         #region Constructor / DI
 
-        public Insights(IServiceProvider serviceProvider): base("Api.SysIns")
+        public Insights(IServiceProvider serviceProvider, IAppStates appStates, SystemManager systemManager, IAppsCache appsCache) : base("Api.SysIns")
         {
             _serviceProvider = serviceProvider;
+            _appStates = appStates;
+            _appsCache = appsCache;
+            SystemManager = systemManager.Init(Log);
         }
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IAppStates _appStates;
+        private readonly IAppsCache _appsCache;
+        protected readonly SystemManager SystemManager;
 
 
         public Insights Init(ILog parentLog, Action throwIfNotSuperUser, Func<string, Exception> createBadRequest) 
@@ -30,9 +37,9 @@ namespace ToSic.Sxc.Web.WebApi.System
 
         #endregion
 
-        private AppRuntime AppRt(int? appId) => _serviceProvider.Build<AppRuntime>().Init(State.Identity(null, appId.Value), true, Log);
+        private AppRuntime AppRt(int? appId) => _serviceProvider.Build<AppRuntime>().Init(appId.Value, true, Log);
 
-        private AppState AppState(int? appId) => State.Get(appId.Value);
+        private AppState AppState(int? appId) => _appStates.Get(appId.Value);
 
 
     }

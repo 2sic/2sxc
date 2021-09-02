@@ -2,16 +2,18 @@
 using System.Diagnostics;
 using System.Web.UI;
 using DotNetNuke.Entities.Modules;
-using ToSic.Eav;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Sxc.Beta.LightSpeed;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Web;
 
-
-namespace ToSic.SexyContent
+namespace ToSic.Sxc.Dnn
 {
     public partial class View : PortalModuleBase, IActionable
     {
@@ -21,8 +23,8 @@ namespace ToSic.SexyContent
             {
                 if (_blockLoaded) return _block;
                 _blockLoaded = true;
-                var newCtx = Eav.Factory.Resolve<IContextOfBlock>().Init(ModuleConfiguration, Log);
-                return _block = Eav.Factory.Resolve<BlockFromModule>().Init(newCtx, Log);
+                var newCtx = Eav.Factory.StaticBuild<IContextOfBlock>().Init(ModuleConfiguration, Log);
+                return _block = Eav.Factory.StaticBuild<BlockFromModule>().Init(newCtx, Log);
             }
         }
         private IBlock _block;
@@ -41,6 +43,25 @@ namespace ToSic.SexyContent
             _stopwatch = Stopwatch.StartNew();
             _entireLog = Log.Call(message: $"Page:{TabId} '{Page?.Title}', Instance:{ModuleId} '{ModuleConfiguration.ModuleTitle}'", useTimer: true);
             var callLog = Log.Call(useTimer: true);
+
+            // todo: this should be dynamic at some future time, because normally once it's been checked, it wouldn't need checking again
+            var checkPortalIsReady = true;
+            bool? requiresPre1025Behavior = null; // null = auto-detect, true/false
+
+            #region Lightspeed - very experimental - deactivate before distribution
+            if (Lightspeed.HasCache(ModuleId))
+            {
+                Log.Add("Lightspeed enabled, has cache");
+                PreviousCache = Lightspeed.Get(ModuleId);
+                if (PreviousCache != null)
+                {
+                    checkPortalIsReady = false;
+                    requiresPre1025Behavior = PreviousCache.EnforcePre1025;
+                }
+            }
+            if(PreviousCache == null) NewCache = new OutputCacheItem();
+            #endregion
+
             // always do this, part of the guarantee that everything will work
             // 2020-01-06 2sxc 10.25 - moved away to DnnRenderingHelpers
             // to only load when we're actually activating the JS.
@@ -53,9 +74,13 @@ namespace ToSic.SexyContent
             // ensure everything is ready and that we know if we should activate the client-dependency
             TryCatchAndLogToDnn(() =>
             {
-                EnsureCmsBlockAndPortalIsReady();
-                DnnClientResources = Factory.StaticBuild<DnnClientResources>()/* new DnnClientResources()*/.Init(Page, Block?.BlockBuilder, Log);
-                DnnClientResources.EnsurePre1025Behavior();
+                if (checkPortalIsReady) new DnnReadyCheckTurbo(this, Log).EnsureSiteAndAppFoldersAreReady(Block);
+                DnnClientResources = Eav.Factory.StaticBuild<DnnClientResources>()
+                    .Init(Page, requiresPre1025Behavior == false ? null : Block?.BlockBuilder, Log);
+                var needsPre1025Behavior = requiresPre1025Behavior ?? DnnClientResources.NeedsPre1025Behavior();
+                if (needsPre1025Behavior) DnnClientResources.EnforcePre1025Behavior();
+                // #lightspeed
+                if(NewCache != null) NewCache.EnforcePre1025 = needsPre1025Behavior;
             }, callLog);
             _stopwatch.Stop();
         }
@@ -63,7 +88,7 @@ namespace ToSic.SexyContent
         protected DnnClientResources DnnClientResources;
 
 
-        /// <summary>s
+        /// <summary>
         /// Process View if a Template has been set
         /// </summary>
         /// <param name="sender"></param>
@@ -72,42 +97,75 @@ namespace ToSic.SexyContent
         {
             _stopwatch?.Start();
             var callLog = Log.Call(useTimer: true);
+
+            // #lightspeed
+            if (PreviousCache != null) Log.Add("Lightspeed hit - will use cached");
+
+            RenderResultWIP data = null;
             var headersAndScriptsAdded = false;
             // skip this if something before this caused an error
             if (!IsError)
                 TryCatchAndLogToDnn(() =>
                 {
-                    // Try to build the html
-                    var html = RenderViewAndGatherJsCssSpecs();
+                    // Try to build the html and everything
+                    data = PreviousCache?.Data ?? RenderViewAndGatherJsCssSpecs();
+                    // in this case assets & page settings were not applied
+                    try
+                    {
+                        var pageChanges = Eav.Factory.StaticBuild<DnnPageChanges>();
+                        pageChanges.Apply(Page, data); // note: if Assets == null, it will take the default
+                    }
+                    catch{ /* ignore */ }
+
+                    // todo: #Lightspeed Page property changes!
+
                     // call this after rendering templates, because the template may change what resources are registered
-                    headersAndScriptsAdded = DnnClientResources.AddEverything();
+                    DnnClientResources.AddEverything(data.Features);
+                    headersAndScriptsAdded = true; // will be true if we make it this far
                     // If standalone is specified, output just the template without anything else
                     if (RenderNaked)
-                        SendStandalone(html);
+                        SendStandalone(data.Html);
                     else
-                        phOutput.Controls.Add(new LiteralControl(html));
+                    {
+                        phOutput.Controls.Add(new LiteralControl(data.Html));
+
+                        // #Lightspeed
+                        if (NewCache != null)
+                        {
+                            Log.Add("Adding to lightspeed");
+                            NewCache.Data = data;
+                            Lightspeed.Add(ModuleId, NewCache);
+                        }
+                    }
                 });
 
             // if we had an error before, or have one now, re-check assets
             if (IsError && !headersAndScriptsAdded)
-                DnnClientResources?.AddEverything();
+                DnnClientResources?.AddEverything(data?.Features);
+
             callLog(null);
             _stopwatch?.Stop();
-            _entireLog?.Invoke("✔"); //$"⌚ {_stopwatch?.ElapsedMilliseconds:##.##}ms");
+            _entireLog?.Invoke("✔");
         }
 
-        private string RenderViewAndGatherJsCssSpecs()
+        private RenderResultWIP RenderViewAndGatherJsCssSpecs()
         {
             var timerWrap = Log.Call(message: $"module {ModuleId} on page {TabId}", useTimer: true);
-            var renderedTemplate = "";
+            var result = new RenderResultWIP();
             TryCatchAndLogToDnn(() =>
             {
                 if (RenderNaked) Block.BlockBuilder.WrapInDiv = false;
-                renderedTemplate = Block.BlockBuilder.Render()
-                    + GetOptionalDetailedLogToAttach();
+                result = Block.BlockBuilder.Run();
+                result.Html += GetOptionalDetailedLogToAttach();
             }, timerWrap);
 
-            return renderedTemplate;
+            return result;
         }
+
+
+        private OutputCacheManager Lightspeed => _lightspeed ?? (_lightspeed = new OutputCacheManager());
+        private OutputCacheManager _lightspeed;
+        private OutputCacheItem PreviousCache;
+        private OutputCacheItem NewCache;
     }
 }

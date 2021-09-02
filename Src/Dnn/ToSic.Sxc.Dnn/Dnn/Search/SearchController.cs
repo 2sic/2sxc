@@ -8,6 +8,7 @@ using System.Web;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Caching;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Helpers;
@@ -33,14 +34,21 @@ namespace ToSic.Sxc.Search
     /// This will construct data for the search indexer in DNN.
     /// It's created once for each module which will be indexed
     /// </summary>
-    internal class SearchController : HasLog
+    /// <remarks>
+    /// ATM it's DNN only (because Oqtane doesn't have search indexing)
+    /// But the code is 99% clean, so it would be easy to split into dnn/Oqtane versions once ready.
+    /// The only difference seems to be exception logging. 
+    /// </remarks>
+    public class SearchController : HasLog<SearchController>
     {
-        private readonly IServiceProvider _serviceProvider;
-
-        public SearchController(IServiceProvider serviceProvider, ILog parentLog) : base("DNN.Search", parentLog)
+        public SearchController(IServiceProvider serviceProvider, IAppsCache appsCache) : base("DNN.Search")
         {
             _serviceProvider = serviceProvider;
+            _appsCache = appsCache;
         }
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IAppsCache _appsCache;
+
 
         /// <summary>
         /// Initialize all values which are needed - or return a text with the info why we must stop. 
@@ -57,14 +65,14 @@ namespace ToSic.Sxc.Search
             // New Context because Portal-Settings.Current is null
             var appId = module.BlockIdentifier.AppId;
             if (appId == AppConstants.AppIdNotFound || appId == Eav.Constants.NullId) return wrapLog("cancel", "no app id");
-            
-            DnnSite = new DnnSite().TrySwap(DnnModule);
+
+            DnnSite = _serviceProvider.Build<DnnSite>().TrySwap(DnnModule); // new DnnSite().TrySwap(DnnModule);
 
             // Ensure cache builds up with correct primary language
             // In case it's not loaded yet
-            State.Cache.Load(module.BlockIdentifier, DnnSite.DefaultCultureCode);
+            _appsCache/*State.Cache*/.Load(module.BlockIdentifier, DnnSite.DefaultCultureCode);
 
-            var dnnContext = Eav.Factory.StaticBuild<IContextOfBlock>().Init(DnnModule, Log);
+            var dnnContext = _serviceProvider.Build<IContextOfBlock>().Init(DnnModule, Log);
             Block = _serviceProvider.Build<BlockFromModule>().Init(dnnContext, Log);
             
             if (Block.View == null) return wrapLog("cancel", "no view");
@@ -132,7 +140,7 @@ namespace ToSic.Sxc.Search
                 {
                     /* Old mode v06.02 - 12.01 using the Engine or Razor which customizes */
                     // Build the engine, as that's responsible for calling inner search stuff
-                    var engine = EngineFactory.CreateEngine(Block.View);
+                    var engine = EngineFactory.CreateEngine(_serviceProvider,  Block.View);
                     engine.Init(Block, Purpose.IndexingForSearch, Log);
                     
                     // Only run CustomizeData() if we're in the older, classic model of search-indexing

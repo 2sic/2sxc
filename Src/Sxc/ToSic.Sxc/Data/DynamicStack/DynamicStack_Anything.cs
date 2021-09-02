@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Data;
 
 namespace ToSic.Sxc.Data
 {
-    public partial class DynamicStack: DynamicEntityBase, IWrapper<IPropertyStack>, IDynamicStack
+    public partial class DynamicStack
     {
         /// <inheritdoc />
         public bool AnyBooleanProperty { get; }
@@ -26,6 +25,9 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         public string AnyStringProperty { get; }
+
+        /// <inheritdoc />
+        public IEnumerable<DynamicEntity> AnyTitleOfAnEntityInTheList { get; }
 
     }
 }

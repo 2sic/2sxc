@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
         [HttpPost("{appPath}/query/{name}")]
         [HttpPost("{appPath}/query/{name}/{stream}")]
         [AllowAnonymous] // will check security internally, so assume no requirements
-        public Dictionary<string, IEnumerable<Dictionary<string, object>>> PublicQuery(
+        public IDictionary<string, IEnumerable<IDictionary<string, object>>> PublicQuery(
             [FromRoute] string appPath,
             [FromRoute] string name,
             AppQueryParameters more,
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
         [HttpPost("auto/query/{name}")]
         [HttpPost("auto/query/{name}/{stream?}")]
         [AllowAnonymous] // will check security internally, so assume no requirements
-        public Dictionary<string, IEnumerable<Dictionary<string, object>>> Query(
+        public IDictionary<string, IEnumerable<IDictionary<string, object>>> Query(
             [FromRoute] string name,
             AppQueryParameters more,
             [FromQuery] bool includeGuid = false,

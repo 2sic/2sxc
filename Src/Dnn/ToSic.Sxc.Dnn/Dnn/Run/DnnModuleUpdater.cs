@@ -19,18 +19,20 @@ namespace ToSic.Sxc.Dnn.Run
     {
         #region Constructor and DI
 
-        private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
-        private readonly IZoneMapper _zoneMapper;
-
         /// <summary>
         /// Empty constructor for DI
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public DnnModuleUpdater(Lazy<CmsRuntime> cmsRuntimeLazy, IZoneMapper zoneMapper) : base("Dnn.MapA2I")
+        public DnnModuleUpdater(Lazy<CmsRuntime> cmsRuntimeLazy, IZoneMapper zoneMapper, IAppStates appStates) : base("Dnn.MapA2I")
         {
             _cmsRuntimeLazy = cmsRuntimeLazy;
+            _appStates = appStates;
             _zoneMapper = zoneMapper.Init(Log);
         }
+        private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
+        private readonly IAppStates _appStates;
+        private readonly IZoneMapper _zoneMapper;
+
 
         #endregion
 
@@ -50,7 +52,7 @@ namespace ToSic.Sxc.Dnn.Run
                 UpdateInstanceSettingForAllLanguages(instance.Id, Settings.ModuleSettingApp, null, Log);
             else
             {
-                var appName = State.Zones[zoneId].Apps[appId.Value];
+                var appName = _appStates.AppIdentifier(zoneId, appId.Value); // State.Zones[zoneId].Apps[appId.Value];
                 UpdateInstanceSettingForAllLanguages(instance.Id, Settings.ModuleSettingApp, appName, Log);
             }
 

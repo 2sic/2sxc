@@ -16,16 +16,19 @@ namespace ToSic.Sxc.WebApi.Features
     {
         #region Constructor / DI
 
-        public FeaturesBackend(IServerPaths serverPaths, IZoneMapper zoneMapper, IServiceProvider serviceProvider, IGlobalConfiguration globalConfiguration) : base(serviceProvider, "Bck.Feats")
+        public FeaturesBackend(IZoneMapper zoneMapper, IServiceProvider serviceProvider, 
+            IGlobalConfiguration globalConfiguration, IFeaturesConfiguration features, SystemLoader systemLoader) : base(serviceProvider, "Bck.Feats")
         {
-            _serverPaths = serverPaths;
             _zoneMapper = zoneMapper;
             _globalConfiguration = globalConfiguration;
+            _features = features;
+            _systemLoader = systemLoader;
         }
 
-        private readonly IServerPaths _serverPaths;
         private readonly IZoneMapper _zoneMapper;
         private readonly IGlobalConfiguration _globalConfiguration;
+        private readonly IFeaturesConfiguration _features;
+        private readonly SystemLoader _systemLoader;
 
         public new FeaturesBackend Init(ILog parentLog)
         {
@@ -38,7 +41,7 @@ namespace ToSic.Sxc.WebApi.Features
 
         public IEnumerable<Feature> GetAll(bool reload)
         {
-            if (reload) Eav.Configuration.Features.Reset();
+            if (reload) _systemLoader.Reload();
             return Eav.Configuration.Features.All;
         }
 
@@ -50,61 +53,19 @@ namespace ToSic.Sxc.WebApi.Features
 
             // 1. valid json? 
             // - ensure signature is valid
-            if (!IsValidFeaturesJson(featuresManagementResponse.Msg.Features)) return false;
+            if (!Json.IsValidJson(featuresManagementResponse.Msg.Features)) return false;
 
             // then take the newFeatures (it should be a json)
             // and save to /desktopmodules/.data-custom/configurations/features.json
-            if (!SaveFeature(featuresManagementResponse.Msg.Features)) return false;
-
-            // when done, reset features
-            Eav.Configuration.Features.Reset();
+            if (!SaveFeaturesAndReload(featuresManagementResponse.Msg.Features)) return false;
 
             return true;
         }
 
 
-
-
         #region Helper Functions
 
-        public static bool IsValidFeaturesJson(string input)
-        {
-            return Json.IsValidJson(input);
-
-            // todo: ensure signature is valid
-
-            // json is valid
-            //return true;
-        }
-
-        //public static bool IsValidJson(string strInput)
-        //{
-        //    strInput = strInput.Trim();
-        //    if (!(strInput.StartsWith("{") && strInput.EndsWith("}")) &&
-        //        !(strInput.StartsWith("[") && strInput.EndsWith("]")))
-        //        // it is not js Object and not js Array
-        //        return false;
-
-        //    try
-        //    {
-        //        JToken.Parse(strInput);
-        //    }
-        //    catch (JsonReaderException)
-        //    {
-        //        //  exception in parsing json
-        //        return false;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        // some other exception
-        //        return false;
-        //    }
-
-        //    // json is valid
-        //    return true;
-        //}
-
-        public bool SaveFeature(string features)
+        private bool SaveFeaturesAndReload(string features)
         {
             try
             {
@@ -116,7 +77,7 @@ namespace ToSic.Sxc.WebApi.Features
                 var featureFilePath = Path.Combine(configurationsPath, Eav.Configuration.Features.FeaturesJson);
 
                 File.WriteAllText(featureFilePath, features);
-                Eav.Configuration.Features.Reset();
+                _systemLoader.Reload();
                 return true;
             }
             catch (Exception)

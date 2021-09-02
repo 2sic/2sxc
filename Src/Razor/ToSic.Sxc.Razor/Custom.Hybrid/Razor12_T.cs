@@ -25,7 +25,7 @@ namespace Custom.Hybrid
         public IServiceProvider ServiceProvider { get; set; }
 
         [PrivateApi]
-        public TService GetService<TService>() => ServiceProvider.Build<TService>();
+        public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
 
         /// <summary>
         /// Constructor - only available for inheritance

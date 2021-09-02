@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
+using Oqtane.Models;
 using Oqtane.Shared;
 using ToSic.Eav.ImportExport.Options;
 using ToSic.Eav.Security.Permissions;
@@ -10,6 +15,7 @@ using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -98,18 +104,41 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// <returns></returns>
         [HttpGet]
         [AllowAnonymous] // will do security check internally
-        public HttpResponseMessage Download(
+        public async Task<IActionResult> Download(
             int appId,
             string language,
             string defaultLanguage,
             string contentType,
             ExportSelection recordExport, ExportResourceReferenceMode resourcesReferences,
             ExportLanguageResolution languageReferences, string selectedIds = null)
-            => _contentExportLazy.Value.Init(appId, Log).ExportContent(
+        {
+            var httpResponseMessage = _contentExportLazy.Value.Init(appId, Log).ExportContent(
                 GetContext().User,
                 language, defaultLanguage, contentType,
                 recordExport, resourcesReferences,
                 languageReferences, selectedIds);
+
+            // WIP....
+            var fileName = httpResponseMessage.Content.Headers.ContentDisposition.FileName;
+            var provider = new FileExtensionContentTypeProvider();
+            if (!provider.TryGetContentType(fileName, out var mediaType))
+            {
+                mediaType = httpResponseMessage.Content.Headers.ContentType.MediaType ?? "application/octet-stream";
+            }
+
+            var contentDisposition = new System.Net.Mime.ContentDisposition
+            {
+                FileName = fileName,
+                Inline = false
+            };
+            HttpContext.Response.Headers.Add("Content-Disposition", contentDisposition.ToString());
+            HttpContext.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+
+            using var stream = await httpResponseMessage.Content.ReadAsStreamAsync();
+            await stream.CopyToAsync(HttpContext.Response.Body);
+            await HttpContext.Response.Body.FlushAsync();
+            return File(stream, mediaType, fileName);
+        }
 
         /// <summary>
         /// This seems to be for XML import of a list

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using Oqtane.Infrastructure;
 using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
@@ -15,10 +16,16 @@ namespace ToSic.Sxc.Oqt.Server.Run
     public class OqtEnvironmentInstaller: HasLog<IEnvironmentInstaller>, IEnvironmentInstaller
     {
         private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
+        private readonly WipRemoteRouterLink _remoteRouterLink;
+        private readonly IAppStates _appStates;
+        private readonly IConfigManager _configManager;
 
-        public OqtEnvironmentInstaller(Lazy<CmsRuntime> cmsRuntimeLazy): base($"{OqtConstants.OqtLogPrefix}.Instll")
+        public OqtEnvironmentInstaller(Lazy<CmsRuntime> cmsRuntimeLazy, WipRemoteRouterLink remoteRouterLink, IAppStates appStates, IConfigManager configManager) : base($"{OqtConstants.OqtLogPrefix}.Instll")
         {
             _cmsRuntimeLazy = cmsRuntimeLazy;
+            _remoteRouterLink = remoteRouterLink;
+            _appStates = appStates;
+            _configManager = configManager;
         }
 
 
@@ -33,7 +40,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public bool ResumeAbortedUpgrade()
         {
             // don't do anything for now
-            // throw new NotImplementedException();
             return true;
         }
 
@@ -47,20 +53,20 @@ namespace ToSic.Sxc.Oqt.Server.Run
             if (forContentApp)
                 try
                 {
-                    var primaryAppId = new ZoneRuntime().Init(site.ZoneId, Log).DefaultAppId;
+                    var primaryAppId = _appStates.DefaultAppId(site.ZoneId); // new ZoneRuntime().Init(site.ZoneId, Log).DefaultAppId;
                     // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                     var contentViews = _cmsRuntimeLazy.Value //  Eav.Factory.Resolve<CmsRuntime>()
-                        .Init(State.Identity(null, primaryAppId), false, Log)
+                        .Init(_appStates.Identity(null, primaryAppId), false, Log)
                         .Views.GetAll();
                     if (contentViews.Any()) return null;
                 }
                 catch { /* ignore */ }
 
-            var link = new WipRemoteRouterLink().LinkToRemoteRouter(
+            var link = _remoteRouterLink.LinkToRemoteRouter(
                 RemoteDestinations.AutoConfigure,
                 "Oqt",
                 Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),
-                Guid.Empty.ToString(), // TODO
+                _configManager.GetInstallationId(), // Installation ID - added in Oqtane 2.2
                 site,
                 module.Id,
                 app: null,

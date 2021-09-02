@@ -22,13 +22,17 @@ namespace ToSic.Sxc.Blocks
         
         #region Constructor and DI
 
-        public BlockFromEntity(Lazy<BlockDataSourceFactory> bdsFactoryLazy) : base(bdsFactoryLazy, "CB.Ent") { }
+        public BlockFromEntity(Lazy<BlockDataSourceFactory> bdsFactoryLazy, Lazy<AppFinder> appFinderLazy) : base(bdsFactoryLazy, "CB.Ent")
+        {
+            _appFinderLazy = appFinderLazy;
+        }
+        private readonly Lazy<AppFinder> _appFinderLazy;
 
         public BlockFromEntity Init(IBlock parent, IEntity blockEntity, ILog parentLog)
         {
             var ctx = parent.Context.Clone(Log) as IContextOfBlock;
             Init(ctx, parent, parentLog);
-            var wrapLog = Log.Call<BlockFromEntity>($"{nameof(blockEntity)}:{blockEntity.EntityId}");
+            var wrapLog = Log.Call<BlockFromEntity>($"{nameof(blockEntity)}:{blockEntity.EntityId}", useTimer: true);
             return wrapLog(null, CompleteInit(parent, blockEntity));
         }
 
@@ -89,7 +93,7 @@ namespace ToSic.Sxc.Blocks
             temp = blockDefinition.Value<string>(ViewParts.TemplateContentType) ?? "";
             Guid.TryParse(temp, out var previewTemplateGuid);
 
-            var appId = new ZoneRuntime().Init(zoneId, log).FindAppId(appName);
+            var appId = _appFinderLazy.Value.Init(log)/* new ZoneRuntime().Init(zoneId, log)*/.FindAppId(zoneId, appName);
             return new BlockIdentifier(zoneId, appId, contentGroupGuid, previewTemplateGuid);
         }
         #endregion

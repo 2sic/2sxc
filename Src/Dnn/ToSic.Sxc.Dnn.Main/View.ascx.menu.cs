@@ -4,7 +4,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Sxc.Dnn.Run;
 
-namespace ToSic.SexyContent
+namespace ToSic.Sxc.Dnn
 {
     public partial class View
     {

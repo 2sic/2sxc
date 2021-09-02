@@ -10,7 +10,10 @@ namespace ToSic.Sxc.Dnn.Code
     [PrivateApi]
     public class DnnDynamicCodeRoot : DynamicCodeRoot, Sxc.Code.IDynamicCode, IDnnDynamicCode, IHasDynamicCodeRoot
     {
-        public DnnDynamicCodeRoot(Dependencies dependencies): base(dependencies, DnnConstants.LogName) { }
+        public DnnDynamicCodeRoot(Dependencies dependencies, IDnnContext dnnContext): base(dependencies, DnnConstants.LogName)
+        {
+            Dnn = dnnContext;
+        }
 
         /// <summary>
         /// Standard constructor
@@ -22,8 +25,8 @@ namespace ToSic.Sxc.Dnn.Code
         {
             base.Init(block, parentLog, compatibility);
             // Init things than require module-info or similar, but not 2sxc
-            Dnn = new DnnContextOld(block?.Context.Module);
-            ((DnnLinkHelper)Link).Init(Dnn, App);
+            ((DnnContextOld)Dnn).Init(block?.Context.Module);
+            //Link.Init(block?.Context, App);
             return this;
         }
 

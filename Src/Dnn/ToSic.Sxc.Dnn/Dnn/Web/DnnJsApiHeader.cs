@@ -34,13 +34,14 @@ namespace ToSic.Sxc.Dnn.Web
             
             var portal = PortalSettings.Current;
             var json = InpageCms.JsApiJson(
-                PlatformType.Dnn.ToString(),
-                portal.ActiveTab.TabID, 
-                siteRoot, 
-                apiRoots.Item1, 
-                apiRoots.Item2,
-                AntiForgeryToken(),
-                VirtualPathUtility.ToAbsolute(DnnConstants.SysFolderRootVirtual));
+                platform: PlatformType.Dnn.ToString(),
+                pageId: portal.ActiveTab.TabID, 
+                siteRoot: siteRoot, 
+                apiRoot: apiRoots.Item1, 
+                appApiRoot: apiRoots.Item2,
+                uiRoot: VirtualPathUtility.ToAbsolute(DnnConstants.SysFolderRootVirtual),
+                rvtHeader: DnnConstants.AntiForgeryTokenHeaderName,
+                rvt: AntiForgeryToken());
 
             HtmlPage.AddMeta(InpageCms.MetaName, json);
             return wrapLog("added", true);

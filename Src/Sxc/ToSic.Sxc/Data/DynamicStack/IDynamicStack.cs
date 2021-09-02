@@ -7,16 +7,19 @@ namespace ToSic.Sxc.Data
     /// It will try to find a value inside each source in the order the Sources are managed. 
     /// </summary>
     /// <remarks>New in 12.02</remarks>
-    [PublicApi("Careful - still Experimental in 12.02")]
+    [PublicApi]
     public partial interface IDynamicStack
     {
         /// <summary>
         /// Get a source object which is used in the stack. Returned as a dynamic object. 
         /// </summary>
         /// <param name="name"></param>
-        /// <returns>A dynamic object like a <see cref="IDynamicEntity"/> or similar, can also be null if the source isn't found. </returns>
+        /// <returns>A dynamic object like a <see cref="IDynamicEntity"/> or similar. If not found, it will return a source which just-works, but doesn't have data. </returns>
+        /// <remarks>
+        /// Added in 2sxc 12.03
+        /// </remarks>
         dynamic GetSource(string name);
-
+        
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityGet and IDynamicStack */
         /// <summary>
         /// Get a value of the entity. Usually you will prefer the quick access like
@@ -40,11 +43,23 @@ namespace ToSic.Sxc.Data
         /// </param>
         /// <param name="language">Optional language code - like "de-ch" to prioritize that language</param>
         /// <param name="convertLinks">Optionally turn off if links like file:72 are looked up to a real link. Default is true.</param>
+        /// <param name="debug">Set true to see more details in [Insights](xref:NetCode.Debug.Insights.Index) how the value was retrieved.</param>
         /// <returns>a dynamically typed result, can be string, bool, etc.</returns>
         dynamic Get(string name,
             // ReSharper disable once MethodOverloadWithOptionalParameter
             string dontRelyOnParameterOrder = Eav.Parameters.Protector,
             string language = null,
-            bool convertLinks = true);
+            bool convertLinks = true,
+            bool? debug = null
+        );
+
+
+        /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityGet and IDynamicStack */
+        /// <summary>
+        /// Activate debugging, so that you'll see details in [Insights](xref:NetCode.Debug.Insights.Index) how the value was retrieved.
+        /// </summary>
+        /// <param name="debug"></param>
+        void SetDebug(bool debug);
+
     }
 }

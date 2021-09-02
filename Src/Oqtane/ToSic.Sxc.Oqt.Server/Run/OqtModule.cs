@@ -18,15 +18,20 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private readonly SettingsHelper _settingsHelper;
         private readonly Lazy<OqtZoneMapper> _zoneMapperLazy;
         private readonly IModuleRepository _moduleRepository;
+        private readonly IAppStates _appStates;
+        private readonly Lazy<AppFinder> _appFinderLazy;
         private IZoneMapper ZoneMapper => _zoneMapper ??= _zoneMapperLazy.Value.Init(Log);
         private IZoneMapper _zoneMapper;
         private Dictionary<string, string> _settings;
 
-        public OqtModule(SettingsHelper settingsHelper, Lazy<OqtZoneMapper> zoneMapperLazy, IModuleRepository moduleRepository) : base ($"{OqtConstants.OqtLogPrefix}.Cont")
+        public OqtModule(SettingsHelper settingsHelper, Lazy<OqtZoneMapper> zoneMapperLazy, IModuleRepository moduleRepository, 
+            IAppStates appStates, Lazy<AppFinder> appFinderLazy) : base ($"{OqtConstants.OqtLogPrefix}.Cont")
         {
             _settingsHelper = settingsHelper;
             _zoneMapperLazy = zoneMapperLazy;
             _moduleRepository = moduleRepository;
+            _appStates = appStates;
+            _appFinderLazy = appFinderLazy;
         }
 
         public new OqtModule Init(Module module, ILog parentLog)
@@ -100,13 +105,13 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         private int GetInstanceAppId(int zoneId)
         {
-            var zoneRt = new ZoneRuntime().Init(zoneId, Log);
-            if (IsPrimary) return zoneRt.DefaultAppId;
+            if (IsPrimary) return _appStates.DefaultAppId(zoneId); // zoneRt.DefaultAppId;
 
             if (!_settings.ContainsKey(Settings.ModuleSettingApp)) return Eav.Constants.AppIdEmpty;
 
+            //var zoneRt = new ZoneRuntime().Init(zoneId, Log);
             var guid = _settings[Settings.ModuleSettingApp] ?? "";
-            var appId = zoneRt.FindAppId(guid);
+            var appId = _appFinderLazy.Value.Init(Log)/* zoneRt*/.FindAppId(zoneId, guid);
             return appId;
 
         }

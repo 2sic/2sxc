@@ -2,6 +2,8 @@
 {
     internal class Constants : Eav.Constants // inherit from EAV constants to make coding easier
     {
+        public const string SxcLogName = "Sxc";
+
         /// <summary>
         /// Additional json-node for metadata in serialized entities, if user has edit rights
         /// </summary>

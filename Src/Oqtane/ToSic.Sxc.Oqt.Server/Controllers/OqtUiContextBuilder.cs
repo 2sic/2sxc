@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Oqtane.Infrastructure;
 using Oqtane.Shared;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Dto;
@@ -13,16 +14,20 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     public class OqtUiContextBuilder: UiContextBuilderBase
     {
-        public OqtUiContextBuilder(ILinkPaths linkPaths, IContextOfSite ctx, SiteState siteState, Dependencies deps) : base(deps)
+        public OqtUiContextBuilder(ILinkPaths linkPaths, IContextOfSite ctx, SiteState siteState, WipRemoteRouterLink remoteRouterLink, IConfigManager configManager, Dependencies deps) : base(deps)
         {
             _linkPaths = linkPaths;
             _context = ctx;
             _siteState = siteState;
+            _remoteRouterLink = remoteRouterLink;
+            _configManager = configManager;
         }
 
         private readonly ILinkPaths _linkPaths;
         private IContextOfSite _context;
         private readonly SiteState _siteState;
+        private readonly WipRemoteRouterLink _remoteRouterLink;
+        private readonly IConfigManager _configManager;
 
 
         //protected override ContextLanguageDto GetLanguage()
@@ -42,18 +47,28 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         //    };
         //}
 
-        protected override WebResourceDto GetSystem() =>
-            new WebResourceDto
-            {
-                Url = _linkPaths.AsSeenFromTheDomainRoot("~/")
-            };
+        protected override ContextResourceWithApp GetSystem(Ctx flags)
+        {
+            var result = base.GetSystem(flags);
 
-        protected override WebResourceDto GetSite() =>
-            new WebResourceDto
-            {
-                Id = _context.Site.Id,
-                Url = "//" + _context.Site.Url,
-            };
+            //return new WebResourceDto
+            //{
+            result.Url = _linkPaths.AsSeenFromTheDomainRoot("~/");
+            //};
+            return result;
+        }
+
+        protected override ContextResourceWithApp GetSite(Ctx flags)
+        {
+            var result = base.GetSite(flags);
+
+            //return new WebResourceDto
+            //{
+            result.Id = _context.Site.Id;
+            result.Url = "//" + _context.Site.Url;
+            //};
+            return result;
+        }
 
         protected override WebResourceDto GetPage() =>
             new WebResourceDto
@@ -83,11 +98,11 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             var blockCtx = _context as IContextOfBlock; // may be null!
             var x = _siteState.Alias.TenantId;
             
-            var gsUrl = new WipRemoteRouterLink().LinkToRemoteRouter(
+            var gsUrl = _remoteRouterLink.LinkToRemoteRouter(
                 RemoteDestinations.GettingStarted,
                 "Oqt",
                 Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),
-                Guid.Empty.ToString(),  // TODO: Oqt doesn't seem to have a system guid - Dnn had DotNetNuke.Entities.Host.Host.GUID, 
+                _configManager.GetInstallationId(), // Installation ID - added in Oqtane 2.2
                 Deps.SiteCtx.Site,
                 blockCtx?.Module.Id ?? 0, // TODO: V12 - REQUIRED FOR CALLBACK TO WORK
                 Deps.AppToLaterInitialize,

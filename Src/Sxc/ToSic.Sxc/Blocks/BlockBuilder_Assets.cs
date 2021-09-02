@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Blocks
     {
         public List<ClientAssetInfo> Assets { get; private set; } = new List<ClientAssetInfo>();
 
-        private void TransferEngineAssets(IEngine engine)
+        private void TransferEngineAssetsToParent(IEngine engine)
         {
             if (!engine.Assets.Any()) return;
             if (RootBuilder is BlockBuilder parentBlock)

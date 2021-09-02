@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using ToSic.Eav.WebApi.Errors;
@@ -124,5 +126,39 @@ namespace ToSic.Sxc.WebApi
             ValidationFlags = XmlSchemaValidationFlags.None,
             ValidationType = ValidationType.None,
         };
+
+        public static Encoding GetEncoding(XmlDocument xmlDocument)
+        {
+            var xmlDeclaration = xmlDocument.ChildNodes.OfType<XmlDeclaration>().FirstOrDefault();
+            return (xmlDeclaration?.Encoding == null) 
+                ? Encoding.UTF8
+                : Encoding.GetEncoding(xmlDeclaration?.Encoding);
+        }
+
+        public static Encoding GetEncoding(string xmlString)
+        {
+            var xmlDocument = new XmlDocument();
+            xmlDocument.LoadXml(xmlString);
+            return GetEncoding(xmlDocument);
+        }
+
+        public static Encoding GetEncoding(Stream stream)
+        {
+            using (var xmlReader = XmlReader.Create(stream, _settings))
+            {
+                var xmlDocument = new XmlDocument();
+                xmlDocument.Load(xmlReader);
+                stream.Position = 0;
+                return GetEncoding(xmlDocument);
+            }
+        }
+
+        public static Encoding GetEncoding(byte[] charBody)
+        {
+            using (var memoryStream = new MemoryStream(charBody))
+            {
+                return GetEncoding(memoryStream);
+            }
+        }
     }
 }

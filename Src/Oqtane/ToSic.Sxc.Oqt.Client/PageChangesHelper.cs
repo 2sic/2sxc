@@ -22,7 +22,9 @@ namespace ToSic.Sxc.Oqt.Client
                     id = string.IsNullOrWhiteSpace(a.UniqueId) ? null : a.UniqueId,
                     rel = "stylesheet",
                     href = a.Url,
-                    type = "text/css"
+                    type = "text/css",
+                    integrity = "",
+                    crossorigin = ""
                 })
                 .Cast<object>()
                 .ToArray());
@@ -34,11 +36,12 @@ namespace ToSic.Sxc.Oqt.Client
                 .Where(r => r.ResourceType == ResourceType.Script)
                 .Select(a => new
                 {
-                    bundle = bundleId,
-                    id = string.IsNullOrWhiteSpace(a.UniqueId) ? null : a.UniqueId,
                     href = a.Url,
+                    bundle = "", // not working when bundleId is provided
+                    id = string.IsNullOrWhiteSpace(a.UniqueId) ? null : a.UniqueId,
                     location = a.Location,
                     integrity = "", // bug in Oqtane, needs to be an empty string to not throw errors
+                    crossorigin = ""
                 })
                 .Cast<object>()
                 .ToArray();

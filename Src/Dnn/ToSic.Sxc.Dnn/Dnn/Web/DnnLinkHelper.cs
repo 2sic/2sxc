@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Web;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.WebApi;
@@ -12,20 +15,24 @@ namespace ToSic.Sxc.Dnn.Web
     /// The DNN implementation of the <see cref="ILinkHelper"/>.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public class DnnLinkHelper : ILinkHelper
+    public class DnnLinkHelper : LinkHelper
     {
-        private IDnnContext _dnn;
-        private IApp _app;
+        [PrivateApi] private readonly IDnnContext _dnn;
 
-        public DnnLinkHelper Init(IDnnContext dnn, IApp app)
+        [PrivateApi]
+        public DnnLinkHelper(IDnnContext dnnContext, ImgResizeLinker imgLinker): base(imgLinker)
         {
-            _dnn = dnn;
-            _app = app;
-            return this;
+            _dnn = dnnContext;
+        }
+
+        public override void Init(IContextOfBlock context, IApp app, ILog parentLog)
+        {
+            base.Init(context, app, parentLog);
+            ((DnnContextOld) _dnn).Init(context?.Module);
         }
 
         /// <inheritdoc />
-        public string To(string dontRelyOnParameterOrder = Eav.Parameters.Protector, int? pageId = null, string parameters = null, string api = null)
+        public override string To(string dontRelyOnParameterOrder = Eav.Parameters.Protector, int? pageId = null, string parameters = null, string api = null)
         {
             // prevent incorrect use without named parameters
             Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
@@ -34,19 +41,10 @@ namespace ToSic.Sxc.Dnn.Web
 
             return parameters == null
                 ? _dnn.Tab.FullUrl
-                : DotNetNuke.Common.Globals.NavigateURL(pageId ?? _dnn.Tab.TabID, "", parameters);
+                : DotNetNuke.Common.Globals.NavigateURL(pageId ?? _dnn.Tab.TabID, "", parameters); // NavigateURL returns absolute links
         }
 
-        /// <inheritdoc />
-        public string Base()
-        {
-            // helper to generate a base path which is also valid on home (special DNN behaviour)
-            const string randomxyz = "this-should-never-exist-in-the-url";
-            var basePath = To(parameters: randomxyz + "=1");
-            return basePath.Substring(0, basePath.IndexOf(randomxyz, StringComparison.Ordinal));
-        }
-
-        private string Api(string dontRelyOnParameterOrder = Eav.Parameters.Protector, string path = null)
+        private string Api(string dontRelyOnParameterOrder = Eav.Parameters.Protector, string path = null, bool absoluteUrl = true)
         {
             Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Api", $"{nameof(path)}");
 
@@ -63,7 +61,14 @@ namespace ToSic.Sxc.Dnn.Web
 
             var apiRoot = DnnJsApiHeader.GetApiRoots().Item2.TrimLastSlash();
 
-            return $"{apiRoot}/app/{_app.Folder}/{path}";
+            var relativePath = $"{apiRoot}/app/{App.Folder}/{path}";    
+
+            return absoluteUrl ? $"{GetDomainName()}{relativePath}" : relativePath;
+        }
+
+        private string GetDomainName()
+        {
+            return HttpContext.Current?.Request?.Url?.GetLeftPart(UriPartial.Authority) ?? string.Empty;
         }
     }
 }

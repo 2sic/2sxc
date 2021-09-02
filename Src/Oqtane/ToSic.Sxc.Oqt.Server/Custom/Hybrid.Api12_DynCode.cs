@@ -31,7 +31,7 @@ namespace Custom.Hybrid
 
         [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
 
-        public TService GetService<TService>() => ServiceProvider.Build<TService>();
+        public TService GetService<TService>() => _DynCodeRoot.GetService<TService>(); // ServiceProvider.Build<TService>();
 
         /// <inheritdoc />
         public IApp App => _DynCodeRoot?.App;
@@ -108,7 +108,7 @@ namespace Custom.Hybrid
 
 
         // Adam - Shared Code Across the APIs (prevent duplicate code)
-
+        // TODO: STV - duplicate code with DynamicApiController and Hybrid.Api12_DynCode
         /// <summary>
         /// See docs of official interface <see cref="IDynamicWebApi"/>
         /// </summary>
@@ -128,7 +128,9 @@ namespace Custom.Hybrid
                 throw new Exception();
 
             var feats = new[] { FeatureIds.UseAdamInWebApi, FeatureIds.PublicUpload };
-            if (!Features.EnabledOrException(feats, "can't save in ADAM", out var exp))
+            var features = GetService<ToSic.Eav.Configuration.Features>();
+
+            if (!/*Features*/features.EnabledOrException(feats, "can't save in ADAM", out var exp))
                 throw exp;
 
             var appId = _DynCodeRoot?.Block?.AppId ?? _DynCodeRoot?.App?.AppId ?? throw new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known.");

@@ -14,7 +14,13 @@ namespace ToSic.Sxc.Apps
     {
         #region Constructor / DI
 
-        public AppsRuntime(IServiceProvider serviceProvider) : base(serviceProvider, "Cms.AppsRt") { }
+        public AppsRuntime(IServiceProvider serviceProvider, ZoneRuntime zoneRuntime, IAppStates appStates) : base(serviceProvider, "Cms.AppsRt")
+        {
+            _zoneRuntime = zoneRuntime;
+            _appStates = appStates;
+        }
+        private readonly ZoneRuntime _zoneRuntime;
+        private readonly IAppStates _appStates;
 
         #endregion
 
@@ -54,8 +60,9 @@ namespace ToSic.Sxc.Apps
         /// <returns></returns>
         public List<IApp> GetApps(ISite site, Func<Eav.Apps.App, IAppDataConfiguration> buildConfig)
         {
+            // todo: unclear if this is the right way to do this - probably the ZoneId should come from the site?
             var zId = ZoneRuntime.ZoneId;
-            var appIds = new ZoneRuntime().Init(zId, Log).Apps;
+            var appIds = _appStates.Apps(zId); //  _zoneRuntime/* new ZoneRuntime()*/.Init(zId, Log).Apps;
             return appIds
                 .Select(a => ServiceProvider.Build<App>()
                     .PreInit(site)

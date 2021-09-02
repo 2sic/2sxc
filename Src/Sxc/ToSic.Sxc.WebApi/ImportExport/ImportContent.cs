@@ -26,32 +26,35 @@ namespace ToSic.Sxc.WebApi.ImportExport
         #region DI Constructor
 
         public ImportContent(IZoneMapper zoneMapper, 
-            IServerPaths serverPaths, 
             IEnvironmentLogger envLogger,
             Lazy<Import> importerLazy,
             Lazy<XmlImportWithFiles> xmlImportWithFilesLazy,
             ZipImport zipImport,
             Lazy<JsonSerializer> jsonSerializerLazy, 
-            IGlobalConfiguration globalConfiguration) : base("Bck.Export")
+            IGlobalConfiguration globalConfiguration,
+            IAppStates appStates,
+            SystemManager systemManager) : base("Bck.Export")
         {
             _zoneMapper = zoneMapper;
-            _serverPaths = serverPaths;
             _envLogger = envLogger;
             _importerLazy = importerLazy;
             _xmlImportWithFilesLazy = xmlImportWithFilesLazy;
             _zipImport = zipImport;
             _jsonSerializerLazy = jsonSerializerLazy;
             _globalConfiguration = globalConfiguration;
+            _appStates = appStates;
+            SystemManager = systemManager.Init(Log);
         }
 
         private readonly IZoneMapper _zoneMapper;
-        private readonly IServerPaths _serverPaths;
         private readonly IEnvironmentLogger _envLogger;
         private readonly Lazy<Import> _importerLazy;
         private readonly Lazy<XmlImportWithFiles> _xmlImportWithFilesLazy;
         private readonly ZipImport _zipImport;
         private readonly Lazy<JsonSerializer> _jsonSerializerLazy;
         private readonly IGlobalConfiguration _globalConfiguration;
+        private readonly IAppStates _appStates;
+        protected readonly SystemManager SystemManager;
         private IUser _user;
 
         public ImportContent Init(IUser user, ILog parentLog)
@@ -112,7 +115,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                     throw new ArgumentException("a file is not json");
 
                 // 1. create the content type
-                var serializer = _jsonSerializerLazy.Value.Init(State.Get(new AppIdentity(zoneId, appId)), Log);
+                var serializer = _jsonSerializerLazy.Value.Init(_appStates.Get(new AppIdentity(zoneId, appId)), Log);
 
                 var types = files.Select(f => serializer.DeserializeContentType(f.Contents) as ContentType).ToList();
 
@@ -124,7 +127,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 import.ImportIntoDb(types, null);
 
                 Log.Add($"Purging {zoneId}/{appId}");
-                SystemManager.Purge(zoneId, appId, log: Log);
+                SystemManager.Purge(zoneId, appId);
 
                 // 3. possibly show messages / issues
                 return callLog("ok", new ImportResultDto(true));

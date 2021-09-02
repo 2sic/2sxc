@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
@@ -29,17 +28,16 @@ namespace ToSic.Sxc.WebApi.Cms
             IUiContextBuilder contextBuilder, 
             IContextResolver ctxResolver, 
             ITargetTypes mdTargetTypes,
-            // for prefetch
-            IValueConverter valueConverter,
-            EntityPickerApi entityPickerBackend) : base(serviceProvider, "Cms.LoadBk")
+            EntityPickerApi entityPickerBackend,
+            IAppStates appStates) : base(serviceProvider, "Cms.LoadBk")
         {
             _entityApi = entityApi;
             _contentGroupList = contentGroupList;
             _contextBuilder = contextBuilder;
             _ctxResolver = ctxResolver;
             _mdTargetTypes = mdTargetTypes;
-            _valueConverter = valueConverter;
             _entityPickerBackend = entityPickerBackend;
+            _appStates = appStates;
         }
         
         private readonly EntityApi _entityApi;
@@ -47,8 +45,8 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly IUiContextBuilder _contextBuilder;
         private readonly IContextResolver _ctxResolver;
         private readonly ITargetTypes _mdTargetTypes;
-        private readonly IValueConverter _valueConverter;
         private readonly EntityPickerApi _entityPickerBackend;
+        private readonly IAppStates _appStates;
 
         #endregion
 
@@ -64,7 +62,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // do early permission check - but at this time it may be that we don't have the types yet
             // because they may be group/id combinations, without type information which we'll look up afterwards
-            var appIdentity = State.Identity(null, appId);
+            var appIdentity = _appStates.Identity(null, appId);
             items = _contentGroupList.Init(appIdentity, Log, showDrafts).ConvertListIndexToId(items);
             TryToAutoFindMetadataSingleton(items, context.AppState);
 

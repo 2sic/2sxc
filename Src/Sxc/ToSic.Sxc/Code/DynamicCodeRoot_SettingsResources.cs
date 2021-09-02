@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using static ToSic.Eav.Configuration.ConfigurationStack;
+
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Code
@@ -10,25 +12,42 @@ namespace ToSic.Sxc.Code
     public partial class DynamicCodeRoot
     {
         /// <inheritdoc />
-        [PublicApi("Careful - still Experimental in 12.02")]
-        public dynamic Resources => _resources ?? (_resources = new DynamicStack(
-                new DynamicEntityDependencies(Block,
-                    DataSourceFactory.ServiceProvider,
-                    CmsContext.SafeLanguagePriorityCodes()),
-                new KeyValuePair<string, IPropertyLookup>("View", Block?.View?.Resources),
-                new KeyValuePair<string, IPropertyLookup>("App", App?.Resources?.Entity))
-            );
+        [PublicApi]
+        public dynamic Resources
+        {
+            get
+            {
+                if (_resources != null) return _resources;
+                var appState = ((App)_DynCodeRoot.App).AppState;
+
+                return _resources ?? (_resources = new DynamicStack(
+                        AppConstants.RootNameResources,
+                        DynamicEntityDependencies,
+                        appState.SettingsInApp.GetStack(false, _DynCodeRoot.Block?.View?.Resources).ToArray())
+                        //new KeyValuePair<string, IPropertyLookup>(PartView, Block?.View?.Resources),
+                        //new KeyValuePair<string, IPropertyLookup>(PartApp, App?.Resources?.Entity))
+                    );
+            }
+        }
+
         private dynamic _resources;
 
         /// <inheritdoc />
-        [PublicApi("Careful - still Experimental in 12.02")]
-        public dynamic Settings => _settings ?? (_settings = new DynamicStack(
-                new DynamicEntityDependencies(_DynCodeRoot.Block,
-                    _DynCodeRoot.DataSourceFactory.ServiceProvider,
-                    CmsContext.SafeLanguagePriorityCodes()),
-                new KeyValuePair<string, IPropertyLookup>("View", _DynCodeRoot.Block?.View?.Settings),
-                new KeyValuePair<string, IPropertyLookup>("App", _DynCodeRoot.App?.Settings?.Entity))
-            );
+        [PublicApi]
+        public dynamic Settings
+        {
+            get
+            {
+                if (_settings != null) return _settings;
+                var appState = ((App)_DynCodeRoot.App).AppState;
+                
+                return _settings = new DynamicStack(
+                    AppConstants.RootNameSettings,
+                    DynamicEntityDependencies,
+                    appState.SettingsInApp.GetStack(true, _DynCodeRoot.Block?.View?.Settings).ToArray());
+            }
+        }
+
         private dynamic _settings;
     }
 }

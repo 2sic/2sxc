@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
@@ -58,7 +59,18 @@ namespace ToSic.Sxc.Code
 
 
         /// <inheritdoc />
-        public TService GetService<TService>() => _serviceProvider.Build<TService>();
+        public TService GetService<TService>()
+        {
+            var newService = _serviceProvider.Build<TService>();
+            if(newService is INeedsCodeRoot newWithNeeds)
+                newWithNeeds.AddBlockContext(this);
+
+            return newService;
+        }
+
+        [PrivateApi]
+        internal Dictionary<string, object> PiggyBackers => _piggyBackers ?? (_piggyBackers = new Dictionary<string, object>());
+        [PrivateApi] private Dictionary<string, object> _piggyBackers;
 
         [PrivateApi]
         public virtual IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)
@@ -70,9 +82,12 @@ namespace ToSic.Sxc.Code
             CompatibilityLevel = compatibility;
             ((CmsContext) CmsContext).Update(block);
             Block = block;
-            App = block.App;
+            //App = block.App;
             Data = block.Data;
             Edit = new InPageEditingHelper(block, Log);
+
+            //Link.Init(block?.Context, App);
+            AttachAppAndInitLink(block.App);
 
             return this;
         }

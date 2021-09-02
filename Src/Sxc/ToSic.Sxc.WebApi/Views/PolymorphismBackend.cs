@@ -6,18 +6,20 @@ namespace ToSic.Sxc.WebApi.Views
 {
     internal class PolymorphismBackend : WebApiBackendBase<PolymorphismBackend>
     {
-        private readonly Polymorphism.Polymorphism _polymorphism;
-        public PolymorphismBackend(IServiceProvider serviceProvider, Polymorphism.Polymorphism polymorphism) : base(serviceProvider, "Bck.Views")
+        public PolymorphismBackend(IServiceProvider serviceProvider, Polymorphism.Polymorphism polymorphism, IAppStates appStates) : base(serviceProvider, "Bck.Views")
         {
             _polymorphism = polymorphism;
+            _appStates = appStates;
         }
 
-        
+        private readonly Polymorphism.Polymorphism _polymorphism;
+        private readonly IAppStates _appStates;
+
         public PolymorphismDto Polymorphism(int appId)
         {
             var callLog = Log.Call<dynamic>($"a#{appId}");
-            var appState = State.Get(appId);
-            var poly = _polymorphism.Init(appState.List, Log); // new Polymorphism.Polymorphism(appState.List, Log);
+            var appState = _appStates.Get(appId);
+            var poly = _polymorphism.Init(appState.List, Log);
             var result = new PolymorphismDto
             {
                 Id = poly.Entity?.EntityId, 

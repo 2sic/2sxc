@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddTransient<IPagePublishingResolver, OqtPagePublishingResolver>();
 
             //// Oqtane Specific stuff
-            services.AddScoped<OqtAssetsAndHeaders>();
+            services.TryAddTransient<OqtAssetsAndHeaders>();
             services.TryAddTransient<OqtSxcViewBuilder>();
             services.TryAddTransient<IClientDependencyOptimizer, OqtClientDependencyOptimizer>();
             services.TryAddTransient<IValueConverter, OqtValueConverter>();

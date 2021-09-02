@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Data
 {
-    [PrivateApi("WIP")]
+    [PrivateApi("Keep implementation hidden, only publish interface")]
     public partial class DynamicStack: DynamicEntityBase, IWrapper<IPropertyStack>, IDynamicStack
     {
-        public DynamicStack(DynamicEntityDependencies dependencies, params KeyValuePair<string, IPropertyLookup>[] entities) : base(dependencies)
+        public DynamicStack(string name, DynamicEntityDependencies dependencies, params KeyValuePair<string, IPropertyLookup>[] entities) : base(dependencies)
         {
             var stack = new PropertyStack();
-            stack.Init(entities);
+            stack.Init(name, entities);
             UnwrappedContents = stack;
         }
         
@@ -20,24 +22,41 @@ namespace ToSic.Sxc.Data
 
         public dynamic GetSource(string name)
         {
-            var source = UnwrappedContents.GetSource(name);
+            var source = UnwrappedContents.GetSource(name)
+                         // If not found, create a fake one
+                         ?? _Dependencies.DataBuilder.FakeEntity(_Dependencies.BlockOrNull?.AppId ?? 0);
+
+            return SourceToDynamicEntity(source);
+        }
+
+        private IDynamicEntity SourceToDynamicEntity(IPropertyLookup source)
+        {
             if (source == null) return null;
             if (source is IDynamicEntity dynEnt) return dynEnt;
             if (source is IEntity ent) return SubDynEntity(ent);
             return null;
         }
 
-        public override bool TryGetMember(GetMemberBinder binder, out object result)
+        [PrivateApi("Internal")]
+        public override PropertyRequest FindPropertyInternal(string field, string[] dimensions, ILog parentLogOrNull)
         {
-            result = _getValue(binder.Name);
-            return true;
+            var logOrNull = parentLogOrNull.SubLogOrNull("Sxc.DynStk");
+
+            var wrapLog = logOrNull.SafeCall<PropertyRequest>($"{nameof(field)}: {field}", "DynamicStack");
+            var result = UnwrappedContents.FindPropertyInternal(field, dimensions, logOrNull);
+            return wrapLog(result == null ? "null" : "ok", result);
         }
 
+        [PrivateApi]
+
         [PrivateApi("Internal")]
-        public override PropertyRequest FindPropertyInternal(string field, string[] dimensions) => UnwrappedContents.FindPropertyInternal(field, dimensions);
+        public override List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull)
+        {
+            return UnwrappedContents?._Dump(languages, path, parentLogOrNull)
+                   ?? new List<PropertyDumpItem>();
+        }
 
         public override bool TrySetMember(SetMemberBinder binder, object value)
-            => throw new NotImplementedException($"Setting a value on {nameof(DynamicStack)} is not supported");
-
+            => throw new NotSupportedException($"Setting a value on {nameof(DynamicStack)} is not supported");
     }
 }

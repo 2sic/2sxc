@@ -34,10 +34,17 @@ namespace ToSic.Sxc.Apps
         {
         }
 
-        public Version Version =>
-            Version.TryParse(Get(FieldVersion, ""), out var version)
-                ? version
-                : new Version();
+        public Version Version
+        {
+            get
+            {
+                var versionValue = Get(FieldVersion, "");
+                var valid = Version.TryParse(versionValue, out var version);
+                return valid
+                    ? version
+                    : new Version();
+            }
+        }
 
         public string Name => Get(AppConstants.FieldName, "unknown");
 

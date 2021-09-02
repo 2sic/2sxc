@@ -24,28 +24,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
   <div>@message</div>
 }
 ";
-
-        // copied from the razor tutorial
-
-        internal override string DefaultWebApiBody { get; } = @"using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
-[AllowAnonymous]			// define that all commands can be accessed without a login
-[ValidateAntiForgeryToken]	// protects the API from users not on your site (CSRF protection)
-// Inherit from Custom.Hybrid.Api12 to get features like App, Data...
-// see https://docs.2sxc.org/web-api/custom/index.html
-public class " + CsApiTemplateControllerName + @" : Custom.Hybrid.Api12
-{
-
-    [HttpGet]				// [HttpGet] says we're listening to GET requests
-    public string Hello()
-    {
-        return ""Hello from the controller with ValidateAntiForgeryToken in /api"";
-    }
-
-}
-";
-
+        
         internal override string DefaultCsCode { get; } = @"// Important notes:
 // - This class should have the same name as the file it's in
 // - This inherits from Custom.Hybrid.Code12
