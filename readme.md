@@ -4,8 +4,8 @@
 
 > you can't use DNN  or Oqtane without 2sxc 😉
 
-This tool helps web designers and developers prepare great looking, animated and sexy content templates in DNN (DotNetNuke). 
-It's like mixing DNN with Umbraco and Drupal :).
+2sxc helps web designers and developers prepare great looking, animated and sexy content and applications in DNN (DotNetNuke) and Oqtane. 
+In works in .net Framework and .net Core 5.
 
 Visit [2sxc.org](https://2sxc.org/) for more information.
 
@@ -32,5 +32,3 @@ This is just one repo of 2sxc - the full software also has another ca. 3 for
 1. [EAV-UI](https://github.com/2sic/eav-ui) Angular 12 UI layer for EAV data
 1. [2sxc-UI](https://github.com/2sic/2sxc-ui) In-page editing system and JS APIs
 
-
-The full list with repo-links is maintained on the [2sxc github wiki setup-contribute](https://github.com/2sic/2sxc/wiki/contribute-setup) site. 
