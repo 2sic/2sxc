@@ -67,19 +67,10 @@ namespace ToSic.Sxc.Oqt.Server.Block
             //}
             #endregion
 
-            AssetsAndHeaders.Init(this);
-
             // #Lightspeed
             var renderResult = PreviousCache?.Data ?? Block.BlockBuilder.Run();
 
-            var resources = renderResult.Assets.Select(a => new SxcResource
-            {
-                ResourceType = a.IsJs ? ResourceType.Script : ResourceType.Stylesheet,
-                Url = a.Url,
-                IsExternal = a.IsExternal,
-                Content = a.Content,
-                UniqueId = a.Id
-            }).ToList();
+            AssetsAndHeaders.Init(this, renderResult);
 
             //// #Lightspeed
             //if (NewCache != null)
@@ -92,7 +83,7 @@ namespace ToSic.Sxc.Oqt.Server.Block
             var ret = new OqtViewResultsDto
             {
                 Html = renderResult.Html, 
-                TemplateResources = resources,
+                TemplateResources = AssetsAndHeaders.GetSxcResources(),
                 SxcContextMetaName = AssetsAndHeaders.AddContextMeta ? AssetsAndHeaders.ContextMetaName : null,
                 SxcContextMetaContents = AssetsAndHeaders.AddContextMeta ? AssetsAndHeaders.ContextMetaContents(): null,
                 SxcScripts = AssetsAndHeaders.Scripts().ToList(),
@@ -102,6 +93,8 @@ namespace ToSic.Sxc.Oqt.Server.Block
 
             return ret;
         }
+
+
 
         internal Alias Alias;
         internal Site Site;

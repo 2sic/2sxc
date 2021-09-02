@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Oqtane.Shared;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
@@ -8,6 +9,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
@@ -19,23 +21,24 @@ namespace ToSic.Sxc.Oqt.Server.Block
     {
         #region Constructor and DI
 
-        public OqtAssetsAndHeaders(SiteState siteState, /*IPageService pageService,*/ PageServiceShared pageServiceShared) : base($"{OqtConstants.OqtLogPrefix}.AssHdr")
+        public OqtAssetsAndHeaders(SiteState siteState, IClientDependencyOptimizer oqtClientDependencyOptimizer) : base($"{OqtConstants.OqtLogPrefix}.AssHdr")
         {
+            OqtClientDependencyOptimizer = oqtClientDependencyOptimizer.Init(Log);
             _siteState = siteState;
-            //PageService = pageService;
-            PageServiceShared = pageServiceShared;
         }
-        private readonly SiteState _siteState;
-        //private IPageService PageService { get; }
-        public PageServiceShared PageServiceShared { get; }
 
-        public void Init(OqtSxcViewBuilder parent)
+        public IClientDependencyOptimizer OqtClientDependencyOptimizer { get; }
+        private readonly SiteState _siteState;
+
+        public void Init(OqtSxcViewBuilder parent, RenderResultWIP renderResult)
         {
             Parent = parent;
+            RenderResult = renderResult;
             BlockBuilder = parent?.Block?.BlockBuilder as BlockBuilder;
         }
 
         protected OqtSxcViewBuilder Parent;
+        protected RenderResultWIP RenderResult;
         protected BlockBuilder BlockBuilder;
 
         #endregion
@@ -44,6 +47,46 @@ namespace ToSic.Sxc.Oqt.Server.Block
         private bool AddJsCore => Features.Contains(BuiltInFeatures.Core); // || (BlockBuilder?.UiAddJsApi ?? AddJsEdit); //BlockBuilder?.UiAddJsApi ?? false;
         private bool AddJsEdit => Features.Contains(BuiltInFeatures.EditApi); // || (BlockBuilder?.UiAddEditApi ?? false);  // BlockBuilder?.UiAddEditApi ?? false;
         private bool AddCssEdit => Features.Contains(BuiltInFeatures.EditUi); // || (BlockBuilder?.UiAddEditUi ?? false);  // BlockBuilder?.UiAddEditUi ?? false;
+        
+
+        /// <summary>
+        /// The JavaScript and Style assets
+        /// from razor template and manual features
+        /// </summary>
+        /// <returns></returns>
+        public List<SxcResource> GetSxcResources()
+        {
+            // assets from razor template
+            var resources = SxcResourcesBuilder(RenderResult.Assets);
+            // assets from manual features
+            resources.AddRange(SxcResourcesBuilder(GetAssetsFromManualFeatures()));
+            return resources;
+        }
+
+        private static List<SxcResource> SxcResourcesBuilder(List<ClientAssetInfo> assets)
+        {
+            var resources = assets.Select(a => new SxcResource
+            {
+                ResourceType = a.IsJs ? ResourceType.Script : ResourceType.Stylesheet,
+                Url = a.Url,
+                IsExternal = a.IsExternal,
+                Content = a.Content,
+                UniqueId = a.Id
+            }).ToList();
+            return resources;
+        }
+
+        private List<ClientAssetInfo> GetAssetsFromManualFeatures()
+        {
+            var assets = new List<ClientAssetInfo>();
+            foreach (var manualFeature in ManualFeatures)
+            {
+                // process manual features to get assets
+                OqtClientDependencyOptimizer.Process(manualFeature.Html);
+                assets.AddRange(OqtClientDependencyOptimizer.Assets);
+            }
+            return assets;
+        }
 
         /// <summary>
         /// The JavaScripts needed
@@ -70,7 +113,6 @@ namespace ToSic.Sxc.Oqt.Server.Block
             if (Features.Contains(BuiltInFeatures.TurnOn))
                 list.Add($"{OqtConstants.UiRoot}/{InpageCms.TurnOnJs}");
 
-
             return list;
         }
 
@@ -82,6 +124,10 @@ namespace ToSic.Sxc.Oqt.Server.Block
         {
             if (!AddCssEdit) return Array.Empty<string>();
             var list = new List<string> { $"{OqtConstants.UiRoot}/{InpageCms.EditCss}" };
+
+            // Manual styles
+
+
             return list;
         }
 
@@ -89,20 +135,10 @@ namespace ToSic.Sxc.Oqt.Server.Block
         public static string GetSiteRoot(SiteState siteState)
             => siteState?.Alias?.Name == null ? OqtConstants.SiteRoot : new Uri($"http://{siteState.Alias.Name}/").AbsolutePath.SuffixSlash();
 
-        internal List<IPageFeature> Features => _features ??= BlockBuilder?.Run().Features ?? new List<IPageFeature>(); // PageServiceShared.Features.GetWithDependentsAndFlush(Log);
+        internal List<IPageFeature> Features => _features ??= RenderResult.Features ?? new List<IPageFeature>();
         private List<IPageFeature> _features;
 
-        /// <summary>
-        /// Manual features adding html snippet (scripts and styles) to header in Oqtane
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<string> GetPageHeadUpdates()
-        {
-            var headUpdates = new List<string>();
-            PageServiceShared.Features.ManualFeaturesGetNew()
-                .ForEach(f => headUpdates.Add(f.Html));
-            return headUpdates;
-        }
-
+        internal IList<IPageFeature> ManualFeatures => _manualFeatures ??= RenderResult.ManualChanges ?? new List<IPageFeature>();
+        private IList<IPageFeature> _manualFeatures;
     }
 }
