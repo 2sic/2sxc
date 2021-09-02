@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using Oqtane.Infrastructure;
 using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
@@ -17,12 +18,14 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
         private readonly WipRemoteRouterLink _remoteRouterLink;
         private readonly IAppStates _appStates;
+        private readonly IConfigManager _configManager;
 
-        public OqtEnvironmentInstaller(Lazy<CmsRuntime> cmsRuntimeLazy, WipRemoteRouterLink remoteRouterLink, IAppStates appStates): base($"{OqtConstants.OqtLogPrefix}.Instll")
+        public OqtEnvironmentInstaller(Lazy<CmsRuntime> cmsRuntimeLazy, WipRemoteRouterLink remoteRouterLink, IAppStates appStates, IConfigManager configManager) : base($"{OqtConstants.OqtLogPrefix}.Instll")
         {
             _cmsRuntimeLazy = cmsRuntimeLazy;
             _remoteRouterLink = remoteRouterLink;
             _appStates = appStates;
+            _configManager = configManager;
         }
 
 
@@ -63,7 +66,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 RemoteDestinations.AutoConfigure,
                 "Oqt",
                 Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),
-                Guid.Empty.ToString(), // TODO
+                _configManager.GetInstallationId(), // Installation ID - added in Oqtane 2.2
                 site,
                 module.Id,
                 app: null,

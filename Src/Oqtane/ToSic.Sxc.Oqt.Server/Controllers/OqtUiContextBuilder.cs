@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Oqtane.Infrastructure;
 using Oqtane.Shared;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Dto;
@@ -13,18 +14,20 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     public class OqtUiContextBuilder: UiContextBuilderBase
     {
-        public OqtUiContextBuilder(ILinkPaths linkPaths, IContextOfSite ctx, SiteState siteState, WipRemoteRouterLink remoteRouterLink, Dependencies deps) : base(deps)
+        public OqtUiContextBuilder(ILinkPaths linkPaths, IContextOfSite ctx, SiteState siteState, WipRemoteRouterLink remoteRouterLink, IConfigManager configManager, Dependencies deps) : base(deps)
         {
             _linkPaths = linkPaths;
             _context = ctx;
             _siteState = siteState;
             _remoteRouterLink = remoteRouterLink;
+            _configManager = configManager;
         }
 
         private readonly ILinkPaths _linkPaths;
         private IContextOfSite _context;
         private readonly SiteState _siteState;
         private readonly WipRemoteRouterLink _remoteRouterLink;
+        private readonly IConfigManager _configManager;
 
 
         //protected override ContextLanguageDto GetLanguage()
@@ -99,7 +102,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                 RemoteDestinations.GettingStarted,
                 "Oqt",
                 Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),
-                Guid.Empty.ToString(),  // TODO: Oqt doesn't seem to have a system guid - Dnn had DotNetNuke.Entities.Host.Host.GUID, 
+                _configManager.GetInstallationId(), // Installation ID - added in Oqtane 2.2
                 Deps.SiteCtx.Site,
                 blockCtx?.Module.Id ?? 0, // TODO: V12 - REQUIRED FOR CALLBACK TO WORK
                 Deps.AppToLaterInitialize,
