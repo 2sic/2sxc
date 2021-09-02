@@ -4,6 +4,7 @@ using Oqtane.Models;
 using Oqtane.Shared;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Beta.LightSpeed;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Server.Run;
@@ -20,18 +21,16 @@ namespace ToSic.Sxc.Oqt.Server.Block
 
         #region Constructor and DI
 
-        public OqtSxcViewBuilder(OqtAssetsAndHeaders assetsAndHeaders, OqtState oqtState, IClientDependencyOptimizer oqtClientDependencyOptimizer) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
+        public OqtSxcViewBuilder(OqtAssetsAndHeaders assetsAndHeaders, OqtState oqtState/*, IClientDependencyOptimizer oqtClientDependencyOptimizer*/) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
         {
-            _assetsAndHeaders = assetsAndHeaders;
+            AssetsAndHeaders = assetsAndHeaders;
             _oqtState = oqtState.Init(Log);
-            OqtClientDependencyOptimizer = oqtClientDependencyOptimizer.Init(Log);
+            //OqtClientDependencyOptimizer = oqtClientDependencyOptimizer.Init(Log);
             // add log to history!
             History.Add("oqt-view", Log);
         }
 
-        private OqtAssetsAndHeaders AssetsAndHeaders => _assetsAndHeaders;
-        private readonly OqtAssetsAndHeaders _assetsAndHeaders;
-
+        public OqtAssetsAndHeaders AssetsAndHeaders { get; }
         private readonly OqtState _oqtState;
 
         #endregion
@@ -43,24 +42,37 @@ namespace ToSic.Sxc.Oqt.Server.Block
         /// </summary>
         public OqtViewResultsDto Prepare(Alias alias, Site site, Page page, Module module)
         {
-            // Check for installation errors before even trying to build a view, and otherwise return this object if Refs are missing.
-            if (RefsInstalledCheck.WarnIfRefsAreNotInstalled(out var oqtViewResultsDto)) return oqtViewResultsDto;
-
             Alias = alias;
             Site = site;
             Page = page;
             Module = module;
 
-            Block = _oqtState.GetBlockOfModule(page.PageId, module);
+            // Check for installation errors before even trying to build a view, and otherwise return this object if Refs are missing.
+            if (RefsInstalledCheck.WarnIfRefsAreNotInstalled(out var oqtViewResultsDto)) return oqtViewResultsDto;
 
-            _assetsAndHeaders.Init(this);
-            var generatedHtml = Block.BlockBuilder.Render(); // TODO: RUN INSTEAD OF Render
+            #region Lightspeed - very experimental - deactivate before distribution
+            //if (Lightspeed.HasCache(module.ModuleId))
+            //{
+            //    Log.Add("Lightspeed enabled, has cache");
+            //    PreviousCache = Lightspeed.Get(module.ModuleId);
+            //}
 
-            var pageHeadAssets = PageHeadAssets();
-            if (pageHeadAssets.Count > 0)
-                Block.BlockBuilder.Assets.AddRange(pageHeadAssets);
+            //if (PreviousCache == null)
+            //{
+            //    NewCache = new OutputCacheItem();
+            //}
+            //else
+            //{
+            //    Log.Add("Lightspeed hit - will use cached");
+            //}
+            #endregion
 
-            var resources = Block.BlockBuilder.Assets.Select(a => new SxcResource
+            AssetsAndHeaders.Init(this);
+
+            // #Lightspeed
+            var renderResult = PreviousCache?.Data ?? Block.BlockBuilder.Run();
+
+            var resources = renderResult.Assets.Select(a => new SxcResource
             {
                 ResourceType = a.IsJs ? ResourceType.Script : ResourceType.Stylesheet,
                 Url = a.Url,
@@ -69,32 +81,41 @@ namespace ToSic.Sxc.Oqt.Server.Block
                 UniqueId = a.Id
             }).ToList();
 
-            return new OqtViewResultsDto
+            //// #Lightspeed
+            //if (NewCache != null)
+            //{
+            //    Log.Add("Adding to lightspeed");
+            //    NewCache.Data = renderResult;
+            //    Lightspeed.Add(Module.ModuleId, NewCache);
+            //}
+
+            var ret = new OqtViewResultsDto
             {
-                Html = generatedHtml,
+                Html = renderResult.Html, 
                 TemplateResources = resources,
                 SxcContextMetaName = AssetsAndHeaders.AddContextMeta ? AssetsAndHeaders.ContextMetaName : null,
                 SxcContextMetaContents = AssetsAndHeaders.AddContextMeta ? AssetsAndHeaders.ContextMetaContents(): null,
                 SxcScripts = AssetsAndHeaders.Scripts().ToList(),
                 SxcStyles = AssetsAndHeaders.Styles().ToList(),
-                PageProperties = AssetsAndHeaders.GetPagePropertyChanges(),
+                PageProperties = AssetsAndHeaders.GetOqtPagePropertyChangesList(renderResult.PageChanges)
             };
-        }
 
-        private List<ClientAssetInfo> PageHeadAssets()
-        {
-            AssetsAndHeaders.GetPageHeadUpdates().ToList()
-                .ForEach(html => OqtClientDependencyOptimizer.Process(html));
-            return OqtClientDependencyOptimizer.Assets;
+            return ret;
         }
 
         internal Alias Alias;
         internal Site Site;
         internal Page Page;
         internal Module Module;
-        internal IBlock Block;
+        internal IBlock Block => _block ??= _oqtState.GetBlockOfModule(Page.PageId, Module);
+        private IBlock _block;
 
         #endregion
+
+        private OutputCacheManager Lightspeed => _lightspeed ??= new OutputCacheManager();
+        private OutputCacheManager _lightspeed;
+        private OutputCacheItem PreviousCache;
+        private OutputCacheItem NewCache;
 
     }
 }
