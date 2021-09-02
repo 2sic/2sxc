@@ -44,18 +44,26 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
             return base.SetZoneAndApp(zoneId, app);
         }
 
-        protected override WebResourceDto GetSystem() =>
-            new WebResourceDto
-            {
-                Url = VirtualPathUtility.ToAbsolute("~/")
-            };
+        protected override ContextResourceWithApp GetSystem(Ctx flags)
+        {
+            var result = base.GetSystem(flags);
+            //return new ContextSiteDto
+            //{
+            result.Url = VirtualPathUtility.ToAbsolute("~/");
+            //};
+            return result;
+        }
 
-        protected override WebResourceDto GetSite() =>
-            new WebResourceDto
-            {
-                Id = _portal.PortalId,
-                Url = "//" + _portal.PortalAlias.HTTPAlias + "/",
-            };
+        protected override ContextResourceWithApp GetSite(Ctx flags)
+        {
+            var result = base.GetSite(flags);
+            //return new ContextSiteDto
+            //{
+            result.Id = _portal.PortalId;
+            result.Url = "//" + _portal.PortalAlias.HTTPAlias + "/";
+            //};
+            return result;
+        }
 
         protected override WebResourceDto GetPage() =>
             Module == null ? null

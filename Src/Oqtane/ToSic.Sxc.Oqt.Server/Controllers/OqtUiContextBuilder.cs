@@ -44,18 +44,28 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         //    };
         //}
 
-        protected override WebResourceDto GetSystem() =>
-            new WebResourceDto
-            {
-                Url = _linkPaths.AsSeenFromTheDomainRoot("~/")
-            };
+        protected override ContextResourceWithApp GetSystem(Ctx flags)
+        {
+            var result = base.GetSystem(flags);
 
-        protected override WebResourceDto GetSite() =>
-            new WebResourceDto
-            {
-                Id = _context.Site.Id,
-                Url = "//" + _context.Site.Url,
-            };
+            //return new WebResourceDto
+            //{
+            result.Url = _linkPaths.AsSeenFromTheDomainRoot("~/");
+            //};
+            return result;
+        }
+
+        protected override ContextResourceWithApp GetSite(Ctx flags)
+        {
+            var result = base.GetSite(flags);
+
+            //return new WebResourceDto
+            //{
+            result.Id = _context.Site.Id;
+            result.Url = "//" + _context.Site.Url;
+            //};
+            return result;
+        }
 
         protected override WebResourceDto GetPage() =>
             new WebResourceDto

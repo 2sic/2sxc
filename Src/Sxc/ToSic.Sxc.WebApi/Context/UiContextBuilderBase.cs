@@ -17,12 +17,14 @@ namespace ToSic.Sxc.WebApi.Context
             public IContextOfSite SiteCtx { get; }
             public JsContextLanguage JsCtx { get; }
             public Apps.IApp AppToLaterInitialize { get; }
+            public IAppStates AppStates { get; }
 
-            public Dependencies(IContextOfSite siteCtx, JsContextLanguage jsCtx, Apps.App appToLaterInitialize)
+            public Dependencies(IContextOfSite siteCtx, JsContextLanguage jsCtx, Apps.App appToLaterInitialize, IAppStates appStates)
             {
                 SiteCtx = siteCtx;
                 JsCtx = jsCtx;
                 AppToLaterInitialize = appToLaterInitialize;
+                AppStates = appStates;
             }
         }
 
@@ -64,8 +66,8 @@ namespace ToSic.Sxc.WebApi.Context
             if(enableFlags != CtxEnable.None) ctx.Enable = GetEnable(enableFlags);
             if (flags.HasFlag(Ctx.Language)) ctx.Language = GetLanguage();
             if (flags.HasFlag(Ctx.Page)) ctx.Page = GetPage();
-            if (flags.HasFlag(Ctx.Site)) ctx.Site = GetSite();
-            if (flags.HasFlag(Ctx.System)) ctx.System = GetSystem();
+            if (flags.HasFlag(Ctx.Site)) ctx.Site = GetSite(flags);
+            if (flags.HasFlag(Ctx.System)) ctx.System = GetSystem(flags);
             return ctx;
         }
 
@@ -81,18 +83,34 @@ namespace ToSic.Sxc.WebApi.Context
             };
         }
 
-        protected virtual WebResourceDto GetSystem() =>
-            new WebResourceDto
+        protected virtual ContextResourceWithApp GetSystem(Ctx flags)
+        {
+            var result = new ContextResourceWithApp
             {
                 Url = "/"
             };
+            // Stop now if we don't need advanced infos
+            if (!flags.HasFlag(Ctx.AppAdvanced)) return result;
 
-        protected virtual WebResourceDto GetSite() =>
-            new WebResourceDto
+            // Otherwise also add the global app id
+            result.DefaultApp = new AppIdentity(1, 1);
+            return result;
+        }
+
+        protected virtual ContextResourceWithApp GetSite(Ctx flags)
+        {
+            var result = new ContextResourceWithApp
             {
                 Id = Deps.SiteCtx.Site.Id,
                 Url = "//" + Deps.SiteCtx.Site.Url + "/",
             };
+            // Stop now if we don't need advanced infos
+            if (!flags.HasFlag(Ctx.AppAdvanced)) return result;
+
+            // Otherwise also add the global appId
+            result.DefaultApp = Deps.AppStates.Identity(null, Deps.AppStates.DefaultAppId(Deps.SiteCtx.Site.ZoneId)) as AppIdentity;
+            return result;
+        }
 
         protected virtual WebResourceDto GetPage() =>
             new WebResourceDto
@@ -130,11 +148,15 @@ namespace ToSic.Sxc.WebApi.Context
                 Name = App.Name,
                 Folder = App.Folder,
             };
+
+            // Stop now if we don't need advanced infos
             if (!flags.HasFlag(Ctx.AppAdvanced)) return result;
 
             result.GettingStartedUrl = GetGettingStartedUrl();
             result.Identifier = _appToLaterInitialize.AppGuid;
             result.SettingsScope = App.AppId == 1 ? "Global" : result.Identifier == Eav.Constants.DefaultAppName ? "Site" : "App";
+
+
             result.Permissions = new HasPermissionsDto {Count = App.Metadata.Permissions.Count()};
             return result;
         }

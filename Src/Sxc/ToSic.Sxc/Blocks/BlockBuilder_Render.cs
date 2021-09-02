@@ -135,7 +135,6 @@ namespace ToSic.Sxc.Blocks
             }
             catch (Exception ex)
             {
-                // TODO: CRITICAL - this will also result in wrapping, so it should be in run, not in render-internal
                 return wrapLog("error", RenderingHelper.DesignErrorMessage(ex, true,
                     null, true, true));
             }

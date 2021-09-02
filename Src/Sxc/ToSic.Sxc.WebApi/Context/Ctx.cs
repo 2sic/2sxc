@@ -13,7 +13,7 @@ namespace ToSic.Sxc.WebApi.Context
         Page = 16,
         Site = 32,
         System = 64,
-        All = AppBasic | AppAdvanced | /*Enable |*/ Language | Page | Site | System,
+        All = AppBasic | AppAdvanced | /*Enable |*/ Language | Page | Site | System ,
     }
 
 }
