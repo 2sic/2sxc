@@ -1,11 +1,8 @@
 ﻿using System;
-using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
-
 
 namespace ToSic.Sxc.Blocks
 {
@@ -30,7 +27,7 @@ namespace ToSic.Sxc.Blocks
         public BlockFromModule Init(IContextOfBlock ctx, ILog parentLog)
         {
             Init(ctx, ctx.Module.BlockIdentifier, parentLog);
-            var wrapLog = Log.Call<BlockFromModule>();
+            var wrapLog = Log.Call<BlockFromModule>(useTimer: true);
             IsContentApp = ctx.Module.IsPrimary;
             CompleteInit(null, ctx.Module.BlockIdentifier, ctx.Module.Id);
             return wrapLog("ok", this);

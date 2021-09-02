@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Blocks
         {
             var ctx = parent.Context.Clone(Log) as IContextOfBlock;
             Init(ctx, parent, parentLog);
-            var wrapLog = Log.Call<BlockFromEntity>($"{nameof(blockEntity)}:{blockEntity.EntityId}");
+            var wrapLog = Log.Call<BlockFromEntity>($"{nameof(blockEntity)}:{blockEntity.EntityId}", useTimer: true);
             return wrapLog(null, CompleteInit(parent, blockEntity));
         }
 

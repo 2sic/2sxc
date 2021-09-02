@@ -134,6 +134,7 @@ namespace ToSic.Sxc.WebApi.Context
 
             result.GettingStartedUrl = GetGettingStartedUrl();
             result.Identifier = _appToLaterInitialize.AppGuid;
+            result.SettingsScope = App.AppId == 1 ? "Global" : result.Identifier == Eav.Constants.DefaultAppName ? "Site" : "App";
             result.Permissions = new HasPermissionsDto {Count = App.Metadata.Permissions.Count()};
             return result;
         }
