@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Oqt.App
             // This must contain all versions with a SQL script and current/latest version
             // list versions with sql scripts in \ToSic.Sxc.Oqt.Server\Scripts\
             // Always keep this in sync wth the App and Content ModuleInfo.cs
-            ReleaseVersions = "0.0.1,12.00.00,12.02.00,12.02.01,12.04.01,12.04.01",
+            ReleaseVersions = "0.0.1,12.00.00,12.02.01,12.04.01",
             Dependencies = "ToSic.Sxc.Oqtane.Shared",
             Categories = "Common",
             //Runtimes = "Server",
