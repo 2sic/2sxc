@@ -43,14 +43,12 @@
     <Compile Remove="StartUp\SxcRazorPage_IDynamicCode.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="Scripts\ToSic.Sxc.0.0.1.sql" />
-    <None Remove="Scripts\ToSic.Sxc.12.04.01.sql" />
-  </ItemGroup>
+
 
   <ItemGroup>
     <EmbeddedResource Include="Scripts\ToSic.Sxc.0.0.1.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.12.00.00.sql" />
+    <EmbeddedResource Include="Scripts\ToSic.Sxc.12.02.01.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.Uninstall.sql" />
   </ItemGroup>
 
@@ -86,4 +84,5 @@
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\netstandard2.0\ToSic.Razor.dll</HintPath>
     </Reference>
   </ItemGroup>
+
 </Project>
