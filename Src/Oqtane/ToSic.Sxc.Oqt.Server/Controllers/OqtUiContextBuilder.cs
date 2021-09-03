@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Oqtane.Infrastructure;
 using Oqtane.Shared;
 using ToSic.Eav.Context;
@@ -96,11 +97,15 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         {
             var blockCtx = _context as IContextOfBlock; // may be null!
             var x = _siteState.Alias.TenantId;
-            
+
+
+
+
+
             var gsUrl = _remoteRouterLink.LinkToRemoteRouter(
                 RemoteDestinations.GettingStarted,
                 "Oqt",
-                Version.Parse(Oqtane.Shared.Constants.Version)?.ToString(4), // Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),
+                Oqtane.Shared.Constants.Version, // Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),
                 _configManager.GetInstallationId(),
                 Deps.SiteCtx.Site,
                 blockCtx?.Module.Id ?? 0, // TODO: V12 - REQUIRED FOR CALLBACK TO WORK
