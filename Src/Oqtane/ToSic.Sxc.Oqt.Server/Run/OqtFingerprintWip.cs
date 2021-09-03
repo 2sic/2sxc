@@ -1,8 +1,6 @@
-﻿using System;
-using System.Reflection;
+﻿using Oqtane.Infrastructure;
 using System.Security.Cryptography;
 using System.Text;
-using Oqtane.Shared;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
@@ -16,19 +14,21 @@ namespace ToSic.Sxc.Oqt.Server.Run
     public class OqtFingerprintWip: IFingerprint
     {
         private readonly IDbConfiguration _dbConfiguration;
+        private readonly IConfigManager _configManager;
 
-        public OqtFingerprintWip(IDbConfiguration dbConfiguration)
+        public OqtFingerprintWip(IDbConfiguration dbConfiguration, IConfigManager configManager)
         {
             _dbConfiguration = dbConfiguration;
+            _configManager = configManager;
         }
 
         public string GetSystemFingerprint()
         {
             if (_fingerprintCache != null) return _fingerprintCache;
 
-            var systemGuid = Guid.Empty;
+            var systemGuid = _configManager.GetInstallationId();
 
-            var mainVersion = Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.Major.ToString();
+            var mainVersion = Oqtane.Shared.Constants.Version;
 
             var mainVersion2Sxc = Settings.Version.Major.ToString();
 

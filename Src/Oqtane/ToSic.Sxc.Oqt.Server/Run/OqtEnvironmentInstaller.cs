@@ -1,8 +1,6 @@
-﻿using System;
+﻿using Oqtane.Infrastructure;
+using System;
 using System.Linq;
-using System.Reflection;
-using Oqtane.Infrastructure;
-using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
@@ -65,8 +63,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var link = _remoteRouterLink.LinkToRemoteRouter(
                 RemoteDestinations.AutoConfigure,
                 "Oqt",
-                Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),
-                _configManager.GetInstallationId(), // Installation ID - added in Oqtane 2.2
+                Oqtane.Shared.Constants.Version,
+                _configManager.GetInstallationId(),
                 site,
                 module.Id,
                 app: null,

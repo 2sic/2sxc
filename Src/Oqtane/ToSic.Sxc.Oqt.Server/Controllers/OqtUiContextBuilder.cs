@@ -1,6 +1,4 @@
-﻿using System;
-using System.Reflection;
-using Oqtane.Infrastructure;
+﻿using Oqtane.Infrastructure;
 using Oqtane.Shared;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Dto;
@@ -101,8 +99,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             var gsUrl = _remoteRouterLink.LinkToRemoteRouter(
                 RemoteDestinations.GettingStarted,
                 "Oqt",
-                Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),
-                _configManager.GetInstallationId(), // Installation ID - added in Oqtane 2.2
+                Oqtane.Shared.Constants.Version,
+                _configManager.GetInstallationId(),
                 Deps.SiteCtx.Site,
                 blockCtx?.Module.Id ?? 0, // TODO: V12 - REQUIRED FOR CALLBACK TO WORK
                 Deps.AppToLaterInitialize,
