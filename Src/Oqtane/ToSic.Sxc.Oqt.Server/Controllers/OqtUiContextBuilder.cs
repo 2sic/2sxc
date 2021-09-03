@@ -1,13 +1,10 @@
-﻿using System;
-using System.Reflection;
-using Oqtane.Infrastructure;
+﻿using Oqtane.Infrastructure;
 using Oqtane.Shared;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Block;
 using ToSic.Sxc.Run;
-
 using ToSic.Sxc.WebApi.Context;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
@@ -96,11 +93,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected override string GetGettingStartedUrl()
         {
             var blockCtx = _context as IContextOfBlock; // may be null!
-            var x = _siteState.Alias.TenantId;
-
-
-
-
 
             var gsUrl = _remoteRouterLink.LinkToRemoteRouter(
                 RemoteDestinations.GettingStarted,
