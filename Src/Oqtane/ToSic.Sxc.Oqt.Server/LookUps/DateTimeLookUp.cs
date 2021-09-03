@@ -15,9 +15,8 @@ namespace ToSic.Sxc.Oqt.Server.LookUps
             return key.ToLowerInvariant() switch
             {
                 "now" => DateTime.Now.ToString(format),
-
-                // todo: STV - also add "System" and "UTC" as documented here 
-                // http://www.dnnsoftware.com/Content/Dnn.Platform/Documentation/Using%20Common%20Tools/Replacement%20Tokens/List%20of%20Replacement%20Tokens.html
+                "system" => DateTime.Now.ToString(format),
+                "utc" => DateTime.Now.ToUniversalTime().ToString(format),
                 _ => string.Empty
             };
         }
