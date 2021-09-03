@@ -11,9 +11,9 @@ namespace ToSic.Sxc.Oqt.Content
          * 00-00-01 - SQL - Oqtane db fix for https://github.com/oqtane/oqtane.framework/issues/1269 (probably we will remove latter).
          * 12-00-00 - SQL - 2sxc oqtane module first release.
          * 12-01-00 -  -  - 2sxc oqtane module minor release.
-         * 12-02-00 -  -  - max Oqtane 2.0.2, 30+ new features: Views, Settings, Resources, IPageService etc.
-         * 12-02-01 - SQL - Oqtane 2.1 compatibility, minor fixes
-         * 12-04-00 -  -  - min Oqtane 2.2, Global Settings, Resources, Images and more
+         * 12-02-00 -  -  - Oqtane 2.0.2
+         * 12-02-01 - SQL - Oqtane 2.1.0
+         * 12-04-00 -  -  - Oqtane 2.2.0
          * 12-04-01 -  -  - Nothing yet
          */
 
