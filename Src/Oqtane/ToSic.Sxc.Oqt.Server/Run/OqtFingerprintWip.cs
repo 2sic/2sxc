@@ -1,4 +1,5 @@
 ﻿using Oqtane.Infrastructure;
+using System;
 using System.Security.Cryptography;
 using System.Text;
 using ToSic.Eav.Configuration;
@@ -28,7 +29,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             var systemGuid = _configManager.GetInstallationId();
 
-            var mainVersion = Oqtane.Shared.Constants.Version;
+            // getting Oqtane version is changed in Oqtane 2.2
+            // Oqtane.Shared.Constants.Version is static readonly string
+            // var mainVersion = Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.Major.ToString();
+            var mainVersion = Version.Parse(Oqtane.Shared.Constants.Version)?.Major.ToString();
 
             var mainVersion2Sxc = Settings.Version.Major.ToString();
 
