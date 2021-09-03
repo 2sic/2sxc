@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var link = _remoteRouterLink.LinkToRemoteRouter(
                 RemoteDestinations.AutoConfigure,
                 "Oqt",
-                Oqtane.Shared.Constants.Version,
+                Version.Parse(Oqtane.Shared.Constants.Version)?.ToString(4), // Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),
                 _configManager.GetInstallationId(),
                 site,
                 module.Id,
