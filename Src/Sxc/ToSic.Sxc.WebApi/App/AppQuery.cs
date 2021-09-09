@@ -8,7 +8,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Conversion;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.LookUp;
 
 
@@ -20,14 +20,14 @@ namespace ToSic.Sxc.WebApi.App
 
         #region Constructor / DI
 
-        public AppQuery(IServiceProvider serviceProvider, IContextResolver ctxResolver, IDataToDictionary dataToDictionary) : base(serviceProvider, "Sxc.ApiApQ")
+        public AppQuery(IServiceProvider serviceProvider, IContextResolver ctxResolver, IConvertToDictionary dataToDictionary) : base(serviceProvider, "Sxc.ApiApQ")
         {
             _ctxResolver = ctxResolver;
             _dataToDictionary = dataToDictionary;
         }
         
         private readonly IContextResolver _ctxResolver;
-        private readonly IDataToDictionary _dataToDictionary;
+        private readonly IConvertToDictionary _dataToDictionary;
 
         #endregion
 

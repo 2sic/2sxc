@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using ToSic.Eav.Conversion;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
-using ToSic.Sxc.Conversion;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Dnn.WebApi.App
 {
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         }
 
 
-        private class OldContentBlockJsonSerialization : DataToDictionary
+        private class OldContentBlockJsonSerialization : ConvertToDictionary
         {
             public OldContentBlockJsonSerialization(Dependencies dependencies, bool withEdit) : base(dependencies)
             {

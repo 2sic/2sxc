@@ -11,7 +11,7 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Conversion;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
 
 // note: not sure if the final namespace should be Sxc.Apps or Sxc.Views
@@ -24,10 +24,10 @@ namespace ToSic.Sxc.Apps
         private IValueConverter ValueConverter => _valConverter ?? (_valConverter = _valConverterLazy.Value);
         private readonly Lazy<IValueConverter> _valConverterLazy;
         private readonly IZoneCultureResolver _cultureResolver;
-        private readonly IDataToDictionary _dataToDictionary;
+        private readonly IConvertToDictionary _dataToDictionary;
         private IValueConverter _valConverter;
 
-        public ViewsRuntime(Lazy<IValueConverter> valConverterLazy, IZoneCultureResolver cultureResolver, IDataToDictionary dataToDictionary) : base("Cms.ViewRd")
+        public ViewsRuntime(Lazy<IValueConverter> valConverterLazy, IZoneCultureResolver cultureResolver, IConvertToDictionary dataToDictionary) : base("Cms.ViewRd")
         {
             _valConverterLazy = valConverterLazy;
             _cultureResolver = cultureResolver;

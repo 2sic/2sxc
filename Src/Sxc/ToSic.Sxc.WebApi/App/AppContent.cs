@@ -13,7 +13,7 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Helpers;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Conversion;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.WebApi.App
 {
@@ -140,7 +140,7 @@ namespace ToSic.Sxc.WebApi.App
             Log.Add($"init eav for a#{appId}");
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
             var ser = _entToDicLazy.Value.EnableGuids();
-            ((DataToDictionary)ser).WithEdit = userMayEdit;
+            ((ConvertToDictionary)ser).WithEdit = userMayEdit;
             return ser;
         }
         #endregion

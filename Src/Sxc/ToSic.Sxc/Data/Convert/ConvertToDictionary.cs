@@ -5,19 +5,17 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Interfaces;
-using IDynamicEntity = ToSic.Sxc.Data.IDynamicEntity;
 
-namespace ToSic.Sxc.Conversion
+namespace ToSic.Sxc.Data
 {
     /// <summary>
     /// Convert various types of entities (standalone, dynamic, in streams, etc.) to Dictionaries <br/>
     /// Mainly used for serialization scenarios, like in WebApis.
     /// 
     /// </summary>
-    [PublicApi_Stable_ForUseInYourCode]
-    public class DataToDictionary: Eav.Conversion.EntitiesToDictionary, IDataToDictionary // IDynamicEntityTo<IDictionary<string, object>>
+    [PrivateApi("Hide implementation")]
+    public class ConvertToDictionary: Eav.Conversion.EntitiesToDictionary, IConvertToDictionary
     {
         /// <summary>
         /// Determines if we should use edit-information
@@ -29,28 +27,13 @@ namespace ToSic.Sxc.Conversion
         /// Standard constructor, important for opening this class in dependency-injection
         /// </summary>
         [PrivateApi]
-	    public DataToDictionary(Dependencies dependencies): base(dependencies) { }
+	    public ConvertToDictionary(Dependencies dependencies): base(dependencies) { }
 
 #if NETFRAMEWORK
-        /// <summary>
-        /// Standard constructor, important for opening this class in dependency-injection
-        /// </summary>
-        [PrivateApi]
-        [Obsolete("only keep in case external code was using this in apps ca. 2sxc 11. v12+ should use CreateService")]
-	    public DataToDictionary() { }
-
-        /// <summary>
-        /// Common constructor, directly preparing it with 2sxc
-        /// </summary>
-        /// <param name="withEdit">Include editing information in serialized result</param>
-        ///// <param name="languages"></param>
+        [PrivateApi("only for compatibility with old published code")]
         [Obsolete]
-        public DataToDictionary(bool withEdit)
-        {
-            WithEdit = withEdit;
-        }
+        protected ConvertToDictionary() {}
 #endif
-
 
         #region Convert statements expecting dynamic objects - extending the EAV Prepare variations
 
@@ -63,7 +46,7 @@ namespace ToSic.Sxc.Conversion
                 .Select(c =>
                 {
                     IEntity entity = null;
-                    if (c is IEntity) entity = c;
+                    if (c is IEntity ent) entity = ent;
                     else if (c is IDynamicEntity dynEnt) entity = dynEnt.Entity;
                     if (entity == null)
                         throw new Exception("tried to convert an item, but it was not a known Entity-type");
@@ -72,10 +55,20 @@ namespace ToSic.Sxc.Conversion
                 .ToList();
         }
 
+        public IEnumerable<IDictionary<string, object>> Convert(IEnumerable<IDynamicEntity> dynamicList) 
+            => Convert(dynamicList as IEnumerable<dynamic>);
+
         /// <inheritdoc />
 	    public IDictionary<string, object> Convert(IDynamicEntity dynamicEntity)
 	        => GetDictionaryFromEntity(dynamicEntity.Entity);
-        
+
+        public IDictionary<string, object> Convert(object dynamicEntity)
+        {
+            if(dynamicEntity is IDynamicEntity dynEnt)
+                return GetDictionaryFromEntity(dynEnt.Entity);
+            throw new ArgumentException("expected a dynamic entity, but got something else", nameof(dynamicEntity));
+        }
+
         #endregion
 
 

@@ -4,7 +4,7 @@ using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.ImportExport;
-using ToSic.Sxc.Conversion;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
@@ -31,9 +31,9 @@ namespace ToSic.Sxc.WebApi
         public static IServiceCollection AddSxcWebApi(this IServiceCollection services)
         {
             // The top version should be deprecated soon, so we just use DataToDictionary or an Interface instead
-            services.TryAddTransient<Eav.Conversion.EntitiesToDictionary, DataToDictionary>(); // this is needed for all the EAV uses of conversion
-            services.TryAddTransient<DataToDictionary>(); // WIP, not public, should use interface instead
-            services.TryAddTransient<IDataToDictionary, DataToDictionary>();
+            services.TryAddTransient<Eav.Conversion.EntitiesToDictionary, ConvertToDictionary>(); // this is needed for all the EAV uses of conversion
+            services.TryAddTransient<ConvertToDictionary>(); // WIP, not public, should use interface instead
+            services.TryAddTransient<IConvertToDictionary, ConvertToDictionary>();
 
             services.TryAddScoped<ILinkPaths, LinkPaths>();
             services.TryAddTransient<IServerPaths, ServerPaths>();
