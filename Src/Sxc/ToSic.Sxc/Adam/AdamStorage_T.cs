@@ -28,7 +28,7 @@
         /// Get a (root) folder object for this container
         /// </summary>
         /// <returns></returns>
-        internal Folder<TFolderId, TFileId> Folder(bool autoCreate = true) => _folder ?? (_folder = Folder("", autoCreate));
+        internal Folder<TFolderId, TFileId> Folder(bool autoCreate = false) => _folder ?? (_folder = Folder("", autoCreate));
         private Folder<TFolderId, TFileId> _folder;
 
     }
