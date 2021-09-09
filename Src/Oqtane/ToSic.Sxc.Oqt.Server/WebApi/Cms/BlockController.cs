@@ -149,10 +149,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
-        // TODO: SPM - why is this code different from the Dnn ? that uses the ViewsBackend
-        // I changed it, but didn't test yet
         public IEnumerable<TemplateUiInfo> Templates() => _viewsBackendLazy.Value.Init(Log).Templates();
-            // => CmsRuntime?.Views.GetCompatibleViews(ContextApp, GetBlock().Configuration);
 
         /// <summary>
         /// Used in InPage.js
