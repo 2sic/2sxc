@@ -54,7 +54,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         [HttpPost]
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         [AllowAnonymous]   // will check security internally, so assume no requirements
-        // TODO: 2DM please check permissions
         public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
             => _loadBackend.Value.Init(Log).Load(appId, items);
 
