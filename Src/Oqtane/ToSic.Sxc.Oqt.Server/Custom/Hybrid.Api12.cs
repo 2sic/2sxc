@@ -9,6 +9,7 @@ using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.WebApi;
+using ToSic.Sxc.WebApi.Adam;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 // ReSharper disable once CheckNamespace
@@ -38,6 +39,7 @@ namespace Custom.Hybrid
             base.OnActionExecuting(context);
 
             _DynCodeRoot = ServiceProvider.Build<DynamicCodeRoot>().Init(OqtState.GetBlock(true), Log);
+            _AdamCode = ServiceProvider.Build<AdamCode>().Init(_DynCodeRoot, Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (_DynCodeRoot.App == null)

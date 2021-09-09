@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Run;
-//using ToSic.Eav.WebApi;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.ImportExport;
 using ToSic.Sxc.Conversion;
@@ -91,6 +90,9 @@ namespace ToSic.Sxc.WebApi
 
             // Eav.WebApi
             //services.TryAddTransient<MetadataBackend>();
+
+            // Adam shared code across the APIs
+            services.TryAddTransient<AdamCode>();
 
             return services;
         }

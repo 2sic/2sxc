@@ -3,11 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
@@ -25,9 +23,10 @@ namespace Custom.Hybrid
 {
     public abstract partial class Api12
     {
-
         // ReSharper disable once InconsistentNaming
-        public IDynamicCodeRoot _DynCodeRoot { get; set; }
+        [PrivateApi] public IDynamicCodeRoot _DynCodeRoot { get; set; }
+        // ReSharper disable once InconsistentNaming
+        [PrivateApi] public AdamCode _AdamCode { get; set; }
 
         [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
 
@@ -106,9 +105,6 @@ namespace Custom.Hybrid
         [NonAction]
         public IFolder AsAdam(IEntity entity, string fieldName) => _DynCodeRoot?.AsAdam(entity, fieldName);
 
-
-        // Adam - Shared Code Across the APIs (prevent duplicate code)
-        // TODO: STV - duplicate code with DynamicApiController and Hybrid.Api12_DynCode
         /// <summary>
         /// See docs of official interface <see cref="IDynamicWebApi"/>
         /// </summary>
@@ -121,22 +117,13 @@ namespace Custom.Hybrid
             string field = null,
             string subFolder = "")
         {
-            Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "SaveInAdam",
-                $"{nameof(stream)},{nameof(fileName)},{nameof(contentType)},{nameof(guid)},{nameof(field)},{nameof(subFolder)} (optional)");
-
-            if (stream == null || fileName == null || contentType == null || guid == null || field == null)
-                throw new Exception();
-
-            var feats = new[] { FeatureIds.UseAdamInWebApi, FeatureIds.PublicUpload };
-            var features = GetService<ToSic.Eav.Configuration.Features>();
-
-            if (!/*Features*/features.EnabledOrException(feats, "can't save in ADAM", out var exp))
-                throw exp;
-
-            var appId = _DynCodeRoot?.Block?.AppId ?? _DynCodeRoot?.App?.AppId ?? throw new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
-            return ServiceProvider.Build<AdamTransUpload<int, int>>()
-                .Init(appId, contentType, guid.Value, field, false, Log)
-                .UploadOne(stream, fileName, subFolder, true);
+            return _AdamCode.SaveInAdam(
+                stream: stream,
+                fileName: fileName,
+                contentType: contentType,
+                guid: guid,
+                field: field,
+                subFolder: subFolder);
         }
 
         #endregion
