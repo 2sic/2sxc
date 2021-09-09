@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
@@ -18,6 +19,7 @@ namespace ToSic.Sxc.Data
     /// You will usually do things like `AsDynamic(jsonString).FirstName` etc.
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic, don't use this directly")]
+    [JsonConverter(typeof(DynamicJacketJsonConverter))]
     public partial class DynamicJacket: DynamicJacketBase<JObject>, IPropertyLookup
     {
         /// <inheritdoc />
