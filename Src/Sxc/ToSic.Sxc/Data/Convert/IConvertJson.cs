@@ -10,7 +10,9 @@ namespace ToSic.Sxc.Data
     /// Since it's a data-operation, we keep it in this namespace, even if most other things in this namespace are 2sxc-data objects. 
     /// </summary>
     /// <remarks>
-    /// Introduced in 2sxc 12.05. For previous versions, you can just write code to access Newtonsoft directly.
+    /// Introduced in 2sxc 12.05.
+    /// For previous versions of 2sxc, you can just write code to access Newtonsoft directly.
+    /// For more control regarding serialization, also just work with Newtonsoft directly.
     ///
     /// Internally it uses Newtonsoft and preserves the case of keys.
     /// In future the internal engine may change (like for .net core), but we'll ensure that the result remains consistent. 

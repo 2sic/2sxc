@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
-using ToSic.Eav.Conversion;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.ImportExport.Convert.EntityToDictionaryLight;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Dnn.WebApi.App
@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
                 var dicToSerialize = new Dictionary<string, object>();
                 foreach (string key in dicNew.Keys)
                 {
-                    var list = dicNew[key] as List<RelationshipReference>;
+                    var list = dicNew[key] as List<RelationshipReferenceDto>;
                     dicToSerialize.Add(key,
                         list?.Select(p => new SerializableRelationshipOld() { EntityId = p.Id, EntityTitle = p.Title }).ToList() ??
                         dicNew[key]);

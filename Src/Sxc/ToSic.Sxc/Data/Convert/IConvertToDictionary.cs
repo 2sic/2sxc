@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.ImportExport.Convert;
 
 namespace ToSic.Sxc.Data
 {
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Data
     /// </remarks>
     [PublicApi]
     public interface IConvertToDictionary: 
-        IConvertEntities<IDictionary<string, object>>, 
+        IConvertJsonV0, 
         IConvertStreams<IDictionary<string,object>>,
         IConvert<IDynamicEntity, IDictionary<string, object>>, // for the dynamic-entity
         IConvert<object, IDictionary<string, object>> // for the dynamic-entity
