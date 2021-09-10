@@ -111,29 +111,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
         /// <returns></returns>
         private string TryToResolveOqtCodeToLink(Guid itemGuid, string originalValue)
         {
-            if (string.IsNullOrEmpty(originalValue)) return originalValue;
-            // new
-            var resultString = originalValue;
-            var parts = new ValueConverterBase.LinkParts(resultString);
-
-            //var regularExpression = Regex.Match(resultString, ValueConverterBase.RegExToDetectConvertable, RegexOptions.IgnoreCase);
-
-            if (!parts.IsMatch) // regularExpression.Success)
-                return originalValue;
-
-            //var linkType = regularExpression.Groups[ValueConverterBase.RegExType].Value.ToLowerInvariant();
-            //var linkId = int.Parse(regularExpression.Groups[ValueConverterBase.RegExId].Value);
-            //var urlParams = regularExpression.Groups[ValueConverterBase.RegExParams].Value ?? "";
-
-            //var isPageLookup = linkType == ValueConverterBase.PrefixPage;
             try
             {
-                var result = (parts.IsPage // isPageLookup
-                                 ? ResolvePageLink(parts.Id)
-                                 : ResolveFileLink(parts.Id, itemGuid))
-                             ?? originalValue;
-
-                return result + (result == originalValue ? "" : parts.Params);
+                return ValueConverterBase.TryToResolveCodeToLink(itemGuid, originalValue, ResolvePageLink, ResolveFileLink);
             }
             catch /*(Exception e)*/
             {
@@ -144,7 +124,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 //Logger.Value.Log(LogLevel.Error, this, LogFunction.Other, wrappedEx.Message);
                 return originalValue;
             }
-
         }
 
         private string ResolveFileLink(int linkId, Guid itemGuid)
