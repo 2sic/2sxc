@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
+using ToSic.Eav.ImportExport.Json.V0;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.PublicApi;
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         [HttpGet]
         [HttpPost]
         [AllowAnonymous] // will check security internally, so assume no requirements
-        public IDictionary<string, IEnumerable<IDictionary<string, object>>> Query([FromUri] string name,
+        public IDictionary<string, IEnumerable<IJsonEntity>> Query([FromUri] string name,
             [FromBody] AppQueryParameters more,
             [FromUri] bool includeGuid = false,
             [FromUri] string stream = null,
@@ -31,7 +32,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         [HttpGet]
         [HttpPost]
         [AllowAnonymous] // will check security internally, so assume no requirements
-        public IDictionary<string, IEnumerable<IDictionary<string, object>>> PublicQuery(
+        public IDictionary<string, IEnumerable<IJsonEntity>> PublicQuery(
             [FromUri] string appPath,
             [FromUri] string name,
             [FromBody] AppQueryParameters more,

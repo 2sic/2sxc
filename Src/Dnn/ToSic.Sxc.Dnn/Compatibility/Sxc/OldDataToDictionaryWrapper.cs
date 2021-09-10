@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.ImportExport.Json.V0;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Compatibility.Sxc
@@ -28,11 +29,11 @@ namespace ToSic.Sxc.Compatibility.Sxc
         public IDictionary<string, object> Prepare(IDynamicEntity dynamicEntity)
             => _converter.Convert(dynamicEntity);
 
-        public IDictionary<string, IEnumerable<IDictionary<string, object>>> Prepare(IDataSource source,
+        public IDictionary<string, IEnumerable<IJsonEntity>> Prepare(IDataSource source,
             IEnumerable<string> streams = null)
             => _converter.Convert(source, streams);
 
-        public IDictionary<string, IEnumerable<IDictionary<string, object>>> Prepare(IDataSource source, string streams)
+        public IDictionary<string, IEnumerable<IJsonEntity>> Prepare(IDataSource source, string streams)
             => _converter.Convert(source, streams);
 
         public IEnumerable<IDictionary<string, object>> Prepare(IDataStream stream)

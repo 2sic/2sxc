@@ -4,6 +4,7 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.ImportExport.Json.V0;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 
@@ -38,7 +39,7 @@ namespace ToSic.Sxc.Data
         #region Convert statements expecting dynamic objects - extending the EAV Prepare variations
 
         /// <inheritdoc />
-        public IEnumerable<IDictionary<string, object>> Convert(IEnumerable<dynamic> dynamicList)
+        public IEnumerable<IJsonEntity> Convert(IEnumerable<dynamic> dynamicList)
         {
             if (dynamicList is IDataStream stream) return base.Convert(stream);
 
@@ -55,14 +56,14 @@ namespace ToSic.Sxc.Data
                 .ToList();
         }
 
-        public IEnumerable<IDictionary<string, object>> Convert(IEnumerable<IDynamicEntity> dynamicList) 
+        public IEnumerable<IJsonEntity> Convert(IEnumerable<IDynamicEntity> dynamicList) 
             => Convert(dynamicList as IEnumerable<dynamic>);
 
         /// <inheritdoc />
-	    public IDictionary<string, object> Convert(IDynamicEntity dynamicEntity)
+	    public IJsonEntity Convert(IDynamicEntity dynamicEntity)
 	        => GetDictionaryFromEntity(dynamicEntity.Entity);
 
-        public IDictionary<string, object> Convert(object dynamicEntity)
+        public IJsonEntity Convert(object dynamicEntity)
         {
             if(dynamicEntity is IDynamicEntity dynEnt)
                 return GetDictionaryFromEntity(dynEnt.Entity);
@@ -73,7 +74,7 @@ namespace ToSic.Sxc.Data
 
 
         [PrivateApi]
-        protected override IDictionary<string, object> GetDictionaryFromEntity(IEntity entity)
+        protected override IJsonEntity GetDictionaryFromEntity(IEntity entity)
 		{
             // Do groundwork
             var dictionary = base.GetDictionaryFromEntity(entity);

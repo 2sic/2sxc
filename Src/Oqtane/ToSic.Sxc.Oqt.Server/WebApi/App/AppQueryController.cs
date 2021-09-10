@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ToSic.Eav.ImportExport.Json.V0;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.App;
@@ -51,7 +52,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
         [HttpPost("{appPath}/query/{name}")]
         [HttpPost("{appPath}/query/{name}/{stream}")]
         [AllowAnonymous] // will check security internally, so assume no requirements
-        public IDictionary<string, IEnumerable<IDictionary<string, object>>> PublicQuery(
+        public IDictionary<string, IEnumerable<IJsonEntity>> PublicQuery(
             [FromRoute] string appPath,
             [FromRoute] string name,
             AppQueryParameters more,
@@ -63,7 +64,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
         [HttpPost("auto/query/{name}")]
         [HttpPost("auto/query/{name}/{stream?}")]
         [AllowAnonymous] // will check security internally, so assume no requirements
-        public IDictionary<string, IEnumerable<IDictionary<string, object>>> Query(
+        public IDictionary<string, IEnumerable<IJsonEntity>> Query(
             [FromRoute] string name,
             AppQueryParameters more,
             [FromQuery] bool includeGuid = false,

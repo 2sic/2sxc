@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
+using ToSic.Eav.ImportExport.Json.V0;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
@@ -33,7 +34,7 @@ namespace ToSic.Sxc.WebApi.App
 
         #region In-Container-Context Queries
 
-        public IDictionary<string, IEnumerable<IDictionary<string, object>>> Query(int? appId, string name, bool includeGuid, string stream, AppQueryParameters more)
+        public IDictionary<string, IEnumerable<IJsonEntity>> Query(int? appId, string name, bool includeGuid, string stream, AppQueryParameters more)
         {
             var wrapLog = Log.Call($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
 
@@ -57,7 +58,7 @@ namespace ToSic.Sxc.WebApi.App
         #region Public Queries
 
 
-        public IDictionary<string, IEnumerable<IDictionary<string, object>>> PublicQuery(string appPath, string name, string stream, AppQueryParameters more)
+        public IDictionary<string, IEnumerable<IJsonEntity>> PublicQuery(string appPath, string name, string stream, AppQueryParameters more)
         {
             var wrapLog = Log.Call($"path:{appPath}, name:{name}, stream: {stream}");
             if (string.IsNullOrEmpty(name))
@@ -78,7 +79,7 @@ namespace ToSic.Sxc.WebApi.App
         #endregion
 
 
-        private IDictionary<string, IEnumerable<IDictionary<string, object>>> BuildQueryAndRun(
+        private IDictionary<string, IEnumerable<IJsonEntity>> BuildQueryAndRun(
                 IApp app, 
                 string name, 
                 string stream, 
