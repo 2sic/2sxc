@@ -36,9 +36,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
             ImgResizeLinker imgLinker
         ) : base(imgLinker)
         {
-            //Log = new Log("OqtLinkHelper");
-            // TODO: logging
-
             _pageRepository = pageRepository;
             _siteStateInitializer = siteStateInitializer;
             _contextAccessor = contextAccessor;
@@ -50,8 +47,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
             base.Init(context, app, parentLog);
             _context = context;
         }
-        
-        //public ILog Log { get; }
 
         /// <inheritdoc />
         public override string To(string dontRelyOnParameterOrder = Parameters.Protector, int? pageId = null, string parameters = null, string api = null)

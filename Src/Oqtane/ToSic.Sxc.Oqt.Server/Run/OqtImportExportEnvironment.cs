@@ -189,7 +189,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
             wrapLog($"done - final count {folderIdCorrectionList.Count}");
         }
 
-        /*** TODO: refactor code clones ***/
         private File Add(Folder parent, IO.Stream body, string fileName, OqtSite oqtSite)
         {
             var callLog = Log.Call<File>($"Add {fileName}, folderId:{parent.FolderId}, siteId {oqtSite.Id}");

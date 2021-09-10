@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public string ToValue(string reference, Guid itemGuid = default) => TryToResolveOqtCodeToLink(itemGuid, reference);
 
         /// <summary>
-        /// Will take a link like http:\\... to a file or page and try to return a DNN-style info like
+        /// Will take a link like http://... to a file or page and try to return a DNN-style info like
         /// Page:35 or File:43003
         /// </summary>
         /// <param name="potentialFilePath"></param>
@@ -81,7 +81,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
             //var site = TenantResolver.Value.GetAlias();
 
             // Try to find the Folder
-            // todo: check if it has /Content/Tenant/1/Site/1 etc.
             var pathAsFolder = potentialFilePath.Backslash();
             var folderPath = Path.GetDirectoryName(pathAsFolder);
             var folder = FolderRepository.Value.GetFolder(Alias.SiteId, folderPath);
