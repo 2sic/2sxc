@@ -4,7 +4,7 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.ImportExport.Json.V0;
+using ToSic.Eav.ImportExport.Json.Basic;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 
@@ -15,8 +15,8 @@ namespace ToSic.Sxc.Data
     /// Mainly used for serialization scenarios, like in WebApis.
     /// 
     /// </summary>
-    [PrivateApi("Hide implementation")]
-    public class ConvertToDictionary: Eav.Conversion.EntitiesToDictionary, IConvertToDictionary
+    [PrivateApi("Hide implementation; this was never public; the DataToDictionary was with empty constructor, but that's already polyfilled")]
+    public class ConvertToDictionary: Eav.Convert.ConvertToJsonBasic, IConvertToJsonBasic
     {
         /// <summary>
         /// Determines if we should use edit-information
@@ -30,16 +30,10 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
 	    public ConvertToDictionary(Dependencies dependencies): base(dependencies) { }
 
-#if NETFRAMEWORK
-        [PrivateApi("only for compatibility with old published code")]
-        [Obsolete]
-        protected ConvertToDictionary() {}
-#endif
-
         #region Convert statements expecting dynamic objects - extending the EAV Prepare variations
 
         /// <inheritdoc />
-        public IEnumerable<IJsonEntity> Convert(IEnumerable<dynamic> dynamicList)
+        public IEnumerable<JsonEntity> Convert(IEnumerable<dynamic> dynamicList)
         {
             if (dynamicList is IDataStream stream) return base.Convert(stream);
 
@@ -56,14 +50,14 @@ namespace ToSic.Sxc.Data
                 .ToList();
         }
 
-        public IEnumerable<IJsonEntity> Convert(IEnumerable<IDynamicEntity> dynamicList) 
+        public IEnumerable<JsonEntity> Convert(IEnumerable<IDynamicEntity> dynamicList) 
             => Convert(dynamicList as IEnumerable<dynamic>);
 
         /// <inheritdoc />
-	    public IJsonEntity Convert(IDynamicEntity dynamicEntity)
+	    public JsonEntity Convert(IDynamicEntity dynamicEntity)
 	        => GetDictionaryFromEntity(dynamicEntity.Entity);
 
-        public IJsonEntity Convert(object dynamicEntity)
+        public JsonEntity Convert(object dynamicEntity)
         {
             if(dynamicEntity is IDynamicEntity dynEnt)
                 return GetDictionaryFromEntity(dynEnt.Entity);
@@ -74,7 +68,7 @@ namespace ToSic.Sxc.Data
 
 
         [PrivateApi]
-        protected override IJsonEntity GetDictionaryFromEntity(IEntity entity)
+        protected override JsonEntity GetDictionaryFromEntity(IEntity entity)
 		{
             // Do groundwork
             var dictionary = base.GetDictionaryFromEntity(entity);

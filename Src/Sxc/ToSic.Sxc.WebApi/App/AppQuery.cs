@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
-using ToSic.Eav.ImportExport.Json.V0;
+using ToSic.Eav.ImportExport.Json.Basic;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
@@ -21,20 +21,20 @@ namespace ToSic.Sxc.WebApi.App
 
         #region Constructor / DI
 
-        public AppQuery(IServiceProvider serviceProvider, IContextResolver ctxResolver, IConvertToDictionary dataToDictionary) : base(serviceProvider, "Sxc.ApiApQ")
+        public AppQuery(IServiceProvider serviceProvider, IContextResolver ctxResolver, IConvertToJsonBasic dataToJsonBasic) : base(serviceProvider, "Sxc.ApiApQ")
         {
             _ctxResolver = ctxResolver;
-            _dataToDictionary = dataToDictionary;
+            _dataToJsonBasic = dataToJsonBasic;
         }
         
         private readonly IContextResolver _ctxResolver;
-        private readonly IConvertToDictionary _dataToDictionary;
+        private readonly IConvertToJsonBasic _dataToJsonBasic;
 
         #endregion
 
         #region In-Container-Context Queries
 
-        public IDictionary<string, IEnumerable<IJsonEntity>> Query(int? appId, string name, bool includeGuid, string stream, AppQueryParameters more)
+        public IDictionary<string, IEnumerable<JsonEntity>> Query(int? appId, string name, bool includeGuid, string stream, AppQueryParameters more)
         {
             var wrapLog = Log.Call($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
 
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.WebApi.App
         #region Public Queries
 
 
-        public IDictionary<string, IEnumerable<IJsonEntity>> PublicQuery(string appPath, string name, string stream, AppQueryParameters more)
+        public IDictionary<string, IEnumerable<JsonEntity>> PublicQuery(string appPath, string name, string stream, AppQueryParameters more)
         {
             var wrapLog = Log.Call($"path:{appPath}, name:{name}, stream: {stream}");
             if (string.IsNullOrEmpty(name))
@@ -79,7 +79,7 @@ namespace ToSic.Sxc.WebApi.App
         #endregion
 
 
-        private IDictionary<string, IEnumerable<IJsonEntity>> BuildQueryAndRun(
+        private IDictionary<string, IEnumerable<JsonEntity>> BuildQueryAndRun(
                 IApp app, 
                 string name, 
                 string stream, 
@@ -113,7 +113,7 @@ namespace ToSic.Sxc.WebApi.App
             }
 
             //var serializer = new DataToDictionary(userMayEdit) { WithGuid = includeGuid };
-            var serializer = _dataToDictionary;
+            var serializer = _dataToJsonBasic;
             serializer.WithEdit = userMayEdit;
             serializer.WithGuid = includeGuid;
             if (stream == AllStreams) stream = null;

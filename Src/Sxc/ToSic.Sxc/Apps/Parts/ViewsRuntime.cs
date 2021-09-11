@@ -23,14 +23,14 @@ namespace ToSic.Sxc.Apps
         private IValueConverter ValueConverter => _valConverter ?? (_valConverter = _valConverterLazy.Value);
         private readonly Lazy<IValueConverter> _valConverterLazy;
         private readonly IZoneCultureResolver _cultureResolver;
-        private readonly IConvertToDictionary _dataToDictionary;
+        private readonly IConvertToJsonBasic _dataToJsonBasic;
         private IValueConverter _valConverter;
 
-        public ViewsRuntime(Lazy<IValueConverter> valConverterLazy, IZoneCultureResolver cultureResolver, IConvertToDictionary dataToDictionary) : base("Cms.ViewRd")
+        public ViewsRuntime(Lazy<IValueConverter> valConverterLazy, IZoneCultureResolver cultureResolver, IConvertToJsonBasic dataToJsonBasic) : base("Cms.ViewRd")
         {
             _valConverterLazy = valConverterLazy;
             _cultureResolver = cultureResolver;
-            _dataToDictionary = dataToDictionary;
+            _dataToJsonBasic = dataToJsonBasic;
         }
 
         #endregion
@@ -146,7 +146,7 @@ namespace ToSic.Sxc.Apps
                         Name = ct.Name,
                         IsHidden = visible.All(t => t.ContentType != ct.StaticName),   // must check if *any* template is visible, otherwise tell the UI that it's hidden
                         Thumbnail = thumbnail,
-                        Metadata = _dataToDictionary.Convert(metadata)
+                        Metadata = _dataToJsonBasic.Convert(metadata)
                     };
                 });
         }

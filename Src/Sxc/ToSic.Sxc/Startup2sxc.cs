@@ -98,9 +98,6 @@ namespace ToSic.Sxc
             // WIP - objects which are not really final
             services.TryAddTransient<WipRemoteRouterLink>();
 
-            // WIP 12.05 - json converter
-            services.TryAddTransient<IConvertJson, ConvertJson>();
-
             return services;
         }
 

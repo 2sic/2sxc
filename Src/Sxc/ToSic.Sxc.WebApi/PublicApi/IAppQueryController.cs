@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.ImportExport.Json.V0;
+using ToSic.Eav.ImportExport.Json.Basic;
 using ToSic.Sxc.WebApi.App;
 
 namespace ToSic.Sxc.WebApi.PublicApi
@@ -26,7 +26,7 @@ namespace ToSic.Sxc.WebApi.PublicApi
         /// will check security internally, so assume the endpoint doesn't need to check security first
         /// </remarks>
         /// <returns></returns>
-        IDictionary<string, IEnumerable<IJsonEntity>> Query(
+        IDictionary<string, IEnumerable<JsonEntity>> Query(
             string name, 
             AppQueryParameters more,
             bool includeGuid = false, 
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.WebApi.PublicApi
         /// will check security internally, so assume the endpoint doesn't need to check security first
         /// </remarks>
         /// <returns></returns>
-        IDictionary<string, IEnumerable<IJsonEntity>> PublicQuery(
+        IDictionary<string, IEnumerable<JsonEntity>> PublicQuery(
             string appPath, 
             string name, 
             AppQueryParameters more,

@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.Data;
+﻿using ToSic.Eav.Convert;
+using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.ImportExport.Convert;
-using ToSic.Eav.ImportExport.Json.V0;
+using ToSic.Eav.ImportExport.Json.Basic;
 
 namespace ToSic.Sxc.Data
 {
@@ -16,11 +15,11 @@ namespace ToSic.Sxc.Data
     /// Introduced in 12.05
     /// </remarks>
     [PublicApi]
-    public interface IConvertToDictionary: 
-        IConvertJsonV0, 
-        IConvertStreams<IJsonEntity>,
-        IConvert<IDynamicEntity, IJsonEntity>, // for the dynamic-entity
-        IConvert<object, IJsonEntity> // for the dynamic-entity
+    public interface IConvertToJsonBasic: 
+        Eav.Convert.IConvertToJsonBasic, 
+        IConvertDataSource<JsonEntity>,
+        IConvert<IDynamicEntity, JsonEntity>, // for the dynamic-entity
+        IConvert<object, JsonEntity> // for the dynamic-entity
     {
         [PrivateApi("internal use only")]
         bool WithEdit { get; set; }

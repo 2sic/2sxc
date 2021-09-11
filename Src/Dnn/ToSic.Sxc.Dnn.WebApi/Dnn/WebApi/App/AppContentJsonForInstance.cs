@@ -3,7 +3,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.ImportExport.Convert.EntityToDictionaryLight;
+using ToSic.Eav.ImportExport.Json.Basic;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Dnn.WebApi.App
@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         {
 #pragma warning disable 612
 #pragma warning disable 618
-            var ser = new OldContentBlockJsonSerialization(Eav.Factory.ObsoleteBuild<EntitiesToDictionaryBase.Dependencies>(), userMayEdit);
+            var ser = new OldContentBlockJsonSerialization(Eav.Factory.ObsoleteBuild<ConvertToJsonBasicBase.Dependencies>(), userMayEdit);
 #pragma warning restore 618
 #pragma warning restore 612
 
@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
                 var dicToSerialize = new Dictionary<string, object>();
                 foreach (string key in dicNew.Keys)
                 {
-                    var list = dicNew[key] as List<RelationshipReferenceDto>;
+                    var list = dicNew[key] as List<JsonRelationship>;
                     dicToSerialize.Add(key,
                         list?.Select(p => new SerializableRelationshipOld() { EntityId = p.Id, EntityTitle = p.Title }).ToList() ??
                         dicNew[key]);
