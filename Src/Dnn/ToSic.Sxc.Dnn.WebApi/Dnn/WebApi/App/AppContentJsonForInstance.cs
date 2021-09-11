@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using ToSic.Eav.Convert;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.ImportExport.Json.Basic;
@@ -24,7 +25,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         {
 #pragma warning disable 612
 #pragma warning disable 618
-            var ser = new OldContentBlockJsonSerialization(Eav.Factory.ObsoleteBuild<ConvertToJsonBasicBase.Dependencies>(), userMayEdit);
+            var ser = new OldContentBlockJsonSerialization(Eav.Factory.ObsoleteBuild<ConvertToJsonBasic.Dependencies>(), userMayEdit);
 #pragma warning restore 618
 #pragma warning restore 612
 
@@ -39,7 +40,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         }
 
 
-        private class OldContentBlockJsonSerialization : ConvertToDictionary
+        private class OldContentBlockJsonSerialization : ConvertToJsonBasicWithCmsInfo
         {
             public OldContentBlockJsonSerialization(Dependencies dependencies, bool withEdit) : base(dependencies)
             {

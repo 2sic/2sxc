@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using ToSic.Eav.Convert;
 using ToSic.Eav.Data;
-using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.ImportExport.Json.Basic;
 using ToSic.Sxc.Blocks;
@@ -16,7 +14,7 @@ namespace ToSic.Sxc.Data
     /// 
     /// </summary>
     [PrivateApi("Hide implementation; this was never public; the DataToDictionary was with empty constructor, but that's already polyfilled")]
-    public class ConvertToDictionary: Eav.Convert.ConvertToJsonBasic, IConvertToJsonBasic
+    public class ConvertToJsonBasicWithCmsInfo: ConvertToJsonBasic
     {
         /// <summary>
         /// Determines if we should use edit-information
@@ -28,44 +26,7 @@ namespace ToSic.Sxc.Data
         /// Standard constructor, important for opening this class in dependency-injection
         /// </summary>
         [PrivateApi]
-	    public ConvertToDictionary(Dependencies dependencies): base(dependencies) { }
-
-        #region Convert statements expecting dynamic objects - extending the EAV Prepare variations
-
-        /// <inheritdoc />
-        public IEnumerable<JsonEntity> Convert(IEnumerable<dynamic> dynamicList)
-        {
-            if (dynamicList is IDataStream stream) return base.Convert(stream);
-
-            return dynamicList
-                .Select(c =>
-                {
-                    IEntity entity = null;
-                    if (c is IEntity ent) entity = ent;
-                    else if (c is IDynamicEntity dynEnt) entity = dynEnt.Entity;
-                    if (entity == null)
-                        throw new Exception("tried to convert an item, but it was not a known Entity-type");
-                    return GetDictionaryFromEntity(entity);
-                })
-                .ToList();
-        }
-
-        public IEnumerable<JsonEntity> Convert(IEnumerable<IDynamicEntity> dynamicList) 
-            => Convert(dynamicList as IEnumerable<dynamic>);
-
-        /// <inheritdoc />
-	    public JsonEntity Convert(IDynamicEntity dynamicEntity)
-	        => GetDictionaryFromEntity(dynamicEntity.Entity);
-
-        public JsonEntity Convert(object dynamicEntity)
-        {
-            if(dynamicEntity is IDynamicEntity dynEnt)
-                return GetDictionaryFromEntity(dynEnt.Entity);
-            throw new ArgumentException("expected a dynamic entity, but got something else", nameof(dynamicEntity));
-        }
-
-        #endregion
-
+	    public ConvertToJsonBasicWithCmsInfo(Dependencies dependencies): base(dependencies) { }
 
         [PrivateApi]
         protected override JsonEntity GetDictionaryFromEntity(IEntity entity)
@@ -90,12 +51,14 @@ namespace ToSic.Sxc.Data
                 dictionary.Add(ViewParts.Presentation, GetDictionaryFromEntity(entityInGroup.Presentation));
         }
 
+        /// <summary>
+        /// Add additional information in case we're in edit mode
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="dictionary"></param>
 	    private void AddEditInfo(IEntity entity, IDictionary<string, object> dictionary)
 	    {
-            // Add additional information in case we're in edit mode
-            var userMayEdit = WithEdit;
-
-	        if (!userMayEdit) return;
+	        if (!WithEdit) return;
 
 	        var title = entity.GetBestTitle(Languages);
 	        if (string.IsNullOrEmpty(title))

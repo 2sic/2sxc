@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav;
+using ToSic.Eav.Convert;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.ImportExport.Json.Basic;
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.Compatibility.Sxc
         public OldDataToDictionaryWrapper(bool userMayEdit)
         {
             _converter = Factory.ObsoleteBuild<IConvertToJsonBasic>();
-            _converter.WithEdit = userMayEdit;
+            if (_converter is ConvertToJsonBasicWithCmsInfo serializerWithEdit) serializerWithEdit.WithEdit = userMayEdit;
         }
 
         private readonly IConvertToJsonBasic _converter;

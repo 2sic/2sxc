@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
+using ToSic.Eav.Convert;
 using ToSic.Eav.ImportExport.Json.Basic;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
@@ -114,7 +115,7 @@ namespace ToSic.Sxc.WebApi.App
 
             //var serializer = new DataToDictionary(userMayEdit) { WithGuid = includeGuid };
             var serializer = _dataToJsonBasic;
-            serializer.WithEdit = userMayEdit;
+            if (serializer is ConvertToJsonBasicWithCmsInfo serializerWithEdit) serializerWithEdit.WithEdit = userMayEdit;
             serializer.WithGuid = includeGuid;
             if (stream == AllStreams) stream = null;
             var result = serializer.Convert(query, stream?.Split(','), more?.Guids);
