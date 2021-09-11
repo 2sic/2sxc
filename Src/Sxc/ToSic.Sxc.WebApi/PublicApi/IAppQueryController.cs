@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.ImportExport.Json.Basic;
+using ToSic.Eav.ImportExport.JsonLight;
 using ToSic.Sxc.WebApi.App;
 
 namespace ToSic.Sxc.WebApi.PublicApi

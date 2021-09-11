@@ -4,7 +4,7 @@ using ToSic.Eav;
 using ToSic.Eav.Convert;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.ImportExport.Json.Basic;
+using ToSic.Eav.ImportExport.JsonLight;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Compatibility.Sxc
@@ -18,11 +18,11 @@ namespace ToSic.Sxc.Compatibility.Sxc
     {
         public OldDataToDictionaryWrapper(bool userMayEdit)
         {
-            _converter = Factory.ObsoleteBuild<IConvertToJsonBasic>();
-            if (_converter is ConvertToJsonBasicWithCmsInfo serializerWithEdit) serializerWithEdit.WithEdit = userMayEdit;
+            _converter = Factory.ObsoleteBuild<IConvertToJsonLight>();
+            if (_converter is ConvertToJsonLightWithCmsInfo serializerWithEdit) serializerWithEdit.WithEdit = userMayEdit;
         }
 
-        private readonly IConvertToJsonBasic _converter;
+        private readonly IConvertToJsonLight _converter;
 
         public IEnumerable<IDictionary<string, object>> Prepare(IEnumerable<dynamic> dynamicList)
             => _converter.Convert(dynamicList);

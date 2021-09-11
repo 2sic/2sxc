@@ -4,7 +4,7 @@ using System.Net;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.Convert;
-using ToSic.Eav.ImportExport.Json.Basic;
+using ToSic.Eav.ImportExport.JsonLight;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
@@ -22,14 +22,14 @@ namespace ToSic.Sxc.WebApi.App
 
         #region Constructor / DI
 
-        public AppQuery(IServiceProvider serviceProvider, IContextResolver ctxResolver, IConvertToJsonBasic dataToJsonBasic) : base(serviceProvider, "Sxc.ApiApQ")
+        public AppQuery(IServiceProvider serviceProvider, IContextResolver ctxResolver, IConvertToJsonLight dataToJsonLight) : base(serviceProvider, "Sxc.ApiApQ")
         {
             _ctxResolver = ctxResolver;
-            _dataToJsonBasic = dataToJsonBasic;
+            _dataToJsonLight = dataToJsonLight;
         }
         
         private readonly IContextResolver _ctxResolver;
-        private readonly IConvertToJsonBasic _dataToJsonBasic;
+        private readonly IConvertToJsonLight _dataToJsonLight;
 
         #endregion
 
@@ -114,8 +114,8 @@ namespace ToSic.Sxc.WebApi.App
             }
 
             //var serializer = new DataToDictionary(userMayEdit) { WithGuid = includeGuid };
-            var serializer = _dataToJsonBasic;
-            if (serializer is ConvertToJsonBasicWithCmsInfo serializerWithEdit) serializerWithEdit.WithEdit = userMayEdit;
+            var serializer = _dataToJsonLight;
+            if (serializer is ConvertToJsonLightWithCmsInfo serializerWithEdit) serializerWithEdit.WithEdit = userMayEdit;
             serializer.WithGuid = includeGuid;
             if (stream == AllStreams) stream = null;
             var result = serializer.Convert(query, stream?.Split(','), more?.Guids);

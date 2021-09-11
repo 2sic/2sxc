@@ -2,7 +2,7 @@
 using ToSic.Eav.Convert;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.ImportExport.Json.Basic;
+using ToSic.Eav.ImportExport.JsonLight;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 
@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Data
     /// 
     /// </summary>
     [PrivateApi("Hide implementation; this was never public; the DataToDictionary was with empty constructor, but that's already polyfilled")]
-    public class ConvertToJsonBasicWithCmsInfo: ConvertToJsonBasic
+    public class ConvertToJsonLightWithCmsInfo: ConvertToJsonLight
     {
         /// <summary>
         /// Determines if we should use edit-information
@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Data
         /// Standard constructor, important for opening this class in dependency-injection
         /// </summary>
         [PrivateApi]
-	    public ConvertToJsonBasicWithCmsInfo(Dependencies dependencies): base(dependencies) { }
+	    public ConvertToJsonLightWithCmsInfo(Dependencies dependencies): base(dependencies) { }
 
         [PrivateApi]
         protected override JsonEntity GetDictionaryFromEntity(IEntity entity)

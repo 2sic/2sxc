@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Conversion
     /// </summary>
     [PrivateApi("Hide implementation")]
     [Obsolete]
-    public class DataToDictionary: Data.ConvertToJsonBasicWithCmsInfo
+    public class DataToDictionary: Data.ConvertToJsonLightWithCmsInfo
     {
 
         /// <summary>

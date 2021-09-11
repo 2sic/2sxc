@@ -8,6 +8,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Convert;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.ImportExport.JsonLight;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
@@ -23,14 +24,14 @@ namespace ToSic.Sxc.Apps
         private IValueConverter ValueConverter => _valConverter ?? (_valConverter = _valConverterLazy.Value);
         private readonly Lazy<IValueConverter> _valConverterLazy;
         private readonly IZoneCultureResolver _cultureResolver;
-        private readonly IConvertToJsonBasic _dataToJsonBasic;
+        private readonly IConvertToJsonLight _dataToJsonLight;
         private IValueConverter _valConverter;
 
-        public ViewsRuntime(Lazy<IValueConverter> valConverterLazy, IZoneCultureResolver cultureResolver, IConvertToJsonBasic dataToJsonBasic) : base("Cms.ViewRd")
+        public ViewsRuntime(Lazy<IValueConverter> valConverterLazy, IZoneCultureResolver cultureResolver, IConvertToJsonLight dataToJsonLight) : base("Cms.ViewRd")
         {
             _valConverterLazy = valConverterLazy;
             _cultureResolver = cultureResolver;
-            _dataToJsonBasic = dataToJsonBasic;
+            _dataToJsonLight = dataToJsonLight;
         }
 
         #endregion
@@ -146,7 +147,7 @@ namespace ToSic.Sxc.Apps
                         Name = ct.Name,
                         IsHidden = visible.All(t => t.ContentType != ct.StaticName),   // must check if *any* template is visible, otherwise tell the UI that it's hidden
                         Thumbnail = thumbnail,
-                        Metadata = _dataToJsonBasic.Convert(metadata)
+                        Metadata = _dataToJsonLight.Convert(metadata)
                     };
                 });
         }
