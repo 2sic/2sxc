@@ -2,11 +2,13 @@
 using System.Web.Hosting;
 using DotNetNuke.Web.Api;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.SexyContent.Dnn920;
 using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.WebApi;
+using GlobalConfiguration = System.Web.Http.GlobalConfiguration;
 
 namespace ToSic.Sxc.Dnn.StartUp
 {
@@ -51,6 +53,11 @@ namespace ToSic.Sxc.Dnn.StartUp
                 services.TryAddTransient<Permissions>();
                 
             });
+
+            // Configure Newtonsoft Time zone handling
+            // Moved here in v12.05 - previously it was in the Pre-Serialization converter
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+
 
             // now we should be able to instantiate registration of DB
             Eav.Factory.StaticBuild<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
