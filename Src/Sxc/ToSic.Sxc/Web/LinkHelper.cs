@@ -94,7 +94,17 @@ namespace ToSic.Sxc.Web
             var urlParams = string.Join("&", resizer.Select(pair => pair.Key + "=" + pair.Value));
             if (!string.IsNullOrWhiteSpace(urlParams)) urlParams = "?" + urlParams;
             
-            // todo: in future also try to combine existing params - so if the url already has a "?..." we should merge these
+            // TODO: STV
+            // Problem ATM:
+            // - if the url is something like "test.jpg?w=200" then running this function gets you something like test.jpg?w=200?w=1600
+            // We should try to combine existing params - so if the url already has a "?..." we should merge these
+            // Basically the logic we need is
+            // - if the url already has some params we should take that and split it into it's pieces
+            // ...ideally using some .net url processing API and not invent our own
+            // Then we should check if our new params (the `resizer` dictionary would replace any of the params
+            // ...if yes, they should be removed
+            // then everythinig should be re-assembled to work
+
 
             var result = Tags.SafeUrl(url + urlParams).ToString();
             wrapLog?.Invoke(result);
