@@ -24,10 +24,12 @@ namespace ToSic.Sxc.Web
     public interface IJsonService
     {
         /// <summary>
-        /// Convert an object to JSON if possible.
+        /// Convert an object to JSON.
+        /// 
+        /// If you need to add the JSON to HTML of a page, make sure you also use `Html.Raw(...)`, otherwise it will be encoded and not usable in JavaScript.
         /// </summary>
         string ToJson(object item);
-        
+
         /// <summary>
         /// Convert a JSON to a typed object. 
         /// </summary>
@@ -37,7 +39,8 @@ namespace ToSic.Sxc.Web
         T To<T>(string json);
 
         /// <summary>
-        /// Convert a json to an anonymous object. This is a very technical thing to do.
+        /// Convert a json to an anonymous object.
+        /// This is a very technical thing to do, so only use it if you know why you're doing this.
         ///
         /// It's usually better to use [](xref:ToSic.Sxc.Code.IDynamicCode.AsDynamic(System.String,System.String)) or  <see cref="To{T}"/>
         /// </summary>
