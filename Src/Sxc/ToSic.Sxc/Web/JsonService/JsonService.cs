@@ -7,12 +7,12 @@ namespace ToSic.Sxc.Web
     public class JsonService: IJsonService
     {
         /// <inheritdoc />
-        public T Deserialize<T>(string json) => JsonConvert.DeserializeObject<T>(json);
+        public T To<T>(string json) => JsonConvert.DeserializeObject<T>(json);
 
         /// <inheritdoc />
-        public object Deserialize(string json) => JsonConvert.DeserializeObject(json);
+        public object ToObject(string json) => JsonConvert.DeserializeObject(json);
 
         /// <inheritdoc />
-        public string Serialize(object dynamicEntity) => JsonConvert.SerializeObject(dynamicEntity);
+        public string ToJson(object dynamicEntity) => JsonConvert.SerializeObject(dynamicEntity);
     }
 }

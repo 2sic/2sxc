@@ -20,13 +20,13 @@ namespace ToSic.Sxc.Web
     /// Internally it uses Newtonsoft and preserves the case of keys.
     /// In future the internal engine may change (like for .net core), but we'll ensure that the result remains consistent. 
     /// </remarks>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP 12.05 - not final, will probably move to ToSic.Sxc.Web")]
+    [PublicApi]
     public interface IJsonService
     {
         /// <summary>
         /// Convert an object to JSON if possible.
         /// </summary>
-        string Serialize(object item);
+        string ToJson(object item);
         
         /// <summary>
         /// Convert a JSON to a typed object. 
@@ -34,15 +34,15 @@ namespace ToSic.Sxc.Web
         /// <typeparam name="T"></typeparam>
         /// <param name="json"></param>
         /// <returns></returns>
-        T Deserialize<T>(string json);
+        T To<T>(string json);
 
         /// <summary>
-        /// Convert a json to an anonymously typed object. This is usually not ideal.
+        /// Convert a json to an anonymous object. This is a very technical thing to do.
         ///
-        /// It's usually better to use [](xref:ToSic.Sxc.Code.IDynamicCode.AsDynamic(System.String,System.String)) or  <see cref="Deserialize{T}"/>
+        /// It's usually better to use [](xref:ToSic.Sxc.Code.IDynamicCode.AsDynamic(System.String,System.String)) or  <see cref="To{T}"/>
         /// </summary>
         /// <param name="json"></param>
         /// <returns></returns>
-        object Deserialize(string json);
+        object ToObject(string json);
     }
 }
