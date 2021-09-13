@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
-using ToSic.Eav.Convert;
 using ToSic.Eav.Data;
+using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.ImportExport.JsonLight;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Dnn.WebApi.App
@@ -25,7 +24,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         {
 #pragma warning disable 612
 #pragma warning disable 618
-            var ser = new OldContentBlockJsonSerialization(Eav.Factory.ObsoleteBuild<ConvertToJsonLight.Dependencies>(), userMayEdit);
+            var ser = new OldContentBlockJsonSerialization(Eav.Factory.ObsoleteBuild<ConvertToEavLight.Dependencies>(), userMayEdit);
 #pragma warning restore 618
 #pragma warning restore 612
 
@@ -65,7 +64,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
                 var dicToSerialize = new Dictionary<string, object>();
                 foreach (string key in dicNew.Keys)
                 {
-                    var list = dicNew[key] as List<JsonRelationship>;
+                    var list = dicNew[key] as List<EavLightEntityReference>;
                     dicToSerialize.Add(key,
                         list?.Select(p => new SerializableRelationshipOld() { EntityId = p.Id, EntityTitle = p.Title }).ToList() ??
                         dicNew[key]);

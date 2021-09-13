@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav;
-using ToSic.Eav.Convert;
 using ToSic.Eav.Data;
+using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.ImportExport.JsonLight;
+using ToSic.Eav.ImportExport;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Compatibility.Sxc
@@ -18,11 +18,11 @@ namespace ToSic.Sxc.Compatibility.Sxc
     {
         public OldDataToDictionaryWrapper(bool userMayEdit)
         {
-            _converter = Factory.ObsoleteBuild<IConvertToJsonLight>();
+            _converter = Factory.ObsoleteBuild<IConvertToEavLight>();
             if (_converter is ConvertToJsonLightWithCmsInfo serializerWithEdit) serializerWithEdit.WithEdit = userMayEdit;
         }
 
-        private readonly IConvertToJsonLight _converter;
+        private readonly IConvertToEavLight _converter;
 
         public IEnumerable<IDictionary<string, object>> Prepare(IEnumerable<dynamic> dynamicList)
             => _converter.Convert(dynamicList);
@@ -30,11 +30,11 @@ namespace ToSic.Sxc.Compatibility.Sxc
         public IDictionary<string, object> Prepare(IDynamicEntity dynamicEntity)
             => _converter.Convert(dynamicEntity);
 
-        public IDictionary<string, IEnumerable<JsonEntity>> Prepare(IDataSource source,
+        public IDictionary<string, IEnumerable<EavLightEntity>> Prepare(IDataSource source,
             IEnumerable<string> streams = null)
             => _converter.Convert(source, streams);
 
-        public IDictionary<string, IEnumerable<JsonEntity>> Prepare(IDataSource source, string streams)
+        public IDictionary<string, IEnumerable<EavLightEntity>> Prepare(IDataSource source, string streams)
             => _converter.Convert(source, streams);
 
         public IEnumerable<IDictionary<string, object>> Prepare(IDataStream stream)

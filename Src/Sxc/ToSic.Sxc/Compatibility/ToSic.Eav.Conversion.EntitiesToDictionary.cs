@@ -1,5 +1,6 @@
 ﻿#if NETFRAMEWORK
 using System;
+using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Documentation;
 
 // ReSharper disable once CheckNamespace
@@ -10,7 +11,7 @@ namespace ToSic.Eav.Conversion
     /// </summary>
     [PrivateApi("Made private in v12.04, as it shouldn't be used in razor - but previously it was in some apps so we must assume it's in use")]
     [Obsolete("Marked obsolete in 12.05, because it should be constructed with DI. But we're not sure if it's used in code in the wild")]
-    public class EntitiesToDictionary: Convert.ConvertToJsonLight
+    public class EntitiesToDictionary: ConvertToEavLight
     {
         /// <summary>
         /// Old constructor used in some public apps in razor, so it must remain for DNN implementation

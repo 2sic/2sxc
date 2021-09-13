@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ToSic.Eav.ImportExport.JsonLight;
+using ToSic.Eav.DataFormats.EavLight;
+using ToSic.Eav.ImportExport.Json.V1;
+
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.App;
@@ -52,7 +54,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
         [HttpPost("{appPath}/query/{name}")]
         [HttpPost("{appPath}/query/{name}/{stream}")]
         [AllowAnonymous] // will check security internally, so assume no requirements
-        public IDictionary<string, IEnumerable<JsonEntity>> PublicQuery([FromRoute] string appPath,
+        public IDictionary<string, IEnumerable<EavLightEntity>> PublicQuery([FromRoute] string appPath,
             [FromRoute] string name,
             AppQueryParameters more,
             [FromRoute] string stream = null) => _appQuery.Value.Init(Log).PublicQuery(appPath, name, stream, more);
@@ -62,7 +64,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
         [HttpPost("auto/query/{name}")]
         [HttpPost("auto/query/{name}/{stream?}")]
         [AllowAnonymous] // will check security internally, so assume no requirements
-        public IDictionary<string, IEnumerable<JsonEntity>> Query([FromRoute] string name,
+        public IDictionary<string, IEnumerable<EavLightEntity>> Query([FromRoute] string name,
             AppQueryParameters more,
             [FromQuery] bool includeGuid = false,
             [FromRoute] string stream = null,

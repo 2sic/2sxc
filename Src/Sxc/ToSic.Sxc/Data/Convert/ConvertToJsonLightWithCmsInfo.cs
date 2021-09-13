@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Convert;
 using ToSic.Eav.Data;
+using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.ImportExport.JsonLight;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Interfaces;
 
@@ -14,7 +13,7 @@ namespace ToSic.Sxc.Data
     /// 
     /// </summary>
     [PrivateApi("Hide implementation; this was never public; the DataToDictionary was with empty constructor, but that's already polyfilled")]
-    public class ConvertToJsonLightWithCmsInfo: ConvertToJsonLight
+    public class ConvertToJsonLightWithCmsInfo : ConvertToEavLight
     {
         /// <summary>
         /// Determines if we should use edit-information
@@ -29,7 +28,7 @@ namespace ToSic.Sxc.Data
 	    public ConvertToJsonLightWithCmsInfo(Dependencies dependencies): base(dependencies) { }
 
         [PrivateApi]
-        protected override JsonEntity GetDictionaryFromEntity(IEntity entity)
+        protected override EavLightEntity GetDictionaryFromEntity(IEntity entity)
 		{
             // Do groundwork
             var dictionary = base.GetDictionaryFromEntity(entity);

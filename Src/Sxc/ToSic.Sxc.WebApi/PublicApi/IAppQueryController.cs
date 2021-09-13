@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.ImportExport.JsonLight;
+using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Sxc.WebApi.App;
 
 namespace ToSic.Sxc.WebApi.PublicApi
@@ -26,7 +26,7 @@ namespace ToSic.Sxc.WebApi.PublicApi
         /// will check security internally, so assume the endpoint doesn't need to check security first
         /// </remarks>
         /// <returns></returns>
-        IDictionary<string, IEnumerable<JsonEntity>> Query(
+        IDictionary<string, IEnumerable<EavLightEntity>> Query(
             string name, 
             AppQueryParameters more,
             bool includeGuid = false, 
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.WebApi.PublicApi
         /// will check security internally, so assume the endpoint doesn't need to check security first
         /// </remarks>
         /// <returns></returns>
-        IDictionary<string, IEnumerable<JsonEntity>> PublicQuery(
+        IDictionary<string, IEnumerable<EavLightEntity>> PublicQuery(
             string appPath, 
             string name, 
             AppQueryParameters more,

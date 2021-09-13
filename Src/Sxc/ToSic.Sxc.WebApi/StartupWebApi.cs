@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.ImportExport;
-using ToSic.Eav.Convert;
-using ToSic.Eav.ImportExport.JsonLight;
+using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.ImportExport;
@@ -33,9 +32,9 @@ namespace ToSic.Sxc.WebApi
         public static IServiceCollection AddSxcWebApi(this IServiceCollection services)
         {
             // The top version should be deprecated soon, so we just use DataToDictionary or an Interface instead
-            services.TryAddTransient<Eav.Convert.ConvertToJsonLight, ConvertToJsonLightWithCmsInfo>(); // this is needed for all the EAV uses of conversion
+            services.TryAddTransient<ConvertToEavLight, ConvertToJsonLightWithCmsInfo>(); // this is needed for all the EAV uses of conversion
             services.TryAddTransient<ConvertToJsonLightWithCmsInfo>(); // WIP, not public, should use interface instead
-            services.TryAddTransient<IConvertToJsonLight, ConvertToJsonLightWithCmsInfo>();
+            services.TryAddTransient<IConvertToEavLight, ConvertToJsonLightWithCmsInfo>();
 
             services.TryAddScoped<ILinkPaths, LinkPaths>();
             services.TryAddTransient<IServerPaths, ServerPaths>();

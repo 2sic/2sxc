@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Convert;
 using ToSic.Eav.Data;
-using ToSic.Eav.ImportExport.JsonLight;
+using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security;
@@ -24,7 +23,7 @@ namespace ToSic.Sxc.WebApi.App
         #region Constructor / DI
         protected IContextOfApp Context;
 
-        public AppContent(IServiceProvider sp, EntityApi entityApi, Lazy<IConvertToJsonLight> entToDicLazy, IContextResolver ctxResolver) : base(sp, "Sxc.ApiApC")
+        public AppContent(IServiceProvider sp, EntityApi entityApi, Lazy<IConvertToEavLight> entToDicLazy, IContextResolver ctxResolver) : base(sp, "Sxc.ApiApC")
         {
             _entityApi = entityApi;
             _entToDicLazy = entToDicLazy;
@@ -32,7 +31,7 @@ namespace ToSic.Sxc.WebApi.App
 
         }
         private readonly EntityApi _entityApi;
-        private readonly Lazy<IConvertToJsonLight> _entToDicLazy;
+        private readonly Lazy<IConvertToEavLight> _entToDicLazy;
         private readonly IContextResolver _ctxResolver;
 
         public AppContent Init(string appName, ILog parentLog)
@@ -136,11 +135,12 @@ namespace ToSic.Sxc.WebApi.App
         
         #region helpers / initializers to prep the EAV and Serializer
 
-        private IConvertToJsonLight InitEavAndSerializer(int appId, bool userMayEdit)
+        private IConvertToEavLight InitEavAndSerializer(int appId, bool userMayEdit)
         {
             Log.Add($"init eav for a#{appId}");
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
-            var ser = _entToDicLazy.Value.EnableGuids();
+            var ser = _entToDicLazy.Value;
+            ser.WithGuid = true; //.EnableGuids();
             ((ConvertToJsonLightWithCmsInfo)ser).WithEdit = userMayEdit;
             return ser;
         }
