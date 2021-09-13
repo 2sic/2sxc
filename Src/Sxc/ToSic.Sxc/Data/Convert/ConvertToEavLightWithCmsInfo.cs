@@ -10,10 +10,9 @@ namespace ToSic.Sxc.Data
     /// <summary>
     /// Convert various types of entities (standalone, dynamic, in streams, etc.) to Dictionaries <br/>
     /// Mainly used for serialization scenarios, like in WebApis.
-    /// 
     /// </summary>
     [PrivateApi("Hide implementation; this was never public; the DataToDictionary was with empty constructor, but that's already polyfilled")]
-    public class ConvertToJsonLightWithCmsInfo : ConvertToEavLight
+    public class ConvertToEavLightWithCmsInfo : ConvertToEavLight
     {
         /// <summary>
         /// Determines if we should use edit-information
@@ -25,7 +24,7 @@ namespace ToSic.Sxc.Data
         /// Standard constructor, important for opening this class in dependency-injection
         /// </summary>
         [PrivateApi]
-	    public ConvertToJsonLightWithCmsInfo(Dependencies dependencies): base(dependencies) { }
+	    public ConvertToEavLightWithCmsInfo(Dependencies dependencies): base(dependencies) { }
 
         [PrivateApi]
         protected override EavLightEntity GetDictionaryFromEntity(IEntity entity)

@@ -115,7 +115,7 @@ namespace ToSic.Sxc.WebApi.App
 
             //var serializer = new DataToDictionary(userMayEdit) { WithGuid = includeGuid };
             var serializer = _dataToFormatLight;
-            if (serializer is ConvertToJsonLightWithCmsInfo serializerWithEdit) serializerWithEdit.WithEdit = userMayEdit;
+            if (serializer is ConvertToEavLightWithCmsInfo serializerWithEdit) serializerWithEdit.WithEdit = userMayEdit;
             serializer.WithGuid = includeGuid;
             if (stream == AllStreams) stream = null;
             var result = serializer.Convert(query, stream?.Split(','), more?.Guids);

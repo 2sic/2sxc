@@ -32,9 +32,9 @@ namespace ToSic.Sxc.WebApi
         public static IServiceCollection AddSxcWebApi(this IServiceCollection services)
         {
             // The top version should be deprecated soon, so we just use DataToDictionary or an Interface instead
-            services.TryAddTransient<ConvertToEavLight, ConvertToJsonLightWithCmsInfo>(); // this is needed for all the EAV uses of conversion
-            services.TryAddTransient<ConvertToJsonLightWithCmsInfo>(); // WIP, not public, should use interface instead
-            services.TryAddTransient<IConvertToEavLight, ConvertToJsonLightWithCmsInfo>();
+            services.TryAddTransient<ConvertToEavLight, ConvertToEavLightWithCmsInfo>(); // this is needed for all the EAV uses of conversion
+            services.TryAddTransient<ConvertToEavLightWithCmsInfo>(); // WIP, not public, should use interface instead
+            services.TryAddTransient<IConvertToEavLight, ConvertToEavLightWithCmsInfo>();
 
             services.TryAddScoped<ILinkPaths, LinkPaths>();
             services.TryAddTransient<IServerPaths, ServerPaths>();

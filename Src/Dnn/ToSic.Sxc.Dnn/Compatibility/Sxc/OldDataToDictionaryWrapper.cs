@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Compatibility.Sxc
         public OldDataToDictionaryWrapper(bool userMayEdit)
         {
             _converter = Factory.ObsoleteBuild<IConvertToEavLight>();
-            if (_converter is ConvertToJsonLightWithCmsInfo serializerWithEdit) serializerWithEdit.WithEdit = userMayEdit;
+            if (_converter is ConvertToEavLightWithCmsInfo serializerWithEdit) serializerWithEdit.WithEdit = userMayEdit;
         }
 
         private readonly IConvertToEavLight _converter;

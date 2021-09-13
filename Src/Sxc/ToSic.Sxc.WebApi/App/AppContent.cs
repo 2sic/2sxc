@@ -141,7 +141,7 @@ namespace ToSic.Sxc.WebApi.App
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
             var ser = _entToDicLazy.Value;
             ser.WithGuid = true; //.EnableGuids();
-            ((ConvertToJsonLightWithCmsInfo)ser).WithEdit = userMayEdit;
+            ((ConvertToEavLightWithCmsInfo)ser).WithEdit = userMayEdit;
             return ser;
         }
         #endregion

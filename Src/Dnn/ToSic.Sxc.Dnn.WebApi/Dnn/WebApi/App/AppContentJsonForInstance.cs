@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         }
 
 
-        private class OldContentBlockJsonSerialization : ConvertToJsonLightWithCmsInfo
+        private class OldContentBlockJsonSerialization : ConvertToEavLightWithCmsInfo
         {
             public OldContentBlockJsonSerialization(Dependencies dependencies, bool withEdit) : base(dependencies)
             {
