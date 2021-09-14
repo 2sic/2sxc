@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Reflection;
+using Newtonsoft.Json;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 
@@ -18,7 +18,8 @@ namespace ToSic.Sxc.Data
     /// <remarks>
     /// Will always return true even if the property doesn't exist, in which case it resolves to null.
     /// </remarks>
-    public partial class DynamicReadObject: DynamicObject, IWrapper<object>, IPropertyLookup
+    [JsonConverter(typeof(DynamicJsonConverter))]
+    public partial class DynamicReadObject: DynamicObject, IWrapper<object>, IPropertyLookup, IHasJsonSource
     {
         public object UnwrappedContents { get; }
         private readonly Dictionary<string, PropertyInfo> _ignoreCaseLookup = new Dictionary<string, PropertyInfo>(StringComparer.InvariantCultureIgnoreCase);
@@ -39,6 +40,7 @@ namespace ToSic.Sxc.Data
             foreach (var propertyInfo in itemType.GetProperties()) _ignoreCaseLookup[propertyInfo.Name] = propertyInfo;
         }
         private readonly bool _reWrapObjects;
+
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
             result = FindValueOrNull(binder.Name);
@@ -66,10 +68,11 @@ namespace ToSic.Sxc.Data
 
             var result = lookup.GetValue(UnwrappedContents);
 
-            // Probably rewrap for further dynamic navigation!
+            // Probably re-wrap for further dynamic navigation!
             return _reWrapObjects ? DynamicHelpers.WrapIfPossible(result) : result;
         }
 
 
+        object IHasJsonSource.JsonSource => UnwrappedContents;
     }
 }

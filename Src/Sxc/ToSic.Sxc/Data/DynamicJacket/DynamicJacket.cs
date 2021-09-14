@@ -19,8 +19,8 @@ namespace ToSic.Sxc.Data
     /// You will usually do things like `AsDynamic(jsonString).FirstName` etc.
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic, don't use this directly")]
-    [JsonConverter(typeof(DynamicJacketJsonConverter))]
-    public partial class DynamicJacket: DynamicJacketBase<JObject>, IPropertyLookup
+    [JsonConverter(typeof(DynamicJsonConverter))]
+    public partial class DynamicJacket: DynamicJacketBase<JObject>, IPropertyLookup, IHasJsonSource
     {
         /// <inheritdoc />
         [PrivateApi]
@@ -102,5 +102,7 @@ namespace ToSic.Sxc.Data
 
         private JProperty[] _propertyArray;
 
+        /// <inheritdoc />
+        object IHasJsonSource.JsonSource => UnwrappedContents;
     }
 }
