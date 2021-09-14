@@ -3,6 +3,9 @@ using Newtonsoft.Json;
 
 namespace ToSic.Sxc.Data
 {
+    /// <summary>
+    /// This is a serializer-helper which Newtonsoft will pick up automatically when converting a DynamicJacket to JSON
+    /// </summary>
     public class DynamicJacketJsonConverter: JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

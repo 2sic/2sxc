@@ -38,16 +38,10 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         [PrivateApi("Internal")]
-        public PropertyRequest FindPropertyInternal(string field, string[] languages, ILog parentLogOrNull)
+        public override PropertyRequest FindPropertyInternal(string field, string[] languages, ILog parentLogOrNull)
         {
             var result = FindValueOrNull(field, StringComparison.InvariantCultureIgnoreCase, parentLogOrNull);
             return new PropertyRequest {Result = result, FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic"};
-        }
-
-        [PrivateApi("internal")]
-        public List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull)
-        {
-            return new List<PropertyDumpItem> { new PropertyDumpItem { Path = "Not supported on DynamicJacket" } };
         }
 
 
@@ -98,7 +92,7 @@ namespace ToSic.Sxc.Data
                 .FirstOrDefault(
                     p => string.Equals(p.Name, name, comparison));
 
-            return DynamicJacket.WrapOrUnwrap(found?.Value);
+            return WrapIfJObjectUnwrapIfJValue(found?.Value);
         }
 
         #endregion
