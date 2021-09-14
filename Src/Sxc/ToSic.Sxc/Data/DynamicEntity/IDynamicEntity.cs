@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Data
     /// </blockquote>
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public partial interface IDynamicEntity: SexyContent.Interfaces.IDynamicEntity, IEntityWrapper, IDynamicEntityBase
+    public partial interface IDynamicEntity: SexyContent.Interfaces.IDynamicEntity, IEntityWrapper, IDynamicEntityBase, ISxcDynamicObject
     {
         /// <summary>
         /// The underlying entity which provides all the data for the DynamicEntity
