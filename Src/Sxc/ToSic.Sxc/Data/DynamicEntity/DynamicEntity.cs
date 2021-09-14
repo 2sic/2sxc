@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Data
     /// Note that it will provide many things not listed here, usually things like `.Image`, `.FirstName` etc. based on your ContentType.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public partial class DynamicEntity : DynamicEntityBase, IDynamicEntity
+    public partial class DynamicEntity : DynamicEntityBase, IDynamicEntity, ISxcDynamicObject
     {
         [PrivateApi]
         public IEntity Entity { get; private set; }

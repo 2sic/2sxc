@@ -8,7 +8,7 @@ using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Data
 {
-    public abstract partial class DynamicEntityBase : DynamicObject, IDynamicEntityBase, IPropertyLookup
+    public abstract partial class DynamicEntityBase : DynamicObject, IDynamicEntityBase, IPropertyLookup, ISxcDynamicObject
     {
         protected DynamicEntityBase(DynamicEntityDependencies dependencies) => _Dependencies = dependencies;
 
