@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Data
     /// Will always return true even if the property doesn't exist, in which case it resolves to null.
     /// </remarks>
     [JsonConverter(typeof(DynamicJsonConverter))]
-    public partial class DynamicReadObject: DynamicObject, IWrapper<object>, IPropertyLookup, IHasJsonSource
+    public partial class DynamicReadObject: DynamicObject, IWrapper<object>, IPropertyLookup, IHasJsonSource, ICanGetNameNotFinal
     {
         public object UnwrappedContents { get; }
         private readonly Dictionary<string, PropertyInfo> _ignoreCaseLookup = new Dictionary<string, PropertyInfo>(StringComparer.InvariantCultureIgnoreCase);
@@ -74,5 +74,6 @@ namespace ToSic.Sxc.Data
 
 
         object IHasJsonSource.JsonSource => UnwrappedContents;
+        public dynamic Get(string name) => FindValueOrNull(name);
     }
 }

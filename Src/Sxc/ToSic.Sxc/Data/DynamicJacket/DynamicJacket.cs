@@ -36,14 +36,6 @@ namespace ToSic.Sxc.Data
         /// <returns>the string names of the keys</returns>
         public override IEnumerator<object> GetEnumerator() => UnwrappedContents.Properties().Select(p => p.Name).GetEnumerator();
 
-        /// <inheritdoc />
-        [PrivateApi("Internal")]
-        public override PropertyRequest FindPropertyInternal(string field, string[] languages, ILog parentLogOrNull)
-        {
-            var result = FindValueOrNull(field, StringComparison.InvariantCultureIgnoreCase, parentLogOrNull);
-            return new PropertyRequest {Result = result, FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic"};
-        }
-
 
         /// <summary>
         /// Access the properties of this object.
@@ -83,7 +75,7 @@ namespace ToSic.Sxc.Data
             return true;
         }
 
-        private object FindValueOrNull(string name, StringComparison comparison, ILog parentLogOrNull)
+        protected override object FindValueOrNull(string name, StringComparison comparison, ILog parentLogOrNull)
         {
             if (UnwrappedContents == null || !UnwrappedContents.HasValues)
                 return null;

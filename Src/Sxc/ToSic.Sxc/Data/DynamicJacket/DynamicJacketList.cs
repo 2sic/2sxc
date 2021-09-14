@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
-using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
@@ -32,12 +31,6 @@ namespace ToSic.Sxc.Data
         /// <returns>the item or an error if not found</returns>
         public override object this[int index] => DynamicJacket.WrapIfJObjectUnwrapIfJValue(UnwrappedContents[index]);
 
-        public override PropertyRequest FindPropertyInternal(string field, string[] languages, ILog parentLogOrNull)
-        {
-            var result = FindValueOrNull(field, StringComparison.InvariantCultureIgnoreCase, parentLogOrNull);
-            return new PropertyRequest { Result = result, FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic" };
-        }
-
         [PrivateApi("internal")]
         public override List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull)
         {
@@ -52,13 +45,12 @@ namespace ToSic.Sxc.Data
         /// <param name="comparison"></param>
         /// <param name="parentLogOrNull"></param>
         /// <returns></returns>
-        private object FindValueOrNull(string name, StringComparison comparison, ILog parentLogOrNull)
+        protected override object FindValueOrNull(string name, StringComparison comparison, ILog parentLogOrNull)
         {
             if (UnwrappedContents == null || !UnwrappedContents.HasValues)
                 return null;
 
-            var found = UnwrappedContents // . .Properties()
-                .FirstOrDefault(p =>
+            var found = UnwrappedContents.FirstOrDefault(p =>
                 {
                     if (!(p is JObject pJObject))
                         return false;

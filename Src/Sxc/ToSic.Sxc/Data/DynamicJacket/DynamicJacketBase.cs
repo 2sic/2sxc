@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using ToSic.Eav.Data;
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.Data
     /// </summary>
     /// <typeparam name="T">The underlying type, either a JObject or a JToken</typeparam>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic, don't use this directly")]
-    public abstract class DynamicJacketBase<T>: DynamicObject, IReadOnlyList<object>, IWrapper<T>, IPropertyLookup, ISxcDynamicObject
+    public abstract class DynamicJacketBase<T>: DynamicObject, IReadOnlyList<object>, IWrapper<T>, IPropertyLookup, ISxcDynamicObject, ICanGetNameNotFinal
     {
         /// <summary>
         /// The underlying data, in case it's needed for various internal operations.
@@ -52,6 +53,9 @@ namespace ToSic.Sxc.Data
         public override string ToString() => UnwrappedContents.ToString();
 
         /// <inheritdoc />
+        public dynamic Get(string name) => FindValueOrNull(name, StringComparison.InvariantCultureIgnoreCase, null);
+
+        /// <inheritdoc />
         public int Count => ((IList) UnwrappedContents).Count;
 
         /// <summary>
@@ -76,8 +80,17 @@ namespace ToSic.Sxc.Data
             return true;
         }
 
-        public abstract PropertyRequest FindPropertyInternal(string field, string[] languages, ILog parentLogOrNull);
+        /// <inheritdoc />
+        [PrivateApi("Internal")]
+        public PropertyRequest FindPropertyInternal(string field, string[] languages, ILog parentLogOrNull)
+        {
+            var result = FindValueOrNull(field, StringComparison.InvariantCultureIgnoreCase, parentLogOrNull);
+            return new PropertyRequest { Result = result, FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic" };
+        }
 
         public abstract List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull);
+
+        protected abstract object FindValueOrNull(string name, StringComparison comparison, ILog parentLogOrNull);
+
     }
 }
