@@ -138,11 +138,6 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             }
             catch { /* ignore */ }
 
-            // new in v12.02 - PageService DI
-            // TODO: SPM: IMPLEMENT OqtPageChanger - discuss w/2dm
-            // services.TryAddScoped<IPageChangeApplicator, DnnPageChanges>();
-
-
             return services;
         }
 
