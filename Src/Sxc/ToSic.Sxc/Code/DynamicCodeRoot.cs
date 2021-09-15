@@ -30,14 +30,14 @@ namespace ToSic.Sxc.Code
         {
             public IServiceProvider ServiceProvider { get; }
             public ICmsContext CmsContext { get; }
-            public ILinkHelper LinkHelper { get; }
+            //public ILinkHelper LinkHelper { get; }
             public Lazy<CodeCompiler> CodeCompilerLazy { get; }
 
-            public Dependencies(IServiceProvider serviceProvider, ICmsContext cmsContext, ILinkHelper linkHelper, Lazy<CodeCompiler> codeCompilerLazy)
+            public Dependencies(IServiceProvider serviceProvider, ICmsContext cmsContext, /*ILinkHelper linkHelper,*/ Lazy<CodeCompiler> codeCompilerLazy)
             {
                 ServiceProvider = serviceProvider;
                 CmsContext = cmsContext;
-                LinkHelper = linkHelper;
+                //LinkHelper = linkHelper;
                 CodeCompilerLazy = codeCompilerLazy;
             }
         }
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Code
             Deps = dependencies;
             _serviceProvider = dependencies.ServiceProvider;
             CmsContext = dependencies.CmsContext;
-            Link = dependencies.LinkHelper;
+            //Link = dependencies.LinkHelper;
         }
 
         private readonly Dependencies Deps;
@@ -99,7 +99,9 @@ namespace ToSic.Sxc.Code
         public IBlockDataSource Data { get; private set; }
 
         /// <inheritdoc />
-        public ILinkHelper Link { get; protected set; }
+        // Note that ILinkHelper uses INeedsCodeRoot, so if initialized in GetService this will be auto-provided
+        public ILinkHelper Link => _link ?? (_link = GetService<ILinkHelper>());
+        private ILinkHelper _link;
 
 
 

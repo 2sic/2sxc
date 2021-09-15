@@ -5,8 +5,7 @@ using Oqtane.Shared;
 using System;
 using ToSic.Eav;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
@@ -25,7 +24,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private readonly SiteStateInitializer _siteStateInitializer;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly OqtLinkPaths _linkPaths;
-        //private IApp App;
         private Context.IContextOfBlock _context;
 
         public OqtLinkHelper(
@@ -42,10 +40,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
             _linkPaths = linkPaths as OqtLinkPaths;
         }
 
-        public override void Init(Context.IContextOfBlock context, IApp app, ILog parentLog)
+
+        public override void AddBlockContext(IDynamicCodeRoot codeRoot)
         {
-            base.Init(context, app, parentLog);
-            _context = context;
+            base.AddBlockContext(codeRoot);
+            _context = codeRoot.Block?.Context;
         }
 
         /// <inheritdoc />

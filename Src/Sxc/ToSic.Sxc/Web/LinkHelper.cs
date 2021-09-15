@@ -2,7 +2,7 @@
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Context;
+using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Web
 {
@@ -18,10 +18,10 @@ namespace ToSic.Sxc.Web
             ImgLinker.Init(Log);
         }
 
-        public virtual void Init(IContextOfBlock context, IApp app, ILog parentLog)
+        public virtual void AddBlockContext(IDynamicCodeRoot codeRoot)
         {
-            Log.LinkTo(parentLog);
-            App = app;
+            Log.LinkTo(codeRoot.Log);
+            App = codeRoot.App;
         }
 
 
@@ -65,5 +65,7 @@ namespace ToSic.Sxc.Web
             // Set logging on ImageResizeHelper
             ImgLinker.Debug = debug;
         }
+
+
     }
 }

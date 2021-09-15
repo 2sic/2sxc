@@ -2,9 +2,7 @@
 using System.Web;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
-using ToSic.Eav.Logging;
-using ToSic.Sxc.Apps;
-using ToSic.Sxc.Context;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.WebApi;
@@ -25,10 +23,10 @@ namespace ToSic.Sxc.Dnn.Web
             _dnn = dnnContext;
         }
 
-        public override void Init(IContextOfBlock context, IApp app, ILog parentLog)
+        public override void AddBlockContext(IDynamicCodeRoot codeRoot)
         {
-            base.Init(context, app, parentLog);
-            ((DnnContextOld) _dnn).Init(context?.Module);
+            base.AddBlockContext(codeRoot);
+            ((DnnContextOld) _dnn).Init(codeRoot.Block?.Context?.Module);
         }
 
         /// <inheritdoc />

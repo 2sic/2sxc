@@ -1,7 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
-using ToSic.Sxc.Apps;
-using ToSic.Sxc.Context;
+using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Web
 {
@@ -9,11 +7,8 @@ namespace ToSic.Sxc.Web
     /// Helpers to create links with parameters or base-tag links (important for SPAs)
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public interface ILinkHelper
+    public interface ILinkHelper: INeedsCodeRoot
     {
-        [PrivateApi("Internal")]
-        void Init(IContextOfBlock context, IApp app, ILog parentLog);
-        
         /// <summary>
         /// returns a link to the current page with parameters resolved in a way that DNN wants it
         /// </summary>
