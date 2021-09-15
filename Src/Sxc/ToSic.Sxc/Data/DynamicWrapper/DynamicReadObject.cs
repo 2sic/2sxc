@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Data
         /// <param name="item"></param>
         /// <param name="reWrapObjects">Determines if properties which are objects should again be wrapped. When using this for DynamicModel it should be false, otherwise usually true.</param>
         [PrivateApi]
-        public DynamicReadObject(object item, bool reWrapObjects)
+        public DynamicReadObject(object item, bool reWrapObjects = false)
         {
             _reWrapObjects = reWrapObjects;
             UnwrappedContents = item;

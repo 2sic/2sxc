@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
+using static ToSic.Sxc.Web.CleanParam;
 
 namespace ToSic.Sxc.Web.Images
 {
@@ -49,8 +50,7 @@ namespace ToSic.Sxc.Web.Images
             var formToUse = RealStringOrNull(format);
 
             // Aspects which aren't affected by scale
-            var qFinal = IntOrNull(quality)
-                         ?? IntOrNull(getSettings?.Get("Quality")) ?? 0;
+            var qFinal = IntOrZeroAsNull(quality) ?? IntOrZeroAsNull(getSettings?.Get("Quality")) ?? 0;
             string mToUse = KeepBestParam(resizeMode, getSettings?.Get("ResizeMode"));
             string sToUse = KeepBestParam(scaleMode, getSettings?.Get("ScaleMode"));
 
@@ -93,10 +93,6 @@ namespace ToSic.Sxc.Web.Images
             object aspectRatio, ICanGetNameNotFinal getSettings);
 
         internal abstract string KeepBestParam(object given, object setting);
-
-        internal abstract string RealStringOrNull(object value);
-
-        internal abstract int? IntOrNull(object value);
 
         #endregion
     }

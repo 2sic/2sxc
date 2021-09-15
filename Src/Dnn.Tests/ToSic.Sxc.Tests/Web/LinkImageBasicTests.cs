@@ -42,8 +42,45 @@ namespace ToSic.Sxc.Tests.Web
 
             Assert.AreEqual("test.jpg?w=200", linker.Image("test.jpg", width: 200, aspectRatio: 0));
             Assert.AreEqual("test.jpg?w=200&h=200", linker.Image("test.jpg", width: 200, aspectRatio: 1));
-            Assert.AreEqual("test.jpg?w=200&h=400", linker.Image("test.jpg", width: 200, aspectRatio: 2));
-            Assert.AreEqual("test.jpg?w=200&h=100", linker.Image("test.jpg", width: 200, aspectRatio: 0.5));
+            Assert.AreEqual("test.jpg?w=200&h=400", linker.Image("test.jpg", width: 200, aspectRatio: 0.5));
+            Assert.AreEqual("test.jpg?w=200&h=100", linker.Image("test.jpg", width: 200, aspectRatio: 2));
+            Assert.AreEqual("test.jpg?w=200&h=80", linker.Image("test.jpg", width: 200, aspectRatio: 2.5));
+            
+            // Note: in this case it should be 112.5 and will be rounded down by default
+            Assert.AreEqual("test.jpg?w=200&h=112", linker.Image("test.jpg", width: 200, aspectRatio: 16f/9));
+        }
+
+        [TestMethod]
+        public void BasicWidthAndAspectRatioString()
+        {
+            var linker = new ImgResizeLinker();
+
+            // Simple Strings
+            Assert.AreEqual("test.jpg?w=200", linker.Image("test.jpg", width: 200, aspectRatio: "0"));
+            Assert.AreEqual("test.jpg?w=200&h=200", linker.Image("test.jpg", width: 200, aspectRatio: "1"));
+            Assert.AreEqual("test.jpg?w=200&h=400", linker.Image("test.jpg", width: 200, aspectRatio: "0.5"));
+            Assert.AreEqual("test.jpg?w=200&h=100", linker.Image("test.jpg", width: 200, aspectRatio: "2"));
+            Assert.AreEqual("test.jpg?w=200&h=80", linker.Image("test.jpg", width: 200, aspectRatio: "2.5"));
+        }
+
+        [TestMethod]
+        public void BasicWidthAndAspectRatioStringWithSeparator()
+        {
+            var linker = new ImgResizeLinker();
+
+            // Simple Strings
+            Assert.AreEqual("test.jpg?w=200", linker.Image("test.jpg", width: 200, aspectRatio: "0"));
+            Assert.AreEqual("test.jpg?w=200&h=200", linker.Image("test.jpg", width: 200, aspectRatio: "1:1"));
+            Assert.AreEqual("test.jpg?w=200&h=200", linker.Image("test.jpg", width: 200, aspectRatio: "1/1"));
+            Assert.AreEqual("test.jpg?w=200&h=400", linker.Image("test.jpg", width: 200, aspectRatio: "1:2"));
+            Assert.AreEqual("test.jpg?w=200&h=400", linker.Image("test.jpg", width: 200, aspectRatio: "1/2"));
+            Assert.AreEqual("test.jpg?w=200&h=100", linker.Image("test.jpg", width: 200, aspectRatio: "2:1"));
+            Assert.AreEqual("test.jpg?w=200&h=100", linker.Image("test.jpg", width: 200, aspectRatio: "2/1"));
+            Assert.AreEqual("test.jpg?w=200&h=100", linker.Image("test.jpg", width: 200, aspectRatio: "2"));
+            Assert.AreEqual("test.jpg?w=200&h=80", linker.Image("test.jpg", width: 200, aspectRatio: "2.5"));
+            
+            // Note: in this case it should be 112.5 and will be rounded down by default
+            Assert.AreEqual("test.jpg?w=200&h=112", linker.Image("test.jpg", width: 200, aspectRatio: "16/9"));
         }
 
         [TestMethod]
