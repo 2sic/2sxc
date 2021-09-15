@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Oqtane.Infrastructure;
 using Oqtane.Shared;
+using System.Collections.Generic;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.Features;
@@ -27,13 +27,17 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     {
         private readonly FeaturesBackend _featuresBackend;
         private readonly ISite _site;
+        private readonly IConfigManager _configManager;
+        private readonly OqtModuleHelper _oqtModuleHelper;
         private readonly WipRemoteRouterLink _remoteRouterLink;
         protected override string HistoryLogName => "Api.Feats";
 
-        public FeatureController(FeaturesBackend featuresBackend, ISite site, WipRemoteRouterLink remoteRouterLink)
+        public FeatureController(FeaturesBackend featuresBackend, ISite site, IConfigManager configManager, OqtModuleHelper oqtModuleHelper, WipRemoteRouterLink remoteRouterLink)
         {
             _featuresBackend = featuresBackend;
             _site = site;
+            _configManager = configManager;
+            _oqtModuleHelper = oqtModuleHelper;
             _remoteRouterLink = remoteRouterLink;
         }
 
@@ -62,20 +66,17 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             var ctx = GetContext();
             var site = ctx.Site;
             var module = ctx.Module;
-
-            //var module = Request.FindModuleInfo();
+            
             var link = _remoteRouterLink.LinkToRemoteRouter(RemoteDestinations.Features,
-                "Dnn",
-                Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),
-                Guid.Empty.ToString(),
+                "Oqt",
+                Oqtane.Shared.Constants.Version, // Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),
+                _configManager.GetInstallationId(),
                 site,
                 module.Id,
                 app: null,
-                false // TODO: NOT SURE HOW TO DETECT CONTENT-APP IN OQTANE
-                                // (Oqtane.Models.Module)module.ModuleDefinitionName.Contains(".Content")
+                _oqtModuleHelper.IsContentApp(module.Id)
                 );
             return link;
-
         }
 
         /// <summary>

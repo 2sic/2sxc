@@ -138,6 +138,8 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             }
             catch { /* ignore */ }
 
+            services.TryAddTransient<OqtModuleHelper>();
+
             return services;
         }
 
