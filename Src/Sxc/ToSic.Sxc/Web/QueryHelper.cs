@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Net.Http;
 
 namespace ToSic.Sxc.Web
@@ -21,20 +22,34 @@ namespace ToSic.Sxc.Web
             // ...if yes, they should be removed
             // then everything should be re-assembled to work
 
+            // prepare temp absolute uri because it is required for ParseQueryString
+            var tempAbsoluteUri = GetTempAbsoluteUri(url);
+
+            // if the url already has some params we should take that and split it into it's pieces
+            var queryString = tempAbsoluteUri.ParseQueryString();
+
+            // new params would update existing queryString params or append new param to queryString
+            queryParams.ForEach(param => queryString.Set(param.Key, param.Value));
+
+            // combine new query string in url
+            return GetUrlWithUpdatedQueryString(url, tempAbsoluteUri, queryString);
+        }
+
+        private static Uri GetTempAbsoluteUri(string url)
+        {
             var isAbsoluteWithoutProtocol = url.StartsWith(@"//");
             var isAbsoluteUrl = url.StartsWith(@"http") || isAbsoluteWithoutProtocol;
 
             // special handling for relative urls, because of ParseQueryString limitation (it is working only with absolute uris)
-            var tempUri = isAbsoluteUrl 
-                ? new Uri(isAbsoluteWithoutProtocol ? "http:" + url : url, UriKind.Absolute) 
-                : new Uri(new Uri("http://unknown/", UriKind.Absolute), url);
+            var absoluteUri = isAbsoluteUrl
+                ? new Uri(isAbsoluteWithoutProtocol ? "http:" + url : url, UriKind.Absolute)
+                : new Uri(new Uri("http://unknown/", UriKind.Absolute), url); // generate temp/dummy absolute uri, just for use with ParseQueryString
 
-            // if the url already has some params we should take that and split it into it's pieces
-            var queryString = tempUri.ParseQueryString();
+            return absoluteUri;
+        }
 
-            // our new params would update existing queryString params or append new param to queryString
-            queryParams.ForEach(param => queryString.Set(param.Key, param.Value));
-
+        private static string GetUrlWithUpdatedQueryString(string url, Uri tempUri, NameValueCollection queryString)
+        {
             var newQueryString = "?" + queryString;
 
             // check for old query string to replace

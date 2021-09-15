@@ -81,7 +81,6 @@ namespace ToSic.Sxc.Dnn.Services
         private int ManualFeatures(DnnHtmlPage dnnPage, IList<IPageFeature> feats)
         {
             // New in 12.04 - Add features which have HTML only
-            // Todo STV: Repeat this in Oqtane
             // In the page the code would be like this:
             // var pageService = GetService<ToSic.Sxc.Web.IPageService>();
             // pageService.Activate("fancybox4");
