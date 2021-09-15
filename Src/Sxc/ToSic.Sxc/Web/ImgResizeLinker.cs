@@ -2,23 +2,24 @@
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Web.Images;
 
 namespace ToSic.Sxc.Web
 {
     [PrivateApi]
-    public class ImgResizeLinker: HasLog<ImgResizeLinker>
+    public class ImgResizeLinker: ImageLinkerBase // HasLog
     {
         internal const int MaxSize = 3200;
         internal const int MaxQuality = 100;
 
-        public bool Debug = false;
+        //public bool Debug = false;
 
         public ImgResizeLinker() : base($"{Constants.SxcLogName}.ImgRes")
         {
         }
 
 
-        internal Tuple<int, int> FigureOutBestWidthAndHeight(object width, object height, object factor, object aspectRatio, ICanGetNameNotFinal getSettings)
+        internal override Tuple<int, int> FigureOutBestWidthAndHeight(object width, object height, object factor, object aspectRatio, ICanGetNameNotFinal getSettings)
         {
             // Try to pre-process parameters and prefer them
             var parms = new Tuple<int?, int?>(IntOrNull(width), IntOrNull(height));
@@ -59,7 +60,7 @@ namespace ToSic.Sxc.Web
 
 
 
-        internal string KeepBestParam(object given, object setting)
+        internal override string KeepBestParam(object given, object setting)
         {
             if (given == null && setting == null) return null;
             var strGiven = RealStringOrNull(given);
@@ -68,7 +69,7 @@ namespace ToSic.Sxc.Web
             return strSetting;
         }
 
-        internal string RealStringOrNull(object value)
+        internal override string RealStringOrNull(object value)
         {
             if (value == null) return null;
             var strValue = value.ToString();
@@ -80,7 +81,7 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        internal int? IntOrNull(object value)
+        internal override int? IntOrNull(object value)
         {
             if (value == null) return null;
             if (value is int intVal ) return intVal;
