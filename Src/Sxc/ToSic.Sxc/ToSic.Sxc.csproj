@@ -4,10 +4,10 @@
     <TargetFrameworks>net451;netstandard2.0</TargetFrameworks>
     <RootNamespace>ToSic.Sxc</RootNamespace>
     <AssemblyName>ToSic.Sxc</AssemblyName>
-    <Version>12.04.01</Version>
+    <Version>12.05.00</Version>
     <!-- This assembly must NOT be deterministic, as the build version is used somewhere -->
     <!-- It's the only assembly where this matters -->
-    <AssemblyVersion>12.04.01.*</AssemblyVersion>
+    <AssemblyVersion>12.05.00.*</AssemblyVersion>
     <Deterministic>false</Deterministic>
     <NoWarn>7035</NoWarn>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>

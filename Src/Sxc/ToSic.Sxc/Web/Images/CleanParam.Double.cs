@@ -6,56 +6,19 @@ using System.Threading.Tasks;
 
 namespace ToSic.Sxc.Web
 {
-    internal static class CleanParam
+    internal static partial class CleanParam
     {
-        internal static string RealStringOrNull(object value)
-        {
-            if (value == null) return null;
-            if (value is string strValue) return strValue;
-            if (!value.GetType().IsValueType) return null;
 
-            // Only do this for value types
-            strValue = value.ToString();
-            return string.IsNullOrEmpty(strValue) ? null : strValue;
-        }
-
-        /// <summary>
-        /// Check if an object
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        internal static int? IntOrNull(object value)
-        {
-            if (value is null) return null;
-            if (value is int intVal) return intVal;
-
-            var floatVal = FloatOrNull(value);
-            if (floatVal is null) return null;
-
-            var rounded = (int)Math.Round(floatVal.Value);
-            if (rounded < 1) return 0;
-            return rounded;
-        }
-
-
-        internal static int? IntOrZeroAsNull(object value)
-        {
-            var val = IntOrNull(value);
-            if (val == 0) return null;
-            return val;
-        }
-
-
-        internal static float? FloatOrNull(object value)
+        internal static double? DoubleOrNull(object value)
         {
             if (value is null) return null;
             if (value is float floatVal) return floatVal;
-            if (value is double dVal) return (float)dVal;
+            if (value is double dVal) return dVal;
 
             var strValue = RealStringOrNull(value);
             if (strValue == null) return null;
             if (!double.TryParse(strValue, out var doubleValue)) return null;
-            return (float)doubleValue;
+            return doubleValue;
         }
 
         internal static double? DoubleOrNullWithCalculation(object value)
@@ -79,10 +42,10 @@ namespace ToSic.Sxc.Web
                 }
             }
 
-            return FloatOrNull(value);
+            return DoubleOrNull(value);
         }
 
-        internal static bool FNearZero(float f) => Math.Abs(f) <= 0.01;
+        //internal static bool FNearZero(float f) => Math.Abs(f) <= 0.01;
         internal static bool DNearZero(double f) => Math.Abs(f) <= 0.01;
     }
 }

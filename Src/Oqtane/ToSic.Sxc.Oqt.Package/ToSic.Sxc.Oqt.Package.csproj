@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
-    <Version>12.04.01</Version>
+    <Version>12.05.00</Version>
   </PropertyGroup>
 
   <ItemGroup>

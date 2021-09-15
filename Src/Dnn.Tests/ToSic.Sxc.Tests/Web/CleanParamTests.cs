@@ -11,23 +11,23 @@ namespace ToSic.Sxc.Tests.Web
         public void FloatOrNull()
         {
             // Expected Nulls
-            Assert.AreEqual(null, CleanParam.FloatOrNull(null), "null");
-            Assert.AreEqual(null, CleanParam.FloatOrNull(new object()), "null");
+            Assert.AreEqual(null, CleanParam.DoubleOrNull(null), "null");
+            Assert.AreEqual(null, CleanParam.DoubleOrNull(new object()), "null");
 
             // Expected Floats from other number formats
-            Assert.AreEqual(0f, CleanParam.FloatOrNull(0d), "double zero");
-            Assert.AreEqual(0f, CleanParam.FloatOrNull(0f), "float zero");
-            Assert.AreEqual(1.1f, CleanParam.FloatOrNull(1.1f), "float 1.1");
-            Assert.AreEqual(1.1f, CleanParam.FloatOrNull(1.1d), "double 1.1");
+            Assert.AreEqual(0f, CleanParam.DoubleOrNull(0d), "double zero");
+            Assert.AreEqual(0f, CleanParam.DoubleOrNull(0f), "float zero");
+            Assert.AreEqual(1.1f, CleanParam.DoubleOrNull(1.1f), "float 1.1");
+            Assert.AreEqual(1.1f, CleanParam.DoubleOrNull(1.1d), "double 1.1");
 
             // Expected Floats
-            Assert.AreEqual(0f, CleanParam.FloatOrNull(0), "int zero");
-            Assert.AreEqual(0f, CleanParam.FloatOrNull("0"), "string zero");
-            Assert.AreEqual(0f, CleanParam.FloatOrNull("0.0"), "string 0.0");
-            Assert.AreEqual(7f, CleanParam.FloatOrNull(7), "int 7");
-            Assert.AreEqual(7f, CleanParam.FloatOrNull("7"), "string 7");
-            Assert.AreEqual(7.1f, CleanParam.FloatOrNull("7.1"), "string 7.1");
-            Assert.AreEqual(6.9f, CleanParam.FloatOrNull("6.9"), "string 6.9");
+            Assert.AreEqual(0f, CleanParam.DoubleOrNull(0), "int zero");
+            Assert.AreEqual(0f, CleanParam.DoubleOrNull("0"), "string zero");
+            Assert.AreEqual(0f, CleanParam.DoubleOrNull("0.0"), "string 0.0");
+            Assert.AreEqual(7f, CleanParam.DoubleOrNull(7), "int 7");
+            Assert.AreEqual(7f, CleanParam.DoubleOrNull("7"), "string 7");
+            Assert.AreEqual(7.1f, CleanParam.DoubleOrNull("7.1"), "string 7.1");
+            Assert.AreEqual(6.9f, CleanParam.DoubleOrNull("6.9"), "string 6.9");
         }
 
         [TestMethod]
@@ -123,11 +123,11 @@ namespace ToSic.Sxc.Tests.Web
         [TestMethod]
         public void FNearZero()
         {
-            Assert.IsTrue(CleanParam.FNearZero(0));
-            Assert.IsTrue(CleanParam.FNearZero(0.0001f));
-            Assert.IsTrue(CleanParam.FNearZero(-0.009f));
-            Assert.IsFalse(CleanParam.FNearZero(0.2f));
-            Assert.IsFalse(CleanParam.FNearZero(2f));
+            Assert.IsTrue(CleanParam.DNearZero(0));
+            Assert.IsTrue(CleanParam.DNearZero(0.0001f));
+            Assert.IsTrue(CleanParam.DNearZero(-0.009f));
+            Assert.IsFalse(CleanParam.DNearZero(0.2f));
+            Assert.IsFalse(CleanParam.DNearZero(2f));
         }
 
     }

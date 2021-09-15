@@ -1,6 +1,7 @@
 using Oqtane.Models;
 using Oqtane.Modules;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Oqt.Content
 {
     public class ModuleInfo : IModule
@@ -17,19 +18,35 @@ namespace ToSic.Sxc.Oqt.Content
          * 12-04-01 -  -  - Nothing yet
          */
 
-        public ModuleDefinition ModuleDefinition => new ModuleDefinition
+        internal static ModuleDefinition BuildModuleDefinition(string name, string description) => new ModuleDefinition
         {
-            Name = "Content",
-            Description = "2sxc helps create designed, cross-platform content",
-            Version = "12.04.01",
+            Name = name, // "App",
+            Description = description, // "2sxc helps create designed, cross-platform content",
+            Version = "12.05.00",
             ServerManagerType = "ToSic.Sxc.Oqt.Server.Manager.SxcManager, ToSic.Sxc.Oqtane.Server",
             // This must contain all versions with a SQL script and current/latest version
             // list versions with sql scripts in \ToSic.Sxc.Oqt.Server\Scripts\
             // Always keep this in sync wth the App and Content ModuleInfo.cs
-            ReleaseVersions = "0.0.1,12.00.00,12.02.01,12.04.01",
+            ReleaseVersions = "0.0.1,12.00.00,12.02.01,12.05.00",
             Dependencies = "ToSic.Sxc.Oqtane.Shared",
             Categories = "Common",
             //Runtimes = "Server",
         };
+
+        public ModuleDefinition ModuleDefinition => BuildModuleDefinition("Content", "Text/Image layouts using structured content");
+        //    new ModuleDefinition
+        //{
+        //    Name = "Content",
+        //    Description = "2sxc helps create designed, cross-platform content",
+        //    Version = "12.05.00",
+        //    ServerManagerType = "ToSic.Sxc.Oqt.Server.Manager.SxcManager, ToSic.Sxc.Oqtane.Server",
+        //    // This must contain all versions with a SQL script and current/latest version
+        //    // list versions with sql scripts in \ToSic.Sxc.Oqt.Server\Scripts\
+        //    // Always keep this in sync wth the App and Content ModuleInfo.cs
+        //    ReleaseVersions = "0.0.1,12.00.00,12.02.01,12.05.00",
+        //    Dependencies = "ToSic.Sxc.Oqtane.Shared",
+        //    Categories = "Common",
+        //    //Runtimes = "Server",
+        //};
     }
 }

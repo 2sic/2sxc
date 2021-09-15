@@ -9,15 +9,13 @@ namespace ToSic.Sxc.Web.Images
 {
     public abstract class ImageLinkerBase: HasLog<ImageLinkerBase>
     {
-        protected ImageLinkerBase(string logName) : base(logName)
-        {
-
-
-        }
+        protected ImageLinkerBase(string logName) : base(logName) { }
 
         public bool Debug = false;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Make sure this is in sync with the Link.Image
+        /// </summary>
         public string Image(string url = null,
             object settings = null,
             object factor = null,
@@ -47,11 +45,13 @@ namespace ToSic.Sxc.Web.Images
 
             // Special case, if the settings are just an anonymous object
             // In that case try to convert to a Dynamic object
-            if (getSettings is null && !(settings is null))
-            {
-                if (Debug) Log.Add($"Conversion to {nameof(ICanGetNameNotFinal)} failed, will try to convert automatically");
-                getSettings = new DynamicReadObject(settings, true);
-            }
+            // Not active for now, as of now it must always be done with AsDynamic(...)
+            // Reason is that we're not sure if this would have a performance overhead we would like to avoid
+            //if (getSettings is null && !(settings is null))
+            //{
+            //    if (Debug) Log.Add($"Conversion to {nameof(ICanGetNameNotFinal)} failed, will try to convert automatically");
+            //    getSettings = new DynamicReadObject(settings, true);
+            //}
 
             var resizedNew = FigureOutBestWidthAndHeight(width, height, factor, aspectRatio, getSettings);
 
@@ -59,8 +59,8 @@ namespace ToSic.Sxc.Web.Images
 
             // Aspects which aren't affected by scale
             var qFinal = IntOrZeroAsNull(quality) ?? IntOrZeroAsNull(getSettings?.Get("Quality")) ?? 0;
-            string mToUse = KeepBestParam(resizeMode, getSettings?.Get("ResizeMode"));
-            string sToUse = KeepBestParam(scaleMode, getSettings?.Get("ScaleMode"));
+            string mToUse = KeepBestString(resizeMode, getSettings?.Get("ResizeMode"));
+            string sToUse = KeepBestString(scaleMode, getSettings?.Get("ScaleMode"));
 
             var resizer = new List<KeyValuePair<string, string>>();
             ImgAddIfRelevant(resizer, "w", resizedNew.Item1, "0");
@@ -99,8 +99,6 @@ namespace ToSic.Sxc.Web.Images
 
         internal abstract Tuple<int, int> FigureOutBestWidthAndHeight(object width, object height, object factor,
             object aspectRatio, ICanGetNameNotFinal getSettings);
-
-        internal abstract string KeepBestParam(object given, object setting);
 
         #endregion
     }

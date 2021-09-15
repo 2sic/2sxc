@@ -57,19 +57,6 @@ namespace ToSic.Sxc.Web
 
 
 
-
-
-        internal override string KeepBestParam(object given, object setting)
-        {
-            if (given == null && setting == null) return null;
-            var strGiven = RealStringOrNull(given);
-            if (strGiven != null) return strGiven;
-            var strSetting = RealStringOrNull(setting);
-            return strSetting;
-        }
-
-
-
         internal Tuple<int, int> Rescale(Tuple<int, int> dims, double factor, double aspectRatio, bool scaleW, bool scaleH)
         {
             var maybeLog = Debug ? Log : null;
