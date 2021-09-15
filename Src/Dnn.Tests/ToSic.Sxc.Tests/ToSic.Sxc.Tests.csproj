@@ -56,6 +56,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\eav-server\packages\MSTest.TestFramework.2.0.0\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
     </Reference>
@@ -67,14 +68,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adam\AdamSecurity.cs" />
+    <Compile Include="DynamicData\DynamicReadObjectTest.cs" />
     <Compile Include="PageFeatures\SimpleFeatureManagement.cs" />
     <Compile Include="PageProperty\UpdatePropertyTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Web\LinkImageBasicTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj">
+      <Project>{82f94588-269b-4cdd-98d1-d5cb14c39090}</Project>
+      <Name>ToSic.Eav.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj">
       <Project>{5a75cd35-99f4-4cf0-944a-dc0f5d68b430}</Project>
       <Name>ToSic.Eav.ImportExport</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Testing.Shared\ToSic.Testing.Shared.csproj">
+      <Project>{41243C6D-2D10-4285-8AF2-719497AE00DB}</Project>
+      <Name>ToSic.Testing.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj">
       <Project>{5d87eb0c-bf67-4814-a0ff-d96256c9b852}</Project>

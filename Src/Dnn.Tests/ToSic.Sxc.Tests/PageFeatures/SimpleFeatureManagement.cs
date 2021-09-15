@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Tests.PageFeatures
         [TestMethod]
         public void AddFeatures()
         {
-            var fm = new Web.PageFeatures.PageFeaturesManager();
+            var fm = new Sxc.Web.PageFeatures.PageFeaturesManager();
 
             //fm.Register(new PageFeature("turnOn", "turnOn JS"));
 
