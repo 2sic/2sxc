@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using ToSic.Eav.Logging;
+using static ToSic.Razor.Blade.Tag;
 
 namespace ToSic.Sxc.Web.WebApi.System
 {
@@ -31,7 +32,7 @@ namespace ToSic.Sxc.Web.WebApi.System
                 {
                     var log = set.Take(position).LastOrDefault();
                     msg += log == null
-                        ? p("log is null")
+                        ? P("log is null").ToString()
                         : DumpTree($"Log for {key}[{position}]", log);
                 }
                 else

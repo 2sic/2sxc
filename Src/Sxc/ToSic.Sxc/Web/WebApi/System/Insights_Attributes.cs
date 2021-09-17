@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using ToSic.Eav.Data;
+using static ToSic.Razor.Blade.Tag;
 
 namespace ToSic.Sxc.Web.WebApi.System
 {
@@ -15,31 +16,31 @@ namespace ToSic.Sxc.Web.WebApi.System
 
             Log.Add($"debug app attributes for {appId} and {type}");
             var typ = AppState(appId).GetContentType(type);
-            //var pkg = appRead.Package;
 
-            var msg = h1($"Attributes for {typ.Name} ({typ.StaticName}) in {appId}\n");
+            var msg = H1($"Attributes for {typ.Name} ({typ.StaticName}) in {appId}\n").ToString();
             try
             {
                 Log.Add("getting content-type stats");
                 var attribs = typ.Attributes;
-                msg += p($"attribs: {attribs.Count}\n");
-                msg += "<table id='table'><thead>"
-                    + tr(new[] { "#", "Id", "Name", "Type", "Input", "IsTitle", "Metadata", "Permissions" }, true)
-                    + "</thead>"
+                msg += P($"attribs: {attribs.Count}\n");
+                msg += "<table id='table'>"
+                    + HeadFields( "#", "Id", "Name", "Type", "Input", "IsTitle", "Metadata", "Permissions" )
                     + "<tbody>";
                 var count = 0;
                 foreach (var att in attribs)
                 {
-                    msg = msg + tr(new[] {
+                    msg = msg + RowFields(
                         (++count).ToString(),
                         att.AttributeId.ToString(),
                         att.Name,
                         att.Type,
                         att.InputType(),
                         att.IsTitle.ToString(),
-                        a($"{att.Metadata.Count()}", $"attributemetadata?appid={appId}&type={type}&attribute={att.Name}"),
-                        a($"{att.Metadata.Permissions.Count()}", $"attributepermissions?appid={appId}&type={type}&attribute={att.Name}")
-                          });
+                        A(att.Metadata.Count())
+                            .Href($"attributemetadata?appid={appId}&type={type}&attribute={att.Name}"),
+                        A($"{att.Metadata.Permissions.Count()}")
+                            .Href($"attributepermissions?appid={appId}&type={type}&attribute={att.Name}")
+                    );
                 }
                 msg += "</tbody>";
                 msg += "</table>";
@@ -66,7 +67,7 @@ namespace ToSic.Sxc.Web.WebApi.System
             var att = typ.Attributes.First(a => a.Name == attribute)
                       ?? throw CreateBadRequest($"can't find attribute {attribute}");
 
-            var msg = h1($"Attribute Metadata for {typ.Name}.{attribute} in {appId}\n");
+            var msg = H1($"Attribute Metadata for {typ.Name}.{attribute} in {appId}\n").ToString();
             var metadata = att.Metadata.ToList();
 
             return MetadataTable(msg, metadata);
@@ -82,7 +83,7 @@ namespace ToSic.Sxc.Web.WebApi.System
             var att = typ.Attributes.First(a => a.Name == attribute)
                       ?? throw CreateBadRequest($"can't find attribute {attribute}");
 
-            var msg = h1($"Attribute Permissions for {typ.Name}.{attribute} in {appId}\n");
+            var msg = H1($"Attribute Permissions for {typ.Name}.{attribute} in {appId}\n").ToString();
             var metadata = att.Metadata.Permissions.Select(p => p.Entity).ToList();
 
             return MetadataTable(msg, metadata);
