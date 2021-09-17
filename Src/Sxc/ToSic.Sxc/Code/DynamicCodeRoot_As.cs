@@ -106,7 +106,7 @@ namespace ToSic.Sxc.Code
                 case null:
                     return new List<dynamic>();
                 case IDataSource dsEntities:
-                    return AsList(dsEntities[Eav.Constants.DefaultStreamName]);
+                    return AsList(dsEntities.List); // [Eav.Constants.DefaultStreamName]);
                 case IEnumerable<IEntity> iEntities:
                     return iEntities.Select(e => AsDynamic(e));
                 case IEnumerable<IDynamicEntity> dynIDynEnt:
