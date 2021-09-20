@@ -209,7 +209,7 @@ namespace ToSic.Sxc.Web.WebApi.System
             if (e.Elapsed == TimeSpan.Zero) return "";
             var seconds = e.Elapsed.TotalSeconds;
             var ms = seconds * 1000;
-            var time = ms < 1000 ? $"{ms}ms" : $"{seconds}s";
+            var time = ms < 1000 ? $"{ms:##.####}ms" : $"{seconds:##.####}s";
             return HtmlEncode($" ⌚ {time} ");
         }
     }
