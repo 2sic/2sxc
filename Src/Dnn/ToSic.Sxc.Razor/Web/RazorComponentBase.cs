@@ -42,8 +42,8 @@ namespace ToSic.Sxc.Web
             if (!(parentPage is RazorComponentBase typedParent)) return;
 
             // New in v12: the HtmlHelper must know about this page from now on, so we can't re-use the one from the parent
-            Html = new HtmlHelper(this); // typedParent.Html;
-            
+            Html = new HtmlHelper(this);
+
             // Forward the context
             _DynCodeRoot = typedParent._DynCodeRoot;
             try
@@ -53,6 +53,11 @@ namespace ToSic.Sxc.Web
         }
 
         #region Compile Helpers
+
+        /// <summary>
+        /// Consistency across platforms - because Path exists in .net core, but in .net Framework it has a different name.
+        /// </summary>>
+        public string Path => VirtualPath;
 
         public string CreateInstancePath { get; set; }
 

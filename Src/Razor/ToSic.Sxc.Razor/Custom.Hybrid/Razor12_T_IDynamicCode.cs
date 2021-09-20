@@ -11,9 +11,10 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Web;
 
+// ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
 {
-    public partial class Razor12<TModel> : IDynamicCode
+    public partial class Razor12<TModel>
     {
 
         #region Content, Header, etc. and List

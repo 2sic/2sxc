@@ -19,8 +19,8 @@ namespace ToSic.Sxc.Web.WebApi.System
 
         private const string JsTableSortCdn = "https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.0.2/";
 
-        private static string JsTableSort(string id = "table")
-            => Tag.Script().Src(JsTableSortCdn + "tablesort.min.js").ToString()
+        private static TagBase JsTableSort(string id = "table")
+            => Tag.Script().Src(JsTableSortCdn + "tablesort.min.js")
                + Tag.Script().Src(JsTableSortCdn + "sorts/tablesort.number.min.js")
                + Tag.Script($"new Tablesort(document.getElementById('{id}'));");
 

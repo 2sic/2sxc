@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Web.WebApi.System
 
             var typ = appRead.ContentTypes.Get(type);
 
-            var msg = H1($"Entities for {type} ({typ?.Name}/{typ?.StaticName}) in {appId}\n").ToString();
+            var msg = "" + H1($"Entities for {type} ({typ?.Name}/{typ?.StaticName}) in {appId}\n");
             try
             {
                 Log.Add("getting content-type stats");
@@ -123,7 +123,7 @@ namespace ToSic.Sxc.Web.WebApi.System
 
             var msg = H1($"Entity Debug for {entity} in {appId}\n")
                       + Tags.Nl2Br("\n\n\n")
-                      + Textarea(json).Rows("20").Cols("100");// TagOld("textarea", json, " rows='20' cols='100' ");
+                      + Textarea(json).Rows("20").Cols("100");
 
             return msg;
         }
