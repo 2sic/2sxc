@@ -75,6 +75,8 @@
     <Compile Include="Web\LinkImageBasicTests.cs" />
     <Compile Include="Web\LinkImageInternalsTests.cs" />
     <Compile Include="Web\CleanParamTests.cs" />
+    <Compile Include="Web\LinkImageSettingsTests.cs" />
+    <Compile Include="Web\LinkImageTestHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj">

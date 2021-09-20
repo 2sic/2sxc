@@ -21,7 +21,8 @@ namespace ToSic.Sxc.Web
         internal override Tuple<int, int> FigureOutBestWidthAndHeight(object width, object height, object factor, object aspectRatio, ICanGetNameNotFinal getSettings)
         {
             // Try to pre-process parameters and prefer them
-            var parms = new Tuple<int?, int?>(IntOrZeroAsNull(width), IntOrZeroAsNull(height));
+            // The manually provided values must remember Zeros because they deactivate presets
+            var parms = new Tuple<int?, int?>(IntOrNull(width), IntOrNull(height));
             IfDebugLogPair("Params", parms);
 
             // Pre-Clean the values - all as strings

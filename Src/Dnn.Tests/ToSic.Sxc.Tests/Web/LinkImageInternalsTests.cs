@@ -2,6 +2,7 @@
 using System;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web;
+using static ToSic.Sxc.Tests.Web.LinkImageTestHelpers;
 
 namespace ToSic.Sxc.Tests.Web
 {
@@ -72,6 +73,13 @@ namespace ToSic.Sxc.Tests.Web
             FigureOutWHFactors(0.5, 0.5);
         }
 
+
+        [TestMethod]
+        public void FigureOutBestWH_SettingsWithNeutralizer()
+        {
+            Assert.IsTrue(TestBestWH(0, 0, 0, null, null, null, ToDyn(new { Width = 700 })));
+        }
+
         private void FigureOutWHFactors(double factor, double fResult)
         {
             Console.WriteLine("Run with Factor: " + factor);
@@ -82,12 +90,10 @@ namespace ToSic.Sxc.Tests.Web
             Assert.IsTrue(TestBestWH((int)(fResult * s), (int)(fResult * s), factor: factor, settings: ToDyn(new { Width = s, Height = s })), $"W/H f:{factor}");
         }
 
-        private DynamicReadObject ToDyn(object o) => new DynamicReadObject(o);
-
 
         private bool TestBestWH(int expW, int expH, object width = null, object height = null, object factor = null, object ar = null, ICanGetNameNotFinal settings = null)
         {
-            var linker = new ImgResizeLinker();
+            var linker = GetLinker();
 
             var t1 = linker.FigureOutBestWidthAndHeight(width, height, factor, ar, settings);
             var ok = Equals(new Tuple<int, int>(expW, expH), t1);

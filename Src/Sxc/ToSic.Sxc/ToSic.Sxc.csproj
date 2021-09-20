@@ -70,8 +70,4 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Conversion\" />
-  </ItemGroup>
-
 </Project>

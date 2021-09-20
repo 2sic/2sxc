@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Web;
+using static ToSic.Sxc.Tests.Web.LinkImageTestHelpers;
 
 namespace ToSic.Sxc.Tests.Web
 {
@@ -28,7 +29,7 @@ namespace ToSic.Sxc.Tests.Web
         [TestMethod]
         public void BasicWidthAndHeight()
         {
-            var linker = new ImgResizeLinker();
+            var linker = GetLinker();
 
             Assert.AreEqual("test.jpg?w=200", linker.Image("test.jpg", width: 200));
             Assert.AreEqual("test.jpg?h=200", linker.Image("test.jpg", height: 200));
@@ -38,7 +39,7 @@ namespace ToSic.Sxc.Tests.Web
         [TestMethod]
         public void BasicWidthAndAspectRatio()
         {
-            var linker = new ImgResizeLinker();
+            var linker = GetLinker();
 
             Assert.AreEqual("test.jpg?w=200", linker.Image("test.jpg", width: 200, aspectRatio: 0));
             Assert.AreEqual("test.jpg?w=200&h=200", linker.Image("test.jpg", width: 200, aspectRatio: 1));
@@ -53,7 +54,7 @@ namespace ToSic.Sxc.Tests.Web
         [TestMethod]
         public void BasicWidthAndAspectRatioString()
         {
-            var linker = new ImgResizeLinker();
+            var linker = GetLinker();
 
             // Simple Strings
             Assert.AreEqual("test.jpg?w=200", linker.Image("test.jpg", width: 200, aspectRatio: "0"));
@@ -66,7 +67,7 @@ namespace ToSic.Sxc.Tests.Web
         [TestMethod]
         public void BasicWidthAndAspectRatioStringWithSeparator()
         {
-            var linker = new ImgResizeLinker();
+            var linker = GetLinker();
 
             // Simple Strings
             Assert.AreEqual("test.jpg?w=200", linker.Image("test.jpg", width: 200, aspectRatio: "0"));
@@ -87,7 +88,7 @@ namespace ToSic.Sxc.Tests.Web
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void ErrorHeightAndAspectRatio()
         {
-            var linker = new ImgResizeLinker();
+            var linker = GetLinker();
 
             linker.Image("test.jpg", height: 200, aspectRatio: 1);
         }
