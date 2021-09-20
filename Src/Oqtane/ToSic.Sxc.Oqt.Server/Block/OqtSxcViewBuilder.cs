@@ -1,37 +1,42 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Oqtane.Models;
-using Oqtane.Shared;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Beta.LightSpeed;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
-using ToSic.Sxc.Web;
+using Page = Oqtane.Models.Page;
 
 namespace ToSic.Sxc.Oqt.Server.Block
 {
     [PrivateApi]
     public class OqtSxcViewBuilder : HasLog, ISxcOqtane
     {
-        public IClientDependencyOptimizer OqtClientDependencyOptimizer { get; }
 
         #region Constructor and DI
 
-        public OqtSxcViewBuilder(OqtAssetsAndHeaders assetsAndHeaders, OqtState oqtState/*, IClientDependencyOptimizer oqtClientDependencyOptimizer*/) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
+        public OqtSxcViewBuilder(
+            OqtAssetsAndHeaders assetsAndHeaders, 
+            IContextOfBlock contextOfBlockEmpty, 
+            BlockFromModule blockModuleEmpty,
+            IContextResolver contextResolverForLookUps
+        ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
         {
+            _contextOfBlockEmpty = contextOfBlockEmpty;
+            _blockModuleEmpty = blockModuleEmpty;
+            _contextResolverForLookUps = contextResolverForLookUps;
             AssetsAndHeaders = assetsAndHeaders;
-            _oqtState = oqtState.Init(Log);
-            //OqtClientDependencyOptimizer = oqtClientDependencyOptimizer.Init(Log);
-            // add log to history!
             History.Add("oqt-view", Log);
         }
 
         public OqtAssetsAndHeaders AssetsAndHeaders { get; }
-        private readonly OqtState _oqtState;
+        private readonly IContextOfBlock _contextOfBlockEmpty;
+        private readonly BlockFromModule _blockModuleEmpty;
+        private readonly IContextResolver _contextResolverForLookUps;
 
         #endregion
 
@@ -100,8 +105,25 @@ namespace ToSic.Sxc.Oqt.Server.Block
         internal Site Site;
         internal Page Page;
         internal Module Module;
-        internal IBlock Block => _block ??= _oqtState.GetBlockOfModule(Page.PageId, Module);
+        internal IBlock Block
+        {
+            get
+            {
+                if (_blockLoaded) return _block;
+                _blockLoaded = true;
+                var ctx = _contextOfBlockEmpty.Init(Page.PageId, Module, Log);
+                _block = _blockModuleEmpty.Init(ctx, Log);
+                
+                // Special for Oqtane - normally the IContextResolver is only used in WebAPIs
+                // But the ModuleLookUp and PageLookUp also rely on this, so the IContextResolver must know about this for now
+                // In future, we should find a better way for this, so that IContextResolver is really only used on WebApis
+                _contextResolverForLookUps.AttachRealBlock(() => _block);
+                return _block;
+            }
+        }
+
         private IBlock _block;
+        private bool _blockLoaded;
 
         #endregion
 

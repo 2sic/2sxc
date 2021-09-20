@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Oqt.Server.LookUps
 
         #endregion
 
-        public ILookUpEngine GetLookUpEngine(int instanceId/*, ILog parentLog*/)
+        public ILookUpEngine GetLookUpEngine(int instanceId)
         {
             var providers = new LookUpEngine(Log);
 

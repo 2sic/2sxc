@@ -59,6 +59,8 @@ namespace ToSic.Sxc.Dnn.WebApi
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
+        // TODO: this is probably old code, and should be merged centrally to use the generic implementation
+        // and be the same for Dnn and Oqtane
         private static List<KeyValuePair<string, string>> GetOverrideParams(HttpRequestMessage request)
         {
             List<KeyValuePair<string, string>> urlParams = null;

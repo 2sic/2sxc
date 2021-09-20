@@ -22,7 +22,7 @@ namespace ToSic.Sxc.WebApi
             base.Initialize(controllerContext);
             SharedContextResolver = GetService<IContextResolver>();
             SharedContextResolver.AttachRealBlock(() => BlockOfRequest);
-            SharedContextResolver.AttachBlockContext(() => BlockOfRequest?.Context);
+            //SharedContextResolver.AttachBlockContext(() => BlockOfRequest?.Context);
         }
 
         protected IContextResolver SharedContextResolver;

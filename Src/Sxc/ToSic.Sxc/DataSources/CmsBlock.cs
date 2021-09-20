@@ -47,7 +47,7 @@ namespace ToSic.Sxc.DataSources
         /// The instance-id of the CmsBlock (2sxc instance, DNN ModId). <br/>
         /// It's named Instance-Id to be more neutral as we're opening it to other platforms
         /// </summary>
-        public int? InstanceId
+        public int? ModuleId
         {
             get
             {
@@ -69,11 +69,43 @@ namespace ToSic.Sxc.DataSources
         }
 
         private ImmutableArray<IEntity> GetContent()
-            => GetStream(BlockConfiguration.Content, View.ContentItem,
+        {
+            // First check if BlockConfiguration works - to give better error if not
+            if (GetErrorStreamIfConfigOrViewAreMissing(out var immutableArray)) 
+                return immutableArray;
+
+            return GetStream(BlockConfiguration.Content, View.ContentItem,
                 BlockConfiguration.Presentation, View.PresentationItem, false);
+        }
 
         private ImmutableArray<IEntity> GetHeader()
-            => GetStream(BlockConfiguration.Header, View.HeaderItem,
+        {
+            // First check if BlockConfiguration works - to give better error if not
+            if (GetErrorStreamIfConfigOrViewAreMissing(out var immutableArray)) 
+                return immutableArray;
+
+            return GetStream(BlockConfiguration.Header, View.HeaderItem,
                 BlockConfiguration.HeaderPresentation, View.HeaderPresentationItem, true);
+        }
+
+        private bool GetErrorStreamIfConfigOrViewAreMissing(out ImmutableArray<IEntity> immutableArray)
+        {
+            if (BlockConfiguration == null)
+            {
+                immutableArray = new DataSourceErrorHandling()
+                    .CreateErrorList(title: "CmsBlock Configuration Missing", message: "Cannot find configuration of current CmsBlock");
+                return true;
+            }
+
+            if (View == null)
+            {
+                immutableArray = new DataSourceErrorHandling()
+                    .CreateErrorList(title: "CmsBlock View Missing", message: "Cannot find View configuration of current CmsBlock");
+                return true;
+            }
+
+            return false;
+        }
+
     }
 }

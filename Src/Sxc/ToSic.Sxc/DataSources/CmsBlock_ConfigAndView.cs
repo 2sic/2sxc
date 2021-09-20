@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
@@ -21,10 +20,10 @@ namespace ToSic.Sxc.DataSources
 
             // If we don't have a context, then look it up based on the InstanceId
             Log.Add("need content-group, will construct as cannot use context");
-            if (!InstanceId.HasValue)
+            if (!ModuleId.HasValue)
             {
-                wrapLog("Error, no module-id", null);
-                throw new Exception($"{nameof(LoadBlockConfiguration)} failed because ModuleId is null.");
+                SetError($"{nameof(CmsBlock)} cannot find Block Configuration", $"Neither InstanceContext nor {nameof(ModuleId)} found");
+                return wrapLog("Error, no module-id", null);
             }
 
             var sp = DataSourceFactory.ServiceProvider;
@@ -33,7 +32,7 @@ namespace ToSic.Sxc.DataSources
             var cms = _lazyCmsRuntime.IsValueCreated
                 ? _lazyCmsRuntime.Value
                 : _lazyCmsRuntime.Value.Init(this, userMayEdit, Log);
-            var container = sp.Build<IModule>().Init(InstanceId.Value, Log);
+            var container = sp.Build<IModule>().Init(ModuleId.Value, Log);
             var blockId = container.BlockIdentifier;
             return wrapLog("ok", cms.Blocks.GetOrGeneratePreviewConfig(blockId));
         }

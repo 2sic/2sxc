@@ -1,21 +1,19 @@
-﻿using System;
-using ToSic.Eav.Logging;
+﻿using ToSic.Eav.Logging;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtAppFolder: HasLog<OqtAppFolder>
     {
-        private readonly Lazy<OqtState> _oqtState;
-
-        public OqtAppFolder(Lazy<OqtState> oqtState) : base($"{OqtConstants.OqtLogPrefix}.AppFolder")
-        {
-            _oqtState = oqtState;
-        }
+        // TODO: @STV - pls test, I changed OqtState to use ctxResolver
+        public OqtAppFolder(IContextResolver ctxResolver) : base($"{OqtConstants.OqtLogPrefix}.AppFolder") 
+            => _ctxResolver = ctxResolver;
+        private readonly IContextResolver _ctxResolver;
 
         public string GetAppFolder()
         {
-            var ctx = _oqtState.Value.GetContext();
+            var ctx = _ctxResolver.BlockOrNull();
             return ctx.AppState.Folder;
         }
     }

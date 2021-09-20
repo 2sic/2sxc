@@ -45,7 +45,8 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddScoped<IUser, OqtUser>();
             services.TryAddTransient<IModule, OqtModule>();
             services.TryAddTransient<OqtModule>();
-            services.TryAddScoped<OqtState>();
+            //services.TryAddScoped<OqtState>();
+            services.TryAddTransient<OqtGetBlock>();    // WIP - should replace most of OqtState
             services.TryAddScoped<RequestHelper>();
             //services.TryAddTransient<OqtTempInstanceContext>();
 
