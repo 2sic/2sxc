@@ -64,11 +64,13 @@ namespace ToSic.Sxc.Dnn.Run
             return this;
         }
 
-        private void EnsureSiteIsLoadedWhenDiFails()
+        private bool EnsureSiteIsLoadedWhenDiFails()
         {
-            if (Site.Id != Eav.Constants.NullId) return;
-            Log.Add("TenantId not found. Must be in search mode, will try to find correct portalsettings");
+            var wrapLog = Log.Call<bool>();
+            if (Site.Id != Eav.Constants.NullId && Site.Id != 0) return wrapLog($"Stopped because siteId isn't zero or {Eav.Constants.NullId}", false);
+            Log.Add("TenantId not found. Must be in search mode or something else DI-style failed, will try to find correct portalsettings");
             Site = ZoneMapper.SiteOfApp(AppId);
+            return wrapLog("done", true);
         }
 
         IAppRepositoryLoader IAppRepositoryLoader.Init(int appId, string path, ILog log) => Init(appId, path, log) as IAppRepositoryLoader;
