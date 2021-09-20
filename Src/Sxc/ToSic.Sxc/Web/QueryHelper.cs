@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Net.Http;
-using System.Net.Http.Formatting;
+using System.Web;
 
 namespace ToSic.Sxc.Web
 {
@@ -27,7 +26,7 @@ namespace ToSic.Sxc.Web
             var tempAbsoluteUri = GetTempAbsoluteUri(url);
 
             // if the url already has some params we should take that and split it into it's pieces
-            var queryString = tempAbsoluteUri.ParseQueryString();
+            var queryString = HttpUtility.ParseQueryString(tempAbsoluteUri.Query);
 
             // new params would update existing queryString params or append new param to queryString
             queryParams.ForEach(param => queryString.Set(param.Key, param.Value));
