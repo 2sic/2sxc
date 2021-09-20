@@ -50,7 +50,7 @@
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.CodeAnalysis.dll" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.CodeAnalysis.Razor.dll" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.Extensions.DependencyModel.dll" target="lib\net5.0" />
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\System.Net.Http.Formatting.dll" target="lib\net5.0" />
+    <!--<file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\System.Net.Http.Formatting.dll" target="lib\net5.0" />-->
 
     <file src="..\..\packages\system.data.sqlclient\4.6.0\lib\netcoreapp2.1\System.Data.SqlClient.dll" target="lib\net5.0" />
 
