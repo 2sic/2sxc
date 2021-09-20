@@ -63,6 +63,10 @@ XCOPY "..\..\..\Dependencies\RazorBlade\Debug\netstandard2.0\ToSic.Razor.dll" "%
 XCOPY "..\..\..\Dependencies\RazorBlade\Debug\netstandard2.0\ToSic.Razor.pdb" "%OqtaneBin%" /Y
 
 @Echo(
+@Echo Copy System.Net.Http.Formatting DLLs required by ToSic.Sxc netstandard2.0
+XCOPY "..\..\packages\microsoft.aspnet.webapi.client\5.2.7\lib\netstandard2.0\System.Net.Http.Formatting.dll" "%OqtaneBin%" /Y
+
+@Echo(
 @Echo the target for js, css, json etc.
 @set BuildTarget=c:\Projects\2sxc\oqtane\oqtane.framework\Oqtane.Server\wwwroot\Modules\ToSic.Sxc
 

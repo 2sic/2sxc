@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 
 namespace ToSic.Sxc.Web
 {
