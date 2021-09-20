@@ -2,18 +2,18 @@
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Run;
+using static ToSic.Sxc.LookUp.LookUpConstants;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps
 {
     // TODO: @STV pls test, I changed oqtState to CtxResolver
-    // Afterwards pls Rename to OqtModuleLookUp
-    public class ModuleLookUp : LookUpBase
+    public class OqtModuleLookUp : LookUpBase
     {
         private Module Module { get; set; }
 
-        public ModuleLookUp(IContextResolver ctxResolver)
+        public OqtModuleLookUp(IContextResolver ctxResolver)
         {
-            Name = "Module";
+            Name = SourceModule;
             _ctxResolver = ctxResolver;
         }
 
@@ -40,8 +40,8 @@ namespace ToSic.Sxc.Oqt.Server.LookUps
 
                 return key.ToLowerInvariant() switch
                 {
-                    "id" => $"{Module.ModuleId}",       // Todo: must ensure ID would also work in Dnn
-                    "moduleid" => "Warning: 'PageId' was requested, but the page source can only answer to Id", // warning for compatibility with older Dnn implementation
+                    KeyId => $"{Module.ModuleId}",
+                    OldDnnModuleId => $"Warning: '{OldDnnModuleId}' was requested, but the {nameof(OqtModuleLookUp)} source can only answer to '{KeyId}'",
                     _ => string.Empty
                 };
             }

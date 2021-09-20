@@ -3,6 +3,7 @@ using Oqtane.Repository;
 using Oqtane.Shared;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Oqt.Server.Plumbing;
+using static ToSic.Sxc.LookUp.LookUpConstants;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps
 {
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.LookUps
 
         public SiteLookUp(Lazy<SiteStateInitializer> siteStateInitializer, SiteState siteState, Lazy<SiteRepository> siteRepository)
         {
-            Name = "Site";
+            Name = SourceSite;
             SiteState = siteState;
             _siteStateInitializer = siteStateInitializer;
             _siteRepository = siteRepository;
@@ -25,8 +26,6 @@ namespace ToSic.Sxc.Oqt.Server.LookUps
         {
             if (!_siteStateInitializer.Value.InitIfEmpty()) return null;
             var site = _siteRepository.Value.GetSite(SiteState.Alias.SiteId);
-            //var oqtSite = _serviceProvider.Build<OqtSite>().Init(site);
-
             return site;
         }
 
@@ -38,8 +37,9 @@ namespace ToSic.Sxc.Oqt.Server.LookUps
 
                 return key.ToLowerInvariant() switch
                 {
-                    "id" => $"{Site.SiteId}",
-                    "guid" => $"{Site.SiteGuid}",
+                    KeyId => $"{Site.SiteId}",
+                    KeyGuid => $"{Site.SiteGuid}",
+                    OldDnnSiteId => $"warning: you have requested '{OldDnnSiteId}' which doesn't work in hybrid/oqtane. Use {KeyId}",
                     _ => string.Empty
                 };
             }

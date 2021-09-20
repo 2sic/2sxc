@@ -107,8 +107,8 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             // Lookup
             services.TryAddTransient<QueryStringLookUp>();
             services.TryAddTransient<SiteLookUp>();
-            services.TryAddTransient<PageLookUp>();
-            services.TryAddTransient<ModuleLookUp>();
+            services.TryAddTransient<OqtPageLookUp>();
+            services.TryAddTransient<OqtModuleLookUp>();
             services.TryAddScoped<UserLookUp>();
 
             // Polymorphism Resolvers

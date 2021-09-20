@@ -1,19 +1,19 @@
 ﻿using ToSic.Eav.LookUp;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Run;
+using static ToSic.Sxc.LookUp.LookUpConstants;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps
 {
     // TODO: @STV pls check - not using oqtState any more
-    // Afterwards pls Rename to OqtPageLookUp
-    public class PageLookUp : LookUpBase
+    public class OqtPageLookUp : LookUpBase
     {
         private readonly IContextResolver _ctxResolver;
         protected Oqtane.Models.Page Page { get; set; }
 
-        public PageLookUp(IContextResolver ctxResolver)
+        public OqtPageLookUp(IContextResolver ctxResolver)
         {
-            Name = "Page";
+            Name = SourcePage;
             _ctxResolver = ctxResolver;
         }
 
@@ -34,8 +34,8 @@ namespace ToSic.Sxc.Oqt.Server.LookUps
 
                 return key.ToLowerInvariant() switch
                 {
-                    "id" => $"{Page.PageId}",     // Todo: must ensure id will also work in Dnn implementation
-                    "pageid" => "Warning: 'PageId' was requested, but the page source can only answer to Id", // warning for compatibility with old Dnn implementation
+                    KeyId => $"{Page.PageId}",
+                    OldDnnPageId => $"Warning: '{OldDnnPageId}' was requested, but the {nameof(OqtPageLookUp)} source can only answer to '{KeyId}'",
                     "url" => $"{Page.Url}",
                     _ => string.Empty
                 };
