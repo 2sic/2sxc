@@ -34,7 +34,7 @@ namespace ToSic.Sxc.WebApi.Adam
             return this;
         }
 
-        public IFile SaveInAdam(string dontRelyOnParameterOrder = Parameters.Protector,
+        public IFile SaveInAdam(string noParamOrder = Parameters.Protector,
             Stream stream = null,
             string fileName = null,
             string contentType = null,
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.WebApi.Adam
             string field = null,
             string subFolder = "")
         {
-            Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "SaveInAdam",
+            Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "SaveInAdam",
                 $"{nameof(stream)},{nameof(fileName)},{nameof(contentType)},{nameof(guid)},{nameof(field)},{nameof(subFolder)} (optional)");
 
             if (stream == null || fileName == null || contentType == null || guid == null || field == null)

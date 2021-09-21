@@ -86,7 +86,7 @@ namespace ToSic.Sxc.WebApi
         /// <summary>
         /// See docs of official interface <see cref="IDynamicWebApi"/>
         /// </summary>
-        public Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Parameters.Protector, 
+        public Sxc.Adam.IFile SaveInAdam(string noParamOrder = Eav.Parameters.Protector, 
             Stream stream = null, 
             string fileName = null, 
             string contentType = null, 
@@ -106,11 +106,11 @@ namespace ToSic.Sxc.WebApi
         public string CreateInstancePath { get; set; }
 
         public dynamic CreateInstance(string virtualPath, 
-            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             string name = null, 
             string relativePath = null, 
             bool throwOnError = true) =>
-            _DynCodeRoot.CreateInstance(virtualPath, dontRelyOnParameterOrder, name,
+            _DynCodeRoot.CreateInstance(virtualPath, noParamOrder, name,
                 CreateInstancePath, throwOnError);
     }
 }

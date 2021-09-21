@@ -109,7 +109,7 @@ namespace Custom.Hybrid
         /// See docs of official interface <see cref="IDynamicWebApi"/>
         /// </summary>
         [NonAction]
-        public ToSic.Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = Parameters.Protector,
+        public ToSic.Sxc.Adam.IFile SaveInAdam(string noParamOrder = Parameters.Protector,
             Stream stream = null,
             string fileName = null,
             string contentType = null,
@@ -144,11 +144,11 @@ namespace Custom.Hybrid
 
         [NonAction]
         public dynamic CreateInstance(string virtualPath,
-            string dontRelyOnParameterOrder = Parameters.Protector,
+            string noParamOrder = Parameters.Protector,
             string name = null,
             string relativePath = null,
             bool throwOnError = true) =>
-            _DynCodeRoot.CreateInstance(virtualPath, dontRelyOnParameterOrder, name, CreateInstancePath, throwOnError);
+            _DynCodeRoot.CreateInstance(virtualPath, noParamOrder, name, CreateInstancePath, throwOnError);
 
         #endregion
 

@@ -83,7 +83,7 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc />
         public dynamic CreateInstance(string virtualPath, 
-            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             string name = null,
             string relativePath = null,
             bool throwOnError = true)
@@ -91,7 +91,7 @@ namespace ToSic.Sxc.Code
             var wrapLog = Log.Call<dynamic>();
             // usually we don't have a relative path, so we use the preset path from when this class was instantiated
             relativePath = relativePath ?? CreateInstancePath;
-            var instance = UnwrappedContents?.CreateInstance(virtualPath, dontRelyOnParameterOrder, name,
+            var instance = UnwrappedContents?.CreateInstance(virtualPath, noParamOrder, name,
                 relativePath ?? CreateInstancePath, throwOnError);
             return wrapLog((instance != null).ToString(), instance);
         }

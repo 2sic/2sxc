@@ -11,10 +11,10 @@ namespace ToSic.Sxc.WebApi
 {
     public class CustomApiHelpers
     {
-        public static string FileParamsInitialCheck(string dontRelyOnParameterOrder, bool? download, string virtualPath,
+        public static string FileParamsInitialCheck(string noParamOrder, bool? download, string virtualPath,
             string fileDownloadName, object contents)
         {
-            Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, nameof(File), nameof(download) + "," + nameof(virtualPath) + "," + nameof(fileDownloadName) + "," + nameof(contents));
+            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(File), nameof(download) + "," + nameof(virtualPath) + "," + nameof(fileDownloadName) + "," + nameof(contents));
 
             // Check initial conflicting values
             CheckInitialConflictingValues(virtualPath, contents);

@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <returns></returns>
         public dynamic CreateInstance(string virtualPath,
-            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             string name = null,
             string relativePath = null,
             bool throwOnError = true)
@@ -75,7 +75,7 @@ namespace ToSic.Sxc.Web
             var path = NormalizePath(virtualPath);
             VerifyFileExists(path);
             var result = path.EndsWith(CodeCompiler.CsFileExtension)
-                ? _DynCodeRoot.CreateInstance(path, dontRelyOnParameterOrder, name, null, throwOnError)
+                ? _DynCodeRoot.CreateInstance(path, noParamOrder, name, null, throwOnError)
                 : CreateInstanceCshtml(path);
             return wrapLog("ok", result);
         }

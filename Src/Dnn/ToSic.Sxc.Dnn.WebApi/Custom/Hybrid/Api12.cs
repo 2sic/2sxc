@@ -98,14 +98,14 @@ namespace Custom.Hybrid
 
 
         /// <inheritdoc />
-        public new ToSic.Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = ToSic.Eav.Parameters.Protector,
+        public new ToSic.Sxc.Adam.IFile SaveInAdam(string noParamOrder = ToSic.Eav.Parameters.Protector,
             Stream stream = null,
             string fileName = null,
             string contentType = null,
             Guid? guid = null,
             string field = null,
             string subFolder = "")
-            => base.SaveInAdam(dontRelyOnParameterOrder, stream, fileName, contentType, guid, field, subFolder);
+            => base.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
 
         #endregion
 

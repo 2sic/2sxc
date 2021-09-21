@@ -31,7 +31,7 @@ namespace ToSic.SexyContent.WebApi
         #endregion
 
         
-        public dynamic File(string dontRelyOnParameterOrder = Parameters.Protector, bool? download = null,
+        public dynamic File(string noParamOrder = Parameters.Protector, bool? download = null,
             string virtualPath = null, string contentType = null, string fileDownloadName = null, object contents = null) =>
             throw new NotSupportedException($"This method is not available in the old {nameof(SxcApiController)}. Use a newer base controller from the Custom namespace.");
     }

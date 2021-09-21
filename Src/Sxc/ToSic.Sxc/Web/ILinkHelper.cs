@@ -12,13 +12,13 @@ namespace ToSic.Sxc.Web
         /// <summary>
         /// returns a link to the current page with parameters resolved in a way that DNN wants it
         /// </summary>
-        /// <param name="dontRelyOnParameterOrder">a helper to ensure that you must use named parameters. You shouldn't give it anything, but you must use all others like parameters: "id=47&amp;name=42"</param>
+        /// <param name="noParamOrder">a helper to ensure that you must use named parameters. You shouldn't give it anything, but you must use all others like parameters: "id=47&amp;name=42"</param>
         /// <param name="pageId">optional page ID (TabId) - if not supplied, will use current page</param>
         /// <param name="parameters">the parameters either as "/id/47/name/daniel" or "id=47&amp;name=daniel"</param>
         /// <param name="api">optional api url "api/my?id=something"</param>
         /// <returns></returns>
         string To(
-            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             int? pageId = null,
             string parameters = null,
             string api = null
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Web
         /// <param name="url">The image url. Use an empty string if you want to just get the params for re-use.</param>
         /// <param name="settings">A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings </param>
         /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. It only affects sizes from the settings.</param>
-        /// <param name="dontRelyOnParameterOrder">a helper to ensure that you must use named parameters. You shouldn't give it anything, but you must use all others like parameters: "id=47&amp;name=42"</param>
+        /// <param name="noParamOrder">a helper to ensure that you must use named parameters. You shouldn't give it anything, but you must use all others like parameters: "id=47&amp;name=42"</param>
         /// <param name="width">Optional width parameter. Cannot be used if `factor` is set. Usually takes the default from the `settings`.</param>
         /// <param name="height">Optional height parameter. Can only be 0 if `factor` is set, no not specify a height. Usually takes the default from the `settings`.</param>
         /// <param name="quality">Optional quality parameter. Usually takes the default from the `settings`.</param>
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Web
             string url = null,
             object settings = null,
             object factor = null,
-            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object width = null,
             object height = null,
             object quality = null,

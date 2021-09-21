@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Web.Images
         public string Image(string url = null,
             object settings = null,
             object factor = null,
-            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object width = null,
             object height = null,
             object quality = null,
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Web.Images
             object aspectRatio = null)
         {
             var wrapLog = (Debug ? Log : null).SafeCall($"{nameof(url)}:{url}");
-            Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, $"{nameof(Image)}", $"{nameof(url)},{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
+            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Image)}", $"{nameof(url)},{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
 
             // check common mistakes
             if (aspectRatio != null && height != null)

@@ -20,10 +20,10 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         #region Scripts and CSS includes
 
         /// <inheritdoc/>
-        public string Enable(string noParameterOrder = Eav.Parameters.Protector, bool? js = null, bool? api = null,
+        public string Enable(string noParamOrder = Eav.Parameters.Protector, bool? js = null, bool? api = null,
             bool? forms = null, bool? context = null, bool? autoToolbar = null, bool? styles = null)
         {
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParameterOrder, "Enable", $"{nameof(js)},{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
+            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Enable", $"{nameof(js)},{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
 
             // check if feature enabled - if more than the api is needed
             // extend this list if new parameters are added

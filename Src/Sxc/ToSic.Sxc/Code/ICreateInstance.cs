@@ -21,14 +21,14 @@ namespace ToSic.Sxc.Code
         /// Create an instance of code lying in a file near this
         /// </summary>
         /// <param name="virtualPath">path to the other code file to compile</param>
-        /// <param name="dontRelyOnParameterOrder">dummy parameter to ensure all other parameters are called using named parameters, so that the API can change in future</param>
+        /// <param name="noParamOrder">dummy parameter to ensure all other parameters are called using named parameters, so that the API can change in future</param>
         /// <param name="name">Override the class name to compile - usually not required as it should match the file name</param>
         /// <param name="relativePath">optional relative path, will usually use the <see cref="CreateInstancePath"/></param>
         /// <param name="throwOnError">throw errors if compiling fails, recommended</param>
         /// <returns>An object of the class in the file</returns>
         /// <remarks>Note that the C# code which we are creating an instance of inherits from <see cref="DynamicCode"/> then it will automatically be initialized to support App, AsDynamic etc.</remarks>
         dynamic CreateInstance(string virtualPath, 
-            string dontRelyOnParameterOrder = Eav.Parameters.Protector, 
+            string noParamOrder = Eav.Parameters.Protector, 
             string name = null,
             string relativePath = null,
             bool throwOnError = true);

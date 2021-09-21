@@ -18,17 +18,17 @@ namespace ToSic.SexyContent.ContentBlocks
     {
         [Obsolete]
         public static IHtmlString One(DynamicEntity context,
-            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             IDynamicEntity item = null,
             string field = null,
             Guid? newGuid = null)
-            => Sxc.Blocks.Render.One(context, dontRelyOnParameterOrder, item: item, field: field, newGuid: newGuid);
+            => Sxc.Blocks.Render.One(context, noParamOrder, item: item, field: field, newGuid: newGuid);
 
         [Obsolete]
         public static IHtmlString All(DynamicEntity context,
-            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             string field = null,
             string merge = null)
-            => Sxc.Blocks.Render.All(context, dontRelyOnParameterOrder, field: field, merge: merge);
+            => Sxc.Blocks.Render.All(context, noParamOrder, field: field, merge: merge);
     }
 }

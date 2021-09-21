@@ -162,7 +162,7 @@ namespace ToSic.SexyContent.WebApi
         /// <summary>
         /// Save a file from a stream (usually an upload from the browser) into an adam-field
         /// </summary>
-        /// <param name="dontRelyOnParameterOrder">ensure that all parameters use names, so the api can change in future</param>
+        /// <param name="noParamOrder">ensure that all parameters use names, so the api can change in future</param>
         /// <param name="stream">the stream</param>
         /// <param name="fileName">file name to save to</param>
         /// <param name="contentType">content-type of the target item (important for security checks)</param>
@@ -170,14 +170,14 @@ namespace ToSic.SexyContent.WebApi
         /// <param name="field"></param>
         /// <param name="subFolder"></param>
         /// <returns></returns>
-        public new Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = Eav.Parameters.Protector,
+        public new Sxc.Adam.IFile SaveInAdam(string noParamOrder = Eav.Parameters.Protector,
             Stream stream = null,
             string fileName = null,
             string contentType = null,
             Guid? guid = null,
             string field = null,
             string subFolder = "")
-            => base.SaveInAdam(dontRelyOnParameterOrder, stream, fileName, contentType, guid, field, subFolder);
+            => base.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
 
         #endregion
 

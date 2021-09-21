@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Web
 
 
         /// <inheritdoc />
-        public abstract string To(string dontRelyOnParameterOrder = Eav.Parameters.Protector, 
+        public abstract string To(string noParamOrder = Eav.Parameters.Protector, 
             int? pageId = null,
             string parameters = null,
             string api = null);
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Web
         public string Image(string url = null,
             object settings = null,
             object factor = null,
-            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object width = null,
             object height = null,
             object quality = null,
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Web
             string format = null,
             object aspectRatio = null)
         {
-            return ImgLinker.Image(url, settings, factor, dontRelyOnParameterOrder, width, height, quality, resizeMode,
+            return ImgLinker.Image(url, settings, factor, noParamOrder, width, height, quality, resizeMode,
                 scaleMode, format, aspectRatio);
         }
 

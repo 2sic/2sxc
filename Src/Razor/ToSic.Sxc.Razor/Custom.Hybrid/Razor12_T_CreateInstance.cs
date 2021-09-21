@@ -21,7 +21,7 @@ namespace Custom.Hybrid
         /// </summary>
         /// <returns></returns>
         public dynamic CreateInstance(string virtualPath,
-            string dontRelyOnParameterOrder = ToSic.Eav.Parameters.Protector,
+            string noParamOrder = ToSic.Eav.Parameters.Protector,
             string name = null,
             string relativePath = null,
             bool throwOnError = true)
@@ -32,7 +32,7 @@ namespace Custom.Hybrid
             VerifyFileExists(path);
             
             return path.EndsWith(CodeCompiler.CsFileExtension)
-                ? _DynCodeRoot.CreateInstance(path, dontRelyOnParameterOrder, name, null, throwOnError)
+                ? _DynCodeRoot.CreateInstance(path, noParamOrder, name, null, throwOnError)
                 : CreateInstanceCshtml(path);
         }
 

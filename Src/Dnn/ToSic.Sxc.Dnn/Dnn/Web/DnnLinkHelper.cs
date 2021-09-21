@@ -30,10 +30,10 @@ namespace ToSic.Sxc.Dnn.Web
         }
 
         /// <inheritdoc />
-        public override string To(string dontRelyOnParameterOrder = Eav.Parameters.Protector, int? pageId = null, string parameters = null, string api = null)
+        public override string To(string noParamOrder = Eav.Parameters.Protector, int? pageId = null, string parameters = null, string api = null)
         {
             // prevent incorrect use without named parameters
-            Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
+            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
 
             if (api != null) return Api(path: LinkHelpers.CombineApiWithQueryString(api.TrimPrefixSlash(), parameters));
 
@@ -42,9 +42,9 @@ namespace ToSic.Sxc.Dnn.Web
                 : DotNetNuke.Common.Globals.NavigateURL(pageId ?? _dnn.Tab.TabID, "", parameters); // NavigateURL returns absolute links
         }
 
-        private string Api(string dontRelyOnParameterOrder = Eav.Parameters.Protector, string path = null, bool absoluteUrl = true)
+        private string Api(string noParamOrder = Eav.Parameters.Protector, string path = null, bool absoluteUrl = true)
         {
-            Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Api", $"{nameof(path)}");
+            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Api", $"{nameof(path)}");
 
             if (string.IsNullOrEmpty(path)) return string.Empty;
 
