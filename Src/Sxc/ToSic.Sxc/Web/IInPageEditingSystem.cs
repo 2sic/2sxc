@@ -33,34 +33,38 @@ namespace ToSic.Sxc.Web
         /// See also @HowTo.Razor.Edit.Toolbar
         /// </summary>
         /// <param name="target">
-        /// The content-item this toolbar is for, can be null. <br/>
-        /// Usually a @NetCode.DynamicCode.DynamicEntity?text=DynamicEntity or a @NetCode.DynamicCode.Entity?text=Entity
+        ///     The content-item this toolbar is for, can be null. <br/>
+        ///     Usually a @NetCode.DynamicCode.DynamicEntity?text=DynamicEntity or a @NetCode.DynamicCode.Entity?text=Entity
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="actions">
-        /// List of actions on this toolbar. If null, will use default actions for this item.
-        /// If provided, must be comma-separated action-names - see [](xref:JsCode.Commands.Index).
+        ///     List of actions on this toolbar. If null, will use default actions for this item.
+        ///     If provided, must be comma-separated action-names - see [](xref:JsCode.Commands.Index).
         /// </param>
         /// <param name="contentType">Content-type of this toolbar, used when it has `new` or `add` buttons.
-        /// This allows you to create a button for a new "Category" and another button for a new "BlogPost" etc.
+        ///     This allows you to create a button for a new "Category" and another button for a new "BlogPost" etc.
         /// </param>
         /// <param name="prefill">
-        /// Allows a `new` dialog to receive values as a prefill.
-        /// For example to already specify a date, title, category, etc. <br/>
-        /// It's a dynamic object, see also the JS documentation on the prefill.
+        ///     Allows a `new` dialog to receive values as a prefill.
+        ///     For example to already specify a date, title, category, etc. <br/>
+        ///     It's a dynamic object, see also the JS documentation on the prefill.
         /// </param>
         /// <param name="toolbar">
-        /// Full manual toolbar configuration. Setting this will cause `actions` to be ignored. <br/>
-        /// See [](xref:Basics.Browser.EditUx.Toolbars.Index)
+        ///     Full manual toolbar configuration. Setting this will cause `actions` to be ignored. <br/>
+        ///     See [](xref:Basics.Browser.EditUx.Toolbars.Index)
         /// </param>
         /// <param name="settings">
-        /// Toolbar settings controlling hover etc. <br/>
-        /// See [](xref:JsCode.Toolbars.Settings)
+        ///     Toolbar settings controlling hover etc. <br/>
+        ///     See [](xref:JsCode.Toolbars.Settings)
+        /// </param>
+        /// <param name="condition">
+        /// Condition will make that no toolbar is created, if it's 0, false or "false"
         /// </param>
         /// <returns>If the user is an editor, it returns HTML UL tag containing all the toolbar configuration.</returns>
         /// <remarks>
         /// **History**
         /// 1. Added in 2sxc 8.04
+        /// 1. Condition added in 2sxc 12.05
         /// </remarks>
         HtmlString Toolbar(object target = null,
             string noParamOrder = Eav.Parameters.Protector,
@@ -68,49 +72,56 @@ namespace ToSic.Sxc.Web
             string contentType = null,
             object prefill = null,
             object toolbar = null,
-            object settings = null);
+            object settings = null,
+            object condition = null);
 
         /// <summary>
         /// Generate a toolbar attribute inside an html-tag <br/>
         /// See also @HowTo.Razor.Edit.Toolbar
         /// </summary>
         /// <param name="target">
-        /// The content-item this toolbar is for, can be null. <br/>
-        /// Usually a @NetCode.DynamicCode.DynamicEntity?text=DynamicEntity or a @HowTo.DynamicCode.Entity?text=Entity
+        ///     The content-item this toolbar is for, can be null. <br/>
+        ///     Usually a @NetCode.DynamicCode.DynamicEntity?text=DynamicEntity or a @HowTo.DynamicCode.Entity?text=Entity
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="actions">
-        /// List of actions on this toolbar. If null, will use default actions for this item.
-        /// If provided, must be comma-separated action-names - see [](xref:JsCode.Commands.Index).
+        ///     List of actions on this toolbar. If null, will use default actions for this item.
+        ///     If provided, must be comma-separated action-names - see [](xref:JsCode.Commands.Index).
         /// </param>
         /// <param name="contentType">Content-type of this toolbar, used when it has `new` or `add` buttons.
-        /// This allows you to create a button for a new "Category" and another button for a new "BlogPost" etc.
+        ///     This allows you to create a button for a new "Category" and another button for a new "BlogPost" etc.
         /// </param>
         /// <param name="prefill">
-        /// Allows a `new` dialog to receive values as a prefill.
-        /// For example to already specify a date, title, category, etc. <br/>
-        /// It's a dynamic object, see also the JS documentation on the prefill.
+        ///     Allows a `new` dialog to receive values as a prefill.
+        ///     For example to already specify a date, title, category, etc. <br/>
+        ///     It's a dynamic object, see also the JS documentation on the prefill.
         /// </param>
         /// <param name="toolbar">
-        /// Full manual toolbar configuration. Setting this will cause `actions` to be ignored. <br/>
-        /// See [](xref:Basics.Browser.EditUx.Toolbars.Index)
+        ///     Full manual toolbar configuration. Setting this will cause `actions` to be ignored. <br/>
+        ///     See [](xref:Basics.Browser.EditUx.Toolbars.Index)
         /// </param>
         /// <param name="settings">
-        /// Toolbar settings controlling hover etc. <br/>
-        /// See [](xref:JsCode.Toolbars.Settings)
+        ///     Toolbar settings controlling hover etc. <br/>
+        ///     See [](xref:JsCode.Toolbars.Settings)
+        /// </param>
+        /// <param name="condition">
+        /// Condition will make that no toolbar is created, if it's 0, false or "false"
         /// </param>
         /// <returns>If the user is an editor, it returns the attribute containing all the toolbar configuration.</returns>
         /// <remarks>
         /// **History**
         /// 1. Added in 2sxc 9.40
+        /// 1. Condition added in 2sxc 12.05
         /// </remarks>
         HtmlString TagToolbar(object target = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder =
+                "Rule: all params must be named (https://r.2sxc.org/named-params), Example: \'enable: true, version: 10\'",
             string actions = null,
             string contentType = null,
             object prefill = null,
             object toolbar = null,
-            object settings = null);
+            object settings = null,
+            object condition = null);
 
         /// <summary>
         /// Get html-attributes to mark the current context
