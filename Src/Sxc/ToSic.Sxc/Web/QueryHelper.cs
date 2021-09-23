@@ -12,6 +12,9 @@ namespace ToSic.Sxc.Web
             // check do we have any work to do
             if (queryParams.Count == 0) return url;
 
+            // Make sure we don't run into null-errors below
+            if (url == null) url = string.Empty;
+
             // Problem ATM:
             // - if the url is something like "test.jpg?w=200" then running this function gets you something like test.jpg?w=200?w=1600
             // We should try to combine existing params - so if the url already has a "?..." we should merge these
