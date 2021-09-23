@@ -17,16 +17,31 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public OqtGetBlock(
             IServiceProvider serviceProvider,
             Lazy<IModuleRepository> modRepoLazy,
-            RequestHelper requestHelper
-            ) : base($"{OqtConstants.OqtLogPrefix}.GetBlk")
+            RequestHelper requestHelper,
+            IContextResolver contextResolverToInit
+        ) : base($"{OqtConstants.OqtLogPrefix}.GetBlk")
         {
             _serviceProvider = serviceProvider;
             _modRepoLazy = modRepoLazy;
             this.requestHelper = requestHelper;
+            _contextResolverToInit = contextResolverToInit;
         }
         private readonly IServiceProvider _serviceProvider;
         private readonly Lazy<IModuleRepository> _modRepoLazy;
         private readonly RequestHelper requestHelper;
+        private readonly IContextResolver _contextResolverToInit;
+
+        public IContextResolver TryToLoadBlockAndAttachToResolver()
+        {
+            if (alreadyTriedToLoad) return _contextResolverToInit;
+            alreadyTriedToLoad = true;
+
+            var block = GetBlock();
+            _contextResolverToInit.AttachRealBlock(() => block);
+            return _contextResolverToInit;
+        }
+
+        private bool alreadyTriedToLoad;
 
 
         public IBlock GetBlock()

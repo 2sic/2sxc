@@ -77,7 +77,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             if (!values.ContainsKey("appFolder"))
                 throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, $"Error: missing required 'appFolder' route value.", "Not Found");
             var appFolder = (string)values["appFolder"];
-            if (appFolder == WebApiConstants.Auto) appFolder = _oqtAppFolderLazy.Value.GetAppFolder();
+            if (appFolder == WebApiConstants.Auto)
+            {
+                // Before trying to get the AppFolder, we must init the ICmsContext as this will
+                var blockInitializer = httpContext.RequestServices.Build<OqtGetBlock>();
+                blockInitializer.TryToLoadBlockAndAttachToResolver();
+                appFolder = _oqtAppFolderLazy.Value.GetAppFolder();
+            }
 
 
             if (!values.ContainsKey("controller"))

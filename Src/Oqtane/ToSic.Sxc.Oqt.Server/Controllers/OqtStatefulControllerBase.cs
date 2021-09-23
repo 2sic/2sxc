@@ -21,10 +21,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             base.OnActionExecuting(context);
 
             var getBlock = ServiceProvider.Build<OqtGetBlock>().Init(Log);
-            var blockOptional = BlockOptional = getBlock.GetBlock();
+            CtxResolver = getBlock.TryToLoadBlockAndAttachToResolver();
+            BlockOptional = CtxResolver.RealBlockOrNull();
+            //var blockOptional = BlockOptional = getBlock.GetBlock();
             //OqtState = ServiceProvider.Build<OqtState>().Init(Log) ;// dependencies.OqtState.Init(Log);
-            CtxResolver = ServiceProvider.Build<IContextResolver>() ;// dependencies.CtxResolver;
-            CtxResolver.AttachRealBlock(() => blockOptional);
+            //CtxResolver = ServiceProvider.Build<IContextResolver>() ;// dependencies.CtxResolver;
+            //CtxResolver.AttachRealBlock(() => blockOptional);
             //CtxResolver.AttachBlockContext(() => blockOptional?.Context);
             wrapLog(null);
         }
