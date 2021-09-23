@@ -60,8 +60,10 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<IImportExportEnvironment, DnnImportExportEnvironment>();
 
             // new for .net standard
+            // todo: find out why we have both - do they have a different function? probably yes....
             services.TryAddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
             services.TryAddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
+
             services.TryAddTransient<IZoneMapper, DnnZoneMapper>();
 
             services.TryAddTransient<IClientDependencyOptimizer, DnnClientDependencyOptimizer>();
