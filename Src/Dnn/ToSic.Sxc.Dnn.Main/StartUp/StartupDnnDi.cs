@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.Run;
@@ -136,6 +135,9 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // v12.04 - proper DI for SearchController
             services.TryAddTransient<SearchController>();
+
+            // v12.05 custom Http for Dnn which only keeps the URL parameters really provided, and not the internally generated ones
+            services.TryAddTransient<IHttp, DnnHttp>();
 
             return services;
         }
