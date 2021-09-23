@@ -4,6 +4,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -25,7 +26,7 @@ namespace Custom.Hybrid
         //protected IServiceProvider ServiceProvider { get; private set; }
 
         [PrivateApi]
-        protected override string HistoryLogName { get; } = "web-api";
+        protected override string HistoryLogName => EavWebApiConstants.HistoryNameWebApi;
 
         //private OqtState _oqtState;
 

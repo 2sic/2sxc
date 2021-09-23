@@ -12,28 +12,28 @@ namespace ToSic.Sxc.Web.WebApi.System
     public partial class Insights
     {
 
-        internal static string LogHeader(string key = null)
+        internal string LogHeader(string key = null)
         {
             var msg = "" + Div("back to " + A("2sxc insights home").Href( "./help"))
                       + H1($"2sxc Insights: Log {key}")
                       + P("Status: ",
-                          Strong(History.Pause ? "paused" : "running"), 
+                          Strong(_logHistory.Pause ? "paused" : "running"), 
                           " ",
                           A(HtmlEncode("▶")).Href("logs?pause=false"),
                           " | ",
                           A(HtmlEncode("⏸")).Href("logs?pause=true"),
-                          $" collecting #{History.Count} of max {History.MaxCollect} (keep max {History.Size} per set, then FIFO) - "
-                          + A("change").Href($"logs?pause={!History.Pause}")
+                          $" collecting #{_logHistory.Count} of max {_logHistory.MaxCollect} (keep max {_logHistory.Size} per set, then FIFO) - "
+                          + A("change").Href($"logs?pause={!_logHistory.Pause}")
                           + " (pause to see details of the log)\n");
             return msg;
         }
 
-        internal static string LogHistoryOverview()
+        internal static string LogHistoryOverview(LogHistory logHistory)
         {
             var msg = "";
             try
             {
-                var logs = History.Logs;
+                var logs = logHistory.Logs;
                 msg += P($"Logs Overview: {logs.Count}\n");
 
                 var count = 0;
@@ -60,12 +60,12 @@ namespace ToSic.Sxc.Web.WebApi.System
             return msg;
         }
 
-        internal static string LogHistory(string key)
+        internal static string LogHistory(LogHistory logHistory, string key)
         {
             var msg = "";
             try
             {
-                if (History.Logs.TryGetValue(key, out var set))
+                if (logHistory.Logs.TryGetValue(key, out var set))
                 {
                     var count = 0;
                     msg += P($"Logs Overview: {set.Count}\n");

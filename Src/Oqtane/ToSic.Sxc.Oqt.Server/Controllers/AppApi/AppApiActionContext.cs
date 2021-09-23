@@ -15,10 +15,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {
     public class AppApiActionContext : IHasLog
     {
-        public AppApiActionContext()
+        public AppApiActionContext(LogHistory logHistory)
         {
             Log = new Log(HistoryLogName, null, "AppApiActionContext");
-            History.Add(HistoryLogGroup, Log);
+            logHistory.Add(HistoryLogGroup, Log);
         }
 
         public ILog Log { get; }

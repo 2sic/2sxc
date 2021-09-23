@@ -23,14 +23,15 @@ namespace ToSic.Sxc.Oqt.Server.Block
             OqtAssetsAndHeaders assetsAndHeaders, 
             IContextOfBlock contextOfBlockEmpty, 
             BlockFromModule blockModuleEmpty,
-            IContextResolver contextResolverForLookUps
+            IContextResolver contextResolverForLookUps,
+            LogHistory logHistory
         ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
         {
             _contextOfBlockEmpty = contextOfBlockEmpty;
             _blockModuleEmpty = blockModuleEmpty;
             _contextResolverForLookUps = contextResolverForLookUps;
             AssetsAndHeaders = assetsAndHeaders;
-            History.Add("oqt-view", Log);
+            logHistory.Add("oqt-view", Log);
         }
 
         public OqtAssetsAndHeaders AssetsAndHeaders { get; }

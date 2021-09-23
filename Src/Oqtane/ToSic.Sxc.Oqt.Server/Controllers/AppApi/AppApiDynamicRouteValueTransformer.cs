@@ -34,13 +34,14 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
         public AppApiDynamicRouteValueTransformer(
             ITenantResolver tenantResolver,
             IWebHostEnvironment hostingEnvironment,
-            Lazy<OqtAppFolder> oqtAppFolderLazy)
+            Lazy<OqtAppFolder> oqtAppFolderLazy,
+            LogHistory logHistory)
         {
             _tenantResolver = tenantResolver;
             _hostingEnvironment = hostingEnvironment;
             _oqtAppFolderLazy = oqtAppFolderLazy;
             Log = new Log(HistoryLogName, null, nameof(AppApiDynamicRouteValueTransformer));
-            History.Add(HistoryLogGroup, Log);
+            logHistory.Add(HistoryLogGroup, Log);
         }
 
         public ILog Log { get; }

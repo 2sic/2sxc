@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using Log = ToSic.Eav.Logging.Simple.Log;
@@ -25,7 +26,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             // ReSharper disable once VirtualMemberCallInConstructor
             Log = new Log(HistoryLogName, null, $"OqtControllerBase");
             // ReSharper disable once VirtualMemberCallInConstructor
-            History.Add(HistoryLogGroup, Log);
+            //History.Add(HistoryLogGroup, Log);
         }
 
         protected IServiceProvider ServiceProvider;
@@ -37,7 +38,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// The group name for log entries in insights.
         /// Helps group various calls by use case.
         /// </summary>
-        protected virtual string HistoryLogGroup { get; } = "web-api";
+        protected virtual string HistoryLogGroup => EavWebApiConstants.HistoryNameWebApi;
 
         /// <summary>
         /// The name of the logger in insights.
@@ -58,6 +59,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             base.OnActionExecuting(context);
 
             ServiceProvider = context.HttpContext.RequestServices;
+
+            // add log
+            ServiceProvider.Build<LogHistory>().Add(HistoryLogGroup, Log);
 
             //// background processes can pass in an alias using the SiteState service
             ServiceProvider.Build<SiteStateInitializer>().InitIfEmpty();

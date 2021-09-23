@@ -93,14 +93,14 @@ namespace ToSic.Sxc.Web.WebApi.System
         {
             ThrowIfNotSuperUser();
 
-            var globTypes = Global.AllContentTypes().Values;
+            var globTypes = _globalTypes.AllContentTypes().Values;
             return TypesTable(0, globTypes, null);
         }
 
         public string GlobalTypesLog()
         {
             ThrowIfNotSuperUser();
-            return FormatLog("2sxc load log for Global Types", Global.Log);
+            return FormatLog("2sxc load log for Global Types", _globalTypes.Log);
         }
 
         public string TypeMetadata(int? appId = null, string type = null)

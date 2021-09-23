@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Dnn.Install
         public DnnInstallationController(): base("Dnn.InstCo")
         {
             _installLogger = new DnnInstallLogger(SaveUnimportantDetails);
-            History.Add("installation", Log);
+            Eav.Factory.StaticBuild<LogHistory>().Add("installation", Log);
         }
 
         public IEnvironmentInstaller Init(ILog parent)
