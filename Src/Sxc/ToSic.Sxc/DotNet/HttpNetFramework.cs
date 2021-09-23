@@ -20,9 +20,9 @@ namespace ToSic.Sxc.DotNet
             get
             {
                 if (_queryStringValues != null) return _queryStringValues;
-                return Request == null
-                    ? _queryStringValues = new NameValueCollection()
-                    : _queryStringValues = Request.QueryString;
+                return _queryStringValues = Request == null
+                    ? new NameValueCollection()
+                    : Request.QueryString;
             }
         }
 
