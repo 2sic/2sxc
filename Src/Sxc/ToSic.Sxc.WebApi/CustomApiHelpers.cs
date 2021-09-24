@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
@@ -52,6 +53,14 @@ namespace ToSic.Sxc.WebApi
             }
 
             return fileDownloadName;
+        }
+
+        /*
+         * for "Content-Disposition: inline" fileDownloadName should be null
+         */
+        public static string EnsureFileDownloadNameIsNullForInline(bool? download, string fileDownloadName)
+        {
+            return download == true ? fileDownloadName : null;
         }
 
         public static string XmlContentTypeFromContent(bool isValidXml, string contentType)
@@ -159,6 +168,24 @@ namespace ToSic.Sxc.WebApi
             {
                 return GetEncoding(memoryStream);
             }
+        }
+
+        public static MediaTypeHeaderValue PrepareMediaTypeHeaderValue(string contentType, Encoding encoding)
+        {
+            return new MediaTypeHeaderValue(contentType)
+            {
+                CharSet = encoding.WebName
+            };
+        }
+
+        public static ContentDispositionHeaderValue PrepareContentDispositionHeaderValue(bool? download, string fileDownloadName)
+        {
+            return (download != true || string.IsNullOrWhiteSpace(fileDownloadName))
+                ? new ContentDispositionHeaderValue("inline")
+                : new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = fileDownloadName
+                };
         }
     }
 }

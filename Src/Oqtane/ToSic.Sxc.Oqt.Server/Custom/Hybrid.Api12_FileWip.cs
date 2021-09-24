@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Net.Mime;
+using System.Text;
 using System.Xml;
+using Microsoft.Net.Http.Headers;
 using ToSic.Eav;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.WebApi;
@@ -11,7 +15,6 @@ namespace Custom.Hybrid
     public abstract partial class Api12
     {
         #region Experimental
-
 
         public dynamic File(string noParamOrder = Parameters.Protector,
             // Important: the second parameter should _not_ be a string, otherwise the signature looks the same as the built-in File(...) method
@@ -27,11 +30,19 @@ namespace Custom.Hybrid
             // Try to figure out file mime type as needed
             if (string.IsNullOrWhiteSpace(contentType))
                 contentType = ContentFileHelper.GetMimeType(fileDownloadName ?? virtualPath);
-            
+
             // check if this may just be a call to the built in file, which has two strings
             // this can only be possible if only the virtualPath and contentType were set
             if (!string.IsNullOrWhiteSpace(virtualPath))
                 return base.File(virtualPath, contentType, fileDownloadName);
+
+            // in aspNetCore for File stream/content result in response
+            // fileDownloadName should be null to get header "Content-Disposition: inline"
+            // that will directly show content response in browser
+            // opposed to "Content-Disposition: attachment; filename=..." that file start file download
+            fileDownloadName = CustomApiHelpers.EnsureFileDownloadNameIsNullForInline(download, fileDownloadName);
+            Encoding encoding;
+            string mediaTypeHeaderValue;
 
             switch (contents)
             {
@@ -40,22 +51,29 @@ namespace Custom.Hybrid
                     xmlDoc.Save(xmlStream);
                     xmlStream.Position = 0;
                     contentType = CustomApiHelpers.XmlContentTypeFromContent(true, contentType);
-                    return base.File(xmlStream, contentType, fileDownloadName);
+                    encoding = CustomApiHelpers.GetEncoding(xmlDoc);
+                    mediaTypeHeaderValue = CustomApiHelpers.PrepareMediaTypeHeaderValue(contentType, encoding).ToString();
+                    return base.File(xmlStream, mediaTypeHeaderValue, fileDownloadName);
                 case string stringBody:
                     contentType = CustomApiHelpers.XmlContentTypeFromContent(CustomApiHelpers.IsValidXml(stringBody), contentType);
-                    return base.File( System.Text.Encoding.UTF8.GetBytes(stringBody), contentType, fileDownloadName);
+                    encoding = CustomApiHelpers.GetEncoding(stringBody);
+                    mediaTypeHeaderValue = CustomApiHelpers.PrepareMediaTypeHeaderValue(contentType, encoding).ToString();
+                    return base.File(System.Text.Encoding.UTF8.GetBytes(stringBody), mediaTypeHeaderValue, fileDownloadName);
                 case Stream streamBody:
                     contentType = CustomApiHelpers.XmlContentTypeFromContent(CustomApiHelpers.IsValidXml(streamBody), contentType);
-                    return base.File(streamBody, contentType, fileDownloadName);
+                    encoding = CustomApiHelpers.GetEncoding(streamBody);
+                    mediaTypeHeaderValue = CustomApiHelpers.PrepareMediaTypeHeaderValue(contentType, encoding).ToString();
+                    return base.File(streamBody, mediaTypeHeaderValue, fileDownloadName);
                 case byte[] charBody:
                     contentType = CustomApiHelpers.XmlContentTypeFromContent(CustomApiHelpers.IsValidXml(charBody), contentType);
-                    return base.File(charBody, contentType, fileDownloadName);
+                    encoding = CustomApiHelpers.GetEncoding(charBody);
+                    mediaTypeHeaderValue = CustomApiHelpers.PrepareMediaTypeHeaderValue(contentType, encoding).ToString();
+                    return base.File(charBody, mediaTypeHeaderValue, fileDownloadName);
                 default:
                     throw new ArgumentException("Tried to provide file download but couldn't find content");
             }
         }
 
-        
         private void Test()
         {
             var x = base.Content("");
