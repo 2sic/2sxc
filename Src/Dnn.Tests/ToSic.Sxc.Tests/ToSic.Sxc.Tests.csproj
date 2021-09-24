@@ -78,6 +78,8 @@
     <Compile Include="Web\CleanParamTests.cs" />
     <Compile Include="Web\LinkImageSettingsTests.cs" />
     <Compile Include="Web\LinkImageTestHelpers.cs" />
+    <Compile Include="Web\QueryHelperTests.cs" />
+    <Compile Include="Web\UrlPartsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj">
