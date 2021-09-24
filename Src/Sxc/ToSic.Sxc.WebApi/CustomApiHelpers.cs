@@ -119,7 +119,7 @@ namespace ToSic.Sxc.WebApi
                 }
                 catch (XmlException)
                 {
-                    return  false;
+                    return false;
                 }
             }
         }
@@ -139,7 +139,7 @@ namespace ToSic.Sxc.WebApi
         public static Encoding GetEncoding(XmlDocument xmlDocument)
         {
             var xmlDeclaration = xmlDocument.ChildNodes.OfType<XmlDeclaration>().FirstOrDefault();
-            return (xmlDeclaration?.Encoding == null) 
+            return (xmlDeclaration?.Encoding == null)
                 ? Encoding.UTF8
                 : Encoding.GetEncoding(xmlDeclaration?.Encoding);
         }
@@ -180,8 +180,13 @@ namespace ToSic.Sxc.WebApi
 
         public static ContentDispositionHeaderValue PrepareContentDispositionHeaderValue(bool? download, string fileDownloadName)
         {
-            return (download != true || string.IsNullOrWhiteSpace(fileDownloadName))
+            if (string.IsNullOrWhiteSpace(fileDownloadName))
+                return new ContentDispositionHeaderValue("inline");
+            return download != true
                 ? new ContentDispositionHeaderValue("inline")
+                {
+                    FileName = fileDownloadName
+                }
                 : new ContentDispositionHeaderValue("attachment")
                 {
                     FileName = fileDownloadName
