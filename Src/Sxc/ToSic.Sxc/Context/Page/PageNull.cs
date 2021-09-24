@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Context
         }
         private List<KeyValuePair<string, string>> _parameters;
 
-        public IReadOnlyDictionary<string, string> Parameters => new Parameters(null);
+        public IParameters Parameters => new Parameters(null);
 
     }
 }

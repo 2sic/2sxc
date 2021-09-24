@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Web
 {
@@ -14,13 +15,20 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <param name="noParamOrder">a helper to ensure that you must use named parameters. You shouldn't give it anything, but you must use all others like parameters: "id=47&amp;name=42"</param>
         /// <param name="pageId">optional page ID (TabId) - if not supplied, will use current page</param>
-        /// <param name="parameters">the parameters either as "/id/47/name/daniel" or "id=47&amp;name=daniel"</param>
+        /// <param name="parameters">
+        /// the parameters either as "/id/47/name/daniel" or "id=47&amp;name=daniel"
+        /// in 2sxc 12.05+ it can also be an <see cref="IParameters"/>
+        /// </param>
         /// <param name="api">optional api url "api/my?id=something"</param>
         /// <returns></returns>
+        /// <remarks>
+        /// History
+        /// * In v12.05 the type of parameters was changed from string to object, to allow <see cref="IParameters"/> as well
+        /// </remarks>
         string To(
             string noParamOrder = Eav.Parameters.Protector,
             int? pageId = null,
-            string parameters = null,
+            object parameters = null,
             string api = null
         );
         
@@ -70,8 +78,6 @@ namespace ToSic.Sxc.Web
             string resizeMode = null,
             string scaleMode = null,
             string format = null,
-            //object maxWidth = null,
-            //object maxHeight = null,
             object aspectRatio = null);
 
         /// <summary>
@@ -79,6 +85,7 @@ namespace ToSic.Sxc.Web
         /// Should activate debugging for Link helpers
         /// </summary>
         /// <param name="debug"></param>
+        [InternalApi_DoNotUse_MayChangeWithoutNotice("just for debugging, can change at any time but for debugging it's useful")]
         void SetDebug(bool debug);
     }
 }

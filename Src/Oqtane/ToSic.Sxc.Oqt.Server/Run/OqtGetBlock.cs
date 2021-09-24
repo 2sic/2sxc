@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private bool alreadyTriedToLoad;
 
 
-        public IBlock GetBlock()
+        private IBlock GetBlock()
         {
             if (_block != null || _triedToGetBlock) return _block;
             _block = InitializeBlock();

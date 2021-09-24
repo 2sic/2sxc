@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adam\AdamSecurity.cs" />
+    <Compile Include="ContextTests\ParametersTests.cs" />
     <Compile Include="DynamicData\DynamicReadObjectTest.cs" />
     <Compile Include="PageFeatures\SimpleFeatureManagement.cs" />
     <Compile Include="PageProperty\UpdatePropertyTest.cs" />

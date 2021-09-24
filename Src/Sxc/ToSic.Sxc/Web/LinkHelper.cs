@@ -3,6 +3,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Web
 {
@@ -26,10 +27,31 @@ namespace ToSic.Sxc.Web
 
 
         /// <inheritdoc />
-        public abstract string To(string noParamOrder = Eav.Parameters.Protector, 
-            int? pageId = null,
-            string parameters = null,
-            string api = null);
+        public string To(string noParamOrder = Eav.Parameters.Protector, int? pageId = null, object parameters = null, string api = null)
+        {
+            // prevent incorrect use without named parameters
+            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
+
+            // Check initial conflicting values.
+            if (pageId != null && api != null)
+                throw new ArgumentException($"Multiple properties like '{nameof(api)}' or '{nameof(pageId)}' have a value - only one can be provided.");
+
+            var strParams = ParametersToString(parameters);
+
+            return ToImplementation(pageId, strParams, api);
+        }
+
+        protected abstract string ToImplementation(int? pageId = null, string parameters = null, string api = null);
+
+        protected string ParametersToString(object parameters)
+        {
+            if (parameters is null) return null;
+            if (parameters is string strParameters) return strParameters;
+            if (parameters is IParameters paramDic) return paramDic.ToString();
+            
+            // Fallback / default
+            return null;
+        }
 
         
         /// <inheritdoc />

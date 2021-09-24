@@ -29,12 +29,27 @@ namespace ToSic.Sxc.Dnn.Web
             ((DnnContextOld) _dnn).Init(codeRoot.Block?.Context?.Module);
         }
 
-        /// <inheritdoc />
-        public override string To(string noParamOrder = Eav.Parameters.Protector, int? pageId = null, string parameters = null, string api = null)
-        {
-            // prevent incorrect use without named parameters
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
+        ///// <inheritdoc />
+        //public override string To(string noParamOrder = Eav.Parameters.Protector, int? pageId = null, object parameters = null, string api = null)
+        //{
+        //    // prevent incorrect use without named parameters
+        //    Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
 
+        //    // Check initial conflicting values.
+        //    if (pageId != null && api != null)
+        //        throw new ArgumentException($"Multiple properties like '{nameof(api)}' or '{nameof(pageId)}' have a value - only one can be provided.");
+
+        //    var strParams = ParametersToString(parameters);
+
+        //    if (api != null) return Api(path: LinkHelpers.CombineApiWithQueryString(api.TrimPrefixSlash(), strParams));
+
+        //    return parameters == null
+        //        ? _dnn.Tab.FullUrl
+        //        : DotNetNuke.Common.Globals.NavigateURL(pageId ?? _dnn.Tab.TabID, "", strParams); // NavigateURL returns absolute links
+        //}
+
+        protected override string ToImplementation(int? pageId = null, string parameters = null, string api = null)
+        {
             if (api != null) return Api(path: LinkHelpers.CombineApiWithQueryString(api.TrimPrefixSlash(), parameters));
 
             return parameters == null

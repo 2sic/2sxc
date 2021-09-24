@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Context
 {
@@ -31,6 +30,6 @@ namespace ToSic.Sxc.Context
         /// 
         /// 🪒 Use in Razor: `CmsContext.Page.Parameters["id"]`
         /// </summary>
-        IReadOnlyDictionary<string, string> Parameters { get; }
+        IParameters Parameters { get; }
     }
 }

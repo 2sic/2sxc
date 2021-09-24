@@ -47,20 +47,28 @@ namespace ToSic.Sxc.Oqt.Server.Run
             _context = codeRoot.Block?.Context;
         }
 
-        /// <inheritdoc />
-        public override string To(string noParamOrder = Parameters.Protector, int? pageId = null, string parameters = null, string api = null)
+        ///// <inheritdoc />
+        //public override string To(string noParamOrder = Parameters.Protector, int? pageId = null, object parameters = null, string api = null)
+        //{
+        //    // prevent incorrect use without named parameters
+        //    Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
+
+        //    // Check initial conflicting values.
+        //    if (pageId != null && api != null)
+        //        throw new ArgumentException($"Multiple properties like '{nameof(api)}' or '{nameof(pageId)}' have a value - only one can be provided.");
+
+        //    var strParams = ParametersToString(parameters);
+
+        //    // Page or Api?
+        //    return api == null ? PageNavigateUrl(pageId, strParams) : ApiNavigateUrl(api, strParams);
+        //}
+
+        protected override string ToImplementation(int? pageId = null, string parameters = null, string api = null)
         {
-            // prevent incorrect use without named parameters
-            Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
-
-            // Check initial conflicting values.
-            if (pageId != null && api != null)
-                throw new ArgumentException($"Multiple properties like '{nameof(api)}' or '{nameof(pageId)}' have a value - only one can be provided.");
-
             // Page or Api?
             return api == null ? PageNavigateUrl(pageId, parameters) : ApiNavigateUrl(api, parameters);
-        }
 
+        }
         // Prepare Api link.
         private string ApiNavigateUrl(string api, string parameters, bool absoluteUrl = true)
         {

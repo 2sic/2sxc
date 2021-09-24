@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using ToSic.Sxc.Context.Query;
 using ToSic.Sxc.Web;
 
@@ -33,8 +32,8 @@ namespace ToSic.Sxc.Context
         }
         private List<KeyValuePair<string, string>> _paramsInternalOld;
 
-        public IReadOnlyDictionary<string, string> Parameters => _parameters ?? (_parameters = new Parameters(_httpLazy.Value?.QueryStringParams));
-        private IReadOnlyDictionary<string, string> _parameters;
+        public IParameters Parameters => _parameters ?? (_parameters = new Parameters(_httpLazy.Value?.QueryStringParams));
+        private IParameters _parameters;
 
 
         public string Url { get; set; } = Eav.Constants.UrlNotInitialized;

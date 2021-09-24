@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Context.Query
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.Context.Query
     /// This should provide cross-platform, neutral way to have page parameters in the Razor
     /// </summary>
     [PrivateApi]
-    public class Parameters : IReadOnlyDictionary<string, string>
+    public class Parameters : IParameters, IReadOnlyDictionary<string, string>
     {
         public Parameters(NameValueCollection originals)
         {
@@ -47,5 +48,27 @@ namespace ToSic.Sxc.Context.Query
         public IEnumerable<string> Keys => OriginalsAsDic.Keys;
 
         public IEnumerable<string> Values => OriginalsAsDic.Values;
+
+
+        public override string ToString()
+        {
+            return string.Join("&", _originals.AllKeys.SelectMany(k => _originals.GetValues(k)?.Select(v => $"{k}={v}")));
+        }
+
+        public IParameters Add(string name, string value)
+        {
+            var copy = new NameValueCollection(_originals);
+            // Use set, not Add, because NVCs can multiple values per key
+            copy.Set(name, value);
+            return new Parameters(copy);
+        }
+
+        public IParameters Remove(string name)
+        {
+            var copy = new NameValueCollection(_originals);
+            if (copy[name] != null)
+                copy.Remove(name);
+            return new Parameters(copy);
+        }
     }
 }
