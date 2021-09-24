@@ -36,6 +36,10 @@ namespace Custom.Hybrid
             if (!string.IsNullOrWhiteSpace(virtualPath))
                 return base.File(virtualPath, contentType, fileDownloadName);
 
+            // add only header "Content-Disposition: inline, file..."
+            if (download != true)
+                Response.Headers.Add("Content-Disposition", CustomApiHelpers.PrepareContentDispositionHeaderValue(download, fileDownloadName).ToString());
+
             // in aspNetCore for File stream/content result in response
             // fileDownloadName should be null to get header "Content-Disposition: inline"
             // that will directly show content response in browser
