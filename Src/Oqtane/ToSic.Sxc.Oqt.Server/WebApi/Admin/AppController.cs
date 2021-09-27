@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using System;
+using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.AppStack;
@@ -38,6 +40,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         private readonly Lazy<AppCreator> _appBuilderLazy;
         private readonly Lazy<ResetApp> _resetAppLazy;
         private readonly Lazy<SystemManager> _systemManagerLazy;
+        private readonly Lazy<SiteStateInitializer> _siteStateInitializerLazy;
+        private readonly Lazy<IUser> _userLazy;
         protected override string HistoryLogName => "Api.App";
 
         public AppController(
@@ -47,7 +51,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             Lazy<ImportApp> importAppLazy,
             Lazy<AppCreator> appBuilderLazy,
             Lazy<ResetApp> resetAppLazy,
-            Lazy<SystemManager> systemManagerLazy)
+            Lazy<SystemManager> systemManagerLazy,
+            Lazy<SiteStateInitializer> siteStateInitializerLazy,
+            Lazy<IUser> userLazy)
         {
             _appsBackendLazy = appsBackendLazy;
             _cmsZonesLazy = cmsZonesLazy;
@@ -56,6 +62,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             _appBuilderLazy = appBuilderLazy;
             _resetAppLazy = resetAppLazy;
             _systemManagerLazy = systemManagerLazy;
+            _siteStateInitializerLazy = siteStateInitializerLazy;
+            _userLazy = userLazy;
         }
 
         [HttpGet]
@@ -87,7 +95,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public AppExportInfoDto Statistics(int zoneId, int appId)
-            => _exportAppLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
+            => _exportAppLazy.Value.Init(_siteStateInitializerLazy.Value.InitializedState.Alias.SiteId, _userLazy.Value, Log)
                 .GetAppInfo(appId, zoneId);
 
 
@@ -111,11 +119,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// <param name="resetAppGuid"></param>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-        {
-            return _exportAppLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
+        public IActionResult Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid) =>
+            _exportAppLazy.Value.Init(_siteStateInitializerLazy.Value.InitializedState.Alias.SiteId, _userLazy.Value, Log)
                 .Export(appId, zoneId, includeContentGroups, resetAppGuid);
-        }
 
         /// <inheritdoc />
         [HttpPost]
@@ -127,7 +133,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
             PreventServerTimeout300();
             var result = _resetAppLazy.Value
-                .Init(GetContext().Site.Id, GetContext().User, Log)
+                .Init(_siteStateInitializerLazy.Value.InitializedState.Alias.SiteId, _userLazy.Value, Log)
                 .Reset(zoneId, appId, GetContext().Site.DefaultCultureCode);
 
             return wrapLog("ok", result);
@@ -153,7 +159,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [Authorize(Roles = RoleNames.Admin)]
         [ValidateAntiForgeryToken]
         public bool SaveData(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => _exportAppLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
+            => _exportAppLazy.Value.Init(_siteStateInitializerLazy.Value.InitializedState.Alias.SiteId, _userLazy.Value, Log)
                 .SaveDataForVersionControl(appId, zoneId, includeContentGroups, resetAppGuid);
 
 
@@ -174,7 +180,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
             if (request.Files.Count <= 0) return new ImportResultDto(false, "no files uploaded");
 
-            return _importAppLazy.Value.Init(GetContext().User, Log)
+            return _importAppLazy.Value.Init(_userLazy.Value, Log)
                 .Import(zoneId, request["Name"], request.Files[0].OpenReadStream());
         }
     }
