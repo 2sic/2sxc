@@ -8,6 +8,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
@@ -106,7 +107,7 @@ namespace ToSic.Sxc.Code
                 case null:
                     return new List<dynamic>();
                 case IDataSource dsEntities:
-                    return AsList(dsEntities.List); // [Eav.Constants.DefaultStreamName]);
+                    return AsList(dsEntities.List);
                 case IEnumerable<IEntity> iEntities:
                     return iEntities.Select(e => AsDynamic(e));
                 case IEnumerable<IDynamicEntity> dynIDynEnt:
@@ -118,8 +119,16 @@ namespace ToSic.Sxc.Code
             }
         }
 
+
         #endregion
 
+        #region Convert
+
+        [PrivateApi("WIP 12.05")]
+        public IConvertService Convert => _convert ?? (_convert = _serviceProvider.Build<IConvertService>());
+        private IConvertService _convert;
+
+        #endregion
 
         #region Adam
 

@@ -156,7 +156,7 @@ namespace ToSic.Sxc.Code
         /// <param name="entities">one or more source object</param>
         /// <returns>a dynamic object for easier coding</returns>
         /// <remarks>
-        /// New in 12.02 - WIP
+        /// New in 12.05
         /// </remarks>
         [PublicApi("Careful - still Experimental in 12.02")]
         dynamic AsDynamic(params object[] entities);
@@ -185,6 +185,17 @@ namespace ToSic.Sxc.Code
         /// <returns>a list of <see cref="IDynamicEntity"/> objects</returns>
         IEnumerable<dynamic> AsList(object list);
 
+        #endregion
+
+        #region Convert-Service
+
+        [PrivateApi("WIP 12.05")]
+        IConvertService Convert { get; }
+
+        //[PrivateApi("WIP 12.05")]
+        //T As<T>(object original);
+        //[PrivateApi("wip 12.05")]
+        //T As<T>(object original, T fallback);
         #endregion
 
         #region Create Data Sources

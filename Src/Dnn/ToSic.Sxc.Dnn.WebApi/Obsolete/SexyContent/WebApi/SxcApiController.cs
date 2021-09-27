@@ -148,6 +148,17 @@ namespace ToSic.SexyContent.WebApi
 
         #endregion
 
+        #region Convert-Service
+        [PrivateApi] public IConvertService Convert => _DynCodeRoot.Convert;
+
+        //[PrivateApi]
+        //public T As<T>(object original) => _DynCodeRoot.As<T>(original);
+
+        //[PrivateApi]
+        //public T As<T>(object original, T fallback) => _DynCodeRoot.As(original, fallback);
+
+        #endregion
+
 
         #region Adam
 
@@ -187,17 +198,15 @@ namespace ToSic.SexyContent.WebApi
 
         #endregion
 
-        #region CmsContext
+        #region CmsContext, Resources and Settings
 
         /// <inheritdoc />
         public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
 
         /// <inheritdoc />
-        [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic Resources => _DynCodeRoot.Resources;
 
         /// <inheritdoc />
-        [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic Settings => _DynCodeRoot.Settings;
 
         #endregion

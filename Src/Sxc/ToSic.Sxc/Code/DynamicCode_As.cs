@@ -4,6 +4,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -25,7 +26,6 @@ namespace ToSic.Sxc.Code
         public dynamic AsDynamic(object dynamicEntity) => UnwrappedContents?.AsDynamic(dynamicEntity);
 
         /// <inheritdoc />
-        [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic AsDynamic(params object[] entities) => UnwrappedContents?.AsDynamic(entities);
 
         /// <inheritdoc />
@@ -39,6 +39,17 @@ namespace ToSic.Sxc.Code
         public IEnumerable<dynamic> AsList(object list)
             => UnwrappedContents?.AsList(list);
 
+
+        #endregion
+
+        #region Convert-Service
+
+        [PrivateApi] public IConvertService Convert => UnwrappedContents.Convert;
+
+        //public T As<T>(object original) => UnwrappedContents.As<T>(original);
+
+        //[PrivateApi]
+        //public T As<T>(object original, T fallback) => UnwrappedContents.As(original, fallback);
 
         #endregion
 

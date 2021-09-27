@@ -100,7 +100,7 @@ namespace ToSic.Sxc
 
             // WIP 12.05 - json converter
             services.TryAddTransient<IJsonService, JsonService>();
-
+            services.TryAddTransient<IConvertService, ConvertService>();
 
             return services;
         }

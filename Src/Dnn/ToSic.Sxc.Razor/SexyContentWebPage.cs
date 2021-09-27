@@ -126,6 +126,17 @@ namespace ToSic.SexyContent.Razor
 
         #endregion
 
+        #region Convert-Service
+        [PrivateApi] public IConvertService Convert => _DynCodeRoot.Convert;
+
+        //[PrivateApi]
+        //public T As<T>(object original) => _DynCodeRoot.As<T>(original);
+
+        //[PrivateApi]
+        //public T As<T>(object original, T fallback) => _DynCodeRoot.As(original, fallback);
+
+        #endregion
+
 
         #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
         [PrivateApi]

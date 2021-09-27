@@ -62,6 +62,17 @@ namespace Custom.Hybrid
 
         #endregion
 
+        #region Convert-Service
+        [PrivateApi] public IConvertService Convert => _DynCodeRoot.Convert;
+        //[PrivateApi]
+        //public T As<T>(object original) => _DynCodeRoot.As<T>(original);
+
+        //[PrivateApi]
+        //public T As<T>(object original, T fallback) => _DynCodeRoot.As<T>(original, fallback);
+
+        #endregion
+
+
 
         #region CreateSource implementations
 
