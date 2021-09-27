@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+using ToSic.Eav.Context;
 using ToSic.Eav.ImportExport.Options;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
@@ -41,13 +42,15 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     {
         private readonly Lazy<ContentExportApi>_contentExportLazy;
         private readonly Lazy<ContentImportApi> _contentImportLazy;
+        private readonly Lazy<IUser> _userLazy;
         private readonly Lazy<EntityApi> _lazyEntityApi;
         protected override string HistoryLogName => "Api.EntCnt";
         
-        public EntityController(Lazy<EntityApi> lazyEntityApi, Lazy<ContentExportApi> contentExportLazy, Lazy<ContentImportApi> contentImportLazy)
+        public EntityController(Lazy<EntityApi> lazyEntityApi, Lazy<ContentExportApi> contentExportLazy, Lazy<ContentImportApi> contentImportLazy, Lazy<IUser> userLazy)
         {
             _contentExportLazy = contentExportLazy;
             _contentImportLazy = contentImportLazy;
+            _userLazy = userLazy;
             _lazyEntityApi = lazyEntityApi;
         }
 
@@ -84,7 +87,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [HttpGet]
         [AllowAnonymous] // will do security check internally
         public HttpResponseMessage Json(int appId, int id, string prefix, bool withMetadata)
-            => _contentExportLazy.Value.Init(appId, Log).DownloadEntityAsJson(GetContext().User, id, prefix, withMetadata);
+            => _contentExportLazy.Value.Init(appId, Log).DownloadEntityAsJson(_userLazy.Value, id, prefix, withMetadata);
 
 
         /// <summary>
@@ -110,7 +113,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             ExportLanguageResolution languageReferences, string selectedIds = null)
         {
             var fileContentAndFileName = _contentExportLazy.Value.Init(appId, Log).ExportContent(
-                GetContext().User,
+                _userLazy.Value,
                 language, defaultLanguage, contentType,
                 recordExport, resourcesReferences,
                 languageReferences, selectedIds);

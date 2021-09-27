@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Languages;
 
@@ -24,17 +26,19 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     public class ZoneController : OqtStatefulControllerBase
     {
         private readonly LanguagesBackend _languagesBackend;
+        private readonly Lazy<SiteStateInitializer> _siteStateInitializerLazy;
         protected override string HistoryLogName => "Api.Zone";
 
-        public ZoneController(LanguagesBackend languagesBackend)
+        public ZoneController(LanguagesBackend languagesBackend, Lazy<SiteStateInitializer> siteStateInitializerLazy)
         {
             _languagesBackend = languagesBackend;
+            _siteStateInitializerLazy = siteStateInitializerLazy;
         }
 
         [HttpGet]
         public IList<SiteLanguageDto> GetLanguages() =>
             _languagesBackend.Init(Log)
-                .GetLanguages(GetContext().Site.Id);
+                .GetLanguages(_siteStateInitializerLazy.Value.InitializedState.Alias.SiteId);
 
         /// <summary>
         /// Enable / disable a language in the EAV
@@ -44,7 +48,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         public void SwitchLanguage(string cultureCode, bool enable) =>
             _languagesBackend.Init(Log)
                 .Toggle(
-                    GetContext().Site.Id,
+                    _siteStateInitializerLazy.Value.InitializedState.Alias.SiteId,
                     cultureCode,
                     enable,
                     CultureInfo.GetCultureInfo(cultureCode).EnglishName);

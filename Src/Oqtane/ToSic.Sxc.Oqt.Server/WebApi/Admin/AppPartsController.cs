@@ -1,11 +1,13 @@
-﻿using System;
-using System.Net.Http;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using System;
+using System.Net.Http;
+using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.ImportExport;
 
@@ -27,12 +29,16 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     {
         private readonly Lazy<ExportContent> _exportContentLazy;
         private readonly Lazy<ImportContent> _importContentLazy;
+        private readonly Lazy<SiteStateInitializer> _siteStateInitializerLazy;
+        private readonly Lazy<IUser> _userLazy;
         protected override string HistoryLogName => "Api.AParts";
 
-        public AppPartsController(Lazy<ExportContent> exportContentLazy, Lazy<ImportContent> importContentLazy)
+        public AppPartsController(Lazy<ExportContent> exportContentLazy, Lazy<ImportContent> importContentLazy, Lazy<SiteStateInitializer> siteStateInitializerLazy, Lazy<IUser> userLazy)
         {
             _exportContentLazy = exportContentLazy;
             _importContentLazy = importContentLazy;
+            _siteStateInitializerLazy = siteStateInitializerLazy;
+            _userLazy = userLazy;
         }
 
         #region Parts Export/Import
@@ -48,7 +54,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public ExportPartsOverviewDto Get(int zoneId, int appId, string scope)
-            => _exportContentLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
+            => _exportContentLazy.Value.Init(_siteStateInitializerLazy.Value.InitializedState.Alias.SiteId, _userLazy.Value, Log)
                 .PreExportSummary(appId, zoneId, scope);
 
         /// <summary>
@@ -63,7 +69,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [HttpGet]
         public HttpResponseMessage Export(int zoneId, int appId, string contentTypeIdsString,
             string entityIdsString, string templateIdsString)
-            => _exportContentLazy.Value.Init(GetContext().Site.Id, GetContext().User, Log)
+            => _exportContentLazy.Value.Init(_siteStateInitializerLazy.Value.InitializedState.Alias.SiteId, _userLazy.Value, Log)
                 .Export(appId, zoneId, contentTypeIdsString, entityIdsString, templateIdsString);
 
         /// <summary>
@@ -80,7 +86,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             PreventServerTimeout300();
             if (HttpContext.Request.Form.Files.Count <= 0) return new ImportResultDto(false, "no files uploaded");
             var file = HttpContext.Request.Form.Files[0];
-            var result = _importContentLazy.Value.Init(GetContext().User, Log).Import(zoneId, appId, file.FileName,
+            var result = _importContentLazy.Value.Init(_userLazy.Value, Log).Import(zoneId, appId, file.FileName,
                 file.OpenReadStream(), GetContext().Site.DefaultCultureCode);
 
             return wrapLog("ok", result);

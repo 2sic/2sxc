@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Oqtane.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Oqtane.Shared;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Data;
+using ToSic.Eav.Context;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi;
@@ -40,12 +39,14 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     {
         private readonly Lazy<ContentTypeApi> _ctApiLazy;
         private readonly Lazy<ContentExportApi> _contentExportLazy;
+        private readonly Lazy<IUser> _userLazy;
         protected override string HistoryLogName => "Api.Types";
 
-        public TypeController(Lazy<ContentTypeApi> ctApiLazy, Lazy<ContentExportApi> contentExportLazy)
+        public TypeController(Lazy<ContentTypeApi> ctApiLazy, Lazy<ContentExportApi> contentExportLazy, Lazy<IUser> userLazy)
         {
             _ctApiLazy = ctApiLazy;
             _contentExportLazy = contentExportLazy;
+            _userLazy = userLazy;
         }
 
         [HttpGet]
@@ -111,7 +112,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [HttpGet]
         [AllowAnonymous] // will do security check internally
         public HttpResponseMessage Json(int appId, string name)
-            => _contentExportLazy.Value.Init(appId, Log).DownloadTypeAsJson(GetContext().User, name);
+            => _contentExportLazy.Value.Init(appId, Log).DownloadTypeAsJson(_userLazy.Value, name);
 
         /// <summary>
         /// Used to be POST ImportExport/ImportContent
@@ -136,7 +137,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             var streams = new List<FileUploadDto>();
             for (var i = 0; i < files.Count; i++)
                 streams.Add(new FileUploadDto { Name = files[i].FileName, Stream = files[i].OpenReadStream() });
-            var result = HttpContext.RequestServices.Build<ImportContent>().Init(GetContext().User, Log)
+            var result = HttpContext.RequestServices.Build<ImportContent>().Init(_userLazy.Value, Log)
                 .ImportContentType(zoneId, appId, streams, GetContext().Site.DefaultCultureCode);
 
             return wrapLog("ok", result);
