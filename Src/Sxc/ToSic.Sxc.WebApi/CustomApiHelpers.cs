@@ -174,7 +174,7 @@ namespace ToSic.Sxc.WebApi
         {
             return new MediaTypeHeaderValue(contentType)
             {
-                CharSet = encoding.WebName
+                CharSet = encoding.WebName // do not use HeaderName or BodyName because it is used for mail agents
             };
         }
 
