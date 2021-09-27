@@ -1,7 +1,8 @@
-﻿using System;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using System;
+using ToSic.Eav.Context;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
@@ -20,6 +21,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
     {
         private readonly Lazy<IEnvironmentInstaller> _envInstallerLazy;
         private readonly Lazy<ImportFromRemote> _impFromRemoteLazy;
+        private readonly Lazy<IUser> _userLazy;
         protected override string HistoryLogName => "Api.Install";
 
         /// <summary>
@@ -31,10 +33,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 
         #region System Installation
 
-        public InstallController(Lazy<IEnvironmentInstaller> envInstallerLazy, Lazy<ImportFromRemote> impFromRemoteLazy)
+        public InstallController(Lazy<IEnvironmentInstaller> envInstallerLazy, Lazy<ImportFromRemote> impFromRemoteLazy, Lazy<IUser> userLazy)
         {
             _envInstallerLazy = envInstallerLazy;
             _impFromRemoteLazy = impFromRemoteLazy;
+            _userLazy = userLazy;
         }
 
         /// <summary>
@@ -82,14 +85,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
         {
             PreventServerTimeout300();
 
-            var oqtaneUser = GetContext().User;
             var container = GetContext().Module;
             bool isApp = !container.IsPrimary;
 
             Log.Add("install package:" + packageUrl);
 
             var block = container.BlockIdentifier;
-            var result = _impFromRemoteLazy.Value.Init(oqtaneUser, Log)
+            var result = _impFromRemoteLazy.Value.Init(_userLazy.Value, Log)
                 .InstallPackage(block.ZoneId, block.AppId, isApp, packageUrl);
 
             Log.Add("install completed with success:" + result.Item1);
