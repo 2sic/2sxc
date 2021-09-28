@@ -156,6 +156,7 @@ namespace ToSic.Sxc.WebApi
             using (var reader = new StreamReader(stream, detectEncodingFromByteOrderMarks: true))
             {
                 reader.ReadToEnd();
+                stream.Position = 0;
                 return reader.CurrentEncoding; // the reader detects the encoding!
             }
         }
