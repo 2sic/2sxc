@@ -153,12 +153,10 @@ namespace ToSic.Sxc.WebApi
 
         public static Encoding GetEncoding(Stream stream)
         {
-            using (var xmlReader = XmlReader.Create(stream, _settings))
+            using (var reader = new StreamReader(stream, detectEncodingFromByteOrderMarks: true))
             {
-                var xmlDocument = new XmlDocument();
-                xmlDocument.Load(xmlReader);
-                stream.Position = 0;
-                return GetEncoding(xmlDocument);
+                reader.ReadToEnd();
+                return reader.CurrentEncoding; // the reader detects the encoding!
             }
         }
 
