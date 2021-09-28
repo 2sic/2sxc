@@ -2,13 +2,22 @@
 using System.Dynamic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Data
 {
     public static class DynamicHelpers
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="wrapRealObjects">if true and the contents isn't already a dynamic object, it will also wrap real objects; otherwise only anonymous</param>
+        /// <param name="wrapChildren"></param>
+        /// <param name="wrapRealChildren"></param>
+        /// <returns></returns>
         [PrivateApi]
-        internal static object WrapIfPossible(object value)
+        internal static object WrapIfPossible(object value, bool wrapRealObjects, bool wrapChildren, bool wrapRealChildren)
         {
             // If null or simple value, use that
             if (value is null) return null;
@@ -22,11 +31,13 @@ namespace ToSic.Sxc.Data
             var result = DynamicJacket.WrapIfJObjectUnwrapIfJValue(value);
 
             // Check if the result already supports navigation... - which is the case if it's a DynamicJacket now
-            if (result is IPropertyLookup) return result;
-
-            if (result is ISxcDynamicObject) return result;
-
-            if (result is DynamicObject) return result;
+            switch (result)
+            {
+                case IPropertyLookup _:
+                case ISxcDynamicObject _:
+                case DynamicObject _:
+                    return result;
+            }
 
             // if (result is IDictionary dicResult) return DynamicReadDictionary(dicResult);
 
@@ -35,7 +46,9 @@ namespace ToSic.Sxc.Data
             if (result.GetType().IsArray) return result;
 
             // Otherwise it's a complex object, which should be re-wrapped for navigation
-            return new DynamicReadObject(value, true);
+            var wrap = wrapRealObjects || value.IsAnonymous();
+            // var dontWrap = onlyRewrapDynamic && value.IsAnonymous();
+            return wrap ? new DynamicReadObject(value, wrapChildren, wrapRealChildren): value;
         }
     }
 }

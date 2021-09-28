@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Data
         /// Use the [key] accessor to get the values as <see cref="DynamicJacket"/> or <see cref="DynamicJacketList"/>
         /// </summary>
         /// <returns>the string names of the keys</returns>
-        public override IEnumerator<object> GetEnumerator() => UnwrappedContents.Properties().Select(p => p.Name).GetEnumerator();
+        public override IEnumerator<object> GetEnumerator() => _contents.Properties().Select(p => p.Name).GetEnumerator();
 
 
         /// <summary>
@@ -77,10 +77,10 @@ namespace ToSic.Sxc.Data
 
         protected override object FindValueOrNull(string name, StringComparison comparison, ILog parentLogOrNull)
         {
-            if (UnwrappedContents == null || !UnwrappedContents.HasValues)
+            if (_contents == null || !_contents.HasValues)
                 return null;
 
-            var found = UnwrappedContents.Properties()
+            var found = _contents.Properties()
                 .FirstOrDefault(
                     p => string.Equals(p.Name, name, comparison));
 
@@ -90,11 +90,11 @@ namespace ToSic.Sxc.Data
         #endregion
 
         /// <inheritdoc />
-        public override object this[int index] => (_propertyArray ?? (_propertyArray = UnwrappedContents.Properties().ToArray()))[index];
+        public override object this[int index] => (_propertyArray ?? (_propertyArray = _contents.Properties().ToArray()))[index];
 
         private JProperty[] _propertyArray;
 
         /// <inheritdoc />
-        object IHasJsonSource.JsonSource => UnwrappedContents;
+        object IHasJsonSource.JsonSource => _contents;
     }
 }

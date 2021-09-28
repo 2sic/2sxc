@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
@@ -17,11 +13,11 @@ namespace ToSic.Sxc.Data
         [PrivateApi("internal")]
         public override List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull)
         {
-            if (UnwrappedContents == null || !UnwrappedContents.HasValues) return new List<PropertyDumpItem>();
+            if (_contents == null || !_contents.HasValues) return new List<PropertyDumpItem>();
 
             if (string.IsNullOrEmpty(path)) path = _dumpSourceName;
 
-            var allProperties = UnwrappedContents.Properties().ToList();
+            var allProperties = _contents.Properties().ToList();
 
             var simpleProps = allProperties.Where(p => !(p.Value is JObject));
             var resultDynChildren = simpleProps.Select(p => new PropertyDumpItem

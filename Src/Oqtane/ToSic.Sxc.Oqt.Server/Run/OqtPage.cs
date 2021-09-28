@@ -8,7 +8,7 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtPage : Context.Page, IWrapper<Oqtane.Models.Page>
+    public class OqtPage : Context.Page, IWrapper<Page>
     {
         private readonly SiteState _siteState;
         private readonly Lazy<IAliasRepository> _aliasRepository;
@@ -22,8 +22,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
             _pages = pages;
         }
 
-        public Oqtane.Models.Page UnwrappedContents { get; set; }
-
+        public Page UnwrappedContents { get; set; }
+        public Page GetContents() => UnwrappedContents;
         public new OqtPage Init(int id)
         {
             base.Init(id);

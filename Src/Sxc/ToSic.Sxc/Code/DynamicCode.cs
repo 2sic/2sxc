@@ -35,14 +35,17 @@ namespace ToSic.Sxc.Code
         {
             Log.LinkTo(parent?.Log);
             Log.Call()(null);
-            UnwrappedContents = parent;
+            _contents = parent;
         }
 
         /// <inheritdoc />
         /// <remarks>
         /// The parent of this object. It's not called Parent but uses an exotic name to ensure that your code won't accidentally create a property with the same name.
         /// </remarks>
-        public IDynamicCode UnwrappedContents { get; private set; }
+        public IDynamicCode UnwrappedContents => _contents;// { get; private set; }
+
+        public IDynamicCode GetContents() => _contents;
+        private IDynamicCode _contents;
 
         [PrivateApi] public IDynamicCodeRoot _DynCodeRoot => (UnwrappedContents as IHasDynamicCodeRoot)?._DynCodeRoot;
 

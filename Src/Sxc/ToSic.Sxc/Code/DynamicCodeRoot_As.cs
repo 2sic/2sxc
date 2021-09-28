@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Code
                     if (dynObject.GetType().IsValueType) return wrapLog("bad call - value type", dynObject);
 
                     // 2021-09-14 new - just convert to a DynamicReadObject
-                    var result = DynamicHelpers.WrapIfPossible(dynObject);
+                    var result = DynamicHelpers.WrapIfPossible(dynObject, true, true, false);
                     if (!(result is null)) return wrapLog("converted to dyn-read", result);
 
                     // Note 2dm 2021-09-14 returning the original object was actually the default till now.

@@ -6,7 +6,6 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Dnn.Run
@@ -58,6 +57,7 @@ namespace ToSic.Sxc.Dnn.Run
 
         public UserInfo UnwrappedContents => _user ?? (_user = PortalSettings.Current?.UserInfo);
         private UserInfo _user;
+        public UserInfo GetContents() => UnwrappedContents;
 
         private static List<int> BuildRoleList()
         {

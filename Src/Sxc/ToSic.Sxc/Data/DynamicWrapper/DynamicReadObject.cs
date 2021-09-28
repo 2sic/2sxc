@@ -16,30 +16,34 @@ namespace ToSic.Sxc.Data
     /// 
     /// </summary>
     /// <remarks>
-    /// Will always return true even if the property doesn't exist, in which case it resolves to null.
+    /// Will always return a value even if the property doesn't exist, in which case it resolves to null.
     /// </remarks>
     [JsonConverter(typeof(DynamicJsonConverter))]
     public partial class DynamicReadObject: DynamicObject, IWrapper<object>, IPropertyLookup, IHasJsonSource, ICanGetNameNotFinal
     {
-        public object UnwrappedContents { get; }
+        public object UnwrappedContents => _contents;
+        public object GetContents() => _contents;
         private readonly Dictionary<string, PropertyInfo> _ignoreCaseLookup = new Dictionary<string, PropertyInfo>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="item"></param>
-        /// <param name="reWrapObjects">Determines if properties which are objects should again be wrapped. When using this for DynamicModel it should be false, otherwise usually true.</param>
+        /// <param name="wrapChildren">Determines if properties which are objects should again be wrapped. When using this for DynamicModel it should be false, otherwise usually true.</param>
         [PrivateApi]
-        public DynamicReadObject(object item, bool reWrapObjects = false)
+        public DynamicReadObject(object item, bool wrapChildren, bool wrapRealChildren)
         {
-            _reWrapObjects = reWrapObjects;
-            UnwrappedContents = item;
+            _wrapChildren = wrapChildren;
+            _wrapRealChildren = wrapRealChildren;
+            _contents = item;
             if (item == null) return;
             
             var itemType = item.GetType();
             foreach (var propertyInfo in itemType.GetProperties()) _ignoreCaseLookup[propertyInfo.Name] = propertyInfo;
         }
-        private readonly bool _reWrapObjects;
+        private readonly bool _wrapChildren;
+        private readonly bool _wrapRealChildren;
+        private object _contents;
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
@@ -60,20 +64,22 @@ namespace ToSic.Sxc.Data
 
         private object FindValueOrNull(string name)
         {
-            if (UnwrappedContents == null)
+            if (_contents == null)
                 return null;
 
             if(!_ignoreCaseLookup.TryGetValue(name, out var lookup))
                 return null;
 
-            var result = lookup.GetValue(UnwrappedContents);
+            var result = lookup.GetValue(_contents);
 
             // Probably re-wrap for further dynamic navigation!
-            return _reWrapObjects ? DynamicHelpers.WrapIfPossible(result) : result;
+            return _wrapChildren 
+                ? DynamicHelpers.WrapIfPossible(result, _wrapRealChildren, _wrapChildren, _wrapRealChildren) 
+                : result;
         }
 
 
-        object IHasJsonSource.JsonSource => UnwrappedContents;
+        object IHasJsonSource.JsonSource => _contents;
         public dynamic Get(string name) => FindValueOrNull(name);
     }
 }

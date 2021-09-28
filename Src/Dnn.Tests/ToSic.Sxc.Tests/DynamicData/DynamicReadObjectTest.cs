@@ -1,6 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using ToSic.Sxc.Data;
+using System.Collections.Generic;
+using Microsoft.CSharp.RuntimeBinder;
+using static ToSic.Sxc.Tests.DynamicData.TestAccessors;
+using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.DynamicData
 {
@@ -19,14 +22,15 @@ namespace ToSic.Sxc.Tests.DynamicData
                 Truthy = true,
             };
 
-            var dynAnon = new DynamicReadObject(anon, false) as dynamic;
+            var dynAnon = DynReadObjT(anon, false, false) as dynamic;
 
-            Assert.IsNull(dynAnon.NotExisting);
-            Assert.AreEqual(anon.Name, dynAnon.Name);
-            Assert.AreEqual(anon.Name, dynAnon.naME, "Should be the same irrelevant of case");
-            Assert.AreEqual(anon.Birthday, dynAnon.Birthday, "dates should be the same");
-            Assert.AreEqual(anon.Truthy, dynAnon.truthy);
+            IsNull(dynAnon.NotExisting);
+            AreEqual(anon.Name, dynAnon.Name);
+            AreEqual(anon.Name, dynAnon.naME, "Should be the same irrelevant of case");
+            AreEqual(anon.Birthday, dynAnon.Birthday, "dates should be the same");
+            AreEqual(anon.Truthy, dynAnon.truthy);
         }
+
 
         [TestMethod]
         public void SubObjectNotWrapped()
@@ -40,25 +44,119 @@ namespace ToSic.Sxc.Tests.DynamicData
                 }
             };
 
-            var dynAnon = new DynamicReadObject(anon, false) as dynamic;
-            Assert.AreEqual(anon.Sub, dynAnon.Sub);
+            var dynAnon = DynReadObjT(anon, false, false) as dynamic;
+            AreEqual(anon.Sub, dynAnon.Sub);
         }
 
-        [TestMethod]
-        public void SubObjectAutoWrapped()
+        [TestMethod] public void SubObjectAutoWrappedTrueFalse() 
+            => AreEqual("TF-ok", SubObjectAutoWrapped(true, false, "TF"));
+
+        [TestMethod] public void SubObjectAutoWrappedTrueTrue() 
+            => AreEqual("TT-ok", SubObjectAutoWrapped(true, true, "TT"));
+
+        [TestMethod] public void SubObjectAutoWrappedFalseFalse() 
+            => AreEqual("FF-ok", SubObjectAutoWrapped(false, false, "FF"));
+        [TestMethod] public void SubObjectAutoWrappedFalseTrue() 
+            => AreEqual("FT-ok", SubObjectAutoWrapped(false, true, "FT"));
+
+        #region Exeption-tests because wrappings shouldn't work
+
+        
+
+        [ExpectedException(typeof(RuntimeBinderException))]
+        [TestMethod] public void SubObjectAutoWrappedErrSubFf() 
+            => AreEqual("ErrSub-ok", SubObjectAutoWrapped(false, false, "ErrSub"));
+        [ExpectedException(typeof(RuntimeBinderException))]
+        [TestMethod] public void SubObjectAutoWrappedErrSubFt() 
+            => AreEqual("ErrSub-ok", SubObjectAutoWrapped(false, true, "ErrSub"));
+
+        [ExpectedException(typeof(RuntimeBinderException))]
+        [TestMethod] public void SubObjectAutoWrappedErrSubSubFf() 
+            => AreEqual("ErrSubSub-ok", SubObjectAutoWrapped(false, false, "ErrSubSub"));
+        [ExpectedException(typeof(RuntimeBinderException))]
+        [TestMethod] public void SubObjectAutoWrappedErrSubSubFt() 
+            => AreEqual("ErrSubSub-ok", SubObjectAutoWrapped(false, true, "ErrSubSub"));
+
+        [ExpectedException(typeof(RuntimeBinderException))]
+        [TestMethod] public void SubObjectAutoWrappedErrSubSomethingFf() 
+            => AreEqual("ErrSubSomething-ok", SubObjectAutoWrapped(false, false, "ErrSubSomething"));
+        [ExpectedException(typeof(RuntimeBinderException))]
+        [TestMethod] public void SubObjectAutoWrappedErrSubSomethingFt() 
+            => AreEqual("ErrSubSomething-ok", SubObjectAutoWrapped(false, true, "ErrSubSomething"));
+        #endregion
+
+        public string SubObjectAutoWrapped(bool wrapChildren, bool wrapRealChildren, string testSet)
         {
             var anon = new
             {
                 Simple = "simple",
                 Sub = new
                 {
-                    SubSub = "Test"
-                }
+                    Something = "Test",
+                    Sub = new {
+                        Sub = new { }
+                    }
+                },
+                Guid = new Guid(),
+                SubNonDynamic = new List<string>(),
+                Arr = new string[0],
             };
 
-            var dynAnon = new DynamicReadObject(anon, true) as dynamic;
-            Assert.AreNotEqual(anon.Sub, dynAnon.Sub, "Should not be equal, as the Sub should be re-wrapped");
-            Assert.AreEqual(anon.Sub.SubSub, dynAnon.sub.subsub);
+            // Test wrapping anonymous sub-objects only
+            var msgPlus = $" - DynRead(..., {wrapChildren}, {wrapRealChildren})";
+            var dynWrapAnon = DynReadObjT(anon, wrapChildren, wrapRealChildren) as dynamic;
+
+            // These tests should run in all cases
+            AreNotEqual(anon, dynWrapAnon, $"wrapper should never be equal {msgPlus}");
+            AreEqual(anon, dynWrapAnon.GetContents(), $"Wrapped content should be equal {msgPlus}");
+            AreEqual(anon.Arr, dynWrapAnon.Arr, $"Arrays shouldn't be re-wrapped {msgPlus}");
+            AreEqual(anon.Guid, dynWrapAnon.Guid, $"Guids shouldn't be re-wrapped {msgPlus}");
+
+            if (testSet == "TF" || testSet == "TT")
+            {
+                AreNotEqual(anon.Sub, dynWrapAnon.Sub, $"Should not be equal, as the Sub should be re-wrapped {msgPlus}");
+                AreEqual(anon.Sub, dynWrapAnon.Sub.GetContents(), $"Sub should be = to unwrapped {msgPlus}");
+                AreNotEqual(anon.Sub.Sub, dynWrapAnon.Sub.Sub, $"sub-sub shouldn't be equal either, as they are still wrapped {msgPlus}");
+                AreEqual(anon.Sub.Sub, dynWrapAnon.Sub.Sub.GetContents(), $"sub-sub GetContents {msgPlus}");
+                AreEqual(anon.Sub.Something, dynWrapAnon.sub.something, $"simple value, but case-invariant {msgPlus}");
+                // added, todo
+                AreEqual(anon.Sub.Something, dynWrapAnon.Sub.something, $"simple value, but case-invariant {msgPlus}");
+                AreEqual(anon.Sub.Something, dynWrapAnon.Sub.Something, $"simple value, but case-invariant {msgPlus}");
+                // </added>
+            }
+
+            if (testSet == "TF" || testSet == "FF" || testSet == "FT")
+            {
+                AreEqual(anon.SubNonDynamic, dynWrapAnon.SubNonDynamic, $"real object, shouldn't be re-wrapped {msgPlus}");
+            }
+
+            if (testSet == "TT")
+            {
+                AreNotEqual(anon.SubNonDynamic, dynWrapAnon.SubNonDynamic, $"real object, shouldn't be re-wrapped {msgPlus}");
+                AreEqual(anon.SubNonDynamic, dynWrapAnon.SubNonDynamic.GetContents(), $"real object, shouldn't be re-wrapped {msgPlus}");
+            }
+
+
+            if (testSet == "FT" || testSet == "FF")
+            {
+                AreEqual(anon.Sub, dynWrapAnon.Sub, $"Should not be equal, as the Sub should be re-wrapped {msgPlus}");
+                AreEqual(anon.Sub.Sub, dynWrapAnon.Sub.Sub, $"sub-sub shouldn't be equal either, as they are still wrapped {msgPlus}");
+            }
+
+
+            // Test wrapping no sub-objects
+            
+            // All these should throw errors when in FF or FT mode
+            if (testSet == "ErrSub")
+                AreEqual(anon.Sub, dynWrapAnon.Sub.GetContents(), $"Sub should be = to unwrapped {msgPlus}");
+
+            if (testSet == "ErrSubSub")
+                AreEqual(anon.Sub.Sub, dynWrapAnon.Sub.Sub.GetContents(), $"sub-sub GetContents {msgPlus}");
+
+            if (testSet == "ErrSubSomething")
+                AreEqual(anon.Sub.Something, dynWrapAnon.sub.something, $"simple value, but case-invariant {msgPlus}");
+
+            return testSet + "-ok";
         }
     }
 }

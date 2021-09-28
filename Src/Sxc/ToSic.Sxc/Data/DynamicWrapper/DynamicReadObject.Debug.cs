@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         public List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull)
         {
-            if (UnwrappedContents == null) return new List<PropertyDumpItem>();
+            if (_contents == null) return new List<PropertyDumpItem>();
 
             if (string.IsNullOrEmpty(path)) path = _dumpSourceName;
 
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Data
                 }).Select(p => new
                 {
                     p.Field,
-                    CanDump = DynamicHelpers.WrapIfPossible(p.Pdi.Property.Result) as IPropertyLookup
+                    CanDump = DynamicHelpers.WrapIfPossible(p.Pdi.Property.Result, false, true, true) as IPropertyLookup
                 })
                 .Where(p => !(p.CanDump is null))
                 .ToList();

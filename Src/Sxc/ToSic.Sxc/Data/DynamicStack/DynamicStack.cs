@@ -19,6 +19,7 @@ namespace ToSic.Sxc.Data
         }
         
         public IPropertyStack UnwrappedContents { get; }
+        public IPropertyStack GetContents() => UnwrappedContents;
 
         public dynamic GetSource(string name)
         {

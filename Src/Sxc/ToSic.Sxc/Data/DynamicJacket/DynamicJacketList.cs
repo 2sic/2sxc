@@ -22,14 +22,14 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         public override IEnumerator<object> GetEnumerator() 
-            => UnwrappedContents.Select(DynamicJacket.WrapIfJObjectUnwrapIfJValue).GetEnumerator();
+            => _contents.Select(DynamicJacket.WrapIfJObjectUnwrapIfJValue).GetEnumerator();
 
         /// <summary>
         /// Access the items in this object - but only if the underlying object is an array. 
         /// </summary>
         /// <param name="index">array index</param>
         /// <returns>the item or an error if not found</returns>
-        public override object this[int index] => DynamicJacket.WrapIfJObjectUnwrapIfJValue(UnwrappedContents[index]);
+        public override object this[int index] => DynamicJacket.WrapIfJObjectUnwrapIfJValue(_contents[index]);
 
         [PrivateApi("internal")]
         public override List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull)
@@ -47,10 +47,10 @@ namespace ToSic.Sxc.Data
         /// <returns></returns>
         protected override object FindValueOrNull(string name, StringComparison comparison, ILog parentLogOrNull)
         {
-            if (UnwrappedContents == null || !UnwrappedContents.HasValues)
+            if (_contents == null || !_contents.HasValues)
                 return null;
 
-            var found = UnwrappedContents.FirstOrDefault(p =>
+            var found = _contents.FirstOrDefault(p =>
                 {
                     if (!(p is JObject pJObject))
                         return false;

@@ -15,14 +15,17 @@ namespace ToSic.Sxc.Context
         #region Constructors and DI
 
         /// <inheritdoc />
-        public T UnwrappedContents { get; private set; }
+        public T UnwrappedContents => _contents;// { get; private set; }
+
+        public T GetContents() => _contents;
+        [PrivateApi] private T _contents;
 
         protected Module(string logName) : base(logName) { }
 
         public IModule Init(T item, ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            UnwrappedContents = item;
+            _contents = item;
             return this;
         }
 
@@ -30,10 +33,10 @@ namespace ToSic.Sxc.Context
         #endregion
 
         /// <inheritdoc />
-        public abstract int Id { get; /*protected set;*/ }
+        public abstract int Id { get; }
 
         /// <inheritdoc />
-        public abstract bool IsPrimary { get; /*protected set;*/ }
+        public abstract bool IsPrimary { get; }
 
         /// <inheritdoc />
         public abstract IBlockIdentifier BlockIdentifier { get; }

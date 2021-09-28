@@ -20,7 +20,12 @@ namespace ToSic.Sxc.Data
         /// <summary>
         /// The underlying data, in case it's needed for various internal operations.
         /// </summary>
-        public T UnwrappedContents { get; }
+        [PrivateApi]
+        public T UnwrappedContents => _contents;
+
+        [PrivateApi]
+        protected T _contents;
+        public T GetContents() => _contents; // UnwrappedContents;
 
         /// <summary>
         /// Check if it's an array.
@@ -33,7 +38,7 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="originalData">the original data we're wrapping</param>
         [PrivateApi]
-        protected DynamicJacketBase(T originalData) => UnwrappedContents = originalData;
+        protected DynamicJacketBase(T originalData) => _contents = originalData;
 
         /// <summary>
         /// Enable enumeration. When going through objects (properties) it will return the keys, not the values. <br/>
@@ -50,13 +55,13 @@ namespace ToSic.Sxc.Data
         /// If the object is just output, it should show the underlying json string
         /// </summary>
         /// <returns>the inner json string</returns>
-        public override string ToString() => UnwrappedContents.ToString();
+        public override string ToString() => _contents.ToString();
 
         /// <inheritdoc />
         public dynamic Get(string name) => FindValueOrNull(name, StringComparison.InvariantCultureIgnoreCase, null);
 
         /// <inheritdoc />
-        public int Count => ((IList) UnwrappedContents).Count;
+        public int Count => ((IList) _contents).Count;
 
         /// <summary>
         /// Not yet implemented accessor - must be implemented by the inheriting class.

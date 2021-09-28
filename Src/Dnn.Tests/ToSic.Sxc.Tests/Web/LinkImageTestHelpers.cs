@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ToSic.Sxc.Data;
+﻿using ToSic.Sxc.Data;
+using ToSic.Sxc.Tests.DynamicData;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Tests.Web
@@ -17,7 +13,7 @@ namespace ToSic.Sxc.Tests.Web
         /// </summary>
         /// <param name="contents"></param>
         /// <returns></returns>
-        public static DynamicReadObject ToDyn(object contents) => new DynamicReadObject(contents);
+        public static DynamicReadObject ToDyn(object contents) => TestAccessors.DynReadObjT(contents, false, false);
 
     }
 }
