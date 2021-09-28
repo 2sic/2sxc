@@ -1,7 +1,5 @@
-﻿using Oqtane.Extensions;
-using Oqtane.Models;
+﻿using Oqtane.Models;
 using Oqtane.Repository;
-using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -194,19 +192,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         private Folder CreateVirtualFolder(Folder parentFolder, string path, string folder)
         {
-            var newVirtualFolder = new Folder
-            {
-                SiteId = AdamContext.Site.Id,
-                ParentId = parentFolder.FolderId,
-                Name = folder,
-                Path = path,
-                Order = 1,
-                IsSystem = true,
-                Permissions = new List<Permission>
-                {
-                    new Permission(PermissionNames.View, RoleNames.Everyone, true),
-                }.EncodePermissions()
-            };
+            var newVirtualFolder = AdamFolderHelper.NewVirtualFolder(AdamContext.Site.Id, parentFolder.FolderId, path, folder);
             OqtFolderRepository.AddFolder(newVirtualFolder);
             return newVirtualFolder;
         }

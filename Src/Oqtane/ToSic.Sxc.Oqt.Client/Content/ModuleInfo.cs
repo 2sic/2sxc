@@ -16,6 +16,7 @@ namespace ToSic.Sxc.Oqt.Content
          * 12-02-01 - SQL - Oqtane 2.1.0
          * 12-04-00 -  -  - Oqtane 2.2.0
          * 12-04-01 -  -  - Nothing yet
+         * 12-05-00 - SQL - Oqtane db fix for folders
          */
 
         internal static ModuleDefinition BuildModuleDefinition(string name, string description) => new ModuleDefinition
