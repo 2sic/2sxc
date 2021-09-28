@@ -124,7 +124,7 @@ namespace ToSic.Sxc.Code
 
         #region Convert
 
-        [PrivateApi("WIP 12.05")]
+        /// <inheritdoc />
         public IConvertService Convert => _convert ?? (_convert = _serviceProvider.Build<IConvertService>());
         private IConvertService _convert;
 

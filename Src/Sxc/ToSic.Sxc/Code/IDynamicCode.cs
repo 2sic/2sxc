@@ -189,13 +189,14 @@ namespace ToSic.Sxc.Code
 
         #region Convert-Service
 
-        [PrivateApi("WIP 12.05")]
+        /// <summary>
+        /// Conversion helper for common data conversions in Razor and WebAPIs
+        /// </summary>
+        /// <remarks>
+        /// Added in 2sxc 12.05
+        /// </remarks>
         IConvertService Convert { get; }
 
-        //[PrivateApi("WIP 12.05")]
-        //T As<T>(object original);
-        //[PrivateApi("wip 12.05")]
-        //T As<T>(object original, T fallback);
         #endregion
 
         #region Create Data Sources

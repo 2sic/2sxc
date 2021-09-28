@@ -34,6 +34,7 @@ namespace ToSic.SexyContent.WebApi
     /// safer because it can't accidentally mix the App with a different appId in the params
     /// </summary>
     [DnnLogExceptions]
+    [Obsolete("This will continue to work, but you should use the Custom.Hybrid.Api12 or Custom.Dnn.Api12 instead.")]
     public abstract partial class SxcApiController : 
         DynamicApiController, 
         IDnnDynamicWebApi,
@@ -145,17 +146,6 @@ namespace ToSic.SexyContent.WebApi
 
         [Obsolete("This is an old way used to loop things. Use Data[\"Default\"] instead. Will be removed in 2sxc v10")]
         public List<Element> List => new DynamicCodeObsolete(_DynCodeRoot).ElementList;
-
-        #endregion
-
-        #region Convert-Service
-        [PrivateApi] public IConvertService Convert => _DynCodeRoot.Convert;
-
-        //[PrivateApi]
-        //public T As<T>(object original) => _DynCodeRoot.As<T>(original);
-
-        //[PrivateApi]
-        //public T As<T>(object original, T fallback) => _DynCodeRoot.As(original, fallback);
 
         #endregion
 

@@ -19,7 +19,7 @@ namespace Custom.Hybrid
     /// The base class for Hybrid Razor-Components in 2sxc 12 <br/>
     /// Provides context objects like CmsContext, helpers like Edit and much more. <br/>
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("As of now just fyi, should be finalized for 2sxc 12")]
+    [PublicApi]
     public abstract partial class Razor12 : RazorComponentBase, IRazor12
     {
         [PrivateApi("Hide this, no need to publish; would only confuse users")]
@@ -81,12 +81,9 @@ namespace Custom.Hybrid
         #endregion
 
         #region Convert-Service
-        [PrivateApi] public IConvertService Convert => _DynCodeRoot.Convert;
-        //[PrivateApi]
-        //public T As<T>(object original) => _DynCodeRoot.As<T>(original);
 
-        //[PrivateApi]
-        //public T As<T>(object original, T fallback) => _DynCodeRoot.As<T>(original, fallback);
+        /// <inheritdoc />
+        public IConvertService Convert => _DynCodeRoot.Convert;
 
         #endregion
 

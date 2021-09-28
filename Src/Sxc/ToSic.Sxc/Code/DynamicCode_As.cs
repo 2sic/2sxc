@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
@@ -44,12 +43,8 @@ namespace ToSic.Sxc.Code
 
         #region Convert-Service
 
-        [PrivateApi] public IConvertService Convert => UnwrappedContents.Convert;
-
-        //public T As<T>(object original) => UnwrappedContents.As<T>(original);
-
-        //[PrivateApi]
-        //public T As<T>(object original, T fallback) => UnwrappedContents.As(original, fallback);
+        /// <inheritdoc />
+        public IConvertService Convert => UnwrappedContents.Convert;
 
         #endregion
 

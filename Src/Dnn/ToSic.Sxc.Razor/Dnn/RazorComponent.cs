@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Dnn
     /// Provides context infos like the Dnn object, helpers like Edit and much more. <br/>
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract class RazorComponent : Custom.Dnn.Razor12
+    public abstract partial class RazorComponent : Custom.Dnn.Razor12
     {
         //[PrivateApi("Hide this, no need to publish; would only confuse users")]
         //protected RazorComponent()

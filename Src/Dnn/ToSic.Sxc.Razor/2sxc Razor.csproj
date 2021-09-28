@@ -123,6 +123,7 @@
     <Compile Include="Custom\Hybrid\Razor12_DynamicModel.cs" />
     <Compile Include="Dnn\beta\InheritRazorComponent.cs" />
     <Compile Include="Dnn\RazorCodeManager.cs" />
+    <Compile Include="Dnn\RazorComponent.NewNotAvailable.cs" />
     <Compile Include="Dnn\RazorComponentCode.cs" />
     <Compile Include="Dnn\RazorComponent_Code.cs" />
     <Compile Include="Dnn\RazorComponent_Customize.cs" />

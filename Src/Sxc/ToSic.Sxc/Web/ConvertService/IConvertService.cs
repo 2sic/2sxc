@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Documentation;
 #if NET451
 using IHtmlString = System.Web.IHtmlString;
+// ReSharper disable MethodOverloadWithOptionalParameter
 #else
 using IHtmlString = Microsoft.AspNetCore.Html.IHtmlContent;
 #endif
@@ -71,39 +72,51 @@ namespace ToSic.Sxc.Web
         /// </summary>
         int ToInt(object value);
 
+        int ToInt(object value, 
+            string noParamOrder = Eav.Parameters.Protector,
+            int fallback = default);
+
         /// <summary>
         /// Convert any object safely to float.
         /// This does the same as <see cref="To{T}(object)"/> but this is easier to type in Razor.
-        /// If you need a fallback, please use the normal <see cref="To{T}(object, T)"/> a that will work without if, the type if the fallback value has the right type.
         /// </summary>
         float ToFloat(object value);
 
-        /// <summary>
-        /// Convert any object safely to double.
-        /// This does the same as <see cref="To{T}(object)"/> but this is easier to type in Razor.
-        /// If you need a fallback, please use the normal <see cref="To{T}(object, T)"/> a that will work without if, the type if the fallback value has the right type.
-        /// </summary>
-        double ToDouble(object value);
+        float ToFloat(object value,
+            string noParamOrder = Eav.Parameters.Protector,
+            float fallback = default);
 
         /// <summary>
         /// Convert any object safely to double.
         /// This does the same as <see cref="To{T}(object)"/> but this is easier to type in Razor.
-        /// If you need a fallback, please use the normal <see cref="To{T}(object, T)"/> a that will work without if, the type if the fallback value has the right type.
+        /// </summary>
+        double ToDouble(object value);
+        double ToDouble(object value,
+            string noParamOrder = Eav.Parameters.Protector,
+            double fallback = default);
+
+        /// <summary>
+        /// Convert any object safely to double.
+        /// This does the same as <see cref="To{T}(object)"/> but this is easier to type in Razor.
         /// </summary>
         bool ToBool(object value);
 
+        bool ToBool(object value,
+            string noParamOrder = Eav.Parameters.Protector,
+            bool fallback = default);
 
         /// <summary>
-        /// Convert any object safely to string.
-        /// This does the same as <see cref="To{T}(object)"/> but this is easier to type in Razor.
-        /// If you need a fallback, please use the normal <see cref="To{T}(object, T)"/> a that will work without if, the type if the fallback value has the right type.
+        /// Convert any object safely to string to put into source code like HTML-attributes, inline-JavaScript or similar.
+        ///
+        /// This is usually used to ensure numbers or booleans are in a format which works.
         ///
         /// Important: this is especially useful in scenarios where a number must always have a dot "." notation, because it will ensure that even if the UI culture would use a comma ",".
         /// For example, when giving numbers to JavaScript.
         /// </summary>
-        string ToString(object value);
-
-        IHtmlString ToRaw(object value);
+        string ForCode(object value);
+        string ForCode(object value, 
+            string noParamOrder = Eav.Parameters.Protector, 
+            string fallback = default);
 
         /// <summary>
         /// Sub-Service to convert JSON
@@ -112,9 +125,5 @@ namespace ToSic.Sxc.Web
 
         // TODO:
         // - ToDateTime
-        // - ToJson
-        // - JsonTo<...>
-        // - JsonToObject
-
     }
 }

@@ -46,7 +46,7 @@ namespace ToSic.SexyContent.Razor
 
         public ILinkHelper Link => _DynCodeRoot.Link;
 
-        [PrivateApi] public dynamic DynamicModel => throw new NotSupportedException($"{nameof(DynamicModel)} not implemented on {nameof(SexyContentWebPage)}. Use a newer base class to leverage this. ");
+        [PrivateApi] public dynamic DynamicModel => throw new NotSupportedException($"{nameof(DynamicModel)} not implemented on {nameof(SexyContentWebPage)}. {RazorComponent.NotImplementedUseCustomBase}");
 
         /// <summary>
         /// Helper commands to enable in-page editing functionality
@@ -127,13 +127,9 @@ namespace ToSic.SexyContent.Razor
         #endregion
 
         #region Convert-Service
-        [PrivateApi] public IConvertService Convert => _DynCodeRoot.Convert;
 
-        //[PrivateApi]
-        //public T As<T>(object original) => _DynCodeRoot.As<T>(original);
-
-        //[PrivateApi]
-        //public T As<T>(object original, T fallback) => _DynCodeRoot.As(original, fallback);
+        [PrivateApi] 
+        public IConvertService Convert => throw new NotSupportedException($"{nameof(Convert)} not implemented on {nameof(SexyContentWebPage)}. {RazorComponent.NotImplementedUseCustomBase}");
 
         #endregion
 
