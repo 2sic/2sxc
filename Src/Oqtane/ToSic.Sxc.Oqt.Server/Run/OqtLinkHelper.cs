@@ -96,9 +96,14 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             var page = _pageRepository.GetPage(pid.Value);
 
+            // if pageId is invalid, fallback to currentPageId
+            if (page == null && currentPageId.HasValue && pid != currentPageId)
+                page = _pageRepository.GetPage(currentPageId.Value);
+
             var alias = _siteStateInitializer.InitializedState.Alias;
 
-            var relativePath = Utilities.NavigateUrl(alias.Path, page.Path, parameters ?? string.Empty); // NavigateUrl do not works with absolute links
+            // for invalid page numbers just skip that part 
+            var relativePath = Utilities.NavigateUrl(alias.Path, page?.Path ?? string.Empty, parameters ?? string.Empty); // NavigateUrl do not works with absolute links
 
             return absoluteUrl ? $"{GetDomainName()}{relativePath}" : relativePath;
         }
