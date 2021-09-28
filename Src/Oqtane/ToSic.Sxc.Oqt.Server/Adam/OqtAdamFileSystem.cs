@@ -236,7 +236,8 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             var fldObj = GetOqtFolder(folder.AsOqt().SysId);
             if(fldObj == null) return new List<Folder<int, int>>();
 
-            var firstList = OqtFolderRepository.GetFolders(fldObj.FolderId);
+            // get sub folders with in parent folder
+            var firstList = OqtFolderRepository.GetFolders(fldObj.SiteId).Where(f => f.ParentId == fldObj.FolderId);
             var folders = firstList?.Select(OqtToAdam).ToList()
                           ?? new List<Folder<int, int>>();
             return callLog($"{folders.Count}", folders);
