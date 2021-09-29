@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using Oqtane.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
@@ -16,14 +15,16 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         public IActionResult ErrorLocalDevelopment(
             [FromServices] IWebHostEnvironment webHostEnvironment)
         {
-            // TODO: EnsureSchemaOperation that errors are displayed just to super user... norma user should het simple message ...
-            
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
 
-            Response.ContentType = "application/json";
+            // super user and admins gets all details in error
+            if (User.IsInRole(RoleNames.Host) || User.IsInRole(RoleNames.Admin))
+                return Problem(
+                    detail: context.Error.StackTrace,
+                    title: context.Error.Message);
 
+            // normal users gets minimal error message.
             return Problem(
-                detail: context.Error.StackTrace,
                 title: context.Error.Message);
         }
     }
