@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected OqtControllerBase()
         {
             // ReSharper disable once VirtualMemberCallInConstructor
-            Log = new Log(HistoryLogName, null, $"OqtControllerBase");
+            Log = new Log(HistoryLogName, null, GetType().Name);
             // ReSharper disable once VirtualMemberCallInConstructor
             //History.Add(HistoryLogGroup, Log);
         }
