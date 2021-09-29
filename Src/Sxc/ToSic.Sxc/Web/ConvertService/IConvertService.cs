@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+// ReSharper disable MethodOverloadWithOptionalParameter
 
 namespace ToSic.Sxc.Web
 {
@@ -12,9 +13,9 @@ namespace ToSic.Sxc.Web
     /// * Numbers like 42.5 reliably convert to strings "42.5" instead of "42,5" in certain cultures
     /// </summary>
     /// <remarks>
-    /// New is v12.05
+    /// New in v12.05
     /// </remarks>
-    [PublicApi("New in 12.05")]
+    [PublicApi]
     public interface IConvertService
     {
         /// <summary>
@@ -54,7 +55,7 @@ namespace ToSic.Sxc.Web
         /// <param name="fallback">The value used if conversion fails.</param>
         /// <returns></returns>
         T To<T>(object value,
-            string noParamOrder = Eav.Parameters.Protector,
+            string paramsMustBeNamed = Eav.Parameters.Protector,
             T fallback = default);
 
 
@@ -65,7 +66,7 @@ namespace ToSic.Sxc.Web
         int ToInt(object value);
 
         int ToInt(object value, 
-            string noParamOrder = Eav.Parameters.Protector,
+            string paramsMustBeNamed = Eav.Parameters.Protector,
             int fallback = default);
 
         /// <summary>
@@ -75,7 +76,7 @@ namespace ToSic.Sxc.Web
         float ToFloat(object value);
 
         float ToFloat(object value,
-            string noParamOrder = Eav.Parameters.Protector,
+            string paramsMustBeNamed = Eav.Parameters.Protector,
             float fallback = default);
 
         /// <summary>
@@ -84,7 +85,7 @@ namespace ToSic.Sxc.Web
         /// </summary>
         double ToDouble(object value);
         double ToDouble(object value,
-            string noParamOrder = Eav.Parameters.Protector,
+            string paramsMustBeNamed = Eav.Parameters.Protector,
             double fallback = default);
 
         /// <summary>
@@ -94,7 +95,7 @@ namespace ToSic.Sxc.Web
         bool ToBool(object value);
 
         bool ToBool(object value,
-            string noParamOrder = Eav.Parameters.Protector,
+            string paramsMustBeNamed = Eav.Parameters.Protector,
             bool fallback = default);
 
         /// <summary>
@@ -105,11 +106,10 @@ namespace ToSic.Sxc.Web
         /// * booleans will be `true` or `false` (not `True` or `False`)
         /// * numbers will have a . notation and never a comma (like in de-DE cultures)
         /// * dates will convert to ISO format without time zone
-        ///
         /// </summary>
         string ForCode(object value);
         string ForCode(object value, 
-            string noParamOrder = Eav.Parameters.Protector, 
+            string paramsMustBeNamed = Eav.Parameters.Protector, 
             string fallback = default);
 
         /// <summary>
