@@ -7,7 +7,7 @@ GO
 UPDATE [dbo].[Folder] SET [IsSystem] = 0, [Type] = 'Private' WHERE [Path] LIKE 'adam%' AND [IsSystem] = 1
 GO
 
--- Insert missing View permissions
+-- Inser missing Browse permissions for All Users
 INSERT INTO [dbo].[Permission]
 	([SiteId]
 	,[EntityName]
@@ -21,27 +21,26 @@ INSERT INTO [dbo].[Permission]
 	,[ModifiedBy]
 	,[ModifiedOn])
 SELECT 
-	[SiteId] = COALESCE(p.[SiteId], f.[SiteId])
-	,[EntityName] = COALESCE(p.[EntityName], 'Folder')
-	,[FolderId] = COALESCE(p.[EntityId], f.[FolderId])
-	,[PermissionName] = COALESCE(p.[PermissionName], 'View')
-	,[RoleId] = COALESCE(p.[RoleId],pv.[RoleId])
-	,[UserId] = COALESCE(p.[UserId],pv.[UserId])
-	,[IsAuthorized] = COALESCE(p.[IsAuthorized], pv.[IsAuthorized], 1)
-	,[CreatedBy] = COALESCE(p.[CreatedBy], pv.[CreatedBy] ,f.[CreatedBy])
-	,[CreatedOn] = COALESCE(p.[CreatedOn], pv.[CreatedOn], f.[CreatedOn])
-	,[ModifiedBy] = COALESCE(p.[ModifiedBy], pv.[ModifiedBy], f.[ModifiedBy])
-	,[ModifiedOn] = COALESCE(p.[ModifiedOn], pv.[ModifiedOn], f.[ModifiedOn])
+	[SiteId] = f.[SiteId]
+	,[EntityName] = 'Folder'
+	,[FolderId] = f.[FolderId]
+	,[PermissionName] = 'Browse'
+	,[RoleId] = 1 -- All Users
+	,[UserId] = null
+	,[IsAuthorized] = 1
+	,[CreatedBy] = f.[CreatedBy]
+	,[CreatedOn] = f.[CreatedOn]
+	,[ModifiedBy] = f.[ModifiedBy]
+	,[ModifiedOn] = f.[ModifiedOn]
 FROM 
 	[dbo].[Folder] AS f
-	LEFT JOIN [dbo].[Permission] AS p ON p.[EntityId] = f.[FolderId] AND p.[EntityName] = 'Folder' AND p.[PermissionName] = 'View'
-	LEFT JOIN [dbo].[Permission] AS pv ON pv.[EntityId] = f.[FolderId] AND pv.[EntityName] = 'Folder' AND pv.[PermissionName] = 'Browse'
+	LEFT JOIN [dbo].[Permission] AS p ON p.[EntityId] = f.[FolderId] AND p.[EntityName] = 'Folder' AND p.[PermissionName] = 'Browse'
 WHERE
 	f.[Path] LIKE 'adam%'
 	AND p.[PermissionId] IS NULL
 GO
 
--- Inser missing Browse permissions
+-- Insert missing View permissions for All Users
 INSERT INTO [dbo].[Permission]
 	([SiteId]
 	,[EntityName]
@@ -55,22 +54,124 @@ INSERT INTO [dbo].[Permission]
 	,[ModifiedBy]
 	,[ModifiedOn])
 SELECT 
-	[SiteId] = COALESCE(p.[SiteId], f.[SiteId])
-	,[EntityName] = COALESCE(p.[EntityName], 'Folder')
-	,[FolderId] = COALESCE(p.[EntityId], f.[FolderId])
-	,[PermissionName] = COALESCE(p.[PermissionName], 'Browse')
-	,[RoleId] = COALESCE(p.[RoleId],pv.[RoleId])
-	,[UserId] = COALESCE(p.[UserId],pv.[UserId])
-	,[IsAuthorized] = COALESCE(p.[IsAuthorized], pv.[IsAuthorized], 1)
-	,[CreatedBy] = COALESCE(p.[CreatedBy], pv.[CreatedBy] ,f.[CreatedBy])
-	,[CreatedOn] = COALESCE(p.[CreatedOn], pv.[CreatedOn], f.[CreatedOn])
-	,[ModifiedBy] = COALESCE(p.[ModifiedBy], pv.[ModifiedBy], f.[ModifiedBy])
-	,[ModifiedOn] = COALESCE(p.[ModifiedOn], pv.[ModifiedOn], f.[ModifiedOn])
+	[SiteId] = f.[SiteId]
+	,[EntityName] = 'Folder'
+	,[FolderId] = f.[FolderId]
+	,[PermissionName] = 'View'
+	,[RoleId] = 1 -- All Users
+	,[UserId] = null
+	,[IsAuthorized] = 1
+	,[CreatedBy] = f.[CreatedBy]
+	,[CreatedOn] = f.[CreatedOn]
+	,[ModifiedBy] = f.[ModifiedBy]
+	,[ModifiedOn] = f.[ModifiedOn]
 FROM 
 	[dbo].[Folder] AS f
-	LEFT JOIN [dbo].[Permission] AS p ON p.[EntityId] = f.[FolderId] AND p.[EntityName] = 'Folder' AND p.[PermissionName] = 'Browse'
-	LEFT JOIN [dbo].[Permission] AS pv ON pv.[EntityId] = f.[FolderId] AND pv.[EntityName] = 'Folder' AND pv.[PermissionName] = 'View'
+	LEFT JOIN [dbo].[Permission] AS p ON p.[EntityId] = f.[FolderId] AND p.[EntityName] = 'Folder' AND p.[PermissionName] = 'View'
 WHERE
 	f.[Path] LIKE 'adam%'
 	AND p.[PermissionId] IS NULL
 GO
+
+-- Inser missing Browse permissions for Administrators
+INSERT INTO [dbo].[Permission]
+	([SiteId]
+	,[EntityName]
+	,[EntityId]
+	,[PermissionName]
+	,[RoleId]
+	,[UserId]
+	,[IsAuthorized]
+	,[CreatedBy]
+	,[CreatedOn]
+	,[ModifiedBy]
+	,[ModifiedOn])
+SELECT 
+	[SiteId] = f.[SiteId]
+	,[EntityName] = 'Folder'
+	,[FolderId] = f.[FolderId]
+	,[PermissionName] = 'Browse'
+	,[RoleId] = r.RoleId
+	,[UserId] = null
+	,[IsAuthorized] = 1
+	,[CreatedBy] = f.[CreatedBy]
+	,[CreatedOn] = f.[CreatedOn]
+	,[ModifiedBy] = f.[ModifiedBy]
+	,[ModifiedOn] = f.[ModifiedOn]
+FROM 
+	[dbo].[Folder] AS f
+	INNER JOIN [dbo].[Role] AS r ON f.SiteId = r.SiteId AND r.[Name] = 'Administrators'
+	LEFT JOIN [dbo].[Permission] AS p ON p.[EntityId] = f.[FolderId] AND p.[EntityName] = 'Folder' AND p.[PermissionName] = 'Browse' AND r.RoleId = p.RoleId
+WHERE
+	f.[Path] LIKE 'adam%'
+	AND p.[PermissionId] IS NULL
+GO
+
+-- Inser missing View permissions for Administrators
+INSERT INTO [dbo].[Permission]
+	([SiteId]
+	,[EntityName]
+	,[EntityId]
+	,[PermissionName]
+	,[RoleId]
+	,[UserId]
+	,[IsAuthorized]
+	,[CreatedBy]
+	,[CreatedOn]
+	,[ModifiedBy]
+	,[ModifiedOn])
+SELECT 
+	[SiteId] = f.[SiteId]
+	,[EntityName] = 'Folder'
+	,[FolderId] = f.[FolderId]
+	,[PermissionName] = 'View'
+	,[RoleId] = r.RoleId
+	,[UserId] = null
+	,[IsAuthorized] = 1
+	,[CreatedBy] = f.[CreatedBy]
+	,[CreatedOn] = f.[CreatedOn]
+	,[ModifiedBy] = f.[ModifiedBy]
+	,[ModifiedOn] = f.[ModifiedOn]
+FROM 
+	[dbo].[Folder] AS f
+	INNER JOIN [dbo].[Role] AS r ON f.SiteId = r.SiteId AND r.[Name] = 'Administrators'
+	LEFT JOIN [dbo].[Permission] AS p ON p.[EntityId] = f.[FolderId] AND p.[EntityName] = 'Folder' AND p.[PermissionName] = 'View' AND r.RoleId = p.RoleId
+WHERE
+	f.[Path] LIKE 'adam%'
+	AND p.[PermissionId] IS NULL
+GO
+
+-- Inser missing Edit permissions for Administrators
+INSERT INTO [dbo].[Permission]
+	([SiteId]
+	,[EntityName]
+	,[EntityId]
+	,[PermissionName]
+	,[RoleId]
+	,[UserId]
+	,[IsAuthorized]
+	,[CreatedBy]
+	,[CreatedOn]
+	,[ModifiedBy]
+	,[ModifiedOn])
+SELECT 
+	[SiteId] = f.[SiteId]
+	,[EntityName] = 'Folder'
+	,[FolderId] = f.[FolderId]
+	,[PermissionName] = 'Edit'
+	,[RoleId] = r.RoleId
+	,[UserId] = null
+	,[IsAuthorized] = 1
+	,[CreatedBy] = f.[CreatedBy]
+	,[CreatedOn] = f.[CreatedOn]
+	,[ModifiedBy] = f.[ModifiedBy]
+	,[ModifiedOn] = f.[ModifiedOn]
+FROM 
+	[dbo].[Folder] AS f
+	INNER JOIN [dbo].[Role] AS r ON f.SiteId = r.SiteId AND r.[Name] = 'Administrators'
+	LEFT JOIN [dbo].[Permission] AS p ON p.[EntityId] = f.[FolderId] AND p.[EntityName] = 'Folder' AND p.[PermissionName] = 'Edit' AND r.RoleId = p.RoleId
+WHERE
+	f.[Path] LIKE 'adam%'
+	AND p.[PermissionId] IS NULL
+GO
+

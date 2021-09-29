@@ -22,6 +22,9 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 {
                     new Permission(PermissionNames.Browse, RoleNames.Everyone, true),
                     new Permission(PermissionNames.View, RoleNames.Everyone, true),
+                    new Permission(PermissionNames.Browse, RoleNames.Admin, true),
+                    new Permission(PermissionNames.View, RoleNames.Admin, true),
+                    new Permission(PermissionNames.Edit, RoleNames.Admin, true),
                 }.EncodePermissions()
             };
         }
