@@ -39,15 +39,21 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 var appApiAuthorization = context.RequestServices.GetService<AppApiAuthorization>().Init(InvokeActionAfterAuthorization);
                 await appApiAuthorization.Invoke(actionContext);
             }
-            catch (HttpExceptionAbstraction e)
-            {
-                context.Response.StatusCode = e.Status;
-                await context.Response.WriteAsync($"{e.Status} - {e.Message}");
-            }
+            //catch (HttpExceptionAbstraction e)
+            //{
+            //    context.Response.ContentType = "text/html"; // for error message ensure "text/html" content type, useful in case that some custom app api changed response type
+            //    context.Response.StatusCode = e.Status;
+            //    await context.Response.WriteAsync($"{e.Status} - {e.Message}");
+            //}
+            //catch (Exception e)
+            //{
+            //    context.Response.ContentType = "text/html"; // for error message ensure "text/html" content type, useful in case that some custom app api changed response type
+            //    context.Response.StatusCode = 500;
+            //    await context.Response.WriteAsync($"500 Internal Server Error - {e.Message}");
+            //}
             catch (Exception e)
             {
-                context.Response.StatusCode = 500;
-                await context.Response.WriteAsync($"500 Internal Server Error - {e.Message}");
+                throw;
             }
         }
 

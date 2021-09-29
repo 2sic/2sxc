@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Oqtane.Infrastructure;
 using System.IO;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
@@ -92,14 +94,18 @@ namespace ToSic.Sxc.Oqt.Server
         {
             HostEnvironment = env;
 
-            if (env.IsDevelopment())
-            {
-                app.UseExceptionHandler("/error-local-development");
-            }
-            else
-            {
-                app.UseExceptionHandler("/error");
-            }
+            app.UseExceptionHandler("/error");
+
+            //app.UseExceptionHandler(c => c.Run(async context =>
+            //{
+            //    var exception = context.Features
+            //        .Get<IExceptionHandlerPathFeature>()
+            //        .Error;
+            //    var response = new { error = exception.Message };
+            //    await context.Response.WriteAsJsonAsync(response);
+            //}));
+
+            //app.UseDeveloperExceptionPage();
 
             // routing middleware
             app.UseRouting();
