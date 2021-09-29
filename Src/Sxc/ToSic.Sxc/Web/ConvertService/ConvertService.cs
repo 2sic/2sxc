@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Documentation;
+﻿using System;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
 #if NET451
 using HtmlString = System.Web.HtmlString;
@@ -41,13 +42,23 @@ namespace ToSic.Sxc.Web
         public bool ToBool(object value) => To<bool>(value);
         public bool ToBool(object value, string noParamOrder = Eav.Parameters.Protector, bool fallback = default) => To(value, fallback);
 
-        public string ForCode(object value) => To<string>(value);
+        public string ForCode(object value) => ForCode(value, fallback: default);
         public string ForCode(object value, string noParamOrder = Eav.Parameters.Protector, string fallback = default)
         {
+            if (value == null) return null;
+
+            // Pre-check special case of date-time which needs ISO encoding without time zone
+            if (value.GetType().UnboxIfNullable() == typeof(DateTime))
+            {
+                var dt = ((DateTime)value).ToString("O").Substring(0, 23) + "z";
+                return dt;
+            }
+
             var result = To(value, fallback);
+            if (result is null) return null;
 
             // If the original value was a boolean, we will do case changing as js expects "true" or "false" and not "True" or "False"
-            if (value is bool) result = result.ToLowerInvariant();
+            if (value.GetType().UnboxIfNullable() == typeof(bool)) result = result.ToLowerInvariant();
 
             return result;
         }

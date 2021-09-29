@@ -107,11 +107,13 @@ namespace ToSic.Sxc.Web
 
         /// <summary>
         /// Convert any object safely to string to put into source code like HTML-attributes, inline-JavaScript or similar.
+        /// This is usually used to ensure numbers, booleans and dates are in a format which works.
+        /// Especially useful when giving data to a JavaScript, Json-Fragment or an Html Attribute.
         ///
-        /// This is usually used to ensure numbers or booleans are in a format which works.
+        /// * booleans will be `true` or `false` (not `True` or `False`)
+        /// * numbers will have a . notation and never a comma (like in de-DE cultures)
+        /// * dates will convert to ISO format without time zone
         ///
-        /// Important: this is especially useful in scenarios where a number must always have a dot "." notation, because it will ensure that even if the UI culture would use a comma ",".
-        /// For example, when giving numbers to JavaScript.
         /// </summary>
         string ForCode(object value);
         string ForCode(object value, 
@@ -122,8 +124,5 @@ namespace ToSic.Sxc.Web
         /// Sub-Service to convert JSON
         /// </summary>
         IJsonService Json { get; }
-
-        // TODO:
-        // - ToDateTime
     }
 }
