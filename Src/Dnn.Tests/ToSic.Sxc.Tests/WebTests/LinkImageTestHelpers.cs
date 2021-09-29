@@ -2,7 +2,7 @@
 using ToSic.Sxc.Tests.DynamicData;
 using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Tests.Web
+namespace ToSic.Sxc.Tests.WebTests
 {
     internal static class LinkImageTestHelpers
     {

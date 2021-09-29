@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Web;
-using static ToSic.Sxc.Tests.Web.LinkImageTestHelpers;
+using static ToSic.Sxc.Tests.WebTests.LinkImageTestHelpers;
 
-namespace ToSic.Sxc.Tests.Web
+namespace ToSic.Sxc.Tests.WebTests
 {
     [TestClass]
     public class LinkImageBasicTests

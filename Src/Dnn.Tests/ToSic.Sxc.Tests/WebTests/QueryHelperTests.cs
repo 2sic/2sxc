@@ -1,9 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using static ToSic.Sxc.Web.QueryHelper;
 
-namespace ToSic.Sxc.Tests.Web
+namespace ToSic.Sxc.Tests.WebTests
 {
     [TestClass]
     public class QueryHelperTests

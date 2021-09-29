@@ -74,13 +74,13 @@
     <Compile Include="PageFeatures\SimpleFeatureManagement.cs" />
     <Compile Include="PageProperty\UpdatePropertyTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Web\LinkImageBasicTests.cs" />
-    <Compile Include="Web\LinkImageInternalsTests.cs" />
-    <Compile Include="Web\CleanParamTests.cs" />
-    <Compile Include="Web\LinkImageSettingsTests.cs" />
-    <Compile Include="Web\LinkImageTestHelpers.cs" />
-    <Compile Include="Web\QueryHelperTests.cs" />
-    <Compile Include="Web\UrlPartsTest.cs" />
+    <Compile Include="WebTests\LinkImageBasicTests.cs" />
+    <Compile Include="WebTests\LinkImageInternalsTests.cs" />
+    <Compile Include="WebTests\CleanParamTests.cs" />
+    <Compile Include="WebTests\LinkImageSettingsTests.cs" />
+    <Compile Include="WebTests\LinkImageTestHelpers.cs" />
+    <Compile Include="WebTests\QueryHelperTests.cs" />
+    <Compile Include="WebTests\UrlPartsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj">

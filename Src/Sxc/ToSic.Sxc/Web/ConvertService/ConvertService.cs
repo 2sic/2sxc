@@ -52,12 +52,6 @@ namespace ToSic.Sxc.Web
             return result;
         }
 
-        //public IHtmlString ToRaw(object value)
-        //{
-        //    var str = To<string>(value);
-        //    return new HtmlString(str);
-        //}
-
         public IJsonService Json { get; }
     }
 }

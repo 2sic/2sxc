@@ -1,8 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Tests.Web
+namespace ToSic.Sxc.Tests.WebTests
 {
     [TestClass]
     public class UrlPartsTest
