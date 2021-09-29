@@ -18,6 +18,7 @@ namespace Custom.Dnn
     {
 
         /// <inheritdoc />
+        [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely. There are now better ways of doing this")]
         public override void CustomizeData() { }
 
 #pragma warning disable 618
@@ -28,6 +29,7 @@ namespace Custom.Dnn
             CustomizeSearch(searchInfos, moduleInfo as IContainer, beginDate);
         }
 
+        [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely. There are now better ways of doing this")]
         public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo, DateTime beginDate) { }
 #pragma warning restore 618
 

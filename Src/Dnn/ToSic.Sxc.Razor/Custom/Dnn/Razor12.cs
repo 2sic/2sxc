@@ -48,7 +48,7 @@ namespace Custom.Dnn
         #region CustomizeSearch corrections
 
         /// <inheritdoc />
-        [PrivateApi]
+        [PrivateApi("shouldn't be used any more, but was still in v12 when released. v13+ must completely remove this")]
         public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo,
             DateTime beginDate)
         {
@@ -61,7 +61,7 @@ namespace Custom.Dnn
 #pragma warning restore 618
         }
 
-        [PrivateApi]
+        [PrivateApi("shouldn't be used any more, but was still in v12 when released. v13+ must completely remove this")]
 #pragma warning disable 618 // disable warning about IContainer being obsolete
         public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
 #pragma warning restore 618
@@ -73,6 +73,7 @@ namespace Custom.Dnn
             if (code is Razor12Code codeAsRazor) codeAsRazor.CustomizeSearch(searchInfos, moduleInfo, beginDate);
         }
 
+        [PrivateApi("shouldn't be used any more, but was still in v12 when released. v13+ must completely remove this")]
         public virtual void CustomizeData()
         {
             // new in 2sxc 11, if it has not been overridden, then try to check if code has something for us.
@@ -82,6 +83,7 @@ namespace Custom.Dnn
         }
 
         /// <inheritdoc />
+        [PrivateApi("shouldn't be used any more, but was still in v12 when released. v13+ must completely remove this")]
         public Purpose Purpose { get; internal set; }
 
 

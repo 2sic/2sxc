@@ -63,7 +63,9 @@ namespace Custom.Hybrid
         #endregion
 
         #region Convert-Service
-        [PrivateApi] public IConvertService Convert => _DynCodeRoot.Convert;
+
+        /// <inheritdoc />
+        public IConvertService Convert => _DynCodeRoot.Convert;
 
         #endregion
 

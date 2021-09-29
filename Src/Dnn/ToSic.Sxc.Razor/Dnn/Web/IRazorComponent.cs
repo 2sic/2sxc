@@ -28,6 +28,7 @@ namespace ToSic.Sxc.Dnn.Web
         /// Override this to have your code change the (already initialized) Data object. 
         /// If you don't override this, nothing will be changed/customized. 
         /// </summary>
+        [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely. There are now better ways of doing this")]
         void CustomizeData();
 
         /// <summary>
@@ -36,12 +37,14 @@ namespace ToSic.Sxc.Dnn.Web
         /// <param name="searchInfos"></param>
         /// <param name="moduleInfo"></param>
         /// <param name="beginDate"></param>
+        [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely. There are now better ways of doing this")]
         void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate);
 
         /// <summary>
         /// The purpose of the current execution. The code might be called for showing to a user, or search-indexing.
         /// </summary>
         /// <returns>The value of the current purpose.</returns>
+        [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely. There are now better ways of doing this")]
         Purpose Purpose { get; }
 
     }
