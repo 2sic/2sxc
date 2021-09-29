@@ -59,6 +59,7 @@ namespace ToSic.Sxc.Web
         /// <param name="scaleMode">Optional scale-mode to allow up-scaling images like `up` or `both`. Usually takes the default from the `settings`.</param>
         /// <param name="format">Optional file format like `jpg` or `png`</param>
         /// <param name="aspectRatio">Aspect Ratio width/height, only relevant if a `factor` is supplied. Usually takes default from the `settings` or is ignored. </param>
+        /// <param name="absoluteUrl">Set to true to generate absolute url</param>
         /// <param name="debug">Set to true to activate detailed logging into insights</param>
         /// <remarks>
         /// Usually a factor is applied to create a link which is possibly 50% of the content-width or similar.
@@ -78,7 +79,8 @@ namespace ToSic.Sxc.Web
             string resizeMode = null,
             string scaleMode = null,
             string format = null,
-            object aspectRatio = null);
+            object aspectRatio = null,
+            bool? absoluteUrl = null);
 
         /// <summary>
         /// WIP v12.04 - not final
@@ -87,5 +89,12 @@ namespace ToSic.Sxc.Web
         /// <param name="debug"></param>
         [InternalApi_DoNotUse_MayChangeWithoutNotice("just for debugging, can change at any time but for debugging it's useful")]
         void SetDebug(bool debug);
+
+        [PrivateApi]
+        string AbsoluteUrl(string virtualPath);
+
+        [PrivateApi]
+        string GetDomainName();
     }
+
 }

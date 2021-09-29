@@ -108,7 +108,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return absoluteUrl ? $"{GetDomainName()}{relativePath}" : relativePath;
         }
 
-        private string GetDomainName()
+        public override string GetDomainName()
         {
             var scheme = _contextAccessor?.HttpContext?.Request?.Scheme ?? "http";
             var alias = _siteStateInitializer.InitializedState.Alias;

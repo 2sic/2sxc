@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
@@ -74,9 +75,12 @@ namespace ToSic.Sxc.Web
             string resizeMode = null,
             string scaleMode = null,
             string format = null,
-            object aspectRatio = null)
+            object aspectRatio = null,
+            bool? absoluteUrl = null)
         {
-            return ImgLinker.Image(url, settings, factor, noParamOrder, width, height, quality, resizeMode,
+            var relativeOrAbsoluteUrl = absoluteUrl.HasValue && absoluteUrl.Value ? AbsoluteUrl(url) : url;
+
+            return ImgLinker.Image(url: relativeOrAbsoluteUrl, settings, factor, noParamOrder, width, height, quality, resizeMode,
                 scaleMode, format, aspectRatio);
         }
 
@@ -88,6 +92,11 @@ namespace ToSic.Sxc.Web
             ImgLinker.Debug = debug;
         }
 
+        public string AbsoluteUrl(string virtualPath)
+        {
+            return $"{GetDomainName()}{virtualPath.PrefixSlash()}";
+        }
 
+        public abstract string GetDomainName();
     }
 }

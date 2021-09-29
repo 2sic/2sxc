@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Dnn.Web
             return absoluteUrl ? $"{GetDomainName()}{relativePath}" : relativePath;
         }
 
-        private string GetDomainName()
+        public override string GetDomainName()
         {
             return HttpContext.Current?.Request?.Url?.GetLeftPart(UriPartial.Authority) ?? string.Empty;
         }
