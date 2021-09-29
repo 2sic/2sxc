@@ -1,10 +1,4 @@
 ﻿using ToSic.Eav.Documentation;
-#if NET451
-using IHtmlString = System.Web.IHtmlString;
-// ReSharper disable MethodOverloadWithOptionalParameter
-#else
-using IHtmlString = Microsoft.AspNetCore.Html.IHtmlContent;
-#endif
 
 namespace ToSic.Sxc.Web
 {
@@ -17,7 +11,10 @@ namespace ToSic.Sxc.Web
     /// * Numbers like 42 reliably converts to bool true which would otherwise return false
     /// * Numbers like 42.5 reliably convert to strings "42.5" instead of "42,5" in certain cultures
     /// </summary>
-    [PrivateApi("WIP 12.05")]
+    /// <remarks>
+    /// New is v12.05
+    /// </remarks>
+    [PublicApi("New in 12.05")]
     public interface IConvertService
     {
         /// <summary>
@@ -32,13 +29,6 @@ namespace ToSic.Sxc.Web
         /// If set to false, only 1 will be true, other numbers will be false.
         /// </summary>
         bool OptimizeBoolean { get; }
-
-
-        /// <summary>
-        /// If set to true (default) will ensure that numbers and dates are serialized in culture-invariant mode.
-        /// So numbers to strings will always use the dot "." notation and never the comma ","
-        /// </summary>
-        bool OptimizeRoundtrip { get; }
 
         /// <summary>
         /// Convert any object safely to the desired type T.
@@ -63,7 +53,9 @@ namespace ToSic.Sxc.Web
         /// <param name="value"></param>
         /// <param name="fallback">The value used if conversion fails.</param>
         /// <returns></returns>
-        T To<T>(object value, T fallback);
+        T To<T>(object value,
+            string noParamOrder = Eav.Parameters.Protector,
+            T fallback = default);
 
 
         /// <summary>
