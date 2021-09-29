@@ -222,20 +222,20 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             var fldObj = GetOqtFolder(folder.AsOqt().SysId);
             if(fldObj == null) return new List<Folder<int, int>>();
 
-            var allOqtFoldersInSite = OqtFolderRepository.GetFolders(fldObj.SiteId).ToList();
-            var firstList = GetSubFoldersRecursive(allOqtFoldersInSite, fldObj);
+            var firstList = GetSubFoldersRecursive(fldObj);
             var folders = firstList?.Select(OqtToAdam).ToList()
                           ?? new List<Folder<int, int>>();
             return callLog($"{folders.Count}", folders);
         }
 
-        private static List<Folder> GetSubFoldersRecursive(List<Folder> allFolders, Folder parentFolder, List<Folder> subFolders = null)
+        private List<Folder> GetSubFoldersRecursive(Folder parentFolder, List<Folder> allFolders = null, List<Folder> subFolders = null)
         {
+            allFolders ??= OqtFolderRepository.GetFolders(parentFolder.SiteId).ToList();
             subFolders ??= new List<Folder>();
             allFolders.Where(f => f.ParentId == parentFolder.FolderId).ToList().ForEach(f =>
             {
                 subFolders.Add(f);
-                GetSubFoldersRecursive(allFolders, f, subFolders);
+                GetSubFoldersRecursive(f, allFolders, subFolders);
             });
             return subFolders;
         }
