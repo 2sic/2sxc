@@ -8,6 +8,9 @@ namespace ToSic.Sxc.Web
     [PrivateApi("for testing / un-implemented use")]
     public class LinkHelperUnknown: LinkHelper, IIsUnknown
     {
+        public const string MockHost = "https://unknown.2sxc.org";
+
+
         public LinkHelperUnknown(ImgResizeLinker imgLinker, WarnUseOfUnknown<LinkHelperUnknown> warn) : base(imgLinker)
         {
         }
@@ -24,13 +27,13 @@ namespace ToSic.Sxc.Web
         public override string GetDomainName()
         {
             // use a pre-standardized dummy-domain  
-            return "https://unknown.2sxc.org";
+            return MockHost;
         }
 
         // Mock CurrentPage
         public override string GetCurrentRequestUrl()
         {
-            return $"{GetDomainName()}/folder/subfolder/page?param=a#fragment";
+            return $"{MockHost}/folder/subfolder/page?param=a#fragment";
         }
     }
 }
