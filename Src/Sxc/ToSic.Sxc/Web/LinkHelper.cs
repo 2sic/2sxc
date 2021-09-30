@@ -40,20 +40,14 @@ namespace ToSic.Sxc.Web
 
             var strParams = ParametersToString(parameters);
 
-            var relativeOrAbsoluteUrl = (part == "full") ? FullUrl(api) : api;
+            var url = ToImplementation(pageId, parameters: strParams, api: api);
 
-            var parts = CombineParams(relativeOrAbsoluteUrl, strParams, out var queryAndFragment);
-
-            return ToImplementation(pageId, parameters: queryAndFragment, api: parts.Path);
+            return ProcessPartParam(part, url);
         }
 
-        // handle case when api already have some query string params and fragment
-        private static UrlParts CombineParams(string relativeOrAbsoluteUrl, string strParams, out string queryAndFragment)
+        private string ProcessPartParam(string part, string url)
         {
-            var relativeOrAbsoluteUrlWithCombinedParams = QueryHelper.Combine(relativeOrAbsoluteUrl, strParams);
-            var parts = new UrlParts(relativeOrAbsoluteUrlWithCombinedParams);
-            queryAndFragment = string.IsNullOrEmpty(parts.Fragment) ? parts.Query : $"{parts.Query}#{parts.Fragment}";
-            return parts;
+            return (part == "full") ? FullUrl(url) : url;
         }
 
         protected abstract string ToImplementation(int? pageId = null, string parameters = null, string api = null);
@@ -92,10 +86,10 @@ namespace ToSic.Sxc.Web
             object aspectRatio = null,
             string part = null)
         {
-            var relativeOrAbsoluteUrl = (part == "full") ? FullUrl(url) : url;
-
-            return ImgLinker.Image(url: relativeOrAbsoluteUrl, settings, factor, noParamOrder, width, height, quality, resizeMode,
+            var imageUrl  =ImgLinker.Image(url: url, settings, factor, noParamOrder, width, height, quality, resizeMode,
                 scaleMode, format, aspectRatio);
+
+            return ProcessPartParam(part, imageUrl);
         }
 
         private bool _debug;
