@@ -1,9 +1,9 @@
 ﻿using Custom.Hybrid;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Oqtane.Repository;
 using Oqtane.Shared;
 using System;
-using ToSic.Eav;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Oqt.Server.Plumbing;
@@ -69,6 +69,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return api == null ? PageNavigateUrl(pageId, parameters) : ApiNavigateUrl(api, parameters);
 
         }
+
         // Prepare Api link.
         private string ApiNavigateUrl(string api, string parameters, bool absoluteUrl = true)
         {
@@ -116,6 +117,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 ? alias.Name
                 : alias.Name.Substring(0, alias.Name.Length - alias.Path.Length - 1);
             return  $"{scheme}://{domainName}";
+        }
+
+        public override string GetCurrentRequestUrl()
+        {
+            return _contextAccessor?.HttpContext?.Request?.GetEncodedUrl() ?? string.Empty;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace ToSic.Eav.Core.Tests
             Factory.ActivateNetCoreDi(sc =>
             {
                 sc.AddSxcCore();
-
+                sc.AddEavCore();
                 //Trace.WriteLine("di configuration core");
                 //sc.TryAddTransient<IValueConverter, MockValueConverter>();
                 //sc.TryAddTransient<IRuntime, RuntimeUnknown>();

@@ -83,5 +83,10 @@ namespace ToSic.Sxc.Dnn.Web
         {
             return HttpContext.Current?.Request?.Url?.GetLeftPart(UriPartial.Authority) ?? string.Empty;
         }
+
+        public override string GetCurrentRequestUrl()
+        {
+            return HttpContext.Current?.Request?.Url?.AbsoluteUri ?? string.Empty;
+        }
     }
 }

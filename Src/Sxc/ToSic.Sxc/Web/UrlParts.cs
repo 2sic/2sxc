@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Documentation;
+﻿using System.Text;
+using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Web
 {
@@ -34,6 +35,14 @@ namespace ToSic.Sxc.Web
                 Path = urlWithoutFragment.Substring(0, queryStart);
             }
 
+        }
+
+        public string BuildUrl()
+        {
+            var urlStringBuilder = new StringBuilder(!string.IsNullOrEmpty(Path) ? Path : string.Empty);
+            if (!string.IsNullOrEmpty(Query)) urlStringBuilder.Append($"{QuerySeparator}{Query}");
+            if (!string.IsNullOrEmpty(Fragment)) urlStringBuilder.Append($"{FragmentSeparator}{Fragment}");
+            return urlStringBuilder.ToString();
         }
     }
 }

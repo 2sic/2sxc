@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Eav.Run.Unknown;
 
@@ -14,14 +13,20 @@ namespace ToSic.Sxc.Web
 
         protected override string ToImplementation(int? pageId = null, string parameters = null, string api = null)
         {
-            // TODO: stv
-            throw new NotImplementedException();
+            return base.To(pageId: pageId, parameters: parameters, api: api);
         }
 
+        // Mock DomainName
         public override string GetDomainName()
         {
-            // TODO: stv - use a pre-standardised dummy-domain like unknown.2sxc.org
-            throw new NotImplementedException();
+            // use a pre-standardized dummy-domain  
+            return "https://unknown.2sxc.org";
+        }
+
+        // Mock CurrentPage
+        public override string GetCurrentRequestUrl()
+        {
+            return $"{GetDomainName()}/folder/subfolder/page?param=a#fragment";
         }
     }
 }

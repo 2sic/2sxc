@@ -61,7 +61,6 @@ namespace ToSic.Sxc.Web
         /// <param name="scaleMode">Optional scale-mode to allow up-scaling images like `up` or `both`. Usually takes the default from the `settings`.</param>
         /// <param name="format">Optional file format like `jpg` or `png`</param>
         /// <param name="aspectRatio">Aspect Ratio width/height, only relevant if a `factor` is supplied. Usually takes default from the `settings` or is ignored. </param>
-        /// <param name="absoluteUrl">WIP - to be replaced by `part` Set to true to generate absolute url</param>
         /// <param name="part">
         /// _This is a proposal, it's not final yet_
         /// - null/empty/default means that the link is returned as given - as provided by the 'url' parameter. if none was provided, it's a root-absolute link like `/xyz/abc?stuff#stuff`
@@ -101,7 +100,7 @@ namespace ToSic.Sxc.Web
             string scaleMode = null,
             string format = null,
             object aspectRatio = null,
-            bool? absoluteUrl = null);
+            string part = null);
 
         /// <summary>
         /// WIP v12.04 - not final
