@@ -113,5 +113,31 @@ namespace ToSic.Sxc.Web
 
             //return url;
         }
+
+        public static string Combine(string url, string parameters)
+        {
+            if (string.IsNullOrEmpty(parameters)) return url;
+
+            var urlParts = new UrlParts(url);
+
+            if (string.IsNullOrEmpty(urlParts.Query))
+            {
+                urlParts.Query = parameters;
+            }
+            else
+            {
+                // combine query strings
+                var queryString = HttpUtility.ParseQueryString(parameters);
+                var currentRequestQueryString = HttpUtility.ParseQueryString(urlParts.Query);
+                foreach (var key in queryString.AllKeys)
+                {
+                    currentRequestQueryString.Set(key, queryString.Get(key));
+                }
+
+                urlParts.Query = currentRequestQueryString.ToString();
+            }
+
+            return urlParts.BuildUrl();
+        }
     }
 }

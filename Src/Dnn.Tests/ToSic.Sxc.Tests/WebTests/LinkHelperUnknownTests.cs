@@ -9,6 +9,68 @@ namespace ToSic.Sxc.Tests.WebTests
     public class LinkHelperUnknownTests: EavTestBase
     {
         [TestMethod()]
+        public void ToNoUrlOrParamsTest()
+        {
+            var linkHelper = LinkHelperUnknown();
+            AreEqual("https://unknown.2sxc.org/folder/subfolder/page?param=a#fragment", linkHelper.To(api: "", part: "full"));
+        }
+
+        [TestMethod()]
+        public void ToCommonUrlsTest()
+        {
+            var linkHelper = LinkHelperUnknown();
+            AreEqual("https://unknown.2sxc.org/", linkHelper.To(api: "/", part: "full"));
+            AreEqual("https://unknown.2sxc.org/?a=1&b=2#fragment", linkHelper.To(api: "/", parameters: "a=1&b=2#fragment", part: "full"));
+            AreEqual("https://unknown.2sxc.org/api", linkHelper.To(api: "/api", part: "full"));
+            AreEqual("https://unknown.2sxc.org/api?a=1&b=2#fragment", linkHelper.To(api: "/api", parameters: "a=1&b=2#fragment", part: "full"));
+            AreEqual("https://unknown.2sxc.org/app/", linkHelper.To(api: "/app/", part: "full"));
+            AreEqual("https://unknown.2sxc.org/app/?a=1&b=2#fragment", linkHelper.To(api: "/app/", parameters: "a=1&b=2#fragment", part: "full"));
+            AreEqual("https://unknown.2sxc.org/app/api", linkHelper.To(api: "/app/api", part: "full"));
+            AreEqual("https://unknown.2sxc.org/app/api?a=1&b=2#fragment", linkHelper.To(api: "/app/api", parameters: "a=1&b=2#fragment", part: "full"));
+        }
+
+        [TestMethod()]
+        public void ToUrlPathIsMissingTest()
+        {
+            var linkHelper = LinkHelperUnknown();
+            AreEqual("https://unknown.2sxc.org/folder/subfolder/page?param=b&b=3&c=3#fragment", linkHelper.To(api: "", parameters: "param=b&b=3&c=3", part: "full"));
+        }
+
+        [TestMethod()]
+        public void ToWithoutProtocolTest()
+        {
+            var linkHelper = LinkHelperUnknown();
+            AreEqual("https://unknown.2sxc.org/api?param=b&b=3&c=3", linkHelper.To(api: "//unknown.2sxc.org/api", parameters: "param=b&b=3&c=3", part: "full"));
+        }
+
+        [TestMethod()]
+        public void ToUrlWithTildeTest()
+        {
+            var linkHelper = LinkHelperUnknown();
+            AreEqual("https://unknown.2sxc.org/api?p=1&r=2", linkHelper.To(api: "~/api", parameters: "p=1&r=2", part: "full"));
+            AreEqual("https://unknown.2sxc.org/app/", linkHelper.To(api: "~/app/", part: "full"));
+        }
+
+        [TestMethod()]
+        public void ToWithAbsoluteUrlTest()
+        {
+            var linkHelper = LinkHelperUnknown();
+            AreEqual("https://unknown2.2sxc.org/", linkHelper.To(api: "https://unknown2.2sxc.org/", part: "full"));
+            AreEqual("https://unknown2.2sxc.org/api", linkHelper.To(api: "https://unknown2.2sxc.org/api", part: "full"));
+            AreEqual("https://unknown2.2sxc.org/app/api?a=1", linkHelper.To(api: "https://unknown2.2sxc.org/app/api", parameters: "a=1", part: "full"));
+        }
+
+        [TestMethod()]
+        public void ToWithInvalidUrlTest()
+        {
+            var linkHelper = LinkHelperUnknown();
+            AreEqual("hello2:there", linkHelper.To(api: "hello2:there", part: "full"));
+            AreEqual("file:123", linkHelper.To(api: "file:123", part: "full"));
+            AreEqual("../api", linkHelper.To(api: "../api", part: "full"));
+            AreEqual("/sibling1/../sibling2/api", linkHelper.To(api: "/sibling1/../sibling2/api", part: "full"));
+        }
+
+        [TestMethod()]
         public void ImageNoUrlOrParamsTest()
         {
             var linkHelper = LinkHelperUnknown();

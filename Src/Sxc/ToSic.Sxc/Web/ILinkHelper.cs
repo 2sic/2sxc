@@ -31,7 +31,8 @@ namespace ToSic.Sxc.Web
             string noParamOrder = Eav.Parameters.Protector,
             int? pageId = null,
             object parameters = null,
-            string api = null
+            string api = null,
+            string part = null
         );
         
         /// <summary>

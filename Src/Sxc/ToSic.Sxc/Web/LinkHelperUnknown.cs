@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Documentation;
+﻿using System;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Eav.Run.Unknown;
 
@@ -13,7 +14,10 @@ namespace ToSic.Sxc.Web
 
         protected override string ToImplementation(int? pageId = null, string parameters = null, string api = null)
         {
-            return base.To(pageId: pageId, parameters: parameters, api: api);
+            if (!string.IsNullOrEmpty(parameters)) parameters = $"?{parameters}";
+
+            // Page or Api?
+            return api == null ? $"{GetDomainName()}/page{pageId}{parameters}" : $"{api}{parameters}";
         }
 
         // Mock DomainName

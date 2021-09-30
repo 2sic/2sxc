@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Web
 
 
         /// <inheritdoc />
-        public string To(string noParamOrder = Eav.Parameters.Protector, int? pageId = null, object parameters = null, string api = null)
+        public string To(string noParamOrder = Eav.Parameters.Protector, int? pageId = null, object parameters = null, string api = null, string part = null)
         {
             // prevent incorrect use without named parameters
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
@@ -40,7 +40,20 @@ namespace ToSic.Sxc.Web
 
             var strParams = ParametersToString(parameters);
 
-            return ToImplementation(pageId, strParams, api);
+            var relativeOrAbsoluteUrl = (part == "full") ? FullUrl(api) : api;
+
+            var parts = CombineParams(relativeOrAbsoluteUrl, strParams, out var queryAndFragment);
+
+            return ToImplementation(pageId, parameters: queryAndFragment, api: parts.Path);
+        }
+
+        // handle case when api already have some query string params and fragment
+        private static UrlParts CombineParams(string relativeOrAbsoluteUrl, string strParams, out string queryAndFragment)
+        {
+            var relativeOrAbsoluteUrlWithCombinedParams = QueryHelper.Combine(relativeOrAbsoluteUrl, strParams);
+            var parts = new UrlParts(relativeOrAbsoluteUrlWithCombinedParams);
+            queryAndFragment = string.IsNullOrEmpty(parts.Fragment) ? parts.Query : $"{parts.Query}#{parts.Fragment}";
+            return parts;
         }
 
         protected abstract string ToImplementation(int? pageId = null, string parameters = null, string api = null);
@@ -123,27 +136,7 @@ namespace ToSic.Sxc.Web
                 currentRequestParts.Fragment = parts.Fragment;
 
             // handle query strings
-            if (!string.IsNullOrEmpty(parts.Query))
-            {
-                if (string.IsNullOrEmpty(currentRequestParts.Query))
-                {
-                    currentRequestParts.Query = parts.Query;
-                }
-                else
-                {
-                    // combine query strings
-                    var queryString = HttpUtility.ParseQueryString(parts.Query);
-                    var currentRequestQueryString = HttpUtility.ParseQueryString(currentRequestParts.Query);
-                    foreach (var key in queryString.AllKeys)
-                    {
-                        currentRequestQueryString.Set(key, queryString.Get(key));
-                    }
-
-                    currentRequestParts.Query = currentRequestQueryString.ToString();
-                }
-            }
-
-            return currentRequestParts.BuildUrl();
+            return QueryHelper.Combine(currentRequestParts.BuildUrl(), parts.Query);
         }
 
         private static bool IsAbsoluteUrl(UrlParts parts)
