@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Tests.WebTests.ConvertServiceTests
         /// <returns></returns>
         private static ConvertService ConvertService()
         {
-            var conv = EavTestBase.Resolve<ConvertService>();
+            var conv = Resolve<ConvertService>();
             return conv;
         }
     }
