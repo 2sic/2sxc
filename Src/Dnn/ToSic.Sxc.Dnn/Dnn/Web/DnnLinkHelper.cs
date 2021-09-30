@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Dnn.Web
                 : DotNetNuke.Common.Globals.NavigateURL(pageId ?? _dnn.Tab.TabID, "", parameters); // NavigateURL returns absolute links
         }
 
-        private string Api(string noParamOrder = Eav.Parameters.Protector, string path = null, bool absoluteUrl = true)
+        private string Api(string noParamOrder = Eav.Parameters.Protector, string path = null)
         {
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Api", $"{nameof(path)}");
 
@@ -76,7 +76,7 @@ namespace ToSic.Sxc.Dnn.Web
 
             var relativePath = $"{apiRoot}/app/{App.Folder}/{path}";    
 
-            return absoluteUrl ? $"{GetDomainName()}{relativePath}" : relativePath;
+            return relativePath;
         }
 
         public override string GetDomainName()
