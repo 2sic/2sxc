@@ -10,15 +10,9 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
     [TestClass()]
     public class LinkHelperToApiPartFullTests: EavTestBase
     {
-        public static ILinkHelper Link = LinkHelper();
+        public ILinkHelper Link = LinkHelperResolver.LinkHelper();
 
-        private static ILinkHelper LinkHelper()
-        {
-            var linkHelper = Resolve<ILinkHelper>();
-            return linkHelper;
-        }
-
-        private static void ToApiPartFullVerifyUrlAreEqual(string testUrl)
+        private void ToApiPartFullVerifyUrlAreEqual(string testUrl)
         {
             AreEqual(testUrl, Link.To(api: testUrl, part: "full"));
         }

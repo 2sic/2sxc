@@ -10,13 +10,7 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
     [TestClass()]
     public class LinkHelperToPagePartFullTests: EavTestBase
     {
-        public static ILinkHelper Link = LinkHelper();
-
-        private static ILinkHelper LinkHelper()
-        {
-            var linkHelper = Resolve<ILinkHelper>();
-            return linkHelper;
-        }
+        public ILinkHelper Link = LinkHelperResolver.LinkHelper();
 
         [TestMethod()]
         public void ToNoPageIdOrParamsTest()

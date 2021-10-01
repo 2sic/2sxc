@@ -8,17 +8,11 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
     [TestClass()]
     public class LinkHelperImagePartUndefinedTests: EavTestBase
     {
-        public ILinkHelper Link = LinkHelper();
+        public ILinkHelper Link = LinkHelperResolver.LinkHelper();
 
-        private static ILinkHelper LinkHelper()
+        private void ImageVerifyUrlAreEqual(string testUrl)
         {
-            var linkHelper = Resolve<ILinkHelper>();
-            return linkHelper;
-        }
-
-        private static void ImageVerifyUrlAreEqual(string testUrl)
-        {
-            AreEqual(testUrl, LinkHelper().Image(url: testUrl));
+            AreEqual(testUrl, Link.Image(url: testUrl));
         }
 
         [TestMethod()]

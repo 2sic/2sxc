@@ -10,15 +10,9 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
     [TestClass()]
     public class LinkHelperToApiPartUndefinedTests: EavTestBase
     {
-        public static ILinkHelper Link = LinkHelper();
+        public ILinkHelper Link = LinkHelperResolver.LinkHelper();
 
-        private static ILinkHelper LinkHelper()
-        {
-            var linkHelper = Resolve<ILinkHelper>();
-            return linkHelper;
-        }
-
-        private static void ToApiPartUndefinedVerifyUrlAreEqual(string testUrl)
+        private void ToApiPartUndefinedVerifyUrlAreEqual(string testUrl)
         {
             AreEqual(testUrl, Link.To(api: testUrl));
         }

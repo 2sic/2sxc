@@ -93,6 +93,7 @@
     <Compile Include="WebTests\ConvertServiceTests\ConvertServiceTest.cs" />
     <Compile Include="WebTests\LinkHelperTests\LinkHelperImagePartFullTests.cs" />
     <Compile Include="WebTests\LinkHelperTests\LinkHelperImagePartUndefinedTests.cs" />
+    <Compile Include="WebTests\LinkHelperTests\LinkHelperResolver.cs" />
     <Compile Include="WebTests\LinkHelperTests\LinkHelperToApiPartFullTests.cs" />
     <Compile Include="WebTests\LinkHelperTests\LinkHelperToApiPartUndefinedTests.cs" />
     <Compile Include="WebTests\LinkHelperTests\LinkHelperToCommonTests.cs" />
