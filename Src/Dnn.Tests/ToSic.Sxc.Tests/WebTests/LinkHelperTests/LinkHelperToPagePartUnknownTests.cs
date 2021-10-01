@@ -2,16 +2,13 @@
 using System.Collections.Specialized;
 using ToSic.Sxc.Context.Query;
 using ToSic.Sxc.Web;
-using ToSic.Testing.Shared;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
 {
     [TestClass()]
-    public class LinkHelperToPagePartUnknownTests : EavTestBase
+    public class LinkHelperToPagePartUnknownTests : LinkHelperTestBase
     {
-        public ILinkHelper Link = LinkHelperResolver.LinkHelper();
-
         [TestMethod()]
         public void ToNoPageIdOrParamsTest()
         {

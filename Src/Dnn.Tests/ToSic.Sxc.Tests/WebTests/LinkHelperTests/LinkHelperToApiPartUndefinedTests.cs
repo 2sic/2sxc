@@ -1,17 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
 using ToSic.Sxc.Context.Query;
-using ToSic.Sxc.Web;
-using ToSic.Testing.Shared;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
 {
     [TestClass()]
-    public class LinkHelperToApiPartUndefinedTests: EavTestBase
+    public class LinkHelperToApiPartUndefinedTests: LinkHelperTestBase
     {
-        public ILinkHelper Link = LinkHelperResolver.LinkHelper();
-
         private void ToApiPartUndefinedVerifyUrlAreEqual(string testUrl)
         {
             AreEqual(testUrl, Link.To(api: testUrl));

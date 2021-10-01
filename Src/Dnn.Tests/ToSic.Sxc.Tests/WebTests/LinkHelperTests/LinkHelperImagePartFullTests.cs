@@ -1,15 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Web;
-using ToSic.Testing.Shared;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
 {
     [TestClass()]
-    public class LinkHelperImagePartFullTests: EavTestBase
+    public class LinkHelperImagePartFullTests: LinkHelperTestBase
     {
-        public ILinkHelper Link = LinkHelperResolver.LinkHelper();
-
         private void ImagePartFullVerifyUrlAreEqual(string testUrl)
         {
             AreEqual(testUrl, Link.Image(url: testUrl, part: "full"));
