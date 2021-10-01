@@ -31,8 +31,8 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             if (forms == true) // .HasValue || styles.HasValue || context.HasValue || autoToolbar.HasValue)
             {
                 var feats = new[] {FeatureIds.PublicForms};
-                var features = Block.Context.ServiceProvider.Build<Features>();
-                if (!/*Feats*/features.EnabledOrException(feats, "public forms not available", out var exp))
+                var features = Block.Context.ServiceProvider.Build<IFeaturesInternal>();
+                if (!features.Enabled(feats, "public forms not available", out var exp))
                     throw exp;
             }
 

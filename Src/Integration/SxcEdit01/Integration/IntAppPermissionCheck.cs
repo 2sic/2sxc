@@ -7,7 +7,7 @@ namespace IntegrationSamples.SxcEdit01.Integration
 {
     public class IntAppPermissionCheck: AppPermissionCheck
     {
-        public IntAppPermissionCheck(IAppStates appStates) : base(appStates, IntConstants.LogPrefix)
+        public IntAppPermissionCheck(IAppStates appStates, Dependencies dependencies) : base(appStates, dependencies, IntConstants.LogPrefix)
         {
         }
 

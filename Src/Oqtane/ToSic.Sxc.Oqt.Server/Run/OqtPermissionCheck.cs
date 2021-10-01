@@ -23,8 +23,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public OqtPermissionCheck(IHttpContextAccessor httpContextAccessor, 
             Lazy<IUserPermissions> userPermissions, 
             Lazy<IUser> oqtUser/*, OqtState oqtState*/,
-            IAppStates appStates
-            ) : base(appStates, OqtConstants.OqtLogPrefix)
+            IAppStates appStates,
+            Dependencies dependencies
+            ) : base(appStates, dependencies, OqtConstants.OqtLogPrefix)
         {
             _httpContextAccessor = httpContextAccessor;
             _userPermissions = userPermissions;

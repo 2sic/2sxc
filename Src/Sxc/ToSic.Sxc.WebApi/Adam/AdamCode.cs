@@ -17,12 +17,15 @@ namespace ToSic.Sxc.WebApi.Adam
     [PrivateApi("Used by DynamicApiController and Hybrid.Api12_DynCode")]
     public class AdamCode: HasLog
     {
+        private readonly Lazy<IFeaturesInternal> _featuresLazy;
+
         // ReSharper disable once InconsistentNaming
         public IDynamicCodeRoot _DynCodeRoot { get; private set; }
         public IServiceProvider ServiceProvider { get; }
 
-        public AdamCode(IServiceProvider serviceProvider) : base("AdamCode")
+        public AdamCode(IServiceProvider serviceProvider, Lazy<IFeaturesInternal> featuresLazy) : base("AdamCode")
         {
+            _featuresLazy = featuresLazy;
             ServiceProvider = serviceProvider;
         }
 
@@ -49,9 +52,8 @@ namespace ToSic.Sxc.WebApi.Adam
                 throw new Exception();
 
             var feats = new[] { FeatureIds.UseAdamInWebApi, FeatureIds.PublicUpload };
-            var features = _DynCodeRoot.GetService<ToSic.Eav.Configuration.Features>();
 
-            if (!/*Features*/features.EnabledOrException(feats, "can't save in ADAM", out var exp))
+            if (!_featuresLazy.Value.Enabled(feats, "can't save in ADAM", out var exp))
                 throw exp;
 
             var appId = _DynCodeRoot?.Block?.AppId ?? _DynCodeRoot?.App?.AppId ?? throw new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known.");

@@ -59,9 +59,10 @@ namespace ToSic.Sxc.Adam
                 throw exception;
 
             Log.Add("check if feature enabled");
-            if (Security.UserIsRestricted && !Eav.Configuration.Features.Enabled(FeaturesForRestrictedUsers))
+            var sysFeatures = ServiceProvider.Build<IFeaturesInternal>();
+            if (Security.UserIsRestricted && !sysFeatures.Enabled(FeaturesForRestrictedUsers))
             {
-                var msg = ServiceProvider.Build<Features>().MsgMissingSome(FeaturesForRestrictedUsers);
+                var msg = sysFeatures.MsgMissingSome(FeaturesForRestrictedUsers);
                 throw HttpException.PermissionDenied(
                     $"low-permission users may not access this - {msg}");
 
@@ -69,7 +70,7 @@ namespace ToSic.Sxc.Adam
 
             if (string.IsNullOrEmpty(contentType) || string.IsNullOrEmpty(fieldName)) return callLog(null, this);
 
-            Attribute = AttributeDefinition(context.AppState, /*appId, */contentType, fieldName);
+            Attribute = AttributeDefinition(context.AppState, contentType, fieldName);
             if (!Security.FileTypeIsOkForThisField(out var exp))
                 throw exp;
             return callLog(null, this);

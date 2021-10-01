@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
@@ -29,7 +30,8 @@ namespace ToSic.Sxc.WebApi.Cms
             IContextResolver ctxResolver, 
             ITargetTypes mdTargetTypes,
             EntityPickerApi entityPickerBackend,
-            IAppStates appStates) : base(serviceProvider, "Cms.LoadBk")
+            IAppStates appStates,
+            IFeaturesInternal features) : base(serviceProvider, "Cms.LoadBk")
         {
             _entityApi = entityApi;
             _contentGroupList = contentGroupList;
@@ -38,6 +40,7 @@ namespace ToSic.Sxc.WebApi.Cms
             _mdTargetTypes = mdTargetTypes;
             _entityPickerBackend = entityPickerBackend;
             _appStates = appStates;
+            _features = features;
         }
         
         private readonly EntityApi _entityApi;
@@ -47,6 +50,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly ITargetTypes _mdTargetTypes;
         private readonly EntityPickerApi _entityPickerBackend;
         private readonly IAppStates _appStates;
+        private readonly IFeaturesInternal _features;
 
         #endregion
 
@@ -149,7 +153,7 @@ namespace ToSic.Sxc.WebApi.Cms
             result.InputTypes = GetNecessaryInputTypes(result.ContentTypes, typeRead);
 
             // also include UI features
-            result.Features = FeaturesHelpers.FeatureListWithPermissionCheck(permCheck).ToList();
+            result.Features = FeaturesHelpers.FeatureListWithPermissionCheck(_features, permCheck).ToList();
 
             // Attach context, but only the minimum needed for the UI
             result.Context = _contextBuilder.SetZoneAndApp(appIdentity.ZoneId, context.AppState)

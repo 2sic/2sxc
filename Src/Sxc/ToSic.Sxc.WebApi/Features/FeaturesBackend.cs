@@ -17,7 +17,7 @@ namespace ToSic.Sxc.WebApi.Features
         #region Constructor / DI
 
         public FeaturesBackend(IZoneMapper zoneMapper, IServiceProvider serviceProvider, 
-            IGlobalConfiguration globalConfiguration, IFeaturesConfiguration features, SystemLoader systemLoader) : base(serviceProvider, "Bck.Feats")
+            IGlobalConfiguration globalConfiguration, IFeaturesInternal features, SystemLoader systemLoader) : base(serviceProvider, "Bck.Feats")
         {
             _zoneMapper = zoneMapper;
             _globalConfiguration = globalConfiguration;
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.WebApi.Features
 
         private readonly IZoneMapper _zoneMapper;
         private readonly IGlobalConfiguration _globalConfiguration;
-        private readonly IFeaturesConfiguration _features;
+        private readonly IFeaturesInternal _features;
         private readonly SystemLoader _systemLoader;
 
         public new FeaturesBackend Init(ILog parentLog)
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.WebApi.Features
         public IEnumerable<Feature> GetAll(bool reload)
         {
             if (reload) _systemLoader.Reload();
-            return Eav.Configuration.Features.All;
+            return _features.All;
         }
 
 
