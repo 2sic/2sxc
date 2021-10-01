@@ -1,15 +1,18 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Specialized;
+using ToSic.Sxc.Context.Query;
 using ToSic.Sxc.Web;
 using ToSic.Testing.Shared;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
-namespace ToSic.Sxc.Tests.WebTests
+namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
 {
     [TestClass()]
-    public class LinkHelperToTests: LinkHelperTestBase
+    public class LinkHelperToApiPartFullTests: EavTestBase
     {
-        // @STV - don't use statics in tests - results in object-reuse, but we want to always run clean
-        private /*static*/ void ToPartFullVerifyUrlAreEqual(string testUrl)
+        public ILinkHelper Link = LinkHelperResolver.LinkHelper();
+
+        private void ToApiPartFullVerifyUrlAreEqual(string testUrl)
         {
             AreEqual(testUrl, Link.To(api: testUrl, part: "full"));
         }
@@ -31,6 +34,20 @@ namespace ToSic.Sxc.Tests.WebTests
             AreEqual($"{LinkHelperUnknown.MockHost}/app/?a=1&b=2#fragment", Link.To(api: "/app/", parameters: "a=1&b=2#fragment", part: "full"));
             AreEqual($"{LinkHelperUnknown.MockHost}/app/api", Link.To(api: "/app/api", part: "full"));
             AreEqual($"{LinkHelperUnknown.MockHost}/app/api?a=1&b=2#fragment", Link.To(api: "/app/api", parameters: "a=1&b=2#fragment", part: "full"));
+        }
+
+        [TestMethod()]
+        public void ToApiParametersTest()
+        {
+            AreEqual($"{LinkHelperUnknown.MockHost}/app/api", Link.To(api: "/app/api", part: "full"));
+            AreEqual($"{LinkHelperUnknown.MockHost}/app/api", Link.To(api: "/app/api", parameters: null, part: "full"));
+            AreEqual($"{LinkHelperUnknown.MockHost}/app/api?a=1&b=2#fragment", Link.To(api: "/app/api", parameters: "a=1&b=2#fragment", part: "full"));
+            AreEqual($"{LinkHelperUnknown.MockHost}/app/api?a=1&b=2&c=3", Link.To(api: "/app/api", parameters: new Parameters(new NameValueCollection
+            {
+                { "a", "1" },
+                { "b", "2" },
+                { "c", "3" }
+            }), part: "full"));
         }
 
         [TestMethod()]
@@ -63,10 +80,10 @@ namespace ToSic.Sxc.Tests.WebTests
         [TestMethod()]
         public void ToWithInvalidUrlTest()
         {
-            ToPartFullVerifyUrlAreEqual("hello2:there");
-            ToPartFullVerifyUrlAreEqual("file:123");
-            ToPartFullVerifyUrlAreEqual("../api");
-            ToPartFullVerifyUrlAreEqual("/sibling1/../sibling2/api");
+            ToApiPartFullVerifyUrlAreEqual("hello2:there");
+            ToApiPartFullVerifyUrlAreEqual("file:123");
+            ToApiPartFullVerifyUrlAreEqual("../api");
+            ToApiPartFullVerifyUrlAreEqual("/sibling1/../sibling2/api");
         }
     }
 }

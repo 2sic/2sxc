@@ -3,22 +3,16 @@ using ToSic.Sxc.Web;
 using ToSic.Testing.Shared;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
-namespace ToSic.Sxc.Tests.WebTests
+namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
 {
     [TestClass()]
-    public class LinkHelperImageTests: EavTestBase
+    public class LinkHelperImagePartFullTests: EavTestBase
     {
-        public ILinkHelper Link = LinkHelper();
+        public ILinkHelper Link = LinkHelperResolver.LinkHelper();
 
-        private static ILinkHelper LinkHelper()
+        private void ImagePartFullVerifyUrlAreEqual(string testUrl)
         {
-            var linkHelper = Resolve<ILinkHelper>();
-            return linkHelper;
-        }
-
-        private static void ImagePartFullVerifyUrlAreEqual(string testUrl)
-        {
-            AreEqual(testUrl, LinkHelper().Image(url: testUrl, part: "full"));
+            AreEqual(testUrl, Link.Image(url: testUrl, part: "full"));
         }
 
         [TestMethod()]

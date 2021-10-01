@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Eav.Run.Unknown;
 
@@ -33,7 +32,7 @@ namespace ToSic.Sxc.Web
         // Mock CurrentPage
         public override string GetCurrentRequestUrl()
         {
-            return $"{MockHost}/folder/subfolder/page?param=a#fragment";
+            return $"{GetDomainName()}/folder/subfolder/page?param=a#fragment";
         }
     }
 }
