@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Web
 
 
         /// <inheritdoc />
-        public string To(string noParamOrder = Eav.Parameters.Protector, int? pageId = null, object parameters = null, string api = null)
+        public string To(string noParamOrder = Eav.Parameters.Protector, int? pageId = null, object parameters = null, string api = null, string part = null)
         {
             // prevent incorrect use without named parameters
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
@@ -40,7 +40,14 @@ namespace ToSic.Sxc.Web
 
             var strParams = ParametersToString(parameters);
 
-            return ToImplementation(pageId, strParams, api);
+            var url = ToImplementation(pageId, parameters: strParams, api: api);
+
+            return ProcessPartParam(part, url);
+        }
+
+        private string ProcessPartParam(string part, string url)
+        {
+            return (part == "full") ? FullUrl(url) : url;
         }
 
         protected abstract string ToImplementation(int? pageId = null, string parameters = null, string api = null);
@@ -79,10 +86,10 @@ namespace ToSic.Sxc.Web
             object aspectRatio = null,
             string part = null)
         {
-            var relativeOrAbsoluteUrl = (part == "full") ? FullUrl(url) : url;
-
-            return ImgLinker.Image(url: relativeOrAbsoluteUrl, settings, factor, noParamOrder, width, height, quality, resizeMode,
+            var imageUrl  =ImgLinker.Image(url: url, settings, factor, noParamOrder, width, height, quality, resizeMode,
                 scaleMode, format, aspectRatio);
+
+            return ProcessPartParam(part, imageUrl);
         }
 
         private bool _debug;
@@ -123,27 +130,7 @@ namespace ToSic.Sxc.Web
                 currentRequestParts.Fragment = parts.Fragment;
 
             // handle query strings
-            if (!string.IsNullOrEmpty(parts.Query))
-            {
-                if (string.IsNullOrEmpty(currentRequestParts.Query))
-                {
-                    currentRequestParts.Query = parts.Query;
-                }
-                else
-                {
-                    // combine query strings
-                    var queryString = HttpUtility.ParseQueryString(parts.Query);
-                    var currentRequestQueryString = HttpUtility.ParseQueryString(currentRequestParts.Query);
-                    foreach (var key in queryString.AllKeys)
-                    {
-                        currentRequestQueryString.Set(key, queryString.Get(key));
-                    }
-
-                    currentRequestParts.Query = currentRequestQueryString.ToString();
-                }
-            }
-
-            return currentRequestParts.BuildUrl();
+            return QueryHelper.Combine(currentRequestParts.BuildUrl(), parts.Query);
         }
 
         private static bool IsAbsoluteUrl(UrlParts parts)

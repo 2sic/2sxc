@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         }
 
         // Prepare Api link.
-        private string ApiNavigateUrl(string api, string parameters, bool absoluteUrl = true)
+        private string ApiNavigateUrl(string api, string parameters)
         {
             var alias = _siteStateInitializer.InitializedState.Alias;
             
@@ -83,7 +83,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 ? pathWithQueryString
                 : $"/{alias.Path}{pathWithQueryString}";
 
-            return absoluteUrl ? $"{GetDomainName()}{relativePath}" : relativePath;
+            return relativePath;
         }
 
         // Prepare Page link.

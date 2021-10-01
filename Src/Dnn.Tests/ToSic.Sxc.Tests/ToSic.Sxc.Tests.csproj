@@ -91,6 +91,8 @@
     <Compile Include="PageProperty\UpdatePropertyTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebTests\ConvertServiceTests\ConvertServiceTest.cs" />
+    <Compile Include="WebTests\LinkHelperImageTests.cs" />
+    <Compile Include="WebTests\LinkHelperToTests.cs" />
     <Compile Include="WebTests\LinkImageBasicTests.cs" />
     <Compile Include="WebTests\LinkImageInternalsTests.cs" />
     <Compile Include="WebTests\CleanParamTests.cs" />
@@ -98,7 +100,6 @@
     <Compile Include="WebTests\LinkImageTestHelpers.cs" />
     <Compile Include="WebTests\QueryHelperTests.cs" />
     <Compile Include="WebTests\UrlPartsTest.cs" />
-    <Compile Include="WebTests\LinkHelperUnknownTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj">
