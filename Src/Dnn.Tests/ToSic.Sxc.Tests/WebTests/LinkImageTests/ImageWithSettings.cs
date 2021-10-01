@@ -1,10 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static ToSic.Sxc.Tests.WebTests.LinkImageTestHelpers;
 
-namespace ToSic.Sxc.Tests.WebTests
+namespace ToSic.Sxc.Tests.WebTests.LinkImageTests
 {
     [TestClass]
-    public class LinkImageSettingsTests
+    public class ImageWithSettings: LinkImageTestBase
     {
         [TestMethod]
         public void BasicHWandAR()

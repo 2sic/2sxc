@@ -43,16 +43,6 @@ namespace ToSic.Sxc.Web.Images
             var getSettings = settings as ICanGetNameNotFinal;
             if (Debug) Log.Add($"Has Settings:{getSettings != null}");
 
-            // Special case, if the settings are just an anonymous object
-            // In that case try to convert to a Dynamic object
-            // Not active for now, as of now it must always be done with AsDynamic(...)
-            // Reason is that we're not sure if this would have a performance overhead we would like to avoid
-            //if (getSettings is null && !(settings is null))
-            //{
-            //    if (Debug) Log.Add($"Conversion to {nameof(ICanGetNameNotFinal)} failed, will try to convert automatically");
-            //    getSettings = new DynamicReadObject(settings, true);
-            //}
-
             var resizedNew = FigureOutBestWidthAndHeight(width, height, factor, aspectRatio, getSettings);
 
             var formToUse = RealStringOrNull(format);

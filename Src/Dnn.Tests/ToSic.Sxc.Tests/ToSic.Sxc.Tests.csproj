@@ -92,13 +92,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebTests\ConvertServiceTests\ConvertServiceTest.cs" />
     <Compile Include="WebTests\LinkHelperImageTests.cs" />
+    <Compile Include="WebTests\LinkHelperTestBase.cs" />
     <Compile Include="WebTests\LinkHelperToTests.cs" />
-    <Compile Include="WebTests\LinkImageBasicTests.cs" />
-    <Compile Include="WebTests\LinkImageInternalsTests.cs" />
+    <Compile Include="WebTests\LinkImageTests\ImageBasic.cs" />
+    <Compile Include="WebTests\LinkImageTests\ImgResizeLinkerInternals.cs" />
     <Compile Include="WebTests\CleanParamTests.cs" />
-    <Compile Include="WebTests\LinkImageSettingsTests.cs" />
-    <Compile Include="WebTests\LinkImageTestHelpers.cs" />
+    <Compile Include="WebTests\LinkImageTests\ImageWithSettings.cs" />
+    <Compile Include="WebTests\LinkImageTests\LinkImageTestBase.cs" />
     <Compile Include="WebTests\QueryHelperTests.cs" />
+    <Compile Include="WebTests\LinkToBasicTests.cs" />
     <Compile Include="WebTests\UrlPartsTest.cs" />
   </ItemGroup>
   <ItemGroup>

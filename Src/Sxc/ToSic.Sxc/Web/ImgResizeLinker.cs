@@ -8,7 +8,7 @@ using static ToSic.Sxc.Web.CleanParam;
 namespace ToSic.Sxc.Web
 {
     [PrivateApi]
-    public class ImgResizeLinker: ImageLinkerBase // HasLog
+    public class ImgResizeLinker: ImageLinkerBase
     {
         internal const int MaxSize = 3200;
         internal const int MaxQuality = 100;

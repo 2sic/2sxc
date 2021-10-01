@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc;
+using ToSic.Eav;
 
-namespace ToSic.Eav.Core.Tests
+namespace ToSic.Sxc.Tests
 {
     [TestClass]
     public class InitializeTests

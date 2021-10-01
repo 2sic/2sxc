@@ -6,17 +6,10 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.WebTests
 {
     [TestClass()]
-    public class LinkHelperToTests: EavTestBase
+    public class LinkHelperToTests: LinkHelperTestBase
     {
-        public static ILinkHelper Link = LinkHelper();
-
-        private static ILinkHelper LinkHelper()
-        {
-            var linkHelper = Resolve<ILinkHelper>();
-            return linkHelper;
-        }
-
-        private static void ToPartFullVerifyUrlAreEqual(string testUrl)
+        // @STV - don't use statics in tests - results in object-reuse, but we want to always run clean
+        private /*static*/ void ToPartFullVerifyUrlAreEqual(string testUrl)
         {
             AreEqual(testUrl, Link.To(api: testUrl, part: "full"));
         }
