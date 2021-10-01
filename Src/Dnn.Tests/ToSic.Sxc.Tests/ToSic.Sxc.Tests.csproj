@@ -91,8 +91,13 @@
     <Compile Include="PageProperty\UpdatePropertyTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebTests\ConvertServiceTests\ConvertServiceTest.cs" />
-    <Compile Include="WebTests\LinkHelperImageTests.cs" />
-    <Compile Include="WebTests\LinkHelperToTests.cs" />
+    <Compile Include="WebTests\LinkHelperTests\LinkHelperImagePartFullTests.cs" />
+    <Compile Include="WebTests\LinkHelperTests\LinkHelperImagePartUndefinedTests.cs" />
+    <Compile Include="WebTests\LinkHelperTests\LinkHelperToApiPartFullTests.cs" />
+    <Compile Include="WebTests\LinkHelperTests\LinkHelperToApiPartUndefinedTests.cs" />
+    <Compile Include="WebTests\LinkHelperTests\LinkHelperToCommonTests.cs" />
+    <Compile Include="WebTests\LinkHelperTests\LinkHelperToPagePartUnknownTests.cs" />
+    <Compile Include="WebTests\LinkHelperTests\LinkHelperToPagePartFullTests.cs" />
     <Compile Include="WebTests\LinkImageBasicTests.cs" />
     <Compile Include="WebTests\LinkImageInternalsTests.cs" />
     <Compile Include="WebTests\CleanParamTests.cs" />

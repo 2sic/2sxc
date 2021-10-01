@@ -3,10 +3,10 @@ using ToSic.Sxc.Web;
 using ToSic.Testing.Shared;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
-namespace ToSic.Sxc.Tests.WebTests
+namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
 {
     [TestClass()]
-    public class LinkHelperImageTests: EavTestBase
+    public class LinkHelperImagePartFullTests: EavTestBase
     {
         public ILinkHelper Link = LinkHelper();
 
