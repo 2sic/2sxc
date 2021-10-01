@@ -3,10 +3,10 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
 {
-    [TestClass()]
+    [TestClass]
     public class LinkHelperToCommonTests : LinkHelperTestBase
     {
-        [TestMethod()]
+        [TestMethod]
         public void ToConflictingValuesProvidedTest()
         {
             ThrowsException<System.ArgumentException>(() =>

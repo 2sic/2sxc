@@ -92,6 +92,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebTests\ConvertServiceTests\ConvertServiceTest.cs" />
     <Compile Include="WebTests\LinkHelperTestBase.cs" />
+    <Compile Include="WebTests\LinkHelperTests\LinkHelperPartSuffixTests.cs" />
+    <Compile Include="WebTests\LinkHelperTests\LinkHelperPartQueryTests.cs" />
+    <Compile Include="WebTests\LinkHelperTests\LinkHelperPartHashTests.cs" />
+    <Compile Include="WebTests\LinkHelperTests\LinkHelperPartDomainTests.cs" />
+    <Compile Include="WebTests\LinkHelperTests\LinkHelperPartProtocolTests.cs" />
     <Compile Include="WebTests\LinkImageTests\ImageBasic.cs" />
     <Compile Include="WebTests\LinkImageTests\ImgResizeLinkerInternals.cs" />
     <Compile Include="WebTests\LinkHelperTests\LinkHelperImagePartFullTests.cs" />

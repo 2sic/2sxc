@@ -3,7 +3,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
 {
-    [TestClass()]
+    [TestClass]
     public class LinkHelperImagePartUndefinedTests: LinkHelperTestBase
     {
         private void ImageVerifyUrlAreEqual(string testUrl)
@@ -11,13 +11,13 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
             AreEqual(testUrl, Link.Image(url: testUrl));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ImageNoUrlOrParamsTest()
         {
             ImageVerifyUrlAreEqual("");
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ImageCommonUrlsTest()
         {
             ImageVerifyUrlAreEqual($"/");
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
             ImageVerifyUrlAreEqual($"/folder/subfolder/file.ext?a=1&b=2#fragment");
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ImageUrlPathIsMissingTest()
         {
             ImageVerifyUrlAreEqual("?c=3");
@@ -51,13 +51,13 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
             ImageVerifyUrlAreEqual("#fragmentC");
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ImageWithoutProtocolTest() // current behavior, potentially we can improve like in part "full"
         {
             AreEqual($"//unknown.2sxc.org/test", Link.Image(url: "//unknown.2sxc.org/test"));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ImageUrlWithTildeTest() // current behavior, potentially we can improve like in part "full"
         {
             AreEqual($"~", Link.Image(url: "~"));
@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
             AreEqual($"~/folder/", Link.Image(url: "~/folder/"));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ImageWithAbsoluteUrlTest()
         {
             ImageVerifyUrlAreEqual("https://unknown2.2sxc.org/");
@@ -76,7 +76,7 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
             ImageVerifyUrlAreEqual("https://unknown2.2sxc.org/folder/");
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ImageWithInvalidUrlTest()
         {
             ImageVerifyUrlAreEqual("hello:there");

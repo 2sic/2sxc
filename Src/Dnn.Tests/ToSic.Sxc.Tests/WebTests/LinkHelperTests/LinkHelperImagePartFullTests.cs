@@ -4,7 +4,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
 {
-    [TestClass()]
+    [TestClass]
     public class LinkHelperImagePartFullTests: LinkHelperTestBase
     {
         private void ImagePartFullVerifyUrlAreEqual(string testUrl)
@@ -12,13 +12,13 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
             AreEqual(testUrl, Link.Image(url: testUrl, part: "full"));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ImageNoUrlOrParamsTest()
         {
             AreEqual($"{LinkHelperUnknown.MockHost}/folder/subfolder/page?param=a#fragment", Link.Image(url: "", part: "full"));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ImageCommonUrlsTest()
         {
             AreEqual($"{LinkHelperUnknown.MockHost}/", Link.Image(url: "/", part: "full"));
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
             AreEqual($"{LinkHelperUnknown.MockHost}/folder/subfolder/file.ext?a=1&b=2#fragment", Link.Image(url: "/folder/subfolder/file.ext?a=1&b=2#fragment", part: "full"));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ImageUrlPathIsMissingTest()
         {
             AreEqual($"{LinkHelperUnknown.MockHost}/folder/subfolder/page?param=a&c=3#fragment", Link.Image(url: "?c=3", part: "full"));
@@ -52,13 +52,13 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
             AreEqual($"{LinkHelperUnknown.MockHost}/folder/subfolder/page?param=a#fragmentC", Link.Image(url: "#fragmentC", part: "full"));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ImageWithoutProtocolTest()
         {
             AreEqual($"{LinkHelperUnknown.MockHost}/test", Link.Image(url: "//unknown.2sxc.org/test", part: "full"));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ImageUrlWithTildeTest()
         {
             AreEqual($"{LinkHelperUnknown.MockHost}/", Link.Image(url: "~", part: "full"));
@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
             AreEqual($"{LinkHelperUnknown.MockHost}/folder/", Link.Image(url: "~/folder/", part: "full"));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ImageWithAbsoluteUrlTest()
         {
             ImagePartFullVerifyUrlAreEqual("https://unknown2.2sxc.org/");
@@ -77,7 +77,7 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
             ImagePartFullVerifyUrlAreEqual("https://unknown2.2sxc.org/folder/");
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ImageWithInvalidUrlTest()
         {
             ImagePartFullVerifyUrlAreEqual("hello:there");

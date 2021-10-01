@@ -47,7 +47,23 @@ namespace ToSic.Sxc.Web
 
         private string ProcessPartParam(string part, string url)
         {
-            return (part == "full") ? FullUrl(url) : url;
+            switch (part)
+            {
+                case "full":
+                    return FullUrl(url);
+                case "protocol":
+                    return Protocol(url);
+                case "domain":
+                    return Domain(url);
+                case "hash":
+                    return Hash(url);
+                case "query":
+                    return Query(url);
+                case "suffix":
+                    return Suffix(url);
+                default:
+                    return url;
+            }
         }
 
         protected abstract string ToImplementation(int? pageId = null, string parameters = null, string api = null);
@@ -198,5 +214,61 @@ namespace ToSic.Sxc.Web
         public abstract string GetDomainName();
 
         public abstract string GetCurrentRequestUrl();
+
+        /// <summary>
+        /// `protocol` would just return the "http", "https" or whatever.
+        ///     - if no url was provided, it will assume that the current page is to be used
+        ///     - if a url was provided and it has no protocol, then the current protocol is used
+        ///     - if a url was provided with protocol, it would return that
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        protected string Protocol(string url)
+        {
+            return (new Uri(FullUrl(url), UriKind.Absolute)).Scheme;
+        }
+
+        /// <summary>
+        /// `domain` would just return the full domain like `2sxc.org`, `www.2sxc.org` or `gettingstarted.2sxc.org`
+        ///     - if no url was provided, then the domain of the current page
+        ///     - if the url contains a domain, then that domain
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        protected string Domain(string url)
+        {
+            return (new Uri(FullUrl(url), UriKind.Absolute)).DnsSafeHost;
+        }
+
+        /// <summary>
+        /// `hash` would just return the part after the `#` (without the `#`) - if not provided, empty string
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        protected string Hash(string url)
+        {
+            return (new UrlParts(FullUrl(url))).Fragment;
+        }
+
+        /// <summary>
+        /// `query` would return the part after the `?` (without the `?`- if not provided, empty string
+        ///     - if no url was provided and there are magical query params (like in DNN), these would not be returned, but not dnn-internals like tabid or language
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        protected string Query(string url)
+        {
+            return (new UrlParts(FullUrl(url))).Query;
+        }
+
+        /// <summary>
+        /// `suffix` would return the entire suffix starting from the `?` _including_ the `?` or `#` - if nothing is there, empty string
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        protected string Suffix(string url)
+        {
+            return (new UrlParts(FullUrl(url))).Suffix();
+        }
     }
 }

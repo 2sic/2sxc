@@ -5,7 +5,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
 {
-    [TestClass()]
+    [TestClass]
     public class LinkHelperToApiPartUndefinedTests: LinkHelperTestBase
     {
         private void ToApiPartUndefinedVerifyUrlAreEqual(string testUrl)
@@ -13,14 +13,14 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
             AreEqual(testUrl, Link.To(api: testUrl));
         }
 
-        [TestMethod()]
-        public void ToNoUrlOrParamsTest()
+        [TestMethod]
+        public void ToNoApiOrParamsTest()
         {
             ToApiPartUndefinedVerifyUrlAreEqual("");
         }
 
-        [TestMethod()]
-        public void ToCommonUrlsTest()
+        [TestMethod]
+        public void ToApiCommonUrlsTest()
         {
             AreEqual($"/", Link.To(api: "/"));
             AreEqual($"/?a=1&b=2#fragment", Link.To(api: "/", parameters: "a=1&b=2#fragment"));
@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
             AreEqual($"/app/api?a=1&b=2#fragment", Link.To(api: "/app/api", parameters: "a=1&b=2#fragment"));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ToApiParametersTest()
         {
             AreEqual($"/app/api", Link.To(api: "/app/api"));
@@ -46,35 +46,35 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
             })));
         }
 
-        [TestMethod()]
-        public void ToUrlPathIsMissingTest()
+        [TestMethod]
+        public void ToApiPathIsMissingTest()
         {
             AreEqual($"?param=b&b=3&c=3", Link.To(api: "", parameters: "param=b&b=3&c=3"));
         }
 
-        [TestMethod()]
-        public void ToWithoutProtocolTest() // current behavior, potentially we can improve like in part "full"
+        [TestMethod]
+        public void ToApiWithoutProtocolTest() // current behavior, potentially we can improve like in part "full"
         {
             AreEqual($"//unknown.2sxc.org/api?param=b&b=3&c=3", Link.To(api: "//unknown.2sxc.org/api", parameters: "param=b&b=3&c=3"));
         }
 
-        [TestMethod()]
-        public void ToUrlWithTildeTest() // current behavior, potentially we can improve like in part "full"
+        [TestMethod]
+        public void ToApiWithTildeTest() // current behavior, potentially we can improve like in part "full"
         {
             AreEqual($"~/api?p=1&r=2", Link.To(api: "~/api", parameters: "p=1&r=2"));
             AreEqual($"~/app/", Link.To(api: "~/app/"));
         }
 
-        [TestMethod()]
-        public void ToWithAbsoluteUrlTest()
+        [TestMethod]
+        public void ToApiWithAbsoluteUrlTest()
         {
             ToApiPartUndefinedVerifyUrlAreEqual("https://unknown2.2sxc.org/");
             ToApiPartUndefinedVerifyUrlAreEqual("https://unknown2.2sxc.org/api");
             AreEqual("https://unknown2.2sxc.org/app/api?a=1", Link.To(api: "https://unknown2.2sxc.org/app/api", parameters: "a=1"));
         }
 
-        [TestMethod()]
-        public void ToWithInvalidUrlTest()
+        [TestMethod]
+        public void ToApiWithInvalidUrlTest()
         {
             ToApiPartUndefinedVerifyUrlAreEqual("hello2:there");
             ToApiPartUndefinedVerifyUrlAreEqual("file:123");

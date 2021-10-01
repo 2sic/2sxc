@@ -6,23 +6,23 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
 {
-    [TestClass()]
+    [TestClass]
     public class LinkHelperToPagePartFullTests: LinkHelperTestBase
     {
-        [TestMethod()]
+        [TestMethod]
         public void ToNoPageIdOrParamsTest()
         {
             AreEqual($"{LinkHelperUnknown.MockHost}/page", Link.To(part: "full"));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ToPageCommonsTest()
         {
             AreEqual($"{LinkHelperUnknown.MockHost}/page", Link.To(pageId: null, part: "full"));
             AreEqual($"{LinkHelperUnknown.MockHost}/page{27}", Link.To(pageId: 27, part: "full"));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ToPageParametersTest()
         {
             AreEqual($"{LinkHelperUnknown.MockHost}/page27", Link.To(pageId: 27, part: "full"));

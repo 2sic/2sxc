@@ -40,9 +40,22 @@ namespace ToSic.Sxc.Web
         public string BuildUrl()
         {
             var urlStringBuilder = new StringBuilder(!string.IsNullOrEmpty(Path) ? Path : string.Empty);
+            AppendSuffix(urlStringBuilder);
+            return urlStringBuilder.ToString();
+        }
+
+        // would return the entire suffix starting from the `?` _including_ the `?` or `#` - if nothing is there, empty string
+        public string Suffix()
+        {
+            var urlStringBuilder = new StringBuilder();
+            AppendSuffix(urlStringBuilder);
+            return urlStringBuilder.ToString();
+        }
+
+        private void AppendSuffix(StringBuilder urlStringBuilder)
+        {
             if (!string.IsNullOrEmpty(Query)) urlStringBuilder.Append($"{QuerySeparator}{Query}");
             if (!string.IsNullOrEmpty(Fragment)) urlStringBuilder.Append($"{FragmentSeparator}{Fragment}");
-            return urlStringBuilder.ToString();
         }
     }
 }
