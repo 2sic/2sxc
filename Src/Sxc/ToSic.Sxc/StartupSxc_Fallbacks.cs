@@ -43,6 +43,9 @@ namespace ToSic.Sxc
             // v12.05 - linkhelperunknown - for testing etc.
             services.TryAddTransient<ILinkHelper, LinkHelperUnknown>();
 
+            // v12.05
+            services.TryAddTransient<IRazorService, RazorServiceUnknown>();
+
             return services;
         }
     }
