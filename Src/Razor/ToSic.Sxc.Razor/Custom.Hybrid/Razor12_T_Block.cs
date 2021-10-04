@@ -25,6 +25,8 @@ namespace Custom.Hybrid
             set => _dynCode = value;
         }
 
+        public void DynamicCodeCoupling(IDynamicCodeRoot parent) => _DynCodeRoot = parent;
+
         private IDynamicCodeRoot _dynCode;
         #endregion
 
@@ -42,5 +44,6 @@ namespace Custom.Hybrid
                 if (_dynCode != null && base.ViewData != null && base.ViewData[DynCode] == null) base.ViewData[DynCode] = _dynCode;
             }
         }
+
     }
 }

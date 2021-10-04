@@ -193,11 +193,11 @@ namespace ToSic.SexyContent.WebApi
         /// <inheritdoc />
         public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
 
-        /// <inheritdoc />
-        public dynamic Resources => _DynCodeRoot.Resources;
+        ///// <inheritdoc />
+        //public dynamic Resources => _DynCodeRoot.Resources;
 
-        /// <inheritdoc />
-        public dynamic Settings => _DynCodeRoot.Settings;
+        ///// <inheritdoc />
+        //public dynamic Settings => _DynCodeRoot.Settings;
 
         #endregion
     }

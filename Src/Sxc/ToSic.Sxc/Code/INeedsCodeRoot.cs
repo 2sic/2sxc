@@ -2,6 +2,7 @@
 
 namespace ToSic.Sxc.Code
 {
+    // Todo: Merge with ICoupledDynamicCode as it does the same thing
     [PrivateApi]
     public interface INeedsCodeRoot
     {

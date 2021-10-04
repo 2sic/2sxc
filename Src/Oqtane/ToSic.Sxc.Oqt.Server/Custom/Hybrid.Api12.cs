@@ -21,14 +21,10 @@ namespace Custom.Hybrid
     /// It is without dependencies in class constructor, commonly provided with DI.
     /// </summary>
     [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
-    public abstract partial class Api12 : OqtStatefulControllerBase, IDynamicCode, IDynamicWebApi
+    public abstract partial class Api12 : OqtStatefulControllerBase, IDynamicCode, IDynamicWebApi, IDynamicCode12
     {
-        //protected IServiceProvider ServiceProvider { get; private set; }
-
         [PrivateApi]
         protected override string HistoryLogName => EavWebApiConstants.HistoryNameWebApi;
-
-        //private OqtState _oqtState;
 
         /// <summary>
         /// Our custom dynamic 2sxc app api controllers, depends on event OnActionExecuting to provide dependencies (without DI in constructor).

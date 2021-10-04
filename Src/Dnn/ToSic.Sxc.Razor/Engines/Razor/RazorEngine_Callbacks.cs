@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Engines
     {
 
         /// <inheritdoc />
-        public override void CustomizeData() => (Webpage as IRazorComponent)?.CustomizeData();
+        public override void CustomizeData() => (Webpage as IDnnRazorCustomize)?.CustomizeData();
 
         /// <inheritdoc />
         public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate)

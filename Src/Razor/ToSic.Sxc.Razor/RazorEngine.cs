@@ -58,8 +58,8 @@ namespace ToSic.Sxc.Razor
                 var result = await RazorRenderer.RenderToStringAsync(TemplatePath, new object(),
                     rzv =>
                     {
-                        if (rzv.RazorPage is not IRazor12 asSxc) return;
-                        asSxc._DynCodeRoot = dynCode;
+                        if (rzv.RazorPage is not IRazor asSxc) return;
+                        asSxc.DynamicCodeCoupling(dynCode); // ._DynCodeRoot = dynCode;
                         //asSxc.Purpose = Purpose;
                     });
                 var writer = new StringWriter();

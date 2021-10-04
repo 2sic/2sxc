@@ -41,12 +41,6 @@ namespace ToSic.Sxc.Code
 
         #endregion
 
-        #region Convert-Service
-
-        /// <inheritdoc />
-        public IConvertService Convert => UnwrappedContents.Convert;
-
-        #endregion
 
         #region CreateSource
         /// <inheritdoc />

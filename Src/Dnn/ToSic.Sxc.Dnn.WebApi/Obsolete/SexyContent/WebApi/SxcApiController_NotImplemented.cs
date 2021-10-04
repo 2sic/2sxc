@@ -36,9 +36,9 @@ namespace ToSic.SexyContent.WebApi
 
         #region Convert-Service - 2sxc 12.05 only
 
-        [PrivateApi]
-        public IConvertService Convert => throw new NotSupportedException(
-            $"The command {nameof(Convert)} is only available in newer base classes. {ApiController.ErrRecommendedNamespaces}");
+        //[PrivateApi]
+        //public IxConvertService Convert => throw new NotSupportedException(
+        //    $"The command {nameof(Convert)} is only available in newer base classes. {ApiController.ErrRecommendedNamespaces}");
 
         #endregion
 

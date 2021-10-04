@@ -25,7 +25,7 @@ namespace Custom.Hybrid
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP for 2sxc 12")]
     [DnnLogExceptions]
-    public abstract partial class Api12: DynamicApiController, IDynamicCode, IDynamicWebApi, IHasDynamicCodeRoot
+    public abstract partial class Api12: DynamicApiController, IDynamicCode, IDynamicCode12, IDynamicWebApi, IHasDynamicCodeRoot
     {
         [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
 

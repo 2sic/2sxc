@@ -35,6 +35,14 @@ namespace ToSic.Sxc.Web
 
         public bool ToBool(object value) => To<bool>(value);
         public bool ToBool(object value, string paramsMustBeNamed = Eav.Parameters.Protector, bool fallback = default) => To(value, fallback: fallback);
+        
+        public string ToString(object value) => To<string>(value);
+
+        public string ToString(object value, string paramsMustBeNamed = Eav.Parameters.Protector, string fallback = default, bool fallbackOnNull = true)
+        {
+            var result = To(value, fallback: fallback);
+            return result is null && fallbackOnNull ? fallback: result;
+        }
 
         public string ForCode(object value) => ForCode(value, fallback: default);
         public string ForCode(object value, string paramsMustBeNamed = Eav.Parameters.Protector, string fallback = default)
@@ -58,5 +66,13 @@ namespace ToSic.Sxc.Web
         }
 
         public IJsonService Json { get; }
+
+        #region Invisible Converts for backward compatibility
+
+        public int ToInt32(object value) => ToInt(value);
+
+        public float ToSingle(object value) => ToFloat(value);
+
+        #endregion
     }
 }

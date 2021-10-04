@@ -2,6 +2,7 @@
 using System.IO;
 using System.Web.Hosting;
 using System.Web.WebPages;
+using Custom.Hybrid;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
@@ -18,12 +19,13 @@ namespace ToSic.Sxc.Web
     /// It only contains internal wiring stuff, so not to be published
     /// </summary>
     [PrivateApi("internal class only!")]
-    public abstract partial class RazorComponentBase: WebPageBase, ICreateInstance, IHasLog, ICoupledDynamicCode
+    public abstract partial class RazorComponentBase: WebPageBase, ICreateInstance, IHasLog, ICoupledDynamicCode, IRazor
     {
-        public IHtmlHelper Html { get; internal set; }
+        public IHtmlHelper Html => _html ?? (_html = new HtmlHelper(this));
+        private IHtmlHelper _html;
 
         [PrivateApi]
-        public IDynamicCodeRoot _DynCodeRoot { get; set; }
+        public IDynamicCodeRoot _DynCodeRoot { get; private set; }
 
 
         /// <summary>
@@ -38,14 +40,18 @@ namespace ToSic.Sxc.Web
             // Child pages need to get their context from the Parent
             Context = parentPage.Context;
 
+            // New in v12: the HtmlHelper must know about this page from now on, so we can't re-use the one from the parent
+            // 2021-10-04 2dm disabled this, added to directly create on the Html property
+            //Html = new HtmlHelper(this);
+
             // Return if parent page is not a SexyContentWebPage
             if (!(parentPage is RazorComponentBase typedParent)) return;
 
-            // New in v12: the HtmlHelper must know about this page from now on, so we can't re-use the one from the parent
-            Html = new HtmlHelper(this);
 
             // Forward the context
-            _DynCodeRoot = typedParent._DynCodeRoot;
+            DynamicCodeCoupling(typedParent._DynCodeRoot);
+            // 2021-10-04 2dm changed mechanism
+            // _DynCodeRoot = typedParent._DynCodeRoot;
             try
             {
                 Log.Add("@RenderPage:" + VirtualPath);
@@ -112,9 +118,9 @@ namespace ToSic.Sxc.Web
 
         public void DynamicCodeCoupling(IDynamicCodeRoot parent)
         {
-            if (!(parent is IDynamicCodeRoot isDynCode)) return;
-            
-            _DynCodeRoot = isDynCode;
+            // if (!(parent is IDynamicCodeRoot isDynCode)) return;
+
+            _DynCodeRoot = parent; // isDynCode;
             _log = new Log("Rzr.Comp", _DynCodeRoot?.Log);
             var wrapLog = Log.Call();
             wrapLog("ok");

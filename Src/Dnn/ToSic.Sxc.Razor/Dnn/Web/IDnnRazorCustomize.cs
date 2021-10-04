@@ -16,12 +16,8 @@ namespace ToSic.Sxc.Dnn.Web
     /// All DNN Razor Pages inherit from this class
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public interface IRazorComponent: IDnnDynamicCode, IRazor12
+    public interface IDnnRazorCustomize: IDnnDynamicCode // , IRazor12
     {
-        /// <summary>
-        /// Helper for Html.Raw - for creating raw html output which doesn't encode &gt; and &lt;
-        /// </summary>
-        IHtmlHelper Html { get; }
 
 
         /// <summary>

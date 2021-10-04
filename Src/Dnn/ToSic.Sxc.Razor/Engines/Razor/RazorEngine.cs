@@ -129,8 +129,12 @@ namespace ToSic.Sxc.Engines
 
         private void InitHelpers(RazorComponentBase webPage, int compatibility)
         {
-            webPage.Html = new Razor.HtmlHelper(webPage);
-            webPage._DynCodeRoot = _dnnDynCodeLazy.Value.Init(Block, Log, compatibility);
+            // 2021-10-4 2dm - disabled this, as I believe the RazorComponentBase does this internally as well
+            // webPage.Html = new Razor.HtmlHelper(webPage);
+            // 2021-10-04 2dm changed mechanism - before we changed the _DynCodeRoot variable
+            // if (rzv.RazorPage is not IRazor asSxc) return;
+            //   asSxc._DynCodeRoot = dynCode;
+            webPage.DynamicCodeCoupling(_dnnDynCodeLazy.Value.Init(Block, Log, compatibility));
 
             #region New in 10.25 - ensure jquery is not included by default
 

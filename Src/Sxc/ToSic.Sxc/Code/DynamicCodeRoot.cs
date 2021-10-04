@@ -30,14 +30,12 @@ namespace ToSic.Sxc.Code
         {
             public IServiceProvider ServiceProvider { get; }
             public ICmsContext CmsContext { get; }
-            //public ILinkHelper LinkHelper { get; }
             public Lazy<CodeCompiler> CodeCompilerLazy { get; }
 
-            public Dependencies(IServiceProvider serviceProvider, ICmsContext cmsContext, /*ILinkHelper linkHelper,*/ Lazy<CodeCompiler> codeCompilerLazy)
+            public Dependencies(IServiceProvider serviceProvider, ICmsContext cmsContext, Lazy<CodeCompiler> codeCompilerLazy)
             {
                 ServiceProvider = serviceProvider;
                 CmsContext = cmsContext;
-                //LinkHelper = linkHelper;
                 CodeCompilerLazy = codeCompilerLazy;
             }
         }
@@ -47,7 +45,6 @@ namespace ToSic.Sxc.Code
             Deps = dependencies;
             _serviceProvider = dependencies.ServiceProvider;
             CmsContext = dependencies.CmsContext;
-            //Link = dependencies.LinkHelper;
         }
 
         private readonly Dependencies Deps;

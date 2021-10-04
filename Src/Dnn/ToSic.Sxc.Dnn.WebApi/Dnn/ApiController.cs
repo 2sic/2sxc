@@ -28,9 +28,10 @@ namespace ToSic.Sxc.Dnn
 
         #region Convert-Service - 2sxc 12.05 only
 
-        [PrivateApi]
-        public new IConvertService Convert => throw new NotSupportedException(
-            $"The command {nameof(Convert)} is only available in newer base classes. {ErrRecommendedNamespaces}");
+        // todo: 12.05
+        //[PrivateApi]
+        //public new IxConvertService Convert => throw new NotSupportedException(
+        //    $"The command {nameof(Convert)} is only available in newer base classes. {ErrRecommendedNamespaces}");
 
         #endregion
 

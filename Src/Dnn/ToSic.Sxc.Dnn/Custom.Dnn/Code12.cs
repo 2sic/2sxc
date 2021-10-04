@@ -10,7 +10,7 @@ namespace Custom.Dnn
     /// By inheriting from this base class, you will automatically have the context like the App object etc. available. 
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract class Code12 : ToSic.Sxc.Code.DynamicCode, IDnnDynamicCodeAdditions
+    public abstract class Code12 : ToSic.Sxc.Code.DynamicCode12, IDnnDynamicCodeAdditions
     {
         /// <inheritdoc />
         public IDnnContext Dnn => (_DynCodeRoot as DnnDynamicCodeRoot)?.Dnn;

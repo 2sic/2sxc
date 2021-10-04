@@ -2,13 +2,14 @@
 using System.IO;
 using System.Web;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn
 {
     public class RazorCodeManager: HasLog
     {
-        public Custom.Dnn.Razor12 Parent;
-        public RazorCodeManager(Custom.Dnn.Razor12 parent): base("Rzr.Code", parent.Log)
+        public RazorComponentBase Parent;
+        public RazorCodeManager(RazorComponentBase parent): base("Rzr.Code", parent.Log)
         {
             Parent = parent;
         }

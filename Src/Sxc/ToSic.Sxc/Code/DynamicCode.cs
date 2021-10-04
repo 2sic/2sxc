@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Code
         public IDynamicCode UnwrappedContents => _contents;// { get; private set; }
 
         public IDynamicCode GetContents() => _contents;
-        private IDynamicCode _contents;
+        protected IDynamicCodeRoot _contents;
 
         [PrivateApi] public IDynamicCodeRoot _DynCodeRoot => (UnwrappedContents as IHasDynamicCodeRoot)?._DynCodeRoot;
 
@@ -106,13 +106,6 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public ICmsContext CmsContext => UnwrappedContents?.CmsContext;
 
-        /// <inheritdoc />
-        [PublicApi("Careful - still Experimental in 12.02")]
-        public dynamic Resources => UnwrappedContents?.Resources;
-
-        /// <inheritdoc />
-        [PublicApi("Careful - still Experimental in 12.02")]
-        public dynamic Settings => UnwrappedContents?.Settings;
 
         #endregion CmsContext  
     }
