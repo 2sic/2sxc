@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
@@ -12,7 +13,7 @@ namespace Custom.Dnn
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
     [DnnLogExceptions]
-    public abstract class Api12 : Hybrid.Api12, IDnnDynamicWebApi
+    public abstract class Api12 : Hybrid.Api12, IDnnDynamicWebApi, IDnnDynamicCodeAdditions
     {
         /// <inheritdoc />
         public new IDnnContext Dnn => base.Dnn;

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav;
-using ToSic.Eav.Documentation;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn;
-using ToSic.Sxc.Web;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.WebApi
@@ -34,13 +32,6 @@ namespace ToSic.SexyContent.WebApi
             string virtualPath = null, string contentType = null, string fileDownloadName = null, object contents = null) =>
             throw new NotSupportedException($"This method is not available in the old {nameof(SxcApiController)}. {ApiController.ErrRecommendedNamespaces}");
 
-        #region Convert-Service - 2sxc 12.05 only
-
-        //[PrivateApi]
-        //public IxConvertService Convert => throw new NotSupportedException(
-        //    $"The command {nameof(Convert)} is only available in newer base classes. {ApiController.ErrRecommendedNamespaces}");
-
-        #endregion
 
     }
 }

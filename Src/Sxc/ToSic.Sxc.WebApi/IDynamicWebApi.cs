@@ -45,6 +45,9 @@ namespace ToSic.Sxc.WebApi
         /// <param name="fileDownloadName">Download name. If provided, it will try to force download/save on the browser. </param>
         /// <param name="contents">Content of the result - a string, byte[] or stream to include.</param>
         /// <returns></returns>
+        /// <remarks>
+        /// Added in 2sxc 12.05
+        /// </remarks>
         dynamic File(string noParamOrder = ToSic.Eav.Parameters.Protector,
             // Important: the second parameter should _not_ be a string, otherwise the signature looks the same as the built-in File(...) method
             bool? download = null,

@@ -6,7 +6,7 @@ using ToSic.Sxc.Code;
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
 {
-    public partial class Razor12<TModel>: IRazor12
+    public partial class Razor12<TModel>: IRazor, IRazor12
     {
         const string DynCode = "_dynCode";
 

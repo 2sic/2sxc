@@ -110,11 +110,5 @@ using ToSic.Eav.LookUp;
 
         #endregion
 
-
-        [PrivateApi]
-        [Obsolete("left for compatibility, use Purpose instead")]
-        public object InstancePurpose
-            => throw new Exception($"InstancePurpose {NotSupportedIn10}. Use Purpose");
-
     }
 }
