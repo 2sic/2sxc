@@ -25,7 +25,11 @@ namespace Custom.Hybrid
             set => _dynCode = value;
         }
 
-        public void DynamicCodeCoupling(IDynamicCodeRoot parent) => _DynCodeRoot = parent;
+        // TODO: STV - this should probably also attach logs? not sure in what direction
+        public void DynamicCodeCoupling(IDynamicCodeRoot parent)
+        {
+            _DynCodeRoot = parent;
+        }
 
         private IDynamicCodeRoot _dynCode;
         #endregion

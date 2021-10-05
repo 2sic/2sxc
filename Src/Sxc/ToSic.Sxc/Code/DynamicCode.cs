@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Code
         public IDynamicCode GetContents() => _contents;
         protected IDynamicCodeRoot _contents;
 
-        [PrivateApi] public IDynamicCodeRoot _DynCodeRoot => (UnwrappedContents as IHasDynamicCodeRoot)?._DynCodeRoot;
+        [PrivateApi] public IDynamicCodeRoot _DynCodeRoot => _contents;// (UnwrappedContents as IHasDynamicCodeRoot)?._DynCodeRoot;
 
         #endregion
 

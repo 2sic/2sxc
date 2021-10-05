@@ -20,11 +20,11 @@ namespace ToSic.Sxc.Code
         #endregion
 
         /// <inheritdoc />
-        public dynamic Resources => _DynCodeRoot?.Resources;
+        public dynamic Resources => _contents?.Resources;
 
         /// <inheritdoc />
-        public dynamic Settings => _DynCodeRoot?.Settings;
+        public dynamic Settings => _contents?.Settings;
 
-        public IDevTools DevTools => _DynCodeRoot.DevTools;
+        public IDevTools DevTools => _contents.DevTools;
     }
 }
