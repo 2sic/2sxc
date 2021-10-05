@@ -12,20 +12,23 @@ namespace ToSic.Sxc.Web
         public const string DefRoot = DefProtocol +"://" + DefDomain;
         public const string NiceCurrentPath = "/folder/sub-folder/";
         public const string NiceCurrentPage = "current-page";
+        public const string NiceCurrentRelative = NiceCurrentPath + NiceCurrentPage;
 
         // 2dm - disable this, as there cannot be a current query on a page, unless it's page-url like tabid=25
         public const string CurrentQuery = "";// "testparam=2742";
-        public const string NiceCurrentUrlRoot = DefRoot + NiceCurrentPath + NiceCurrentPage;
+        public const string NiceCurrentUrlRoot = DefRoot + NiceCurrentRelative;
         public const string NiceCurrentUrl = NiceCurrentUrlRoot;// + "?" + CurrentQuery;
 
         public const string UglyAnyQuery = "tabId={0}";
         public const string UglyCurrentQuery = "tabId=27";
         public const string UglyCurrentPage = "default.aspx?" + UglyCurrentQuery;
+        //public const string UglyCurrentRelative = NiceCurrentPath + NiceCurrentPage;
         public const string UglyAnyPage = "default.aspx?" + UglyAnyQuery;
         public const string UglyCurrentUrl = DefRoot + "/" + UglyCurrentPage;
         public const string UglyAnyPageUrl = DefRoot + "/" + UglyAnyPage;
 
-        public static string NiceAnyPageUrl = DefRoot + "/page{0}";
+        public const string NiceAnyRelative = "/page{0}";
+        public static string NiceAnyPageUrl = DefRoot + NiceAnyRelative;
 
         internal static string CurrentPageUrl = NiceCurrentUrl;
         internal static string AnyPageUrl = NiceAnyPageUrl;

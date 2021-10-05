@@ -49,46 +49,51 @@ namespace ToSic.Sxc.Web
                 ? ToPage(pageId, strParams)
                 : ToApi(api, strParams);
 
-            var processed = ProcessPartParam(part, url);
+            var processed = ChangeToMatchType(type, url);
+
             return Tags.SafeUrl(processed).ToString();
         }
 
-        private string ProcessPartParam(string part, string url)
+        private string ChangeToMatchType(string type, string url)
         {
-            switch (part)
+            // var urlParts = 
+            switch (type)
             {
                 case "full":
                     return FullUrl(url);
-                case "protocol":
+                case "//":
                     return Protocol(url);
-                case "domain":
+                case "/":
                     return Domain(url);
-                case "hash":
-                    return Hash(url);
-                case "query":
-                    return Query(url);
-                case "suffix":
-                    return Suffix(url);
                 default:
                     return url;
             }
         }
 
+        //private string ProcessPartParam(string part, string url)
+        //{
+        //    switch (part)
+        //    {
+        //        case "full":
+        //            return FullUrl(url);
+        //        case "protocol":
+        //            return Protocol(url);
+        //        case "domain":
+        //            return Domain(url);
+        //        case "hash":
+        //            return Hash(url);
+        //        case "query":
+        //            return Query(url);
+        //        case "suffix":
+        //            return Suffix(url);
+        //        default:
+        //            return url;
+        //    }
+        //}
+
         protected abstract string ToApi(string api, string parameters = null);
 
         protected abstract string ToPage(int? pageId, string parameters = null);
-
-        /// <summary>
-        /// This should behave as follows
-        /// - if no additional parameters are given, return a link to the current url as the CMS needs it
-        /// - parameters always replace existing parameters - since they would have been provided in the call if they should be preserved
-        /// - for example in Dnn this would typically be a virtual url like
-        ///     - /xyz/abc/some-page
-        ///     - /xyz/abc/some-page?previous-parameters
-        ///     - /xyz/abc/some-page?new-parameters
-        /// </summary>
-        /// <returns></returns>
-        //protected abstract string ToCurrent();
 
         //protected abstract string ToImplementation(int? pageId = null, string parameters = null, string api = null);
 
@@ -125,12 +130,14 @@ namespace ToSic.Sxc.Web
             string scaleMode = null,
             string format = null,
             object aspectRatio = null,
+            string type = null, // WIP, probably "full", "/", "//" etc.
             string part = null)
         {
             var imageUrl = ImgLinker.Image(url: url, settings, factor, noParamOrder, width, height, quality, resizeMode,
                 scaleMode, format, aspectRatio);
 
-            var processed = ProcessPartParam(part, imageUrl);
+            var processed = ChangeToMatchType(type, imageUrl);
+            //var processed = ProcessPartParam(part, imageUrl);
             return Tags.SafeUrl(processed).ToString();
         }
 
@@ -149,7 +156,7 @@ namespace ToSic.Sxc.Web
             // no path or just query string
             if (string.IsNullOrEmpty(parts.Path))
             {
-                return UrlPathIsMissing(parts);
+                return AddDomainAndProtocol(parts);
             }
 
             // absolute url already provided
@@ -163,9 +170,10 @@ namespace ToSic.Sxc.Web
         }
 
         // when no url or just query params was provided would just result in the domain + link to the current page as is
-        private string UrlPathIsMissing(UrlParts parts)
+        private string AddDomainAndProtocol(UrlParts parts)
         {
             var currentRequestParts = new UrlParts(GetCurrentRequestUrl());
+            
 
             // handle fragments
             if (!string.IsNullOrEmpty(parts.Fragment))
@@ -262,35 +270,35 @@ namespace ToSic.Sxc.Web
             return (new Uri(FullUrl(url), UriKind.Absolute)).DnsSafeHost;
         }
 
-        /// <summary>
-        /// `hash` would just return the part after the `#` (without the `#`) - if not provided, empty string
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        protected string Hash(string url)
-        {
-            return (new UrlParts(FullUrl(url))).Fragment;
-        }
+        ///// <summary>
+        ///// `hash` would just return the part after the `#` (without the `#`) - if not provided, empty string
+        ///// </summary>
+        ///// <param name="url"></param>
+        ///// <returns></returns>
+        //protected string Hash(string url)
+        //{
+        //    return (new UrlParts(FullUrl(url))).Fragment;
+        //}
 
-        /// <summary>
-        /// `query` would return the part after the `?` (without the `?`- if not provided, empty string
-        ///     - if no url was provided and there are magical query params (like in DNN), these would not be returned, but not dnn-internals like tabid or language
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        protected string Query(string url)
-        {
-            return new UrlParts(FullUrl(url)).Query;
-        }
+        ///// <summary>
+        ///// `query` would return the part after the `?` (without the `?`- if not provided, empty string
+        /////     - if no url was provided and there are magical query params (like in DNN), these would not be returned, but not dnn-internals like tabid or language
+        ///// </summary>
+        ///// <param name="url"></param>
+        ///// <returns></returns>
+        //protected string Query(string url)
+        //{
+        //    return new UrlParts(FullUrl(url)).Query;
+        //}
 
-        /// <summary>
-        /// `suffix` would return the entire suffix starting from the `?` _including_ the `?` or `#` - if nothing is there, empty string
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        protected string Suffix(string url)
-        {
-            return (new UrlParts(FullUrl(url))).Suffix();
-        }
+        ///// <summary>
+        ///// `suffix` would return the entire suffix starting from the `?` _including_ the `?` or `#` - if nothing is there, empty string
+        ///// </summary>
+        ///// <param name="url"></param>
+        ///// <returns></returns>
+        //protected string Suffix(string url)
+        //{
+        //    return (new UrlParts(FullUrl(url))).Suffix();
+        //}
     }
 }

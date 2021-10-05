@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         [TestMethod]
         public void NoPage()
         {
-            TestToPageParts(null, null, NiceCurrentUrl, NiceCurrentUrl, DefProtocol, DefDomain, null, null, "", "","");
+            TestToPageParts(null, null, NiceCurrentUrl, NiceCurrentUrl, NiceCurrentRelative);
         }
 
         [TestMethod]
@@ -22,7 +22,8 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         {
             var query = "active=true";
             var exp = $"{NiceCurrentUrlRoot}?{query}";
-            TestToPageParts(null, $"?{query}", exp, exp, DefProtocol, DefDomain, null, null, query, string.Empty,$"?{query}");
+            var rel = $"{NiceCurrentRelative}?{query}";
+            TestToPageParts(null, $"?{query}", exp, exp, rel);
         }
 
         [TestMethod]
@@ -30,13 +31,15 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         {
             var query = "active=true";
             var exp = $"{NiceCurrentUrlRoot}?{query}";
-            TestToPageParts(null, $"&{query}", exp, exp, DefProtocol, DefDomain, null, null, query, string.Empty,$"?{query}");
+            var rel = $"{NiceCurrentRelative}?{query}";
+            TestToPageParts(null, $"&{query}", exp, exp, rel);
         }
 
         private void NoPageStringParam(string query)
         {
             var exp = NiceCurrentUrlRoot + "?" + query;
-            TestToPageParts(null, query, exp, exp, DefProtocol, DefDomain, null, null, query, string.Empty, $"?{query}");
+            var rel = $"{NiceCurrentRelative}?{query}";
+            TestToPageParts(null, query, exp, exp, rel);
         }
 
         [TestMethod] public void NoPageStringParamNoValue() => NoPageStringParam("active");
@@ -50,7 +53,8 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         {
             var fullQuery = (string.IsNullOrEmpty(expQuery) ? "" : "?") + expQuery;
             var exp = NiceCurrentUrlRoot + fullQuery;
-            TestToPageParts(null, parameters, exp, exp, DefProtocol, DefDomain, null, null, expQuery, string.Empty, fullQuery);
+            var rel = $"{NiceCurrentRelative}{fullQuery}";
+            TestToPageParts(null, parameters, exp, exp, rel);
         }
 
         [TestMethod] public void NoPageObjectParamUnsupported() => NoPageObjectParam(new DateTime(), "");
@@ -96,27 +100,30 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
             }
         }
 
-        [TestMethod]
-        public void NoPageUgly()
-        {
-            RunWithUglyUrl(() =>
-                TestToPageParts(null, null, UglyCurrentUrl, UglyCurrentUrl, DefProtocol, DefDomain, null, null,
-                    UglyCurrentQuery, "", "?" + UglyCurrentQuery)
-            );
-        }
+        //[TestMethod]
+        //[Ignore]
+        //public void NoPageUgly()
+        //{
+        //    RunWithUglyUrl(() => { }
+        //        //TestToPageParts(null, null, UglyCurrentUrl, UglyCurrentUrl, DefProtocol, DefDomain, null, null,
+        //        //    UglyCurrentQuery, "", "?" + UglyCurrentQuery)
+        //    );
+        //}
 
 
         [TestMethod]
         public void Page27Plain()
         {
             var exp = NiceAnyPageUrl.Replace("{0}", "27");
-            TestToPageParts(27, null, exp, exp, DefProtocol, DefDomain, null, null, string.Empty, string.Empty, string.Empty);
+            var rel = NiceAnyRelative.Replace("{0}", "27");
+            TestToPageParts(27, null, exp, exp, rel);
         }
 
         private void Page27StringParam(string query)
         {
             var exp = NiceCurrentUrlRoot + "?" + query;
-            TestToPageParts(27, query, exp, exp, DefProtocol, DefDomain, null, null, query, string.Empty,$"?{query}");
+            var rel = NiceAnyRelative.Replace("{0}", "27") + "?" + query;
+            TestToPageParts(27, query, exp, exp, rel);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Web
             int? pageId = null,
             object parameters = null,
             string api = null,
-            string type = null, // WIP, probably "full", "root", "https", "//", "http" etc.
+            string type = null, // WIP, probably "full", "/", "//" etc.
             string part = null
         );
         
@@ -102,6 +102,7 @@ namespace ToSic.Sxc.Web
             string scaleMode = null,
             string format = null,
             object aspectRatio = null,
+            string type = null, // WIP, probably "full", "/", "//" etc.
             string part = null);
 
         /// <summary>
