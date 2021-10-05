@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         {
             ThrowsException<System.ArgumentException>(() =>
             {
-                Link.To(pageId: 27, api: "api");
+                Link.TestTo(pageId: 27, api: "api");
             });
         }
     }

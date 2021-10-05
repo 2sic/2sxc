@@ -12,44 +12,44 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         [TestMethod]
         public void ToNoPageIdOrParamsTest()
         {
-            AreEqual(Https, Link.To(part: "protocol"));
+            AreEqual(Https, Link.TestTo(part: "protocol"));
         }
 
         [TestMethod]
         public void ToPageTest()
         {
-            AreEqual(Https, Link.To(pageId: 27, part: "protocol"));
-            AreEqual(Https, Link.To(pageId: 27, parameters: "a=1&b=2#fragment", part: "protocol"));
+            AreEqual(Https, Link.TestTo(pageId: 27, part: "protocol"));
+            AreEqual(Https, Link.TestTo(pageId: 27, parameters: "a=1&b=2#fragment", part: "protocol"));
         }
 
         [TestMethod]
         public void ToNoApiUrlOrParamsTest()
         {
-            AreEqual(Https, Link.To(api: "", part: "protocol"));
+            AreEqual(Https, Link.TestTo(api: "", part: "protocol"));
         }
 
         [TestMethod]
         public void ToApiTest()
         {
-            AreEqual(Https, Link.To(api: "/", part: "protocol"));
-            AreEqual(Https, Link.To(api: "/", parameters: "a=1&b=2#fragment", part: "protocol"));
-            AreEqual(Https, Link.To(api: "/app/api", part: "protocol"));
-            AreEqual(Https, Link.To(api: "/app/api", parameters: "a=1&b=2#fragment", part: "protocol"));
-            AreEqual(Https, Link.To(api: "~/api", parameters: "p=1&r=2", part: "protocol"));
+            AreEqual(Https, Link.TestTo(api: "/", part: "protocol"));
+            AreEqual(Https, Link.TestTo(api: "/", parameters: "a=1&b=2#fragment", part: "protocol"));
+            AreEqual(Https, Link.TestTo(api: "/app/api", part: "protocol"));
+            AreEqual(Https, Link.TestTo(api: "/app/api", parameters: "a=1&b=2#fragment", part: "protocol"));
+            AreEqual(Https, Link.TestTo(api: "~/api", parameters: "p=1&r=2", part: "protocol"));
         }
 
         [TestMethod]
         public void ToApiWithoutProtocolTest()
         {
-            AreEqual(Https, Link.To(api: "//unknown.2sxc.org/api", parameters: "param=b&b=3&c=3", part: "protocol"));
+            AreEqual(Https, Link.TestTo(api: "//unknown.2sxc.org/api", parameters: "param=b&b=3&c=3", part: "protocol"));
         }
 
         [TestMethod]
         public void ToApiWithAbsoluteUrlTest()
         {
-            AreEqual(Http, Link.To(api: $"{Http}://unknown2.2sxc.org/", part: "protocol"));
-            AreEqual(Https, Link.To(api: $"{Https}://unknown2.2sxc.org/api", part: "protocol"));
-            AreEqual(Http, Link.To(api: $"{Http}://unknown2.2sxc.org/app/api", parameters: "a=1", part: "protocol"));
+            AreEqual(Http, Link.TestTo(api: $"{Http}://unknown2.2sxc.org/", part: "protocol"));
+            AreEqual(Https, Link.TestTo(api: $"{Https}://unknown2.2sxc.org/api", part: "protocol"));
+            AreEqual(Http, Link.TestTo(api: $"{Http}://unknown2.2sxc.org/app/api", parameters: "a=1", part: "protocol"));
         }
 
         [TestMethod]
@@ -57,12 +57,12 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         {
             Assert.Inconclusive("TODO: Need to define behavior in this case.");
 
-            AreEqual("hello3:there", Link.To(api: "hello3:there", part: "protocol"));
-            AreEqual("file:456", Link.To(api: "file:456", part: "protocol"));
+            AreEqual("hello3:there", Link.TestTo(api: "hello3:there", part: "protocol"));
+            AreEqual("file:456", Link.TestTo(api: "file:456", part: "protocol"));
 
             // Invalid URI: The format of the URI could not be determined.
-            AreEqual("../file.ext", Link.To(api: "../file.ext", part: "protocol"));
-            AreEqual("/sibling1/../sibling2/image.jpg", Link.To(api: "/sibling1/../sibling2/image.jpg", part: "protocol"));
+            AreEqual("../file.ext", Link.TestTo(api: "../file.ext", part: "protocol"));
+            AreEqual("/sibling1/../sibling2/image.jpg", Link.TestTo(api: "/sibling1/../sibling2/image.jpg", part: "protocol"));
         }
 
         [TestMethod]

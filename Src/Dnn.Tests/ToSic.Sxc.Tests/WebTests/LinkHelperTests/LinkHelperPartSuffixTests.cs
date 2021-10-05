@@ -9,43 +9,43 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         [TestMethod]
         public void ToNoPageIdOrParamsTest()
         {
-            AreEqual(string.Empty, Link.To(part: "suffix"));
+            AreEqual(string.Empty, Link.TestTo(part: "suffix"));
         }
 
         [TestMethod]
         public void ToPageTest()
         {
-            AreEqual(string.Empty, Link.To(pageId: 27, part: "suffix"));
-            AreEqual("?a=1&b=2", Link.To(pageId: 27, parameters: "a=1&b=2", part: "suffix"));
-            AreEqual("?a=1&b=2#fragment", Link.To(pageId: 27, parameters: "a=1&b=2#fragment", part: "suffix"));
-            AreEqual("#fragment", Link.To(pageId: 27, parameters: "#fragment", part: "suffix"));
+            AreEqual(string.Empty, Link.TestTo(pageId: 27, part: "suffix"));
+            AreEqual("?a=1&b=2", Link.TestTo(pageId: 27, parameters: "a=1&b=2", part: "suffix"));
+            AreEqual("?a=1&b=2#fragment", Link.TestTo(pageId: 27, parameters: "a=1&b=2#fragment", part: "suffix"));
+            AreEqual("#fragment", Link.TestTo(pageId: 27, parameters: "#fragment", part: "suffix"));
         }
 
         [TestMethod]
         public void ToNoApiUrlOrParamsTest()
         {
-            AreEqual("?param=a#fragment", Link.To(api: "", part: "suffix"));
+            AreEqual("?param=a#fragment", Link.TestTo(api: "", part: "suffix"));
         }
 
         [TestMethod]
         public void ToApiTest()
         {
-            AreEqual(string.Empty, Link.To(api: "/", part: "suffix"));
-            AreEqual("?a=1&b=2#fragment", Link.To(api: "/", parameters: "a=1&b=2#fragment", part: "suffix"));
-            AreEqual("#fragment", Link.To(api: "~/api", parameters: "#fragment", part: "suffix"));
+            AreEqual(string.Empty, Link.TestTo(api: "/", part: "suffix"));
+            AreEqual("?a=1&b=2#fragment", Link.TestTo(api: "/", parameters: "a=1&b=2#fragment", part: "suffix"));
+            AreEqual("#fragment", Link.TestTo(api: "~/api", parameters: "#fragment", part: "suffix"));
         }
 
         [TestMethod]
         public void ToApiWithoutProtocolTest()
         {
-            AreEqual("?param=b&b=3&c=3#fragment", Link.To(api: "//unknown.2sxc.org/api", parameters: "param=b&b=3&c=3#fragment", part: "suffix"));
+            AreEqual("?param=b&b=3&c=3#fragment", Link.TestTo(api: "//unknown.2sxc.org/api", parameters: "param=b&b=3&c=3#fragment", part: "suffix"));
         }
 
         [TestMethod]
         public void ToApiWithAbsoluteUrlTest()
         {
-            AreEqual(string.Empty, Link.To(api: "http://unknown2.2sxc.org/", part: "suffix"));
-            AreEqual("?a=1#fragment", Link.To(api: "http://unknown2.2sxc.org/app/api", parameters: "a=1#fragment", part: "suffix"));
+            AreEqual(string.Empty, Link.TestTo(api: "http://unknown2.2sxc.org/", part: "suffix"));
+            AreEqual("?a=1#fragment", Link.TestTo(api: "http://unknown2.2sxc.org/app/api", parameters: "a=1#fragment", part: "suffix"));
         }
 
         [TestMethod]
@@ -53,12 +53,12 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         {
             Assert.Inconclusive("TODO: Need to define behavior in this case.");
 
-            AreEqual("hello3:there", Link.To(api: "hello3:there", parameters: "#fragment", part: "suffix"));
-            AreEqual("file:456", Link.To(api: "file:456", parameters: "a=1#fragment", part: "suffix"));
+            AreEqual("hello3:there", Link.TestTo(api: "hello3:there", parameters: "#fragment", part: "suffix"));
+            AreEqual("file:456", Link.TestTo(api: "file:456", parameters: "a=1#fragment", part: "suffix"));
 
             // Invalid URI: The format of the URI could not be determined.
-            AreEqual("../file.ext", Link.To(api: "../file.ext", parameters: "#fragment", part: "suffix"));
-            AreEqual("/sibling1/../sibling2/image.jpg", Link.To(api: "/sibling1/../sibling2/image.jpg", parameters: "b=2#fragment", part: "suffix"));
+            AreEqual("../file.ext", Link.TestTo(api: "../file.ext", parameters: "#fragment", part: "suffix"));
+            AreEqual("/sibling1/../sibling2/image.jpg", Link.TestTo(api: "/sibling1/../sibling2/image.jpg", parameters: "b=2#fragment", part: "suffix"));
         }
 
         [TestMethod]

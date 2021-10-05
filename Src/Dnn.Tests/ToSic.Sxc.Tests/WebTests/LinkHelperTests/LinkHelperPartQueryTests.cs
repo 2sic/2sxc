@@ -9,43 +9,43 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         [TestMethod]
         public void ToNoPageIdOrParamsTest()
         {
-            AreEqual(string.Empty, Link.To(part: "query"));
+            AreEqual(string.Empty, Link.TestTo(part: "query"));
         }
 
         [TestMethod]
         public void ToPageTest()
         {
-            AreEqual(string.Empty, Link.To(pageId: 27, part: "query"));
-            AreEqual("a=1&b=2", Link.To(pageId: 27, parameters: "a=1&b=2", part: "query"));
-            AreEqual("a=1&b=2", Link.To(pageId: 27, parameters: "a=1&b=2#fragment", part: "query"));
-            AreEqual(string.Empty, Link.To(pageId: 27, parameters: "#fragment", part: "query"));
+            AreEqual(string.Empty, Link.TestTo(pageId: 27, part: "query"));
+            AreEqual("a=1&b=2", Link.TestTo(pageId: 27, parameters: "a=1&b=2", part: "query"));
+            AreEqual("a=1&b=2", Link.TestTo(pageId: 27, parameters: "a=1&b=2#fragment", part: "query"));
+            AreEqual(string.Empty, Link.TestTo(pageId: 27, parameters: "#fragment", part: "query"));
         }
 
         [TestMethod]
         public void ToNoApiUrlOrParamsTest()
         {
-            AreEqual("param=a", Link.To(api: "", part: "query"));
+            AreEqual("param=a", Link.TestTo(api: "", part: "query"));
         }
 
         [TestMethod]
         public void ToApiTest()
         {
-            AreEqual(string.Empty, Link.To(api: "/", part: "query"));
-            AreEqual("a=1&b=2", Link.To(api: "/", parameters: "a=1&b=2#fragment", part: "query"));
-            AreEqual(string.Empty, Link.To(api: "~/api", parameters: "#fragment", part: "query"));
+            AreEqual(string.Empty, Link.TestTo(api: "/", part: "query"));
+            AreEqual("a=1&b=2", Link.TestTo(api: "/", parameters: "a=1&b=2#fragment", part: "query"));
+            AreEqual(string.Empty, Link.TestTo(api: "~/api", parameters: "#fragment", part: "query"));
         }
 
         [TestMethod]
         public void ToApiWithoutProtocolTest()
         {
-            AreEqual("param=b&b=3&c=3", Link.To(api: "//unknown.2sxc.org/api", parameters: "param=b&b=3&c=3#fragment", part: "query"));
+            AreEqual("param=b&b=3&c=3", Link.TestTo(api: "//unknown.2sxc.org/api", parameters: "param=b&b=3&c=3#fragment", part: "query"));
         }
 
         [TestMethod]
         public void ToApiWithAbsoluteUrlTest()
         {
-            AreEqual(string.Empty, Link.To(api: "http://unknown2.2sxc.org/", part: "query"));
-            AreEqual("a=1", Link.To(api: "http://unknown2.2sxc.org/app/api", parameters: "a=1#fragment", part: "query"));
+            AreEqual(string.Empty, Link.TestTo(api: "http://unknown2.2sxc.org/", part: "query"));
+            AreEqual("a=1", Link.TestTo(api: "http://unknown2.2sxc.org/app/api", parameters: "a=1#fragment", part: "query"));
         }
 
         [TestMethod]
@@ -53,12 +53,12 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         {
             Assert.Inconclusive("TODO: Need to define behavior in this case.");
 
-            AreEqual("hello3:there", Link.To(api: "hello3:there", parameters: "#fragment", part: "query"));
-            AreEqual("file:456", Link.To(api: "file:456", parameters: "a=1#fragment", part: "query"));
+            AreEqual("hello3:there", Link.TestTo(api: "hello3:there", parameters: "#fragment", part: "query"));
+            AreEqual("file:456", Link.TestTo(api: "file:456", parameters: "a=1#fragment", part: "query"));
 
             // Invalid URI: The format of the URI could not be determined.
-            AreEqual("../file.ext", Link.To(api: "../file.ext", parameters: "#fragment", part: "query"));
-            AreEqual("/sibling1/../sibling2/image.jpg", Link.To(api: "/sibling1/../sibling2/image.jpg", parameters: "b=2#fragment", part: "query"));
+            AreEqual("../file.ext", Link.TestTo(api: "../file.ext", parameters: "#fragment", part: "query"));
+            AreEqual("/sibling1/../sibling2/image.jpg", Link.TestTo(api: "/sibling1/../sibling2/image.jpg", parameters: "b=2#fragment", part: "query"));
         }
 
         [TestMethod]

@@ -12,23 +12,23 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         [TestMethod]
         public void ToNoPageIdOrParamsTest()
         {
-            AreEqual($"{LinkHelperUnknown.MockHost}/page", Link.To());
+            AreEqual($"{LinkHelperUnknown.MockHost}/page", Link.TestTo());
         }
 
         [TestMethod]
         public void ToPageCommonsTest()
         {
-            AreEqual($"{LinkHelperUnknown.MockHost}/page", Link.To(pageId: null));
-            AreEqual($"{LinkHelperUnknown.MockHost}/page{27}", Link.To(pageId: 27));
+            AreEqual($"{LinkHelperUnknown.MockHost}/page", Link.TestTo(pageId: null));
+            AreEqual($"{LinkHelperUnknown.MockHost}/page{27}", Link.TestTo(pageId: 27));
         }
 
         [TestMethod]
         public void ToPageParametersTest()
         {
-            AreEqual($"{LinkHelperUnknown.MockHost}/page27", Link.To(pageId: 27));
-            AreEqual($"{LinkHelperUnknown.MockHost}/page27", Link.To(pageId: 27, parameters: null));
-            AreEqual($"{LinkHelperUnknown.MockHost}/page27?a=1&b=2#fragment", Link.To(pageId: 27, parameters: "a=1&b=2#fragment"));
-            AreEqual($"{LinkHelperUnknown.MockHost}/page27?a=1&b=2&c=3", Link.To(pageId: 27, parameters: new Parameters(new NameValueCollection
+            AreEqual($"{LinkHelperUnknown.MockHost}/page27", Link.TestTo(pageId: 27));
+            AreEqual($"{LinkHelperUnknown.MockHost}/page27", Link.TestTo(pageId: 27, parameters: null));
+            AreEqual($"{LinkHelperUnknown.MockHost}/page27?a=1&b=2#fragment", Link.TestTo(pageId: 27, parameters: "a=1&b=2#fragment"));
+            AreEqual($"{LinkHelperUnknown.MockHost}/page27?a=1&b=2&c=3", Link.TestTo(pageId: 27, parameters: new Parameters(new NameValueCollection
             {
                 { "a", "1" },
                 { "b", "2" },

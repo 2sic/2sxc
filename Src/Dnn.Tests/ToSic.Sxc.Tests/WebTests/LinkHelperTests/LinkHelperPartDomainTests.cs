@@ -12,44 +12,44 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         [TestMethod]
         public void ToNoPageIdOrParamsTest()
         {
-            AreEqual(Domain, Link.To(part: "domain"));
+            AreEqual(Domain, Link.TestTo(part: "domain"));
         }
 
         [TestMethod]
         public void ToPageTest()
         {
-            AreEqual(Domain, Link.To(pageId: 27, part: "domain"));
-            AreEqual(Domain, Link.To(pageId: 27, parameters: "a=1&b=2#fragment", part: "domain"));
+            AreEqual(Domain, Link.TestTo(pageId: 27, part: "domain"));
+            AreEqual(Domain, Link.TestTo(pageId: 27, parameters: "a=1&b=2#fragment", part: "domain"));
         }
 
         [TestMethod]
         public void ToNoApiUrlOrParamsTest()
         {
-            AreEqual(Domain, Link.To(api: "", part: "domain"));
+            AreEqual(Domain, Link.TestTo(api: "", part: "domain"));
         }
 
         [TestMethod]
         public void ToApiTest()
         {
-            AreEqual(Domain, Link.To(api: "/", part: "domain"));
-            AreEqual(Domain, Link.To(api: "/", parameters: "a=1&b=2#fragment", part: "domain"));
-            AreEqual(Domain, Link.To(api: "/app/api", part: "domain"));
-            AreEqual(Domain, Link.To(api: "/app/api", parameters: "a=1&b=2#fragment", part: "domain"));
-            AreEqual(Domain, Link.To(api: "~/api", parameters: "p=1&r=2", part: "domain"));
+            AreEqual(Domain, Link.TestTo(api: "/", part: "domain"));
+            AreEqual(Domain, Link.TestTo(api: "/", parameters: "a=1&b=2#fragment", part: "domain"));
+            AreEqual(Domain, Link.TestTo(api: "/app/api", part: "domain"));
+            AreEqual(Domain, Link.TestTo(api: "/app/api", parameters: "a=1&b=2#fragment", part: "domain"));
+            AreEqual(Domain, Link.TestTo(api: "~/api", parameters: "p=1&r=2", part: "domain"));
         }
 
         [TestMethod]
         public void ToApiWithoutProtocolTest()
         {
-            AreEqual(Domain, Link.To(api: $"//{Domain}/api", parameters: "param=b&b=3&c=3", part: "domain"));
+            AreEqual(Domain, Link.TestTo(api: $"//{Domain}/api", parameters: "param=b&b=3&c=3", part: "domain"));
         }
 
         [TestMethod]
         public void ToApiWithAbsoluteUrlTest()
         {
-            AreEqual(Domain2, Link.To(api: $"http://{Domain2}/", part: "domain"));
-            AreEqual(Domain2, Link.To(api: $"http://{Domain2}/api", part: "domain"));
-            AreEqual(Domain2, Link.To(api: $"http://{Domain2}/app/api", parameters: "a=1", part: "domain"));
+            AreEqual(Domain2, Link.TestTo(api: $"http://{Domain2}/", part: "domain"));
+            AreEqual(Domain2, Link.TestTo(api: $"http://{Domain2}/api", part: "domain"));
+            AreEqual(Domain2, Link.TestTo(api: $"http://{Domain2}/app/api", parameters: "a=1", part: "domain"));
         }
 
         [TestMethod]
@@ -57,12 +57,12 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         {
             Assert.Inconclusive("TODO: Need to define behavior in this case.");
 
-            AreEqual("hello3:there", Link.To(api: "hello3:there", part: "domain"));
-            AreEqual("file:456", Link.To(api: "file:456", part: "domain"));
+            AreEqual("hello3:there", Link.TestTo(api: "hello3:there", part: "domain"));
+            AreEqual("file:456", Link.TestTo(api: "file:456", part: "domain"));
 
             // Invalid URI: The format of the URI could not be determined.
-            AreEqual("../file.ext", Link.To(api: "../file.ext", part: "domain"));
-            AreEqual("/sibling1/../sibling2/image.jpg", Link.To(api: "/sibling1/../sibling2/image.jpg", part: "domain"));
+            AreEqual("../file.ext", Link.TestTo(api: "../file.ext", part: "domain"));
+            AreEqual("/sibling1/../sibling2/image.jpg", Link.TestTo(api: "/sibling1/../sibling2/image.jpg", part: "domain"));
         }
 
         [TestMethod]
