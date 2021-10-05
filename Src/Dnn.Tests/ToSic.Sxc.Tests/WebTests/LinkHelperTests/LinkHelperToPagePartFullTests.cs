@@ -9,26 +9,26 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
     [TestClass]
     public class LinkHelperToPagePartFullTests: LinkHelperTestBase
     {
-        [TestMethod]
-        public void ToNoPageIdOrParamsTest()
-        {
-            AreEqual($"{LinkHelperUnknown.MockHost}/page", Link.TestTo(part: "full"));
-        }
+        //[TestMethod]
+        //public void ToNoPageIdOrParamsTest()
+        //{
+        //    AreEqual($"{LinkHelperUnknown.MockHost}/page", Link.TestTo(part: "full"));
+        //}
 
         [TestMethod]
         public void ToPageCommonsTest()
         {
-            AreEqual($"{LinkHelperUnknown.MockHost}/page", Link.TestTo(pageId: null, part: "full"));
-            AreEqual($"{LinkHelperUnknown.MockHost}/page{27}", Link.TestTo(pageId: 27, part: "full"));
+            //AreEqual($"{LinkHelperUnknown.MockHost}/page", Link.TestTo(pageId: null, part: "full"));
+            AreEqual($"{LinkHelperUnknown.DefRoot}/page{27}", Link.TestTo(pageId: 27, part: "full"));
         }
 
         [TestMethod]
         public void ToPageParametersTest()
         {
-            AreEqual($"{LinkHelperUnknown.MockHost}/page27", Link.TestTo(pageId: 27, part: "full"));
-            AreEqual($"{LinkHelperUnknown.MockHost}/page27", Link.TestTo(pageId: 27, parameters: null, part: "full"));
-            AreEqual($"{LinkHelperUnknown.MockHost}/page27?a=1&b=2#fragment", Link.TestTo(pageId: 27, parameters: "a=1&b=2#fragment", part: "full"));
-            AreEqual($"{LinkHelperUnknown.MockHost}/page27?a=1&b=2&c=3", Link.TestTo(pageId: 27, parameters: new Parameters(new NameValueCollection
+            AreEqual($"{LinkHelperUnknown.DefRoot}/page27", Link.TestTo(pageId: 27, part: "full"));
+            AreEqual($"{LinkHelperUnknown.DefRoot}/page27", Link.TestTo(pageId: 27, parameters: null, part: "full"));
+            AreEqual($"{LinkHelperUnknown.DefRoot}/page27?a=1&b=2#fragment", Link.TestTo(pageId: 27, parameters: "a=1&b=2#fragment", part: "full"));
+            AreEqual($"{LinkHelperUnknown.DefRoot}/page27?a=1&b=2&c=3", Link.TestTo(pageId: 27, parameters: new Parameters(new NameValueCollection
             {
                 { "a", "1" },
                 { "b", "2" },

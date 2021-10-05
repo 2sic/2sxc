@@ -9,6 +9,9 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         private const string Domain = "unknown.2sxc.org";
         private const string Domain2 = "unknown2.2sxc.org";
 
+
+
+
         [TestMethod]
         public void ToNoPageIdOrParamsTest()
         {
@@ -53,9 +56,10 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         }
 
         [TestMethod]
+        [Ignore("TODO: behavior not clear yen")]
         public void ToApiWithInvalidUrlTest()
         {
-            Assert.Inconclusive("TODO: Need to define behavior in this case.");
+            // Assert.Inconclusive("TODO: Need to define behavior in this case.");
 
             AreEqual("hello3:there", Link.TestTo(api: "hello3:there", part: "domain"));
             AreEqual("file:456", Link.TestTo(api: "file:456", part: "domain"));

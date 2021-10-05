@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+using static ToSic.Sxc.Web.LinkHelperUnknown;
 
 namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
 {
@@ -24,7 +25,7 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         [TestMethod]
         public void ToNoApiUrlOrParamsTest()
         {
-            AreEqual("param=a", Link.TestTo(api: "", part: "query"));
+            AreEqual(CurrentQuery, Link.TestTo(api: "", part: "query"));
         }
 
         [TestMethod]
@@ -64,7 +65,7 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         [TestMethod]
         public void ImageNoUrlOrParamsTest()
         {
-            AreEqual("param=a", Link.TestImage(url: "", part: "query"));
+            AreEqual("", Link.TestImage(url: "", part: "query"));
         }
 
         [TestMethod]

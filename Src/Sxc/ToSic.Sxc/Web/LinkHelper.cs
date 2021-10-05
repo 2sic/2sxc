@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
@@ -30,18 +29,25 @@ namespace ToSic.Sxc.Web
 
 
         /// <inheritdoc />
-        public string To(string noParamOrder = Eav.Parameters.Protector, int? pageId = null, object parameters = null, string api = null, string part = null)
+        public string To(string noParamOrder = Eav.Parameters.Protector, 
+            int? pageId = null, 
+            object parameters = null, 
+            string api = null,
+            string type = null, // WIP, probably "full", "root", "https", "//", "http" etc.
+            string part = null)
         {
             // prevent incorrect use without named parameters
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
 
             // Check initial conflicting values.
             if (pageId != null && api != null)
-                throw new ArgumentException($"Multiple properties like '{nameof(api)}' or '{nameof(pageId)}' have a value - only one can be provided.");
+                throw new ArgumentException($"Only one of the parameters '{nameof(api)}' or '{nameof(pageId)}' can have a value.");
 
             var strParams = ParametersToString(parameters);
 
-            var url = ToImplementation(pageId, parameters: strParams, api: api);
+            var url = api == null
+                ? ToPage(pageId, strParams)
+                : ToApi(api, strParams);
 
             var processed = ProcessPartParam(part, url);
             return Tags.SafeUrl(processed).ToString();
@@ -68,12 +74,29 @@ namespace ToSic.Sxc.Web
             }
         }
 
-        protected abstract string ToImplementation(int? pageId = null, string parameters = null, string api = null);
+        protected abstract string ToApi(string api, string parameters = null);
 
-        protected string ParametersToString(object parameters)
+        protected abstract string ToPage(int? pageId, string parameters = null);
+
+        /// <summary>
+        /// This should behave as follows
+        /// - if no additional parameters are given, return a link to the current url as the CMS needs it
+        /// - parameters always replace existing parameters - since they would have been provided in the call if they should be preserved
+        /// - for example in Dnn this would typically be a virtual url like
+        ///     - /xyz/abc/some-page
+        ///     - /xyz/abc/some-page?previous-parameters
+        ///     - /xyz/abc/some-page?new-parameters
+        /// </summary>
+        /// <returns></returns>
+        //protected abstract string ToCurrent();
+
+        //protected abstract string ToImplementation(int? pageId = null, string parameters = null, string api = null);
+
+        protected static string ParametersToString(object parameters)
         {
             if (parameters is null) return null;
-            if (parameters is string strParameters) return strParameters;
+            if (parameters is string strParameters)
+                return strParameters.TrimStart('?').TrimStart('&');    // make sure leading ? and '&' are removed
             if (parameters is IParameters paramDic) return paramDic.ToString();
 
             // Fallback / default
@@ -130,7 +153,7 @@ namespace ToSic.Sxc.Web
             }
 
             // absolute url already provided
-            if (IsAbsoluteUrl(parts))
+            if (parts.IsAbsolute)
             {
                 return UrlIsAbsolute(parts);
             }
@@ -152,10 +175,6 @@ namespace ToSic.Sxc.Web
             return QueryHelper.Combine(currentRequestParts.BuildUrl(), parts.Query);
         }
 
-        private static bool IsAbsoluteUrl(UrlParts parts)
-        {
-            return parts.Path.StartsWith("//") || parts.Path.StartsWith("http://") || parts.Path.StartsWith("https://");
-        }
 
         private string UrlIsAbsolute(UrlParts parts)
         {
@@ -261,7 +280,7 @@ namespace ToSic.Sxc.Web
         /// <returns></returns>
         protected string Query(string url)
         {
-            return (new UrlParts(FullUrl(url))).Query;
+            return new UrlParts(FullUrl(url)).Query;
         }
 
         /// <summary>

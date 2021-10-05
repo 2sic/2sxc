@@ -99,7 +99,10 @@
     <Compile Include="WebTests\LinkHelperTests\LinkHelperPartHashTests.cs" />
     <Compile Include="WebTests\LinkHelperTests\LinkHelperPartDomainTests.cs" />
     <Compile Include="WebTests\LinkHelperTests\LinkHelperPartProtocolTests.cs" />
+    <Compile Include="WebTests\LinkHelperTests\LinkHelperToVerifyTests.cs" />
+    <Compile Include="WebTests\LinkHelperTests\LinkHelperToTestBase.cs" />
     <Compile Include="WebTests\LinkHelperTests\LinkTestHelperExtensions.cs" />
+    <Compile Include="WebTests\LinkHelperTests\LinkHelperToPartTests.cs" />
     <Compile Include="WebTests\LinkImageTests\ImageBasic.cs" />
     <Compile Include="WebTests\LinkImageTests\ImgResizeLinkerInternals.cs" />
     <Compile Include="WebTests\LinkHelperTests\LinkHelperImagePartFullTests.cs" />

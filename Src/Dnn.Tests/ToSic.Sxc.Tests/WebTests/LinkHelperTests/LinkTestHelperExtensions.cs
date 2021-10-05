@@ -12,8 +12,9 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
             int? pageId = null,
             object parameters = null,
             string api = null,
+            string type = null, // WIP, probably "full", "root", "https", "//", "http" etc.
             string part = null
-        ) => link.To(noParamOrder: noParamOrder, pageId: pageId, parameters: parameters, api: api, part: part);
+        ) => link.To(noParamOrder: noParamOrder, pageId: pageId, parameters: parameters, api: api, type: type, part: part);
 
 
         public static string TestImage(this ILinkHelper link,

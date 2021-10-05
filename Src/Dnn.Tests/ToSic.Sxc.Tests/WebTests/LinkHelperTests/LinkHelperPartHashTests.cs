@@ -26,7 +26,8 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         [TestMethod]
         public void ToNoApiUrlOrParamsTest()
         {
-            AreEqual(Fragment, Link.TestTo(api: "", part: "hash"));
+            AreEqual("", Link.TestTo(api: "", part: "hash"));
+            AreEqual(Fragment, Link.TestTo(api: "#" + Fragment, part: "hash"));
         }
 
         [TestMethod]

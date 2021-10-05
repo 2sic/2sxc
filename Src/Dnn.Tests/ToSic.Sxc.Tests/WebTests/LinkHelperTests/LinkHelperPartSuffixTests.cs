@@ -1,16 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+using static ToSic.Sxc.Web.LinkHelperUnknown;
 
 namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
 {
     [TestClass]
     public class LinkHelperSuffixHashTests : LinkHelperTestBase
     {
-        [TestMethod]
-        public void ToNoPageIdOrParamsTest()
-        {
-            AreEqual(string.Empty, Link.TestTo(part: "suffix"));
-        }
 
         [TestMethod]
         public void ToPageTest()
@@ -64,7 +60,8 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         [TestMethod]
         public void ImageNoUrlOrParamsTest()
         {
-            AreEqual("?param=a#fragment", Link.TestImage(url: "", part: "suffix"));
+            AreEqual($"?{CurrentQuery}", Link.TestImage(url: "", part: "suffix"));
+            AreEqual($"?{CurrentQuery}#fragment", Link.TestImage(url: "#fragment", part: "suffix"));
         }
 
         [TestMethod]
@@ -80,10 +77,11 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         [TestMethod]
         public void ImageUrlPathIsMissingTest()
         {
-            AreEqual("?param=a&c=3#fragment", Link.TestImage(url: "?c=3", part: "suffix"));
-            AreEqual("?param=a#fragmentB", Link.TestImage(url: "?#fragmentB", part: "suffix"));
+            AreEqual($"?{CurrentQuery}&c=3", Link.TestImage(url: "?c=3", part: "suffix"));
+            AreEqual($"?{CurrentQuery}&c=3#fragment", Link.TestImage(url: "?c=3#fragment", part: "suffix"));
+            AreEqual($"?{CurrentQuery}#fragmentB", Link.TestImage(url: "?#fragmentB", part: "suffix"));
             AreEqual("?param=c#fragmentB", Link.TestImage(url: "?param=c#fragmentB", part: "suffix"));
-            AreEqual("?param=a#fragmentB", Link.TestImage(url: "#fragmentB", part: "suffix"));
+            AreEqual($"?{CurrentQuery}#fragmentB", Link.TestImage(url: "#fragmentB", part: "suffix"));
         }
 
         [TestMethod]

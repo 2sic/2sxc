@@ -63,12 +63,15 @@ namespace ToSic.Sxc.Oqt.Server.Run
         //    return api == null ? PageNavigateUrl(pageId, strParams) : ApiNavigateUrl(api, strParams);
         //}
 
-        protected override string ToImplementation(int? pageId = null, string parameters = null, string api = null)
-        {
-            // Page or Api?
-            return api == null ? PageNavigateUrl(pageId, parameters) : ApiNavigateUrl(api, parameters);
+        protected override string ToApi(string api, string parameters = null) => ApiNavigateUrl(api, parameters);
+        protected override string ToPage(int? pageId, string parameters = null) => PageNavigateUrl(pageId, parameters);
 
-        }
+        //protected override string ToImplementation(int? pageId = null, string parameters = null, string api = null)
+        //{
+        //    // Page or Api?
+        //    return api == null ? PageNavigateUrl(pageId, parameters) : ApiNavigateUrl(api, parameters);
+
+        //}
 
         // Prepare Api link.
         private string ApiNavigateUrl(string api, string parameters)

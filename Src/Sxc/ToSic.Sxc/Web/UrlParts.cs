@@ -37,6 +37,9 @@ namespace ToSic.Sxc.Web
 
         }
 
+        public bool IsAbsolute => Path.StartsWith("//") || Path.StartsWith("http://") || Path.StartsWith("https://");
+
+
         public string BuildUrl()
         {
             var urlStringBuilder = new StringBuilder(!string.IsNullOrEmpty(Path) ? Path : string.Empty);

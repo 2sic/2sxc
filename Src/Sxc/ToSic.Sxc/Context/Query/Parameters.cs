@@ -52,7 +52,15 @@ namespace ToSic.Sxc.Context.Query
 
         public override string ToString()
         {
-            return string.Join("&", _originals.AllKeys.SelectMany(k => _originals.GetValues(k)?.Select(v => $"{k}={v}")));
+            var allPairs = _originals.AllKeys
+                .Where(k => !string.IsNullOrEmpty(k))
+                .SelectMany(k =>
+                {
+                    var vals = _originals.GetValues(k) ?? new[] { "" }; // catch null-values
+                    return vals.Select(v => k + (string.IsNullOrEmpty(v) ? "" : "=" + v));
+                })
+                .ToArray();
+            return allPairs.Any() ? string.Join("&", allPairs) : "";
         }
 
         public IParameters Add(string name, string value)

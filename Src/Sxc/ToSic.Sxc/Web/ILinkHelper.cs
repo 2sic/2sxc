@@ -16,8 +16,8 @@ namespace ToSic.Sxc.Web
         /// <param name="noParamOrder">a helper to ensure that you must use named parameters. You shouldn't give it anything, but you must use all others like parameters: "id=47&amp;name=42"</param>
         /// <param name="pageId">optional page ID (TabId) - if not supplied, will use current page</param>
         /// <param name="parameters">
-        /// the parameters either as "/id/47/name/daniel" or "id=47&amp;name=daniel"
-        /// in 2sxc 12.05+ it can also be an <see cref="IParameters"/>
+        /// - the parameters either as `/id/47/name/daniel` or `id=47&amp;name=daniel`
+        /// - in 2sxc 12.05+ it can also be an <see cref="IParameters"/>
         /// </param>
         /// <param name="api">optional api url "api/name/method?id=something"</param>
         /// <param name="part"> TODO: stv</param>
@@ -32,6 +32,7 @@ namespace ToSic.Sxc.Web
             int? pageId = null,
             object parameters = null,
             string api = null,
+            string type = null, // WIP, probably "full", "root", "https", "//", "http" etc.
             string part = null
         );
         

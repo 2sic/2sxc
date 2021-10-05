@@ -17,29 +17,29 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         [TestMethod]
         public void ToNoApiUrlOrParamsTest()
         {
-            AreEqual($"{LinkHelperUnknown.MockHost}/folder/subfolder/page?param=a#fragment", Link.TestTo(api: "", part: "full"));
+            AreEqual($"{LinkHelperUnknown.DefRoot}/folder/subfolder/page?param=a#fragment", Link.TestTo(api: "", part: "full"));
         }
 
         [TestMethod]
         public void ToApiCommonUrlsTest()
         {
-            AreEqual($"{LinkHelperUnknown.MockHost}/", Link.TestTo(api: "/", part: "full"));
-            AreEqual($"{LinkHelperUnknown.MockHost}/?a=1&b=2#fragment", Link.TestTo(api: "/", parameters: "a=1&b=2#fragment", part: "full"));
-            AreEqual($"{LinkHelperUnknown.MockHost}/api", Link.TestTo(api: "/api", part: "full"));
-            AreEqual($"{LinkHelperUnknown.MockHost}/api?a=1&b=2#fragment", Link.TestTo(api: "/api", parameters: "a=1&b=2#fragment", part: "full"));
-            AreEqual($"{LinkHelperUnknown.MockHost}/app/", Link.TestTo(api: "/app/", part: "full"));
-            AreEqual($"{LinkHelperUnknown.MockHost}/app/?a=1&b=2#fragment", Link.TestTo(api: "/app/", parameters: "a=1&b=2#fragment", part: "full"));
-            AreEqual($"{LinkHelperUnknown.MockHost}/app/api", Link.TestTo(api: "/app/api", part: "full"));
-            AreEqual($"{LinkHelperUnknown.MockHost}/app/api?a=1&b=2#fragment", Link.TestTo(api: "/app/api", parameters: "a=1&b=2#fragment", part: "full"));
+            AreEqual($"{LinkHelperUnknown.DefRoot}/", Link.TestTo(api: "/", part: "full"));
+            AreEqual($"{LinkHelperUnknown.DefRoot}/?a=1&b=2#fragment", Link.TestTo(api: "/", parameters: "a=1&b=2#fragment", part: "full"));
+            AreEqual($"{LinkHelperUnknown.DefRoot}/api", Link.TestTo(api: "/api", part: "full"));
+            AreEqual($"{LinkHelperUnknown.DefRoot}/api?a=1&b=2#fragment", Link.TestTo(api: "/api", parameters: "a=1&b=2#fragment", part: "full"));
+            AreEqual($"{LinkHelperUnknown.DefRoot}/app/", Link.TestTo(api: "/app/", part: "full"));
+            AreEqual($"{LinkHelperUnknown.DefRoot}/app/?a=1&b=2#fragment", Link.TestTo(api: "/app/", parameters: "a=1&b=2#fragment", part: "full"));
+            AreEqual($"{LinkHelperUnknown.DefRoot}/app/api", Link.TestTo(api: "/app/api", part: "full"));
+            AreEqual($"{LinkHelperUnknown.DefRoot}/app/api?a=1&b=2#fragment", Link.TestTo(api: "/app/api", parameters: "a=1&b=2#fragment", part: "full"));
         }
 
         [TestMethod]
         public void ToApiParametersTest()
         {
-            AreEqual($"{LinkHelperUnknown.MockHost}/app/api", Link.TestTo(api: "/app/api", part: "full"));
-            AreEqual($"{LinkHelperUnknown.MockHost}/app/api", Link.TestTo(api: "/app/api", parameters: null, part: "full"));
-            AreEqual($"{LinkHelperUnknown.MockHost}/app/api?a=1&b=2#fragment", Link.TestTo(api: "/app/api", parameters: "a=1&b=2#fragment", part: "full"));
-            AreEqual($"{LinkHelperUnknown.MockHost}/app/api?a=1&b=2&c=3", Link.TestTo(api: "/app/api", parameters: new Parameters(new NameValueCollection
+            AreEqual($"{LinkHelperUnknown.DefRoot}/app/api", Link.TestTo(api: "/app/api", part: "full"));
+            AreEqual($"{LinkHelperUnknown.DefRoot}/app/api", Link.TestTo(api: "/app/api", parameters: null, part: "full"));
+            AreEqual($"{LinkHelperUnknown.DefRoot}/app/api?a=1&b=2#fragment", Link.TestTo(api: "/app/api", parameters: "a=1&b=2#fragment", part: "full"));
+            AreEqual($"{LinkHelperUnknown.DefRoot}/app/api?a=1&b=2&c=3", Link.TestTo(api: "/app/api", parameters: new Parameters(new NameValueCollection
             {
                 { "a", "1" },
                 { "b", "2" },
@@ -50,20 +50,20 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         [TestMethod]
         public void ToApiPathIsMissingTest()
         {
-            AreEqual($"{LinkHelperUnknown.MockHost}/folder/subfolder/page?param=b&b=3&c=3#fragment", Link.TestTo(api: "", parameters: "param=b&b=3&c=3", part: "full"));
+            AreEqual($"{LinkHelperUnknown.DefRoot}/folder/subfolder/page?param=b&b=3&c=3#fragment", Link.TestTo(api: "", parameters: "param=b&b=3&c=3", part: "full"));
         }
 
         [TestMethod]
         public void ToApiWithoutProtocolTest()
         {
-            AreEqual($"{LinkHelperUnknown.MockHost}/api?param=b&b=3&c=3", Link.TestTo(api: "//unknown.2sxc.org/api", parameters: "param=b&b=3&c=3", part: "full"));
+            AreEqual($"{LinkHelperUnknown.DefRoot}/api?param=b&b=3&c=3", Link.TestTo(api: "//unknown.2sxc.org/api", parameters: "param=b&b=3&c=3", part: "full"));
         }
 
         [TestMethod]
         public void ToApiWithTildeTest()
         {
-            AreEqual($"{LinkHelperUnknown.MockHost}/api?p=1&r=2", Link.TestTo(api: "~/api", parameters: "p=1&r=2", part: "full"));
-            AreEqual($"{LinkHelperUnknown.MockHost}/app/", Link.TestTo(api: "~/app/", part: "full"));
+            AreEqual($"{LinkHelperUnknown.DefRoot}/api?p=1&r=2", Link.TestTo(api: "~/api", parameters: "p=1&r=2", part: "full"));
+            AreEqual($"{LinkHelperUnknown.DefRoot}/app/", Link.TestTo(api: "~/app/", part: "full"));
         }
 
         [TestMethod]

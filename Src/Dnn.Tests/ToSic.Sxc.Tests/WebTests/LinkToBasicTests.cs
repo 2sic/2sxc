@@ -12,8 +12,8 @@ namespace ToSic.Sxc.Tests.WebTests
         [TestMethod]
         public void NormalPage()
         {
-            Assert.AreEqual($"{LinkHelperUnknown.MockHost}/page0", Link.TestTo(pageId: 0));
-            Assert.AreEqual($"{LinkHelperUnknown.MockHost}/page27", Link.TestTo(pageId: 27));
+            Assert.AreEqual($"{LinkHelperUnknown.DefRoot}/page0", Link.TestTo(pageId: 0));
+            Assert.AreEqual($"{LinkHelperUnknown.DefRoot}/page27", Link.TestTo(pageId: 27));
         }
     }
 }

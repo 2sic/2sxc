@@ -48,14 +48,25 @@ namespace ToSic.Sxc.Dnn.Web
         //        : DotNetNuke.Common.Globals.NavigateURL(pageId ?? _dnn.Tab.TabID, "", strParams); // NavigateURL returns absolute links
         //}
 
-        protected override string ToImplementation(int? pageId = null, string parameters = null, string api = null)
-        {
-            if (api != null) return Api(path: LinkHelpers.CombineApiWithQueryString(api.TrimPrefixSlash(), parameters));
+        protected override string ToApi(string api, string parameters = null) 
+            => Api(path: LinkHelpers.CombineApiWithQueryString(api.TrimPrefixSlash(), parameters));
 
+        protected override string ToPage(int? pageId, string parameters = null)
+        {
             return parameters == null
                 ? _dnn.Tab.FullUrl
                 : DotNetNuke.Common.Globals.NavigateURL(pageId ?? _dnn.Tab.TabID, "", parameters); // NavigateURL returns absolute links
         }
+
+
+        //protected override string ToImplementation(int? pageId = null, string parameters = null, string api = null)
+        //{
+        //    if (api != null) return Api(path: LinkHelpers.CombineApiWithQueryString(api.TrimPrefixSlash(), parameters));
+
+        //    return parameters == null
+        //        ? _dnn.Tab.FullUrl
+        //        : DotNetNuke.Common.Globals.NavigateURL(pageId ?? _dnn.Tab.TabID, "", parameters); // NavigateURL returns absolute links
+        //}
 
         private string Api(string noParamOrder = Eav.Parameters.Protector, string path = null)
         {
