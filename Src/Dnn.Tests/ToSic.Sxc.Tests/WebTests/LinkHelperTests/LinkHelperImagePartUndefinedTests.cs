@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
     {
         private void ImageVerifyUrlAreEqual(string testUrl)
         {
-            AreEqual(testUrl, Link.Image(url: testUrl));
+            AreEqual(testUrl, Link.TestImage(url: testUrl));
         }
 
         [TestMethod]
@@ -54,17 +54,17 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         [TestMethod]
         public void ImageWithoutProtocolTest() // current behavior, potentially we can improve like in part "full"
         {
-            AreEqual($"//unknown.2sxc.org/test", Link.Image(url: "//unknown.2sxc.org/test"));
+            AreEqual($"//unknown.2sxc.org/test", Link.TestImage(url: "//unknown.2sxc.org/test"));
         }
 
         [TestMethod]
         public void ImageUrlWithTildeTest() // current behavior, potentially we can improve like in part "full"
         {
-            AreEqual($"~", Link.Image(url: "~"));
-            AreEqual($"~/", Link.Image(url: "~/"));
-            AreEqual($"~/page", Link.Image(url: "~/page"));
-            AreEqual($"~/file.ext", Link.Image(url: "~/file.ext"));
-            AreEqual($"~/folder/", Link.Image(url: "~/folder/"));
+            AreEqual($"~", Link.TestImage(url: "~"));
+            AreEqual($"~/", Link.TestImage(url: "~/"));
+            AreEqual($"~/page", Link.TestImage(url: "~/page"));
+            AreEqual($"~/file.ext", Link.TestImage(url: "~/file.ext"));
+            AreEqual($"~/folder/", Link.TestImage(url: "~/folder/"));
         }
 
         [TestMethod]

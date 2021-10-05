@@ -66,39 +66,39 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         [TestMethod]
         public void ImageNoUrlOrParamsTest()
         {
-            AreEqual(Fragment, Link.Image(url: "", part: "hash"));
+            AreEqual(Fragment, Link.TestImage(url: "", part: "hash"));
         }
 
         [TestMethod]
         public void ImageCommonUrlsTest()
         {
-            AreEqual(string.Empty, Link.Image(url: "/", part: "hash"));
-            AreEqual(Fragment, Link.Image(url: $"/?a=1&b=2#{Fragment}", part: "hash"));
-            AreEqual(string.Empty, Link.Image(url: "/page", part: "hash"));
-            AreEqual(Fragment, Link.Image(url: $"/page?a=1&b=2#{Fragment}", part: "hash"));
-            AreEqual(string.Empty, Link.Image(url: "~/", part: "hash"));
+            AreEqual(string.Empty, Link.TestImage(url: "/", part: "hash"));
+            AreEqual(Fragment, Link.TestImage(url: $"/?a=1&b=2#{Fragment}", part: "hash"));
+            AreEqual(string.Empty, Link.TestImage(url: "/page", part: "hash"));
+            AreEqual(Fragment, Link.TestImage(url: $"/page?a=1&b=2#{Fragment}", part: "hash"));
+            AreEqual(string.Empty, Link.TestImage(url: "~/", part: "hash"));
         }
 
         [TestMethod]
         public void ImageUrlPathIsMissingTest()
         {
-            AreEqual(Fragment, Link.Image(url: "?c=3", part: "hash"));
-            AreEqual(FragmentB, Link.Image(url: $"?#{FragmentB}", part: "hash"));
-            AreEqual(FragmentB, Link.Image(url: $"?param=c#{FragmentB}", part: "hash"));
-            AreEqual(FragmentB, Link.Image(url: $"#{FragmentB}", part: "hash"));
+            AreEqual(Fragment, Link.TestImage(url: "?c=3", part: "hash"));
+            AreEqual(FragmentB, Link.TestImage(url: $"?#{FragmentB}", part: "hash"));
+            AreEqual(FragmentB, Link.TestImage(url: $"?param=c#{FragmentB}", part: "hash"));
+            AreEqual(FragmentB, Link.TestImage(url: $"#{FragmentB}", part: "hash"));
         }
 
         [TestMethod]
         public void ImageWithoutProtocolTest()
         {
-            AreEqual(Fragment, Link.Image(url: $"//unknown.2sxc.org/test#{Fragment}", part: "hash"));
+            AreEqual(Fragment, Link.TestImage(url: $"//unknown.2sxc.org/test#{Fragment}", part: "hash"));
         }
 
         [TestMethod]
         public void ImageWithAbsoluteUrlTest()
         {
-            AreEqual(Fragment, Link.Image(url: $"http://unknown2.2sxc.org/#{Fragment}", part: "hash"));
-            AreEqual(FragmentB, Link.Image(url: $"https://unknown2.2sxc.org/page#{FragmentB}", part: "hash"));
+            AreEqual(Fragment, Link.TestImage(url: $"http://unknown2.2sxc.org/#{Fragment}", part: "hash"));
+            AreEqual(FragmentB, Link.TestImage(url: $"https://unknown2.2sxc.org/page#{FragmentB}", part: "hash"));
         }
 
         [TestMethod]
@@ -106,11 +106,11 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         {
             Assert.Inconclusive("TODO: Need to define behavior in this case.");
 
-            AreEqual("hello:there", Link.Image(url: "hello:there", part: "hash"));
-            AreEqual("file:593902", Link.Image(url: "file:593902", part: "hash"));
+            AreEqual("hello:there", Link.TestImage(url: "hello:there", part: "hash"));
+            AreEqual("file:593902", Link.TestImage(url: "file:593902", part: "hash"));
 
-            AreEqual("../file.ext", Link.Image(url: "../file.ext", part: "hash"));
-            AreEqual("/sibling1/../sibling2/image.jpg", Link.Image(url: "/sibling1/../sibling2/image.jpg", part: "hash"));
+            AreEqual("../file.ext", Link.TestImage(url: "../file.ext", part: "hash"));
+            AreEqual("/sibling1/../sibling2/image.jpg", Link.TestImage(url: "/sibling1/../sibling2/image.jpg", part: "hash"));
         }
     }
 }

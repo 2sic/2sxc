@@ -24,6 +24,15 @@ namespace ToSic.Sxc.Tests.WebTests.LinkImageTests
         }
 
         [TestMethod]
+        public void BadCharacters()
+        {
+            EqualOnLinkerAndHelper("test%20picture.jpg?w=200", "test picture.jpg", width: 200);
+            EqualOnLinkerAndHelper("gr%C3%A4%C3%9Flich.jpg?h=200", "gräßlich.jpg", height: 200);
+            EqualOnLinkerAndHelper("test%20picture.jpg?x=chuchich%C3%A4schtly&w=200", "test picture.jpg?x=chuchichäschtly", width: 200);
+        }
+
+
+        [TestMethod]
         public void BasicWidthAndHeight()
         {
             EqualOnLinkerAndHelper("test.jpg?w=200", "test.jpg", width: 200);

@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Tests.DynamicData;
+using ToSic.Sxc.Tests.WebTests.LinkHelperTests;
 using ToSic.Sxc.Web;
 using ToSic.Testing.Shared;
 
@@ -39,7 +40,7 @@ namespace ToSic.Sxc.Tests.WebTests.LinkImageTests
             Assert.AreEqual(expected, linkerResult, "Failed on ImgResizeLinker");
 
             var linkHelper = GetLinkHelper();
-            var helperResult = linkHelper.Image(url: url, settings: settings, factor: factor, width: width,
+            var helperResult = linkHelper.TestImage(url: url, settings: settings, factor: factor, width: width,
                 height: height,
                 quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format,
                 aspectRatio: aspectRatio);

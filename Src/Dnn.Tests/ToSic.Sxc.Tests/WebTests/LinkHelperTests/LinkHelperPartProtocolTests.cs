@@ -68,39 +68,39 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         [TestMethod]
         public void ImageNoUrlOrParamsTest()
         {
-            AreEqual(Https, Link.Image(url: "", part: "protocol"));
+            AreEqual(Https, Link.TestImage(url: "", part: "protocol"));
         }
 
         [TestMethod]
         public void ImageCommonUrlsTest()
         {
-            AreEqual(Https, Link.Image(url: "/", part: "protocol"));
-            AreEqual(Https, Link.Image(url: "/?a=1&b=2#fragment", part: "protocol"));
-            AreEqual(Https, Link.Image(url: "/page", part: "protocol"));
-            AreEqual(Https, Link.Image(url: "/page?a=1&b=2#fragment", part: "protocol"));
-            AreEqual(Https, Link.Image(url: "~/", part: "protocol"));
+            AreEqual(Https, Link.TestImage(url: "/", part: "protocol"));
+            AreEqual(Https, Link.TestImage(url: "/?a=1&b=2#fragment", part: "protocol"));
+            AreEqual(Https, Link.TestImage(url: "/page", part: "protocol"));
+            AreEqual(Https, Link.TestImage(url: "/page?a=1&b=2#fragment", part: "protocol"));
+            AreEqual(Https, Link.TestImage(url: "~/", part: "protocol"));
         }
 
         [TestMethod]
         public void ImageUrlPathIsMissingTest()
         {
-            AreEqual(Https, Link.Image(url: "?c=3", part: "protocol"));
-            AreEqual(Https, Link.Image(url: "?#fragmentB", part: "protocol"));
-            AreEqual(Https, Link.Image(url: "?param=c#fragmentB", part: "protocol"));
-            AreEqual(Https, Link.Image(url: "#fragmentC", part: "protocol"));
+            AreEqual(Https, Link.TestImage(url: "?c=3", part: "protocol"));
+            AreEqual(Https, Link.TestImage(url: "?#fragmentB", part: "protocol"));
+            AreEqual(Https, Link.TestImage(url: "?param=c#fragmentB", part: "protocol"));
+            AreEqual(Https, Link.TestImage(url: "#fragmentC", part: "protocol"));
         }
 
         [TestMethod]
         public void ImageWithoutProtocolTest()
         {
-            AreEqual(Https, Link.Image(url: "//unknown.2sxc.org/test", part: "protocol"));
+            AreEqual(Https, Link.TestImage(url: "//unknown.2sxc.org/test", part: "protocol"));
         }
 
         [TestMethod]
         public void ImageWithAbsoluteUrlTest()
         {
-            AreEqual(Http, Link.Image(url: $"{Http}://unknown2.2sxc.org/", part: "protocol"));
-            AreEqual(Https, Link.Image(url: $"{Https}://unknown2.2sxc.org/page", part: "protocol"));
+            AreEqual(Http, Link.TestImage(url: $"{Http}://unknown2.2sxc.org/", part: "protocol"));
+            AreEqual(Https, Link.TestImage(url: $"{Https}://unknown2.2sxc.org/page", part: "protocol"));
         }
 
         [TestMethod]
@@ -108,11 +108,11 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         {
             Assert.Inconclusive("TODO: Need to define behavior in this case.");
 
-            AreEqual("hello:there", Link.Image(url: "hello:there", part: "protocol"));
-            AreEqual("file:593902", Link.Image(url: "file:593902", part: "protocol"));
+            AreEqual("hello:there", Link.TestImage(url: "hello:there", part: "protocol"));
+            AreEqual("file:593902", Link.TestImage(url: "file:593902", part: "protocol"));
 
-            AreEqual("../file.ext", Link.Image(url: "../file.ext", part: "protocol"));
-            AreEqual("/sibling1/../sibling2/image.jpg", Link.Image(url: "/sibling1/../sibling2/image.jpg", part: "protocol"));
+            AreEqual("../file.ext", Link.TestImage(url: "../file.ext", part: "protocol"));
+            AreEqual("/sibling1/../sibling2/image.jpg", Link.TestImage(url: "/sibling1/../sibling2/image.jpg", part: "protocol"));
         }
     }
 }
