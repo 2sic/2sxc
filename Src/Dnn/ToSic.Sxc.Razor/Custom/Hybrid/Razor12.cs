@@ -139,5 +139,13 @@ namespace Custom.Hybrid
         public dynamic Settings => _DynCodeRoot.Settings;
 
         #endregion
+
+
+        #region Path - for consistency across platforms
+
+        /// <inheritdoc />
+        public string Path => VirtualPath;
+
+        #endregion
     }
 }

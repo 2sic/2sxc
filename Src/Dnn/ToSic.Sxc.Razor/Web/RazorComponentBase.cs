@@ -61,11 +61,6 @@ namespace ToSic.Sxc.Web
 
         #region Compile Helpers
 
-        /// <summary>
-        /// Consistency across platforms - because Path exists in .net core, but in .net Framework it has a different name.
-        /// </summary>>
-        public string Path => VirtualPath;
-
         public string CreateInstancePath { get; set; }
 
         /// <summary>
