@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Code
@@ -24,6 +25,6 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public dynamic Settings => _DynCodeRoot?.Settings;
 
-
+        public IDevTools DevTools => _DynCodeRoot.DevTools;
     }
 }

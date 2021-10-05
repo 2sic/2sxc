@@ -7,6 +7,7 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
@@ -23,6 +24,7 @@ namespace Custom.Hybrid
 {
     public abstract partial class Api12
     {
+
         // ReSharper disable once InconsistentNaming
         [PrivateApi] public IDynamicCodeRoot _DynCodeRoot { get; set; }
         // ReSharper disable once InconsistentNaming
@@ -71,11 +73,6 @@ namespace Custom.Hybrid
 
         #region Convert-Service
         [PrivateApi] public IConvertService Convert => _DynCodeRoot.Convert;
-        //[PrivateApi]
-        //public T As<T>(object original) => _DynCodeRoot.As<T>(original);
-
-        //[PrivateApi]
-        //public T As<T>(object original, T fallback) => _DynCodeRoot.As<T>(original, fallback);
 
         #endregion
 
@@ -177,6 +174,7 @@ namespace Custom.Hybrid
         [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic Settings => _DynCodeRoot.Settings;
 
+        public IDevTools DevTools => _DynCodeRoot.DevTools;
 
         #endregion
     }

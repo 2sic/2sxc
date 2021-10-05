@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
@@ -127,10 +129,13 @@ namespace Custom.Hybrid
 
         #endregion
 
-        #region CmsContext
+        #region v11 properties CmsContext
 
         /// <inheritdoc />
         public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
+        #endregion
+
+        #region v12 properties Resources, Settings, Path
 
         /// <inheritdoc />
         public dynamic Resources => _DynCodeRoot.Resources;
@@ -138,10 +143,7 @@ namespace Custom.Hybrid
         /// <inheritdoc />
         public dynamic Settings => _DynCodeRoot.Settings;
 
-        #endregion
-
-
-        #region Path - for consistency across platforms
+        public IDevTools DevTools => _DynCodeRoot.DevTools;
 
         /// <inheritdoc />
         public string Path => VirtualPath;

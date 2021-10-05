@@ -4,6 +4,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Edit.InPageEditingSystem;
@@ -101,7 +102,6 @@ namespace ToSic.Sxc.Code
         private ILinkHelper _link;
 
 
-
         #region Edit
 
         /// <inheritdoc />
@@ -115,5 +115,6 @@ namespace ToSic.Sxc.Code
 
         #endregion
 
+        public IDevTools DevTools => throw new NotImplementedException("This is a future feature, we're just reserving the object name");
     }
 }

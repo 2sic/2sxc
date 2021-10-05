@@ -5,6 +5,7 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
@@ -127,7 +128,7 @@ namespace Custom.Hybrid
 
         #endregion
 
-        #region RunContext WiP
+        #region v12 Properties like CmsContext, Resources, Settings
 
         /// <inheritdoc />
         public ICmsContext CmsContext => _DynCodeRoot?.CmsContext;
@@ -137,6 +138,8 @@ namespace Custom.Hybrid
 
         /// <inheritdoc />
         public dynamic Settings => _DynCodeRoot.Settings;
+
+        public IDevTools DevTools => _DynCodeRoot.DevTools;
 
         #endregion
     }

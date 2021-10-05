@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web;
 
@@ -63,8 +64,8 @@ namespace ToSic.Sxc.Code
 
         #region DevTools
 
-        //[InternalApi_DoNotUse_MayChangeWithoutNotice]
-        //object DevTools { get; }
+        [InternalApi_DoNotUse_MayChangeWithoutNotice]
+        IDevTools DevTools { get; }
 
         #endregion
 
