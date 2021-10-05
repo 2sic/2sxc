@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +18,8 @@ namespace ToSic.Sxc.Web
 
             var strValue = RealStringOrNull(value);
             if (strValue == null) return null;
-            if (!double.TryParse(strValue, out var doubleValue)) return null;
+            strValue = strValue.Replace(",", ".");
+            if (!double.TryParse(strValue, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var doubleValue)) return null;
             return doubleValue;
         }
 

@@ -33,16 +33,17 @@ namespace ToSic.Sxc.Tests.WebTests.LinkImageTests
         {
             // Test with Linker
             var linker = GetLinker();
-            Assert.AreEqual(expected,
-                linker.Image(url: url, settings: settings, factor: factor, width: width, height: height,
-                    quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format,
-                    aspectRatio: aspectRatio), "Failed on ImgResizeLinker");
+            var linkerResult = linker.Image(url: url, settings: settings, factor: factor, width: width, height: height,
+                quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format,
+                aspectRatio: aspectRatio);
+            Assert.AreEqual(expected, linkerResult, "Failed on ImgResizeLinker");
 
             var linkHelper = GetLinkHelper();
-            Assert.AreEqual(expected,
-                linker.Image(url: url, settings: settings, factor: factor, width: width, height: height,
-                    quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format,
-                    aspectRatio: aspectRatio), "Failed on ILinkHelper");
+            var helperResult = linkHelper.Image(url: url, settings: settings, factor: factor, width: width,
+                height: height,
+                quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format,
+                aspectRatio: aspectRatio);
+            Assert.AreEqual(expected, helperResult, "Failed on ILinkHelper");
 
 
 

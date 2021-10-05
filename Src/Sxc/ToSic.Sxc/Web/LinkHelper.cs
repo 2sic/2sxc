@@ -3,6 +3,7 @@ using System.Web;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
@@ -42,7 +43,8 @@ namespace ToSic.Sxc.Web
 
             var url = ToImplementation(pageId, parameters: strParams, api: api);
 
-            return ProcessPartParam(part, url);
+            var processed = ProcessPartParam(part, url);
+            return Tags.SafeUrl(processed).ToString();
         }
 
         private string ProcessPartParam(string part, string url)
@@ -102,10 +104,11 @@ namespace ToSic.Sxc.Web
             object aspectRatio = null,
             string part = null)
         {
-            var imageUrl  =ImgLinker.Image(url: url, settings, factor, noParamOrder, width, height, quality, resizeMode,
+            var imageUrl = ImgLinker.Image(url: url, settings, factor, noParamOrder, width, height, quality, resizeMode,
                 scaleMode, format, aspectRatio);
 
-            return ProcessPartParam(part, imageUrl);
+            var processed = ProcessPartParam(part, imageUrl);
+            return Tags.SafeUrl(processed).ToString();
         }
 
         private bool _debug;
