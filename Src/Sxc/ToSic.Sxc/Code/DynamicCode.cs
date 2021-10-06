@@ -51,31 +51,31 @@ namespace ToSic.Sxc.Code
         #endregion
 
         /// <inheritdoc />
-        public IApp App => UnwrappedContents?.App;
+        public IApp App => _DynCodeRoot?.App;
 
         /// <inheritdoc />
-        public IBlockDataSource Data => UnwrappedContents?.Data;
+        public IBlockDataSource Data => _DynCodeRoot?.Data;
 
         /// <inheritdoc />
-        public TService GetService<TService>() => UnwrappedContents.GetService<TService>();
+        public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
 
 
 
         #region Content and Header
 
         /// <inheritdoc />
-        public dynamic Content => UnwrappedContents?.Content;
+        public dynamic Content => _DynCodeRoot?.Content;
         /// <inheritdoc />
-        public dynamic Header => UnwrappedContents?.Header;
+        public dynamic Header => _DynCodeRoot?.Header;
 
         #endregion
 
 
         #region Link and Edit
         /// <inheritdoc />
-        public ILinkHelper Link => UnwrappedContents?.Link;
+        public ILinkHelper Link => _DynCodeRoot?.Link;
         /// <inheritdoc />
-        public IInPageEditingSystem Edit => UnwrappedContents?.Edit;
+        public IInPageEditingSystem Edit => _DynCodeRoot?.Edit;
         #endregion
 
         #region SharedCode - must also map previous path to use here
@@ -93,7 +93,7 @@ namespace ToSic.Sxc.Code
             var wrapLog = Log.Call<dynamic>();
             // usually we don't have a relative path, so we use the preset path from when this class was instantiated
             relativePath = relativePath ?? CreateInstancePath;
-            var instance = UnwrappedContents?.CreateInstance(virtualPath, noParamOrder, name,
+            var instance = _DynCodeRoot?.CreateInstance(virtualPath, noParamOrder, name,
                 relativePath ?? CreateInstancePath, throwOnError);
             return wrapLog((instance != null).ToString(), instance);
         }
@@ -103,7 +103,7 @@ namespace ToSic.Sxc.Code
         #region Context, Settings, Resources
 
         /// <inheritdoc />
-        public ICmsContext CmsContext => UnwrappedContents?.CmsContext;
+        public ICmsContext CmsContext => _DynCodeRoot?.CmsContext;
 
 
         #endregion CmsContext  

@@ -16,19 +16,19 @@ namespace ToSic.Sxc.Code
         #region AsDynamic and AsEntity
 
         /// <inheritdoc />
-        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => UnwrappedContents?.AsDynamic(json, fallback);
+        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => _DynCodeRoot?.AsDynamic(json, fallback);
 
         /// <inheritdoc />
-        public dynamic AsDynamic(IEntity entity) => UnwrappedContents?.AsDynamic(entity);
+        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot?.AsDynamic(entity);
 
         /// <inheritdoc />
-        public dynamic AsDynamic(object dynamicEntity) => UnwrappedContents?.AsDynamic(dynamicEntity);
+        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot?.AsDynamic(dynamicEntity);
 
         /// <inheritdoc />
-        public dynamic AsDynamic(params object[] entities) => UnwrappedContents?.AsDynamic(entities);
+        public dynamic AsDynamic(params object[] entities) => _DynCodeRoot?.AsDynamic(entities);
 
         /// <inheritdoc />
-        public IEntity AsEntity(object dynamicEntity) => UnwrappedContents?.AsEntity(dynamicEntity);
+        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot?.AsEntity(dynamicEntity);
 
         #endregion
 
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc />
         public IEnumerable<dynamic> AsList(object list)
-            => UnwrappedContents?.AsList(list);
+            => _DynCodeRoot?.AsList(list);
 
 
         #endregion
@@ -45,23 +45,23 @@ namespace ToSic.Sxc.Code
         #region CreateSource
         /// <inheritdoc />
         public T CreateSource<T>(IDataStream inStream) where T : IDataSource
-            => UnwrappedContents.CreateSource<T>(inStream);
+            => _DynCodeRoot.CreateSource<T>(inStream);
 
         /// <inheritdoc />
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             where T : IDataSource
-            => UnwrappedContents.CreateSource<T>(inSource, configurationProvider);
+            => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
         #endregion
 
         #region AsAdam
         /// <inheritdoc />
         public IFolder AsAdam(IDynamicEntity entity, string fieldName)
-            => UnwrappedContents?.AsAdam(entity, fieldName);
+            => _DynCodeRoot?.AsAdam(entity, fieldName);
 
         /// <inheritdoc />
         public IFolder AsAdam(IEntity entity, string fieldName)
-            => UnwrappedContents?.AsAdam(entity, fieldName);
+            => _DynCodeRoot?.AsAdam(entity, fieldName);
         #endregion
     }
 }
