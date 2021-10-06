@@ -66,40 +66,40 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         [TestMethod]
         public void ImageNoUrlOrParamsTest()
         {
-            AreEqual("", Link.TestImage(url: "", part: "query"));
+            AreEqual("", Link.TestImage(url: "", type: "query"));
         }
 
         [TestMethod]
         public void ImageCommonUrlsTest()
         {
-            AreEqual(string.Empty, Link.TestImage(url: "/", part: "query"));
-            AreEqual("a=1&b=2", Link.TestImage(url: "/?a=1&b=2#fragment", part: "query"));
-            AreEqual(string.Empty, Link.TestImage(url: "/page#fragment", part: "query"));
-            AreEqual("a=1&b=2", Link.TestImage(url: "/page?a=1&b=2#fragment", part: "query"));
-            AreEqual(string.Empty, Link.TestImage(url: "~/", part: "query"));
+            AreEqual(string.Empty, Link.TestImage(url: "/", type: "query"));
+            AreEqual("a=1&b=2", Link.TestImage(url: "/?a=1&b=2#fragment", type: "query"));
+            AreEqual(string.Empty, Link.TestImage(url: "/page#fragment", type: "query"));
+            AreEqual("a=1&b=2", Link.TestImage(url: "/page?a=1&b=2#fragment", type: "query"));
+            AreEqual(string.Empty, Link.TestImage(url: "~/", type: "query"));
         }
 
         [TestMethod]
         public void ImageUrlPathIsMissingTest()
         {
-            AreEqual("param=a&c=3", Link.TestImage(url: "?c=3", part: "query"));
-            AreEqual("param=a", Link.TestImage(url: "?#fragmentB", part: "query"));
-            AreEqual("param=c", Link.TestImage(url: "?param=c#fragmentB", part: "query"));
-            AreEqual("param=a", Link.TestImage(url: "#fragmentB", part: "query"));
+            AreEqual("param=a&c=3", Link.TestImage(url: "?c=3", type: "query"));
+            AreEqual("param=a", Link.TestImage(url: "?#fragmentB", type: "query"));
+            AreEqual("param=c", Link.TestImage(url: "?param=c#fragmentB", type: "query"));
+            AreEqual("param=a", Link.TestImage(url: "#fragmentB", type: "query"));
         }
 
         [TestMethod]
         public void ImageWithoutProtocolTest()
         {
-            AreEqual(string.Empty, Link.TestImage(url: "//unknown.2sxc.org/test#fragment", part: "query"));
-            AreEqual("a=1", Link.TestImage(url: "//unknown.2sxc.org/test?a=1#fragment", part: "query"));
+            AreEqual(string.Empty, Link.TestImage(url: "//unknown.2sxc.org/test#fragment", type: "query"));
+            AreEqual("a=1", Link.TestImage(url: "//unknown.2sxc.org/test?a=1#fragment", type: "query"));
         }
 
         [TestMethod]
         public void ImageWithAbsoluteUrlTest()
         {
-            AreEqual(string.Empty, Link.TestImage(url: "http://unknown2.2sxc.org/#fragment", part: "query"));
-            AreEqual("a=1", Link.TestImage(url: "https://unknown2.2sxc.org/page?a=1#fragmentB", part: "query"));
+            AreEqual(string.Empty, Link.TestImage(url: "http://unknown2.2sxc.org/#fragment", type: "query"));
+            AreEqual("a=1", Link.TestImage(url: "https://unknown2.2sxc.org/page?a=1#fragmentB", type: "query"));
         }
 
         [TestMethod]
@@ -107,11 +107,11 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         {
             Assert.Inconclusive("TODO: Need to define behavior in this case.");
 
-            AreEqual("hello:there", Link.TestImage(url: "hello:there", part: "query"));
-            AreEqual("file:593902", Link.TestImage(url: "file:593902", part: "query"));
+            AreEqual("hello:there", Link.TestImage(url: "hello:there", type: "query"));
+            AreEqual("file:593902", Link.TestImage(url: "file:593902", type: "query"));
 
-            AreEqual("../file.ext", Link.TestImage(url: "../file.ext", part: "query"));
-            AreEqual("/sibling1/../sibling2/image.jpg", Link.TestImage(url: "/sibling1/../sibling2/image.jpg", part: "query"));
+            AreEqual("../file.ext", Link.TestImage(url: "../file.ext", type: "query"));
+            AreEqual("/sibling1/../sibling2/image.jpg", Link.TestImage(url: "/sibling1/../sibling2/image.jpg", type: "query"));
         }
     }
 }

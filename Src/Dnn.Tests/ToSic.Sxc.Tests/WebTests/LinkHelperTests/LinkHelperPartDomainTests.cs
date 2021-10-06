@@ -79,43 +79,43 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         [Ignore("part is not implemented for now")]
         public void ImageNoUrlOrParamsTest()
         {
-            AreEqual(Domain, Link.TestImage(url: "", part: "domain"));
+            AreEqual(Domain, Link.TestImage(url: "", type: "domain"));
         }
 
         [TestMethod]
         [Ignore("part is not implemented for now")]
         public void ImageCommonUrlsTest()
         {
-            AreEqual(Domain, Link.TestImage(url: "/", part: "domain"));
-            AreEqual(Domain, Link.TestImage(url: "/?a=1&b=2#fragment", part: "domain"));
-            AreEqual(Domain, Link.TestImage(url: "/page", part: "domain"));
-            AreEqual(Domain, Link.TestImage(url: "/page?a=1&b=2#fragment", part: "domain"));
-            AreEqual(Domain, Link.TestImage(url: "~/", part: "domain"));
+            AreEqual(Domain, Link.TestImage(url: "/", type: "domain"));
+            AreEqual(Domain, Link.TestImage(url: "/?a=1&b=2#fragment", type: "domain"));
+            AreEqual(Domain, Link.TestImage(url: "/page", type: "domain"));
+            AreEqual(Domain, Link.TestImage(url: "/page?a=1&b=2#fragment", type: "domain"));
+            AreEqual(Domain, Link.TestImage(url: "~/", type: "domain"));
         }
 
         [TestMethod]
         [Ignore("part is not implemented for now")]
         public void ImageUrlPathIsMissingTest()
         {
-            AreEqual(Domain, Link.TestImage(url: "?c=3", part: "domain"));
-            AreEqual(Domain, Link.TestImage(url: "?#fragmentB", part: "domain"));
-            AreEqual(Domain, Link.TestImage(url: "?param=c#fragmentB", part: "domain"));
-            AreEqual(Domain, Link.TestImage(url: "#fragmentC", part: "domain"));
+            AreEqual(Domain, Link.TestImage(url: "?c=3", type: "domain"));
+            AreEqual(Domain, Link.TestImage(url: "?#fragmentB", type: "domain"));
+            AreEqual(Domain, Link.TestImage(url: "?param=c#fragmentB", type: "domain"));
+            AreEqual(Domain, Link.TestImage(url: "#fragmentC", type: "domain"));
         }
 
         [TestMethod]
         [Ignore("part is not implemented for now")]
         public void ImageWithoutProtocolTest()
         {
-            AreEqual(Domain, Link.TestImage(url: $"//{Domain}/test", part: "domain"));
+            AreEqual(Domain, Link.TestImage(url: $"//{Domain}/test", type: "domain"));
         }
 
         [TestMethod]
         [Ignore("part is not implemented for now")]
         public void ImageWithAbsoluteUrlTest()
         {
-            AreEqual(Domain2, Link.TestImage(url: $"http://{Domain2}/", part: "domain"));
-            AreEqual(Domain2, Link.TestImage(url: $"https://{Domain2}/page", part: "domain"));
+            AreEqual(Domain2, Link.TestImage(url: $"http://{Domain2}/", type: "domain"));
+            AreEqual(Domain2, Link.TestImage(url: $"https://{Domain2}/page", type: "domain"));
         }
 
         [TestMethod]
@@ -123,11 +123,11 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         {
             Assert.Inconclusive("TODO: Need to define behavior in this case.");
 
-            AreEqual("hello:there", Link.TestImage(url: "hello:there", part: "domain"));
-            AreEqual("file:593902", Link.TestImage(url: "file:593902", part: "domain"));
+            AreEqual("hello:there", Link.TestImage(url: "hello:there", type: "domain"));
+            AreEqual("file:593902", Link.TestImage(url: "file:593902", type: "domain"));
 
-            AreEqual("../file.ext", Link.TestImage(url: "../file.ext", part: "domain"));
-            AreEqual("/sibling1/../sibling2/image.jpg", Link.TestImage(url: "/sibling1/../sibling2/image.jpg", part: "domain"));
+            AreEqual("../file.ext", Link.TestImage(url: "../file.ext", type: "domain"));
+            AreEqual("/sibling1/../sibling2/image.jpg", Link.TestImage(url: "/sibling1/../sibling2/image.jpg", type: "domain"));
         }
     }
 }

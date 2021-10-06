@@ -61,42 +61,42 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         [TestMethod]
         public void ImageNoUrlOrParamsTest()
         {
-            AreEqual($"?{CurrentQuery}", Link.TestImage(url: "", part: "suffix"));
-            AreEqual($"?{CurrentQuery}#fragment", Link.TestImage(url: "#fragment", part: "suffix"));
+            AreEqual($"?{CurrentQuery}", Link.TestImage(url: "", type: "suffix"));
+            AreEqual($"?{CurrentQuery}#fragment", Link.TestImage(url: "#fragment", type: "suffix"));
         }
 
         [TestMethod]
         public void ImageCommonUrlsTest()
         {
-            AreEqual(string.Empty, Link.TestImage(url: "/", part: "suffix"));
-            AreEqual("?a=1&b=2#fragment", Link.TestImage(url: "/?a=1&b=2#fragment", part: "suffix"));
-            AreEqual("#fragment", Link.TestImage(url: "/page#fragment", part: "suffix"));
-            AreEqual("?a=1&b=2#fragment", Link.TestImage(url: "/page?a=1&b=2#fragment", part: "suffix"));
-            AreEqual(string.Empty, Link.TestImage(url: "~/", part: "suffix"));
+            AreEqual(string.Empty, Link.TestImage(url: "/", type: "suffix"));
+            AreEqual("?a=1&b=2#fragment", Link.TestImage(url: "/?a=1&b=2#fragment", type: "suffix"));
+            AreEqual("#fragment", Link.TestImage(url: "/page#fragment", type: "suffix"));
+            AreEqual("?a=1&b=2#fragment", Link.TestImage(url: "/page?a=1&b=2#fragment", type: "suffix"));
+            AreEqual(string.Empty, Link.TestImage(url: "~/", type: "suffix"));
         }
 
         [TestMethod]
         public void ImageUrlPathIsMissingTest()
         {
-            AreEqual($"?{CurrentQuery}&c=3", Link.TestImage(url: "?c=3", part: "suffix"));
-            AreEqual($"?{CurrentQuery}&c=3#fragment", Link.TestImage(url: "?c=3#fragment", part: "suffix"));
-            AreEqual($"?{CurrentQuery}#fragmentB", Link.TestImage(url: "?#fragmentB", part: "suffix"));
-            AreEqual("?param=c#fragmentB", Link.TestImage(url: "?param=c#fragmentB", part: "suffix"));
-            AreEqual($"?{CurrentQuery}#fragmentB", Link.TestImage(url: "#fragmentB", part: "suffix"));
+            AreEqual($"?{CurrentQuery}&c=3", Link.TestImage(url: "?c=3", type: "suffix"));
+            AreEqual($"?{CurrentQuery}&c=3#fragment", Link.TestImage(url: "?c=3#fragment", type: "suffix"));
+            AreEqual($"?{CurrentQuery}#fragmentB", Link.TestImage(url: "?#fragmentB", type: "suffix"));
+            AreEqual("?param=c#fragmentB", Link.TestImage(url: "?param=c#fragmentB", type: "suffix"));
+            AreEqual($"?{CurrentQuery}#fragmentB", Link.TestImage(url: "#fragmentB", type: "suffix"));
         }
 
         [TestMethod]
         public void ImageWithoutProtocolTest()
         {
-            AreEqual("#fragment", Link.TestImage(url: "//unknown.2sxc.org/test#fragment", part: "suffix"));
-            AreEqual("?a=1#fragment", Link.TestImage(url: "//unknown.2sxc.org/test?a=1#fragment", part: "suffix"));
+            AreEqual("#fragment", Link.TestImage(url: "//unknown.2sxc.org/test#fragment", type: "suffix"));
+            AreEqual("?a=1#fragment", Link.TestImage(url: "//unknown.2sxc.org/test?a=1#fragment", type: "suffix"));
         }
 
         [TestMethod]
         public void ImageWithAbsoluteUrlTest()
         {
-            AreEqual("#fragment", Link.TestImage(url: "http://unknown2.2sxc.org/#fragment", part: "suffix"));
-            AreEqual("?a=1#fragmentB", Link.TestImage(url: "https://unknown2.2sxc.org/page?a=1#fragmentB", part: "suffix"));
+            AreEqual("#fragment", Link.TestImage(url: "http://unknown2.2sxc.org/#fragment", type: "suffix"));
+            AreEqual("?a=1#fragmentB", Link.TestImage(url: "https://unknown2.2sxc.org/page?a=1#fragmentB", type: "suffix"));
         }
 
         [TestMethod]
@@ -104,11 +104,11 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         {
             Assert.Inconclusive("TODO: Need to define behavior in this case.");
 
-            AreEqual("hello:there", Link.TestImage(url: "hello:there", part: "suffix"));
-            AreEqual("file:593902", Link.TestImage(url: "file:593902", part: "suffix"));
+            AreEqual("hello:there", Link.TestImage(url: "hello:there", type: "suffix"));
+            AreEqual("file:593902", Link.TestImage(url: "file:593902", type: "suffix"));
 
-            AreEqual("../file.ext", Link.TestImage(url: "../file.ext", part: "suffix"));
-            AreEqual("/sibling1/../sibling2/image.jpg", Link.TestImage(url: "/sibling1/../sibling2/image.jpg", part: "suffix"));
+            AreEqual("../file.ext", Link.TestImage(url: "../file.ext", type: "suffix"));
+            AreEqual("/sibling1/../sibling2/image.jpg", Link.TestImage(url: "/sibling1/../sibling2/image.jpg", type: "suffix"));
         }
     }
 }

@@ -69,54 +69,54 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         [Ignore("part is not implemented for now")]
         public void ImageNoUrlOrParamsTest()
         {
-            AreEqual(Fragment, Link.TestImage(url: "", part: "hash"));
+            AreEqual(Fragment, Link.TestImage(url: "", type: "hash"));
         }
 
         [TestMethod]
         [Ignore("part is not implemented for now")]
         public void ImageCommonUrlsTest()
         {
-            AreEqual(string.Empty, Link.TestImage(url: "/", part: "hash"));
-            AreEqual(Fragment, Link.TestImage(url: $"/?a=1&b=2#{Fragment}", part: "hash"));
-            AreEqual(string.Empty, Link.TestImage(url: "/page", part: "hash"));
-            AreEqual(Fragment, Link.TestImage(url: $"/page?a=1&b=2#{Fragment}", part: "hash"));
-            AreEqual(string.Empty, Link.TestImage(url: "~/", part: "hash"));
+            AreEqual(string.Empty, Link.TestImage(url: "/", type: "hash"));
+            AreEqual(Fragment, Link.TestImage(url: $"/?a=1&b=2#{Fragment}", type: "hash"));
+            AreEqual(string.Empty, Link.TestImage(url: "/page", type: "hash"));
+            AreEqual(Fragment, Link.TestImage(url: $"/page?a=1&b=2#{Fragment}", type: "hash"));
+            AreEqual(string.Empty, Link.TestImage(url: "~/", type: "hash"));
         }
 
         [TestMethod]
         [Ignore("part is not implemented for now")]
         public void ImageUrlPathIsMissingTest()
         {
-            AreEqual(Fragment, Link.TestImage(url: "?c=3", part: "hash"));
-            AreEqual(FragmentB, Link.TestImage(url: $"?#{FragmentB}", part: "hash"));
-            AreEqual(FragmentB, Link.TestImage(url: $"?param=c#{FragmentB}", part: "hash"));
-            AreEqual(FragmentB, Link.TestImage(url: $"#{FragmentB}", part: "hash"));
+            AreEqual(Fragment, Link.TestImage(url: "?c=3", type: "hash"));
+            AreEqual(FragmentB, Link.TestImage(url: $"?#{FragmentB}", type: "hash"));
+            AreEqual(FragmentB, Link.TestImage(url: $"?param=c#{FragmentB}", type: "hash"));
+            AreEqual(FragmentB, Link.TestImage(url: $"#{FragmentB}", type: "hash"));
         }
 
         [TestMethod]
         [Ignore("part is not implemented for now")]
         public void ImageWithoutProtocolTest()
         {
-            AreEqual(Fragment, Link.TestImage(url: $"//unknown.2sxc.org/test#{Fragment}", part: "hash"));
+            AreEqual(Fragment, Link.TestImage(url: $"//unknown.2sxc.org/test#{Fragment}", type: "hash"));
         }
 
         [TestMethod]
         [Ignore("part is not implemented for now")]
         public void ImageWithAbsoluteUrlTest()
         {
-            AreEqual(Fragment, Link.TestImage(url: $"http://unknown2.2sxc.org/#{Fragment}", part: "hash"));
-            AreEqual(FragmentB, Link.TestImage(url: $"https://unknown2.2sxc.org/page#{FragmentB}", part: "hash"));
+            AreEqual(Fragment, Link.TestImage(url: $"http://unknown2.2sxc.org/#{Fragment}", type: "hash"));
+            AreEqual(FragmentB, Link.TestImage(url: $"https://unknown2.2sxc.org/page#{FragmentB}", type: "hash"));
         }
 
         [TestMethod]
         [Ignore("part is not implemented for now")]
         public void ImageWithInvalidUrlTest()
         {
-            AreEqual("hello:there", Link.TestImage(url: "hello:there", part: "hash"));
-            AreEqual("file:593902", Link.TestImage(url: "file:593902", part: "hash"));
+            AreEqual("hello:there", Link.TestImage(url: "hello:there", type: "hash"));
+            AreEqual("file:593902", Link.TestImage(url: "file:593902", type: "hash"));
 
-            AreEqual("../file.ext", Link.TestImage(url: "../file.ext", part: "hash"));
-            AreEqual("/sibling1/../sibling2/image.jpg", Link.TestImage(url: "/sibling1/../sibling2/image.jpg", part: "hash"));
+            AreEqual("../file.ext", Link.TestImage(url: "../file.ext", type: "hash"));
+            AreEqual("/sibling1/../sibling2/image.jpg", Link.TestImage(url: "/sibling1/../sibling2/image.jpg", type: "hash"));
         }
     }
 }
