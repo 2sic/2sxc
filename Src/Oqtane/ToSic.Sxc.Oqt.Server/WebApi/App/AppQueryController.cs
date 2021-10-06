@@ -49,22 +49,36 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
 
         #endregion
 
+        // GET is separated from POST to solve HttpResponseException that happens when
+        // 'content-type' header is missing (or in GET request) on the endpoint that has [FromBody] in signature
+
         [HttpGet("{appPath}/query/{name}")]
         [HttpGet("{appPath}/query/{name}/{stream}")]
+        [AllowAnonymous] // will check security internally, so assume no requirements
+        public IDictionary<string, IEnumerable<EavLightEntity>> PublicQuery([FromRoute] string appPath,
+            [FromRoute] string name,
+            [FromRoute] string stream = null) => _appQuery.Value.Init(Log).PublicQuery(appPath, name, stream, null);
+
         [HttpPost("{appPath}/query/{name}")]
         [HttpPost("{appPath}/query/{name}/{stream}")]
         [AllowAnonymous] // will check security internally, so assume no requirements
-        public IDictionary<string, IEnumerable<EavLightEntity>> PublicQuery([FromRoute] string appPath,
+        public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost([FromRoute] string appPath,
             [FromRoute] string name,
             AppQueryParameters more,
             [FromRoute] string stream = null) => _appQuery.Value.Init(Log).PublicQuery(appPath, name, stream, more);
 
         [HttpGet("auto/query/{name}")]
         [HttpGet("auto/query/{name}/{stream?}")]
+        [AllowAnonymous] // will check security internally, so assume no requirements
+        public IDictionary<string, IEnumerable<EavLightEntity>> Query([FromRoute] string name,
+            [FromQuery] bool includeGuid = false,
+            [FromRoute] string stream = null,
+            [FromQuery] int? appId = null) => _appQuery.Value.Init(Log).Query(appId, name, includeGuid, stream, null);
+
         [HttpPost("auto/query/{name}")]
         [HttpPost("auto/query/{name}/{stream?}")]
         [AllowAnonymous] // will check security internally, so assume no requirements
-        public IDictionary<string, IEnumerable<EavLightEntity>> Query([FromRoute] string name,
+        public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost([FromRoute] string name,
             AppQueryParameters more,
             [FromQuery] bool includeGuid = false,
             [FromRoute] string stream = null,

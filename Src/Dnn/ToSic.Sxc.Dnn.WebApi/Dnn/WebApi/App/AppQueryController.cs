@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
+using JetBrains.Annotations;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.App;
@@ -19,20 +20,37 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         protected override string HistoryLogName => "Api.ApQrCt";
         #endregion
 
-        [HttpGet]
-        [HttpPost]
+        // GET is separated from POST to solve HttpResponseException that happens when
+        // 'content-type' header is missing (or in GET request) on the endpoint that has [FromBody] in signature
+
+        [HttpGet] 
         [AllowAnonymous] // will check security internally, so assume no requirements
         public IDictionary<string, IEnumerable<EavLightEntity>> Query([FromUri] string name,
+            [FromUri] bool includeGuid = false,
+            [FromUri] string stream = null,
+            [FromUri] int? appId = null
+        ) => GetService<AppQuery>().Init(Log).Query(appId, name, includeGuid, stream, null);
+
+        [HttpPost]
+        [AllowAnonymous] // will check security internally, so assume no requirements
+        public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost([FromUri] string name,
             [FromBody] AppQueryParameters more,
             [FromUri] bool includeGuid = false,
             [FromUri] string stream = null,
             [FromUri] int? appId = null
         ) => GetService<AppQuery>().Init(Log).Query(appId, name, includeGuid, stream, more);
 
-        [HttpGet]
-        [HttpPost]
+        [HttpGet] 
         [AllowAnonymous] // will check security internally, so assume no requirements
         public IDictionary<string, IEnumerable<EavLightEntity>> PublicQuery(
+            [FromUri] string appPath,
+            [FromUri] string name,
+            [FromUri] string stream = null
+        ) => GetService<AppQuery>().Init(Log).PublicQuery(appPath, name, stream, null);
+
+        [HttpPost]
+        [AllowAnonymous] // will check security internally, so assume no requirements
+        public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost(
             [FromUri] string appPath,
             [FromUri] string name,
             [FromBody] AppQueryParameters more,
