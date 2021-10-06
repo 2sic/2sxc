@@ -15,16 +15,16 @@ namespace ToSic.Sxc.Code
         #region Convert-Service
 
         /// <inheritdoc />
-        public IConvertService Convert => _contents.Convert;
+        public IConvertService Convert => _DynCodeRoot.Convert;
 
         #endregion
 
         /// <inheritdoc />
-        public dynamic Resources => _contents?.Resources;
+        public dynamic Resources => _DynCodeRoot?.Resources;
 
         /// <inheritdoc />
-        public dynamic Settings => _contents?.Settings;
+        public dynamic Settings => _DynCodeRoot?.Settings;
 
-        public IDevTools DevTools => _contents.DevTools;
+        public IDevTools DevTools => _DynCodeRoot.DevTools;
     }
 }
