@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Web.JsContext
         {
             WebsiteId = ctx.Site.Id;
 
-            WebsiteUrl = "//" + ctx.Site.Url + "/";
+            WebsiteUrl = "//" + ctx.Site.UrlRoot + "/";
 
             PageId = ctx.Page.Id;
             PageUrl = ctx.Page.Url;

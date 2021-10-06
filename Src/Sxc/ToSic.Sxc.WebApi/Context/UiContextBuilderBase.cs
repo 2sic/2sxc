@@ -102,7 +102,7 @@ namespace ToSic.Sxc.WebApi.Context
             var result = new ContextResourceWithApp
             {
                 Id = Deps.SiteCtx.Site.Id,
-                Url = "//" + Deps.SiteCtx.Site.Url + "/",
+                Url = "//" + Deps.SiteCtx.Site.UrlRoot + "/",
             };
             // Stop now if we don't need advanced infos
             if (!flags.HasFlag(Ctx.AppAdvanced)) return result;

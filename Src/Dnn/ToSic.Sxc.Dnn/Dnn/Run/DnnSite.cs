@@ -115,6 +115,8 @@ namespace ToSic.Sxc.Dnn.Run
         /// <inheritdoc />
         public override string Name => UnwrappedContents.PortalName;
 
+        public override string Url => UrlRoot;
+
         /// <summary>
         /// 
         /// </summary>
@@ -125,9 +127,11 @@ namespace ToSic.Sxc.Dnn.Run
         /// Like when showing a module from another portal - in which case we don't need that alias
         /// but the current one. Just keep this in mind in case anything ever breaks.
         /// </remarks>
-        public override string Url => UnwrappedContents?.PortalAlias?.HTTPAlias
-                                          ?? PortalSettings.Current?.PortalAlias?.HTTPAlias
-                                          ?? "err-portal-alias-not-loaded";
+        public override string UrlRoot
+            => _urlRoot ?? (_urlRoot = UnwrappedContents?.PortalAlias?.HTTPAlias
+                                       ?? PortalSettings.Current?.PortalAlias?.HTTPAlias
+                                       ?? "err-portal-alias-not-loaded");
+        private string _urlRoot;
 
         [PrivateApi]
         public override string AppsRootPhysical => AppsRootRelative;

@@ -30,5 +30,8 @@ namespace ToSic.Sxc.Context
         /// 🪒 Use in Razor: `CmsContext.Site.Url`
         /// </summary>
         string Url { get; }
+
+        [PrivateApi("WIP 2dm - trying to get a better replacement for url")]
+        string UrlRoot { get; }
     }
 }

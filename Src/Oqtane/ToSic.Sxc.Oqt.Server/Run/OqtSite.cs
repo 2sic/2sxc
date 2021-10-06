@@ -76,6 +76,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public override int Id => UnwrappedContents.SiteId;
 
         public override string Url => Alias.Name;
+        public override string UrlRoot => Alias.Name;
 
         /// <inheritdoc />
         public override string Name => UnwrappedContents.Name;

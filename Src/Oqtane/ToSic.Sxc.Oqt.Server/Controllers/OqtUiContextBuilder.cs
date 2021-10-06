@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             //return new WebResourceDto
             //{
             result.Id = _context.Site.Id;
-            result.Url = "//" + _context.Site.Url;
+            result.Url = "//" + _context.Site.UrlRoot;
             //};
             return result;
         }
