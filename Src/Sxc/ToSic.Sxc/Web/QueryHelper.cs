@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Web;
+using ToSic.Sxc.Web.Url;
 
 namespace ToSic.Sxc.Web
 {
@@ -37,7 +38,9 @@ namespace ToSic.Sxc.Web
             //var tempAbsoluteUri = GetTempAbsoluteUri(url);
 
             // if the url already has some params we should take that and split it into it's pieces
-            var queryString = HttpUtility.ParseQueryString(parts.Query);
+            var queryString = UrlHelpers.ParseQueryString(parts.Query);
+            // var queryString2 = HttpUtility.ParseQueryString(parts.Query);
+
 
             // new params would update existing queryString params or append new param to queryString
             queryParams.ForEach(param => queryString.Set(param.Key, param.Value));
@@ -94,7 +97,7 @@ namespace ToSic.Sxc.Web
 
             var newUrl = parts.ToLink(suffix: false);
             if (queryString.Count > 0)
-                newUrl += UrlParts.QuerySeparator + queryString.ToString();
+                newUrl += UrlParts.QuerySeparator + UrlHelpers.NvcToString(queryString); // queryString.ToString();
 
             if (!string.IsNullOrWhiteSpace(parts.Fragment))
                 newUrl += UrlParts.FragmentSeparator + parts.Fragment;
@@ -127,14 +130,14 @@ namespace ToSic.Sxc.Web
             else
             {
                 // combine query strings
-                var queryString = HttpUtility.ParseQueryString(parameters);
-                var currentRequestQueryString = HttpUtility.ParseQueryString(urlParts.Query);
+                var queryString = UrlHelpers.ParseQueryString(parameters);
+                var currentRequestQueryString = UrlHelpers.ParseQueryString(urlParts.Query);
                 foreach (var key in queryString.AllKeys)
                 {
                     currentRequestQueryString.Set(key, queryString.Get(key));
                 }
 
-                urlParts.Query = currentRequestQueryString.ToString();
+                urlParts.Query = UrlHelpers.NvcToString(currentRequestQueryString); //.ToString();
             }
 
             return urlParts.BuildUrl();

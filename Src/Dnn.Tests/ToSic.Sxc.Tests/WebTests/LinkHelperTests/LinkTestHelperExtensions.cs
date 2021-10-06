@@ -35,8 +35,8 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
             string scaleMode = null,
             string format = null,
             object aspectRatio = null,
-            string part = null)
+            string type = null)
             => link.Image(url, settings, factor, noParamOrder, width, height, quality, resizeMode, scaleMode, format,
-                aspectRatio, part);
+                aspectRatio, type: type);
     }
 }

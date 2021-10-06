@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using ToSic.Eav.Documentation;
+using ToSic.Sxc.Web.Url;
 
 namespace ToSic.Sxc.Context.Query
 {
@@ -52,15 +53,16 @@ namespace ToSic.Sxc.Context.Query
 
         public override string ToString()
         {
-            var allPairs = _originals.AllKeys
-                .Where(k => !string.IsNullOrEmpty(k))
-                .SelectMany(k =>
-                {
-                    var vals = _originals.GetValues(k) ?? new[] { "" }; // catch null-values
-                    return vals.Select(v => k + (string.IsNullOrEmpty(v) ? "" : "=" + v));
-                })
-                .ToArray();
-            return allPairs.Any() ? string.Join("&", allPairs) : "";
+            return UrlHelpers.NvcToString(_originals);
+            //var allPairs = _originals.AllKeys
+            //    .Where(k => !string.IsNullOrEmpty(k))
+            //    .SelectMany(k =>
+            //    {
+            //        var vals = _originals.GetValues(k) ?? new[] { "" }; // catch null-values
+            //        return vals.Select(v => k + (string.IsNullOrEmpty(v) ? "" : "=" + v));
+            //    })
+            //    .ToArray();
+            //return allPairs.Any() ? string.Join("&", allPairs) : "";
         }
 
         public IParameters Add(string name, string value)

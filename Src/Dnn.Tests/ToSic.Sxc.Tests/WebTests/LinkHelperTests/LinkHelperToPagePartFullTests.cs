@@ -7,6 +7,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
 {
     [TestClass]
+    [Ignore("part is not implemented for now")]
     public class LinkHelperToPagePartFullTests: LinkHelperTestBase
     {
         //[TestMethod]

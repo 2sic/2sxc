@@ -117,6 +117,7 @@
     <Compile Include="WebTests\LinkImageTests\LinkImageTestBase.cs" />
     <Compile Include="WebTests\QueryHelperTests.cs" />
     <Compile Include="WebTests\LinkToBasicTests.cs" />
+    <Compile Include="WebTests\UrlHelperTests\ParseQueryStringTests.cs" />
     <Compile Include="WebTests\UrlParts\UrlPartsToLink.cs" />
     <Compile Include="WebTests\UrlParts\UrlPartsProtocolAndDomain.cs" />
     <Compile Include="WebTests\UrlParts\UrlPartsTrivial.cs" />
