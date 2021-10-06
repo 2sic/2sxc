@@ -92,7 +92,7 @@ namespace ToSic.Sxc.Web
         {
             //var newQueryString = "?" + queryString;
 
-            var newUrl = parts.Path;
+            var newUrl = parts.ToLink(suffix: false);
             if (queryString.Count > 0)
                 newUrl += UrlParts.QuerySeparator + queryString.ToString();
 

@@ -28,7 +28,6 @@ namespace ToSic.Sxc.Web
             Url = url;
             if (string.IsNullOrEmpty(url)) return;
 
-            // url = url ?? string.Empty; // avoid errors on string operations
             var rest = url;
             rest = ExtractFragment(url, rest);
             Path = rest;
@@ -44,20 +43,20 @@ namespace ToSic.Sxc.Web
 
         }
 
-        public void ReplaceDomain(string url)
+        public void ReplaceRoot(string url)
         {
             if (string.IsNullOrEmpty(url)) return;
 
-            if (!url.Contains(Slash))
-            {
+            if (!url.Contains(Slash) && !url.Contains(ProtocolColon))
                 Domain = url;
-                if (string.IsNullOrEmpty(Protocol)) Protocol = RootWithoutProtocol;
-                return;
+            else
+            {
+                var newParts = new UrlParts(url);
+                if (!string.IsNullOrEmpty(newParts.Domain)) Domain = newParts.Domain;
+                if (!string.IsNullOrEmpty(newParts.Protocol)) Protocol = newParts.Protocol;
             }
-
-            var newParts = new UrlParts(url);
-            if (!string.IsNullOrEmpty(newParts.Domain)) Domain = newParts.Domain;
-            if (!string.IsNullOrEmpty(newParts.Protocol)) Protocol = newParts.Protocol;
+            if(!string.IsNullOrEmpty(Domain) && string.IsNullOrEmpty(Protocol))
+                Protocol = RootWithoutProtocol;
         }
 
         private string ExtractDomain(bool domainAtStartPossible, string rest)
@@ -110,11 +109,12 @@ namespace ToSic.Sxc.Web
         }
 
         public bool IsAbsolute => !string.IsNullOrEmpty(Protocol); // Path.StartsWith("//") || Path.StartsWith("http://") || Path.StartsWith("https://");
+        public bool IsRelative => Path.StartsWith(".") && !IsAbsolute && !string.IsNullOrEmpty(Domain);
 
 
-        public string ToLink(string format = null)
+        public string ToLink(string format = null, bool suffix = true)
         {
-            var endPart = Path + Suffix();
+            var endPart = Path + (suffix ? Suffix() : "");
             if (format == "/") return endPart;
             if (format == "//")
                 return string.IsNullOrEmpty(Domain)

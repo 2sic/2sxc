@@ -13,12 +13,14 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
 
 
         [TestMethod]
+        [Ignore("part is not implemented for now")]
         public void ToNoPageIdOrParamsTest()
         {
             AreEqual(Domain, Link.TestTo(part: "domain"));
         }
 
         [TestMethod]
+        [Ignore("part is not implemented for now")]
         public void ToPageTest()
         {
             AreEqual(Domain, Link.TestTo(pageId: 27, part: "domain"));
@@ -26,12 +28,14 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         }
 
         [TestMethod]
+        [Ignore("part is not implemented for now")]
         public void ToNoApiUrlOrParamsTest()
         {
             AreEqual(Domain, Link.TestTo(api: "", part: "domain"));
         }
 
         [TestMethod]
+        [Ignore("part is not implemented for now")]
         public void ToApiTest()
         {
             AreEqual(Domain, Link.TestTo(api: "/", part: "domain"));
@@ -42,12 +46,14 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         }
 
         [TestMethod]
+        [Ignore("part is not implemented for now")]
         public void ToApiWithoutProtocolTest()
         {
             AreEqual(Domain, Link.TestTo(api: $"//{Domain}/api", parameters: "param=b&b=3&c=3", part: "domain"));
         }
 
         [TestMethod]
+        [Ignore("part is not implemented for now")]
         public void ToApiWithAbsoluteUrlTest()
         {
             AreEqual(Domain2, Link.TestTo(api: $"http://{Domain2}/", part: "domain"));
@@ -70,12 +76,14 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         }
 
         [TestMethod]
+        [Ignore("part is not implemented for now")]
         public void ImageNoUrlOrParamsTest()
         {
             AreEqual(Domain, Link.TestImage(url: "", part: "domain"));
         }
 
         [TestMethod]
+        [Ignore("part is not implemented for now")]
         public void ImageCommonUrlsTest()
         {
             AreEqual(Domain, Link.TestImage(url: "/", part: "domain"));
@@ -86,6 +94,7 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         }
 
         [TestMethod]
+        [Ignore("part is not implemented for now")]
         public void ImageUrlPathIsMissingTest()
         {
             AreEqual(Domain, Link.TestImage(url: "?c=3", part: "domain"));
@@ -95,12 +104,14 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         }
 
         [TestMethod]
+        [Ignore("part is not implemented for now")]
         public void ImageWithoutProtocolTest()
         {
             AreEqual(Domain, Link.TestImage(url: $"//{Domain}/test", part: "domain"));
         }
 
         [TestMethod]
+        [Ignore("part is not implemented for now")]
         public void ImageWithAbsoluteUrlTest()
         {
             AreEqual(Domain2, Link.TestImage(url: $"http://{Domain2}/", part: "domain"));

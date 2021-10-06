@@ -117,7 +117,10 @@
     <Compile Include="WebTests\LinkImageTests\LinkImageTestBase.cs" />
     <Compile Include="WebTests\QueryHelperTests.cs" />
     <Compile Include="WebTests\LinkToBasicTests.cs" />
-    <Compile Include="WebTests\UrlPartsTest.cs" />
+    <Compile Include="WebTests\UrlParts\UrlPartsToLink.cs" />
+    <Compile Include="WebTests\UrlParts\UrlPartsProtocolAndDomain.cs" />
+    <Compile Include="WebTests\UrlParts\UrlPartsTrivial.cs" />
+    <Compile Include="WebTests\UrlParts\UrlPartsTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj">

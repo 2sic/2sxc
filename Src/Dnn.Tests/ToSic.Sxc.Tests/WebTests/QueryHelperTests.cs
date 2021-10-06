@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
-using static ToSic.Sxc.Web.QueryHelper;
 
 namespace ToSic.Sxc.Tests.WebTests
 {
     [TestClass]
     public class QueryHelperTests
     {
+        private static string AddQueryString(string url, List<KeyValuePair<string, string>> queryParams)
+            => ToSic.Sxc.Web.QueryHelper.AddQueryString(url, queryParams);
+
         private const string urlRelativeNoParams = "/xyz/abc.jpg";
         private const string urlHttpNoParams = "http://2sxc.org/xyz/abc.jpg";
         private const string urlHttpsNoParams = "https://2sxc.org/xyz/abc.jpg";

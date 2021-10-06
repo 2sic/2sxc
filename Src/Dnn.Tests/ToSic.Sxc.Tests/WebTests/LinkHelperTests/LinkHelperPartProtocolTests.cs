@@ -4,6 +4,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
 {
     [TestClass]
+    [Ignore("part is not implemented for now")]
     public class LinkHelperPartProtocolTests : LinkHelperTestBase
     {
         private const string Http = "http";
@@ -66,12 +67,14 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         }
 
         [TestMethod]
+        [Ignore("part is not implemented for now")]
         public void ImageNoUrlOrParamsTest()
         {
             AreEqual(Https, Link.TestImage(url: "", part: "protocol"));
         }
 
         [TestMethod]
+        [Ignore("part is not implemented for now")]
         public void ImageCommonUrlsTest()
         {
             AreEqual(Https, Link.TestImage(url: "/", part: "protocol"));

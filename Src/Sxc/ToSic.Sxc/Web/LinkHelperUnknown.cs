@@ -37,7 +37,14 @@ namespace ToSic.Sxc.Web
         {
         }
 
-        protected override string ToApi(string api, string parameters = null) => $"{api}{parameters}";
+        protected override string ToApi(string api, string parameters = null)
+        {
+            // todo: this looks bad, not sure if this should be in each unique implementation
+            if (!string.IsNullOrEmpty(parameters)) parameters = $"?{parameters}";
+
+            return $"{api}{parameters}";
+        }
+
         protected override string ToPage(int? pageId, string parameters = null)
         {
             // todo: this looks bad!
@@ -69,7 +76,7 @@ namespace ToSic.Sxc.Web
         //}
 
         // Mock DomainName
-        public override string GetDomainName()
+        public override string GetCurrentLinkRoot()
         {
             // use a pre-standardized dummy-domain  
             return DefRoot;

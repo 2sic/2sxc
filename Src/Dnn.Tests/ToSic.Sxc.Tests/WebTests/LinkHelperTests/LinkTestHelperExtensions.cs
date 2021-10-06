@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Web;
+﻿using System;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
 {
@@ -14,7 +15,12 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
             string api = null,
             string type = null, // WIP, probably "full", "root", "https", "//", "http" etc.
             string part = null
-        ) => link.To(noParamOrder: noParamOrder, pageId: pageId, parameters: parameters, api: api, type: type, part: part);
+        )
+        {
+            if (part != null) throw new Exception("part shouldn't be used ATM,not implemented");
+            return link.To(noParamOrder: noParamOrder, pageId: pageId, parameters: parameters, api: api, type: type
+                /*part: part*/);
+        }
 
 
         public static string TestImage(this ILinkHelper link,

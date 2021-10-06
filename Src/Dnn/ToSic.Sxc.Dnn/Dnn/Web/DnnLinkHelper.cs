@@ -90,7 +90,7 @@ namespace ToSic.Sxc.Dnn.Web
             return relativePath;
         }
 
-        public override string GetDomainName()
+        public override string GetCurrentLinkRoot()
         {
             return HttpContext.Current?.Request?.Url?.GetLeftPart(UriPartial.Authority) ?? string.Empty;
         }

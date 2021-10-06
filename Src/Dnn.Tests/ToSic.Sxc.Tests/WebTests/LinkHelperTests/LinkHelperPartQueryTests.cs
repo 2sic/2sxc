@@ -5,6 +5,7 @@ using static ToSic.Sxc.Web.LinkHelperUnknown;
 namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
 {
     [TestClass]
+    [Ignore("part is not implemented for now")]
     public class LinkHelperQueryHashTests : LinkHelperTestBase
     {
         [TestMethod]

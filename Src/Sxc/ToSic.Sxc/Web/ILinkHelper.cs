@@ -20,7 +20,13 @@ namespace ToSic.Sxc.Web
         /// - in 2sxc 12.05+ it can also be an <see cref="IParameters"/>
         /// </param>
         /// <param name="api">optional api url "api/name/method?id=something"</param>
-        /// <param name="part"> TODO: stv</param>
+        /// <param name="type">
+        /// Optional type changes how the link is generated. Possible values are:
+        ///
+        /// - null / not specified / empty = return link as is generated
+        /// - `"full"` return link with protocol & domain. If that was missing before, it will add current protocol/domain if possible, but not on relative `./` or `../` links
+        /// - `"//"` return link with `//domain`. If that was missing before, will add current domain if possible, but not on relative `./` or `../` links
+        /// </param>
         /// <returns></returns>
         /// <remarks>
         /// History
@@ -32,8 +38,8 @@ namespace ToSic.Sxc.Web
             int? pageId = null,
             object parameters = null,
             string api = null,
-            string type = null, // WIP, probably "full", "/", "//" etc.
-            string part = null
+            string type = null // WIP, probably "full", "/", "//" etc.
+            //string part = null
         );
         
         /// <summary>
@@ -63,25 +69,13 @@ namespace ToSic.Sxc.Web
         /// <param name="scaleMode">Optional scale-mode to allow up-scaling images like `up` or `both`. Usually takes the default from the `settings`.</param>
         /// <param name="format">Optional file format like `jpg` or `png`</param>
         /// <param name="aspectRatio">Aspect Ratio width/height, only relevant if a `factor` is supplied. Usually takes default from the `settings` or is ignored. </param>
-        /// <param name="part">
-        /// _This is a proposal, it's not final yet_
-        /// - null/empty/default means that the link is returned as given - as provided by the 'url' parameter. if none was provided, it's a root-absolute link like `/xyz/abc?stuff#stuff`
-        /// - `full` means full protocol, domain and everything - like https://2sxc.org/dnn-tutorials/page/subpage/?product=27&filter=42#test=42
-        ///     - if a url is provided without protocol, it's assumed that it's on the current site, so the current domain/protocol are added
-        ///     - when no url or params was provided would just result in the domain + link to the current page as is
-        ///     - if the url seems invalid (like `hello:there` or an invalid `file:593902` reference) nothing is added
-        /// - `protocol` would just return the "http", "https" or whatever.
-        ///     - if no url was provided, it will assume that the current page is to be used
-        ///     - if a url was provided and it has no protocol, then the current protocol is used
-        ///     - if a url was provided with protocol, it would return that
-        /// - `domain` would just return the full domain like `2sxc.org`, `www.2sxc.org` or `gettingstarted.2sxc.org`
-        ///     - if no url was provided, then the domain of the current page
-        ///     - if the url contains a domain, then that domain
-        /// - `hash` would just return the part after the `#` (without the `#`) - if not provided, empty string
-        /// - `query` would return the part after the `?` (without the `?`- if not provided, empty string
-        ///     - if no url was provided and there are magical query params (like in DNN), these would not be returned, but not dnn-internals like tabid or language
-        /// - `suffix` would return the entire suffix starting from the `?` _including_ the `?` or `#` - if nothing is there, empty string
-        /// TODO: STV - GET `full` TO work, to replace `absoluteUrl` - also on Link.To
+
+        /// <param name="type">
+        /// Optional type changes how the link is generated. Possible values are:
+        ///
+        /// - null / not specified / empty = return link as is generated
+        /// - `"full"` return link with protocol & domain. If that was missing before, it will add current protocol/domain if possible, but not on relative `./` or `../` links
+        /// - `"//"` return link with `//domain`. If that was missing before, will add current domain if possible, but not on relative `./` or `../` links
         /// </param>
         /// <remarks>
         /// Usually a factor is applied to create a link which is possibly 50% of the content-width or similar.
@@ -89,7 +83,26 @@ namespace ToSic.Sxc.Web
         /// New in 2sxc 12.03
         /// </remarks>
         /// <returns></returns>
-        [PrivateApi]
+        ///// <param name="part">
+        ///// _This is a proposal, it's not final yet_
+        ///// - null/empty/default means that the link is returned as given - as provided by the 'url' parameter. if none was provided, it's a root-absolute link like `/xyz/abc?stuff#stuff`
+        ///// - `full` means full protocol, domain and everything - like https://2sxc.org/dnn-tutorials/page/subpage/?product=27&filter=42#test=42
+        /////     - if a url is provided without protocol, it's assumed that it's on the current site, so the current domain/protocol are added
+        /////     - when no url or params was provided would just result in the domain + link to the current page as is
+        /////     - if the url seems invalid (like `hello:there` or an invalid `file:593902` reference) nothing is added
+        ///// - `protocol` would just return the "http", "https" or whatever.
+        /////     - if no url was provided, it will assume that the current page is to be used
+        /////     - if a url was provided and it has no protocol, then the current protocol is used
+        /////     - if a url was provided with protocol, it would return that
+        ///// - `domain` would just return the full domain like `2sxc.org`, `www.2sxc.org` or `gettingstarted.2sxc.org`
+        /////     - if no url was provided, then the domain of the current page
+        /////     - if the url contains a domain, then that domain
+        ///// - `hash` would just return the part after the `#` (without the `#`) - if not provided, empty string
+        ///// - `query` would return the part after the `?` (without the `?`- if not provided, empty string
+        /////     - if no url was provided and there are magical query params (like in DNN), these would not be returned, but not dnn-internals like tabid or language
+        ///// - `suffix` would return the entire suffix starting from the `?` _including_ the `?` or `#` - if nothing is there, empty string
+        ///// TODO: STV - GET `full` TO work, to replace `absoluteUrl` - also on Link.To
+        ///// </param>        [PrivateApi]
         string Image(
             string url = null,
             object settings = null,
@@ -102,8 +115,9 @@ namespace ToSic.Sxc.Web
             string scaleMode = null,
             string format = null,
             object aspectRatio = null,
-            string type = null, // WIP, probably "full", "/", "//" etc.
-            string part = null);
+            string type = null // WIP, probably "full", "/", "//" etc.
+            //string part = null
+            );
 
         /// <summary>
         /// WIP v12.04 - not final

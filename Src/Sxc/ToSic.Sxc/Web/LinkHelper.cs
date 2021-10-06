@@ -33,8 +33,8 @@ namespace ToSic.Sxc.Web
             int? pageId = null, 
             object parameters = null, 
             string api = null,
-            string type = null, // WIP, probably "full", "root", "https", "//", "http" etc.
-            string part = null)
+            string type = null // WIP, probably "full", "root", "https", "//", "http" etc.
+            /*string part = null*/)
         {
             // prevent incorrect use without named parameters
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
@@ -56,15 +56,25 @@ namespace ToSic.Sxc.Web
 
         private string ChangeToMatchType(string type, string url)
         {
-            // var urlParts = 
-            switch (type)
+            // Short-Circuit to really not do anything if the type isn't specified
+            if (string.IsNullOrEmpty(type)) return url;
+
+            var parts = new UrlParts(url);
+            switch (type?.ToLowerInvariant())
             {
                 case "full":
-                    return FullUrl(url);
+                    if (!parts.IsAbsolute)
+                        parts.ReplaceRoot(GetCurrentRequestUrl());
+                    return parts.ToLink("full");
+                    // return FullUrl(url);
                 case "//":
-                    return Protocol(url);
-                case "/":
-                    return Domain(url);
+                    if (!parts.IsAbsolute)
+                        parts.ReplaceRoot(GetCurrentRequestUrl());
+                    return parts.ToLink("//");
+                    //return Protocol(url);
+                case "/": // note: "/" isn't officially supported
+                    return parts.ToLink("/");
+                    //return Domain(url);
                 default:
                     return url;
             }
@@ -130,8 +140,8 @@ namespace ToSic.Sxc.Web
             string scaleMode = null,
             string format = null,
             object aspectRatio = null,
-            string type = null, // WIP, probably "full", "/", "//" etc.
-            string part = null)
+            string type = null // WIP, probably "full", "/", "//" etc.
+            /*string part = null*/)
         {
             var imageUrl = ImgLinker.Image(url: url, settings, factor, noParamOrder, width, height, quality, resizeMode,
                 scaleMode, format, aspectRatio);
@@ -149,52 +159,53 @@ namespace ToSic.Sxc.Web
             ImgLinker.Debug = debug;
         }
 
-        protected string FullUrl(string url)
-        {
-            var parts = new UrlParts(url);
+        //protected string FullUrl(string url)
+        //{
+        //    var parts = new UrlParts(url);
 
-            // no path or just query string
-            if (string.IsNullOrEmpty(parts.Path))
-            {
-                return AddDomainAndProtocol(parts);
-            }
+        //    // no path or just query string
+        //    if (string.IsNullOrEmpty(parts.Path))
+        //    {
+        //        return AddDomainAndProtocol(parts);
+        //    }
 
-            // absolute url already provided
-            if (parts.IsAbsolute)
-            {
-                return UrlIsAbsolute(parts);
-            }
+        //    // absolute url already provided
+        //    if (parts.IsAbsolute)
+        //    {
+        //        return AddCurrentProtocol(parts);
+        //    }
 
-            // relative urls
-            return UrlIsRelative(parts);
-        }
+        //    // relative urls
+        //    return UrlIsRelative(parts);
+        //}
 
-        // when no url or just query params was provided would just result in the domain + link to the current page as is
-        private string AddDomainAndProtocol(UrlParts parts)
-        {
-            var currentRequestParts = new UrlParts(GetCurrentRequestUrl());
+        //// when no url or just query params was provided would just result in the domain + link to the current page as is
+        //private string AddDomainAndProtocol(UrlParts parts)
+        //{
+        //    parts.ReplaceRoot(GetCurrentRequestUrl());
+        //    // var currentRequestParts = new UrlParts(GetCurrentRequestUrl());
             
 
-            // handle fragments
-            if (!string.IsNullOrEmpty(parts.Fragment))
-                currentRequestParts.Fragment = parts.Fragment;
+        //    // handle fragments
+        //    //if (!string.IsNullOrEmpty(parts.Fragment))
+        //    //    currentRequestParts.Fragment = parts.Fragment;
 
-            // handle query strings
-            return QueryHelper.Combine(currentRequestParts.BuildUrl(), parts.Query);
-        }
+        //    // handle query strings
+        //    return parts.ToLink("full"); // QueryHelper.Combine(currentRequestParts.BuildUrl(), parts.Query);
+        //}
 
 
-        private string UrlIsAbsolute(UrlParts parts)
-        {
-            // if a url is provided without protocol, it's assumed that it's on the current site, so the current domain/protocol are added
-            if (parts.Path.StartsWith("//"))
-            {
-                var protocol = (new Uri(GetDomainName(), UriKind.Absolute)).Scheme;
-                parts.Path = $"{protocol}:{parts.Path}";
-            }
+        //private string AddCurrentProtocol(UrlParts parts)
+        //{
+        //    // if a url is provided without protocol, it's assumed that it's on the current site, so the current domain/protocol are added
+        //    if (parts.Path.StartsWith("//"))
+        //    {
+        //        var protocol = (new Uri(GetDomainName(), UriKind.Absolute)).Scheme;
+        //        parts.Path = $"{protocol}:{parts.Path}";
+        //    }
 
-            return parts.BuildUrl();
-        }
+        //    return parts.BuildUrl();
+        //}
 
         private static bool IsInvalidUrl(UrlParts parts)
         {
@@ -223,6 +234,7 @@ namespace ToSic.Sxc.Web
             return false;
         }
 
+        // TODO: review w/Tonci STV if this is necessary any where
         private string UrlIsRelative(UrlParts parts)
         {
             // clean "~" from path
@@ -236,39 +248,39 @@ namespace ToSic.Sxc.Web
             }
 
             // create absolute url
-            parts.Path = $"{GetDomainName()}{parts.Path.PrefixSlash()}";
+            parts.Path = $"{GetCurrentLinkRoot()}{parts.Path.PrefixSlash()}";
 
             return parts.BuildUrl();
         }
 
-        public abstract string GetDomainName();
+        public abstract string GetCurrentLinkRoot();
 
         public abstract string GetCurrentRequestUrl();
 
-        /// <summary>
-        /// `protocol` would just return the "http", "https" or whatever.
-        ///     - if no url was provided, it will assume that the current page is to be used
-        ///     - if a url was provided and it has no protocol, then the current protocol is used
-        ///     - if a url was provided with protocol, it would return that
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        protected string Protocol(string url)
-        {
-            return (new Uri(FullUrl(url), UriKind.Absolute)).Scheme;
-        }
+        ///// <summary>
+        ///// `protocol` would just return the "http", "https" or whatever.
+        /////     - if no url was provided, it will assume that the current page is to be used
+        /////     - if a url was provided and it has no protocol, then the current protocol is used
+        /////     - if a url was provided with protocol, it would return that
+        ///// </summary>
+        ///// <param name="url"></param>
+        ///// <returns></returns>
+        //protected string Protocol(string url)
+        //{
+        //    return (new Uri(FullUrl(url), UriKind.Absolute)).Scheme;
+        //}
 
-        /// <summary>
-        /// `domain` would just return the full domain like `2sxc.org`, `www.2sxc.org` or `gettingstarted.2sxc.org`
-        ///     - if no url was provided, then the domain of the current page
-        ///     - if the url contains a domain, then that domain
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        protected string Domain(string url)
-        {
-            return (new Uri(FullUrl(url), UriKind.Absolute)).DnsSafeHost;
-        }
+        ///// <summary>
+        ///// `domain` would just return the full domain like `2sxc.org`, `www.2sxc.org` or `gettingstarted.2sxc.org`
+        /////     - if no url was provided, then the domain of the current page
+        /////     - if the url contains a domain, then that domain
+        ///// </summary>
+        ///// <param name="url"></param>
+        ///// <returns></returns>
+        //protected string Domain(string url)
+        //{
+        //    return (new Uri(FullUrl(url), UriKind.Absolute)).DnsSafeHost;
+        //}
 
         ///// <summary>
         ///// `hash` would just return the part after the `#` (without the `#`) - if not provided, empty string

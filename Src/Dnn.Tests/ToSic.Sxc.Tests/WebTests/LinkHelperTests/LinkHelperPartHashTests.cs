@@ -4,6 +4,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
 {
     [TestClass]
+    [Ignore("part is not implemented for now")]
     public class LinkHelperPartHashTests : LinkHelperTestBase
     {
         private const string Fragment = "fragment";
@@ -65,12 +66,14 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         }
 
         [TestMethod]
+        [Ignore("part is not implemented for now")]
         public void ImageNoUrlOrParamsTest()
         {
             AreEqual(Fragment, Link.TestImage(url: "", part: "hash"));
         }
 
         [TestMethod]
+        [Ignore("part is not implemented for now")]
         public void ImageCommonUrlsTest()
         {
             AreEqual(string.Empty, Link.TestImage(url: "/", part: "hash"));
@@ -81,6 +84,7 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         }
 
         [TestMethod]
+        [Ignore("part is not implemented for now")]
         public void ImageUrlPathIsMissingTest()
         {
             AreEqual(Fragment, Link.TestImage(url: "?c=3", part: "hash"));
@@ -90,12 +94,14 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         }
 
         [TestMethod]
+        [Ignore("part is not implemented for now")]
         public void ImageWithoutProtocolTest()
         {
             AreEqual(Fragment, Link.TestImage(url: $"//unknown.2sxc.org/test#{Fragment}", part: "hash"));
         }
 
         [TestMethod]
+        [Ignore("part is not implemented for now")]
         public void ImageWithAbsoluteUrlTest()
         {
             AreEqual(Fragment, Link.TestImage(url: $"http://unknown2.2sxc.org/#{Fragment}", part: "hash"));
@@ -103,10 +109,9 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         }
 
         [TestMethod]
+        [Ignore("part is not implemented for now")]
         public void ImageWithInvalidUrlTest()
         {
-            Assert.Inconclusive("TODO: Need to define behavior in this case.");
-
             AreEqual("hello:there", Link.TestImage(url: "hello:there", part: "hash"));
             AreEqual("file:593902", Link.TestImage(url: "file:593902", part: "hash"));
 

@@ -109,10 +109,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
             // for invalid page numbers just skip that part 
             var relativePath = Utilities.NavigateUrl(alias.Path, page?.Path ?? string.Empty, parameters ?? string.Empty); // NavigateUrl do not works with absolute links
 
-            return absoluteUrl ? $"{GetDomainName()}{relativePath}" : relativePath;
+            return absoluteUrl ? $"{GetCurrentLinkRoot()}{relativePath}" : relativePath;
         }
 
-        public override string GetDomainName()
+        public override string GetCurrentLinkRoot()
         {
             var scheme = _contextAccessor?.HttpContext?.Request?.Scheme ?? "http";
             var alias = _siteStateInitializer.InitializedState.Alias;
