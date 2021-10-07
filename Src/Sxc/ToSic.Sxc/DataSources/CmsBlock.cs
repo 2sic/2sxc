@@ -35,7 +35,7 @@ namespace ToSic.Sxc.DataSources
         public override string LogId => "Sxc.CmsBDs";
 
         public const string InstanceLookupName = "module";
-        public const string InstanceIdKey = "ModuleId";
+        public const string InstanceIdKey = "Id"; // 2021-10-07 2dm changed from "ModuleId" because that's doesn't work in Oqtane
 
         [PrivateApi]
         public enum Settings

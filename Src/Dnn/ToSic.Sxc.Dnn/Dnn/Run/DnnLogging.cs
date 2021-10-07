@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Dnn.Run
                     logInfo.LogUserName = dnn.User?.DisplayName ?? "unknown";
                     logInfo.LogUserID = dnn.User?.UserID ?? -1;
                     logInfo.LogPortalID = dnn.Portal.PortalId;
-                    logInfo.AddProperty("ModuleId", dnn.Module?.ModuleID.ToString() ?? "unknown");
+                    logInfo.AddProperty("Module Id", dnn.Module?.ModuleID.ToString() ?? "unknown");
                 }
             }
             catch { /* ignore */ }

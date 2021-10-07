@@ -19,8 +19,8 @@ namespace ToSic.Sxc.Dnn.Providers
 
     public sealed class ModifiedTabAndModuleInfoProvider : ITabAndModuleInfoProvider
     {
-        private const string ModuleIdKey = "ModuleId";
-        private const string TabIdKey = WebApiConstants.HeaderPageId; // "TabId"; // changed by 2dm 2020-11-20
+        private const string ModuleIdKey = WebApiConstants.HeaderInstanceId; // changed 2dm 2021-10-07
+        private const string TabIdKey = WebApiConstants.HeaderPageId; // changed by 2dm 2020-11-20
 
         public bool TryFindTabId(HttpRequestMessage request, out int tabId)
         {
