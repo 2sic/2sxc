@@ -15,25 +15,21 @@ namespace ToSic.Sxc.Tests.WebTests.ConvertServiceTests
     {
         private const string strGuid = "424e56ce-570a-4747-aee2-44c04caf7f12";
         private static readonly Guid expGuid = new Guid(strGuid);
-        [TestMethod] public void ToGuidNull() => AreEqual(Guid.Empty, ConvertService().ToGuid(null));
-        [TestMethod] public void ToGuidEmpty() => AreEqual(Guid.Empty, ConvertService().ToGuid(""));
-        [TestMethod] public void ToGuidBasic() => AreEqual(expGuid, ConvertService().ToGuid(strGuid));
-        [TestMethod] public void ToGuidFallback() => AreEqual(expGuid, ConvertService().ToGuid("", expGuid));
+        [TestMethod] public void ToGuidNull() => AreEqual(Guid.Empty, Csvc().ToGuid(null));
+        [TestMethod] public void ToGuidEmpty() => AreEqual(Guid.Empty, Csvc().ToGuid(""));
+        [TestMethod] public void ToGuidBasic() => AreEqual(expGuid, Csvc().ToGuid(strGuid));
+        [TestMethod] public void ToGuidFallback() => AreEqual(expGuid, Csvc().ToGuid("", expGuid));
 
         [TestMethod]
-        public void ForCodeDate()
-        {
-            var conv = ConvertService();
-            AreEqual("2021-09-29T08:45:59.000z", conv.ForCode(new DateTime(2021, 09, 29, 08, 45, 59)));
-        }
+        public void ForCodeDate() 
+            => AreEqual("2021-09-29T08:45:59.000z", Csvc().ForCode(new DateTime(2021, 09, 29, 08, 45, 59)));
 
         [TestMethod]
         public void ForCodeBool()
         {
-            var conv = ConvertService();
-            AreEqual("true", conv.ForCode(true));
-            AreNotEqual(true.ToString(), conv.ForCode(true));
-            AreEqual("false", conv.ForCode(false));
+            AreEqual("true", Csvc().ForCode(true));
+            AreNotEqual(true.ToString(), Csvc().ForCode(true));
+            AreEqual("false", Csvc().ForCode(false));
         }
 
         [TestMethod]
@@ -44,7 +40,7 @@ namespace ToSic.Sxc.Tests.WebTests.ConvertServiceTests
             AreEqual("1,11", 1.11.ToString());
 
             // Now run tests expecting things to "just-work"
-            var conv = ConvertService();
+            var conv = Csvc();
             AreEqual("0", conv.ForCode("0"));
             AreEqual("1.11", conv.ForCode(1.11f));
             AreEqual("27.42", conv.ForCode(27.42));
@@ -55,10 +51,6 @@ namespace ToSic.Sxc.Tests.WebTests.ConvertServiceTests
         /// test accessor
         /// </summary>
         /// <returns></returns>
-        private static IConvertService ConvertService()
-        {
-            var conv = Resolve<IConvertService>();
-            return conv;
-        }
+        private static IConvertService Csvc() => Resolve<IConvertService>();
     }
 }
