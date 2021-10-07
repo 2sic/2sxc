@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Documentation;
+﻿using System;
+using ToSic.Eav.Documentation;
 // ReSharper disable MethodOverloadWithOptionalParameter
 
 namespace ToSic.Sxc.Web
@@ -18,6 +19,14 @@ namespace ToSic.Sxc.Web
     [PublicApi]
     public interface IConvertService
     {
+        // Important internal information
+        // Most of our APIs have a pleaseNameParams parameter very early on
+        // But these don't enforce that for the second fallback parameter.
+        // The reason is that they are very common, and if people would try
+        // ToInt(value, 27) they would always get a
+        // "second parameter is not a string" - which is hard for people to figure out why this happens
+
+
         /// <summary>
         /// If set to true (default) will optimize converting numbers.
         /// For example, a string like "4.2" will properly convert to an int of 2.
@@ -44,7 +53,7 @@ namespace ToSic.Sxc.Web
         /// Convert any object safely to the desired type T.
         /// If conversion fails, it will return the `fallback` parameter as given.
         /// Since the fallback is typed, you can usually call this method without specifying T explicitly, so this should work:
-        ///
+        /// 
         /// ```
         /// var c1 = Convert.To("5", 100); // will return 5
         /// var c2 = Convert.To("", 100);  // will return 100
@@ -52,26 +61,43 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="value"></param>
+        /// <param name="paramsMustBeNamed">requires that all params must be named, like `fallback: 27`</param>
         /// <param name="fallback">The value used if conversion fails.</param>
         /// <returns></returns>
         T To<T>(object value,
             string paramsMustBeNamed = Eav.Parameters.Protector,
             T fallback = default);
 
+        /// <summary>
+        /// Convert any object safely to bool.
+        /// This does the same as <see cref="To{T}(object)"/> but this is easier to type in Razor.
+        ///
+        /// _Note that it's called ToBool, not ToBoolean, because the core type is also called bool, not boolean. This is different from `System.Convert.ToBoolean(...)`_
+        /// </summary>
+        bool ToBool(object value);
 
         /// <summary>
-        /// Convert any object safely to standard int.
-        /// This does the same as <see cref="To{T}(object)"/> but this is easier to type in Razor.
+        /// Convert any object safely to bool, or if that fails, return the fallback value.
+        /// 
+        /// _Note that it's called ToBool, not ToBoolean, because the core type is also called bool, not boolean. This is different from `System.Convert.ToBoolean(...)`_
         /// </summary>
-        int ToInt(object value);
+        /// <param name="value"></param>
+        /// <param name="fallback"></param>
+        /// <returns></returns>
+        bool ToBool(object value, bool fallback = default);
+
 
         /// <summary>
-        /// Convert any object safely to standard int, or if that fails, return the fallback value.
+        /// Convert any object safely to double.
         /// This does the same as <see cref="To{T}(object)"/> but this is easier to type in Razor.
         /// </summary>
-        int ToInt(object value, 
-            string paramsMustBeNamed = Eav.Parameters.Protector,
-            int fallback = default);
+        double ToDouble(object value);
+
+        /// <summary>
+        /// Convert any object safely to double, or if that fails, return the fallback value.
+        /// This does the same as <see cref="To{T}(object)"/> but this is easier to type in Razor.
+        /// </summary>
+        double ToDouble(object value, double fallback = default);
 
         /// <summary>
         /// Convert any object safely to float.
@@ -87,44 +113,33 @@ namespace ToSic.Sxc.Web
         ///
         /// _Note that it's called ToFloat, not ToSingle, because the core type is also called float, not single. This is different from `System.Convert.ToSingle(...)`_
         /// </summary>
-        float ToFloat(object value,
-            string paramsMustBeNamed = Eav.Parameters.Protector,
-            float fallback = default);
+        float ToFloat(object value, float fallback = default);
 
         /// <summary>
-        /// Convert any object safely to double.
+        /// Convert any object safely to standard int.
         /// This does the same as <see cref="To{T}(object)"/> but this is easier to type in Razor.
         /// </summary>
-        double ToDouble(object value);
+        int ToInt(object value);
 
         /// <summary>
-        /// Convert any object safely to double, or if that fails, return the fallback value.
+        /// Convert any object safely to standard int, or if that fails, return the fallback value.
         /// This does the same as <see cref="To{T}(object)"/> but this is easier to type in Razor.
         /// </summary>
-        double ToDouble(object value,
-            string paramsMustBeNamed = Eav.Parameters.Protector,
-            double fallback = default);
+        int ToInt(object value, int fallback = default);
 
         /// <summary>
-        /// Convert any object safely to bool.
+        /// Convert any object safely to a Guid
         /// This does the same as <see cref="To{T}(object)"/> but this is easier to type in Razor.
-        ///
-        /// _Note that it's called ToBool, not ToBoolean, because the core type is also called bool, not boolean. This is different from `System.Convert.ToBoolean(...)`_
         /// </summary>
-        bool ToBool(object value);
+        Guid ToGuid(object value);
 
         /// <summary>
-        /// Convert any object safely to bool, or if that fails, return the fallback value.
-        ///
-        /// _Note that it's called ToBool, not ToBoolean, because the core type is also called bool, not boolean. This is different from `System.Convert.ToBoolean(...)`_
+        /// Convert any object safely to standard guid, or if that fails, return the fallback value.
+        /// This does the same as <see cref="To{T}(object)"/> but this is easier to type in Razor.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="paramsMustBeNamed"></param>
-        /// <param name="fallback"></param>
-        /// <returns></returns>
-        bool ToBool(object value,
-            string paramsMustBeNamed = Eav.Parameters.Protector,
-            bool fallback = default);
+        Guid ToGuid(object value, Guid fallback = default);
+
+
 
         /// <summary>
         /// Convert any object safely to string.
@@ -140,8 +155,8 @@ namespace ToSic.Sxc.Web
         /// But this ToString will also give you the fallback, if the result is null. 
         /// </summary>
         string ToString(object value,
-            string paramsMustBeNamed = Eav.Parameters.Protector,
             string fallback = default,
+            string paramsMustBeNamed = Eav.Parameters.Protector,
             bool fallbackOnNull = true);
 
         /// <summary>
@@ -159,9 +174,7 @@ namespace ToSic.Sxc.Web
         /// Same as <see cref="ForCode(object)"/>, but with fallback, in case the conversion fails.
         /// </summary>
         /// <returns></returns>
-        string ForCode(object value, 
-            string paramsMustBeNamed = Eav.Parameters.Protector, 
-            string fallback = default);
+        string ForCode(object value, string fallback = default);
 
         /// <summary>
         /// Sub-Service to convert JSON

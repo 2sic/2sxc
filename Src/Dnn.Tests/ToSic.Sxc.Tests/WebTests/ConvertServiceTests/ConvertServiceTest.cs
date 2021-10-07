@@ -7,9 +7,19 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.WebTests.ConvertServiceTests
 {
+    /// <summary>
+    /// Note: there are not many tests here, because the true engine is in the EAV conversion system which is tested very thoroughly already
+    /// </summary>
     [TestClass]
     public class ConvertServiceTest:EavTestBase
     {
+        private const string strGuid = "424e56ce-570a-4747-aee2-44c04caf7f12";
+        private static readonly Guid expGuid = new Guid(strGuid);
+        [TestMethod] public void ToGuidNull() => AreEqual(Guid.Empty, ConvertService().ToGuid(null));
+        [TestMethod] public void ToGuidEmpty() => AreEqual(Guid.Empty, ConvertService().ToGuid(""));
+        [TestMethod] public void ToGuidBasic() => AreEqual(expGuid, ConvertService().ToGuid(strGuid));
+        [TestMethod] public void ToGuidFallback() => AreEqual(expGuid, ConvertService().ToGuid("", expGuid));
+
         [TestMethod]
         public void ForCodeDate()
         {
@@ -45,9 +55,9 @@ namespace ToSic.Sxc.Tests.WebTests.ConvertServiceTests
         /// test accessor
         /// </summary>
         /// <returns></returns>
-        private static ConvertService ConvertService()
+        private static IConvertService ConvertService()
         {
-            var conv = Resolve<ConvertService>();
+            var conv = Resolve<IConvertService>();
             return conv;
         }
     }
