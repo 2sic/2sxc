@@ -969,7 +969,7 @@
     <!-- Keep the 4th version number part as it is needed to prevent "repair install" message that DNN
       shows when upgrading 2sxc: https://github.com/2sic/2sxc/issues/1555
       -->
-    <package name="Connect.Dnn.Koi" type="Library" version="02.00.00.01">
+    <package name="Connect.Dnn.Koi" type="Library" version="02.00.01.01">
       <friendlyName>DnnConnect Koi</friendlyName>
       <description>Koi</description>
       <iconFile>icon.png</iconFile>
