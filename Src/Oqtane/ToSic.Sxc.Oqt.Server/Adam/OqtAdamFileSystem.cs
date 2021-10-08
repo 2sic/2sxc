@@ -298,8 +298,9 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 Created = f.CreatedOn,
                 Modified = f.ModifiedOn,
                 Name = Path.GetFileNameWithoutExtension(f.Name),
-                Url = _adamPaths.Url(Path.Combine(f.Folder.Path, f.Name).ForwardSlash())
-            };
+                Url = _adamPaths.Url(Path.Combine(f.Folder.Path, f.Name).ForwardSlash()),
+                PhysicalPath = _adamPaths.PhysicalPath(Path.Combine(f.Folder.Path, f.Name)),
+        };
             return adamFile;
         }
 

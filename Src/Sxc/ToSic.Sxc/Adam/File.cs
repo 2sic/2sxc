@@ -45,5 +45,7 @@ namespace ToSic.Sxc.Adam
 
         public int FileId => SysId as int? ?? 0;
 
+        // 12.05
+        public string PhysicalPath { get; set; }
     }
 }

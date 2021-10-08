@@ -246,7 +246,8 @@ namespace ToSic.Sxc.Dnn.Adam
                 Name = Path.GetFileNameWithoutExtension(dnnFileInfo.FileName),
                 Url = dnnFileInfo.StorageLocation == 0
                     ? AdamContext.Site.ContentPath + dnnFileInfo.Folder + dnnFileInfo.FileName
-                    : FileLinkClickController.Instance.GetFileLinkClick(dnnFileInfo)
+                    : FileLinkClickController.Instance.GetFileLinkClick(dnnFileInfo),
+                PhysicalPath = dnnFileInfo.PhysicalPath,
             });
         }
 
