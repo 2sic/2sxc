@@ -9,6 +9,7 @@ using ToSic.Sxc.Oqt.Server.Block;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
@@ -25,13 +26,15 @@ namespace ToSic.Sxc.Oqt.Server.Run
             Lazy<ISiteRepository> siteRepository,
             Lazy<IServerPaths> serverPaths,
             Lazy<OqtZoneMapper> zoneMapper,
-            Lazy<OqtCulture> oqtCulture)
+            Lazy<OqtCulture> oqtCulture,
+            Lazy<ILinkHelper> linkHelperLazy)
         {
             _siteStateInitializer = siteStateInitializer;
             _siteRepository = siteRepository;
             _serverPaths = serverPaths;
             _zoneMapper = zoneMapper;
             _oqtCulture = oqtCulture;
+            _linkHelperLazy = linkHelperLazy;
         }
 
         private readonly SiteStateInitializer _siteStateInitializer;
@@ -39,6 +42,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private readonly Lazy<IServerPaths> _serverPaths;
         private readonly Lazy<OqtZoneMapper> _zoneMapper;
         private readonly Lazy<OqtCulture> _oqtCulture;
+        private readonly Lazy<ILinkHelper> _linkHelperLazy;
 
 
         public OqtSite Init(Site site)
@@ -75,7 +79,20 @@ namespace ToSic.Sxc.Oqt.Server.Run
         /// <inheritdoc />
         public override int Id => UnwrappedContents.SiteId;
 
-        public override string Url => Alias.Name;
+        public override string Url
+        {
+            get
+            {
+                if (_url != null) return _url;
+                // Site Alias in Oqtane is without protocol, so we need to add it from current request for consistency
+                // also without trailing slash
+                var parts = new UrlParts(_linkHelperLazy.Value.GetCurrentRequestUrl());
+                _url = $"{parts.Protocol}{Alias.Name}";
+                return _url;
+            }
+        }
+        private string _url;
+
         public override string UrlRoot => Alias.Name;
 
         /// <inheritdoc />

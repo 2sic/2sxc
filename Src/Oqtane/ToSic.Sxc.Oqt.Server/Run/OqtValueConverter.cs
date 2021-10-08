@@ -95,7 +95,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 if (fileInfo != null) return "file:" + fileInfo.FileId;
             }
 
-            var pathAsPageLink = potentialFilePath.ForwardSlash().TrimEnd('/').TrimStart('/'); // no trailing slashes
+            var pathAsPageLink = potentialFilePath.TrimLastSlash(); // no trailing slashes
             // Try page / tab ID
             var page = PageRepository.Value.GetPage(pathAsPageLink, Alias.SiteId);
             return page != null
