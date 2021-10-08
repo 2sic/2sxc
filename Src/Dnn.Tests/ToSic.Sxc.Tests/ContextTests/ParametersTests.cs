@@ -1,29 +1,32 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Query;
+using ToSic.Testing.Shared;
+using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.ContextTests
 {
     [TestClass]
-    public class ParametersTests
+    public class ParametersTests: EavTestBase
     {
         [TestMethod]
         public void BasicParameters()
         {
             var p = GetTestParameters();
-            Assert.AreEqual(2, p.Count);
-            Assert.IsTrue(p.ContainsKey("id"));
-            Assert.IsTrue(p.ContainsKey("ID"));
+            AreEqual(2, p.Count);
+            IsTrue(p.ContainsKey("id"));
+            IsTrue(p.ContainsKey("ID"));
         }
 
         [TestMethod]
         public void NotCaseSensitive()
         {
             var p = GetTestParameters();
-            Assert.IsTrue(p.ContainsKey("id"));
-            Assert.IsTrue(p.ContainsKey("ID"));
-            Assert.IsFalse(p.ContainsKey("fake"));
+            IsTrue(p.ContainsKey("id"));
+            IsTrue(p.ContainsKey("ID"));
+            IsFalse(p.ContainsKey("fake"));
         }
 
 
@@ -31,23 +34,103 @@ namespace ToSic.Sxc.Tests.ContextTests
         public void ParamsToString()
         {
             var p = GetTestParameters();
-            Assert.AreEqual("id=27&sort=descending", p.ToString());
+            AreEqual("id=27&sort=descending", p.ToString());
+        }
+
+        private void TestParam(int count, string exp, Func<IParameters, IParameters> pFunc)
+        {
+            //var p = GetTestParameters();
+            var p = pFunc(GetTestParameters());
+            AreEqual(count, p.Count);
+            AreEqual(exp, p.ToString());
+        }
+
+        [TestMethod] public void ParameterAdd() 
+            => TestParam(3, "id=27&sort=descending&test=wonderful", p => p.Add("test", "wonderful"));
+
+        [TestMethod] public void ParameterAddNull()
+            => TestParam(3, "id=27&sort=descending&test", p => p.Add("test", null));
+
+        [TestMethod]
+        public void ParameterAddNoValue()
+            => TestParam(3, "id=27&sort=descending&test", p => p.Add("test"));
+
+        [TestMethod]
+        public void ParameterAddEmptyString()
+            => TestParam(3, "id=27&sort=descending&test", p => p.Add("test", string.Empty));
+
+        [TestMethod]
+        public void ParameterAddMultipleSameKey()
+            => TestParam(3, "id=27&sort=descending&test=wonderful&test=awesome",
+                p => p.Add("test", "wonderful").Add("Test", "awesome"));
+
+        [TestMethod]
+        public void ParameterSet()
+        {
+            var p = GetTestParameters().Set("test", "wonderful");
+            AreEqual(3, p.Count);
+            AreEqual("id=27&sort=descending&test=wonderful", p.ToString());
         }
 
         [TestMethod]
-        public void ParameterAdd()
+        public void ParameterSetNullValue()
         {
-            var p = GetTestParameters().Add("test", "wonderful");
-            Assert.AreEqual(3, p.Count);
-            Assert.AreEqual("id=27&sort=descending&test=wonderful", (p as Parameters).ToString());
+            var p = GetTestParameters().Set("test", null);
+            AreEqual(3, p.Count);
+            AreEqual("id=27&sort=descending&test", p.ToString());
+        }
+        [TestMethod]
+        public void ParameterSetNoValue()
+        {
+            var p = GetTestParameters().Set("test");
+            AreEqual(3, p.Count);
+            AreEqual("id=27&sort=descending&test", p.ToString());
+        }
+        [TestMethod]
+        public void ParameterSetEmptyString()
+        {
+            var p = GetTestParameters().Set("test", string.Empty);
+            AreEqual(3, p.Count);
+            AreEqual("id=27&sort=descending&test", p.ToString());
+        }
+
+        [TestMethod]
+        public void ParameterSetMultipleSameKey()
+        {
+            var p = GetTestParameters().Set("test", "wonderful").Set("test", "awesome");
+            AreEqual(3, p.Count);
+            AreEqual("id=27&sort=descending&test=awesome", p.ToString());
         }
 
         [TestMethod]
         public void ParameterAddExisting()
         {
             var p = GetTestParameters().Add("id", "42");
-            Assert.AreEqual(2, p.Count);
-            Assert.AreEqual("id=42&sort=descending", (p as Parameters).ToString());
+            AreEqual(2, p.Count);
+            AreEqual("id=27&id=42&sort=descending", p.ToString());
+        }
+
+        [TestMethod]
+        public void ParameterAddExistingEmptyString()
+        {
+            var p = GetTestParameters().Add("id", string.Empty);
+            AreEqual(2, p.Count);
+            AreEqual("id=27&id&sort=descending", p.ToString());
+        }
+        [TestMethod]
+        public void ParameterAddExistingNull()
+        {
+            var p = GetTestParameters().Add("id", null);
+            AreEqual(2, p.Count);
+            AreEqual("id=27&sort=descending", p.ToString());
+        }
+
+        [TestMethod]
+        public void ParameterSetExisting()
+        {
+            var p = GetTestParameters().Set("id", "42");
+            AreEqual(2, p.Count);
+            AreEqual("id=42&sort=descending", p.ToString());
         }
 
 

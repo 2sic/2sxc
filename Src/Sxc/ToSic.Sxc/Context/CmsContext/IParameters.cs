@@ -20,7 +20,20 @@ namespace ToSic.Sxc.Context
 
         /// <summary>
         /// Add another URL parameter and return a new <see cref="IParameters"/>.
-        /// If the name/key already exists, it will just overwrite it.
+        /// If the name/key already exists, it will extend it, add a simple 
+        /// Otherwise please use <see cref="Set(string,string)"/>
+        /// 
+        /// _Important: this does not change the current object, it returns a new object._
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        IParameters Add(string name);
+
+        /// <summary>
+        /// Add another URL parameter and return a new <see cref="IParameters"/>.
+        /// If the name/key already exists, it will extend it, so the parameter will have 2 values.
+        /// Otherwise please use <see cref="Set(string,string)"/>
         /// 
         /// _Important: this does not change the current object, it returns a new object._
         /// </summary>
@@ -28,6 +41,27 @@ namespace ToSic.Sxc.Context
         /// <param name="value"></param>
         /// <returns></returns>
         IParameters Add(string name, string value);
+
+        /// <summary>
+        /// Add another URL parameter and return a new <see cref="IParameters"/>.
+        /// If the name/key already exists, it will just overwrite it.
+        /// 
+        /// _Important: this does not change the current object, it returns a new object._
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        IParameters Set(string name, string value);
+
+        /// <summary>
+        /// Add another URL parameter and return a new <see cref="IParameters"/>.
+        /// If the name/key already exists, it will just overwrite it.
+        /// 
+        /// _Important: this does not change the current object, it returns a new object._
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        IParameters Set(string name);
 
         /// <summary>
         /// Remove a parameter and return a new <see cref="IParameters"/>.

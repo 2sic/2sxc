@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Web.Url;
 
@@ -51,25 +50,31 @@ namespace ToSic.Sxc.Context.Query
         public IEnumerable<string> Values => OriginalsAsDic.Values;
 
 
-        public override string ToString()
+        public override string ToString() => UrlHelpers.NvcToString(_originals);
+
+        public IParameters Add(string name)
         {
-            return UrlHelpers.NvcToString(_originals);
-            //var allPairs = _originals.AllKeys
-            //    .Where(k => !string.IsNullOrEmpty(k))
-            //    .SelectMany(k =>
-            //    {
-            //        var vals = _originals.GetValues(k) ?? new[] { "" }; // catch null-values
-            //        return vals.Select(v => k + (string.IsNullOrEmpty(v) ? "" : "=" + v));
-            //    })
-            //    .ToArray();
-            //return allPairs.Any() ? string.Join("&", allPairs) : "";
+            var copy = new NameValueCollection(_originals) { { name, null } };
+            return new Parameters(copy);
         }
 
         public IParameters Add(string name, string value)
         {
+            var copy = new NameValueCollection(_originals) { { name, value } };
+            return new Parameters(copy);
+        }
+
+        public IParameters Set(string name, string value)
+        {
             var copy = new NameValueCollection(_originals);
-            // Use set, not Add, because NVCs can multiple values per key
             copy.Set(name, value);
+            return new Parameters(copy);
+        }
+
+        public IParameters Set(string name)
+        {
+            var copy = new NameValueCollection(_originals);
+            copy.Set(name, null);
             return new Parameters(copy);
         }
 
