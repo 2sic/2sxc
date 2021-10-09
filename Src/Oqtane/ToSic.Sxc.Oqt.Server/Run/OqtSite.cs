@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
     /// <summary>
     /// This is a Mvc implementation of a Tenant-object.
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
+    [PrivateApi]
     public sealed class OqtSite: Site<Site>, ICmsSite
     {
         /// <summary>

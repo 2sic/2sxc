@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
     /// <summary>
     /// The Oqtane implementation of the <see cref="ILinkHelper"/>.
     /// </summary>
-    [PublicApi_Stable_ForUseInYourCode]
+    [PrivateApi]
     public class OqtLinkHelper : LinkHelper
     {
         public Razor12 RazorPage { get; set; }

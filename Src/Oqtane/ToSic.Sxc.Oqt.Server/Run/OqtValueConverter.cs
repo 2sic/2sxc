@@ -8,7 +8,6 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Adam;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 
 namespace ToSic.Sxc.Oqt.Server.Run
@@ -16,7 +15,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
     /// <summary>
     /// The Oqtane implementation of the <see cref="IValueConverter"/> which converts "file:22" or "page:5" to the url,
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
+    [PrivateApi]
     public class OqtValueConverter : IValueConverter
     {
         private readonly Lazy<IFeaturesService> _featuresLazy;

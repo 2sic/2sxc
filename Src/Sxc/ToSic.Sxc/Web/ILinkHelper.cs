@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Web
 {
@@ -16,22 +15,22 @@ namespace ToSic.Sxc.Web
         /// <param name="noParamOrder">a helper to ensure that you must use named parameters. You shouldn't give it anything, but you must use all others like parameters: "id=47&amp;name=42"</param>
         /// <param name="pageId">optional page ID (TabId) - if not supplied, will use current page</param>
         /// <param name="parameters">
-        /// - the parameters either as `/id/47/name/daniel` or `id=47&amp;name=daniel`
-        /// - in 2sxc 12.05+ it can also be an <see cref="IParameters"/>
+        /// - the parameters either as `id=47&amp;name=daniel` (Dnn also supports `/id/47/name/daniel`)
+        /// - in 2sxc 12.05+ it can also be an <see cref="ToSic.Sxc.Context.IParameters"/>
         /// </param>
         /// <param name="api">optional api url "api/name/method?id=something"</param>
         /// <param name="type">
         /// Optional type changes how the link is generated. Possible values are:
         ///
         /// - null / not specified / empty = return link as is generated
-        /// - `"full"` return link with protocol & domain. If that was missing before, it will add current protocol/domain if possible, but not on relative `./` or `../` links
+        /// - `"full"` return link with protocol and domain. If that was missing before, it will add current protocol/domain if possible, but not on relative `./` or `../` links
         /// - `"//"` return link with `//domain`. If that was missing before, will add current domain if possible, but not on relative `./` or `../` links
         /// </param>
         /// <returns></returns>
         /// <remarks>
         /// History
         /// * v12 added the api parameter for liking APIs of the current app
-        /// * In v12.05 the type of parameters was changed from string to object, to allow <see cref="IParameters"/> as well
+        /// * In v12.05 the type of parameters was changed from string to object, to allow <see cref="ToSic.Sxc.Context.IParameters"/> as well
         /// </remarks>
         string To(
             string noParamOrder = Eav.Parameters.Protector,
@@ -74,7 +73,7 @@ namespace ToSic.Sxc.Web
         /// Optional type changes how the link is generated. Possible values are:
         ///
         /// - null / not specified / empty = return link as is generated
-        /// - `"full"` return link with protocol & domain. If that was missing before, it will add current protocol/domain if possible, but not on relative `./` or `../` links
+        /// - `"full"` return link with protocol and domain. If that was missing before, it will add current protocol/domain if possible, but not on relative `./` or `../` links
         /// - `"//"` return link with `//domain`. If that was missing before, will add current domain if possible, but not on relative `./` or `../` links
         /// </param>
         /// <remarks>
@@ -101,7 +100,6 @@ namespace ToSic.Sxc.Web
         ///// - `query` would return the part after the `?` (without the `?`- if not provided, empty string
         /////     - if no url was provided and there are magical query params (like in DNN), these would not be returned, but not dnn-internals like tabid or language
         ///// - `suffix` would return the entire suffix starting from the `?` _including_ the `?` or `#` - if nothing is there, empty string
-        ///// TODO: STV - GET `full` TO work, to replace `absoluteUrl` - also on Link.To
         ///// </param>        [PrivateApi]
         string Image(
             string url = null,
