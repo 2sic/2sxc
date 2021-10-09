@@ -154,7 +154,7 @@ namespace ToSic.Sxc.Dnn
             TryCatchAndLogToDnn(() =>
             {
                 if (RenderNaked) Block.BlockBuilder.WrapInDiv = false;
-                result = Block.BlockBuilder.Run();
+                result = Block.BlockBuilder.Run(true);
                 result.Html += GetOptionalDetailedLogToAttach();
             }, timerWrap);
 

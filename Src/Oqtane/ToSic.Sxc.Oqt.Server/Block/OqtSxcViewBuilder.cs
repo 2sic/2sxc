@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Oqt.Server.Block
             #endregion
 
             // #Lightspeed
-            var renderResult = PreviousCache?.Data ?? Block.BlockBuilder.Run();
+            var renderResult = PreviousCache?.Data ?? Block.BlockBuilder.Run(true);
 
             AssetsAndHeaders.Init(this, renderResult);
 

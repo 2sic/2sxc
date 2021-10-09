@@ -19,8 +19,16 @@ namespace ToSic.Sxc.Blocks
         /// <returns></returns>
         string Render();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="topLevel">
+        /// This means it's the outer-most render which is happening.
+        /// This changes if things like header changes, features etc. are picked up - which should only happen at top level
+        /// </param>
+        /// <returns></returns>
         [PrivateApi]
-        RenderResultWIP Run();
+        RenderResultWIP Run(bool topLevel);
 
         /// <summary>
         /// The real block / unit of content which will be rendered. 

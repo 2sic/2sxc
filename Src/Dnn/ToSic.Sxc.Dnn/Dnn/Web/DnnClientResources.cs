@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Dnn.Web
         }
 
 
-        internal List<IPageFeature> Features => _features ?? (_features = BlockBuilder?.Run().Features ?? new List<IPageFeature>());// PageServiceShared.Features.GetWithDependentsAndFlush(Log));
+        internal List<IPageFeature> Features => _features ?? (_features = BlockBuilder?.Run(true).Features ?? new List<IPageFeature>());
         private List<IPageFeature> _features;
 
         public List<IPageFeature> AddEverything(List<IPageFeature> features = null)

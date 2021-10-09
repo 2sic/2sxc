@@ -2,20 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using ToSic.Eav.Data;
-using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.InPageEditingSystem;
 using ToSic.Sxc.Web;
-#if NET451
-using HtmlString = System.Web.HtmlString;
-using IHtmlString = System.Web.IHtmlString;
-#else
-using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
-using IHtmlString = Microsoft.AspNetCore.Html.IHtmlContent;
-#endif
-
 
 
 namespace ToSic.Sxc.Blocks.Renderers
@@ -38,7 +29,15 @@ namespace ToSic.Sxc.Blocks.Renderers
             // render it
             log.Add("found, will render");
             var cb = parentBlock.Context.ServiceProvider.Build<BlockFromEntity>().Init(parentBlock, entity, log);
-            return cb.BlockBuilder.Render();
+            var result = cb.BlockBuilder.Run(false);
+
+            // Special: during Run() various things are picked up like header changes, activations etc.
+            // Depending on the code flow, it could have picked up changes of other templates (not this one)
+            // because these were scoped, 
+            // must attach additional info to the parent block, so it doesn't loose header changes and similar
+
+            // Return resulting string
+            return result.Html;
         }
 
         private const string WrapperTemplate = "<div class='{0}' {1}>{2}</div>";
@@ -52,7 +51,7 @@ namespace ToSic.Sxc.Blocks.Renderers
                 edit = new InPageEditingHelper(dynParent._Dependencies.BlockOrNull);
 
             var attribs = edit.ContextAttributes(dynParent, field: cbFieldName, newGuid: newGuid);
-            var inner = subItem == null ? "": Render(dynParent._Dependencies.BlockOrNull, subItem.Entity).ToString();
+            var inner = subItem == null ? "": Render(dynParent._Dependencies.BlockOrNull, subItem.Entity);
             var cbClasses = edit.Enabled ? WrapperSingleItem : "";
             return string.Format(WrapperTemplate, new object[] { cbClasses, attribs, inner});
         }
