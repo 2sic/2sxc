@@ -53,13 +53,14 @@ namespace ToSic.Sxc.Razor
             try
             {
                 if (string.IsNullOrEmpty(TemplatePath)) return null;
-                var dynCode = _dynCodeRootLazy.Value.Init(Block, Log);
+                var dynCode = _dynCodeRootLazy.Value.Init(Block, Log, Constants.CompatibilityLevel12);
 
                 var result = await RazorRenderer.RenderToStringAsync(TemplatePath, new object(),
                     rzv =>
                     {
                         if (rzv.RazorPage is not IRazor asSxc) return;
-                        asSxc.DynamicCodeCoupling(dynCode); // ._DynCodeRoot = dynCode;
+                        asSxc.DynamicCodeCoupling(dynCode);
+                        // TODO: purpose may be missing?
                         //asSxc.Purpose = Purpose;
                     });
                 var writer = new StringWriter();

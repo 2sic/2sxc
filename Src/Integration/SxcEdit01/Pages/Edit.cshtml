@@ -60,7 +60,7 @@
 
   // Now get the adam-manager, which will give us the AdamFolder object
   var adamManager = ToSic.Eav.Factory.Resolve<AdamManager<string, string>>();
-  adamManager.Init(appContext, 10, log);
+  adamManager.Init(appContext, ToSic.Sxc.Constants.CompatibilityLevel10, log);
 
   // Now get the folder (which is what AsAdam would return)
   var entityWithAdam = appState.List.One(itemWithImagesId);

@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Code
         [PrivateApi] private Dictionary<string, object> _piggyBackers;
 
         [PrivateApi]
-        public virtual IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)
+        public virtual IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility) // = Constants.CompatibilityLevel10)
         {
             Log.LinkTo(parentLog ?? block?.Log);
             if (block == null)
@@ -80,11 +80,9 @@ namespace ToSic.Sxc.Code
             CompatibilityLevel = compatibility;
             ((CmsContext) CmsContext).Update(block);
             Block = block;
-            //App = block.App;
             Data = block.Data;
             Edit = new InPageEditingHelper(block, Log);
 
-            //Link.Init(block?.Context, App);
             AttachAppAndInitLink(block.App);
 
             return this;

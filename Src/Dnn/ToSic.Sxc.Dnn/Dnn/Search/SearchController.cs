@@ -309,7 +309,7 @@ namespace ToSic.Sxc.Search
             if (instance is DynamicCode instanceWithContext)
             {
                 Log.Add($"attach DynamicCode context to class instance");
-                var parentDynamicCodeRoot = _serviceProvider.Build<DnnDynamicCodeRoot>().Init(block, Log);
+                var parentDynamicCodeRoot = _serviceProvider.Build<DnnDynamicCodeRoot>().Init(block, Log, Constants.CompatibilityLevel10);
                 instanceWithContext.DynamicCodeCoupling(parentDynamicCodeRoot);
             }
 

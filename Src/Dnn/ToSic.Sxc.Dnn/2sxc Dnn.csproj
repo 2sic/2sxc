@@ -99,7 +99,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Compatibility\Sxc\OldDataToDictionaryWrapper.cs" />
+    <Compile Include="Compatibility\Sxc\ToSic.Sxc.Blocks.Render.cs" />
     <Compile Include="Compatibility\Sxc\SxcHelper.cs" />
+    <Compile Include="Compatibility\ToSic.SexyContent.ContentBlocks.Render.cs" />
     <Compile Include="Custom.Dnn\Code12.cs" />
     <Compile Include="Dnn\Adam\DnnAdam.cs" />
     <Compile Include="Dnn\Cms\DnnPagePublishingResolver.cs" />

@@ -8,6 +8,7 @@ using System.Web.WebPages;
 using ToSic.Eav.Documentation;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Web;
@@ -114,12 +115,16 @@ namespace ToSic.Sxc.Engines
 
             Webpage.Context = HttpContext;
             Webpage.VirtualPath = TemplatePath;
-            var compatibility = 9;
+            var compatibility = Constants.CompatibilityLevel9Old;
             if (Webpage is RazorComponent rzrPage)
             {
                 rzrPage.Purpose = Purpose;
-                compatibility = 10;
+                compatibility = Constants.CompatibilityLevel10;
             }
+
+            if (Webpage is IDynamicCode12)
+                compatibility = Constants.CompatibilityLevel12;
+
 #pragma warning disable 618
             if(Webpage is SexyContentWebPage oldPage)
                 oldPage.InstancePurpose = (InstancePurposes) Purpose;
@@ -138,7 +143,7 @@ namespace ToSic.Sxc.Engines
 
             #region New in 10.25 - ensure jquery is not included by default
 
-            if (compatibility == 10) CompatibilityAutoLoadJQueryAndRVT = false;
+            if (compatibility > Constants.MaxLevelForAutoJQuery) CompatibilityAutoLoadJQueryAndRVT = false;
 
             #endregion
 

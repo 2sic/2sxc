@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Dnn.Code
         /// <param name="block">CMS Block which provides context and maybe some edit-allowed info.</param>
         /// <param name="parentLog">parent logger for logging what's happening</param>
         /// <param name="compatibility">compatibility level - changes behaviour if level 9 or 10</param>
-        public override IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)
+        public override IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility) // = Constants.CompatibilityLevel10)
         {
             base.Init(block, parentLog, compatibility);
             // Init things than require module-info or similar, but not 2sxc

@@ -46,6 +46,7 @@ namespace ToSic.Sxc
             services.TryAddTransient<BlockDataSourceFactory>();
             services.TryAddTransient<BlockFromModule>();
             services.TryAddTransient<BlockFromEntity>();
+            services.TryAddTransient<IRenderService, RenderService>();  // new 12.05
 
             // Configuration Provider WIP
             services.TryAddTransient<AppConfigDelegate>();

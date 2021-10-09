@@ -36,7 +36,7 @@ namespace Custom.Hybrid
             base.OnActionExecuting(context);
 
             // Note that BlockOptional was already retrieved in the base class
-            _DynCodeRoot = ServiceProvider.Build<DynamicCodeRoot>().Init(BlockOptional /*OqtState.GetBlock()*/, Log);
+            _DynCodeRoot = ServiceProvider.Build<DynamicCodeRoot>().Init(BlockOptional, Log, ToSic.Sxc.Constants.CompatibilityLevel12);
             _AdamCode = ServiceProvider.Build<AdamCode>().Init(_DynCodeRoot, Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app

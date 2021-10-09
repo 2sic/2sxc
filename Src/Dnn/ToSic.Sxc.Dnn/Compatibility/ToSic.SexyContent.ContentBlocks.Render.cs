@@ -1,14 +1,6 @@
 ﻿using System;
-using System.Web;
 using ToSic.Sxc.Data;
-#if NET451
-using HtmlString = System.Web.HtmlString;
 using IHtmlString = System.Web.IHtmlString;
-#else
-using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
-using IHtmlString = Microsoft.AspNetCore.Html.IHtmlContent;
-#endif
-
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.ContentBlocks
