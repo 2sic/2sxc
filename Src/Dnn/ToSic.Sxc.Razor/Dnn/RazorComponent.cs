@@ -26,26 +26,13 @@ namespace ToSic.Sxc.Dnn
     [PublicApi_Stable_ForUseInYourCode]
     public abstract partial class RazorComponent : RazorComponentBase, IDnnRazorCustomize, IDnnRazor, IDnnRazor11
     {
-
-
-        //[PrivateApi("Hide this, no need to publish; would only confuse users")]
-        //protected RazorComponent()
-        //{
-        //    // Enable CreateInstanceCshtml and RenderPage in anything that inherits these classes
-        //    _ErrorWhenUsingCreateInstanceCshtml = null;
-        //    _ErrorWhenUsingRenderPage = null;
-        //}
-
-
         /// <inheritdoc />
         public IDnnContext Dnn => (_DynCodeRoot as IDnnDynamicCode)?.Dnn;
-
-
 
         #region CustomizeSearch corrections
 
         /// <inheritdoc />
-        [PrivateApi("shouldn't be used any more, but was still in v12 when released. v13+ must completely remove this")]
+        [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
         public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo,
             DateTime beginDate)
         {
@@ -70,7 +57,7 @@ namespace ToSic.Sxc.Dnn
             if (code is RazorComponentCode codeAsRazor) codeAsRazor.CustomizeSearch(searchInfos, moduleInfo, beginDate);
         }
 
-        [PrivateApi("shouldn't be used any more, but was still in v12 when released. v13+ must completely remove this")]
+        [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
         public virtual void CustomizeData()
         {
             // new in 2sxc 11, if it has not been overridden, then try to check if code has something for us.
@@ -80,48 +67,11 @@ namespace ToSic.Sxc.Dnn
         }
 
         /// <inheritdoc />
-        [PrivateApi("shouldn't be used any more, but was still in v12 when released. v13+ must completely remove this")]
+        [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
         public Purpose Purpose { get; internal set; }
 
 
         #endregion
-
-
-
-        //        /// <inheritdoc />
-        //        public IDnnContext Dnn => (_DynCodeRoot as IDnnDynamicCode)?.Dnn;
-
-        //        #region CustomizeSearch corrections
-
-        //        /// <inheritdoc />
-        //        [PrivateApi]
-        //        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo,
-        //            DateTime beginDate)
-        //        {
-        //            // in 2sxc 11.11 the signature changed. 
-        //            // so the engine will call this function
-        //            // but the override will be the other one - so I must call that
-        //            // unless of course this method was overridden by the final inheriting RazorComponent
-        //#pragma warning disable 618 // disable warning about IContainer being obsolete
-        //            CustomizeSearch(searchInfos, moduleInfo as IContainer, beginDate);
-        //#pragma warning restore 618
-        //        }
-
-        //        [PrivateApi]
-        //#pragma warning disable 618 // disable warning about IContainer being obsolete
-        //        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
-        //#pragma warning restore 618
-        //            DateTime beginDate)
-        //        {
-        //            // new in 2sxc 11, if it has not been overridden, then try to check if code has something for us.
-        //            var code = CodeManager.CodeOrNull;
-        //            if (code == null) return;
-        //            if (code is RazorComponent codeAsRazor) codeAsRazor.CustomizeSearch(searchInfos, moduleInfo, beginDate);
-        //        }
-
-
-        //        #endregion
-
 
         #region Link, Edit, Dnn, App, Data
 
@@ -196,9 +146,6 @@ namespace ToSic.Sxc.Dnn
         public dynamic Header => _DynCodeRoot.Header;
 
         #endregion
-
-
-
 
 
         #region Adam 

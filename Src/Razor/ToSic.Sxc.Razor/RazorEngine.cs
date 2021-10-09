@@ -60,8 +60,7 @@ namespace ToSic.Sxc.Razor
                     {
                         if (rzv.RazorPage is not IRazor asSxc) return;
                         asSxc.DynamicCodeCoupling(dynCode);
-                        // TODO: purpose may be missing?
-                        //asSxc.Purpose = Purpose;
+                        // Note: Don't set the purpose here any more, it's a deprecated feature in 12+
                     });
                 var writer = new StringWriter();
                 await writer.WriteAsync(result);

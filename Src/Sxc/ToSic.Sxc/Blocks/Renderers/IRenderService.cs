@@ -14,6 +14,9 @@ namespace ToSic.Sxc.Blocks
     /// It's used for InnerContent, so that Razor-Code can easily render additional content blocks. <br/>
     /// See also [](xref:Basics.Cms.InnerContent.Index)
     /// </summary>
+    /// <remarks>
+    /// This replaces the now obsolete ToSic.Sxc.Blocks.Render
+    /// </remarks>
     [PublicApi_Stable_ForUseInYourCode]
     public interface IRenderService
     {
