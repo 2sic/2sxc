@@ -1,16 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Web;
+﻿using System.Collections.Specialized;
 using ToSic.Sxc.Web.Url;
 
 namespace ToSic.Sxc.Web
 {
     public class QueryHelper
     {
-        public static string AddQueryString(string url, List<KeyValuePair<string, string>> queryParams)
+        public static string AddQueryString(string url, NameValueCollection newParams) // List<KeyValuePair<string, string>> newParams)
         {
             // check do we have any work to do
-            if (queryParams == null || queryParams.Count == 0) return url;
+            if (newParams == null || newParams.Count == 0) return url;
 
             // Make sure we don't run into null-errors below
             url = url ?? string.Empty;
@@ -38,15 +36,16 @@ namespace ToSic.Sxc.Web
             //var tempAbsoluteUri = GetTempAbsoluteUri(url);
 
             // if the url already has some params we should take that and split it into it's pieces
-            var queryString = UrlHelpers.ParseQueryString(parts.Query);
+            var queryParams = UrlHelpers.ParseQueryString(parts.Query);
             // var queryString2 = HttpUtility.ParseQueryString(parts.Query);
 
 
-            // new params would update existing queryString params or append new param to queryString
-            queryParams.ForEach(param => queryString.Set(param.Key, param.Value));
+            // new params would replace existing queryString params or append new param to queryString
+            //newParams.ForEach(param => queryParams.Set(param.Key, param.Value));
+            var finalParams = queryParams.Merge(newParams);
 
             // combine new query string in url
-            return GetUrlWithUpdatedQueryString(parts, /* url, /*tempAbsoluteUri,*/ queryString);
+            return GetUrlWithUpdatedQueryString(parts, /* url, /*tempAbsoluteUri,*/ finalParams);
         }
 
         //private static UrlParts SplitUrlIntoParts(string url)
@@ -93,11 +92,9 @@ namespace ToSic.Sxc.Web
 
         private static string GetUrlWithUpdatedQueryString(UrlParts parts, /* string url, /*Uri tempUri,*/ NameValueCollection queryString)
         {
-            //var newQueryString = "?" + queryString;
-
             var newUrl = parts.ToLink(suffix: false);
             if (queryString.Count > 0)
-                newUrl += UrlParts.QuerySeparator + UrlHelpers.NvcToString(queryString); // queryString.ToString();
+                newUrl += UrlParts.QuerySeparator + UrlHelpers.NvcToString(queryString);
 
             if (!string.IsNullOrWhiteSpace(parts.Fragment))
                 newUrl += UrlParts.FragmentSeparator + parts.Fragment;
@@ -117,30 +114,32 @@ namespace ToSic.Sxc.Web
             //return url;
         }
 
-        public static string Combine(string url, string parameters)
-        {
-            if (string.IsNullOrEmpty(parameters)) return url;
 
-            var urlParts = new UrlParts(url);
+        // 2021-10-08 2dm - disabled, as it's not in use
+        //public static string Combine(string url, string parameters)
+        //{
+        //    if (string.IsNullOrEmpty(parameters)) return url;
 
-            if (string.IsNullOrEmpty(urlParts.Query))
-            {
-                urlParts.Query = parameters;
-            }
-            else
-            {
-                // combine query strings
-                var queryString = UrlHelpers.ParseQueryString(parameters);
-                var currentRequestQueryString = UrlHelpers.ParseQueryString(urlParts.Query);
-                foreach (var key in queryString.AllKeys)
-                {
-                    currentRequestQueryString.Set(key, queryString.Get(key));
-                }
+        //    var urlParts = new UrlParts(url);
 
-                urlParts.Query = UrlHelpers.NvcToString(currentRequestQueryString); //.ToString();
-            }
+        //    if (string.IsNullOrEmpty(urlParts.Query))
+        //    {
+        //        urlParts.Query = parameters;
+        //    }
+        //    else
+        //    {
+        //        // combine query strings
+        //        var queryString = UrlHelpers.ParseQueryString(parameters);
+        //        var currentRequestQueryString = UrlHelpers.ParseQueryString(urlParts.Query);
+        //        foreach (var key in queryString.AllKeys)
+        //        {
+        //            currentRequestQueryString.Set(key, queryString.Get(key));
+        //        }
 
-            return urlParts.BuildUrl();
-        }
+        //        urlParts.Query = UrlHelpers.NvcToString(currentRequestQueryString); //.ToString();
+        //    }
+
+        //    return urlParts.BuildUrl();
+        //}
     }
 }

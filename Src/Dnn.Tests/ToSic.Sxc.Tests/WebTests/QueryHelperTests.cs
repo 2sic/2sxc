@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
@@ -7,7 +8,7 @@ namespace ToSic.Sxc.Tests.WebTests
     [TestClass]
     public class QueryHelperTests
     {
-        private static string AddQueryString(string url, List<KeyValuePair<string, string>> queryParams)
+        private static string AddQueryString(string url, NameValueCollection queryParams)
             => ToSic.Sxc.Web.QueryHelper.AddQueryString(url, queryParams);
 
         private const string urlRelativeNoParams = "/xyz/abc.jpg";
@@ -23,11 +24,11 @@ namespace ToSic.Sxc.Tests.WebTests
         public const string fragKeyValueMany = "#Some=fraGMent&othr=OTHR";
         public const string fragWithQuestion = "#some=how-are-you?";
 
-        private const List<KeyValuePair<string, string>> addOnNull = null;
-        private static List<KeyValuePair<string, string>> addOnEmpty = new List<KeyValuePair<string, string>>();
-        private static List<KeyValuePair<string, string>> addOnOne = new List<KeyValuePair<string, string>>
+        private const NameValueCollection addOnNull = null;
+        private static NameValueCollection addOnEmpty = new NameValueCollection();
+        private static NameValueCollection addOnOne = new NameValueCollection
         {
-            new KeyValuePair<string, string>("added", "worked")
+            {"added", "worked"}
         };
 
         private string paramAddOnOne = "added=worked";

@@ -6,6 +6,7 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Web.Url;
 
 namespace ToSic.Sxc.Web
 {
@@ -45,6 +46,7 @@ namespace ToSic.Sxc.Web
 
             var strParams = ParametersToString(parameters);
 
+            // TODO: unclear what would happen if a new parameter would replace an existing - would it just append? that wouldn't be good
             var url = api == null
                 ? ToPage(pageId, strParams)
                 : ToApi(api, strParams);
@@ -140,11 +142,26 @@ namespace ToSic.Sxc.Web
             string scaleMode = null,
             string format = null,
             object aspectRatio = null,
-            string type = null // WIP, probably "full", "/", "//" etc.
+            string type = null,
+            object parameters = null
+
             /*string part = null*/)
         {
+            // prevent incorrect use without named parameters
+            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Image)}", $"{nameof(width)},{nameof(height)}," +
+                $"{nameof(quality)},{nameof(resizeMode)},{nameof(scaleMode)},{nameof(format)},{nameof(aspectRatio)},{nameof(type)},{nameof(parameters)}");
+
             var imageUrl = ImgLinker.Image(url: url, settings, factor, noParamOrder, width, height, quality, resizeMode,
                 scaleMode, format, aspectRatio);
+
+            var strParams = ParametersToString(parameters);
+
+            if (!string.IsNullOrWhiteSpace(strParams))
+            {
+                var paramList = UrlHelpers.ParseQueryString(strParams);
+                if (paramList != null & paramList.HasKeys()) 
+                    imageUrl = QueryHelper.AddQueryString(imageUrl, paramList);
+            }
 
             var processed = ChangeToMatchType(type, imageUrl);
             //var processed = ProcessPartParam(part, imageUrl);

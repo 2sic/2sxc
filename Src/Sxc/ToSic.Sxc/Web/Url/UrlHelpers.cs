@@ -1,5 +1,6 @@
 ﻿using System.Collections.Specialized;
 using System.Linq;
+using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Web.Url
 {
@@ -37,7 +38,7 @@ namespace ToSic.Sxc.Web.Url
 
         /// <summary>
         /// Converts a NameValueCollection to string.
-        /// Used in link generations and especially also the <see cref="ToSic.Sxc.Context.Query.Parameters"/>
+        /// Used in link generations and especially also the <see cref="Context.Query.Parameters"/>
         /// so be very careful if you change anything!
         /// </summary>
         /// <param name="nvc"></param>
@@ -48,11 +49,37 @@ namespace ToSic.Sxc.Web.Url
                 .Where(k => !string.IsNullOrEmpty(k))
                 .SelectMany(k =>
                 {
-                    var vals = nvc.GetValues(k) ?? new[] { "" }; // catch null-values
-                    return vals.Select(v => k + (string.IsNullOrEmpty(v) ? "" : "=" + v));
+                    var values = nvc.GetValues(k) ?? new[] { "" }; // catch null-values
+                    return values.Select(v => k + (string.IsNullOrEmpty(v) ? "" : "=" + v));
                 })
                 .ToArray();
             return allPairs.Any() ? string.Join("&", allPairs) : "";
+        }
+
+
+        /// <summary>
+        /// Import an NVC into another
+        /// </summary>
+        /// <returns></returns>
+        public static NameValueCollection Merge(this NameValueCollection first, NameValueCollection source, bool replace = false)
+        {
+            var target = new NameValueCollection(first);
+            source.AllKeys
+                .Where(k => !string.IsNullOrEmpty(k))
+                .ToList()
+                .ForEach(k =>
+                {
+                    var values = source.GetValues(k) ?? new string[] { null }; // catch null-values
+
+                    foreach (var v in values)
+                    {
+                        if (replace)
+                            target.Set(k, v);
+                        else
+                            target.Add(k, v);
+                    }
+                });
+            return target;
         }
 
     }

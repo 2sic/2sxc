@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
@@ -52,22 +53,23 @@ namespace ToSic.Sxc.Web.Images
             string mToUse = KeepBestString(resizeMode, getSettings?.Get("ResizeMode"));
             string sToUse = KeepBestString(scaleMode, getSettings?.Get("ScaleMode"));
 
-            var resizer = new List<KeyValuePair<string, string>>();
-            ImgAddIfRelevant(resizer, "w", resizedNew.Item1, "0");
-            ImgAddIfRelevant(resizer, "h", resizedNew.Item2, "0");
-            ImgAddIfRelevant(resizer, "quality", qFinal, "0");
-            ImgAddIfRelevant(resizer, "mode", mToUse);
-            ImgAddIfRelevant(resizer, "scale", ImgResizeLinker.CorrectScales(sToUse));
-            ImgAddIfRelevant(resizer, "format", ImgResizeLinker.CorrectFormats(formToUse));
+            //var resizer = new List<KeyValuePair<string, string>>();
+            var resizerNvc = new NameValueCollection();
+            ImgAddIfRelevant(resizerNvc, "w", resizedNew.Item1, "0");
+            ImgAddIfRelevant(resizerNvc, "h", resizedNew.Item2, "0");
+            ImgAddIfRelevant(resizerNvc, "quality", qFinal, "0");
+            ImgAddIfRelevant(resizerNvc, "mode", mToUse);
+            ImgAddIfRelevant(resizerNvc, "scale", ImgResizeLinker.CorrectScales(sToUse));
+            ImgAddIfRelevant(resizerNvc, "format", ImgResizeLinker.CorrectFormats(formToUse));
 
-            url = QueryHelper.AddQueryString(url, resizer);
+            url = QueryHelper.AddQueryString(url, resizerNvc);
 
             var result = Tags.SafeUrl(url).ToString();
             wrapLog?.Invoke(result);
             return result;
         }
 
-        private bool ImgAddIfRelevant(ICollection<KeyValuePair<string, string>> resizer, string key, object value, string irrelevant = "")
+        private bool ImgAddIfRelevant(NameValueCollection /*ICollection<KeyValuePair<string, string>>*/ resizer, string key, object value, string irrelevant = "")
         {
             var wrapLog = (Debug ? Log : null).SafeCall<bool>();
             if (key == null || value == null)
@@ -80,7 +82,8 @@ namespace ToSic.Sxc.Web.Images
             if (strValue.Equals(irrelevant, StringComparison.InvariantCultureIgnoreCase))
                 return wrapLog($"Won't add '{key}' since value would be irrelevant", false);
 
-            resizer.Add(new KeyValuePair<string, string>(key, strValue));
+            //resizer.Add(new KeyValuePair<string, string>(key, strValue));
+            resizer.Add(key, strValue);
             return wrapLog($"Added key {key}", true);
         }
 

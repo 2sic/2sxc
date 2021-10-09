@@ -115,7 +115,8 @@ namespace ToSic.Sxc.Web
             string scaleMode = null,
             string format = null,
             object aspectRatio = null,
-            string type = null // WIP, probably "full", "/", "//" etc.
+            string type = null, // WIP, probably "full", "/", "//" etc.
+            object parameters = null
             //string part = null
             );
 
