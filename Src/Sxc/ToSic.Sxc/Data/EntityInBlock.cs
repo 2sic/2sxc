@@ -9,6 +9,7 @@ namespace ToSic.Sxc.Data
     // 2021-10-11 2dm started it, mostly done, but would have to go through all code and change
     // final accessors
     // Afterwards we would drop this class completely
+    // Use pattern already used in accessing IsDemoItem
     [PrivateApi]
     public class EntityInBlock : EntityDecorator12<EntityInBlockDecorator>, IHasEditingData
     {
