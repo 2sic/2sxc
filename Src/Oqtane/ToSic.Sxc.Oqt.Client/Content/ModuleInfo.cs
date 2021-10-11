@@ -23,15 +23,26 @@ namespace ToSic.Sxc.Oqt.Content
         {
             Name = name, // "App",
             Description = description, // "2sxc helps create designed, cross-platform content",
+            Categories = "Common",
             Version = "12.05.00",
+            // Owner = "",
+            // Url = "",
+            // Contact = "",
+            // License = "",
+            Dependencies = "ToSic.Sxc.Oqtane.Shared",
+            // PermissionNames = "",
             ServerManagerType = "ToSic.Sxc.Oqt.Server.Manager.SxcManager, ToSic.Sxc.Oqtane.Server",
+            // ControlTypeRoutes = "",
             // This must contain all versions with a SQL script and current/latest version
             // list versions with sql scripts in \ToSic.Sxc.Oqt.Server\Scripts\
             // Always keep this in sync wth the App and Content ModuleInfo.cs
             ReleaseVersions = "0.0.1,12.00.00,12.02.01,12.05.00",
-            Dependencies = "ToSic.Sxc.Oqtane.Shared",
-            Categories = "Common",
+            // DefaultAction = "",
+            // SettingsType = "",
+            PackageName = "ToSic.Sxc",
             //Runtimes = "Server",
+            Template = "", // "External" (not "internal") "Default Module Template"
+
         };
 
         public ModuleDefinition ModuleDefinition => BuildModuleDefinition("Content", "Text/Image layouts using structured content");
