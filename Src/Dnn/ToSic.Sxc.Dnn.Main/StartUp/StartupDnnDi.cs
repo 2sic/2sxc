@@ -139,6 +139,9 @@ namespace ToSic.Sxc.Dnn.StartUp
             // v12.05 custom Http for Dnn which only keeps the URL parameters really provided, and not the internally generated ones
             services.TryAddTransient<IHttp, DnnHttp>();
 
+            // v12.05
+            services.TryAddSingleton<IEventLogService, DnnEventLogService>();
+
             return services;
         }
     }
