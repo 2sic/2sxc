@@ -1,9 +1,11 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Web;
+
 // ReSharper disable MethodOverloadWithOptionalParameter
 
-namespace ToSic.Sxc.Web
+namespace ToSic.Sxc.Services
 {
     [PrivateApi("Hide implementation")]
     public class ConvertService: IConvertService

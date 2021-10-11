@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using ToSic.Eav.Documentation;
 
-namespace ToSic.Sxc.Web
+namespace ToSic.Sxc.Services
 {
     [PrivateApi("Hide implementation")]
     public class JsonService: IJsonService

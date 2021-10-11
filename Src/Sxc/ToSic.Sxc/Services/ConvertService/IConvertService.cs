@@ -1,8 +1,10 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
+using ToSic.Sxc.Web;
+
 // ReSharper disable MethodOverloadWithOptionalParameter
 
-namespace ToSic.Sxc.Web
+namespace ToSic.Sxc.Services
 {
     /// <summary>
     /// Conversion helper for things which are very common in web-code like Razor and WebAPIs.

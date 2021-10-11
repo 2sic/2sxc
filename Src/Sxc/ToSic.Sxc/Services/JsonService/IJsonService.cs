@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
 
-namespace ToSic.Sxc.Web
+namespace ToSic.Sxc.Services
 {
     /// <summary>
     /// Service to serialize/restore JSON. Get it using GetService &lt; T &gt;
