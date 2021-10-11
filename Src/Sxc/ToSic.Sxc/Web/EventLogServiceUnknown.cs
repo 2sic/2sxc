@@ -4,7 +4,7 @@ namespace ToSic.Sxc.Web
 {
     public class EventLogServiceUnknown : IEventLogService
     {
-        public EventLogServiceUnknown(WarnUseOfUnknown<RazorServiceUnknown> warn)
+        public EventLogServiceUnknown(WarnUseOfUnknown<EventLogServiceUnknown> warn)
         {
             
         }
