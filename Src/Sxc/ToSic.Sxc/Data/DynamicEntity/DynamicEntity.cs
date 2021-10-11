@@ -46,7 +46,9 @@ namespace ToSic.Sxc.Data
         protected void SetEntity(IEntity entity)
         {
             Entity = entity;
-            EntityForEqualityCheck = (Entity as IEntityWrapper)?.EntityForEqualityCheck ?? Entity;
+            var entAsWrapper = Entity as IEntityWrapper;
+            EntityForEqualityCheck = entAsWrapper?.EntityForEqualityCheck ?? Entity;
+            Decorators = entAsWrapper?.Decorators ?? new List<IDecorator<IEntity>>();
         }
 
         // ReSharper disable once InconsistentNaming
