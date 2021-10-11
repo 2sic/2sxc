@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Context
         /// 
         /// This is mainly used to clearly identify a site in a multi-site system or a language-variation in a multi-language setup.
         /// </summary>
-        [PrivateApi("WIP 2dm - trying to get a better replacement for url")]
+        [PrivateApi("WIP 2dm - trying to get a better replacement for url - not public yet, and NAME NOT FINAL!")]
         string UrlRoot { get; }
     }
 }
