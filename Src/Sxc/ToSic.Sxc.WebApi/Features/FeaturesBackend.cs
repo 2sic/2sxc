@@ -69,12 +69,12 @@ namespace ToSic.Sxc.WebApi.Features
         {
             try
             {
-                var configurationsPath = Path.Combine(_globalConfiguration.GlobalFolder, Eav.Configuration.Features.FeaturesPath);
+                var configurationsPath = Path.Combine(_globalConfiguration.GlobalFolder, FeatureConstants.FeaturesPath);
 
                 if (!Directory.Exists(configurationsPath)) 
                     Directory.CreateDirectory(configurationsPath);
 
-                var featureFilePath = Path.Combine(configurationsPath, Eav.Configuration.Features.FeaturesJson);
+                var featureFilePath = Path.Combine(configurationsPath, FeatureConstants.FeaturesJson);
 
                 File.WriteAllText(featureFilePath, features);
                 _systemLoader.Reload();
