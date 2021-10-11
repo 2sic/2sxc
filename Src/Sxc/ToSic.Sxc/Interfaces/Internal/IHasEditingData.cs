@@ -13,16 +13,16 @@ namespace ToSic.Sxc.Interfaces
         /// <remarks>
         /// This has been in use since ca. 2sxc 2.0
         /// </remarks>
-        int SortOrder { get; set; }
+        int SortOrder { get; }
 
         /// <summary>
         /// The parent item which has the list containing this item.
         /// </summary>
-        Guid? Parent { get; set; }
+        Guid? Parent { get; }
 
         /// <summary>
         /// The field which has the list containing this item.
         /// </summary>
-        string Field { get; set; }
+        string Field { get; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NETFRAMEWORK
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
@@ -54,10 +55,6 @@ namespace ToSic.Sxc.Code
         }
 
 
-        //[PrivateApi]
-        //[Obsolete("use Header instead")]
-        //public dynamic ListContent => DynCode.Header;
-
 #pragma warning disable 618
         [PrivateApi]
         [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in 2sxc v10")]
@@ -85,7 +82,6 @@ namespace ToSic.Sxc.Code
             if (!_root.Data.Out.ContainsKey(Eav.Constants.DefaultStreamName)) return;
 
             var entities = _root.Data.List.ToList();
-            //if (entities.Any()) _content = AsDynamic(entities.First());
 
             _list = entities.Select(GetElementFromEntity).ToList();
 
@@ -111,3 +107,5 @@ namespace ToSic.Sxc.Code
 
     }
 }
+
+#endif

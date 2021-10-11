@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NETFRAMEWORK
+using System;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent
@@ -33,3 +34,4 @@ namespace ToSic.SexyContent
 
     }
 }
+#endif

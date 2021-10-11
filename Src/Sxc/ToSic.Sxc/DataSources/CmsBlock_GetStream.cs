@@ -70,14 +70,13 @@ namespace ToSic.Sxc.DataSources
                         try
                         {
                             var itm = originals.One(entityId);
-                            entitiesToDeliver.Add(new EntityInBlock(itm, null, null, isListHeader ? -1 : i)
+                            entitiesToDeliver.Add(new EntityInBlock(itm, null, null, isListHeader ? -1 : i, presentationDemoEntity, isDemoItem: usingDemoItem)
                             {
-                                Presentation = presentationEntity,
-
+#if NETFRAMEWORK
                                 // todo: merge with Parent property, if possible
                                 // actually unclear if this is ever used, maybe for automatic serialization?
                                 GroupId = BlockConfiguration.Guid,
-                                IsDemoItem = usingDemoItem // mark demo-items for demo-item detection in template #1792
+#endif
                             });
                         }
                         catch (Exception ex)

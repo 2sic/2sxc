@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
 using ToSic.Sxc.Interfaces;
 using static Newtonsoft.Json.NullValueHandling;
 using IEntity = ToSic.Eav.Data.IEntity;
+// ReSharper disable InconsistentNaming
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
     internal class ItemToolbarAction
     {
         public ItemToolbarAction(IEntity entity = null)

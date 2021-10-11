@@ -1,6 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 using ToSic.Eav.Apps.Enums;
+using ToSic.Eav.Data;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 
@@ -54,10 +55,12 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
             PublishingMode = publishingMode.ToString();
             
             // try to get more information about the block
-            if (!((contentBlock as BlockFromEntity)?.Entity is EntityInBlock specsEntity)) return;
-            ParentGuid = specsEntity.Parent;
-            ParentField = specsEntity.Field;
-            ParentIndex = specsEntity.SortOrder;
+            if (!((contentBlock as BlockFromEntity)?.Entity is IHasDecorator<IEntity> specsEntity)) return;
+            var decorator = specsEntity.GetDecorator<EntityInBlockDecorator, IEntity>();
+            if (decorator == null) return;
+            ParentGuid = decorator.Parent;
+            ParentField = decorator.Field;
+            ParentIndex = decorator.SortOrder;
         }
     }
 
