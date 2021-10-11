@@ -44,8 +44,5 @@ namespace ToSic.Sxc.Adam
         public DateTime CreatedOnDate => Created;
 
         public int FileId => SysId as int? ?? 0;
-
-        // 12.05
-        public string PhysicalPath { get; set; }
     }
 }

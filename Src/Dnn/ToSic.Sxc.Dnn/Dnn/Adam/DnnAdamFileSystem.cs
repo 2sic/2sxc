@@ -220,6 +220,7 @@ namespace ToSic.Sxc.Dnn.Adam
                 Created = dnnFolderInfo.CreatedOnDate,
                 Modified = dnnFolderInfo.LastModifiedOnDate,
                 Url = AdamContext.Site.ContentPath + dnnFolderInfo.FolderPath,
+                PhysicalPath = dnnFolderInfo.PhysicalPath,
             });
         }
 
