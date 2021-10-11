@@ -27,6 +27,8 @@ namespace ToSic.Sxc.Adam
             // IAdamItem interface properties
             Name = f.Name;
             Url = f.Url;
+
+            PhysicalPath = f.PhysicalPath;
         }
 
     }

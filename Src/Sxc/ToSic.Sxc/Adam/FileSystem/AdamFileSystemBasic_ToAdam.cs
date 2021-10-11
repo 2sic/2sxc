@@ -36,7 +36,8 @@ namespace ToSic.Sxc.Adam
 
         private Folder<string, string> ToAdamFolder(string path)
         {
-            var f = new DirectoryInfo(_adamPaths.PhysicalPath(path));
+            var physicalPath = _adamPaths.PhysicalPath(path);
+            var f = new DirectoryInfo(physicalPath);
 
             var relativePath = _adamPaths.RelativeFromAdam(path);
             return new Folder<string, string>(AdamManager)
@@ -49,6 +50,7 @@ namespace ToSic.Sxc.Adam
                 Modified = f.LastWriteTime,
 
                 Url = _adamPaths.Url(relativePath),
+                PhysicalPath = physicalPath,
             };
         }
 
