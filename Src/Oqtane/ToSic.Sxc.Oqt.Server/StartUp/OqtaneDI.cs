@@ -24,6 +24,7 @@ using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Server.WebApi.Admin;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi.ApiExplorer;
 using ToSic.Sxc.WebApi.Context;
@@ -142,7 +143,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddTransient<OqtModuleHelper>();
 
             // v12.05
-            services.TryAddTransient<IEventLogService, OqtEventLogService>();
+            services.TryAddTransient<ILogService, OqtLogService>();
 
             return services;
         }

@@ -1,21 +1,20 @@
-﻿using System.Reflection;
-using Oqtane.Enums;
+﻿using Oqtane.Enums;
 using Oqtane.Infrastructure;
 using Oqtane.Shared;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtEventLogService : IEventLogService
+    public class OqtLogService : ILogService
     {
         private readonly ILogManager _logManager;
 
-        public OqtEventLogService(ILogManager logManager)
+        public OqtLogService(ILogManager logManager)
         {
             _logManager = logManager;
         }
         
-        public void AddEvent(string title, string message)
+        public void Add(string title, string message)
         {
             _logManager.Log(LogLevel.Information, title, LogFunction.Other, message);
         }

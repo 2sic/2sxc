@@ -19,18 +19,23 @@ namespace ToSic.Sxc.Context
         int Id { get; }
 
         /// <summary>
-        /// The site url without protocol. Can be variation of any such examples:
+        /// The site url with protocol. Can be variation of any such examples:
         /// 
-        /// - website.org
-        /// - www.website.org
-        /// - website.org/products
-        /// - website.org/en-us
-        /// - website.org/products/en-us
+        /// - https://website.org
+        /// - https://www.website.org
+        /// - https://website.org/products
+        /// - https://website.org/en-us
+        /// - https://website.org/products/en-us
         /// 
         /// 🪒 Use in Razor: `CmsContext.Site.Url`
         /// </summary>
         string Url { get; }
 
+        /// <summary>
+        /// The url root which identifies the current site / portal as is. It does not contain a protocol, but can contain subfolders.
+        /// 
+        /// This is mainly used to clearly identify a site in a multi-site system or a language-variation in a multi-language setup.
+        /// </summary>
         [PrivateApi("WIP 2dm - trying to get a better replacement for url")]
         string UrlRoot { get; }
     }

@@ -5,7 +5,7 @@ using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Data
 {
-    // todo: finish change to new IEntity Decorator method
+    // todo: 2dm finish change to new IEntity Decorator method
     // 2021-10-11 2dm started it, mostly done, but would have to go through all code and change
     // final accessors
     // Afterwards we would drop this class completely

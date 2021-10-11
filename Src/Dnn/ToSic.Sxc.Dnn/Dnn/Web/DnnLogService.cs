@@ -1,11 +1,12 @@
 ﻿using DotNetNuke.Services.Log.EventLog;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.Web
 {
-    public class DnnEventLogService : IEventLogService
+    public class DnnLogService : ILogService
     {
-        public void AddEvent(string title, string message)
+        public void Add(string title, string message)
         {
             var logInfo = new LogInfo
             {

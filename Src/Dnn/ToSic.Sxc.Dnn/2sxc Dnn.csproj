@@ -126,7 +126,7 @@
     <Compile Include="Dnn\Factory.cs" />
     <Compile Include="Dnn\Run\DnnPlatformContext.cs" />
     <Compile Include="Dnn\Services\DnnPageChanges.cs" />
-    <Compile Include="Dnn\Web\DnnEventLogService.cs" />
+    <Compile Include="Dnn\Web\DnnLogService.cs" />
     <Compile Include="Dnn\Web\DnnHttp.cs" />
     <Compile Include="Dnn\Web\DnnJsApiHeader.cs" />
     <Compile Include="Dnn\Web\DnnClientResources.cs" />

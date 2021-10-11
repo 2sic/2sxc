@@ -31,6 +31,7 @@ using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Search;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi.ApiExplorer;
 using ToSic.Sxc.WebApi.Context;
@@ -140,7 +141,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<IHttp, DnnHttp>();
 
             // v12.05
-            services.TryAddTransient<IEventLogService, DnnEventLogService>();
+            services.TryAddTransient<ILogService, DnnLogService>();
 
             return services;
         }

@@ -5,6 +5,7 @@ using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc
@@ -47,7 +48,7 @@ namespace ToSic.Sxc
             services.TryAddTransient<IRazorService, RazorServiceUnknown>();
 
             // v12.05
-            services.TryAddTransient<IEventLogService, EventLogServiceUnknown>();
+            services.TryAddTransient<ILogService, LogServiceUnknown>();
 
             return services;
         }
