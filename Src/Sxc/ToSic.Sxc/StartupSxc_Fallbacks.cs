@@ -47,7 +47,7 @@ namespace ToSic.Sxc
             services.TryAddTransient<IRazorService, RazorServiceUnknown>();
 
             // v12.05
-            services.TryAddSingleton<IEventLogService, EventLogServiceUnknown>();
+            services.TryAddTransient<IEventLogService, EventLogServiceUnknown>();
 
             return services;
         }

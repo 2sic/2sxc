@@ -140,7 +140,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<IHttp, DnnHttp>();
 
             // v12.05
-            services.TryAddSingleton<IEventLogService, DnnEventLogService>();
+            services.TryAddTransient<IEventLogService, DnnEventLogService>();
 
             return services;
         }

@@ -142,7 +142,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddTransient<OqtModuleHelper>();
 
             // v12.05
-            services.TryAddSingleton<IEventLogService, OqtEventLogService>();
+            services.TryAddTransient<IEventLogService, OqtEventLogService>();
 
             return services;
         }
