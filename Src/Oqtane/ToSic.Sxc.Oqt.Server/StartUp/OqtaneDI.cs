@@ -145,6 +145,9 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             // v12.05
             services.TryAddTransient<ILogService, OqtLogService>();
 
+            // v12.05
+            services.TryAddTransient<IMailService, OqtMailService>();
+
             return services;
         }
 

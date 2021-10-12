@@ -50,6 +50,9 @@ namespace ToSic.Sxc
             // v12.05
             services.TryAddTransient<ILogService, LogServiceUnknown>();
 
+            // v12.05
+            services.TryAddTransient<IMailService, MailServiceUnknown>();
+
             return services;
         }
     }

@@ -155,6 +155,7 @@
     <Compile Include="Dnn\Install\DnnInstallLogger.cs" />
     <Compile Include="Dnn\Install\InstallVersion.cs" />
     <Compile Include="Dnn\Run\DnnLogging.cs" />
+    <Compile Include="Dnn\Web\DnnMailService.cs" />
     <Compile Include="Dnn\Web\DnnModuleSettings.cs" />
     <Compile Include="Dnn\Cms\DnnPagePublishing.cs" />
     <Compile Include="Dnn\Cms\DnnPagePublishing_ModuleSettings.cs" />

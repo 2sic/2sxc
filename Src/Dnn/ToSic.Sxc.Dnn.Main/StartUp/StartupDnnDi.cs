@@ -143,6 +143,9 @@ namespace ToSic.Sxc.Dnn.StartUp
             // v12.05
             services.TryAddTransient<ILogService, DnnLogService>();
 
+            // v12.05
+            services.TryAddTransient<IMailService, DnnMailService>();
+
             return services;
         }
     }
