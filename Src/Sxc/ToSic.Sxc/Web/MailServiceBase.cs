@@ -24,72 +24,51 @@ namespace ToSic.Sxc.Web
 
         protected abstract SmtpClient SmtpClient();
 
-        public string Send(MailMessage message)
+        public void Send(MailMessage message)
         {
+            var wrapLog = Log.Call();
             try
             {
-                using (var client = SmtpClient())
-                {
-                    if (client == null)
-                        return "SMTP Not Configured Properly In Site Settings - Host, Port, SSL, And Sender Are All Required";
-
+                using (var client = SmtpClient()) 
                     client.Send(message);
-                }
-
-                return ""; // return "Message: Send Ok";
-            }
-            catch (SmtpFailedRecipientException ex)
-            {
-                return "Error Failed Recipient: " + ex.Message;
-            }
-            catch (SmtpException ex)
-            {
-                return "Error SMTP Configuration Problem: " + ex.Message;
+                wrapLog("ok");
             }
             catch (Exception ex)
             {
-                if (ex.InnerException != null)
-                {
-                    return "Error: " + ex.Message + Environment.NewLine + ex.InnerException.Message;
-
-                }
-                return "Error: " + ex.Message;
-
-            }
-            finally
-            {
-                message.Dispose();
+                Log.Exception(ex);
+                wrapLog("error");
+                throw;
             }
         }
 
-        public string Send(
-            string noParamOrder = Eav.Parameters.Protector,
-            string mailFrom = null,
-            string mailTo = null,
+
+        public MailMessage Create(
+            string noParamOrder =
+                "Rule: all params must be named (https://r.2sxc.org/named-params), Example: \'enable: true, version: 10\'",
+            string @from = null,
+            string to = null,
             string cc = null,
             string bcc = null,
             string replyTo = null,
-            MailPriority priority = MailPriority.Normal,
             string subject = null,
-            bool isBodyHtml = true,
-            Encoding bodyEncoding = null,
+            bool? isHtml = null,
+            Encoding encoding = null,
             string body = null,
-            List<Attachment> attachments = null
-        )
+            IEnumerable<Attachment> attachments = null)
         {
             // prevent incorrect use without named parameters
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Send)}", $"{nameof(mailTo)},{nameof(body)}");
+            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Send)}", $"{nameof(to)},{nameof(body)}");
 
             var mailMessage = new MailMessage();
-            if (!string.IsNullOrEmpty(mailFrom)) mailMessage.From = new MailAddress(mailFrom);
-            AddMailAddresses(mailMessage.To, mailTo);
+            if (!string.IsNullOrEmpty(from)) mailMessage.From = new MailAddress(from);
+            AddMailAddresses(mailMessage.To, to);
             AddMailAddresses(mailMessage.CC, cc);
             AddMailAddresses(mailMessage.Bcc, bcc);
             if (!string.IsNullOrEmpty(replyTo)) mailMessage.ReplyTo = new MailAddress(replyTo);
-            mailMessage.Priority = priority;
             mailMessage.Subject = subject;
-            mailMessage.IsBodyHtml = isBodyHtml;
-            mailMessage.BodyEncoding = bodyEncoding;
+            mailMessage.SubjectEncoding = encoding ?? Encoding.UTF8;
+            mailMessage.IsBodyHtml = isHtml ?? AutoDetectHtml(body);
+            mailMessage.BodyEncoding = encoding ?? Encoding.UTF8;
             mailMessage.Body = body;
 
             foreach (var attachment in attachments)
@@ -97,7 +76,62 @@ namespace ToSic.Sxc.Web
                 mailMessage.Attachments.Add(attachment);
             }
 
-            return Send(mailMessage);
+            return mailMessage;
+        }
+
+        // TODO: STV
+        private bool AutoDetectHtml(string body)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Send(
+            string noParamOrder =
+                "Rule: all params must be named (https://r.2sxc.org/named-params), Example: \'enable: true, version: 10\'",
+            string @from = null,
+            string to = null,
+            string cc = null,
+            string bcc = null,
+            string replyTo = null,
+            string subject = null,
+            bool? isHtml = null,
+            Encoding encoding = null,
+            string body = null,
+            IEnumerable<Attachment> attachments = null)
+        {
+            // prevent incorrect use without named parameters
+            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Send)}", $"{nameof(to)},{nameof(body)}");
+
+            var mailMessage = Create(
+                @from: @from,
+                to: to,
+                cc: cc,
+                bcc: bcc,
+                replyTo: replyTo,
+                subject: subject,
+                isHtml: isHtml,
+                encoding: encoding,
+                body: body,
+                attachments: attachments);
+
+            //var mailMessage = new MailMessage();
+            //if (!string.IsNullOrEmpty(mailFrom)) mailMessage.From = new MailAddress(mailFrom);
+            //AddMailAddresses(mailMessage.To, mailTo);
+            //AddMailAddresses(mailMessage.CC, cc);
+            //AddMailAddresses(mailMessage.Bcc, bcc);
+            //if (!string.IsNullOrEmpty(replyTo)) mailMessage.ReplyTo = new MailAddress(replyTo);
+            //mailMessage.Priority = priority;
+            //mailMessage.Subject = subject;
+            //mailMessage.IsBodyHtml = isBodyHtml;
+            //mailMessage.BodyEncoding = bodyEncoding;
+            //mailMessage.Body = body;
+
+            //foreach (var attachment in attachments)
+            //{
+            //    mailMessage.Attachments.Add(attachment);
+            //}
+
+            Send(mailMessage);
         }
 
         private void AddMailAddresses(MailAddressCollection mails, string emails)

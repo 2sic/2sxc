@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DotNetNuke.Entities.Host;
+using System;
 using System.Net;
 using System.Net.Mail;
 using ToSic.Sxc.Web;
@@ -9,7 +10,7 @@ namespace ToSic.Sxc.Dnn.Web
     {
         protected override SmtpClient SmtpClient()
         {
-            var smtpServer = DotNetNuke.Entities.Host.Host.SMTPServer;
+            var smtpServer = Host.SMTPServer;
             if (string.IsNullOrEmpty(smtpServer)) return null; // DotNetNuke.Services.Localization.Localization.GetString("SMTPConfigurationProblem");
 
             var client = new SmtpClient();
@@ -17,12 +18,12 @@ namespace ToSic.Sxc.Dnn.Web
             var strArray = smtpServer.Split(':');
             client.Host = strArray[0];
             client.Port = strArray.Length > 1 ? Convert.ToInt32(strArray[1]) : 25;
-            client.ServicePoint.MaxIdleTime = DotNetNuke.Entities.Host.Host.SMTPMaxIdleTime;
-            client.ServicePoint.ConnectionLimit = DotNetNuke.Entities.Host.Host.SMTPConnectionLimit;
+            client.ServicePoint.MaxIdleTime = Host.SMTPMaxIdleTime;
+            client.ServicePoint.ConnectionLimit = Host.SMTPConnectionLimit;
 
-            var smtpAuthentication = DotNetNuke.Entities.Host.Host.SMTPAuthentication;
-            var smtpUsername = DotNetNuke.Entities.Host.Host.SMTPUsername;
-            var smtpPassword = DotNetNuke.Entities.Host.Host.SMTPPassword;
+            var smtpAuthentication = Host.SMTPAuthentication;
+            var smtpUsername = Host.SMTPUsername;
+            var smtpPassword = Host.SMTPPassword;
 
             switch (smtpAuthentication)
             {
@@ -39,7 +40,7 @@ namespace ToSic.Sxc.Dnn.Web
                     break;
             }
 
-            client.EnableSsl = DotNetNuke.Entities.Host.Host.EnableSMTPSSL;
+            client.EnableSsl = Host.EnableSMTPSSL;
 
             return client;
         }
