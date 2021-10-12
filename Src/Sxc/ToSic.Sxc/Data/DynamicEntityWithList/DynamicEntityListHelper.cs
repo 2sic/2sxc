@@ -50,14 +50,15 @@ namespace ToSic.Sxc.Data
                 // If not, it's coming from a stream or something and shouldn't do that
                 var reWrapWithListNumbering = ParentOrNull != null;
 
-                var index = 0;
+                //var index = 0;
                 var debug = _getDebug?.Invoke();
                 return _list = _entities
-                    .Select(e =>
+                    .Select((e, i) =>
                     {
                         // If we should re-wrap, we create an Entity with some metadata-decoration, so that toolbars know it's part of a list
                         var blockEntity = reWrapWithListNumbering
-                            ? new EntityInBlock(e, ParentOrNull.EntityGuid, FieldOrNull, index++)
+                            //? new EntityInBlock(e, ParentOrNull.EntityGuid, FieldOrNull, index++)
+                            ? EntityInBlockDecorator.Wrap(e, ParentOrNull.EntityGuid, FieldOrNull, i) // index++)
                             : e;
                         return DynamicEntityBase.SubDynEntity(blockEntity, _dependencies, debug);
                     })

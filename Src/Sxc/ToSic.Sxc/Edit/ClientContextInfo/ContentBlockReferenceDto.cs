@@ -55,8 +55,8 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
             PublishingMode = publishingMode.ToString();
             
             // try to get more information about the block
-            if (!((contentBlock as BlockFromEntity)?.Entity is IHasDecorator<IEntity> specsEntity)) return;
-            var decorator = specsEntity.GetDecorator<EntityInBlockDecorator, IEntity>();
+            //if (!((contentBlock as BlockFromEntity)?.Entity is IHasDecorator<IEntity> specsEntity)) return;
+            var decorator = (contentBlock as BlockFromEntity)?.Entity.GetDecorator<EntityInListDecorator>();
             if (decorator == null) return;
             ParentGuid = decorator.Parent;
             ParentField = decorator.Field;

@@ -35,10 +35,11 @@ namespace ToSic.Sxc.Data
             _ListHelper = new DynamicEntityListHelper(list, parent, field, () => _debug, dependencies);
         }
 
-        private EntityInBlock PlaceHolder(IEntity parent, string field)
+        private IEntity PlaceHolder(IEntity parent, string field)
         {
             var dummyEntity = _Dependencies.DataBuilder.FakeEntity(parent.AppId);
-            return new EntityInBlock(dummyEntity, parent.EntityGuid, field, 0);
+            return EntityInBlockDecorator.Wrap(dummyEntity, parent.EntityGuid, field);
+            //return new EntityInBlock(dummyEntity, parent.EntityGuid, field, 0);
         }
 
 
@@ -62,7 +63,7 @@ namespace ToSic.Sxc.Data
 
         // ReSharper disable once InheritdocInvalidUsage
         /// <inheritdoc />
-        public bool IsDemoItem => this.GetDecorator<EntityInBlockDecorator, IEntity>()?.IsDemoItem ?? false; // Entity is EntityInBlock entInCg && entInCg.IsDemoItem;
+        public bool IsDemoItem => Entity?.GetDecorator<EntityInBlockDecorator>()?.IsDemoItem ?? false; // Entity is EntityInBlock entInCg && entInCg.IsDemoItem;
 
     }
 }

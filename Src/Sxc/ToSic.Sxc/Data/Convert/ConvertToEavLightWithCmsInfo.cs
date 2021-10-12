@@ -3,7 +3,6 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Interfaces;
 
 namespace ToSic.Sxc.Data
 {
@@ -42,11 +41,13 @@ namespace ToSic.Sxc.Data
 
         private void AddPresentation(IEntity entity, IDictionary<string, object> dictionary)
         {
-            // Add full presentation object if it has one...because there we need more than just id/title
-            if (!(entity is EntityInBlock entityInGroup) || dictionary.ContainsKey(ViewParts.Presentation)) return;
+            var decorator = entity.GetDecorator<EntityInBlockDecorator>();
 
-            if (entityInGroup.Presentation != null)
-                dictionary.Add(ViewParts.Presentation, GetDictionaryFromEntity(entityInGroup.Presentation));
+            // Add full presentation object if it has one...because there we need more than just id/title
+            if (decorator?.Presentation == null || dictionary.ContainsKey(ViewParts.Presentation)) return;
+
+            // if (entityInGroup.Presentation != null)
+                dictionary.Add(ViewParts.Presentation, GetDictionaryFromEntity(decorator.Presentation));
         }
 
         /// <summary>
@@ -61,9 +62,12 @@ namespace ToSic.Sxc.Data
 	        var title = entity.GetBestTitle(Languages);
 	        if (string.IsNullOrEmpty(title))
 	            title = "(no title)";
-	        dictionary.Add(Constants.JsonEntityEditNodeName, entity is IHasEditingData entWithEditing
+
+            var editDecorator = entity.GetDecorator<EntityInBlockDecorator>();
+
+            dictionary.Add(Constants.JsonEntityEditNodeName, editDecorator != null // entity is IHasEditingData entWithEditing
 	            ? (object) new {
-	                sortOrder = entWithEditing.SortOrder,
+	                sortOrder = editDecorator.SortOrder,
 	                isPublished = entity.IsPublished,
 	            }
 	            : new {

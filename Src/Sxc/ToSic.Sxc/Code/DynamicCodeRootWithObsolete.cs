@@ -93,11 +93,15 @@ namespace ToSic.Sxc.Code
                     Content = _root.AsDynamic(e)
                 };
 
-                if (e is EntityInBlock c)
+                var editDecorator = e.GetDecorator<EntityInBlockDecorator>();
+
+                //if (e is EntityInBlock c)
+                if (editDecorator != null)
                 {
-                    el.GroupId = c.GroupId;
-                    el.Presentation = c.Presentation == null ? null : _root.AsDynamic(c.Presentation);
-                    el.SortOrder = c.SortOrder;
+                    // 2021-10-12 2dm #dropGroupId - believe this is never used anywhere. Leave comment till EOY 2021
+                    //el.GroupId = editDecorator.GroupId;
+                    el.Presentation = editDecorator.Presentation == null ? null : _root.AsDynamic(editDecorator.Presentation);
+                    el.SortOrder = editDecorator.SortOrder;
                 }
 
                 return el;

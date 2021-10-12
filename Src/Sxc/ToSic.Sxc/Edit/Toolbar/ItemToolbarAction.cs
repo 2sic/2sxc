@@ -1,6 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
-using ToSic.Sxc.Interfaces;
+using ToSic.Eav.Data;
+using ToSic.Sxc.Data;
 using static Newtonsoft.Json.NullValueHandling;
 using IEntity = ToSic.Eav.Data.IEntity;
 // ReSharper disable InconsistentNaming
@@ -18,18 +19,20 @@ namespace ToSic.Sxc.Edit.Toolbar
             isPublished = entity.IsPublished;
             title = entity.GetBestTitle();
             entityGuid = entity.EntityGuid;
-            if (entity is IHasEditingData editingData)
+            var editDecorator = entity.GetDecorator<EntityInBlockDecorator>();
+            //if (entity is IHasEditingData editingData)
+            if (editDecorator != null)
             {
-                sortOrder = editingData.SortOrder;
-                if (editingData.Parent == null)
+                sortOrder = editDecorator.SortOrder;
+                if (editDecorator.Parent == null)
                 {
                     useModuleList = true;
                 }
                 else 
                 // only set parent if not empty - as it's always a valid int and wouldn't be null
                 {
-                    parent = editingData.Parent;
-                    fields = editingData.Field;
+                    parent = editDecorator.Parent;
+                    fields = editDecorator.Field;
                     entityId = entity.EntityId;
                     contentType = entity.Type.Name;
                 }

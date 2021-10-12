@@ -9,6 +9,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
+using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
@@ -110,8 +111,10 @@ namespace ToSic.Sxc.Dnn.Cms
                     // ReSharper disable PossibleMultipleEnumeration
                     // Find related presentation entities
                     var attachedPresItems = list
-                        .Where(e => (e as EntityInBlock)?.Presentation != null)
-                        .Select(e => ((EntityInBlock)e).Presentation);
+                        .Select(e => e.GetDecorator<EntityInBlockDecorator>()?.Presentation)
+                        .Where(p => p != null);
+                        //.Where(e => (e as EntityInBlock)?.Presentation != null)
+                        //.Select(e => ((EntityInBlock)e).Presentation);
                     Log.Add($"adding presentation item⋮{attachedPresItems.Count()}");
                     list = list.Concat(attachedPresItems);
                     // ReSharper restore PossibleMultipleEnumeration

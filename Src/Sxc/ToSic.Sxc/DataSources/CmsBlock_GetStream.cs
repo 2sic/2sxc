@@ -44,7 +44,7 @@ namespace ToSic.Sxc.DataSources
                     for (; i < contentEntities.Count; i++)
                     {
                         // new 2019-09-18 trying to mark demo-items for better detection in output #1792
-                        var usingDemoItem = false;
+                        var isDemoItem = false;
 
                         // get the entity, if null: try to substitute with the demo item
                         var contentEntity = contentEntities[i];
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.DataSources
                         if (contentEntity == null || !originals.Has(contentEntity.EntityId))
                         {
                             contentEntity = contentDemoEntity;
-                            usingDemoItem = true;  // mark demo-items for demo-item detection in template #1792
+                            isDemoItem = true;  // mark demo-items for demo-item detection in template #1792
                         }
 
                         // now check again...
@@ -65,19 +65,23 @@ namespace ToSic.Sxc.DataSources
                         // use demo-entities where available
                         entityId = contentEntity.EntityId;
 
-                        var presentationEntity = GetPresentationEntity(originals, presentationList, i, presentationDemoEntity, entityId);
+                        var presentationEntity = GetPresentationEntity(originals, presentationList, i, /*presentationDemoEntity,*/ entityId)
+                            ?? presentationDemoEntity;
 
                         try
                         {
                             var itm = originals.One(entityId);
-                            entitiesToDeliver.Add(new EntityInBlock(itm, null, null, isListHeader ? -1 : i, presentationDemoEntity, isDemoItem: usingDemoItem)
-                            {
-#if NETFRAMEWORK
-                                // todo: merge with Parent property, if possible
-                                // actually unclear if this is ever used, maybe for automatic serialization?
-                                GroupId = BlockConfiguration.Guid,
-#endif
-                            });
+                            entitiesToDeliver.Add(
+                                EntityInBlockDecorator.Wrap(itm, null, null, isListHeader ? -1 : i, presentationEntity, isDemoItem)
+                            //{
+                            //    // 2021-10-12 2dm #dropGroupId - believe this is never used anywhere. Leave comment till EOY 2021
+                            //    //#if NETFRAMEWORK
+                            //    // actually unclear if this is ever used, maybe for automatic serialization?
+                            //    // 2021-10-12 2dm #dropGroupId - believe this is never used anywhere. Leave comment till EOY 2021
+                            //    //GroupId = BlockConfiguration.Guid,
+                            //    //#endif
+                            //}
+                            );
                         }
                         catch (Exception ex)
                         {
@@ -116,7 +120,7 @@ namespace ToSic.Sxc.DataSources
             return callLog(null, In[Eav.Constants.DefaultStreamName].List.ToImmutableList());
         }
 
-        private static IEntity GetPresentationEntity(IReadOnlyCollection<IEntity> originals, IReadOnlyList<IEntity> presItems, int itemIndex, IEntity demo, int entityId)
+        private static IEntity GetPresentationEntity(IReadOnlyCollection<IEntity> originals, IReadOnlyList<IEntity> presItems, int itemIndex, /*IEntity demo,*/ int entityId)
         {
             try
             {
@@ -132,11 +136,13 @@ namespace ToSic.Sxc.DataSources
                 // If there is no presentationList entity, take default entity
                 if (presentationId.HasValue) return originals.One(presentationId.Value);
 
-                presentationId = demo != null && originals.Has(demo.EntityId)
-                    ? demo.EntityId
-                    : new int?();
+                // 2021-10-12 2dm - believe this is an unnecessary loop to re-retrieve the demo item, will short-circuit
+                return null;
+                //var demoPresentationId = demo != null && originals.Has(demo.EntityId)
+                //    ? demo.EntityId
+                //    : new int?();
 
-                return presentationId.HasValue ? originals.One(presentationId.Value) : null;
+                //return demoPresentationId.HasValue ? originals.One(demoPresentationId.Value) : null;
             }
             catch (Exception ex)
             {
