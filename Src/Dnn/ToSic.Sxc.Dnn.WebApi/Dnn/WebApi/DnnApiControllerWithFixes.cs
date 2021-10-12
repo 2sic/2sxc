@@ -23,7 +23,6 @@ namespace ToSic.Sxc.Dnn.WebApi
 	        if (HistoryLogGroup != null)
                 Eav.Factory.StaticBuild<LogHistory>().Add(HistoryLogGroup, Log);
             // ReSharper restore VirtualMemberCallInConstructor
-
         }
 
         // ReSharper disable once InconsistentNaming
@@ -33,7 +32,11 @@ namespace ToSic.Sxc.Dnn.WebApi
 	    {
             // Add the logger to the request, in case it's needed in error-reporting
 	        controllerContext.Request.Properties.Add(DnnConstants.EavLogKey, Log);
-	        base.Initialize(controllerContext);
+
+            // ignoring circular reference
+            controllerContext.Configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+
+            base.Initialize(controllerContext);
         }
 
         protected override void Dispose(bool disposing)
