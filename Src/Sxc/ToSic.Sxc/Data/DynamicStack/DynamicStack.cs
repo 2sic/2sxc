@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Data
         {
             if (source == null) return null;
             if (source is IDynamicEntity dynEnt) return dynEnt;
-            if (source is IEntity ent) return SubDynEntity(ent);
+            if (source is IEntity ent) return SubDynEntityOrNull(ent);
             return null;
         }
 

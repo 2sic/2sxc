@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Data
                             //? new EntityInBlock(e, ParentOrNull.EntityGuid, FieldOrNull, index++)
                             ? EntityInBlockDecorator.Wrap(e, ParentOrNull.EntityGuid, FieldOrNull, i) // index++)
                             : e;
-                        return DynamicEntityBase.SubDynEntity(blockEntity, _dependencies, debug);
+                        return DynamicEntityBase.SubDynEntityOrNull(blockEntity, _dependencies, debug);
                     })
                     .ToList();
             }
