@@ -5,13 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Text;
-using ToSic.Eav;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtMailService : MailService
+    public class OqtMailService : MailServiceBase
     {
         private readonly Lazy<ISiteRepository> _siteRepositoryLazy;
         private readonly Lazy<ISettingRepository> _settingRepositoryLazy;
@@ -22,75 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             _settingRepositoryLazy = settingRepositoryLazy;
         }
 
-        public override string Send(MailMessage message)
-        {
-            try
-            {
-                var client = SmtpClient();
-                if (client == null)
-                    return "SMTP Not Configured Properly In Site Settings - Host, Port, SSL, And Sender Are All Required";
-
-                client.Send(message);
-                return "Message: Send Ok";
-            }
-            catch (Exception ex)
-            {
-                // error
-                return $"Error: {ex.Message}.";
-            }
-        }
-
-        public override string Send(
-            string noParamOrder = Parameters.Protector,
-            string mailFrom = null,
-            string mailTo = null,
-            string cc = null,
-            string bcc = null,
-            string replyTo = null,
-            MailPriority priority = MailPriority.Normal,
-            string subject = null,
-            bool isBodyHtml = true,
-            Encoding bodyEncoding = null,
-            string body = null,
-            List<Attachment> attachments = null
-        )
-        {
-            // prevent incorrect use without named parameters
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Send)}", $"{nameof(mailTo)},{nameof(body)}");
-
-            var mailMessage = new MailMessage();
-            mailMessage.From = new MailAddress(mailFrom);
-            AddMailAddresses(mailMessage.To, mailTo);
-            AddMailAddresses(mailMessage.CC, cc);
-            AddMailAddresses(mailMessage.Bcc, bcc);
-            if (!string.IsNullOrEmpty(replyTo)) mailMessage.ReplyTo = new MailAddress(replyTo);
-            mailMessage.Priority = priority;
-            mailMessage.Subject = subject;
-            mailMessage.IsBodyHtml = isBodyHtml;
-            mailMessage.BodyEncoding = bodyEncoding;
-            mailMessage.Body = body;
-
-            foreach (var attachment in attachments)
-            {
-                mailMessage.Attachments.Add(attachment);
-            }
-
-            return Send(mailMessage);
-        }
-
-        private Dictionary<string, string> GetSettings()
-        {
-            var sitedId = base.App.Site.Id;
-
-            var site = _siteRepositoryLazy.Value.GetSite(sitedId);
-
-            // get site settings
-            var settings = _settingRepositoryLazy.Value.GetSettings(EntityNames.Site, site.SiteId).ToList();
-
-            return settings.OrderBy(item => item.SettingName).ToList().ToDictionary(setting => setting.SettingName, setting => setting.SettingValue);
-        }
-
-        private SmtpClient SmtpClient()
+        protected override SmtpClient SmtpClient()
         {
             var settings = GetSettings();
             if (!settings.ContainsKey("SMTPHost") || settings["SMTPHost"] == "" 
@@ -116,13 +46,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return client;
         }
 
-        private void AddMailAddresses(MailAddressCollection mails, string emails)
+        private Dictionary<string, string> GetSettings()
         {
-            if (string.IsNullOrEmpty(emails)) return;
-            foreach (var email in emails.Split(",;".ToCharArray()))
-            {
-                mails.Add(new MailAddress(email));
-            }
+            var site = _siteRepositoryLazy.Value.GetSite(App.Site.Id);
+            var settings = _settingRepositoryLazy.Value.GetSettings(EntityNames.Site, site.SiteId).ToList();
+            return settings.OrderBy(item => item.SettingName).ToList().ToDictionary(setting => setting.SettingName, setting => setting.SettingValue);
         }
     }
 }
