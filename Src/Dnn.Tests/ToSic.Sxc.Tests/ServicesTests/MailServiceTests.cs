@@ -28,14 +28,14 @@ namespace ToSic.Sxc.Tests.ServicesTests
         public void MailAddressInputMailAddressType()
         {
             var expected = new MailAddress(testEmail, testDisplayName);
-            var actual = MailServiceBase.MailAddress(expected);
+            var actual = MailServiceBase.MailAddress("test", expected);
             AreSame(expected, actual);
         }
 
         [TestMethod]
         public void MailAddressInputStringType()
         {
-            AreEqual(testEmail, MailServiceBase.MailAddress(testEmail).Address);
+            AreEqual(testEmail, MailServiceBase.MailAddress("test", testEmail).Address);
         }
 
         [TestMethod]
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         public void MailAddressInputInvalidString()
         {
             // An invalid character was found in the mail header.
-            MailServiceBase.MailAddress(@";;;ffff@@@@@@gggggg");
+            MailServiceBase.MailAddress("test", @";;;ffff@@@@@@gggggg");
         }
 
         [TestMethod]
@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         public void MailAddressInputEmptyString()
         {
             // The parameter 'address' cannot be an empty string.
-            MailServiceBase.MailAddress(string.Empty);
+            MailServiceBase.MailAddress("test", string.Empty);
         }
 
         [TestMethod]
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         public void MailAddressInputNull()
         {
             // Unknown type for MailAddress
-            MailServiceBase.MailAddress(null);
+            MailServiceBase.MailAddress("test", null);
         }
 
         //[TestMethod]

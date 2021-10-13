@@ -76,11 +76,11 @@ namespace ToSic.Sxc.Services
 
             var mailMessage = new MailMessage();
             
-            if (from != null) mailMessage.From = MailAddress(from);
-            AddMailAddresses(mailMessage.To, to);
-            AddMailAddresses(mailMessage.CC, cc);
-            AddMailAddresses(mailMessage.Bcc, bcc);
-            AddMailAddresses(mailMessage.ReplyToList, replyTo);
+            if (from != null) mailMessage.From = MailAddress(nameof(from), from);
+            AddMailAddresses(nameof(to), mailMessage.To, to);
+            AddMailAddresses(nameof(cc), mailMessage.CC, cc);
+            AddMailAddresses(nameof(bcc), mailMessage.Bcc, bcc);
+            AddMailAddresses(nameof(replyTo), mailMessage.ReplyToList, replyTo);
 
             mailMessage.Subject = subject;
             mailMessage.SubjectEncoding = encoding ?? Encoding.UTF8;
@@ -133,7 +133,7 @@ namespace ToSic.Sxc.Services
             wrapLog("done");
         }
 
-        public static MailAddress MailAddress(object mailAddresses)
+        public static MailAddress MailAddress(string addressType, object mailAddresses)
         {
             switch (mailAddresses)
             {
@@ -142,11 +142,11 @@ namespace ToSic.Sxc.Services
                 case string fromString:
                     return new MailAddress(fromString);
                 default:
-                    throw new ArgumentException($"Unknown type for {nameof(mailAddresses)}");
+                    throw new ArgumentException($"Trying to parse e-mails for {addressType} but got unknown type for {nameof(mailAddresses)}");
             }
         }
 
-        public bool AddMailAddresses(MailAddressCollection targetMails, object mailAddresses)
+        public bool AddMailAddresses(string addressType, MailAddressCollection targetMails, object mailAddresses)
         {
             var wrapLog = Log.Call<bool>(); // return a bool just to make return-statements easier later on
 
@@ -173,9 +173,12 @@ namespace ToSic.Sxc.Services
                     if (!string.IsNullOrEmpty(inputString)) 
                         targetMails.Add(NormalizeEmailSeparators(inputString));
                     return wrapLog("string", true);
-                    
+
+                case null:
+                    return wrapLog("null", true);
+
                 default:
-                    throw new ArgumentException($"Unknown type for {nameof(mailAddresses)}");
+                    throw new ArgumentException($"Trying to parse e-mails for {addressType} but got unknown type for {nameof(mailAddresses)}");
             }
         }
 
