@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return (_languageRepository.Value.GetLanguages(siteId).FirstOrDefault(l => l.IsDefault)?.Code ?? FallbackLanguageCode).ToLowerInvariant();
         }
 
-        public string CurrentCultureCode => CultureInfo.CurrentCulture?.Name.ToLowerInvariant() ?? DefaultCultureCode;
+        public string CurrentCultureCode => MapTwoLetterCulture(CultureInfo.CurrentCulture.Name).ToLowerInvariant();
 
         public List<TempTempCulture> GetSupportedCultures(int siteId, List<DimensionDefinition>  availableEavLanguages)
         {
