@@ -1,8 +1,7 @@
 ﻿using DotNetNuke.Services.Log.EventLog;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Dnn.Web
+namespace ToSic.Sxc.Dnn.Services
 {
     public class DnnLogService : ILogService
     {

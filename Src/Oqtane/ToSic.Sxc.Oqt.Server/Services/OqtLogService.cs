@@ -3,7 +3,7 @@ using Oqtane.Infrastructure;
 using Oqtane.Shared;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Oqt.Server.Run
+namespace ToSic.Sxc.Oqt.Server.Services
 {
     public class OqtLogService : ILogService
     {
