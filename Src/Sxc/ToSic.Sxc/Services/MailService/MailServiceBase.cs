@@ -93,7 +93,8 @@ namespace ToSic.Sxc.Services
             return wrapLog("done", mailMessage);
         }
 
-        private static bool AutoDetectHtml(string body)
+        [PrivateApi] 
+        public static bool AutoDetectHtml(string body)
         {
             return !string.IsNullOrEmpty(body) && HtmlDetectionRegex.IsMatch(body);
         }
@@ -133,16 +134,16 @@ namespace ToSic.Sxc.Services
             wrapLog("done");
         }
 
-        public static MailAddress MailAddress(string addressType, object mailAddresses)
+        public MailAddress MailAddress(string addressType, object mailAddress)
         {
-            switch (mailAddresses)
+            switch (mailAddress)
             {
-                case MailAddress mailAddress:
-                    return mailAddress;
+                case MailAddress fromMailAddress:
+                    return fromMailAddress;
                 case string fromString:
                     return new MailAddress(fromString);
                 default:
-                    throw new ArgumentException($"Trying to parse e-mails for {addressType} but got unknown type for {nameof(mailAddresses)}");
+                    throw new ArgumentException($"Trying to parse e-mails for {addressType} but got unknown type for {nameof(mailAddress)}");
             }
         }
 
@@ -165,9 +166,8 @@ namespace ToSic.Sxc.Services
                 case IEnumerable<string> inputStringArray:
                     foreach (var emailAddress in inputStringArray)
                         if (!string.IsNullOrEmpty(emailAddress))
-                            targetMails.Add(NormalizeEmailSeparators(emailAddress));
+                            targetMails.Add(emailAddress);
                     return wrapLog(nameof(IEnumerable<string>), true);
-
 
                 case string inputString: 
                     if (!string.IsNullOrEmpty(inputString)) 
@@ -182,6 +182,7 @@ namespace ToSic.Sxc.Services
             }
         }
 
+        [PrivateApi]
         public static string NormalizeEmailSeparators(string input)
         {
             return string.IsNullOrEmpty(input) ? null : input.Replace(";", ",");

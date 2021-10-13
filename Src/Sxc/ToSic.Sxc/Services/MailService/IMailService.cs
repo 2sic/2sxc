@@ -119,5 +119,9 @@ namespace ToSic.Sxc.Services
             Encoding encoding = null,
             object attachments = null
         );
+
+        [PrivateApi] MailAddress MailAddress(string addressType, object mailAddress);
+
+        [PrivateApi] bool AddMailAddresses(string addressType, MailAddressCollection targetMails, object mailAddresses);
     }
 }
