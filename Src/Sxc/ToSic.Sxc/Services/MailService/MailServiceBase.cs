@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
+using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
@@ -22,6 +23,7 @@ namespace ToSic.Sxc.Services
         protected MailServiceBase() : base($"{Constants.SxcLogName}.MailSrv")
         { }
 
+        /// <inheritdoc />
         public virtual void AddBlockContext(IDynamicCodeRoot codeRoot)
         {
             Log.LinkTo(codeRoot.Log);
@@ -30,6 +32,7 @@ namespace ToSic.Sxc.Services
 
         protected abstract SmtpClient SmtpClient();
 
+        /// <inheritdoc />
         public void Send(MailMessage message)
         {
             var wrapLog = Log.Call();
@@ -47,21 +50,29 @@ namespace ToSic.Sxc.Services
             }
         }
 
-
-        public MailMessage Create(string noParamOrder = Eav.Parameters.Protector,
+        /// <inheritdoc />
+        public MailMessage Create(
+            string noParamOrder = Eav.Parameters.Protector,
             object from = null,
             object to = null,
             object cc = null,
             object bcc = null,
             object replyTo = null,
             string subject = null,
+            string body = null,
             bool? isHtml = null,
             Encoding encoding = null,
-            string body = null,
             object attachments = null)
         {
+            var wrapLog = Log.Call<MailMessage>(
+                parameters: $"{nameof(from)}: {from}, {nameof(to)}: {to}, {nameof(cc)}: {cc}, {nameof(bcc)}: {bcc}, {nameof(replyTo)}: {replyTo}, " +
+                            $"{nameof(subject)}: {subject}, {nameof(body)}: {body}, {nameof(isHtml)}: {isHtml}, {nameof(encoding)}: {encoding}, " +
+                            $"{nameof(attachments)}: {attachments}");
+
             // prevent incorrect use without named parameters
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Send)}", $"{nameof(to)},{nameof(body)}");
+            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Create)}", 
+                $"{nameof(from)}, {nameof(to)}, {nameof(cc)}, {nameof(bcc)}, {nameof(replyTo)}, " +
+                $"{nameof(subject)}, {nameof(body)}, {nameof(isHtml)}, {nameof(encoding)}, {nameof(attachments)}");
 
             var mailMessage = new MailMessage();
             
@@ -79,7 +90,7 @@ namespace ToSic.Sxc.Services
 
             AddAttachments(mailMessage.Attachments, attachments);
 
-            return mailMessage;
+            return wrapLog("done", mailMessage);
         }
 
         private static bool AutoDetectHtml(string body)
@@ -87,22 +98,26 @@ namespace ToSic.Sxc.Services
             return !string.IsNullOrEmpty(body) && HtmlDetectionRegex.IsMatch(body);
         }
 
+        /// <inheritdoc />
         public void Send(
-            string noParamOrder =
-                "Rule: all params must be named (https://r.2sxc.org/named-params), Example: \'enable: true, version: 10\'",
+            string noParamOrder = Eav.Parameters.Protector,
             object from = null,
             object to = null,
             object cc = null,
             object bcc = null,
             object replyTo = null,
             string subject = null,
+            string body = null,
             bool? isHtml = null,
             Encoding encoding = null,
-            string body = null,
             object attachments = null)
         {
+            // Note: don't log all the parameters here, because we'll do it again on the Create-call
+            var wrapLog = Log.Call();
             // prevent incorrect use without named parameters
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Send)}", $"{nameof(to)},{nameof(body)}");
+            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Send)}",
+                $"{nameof(from)}, {nameof(to)}, {nameof(cc)}, {nameof(bcc)}, {nameof(replyTo)}, " +
+                $"{nameof(subject)}, {nameof(body)}, {nameof(isHtml)}, {nameof(encoding)}, {nameof(attachments)}");
 
             var mailMessage = Create(
                 from: from,
@@ -111,60 +126,56 @@ namespace ToSic.Sxc.Services
                 bcc: bcc,
                 replyTo: replyTo,
                 subject: subject,
-                isHtml: isHtml,
-                encoding: encoding,
                 body: body,
-                attachments: attachments);
+                isHtml: isHtml, encoding: encoding, attachments: attachments);
 
             Send(mailMessage);
+            wrapLog("done");
         }
 
-        public static MailAddress MailAddress(object input)
+        public static MailAddress MailAddress(object mailAddresses)
         {
-            switch (input)
+            switch (mailAddresses)
             {
                 case MailAddress mailAddress:
                     return mailAddress;
                 case string fromString:
                     return new MailAddress(fromString);
                 default:
-                    throw new ArgumentException("Unknown type for MailAddress");
+                    throw new ArgumentException($"Unknown type for {nameof(mailAddresses)}");
             }
         }
 
-        public static void AddMailAddresses(MailAddressCollection mails, object input)
+        public bool AddMailAddresses(MailAddressCollection targetMails, object mailAddresses)
         {
-            switch (input)
+            var wrapLog = Log.Call<bool>(); // return a bool just to make return-statements easier later on
+
+            switch (mailAddresses)
             {
                 case MailAddressCollection inputMailAddressCollection:
-                    foreach (var mailAddress in inputMailAddressCollection)
-                    {
-                        mails.Add(mailAddress);
-                    }
-                    break;
+                    foreach (var mailAddress in inputMailAddressCollection) 
+                        targetMails.Add(mailAddress);
+                    return wrapLog(nameof(MailAddressCollection), true);
 
                 case IEnumerable<MailAddress> inputMailAddressesArray:
-                    foreach (var mailAddress in inputMailAddressesArray)
-                    {
-                        mails.Add(mailAddress);
-                    }
-                    break;
+                    foreach (var mailAddress in inputMailAddressesArray) 
+                        targetMails.Add(mailAddress);
+                    return wrapLog(nameof(IEnumerable<MailAddress>), true);
 
                 case IEnumerable<string> inputStringArray:
                     foreach (var emailAddress in inputStringArray)
-                    {
-                        if (!string.IsNullOrEmpty(emailAddress)) 
-                            mails.Add(NormalizeEmailSeparators(emailAddress));
-                    }
-                    break;
+                        if (!string.IsNullOrEmpty(emailAddress))
+                            targetMails.Add(NormalizeEmailSeparators(emailAddress));
+                    return wrapLog(nameof(IEnumerable<string>), true);
+
 
                 case string inputString: 
                     if (!string.IsNullOrEmpty(inputString)) 
-                        mails.Add(NormalizeEmailSeparators(inputString));
-                    break;
+                        targetMails.Add(NormalizeEmailSeparators(inputString));
+                    return wrapLog("string", true);
                     
                 default:
-                    throw new ArgumentException("Unknown type for MailAddressCollection");
+                    throw new ArgumentException($"Unknown type for {nameof(mailAddresses)}");
             }
         }
 
@@ -173,45 +184,40 @@ namespace ToSic.Sxc.Services
             return string.IsNullOrEmpty(input) ? null : input.Replace(";", ",");
         }
 
-        public static void AddAttachments(AttachmentCollection attachments, object input)
+        public bool AddAttachments(AttachmentCollection targetAttachments, object attachments)
         {
-            switch (input)
+            var wrapLog = Log.Call<bool>(); // return a bool just to make return-statements easier later on
+            switch (attachments)
             {
                 case Attachment inputAttachment:
-                    attachments.Add(inputAttachment);
-                    break;
+                    targetAttachments.Add(inputAttachment);
+                    return wrapLog(nameof(Attachment), true);
 
                 case AttachmentCollection attachmentCollection:
-                    foreach (var attachment in attachmentCollection)
-                    {
-                        attachments.Add(attachment);
-                    }
-                    break;
+                    foreach (var attachment in attachmentCollection) 
+                        targetAttachments.Add(attachment);
+                    return wrapLog(nameof(AttachmentCollection), true);
 
                 case IEnumerable<Attachment> inputAttachmentsArray:
-                    foreach (var attachment in inputAttachmentsArray)
-                    {
-                        attachments.Add(attachment);
-                    }
-                    break;
+                    foreach (var attachment in inputAttachmentsArray) 
+                        targetAttachments.Add(attachment);
+                    return wrapLog(nameof(IEnumerable<Attachment>), true);
 
-                case Adam.IFile inputFile:
-                    attachments.Add(new Attachment(
+                case IFile inputFile:
+                    targetAttachments.Add(new Attachment(
                         new FileStream(inputFile.PhysicalPath, FileMode.Open, FileAccess.Read, FileShare.Read),
                         inputFile.FullName));
-                    break;
+                    return wrapLog(nameof(IFile), true);
 
-                case IEnumerable<Adam.IFile> inputFiles:
+                case IEnumerable<IFile> inputFiles:
                     foreach (var file in inputFiles)
-                    {
-                        attachments.Add(new Attachment(
+                        targetAttachments.Add(new Attachment(
                             new FileStream(file.PhysicalPath, FileMode.Open, FileAccess.Read, FileShare.Read),
                             file.FullName));
-                    }
-                    break;
+                    return wrapLog(nameof(IEnumerable<IFile>), true);
 
                 default:
-                    throw new ArgumentException("Unknown type for AttachmentCollection");
+                    throw new ArgumentException($"Unknown type for {nameof(attachments)}");
             }
         }
     }

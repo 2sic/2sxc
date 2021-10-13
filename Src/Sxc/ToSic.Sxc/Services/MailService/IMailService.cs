@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Net.Mail;
+﻿using System.Net.Mail;
 using System.Text;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
@@ -40,30 +39,30 @@ namespace ToSic.Sxc.Services
         /// <param name="bcc">BCC recipient(s) of the mail, in the same format as <see cref="to"/></param>
         /// <param name="replyTo">ReplyTo address(es) in the same format as <see cref="to"/></param>
         /// <param name="subject">The main subject</param>
+        /// <param name="body">The body / contents of the e-mail - can be text or HTML</param>
         /// <param name="isHtml">Set the body to be HTML - if not set, will auto-detect</param>
         /// <param name="encoding">
         ///     Encoding of subject and body - if not set, will default to UTF8.
         ///     If you need different encodings on subject and body, set it on the resulting object. 
         /// </param>
-        /// <param name="body"></param>
         /// <param name="attachments">
         ///     One or more attachments to include. Could be any of the following
         ///     - A System.Net.Mail.Attachment object
-        ///     - An <see cref="ToSic.Sxc.Adam.IFile"/> or an <see cref="ToSic.Eav.Apps.Assets.IFile"/> object
+        ///     - An <see cref="Adam.IFile"/> or an <see cref="Eav.Apps.Assets.IFile"/> object
         ///     - An Array/IEnumerable of these 
         /// </param>
-        /// <returns></returns>
+        /// <returns>The newly created `MailMessage` object</returns>
         MailMessage Create(
             string noParamOrder = Eav.Parameters.Protector,
-            object from = null, // todo: convert to object, check if Razor would write "from:" or "@from:" - otherwise "sender"
-            object to = null, // todo object
-            object cc = null, // todo object
-            object bcc = null, // todo object
-            object replyTo = null, // todo object
-            string subject = null, // todo object
+            object from = null,
+            object to = null,
+            object cc = null,
+            object bcc = null,
+            object replyTo = null,
+            string subject = null,
+            string body = null,
             bool? isHtml = null,
             Encoding encoding = null,
-            string body = null,
             object attachments = null);
 
         /// <summary>
@@ -72,8 +71,9 @@ namespace ToSic.Sxc.Services
         /// <param name="message">A prepared .net MailMessage object</param>
         /// <returns></returns>
         void Send(MailMessage message);
+
         /// <summary>
-        /// 
+        /// Quickly create and send an E-Mail.
         /// </summary>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="from">
@@ -93,19 +93,19 @@ namespace ToSic.Sxc.Services
         /// <param name="bcc">BCC recipient(s) of the mail, in the same format as <see cref="to"/></param>
         /// <param name="replyTo">ReplyTo address(es) in the same format as <see cref="to"/></param>
         /// <param name="subject">The main subject</param>
+        /// <param name="body">The body / contents of the e-mail - can be text or HTML</param>
         /// <param name="isHtml">Set the body to be HTML - if not set, will auto-detect</param>
         /// <param name="encoding">
         ///     Encoding of subject and body - if not set, will default to UTF8.
         ///     If you need different encodings on subject and body, set it on the resulting object. 
         /// </param>
-        /// <param name="body"></param>
         /// <param name="attachments">
         ///     One or more attachments to include. Could be any of the following
         ///     - A System.Net.Mail.Attachment object
         ///     - An <see cref="ToSic.Sxc.Adam.IFile"/> or an <see cref="ToSic.Eav.Apps.Assets.IFile"/> object
         ///     - An Array/IEnumerable of these 
         /// </param>
-        /// <returns></returns>
+        /// <returns>void</returns>
         void Send(
             string noParamOrder = Eav.Parameters.Protector,
             object from = null,
@@ -114,9 +114,9 @@ namespace ToSic.Sxc.Services
             object bcc = null,
             object replyTo = null,
             string subject = null,
+            string body = null,
             bool? isHtml = null,
             Encoding encoding = null,
-            string body = null,
             object attachments = null
         );
     }
