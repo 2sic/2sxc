@@ -26,18 +26,18 @@ namespace ToSic.Sxc.Oqt.Server.Run
         // When culture code is not provided for selected default language, use defaultLanguageCode.
         public string DefaultLanguageCode(int siteId)
         {
-
             return (_languageRepository.Value.GetLanguages(siteId).FirstOrDefault(l => l.IsDefault)?.Code ?? FallbackLanguageCode).ToLowerInvariant();
         }
 
-        public string CurrentCultureCode => CultureInfo.DefaultThreadCurrentUICulture?.Name.ToLowerInvariant() ?? DefaultCultureCode;
+        public string CurrentCultureCode => CultureInfo.CurrentCulture?.Name.ToLowerInvariant() ?? DefaultCultureCode;
 
         public List<TempTempCulture> GetSupportedCultures(int siteId, List<DimensionDefinition>  availableEavLanguages)
         {
+            var cultures = new List<string>(new[] { DefaultCultureCode });
+            cultures.AddRange(_languageRepository.Value.GetLanguages(siteId).Select(language => language.Code));
+
             // List of localizations enabled in Oqtane site.
-            var siteCultures = _languageRepository.Value.GetLanguages(siteId)
-                .Select(l => string.IsNullOrEmpty(l.Code) ? FallbackLanguageCode : l.Code).ToList() // default English is missing code in Oqtane v2.0.2.
-                .Select(c => CultureInfo.GetCultureInfo(c))
+            var siteCultures = cultures.Select(c => CultureInfo.GetCultureInfo(c))
                 .Select(c => new TempTempCulture(
                     c.Name.ToLowerInvariant(), 
                     c.EnglishName, 
