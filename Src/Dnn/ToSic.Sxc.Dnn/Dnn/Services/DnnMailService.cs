@@ -1,10 +1,10 @@
-﻿using DotNetNuke.Entities.Host;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Mail;
-using ToSic.Sxc.Web;
+using DotNetNuke.Entities.Host;
+using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Dnn.Web
+namespace ToSic.Sxc.Dnn.Services
 {
     public class DnnMailService : MailServiceBase
     {

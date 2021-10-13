@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Oqt.Server.Run
+namespace ToSic.Sxc.Oqt.Server.Services
 {
     public class OqtMailService : MailServiceBase
     {

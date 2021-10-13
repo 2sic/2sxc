@@ -4,7 +4,8 @@ using System.Text;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
 
-namespace ToSic.Sxc.Web
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Services
 {
     /// <summary>
     /// Service to send mail messages cross-platform.
@@ -41,30 +42,29 @@ namespace ToSic.Sxc.Web
         /// <param name="subject">The main subject</param>
         /// <param name="isHtml">Set the body to be HTML - if not set, will auto-detect</param>
         /// <param name="encoding">
-        /// Encoding of subject and body - if not set, will default to UTF8.
-        /// If you need different encodings on subject and body, set it on the resulting object. 
+        ///     Encoding of subject and body - if not set, will default to UTF8.
+        ///     If you need different encodings on subject and body, set it on the resulting object. 
         /// </param>
         /// <param name="body"></param>
         /// <param name="attachments">
-        /// One or more attachments to include. Could be any of the following
-        /// - A System.Net.Mail.Attachment object
-        /// - An <see cref="ToSic.Sxc.Adam.IFile"/> or an <see cref="ToSic.Eav.Apps.Assets.IFile"/> object
-        /// - An Array/IEnumerable of these 
+        ///     One or more attachments to include. Could be any of the following
+        ///     - A System.Net.Mail.Attachment object
+        ///     - An <see cref="ToSic.Sxc.Adam.IFile"/> or an <see cref="ToSic.Eav.Apps.Assets.IFile"/> object
+        ///     - An Array/IEnumerable of these 
         /// </param>
         /// <returns></returns>
         MailMessage Create(
             string noParamOrder = Eav.Parameters.Protector,
-            string from = null,    // todo: convert to object, check if Razor would write "from:" or "@from:" - otherwise "sender"
-            string to = null,   // todo object
-            string cc = null,// todo object
-            string bcc = null,// todo object
-            string replyTo = null,// todo object
-            string subject = null,// todo object
+            object from = null, // todo: convert to object, check if Razor would write "from:" or "@from:" - otherwise "sender"
+            object to = null, // todo object
+            object cc = null, // todo object
+            object bcc = null, // todo object
+            object replyTo = null, // todo object
+            string subject = null, // todo object
             bool? isHtml = null,
             Encoding encoding = null,
             string body = null,
-            IEnumerable<Attachment> attachments = null
-        );
+            object attachments = null);
 
         /// <summary>
         /// Send a .net `MailMessage` object using the settings configured in Dnn or Oqtane.

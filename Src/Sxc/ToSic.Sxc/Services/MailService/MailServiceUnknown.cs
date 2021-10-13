@@ -1,7 +1,8 @@
 ﻿using System.Net.Mail;
 using ToSic.Eav.Run.Unknown;
 
-namespace ToSic.Sxc.Web
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Services
 {
     public class MailServiceUnknown : MailServiceBase
     {
