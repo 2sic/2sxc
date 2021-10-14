@@ -152,7 +152,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         public new bool FolderExists(string path) => GetOqtFolderByName(path) != null;
 
-        private Folder GetOqtFolderByName(string path) => OqtFolderRepository.GetFolder(AdamContext.Site.Id, path.Backslash());
+        private Folder GetOqtFolderByName(string path) => OqtFolderRepository.GetFolder(AdamContext.Site.Id, path.SuffixSlash().Backslash());
 
 
         public new void AddFolder(string path)
