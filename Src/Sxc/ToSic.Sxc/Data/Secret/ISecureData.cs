@@ -2,8 +2,20 @@
 
 namespace ToSic.Sxc.Data
 {
+    /// <summary>
+    /// This object contains decrypted data (if it was encrypted originally) and tells you if the data was encrypted, signed etc.
+    /// It's still very basic, and will grow in functionality to assist in handling secure / encrypted / signed data.
+    /// </summary>
+    /// <remarks>
+    /// Introduced in 2sxc 12.05
+    /// </remarks>
+    /// <typeparam name="T">Type of this secure data - as of now it's always a `string`</typeparam>
+    [PublicApi]
     public interface ISecureData<out T>
     {
+        /// <summary>
+        /// The value returned by the secure data - usually a string. 
+        /// </summary>
         T Value { get; }
 
         [PrivateApi("not final yet")]

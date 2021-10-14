@@ -30,14 +30,14 @@ namespace ToSic.Sxc.Services
         /// </param>
         /// <param name="to">
         ///     Main recipient(s) of the mail in one of the following formats
-        ///     * all the formats as available in <see cref="from"/>
+        ///     * all the formats as available in `from`
         ///     * a CSV of such addresses like "info@a.com, info@b.com"
         ///     * An Array/List/IEnumerable of such strings
         ///     * An Array/List/IEnumerable of System.Net.Mail.MailAddress objects
         /// </param>
-        /// <param name="cc">CC recipient(s) of the mail, in the same format as <see cref="to"/></param>
-        /// <param name="bcc">BCC recipient(s) of the mail, in the same format as <see cref="to"/></param>
-        /// <param name="replyTo">ReplyTo address(es) in the same format as <see cref="to"/></param>
+        /// <param name="cc">CC recipient(s) of the mail, in the same format as `to`</param>
+        /// <param name="bcc">BCC recipient(s) of the mail, in the same format as `to`</param>
+        /// <param name="replyTo">ReplyTo address(es) in the same format as `to`</param>
         /// <param name="subject">The main subject</param>
         /// <param name="body">The body / contents of the e-mail - can be text or HTML</param>
         /// <param name="isHtml">Set the body to be HTML - if not set, will auto-detect</param>
@@ -84,14 +84,14 @@ namespace ToSic.Sxc.Services
         /// </param>
         /// <param name="to">
         ///     Main recipient(s) of the mail in one of the following formats
-        ///     * all the formats as available in <see cref="from"/>
+        ///     * all the formats as available in `from`
         ///     * a CSV of such addresses like "info@a.com, info@b.com"
         ///     * An Array/List/IEnumerable of such strings
         ///     * An Array/List/IEnumerable of System.Net.Mail.MailAddress objects
         /// </param>
-        /// <param name="cc">CC recipient(s) of the mail, in the same format as <see cref="to"/></param>
-        /// <param name="bcc">BCC recipient(s) of the mail, in the same format as <see cref="to"/></param>
-        /// <param name="replyTo">ReplyTo address(es) in the same format as <see cref="to"/></param>
+        /// <param name="cc">CC recipient(s) of the mail, in the same format as `to`</param>
+        /// <param name="bcc">BCC recipient(s) of the mail, in the same format as `to`</param>
+        /// <param name="replyTo">ReplyTo address(es) in the same format as `to`</param>
         /// <param name="subject">The main subject</param>
         /// <param name="body">The body / contents of the e-mail - can be text or HTML</param>
         /// <param name="isHtml">Set the body to be HTML - if not set, will auto-detect</param>

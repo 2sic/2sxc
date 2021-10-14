@@ -26,6 +26,7 @@ namespace ToSic.Sxc.Tests.ServicesTests.SecureDataTests
         [TestMethod] public void TestDecryptWithPrefixLowercase() => TestDecryptSecret(PrefixSecure.ToLowerInvariant() + EncryptedApiKey, TestGoogleApiKey);
 
         [TestMethod]
+        [Ignore]
         public void TestGoogleMapsApiKey()
         {
             TestDecryptSecret("Secret:YPIieaLHdWhoeI1q0ULQv4WjGQMce2dKZ2apW7IVumwTzAap9LLJ4dmBQfDABC1g", "");
