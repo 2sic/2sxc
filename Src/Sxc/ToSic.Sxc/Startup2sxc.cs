@@ -104,6 +104,9 @@ namespace ToSic.Sxc
             services.TryAddTransient<IJsonService, JsonService>();
             services.TryAddTransient<IConvertService, ConvertService>();
 
+            // New 12.05: SecureData
+            services.TryAddTransient<ISecureDataService, SecureDataService>();
+
             return services;
         }
 

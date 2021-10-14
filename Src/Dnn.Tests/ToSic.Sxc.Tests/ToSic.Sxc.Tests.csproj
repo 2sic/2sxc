@@ -98,6 +98,7 @@
     <Compile Include="ServicesTests\MailAddressTests.cs" />
     <Compile Include="ServicesTests\MailAddressInputTypeTests.cs" />
     <Compile Include="ServicesTests\MailServiceTestsBase.cs" />
+    <Compile Include="ServicesTests\SecureDataTests\SecureDataTest.cs" />
     <Compile Include="WebTests\ConvertServiceTests\ConvertServiceTest.cs" />
     <Compile Include="WebTests\LinkHelperTestBase.cs" />
     <Compile Include="WebTests\LinkHelperTests\LinkHelperPartSuffixTests.cs" />
