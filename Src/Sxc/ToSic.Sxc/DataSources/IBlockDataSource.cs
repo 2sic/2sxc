@@ -17,8 +17,10 @@ namespace ToSic.Sxc.DataSources
         DataPublishing Publish { get; }
 
 
+#if NETFRAMEWORK
         [Obsolete]
         [PrivateApi]
         CacheWithGetContentType Cache { get; }
+#endif
     }
 }

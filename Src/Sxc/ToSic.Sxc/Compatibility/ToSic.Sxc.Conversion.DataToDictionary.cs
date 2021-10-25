@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Conversion
     /// Old implementation with simple constructor. Shouldn't be used any more, because it needs DI now. 
     /// </summary>
     [PrivateApi("Hide implementation")]
-    [Obsolete]
+    [Obsolete("Please use the new ToSic.Eav.DataFormats.EavLight.IConvertToEavLight service")]
     public class DataToDictionary: Data.ConvertToEavLightWithCmsInfo
     {
 

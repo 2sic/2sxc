@@ -16,7 +16,11 @@ namespace ToSic.Sxc.Data
     /// </blockquote>
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public partial interface IDynamicEntity: SexyContent.Interfaces.IDynamicEntity, IEntityWrapper, IDynamicEntityBase, ISxcDynamicObject
+    public partial interface IDynamicEntity:
+#if NETFRAMEWORK
+        SexyContent.Interfaces.IDynamicEntity,
+#endif
+        IEntityWrapper, IDynamicEntityBase, ISxcDynamicObject
     {
         /// <summary>
         /// The underlying entity which provides all the data for the DynamicEntity
@@ -122,7 +126,7 @@ namespace ToSic.Sxc.Data
         /// True if this is the item configured in the view-settings, false if not.
         /// </returns>
         /// <remarks>New in 10.07</remarks>
-        new bool IsDemoItem { get; }
+        bool IsDemoItem { get; }
 
         #region parents / children
 

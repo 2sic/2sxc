@@ -8,8 +8,10 @@ namespace ToSic.Sxc.Search
     /// Defines an item in the search system - which is prepared by Sxc, and can be customized as needed
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public interface ISearchItem 
+    public interface ISearchItem
+#if NETFRAMEWORK
         : ToSic.SexyContent.Search.ISearchInfo // backward compatibility
+#endif
     {
         new string UniqueKey { get; set; }
 

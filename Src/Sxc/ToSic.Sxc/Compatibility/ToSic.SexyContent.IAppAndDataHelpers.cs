@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NETFRAMEWORK
+using System;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;
@@ -53,3 +54,4 @@ namespace ToSic.SexyContent
 
     }
 }
+#endif

@@ -23,14 +23,8 @@ namespace ToSic.Eav.Conversion
         /// </remarks>
         public EntitiesToDictionary(): base(Factory.ObsoleteBuild<Dependencies>())
         {
-            // IMPORTANT: Side effect on GlobalConfiguration was moved to the Dnn Startup now. 
-
-            // Ensure that date-times are sent in the Zulu-time format (UTC) and not with offsets which causes many problems during round-trips
-            //GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-            // #DoneDotNetStandard - there it's handled in the startup.cs
         }
 
-        
     }
 }
 #endif

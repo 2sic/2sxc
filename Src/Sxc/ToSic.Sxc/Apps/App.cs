@@ -67,6 +67,7 @@ namespace ToSic.Sxc.Apps
 
         private AppConfiguration _appConfig;
 
+#if NETFRAMEWORK
         [PrivateApi("obsolete, use the typed accessor instead, only included for old-compatibility")]
         [Obsolete("use the new, typed accessor instead")]
         dynamic SexyContent.Interfaces.IApp.Configuration
@@ -77,7 +78,7 @@ namespace ToSic.Sxc.Apps
                 return c?.Entity != null ? MakeDynProperty(c.Entity) : null;
             }
         }
-
+#endif
         private dynamic MakeDynProperty(IEntity contents) => new DynamicEntity(contents, DynamicEntityDependencies);
 
         // TODO: THIS CAN PROBABLY BE IMPROVED
