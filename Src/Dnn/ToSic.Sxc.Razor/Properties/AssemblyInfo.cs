@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ToSic.SexyContent")]
+[assembly: AssemblyTitle("ToSic.SexyContent.Razor")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("2sic Internet Solutions")]
-[assembly: AssemblyProduct("2Sexy Content Razor Engine")]
+[assembly: AssemblyProduct("2sxc Razor Engine for Dnn")]
 [assembly: AssemblyCopyright("Copyright © 2sic 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -30,4 +30,4 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("12.06.00.*")]
+[assembly: AssemblyVersion("12.07.00")]
