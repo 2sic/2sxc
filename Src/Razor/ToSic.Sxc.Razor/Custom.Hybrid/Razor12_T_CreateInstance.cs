@@ -3,10 +3,12 @@ using System.IO;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Code;
 
+// ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
 {
     public partial class Razor12<TModel>
     {
+
         public string CreateInstancePath
         {
             get => _createInstancePath ?? Path;
@@ -19,7 +21,7 @@ namespace Custom.Hybrid
         /// </summary>
         /// <returns></returns>
         public dynamic CreateInstance(string virtualPath,
-            string dontRelyOnParameterOrder = ToSic.Eav.Parameters.Protector,
+            string noParamOrder = ToSic.Eav.Parameters.Protector,
             string name = null,
             string relativePath = null,
             bool throwOnError = true)
@@ -30,11 +32,11 @@ namespace Custom.Hybrid
             VerifyFileExists(path);
             
             return path.EndsWith(CodeCompiler.CsFileExtension)
-                ? _DynCodeRoot.CreateInstance(path, dontRelyOnParameterOrder, name, null, throwOnError)
+                ? _DynCodeRoot.CreateInstance(path, noParamOrder, name, null, throwOnError)
                 : CreateInstanceCshtml(path);
         }
 
-        protected dynamic CreateInstanceCshtml(string path)
+        private dynamic CreateInstanceCshtml(string path)
         {
             throw new NotSupportedException("CreateInstance with .cshtml files is not supported in Oqtane. We're still trying to find a solution, but ATM it doesn't work. Use a .cs file instead. ");
         }

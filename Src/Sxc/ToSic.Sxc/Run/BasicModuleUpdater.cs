@@ -4,6 +4,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
+using ToSic.Eav.Run.Unknown;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 
@@ -16,7 +17,7 @@ namespace ToSic.Sxc.Run
         /// Empty constructor for DI
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public BasicModuleUpdater() : base($"{LogNames.NotImplemented}.MapA2I") { }
+        public BasicModuleUpdater(WarnUseOfUnknown<BasicModuleUpdater> warn) : base($"{LogNames.NotImplemented}.MapA2I") { }
 
 
         public IPlatformModuleUpdater Init(ILog parent)

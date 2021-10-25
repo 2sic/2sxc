@@ -1,13 +1,12 @@
-﻿using System.Threading.Tasks;
-using Custom.Hybrid;
-using Microsoft.AspNetCore.Mvc.Razor.Internal;
+﻿using Microsoft.AspNetCore.Mvc.Razor.Internal;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ToSic.Sxc.Code;
 
 
+// ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
 {
-    public partial class Razor12<TModel>: IRazor12
+    public partial class Razor12<TModel>: IRazor, IRazor12
     {
         const string DynCode = "_dynCode";
 
@@ -24,6 +23,12 @@ namespace Custom.Hybrid
             }
 
             set => _dynCode = value;
+        }
+
+        // TODO: STV - this should probably also attach logs? not sure in what direction
+        public void DynamicCodeCoupling(IDynamicCodeRoot parent)
+        {
+            _DynCodeRoot = parent;
         }
 
         private IDynamicCodeRoot _dynCode;
@@ -43,5 +48,6 @@ namespace Custom.Hybrid
                 if (_dynCode != null && base.ViewData != null && base.ViewData[DynCode] == null) base.ViewData[DynCode] = _dynCode;
             }
         }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NETFRAMEWORK
+using System;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 
@@ -18,3 +19,4 @@ namespace ToSic.Sxc.Compatibility
             => _app.GetContentType(typeName);
     }
 }
+#endif

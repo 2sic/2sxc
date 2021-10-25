@@ -99,7 +99,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Compatibility\Sxc\OldDataToDictionaryWrapper.cs" />
+    <Compile Include="Compatibility\Sxc\ToSic.Sxc.Blocks.Render.cs" />
     <Compile Include="Compatibility\Sxc\SxcHelper.cs" />
+    <Compile Include="Compatibility\ToSic.SexyContent.ContentBlocks.Render.cs" />
     <Compile Include="Custom.Dnn\Code12.cs" />
     <Compile Include="Dnn\Adam\DnnAdam.cs" />
     <Compile Include="Dnn\Cms\DnnPagePublishingResolver.cs" />
@@ -122,9 +124,10 @@
     <Compile Include="Dnn\Run\DnnAppFileSystemLoader.cs" />
     <Compile Include="Dnn\Run\DnnContext.cs" />
     <Compile Include="Dnn\Factory.cs" />
-    <Compile Include="Dnn\Run\DnnPage.cs" />
     <Compile Include="Dnn\Run\DnnPlatformContext.cs" />
     <Compile Include="Dnn\Services\DnnPageChanges.cs" />
+    <Compile Include="Dnn\Services\DnnLogService.cs" />
+    <Compile Include="Dnn\Web\DnnHttp.cs" />
     <Compile Include="Dnn\Web\DnnJsApiHeader.cs" />
     <Compile Include="Dnn\Web\DnnClientResources.cs" />
     <Compile Include="Dnn\Code\IDnnDynamicCode.cs" />
@@ -152,6 +155,7 @@
     <Compile Include="Dnn\Install\DnnInstallLogger.cs" />
     <Compile Include="Dnn\Install\InstallVersion.cs" />
     <Compile Include="Dnn\Run\DnnLogging.cs" />
+    <Compile Include="Dnn\Services\DnnMailService.cs" />
     <Compile Include="Dnn\Web\DnnModuleSettings.cs" />
     <Compile Include="Dnn\Cms\DnnPagePublishing.cs" />
     <Compile Include="Dnn\Cms\DnnPagePublishing_ModuleSettings.cs" />

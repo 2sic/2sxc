@@ -3,15 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Adam;
@@ -27,11 +27,13 @@ namespace Custom.Hybrid
     {
 
         // ReSharper disable once InconsistentNaming
-        public IDynamicCodeRoot _DynCodeRoot { get; set; }
+        [PrivateApi] public IDynamicCodeRoot _DynCodeRoot { get; set; }
+        // ReSharper disable once InconsistentNaming
+        [PrivateApi] public AdamCode _AdamCode { get; set; }
 
         [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
 
-        public TService GetService<TService>() => _DynCodeRoot.GetService<TService>(); // ServiceProvider.Build<TService>();
+        public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
 
         /// <inheritdoc />
         public IApp App => _DynCodeRoot?.App;
@@ -70,6 +72,12 @@ namespace Custom.Hybrid
 
         #endregion
 
+        #region Convert-Service
+        [PrivateApi] public IConvertService Convert => _DynCodeRoot.Convert;
+
+        #endregion
+
+
         #region CreateSource implementations
 
         /// <inheritdoc />
@@ -106,14 +114,11 @@ namespace Custom.Hybrid
         [NonAction]
         public IFolder AsAdam(IEntity entity, string fieldName) => _DynCodeRoot?.AsAdam(entity, fieldName);
 
-
-        // Adam - Shared Code Across the APIs (prevent duplicate code)
-        // TODO: STV - duplicate code with DynamicApiController and Hybrid.Api12_DynCode
         /// <summary>
         /// See docs of official interface <see cref="IDynamicWebApi"/>
         /// </summary>
         [NonAction]
-        public ToSic.Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = Parameters.Protector,
+        public ToSic.Sxc.Adam.IFile SaveInAdam(string noParamOrder = Parameters.Protector,
             Stream stream = null,
             string fileName = null,
             string contentType = null,
@@ -121,22 +126,13 @@ namespace Custom.Hybrid
             string field = null,
             string subFolder = "")
         {
-            Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "SaveInAdam",
-                $"{nameof(stream)},{nameof(fileName)},{nameof(contentType)},{nameof(guid)},{nameof(field)},{nameof(subFolder)} (optional)");
-
-            if (stream == null || fileName == null || contentType == null || guid == null || field == null)
-                throw new Exception();
-
-            var feats = new[] { FeatureIds.UseAdamInWebApi, FeatureIds.PublicUpload };
-            var features = GetService<ToSic.Eav.Configuration.Features>();
-
-            if (!/*Features*/features.EnabledOrException(feats, "can't save in ADAM", out var exp))
-                throw exp;
-
-            var appId = _DynCodeRoot?.Block?.AppId ?? _DynCodeRoot?.App?.AppId ?? throw new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
-            return ServiceProvider.Build<AdamTransUpload<int, int>>()
-                .Init(appId, contentType, guid.Value, field, false, Log)
-                .UploadOne(stream, fileName, subFolder, true);
+            return _AdamCode.SaveInAdam(
+                stream: stream,
+                fileName: fileName,
+                contentType: contentType,
+                guid: guid,
+                field: field,
+                subFolder: subFolder);
         }
 
         #endregion
@@ -157,11 +153,11 @@ namespace Custom.Hybrid
 
         [NonAction]
         public dynamic CreateInstance(string virtualPath,
-            string dontRelyOnParameterOrder = Parameters.Protector,
+            string noParamOrder = Parameters.Protector,
             string name = null,
             string relativePath = null,
             bool throwOnError = true) =>
-            _DynCodeRoot.CreateInstance(virtualPath, dontRelyOnParameterOrder, name, CreateInstancePath, throwOnError);
+            _DynCodeRoot.CreateInstance(virtualPath, noParamOrder, name, CreateInstancePath, throwOnError);
 
         #endregion
 
@@ -179,6 +175,7 @@ namespace Custom.Hybrid
         [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic Settings => _DynCodeRoot.Settings;
 
+        public IDevTools DevTools => _DynCodeRoot.DevTools;
 
         #endregion
     }

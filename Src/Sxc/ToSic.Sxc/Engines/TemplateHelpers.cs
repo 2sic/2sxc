@@ -1,14 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Blocks;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Engines
 {
@@ -161,11 +162,11 @@ namespace ToSic.Sxc.Engines
         public string ViewPath(IView view, PathTypes type) => Path.Combine(AppPathRoot(view.IsShared, type), view.Path);
 
         public static bool AppPathTokenDetected(string iconInConfig) =>
-            (iconInConfig ?? "").StartsWith(AppAssets.AppPathPlaceholder, StringComparison.OrdinalIgnoreCase);
+            (iconInConfig ?? "").StartsWith(AppConstants.AppPathPlaceholder, StringComparison.OrdinalIgnoreCase);
 
         public static string AppPathTokenReplace(string iconInConfig, string appPath) =>
             AppPathTokenDetected(iconInConfig)
-                ? appPath + iconInConfig.Substring(AppAssets.AppPathPlaceholder.Length)
+                ? appPath + iconInConfig.Substring(AppConstants.AppPathPlaceholder.Length)
                 : iconInConfig;
     }
 }

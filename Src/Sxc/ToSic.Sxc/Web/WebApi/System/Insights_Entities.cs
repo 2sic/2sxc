@@ -5,6 +5,8 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.Plumbing;
+using ToSic.Razor.Blade;
+using static ToSic.Razor.Blade.Tag;
 
 namespace ToSic.Sxc.Web.WebApi.System
 {
@@ -23,33 +25,33 @@ namespace ToSic.Sxc.Web.WebApi.System
 
             var typ = appRead.ContentTypes.Get(type);
 
-            var msg = h1($"Entities for {type} ({typ?.Name}/{typ?.StaticName}) in {appId}\n");
+            var msg = "" + H1($"Entities for {type} ({typ?.Name}/{typ?.StaticName}) in {appId}\n");
             try
             {
                 Log.Add("getting content-type stats");
                 var entities = type == "all"
                     ? appRead.Entities.All.ToImmutableArray()
                     : appRead.Entities.Get(type).ToImmutableArray();
-                msg += p($"entities: {entities.Length}\n");
-                msg += "<table id='table'><thead>"
-                    + tr(new[] { "#", "Id", Eav.Data.Attributes.GuidNiceName, Eav.Data.Attributes.TitleNiceName, "Type", "Modified", "Owner", "Version", "Metadata", "Permissions" }, true)
-                    + "</thead>"
+                msg += P($"entities: {entities.Length}\n");
+                msg += "<table id='table'>"
+                    + HeadFields("#", "Id", Eav.Data.Attributes.GuidNiceName, Eav.Data.Attributes.TitleNiceName, "Type", "Modified", "Owner", "Version", "Metadata", "Permissions")
                     + "<tbody>";
                 var count = 0;
                 foreach (var ent in entities)
                 {
-                    msg = msg + tr(new[] {
+                    msg = msg + RowFields(
                         (++count).ToString(),
-                        a($"{ent.EntityId}", $"entity?appid={appId}&entity={ent.EntityId}"),
-                        a($"{ent.EntityGuid}", $"entity?appid={appId}&entity={ent.EntityGuid}"),
+                        A($"{ent.EntityId}").Href($"entity?appid={appId}&entity={ent.EntityId}"),
+                        A($"{ent.EntityGuid}").Href($"entity?appid={appId}&entity={ent.EntityGuid}"),
                         ent.GetBestTitle(),
                         ent.Type.Name,
                         ent.Modified.ToString(CultureInfo.InvariantCulture),
                         ent.Owner,
                         $"{ent.Version}",
-                        a($"{ent.Metadata.Count()}", $"entitymetadata?appid={appId}&entity={ent.EntityId}"),
-                        a($"{ent.Metadata.Permissions.Count()}", $"entitypermissions?appid={appId}&entity={ent.EntityId}")
-                          });
+                        A($"{ent.Metadata.Count()}").Href($"entitymetadata?appid={appId}&entity={ent.EntityId}"),
+                        A($"{ent.Metadata.Permissions.Count()}")
+                            .Href($"entitypermissions?appid={appId}&entity={ent.EntityId}")
+                    );
                 }
                 msg += "</tbody>";
                 msg += "</table>";
@@ -75,7 +77,7 @@ namespace ToSic.Sxc.Web.WebApi.System
             var appRead = AppRt(appId);
             var ent = appRead.Entities.Get(entity.Value);
 
-            var msg = h1($"Entity Metadata for {entity} in {appId}\n");
+            var msg = H1($"Entity Metadata for {entity} in {appId}\n").ToString();
             var metadata = ent.Metadata.ToList();
 
             return MetadataTable(msg, metadata);
@@ -92,7 +94,7 @@ namespace ToSic.Sxc.Web.WebApi.System
             var appRead = AppRt(appId);
             var ent = appRead.Entities.Get(entity.Value);
 
-            var msg = h1($"Entity Permissions for {entity} in {appId}\n");
+            var msg = H1($"Entity Permissions for {entity} in {appId}\n").ToString();
             var permissions = ent.Metadata.Permissions.Select(p => p.Entity).ToList();
 
             return MetadataTable(msg, permissions);
@@ -119,9 +121,9 @@ namespace ToSic.Sxc.Web.WebApi.System
             var ser = _serviceProvider.Build<JsonSerializer>().Init(appRead.AppState, Log);
             var json = ser.Serialize(ent);
 
-            var msg = h1($"Entity Debug for {entity} in {appId}\n")
-                      + ToBr("\n\n\n")
-                      + Tag("textarea", json, " rows='20' cols='100' ");
+            var msg = H1($"Entity Debug for {entity} in {appId}\n")
+                      + Tags.Nl2Br("\n\n\n")
+                      + Textarea(json).Rows("20").Cols("100");
 
             return msg;
         }

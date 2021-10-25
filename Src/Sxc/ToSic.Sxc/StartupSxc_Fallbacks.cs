@@ -5,6 +5,8 @@ using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.Services;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc
 {
@@ -36,7 +38,20 @@ namespace ToSic.Sxc
             services.TryAddSingleton<IPlatform, PlatformUnknown>();
 
             // ADAM basics
+            // TODO: this doesn't warn yet, there should be an AdamFileSystemUnknown(WarnUseOfUnknown<AdamFileSystemUnknown> warn)
             services.TryAddTransient<IAdamFileSystem<string, string>, AdamFileSystemBasic>();
+
+            // v12.05 - linkhelperunknown - for testing etc.
+            services.TryAddTransient<ILinkHelper, LinkHelperUnknown>();
+
+            // v12.05
+            services.TryAddTransient<IRazorService, RazorServiceUnknown>();
+
+            // v12.05
+            services.TryAddTransient<ILogService, LogServiceUnknown>();
+
+            // v12.05
+            services.TryAddTransient<IMailService, MailServiceUnknown>();
 
             return services;
         }

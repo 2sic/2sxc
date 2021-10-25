@@ -5,10 +5,12 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
@@ -25,7 +27,7 @@ namespace Custom.Hybrid
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP for 2sxc 12")]
     [DnnLogExceptions]
-    public abstract partial class Api12: DynamicApiController, IDynamicCode, IDynamicWebApi, IHasDynamicCodeRoot
+    public abstract partial class Api12: DynamicApiController, IDynamicCode, IDynamicCode12, IDynamicWebApi, IHasDynamicCodeRoot
     {
         [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
 
@@ -61,6 +63,14 @@ namespace Custom.Hybrid
         public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.AsList(list);
 
         #endregion
+
+        #region Convert-Service
+
+        /// <inheritdoc />
+        public IConvertService Convert => _DynCodeRoot.Convert;
+
+        #endregion
+
 
 
         #region CreateSource implementations
@@ -98,14 +108,14 @@ namespace Custom.Hybrid
 
 
         /// <inheritdoc />
-        public new ToSic.Sxc.Adam.IFile SaveInAdam(string dontRelyOnParameterOrder = ToSic.Eav.Parameters.Protector,
+        public new ToSic.Sxc.Adam.IFile SaveInAdam(string noParamOrder = ToSic.Eav.Parameters.Protector,
             Stream stream = null,
             string fileName = null,
             string contentType = null,
             Guid? guid = null,
             string field = null,
             string subFolder = "")
-            => base.SaveInAdam(dontRelyOnParameterOrder, stream, fileName, contentType, guid, field, subFolder);
+            => base.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
 
         #endregion
 
@@ -119,18 +129,18 @@ namespace Custom.Hybrid
 
         #endregion
 
-        #region RunContext WiP
+        #region v12 Properties like CmsContext, Resources, Settings
 
         /// <inheritdoc />
         public ICmsContext CmsContext => _DynCodeRoot?.CmsContext;
 
         /// <inheritdoc />
-        [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic Resources => _DynCodeRoot.Resources;
 
         /// <inheritdoc />
-        [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic Settings => _DynCodeRoot.Settings;
+
+        public IDevTools DevTools => _DynCodeRoot.DevTools;
 
         #endregion
     }

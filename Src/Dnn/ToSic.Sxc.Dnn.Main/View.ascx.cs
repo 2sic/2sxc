@@ -11,7 +11,6 @@ using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -39,7 +38,7 @@ namespace ToSic.Sxc.Dnn
         protected void Page_Load(object sender, EventArgs e)
         {
             // add to insights-history for analytic
-            History.Add("module", Log);
+            Eav.Factory.StaticBuild<LogHistory>().Add("module", Log);
             _stopwatch = Stopwatch.StartNew();
             _entireLog = Log.Call(message: $"Page:{TabId} '{Page?.Title}', Instance:{ModuleId} '{ModuleConfiguration.ModuleTitle}'", useTimer: true);
             var callLog = Log.Call(useTimer: true);
@@ -155,7 +154,7 @@ namespace ToSic.Sxc.Dnn
             TryCatchAndLogToDnn(() =>
             {
                 if (RenderNaked) Block.BlockBuilder.WrapInDiv = false;
-                result = Block.BlockBuilder.Run();
+                result = Block.BlockBuilder.Run(true);
                 result.Html += GetOptionalDetailedLogToAttach();
             }, timerWrap);
 

@@ -4,7 +4,7 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Helpers;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 	        
             // ReSharper disable VirtualMemberCallInConstructor
 	        if (HistoryLogGroup != null)
-	            History.Add(HistoryLogGroup, Log);
+                Eav.Factory.StaticBuild<LogHistory>().Add(HistoryLogGroup, Log);
             // ReSharper restore VirtualMemberCallInConstructor
 
         }
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         /// The group name for log entries in insights.
         /// Helps group various calls by use case. 
         /// </summary>
-        protected virtual string HistoryLogGroup { get; } = "web-api";
+        protected virtual string HistoryLogGroup => EavWebApiConstants.HistoryNameWebApi;
 
         /// <summary>
         /// The name of the logger in insights.

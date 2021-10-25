@@ -1,12 +1,11 @@
 ﻿using Custom.Hybrid;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Oqtane.Repository;
 using Oqtane.Shared;
 using System;
-using ToSic.Eav;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
@@ -17,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
     /// <summary>
     /// The Oqtane implementation of the <see cref="ILinkHelper"/>.
     /// </summary>
-    [PublicApi_Stable_ForUseInYourCode]
+    [PrivateApi]
     public class OqtLinkHelper : LinkHelper
     {
         public Razor12 RazorPage { get; set; }
@@ -25,7 +24,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private readonly SiteStateInitializer _siteStateInitializer;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly OqtLinkPaths _linkPaths;
-        //private IApp App;
         private Context.IContextOfBlock _context;
 
         public OqtLinkHelper(
@@ -36,39 +34,47 @@ namespace ToSic.Sxc.Oqt.Server.Run
             ImgResizeLinker imgLinker
         ) : base(imgLinker)
         {
-            //Log = new Log("OqtLinkHelper");
-            // TODO: logging
-
             _pageRepository = pageRepository;
             _siteStateInitializer = siteStateInitializer;
             _contextAccessor = contextAccessor;
             _linkPaths = linkPaths as OqtLinkPaths;
         }
 
-        public override void Init(Context.IContextOfBlock context, IApp app, ILog parentLog)
+
+        public override void AddBlockContext(IDynamicCodeRoot codeRoot)
         {
-            base.Init(context, app, parentLog);
-            _context = context;
+            base.AddBlockContext(codeRoot);
+            _context = codeRoot.Block?.Context;
         }
-        
-        //public ILog Log { get; }
 
-        /// <inheritdoc />
-        public override string To(string dontRelyOnParameterOrder = Parameters.Protector, int? pageId = null, string parameters = null, string api = null)
-        {
-            // prevent incorrect use without named parameters
-            Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
+        ///// <inheritdoc />
+        //public override string To(string noParamOrder = Parameters.Protector, int? pageId = null, object parameters = null, string api = null)
+        //{
+        //    // prevent incorrect use without named parameters
+        //    Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
 
-            // Check initial conflicting values.
-            if (pageId != null && api != null)
-                throw new ArgumentException($"Multiple properties like '{nameof(api)}' or '{nameof(pageId)}' have a value - only one can be provided.");
+        //    // Check initial conflicting values.
+        //    if (pageId != null && api != null)
+        //        throw new ArgumentException($"Multiple properties like '{nameof(api)}' or '{nameof(pageId)}' have a value - only one can be provided.");
 
-            // Page or Api?
-            return api == null ? PageNavigateUrl(pageId, parameters) : ApiNavigateUrl(api, parameters);
-        }
+        //    var strParams = ParametersToString(parameters);
+
+        //    // Page or Api?
+        //    return api == null ? PageNavigateUrl(pageId, strParams) : ApiNavigateUrl(api, strParams);
+        //}
+
+        protected override string ToApi(string api, string parameters = null) => ApiNavigateUrl(api, parameters);
+        protected override string ToPage(int? pageId, string parameters = null) => PageNavigateUrl(pageId, parameters);
+
+        //protected override string ToImplementation(int? pageId = null, string parameters = null, string api = null)
+        //{
+        //    // Page or Api?
+        //    return api == null ? PageNavigateUrl(pageId, parameters) : ApiNavigateUrl(api, parameters);
+
+        //}
 
         // Prepare Api link.
-        private string ApiNavigateUrl(string api, string parameters, bool absoluteUrl = true)
+        private string ApiNavigateUrl(string api, string parameters)
         {
             var alias = _siteStateInitializer.InitializedState.Alias;
             
@@ -80,7 +86,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 ? pathWithQueryString
                 : $"/{alias.Path}{pathWithQueryString}";
 
-            return absoluteUrl ? $"{GetDomainName()}{relativePath}" : relativePath;
+            return relativePath;
         }
 
         // Prepare Page link.
@@ -94,14 +100,19 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             var page = _pageRepository.GetPage(pid.Value);
 
+            // if pageId is invalid, fallback to currentPageId
+            if (page == null && currentPageId.HasValue && pid != currentPageId)
+                page = _pageRepository.GetPage(currentPageId.Value);
+
             var alias = _siteStateInitializer.InitializedState.Alias;
 
-            var relativePath = Utilities.NavigateUrl(alias.Path, page.Path, parameters ?? string.Empty); // NavigateUrl do not works with absolute links
+            // for invalid page numbers just skip that part 
+            var relativePath = Utilities.NavigateUrl(alias.Path, page?.Path ?? string.Empty, parameters ?? string.Empty); // NavigateUrl do not works with absolute links
 
-            return absoluteUrl ? $"{GetDomainName()}{relativePath}" : relativePath;
+            return absoluteUrl ? $"{GetCurrentLinkRoot()}{relativePath}" : relativePath;
         }
 
-        private string GetDomainName()
+        public override string GetCurrentLinkRoot()
         {
             var scheme = _contextAccessor?.HttpContext?.Request?.Scheme ?? "http";
             var alias = _siteStateInitializer.InitializedState.Alias;
@@ -109,6 +120,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 ? alias.Name
                 : alias.Name.Substring(0, alias.Name.Length - alias.Path.Length - 1);
             return  $"{scheme}://{domainName}";
+        }
+
+        public override string GetCurrentRequestUrl()
+        {
+            return _contextAccessor?.HttpContext?.Request?.GetEncodedUrl() ?? string.Empty;
         }
     }
 }

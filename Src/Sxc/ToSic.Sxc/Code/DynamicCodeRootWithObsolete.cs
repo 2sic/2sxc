@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NETFRAMEWORK
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
@@ -54,10 +55,6 @@ namespace ToSic.Sxc.Code
         }
 
 
-        //[PrivateApi]
-        //[Obsolete("use Header instead")]
-        //public dynamic ListContent => DynCode.Header;
-
 #pragma warning disable 618
         [PrivateApi]
         [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in 2sxc v10")]
@@ -85,7 +82,6 @@ namespace ToSic.Sxc.Code
             if (!_root.Data.Out.ContainsKey(Eav.Constants.DefaultStreamName)) return;
 
             var entities = _root.Data.List.ToList();
-            //if (entities.Any()) _content = AsDynamic(entities.First());
 
             _list = entities.Select(GetElementFromEntity).ToList();
 
@@ -97,11 +93,15 @@ namespace ToSic.Sxc.Code
                     Content = _root.AsDynamic(e)
                 };
 
-                if (e is EntityInBlock c)
+                var editDecorator = e.GetDecorator<EntityInBlockDecorator>();
+
+                //if (e is EntityInBlock c)
+                if (editDecorator != null)
                 {
-                    el.GroupId = c.GroupId;
-                    el.Presentation = c.Presentation == null ? null : _root.AsDynamic(c.Presentation);
-                    el.SortOrder = c.SortOrder;
+                    // 2021-10-12 2dm #dropGroupId - believe this is never used anywhere. Leave comment till EOY 2021
+                    //el.GroupId = editDecorator.GroupId;
+                    el.Presentation = editDecorator.Presentation == null ? null : _root.AsDynamic(editDecorator.Presentation);
+                    el.SortOrder = editDecorator.SortOrder;
                 }
 
                 return el;
@@ -111,3 +111,5 @@ namespace ToSic.Sxc.Code
 
     }
 }
+
+#endif

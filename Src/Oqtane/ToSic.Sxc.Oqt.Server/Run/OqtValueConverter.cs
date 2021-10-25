@@ -8,7 +8,6 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Adam;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 
 namespace ToSic.Sxc.Oqt.Server.Run
@@ -16,9 +15,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
     /// <summary>
     /// The Oqtane implementation of the <see cref="IValueConverter"/> which converts "file:22" or "page:5" to the url,
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
+    [PrivateApi]
     public class OqtValueConverter : IValueConverter
     {
+        private readonly Lazy<IFeaturesService> _featuresLazy;
         public Lazy<IFileRepository> FileRepository { get; }
         public Lazy<IFolderRepository> FolderRepository { get; }
         public Lazy<ITenantResolver> TenantResolver { get; }
@@ -34,9 +34,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
             Lazy<ITenantResolver> tenantResolver,
             Lazy<IPageRepository> pageRepository,
             Lazy<IServerPaths> serverPaths,
-            Lazy<SiteStateInitializer> siteStateInitializerLazy
-            )
+            Lazy<SiteStateInitializer> siteStateInitializerLazy,
+            Lazy<IFeaturesService> featuresLazy) 
         {
+            _featuresLazy = featuresLazy;
             FileRepository = fileRepository;
             FolderRepository = folderRepository;
             TenantResolver = tenantResolver;
@@ -66,7 +67,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public string ToValue(string reference, Guid itemGuid = default) => TryToResolveOqtCodeToLink(itemGuid, reference);
 
         /// <summary>
-        /// Will take a link like http:\\... to a file or page and try to return a DNN-style info like
+        /// Will take a link like http://... to a file or page and try to return a DNN-style info like
         /// Page:35 or File:43003
         /// </summary>
         /// <param name="potentialFilePath"></param>
@@ -81,7 +82,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
             //var site = TenantResolver.Value.GetAlias();
 
             // Try to find the Folder
-            // todo: check if it has /Content/Tenant/1/Site/1 etc.
             var pathAsFolder = potentialFilePath.Backslash();
             var folderPath = Path.GetDirectoryName(pathAsFolder);
             var folder = FolderRepository.Value.GetFolder(Alias.SiteId, folderPath);
@@ -94,7 +94,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 if (fileInfo != null) return "file:" + fileInfo.FileId;
             }
 
-            var pathAsPageLink = potentialFilePath.ForwardSlash().TrimEnd('/').TrimStart('/'); // no trailing slashes
+            var pathAsPageLink = potentialFilePath.TrimLastSlash(); // no trailing slashes
             // Try page / tab ID
             var page = PageRepository.Value.GetPage(pathAsPageLink, Alias.SiteId);
             return page != null
@@ -111,29 +111,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
         /// <returns></returns>
         private string TryToResolveOqtCodeToLink(Guid itemGuid, string originalValue)
         {
-            if (string.IsNullOrEmpty(originalValue)) return originalValue;
-            // new
-            var resultString = originalValue;
-            var parts = new ValueConverterBase.LinkParts(resultString);
-
-            //var regularExpression = Regex.Match(resultString, ValueConverterBase.RegExToDetectConvertable, RegexOptions.IgnoreCase);
-
-            if (!parts.IsMatch) // regularExpression.Success)
-                return originalValue;
-
-            //var linkType = regularExpression.Groups[ValueConverterBase.RegExType].Value.ToLowerInvariant();
-            //var linkId = int.Parse(regularExpression.Groups[ValueConverterBase.RegExId].Value);
-            //var urlParams = regularExpression.Groups[ValueConverterBase.RegExParams].Value ?? "";
-
-            //var isPageLookup = linkType == ValueConverterBase.PrefixPage;
             try
             {
-                var result = (parts.IsPage // isPageLookup
-                                 ? ResolvePageLink(parts.Id)
-                                 : ResolveFileLink(parts.Id, itemGuid))
-                             ?? originalValue;
-
-                return result + (result == originalValue ? "" : parts.Params);
+                return ValueConverterBase.TryToResolveCodeToLink(itemGuid, originalValue, ResolvePageLink, ResolveFileLink);
             }
             catch /*(Exception e)*/
             {
@@ -144,7 +124,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 //Logger.Value.Log(LogLevel.Error, this, LogFunction.Other, wrappedEx.Message);
                 return originalValue;
             }
-
         }
 
         private string ResolveFileLink(int linkId, Guid itemGuid)
@@ -173,7 +152,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 var result = $"{Alias.Path}/app/{appName}/adam/{filePath}".PrefixSlash();
 
                 // optionally do extra security checks (new in 10.02)
-                if (!Features.Enabled(FeatureIds.BlockFileIdLookupIfNotInSameApp)) return result;
+                if (!_featuresLazy.Value.Enabled(FeatureIds.BlockFileIdLookupIfNotInSameApp)) return result;
 
                 // check if it's in this item. We won't check the field, just the item, so the field is ""
                 return !ToSic.Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", pathInAdam)

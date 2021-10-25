@@ -6,27 +6,27 @@ using ToSic.Sxc.Context;
 namespace ToSic.Sxc.Blocks
 {
     [PrivateApi("Hide implementation")]
-    public class CmsView: ICmsView, IWrapper<IView>
+    public class CmsView: Wrapper<IView>, ICmsView, IWrapper<IView>
     {
-        public CmsView(IBlock block)
+        public CmsView(IBlock block): base(block?.View)
         {
-            UnwrappedContents = block?.View;
+            // UnwrappedContents = block?.View;
         }
 
-        [PrivateApi]
-        public IView UnwrappedContents { get; }
+        //[PrivateApi]
+        //public IView UnwrappedContents { get; }
 
         /// <inheritdoc />
-        public int Id => UnwrappedContents?.Id ?? 0;
+        public int Id => _contents?.Id ?? 0;
 
         /// <inheritdoc />
-        public string Name => UnwrappedContents?.Name ?? "";
+        public string Name => _contents?.Name ?? "";
 
         /// <inheritdoc />
-        public string Identifier => UnwrappedContents?.Identifier ?? "";
+        public string Identifier => _contents?.Identifier ?? "";
 
         /// <inheritdoc />
-        public string Edition => UnwrappedContents?.Edition;
+        public string Edition => _contents?.Edition;
 
     }
 }

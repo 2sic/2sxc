@@ -4,48 +4,52 @@ using System.Linq;
 using System.Text;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Razor.Blade;
+using static ToSic.Razor.Blade.Tag;
 
 namespace ToSic.Sxc.Web.WebApi.System
 {
     public partial class Insights
     {
 
-        internal static string LogHeader(string key = null)
+        internal string LogHeader(string key = null)
         {
-            var msg = div("back to " + a("2sxc insights home", "./help"))
-                      + h1($"2sxc Insights: Log {key}")
-                      + p(
-                          $"Status: {(History.Pause ? "paused" : "running")} collecting #{History.Count} of max {History.MaxCollect} (keep max {History.Size} per set, then FIFO) - "
-                          + a("change", $"logs?pause={!History.Pause}")
+            var msg = "" + Div("back to " + A("2sxc insights home").Href( "./help"))
+                      + H1($"2sxc Insights: Log {key}")
+                      + P("Status: ",
+                          Strong(_logHistory.Pause ? "paused" : "running"), 
+                          " ",
+                          A(HtmlEncode("▶")).Href("logs?pause=false"),
+                          " | ",
+                          A(HtmlEncode("⏸")).Href("logs?pause=true"),
+                          $" collecting #{_logHistory.Count} of max {_logHistory.MaxCollect} (keep max {_logHistory.Size} per set, then FIFO) - "
+                          + A("change").Href($"logs?pause={!_logHistory.Pause}")
                           + " (pause to see details of the log)\n");
             return msg;
         }
 
-        internal static string LogHistoryOverview()
+        internal static string LogHistoryOverview(LogHistory logHistory)
         {
             var msg = "";
             try
             {
-                var logs = History.Logs;
-                msg += p($"Logs Overview: {logs.Count}\n");
+                var logs = logHistory.Logs;
+                msg += P($"Logs Overview: {logs.Count}\n");
 
-                msg += "<table id='table'><thead>"
-                       + tr(new[] { "#", "Key", "Count", "Actions" }, true)
-                       + "</thead>"
-                       + "<tbody>";
                 var count = 0;
-                foreach (var log in logs.OrderBy(l => l.Key))
-                {
-                    msg = msg + tr(new[]
-                    {
-                        (++count).ToString(),
-                        a(log.Key, $"logs?key={log.Key}"),
-                        $"{log.Value.Count}",
-                        a("flush", $"logsflush?key={log.Key}")
-                    });
-                }
-                msg += "</tbody>";
-                msg += "</table>";
+
+                msg += Table().Id("table").Wrap(
+                    HeadFields("# ↕", "Key ↕", "Count ↕", "Actions ↕"),
+                    Tbody(
+                        logs.OrderBy(l => l.Key)
+                            .Select(log => RowFields((++count).ToString(),
+                                A(log.Key).Href($"logs?key={log.Key}").ToString(),
+                                $"{log.Value.Count}",
+                                A("flush").Href($"logsflush?key={log.Key}").ToString())
+                            )
+                            .Cast<object>()
+                            .ToArray())
+                );
                 msg += "\n\n";
                 msg += JsTableSort();
             }
@@ -56,34 +60,31 @@ namespace ToSic.Sxc.Web.WebApi.System
             return msg;
         }
 
-        internal static string LogHistory(string key)
+        internal static string LogHistory(LogHistory logHistory, string key)
         {
             var msg = "";
             try
             {
-                if (History.Logs.TryGetValue(key, out var set))
+                if (logHistory.Logs.TryGetValue(key, out var set))
                 {
-                    msg += p($"Logs Overview: {set.Count}\n");
-                    msg += "<table id='table'><thead>"
-                           + tr(new[] { "#", "Timestamp", "Key", "TopLevel Name", "Lines", "First Message" }, true)
-                           + "</thead>"
-                           + "<tbody>";
                     var count = 0;
-                    foreach (var log in set)
-                    {
-                        count++;
-                        msg = msg + tr(new[]
-                        {
-                            $"{count}",
-                            log.Created.ToString("O"),
-                            $"{key}",
-                            a(log.FullIdentifier, $"logs?key={key}&position={count}"),
-                            $"{log.Entries.Count}",
-                            log.Entries.FirstOrDefault()?.Message
-                        });
-                    }
-                    msg += "</tbody>";
-                    msg += "</table>";
+                    msg += P($"Logs Overview: {set.Count}\n");
+                    msg += Table().Id("table").Wrap( // ) "<table id='table'>"
+                        HeadFields("#", "Timestamp", "Key", "TopLevel Name", "Lines", "First Message"),
+                        //+ "<tbody>"
+                        //;
+                        Tbody(set
+                            .Select(log => RowFields(
+                                $"{++count}",
+                                log.Created.ToString("O"),
+                                $"{key}",
+                                A(log.FullIdentifier).Href($"logs?key={key}&position={count}"),
+                                $"{log.Entries.Count}",
+                                log.Entries.FirstOrDefault()?.Message)
+                            )
+                            .ToArray<object>()));
+                    //msg += "</tbody>";
+                    //msg += "</table>";
                     msg += "\n\n";
                     msg += JsTableSort();
                 }
@@ -122,19 +123,19 @@ namespace ToSic.Sxc.Web.WebApi.System
                 callStart: CallerPrefixPlaceholder,
                 callEnd: CallerSuffixPlaceholder
                 );
-            var htmlEnc = h1($"{title}") + "\n" + HtmlEncode(dump);
+            var htmlEnc = H1($"{title}") + "\n" + HtmlEncode(dump);
             htmlEnc = htmlEnc
                 .Replace(ResStartPlaceholder, ResStart)
                 .Replace(ResEndPlaceholder, ResEnd)
                 .Replace(CallerPrefixPlaceholder, CallerPrefix)
                 .Replace(CallerSuffixPlaceholder, CallerSuffix);
 
-            return ToBr(htmlEnc);
+            return Tags.Nl2Br(htmlEnc);
         }
 
         internal static string DumpTree(string title, ILog log)
         {
-            var lg = new StringBuilder(h1($"{title}") + "\n\n");
+            var lg = new StringBuilder(H1($"{title}") + "\n\n");
             if (log.Entries.Count == 0) return "";
             lg.AppendLine("<ol>");
 
@@ -208,7 +209,7 @@ namespace ToSic.Sxc.Web.WebApi.System
             if (e.Elapsed == TimeSpan.Zero) return "";
             var seconds = e.Elapsed.TotalSeconds;
             var ms = seconds * 1000;
-            var time = ms < 1000 ? $"{ms}ms" : $"{seconds}s";
+            var time = ms < 1000 ? $"{ms:##.####}ms" : $"{seconds:##.####}s";
             return HtmlEncode($" ⌚ {time} ");
         }
     }

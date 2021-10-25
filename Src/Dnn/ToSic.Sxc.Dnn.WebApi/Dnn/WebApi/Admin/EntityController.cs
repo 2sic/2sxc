@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
 using ToSic.Eav.ImportExport.Options;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
@@ -14,6 +14,7 @@ using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Cms;
 using Guid = System.Guid;
+using Helpers = ToSic.Eav.WebApi.Helpers;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
@@ -109,11 +110,15 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             string contentType,
             ExportSelection recordExport, ExportResourceReferenceMode resourcesReferences,
             ExportLanguageResolution languageReferences, string selectedIds = null)
-            => GetService<ContentExportApi>().Init(appId, Log).ExportContent(
+        {
+            var fileContentAndFileName = GetService<ContentExportApi>().Init(appId, Log).ExportContent(
                 new DnnUser(),
                 language, defaultLanguage, contentType,
                 recordExport, resourcesReferences,
                 languageReferences, selectedIds);
+
+            return Helpers.Download.BuildDownload(fileContentAndFileName.Item1, fileContentAndFileName.Item2);
+        }
 
         /// <inheritdoc/>
         [HttpPost]

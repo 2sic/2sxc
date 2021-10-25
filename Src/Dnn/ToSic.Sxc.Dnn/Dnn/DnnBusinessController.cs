@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Dnn
 
                 // if publishing is used, make sure it's in the log-history
                 _publishing = Eav.Factory.StaticBuild<Cms.DnnPagePublishing>().Init(Log);
-                History.Add("dnn-publishing", Log);
+                Eav.Factory.StaticBuild<LogHistory>().Add("dnn-publishing", Log);
                 return _publishing;
             }
         }

@@ -6,23 +6,20 @@
 
         /// <inheritdoc />
         public virtual dynamic CreateInstance(string virtualPath,
-            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             string name = null,
             string relativePath = null,
             bool throwOnError = true)
         {
             var wrap = Log.Call<dynamic>($"{virtualPath}, {name}, {relativePath}, {throwOnError}");
-            Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "CreateInstance",
+            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "CreateInstance",
                 $"{nameof(name)},{nameof(throwOnError)}");
 
             // Compile
             var compiler = Deps.CodeCompilerLazy.IsValueCreated
                 ? Deps.CodeCompilerLazy.Value
                 : Deps.CodeCompilerLazy.Value.Init(Log);
-            var instance = compiler
-                //new CodeCompiler(_serviceProvider)
-                //.Init(Log)
-                .InstantiateClass(virtualPath, name, relativePath, throwOnError);
+            var instance = compiler.InstantiateClass(virtualPath, name, relativePath, throwOnError);
 
             // if it supports all our known context properties, attach them
             if (instance is ICoupledDynamicCode isShared) isShared.DynamicCodeCoupling(this);

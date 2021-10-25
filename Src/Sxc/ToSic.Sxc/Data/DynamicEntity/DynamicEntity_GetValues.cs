@@ -36,7 +36,41 @@ namespace ToSic.Sxc.Data
             if (Entity == null) return safeWrap("no entity", null);
             var propRequest = Entity.FindPropertyInternal(field, dimensions, logOrNull);
 
+            // new 12.05, very experimental
+            //ApplyDynamicDataFeaturesToResult(field, propRequest);
+
             return safeWrap(null, propRequest);
+        }
+
+        // V12.10? This is just PoC to show that we could auto-dynamic data. Will not be available yet
+        private void ApplyDynamicDataFeaturesToResult(string field, PropertyRequest propRequest)
+        {
+            if (propRequest.Value != null && propRequest.Result is string strResult)
+            {
+                if (propRequest.Value.DynamicUseCache == null)
+                {
+                    // determine if we should use a cache
+                    try
+                    {
+                        var attDef = Entity.Type[field];
+                        if (attDef?.InputType()?.StartsWith("custom-json") ?? false)
+                        {
+                            // try to convert json object
+                            var jsonJacket = DynamicJacket.AsDynamicJacket(strResult);
+                            propRequest.Value.DynamicCache = jsonJacket;
+                            // Set true after storing data, so if anything broke, it will catch and be set to false
+                            propRequest.Value.DynamicUseCache = true;
+                        }
+                    }
+                    catch
+                    {
+                        // anything broke? cancel and don't try again
+                        propRequest.Value.DynamicUseCache = false;
+                    }
+                }
+
+                if (propRequest.Value.DynamicUseCache == true) propRequest.Result = propRequest.Value.DynamicCache;
+            }
         }
 
         [PrivateApi("WIP / internal")]

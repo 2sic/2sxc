@@ -36,7 +36,7 @@ namespace ToSic.SexyContent.Razor
     /// </summary>
     public abstract class SexyContentWebPage : 
         RazorComponentBase, 
-        IRazorComponent, 
+        IDnnRazorCustomize, 
         IDynamicCodeBeforeV10,
 #pragma warning disable 618
         IAppAndDataHelpers
@@ -46,7 +46,7 @@ namespace ToSic.SexyContent.Razor
 
         public ILinkHelper Link => _DynCodeRoot.Link;
 
-        [PrivateApi] public dynamic DynamicModel => throw new NotSupportedException($"{nameof(DynamicModel)} not implemented on {nameof(SexyContentWebPage)}. Use a newer base class to leverage this. ");
+        [PrivateApi] public dynamic DynamicModel => throw new NotSupportedException($"{nameof(DynamicModel)} not implemented on {nameof(SexyContentWebPage)}. {RazorComponent.NotImplementedUseCustomBase}");
 
         /// <summary>
         /// Helper commands to enable in-page editing functionality
@@ -125,6 +125,11 @@ namespace ToSic.SexyContent.Razor
             => throw new Exception("AsList is a new feature in 2sxc 10.20. To use it, change your template type to " + nameof(RazorComponent) + " see https://r.2sxc.org/RazorComponent");
 
         #endregion
+
+        //#region Convert-Service
+        //[PrivateApi] 
+        //public IConvertService Convert => throw new NotSupportedException($"{nameof(Convert)} not implemented on {nameof(SexyContentWebPage)}. {RazorComponent.NotImplementedUseCustomBase}");
+        //#endregion
 
 
         #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
@@ -230,13 +235,13 @@ namespace ToSic.SexyContent.Razor
         /// <inheritdoc />
         public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
 
-        /// <inheritdoc />
-        [PublicApi("Careful - still Experimental in 12.02")]
-        public dynamic Resources => _DynCodeRoot.Resources;
+        ///// <inheritdoc />
+        //[PublicApi("Careful - still Experimental in 12.02")]
+        //public dynamic Resources => _DynCodeRoot.Resources;
 
-        /// <inheritdoc />
-        [PublicApi("Careful - still Experimental in 12.02")]
-        public dynamic Settings => _DynCodeRoot.Settings;
+        ///// <inheritdoc />
+        //[PublicApi("Careful - still Experimental in 12.02")]
+        //public dynamic Settings => _DynCodeRoot.Settings;
 
         #endregion
 

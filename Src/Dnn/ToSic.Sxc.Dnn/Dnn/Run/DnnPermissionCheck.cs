@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Dnn.Run
     {
         #region Constructor / DI
 
-        public DnnPermissionCheck(IAppStates appStates) : base(appStates, DnnConstants.LogName)
+        public DnnPermissionCheck(IAppStates appStates, Dependencies dependencies) : base(appStates, dependencies, DnnConstants.LogName)
         {
         }
 

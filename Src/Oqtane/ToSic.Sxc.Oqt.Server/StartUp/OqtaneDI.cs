@@ -21,9 +21,11 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.LookUps;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
+using ToSic.Sxc.Oqt.Server.Services;
 using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Server.WebApi.Admin;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi.ApiExplorer;
 using ToSic.Sxc.WebApi.Context;
@@ -45,7 +47,8 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddScoped<IUser, OqtUser>();
             services.TryAddTransient<IModule, OqtModule>();
             services.TryAddTransient<OqtModule>();
-            services.TryAddScoped<OqtState>();
+            //services.TryAddScoped<OqtState>();
+            services.TryAddTransient<OqtGetBlock>();    // WIP - should replace most of OqtState
             services.TryAddScoped<RequestHelper>();
             //services.TryAddTransient<OqtTempInstanceContext>();
 
@@ -106,8 +109,8 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             // Lookup
             services.TryAddTransient<QueryStringLookUp>();
             services.TryAddTransient<SiteLookUp>();
-            services.TryAddTransient<PageLookUp>();
-            services.TryAddTransient<ModuleLookUp>();
+            services.TryAddTransient<OqtPageLookUp>();
+            services.TryAddTransient<OqtModuleLookUp>();
             services.TryAddScoped<UserLookUp>();
 
             // Polymorphism Resolvers
@@ -138,10 +141,13 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             }
             catch { /* ignore */ }
 
-            // new in v12.02 - PageService DI
-            // TODO: SPM: IMPLEMENT OqtPageChanger - discuss w/2dm
-            // services.TryAddScoped<IPageChangeApplicator, DnnPageChanges>();
+            services.TryAddTransient<OqtModuleHelper>();
 
+            // v12.05
+            services.TryAddTransient<ILogService, OqtLogService>();
+
+            // v12.05
+            services.TryAddTransient<IMailService, OqtMailService>();
 
             return services;
         }

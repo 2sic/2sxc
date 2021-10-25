@@ -146,7 +146,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             if (!InsightsController.InsightsLoggingEnabled)
                 if (url?.Contains(InsightsController.InsightsUrlFragment) ?? false)
                     addToHistory = false;
-            if (addToHistory) History.Add("http-request", log);
+            if (addToHistory) Eav.Factory.StaticBuild<LogHistory>().Add("http-request", log);
         }
     }
 }

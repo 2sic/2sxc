@@ -2,11 +2,17 @@
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
+using ToSic.Eav.Run.Unknown;
 
 namespace ToSic.Sxc.Context
 {
     public class ModuleUnknown: IModule, IIsUnknown
     {
+        public ModuleUnknown(WarnUseOfUnknown<ModuleUnknown> warn)
+        {
+
+        }
+
         public IModule Init(int id, ILog parentLog)
         {
             // don't do anything

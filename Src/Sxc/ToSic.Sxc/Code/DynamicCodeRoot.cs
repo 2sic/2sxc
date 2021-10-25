@@ -4,6 +4,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Edit.InPageEditingSystem;
@@ -30,14 +31,12 @@ namespace ToSic.Sxc.Code
         {
             public IServiceProvider ServiceProvider { get; }
             public ICmsContext CmsContext { get; }
-            public ILinkHelper LinkHelper { get; }
             public Lazy<CodeCompiler> CodeCompilerLazy { get; }
 
-            public Dependencies(IServiceProvider serviceProvider, ICmsContext cmsContext, ILinkHelper linkHelper, Lazy<CodeCompiler> codeCompilerLazy)
+            public Dependencies(IServiceProvider serviceProvider, ICmsContext cmsContext, Lazy<CodeCompiler> codeCompilerLazy)
             {
                 ServiceProvider = serviceProvider;
                 CmsContext = cmsContext;
-                LinkHelper = linkHelper;
                 CodeCompilerLazy = codeCompilerLazy;
             }
         }
@@ -47,7 +46,6 @@ namespace ToSic.Sxc.Code
             Deps = dependencies;
             _serviceProvider = dependencies.ServiceProvider;
             CmsContext = dependencies.CmsContext;
-            Link = dependencies.LinkHelper;
         }
 
         private readonly Dependencies Deps;
@@ -73,7 +71,7 @@ namespace ToSic.Sxc.Code
         [PrivateApi] private Dictionary<string, object> _piggyBackers;
 
         [PrivateApi]
-        public virtual IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)
+        public virtual IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility) // = Constants.CompatibilityLevel10)
         {
             Log.LinkTo(parentLog ?? block?.Log);
             if (block == null)
@@ -82,11 +80,9 @@ namespace ToSic.Sxc.Code
             CompatibilityLevel = compatibility;
             ((CmsContext) CmsContext).Update(block);
             Block = block;
-            //App = block.App;
             Data = block.Data;
             Edit = new InPageEditingHelper(block, Log);
 
-            //Link.Init(block?.Context, App);
             AttachAppAndInitLink(block.App);
 
             return this;
@@ -99,8 +95,9 @@ namespace ToSic.Sxc.Code
         public IBlockDataSource Data { get; private set; }
 
         /// <inheritdoc />
-        public ILinkHelper Link { get; protected set; }
-
+        // Note that ILinkHelper uses INeedsCodeRoot, so if initialized in GetService this will be auto-provided
+        public ILinkHelper Link => _link ?? (_link = GetService<ILinkHelper>());
+        private ILinkHelper _link;
 
 
         #region Edit
@@ -116,5 +113,6 @@ namespace ToSic.Sxc.Code
 
         #endregion
 
+        public IDevTools DevTools => throw new NotImplementedException("This is a future feature, we're just reserving the object name");
     }
 }

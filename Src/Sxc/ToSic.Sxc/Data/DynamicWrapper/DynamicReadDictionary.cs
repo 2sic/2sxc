@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using ToSic.Eav.Data;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Data
 {
@@ -17,6 +18,7 @@ namespace ToSic.Sxc.Data
     public class DynamicReadDictionary<TKey, TVal>: DynamicObject, IWrapper<IDictionary<TKey, TVal>>
     {
         public IDictionary<TKey, TVal> UnwrappedContents { get; }
+        public IDictionary<TKey, TVal> GetContents() => UnwrappedContents;
         private readonly Dictionary<string, object> _ignoreCaseLookup = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
 
         public DynamicReadDictionary(IDictionary<TKey, TVal> dictionary)
@@ -30,7 +32,15 @@ namespace ToSic.Sxc.Data
         
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            _ignoreCaseLookup.TryGetValue(binder.Name, out result);
+            // if nothing found, just return true/done
+            if(!_ignoreCaseLookup.TryGetValue(binder.Name, out result))
+                return true;
+
+            // if result is an anonymous object, re-wrap again for consistency with other APIs
+            if (result is null) return true;
+            if (result.IsAnonymous())
+                result = DynamicHelpers.WrapIfPossible(result, false, true, false);
+
             return true;
         }
 

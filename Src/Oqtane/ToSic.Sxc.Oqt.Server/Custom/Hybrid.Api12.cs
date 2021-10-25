@@ -4,11 +4,13 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.WebApi;
+using ToSic.Sxc.WebApi.Adam;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 // ReSharper disable once CheckNamespace
@@ -19,14 +21,10 @@ namespace Custom.Hybrid
     /// It is without dependencies in class constructor, commonly provided with DI.
     /// </summary>
     [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
-    public abstract partial class Api12 : OqtStatefulControllerBase, IDynamicCode, IDynamicWebApi
+    public abstract partial class Api12 : OqtStatefulControllerBase, IDynamicCode, IDynamicWebApi, IDynamicCode12
     {
-        //protected IServiceProvider ServiceProvider { get; private set; }
-
         [PrivateApi]
-        protected override string HistoryLogName { get; } = "web-api";
-
-        //private OqtState _oqtState;
+        protected override string HistoryLogName => EavWebApiConstants.HistoryNameWebApi;
 
         /// <summary>
         /// Our custom dynamic 2sxc app api controllers, depends on event OnActionExecuting to provide dependencies (without DI in constructor).
@@ -37,7 +35,9 @@ namespace Custom.Hybrid
         {
             base.OnActionExecuting(context);
 
-            _DynCodeRoot = ServiceProvider.Build<DynamicCodeRoot>().Init(OqtState.GetBlock(true), Log);
+            // Note that BlockOptional was already retrieved in the base class
+            _DynCodeRoot = ServiceProvider.Build<DynamicCodeRoot>().Init(BlockOptional, Log, ToSic.Sxc.Constants.CompatibilityLevel12);
+            _AdamCode = ServiceProvider.Build<AdamCode>().Init(_DynCodeRoot, Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (_DynCodeRoot.App == null)

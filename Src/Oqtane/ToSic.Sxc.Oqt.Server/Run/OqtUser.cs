@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public OqtUser(Lazy<IUserRepository> userRepository,
             Lazy<IUserRoleRepository> userRoleRepository,
             IHttpContextAccessor httpContextAccessor,
-            SiteState siteState) /*: this(WipConstants.NullUser)*/
+            SiteState siteState)
         {
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
@@ -45,6 +45,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             set => _unwrappedUser = value;
         }
         private User _unwrappedUser;
+        public User GetContents() => UnwrappedContents;
 
         private User GetUser()
         {

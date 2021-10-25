@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Security.Policy;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
+using static ToSic.Sxc.LookUp.LookUpConstants;
 
 namespace ToSic.Sxc.Dnn.LookUp
 {
@@ -46,31 +46,31 @@ namespace ToSic.Sxc.Dnn.LookUp
             foreach (var propertyAccess in stdSources)
                 providers.Add(new LookUpInDnnPropertyAccess(propertyAccess.Key, propertyAccess.Value, dnnUsr, dnnCult));
 
-            if (providers.HasSource("module"))
+            if (providers.HasSource(SourceModule))
             {
-                var original = providers.Sources["module"];
-                var id = original.Get("moduleid");
-                var preferred = new LookUpInDictionary("module", new Dictionary<string, string> {{"id", id}});
-                providers.Sources["module"] = new LookUpInLookUps("module", preferred, original);
+                var original = providers.Sources[SourceModule];
+                var id = original.Get(OldDnnModuleId);
+                var preferred = new LookUpInDictionary(SourceModule, new Dictionary<string, string> { { KeyId, id } });
+                providers.Sources[SourceModule] = new LookUpInLookUps(SourceModule, preferred, original);
             }
 
             // site - id & guid
-            if (providers.HasSource("portal"))
+            if (providers.HasSource(OldDnnSiteSource))
             {
-                var original = providers.Sources["portal"];
-                var id = original.Get("portalid");
+                var original = providers.Sources[OldDnnSiteSource];
+                var id = original.Get(OldDnnSiteId);
                 var guid = DotNetNuke.Common.Globals.GetPortalSettings()?.GUID;
-                var preferred = new LookUpInDictionary("site", new Dictionary<string, string> { { "id", id }, { "guid", $"{guid}" } });
+                var preferred = new LookUpInDictionary(SourceSite, new Dictionary<string, string> { { KeyId, id }, { KeyGuid, $"{guid}" } });
                 providers.Add(preferred);
             }
 
             // page - id only for now or maybe guid
-            if (providers.HasSource("tab"))
+            if (providers.HasSource(OldDnnPageSource))
             {
-                var original = providers.Sources["tab"];
-                var id = original.Get("tabid");
+                var original = providers.Sources[OldDnnPageSource];
+                var id = original.Get(OldDnnPageId);
                 var guid = DotNetNuke.Common.Globals.GetPortalSettings()?.ActiveTab?.UniqueId;
-                var preferred = new LookUpInDictionary("page", new Dictionary<string, string> { { "id", id }, { "guid", $"{guid}" } });
+                var preferred = new LookUpInDictionary(SourcePage, new Dictionary<string, string> { { KeyId, id }, { KeyGuid, $"{guid}" } });
                 providers.Add(preferred);
             }
 

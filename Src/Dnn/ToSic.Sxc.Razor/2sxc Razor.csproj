@@ -121,12 +121,14 @@
     <Compile Include="Custom\Dnn\Razor12.cs" />
     <Compile Include="Custom\Dnn\Razor12Code.cs" />
     <Compile Include="Custom\Hybrid\Razor12_DynamicModel.cs" />
-    <Compile Include="Dnn\beta\InheritRazorComponent.cs" />
+    <Compile Include="Dnn\IDnnRazor.cs" />
+    <Compile Include="Dnn\IDnnRazor11.cs" />
     <Compile Include="Dnn\RazorCodeManager.cs" />
+    <Compile Include="Dnn\RazorComponent.NewNotAvailable.cs" />
     <Compile Include="Dnn\RazorComponentCode.cs" />
     <Compile Include="Dnn\RazorComponent_Code.cs" />
     <Compile Include="Dnn\RazorComponent_Customize.cs" />
-    <Compile Include="Dnn\Web\IRazorComponent.cs" />
+    <Compile Include="Dnn\Web\IDnnRazorCustomize.cs" />
     <Compile Include="Dnn\Web\IHtmlHelper.cs" />
     <Compile Include="Dnn\RazorComponent.cs" />
     <Compile Include="Engines\Razor\RazorEngine_Callbacks.cs" />

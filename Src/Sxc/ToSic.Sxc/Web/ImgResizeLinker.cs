@@ -2,25 +2,26 @@
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Web.Images;
+using static ToSic.Sxc.Web.CleanParam;
 
 namespace ToSic.Sxc.Web
 {
     [PrivateApi]
-    public class ImgResizeLinker: HasLog<ImgResizeLinker>
+    public class ImgResizeLinker: ImageLinkerBase
     {
         internal const int MaxSize = 3200;
         internal const int MaxQuality = 100;
-
-        public bool Debug = false;
 
         public ImgResizeLinker() : base($"{Constants.SxcLogName}.ImgRes")
         {
         }
 
 
-        internal Tuple<int, int> FigureOutBestWidthAndHeight(object width, object height, object factor, object aspectRatio, ICanGetNameNotFinal getSettings)
+        internal override Tuple<int, int> FigureOutBestWidthAndHeight(object width, object height, object factor, object aspectRatio, ICanGetNameNotFinal getSettings)
         {
             // Try to pre-process parameters and prefer them
+            // The manually provided values must remember Zeros because they deactivate presets
             var parms = new Tuple<int?, int?>(IntOrNull(width), IntOrNull(height));
             IfDebugLogPair("Params", parms);
 
@@ -28,20 +29,20 @@ namespace ToSic.Sxc.Web
             var set = new Tuple<dynamic, dynamic>(getSettings?.Get("Width"), getSettings?.Get("Height"));
             if(getSettings!=null) IfDebugLogPair("Settings", set);
 
-            var safe = new Tuple<int, int>(parms.Item1 ?? IntOrNull(set.Item1) ?? 0, parms.Item2 ?? IntOrNull(set.Item2) ?? 0);
+            var safe = new Tuple<int, int>(parms.Item1 ?? IntOrZeroAsNull(set.Item1) ?? 0, parms.Item2 ?? IntOrZeroAsNull(set.Item2) ?? 0);
             IfDebugLogPair("Safe", safe);
 
 
-            var factorFinal = FloatOrNull(factor) ?? 0;
-            var arFinal = FloatOrNull(aspectRatio)
-                          ?? FloatOrNull(getSettings?.Get("AspectRatio")) ?? 0;
+            var factorFinal = DoubleOrNullWithCalculation(factor) ?? 0;
+            double arFinal = DoubleOrNullWithCalculation(aspectRatio)
+                            ?? DoubleOrNullWithCalculation(getSettings?.Get("AspectRatio")) ?? 0;
             if (Debug) Log.Add($"Resize Factor: {factorFinal}, Aspect Ratio: {arFinal}");
 
             // if either param h/w was null, then do a rescaling on the param which comes from the settings
             // But ignore the other one!
-            var rescale = factorFinal != 0 && (parms.Item1 == null || parms.Item2 == null);
+            var rescale = (!DNearZero(factorFinal) || !DNearZero(arFinal)) && (parms.Item1 == null || parms.Item2 == null);
             Tuple<int, int> resizedNew = rescale
-                ? Rescale(safe/*.Item1, safe.Item2*/, factorFinal, arFinal, parms.Item1 == null, parms.Item2 == null)
+                ? Rescale(safe, factorFinal, arFinal, parms.Item1 == null, parms.Item2 == null)
                 : safe;
             IfDebugLogPair("Rescale", resizedNew);
 
@@ -57,76 +58,44 @@ namespace ToSic.Sxc.Web
 
 
 
-
-
-        internal string KeepBestParam(object given, object setting)
-        {
-            if (given == null && setting == null) return null;
-            var strGiven = RealStringOrNull(given);
-            if (strGiven != null) return strGiven;
-            var strSetting = RealStringOrNull(setting);
-            return strSetting;
-        }
-
-        internal string RealStringOrNull(object value)
-        {
-            if (value == null) return null;
-            var strValue = value.ToString();
-            return string.IsNullOrEmpty(strValue) ? null : strValue;
-        }
-        
-        /// <summary>
-        /// Check if an object
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        internal int? IntOrNull(object value)
-        {
-            if (value == null) return null;
-            if (value is int intVal ) return intVal;
-
-            var floatVal = FloatOrNull(value);
-            if (floatVal == null) return null;
-            
-            var rounded = (int)Math.Round(floatVal.Value);
-            if (rounded < 1) return null;
-            return rounded;
-        }
-
-        internal float? FloatOrNull(object value)
-        {
-            if (value == null) return null;
-            if (value is float floatVal) return floatVal;
-            if (value is double dVal) return (float)dVal;
-
-            var strValue = RealStringOrNull(value);
-            if (strValue == null) return null;
-            if (!double.TryParse(strValue, out var doubleValue)) return null;
-            return (float)doubleValue;
-        }
-
-        internal Tuple<int, int> Rescale(Tuple<int, int> dims, /*int width, int height,*/ float factor, float aspectRatio, bool scaleW, bool scaleH)
+        internal Tuple<int, int> Rescale(Tuple<int, int> dims, double factor, double aspectRatio, bool scaleW, bool scaleH)
         {
             var maybeLog = Debug ? Log : null;
             var wrapLog = maybeLog.SafeCall<Tuple<int, int>>();
 
-            // Check if we have nothing to rescale
+
+            // var useAspectRatio = aspectRatio != 0 && !(Math.Abs(aspectRatio - 1) < 0.01);
+            var useAspectRatio = !DNearZero(aspectRatio); // !(Math.Abs(aspectRatio) < 0.01); // ignore super-small aspect ratios or zero
+
+            // 1. Check if we have nothing to rescale
             string msgWhyNoRescale = null;
             if (dims.Item1 == 0 && dims.Item2 == 0) msgWhyNoRescale = "w/h == 0";
-            if (factor == 0f || Math.Abs(factor - 1) < 0.01) msgWhyNoRescale = "Factor is 0 or 1";
+            if (DNearZero(factor) || DNearZero(factor - 1)) // Factor is 0 or 1
+            {
+                factor = 1; // in this case we must still calculate, and should assume factor is exactly 1
+                if (!useAspectRatio) msgWhyNoRescale = "Factor is 0 or 1 and no AspectRatio";
+            }
             if (!scaleW && !scaleH) msgWhyNoRescale = "h/w shouldn't be scaled";
             if (msgWhyNoRescale != null)
-                return wrapLog(msgWhyNoRescale + ", no changes", dims);// new Tuple<int, int>(width, height));
+                return wrapLog(msgWhyNoRescale + ", no changes", dims);
             
-            // Figure out height/width, as we're resizing, we respect the aspect ratio, unless there is none or height shouldn't be set
+            // 2. Figure out height/width, as we're resizing, we respect the aspect ratio, unless there is none or height shouldn't be set
+            // Width should only be calculated, if it wasn't explicitly provided (so only if coming from the settings)
             var newW = !scaleW ? dims.Item1 : dims.Item1 * factor;
-            float newH = dims.Item2;
-            var doScaleH = scaleH && dims.Item2 != 0;
-            var useAspectRatio = aspectRatio == 0 || !(Math.Abs(aspectRatio - 1) < 0.01);
+            
+            // Height should only get Aspect Ratio if the Height wasn't specifically provided
+            // and if useAR is true and Width is useful
+            var applyAspectRatio = scaleH && useAspectRatio; // && FNotNearZero(newW);
+            var newH = applyAspectRatio 
+                ? newW / aspectRatio
+                : dims.Item2;
 
-            maybeLog.SafeAdd($"ScaleW: {scaleW}, ScaleH: {scaleH}, Really-ScaleH:{doScaleH}, Use Aspect Ratio:{useAspectRatio}");
+            // Should we scale height? Only if AspectRatio wasn't applied as then the scale factor was already in there
+            var doScaleH = !useAspectRatio && scaleH;
 
-            if (doScaleH) newH = useAspectRatio ? newW / aspectRatio : dims.Item2 * factor;
+            maybeLog.SafeAdd($"ScaleW: {scaleW}, ScaleH: {scaleH}, Really-ScaleH:{doScaleH}, Use Aspect Ratio:{useAspectRatio}, Use AR on H: {applyAspectRatio}");
+
+            if (doScaleH) newH = dims.Item2 * factor;
 
             // new - don't check here
             var intW = (int)newW;
@@ -182,6 +151,5 @@ namespace ToSic.Sxc.Web
                 default: return null;
             }
         }
-
     }
 }

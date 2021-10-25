@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Caching;
+using ToSic.Razor.Blade;
+using static ToSic.Razor.Blade.Tag;
 
 namespace ToSic.Sxc.Web.WebApi.System
 {
@@ -21,14 +23,12 @@ namespace ToSic.Sxc.Web.WebApi.System
         {
             ThrowIfNotSuperUser();
 
-            var msg = h1("Apps In Cache");
-            //var cache = State.Cache;
+            var msg = H1("Apps In Cache").ToString();
 
             var zones = _appsCache.Zones.OrderBy(z => z.Key);
 
-            msg += "<table id='table'><thead>"
-                + tr(new[] { "Zone", "App", Eav.Data.Attributes.GuidNiceName, "InCache", "Name", "Folder", "Details", "Actions" }, true)
-                + "</thead>"
+            msg += "<table id='table'>"
+                + HeadFields("Zone ↕", "App ↕", Eav.Data.Attributes.GuidNiceName, "InCache", "Name ↕", "Folder ↕", "Details", "Actions")
                 + "<tbody>";
             foreach (var zone in zones)
             {
@@ -57,19 +57,19 @@ namespace ToSic.Sxc.Web.WebApi.System
 
                 foreach (var app in apps)
                 {
-                    msg += tr(new[]
-                    {
+                    msg += RowFields(
                         zone.Key.ToString(),
                         app.Id.ToString(),
                         $"{app.Guid}",
                         app.InCache ? "yes" : "no",
                         app.Name,
                         app.Folder,
-                        $"{a("stats", $"stats?appid={app.Id}")} | {a("load log", $"loadlog?appid={app.Id}")} | {a("types", $"types?appid={app.Id}")}",
-                        summary("show actions",
-                            $"{a("purge", $"purge?appid={app.Id}")}"
+                        $"{A("stats").Href($"stats?appid={app.Id}")} | {A("load log").Href($"loadlog?appid={app.Id}")} | {A("types").Href($"types?appid={app.Id}")}",
+                        Details(
+                            Summary("show actions"),
+                            A("purge").Href($"purge?appid={app.Id}").ToString()
                         )
-                    });
+                    );
                 }
             }
             msg += "</tbody>"
@@ -89,12 +89,12 @@ namespace ToSic.Sxc.Web.WebApi.System
             var appRead = AppRt(appId);
             var pkg = appRead.AppState;
 
-            var msg = h1($"App internals for {appId}");
+            var msg = H1($"App internals for {appId}").ToString();
             try
             {
                 Log.Add("general stats");
-                msg += p(
-                    ToBr($"AppId: {pkg.AppId}\n"
+                msg += P(
+                     Tags.Nl2Br($"AppId: {pkg.AppId}\n"
                          + $"Timestamp First : {pkg.CacheStatistics.FirstTimestamp} = {pkg.CacheStatistics.FirstTimestamp.ToReadable()}\n"
                          + $"Timestamp Current: {pkg.CacheStatistics.CacheTimestamp} = {pkg.CacheStatistics.CacheTimestamp.ToReadable()}\n"
                          + $"Update Count: {pkg.CacheStatistics.ResetCount}\n"
@@ -102,12 +102,14 @@ namespace ToSic.Sxc.Web.WebApi.System
                          + "\n")
                 );
 
-                msg += h2("History");
+                msg += H2("History");
 
-                var list = pkg.CacheStatistics.History.Reverse().Aggregate("", (current, timestamp) 
-                    => current + li(timestamp + " = " + timestamp.ToReadable()));
-
-                msg += ol(list);
+                msg += Ol(
+                    pkg.CacheStatistics.History
+                        .Reverse()
+                        .Select(timestamp => Li(timestamp + " = " + timestamp.ToReadable()))
+                        .ToArray<object>()
+                );
             }
             catch { /* ignore */ }
 

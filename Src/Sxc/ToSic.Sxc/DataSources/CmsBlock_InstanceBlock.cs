@@ -1,8 +1,8 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.LookUp;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.LookUp;
+using LookUpConstants = ToSic.Sxc.LookUp.LookUpConstants;
 
 namespace ToSic.Sxc.DataSources
 {

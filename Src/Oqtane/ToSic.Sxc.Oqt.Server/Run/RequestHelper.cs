@@ -32,6 +32,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return ReturnTypedResultOrFallback(valueString, fallback);
         }
 
+        // TODO: REVIEW IF we should call ObjectExtensions.ChangeTypeOrFallback(...) instead; functionality may be a tiny bit different
         private static T ReturnTypedResultOrFallback<T>(StringValues valueString, T fallback)
         {
             if (valueString == StringValues.Empty) return fallback;

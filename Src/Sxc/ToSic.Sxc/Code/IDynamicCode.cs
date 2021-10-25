@@ -117,9 +117,7 @@ namespace ToSic.Sxc.Code
         /// <summary>
         /// Take a json and provide it as a dynamic object to the code
         /// </summary>
-        /// <remarks>
-        /// New in 2sxc 10.20
-        /// </remarks>
+        /// <remarks>Added in 2sxc 10.22.00</remarks>
         /// <param name="json">the original json string</param>
         /// <param name="fallback">
         /// Alternate string to use, if the original json can't parse.
@@ -128,7 +126,6 @@ namespace ToSic.Sxc.Code
         /// If it can't be parsed, it will parse the fallback, which by default is an empty empty dynamic object.
         /// If you provide null for the fallback, then you will get null back.
         /// </returns>
-        /// <remarks>Added in 2sxc 10.22.00</remarks>
         dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson);
 
         #endregion 
@@ -150,16 +147,6 @@ namespace ToSic.Sxc.Code
         /// <returns>a dynamic object for easier coding</returns>
         dynamic AsDynamic(object dynamicEntity);
 
-        /// <summary>
-        /// Convert one or many Entities and Dynamic entities into an <see cref="IDynamicStack"/>
-        /// </summary>
-        /// <param name="entities">one or more source object</param>
-        /// <returns>a dynamic object for easier coding</returns>
-        /// <remarks>
-        /// New in 12.02 - WIP
-        /// </remarks>
-        [PublicApi("Careful - still Experimental in 12.02")]
-        dynamic AsDynamic(params object[] entities);
         
         #endregion
 
@@ -186,6 +173,7 @@ namespace ToSic.Sxc.Code
         IEnumerable<dynamic> AsList(object list);
 
         #endregion
+
 
         #region Create Data Sources
         /// <summary>
@@ -219,42 +207,6 @@ namespace ToSic.Sxc.Code
         ICmsContext CmsContext { get; }
 
         #endregion
-
-        #region Resources and Settings WIP 12.02
-
-        /// <summary>
-        /// Resources for this Scenario. This is a dynamic object based on the <see cref="IDynamicStack"/>.
-        ///
-        /// It will combine both the Resources of the View and the App. The View-Resources will have priority. In future it may also include some global Resources. 
-        /// 
-        /// 🪒 Use in Razor: `@Resources.CtaButtonLabel`
-        /// </summary>
-        /// <remarks>New in 12.03</remarks>
-        [PublicApi]
-        dynamic Resources { get; }
-
-        /// <summary>
-        /// Settings for this Scenario. This is a dynamic object based on the <see cref="IDynamicStack"/>.
-        /// 
-        /// It will combine both the Settings of the View and the App. The View-Settings will have priority. In future it may also include some global Settings. 
-        /// 
-        /// 🪒 Use in Razor: `Settings.ItemsPerRow`
-        /// </summary>
-        /// <remarks>New in 12.03</remarks>
-        [PublicApi]
-        dynamic Settings { get; }
-
-        #endregion
-
-        #region Accessor to Root
-
-        /// <summary>
-        /// The dynamic code root which many dynamic code objects need to access prepared context, state etc.
-        /// </summary>
-        [PrivateApi("internal, for passing around context!")]
-        // ReSharper disable once InconsistentNaming
-        IDynamicCodeRoot _DynCodeRoot { get; }
-
-        #endregion
+        
     }
 }

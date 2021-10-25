@@ -60,7 +60,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         }
         private CmsRuntime _cmsRuntime;
 
-        private IApp ContextApp => _app ??= GetBlock().App;
+        // TODO: NOT sure if this is correct - it just gets the App but the block may be null
+        private IApp ContextApp => _app ??= BlockOptional.App; // GetBlock().App;
         private IApp _app;
 
         #region Block
@@ -77,7 +78,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
             var entityId = Backend.NewBlock(parentId, field, sortOrder, app, guid);
 
             // now return a rendered instance
-            var newContentBlock = HttpContext.RequestServices.Build<BlockFromEntity>().Init(GetBlock(), entityId, Log);
+            var newContentBlock = HttpContext.RequestServices.Build<BlockFromEntity>().Init(BlockOptional /*GetBlock()*/, entityId, Log);
             return newContentBlock.BlockBuilder.Render();
 
         }
@@ -149,10 +150,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
-        // TODO: SPM - why is this code different from the Dnn ? that uses the ViewsBackend
-        // I changed it, but didn't test yet
         public IEnumerable<TemplateUiInfo> Templates() => _viewsBackendLazy.Value.Init(Log).Templates();
-            // => CmsRuntime?.Views.GetCompatibleViews(ContextApp, GetBlock().Configuration);
 
         /// <summary>
         /// Used in InPage.js

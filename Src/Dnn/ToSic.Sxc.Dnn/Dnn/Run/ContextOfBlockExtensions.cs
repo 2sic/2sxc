@@ -1,6 +1,7 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Context;
+using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Context;
 
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.Dnn.Run
             // the FullUrl will throw an error in DNN search scenarios
             try
             {
-                ((Page)context.Page).Url = activeTab?.FullUrl;
+                ((Page)context.Page).Url = activeTab?.FullUrl.TrimLastSlash();
             }
             catch
             {

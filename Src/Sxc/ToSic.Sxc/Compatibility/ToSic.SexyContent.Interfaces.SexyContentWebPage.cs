@@ -1,11 +1,12 @@
-﻿using System;
+﻿#if NETFRAMEWORK
+
+using System;
 using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 
-#if NET451
 namespace ToSic.Sxc.Compatibility
 {
 	/// <summary>

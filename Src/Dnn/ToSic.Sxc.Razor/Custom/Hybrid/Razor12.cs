@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -19,7 +22,7 @@ namespace Custom.Hybrid
     /// The base class for Hybrid Razor-Components in 2sxc 12 <br/>
     /// Provides context objects like CmsContext, helpers like Edit and much more. <br/>
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("As of now just fyi, should be finalized for 2sxc 12")]
+    [PublicApi]
     public abstract partial class Razor12 : RazorComponentBase, IRazor12
     {
         [PrivateApi("Hide this, no need to publish; would only confuse users")]
@@ -80,6 +83,13 @@ namespace Custom.Hybrid
 
         #endregion
 
+        #region Convert-Service
+
+        /// <inheritdoc />
+        public IConvertService Convert => _DynCodeRoot.Convert;
+
+        #endregion
+
 
         #region Data Source Stuff
 
@@ -120,18 +130,24 @@ namespace Custom.Hybrid
 
         #endregion
 
-        #region CmsContext
+        #region v11 properties CmsContext
 
         /// <inheritdoc />
         public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
+        #endregion
+
+        #region v12 properties Resources, Settings, Path
 
         /// <inheritdoc />
-        [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic Resources => _DynCodeRoot.Resources;
 
         /// <inheritdoc />
-        [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic Settings => _DynCodeRoot.Settings;
+
+        public IDevTools DevTools => _DynCodeRoot.DevTools;
+
+        /// <inheritdoc />
+        public string Path => VirtualPath;
 
         #endregion
     }

@@ -8,7 +8,7 @@ using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Data
 {
-    public abstract partial class DynamicEntityBase : DynamicObject, IDynamicEntityBase, IPropertyLookup
+    public abstract partial class DynamicEntityBase : DynamicObject, IDynamicEntityBase, IPropertyLookup, ISxcDynamicObject
     {
         protected DynamicEntityBase(DynamicEntityDependencies dependencies) => _Dependencies = dependencies;
 
@@ -37,9 +37,9 @@ namespace ToSic.Sxc.Data
         /// <param name="contents"></param>
         /// <returns></returns>
         [PrivateApi]
-        protected IDynamicEntity SubDynEntity(IEntity contents) => SubDynEntity(contents, _Dependencies, _debug);
+        protected IDynamicEntity SubDynEntityOrNull(IEntity contents) => SubDynEntityOrNull(contents, _Dependencies, _debug);
 
-        internal static IDynamicEntity SubDynEntity(IEntity contents, DynamicEntityDependencies dependencies, bool? debug)
+        internal static IDynamicEntity SubDynEntityOrNull(IEntity contents, DynamicEntityDependencies dependencies, bool? debug)
         {
             if (contents == null) return null;
             var result = new DynamicEntity(contents, dependencies);

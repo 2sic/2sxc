@@ -1,9 +1,12 @@
-﻿using System;
-using Microsoft.AspNetCore.Http.Extensions;
+﻿using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System;
+using System.Threading.Tasks;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using Log = ToSic.Eav.Logging.Simple.Log;
@@ -23,9 +26,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected OqtControllerBase()
         {
             // ReSharper disable once VirtualMemberCallInConstructor
-            Log = new Log(HistoryLogName, null, $"OqtControllerBase");
+            Log = new Log(HistoryLogName, null, GetType().Name);
             // ReSharper disable once VirtualMemberCallInConstructor
-            History.Add(HistoryLogGroup, Log);
+            //History.Add(HistoryLogGroup, Log);
         }
 
         protected IServiceProvider ServiceProvider;
@@ -37,7 +40,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// The group name for log entries in insights.
         /// Helps group various calls by use case.
         /// </summary>
-        protected virtual string HistoryLogGroup { get; } = "web-api";
+        protected virtual string HistoryLogGroup => EavWebApiConstants.HistoryNameWebApi;
 
         /// <summary>
         /// The name of the logger in insights.
@@ -59,6 +62,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
             ServiceProvider = context.HttpContext.RequestServices;
 
+            // add log
+            ServiceProvider.Build<LogHistory>().Add(HistoryLogGroup, Log);
+
             //// background processes can pass in an alias using the SiteState service
             ServiceProvider.Build<SiteStateInitializer>().InitIfEmpty();
             wrapLog(null);
@@ -70,7 +76,28 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         #endregion
 
+        /// <inheritdoc/>
+        [NonAction]
+        public override void OnActionExecuted(ActionExecutedContext context)
+        {
+            base.OnActionExecuted(context);
 
+            if (context.ActionDescriptor is ControllerActionDescriptor actionDescriptor)
+            {
+                // If the api endpoint method return type is "void" or "Task", Web API will return HTTP response with status code 204 (No Content).
+                // This changes aspnetcore default behavior in Oqtane that returns HTTP 200 OK, with no body so it is same as in ASP.NET MVC2 in DNN. 
+                // This is helpful for jQuery Ajax issue that on HTTP 200 OK with empty body throws json parse error.
+                // https://docs.microsoft.com/en-us/aspnet/web-api/overview/getting-started-with-aspnet-web-api/action-results#void
+                // https://github.com/dotnet/aspnetcore/issues/16944
+                // https://github.com/2sic/2sxc/issues/2555
+                var returnType = actionDescriptor.MethodInfo.ReturnType;
+                if (returnType == typeof(void) || returnType == typeof(Task))
+                {
+                    if (context.HttpContext.Response.StatusCode == 200)
+                        context.HttpContext.Response.StatusCode = 204; // NoContent (instead of HTTP 200 OK)
+                }
+            }
+        }
     }
 
 

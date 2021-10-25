@@ -6,10 +6,10 @@
         public bool IsPublished => Entity?.IsPublished ?? true;
 
         /// <inheritdoc />
-        public dynamic GetDraft() => SubDynEntity(Entity?.GetDraft());
+        public dynamic GetDraft() => SubDynEntityOrNull(Entity?.GetDraft());
 
         /// <inheritdoc />
-        public dynamic GetPublished() => SubDynEntity(Entity?.GetPublished());
+        public dynamic GetPublished() => SubDynEntityOrNull(Entity?.GetPublished());
 
     }
 }

@@ -9,14 +9,14 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {
     public class AppApiActionInvoker : IHasLog
     {
-        public AppApiActionInvoker()
+        public AppApiActionInvoker(LogHistory logHistory)
         {
             Log = new Log(HistoryLogName, null, "AppApiActionInvoker");
-            History.Add(HistoryLogGroup, Log);
+            logHistory.Add(HistoryLogGroup, Log);
         }
 
         public ILog Log { get; }
-        protected string HistoryLogGroup { get; } = "app-api";
+        protected string HistoryLogGroup => "app-api";
         protected static string HistoryLogName => "Invoker";
 
         public async Task Invoke(ActionContext actionContext)

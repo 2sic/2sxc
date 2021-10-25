@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
-using Oqtane.Models;
 using Oqtane.Shared;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Mime;
+using System.Text;
+using System.Threading.Tasks;
+using ToSic.Eav.Context;
 using ToSic.Eav.ImportExport.Options;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
-using Microsoft.AspNetCore.StaticFiles;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -44,13 +42,15 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     {
         private readonly Lazy<ContentExportApi>_contentExportLazy;
         private readonly Lazy<ContentImportApi> _contentImportLazy;
+        private readonly Lazy<IUser> _userLazy;
         private readonly Lazy<EntityApi> _lazyEntityApi;
         protected override string HistoryLogName => "Api.EntCnt";
         
-        public EntityController(Lazy<EntityApi> lazyEntityApi, Lazy<ContentExportApi> contentExportLazy, Lazy<ContentImportApi> contentImportLazy)
+        public EntityController(Lazy<EntityApi> lazyEntityApi, Lazy<ContentExportApi> contentExportLazy, Lazy<ContentImportApi> contentImportLazy, Lazy<IUser> userLazy)
         {
             _contentExportLazy = contentExportLazy;
             _contentImportLazy = contentImportLazy;
+            _userLazy = userLazy;
             _lazyEntityApi = lazyEntityApi;
         }
 
@@ -87,7 +87,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [HttpGet]
         [AllowAnonymous] // will do security check internally
         public HttpResponseMessage Json(int appId, int id, string prefix, bool withMetadata)
-            => _contentExportLazy.Value.Init(appId, Log).DownloadEntityAsJson(GetContext().User, id, prefix, withMetadata);
+            => _contentExportLazy.Value.Init(appId, Log).DownloadEntityAsJson(_userLazy.Value, id, prefix, withMetadata);
 
 
         /// <summary>
@@ -112,32 +112,16 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             ExportSelection recordExport, ExportResourceReferenceMode resourcesReferences,
             ExportLanguageResolution languageReferences, string selectedIds = null)
         {
-            var httpResponseMessage = _contentExportLazy.Value.Init(appId, Log).ExportContent(
-                GetContext().User,
+            var fileContentAndFileName = _contentExportLazy.Value.Init(appId, Log).ExportContent(
+                _userLazy.Value,
                 language, defaultLanguage, contentType,
                 recordExport, resourcesReferences,
                 languageReferences, selectedIds);
 
-            // WIP....
-            var fileName = httpResponseMessage.Content.Headers.ContentDisposition.FileName;
-            var provider = new FileExtensionContentTypeProvider();
-            if (!provider.TryGetContentType(fileName, out var mediaType))
-            {
-                mediaType = httpResponseMessage.Content.Headers.ContentType.MediaType ?? "application/octet-stream";
-            }
+            var fileContents = Encoding.Unicode.GetBytes(fileContentAndFileName.Item1);
+            var fileName = fileContentAndFileName.Item2;
 
-            var contentDisposition = new System.Net.Mime.ContentDisposition
-            {
-                FileName = fileName,
-                Inline = false
-            };
-            HttpContext.Response.Headers.Add("Content-Disposition", contentDisposition.ToString());
-            HttpContext.Response.Headers.Add("X-Content-Type-Options", "nosniff");
-
-            using var stream = await httpResponseMessage.Content.ReadAsStreamAsync();
-            await stream.CopyToAsync(HttpContext.Response.Body);
-            await HttpContext.Response.Body.FlushAsync();
-            return File(stream, mediaType, fileName);
+            return File(fileContents: fileContents, contentType: MediaTypeNames.Application.Octet, fileDownloadName: fileName);
         }
 
         /// <summary>

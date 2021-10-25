@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Context;
-using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Oqt.Shared;
 
 
@@ -50,13 +46,13 @@ namespace ToSic.Sxc.Oqt.Server.Run
             Log.Add("publish never happened ");
         }
 
-        private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, IBlockDataSource data, string key)
-        {
-            var cont = data.Out.ContainsKey(key) ? data[key]?.List : null;
-            Log.Add($"TryToAddStream(..., ..., key:{key}), found:{cont != null} add⋮{cont?.Count() ?? 0}");
-            if (cont != null) list = list.Concat(cont);
-            return list;
-        }
+        //private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, IBlockDataSource data, string key)
+        //{
+        //    var cont = data.GetStream(key, nullIfNotFound: true)?.List; // data.Out.ContainsKey(key) ? data[key]?.List : null;
+        //    Log.Add($"TryToAddStream(..., ..., key:{key}), found:{cont != null} add⋮{cont?.Count() ?? 0}");
+        //    if (cont != null) list = list.Concat(cont);
+        //    return list;
+        //}
 
     }
 }

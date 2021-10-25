@@ -3,7 +3,6 @@ using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Dnn.Web;
 
 namespace ToSic.Sxc.Dnn.Code
 {
@@ -21,12 +20,11 @@ namespace ToSic.Sxc.Dnn.Code
         /// <param name="block">CMS Block which provides context and maybe some edit-allowed info.</param>
         /// <param name="parentLog">parent logger for logging what's happening</param>
         /// <param name="compatibility">compatibility level - changes behaviour if level 9 or 10</param>
-        public /*new*/ override IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)
+        public override IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility) // = Constants.CompatibilityLevel10)
         {
             base.Init(block, parentLog, compatibility);
             // Init things than require module-info or similar, but not 2sxc
             ((DnnContextOld)Dnn).Init(block?.Context.Module);
-            //Link.Init(block?.Context, App);
             return this;
         }
 
@@ -34,7 +32,5 @@ namespace ToSic.Sxc.Dnn.Code
         /// Dnn context with module, page, portal etc.
         /// </summary>
         public IDnnContext Dnn { get; private set; }
-
-        //public IDynamicCodeRoot _DynCodeRoot => this;
     }
 }

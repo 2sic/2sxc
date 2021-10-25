@@ -12,6 +12,7 @@ using ToSic.Sxc.DotNet;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.JsContext;
 using ToSic.Sxc.Web.PageFeatures;
@@ -46,6 +47,7 @@ namespace ToSic.Sxc
             services.TryAddTransient<BlockDataSourceFactory>();
             services.TryAddTransient<BlockFromModule>();
             services.TryAddTransient<BlockFromEntity>();
+            services.TryAddTransient<IRenderService, RenderService>();  // new 12.05
 
             // Configuration Provider WIP
             services.TryAddTransient<AppConfigDelegate>();
@@ -97,6 +99,13 @@ namespace ToSic.Sxc
 
             // WIP - objects which are not really final
             services.TryAddTransient<WipRemoteRouterLink>();
+
+            // WIP 12.05 - json converter
+            services.TryAddTransient<IJsonService, JsonService>();
+            services.TryAddTransient<IConvertService, ConvertService>();
+
+            // New 12.05: SecureData
+            services.TryAddTransient<ISecureDataService, SecureDataService>();
 
             return services;
         }

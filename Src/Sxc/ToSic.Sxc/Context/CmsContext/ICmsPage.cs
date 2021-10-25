@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Context
 {
@@ -31,6 +30,14 @@ namespace ToSic.Sxc.Context
         /// 
         /// 🪒 Use in Razor: `CmsContext.Page.Parameters["id"]`
         /// </summary>
-        IReadOnlyDictionary<string, string> Parameters { get; }
+        IParameters Parameters { get; }
+
+        // unsure if used
+        /// <summary>
+        /// The resource specific url, like the one to this page or portal
+        /// </summary>
+        [PrivateApi("Not yet official property, must decide if we'll put in on the ICmsPage or maybe on an ICmsUrl or something")]
+        string Url { get; }
+
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Web.WebApi.System
+﻿using static ToSic.Razor.Blade.Tag;
+
+namespace ToSic.Sxc.Web.WebApi.System
 {
     public partial class Insights
     {
@@ -21,46 +23,46 @@
             const string globTypes = "globaltypes";
             const string globTypesLog = "globaltypeslog";
             const string logs = "logs";
-            var result = h1("2sxc Insights - Commands")
-                   + p(
-                       "In most cases you'll just browse the cache and use the links from there. "
-                       + "The other links are listed here so you know what they would be, "
-                       + "in case something is preventing you from browsing the normal way. "
-                       + "Read more about 2sxc insights in the "
-                       + a("blog post", "https://2sxc.org/en/blog/post/using-2sxc-insights", true)
-                       )
+            var result = "" + H1("2sxc Insights - Commands")
+                            + P(
+                                "In most cases you'll just browse the cache and use the links from there. "
+                                + "The other links are listed here so you know what they would be, "
+                                + "in case something is preventing you from browsing the normal way. "
+                                + "Read more about 2sxc insights in the "
+                                + A("blog post").Href("https://2sxc.org/en/blog/post/using-2sxc-insights").Target("_blank")
+                            )
 
-                   + h2("Most used")
-                   + "<ol>"
-                   + li("<a href='help'>Help</a> (this screen)")
-                   + li("All logs: " + a(logs, logs))
-                   + li("In Memory " + a("cache", "cache"))
-                   + li("ping the system <a href='isalive'>isalive</a>")
-                   + "</ol>"
+                            + H2("Most used")
+                            + "<ol>"
+                            + Li("<a href='help'>Help</a> (this screen)")
+                            + Li("All logs: " + A(logs).Href(logs))
+                            + Li("In Memory " + A("cache").Href("cache"))
+                            + Li("ping the system <a href='isalive'>isalive</a>")
+                            + "</ol>"
 
-                   + h2("Global Types")
-                   + "<ol>"
-                   + li("global types in cache: " + a(globTypes, globTypes))
-                   + li("global types loading log: " + a(globTypesLog, globTypesLog))
-                   + "</ol>"
+                            + H2("Global Types")
+                            + "<ol>"
+                            + Li("global types in cache: " + A(globTypes).Href(globTypes))
+                            + Li("global types loading log: " + A(globTypesLog).Href(globTypesLog))
+                            + "</ol>"
 
-                   + h2("Manual links to access debug information")
-                   + "<ol>"
-                   + li("flush an app cache: " + a(purgeapp, purgeapp))
-                   + li("look at the load-log of an app-cache: <a href='loadlog?appid='>loadlog?appid=</a>")
-                   + li("look at the cache-stats of an app: <a href='stats?appid='>stats?appid=</a>")
-                   + li("look at the content-types of an app: <a href='types?appid='>types?appid=</a>")
-                   + li("look at attributes of a type: " + a(typeattribs, typeattribs))
-                   + li("look at type metadata:" + a(typeMeta, typeMeta))
-                   + li("look at type permissions:" + a(typePerms, typePerms))
-                   + li("look at attribute Metadata :" + a(attribMeta, attribMeta))
-                   + li("look at attribute permissions:" + a(attribPerms, attribPerms))
-                   + li("look at entities of a type:" + a(entities, entities))
-                   + li("look at all entities:" + a(entitiesAll, entitiesAll))
-                   + li("look at a single entity by id:" + a(entity, entity))
-                   + li("look at entity metadata using entity-id:" + a(entityMeta, entityMeta))
-                   + li("look at entity permissions using entity-id:" + a(entityPerms, entityPerms))
-                   + "<ol>"
+                            + H2("Manual links to access debug information")
+                            + "<ol>"
+                            + Li("flush an app cache: " + A(purgeapp).Href(purgeapp))
+                            + Li("look at the load-log of an app-cache: <a href='loadlog?appid='>loadlog?appid=</a>")
+                            + Li("look at the cache-stats of an app: <a href='stats?appid='>stats?appid=</a>")
+                            + Li("look at the content-types of an app: <a href='types?appid='>types?appid=</a>")
+                            + Li("look at attributes of a type: " + A(typeattribs).Href(typeattribs))
+                            + Li("look at type metadata:" + A(typeMeta).Href(typeMeta))
+                            + Li("look at type permissions:" + A(typePerms).Href(typePerms))
+                            + Li("look at attribute Metadata :" + A(attribMeta).Href(attribMeta))
+                            + Li("look at attribute permissions:" + A(attribPerms).Href(attribPerms))
+                            + Li("look at entities of a type:" + A(entities).Href(entities))
+                            + Li("look at all entities:" + A(entitiesAll).Href(entitiesAll))
+                            + Li("look at a single entity by id:" + A(entity).Href(entity))
+                            + Li("look at entity metadata using entity-id:" + A(entityMeta).Href(entityMeta))
+                            + Li("look at entity permissions using entity-id:" + A(entityPerms).Href(entityPerms))
+                            + "<ol>"
                 ;
             logWrap("ok");
             return result;

@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Run;
-//using ToSic.Eav.WebApi;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.ImportExport;
-using ToSic.Sxc.Conversion;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
@@ -32,9 +32,9 @@ namespace ToSic.Sxc.WebApi
         public static IServiceCollection AddSxcWebApi(this IServiceCollection services)
         {
             // The top version should be deprecated soon, so we just use DataToDictionary or an Interface instead
-            services.TryAddTransient<Eav.Conversion.EntitiesToDictionary, DataToDictionary>(); // this is needed for all the EAV uses of conversion
-            services.TryAddTransient<DataToDictionary>(); // WIP, not public, should use interface instead
-            services.TryAddTransient<IDataToDictionary, DataToDictionary>();
+            services.TryAddTransient<ConvertToEavLight, ConvertToEavLightWithCmsInfo>(); // this is needed for all the EAV uses of conversion
+            services.TryAddTransient<ConvertToEavLightWithCmsInfo>(); // WIP, not public, should use interface instead
+            services.TryAddTransient<IConvertToEavLight, ConvertToEavLightWithCmsInfo>();
 
             services.TryAddScoped<ILinkPaths, LinkPaths>();
             services.TryAddTransient<IServerPaths, ServerPaths>();
@@ -91,6 +91,9 @@ namespace ToSic.Sxc.WebApi
 
             // Eav.WebApi
             //services.TryAddTransient<MetadataBackend>();
+
+            // Adam shared code across the APIs
+            services.TryAddTransient<AdamCode>();
 
             return services;
         }

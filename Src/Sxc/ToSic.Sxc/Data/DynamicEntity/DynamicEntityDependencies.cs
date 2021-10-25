@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Data
             _valueConverterLazy = valueConverterLazy;
         }
 
-        internal DynamicEntityDependencies Init(IBlock blockOrNull, string[] dimensions, ILog log, int compatibility = 10)
+        internal DynamicEntityDependencies Init(IBlock blockOrNull, string[] dimensions, ILog log, int compatibility = Constants.CompatibilityLevel10)
         {
             Dimensions = dimensions;
             LogOrNull = log;

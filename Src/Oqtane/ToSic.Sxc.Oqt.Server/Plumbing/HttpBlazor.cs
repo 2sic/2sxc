@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
                 {
                     var paramList = new NameValueCollection();
                     Current.Request.Query.ToList().ForEach(i => paramList.Add(i.Key, i.Value));
-                    return _queryStringValues = paramList;
+                    return _queryStringValues = FilterOutOqtaneParams(paramList);
                 }
                 else
                 {
@@ -52,13 +52,18 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
 
                     var paramList = new NameValueCollection();
                     queryBits.ToList().ForEach(i => paramList.Add(i.Key, i.Value));
-                    return _queryStringValues = paramList;
+                    return _queryStringValues = FilterOutOqtaneParams(paramList);
                 }
             }
         }
 
         private NameValueCollection _queryStringValues;
 
-
+        private NameValueCollection FilterOutOqtaneParams(NameValueCollection original)
+        {
+            // Oqtane seems to add this automatically, at least in v2.2
+            original.Remove("authmoduleid");
+            return original;
+        }
     }
 }

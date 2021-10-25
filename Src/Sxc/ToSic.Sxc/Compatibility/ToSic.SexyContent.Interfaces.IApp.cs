@@ -1,4 +1,5 @@
-﻿// ReSharper disable once CheckNamespace
+﻿#if NETFRAMEWORK
+// ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Interfaces
 {
     /// <summary>
@@ -22,3 +23,4 @@ namespace ToSic.SexyContent.Interfaces
         string Thumbnail { get; }
     }
 }
+#endif

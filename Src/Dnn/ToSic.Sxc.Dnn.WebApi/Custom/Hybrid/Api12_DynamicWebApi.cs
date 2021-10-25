@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Web;
 using System.Xml;
@@ -13,7 +12,7 @@ namespace Custom.Hybrid
     public abstract partial class Api12 : IDynamicWebApi
     {
         /// <inheritdoc />
-        public dynamic File(string dontRelyOnParameterOrder = ToSic.Eav.Parameters.Protector,
+        public dynamic File(string noParamOrder = ToSic.Eav.Parameters.Protector,
             // Important: the second parameter should _not_ be a string, otherwise the signature looks the same as the built-in File(...) method
             bool? download = null,
             string virtualPath = null, // important: this is the virtualPath, but it should not have the same name, to not confuse the compiler with same sounding param names
@@ -22,11 +21,12 @@ namespace Custom.Hybrid
             object contents = null // can be stream, string or byte[]
             )
         {
-            fileDownloadName = CustomApiHelpers.FileParamsInitialCheck(dontRelyOnParameterOrder, download, virtualPath, fileDownloadName, contents);
+            // fileDownloadName becomes null when download != true
+            fileDownloadName = CustomApiHelpers.FileParamsInitialCheck(noParamOrder, download, virtualPath, fileDownloadName, contents);
 
             // Try to figure out file mime type as needed
             if (string.IsNullOrWhiteSpace(contentType))
-                contentType = MimeMapping.GetMimeMapping(fileDownloadName ?? virtualPath);
+                contentType = (string.IsNullOrWhiteSpace(fileDownloadName ?? virtualPath)) ? "application/octet-stream" : MimeMapping.GetMimeMapping(fileDownloadName ?? virtualPath);
 
             HttpContent httpContent = new ByteArrayContent(Encoding.UTF8.GetBytes(string.Empty));
 
@@ -35,7 +35,7 @@ namespace Custom.Hybrid
             if (!string.IsNullOrWhiteSpace(virtualPath))
                 httpContent = new StreamContent(new FileStream(HttpContext.Current.Server.MapPath(virtualPath), FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
 
-            Encoding encoding = Encoding.UTF8;
+            var encoding = Encoding.UTF8;
             var isValidXml = false;
             switch (contents)
             {
@@ -67,19 +67,8 @@ namespace Custom.Hybrid
 
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = httpContent;
-
-            response.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType)
-            {
-                CharSet = encoding.WebName
-            };
-
-            // TODO: STV - make sure this is the same in Oqtane
-            response.Content.Headers.ContentDisposition = (download == false)
-                ? new ContentDispositionHeaderValue("inline")
-                : new ContentDispositionHeaderValue("attachment")
-                {
-                    FileName = fileDownloadName
-                };
+            response.Content.Headers.ContentType = CustomApiHelpers.PrepareMediaTypeHeaderValue(contentType, encoding);
+            response.Content.Headers.ContentDisposition = CustomApiHelpers.PrepareContentDispositionHeaderValue(download, fileDownloadName);
 
             return response;
         }

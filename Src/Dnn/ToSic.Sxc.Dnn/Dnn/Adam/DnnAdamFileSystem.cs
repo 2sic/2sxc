@@ -220,6 +220,7 @@ namespace ToSic.Sxc.Dnn.Adam
                 Created = dnnFolderInfo.CreatedOnDate,
                 Modified = dnnFolderInfo.LastModifiedOnDate,
                 Url = AdamContext.Site.ContentPath + dnnFolderInfo.FolderPath,
+                PhysicalPath = dnnFolderInfo.PhysicalPath,
             });
         }
 
@@ -246,7 +247,8 @@ namespace ToSic.Sxc.Dnn.Adam
                 Name = Path.GetFileNameWithoutExtension(dnnFileInfo.FileName),
                 Url = dnnFileInfo.StorageLocation == 0
                     ? AdamContext.Site.ContentPath + dnnFileInfo.Folder + dnnFileInfo.FileName
-                    : FileLinkClickController.Instance.GetFileLinkClick(dnnFileInfo)
+                    : FileLinkClickController.Instance.GetFileLinkClick(dnnFileInfo),
+                PhysicalPath = dnnFileInfo.PhysicalPath,
             });
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 
@@ -9,8 +10,8 @@ namespace ToSic.Sxc.Data
 {
     public partial class DynamicEntity: IEquatable<IEntityWrapper>
     {
-        [PrivateApi]
-        public IEntity EntityForEqualityCheck { get; private set; }
+        [PrivateApi] public IEntity EntityForEqualityCheck { get; private set; }
+        [PrivateApi] public List<IDecorator<IEntity>> Decorators { get; private set; }
 
         #region Changing comparison operation to internally compare the entities, not this wrapper
 

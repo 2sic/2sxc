@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Apps;
 
 namespace ToSic.Sxc.Apps.Assets
 {
@@ -34,6 +35,5 @@ namespace ToSic.Sxc.Apps.Assets
                    || AppInGlobal.Equals(key, StringComparison.OrdinalIgnoreCase);
         }
 
-        public static string AppPathPlaceholder = "[App:Path]";
     }
 }

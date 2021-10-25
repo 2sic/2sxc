@@ -5,6 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Oqtane.Infrastructure;
 using System.IO;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
@@ -18,7 +21,7 @@ using WebApiConstants = ToSic.Sxc.Oqt.Shared.WebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server
 {
-    class Startup : IServerStartup
+    public class Startup : IServerStartup
     {
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment HostEnvironment { get; set; }
@@ -80,20 +83,29 @@ namespace ToSic.Sxc.Oqt.Server
 
             // 2sxc Oqtane blob services for Imageflow.
             services.AddImageflowOqtaneBlobService();
+
+            // Help RazorBlade to have a proper best-practices ToJson
+            // New v12.05
+            ToSic.Razor.Internals.StartUp.RegisterToJson(JsonConvert.SerializeObject);
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             HostEnvironment = env;
 
-            if (env.IsDevelopment())
-            {
-                app.UseExceptionHandler("/error-local-development");
-            }
-            else
-            {
-                app.UseExceptionHandler("/error");
-            }
+            app.UseExceptionHandler("/error");
+
+            //app.UseExceptionHandler(c => c.Run(async context =>
+            //{
+            //    var exception = context.Features
+            //        .Get<IExceptionHandlerPathFeature>()
+            //        .Error;
+            //    var response = new { error = exception.Message };
+            //    await context.Response.WriteAsJsonAsync(response);
+            //}));
+
+            //app.UseDeveloperExceptionPage();
 
             // routing middleware
             app.UseRouting();

@@ -16,7 +16,11 @@ namespace ToSic.Sxc.Data
     /// </blockquote>
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public partial interface IDynamicEntity: SexyContent.Interfaces.IDynamicEntity, IEntityWrapper, IDynamicEntityBase
+    public partial interface IDynamicEntity:
+#if NETFRAMEWORK
+        SexyContent.Interfaces.IDynamicEntity,
+#endif
+        IEntityWrapper, IDynamicEntityBase, ISxcDynamicObject
     {
         /// <summary>
         /// The underlying entity which provides all the data for the DynamicEntity
@@ -73,7 +77,7 @@ namespace ToSic.Sxc.Data
         /// Get a property using the string name. Only needed in special situations, as most cases can use the object.name directly
         /// </summary>
         /// <param name="name">the property name. </param>
-        /// <param name="dontRelyOnParameterOrder">
+        /// <param name="noParamOrder">
         /// This should enforce the convention that all following parameters (which are optional) must explicitly use the parameter name.
         /// So <code>Get("FirstName", "en")</code> won't work, you must use <code>Get("FirstName", language: "en")</code> and similar
         /// </param>
@@ -83,7 +87,7 @@ namespace ToSic.Sxc.Data
         /// <returns>a dynamically typed result, can be string, bool, etc.</returns>
         new dynamic Get(string name,
             // ReSharper disable once MethodOverloadWithOptionalParameter
-            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             string language = null,
             bool convertLinks = true,
             bool? debug = null
@@ -122,7 +126,7 @@ namespace ToSic.Sxc.Data
         /// True if this is the item configured in the view-settings, false if not.
         /// </returns>
         /// <remarks>New in 10.07</remarks>
-        new bool IsDemoItem { get; }
+        bool IsDemoItem { get; }
 
         #region parents / children
 

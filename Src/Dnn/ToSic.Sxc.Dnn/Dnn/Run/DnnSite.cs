@@ -1,14 +1,15 @@
-﻿using System;
-using System.IO;
-using System.Web.Hosting;
-using DotNetNuke.Common;
+﻿using DotNetNuke.Common;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using System;
+using System.IO;
+using System.Web.Hosting;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.Run
 {
@@ -25,12 +26,14 @@ namespace ToSic.Sxc.Dnn.Run
         /// DI Constructor, will get the current portal settings
         /// #TodoDI not ideal yet, as PortalSettings.current is still retrieved from global
         /// </summary>
-        public DnnSite(Lazy<IZoneMapper> zoneMapperLazy)
+        public DnnSite(Lazy<IZoneMapper> zoneMapperLazy, Lazy<ILinkHelper> linkHelperLazy)
         {
             _zoneMapperLazy = zoneMapperLazy;
+            _linkHelperLazy = linkHelperLazy;
             Swap(null);
         }
         private readonly Lazy<IZoneMapper> _zoneMapperLazy;
+        private readonly Lazy<ILinkHelper> _linkHelperLazy;
 
         /// <inheritdoc />
         public override ISite Init(int siteId) => Swap(new PortalSettings(siteId));
@@ -115,6 +118,21 @@ namespace ToSic.Sxc.Dnn.Run
         /// <inheritdoc />
         public override string Name => UnwrappedContents.PortalName;
 
+        public override string Url
+        {
+            get
+            {
+                if (_url != null) return _url;
+                // PortalAlias in DNN is without protocol, so we need to add it from current request for consistency
+                // also without trailing slash
+                var parts = new UrlParts(_linkHelperLazy.Value.GetCurrentRequestUrl());
+                _url = $"{parts.Protocol}{UrlRoot}";
+                return _url;
+            }
+        }
+
+        private string _url;
+
         /// <summary>
         /// 
         /// </summary>
@@ -125,9 +143,11 @@ namespace ToSic.Sxc.Dnn.Run
         /// Like when showing a module from another portal - in which case we don't need that alias
         /// but the current one. Just keep this in mind in case anything ever breaks.
         /// </remarks>
-        public override string Url => UnwrappedContents?.PortalAlias?.HTTPAlias
-                                          ?? PortalSettings.Current?.PortalAlias?.HTTPAlias
-                                          ?? "err-portal-alias-not-loaded";
+        public override string UrlRoot
+            => _urlRoot ?? (_urlRoot = UnwrappedContents?.PortalAlias?.HTTPAlias
+                                       ?? PortalSettings.Current?.PortalAlias?.HTTPAlias
+                                       ?? "err-portal-alias-not-loaded");
+        private string _urlRoot;
 
         [PrivateApi]
         public override string AppsRootPhysical => AppsRootRelative;

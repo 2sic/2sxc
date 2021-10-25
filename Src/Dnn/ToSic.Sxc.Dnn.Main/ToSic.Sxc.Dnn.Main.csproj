@@ -105,7 +105,7 @@
     <Compile Include="ActivateKoi2DependencyInjection.cs" />
     <Compile Include="CompilerDependencies.cs" />
     <Compile Include="DnnBusinessController.cs" />
-    <Compile Include="StartupDnn.cs" />
+    <Compile Include="StartUp\StartupDnn.cs" />
     <Compile Include="DnnWebForms\PagePicker.ascx.cs">
       <DependentUpon>PagePicker.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -135,7 +135,7 @@
       <DependentUpon>QuickEdit.ascx</DependentUpon>
     </Compile>
     <Compile Include="Polymorphism\Permissions.cs" />
-    <Compile Include="StartupDnnDi.cs" />
+    <Compile Include="StartUp\StartupDnnDi.cs" />
     <Compile Include="View.ascx.cs">
       <DependentUpon>View.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -211,7 +211,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Extensions\ImageResizer\bin\" />
-    <Folder Include="StartUp\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">

@@ -54,11 +54,11 @@ namespace ToSic.Sxc.Context
             return App(appId);
         }
 
-        private IContextOfBlock BlockContext => _blockContext ?? (_blockContext = _getBlockContext?.Invoke());
+        private IContextOfBlock BlockContext => _blockContext ?? (_blockContext = RealBlockOrNull()?.Context);// _getBlockContext?.Invoke());
         private IContextOfBlock _blockContext;
 
-        public void AttachBlockContext(Func<IContextOfBlock> getBlockContext) => _getBlockContext = getBlockContext;
-        private Func<IContextOfBlock> _getBlockContext;
+        //public void AttachBlockContext(Func<IContextOfBlock> getBlockContext) => _getBlockContext = getBlockContext;
+        //private Func<IContextOfBlock> _getBlockContext;
 
         public void AttachRealBlock(Func<IBlock> getBlock) => _getBlock = getBlock;
         private Func<IBlock> _getBlock;

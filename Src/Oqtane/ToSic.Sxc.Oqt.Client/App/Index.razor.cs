@@ -76,7 +76,7 @@ namespace ToSic.Sxc.Oqt.App
                 culture,
                 urlQuery);
 
-            if (!string.IsNullOrEmpty(ViewResults.ErrorMessage)) AddModuleMessage(ViewResults.ErrorMessage, MessageType.Warning);
+            if (!string.IsNullOrEmpty(ViewResults?.ErrorMessage)) AddModuleMessage(ViewResults.ErrorMessage, MessageType.Warning);
         }
 
         //private async Task<string> GetUserSelectedCultureFromCookie()

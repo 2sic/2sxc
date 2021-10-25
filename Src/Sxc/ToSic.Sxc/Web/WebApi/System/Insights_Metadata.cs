@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Data;
+using static ToSic.Razor.Blade.Tag;
 
 namespace ToSic.Sxc.Web.WebApi.System
 {
@@ -10,10 +11,9 @@ namespace ToSic.Sxc.Web.WebApi.System
         {
             try
             {
-                msg += p($"Assigned Items: {metadata.Count}\n");
-                msg += "<table id='table'><thead>"
-                       + tr(new[] { "#", "Id", Eav.Data.Attributes.TitleNiceName, "Content-Type", "Target", "Key" }, true)
-                       + "</thead>"
+                msg += P($"Assigned Items: {metadata.Count}\n");
+                msg += "<table id='table'>"
+                       + HeadFields( "#", "Id", Eav.Data.Attributes.TitleNiceName, "Content-Type", "Target", "Key" )
                        + "<tbody>";
                 var count = 0;
                 foreach (var md in metadata)
@@ -27,15 +27,14 @@ namespace ToSic.Sxc.Web.WebApi.System
                                 ? "{" + mdFor.KeyGuid + "}"
                                 : "(directly attached)";
 
-                    msg = msg + tr(new[]
-                    {
-                        (++count).ToString(),
-                        md.EntityId.ToString(),
+                    msg = msg + RowFields(
+                        ++count,
+                        md.EntityId,
                         md.GetBestTitle(),
                         md.Type.Name,
-                        mdFor.TargetType.ToString(),
+                        mdFor.TargetType,
                         key
-                    });
+                    );
                 }
                 msg += "</tbody>";
                 msg += "</table>";

@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Adam
         {
             Log.LinkTo(parentLog);
             var logCall = Log.Call<AdamContext>($"..., usePortalRoot: {usePortalRoot}");
-            AdamManager.Init(context, 10, Log);
+            AdamManager.Init(context, Constants.CompatibilityLevel10, Log);
             AdamRoot = usePortalRoot
                 ? new AdamStorageOfSite<TFolderId, TFileId>(AdamManager) as AdamStorage<TFolderId, TFileId>
                 : new AdamStorageOfField<TFolderId, TFileId>(AdamManager, entityGuid, fieldName);

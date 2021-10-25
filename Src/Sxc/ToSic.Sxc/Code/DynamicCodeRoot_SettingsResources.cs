@@ -24,8 +24,6 @@ namespace ToSic.Sxc.Code
                         AppConstants.RootNameResources,
                         DynamicEntityDependencies,
                         appState.SettingsInApp.GetStack(false, _DynCodeRoot.Block?.View?.Resources).ToArray())
-                        //new KeyValuePair<string, IPropertyLookup>(PartView, Block?.View?.Resources),
-                        //new KeyValuePair<string, IPropertyLookup>(PartApp, App?.Resources?.Entity))
                     );
             }
         }

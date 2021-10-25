@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi;
 
 namespace IntegrationSamples.SxcEdit01.Controllers
 {
@@ -10,8 +12,9 @@ namespace IntegrationSamples.SxcEdit01.Controllers
         protected IntStatelessControllerBase()
         {
             // ReSharper disable VirtualMemberCallInConstructor
-            Log = new Log(HistoryLogName, null, $"Path: {HttpContext?.Request.GetDisplayUrl()}");
-            History.Add(HistoryLogGroup, Log);
+            Log = new Log(HistoryLogName, null, $"Path: {HttpContext.Request.GetDisplayUrl()}");
+            HttpContext.RequestServices.Build<LogHistory>()
+                /*History*/.Add(HistoryLogGroup, Log);
             // ReSharper restore VirtualMemberCallInConstructor
         }
 
@@ -22,7 +25,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
         /// The group name for log entries in insights.
         /// Helps group various calls by use case. 
         /// </summary>
-        protected virtual string HistoryLogGroup { get; } = "web-api";
+        protected virtual string HistoryLogGroup => EavWebApiConstants.HistoryNameWebApi;
 
         /// <summary>
         /// The name of the logger in insights.

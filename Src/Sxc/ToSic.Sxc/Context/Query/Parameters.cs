@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using ToSic.Eav.Documentation;
+using ToSic.Sxc.Web.Url;
 
 namespace ToSic.Sxc.Context.Query
 {
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.Context.Query
     /// This should provide cross-platform, neutral way to have page parameters in the Razor
     /// </summary>
     [PrivateApi]
-    public class Parameters : IReadOnlyDictionary<string, string>
+    public class Parameters : IParameters, IReadOnlyDictionary<string, string>
     {
         public Parameters(NameValueCollection originals)
         {
@@ -47,5 +48,42 @@ namespace ToSic.Sxc.Context.Query
         public IEnumerable<string> Keys => OriginalsAsDic.Keys;
 
         public IEnumerable<string> Values => OriginalsAsDic.Values;
+
+
+        public override string ToString() => UrlHelpers.NvcToString(_originals);
+
+        public IParameters Add(string name)
+        {
+            var copy = new NameValueCollection(_originals) { { name, null } };
+            return new Parameters(copy);
+        }
+
+        public IParameters Add(string name, string value)
+        {
+            var copy = new NameValueCollection(_originals) { { name, value } };
+            return new Parameters(copy);
+        }
+
+        public IParameters Set(string name, string value)
+        {
+            var copy = new NameValueCollection(_originals);
+            copy.Set(name, value);
+            return new Parameters(copy);
+        }
+
+        public IParameters Set(string name)
+        {
+            var copy = new NameValueCollection(_originals);
+            copy.Set(name, null);
+            return new Parameters(copy);
+        }
+
+        public IParameters Remove(string name)
+        {
+            var copy = new NameValueCollection(_originals);
+            if (copy[name] != null)
+                copy.Remove(name);
+            return new Parameters(copy);
+        }
     }
 }

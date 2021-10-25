@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
@@ -11,10 +12,10 @@ namespace ToSic.Sxc.WebApi
 {
     public class CustomApiHelpers
     {
-        public static string FileParamsInitialCheck(string dontRelyOnParameterOrder, bool? download, string virtualPath,
+        public static string FileParamsInitialCheck(string noParamOrder, bool? download, string virtualPath,
             string fileDownloadName, object contents)
         {
-            Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, nameof(File), nameof(download) + "," + nameof(virtualPath) + "," + nameof(fileDownloadName) + "," + nameof(contents));
+            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(File), nameof(download) + "," + nameof(virtualPath) + "," + nameof(fileDownloadName) + "," + nameof(contents));
 
             // Check initial conflicting values
             CheckInitialConflictingValues(virtualPath, contents);
@@ -52,6 +53,14 @@ namespace ToSic.Sxc.WebApi
             }
 
             return fileDownloadName;
+        }
+
+        /*
+         * for "Content-Disposition: inline" fileDownloadName should be null
+         */
+        public static string EnsureFileDownloadNameIsNullForInline(bool? download, string fileDownloadName)
+        {
+            return download == true ? fileDownloadName : null;
         }
 
         public static string XmlContentTypeFromContent(bool isValidXml, string contentType)
@@ -110,7 +119,7 @@ namespace ToSic.Sxc.WebApi
                 }
                 catch (XmlException)
                 {
-                    return  false;
+                    return false;
                 }
             }
         }
@@ -130,7 +139,7 @@ namespace ToSic.Sxc.WebApi
         public static Encoding GetEncoding(XmlDocument xmlDocument)
         {
             var xmlDeclaration = xmlDocument.ChildNodes.OfType<XmlDeclaration>().FirstOrDefault();
-            return (xmlDeclaration?.Encoding == null) 
+            return (xmlDeclaration?.Encoding == null)
                 ? Encoding.UTF8
                 : Encoding.GetEncoding(xmlDeclaration?.Encoding);
         }
@@ -144,12 +153,11 @@ namespace ToSic.Sxc.WebApi
 
         public static Encoding GetEncoding(Stream stream)
         {
-            using (var xmlReader = XmlReader.Create(stream, _settings))
+            using (var reader = new StreamReader(stream, detectEncodingFromByteOrderMarks: true))
             {
-                var xmlDocument = new XmlDocument();
-                xmlDocument.Load(xmlReader);
+                reader.ReadToEnd();
                 stream.Position = 0;
-                return GetEncoding(xmlDocument);
+                return reader.CurrentEncoding; // the reader detects the encoding!
             }
         }
 
@@ -159,6 +167,29 @@ namespace ToSic.Sxc.WebApi
             {
                 return GetEncoding(memoryStream);
             }
+        }
+
+        public static MediaTypeHeaderValue PrepareMediaTypeHeaderValue(string contentType, Encoding encoding)
+        {
+            return new MediaTypeHeaderValue(contentType)
+            {
+                CharSet = encoding.WebName // do not use HeaderName or BodyName because it is used for mail agents
+            };
+        }
+
+        public static ContentDispositionHeaderValue PrepareContentDispositionHeaderValue(bool? download, string fileDownloadName)
+        {
+            if (string.IsNullOrWhiteSpace(fileDownloadName))
+                return new ContentDispositionHeaderValue("inline");
+            return download != true
+                ? new ContentDispositionHeaderValue("inline")
+                {
+                    FileName = fileDownloadName
+                }
+                : new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = fileDownloadName
+                };
         }
     }
 }

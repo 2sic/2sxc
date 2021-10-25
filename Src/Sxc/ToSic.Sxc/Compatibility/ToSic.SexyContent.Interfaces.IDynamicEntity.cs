@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NETFRAMEWORK
+using System;
 using ToSic.Eav.Documentation;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -42,6 +43,8 @@ namespace ToSic.SexyContent.Interfaces
 
         dynamic GetPublished();
 
-        bool IsDemoItem { get; }
+        // 2021-10-25 2dm removed this from the obsolete interface - as it was added in 2sxc 10.07 so it should never have made it to the SexyContent namespace
+        //bool IsDemoItem { get; }
     }
 }
+#endif

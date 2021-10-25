@@ -1,5 +1,7 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Oqtane.Shared;
+using System;
+using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Web.WebApi.System;
@@ -54,9 +56,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
 
         private void ThrowIfNotSuperuser()
         {
-            // todo: security relevant before final release
-            //if (!PortalSettings.UserInfo.IsSuperUser)
-            //    throw Http.PermissionDenied("requires Superuser permissions");
+            if (!User.IsInRole(RoleNames.Host))
+                throw HttpException.PermissionDenied("requires Host permissions");
         }
 
         #endregion

@@ -1,5 +1,7 @@
 ﻿using System;
+using ToSic.Eav;
 using ToSic.Eav.Documentation;
+using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Data
 {
@@ -23,10 +25,10 @@ namespace ToSic.Sxc.Data
                 if (!userMayEdit)
                     return new System.Web.HtmlString("");
 
-                if (_Dependencies.CompatibilityLevel == 10)
+                if (_Dependencies.CompatibilityLevel > Constants.MaxLevelForEntityDotToolbar)
                     throw new Exception("content.Toolbar is deprecated in the new RazorComponent. Use @Edit.TagToolbar(content) or @Edit.Toolbar(content) instead. See https://r.2sxc.org/EditToolbar");
 
-                var toolbar = new ToSic.Sxc.Edit.Toolbar.ItemToolbar(Entity).Toolbar;
+                var toolbar = new Edit.Toolbar.ItemToolbar(Entity).Toolbar;
                 return new System.Web.HtmlString(toolbar);
             }
         }
@@ -35,10 +37,10 @@ namespace ToSic.Sxc.Data
         [PrivateApi("probably we won't continue recommending to use this, but first we must provide an alternative")]
         public System.Web.IHtmlString Render()
         {
-            if (_Dependencies.CompatibilityLevel == 10)
+            if (_Dependencies.CompatibilityLevel > Constants.MaxLevelForEntityDotRender)
                 throw new Exception("content.Render() is deprecated in the new RazorComponent. Use ToSic.Sxc.Blocks.Render.One(content) instead. See https://r.2sxc.org/EditToolbar");
 
-            return Blocks.Render.One(this);
+            return Factory.StaticBuild<IRenderService>().One(this);
         }
 
         [PrivateApi("shouldn't be used, but it may be published by accident, so shouldn't be removed. ")]

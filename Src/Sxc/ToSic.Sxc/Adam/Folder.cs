@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using ToSic.Eav.Data;
 using ToSic.Eav.Metadata;
 
@@ -16,11 +17,14 @@ namespace ToSic.Sxc.Adam
         }
 
         /// <inheritdoc />
+        [JsonIgnore]
         public dynamic Metadata => AdamManager.MetadataMaker.GetFirstOrFake(AdamManager, MetadataId);
 
         /// <inheritdoc />
+        [JsonIgnore]
         public bool HasMetadata => AdamManager.MetadataMaker.GetFirstMetadata(AdamManager.AppRuntime, MetadataId) != null;
 
+        [JsonIgnore]
         public MetadataFor MetadataId => _metadataKey ?? (_metadataKey = new MetadataFor
         {
             TargetType = (int)TargetTypes.CmsItem,

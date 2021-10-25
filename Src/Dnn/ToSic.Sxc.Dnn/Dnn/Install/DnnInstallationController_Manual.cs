@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.Install
             if (IsUpgradeRunning)
             {
                 Log.Add("Upgrade is still running");
-                throw new Exception("There seems to be an upgrade running - please wait. If you still see this message after 10 minutes, please restart the web application.");
+                throw new Exception("There seems to be an upgrade running - please wait. If you still see this message after 3-4 minutes, please restart the web application.");
             }
 
             _installLogger.LogStep("", "FinishAbortedUpgrade starting", false);

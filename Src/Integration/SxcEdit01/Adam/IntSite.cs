@@ -17,7 +17,9 @@ namespace IntegrationSamples.SxcEdit01.Adam
 
         public string ContentPath => "wwwroot";
 
-        public string Url => "" ; // "/";
+        public string Url => "https://" + UrlRoot;
+
+        public string UrlRoot => "some-domain/en-us";
 
         public int ZoneId => Id;
 

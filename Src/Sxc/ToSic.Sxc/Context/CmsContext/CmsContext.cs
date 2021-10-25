@@ -54,13 +54,13 @@ namespace ToSic.Sxc.Context
 
         public ICmsSite Site => Context.Site as ICmsSite;
 
-        public ICmsPage Page => _page ?? (_page = (Context as IContextOfBlock)?.Page ?? new PageUnknown());
+        public ICmsPage Page => _page ?? (_page = (Context as IContextOfBlock)?.Page ?? new PageUnknown(null));
         private IPage _page;
 
         public ICmsCulture Culture => _culture ?? (_culture = new CmsCulture(this));
         private ICmsCulture _culture;
 
-        public ICmsModule Module => _module ?? (_module = (Context as IContextOfBlock)?.Module ?? new ModuleUnknown());
+        public ICmsModule Module => _module ?? (_module = (Context as IContextOfBlock)?.Module ?? new ModuleUnknown(null));
         private IModule _module;
 
         public ICmsUser User => Context.User as ICmsUser;

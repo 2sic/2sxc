@@ -2,9 +2,7 @@
 using System.Web;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
-using ToSic.Eav.Logging;
-using ToSic.Sxc.Apps;
-using ToSic.Sxc.Context;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.WebApi;
@@ -25,28 +23,54 @@ namespace ToSic.Sxc.Dnn.Web
             _dnn = dnnContext;
         }
 
-        public override void Init(IContextOfBlock context, IApp app, ILog parentLog)
+        public override void AddBlockContext(IDynamicCodeRoot codeRoot)
         {
-            base.Init(context, app, parentLog);
-            ((DnnContextOld) _dnn).Init(context?.Module);
+            base.AddBlockContext(codeRoot);
+            ((DnnContextOld) _dnn).Init(codeRoot.Block?.Context?.Module);
         }
 
-        /// <inheritdoc />
-        public override string To(string dontRelyOnParameterOrder = Eav.Parameters.Protector, int? pageId = null, string parameters = null, string api = null)
+        ///// <inheritdoc />
+        //public override string To(string noParamOrder = Eav.Parameters.Protector, int? pageId = null, object parameters = null, string api = null)
+        //{
+        //    // prevent incorrect use without named parameters
+        //    Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
+
+        //    // Check initial conflicting values.
+        //    if (pageId != null && api != null)
+        //        throw new ArgumentException($"Multiple properties like '{nameof(api)}' or '{nameof(pageId)}' have a value - only one can be provided.");
+
+        //    var strParams = ParametersToString(parameters);
+
+        //    if (api != null) return Api(path: LinkHelpers.CombineApiWithQueryString(api.TrimPrefixSlash(), strParams));
+
+        //    return parameters == null
+        //        ? _dnn.Tab.FullUrl
+        //        : DotNetNuke.Common.Globals.NavigateURL(pageId ?? _dnn.Tab.TabID, "", strParams); // NavigateURL returns absolute links
+        //}
+
+        protected override string ToApi(string api, string parameters = null) 
+            => Api(path: LinkHelpers.CombineApiWithQueryString(api.TrimPrefixSlash(), parameters));
+
+        protected override string ToPage(int? pageId, string parameters = null)
         {
-            // prevent incorrect use without named parameters
-            Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
-
-            if (api != null) return Api(path: LinkHelpers.CombineApiWithQueryString(api.TrimPrefixSlash(), parameters));
-
             return parameters == null
                 ? _dnn.Tab.FullUrl
                 : DotNetNuke.Common.Globals.NavigateURL(pageId ?? _dnn.Tab.TabID, "", parameters); // NavigateURL returns absolute links
         }
 
-        private string Api(string dontRelyOnParameterOrder = Eav.Parameters.Protector, string path = null, bool absoluteUrl = true)
+
+        //protected override string ToImplementation(int? pageId = null, string parameters = null, string api = null)
+        //{
+        //    if (api != null) return Api(path: LinkHelpers.CombineApiWithQueryString(api.TrimPrefixSlash(), parameters));
+
+        //    return parameters == null
+        //        ? _dnn.Tab.FullUrl
+        //        : DotNetNuke.Common.Globals.NavigateURL(pageId ?? _dnn.Tab.TabID, "", parameters); // NavigateURL returns absolute links
+        //}
+
+        private string Api(string noParamOrder = Eav.Parameters.Protector, string path = null)
         {
-            Eav.Parameters.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Api", $"{nameof(path)}");
+            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Api", $"{nameof(path)}");
 
             if (string.IsNullOrEmpty(path)) return string.Empty;
 
@@ -63,12 +87,17 @@ namespace ToSic.Sxc.Dnn.Web
 
             var relativePath = $"{apiRoot}/app/{App.Folder}/{path}";    
 
-            return absoluteUrl ? $"{GetDomainName()}{relativePath}" : relativePath;
+            return relativePath;
         }
 
-        private string GetDomainName()
+        public override string GetCurrentLinkRoot()
         {
             return HttpContext.Current?.Request?.Url?.GetLeftPart(UriPartial.Authority) ?? string.Empty;
+        }
+
+        public override string GetCurrentRequestUrl()
+        {
+            return HttpContext.Current?.Request?.Url?.AbsoluteUri ?? string.Empty;
         }
     }
 }

@@ -3,13 +3,14 @@ using ToSic.Eav;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Run.Unknown;
 
 
 namespace ToSic.Sxc.Cms.Publishing
 {
     internal class BasicPagePublishing : HasLog<IPagePublishing>, IPagePublishing
     {
-        public BasicPagePublishing() : base($"{LogNames.NotImplemented}.Publsh") { }
+        public BasicPagePublishing(WarnUseOfUnknown<BasicPagePublishing> warn) : base($"{LogNames.NotImplemented}.Publsh") { }
 
         public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
         {

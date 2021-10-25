@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v5.0": {
-      "ToSic.Razor/03.04.00": {
+      "ToSic.Razor/03.07.00": {
         "dependencies": {
           "Microsoft.AspNetCore.Html.Abstractions": "2.2.0"
         },
@@ -29,7 +29,7 @@
     }
   },
   "libraries": {
-    "ToSic.Razor/03.04.00": {
+    "ToSic.Razor/03.07.00": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

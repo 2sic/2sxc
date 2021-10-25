@@ -162,7 +162,7 @@ namespace ToSic.Sxc.Search
 
             // At the of the code, add it to insights / history. This must happen at the end.
             // It will only be preserved, if the inner code ran a Log.Preserve = true;
-            History.Add("dnn-search", Log);
+            Eav.Factory.StaticBuild<LogHistory>().Add("dnn-search", Log);
 
             // reduce load by only keeping recently modified items
             var searchDocuments = KeepOnlyChangesSinceLastIndex(beginDate, SearchItems);
@@ -309,7 +309,7 @@ namespace ToSic.Sxc.Search
             if (instance is DynamicCode instanceWithContext)
             {
                 Log.Add($"attach DynamicCode context to class instance");
-                var parentDynamicCodeRoot = _serviceProvider.Build<DnnDynamicCodeRoot>().Init(block, Log);
+                var parentDynamicCodeRoot = _serviceProvider.Build<DnnDynamicCodeRoot>().Init(block, Log, Constants.CompatibilityLevel10);
                 instanceWithContext.DynamicCodeCoupling(parentDynamicCodeRoot);
             }
 

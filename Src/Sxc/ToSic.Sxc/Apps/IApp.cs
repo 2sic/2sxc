@@ -10,8 +10,10 @@ namespace ToSic.Sxc.Apps
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
     public interface IApp: 
-        Eav.Apps.IApp,
-        SexyContent.Interfaces.IApp // inherits from old namespace for compatibility
+        Eav.Apps.IApp
+#if NETFRAMEWORK
+        , SexyContent.Interfaces.IApp // inherits from old namespace for compatibility
+#endif
     {
         /// <summary>
         /// Configuration object as a DynamicEntity.

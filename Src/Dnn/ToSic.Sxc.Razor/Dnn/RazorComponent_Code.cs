@@ -1,17 +1,19 @@
-﻿//using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Documentation;
 
-//namespace ToSic.Sxc.Dnn
-//{
-//    public abstract partial class RazorComponent
-//    {
-//        [PrivateApi]
-//        internal RazorCodeManager CodeManager => _codeManager ?? (_codeManager = new RazorCodeManager(this));
-//        private RazorCodeManager _codeManager;
+namespace ToSic.Sxc.Dnn
+{
+    public abstract partial class RazorComponent
+    {
+        #region Code Behind - a Dnn feature which probably won't exist in Oqtane
 
-//        /// <summary>
-//        /// Code-Behind of this .cshtml file - located in a file with the same name but ending in .code.cshtml
-//        /// </summary>
-//        public dynamic Code => CodeManager.CodeOrException;
+        [PrivateApi]
+        internal RazorCodeManager CodeManager => _codeManager ?? (_codeManager = new RazorCodeManager(this));
+        private RazorCodeManager _codeManager;
 
-//    }
-//}
+        /// <inheritdoc />
+        public dynamic Code => CodeManager.CodeOrException;
+
+        #endregion
+
+    }
+}

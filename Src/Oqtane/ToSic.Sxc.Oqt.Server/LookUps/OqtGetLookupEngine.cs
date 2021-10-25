@@ -12,8 +12,8 @@ namespace ToSic.Sxc.Oqt.Server.LookUps
         public OqtGetLookupEngine(
             Lazy<QueryStringLookUp> queryStringLookUp,
             Lazy<SiteLookUp> siteLookUp,
-            Lazy<PageLookUp> pageLookUp,
-            Lazy<ModuleLookUp> moduleLookUp,
+            Lazy<OqtPageLookUp> pageLookUp,
+            Lazy<OqtModuleLookUp> moduleLookUp,
             Lazy<UserLookUp> userLookUp) : base($"{OqtConstants.OqtLogPrefix}.LookUp")
         {
             _queryStringLookUp = queryStringLookUp;
@@ -24,13 +24,13 @@ namespace ToSic.Sxc.Oqt.Server.LookUps
         }
         private readonly Lazy<QueryStringLookUp> _queryStringLookUp;
         private readonly Lazy<SiteLookUp> _siteLookUp;
-        private readonly Lazy<PageLookUp> _pageLookUp;
-        private readonly Lazy<ModuleLookUp> _moduleLookUp;
+        private readonly Lazy<OqtPageLookUp> _pageLookUp;
+        private readonly Lazy<OqtModuleLookUp> _moduleLookUp;
         private readonly Lazy<UserLookUp> _userLookUp;
 
         #endregion
 
-        public ILookUpEngine GetLookUpEngine(int instanceId/*, ILog parentLog*/)
+        public ILookUpEngine GetLookUpEngine(int instanceId)
         {
             var providers = new LookUpEngine(Log);
 

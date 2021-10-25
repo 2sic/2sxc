@@ -10,18 +10,13 @@ namespace ToSic.Sxc.Razor
         /// <inheritdoc />
         public override void CustomizeData()
         {
-            // TODO
-            // (Webpage as IRazorComponent)?.CustomizeData();
+            // Not implemented in v12
         }
 
         /// <inheritdoc />
         public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate)
         {
-            //if (Webpage == null || searchInfos == null || searchInfos.Count <= 0) return;
-
-            // call new signature
-            // TODO
-            // Webpage?.CustomizeSearch(searchInfos, moduleInfo, beginDate);
+            // Not implemented in v12
         }
     }
 }

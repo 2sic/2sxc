@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.Block
             _siteStateInitializerLazy = siteStateInitializerLazy;
         }
 
-        public override IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = 10)
+        public override IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility = Constants.CompatibilityLevel12)
         {
             _siteStateInitializerLazy.Value.InitIfEmpty(block?.Context?.Site?.Id);
             return base.Init(block, parentLog, compatibility);

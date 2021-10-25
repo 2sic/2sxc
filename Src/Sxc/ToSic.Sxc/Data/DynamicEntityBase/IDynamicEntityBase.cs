@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Data
         /// Get a property using the string name. Only needed in special situations, as most cases can use the object.name directly
         /// </summary>
         /// <param name="name">the property name. </param>
-        /// <param name="dontRelyOnParameterOrder">
+        /// <param name="noParamOrder">
         /// This should enforce the convention that all following parameters (which are optional) must explicitly use the parameter name.
         /// So <code>Get("FirstName", "en")</code> won't work, you must use <code>Get("FirstName", language: "en")</code> and similar
         /// </param>
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Data
         /// <returns>a dynamically typed result, can be string, bool, etc.</returns>
         dynamic Get(string name,
             // ReSharper disable once MethodOverloadWithOptionalParameter
-            string dontRelyOnParameterOrder = Eav.Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             string language = null,
             bool convertLinks = true,
             bool? debug = null

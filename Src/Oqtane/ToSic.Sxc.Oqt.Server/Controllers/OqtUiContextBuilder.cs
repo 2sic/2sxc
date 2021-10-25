@@ -1,13 +1,10 @@
-﻿using System;
-using System.Reflection;
-using Oqtane.Infrastructure;
+﻿using Oqtane.Infrastructure;
 using Oqtane.Shared;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Block;
 using ToSic.Sxc.Run;
-
 using ToSic.Sxc.WebApi.Context;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
@@ -65,7 +62,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             //return new WebResourceDto
             //{
             result.Id = _context.Site.Id;
-            result.Url = "//" + _context.Site.Url;
+            result.Url = "//" + _context.Site.UrlRoot;
             //};
             return result;
         }
@@ -96,13 +93,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected override string GetGettingStartedUrl()
         {
             var blockCtx = _context as IContextOfBlock; // may be null!
-            var x = _siteState.Alias.TenantId;
-            
+
             var gsUrl = _remoteRouterLink.LinkToRemoteRouter(
                 RemoteDestinations.GettingStarted,
                 "Oqt",
-                Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),
-                _configManager.GetInstallationId(), // Installation ID - added in Oqtane 2.2
+                Oqtane.Shared.Constants.Version, // Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),
+                _configManager.GetInstallationId(),
                 Deps.SiteCtx.Site,
                 blockCtx?.Module.Id ?? 0, // TODO: V12 - REQUIRED FOR CALLBACK TO WORK
                 Deps.AppToLaterInitialize,

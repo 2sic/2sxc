@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Run;
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     public abstract class OqtStatefulControllerBase : OqtControllerBase
     {
-        protected OqtState OqtState;
+        //protected OqtState OqtState;
         protected IContextResolver CtxResolver;
 
         public override void OnActionExecuting(ActionExecutingContext context)
@@ -18,18 +19,28 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             var wrapLog = Log.Call();
 
             base.OnActionExecuting(context);
-            
-            OqtState = ServiceProvider.Build<OqtState>().Init(Log) ;// dependencies.OqtState.Init(Log);
-            CtxResolver = ServiceProvider.Build<IContextResolver>() ;// dependencies.CtxResolver;
-            CtxResolver.AttachRealBlock(() => GetBlock());
-            CtxResolver.AttachBlockContext(GetContext);
+
+            var getBlock = ServiceProvider.Build<OqtGetBlock>().Init(Log);
+            CtxResolver = getBlock.TryToLoadBlockAndAttachToResolver();
+            BlockOptional = CtxResolver.RealBlockOrNull();
+            //var blockOptional = BlockOptional = getBlock.GetBlock();
+            //OqtState = ServiceProvider.Build<OqtState>().Init(Log) ;// dependencies.OqtState.Init(Log);
+            //CtxResolver = ServiceProvider.Build<IContextResolver>() ;// dependencies.CtxResolver;
+            //CtxResolver.AttachRealBlock(() => blockOptional);
+            //CtxResolver.AttachBlockContext(() => blockOptional?.Context);
             wrapLog(null);
         }
 
-        protected IContextOfBlock GetContext() => OqtState.GetContext();
 
-        protected IBlock GetBlock(bool allowNoContextFound = true) => OqtState.GetBlock(allowNoContextFound);
+        // TODO: 2021-09-20 2dm this should probably be removed - I don't think the context should be available on this class, but I'm not sure 
+        protected IContextOfBlock GetContext() => BlockOptional?.Context; // OqtState.GetContext();
 
-        protected IApp GetApp(int appId) => OqtState.GetApp(appId);
+        //protected IBlock GetBlock(bool allowNoContextFound = true) => OqtState.GetBlock(allowNoContextFound);
+
+        protected IBlock BlockOptional { get; private set; }
+
+        protected IApp GetApp(int appId)
+            // => OqtState.GetApp(appId);
+            => ServiceProvider.Build<App>().Init(ServiceProvider, appId, Log, BlockOptional);
     }
 }

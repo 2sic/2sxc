@@ -53,14 +53,14 @@ namespace ToSic.Sxc.Razor
             try
             {
                 if (string.IsNullOrEmpty(TemplatePath)) return null;
-                var dynCode = _dynCodeRootLazy.Value.Init(Block, Log);
+                var dynCode = _dynCodeRootLazy.Value.Init(Block, Log, Constants.CompatibilityLevel12);
 
                 var result = await RazorRenderer.RenderToStringAsync(TemplatePath, new object(),
                     rzv =>
                     {
-                        if (rzv.RazorPage is not IRazor12 asSxc) return;
-                        asSxc._DynCodeRoot = dynCode;
-                        //asSxc.Purpose = Purpose;
+                        if (rzv.RazorPage is not IRazor asSxc) return;
+                        asSxc.DynamicCodeCoupling(dynCode);
+                        // Note: Don't set the purpose here any more, it's a deprecated feature in 12+
                     });
                 var writer = new StringWriter();
                 await writer.WriteAsync(result);

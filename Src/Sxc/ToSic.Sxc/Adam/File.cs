@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 using ToSic.Eav.Data;
 using ToSic.Eav.Metadata;
 using ToSic.SexyContent.Adam;
@@ -21,10 +22,13 @@ namespace ToSic.Sxc.Adam
         #region Metadata
 
         /// <inheritdoc />
+        [JsonIgnore]
         public dynamic Metadata => AdamManager.MetadataMaker.GetFirstOrFake(AdamManager, MetadataId);
 
+        [JsonIgnore]
         public bool HasMetadata => AdamManager.MetadataMaker.GetFirstMetadata(AdamManager.AppRuntime, MetadataId) != null;
 
+        [JsonIgnore]
         public MetadataFor MetadataId => _metadataKey ?? (_metadataKey = new MetadataFor
         {
             TargetType = (int)TargetTypes.CmsItem,
@@ -44,6 +48,5 @@ namespace ToSic.Sxc.Adam
         public DateTime CreatedOnDate => Created;
 
         public int FileId => SysId as int? ?? 0;
-
     }
 }

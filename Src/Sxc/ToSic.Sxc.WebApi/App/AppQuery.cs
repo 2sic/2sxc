@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Net;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
+using ToSic.Eav.DataFormats.EavLight;
+using ToSic.Eav.ImportExport;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Conversion;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.LookUp;
 
 
@@ -20,20 +22,20 @@ namespace ToSic.Sxc.WebApi.App
 
         #region Constructor / DI
 
-        public AppQuery(IServiceProvider serviceProvider, IContextResolver ctxResolver, IDataToDictionary dataToDictionary) : base(serviceProvider, "Sxc.ApiApQ")
+        public AppQuery(IServiceProvider serviceProvider, IContextResolver ctxResolver, IConvertToEavLight dataToFormatLight) : base(serviceProvider, "Sxc.ApiApQ")
         {
             _ctxResolver = ctxResolver;
-            _dataToDictionary = dataToDictionary;
+            _dataToFormatLight = dataToFormatLight;
         }
         
         private readonly IContextResolver _ctxResolver;
-        private readonly IDataToDictionary _dataToDictionary;
+        private readonly IConvertToEavLight _dataToFormatLight;
 
         #endregion
 
         #region In-Container-Context Queries
 
-        public IDictionary<string, IEnumerable<IDictionary<string, object>>> Query(int? appId, string name, bool includeGuid, string stream, AppQueryParameters more)
+        public IDictionary<string, IEnumerable<EavLightEntity>> Query(int? appId, string name, bool includeGuid, string stream, AppQueryParameters more)
         {
             var wrapLog = Log.Call($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
 
@@ -57,7 +59,7 @@ namespace ToSic.Sxc.WebApi.App
         #region Public Queries
 
 
-        public IDictionary<string, IEnumerable<IDictionary<string, object>>> PublicQuery(string appPath, string name, string stream, AppQueryParameters more)
+        public IDictionary<string, IEnumerable<EavLightEntity>> PublicQuery(string appPath, string name, string stream, AppQueryParameters more)
         {
             var wrapLog = Log.Call($"path:{appPath}, name:{name}, stream: {stream}");
             if (string.IsNullOrEmpty(name))
@@ -78,7 +80,7 @@ namespace ToSic.Sxc.WebApi.App
         #endregion
 
 
-        private IDictionary<string, IEnumerable<IDictionary<string, object>>> BuildQueryAndRun(
+        private IDictionary<string, IEnumerable<EavLightEntity>> BuildQueryAndRun(
                 IApp app, 
                 string name, 
                 string stream, 
@@ -112,8 +114,8 @@ namespace ToSic.Sxc.WebApi.App
             }
 
             //var serializer = new DataToDictionary(userMayEdit) { WithGuid = includeGuid };
-            var serializer = _dataToDictionary;
-            serializer.WithEdit = userMayEdit;
+            var serializer = _dataToFormatLight;
+            if (serializer is ConvertToEavLightWithCmsInfo serializerWithEdit) serializerWithEdit.WithEdit = userMayEdit;
             serializer.WithGuid = includeGuid;
             if (stream == AllStreams) stream = null;
             var result = serializer.Convert(query, stream?.Split(','), more?.Guids);

@@ -9,7 +9,8 @@ namespace ToSic.Sxc.Adam
 
         private File<string, string> ToAdamFile(string path)
         {
-            var f = new FileInfo(_adamPaths.PhysicalPath(path));
+            var physicalPath = _adamPaths.PhysicalPath(path);
+            var f = new FileInfo(physicalPath);
             var directoryName = f.Directory.Name;
 
             // todo: unclear if we need both, but we need the url for the compare-if-same-path
@@ -29,12 +30,14 @@ namespace ToSic.Sxc.Adam
                 Modified = f.LastWriteTime,
                 Name = Path.GetFileNameWithoutExtension(f.Name),
                 Url = _adamPaths.Url(relativeUrl),
+                PhysicalPath = physicalPath,
             };
         }
 
         private Folder<string, string> ToAdamFolder(string path)
         {
-            var f = new DirectoryInfo(_adamPaths.PhysicalPath(path));
+            var physicalPath = _adamPaths.PhysicalPath(path);
+            var f = new DirectoryInfo(physicalPath);
 
             var relativePath = _adamPaths.RelativeFromAdam(path);
             return new Folder<string, string>(AdamManager)
@@ -47,6 +50,7 @@ namespace ToSic.Sxc.Adam
                 Modified = f.LastWriteTime,
 
                 Url = _adamPaths.Url(relativePath),
+                PhysicalPath = physicalPath,
             };
         }
 

@@ -22,9 +22,14 @@ namespace ToSic.Sxc.Dnn.Run
     {
         #region DI Constructor
 
-        public DnnValueConverter(ISite site) => _site = site;
+        public DnnValueConverter(ISite site, Lazy<IFeaturesService> featuresLazy )
+        {
+            _site = site;
+            _featuresLazy = featuresLazy;
+        }
 
         private readonly ISite _site;
+        private readonly Lazy<IFeaturesService> _featuresLazy;
 
         #endregion
 
@@ -70,31 +75,9 @@ namespace ToSic.Sxc.Dnn.Run
         /// <returns></returns>
         private string TryToResolveDnnCodeToLink(Guid itemGuid, string originalValue)
         {
-            if (string.IsNullOrEmpty(originalValue)) return originalValue;
-
-            // new
-            var resultString = originalValue;
-
-            var parts = new ValueConverterBase.LinkParts(resultString);
-            
-            // var regularExpression = Regex.Match(resultString, ValueConverterBase.RegExToDetectConvertable, RegexOptions.IgnoreCase);
-
-            if (!parts.IsMatch) // regularExpression.Success)
-                return originalValue;
-
-            //var linkType = regularExpression.Groups[ValueConverterBase.RegExType].Value.ToLowerInvariant();
-            //var linkId = int.Parse(regularExpression.Groups[ValueConverterBase.RegExId].Value);
-            //var urlParams = regularExpression.Groups[ValueConverterBase.RegExParams].Value ?? "";
-
-            //var isPageLookup = linkType == ValueConverterBase.PrefixPage;
             try
             {
-                var result = (parts.IsPage // isPageLookup
-                                 ? ResolvePageLink(parts.Id)
-                                 : ResolveFileLink(parts.Id, itemGuid))
-                             ?? originalValue;
-
-                return result + (result == originalValue ? "" : parts.Params);
+                return ValueConverterBase.TryToResolveCodeToLink(itemGuid, originalValue, ResolvePageLink, ResolveFileLink);
             }
             catch (Exception e)
             {
@@ -105,7 +88,7 @@ namespace ToSic.Sxc.Dnn.Run
 
         }
 
-        private static string ResolveFileLink(int linkId, Guid itemGuid)
+        private string ResolveFileLink(int linkId, Guid itemGuid)
         {
             var fileInfo = FileManager.Instance.GetFile(linkId);
             if (fileInfo == null)
@@ -122,7 +105,7 @@ namespace ToSic.Sxc.Dnn.Run
                 var result = fileInfo.StorageLocation == 0 ? filePath : FileLinkClickController.Instance.GetFileLinkClick(fileInfo);
 
                 // optionally do extra security checks (new in 10.02)
-                if (!Features.Enabled(FeatureIds.BlockFileIdLookupIfNotInSameApp)) return result;
+                if (!_featuresLazy.Value.Enabled(FeatureIds.BlockFileIdLookupIfNotInSameApp)) return result;
 
                 // check if it's in this item. We won't check the field, just the item, so the field is ""
                 return !Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", filePath)

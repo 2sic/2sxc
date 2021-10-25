@@ -1,31 +1,31 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Oqtane.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     [ApiController]
+    [AllowAnonymous]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class ErrorController : ControllerBase
     {
-        [Route("/error-local-development")]
+        [Route("/error")]
         public IActionResult ErrorLocalDevelopment(
             [FromServices] IWebHostEnvironment webHostEnvironment)
         {
-            if (webHostEnvironment.EnvironmentName != "Development")
-            {
-                throw new InvalidOperationException(
-                    "This shouldn't be invoked in non-development environments.");
-            }
-
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
 
+            // super user and admins gets all details in error
+            if (User.IsInRole(RoleNames.Host) || User.IsInRole(RoleNames.Admin))
+                return Problem(
+                    detail: context.Error.StackTrace,
+                    title: context.Error.Message);
+
+            // normal users gets minimal error message.
             return Problem(
-                detail: context.Error.StackTrace,
                 title: context.Error.Message);
         }
-
-        [Route("/error")]
-        public IActionResult Error() => Problem();
     }
 }

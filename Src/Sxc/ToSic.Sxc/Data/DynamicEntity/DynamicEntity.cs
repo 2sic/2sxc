@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Data
     /// Note that it will provide many things not listed here, usually things like `.Image`, `.FirstName` etc. based on your ContentType.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public partial class DynamicEntity : DynamicEntityBase, IDynamicEntity
+    public partial class DynamicEntity : DynamicEntityBase, IDynamicEntity, ISxcDynamicObject
     {
         [PrivateApi]
         public IEntity Entity { get; private set; }
@@ -35,10 +35,11 @@ namespace ToSic.Sxc.Data
             _ListHelper = new DynamicEntityListHelper(list, parent, field, () => _debug, dependencies);
         }
 
-        private EntityInBlock PlaceHolder(IEntity parent, string field)
+        private IEntity PlaceHolder(IEntity parent, string field)
         {
             var dummyEntity = _Dependencies.DataBuilder.FakeEntity(parent.AppId);
-            return new EntityInBlock(dummyEntity, parent.EntityGuid, field, 0);
+            return EntityInBlockDecorator.Wrap(dummyEntity, parent.EntityGuid, field);
+            //return new EntityInBlock(dummyEntity, parent.EntityGuid, field, 0);
         }
 
 
@@ -46,7 +47,9 @@ namespace ToSic.Sxc.Data
         protected void SetEntity(IEntity entity)
         {
             Entity = entity;
-            EntityForEqualityCheck = (Entity as IEntityWrapper)?.EntityForEqualityCheck ?? Entity;
+            var entAsWrapper = Entity as IEntityWrapper;
+            EntityForEqualityCheck = entAsWrapper?.EntityForEqualityCheck ?? Entity;
+            Decorators = entAsWrapper?.Decorators ?? new List<IDecorator<IEntity>>();
         }
 
         // ReSharper disable once InconsistentNaming
@@ -60,7 +63,7 @@ namespace ToSic.Sxc.Data
 
         // ReSharper disable once InheritdocInvalidUsage
         /// <inheritdoc />
-        public bool IsDemoItem => Entity is EntityInBlock entInCg && entInCg.IsDemoItem;
+        public bool IsDemoItem => Entity?.GetDecorator<EntityInBlockDecorator>()?.IsDemoItem ?? false; // Entity is EntityInBlock entInCg && entInCg.IsDemoItem;
 
     }
 }

@@ -17,9 +17,9 @@ namespace ToSic.Sxc.Blocks
             _rendHelp ?? (_rendHelp = Block.Context.ServiceProvider.Build<IRenderingHelper>().Init(Block, Log));
         private IRenderingHelper _rendHelp;
 
-        public string Render() => Run().Html;
+        public string Render() => Run(true).Html;
 
-        public RenderResultWIP Run()
+        public RenderResultWIP Run(bool topLevel = true)
         {
             if (_result != null) return _result;
             var wrapLog = Log.Call<RenderResultWIP>();
@@ -33,23 +33,32 @@ namespace ToSic.Sxc.Blocks
 
                 result.DependentApps.Add(Block.AppId);
 
+                // TODO: this may fail on a sub-tmplate, must research
                 result.Assets = Assets;
-                var pss = Block.Context.PageServiceShared;
-                // Page Features
-                if (Block.Context.UserMayEdit)
+
+                // The remaining stuff should only happen at top-level
+                // Because once these properties are picked up, they are flushed
+                // So only the top-level should get them
+                if (topLevel)
                 {
-                    pss.Activate(BuiltInFeatures.EditUi.Key);
-                    pss.Activate(BuiltInFeatures.AutoToolbarGlobal.Key);
+                    var pss = Block.Context.PageServiceShared;
+                    // Page Features
+                    if (Block.Context.UserMayEdit)
+                    {
+                        pss.Activate(BuiltInFeatures.EditUi.Key);
+                        pss.Activate(BuiltInFeatures.AutoToolbarGlobal.Key);
+                    }
+
+                    result.Features = pss.Features.GetWithDependentsAndFlush(Log);
+
+                    // Head & Page Changes
+                    result.HeadChanges = pss.GetHeadChangesAndFlush();
+                    result.PageChanges = pss.GetPropertyChangesAndFlush();
+                    result.ManualChanges = pss.Features.ManualFeaturesGetNew();
+
+                    result.HttpStatusCode = pss.HttpStatusCode;
+                    result.HttpStatusMessage = pss.HttpStatusMessage;
                 }
-                result.Features = pss.Features.GetWithDependentsAndFlush(Log);
-
-                // Head & Page Changes
-                result.HeadChanges = pss.GetHeadChangesAndFlush();
-                result.PageChanges = pss.GetPropertyChangesAndFlush();
-                result.ManualChanges = pss.Features.ManualFeaturesGetNew();
-
-                result.HttpStatusCode = pss.HttpStatusCode;
-                result.HttpStatusMessage = pss.HttpStatusMessage;
 
                 result.Ready = true;
                 _result = result;
@@ -112,6 +121,7 @@ namespace ToSic.Sxc.Blocks
                                 Block.Context.PageServiceShared.Features.Activate(BuiltInFeatures.Core.Key);
                             }
 
+                            // TODO: this should use the same pattern as features, waiting to be picked up
                             TransferEngineAssetsToParent(engine);
                         }
                         else body = "";

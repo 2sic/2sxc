@@ -5,6 +5,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Helpers;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources
@@ -57,7 +58,7 @@ namespace ToSic.Sxc.DataSources
                         ParentId = p.ParentId,
                         Visible = p.IsVisible,
                         Path = p.TabPath,
-                        Url = p.FullUrl,
+                        Url = p.FullUrl.TrimLastSlash(),
                         Created = p.CreatedOnDate,
                         Modified = p.LastModifiedOnDate
                     })

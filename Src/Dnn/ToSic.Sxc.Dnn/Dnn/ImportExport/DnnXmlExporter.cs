@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
             var context = _ctxResolver.App(appId);
             //var tenant = new DnnSite();
             var app = _serviceProvider.Build<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
-            AdamManager.Init(context, 10, Log);
+            AdamManager.Init(context, Constants.CompatibilityLevel10, Log);
             Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
 
             // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally

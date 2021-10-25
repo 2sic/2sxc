@@ -1,10 +1,13 @@
-﻿using Oqtane.Models;
+﻿using Microsoft.AspNetCore.Http;
 using Oqtane.Repository;
+using Oqtane.Security;
 using Oqtane.Shared;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Helpers;
+using ToSic.Sxc.Web;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources
@@ -24,20 +27,30 @@ namespace ToSic.Sxc.DataSources
     public class Pages : CmsBases.PagesBase
     {
         private readonly IPageRepository _pages;
-        private readonly ISettingRepository _settings;
         private readonly SiteState _siteState;
+        private readonly IUserPermissions _userPermissions;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILinkHelper _linkHelper;
 
-        public Pages(IPageRepository pages, ISettingRepository settings, SiteState siteState)
+        public Pages(IPageRepository pages, SiteState siteState, IUserPermissions userPermissions, IHttpContextAccessor httpContextAccessor, ILinkHelper linkHelper)
         {
             _pages = pages;
-            _settings = settings;
             _siteState = siteState;
+            _userPermissions = userPermissions;
+            _httpContextAccessor = httpContextAccessor;
+            _linkHelper = linkHelper;
         }
 
         protected override List<TempPageInfo> GetPagesInternal()
         {
-            // TODO: Ignoring user and module security for first version.
-            return _pages.GetPages(_siteState.Alias.SiteId).Select(p => new TempPageInfo()
+            var user = _httpContextAccessor?.HttpContext?.User;
+            var pages = _pages.GetPages(_siteState.Alias.SiteId)
+                .Where(page => _userPermissions.IsAuthorized(user, PermissionNames.View, page.Permissions))
+                .ToList();
+
+            var parts = new UrlParts(_linkHelper.GetCurrentRequestUrl());
+
+            return pages.Select(p => new TempPageInfo()
             {
                 Id = p.PageId,
                 ParentId = p.ParentId ?? -1,
@@ -45,7 +58,7 @@ namespace ToSic.Sxc.DataSources
                 Name = p.Name,
                 Visible = p.IsNavigation,
                 Path = p.Path,
-                Url = $"//{_siteState.Alias.Name}/{p.Path}",
+                Url = $"{parts.Protocol}{_siteState.Alias.Name}/{p.Path}".TrimLastSlash(),
                 Created = p.CreatedOn,
                 Modified = p.ModifiedOn,
             }).ToList();

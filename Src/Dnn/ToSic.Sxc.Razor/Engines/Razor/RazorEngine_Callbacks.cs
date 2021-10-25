@@ -16,9 +16,11 @@ namespace ToSic.Sxc.Engines
     {
 
         /// <inheritdoc />
-        public override void CustomizeData() => (Webpage as IRazorComponent)?.CustomizeData();
+        [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
+        public override void CustomizeData() => (Webpage as IDnnRazorCustomize)?.CustomizeData();
 
         /// <inheritdoc />
+        [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
         public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate)
         {
             if (Webpage == null || searchInfos == null || searchInfos.Count <= 0) return;
