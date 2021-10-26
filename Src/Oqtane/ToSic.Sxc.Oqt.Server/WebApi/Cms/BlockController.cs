@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
 
             // now return a rendered instance
             var newContentBlock = HttpContext.RequestServices.Build<BlockFromEntity>().Init(BlockOptional /*GetBlock()*/, entityId, Log);
-            return newContentBlock.BlockBuilder.Render();
+            return newContentBlock.BlockBuilder.Run(true).Html;
 
         }
         #endregion
@@ -180,7 +180,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
             Log.Add($"render template:{templateId}, lang:{lang}");
             try
             {
-                var rendered = _appViewPickerBackendLazy.Value.Init(Log).Render(templateId, lang);
+                var rendered = _appViewPickerBackendLazy.Value.Init(Log).Render(templateId, lang).Html;
                 return new ContentResult
                 {
                     Content = rendered,

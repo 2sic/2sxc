@@ -100,7 +100,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
             Log.Add($"render template:{templateId}, lang:{lang}");
             try
             {
-                var rendered = ViewBackend.Render(templateId, lang);
+                var result = ViewBackend.Render(templateId, lang);
+                var rendered = new AjaxPreviewHelperWIP().ReconstructHtml(result);
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new StringContent(rendered, Encoding.UTF8, "text/plain")
