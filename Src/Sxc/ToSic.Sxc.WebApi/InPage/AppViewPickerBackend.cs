@@ -5,6 +5,7 @@ using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Context;
 
@@ -62,9 +63,9 @@ namespace ToSic.Sxc.WebApi.InPage
 
 
 
-        public string Render(int templateId, string lang)
+        public RenderResultWIP Render(int templateId, string lang)
         {
-            var callLog = Log.Call<string>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
+            var callLog = Log.Call<RenderResultWIP>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
             //SetThreadCulture(lang);
 
             // if a preview templateId was specified, swap to that
@@ -74,8 +75,8 @@ namespace ToSic.Sxc.WebApi.InPage
                 Block.View = template;
             }
 
-            var rendered = Block.BlockBuilder.Render();
-            return callLog("ok", rendered);
+            var result = Block.BlockBuilder.Run(true);
+            return callLog("ok", result);
         }
 
     }

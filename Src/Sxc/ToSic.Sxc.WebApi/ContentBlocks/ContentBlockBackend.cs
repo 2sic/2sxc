@@ -30,7 +30,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
 
             // now return a rendered instance
             var newContentBlock = ServiceProvider.Build<BlockFromEntity>().Init(Block, entityId, Log);
-            return newContentBlock.BlockBuilder.Render();
+            return newContentBlock.BlockBuilder.Run(true).Html;
         }
 
         // todo: probably move to CmsManager.Block
