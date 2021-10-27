@@ -82,6 +82,9 @@ namespace ToSic.Sxc.Web.Url
             return target;
         }
 
+
+        public static string QuickAddUrlParameter(string url, string name, string value) 
+            => $"{url}{(url.IndexOf('?') > 0 ? '&' : '?')}v={value}";
     }
 
 

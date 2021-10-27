@@ -3,6 +3,7 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit;
 using ToSic.Sxc.Web.PageFeatures;
+using ToSic.Sxc.Web.Url;
 
 namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
@@ -47,7 +48,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 
         private static string Js(string version, string path)
         {
-            var url = $"{path}{(path.IndexOf('?') > 0 ? '&' : '?')}v={version}";
+            var url = UrlHelpers.QuickAddUrlParameter(path, "v", version);
             return Tag.Script().Src(url).Type("text/javascript").ToString();
         }
 
