@@ -120,33 +120,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         public AjaxRenderDto RenderWIP([FromUri] int templateId, [FromUri] string lang, bool v2)
         {
             Log.Add($"render template:{templateId}, lang:{lang}");
-            try
-            {
-                var result = ViewBackend.Render(templateId, lang);
-                //var resources = new List<AjaxResourceDtoWIP>();
-                //var root = DnnConstants.SysFolderRootVirtual.Trim('~');
-                return ContentBlockBackend.RenderV2(result, DnnConstants.SysFolderRootVirtual.Trim('~'));
-                //var ver = Settings.Version.ToString();
-                //if (result.Features.Contains(BuiltInFeatures.TurnOn))
-                //    resources.Add(new AjaxResourceDtoWIP { Url = UrlHelpers.QuickAddUrlParameter(root + InpageCms.TurnOnJs, "v", ver) });
-
-                //resources.AddRange(result.Assets.Select(asset => new AjaxResourceDtoWIP { Url = UrlHelpers.QuickAddUrlParameter(asset.Url, "v", ver), Type = asset.IsJs ? "js" : "css" }));
-                //return new AjaxRenderDto
-                //{
-                //    Html = result.Html,
-                //    Resources = resources
-                //};
-                //return new HttpResponseMessage(HttpStatusCode.OK)
-                //{
-                //    Content = new StringContent(rendered, Encoding.UTF8, "text/plain")
-                //};
-            }
-            // todo: unsure if it needs this exception handling, that should be default anyhow... probably remove in Dnn and Oqtane
-            catch (Exception e)
-            {
-				Exceptions.LogException(e);
-                throw;
-            }
+            var result = ViewBackend.Render(templateId, lang);
+            return ContentBlockBackend.RenderV2(result, DnnConstants.SysFolderRootVirtual.Trim('~'));
         }
 
         /// <inheritdoc />
