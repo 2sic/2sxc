@@ -29,12 +29,8 @@
   </metadata>
   <files>
     <file src="images\2sxc_V11.png" target="images\" />
-    <file src="..\ToSic.Sxc.Oqt.Client\bin\Release\net5.0\ToSic.*.dll" target="lib\net5.0" />
-    <file src="..\ToSic.Sxc.Oqt.Client\bin\Release\net5.0\ToSic.*.pdb" target="lib\net5.0" />
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\ToSic.*.dll" target="lib\net5.0" />
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\ToSic.*.pdb" target="lib\net5.0" />
-    <file src="..\ToSic.Sxc.Oqt.Shared\bin\Release\net5.0\ToSic.*.dll" target="lib\net5.0" />
-    <file src="..\ToSic.Sxc.Oqt.Shared\bin\Release\net5.0\ToSic.*.pdb" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net5.0\ToSic.*.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net5.0\ToSic.*.pdb" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Server\wwwroot\**\*.*" exclude="**\*.map;" target="wwwroot" />
     <!-- 3rd party dependencies -->
     <!--<file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\refs\**\*.*" target="refs" />-->
