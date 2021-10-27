@@ -21,11 +21,6 @@
       <dependency id="Oqtane.Framework" version="2.2.0" />
       <dependency id="ToSic.Imageflow.Oqtane" version="1.0.3" />
     </dependencies>
-    <frameworkReferences>
-      <group targetFramework="net5.0">
-        <frameworkReference name="System.Drawing.Common" />
-      </group>
-    </frameworkReferences>
   </metadata>
   <files>
     <file src="images\2sxc12-500.png" target="images\" />
