@@ -63,8 +63,8 @@ namespace ToSic.Sxc.Web.WebApi.System
         internal static string LogHistory(LogHistory logHistory, string key)
         {
             var msg = "";
-            try
-            {
+            //try
+            //{
                 if (logHistory.Logs.TryGetValue(key, out var set))
                 {
                     var count = 0;
@@ -94,11 +94,12 @@ namespace ToSic.Sxc.Web.WebApi.System
                 }
 
 
-            }
-            catch
-            {
-                // ignored
-            }
+            //}
+            //catch (Exception e)
+            //{
+            //    // ignored
+            //    throw;
+            //}
             return msg;
         }
 

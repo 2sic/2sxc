@@ -100,7 +100,7 @@ namespace ToSic.Sxc.Web.WebApi.System
         public string GlobalTypesLog()
         {
             ThrowIfNotSuperUser();
-            return FormatLog("2sxc load log for Global Types", _globalTypes.Log);
+            return FormatLog("2sxc load log for Global Types", _globalTypeLoader.Log);
         }
 
         public string TypeMetadata(int? appId = null, string type = null)
