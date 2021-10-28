@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Text;
 using System.Web.Http;
 using DotNetNuke.Security;
-using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Ui;
 using ToSic.SexyContent.WebApi;
@@ -98,20 +97,12 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         public HttpResponseMessage Render([FromUri] int templateId, [FromUri] string lang)
         {
             Log.Add($"render template:{templateId}, lang:{lang}");
-            try
+            var result = ViewBackend.Render(templateId, lang);
+            var rendered = new AjaxPreviewHelperWIP().ReconstructHtml(result, DnnConstants.SysFolderRootVirtual.Trim('~'));
+            return new HttpResponseMessage(HttpStatusCode.OK)
             {
-                var result = ViewBackend.Render(templateId, lang);
-                var rendered = new AjaxPreviewHelperWIP().ReconstructHtml(result, DnnConstants.SysFolderRootVirtual.Trim('~'));
-                return new HttpResponseMessage(HttpStatusCode.OK)
-                {
-                    Content = new StringContent(rendered, Encoding.UTF8, "text/plain")
-                };
-            }
-            catch (Exception e)
-            {
-				Exceptions.LogException(e);
-                throw;
-            }
+                Content = new StringContent(rendered, Encoding.UTF8, "text/plain")
+            };
         }
 
         /// <inheritdoc />
