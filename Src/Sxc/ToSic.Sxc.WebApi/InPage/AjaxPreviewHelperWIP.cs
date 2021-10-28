@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Linq;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit;
 using ToSic.Sxc.Web.PageFeatures;
-using ToSic.Sxc.Web.Url;
 
-namespace ToSic.Sxc.Dnn.WebApi.Cms
+namespace ToSic.Sxc.WebApi.InPage
 {
     /// <summary>
     /// This helps the ajax preview to ensure js/css are also loaded in the preview.
@@ -14,12 +14,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
     /// </summary>
     public class AjaxPreviewHelperWIP
     {
-        public string ReconstructHtml(RenderResultWIP renderResult)
+        public string ReconstructHtml(RenderResultWIP renderResult, string root)
         {
             // 0. Skip basics like jQuery, $2sxc, editApi and editUI as they are always available in edit mode
 
-            // 0.1 Get root paths
-            var root = DnnConstants.SysFolderRootVirtual.Trim('~');
+            // 0.1 Get Version etc.
             var ver = Settings.Version.ToString();
             var addOn = "";
 
@@ -28,7 +27,9 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
                 addOn += Js(ver, root + InpageCms.TurnOnJs);
 
             // 2. Add JS & CSS which was stripped before
-            renderResult.Assets.ForEach(a => addOn += a.IsJs ? Js(ver, a.Url) : Css(a.Url));
+            renderResult.Assets.ForEach(a => addOn += "\n" + (a.IsJs ? Js(ver, a.Url) : Css(a.Url)));
+
+            renderResult.ManualChanges.ToList().ForEach(f => addOn += "\n" + f.Html);
 
             var html = renderResult.Html;
             if (!string.IsNullOrEmpty(html) && !string.IsNullOrEmpty(addOn))
@@ -36,7 +37,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
                 // Must insert before the last closing div
                 var lastDiv = html.LastIndexOf("</div>", StringComparison.InvariantCultureIgnoreCase);
                 var result = html.Substring(0, lastDiv)
-                    + "\n<!-- resources added for ajax -->\n"
+                    + "\n<!-- resources added for ajax -->"
                     + addOn
                     + "\n"
                     + "</div>";
@@ -48,7 +49,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 
         private static string Js(string version, string path)
         {
-            var url = UrlHelpers.QuickAddUrlParameter(path, "v", version);
+            var url = $"{path}{(path.IndexOf('?') > 0 ? '&' : '?')}v={version}";
             return Tag.Script().Src(url).Type("text/javascript").ToString();
         }
 

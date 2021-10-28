@@ -73,7 +73,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<ContentTypeUiInfo> ContentTypes() => ViewBackend.ContentTypes();
+        public IEnumerable<ContentTypeUiInfo> ContentTypes() => ViewBackend.ContentTypes(); //  CmsRuntime?.Views.GetContentTypesWithStatus();
 
         #endregion
 
@@ -101,7 +101,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
             try
             {
                 var result = ViewBackend.Render(templateId, lang);
-                var rendered = new AjaxPreviewHelperWIP().ReconstructHtml(result);
+                var rendered = new AjaxPreviewHelperWIP().ReconstructHtml(result, DnnConstants.SysFolderRootVirtual.Trim('~'));
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new StringContent(rendered, Encoding.UTF8, "text/plain")
@@ -112,16 +112,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 				Exceptions.LogException(e);
                 throw;
             }
-        }
-
-        /// <inheritdoc />
-        [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public AjaxRenderDto RenderWIP([FromUri] int templateId, [FromUri] string lang, bool v2)
-        {
-            Log.Add($"render template:{templateId}, lang:{lang}");
-            var result = ViewBackend.Render(templateId, lang);
-            return ContentBlockBackend.RenderV2(result, DnnConstants.SysFolderRootVirtual.Trim('~'));
         }
 
         /// <inheritdoc />

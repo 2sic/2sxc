@@ -67,6 +67,8 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
                 resources.Add(new AjaxResourceDtoWIP { Url = UrlHelpers.QuickAddUrlParameter(root + InpageCms.TurnOnJs, "v", ver) });
 
             resources.AddRange(result.Assets.Select(asset => new AjaxResourceDtoWIP { Url = UrlHelpers.QuickAddUrlParameter(asset.Url, "v", ver), Type = asset.IsJs ? "js" : "css" }));
+
+            // todo: add manual resources (fancybox etc.)
             return new AjaxRenderDto
             {
                 Html = result.Html,
