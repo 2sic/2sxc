@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Web.WebApi.System
         #region Constructor / DI
 
         public Insights(IServiceProvider serviceProvider, IAppStates appStates, SystemManager systemManager, IAppsCache appsCache, LogHistory logHistory, 
-            GlobalTypes globalTypes, GlobalTypeLoader globalTypeLoader) 
+            GlobalTypes globalTypes)
             : base("Api.SysIns")
         {
             _serviceProvider = serviceProvider;
@@ -21,7 +21,6 @@ namespace ToSic.Sxc.Web.WebApi.System
             _appsCache = appsCache;
             _logHistory = logHistory;
             _globalTypes = globalTypes;
-            _globalTypeLoader = globalTypeLoader;
             SystemManager = systemManager.Init(Log);
         }
         private readonly IServiceProvider _serviceProvider;
@@ -29,7 +28,6 @@ namespace ToSic.Sxc.Web.WebApi.System
         private readonly IAppsCache _appsCache;
         private readonly LogHistory _logHistory;
         private readonly GlobalTypes _globalTypes;
-        private readonly GlobalTypeLoader _globalTypeLoader;
         protected readonly SystemManager SystemManager;
 
 
