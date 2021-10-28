@@ -55,11 +55,12 @@ namespace ToSic.Sxc.Dnn.WebApi
             }
             catch (HttpExceptionAbstraction he)
             {
-                return new UploadResultDto { Success = false, Error = he.Response.ReasonPhrase };
+                // Our abstraction places an extra message in the value, not sure if this is right, but that's how it is. 
+                return new UploadResultDto { Success = false, Error = he.Response.ReasonPhrase + "\n" + he.Value };
             }
             catch (Exception e)
             {
-                return new UploadResultDto { Success = false, Error = e.Message };
+                return new UploadResultDto { Success = false, Error = e.Message + "\n" + e.Message };
             }
         }
 
