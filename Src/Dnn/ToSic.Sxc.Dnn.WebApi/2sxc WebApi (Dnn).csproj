@@ -135,7 +135,6 @@
     <Compile Include="Dnn\WebApi\Admin\FeatureController.cs" />
     <Compile Include="Dnn\WebApi\Admin\ApiExplorerController.cs" />
     <Compile Include="Dnn\WebApi\Admin\ZoneController.cs" />
-    <Compile Include="Dnn\WebApi\Cms\AjaxPreviewHelperWIP.cs" />
     <Compile Include="Dnn\WebApi\Cms\BlockController.cs" />
     <Compile Include="Dnn\WebApi\Cms\ListController.cs" />
     <Compile Include="Dnn\WebApi\Cms\ItemController.cs" />

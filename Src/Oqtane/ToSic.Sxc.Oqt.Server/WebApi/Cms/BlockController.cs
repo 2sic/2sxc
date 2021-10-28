@@ -179,25 +179,14 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         public IActionResult Render(int templateId, string lang)
         {
             Log.Add($"render template:{templateId}, lang:{lang}");
-            try
+            var result = _appViewPickerBackendLazy.Value.Init(Log).Render(templateId, lang);
+            var rendered = new AjaxPreviewHelperWIP().ReconstructHtml(result, OqtConstants.UiRoot);
+            return new ContentResult
             {
-                var rendered = _appViewPickerBackendLazy.Value.Init(Log).Render(templateId, lang).Html;
-                return new ContentResult
-                {
-                    Content = rendered,
-                    ContentType = "text/plain"
-                    // rendered, Encoding.UTF8, "text/plain"
-                };
-                //return new HttpResponseMessage(HttpStatusCode.OK)
-                //{
-                //    Content = new StringContent(rendered, Encoding.UTF8, "text/plain")
-                //};
-            }
-            catch
-            {
-                //Exceptions.LogException(e);
-                throw;
-            }
+                Content = rendered,
+                ContentType = "text/plain"
+                // rendered, Encoding.UTF8, "text/plain"
+            };
         }
 
         /// <inheritdoc />

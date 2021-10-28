@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Text;
 using System.Web.Http;
 using DotNetNuke.Security;
-using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Ui;
 using ToSic.SexyContent.WebApi;
@@ -73,7 +72,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<ContentTypeUiInfo> ContentTypes() => ViewBackend.ContentTypes();
+        public IEnumerable<ContentTypeUiInfo> ContentTypes() => ViewBackend.ContentTypes(); //  CmsRuntime?.Views.GetContentTypesWithStatus();
 
         #endregion
 
@@ -98,30 +97,12 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         public HttpResponseMessage Render([FromUri] int templateId, [FromUri] string lang)
         {
             Log.Add($"render template:{templateId}, lang:{lang}");
-            try
-            {
-                var result = ViewBackend.Render(templateId, lang);
-                var rendered = new AjaxPreviewHelperWIP().ReconstructHtml(result);
-                return new HttpResponseMessage(HttpStatusCode.OK)
-                {
-                    Content = new StringContent(rendered, Encoding.UTF8, "text/plain")
-                };
-            }
-            catch (Exception e)
-            {
-				Exceptions.LogException(e);
-                throw;
-            }
-        }
-
-        /// <inheritdoc />
-        [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public AjaxRenderDto RenderWIP([FromUri] int templateId, [FromUri] string lang, bool v2)
-        {
-            Log.Add($"render template:{templateId}, lang:{lang}");
             var result = ViewBackend.Render(templateId, lang);
-            return ContentBlockBackend.RenderV2(result, DnnConstants.SysFolderRootVirtual.Trim('~'));
+            var rendered = new AjaxPreviewHelperWIP().ReconstructHtml(result, DnnConstants.SysFolderRootVirtual.Trim('~'));
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(rendered, Encoding.UTF8, "text/plain")
+            };
         }
 
         /// <inheritdoc />

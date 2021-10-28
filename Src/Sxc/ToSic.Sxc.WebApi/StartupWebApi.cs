@@ -37,7 +37,8 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<IConvertToEavLight, ConvertToEavLightWithCmsInfo>();
 
             services.TryAddScoped<ILinkPaths, LinkPaths>();
-            services.TryAddTransient<IServerPaths, ServerPaths>();
+            // moved to ToSic.Sxc
+            //services.TryAddTransient<IServerPaths, ServerPaths>();
             services.TryAddTransient<XmlImportWithFiles, XmlImportFull>();
             services.TryAddTransient<XmlImportWithFiles.Dependencies>();
             services.TryAddTransient<TemplateHelpers, TemplateHelpers>();

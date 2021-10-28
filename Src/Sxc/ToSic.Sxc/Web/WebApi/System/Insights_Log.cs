@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using ToSic.Eav.Logging;
 using static ToSic.Razor.Blade.Tag;
 
 namespace ToSic.Sxc.Web.WebApi.System
@@ -25,24 +24,18 @@ namespace ToSic.Sxc.Web.WebApi.System
         {
             ThrowIfNotSuperUser();
             Log.Add($"debug log load for {key}/{position}");
-            var msg = PageStyles() + LogHeader();
-            if (_logHistory.Logs.TryGetValue(key, out var set))
-            {
-                if (set.Count >= position - 1)
-                {
-                    var log = set.Take(position).LastOrDefault();
-                    msg += log == null
-                        ? P("log is null").ToString()
-                        : DumpTree($"Log for {key}[{position}]", log);
-                }
-                else
-                    msg += $"position ({position}) > count ({set.Count})";
-            }
-            else
-                msg += $"position {position} not found in log set {key}";
+            var msg = PageStyles() + LogHeader($"{key}[{position}]");
 
-            //msg += PageStyles();
-            return msg;
+            if (!_logHistory.Logs.TryGetValue(key, out var set))
+                return msg + $"position {position} not found in log set {key}";
+
+            if (set.Count < position - 1)
+                return msg + $"position ({position}) > count ({set.Count})";
+            
+            var log = set.Take(position).LastOrDefault();
+            return msg + (log == null
+                ? P("log is null").ToString()
+                : DumpTree($"Log for {key}[{position}]", log));
         }
 
         public string Logs(bool pause)

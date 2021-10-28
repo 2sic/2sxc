@@ -11,11 +11,11 @@ namespace ToSic.Sxc.Web.WebApi.System
     {
         private static ITag HeadFields(params object[] fields)
             => Tag.Thead(Tag.Tr(
-                fields.Select(fresh => Tag.Th(HtmlEncode(fresh.ToString()))).ToArray<object>()
+                fields.Select(fresh => Tag.Th(HtmlEncode((fresh ?? "").ToString()))).ToArray<object>()
             ));
 
         private static ITag RowFields(params object[] fields)
-            => Tag.Tr(fields.Select(fresh => Tag.Td(fresh.ToString())).ToArray<object>());
+            => Tag.Tr(fields.Select(fresh => Tag.Td((fresh ?? "").ToString())).ToArray<object>());
 
         private const string JsTableSortCdn = "https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.0.2/";
 

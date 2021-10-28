@@ -49,26 +49,13 @@ namespace ToSic.Sxc.Dnn.Web
             var wrapLog = Log.Call<List<IPageFeature>>();
             // temporary solution, till the features are correctly activated in the block
             // auto-detect Blockbuilder params
-            if (features == null)
-            {
-                //var activateEditApi = BlockBuilder?.UiAddEditApi ?? false;
-                //if (activateEditApi)
-                //    PageServiceShared.Features.Activate(BuiltInFeatures.EditApi.Key);
-                //if(BlockBuilder?.UiAddJsApi ?? activateEditApi)
-                //    PageServiceShared.Features.Activate(BuiltInFeatures.Core.Key);
-                //if (BlockBuilder?.UiAddEditUi ?? false)
-                //    PageServiceShared.Features.Activate(BuiltInFeatures.EditUi.Key);
-            
-                // now get expanded list and flush in the PageServiceShared;
-                features = Features;
-            }
+            if (features == null) features = Features;
 
 
             // normal scripts
-            var editJs = features.Contains(BuiltInFeatures.EditApi); // || (BlockBuilder?.UiAddEditApi ?? false);
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            var readJs = features.Contains(BuiltInFeatures.Core); // || (BlockBuilder?.UiAddJsApi ?? editJs);
-            var editCss = features.Contains(BuiltInFeatures.EditUi); // || (BlockBuilder?.UiAddEditUi ?? false);
+            var editJs = features.Contains(BuiltInFeatures.EditApi);
+            var readJs = features.Contains(BuiltInFeatures.Core);
+            var editCss = features.Contains(BuiltInFeatures.EditUi);
 
             if (!readJs && !editJs && !editCss && !features.Any())
                 return wrapLog("nothing to add", features);
@@ -88,12 +75,13 @@ namespace ToSic.Sxc.Dnn.Web
         }
 
 
+        /// <summary>
+        /// new in 10.25 - by default jQuery isn't loaded any more
+        /// but older razor templates might still expect it
+        /// and any other old behaviour, incl. no-view defined, etc. should activate compatibility
+        /// </summary>
         public void EnforcePre1025Behavior()
         {
-            // new in 10.25 - by default jQuery isn't loaded!
-            // but any old behaviour, incl. no-view defined, etc. should activate compatibility
-            //if (!NeedsPre1025Behavior()) return false;
-
             // If we got this far, we want the old behavior which always enables headers etc.
             Log.Add(nameof(EnforcePre1025Behavior) + ": Activate Anti-Forgery for compatibility with old behavior");
             ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
@@ -144,13 +132,11 @@ namespace ToSic.Sxc.Dnn.Web
                 // note: the inpage only works if it's not in the head, so we're adding it below
                 RegisterJs(page, ver, root + InpageCms.EditJs, false, priority + 1);
                 // request full $services and jQuery etc.
-
-                // #2492 2021-10-26 v12-07 we believe we don't need this any more
-                //JavaScript.RequestRegistration(CommonJs.jQuery);
-                //ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
+                JavaScript.RequestRegistration(CommonJs.jQuery);
+                ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
             }
 
-            if (features.Contains(BuiltInFeatures.JQuery))
+            if(features.Contains(BuiltInFeatures.JQuery))
                 JavaScript.RequestRegistration(CommonJs.jQuery);
             
             if (features.Contains(BuiltInFeatures.TurnOn))

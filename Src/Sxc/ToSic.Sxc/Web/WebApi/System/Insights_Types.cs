@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
-using ToSic.Eav.Types;
 using static ToSic.Razor.Blade.Tag;
 
 namespace ToSic.Sxc.Web.WebApi.System
@@ -19,7 +18,7 @@ namespace ToSic.Sxc.Web.WebApi.System
             var appRead = AppRt(appId);
             var pkg = appRead.AppState;
 
-            var msg = TypesTable(appId.Value, pkg.ContentTypes, pkg.List); //.ToList());
+            var msg = TypesTable(appId.Value, pkg.ContentTypes, pkg.List);
 
             return msg;
         }
@@ -100,7 +99,11 @@ namespace ToSic.Sxc.Web.WebApi.System
         public string GlobalTypesLog()
         {
             ThrowIfNotSuperUser();
-            return FormatLog("2sxc load log for Global Types", _globalTypes.Log);
+            var msg = PageStyles() + LogHeader();
+            var log = ToSic.Eav.Types.GlobalTypes.TypeLoader?.Log;
+            return msg + (log == null
+                ? P("log is null").ToString()
+                : DumpTree($"Log for Global Types loading", log));
         }
 
         public string TypeMetadata(int? appId = null, string type = null)

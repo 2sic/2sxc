@@ -2,8 +2,8 @@
 
 @REM Copy the data folders
 robocopy /mir "..\..\Data\.data\ " "%BuildTarget%\.data\ "
-robocopy /mir "..\..\Data\.databeta\ " "%BuildTarget%\.databeta\ "
-robocopy /mir "..\..\Data\.data-custom\ " "%BuildTarget%\.data-custom\ "
+rmdir /Q /S "%BuildTarget%\.databeta"
+rmdir /Q /S "%BuildTarget%\.data-custom"
 
 @REM Copy 2sxc JS stuff
 robocopy /mir "%Dev2sxcAssets%\js\ " "%BuildTarget%\js\ "

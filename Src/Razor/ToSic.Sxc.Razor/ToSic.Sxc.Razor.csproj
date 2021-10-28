@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
-    <Version>12.07.00</Version>
+    <Version>12.08.00</Version>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
   </PropertyGroup>
 

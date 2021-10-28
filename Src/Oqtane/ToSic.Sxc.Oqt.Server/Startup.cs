@@ -79,6 +79,9 @@ namespace ToSic.Sxc.Oqt.Server
             globalConfig.GlobalSiteFolder = "todo - global apps not implemented yet";
 
             // Load features from configuration
+            // NOTE: On first installation of 2sxc module in oqtane, this code can not load all 2sxc global types
+            // because it has dependency on ToSic_Eav_* sql tables, before this tables are actually created by oqtane 2.3.x,
+            // but after next restart of oqtane application all is ok, and all 2sxc global types are loaded as expected
             sp.Build<SystemLoader>().StartUp();
 
             // 2sxc Oqtane blob services for Imageflow.

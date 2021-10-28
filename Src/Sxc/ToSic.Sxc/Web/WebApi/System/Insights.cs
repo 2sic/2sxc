@@ -12,7 +12,9 @@ namespace ToSic.Sxc.Web.WebApi.System
 
         #region Constructor / DI
 
-        public Insights(IServiceProvider serviceProvider, IAppStates appStates, SystemManager systemManager, IAppsCache appsCache, LogHistory logHistory, GlobalTypes globalTypes) : base("Api.SysIns")
+        public Insights(IServiceProvider serviceProvider, IAppStates appStates, SystemManager systemManager, IAppsCache appsCache, LogHistory logHistory, 
+            GlobalTypes globalTypes)
+            : base("Api.SysIns")
         {
             _serviceProvider = serviceProvider;
             _appStates = appStates;
