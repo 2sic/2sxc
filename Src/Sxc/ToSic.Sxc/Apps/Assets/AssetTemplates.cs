@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 
@@ -52,9 +53,25 @@ namespace ToSic.Sxc.Apps.Assets
     Start editing it by hovering the ""Manage"" button and opening the ""Edit Template"" dialog.
 </p>";
 
-        internal abstract string DefaultCshtmlBody { get; }
+        internal string DefaultCshtmlBody { get; } = @"@inherits Custom.Hybrid.Razor12 @* to get features like App, CmsContext, Data etc. *@
 
-        internal abstract string DefaultCodeCshtmlBody { get; }
+<div @Edit.TagToolbar(Content)>
+    Put your content here
+</div>";
+
+        internal string DefaultCodeCshtmlBody { get; } = @"@inherits Custom.Hybrid.Razor12 @* to get features like App, CmsContext, Data etc. *@
+@using ToSic.Razor.Blade;
+
+@functions {
+  public string Hello() {
+    return ""Hello from inner code"";
+  }
+
+  dynamic MessageHelper(string message) {
+    return Tag.Div(message + ""!"");
+  }
+}
+";
 
         public const string CsApiTemplateControllerName = "PleaseRenameController";
 
@@ -70,7 +87,7 @@ using DotNetNuke.Web.Api;
 #endif
 
 [AllowAnonymous]      // define that all commands can be accessed without a login
-// Inherit from Custom.Hybrid.Api12 to get features like App, Data...
+// Inherit from Custom.Hybrid.Api12 to get features like App, CmsContext, Data etc.
 // see https://docs.2sxc.org/web-api/custom/index.html
 public class " + CsApiTemplateControllerName + @" : Custom.Hybrid.Api12
 {
@@ -93,7 +110,18 @@ public class " + CsApiTemplateControllerName + @" : Custom.Hybrid.Api12
 
         public const string CsCodeTemplateName = "PleaseRenameClass";
 
-        internal abstract string DefaultCsCode { get; }
+        internal string DefaultCsCode { get; } = @"// Important notes:
+// - This class should have the same name as the file it's in
+// - This inherits from Custom.Hybrid.Code12
+//   which will automatically provide the common objects like App, CmsContext, Data etc.
+//   from the current context to use in your code
+
+public class " + CsCodeTemplateName + @" : Custom.Hybrid.Code12 {
+  public string SayHello() {
+    return ""Hello from shared functions!"";
+  }
+}
+";
 
         internal abstract string CustomsSearchCsCode { get; }
     }

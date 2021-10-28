@@ -1,14 +1,12 @@
 ﻿using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.PageFeatures;
 
@@ -40,9 +38,9 @@ namespace ToSic.Sxc.Oqt.Server.Block
         #endregion
 
 
-        private bool AddJsCore => Features.Contains(BuiltInFeatures.Core); // || (BlockBuilder?.UiAddJsApi ?? AddJsEdit); //BlockBuilder?.UiAddJsApi ?? false;
-        private bool AddJsEdit => Features.Contains(BuiltInFeatures.EditApi); // || (BlockBuilder?.UiAddEditApi ?? false);  // BlockBuilder?.UiAddEditApi ?? false;
-        private bool AddCssEdit => Features.Contains(BuiltInFeatures.EditUi); // || (BlockBuilder?.UiAddEditUi ?? false);  // BlockBuilder?.UiAddEditUi ?? false;
+        private bool AddJsCore => Features.Contains(BuiltInFeatures.Core);
+        private bool AddJsEdit => Features.Contains(BuiltInFeatures.EditApi);
+        private bool AddCssEdit => Features.Contains(BuiltInFeatures.EditUi);
 
 
         /// <summary>
@@ -53,19 +51,18 @@ namespace ToSic.Sxc.Oqt.Server.Block
         {
             var list = new List<string>();
 
-
             // v12.03, Oqtane 2.2 with Bootstrap 5 do not includes jQuery any more
             // as Oqtane 2.1 with Bootstrap 4
-            if (Features.Contains(BuiltInFeatures.JQuery) || AddJsEdit)
+            // #2492 2021-10-26 v12-07 we believe we don't need this any more
+            if (Features.Contains(BuiltInFeatures.JQuery)) // #2492 disabled:  || AddJsEdit)
                 list.Add($"//code.jquery.com/jquery-3.5.1.min.js");
 
             if (AddJsCore)
-                    list.Add($"{OqtConstants.UiRoot}/{InpageCms.CoreJs}");
+                list.Add($"{OqtConstants.UiRoot}/{InpageCms.CoreJs}");
 
             if (AddJsEdit)
                 list.Add($"{OqtConstants.UiRoot}/{InpageCms.EditJs}");
 
-            //if(BlockBuilder.NamedScriptsWIP?.Contains(BlockBuilder.JsTurnOn) ?? false)
             // New in 12.02
             if (Features.Contains(BuiltInFeatures.TurnOn))
                 list.Add($"{OqtConstants.UiRoot}/{InpageCms.TurnOnJs}");

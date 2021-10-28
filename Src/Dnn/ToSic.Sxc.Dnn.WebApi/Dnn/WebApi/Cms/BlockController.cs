@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public new string Block(int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
-            => Backend.NewBlockAndRender(parentId, field, sortOrder, app, guid);
+            => Backend.NewBlockAndRender(parentId, field, sortOrder, app, guid).Html;
 
         #endregion
 
@@ -73,7 +73,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<ContentTypeUiInfo> ContentTypes() => ViewBackend.ContentTypes(); //  CmsRuntime?.Views.GetContentTypesWithStatus();
+        public IEnumerable<ContentTypeUiInfo> ContentTypes() => ViewBackend.ContentTypes();
 
         #endregion
 
@@ -100,7 +100,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
             Log.Add($"render template:{templateId}, lang:{lang}");
             try
             {
-                var rendered = ViewBackend.Render(templateId, lang);
+                var result = ViewBackend.Render(templateId, lang);
+                var rendered = new AjaxPreviewHelperWIP().ReconstructHtml(result);
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new StringContent(rendered, Encoding.UTF8, "text/plain")
@@ -111,6 +112,16 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 				Exceptions.LogException(e);
                 throw;
             }
+        }
+
+        /// <inheritdoc />
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public AjaxRenderDto RenderWIP([FromUri] int templateId, [FromUri] string lang, bool v2)
+        {
+            Log.Add($"render template:{templateId}, lang:{lang}");
+            var result = ViewBackend.Render(templateId, lang);
+            return ContentBlockBackend.RenderV2(result, DnnConstants.SysFolderRootVirtual.Trim('~'));
         }
 
         /// <inheritdoc />

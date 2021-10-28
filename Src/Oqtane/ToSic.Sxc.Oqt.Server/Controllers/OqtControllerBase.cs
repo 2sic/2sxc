@@ -48,6 +48,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// </summary>
         protected abstract string HistoryLogName { get; }
 
+        private Action<string> ActionTimerWrap; // it is used across events to track action execution total time
 
         /// <summary>
         /// Initializer - just ensure SiteState is initialized thanks to our paths
@@ -56,7 +57,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [NonAction]
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            var wrapLog = Log.Call($"Url: {context.HttpContext.Request.GetDisplayUrl()}");
+            ActionTimerWrap = Log.Call($"action executing url: {context.HttpContext.Request.GetDisplayUrl()}", useTimer: true);
 
             base.OnActionExecuting(context);
 
@@ -67,7 +68,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
             //// background processes can pass in an alias using the SiteState service
             ServiceProvider.Build<SiteStateInitializer>().InitIfEmpty();
-            wrapLog(null);
         }
 
         #region Extend Time so Web Server doesn't time out - not really implemented ATM
@@ -97,6 +97,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                         context.HttpContext.Response.StatusCode = 204; // NoContent (instead of HTTP 200 OK)
                 }
             }
+
+            ActionTimerWrap("ok");
+            ActionTimerWrap = null; // just to mark that Action Delegate is not in use any more, so GC can collect it
         }
     }
 

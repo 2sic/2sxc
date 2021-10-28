@@ -77,9 +77,10 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         {
             var entityId = Backend.NewBlock(parentId, field, sortOrder, app, guid);
 
+            // TODO: @STV - THIS should use the ContentBlockBackend like DNN does
             // now return a rendered instance
             var newContentBlock = HttpContext.RequestServices.Build<BlockFromEntity>().Init(BlockOptional /*GetBlock()*/, entityId, Log);
-            return newContentBlock.BlockBuilder.Render();
+            return newContentBlock.BlockBuilder.Run(true).Html;
 
         }
         #endregion
@@ -180,7 +181,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
             Log.Add($"render template:{templateId}, lang:{lang}");
             try
             {
-                var rendered = _appViewPickerBackendLazy.Value.Init(Log).Render(templateId, lang);
+                var rendered = _appViewPickerBackendLazy.Value.Init(Log).Render(templateId, lang).Html;
                 return new ContentResult
                 {
                     Content = rendered,
@@ -197,6 +198,17 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
                 //Exceptions.LogException(e);
                 throw;
             }
+        }
+
+        /// <inheritdoc />
+        [HttpGet]
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [Authorize(Roles = RoleNames.Admin)]
+        public AjaxRenderDto RenderWIP(int templateId, string lang, bool v2)
+        {
+            Log.Add($"render template:{templateId}, lang:{lang}");
+            var result = _appViewPickerBackendLazy.Value.Init(Log).Render(templateId, lang);
+            return ContentBlockBackend.RenderV2(result, OqtConstants.UiRoot);
         }
 
         /// <inheritdoc />

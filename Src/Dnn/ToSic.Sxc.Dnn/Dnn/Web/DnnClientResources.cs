@@ -12,6 +12,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
+using ToSic.Sxc.Web.Url;
 
 namespace ToSic.Sxc.Dnn.Web
 {
@@ -143,11 +144,13 @@ namespace ToSic.Sxc.Dnn.Web
                 // note: the inpage only works if it's not in the head, so we're adding it below
                 RegisterJs(page, ver, root + InpageCms.EditJs, false, priority + 1);
                 // request full $services and jQuery etc.
-                JavaScript.RequestRegistration(CommonJs.jQuery);
-                ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
+
+                // #2492 2021-10-26 v12-07 we believe we don't need this any more
+                //JavaScript.RequestRegistration(CommonJs.jQuery);
+                //ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
             }
 
-            if(features.Contains(BuiltInFeatures.JQuery))
+            if (features.Contains(BuiltInFeatures.JQuery))
                 JavaScript.RequestRegistration(CommonJs.jQuery);
             
             if (features.Contains(BuiltInFeatures.TurnOn))
@@ -173,7 +176,7 @@ namespace ToSic.Sxc.Dnn.Web
 
         private static void RegisterJs(Page page, string version, string path, bool toHead, int priority)
         {
-            var url = $"{path}{(path.IndexOf('?') > 0 ? '&' : '?')}v={version}";
+            var url = UrlHelpers.QuickAddUrlParameter(path, "v", version); // $"{path}{(path.IndexOf('?') > 0 ? '&' : '?')}v={version}";
             if (toHead)
             {
                 // don't add version in DNN 7 and probably 8, because it breaks the client-dependency - but only in the head

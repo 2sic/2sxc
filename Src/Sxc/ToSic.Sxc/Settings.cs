@@ -48,13 +48,15 @@ namespace ToSic.Sxc
                 "11.07.03", // LTS
                 "11.10.00", "11.10.01", "11.11.00", "11.11.01", "11.11.02", "11.11.03", "11.11.04", "11.12.00", "11.12.01", "11.20.00", "11.22.00",
                 "11.22.00", // LTS
-                "12.00.00", "12.01.00", "12.02.00", "12.02.01", "12.05.00", "12.06.00"
+                "12.00.00", "12.01.00", "12.02.00", "12.02.01", "12.05.00",
+                "12.06.00", // LTS
+                "12.07.00"
             };
 
             // this is the last version which must run server-side change-code
             // it's not sql-code, as the SqlDataProvider files are imported by DNN, not by our code
             internal const string LastVersionWithServerChanges = "08.11.00";
-            internal const string LastVersionWithDbChanges = "09.07.00"; // just fyi, not used anywhere
+            internal const string LastVersionWithDnnDbChanges = "09.07.00"; // just fyi, not used anywhere
         }
     }
 }

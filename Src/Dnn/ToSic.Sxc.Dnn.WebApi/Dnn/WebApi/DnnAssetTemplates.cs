@@ -4,38 +4,6 @@ namespace ToSic.Sxc.Dnn.WebApi
 {
     public class DnnAssetTemplates : AssetTemplates
     {
-        internal override string DefaultCshtmlBody { get; } = @"@inherits ToSic.Sxc.Dnn.RazorComponent
-
-<div @Edit.TagToolbar(Content)>
-    Put your content here
-</div>";
-
-        internal override string DefaultCodeCshtmlBody { get; } = @"@inherits ToSic.Sxc.Dnn.RazorComponentCode
-
-@functions {
-  public string Hello() {
-    return ""Hello from inner code"";
-  }
-}
-
-@helper ShowDiv(string message) {
-  <div>@message</div>
-}
-";
-
-        internal override string DefaultCsCode { get; } = @"// Important notes:
-// - This class should have the same name as the file it's in
-// - This inherits from ToSic.Sxc.Code.WithDnnContext
-//   which will automatically provide the common objects like App, Dnn etc.
-//   from the current context to use in your code
-
-        public class " + CsCodeTemplateName + @": ToSic.Sxc.Code.WithDnnContext {
-  public string SayHello() {
-    return ""Hello from shared functions!"";
-    }
-}
-";
-
     internal override string CustomsSearchCsCode { get; } = @"using System;
 using System.Collections.Generic;
 using System.Linq;
