@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Oqt.Content
             Name = name,
             Description = description,
             Categories = "Common",
-            Version = "12.06.00",
+            Version = "12.06.01",
             Owner = "2sic Internet Solutions",
             Url = "https://2sxc.org",
             Contact = "@iJungleboy",
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Oqt.Content
             // ControlTypeRoutes = "",
             // This must contain all versions with a SQL script and current/latest version
             // list versions with sql scripts in \ToSic.Sxc.Oqt.Server\Scripts\
-            ReleaseVersions = "0.0.1,12.00.00,12.02.01,12.05.00,12.06.00",
+            ReleaseVersions = "0.0.1,12.00.00,12.02.01,12.05.00,12.06.01",
             // DefaultAction = "",
             // SettingsType = "",
             PackageName = "ToSic.Sxc",
