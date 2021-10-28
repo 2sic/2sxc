@@ -24,12 +24,14 @@ namespace ToSic.Sxc.Oqt.Server.Block
             IContextOfBlock contextOfBlockEmpty, 
             BlockFromModule blockModuleEmpty,
             IContextResolver contextResolverForLookUps,
-            LogHistory logHistory
+            LogHistory logHistory,
+            GlobalTypesCheck globalTypesCheck
         ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
         {
             _contextOfBlockEmpty = contextOfBlockEmpty;
             _blockModuleEmpty = blockModuleEmpty;
             _contextResolverForLookUps = contextResolverForLookUps;
+            _globalTypesCheck = globalTypesCheck;
             AssetsAndHeaders = assetsAndHeaders;
             logHistory.Add("oqt-view", Log);
         }
@@ -38,6 +40,7 @@ namespace ToSic.Sxc.Oqt.Server.Block
         private readonly IContextOfBlock _contextOfBlockEmpty;
         private readonly BlockFromModule _blockModuleEmpty;
         private readonly IContextResolver _contextResolverForLookUps;
+        private readonly GlobalTypesCheck _globalTypesCheck;
 
         #endregion
 
@@ -55,6 +58,9 @@ namespace ToSic.Sxc.Oqt.Server.Block
 
             // Check for installation errors before even trying to build a view, and otherwise return this object if Refs are missing.
             if (RefsInstalledCheck.WarnIfRefsAreNotInstalled(out var oqtViewResultsDto)) return oqtViewResultsDto;
+
+            // Check if there is less than 50 global types and warn user to restart application
+            if (_globalTypesCheck.WarnIfGlobalTypesAreNotLoaded(out var oqtViewResultsDtoWarning)) return oqtViewResultsDtoWarning;
 
             #region Lightspeed - very experimental - deactivate before distribution
             //if (Lightspeed.HasCache(module.ModuleId))
