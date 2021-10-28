@@ -144,13 +144,11 @@ namespace ToSic.Sxc.Dnn.Web
                 // note: the inpage only works if it's not in the head, so we're adding it below
                 RegisterJs(page, ver, root + InpageCms.EditJs, false, priority + 1);
                 // request full $services and jQuery etc.
-
-                // #2492 2021-10-26 v12-07 we believe we don't need this any more
-                //JavaScript.RequestRegistration(CommonJs.jQuery);
-                //ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
+                JavaScript.RequestRegistration(CommonJs.jQuery);
+                ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
             }
 
-            if (features.Contains(BuiltInFeatures.JQuery))
+            if(features.Contains(BuiltInFeatures.JQuery))
                 JavaScript.RequestRegistration(CommonJs.jQuery);
             
             if (features.Contains(BuiltInFeatures.TurnOn))
