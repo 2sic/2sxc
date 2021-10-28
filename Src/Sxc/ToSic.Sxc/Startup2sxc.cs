@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
@@ -106,6 +107,9 @@ namespace ToSic.Sxc
 
             // New 12.05: SecureData
             services.TryAddTransient<ISecureDataService, SecureDataService>();
+
+            // 12.06.01 moved here from WebApi, but it should probably be in Dnn as it's probably just used there
+            services.TryAddTransient<IServerPaths, ServerPaths>();
 
             return services;
         }
