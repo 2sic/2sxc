@@ -9,6 +9,7 @@ using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Edit;
+using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.Url;
 using ToSic.Sxc.WebApi.InPage;
@@ -17,15 +18,21 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
 {
     public class ContentBlockBackend : BlockWebApiBackendBase<ContentBlockBackend>
     {
-        private readonly IPagePublishing _publishing;
-
         #region constructor / DI
 
-        public ContentBlockBackend(IServiceProvider sp, IPagePublishing publishing, Lazy<CmsManager> cmsManagerLazy, IContextResolver ctxResolver)
+        public ContentBlockBackend(IServiceProvider sp, 
+            IPagePublishing publishing, 
+            Lazy<CmsManager> cmsManagerLazy, 
+            IContextResolver ctxResolver, 
+            Lazy<IClientDependencyOptimizer> optimizerLazy)
             : base(sp, cmsManagerLazy, ctxResolver, "Bck.FldLst")
         {
+            _optimizer = optimizerLazy;
             _publishing = publishing.Init(Log);
         }
+
+        private readonly Lazy<IClientDependencyOptimizer> _optimizer;
+        private readonly IPagePublishing _publishing;
 
         #endregion
 
@@ -59,22 +66,43 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             return BlockEditorBase.GetEditor(Block).Publish(part, index);
         }
 
-        public static AjaxRenderDto RenderV2(RenderResultWIP result, string root)
+        public AjaxRenderDto RenderV2(RenderResultWIP result, string root)
         {
+            var wrapLog = Log.Call<AjaxRenderDto>();
             var resources = new List<AjaxResourceDtoWIP>();
             var ver = Settings.Version.ToString();
             if (result.Features.Contains(BuiltInFeatures.TurnOn))
                 resources.Add(new AjaxResourceDtoWIP { Url = UrlHelpers.QuickAddUrlParameter(root + InpageCms.TurnOnJs, "v", ver) });
 
-            resources.AddRange(result.Assets.Select(asset => new AjaxResourceDtoWIP { Url = UrlHelpers.QuickAddUrlParameter(asset.Url, "v", ver), Type = asset.IsJs ? "js" : "css" }));
+            // 2. Add JS & CSS which was stripped before
+            resources.AddRange(result.Assets.Select(asset => new AjaxResourceDtoWIP
+            {
+                Url = UrlHelpers.QuickAddUrlParameter(asset.Url, "v", ver), 
+                Type = asset.IsJs ? "js" : "css"
+            }));
 
-            // todo: add manual resources (fancybox etc.)
-            return new AjaxRenderDto
+            // 3. Add manual resources (fancybox etc.)
+            // First get all the parts out of HTML, as the configuration is still stored as plain HTML
+            var mergedFeatures  = string.Join("\n", result.ManualChanges.Select(mc => mc.Html));
+            var optimizer = _optimizer.Value;
+            if(optimizer is ClientDependencyOptimizer withInternal) 
+                withInternal.ExtractOnlyEnableOptimization = false;
+
+            var rest = optimizer.Process(mergedFeatures).Item1;
+            if (!string.IsNullOrWhiteSpace(rest)) 
+                Log.Add("Warning: Rest after extraction should be empty - not handled ATM");
+
+            resources.AddRange(optimizer.Assets.Select(asset => new AjaxResourceDtoWIP
+            {
+                Url = asset.Url,
+                Type = asset.IsJs ? "js" : "css"
+            }));
+
+            return wrapLog("ok", new AjaxRenderDto
             {
                 Html = result.Html,
                 Resources = resources
-            };
-
+            });
         }
     }
 }

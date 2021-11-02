@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Web
         /// <summary>
         /// Extract only script tags which are marked for extraction
         /// </summary>
-        protected bool ExtractOnlyEnableOptimization = true;
+        public bool ExtractOnlyEnableOptimization = true;
 
         #endregion
 

@@ -112,7 +112,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         {
             Log.Add($"render template:{templateId}, lang:{lang}");
             var result = ViewBackend.Render(templateId, lang);
-            return ContentBlockBackend.RenderV2(result, DnnConstants.SysFolderRootVirtual.Trim('~'));
+            return Backend.RenderV2(result, DnnConstants.SysFolderRootVirtual.Trim('~'));
         }
 
         /// <inheritdoc />

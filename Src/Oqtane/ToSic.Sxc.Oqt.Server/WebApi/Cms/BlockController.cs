@@ -197,7 +197,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         {
             Log.Add($"render template:{templateId}, lang:{lang}");
             var result = _appViewPickerBackendLazy.Value.Init(Log).Render(templateId, lang);
-            return ContentBlockBackend.RenderV2(result, OqtConstants.UiRoot);
+            return Backend.RenderV2(result, OqtConstants.UiRoot);
         }
 
         /// <inheritdoc />
