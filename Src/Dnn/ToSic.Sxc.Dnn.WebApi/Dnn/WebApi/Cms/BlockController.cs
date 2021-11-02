@@ -106,6 +106,16 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         }
 
         /// <inheritdoc />
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public AjaxRenderDto RenderWIP([FromUri] int templateId, [FromUri] string lang, bool v2)
+        {
+            Log.Add($"render template:{templateId}, lang:{lang}");
+            var result = ViewBackend.Render(templateId, lang);
+            return ContentBlockBackend.RenderV2(result, DnnConstants.SysFolderRootVirtual.Trim('~'));
+        }
+
+        /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool Publish(string part, int index) => Backend.PublishPart(part, index);
