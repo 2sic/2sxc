@@ -6,16 +6,17 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtClientDependencyOptimizer: ClientDependencyOptimizer
     {
-        private readonly IHttpContextAccessor _httpContext;
+        //private readonly IHttpContextAccessor _httpContext;
 
-        public OqtClientDependencyOptimizer(IHttpContextAccessor httpContext)
-        {
-            _httpContext = httpContext;
-        }
+        //public OqtClientDependencyOptimizer(IHttpContextAccessor httpContext)
+        //{
+        //    _httpContext = httpContext;
+        //}
+
         public override Tuple<string, bool> Process(string renderedTemplate)
         {
-            if (_httpContext.HttpContext == null)
-                return new Tuple<string, bool>(renderedTemplate, false);
+            //if (_httpContext.HttpContext == null)
+            //    return new Tuple<string, bool>(renderedTemplate, false);
 
             var include2SxcJs = false;
 
