@@ -15,8 +15,10 @@ namespace ToSic.Sxc.Tests
         {
             Factory.ActivateNetCoreDi(sc =>
             {
-                sc.AddSxcCore();
-                sc.AddEavCore();
+                sc.AddSxcCore()
+                    .AddEavCore()
+                    .AddEavCorePlumbing()
+                    .AddEavCoreFallbackServices();
                 //Trace.WriteLine("di configuration core");
                 //sc.TryAddTransient<IValueConverter, MockValueConverter>();
                 //sc.TryAddTransient<IRuntime, RuntimeUnknown>();
