@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 
@@ -53,13 +52,15 @@ namespace ToSic.Sxc.Apps.Assets
     Start editing it by hovering the ""Manage"" button and opening the ""Edit Template"" dialog.
 </p>";
 
-        internal string DefaultCshtmlBody { get; } = @"@inherits Custom.Hybrid.Razor12 @* to get features like App, CmsContext, Data etc. *@
+        internal string DefaultCshtmlBody { get; } = @"@inherits Custom.Hybrid.Razor12
+@* This inherits statement gets you features like App, CmsContext, Data etc. - you can delete this comment *@
 
 <div @Edit.TagToolbar(Content)>
     Put your content here
 </div>";
 
-        internal string DefaultCodeCshtmlBody { get; } = @"@inherits Custom.Hybrid.Razor12 @* to get features like App, CmsContext, Data etc. *@
+        internal string DefaultCodeCshtmlBody { get; } = @"@inherits Custom.Hybrid.Razor12
+@* This inherits statement gets you features like App, CmsContext, Data etc. - you can delete this comment *@
 @using ToSic.Razor.Blade;
 
 @functions {
