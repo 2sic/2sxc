@@ -13,8 +13,8 @@ namespace ToSic.Sxc.Tests.ServicesTests.SecureDataTests
 
         [TestMethod] public void NonSecret() => TestDecryptNoSecret("Test");
 
-        [TestMethod] public void NonSecretWithPrefix() => TestDecryptNoSecret(PrefixSecure + "Test", "Test");
-        [TestMethod] public void NonSecretWithLowPrefix() => TestDecryptNoSecret(PrefixSecure.ToLowerInvariant() + "Test", "Test");
+        [TestMethod] public void NonSecretWithPrefix() => TestDecryptNoSecret(PrefixSecure + "Test", "Secure:Test");
+        [TestMethod] public void NonSecretWithLowPrefix() => TestDecryptNoSecret(PrefixSecure.ToLowerInvariant() + "Test", "secure:Test");
 
 
         private const string TestGoogleApiKey = "Made-Up-Google-Maps-Key3423";
