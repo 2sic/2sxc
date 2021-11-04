@@ -3,13 +3,12 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Query;
-using ToSic.Testing.Shared;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.ContextTests
 {
     [TestClass]
-    public class ParametersTests: EavTestBase
+    public class ParametersTests
     {
         [TestMethod]
         public void BasicParameters()
