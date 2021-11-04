@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Tests.WebTests.LinkHelperTests;
-using ToSic.Sxc.Web;
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+﻿using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Tests.WebTests
 {
@@ -19,9 +17,5 @@ namespace ToSic.Sxc.Tests.WebTests
 
         internal ILinkHelper Link;
 
-
-        // @STV - don't use statics in tests - results in object-reuse, but we want to always run clean
-        internal /*static*/ void ToUrlAreEqual(string testUrl, string part = null) 
-            => AreEqual(testUrl, Link.TestTo(part: part));
     }
 }

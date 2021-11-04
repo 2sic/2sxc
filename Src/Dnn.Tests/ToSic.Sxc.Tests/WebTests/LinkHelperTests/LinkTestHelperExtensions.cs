@@ -13,11 +13,11 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
             int? pageId = null,
             object parameters = null,
             string api = null,
-            string type = null, // WIP, probably "full", "root", "https", "//", "http" etc.
-            string part = null
+            string type = null // WIP, probably "full", "root", "https", "//", "http" etc.
+            // string part = null
         )
         {
-            if (part != null) throw new Exception("part shouldn't be used ATM,not implemented");
+            // if (part != null) throw new Exception("part shouldn't be used ATM,not implemented");
             return link.To(noParamOrder: noParamOrder, pageId: pageId, parameters: parameters, api: api, type: type
                 /*part: part*/);
         }

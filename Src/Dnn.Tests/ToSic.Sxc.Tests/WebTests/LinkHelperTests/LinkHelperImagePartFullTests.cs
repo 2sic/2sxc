@@ -46,7 +46,6 @@ namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
         [TestMethod]
         public void ImageUrlPathIsMissingTest()
         {
-            // TODO: this is all wrong - the Image should never point to the current page
             AreEqual($"{LinkHelperUnknown.DefRoot}?c=3", Link.TestImage(url: "?c=3", type: "full"));
             AreEqual($"{LinkHelperUnknown.DefRoot}?param=c", Link.TestImage(url: "?param=c", type: "full"));
             AreEqual($"{LinkHelperUnknown.DefRoot}?param=b&b=3&c=3", Link.TestImage(url: "?param=b&b=3&c=3", type: "full"));
