@@ -1,11 +1,10 @@
 ﻿using ToSic.Sxc.Tests.WebTests.LinkHelperTests;
 using ToSic.Sxc.Web;
-using ToSic.Testing.Shared;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.WebTests
 {
-    public class LinkHelperTestBase: EavTestBase
+    public class LinkHelperTestBase: TestBaseSxc
     {
         /// <summary>
         /// 
@@ -15,7 +14,7 @@ namespace ToSic.Sxc.Tests.WebTests
             // @STV - don't use statics in tests - can cause unexpected results across tests
             // Every test should run by itself
 
-            Link = Resolve<ILinkHelper>();
+            Link = Build<ILinkHelper>();
         }
 
         internal ILinkHelper Link;

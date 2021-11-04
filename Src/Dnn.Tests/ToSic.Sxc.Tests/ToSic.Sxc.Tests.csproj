@@ -88,7 +88,6 @@
     <Compile Include="DynamicData\SimpleObject.cs" />
     <Compile Include="DynamicData\TestAccessors.cs" />
     <Compile Include="DynamicData\DynamicReadRealClass.cs" />
-    <Compile Include="InitializeTests.cs" />
     <Compile Include="PageFeatures\SimpleFeatureManagement.cs" />
     <Compile Include="PageProperty\UpdatePropertyTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -99,6 +98,7 @@
     <Compile Include="ServicesTests\MailAddressInputTypeTests.cs" />
     <Compile Include="ServicesTests\MailServiceTestsBase.cs" />
     <Compile Include="ServicesTests\SecureDataTests\SecureDataTest.cs" />
+    <Compile Include="TestBaseSxc.cs" />
     <Compile Include="WebTests\ConvertServiceTests\ConvertServiceTest.cs" />
     <Compile Include="WebTests\LinkHelperTestBase.cs" />
     <Compile Include="WebTests\LinkHelperTests\LinkHelperPartSuffixTests.cs" />

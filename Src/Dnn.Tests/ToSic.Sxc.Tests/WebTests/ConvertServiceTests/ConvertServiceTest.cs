@@ -2,8 +2,6 @@
 using System;
 using System.Globalization;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
-using ToSic.Testing.Shared;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.WebTests.ConvertServiceTests
@@ -12,7 +10,7 @@ namespace ToSic.Sxc.Tests.WebTests.ConvertServiceTests
     /// Note: there are not many tests here, because the true engine is in the EAV conversion system which is tested very thoroughly already
     /// </summary>
     [TestClass]
-    public class ConvertServiceTest:EavTestBase
+    public class ConvertServiceTest:TestBaseSxc
     {
         private const string strGuid = "424e56ce-570a-4747-aee2-44c04caf7f12";
         private static readonly Guid expGuid = new Guid(strGuid);
@@ -52,6 +50,6 @@ namespace ToSic.Sxc.Tests.WebTests.ConvertServiceTests
         /// test accessor
         /// </summary>
         /// <returns></returns>
-        private static IConvertService Csvc() => Resolve<IConvertService>();
+        private IConvertService Csvc() => Build<IConvertService>();
     }
 }

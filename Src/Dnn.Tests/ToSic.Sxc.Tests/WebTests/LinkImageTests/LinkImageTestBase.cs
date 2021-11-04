@@ -3,18 +3,14 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Tests.DynamicData;
 using ToSic.Sxc.Tests.WebTests.LinkHelperTests;
 using ToSic.Sxc.Web;
-using ToSic.Testing.Shared;
 
 namespace ToSic.Sxc.Tests.WebTests.LinkImageTests
 {
-    public class LinkImageTestBase: EavTestBase
+    public class LinkImageTestBase: TestBaseSxc
     {
-        public LinkImageTestBase()
-        {
-        }
 
-        public ImgResizeLinker GetLinker() => Resolve<ImgResizeLinker>();
-        public ILinkHelper GetLinkHelper() => Resolve<ILinkHelper>();
+        public ImgResizeLinker GetLinker() => Build<ImgResizeLinker>();
+        public ILinkHelper GetLinkHelper() => Build<ILinkHelper>();
 
         public static DynamicReadObject ToDyn(object contents) => TestAccessors.DynReadObjT(contents, false, false);
 
