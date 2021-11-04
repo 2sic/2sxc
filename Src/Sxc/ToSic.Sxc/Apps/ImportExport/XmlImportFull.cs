@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.ImportExport;
-using ToSic.Eav.Metadata;
-using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Repositories;
-using ToSic.Eav.Repository.Efc;
 
 namespace ToSic.Sxc.Apps.ImportExport
 {
@@ -20,14 +16,7 @@ namespace ToSic.Sxc.Apps.ImportExport
             Dependencies dependencies,
             Lazy<CmsManager> cmsManagerLazy,
             IRepositoryLoader repositoryLoader
-            //Lazy<Import> importerLazy, 
-            //Lazy<DbDataController> dbDataForNewApp,
-            //Lazy<DbDataController> dbDataForAppImport,
-            //IImportExportEnvironment importExportEnvironment, 
-            //ITargetTypes metaTargetTypes,
-            //SystemManager systemManager,
-            //IAppStates appStates
-            ) : base(dependencies, /*importerLazy, dbDataForNewApp, dbDataForAppImport, importExportEnvironment, metaTargetTypes, systemManager, appStates,*/ "Sxc.XmlImp")
+            ) : base(dependencies, "Sxc.XmlImp")
         {
             _cmsManagerLazy = cmsManagerLazy;
             _repositoryLoader = repositoryLoader.Init(Log);
