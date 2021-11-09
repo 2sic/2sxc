@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+<package>
   <metadata>
     <id>ToSic.Sxc</id>
     <version>12.08.02</version>
@@ -15,7 +15,8 @@
     <iconUrl>https://raw.githubusercontent.com/wiki/2sic/2sxc/assets/logos/2sxc12/2sxc12-500.png</iconUrl>
     <icon>images\2sxc12-500.png</icon>
     <tags>oqtane module</tags>
-    <releaseNotes>release</releaseNotes>
+    <readme>docs\README.md</readme>
+    <releaseNotes>https://github.com/2sic/2sxc/releases</releaseNotes>
     <summary>2sxc 12 - CMS &amp; App-Engine for Oqtane</summary>
     <dependencies>
       <dependency id="Oqtane.Framework" version="2.2.0" />
@@ -24,6 +25,7 @@
   </metadata>
   <files>
     <file src="images\2sxc12-500.png" target="images\" />
+    <file src="README.md" target="docs\" />
     <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net5.0\ToSic.*.dll" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net5.0\ToSic.*.pdb" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Server\wwwroot\**\*.*" exclude="**\*.map;" target="wwwroot" />
