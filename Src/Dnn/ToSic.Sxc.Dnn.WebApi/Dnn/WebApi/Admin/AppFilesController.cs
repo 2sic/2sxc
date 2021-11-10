@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Web.Http;
-using DotNetNuke.Security;
+﻿using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using System.Collections.Generic;
+using System.Web.Http;
 using ToSic.Sxc.Apps.Assets;
-using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Assets;
@@ -55,7 +54,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpPost]
         public bool Create([FromUri] int appId, [FromUri] string path,
             [FromBody] FileContentsDto content, // note: as of 2020-09 the content is never submitted
-            bool global, [FromUri] string purpose = AssetEditor.PurposeType.Auto) 
+            bool global, [FromUri] string purpose = AssetTemplatePurpose.Auto) 
             => Backend().Create(appId, path, content, purpose, global);
 
 
@@ -76,6 +75,22 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             // todo w/SPM - global never seems to be used - must check why and if we remove or add to UI
             [FromUri] bool global = false) 
             => Backend().Save(appId: appId, template: template, templateId: templateId, global: global, path: path);
+
+
+        /// <summary>
+        /// Get all asset template types
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public List<AssetTemplateInfo> GetAllAssetTemplates() => Backend().GetAllAssetTemplates();
+
+        /// <summary>
+        /// Create a new file from template
+        /// </summary>
+        /// <param name="assetFromTemplateDto">AssetFromTemplateDto</param>
+        /// <returns></returns>
+        [HttpPut]
+        public bool CreateFromTemplate(AssetFromTemplateDto assetFromTemplateDto) => Backend().Create(assetFromTemplateDto);
 
     }
 }

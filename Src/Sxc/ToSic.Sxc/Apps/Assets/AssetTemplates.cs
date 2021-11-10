@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 
@@ -11,6 +12,25 @@ namespace ToSic.Sxc.Apps.Assets
         protected AssetTemplates() : base("SxcAss.Templt")
         {
         }
+
+        public static List<AssetTemplateInfo> GetAllAssetTemplates()
+        {
+            if (_getAllTemplates == null)
+            {
+                _getAllTemplates = new List<AssetTemplateInfo>
+                {
+                    new AssetTemplateInfo() { Id = AssetTemplateType.CsHtml, Name = "CsHtml", Extension = AssetTemplateExtension.CshtmlExtension, Purpose = AssetTemplatePurpose.Razor },
+                    new AssetTemplateInfo() { Id = AssetTemplateType.CsHtmlCode, Name = "CsHtmlCode", Extension = AssetTemplateExtension.CodeCshtmlExtension, Purpose = AssetTemplatePurpose.Razor },
+                    new AssetTemplateInfo() { Id = AssetTemplateType.CsCode, Name = "CsCode", Extension = AssetTemplateExtension.CsExtension, Purpose = AssetTemplatePurpose.Auto },
+                    new AssetTemplateInfo() { Id = AssetTemplateType.WebApi, Name = "WebApi", Extension = AssetTemplateExtension.CsExtension, Purpose = AssetTemplatePurpose.Api },
+                    new AssetTemplateInfo() { Id = AssetTemplateType.Token, Name = "Token", Extension = AssetTemplateExtension.TokenHtmlExtension, Purpose = AssetTemplatePurpose.Token },
+                    new AssetTemplateInfo() { Id = AssetTemplateType.CustomSearchCsCode, Name = "CustomSearchCsCode", Extension = AssetTemplateExtension.CsExtension, Purpose = AssetTemplatePurpose.Search },
+                };
+            }
+            return _getAllTemplates;
+        }
+
+        private static List<AssetTemplateInfo> _getAllTemplates;
 
         public virtual string GetTemplate(AssetTemplateType type)
         {

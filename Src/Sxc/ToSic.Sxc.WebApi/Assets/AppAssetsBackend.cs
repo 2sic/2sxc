@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
@@ -72,6 +74,15 @@ namespace ToSic.Sxc.WebApi.Assets
             assetEditor.EnsureUserMayEditAssetOrThrow(path);
             return assetEditor.Create(content.Content);
         }
+
+        public bool Create(AssetFromTemplateDto assetFromTemplateDto)
+        {
+            var content = new FileContentsDto(); // empty content
+            var purpose = AssetTemplates.GetAllAssetTemplates().First(t => t.Id == assetFromTemplateDto.AssetTemplateType).Purpose;
+            return Create(assetFromTemplateDto.AppId, assetFromTemplateDto.Path, content, purpose, assetFromTemplateDto.Global);
+        }
+
+        public List<AssetTemplateInfo> GetAllAssetTemplates() => AssetTemplates.GetAllAssetTemplates();
 
         private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(int appId, int templateId, bool global, string path)
         {

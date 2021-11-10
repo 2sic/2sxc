@@ -76,7 +76,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             [FromQuery] string path,
             [FromBody] FileContentsDto content, // note: as of 2020-09 the content is never submitted
             [FromQuery] bool global,
-            [FromQuery] string purpose = AssetEditor.PurposeType.Auto
+            [FromQuery] string purpose = AssetTemplatePurpose.Auto
         ) => Backend().Create(appId, path, content, purpose, global);
 
         /// <summary>
@@ -97,5 +97,21 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             // todo w/SPM - global never seems to be used - must check why and if we remove or add to UI
             [FromQuery] bool global = false
         ) => Backend().Save(appId, template, templateId, global, path);
+
+
+        /// <summary>
+        /// Get all asset template types
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public List<AssetTemplateInfo> GetAllAssetTemplates() => Backend().GetAllAssetTemplates();
+
+        /// <summary>
+        /// Create a new file from template
+        /// </summary>
+        /// <param name="assetFromTemplateDto">AssetFromTemplateDto</param>
+        /// <returns></returns>
+        [HttpPut]
+        public bool CreateFromTemplate(AssetFromTemplateDto assetFromTemplateDto) => Backend().Create(assetFromTemplateDto);
     }
 }

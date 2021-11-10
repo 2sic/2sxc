@@ -27,8 +27,8 @@ namespace ToSic.Sxc.WebApi.Assets
             switch (ext?.ToLowerInvariant())
             {
                 // .cs files - usually API controllers
-                case AssetEditor.CsExtension:
-                    if ((folder?.ToLowerInvariant() ?? "").Contains(AssetEditor.CsApiFolder.ToLowerInvariant()))
+                case AssetTemplateExtension.CsExtension:
+                    if ((folder?.ToLowerInvariant() ?? "").Contains(AssetTemplateExtension.CsApiFolder.ToLowerInvariant()))
                     {
                         var nameWithoutExt = name.Substring(0, name.Length - ext.Length);
                         content.Content =
@@ -37,7 +37,7 @@ namespace ToSic.Sxc.WebApi.Assets
                     else
                     {
                         var nameWithoutExt = name.Substring(0, name.Length - ext.Length);
-                        content.Content = _assetTemplates.GetTemplate(purpose == AssetEditor.PurposeType.Search
+                        content.Content = _assetTemplates.GetTemplate(purpose == AssetTemplatePurpose.Search
                                 ? AssetTemplateType.CustomSearchCsCode
                                 : AssetTemplateType.CsCode)
                             .Replace(AssetTemplates.CsCodeTemplateName, nameWithoutExt);
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.WebApi.Assets
                     break;
 
                 // .cshtml files (razor) or .code.cshtml (razor code-behind)
-                case AssetEditor.CshtmlExtension:
+                case AssetTemplateExtension.CshtmlExtension:
                     {
                         // ensure all .cshtml start with "_"
                         if (!name.StartsWith(AssetEditor.CshtmlPrefix))
@@ -55,15 +55,15 @@ namespace ToSic.Sxc.WebApi.Assets
                         }
 
                         // first check the code-extension, because it's longer but also would contain the non-code extension
-                        if (name.EndsWith(AssetEditor.CodeCshtmlExtension))
+                        if (name.EndsWith(AssetTemplateExtension.CodeCshtmlExtension))
                             content.Content = _assetTemplates.GetTemplate(AssetTemplateType.CsHtmlCode);
-                        else if (name.EndsWith(AssetEditor.CshtmlExtension))
+                        else if (name.EndsWith(AssetTemplateExtension.CshtmlExtension))
                             content.Content = _assetTemplates.GetTemplate(AssetTemplateType.CsHtml);
                         break;
                     }
 
                 // .html files (Tokens)
-                case AssetEditor.TokenHtmlExtension:
+                case AssetTemplateExtension.TokenHtmlExtension:
                     content.Content = _assetTemplates.GetTemplate(AssetTemplateType.Token);
                     break;
             }
