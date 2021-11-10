@@ -13,7 +13,7 @@ namespace ToSic.Sxc.WebApi.Assets
 
         public bool Global;
 
-        public AssetTemplateType AssetTemplateType;
+        public string TemplateKey;
     }
 
 }

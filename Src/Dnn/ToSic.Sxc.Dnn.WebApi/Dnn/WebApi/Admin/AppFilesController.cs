@@ -1,4 +1,5 @@
-﻿using DotNetNuke.Security;
+﻿using System;
+using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using System.Collections.Generic;
 using System.Web.Http;
@@ -51,10 +52,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <param name="global">this determines, if the app-file store is the global in _default or the local in the current app</param>
         /// <param name="purpose">auto;razor;token;api;search</param>
         /// <returns></returns>
+        [Obsolete("This Method is Deprecated", false)]
         [HttpPost]
-        public bool Create([FromUri] int appId, [FromUri] string path,
+        public bool Create(
+            [FromUri] int appId, 
+            [FromUri] string path,
             [FromBody] FileContentsDto content, // note: as of 2020-09 the content is never submitted
-            bool global, [FromUri] string purpose = AssetTemplatePurpose.Auto) 
+            [FromUri] bool global, 
+            [FromUri] string purpose = Purpose.Auto) 
             => Backend().Create(appId, path, content, purpose, global);
 
 
@@ -82,15 +87,15 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public List<AssetTemplateInfo> GetAllAssetTemplates() => Backend().GetAllAssetTemplates();
+        public List<TemplateInfo> GetTemplates() => Backend().GetTemplates();
 
         /// <summary>
         /// Create a new file from template
         /// </summary>
         /// <param name="assetFromTemplateDto">AssetFromTemplateDto</param>
         /// <returns></returns>
-        [HttpPut]
-        public bool CreateFromTemplate(AssetFromTemplateDto assetFromTemplateDto) => Backend().Create(assetFromTemplateDto);
+        [HttpPost]
+        public bool Create(AssetFromTemplateDto assetFromTemplateDto) => Backend().Create(assetFromTemplateDto);
 
     }
 }

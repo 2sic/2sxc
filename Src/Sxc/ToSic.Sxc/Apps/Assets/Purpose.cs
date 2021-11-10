@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Apps.Assets
 {
-    public class AssetTemplatePurpose
+    public class Purpose
     {
         public const string Auto = "auto";
         public const string Razor = "razor";

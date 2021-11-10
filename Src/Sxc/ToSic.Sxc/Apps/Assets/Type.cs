@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Apps.Assets
 {
     [PrivateApi]
-    public enum AssetTemplateType
+    public enum Type
     {
         Unknown,
         CsHtml,
