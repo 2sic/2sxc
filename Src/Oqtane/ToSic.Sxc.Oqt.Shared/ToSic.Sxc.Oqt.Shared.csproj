@@ -1,21 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Version>12.08.02</Version>
     <Product>ToSic.Sxc</Product>
     <Authors>2sic</Authors>
     <Company>2sic</Company>
-    <Description>2sic 2sxc Oqtane POC</Description>
+    <Description>2sic 2sxc Oqtane</Description>
     <Copyright>2sic</Copyright>
     <AssemblyName>ToSic.Sxc.Oqtane.Shared</AssemblyName>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="6.0.0-preview.4.21253.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.0" />
     <PackageReference Include="Oqtane.Shared" Version="2.2.0" />
   </ItemGroup>
 

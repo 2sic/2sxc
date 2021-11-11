@@ -2,38 +2,38 @@
 @Echo the build folder (Debug or DebugOqtane) must be passed in as a parameter
 @set BuildFolder=%1
 @set Dev2sxcOqtaneRoot=c:\Projects\2sxc\oqtane\oqtane.framework\Oqtane.Server\
-@set OqtaneBin=%Dev2sxcOqtaneRoot%bin\%BuildFolder%\net5.0\
+@set OqtaneBin=%Dev2sxcOqtaneRoot%bin\%BuildFolder%\net6.0\
 
 @Echo(
 @Echo 2sxc Oqtane - Client
-XCOPY "..\ToSic.Sxc.Oqt.Client\bin\%BuildFolder%\net5.0\ToSic.*.dll" "%OqtaneBin%" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Client\bin\%BuildFolder%\net5.0\ToSic.*.pdb" "%OqtaneBin%" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Client\bin\%BuildFolder%\net6.0\ToSic.*.dll" "%OqtaneBin%" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Client\bin\%BuildFolder%\net6.0\ToSic.*.pdb" "%OqtaneBin%" /Y
 
 @Echo(
 @Echo 2sxc Oqtane - Server
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\ToSic.*.dll" "%OqtaneBin%" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\ToSic.*.pdb" "%OqtaneBin%" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net6.0\ToSic.*.dll" "%OqtaneBin%" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net6.0\ToSic.*.pdb" "%OqtaneBin%" /Y
 
 @Echo(
 @Echo 2sxc Oqtane - Server Framework DLLs
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\Microsoft.AspNetCore.Mvc.Razor.*.dll" "%OqtaneBin%" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\Microsoft.AspNetCore.Razor.*" "%OqtaneBin%" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\Microsoft.CodeAnalys*.*" "%OqtaneBin%" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\Microsoft.Extensions.DependencyModel.dll" "%OqtaneBin%" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\System.Data.SqlClient.dll" "%OqtaneBin%" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net6.0\Microsoft.AspNetCore.Mvc.Razor.*.dll" "%OqtaneBin%" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net6.0\Microsoft.AspNetCore.Razor.*" "%OqtaneBin%" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net6.0\Microsoft.CodeAnalys*.*" "%OqtaneBin%" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net6.0\Microsoft.Extensions.DependencyModel.dll" "%OqtaneBin%" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net6.0\System.Data.SqlClient.dll" "%OqtaneBin%" /Y
 
 @Echo(
 @Echo 2sxc Oqtane - ICSharpCode.SharpZipLib.dll
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\ICSharpCode.SharpZipLib.dll" "%OqtaneBin%" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net6.0\ICSharpCode.SharpZipLib.dll" "%OqtaneBin%" /Y
 
 @Echo(
 @Echo Copying refs folder for runtime compilation of Razor cshtml
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\refs\*.dll" "%OqtaneBin%refs\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net6.0\refs\*.dll" "%OqtaneBin%refs\" /Y
 
 @Echo(
 @Echo 2sxc Oqtane - Shared
-XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net5.0\ToSic.*.dll" "%OqtaneBin%" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net5.0\ToSic.*.pdb" "%OqtaneBin%" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net6.0\ToSic.*.dll" "%OqtaneBin%" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net6.0\ToSic.*.pdb" "%OqtaneBin%" /Y
 
 ::@Echo(
 ::@Echo 2sxc Oqtane - ImportExport Assets
