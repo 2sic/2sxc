@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     public class MetadataController : SxcApiControllerBase, IMetadataController
     {
         [HttpGet]
-        public IEnumerable<IDictionary<string, object>> Get(int appId, int targetType, string keyType, string key, string contentType)
+        public IEnumerable<IDictionary<string, object>> Get(int appId, int targetType, string keyType, string key, string contentType = null)
             => GetService<MetadataBackend>().Get(appId, targetType, keyType, key, contentType);
     }
 }
