@@ -48,11 +48,11 @@
     <file src="..\..\packages\system.data.sqlclient\4.6.0\lib\netcoreapp2.1\System.Data.SqlClient.dll" target="lib\net6.0" />
 
     <!-- ToSic.Imageflow.Oqtane 1.0.3 -->
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\lib\net6.0\ToSic.Imageflow.Oqt.Server.Oqtane.dll" target="lib\net6.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\lib\net6.0\ToSic.Imageflow.Oqt.Server.Oqtane.pdb" target="lib\net6.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\lib\net6.0\Imageflow.*" target="lib\net6.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\lib\net6.0\Imazen.*" target="lib\net6.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\lib\net6.0\Microsoft.IO.*" target="lib\net6.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\lib\net5.0\ToSic.Imageflow.Oqt.Server.Oqtane.dll" target="lib\net6.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\lib\net5.0\ToSic.Imageflow.Oqt.Server.Oqtane.pdb" target="lib\net6.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\lib\net5.0\Imageflow.*" target="lib\net6.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\lib\net5.0\Imazen.*" target="lib\net6.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\lib\net5.0\Microsoft.IO.*" target="lib\net6.0" />
     <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\runtimes\win*\**\*imageflow.*" target="runtimes" />
   </files>
 </package>
