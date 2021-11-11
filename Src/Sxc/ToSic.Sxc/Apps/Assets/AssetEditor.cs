@@ -54,24 +54,7 @@ namespace ToSic.Sxc.Apps.Assets
 
         #endregion
 
-        public const string TokenHtmlExtension = ".html";
-        
-        public const string CshtmlExtension = ".cshtml";
-        public const string CodeCshtmlExtension = ".code.cshtml";
         public const string CshtmlPrefix = "_";
-        
-        public const string CsExtension = ".cs";
-
-        public const string CsApiFolder = "api";
-
-        public struct PurposeType
-        {
-            public const string Auto = "auto";
-            public const string Razor = "razor";
-            public const string Token = "token";
-            public const string Api = "api";
-            public const string Search = "search";
-        }
 
         public AssetEditInfo EditInfoWithSource
         {
@@ -200,6 +183,5 @@ namespace ToSic.Sxc.Apps.Assets
 
             return true;
         }
-
     }
 }

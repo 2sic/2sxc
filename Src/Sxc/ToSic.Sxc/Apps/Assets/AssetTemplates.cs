@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 
@@ -12,31 +13,31 @@ namespace ToSic.Sxc.Apps.Assets
         {
         }
 
-        public virtual string GetTemplate(AssetTemplateType type)
+        public virtual string GetTemplate(Type type)
         {
             var callLog = Log.Call<string>(type.ToString());
             string result;
             switch (type)
             {
-                case AssetTemplateType.Unknown:
+                case Type.Unknown:
                     result = "Unknown file type - cannot provide template";
                     break;
-                case AssetTemplateType.CsHtml:
+                case Type.CsHtml:
                     result = DefaultCshtmlBody;
                     break;
-                case AssetTemplateType.CsHtmlCode:
+                case Type.CsHtmlCode:
                     result = DefaultCodeCshtmlBody;
                     break;
-                case AssetTemplateType.CsCode:
+                case Type.CsCode:
                     result = DefaultCsCode;
                     break;
-                case AssetTemplateType.WebApi:
+                case Type.WebApi:
                     result = DefaultWebApiBody;
                     break;
-                case AssetTemplateType.Token:
+                case Type.Token:
                     result = DefaultTokenHtmlBody;
                     break;
-                case AssetTemplateType.CustomSearchCsCode:
+                case Type.CustomSearchCsCode:
                     result = CustomsSearchCsCode;
                     break;
                 default:
