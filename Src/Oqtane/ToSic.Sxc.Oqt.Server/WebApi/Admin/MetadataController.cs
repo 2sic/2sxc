@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         }
 
         [HttpGet]
-        public IEnumerable<IDictionary<string, object>> Get(int appId, int targetType, string keyType, string key, string contentType)
+        public IEnumerable<IDictionary<string, object>> Get(int appId, int targetType, string keyType, string key, string contentType = null)
             => Backend.Get(appId, targetType, keyType, key, contentType);
 
     }
