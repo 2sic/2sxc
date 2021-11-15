@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
 
             return AssemblyLoadContext.GetLoadContext(_assembly).Assemblies
                 .Where(_ => !_.IsDynamic)
-                .Select(_ => new Uri(_.Location).LocalPath);
+                .Select(_ => new Uri(_.CodeBase).LocalPath);
         }
     }
 }
