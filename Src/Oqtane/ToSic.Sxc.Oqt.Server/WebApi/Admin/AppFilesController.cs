@@ -112,7 +112,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// </summary>
         /// <param name="assetFromTemplateDto">AssetFromTemplateDto</param>
         /// <returns></returns>
-        [HttpPost]
-        public bool Create(AssetFromTemplateDto assetFromTemplateDto) => Backend().Create(assetFromTemplateDto);
+        //[HttpPost]
+        //public bool Create(AssetFromTemplateDto assetFromTemplateDto) => Backend().Create(assetFromTemplateDto);
     }
 }
