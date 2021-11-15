@@ -46,11 +46,19 @@ namespace ToSic.Sxc.Web.Url
         public static string NvcToString(NameValueCollection nvc)
         {
             var allPairs = nvc.AllKeys
-                .Where(k => !string.IsNullOrEmpty(k))
-                .SelectMany(k =>
+                .SelectMany(key =>
                 {
-                    var values = nvc.GetValues(k) ?? new[] { "" }; // catch null-values
-                    return values.Select(v => k + (string.IsNullOrEmpty(v) ? "" : "=" + v));
+                    // Important - both key and values can be null; values can be a list of things
+                    var values = nvc.GetValues(key);
+                    var noValues = (values == null || values.Length == 0);
+                    if (key is null)
+                        return noValues
+                            ? new string[0] // No keys or values, empty list
+                            : values.Select(v => v.ToString()).ToArray(); // in case values are without keys, join them like this
+
+                    return noValues
+                        ? new[] { key }
+                        : values.Select(v => key + (string.IsNullOrEmpty(v) ? "" : "=" + v));                        
                 })
                 .ToArray();
             return allPairs.Any() ? string.Join("&", allPairs) : "";
