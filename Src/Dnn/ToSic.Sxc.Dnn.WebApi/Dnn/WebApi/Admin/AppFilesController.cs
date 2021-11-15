@@ -95,7 +95,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <param name="assetFromTemplateDto">AssetFromTemplateDto</param>
         /// <returns></returns>
         [HttpPost]
-        public bool Create(AssetFromTemplateDto assetFromTemplateDto) => Backend().Create(assetFromTemplateDto);
+        public bool Create2(AssetFromTemplateDto assetFromTemplateDto) => Backend().Create(assetFromTemplateDto);
 
     }
 }
