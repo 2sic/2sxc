@@ -82,7 +82,7 @@ namespace ToSic.Sxc.WebApi.Assets
             return Create(assetFromTemplateDto.AppId, assetFromTemplateDto.Path, content, purpose, assetFromTemplateDto.Global);
         }
 
-        public List<TemplateInfo> GetTemplates() => Templates.GetTemplates();
+        public TemplatesDto GetTemplates(string purpose) => new TemplatesDto { Templates = Templates.GetTemplates() };
 
         private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(int appId, int templateId, bool global, string path)
         {

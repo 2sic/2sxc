@@ -87,7 +87,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public List<TemplateInfo> GetTemplates() => Backend().GetTemplates();
+        public TemplatesDto GetTemplates(string purpose = null) => Backend().GetTemplates(purpose);
 
         /// <summary>
         /// Create a new file from template
