@@ -9,12 +9,12 @@ namespace ToSic.Sxc.Apps.Assets
 {
     public class TemplateKey
     {
-        public const string CsHtml = "cshtml";
-        public const string CsHtmlCode = "cshtml-code";
-        public const string CsCode = "cs-code";
-        public const string Api = "cs-api";
+        public const string CsHtml = "cshtml-hybrid";
+        public const string CsHtmlCode = "cshtml-code-hybrid";
+        public const string CsCode = "cs-code-hybrid";
+        public const string Api = "cs-api-hybrid";
         public const string Token = "html-token";
-        public const string CustomSearchCsCode = "cs-code-custom-search";
+        public const string CustomSearchCsCode = "cs-code-custom-search-dnn";
     }
 
     public class Extension
@@ -23,7 +23,6 @@ namespace ToSic.Sxc.Apps.Assets
         public const string Cshtml = ".cshtml";
         public const string CodeCshtml = ".code.cshtml";
         public const string Cs = ".cs";
-        public const string ApiFolder = "api";
     }
 
     public class Purpose
@@ -36,74 +35,42 @@ namespace ToSic.Sxc.Apps.Assets
     }
 
     [PrivateApi]
-    public abstract class AssetTemplates: HasLog<IAssetTemplates>, IAssetTemplates
+    public abstract class AssetTemplates : HasLog<IAssetTemplates>, IAssetTemplates
     {
         protected AssetTemplates() : base("SxcAss.Templt")
         {
         }
 
-        public static TemplateInfo CsHtml = new TemplateInfo(TemplateKey.CsHtml, "CsHtml", Extension.Cshtml, Purpose.Razor);
-        public static TemplateInfo CsHtmlCode = new TemplateInfo(TemplateKey.CsHtmlCode, "CsHtmlCode", Extension.CodeCshtml, Purpose.Razor);
-        public static TemplateInfo CsCode = new TemplateInfo(TemplateKey.CsCode, "CsCode", Extension.Cs, Purpose.Auto);
-        public static TemplateInfo Api = new TemplateInfo(TemplateKey.Api, "WebApi", Extension.Cs, Purpose.Api);
-        public static TemplateInfo Token = new TemplateInfo(TemplateKey.Token, "Token", Extension.Html, Purpose.Token);
-        public static TemplateInfo CustomSearchCsCode = new TemplateInfo(TemplateKey.CustomSearchCsCode, "CustomSearchCsCode", Extension.Cs, Purpose.Search);
-
-        public virtual List<TemplateInfo> GetTemplates()
+        private List<TemplateInfo> TemplateInfos()
         {
+            return new List<TemplateInfo>
+            {
+                new TemplateInfo(TemplateKey.CsHtml, "cshtml hybrid", Extension.Cshtml, Purpose.Razor, DefaultCshtmlBody, "razor page hybrid template"),
+                new TemplateInfo(TemplateKey.CsHtmlCode, "cshtml code hybrid", Extension.CodeCshtml, Purpose.Razor, DefaultCodeCshtmlBody, "razor page c# code hybrid template"),
+                new TemplateInfo(TemplateKey.CsCode, "c# code hybrid", Extension.Cs, Purpose.Auto, DefaultCsCode, "c# code hybrid template"),
+                new TemplateInfo(TemplateKey.Api, "WebApi hybrid", Extension.Cs, Purpose.Api, DefaultWebApiBody, "c# WebApi controller hybrid template"),
+                new TemplateInfo(TemplateKey.Token, "html token", Extension.Html, Purpose.Token, DefaultTokenHtmlBody, "html token template"),
+                new TemplateInfo(TemplateKey.CustomSearchCsCode, "dnn custom search c# code", Extension.Cs, Purpose.Search, CustomsSearchCsCode, "custom search c# code to customize how dnn search treats data of view, see https://r.2sxc.org/customize-search"),
+                new TemplateInfo("readme", "README.md", ".md", "assets", Readme, ".md file"),
+                new TemplateInfo("txt", "text file", ".txt", "assets", Txt, "simple textual file"),
+            };
+        }
+
+        public List<TemplateInfo> GetTemplates()
+            {
             var callLog = Log.Call<List<TemplateInfo>>(nameof(GetTemplates));
 
-            if (_templateInfos == null)
-            {
-                _templateInfos = new List<TemplateInfo>
-                {
-                    CsHtml,
-                    CsHtmlCode,
-                    CsCode,
-                    Api,
-                    Token,
-                    CustomSearchCsCode
-                };
-
-                // prefill template body
-                foreach (var templateInfo in _templateInfos)
-                {
-                    switch (templateInfo.Key)
-                    {
-                        case TemplateKey.CsHtml:
-                            templateInfo.Body = DefaultCshtmlBody;
-                            break;
-                        case TemplateKey.CsHtmlCode:
-                            templateInfo.Body = DefaultCodeCshtmlBody;
-                            break;
-                        case TemplateKey.CsCode:
-                            templateInfo.Body = DefaultCsCode;
-                            break;
-                        case TemplateKey.Api:
-                            templateInfo.Body = DefaultWebApiBody;
-                            break;
-                        case TemplateKey.Token:
-                            templateInfo.Body = DefaultTokenHtmlBody;
-                            break;
-                        case TemplateKey.CustomSearchCsCode:
-                            templateInfo.Body = CustomsSearchCsCode;
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(templateInfo.Key), templateInfo.Key, null);
-                    }
-                }
-
-            }
+            if (_templateInfos == null) _templateInfos = TemplateInfos();
 
             return callLog(null, _templateInfos);
         }
 
         private static List<TemplateInfo> _templateInfos;
 
-        public virtual TemplateInfo GetTemplateInfo(string key) => GetTemplates()
-            .FirstOrDefault(t => t.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase));
+        public string GetTemplate(string key) => GetTemplateInfo(key).Body;
 
-        public virtual string GetTemplate(string key) => GetTemplateInfo(key).Body;
+        private TemplateInfo GetTemplateInfo(string key) => GetTemplates()
+            .FirstOrDefault(t => t.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase));
 
         internal string DefaultTokenHtmlBody =>
             @"<p>
@@ -184,5 +151,13 @@ public class " + CsCodeTemplateName + @" : Custom.Hybrid.Code12 {
 ";
 
         internal abstract string CustomsSearchCsCode { get; }
+
+        internal string Readme = @"# Readme
+
+A standard README file.
+";
+
+        internal string Txt = @"Simple text file.
+";
     }
 }

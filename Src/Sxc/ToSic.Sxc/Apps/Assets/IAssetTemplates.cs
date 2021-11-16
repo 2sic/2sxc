@@ -10,7 +10,5 @@ namespace ToSic.Sxc.Apps.Assets
         string GetTemplate(string key);
 
         List<TemplateInfo> GetTemplates();
-
-        TemplateInfo GetTemplateInfo(string key);
     }
 }

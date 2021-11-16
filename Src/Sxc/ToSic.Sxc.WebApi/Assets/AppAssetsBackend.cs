@@ -99,9 +99,7 @@ namespace ToSic.Sxc.WebApi.Assets
         {
             var templateInfos = _assetTemplates.GetTemplates();
 
-            // filter by purpose, when provided
-            if (!string.IsNullOrEmpty(purpose))
-                templateInfos = templateInfos.Where(t => t.Purpose.Equals(purpose, StringComparison.InvariantCultureIgnoreCase)).ToList();
+            // TBD: future purpose implementation
 
             return new TemplatesDto {Templates = templateInfos};
         }
