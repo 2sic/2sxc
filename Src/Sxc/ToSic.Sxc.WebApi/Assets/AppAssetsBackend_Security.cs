@@ -34,14 +34,14 @@ namespace ToSic.Sxc.WebApi.Assets
                     {
                         var nameWithoutExt = name.Substring(0, name.Length - ext.Length);
                         content.Content =
-                            _assetTemplates.GetTemplate(Templates.Key.Api).Replace(AssetTemplates.CsApiTemplateControllerName, nameWithoutExt);
+                            _assetTemplates.GetTemplate(TemplateKey.Api).Replace(AssetTemplates.CsApiTemplateControllerName, nameWithoutExt);
                     }
                     else
                     {
                         var nameWithoutExt = name.Substring(0, name.Length - ext.Length);
                         content.Content = _assetTemplates.GetTemplate(purpose == Purpose.Search
-                                ? Templates.Key.CustomSearchCsCode
-                                : Templates.Key.CsCode)
+                                ? TemplateKey.CustomSearchCsCode
+                                : TemplateKey.CsCode)
                             .Replace(AssetTemplates.CsCodeTemplateName, nameWithoutExt);
                     }
                     break;
@@ -58,15 +58,15 @@ namespace ToSic.Sxc.WebApi.Assets
 
                         // first check the code-extension, because it's longer but also would contain the non-code extension
                         if (name.EndsWith(Extension.CodeCshtml))
-                            content.Content = _assetTemplates.GetTemplate(Templates.Key.CsHtmlCode);
+                            content.Content = _assetTemplates.GetTemplate(TemplateKey.CsHtmlCode);
                         else if (name.EndsWith(Extension.Cshtml))
-                            content.Content = _assetTemplates.GetTemplate(Templates.Key.CsHtml);
+                            content.Content = _assetTemplates.GetTemplate(TemplateKey.CsHtml);
                         break;
                     }
 
                 // .html files (Tokens)
                 case Extension.Html:
-                    content.Content = _assetTemplates.GetTemplate(Templates.Key.Token);
+                    content.Content = _assetTemplates.GetTemplate(TemplateKey.Token);
                     break;
             }
 
