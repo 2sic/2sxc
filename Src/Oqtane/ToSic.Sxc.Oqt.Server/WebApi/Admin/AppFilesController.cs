@@ -103,10 +103,10 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// <summary>
         /// Get all asset template types
         /// </summary>
-        /// <param name="templateKey"></param>
+        /// <param name="purpose">filter by Purpose when provided</param>
         /// <returns></returns>
         [HttpGet]
-        public TemplatesDto GetTemplates(string templateKey = null) => Backend().GetTemplates(templateKey);
+        public TemplatesDto GetTemplates(string purpose = null) => Backend().GetTemplates(purpose);
 
         /// <summary>
         /// Create a new file from template

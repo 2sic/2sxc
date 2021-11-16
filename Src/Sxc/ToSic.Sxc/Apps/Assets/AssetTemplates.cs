@@ -1,17 +1,79 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 
 
 namespace ToSic.Sxc.Apps.Assets
 {
+    public class TemplateKey
+    {
+        public const string CsHtml = "cshtml";
+        public const string CsHtmlCode = "cshtml-code";
+        public const string CsCode = "cs-code";
+        public const string Api = "cs-api";
+        public const string Token = "html-token";
+        public const string CustomSearchCsCode = "cs-code-custom-search";
+    }
+
+    public class Extension
+    {
+        public const string Html = ".html";
+        public const string Cshtml = ".cshtml";
+        public const string CodeCshtml = ".code.cshtml";
+        public const string Cs = ".cs";
+        public const string ApiFolder = "api";
+    }
+
+    public class Purpose
+    {
+        public const string Auto = "auto";
+        public const string Razor = "razor";
+        public const string Token = "token";
+        public const string Api = "api";
+        public const string Search = "search";
+    }
+
     [PrivateApi]
     public abstract class AssetTemplates: HasLog<IAssetTemplates>, IAssetTemplates
     {
         protected AssetTemplates() : base("SxcAss.Templt")
         {
         }
+
+        public static TemplateInfo CsHtml = new TemplateInfo(TemplateKey.CsHtml, "CsHtml", Extension.Cshtml, Purpose.Razor);
+        public static TemplateInfo CsHtmlCode = new TemplateInfo(TemplateKey.CsHtmlCode, "CsHtmlCode", Extension.CodeCshtml, Purpose.Razor);
+        public static TemplateInfo CsCode = new TemplateInfo(TemplateKey.CsCode, "CsCode", Extension.Cs, Purpose.Auto);
+        public static TemplateInfo Api = new TemplateInfo(TemplateKey.Api, "WebApi", Extension.Cs, Purpose.Api);
+        public static TemplateInfo Token = new TemplateInfo(TemplateKey.Token, "Token", Extension.Html, Purpose.Token);
+        public static TemplateInfo CustomSearchCsCode = new TemplateInfo(TemplateKey.CustomSearchCsCode, "CustomSearchCsCode", Extension.Cs, Purpose.Search);
+
+        public List<TemplateInfo> GetTemplates()
+        {
+            if (_templateInfos == null)
+            {
+                _templateInfos = new List<TemplateInfo>
+                {
+                    CsHtml,
+                    CsHtmlCode,
+                    CsCode,
+                    Api,
+                    Token,
+                    CustomSearchCsCode
+                };
+
+                // prefill template body
+                foreach (var templateInfo in _templateInfos)
+                    templateInfo.Body = GetTemplate(templateInfo.Key);
+            }
+            return _templateInfos;
+        }
+
+        public TemplateInfo GetTemplateInfo(string key) => GetTemplates()
+            .FirstOrDefault(t => t.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase));
+
+        private static List<TemplateInfo> _templateInfos;
 
         public virtual string GetTemplate(string key)
         {
