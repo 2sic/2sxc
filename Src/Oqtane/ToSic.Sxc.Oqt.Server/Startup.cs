@@ -18,6 +18,9 @@ using ToSic.Sxc.Razor;
 using ToSic.Sxc.WebApi;
 using Factory = ToSic.Eav.Factory;
 using WebApiConstants = ToSic.Sxc.Oqt.Shared.WebApiConstants;
+using ToSic.Eav.Persistence.File;
+using ToSic.Eav.Caching;
+using System;
 
 namespace ToSic.Sxc.Oqt.Server
 {
@@ -82,7 +85,24 @@ namespace ToSic.Sxc.Oqt.Server
             // NOTE: On first installation of 2sxc module in oqtane, this code can not load all 2sxc global types
             // because it has dependency on ToSic_Eav_* sql tables, before this tables are actually created by oqtane 2.3.x,
             // but after next restart of oqtane application all is ok, and all 2sxc global types are loaded as expected
-            sp.Build<SystemLoader>().StartUp();
+            var sysLoader = sp.Build<SystemLoader>();
+            sysLoader.StartUp();
+
+            // 2021-11-16 2dm - experimental, working on moving global/preset data into a normal AppState #PresetInAppState
+            try
+            {
+                sysLoader.Log.Add("Try to load global app-state");
+                var globalStateLoader = sp.Build<FileAppStateLoaderWIP>();
+                var appState = globalStateLoader.AppState(0);
+                var appsMemCache = sp.Build<IAppsCache>();
+                appsMemCache.Add(appState);
+            }
+            catch (Exception ex)
+            {
+                sysLoader.Log.Add("Error");
+                sysLoader.Log.Exception(ex);
+            }
+            // End experimental #PresetInAppState
 
             // 2sxc Oqtane blob services for Imageflow.
             services.AddImageflowOqtaneBlobService();
@@ -90,6 +110,7 @@ namespace ToSic.Sxc.Oqt.Server
             // Help RazorBlade to have a proper best-practices ToJson
             // New v12.05
             ToSic.Razor.Internals.StartUp.RegisterToJson(JsonConvert.SerializeObject);
+
 
         }
 
