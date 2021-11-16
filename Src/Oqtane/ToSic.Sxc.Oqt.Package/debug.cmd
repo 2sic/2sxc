@@ -28,7 +28,8 @@ XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net6.0\ICSharpCode.SharpZipLib.
 
 @Echo(
 @Echo Copying refs folder for runtime compilation of Razor cshtml
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net6.0\refs\*.dll" "%OqtaneBin%refs\" /Y
+:: XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\refs\*.dll" "%OqtaneBin%refs\" /Y
+XCOPY "..\..\..\..\oqtane-razor-refs\net6.0\refs\*.dll" "%OqtaneBin%refs\" /Y
 
 @Echo(
 @Echo 2sxc Oqtane - Shared
