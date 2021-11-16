@@ -16,12 +16,13 @@ namespace ToSic.Sxc.WebApi.Assets
         /// <param name="content"></param>
         /// <param name="purpose">razor;token;search;api;auto</param>
         /// <returns></returns>
+        [Obsolete("This Method is Deprecated", false)]
         private string SanitizePathAndContent(string path, FileContentsDto content, string purpose)
         {
             var name = Path.GetFileName(path);
             var folder = Path.GetDirectoryName(path);
             var ext = Path.GetExtension(path);
-
+            
             // not sure what this is for, since I believe code should only get here if there was an ext and it's cshtml
             // probably just to prevent some very unexpected create
             if (name == null) name = "missing-name.txt";
@@ -71,6 +72,29 @@ namespace ToSic.Sxc.WebApi.Assets
             }
 
             return path;
+        }
+
+        private string GetTemplateContent(AssetFromTemplateDto assetFromTemplateDto)
+        {
+            var name = Path.GetFileName(assetFromTemplateDto.Path);
+            var ext = Path.GetExtension(assetFromTemplateDto.Path);
+            var nameWithoutExt = name.Substring(0, name.Length - ext.Length);
+
+            return _assetTemplates.GetTemplate(assetFromTemplateDto.TemplateKey)
+                .Replace(AssetTemplates.CsApiTemplateControllerName, nameWithoutExt)
+                .Replace(AssetTemplates.CsCodeTemplateName, nameWithoutExt);
+        }
+
+        private static void EnsureCshtmlStartWithUnderscore(AssetFromTemplateDto assetFromTemplateDto)
+        {
+            var name = Path.GetFileName(assetFromTemplateDto.Path);
+            if ((assetFromTemplateDto.TemplateKey == TemplateKey.CsHtml || assetFromTemplateDto.TemplateKey == TemplateKey.CsHtmlCode)
+                && !name.StartsWith(AssetEditor.CshtmlPrefix))
+            {
+                name = AssetEditor.CshtmlPrefix + name;
+                var folder = Path.GetDirectoryName(assetFromTemplateDto.Path) ?? "";
+                assetFromTemplateDto.Path = Path.Combine(folder, name);
+            }
         }
 
         [AssertionMethod]
