@@ -57,6 +57,7 @@ namespace ToSic.Sxc.WebApi.Assets
             return wrapLog(null, true);
         }
 
+        [Obsolete("This Method is Deprecated", false)]
         public bool Create(int appId, string path, FileContentsDto content, string purpose, bool global = false)
         {
             Log.Add($"create a#{appId}, path:{path}, global:{global}, purpose:{purpose}, cont-length:{content.Content?.Length}");
@@ -77,9 +78,21 @@ namespace ToSic.Sxc.WebApi.Assets
 
         public bool Create(AssetFromTemplateDto assetFromTemplateDto)
         {
-            var content = new FileContentsDto(); // empty content
-            var purpose = _assetTemplates.GetTemplateInfo(assetFromTemplateDto.TemplateKey).Purpose;
-            return Create(assetFromTemplateDto.AppId, assetFromTemplateDto.Path, content, purpose, assetFromTemplateDto.Global);
+            Log.Add($"create a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
+            assetFromTemplateDto.Path = assetFromTemplateDto.Path.Replace("/", "\\");
+
+            var thisApp = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, assetFromTemplateDto.AppId), Log);
+
+            // get and prepare template content
+            var content = GetTemplateContent(assetFromTemplateDto);
+
+            // ensure all .cshtml start with "_"
+            EnsureCshtmlStartWithUnderscore(assetFromTemplateDto);
+
+            var isAdmin = _user.IsAdmin;
+            var assetEditor = _assetEditorLazy.Value.Init(thisApp, assetFromTemplateDto.Path, _user.IsSuperUser, isAdmin, assetFromTemplateDto.Global, Log);
+            assetEditor.EnsureUserMayEditAssetOrThrow(assetFromTemplateDto.Path);
+            return assetEditor.Create(content);
         }
 
         public TemplatesDto GetTemplates(string purpose)
