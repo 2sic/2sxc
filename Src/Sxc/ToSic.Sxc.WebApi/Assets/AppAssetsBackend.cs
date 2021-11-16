@@ -82,9 +82,9 @@ namespace ToSic.Sxc.WebApi.Assets
             return Create(assetFromTemplateDto.AppId, assetFromTemplateDto.Path, content, purpose, assetFromTemplateDto.Global);
         }
 
-        public TemplatesDto GetTemplates(string purpose)
+        public TemplatesDto GetTemplates(string templateKey)
         {
-            var templateInfos = Templates.GetTemplates();
+            var templateInfos = Templates.GetTemplates().Where(t => t.Key.Equals(templateKey, StringComparison.InvariantCultureIgnoreCase)).ToList();
             
             // prefill template body
             foreach (var templateInfo in templateInfos)

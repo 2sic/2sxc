@@ -61,24 +61,24 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             [FromQuery] bool global = false
         ) => Backend().Get(appId, templateId, path, global);
 
-        /// <summary>
-        /// Create a new file (if it doesn't exist yet) and optionally prefill it with content
-        /// </summary>
-        /// <param name="appId"></param>
-        /// <param name="path"></param>
-        /// <param name="content"></param>
-        /// <param name="global">this determines, if the app-file store is the global in _default or the local in the current app</param>
-        /// <param name="purpose">auto;razor;token;api;search</param>
-        /// <returns></returns>
-        [Obsolete("This Method is Deprecated", false)]
-        [HttpPost]
-        public bool Create(
-            [FromQuery] int appId,
-            [FromQuery] string path,
-            [FromBody] FileContentsDto content, // note: as of 2020-09 the content is never submitted
-            [FromQuery] bool global,
-            [FromQuery] string purpose = Purpose.Auto
-        ) => Backend().Create(appId, path, content, purpose, global);
+        ///// <summary>
+        ///// Create a new file (if it doesn't exist yet) and optionally prefill it with content
+        ///// </summary>
+        ///// <param name="appId"></param>
+        ///// <param name="path"></param>
+        ///// <param name="content"></param>
+        ///// <param name="global">this determines, if the app-file store is the global in _default or the local in the current app</param>
+        ///// <param name="purpose">auto;razor;token;api;search</param>
+        ///// <returns></returns>
+        //[Obsolete("This Method is Deprecated", false)]
+        //[HttpPost]
+        //public bool Create(
+        //    [FromQuery] int appId,
+        //    [FromQuery] string path,
+        //    [FromBody] FileContentsDto content, // note: as of 2020-09 the content is never submitted
+        //    [FromQuery] bool global,
+        //    [FromQuery] string purpose = Purpose.Auto
+        //) => Backend().Create(appId, path, content, purpose, global);
 
         /// <summary>
         /// Update an asset with POST
@@ -103,9 +103,10 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// <summary>
         /// Get all asset template types
         /// </summary>
+        /// <param name="templateKey"></param>
         /// <returns></returns>
         [HttpGet]
-        public TemplatesDto GetTemplates(string purpose = null) => Backend().GetTemplates(purpose);
+        public TemplatesDto GetTemplates(string templateKey = null) => Backend().GetTemplates(templateKey);
 
         /// <summary>
         /// Create a new file from template
@@ -113,6 +114,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// <param name="assetFromTemplateDto">AssetFromTemplateDto</param>
         /// <returns></returns>
         [HttpPost]
-        public bool Create2(AssetFromTemplateDto assetFromTemplateDto) => Backend().Create(assetFromTemplateDto);
+        public bool Create(AssetFromTemplateDto assetFromTemplateDto) => Backend().Create(assetFromTemplateDto);
     }
 }
