@@ -72,7 +72,9 @@ namespace ToSic.Sxc.Oqt.Server
                     .AddAppApi(); // 2sxc Oqtane dyncode app api.
             });
 
-            var sp = services.BuildServiceProvider();
+
+            // TODO: stv - should move code bellow in Config
+            var sp = services.BuildServiceProvider(); // TODO: stv - avoid this
 
             sp.Build<IDbConfiguration>().ConnectionString = Configuration.GetConnectionString("DefaultConnection");
 
