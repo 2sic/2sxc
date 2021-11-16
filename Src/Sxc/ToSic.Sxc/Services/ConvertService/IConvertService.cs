@@ -88,6 +88,17 @@ namespace ToSic.Sxc.Services
         /// <returns></returns>
         bool ToBool(object value, bool fallback = default);
 
+        /// <summary>
+        /// Convert any object safely to decimal.
+        /// This does the same as <see cref="To{T}(object)"/> but this is easier to type in Razor.
+        /// </summary>
+        decimal ToDecimal(object value);
+
+        /// <summary>
+        /// Convert any object safely to decimal, or if that fails, return the fallback value.
+        /// This does the same as <see cref="To{T}(object)"/> but this is easier to type in Razor.
+        /// </summary>
+        decimal ToDecimal(object value, decimal fallback = default);
 
         /// <summary>
         /// Convert any object safely to double.
