@@ -78,17 +78,17 @@ namespace ToSic.Sxc.WebApi.Assets
         public bool Create(AssetFromTemplateDto assetFromTemplateDto)
         {
             var content = new FileContentsDto(); // empty content
-            var purpose = Templates.GetTemplates().First(t => t.Key == assetFromTemplateDto.TemplateKey).Purpose;
+            var purpose = _assetTemplates.GetTemplateInfo(assetFromTemplateDto.TemplateKey).Purpose;
             return Create(assetFromTemplateDto.AppId, assetFromTemplateDto.Path, content, purpose, assetFromTemplateDto.Global);
         }
 
-        public TemplatesDto GetTemplates(string templateKey)
+        public TemplatesDto GetTemplates(string purpose)
         {
-            var templateInfos = Templates.GetTemplates().Where(t => t.Key.Equals(templateKey, StringComparison.InvariantCultureIgnoreCase)).ToList();
-            
-            // prefill template body
-            foreach (var templateInfo in templateInfos)
-                templateInfo.Body = _assetTemplates.GetTemplate(templateInfo.Key);
+            var templateInfos = _assetTemplates.GetTemplates();
+
+            // filter by purpose, when provided
+            if (!string.IsNullOrEmpty(purpose))
+                templateInfos = templateInfos.Where(t => t.Purpose.Equals(purpose, StringComparison.InvariantCultureIgnoreCase)).ToList();
 
             return new TemplatesDto {Templates = templateInfos};
         }
