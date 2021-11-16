@@ -104,12 +104,12 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
 
 
-            // exp: access the anti forgery so it's loaded
-            //var temp = new Microsoft.AspNetCore.Antiforgery.AntiforgeryOptions();
-            //mvcBuilder.AddApplicationPart(typeof(Microsoft.AspNetCore.Antiforgery.AntiforgeryOptions).Assembly);
-            //LoadAssembliesForRazor(mvcBuilder, dllPath);
-            //var builderDebug = mvcBuilder.PartManager;
-        }
+        //    // exp: access the anti forgery so it's loaded
+        //    //var temp = new Microsoft.AspNetCore.Antiforgery.AntiforgeryOptions();
+        //    //mvcBuilder.AddApplicationPart(typeof(Microsoft.AspNetCore.Antiforgery.AntiforgeryOptions).Assembly);
+        //    //LoadAssembliesForRazor(mvcBuilder, dllPath);
+        //    //var builderDebug = mvcBuilder.PartManager;
+        //}
 
 
 
