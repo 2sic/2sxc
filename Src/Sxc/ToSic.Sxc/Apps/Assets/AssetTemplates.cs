@@ -49,8 +49,10 @@ namespace ToSic.Sxc.Apps.Assets
         public static TemplateInfo Token = new TemplateInfo(TemplateKey.Token, "Token", Extension.Html, Purpose.Token);
         public static TemplateInfo CustomSearchCsCode = new TemplateInfo(TemplateKey.CustomSearchCsCode, "CustomSearchCsCode", Extension.Cs, Purpose.Search);
 
-        public List<TemplateInfo> GetTemplates()
+        public virtual List<TemplateInfo> GetTemplates()
         {
+            var callLog = Log.Call<List<TemplateInfo>>(nameof(GetTemplates));
+
             if (_templateInfos == null)
             {
                 _templateInfos = new List<TemplateInfo>
@@ -65,46 +67,43 @@ namespace ToSic.Sxc.Apps.Assets
 
                 // prefill template body
                 foreach (var templateInfo in _templateInfos)
-                    templateInfo.Body = GetTemplate(templateInfo.Key);
-            }
-            return _templateInfos;
-        }
+                {
+                    switch (templateInfo.Key)
+                    {
+                        case TemplateKey.CsHtml:
+                            templateInfo.Body = DefaultCshtmlBody;
+                            break;
+                        case TemplateKey.CsHtmlCode:
+                            templateInfo.Body = DefaultCodeCshtmlBody;
+                            break;
+                        case TemplateKey.CsCode:
+                            templateInfo.Body = DefaultCsCode;
+                            break;
+                        case TemplateKey.Api:
+                            templateInfo.Body = DefaultWebApiBody;
+                            break;
+                        case TemplateKey.Token:
+                            templateInfo.Body = DefaultTokenHtmlBody;
+                            break;
+                        case TemplateKey.CustomSearchCsCode:
+                            templateInfo.Body = CustomsSearchCsCode;
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(templateInfo.Key), templateInfo.Key, null);
+                    }
+                }
 
-        public TemplateInfo GetTemplateInfo(string key) => GetTemplates()
-            .FirstOrDefault(t => t.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase));
+            }
+
+            return callLog(null, _templateInfos);
+        }
 
         private static List<TemplateInfo> _templateInfos;
 
-        public virtual string GetTemplate(string key)
-        {
-            var callLog = Log.Call<string>(key.ToString());
-            string result;
-            switch (key)
-            {
-                case TemplateKey.CsHtml:
-                    result = DefaultCshtmlBody;
-                    break;
-                case TemplateKey.CsHtmlCode:
-                    result = DefaultCodeCshtmlBody;
-                    break;
-                case TemplateKey.CsCode:
-                    result = DefaultCsCode;
-                    break;
-                case TemplateKey.Api:
-                    result = DefaultWebApiBody;
-                    break;
-                case TemplateKey.Token:
-                    result = DefaultTokenHtmlBody;
-                    break;
-                case TemplateKey.CustomSearchCsCode:
-                    result = CustomsSearchCsCode;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(key), key, null);
-            }
+        public virtual TemplateInfo GetTemplateInfo(string key) => GetTemplates()
+            .FirstOrDefault(t => t.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase));
 
-            return callLog(null, result);
-        }
+        public virtual string GetTemplate(string key) => GetTemplateInfo(key).Body;
 
         internal string DefaultTokenHtmlBody =>
             @"<p>
