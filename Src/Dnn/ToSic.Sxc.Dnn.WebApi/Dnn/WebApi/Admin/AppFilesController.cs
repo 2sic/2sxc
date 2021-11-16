@@ -43,24 +43,24 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             => Backend().Get(appId, templateId, path, global);
 
 
-        ///// <summary>
-        ///// Create a new file (if it doesn't exist yet) and optionally prefill it with content
-        ///// </summary>
-        ///// <param name="appId"></param>
-        ///// <param name="path"></param>
-        ///// <param name="content"></param>
-        ///// <param name="global">this determines, if the app-file store is the global in _default or the local in the current app</param>
-        ///// <param name="purpose">auto;razor;token;api;search</param>
-        ///// <returns></returns>
-        //[Obsolete("This Method is Deprecated", false)]
-        //[HttpPost]
-        //public bool Create(
-        //    [FromUri] int appId, 
-        //    [FromUri] string path,
-        //    [FromBody] FileContentsDto content, // note: as of 2020-09 the content is never submitted
-        //    [FromUri] bool global, 
-        //    [FromUri] string purpose = Purpose.Auto) 
-        //    => Backend().Create(appId, path, content, purpose, global);
+        /// <summary>
+        /// Create a new file (if it doesn't exist yet) and optionally prefill it with content
+        /// </summary>
+        /// <param name="appId"></param>
+        /// <param name="path"></param>
+        /// <param name="content"></param>
+        /// <param name="global">this determines, if the app-file store is the global in _default or the local in the current app</param>
+        /// <param name="purpose">auto;razor;token;api;search</param>
+        /// <returns></returns>
+        [Obsolete("This Method is Deprecated", false)]
+        [HttpPost]
+        public bool Create(
+            [FromUri] int appId,
+            [FromUri] string path,
+            [FromBody] FileContentsDto content, // note: as of 2020-09 the content is never submitted
+            [FromUri] bool global,
+            [FromUri] string purpose = Purpose.Auto)
+            => Backend().Create(appId, path, content, purpose, global);
 
 
 
@@ -96,7 +96,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <param name="assetFromTemplateDto">AssetFromTemplateDto</param>
         /// <returns></returns>
         [HttpPost]
-        public bool Create(AssetFromTemplateDto assetFromTemplateDto) => Backend().Create(assetFromTemplateDto);
+        public bool CreateTemplate(AssetFromTemplateDto assetFromTemplateDto) => Backend().Create(assetFromTemplateDto);
 
     }
 }
