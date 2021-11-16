@@ -6,6 +6,6 @@ namespace ToSic.Sxc.Apps.Assets
     [PrivateApi]
     public interface IAssetTemplates: IHasLog<IAssetTemplates>
     {
-        string GetTemplate(Type type);
+        string GetTemplate(string key);
     }
 }

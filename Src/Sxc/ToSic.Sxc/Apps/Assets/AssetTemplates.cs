@@ -13,35 +13,32 @@ namespace ToSic.Sxc.Apps.Assets
         {
         }
 
-        public virtual string GetTemplate(Type type)
+        public virtual string GetTemplate(string key)
         {
-            var callLog = Log.Call<string>(type.ToString());
+            var callLog = Log.Call<string>(key.ToString());
             string result;
-            switch (type)
+            switch (key)
             {
-                case Type.Unknown:
-                    result = "Unknown file type - cannot provide template";
-                    break;
-                case Type.CsHtml:
+                case Templates.Key.CsHtml:
                     result = DefaultCshtmlBody;
                     break;
-                case Type.CsHtmlCode:
+                case Templates.Key.CsHtmlCode:
                     result = DefaultCodeCshtmlBody;
                     break;
-                case Type.CsCode:
+                case Templates.Key.CsCode:
                     result = DefaultCsCode;
                     break;
-                case Type.WebApi:
+                case Templates.Key.Api:
                     result = DefaultWebApiBody;
                     break;
-                case Type.Token:
+                case Templates.Key.Token:
                     result = DefaultTokenHtmlBody;
                     break;
-                case Type.CustomSearchCsCode:
+                case Templates.Key.CustomSearchCsCode:
                     result = CustomsSearchCsCode;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                    throw new ArgumentOutOfRangeException(nameof(key), key, null);
             }
 
             return callLog(null, result);

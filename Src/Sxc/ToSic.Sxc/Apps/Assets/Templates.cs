@@ -11,12 +11,22 @@ namespace ToSic.Sxc.Apps.Assets
             _assetTemplates = assetTemplates;
         }
 
-        public static TemplateInfo CsHtml = new TemplateInfo("cshtml", "CsHtml", Extension.Cshtml, Purpose.Razor, "", Type.CsHtml);
-        public static TemplateInfo CsHtmlCode = new TemplateInfo("cshtml-code", "CsHtmlCode", Extension.CodeCshtml, Purpose.Razor, "", Type.CsHtmlCode);
-        public static TemplateInfo CsCode = new TemplateInfo("cs-code", "CsCode", Extension.Cs, Purpose.Auto, "", Type.CsCode);
-        public static TemplateInfo Api = new TemplateInfo("cs-api", "WebApi", Extension.Cs, Purpose.Api, "", Type.WebApi);
-        public static TemplateInfo Token = new TemplateInfo("html-token", "Token", Extension.Html, Purpose.Token, "", Type.Token);
-        public static TemplateInfo CustomSearchCsCode = new TemplateInfo("cs-code-custom-search", "CustomSearchCsCode", Extension.Cs, Purpose.Search, "", Type.CustomSearchCsCode);
+        public static class Key
+        {
+            public const string CsHtml = "cshtml";
+            public const string CsHtmlCode = "cshtml-code";
+            public const string CsCode = "cs-code";
+            public const string Api = "cs-api";
+            public const string Token = "html-token";
+            public const string CustomSearchCsCode = "cs-code-custom-search";
+        }
+
+        public static TemplateInfo CsHtml = new TemplateInfo(Key.CsHtml, "CsHtml", Extension.Cshtml, Purpose.Razor);
+        public static TemplateInfo CsHtmlCode = new TemplateInfo(Key.CsHtmlCode, "CsHtmlCode", Extension.CodeCshtml, Purpose.Razor);
+        public static TemplateInfo CsCode = new TemplateInfo(Key.CsCode, "CsCode", Extension.Cs, Purpose.Auto);
+        public static TemplateInfo Api = new TemplateInfo(Key.Api, "WebApi", Extension.Cs, Purpose.Api);
+        public static TemplateInfo Token = new TemplateInfo(Key.Token, "Token", Extension.Html, Purpose.Token);
+        public static TemplateInfo CustomSearchCsCode = new TemplateInfo(Key.CustomSearchCsCode, "CustomSearchCsCode", Extension.Cs, Purpose.Search);
 
         public static List<TemplateInfo> GetTemplates()
         {

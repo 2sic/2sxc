@@ -7,15 +7,13 @@
             string name ,
             string extension,
             string purpose,
-            string description = "",
-            Type type = Type.Unknown)
+            string description = "")
         {
             Key = key;
             Name = name;
             Extension = extension;
             Purpose = purpose;
             Description = description;
-            Type = type;
             Body = string.Empty;
         }
 
@@ -26,6 +24,5 @@
         public string Body { get; set;  }
         // will be removed
         internal string Purpose { get; }
-        internal Type Type { get; }
     }
 }
