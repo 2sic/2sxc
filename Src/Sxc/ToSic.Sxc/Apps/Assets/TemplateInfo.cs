@@ -16,7 +16,7 @@
             Purpose = purpose;
             Description = description;
             Type = type;
-            Body = "TODO";
+            Body = string.Empty;
         }
 
         public string Key { get; }
