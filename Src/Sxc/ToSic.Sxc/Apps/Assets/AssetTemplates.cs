@@ -19,22 +19,22 @@ namespace ToSic.Sxc.Apps.Assets
             string result;
             switch (key)
             {
-                case Templates.Key.CsHtml:
+                case TemplateKey.CsHtml:
                     result = DefaultCshtmlBody;
                     break;
-                case Templates.Key.CsHtmlCode:
+                case TemplateKey.CsHtmlCode:
                     result = DefaultCodeCshtmlBody;
                     break;
-                case Templates.Key.CsCode:
+                case TemplateKey.CsCode:
                     result = DefaultCsCode;
                     break;
-                case Templates.Key.Api:
+                case TemplateKey.Api:
                     result = DefaultWebApiBody;
                     break;
-                case Templates.Key.Token:
+                case TemplateKey.Token:
                     result = DefaultTokenHtmlBody;
                     break;
-                case Templates.Key.CustomSearchCsCode:
+                case TemplateKey.CustomSearchCsCode:
                     result = CustomsSearchCsCode;
                     break;
                 default:
