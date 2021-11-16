@@ -2,7 +2,7 @@
 @Echo the build folder (Debug or DebugOqtane) must be passed in as a parameter
 @set BuildFolder=%1
 @set Dev2sxcOqtaneRoot=c:\Projects\2sxc\oqtane\oqtane.framework\Oqtane.Server\
-@set OqtaneBin=%Dev2sxcOqtaneRoot%bin\%BuildFolder%\net5.0\
+@set OqtaneBin=%Dev2sxcOqtaneRoot%bin\%BuildFolder%\net6.0\
 
 @Echo(
 @Echo 2sxc Oqtane - Client
@@ -28,7 +28,8 @@ XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\ICSharpCode.SharpZipLib.
 
 @Echo(
 @Echo Copying refs folder for runtime compilation of Razor cshtml
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\refs\*.dll" "%OqtaneBin%refs\" /Y
+:: XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net5.0\refs\*.dll" "%OqtaneBin%refs\" /Y
+XCOPY "..\..\..\..\oqtane-razor-refs\net6.0\refs\*.dll" "%OqtaneBin%refs\" /Y
 
 @Echo(
 @Echo 2sxc Oqtane - Shared
