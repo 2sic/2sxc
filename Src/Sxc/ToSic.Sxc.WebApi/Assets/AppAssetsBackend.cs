@@ -88,7 +88,7 @@ namespace ToSic.Sxc.WebApi.Assets
             
             // prefill template body
             foreach (var templateInfo in templateInfos)
-                templateInfo.Body = _assetTemplates.GetTemplate(templateInfo.Type);
+                templateInfo.Body = _assetTemplates.GetTemplate(templateInfo.Key);
 
             return new TemplatesDto {Templates = templateInfos};
         }

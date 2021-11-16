@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 using ToSic.Sxc.Apps.Assets;
-using Type = ToSic.Sxc.Apps.Assets.Type;
 
 namespace ToSic.Sxc.WebApi.Assets
 {
@@ -35,14 +34,14 @@ namespace ToSic.Sxc.WebApi.Assets
                     {
                         var nameWithoutExt = name.Substring(0, name.Length - ext.Length);
                         content.Content =
-                            _assetTemplates.GetTemplate(Type.WebApi).Replace(AssetTemplates.CsApiTemplateControllerName, nameWithoutExt);
+                            _assetTemplates.GetTemplate(Templates.Key.Api).Replace(AssetTemplates.CsApiTemplateControllerName, nameWithoutExt);
                     }
                     else
                     {
                         var nameWithoutExt = name.Substring(0, name.Length - ext.Length);
                         content.Content = _assetTemplates.GetTemplate(purpose == Purpose.Search
-                                ? Type.CustomSearchCsCode
-                                : Type.CsCode)
+                                ? Templates.Key.CustomSearchCsCode
+                                : Templates.Key.CsCode)
                             .Replace(AssetTemplates.CsCodeTemplateName, nameWithoutExt);
                     }
                     break;
@@ -59,15 +58,15 @@ namespace ToSic.Sxc.WebApi.Assets
 
                         // first check the code-extension, because it's longer but also would contain the non-code extension
                         if (name.EndsWith(Extension.CodeCshtml))
-                            content.Content = _assetTemplates.GetTemplate(Type.CsHtmlCode);
+                            content.Content = _assetTemplates.GetTemplate(Templates.Key.CsHtmlCode);
                         else if (name.EndsWith(Extension.Cshtml))
-                            content.Content = _assetTemplates.GetTemplate(Type.CsHtml);
+                            content.Content = _assetTemplates.GetTemplate(Templates.Key.CsHtml);
                         break;
                     }
 
                 // .html files (Tokens)
                 case Extension.Html:
-                    content.Content = _assetTemplates.GetTemplate(Type.Token);
+                    content.Content = _assetTemplates.GetTemplate(Templates.Key.Token);
                     break;
             }
 
