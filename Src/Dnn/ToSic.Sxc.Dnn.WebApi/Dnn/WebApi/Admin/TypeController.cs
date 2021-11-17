@@ -65,7 +65,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public IDictionary<string, string> Scopes(int appId)
             => Backend.Init(appId, Log).Scopes();
-            //=> State.Get(appId).ContentTypes.GetAllScopesWithLabels();
 
         /// <summary>
         /// Used to be GET ContentTypes.
