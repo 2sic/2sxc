@@ -22,7 +22,8 @@
 
         public static PageFeature EditApi = new PageFeature("2sxc.EditApi", "2sxc inpage editing APIs", requires: new[]
         {
-            JQuery.Key, // 12.4.0 added because Oqtane 2.2 is not using jQury any more.
+            // #2492 2021-10-26 v12-07 we believe we don't need this any more
+            // JQuery.Key, // 12.4.0 added because Oqtane 2.2 is not using jQuery any more.
             Core.Key
         });
 
