@@ -1,10 +1,43 @@
-﻿using ToSic.Sxc.Apps.Assets;
+﻿using ToSic.Sxc.Context;
 
-namespace ToSic.Sxc.Dnn.WebApi
+namespace ToSic.Sxc.Apps.Assets
 {
-    public class DnnAssetTemplates : AssetTemplates
+    public partial class AssetTemplates
     {
-    internal override string CustomsSearchCsCode { get; } = @"using System;
+        public const string CsCodeTemplateName = "PleaseRenameClass";
+
+        /// <summary>
+        /// This only works for Dnn, Hybrid doesn't have this concept as we can't access functions from outside
+        /// </summary>
+        public static readonly TemplateInfo DnnCsCode =
+            new TemplateInfo(TemplateKey.CsHtmlCode, "Razor Code (Dnn only)", Extension.CodeCshtml, ForTemplate)
+            {
+                Body = @"@inherits Custom.Dnn.Razor12
+@* This inherits statement gets you features like App, CmsContext, Data as well as Dnn etc. - you can delete this comment *@
+@using ToSic.Razor.Blade;
+
+@functions {
+  public string Hello() {
+    return ""Hello from inner code"";
+  }
+
+  dynamic MessageHelper(string message) {
+    return Tag.Div(message + ""!"");
+  }
+}
+",
+                Description = "razor page c# code hybrid template",
+                PlatformTypes = PlatformType.Dnn,
+                Prefix = "_",
+            };
+
+
+
+
+        public static readonly TemplateInfo DnnSearch =
+            new TemplateInfo(TemplateKey.CustomSearchCsCode, "Dnn Search Integration (c#)", Extension.Cs, ForSearch)
+            {
+                Body = @"using System;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Sxc.Context;
@@ -50,6 +83,12 @@ public class " + CsCodeTemplateName + @" : Custom.Hybrid.Code12, ICustomizeSearc
         }
     }
 }
-";
+",
+                Description =
+                    "custom search c# code to customize how dnn search treats data of view, see https://r.2sxc.org/customize-search",
+                PlatformTypes = PlatformType.Dnn,
+            };
+
+        
     }
 }

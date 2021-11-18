@@ -18,21 +18,21 @@ namespace ToSic.Sxc.WebApi.Assets
         public AppAssetsBackend(TemplateHelpers templateHelpers,
             IUser user, 
             Lazy<AssetEditor> assetEditorLazy, 
-            IAssetTemplates assetTemplates, 
+            //IAssetTemplates assetTemplates, 
             IServiceProvider serviceProvider,
             IAppStates appStates) : base("Bck.Assets")
         {
 
             _templateHelpers = templateHelpers;
             _assetEditorLazy = assetEditorLazy;
-            _assetTemplates = assetTemplates;
+            _assetTemplates = new AssetTemplates().Init(Log); // assetTemplates;
             _serviceProvider = serviceProvider;
             _appStates = appStates;
             _user = user;
         }
         private readonly TemplateHelpers _templateHelpers;
         private readonly Lazy<AssetEditor> _assetEditorLazy;
-        private readonly IAssetTemplates _assetTemplates;
+        private readonly AssetTemplates _assetTemplates;
         private readonly IServiceProvider _serviceProvider;
         private readonly IAppStates _appStates;
         private readonly IUser _user;

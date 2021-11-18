@@ -40,7 +40,7 @@ namespace ToSic.Sxc.WebApi.Assets
                     else
                     {
                         var nameWithoutExt = name.Substring(0, name.Length - ext.Length);
-                        content.Content = _assetTemplates.GetTemplate(purpose == Purpose.Search
+                        content.Content = _assetTemplates.GetTemplate(purpose == AssetTemplates.ForSearch
                                 ? TemplateKey.CustomSearchCsCode
                                 : TemplateKey.CsCode)
                             .Replace(AssetTemplates.CsCodeTemplateName, nameWithoutExt);
@@ -61,7 +61,7 @@ namespace ToSic.Sxc.WebApi.Assets
                         if (name.EndsWith(Extension.CodeCshtml))
                             content.Content = _assetTemplates.GetTemplate(TemplateKey.CsHtmlCode);
                         else if (name.EndsWith(Extension.Cshtml))
-                            content.Content = _assetTemplates.GetTemplate(TemplateKey.CsHtml);
+                            content.Content = AssetTemplates.RazorHybrid.Body; // _assetTemplates.GetTemplate(TemplateKey.CsHtml);
                         break;
                     }
 
@@ -88,7 +88,7 @@ namespace ToSic.Sxc.WebApi.Assets
         private static void EnsureCshtmlStartWithUnderscore(AssetFromTemplateDto assetFromTemplateDto)
         {
             var name = Path.GetFileName(assetFromTemplateDto.Path);
-            if ((assetFromTemplateDto.TemplateKey == TemplateKey.CsHtml || assetFromTemplateDto.TemplateKey == TemplateKey.CsHtmlCode)
+            if ((assetFromTemplateDto.TemplateKey == AssetTemplates.RazorHybrid.Key /*TemplateKey.CsHtml*/ || assetFromTemplateDto.TemplateKey == TemplateKey.CsHtmlCode)
                 && !name.StartsWith(AssetEditor.CshtmlPrefix))
             {
                 name = AssetEditor.CshtmlPrefix + name;

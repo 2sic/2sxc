@@ -104,9 +104,6 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<IPagePublishing, Sxc.Dnn.Cms.DnnPagePublishing>();
             services.TryAddTransient<IPagePublishingResolver, Sxc.Dnn.Cms.DnnPagePublishingResolver>();
 
-            // Asset Templates
-            services.TryAddTransient<IAssetTemplates, DnnAssetTemplates>();
-
             if (appsCacheOverride != null)
             {
                 try

@@ -138,7 +138,6 @@
     <Compile Include="Dnn\WebApi\Cms\BlockController.cs" />
     <Compile Include="Dnn\WebApi\Cms\ListController.cs" />
     <Compile Include="Dnn\WebApi\Cms\ItemController.cs" />
-    <Compile Include="Dnn\WebApi\DnnAssetTemplates.cs" />
     <Compile Include="Dnn\WebApi\IDnnDynamicWebApi.cs" />
     <Compile Include="Dnn\WebApi\Sys\InstallController.cs" />
     <Compile Include="Dnn\WebApi\Sys\LogController.cs" />

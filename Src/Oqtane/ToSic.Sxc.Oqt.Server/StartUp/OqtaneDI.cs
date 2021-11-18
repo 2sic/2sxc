@@ -104,9 +104,6 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddTransient<OqtAppFolder>();
             services.TryAddTransient<AppAssetsDependencies>();
 
-            // Asset Templates
-            services.TryAddTransient<IAssetTemplates, OwtAssetTemplates>();
-
             // Lookup
             services.TryAddTransient<QueryStringLookUp>();
             services.TryAddTransient<SiteLookUp>();

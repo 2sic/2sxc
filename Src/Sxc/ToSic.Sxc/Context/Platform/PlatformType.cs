@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Documentation;
+﻿using System;
+using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Context
 {
@@ -6,7 +7,8 @@ namespace ToSic.Sxc.Context
     /// The types of platforms which 2sxc could be running on
     /// </summary>
     [PublicApi]
-    public enum PlatformType
+    [Flags]
+    public enum PlatformType : long
     {
         /// <summary>
         /// Unknown platform - this should never occur
@@ -16,31 +18,36 @@ namespace ToSic.Sxc.Context
         /// <summary>
         /// No platform - this should never occur
         /// </summary>
-        None = 1,
+        None = 1 << 0,
         
         /// <summary>
-        /// Not one of the here defined platforms - this should never occur
+        /// All platforms / hybrid. This should never be used to publish what a platform is, but to mark things that work on all platforms
         /// </summary>
-        Other = 2,
+        Hybrid = 1 << 1,
         
-        /// <summary>
-        /// Test platform - this should never occur in production code but could during automated testing
-        /// </summary>
-        Testing = 3,
-
         /// <summary>
         /// Dnn aka. DotNetNuke - see https://dnncommunity.org/
         /// </summary>
-        Dnn = 11,
+        Dnn = 1 << 2,
 
         /// <summary>
         /// Oqtane using .net Core 5 - see https://oqtane.org/
         /// </summary>
-        Oqtane = 12,
+        Oqtane = 1 << 3,
 
         /// <summary>
         /// NopCommerce using .net Core 5 (not implemented yet) - see https://www.nopcommerce.com/
         /// </summary>
-        NopCommerce = 21,
+        NopCommerce = 1 << 4,
+
+        /// <summary>
+        /// Custom platform - this should never occur in production code but could during automated testing
+        /// </summary>
+        Custom = 1L << 56,
+
+        /// <summary>
+        /// Test platform - this should never occur in production code but could during automated testing
+        /// </summary>
+        Test = 1L << 57,
     }
 }
