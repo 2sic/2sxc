@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
@@ -22,16 +23,21 @@ namespace ToSic.Sxc.Edit.Toolbar
             Settings = settings;
 
             // Case 1 - use the simpler string format in V10.27
-            if(settings is string || toolbar is string || prefill is string || ToolbarIsV10Format(toolbar))
+            var toolbarAsStringArray = ToolbarV10OrNull(toolbar);
+            if(settings is string || toolbar is string || prefill is string || toolbarAsStringArray != null)
             {
-                ToolbarV10 = toolbar == null
-                    ? new List<string>()
-                    : toolbar is string tlbString
-                        ? tlbString.Split('|').ToList() //new List<string> {tlbString}
-                        : (toolbar as IEnumerable<string>).ToList();
+                // 2021-11-18 fix https://github.com/2sic/2sxc/issues/2561 - preserve till EOY in case something else breaks
+                //ToolbarV10 = toolbar == null
+                //    ? new List<string>()
+                //    : toolbar is string tlbString
+                //        ? tlbString.Split('|').ToList() //new List<string> {tlbString}
+                //        : toolbarAsStringArray; // (toolbar as IEnumerable<string>).ToList();
+
+                // Make sure ToolbarV10 is a real object - this code could also run with toolbar being null
+                ToolbarV10 = toolbarAsStringArray ?? new List<string>();
 
                 // check conflicting prefill format
-                if(prefill != null && !(prefill is string))
+                if (prefill != null && !(prefill is string))
                     throw new Exception("Tried to build toolbar in new V10 format, but prefill is not a string. In V10.27+ it expects a string in url format like field=value&field2=value2");
 
                 TargetV10 = new ItemToolbarAction(entity) { contentType = newType, prefill = prefill };
@@ -95,12 +101,40 @@ namespace ToSic.Sxc.Edit.Toolbar
             return JsonConvert.SerializeObject(ToolbarV10);
         }
 
+        // 2021-11-18 fix https://github.com/2sic/2sxc/issues/2561 - preserve till EOY in case something else breaks
+        ///// <summary>
+        ///// Check if the configuration we got is a V10 Toolbar
+        ///// </summary>
+        ///// <param name="toolbar"></param>
+        ///// <returns></returns>
+        //private bool ToolbarIsV10Format(object toolbar)
+        //{
+        //    // Old - doesn't work because it's sometimes seen as an IEnumerable<object>
+        //    // return toolbar is IEnumerable<string> array && array.FirstOrDefault() != null;
+
+        //    if (!(toolbar is IEnumerable toolbarEnum)) return false;
+        //    if (!(toolbarEnum is IEnumerable<object> objEnum)) return false;
+        //    return objEnum.FirstOrDefault() is string;
+        //}
+
         /// <summary>
         /// Check if the configuration we got is a V10 Toolbar
         /// </summary>
         /// <param name="toolbar"></param>
         /// <returns></returns>
-        private bool ToolbarIsV10Format(object toolbar) => toolbar is IEnumerable<string> array && array.FirstOrDefault() != null;
+        private List<string> ToolbarV10OrNull(object toolbar)
+        {
+            // Note: This is a bit complex because previously we checked for this:
+            // return toolbar is IEnumerable<string> array && array.FirstOrDefault() != null;
+            // But that failed, because sometimes razor made the new [] { "..." } be an object list instead
+            // This is why it's more complex that you would intuitively do it - see https://github.com/2sic/2sxc/issues/2561
+
+            if (!(toolbar is IEnumerable<object> objEnum)) return null;
+            var asArray = objEnum.ToArray();
+            return !asArray.All(o => o is string) 
+                ? null 
+                : asArray.Select(o => o.ToString()).ToList();
+        }
 
         private string SettingsJson => JsonConvert.SerializeObject(Settings);
 
