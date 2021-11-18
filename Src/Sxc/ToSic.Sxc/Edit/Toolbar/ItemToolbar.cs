@@ -27,6 +27,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             if(settings is string || toolbar is string || prefill is string || toolbarAsStringArray != null)
             {
                 // 2021-11-18 fix https://github.com/2sic/2sxc/issues/2561 - preserve till EOY in case something else breaks
+                // #cleanup EOY 2021
                 //ToolbarV10 = toolbar == null
                 //    ? new List<string>()
                 //    : toolbar is string tlbString
@@ -102,6 +103,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         }
 
         // 2021-11-18 fix https://github.com/2sic/2sxc/issues/2561 - preserve till EOY in case something else breaks
+        // #cleanup EOY 2021
         ///// <summary>
         ///// Check if the configuration we got is a V10 Toolbar
         ///// </summary>
@@ -109,12 +111,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         ///// <returns></returns>
         //private bool ToolbarIsV10Format(object toolbar)
         //{
-        //    // Old - doesn't work because it's sometimes seen as an IEnumerable<object>
         //    // return toolbar is IEnumerable<string> array && array.FirstOrDefault() != null;
-
-        //    if (!(toolbar is IEnumerable toolbarEnum)) return false;
-        //    if (!(toolbarEnum is IEnumerable<object> objEnum)) return false;
-        //    return objEnum.FirstOrDefault() is string;
         //}
 
         /// <summary>
