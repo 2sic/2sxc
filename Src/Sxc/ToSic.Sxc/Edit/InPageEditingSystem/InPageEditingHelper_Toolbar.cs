@@ -16,49 +16,55 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         private readonly string innerContentAttribute = "data-list-context";
 
         /// <inheritdoc />
-        public HtmlString Toolbar(object target = null,
+        public HtmlString Toolbar(
+            object target = null,
             string noParamOrder = Eav.Parameters.Protector,
             string actions = null,
             string contentType = null,
+            object condition = null,
+            object metadataFor = null,
             object prefill = null,
-            object toolbar = null,
             object settings = null, 
-            object condition = null) 
-            => ToolbarInternal(false, target, noParamOrder, actions, contentType, prefill, toolbar,
-            settings, condition);
+            object toolbar = null) 
+            => ToolbarInternal(false, target, noParamOrder, actions, contentType, condition, metadataFor, prefill, settings, toolbar);
 
         /// <inheritdoc/>
-        public HtmlString TagToolbar(object target = null,
+        public HtmlString TagToolbar(
+            object target = null,
             string noParamOrder = Eav.Parameters.Protector,
             string actions = null,
             string contentType = null,
+            object condition = null,
+            object metadataFor = null,
             object prefill = null,
-            object toolbar = null,
             object settings = null,
-            object condition = null) 
-            => ToolbarInternal(true, target, noParamOrder, actions, contentType, prefill, toolbar,
-            settings, condition);
+            object toolbar = null) 
+            => ToolbarInternal(true, target, noParamOrder, actions, contentType, condition, metadataFor, prefill, settings, toolbar);
 
-        private HtmlString ToolbarInternal(bool inTag, object target,
+        private HtmlString ToolbarInternal(
+            bool inTag,
+            object target,
             string noParamOrder,
             string actions,
             string contentType,
+            object condition,
+            object metadataFor,
             object prefill,
-            object toolbar,
             object settings,
-            object condition)
+            object toolbar)
         {
             var wrapLog = Log.Call<HtmlString>($"enabled:{Enabled}; inline{inTag}");
             if (!Enabled) return wrapLog("not enabled", null);
             if (!IsConditionOk(condition)) return wrapLog("condition false", null);
 
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar", $"{nameof(actions)},{nameof(contentType)},{nameof(prefill)},{nameof(toolbar)},{nameof(settings)}");
+            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar", 
+                $"{nameof(actions)},{nameof(contentType)},{nameof(condition)},{nameof(metadataFor)},{nameof(prefill)},{nameof(settings)},{nameof(toolbar)}");
 
             // ensure that internally we always process it as an entity
             var eTarget = target as IEntity ?? (target as IDynamicEntity)?.Entity;
             if (target != null && eTarget == null)
                 Log.Warn("Creating toolbar - it seems the object provided was neither null, IEntity nor DynamicEntity");
-            var itmToolbar = new ItemToolbar(eTarget, actions, contentType, prefill, toolbar, settings);
+            var itmToolbar = new ItemToolbar(eTarget, actions, contentType, metadataFor, prefill: prefill, settings: settings, toolbar: toolbar);
 
             var result = inTag
                 ? Attribute("sxc-toolbar", itmToolbar.ToolbarAttribute())

@@ -111,6 +111,9 @@ namespace ToSic.Sxc
             // 12.06.01 moved here from WebApi, but it should probably be in Dnn as it's probably just used there
             services.TryAddTransient<IServerPaths, ServerPaths>();
 
+            // 13 - ToolbarService
+            services.TryAddTransient<IToolbarRuleService, ToolbarRuleService>();
+
             return services;
         }
 

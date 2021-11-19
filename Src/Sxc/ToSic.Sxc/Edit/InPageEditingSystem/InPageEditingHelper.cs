@@ -12,7 +12,8 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
     public partial class InPageEditingHelper : HasLog, IInPageEditingSystem
     {
-        internal InPageEditingHelper(IBlock block, ILog parentLog = null) : base("Edt", parentLog ?? block?.Log)
+        // TODO: Switch to being CodeBlock dependent and then use GetService
+        internal InPageEditingHelper(IBlock block, ILog parentLog = null) : base("Edit", parentLog ?? block?.Log)
         {
             Block = block;
             Enabled = Block?.Context.UserMayEdit ?? false;
