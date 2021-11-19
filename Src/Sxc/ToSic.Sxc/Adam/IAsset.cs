@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Adam
 {
@@ -8,7 +9,7 @@ namespace ToSic.Sxc.Adam
     /// This contains properties which both <see cref="IFolder"/> and <see cref="IFile"/> have in common.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public interface IAsset
+    public interface IAsset: IIsMetadataTarget
     {
         #region Metadata
         /// <summary>
@@ -29,7 +30,7 @@ namespace ToSic.Sxc.Adam
         /// Experimental
         /// </summary>
         [PrivateApi]
-        MetadataFor MetadataId { get; }
+        ITarget MetadataId { get; }
         #endregion
 
 

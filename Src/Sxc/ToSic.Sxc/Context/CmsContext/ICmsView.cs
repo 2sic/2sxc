@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Context
     /// Added in 2sxc 12.02
     /// </remarks>
     [PublicApi]
-    public interface ICmsView
+    public interface ICmsView: IHasMetadata
     {
         /// <summary>
         /// View configuration ID
