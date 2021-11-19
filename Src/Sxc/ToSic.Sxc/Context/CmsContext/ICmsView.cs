@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Context
 {
@@ -42,5 +43,12 @@ namespace ToSic.Sxc.Context
         /// </summary>
         string Edition { get; }
 
+        /// <summary>
+        /// Get the views Metadata
+        /// </summary>
+        /// <remarks>
+        /// Added in v12.10
+        /// </remarks>
+        IMetadataOf Metadata { get; }
     }
 }
