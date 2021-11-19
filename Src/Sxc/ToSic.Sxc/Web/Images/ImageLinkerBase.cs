@@ -62,14 +62,14 @@ namespace ToSic.Sxc.Web.Images
             ImgAddIfRelevant(resizerNvc, "scale", ImgResizeLinker.CorrectScales(sToUse));
             ImgAddIfRelevant(resizerNvc, "format", ImgResizeLinker.CorrectFormats(formToUse));
 
-            url = QueryHelper.AddQueryString(url, resizerNvc);
+            url = Url.UrlHelpers.AddQueryString(url, resizerNvc);
 
             var result = Tags.SafeUrl(url).ToString();
             wrapLog?.Invoke(result);
             return result;
         }
 
-        private bool ImgAddIfRelevant(NameValueCollection /*ICollection<KeyValuePair<string, string>>*/ resizer, string key, object value, string irrelevant = "")
+        private bool ImgAddIfRelevant(NameValueCollection resizer, string key, object value, string irrelevant = "")
         {
             var wrapLog = (Debug ? Log : null).SafeCall<bool>();
             if (key == null || value == null)

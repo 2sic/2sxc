@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Tests.WebTests
     public class QueryHelperTests
     {
         private static string AddQueryString(string url, NameValueCollection queryParams)
-            => ToSic.Sxc.Web.QueryHelper.AddQueryString(url, queryParams);
+            => ToSic.Sxc.Web.Url.UrlHelpers.AddQueryString(url, queryParams);
 
         private const string urlRelativeNoParams = "/xyz/abc.jpg";
         private const string urlHttpNoParams = "http://2sxc.org/xyz/abc.jpg";
