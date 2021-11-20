@@ -33,6 +33,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// </summary>
         [HttpGet]
         public IEnumerable<DataSourceDto> DataSources() 
+        // TODO: #42
             => GetService<QueryBackend>().Init(0, Log).DataSources();
 
         /// <summary>

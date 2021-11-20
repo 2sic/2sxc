@@ -113,7 +113,7 @@ namespace ToSic.Sxc.Oqt.Server
             {
                 sysLoader.Log.Add("Try to load global app-state");
                 var globalStateLoader = serviceProvider.Build<FileAppStateLoaderWIP>();
-                var appState = globalStateLoader.AppState(0);
+                var appState = globalStateLoader.AppState(Eav.Constants.PresetAppId);
                 var appsMemCache = serviceProvider.Build<IAppsCache>();
                 appsMemCache.Add(appState);
             }

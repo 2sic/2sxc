@@ -78,7 +78,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             {
                 sysLoader.Log.Add("Try to load global app-state");
                 var globalStateLoader = Eav.Factory.StaticBuild<FileAppStateLoaderWIP>();
-                var appState = globalStateLoader.AppState(0);
+                var appState = globalStateLoader.AppState(Eav.Constants.PresetAppId);
                 var appsMemCache = Eav.Factory.StaticBuild<IAppsCache>();
                 appsMemCache.Add(appState);
             }
