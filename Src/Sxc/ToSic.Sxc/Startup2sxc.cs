@@ -48,7 +48,10 @@ namespace ToSic.Sxc
             services.TryAddTransient<BlockDataSourceFactory>();
             services.TryAddTransient<BlockFromModule>();
             services.TryAddTransient<BlockFromEntity>();
-            services.TryAddTransient<IRenderService, RenderService>();  // new 12.05
+            services.TryAddTransient<Services.IRenderService, RenderService>();  // new 12.05
+#pragma warning disable CS0618
+            services.TryAddTransient<Blocks.IRenderService, RenderService>();  // Obsolete, but keep for the few apps we already released in v12
+#pragma warning restore CS0618
 
             // Configuration Provider WIP
             services.TryAddTransient<AppConfigDelegate>();
@@ -90,7 +93,11 @@ namespace ToSic.Sxc
             services.TryAddTransient<Polymorphism.Polymorphism>();
 
             // new in v12.02 - PageService & Page Features
-            services.TryAddTransient<IPageService, PageService>();  // must be unique per module where it's used
+            services.TryAddTransient<ToSic.Sxc.Services.IPageService, PageService>();  // must be unique per module where it's used
+#pragma warning disable CS0618
+            services.TryAddTransient<ToSic.Sxc.Web.IPageService, PageService>();  // Obsolete version, needed to keep old Apps working which used this
+#pragma warning restore CS0618
+
             services.TryAddScoped<PageServiceShared>();             // must be scoped / shared across all modules
             services.TryAddTransient<IPageFeatures, PageFeatures>();
             services.TryAddSingleton<IPageFeaturesManager, PageFeaturesManager>();

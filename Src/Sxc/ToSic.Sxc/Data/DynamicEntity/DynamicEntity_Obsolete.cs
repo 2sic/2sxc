@@ -2,6 +2,7 @@
 using ToSic.Eav;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Data
 {
@@ -40,7 +41,7 @@ namespace ToSic.Sxc.Data
             if (_Dependencies.CompatibilityLevel > Constants.MaxLevelForEntityDotRender)
                 throw new Exception("content.Render() is deprecated in the new RazorComponent. Use ToSic.Sxc.Blocks.Render.One(content) instead. See https://r.2sxc.org/EditToolbar");
 
-            return Factory.StaticBuild<IRenderService>().One(this);
+            return Factory.StaticBuild<Services.IRenderService>().One(this);
         }
 
         [PrivateApi("shouldn't be used, but it may be published by accident, so shouldn't be removed. ")]

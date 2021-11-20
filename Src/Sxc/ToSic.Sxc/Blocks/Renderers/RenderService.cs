@@ -19,7 +19,10 @@ namespace ToSic.Sxc.Blocks
     /// See also [](xref:Basics.Cms.InnerContent.Index)
     /// </summary>
     [PrivateApi("Hide Implementation")]
-    public class RenderService: IRenderService
+    public class RenderService: ToSic.Sxc.Services.IRenderService,
+#pragma warning disable CS0618
+        ToSic.Sxc.Blocks.IRenderService
+#pragma warning restore CS0618
     {
         /// <summary>
         /// Render one content block
