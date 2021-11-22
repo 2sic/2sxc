@@ -1,7 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Data;
-#if NET451
+#if NET472
 using IHtmlString = System.Web.IHtmlString;
 #else
 using IHtmlString = Microsoft.AspNetCore.Html.IHtmlContent;

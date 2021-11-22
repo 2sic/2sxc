@@ -1,7 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Data;
-#if NET451
+#if NET472
 using HtmlString = System.Web.HtmlString;
 #else
 using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
@@ -12,7 +12,7 @@ using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
 namespace ToSic.Sxc.Web
 {
     /// <summary>
-    /// Contains status and commands to configure the in-page editing system. 
+    /// Contains status and commands to configure the in-page editing system.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
     public interface IInPageEditingSystem
@@ -143,12 +143,12 @@ namespace ToSic.Sxc.Web
         /// 1. Introduced in 2sxc 8.4
         /// 1. Enhanced with apps in 10.27
         /// </remarks>
-        HtmlString ContextAttributes(IDynamicEntity target, 
-            string noParamOrder = Eav.Parameters.Protector, 
-            string field = null, 
+        HtmlString ContextAttributes(IDynamicEntity target,
+            string noParamOrder = Eav.Parameters.Protector,
+            string field = null,
             string contentType = null,
             Guid? newGuid = null,
-            string apps = null, 
+            string apps = null,
             int max = 100);
 
         /// <summary>
@@ -211,7 +211,7 @@ namespace ToSic.Sxc.Web
             bool? styles = null);
 
         /// <summary>
-        /// Generate an HTML attribute by converting the value to JSON 
+        /// Generate an HTML attribute by converting the value to JSON
         /// - but only in edit mode
         /// </summary>
         /// <param name="name">the attribute name, used for ...=</param>
@@ -220,7 +220,7 @@ namespace ToSic.Sxc.Web
         HtmlString Attribute(string name, string value);
 
         /// <summary>
-        /// Generate an HTML attribute by converting the value to JSON 
+        /// Generate an HTML attribute by converting the value to JSON
         /// - but only in edit mode
         /// </summary>
         /// <param name="name">the attribute name, used for ...=</param>

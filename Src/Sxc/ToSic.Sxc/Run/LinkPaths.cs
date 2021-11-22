@@ -1,4 +1,4 @@
-﻿#if NET451
+﻿#if NET472
 using System.Web;
 #else
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Run
     public class LinkPaths: ILinkPaths
     {
         public static string AppFolderPlaceholder = "[AppFolder]";
-        
+
 #if NETSTANDARD
         public LinkPaths(IUrlHelper urlHelper) => _urlHelper = urlHelper;
 
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Run
 //        }
 
 
-        //public string AppAssetsBase(ISite site, IApp app) 
+        //public string AppAssetsBase(ISite site, IApp app)
         //    //=> ToAbsolute(site.AppAssetsLinkTemplate.Replace(LinkPaths.AppFolderPlaceholder, app.Folder));
         //    => site.AppAssetsLinkTemplate.Replace(LinkPaths.AppFolderPlaceholder, app.Folder).ToAbsolutePathForwardSlash();
     }

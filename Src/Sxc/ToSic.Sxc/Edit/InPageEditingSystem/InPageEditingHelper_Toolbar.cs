@@ -2,7 +2,7 @@
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
 using IEntity = ToSic.Eav.Data.IEntity;
-#if NET451
+#if NET472
 using HtmlString = System.Web.HtmlString;
 #else
 using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
@@ -22,8 +22,8 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             string contentType = null,
             object prefill = null,
             object toolbar = null,
-            object settings = null, 
-            object condition = null) 
+            object settings = null,
+            object condition = null)
             => ToolbarInternal(false, target, noParamOrder, actions, contentType, prefill, toolbar,
             settings, condition);
 
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             object prefill = null,
             object toolbar = null,
             object settings = null,
-            object condition = null) 
+            object condition = null)
             => ToolbarInternal(true, target, noParamOrder, actions, contentType, prefill, toolbar,
             settings, condition);
 
@@ -85,7 +85,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             if (condition is string s &&
                 string.Equals(s, false.ToString(), StringComparison.InvariantCultureIgnoreCase))
                 return wrapLog("string false", false);
-            
+
             // Anything else: true
             return wrapLog("default,true", true);
         }

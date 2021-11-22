@@ -1,4 +1,4 @@
-﻿#if NET451
+﻿#if NET472
 using System.Web;
 using System.Web.Hosting;
 #else

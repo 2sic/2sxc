@@ -107,7 +107,7 @@ namespace ToSic.Sxc.LookUp
 
 
                 // old
-#if NET451
+#if NET472
                 provider.Add(new LookUpInNameValueCollection("querystring", paramList));
                 provider.Add(new LookUpInNameValueCollection("form", http.Request.Form));
                 //provider.Add(new LookUpInNameValueCollection("server", http.Request.ServerVariables)); // deprecated

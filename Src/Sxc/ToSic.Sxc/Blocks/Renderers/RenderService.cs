@@ -2,7 +2,7 @@
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Blocks.Renderers;
 using ToSic.Sxc.Data;
-#if NET451
+#if NET472
 using HtmlString = System.Web.HtmlString;
 using IHtmlString = System.Web.IHtmlString;
 #else
@@ -34,14 +34,14 @@ namespace ToSic.Sxc.Blocks
         /// <returns></returns>
         public IHtmlString One(DynamicEntity dynParent,
             string noParamOrder = Eav.Parameters.Protector,
-            IDynamicEntity item = null, 
+            IDynamicEntity item = null,
             string field = null,
             Guid? newGuid = null)
         {
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(One), $"{nameof(item)},{nameof(field)},{nameof(newGuid)}");
             if (item == null)
                 item = dynParent;
-            
+
             return new HtmlString(field == null
                 ? Simple.Render(dynParent._Dependencies.BlockOrNull, item.Entity) // with edit-context
                 : Simple.RenderWithEditContext(dynParent, item, field, newGuid) + "<b>data-list-context</b>"); // data-list-context (no edit-context)
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Blocks
         /// <returns></returns>
         public IHtmlString All(DynamicEntity context,
             string noParamOrder = Eav.Parameters.Protector,
-            string field = null, 
+            string field = null,
             string apps = null,
             int max = 100,
             string merge = null)

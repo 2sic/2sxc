@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using ToSic.Eav.Documentation;
-#if NET451
+#if NET472
 using System.Web;
 #else
 using Microsoft.AspNetCore.Http;
@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Web
 {
     /// <summary>
     /// Goal is that anything on this will be able to provide HttpContext operations as needed
-    /// To abstract .net451 and .net core
+    /// To abstract .net472 and .net core
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
     public interface IHttp
@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Web
         HttpContext Current { get; }
 
         /// <summary>
-        /// The standardized" HttpRequest object. It's type changes depending on the framework it's running in. 
+        /// The standardized" HttpRequest object. It's type changes depending on the framework it's running in.
         /// </summary>
         HttpRequest Request { get; }
 

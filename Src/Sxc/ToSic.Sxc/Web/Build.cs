@@ -1,6 +1,6 @@
 ﻿using System.Web;
 using ToSic.Eav.Documentation;
-#if NET451
+#if NET472
 using HtmlString = System.Web.HtmlString;
 #else
 using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Web
     public class Build
     {
         /// <summary>
-        /// Generate an HTML attribute 
+        /// Generate an HTML attribute
         /// - but only if in edit mode
         /// </summary>
         /// <param name="name"></param>
