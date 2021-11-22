@@ -48,7 +48,7 @@
             </script>
           </scripts>
         </component>
-        <!-- 
+        <!--
           Always flush the dist folder before installing new stuff - must always run before the module is installed!
           That means the node has to be in the xml-file before the Module nodes
         -->
@@ -109,14 +109,14 @@
           </eventMessage>
         </component>
 
-        <!-- 
-          2020-06 2dm: Previously 2sxc also included the copy-image-resizer 
-          which causes issues on update, because DNN thinks that image resizer was included with the 
+        <!--
+          2020-06 2dm: Previously 2sxc also included the copy-image-resizer
+          which causes issues on update, because DNN thinks that image resizer was included with the
           version which 2sxc has, like V9 or V10. That's why we must say we don't use it any more
         -->
         <component type="Assembly">
           <assemblies>
-            <!-- 2020-07-27 2dm try to pretend we need it, so it can then Unregister it again :( https://github.com/2sic/2sxc/issues/2126  
+            <!-- 2020-07-27 2dm try to pretend we need it, so it can then Unregister it again :( https://github.com/2sic/2sxc/issues/2126
                  If this works, it's because we need the UnRegister for upgrades, but can't have it on new installs without breaking the install -->
             <assembly>
               <name>ImageResizer.dll</name>
@@ -709,8 +709,8 @@
                         nameSpacePrefix="ab">
                     <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
                       <assemblyIdentity name="Microsoft.Extensions.DependencyInjection.Abstractions" publicKeyToken="adb9793829ddae60" />
-                      <codeBase version="1.1.0.0" href="bin\2sxc\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-1.32767.32767.32767" newVersion="1.1.0.0"/>
+                      <codeBase version="2.1.1.0" href="bin\2sxc\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+                      <bindingRedirect oldVersion="0.0.0.0-2.32767.32767.32767" newVersion="2.1.0.0"/>
                     </dependentAssembly>
                   </node>
 
@@ -723,8 +723,8 @@
                         nameSpacePrefix="ab">
                     <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
                       <assemblyIdentity name="Microsoft.Extensions.DependencyInjection" publicKeyToken="adb9793829ddae60" />
-                      <codeBase version="1.1.0.0" href="bin\2sxc\Microsoft.Extensions.DependencyInjection.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-1.32767.32767.32767" newVersion="1.1.0.0"/>
+                      <codeBase version="2.1.1.0" href="bin\2sxc\Microsoft.Extensions.DependencyInjection.dll" />
+                      <bindingRedirect oldVersion="0.0.0.0-2.32767.32767.32767" newVersion="2.1.1.0"/>
                     </dependentAssembly>
                   </node>
 
