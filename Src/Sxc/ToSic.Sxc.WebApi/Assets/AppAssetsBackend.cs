@@ -101,7 +101,11 @@ namespace ToSic.Sxc.WebApi.Assets
 
             // TBD: future purpose implementation
 
-            return new TemplatesDto {Templates = templateInfos};
+            return new TemplatesDto
+            {
+                Default = AssetTemplates.RazorHybrid.Key,
+                Templates = templateInfos
+            };
         }
 
         private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(int appId, int templateId, bool global, string path)
