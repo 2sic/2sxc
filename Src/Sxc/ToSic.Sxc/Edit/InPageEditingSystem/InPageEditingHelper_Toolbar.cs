@@ -2,7 +2,7 @@
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
 using IEntity = ToSic.Eav.Data.IEntity;
-#if NET451
+#if NETFRAMEWORK
 using HtmlString = System.Web.HtmlString;
 #else
 using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
@@ -24,8 +24,8 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             object condition = null,
             object metadataFor = null,
             object prefill = null,
-            object settings = null, 
-            object toolbar = null) 
+            object settings = null,
+            object toolbar = null)
             => ToolbarInternal(false, target, noParamOrder, actions, contentType, condition, metadataFor, prefill, settings, toolbar);
 
         /// <inheritdoc/>
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             object metadataFor = null,
             object prefill = null,
             object settings = null,
-            object toolbar = null) 
+            object toolbar = null)
             => ToolbarInternal(true, target, noParamOrder, actions, contentType, condition, metadataFor, prefill, settings, toolbar);
 
         private HtmlString ToolbarInternal(
@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             if (!Enabled) return wrapLog("not enabled", null);
             if (!IsConditionOk(condition)) return wrapLog("condition false", null);
 
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar", 
+            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar",
                 $"{nameof(actions)},{nameof(contentType)},{nameof(condition)},{nameof(metadataFor)},{nameof(prefill)},{nameof(settings)},{nameof(toolbar)}");
 
             // ensure that internally we always process it as an entity
@@ -91,7 +91,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             if (condition is string s &&
                 string.Equals(s, false.ToString(), StringComparison.InvariantCultureIgnoreCase))
                 return wrapLog("string false", false);
-            
+
             // Anything else: true
             return wrapLog("default,true", true);
         }

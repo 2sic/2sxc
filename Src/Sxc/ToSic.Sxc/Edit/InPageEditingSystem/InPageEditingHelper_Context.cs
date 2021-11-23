@@ -5,7 +5,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web;
-#if NET451
+#if NETFRAMEWORK
 using HtmlString = System.Web.HtmlString;
 #else
 using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
@@ -13,15 +13,15 @@ using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
 
 namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
-    public partial class InPageEditingHelper 
+    public partial class InPageEditingHelper
     {
         #region Context Attributes
 
         /// <inheritdoc/>
         public HtmlString ContextAttributes(IDynamicEntity target,
-            string noParamOrder = Parameters.Protector, 
+            string noParamOrder = Parameters.Protector,
             string field = null,
-            string contentType = null, 
+            string contentType = null,
             Guid? newGuid = null,
             string apps = null,
             int max = 100)
@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
             if (field == null) throw new Exception("need parameter 'field'");
 
-            var serialized = JsonConvert.SerializeObject(new 
+            var serialized = JsonConvert.SerializeObject(new
             {
                 apps,
                 field,

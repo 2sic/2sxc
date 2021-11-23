@@ -1,4 +1,4 @@
-﻿#if NET451
+﻿#if NETFRAMEWORK
 using System.Web;
 using System.Web.Hosting;
 #else
