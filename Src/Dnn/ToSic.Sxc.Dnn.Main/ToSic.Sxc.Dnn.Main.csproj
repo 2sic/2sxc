@@ -71,7 +71,7 @@
     <PackageReference Include="DotNetNuke.Core" Version="9.4.4" />
     <PackageReference Include="DotNetNuke.DependencyInjection" Version="9.4.4" />
     <PackageReference Include="DotNetNuke.Web" Version="9.4.4" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.3" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Connect.Dnn.Koi, Version=1.3.0.27054, Culture=neutral, processorArchitecture=MSIL">
