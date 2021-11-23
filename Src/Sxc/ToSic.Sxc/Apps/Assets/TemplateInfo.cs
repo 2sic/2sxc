@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using ToSic.Sxc.Context;
 
@@ -39,7 +40,7 @@ namespace ToSic.Sxc.Apps.Assets
         /// <summary>
         /// Returns an array of platforms this template supports so the UI can pick
         /// </summary>
-        public IEnumerable<string> Platforms => PlatformTypes.ToString().Split(',');
+        public IEnumerable<string> Platforms => PlatformTypes.ToString().Split(',').Select(p => p.Trim());
 
         [JsonIgnore]
         public PlatformType PlatformTypes { get; set; } = PlatformType.Hybrid | PlatformType.Dnn | PlatformType.Oqtane;
