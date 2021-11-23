@@ -33,15 +33,15 @@ namespace ToSic.Sxc.Blocks
             Guid? newGuid = null) 
             => RenderService(parent).One(parent, noParamOrder, item, field, newGuid);
 
-        private static IRenderService RenderService(DynamicEntity parent)
+        private static Services.IRenderService RenderService(DynamicEntity parent)
         {
             // First do version checks - should not be allowed if compatibility is too low
             var compatibility = parent._Dependencies.CompatibilityLevel;
             if (compatibility > Constants.MaxLevelForStaticRender)
                 throw new Exception(
-                    "The static ToSic.Sxc.Blocks.Render can only be used in old Razor components. For v12+ use the IRenderService instead");
+                    "The static ToSic.Sxc.Blocks.Render can only be used in old Razor components. For v12+ use the ToSic.Sxc.Services.IRenderService instead");
 
-            return Eav.Factory.ObsoleteBuild<IRenderService>();
+            return Eav.Factory.ObsoleteBuild<Services.IRenderService>();
         }
 
         /// <summary>

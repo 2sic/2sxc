@@ -7,7 +7,7 @@ using IHtmlString = System.Web.IHtmlString;
 using IHtmlString = Microsoft.AspNetCore.Html.IHtmlContent;
 #endif
 
-namespace ToSic.Sxc.Blocks
+namespace ToSic.Sxc.Services
 {
     /// <summary>
     /// Block-Rendering system. It's responsible for taking a Block and delivering HTML for the output. <br/>
@@ -16,6 +16,10 @@ namespace ToSic.Sxc.Blocks
     /// </summary>
     /// <remarks>
     /// This replaces the now obsolete ToSic.Sxc.Blocks.Render
+    ///
+    /// History
+    /// * Introduced in v12.05 but on another namespace which still works for compatibility
+    /// * Moved to ToSic.Sxc.Services in v13
     /// </remarks>
     [PublicApi_Stable_ForUseInYourCode]
     public interface IRenderService

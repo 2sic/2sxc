@@ -4,7 +4,7 @@ using ToSic.Eav.Documentation;
 namespace ToSic.Sxc.Web.PageService
 {
     /// <summary>
-    /// This controller should collect what all the <see cref="IPageService"/> objects do, for use on the final page
+    /// This controller should collect what all the <see cref="ToSic.Sxc.Services.IPageService"/> objects do, for use on the final page
     /// It must be scoped, so that it's the same object across the entire page-lifecycle.
     /// </summary>
     public partial class PageServiceShared: IChangeQueue

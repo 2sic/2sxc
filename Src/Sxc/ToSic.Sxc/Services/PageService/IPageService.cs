@@ -1,17 +1,20 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Documentation;
 using ToSic.Razor.Markup;
-// ReSharper disable UnusedMember.Global
+using ToSic.Sxc.Web;
 
-// ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Web
+// ReSharper disable UnusedMember.Global
+namespace ToSic.Sxc.Services
 {
 
     /// <summary>
     /// Make changes to the page - usually from Razor.
     /// </summary>
     /// <remarks>
-    /// Introduced in 2sxc 12.02
+    ///
+    /// History
+    /// * Introduced in v12.02 but on another namespace which still works for compatibility
+    /// * Moved to ToSic.Sxc.Services in v13
     /// </remarks>
     [PublicApi_Stable_ForUseInYourCode]
     public interface IPageService
@@ -145,9 +148,6 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <param name="keys"></param>
         void Activate(params string[] keys);
-
-        //[PrivateApi]
-        //IPageFeatures Features { get; }
 
         #endregion
     }
