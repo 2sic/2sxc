@@ -26,7 +26,7 @@ namespace ToSic.Sxc
 
         public class Installation
         {
-            public const string CurrentReleaseVersion = "12.08.02";
+            public const string CurrentReleaseVersion = "12.10.00";
 
             // todo: Maybe this list can somehow be extracted from the module manifest or placed there...
             internal static readonly string[] UpgradeVersionList =
