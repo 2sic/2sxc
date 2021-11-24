@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace ToSic.Sxc.Apps.Assets
+﻿namespace ToSic.Sxc.Apps.Assets
 {
     public partial class AssetTemplates
     {
