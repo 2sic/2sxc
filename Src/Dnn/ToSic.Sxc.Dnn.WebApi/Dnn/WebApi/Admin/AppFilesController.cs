@@ -78,6 +78,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public bool Asset([FromUri] int appId, [FromBody] AssetEditInfo template,
             [FromUri] int templateId = 0, [FromUri] string path = null, // identifier is either template Id or path
             // todo w/SPM - global never seems to be used - must check why and if we remove or add to UI
+            // TODO: NEW PARAM TEMPLATEKey SHOULD BE USED TO CREATE THE FILE
             [FromUri] bool global = false) 
             => Backend().Save(appId: appId, template: template, templateId: templateId, global: global, path: path);
 
