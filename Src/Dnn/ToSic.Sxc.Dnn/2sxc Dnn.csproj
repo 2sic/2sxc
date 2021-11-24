@@ -54,17 +54,24 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DotNetNuke">
-      <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\Dnn944\DotNetNuke.dll</HintPath>
+      <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="DotNetNuke.Web">
-      <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.Web.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\Dnn944\DotNetNuke.Web.dll</HintPath>
+      <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="DotNetNuke.Web.Client">
-      <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.Web.Client.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\Dnn944\DotNetNuke.Web.Client.dll</HintPath>
+      <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="DotNetNuke.WebUtility, Version=4.2.1.783, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\Dependencies\Dnn944\DotNetNuke.WebUtility.dll</HintPath>
+      <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.WebUtility.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />

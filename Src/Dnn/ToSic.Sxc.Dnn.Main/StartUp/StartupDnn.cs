@@ -41,21 +41,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             if (_alreadyConfigured)
                 return;
 
-            var appsCache = GetAppsCacheOverride();
-            Eav.Factory.ActivateNetCoreDi(services =>
-            {
-                services
-                    .AddDnn(appsCache)
-                    .AddAdamWebApi<int, int>()
-                    .AddSxcWebApi()
-                    .AddSxcCore()
-                    .AddEav();
-                
-                // temp polymorphism - later put into AddPolymorphism
-                services.TryAddTransient<Koi>();
-                services.TryAddTransient<Permissions>();
-                
-            });
+            DiRegister();
 
             // Configure Newtonsoft Time zone handling
             // Moved here in v12.05 - previously it was in the Pre-Serialization converter
@@ -91,12 +77,38 @@ namespace ToSic.Sxc.Dnn.StartUp
             _alreadyConfigured = true;
         }
 
+        private static bool _alreadyRegistrated;
+
+        internal static void DiRegister()
+        {
+            if (_alreadyRegistrated)
+                return;
+
+            var appsCache = GetAppsCacheOverride();
+            Eav.Factory.ActivateNetCoreDi(services =>
+            {
+                services
+                    .AddDnn(appsCache)
+                    .AddAdamWebApi<int, int>()
+                    .AddSxcWebApi()
+                    .AddSxcCore()
+                    .AddEav();
+
+                // temp polymorphism - later put into AddPolymorphism
+                services.TryAddTransient<Koi>();
+                services.TryAddTransient<Permissions>();
+
+            });
+
+            _alreadyRegistrated = true;
+        }
+
 
         /// <summary>
         /// Expects something like "ToSic.Sxc.Dnn.DnnAppsCacheFarm, ToSic.Sxc.Dnn.Enterprise" - namespaces + class, DLL name without extension
         /// </summary>
         /// <returns></returns>
-        private string GetAppsCacheOverride()
+        private static string GetAppsCacheOverride()
         {
             var farmCacheName = ConfigurationManager.AppSettings["EavAppsCache"];
             if (string.IsNullOrWhiteSpace(farmCacheName)) return null;
