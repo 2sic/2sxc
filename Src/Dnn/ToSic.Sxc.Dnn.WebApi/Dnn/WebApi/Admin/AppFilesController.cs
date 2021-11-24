@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [DnnLogExceptions]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public class AppFilesController : SxcApiControllerBase
+    public class AppFilesController : SxcApiControllerBase, IAppFilesController
     {
         protected override string HistoryLogName => "Api.Assets";
 
