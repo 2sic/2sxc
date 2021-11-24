@@ -205,14 +205,14 @@
               <path>bin\2sxc</path>
               <name>Microsoft.Extensions.Caching.Memory.dll</name>
             </assembly>
-            <assembly>
+            <!--<assembly>
               <path>bin\2sxc</path>
               <name>Microsoft.Extensions.DependencyInjection.Abstractions.dll</name>
             </assembly>
             <assembly>
               <path>bin\2sxc</path>
               <name>Microsoft.Extensions.DependencyInjection.dll</name>
-            </assembly>
+            </assembly>-->
             <assembly>
               <path>bin\2sxc</path>
               <name>Microsoft.Extensions.Logging.Abstractions.dll</name>
@@ -700,8 +700,8 @@
                     </dependentAssembly>
                   </node>
 
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.DependencyInjection.Abstractions.dll, version 1.1.0.0 -->
-                  <node path="/configuration/runtime/ab:assemblyBinding"
+                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.DependencyInjection.Abstractions.dll, version 2.1.1.0 -->
+                  <!--<node path="/configuration/runtime/ab:assemblyBinding"
                         action="update"
                         collision="overwrite"
                         targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.DependencyInjection.Abstractions'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]"
@@ -709,13 +709,13 @@
                         nameSpacePrefix="ab">
                     <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
                       <assemblyIdentity name="Microsoft.Extensions.DependencyInjection.Abstractions" publicKeyToken="adb9793829ddae60" />
-                      <codeBase version="1.1.0.0" href="bin\2sxc\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-1.32767.32767.32767" newVersion="1.1.0.0"/>
+                      <codeBase version="2.1.1.0" href="bin\2sxc\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+                      <bindingRedirect oldVersion="0.0.0.0-2.1.32767.32767" newVersion="2.1.1.0"/>
                     </dependentAssembly>
-                  </node>
+                  </node>-->
 
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.DependencyInjection.dll, version 1.1.0.0 -->
-                  <node path="/configuration/runtime/ab:assemblyBinding"
+                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.DependencyInjection.dll, version 2.1.1.0 -->
+                  <!--<node path="/configuration/runtime/ab:assemblyBinding"
                         action="update"
                         collision="overwrite"
                         targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.DependencyInjection'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]"
@@ -723,10 +723,10 @@
                         nameSpacePrefix="ab">
                     <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
                       <assemblyIdentity name="Microsoft.Extensions.DependencyInjection" publicKeyToken="adb9793829ddae60" />
-                      <codeBase version="1.1.0.0" href="bin\2sxc\Microsoft.Extensions.DependencyInjection.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-1.32767.32767.32767" newVersion="1.1.0.0"/>
+                      <codeBase version="2.1.1.0" href="bin\2sxc\Microsoft.Extensions.DependencyInjection.dll" />
+                      <bindingRedirect oldVersion="0.0.0.0-2.1.32767.32767" newVersion="2.1.1.0"/>
                     </dependentAssembly>
-                  </node>
+                  </node>-->
 
                   <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.Logging.Abstractions.dll, version 1.1.1.0 -->
                   <node path="/configuration/runtime/ab:assemblyBinding"

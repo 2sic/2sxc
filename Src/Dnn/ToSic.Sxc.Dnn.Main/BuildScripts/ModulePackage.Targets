@@ -115,8 +115,8 @@
       <Assembly2sxcInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.SqlServer.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Caching.Abstractions.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Caching.Memory.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.dll" />
+      <!--<Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.dll" />-->
       <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Logging.Abstractions.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Logging.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Options.dll" />
