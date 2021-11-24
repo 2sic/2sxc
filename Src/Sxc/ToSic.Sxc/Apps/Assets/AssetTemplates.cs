@@ -70,6 +70,7 @@ namespace ToSic.Sxc.Apps.Assets
                 DnnSearch,
                 Markdown,
                 EmptyTextFile,
+                EmptyFile,
             };
 
             return callLog(null, _templates);

@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Apps.Assets
         // Place the keys, etc. here and use these objects for the constant (don't create separate template-key object etc.)
         // then _don't_ put this in an abstract class, just in an own class containing all the data
         // ...and put your 
-        public static readonly TemplateInfo RazorHybrid = new TemplateInfo("cshtml-hybrid", "Razor Hybrid", Extension.Cshtml, ForTemplate)
+        public static readonly TemplateInfo RazorHybrid = new TemplateInfo("cshtml-hybrid", "Razor Hybrid", Extension.Cshtml, ForTemplate, "DetailsTemplate")
         {
             Body = @"@inherits Custom.Hybrid.Razor12
 @* This inherits statement gets you features like App, CmsContext, Data etc. - you can delete this comment *@
@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Apps.Assets
         };
 
         public static readonly TemplateInfo CsHybrid =
-            new TemplateInfo(TemplateKey.CsCode, "C# Code Hybrid", Extension.Cs, ForCode)
+            new TemplateInfo(TemplateKey.CsCode, "C# Code Hybrid", Extension.Cs, ForCode, "Helpers")
             {
                 Body = @"// Important notes:
 // - This class should have the same name as the file it's in
@@ -42,7 +42,7 @@ public class " + CsCodeTemplateName + @" : Custom.Hybrid.Code12 {
 
 
         public static readonly TemplateInfo ApiHybrid =
-            new TemplateInfo(TemplateKey.Api, "WebApi Hybrid", Extension.Cs, ForApi)
+            new TemplateInfo(TemplateKey.Api, "WebApi Hybrid", Extension.Cs, ForApi, "My")
             {
                 Body = @"#if NETCOREAPP // Oqtane
 using Microsoft.AspNetCore.Authorization;
