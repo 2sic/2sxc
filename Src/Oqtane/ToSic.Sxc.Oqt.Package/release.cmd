@@ -14,5 +14,5 @@ robocopy /mir "%Dev2sxcAssets%\system\ " "%BuildTarget%\system\ "
 robocopy /mir "..\..\..\..\..\2sxc-dnn742\Website\DesktopModules\ToSIC_SexyContent\ImportExport\ " "%BuildTarget%\system\ImportExport\ "
 
 
-"c:\Projects\2sxc\oqtane\oqtane.framework\oqtane.package\nuget.exe" pack ToSic.Sxc.nuspec
+.nuget\nuget.exe pack ToSic.Sxc.nuspec
 XCOPY "*.nupkg" "c:\Projects\2sxc\2sxc\InstallPackages\OqtaneModule\" /Y

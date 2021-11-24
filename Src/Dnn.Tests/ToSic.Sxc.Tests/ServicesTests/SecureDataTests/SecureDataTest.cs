@@ -2,20 +2,19 @@
 using System.Diagnostics;
 using ToSic.Eav.Security.Encryption;
 using ToSic.Sxc.Services;
-using ToSic.Testing.Shared;
 using static ToSic.Sxc.Services.SecureDataService;
 
 namespace ToSic.Sxc.Tests.ServicesTests.SecureDataTests
 {
     [TestClass]
-    public class SecureDataTest: EavTestBase
+    public class SecureDataTest: TestBaseSxc
     {
-        private ISecureDataService GetSDS() => Resolve<ISecureDataService>();
+        private ISecureDataService GetSDS() => Build<ISecureDataService>();
 
         [TestMethod] public void NonSecret() => TestDecryptNoSecret("Test");
 
-        [TestMethod] public void NonSecretWithPrefix() => TestDecryptNoSecret(PrefixSecure + "Test", "Test");
-        [TestMethod] public void NonSecretWithLowPrefix() => TestDecryptNoSecret(PrefixSecure.ToLowerInvariant() + "Test", "Test");
+        [TestMethod] public void NonSecretWithPrefix() => TestDecryptNoSecret(PrefixSecure + "Test", "Secure:Test");
+        [TestMethod] public void NonSecretWithLowPrefix() => TestDecryptNoSecret(PrefixSecure.ToLowerInvariant() + "Test", "secure:Test");
 
 
         private const string TestGoogleApiKey = "Made-Up-Google-Maps-Key3423";

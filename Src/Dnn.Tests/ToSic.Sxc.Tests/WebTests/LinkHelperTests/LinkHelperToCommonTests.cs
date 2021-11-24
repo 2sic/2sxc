@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
 {

@@ -16,10 +16,8 @@ namespace ToSic.Sxc.Data
             serializer.Serialize(writer, hasJsonSource.JsonSource);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            throw new NotImplementedException();
-        }
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) 
+            => throw new NotSupportedException();
 
         public override bool CanConvert(Type objectType) => objectType == typeof(IHasJsonSource);
     }

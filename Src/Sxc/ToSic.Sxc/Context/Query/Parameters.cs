@@ -25,8 +25,22 @@ namespace ToSic.Sxc.Context.Query
             {
                 if (_originalsAsDic != null) return _originalsAsDic;
                 _originalsAsDic = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
-                foreach (var key in _originals.Keys) 
-                    _originalsAsDic[key.ToString()] = _originals[key.ToString()];
+                foreach (var key in _originals.Keys)
+                {
+                    // key is usually as string, but sometimes it's null
+                    // we're not sure if DNN is breaking this, or if it should really be like this
+                    var stringKey = key as string;
+                    if (stringKey != null)
+                        _originalsAsDic[stringKey] = _originals[stringKey];
+                    else
+                    {
+                        var nullValues = _originals[stringKey];
+                        if (nullValues != null)
+                            foreach (var nullKey in nullValues.Split(','))
+                                if(!string.IsNullOrEmpty(nullKey) && !_originalsAsDic.ContainsKey(nullKey))
+                                    _originalsAsDic[nullKey] = null;
+                    }
+                }
                 return _originalsAsDic;
             }
         }

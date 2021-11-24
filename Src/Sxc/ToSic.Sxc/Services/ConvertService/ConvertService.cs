@@ -41,6 +41,10 @@ namespace ToSic.Sxc.Services
         public float ToFloat(object value) => To<float>(value);
         public float ToFloat(object value, float fallback = 0F) => To(value, fallback: fallback);
 
+        public decimal ToDecimal(object value) => To<decimal>(value);
+
+        public decimal ToDecimal(object value, decimal fallback = 0m) => To<decimal>(value, fallback: fallback);
+
         public double ToDouble(object value) => To<double>(value);
         public double ToDouble(object value, double fallback = 0D) => To(value, fallback: fallback);
 

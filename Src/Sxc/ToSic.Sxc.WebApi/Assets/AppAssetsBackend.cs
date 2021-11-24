@@ -15,22 +15,21 @@ namespace ToSic.Sxc.WebApi.Assets
 
         public AppAssetsBackend(TemplateHelpers templateHelpers,
             IUser user, 
-            Lazy<AssetEditor> assetEditorLazy, 
-            IAssetTemplates assetTemplates, 
+            Lazy<AssetEditor> assetEditorLazy,
             IServiceProvider serviceProvider,
             IAppStates appStates) : base("Bck.Assets")
         {
 
             _templateHelpers = templateHelpers;
             _assetEditorLazy = assetEditorLazy;
-            _assetTemplates = assetTemplates;
+            _assetTemplates = new AssetTemplates().Init(Log);
             _serviceProvider = serviceProvider;
             _appStates = appStates;
             _user = user;
         }
         private readonly TemplateHelpers _templateHelpers;
         private readonly Lazy<AssetEditor> _assetEditorLazy;
-        private readonly IAssetTemplates _assetTemplates;
+        private readonly AssetTemplates _assetTemplates;
         private readonly IServiceProvider _serviceProvider;
         private readonly IAppStates _appStates;
         private readonly IUser _user;
@@ -55,6 +54,7 @@ namespace ToSic.Sxc.WebApi.Assets
             return wrapLog(null, true);
         }
 
+        [Obsolete("This Method is Deprecated", false)]
         public bool Create(int appId, string path, FileContentsDto content, string purpose, bool global = false)
         {
             Log.Add($"create a#{appId}, path:{path}, global:{global}, purpose:{purpose}, cont-length:{content.Content?.Length}");
@@ -73,6 +73,38 @@ namespace ToSic.Sxc.WebApi.Assets
             return assetEditor.Create(content.Content);
         }
 
+        public bool Create(AssetFromTemplateDto assetFromTemplateDto)
+        {
+            Log.Add($"create a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
+            assetFromTemplateDto.Path = assetFromTemplateDto.Path.Replace("/", "\\");
+
+            var thisApp = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, assetFromTemplateDto.AppId), Log);
+
+            // get and prepare template content
+            var content = GetTemplateContent(assetFromTemplateDto);
+
+            // ensure all .cshtml start with "_"
+            EnsureCshtmlStartWithUnderscore(assetFromTemplateDto);
+
+            var isAdmin = _user.IsAdmin;
+            var assetEditor = _assetEditorLazy.Value.Init(thisApp, assetFromTemplateDto.Path, _user.IsSuperUser, isAdmin, assetFromTemplateDto.Global, Log);
+            assetEditor.EnsureUserMayEditAssetOrThrow(assetFromTemplateDto.Path);
+            return assetEditor.Create(content);
+        }
+
+        public TemplatesDto GetTemplates(string purpose)
+        {
+            var templateInfos = _assetTemplates.GetTemplates();
+
+            // TBD: future purpose implementation
+
+            return new TemplatesDto
+            {
+                Default = AssetTemplates.RazorHybrid.Key,
+                Templates = templateInfos
+            };
+        }
+
         private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(int appId, int templateId, bool global, string path)
         {
             var wrapLog = Log.Call<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
@@ -85,5 +117,15 @@ namespace ToSic.Sxc.WebApi.Assets
             return wrapLog(null, assetEditor);
         }
 
+        // TODO STV
+        // - check if file can be created or already exists - if not, set Error-property
+        // - run the code that would generate the file, so the UI can show a real preview
+        public TemplatePreviewDto GetPreview(int appId, string path, string name, string templateKey, bool b)
+        {
+            return new TemplatePreviewDto()
+            {
+                Preview = _assetTemplates.GetTemplate(templateKey)
+            };
+        }
     }
 }

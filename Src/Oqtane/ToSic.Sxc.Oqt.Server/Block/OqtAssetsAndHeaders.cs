@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Oqt.Server.Block
 
             // v12.03, Oqtane 2.2 with Bootstrap 5 do not includes jQuery any more
             // as Oqtane 2.1 with Bootstrap 4
-            if (Features.Contains(BuiltInFeatures.JQuery) || AddJsEdit)
+            if (Features.Contains(BuiltInFeatures.JQuery)) // #2492 disabled:   || AddJsEdit)
                 list.Add("//code.jquery.com/jquery-3.5.1.min.js");
 
             if (AddJsCore) 

@@ -3,6 +3,8 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.DataSources;
+using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
 
@@ -28,7 +30,7 @@ namespace ToSic.Sxc.Adam
         /// <param name="app">the app which manages the metadata</param>
         /// <param name="mdId"></param>
         /// <returns></returns>
-        internal IEntity GetFirstMetadata(AppRuntime app, MetadataFor mdId)
+        internal IEntity GetFirstMetadata(AppRuntime app, ITarget mdId)
             => app.Metadata
                 .Get(mdId.TargetType, mdId.KeyString)
                 .FirstOrDefault();
@@ -36,7 +38,7 @@ namespace ToSic.Sxc.Adam
         /// <summary>
         /// Get the first metadata entity of an item - or return a fake one instead
         /// </summary>
-        internal IDynamicEntity GetFirstOrFake(AdamManager manager, MetadataFor mdId)
+        internal IDynamicEntity GetFirstOrFake(AdamManager manager, ITarget mdId)
         {
             var meta = GetFirstMetadata(manager.AppRuntime, mdId) 
                        ?? _dataBuilderLazy.Value.FakeEntity(Eav.Constants.TransientAppId);

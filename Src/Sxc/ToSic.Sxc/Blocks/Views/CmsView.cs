@@ -1,20 +1,15 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Metadata;
 using ToSic.Sxc.Context;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Blocks
 {
     [PrivateApi("Hide implementation")]
-    public class CmsView: Wrapper<IView>, ICmsView, IWrapper<IView>
+    public class CmsView: Wrapper<IView>, ICmsView
     {
-        public CmsView(IBlock block): base(block?.View)
-        {
-            // UnwrappedContents = block?.View;
-        }
-
-        //[PrivateApi]
-        //public IView UnwrappedContents { get; }
+        public CmsView(IBlock block): base(block?.View) { }
 
         /// <inheritdoc />
         public int Id => _contents?.Id ?? 0;
@@ -28,5 +23,6 @@ namespace ToSic.Sxc.Blocks
         /// <inheritdoc />
         public string Edition => _contents?.Edition;
 
+        public IMetadataOf Metadata => _contents.Metadata;
     }
 }

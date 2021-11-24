@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Version>12.08.00</Version>
+    <Version>12.10.00</Version>
     <Product>ToSic.Sxc</Product>
     <Authors>2sic</Authors>
     <Company>2sic</Company>
@@ -27,12 +27,16 @@
   <ItemGroup>
     <Compile Remove="Engines\**" />
     <Compile Remove="RazorPartialToString\**" />
+    <Compile Remove="wwwroot\Modules\ToSic.Sxc\**" />
     <Content Remove="Engines\**" />
     <Content Remove="RazorPartialToString\**" />
+    <Content Remove="wwwroot\Modules\ToSic.Sxc\**" />
     <EmbeddedResource Remove="Engines\**" />
     <EmbeddedResource Remove="RazorPartialToString\**" />
+    <EmbeddedResource Remove="wwwroot\Modules\ToSic.Sxc\**" />
     <None Remove="Engines\**" />
     <None Remove="RazorPartialToString\**" />
+    <None Remove="wwwroot\Modules\ToSic.Sxc\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -84,6 +88,10 @@
     <Reference Include="ToSic.Razor">
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\netstandard2.0\ToSic.Razor.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Modules\" />
   </ItemGroup>
 
 </Project>

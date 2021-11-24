@@ -29,12 +29,12 @@ namespace ToSic.Sxc.Adam
         public bool HasMetadata => AdamManager.MetadataMaker.GetFirstMetadata(AdamManager.AppRuntime, MetadataId) != null;
 
         [JsonIgnore]
-        public MetadataFor MetadataId => _metadataKey ?? (_metadataKey = new MetadataFor
+        public ITarget MetadataId => _metadataId ?? (_metadataId = new Target
         {
             TargetType = (int)TargetTypes.CmsItem,
             KeyString = "file:" + SysId
         });
-        private MetadataFor _metadataKey;
+        private ITarget _metadataId;
         #endregion
 
         public string Url { get; set; }

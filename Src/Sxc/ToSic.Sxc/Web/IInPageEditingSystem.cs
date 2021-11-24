@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Data;
+using ToSic.Eav.Metadata;
 #if NET451
 using HtmlString = System.Web.HtmlString;
 #else
@@ -44,6 +45,9 @@ namespace ToSic.Sxc.Web
         /// <param name="contentType">Content-type of this toolbar, used when it has `new` or `add` buttons.
         ///     This allows you to create a button for a new "Category" and another button for a new "BlogPost" etc.
         /// </param>
+        /// <param name="metadataFor">
+        /// If the toolbar should create Metadata, then this is the object the metadata is for. It must be an <see cref="IIsMetadataTarget"/> or an <see cref="IHasMetadata"/> object.
+        /// </param>
         /// <param name="prefill">
         ///     Allows a `new` dialog to receive values as a prefill.
         ///     For example to already specify a date, title, category, etc. <br/>
@@ -64,16 +68,19 @@ namespace ToSic.Sxc.Web
         /// <remarks>
         /// **History**
         /// 1. Added in 2sxc 8.04
-        /// 1. Condition added in 2sxc 12.05
+        /// 1. `condition` added in 2sxc 12.05
+        /// 1. `metadataFor` added in 2sxc 12.10
         /// </remarks>
-        HtmlString Toolbar(object target = null,
+        HtmlString Toolbar(
+            object target = null,
             string noParamOrder = Eav.Parameters.Protector,
             string actions = null,
             string contentType = null,
+            object condition = null,
+            object metadataFor = null,
             object prefill = null,
-            object toolbar = null,
             object settings = null,
-            object condition = null);
+            object toolbar = null);
 
         /// <summary>
         /// Generate a toolbar attribute inside an html-tag <br/>
@@ -90,6 +97,9 @@ namespace ToSic.Sxc.Web
         /// </param>
         /// <param name="contentType">Content-type of this toolbar, used when it has `new` or `add` buttons.
         ///     This allows you to create a button for a new "Category" and another button for a new "BlogPost" etc.
+        /// </param>
+        /// <param name="metadataFor">
+        /// If the toolbar should create Metadata, then this is the object the metadata is for. It must be an <see cref="IIsMetadataTarget"/> or an <see cref="IHasMetadata"/> object.
         /// </param>
         /// <param name="prefill">
         ///     Allows a `new` dialog to receive values as a prefill.
@@ -111,17 +121,20 @@ namespace ToSic.Sxc.Web
         /// <remarks>
         /// **History**
         /// 1. Added in 2sxc 9.40
-        /// 1. Condition added in 2sxc 12.05
+        /// 1. `condition` added in 2sxc 12.05
+        /// 1. `metadataFor` added in 2sxc 12.10
         /// </remarks>
-        HtmlString TagToolbar(object target = null,
+        HtmlString TagToolbar(
+            object target = null,
             string noParamOrder =
                 "Rule: all params must be named (https://r.2sxc.org/named-params), Example: \'enable: true, version: 10\'",
             string actions = null,
             string contentType = null,
+            object condition = null,
+            object metadataFor = null,
             object prefill = null,
-            object toolbar = null,
             object settings = null,
-            object condition = null);
+            object toolbar = null);
 
         /// <summary>
         /// Get html-attributes to mark the current context
@@ -143,7 +156,8 @@ namespace ToSic.Sxc.Web
         /// 1. Introduced in 2sxc 8.4
         /// 1. Enhanced with apps in 10.27
         /// </remarks>
-        HtmlString ContextAttributes(IDynamicEntity target, 
+        HtmlString ContextAttributes(
+            IDynamicEntity target, 
             string noParamOrder = Eav.Parameters.Protector, 
             string field = null, 
             string contentType = null,

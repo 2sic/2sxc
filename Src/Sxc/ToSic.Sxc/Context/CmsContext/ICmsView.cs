@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Context
 {
@@ -9,7 +10,7 @@ namespace ToSic.Sxc.Context
     /// Added in 2sxc 12.02
     /// </remarks>
     [PublicApi]
-    public interface ICmsView
+    public interface ICmsView: IHasMetadata
     {
         /// <summary>
         /// View configuration ID
@@ -42,5 +43,12 @@ namespace ToSic.Sxc.Context
         /// </summary>
         string Edition { get; }
 
+        /// <summary>
+        /// Get the views Metadata
+        /// </summary>
+        /// <remarks>
+        /// Added in v12.10
+        /// </remarks>
+        IMetadataOf Metadata { get; }
     }
 }

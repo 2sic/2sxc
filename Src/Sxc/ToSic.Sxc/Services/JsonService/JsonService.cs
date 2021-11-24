@@ -14,5 +14,8 @@ namespace ToSic.Sxc.Services
 
         /// <inheritdoc />
         public string ToJson(object dynamicEntity) => JsonConvert.SerializeObject(dynamicEntity);
+
+        /// <inheritdoc />
+        public string ToJsonIndented(object dynamicEntity) => JsonConvert.SerializeObject(dynamicEntity, Formatting.Indented);
     }
 }

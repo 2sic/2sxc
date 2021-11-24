@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using ToSic.Eav.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit;
@@ -19,6 +20,7 @@ namespace ToSic.Sxc.WebApi.InPage
             // 0. Skip basics like jQuery, $2sxc, editApi and editUI as they are always available in edit mode
 
             // 0.1 Get Version etc.
+            root = root.SuffixSlash(); // important because DNN historically has a slash in the constant, Oqtane does not
             var ver = Settings.Version.ToString();
             var addOn = "";
 

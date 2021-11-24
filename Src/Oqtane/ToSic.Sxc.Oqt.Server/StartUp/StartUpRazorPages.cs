@@ -14,33 +14,33 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
     internal class StartUpRazorPages
     {
 
-        public void ConfigureServices(IServiceCollection services)
-        {
-            // get path for content
-            var tempDi = services.BuildServiceProvider();
-            var webHost = tempDi.Build<IWebHostEnvironment>();
-            var contentRootPath = Path.GetFullPath(Path.Combine(webHost.ContentRootPath, OqtConstants.ContentSubfolder));
+        //public void ConfigureServices(IServiceCollection services)
+        //{
+        //    // get path for content
+        //    var tempDi = services.BuildServiceProvider();
+        //    var webHost = tempDi.Build<IWebHostEnvironment>();
+        //    var contentRootPath = Path.GetFullPath(Path.Combine(webHost.ContentRootPath, OqtConstants.ContentSubfolder));
 
-            //// Add razor pages dynamic compilation WIP
-            var dllLocation = typeof(Oqtane.Server.Program).Assembly.Location;
-            var dllPath = Path.GetDirectoryName(dllLocation);
-            var mvcBuilder = services.AddRazorPages()
-                // experiment
-                // https://github.com/aspnet/samples/blob/master/samples/aspnetcore/mvc/runtimecompilation/MyApp/Startup.cs#L26
-                .AddRazorRuntimeCompilation(options =>
-                {
-                    options.FileProviders.Add(new PhysicalFileProvider(contentRootPath));
-                    foreach (string dllFile in Directory.GetFiles(dllPath, "*.dll"))
-                        options.AdditionalReferencePaths.Add(dllFile);
+        //    //// Add razor pages dynamic compilation WIP
+        //    var dllLocation = typeof(Oqtane.Server.Program).Assembly.Location;
+        //    var dllPath = Path.GetDirectoryName(dllLocation);
+        //    var mvcBuilder = services.AddRazorPages()
+        //        // experiment
+        //        // https://github.com/aspnet/samples/blob/master/samples/aspnetcore/mvc/runtimecompilation/MyApp/Startup.cs#L26
+        //        .AddRazorRuntimeCompilation(options =>
+        //        {
+        //            options.FileProviders.Add(new PhysicalFileProvider(contentRootPath));
+        //            foreach (string dllFile in Directory.GetFiles(dllPath, "*.dll"))
+        //                options.AdditionalReferencePaths.Add(dllFile);
 
-                });
+        //        });
 
-            // exp: access the anti forgery so it's loaded
-            //var temp = new Microsoft.AspNetCore.Antiforgery.AntiforgeryOptions();
-            //mvcBuilder.AddApplicationPart(typeof(Microsoft.AspNetCore.Antiforgery.AntiforgeryOptions).Assembly);
-            //LoadAssembliesForRazor(mvcBuilder, dllPath);
-            //var builderDebug = mvcBuilder.PartManager;
-        }
+        //    // exp: access the anti forgery so it's loaded
+        //    //var temp = new Microsoft.AspNetCore.Antiforgery.AntiforgeryOptions();
+        //    //mvcBuilder.AddApplicationPart(typeof(Microsoft.AspNetCore.Antiforgery.AntiforgeryOptions).Assembly);
+        //    //LoadAssembliesForRazor(mvcBuilder, dllPath);
+        //    //var builderDebug = mvcBuilder.PartManager;
+        //}
 
 
 

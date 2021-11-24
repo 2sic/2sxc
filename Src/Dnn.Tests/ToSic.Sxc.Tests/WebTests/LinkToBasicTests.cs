@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using ToSic.Sxc.Tests.WebTests.LinkHelperTests;
 using ToSic.Sxc.Web;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;

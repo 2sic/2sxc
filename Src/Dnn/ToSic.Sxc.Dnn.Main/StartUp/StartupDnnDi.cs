@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.Run;
@@ -36,6 +35,7 @@ using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi.ApiExplorer;
 using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.Plumbing;
+using Type = System.Type;
 
 
 namespace ToSic.Sxc.Dnn.StartUp
@@ -103,9 +103,6 @@ namespace ToSic.Sxc.Dnn.StartUp
             // add page publishing
             services.TryAddTransient<IPagePublishing, Sxc.Dnn.Cms.DnnPagePublishing>();
             services.TryAddTransient<IPagePublishingResolver, Sxc.Dnn.Cms.DnnPagePublishingResolver>();
-
-            // Asset Templates
-            services.TryAddTransient<IAssetTemplates, DnnAssetTemplates>();
 
             if (appsCacheOverride != null)
             {

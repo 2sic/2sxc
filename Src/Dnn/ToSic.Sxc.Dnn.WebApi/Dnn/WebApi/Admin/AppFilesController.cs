@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Web.Http;
+﻿using System;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using System.Collections.Generic;
+using System.Web.Http;
 using ToSic.Sxc.Apps.Assets;
-using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Assets;
@@ -52,10 +52,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <param name="global">this determines, if the app-file store is the global in _default or the local in the current app</param>
         /// <param name="purpose">auto;razor;token;api;search</param>
         /// <returns></returns>
+        [Obsolete("This Method is Deprecated", false)]
         [HttpPost]
-        public bool Create([FromUri] int appId, [FromUri] string path,
+        public bool Create(
+            [FromUri] int appId,
+            [FromUri] string path,
             [FromBody] FileContentsDto content, // note: as of 2020-09 the content is never submitted
-            bool global, [FromUri] string purpose = AssetEditor.PurposeType.Auto) 
+            [FromUri] bool global,
+            [FromUri] string purpose = Purpose.Auto)
             => Backend().Create(appId, path, content, purpose, global);
 
 
@@ -74,8 +78,30 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public bool Asset([FromUri] int appId, [FromBody] AssetEditInfo template,
             [FromUri] int templateId = 0, [FromUri] string path = null, // identifier is either template Id or path
             // todo w/SPM - global never seems to be used - must check why and if we remove or add to UI
+            // TODO: NEW PARAM TEMPLATEKey SHOULD BE USED TO CREATE THE FILE
             [FromUri] bool global = false) 
             => Backend().Save(appId: appId, template: template, templateId: templateId, global: global, path: path);
+
+
+        /// <summary>
+        /// Get all asset template types
+        /// </summary>
+        /// <param name="purpose">filter by Purpose when provided</param>
+        /// <returns></returns>
+        [HttpGet]
+        public TemplatesDto GetTemplates(string purpose = null) => Backend().GetTemplates(purpose);
+
+        [HttpGet]
+        public TemplatePreviewDto Preview(int appId, string path, string name, string templateKey, bool global = false)
+            => Backend().GetPreview(appId, path, name, templateKey, global);
+
+        /// <summary>
+        /// Create a new file from template
+        /// </summary>
+        /// <param name="assetFromTemplateDto">AssetFromTemplateDto</param>
+        /// <returns></returns>
+        [HttpPost]
+        public bool CreateTemplate(AssetFromTemplateDto assetFromTemplateDto) => Backend().Create(assetFromTemplateDto);
 
     }
 }

@@ -2,14 +2,14 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Oqtane.Infrastructure;
-using System.IO;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Oqtane.Infrastructure;
+using System;
+using System.IO;
 using ToSic.Eav;
+using ToSic.Eav.Caching;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.Persistence.File;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
@@ -37,7 +37,18 @@ namespace ToSic.Sxc.Oqt.Server
         public void ConfigureServices(IServiceCollection services)
         {
             // try to enable dynamic razor compiling - still WIP
-            new StartUpRazorPages().ConfigureServices(services);
+            services.AddRazorPages()            
+                .AddRazorRuntimeCompilation(options =>
+                {
+                    // Add razor pages dynamic compilation WIP
+                    //var ContentRootPath = Path.GetFullPath(Path.Combine(HostEnvironment.ContentRootPath, OqtConstants.ContentSubfolder));
+                    //options.FileProviders.Add(new PhysicalFileProvider(ContentRootPath));
+
+                    var dllLocation = typeof(Oqtane.Server.Program).Assembly.Location;
+                    var dllPath = Path.GetDirectoryName(dllLocation);
+                    foreach (var dllFile in Directory.GetFiles(dllPath, "*.dll"))
+                        options.AdditionalReferencePaths.Add(dllFile);
+                });
 
             // TODO: STV - MAKE SURE OUR CONTROLLERS RULES ONLY APPLY TO OURS, NOT TO override rules on normal Oqtane controllers
             // enable webapi - include all controllers in the Sxc.Mvc assembly
@@ -47,13 +58,13 @@ namespace ToSic.Sxc.Oqt.Server
             //        // options.AllowEmptyInputInBodyModelBinding = true; // Added with attribute
             //        // options.Filters.Add(new HttpResponseExceptionFilter()); // Added with attribute
             //    });
-                // This is needed to preserve compatibility with previous api usage
-                //.AddNewtonsoftJson(options =>
-                //{
-                //    // this ensures that c# objects with Pascal-case keep that
-                //    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                //    Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings);
-                //});
+            // This is needed to preserve compatibility with previous api usage
+            //.AddNewtonsoftJson(options =>
+            //{
+            //    // this ensures that c# objects with Pascal-case keep that
+            //    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+            //    Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings);
+            //});
 
 
             Factory.UseExistingServices(services);
@@ -69,45 +80,44 @@ namespace ToSic.Sxc.Oqt.Server
                     .AddAppApi(); // 2sxc Oqtane dyncode app api.
             });
 
-            var sp = services.BuildServiceProvider();
-
-            sp.Build<IDbConfiguration>().ConnectionString = Configuration.GetConnectionString("DefaultConnection");
-
-            var hostingEnvironment = sp.Build<IHostEnvironment>();
-            var globalConfig = sp.Build<IGlobalConfiguration>();
-            globalConfig.GlobalFolder = Path.Combine(hostingEnvironment.ContentRootPath, "wwwroot\\Modules\\ToSic.Sxc");
-            globalConfig.GlobalSiteFolder = "todo - global apps not implemented yet";
-
-            // Load features from configuration
-            // NOTE: On first installation of 2sxc module in oqtane, this code can not load all 2sxc global types
-            // because it has dependency on ToSic_Eav_* sql tables, before this tables are actually created by oqtane 2.3.x,
-            // but after next restart of oqtane application all is ok, and all 2sxc global types are loaded as expected
-            sp.Build<SystemLoader>().StartUp();
-
             // 2sxc Oqtane blob services for Imageflow.
             services.AddImageflowOqtaneBlobService();
 
             // Help RazorBlade to have a proper best-practices ToJson
             // New v12.05
             ToSic.Razor.Internals.StartUp.RegisterToJson(JsonConvert.SerializeObject);
-
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             HostEnvironment = env;
 
+            var serviceProvider = app.ApplicationServices;
+
+            serviceProvider.Build<IDbConfiguration>().ConnectionString = Configuration.GetConnectionString("DefaultConnection");
+
+            var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
+            globalConfig.GlobalFolder = Path.Combine(HostEnvironment.ContentRootPath, "wwwroot\\Modules\\ToSic.Sxc");
+            globalConfig.GlobalSiteFolder = "todo - global apps not implemented yet";
+
+
+            // Load features from configuration
+            // NOTE: On first installation of 2sxc module in oqtane, this code can not load all 2sxc global types
+            // because it has dependency on ToSic_Eav_* sql tables, before this tables are actually created by oqtane 2.3.x,
+            // but after next restart of oqtane application all is ok, and all 2sxc global types are loaded as expected
+            var sysLoader = serviceProvider.Build<SystemLoader>();
+            sysLoader.StartUp();
+
+            // 2021-11-16 2dm - experimental, working on moving global/preset data into a normal AppState #PresetInAppState
+            sysLoader.Log.Add("Try to load global app-state");
+            var globalStateLoader = serviceProvider.Build<FileAppStateLoaderWIP>();
+            var appState = globalStateLoader.AppState(Eav.Constants.PresetAppId);
+            var appsMemCache = serviceProvider.Build<IAppsCache>();
+            appsMemCache.Add(appState);
+            // End experimental #PresetInAppState
+
+
             app.UseExceptionHandler("/error");
-
-            //app.UseExceptionHandler(c => c.Run(async context =>
-            //{
-            //    var exception = context.Features
-            //        .Get<IExceptionHandlerPathFeature>()
-            //        .Error;
-            //    var response = new { error = exception.Message };
-            //    await context.Response.WriteAsJsonAsync(response);
-            //}));
-
             //app.UseDeveloperExceptionPage();
 
             // routing middleware
@@ -136,14 +146,9 @@ namespace ToSic.Sxc.Oqt.Server
             });
         }
 
-        // Workaround because of initialization issues with razor pages
-        //private static string _contentRootPath;
-
         public void ConfigureMvc(IMvcBuilder mvcBuilder)
         {
             //throw new NotImplementedException();
         }
-
-
     }
 }

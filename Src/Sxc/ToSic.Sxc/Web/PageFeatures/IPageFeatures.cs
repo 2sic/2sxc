@@ -7,7 +7,7 @@ using ToSic.Sxc.Web.PageFeatures;
 namespace ToSic.Sxc.Web
 {
     /// <summary>
-    /// Part of the <see cref="IPageService"/> to activate features on the page.
+    /// Part of the <see cref="ToSic.Sxc.Services.IPageService"/> to activate features on the page.
     /// </summary>
     [PrivateApi("not public ATM")]
     public interface IPageFeatures

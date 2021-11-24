@@ -7,6 +7,8 @@ namespace ToSic.Sxc.WebApi.Assets
 {
     public partial class AppAssetsBackend
     {
+        private const string ApiFolder = "api";
+
         /// <summary>
         /// 
         /// </summary>
@@ -14,12 +16,13 @@ namespace ToSic.Sxc.WebApi.Assets
         /// <param name="content"></param>
         /// <param name="purpose">razor;token;search;api;auto</param>
         /// <returns></returns>
+        [Obsolete("This Method is Deprecated", false)]
         private string SanitizePathAndContent(string path, FileContentsDto content, string purpose)
         {
             var name = Path.GetFileName(path);
             var folder = Path.GetDirectoryName(path);
             var ext = Path.GetExtension(path);
-
+            
             // not sure what this is for, since I believe code should only get here if there was an ext and it's cshtml
             // probably just to prevent some very unexpected create
             if (name == null) name = "missing-name.txt";
@@ -27,25 +30,25 @@ namespace ToSic.Sxc.WebApi.Assets
             switch (ext?.ToLowerInvariant())
             {
                 // .cs files - usually API controllers
-                case AssetEditor.CsExtension:
-                    if ((folder?.ToLowerInvariant() ?? "").Contains(AssetEditor.CsApiFolder.ToLowerInvariant()))
+                case Extension.Cs:
+                    if ((folder?.ToLowerInvariant() ?? "").Contains(ApiFolder.ToLowerInvariant()))
                     {
                         var nameWithoutExt = name.Substring(0, name.Length - ext.Length);
                         content.Content =
-                            _assetTemplates.GetTemplate(AssetTemplateType.WebApi).Replace(AssetTemplates.CsApiTemplateControllerName, nameWithoutExt);
+                            _assetTemplates.GetTemplate(TemplateKey.Api).Replace(AssetTemplates.CsApiTemplateControllerName, nameWithoutExt);
                     }
                     else
                     {
                         var nameWithoutExt = name.Substring(0, name.Length - ext.Length);
-                        content.Content = _assetTemplates.GetTemplate(purpose == AssetEditor.PurposeType.Search
-                                ? AssetTemplateType.CustomSearchCsCode
-                                : AssetTemplateType.CsCode)
+                        content.Content = _assetTemplates.GetTemplate(purpose == AssetTemplates.ForSearch
+                                ? TemplateKey.CustomSearchCsCode
+                                : TemplateKey.CsCode)
                             .Replace(AssetTemplates.CsCodeTemplateName, nameWithoutExt);
                     }
                     break;
 
                 // .cshtml files (razor) or .code.cshtml (razor code-behind)
-                case AssetEditor.CshtmlExtension:
+                case Extension.Cshtml:
                     {
                         // ensure all .cshtml start with "_"
                         if (!name.StartsWith(AssetEditor.CshtmlPrefix))
@@ -55,20 +58,43 @@ namespace ToSic.Sxc.WebApi.Assets
                         }
 
                         // first check the code-extension, because it's longer but also would contain the non-code extension
-                        if (name.EndsWith(AssetEditor.CodeCshtmlExtension))
-                            content.Content = _assetTemplates.GetTemplate(AssetTemplateType.CsHtmlCode);
-                        else if (name.EndsWith(AssetEditor.CshtmlExtension))
-                            content.Content = _assetTemplates.GetTemplate(AssetTemplateType.CsHtml);
+                        if (name.EndsWith(Extension.CodeCshtml))
+                            content.Content = _assetTemplates.GetTemplate(TemplateKey.CsHtmlCode);
+                        else if (name.EndsWith(Extension.Cshtml))
+                            content.Content = AssetTemplates.RazorHybrid.Body; // _assetTemplates.GetTemplate(TemplateKey.CsHtml);
                         break;
                     }
 
                 // .html files (Tokens)
-                case AssetEditor.TokenHtmlExtension:
-                    content.Content = _assetTemplates.GetTemplate(AssetTemplateType.Token);
+                case Extension.Html:
+                    content.Content = _assetTemplates.GetTemplate(TemplateKey.Token);
                     break;
             }
 
             return path;
+        }
+
+        private string GetTemplateContent(AssetFromTemplateDto assetFromTemplateDto)
+        {
+            var name = Path.GetFileName(assetFromTemplateDto.Path);
+            var ext = Path.GetExtension(assetFromTemplateDto.Path);
+            var nameWithoutExt = name.Substring(0, name.Length - ext.Length);
+
+            return _assetTemplates.GetTemplate(assetFromTemplateDto.TemplateKey)
+                .Replace(AssetTemplates.CsApiTemplateControllerName, nameWithoutExt)
+                .Replace(AssetTemplates.CsCodeTemplateName, nameWithoutExt);
+        }
+
+        private static void EnsureCshtmlStartWithUnderscore(AssetFromTemplateDto assetFromTemplateDto)
+        {
+            var name = Path.GetFileName(assetFromTemplateDto.Path);
+            if ((assetFromTemplateDto.TemplateKey == AssetTemplates.RazorHybrid.Key /*TemplateKey.CsHtml*/ || assetFromTemplateDto.TemplateKey == TemplateKey.CsHtmlCode)
+                && !name.StartsWith(AssetEditor.CshtmlPrefix))
+            {
+                name = AssetEditor.CshtmlPrefix + name;
+                var folder = Path.GetDirectoryName(assetFromTemplateDto.Path) ?? "";
+                assetFromTemplateDto.Path = Path.Combine(folder, name);
+            }
         }
 
         [AssertionMethod]

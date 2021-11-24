@@ -25,11 +25,9 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
             // your `LoadPrivateBinAssemblies()` method needs to be called before the next line executes!
             // So you should load all private bin's before the first RazorPage gets requested.
 
-            return new List<string>();
-
-            //return AssemblyLoadContext.GetLoadContext(_assembly).Assemblies
-            //    .Where(_ => !_.IsDynamic)
-            //    .Select(_ => new Uri(_.CodeBase).LocalPath);
+            return AssemblyLoadContext.GetLoadContext(_assembly).Assemblies
+                .Where(_ => !_.IsDynamic)
+                .Select(_ => new Uri(_.CodeBase).LocalPath);
         }
     }
 }

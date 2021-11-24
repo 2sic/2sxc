@@ -11,12 +11,12 @@ namespace ToSic.Sxc.Oqt.Server.Installation
     // this code will check if there is less than 50 global types and warn user to restart application to fix that
     public class GlobalTypesCheck
     {
-        private readonly Lazy<GlobalTypes> _globalTypesLazy;
 
-        public GlobalTypesCheck(Lazy<GlobalTypes> globalTypesLazy)
+        public GlobalTypesCheck(Lazy<IGlobalTypes> globalTypesLazy)
         {
             _globalTypesLazy = globalTypesLazy;
         }
+        private readonly Lazy<IGlobalTypes> _globalTypesLazy;
         
         private static bool? _globalTypesCheckedAndError;
 

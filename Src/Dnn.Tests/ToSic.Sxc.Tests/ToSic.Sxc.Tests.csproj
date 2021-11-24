@@ -88,7 +88,6 @@
     <Compile Include="DynamicData\SimpleObject.cs" />
     <Compile Include="DynamicData\TestAccessors.cs" />
     <Compile Include="DynamicData\DynamicReadRealClass.cs" />
-    <Compile Include="InitializeTests.cs" />
     <Compile Include="PageFeatures\SimpleFeatureManagement.cs" />
     <Compile Include="PageProperty\UpdatePropertyTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -99,13 +98,9 @@
     <Compile Include="ServicesTests\MailAddressInputTypeTests.cs" />
     <Compile Include="ServicesTests\MailServiceTestsBase.cs" />
     <Compile Include="ServicesTests\SecureDataTests\SecureDataTest.cs" />
+    <Compile Include="TestBaseSxc.cs" />
     <Compile Include="WebTests\ConvertServiceTests\ConvertServiceTest.cs" />
     <Compile Include="WebTests\LinkHelperTestBase.cs" />
-    <Compile Include="WebTests\LinkHelperTests\LinkHelperPartSuffixTests.cs" />
-    <Compile Include="WebTests\LinkHelperTests\LinkHelperPartQueryTests.cs" />
-    <Compile Include="WebTests\LinkHelperTests\LinkHelperPartHashTests.cs" />
-    <Compile Include="WebTests\LinkHelperTests\LinkHelperPartDomainTests.cs" />
-    <Compile Include="WebTests\LinkHelperTests\LinkHelperPartProtocolTests.cs" />
     <Compile Include="WebTests\LinkHelperTests\LinkHelperToVerifyTests.cs" />
     <Compile Include="WebTests\LinkHelperTests\LinkHelperToTestBase.cs" />
     <Compile Include="WebTests\LinkHelperTests\LinkTestHelperExtensions.cs" />
@@ -114,11 +109,9 @@
     <Compile Include="WebTests\LinkImageTests\ImgResizeLinkerInternals.cs" />
     <Compile Include="WebTests\LinkHelperTests\LinkHelperImagePartFullTests.cs" />
     <Compile Include="WebTests\LinkHelperTests\LinkHelperImagePartUndefinedTests.cs" />
-    <Compile Include="WebTests\LinkHelperTests\LinkHelperToApiPartFullTests.cs" />
     <Compile Include="WebTests\LinkHelperTests\LinkHelperToApiPartUndefinedTests.cs" />
     <Compile Include="WebTests\LinkHelperTests\LinkHelperToCommonTests.cs" />
     <Compile Include="WebTests\LinkHelperTests\LinkHelperToPagePartUnknownTests.cs" />
-    <Compile Include="WebTests\LinkHelperTests\LinkHelperToPagePartFullTests.cs" />
     <Compile Include="WebTests\CleanParamTests.cs" />
     <Compile Include="WebTests\LinkImageTests\ImageWithSettings.cs" />
     <Compile Include="WebTests\LinkImageTests\LinkImageTestBase.cs" />

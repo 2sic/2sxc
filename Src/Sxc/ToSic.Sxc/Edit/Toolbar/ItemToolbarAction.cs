@@ -76,25 +76,5 @@ namespace ToSic.Sxc.Edit.Toolbar
         [JsonIgnore]
         public string Json => JsonConvert.SerializeObject(this);
 
-        //public string ToUrl()
-        //{
-        //    var paramList = new List<string>();
-
-        //    void AddIfExists(string name, object value)
-        //    {
-        //        if (value != null) paramList.Add($"{name}={value}");
-        //    }
-
-        //    AddIfExists(nameof(entityId), entityId);
-        //    AddIfExists(nameof(contentType), contentType);
-        //    AddIfExists(nameof(sortOrder), sortOrder);
-        //    AddIfExists(nameof(useModuleList), useModuleList);
-        //    AddIfExists(nameof(isPublished), isPublished);
-        //    // TODO: AddIfExists(nameof(prefill));
-        //    AddIfExists(nameof(title), title == null ? title : Uri.EscapeUriString(title) );
-        //    AddIfExists(nameof(paramList), parent);
-        //    AddIfExists(nameof(fields), fields);
-        //    return string.Join("&", paramList);
-        //}
     }
 }

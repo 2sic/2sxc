@@ -57,10 +57,10 @@ namespace ToSic.Sxc.Oqt.Server.Block
             Module = module;
 
             // Check for installation errors before even trying to build a view, and otherwise return this object if Refs are missing.
-            if (RefsInstalledCheck.WarnIfRefsAreNotInstalled(out var oqtViewResultsDto)) return oqtViewResultsDto;
+            if (RefsInstalledCheck.WarnIfRefsAreNotInstalled(out var oqtViewResultsDtoWarning)) return oqtViewResultsDtoWarning;
 
             // Check if there is less than 50 global types and warn user to restart application
-            if (_globalTypesCheck.WarnIfGlobalTypesAreNotLoaded(out var oqtViewResultsDtoWarning)) return oqtViewResultsDtoWarning;
+            if (_globalTypesCheck.WarnIfGlobalTypesAreNotLoaded(out var oqtViewResultsDtoWarning2)) return oqtViewResultsDtoWarning2;
 
             #region Lightspeed - very experimental - deactivate before distribution
             //if (Lightspeed.HasCache(module.ModuleId))
@@ -102,6 +102,9 @@ namespace ToSic.Sxc.Oqt.Server.Block
                 SxcStyles = AssetsAndHeaders.Styles().ToList(),
                 PageProperties = AssetsAndHeaders.GetOqtPagePropertyChangesList(renderResult.PageChanges)
             };
+
+            // TODO: stv
+            // if (DebuggerIsAttachedCheck.WarnIfDebuggerIsAttached(out var oqtViewResultsDtoWarning3)) ret.ErrorMessage +=  oqtViewResultsDtoWarning3.ErrorMessage;
 
             return ret;
         }

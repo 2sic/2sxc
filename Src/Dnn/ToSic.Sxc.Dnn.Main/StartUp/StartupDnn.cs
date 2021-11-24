@@ -1,10 +1,13 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.Web.Hosting;
 using DotNetNuke.Web.Api;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Newtonsoft.Json;
 using ToSic.Eav;
+using ToSic.Eav.Caching;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.Persistence.File;
 using ToSic.SexyContent.Dnn920;
 using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.WebApi;
@@ -67,7 +70,16 @@ namespace ToSic.Sxc.Dnn.StartUp
             globalConfig.GlobalSiteFolder = "~/Portals/_default/";
 
             // Load features from configuration
-            Eav.Factory.StaticBuild<SystemLoader>().StartUp();
+            var sysLoader = Eav.Factory.StaticBuild<SystemLoader>();
+            sysLoader.StartUp();
+
+            // 2021-11-16 2dm - experimental, working on moving global/preset data into a normal AppState #PresetInAppState
+            sysLoader.Log.Add("Try to load global app-state");
+            var globalStateLoader = Eav.Factory.StaticBuild<FileAppStateLoaderWIP>();
+            var appState = globalStateLoader.AppState(Eav.Constants.PresetAppId);
+            var appsMemCache = Eav.Factory.StaticBuild<IAppsCache>();
+            appsMemCache.Add(appState);
+            // End experimental #PresetInAppState
 
             // also register this because of a long DNN issue which was fixed, but we don't know if we're running in another version
             SharpZipLibRedirect.RegisterSharpZipLibRedirect();

@@ -160,7 +160,7 @@ namespace ToSic.Sxc.Web
             {
                 var paramList = UrlHelpers.ParseQueryString(strParams);
                 if (paramList != null & paramList.HasKeys()) 
-                    imageUrl = QueryHelper.AddQueryString(imageUrl, paramList);
+                    imageUrl = UrlHelpers.AddQueryString(imageUrl, paramList);
             }
 
             var processed = ChangeToMatchType(type, imageUrl);

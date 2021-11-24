@@ -70,13 +70,14 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// <param name="global">this determines, if the app-file store is the global in _default or the local in the current app</param>
         /// <param name="purpose">auto;razor;token;api;search</param>
         /// <returns></returns>
+        [Obsolete("This Method is Deprecated", false)]
         [HttpPost]
         public bool Create(
             [FromQuery] int appId,
             [FromQuery] string path,
             [FromBody] FileContentsDto content, // note: as of 2020-09 the content is never submitted
             [FromQuery] bool global,
-            [FromQuery] string purpose = AssetEditor.PurposeType.Auto
+            [FromQuery] string purpose = Purpose.Auto
         ) => Backend().Create(appId, path, content, purpose, global);
 
         /// <summary>
@@ -97,5 +98,26 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             // todo w/SPM - global never seems to be used - must check why and if we remove or add to UI
             [FromQuery] bool global = false
         ) => Backend().Save(appId, template, templateId, global, path);
+
+
+        /// <summary>
+        /// Get all asset template types
+        /// </summary>
+        /// <param name="purpose">filter by Purpose when provided</param>
+        /// <returns></returns>
+        [HttpGet]
+        public TemplatesDto GetTemplates(string purpose = null) => Backend().GetTemplates(purpose);
+
+        [HttpGet]
+        public TemplatePreviewDto Preview(int appId, string path, string name, string templateKey, bool global = false)
+            => Backend().GetPreview(appId, path, name, templateKey, global);
+
+        /// <summary>
+        /// Create a new file from template
+        /// </summary>
+        /// <param name="assetFromTemplateDto">AssetFromTemplateDto</param>
+        /// <returns></returns>
+        [HttpPost]
+        public bool CreateTemplate(AssetFromTemplateDto assetFromTemplateDto) => Backend().Create(assetFromTemplateDto);
     }
 }

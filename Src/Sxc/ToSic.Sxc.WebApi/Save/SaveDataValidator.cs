@@ -5,6 +5,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Builder;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Types;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
@@ -115,7 +116,8 @@ namespace ToSic.Sxc.WebApi.Save
                 return wrapLog("newEntity is null", notOk);
             }
 
-            if (newEntity.Attributes.Count == 0)
+            // New #2595 allow saving empty metadata decorator entities
+            if (newEntity.Attributes.Count == 0 && !newEntity.Type.Metadata.HasType(Decorators.SaveEmptyDecoratorId))
                 Add($"entity {count} doesn't have attributes (or they are invalid)");
 
             var ok = BuildExceptionIfHasIssues(out preparedException, "EntityIsOk() done");

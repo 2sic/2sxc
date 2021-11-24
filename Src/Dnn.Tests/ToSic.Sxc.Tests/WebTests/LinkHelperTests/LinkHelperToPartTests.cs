@@ -2,7 +2,6 @@
 using System.Collections.Specialized;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Context.Query;
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using static ToSic.Sxc.Web.LinkHelperUnknown;
 
 namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests

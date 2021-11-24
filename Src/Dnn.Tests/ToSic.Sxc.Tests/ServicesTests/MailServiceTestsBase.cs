@@ -1,15 +1,14 @@
 ﻿using System.Net.Mail;
 using ToSic.Sxc.Services;
-using ToSic.Testing.Shared;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.ServicesTests
 {
-    public class MailServiceTestsBase : EavTestBase
+    public class MailServiceTestsBase : TestBaseSxc
     {
         #region Helpers
 
-        public IMailService MailService() => Resolve<IMailService>();
+        public IMailService MailService() => Build<IMailService>();
 
         public const string Address = @"user@host";
         public const string DisplayName = @"Display Name";
