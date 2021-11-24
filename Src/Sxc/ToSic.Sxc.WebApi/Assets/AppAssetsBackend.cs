@@ -117,7 +117,10 @@ namespace ToSic.Sxc.WebApi.Assets
             return wrapLog(null, assetEditor);
         }
 
-        public TemplatePreviewDto GetPreview(int appId, string path, string templateKey, bool b)
+        // TODO STV
+        // - check if file can be created or already exists - if not, set Error-property
+        // - run the code that would generate the file, so the UI can show a real preview
+        public TemplatePreviewDto GetPreview(int appId, string path, string name, string templateKey, bool b)
         {
             return new TemplatePreviewDto()
             {

@@ -109,8 +109,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         public TemplatesDto GetTemplates(string purpose = null) => Backend().GetTemplates(purpose);
 
         [HttpGet]
-        public TemplatePreviewDto Preview(int appId, string path, string templateKey, bool global = false)
-            => Backend().GetPreview(appId, path, templateKey, global);
+        public TemplatePreviewDto Preview(int appId, string path, string name, string templateKey, bool global = false)
+            => Backend().GetPreview(appId, path, name, templateKey, global);
 
         /// <summary>
         /// Create a new file from template
