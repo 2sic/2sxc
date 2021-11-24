@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
@@ -17,15 +15,14 @@ namespace ToSic.Sxc.WebApi.Assets
 
         public AppAssetsBackend(TemplateHelpers templateHelpers,
             IUser user, 
-            Lazy<AssetEditor> assetEditorLazy, 
-            //IAssetTemplates assetTemplates, 
+            Lazy<AssetEditor> assetEditorLazy,
             IServiceProvider serviceProvider,
             IAppStates appStates) : base("Bck.Assets")
         {
 
             _templateHelpers = templateHelpers;
             _assetEditorLazy = assetEditorLazy;
-            _assetTemplates = new AssetTemplates().Init(Log); // assetTemplates;
+            _assetTemplates = new AssetTemplates().Init(Log);
             _serviceProvider = serviceProvider;
             _appStates = appStates;
             _user = user;
@@ -120,5 +117,12 @@ namespace ToSic.Sxc.WebApi.Assets
             return wrapLog(null, assetEditor);
         }
 
+        public TemplatePreviewDto GetPreview(int appId, string path, string templateKey, bool b)
+        {
+            return new TemplatePreviewDto()
+            {
+                Preview = _assetTemplates.GetTemplate(templateKey)
+            };
+        }
     }
 }
