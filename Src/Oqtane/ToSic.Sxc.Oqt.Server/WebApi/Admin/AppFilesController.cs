@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
     // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
-    public class AppFilesController : OqtStatefulControllerBase
+    public class AppFilesController : OqtStatefulControllerBase, IAppFilesController
     {
         private readonly Lazy<AppAssetsBackend> _appAssetsLazy;
         protected override string HistoryLogName => "Api.Assets";

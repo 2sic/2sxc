@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Apps;
@@ -72,7 +73,8 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             var resources = new List<AjaxResourceDtoWIP>();
             var ver = Settings.Version.ToString();
             if (result.Features.Contains(BuiltInFeatures.TurnOn))
-                resources.Add(new AjaxResourceDtoWIP { Url = UrlHelpers.QuickAddUrlParameter(root + InpageCms.TurnOnJs, "v", ver) });
+                resources.Add(new AjaxResourceDtoWIP
+                    { Url = UrlHelpers.QuickAddUrlParameter(root.SuffixSlash() + InpageCms.TurnOnJs, "v", ver) });
 
             // 2. Add JS & CSS which was stripped before
             resources.AddRange(result.Assets.Select(asset => new AjaxResourceDtoWIP
