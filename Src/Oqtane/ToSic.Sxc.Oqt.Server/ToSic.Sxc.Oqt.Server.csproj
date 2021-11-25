@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Version>12.10.00</Version>
+    <Version>12.11.00</Version>
     <Product>ToSic.Sxc</Product>
     <Authors>2sic</Authors>
     <Company>2sic</Company>
