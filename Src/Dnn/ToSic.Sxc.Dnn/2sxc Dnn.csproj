@@ -68,8 +68,8 @@
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DotNetNuke.WebUtility, Version=4.2.1.783, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Dependencies\Dnn944\DotNetNuke.WebUtility.dll</HintPath>
+    <Reference Include="DotNetNuke.WebControls">
+      <HintPath>..\..\..\Dependencies\Dnn944\DotNetNuke.WebControls.dll</HintPath>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
@@ -82,9 +82,10 @@
     <Reference Include="System.Numerics" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
-    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.WebPages">
+      <HintPath>..\..\..\Dependencies\Dnn944\System.Web.WebPages.dll</HintPath>
+      <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Dependencies\System.Web\System.Web.WebPages.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
