@@ -26,7 +26,7 @@ namespace ToSic.Sxc
 
         public class Installation
         {
-            public const string CurrentReleaseVersion = "12.10.00";
+            public const string CurrentReleaseVersion = "12.11.00";
 
             // todo: Maybe this list can somehow be extracted from the module manifest or placed there...
             internal static readonly string[] UpgradeVersionList =
@@ -54,6 +54,7 @@ namespace ToSic.Sxc
                 "12.06.00", // LTS
                 // "12.07.00", was never released
                 "12.08.00", "12.08.01", // LTS
+                "12.10.00",
                 CurrentReleaseVersion,
             };
 
