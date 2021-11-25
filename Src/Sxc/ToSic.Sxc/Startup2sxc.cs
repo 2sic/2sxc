@@ -86,9 +86,6 @@ namespace ToSic.Sxc
             // WIP - add net-core specific stuff
             services.AddNetVariations();
 
-            // Add possibly missing fallbacks
-            services.AddSxcCoreFallbackServices();
-            
             // Polymorphism
             services.TryAddTransient<Polymorphism.Polymorphism>();
 
@@ -120,6 +117,11 @@ namespace ToSic.Sxc
 
             // 13 - ToolbarService
             services.TryAddTransient<IToolbarRuleService, ToolbarRuleService>();
+
+
+            // Add possibly missing fallback services
+            // This must always be at the end here so it doesn't accidentally replace something we actually need
+            services.AddSxcCoreFallbackServices();
 
             return services;
         }

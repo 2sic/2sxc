@@ -4,9 +4,13 @@ using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Web.PageService
 {
-    public partial class PageService: HasLog, ToSic.Sxc.Services.IPageService, INeedsCodeRoot, 
+    public partial class PageService: HasLog, 
+            // Important: Write with namespace, because it's easy to confuse with IPageService it supports
+            ToSic.Sxc.Services.IPageService, 
+            INeedsCodeRoot,
 #pragma warning disable CS0618
-        IPageService    // Keep for compatibility with some Apps released in v12
+            // Important: Write with namespace, because it's easy to confuse with IPageService it supports
+            ToSic.Sxc.Web.IPageService    // Keep for compatibility with some Apps released in v12
 #pragma warning restore CS0618
     {
         public PageServiceShared PageServiceShared { get; }
