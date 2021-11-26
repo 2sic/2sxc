@@ -51,12 +51,6 @@ namespace ToSic.Sxc.Blocks
         /// </summary>
         bool IsHidden { get; }
 
-        // 2021-05-28 2dm - disabled for 12.02 only used internally
-        ///// <summary>
-        ///// Location of the template - in the current tenant/portal or global/shared location.
-        ///// </summary>
-        //string Location { get; }
-
         /// <summary>
         /// Translates the location to tell us if it's a shared view (the template is in a shared location)
         /// </summary>
@@ -98,8 +92,9 @@ namespace ToSic.Sxc.Blocks
         /// Contains the polymorph edition name for this view, which changes
         /// what path is loaded.
         /// </summary>
-        [PrivateApi]
-        string Edition { get; set; }
+        [PrivateApi] string Edition { get; set; }
+
+        [PrivateApi] string EditionPath { get; set; }
 
 
         [PrivateApi("WIP 12.02")] IEntity Resources { get; }
