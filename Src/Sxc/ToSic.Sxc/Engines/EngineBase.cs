@@ -59,8 +59,8 @@ namespace ToSic.Sxc.Engines
 
             var appPathRootInInstallation = Helpers.TemplateHelpers.Init(Block.App, Log).AppPathRoot(view.IsShared, PathTypes.PhysRelative);
             var subPath = view.Path;
-            var templatePath = TryToFindPolymorphPath(appPathRootInInstallation, view, subPath)
-                               ?? Path.Combine(appPathRootInInstallation, subPath).ToAbsolutePathForwardSlash();
+            var polymorphInfo = TryToFindPolymorphPath(appPathRootInInstallation, view, subPath);
+            var templatePath = polymorphInfo ?? Path.Combine(appPathRootInInstallation, subPath).ToAbsolutePathForwardSlash();
 
             // Throw Exception if Template does not exist
             if (!File.Exists(Helpers.ServerPaths.FullAppPath(templatePath)))
@@ -86,6 +86,7 @@ namespace ToSic.Sxc.Engines
         private string TryToFindPolymorphPath(string root, IView view, string subPath)
         {
             var wrapLog = Log.Call<string>($"{root}, {subPath}");
+            view.EditionPath = subPath.ToAbsolutePathForwardSlash();
             var polymorph = Helpers.Polymorphism.Init(Block.App.Data.List, Log);
             var edition = polymorph.Edition();
             if (edition == null) return wrapLog("no edition detected", null);
@@ -95,6 +96,7 @@ namespace ToSic.Sxc.Engines
             if (File.Exists(Helpers.ServerPaths.FullAppPath(testPath)))
             {
                 view.Edition = edition;
+                view.EditionPath = Path.Combine(edition, subPath).ToAbsolutePathForwardSlash();
                 return wrapLog($"edition {edition}", testPath);
             }
 
@@ -107,10 +109,11 @@ namespace ToSic.Sxc.Engines
             if (File.Exists(Helpers.ServerPaths.FullAppPath(testPath)))
             {
                 view.Edition = edition;
+                view.EditionPath = Path.Combine(edition, subPath).ToAbsolutePathForwardSlash();
                 return wrapLog($"edition {edition} up one path", testPath);
             }
 
-            return wrapLog($"edition {edition} never found", null);
+            return wrapLog($"edition {edition} not found", null);
         }
 
         [PrivateApi]
