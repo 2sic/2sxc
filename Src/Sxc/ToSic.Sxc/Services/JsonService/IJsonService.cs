@@ -28,7 +28,23 @@ namespace ToSic.Sxc.Services
         /// 
         /// If you need to add the JSON to HTML of a page, make sure you also use `Html.Raw(...)`, otherwise it will be encoded and not usable in JavaScript.
         /// </summary>
+        /// <param name="item">The object to serialize</param>
         string ToJson(object item);
+
+        /// <summary>
+        /// Convert an object to JSON - using nicer output / indentation.
+        /// 
+        /// If you need to add the JSON to HTML of a page, make sure you also use `Html.Raw(...)`, otherwise it will be encoded and not usable in JavaScript.
+        /// </summary>
+        /// <param name="item">The object to serialize</param>
+        /// <param name="indentation">How much to indent the json - we recommend 4. As of now, it will always use 4, no matter what you set (see remarks)</param>
+        /// <remarks>
+        /// Added in 2sxc 12.11
+        ///
+        /// But as of 2sxc 12.11 we're still using an old Newtonsoft, so we cannot really control the indentation depth.
+        /// If you call this, it will always indent using 4 spaces. In a future release we'll probably use a newer Newtonsoft with which we can then use the indentation as needed.
+        /// </remarks>
+        string ToJson(object item, int indentation);
 
         /// <summary>
         /// Convert a JSON to a typed object. 
