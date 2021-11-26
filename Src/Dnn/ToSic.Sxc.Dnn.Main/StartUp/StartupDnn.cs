@@ -41,7 +41,8 @@ namespace ToSic.Sxc.Dnn.StartUp
             if (_alreadyConfigured)
                 return;
 
-            // DiRegister();
+            // this service configuration for DNN7 and on DNN9 it is already happned on special startup
+            DiRegister();
 
             // Configure Newtonsoft Time zone handling
             // Moved here in v12.05 - previously it was in the Pre-Serialization converter
