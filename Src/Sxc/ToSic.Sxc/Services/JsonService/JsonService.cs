@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.IO;
+using System.Text;
+using Newtonsoft.Json;
 using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Services
@@ -13,9 +15,9 @@ namespace ToSic.Sxc.Services
         public object ToObject(string json) => JsonConvert.DeserializeObject(json);
 
         /// <inheritdoc />
-        public string ToJson(object dynamicEntity) => JsonConvert.SerializeObject(dynamicEntity);
+        public string ToJson(object item) => JsonConvert.SerializeObject(item);
 
         /// <inheritdoc />
-        public string ToJsonIndented(object dynamicEntity) => JsonConvert.SerializeObject(dynamicEntity, Formatting.Indented);
+        public string ToJson(object item, int indentation) => JsonConvert.SerializeObject(item, Formatting.Indented);
     }
 }
