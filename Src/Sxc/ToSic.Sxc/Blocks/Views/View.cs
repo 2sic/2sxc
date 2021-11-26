@@ -9,6 +9,7 @@ using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Blocks
 {
+    [PrivateApi("Internal implementation - don't publish")]
     public partial class View: EntityBasedWithLog, IView
     {
         #region Constructors
@@ -77,7 +78,6 @@ namespace ToSic.Sxc.Blocks
         public bool PublishData => Get(FieldPublishEnable, false);
         public string StreamsToPublish => Get(FieldPublishStreams, "");
 
-        [PrivateApi]
         public IEntity QueryRaw
         {
             get
@@ -88,7 +88,6 @@ namespace ToSic.Sxc.Blocks
         }
         private IEntity _queryRaw;
 
-        [PrivateApi]
         public QueryDefinition Query
         {
             get
@@ -114,16 +113,14 @@ namespace ToSic.Sxc.Blocks
         /// <summary>
         /// Returns true if the current template uses Razor
         /// </summary>
-        [PrivateApi]
         public bool IsRazor => Type == TypeRazorValue;
 
-        [PrivateApi]
         public string Edition { get; set; }
-        
-        [PrivateApi("WIP 12.02")]
+
+        public string EditionPath { get; set; }
+
         public IEntity Resources => GetBestRelationship(FieldResources);
 
-        [PrivateApi("WIP 12.02")]
         public IEntity Settings => GetBestRelationship(FieldSettings);
 
         /// <inheritdoc />
