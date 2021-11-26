@@ -20,12 +20,11 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
         public bool HasContent;
         public bool SupportsAjax;
 
-        [JsonProperty(NullValueHandling = Ignore)]
-        public string TemplateEdition;
+        [JsonProperty(NullValueHandling = Ignore)] public string Edition;
+        [JsonProperty(NullValueHandling = Ignore)] public string TemplatePath;
 
         public ContentBlockDto(IBlock block)
         {
-            //var block = blockBuilder.Block;
             IsCreated = block.ContentGroupExists;
             IsContent = block.IsContentApp;
             var app = block.App;
@@ -41,12 +40,13 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
 
             HasContent = block.View != null && (block.Configuration?.Exists ?? false);
 
-            ZoneId = block.ZoneId; // 2019-11-09, Id not nullable any more // ?? 0;
+            ZoneId = block.ZoneId;
             TemplateId = block.View?.Id ?? 0;
-            TemplateEdition = block.View?.Edition;
+            Edition = block.View?.Edition;
+            TemplatePath = block.View?.EditionPath;
             QueryId = block.View?.Query?.Id; // will be null if not defined
             ContentTypeName = block.View?.ContentType ?? "";
-            IsList = block.Configuration?.View?.UseForList ?? false;//  isCreated && ((sxc.BlockConfiguration?.Content?.Count ?? 0) > 1);
+            IsList = block.Configuration?.View?.UseForList ?? false;
             SupportsAjax = block.IsContentApp || (block.App?.Configuration?.EnableAjax ?? false);
         }
     }
