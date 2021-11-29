@@ -80,7 +80,7 @@ namespace ToSic.Sxc.Dnn.StartUp
 
         private static bool _alreadyRegistrated;
 
-        internal static void DiRegister()
+        public static void DiRegister()
         {
             if (_alreadyRegistrated)
                 return;
