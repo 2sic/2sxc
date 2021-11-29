@@ -38,15 +38,19 @@ namespace ToSic.Sxc.Apps.Assets
     }
 
     [PrivateApi]
-    public partial class AssetTemplates : HasLog<AssetTemplates> // , IAssetTemplates
+    public partial class AssetTemplates : HasLog<AssetTemplates>
     {
         #region Constants
 
-        private const string ForTemplate = "Template";
-        private const string ForApi = "Api";
+        internal const string ForTemplate = "Template";
+        internal const string ForApi = "Api";
         private const string ForDocs = "Documentation";
         public const string ForCode = "Code";
         public const string ForSearch = "Search";
+
+        internal const string TypeRazor = "Razor";
+        internal const string TypeToken = "Token";
+        internal const string TypeNone = "";
 
 
         #endregion
