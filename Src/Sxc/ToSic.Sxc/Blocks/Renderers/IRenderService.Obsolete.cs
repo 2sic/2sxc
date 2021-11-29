@@ -1,11 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Data;
-#if NETFRAMEWORK
-using IHtmlString = System.Web.IHtmlString;
-#else
-using IHtmlString = Microsoft.AspNetCore.Html.IHtmlContent;
-#endif
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -29,10 +25,10 @@ namespace ToSic.Sxc.Blocks
     {
         [PrivateApi]
 #pragma warning disable CS0108, CS0114
-        IHtmlString One(DynamicEntity dynParent, string noParamOrder = Eav.Parameters.Protector,
+        IHybridHtmlString One(DynamicEntity dynParent, string noParamOrder = Eav.Parameters.Protector,
             IDynamicEntity item = null, string field = null, Guid? newGuid = null);
         [PrivateApi]
-        IHtmlString All(DynamicEntity context, string noParamOrder = Eav.Parameters.Protector,
+        IHybridHtmlString All(DynamicEntity context, string noParamOrder = Eav.Parameters.Protector,
             string field = null, string apps = null, int max = 100, string merge = null);
 #pragma warning restore CS0108, CS0114
     }

@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Dnn.Web
         /// <returns>
         /// An HtmlString object which will be not be html-encoded when added to a page with @Html.Raw(...)
         /// </returns>
-        HtmlString Raw(object stringHtml);
+        IHtmlString Raw(object stringHtml);
 
         /// <summary>
         /// Experimental support for Html.Partial to mimic API in .net Core 5
