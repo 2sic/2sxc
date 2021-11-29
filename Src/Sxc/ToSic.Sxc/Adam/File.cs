@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Adam
         public ITarget MetadataId => _metadataId ?? (_metadataId = new Target
         {
             TargetType = (int)TargetTypes.CmsItem,
-            KeyString = "file:" + SysId
+            KeyString = CmsMetadata.FilePrefix /*"file:"*/ + SysId
         });
         private ITarget _metadataId;
         #endregion

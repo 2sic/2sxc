@@ -4,8 +4,27 @@ using ToSic.Eav.Documentation;
 namespace ToSic.Sxc.Context
 {
     // ReSharper disable once PossibleInterfaceMemberAmbiguity
-    public interface IPage : ICmsPage
+    public interface IPage
     {
+        /// <summary>
+        /// The Id of the page.
+        /// 
+        /// 🪒 Use in Razor: `CmsContext.Page.Type`
+        /// </summary>
+        /// <remarks>
+        /// Corresponds to the Dnn `TabId` or the Oqtane `Page.PageId`
+        /// </remarks>
+        int Id { get; }
+
+        /// <summary>
+        /// The page parameters, cross-platform.
+        /// Use this for easy access to url parameters like ?id=xyz
+        /// with `CmsContext.Page.Parameters["id"]` as a replacement for `Request.QueryString["id"]`
+        /// 
+        /// 🪒 Use in Razor: `CmsContext.Page.Parameters["id"]`
+        /// </summary>
+        IParameters Parameters { get; }
+
         /// <summary>
         /// These parameters can reconfigure what view is used or change
         /// </summary>
