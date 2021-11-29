@@ -2,11 +2,6 @@
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Web;
-#if NET451
-using HtmlString = System.Web.HtmlString;
-#else
-using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
-#endif
 
 namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
@@ -24,11 +19,11 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         #region Attribute-helper
 
         /// <inheritdoc/>
-        public HtmlString Attribute(string name, string value)
+        public IHybridHtmlString Attribute(string name, string value)
             => !Enabled ? null : Build.Attribute(name, value);
 
         /// <inheritdoc/>
-        public HtmlString Attribute(string name, object value)
+        public IHybridHtmlString Attribute(string name, object value)
             => !Enabled ? null : Build.Attribute(name, JsonConvert.SerializeObject(value));
 
         #endregion Attribute Helper
