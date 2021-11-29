@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using ToSic.Eav.Metadata;
+using ToSic.Sxc.Edit.Toolbar;
 
 namespace ToSic.Sxc.Services
 {
@@ -9,15 +10,13 @@ namespace ToSic.Sxc.Services
         // - add parameter protection
         // - detect content-type based on Decorator
 
-        public string Metadata(
-            object target,
-            string contentType)
+        public ToolbarRuleBase Metadata(object target, string contentType)
         {
-            if (string.IsNullOrWhiteSpace(contentType)) return null;
-            if (!(target is IHasMetadata hasMetadata)) return null;
+            if (string.IsNullOrWhiteSpace(contentType)) return new ToolbarRuleGeneric(null);
+            if (!(target is IHasMetadata hasMetadata)) return new ToolbarRuleGeneric(null);
 
             // 1. check if it's a valid target
-            ITarget targetId = hasMetadata.Metadata.MetadataId;
+            var targetId = hasMetadata.Metadata.MetadataId;
 
             // Check if it already has this metadata
             var existing = hasMetadata.Metadata.OfType(contentType).FirstOrDefault();
@@ -35,7 +34,9 @@ namespace ToSic.Sxc.Services
                               ? "&contentType=" + contentType + "&" + mdFor
                               : "");
 
-            return newRule;
+            return new ToolbarRuleGeneric(newRule);
         }
+
+        public ToolbarFluidWIP New() => new ToolbarFluidWIP();
     }
 }
