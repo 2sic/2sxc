@@ -15,7 +15,7 @@ namespace ToSic.Sxc.WebApi.InPage
     /// </summary>
     public class AjaxPreviewHelperWIP
     {
-        public string ReconstructHtml(RenderResultWIP renderResult, string root)
+        public string ReconstructHtml(RenderResult renderResult, string root)
         {
             // 0. Skip basics like jQuery, $2sxc, editApi and editUI as they are always available in edit mode
 
