@@ -26,14 +26,14 @@ namespace ToSic.Sxc.Oqt.Server.Block
         private readonly SiteState _siteState;
         private readonly IClientDependencyOptimizer _oqtClientDependencyOptimizer;
         
-        public void Init(OqtSxcViewBuilder parent, RenderResultWIP renderResult)
+        public void Init(OqtSxcViewBuilder parent, RenderResult renderResult)
         {
             Parent = parent;
             RenderResult = renderResult;
         }
 
         protected OqtSxcViewBuilder Parent;
-        protected RenderResultWIP RenderResult;
+        protected RenderResult RenderResult;
 
         #endregion
 
