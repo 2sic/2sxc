@@ -146,7 +146,7 @@ namespace ToSic.Sxc.Apps
                         Name = ct.Name,
                         IsHidden = visible.All(t => t.ContentType != ct.StaticName),   // must check if *any* template is visible, otherwise tell the UI that it's hidden
                         Thumbnail = thumbnail,
-                        Metadata = _dataToFormatLight.Convert(metadata)
+                        Properties = _dataToFormatLight.Convert(metadata)
                     };
                 });
         }
