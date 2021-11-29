@@ -58,25 +58,5 @@ namespace ToSic.Sxc.WebApi.InPage
             return callLog("ok", true);
         }
 
-
-
-
-
-        //public RenderResult Render(int templateId, string lang)
-        //{
-        //    var callLog = Log.Call<RenderResult>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
-        //    //SetThreadCulture(lang);
-
-        //    // if a preview templateId was specified, swap to that
-        //    if (templateId > 0)
-        //    {
-        //        var template = CmsManagerOfBlock.Read.Views.Get(templateId);
-        //        Block.View = template;
-        //    }
-
-        //    var result = Block.BlockBuilder.Run(true);
-        //    return callLog("ok", result);
-        //}
-
     }
 }
