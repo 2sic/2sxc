@@ -1,13 +1,8 @@
 ﻿using System;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
+using ToSic.Sxc.Web;
 using IEntity = ToSic.Eav.Data.IEntity;
-#if NETFRAMEWORK
-using HtmlString = System.Web.HtmlString;
-#else
-using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
-#endif
-
 
 namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
@@ -16,7 +11,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         private readonly string innerContentAttribute = "data-list-context";
 
         /// <inheritdoc />
-        public HtmlString Toolbar(
+        public IHybridHtmlString Toolbar(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
             string actions = null,
@@ -29,7 +24,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             => ToolbarInternal(false, target, noParamOrder, actions, contentType, condition, metadataFor, prefill, settings, toolbar);
 
         /// <inheritdoc/>
-        public HtmlString TagToolbar(
+        public IHybridHtmlString TagToolbar(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
             string actions = null,
@@ -41,7 +36,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             object toolbar = null)
             => ToolbarInternal(true, target, noParamOrder, actions, contentType, condition, metadataFor, prefill, settings, toolbar);
 
-        private HtmlString ToolbarInternal(
+        private IHybridHtmlString ToolbarInternal(
             bool inTag,
             object target,
             string noParamOrder,
@@ -53,7 +48,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             object settings,
             object toolbar)
         {
-            var wrapLog = Log.Call<HtmlString>($"enabled:{Enabled}; inline{inTag}");
+            var wrapLog = Log.Call<IHybridHtmlString>($"enabled:{Enabled}; inline{inTag}");
             if (!Enabled) return wrapLog("not enabled", null);
             if (!IsConditionOk(condition)) return wrapLog("condition false", null);
 
@@ -68,7 +63,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
             var result = inTag
                 ? Attribute("sxc-toolbar", itmToolbar.ToolbarAttribute())
-                : new HtmlString(itmToolbar.Toolbar);
+                : new HybridHtmlString(itmToolbar.Toolbar);
             return wrapLog("ok", result);
         }
 

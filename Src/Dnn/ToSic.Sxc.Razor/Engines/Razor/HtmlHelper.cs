@@ -20,11 +20,11 @@ namespace ToSic.Sxc.Engines.Razor
         }
         
         /// <inheritdoc/>
-        public HtmlString Raw(object stringHtml)
+        public IHtmlString Raw(object stringHtml)
         {
             if(stringHtml is string s)
                 return new HtmlString(s);
-            if (stringHtml is HtmlString h)
+            if (stringHtml is IHtmlString h)
                 return h;
             if (stringHtml == null)
                 return new HtmlString(string.Empty);
