@@ -45,5 +45,9 @@ namespace ToSic.Sxc.Context
         /// </summary>
         /// <remarks>New in v12.02, WIP</remarks>
         ICmsView View { get; }
+
+
+        [PrivateApi("WIP v13")]
+        ICmsBlock Block { get; }
     }
 }

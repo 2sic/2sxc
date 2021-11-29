@@ -1,10 +1,11 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Metadata;
-using ToSic.Sxc.Context;
+using ToSic.Sxc.Blocks;
+
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
-namespace ToSic.Sxc.Blocks
+namespace ToSic.Sxc.Context
 {
     [PrivateApi("Hide implementation")]
     public class CmsView: Wrapper<IView>, ICmsView

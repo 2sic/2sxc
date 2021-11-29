@@ -38,11 +38,8 @@ namespace ToSic.Sxc.Context
         /// <returns></returns>
         internal CmsContext Update(IBlock block)
         {
-            //_dynCode = dynCode;
             _block = block;
             Context = block.Context;
-            _page = null;
-            _module = null;
             return this;
         }
 
@@ -52,21 +49,24 @@ namespace ToSic.Sxc.Context
 
         public ICmsPlatform Platform { get; }
 
-        public ICmsSite Site => Context.Site as ICmsSite;
+        public ICmsSite Site => _site ?? (_site = new CmsSite(Context.Site, _block.Context?.AppState));
+        private ICmsSite _site;
 
-        public ICmsPage Page => _page ?? (_page = (Context as IContextOfBlock)?.Page ?? new PageUnknown(null));
-        private IPage _page;
+        public ICmsPage Page => _page ?? (_page = new CmsPage((Context as IContextOfBlock)?.Page ?? new PageUnknown(null), _block.Context?.AppState));
+        private ICmsPage _page;
 
         public ICmsCulture Culture => _culture ?? (_culture = new CmsCulture(this));
         private ICmsCulture _culture;
 
-        public ICmsModule Module => _module ?? (_module = (Context as IContextOfBlock)?.Module ?? new ModuleUnknown(null));
-        private IModule _module;
+        public ICmsModule Module => _cmsModule ?? (_cmsModule = new CmsModule((Context as IContextOfBlock)?.Module ?? new ModuleUnknown(null), _block));
+        private ICmsModule _cmsModule;
 
         public ICmsUser User => Context.User as ICmsUser;
 
-        [PrivateApi]
         public ICmsView View => _view ?? (_view = new CmsView(_block));
         private ICmsView _view;
+
+        public ICmsBlock Block => _cmsBlock ?? (_cmsBlock = new CmsBlock(_block));
+        private ICmsBlock _cmsBlock;
     }
 }
