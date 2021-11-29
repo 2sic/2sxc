@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Sxc.Edit.Toolbar;
 
 namespace ToSic.Sxc.Services
 {
@@ -17,7 +18,7 @@ namespace ToSic.Sxc.Services
         /// <param name="target"></param>
         /// <param name="contentType"></param>
         /// <returns></returns>
-        string Metadata(
+        ToolbarRuleBase Metadata(
             object target,
             string contentType);
     }
