@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
@@ -12,41 +13,47 @@ namespace ToSic.Sxc.Apps.Assets
     {
         #region Constructor / DI
 
-        public AssetEditInfo EditInfo { get; set; }
+        private AssetEditInfo EditInfo { get; set; }
 
-        private bool _userIsSuperUser;
-        private bool _userIsAdmin;
         private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
+        private readonly IUser _user;
         private CmsRuntime _cmsRuntime;
         private IApp _app;
 
-        public AssetEditor(Lazy<CmsRuntime> cmsRuntimeLazy) : base("Sxc.AstEdt")
+        public AssetEditor(Lazy<CmsRuntime> cmsRuntimeLazy, IUser user) : base("Sxc.AstEdt")
         {
             _cmsRuntimeLazy = cmsRuntimeLazy;
+            _user = user;
         }
 
-        public AssetEditor Init(IApp app, int templateId, bool isSuperUser, bool isAdmin, ILog parentLog)
+        // TODO: REMOVE THIS once we release v13 #cleanUp EOY 2021
+        public AssetEditor Init(IApp app, int templateId, ILog parentLog)
         {
-            InitShared(app, isSuperUser, isAdmin, parentLog);
-            var template = _cmsRuntime.Views.Get(templateId);
-            EditInfo = TemplateAssetsInfo(template);
+            InitShared(app, parentLog);
+            var view = _cmsRuntime.Views.Get(templateId);
+            var t = new AssetEditInfo(_app.AppId, _app.Name, view.Path, view.IsShared);
+            EditInfo = AddViewDetailsAndTypes(t, view);
+
+            //EditInfo = TemplateAssetsInfo(template);
             return this;
         }
 
-        public AssetEditor Init(IApp app, string path, bool isSuperUser, bool isAdmin, bool global, ILog parentLog)
+        public AssetEditor Init(IApp app, string path, bool global, int viewId, ILog parentLog)
         {
-            InitShared(app, isSuperUser, isAdmin, parentLog);
+            InitShared(app, parentLog);
             EditInfo = new AssetEditInfo(_app.AppId, _app.Name, path, global);
+            if (viewId == 0) return this;
+
+            var view = _cmsRuntime.Views.Get(viewId);
+            AddViewDetailsAndTypes(EditInfo, view);
             return this;
         }
 
 
-        private void InitShared(IApp app, bool isSuperUser, bool isAdmin, ILog parentLog)
+        private void InitShared(IApp app, ILog parentLog)
         {
             Log.LinkTo(parentLog);
             _app = app;
-            _userIsSuperUser = isSuperUser;
-            _userIsAdmin = isAdmin;
 
             // todo: 2dm Views - see if we can get logger to flow
             _cmsRuntime = _cmsRuntimeLazy.Value.Init(app, true, Log);
@@ -71,11 +78,11 @@ namespace ToSic.Sxc.Apps.Assets
         public void EnsureUserMayEditAssetOrThrow(string fullPath = null)
         {
             // check super user permissions - then all is allowed
-            if (_userIsSuperUser)
+            if (_user.IsSuperUser)// _userIsSuperUser)
                 return;
 
             // ensure current user is admin - this is the minimum of not super-user
-            if (!_userIsAdmin)
+            if (!_user.IsAdmin) // _userIsAdmin)
                 throw new AccessViolationException("current user may not edit templates, requires admin rights");
 
             // if not super user, check if razor (not allowed; super user only)
@@ -98,19 +105,22 @@ namespace ToSic.Sxc.Apps.Assets
                 throw new AccessViolationException("current user may not edit files outside of the app-scope");
         }
 
-        private AssetEditInfo TemplateAssetsInfo(IView view)
+        //private AssetEditInfo TemplateAssetsInfo(IView view)
+        //{
+        //    var t = new AssetEditInfo(_app.AppId, _app.Name, view.Path, view.IsShared);
+        //    return AddViewDetailsAndTypes(t, view);
+        //}
+
+        private static AssetEditInfo AddViewDetailsAndTypes(AssetEditInfo t, IView view)
         {
-            var t = new AssetEditInfo(_app.AppId, _app.Name, view.Path, view.IsShared)
-            {
-                // Template specific properties, not really available in other files
-                Type = view.Type,
-                Name = view.Name,
-                HasList = view.UseForList,
-                TypeContent = view.ContentType,
-                TypeContentPresentation = view.PresentationType,
-                TypeList = view.HeaderType,
-                TypeListPresentation = view.HeaderPresentationType
-            };
+            // Template specific properties, not really available in other files
+            t.Type = view.Type;
+            t.Name = view.Name;
+            t.HasList = view.UseForList;
+            t.TypeContent = view.ContentType;
+            t.TypeContentPresentation = view.PresentationType;
+            t.TypeList = view.HeaderType;
+            t.TypeListPresentation = view.HeaderPresentationType;
             return t;
         }
 
@@ -131,7 +141,7 @@ namespace ToSic.Sxc.Apps.Assets
                     return File.ReadAllText(InternalPath);
 
                 throw new FileNotFoundException("could not find file"
-                                                + (_userIsSuperUser
+                                                + (_user.IsSuperUser // _userIsSuperUser
                                                     ? " for superuser - file tried '" + InternalPath + "'"
                                                     : "")
                 );
@@ -144,7 +154,7 @@ namespace ToSic.Sxc.Apps.Assets
                     File.WriteAllText(InternalPath, value);
                 else
                     throw new FileNotFoundException("could not find file"
-                                                    + (_userIsSuperUser
+                                                    + (_user.IsSuperUser // _userIsSuperUser
                                                         ? " for superuser - file tried '" + InternalPath + "'"
                                                         : "")
                     );
