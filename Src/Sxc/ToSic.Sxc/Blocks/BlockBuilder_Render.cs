@@ -19,13 +19,13 @@ namespace ToSic.Sxc.Blocks
 
         public string Render() => Run(true).Html;
 
-        public RenderResultWIP Run(bool topLevel = true)
+        public RenderResult Run(bool topLevel = true)
         {
             if (_result != null) return _result;
-            var wrapLog = Log.Call<RenderResultWIP>();
+            var wrapLog = Log.Call<RenderResult>();
             try
             {
-                var result = new RenderResultWIP
+                var result = new RenderResult
                 {
                     Html = RenderInternal(),
                     ModuleId = Block.ParentId
@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Blocks
             return wrapLog(null, _result);
         }
 
-        private RenderResultWIP _result;
+        private RenderResult _result;
 
         private string RenderInternal()
         {

@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Blocks
     /// It's kind of like a bundle of things the CMS must then do to deliver to the page
     /// </summary>
     [PrivateApi]
-    public class RenderResultWIP
+    public class RenderResult
     {
         /// <summary>
         /// True if the work has been done and this is populated
