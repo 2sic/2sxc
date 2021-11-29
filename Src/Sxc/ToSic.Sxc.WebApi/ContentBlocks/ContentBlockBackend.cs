@@ -67,7 +67,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             return BlockEditorBase.GetEditor(Block).Publish(part, index);
         }
 
-        public AjaxRenderDto RenderV2(int templateId, string lang, /*RenderResult result,*/ string root)
+        public AjaxRenderDto RenderV2(int templateId, string lang, string root)
         {
             var wrapLog = Log.Call<AjaxRenderDto>();
             var result = RenderToResult(templateId, lang);
