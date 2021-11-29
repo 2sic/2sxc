@@ -4,8 +4,6 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Web.PageFeatures;
 
-// using Feats = ToSic.Eav.Configuration.Features;
-
 namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
     public partial class InPageEditingHelper
@@ -28,7 +26,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             // check if feature enabled - if more than the api is needed
             // extend this list if new parameters are added
             // 2021-09-1 2dm- I think this was a bug, it checked for many more things but the feature-form check is only important for the form
-            if (forms == true) // .HasValue || styles.HasValue || context.HasValue || autoToolbar.HasValue)
+            if (forms == true)
             {
                 var feats = new[] {FeatureIds.PublicForms};
                 var features = Block.Context.ServiceProvider.Build<IFeaturesInternal>();
@@ -41,24 +39,12 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
             var psf = Block?.Context?.PageServiceShared;
 
-            if (js == true || api ==true || forms == true)
-            {
-                psf?.Activate(BuiltInFeatures.Core.Key);
-                //hostWithInternals.UiAddJsApi = (js ?? false) || (api ?? false) || (forms ?? false);
-            }
+            if (js == true || api ==true || forms == true) psf?.Activate(BuiltInFeatures.Core.Key);
 
             // only update the values if true, otherwise leave untouched
-            if (api == true || forms == true)
-            {
-                psf?.Activate(BuiltInFeatures.EditApi.Key);
-                //hostWithInternals.UiAddEditApi = (api ?? false) || (forms ?? false);
-            }
+            if (api == true || forms == true) psf?.Activate(BuiltInFeatures.EditApi.Key);
 
-            if (styles.HasValue)
-            {
-                psf?.Activate(BuiltInFeatures.EditUi.Key);
-                //hostWithInternals.UiAddEditUi = styles.Value;
-            }
+            if (styles.HasValue) psf?.Activate(BuiltInFeatures.EditUi.Key);
 
             if (context.HasValue)
                 hostWithInternals.UiAddEditContext = context.Value;
