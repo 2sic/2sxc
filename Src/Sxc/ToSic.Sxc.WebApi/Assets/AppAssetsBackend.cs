@@ -90,15 +90,29 @@ namespace ToSic.Sxc.WebApi.Assets
             return assetEditor.Create(content);
         }
 
-        public TemplatesDto GetTemplates(string purpose)
+        public TemplatesDto GetTemplates(string purpose, string type)
         {
             var templateInfos = _assetTemplates.GetTemplates();
 
             // TBD: future purpose implementation
+            purpose = (purpose ?? AssetTemplates.ForTemplate).ToLowerInvariant().Trim() ?? "";
+            var defId = AssetTemplates.RazorHybrid.Key;
+            if (purpose.Equals(AssetTemplates.ForApi, StringComparison.InvariantCultureIgnoreCase))
+                defId = AssetTemplates.ApiHybrid.Key;
+            if (purpose.Equals(AssetTemplates.ForSearch, StringComparison.InvariantCultureIgnoreCase))
+                defId = AssetTemplates.DnnSearch.Key;
+
+            // For templates we also check the type
+            if (purpose.Equals(AssetTemplates.ForTemplate, StringComparison.InvariantCultureIgnoreCase))
+            {
+                type = type?.ToLowerInvariant().Trim() ?? "";
+                if (type.Equals(AssetTemplates.TypeToken, StringComparison.InvariantCultureIgnoreCase))
+                    defId = AssetTemplates.Token.Key;
+            }
 
             return new TemplatesDto
             {
-                Default = AssetTemplates.RazorHybrid.Key,
+                Default = defId,
                 Templates = templateInfos
             };
         }
