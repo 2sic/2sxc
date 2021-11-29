@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Dnn.Run
     /// This is a DNN implementation of a Tenant-object. 
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public sealed class DnnSite: Site<PortalSettings>, ICmsSite
+    public sealed class DnnSite: Site<PortalSettings> //, ICmsSite
     {
 
         #region Constructors and DI

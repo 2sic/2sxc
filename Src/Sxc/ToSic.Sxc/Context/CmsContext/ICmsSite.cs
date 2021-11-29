@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Context
 {
@@ -6,7 +7,7 @@ namespace ToSic.Sxc.Context
     /// The site context of the code - so basically which website / portal it's running on. 
     /// </summary>
     [PublicApi]
-    public interface ICmsSite
+    public interface ICmsSite: IHasMetadata
     {
         /// <summary>
         /// The Id of the site in systems like DNN and Oqtane.

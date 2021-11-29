@@ -8,8 +8,8 @@ using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Web;
+using CmsBlock = ToSic.Sxc.DataSources.CmsBlock;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.LookUp
