@@ -96,8 +96,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         public AjaxRenderDto Render([FromUri] int templateId, [FromUri] string lang)
         {
             Log.Add($"render template:{templateId}, lang:{lang}");
-            //var result = ViewBackend.Render(templateId, lang);
-            return Backend.RenderV2(templateId, lang, /*result,*/ DnnConstants.SysFolderRootVirtual.Trim('~'));
+            return Backend.RenderV2(templateId, lang, DnnConstants.SysFolderRootVirtual.Trim('~'));
         }
 
         /// <inheritdoc />
