@@ -11,16 +11,30 @@ namespace ToSic.Sxc.Context
     /// </summary>
     [PrivateApi]
 
-    public interface IModule: ICmsModule
+    public interface IModule //: ICmsModule
 #if NETFRAMEWORK
-        // in this case we must also inherit from IContainer - legacy of the signature for CustomizeSearch
 #pragma warning disable 618
-        , ToSic.Eav.Run.IContainer
+        // in this case we must also inherit from IContainer - legacy of the signature for CustomizeSearch
+        : ToSic.Eav.Run.IContainer
 #pragma warning restore 618
 #endif
     {
         [PrivateApi("Workaround till we have DI to inject the current container")]
         IModule Init(int id, ILog parentLog);
+
+        /// <summary>
+        /// The module id on the page.
+        ///
+        /// 🪒 Use in Razor: `CmsContext.Module.Id`
+        /// </summary>
+        /// <remarks>
+        /// Corresponds to the Dnn ModuleId or the Oqtane Module Id.
+        ///
+        /// In some systems a module can be re-used on multiple pages, and possibly have different settings for re-used modules.
+        /// 2sxc doesn't use that, so the module id corresponds to the Dnn ModuleId and not the PageModuleId.
+        /// </remarks>
+        /// <returns>The ID, unless unknown, in which case it's a negative number</returns>
+        int Id { get; }
 
 
         /// <summary>
