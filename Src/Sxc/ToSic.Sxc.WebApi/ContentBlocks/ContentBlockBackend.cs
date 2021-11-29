@@ -38,7 +38,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
         #endregion
 
 
-        public RenderResultWIP NewBlockAndRender(int parentId, string field, int sortOrder, string app = "", Guid? guid = null) 
+        public RenderResult NewBlockAndRender(int parentId, string field, int sortOrder, string app = "", Guid? guid = null) 
         {
             var entityId = NewBlock(parentId, field, sortOrder, app, guid);
 
@@ -67,9 +67,10 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             return BlockEditorBase.GetEditor(Block).Publish(part, index);
         }
 
-        public AjaxRenderDto RenderV2(RenderResultWIP result, string root)
+        public AjaxRenderDto RenderV2(int templateId, string lang, /*RenderResult result,*/ string root)
         {
             var wrapLog = Log.Call<AjaxRenderDto>();
+            var result = RenderToResult(templateId, lang);
             var resources = new List<AjaxResourceDtoWIP>();
             var ver = Settings.Version.ToString();
             if (result.Features.Contains(BuiltInFeatures.TurnOn))
@@ -106,5 +107,22 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
                 Resources = resources
             });
         }
+
+        private RenderResult RenderToResult(int templateId, string lang)
+        {
+            var callLog = Log.Call<RenderResult>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
+            //SetThreadCulture(lang);
+
+            // if a preview templateId was specified, swap to that
+            if (templateId > 0)
+            {
+                var template = CmsManagerOfBlock.Read.Views.Get(templateId);
+                Block.View = template;
+            }
+
+            var result = Block.BlockBuilder.Run(true);
+            return callLog("ok", result);
+        }
+
     }
 }

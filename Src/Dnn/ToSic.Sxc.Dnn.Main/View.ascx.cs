@@ -100,7 +100,7 @@ namespace ToSic.Sxc.Dnn
             // #lightspeed
             if (PreviousCache != null) Log.Add("Lightspeed hit - will use cached");
 
-            RenderResultWIP data = null;
+            RenderResult data = null;
             var headersAndScriptsAdded = false;
             // skip this if something before this caused an error
             if (!IsError)
@@ -147,10 +147,10 @@ namespace ToSic.Sxc.Dnn
             _entireLog?.Invoke("✔");
         }
 
-        private RenderResultWIP RenderViewAndGatherJsCssSpecs()
+        private RenderResult RenderViewAndGatherJsCssSpecs()
         {
             var timerWrap = Log.Call(message: $"module {ModuleId} on page {TabId}", useTimer: true);
-            var result = new RenderResultWIP();
+            var result = new RenderResult();
             TryCatchAndLogToDnn(() =>
             {
                 if (RenderNaked) Block.BlockBuilder.WrapInDiv = false;
