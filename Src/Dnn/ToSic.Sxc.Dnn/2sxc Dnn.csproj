@@ -54,22 +54,22 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DotNetNuke">
-      <HintPath>..\..\..\Dependencies\Dnn944\DotNetNuke.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.dll</HintPath>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="DotNetNuke.Web">
-      <HintPath>..\..\..\Dependencies\Dnn944\DotNetNuke.Web.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.Web.dll</HintPath>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="DotNetNuke.Web.Client">
-      <HintPath>..\..\..\Dependencies\Dnn944\DotNetNuke.Web.Client.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.Web.Client.dll</HintPath>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="DotNetNuke.WebControls">
-      <HintPath>..\..\..\Dependencies\Dnn944\DotNetNuke.WebControls.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.WebControls.dll</HintPath>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
@@ -82,8 +82,13 @@
     <Reference Include="System.Numerics" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.Helpers">
+      <HintPath>..\..\..\Dependencies\System.Web\System.Web.Helpers.dll</HintPath>
+      <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="System.Web.WebPages">
-      <HintPath>..\..\..\Dependencies\Dnn944\System.Web.WebPages.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\System.Web\System.Web.WebPages.dll</HintPath>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>

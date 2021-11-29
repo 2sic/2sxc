@@ -77,12 +77,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DotNetNuke">
-      <HintPath>..\..\..\Dependencies\Dnn944\DotNetNuke.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.dll</HintPath>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="DotNetNuke.Web">
-      <HintPath>..\..\..\Dependencies\Dnn944\DotNetNuke.Web.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.Web.dll</HintPath>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>

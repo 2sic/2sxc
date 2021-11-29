@@ -96,7 +96,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DotNetNuke">
-      <HintPath>..\..\..\Dependencies\Dnn944\DotNetNuke.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.dll</HintPath>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
@@ -110,7 +110,7 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.WebPages">
-      <HintPath>..\..\..\Dependencies\Dnn944\System.Web.WebPages.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\System.Web\System.Web.WebPages.dll</HintPath>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
