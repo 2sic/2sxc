@@ -55,7 +55,7 @@ namespace ToSic.Sxc.WebApi.Assets
         /// </summary>
         /// <param name="purpose">filter by Purpose when provided</param>
         /// <returns></returns>
-        TemplatesDto GetTemplates(string purpose = null);
+        TemplatesDto GetTemplates(string purpose = null, string type = null);
 
         TemplatePreviewDto Preview(int appId, string path, string name, string templateKey, bool global = false);
 
