@@ -177,8 +177,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         public AjaxRenderDto Render(int templateId, string lang)
         {
             Log.Add($"render template:{templateId}, lang:{lang}");
-            //var result = _appViewPickerBackendLazy.Value.Init(Log).Render(templateId, lang);
-            return Backend.RenderV2(templateId, lang, /*result,*/ OqtConstants.UiRoot);
+            return Backend.RenderV2(templateId, lang, OqtConstants.UiRoot);
         }
 
         /// <inheritdoc />
