@@ -21,5 +21,7 @@ namespace ToSic.Sxc.Services
         ToolbarRuleBase Metadata(
             object target,
             string contentType);
+
+        ToolbarFluidWIP New();
     }
 }

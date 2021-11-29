@@ -1,36 +1,33 @@
 ﻿using System;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
-    public class ToolbarRuleBase: IString
+    public class ToolbarRuleBase: HybridHtmlString
     {
-        protected ToolbarRuleBase() {}
+        protected ToolbarRuleBase(): base(null) {}
 
-        protected ToolbarRuleBase(string rule)
+        protected ToolbarRuleBase(string rule): this()
         {
             Rule = rule;
         }
+
+        public override string ToString() => Rule;
 
         public IEntity Target { get; set; }
         public bool TargetRequired { get; set; }
 
         public bool Prepared { get; set; }
 
-        public string Command { get; set; }
-
-        public string CommandParams { get; set; }
-
-        public string UiParams { get; set; }
-
-        public string Rule
+        public virtual string Rule
         {
             get
             {
                 if (Prepared) return _rule;
                 Prepared = true;
-                _rule = PrepareRule();
+                _rule = BuildRule();
                 return _rule;
             }
             set
@@ -40,10 +37,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             }
         }
 
-        private string PrepareRule()
-        {
-            throw new NotImplementedException();
-        }
+        protected virtual string BuildRule() => string.Empty;
 
         private string _rule;
 
