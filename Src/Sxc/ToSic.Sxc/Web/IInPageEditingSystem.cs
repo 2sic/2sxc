@@ -2,14 +2,8 @@
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Data;
 using ToSic.Eav.Metadata;
-#if NETFRAMEWORK
-using HtmlString = System.Web.HtmlString;
-#else
-using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
-#endif
 
 // ReSharper disable UnusedMember.Global
-
 namespace ToSic.Sxc.Web
 {
     /// <summary>
@@ -71,7 +65,7 @@ namespace ToSic.Sxc.Web
         /// 1. `condition` added in 2sxc 12.05
         /// 1. `metadataFor` added in 2sxc 12.10
         /// </remarks>
-        HtmlString Toolbar(
+        IHybridHtmlString Toolbar(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
             string actions = null,
@@ -124,7 +118,7 @@ namespace ToSic.Sxc.Web
         /// 1. `condition` added in 2sxc 12.05
         /// 1. `metadataFor` added in 2sxc 12.10
         /// </remarks>
-        HtmlString TagToolbar(
+        IHybridHtmlString TagToolbar(
             object target = null,
             string noParamOrder =
                 "Rule: all params must be named (https://r.2sxc.org/named-params), Example: \'enable: true, version: 10\'",
@@ -150,13 +144,13 @@ namespace ToSic.Sxc.Web
         /// <param name="newGuid">the guid of a new item - use null for auto-generate</param>
         /// <param name="apps">Beta / WIP</param>
         /// <param name="max">Beta / WIP</param>
-        /// <returns>An <see cref="HtmlString"/> object containing an html-attribute to add to the wrapper of the inner content</returns>
+        /// <returns>An <see cref="IHybridHtmlString"/> object containing an html-attribute to add to the wrapper of the inner content</returns>
         /// <remarks>
         /// **History** <br/>
         /// 1. Introduced in 2sxc 8.4
         /// 1. Enhanced with apps in 10.27
         /// </remarks>
-        HtmlString ContextAttributes(
+        IHybridHtmlString ContextAttributes(
             IDynamicEntity target,
             string noParamOrder = Eav.Parameters.Protector,
             string field = null,
@@ -182,7 +176,7 @@ namespace ToSic.Sxc.Web
         /// 1. Introduced in 2sxc 8.4
         /// </remarks>
         [PrivateApi]
-        HtmlString WrapInContext(object content,
+        IHybridHtmlString WrapInContext(object content,
             string noParamOrder = Eav.Parameters.Protector,
             string tag = Constants.DefaultContextTag,
             bool full = false,
@@ -231,7 +225,7 @@ namespace ToSic.Sxc.Web
         /// <param name="name">the attribute name, used for ...=</param>
         /// <param name="value">the attribute value, used for ="..."</param>
         /// <returns>A string but as HtmlString, so it can be used with @Attribute(...)</returns>
-        HtmlString Attribute(string name, string value);
+        IHybridHtmlString Attribute(string name, string value);
 
         /// <summary>
         /// Generate an HTML attribute by converting the value to JSON
@@ -240,6 +234,6 @@ namespace ToSic.Sxc.Web
         /// <param name="name">the attribute name, used for ...=</param>
         /// <param name="value">the attribute value, used for ="..."</param>
         /// <returns>A string but as HtmlString, so it can be used with @Attribute(...)</returns>
-        HtmlString Attribute(string name, object value);
+        IHybridHtmlString Attribute(string name, object value);
     }
 }
