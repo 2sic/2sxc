@@ -302,9 +302,7 @@
             <assembly>
               <name>Microsoft.Extensions.FileProviders.Physical.dll</name>
             </assembly>
-            <assembly>
-              <name>Microsoft.Extensions.FileSystemGlobbing.dll</name>
-            </assembly>
+
             <assembly>
               <name>Microsoft.Extensions.Hosting.Abstractions.dll</name>
             </assembly>
@@ -346,7 +344,7 @@
             <!--<assembly><name>System.Diagnostics.DiagnosticSource.dll</name></assembly>-->
             <!--<assembly><name>System.Interactive.Async.dll</name></assembly>-->
             <!--<assembly><name>System.Memory.dll</name></assembly>-->
-            <!--<assembly><name>System.Net.Http.Formatting.dll</name></assembly>-->
+
             <assembly>
               <name>System.Numerics.Vectors.dll</name>
             </assembly>
@@ -361,8 +359,6 @@
             <assembly>
               <name>System.Threading.Tasks.Extensions.dll</name>
             </assembly>
-            <!--<assembly><name>System.Web.Http.dll</name></assembly>-->
-            <!--<assembly><name>System.Web.Http.WebHost.dll</name></assembly>-->
 
             <!-- New assemblies for EntityFramework core and dependency injection -->
 
@@ -432,24 +428,36 @@
             </assembly>
             <assembly>
               <path>bin\2sxc</path>
-              <name>System.Memory.dll</name>
-            </assembly>
-            <assembly>
-              <path>bin\2sxc</path>
-              <name>System.Net.Http.Formatting.dll</name>
-            </assembly>
-            <assembly>
-              <path>bin\2sxc</path>
               <name>System.Runtime.CompilerServices.Unsafe.dll</name>
             </assembly>
-            <assembly>
-              <path>bin\2sxc</path>
-              <name>System.Web.Http.dll</name>
-            </assembly>
-            <assembly>
-              <path>bin\2sxc</path>
-              <name>System.Web.Http.WebHost.dll</name>
-            </assembly>
+
+			  <assembly>
+				  <name>System.Memory.dll</name>
+				  <version>4.6.26606.5</version>
+			  </assembly>
+
+			  <!-- ASP.NET Web API Components -->
+			  <!-- Libraries required for ASP.NET Web API. -->
+			  <assembly>
+				  <name>System.Net.Http.Formatting.dll</name>
+				  <version>5.2.30128.0</version>
+			  </assembly>
+			  <assembly>
+				  <name>System.Web.Http.dll</name>
+				  <version>5.2.30128.0</version>
+			  </assembly>
+			  <assembly>
+				  <name>System.Web.Http.WebHost.dll</name>
+				  <version>5.2.30128.0</version>
+			  </assembly>
+
+			  <!-- Microsoft.Extensions.FileSystemGlobbing Components -->
+			  <assembly>
+				  <path>bin</path>
+				  <name>Microsoft.Extensions.FileSystemGlobbing.dll</name>
+				  <version>2.0.1.18051</version>
+			  </assembly>
+
           </assemblies>
         </component>
 
@@ -988,29 +996,29 @@
                     </dependentAssembly>
                   </node>
                   <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\System.Net.Http.Formatting.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Net.Http.Formatting'][ab:assemblyIdentity/@publicKeyToken='31bf3856ad364e35'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
+                  <!--<node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Net.Http.Formatting'][ab:assemblyIdentity/@publicKeyToken='31bf3856ad364e35'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
                     <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
                       <assemblyIdentity name="System.Net.Http.Formatting" publicKeyToken="31bf3856ad364e35" />
-                      <codeBase version="5.2.3.0" href="bin\2sxc\System.Net.Http.Formatting.dll" />
+                      <codeBase version="5.2.3.0" href="bin\System.Net.Http.Formatting.dll" />
                       <bindingRedirect oldVersion="0.0.0.0-5.2.3.0" newVersion="5.2.3.0" />
                     </dependentAssembly>
-                  </node>
+                  </node>-->
                   <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\System.Web.Http.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Web.Http'][ab:assemblyIdentity/@publicKeyToken='31bf3856ad364e35'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
+                  <!--<node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Web.Http'][ab:assemblyIdentity/@publicKeyToken='31bf3856ad364e35'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
                     <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
                       <assemblyIdentity name="System.Web.Http" publicKeyToken="31bf3856ad364e35" />
-                      <codeBase version="5.2.3.0" href="bin\2sxc\System.Web.Http.dll" />
+                      <codeBase version="5.2.3.0" href="bin\System.Web.Http.dll" />
                       <bindingRedirect oldVersion="0.0.0.0-5.2.3.0" newVersion="5.2.3.0" />
                     </dependentAssembly>
-                  </node>
+                  </node>-->
                   <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\System.Web.Http.WebHost.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Web.Http.WebHost'][ab:assemblyIdentity/@publicKeyToken='31bf3856ad364e35'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
+                  <!--<node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Web.Http.WebHost'][ab:assemblyIdentity/@publicKeyToken='31bf3856ad364e35'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
                     <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
                       <assemblyIdentity name="System.Web.Http.WebHost" publicKeyToken="31bf3856ad364e35" />
-                      <codeBase version="5.2.3.0" href="bin\2sxc\System.Web.Http.WebHost.dll" />
+                      <codeBase version="5.2.3.0" href="bin\System.Web.Http.WebHost.dll" />
                       <bindingRedirect oldVersion="0.0.0.0-5.2.3.0" newVersion="5.2.3.0" />
                     </dependentAssembly>
-                  </node>
+                  </node>-->
                   <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\System.Runtime.CompilerServices.Unsafe.dll -->
                   <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Runtime.CompilerServices.Unsafe'][ab:assemblyIdentity/@publicKeyToken='b03f5f7f11d50a3a'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
                     <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
@@ -1020,13 +1028,13 @@
                     </dependentAssembly>
                   </node>
                   <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\System.Memory.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Memory'][ab:assemblyIdentity/@publicKeyToken='cc7b13ffcd2ddd51'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
+                  <!--<node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Memory'][ab:assemblyIdentity/@publicKeyToken='cc7b13ffcd2ddd51'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
                     <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
                       <assemblyIdentity name="System.Memory" publicKeyToken="cc7b13ffcd2ddd51" />
                       <codeBase version="4.0.1.0" href="bin\2sxc\System.Memory.dll" />
                       <bindingRedirect oldVersion="0.0.0.0-4.0.1.0" newVersion="4.0.1.0" />
                     </dependentAssembly>
-                  </node>
+                  </node>-->
 
                 </nodes>
               </configuration>

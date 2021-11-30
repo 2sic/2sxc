@@ -123,11 +123,7 @@
       <Assembly2sxcInclude Include="$(OutDir)\System.ComponentModel.Annotations.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\System.Diagnostics.DiagnosticSource.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\System.Interactive.Async.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\System.Memory.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\System.Net.Http.Formatting.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\System.Runtime.CompilerServices.Unsafe.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\System.Web.Http.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\System.Web.Http.WebHost.dll" />
+	  <Assembly2sxcInclude Include="$(OutDir)\System.Runtime.CompilerServices.Unsafe.dll" />
 
       <!-- Other DLLs -->
       <AssemblyInclude Include="$(OutDir)\CsvHelper.dll" />
@@ -195,16 +191,17 @@
       <AssemblyInclude Include="$(OutDir)\System.Data.SqlClient.dll" />
       <!--<AssemblyInclude Include="$(OutDir)\System.Diagnostics.DiagnosticSource.dll" />-->
       <!--<AssemblyInclude Include="$(OutDir)\System.Interactive.Async.dll" />-->
-      <!--<AssemblyInclude Include="$(OutDir)\System.Memory.dll" />-->
-      <!--<AssemblyInclude Include="$(OutDir)\System.Net.Http.Formatting.dll" />-->
+      <AssemblyInclude Include="$(OutDir)\System.Memory.dll" />
+      <AssemblyInclude Include="$(OutDir)\System.Net.Http.Formatting.dll" />
       <AssemblyInclude Include="$(OutDir)\System.Numerics.Vectors.dll" />
       <AssemblyInclude Include="$(OutDir)\System.Reflection.Metadata.dll" />
       <!--<AssemblyInclude Include="$(OutDir)\System.Runtime.CompilerServices.Unsafe.dll" />-->
       <!--! <AssemblyInclude Include="$(OutDir)\System.Runtime.InteropServices.RuntimeInformation.dll" />-->
       <AssemblyInclude Include="$(OutDir)\System.Text.Encodings.Web.dll" />
       <AssemblyInclude Include="$(OutDir)\System.Threading.Tasks.Extensions.dll" />
-      <!--<AssemblyInclude Include="$(OutDir)\System.Web.Http.dll" />-->
-      <!--<AssemblyInclude Include="$(OutDir)\System.Web.Http.WebHost.dll" />-->
+      <AssemblyInclude Include="$(OutDir)\System.Web.Http.dll" />
+      <AssemblyInclude Include="$(OutDir)\System.Web.Http.WebHost.dll" />
+		
     </ItemGroup>
 
     <CreateItem Include="$(DnnManifestFile)">
