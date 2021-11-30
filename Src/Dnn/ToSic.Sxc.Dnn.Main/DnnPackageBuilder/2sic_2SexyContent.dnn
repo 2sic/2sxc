@@ -294,8 +294,7 @@
             <assembly>
               <name>Microsoft.Extensions.Configuration.UserSecrets.dll</name>
             </assembly>
-            <!--<assembly><name>Microsoft.Extensions.DependencyInjection.Abstractions.dll</name></assembly>-->
-            <!--<assembly><name>Microsoft.Extensions.DependencyInjection.dll</name></assembly>-->
+
             <assembly>
               <name>Microsoft.Extensions.FileProviders.Abstractions.dll</name>
             </assembly>
@@ -328,9 +327,7 @@
               <name>Microsoft.Net.Http.Headers.dll</name>
             </assembly>
             <!--<assembly><name>Remotion.Linq.dll</name></assembly>-->
-            <assembly>
-              <name>System.Buffers.dll</name>
-            </assembly>
+
             <!--<assembly><name>System.Collections.Immutable.dll</name></assembly>-->
             <!--<assembly><name>System.ComponentModel.Annotations.dll</name></assembly>-->
             <!--! <assembly><name>System.Data.Common.dll</name></assembly>-->
@@ -380,14 +377,6 @@
             </assembly>
             <assembly>
               <path>bin\2sxc</path>
-              <name>Microsoft.Extensions.DependencyInjection.Abstractions.dll</name>
-            </assembly>
-            <assembly>
-              <path>bin\2sxc</path>
-              <name>Microsoft.Extensions.DependencyInjection.dll</name>
-            </assembly>
-            <assembly>
-              <path>bin\2sxc</path>
               <name>Microsoft.Extensions.Logging.Abstractions.dll</name>
             </assembly>
             <assembly>
@@ -427,37 +416,51 @@
               <name>System.Runtime.CompilerServices.Unsafe.dll</name>
             </assembly>
 
-			  <assembly>
-				  <name>Newtonsoft.Json.dll</name>
-				  <version>10.0.3.21018</version>
-			  </assembly>
+            <!-- DNN 9.4+ assemblies -->
+            <assembly>
+              <name>Microsoft.Extensions.DependencyInjection.Abstractions.dll</name>
+              <version>2.1.1</version>
+            </assembly>
+            <assembly>
+              <name>Microsoft.Extensions.DependencyInjection.dll</name>
+              <version>2.1.1</version>
+            </assembly>
+            <assembly>
+              <name>Newtonsoft.Json.dll</name>
+              <version>10.0.3</version>
+            </assembly>
 
-			  <assembly>
-				  <name>System.Memory.dll</name>
-				  <version>4.6.26606.5</version>
-			  </assembly>
+            <assembly>
+              <name>System.Buffers.dll</name>
+              <version>4.6.25519</version>
+            </assembly>
 
-			  <!-- ASP.NET Web API Components -->
-			  <!-- Libraries required for ASP.NET Web API. -->
-			  <assembly>
-				  <name>System.Net.Http.Formatting.dll</name>
-				  <version>5.2.30128.0</version>
-			  </assembly>
-			  <assembly>
-				  <name>System.Web.Http.dll</name>
-				  <version>5.2.30128.0</version>
-			  </assembly>
-			  <assembly>
-				  <name>System.Web.Http.WebHost.dll</name>
-				  <version>5.2.30128.0</version>
-			  </assembly>
+            <assembly>
+              <name>System.Memory.dll</name>
+              <version>4.6.26606</version>
+            </assembly>
 
-			  <!-- Microsoft.Extensions.FileSystemGlobbing Components -->
-			  <assembly>
-				  <path>bin</path>
-				  <name>Microsoft.Extensions.FileSystemGlobbing.dll</name>
-				  <version>2.0.1.18051</version>
-			  </assembly>
+            <!-- ASP.NET Web API Components -->
+            <!-- Libraries required for ASP.NET Web API. -->
+            <assembly>
+              <name>System.Net.Http.Formatting.dll</name>
+              <version>5.2.30128</version>
+            </assembly>
+            <assembly>
+              <name>System.Web.Http.dll</name>
+              <version>5.2.30128</version>
+            </assembly>
+            <assembly>
+              <name>System.Web.Http.WebHost.dll</name>
+              <version>5.2.30128</version>
+            </assembly>
+
+            <!-- Microsoft.Extensions.FileSystemGlobbing Components -->
+            <assembly>
+              <path>bin</path>
+              <name>Microsoft.Extensions.FileSystemGlobbing.dll</name>
+              <version>2.0.1</version>
+            </assembly>
 
           </assemblies>
         </component>
@@ -701,16 +704,6 @@
               <path>bin</path>
               <name>Microsoft.Extensions.Caching.Memory.dll</name>
             </file>
-            <!--
-            <file>
-              <path>bin</path>
-              <name>Microsoft.Extensions.DependencyInjection.Abstractions.dll</name>
-            </file>
-            <file>
-              <path>bin</path>
-              <name>Microsoft.Extensions.DependencyInjection.dll</name>
-            </file>
-            -->
             <file>
               <path>bin</path>
               <name>Microsoft.Extensions.Logging.Abstractions.dll</name>
@@ -746,6 +739,19 @@
             <file>
               <path>bin</path>
               <name>System.Runtime.dll</name>
+            </file>
+          </files>
+        </component>
+
+        <component type="Cleanup" version="12.10.00">
+          <files>
+            <file>
+              <path>bin\2sxc</path>
+              <name>Microsoft.Extensions.DependencyInjection.Abstractions.dll</name>
+            </file>
+            <file>
+              <path>bin\2sxc</path>
+              <name>Microsoft.Extensions.DependencyInjection.dll</name>
             </file>
           </files>
         </component>
@@ -838,7 +844,7 @@
               <configuration>
                 <nodes>
 
-                  <!-- register components needed at least for System.Collections.Immutable (more: http://stackoverflow.com/questions/16675171/what-does-the-web-config-compilation-assemblies-element-do/19942274#19942274) -->
+                  <!-- register components needed at least for System.Collections.Immutable, netstandard2.0 (more: http://stackoverflow.com/questions/16675171/what-does-the-web-config-compilation-assemblies-element-do/19942274#19942274) -->
                   <node path="/configuration/system.web/compilation/assemblies" action="update" key="assembly" collision="ignore">
                     <add assembly="System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
                     <add assembly="System.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
@@ -890,22 +896,12 @@
                     </dependentAssembly>
                   </node>
 
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.DependencyInjection.Abstractions.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.DependencyInjection.Abstractions'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
-                    <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
-                      <assemblyIdentity name="Microsoft.Extensions.DependencyInjection.Abstractions" publicKeyToken="adb9793829ddae60" />
-                      <codeBase version="2.1.1.0" href="bin\2sxc\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-2.32767.32767.32767" newVersion="2.1.1.0" />
-                    </dependentAssembly>
+                  <!-- remove bindingRedirects for bin\2sxc\Microsoft.Extensions.DependencyInjection.Abstractions.dll -->
+                  <node path="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.DependencyInjection.Abstractions'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]" action="remove" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
                   </node>
 
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.DependencyInjection.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.DependencyInjection'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
-                    <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
-                      <assemblyIdentity name="Microsoft.Extensions.DependencyInjection" publicKeyToken="adb9793829ddae60" />
-                      <codeBase version="2.1.1.0" href="bin\2sxc\Microsoft.Extensions.DependencyInjection.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-2.32767.32767.32767" newVersion="2.1.1.0" />
-                    </dependentAssembly>
+                  <!-- remove bindingRedirects for bin\2sxc\Microsoft.Extensions.DependencyInjection.dll -->
+                  <node path="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.DependencyInjection'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]" action="remove" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
                   </node>
 
                   <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.Logging.Abstractions.dll -->

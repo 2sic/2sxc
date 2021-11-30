@@ -112,8 +112,6 @@
       <Assembly2sxcInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.SqlServer.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Caching.Abstractions.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Caching.Memory.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Logging.Abstractions.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Logging.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Options.dll" />
@@ -166,8 +164,8 @@
       <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Configuration.FileExtensions.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Configuration.Json.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Configuration.UserSecrets.dll" />
-      <!--<AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />-->
-      <!--<AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.dll" />-->
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.FileProviders.Abstractions.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.FileProviders.Physical.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.FileSystemGlobbing.dll" />
