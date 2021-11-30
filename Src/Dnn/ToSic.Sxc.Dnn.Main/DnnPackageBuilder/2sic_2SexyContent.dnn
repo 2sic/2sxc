@@ -185,146 +185,189 @@
 
             <assembly>
               <name>CsvHelper.dll</name>
+              <version>2.0.0</version>
             </assembly>
 
             <assembly>
               <name>Microsoft.AspNetCore.Authentication.Abstractions.dll</name>
+              <version>2.0.3</version>
             </assembly>
             <assembly>
               <name>Microsoft.AspNetCore.Authentication.Core.dll</name>
+              <version>2.0.3</version>
             </assembly>
             <assembly>
               <name>Microsoft.AspNetCore.Diagnostics.Abstractions.dll</name>
+              <version>2.0.3</version>
             </assembly>
             <assembly>
               <name>Microsoft.AspNetCore.Diagnostics.dll</name>
+              <version>2.0.3</version>
             </assembly>
             <assembly>
               <name>Microsoft.AspNetCore.dll</name>
+              <version>2.0.4</version>
             </assembly>
             <assembly>
               <name>Microsoft.AspNetCore.Hosting.Abstractions.dll</name>
+              <version>2.0.3</version>
             </assembly>
             <assembly>
               <name>Microsoft.AspNetCore.Hosting.dll</name>
+              <version>2.0.3</version>
             </assembly>
             <assembly>
               <name>Microsoft.AspNetCore.Hosting.Server.Abstractions.dll</name>
+              <version>2.0.3</version>
             </assembly>
             <assembly>
               <name>Microsoft.AspNetCore.Http.Abstractions.dll</name>
+              <version>2.0.3</version>
             </assembly>
             <assembly>
               <name>Microsoft.AspNetCore.Http.dll</name>
+              <version>2.0.3</version>
             </assembly>
             <assembly>
               <name>Microsoft.AspNetCore.Http.Extensions.dll</name>
+              <version>2.0.3</version>
             </assembly>
             <assembly>
               <name>Microsoft.AspNetCore.Http.Features.dll</name>
+              <version>2.0.3</version>
             </assembly>
             <assembly>
               <name>Microsoft.AspNetCore.HttpOverrides.dll</name>
+              <version>2.0.3</version>
             </assembly>
             <assembly>
               <name>Microsoft.AspNetCore.Routing.Abstractions.dll</name>
+              <version>2.0.3</version>
             </assembly>
             <assembly>
               <name>Microsoft.AspNetCore.Routing.dll</name>
+              <version>2.0.3</version>
             </assembly>
             <assembly>
               <name>Microsoft.AspNetCore.Server.IISIntegration.dll</name>
+              <version>2.0.3</version>
             </assembly>
             <assembly>
               <name>Microsoft.AspNetCore.Server.Kestrel.Core.dll</name>
+              <version>2.0.4</version>
             </assembly>
             <assembly>
               <name>Microsoft.AspNetCore.Server.Kestrel.dll</name>
+              <version>2.0.4</version>
             </assembly>
             <assembly>
               <name>Microsoft.AspNetCore.Server.Kestrel.Https.dll</name>
+              <version>2.0.4</version>
             </assembly>
             <assembly>
               <name>Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions.dll</name>
+              <version>2.0.4</version>
             </assembly>
             <assembly>
               <name>Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv.dll</name>
+              <version>2.0.4</version>
             </assembly>
             <assembly>
               <name>Microsoft.AspNetCore.WebUtilities.dll</name>
+              <version>2.0.3</version>
             </assembly>
             <assembly>
               <name>Microsoft.EntityFrameworkCore.Abstractions.dll</name>
+              <version>2.1.1</version>
             </assembly>
             <assembly>
               <name>Microsoft.EntityFrameworkCore.Design.dll</name>
+              <version>2.1.1</version>
             </assembly>
             <!--<assembly><name>Microsoft.EntityFrameworkCore.dll</name></assembly>-->
             <assembly>
               <name>Microsoft.EntityFrameworkCore.Relational.Design.dll</name>
+              <version>1.1.6</version>
             </assembly>
             <!--<assembly><name>Microsoft.EntityFrameworkCore.Relational.dll</name></assembly>-->
             <assembly>
               <name>Microsoft.EntityFrameworkCore.SqlServer.Design.dll</name>
+              <version>1.1.6</version>
             </assembly>
             <!--<assembly><name>Microsoft.EntityFrameworkCore.SqlServer.dll</name></assembly>-->
             <!--<assembly><name>Microsoft.Extensions.Caching.Abstractions.dll</name></assembly>-->
             <!--<assembly><name>Microsoft.Extensions.Caching.Memory.dll</name></assembly>-->
             <assembly>
               <name>Microsoft.Extensions.Configuration.Abstractions.dll</name>
+              <version>2.1.1</version>
             </assembly>
             <assembly>
               <name>Microsoft.Extensions.Configuration.Binder.dll</name>
+              <version>2.1.1</version>
             </assembly>
             <assembly>
               <name>Microsoft.Extensions.Configuration.CommandLine.dll</name>
+              <version>2.0.2</version>
             </assembly>
             <assembly>
               <name>Microsoft.Extensions.Configuration.dll</name>
+              <version>2.1.1</version>
             </assembly>
             <assembly>
               <name>Microsoft.Extensions.Configuration.EnvironmentVariables.dll</name>
+              <version>2.0.2</version>
             </assembly>
             <assembly>
               <name>Microsoft.Extensions.Configuration.FileExtensions.dll</name>
+              <version>2.0.2</version>
             </assembly>
             <assembly>
               <name>Microsoft.Extensions.Configuration.Json.dll</name>
+              <version>2.0.2</version>
             </assembly>
             <assembly>
               <name>Microsoft.Extensions.Configuration.UserSecrets.dll</name>
+              <version>2.0.2</version>
             </assembly>
 
             <assembly>
               <name>Microsoft.Extensions.FileProviders.Abstractions.dll</name>
+              <version>2.0.1</version>
             </assembly>
             <assembly>
               <name>Microsoft.Extensions.FileProviders.Physical.dll</name>
+              <version>2.0.1</version>
             </assembly>
 
             <assembly>
               <name>Microsoft.Extensions.Hosting.Abstractions.dll</name>
+              <version>2.0.3</version>
             </assembly>
             <!--<assembly><name>Microsoft.Extensions.Logging.Abstractions.dll</name></assembly>-->
             <assembly>
               <name>Microsoft.Extensions.Logging.Configuration.dll</name>
+              <version>2.0.2</version>
             </assembly>
             <assembly>
               <name>Microsoft.Extensions.Logging.Console.dll</name>
+              <version>2.0.2</version>
             </assembly>
             <assembly>
               <name>Microsoft.Extensions.Logging.Debug.dll</name>
+              <version>2.0.2</version>
             </assembly>
             <!--<assembly>
               <name>Microsoft.Extensions.Logging.dll</name>
             </assembly>-->
             <assembly>
               <name>Microsoft.Extensions.Options.ConfigurationExtensions.dll</name>
+              <version>2.0.2</version>
             </assembly>
             <!--<assembly><name>Microsoft.Extensions.Options.dll</name></assembly>-->
             <!--<assembly><name>Microsoft.Extensions.Primitives.dll</name></assembly>-->
             <assembly>
               <name>Microsoft.Net.Http.Headers.dll</name>
+              <version>2.0.3</version>
             </assembly>
             <!--<assembly><name>Remotion.Linq.dll</name></assembly>-->
 
@@ -333,6 +376,7 @@
             <!--! <assembly><name>System.Data.Common.dll</name></assembly>-->
             <assembly>
               <name>System.Data.SqlClient.dll</name>
+              <version>4.4.0</version>
             </assembly>
             <!--<assembly><name>System.Diagnostics.DiagnosticSource.dll</name></assembly>-->
             <!--<assembly><name>System.Interactive.Async.dll</name></assembly>-->
@@ -340,17 +384,21 @@
 
             <assembly>
               <name>System.Numerics.Vectors.dll</name>
+              <version>4.1.3</version>
             </assembly>
             <assembly>
               <name>System.Reflection.Metadata.dll</name>
+              <version>1.4.2</version>
             </assembly>
             <!--<assembly><name>System.Runtime.CompilerServices.Unsafe.dll</name></assembly>-->
             <!--! <assembly><name>System.Runtime.InteropServices.RuntimeInformation.dll</name></assembly>-->
             <assembly>
               <name>System.Text.Encodings.Web.dll</name>
+              <version>4.0.2</version>
             </assembly>
             <assembly>
               <name>System.Threading.Tasks.Extensions.dll</name>
+              <version>4.1.1</version>
             </assembly>
 
             <!-- New assemblies for EntityFramework core and dependency injection -->
@@ -358,62 +406,77 @@
             <assembly>
               <path>bin\2sxc</path>
               <name>Microsoft.EntityFrameworkCore.dll</name>
+              <version>2.1.1</version>
             </assembly>
             <assembly>
               <path>bin\2sxc</path>
               <name>Microsoft.EntityFrameworkCore.Relational.dll</name>
+              <version>2.1.1</version>
             </assembly>
             <assembly>
               <path>bin\2sxc</path>
               <name>Microsoft.EntityFrameworkCore.SqlServer.dll</name>
+              <version>2.1.1</version>
             </assembly>
             <assembly>
               <path>bin\2sxc</path>
               <name>Microsoft.Extensions.Caching.Abstractions.dll</name>
+              <version>2.1.1</version>
             </assembly>
             <assembly>
               <path>bin\2sxc</path>
               <name>Microsoft.Extensions.Caching.Memory.dll</name>
+              <version>2.1.1</version>
             </assembly>
             <assembly>
               <path>bin\2sxc</path>
               <name>Microsoft.Extensions.Logging.Abstractions.dll</name>
+              <version>2.1.1</version>
             </assembly>
             <assembly>
               <path>bin\2sxc</path>
               <name>Microsoft.Extensions.Logging.dll</name>
+              <version>2.1.1</version>
             </assembly>
             <assembly>
               <path>bin\2sxc</path>
               <name>Microsoft.Extensions.Options.dll</name>
+              <version>2.1.1</version>
             </assembly>
             <assembly>
               <path>bin\2sxc</path>
               <name>Microsoft.Extensions.Primitives.dll</name>
+              <version>2.1.1</version>
             </assembly>
             <assembly>
               <path>bin\2sxc</path>
               <name>Remotion.Linq.dll</name>
+              <version>2.2.0</version>
             </assembly>
             <assembly>
               <path>bin\2sxc</path>
               <name>System.Collections.Immutable.dll</name>
+              <version>1.2.3</version>
             </assembly>
             <assembly>
               <path>bin\2sxc</path>
               <name>System.ComponentModel.Annotations.dll</name>
+              <version>4.2.1</version>
             </assembly>
             <assembly>
               <path>bin\2sxc</path>
               <name>System.Diagnostics.DiagnosticSource.dll</name>
+              <version>4.0.3</version>
             </assembly>
             <assembly>
               <path>bin\2sxc</path>
               <name>System.Interactive.Async.dll</name>
+              <version>3.0.3000</version>
             </assembly>
             <assembly>
               <path>bin\2sxc</path>
               <name>System.Runtime.CompilerServices.Unsafe.dll</name>
+              <version>4.0.4</version>
             </assembly>
 
             <!-- DNN 9.4+ assemblies -->
@@ -432,27 +495,27 @@
 
             <assembly>
               <name>System.Buffers.dll</name>
-              <version>4.6.25519</version>
+              <version>4.0.2</version>
             </assembly>
 
             <assembly>
               <name>System.Memory.dll</name>
-              <version>4.6.26606</version>
+              <version>4.0.1</version>
             </assembly>
 
             <!-- ASP.NET Web API Components -->
             <!-- Libraries required for ASP.NET Web API. -->
             <assembly>
               <name>System.Net.Http.Formatting.dll</name>
-              <version>5.2.30128</version>
+              <version>5.2.3</version>
             </assembly>
             <assembly>
               <name>System.Web.Http.dll</name>
-              <version>5.2.30128</version>
+              <version>5.2.3</version>
             </assembly>
             <assembly>
               <name>System.Web.Http.WebHost.dll</name>
-              <version>5.2.30128</version>
+              <version>5.2.3</version>
             </assembly>
 
             <!-- Microsoft.Extensions.FileSystemGlobbing Components -->
@@ -897,12 +960,10 @@
                   </node>
 
                   <!-- remove bindingRedirects for bin\2sxc\Microsoft.Extensions.DependencyInjection.Abstractions.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.DependencyInjection.Abstractions'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]" action="remove" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
-                  </node>
+                  <node path="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.DependencyInjection.Abstractions'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]" action="remove" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab"></node>
 
                   <!-- remove bindingRedirects for bin\2sxc\Microsoft.Extensions.DependencyInjection.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.DependencyInjection'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]" action="remove" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
-                  </node>
+                  <node path="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.DependencyInjection'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]" action="remove" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab"></node>
 
                   <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.Logging.Abstractions.dll -->
                   <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.Logging.Abstractions'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
