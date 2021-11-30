@@ -20,10 +20,7 @@
     </PropertyGroup>
 
     <!-- Get the Version out of the DNN Manifest for this release -->
-    <XmlRead Prefix="n"
-                    Namespace="http://schemas.microsoft.com/developer/msbuild/2003"
-                    XPath="dotnetnuke/packages/package[1]/@version"
-                    XmlFileName="$(DnnManifestFile)">
+    <XmlRead Prefix="n" Namespace="http://schemas.microsoft.com/developer/msbuild/2003" XPath="dotnetnuke/packages/package[1]/@version" XmlFileName="$(DnnManifestFile)">
       <Output TaskParameter="Value" PropertyName="Version" />
     </XmlRead>
 
@@ -67,7 +64,7 @@
       <InstallInclude Include="**\*.aspx" Exclude="@(DefaultExclude)" />
       <!-- all js + css + html etc. stuff from assets-->
       <InstallInclude Include="$(Dev2sxcAssets)\**\*.*" Exclude="$(Dev2sxcAssets)\**\*.map" />
-      
+
       <!-- WIP - turnOn map files must be included for now-->
       <InstallInclude Include="$(Dev2sxcAssets)\dist\turnOn\*.*" />
 
@@ -75,7 +72,7 @@
       <InstallInclude Include="..\..\Data\**\.data\**\*.json" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="..\..\Data-Dnn\**\.data\**\*.json" Exclude="@(DefaultExclude)" />
 
-      <InstallInclude Include="**\*.txt"  Exclude="@(DefaultExclude);**\obj\**;**\_ReSharper*\**;License.txt;ReleaseNotes.txt" />
+      <InstallInclude Include="**\*.txt" Exclude="@(DefaultExclude);**\obj\**;**\_ReSharper*\**;License.txt;ReleaseNotes.txt" />
       <InstallInclude Include="**\*.ashx" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.png" Exclude="@(DefaultExclude);icon.png;icon-app.png" />
       <!-- <InstallInclude Include="**\*.jpg" Exclude="@(DefaultExclude)" /> -->
@@ -106,8 +103,8 @@
       <AssemblyHelper Include="$(OutDir)\ToSic.SexyContent.WebApi.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.SexyContent.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.SexyContent.pdb" />
-      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Dnn.dll" />
-      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Dnn.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Dnn*.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Dnn*.pdb" />
 
       <!-- New assemblies for entity framework core etc. -->
       <Assembly2sxcInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.dll" />
@@ -115,19 +112,99 @@
       <Assembly2sxcInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.SqlServer.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Caching.Abstractions.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Caching.Memory.dll" />
-      <!--<Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.dll" />-->
+      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Logging.Abstractions.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Logging.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Options.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Primitives.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\Remotion.Linq.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\System.Collections.Immutable.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\System.ComponentModel.Annotations.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\System.Diagnostics.DiagnosticSource.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\System.Interactive.Async.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\System.Memory.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\System.Net.Http.Formatting.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\System.Runtime.CompilerServices.Unsafe.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\System.Web.Http.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\System.Web.Http.WebHost.dll" />
 
       <!-- Other DLLs -->
       <AssemblyInclude Include="$(OutDir)\CsvHelper.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Authentication.Abstractions.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Authentication.Core.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Diagnostics.Abstractions.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Diagnostics.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Hosting.Abstractions.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Hosting.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Hosting.Server.Abstractions.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Http.Abstractions.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Http.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Http.Extensions.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Http.Features.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.HttpOverrides.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Routing.Abstractions.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Routing.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Server.IISIntegration.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Server.Kestrel.Core.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Server.Kestrel.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Server.Kestrel.Https.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.WebUtilities.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.Abstractions.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.Design.dll" />
+      <!--<AssemblyInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.dll" />-->
+      <AssemblyInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.Relational.Design.dll" />
+      <!--<AssemblyInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.Relational.dll" />-->
+      <AssemblyInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.SqlServer.Design.dll" />
+      <!--<AssemblyInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.SqlServer.dll" />-->
+      <!--<AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Caching.Abstractions.dll" />-->
+      <!--<AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Caching.Memory.dll" />-->
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Configuration.Abstractions.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Configuration.Binder.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Configuration.CommandLine.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Configuration.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Configuration.EnvironmentVariables.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Configuration.FileExtensions.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Configuration.Json.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Configuration.UserSecrets.dll" />
+      <!--<AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />-->
+      <!--<AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.dll" />-->
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.FileProviders.Abstractions.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.FileProviders.Physical.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.FileSystemGlobbing.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Hosting.Abstractions.dll" />
+      <!--<AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Logging.Abstractions.dll" />-->
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Logging.Configuration.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Logging.Console.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Logging.Debug.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Logging.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Options.ConfigurationExtensions.dll" />
+      <!--<AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Options.dll" />-->
+      <!--<AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Primitives.dll" />-->
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Net.Http.Headers.dll" />
+      <!--! <AssemblyInclude Include="$(OutDir)\netstandard.dll" />-->
+      <AssemblyInclude Include="$(OutDir)\Newtonsoft.Json.dll" />
+      <!--<AssemblyInclude Include="$(OutDir)\Remotion.Linq.dll" />-->
+      <AssemblyInclude Include="$(OutDir)\System.Buffers.dll" />
+      <!--<AssemblyInclude Include="$(OutDir)\System.Collections.Immutable.dll" />-->
+      <!--<AssemblyInclude Include="$(OutDir)\System.ComponentModel.Annotations.dll" />-->
+      <!--! <AssemblyInclude Include="$(OutDir)\System.Data.Common.dll" />-->
+      <AssemblyInclude Include="$(OutDir)\System.Data.SqlClient.dll" />
+      <!--<AssemblyInclude Include="$(OutDir)\System.Diagnostics.DiagnosticSource.dll" />-->
+      <!--<AssemblyInclude Include="$(OutDir)\System.Interactive.Async.dll" />-->
+      <!--<AssemblyInclude Include="$(OutDir)\System.Memory.dll" />-->
+      <!--<AssemblyInclude Include="$(OutDir)\System.Net.Http.Formatting.dll" />-->
+      <AssemblyInclude Include="$(OutDir)\System.Numerics.Vectors.dll" />
+      <AssemblyInclude Include="$(OutDir)\System.Reflection.Metadata.dll" />
+      <!--<AssemblyInclude Include="$(OutDir)\System.Runtime.CompilerServices.Unsafe.dll" />-->
+      <!--! <AssemblyInclude Include="$(OutDir)\System.Runtime.InteropServices.RuntimeInformation.dll" />-->
+      <AssemblyInclude Include="$(OutDir)\System.Text.Encodings.Web.dll" />
+      <AssemblyInclude Include="$(OutDir)\System.Threading.Tasks.Extensions.dll" />
+      <!--<AssemblyInclude Include="$(OutDir)\System.Web.Http.dll" />-->
+      <!--<AssemblyInclude Include="$(OutDir)\System.Web.Http.WebHost.dll" />-->
     </ItemGroup>
 
     <CreateItem Include="$(DnnManifestFile)">
@@ -150,9 +227,9 @@
       <Output TaskParameter="Include" ItemName="SqlDataProviderFiles" />
     </CreateItem>
 
-    <Copy SourceFiles="@(AssemblyInclude)" DestinationFolder="$(TempPackageFolder)\bin"/>
-    <Copy SourceFiles="@(Assembly2sxcInclude)" DestinationFolder="$(TempPackageFolder)\bin\2sxc"/>
-    <Copy SourceFiles="@(AssemblyHelper)" DestinationFolder="$(TempPackagePdbFolder)\bin"/>
+    <Copy SourceFiles="@(AssemblyInclude)" DestinationFolder="$(TempPackageFolder)\bin" />
+    <Copy SourceFiles="@(Assembly2sxcInclude)" DestinationFolder="$(TempPackageFolder)\bin\2sxc" />
+    <Copy SourceFiles="@(AssemblyHelper)" DestinationFolder="$(TempPackagePdbFolder)\bin" />
     <Copy SourceFiles="@(SqlDataProviderFiles)" DestinationFolder="$(TempPackageFolder)\%(RecursiveDir)" />
     <Copy SourceFiles="@(PackageManifestFiles)" DestinationFolder="$(TempPackageFolder)" />
     <Copy SourceFiles="@(PackageModuleIcon)" DestinationFolder="$(TempPackageFolder)" />
