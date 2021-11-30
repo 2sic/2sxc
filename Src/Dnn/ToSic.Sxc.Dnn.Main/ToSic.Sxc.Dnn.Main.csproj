@@ -104,6 +104,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net40\ToSic.Razor.Dnn.dll</HintPath>
     </Reference>
+    <Reference Include="ToSic.Sxc.Dnn9">
+      <HintPath>..\ToSic.Sxc.Dnn9\bin\Release\ToSic.Sxc.Dnn9.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DnnBusinessController.cs" />

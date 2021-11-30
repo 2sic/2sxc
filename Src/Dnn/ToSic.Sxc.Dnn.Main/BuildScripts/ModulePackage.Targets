@@ -122,6 +122,7 @@
       <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Primitives.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\Remotion.Linq.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\System.Collections.Immutable.dll" />
+      <Assembly2sxcInclude Include="$(OutDir)\System.ComponentModel.Annotations.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\System.Diagnostics.DiagnosticSource.dll" />
       <Assembly2sxcInclude Include="$(OutDir)\System.Interactive.Async.dll" />
       -->
@@ -206,7 +207,7 @@
 
       <!-- Other DLLs -->
       <AssemblyInclude Include="$(OutDir)\CsvHelper.dll" />
- 	
+
     </ItemGroup>
 
     <CreateItem Include="$(DnnManifestFile)">
