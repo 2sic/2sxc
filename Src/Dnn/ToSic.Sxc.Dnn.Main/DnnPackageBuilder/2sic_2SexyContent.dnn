@@ -327,10 +327,6 @@
             <assembly>
               <name>Microsoft.Net.Http.Headers.dll</name>
             </assembly>
-            <!--! <assembly><name>netstandard.dll</name></assembly>-->
-            <assembly>
-              <name>Newtonsoft.Json.dll</name>
-            </assembly>
             <!--<assembly><name>Remotion.Linq.dll</name></assembly>-->
             <assembly>
               <name>System.Buffers.dll</name>
@@ -430,6 +426,11 @@
               <path>bin\2sxc</path>
               <name>System.Runtime.CompilerServices.Unsafe.dll</name>
             </assembly>
+
+			  <assembly>
+				  <name>Newtonsoft.Json.dll</name>
+				  <version>10.0.3.21018</version>
+			  </assembly>
 
 			  <assembly>
 				  <name>System.Memory.dll</name>
@@ -844,14 +845,6 @@
                     <add assembly="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
                   </node>
 
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\Newtonsoft.Json.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Newtonsoft.Json'][ab:assemblyIdentity/@publicKeyToken='30ad4fe6b2a6aeed'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
-                    <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
-                      <assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed" />
-                      <bindingRedirect oldVersion="0.0.0.0-10.32767.32767.32767" newVersion="10.0.0.0" />
-                    </dependentAssembly>
-                  </node>
-
                   <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.EntityFrameworkCore.dll -->
                   <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.EntityFrameworkCore'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
                     <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
@@ -995,30 +988,7 @@
                       <bindingRedirect oldVersion="0.0.0.0-4.32767.32767.32767" newVersion="4.2.1.0" />
                     </dependentAssembly>
                   </node>
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\System.Net.Http.Formatting.dll -->
-                  <!--<node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Net.Http.Formatting'][ab:assemblyIdentity/@publicKeyToken='31bf3856ad364e35'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
-                    <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
-                      <assemblyIdentity name="System.Net.Http.Formatting" publicKeyToken="31bf3856ad364e35" />
-                      <codeBase version="5.2.3.0" href="bin\System.Net.Http.Formatting.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-5.2.3.0" newVersion="5.2.3.0" />
-                    </dependentAssembly>
-                  </node>-->
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\System.Web.Http.dll -->
-                  <!--<node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Web.Http'][ab:assemblyIdentity/@publicKeyToken='31bf3856ad364e35'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
-                    <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
-                      <assemblyIdentity name="System.Web.Http" publicKeyToken="31bf3856ad364e35" />
-                      <codeBase version="5.2.3.0" href="bin\System.Web.Http.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-5.2.3.0" newVersion="5.2.3.0" />
-                    </dependentAssembly>
-                  </node>-->
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\System.Web.Http.WebHost.dll -->
-                  <!--<node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Web.Http.WebHost'][ab:assemblyIdentity/@publicKeyToken='31bf3856ad364e35'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
-                    <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
-                      <assemblyIdentity name="System.Web.Http.WebHost" publicKeyToken="31bf3856ad364e35" />
-                      <codeBase version="5.2.3.0" href="bin\System.Web.Http.WebHost.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-5.2.3.0" newVersion="5.2.3.0" />
-                    </dependentAssembly>
-                  </node>-->
+
                   <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\System.Runtime.CompilerServices.Unsafe.dll -->
                   <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Runtime.CompilerServices.Unsafe'][ab:assemblyIdentity/@publicKeyToken='b03f5f7f11d50a3a'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
                     <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
@@ -1027,14 +997,6 @@
                       <bindingRedirect oldVersion="0.0.0.0-4.0.4.0" newVersion="4.0.4.0" />
                     </dependentAssembly>
                   </node>
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\System.Memory.dll -->
-                  <!--<node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Memory'][ab:assemblyIdentity/@publicKeyToken='cc7b13ffcd2ddd51'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
-                    <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
-                      <assemblyIdentity name="System.Memory" publicKeyToken="cc7b13ffcd2ddd51" />
-                      <codeBase version="4.0.1.0" href="bin\2sxc\System.Memory.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-4.0.1.0" newVersion="4.0.1.0" />
-                    </dependentAssembly>
-                  </node>-->
 
                 </nodes>
               </configuration>
