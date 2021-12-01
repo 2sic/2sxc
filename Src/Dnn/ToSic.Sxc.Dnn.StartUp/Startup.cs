@@ -1,14 +1,14 @@
 ﻿using DotNetNuke.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ToSic.Sxc.Dnn9
+namespace ToSic.Sxc.Dnn.StartUp
 {
     public class Startup : IDnnStartup
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            ToSic.Eav.Factory.UseExistingServices(services);
-            ToSic.Sxc.Dnn.StartUp.StartupDnn.DiRegister(); // service configuration for DNN9
+            Eav.Factory.UseExistingServices(services);
+            Di.Register(); // service configuration for DNN9
         }
     }
 }

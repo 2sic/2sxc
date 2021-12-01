@@ -6,7 +6,7 @@ using static System.StringComparison;
 namespace ToSic.Sxc.Polymorphism
 {
     [PolymorphResolver("Permissions")]
-    public class Permissions: IResolver
+    public class Permissions : IResolver
     {
         public string Name => "Permissions";
 

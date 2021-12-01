@@ -7,8 +7,8 @@
     <ProjectGuid>{804F8D2E-472D-4878-91E4-D21B2EA1F84D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ToSic.Sxc.Dnn9</RootNamespace>
-    <AssemblyName>ToSic.Sxc.Dnn9</AssemblyName>
+    <RootNamespace>ToSic.Sxc.Dnn.StartUp</RootNamespace>
+    <AssemblyName>ToSic.Sxc.Dnn.StartUp</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -25,18 +25,27 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\ToSic.Sxc.Dnn.Main\bin\Release\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Connect.Dnn.Koi">
+      <HintPath>..\..\..\Dependencies\Koi\net451\Connect.Dnn.Koi.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Connect.Koi">
+      <HintPath>..\..\..\Dependencies\Koi\net451\Connect.Koi.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DotNetNuke.DependencyInjection">
       <HintPath>..\..\..\Dependencies\Dnn944\DotNetNuke.DependencyInjection.dll</HintPath>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -46,17 +55,52 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivateKoi2DependencyInjection.cs" />
+    <Compile Include="CompilerDependencies.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Di.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">
+      <Project>{fa1b4495-6b85-400f-a5e3-0e292ccbfae2}</Project>
+      <Name>ToSic.Eav.Apps</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj">
       <Project>{82f94588-269b-4cdd-98d1-d5cb14c39090}</Project>
       <Name>ToSic.Eav.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ToSic.Sxc.Dnn.Main\ToSic.Sxc.Dnn.Main.csproj">
-      <Project>{d4250011-b9be-4326-9736-4f0122c79802}</Project>
-      <Name>ToSic.Sxc.Dnn.Main</Name>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj">
+      <Project>{1253087a-070d-4bf7-b3c2-841537489910}</Project>
+      <Name>ToSic.Eav.ImportExport</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.WebApi\ToSic.Eav.WebApi.csproj">
+      <Project>{04f3a07c-2c6c-4d87-9e8d-e2db611b0d52}</Project>
+      <Name>ToSic.Eav.WebApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj">
+      <Project>{892f9d3b-0578-46a1-a46a-b694a7e15669}</Project>
+      <Name>ToSic.Eav</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj">
+      <Project>{80d15f35-334b-4c7c-af94-b0ff1e6cc354}</Project>
+      <Name>ToSic.Sxc.WebApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj">
+      <Project>{5d87eb0c-bf67-4814-a0ff-d96256c9b852}</Project>
+      <Name>ToSic.Sxc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ToSic.Sxc.Dnn.WebApi\2sxc WebApi %28Dnn%29.csproj">
+      <Project>{8398fe44-7164-48cb-96cf-74ba9c270bd2}</Project>
+      <Name>2sxc WebApi %28Dnn%29</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ToSic.Sxc.Dnn\2sxc Dnn.csproj">
+      <Project>{a94de6d7-d1e6-4be2-b5b5-dc4a6a61cd80}</Project>
+      <Name>2sxc Dnn</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ToSic.Sxc.Razor\2sxc Razor.csproj">
+      <Project>{78a558af-f274-4e3c-95fe-8de9226e0ebc}</Project>
+      <Name>2sxc Razor</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

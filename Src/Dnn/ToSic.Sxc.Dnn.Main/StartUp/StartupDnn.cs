@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Dnn.StartUp
                 return;
 
             // this service configuration for DNN7 and on DNN9 it is already happned on special startup
-            DiRegister();
+            Di.Register();
 
             // Configure Newtonsoft Time zone handling
             // Moved here in v12.05 - previously it was in the Pre-Serialization converter
@@ -76,43 +76,6 @@ namespace ToSic.Sxc.Dnn.StartUp
             Razor.Internals.StartUp.RegisterToJson(JsonConvert.SerializeObject);
 
             _alreadyConfigured = true;
-        }
-
-        private static bool _alreadyRegistrated;
-
-        public static void DiRegister()
-        {
-            if (_alreadyRegistrated)
-                return;
-
-            var appsCache = GetAppsCacheOverride();
-            Eav.Factory.ActivateNetCoreDi(services =>
-            {
-                services                    .AddDnn(appsCache)
-                    .AddAdamWebApi<int, int>()
-                    .AddSxcWebApi()
-                    .AddSxcCore()
-                    .AddEav();
-
-                // temp polymorphism - later put into AddPolymorphism
-                services.TryAddTransient<Koi>();
-                services.TryAddTransient<Permissions>();
-
-            });
-
-            _alreadyRegistrated = true;
-        }
-
-
-        /// <summary>
-        /// Expects something like "ToSic.Sxc.Dnn.DnnAppsCacheFarm, ToSic.Sxc.Dnn.Enterprise" - namespaces + class, DLL name without extension
-        /// </summary>
-        /// <returns></returns>
-        internal static string GetAppsCacheOverride()
-        {
-            var farmCacheName = ConfigurationManager.AppSettings["EavAppsCache"];
-            if (string.IsNullOrWhiteSpace(farmCacheName)) return null;
-            return farmCacheName;
         }
     }
 }

@@ -99,13 +99,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net40\ToSic.Razor.Dnn.dll</HintPath>
     </Reference>
-    <Reference Include="ToSic.Sxc.Dnn9">
-      <HintPath>..\ToSic.Sxc.Dnn9\bin\Release\ToSic.Sxc.Dnn9.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActivateKoi2DependencyInjection.cs" />
-    <Compile Include="CompilerDependencies.cs" />
     <Compile Include="DnnBusinessController.cs" />
     <Compile Include="StartUp\StartupDnn.cs" />
     <Compile Include="DnnWebForms\PagePicker.ascx.cs">
@@ -136,8 +131,6 @@
     <Compile Include="DnnWebForms\Skins\QuickEdit.ascx.designer.cs">
       <DependentUpon>QuickEdit.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Polymorphism\Permissions.cs" />
-    <Compile Include="StartUp\StartupDnnDi.cs" />
     <Compile Include="View.ascx.cs">
       <DependentUpon>View.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -234,6 +227,10 @@
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj">
       <Project>{892f9d3b-0578-46a1-a46a-b694a7e15669}</Project>
       <Name>ToSic.Eav</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ToSic.Sxc.Dnn.StartUp\ToSic.Sxc.Dnn.StartUp.csproj">
+      <Project>{804f8d2e-472d-4878-91e4-d21b2ea1f84d}</Project>
+      <Name>ToSic.Sxc.Dnn.StartUp</Name>
     </ProjectReference>
     <ProjectReference Include="..\ToSic.Sxc.Dnn.WebApi\2sxc WebApi %28Dnn%29.csproj">
       <Project>{8398fe44-7164-48cb-96cf-74ba9c270bd2}</Project>

@@ -93,7 +93,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicEav01", "Integration\B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SxcEdit01", "Integration\SxcEdit01\SxcEdit01.csproj", "{67672FFA-702D-423F-906E-5E6A6D6B9EFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Dnn9", "Dnn\ToSic.Sxc.Dnn9\ToSic.Sxc.Dnn9.csproj", "{804F8D2E-472D-4878-91E4-D21B2EA1F84D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Dnn.StartUp", "Dnn\ToSic.Sxc.Dnn.StartUp\ToSic.Sxc.Dnn.StartUp.csproj", "{804F8D2E-472D-4878-91E4-D21B2EA1F84D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

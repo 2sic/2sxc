@@ -155,7 +155,7 @@
               <name>ToSic.SexyContent.pdb</name>
             </assembly>-->
             <assembly>
-              <name>ToSic.Sxc.Dnn9.dll</name>
+              <name>ToSic.Sxc.Dnn.StartUp.dll</name>
             </assembly>
             <assembly>
               <name>ToSic.SexyContent.Razor.dll</name>

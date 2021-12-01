@@ -176,6 +176,7 @@
     <Compile Include="Dnn\LookUp\TokenReplaceDnn.cs" />
     <Compile Include="Dnn\LookUp\LookUpInDnnPropertyAccess.cs" />
     <Compile Include="Dnn\Run\DnnZoneMapper.cs" />
+    <Compile Include="Polymorphism\Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Dnn\Install\DnnReadyCheckTurbo.cs" />
     <Compile Include="Dnn\Search\SearchItem.cs" />
