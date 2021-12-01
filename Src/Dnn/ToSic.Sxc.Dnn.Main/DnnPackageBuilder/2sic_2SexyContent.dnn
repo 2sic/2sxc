@@ -44,8 +44,8 @@
             </script>
             <script type="Install">
               <path>SqlDataProvider</path>
-              <name>12.10.00.SqlDataProvider</name>
-              <version>12.10.00</version>
+              <name>13.00.00.SqlDataProvider</name>
+              <version>12.11.00</version>
             </script>
             <script type="UnInstall">
               <path>SqlDataProvider</path>
@@ -785,7 +785,7 @@
           </files>
         </component>-->
 
-        <component type="Cleanup" version="12.10.00">
+        <component type="Cleanup" version="12.11.00">
           <files>
             <file>
               <path>bin</path>

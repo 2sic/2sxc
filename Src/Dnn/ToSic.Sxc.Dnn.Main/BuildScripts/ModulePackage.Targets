@@ -97,12 +97,6 @@
       <AssemblyHelper Include="$(OutDir)\ToSic.Eav*.pdb" />
 
       <!-- DNN specific DLLs -->
-      <AssemblyInclude Include="$(OutDir)\ToSic.SexyContent.Razor.dll" />
-      <AssemblyHelper Include="$(OutDir)\ToSic.SexyContent.Razor.pdb" />
-      <!--<AssemblyInclude Include="$(OutDir)\ToSic.SexyContent.WebApi.dll" />
-      <AssemblyHelper Include="$(OutDir)\ToSic.SexyContent.WebApi.pdb" />-->
-      <!--<AssemblyInclude Include="$(OutDir)\ToSic.SexyContent.dll" />
-      <AssemblyHelper Include="$(OutDir)\ToSic.SexyContent.pdb" />-->
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Dnn*.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Dnn*.pdb" />
 

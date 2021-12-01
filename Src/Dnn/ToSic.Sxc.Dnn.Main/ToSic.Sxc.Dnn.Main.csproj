@@ -279,7 +279,7 @@
     <Content Include="DnnPackageBuilder\SqlDataProvider\12.00.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\require-2sxc-9.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\Uninstall.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\12.10.00.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\13.00.00.SqlDataProvider" />
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
