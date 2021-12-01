@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("ToSic.Sxc.WebApi")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Dnn")]
-[assembly: InternalsVisibleTo("ToSic.SexyContent.WebApi")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.Dnn.WebApi")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Dnn.Core")]
 [assembly: InternalsVisibleTo("ToSic.SexyContent.Razor")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Mvc")]

@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ToSic.Sxc</RootNamespace>
-    <AssemblyName>ToSic.SexyContent.WebApi</AssemblyName>
+    <AssemblyName>ToSic.Sxc.Dnn.WebApi</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
