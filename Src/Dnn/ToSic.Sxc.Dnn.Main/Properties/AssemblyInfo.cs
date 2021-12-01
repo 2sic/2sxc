@@ -33,4 +33,4 @@ using System.Runtime.InteropServices;
 
 
 [assembly: InternalsVisibleTo("ToSic.SexyContent.WebApi")]
-[assembly: InternalsVisibleTo("ToSic.Sxc.Dnn")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.Dnn.Core")]

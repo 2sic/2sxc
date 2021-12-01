@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("ToSic.Sxc.WebApi")]
 [assembly: InternalsVisibleTo("ToSic.SexyContent")]
 [assembly: InternalsVisibleTo("ToSic.SexyContent.WebApi")]
-[assembly: InternalsVisibleTo("ToSic.Sxc.Dnn")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.Dnn.Core")]
 [assembly: InternalsVisibleTo("ToSic.SexyContent.Razor")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Mvc")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Oqtane.Server")]

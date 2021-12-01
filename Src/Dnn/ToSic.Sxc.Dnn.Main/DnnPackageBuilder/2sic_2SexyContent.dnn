@@ -148,7 +148,7 @@
               <name>ToSic.Sxc.WebApi.dll</name>
             </assembly>
             <assembly>
-              <name>ToSic.Sxc.Dnn.dll</name>
+              <name>ToSic.Sxc.Dnn.Core.dll</name>
             </assembly>
             <!-- trying to include pdb - not possible because the installer will skip anything other than dlls -->
             <!--<assembly>
