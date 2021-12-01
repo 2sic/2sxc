@@ -139,7 +139,7 @@
           <assemblies>
             <basePath>bin</basePath>
             <assembly>
-              <name>ToSic.SexyContent.dll</name>
+              <name>ToSic.Sxc.Dnn.dll</name>
             </assembly>
             <assembly>
               <name>ToSic.Sxc.dll</name>
@@ -152,7 +152,7 @@
             </assembly>
             <!-- trying to include pdb - not possible because the installer will skip anything other than dlls -->
             <!--<assembly>
-              <name>ToSic.SexyContent.pdb</name>
+              <name>ToSic.Sxc.Dnn.pdb</name>
             </assembly>-->
             <assembly>
               <name>ToSic.SexyContent.Razor.dll</name>

@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ToSic.SexyContent")]
+[assembly: AssemblyTitle("ToSic.Sxc.Dnn")]
 [assembly: AssemblyDescription("2sxc - the content module for DotNetNuke")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ToSic")]

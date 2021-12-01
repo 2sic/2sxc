@@ -12,7 +12,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ToSic.Sxc.Dnn</RootNamespace>
-    <AssemblyName>ToSic.SexyContent</AssemblyName>
+    <AssemblyName>ToSic.Sxc.Dnn</AssemblyName>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>4.0</OldToolsVersion>
