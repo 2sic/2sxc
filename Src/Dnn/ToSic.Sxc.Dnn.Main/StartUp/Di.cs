@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Configuration;
 using ToSic.Eav;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
@@ -14,7 +14,6 @@ using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Repositories;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;

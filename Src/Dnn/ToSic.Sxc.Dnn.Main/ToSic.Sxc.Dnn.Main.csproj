@@ -70,18 +70,24 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Connect.Dnn.Koi, Version=1.3.0.27054, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Connect.Dnn.Koi, Version=2.0.0.27364, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>koi\bin\Connect.Dnn.Koi.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="Connect.Koi, Version=1.0.4.14722, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Connect.Koi, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Dependencies\Koi\Connect.Koi.dll</HintPath>
+      <HintPath>koi\bin\Connect.Koi.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DotNetNuke">
       <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.dll</HintPath>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DotNetNuke.DependencyInjection">
+      <HintPath>..\..\..\..\..\2sxc-dnn944\Website\bin\DotNetNuke.DependencyInjection.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DotNetNuke.Web">
       <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.Web.dll</HintPath>
@@ -102,6 +108,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DnnBusinessController.cs" />
+    <Compile Include="Polymorphism\Permissions.cs" />
+    <Compile Include="StartUp\ActivateKoi2DependencyInjection.cs" />
+    <Compile Include="StartUp\CompilerDependencies.cs" />
+    <Compile Include="StartUp\Di.cs" />
+    <Compile Include="StartUp\Startup.cs" />
     <Compile Include="StartUp\StartupDnn.cs" />
     <Compile Include="DnnWebForms\PagePicker.ascx.cs">
       <DependentUpon>PagePicker.ascx</DependentUpon>
@@ -227,10 +238,6 @@
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj">
       <Project>{892f9d3b-0578-46a1-a46a-b694a7e15669}</Project>
       <Name>ToSic.Eav</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ToSic.Sxc.Dnn.StartUp\ToSic.Sxc.Dnn.StartUp.csproj">
-      <Project>{804f8d2e-472d-4878-91e4-d21b2ea1f84d}</Project>
-      <Name>ToSic.Sxc.Dnn.StartUp</Name>
     </ProjectReference>
     <ProjectReference Include="..\ToSic.Sxc.Dnn.WebApi\2sxc WebApi %28Dnn%29.csproj">
       <Project>{8398fe44-7164-48cb-96cf-74ba9c270bd2}</Project>
