@@ -42,6 +42,11 @@
               <name>12.00.00.SqlDataProvider</name>
               <version>12.00.00</version>
             </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>12.10.00.SqlDataProvider</name>
+              <version>12.10.00</version>
+            </script>
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
@@ -81,7 +86,9 @@
                     <supportsPopUps>False</supportsPopUps>
                     <viewOrder>0</viewOrder>
                   </moduleControl>
-                  <moduleControl>
+                  
+                  <!-- 2021-11-30, commented because it is not in use, probably can be deleted 2022 -->
+                  <!--<moduleControl>
                     <controlKey>webformsbridge</controlKey>
                     <controlSrc>DesktopModules/ToSIC_SexyContent/DnnWebForms/WebFormsBridge.ascx</controlSrc>
                     <supportsPartialRendering>False</supportsPartialRendering>
@@ -90,7 +97,8 @@
                     <iconFile />
                     <helpUrl />
                     <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
+                  </moduleControl>-->
+                  
                 </moduleControls>
               </moduleDefinition>
             </moduleDefinitions>
@@ -99,7 +107,7 @@
             <processorType>
               DotNetNuke.Entities.Modules.EventMessageProcessor,
               DotNetNuke
-</processorType>
+            </processorType>
             <processorCommand>UpgradeModule</processorCommand>
             <attributes>
               <businessControllerClass>ToSic.SexyContent.DnnBusinessController</businessControllerClass>
@@ -183,11 +191,17 @@
               <name>ToSic.Eav.WebApi.dll</name>
             </assembly>
 
+
             <assembly>
               <name>CsvHelper.dll</name>
               <version>2.0.0</version>
             </assembly>
 
+            <!-- 2sxc 13+ netstandard2.0/framework 4.7.2 assemblies -->
+            <assembly>
+              <name>JetBrains.Annotations.dll</name>
+              <version>2020.3.0</version>
+            </assembly>
             <assembly>
               <name>Microsoft.AspNetCore.Authentication.Abstractions.dll</name>
               <version>2.0.3</version>
@@ -284,19 +298,34 @@
               <name>Microsoft.EntityFrameworkCore.Design.dll</name>
               <version>2.1.1</version>
             </assembly>
-            <!--<assembly><name>Microsoft.EntityFrameworkCore.dll</name></assembly>-->
+            <assembly>
+              <name>Microsoft.EntityFrameworkCore.dll</name>
+              <version>2.1.1</version>
+            </assembly>
             <assembly>
               <name>Microsoft.EntityFrameworkCore.Relational.Design.dll</name>
               <version>1.1.6</version>
             </assembly>
-            <!--<assembly><name>Microsoft.EntityFrameworkCore.Relational.dll</name></assembly>-->
+            <assembly>
+              <name>Microsoft.EntityFrameworkCore.Relational.dll</name>
+              <version>2.1.1</version>
+            </assembly>
             <assembly>
               <name>Microsoft.EntityFrameworkCore.SqlServer.Design.dll</name>
               <version>1.1.6</version>
             </assembly>
-            <!--<assembly><name>Microsoft.EntityFrameworkCore.SqlServer.dll</name></assembly>-->
-            <!--<assembly><name>Microsoft.Extensions.Caching.Abstractions.dll</name></assembly>-->
-            <!--<assembly><name>Microsoft.Extensions.Caching.Memory.dll</name></assembly>-->
+            <assembly>
+              <name>Microsoft.EntityFrameworkCore.SqlServer.dll</name>
+              <version>2.1.1</version>
+            </assembly>
+            <assembly>
+              <name>Microsoft.Extensions.Caching.Abstractions.dll</name>
+              <version>2.1.1</version>
+            </assembly>
+            <assembly>
+              <name>Microsoft.Extensions.Caching.Memory.dll</name>
+              <version>2.1.1</version>
+            </assembly>
             <assembly>
               <name>Microsoft.Extensions.Configuration.Abstractions.dll</name>
               <version>2.1.1</version>
@@ -329,7 +358,6 @@
               <name>Microsoft.Extensions.Configuration.UserSecrets.dll</name>
               <version>2.0.2</version>
             </assembly>
-
             <assembly>
               <name>Microsoft.Extensions.FileProviders.Abstractions.dll</name>
               <version>2.0.1</version>
@@ -338,12 +366,14 @@
               <name>Microsoft.Extensions.FileProviders.Physical.dll</name>
               <version>2.0.1</version>
             </assembly>
-
             <assembly>
               <name>Microsoft.Extensions.Hosting.Abstractions.dll</name>
               <version>2.0.3</version>
             </assembly>
-            <!--<assembly><name>Microsoft.Extensions.Logging.Abstractions.dll</name></assembly>-->
+            <assembly>
+              <name>Microsoft.Extensions.Logging.Abstractions.dll</name>
+              <version>2.1.1</version>
+            </assembly>
             <assembly>
               <name>Microsoft.Extensions.Logging.Configuration.dll</name>
               <version>2.0.2</version>
@@ -356,32 +386,55 @@
               <name>Microsoft.Extensions.Logging.Debug.dll</name>
               <version>2.0.2</version>
             </assembly>
-            <!--<assembly>
+            <assembly>
               <name>Microsoft.Extensions.Logging.dll</name>
-            </assembly>-->
+              <version>2.1.1</version>
+            </assembly>
             <assembly>
               <name>Microsoft.Extensions.Options.ConfigurationExtensions.dll</name>
               <version>2.0.2</version>
             </assembly>
-            <!--<assembly><name>Microsoft.Extensions.Options.dll</name></assembly>-->
-            <!--<assembly><name>Microsoft.Extensions.Primitives.dll</name></assembly>-->
+            <assembly>
+              <name>Microsoft.Extensions.ObjectPool.dll</name>
+              <version>2.0.0</version>
+            </assembly>
+            <assembly>
+              <name>Microsoft.Extensions.Options.dll</name>
+              <version>2.1.1</version>
+            </assembly>
+            <assembly>
+              <name>Microsoft.Extensions.Primitives.dll</name>
+              <version>2.1.1</version>
+            </assembly>
             <assembly>
               <name>Microsoft.Net.Http.Headers.dll</name>
               <version>2.0.3</version>
             </assembly>
-            <!--<assembly><name>Remotion.Linq.dll</name></assembly>-->
-
-            <!--<assembly><name>System.Collections.Immutable.dll</name></assembly>-->
-            <!--<assembly><name>System.ComponentModel.Annotations.dll</name></assembly>-->
+            <assembly>
+              <name>Remotion.Linq.dll</name>
+              <version>2.2.0</version>
+            </assembly>
+            <assembly>
+              <name>System.Collections.Immutable.dll</name>
+              <version>1.2.3</version>
+            </assembly>
+            <assembly>
+              <name>System.ComponentModel.Annotations.dll</name>
+              <version>4.2.1</version>
+            </assembly>
             <!--! <assembly><name>System.Data.Common.dll</name></assembly>-->
             <assembly>
               <name>System.Data.SqlClient.dll</name>
               <version>4.4.0</version>
             </assembly>
-            <!--<assembly><name>System.Diagnostics.DiagnosticSource.dll</name></assembly>-->
-            <!--<assembly><name>System.Interactive.Async.dll</name></assembly>-->
-            <!--<assembly><name>System.Memory.dll</name></assembly>-->
-
+            <assembly>
+              <name>System.Diagnostics.DiagnosticSource.dll</name>
+              <version>4.0.3</version>
+            </assembly>
+            <assembly>
+              <name>System.Interactive.Async.dll</name>
+              <version>3.0.3000</version>
+            </assembly>
             <assembly>
               <name>System.Numerics.Vectors.dll</name>
               <version>4.1.3</version>
@@ -390,8 +443,15 @@
               <name>System.Reflection.Metadata.dll</name>
               <version>1.4.2</version>
             </assembly>
-            <!--<assembly><name>System.Runtime.CompilerServices.Unsafe.dll</name></assembly>-->
+            <assembly>
+              <name>System.Runtime.CompilerServices.Unsafe.dll</name>
+              <version>4.0.4</version>
+            </assembly>
             <!--! <assembly><name>System.Runtime.InteropServices.RuntimeInformation.dll</name></assembly>-->
+            <assembly>
+              <name>System.Security.Principal.Windows.dll</name>
+              <version>4.6.25519</version>
+            </assembly>
             <assembly>
               <name>System.Text.Encodings.Web.dll</name>
               <version>4.0.2</version>
@@ -401,85 +461,7 @@
               <version>4.1.1</version>
             </assembly>
 
-            <!-- New assemblies for EntityFramework core and dependency injection -->
-
-            <assembly>
-              <path>bin\2sxc</path>
-              <name>Microsoft.EntityFrameworkCore.dll</name>
-              <version>2.1.1</version>
-            </assembly>
-            <assembly>
-              <path>bin\2sxc</path>
-              <name>Microsoft.EntityFrameworkCore.Relational.dll</name>
-              <version>2.1.1</version>
-            </assembly>
-            <assembly>
-              <path>bin\2sxc</path>
-              <name>Microsoft.EntityFrameworkCore.SqlServer.dll</name>
-              <version>2.1.1</version>
-            </assembly>
-            <assembly>
-              <path>bin\2sxc</path>
-              <name>Microsoft.Extensions.Caching.Abstractions.dll</name>
-              <version>2.1.1</version>
-            </assembly>
-            <assembly>
-              <path>bin\2sxc</path>
-              <name>Microsoft.Extensions.Caching.Memory.dll</name>
-              <version>2.1.1</version>
-            </assembly>
-            <assembly>
-              <path>bin\2sxc</path>
-              <name>Microsoft.Extensions.Logging.Abstractions.dll</name>
-              <version>2.1.1</version>
-            </assembly>
-            <assembly>
-              <path>bin\2sxc</path>
-              <name>Microsoft.Extensions.Logging.dll</name>
-              <version>2.1.1</version>
-            </assembly>
-            <assembly>
-              <path>bin\2sxc</path>
-              <name>Microsoft.Extensions.Options.dll</name>
-              <version>2.1.1</version>
-            </assembly>
-            <assembly>
-              <path>bin\2sxc</path>
-              <name>Microsoft.Extensions.Primitives.dll</name>
-              <version>2.1.1</version>
-            </assembly>
-            <assembly>
-              <path>bin\2sxc</path>
-              <name>Remotion.Linq.dll</name>
-              <version>2.2.0</version>
-            </assembly>
-            <assembly>
-              <path>bin\2sxc</path>
-              <name>System.Collections.Immutable.dll</name>
-              <version>1.2.3</version>
-            </assembly>
-            <assembly>
-              <path>bin\2sxc</path>
-              <name>System.ComponentModel.Annotations.dll</name>
-              <version>4.2.1</version>
-            </assembly>
-            <assembly>
-              <path>bin\2sxc</path>
-              <name>System.Diagnostics.DiagnosticSource.dll</name>
-              <version>4.0.3</version>
-            </assembly>
-            <assembly>
-              <path>bin\2sxc</path>
-              <name>System.Interactive.Async.dll</name>
-              <version>3.0.3000</version>
-            </assembly>
-            <assembly>
-              <path>bin\2sxc</path>
-              <name>System.Runtime.CompilerServices.Unsafe.dll</name>
-              <version>4.0.4</version>
-            </assembly>
-
-            <!-- DNN 9.4+ assemblies -->
+            <!-- 2sxc dotnet assemblies -->
             <assembly>
               <name>Microsoft.Extensions.DependencyInjection.Abstractions.dll</name>
               <version>2.1.1</version>
@@ -492,12 +474,10 @@
               <name>Newtonsoft.Json.dll</name>
               <version>10.0.3</version>
             </assembly>
-
             <assembly>
               <name>System.Buffers.dll</name>
               <version>4.6.25519</version>
             </assembly>
-
             <assembly>
               <name>System.Memory.dll</name>
               <version>4.0.1</version>
@@ -520,7 +500,6 @@
 
             <!-- Microsoft.Extensions.FileSystemGlobbing Components -->
             <assembly>
-              <path>bin</path>
               <name>Microsoft.Extensions.FileSystemGlobbing.dll</name>
               <version>2.0.1</version>
             </assembly>
@@ -745,7 +724,9 @@
             </file>
           </files>
         </component>
-        <component type="Cleanup" version="10.03.00">
+
+        <!-- 2021-12-01, commented because it should not be executed for 2sxc 13+, probably can be deleted 2022 -->
+        <!--<component type="Cleanup" version="10.03.00">
           <files>
             <file>
               <path>bin</path>
@@ -804,20 +785,7 @@
               <name>System.Runtime.dll</name>
             </file>
           </files>
-        </component>
-
-        <component type="Cleanup" version="12.10.00">
-          <files>
-            <file>
-              <path>bin\2sxc</path>
-              <name>Microsoft.Extensions.DependencyInjection.Abstractions.dll</name>
-            </file>
-            <file>
-              <path>bin\2sxc</path>
-              <name>Microsoft.Extensions.DependencyInjection.dll</name>
-            </file>
-          </files>
-        </component>
+        </component>-->
 
       </components>
     </package>
@@ -875,7 +843,9 @@
                     <supportsPopUps>False</supportsPopUps>
                     <viewOrder>0</viewOrder>
                   </moduleControl>
-                  <moduleControl>
+
+                  <!-- 2021-11-30, commented because it is not in use, probably can be deleted 2022 -->
+                  <!--<moduleControl>
                     <controlKey>webformsbridge</controlKey>
                     <controlSrc>DesktopModules/ToSIC_SexyContent/DnnWebForms/WebFormsBridge.ascx</controlSrc>
                     <supportsPartialRendering>False</supportsPartialRendering>
@@ -884,7 +854,8 @@
                     <iconFile />
                     <helpUrl />
                     <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
+                  </moduleControl>-->
+                  
                 </moduleControls>
               </moduleDefinition>
             </moduleDefinitions>
@@ -914,146 +885,173 @@
                     <add assembly="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
                   </node>
 
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.EntityFrameworkCore.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.EntityFrameworkCore'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
-                    <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
-                      <assemblyIdentity name="Microsoft.EntityFrameworkCore" publicKeyToken="adb9793829ddae60" />
-                      <codeBase version="2.1.1.0" href="bin\2sxc\Microsoft.EntityFrameworkCore.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-2.32767.32767.32767" newVersion="2.1.1.0" />
-                    </dependentAssembly>
-                  </node>
-
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.EntityFrameworkCore.Relational.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.EntityFrameworkCore.Relational'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
-                    <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
-                      <assemblyIdentity name="Microsoft.EntityFrameworkCore.Relational" publicKeyToken="adb9793829ddae60" />
-                      <codeBase version="2.1.1.0" href="bin\2sxc\Microsoft.EntityFrameworkCore.Relational.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-2.32767.32767.32767" newVersion="2.1.1.0" />
-                    </dependentAssembly>
-                  </node>
-
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.EntityFrameworkCore.SqlServer.dll, version 1.1.1.0 -->
-                  <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.EntityFrameworkCore.SqlServer'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
-                    <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
-                      <assemblyIdentity name="Microsoft.EntityFrameworkCore.SqlServer" publicKeyToken="adb9793829ddae60" />
-                      <codeBase version="2.1.1.0" href="bin\2sxc\Microsoft.EntityFrameworkCore.SqlServer.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-2.32767.32767.32767" newVersion="2.1.1.0" />
-                    </dependentAssembly>
-                  </node>
-
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.Caching.Abstractions.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.Caching.Abstractions'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
+                   <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.Caching.Abstractions.dll, version 1.1.1.0 -->
+                  <!--<node path="/configuration/runtime/ab:assemblyBinding"
+                        action="update"
+                        collision="overwrite"
+                        targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.Caching.Abstractions'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]"
+                        nameSpace="urn:schemas-microsoft-com:asm.v1"
+                        nameSpacePrefix="ab">
                     <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
                       <assemblyIdentity name="Microsoft.Extensions.Caching.Abstractions" publicKeyToken="adb9793829ddae60" />
-                      <codeBase version="2.1.1.0" href="bin\2sxc\Microsoft.Extensions.Caching.Abstractions.dll" />
-                      <bindingRedirect oldVersion="2.0.0.0-2.32767.32767.32767" newVersion="2.1.1.0" />
+                      <bindingRedirect oldVersion="0.0.0.0-1.32767.32767.32767" newVersion="1.1.1.0" />
+                      <codeBase version="1.1.1.0" href="bin\2sxc\Microsoft.Extensions.Caching.Abstractions.dll" />
                     </dependentAssembly>
-                  </node>
+                  </node>-->
 
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.Caching.Memory.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.Caching.Memory'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
+                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.Caching.Memory.dll, version 1.1.1.0 -->
+                  <!--<node path="/configuration/runtime/ab:assemblyBinding"
+                        action="update"
+                        collision="overwrite"
+                        targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.Caching.Memory'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]"
+                        nameSpace="urn:schemas-microsoft-com:asm.v1"
+                        nameSpacePrefix="ab">
                     <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
                       <assemblyIdentity name="Microsoft.Extensions.Caching.Memory" publicKeyToken="adb9793829ddae60" />
-                      <codeBase version="2.1.1.0" href="bin\2sxc\Microsoft.Extensions.Caching.Memory.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-2.32767.32767.32767" newVersion="2.1.1.0" />
+                      <bindingRedirect oldVersion="0.0.0.0-1.32767.32767.32767" newVersion="1.1.1.0" />
+                      <codeBase version="1.1.1.0" href="bin\2sxc\Microsoft.Extensions.Caching.Memory.dll" />
                     </dependentAssembly>
-                  </node>
+                  </node>-->
 
-                  <!-- remove bindingRedirects for bin\2sxc\Microsoft.Extensions.DependencyInjection.Abstractions.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.DependencyInjection.Abstractions'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]" action="remove" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab"></node>
+                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.DependencyInjection.Abstractions.dll, version 1.1.0.0 -->
+                  <!--<node path="/configuration/runtime/ab:assemblyBinding"
+                        action="update"
+                        collision="overwrite"
+                        targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.DependencyInjection.Abstractions'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]"
+                        nameSpace="urn:schemas-microsoft-com:asm.v1"
+                        nameSpacePrefix="ab">
+                    <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
+                      <assemblyIdentity name="Microsoft.Extensions.DependencyInjection.Abstractions" publicKeyToken="adb9793829ddae60" />
+                      <codeBase version="1.1.0.0" href="bin\2sxc\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+                      <bindingRedirect oldVersion="0.0.0.0-1.32767.32767.32767" newVersion="1.1.0.0"/>
+                    </dependentAssembly>
+                  </node>-->
 
-                  <!-- remove bindingRedirects for bin\2sxc\Microsoft.Extensions.DependencyInjection.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.DependencyInjection'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]" action="remove" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab"></node>
+                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.DependencyInjection.dll, version 1.1.0.0 -->
+                  <!--<node path="/configuration/runtime/ab:assemblyBinding"
+                        action="update"
+                        collision="overwrite"
+                        targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.DependencyInjection'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]"
+                        nameSpace="urn:schemas-microsoft-com:asm.v1"
+                        nameSpacePrefix="ab">
+                    <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
+                      <assemblyIdentity name="Microsoft.Extensions.DependencyInjection" publicKeyToken="adb9793829ddae60" />
+                      <codeBase version="1.1.0.0" href="bin\2sxc\Microsoft.Extensions.DependencyInjection.dll" />
+                      <bindingRedirect oldVersion="0.0.0.0-1.32767.32767.32767" newVersion="1.1.0.0"/>
+                    </dependentAssembly>
+                  </node>-->
 
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.Logging.Abstractions.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.Logging.Abstractions'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
+                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.Logging.Abstractions.dll, version 1.1.1.0 -->
+                  <!--<node path="/configuration/runtime/ab:assemblyBinding"
+                        action="update"
+                        collision="overwrite"
+                        targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.Logging.Abstractions'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]"
+                        nameSpace="urn:schemas-microsoft-com:asm.v1"
+                        nameSpacePrefix="ab">
                     <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
                       <assemblyIdentity name="Microsoft.Extensions.Logging.Abstractions" publicKeyToken="adb9793829ddae60" />
-                      <codeBase version="2.1.1.0" href="bin\2sxc\Microsoft.Extensions.Logging.Abstractions.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-2.32767.32767.32767" newVersion="2.1.1.0" />
+                      <bindingRedirect oldVersion="0.0.0.0-1.32767.32767.32767" newVersion="1.1.1.0" />
+                      <codeBase version="1.1.1.0" href="bin\2sxc\Microsoft.Extensions.Logging.Abstractions.dll" />
                     </dependentAssembly>
-                  </node>
+                  </node>-->
 
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.Logging.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.Logging'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
+                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.Logging.dll, version 1.1.1.0 -->
+                  <!--<node path="/configuration/runtime/ab:assemblyBinding"
+                        action="update"
+                        collision="overwrite"
+                        targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.Logging'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]"
+                        nameSpace="urn:schemas-microsoft-com:asm.v1"
+                        nameSpacePrefix="ab">
                     <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
                       <assemblyIdentity name="Microsoft.Extensions.Logging" publicKeyToken="adb9793829ddae60" />
-                      <codeBase version="2.1.1.0" href="bin\2sxc\Microsoft.Extensions.Logging.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-2.32767.32767.32767" newVersion="2.1.1.0" />
+                      <bindingRedirect oldVersion="0.0.0.0-1.32767.32767.32767" newVersion="1.1.1.0" />
+                      <codeBase version="1.1.1.0" href="bin\2sxc\Microsoft.Extensions.Logging.dll" />
                     </dependentAssembly>
-                  </node>
+                  </node>-->
 
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.Options.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.Options'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
+                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.Options.dll, version 1.1.1.0 -->
+                  <!--<node path="/configuration/runtime/ab:assemblyBinding"
+                        action="update"
+                        collision="overwrite"
+                        targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.Options'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]"
+                        nameSpace="urn:schemas-microsoft-com:asm.v1"
+                        nameSpacePrefix="ab">
                     <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
                       <assemblyIdentity name="Microsoft.Extensions.Options" publicKeyToken="adb9793829ddae60" />
-                      <codeBase version="2.1.1.0" href="bin\2sxc\Microsoft.Extensions.Options.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-2.32767.32767.32767" newVersion="2.1.1.0" />
+                      <bindingRedirect oldVersion="0.0.0.0-1.32767.32767.32767" newVersion="1.1.1.0" />
+                      <codeBase version="1.1.1.0" href="bin\2sxc\Microsoft.Extensions.Options.dll" />
                     </dependentAssembly>
-                  </node>
+                  </node>-->
 
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.Primitives.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.Primitives'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
+                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Microsoft.Extensions.Primitives.dll, version 1.1.0.0 -->
+                  <!--<node path="/configuration/runtime/ab:assemblyBinding"
+                        action="update"
+                        collision="overwrite"
+                        targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Extensions.Primitives'][ab:assemblyIdentity/@publicKeyToken='adb9793829ddae60'][ab:bindingRedirect]"
+                        nameSpace="urn:schemas-microsoft-com:asm.v1"
+                        nameSpacePrefix="ab">
                     <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
                       <assemblyIdentity name="Microsoft.Extensions.Primitives" publicKeyToken="adb9793829ddae60" />
-                      <codeBase version="2.1.1.0" href="bin\2sxc\Microsoft.Extensions.Primitives.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-2.32767.32767.32767" newVersion="2.1.1.0" />
+                      <bindingRedirect oldVersion="0.0.0.0-1.32767.32767.32767" newVersion="1.1.0.0" />
+                      <codeBase version="1.1.0.0" href="bin\2sxc\Microsoft.Extensions.Primitives.dll" />
                     </dependentAssembly>
-                  </node>
+                  </node>-->
 
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Remotion.Linq.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Remotion.Linq'][ab:assemblyIdentity/@publicKeyToken='fee00910d6e5f53b'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
+                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\Remotion.Linq.dll, version 2.1.0.0 -->
+                  <!--<node path="/configuration/runtime/ab:assemblyBinding"
+                        action="update"
+                        collision="overwrite"
+                        targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Remotion.Linq'][ab:assemblyIdentity/@publicKeyToken='fee00910d6e5f53b'][ab:bindingRedirect]"
+                        nameSpace="urn:schemas-microsoft-com:asm.v1"
+                        nameSpacePrefix="ab">
                     <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
                       <assemblyIdentity name="Remotion.Linq" publicKeyToken="fee00910d6e5f53b" />
-                      <codeBase version="2.2.0.0" href="bin\2sxc\Remotion.Linq.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-2.32767.32767.32767" newVersion="2.2.0.0" />
+                      <bindingRedirect oldVersion="0.0.0.0-2.32767.32767.32767" newVersion="2.1.0.0" />
+                      <codeBase version="2.1.0.0" href="bin\2sxc\Remotion.Linq.dll" />
                     </dependentAssembly>
-                  </node>
+                  </node>-->
 
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\System.Collections.Immutable.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Collections.Immutable'][ab:assemblyIdentity/@publicKeyToken='b03f5f7f11d50a3a'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
+                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\System.Collections.Immutable.dll, version 1.2.1.0 -->
+                  <!--<node path="/configuration/runtime/ab:assemblyBinding"
+                        action="update"
+                        collision="overwrite"
+                        targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Collections.Immutable'][ab:assemblyIdentity/@publicKeyToken='b03f5f7f11d50a3a'][ab:bindingRedirect]"
+                        nameSpace="urn:schemas-microsoft-com:asm.v1"
+                        nameSpacePrefix="ab">
                     <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
                       <assemblyIdentity name="System.Collections.Immutable" publicKeyToken="b03f5f7f11d50a3a" />
-                      <codeBase version="1.2.3.0" href="bin\2sxc\System.Collections.Immutable.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-1.32767.32767.32767" newVersion="1.2.3.0" />
+                      <bindingRedirect oldVersion="0.0.0.0-1.32767.32767.32767" newVersion="1.2.1.0" />
+                      <codeBase version="1.2.1.0" href="bin\2sxc\System.Collections.Immutable.dll" />
                     </dependentAssembly>
-                  </node>
+                  </node>-->
 
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\System.Diagnostics.DiagnosticSource.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Diagnostics.DiagnosticSource'][ab:assemblyIdentity/@publicKeyToken='cc7b13ffcd2ddd51'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
+                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\System.Diagnostics.DiagnosticSource.dll, version 4.0.1.0 -->
+                  <!--<node path="/configuration/runtime/ab:assemblyBinding"
+                        action="update"
+                        collision="overwrite"
+                        targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Diagnostics.DiagnosticSource'][ab:assemblyIdentity/@publicKeyToken='cc7b13ffcd2ddd51'][ab:bindingRedirect]"
+                        nameSpace="urn:schemas-microsoft-com:asm.v1"
+                        nameSpacePrefix="ab">
                     <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
                       <assemblyIdentity name="System.Diagnostics.DiagnosticSource" publicKeyToken="cc7b13ffcd2ddd51" />
-                      <codeBase version="4.0.3.0" href="bin\2sxc\System.Diagnostics.DiagnosticSource.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-4.32767.32767.32767" newVersion="4.0.3.0" />
+                      <bindingRedirect oldVersion="0.0.0.0-4.32767.32767.32767" newVersion="4.0.2.0" />
+                      <codeBase version="4.0.2.0" href="bin\2sxc\System.Diagnostics.DiagnosticSource.dll" />
                     </dependentAssembly>
-                  </node>
+                  </node>-->
 
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\System.Interactive.Async.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Interactive.Async'][ab:assemblyIdentity/@publicKeyToken='94bc3704cddfc263'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
+                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\System.Interactive.Async.dll, version 3.0.0.0 -->
+                  <!--<node path="/configuration/runtime/ab:assemblyBinding"
+                        action="update"
+                        collision="overwrite"
+                        targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Interactive.Async'][ab:assemblyIdentity/@publicKeyToken='94bc3704cddfc263'][ab:bindingRedirect]"
+                        nameSpace="urn:schemas-microsoft-com:asm.v1"
+                        nameSpacePrefix="ab">
                     <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
                       <assemblyIdentity name="System.Interactive.Async" publicKeyToken="94bc3704cddfc263" />
-                      <codeBase version="3.0.3000.0" href="bin\2sxc\System.Interactive.Async.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-3.32767.32767.32767" newVersion="3.0.3000.0" />
+                      <bindingRedirect oldVersion="0.0.0.0-3.32767.32767.32767" newVersion="3.0.0.0" />
+                      <codeBase version="3.0.0.0" href="bin\2sxc\System.Interactive.Async.dll" />
                     </dependentAssembly>
-                  </node>
-
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\System.ComponentModel.Annotations.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.ComponentModel.Annotations'][ab:assemblyIdentity/@publicKeyToken='b03f5f7f11d50a3a'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
-                    <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
-                      <assemblyIdentity name="System.ComponentModel.Annotations" publicKeyToken="b03f5f7f11d50a3a" />
-                      <codeBase version="4.2.1.0" href="bin\2sxc\System.ComponentModel.Annotations.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-4.32767.32767.32767" newVersion="4.2.1.0" />
-                    </dependentAssembly>
-                  </node>
-
-                  <!-- for DNN 9.4.0 add codeBase and update bindingRedirects for bin\2sxc\System.Runtime.CompilerServices.Unsafe.dll -->
-                  <node path="/configuration/runtime/ab:assemblyBinding" action="update" collision="overwrite" targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Runtime.CompilerServices.Unsafe'][ab:assemblyIdentity/@publicKeyToken='b03f5f7f11d50a3a'][ab:bindingRedirect]" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
-                    <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
-                      <assemblyIdentity name="System.Runtime.CompilerServices.Unsafe" publicKeyToken="b03f5f7f11d50a3a" />
-                      <codeBase version="4.0.4.0" href="bin\2sxc\System.Runtime.CompilerServices.Unsafe.dll" />
-                      <bindingRedirect oldVersion="0.0.0.0-4.0.4.0" newVersion="4.0.4.0" />
-                    </dependentAssembly>
-                  </node>
+                  </node>-->
 
                 </nodes>
               </configuration>
