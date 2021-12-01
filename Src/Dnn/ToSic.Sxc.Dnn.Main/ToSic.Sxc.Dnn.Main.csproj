@@ -86,8 +86,7 @@
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="DotNetNuke.DependencyInjection">
-      <HintPath>..\..\..\..\..\2sxc-dnn944\Website\bin\DotNetNuke.DependencyInjection.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\Dependencies\Dnn944\DotNetNuke.DependencyInjection.dll</HintPath>
     </Reference>
     <Reference Include="DotNetNuke.Web">
       <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.Web.dll</HintPath>
