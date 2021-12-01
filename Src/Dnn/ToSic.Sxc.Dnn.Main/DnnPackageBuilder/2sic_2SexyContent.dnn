@@ -155,7 +155,7 @@
               <name>ToSic.Sxc.Dnn.pdb</name>
             </assembly>-->
             <assembly>
-              <name>ToSic.SexyContent.Razor.dll</name>
+              <name>ToSic.Sxc.Dnn.Razor</name>
             </assembly>
             <assembly>
               <name>ToSic.Sxc.Dnn.WebApi.dll</name>
