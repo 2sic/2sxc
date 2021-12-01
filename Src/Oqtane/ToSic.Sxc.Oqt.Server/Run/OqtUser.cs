@@ -8,12 +8,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using ToSic.Eav.Context;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtUser: IUser<User>, ICmsUser
+    public class OqtUser: IUser<User> //, ICmsUser
     {
         private readonly Lazy<IUserRepository> _userRepository;
         private readonly Lazy<IUserRoleRepository> _userRoleRepository;
@@ -33,11 +32,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
             _httpContextAccessor = httpContextAccessor;
             _siteState = siteState;
         }
-
-        //public OqtUser(User user)
-        //{
-        //    UnwrappedContents = user;
-        //}
 
         public User UnwrappedContents
         {
@@ -77,17 +71,17 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         #region New Permission properties for v12
 
-        /// <inheritdoc />
-        // This is a hopefully clearer implementation of what the user can do
-        public bool IsSiteAdmin => IsAdmin;
+        ///// <inheritdoc />
+        //// This is a hopefully clearer implementation of what the user can do
+        //public bool IsSiteAdmin => IsAdmin;
 
-        /// <inheritdoc />
-        // This is a hopefully clearer implementation of what the user can do
-        public bool IsSiteDeveloper => IsDesigner;
+        ///// <inheritdoc />
+        //// This is a hopefully clearer implementation of what the user can do
+        //public bool IsSiteDeveloper => IsDesigner;
 
-        /// <inheritdoc />
-        // This is a hopefully clearer implementation of what the user can do
-        public bool IsSystemAdmin => IsSuperUser;
+        ///// <inheritdoc />
+        //// This is a hopefully clearer implementation of what the user can do
+        //public bool IsSystemAdmin => IsSuperUser;
 
         #endregion
 

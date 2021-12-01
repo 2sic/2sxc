@@ -61,7 +61,8 @@ namespace ToSic.Sxc.Context
         public ICmsModule Module => _cmsModule ?? (_cmsModule = new CmsModule((Context as IContextOfBlock)?.Module ?? new ModuleUnknown(null), _block));
         private ICmsModule _cmsModule;
 
-        public ICmsUser User => Context.User as ICmsUser;
+        public ICmsUser User => _user ?? (_user = new CmsUser(Context.User, _block.Context?.AppState)); // Context.User as ICmsUser;
+        private ICmsUser _user;
 
         public ICmsView View => _view ?? (_view = new CmsView(_block));
         private ICmsView _view;
