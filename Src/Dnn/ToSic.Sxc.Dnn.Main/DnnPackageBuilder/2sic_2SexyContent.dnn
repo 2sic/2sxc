@@ -155,7 +155,7 @@
               <name>ToSic.Sxc.Dnn.pdb</name>
             </assembly>-->
             <assembly>
-              <name>ToSic.Sxc.Dnn.Razor</name>
+              <name>ToSic.Sxc.Dnn.Razor.dll</name>
             </assembly>
             <assembly>
               <name>ToSic.Sxc.Dnn.WebApi.dll</name>
@@ -783,6 +783,23 @@
             </file>
           </files>
         </component>-->
+
+        <component type="Cleanup" version="12.10.00">
+          <files>
+            <file>
+              <path>bin</path>
+              <name>ToSic.SexyContent.dll</name>
+            </file>
+            <file>
+              <path>bin</path>
+              <name>ToSic.SexyContent.Razor.dll</name>
+            </file>
+            <file>
+              <path>bin</path>
+              <name>ToSic.SexyContent.WebApi.dll</name>
+            </file>
+          </files>
+        </component>
 
       </components>
     </package>
