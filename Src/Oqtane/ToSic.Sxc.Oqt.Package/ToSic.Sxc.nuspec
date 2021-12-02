@@ -37,8 +37,8 @@
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Razor.Language.dll" target="lib\net5.0" />
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Server.Kestrel.Https.dll" target="lib\net5.0" />
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions.dll" target="lib\net5.0" />
+    <!--<file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Server.Kestrel.Https.dll" target="lib\net5.0" />-->
+    <!--<file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions.dll" target="lib\net5.0" />-->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.CodeAnalysis.CSharp.dll" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.CodeAnalysis.dll" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.CodeAnalysis.Razor.dll" target="lib\net5.0" />

@@ -103,16 +103,13 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.WebPages">
       <HintPath>..\..\..\Dependencies\System.Web\System.Web.WebPages.dll</HintPath>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -157,10 +154,6 @@
       <Project>{daae8e21-ca5f-400b-9f5a-5e4e1196b21b}</Project>
       <Name>ToSic.Eav.DataSources</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj">
-      <Project>{cf3b9349-8c66-4901-8edb-a4ec1d75326b}</Project>
-      <Name>ToSic.Eav</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ToSic.Sxc.Dnn\2sxc Dnn.csproj">
       <Project>{a94de6d7-d1e6-4be2-b5b5-dc4a6a61cd80}</Project>
       <Name>2sxc Dnn</Name>
@@ -173,11 +166,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Custom\readme.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="System.Collections.Immutable">
-      <Version>1.5.0</Version>
-    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
