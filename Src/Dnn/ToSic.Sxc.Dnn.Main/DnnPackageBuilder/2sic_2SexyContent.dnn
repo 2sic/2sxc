@@ -292,26 +292,26 @@
               <name>Microsoft.EntityFrameworkCore.Abstractions.dll</name>
               <version>2.1.1</version>
             </assembly>
-            <assembly>
+            <!--<assembly>
               <name>Microsoft.EntityFrameworkCore.Design.dll</name>
               <version>2.1.1</version>
-            </assembly>
+            </assembly>-->
             <assembly>
               <name>Microsoft.EntityFrameworkCore.dll</name>
               <version>2.1.1</version>
             </assembly>
-            <assembly>
+            <!--<assembly>
               <name>Microsoft.EntityFrameworkCore.Relational.Design.dll</name>
               <version>1.1.6</version>
-            </assembly>
+            </assembly>-->
             <assembly>
               <name>Microsoft.EntityFrameworkCore.Relational.dll</name>
               <version>2.1.1</version>
             </assembly>
-            <assembly>
+            <!--<assembly>
               <name>Microsoft.EntityFrameworkCore.SqlServer.Design.dll</name>
               <version>1.1.6</version>
-            </assembly>
+            </assembly>-->
             <assembly>
               <name>Microsoft.EntityFrameworkCore.SqlServer.dll</name>
               <version>2.1.1</version>
