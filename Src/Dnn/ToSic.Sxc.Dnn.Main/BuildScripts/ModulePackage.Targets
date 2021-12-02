@@ -122,7 +122,7 @@
       -->
 
       <!-- 2sxc 13+ netstandard2.0/framework 4.7.2 assemblies -->
-      <AssemblyInclude Include="$(OutDir)\JetBrains.Annotations.dll" />
+      <!--<AssemblyInclude Include="$(OutDir)\JetBrains.Annotations.dll" />-->
       <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Authentication.Abstractions.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Authentication.Core.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Diagnostics.Abstractions.dll" />

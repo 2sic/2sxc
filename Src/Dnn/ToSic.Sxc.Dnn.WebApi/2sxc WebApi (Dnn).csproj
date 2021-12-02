@@ -199,6 +199,7 @@
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations">
       <Version>2020.3.0</Version>
+      <PrivateAssets>All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNet.WebApi.WebHost">
       <Version>5.2.3</Version>

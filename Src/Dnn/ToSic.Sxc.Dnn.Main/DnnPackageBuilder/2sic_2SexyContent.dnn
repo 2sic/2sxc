@@ -196,10 +196,10 @@
             </assembly>
 
             <!-- 2sxc 13+ netstandard2.0/framework 4.7.2 assemblies -->
-            <assembly>
+            <!--<assembly>
               <name>JetBrains.Annotations.dll</name>
               <version>2020.3.0</version>
-            </assembly>
+            </assembly>-->
             <assembly>
               <name>Microsoft.AspNetCore.Authentication.Abstractions.dll</name>
               <version>2.0.3</version>

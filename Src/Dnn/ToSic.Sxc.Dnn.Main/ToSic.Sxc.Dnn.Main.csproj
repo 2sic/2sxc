@@ -87,6 +87,7 @@
     </Reference>
     <Reference Include="DotNetNuke.DependencyInjection">
       <HintPath>..\..\..\Dependencies\Dnn944\DotNetNuke.DependencyInjection.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DotNetNuke.Web">
       <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.Web.dll</HintPath>
@@ -103,9 +104,6 @@
     <Reference Include="ToSic.Razor.Dnn, Version=3.5.0.38911, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net40\ToSic.Razor.Dnn.dll</HintPath>
-    </Reference>
-    <Reference Include="ToSic.Sxc.Dnn9">
-      <HintPath>..\ToSic.Sxc.Dnn9\bin\Release\ToSic.Sxc.Dnn9.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
