@@ -132,10 +132,10 @@
       <!--<AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Hosting.Abstractions.dll" />-->
       <!--<AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Hosting.dll" />-->
       <!--<AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Hosting.Server.Abstractions.dll" />-->
-      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Http.Abstractions.dll" />
+      <!--<AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Http.Abstractions.dll" />-->
       <!--<AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Http.dll" />-->
       <!--<AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Http.Extensions.dll" />-->
-      <AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Http.Features.dll" />
+      <!--<AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Http.Features.dll" />-->
       <!--<AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.HttpOverrides.dll" />-->
       <!--<AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Routing.Abstractions.dll" />-->
       <!--<AssemblyInclude Include="$(OutDir)\Microsoft.AspNetCore.Routing.dll" />-->
@@ -195,7 +195,7 @@
       <AssemblyInclude Include="$(OutDir)\System.Runtime.CompilerServices.Unsafe.dll" />
       <!--! <AssemblyInclude Include="$(OutDir)\System.Runtime.InteropServices.RuntimeInformation.dll" />-->
       <!--<AssemblyInclude Include="$(OutDir)\System.Security.Principal.Windows.dll" />-->
-      <AssemblyInclude Include="$(OutDir)\System.Text.Encodings.Web.dll" />
+      <!--<AssemblyInclude Include="$(OutDir)\System.Text.Encodings.Web.dll" />-->
       <!--<AssemblyInclude Include="$(OutDir)\System.Threading.Tasks.Extensions.dll" />-->
       <AssemblyInclude Include="$(OutDir)\System.Web.Http.dll" />
       <AssemblyInclude Include="$(OutDir)\System.Web.Http.WebHost.dll" />
@@ -247,7 +247,8 @@
     </ItemGroup>
     <Copy SourceFiles="@(IResizeFiles)" DestinationFolder="$(TempPackageFolder)\Extensions\ImageResizer\%(RecursiveDir)" />
     <ItemGroup>
-      <IResizeDllFiles Include="$(MSBuildProjectDirectory)/Extensions/ImageResizer/bin/*.dll" />
+      <IResizeDllFiles Include="$(MSBuildProjectDirectory)/Extensions/ImageResizer/bin/ImageResizer.dll;
+                                $(MSBuildProjectDirectory)/Extensions/ImageResizer/bin/ImageResizer.Plugins.DiskCache.dll" />
     </ItemGroup>
     <Copy SourceFiles="@(IResizeDllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
 

@@ -232,10 +232,10 @@
               <name>Microsoft.AspNetCore.Hosting.Server.Abstractions.dll</name>
               <version>2.0.3</version>
             </assembly>-->
-            <assembly>
+            <!--<assembly>
               <name>Microsoft.AspNetCore.Http.Abstractions.dll</name>
               <version>2.0.3</version>
-            </assembly>
+            </assembly>-->
             <!--<assembly>
               <name>Microsoft.AspNetCore.Http.dll</name>
               <version>2.0.3</version>
@@ -244,10 +244,10 @@
               <name>Microsoft.AspNetCore.Http.Extensions.dll</name>
               <version>2.0.3</version>
             </assembly>-->
-            <assembly>
+            <!--<assembly>
               <name>Microsoft.AspNetCore.Http.Features.dll</name>
               <version>2.0.3</version>
-            </assembly>
+            </assembly>-->
             <!--<assembly>
               <name>Microsoft.AspNetCore.HttpOverrides.dll</name>
               <version>2.0.3</version>
@@ -450,10 +450,10 @@
               <name>System.Security.Principal.Windows.dll</name>
               <version>4.6.25519</version>
             </assembly>-->
-            <assembly>
+            <!--<assembly>
               <name>System.Text.Encodings.Web.dll</name>
               <version>4.0.2</version>
-            </assembly>
+            </assembly>-->
             <!--<assembly>
               <name>System.Threading.Tasks.Extensions.dll</name>
               <version>4.1.1</version>
@@ -951,12 +951,13 @@
               <name>ImageResizer.Plugins.DiskCache.dll</name>
             </assembly>
 
-            <assembly>
+            <!-- 2021-12 commented because ImageResizer WebP support is not in use because of issue with locking libwebp.dll, in future will be replaced with imageflow -->
+            <!--<assembly>
               <name>ImageResizer.Plugins.WebP.dll</name>
-            </assembly>
-            <assembly>
+            </assembly>-->
+            <!--<assembly>
               <name>Imazen.WebP.dll</name>
-            </assembly>
+            </assembly>-->
             <!-- Do not include libwebp.dll - it will be auto-loaded later on
             if you do include it, then on future upgrades IIS will lock it, and will cause errors on updates -->
             <!--<assembly><name>libwebp.dll</name></assembly>-->
@@ -1020,6 +1021,24 @@
               </configuration>
             </uninstall>
           </config>
+        </component>
+
+        <component type="Cleanup" version="04.02.05.01">
+          <files>
+            <file>
+              <path>bin</path>
+              <name>ImageResizer.Plugins.WebP.dll</name>
+            </file>
+            <file>
+              <path>bin</path>
+              <name>Imazen.WebP.dll</name>
+            </file>
+            <!-- it is possible that libwebp.dll can't be deleted because it is lock by webapp process -->
+            <!--<file>
+              <path>bin</path>
+              <name>libwebp.dll</name>
+            </file>-->
+          </files>
         </component>
       </components>
     </package>
