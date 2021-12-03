@@ -1,11 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Data;
-#if NET451
-using IHtmlString = System.Web.IHtmlString;
-#else
-using IHtmlString = Microsoft.AspNetCore.Html.IHtmlContent;
-#endif
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Services
 {
@@ -35,7 +31,7 @@ namespace ToSic.Sxc.Services
         /// <param name="field">Optional: </param>
         /// <param name="newGuid">Internal: this is the guid given to the item when being created in this block. Important for the inner-content functionality to work. </param>
         /// <returns></returns>
-        IHtmlString One(DynamicEntity dynParent,
+        IHybridHtmlString One(DynamicEntity dynParent,
             string noParamOrder = Eav.Parameters.Protector,
             IDynamicEntity item = null,
             string field = null,
@@ -51,7 +47,7 @@ namespace ToSic.Sxc.Services
         /// <param name="merge">Optional: html-text containing special placeholders.</param>
         /// <param name="apps">BETA / WIP</param>
         /// <returns></returns>
-        IHtmlString All(DynamicEntity context,
+        IHybridHtmlString All(DynamicEntity context,
             string noParamOrder = Eav.Parameters.Protector,
             string field = null,
             string apps = null,

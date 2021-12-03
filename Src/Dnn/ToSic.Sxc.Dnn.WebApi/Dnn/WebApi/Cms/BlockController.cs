@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
     [ValidateAntiForgeryToken]
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
-    public class BlockController : SxcApiController, IBlockController<HttpResponseMessage>
+    public class BlockController : SxcApiController, IBlockController
     {
         protected override string HistoryLogName => "Api.Block";
 
@@ -90,29 +90,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 
         #endregion
 
-
         /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public HttpResponseMessage Render([FromUri] int templateId, [FromUri] string lang)
+        public AjaxRenderDto Render([FromUri] int templateId, [FromUri] string lang)
         {
             Log.Add($"render template:{templateId}, lang:{lang}");
-            var result = ViewBackend.Render(templateId, lang);
-            var rendered = new AjaxPreviewHelperWIP().ReconstructHtml(result, DnnConstants.SysFolderRootVirtual.Trim('~'));
-            return new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(rendered, Encoding.UTF8, "text/plain")
-            };
-        }
-
-        /// <inheritdoc />
-        [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public AjaxRenderDto RenderWIP([FromUri] int templateId, [FromUri] string lang, bool v2)
-        {
-            Log.Add($"render template:{templateId}, lang:{lang}");
-            var result = ViewBackend.Render(templateId, lang);
-            return Backend.RenderV2(result, DnnConstants.SysFolderRootVirtual.Trim('~'));
+            return Backend.RenderV2(templateId, lang, DnnConstants.SysFolderRootVirtual.Trim('~'));
         }
 
         /// <inheritdoc />

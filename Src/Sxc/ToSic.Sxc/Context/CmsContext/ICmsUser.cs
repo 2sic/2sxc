@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Context
 {
@@ -6,7 +7,7 @@ namespace ToSic.Sxc.Context
     /// The user context of your code - so it's information about the user your code is using. 
     /// </summary>
     [PublicApi]
-    public interface ICmsUser
+    public interface ICmsUser: IHasMetadata
     {
         /// <summary>
         /// User Id as int. Works in DNN and Oqtane.

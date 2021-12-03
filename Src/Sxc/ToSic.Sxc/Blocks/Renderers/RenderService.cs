@@ -2,14 +2,7 @@
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Blocks.Renderers;
 using ToSic.Sxc.Data;
-#if NET451
-using HtmlString = System.Web.HtmlString;
-using IHtmlString = System.Web.IHtmlString;
-#else
-using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
-using IHtmlString = Microsoft.AspNetCore.Html.IHtmlContent;
-#endif
-
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -35,7 +28,7 @@ namespace ToSic.Sxc.Blocks
         /// <param name="field">Optional: </param>
         /// <param name="newGuid">Internal: this is the guid given to the item when being created in this block. Important for the inner-content functionality to work. </param>
         /// <returns></returns>
-        public IHtmlString One(DynamicEntity dynParent,
+        public IHybridHtmlString One(DynamicEntity dynParent,
             string noParamOrder = Eav.Parameters.Protector,
             IDynamicEntity item = null, 
             string field = null,
@@ -45,7 +38,7 @@ namespace ToSic.Sxc.Blocks
             if (item == null)
                 item = dynParent;
             
-            return new HtmlString(field == null
+            return new HybridHtmlString(field == null
                 ? Simple.Render(dynParent._Dependencies.BlockOrNull, item.Entity) // with edit-context
                 : Simple.RenderWithEditContext(dynParent, item, field, newGuid) + "<b>data-list-context</b>"); // data-list-context (no edit-context)
         }
@@ -60,7 +53,7 @@ namespace ToSic.Sxc.Blocks
         /// <param name="merge">Optional: html-text containing special placeholders.</param>
         /// <param name="apps">BETA / WIP</param>
         /// <returns></returns>
-        public IHtmlString All(DynamicEntity context,
+        public IHybridHtmlString All(DynamicEntity context,
             string noParamOrder = Eav.Parameters.Protector,
             string field = null, 
             string apps = null,
@@ -71,9 +64,12 @@ namespace ToSic.Sxc.Blocks
             if (field == null)
                 throw new ArgumentNullException(nameof(field));
 
-            return merge == null
-                ? new HtmlString(Simple.RenderListWithContext(context, field))
-                : new HtmlString(InTextContentBlocks.Render(context, field, merge));
+            return // merge == null
+                /*?*/ new HybridHtmlString(merge == null
+                    ? Simple.RenderListWithContext(context, field)
+                    : InTextContentBlocks.Render(context, field, merge))
+                //: new HybridHtmlString(InTextContentBlocks.Render(context, field, merge));
+                ;
         }
     }
 }

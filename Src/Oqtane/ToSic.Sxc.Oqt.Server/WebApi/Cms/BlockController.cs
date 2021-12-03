@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     [ValidateAntiForgeryToken]
     [ApiController]
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
-    public class BlockController : OqtStatefulControllerBase, ToSic.Sxc.WebApi.Cms.IBlockController<IActionResult>
+    public class BlockController : OqtStatefulControllerBase, ToSic.Sxc.WebApi.Cms.IBlockController
     {
         private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
         private readonly Lazy<ContentBlockBackend> _blockBackendLazy;
@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
 
             // TODO: @STV - THIS should use the ContentBlockBackend like DNN does
             // now return a rendered instance
-            var newContentBlock = HttpContext.RequestServices.Build<BlockFromEntity>().Init(BlockOptional /*GetBlock()*/, entityId, Log);
+            var newContentBlock = HttpContext.RequestServices.Build<BlockFromEntity>().Init(BlockOptional, entityId, Log);
             return newContentBlock.BlockBuilder.Run(true).Html;
 
         }
@@ -111,8 +111,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
         public void App(int? appId)
-            => _viewsBackendLazy.Value.Init(Log)
-                .SetAppId(appId);
+            => _viewsBackendLazy.Value.Init(Log).SetAppId(appId);
 
         /// <summary>
         /// used to be GET Module/GetSelectableApps
@@ -138,7 +137,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
-        public IEnumerable<ContentTypeUiInfo> ContentTypes() => _viewsBackendLazy.Value.ContentTypes(); //  CmsRuntime?.Views.GetContentTypesWithStatus();
+        public IEnumerable<ContentTypeUiInfo> ContentTypes() => _viewsBackendLazy.Value.ContentTypes();
 
         #endregion
 
@@ -171,33 +170,14 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
 
         #endregion
 
-
         /// <inheritdoc />
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
-        public IActionResult Render(int templateId, string lang)
+        public AjaxRenderDto Render(int templateId, string lang)
         {
             Log.Add($"render template:{templateId}, lang:{lang}");
-            var result = _appViewPickerBackendLazy.Value.Init(Log).Render(templateId, lang);
-            var rendered = new AjaxPreviewHelperWIP().ReconstructHtml(result, OqtConstants.UiRoot);
-            return new ContentResult
-            {
-                Content = rendered,
-                ContentType = "text/plain"
-                // rendered, Encoding.UTF8, "text/plain"
-            };
-        }
-
-        /// <inheritdoc />
-        [HttpGet]
-        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        [Authorize(Roles = RoleNames.Admin)]
-        public AjaxRenderDto RenderWIP(int templateId, string lang, bool v2)
-        {
-            Log.Add($"render template:{templateId}, lang:{lang}");
-            var result = _appViewPickerBackendLazy.Value.Init(Log).Render(templateId, lang);
-            return Backend.RenderV2(result, OqtConstants.UiRoot);
+            return Backend.RenderV2(templateId, lang, OqtConstants.UiRoot);
         }
 
         /// <inheritdoc />

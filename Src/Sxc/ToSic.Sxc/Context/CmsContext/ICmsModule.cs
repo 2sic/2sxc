@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Context
 {
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.Context
     /// as it would then be running on a WebApi.
     /// </remarks>
     [PublicApi]
-    public interface ICmsModule
+    public interface ICmsModule: IHasMetadata
     {
         /// <summary>
         /// The module id on the page. 
@@ -26,5 +27,8 @@ namespace ToSic.Sxc.Context
         /// </remarks>
         /// <returns>The ID, unless unknown, in which case it's a negative number</returns>
         int Id { get; }
+
+        [PrivateApi("WIP v13")]
+        ICmsBlock Block { get; }
     }
 }

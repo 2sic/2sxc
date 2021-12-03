@@ -11,13 +11,13 @@ using ToSic.Sxc.Context;
 namespace ToSic.Sxc.Dnn.Run
 {
     [PrivateApi("still WIP")]
-    public class DnnUser: IUser<UserInfo>, ICmsUser
+    public class DnnUser: IUser<UserInfo> //, ICmsUser
     {
         public DnnUser() { }
 
         private string GetUserIdentityToken ()
         {
-            var userId = Id;// UnwrappedContents?.UserID;
+            var userId = Id;
             var token = userId == -1 ? "anonymous" : "dnn:userid=" + userId;
             return token;
         }
@@ -31,17 +31,17 @@ namespace ToSic.Sxc.Dnn.Run
 
         #region New Permission properties for v12
 
-        /// <inheritdoc />
-        // This is a hopefully clearer implementation of what the user can do
-        public bool IsSiteAdmin => IsAdmin;
+        ///// <inheritdoc />
+        //// This is a hopefully clearer implementation of what the user can do
+        //public bool IsSiteAdmin => IsAdmin;
 
-        /// <inheritdoc />
-        // This is a hopefully clearer implementation of what the user can do
-        public bool IsSiteDeveloper => IsDesigner;
+        ///// <inheritdoc />
+        //// This is a hopefully clearer implementation of what the user can do
+        //public bool IsSiteDeveloper => IsDesigner;
         
-        /// <inheritdoc />
-        // This is a hopefully clearer implementation of what the user can do
-        public bool IsSystemAdmin => IsSuperUser;
+        ///// <inheritdoc />
+        //// This is a hopefully clearer implementation of what the user can do
+        //public bool IsSystemAdmin => IsSuperUser;
 
         #endregion
         

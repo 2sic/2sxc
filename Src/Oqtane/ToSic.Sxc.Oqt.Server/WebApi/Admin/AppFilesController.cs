@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
     // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
-    public class AppFilesController : OqtStatefulControllerBase
+    public class AppFilesController : OqtStatefulControllerBase, IAppFilesController
     {
         private readonly Lazy<AppAssetsBackend> _appAssetsLazy;
         protected override string HistoryLogName => "Api.Assets";
@@ -106,7 +106,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// <param name="purpose">filter by Purpose when provided</param>
         /// <returns></returns>
         [HttpGet]
-        public TemplatesDto GetTemplates(string purpose = null) => Backend().GetTemplates(purpose);
+        public TemplatesDto GetTemplates(string purpose = null, string type = null) => Backend().GetTemplates(purpose, type);
 
         [HttpGet]
         public TemplatePreviewDto Preview(int appId, string path, string name, string templateKey, bool global = false)

@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Dnn.Services
             PageServiceShared = pageServiceShared;
         }
 
-        public int Apply(Page page, RenderResultWIP renderResult)
+        public int Apply(Page page, RenderResult renderResult)
         {
             Log.Add("Will apply PageChanges");
             //var changes = _pageChanges.Apply(_pageChanges.PageServiceShared.GetPropertyChangesAndFlush());
@@ -100,7 +100,7 @@ namespace ToSic.Sxc.Dnn.Services
             return headChanges.Count;
         }
 
-        private void ApplyHttpStatus(Page page, RenderResultWIP result)
+        private void ApplyHttpStatus(Page page, RenderResult result)
         {
             var pageServiceWithInternals = result; // _pageChanges.PageServiceShared; // as Sxc.Web.PageService.PageService;
             if (page?.Response != null && pageServiceWithInternals?.HttpStatusCode != null)

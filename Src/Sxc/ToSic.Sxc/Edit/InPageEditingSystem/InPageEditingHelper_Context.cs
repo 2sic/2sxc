@@ -5,11 +5,6 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web;
-#if NET451
-using HtmlString = System.Web.HtmlString;
-#else
-using HtmlString = Microsoft.AspNetCore.Html.HtmlString;
-#endif
 
 namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
@@ -18,7 +13,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         #region Context Attributes
 
         /// <inheritdoc/>
-        public HtmlString ContextAttributes(IDynamicEntity target,
+        public IHybridHtmlString ContextAttributes(IDynamicEntity target,
             string noParamOrder = Parameters.Protector, 
             string field = null,
             string contentType = null, 
@@ -43,12 +38,12 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
                 type = contentType ?? Settings.AttributeSetStaticNameContentBlockTypeName,
             });
 
-            return new HtmlString(innerContentAttribute + "='" + serialized + "'");
+            return new HybridHtmlString(innerContentAttribute + "='" + serialized + "'");
         }
 
         /// <inheritdoc/>
         [PrivateApi]
-        public HtmlString WrapInContext(object content,
+        public IHybridHtmlString WrapInContext(object content,
             string noParamOrder = Parameters.Protector,
             string tag = Constants.DefaultContextTag,
             bool full = false,
@@ -61,7 +56,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
             var renderingHelper = Block.Context.ServiceProvider.Build<IRenderingHelper>().Init(Block, Log);
 
-            return new HtmlString(
+            return new HybridHtmlString(
                renderingHelper.WrapInContext(content.ToString(),
                     instanceId: instanceId > 0
                         ? instanceId

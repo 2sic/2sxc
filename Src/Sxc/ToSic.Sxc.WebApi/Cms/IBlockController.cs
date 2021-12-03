@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Apps.Ui;
+using ToSic.Sxc.WebApi.InPage;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public interface IBlockController<TRender>
+    public interface IBlockController
     {
         /// <summary>
         /// used to be GET Module/GenerateContentBlock
@@ -57,7 +58,7 @@ namespace ToSic.Sxc.WebApi.Cms
         /// <summary>
         /// Used in InPage.js
         /// </summary>
-        TRender Render(int templateId, string lang);
+        AjaxRenderDto Render(int templateId, string lang);
 
         /// <summary>
         /// Used to be GET Module/Publish

@@ -67,8 +67,7 @@ namespace ToSic.Sxc.WebApi.Assets
 
             path = SanitizePathAndContent(path, content, purpose);
 
-            var isAdmin = _user.IsAdmin;
-            var assetEditor = _assetEditorLazy.Value.Init(thisApp, path, _user.IsSuperUser, isAdmin, global, Log);
+            var assetEditor = _assetEditorLazy.Value.Init(thisApp, path, global, 0, Log);
             assetEditor.EnsureUserMayEditAssetOrThrow(path);
             return assetEditor.Create(content.Content);
         }
@@ -86,21 +85,34 @@ namespace ToSic.Sxc.WebApi.Assets
             // ensure all .cshtml start with "_"
             EnsureCshtmlStartWithUnderscore(assetFromTemplateDto);
 
-            var isAdmin = _user.IsAdmin;
-            var assetEditor = _assetEditorLazy.Value.Init(thisApp, assetFromTemplateDto.Path, _user.IsSuperUser, isAdmin, assetFromTemplateDto.Global, Log);
+            var assetEditor = _assetEditorLazy.Value.Init(thisApp, assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0, Log);
             assetEditor.EnsureUserMayEditAssetOrThrow(assetFromTemplateDto.Path);
             return assetEditor.Create(content);
         }
 
-        public TemplatesDto GetTemplates(string purpose)
+        public TemplatesDto GetTemplates(string purpose, string type)
         {
             var templateInfos = _assetTemplates.GetTemplates();
 
             // TBD: future purpose implementation
+            purpose = (purpose ?? AssetTemplates.ForTemplate).ToLowerInvariant().Trim() ?? "";
+            var defId = AssetTemplates.RazorHybrid.Key;
+            if (purpose.Equals(AssetTemplates.ForApi, StringComparison.InvariantCultureIgnoreCase))
+                defId = AssetTemplates.ApiHybrid.Key;
+            if (purpose.Equals(AssetTemplates.ForSearch, StringComparison.InvariantCultureIgnoreCase))
+                defId = AssetTemplates.DnnSearch.Key;
+
+            // For templates we also check the type
+            if (purpose.Equals(AssetTemplates.ForTemplate, StringComparison.InvariantCultureIgnoreCase))
+            {
+                type = type?.ToLowerInvariant().Trim() ?? "";
+                if (type.Equals(AssetTemplates.TypeToken, StringComparison.InvariantCultureIgnoreCase))
+                    defId = AssetTemplates.Token.Key;
+            }
 
             return new TemplatesDto
             {
-                Default = AssetTemplates.RazorHybrid.Key,
+                Default = defId,
                 Templates = templateInfos
             };
         }
@@ -108,11 +120,14 @@ namespace ToSic.Sxc.WebApi.Assets
         private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(int appId, int templateId, bool global, string path)
         {
             var wrapLog = Log.Call<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
-            var isAdmin = _user.IsAdmin;
             var app = _serviceProvider.Build<Apps.App>().InitNoData(_appStates.Identity(null, appId), Log);
-            var assetEditor = templateId != 0 && path == null
-                ? _serviceProvider.Build<AssetEditor>().Init(app, templateId, _user.IsSuperUser, isAdmin, Log)
-                : _serviceProvider.Build<AssetEditor>().Init(app, path, _user.IsSuperUser, isAdmin, global, Log);
+            var assetEditor = _serviceProvider.Build<AssetEditor>();
+
+            // TODO: simplify once we release v13 #cleanUp EOY 2021
+            if (path == null)
+                assetEditor.Init(app, templateId, Log);
+            else
+                assetEditor.Init(app, path, global, templateId, Log);
             assetEditor.EnsureUserMayEditAssetOrThrow();
             return wrapLog(null, assetEditor);
         }
@@ -122,7 +137,7 @@ namespace ToSic.Sxc.WebApi.Assets
         // - run the code that would generate the file, so the UI can show a real preview
         public TemplatePreviewDto GetPreview(int appId, string path, string name, string templateKey, bool b)
         {
-            return new TemplatePreviewDto()
+            return new TemplatePreviewDto
             {
                 Preview = _assetTemplates.GetTemplate(templateKey)
             };

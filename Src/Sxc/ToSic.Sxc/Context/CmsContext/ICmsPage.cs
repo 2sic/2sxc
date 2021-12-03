@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Context
 {
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.Context
     /// as it would then be running on a WebApi.
     /// </remarks>
     [PublicApi]
-    public interface ICmsPage
+    public interface ICmsPage: IHasMetadata
     {
         /// <summary>
         /// The Id of the page.

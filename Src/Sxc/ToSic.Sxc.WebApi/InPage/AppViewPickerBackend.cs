@@ -5,7 +5,6 @@ using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Context;
 
@@ -57,26 +56,6 @@ namespace ToSic.Sxc.WebApi.InPage
             ThrowIfNotAllowedInApp(GrantSets.WritePublished);
             CmsManagerOfBlock.Entities.Publish(id);
             return callLog("ok", true);
-        }
-
-
-
-
-
-        public RenderResultWIP Render(int templateId, string lang)
-        {
-            var callLog = Log.Call<RenderResultWIP>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
-            //SetThreadCulture(lang);
-
-            // if a preview templateId was specified, swap to that
-            if (templateId > 0)
-            {
-                var template = CmsManagerOfBlock.Read.Views.Get(templateId);
-                Block.View = template;
-            }
-
-            var result = Block.BlockBuilder.Run(true);
-            return callLog("ok", result);
         }
 
     }

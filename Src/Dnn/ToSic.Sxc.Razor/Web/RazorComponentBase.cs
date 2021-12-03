@@ -41,18 +41,12 @@ namespace ToSic.Sxc.Web
             // Child pages need to get their context from the Parent
             Context = parentPage.Context;
 
-            // New in v12: the HtmlHelper must know about this page from now on, so we can't re-use the one from the parent
-            // 2021-10-04 2dm disabled this, added to directly create on the Html property
-            //Html = new HtmlHelper(this);
-
             // Return if parent page is not a SexyContentWebPage
             if (!(parentPage is RazorComponentBase typedParent)) return;
 
 
             // Forward the context
             DynamicCodeCoupling(typedParent._DynCodeRoot);
-            // 2021-10-04 2dm changed mechanism
-            // _DynCodeRoot = typedParent._DynCodeRoot;
             try
             {
                 Log.Add("@RenderPage:" + VirtualPath);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using ToSic.Eav.Metadata;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Url;
 using static System.String;
@@ -165,7 +166,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
             if (!(toolbar is IEnumerable<object> objEnum)) return null;
             var asArray = objEnum.ToArray();
-            return !asArray.All(o => o is string) 
+            return !asArray.All(o => o is string || o is IString)
                 ? null 
                 : asArray.Select(o => o.ToString()).ToList();
         }
