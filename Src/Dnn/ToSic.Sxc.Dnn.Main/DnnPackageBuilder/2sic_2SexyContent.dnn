@@ -188,7 +188,7 @@
               <name>ToSic.Eav.WebApi.dll</name>
             </assembly>
 
-            <!-- ToSic.Eav.DataSources.dll PackageReference -->
+            <!-- ToSic.Eav.DataSources PackageReference -->
             <assembly>
               <name>CsvHelper.dll</name>
               <version>2.0.0</version>
@@ -198,18 +198,18 @@
               <name>Microsoft.EntityFrameworkCore.Abstractions.dll</name>
               <version>2.1.1</version>
             </assembly>
-            <!-- ToSic.Eav.Persistence.Efc.dll PackageReference -->
+            <!-- ToSic.Eav.Persistence.Efc PackageReference -->
             <assembly>
               <name>Microsoft.EntityFrameworkCore.dll</name>
               <version>2.1.1</version>
             </assembly>
-            <!-- ToSic.Eav.Persistence.Efc.dll PackageReference -->
+            <!-- ToSic.Eav.Persistence.Efc PackageReference -->
             <!-- Microsoft.EntityFrameworkCore.SqlServer transitive dependency -->
             <assembly>
               <name>Microsoft.EntityFrameworkCore.Relational.dll</name>
               <version>2.1.1</version>
             </assembly>
-            <!-- ToSic.Eav.Persistence.Efc.dll PackageReference -->
+            <!-- ToSic.Eav.Persistence.Efc PackageReference -->
             <assembly>
               <name>Microsoft.EntityFrameworkCore.SqlServer.dll</name>
               <version>2.1.1</version>
@@ -302,7 +302,7 @@
               <name>System.ComponentModel.Annotations.dll</name>
               <version>4.2.1</version>
             </assembly>
-            <!-- ToSic.Eav.DataSources.dll PackageReference -->
+            <!-- ToSic.Eav.DataSources PackageReference -->
             <assembly>
               <name>System.Data.SqlClient.dll</name>
               <version>4.4.0</version>
