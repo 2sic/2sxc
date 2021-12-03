@@ -34,5 +34,5 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-[assembly: InternalsVisibleTo("ToSic.SexyContent.WebApi")]
-[assembly: InternalsVisibleTo("ToSic.SexyContent.Razor")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.Dnn.WebApi")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.Dnn.Razor")]

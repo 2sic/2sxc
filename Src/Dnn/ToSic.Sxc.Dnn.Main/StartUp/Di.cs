@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.Run;
@@ -12,7 +14,6 @@ using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Repositories;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
@@ -28,10 +29,12 @@ using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Admin;
 using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.ApiExplorer;
 using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.Plumbing;
@@ -40,9 +43,45 @@ using Type = System.Type;
 
 namespace ToSic.Sxc.Dnn.StartUp
 {
-
-    internal static class StartupDnnDi
+    public static class Di
     {
+        private static bool _alreadyRegistered;
+
+        public static void Register()
+        {
+            if (_alreadyRegistered)
+                return;
+
+            var appsCache = GetAppsCacheOverride();
+            Eav.Factory.ActivateNetCoreDi(services =>
+            {
+                services.AddDnn(appsCache)
+                    .AddAdamWebApi<int, int>()
+                    .AddSxcWebApi()
+                    .AddSxcCore()
+                    .AddEav();
+
+                // temp polymorphism - later put into AddPolymorphism
+                services.TryAddTransient<Koi>();
+                services.TryAddTransient<Permissions>();
+
+            });
+
+            _alreadyRegistered = true;
+        }
+
+        /// <summary>
+        /// Expects something like "ToSic.Sxc.Dnn.DnnAppsCacheFarm, ToSic.Sxc.Dnn.Enterprise" - namespaces + class, DLL name without extension
+        /// </summary>
+        /// <returns></returns>
+        internal static string GetAppsCacheOverride()
+        {
+            var farmCacheName = ConfigurationManager.AppSettings["EavAppsCache"];
+            if (string.IsNullOrWhiteSpace(farmCacheName)) return null;
+            return farmCacheName;
+        }
+
+
         public static IServiceCollection AddDnn(this IServiceCollection services, string appsCacheOverride)
         {
             // Core Runtime Context Objects

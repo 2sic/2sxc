@@ -8,15 +8,15 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
-    public partial class InPageEditingHelper 
+    public partial class InPageEditingHelper
     {
         #region Context Attributes
 
         /// <inheritdoc/>
         public IHybridHtmlString ContextAttributes(IDynamicEntity target,
-            string noParamOrder = Parameters.Protector, 
+            string noParamOrder = Parameters.Protector,
             string field = null,
-            string contentType = null, 
+            string contentType = null,
             Guid? newGuid = null,
             string apps = null,
             int max = 100)
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
             if (field == null) throw new Exception("need parameter 'field'");
 
-            var serialized = JsonConvert.SerializeObject(new 
+            var serialized = JsonConvert.SerializeObject(new
             {
                 apps,
                 field,

@@ -9,10 +9,10 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyCulture("")]
 
 [assembly: InternalsVisibleTo("ToSic.Sxc.WebApi")]
-[assembly: InternalsVisibleTo("ToSic.SexyContent")]
-[assembly: InternalsVisibleTo("ToSic.SexyContent.WebApi")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Dnn")]
-[assembly: InternalsVisibleTo("ToSic.SexyContent.Razor")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.Dnn.WebApi")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.Dnn.Core")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.Dnn.Razor")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Mvc")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Oqtane.Server")]
 

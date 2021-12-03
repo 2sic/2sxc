@@ -12,13 +12,13 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ToSic.Sxc.Dnn</RootNamespace>
-    <AssemblyName>ToSic.SexyContent</AssemblyName>
+    <AssemblyName>ToSic.Sxc.Dnn</AssemblyName>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>4.0</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
@@ -65,29 +65,33 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <!-- Different DI for .net 4.5 (using .net core 1.1) and .net Standard 2 -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net451'">
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="1.1.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.1.0" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="1.1.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.1.0" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Connect.Dnn.Koi, Version=1.3.0.27054, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Connect.Dnn.Koi, Version=2.0.0.27364, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>koi\bin\Connect.Dnn.Koi.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="Connect.Koi, Version=1.0.4.14722, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Connect.Koi, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Dependencies\Koi\Connect.Koi.dll</HintPath>
+      <HintPath>koi\bin\Connect.Koi.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DotNetNuke">
       <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.dll</HintPath>
+      <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DotNetNuke.DependencyInjection">
+      <HintPath>..\..\..\Dependencies\Dnn944\DotNetNuke.DependencyInjection.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DotNetNuke.Web">
       <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.Web.dll</HintPath>
+      <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Web" />
@@ -102,9 +106,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActivateKoi2DependencyInjection.cs" />
-    <Compile Include="CompilerDependencies.cs" />
     <Compile Include="DnnBusinessController.cs" />
+    <Compile Include="Polymorphism\Permissions.cs" />
+    <Compile Include="StartUp\ActivateKoi2DependencyInjection.cs" />
+    <Compile Include="StartUp\CompilerDependencies.cs" />
+    <Compile Include="StartUp\Di.cs" />
+    <Compile Include="StartUp\Startup.cs" />
     <Compile Include="StartUp\StartupDnn.cs" />
     <Compile Include="DnnWebForms\PagePicker.ascx.cs">
       <DependentUpon>PagePicker.ascx</DependentUpon>
@@ -134,8 +141,6 @@
     <Compile Include="DnnWebForms\Skins\QuickEdit.ascx.designer.cs">
       <DependentUpon>QuickEdit.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Polymorphism\Permissions.cs" />
-    <Compile Include="StartUp\StartupDnnDi.cs" />
     <Compile Include="View.ascx.cs">
       <DependentUpon>View.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -271,6 +276,7 @@
     <Content Include="DnnPackageBuilder\SqlDataProvider\12.00.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\require-2sxc-9.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\Uninstall.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\13.00.00.SqlDataProvider" />
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
@@ -299,7 +305,7 @@
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

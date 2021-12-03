@@ -7,12 +7,12 @@ using ToSic.Sxc.Context;
 namespace ToSic.Sxc.Context
 {
     /// <summary>
-    /// A unit / block within the CMS. Contains all necessary identification to pass around. 
+    /// A unit / block within the CMS. Contains all necessary identification to pass around.
     /// </summary>
     [PrivateApi]
 
     public interface IModule //: ICmsModule
-#if NET451
+#if NETFRAMEWORK
 #pragma warning disable 618
         // in this case we must also inherit from IContainer - legacy of the signature for CustomizeSearch
         : ToSic.Eav.Run.IContainer
@@ -57,8 +57,8 @@ namespace ToSic.Eav.Run
 {
     /// <summary>
     /// This interface is used in the Dnn RazorComponent of v10, so we must still support it.
-    /// The only use case is in an overridable CustomizeSearch, so it is never really called, 
-    /// but just defined by a razor page. 
+    /// The only use case is in an overridable CustomizeSearch, so it is never really called,
+    /// but just defined by a razor page.
     /// </summary>
     [Obsolete("this was replaced by IModule")]
     public interface IContainer

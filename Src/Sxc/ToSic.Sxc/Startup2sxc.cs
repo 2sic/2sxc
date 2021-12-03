@@ -123,6 +123,26 @@ namespace ToSic.Sxc
             // This must always be at the end here so it doesn't accidentally replace something we actually need
             services.AddSxcCoreFallbackServices();
 
+
+            // Add possibly missing fallback services
+            // This must always be at the end here so it doesn't accidentally replace something we actually need
+            services.AddSxcCoreFallbackServices();
+
+
+            // Add possibly missing fallback services
+            // This must always be at the end here so it doesn't accidentally replace something we actually need
+            services.AddSxcCoreFallbackServices();
+
+
+            // Add possibly missing fallback services
+            // This must always be at the end here so it doesn't accidentally replace something we actually need
+            services.AddSxcCoreFallbackServices();
+
+
+            // Add possibly missing fallback services
+            // This must always be at the end here so it doesn't accidentally replace something we actually need
+            services.AddSxcCoreFallbackServices();
+
             return services;
         }
 
