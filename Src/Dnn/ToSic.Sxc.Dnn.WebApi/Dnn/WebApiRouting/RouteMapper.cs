@@ -72,12 +72,6 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
 
             #region New routes in 2sxc 11.06+ which should replace most previous internal routes
 
-            // Replacement route for app-sys/AppContent/GetContentBlockData
-            AddWD("2sxc-ContentBlockData", $"{Roots.AppAuto}/InstanceData", 
-                new { controller = ControllerNames.AppContent, action = nameof(AppContentController.GetContentBlockData) },
-                StdNsWebApi);
-
-
             AddTy("2sxc-sys",     Root.Sys + "/" + TokenSet.ConAct,           typeof(InsightsController));
             AddTy("2sxc-cms",     Root.Cms + "/" + TokenSet.ConAct,           typeof(BlockController));
             AddTy("2sic-admin",   Root.Admin + "/" + TokenSet.ConAct,         typeof(MetadataController));

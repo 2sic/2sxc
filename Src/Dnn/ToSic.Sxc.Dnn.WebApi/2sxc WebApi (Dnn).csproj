@@ -149,7 +149,6 @@
     <Compile Include="Dnn\WebApi\Logging\DnnLogExceptions.cs" />
     <Compile Include="Dnn\WebApi\Admin\DialogController.cs" />
     <Compile Include="Dnn\WebApi\Admin\ViewController.cs" />
-    <Compile Include="Dnn\WebApi\App\AppContentJsonForInstance.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">

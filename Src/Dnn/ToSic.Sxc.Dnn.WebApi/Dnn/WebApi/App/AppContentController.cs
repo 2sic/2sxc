@@ -68,45 +68,6 @@ namespace ToSic.Sxc.Dnn.WebApi.App
 
         #endregion
 
-        #region ContentBlock - retrieving data of the current instance as is (ATM DNN-specific)
-        [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-	    public HttpResponseMessage GetContentBlockData()
-        {
-            Log.Add("get content block data");
-            // Important note: we are NOT supporting url-view switch at the moment for this
-            // reason is, that this kind of data-access is fairly special
-            // and not recommended for future use cases, where we have the query etc.
-            // IF you want to support View-switching in this, do a deep review w/2dm first!
-            // - note that it's really not needed, as you can always use a query or something similar instead
-            // - not also that if ever you do support view switching, you will need to ensure security checks
-
-            var dataHandler = new AppContentJsonForInstance();
-            var block = SharedContextResolver.RealBlockRequired();
-            // must access engine to ensure pre-processing of data has happened, 
-            // especially if the cshtml contains a override void CustomizeData()
-            var engine = block.BlockBuilder.GetEngine(Purpose.PublishData);  
-            engine.CustomizeData();
-
-            var dataSource = block.Data;
-            string json;
-            if (dataSource.Publish.Enabled)
-            {
-                var publishedStreams = dataSource.Publish.Streams;
-                var streamList = publishedStreams.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
-                json = dataHandler.GenerateJson(dataSource, streamList, block.Context.UserMayEdit);
-            }
-            else
-            {
-                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden)
-                    {ReasonPhrase = dataHandler.GeneratePleaseEnableDataError(ActiveModule.ModuleID)});
-            }
-            var response = Request.CreateResponse(HttpStatusCode.OK);
-            response.Content = new StringContent(json, Encoding.UTF8, "application/json");
-            return response;
-        }
-        #endregion
-
         #region Create
 
         [HttpPost]
