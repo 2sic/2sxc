@@ -1,45 +1,26 @@
-﻿using System;
-using ToSic.Eav.Data;
-using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Web;
+﻿using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
     public class ToolbarRuleBase: HybridHtmlString
     {
-        protected ToolbarRuleBase(): base(null) {}
+        protected ToolbarRuleBase(): base(string.Empty) {}
 
-        protected ToolbarRuleBase(string rule): this()
-        {
-            Rule = rule;
-        }
+        protected ToolbarRuleBase(string rule): base(rule) { }
 
-        public override string ToString() => Rule;
+        //public override string ToString() => base.ToString();
 
-        public IEntity Target { get; set; }
-        public bool TargetRequired { get; set; }
+        //public virtual string Rule
+        //{
+        //    get => _optionalStoredRule ?? BuildRule();
+        //}
 
-        public bool Prepared { get; set; }
+        //protected virtual string BuildRule() => string.Empty;
 
-        public virtual string Rule
-        {
-            get
-            {
-                if (Prepared) return _rule;
-                Prepared = true;
-                _rule = BuildRule();
-                return _rule;
-            }
-            set
-            {
-                _rule = value;
-                Prepared = true;
-            }
-        }
-
-        protected virtual string BuildRule() => string.Empty;
-
-        private string _rule;
+        ///// <summary>
+        ///// In case a string rule was set, it should be here. 
+        ///// </summary>
+        //private string _optionalStoredRule;
 
     }
 }

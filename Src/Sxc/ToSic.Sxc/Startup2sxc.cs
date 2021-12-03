@@ -116,7 +116,7 @@ namespace ToSic.Sxc
             services.TryAddTransient<IServerPaths, ServerPaths>();
 
             // 13 - ToolbarService
-            services.TryAddTransient<IToolbarRuleService, ToolbarRuleService>();
+            services.TryAddTransient<IToolbarService, ToolbarService>();
 
 
             // Add possibly missing fallback services

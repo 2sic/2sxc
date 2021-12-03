@@ -11,8 +11,12 @@ namespace ToSic.Sxc.Web
         {
             _value = value;
         }
+        protected HybridHtmlString()
+        {
+            _value = string.Empty;
+        }
 
-        private string _value { get; }
+        private readonly string _value;
 
         /// <summary>
         /// Standard ToString overload - used when concatenating strings.
