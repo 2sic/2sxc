@@ -4,13 +4,15 @@ using ToSic.Eav.Plumbing;
 namespace ToSic.Sxc.Web
 {
     /// <inheritdoc />
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("Helper to ensure that code providing an IHtmlString will work on .net Framework and .net Standard")]
+    [PrivateApi("Helper to ensure that code providing an IHtmlString will work on .net Framework and .net Standard")]
     public class HybridHtmlString: IHybridHtmlString, IString
     {
         public HybridHtmlString(string value)
         {
             _value = value;
         }
+
+        [PrivateApi]
         protected HybridHtmlString()
         {
             _value = string.Empty;

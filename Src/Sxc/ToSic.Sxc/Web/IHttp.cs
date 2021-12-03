@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Web
     /// Goal is that anything on this will be able to provide HttpContext operations as needed
     /// To abstract .net451 and .net core
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice]
+    [PrivateApi("used to be InternalApi_DoNotUse_MayChangeWithoutNotice, hidden 2021-12")]
     public interface IHttp
     {
         /// <summary>

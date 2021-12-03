@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
-using ToSic.Sxc.Edit.Toolbar;
+using ToSic.Sxc.Edit;
 
 namespace ToSic.Sxc.Services
 {
@@ -8,6 +8,11 @@ namespace ToSic.Sxc.Services
     /// It is used in combination with `@Edit.Toolbar(...)`.
     /// It's especially useful for complex rules like Metadata-buttons which are more complex to create. 
     /// </summary>
+    /// <remarks>
+    /// History
+    /// * Added in 2sxc 13
+    /// </remarks>
+
     [PublicApi("WIP 13")]
     public interface IToolbarService
     {
@@ -19,7 +24,7 @@ namespace ToSic.Sxc.Services
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
         /// <returns></returns>
-        ToolbarBuilder Default(string noParamOrder = Eav.Parameters.Protector, string ui = "");
+        IToolbarBuilder Default(string noParamOrder = Eav.Parameters.Protector, string ui = "");
 
         /// <summary>
         /// Build a Toolbar configuration using the `empty` toolbar to use with `@Edit.Toolbar`
@@ -29,6 +34,6 @@ namespace ToSic.Sxc.Services
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
         /// <returns></returns>
-        ToolbarBuilder Empty(string noParamOrder = Eav.Parameters.Protector, string ui = "");
+        IToolbarBuilder Empty(string noParamOrder = Eav.Parameters.Protector, string ui = "");
     }
 }

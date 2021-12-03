@@ -25,7 +25,13 @@ namespace ToSic.Sxc.Edit.Toolbar
         public List<ToolbarRuleBase> Rules { get; } = new List<ToolbarRuleBase>();
 
         /// <inheritdoc />
-        public ToolbarBuilder Add(params object[] rules)
+        [PrivateApi]
+        public IToolbarBuilder Add(params string[] rules) => InnerAdd(rules);
+
+        /// <inheritdoc />
+        public IToolbarBuilder Add(params object[] rules) => InnerAdd(rules);
+
+        private IToolbarBuilder InnerAdd(params object[] rules)
         {
             var clone = new ToolbarBuilder(this);
             if (!rules.Any()) return clone;
@@ -40,7 +46,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         }
 
         /// <inheritdoc />
-        public ToolbarBuilder Metadata(object target, string contentType) => Add(new ToolbarRuleMetadata(target, contentType));
+        public IToolbarBuilder Metadata(object target, string contentType) => Add(new ToolbarRuleMetadata(target, contentType));
 
         public override string ToString()
         {
