@@ -81,26 +81,8 @@ namespace ToSic.Sxc.Dnn.Install
                     case "01.00.00": // Make sure that log folder empty on new installations (could happen if 2sxc was already installed on a system)
                         MaybeResetUpgradeLogsToStartAgainFromV1();
                         break;
-                    case "07.02.00":
-                    case "07.02.02":
-                    case "07.03.01":
-                    case "07.03.03":
-                    case "08.00.02":
-                    case "08.00.04":
-                    case "08.00.07":
-                    case "08.01.00":
-                    case "08.03.00":
-                    case "08.03.02":
-                    case "08.03.03":
-                    case "08.03.05":
-                    case "08.04.00":
-                    case "08.04.03":
-                    case "08.04.05":
-                    case "08.05.00":
-                    case "08.05.01":
-                    case "08.05.02":
-                    case "08.05.03":
-                    case "08.05.05":
+
+                    // All versions before 8.11 should trigger this
                     case "08.11.00":
                         throw new Exception("Trying to upgrade a 7 or 8 version - which isn't supported in v9.20+. Please upgrade to the latest 8.12 or 9.15before trying to upgrade to a 9.20+");
 
@@ -112,7 +94,7 @@ namespace ToSic.Sxc.Dnn.Install
                 // Increase ClientDependency version upon each upgrade (System and all Portals)
                 // prevents browsers caching old JS and CSS files for editing, which could cause several errors
                 // only set this on the last upgraded version, to prevent crazy updating the client-resource-cache while upgrading
-                if (version == Settings.Installation.UpgradeVersionList.Last())
+                if (version == Settings.Installation.CurrentReleaseVersion)
                 {
                     _installLogger.LogStep(version, "ClientResourceManager- seems to be last item in version-list, will clear");
 
