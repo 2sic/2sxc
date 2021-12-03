@@ -31,20 +31,28 @@
     <file src="..\ToSic.Sxc.Oqt.Server\wwwroot\**\*.*" exclude="**\*.map;" target="wwwroot" />
     <!-- 3rd party dependencies -->
     <!--<file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\refs\**\*.*" target="refs" />-->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Connect.Koi.dll" target="lib\net5.0" />
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\CsvHelper.dll" target="lib\net5.0" />
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\ICSharpCode.SharpZipLib.dll" target="lib\net5.0" />
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll" target="lib\net5.0" />
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll" target="lib\net5.0" />
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Razor.Language.dll" target="lib\net5.0" />
-    <!--<file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Server.Kestrel.Https.dll" target="lib\net5.0" />-->
-    <!--<file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions.dll" target="lib\net5.0" />-->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.CodeAnalysis.CSharp.dll" target="lib\net5.0" />
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.CodeAnalysis.dll" target="lib\net5.0" />
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.CodeAnalysis.Razor.dll" target="lib\net5.0" />
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.Extensions.DependencyModel.dll" target="lib\net5.0" />
-    <!--<file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\System.Net.Http.Formatting.dll" target="lib\net5.0" />-->
 
+    <!-- ToSic.Sxc.Dnn.Main PackageReference -->
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Connect.Koi.dll" target="lib\net5.0" />
+    <!-- ToSic.Eav.DataSources PackageReference -->
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\CsvHelper.dll" target="lib\net5.0" />
+    <!-- ToSic.Eav.ImportExport PackageReference -->
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\ICSharpCode.SharpZipLib.dll" target="lib\net5.0" />
+    <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency -->
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll" target="lib\net5.0" />
+    <!-- ToSic.Sxc.Razor PackageReference -->
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll" target="lib\net5.0" />
+    <!-- Microsoft.CodeAnalysis.Razor transitive dependency -->
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Razor.Language.dll" target="lib\net5.0" />
+    <!-- Microsoft.CodeAnalysis.Razor transitive dependency -->
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.CodeAnalysis.CSharp.dll" target="lib\net5.0" />
+    <!-- Microsoft.CodeAnalysis.Razor transitive dependency -->
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.CodeAnalysis.dll" target="lib\net5.0" />
+    <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency -->
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.CodeAnalysis.Razor.dll" target="lib\net5.0" />
+    <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency -->
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.Extensions.DependencyModel.dll" target="lib\net5.0" />
+    <!-- ToSic.Eav.DataSources PackageReference -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\System.Data.SqlClient.dll" target="lib\net5.0" />
 
     <!-- ToSic.Imageflow.Oqtane 1.0.3 -->
