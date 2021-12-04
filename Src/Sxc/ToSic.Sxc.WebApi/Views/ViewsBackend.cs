@@ -4,8 +4,10 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.Serialization;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.WebApi.ImportExport;
@@ -14,19 +16,21 @@ namespace ToSic.Sxc.WebApi.Views
 {
     public class ViewsBackend: HasLog
     {
-        private readonly Lazy<CmsManager> _cmsManagerLazy;
-        private readonly IAppStates _appStates;
-        private readonly ISite _site;
-        private readonly IUser _user;
-
-        public ViewsBackend(Lazy<CmsManager> cmsManagerLazy, IContextOfSite context, IAppStates appStates) : base("Bck.Views")
+        public ViewsBackend(Lazy<CmsManager> cmsManagerLazy, IContextOfSite context, IAppStates appStates, Lazy<IConvertToEavLight> convertToEavLight) : base("Bck.Views")
         {
             _cmsManagerLazy = cmsManagerLazy;
             _appStates = appStates;
+            _convertToEavLight = convertToEavLight;
 
             _site = context.Site;
             _user = context.User;
         }
+
+        private readonly Lazy<CmsManager> _cmsManagerLazy;
+        private readonly IAppStates _appStates;
+        private readonly Lazy<IConvertToEavLight> _convertToEavLight;
+        private readonly ISite _site;
+        private readonly IUser _user;
 
         public ViewsBackend Init(ILog parentLog)
         {
@@ -41,25 +45,27 @@ namespace ToSic.Sxc.WebApi.Views
             var cms = _cmsManagerLazy.Value.Init(_appStates.Identity(null, appId), true, Log).Read;
 
             var attributeSetList = cms.ContentTypes.All.OfScope(Settings.AttributeSetScope).ToList();
-            var templateList = cms.Views.GetAll().ToList();
-            Log.Add($"attribute list count:{attributeSetList.Count}, template count:{templateList.Count}");
-            var templates = templateList.Select(c => new ViewDetailsDto
+            var viewList = cms.Views.GetAll().ToList();
+            Log.Add($"attribute list count:{attributeSetList.Count}, template count:{viewList.Count}");
+            var ser = (_convertToEavLight.Value as ConvertToEavLight);
+            var views = viewList.Select(view => new ViewDetailsDto
             {
-                Id = c.Id, Name = c.Name, ContentType = TypeSpecs(attributeSetList, c.ContentType, c.ContentItem),
-                PresentationType = TypeSpecs(attributeSetList, c.PresentationType, c.PresentationItem),
-                ListContentType = TypeSpecs(attributeSetList, c.HeaderType, c.HeaderItem),
-                ListPresentationType = TypeSpecs(attributeSetList, c.HeaderPresentationType, c.HeaderPresentationItem),
-                TemplatePath = c.Path,
-                IsHidden = c.IsHidden,
-                ViewNameInUrl = c.UrlIdentifier,
-                Guid = c.Guid,
-                List = c.UseForList,
-                HasQuery = c.QueryRaw != null,
-                Used = c.Entity.Parents().Count,
-                IsShared = c.IsShared,
-                Permissions = new HasPermissionsDto {Count = c.Entity.Metadata.Permissions.Count()},
+                Id = view.Id, Name = view.Name, ContentType = TypeSpecs(attributeSetList, view.ContentType, view.ContentItem),
+                PresentationType = TypeSpecs(attributeSetList, view.PresentationType, view.PresentationItem),
+                ListContentType = TypeSpecs(attributeSetList, view.HeaderType, view.HeaderItem),
+                ListPresentationType = TypeSpecs(attributeSetList, view.HeaderPresentationType, view.HeaderPresentationItem),
+                TemplatePath = view.Path,
+                IsHidden = view.IsHidden,
+                ViewNameInUrl = view.UrlIdentifier,
+                Guid = view.Guid,
+                List = view.UseForList,
+                HasQuery = view.QueryRaw != null,
+                Used = view.Entity.Parents().Count,
+                IsShared = view.IsShared,
+                Metadata = ser?.CreateListOfSubEntities(view.Metadata, SubEntitySerialization.AllTrue()),
+                Permissions = new HasPermissionsDto {Count = view.Entity.Metadata.Permissions.Count()},
             });
-            return templates;
+            return views;
         }
 
 

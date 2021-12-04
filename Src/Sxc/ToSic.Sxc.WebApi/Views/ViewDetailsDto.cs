@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.WebApi.Security;
 
 namespace ToSic.Sxc.WebApi.Views
@@ -20,6 +22,8 @@ namespace ToSic.Sxc.WebApi.Views
         public int Used { get; set; }
 
         public bool IsShared { get; set; }
+
+        public IEnumerable<EavLightEntityReference> Metadata { get; set; }
 
         public HasPermissionsDto Permissions { get; set; }
     }
