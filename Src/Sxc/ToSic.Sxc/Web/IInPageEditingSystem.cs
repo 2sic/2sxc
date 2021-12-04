@@ -39,9 +39,6 @@ namespace ToSic.Sxc.Web
         /// <param name="contentType">Content-type of this toolbar, used when it has `new` or `add` buttons.
         ///     This allows you to create a button for a new "Category" and another button for a new "BlogPost" etc.
         /// </param>
-        /// <param name="metadataFor">
-        /// If the toolbar should create Metadata, then this is the object the metadata is for. It must be an <see cref="IIsMetadataTarget"/> or an <see cref="IHasMetadata"/> object.
-        /// </param>
         /// <param name="prefill">
         ///     Allows a `new` dialog to receive values as a prefill.
         ///     For example to already specify a date, title, category, etc. <br/>
@@ -63,7 +60,6 @@ namespace ToSic.Sxc.Web
         /// **History**
         /// 1. Added in 2sxc 8.04
         /// 1. `condition` added in 2sxc 12.05
-        /// 1. `metadataFor` added in 2sxc 12.10
         /// </remarks>
         IHybridHtmlString Toolbar(
             object target = null,
@@ -71,7 +67,6 @@ namespace ToSic.Sxc.Web
             string actions = null,
             string contentType = null,
             object condition = null,
-            object metadataFor = null,
             object prefill = null,
             object settings = null,
             object toolbar = null);
@@ -91,9 +86,6 @@ namespace ToSic.Sxc.Web
         /// </param>
         /// <param name="contentType">Content-type of this toolbar, used when it has `new` or `add` buttons.
         ///     This allows you to create a button for a new "Category" and another button for a new "BlogPost" etc.
-        /// </param>
-        /// <param name="metadataFor">
-        /// If the toolbar should create Metadata, then this is the object the metadata is for. It must be an <see cref="IIsMetadataTarget"/> or an <see cref="IHasMetadata"/> object.
         /// </param>
         /// <param name="prefill">
         ///     Allows a `new` dialog to receive values as a prefill.
@@ -125,7 +117,6 @@ namespace ToSic.Sxc.Web
             string actions = null,
             string contentType = null,
             object condition = null,
-            object metadataFor = null,
             object prefill = null,
             object settings = null,
             object toolbar = null);

@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Adam
         public ITarget MetadataId => _metadataId ?? (_metadataId = new Target
         {
             TargetType = (int)TargetTypes.CmsItem,
-            KeyString = CmsMetadata.FolderPrefix /*"folder:"*/ + SysId
+            KeyString = CmsMetadata.FolderPrefix + SysId
         });
         private ITarget _metadataId;
 

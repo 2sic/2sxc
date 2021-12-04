@@ -17,11 +17,10 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             string actions = null,
             string contentType = null,
             object condition = null,
-            object metadataFor = null,
             object prefill = null,
             object settings = null,
             object toolbar = null)
-            => ToolbarInternal(false, target, noParamOrder, actions, contentType, condition, metadataFor, prefill, settings, toolbar);
+            => ToolbarInternal(false, target, noParamOrder, actions, contentType, condition, prefill, settings, toolbar);
 
         /// <inheritdoc/>
         public IHybridHtmlString TagToolbar(
@@ -30,11 +29,10 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             string actions = null,
             string contentType = null,
             object condition = null,
-            object metadataFor = null,
             object prefill = null,
             object settings = null,
             object toolbar = null)
-            => ToolbarInternal(true, target, noParamOrder, actions, contentType, condition, metadataFor, prefill, settings, toolbar);
+            => ToolbarInternal(true, target, noParamOrder, actions, contentType, condition, prefill, settings, toolbar);
 
         private IHybridHtmlString ToolbarInternal(
             bool inTag,
@@ -43,7 +41,6 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             string actions,
             string contentType,
             object condition,
-            object metadataFor,
             object prefill,
             object settings,
             object toolbar)
@@ -53,13 +50,13 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             if (!IsConditionOk(condition)) return wrapLog("condition false", null);
 
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar",
-                $"{nameof(actions)},{nameof(contentType)},{nameof(condition)},{nameof(metadataFor)},{nameof(prefill)},{nameof(settings)},{nameof(toolbar)}");
+                $"{nameof(actions)},{nameof(contentType)},{nameof(condition)},{nameof(prefill)},{nameof(settings)},{nameof(toolbar)}");
 
             // ensure that internally we always process it as an entity
             var eTarget = target as IEntity ?? (target as IDynamicEntity)?.Entity;
             if (target != null && eTarget == null)
                 Log.Warn("Creating toolbar - it seems the object provided was neither null, IEntity nor DynamicEntity");
-            var itmToolbar = new ItemToolbar(eTarget, actions, contentType, metadataFor, prefill: prefill, settings: settings, toolbar: toolbar);
+            var itmToolbar = new ItemToolbar(eTarget, actions, contentType, prefill: prefill, settings: settings, toolbar: toolbar);
 
             var result = inTag
                 ? Attribute("sxc-toolbar", itmToolbar.ToolbarAttribute())
