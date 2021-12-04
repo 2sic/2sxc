@@ -1,8 +1,8 @@
 ﻿using System;
 using Newtonsoft.Json;
-using ToSic.Eav.Data;
 using ToSic.Eav.Metadata;
 using ToSic.SexyContent.Adam;
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Adam
 {
@@ -23,18 +23,15 @@ namespace ToSic.Sxc.Adam
 
         /// <inheritdoc />
         [JsonIgnore]
-        public dynamic Metadata => AdamManager.MetadataMaker.GetFirstOrFake(AdamManager, MetadataId);
+        public dynamic Metadata => _metadata ?? (_metadata = AdamManager.MetadataMaker.GetFirstOrFake(AdamManager, MetadataId));
+        private dynamic _metadata;
+        // TODO: PROBABLY CHANGE these Hasmetadata etc. to just use the new IHasMetadata.Metadata property to start with
+        [JsonIgnore] public bool HasMetadata => AdamManager.MetadataMaker.GetFirstMetadata(AdamManager.AppRuntime, MetadataId) != null;
 
         [JsonIgnore]
-        public bool HasMetadata => AdamManager.MetadataMaker.GetFirstMetadata(AdamManager.AppRuntime, MetadataId) != null;
-
-        [JsonIgnore]
-        public ITarget MetadataId => _metadataId ?? (_metadataId = new Target
-        {
-            TargetType = (int)TargetTypes.CmsItem,
-            KeyString = CmsMetadata.FilePrefix /*"file:"*/ + SysId
-        });
+        private ITarget MetadataId => _metadataId ?? (_metadataId = new Target((int)TargetTypes.CmsItem, FileName) { KeyString = CmsMetadata.FilePrefix + SysId });
         private ITarget _metadataId;
+
         #endregion
 
         public string Url { get; set; }
@@ -48,5 +45,10 @@ namespace ToSic.Sxc.Adam
         public DateTime CreatedOnDate => Created;
 
         public int FileId => SysId as int? ?? 0;
+
+        IMetadataOf IHasMetadata.Metadata
+            => _metadataOf ?? (_metadataOf = AdamManager.AppContext.AppState.GetMetadataOf((int)TargetTypes.CmsItem,
+                CmsMetadata.FilePrefix + SysId, FileName));
+        private IMetadataOf _metadataOf;
     }
 }

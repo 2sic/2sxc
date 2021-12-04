@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Security.Permissions;
+﻿using ToSic.Eav.Metadata;
+using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Adam;
 
@@ -46,7 +47,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 ThumbnailUrl = string.Format(ThumbnailPattern, url),
                 PreviewUrl = string.Format(PreviewPattern, url),
                 Url = url,
-                ReferenceId = original.MetadataId.KeyString,
+                ReferenceId = (original as IHasMetadata).Metadata.MetadataId.KeyString,
                 AllowEdit = CanEditFolder(original)
             };
             // (original.StorageLocation == 0) ? original.Path : FileLinkClickController.Instance.GetFileLinkClick(original);
@@ -61,7 +62,7 @@ namespace ToSic.Sxc.WebApi.Adam
             {
                 Path = folder.Path,
                 AllowEdit = CanEditFolder(folder),
-                ReferenceId = folder.MetadataId.KeyString,
+                ReferenceId = (folder as IHasMetadata).Metadata.MetadataId.KeyString,
             };
             return item;
         }

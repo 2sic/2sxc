@@ -85,7 +85,7 @@ namespace ToSic.Sxc.WebApi.Cms
             result.Items = list.Select(e => new BundleWithHeader<JsonEntity>
             {
                 Header = e.Header,
-                Entity = GetSerializeAndMdAssignJsonEntity(appId, e, jsonSerializer, typeRead)
+                Entity = GetSerializeAndMdAssignJsonEntity(appId, e, jsonSerializer, typeRead, _appStates.Get(appIdentity))
             }).ToList();
 
             // set published if some data already exists
@@ -107,41 +107,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var types = UsedTypes(list, typeRead);
             var jsonTypes = types.Select(t => jsonSerializer.ToPackage(t, true)).ToList();
             result.ContentTypes = jsonTypes.Select(t => t.ContentType).ToList();
-                //types
-                //.Select(ct => jsonSerializer.ToJson(ct, true))
-                //.ToList();
 
-            //// TEMP DEBUG
-            //var inputTypes = types.SelectMany(t => t.Attributes.Select(a =>
-            //{
-            //    var Lookup = a.InputType();
-            //    var mdAll = a.Metadata.Where(md => md.Type.Is(Constants.MetadataFieldTypeAll)).ToList();
-            //    var MdAllCount = mdAll.Count;
-            //    var MdAllAttribCount = mdAll.FirstOrDefault()?.Attributes.Count;
-            //    var MdAllWithAttrib = mdAll.FirstOrDefault(md => md.Attributes.ContainsKey(Constants.MetadataFieldTypeAll));
-            //    var MdAllAttrib = MdAllWithAttrib?.GetBestValue<string>(Constants.MetadataFieldTypeAll);
-            //    var MdAllAttribZero = MdAllWithAttrib?.GetBestValue<string>(Constants.MetadataFieldTypeAll, new string[0]);
-            //    var MdAllAttribEmpty = MdAllWithAttrib?.GetBestValue<string>(Constants.MetadataFieldTypeAll, new []{""});
-            //    var MdAllAttribEn = MdAllWithAttrib?.GetBestValue<string>(Constants.MetadataFieldTypeAll, new[] { "en-us" });
-            //    var MdAllAttribTr = MdAllWithAttrib?.GetBestValue<string>(Constants.MetadataFieldTypeAll, new[] { "tr-tr" });
-            //    var MdAllType = a.Metadata.GetBestValue<string>(Constants.MetadataFieldAllInputType, Constants.MetadataFieldTypeAll);
-            //    return new {Lookup, MdAllCount, MdAllType, MdAllAttribCount, MdAllWithAttrib?.EntityId, MdAllAttrib, MdAllAttribZero, MdAllAttribEmpty, MdAllAttribEn, MdAllAttribTr };
-            //}));
-            //var serializedDebug = JsonConvert.SerializeObject(inputTypes);
-            //Log.Add("Test / debug: " + serializedDebug);
-
-            // ensure that sub-properties of the content-types are included
-            // this is for UI Formulas (children of @All) - WIP
-            // and the warning/error Regex specials - WIP
-            
-            //var entList = types.SelectMany(
-            //    // in all Content-Type attributes like title, body etc.
-            //    t => t.Attributes.SelectMany(
-            //        // check all metadata of these attributes - get possible sub-entities attached
-            //        a => a.Metadata.SelectMany(m => m.Children())
-            //    )
-            //);
-            //result.ContentTypeItems = entList.Select(e => jsonSerializer.ToJson(e, 0)).ToList();
             result.ContentTypeItems = jsonTypes.SelectMany(t => t.Entities).ToList();
 
             // Fix not-supported input-type names; map to correct name

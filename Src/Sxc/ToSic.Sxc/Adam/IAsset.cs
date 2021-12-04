@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Adam
     /// This contains properties which both <see cref="IFolder"/> and <see cref="IFile"/> have in common.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public interface IAsset: IIsMetadataTarget
+    public interface IAsset: IHasMetadata // IIsMetadataTarget
     {
         #region Metadata
         /// <summary>
@@ -26,11 +26,11 @@ namespace ToSic.Sxc.Adam
         /// <returns>An IDynamicEntity which contains the metadata, or an empty IDynamicEntity which still works if no metadata exists.</returns>
         dynamic Metadata { get; }
 
-        /// <summary>
-        /// Experimental
-        /// </summary>
-        [PrivateApi]
-        ITarget MetadataId { get; }
+        ///// <summary>
+        ///// Experimental
+        ///// </summary>
+        //[PrivateApi]
+        //ITarget MetadataId { get; }
         #endregion
 
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Builder;
@@ -23,7 +24,7 @@ namespace ToSic.Sxc.WebApi.Cms
         /// <param name="typeRead"></param>
         /// <returns></returns>
         internal static JsonEntity GetSerializeAndMdAssignJsonEntity(int appId, BundleIEntity bundle, JsonSerializer jsonSerializer,
-            ContentTypeRuntime typeRead)
+            ContentTypeRuntime typeRead, AppState appState)
         {
             // attach original metadata assignment when creating a new one
             JsonEntity ent;
@@ -34,34 +35,25 @@ namespace ToSic.Sxc.WebApi.Cms
                 ent = jsonSerializer.ToJson(ConstructEmptyEntity(appId, bundle.Header, typeRead));
 
                 // only attach metadata, if no metadata already exists
-                if (ent.For == null)
-                {
-                    if (bundle.Header?.For != null)
-                        ent.For = bundle.Header.For;
-
-                    // #2134
-                    // if we have "old" Metadata headers, attach these
-                    //else if (bundle.Header?.Metadata != null)
-                    //{
-                    //    var md = bundle.Header.Metadata;
-                    //    ent.For = new JsonMetadataFor
-                    //    {
-                    //        Guid = md.KeyGuid,
-                    //        String = md.KeyString,
-                    //        Number = md.KeyNumber,
-                    //        Target = jsonSerializer.MetadataProvider.GetName(md.TargetType)
-                    //    };
-                    //}
-                }
+                if (ent.For == null && bundle.Header?.For != null) ent.For = bundle.Header.For;
             }
 
             // new UI doesn't use this any more, reset it
-            if (bundle.Header != null)
+            if (bundle.Header != null) bundle.Header.For = null;
+
+            try
             {
-                // #2134
-                //bundle.Header.Metadata = null;
-                bundle.Header.For = null;
+                if (ent.For != null)
+                {
+                    var targetId = ent.For; // bundle.Entity.MetadataFor;
+                    // todo: optimize, probably call FindTarget with the MetadataFor 
+                    var target = appState.FindTarget(jsonSerializer.MetadataTargets.GetId(targetId.Target),
+                        targetId.String ?? targetId.Guid?.ToString() ?? targetId.Number?.ToString());
+                    if (target != null) ent.For.Title = target.MetadataId.Title;
+                }
             }
+            catch { /* ignore experimental */ }
+
             return ent;
         }
 
