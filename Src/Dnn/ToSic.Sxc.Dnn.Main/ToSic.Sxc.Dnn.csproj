@@ -238,17 +238,17 @@
       <Project>{892f9d3b-0578-46a1-a46a-b694a7e15669}</Project>
       <Name>ToSic.Eav</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ToSic.Sxc.Dnn.WebApi\2sxc WebApi %28Dnn%29.csproj">
+    <ProjectReference Include="..\ToSic.Sxc.Dnn.WebApi\ToSic.Sxc.Dnn.WebApi.csproj">
       <Project>{8398fe44-7164-48cb-96cf-74ba9c270bd2}</Project>
-      <Name>2sxc WebApi %28Dnn%29</Name>
+      <Name>ToSic.Sxc.Dnn.WebApi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ToSic.Sxc.Dnn\2sxc Dnn.csproj">
+    <ProjectReference Include="..\ToSic.Sxc.Dnn\ToSic.Sxc.Dnn.Core.csproj">
       <Project>{a94de6d7-d1e6-4be2-b5b5-dc4a6a61cd80}</Project>
-      <Name>2sxc Dnn</Name>
+      <Name>ToSic.Sxc.Dnn.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ToSic.Sxc.Razor\2sxc Razor.csproj">
+    <ProjectReference Include="..\ToSic.Sxc.Razor\ToSic.Sxc.Dnn.Razor.csproj">
       <Project>{78a558af-f274-4e3c-95fe-8de9226e0ebc}</Project>
-      <Name>2sxc Razor</Name>
+      <Name>ToSic.Sxc.Dnn.Razor</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj">
       <Project>{5d87eb0c-bf67-4814-a0ff-d96256c9b852}</Project>
