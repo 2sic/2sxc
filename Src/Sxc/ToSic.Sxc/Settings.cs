@@ -10,7 +10,16 @@ namespace ToSic.Sxc
         // reason is that we must ensure that the static constructor is called
         // whenever anything is accessed
         public const string AppsRootFolder = "2sxc";
-        public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
+
+        // Version is used also as cachebreak for js assets.
+        // In past build revision was good cachebreak value, but since assemblies are deterministic 
+        // we use application start unix time as slow changing revision value for cachebreak purpose. 
+        //public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
+        public static readonly Version Version = new Version(
+            Assembly.GetExecutingAssembly().GetName().Version.Major,
+            Assembly.GetExecutingAssembly().GetName().Version.Minor,
+            Assembly.GetExecutingAssembly().GetName().Version.Build,
+            (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds); // application start unix time as slow changing revision value
 
         public static readonly string ModuleVersion = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString("00") + "."
                                                       + Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString("00") + "."
@@ -22,7 +31,6 @@ namespace ToSic.Sxc
         public const string AttributeSetScope = "2SexyContent";
 
         internal static readonly string AttributeSetStaticNameContentBlockTypeName = "ContentGroupReference";
-
 
         public class Installation
         {
