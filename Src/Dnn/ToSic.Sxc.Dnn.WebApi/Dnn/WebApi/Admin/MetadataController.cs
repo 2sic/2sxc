@@ -18,8 +18,5 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public MetadataListDto Get(int appId, int targetType, string keyType, string key, string contentType = null)
             => GetService<MetadataBackend>().Get(appId, targetType, keyType, key, contentType);
 
-        [HttpGet]
-        public MetadataListDto GetV13(int appId, int targetType, string keyType, string key, string contentType = null)
-            => GetService<MetadataBackend>().Get(appId, targetType, keyType, key, contentType);
     }
 }

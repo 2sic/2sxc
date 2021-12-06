@@ -34,9 +34,5 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         public MetadataListDto Get(int appId, int targetType, string keyType, string key, string contentType = null)
             => Backend.Get(appId, targetType, keyType, key, contentType);
 
-        [HttpGet]
-        public MetadataListDto GetV13(int appId, int targetType, string keyType, string key, string contentType = null)
-            => Backend.Get(appId, targetType, keyType, key, contentType);
-
     }
 }
