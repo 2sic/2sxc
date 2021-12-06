@@ -242,11 +242,11 @@
       <Project>{8398fe44-7164-48cb-96cf-74ba9c270bd2}</Project>
       <Name>ToSic.Sxc.Dnn.WebApi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ToSic.Sxc.Dnn\ToSic.Sxc.Dnn.Core.csproj">
+    <ProjectReference Include="..\ToSic.Sxc.Dnn.Core\ToSic.Sxc.Dnn.Core.csproj">
       <Project>{a94de6d7-d1e6-4be2-b5b5-dc4a6a61cd80}</Project>
       <Name>ToSic.Sxc.Dnn.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ToSic.Sxc.Razor\ToSic.Sxc.Dnn.Razor.csproj">
+    <ProjectReference Include="..\ToSic.Sxc.Dnn.Razor\ToSic.Sxc.Dnn.Razor.csproj">
       <Project>{78a558af-f274-4e3c-95fe-8de9226e0ebc}</Project>
       <Name>ToSic.Sxc.Dnn.Razor</Name>
     </ProjectReference>

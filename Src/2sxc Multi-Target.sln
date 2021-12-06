@@ -13,9 +13,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Persistence.Efc.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Dnn.WebApi", "Dnn\ToSic.Sxc.Dnn.WebApi\ToSic.Sxc.Dnn.WebApi.csproj", "{8398FE44-7164-48CB-96CF-74BA9C270BD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Dnn.Razor", "Dnn\ToSic.Sxc.Razor\ToSic.Sxc.Dnn.Razor.csproj", "{78A558AF-F274-4E3C-95FE-8DE9226E0EBC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Dnn.Razor", "Dnn\ToSic.Sxc.Dnn.Razor\ToSic.Sxc.Dnn.Razor.csproj", "{78A558AF-F274-4E3C-95FE-8DE9226E0EBC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Dnn", "Dnn\ToSic.Sxc.Dnn.Main\ToSic.Sxc.Dnn.csproj", "{D4250011-B9BE-4326-9736-4F0122C79802}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Dnn", "Dnn\ToSic.Sxc.Dnn\ToSic.Sxc.Dnn.csproj", "{D4250011-B9BE-4326-9736-4F0122C79802}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Repository.Efc.Tests", "..\..\eav-server\ToSic.Eav.Repository.Efc.Tests\ToSic.Eav.Repository.Efc.Tests.csproj", "{F989FE10-C84A-4B18-AAA7-4665EC85B059}"
 EndProject
@@ -31,7 +31,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.TokenEngine.Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Apps.Tests", "..\..\eav-server\ToSic.Eav.Apps.Tests\ToSic.Eav.Apps.Tests.csproj", "{5BAEFA99-42C6-4C06-96DE-881303AAE178}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Dnn.Core", "Dnn\ToSic.Sxc.Dnn\ToSic.Sxc.Dnn.Core.csproj", "{A94DE6D7-D1E6-4BE2-B5B5-DC4A6A61CD80}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Dnn.Core", "Dnn\ToSic.Sxc.Dnn.Core\ToSic.Sxc.Dnn.Core.csproj", "{A94DE6D7-D1E6-4BE2-B5B5-DC4A6A61CD80}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Tests", "Dnn.Tests\ToSic.Sxc.Tests\ToSic.Sxc.Tests.csproj", "{0EA1085A-D15F-4254-8A79-DE811C47EBF4}"
 EndProject
