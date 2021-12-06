@@ -5,10 +5,8 @@
     <RootNamespace>ToSic.Sxc</RootNamespace>
     <AssemblyName>ToSic.Sxc</AssemblyName>
     <Version>13.00.00</Version>
-    <!-- This assembly must NOT be deterministic, as the build version is used somewhere -->
-    <!-- It's the only assembly where this matters -->
-    <AssemblyVersion>13.00.00.*</AssemblyVersion>
-    <Deterministic>false</Deterministic>
+    <Deterministic>true</Deterministic>
+    <FileAlignment>512</FileAlignment>
     <NoWarn>7035</NoWarn>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
   </PropertyGroup>

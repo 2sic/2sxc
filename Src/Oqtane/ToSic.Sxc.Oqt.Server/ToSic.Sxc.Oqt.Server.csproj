@@ -16,6 +16,7 @@
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
     <AnalysisLevel>none</AnalysisLevel>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
+    <Deterministic>true</Deterministic>
 
     <!-- 2dm - this seems necessary to ensure that compiler DLLs are included in the output -->
     <!-- See: https://github.com/toddams/RazorLight/issues/294 and https://stackoverflow.com/questions/40426665/what-is-the-use-of-preservecompilationcontext-under-build-option-in-project-json -->

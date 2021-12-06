@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ToSic.SexyContent.Razor")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("ToSic.Sxc.Dnn.Razor")]
+[assembly: AssemblyDescription("2sxc Razor Engine for Dnn")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("2sic Internet Solutions")]
-[assembly: AssemblyProduct("2sxc Razor Engine for Dnn")]
+[assembly: AssemblyProduct("2sxc Dnn Razor")]
 [assembly: AssemblyCopyright("Copyright © 2sic 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

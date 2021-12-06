@@ -11,6 +11,7 @@
     <Copyright>2sic</Copyright>
     <AssemblyName>ToSic.Sxc.Oqtane.Shared</AssemblyName>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
 
   <ItemGroup>

@@ -5,6 +5,8 @@
     <RootNamespace>ToSic.Sxc.WebApi</RootNamespace>
     <Version>13.00.00</Version>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
 
   <ItemGroup>
