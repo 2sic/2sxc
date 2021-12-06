@@ -45,11 +45,9 @@ namespace ToSic.Sxc.WebApi.Cms
             {
                 if (ent.For != null)
                 {
-                    var targetId = ent.For; // bundle.Entity.MetadataFor;
-                    // todo: optimize, probably call FindTarget with the MetadataFor 
-                    var target = appState.FindTarget(jsonSerializer.MetadataTargets.GetId(targetId.Target),
+                    var targetId = ent.For;
+                    ent.For.Title = appState.FindTargetTitle(jsonSerializer.MetadataTargets.GetId(targetId.Target),
                         targetId.String ?? targetId.Guid?.ToString() ?? targetId.Number?.ToString());
-                    if (target != null) ent.For.Title = target.MetadataId.Title;
                 }
             }
             catch { /* ignore experimental */ }
