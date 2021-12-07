@@ -106,7 +106,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             [FromQuery] bool global = false
         ) => Backend().Save(appId, template, templateId, global, path);
 
-
         /// <summary>
         /// Get all asset template types
         /// </summary>
@@ -119,12 +118,5 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         public TemplatePreviewDto Preview(int appId, string path, string name, string templateKey, bool global = false)
             => Backend().GetPreview(appId, path, name, templateKey, global);
 
-        /// <summary>
-        /// Create a new file from template
-        /// </summary>
-        /// <param name="assetFromTemplateDto">AssetFromTemplateDto</param>
-        /// <returns></returns>
-        [HttpPost]
-        public bool CreateTemplate(AssetFromTemplateDto assetFromTemplateDto) => Backend().Create(assetFromTemplateDto);
     }
 }

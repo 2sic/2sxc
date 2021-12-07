@@ -61,11 +61,5 @@ namespace ToSic.Sxc.WebApi.Assets
 
         TemplatePreviewDto Preview(int appId, string path, string name, string templateKey, bool global = false);
 
-        /// <summary>
-        /// Create a new file from template
-        /// </summary>
-        /// <param name="assetFromTemplateDto">AssetFromTemplateDto</param>
-        /// <returns></returns>
-        bool CreateTemplate(AssetFromTemplateDto assetFromTemplateDto);
     }
 }
