@@ -6,6 +6,18 @@ namespace ToSic.Sxc.Apps.Assets
     {
         public const string CsCodeTemplateName = "PleaseRenameClass";
 
+        public static readonly TemplateInfo RazorDnn = new TemplateInfo("cshtml-dnn", "Razor Dnn", ".cshtml", "DetailsTemplate", ForTemplate, TypeRazor)
+        {
+            Body = @"@inherits Custom.Dnn.Razor12
+@* This inherits statement gets you features like App, CmsContext, Data etc. - you can delete this comment *@
+
+<div @Edit.TagToolbar(Content)>
+    Put your content here
+</div>",
+            Description = "razor page dnn template",
+            Prefix = "_",
+        };
+
         /// <summary>
         /// This only works for Dnn, Hybrid doesn't have this concept as we can't access functions from outside
         /// </summary>

@@ -2,11 +2,8 @@
 {
     public partial class AssetTemplates
     {
-        // TODO STV
-        // Place each definition in an own static variable
-        // Place the keys, etc. here and use these objects for the constant (don't create separate template-key object etc.)
-        // then _don't_ put this in an abstract class, just in an own class containing all the data
-        // ...and put your 
+        // Place each definition in an own static variable.
+        // Place the keys, etc. here and use these objects for the constant (don't create separate template-key object etc).
         public static readonly TemplateInfo RazorHybrid = new TemplateInfo("cshtml-hybrid", "Razor Hybrid", ".cshtml", "DetailsTemplate", ForTemplate, TypeRazor)
         {
             Body = @"@inherits Custom.Hybrid.Razor12

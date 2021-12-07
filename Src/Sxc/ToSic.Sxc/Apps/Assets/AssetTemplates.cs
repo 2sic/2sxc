@@ -47,6 +47,7 @@ namespace ToSic.Sxc.Apps.Assets
             if (_templates == null) _templates = new List<TemplateInfo>
             {
                 RazorHybrid,
+                RazorDnn,
                 DnnCsCode,
                 CsHybrid,
                 ApiHybrid,
