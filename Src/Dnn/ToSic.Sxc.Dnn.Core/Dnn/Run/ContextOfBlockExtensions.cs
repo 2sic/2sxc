@@ -27,6 +27,9 @@ namespace ToSic.Sxc.Dnn.Run
             // the FullUrl will throw an error in DNN search scenarios
             try
             {
+                // skip during search (usual HttpContext is missing for search)
+                if (System.Web.HttpContext.Current == null) return context;
+
                 ((Page)context.Page).Url = activeTab?.FullUrl.TrimLastSlash();
             }
             catch

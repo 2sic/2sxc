@@ -93,11 +93,14 @@ namespace ToSic.Sxc.Dnn.Run
                 () =>
                 {
                     if (Module == null) return false;
+
                     // This seems to throw errors during search :(
                     try
                     {
-                        return ModulePermissionController
-                            .HasModuleAccess(SecurityAccessLevel.Edit, "", Module);
+                        // skip during search (usual HttpContext is missing for search)
+                        if (System.Web.HttpContext.Current == null) return false;
+
+                        return ModulePermissionController.HasModuleAccess(SecurityAccessLevel.Edit, "", Module);
                     }
                     catch
                     {
