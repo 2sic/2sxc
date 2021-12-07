@@ -25,7 +25,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
     [Route(WebApiConstants.AppRoot + "/{appName}/content/{contentType}/{guid:guid}/{field}")]
     [Route(WebApiConstants.AppRoot2 + "/{appName}/content/{contentType}/{guid:guid}/{field}")]
     [Route(WebApiConstants.AppRoot3 + "/{appName}/content/{contentType}/{guid:guid}/{field}")]
-
+    [Route(WebApiConstants.AppRoot + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
+    [Route(WebApiConstants.AppRoot2 + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
+    [Route(WebApiConstants.AppRoot3 + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
     // Beta routes
     //[Route(WebApiConstants.WebApiStateRoot + "/app-content/{contentType}/{guid:guid}/{field}/[action]")]
     [Route(WebApiConstants.WebApiStateRoot + "/app-content/{contentType}/{guid:guid}/{field}")]
