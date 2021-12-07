@@ -54,23 +54,23 @@ namespace ToSic.Sxc.WebApi.Assets
             return wrapLog(null, true);
         }
 
-        [Obsolete("This Method is Deprecated", false)]
-        public bool Create(int appId, string path, FileContentsDto content, string purpose, bool global = false)
-        {
-            Log.Add($"create a#{appId}, path:{path}, global:{global}, purpose:{purpose}, cont-length:{content.Content?.Length}");
-            path = path.Replace("/", "\\");
+        //[Obsolete("This Method is Deprecated", false)]
+        //public bool Create(int appId, string path, FileContentsDto content, string purpose, bool global = false)
+        //{
+        //    Log.Add($"create a#{appId}, path:{path}, global:{global}, purpose:{purpose}, cont-length:{content.Content?.Length}");
+        //    path = path.Replace("/", "\\");
 
-            var thisApp = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), Log);
+        //    var thisApp = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), Log);
 
-            if (content.Content == null)
-                content.Content = "";
+        //    if (content.Content == null)
+        //        content.Content = "";
 
-            path = SanitizePathAndContent(path, content, purpose);
+        //    path = SanitizePathAndContent(path, content, purpose);
 
-            var assetEditor = _assetEditorLazy.Value.Init(thisApp, path, global, 0, Log);
-            assetEditor.EnsureUserMayEditAssetOrThrow(path);
-            return assetEditor.Create(content.Content);
-        }
+        //    var assetEditor = _assetEditorLazy.Value.Init(thisApp, path, global, 0, Log);
+        //    assetEditor.EnsureUserMayEditAssetOrThrow(path);
+        //    return assetEditor.Create(content.Content);
+        //}
 
         public bool Create(AssetFromTemplateDto assetFromTemplateDto)
         {

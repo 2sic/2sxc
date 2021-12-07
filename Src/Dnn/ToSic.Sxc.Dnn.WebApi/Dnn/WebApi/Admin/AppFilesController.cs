@@ -50,17 +50,24 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <param name="path"></param>
         /// <param name="content"></param>
         /// <param name="global">this determines, if the app-file store is the global in _default or the local in the current app</param>
-        /// <param name="purpose">auto;razor;token;api;search</param>
+        /// <param name="templateKey"></param>
         /// <returns></returns>
-        [Obsolete("This Method is Deprecated", false)]
         [HttpPost]
         public bool Create(
             [FromUri] int appId,
             [FromUri] string path,
             [FromBody] FileContentsDto content, // note: as of 2020-09 the content is never submitted
             [FromUri] bool global,
-            [FromUri] string purpose = Purpose.Auto)
-            => Backend().Create(appId, path, content, purpose, global);
+            [FromUri] string templateKey // as of 2021-12, all create calls include templateKey
+            //[FromUri] string purpose = Purpose.Auto
+            )
+            => Backend().Create(new AssetFromTemplateDto
+            {
+                AppId = appId,
+                Path = path,
+                Global = global,
+                TemplateKey = templateKey,
+            });
 
 
 

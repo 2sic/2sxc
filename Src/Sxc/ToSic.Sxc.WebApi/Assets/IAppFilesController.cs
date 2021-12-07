@@ -41,14 +41,16 @@ namespace ToSic.Sxc.WebApi.Assets
         /// <param name="path"></param>
         /// <param name="content"></param>
         /// <param name="global">this determines, if the app-file store is the global in _default or the local in the current app</param>
-        /// <param name="purpose">auto;razor;token;api;search</param>
+        /// <param name="templateKey"></param>
         /// <returns></returns>
         bool Create(
             int appId,
             string path,
             FileContentsDto content, // note: as of 2020-09 the content is never submitted
             bool global,
-            string purpose = Purpose.Auto);
+            string templateKey // as of 2021-12, all create calls include templateKey
+            // string purpose = Purpose.Auto
+        );
 
         /// <summary>
         /// Get all asset template types
