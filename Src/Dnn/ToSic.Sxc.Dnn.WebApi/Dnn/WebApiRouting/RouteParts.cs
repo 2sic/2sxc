@@ -17,6 +17,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
     {
         public const string Auto = "auto";
         public const string Content = "content";
+        public const string Data = "data"; // new, v13
         public const string Query = "query";
     }
 
@@ -26,6 +27,8 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
         public const string AppNamed = Root.App + "/" + Token.AppPath;
         public const string ContentAuto = AppAuto + "/" + Parts.Content;
         public const string ContentNamed = AppNamed + "/" + Parts.Content;
+        public const string DataAuto = AppAuto + "/" + Parts.Data; // new, v13
+        public const string DataNamed = AppNamed + "/" + Parts.Data; // new, v13
         public static RootId[] QueryRoots =
         {
             new RootId("qry-auto", AppAuto + "/" + Parts.Query), 
@@ -39,7 +42,9 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
         public static RootId[] Content =
         {
             new RootId("cont-auto", ContentAuto), 
-            new RootId("cont-name", ContentNamed)
+            new RootId("cont-name", ContentNamed),
+            new RootId("data-auto", DataAuto), // new, v13
+            new RootId("data-name", DataNamed) // new, v13
         };
 
         public static RootId[] AppAutoNamedInclEditions = AppAutoAndNamed
