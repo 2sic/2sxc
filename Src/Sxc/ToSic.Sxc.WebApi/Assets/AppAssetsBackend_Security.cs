@@ -30,25 +30,25 @@ namespace ToSic.Sxc.WebApi.Assets
             switch (ext?.ToLowerInvariant())
             {
                 // .cs files - usually API controllers
-                case Extension.Cs:
+                case ".cs":
                     if ((folder?.ToLowerInvariant() ?? "").Contains(ApiFolder.ToLowerInvariant()))
                     {
                         var nameWithoutExt = name.Substring(0, name.Length - ext.Length);
                         content.Content =
-                            _assetTemplates.GetTemplate(TemplateKey.Api).Replace(AssetTemplates.CsApiTemplateControllerName, nameWithoutExt);
+                            _assetTemplates.GetTemplate("cs-api-hybrid").Replace(AssetTemplates.CsApiTemplateControllerName, nameWithoutExt);
                     }
                     else
                     {
                         var nameWithoutExt = name.Substring(0, name.Length - ext.Length);
                         content.Content = _assetTemplates.GetTemplate(purpose == AssetTemplates.ForSearch
-                                ? TemplateKey.CustomSearchCsCode
-                                : TemplateKey.CsCode)
+                                ? "cs-code-custom-search-dnn"
+                                : "cs-code-hybrid")
                             .Replace(AssetTemplates.CsCodeTemplateName, nameWithoutExt);
                     }
                     break;
 
                 // .cshtml files (razor) or .code.cshtml (razor code-behind)
-                case Extension.Cshtml:
+                case ".cshtml":
                     {
                         // ensure all .cshtml start with "_"
                         if (!name.StartsWith(AssetEditor.CshtmlPrefix))
@@ -58,16 +58,16 @@ namespace ToSic.Sxc.WebApi.Assets
                         }
 
                         // first check the code-extension, because it's longer but also would contain the non-code extension
-                        if (name.EndsWith(Extension.CodeCshtml))
-                            content.Content = _assetTemplates.GetTemplate(TemplateKey.CsHtmlCode);
-                        else if (name.EndsWith(Extension.Cshtml))
+                        if (name.EndsWith(".code.cshtml"))
+                            content.Content = _assetTemplates.GetTemplate("cshtml-code-hybrid");
+                        else if (name.EndsWith(".cshtml"))
                             content.Content = AssetTemplates.RazorHybrid.Body; // _assetTemplates.GetTemplate(TemplateKey.CsHtml);
                         break;
                     }
 
                 // .html files (Tokens)
-                case Extension.Html:
-                    content.Content = _assetTemplates.GetTemplate(TemplateKey.Token);
+                case ".html":
+                    content.Content = _assetTemplates.GetTemplate("html-token");
                     break;
             }
 
@@ -88,7 +88,7 @@ namespace ToSic.Sxc.WebApi.Assets
         private static void EnsureCshtmlStartWithUnderscore(AssetFromTemplateDto assetFromTemplateDto)
         {
             var name = Path.GetFileName(assetFromTemplateDto.Path);
-            if ((assetFromTemplateDto.TemplateKey == AssetTemplates.RazorHybrid.Key /*TemplateKey.CsHtml*/ || assetFromTemplateDto.TemplateKey == TemplateKey.CsHtmlCode)
+            if ((assetFromTemplateDto.TemplateKey == AssetTemplates.RazorHybrid.Key /*TemplateKey.CsHtml*/ || assetFromTemplateDto.TemplateKey == "cshtml-code-hybrid")
                 && !name.StartsWith(AssetEditor.CshtmlPrefix))
             {
                 name = AssetEditor.CshtmlPrefix + name;

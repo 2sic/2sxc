@@ -7,26 +7,6 @@ using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Apps.Assets
 {
-    public class TemplateKey
-    {
-        // TODO: STV pls move all these to the definition objects
-        //public const string CsHtml = "cshtml-hybrid";
-        public const string CsHtmlCode = "cshtml-code-hybrid";
-        public const string CsCode = "cs-code-hybrid";
-        public const string Api = "cs-api-hybrid";
-        public const string Token = "html-token";
-        public const string CustomSearchCsCode = "cs-code-custom-search-dnn";
-    }
-
-    public class Extension
-    {
-        // TODO: STV pls move all these to the definition objects
-        public const string Html = ".html";
-        public const string Cshtml = ".cshtml";
-        public const string CodeCshtml = ".code.cshtml";
-        public const string Cs = ".cs";
-    }
-
     public class Purpose
     {
         // TODO: Once the UIs are updated, we'll kill the 'auto' case
