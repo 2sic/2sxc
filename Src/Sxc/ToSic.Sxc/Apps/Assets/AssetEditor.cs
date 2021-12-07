@@ -124,10 +124,11 @@ namespace ToSic.Sxc.Apps.Assets
             return t;
         }
 
-        public string InternalPath => Path.Combine(
+        public string InternalPath => NormalizePath(Path.Combine(
             _cmsRuntime.ServiceProvider.Build<TemplateHelpers>().Init(_app, Log)
-                .AppPathRoot(EditInfo.IsShared, PathTypes.PhysFull), EditInfo.FileName);
+                .AppPathRoot(EditInfo.IsShared, PathTypes.PhysFull), EditInfo.FileName));
 
+        private static string NormalizePath(string path) => Path.GetFullPath(new Uri(path).LocalPath);
 
         /// <summary>
         /// Read / Write the source code of the template file
@@ -164,18 +165,32 @@ namespace ToSic.Sxc.Apps.Assets
 
         public bool Create(string contents)
         {
-            // todo: maybe add some security for special dangerous file names like .cs, etc.?
-            EditInfo.FileName = Regex.Replace(EditInfo.FileName, @"[?:\/*""<>|]", "");
-            var absolutePath = InternalPath;
-
             // don't create if it already exits
-            if (File.Exists(absolutePath)) return false;
+            if (SanitizeFileNameAndCheckIfAssetAlreadyExists()) return false;
 
             // ensure the web.config exists (usually missing in the global area)
             _cmsRuntime.ServiceProvider.Build<TemplateHelpers>().Init(_app, Log)
                 .EnsureTemplateFolderExists(EditInfo.IsShared);
 
-            // check if the folder to it already exists, or create it...
+            var absolutePath = InternalPath;
+
+            EnsureFolders(absolutePath);
+
+            // now create the file
+            CreateAsset(absolutePath, contents);
+
+            return true;
+        }
+
+        private void SanitizeFileName()
+        {
+            // todo: maybe add some security for special dangerous file names like .cs, etc.?
+            EditInfo.FileName = Regex.Replace(EditInfo.FileName, @"[?:\/*""<>|]", "");
+        }
+
+        // check if the folder already exists, or create it...
+        private static void EnsureFolders(string absolutePath)
+        {
             var foundFolder = absolutePath.LastIndexOf("\\", StringComparison.InvariantCulture);
             if (foundFolder > -1)
             {
@@ -184,14 +199,23 @@ namespace ToSic.Sxc.Apps.Assets
                 if (!Directory.Exists(folderPath))
                     Directory.CreateDirectory(folderPath);
             }
+        }
 
-            // now create the file
-            var stream = new StreamWriter(File.Create(absolutePath));
-            stream.Write(contents);
-            stream.Flush();
-            stream.Close();
+        private static void CreateAsset(string absolutePath, string contents)
+        {
+            using (var stream = new StreamWriter(File.Create(absolutePath)))
+            {
+                stream.Write(contents);
+                stream.Flush();
+                stream.Close();
+            }
+        }
 
-            return true;
+        public bool SanitizeFileNameAndCheckIfAssetAlreadyExists()
+        {
+            SanitizeFileName();
+
+            return File.Exists(InternalPath);
         }
     }
 }
