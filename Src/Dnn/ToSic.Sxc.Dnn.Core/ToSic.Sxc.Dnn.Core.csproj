@@ -93,6 +93,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compatibility\Eav\ToSic.Eav.Factory.cs" />
     <Compile Include="Compatibility\Sxc\OldDataToDictionaryWrapper.cs" />
     <Compile Include="Compatibility\Sxc\ToSic.Sxc.Blocks.Render.cs" />
     <Compile Include="Compatibility\Sxc\SxcHelper.cs" />

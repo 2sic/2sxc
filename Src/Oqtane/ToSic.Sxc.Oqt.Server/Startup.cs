@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Oqtane.Infrastructure;
-using System;
 using System.IO;
 using ToSic.Eav;
 using ToSic.Eav.Caching;
@@ -16,7 +15,6 @@ using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Server.StartUp;
 using ToSic.Sxc.Razor;
 using ToSic.Sxc.WebApi;
-using Factory = ToSic.Eav.Factory;
 using WebApiConstants = ToSic.Sxc.Oqt.Shared.WebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server
@@ -143,7 +141,7 @@ namespace ToSic.Sxc.Oqt.Server
 
         public void ConfigureMvc(IMvcBuilder mvcBuilder)
         {
-            //throw new NotImplementedException();
+            // Do nothing
         }
     }
 }
