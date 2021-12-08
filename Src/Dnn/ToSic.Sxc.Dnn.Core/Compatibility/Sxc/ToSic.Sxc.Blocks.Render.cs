@@ -36,12 +36,11 @@ namespace ToSic.Sxc.Blocks
         private static Services.IRenderService RenderService(DynamicEntity parent)
         {
             // First do version checks - should not be allowed if compatibility is too low
-            var compatibility = parent._Dependencies.CompatibilityLevel;
-            if (compatibility > Constants.MaxLevelForStaticRender)
+            if (parent._Dependencies.CompatibilityLevel > Constants.MaxLevelForStaticRender)
                 throw new Exception(
                     "The static ToSic.Sxc.Blocks.Render can only be used in old Razor components. For v12+ use the ToSic.Sxc.Services.IRenderService instead");
 
-            return Eav.Factory.ObsoleteBuild<Services.IRenderService>();
+            return Eav.Factory.StaticBuild<Services.IRenderService>();
         }
 
         /// <summary>

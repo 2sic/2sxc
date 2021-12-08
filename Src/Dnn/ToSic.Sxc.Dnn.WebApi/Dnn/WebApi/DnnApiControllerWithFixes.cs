@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 	        
             // ReSharper disable VirtualMemberCallInConstructor
 	        if (HistoryLogGroup != null)
-                Eav.Factory.StaticBuild<LogHistory>().Add(HistoryLogGroup, Log);
+                GetService<LogHistory>().Add(HistoryLogGroup, Log);
             // ReSharper restore VirtualMemberCallInConstructor
 
         }

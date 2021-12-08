@@ -8,6 +8,7 @@ using ToSic.Eav;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Persistence.File;
+using ToSic.Eav.Plumbing;
 using ToSic.SexyContent.Dnn920;
 using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.WebApi;
@@ -50,21 +51,22 @@ namespace ToSic.Sxc.Dnn.StartUp
 
 
             // now we should be able to instantiate registration of DB
-            Eav.Factory.StaticBuild<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
-            var globalConfig = Eav.Factory.StaticBuild<IGlobalConfiguration>();
+            var sp = Eav.Factory.StaticBuild<IServiceProvider>();
+            sp.Build<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
+            var globalConfig = sp.Build<IGlobalConfiguration>();
 
             globalConfig.GlobalFolder = HostingEnvironment.MapPath(DnnConstants.SysFolderRootVirtual);
             globalConfig.GlobalSiteFolder = "~/Portals/_default/";
 
             // Load features from configuration
-            var sysLoader = Eav.Factory.StaticBuild<SystemLoader>();
+            var sysLoader = sp.Build<SystemLoader>();
             sysLoader.StartUp();
 
             // 2021-11-16 2dm - experimental, working on moving global/preset data into a normal AppState #PresetInAppState
             sysLoader.Log.Add("Try to load global app-state");
-            var globalStateLoader = Eav.Factory.StaticBuild<FileAppStateLoaderWIP>();
+            var globalStateLoader = sp.Build<FileAppStateLoaderWIP>();
             var appState = globalStateLoader.AppState(Eav.Constants.PresetAppId);
-            var appsMemCache = Eav.Factory.StaticBuild<IAppsCache>();
+            var appsMemCache = sp.Build<IAppsCache>();
             appsMemCache.Add(appState);
             // End experimental #PresetInAppState
 
