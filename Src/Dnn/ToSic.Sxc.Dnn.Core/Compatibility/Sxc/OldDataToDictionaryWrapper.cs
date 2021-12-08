@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.ImportExport;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Compatibility.Sxc
@@ -16,9 +14,9 @@ namespace ToSic.Sxc.Compatibility.Sxc
     [Obsolete]
     public class OldDataToDictionaryWrapper
     {
-        public OldDataToDictionaryWrapper(bool userMayEdit)
+        public OldDataToDictionaryWrapper(bool userMayEdit, IConvertToEavLight innerConverter)
         {
-            _converter = Factory.ObsoleteBuild<IConvertToEavLight>();
+            _converter = innerConverter; // Factory.ObsoleteBuild<IConvertToEavLight>();
             if (_converter is ConvertToEavLightWithCmsInfo serializerWithEdit) serializerWithEdit.WithEdit = userMayEdit;
         }
 

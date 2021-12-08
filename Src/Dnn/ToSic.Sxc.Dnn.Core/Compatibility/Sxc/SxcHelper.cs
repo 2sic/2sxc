@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.DataFormats.EavLight;
 
 namespace ToSic.Sxc.Compatibility.Sxc
 {
@@ -8,11 +9,16 @@ namespace ToSic.Sxc.Compatibility.Sxc
     [Obsolete]
 	public class SxcHelper
 	{
+        public SxcHelper(bool editAllowed, IConvertToEavLight innerConverter)
+        {
+            _editAllowed = editAllowed;
+            _innerConverter = innerConverter;
+        }
         private readonly bool _editAllowed;
-		public SxcHelper(bool editAllowed) => _editAllowed = editAllowed;
+        private readonly IConvertToEavLight _innerConverter;
 
         private OldDataToDictionaryWrapper _entityToDictionary;
 		public OldDataToDictionaryWrapper Serializer 
-            => _entityToDictionary ?? (_entityToDictionary = new OldDataToDictionaryWrapper(_editAllowed));
+            => _entityToDictionary ?? (_entityToDictionary = new OldDataToDictionaryWrapper(_editAllowed, _innerConverter));
 	}
 }

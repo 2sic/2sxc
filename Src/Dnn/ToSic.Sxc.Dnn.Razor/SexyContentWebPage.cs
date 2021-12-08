@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Entities.Modules;
+using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
@@ -60,7 +61,7 @@ namespace ToSic.SexyContent.Razor
         /// <inheritdoc />
         [PrivateApi("never public, shouldn't be in use elsewhere")]
         [Obsolete]
-        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(_DynCodeRoot.Block?.Context.UserMayEdit ?? false));
+        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(_DynCodeRoot.Block?.Context.UserMayEdit ?? false, GetService<IConvertToEavLight>()));
         [Obsolete]
         private SxcHelper _sxc;
 #pragma warning restore 612

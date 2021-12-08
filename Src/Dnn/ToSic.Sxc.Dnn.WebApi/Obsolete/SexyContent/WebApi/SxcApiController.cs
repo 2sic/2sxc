@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ToSic.Eav.DataSources;
 using System.IO;
 using System.Linq;
+using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Blocks;
@@ -48,7 +49,7 @@ namespace ToSic.SexyContent.WebApi
 
         [Obsolete]
         [PrivateApi]
-        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(_DynCodeRoot?.Block?.Context?.UserMayEdit ?? false));
+        public SxcHelper Sxc => _sxc ?? (_sxc = new SxcHelper(_DynCodeRoot?.Block?.Context?.UserMayEdit ?? false, GetService< IConvertToEavLight> ()));
         [Obsolete]
         private SxcHelper _sxc;
 

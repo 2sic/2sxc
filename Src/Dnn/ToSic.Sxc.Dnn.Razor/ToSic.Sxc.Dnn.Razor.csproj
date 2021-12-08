@@ -155,6 +155,10 @@
       <Project>{daae8e21-ca5f-400b-9f5a-5e4e1196b21b}</Project>
       <Name>ToSic.Eav.DataSources</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.WebApi\ToSic.Eav.WebApi.csproj">
+      <Project>{04F3A07C-2C6C-4D87-9E8D-E2DB611B0D52}</Project>
+      <Name>ToSic.Eav.WebApi</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ToSic.Sxc.Dnn.Core\ToSic.Sxc.Dnn.Core.csproj">
       <Project>{a94de6d7-d1e6-4be2-b5b5-dc4a6a61cd80}</Project>
       <Name>ToSic.Sxc.Dnn.Core</Name>
