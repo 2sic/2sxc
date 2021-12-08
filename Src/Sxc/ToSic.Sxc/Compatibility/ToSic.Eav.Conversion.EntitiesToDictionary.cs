@@ -11,7 +11,7 @@ namespace ToSic.Eav.Conversion
     /// </summary>
     [PrivateApi("Made private in v12.04, as it shouldn't be used in razor - but previously it was in some apps so we must assume it's in use")]
     [Obsolete("Marked obsolete in 12.05, because it should be constructed with DI. But we're not sure if it's used in code in the wild")]
-    public class EntitiesToDictionary: ConvertToEavLight
+    public class EntitiesToDictionary: ConvertToEavLight    // Important: Inherit must still be used, otherwise the compiler breaks before the constructor is called with the error message
     {
         /// <summary>
         /// Old constructor used in some public apps in razor, so it must remain for DNN implementation
@@ -21,8 +21,10 @@ namespace ToSic.Eav.Conversion
         /// <remarks>
         /// has an important side effect, this isn't clear from outside!
         /// </remarks>
-        public EntitiesToDictionary(): base(Factory.ObsoleteBuild<Dependencies>())
+        public EntitiesToDictionary(): base(null)
         {
+            throw new Exception(
+                $"{nameof(EntitiesToDictionary)} has been removed. Pls see instructions: https://r.2sxc.org/brc-13-conversion");
         }
 
     }
