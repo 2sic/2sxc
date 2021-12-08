@@ -115,8 +115,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         public TemplatesDto GetTemplates(string purpose = null, string type = null) => Backend().GetTemplates(purpose, type);
 
         [HttpGet]
-        public TemplatePreviewDto Preview(int appId, string path, string name, string templateKey, bool global = false)
-            => Backend().GetPreview(appId, path, name, templateKey, global);
+        public TemplatePreviewDto Preview(int appId, string path, string templateKey, bool global = false)
+            => Backend().GetPreview(appId, path, templateKey, global);
 
     }
 }

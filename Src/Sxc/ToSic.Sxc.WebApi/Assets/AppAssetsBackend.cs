@@ -141,9 +141,9 @@ namespace ToSic.Sxc.WebApi.Assets
             return wrapLog(null, assetEditor);
         }
 
-        public TemplatePreviewDto GetPreview(int appId, string path, string name, string templateKey, bool b)
+        public TemplatePreviewDto GetPreview(int appId, string path, string templateKey, bool b)
         {
-            var wrapLog = Log.Call<TemplatePreviewDto>($"create a#{appId}, path:{path}, name:{name}, global:{b}, key:{templateKey}");
+            var wrapLog = Log.Call<TemplatePreviewDto>($"create a#{appId}, path:{path}, global:{b}, key:{templateKey}");
             var templatePreviewDto = new TemplatePreviewDto();
 
             try
@@ -151,7 +151,7 @@ namespace ToSic.Sxc.WebApi.Assets
                 var assetFromTemplateDto = new AssetFromTemplateDto()
                 {
                     AppId = appId,
-                    Path = Path.Combine(path?.Replace("/", "\\") ?? string.Empty, name),
+                    Path = path?.Replace("/", "\\") ?? string.Empty,
                     Global = b,
                     TemplateKey = templateKey,
                 };

@@ -59,7 +59,7 @@ namespace ToSic.Sxc.WebApi.Assets
         /// <returns></returns>
         TemplatesDto GetTemplates(string purpose = null, string type = null);
 
-        TemplatePreviewDto Preview(int appId, string path, string name, string templateKey, bool global = false);
+        TemplatePreviewDto Preview(int appId, string path, string templateKey, bool global = false);
 
     }
 }
