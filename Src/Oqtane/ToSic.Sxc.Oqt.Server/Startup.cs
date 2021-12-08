@@ -66,19 +66,14 @@ namespace ToSic.Sxc.Oqt.Server
             //    Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings);
             //});
 
-
-            Factory.UseExistingServices(services);
-            Factory.ActivateNetCoreDi(services2 =>
-            {
-                services2
-                    .AddSxcOqtane()
-                    .AddSxcRazor()
-                    .AddAdamWebApi<int, int>()
-                    .AddSxcWebApi()
-                    .AddSxcCore()
-                    .AddEav()
-                    .AddAppApi(); // 2sxc Oqtane dyncode app api.
-            });
+            services
+                .AddSxcOqtane()
+                .AddSxcRazor()
+                .AddAdamWebApi<int, int>()
+                .AddSxcWebApi()
+                .AddSxcCore()
+                .AddEav()
+                .AddAppApi(); // 2sxc Oqtane dyncode app api.
 
             // 2sxc Oqtane blob services for Imageflow.
             services.AddImageflowOqtaneBlobService();

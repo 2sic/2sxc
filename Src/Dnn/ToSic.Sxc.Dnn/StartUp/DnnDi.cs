@@ -43,29 +43,32 @@ using Type = System.Type;
 
 namespace ToSic.Sxc.Dnn.StartUp
 {
-    public static class Di
+    public static class DnnDi
     {
         private static bool _alreadyRegistered;
 
-        public static void Register()
+        public static void RegisterServices(IServiceCollection services)
         {
             if (_alreadyRegistered)
                 return;
 
+            // If this is called from Dnn 7 - 9.3 it won't have services, so we must create our own
+            // This is because the old Dnn wasn't DI aware
+            if (services == null) services = new ServiceCollection();
+
             var appsCache = GetAppsCacheOverride();
-            Eav.Factory.ActivateNetCoreDi(services =>
-            {
-                services.AddDnn(appsCache)
-                    .AddAdamWebApi<int, int>()
-                    .AddSxcWebApi()
-                    .AddSxcCore()
-                    .AddEav();
+            services.AddDnn(appsCache)
+                .AddAdamWebApi<int, int>()
+                .AddSxcWebApi()
+                .AddSxcCore()
+                .AddEav();
 
-                // temp polymorphism - later put into AddPolymorphism
-                services.TryAddTransient<Koi>();
-                services.TryAddTransient<Permissions>();
+            // temp polymorphism - later put into AddPolymorphism
+            services.TryAddTransient<Koi>();
+            services.TryAddTransient<Permissions>();
 
-            });
+            // Remember this for later, when we must start the Static Dependency Injection
+            DnnStaticDi.StaticServiceCollection = services;
 
             _alreadyRegistered = true;
         }

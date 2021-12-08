@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Dnn
 
             var appFolder = GetAppFolder(request, log, wrapLog);
 
-            var tenant = Eav.Factory.StaticBuild<DnnSite>();
+            var tenant = DnnStaticDi.StaticBuild<DnnSite>();
 
             var appFolderVirtualPath = Path.Combine(tenant.AppsRootRelative, appFolder).ForwardSlash();
 
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Dnn
                 if (appFolder == null)
                 {
                     log.Add("no folder found in url, will auto-detect");
-                    var block = Eav.Factory.StaticBuild<DnnGetBlock>().GetCmsBlock(request, log);
+                    var block = DnnStaticDi.StaticBuild<DnnGetBlock>().GetCmsBlock(request, log);
                     appFolder = block?.App?.Folder;
                 }
 

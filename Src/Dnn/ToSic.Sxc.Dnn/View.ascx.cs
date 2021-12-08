@@ -22,8 +22,8 @@ namespace ToSic.Sxc.Dnn
             {
                 if (_blockLoaded) return _block;
                 _blockLoaded = true;
-                var newCtx = Eav.Factory.StaticBuild<IContextOfBlock>().Init(ModuleConfiguration, Log);
-                return _block = Eav.Factory.StaticBuild<BlockFromModule>().Init(newCtx, Log);
+                var newCtx = DnnStaticDi.StaticBuild<IContextOfBlock>().Init(ModuleConfiguration, Log);
+                return _block = DnnStaticDi.StaticBuild<BlockFromModule>().Init(newCtx, Log);
             }
         }
         private IBlock _block;
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Dnn
         protected void Page_Load(object sender, EventArgs e)
         {
             // add to insights-history for analytic
-            Eav.Factory.StaticBuild<LogHistory>().Add("module", Log);
+            DnnStaticDi.StaticBuild<LogHistory>().Add("module", Log);
             _stopwatch = Stopwatch.StartNew();
             _entireLog = Log.Call(message: $"Page:{TabId} '{Page?.Title}', Instance:{ModuleId} '{ModuleConfiguration.ModuleTitle}'", useTimer: true);
             var callLog = Log.Call(useTimer: true);
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Dnn
             TryCatchAndLogToDnn(() =>
             {
                 if (checkPortalIsReady) new DnnReadyCheckTurbo(this, Log).EnsureSiteAndAppFoldersAreReady(Block);
-                DnnClientResources = Eav.Factory.StaticBuild<DnnClientResources>()
+                DnnClientResources = DnnStaticDi.StaticBuild<DnnClientResources>()
                     .Init(Page, requiresPre1025Behavior == false ? null : Block?.BlockBuilder, Log);
                 var needsPre1025Behavior = requiresPre1025Behavior ?? DnnClientResources.NeedsPre1025Behavior();
                 if (needsPre1025Behavior) DnnClientResources.EnforcePre1025Behavior();
@@ -111,7 +111,7 @@ namespace ToSic.Sxc.Dnn
                     // in this case assets & page settings were not applied
                     try
                     {
-                        var pageChanges = Eav.Factory.StaticBuild<DnnPageChanges>();
+                        var pageChanges = DnnStaticDi.StaticBuild<DnnPageChanges>();
                         pageChanges.Apply(Page, data); // note: if Assets == null, it will take the default
                     }
                     catch{ /* ignore */ }

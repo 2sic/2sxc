@@ -1,5 +1,5 @@
 ﻿using System;
-using ToSic.Eav;
+using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Web;
 
 namespace ToSic.SexyContent.DnnWebForms.Skins
@@ -9,7 +9,7 @@ namespace ToSic.SexyContent.DnnWebForms.Skins
         protected void Page_Load(object sender, EventArgs e)
         {
             if(DotNetNuke.Security.Permissions.TabPermissionController.HasTabPermission("EDIT"))
-                Factory.StaticBuild<DnnClientResources>()
+                DnnStaticDi.StaticBuild<DnnClientResources>()
                     .Init(Page, null, null)
                     .RegisterClientDependencies(Page, true, true, true);
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Dnn;
 using IHtmlString = System.Web.IHtmlString;
 
 // ReSharper disable once CheckNamespace
@@ -33,6 +34,7 @@ namespace ToSic.Sxc.Blocks
             Guid? newGuid = null) 
             => RenderService(parent).One(parent, noParamOrder, item, field, newGuid);
 
+        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         private static Services.IRenderService RenderService(DynamicEntity parent)
         {
             // First do version checks - should not be allowed if compatibility is too low
@@ -40,7 +42,7 @@ namespace ToSic.Sxc.Blocks
                 throw new Exception(
                     "The static ToSic.Sxc.Blocks.Render can only be used in old Razor components. For v12+ use the ToSic.Sxc.Services.IRenderService instead");
 
-            return Eav.Factory.StaticBuild<Services.IRenderService>();
+            return DnnStaticDi.StaticBuild<Services.IRenderService>();
         }
 
         /// <summary>

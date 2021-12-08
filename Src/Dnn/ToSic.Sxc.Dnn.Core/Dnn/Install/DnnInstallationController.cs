@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Linq;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
@@ -23,7 +22,7 @@ namespace ToSic.Sxc.Dnn.Install
         public DnnInstallationController(): base("Dnn.InstCo")
         {
             _installLogger = new DnnInstallLogger(SaveUnimportantDetails);
-            Eav.Factory.StaticBuild<LogHistory>().Add("installation", Log);
+            new LogHistory().Add("installation", Log);
         }
 
         public IEnvironmentInstaller Init(ILog parent)
@@ -78,9 +77,10 @@ namespace ToSic.Sxc.Dnn.Install
 
                 switch (version)
                 {
-                    case "01.00.00": // Make sure that log folder empty on new installations (could happen if 2sxc was already installed on a system)
-                        MaybeResetUpgradeLogsToStartAgainFromV1();
-                        break;
+                    // 2021-12-08 v13 turned this off now - believe not used since 2sxc 7 - hope everything works - #cleanUp 2022 Q2
+                    //case "01.00.00": // Make sure that log folder empty on new installations (could happen if 2sxc was already installed on a system)
+                    //    MaybeResetUpgradeLogsToStartAgainFromV1();
+                    //    break;
 
                     // All versions before 8.11 should trigger this
                     case "08.11.00":
@@ -125,17 +125,24 @@ namespace ToSic.Sxc.Dnn.Install
         // Note 2dm 2021-08-30
         // I'm not sure what this actually does - I believe it was old code which captured some special issues when upgrading from pre-7 to 7
         // I'm pretty sure we could just remove this, but when we do it we must test it, so don't just delete it
-        private void MaybeResetUpgradeLogsToStartAgainFromV1()
-        {
-            _installLogger.LogStep("", "Maybe reset logs start");
-            // this condition only applies, if 2sxc upgrade 7 didn't happen yet
-            var appState = Eav.Factory.StaticBuild<IAppStates>()/* State*/.Get(new AppIdentity(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId));
-            if (appState.GetContentType(Eav.ImportExport.Settings.TemplateContentType) != null) return;
+        // 2021-12-08 v13 turned this off now - believe not used since 2sxc 7 - hope everything works - #cleanUp 2022 Q2
+        // IMPORTANT Notes 2021-12-08 2dm
+        // I believe this was meant to check if the DB was created, but was missing something 
+        // Which should have been added in v7. 
+        // But as of now, all the changes up until v9 or something are added in one slide, so there is no step-by-step to do
+        // We may need to re-activate this some time in the future, if some install-sequences would need to run again. 
 
-            _installLogger.LogStep("", "Will reset all logs now");
-            _installLogger.DeleteAllLogFiles();
-            _installLogger.LogStep("", "Maybe Reset logs done");
-        }
+        //private void MaybeResetUpgradeLogsToStartAgainFromV1()
+        //{
+        //    _installLogger.LogStep("", "Maybe reset logs start");
+        //    // this condition only applies, if 2sxc upgrade 7 didn't happen yet
+        //    var appState = Eav.Factory.StaticBuild<IAppStates>().Get(new AppIdentity(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId));
+        //    if (appState.GetContentType(Eav.ImportExport.Settings.TemplateContentType) != null) return;
+
+        //    _installLogger.LogStep("", "Will reset all logs now");
+        //    _installLogger.DeleteAllLogFiles();
+        //    _installLogger.LogStep("", "Maybe Reset logs done");
+        //}
 
 
     }

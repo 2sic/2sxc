@@ -103,7 +103,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
 
                 log.Add($"Edition: {edition}");
 
-                var tenant = Eav.Factory.StaticBuild<DnnSite>();
+                var tenant = DnnStaticDi.StaticBuild<DnnSite>();
                 var controllerFolder = Path.Combine(tenant.AppsRootRelative, appFolder, edition + "api/");
 
                 controllerFolder = controllerFolder.Replace("\\", @"/");
@@ -146,7 +146,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             if (!InsightsController.InsightsLoggingEnabled)
                 if (url?.Contains(InsightsController.InsightsUrlFragment) ?? false)
                     addToHistory = false;
-            if (addToHistory) Eav.Factory.StaticBuild<LogHistory>().Add("http-request", log);
+            if (addToHistory) DnnStaticDi.StaticBuild<LogHistory>().Add("http-request", log);
         }
     }
 }

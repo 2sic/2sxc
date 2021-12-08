@@ -12,11 +12,11 @@ namespace ToSic.Sxc.Dnn.StartUp
         public void ConfigureServices(IServiceCollection services)
         {
             // Tell the static factory (used in obsolete code) about the services we have
-            Eav.Factory.UseExistingServices(services);
+            //Eav.Factory.UseExistingServices(services);
 
             // Do standard registration of all services
             // If Dnn < 9.4 is called, this will be called again from the Route-Registration code
-            Di.Register();
+            DnnDi.RegisterServices(services);
         }
     }
 }

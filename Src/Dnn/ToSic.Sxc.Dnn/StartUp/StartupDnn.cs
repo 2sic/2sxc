@@ -39,11 +39,17 @@ namespace ToSic.Sxc.Dnn.StartUp
         /// </summary>
         public void Configure()
         {
-            if (_alreadyConfigured)
-                return;
+            // In some cases this may be called 2x - so we must avoid doing it again
+            if (_alreadyConfigured) return;
 
-            // this service configuration for DNN7 and on DNN9 it is already happned on special startup
-            Di.Register();
+            // Register Services if this has not happened yet
+            // In Dnn9.4+ this was already done before
+            // In older Dnn this didn't happen yet, so this is the latest it can happen
+            DnnDi.RegisterServices(null);
+
+            // Now activate the Service Provider, because some Dnn code still needs the static implementation
+            DnnStaticDi.StaticDiReady();
+
 
             // Configure Newtonsoft Time zone handling
             // Moved here in v12.05 - previously it was in the Pre-Serialization converter
@@ -51,7 +57,7 @@ namespace ToSic.Sxc.Dnn.StartUp
 
 
             // now we should be able to instantiate registration of DB
-            var sp = Eav.Factory.StaticBuild<IServiceProvider>();
+            var sp = DnnStaticDi.StaticBuild<IServiceProvider>();
             sp.Build<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
             var globalConfig = sp.Build<IGlobalConfiguration>();
 
