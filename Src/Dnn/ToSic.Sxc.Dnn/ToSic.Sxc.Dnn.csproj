@@ -113,7 +113,7 @@
     <Compile Include="StartUp\ActivateKoi2DependencyInjection.cs" />
     <Compile Include="StartUp\CompilerDependencies.cs" />
     <Compile Include="StartUp\Di.cs" />
-    <Compile Include="StartUp\Startup.cs" />
+    <Compile Include="StartUp\StartupDnn9.cs" />
     <Compile Include="StartUp\StartupDnn.cs" />
     <Compile Include="DnnWebForms\PagePicker.ascx.cs">
       <DependentUpon>PagePicker.ascx</DependentUpon>
