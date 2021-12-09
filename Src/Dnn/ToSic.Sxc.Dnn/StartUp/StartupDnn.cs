@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Dnn.StartUp
 
 
             // now we should be able to instantiate registration of DB
-            var sp = DnnStaticDi.StaticBuild<IServiceProvider>();
+            var sp = DnnStaticDi.GetServiceProvider();
             sp.Build<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
             var globalConfig = sp.Build<IGlobalConfiguration>();
 

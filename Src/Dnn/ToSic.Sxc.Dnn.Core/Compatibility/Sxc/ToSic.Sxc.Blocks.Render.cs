@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn;
 using IHtmlString = System.Web.IHtmlString;
@@ -42,7 +43,7 @@ namespace ToSic.Sxc.Blocks
                 throw new Exception(
                     "The static ToSic.Sxc.Blocks.Render can only be used in old Razor components. For v12+ use the ToSic.Sxc.Services.IRenderService instead");
 
-            return DnnStaticDi.StaticBuild<Services.IRenderService>();
+            return DnnStaticDi.GetServiceProvider().Build<Services.IRenderService>();
         }
 
         /// <summary>

@@ -41,17 +41,16 @@ namespace ToSic.Sxc.Dnn
         [PrivateApi]
         public static T StaticBuild<T>() => GetServiceProvider().Build<T>();
 
-
         /// <summary>
         /// Dictionary key for keeping the Scoped Injection Service Provider in the Http-Context
         /// </summary>
         // we changed key to one used in DNN9DI instead old one "eav-scoped-serviceprovider"
-        private static Type ServiceProviderKey = typeof(IServiceScope); // "eav-scoped-serviceprovider";
+        private static readonly Type ServiceProviderKey = typeof(IServiceScope); // "eav-scoped-serviceprovider";
 
         private static IServiceProvider _sp;
 
         [PrivateApi("This is just a temporary solution - shouldn't be used long term")]
-        private static IServiceProvider GetServiceProvider()
+        public static IServiceProvider GetServiceProvider()
         {
             // Because 2sxc runs inside DNN as a webforms project and not asp.net core mvc, we have
             // to make sure the service-provider object is disposed correctly. If we don't do this,

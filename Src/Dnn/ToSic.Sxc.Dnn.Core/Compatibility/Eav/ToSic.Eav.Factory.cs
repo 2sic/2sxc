@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Dnn;
 
 // ReSharper disable once CheckNamespace
@@ -34,7 +35,7 @@ namespace ToSic.Eav
         [Obsolete("Please use standard Dnn 9.4+ Dnn DI instead https://r.2sxc.org/brc-13-eav-factory")]
         public static T Resolve<T>()
         {
-            return DnnStaticDi.StaticBuild<T>();
+            return DnnStaticDi.GetServiceProvider().Build<T>();
 
             // Don't throw error yet, would probably cause too much breaks in public code
             throw new NotSupportedException("The Eav.Factory is obsolete. See https://r.2sxc.org/brc-13-eav-factory");
