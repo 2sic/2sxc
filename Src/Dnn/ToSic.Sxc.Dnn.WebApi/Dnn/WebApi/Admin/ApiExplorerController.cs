@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Http;
+using ToSic.Eav.Context;
 using ToSic.Sxc.WebApi.ApiExplorer;
 using ToSic.Sxc.WebApi.Plumbing;
 
@@ -32,7 +33,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
             try
             {
-                var controllerVirtualPath = Path.Combine(AppFolderUtilities.GetAppFolderVirtualPath(Request, Log), path);
+                var controllerVirtualPath = Path.Combine(AppFolderUtilities.GetAppFolderVirtualPath(GetService<IServiceProvider>(), Request, GetService<ISite>(), Log), path);
                 Log.Add($"Controller Virtual Path: {controllerVirtualPath}");
 
                 if (!File.Exists(HostingEnvironment.MapPath(controllerVirtualPath)))

@@ -3,8 +3,11 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
@@ -14,20 +17,18 @@ namespace ToSic.Sxc.Dnn
 {
     internal static class AppFolderUtilities
     {
-        internal static string GetAppFolderVirtualPath(HttpRequestMessage request, ILog log)
+        internal static string GetAppFolderVirtualPath(IServiceProvider sp, HttpRequestMessage request, ISite site, ILog log)
         {
             var wrapLog = log.Call<string>();
 
-            var appFolder = GetAppFolder(request, log, wrapLog);
+            var appFolder = GetAppFolder(sp, request, log, wrapLog);
 
-            var tenant = DnnStaticDi.StaticBuild<DnnSite>();
-
-            var appFolderVirtualPath = Path.Combine(tenant.AppsRootRelative, appFolder).ForwardSlash();
+            var appFolderVirtualPath = Path.Combine(((DnnSite)site).AppsRootRelative, appFolder).ForwardSlash();
 
             return wrapLog($"Ok, AppFolder Virtual Path: {appFolderVirtualPath}", appFolderVirtualPath);
         }
 
-        internal static string GetAppFolder<T>(HttpRequestMessage request, ILog log, Func<string, T, T> wrapLog)
+        internal static string GetAppFolder<T>(IServiceProvider sp, HttpRequestMessage request, ILog log, Func<string, T, T> wrapLog)
         {
             const string errPrefix = "Api Controller Finder Error: ";
             const string errSuffix = "Check event-log, code and inner exception. ";
@@ -44,7 +45,7 @@ namespace ToSic.Sxc.Dnn
                 if (appFolder == null)
                 {
                     log.Add("no folder found in url, will auto-detect");
-                    var block = DnnStaticDi.StaticBuild<DnnGetBlock>().GetCmsBlock(request, log);
+                    var block = sp.Build<DnnGetBlock>().GetCmsBlock(request, log);
                     appFolder = block?.App?.Folder;
                 }
 
@@ -53,7 +54,7 @@ namespace ToSic.Sxc.Dnn
             catch (Exception getBlockException)
             {
                 const string msg = errPrefix + "Trying to find app name, unexpected error - possibly bad/invalid headers. " + errSuffix;
-                throw ReportToLogAndThrow<T>(request, HttpStatusCode.BadRequest, getBlockException, msg, wrapLog);
+                throw ReportToLogAndThrow(request, HttpStatusCode.BadRequest, getBlockException, msg, wrapLog);
             }
 
             if (string.IsNullOrWhiteSpace(appFolder))

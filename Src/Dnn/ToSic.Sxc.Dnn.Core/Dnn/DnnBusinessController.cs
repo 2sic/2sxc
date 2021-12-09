@@ -7,6 +7,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Cms.Publishing;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Search;
@@ -42,6 +43,17 @@ namespace ToSic.Sxc.Dnn
 
         #endregion
 
+        #region Service Providing
+
+        /// <summary>
+        /// Get the service provider only once - ideally in Dnn9.4 we will get it from Dnn
+        /// If we would get it multiple times, there are edge cases where it could be different each time! #2614
+        /// </summary>
+        private IServiceProvider ServiceProvider => _serviceProvider ?? (_serviceProvider = DnnStaticDi.GetServiceProvider());
+        private IServiceProvider _serviceProvider;
+
+        #endregion
+
         #region DNN Interface Members - search, upgrade, versionable
 
         private IPagePublishing Publishing
@@ -51,8 +63,8 @@ namespace ToSic.Sxc.Dnn
                 if (_publishing != null) return Publishing;
 
                 // if publishing is used, make sure it's in the log-history
-                _publishing = DnnStaticDi.StaticBuild<Cms.DnnPagePublishing>().Init(Log);
-                DnnStaticDi.StaticBuild<LogHistory>().Add("dnn-publishing", Log);
+                _publishing = ServiceProvider.Build<Cms.DnnPagePublishing>().Init(Log);
+                ServiceProvider.Build<LogHistory>().Add("dnn-publishing", Log);
                 return _publishing;
             }
         }
@@ -109,8 +121,8 @@ namespace ToSic.Sxc.Dnn
         {
             try
             {
-                return DnnStaticDi.StaticBuild<SearchController>().Init(Log)
-                    .GetModifiedSearchDocuments(DnnStaticDi.StaticBuild<DnnModule>().Init(moduleInfo, Log), beginDate);
+                return ServiceProvider.Build<SearchController>().Init(Log)
+                    .GetModifiedSearchDocuments(((DnnModule)ServiceProvider.Build<IModule>()).Init(moduleInfo, Log), beginDate);
             }
             catch (Exception e)
             {

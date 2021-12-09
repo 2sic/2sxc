@@ -9,6 +9,7 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Caching;
+using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Helpers;
@@ -66,7 +67,7 @@ namespace ToSic.Sxc.Search
             var appId = module.BlockIdentifier.AppId;
             if (appId == AppConstants.AppIdNotFound || appId == Eav.Constants.NullId) return wrapLog("cancel", "no app id");
 
-            DnnSite = _serviceProvider.Build<DnnSite>().TrySwap(DnnModule);
+            DnnSite = ((DnnSite)_serviceProvider.Build<ISite>()).TrySwap(DnnModule);
 
             // Ensure cache builds up with correct primary language
             // In case it's not loaded yet
@@ -151,8 +152,6 @@ namespace ToSic.Sxc.Search
                     // check if the cshtml has search customizations
                     Log.Add("Will run CustomizeSearch() in the Razor Engine which will call it in the Razor if exists");
                     engine.CustomizeSearch(SearchItems, Block.Context.Module, beginDate);
-                    // @STV: this was the old code, probably not needed, del if all is ok - previously it was
-                    // engine.CustomizeSearch(searchInfoDictionary, _serviceProvider.Build<DnnModule>().Init(dnnModule, Log), beginDate);
                 }
             }
             catch (Exception e)

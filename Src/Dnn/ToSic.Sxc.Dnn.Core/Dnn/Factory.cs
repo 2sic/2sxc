@@ -6,6 +6,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Code;
@@ -28,7 +29,7 @@ namespace ToSic.Sxc.Dnn
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        private static T StaticBuild<T>() => DnnStaticDi.StaticBuild<T>();
+        private static T StaticBuild<T>() => DnnStaticDi.GetServiceProvider().Build<T>();
 
         /// <summary>
         /// Get a Root CMS Block if you know the TabId and the ModId
@@ -55,7 +56,7 @@ namespace ToSic.Sxc.Dnn
                 parentLog?.Add(msg);
                 throw new Exception(msg);
             }
-            var container = StaticBuild<DnnModule>().Init(moduleInfo, parentLog);
+            var container = ((DnnModule)StaticBuild<IModule>()).Init(moduleInfo, parentLog);
             wrapLog?.Invoke("ok");
             return CmsBlock(container, parentLog);
         }
@@ -66,7 +67,7 @@ namespace ToSic.Sxc.Dnn
         /// <param name="moduleInfo">A DNN ModuleInfo object</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
         public static IBlockBuilder CmsBlock(ModuleInfo moduleInfo)
-            => CmsBlock(StaticBuild<DnnModule>().Init(moduleInfo, null));
+            => CmsBlock(((DnnModule)StaticBuild<IModule>()).Init(moduleInfo, null));
 
         /// <summary>
         /// Get a Root CMS Block if you have the ModuleInfo object.
@@ -136,7 +137,7 @@ namespace ToSic.Sxc.Dnn
             bool showDrafts = false,
             ILog parentLog = null)
             => App(Eav.Apps.App.AutoLookupZone, appId,
-                StaticBuild<DnnSite>().Swap(ownerPortalSettings), showDrafts, parentLog);
+                ((DnnSite)StaticBuild<ISite>()).Swap(ownerPortalSettings), showDrafts, parentLog);
 
         [InternalApi_DoNotUse_MayChangeWithoutNotice]
         private static IApp App(

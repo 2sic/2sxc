@@ -89,11 +89,17 @@ namespace ToSic.Sxc.Dnn.StartUp
         {
             // Core Runtime Context Objects
             services.TryAddScoped<IUser, DnnUser>();
-            services.TryAddScoped<ISite, DnnSite>();
-            services.TryAddScoped<IZoneCultureResolver, DnnSite>();
+
+            // Make sure that ISite and IZoneCultureResolver use the same singleton!
+            services.TryAddScoped<ISite, DnnSite>();    // this must come first!
+            services.TryAddScoped<IZoneCultureResolver>(x => x.GetRequiredService<ISite>());
+            
+            // Module cannot yet be scoped, until we have a per-module scope at some time
             services.TryAddTransient<IModule, DnnModule>();
-            services.TryAddTransient<DnnModule>();
-            services.TryAddTransient<DnnSite>();
+            //services.TryAddScoped<IModule, DnnModule>();
+
+            //services.TryAddTransient<DnnModule>();
+            //services.TryAddTransient<DnnSite>();
 
             //
             services.TryAddTransient<IValueConverter, DnnValueConverter>();

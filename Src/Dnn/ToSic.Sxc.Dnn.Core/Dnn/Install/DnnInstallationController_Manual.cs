@@ -4,6 +4,7 @@ using System.Web;
 using DotNetNuke.Common;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
@@ -54,19 +55,20 @@ namespace ToSic.Sxc.Dnn.Install
             // it should only be allowed, if the current situation is either
             // Content - and no views exist (even invisible ones)
             // App - and no apps exist - this is already checked on client side, so I won't include a check here
+            var sp = DnnStaticDi.GetServiceProvider();
             if (forContentApp)
                 try
                 {
-                    var primaryAppId = DnnStaticDi.StaticBuild<IAppStates>().DefaultAppId(site.ZoneId);
+                    var primaryAppId = sp.Build<IAppStates>().DefaultAppId(site.ZoneId);
                     // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
-                    var contentViews = DnnStaticDi.StaticBuild<CmsRuntime>()
+                    var contentViews = sp.Build<CmsRuntime>()
                         .Init(new AppIdentity(site.ZoneId, primaryAppId), false, Log)
                         .Views.GetAll();
                     if (contentViews.Any()) return null;
                 }
                 catch { /* ignore */ }
             
-            var gettingStartedSrc = DnnStaticDi.StaticBuild<WipRemoteRouterLink>().LinkToRemoteRouter(
+            var gettingStartedSrc = sp.Build<WipRemoteRouterLink>().LinkToRemoteRouter(
                 RemoteDestinations.AutoConfigure, 
                 "Dnn",
                 Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4),

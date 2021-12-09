@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Dnn.Run
 
             return found == null 
                 ? wrapLog("not found", (DnnSite)null) 
-                : wrapLog($"found {found.PortalId}", _spForNewSites.Build<DnnSite>().Swap(found));
+                : wrapLog($"found {found.PortalId}", ((DnnSite)_spForNewSites.Build<ISite>()).Swap(found));
         }
 
 
