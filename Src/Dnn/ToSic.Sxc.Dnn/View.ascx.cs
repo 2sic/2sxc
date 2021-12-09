@@ -4,6 +4,7 @@ using System.Web.UI;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Beta.LightSpeed;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
@@ -16,14 +17,21 @@ namespace ToSic.Sxc.Dnn
 {
     public partial class View : PortalModuleBase, IActionable
     {
+        /// <summary>
+        /// Get the service provider only once - ideally in Dnn9.4 we will get it from Dnn
+        /// If we would get it multiple times, there are edge cases where it could be different each time! #2614
+        /// </summary>
+        private IServiceProvider ServiceProvider => _serviceProvider ?? (_serviceProvider = DnnStaticDi.GetServiceProvider());
+        private IServiceProvider _serviceProvider;
+
         protected IBlock Block
         {
             get
             {
                 if (_blockLoaded) return _block;
                 _blockLoaded = true;
-                var newCtx = DnnStaticDi.StaticBuild<IContextOfBlock>().Init(ModuleConfiguration, Log);
-                return _block = DnnStaticDi.StaticBuild<BlockFromModule>().Init(newCtx, Log);
+                var newCtx = ServiceProvider.Build<IContextOfBlock>().Init(ModuleConfiguration, Log);
+                return _block = ServiceProvider.Build<BlockFromModule>().Init(newCtx, Log);
             }
         }
         private IBlock _block;
@@ -38,7 +46,7 @@ namespace ToSic.Sxc.Dnn
         protected void Page_Load(object sender, EventArgs e)
         {
             // add to insights-history for analytic
-            DnnStaticDi.StaticBuild<LogHistory>().Add("module", Log);
+            ServiceProvider.Build<LogHistory>().Add("module", Log);
             _stopwatch = Stopwatch.StartNew();
             _entireLog = Log.Call(message: $"Page:{TabId} '{Page?.Title}', Instance:{ModuleId} '{ModuleConfiguration.ModuleTitle}'", useTimer: true);
             var callLog = Log.Call(useTimer: true);
@@ -74,7 +82,7 @@ namespace ToSic.Sxc.Dnn
             TryCatchAndLogToDnn(() =>
             {
                 if (checkPortalIsReady) new DnnReadyCheckTurbo(this, Log).EnsureSiteAndAppFoldersAreReady(Block);
-                DnnClientResources = DnnStaticDi.StaticBuild<DnnClientResources>()
+                DnnClientResources = ServiceProvider.Build<DnnClientResources>()
                     .Init(Page, requiresPre1025Behavior == false ? null : Block?.BlockBuilder, Log);
                 var needsPre1025Behavior = requiresPre1025Behavior ?? DnnClientResources.NeedsPre1025Behavior();
                 if (needsPre1025Behavior) DnnClientResources.EnforcePre1025Behavior();
@@ -111,7 +119,7 @@ namespace ToSic.Sxc.Dnn
                     // in this case assets & page settings were not applied
                     try
                     {
-                        var pageChanges = DnnStaticDi.StaticBuild<DnnPageChanges>();
+                        var pageChanges = ServiceProvider.Build<DnnPageChanges>();
                         pageChanges.Apply(Page, data); // note: if Assets == null, it will take the default
                     }
                     catch{ /* ignore */ }
