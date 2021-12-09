@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Context
         }
         private readonly AppState _appState;
 
-        public int Id => _contents?.Id ?? 0;
+        public int Id => _contents?.Id ?? Eav.Constants.NullId;
         public string Url => _contents?.Url ?? string.Empty;
         public string UrlRoot => _contents.UrlRoot ?? string.Empty;
 

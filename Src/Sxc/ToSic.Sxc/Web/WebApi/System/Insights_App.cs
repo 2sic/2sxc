@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Web.WebApi.System
             var zones = _appsCache.Zones.OrderBy(z => z.Key);
 
             msg += "<table id='table'>"
-                + HeadFields("Zone ↕", "App ↕", Eav.Data.Attributes.GuidNiceName, "InCache", "Name ↕", "Folder ↕", "Details", "Actions")
+                + HeadFields("Zone ↕", "App ↕", Eav.Data.Attributes.GuidNiceName, "InCache", "Hash", "Name ↕", "Folder ↕", "Details", "Actions")
                 + "<tbody>";
             foreach (var zone in zones)
             {
@@ -42,7 +42,9 @@ namespace ToSic.Sxc.Web.WebApi.System
                             : null;
                         return new
                         {
-                            Id = a.Key, Guid = a.Value,
+                            Id = a.Key,
+                            Guid = a.Value,
+                            Hash = appState?.GetHashCode(),
                             InCache = inCache,
                             Name = inCache
                                 ? appState?.Name ?? "unknown, app-infos not json"
@@ -62,6 +64,7 @@ namespace ToSic.Sxc.Web.WebApi.System
                         app.Id.ToString(),
                         $"{app.Guid}",
                         app.InCache ? "yes" : "no",
+                        app.Hash?.ToString() ?? "-",
                         app.Name,
                         app.Folder,
                         $"{A("stats").Href($"stats?appid={app.Id}")} | {A("load log").Href($"loadlog?appid={app.Id}")} | {A("types").Href($"types?appid={app.Id}")}",
