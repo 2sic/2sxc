@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DotNetNuke.DependencyInjection">
+      <HintPath>Dependencies\DotNetNuke.DependencyInjection.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DotNetNuke.Web">
       <HintPath>Dependencies\DotNetNuke.Web.dll</HintPath>
       <Private>False</Private>
