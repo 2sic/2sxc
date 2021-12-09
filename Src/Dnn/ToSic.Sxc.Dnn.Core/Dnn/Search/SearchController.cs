@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Search
 
             // Ensure cache builds up with correct primary language
             // In case it's not loaded yet
-            _appsCache.Load(module.BlockIdentifier, DnnSite.DefaultCultureCode);
+            _appsCache.Load(_serviceProvider, module.BlockIdentifier, DnnSite.DefaultCultureCode);
 
             var dnnContext = _serviceProvider.Build<IContextOfBlock>().Init(DnnModule, Log);
             Block = _serviceProvider.Build<BlockFromModule>().Init(dnnContext, Log);

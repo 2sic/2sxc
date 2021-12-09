@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Web.WebApi.System
 
             var msg = H1("Apps In Cache").ToString();
 
-            var zones = _appsCache.Zones.OrderBy(z => z.Key);
+            var zones = _appStates.Zones.OrderBy(z => z.Key);
 
             msg += "<table id='table'>"
                 + HeadFields("Zone ↕", "App ↕", Eav.Data.Attributes.GuidNiceName, "InCache", "Hash", "Name ↕", "Folder ↕", "Details", "Actions")
