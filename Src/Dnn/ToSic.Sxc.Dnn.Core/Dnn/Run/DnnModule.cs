@@ -3,7 +3,6 @@ using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
@@ -16,19 +15,17 @@ namespace ToSic.Sxc.Dnn.Run
     /// The DNN implementation of a Block Container (a Module).
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public class DnnModule: Module<ModuleInfo>, IHasLog
+    public class DnnModule: Module<ModuleInfo>
     {
         #region Constructors and DI
         
-        public DnnModule(Lazy<IZoneMapper> zoneMapperLazy, Lazy<ZoneRuntime> zoneRuntimeLazy, IAppStates appStates, Lazy<AppFinder> appFinderLazy): base("Dnn.Contnr")
+        public DnnModule(Lazy<IZoneMapper> zoneMapperLazy, IAppStates appStates, Lazy<AppFinder> appFinderLazy): base("Dnn.Contnr")
         {
             _zoneMapperLazy = zoneMapperLazy;
-            _zoneRuntimeLazy = zoneRuntimeLazy;
             _appStates = appStates;
             _appFinderLazy = appFinderLazy;
         }
         private readonly Lazy<IZoneMapper> _zoneMapperLazy;
-        private readonly Lazy<ZoneRuntime> _zoneRuntimeLazy;
         private readonly IAppStates _appStates;
         private readonly Lazy<AppFinder> _appFinderLazy;
 
@@ -52,7 +49,6 @@ namespace ToSic.Sxc.Dnn.Run
             return Init(mod, parentLog);
         }
 
-        //public ILog Log { get; private set; }
         #endregion
 
 

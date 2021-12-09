@@ -34,14 +34,14 @@ namespace ToSic.Sxc.Dnn.ImportExport
 
             var dnnFileManager = FileManager.Instance;
             var dnnFolderManager = FolderManager.Instance;
-            var portalId = Site.Id;
+            var siteId = Site.Id;
 
-            if (!dnnFolderManager.FolderExists(portalId, destinationFolder))
+            if (!dnnFolderManager.FolderExists(siteId, destinationFolder))
             {
-                Log.Add($"Must create {destinationFolder} in site {portalId}");
-                dnnFolderManager.AddFolder(portalId, destinationFolder);
+                Log.Add($"Must create {destinationFolder} in site {siteId}");
+                dnnFolderManager.AddFolder(siteId, destinationFolder);
             }
-            var folderInfo = dnnFolderManager.GetFolder(portalId, destinationFolder);
+            var folderInfo = dnnFolderManager.GetFolder(siteId, destinationFolder);
 
             void MassLog(string msg, Exception exception)
             {
@@ -104,7 +104,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
         public override void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap)
         {
             var wrapLog = Log.Call($"files: {filesAndPaths.Count}, map size: {fileIdMap.Count}");
-            var portalId = Site.Id;
+            var siteId = Site.Id;
 
             var fileManager = FileManager.Instance;
             var folderManager = FolderManager.Instance;
@@ -122,13 +122,13 @@ namespace ToSic.Sxc.Dnn.ImportExport
                     continue;
                 }
 
-                if (!folderManager.FolderExists(portalId, directory))
+                if (!folderManager.FolderExists(siteId, directory))
                 {
                     Log.Add($"Warning: File '{relativePath}', folder doesn't exist in DNN DB");
                     continue;
                 }
 
-                var folderInfo = folderManager.GetFolder(portalId, directory);
+                var folderInfo = folderManager.GetFolder(siteId, directory);
 
                 if (!fileManager.FileExists(folderInfo, fileName))
                 {
@@ -147,7 +147,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
         public override void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog)
         {
             var wrapLog = Log.Call($"folders and paths: {foldersAndPath.Count}");
-            var portalId = Site.Id;
+            var siteId = Site.Id;
 
             var folderManager = FolderManager.Instance;
 
@@ -166,10 +166,10 @@ namespace ToSic.Sxc.Dnn.ImportExport
                         continue;
                     }
                     // if not exist, create - important because we need for metadata assignment
-                    var exists = folderManager.FolderExists(portalId, directory);
+                    var exists = folderManager.FolderExists(siteId, directory);
                     var folderInfo = !exists
-                        ? folderManager.AddFolder(portalId, directory)
-                        : folderManager.GetFolder(portalId, directory);
+                        ? folderManager.AddFolder(siteId, directory)
+                        : folderManager.GetFolder(siteId, directory);
 
                     folderIdCorrectionList.Add(folder.Key, folderInfo.FolderID);
                     Log.Add(

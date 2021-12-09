@@ -7,7 +7,6 @@ using System.Web.Hosting;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 
@@ -17,7 +16,7 @@ namespace ToSic.Sxc.Dnn.Run
     /// This is a DNN implementation of a Tenant-object. 
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public sealed class DnnSite: Site<PortalSettings> //, ICmsSite
+    public sealed class DnnSite: Site<PortalSettings>
     {
 
         #region Constructors and DI
@@ -171,7 +170,7 @@ namespace ToSic.Sxc.Dnn.Run
                 if(_zoneId != null) return _zoneId.Value;
                 // check if id is negative; 0 is a valid tenant id
                 if (Id < 0) return (_zoneId = Eav.Constants.NullId).Value;
-                _zoneId = _zoneMapperLazy.Value /*Eav.Factory.StaticBuild<DnnZoneMapper>()*/.Init(null).GetZoneId(Id);
+                _zoneId = _zoneMapperLazy.Value.Init(null).GetZoneId(Id);
                 return _zoneId.Value;
             }
         }
