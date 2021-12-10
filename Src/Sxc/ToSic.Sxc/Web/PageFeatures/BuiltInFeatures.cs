@@ -6,7 +6,7 @@
         /// JQuery feature
         /// </summary>
         /// <remarks>
-        /// Note: officially published the key 'jQuery' in v12.02, do not change
+        /// Published the key 'jQuery' in v12.02, do not change
         /// </remarks>
         public static PageFeature JQuery = new PageFeature("jQuery", "jQuery");
         
@@ -18,7 +18,10 @@
         /// <summary>
         /// The core 2sxc JS libraries
         /// </summary>
-        public static PageFeature Core = new PageFeature("2sxc.Core", "2sxc core js APIs", requires: new[]
+        /// <remarks>
+        /// Published the key '2sxc.JsCore' in v13.00, do not change
+        /// </remarks>
+        public static PageFeature Core = new PageFeature("2sxc.JsCore", "2sxc core js APIs", requires: new[]
         {
             PageContext.Key
         });
@@ -26,25 +29,42 @@
         /// <summary>
         /// WIP - this will probably be moved to local only in future, ATM it's global though
         /// </summary>
-        public static PageFeature AutoToolbarGlobal = new PageFeature("2sxc.GlobalAutoToolbar", "Ensure that the toolbars automatically appear", requires: new[]
+        public static PageFeature AutoToolbarGlobal = new PageFeature("2sxc.ToolbarsAutoGlobal", "Ensure that the toolbars automatically appear", requires: new[]
         {
             PageContext.Key
         });
 
-        public static PageFeature EditApi = new PageFeature("2sxc.EditApi", "2sxc inpage editing APIs", requires: new[]
+        /// <summary>
+        /// The 2sxc JS libraries for cms / edit actions
+        /// </summary>
+        /// <remarks>
+        /// Published the key '2sxc.JsCms' in v13.00, do not change
+        /// </remarks>
+        public static PageFeature EditApi = new PageFeature("2sxc.JsCms", "2sxc inpage editing APIs", requires: new[]
         {
             Core.Key
         });
 
+        /// <summary>
+        /// The 2sxc JS libraries for cms / edit actions
+        /// </summary>
+        /// <remarks>
+        /// Published the key '2sxc.Toolbars' in v13.00, do not change
+        /// </remarks>
         public static PageFeature EditUi =
-            new PageFeature("2sxc.EditUi", "2sxc InPage editing UIs / Toolbar", requires: new[]
+            new PageFeature("2sxc.Toolbars", "2sxc InPage editing UIs / Toolbar", requires: new[]
             {
                 Core.Key,
                 AutoToolbarGlobal.Key,
                 EditApi.Key
             });
 
-        // Note: officially published in 12.02
+        /// <summary>
+        /// turnOn feature
+        /// </summary>
+        /// <remarks>
+        /// Published the key 'turnOn' in v12.02, do not change
+        /// </remarks>
         public static PageFeature TurnOn = new PageFeature("turnOn", "turnOn JS library");
 
     }
