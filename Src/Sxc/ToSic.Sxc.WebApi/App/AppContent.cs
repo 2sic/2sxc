@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
+using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
@@ -17,7 +20,7 @@ using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.WebApi.App
 {
-    public class AppContent: WebApiBackendBase<AppContent>
+    public class AppContent : WebApiBackendBase<AppContent>
     {
 
         #region Constructor / DI
@@ -81,7 +84,7 @@ namespace ToSic.Sxc.WebApi.App
             var permCheck = ThrowIfNotAllowedInItem(itm, GrantSets.ReadSomething, Context.AppState);
 
             // in case draft wasn't allow, get again with more restricted permissions 
-            if (!permCheck.EnsureAny(GrantSets.ReadDraft)) 
+            if (!permCheck.EnsureAny(GrantSets.ReadDraft))
                 itm = getOne(Context.AppState.ListPublished);
 
             return InitEavAndSerializer(Context.AppState.AppId, Context.UserMayEdit).Convert(itm);
@@ -121,7 +124,8 @@ namespace ToSic.Sxc.WebApi.App
             var realApp = GetApp(Context.AppState.AppId, Context.UserMayEdit);
             if (id == null)
             {
-                var entity = realApp.Data.Create(contentType, cleanedNewItem, userName);
+                var metadata = GetMetadata(newContentItem);
+                var entity = realApp.Data.Create(contentType, cleanedNewItem, userName, metadata);
                 id = entity.EntityId;
             }
             else
@@ -131,8 +135,23 @@ namespace ToSic.Sxc.WebApi.App
                 .Convert(realApp.Data.List.One(id.Value));
         }
 
+        private static Target GetMetadata(Dictionary<string, object> newContentItem)
+        {
+            if (!newContentItem.Keys.Contains("For")) return null;
+
+            var metadataFor = newContentItem["For"] as JObject;
+            if (metadataFor == null) return null;
+
+            return new Target((int) metadataFor["Target"], null)
+            {
+                KeyGuid = (Guid?) metadataFor["Guid"],
+                KeyNumber = (int?) metadataFor["Number"],
+                KeyString = (string) metadataFor["String"]
+            };
+        }
+
         #endregion
-        
+
         #region helpers / initializers to prep the EAV and Serializer
 
         private IConvertToEavLight InitEavAndSerializer(int appId, bool userMayEdit)
