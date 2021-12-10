@@ -44,7 +44,7 @@ namespace ToSic.Sxc.WebApi.Views
             Log.Add($"get all a#{appId}");
             var cms = _cmsManagerLazy.Value.Init(_appStates.Identity(null, appId), true, Log).Read;
 
-            var attributeSetList = cms.ContentTypes.All.OfScope(Settings.AttributeSetScope).ToList();
+            var attributeSetList = cms.ContentTypes.All.OfScope(Scopes.Default /*Settings.AttributeSetScope*/).ToList();
             var viewList = cms.Views.GetAll().ToList();
             Log.Add($"attribute list count:{attributeSetList.Count}, template count:{viewList.Count}");
             var ser = (_convertToEavLight.Value as ConvertToEavLight);

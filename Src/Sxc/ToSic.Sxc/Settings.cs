@@ -28,7 +28,6 @@ namespace ToSic.Sxc
         public const string WebConfigTemplateFile = "WebConfigTemplate.config";
         public const string WebConfigFileName = "web.config";
         public const string SexyContentGroupName = "2sxc designers";
-        public const string AttributeSetScope = "2SexyContent";
 
         internal static readonly string AttributeSetStaticNameContentBlockTypeName = "ContentGroupReference";
 

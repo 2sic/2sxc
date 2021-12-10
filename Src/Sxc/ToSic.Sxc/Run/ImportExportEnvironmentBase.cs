@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
+using ToSic.Eav.Data;
 using ToSic.Sxc.Engines;
 using App = ToSic.Sxc.Apps.App;
 
@@ -40,7 +41,7 @@ namespace ToSic.Sxc.Run
 
         public override string ModuleVersion => Settings.ModuleVersion;
 
-        public override string FallbackContentTypeScope => Settings.AttributeSetScope;
+        public override string FallbackContentTypeScope => Scopes.Default; // Settings.AttributeSetScope;
 
         public override string TemplatesRoot(int zoneId, int appId)
         {
