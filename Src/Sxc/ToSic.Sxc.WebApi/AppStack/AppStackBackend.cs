@@ -71,7 +71,7 @@ namespace ToSic.Sxc.WebApi.AppStack
             }
 
             // Build Sources List
-            var sources = appState.SettingsInApp.GetStack(part == AppConstants.RootNameSettings, viewStackPart);
+            var sources = appState.SettingsInApp(ServiceProvider).GetStack(ServiceProvider, part == AppConstants.RootNameSettings, viewStackPart);
             var settings = new PropertyStack();
             settings.Init(part, sources.ToArray());
 

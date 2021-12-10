@@ -2,11 +2,22 @@
 {
     public class BuiltInFeatures
     {
-        // Note: officially published in 12.02
+        /// <summary>
+        /// JQuery feature
+        /// </summary>
+        /// <remarks>
+        /// Note: officially published the key 'jQuery' in v12.02, do not change
+        /// </remarks>
         public static PageFeature JQuery = new PageFeature("jQuery", "jQuery");
         
+        /// <summary>
+        /// Internal feature, not published ATM
+        /// </summary>
         public static PageFeature PageContext = new PageFeature("2sxc.PageContext", "the $2sxc headers in the page so everything works");
 
+        /// <summary>
+        /// The core 2sxc JS libraries
+        /// </summary>
         public static PageFeature Core = new PageFeature("2sxc.Core", "2sxc core js APIs", requires: new[]
         {
             PageContext.Key
@@ -22,8 +33,6 @@
 
         public static PageFeature EditApi = new PageFeature("2sxc.EditApi", "2sxc inpage editing APIs", requires: new[]
         {
-            // #2492 2021-10-26 v12-07 we believe we don't need this any more
-            // JQuery.Key, // 12.4.0 added because Oqtane 2.2 is not using jQuery any more.
             Core.Key
         });
 

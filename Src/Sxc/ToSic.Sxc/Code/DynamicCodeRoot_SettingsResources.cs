@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Code
                 return _resources ?? (_resources = new DynamicStack(
                         AppConstants.RootNameResources,
                         DynamicEntityDependencies,
-                        appState.SettingsInApp.GetStack(false, _DynCodeRoot.Block?.View?.Resources).ToArray())
+                        appState.SettingsInApp(_serviceProvider).GetStack(_serviceProvider, false, _DynCodeRoot.Block?.View?.Resources).ToArray())
                     );
             }
         }
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Code
                 return _settings = new DynamicStack(
                     AppConstants.RootNameSettings,
                     DynamicEntityDependencies,
-                    appState.SettingsInApp.GetStack(true, _DynCodeRoot.Block?.View?.Settings).ToArray());
+                    appState.SettingsInApp(_serviceProvider).GetStack(_serviceProvider, true, _DynCodeRoot.Block?.View?.Settings).ToArray());
             }
         }
 
