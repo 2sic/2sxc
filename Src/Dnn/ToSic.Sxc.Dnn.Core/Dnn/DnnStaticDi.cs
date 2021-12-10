@@ -49,6 +49,9 @@ namespace ToSic.Sxc.Dnn
 
         private static IServiceProvider _sp;
 
+        // Might need this depending on research...
+        //public static IServiceProvider GetGlobalServiceProviderForStartUp() => _sp;
+
         [PrivateApi("This is just a temporary solution - shouldn't be used long term")]
         public static IServiceProvider GetServiceProvider()
         {

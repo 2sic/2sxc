@@ -2,16 +2,12 @@
 using System.Configuration;
 using System.Web.Hosting;
 using DotNetNuke.Web.Api;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Newtonsoft.Json;
-using ToSic.Eav;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Persistence.File;
 using ToSic.Eav.Plumbing;
 using ToSic.SexyContent.Dnn920;
-using ToSic.Sxc.Polymorphism;
-using ToSic.Sxc.WebApi;
 using GlobalConfiguration = System.Web.Http.GlobalConfiguration;
 
 namespace ToSic.Sxc.Dnn.StartUp
@@ -55,24 +51,28 @@ namespace ToSic.Sxc.Dnn.StartUp
             // Moved here in v12.05 - previously it was in the Pre-Serialization converter
             GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
 
+            // Getting the service provider in Configure is tricky business, because
+            // of .net core 2.1 bugs
+            // ATM it appears that the service provider will get destroyed after startup, so we MUST get an additional one to use here
+            var initialServiceProvider = DnnStaticDi.GetServiceProvider();
+            var transientSp = initialServiceProvider;//.Build<IServiceProvider>();
 
             // now we should be able to instantiate registration of DB
-            var sp = DnnStaticDi.GetServiceProvider();
-            sp.Build<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
-            var globalConfig = sp.Build<IGlobalConfiguration>();
+            transientSp.Build<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
+            var globalConfig = transientSp.Build<IGlobalConfiguration>();
 
             globalConfig.GlobalFolder = HostingEnvironment.MapPath(DnnConstants.SysFolderRootVirtual);
             globalConfig.GlobalSiteFolder = "~/Portals/_default/";
 
             // Load features from configuration
-            var sysLoader = sp.Build<SystemLoader>();
+            var sysLoader = transientSp.Build<SystemLoader>();
             sysLoader.StartUp();
 
             // 2021-11-16 2dm - experimental, working on moving global/preset data into a normal AppState #PresetInAppState
             sysLoader.Log.Add("Try to load global app-state");
-            var globalStateLoader = sp.Build<FileAppStateLoaderWIP>();
+            var globalStateLoader = transientSp.Build<FileAppStateLoaderWIP>();
             var appState = globalStateLoader.AppState(Eav.Constants.PresetAppId);
-            var appsMemCache = sp.Build<IAppsCache>();
+            var appsMemCache = transientSp.Build<IAppsCache>();
             appsMemCache.Add(appState);
             // End experimental #PresetInAppState
 
