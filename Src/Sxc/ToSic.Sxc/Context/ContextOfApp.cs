@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Context
                 AppIdentity = appIdentity;
         }
 
-        public void ResetApp(int appId) => ResetApp(AppStates.Identity(null, appId));
+        public void ResetApp(int appId) => ResetApp(AppStates.IdentityOfApp(appId));
 
         protected virtual IAppIdentity AppIdentity
         {

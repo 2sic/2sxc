@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Context
         public abstract int Id { get; }
 
         /// <inheritdoc />
-        public abstract bool IsPrimary { get; }
+        public abstract bool IsContent { get; }
 
         /// <inheritdoc />
         public abstract IBlockIdentifier BlockIdentifier { get; }

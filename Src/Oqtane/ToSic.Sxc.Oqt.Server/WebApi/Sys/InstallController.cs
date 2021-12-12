@@ -86,7 +86,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
             PreventServerTimeout300();
 
             var container = GetContext().Module;
-            bool isApp = !container.IsPrimary;
+            var isApp = !container.IsContent;
 
             Log.Add("install package:" + packageUrl);
 

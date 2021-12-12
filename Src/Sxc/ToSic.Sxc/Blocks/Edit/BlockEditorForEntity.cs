@@ -30,9 +30,8 @@ namespace ToSic.Sxc.Blocks.Edit
             var appName = "";
             if (appId.HasValue)
             {
-                //var cache = State.Cache;
-                var zoneAppId = _appStates.Identity(null, appId); // cache.GetIdentity(null, appId);
-                appName = _appStates.AppIdentifier(zoneAppId.ZoneId, zoneAppId.AppId); // cache.Zones[zoneAppId.ZoneId].Apps[appId.Value];
+                var zoneAppId = _appStates.IdentityOfApp(appId.Value);
+                appName = _appStates.AppIdentifier(zoneAppId.ZoneId, zoneAppId.AppId);
             }
             UpdateValue(BlockFromEntity.CbPropertyApp, appName);
         }

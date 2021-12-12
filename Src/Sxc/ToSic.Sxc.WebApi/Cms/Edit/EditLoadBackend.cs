@@ -66,7 +66,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // do early permission check - but at this time it may be that we don't have the types yet
             // because they may be group/id combinations, without type information which we'll look up afterwards
-            var appIdentity = _appStates.Identity(null, appId);
+            var appIdentity = _appStates.IdentityOfApp(appId);
             items = _contentGroupList.Init(appIdentity, Log, showDrafts).ConvertListIndexToId(items);
             TryToAutoFindMetadataSingleton(items, context.AppState);
 

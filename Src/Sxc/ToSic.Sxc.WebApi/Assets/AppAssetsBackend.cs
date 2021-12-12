@@ -120,7 +120,7 @@ namespace ToSic.Sxc.WebApi.Assets
         private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(int appId, int templateId, bool global, string path)
         {
             var wrapLog = Log.Call<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
-            var app = _serviceProvider.Build<Apps.App>().InitNoData(_appStates.Identity(null, appId), Log);
+            var app = _serviceProvider.Build<Apps.App>().InitNoData(_appStates.IdentityOfApp(appId), Log);
             var assetEditor = _serviceProvider.Build<AssetEditor>();
 
             // TODO: simplify once we release v13 #cleanUp EOY 2021

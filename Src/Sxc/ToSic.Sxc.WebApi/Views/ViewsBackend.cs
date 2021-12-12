@@ -42,7 +42,7 @@ namespace ToSic.Sxc.WebApi.Views
         public IEnumerable<ViewDetailsDto> GetAll(int appId)
         {
             Log.Add($"get all a#{appId}");
-            var cms = _cmsManagerLazy.Value.Init(_appStates.Identity(null, appId), true, Log).Read;
+            var cms = _cmsManagerLazy.Value.Init(_appStates.IdentityOfApp(appId), true, Log).Read;
 
             var attributeSetList = cms.ContentTypes.All.OfScope(Scopes.Default /*Settings.AttributeSetScope*/).ToList();
             var viewList = cms.Views.GetAll().ToList();

@@ -51,10 +51,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
             if (forContentApp)
                 try
                 {
-                    var primaryAppId = _appStates.DefaultAppId(site.ZoneId); // new ZoneRuntime().Init(site.ZoneId, Log).DefaultAppId;
+                    var contentAppId = _appStates.IdentityOfDefault(site.ZoneId); //.DefaultAppId(site.ZoneId);
                     // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
-                    var contentViews = _cmsRuntimeLazy.Value //  Eav.Factory.Resolve<CmsRuntime>()
-                        .Init(_appStates.Identity(null, primaryAppId), false, Log)
+                    var contentViews = _cmsRuntimeLazy.Value
+                        .Init(contentAppId /*_appStates.Identity(null, primaryAppId)*/, false, Log)
                         .Views.GetAll();
                     if (contentViews.Any()) return null;
                 }
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var link = _remoteRouterLink.LinkToRemoteRouter(
                 RemoteDestinations.AutoConfigure,
                 "Oqt",
-                Oqtane.Shared.Constants.Version, // Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),
+                Oqtane.Shared.Constants.Version,
                 _configManager.GetInstallationId(),
                 site,
                 module.Id,

@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Apps
             var zoneId = ZoneRuntime.ZoneId;
             // check portal assignment and that it's not the default app
             // enable restore for DefaultApp
-            if (appId == _appStates.DefaultAppId(zoneId) /*ZoneRuntime.DefaultAppId*/ && fullDelete)
+            if (appId == _appStates.DefaultAppId(zoneId) && fullDelete)
                 throw new Exception("The default app of a zone cannot be removed.");
 
             const int specialGlobalAppOld = 1; // it was used in older 2sxc version, and have to be preserved

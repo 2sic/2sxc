@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Context
         /// Determines if this is a the primary App (the content-app) as opposed to any additional app
         /// </summary>
         [PrivateApi("don't think this should be here! also not sure if it's the primary - or the contentApp! reason seems to be that we detect it by the DNN module name")]
-        bool IsPrimary { get; }
+        bool IsContent { get; }
 
         /// <summary>
         /// Identifies the content-block which should be shown in this container

@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Dnn.Install
             var wrapLog = Log.SafeCall<bool>($"AppId: {block.AppId}");
 
             var sexyFolder = new DirectoryInfo(block.Context.Site.AppsRootPhysicalFull);
-            var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, Eav.Constants.ContentAppName));
+            var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, Eav.Constants.ContentAppFolder));
             var webConfigTemplate = new FileInfo(Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
             if (!(sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
             {

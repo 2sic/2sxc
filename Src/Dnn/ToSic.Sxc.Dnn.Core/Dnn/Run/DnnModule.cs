@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Dnn.Run
 
 
         /// <inheritdoc />
-        public override bool IsPrimary => (UnwrappedContents?.DesktopModule.ModuleName ?? "2sxc") == "2sxc";
+        public override bool IsContent => (UnwrappedContents?.DesktopModule.ModuleName ?? "2sxc") == "2sxc";
 
 
         /// <inheritdoc />
@@ -95,17 +95,16 @@ namespace ToSic.Sxc.Dnn.Run
             var module = UnwrappedContents ?? throw new Exception("instance is not ModuleInfo");
 
             var msg = $"get appid from instance for Z:{zoneId} Mod:{module.ModuleID}";
-            //var zoneRt = _zoneRuntimeLazy.Value.Init(zoneId, Log);
-            if (IsPrimary)
+            if (IsContent)
             {
-                var appId = _appStates.DefaultAppId(zoneId); // zoneRt.DefaultAppId;
+                var appId = _appStates.DefaultAppId(zoneId);
                 return wrapLog($"{msg} - use Default app: {appId}", appId);
             }
 
             if (module.ModuleSettings.ContainsKey(Settings.ModuleSettingApp))
             {
                 var guid = module.ModuleSettings[Settings.ModuleSettingApp].ToString();
-                var appId = _appFinderLazy.Value.Init(Log)/* zoneRt*/.FindAppId(zoneId, guid);
+                var appId = _appFinderLazy.Value.Init(Log).FindAppId(zoneId, guid);
                 return wrapLog($"{msg} AppG:{guid} = app:{appId}", appId);
             }
 
