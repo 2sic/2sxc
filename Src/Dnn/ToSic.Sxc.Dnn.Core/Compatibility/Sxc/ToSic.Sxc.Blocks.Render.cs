@@ -3,6 +3,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn;
+using static ToSic.Sxc.Compatibility.Obsolete;
 using IHtmlString = System.Web.IHtmlString;
 
 // ReSharper disable once CheckNamespace
@@ -42,6 +43,14 @@ namespace ToSic.Sxc.Blocks
             if (parent._Dependencies.CompatibilityLevel > Constants.MaxLevelForStaticRender)
                 throw new Exception(
                     "The static ToSic.Sxc.Blocks.Render can only be used in old Razor components. For v12+ use the ToSic.Sxc.Services.IRenderService instead");
+
+
+            var block = parent._Dependencies?.BlockOrNull;
+            Warning12To14(
+                "DeprecatedStaticRender",
+                $"View:{block?.View?.Id}",
+                "https://r.2sxc.org/brc-13-staticrender",
+                (log) => LogBlockDetails(block, log));
 
             return DnnStaticDi.GetServiceProvider().Build<Services.IRenderService>();
         }
