@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Conversion
         [Obsolete("only keep in case external code was using this in apps ca. 2sxc 11. v12+ should use GetService")]
         public DataToDictionary() : base(DnnStaticDi.Resolve<Dependencies>())
         {
-            ToSic.Sxc.Compatibility.Obsolete.Warning13To14(nameof(DataToDictionary), "",
+            Compatibility.Obsolete.Warning13To14(nameof(DataToDictionary), "",
                 "https://r.2sxc.org/brc-13-conversion");
         }
 
