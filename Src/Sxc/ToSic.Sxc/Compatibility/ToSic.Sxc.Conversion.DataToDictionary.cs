@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Conversion
     /// </summary>
     [PrivateApi("Hide implementation")]
     [Obsolete("Please use the new ToSic.Eav.DataFormats.EavLight.IConvertToEavLight service")]
-    public class DataToDictionary: Data.ConvertToEavLightWithCmsInfo // Important: Inherit must still be used, otherwise the compiler breaks before the constructor is called with the error message
+    public class DataToDictionary: Data.ConvertToEavLightWithCmsInfo
     {
 
         /// <summary>
@@ -18,12 +18,7 @@ namespace ToSic.Sxc.Conversion
         /// </summary>
         [PrivateApi]
         [Obsolete("only keep in case external code was using this in apps ca. 2sxc 11. v12+ should use GetService")]
-        public DataToDictionary() : base(null)
-        {
-            throw new Exception(
-                $"{nameof(DataToDictionary)} has been removed. Pls see instructions: https://r.2sxc.org/brc-13-conversion");
-
-        }
+	    public DataToDictionary(): base(Eav.Factory.ObsoleteBuild<Dependencies>()) { }
 
         /// <summary>
         /// Old constructor, for old use cases. Was published in tutorial for a while; not ideal...
