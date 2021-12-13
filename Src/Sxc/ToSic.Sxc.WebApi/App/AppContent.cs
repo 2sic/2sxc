@@ -100,7 +100,6 @@ namespace ToSic.Sxc.WebApi.App
         {
             Log.Add($"create or update type:{contentType}, id:{id}, path:{appPath}");
 
-
             // if app-path specified, use that app, otherwise use from context
 
             // Check that this ID is actually of this content-type,
@@ -142,12 +141,19 @@ namespace ToSic.Sxc.WebApi.App
             var metadataFor = newContentItemCaseInsensitive[Attributes.JsonKeyMetadataFor] as JObject;
             if (metadataFor == null) return null;
 
-            return new Target((int) metadataFor[Attributes.TargetNiceName], null)
+            return new Target(GetTargetType(metadataFor[Attributes.TargetNiceName]), null)
             {
                 KeyGuid = (Guid?) metadataFor[Attributes.GuidNiceName],
                 KeyNumber = (int?) metadataFor[Attributes.NumberNiceName],
                 KeyString = (string) metadataFor[Attributes.StringNiceName]
             };
+        }
+
+        private static int GetTargetType(JToken target)
+        {
+            if (target.Type == JTokenType.Integer) return (int) target;
+            if (target.Type == JTokenType.String && Enum.TryParse<TargetTypes>((string) target, out var targetTypes)) return (int) targetTypes;
+            throw new ArgumentOutOfRangeException(Attributes.TargetNiceName, "Value is not 'int' or TargetTypes 'string'.");
         }
 
         #endregion
