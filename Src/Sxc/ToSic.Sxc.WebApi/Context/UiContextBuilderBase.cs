@@ -151,7 +151,11 @@ namespace ToSic.Sxc.WebApi.Context
             result.GettingStartedUrl = GetGettingStartedUrl();
             result.Identifier = _appToLaterInitialize.AppGuid;
             // TODO: #SiteApp v13
-            result.SettingsScope = App.AppId == 1 ? "Global" : result.Identifier == Eav.Constants.DefaultAppGuid ? "Site" : "App";
+            result.SettingsScope = App.AppId == 1 
+                ? "Global" 
+                : result.Identifier == Eav.Constants.PrimaryAppGuid 
+                    ? "Site" 
+                    : "App";
 
 
             result.Permissions = new HasPermissionsDto {Count = App.Metadata.Permissions.Count()};
