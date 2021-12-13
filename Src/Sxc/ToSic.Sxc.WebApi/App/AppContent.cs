@@ -113,18 +113,18 @@ namespace ToSic.Sxc.WebApi.App
             else ThrowIfNotAllowedInItem(itm, Grants.Update.AsSet(), Context.AppState);
 
             // Convert to case-insensitive dictionary just to be safe!
-            newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.InvariantCultureIgnoreCase);
+            var newContentItemCaseInsensitive = new Dictionary<string, object>(newContentItem, StringComparer.InvariantCultureIgnoreCase);
 
             // Now create the cleaned up import-dictionary so we can create a new entity
             var cleanedNewItem = new AppContentEntityBuilder(Log)
-                .CreateEntityDictionary(contentType, newContentItem, Context.AppState/*.AppId*/);
+                .CreateEntityDictionary(contentType, newContentItemCaseInsensitive, Context.AppState/*.AppId*/);
 
             var userName = Context.User.IdentityToken;
 
             var realApp = GetApp(Context.AppState.AppId, Context.UserMayEdit);
             if (id == null)
             {
-                var metadata = GetMetadata(newContentItem);
+                var metadata = GetMetadata(newContentItemCaseInsensitive);
                 var entity = realApp.Data.Create(contentType, cleanedNewItem, userName, metadata);
                 id = entity.EntityId;
             }
@@ -135,18 +135,18 @@ namespace ToSic.Sxc.WebApi.App
                 .Convert(realApp.Data.List.One(id.Value));
         }
 
-        private static Target GetMetadata(Dictionary<string, object> newContentItem)
+        private static Target GetMetadata(Dictionary<string, object> newContentItemCaseInsensitive)
         {
-            if (!newContentItem.Keys.Contains("For")) return null;
+            if (!newContentItemCaseInsensitive.Keys.Contains(Attributes.JsonKeyMetadataFor)) return null;
 
-            var metadataFor = newContentItem["For"] as JObject;
+            var metadataFor = newContentItemCaseInsensitive[Attributes.JsonKeyMetadataFor] as JObject;
             if (metadataFor == null) return null;
 
-            return new Target((int) metadataFor["Target"], null)
+            return new Target((int) metadataFor[Attributes.TargetNiceName], null)
             {
-                KeyGuid = (Guid?) metadataFor["Guid"],
-                KeyNumber = (int?) metadataFor["Number"],
-                KeyString = (string) metadataFor["String"]
+                KeyGuid = (Guid?) metadataFor[Attributes.GuidNiceName],
+                KeyNumber = (int?) metadataFor[Attributes.NumberNiceName],
+                KeyString = (string) metadataFor[Attributes.StringNiceName]
             };
         }
 
