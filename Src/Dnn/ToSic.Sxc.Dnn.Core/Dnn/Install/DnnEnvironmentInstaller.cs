@@ -1,28 +1,40 @@
-﻿using System;
+﻿using DotNetNuke.Web.Client.ClientResourceManagement;
+using System;
 using System.Configuration;
 using System.Data.SqlClient;
-using DotNetNuke.Web.Client.ClientResourceManagement;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Run;
 using Exception = System.Exception;
 
 namespace ToSic.Sxc.Dnn.Install
 {
-    public partial class DnnInstallationController: HasLog, IEnvironmentInstaller
+    public partial class DnnEnvironmentInstaller: HasLog, IEnvironmentInstaller
     {
-        public bool SaveUnimportantDetails = true;
+        public static bool SaveUnimportantDetails = true;
 
         private readonly DnnInstallLogger _installLogger;
+
+        #region Service Providing
+
+        /// <summary>
+        /// Get the service provider only once - ideally in Dnn9.4 we will get it from Dnn
+        /// If we would get it multiple times, there are edge cases where it could be different each time! #2614
+        /// </summary>
+        private IServiceProvider ServiceProvider => _serviceProvider ?? (_serviceProvider = DnnStaticDi.GetServiceProvider());
+        private IServiceProvider _serviceProvider;
+
+        #endregion
 
 
         /// <summary>
         /// Instance initializers...
         /// </summary>
-        public DnnInstallationController(): base("Dnn.InstCo")
+        public DnnEnvironmentInstaller(): base("Dnn.InstCo")
         {
-            _installLogger = new DnnInstallLogger(SaveUnimportantDetails);
-            new LogHistory().Add("installation", Log);
+            // _installLogger = new DnnInstallLogger(SaveUnimportantDetails);
+            _installLogger = ServiceProvider.Build<DnnInstallLogger>();
+            ServiceProvider.Build<LogHistory>().Add("installation", Log);
         }
 
         public IEnvironmentInstaller Init(ILog parent)
@@ -101,7 +113,7 @@ namespace ToSic.Sxc.Dnn.Install
                     ClientResourceManager.UpdateVersion();
                     _installLogger.LogStep(version, "ClientResourceManager- done clearing");
 
-                    UpdateUpgradeCompleteStatus();
+                    UpgradeComplete = IsUpgradeComplete(Settings.Installation.LastVersionWithServerChanges, "- static check");
                     _installLogger.LogStep(version, "updated upgrade-complete status");
                 }
 

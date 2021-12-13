@@ -13,7 +13,7 @@ using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.Sxc.Dnn.Install
 {
-    public partial class DnnInstallationController
+    public partial class DnnEnvironmentInstaller
     {
 
         public bool ResumeAbortedUpgrade()
@@ -55,20 +55,19 @@ namespace ToSic.Sxc.Dnn.Install
             // it should only be allowed, if the current situation is either
             // Content - and no views exist (even invisible ones)
             // App - and no apps exist - this is already checked on client side, so I won't include a check here
-            var sp = DnnStaticDi.GetServiceProvider();
             if (forContentApp)
                 try
                 {
-                    var primaryAppId = sp.Build<IAppStates>().DefaultAppId(site.ZoneId);
+                    var primaryAppId = ServiceProvider.Build<IAppStates>().DefaultAppId(site.ZoneId);
                     // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
-                    var contentViews = sp.Build<CmsRuntime>()
+                    var contentViews = ServiceProvider.Build<CmsRuntime>()
                         .Init(new AppIdentity(site.ZoneId, primaryAppId), false, Log)
                         .Views.GetAll();
                     if (contentViews.Any()) return null;
                 }
                 catch { /* ignore */ }
             
-            var gettingStartedSrc = sp.Build<WipRemoteRouterLink>().LinkToRemoteRouter(
+            var gettingStartedSrc = ServiceProvider.Build<WipRemoteRouterLink>().LinkToRemoteRouter(
                 RemoteDestinations.AutoConfigure, 
                 "Dnn",
                 Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4),

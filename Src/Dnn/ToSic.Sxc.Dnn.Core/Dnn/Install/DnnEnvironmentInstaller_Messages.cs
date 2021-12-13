@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Dnn.Install
 {
-    public partial class DnnInstallationController
+    public partial class DnnEnvironmentInstaller
     {
         public string UpgradeMessages()
         {

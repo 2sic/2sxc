@@ -3,9 +3,9 @@ using System.Web.Hosting;
 
 namespace ToSic.Sxc.Dnn.Install
 {
-    public partial class DnnInstallationController
+    public partial class DnnEnvironmentInstaller
     {
-        private bool IsUpgradeComplete(string version, string note = "")
+        internal bool IsUpgradeComplete(string version, string note = "")
         {
             _installLogger.LogStep(version, "IsUgradeComplete checking " + note, false);
             var logFilePath = HostingEnvironment.MapPath(DnnConstants.LogDirectory + version + ".resources");

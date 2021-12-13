@@ -10,6 +10,7 @@ using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.Search;
 
 namespace ToSic.Sxc.Dnn
@@ -103,6 +104,10 @@ namespace ToSic.Sxc.Dnn
             return Publishing.GetPublishedVersion(instanceId);
         }
 
+        internal static void UpdateUpgradeCompleteStatus()
+            => DnnEnvironmentInstaller.UpgradeComplete = ((DnnEnvironmentInstaller)DnnStaticDi.GetServiceProvider().Build<IEnvironmentInstaller>())
+                .IsUpgradeComplete(Settings.Installation.LastVersionWithServerChanges, "- static check");
+
         /// <summary>
         /// This is part of the IUpgradeable of DNN
         /// </summary>
@@ -111,7 +116,8 @@ namespace ToSic.Sxc.Dnn
         public string UpgradeModule(string version)
         {
             Log.Add($"upgrade module - start for v:{version}");
-            var res = new DnnInstallationController().UpgradeModule(version);
+            // var res = new DnnEnvironmentInstaller().UpgradeModule(version);
+            var res = ((DnnEnvironmentInstaller)ServiceProvider.Build<IEnvironmentInstaller>()).UpgradeModule(version);
             Log.Add($"result:{res}");
             DnnLogging.LogToDnn("Upgrade", "ok", Log, force:true); // always log, this often causes hidden problems
             return res;

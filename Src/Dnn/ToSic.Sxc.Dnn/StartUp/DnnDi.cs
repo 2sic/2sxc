@@ -123,7 +123,9 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
             services.TryAddTransient<DnnDynamicCodeRoot>();
             services.TryAddTransient<IPlatformModuleUpdater, DnnModuleUpdater>();
-            services.TryAddTransient<IEnvironmentInstaller, DnnInstallationController>();
+            services.TryAddTransient<IEnvironmentInstaller, DnnEnvironmentInstaller>();
+            services.TryAddTransient<DnnInstallLogger>(sp =>
+                ActivatorUtilities.CreateInstance<DnnInstallLogger>(sp, DnnEnvironmentInstaller.SaveUnimportantDetails));
 
             // ADAM
             services.TryAddTransient<IAdamFileSystem<int, int>, DnnAdamFileSystem>();
