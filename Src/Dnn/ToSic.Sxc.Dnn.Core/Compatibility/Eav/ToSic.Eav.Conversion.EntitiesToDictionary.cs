@@ -1,7 +1,8 @@
-﻿#if NETFRAMEWORK
+﻿
 using System;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Documentation;
+using ToSic.Sxc.Dnn;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Eav.Conversion
@@ -21,10 +22,11 @@ namespace ToSic.Eav.Conversion
         /// <remarks>
         /// has an important side effect, this isn't clear from outside!
         /// </remarks>
-        public EntitiesToDictionary(): base(Factory.ObsoleteBuild<Dependencies>())
+        public EntitiesToDictionary(): base(DnnStaticDi.Resolve<Dependencies>())
         {
+            ToSic.Sxc.Compatibility.Obsolete.Warning13To14(nameof(EntitiesToDictionary), "", "https://r.2sxc.org/brc-13-conversion");
+
         }
 
     }
 }
-#endif

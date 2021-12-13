@@ -1,6 +1,6 @@
-﻿#if NETFRAMEWORK
-using System;
+﻿using System;
 using ToSic.Eav.Documentation;
+using ToSic.Sxc.Dnn;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Conversion
@@ -18,7 +18,11 @@ namespace ToSic.Sxc.Conversion
         /// </summary>
         [PrivateApi]
         [Obsolete("only keep in case external code was using this in apps ca. 2sxc 11. v12+ should use GetService")]
-	    public DataToDictionary(): base(Eav.Factory.ObsoleteBuild<Dependencies>()) { }
+        public DataToDictionary() : base(DnnStaticDi.Resolve<Dependencies>())
+        {
+            ToSic.Sxc.Compatibility.Obsolete.Warning13To14(nameof(DataToDictionary), "",
+                "https://r.2sxc.org/brc-13-conversion");
+        }
 
         /// <summary>
         /// Old constructor, for old use cases. Was published in tutorial for a while; not ideal...
@@ -29,4 +33,3 @@ namespace ToSic.Sxc.Conversion
         public DataToDictionary(bool withEdit) : this() => WithEdit = withEdit;
     }
 }
-#endif
