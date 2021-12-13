@@ -122,7 +122,7 @@ namespace ToSic.Sxc.WebApi.Context
 
         protected virtual ContextEnableDto GetEnable(CtxEnable ctx)
         {
-            var isRealApp = App != null && (App.AppGuid != Eav.Constants.DefaultAppGuid && App.AppGuid != Eav.Constants.PrimaryAppGuid); // #SiteApp v13
+            var isRealApp = App != null && (App.AppGuid != Eav.Constants.DefaultAppGuid /*&& App.AppGuid != Eav.Constants.PrimaryAppGuid*/); // #SiteApp v13 - Site-Apps should also have permissions
             var tmp = new JsContextUser(Deps.SiteCtx.User);
             var dto = new ContextEnableDto();
             if (ctx.HasFlag(CtxEnable.AppPermissions)) dto.AppPermissions = isRealApp;
