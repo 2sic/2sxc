@@ -5,6 +5,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Dnn;
+using static ToSic.Sxc.Compatibility.Obsolete;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Eav
@@ -23,10 +24,8 @@ namespace ToSic.Eav
         public delegate void ServiceConfigurator(IServiceCollection service);
 
         [PrivateApi]
-	    public static void ActivateNetCoreDi(ServiceConfigurator configure)
-	    {
-            new LogHistory().Add("error", new Log(LogNames.Eav + ".DepInj", null, $"{nameof(ActivateNetCoreDi)} was called, but this won't do anything any more."));
-        }
+	    public static void ActivateNetCoreDi(ServiceConfigurator configure) =>
+            Killed13(nameof(ActivateNetCoreDi), "", "https://r.2sxc.org/brc-13-eav-startup");
 
         /// <summary>
         /// Dependency Injection resolver with a known type as a parameter.
@@ -35,10 +34,12 @@ namespace ToSic.Eav
         [Obsolete("Please use standard Dnn 9.4+ Dnn DI instead https://r.2sxc.org/brc-13-eav-factory")]
         public static T Resolve<T>()
         {
+            Warning13To14("Factory.Resolve<T>", typeof(T).FullName, "https://r.2sxc.org/brc-13-eav-factory");
             return DnnStaticDi.GetServiceProvider().Build<T>();
 
             // Don't throw error yet, would probably cause too much breaks in public code
-            throw new NotSupportedException("The Eav.Factory is obsolete. See https://r.2sxc.org/brc-13-eav-factory");
+            // Activate ca. V14
+            // throw new NotSupportedException("The Eav.Factory is obsolete. See https://r.2sxc.org/brc-13-eav-factory");
         }
     }
 }

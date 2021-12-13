@@ -7,12 +7,10 @@ namespace ToSic.Sxc.Compatibility
 {
     public class Obsolete
     {
-        public static ILog Warning12To14(string obsoleteId, string specificId, string link, Action<ILog> addMore = null)
-        {
-            var obsolete = new LogObsolete(obsoleteId, specificId, "v12",
-                "v14 ca. middle of 2022", link, addMore);
-            return obsolete.Log;
-        }
+        public static ILog Warning13To14(string obsoleteId, string specificId, string link, Action<ILog> addMore = null) 
+            => new LogObsolete(obsoleteId, specificId, "v13", "v14 ca. middle of 2022", link, addMore).Log;
+        public static ILog Killed13(string obsoleteId, string specificId, string link, Action<ILog> addMore = null) 
+            => new LogObsolete(obsoleteId, specificId, "v13 EOY 2021", null, link, addMore).Log;
 
         public static void LogBlockDetails(IBlock block, ILog log)
         {
