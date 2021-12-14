@@ -69,14 +69,6 @@ namespace ToSic.Sxc.Dnn.StartUp
             var sysLoader = transientSp.Build<SystemLoader>();
             sysLoader.StartUp();
 
-            //// 2021-11-16 2dm - experimental, working on moving global/preset data into a normal AppState #PresetInAppState
-            //sysLoader.Log.Add("Try to load global app-state");
-            //var globalStateLoader = transientSp.Build<IPresetLoader>();
-            //var appState = globalStateLoader.AppState(Eav.Constants.PresetAppId);
-            //var appsMemCache = transientSp.Build<IAppsCache>();
-            //appsMemCache.Add(appState);
-            //// End experimental #PresetInAppState
-
             // also register this because of a long DNN issue which was fixed, but we don't know if we're running in another version
             SharpZipLibRedirect.RegisterSharpZipLibRedirect();
 

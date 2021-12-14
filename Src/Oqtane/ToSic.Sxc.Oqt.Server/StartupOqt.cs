@@ -101,15 +101,6 @@ namespace ToSic.Sxc.Oqt.Server
             var sysLoader = serviceProvider.Build<SystemLoader>();
             sysLoader.StartUp();
 
-            //// 2021-11-16 2dm - experimental, working on moving global/preset data into a normal AppState #PresetInAppState
-            //sysLoader.Log.Add("Try to load global app-state");
-            //var globalStateLoader = serviceProvider.Build<IPresetLoader>();
-            //var appState = globalStateLoader.AppState(Eav.Constants.PresetAppId);
-            //var appsMemCache = serviceProvider.Build<IAppsCache>();
-            //appsMemCache.Add(appState);
-            //// End experimental #PresetInAppState
-
-
             app.UseExceptionHandler("/error");
             //app.UseDeveloperExceptionPage();
 
