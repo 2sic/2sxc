@@ -16,9 +16,9 @@
   var pageId = 4427;
   var moduleId = 9771;
   #pragma warning disable 618
-  var appState = ToSic.Eav.Factory.ObsoleteBuild<IAppStates>()/* State*/.Get(appId);
+  // var appState = ToSic.Eav.Factory.ObsoleteBuild<IAppStates>()/* State*/.Get(appId);
   #pragma warning restore 618
-  var firstItem = appState.List.FirstOrDefault();
+  // var firstItem = appState.List.FirstOrDefault();
 
   var itemWithImagesId = 128280;
 }
@@ -30,7 +30,7 @@
   }
 </script>
 <p>
-  Try using the $2sxc js api for @zoneId/@appId and page @pageId and module @moduleId - first item @firstItem.EntityId <br />
+  Try using the $2sxc js api for @zoneId/@appId and page @pageId and module @moduleId - first item @@firstItem.EntityId <br />
 </p>
 
 <ol>
@@ -38,7 +38,7 @@
   <li><a href="/api/sxc/sys/insights/help" target="_blank">Insights</a></li>
   <li><a href="/api/sxc/Dialog/Settings?appId=@appId" target="_blank">Call Dialog/Settings?appId=@appId</a></li>
   <li><a href="#" onclick="getSxc().manage.run('app')">Click to open app-dialog</a></li>
-  <li><a href="#" onclick="getSxc().manage.run('edit', { entityId: @firstItem.EntityId })">Click to open edit dialog</a></li>
+  <li><a href="#" onclick="getSxc().manage.run('edit', { entityId: @@firstItem.EntityId })">Click to open edit dialog</a></li>
 </ol>
 
 <hr />
@@ -54,23 +54,23 @@
   var log = new Log("My.Log");
 
   // Get the App execution context since our code here doesn't have it
-  var appContext = ToSic.Eav.Factory.Resolve<IContextOfApp>();
-  appContext.Init(log);
-  appContext.ResetApp(appId);
+  //var appContext = ToSic.Eav.Factory.Resolve<IContextOfApp>();
+  //appContext.Init(log);
+  //appContext.ResetApp(appId);
 
-  // Now get the adam-manager, which will give us the AdamFolder object
-  var adamManager = ToSic.Eav.Factory.Resolve<AdamManager<string, string>>();
-  adamManager.Init(appContext, ToSic.Sxc.Constants.CompatibilityLevel10, log);
+  //// Now get the adam-manager, which will give us the AdamFolder object
+  //var adamManager = ToSic.Eav.Factory.Resolve<AdamManager<string, string>>();
+  //adamManager.Init(appContext, ToSic.Sxc.Constants.CompatibilityLevel10, log);
 
-  // Now get the folder (which is what AsAdam would return)
-  var entityWithAdam = appState.List.One(itemWithImagesId);
-  var folder = adamManager.Folder(entityWithAdam, "ImageLibrary");
+  //// Now get the folder (which is what AsAdam would return)
+  //var entityWithAdam = appState.List.One(itemWithImagesId);
+  //var folder = adamManager.Folder(entityWithAdam, "ImageLibrary");
 }
 <h3>Files</h3>
 <ol>
-  @foreach (var img in folder.Files)
+  @@foreach (var img in folder.Files)
   {
-    <li>@img.Url</li>
+    <li>@@img.Url</li>
   }
 </ol>
 
@@ -79,13 +79,13 @@
 @{
 var targetType = 10; // CMS object, maybe better something else, officially should be > 100
   var myItemId = 1234;
-  var md = appState.GetMetadata(targetType, myItemId);
+  //var md = appState.GetMetadata(targetType, myItemId);
 }
-Found Metadata: @md.Count()
+Found Metadata: @@md.Count()
 <ol>
-  @foreach (var m in md)
+  @@foreach (var m in md)
   {
-    <li onclick="getSxc().manage.run('edit', { entityId: @m.EntityId })">@m.Type.Name: @m.GetBestTitle()</li>
+    <li onclick="getSxc().manage.run('edit', { entityId: @@m.EntityId })">@@m.Type.Name: @@m.GetBestTitle()</li>
   }
 </ol>
 
