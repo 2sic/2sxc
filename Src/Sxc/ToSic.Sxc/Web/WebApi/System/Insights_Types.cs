@@ -2,8 +2,7 @@
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
-using ToSic.Eav.Plumbing;
-using ToSic.Eav.Types;
+using ToSic.Eav.Persistence.File;
 using static ToSic.Razor.Blade.Tag;
 
 namespace ToSic.Sxc.Web.WebApi.System
@@ -103,8 +102,8 @@ namespace ToSic.Sxc.Web.WebApi.System
         {
             ThrowIfNotSuperUser();
             var msg = PageStyles() + LogHeader();
-            var typeLoader = _serviceProvider.Build<GlobalTypeLoader>();
-            var log = typeLoader.Log;
+            //var typeLoader =  _serviceProvider.Build<GlobalTypeLoader>();
+            var log = PresetAppStateLoader.LoadLog;// typeLoader.Log;
             return msg + (log == null
                 ? P("log is null").ToString()
                 : DumpTree($"Log for Global Types loading", log));
