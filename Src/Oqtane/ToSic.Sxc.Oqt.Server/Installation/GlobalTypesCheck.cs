@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Oqt.Server.Installation
             var errorMessage = string.Empty;
 
             // Check if there is less than 50 global types and warn user to restart application.
-            _globalTypesCheckedAndError = _appStates.Get(Eav.Constants.PresetIdentity).ContentTypes.Count() < 50;
+            _globalTypesCheckedAndError = _appStates.GetPresetApp().ContentTypes.Count() < 50;
             if (_globalTypesCheckedAndError.Value)
             {
                 errorMessage = "<strong>Warning:</strong> The \"global types\" are not loaded. Please <a href=\"/admin/system\">Restart Application</a>.";
