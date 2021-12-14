@@ -102,8 +102,7 @@ namespace ToSic.Sxc.Web.WebApi.System
         {
             ThrowIfNotSuperUser();
             var msg = PageStyles() + LogHeader();
-            //var typeLoader =  _serviceProvider.Build<GlobalTypeLoader>();
-            var log = PresetAppStateLoader.LoadLog;// typeLoader.Log;
+            var log = Runtime.LoadLog;
             return msg + (log == null
                 ? P("log is null").ToString()
                 : DumpTree($"Log for Global Types loading", log));
