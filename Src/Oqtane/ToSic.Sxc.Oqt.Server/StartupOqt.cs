@@ -8,8 +8,8 @@ using System.IO;
 using ToSic.Eav;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.Persistence.File;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.Repositories;
 using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Server.StartUp;
@@ -19,12 +19,12 @@ using WebApiConstants = ToSic.Sxc.Oqt.Shared.WebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server
 {
-    public class Startup : IServerStartup
+    public class StartupOqt : IServerStartup
     {
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment HostEnvironment { get; set; }
 
-        public Startup()
+        public StartupOqt()
         {
             // Configuration is used to provide Master tenant sql connection string to 2sxc eav.
             var builder = new ConfigurationBuilder()
@@ -101,13 +101,13 @@ namespace ToSic.Sxc.Oqt.Server
             var sysLoader = serviceProvider.Build<SystemLoader>();
             sysLoader.StartUp();
 
-            // 2021-11-16 2dm - experimental, working on moving global/preset data into a normal AppState #PresetInAppState
-            sysLoader.Log.Add("Try to load global app-state");
-            var globalStateLoader = serviceProvider.Build<FileAppStateLoaderWIP>();
-            var appState = globalStateLoader.AppState(Eav.Constants.PresetAppId);
-            var appsMemCache = serviceProvider.Build<IAppsCache>();
-            appsMemCache.Add(appState);
-            // End experimental #PresetInAppState
+            //// 2021-11-16 2dm - experimental, working on moving global/preset data into a normal AppState #PresetInAppState
+            //sysLoader.Log.Add("Try to load global app-state");
+            //var globalStateLoader = serviceProvider.Build<IPresetLoader>();
+            //var appState = globalStateLoader.AppState(Eav.Constants.PresetAppId);
+            //var appsMemCache = serviceProvider.Build<IAppsCache>();
+            //appsMemCache.Add(appState);
+            //// End experimental #PresetInAppState
 
 
             app.UseExceptionHandler("/error");
