@@ -92,8 +92,8 @@ namespace ToSic.Sxc.Web.WebApi.System
         {
             ThrowIfNotSuperUser();
 
-            var globTypes = _globalTypes.AllContentTypes().Values;
-            return TypesTable(Constants.PresetAppId, globTypes, null);
+            var globTypes = _appStates.Get(Eav.Constants.PresetIdentity).ContentTypes;
+            return TypesTable(Eav.Constants.PresetAppId, globTypes, null);
         }
 
         public string GlobalTypesLog()
