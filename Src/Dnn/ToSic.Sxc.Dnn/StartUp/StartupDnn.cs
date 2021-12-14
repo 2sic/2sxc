@@ -69,6 +69,12 @@ namespace ToSic.Sxc.Dnn.StartUp
             var sysLoader = transientSp.Build<SystemLoader>();
             sysLoader.StartUp();
 
+            // After the SysLoader got the features, we must attach it to an old API which had was public
+            // This was used in Mobius etc. to see if features are activated
+#pragma warning disable CS0618
+            Features.FeaturesFromDi = sysLoader.Features;
+#pragma warning restore CS0618
+
             // also register this because of a long DNN issue which was fixed, but we don't know if we're running in another version
             SharpZipLibRedirect.RegisterSharpZipLibRedirect();
 
