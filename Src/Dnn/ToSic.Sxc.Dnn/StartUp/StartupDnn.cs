@@ -1,13 +1,9 @@
-﻿using System;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Web.Hosting;
 using DotNetNuke.Web.Api;
 using Newtonsoft.Json;
-using ToSic.Eav.Caching;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.Persistence.File;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.Repositories;
 using ToSic.SexyContent.Dnn920;
 using GlobalConfiguration = System.Web.Http.GlobalConfiguration;
 

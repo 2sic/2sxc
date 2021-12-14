@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Eav.Documentation;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Eav.Configuration
 {
     /// <summary>
