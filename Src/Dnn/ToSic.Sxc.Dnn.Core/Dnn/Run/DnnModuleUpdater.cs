@@ -1,11 +1,11 @@
-﻿using System;
-using System.Linq;
-using DotNetNuke.Entities.Modules;
+﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Localization;
+using System;
+using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Metadata;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
@@ -56,12 +56,17 @@ namespace ToSic.Sxc.Dnn.Run
                 UpdateInstanceSettingForAllLanguages(instance.Id, Settings.ModuleSettingApp, appName, Log);
             }
 
-            // Change to 1. available template if app has been set
+            // Change to 1. available preferable default template if app has been set
             if (appId.HasValue)
             {
                 var appIdentity = new AppIdentity(zoneId, appId.Value);
                 var cms = _cmsRuntimeLazy.Value.Init(appIdentity, true, Log);
-                var templateGuid = cms.Views.GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
+
+                var templateGuid = cms.Views.GetAll()
+                    .OrderByDescending(v => v.Metadata.HasType(Decorators.IsDefaultDecorator)) // first sort by IsDefaultDecorator DESC
+                    .ThenBy(v => v.Name) // than by Name ASC
+                    .FirstOrDefault(t => !t.IsHidden)?.Guid;
+
                 if (templateGuid.HasValue) SetPreview(instance.Id, templateGuid.Value);
             }
         }
