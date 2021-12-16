@@ -66,7 +66,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
             var module = ((DnnModule)GetService<IModule>()).Init(ActiveModule, Log);
             var block = module.BlockIdentifier;
 
-            var result = GetService<ImportFromRemote>().Init(new DnnUser(), Log)
+            var importFromRemote = GetService<ImportFromRemote>();
+
+            var fromRemote = importFromRemote.Init(new DnnUser(), Log);
+
+            var result = fromRemote
                 .InstallPackage(block.ZoneId, block.AppId, ActiveModule.DesktopModule.ModuleName == "2sxc-app", packageUrl);
 
             Log.Add("install completed with success:" + result.Item1);

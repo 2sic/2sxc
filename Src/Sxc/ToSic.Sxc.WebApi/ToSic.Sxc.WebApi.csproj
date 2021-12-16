@@ -7,6 +7,7 @@
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <ItemGroup>

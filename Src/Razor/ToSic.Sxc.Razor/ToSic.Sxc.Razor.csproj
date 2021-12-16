@@ -6,6 +6,7 @@
     <Version>13.00.00</Version>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
     <Deterministic>true</Deterministic>
+    <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <ItemGroup>
