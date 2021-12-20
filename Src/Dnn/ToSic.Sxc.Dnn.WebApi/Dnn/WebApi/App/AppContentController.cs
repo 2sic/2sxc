@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
 using ToSic.Eav.Data;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.App;
 using IEntity = ToSic.Eav.Data.IEntity;

@@ -5,7 +5,6 @@ using Newtonsoft.Json.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
@@ -13,7 +12,6 @@ using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Errors;
-using ToSic.Eav.WebApi.Helpers;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
@@ -116,7 +114,7 @@ namespace ToSic.Sxc.WebApi.App
 
             // Now create the cleaned up import-dictionary so we can create a new entity
             var cleanedNewItem = new AppContentEntityBuilder(Log)
-                .CreateEntityDictionary(contentType, newContentItemCaseInsensitive, Context.AppState/*.AppId*/);
+                .CreateEntityDictionary(contentType, newContentItemCaseInsensitive, Context.AppState);
 
             var userName = Context.User.IdentityToken;
 
@@ -165,7 +163,7 @@ namespace ToSic.Sxc.WebApi.App
             Log.Add($"init eav for a#{appId}");
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
             var ser = _entToDicLazy.Value;
-            ser.WithGuid = true; //.EnableGuids();
+            ser.WithGuid = true;
             ((ConvertToEavLightWithCmsInfo)ser).WithEdit = userMayEdit;
             return ser;
         }

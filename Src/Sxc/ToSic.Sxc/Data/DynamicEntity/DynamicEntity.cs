@@ -63,7 +63,6 @@ namespace ToSic.Sxc.Data
 
         // ReSharper disable once InheritdocInvalidUsage
         /// <inheritdoc />
-        public bool IsDemoItem => Entity?.GetDecorator<EntityInBlockDecorator>()?.IsDemoItem ?? false; // Entity is EntityInBlock entInCg && entInCg.IsDemoItem;
-
+        public bool IsDemoItem => Entity?.GetDecorator<EntityInBlockDecorator>()?.IsDemoItem ?? false;
     }
 }
