@@ -333,6 +333,9 @@
 @REM set BuildTarget=C:\Projects\2sxc-dnn742-target\Website\DesktopModules\ToSIC_SexyContent
 @REM xcopy "C:\Projects\2sxc-dnn742\Website\bin\ToSic.*.*" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /y /i
 
+@REM Copy Imageflow and dependecies
+robocopy $(ProjectDir)Extensions\Imageflow\bin $(Dev2sxcDnnRoot)bin *.dll
+
 @REM Copy the data folders
 robocopy /mir "$(ProjectDir)..\..\Data\.data\ " "%25BuildTarget%25\.data\ "
 robocopy /mir "$(ProjectDir)..\..\Data\.databeta\ " "%25BuildTarget%25\.databeta\ "
