@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
@@ -10,6 +9,8 @@ namespace ToSic.Sxc.Web.Images
 {
     public abstract class ImageLinkerBase: HasLog<ImageLinkerBase>
     {
+        internal const string DontSetParam = "(none)";
+
         protected ImageLinkerBase(string logName) : base(logName) { }
 
         public bool Debug = false;
@@ -53,14 +54,13 @@ namespace ToSic.Sxc.Web.Images
             string mToUse = KeepBestString(resizeMode, getSettings?.Get("ResizeMode"));
             string sToUse = KeepBestString(scaleMode, getSettings?.Get("ScaleMode"));
 
-            //var resizer = new List<KeyValuePair<string, string>>();
             var resizerNvc = new NameValueCollection();
             ImgAddIfRelevant(resizerNvc, "w", resizedNew.Item1, "0");
             ImgAddIfRelevant(resizerNvc, "h", resizedNew.Item2, "0");
             ImgAddIfRelevant(resizerNvc, "quality", qFinal, "0");
-            ImgAddIfRelevant(resizerNvc, "mode", mToUse);
-            ImgAddIfRelevant(resizerNvc, "scale", ImgResizeLinker.CorrectScales(sToUse));
-            ImgAddIfRelevant(resizerNvc, "format", ImgResizeLinker.CorrectFormats(formToUse));
+            ImgAddIfRelevant(resizerNvc, "mode", mToUse, DontSetParam);
+            ImgAddIfRelevant(resizerNvc, "scale", ImgResizeLinker.CorrectScales(sToUse), DontSetParam);
+            ImgAddIfRelevant(resizerNvc, "format", ImgResizeLinker.CorrectFormats(formToUse), DontSetParam);
 
             url = Url.UrlHelpers.AddQueryString(url, resizerNvc);
 
@@ -82,7 +82,6 @@ namespace ToSic.Sxc.Web.Images
             if (strValue.Equals(irrelevant, StringComparison.InvariantCultureIgnoreCase))
                 return wrapLog($"Won't add '{key}' since value would be irrelevant", false);
 
-            //resizer.Add(new KeyValuePair<string, string>(key, strValue));
             resizer.Add(key, strValue);
             return wrapLog($"Added key {key}", true);
         }
