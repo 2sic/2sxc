@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             if (!(_target is IHasMetadata hasMetadata)) return "error=TargetWithoutMetadata";
 
             // 1. check if it's a valid target
-            var targetId = hasMetadata.Metadata.MetadataId;
+            var targetId = hasMetadata.Metadata.Target;
 
             // Check if it already has this metadata
             var existing = hasMetadata.Metadata.OfType(_contentType).FirstOrDefault();

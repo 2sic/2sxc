@@ -47,7 +47,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 ThumbnailUrl = string.Format(ThumbnailPattern, url),
                 PreviewUrl = string.Format(PreviewPattern, url),
                 Url = url,
-                ReferenceId = (original as IHasMetadata).Metadata.MetadataId.KeyString,
+                ReferenceId = (original as IHasMetadata).Metadata.Target.KeyString,
                 AllowEdit = CanEditFolder(original)
             };
             // (original.StorageLocation == 0) ? original.Path : FileLinkClickController.Instance.GetFileLinkClick(original);
@@ -62,7 +62,7 @@ namespace ToSic.Sxc.WebApi.Adam
             {
                 Path = folder.Path,
                 AllowEdit = CanEditFolder(folder),
-                ReferenceId = (folder as IHasMetadata).Metadata.MetadataId.KeyString,
+                ReferenceId = (folder as IHasMetadata).Metadata.Target.KeyString,
             };
             return item;
         }
