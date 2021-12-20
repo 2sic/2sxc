@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Metadata;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Data
@@ -58,6 +59,15 @@ namespace ToSic.Sxc.Data
         /// The type name of the current entity. This provides the nice name like "Person" and not the technical internal StaticName
         /// </summary>
         string EntityType { get; }
+
+
+        /// <summary>
+        /// The type name of the current entity. This provides the nice name like "Person" and not the technical internal StaticName
+        /// </summary>
+        /// <remarks>
+        /// Added in v13
+        /// </remarks>
+        IMetadataOf Metadata { get; }
 
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityGet and IDynamicStack */
         /// <summary>
