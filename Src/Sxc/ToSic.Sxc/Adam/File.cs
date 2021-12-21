@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Linq;
 using Newtonsoft.Json;
 using ToSic.Eav.Metadata;
 using ToSic.SexyContent.Adam;
+using ToSic.Sxc.Data;
+
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Adam
@@ -12,25 +15,19 @@ namespace ToSic.Sxc.Adam
 #pragma warning restore 618
         IFile
     {
+        public File(AdamManager adamManager) => AdamManager = adamManager;
         private AdamManager AdamManager { get; }
-
-        public File(AdamManager adamManager)
-        {
-            AdamManager = adamManager;
-        }
 
         #region Metadata
 
         /// <inheritdoc />
         [JsonIgnore]
-        public dynamic Metadata => _metadata ?? (_metadata = AdamManager.MetadataMaker.GetFirstOrFake(AdamManager, MetadataId));
-        private dynamic _metadata;
-        // TODO: PROBABLY CHANGE these Hasmetadata etc. to just use the new IHasMetadata.Metadata property to start with
-        [JsonIgnore] public bool HasMetadata => AdamManager.MetadataMaker.GetFirstMetadata(AdamManager.AppRuntime, MetadataId) != null;
+        public IDynamicMetadata Metadata => _metadata ?? (_metadata = AdamManager.MetadataMaker.GetMetadata(AdamManager, CmsMetadata.FilePrefix + SysId, FileName));
+        private IDynamicMetadata _metadata;
 
+        /// <inheritdoc />
         [JsonIgnore]
-        private ITarget MetadataId => _metadataId ?? (_metadataId = new Target((int)TargetTypes.CmsItem, FileName) { KeyString = CmsMetadata.FilePrefix + SysId });
-        private ITarget _metadataId;
+        public bool HasMetadata => (Metadata as IHasMetadata)?.Metadata.Any() ?? false;
 
         #endregion
 

@@ -45,10 +45,9 @@ namespace ToSic.Sxc.Code
             if (!Data.Out.ContainsKey(sourceStream)) return wrapLog("stream not found", null);
 
             var list = Data[sourceStream].List;
-            //var first = list.FirstOrDefault();
-            return !list.Any() // first == null 
+            return !list.Any()
                 ? wrapLog("first is null", null) 
-                : wrapLog("found", new DynamicEntity(list, null, null, DynamicEntityDependencies));
+                : wrapLog("found", new DynamicEntity(list, null, null, null, DynamicEntityDependencies));
         }
 
         #endregion

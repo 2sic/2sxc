@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
-using ToSic.Eav.Data;
 using ToSic.Eav.Metadata;
+using ToSic.Sxc.Data;
+
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Adam
@@ -10,25 +11,17 @@ namespace ToSic.Sxc.Adam
 
     public class Folder<TFolderId, TFileId> : Eav.Apps.Assets.Folder<TFolderId, TFileId>, IFolder
     {
+        public Folder(AdamManager<TFolderId, TFileId> adamManager) => AdamManager = adamManager;
         protected AdamManager<TFolderId, TFileId> AdamManager { get; set; }
 
-        public Folder(AdamManager<TFolderId, TFileId> adamManager)
-        {
-            AdamManager = adamManager;
-        }
+        /// <inheritdoc />
+        [JsonIgnore]
+        public IDynamicMetadata Metadata => _metadata ?? (_metadata = AdamManager.MetadataMaker.GetMetadata(AdamManager, CmsMetadata.FolderPrefix + SysId, Name));
+        private IDynamicMetadata _metadata;
 
         /// <inheritdoc />
         [JsonIgnore]
-        public dynamic Metadata => _metadata ?? (_metadata = AdamManager.MetadataMaker.GetFirstOrFake(AdamManager, MetadataId));
-        private dynamic _metadata;
-        // TODO: PROBABLY CHANGE these Hasmetadata etc. to just use the new IHasMetadata.Metadata property to start with
-        /// <inheritdoc />
-        [JsonIgnore]
-        public bool HasMetadata => AdamManager.MetadataMaker.GetFirstMetadata(AdamManager.AppRuntime, MetadataId) != null;
-
-        [JsonIgnore]
-        private ITarget MetadataId => _metadataId ?? (_metadataId = new Target((int)TargetTypes.CmsItem, Name) { KeyString = CmsMetadata.FolderPrefix + SysId });
-        private ITarget _metadataId;
+        public bool HasMetadata => (Metadata as IHasMetadata)?.Metadata.Any() ?? false;
 
         /// <inheritdoc />
         public string Url { get; set; }

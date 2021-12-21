@@ -28,18 +28,19 @@ namespace ToSic.Sxc.Data
             _ListHelper = new DynamicEntityListHelper(this, () => _debug, dependencies);
         }
 
-        internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, DynamicEntityDependencies dependencies): base(dependencies)
+        internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, DynamicEntityDependencies dependencies): base(dependencies)
         {
             // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
-            SetEntity(list.FirstOrDefault() ?? PlaceHolder(parent, field));
+            SetEntity(list.FirstOrDefault() ?? PlaceHolder(appIdOrNull, parent, field));
             _ListHelper = new DynamicEntityListHelper(list, parent, field, () => _debug, dependencies);
         }
 
-        private IEntity PlaceHolder(IEntity parent, string field)
+        private IEntity PlaceHolder(int? appIdOrNull, IEntity parent, string field)
         {
-            var dummyEntity = _Dependencies.DataBuilder.FakeEntity(parent.AppId);
-            return EntityInBlockDecorator.Wrap(dummyEntity, parent.EntityGuid, field);
-            //return new EntityInBlock(dummyEntity, parent.EntityGuid, field, 0);
+            var dummyEntity = _Dependencies.DataBuilder.FakeEntity(appIdOrNull ?? parent.AppId);
+            return parent == null 
+                ? dummyEntity 
+                : EntityInBlockDecorator.Wrap(dummyEntity, parent.EntityGuid, field);
         }
 
 
@@ -63,6 +64,10 @@ namespace ToSic.Sxc.Data
 
         // ReSharper disable once InheritdocInvalidUsage
         /// <inheritdoc />
-        public bool IsDemoItem => Entity?.GetDecorator<EntityInBlockDecorator>()?.IsDemoItem ?? false;
+        public bool IsDemoItem => _isDemoItem ?? (_isDemoItem = Entity?.GetDecorator<EntityInBlockDecorator>()?.IsDemoItem ?? false).Value;
+        private bool? _isDemoItem;
+
+        public bool IsFake => _isFake ?? (_isFake = (Entity?.EntityId ?? DataBuilder.DefaultEntityId) == DataBuilder.DefaultEntityId).Value;
+        private bool? _isFake;
     }
 }

@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Data
         /// <remarks>
         /// Added in v13
         /// </remarks>
-        IMetadataOf Metadata { get; }
+        IDynamicMetadata Metadata { get; }
 
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityGet and IDynamicStack */
         /// <summary>

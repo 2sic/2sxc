@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Data
 {
@@ -16,7 +15,5 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         public string EntityType => Entity?.Type?.Name;
 
-        /// <inheritdoc />
-        public IMetadataOf Metadata => Entity?.Metadata;
     }
 }

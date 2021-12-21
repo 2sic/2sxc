@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Data
             if (result is IEnumerable<IEntity> children)
             {
                 logOrNull?.SafeAdd($"Convert entity list as {nameof(DynamicEntity)}");
-                var dynEnt = new DynamicEntity(children.ToArray(), parent, field, _Dependencies);
+                var dynEnt = new DynamicEntity(children.ToArray(), parent, field, null, _Dependencies);
                 if (_debug) dynEnt.SetDebug(_debug);
                 return safeWrap("ent-list, now dyn", dynEnt);
             }
