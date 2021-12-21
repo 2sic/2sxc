@@ -193,5 +193,16 @@ namespace ToSic.Sxc.Services
         /// Sub-Service to convert JSON
         /// </summary>
         IJsonService Json { get; }
+
+        #region Invisible Converts for backward compatibility
+
+        [PrivateApi]
+        int ToInt32(object value);
+
+        [PrivateApi]
+        float ToSingle(object value);
+
+        #endregion
+
     }
 }
