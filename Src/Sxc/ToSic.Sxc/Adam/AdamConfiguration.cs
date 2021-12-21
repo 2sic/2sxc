@@ -22,9 +22,7 @@ namespace ToSic.Sxc.Adam
             {
                 if (_adamAppRootFolder != null) return _adamAppRootFolder;
 
-                var primaryApp = _appStates.Get(Eav.Constants.PresetIdentity);
-
-                var found = primaryApp.List.FirstOrDefaultOfType(TypeName)?.Value<string>(ConfigFieldRootFolder);
+                var found = _appStates.GetPresetApp().List.FirstOrDefaultOfType(TypeName)?.Value<string>(ConfigFieldRootFolder);
 
                 return _adamAppRootFolder = found ?? AdamFolderMask;
             }
