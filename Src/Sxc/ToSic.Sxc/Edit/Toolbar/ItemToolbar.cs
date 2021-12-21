@@ -28,14 +28,6 @@ namespace ToSic.Sxc.Edit.Toolbar
             var toolbarAsStringArray = ToolbarV10OrNull(toolbar);
             if(settings is string || toolbar is string || prefill is string || toolbarAsStringArray != null)
             {
-                // 2021-11-18 fix https://github.com/2sic/2sxc/issues/2561 - preserve till EOY in case something else breaks
-                // #cleanup EOY 2021
-                //ToolbarV10 = toolbar == null
-                //    ? new List<string>()
-                //    : toolbar is string tlbString
-                //        ? tlbString.Split('|').ToList() //new List<string> {tlbString}
-                //        : toolbarAsStringArray; // (toolbar as IEnumerable<string>).ToList();
-
                 // Make sure ToolbarV10 is a real object - this code could also run with toolbar being null
                 ToolbarV10 = toolbarAsStringArray ?? new List<string>();
 
@@ -104,19 +96,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         }
 
         private string _toolbarV10Json;
-
-        // 2021-11-18 fix https://github.com/2sic/2sxc/issues/2561 - preserve till EOY in case something else breaks
-        // #cleanup EOY 2021
-        ///// <summary>
-        ///// Check if the configuration we got is a V10 Toolbar
-        ///// </summary>
-        ///// <param name="toolbar"></param>
-        ///// <returns></returns>
-        //private bool ToolbarIsV10Format(object toolbar)
-        //{
-        //    // return toolbar is IEnumerable<string> array && array.FirstOrDefault() != null;
-        //}
-
+        
         /// <summary>
         /// Check if the configuration we got is a V10 Toolbar
         /// </summary>
