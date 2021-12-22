@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Context
         public string UrlRoot => _contents.UrlRoot ?? string.Empty;
 
         public IMetadataOf Metadata
-            => _metadata ?? (_metadata = _appState.GetMetadataOf((int)TargetTypes.CmsItem, CmsMetadata.SitePrefix + Id, Url));
+            => _metadata ?? (_metadata = _appState.GetMetadataOf(TargetTypes.Site, Id, Url));
         private IMetadataOf _metadata;
 
     }

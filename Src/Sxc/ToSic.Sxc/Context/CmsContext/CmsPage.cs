@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Context
         public string Url => _contents.Url ?? string.Empty;
 
         public IMetadataOf Metadata
-            => _metadata ?? (_metadata = _appState.GetMetadataOf((int)TargetTypes.CmsItem, CmsMetadata.PagePrefix + Id, Url));
+            => _metadata ?? (_metadata = _appState.GetMetadataOf(TargetTypes.Page, Id, Url));
         private IMetadataOf _metadata;
 
     }

@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Adam
 
 
         IMetadataOf IHasMetadata.Metadata
-            => _metadataOf ?? (_metadataOf = AdamManager.AppContext.AppState.GetMetadataOf((int)TargetTypes.CmsItem,
+            => _metadataOf ?? (_metadataOf = AdamManager.AppContext.AppState.GetMetadataOf(TargetTypes.CmsItem,
                 CmsMetadata.FolderPrefix + SysId, Name));
         private IMetadataOf _metadataOf;
 

@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Adam
         public int FileId => SysId as int? ?? 0;
 
         IMetadataOf IHasMetadata.Metadata
-            => _metadataOf ?? (_metadataOf = AdamManager.AppContext.AppState.GetMetadataOf((int)TargetTypes.CmsItem,
+            => _metadataOf ?? (_metadataOf = AdamManager.AppContext.AppState.GetMetadataOf(TargetTypes.CmsItem,
                 CmsMetadata.FilePrefix + SysId, FileName));
         private IMetadataOf _metadataOf;
     }
