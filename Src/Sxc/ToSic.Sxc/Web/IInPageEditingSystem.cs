@@ -25,11 +25,13 @@ namespace ToSic.Sxc.Web
 
         /// <summary>
         /// Generate a toolbar tag - must be used in normal html, not as an attribute. <br/>
-        /// See also @HowTo.Razor.Edit.Toolbar
+        /// See also [](xref:NetCode.Razor.Edit.Toolbar)
         /// </summary>
         /// <param name="target">
-        ///     The content-item this toolbar is for, can be null. <br/>
-        ///     Usually a @NetCode.DynamicCode.DynamicEntity?text=DynamicEntity or a @NetCode.DynamicCode.Entity?text=Entity
+        /// The content-item this toolbar is for, can be null. <br/>
+        /// Usually a [](xref:NetCode.DynamicData.DynamicEntity) or a [](xref:NetCode.DynamicData.Entity)
+        ///
+        /// If the first parameter is a <see cref="ToSic.Sxc.Edit.IToolbarBuilder"/> then all other parameters will be ignored. 
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="actions">
@@ -45,8 +47,10 @@ namespace ToSic.Sxc.Web
         ///     It's a dynamic object, see also the JS documentation on the prefill.
         /// </param>
         /// <param name="toolbar">
-        ///     Full manual toolbar configuration. Setting this will cause `actions` to be ignored. <br/>
-        ///     See [](xref:Basics.Browser.EditUx.Toolbars.Index)
+        /// Full manual toolbar configuration. Setting this will cause `actions` to be ignored. <br/>
+        /// See [](xref:Basics.Browser.EditUx.Toolbars.Index)
+        ///
+        /// If the the `toolbar` is a <see cref="ToSic.Sxc.Edit.IToolbarBuilder"/> then other parameters except for the `target` will be ignored. 
         /// </param>
         /// <param name="settings">
         ///     Toolbar settings controlling hover etc. <br/>
@@ -60,6 +64,7 @@ namespace ToSic.Sxc.Web
         /// **History**
         /// 1. Added in 2sxc 8.04
         /// 1. `condition` added in 2sxc 12.05
+        /// 1. option to just use a ToolbarBuilder as first parameter or `toolbar` parameter added in v13 - this will skip all other parameters
         /// </remarks>
         IHybridHtmlString Toolbar(
             object target = null,
@@ -76,8 +81,10 @@ namespace ToSic.Sxc.Web
         /// See also @HowTo.Razor.Edit.Toolbar
         /// </summary>
         /// <param name="target">
-        ///     The content-item this toolbar is for, can be null. <br/>
-        ///     Usually a @NetCode.DynamicCode.DynamicEntity?text=DynamicEntity or a @HowTo.DynamicCode.Entity?text=Entity
+        /// The content-item this toolbar is for, can be null. <br/>
+        /// Usually a [](xref:NetCode.DynamicData.DynamicEntity) or a [](xref:NetCode.DynamicData.Entity)
+        ///
+        /// If the first parameter is a <see cref="ToSic.Sxc.Edit.IToolbarBuilder"/> then all other parameters will be ignored. 
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="actions">
@@ -93,8 +100,10 @@ namespace ToSic.Sxc.Web
         ///     It's a dynamic object, see also the JS documentation on the prefill.
         /// </param>
         /// <param name="toolbar">
-        ///     Full manual toolbar configuration. Setting this will cause `actions` to be ignored. <br/>
-        ///     See [](xref:Basics.Browser.EditUx.Toolbars.Index)
+        /// Full manual toolbar configuration. Setting this will cause `actions` to be ignored. <br/>
+        /// See [](xref:Basics.Browser.EditUx.Toolbars.Index)
+        ///
+        /// If the the `toolbar` is a <see cref="ToSic.Sxc.Edit.IToolbarBuilder"/> then other parameters except for the `target` will be ignored. 
         /// </param>
         /// <param name="settings">
         ///     Toolbar settings controlling hover etc. <br/>
@@ -108,7 +117,7 @@ namespace ToSic.Sxc.Web
         /// **History**
         /// 1. Added in 2sxc 9.40
         /// 1. `condition` added in 2sxc 12.05
-        /// 1. `metadataFor` added in 2sxc 12.10
+        /// 1. option to just use a ToolbarBuilder as first parameter or `toolbar` parameter added in v13 - this will skip all other parameters
         /// </remarks>
         IHybridHtmlString TagToolbar(
             object target = null,
@@ -177,7 +186,7 @@ namespace ToSic.Sxc.Web
         );
 
         /// <summary>
-        /// Ensure that the UI will load the correct assets to enable editing. See @NetCode.Razor.Edit.Enable?text=How+to+use+Edit.Enable
+        /// Ensure that the UI will load the correct assets to enable editing. See [](xref:NetCode.Razor.Edit.Enable)
         /// </summary>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="js">optional, default false. automatically true if `api` or `forms` is true<br/>

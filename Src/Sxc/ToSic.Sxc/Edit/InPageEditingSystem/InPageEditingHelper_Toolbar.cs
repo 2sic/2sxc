@@ -52,11 +52,31 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar",
                 $"{nameof(actions)},{nameof(contentType)},{nameof(condition)},{nameof(prefill)},{nameof(settings)},{nameof(toolbar)}");
 
-            // ensure that internally we always process it as an entity
-            var eTarget = target as IEntity ?? (target as IDynamicEntity)?.Entity;
-            if (target != null && eTarget == null)
-                Log.Warn("Creating toolbar - it seems the object provided was neither null, IEntity nor DynamicEntity");
-            var itmToolbar = new ItemToolbar(eTarget, actions, contentType, prefill: prefill, settings: settings, toolbar: toolbar);
+            // New in v13: The first parameter can also be a ToolbarBuilder, in which case all other params are ignored
+            ItemToolbar itmToolbar;
+            if (target is IToolbarBuilder)
+            {
+                Log.Add("Using new modern Item-Toolbar, will ignore all other parameters.");
+                itmToolbar = new ItemToolbar(null, toolbar: target);
+            }
+            else
+            {
+                // ensure that internally we always process it as an entity
+                var eTarget = target as IEntity ?? (target as IDynamicEntity)?.Entity;
+                if (target != null && eTarget == null)
+                    Log.Warn("Creating toolbar - it seems the object provided was neither null, IEntity nor DynamicEntity");
+                if (toolbar is IToolbarBuilder)
+                {
+                    Log.Add("Using new modern Item-Toolbar with an entity, will ignore all other parameters.");
+                    itmToolbar = new ItemToolbar(eTarget, toolbar: toolbar);
+                }
+                else
+                {
+                    Log.Add("Using classic mode, with all parameters.");
+                    itmToolbar = new ItemToolbar(eTarget, actions, contentType, prefill: prefill, settings: settings,
+                        toolbar: toolbar);
+                }
+            }
 
             var result = inTag
                 ? Attribute("sxc-toolbar", itmToolbar.ToolbarAttribute())

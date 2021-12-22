@@ -37,10 +37,21 @@ namespace ToSic.Sxc.Edit
         /// <summary>
         /// Create an add `metadata` rule to add or edit metadata to the specified object and using the content-type specified here. 
         /// </summary>
-        /// <param name="target"></param>
+        /// <param name="target">The target object which should receive metadata. Must support <see cref="ToSic.Eav.Metadata.IHasMetadata"/> </param>
         /// <param name="contentType"></param>
         /// <returns></returns>
-        IToolbarBuilder Metadata(object target, string contentType);
+        IToolbarBuilder Metadata(
+            object target, 
+            string contentType);
+
+        IToolbarBuilder Settings(
+            string noParamOrder = Eav.Parameters.Protector,
+            string show = null,
+            string hover = null,
+            string follow = null,
+            string classes = null,
+            string ui = "", 
+            string parameters = "");
 
         /// <summary>
         /// Converts the configuration to a json-string according to the JS-Toolbar specs.

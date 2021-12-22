@@ -35,5 +35,15 @@ namespace ToSic.Sxc.Services
         /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
         /// <returns></returns>
         IToolbarBuilder Empty(string noParamOrder = Eav.Parameters.Protector, string ui = "");
+
+        /// <summary>
+        /// Build an **empty** Toolbar with a Metadata button.
+        /// 
+        /// This is the same as .Empty().Metadata(target, contentType);
+        /// </summary>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
+        /// <returns></returns>
+        IToolbarBuilder Metadata(object target, string contentType);
     }
 }

@@ -19,6 +19,7 @@ namespace ToSic.Sxc.Services
             string ui = "") 
             => NewBuilder(noParamOrder, ToolbarRuleToolbar.Empty, ui);
 
+        public IToolbarBuilder Metadata(object target, string contentType) => Empty().Metadata(target, contentType);
 
         private IToolbarBuilder NewBuilder(string noParamOrder, string toolbarTemplate, string ui)
         {
@@ -26,5 +27,6 @@ namespace ToSic.Sxc.Services
             return new ToolbarBuilder()
                 .Add(new ToolbarRuleToolbar(toolbarTemplate, ui: ui));
         }
+
     }
 }
