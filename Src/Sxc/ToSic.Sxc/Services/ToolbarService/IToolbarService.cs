@@ -41,8 +41,8 @@ namespace ToSic.Sxc.Services
         /// 
         /// This is the same as .Empty().Metadata(target, contentType);
         /// </summary>
-        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
+        /// <param name="target">The target object which should receive metadata. Must support <see cref="ToSic.Eav.Metadata.IHasMetadata"/> </param>
+        /// <param name="contentType"></param>
         /// <returns></returns>
         IToolbarBuilder Metadata(object target, string contentType);
     }

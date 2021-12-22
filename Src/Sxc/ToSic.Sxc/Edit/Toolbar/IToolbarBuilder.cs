@@ -44,12 +44,25 @@ namespace ToSic.Sxc.Edit
             object target, 
             string contentType);
 
+        /// <summary>
+        /// Add a `settings` rule to configure what the toolbar should look like. See [](xref:JsCode.Toolbars.Settings)
+        /// </summary>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="show"></param>
+        /// <param name="hover"></param>
+        /// <param name="follow"></param>
+        /// <param name="classes"></param>
+        /// <param name="autoAddMore"></param>
+        /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
         IToolbarBuilder Settings(
             string noParamOrder = Eav.Parameters.Protector,
             string show = null,
             string hover = null,
             string follow = null,
             string classes = null,
+            string autoAddMore = null,
             string ui = "", 
             string parameters = "");
 

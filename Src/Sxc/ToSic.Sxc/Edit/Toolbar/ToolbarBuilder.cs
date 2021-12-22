@@ -49,8 +49,8 @@ namespace ToSic.Sxc.Edit.Toolbar
         public IToolbarBuilder Metadata(object target, string contentType) => Add(new ToolbarRuleMetadata(target, contentType));
 
         public IToolbarBuilder Settings(string noParamOrder = Eav.Parameters.Protector, string show = null,
-            string hover = null, string follow = null, string classes = null, string ui = "", string parameters = "")
-            => Add(new ToolbarRuleSettings(show: show, hover: hover, follow: follow, classes: classes,
+            string hover = null, string follow = null, string classes = null, string autoAddMore = null, string ui = "", string parameters = "")
+            => Add(new ToolbarRuleSettings(show: show, hover: hover, follow: follow, classes: classes, autoAddMore: autoAddMore,
                 ui: ui, parameters: parameters));
 
         public override string ToString()
