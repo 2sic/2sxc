@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Edit
     /// History
     /// * Added in 2sxc 13
     /// </remarks>
-    [PublicApi("WIP v13")]
+    [PublicApi]
     public interface IToolbarBuilder: IHybridHtmlString
     {
         /// <summary>
@@ -23,6 +23,10 @@ namespace ToSic.Sxc.Edit
         /// </summary>
         /// <param name="rules"></param>
         /// <returns></returns>
+        /// <remarks>
+        /// History
+        /// * Added in 2sxc 13
+        /// </remarks>
         IToolbarBuilder Add(params string[] rules);
 
 
@@ -31,6 +35,10 @@ namespace ToSic.Sxc.Edit
         /// </summary>
         /// <param name="rules"></param>
         /// <returns></returns>
+        /// <remarks>
+        /// History
+        /// * Added in 2sxc 13
+        /// </remarks>
         [PrivateApi("Would confuse people, since they cannot create ToolbarRule objects")]
         IToolbarBuilder Add(params object[] rules);
 
@@ -38,11 +46,15 @@ namespace ToSic.Sxc.Edit
         /// Create an add `metadata` rule to add or edit metadata to the specified object and using the content-type specified here. 
         /// </summary>
         /// <param name="target">The target object which should receive metadata. Must support <see cref="ToSic.Eav.Metadata.IHasMetadata"/> </param>
-        /// <param name="contentType"></param>
+        /// <param name="contentTypes">Name of **one** content-type for which to generate the button. In future _may_ also allow more content-types</param>
         /// <returns></returns>
+        /// <remarks>
+        /// History
+        /// * Added in 2sxc 13
+        /// </remarks>
         IToolbarBuilder Metadata(
             object target, 
-            string contentType);
+            string contentTypes);
 
         /// <summary>
         /// Add a `settings` rule to configure what the toolbar should look like. See [](xref:JsCode.Toolbars.Settings)
@@ -56,6 +68,10 @@ namespace ToSic.Sxc.Edit
         /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
         /// <param name="parameters"></param>
         /// <returns></returns>
+        /// <remarks>
+        /// History
+        /// * Added in 2sxc 13
+        /// </remarks>
         IToolbarBuilder Settings(
             string noParamOrder = Eav.Parameters.Protector,
             string show = null,

@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         }
 
         /// <inheritdoc />
-        public IToolbarBuilder Metadata(object target, string contentType) => Add(new ToolbarRuleMetadata(target, contentType));
+        public IToolbarBuilder Metadata(object target, string contentTypes) => Add(new ToolbarRuleMetadata(target, contentTypes));
 
         public IToolbarBuilder Settings(string noParamOrder = Eav.Parameters.Protector, string show = null,
             string hover = null, string follow = null, string classes = null, string autoAddMore = null, string ui = "", string parameters = "")
