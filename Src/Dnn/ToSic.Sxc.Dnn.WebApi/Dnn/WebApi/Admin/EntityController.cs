@@ -57,26 +57,26 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void Delete(string contentType, int id, int appId, bool force = false)
+        public void Delete(string contentType, int id, int appId, bool force = false, int? parentId = null, string parentField = null)
         {
             var appContext = ContextResolver.BlockOrApp(appId);
             GetService<EntityApi>()
                 .InitOrThrowBasedOnGrants(appContext, appContext.AppState, contentType,
                     GrantSets.DeleteSomething, Log)
-                .Delete(contentType, id, force);
+                .Delete(contentType, id, force, parentId, parentField);
         }
 
         /// <inheritdoc/>
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void Delete(string contentType, Guid guid, int appId, bool force = false)
+        public void Delete(string contentType, Guid guid, int appId, bool force = false, int? parentId = null, string parentField = null)
         {
             var appContext = ContextResolver.BlockOrApp(appId);
             GetService<EntityApi>()
                 .InitOrThrowBasedOnGrants(appContext, appContext.AppState, contentType,
                     GrantSets.DeleteSomething, Log)
-                .Delete(contentType, guid, force);
+                .Delete(contentType, guid, force, parentId, parentField);
         }
 
 

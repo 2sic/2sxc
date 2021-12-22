@@ -73,12 +73,14 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [ValidateAntiForgeryToken]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
-        public void Delete([FromQuery] string contentType, [FromQuery] int? id, [FromQuery] Guid? guid, [FromQuery] int appId, [FromQuery] bool force = false)
+        public void Delete([FromQuery] string contentType, 
+            [FromQuery] int? id, [FromQuery] Guid? guid, [FromQuery] int appId, [FromQuery] bool force = false, 
+            [FromQuery] int? parentId = null, [FromQuery] string parentField = null)
         {
             if (id.HasValue) _lazyEntityApi.Value.InitOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
-                .Delete(contentType, id.Value, force);
+                .Delete(contentType, id.Value, force, parentId, parentField);
             else if (guid.HasValue) _lazyEntityApi.Value.InitOrThrowBasedOnGrants(GetContext(), GetApp(appId), contentType, GrantSets.DeleteSomething, Log)
-                .Delete(contentType, guid.Value, force);
+                .Delete(contentType, guid.Value, force, parentId, parentField);
         }
 
         /// <summary>
