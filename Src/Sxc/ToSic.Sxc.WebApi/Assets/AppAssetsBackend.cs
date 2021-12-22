@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
@@ -54,40 +55,39 @@ namespace ToSic.Sxc.WebApi.Assets
             return wrapLog(null, true);
         }
 
-        [Obsolete("This Method is Deprecated", false)]
-        public bool Create(int appId, string path, FileContentsDto content, string purpose, bool global = false)
-        {
-            Log.Add($"create a#{appId}, path:{path}, global:{global}, purpose:{purpose}, cont-length:{content.Content?.Length}");
-            path = path.Replace("/", "\\");
+        //[Obsolete("This Method is Deprecated", false)]
+        //public bool Create(int appId, string path, FileContentsDto content, string purpose, bool global = false)
+        //{
+        //    Log.Add($"create a#{appId}, path:{path}, global:{global}, purpose:{purpose}, cont-length:{content.Content?.Length}");
+        //    path = path.Replace("/", "\\");
 
-            var thisApp = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), Log);
+        //    var thisApp = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), Log);
 
-            if (content.Content == null)
-                content.Content = "";
+        //    if (content.Content == null)
+        //        content.Content = "";
 
-            path = SanitizePathAndContent(path, content, purpose);
+        //    path = SanitizePathAndContent(path, content, purpose);
 
-            var assetEditor = _assetEditorLazy.Value.Init(thisApp, path, global, 0, Log);
-            assetEditor.EnsureUserMayEditAssetOrThrow(path);
-            return assetEditor.Create(content.Content);
-        }
+        //    var assetEditor = _assetEditorLazy.Value.Init(thisApp, path, global, 0, Log);
+        //    assetEditor.EnsureUserMayEditAssetOrThrow(path);
+        //    return assetEditor.Create(content.Content);
+        //}
 
         public bool Create(AssetFromTemplateDto assetFromTemplateDto)
         {
-            Log.Add($"create a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
+            var wrapLog = Log.Call<bool>($"create a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
+
             assetFromTemplateDto.Path = assetFromTemplateDto.Path.Replace("/", "\\");
-
-            var thisApp = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, assetFromTemplateDto.AppId), Log);
-
-            // get and prepare template content
-            var content = GetTemplateContent(assetFromTemplateDto);
 
             // ensure all .cshtml start with "_"
             EnsureCshtmlStartWithUnderscore(assetFromTemplateDto);
 
-            var assetEditor = _assetEditorLazy.Value.Init(thisApp, assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0, Log);
-            assetEditor.EnsureUserMayEditAssetOrThrow(assetFromTemplateDto.Path);
-            return assetEditor.Create(content);
+            var assetEditor = GetAssetEditorOrThrowIfInsufficientPermissions(assetFromTemplateDto);
+
+            // get and prepare template content
+            var content = GetTemplateContent(assetFromTemplateDto);
+
+            return wrapLog("Created", assetEditor.Create(content));
         }
 
         public TemplatesDto GetTemplates(string purpose, string type)
@@ -120,7 +120,7 @@ namespace ToSic.Sxc.WebApi.Assets
         private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(int appId, int templateId, bool global, string path)
         {
             var wrapLog = Log.Call<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
-            var app = _serviceProvider.Build<Apps.App>().InitNoData(_appStates.Identity(null, appId), Log);
+            var app = _serviceProvider.Build<Apps.App>().InitNoData(_appStates.IdentityOfApp(appId), Log);
             var assetEditor = _serviceProvider.Build<AssetEditor>();
 
             // TODO: simplify once we release v13 #cleanUp EOY 2021
@@ -132,15 +132,54 @@ namespace ToSic.Sxc.WebApi.Assets
             return wrapLog(null, assetEditor);
         }
 
-        // TODO STV
-        // - check if file can be created or already exists - if not, set Error-property
-        // - run the code that would generate the file, so the UI can show a real preview
-        public TemplatePreviewDto GetPreview(int appId, string path, string name, string templateKey, bool b)
+        private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(AssetFromTemplateDto assetFromTemplateDto)
         {
-            return new TemplatePreviewDto
+            var wrapLog = Log.Call<AssetEditor>($"a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
+            var thisApp = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, assetFromTemplateDto.AppId), Log);
+            var assetEditor = _assetEditorLazy.Value.Init(thisApp, assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0, Log);
+            assetEditor.EnsureUserMayEditAssetOrThrow(assetEditor.InternalPath);
+            return wrapLog(null, assetEditor);
+        }
+
+        public TemplatePreviewDto GetPreview(int appId, string path, string templateKey, bool b)
+        {
+            var wrapLog = Log.Call<TemplatePreviewDto>($"create a#{appId}, path:{path}, global:{b}, key:{templateKey}");
+            var templatePreviewDto = new TemplatePreviewDto();
+
+            try
             {
-                Preview = _assetTemplates.GetTemplate(templateKey)
-            };
+                var assetFromTemplateDto = new AssetFromTemplateDto()
+                {
+                    AppId = appId,
+                    Path = path?.Replace("/", "\\") ?? string.Empty,
+                    Global = b,
+                    TemplateKey = templateKey,
+                };
+
+                // ensure all .cshtml start with "_"
+                EnsureCshtmlStartWithUnderscore(assetFromTemplateDto);
+
+                // check if file can be created
+                var assetEditor = GetAssetEditorOrThrowIfInsufficientPermissions(assetFromTemplateDto);
+
+                // check if file already exists
+                if (assetEditor.SanitizeFileNameAndCheckIfAssetAlreadyExists())
+                    templatePreviewDto.Error = "Asset already exists.";
+
+                // get and prepare template content
+                templatePreviewDto.Preview = GetTemplateContent(assetFromTemplateDto);
+            }
+            catch (Exception e)
+            {
+                templatePreviewDto.Error = e.Message;
+            }
+            finally
+            {
+                // TODO: validate with 2DM that next have sense
+                templatePreviewDto.IsValid = string.IsNullOrEmpty(templatePreviewDto.Error);
+            }
+
+            return wrapLog("GetPreview", templatePreviewDto);
         }
     }
 }

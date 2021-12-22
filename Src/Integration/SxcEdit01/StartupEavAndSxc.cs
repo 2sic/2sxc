@@ -29,10 +29,10 @@ namespace IntegrationSamples.SxcEdit01
     {
         internal static void AddEavAndSxcIntegration(this IServiceCollection services, IConfiguration configuration)
         {
-            Factory.UseExistingServices(services);
-            Factory.ActivateNetCoreDi(services2 =>
-            {
-                services2
+            //Factory.UseExistingServices(services);
+            //Factory.ActivateNetCoreDi(services2 =>
+            //{
+                services
                     .MvcSystemParts()
                     .AddAdam()
                     .AddImplementations()
@@ -40,7 +40,7 @@ namespace IntegrationSamples.SxcEdit01
                     .AddSxcWebApi()
                     .AddSxcCore()
                     .AddEav();
-            });
+            //});
 
             var sp = services.BuildServiceProvider();
             var connectionString = configuration.GetConnectionString("SiteSqlServer");

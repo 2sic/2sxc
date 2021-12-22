@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// <param name="path"></param>
         /// <param name="content"></param>
         /// <param name="global">this determines, if the app-file store is the global in _default or the local in the current app</param>
-        /// <param name="purpose">auto;razor;token;api;search</param>
+        /// <param name="templateKey"></param>
         /// <returns></returns>
         [Obsolete("This Method is Deprecated", false)]
         [HttpPost]
@@ -77,8 +77,15 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             [FromQuery] string path,
             [FromBody] FileContentsDto content, // note: as of 2020-09 the content is never submitted
             [FromQuery] bool global,
-            [FromQuery] string purpose = Purpose.Auto
-        ) => Backend().Create(appId, path, content, purpose, global);
+            [FromQuery] string templateKey // as of 2021-12, all create calls include templateKey
+            //[FromUri] string purpose = Purpose.Auto
+        ) => Backend().Create(new AssetFromTemplateDto
+        {
+            AppId = appId,
+            Path = path,
+            Global = global,
+            TemplateKey = templateKey,
+        });
 
         /// <summary>
         /// Update an asset with POST
@@ -95,10 +102,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             [FromBody] AssetEditInfo template,
             [FromQuery] int templateId = 0,
             [FromQuery] string path = null, // identifier is either template Id or path
-            // todo w/SPM - global never seems to be used - must check why and if we remove or add to UI
+                                            // todo w/SPM - global never seems to be used - must check why and if we remove or add to UI
             [FromQuery] bool global = false
         ) => Backend().Save(appId, template, templateId, global, path);
-
 
         /// <summary>
         /// Get all asset template types
@@ -109,15 +115,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         public TemplatesDto GetTemplates(string purpose = null, string type = null) => Backend().GetTemplates(purpose, type);
 
         [HttpGet]
-        public TemplatePreviewDto Preview(int appId, string path, string name, string templateKey, bool global = false)
-            => Backend().GetPreview(appId, path, name, templateKey, global);
+        public TemplatePreviewDto Preview(int appId, string path, string templateKey, bool global = false)
+            => Backend().GetPreview(appId, path, templateKey, global);
 
-        /// <summary>
-        /// Create a new file from template
-        /// </summary>
-        /// <param name="assetFromTemplateDto">AssetFromTemplateDto</param>
-        /// <returns></returns>
-        [HttpPost]
-        public bool CreateTemplate(AssetFromTemplateDto assetFromTemplateDto) => Backend().Create(assetFromTemplateDto);
     }
 }

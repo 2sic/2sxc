@@ -39,19 +39,19 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 
             var psf = Block?.Context?.PageServiceShared;
 
-            if (js == true || api ==true || forms == true) psf?.Activate(BuiltInFeatures.Core.Key);
+            if (js == true || api ==true || forms == true) psf?.Activate(BuiltInFeatures.JsCore.Key);
 
             // only update the values if true, otherwise leave untouched
-            if (api == true || forms == true) psf?.Activate(BuiltInFeatures.EditApi.Key);
+            if (api == true || forms == true) psf?.Activate(BuiltInFeatures.JsCms.Key);
 
-            if (styles.HasValue) psf?.Activate(BuiltInFeatures.EditUi.Key);
+            if (styles.HasValue) psf?.Activate(BuiltInFeatures.Toolbars.Key);
 
             if (context.HasValue)
                 hostWithInternals.UiAddEditContext = context.Value;
 
             if (autoToolbar.HasValue)
             {
-                psf?.Activate(BuiltInFeatures.AutoToolbarGlobal.Key);
+                psf?.Activate(BuiltInFeatures.ToolbarsAuto.Key);
                 hostWithInternals.UiAutoToolbar = autoToolbar.Value;
             }
 

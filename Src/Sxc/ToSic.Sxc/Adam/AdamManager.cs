@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
@@ -20,14 +23,16 @@ namespace ToSic.Sxc.Adam
     {
         #region Constructor for inheritance
 
-        protected AdamManager(Lazy<AppRuntime> appRuntimeLazy, Lazy<AdamMetadataMaker> metadataMakerLazy, string logName) : base(logName ?? "Adm.Managr")
+        protected AdamManager(Lazy<AppRuntime> appRuntimeLazy, Lazy<AdamMetadataMaker> metadataMakerLazy, AdamConfiguration adamConfiguration, string logName) : base(logName ?? "Adm.Managr")
         {
             _appRuntimeLazy = appRuntimeLazy;
             _metadataMakerLazy = metadataMakerLazy;
+            _adamConfiguration = adamConfiguration;
         }
         
         public AdamMetadataMaker MetadataMaker => _metadataMakerLazy.Value;
         private readonly Lazy<AdamMetadataMaker> _metadataMakerLazy;
+        private readonly AdamConfiguration _adamConfiguration;
 
         public AppRuntime AppRuntime => _appRuntimeLazy.Value;
         private readonly Lazy<AppRuntime> _appRuntimeLazy;
@@ -60,8 +65,7 @@ namespace ToSic.Sxc.Adam
         /// <summary>
         /// Path to the app assets
         /// </summary>
-        public string Path => _path ?? (_path = Configuration.AppReplacementMap(AppContext.AppState)
-                                  .ReplaceInsensitive(Configuration.AdamAppRootFolder));
+        public string Path => _path ?? (_path = _adamConfiguration.PathForApp(AppContext.AppState));
         private string _path;
 
 

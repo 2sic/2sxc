@@ -82,6 +82,7 @@ namespace ToSic.Sxc
             services.TryAddTransient<AdamMetadataMaker>();
             services.TryAddTransient<AdamSecurityChecksBase, AdamSecurityChecksBasic>();
             services.TryAddTransient<IAdamPaths, AdamPathsBase>();
+            services.TryAddTransient<AdamConfiguration>();
 
             // WIP - add net-core specific stuff
             services.AddNetVariations();
@@ -117,6 +118,26 @@ namespace ToSic.Sxc
 
             // 13 - ToolbarService
             services.TryAddTransient<IToolbarService, ToolbarService>();
+
+
+            // Add possibly missing fallback services
+            // This must always be at the end here so it doesn't accidentally replace something we actually need
+            services.AddSxcCoreFallbackServices();
+
+
+            // Add possibly missing fallback services
+            // This must always be at the end here so it doesn't accidentally replace something we actually need
+            services.AddSxcCoreFallbackServices();
+
+
+            // Add possibly missing fallback services
+            // This must always be at the end here so it doesn't accidentally replace something we actually need
+            services.AddSxcCoreFallbackServices();
+
+
+            // Add possibly missing fallback services
+            // This must always be at the end here so it doesn't accidentally replace something we actually need
+            services.AddSxcCoreFallbackServices();
 
 
             // Add possibly missing fallback services

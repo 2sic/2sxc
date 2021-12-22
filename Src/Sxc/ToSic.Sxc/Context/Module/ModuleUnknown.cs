@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Context
         }
 
         public int Id => Eav.Constants.NullId;
-        public bool IsPrimary => true;
+        public bool IsContent => true;
 
         public IBlockIdentifier BlockIdentifier =>
             new BlockIdentifier(Eav.Constants.NullId, Eav.Constants.NullId, Guid.Empty, Guid.Empty);

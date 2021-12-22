@@ -6,7 +6,7 @@ using ToSic.Sxc.Web;
 namespace ToSic.Sxc.Blocks
 {
     // Important: There is a critical bug in Razor that methods which an interface inherits
-    // Will fail when called using dynamic parameters. 
+    // Will fail when called using dynamic parameters.
     // https://stackoverflow.com/questions/3071634/strange-behaviour-when-using-dynamic-types-as-method-parameters
     // Because of this,
     // - ToSic.Sxc.Web.IPageService.SetTitle("ok") works

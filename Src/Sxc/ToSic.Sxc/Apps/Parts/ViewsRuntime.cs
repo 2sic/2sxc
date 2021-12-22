@@ -8,6 +8,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
@@ -101,8 +102,9 @@ namespace ToSic.Sxc.Apps
 	            Name = t.Name,
 	            ContentTypeStaticName = t.ContentType,
 	            IsHidden = t.IsHidden,
-	            Thumbnail = Parent.ServiceProvider.Build<TemplateHelpers>().Init(app, Log).IconPathOrNull(t, PathTypes.Link)
-	        });
+	            Thumbnail = Parent.ServiceProvider.Build<TemplateHelpers>().Init(app, Log).IconPathOrNull(t, PathTypes.Link),
+                IsDefault = t.Metadata.HasType(Decorators.IsDefaultDecorator),
+            });
 	    }
 
 
@@ -132,7 +134,7 @@ namespace ToSic.Sxc.Apps
             var templates = GetAll().ToList();
             var visible = templates.Where(t => !t.IsHidden).ToList();
 
-            return Parent.ContentTypes.All.OfScope(Settings.AttributeSetScope) 
+            return Parent.ContentTypes.All.OfScope(Scopes.Default/* Settings.AttributeSetScope*/) 
                 .Where(ct => templates.Any(t => t.ContentType == ct.StaticName)) // must exist in at least 1 template
                 .OrderBy(ct => ct.Name)
                 .Select(ct =>
@@ -146,7 +148,8 @@ namespace ToSic.Sxc.Apps
                         Name = ct.Name,
                         IsHidden = visible.All(t => t.ContentType != ct.StaticName),   // must check if *any* template is visible, otherwise tell the UI that it's hidden
                         Thumbnail = thumbnail,
-                        Properties = _dataToFormatLight.Convert(metadata)
+                        Properties = _dataToFormatLight.Convert(metadata),
+                        IsDefault = ct.Metadata.HasType(Decorators.IsDefaultDecorator),
                     };
                 });
         }

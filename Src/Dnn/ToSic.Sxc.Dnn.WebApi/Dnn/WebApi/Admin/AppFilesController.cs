@@ -23,7 +23,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
         private AppAssetsBackend Backend() => GetService<AppAssetsBackend>().Init(Log);
 
-
         [HttpGet]
         public List<string> All(int appId, bool global, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false) 
             => Backend().List(appId, global, path, mask, withSubfolders, returnFolders);
@@ -42,7 +41,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             bool global = false)
             => Backend().Get(appId, templateId, path, global);
 
-
         /// <summary>
         /// Create a new file (if it doesn't exist yet) and optionally prefill it with content
         /// </summary>
@@ -50,20 +48,24 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <param name="path"></param>
         /// <param name="content"></param>
         /// <param name="global">this determines, if the app-file store is the global in _default or the local in the current app</param>
-        /// <param name="purpose">auto;razor;token;api;search</param>
+        /// <param name="templateKey"></param>
         /// <returns></returns>
-        [Obsolete("This Method is Deprecated", false)]
         [HttpPost]
         public bool Create(
             [FromUri] int appId,
             [FromUri] string path,
             [FromBody] FileContentsDto content, // note: as of 2020-09 the content is never submitted
             [FromUri] bool global,
-            [FromUri] string purpose = Purpose.Auto)
-            => Backend().Create(appId, path, content, purpose, global);
-
-
-
+            [FromUri] string templateKey // as of 2021-12, all create calls include templateKey
+            //[FromUri] string purpose = Purpose.Auto
+            )
+            => Backend().Create(new AssetFromTemplateDto
+            {
+                AppId = appId,
+                Path = path,
+                Global = global,
+                TemplateKey = templateKey,
+            });
 
         /// <summary>
         /// Update an asset with POST
@@ -82,7 +84,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             [FromUri] bool global = false) 
             => Backend().Save(appId: appId, template: template, templateId: templateId, global: global, path: path);
 
-
         /// <summary>
         /// Get all asset template types
         /// </summary>
@@ -92,16 +93,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public TemplatesDto GetTemplates(string purpose = null, string type = null) => Backend().GetTemplates(purpose, type);
 
         [HttpGet]
-        public TemplatePreviewDto Preview(int appId, string path, string name, string templateKey, bool global = false)
-            => Backend().GetPreview(appId, path, name, templateKey, global);
-
-        /// <summary>
-        /// Create a new file from template
-        /// </summary>
-        /// <param name="assetFromTemplateDto">AssetFromTemplateDto</param>
-        /// <returns></returns>
-        [HttpPost]
-        public bool CreateTemplate(AssetFromTemplateDto assetFromTemplateDto) => Backend().Create(assetFromTemplateDto);
+        public TemplatePreviewDto Preview(int appId, string path, string templateKey, bool global = false)
+            => Backend().GetPreview(appId, path, templateKey, global);
 
     }
 }

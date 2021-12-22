@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
+using ToSic.Eav.Persistence.File;
 using static ToSic.Razor.Blade.Tag;
 
 namespace ToSic.Sxc.Web.WebApi.System
@@ -92,15 +94,15 @@ namespace ToSic.Sxc.Web.WebApi.System
         {
             ThrowIfNotSuperUser();
 
-            var globTypes = _globalTypes.AllContentTypes().Values;
-            return TypesTable(Constants.PresetAppId, globTypes, null);
+            var globTypes = _appStates.GetPresetApp().ContentTypes;
+            return TypesTable(Eav.Constants.PresetAppId, globTypes, null);
         }
 
         public string GlobalTypesLog()
         {
             ThrowIfNotSuperUser();
             var msg = PageStyles() + LogHeader();
-            var log = ToSic.Eav.Types.GlobalTypes.TypeLoader?.Log;
+            var log = Runtime.LoadLog;
             return msg + (log == null
                 ? P("log is null").ToString()
                 : DumpTree($"Log for Global Types loading", log));

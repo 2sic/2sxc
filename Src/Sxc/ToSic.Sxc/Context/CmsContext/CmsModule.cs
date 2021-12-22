@@ -23,7 +23,8 @@ namespace ToSic.Sxc.Context
 
 
         public IMetadataOf Metadata
-            => _metadata ?? (_metadata = new MetadataOf<string>((int)TargetTypes.CmsItem, CmsMetadata.ModulePrefix + Id, _block.Context.AppState));
+            => _metadata ?? (_metadata = _block.Context.AppState.GetMetadataOf(TargetTypes.Module,
+                Id, "Module " + Id));
         private IMetadataOf _metadata;
     }
 }

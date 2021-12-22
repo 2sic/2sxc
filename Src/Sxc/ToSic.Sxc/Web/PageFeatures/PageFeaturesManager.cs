@@ -20,9 +20,9 @@ namespace ToSic.Sxc.Web.PageFeatures
             Register(
                 BuiltInFeatures.JQuery,
                 BuiltInFeatures.PageContext,
-                BuiltInFeatures.Core,
-                BuiltInFeatures.EditApi,
-                BuiltInFeatures.EditUi,
+                BuiltInFeatures.JsCore,
+                BuiltInFeatures.JsCms,
+                BuiltInFeatures.Toolbars,
                 BuiltInFeatures.TurnOn
             );
         }

@@ -4,6 +4,7 @@ using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Helpers;
 using ToSic.Sxc.Dnn.WebApi.Logging;
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 	        
             // ReSharper disable VirtualMemberCallInConstructor
 	        if (HistoryLogGroup != null)
-                Eav.Factory.StaticBuild<LogHistory>().Add(HistoryLogGroup, Log);
+                GetService<LogHistory>().Add(HistoryLogGroup, Log);
             // ReSharper restore VirtualMemberCallInConstructor
 
         }
@@ -64,7 +65,9 @@ namespace ToSic.Sxc.Dnn.WebApi
         protected void PreventServerTimeout300() => HttpContext.Current.Server.ScriptTimeout = 300;
 
         /// <inheritdoc />
-        public TService GetService<TService>() => Eav.Factory.StaticBuild<TService>();
+        public TService GetService<TService>() => (_serviceProvider ?? (_serviceProvider = DnnStaticDi.GetServiceProvider())).Build<TService>();
+        // Must cache it, to be really sure we use the same ServiceProvider in the same request
+        private IServiceProvider _serviceProvider;
 
     }
 }

@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Errors;
-using ToSic.Eav.WebApi.Helpers;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.WebApi.App
 {
-    public class AppContent: WebApiBackendBase<AppContent>
+    public class AppContent : WebApiBackendBase<AppContent>
     {
 
         #region Constructor / DI
@@ -81,7 +82,7 @@ namespace ToSic.Sxc.WebApi.App
             var permCheck = ThrowIfNotAllowedInItem(itm, GrantSets.ReadSomething, Context.AppState);
 
             // in case draft wasn't allow, get again with more restricted permissions 
-            if (!permCheck.EnsureAny(GrantSets.ReadDraft)) 
+            if (!permCheck.EnsureAny(GrantSets.ReadDraft))
                 itm = getOne(Context.AppState.ListPublished);
 
             return InitEavAndSerializer(Context.AppState.AppId, Context.UserMayEdit).Convert(itm);
@@ -97,7 +98,6 @@ namespace ToSic.Sxc.WebApi.App
         {
             Log.Add($"create or update type:{contentType}, id:{id}, path:{appPath}");
 
-
             // if app-path specified, use that app, otherwise use from context
 
             // Check that this ID is actually of this content-type,
@@ -110,18 +110,19 @@ namespace ToSic.Sxc.WebApi.App
             else ThrowIfNotAllowedInItem(itm, Grants.Update.AsSet(), Context.AppState);
 
             // Convert to case-insensitive dictionary just to be safe!
-            newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.InvariantCultureIgnoreCase);
+            var newContentItemCaseInsensitive = new Dictionary<string, object>(newContentItem, StringComparer.InvariantCultureIgnoreCase);
 
             // Now create the cleaned up import-dictionary so we can create a new entity
             var cleanedNewItem = new AppContentEntityBuilder(Log)
-                .CreateEntityDictionary(contentType, newContentItem, Context.AppState/*.AppId*/);
+                .CreateEntityDictionary(contentType, newContentItemCaseInsensitive, Context.AppState);
 
             var userName = Context.User.IdentityToken;
 
             var realApp = GetApp(Context.AppState.AppId, Context.UserMayEdit);
             if (id == null)
             {
-                var entity = realApp.Data.Create(contentType, cleanedNewItem, userName);
+                var metadata = GetMetadata(newContentItemCaseInsensitive);
+                var entity = realApp.Data.Create(contentType, cleanedNewItem, userName, metadata);
                 id = entity.EntityId;
             }
             else
@@ -131,8 +132,30 @@ namespace ToSic.Sxc.WebApi.App
                 .Convert(realApp.Data.List.One(id.Value));
         }
 
+        private static Target GetMetadata(Dictionary<string, object> newContentItemCaseInsensitive)
+        {
+            if (!newContentItemCaseInsensitive.Keys.Contains(Attributes.JsonKeyMetadataFor)) return null;
+
+            var metadataFor = newContentItemCaseInsensitive[Attributes.JsonKeyMetadataFor] as JObject;
+            if (metadataFor == null) return null;
+
+            return new Target(GetTargetType(metadataFor[Attributes.TargetNiceName]), null)
+            {
+                KeyGuid = (Guid?) metadataFor[Attributes.GuidNiceName],
+                KeyNumber = (int?) metadataFor[Attributes.NumberNiceName],
+                KeyString = (string) metadataFor[Attributes.StringNiceName]
+            };
+        }
+
+        private static int GetTargetType(JToken target)
+        {
+            if (target.Type == JTokenType.Integer) return (int) target;
+            if (target.Type == JTokenType.String && Enum.TryParse<TargetTypes>((string) target, out var targetTypes)) return (int) targetTypes;
+            throw new ArgumentOutOfRangeException(Attributes.TargetNiceName, "Value is not 'int' or TargetTypes 'string'.");
+        }
+
         #endregion
-        
+
         #region helpers / initializers to prep the EAV and Serializer
 
         private IConvertToEavLight InitEavAndSerializer(int appId, bool userMayEdit)
@@ -140,7 +163,7 @@ namespace ToSic.Sxc.WebApi.App
             Log.Add($"init eav for a#{appId}");
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
             var ser = _entToDicLazy.Value;
-            ser.WithGuid = true; //.EnableGuids();
+            ser.WithGuid = true;
             ((ConvertToEavLightWithCmsInfo)ser).WithEdit = userMayEdit;
             return ser;
         }

@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A94DE6D7-D1E6-4BE2-B5B5-DC4A6A61CD80}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ToSic.Sxc</RootNamespace>
+    <AssemblyName>ToSic.Sxc.Dnn.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <Deterministic>true</Deterministic>
+    <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugOqtane|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DebugOqtane\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugDnn|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DebugDnn\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="DotNetNuke">
+      <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.dll</HintPath>
+      <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DotNetNuke.Web">
+      <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.Web.dll</HintPath>
+      <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DotNetNuke.Web.Client">
+      <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.Web.Client.dll</HintPath>
+      <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.WebPages">
+      <HintPath>..\..\..\Dependencies\System.Web\System.Web.WebPages.dll</HintPath>
+      <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="ToSic.Razor, Version=3.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net45\ToSic.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="ToSic.Razor.Dnn">
+      <HintPath>..\..\..\Dependencies\RazorBlade\Dnn\ToSic.Razor.Dnn.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Compatibility\Eav\ToSic.Eav.Factory.cs" />
+    <Compile Include="Compatibility\ToSic.Eav.Configuration.Features.cs" />
+    <Compile Include="Compatibility\Sxc\OldDataToDictionaryWrapper.cs" />
+    <Compile Include="Compatibility\Sxc\ToSic.Sxc.Blocks.Render.cs" />
+    <Compile Include="Compatibility\Sxc\SxcHelper.cs" />
+    <Compile Include="Compatibility\Eav\ToSic.Eav.Conversion.EntitiesToDictionary.cs" />
+    <Compile Include="Compatibility\ToSic.SexyContent.ContentBlocks.Render.cs" />
+    <Compile Include="Compatibility\Sxc\ToSic.Sxc.Conversion.DataToDictionary.cs" />
+    <Compile Include="Custom.Dnn\Code12.cs" />
+    <Compile Include="Dnn\Adam\DnnAdam.cs" />
+    <Compile Include="Dnn\Cms\DnnPagePublishingResolver.cs" />
+    <Compile Include="Dnn\Code\IDnnDynamicCodeAdditions.cs" />
+    <Compile Include="Dnn\DnnConstants.cs" />
+    <Compile Include="Dnn\DnnEnvironmentLogger.cs" />
+    <Compile Include="Dnn\DnnStaticDi.cs" />
+    <Compile Include="Dnn\DynamicCode.cs" />
+    <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.DataSources.DnnSqlDataSource.cs" />
+    <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource.cs" />
+    <Compile Include="Dnn920\SharpZipLibRedirect.cs" />
+    <Compile Include="Dnn940\RegisterWebApiActivator.cs" />
+    <Compile Include="Dnn940\WebApiHttpControllerActivator.cs" />
+    <Compile Include="Dnn\Install\DnnEnvironmentInstaller_IsRunning.cs" />
+    <Compile Include="Dnn\Install\DnnEnvironmentInstaller_Manual.cs" />
+    <Compile Include="Dnn\Install\DnnEnvironmentInstaller_Messages.cs" />
+    <Compile Include="Dnn\Install\DnnEnvironmentInstaller_Statics.cs" />
+    <Compile Include="Dnn\Pages\ModuleWithContent.cs" />
+    <Compile Include="Dnn\Pages\Pages.cs" />
+    <Compile Include="Dnn\Run\ContextOfBlockExtensions.cs" />
+    <Compile Include="Dnn\Run\DnnAppFileSystemLoader.cs" />
+    <Compile Include="Dnn\Run\DnnContext.cs" />
+    <Compile Include="Dnn\Factory.cs" />
+    <Compile Include="Dnn\Run\DnnPlatformContext.cs" />
+    <Compile Include="Dnn\Services\DnnPageChanges.cs" />
+    <Compile Include="Dnn\Services\DnnLogService.cs" />
+    <Compile Include="Dnn\Web\DnnHttp.cs" />
+    <Compile Include="Dnn\Web\DnnJsApiHeader.cs" />
+    <Compile Include="Dnn\Web\DnnClientResources.cs" />
+    <Compile Include="Dnn\Code\IDnnDynamicCode.cs" />
+    <Compile Include="Dnn\Run\DnnSecurity.cs" />
+    <Compile Include="Dnn\Code\DnnDynamicCodeRoot.cs" />
+    <Compile Include="Dnn\Web\DnnClientDependencyOptimizer.cs" />
+    <Compile Include="Dnn\DataSources\DnnSql.cs" />
+    <Compile Include="Dnn\DataSources\DnnUserProfile.cs" />
+    <Compile Include="Compatibility\ToSic.SexyContent.DataSources.DnnSqlDataSource.cs" />
+    <Compile Include="Dnn\Adam\DnnAdamFileSystem.cs" />
+    <Compile Include="Dnn\Web\DnnLinkHelper.cs" />
+    <Compile Include="Dnn\Run\DnnModuleUpdater.cs" />
+    <Compile Include="Dnn\DnnBusinessController.cs" />
+    <Compile Include="Dnn\Run\DnnModule.cs" />
+    <Compile Include="Dnn\Run\DnnPermissionCheck.cs" />
+    <Compile Include="Dnn\Run\DnnSite.cs" />
+    <Compile Include="Dnn\Run\DnnValueConverter.cs" />
+    <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.Factory.cs" />
+    <Compile Include="Dnn\Run\DnnFingerprint.cs" />
+    <Compile Include="Dnn\ImportExport\DnnImportExportEnvironment.cs" />
+    <Compile Include="Dnn\ImportExport\DnnXmlExporter.cs" />
+    <Compile Include="Dnn\Install\Helpers.cs" />
+    <Compile Include="Dnn\Install\DnnEnvironmentInstaller.cs" />
+    <Compile Include="Dnn\Install\DnnFileLock.cs" />
+    <Compile Include="Dnn\Install\DnnInstallLogger.cs" />
+    <Compile Include="Dnn\Install\InstallVersion.cs" />
+    <Compile Include="Dnn\Run\DnnLogging.cs" />
+    <Compile Include="Dnn\Services\DnnMailService.cs" />
+    <Compile Include="Dnn\Web\DnnModuleSettings.cs" />
+    <Compile Include="Dnn\Cms\DnnPagePublishing.cs" />
+    <Compile Include="Dnn\Cms\DnnPagePublishing_ModuleSettings.cs" />
+    <Compile Include="Dnn\Run\IDnnContext.cs" />
+    <Compile Include="Dnn\Search\SearchController.cs" />
+    <Compile Include="Dnn\Search\SearchIndexException.cs" />
+    <Compile Include="Dnn\Run\DnnUser.cs" />
+    <Compile Include="Dnn\LookUp\DnnLookUpEngineResolver.cs" />
+    <Compile Include="Dnn\LookUp\TokenReplaceDnn.cs" />
+    <Compile Include="Dnn\LookUp\LookUpInDnnPropertyAccess.cs" />
+    <Compile Include="Dnn\Run\DnnZoneMapper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Dnn\Install\DnnReadyCheckTurbo.cs" />
+    <Compile Include="Dnn\Search\SearchItem.cs" />
+    <Compile Include="ToSic.Sxc.Code\CodeCompilerNetFull.cs" />
+    <Compile Include="ToSic.Sxc.DataSources\Pages.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">
+      <Project>{fa1b4495-6b85-400f-a5e3-0e292ccbfae2}</Project>
+      <Name>ToSic.Eav.Apps</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj">
+      <Project>{82f94588-269b-4cdd-98d1-d5cb14c39090}</Project>
+      <Name>ToSic.Eav.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.DataSources\ToSic.Eav.DataSources.csproj">
+      <Project>{daae8e21-ca5f-400b-9f5a-5e4e1196b21b}</Project>
+      <Name>ToSic.Eav.DataSources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj">
+      <Project>{5a75cd35-99f4-4cf0-944a-dc0f5d68b430}</Project>
+      <Name>ToSic.Eav.ImportExport</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.WebApi\ToSic.Eav.WebApi.csproj">
+      <Project>{f93f5fb1-95a6-4c4b-bdcf-b001e82f766f}</Project>
+      <Name>ToSic.Eav.WebApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj">
+      <Project>{5D87EB0C-BF67-4814-A0FF-D96256C9B852}</Project>
+      <Name>ToSic.Sxc</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Dnn940\readme.md" />
+    <None Include="Dnn\Search\readme.md" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

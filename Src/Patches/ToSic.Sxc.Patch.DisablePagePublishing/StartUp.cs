@@ -1,36 +1,32 @@
-﻿using System.Linq;
-using DotNetNuke.Web.Api;
+﻿using DotNetNuke.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav;
+using System.Linq;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Cms.Publishing;
 
+
 namespace ToSic.Sxc.Patch.DisablePagePublishing
 {
-    public class StartUp: IServiceRouteMapper
+    public class StartUp: IDnnStartup
     {
-        public void RegisterRoutes(IMapRoute mapRouteManager)
+        public void ConfigureServices(IServiceCollection services)
         {
             // Stop if this had already run, and don't re-run no matter what happens afterwards
             if (_alreadyRegistered) return;
             _alreadyRegistered = true;
 
-            var found = false;
-            Factory.ActivateNetCoreDi(services =>
-            {
-                // Use Try-Add in case this code runs before the DNN standard initialization
-                // It will be skipped if Dnn already registered it's resolver
-                var serviceDescriptor = services.FirstOrDefault(descriptor => descriptor.ServiceType == typeof(IPagePublishingResolver));
-                found = serviceDescriptor != null;
-                if (found)
-                    services.Remove(serviceDescriptor);
-                services.TryAddTransient<IPagePublishingResolver, DisablePagePublishingResolver>();
+            // Use Try-Add in case this code runs before the DNN standard initialization
+            // It will be skipped if Dnn already registered it's resolver
+            var serviceDescriptor = services.FirstOrDefault(descriptor => descriptor.ServiceType == typeof(IPagePublishingResolver));
+            var found = serviceDescriptor != null;
+            if (found)
+                services.Remove(serviceDescriptor);
+            services.TryAddTransient<IPagePublishingResolver, DisablePagePublishingResolver>();
 
-                // Now replace existing. If Dnn had already run, it will replace that, otherwise the one we just added
-                //services.Replace(new ServiceDescriptor(typeof(IPagePublishing), typeof(DisablePagePublishingResolver)));
-            });
+            // Now replace existing. If Dnn had already run, it will replace that, otherwise the one we just added
+            //services.Replace(new ServiceDescriptor(typeof(IPagePublishing), typeof(DisablePagePublishingResolver)));
 
             // Place a note into the insights, so it's clear that this happened
             try
@@ -42,7 +38,7 @@ namespace ToSic.Sxc.Patch.DisablePagePublishing
                 History.Add(Constants.PatchesHistoryName, log);
             }
             catch { /* ignore */ }
-            
+
         }
 
         private bool _alreadyRegistered;

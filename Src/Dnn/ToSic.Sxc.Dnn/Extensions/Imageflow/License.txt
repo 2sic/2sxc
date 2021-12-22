@@ -1,0 +1,4 @@
+<p>ToSic.Imageflow.Dnn extension for <a href="https://dnncommunity.org/" target="_blank">DNN</a></p>
+<p>2sic <a href="https://www.2sic.com/" target="_blank">https://www.2sic.com/</a></p>
+<p>Imazen <a href="https://www.imageflow.io/" target="_blank">Imageflow</a></p>
+<p><a href="https://github.com/imazen/imageflow/blob/main/LICENSE" target="_blank">AGPL-3.0 License</a></p>

@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Blocks
         {
             Init(ctx, ctx.Module.BlockIdentifier, parentLog);
             var wrapLog = Log.Call<BlockFromModule>(useTimer: true);
-            IsContentApp = ctx.Module.IsPrimary;
+            IsContentApp = ctx.Module.IsContent;
             CompleteInit(null, ctx.Module.BlockIdentifier, ctx.Module.Id);
             return wrapLog("ok", this);
         }

@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Configuration;
-using ToSic.Eav.Context;
+﻿using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
@@ -26,7 +25,7 @@ namespace ToSic.Sxc.Run
             var destinationPart = "";
             if (destination == RemoteDestinations.AutoConfigure)
                 destinationPart =
-                    $"&destination=autoconfigure{(isContentApp ? Eav.Constants.ContentAppName.ToLowerInvariant() : "app")}";
+                    $"&destination=autoconfigure{(isContentApp ? Eav.Constants.ContentAppAutoConfigureId : Eav.Constants.AppAutoConfigureId)}";
             else if (destination == RemoteDestinations.Features) 
                 destinationPart = "&destination=features";
 

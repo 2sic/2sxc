@@ -3,6 +3,8 @@ using System.Net.Http;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.Context;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.ImportExport;
@@ -44,8 +46,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         public string RemoteWizardUrl(bool isContentApp) =>
             GetService<IEnvironmentInstaller>().Init(Log)
                 .GetAutoInstallPackagesUiUrl(
-                    GetService<DnnSite>(), // new DnnSite(),
-                    GetService<DnnModule>().Init(Request.FindModuleInfo(), Log), 
+                    GetService<ISite>(), ((DnnModule)GetService<IModule>()).Init(Request.FindModuleInfo(), Log), 
                     isContentApp);
 
 
@@ -62,10 +63,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
             PreventServerTimeout300();
 
             Log.Add("install package:" + packageUrl);
-            var container = GetService<DnnModule>().Init(ActiveModule, Log);
-            var block = container.BlockIdentifier;
+            var module = ((DnnModule)GetService<IModule>()).Init(ActiveModule, Log);
+            var block = module.BlockIdentifier;
 
-            var result = GetService<ImportFromRemote>().Init(new DnnUser(), Log)
+            var importFromRemote = GetService<ImportFromRemote>();
+
+            var fromRemote = importFromRemote.Init(new DnnUser(), Log);
+
+            var result = fromRemote
                 .InstallPackage(block.ZoneId, block.AppId, ActiveModule.DesktopModule.ModuleName == "2sxc-app", packageUrl);
 
             Log.Add("install completed with success:" + result.Item1);

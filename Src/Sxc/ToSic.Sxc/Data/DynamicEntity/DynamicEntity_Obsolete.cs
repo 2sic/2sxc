@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Services;
 
@@ -39,9 +40,9 @@ namespace ToSic.Sxc.Data
         public System.Web.IHtmlString Render()
         {
             if (_Dependencies.CompatibilityLevel > Constants.MaxLevelForEntityDotRender)
-                throw new Exception("content.Render() is deprecated in the new RazorComponent. Use ToSic.Sxc.Blocks.Render.One(content) instead. See https://r.2sxc.org/EditToolbar");
+                throw new Exception("content.Render() is deprecated in the new RazorComponent. Use GetService&lt;ToSic.Sxc.Services.IRenderService&gt;().One(content) instead.");
 
-            return Factory.StaticBuild<Services.IRenderService>().One(this);
+            return _Dependencies.BlockOrNull?.Context.ServiceProvider.Build<Services.IRenderService>().One(this);
         }
 
         [PrivateApi("shouldn't be used, but it may be published by accident, so shouldn't be removed. ")]

@@ -14,5 +14,6 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         public string EntityType => Entity?.Type?.Name;
+
     }
 }

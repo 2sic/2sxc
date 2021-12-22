@@ -1,4 +1,7 @@
-﻿using ToSic.Eav.Plumbing;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -46,6 +49,12 @@ namespace ToSic.Sxc.Edit.Toolbar
             if (hasGeneratedCmdParams && hasCmdParams) result += "&";
             if (hasCmdParams) result += Parameters;
             return result;
+        }
+
+        protected string BuildValidParameterList(IEnumerable<(string, string)> values)
+        {
+            var keep = values.Where(set => !string.IsNullOrWhiteSpace(set.Item2));
+            return string.Join("&", keep.Select(set => $"{set.Item1}={set.Item2}"));
         }
     }
 }

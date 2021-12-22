@@ -16,12 +16,12 @@ namespace ToSic.Sxc.Context
         }
         private readonly AppState _appState;
 
-        public int Id => _contents?.Id ?? 0;
+        public int Id => _contents?.Id ?? Eav.Constants.NullId;
         public string Url => _contents?.Url ?? string.Empty;
         public string UrlRoot => _contents.UrlRoot ?? string.Empty;
 
         public IMetadataOf Metadata
-            => _metadata ?? (_metadata = new MetadataOf<string>((int)TargetTypes.CmsItem, CmsMetadata.SitePrefix + Id, _appState));
+            => _metadata ?? (_metadata = _appState.GetMetadataOf(TargetTypes.Site, Id, Url));
         private IMetadataOf _metadata;
 
     }

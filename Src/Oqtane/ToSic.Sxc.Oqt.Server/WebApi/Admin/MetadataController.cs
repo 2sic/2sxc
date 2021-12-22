@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.WebApi;
@@ -32,11 +31,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         }
 
         [HttpGet]
-        public IEnumerable<IDictionary<string, object>> Get(int appId, int targetType, string keyType, string key, string contentType = null)
-            => Backend.Get(appId, targetType, keyType, key, contentType).Items;
-
-        [HttpGet]
-        public MetadataListDto GetV13(int appId, int targetType, string keyType, string key, string contentType = null)
+        public MetadataListDto Get(int appId, int targetType, string keyType, string key, string contentType = null)
             => Backend.Get(appId, targetType, keyType, key, contentType);
 
     }

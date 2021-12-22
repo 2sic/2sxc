@@ -18,6 +18,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
     [Route(WebApiConstants.AppRoot+ "/{appPath}/content")]
     [Route(WebApiConstants.AppRoot2+ "/{appPath}/content")]
     [Route(WebApiConstants.AppRoot3 + "/{appPath}/content")]
+    [Route(WebApiConstants.AppRoot + "/{appPath}/data")] // new, v13
+    [Route(WebApiConstants.AppRoot2 + "/{appPath}/data")] // new, v13
+    [Route(WebApiConstants.AppRoot3 + "/{appPath}/data")] // new, v13
 
     // Beta routes
     [Route( WebApiConstants.WebApiStateRoot + "/app/{appPath}/content/")]

@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Metadata;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Adam
 {
@@ -9,7 +10,7 @@ namespace ToSic.Sxc.Adam
     /// This contains properties which both <see cref="IFolder"/> and <see cref="IFile"/> have in common.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public interface IAsset: IIsMetadataTarget
+    public interface IAsset: IHasMetadata // IIsMetadataTarget
     {
         #region Metadata
         /// <summary>
@@ -24,13 +25,13 @@ namespace ToSic.Sxc.Adam
         /// to help in razor template etc.
         /// </summary>
         /// <returns>An IDynamicEntity which contains the metadata, or an empty IDynamicEntity which still works if no metadata exists.</returns>
-        dynamic Metadata { get; }
+        IDynamicMetadata Metadata { get; }
 
-        /// <summary>
-        /// Experimental
-        /// </summary>
-        [PrivateApi]
-        ITarget MetadataId { get; }
+        ///// <summary>
+        ///// Experimental
+        ///// </summary>
+        //[PrivateApi]
+        //ITarget MetadataId { get; }
         #endregion
 
 

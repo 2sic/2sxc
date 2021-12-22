@@ -86,7 +86,7 @@ namespace ToSic.Sxc.Blocks
         private IBlockIdentifier LoadBlockDefinition(int zoneId, IEntity blockDefinition, ILog log)
         {
             var appName = blockDefinition.Value<string>(CbPropertyApp) ?? "";
-            IsContentApp = appName == Eav.Constants.DefaultAppName;
+            IsContentApp = appName == Eav.Constants.DefaultAppGuid;
             var temp = blockDefinition.Value<string>(CbPropertyContentGroup) ?? "";
             Guid.TryParse(temp, out var contentGroupGuid);
 

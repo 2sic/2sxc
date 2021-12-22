@@ -12,7 +12,8 @@ namespace ToSic.Sxc.Adam
     {
 
         #region Constructor / DI
-        public AdamManager(Lazy<AppRuntime> appRuntime, Lazy<AdamMetadataMaker> metadataMaker) : base(appRuntime, metadataMaker, "Adm.MngrTT")
+        public AdamManager(Lazy<AppRuntime> appRuntime, Lazy<AdamMetadataMaker> metadataMaker, AdamConfiguration adamConfiguration)
+            : base(appRuntime, metadataMaker, adamConfiguration, "Adm.MngrTT")
         {
         }
 

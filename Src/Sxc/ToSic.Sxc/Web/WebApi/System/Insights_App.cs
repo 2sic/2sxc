@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Caching;
 using ToSic.Razor.Blade;
+using ToSic.Eav.Apps.Debug;
 using static ToSic.Razor.Blade.Tag;
 
 namespace ToSic.Sxc.Web.WebApi.System
@@ -25,10 +26,10 @@ namespace ToSic.Sxc.Web.WebApi.System
 
             var msg = H1("Apps In Cache").ToString();
 
-            var zones = _appsCache.Zones.OrderBy(z => z.Key);
+            var zones = _appStates.Zones.OrderBy(z => z.Key);
 
             msg += "<table id='table'>"
-                + HeadFields("Zone ↕", "App ↕", Eav.Data.Attributes.GuidNiceName, "InCache", "Name ↕", "Folder ↕", "Details", "Actions")
+                + HeadFields("Zone ↕", "App ↕", Eav.Data.Attributes.GuidNiceName, "InCache", "Name ↕", "Folder ↕", "Details", "Actions", "Hash", "Timestamp", "List-Timestamp")
                 + "<tbody>";
             foreach (var zone in zones)
             {
@@ -42,7 +43,8 @@ namespace ToSic.Sxc.Web.WebApi.System
                             : null;
                         return new
                         {
-                            Id = a.Key, Guid = a.Value,
+                            Id = a.Key,
+                            Guid = a.Value,
                             InCache = inCache,
                             Name = inCache
                                 ? appState?.Name ?? "unknown, app-infos not json"
@@ -50,6 +52,9 @@ namespace ToSic.Sxc.Web.WebApi.System
                             Folder = inCache
                                 ? appState?.Folder ?? "unknown, app-infos not json"
                                 : "not-loaded",
+                            Hash = appState?.GetHashCode(),
+                            TS = appState?.CacheTimestamp,
+                            ListTs = appState?.ListCache()?.CacheTimestamp,
                         };
                     })
                     .OrderBy(a => a.Id);
@@ -68,7 +73,10 @@ namespace ToSic.Sxc.Web.WebApi.System
                         Details(
                             Summary("show actions"),
                             A("purge").Href($"purge?appid={app.Id}").ToString()
-                        )
+                        ),
+                        app.Hash?.ToString() ?? "-",
+                        app.TS,
+                        app.ListTs
                     );
                 }
             }
@@ -107,7 +115,7 @@ namespace ToSic.Sxc.Web.WebApi.System
                 msg += Ol(
                     pkg.CacheStatistics.History
                         .Reverse()
-                        .Select(timestamp => Li(timestamp + " = " + timestamp.ToReadable()))
+                        .Select(timestamp => Li($"Resets: {timestamp.ResetCount}; Items: {timestamp.ItemCount}; TS: {timestamp.Timestamp} = {timestamp.Timestamp.ToReadable()}"))
                         .ToArray<object>()
                 );
             }

@@ -5,6 +5,7 @@
     <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
     <RootNamespace>IntegrationSamples.BasicEav01</RootNamespace>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
+    <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <ItemGroup>

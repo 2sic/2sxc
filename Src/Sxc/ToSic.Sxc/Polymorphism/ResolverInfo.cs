@@ -3,7 +3,7 @@ using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Polymorphism
 {
-    internal class ResolverInfo: TypeWithMedataBase<PolymorphResolverAttribute>
+    internal class ResolverInfo: TypeWithMetadataBase<PolymorphResolverAttribute>
     {
         public ResolverInfo(Type dsType): base (dsType)
         {

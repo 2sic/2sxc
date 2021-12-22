@@ -38,9 +38,9 @@ namespace ToSic.Sxc.Oqt.Server.Block
         #endregion
 
 
-        private bool AddJsCore => Features.Contains(BuiltInFeatures.Core);
-        private bool AddJsEdit => Features.Contains(BuiltInFeatures.EditApi);
-        private bool AddCssEdit => Features.Contains(BuiltInFeatures.EditUi);
+        private bool AddJsCore => Features.Contains(BuiltInFeatures.JsCore);
+        private bool AddJsEdit => Features.Contains(BuiltInFeatures.JsCms);
+        private bool AddCssEdit => Features.Contains(BuiltInFeatures.Toolbars);
 
 
         /// <summary>

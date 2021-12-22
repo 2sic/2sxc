@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
@@ -14,21 +15,13 @@ namespace ToSic.Sxc.DataSources
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
     public class Block : PassThrough, IBlockDataSource
     {
+
         [PrivateApi]
         public override string LogId => "Sxc.BlckDs";
 
         [PrivateApi("older use case, probably don't publish")]
         public DataPublishing Publish { get; }= new DataPublishing();
 
-#if NETFRAMEWORK
-#pragma warning disable 618
-        [Obsolete("Old property on this data source, should really not be used at all. Will be removed in 2sxc 12")]
-        [PrivateApi]
-        public CacheWithGetContentType Cache => _cache ?? (_cache = new CacheWithGetContentType(Eav.Apps.State.Get(this)));
-        [Obsolete]
-        private CacheWithGetContentType _cache;
-#pragma warning restore 618
-#endif
 
         internal void SetOut(Query querySource) => Out = querySource.Out;
     }

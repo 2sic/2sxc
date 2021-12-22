@@ -28,7 +28,7 @@ namespace ToSic.Sxc.WebApi.App
             return list.Select(a => new AppDto
             {
                 Id = a.AppId,
-                IsApp = a.AppGuid != Eav.Constants.DefaultAppName,
+                IsApp = a.AppGuid != Eav.Constants.DefaultAppGuid && a.AppGuid != Eav.Constants.PrimaryAppGuid, // #SiteApp v13
                 Guid = a.AppGuid,
                 Name = a.Name,
                 Folder = a.Folder,

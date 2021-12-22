@@ -93,7 +93,7 @@ namespace ToSic.Sxc.WebApi.Context
             if (!flags.HasFlag(Ctx.AppAdvanced)) return result;
 
             // Otherwise also add the global app id
-            result.DefaultApp = new AppIdentity(1, 1);
+            result.PrimaryApp = result.DefaultApp = new AppIdentity(1, 1);
             return result;
         }
 
@@ -108,7 +108,9 @@ namespace ToSic.Sxc.WebApi.Context
             if (!flags.HasFlag(Ctx.AppAdvanced)) return result;
 
             // Otherwise also add the global appId
-            result.DefaultApp = Deps.AppStates.Identity(null, Deps.AppStates.DefaultAppId(Deps.SiteCtx.Site.ZoneId)) as AppIdentity;
+            var zoneId = Deps.SiteCtx.Site.ZoneId;
+            result.DefaultApp = Deps.AppStates.IdentityOfDefault(zoneId); // Deps.AppStates.Identity(null, Deps.AppStates.DefaultAppId(Deps.SiteCtx.Site.ZoneId));
+            result.PrimaryApp = Deps.AppStates.IdentityOfPrimary(zoneId); // Deps.AppStates.Identity(null, Deps.AppStates.PrimaryAppId(Deps.SiteCtx.Site.ZoneId));
             return result;
         }
 
@@ -120,7 +122,7 @@ namespace ToSic.Sxc.WebApi.Context
 
         protected virtual ContextEnableDto GetEnable(CtxEnable ctx)
         {
-            var isRealApp = App != null && App.AppGuid != Eav.Constants.DefaultAppName;
+            var isRealApp = App != null && (App.AppGuid != Eav.Constants.DefaultAppGuid /*&& App.AppGuid != Eav.Constants.PrimaryAppGuid*/); // #SiteApp v13 - Site-Apps should also have permissions
             var tmp = new JsContextUser(Deps.SiteCtx.User);
             var dto = new ContextEnableDto();
             if (ctx.HasFlag(CtxEnable.AppPermissions)) dto.AppPermissions = isRealApp;
@@ -128,12 +130,6 @@ namespace ToSic.Sxc.WebApi.Context
             if(ctx.HasFlag(CtxEnable.Query)) dto.Query = isRealApp && tmp.CanDevelop;
             if (ctx.HasFlag(CtxEnable.FormulaSave)) dto.FormulaSave = tmp.CanDevelop;
             return dto;
-            //return new ContextEnableDto
-            //{
-            //    AppPermissions = isRealApp,
-            //    CodeEditor = tmp.CanDevelop,
-            //    Query = isRealApp,
-            //};
         }
 
         protected virtual string GetGettingStartedUrl() => Eav.Constants.UrlNotInitialized;
@@ -154,7 +150,12 @@ namespace ToSic.Sxc.WebApi.Context
 
             result.GettingStartedUrl = GetGettingStartedUrl();
             result.Identifier = _appToLaterInitialize.AppGuid;
-            result.SettingsScope = App.AppId == 1 ? "Global" : result.Identifier == Eav.Constants.DefaultAppName ? "Site" : "App";
+            // TODO: #SiteApp v13
+            result.SettingsScope = App.AppId == 1 
+                ? "Global" 
+                : result.Identifier == Eav.Constants.PrimaryAppGuid 
+                    ? "Site" 
+                    : "App";
 
 
             result.Permissions = new HasPermissionsDto {Count = App.Metadata.Permissions.Count()};

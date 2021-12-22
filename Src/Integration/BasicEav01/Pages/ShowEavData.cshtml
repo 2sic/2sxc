@@ -10,9 +10,9 @@
     var zoneId = 2;
     var appId = 78;
   #pragma warning disable 618
-  var appState = ToSic.Eav.Factory.ObsoleteBuild<IAppStates>()/* State*/.Get(appId);
+  // var appState = ToSic.Eav.Factory.ObsoleteBuild<IAppStates>()/* State*/.Get(appId);
   #pragma warning restore 618
-  var firstItem = appState.List.FirstOrDefault();
+  // var firstItem = appState.List.FirstOrDefault();
 }
 <h1>@ViewData["Title"]</h1>
 
@@ -27,10 +27,10 @@
 @{
 }
 <ol>
-  <li>State Object: @appState</li>
-  <li>List Object: @appState.List</li>
-  <li>List Count: @appState.List.Count</li>
-  <li>First: @firstItem</li>
-  <li>Title of first item: @firstItem?.GetBestTitle()</li>
-  <li>FirstItem modified: @firstItem?.Modified</li>
+  <li>State Object: @@appState</li>
+  <li>List Object: @@appState.List</li>
+  <li>List Count: @@appState.List.Count</li>
+  <li>First: @@firstItem</li>
+  <li>Title of first item: @@firstItem?.GetBestTitle()</li>
+  <li>FirstItem modified: @@firstItem?.Modified</li>
 </ol>

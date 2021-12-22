@@ -12,8 +12,7 @@ namespace ToSic.Sxc.Services
     /// History
     /// * Added in 2sxc 13
     /// </remarks>
-
-    [PublicApi("WIP 13")]
+    [PublicApi]
     public interface IToolbarService
     {
         /// <summary>
@@ -24,6 +23,10 @@ namespace ToSic.Sxc.Services
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
         /// <returns></returns>
+        /// <remarks>
+        /// History
+        /// * Added in 2sxc 13
+        /// </remarks>
         IToolbarBuilder Default(string noParamOrder = Eav.Parameters.Protector, string ui = "");
 
         /// <summary>
@@ -34,6 +37,24 @@ namespace ToSic.Sxc.Services
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
         /// <returns></returns>
+        /// <remarks>
+        /// History
+        /// * Added in 2sxc 13
+        /// </remarks>
         IToolbarBuilder Empty(string noParamOrder = Eav.Parameters.Protector, string ui = "");
+
+        /// <summary>
+        /// Build an **empty** Toolbar with a Metadata button.
+        /// 
+        /// This is the same as .Empty().Metadata(target, contentType);
+        /// </summary>
+        /// <param name="target">The target object which should receive metadata. Must support <see cref="ToSic.Eav.Metadata.IHasMetadata"/> </param>
+        /// <param name="contentTypes">Name of **one** content-type for which to generate the button. In future _may_ also allow more content-types</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// History
+        /// * Added in 2sxc 13
+        /// </remarks>
+        IToolbarBuilder Metadata(object target, string contentTypes);
     }
 }

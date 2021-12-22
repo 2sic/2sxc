@@ -30,14 +30,14 @@ namespace ToSic.Sxc.Blocks
         /// <returns></returns>
         public IHybridHtmlString One(DynamicEntity dynParent,
             string noParamOrder = Eav.Parameters.Protector,
-            IDynamicEntity item = null, 
+            IDynamicEntity item = null,
             string field = null,
             Guid? newGuid = null)
         {
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(One), $"{nameof(item)},{nameof(field)},{nameof(newGuid)}");
             if (item == null)
                 item = dynParent;
-            
+
             return new HybridHtmlString(field == null
                 ? Simple.Render(dynParent._Dependencies.BlockOrNull, item.Entity) // with edit-context
                 : Simple.RenderWithEditContext(dynParent, item, field, newGuid) + "<b>data-list-context</b>"); // data-list-context (no edit-context)
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Blocks
         /// <returns></returns>
         public IHybridHtmlString All(DynamicEntity context,
             string noParamOrder = Eav.Parameters.Protector,
-            string field = null, 
+            string field = null,
             string apps = null,
             int max = 100,
             string merge = null)

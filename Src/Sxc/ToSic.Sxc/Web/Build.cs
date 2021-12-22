@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Documentation;
+using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Web
 {
@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Web
     public class Build
     {
         /// <summary>
-        /// Generate an HTML attribute 
+        /// Generate an HTML attribute
         /// - but only if in edit mode
         /// </summary>
         /// <param name="name"></param>

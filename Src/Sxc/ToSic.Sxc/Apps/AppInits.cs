@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Apps
         public static IApp Init(this App app, IServiceProvider sp, int appId, ILog log, IBlock optionalBlock = null, bool showDrafts = false)
         {
             var appStates = sp.Build<IAppStates>();
-            var appIdentity = appStates.Identity(null, appId); // new AppIdentity(SystemRuntime.ZoneIdOfApp(appId), appId);
+            var appIdentity = appStates.IdentityOfApp(appId);
             var confProvider = sp.Build<AppConfigDelegate>().Init(log);
             var buildConfig = (optionalBlock == null)
                 ? confProvider.Build(showDrafts) // return app.InitWithoutBlock(confProvider, appIdentity, log, showDrafts);

@@ -17,11 +17,10 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             string actions = null,
             string contentType = null,
             object condition = null,
-            object metadataFor = null,
             object prefill = null,
-            object settings = null, 
-            object toolbar = null) 
-            => ToolbarInternal(false, target, noParamOrder, actions, contentType, condition, metadataFor, prefill, settings, toolbar);
+            object settings = null,
+            object toolbar = null)
+            => ToolbarInternal(false, target, noParamOrder, actions, contentType, condition, prefill, settings, toolbar);
 
         /// <inheritdoc/>
         public IHybridHtmlString TagToolbar(
@@ -30,11 +29,10 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             string actions = null,
             string contentType = null,
             object condition = null,
-            object metadataFor = null,
             object prefill = null,
             object settings = null,
-            object toolbar = null) 
-            => ToolbarInternal(true, target, noParamOrder, actions, contentType, condition, metadataFor, prefill, settings, toolbar);
+            object toolbar = null)
+            => ToolbarInternal(true, target, noParamOrder, actions, contentType, condition, prefill, settings, toolbar);
 
         private IHybridHtmlString ToolbarInternal(
             bool inTag,
@@ -43,7 +41,6 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             string actions,
             string contentType,
             object condition,
-            object metadataFor,
             object prefill,
             object settings,
             object toolbar)
@@ -52,14 +49,34 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             if (!Enabled) return wrapLog("not enabled", null);
             if (!IsConditionOk(condition)) return wrapLog("condition false", null);
 
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar", 
-                $"{nameof(actions)},{nameof(contentType)},{nameof(condition)},{nameof(metadataFor)},{nameof(prefill)},{nameof(settings)},{nameof(toolbar)}");
+            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar",
+                $"{nameof(actions)},{nameof(contentType)},{nameof(condition)},{nameof(prefill)},{nameof(settings)},{nameof(toolbar)}");
 
-            // ensure that internally we always process it as an entity
-            var eTarget = target as IEntity ?? (target as IDynamicEntity)?.Entity;
-            if (target != null && eTarget == null)
-                Log.Warn("Creating toolbar - it seems the object provided was neither null, IEntity nor DynamicEntity");
-            var itmToolbar = new ItemToolbar(eTarget, actions, contentType, metadataFor, prefill: prefill, settings: settings, toolbar: toolbar);
+            // New in v13: The first parameter can also be a ToolbarBuilder, in which case all other params are ignored
+            ItemToolbar itmToolbar;
+            if (target is IToolbarBuilder)
+            {
+                Log.Add("Using new modern Item-Toolbar, will ignore all other parameters.");
+                itmToolbar = new ItemToolbar(null, toolbar: target);
+            }
+            else
+            {
+                // ensure that internally we always process it as an entity
+                var eTarget = target as IEntity ?? (target as IDynamicEntity)?.Entity;
+                if (target != null && eTarget == null)
+                    Log.Warn("Creating toolbar - it seems the object provided was neither null, IEntity nor DynamicEntity");
+                if (toolbar is IToolbarBuilder)
+                {
+                    Log.Add("Using new modern Item-Toolbar with an entity, will ignore all other parameters.");
+                    itmToolbar = new ItemToolbar(eTarget, toolbar: toolbar);
+                }
+                else
+                {
+                    Log.Add("Using classic mode, with all parameters.");
+                    itmToolbar = new ItemToolbar(eTarget, actions, contentType, prefill: prefill, settings: settings,
+                        toolbar: toolbar);
+                }
+            }
 
             var result = inTag
                 ? Attribute("sxc-toolbar", itmToolbar.ToolbarAttribute())
@@ -86,7 +103,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             if (condition is string s &&
                 string.Equals(s, false.ToString(), StringComparison.InvariantCultureIgnoreCase))
                 return wrapLog("string false", false);
-            
+
             // Anything else: true
             return wrapLog("default,true", true);
         }

@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         public override AdamItemDto Create(Sxc.Adam.Folder<TFolderId, TFileId> folder)
         {
-            var item = base.Create(folder/*, state*/);
+            var item = base.Create(folder);
             if (item is AdamItemDto<TFolderId, TFolderId> typed)
                 item.Path = "/" + AdamContext.Context.Site.Id + "/api/file/download/" + typed.Id;
             return item;

@@ -1,36 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
-using ToSic.Eav.Data;
 using ToSic.Eav.Metadata;
+using ToSic.Sxc.Data;
+
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Adam
 {
 
     public class Folder<TFolderId, TFileId> : Eav.Apps.Assets.Folder<TFolderId, TFileId>, IFolder
     {
+        public Folder(AdamManager<TFolderId, TFileId> adamManager) => AdamManager = adamManager;
         protected AdamManager<TFolderId, TFileId> AdamManager { get; set; }
 
-        public Folder(AdamManager<TFolderId, TFileId> adamManager)
-        {
-            AdamManager = adamManager;
-        }
+        /// <inheritdoc />
+        [JsonIgnore]
+        public IDynamicMetadata Metadata => _metadata ?? (_metadata = AdamManager.MetadataMaker.GetMetadata(AdamManager, CmsMetadata.FolderPrefix + SysId, Name));
+        private IDynamicMetadata _metadata;
 
         /// <inheritdoc />
         [JsonIgnore]
-        public dynamic Metadata => AdamManager.MetadataMaker.GetFirstOrFake(AdamManager, MetadataId);
-
-        /// <inheritdoc />
-        [JsonIgnore]
-        public bool HasMetadata => AdamManager.MetadataMaker.GetFirstMetadata(AdamManager.AppRuntime, MetadataId) != null;
-
-        [JsonIgnore]
-        public ITarget MetadataId => _metadataId ?? (_metadataId = new Target
-        {
-            TargetType = (int)TargetTypes.CmsItem,
-            KeyString = CmsMetadata.FolderPrefix /*"folder:"*/ + SysId
-        });
-        private ITarget _metadataId;
+        public bool HasMetadata => (Metadata as IHasMetadata)?.Metadata.Any() ?? false;
 
         /// <inheritdoc />
         public string Url { get; set; }
@@ -56,5 +47,12 @@ namespace ToSic.Sxc.Adam
         public IEnumerable<IFile> Files 
             => _files ?? (_files = AdamManager.AdamFs.GetFiles(this));
         private IEnumerable<IFile> _files;
+
+
+        IMetadataOf IHasMetadata.Metadata
+            => _metadataOf ?? (_metadataOf = AdamManager.AppContext.AppState.GetMetadataOf(TargetTypes.CmsItem,
+                CmsMetadata.FolderPrefix + SysId, Name));
+        private IMetadataOf _metadataOf;
+
     }
 }

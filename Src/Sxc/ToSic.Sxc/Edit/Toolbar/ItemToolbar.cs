@@ -17,27 +17,17 @@ namespace ToSic.Sxc.Edit.Toolbar
         protected readonly object ToolbarObj;
         protected readonly List<string> ToolbarV10;
         protected readonly object Settings;
-        protected readonly object MetadataForV12;
 
         protected readonly ItemToolbarAction TargetV10;
 
-        public ItemToolbar(IEntity entity, string actions = null, string newType = null, object metadataFor = null, object prefill = null, object settings = null, object toolbar = null)
+        public ItemToolbar(IEntity entity, string actions = null, string newType = null, object prefill = null, object settings = null, object toolbar = null)
         {
             Settings = settings;
-            MetadataForV12 = metadataFor;
 
             // Case 1 - use the simpler string format in V10.27
             var toolbarAsStringArray = ToolbarV10OrNull(toolbar);
             if(settings is string || toolbar is string || prefill is string || toolbarAsStringArray != null)
             {
-                // 2021-11-18 fix https://github.com/2sic/2sxc/issues/2561 - preserve till EOY in case something else breaks
-                // #cleanup EOY 2021
-                //ToolbarV10 = toolbar == null
-                //    ? new List<string>()
-                //    : toolbar is string tlbString
-                //        ? tlbString.Split('|').ToList() //new List<string> {tlbString}
-                //        : toolbarAsStringArray; // (toolbar as IEnumerable<string>).ToList();
-
                 // Make sure ToolbarV10 is a real object - this code could also run with toolbar being null
                 ToolbarV10 = toolbarAsStringArray ?? new List<string>();
 
@@ -101,57 +91,12 @@ namespace ToSic.Sxc.Edit.Toolbar
                 if (!IsNullOrWhiteSpace(settingsAsUrl)) ToolbarV10.Add("settings?" + settingsAsUrl);
             }
 
-            UpdateMetadataCommandV12();
-
             // return result
             return _toolbarV10Json = JsonConvert.SerializeObject(ToolbarV10);
         }
 
-        private void UpdateMetadataCommandV12()
-        {
-            if (MetadataForV12 == null) return;
-
-            // 1. check if it's a valid target
-            ITarget target = null;
-            if (MetadataForV12 is ITarget pureTarget) target = pureTarget;
-            else if (MetadataForV12 is IMetadataOf mdOf) target = mdOf.MetadataId;
-            else if (MetadataForV12 is IHasMetadata hasMd) target = hasMd.Metadata.MetadataId;
-            else if (MetadataForV12 is IIsMetadataTarget isTarget) target = isTarget.MetadataId;
-
-            if (target == null) return;
-
-            // 2. build target string
-            var mdFor = "for=" + target.TargetType + "," +
-                        (target.KeyGuid != null ? "guid," + target.KeyGuid
-                            : target.KeyString != null ? "string," + target.KeyString
-                            : "number," + target.KeyNumber);
-
-            // 3. check if there is already a rule for this? otherwise ignore!
-            var existing = ToolbarV10.FirstOrDefault(rule => rule?.Trim().TrimStart('+').TrimStart('%').StartsWith("metadata") ?? false);
-
-            // 4. add / update rule
-            var newRule = existing ?? "+metadata";
-
-            newRule = UrlHelpers.AddQueryString(newRule, mdFor);
-            var index = ToolbarV10.IndexOf(existing);
-            if (index == -1) return;
-            ToolbarV10[index] = newRule;
-        }
-
         private string _toolbarV10Json;
-
-        // 2021-11-18 fix https://github.com/2sic/2sxc/issues/2561 - preserve till EOY in case something else breaks
-        // #cleanup EOY 2021
-        ///// <summary>
-        ///// Check if the configuration we got is a V10 Toolbar
-        ///// </summary>
-        ///// <param name="toolbar"></param>
-        ///// <returns></returns>
-        //private bool ToolbarIsV10Format(object toolbar)
-        //{
-        //    // return toolbar is IEnumerable<string> array && array.FirstOrDefault() != null;
-        //}
-
+        
         /// <summary>
         /// Check if the configuration we got is a V10 Toolbar
         /// </summary>

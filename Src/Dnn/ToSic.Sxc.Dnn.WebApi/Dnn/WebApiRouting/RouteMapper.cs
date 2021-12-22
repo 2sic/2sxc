@@ -42,8 +42,10 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             #region new API routes after 08.10
 
             // ADAM routes
-            AddWD("adam-auto",              Roots.ContentAuto + "/" + TokenSet.TypeGuidField, ControllerNames.Adam, AdamNamespace);
-            AddWD("adam2-auto",             Roots.ContentAuto + "/" + TokenSet.TypeGuidFieldAction, ControllerNames.Adam, AdamNamespace);
+            AddWD("adam-auto", Roots.ContentAuto + "/" + TokenSet.TypeGuidField, ControllerNames.Adam, AdamNamespace);
+            AddWD("adam2-auto", Roots.ContentAuto + "/" + TokenSet.TypeGuidFieldAction, ControllerNames.Adam, AdamNamespace);
+            AddWD("adam3-auto", Roots.DataAuto + "/" + TokenSet.TypeGuidField, ControllerNames.Adam, AdamNamespace); // new, v13
+            AddWD("adam4-auto", Roots.DataAuto + "/" + TokenSet.TypeGuidFieldAction, ControllerNames.Adam, AdamNamespace); // new, v13
 
             // App Content routes - for GET/DELETE/PUT entities using REST
             // 1. Type and null or int-id
@@ -71,12 +73,6 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
 
 
             #region New routes in 2sxc 11.06+ which should replace most previous internal routes
-
-            // Replacement route for app-sys/AppContent/GetContentBlockData
-            AddWD("2sxc-ContentBlockData", $"{Roots.AppAuto}/InstanceData", 
-                new { controller = ControllerNames.AppContent, action = nameof(AppContentController.GetContentBlockData) },
-                StdNsWebApi);
-
 
             AddTy("2sxc-sys",     Root.Sys + "/" + TokenSet.ConAct,           typeof(InsightsController));
             AddTy("2sxc-cms",     Root.Cms + "/" + TokenSet.ConAct,           typeof(BlockController));

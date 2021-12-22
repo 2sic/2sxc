@@ -45,8 +45,8 @@ namespace ToSic.Sxc.Blocks
                     // Page Features
                     if (Block.Context.UserMayEdit)
                     {
-                        pss.Activate(BuiltInFeatures.EditUi.Key);
-                        pss.Activate(BuiltInFeatures.AutoToolbarGlobal.Key);
+                        pss.Activate(BuiltInFeatures.Toolbars.Key);
+                        pss.Activate(BuiltInFeatures.ToolbarsAuto.Key);
                     }
 
                     result.Features = pss.Features.GetWithDependentsAndFlush(Log);
@@ -118,7 +118,7 @@ namespace ToSic.Sxc.Blocks
                                 Log.Add("template referenced 2sxc.api JS in script-tag: will enable");
                                 // 2021-09-01 before: if (RootBuilder is BlockBuilder parentBlock) parentBlock.UiAddJsApi = engine.ActivateJsApi;
                                 // todo: should change this, so the param isn't in ActivateJsApi but clearer
-                                Block.Context.PageServiceShared.Features.Activate(BuiltInFeatures.Core.Key);
+                                Block.Context.PageServiceShared.Features.Activate(BuiltInFeatures.JsCore.Key);
                             }
 
                             // TODO: this should use the same pattern as features, waiting to be picked up

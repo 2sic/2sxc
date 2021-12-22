@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Context
         public bool IsSiteDeveloper => _contents.IsDesigner;
 
         public IMetadataOf Metadata
-            => _metadata ?? (_metadata = new MetadataOf<string>((int)TargetTypes.CmsItem, CmsMetadata.UserPrefix + Id, _appState));
+            => _metadata ?? (_metadata = _appState.GetMetadataOf(TargetTypes.User, Id, "User (" + Id + ")"));
         private IMetadataOf _metadata;
 
     }

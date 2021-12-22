@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Oqtane.Controllers;
 using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
@@ -58,7 +57,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         {
             if (module == null) return;
             // note that it's "ToSic.Sxc.Oqt.App, ToSic.Sxc.Oqtane.Client" or "ToSic.Sxc.Oqt.Content, ToSic.Sxc.Oqtane.Client"
-            _isPrimary = module.ModuleDefinitionName.Contains(".Content");
+            _isContent = module.ModuleDefinitionName.Contains(".Content");
         }
 
         // Temp implementation, don't support im MVC
@@ -73,8 +72,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private int _id;
 
         /// <inheritdoc />
-        public override bool IsPrimary => _isPrimary;
-        private bool _isPrimary = true;
+        public override bool IsContent => _isContent;
+        private bool _isContent = true;
 
         public override IBlockIdentifier BlockIdentifier
         {
@@ -105,13 +104,12 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         private int GetInstanceAppId(int zoneId)
         {
-            if (IsPrimary) return _appStates.DefaultAppId(zoneId); // zoneRt.DefaultAppId;
+            if (IsContent) return _appStates.DefaultAppId(zoneId);
 
             if (!_settings.ContainsKey(Settings.ModuleSettingApp)) return Eav.Constants.AppIdEmpty;
 
-            //var zoneRt = new ZoneRuntime().Init(zoneId, Log);
             var guid = _settings[Settings.ModuleSettingApp] ?? "";
-            var appId = _appFinderLazy.Value.Init(Log)/* zoneRt*/.FindAppId(zoneId, guid);
+            var appId = _appFinderLazy.Value.Init(Log).FindAppId(zoneId, guid);
             return appId;
 
         }

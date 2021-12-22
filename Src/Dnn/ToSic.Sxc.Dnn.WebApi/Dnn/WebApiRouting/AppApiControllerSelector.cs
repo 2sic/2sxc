@@ -10,10 +10,14 @@ using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
+using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 
 namespace ToSic.Sxc.Dnn.WebApiRouting
@@ -82,6 +86,9 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             if (!HandleRequestWithThisController(request))
                 return wrapLog("upstream", PreviousSelector.SelectController(request));
 
+            // Do this once and early, to be really sure we always use the same one
+            var sp = DnnStaticDi.GetServiceProvider();
+
             var routeData = request.GetRouteData();
 
             var controllerTypeName = routeData.Values[Names.Controller] + "Controller";
@@ -89,7 +96,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             // Now Handle the 2sxc app-api queries
 
             // Figure out the Path, or show error for that
-            var appFolder = AppFolderUtilities.GetAppFolder(request, log, wrapLog);
+            var appFolder = AppFolderUtilities.GetAppFolder(sp, request, log, wrapLog);
 
             var controllerPath = "";
             try
@@ -103,8 +110,8 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
 
                 log.Add($"Edition: {edition}");
 
-                var tenant = Eav.Factory.StaticBuild<DnnSite>();
-                var controllerFolder = Path.Combine(tenant.AppsRootRelative, appFolder, edition + "api/");
+                var site = (DnnSite)sp.Build<ISite>();
+                var controllerFolder = Path.Combine(site.AppsRootRelative, appFolder, edition + "api/");
 
                 controllerFolder = controllerFolder.Replace("\\", @"/");
                 log.Add($"Controller Folder: {controllerFolder}");
@@ -146,7 +153,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             if (!InsightsController.InsightsLoggingEnabled)
                 if (url?.Contains(InsightsController.InsightsUrlFragment) ?? false)
                     addToHistory = false;
-            if (addToHistory) Eav.Factory.StaticBuild<LogHistory>().Add("http-request", log);
+            if (addToHistory) new LogHistory().Add("http-request", log);
         }
     }
 }

@@ -14,11 +14,11 @@ namespace IntegrationSamples.BasicEav01
     {
         internal static void AddEavAndSxcIntegration(this IServiceCollection services, IConfiguration configuration)
         {
-            Factory.UseExistingServices(services);
-            Factory.ActivateNetCoreDi(services2 =>
-            {
-                services2.AddEav();
-            });
+            //Factory.UseExistingServices(services);
+            //Factory.ActivateNetCoreDi(services2 =>
+            //{
+                services.AddEav();
+            //});
 
             var connectionString = configuration.GetConnectionString("SiteSqlServer");
             services.BuildServiceProvider().Build<IDbConfiguration>().ConnectionString = connectionString;
