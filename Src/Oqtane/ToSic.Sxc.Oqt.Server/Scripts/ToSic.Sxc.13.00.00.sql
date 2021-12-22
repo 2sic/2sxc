@@ -4,6 +4,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 /* TargetTypes Metadata for ..., Custom and Custom1-9 */
+UPDATE [dbo].[ToSIC_EAV_AssignmentObjectTypes] SET [Name] = 'Zone' ,[Description] = 'Metadata for Zone' WHERE [AssignmentObjectTypeID] = 6
 UPDATE [dbo].[ToSIC_EAV_AssignmentObjectTypes] SET [Name] = 'System' ,[Description] = 'Metadata for System' WHERE [AssignmentObjectTypeID] = 11
 UPDATE [dbo].[ToSIC_EAV_AssignmentObjectTypes] SET [Name] = 'Site' ,[Description] = 'Metadata for Site' WHERE [AssignmentObjectTypeID] = 12
 UPDATE [dbo].[ToSIC_EAV_AssignmentObjectTypes] SET [Name] = 'SiteVariant' ,[Description] = 'Metadata for SiteVariant' WHERE [AssignmentObjectTypeID] = 13
