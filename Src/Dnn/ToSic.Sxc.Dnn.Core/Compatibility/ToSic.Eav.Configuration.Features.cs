@@ -28,7 +28,6 @@ namespace ToSic.Eav.Configuration
 
         [Obsolete("Was private before, now deprecated in 12.05, will remove in v13 as it should never have been used outside")]
         [PrivateApi] public static IEnumerable<Feature> All => FeaturesFromDi.All;
-        //private static FeatureList _all;
 
         [Obsolete("Was private before, now deprecated in 12.05, will remove in v13 as it should never have been used outside")]
         [PrivateApi] public static IEnumerable<Feature> Ui => FeaturesFromDi.Ui;

@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             // 2021-09-1 2dm- I think this was a bug, it checked for many more things but the feature-form check is only important for the form
             if (forms == true)
             {
-                var feats = new[] {FeatureIds.PublicForms};
+                var feats = new[] { FeaturesCatalog.PublicEditForm.Id };
                 var features = Block.Context.ServiceProvider.Build<IFeaturesInternal>();
                 if (!features.Enabled(feats, "public forms not available", out var exp))
                     throw exp;

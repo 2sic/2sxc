@@ -105,7 +105,7 @@ namespace ToSic.Sxc.Dnn.Run
                 var result = fileInfo.StorageLocation == 0 ? filePath : FileLinkClickController.Instance.GetFileLinkClick(fileInfo);
 
                 // optionally do extra security checks (new in 10.02)
-                if (!_featuresLazy.Value.Enabled(FeatureIds.BlockFileIdLookupIfNotInSameApp)) return result;
+                if (!_featuresLazy.Value.Enabled(FeaturesCatalog.BlockFileResolveOutsideOfEntityAdam.Id)) return result;
 
                 // check if it's in this item. We won't check the field, just the item, so the field is ""
                 return !Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", filePath)
