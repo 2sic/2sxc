@@ -152,7 +152,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 var result = $"{Alias.Path}/app/{appName}/adam/{filePath}".PrefixSlash();
 
                 // optionally do extra security checks (new in 10.02)
-                if (!_featuresLazy.Value.Enabled(FeaturesDb.BlockFileResolveOutsideOfEntityAdam.Id)) return result;
+                if (!_featuresLazy.Value.Enabled(FeaturesCatalog.BlockFileResolveOutsideOfEntityAdam.Id)) return result;
 
                 // check if it's in this item. We won't check the field, just the item, so the field is ""
                 return !ToSic.Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", pathInAdam)
