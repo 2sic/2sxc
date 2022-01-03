@@ -33,7 +33,7 @@ namespace ToSic.Sxc
 
         public class Installation
         {
-            public const string CurrentReleaseVersion = "13.00.00";
+            public const string CurrentReleaseVersion = "13.00.01";
 
             // This list is just used to run code-upgrades
             // So we only need the versions which do have code upgrades - which is very uncommon
@@ -65,6 +65,7 @@ namespace ToSic.Sxc
                 // "12.07.00", was never released
                 //"12.08.00", "12.08.01", // LTS
                 //"12.10.00",
+                "13.00.00",
                 CurrentReleaseVersion,
             };
 
