@@ -16,13 +16,18 @@ namespace ToSic.Sxc.WebApi.Features
     {
         #region Constructor / DI
 
-        public FeaturesBackend(IZoneMapper zoneMapper, IServiceProvider serviceProvider, 
-            IGlobalConfiguration globalConfiguration, IFeaturesInternal features, SystemLoader systemLoader) : base(serviceProvider, "Bck.Feats")
+        public FeaturesBackend(
+            IZoneMapper zoneMapper, 
+            IServiceProvider serviceProvider, 
+            IGlobalConfiguration globalConfiguration, 
+            IFeaturesInternal features, 
+            SystemLoader systemLoader
+            ) : base(serviceProvider, "Bck.Feats")
         {
             _zoneMapper = zoneMapper;
             _globalConfiguration = globalConfiguration;
             _features = features;
-            _systemLoader = systemLoader;
+            _systemLoader = systemLoader.Init(Log);
         }
 
         private readonly IZoneMapper _zoneMapper;
@@ -41,7 +46,7 @@ namespace ToSic.Sxc.WebApi.Features
 
         public IEnumerable<Feature> GetAll(bool reload)
         {
-            if (reload) _systemLoader.Reload();
+            if (reload) _systemLoader.LoadFeatures();
             return _features.All;
         }
 
@@ -67,6 +72,7 @@ namespace ToSic.Sxc.WebApi.Features
 
         private bool SaveFeaturesAndReload(string features)
         {
+            var wrapLog = Log.Call<bool>();
             try
             {
                 var configurationsPath = Path.Combine(_globalConfiguration.GlobalFolder, FeatureConstants.FeaturesPath);
@@ -77,12 +83,14 @@ namespace ToSic.Sxc.WebApi.Features
                 var featureFilePath = Path.Combine(configurationsPath, FeatureConstants.FeaturesJson);
 
                 File.WriteAllText(featureFilePath, features);
-                _systemLoader.Reload();
-                return true;
+
+                _systemLoader.ReloadFeatures();
+                return wrapLog("ok", true);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return false;
+                Log.Exception(ex);
+                return wrapLog("error", false);
             }
         }
 
