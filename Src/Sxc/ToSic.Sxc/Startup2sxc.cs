@@ -116,28 +116,9 @@ namespace ToSic.Sxc
             // 12.06.01 moved here from WebApi, but it should probably be in Dnn as it's probably just used there
             services.TryAddTransient<IServerPaths, ServerPaths>();
 
-            // 13 - ToolbarService
-            services.TryAddTransient<IToolbarService, ToolbarService>();
-
-
-            // Add possibly missing fallback services
-            // This must always be at the end here so it doesn't accidentally replace something we actually need
-            services.AddSxcCoreFallbackServices();
-
-
-            // Add possibly missing fallback services
-            // This must always be at the end here so it doesn't accidentally replace something we actually need
-            services.AddSxcCoreFallbackServices();
-
-
-            // Add possibly missing fallback services
-            // This must always be at the end here so it doesn't accidentally replace something we actually need
-            services.AddSxcCoreFallbackServices();
-
-
-            // Add possibly missing fallback services
-            // This must always be at the end here so it doesn't accidentally replace something we actually need
-            services.AddSxcCoreFallbackServices();
+            // 13 - ToolbarService & IFeaturesService
+            services.TryAddTransient<IToolbarService, ToolbarService>();    // New 13.00
+            services.TryAddTransient<IFeaturesService, FeaturesService>();  // New 13.01
 
 
             // Add possibly missing fallback services

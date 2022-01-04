@@ -11,7 +11,7 @@ namespace ToSic.Eav.Configuration
     /// Prefer to use the IFeatureService instead
     /// </summary>
     [Obsolete("Obsolete in 2sxc 12 - please use the IFeaturesService instead")]
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
+    [PrivateApi("this is just fyi, hidden since 2022-01-04")]
     public static class Features
     {
 
