@@ -11,9 +11,9 @@ namespace ToSic.Sxc.WebApi.Features
         #region Constructor / DI
 
         public FeaturesBackend(
-            IServiceProvider serviceProvider, 
-            IGlobalConfiguration globalConfiguration, 
-            IFeaturesInternal features, 
+            IServiceProvider serviceProvider,
+            Lazy<IGlobalConfiguration> globalConfiguration,
+            Lazy<IFeaturesInternal> features, 
             Lazy<SystemLoader> systemLoaderLazy
             ) : base(serviceProvider, "Bck.Feats")
         {
@@ -22,8 +22,8 @@ namespace ToSic.Sxc.WebApi.Features
             _systemLoaderLazy = systemLoaderLazy;
         }
 
-        private readonly IGlobalConfiguration _globalConfiguration;
-        private readonly IFeaturesInternal _features;
+        private readonly Lazy<IGlobalConfiguration> _globalConfiguration;
+        private readonly Lazy<IFeaturesInternal> _features;
 
         /// <summary>
         /// Must be lazy, to avoid log being filled with sys-loading infos when this service is being used
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.WebApi.Features
         public IEnumerable<Feature> GetAll(bool reload)
         {
             if (reload) _systemLoaderLazy.Value.Init(Log).ReloadFeatures();
-            return _features.All;
+            return _features.Value.All;
         }
 
 
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.WebApi.Features
             var wrapLog = Log.Call<bool>();
             try
             {
-                var configurationsPath = Path.Combine(_globalConfiguration.GlobalFolder, FeatureConstants.FeaturesPath);
+                var configurationsPath = Path.Combine(_globalConfiguration.Value.GlobalFolder, FeatureConstants.FeaturesPath);
 
                 if (!Directory.Exists(configurationsPath)) 
                     Directory.CreateDirectory(configurationsPath);
