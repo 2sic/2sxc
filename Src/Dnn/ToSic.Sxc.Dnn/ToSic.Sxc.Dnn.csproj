@@ -199,7 +199,6 @@
     <Content Include="View.ascx" />
     <Content Include="WebConfigTemplate.config" />
     <Content Include="web-Deploy.config" />
-    <Content Include="web.config" />
     <Content Include="ImportExport\Instructions\2sxc_App_ByUnknown_NameUnknown.dnn" />
     <Content Include="ImportExport\Instructions\Online help to install this app.url" />
     <Content Include="ImportExport\readme.md" />

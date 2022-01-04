@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Data
         {
             Entity = entity;
             var entAsWrapper = Entity as IEntityWrapper;
-            EntityForEqualityCheck = entAsWrapper?.EntityForEqualityCheck ?? Entity;
+            RootContentsForEqualityCheck = entAsWrapper?.RootContentsForEqualityCheck ?? Entity;
             Decorators = entAsWrapper?.Decorators ?? new List<IDecorator<IEntity>>();
         }
 
