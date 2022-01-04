@@ -2,13 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.Logging;
-using ToSic.Eav.Run;
 using ToSic.Sxc.WebApi.Validation;
-
-
-// Todo: MVC - has a DNN folder name in this code
-// must be injected from elsewhere
 
 namespace ToSic.Sxc.WebApi.Features
 {
@@ -17,36 +11,30 @@ namespace ToSic.Sxc.WebApi.Features
         #region Constructor / DI
 
         public FeaturesBackend(
-            IZoneMapper zoneMapper, 
             IServiceProvider serviceProvider, 
             IGlobalConfiguration globalConfiguration, 
             IFeaturesInternal features, 
-            SystemLoader systemLoader
+            Lazy<SystemLoader> systemLoaderLazy
             ) : base(serviceProvider, "Bck.Feats")
         {
-            _zoneMapper = zoneMapper;
             _globalConfiguration = globalConfiguration;
             _features = features;
-            _systemLoader = systemLoader.Init(Log);
+            _systemLoaderLazy = systemLoaderLazy;
         }
 
-        private readonly IZoneMapper _zoneMapper;
         private readonly IGlobalConfiguration _globalConfiguration;
         private readonly IFeaturesInternal _features;
-        private readonly SystemLoader _systemLoader;
 
-        public new FeaturesBackend Init(ILog parentLog)
-        {
-            base.Init(parentLog);
-            _zoneMapper.Init(Log);
-            return this;
-        }
+        /// <summary>
+        /// Must be lazy, to avoid log being filled with sys-loading infos when this service is being used
+        /// </summary>
+        private readonly Lazy<SystemLoader> _systemLoaderLazy;
 
         #endregion
 
         public IEnumerable<Feature> GetAll(bool reload)
         {
-            if (reload) _systemLoader.LoadFeatures();
+            if (reload) _systemLoaderLazy.Value.Init(Log).ReloadFeatures();
             return _features.All;
         }
 
@@ -84,7 +72,7 @@ namespace ToSic.Sxc.WebApi.Features
 
                 File.WriteAllText(featureFilePath, features);
 
-                _systemLoader.ReloadFeatures();
+                _systemLoaderLazy.Value.Init(Log).ReloadFeatures();
                 return wrapLog("ok", true);
             }
             catch (Exception ex)
