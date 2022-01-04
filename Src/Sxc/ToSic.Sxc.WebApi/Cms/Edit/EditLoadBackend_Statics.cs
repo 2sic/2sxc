@@ -23,7 +23,7 @@ namespace ToSic.Sxc.WebApi.Cms
         /// <param name="jsonSerializer"></param>
         /// <param name="typeRead"></param>
         /// <returns></returns>
-        internal static JsonEntity GetSerializeAndMdAssignJsonEntity(int appId, BundleIEntity bundle, JsonSerializer jsonSerializer,
+        internal static JsonEntity GetSerializeAndMdAssignJsonEntity(int appId, BundleWithHeader<IEntity> bundle, JsonSerializer jsonSerializer,
             ContentTypeRuntime typeRead, AppState appState)
         {
             // attach original metadata assignment when creating a new one
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.WebApi.Cms
             return ent;
         }
 
-        internal static List<IContentType> UsedTypes(List<BundleIEntity> list, ContentTypeRuntime typeRead)
+        internal static List<IContentType> UsedTypes(List<BundleWithHeader<IEntity>> list, ContentTypeRuntime typeRead)
             => list.Select(i
                     // try to get the entity type, but if there is none (new), look it up according to the header
                     => i.Entity?.Type
