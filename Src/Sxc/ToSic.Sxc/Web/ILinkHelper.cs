@@ -14,17 +14,17 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <param name="noParamOrder">a helper to ensure that you must use named parameters. You shouldn't give it anything, but you must use all others like parameters: "id=47&amp;name=42"</param>
         /// <param name="pageId">optional page ID (TabId) - if not supplied, will use current page</param>
-        /// <param name="parameters">
-        /// - the parameters either as `id=47&amp;name=daniel` (Dnn also supports `/id/47/name/daniel`)
-        /// - in 2sxc 12.05+ it can also be an <see cref="ToSic.Sxc.Context.IParameters"/>
-        /// </param>
         /// <param name="api">optional api url "api/name/method?id=something"</param>
+        /// <param name="parameters">
+        ///     - the parameters either as `id=47&amp;name=daniel` (Dnn also supports `/id/47/name/daniel`)
+        ///     - in 2sxc 12.05+ it can also be an <see cref="ToSic.Sxc.Context.IParameters"/>
+        /// </param>
         /// <param name="type">
-        /// Optional type changes how the link is generated. Possible values are:
-        ///
-        /// - null / not specified / empty = return link as is generated
-        /// - `"full"` return link with protocol and domain. If that was missing before, it will add current protocol/domain if possible, but not on relative `./` or `../` links
-        /// - `"//"` return link with `//domain`. If that was missing before, will add current domain if possible, but not on relative `./` or `../` links
+        ///     Optional type changes how the link is generated. Possible values are:
+        /// 
+        ///     - null / not specified / empty = return link as is generated
+        ///     - `"full"` return link with protocol and domain. If that was missing before, it will add current protocol/domain if possible, but not on relative `./` or `../` links
+        ///     - `"//"` return link with `//domain`. If that was missing before, will add current domain if possible, but not on relative `./` or `../` links
         /// </param>
         /// <returns></returns>
         /// <remarks>
@@ -35,10 +35,9 @@ namespace ToSic.Sxc.Web
         string To(
             string noParamOrder = Eav.Parameters.Protector,
             int? pageId = null,
-            object parameters = null,
             string api = null,
-            string type = null // WIP, probably "full", "/", "//" etc.
-            //string part = null
+            object parameters = null,
+            string type = null
         );
         
         /// <summary>
@@ -68,13 +67,16 @@ namespace ToSic.Sxc.Web
         /// <param name="scaleMode">Optional scale-mode to allow up-scaling images like `up` or `both`. Usually takes the default from the `settings`.</param>
         /// <param name="format">Optional file format like `jpg` or `png`</param>
         /// <param name="aspectRatio">Aspect Ratio width/height, only relevant if a `factor` is supplied. Usually takes default from the `settings` or is ignored. </param>
-
         /// <param name="type">
         /// Optional type changes how the link is generated. Possible values are:
-        ///
+        /// 
         /// - null / not specified / empty = return link as is generated
         /// - `"full"` return link with protocol and domain. If that was missing before, it will add current protocol/domain if possible, but not on relative `./` or `../` links
         /// - `"//"` return link with `//domain`. If that was missing before, will add current domain if possible, but not on relative `./` or `../` links
+        /// </param>
+        /// <param name="parameters">
+        ///     - the parameters either as `id=47&amp;name=daniel` (Dnn also supports `/id/47/name/daniel`)
+        ///     - in 2sxc 12.05+ it can also be an <see cref="ToSic.Sxc.Context.IParameters"/>
         /// </param>
         /// <remarks>
         /// Usually a factor is applied to create a link which is possibly 50% of the content-width or similar.
@@ -113,9 +115,8 @@ namespace ToSic.Sxc.Web
             string scaleMode = null,
             string format = null,
             object aspectRatio = null,
-            string type = null, // WIP, probably "full", "/", "//" etc.
+            string type = null,
             object parameters = null
-            //string part = null
             );
 
         /// <summary>

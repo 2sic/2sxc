@@ -30,10 +30,12 @@ namespace ToSic.Sxc.Web
 
 
         /// <inheritdoc />
-        public string To(string noParamOrder = Eav.Parameters.Protector, 
-            int? pageId = null, 
-            object parameters = null, 
+        public string To(
+            string noParamOrder =
+                "Rule: all params must be named (https://r.2sxc.org/named-params), Example: \'enable: true, version: 10\'",
+            int? pageId = null,
             string api = null,
+            object parameters = null,
             string type = null)
         {
             // prevent incorrect use without named parameters
@@ -136,7 +138,6 @@ namespace ToSic.Sxc.Web
             }
 
             var processed = ChangeToMatchType(type, imageUrl);
-            //var processed = ProcessPartParam(part, imageUrl);
             return Tags.SafeUrl(processed).ToString();
         }
 

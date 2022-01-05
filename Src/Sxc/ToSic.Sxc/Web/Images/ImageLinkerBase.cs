@@ -18,7 +18,8 @@ namespace ToSic.Sxc.Web.Images
         /// <summary>
         /// Make sure this is in sync with the Link.Image
         /// </summary>
-        public string Image(string url = null,
+        public string Image(
+            string url = null,
             object settings = null,
             object factor = null,
             string noParamOrder = Eav.Parameters.Protector,
@@ -36,7 +37,7 @@ namespace ToSic.Sxc.Web.Images
             // check common mistakes
             if (aspectRatio != null && height != null)
             {
-                wrapLog?.Invoke("error");
+                wrapLog("error");
                 const string messageOnlyOneOrNone = "only one or none of these should be provided, other can be zero";
                 throw new ArgumentOutOfRangeException($"{nameof(aspectRatio)},{nameof(height)}", messageOnlyOneOrNone);
             }
@@ -64,8 +65,9 @@ namespace ToSic.Sxc.Web.Images
 
             url = Url.UrlHelpers.AddQueryString(url, resizerNvc);
 
+            // todo: q - check if we need this safe-url, as it's handled a layer higher?
             var result = Tags.SafeUrl(url).ToString();
-            wrapLog?.Invoke(result);
+            wrapLog(result);
             return result;
         }
 
