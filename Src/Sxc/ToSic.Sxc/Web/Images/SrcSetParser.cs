@@ -33,7 +33,16 @@ namespace ToSic.Sxc.Web.Images
                 var lastChar = mainPart.ToLowerInvariant().Last();
                 if (SrcSetPart.SizeTypes.Contains(lastChar)) part.SizeType = lastChar;
                 mainPart = mainPart.TrimEnd(SrcSetPart.SizeTypes);
-                part.Size = (float)Math.Round(DoubleOrNull(mainPart) ?? 0, 2);
+
+                var sizeAsNumber = DoubleOrNull(mainPart);
+                if (sizeAsNumber == null)
+                {
+                    // Try calculating - if it is a calculation, we always assume factor-mode '*'
+                    sizeAsNumber = DoubleOrNullWithCalculation(mainPart);
+                    if (sizeAsNumber != null && part.SizeType == SrcSetPart.SizeDefault)
+                        part.SizeType = SrcSetPart.SizeFactorOf;
+                }
+                part.Size = (float)Math.Round(sizeAsNumber ?? 0, 2);
 
                 // If it's a real size and we didn't already set the Type, set it based on the value range
                 if (part.SizeType == SrcSetPart.SizeDefault && !DNearZero(part.Size))

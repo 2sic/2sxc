@@ -58,7 +58,10 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         [DataRow("test.jpg?w=1200 1200w", "test.jpg", "1*")]
         [DataRow("test.jpg?w=1800 1800w", "test.jpg", "1.5*")]
         [DataRow("test.jpg?w=600 600w", "test.jpg", "0.5*")]
-        // TODO: get 1/2 etc. 
+        [DataRow("test.jpg?w=600 600w", "test.jpg", "1:2*")]
+        [DataRow("test.jpg?w=600 600w", "test.jpg", "1/2*")]
+        [DataRow("test.jpg?w=600 600w", "test.jpg", "1/2")] // without '*' it auto-detects a proportion
+        [DataRow("test.jpg?w=600 600w", "test.jpg", "1:2")] // without '*' it auto-detects a proportion
         [DataTestMethod]
         public void SrcSetUrlOnlyStar(string expected, string url, string srcSet) 
             => TestOnLinkerAndHelper(expected, url, srcSet: srcSet);

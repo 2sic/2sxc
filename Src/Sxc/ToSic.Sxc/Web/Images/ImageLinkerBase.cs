@@ -94,19 +94,7 @@ namespace ToSic.Sxc.Web.Images
 
                 // Copy the params so we can optimize based on the expected SrcSet specs
                 var partParams = new ResizeParams(originalParams);
-
-                // Set width if given (has precedence), otherwise multiply previous by pixel density in necessary
-                //var shouldMultiply = part.SizeType == SizePixelDensity || part.SizeType == SizeFactorOf;
-                //if (part.Width != 0)
-                //    partParams.Width = part.Width;
-                //else if (shouldMultiply)
-                //    partParams.Width = (int)(part.Size * partParams.Width);
                 
-                //if (part.Height != 0)
-                //    partParams.Height = part.Height;
-                //else if (shouldMultiply)
-                //    partParams.Height = (int)(part.Size * partParams.Height);
-
                 partParams.Width = BestSrcSetDimension(partParams.Width, part.Width, part, FallbackWidthForSrcSet);
                 partParams.Height = BestSrcSetDimension(partParams.Height, part.Height, part, FallbackHeightForSrcSet);
 
@@ -130,13 +118,17 @@ namespace ToSic.Sxc.Web.Images
         /// </summary>
         private int BestSrcSetDimension(int original, int onSrcSet, SrcSetPart part, int fallbackIfNoOriginal)
         {
+            // SrcSet defined a value, use that
             if (onSrcSet != 0) return onSrcSet;
-            if (part.SizeType == SizePixelDensity || part.SizeType == SizeFactorOf)
-            {
-                if (part.SizeType == SizeFactorOf && original == 0) original = fallbackIfNoOriginal;
-                return (int)(part.Size * original);
-            }
-            return original;
+
+            // No need to recalculate anything, return original
+            if (part.SizeType != SizePixelDensity && part.SizeType != SizeFactorOf) return original;
+
+            // If we're doing a factor-of, we always need an original value. If it's missing, use the fallback
+            if (part.SizeType == SizeFactorOf && original == 0) original = fallbackIfNoOriginal;
+
+            // Calculate the expected size based on the original and factor
+            return (int)(part.Size * original);
         }
 
         private string ConstructUrl(string url, ResizeParams resizeParams)
