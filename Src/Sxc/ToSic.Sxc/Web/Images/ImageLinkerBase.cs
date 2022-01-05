@@ -78,10 +78,18 @@ namespace ToSic.Sxc.Web.Images
                 {
                     if (part.SizeType == SrcSetPart.SizeDefault)
                         return ConstructUrl(url, resizeParams);
-                    var paramCopy = new ResizeParams(resizeParams);
-                    if (part.Width != 0) paramCopy.Width = part.Width;
-                    if (part.Height != 0) paramCopy.Height = part.Height;
-                    return $"{ConstructUrl(url, resizeParams)} {part.Size}{part.SizeType}";
+                    var partParams = new ResizeParams(resizeParams);
+                    
+                    // Set width if given (has precedence), otherwise multiply previous by pixel density in necessary
+                    if (part.Width != 0) 
+                        partParams.Width = part.Width;
+                    else if (part.SizeType == SrcSetPart.SizePixelDensity)
+                        partParams.Width = (int)(part.Size * partParams.Width);
+                    if (part.Height != 0) 
+                        partParams.Height = part.Height;
+                    else if (part.SizeType == SrcSetPart.SizePixelDensity)
+                        partParams.Height = (int)(part.Size * partParams.Height);
+                    return $"{ConstructUrl(url, partParams)} {part.Size}{part.SizeType}";
                 });
                 result = string.Join(",\n", results);
             }

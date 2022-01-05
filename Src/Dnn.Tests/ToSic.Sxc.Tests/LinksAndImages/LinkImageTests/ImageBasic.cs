@@ -20,81 +20,81 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
                 "weird-extension.abc"
             };
 
-            foreach (var url in urls) EqualOnLinkerAndHelper(url, url);
+            foreach (var url in urls) TestOnLinkerAndHelper(url, url);
         }
 
         [TestMethod]
         public void BadCharacters()
         {
-            EqualOnLinkerAndHelper("test%20picture.jpg?w=200", "test picture.jpg", width: 200);
-            EqualOnLinkerAndHelper("gr%C3%A4%C3%9Flich.jpg?h=200", "gräßlich.jpg", height: 200);
-            EqualOnLinkerAndHelper("test%20picture.jpg?x=chuchich%C3%A4schtly&w=200", "test picture.jpg?x=chuchichäschtly", width: 200);
+            TestOnLinkerAndHelper("test%20picture.jpg?w=200", "test picture.jpg", width: 200);
+            TestOnLinkerAndHelper("gr%C3%A4%C3%9Flich.jpg?h=200", "gräßlich.jpg", height: 200);
+            TestOnLinkerAndHelper("test%20picture.jpg?x=chuchich%C3%A4schtly&w=200", "test picture.jpg?x=chuchichäschtly", width: 200);
         }
 
 
         [TestMethod]
         public void BasicWidthAndHeight()
         {
-            EqualOnLinkerAndHelper("test.jpg?w=200", "test.jpg", width: 200);
-            EqualOnLinkerAndHelper("test.jpg?h=200", "test.jpg", height: 200);
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=200", "test.jpg", width: 200, height:200);
+            TestOnLinkerAndHelper("test.jpg?w=200", "test.jpg", width: 200);
+            TestOnLinkerAndHelper("test.jpg?h=200", "test.jpg", height: 200);
+            TestOnLinkerAndHelper("test.jpg?w=200&h=200", "test.jpg", width: 200, height:200);
         }
 
         [TestMethod]
         public void BasicWidthAndAspectRatio()
         {
-            EqualOnLinkerAndHelper("test.jpg?w=200", "test.jpg", width: 200, aspectRatio: 0);
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=200", "test.jpg", width: 200, aspectRatio: 1);
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=400", "test.jpg", width: 200, aspectRatio: 0.5);
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=100", "test.jpg", width: 200, aspectRatio: 2);
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=80", "test.jpg", width: 200, aspectRatio: 2.5);
+            TestOnLinkerAndHelper("test.jpg?w=200", "test.jpg", width: 200, aspectRatio: 0);
+            TestOnLinkerAndHelper("test.jpg?w=200&h=200", "test.jpg", width: 200, aspectRatio: 1);
+            TestOnLinkerAndHelper("test.jpg?w=200&h=400", "test.jpg", width: 200, aspectRatio: 0.5);
+            TestOnLinkerAndHelper("test.jpg?w=200&h=100", "test.jpg", width: 200, aspectRatio: 2);
+            TestOnLinkerAndHelper("test.jpg?w=200&h=80", "test.jpg", width: 200, aspectRatio: 2.5);
             
             // Note: in this case it should be 112.5 and will be rounded down by default
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=112", "test.jpg", width: 200, aspectRatio: 16f/9);
+            TestOnLinkerAndHelper("test.jpg?w=200&h=112", "test.jpg", width: 200, aspectRatio: 16f/9);
         }
 
         [TestMethod]
         public void BasicWidthAndAspectRatioString()
         {
             // Simple Strings
-            EqualOnLinkerAndHelper("test.jpg?w=200", "test.jpg", width: 200, aspectRatio: "0");
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=200", "test.jpg", width: 200, aspectRatio: "1");
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=400", "test.jpg", width: 200, aspectRatio: "0.5");
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=100", "test.jpg", width: 200, aspectRatio: "2");
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=80", "test.jpg", width: 200, aspectRatio: "2.5");
+            TestOnLinkerAndHelper("test.jpg?w=200", "test.jpg", width: 200, aspectRatio: "0");
+            TestOnLinkerAndHelper("test.jpg?w=200&h=200", "test.jpg", width: 200, aspectRatio: "1");
+            TestOnLinkerAndHelper("test.jpg?w=200&h=400", "test.jpg", width: 200, aspectRatio: "0.5");
+            TestOnLinkerAndHelper("test.jpg?w=200&h=100", "test.jpg", width: 200, aspectRatio: "2");
+            TestOnLinkerAndHelper("test.jpg?w=200&h=80", "test.jpg", width: 200, aspectRatio: "2.5");
         }
 
         [TestMethod]
         public void BasicWidthAndAspectRatioCommaBadCulture()
         {
             // test before setting culture
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=400", "test.jpg", width: 200, aspectRatio: "0,5");
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=400", "test.jpg", width: 200, aspectRatio: "0.5");
+            TestOnLinkerAndHelper("test.jpg?w=200&h=400", "test.jpg", width: 200, aspectRatio: "0,5");
+            TestOnLinkerAndHelper("test.jpg?w=200&h=400", "test.jpg", width: 200, aspectRatio: "0.5");
 
             // Now set culture and run again
             System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("de-DE");
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=400", "test.jpg", width: 200, aspectRatio: "0.5");
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=400", "test.jpg", width: 200, aspectRatio: "0.5");
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=100", "test.jpg", width: 200, aspectRatio: "2");
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=80", "test.jpg", width: 200, aspectRatio: "2.5");
+            TestOnLinkerAndHelper("test.jpg?w=200&h=400", "test.jpg", width: 200, aspectRatio: "0.5");
+            TestOnLinkerAndHelper("test.jpg?w=200&h=400", "test.jpg", width: 200, aspectRatio: "0.5");
+            TestOnLinkerAndHelper("test.jpg?w=200&h=100", "test.jpg", width: 200, aspectRatio: "2");
+            TestOnLinkerAndHelper("test.jpg?w=200&h=80", "test.jpg", width: 200, aspectRatio: "2.5");
         }
 
         [TestMethod]
         public void BasicWidthAndAspectRatioStringWithSeparator()
         {
             // Simple Strings
-            EqualOnLinkerAndHelper("test.jpg?w=200", "test.jpg", width: 200, aspectRatio: "0");
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=200", "test.jpg", width: 200, aspectRatio: "1:1");
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=200", "test.jpg", width: 200, aspectRatio: "1/1");
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=400", "test.jpg", width: 200, aspectRatio: "1:2");
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=400", "test.jpg", width: 200, aspectRatio: "1/2");
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=100", "test.jpg", width: 200, aspectRatio: "2:1");
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=100", "test.jpg", width: 200, aspectRatio: "2/1");
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=100", "test.jpg", width: 200, aspectRatio: "2");
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=80", "test.jpg", width: 200, aspectRatio: "2.5");
+            TestOnLinkerAndHelper("test.jpg?w=200", "test.jpg", width: 200, aspectRatio: "0");
+            TestOnLinkerAndHelper("test.jpg?w=200&h=200", "test.jpg", width: 200, aspectRatio: "1:1");
+            TestOnLinkerAndHelper("test.jpg?w=200&h=200", "test.jpg", width: 200, aspectRatio: "1/1");
+            TestOnLinkerAndHelper("test.jpg?w=200&h=400", "test.jpg", width: 200, aspectRatio: "1:2");
+            TestOnLinkerAndHelper("test.jpg?w=200&h=400", "test.jpg", width: 200, aspectRatio: "1/2");
+            TestOnLinkerAndHelper("test.jpg?w=200&h=100", "test.jpg", width: 200, aspectRatio: "2:1");
+            TestOnLinkerAndHelper("test.jpg?w=200&h=100", "test.jpg", width: 200, aspectRatio: "2/1");
+            TestOnLinkerAndHelper("test.jpg?w=200&h=100", "test.jpg", width: 200, aspectRatio: "2");
+            TestOnLinkerAndHelper("test.jpg?w=200&h=80", "test.jpg", width: 200, aspectRatio: "2.5");
             
             // Note: in this case it should be 112.5 and will be rounded down by default
-            EqualOnLinkerAndHelper("test.jpg?w=200&h=112", "test.jpg", width: 200, aspectRatio: "16/9");
+            TestOnLinkerAndHelper("test.jpg?w=200&h=112", "test.jpg", width: 200, aspectRatio: "16/9");
         }
 
         [TestMethod]
