@@ -4,7 +4,7 @@ using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.Url;
-using static ToSic.Sxc.Web.ParseObject;
+using static ToSic.Sxc.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Web.Images
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using static ToSic.Sxc.Web.ParseObject;
+using static ToSic.Sxc.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Web.Images
 {

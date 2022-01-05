@@ -3,7 +3,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.Images;
-using static ToSic.Sxc.Web.ParseObject;
+using static ToSic.Sxc.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Web
 {
