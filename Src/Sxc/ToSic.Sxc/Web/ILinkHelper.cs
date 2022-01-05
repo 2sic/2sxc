@@ -68,20 +68,25 @@ namespace ToSic.Sxc.Web
         /// <param name="format">Optional file format like `jpg` or `png`</param>
         /// <param name="aspectRatio">Aspect Ratio width/height, only relevant if a `factor` is supplied. Usually takes default from the `settings` or is ignored. </param>
         /// <param name="type">
-        /// Optional type changes how the link is generated. Possible values are:
+        ///     Optional type changes how the link is generated. Possible values are:
         /// 
-        /// - null / not specified / empty = return link as is generated
-        /// - `"full"` return link with protocol and domain. If that was missing before, it will add current protocol/domain if possible, but not on relative `./` or `../` links
-        /// - `"//"` return link with `//domain`. If that was missing before, will add current domain if possible, but not on relative `./` or `../` links
+        ///     - null / not specified / empty = return link as is generated
+        ///     - `"full"` return link with protocol and domain. If that was missing before, it will add current protocol/domain if possible, but not on relative `./` or `../` links
+        ///     - `"//"` return link with `//domain`. If that was missing before, will add current domain if possible, but not on relative `./` or `../` links
         /// </param>
         /// <param name="parameters">
         ///     - the parameters either as `id=47&amp;name=daniel` (Dnn also supports `/id/47/name/daniel`)
         ///     - in 2sxc 12.05+ it can also be an <see cref="ToSic.Sxc.Context.IParameters"/>
         /// </param>
+        /// <param name="srcSet">A list of sizes to use - will generate a srcSet list instead of just one url (new in v13)</param>
         /// <remarks>
         /// Usually a factor is applied to create a link which is possibly 50% of the content-width or similar.
         /// In these cases the height is not applied but the aspectRatio is used, which usually comes from `settings` if any were provided.
-        /// New in 2sxc 12.03
+        ///
+        /// History
+        /// - New in 2sxc 12.03
+        /// - type added ca. v12.08
+        /// - srcSet added v13.01
         /// </remarks>
         /// <returns></returns>
         ///// <param name="part">
@@ -116,7 +121,8 @@ namespace ToSic.Sxc.Web
             string format = null,
             object aspectRatio = null,
             string type = null,
-            object parameters = null
+            object parameters = null,
+            string srcSet = null
             );
 
         /// <summary>

@@ -34,8 +34,10 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests
             string scaleMode = null,
             string format = null,
             object aspectRatio = null,
-            string type = null)
+            string type = null,
+            string srcSet = null
+            )
             => link.Image(url, settings, factor, noParamOrder, width, height, quality, resizeMode, scaleMode, format,
-                aspectRatio, type: type);
+                aspectRatio, type: type, srcSet: srcSet);
     }
 }

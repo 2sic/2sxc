@@ -109,7 +109,8 @@ namespace ToSic.Sxc.Web
         public string Image(string url = null,
             object settings = null,
             object factor = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder =
+                "Rule: all params must be named (https://r.2sxc.org/named-params), Example: \'enable: true, version: 10\'",
             object width = null,
             object height = null,
             object quality = null,
@@ -118,7 +119,9 @@ namespace ToSic.Sxc.Web
             string format = null,
             object aspectRatio = null,
             string type = null,
-            object parameters = null)
+            object parameters = null, 
+            string srcSet = null
+            )
         {
             // prevent incorrect use without named parameters
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Image)}", $"{nameof(width)},{nameof(height)}," +
@@ -131,8 +134,8 @@ namespace ToSic.Sxc.Web
             var expandedUrl = ExpandUrlIfNecessary(type, url);
 
             // Get the image-url(s) as needed
-            var imageUrl = ImgLinker.Image(expandedUrl, settings, factor, noParamOrder, width, height, quality, resizeMode,
-                scaleMode, format, aspectRatio, strParams);
+            var imageUrl = ImgLinker.Image(expandedUrl, settings, factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
+                scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: strParams, srcSet: srcSet);
 
             return imageUrl;
         }
