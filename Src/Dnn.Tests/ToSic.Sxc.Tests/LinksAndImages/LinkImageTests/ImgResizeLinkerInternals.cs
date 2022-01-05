@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Data;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
-namespace ToSic.Sxc.Tests.WebTests.LinkImageTests
+namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
 {
     [TestClass]
     public class ImgResizeLinkerInternals: LinkImageTestBase

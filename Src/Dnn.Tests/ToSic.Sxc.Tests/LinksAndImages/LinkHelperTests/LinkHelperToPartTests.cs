@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Context.Query;
 using static ToSic.Sxc.Web.LinkHelperUnknown;
 
-namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
+namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests
 {
     [TestClass]
     public class LinkHelperToPartTests: LinkHelperToTestBase

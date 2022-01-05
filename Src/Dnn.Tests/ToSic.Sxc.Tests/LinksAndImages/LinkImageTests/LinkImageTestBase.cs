@@ -1,10 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Tests.DynamicData;
-using ToSic.Sxc.Tests.WebTests.LinkHelperTests;
+using ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests;
 using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Tests.WebTests.LinkImageTests
+namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
 {
     public class LinkImageTestBase: TestBaseSxc
     {

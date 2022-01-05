@@ -1,9 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Context.Query;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
-namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
+namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests
 {
     [TestClass]
     public class LinkHelperToApiPartUndefinedTests: LinkHelperTestBase

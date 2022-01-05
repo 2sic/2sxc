@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Web.Images;
 
-namespace ToSic.Sxc.Tests.ImageSrcSetTests
+namespace ToSic.Sxc.Tests.LinksAndImages
 {
     [TestClass]
     public class SrcSetParsePart

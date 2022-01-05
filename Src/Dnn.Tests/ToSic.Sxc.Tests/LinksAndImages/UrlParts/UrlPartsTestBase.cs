@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Tests.WebTests
+namespace ToSic.Sxc.Tests.LinksAndImages
 {
     public class UrlPartsTestBase
     {

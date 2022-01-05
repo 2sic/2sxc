@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Tests.WebTests.LinkHelperTests;
+using ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests;
 using ToSic.Sxc.Web;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
-namespace ToSic.Sxc.Tests.WebTests
+namespace ToSic.Sxc.Tests.LinksAndImages
 {
     [TestClass]
     public class LinkToBasicTests: LinkHelperTestBase

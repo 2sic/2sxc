@@ -1,8 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Web.Url;
 
-namespace ToSic.Sxc.Tests.WebTests.UrlHelperTests
+namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests
 {
     [TestClass]
     public class MergeNameValueCollectionTests

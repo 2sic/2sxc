@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ToSic.Sxc.Tests.WebTests
+namespace ToSic.Sxc.Tests.LinksAndImages
 {
     [TestClass]
     public class UrlPartsProtocolAndDomain : UrlPartsTestBase

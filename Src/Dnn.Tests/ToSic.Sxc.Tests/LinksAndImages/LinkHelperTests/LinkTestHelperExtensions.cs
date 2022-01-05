@@ -1,7 +1,6 @@
-﻿using System;
-using ToSic.Sxc.Web;
+﻿using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
+namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests
 {
     public static class LinkTestHelperExtensions
     {

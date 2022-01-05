@@ -1,10 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Context.Query;
 using ToSic.Sxc.Web.Url;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
-namespace ToSic.Sxc.Tests.WebTests.UrlHelperTests
+namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests
 {
     [TestClass]
     public class ParseQueryStringTests

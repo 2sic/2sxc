@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ToSic.Sxc.Tests.WebTests.LinkHelperTests
+namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests
 {
     [TestClass]
     public class LinkHelperToCommonTests : LinkHelperTestBase

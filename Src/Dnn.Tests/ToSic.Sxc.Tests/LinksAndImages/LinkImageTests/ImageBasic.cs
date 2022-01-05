@@ -2,7 +2,7 @@
 using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ToSic.Sxc.Tests.WebTests.LinkImageTests
+namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
 {
     [TestClass]
     public class ImageBasic: LinkImageTestBase
