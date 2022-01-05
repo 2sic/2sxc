@@ -118,8 +118,14 @@ namespace ToSic.Sxc.Tests.LinksAndImages
             CompareSrcSetPart(srcSet, first, expected);
         }
 
-        private static SrcSetPart BuildExpected(float size, char sizeType, int? width, int height) 
-            => new SrcSetPart(size, sizeType, width ?? (int)size, height);
+        private static SrcSetPart BuildExpected(float size, char sizeType, int? width, int height) =>
+            new SrcSetPart
+            {
+                Size = size,
+                SizeType = sizeType,
+                Width = width ?? (int)size,
+                Height = height
+            };
 
         private static void CompareSrcSetPart(string srcSet, SrcSetPart result, SrcSetPart expected)
         {

@@ -6,16 +6,23 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.Url;
 using static ToSic.Sxc.Plumbing.ParseObject;
+using static ToSic.Sxc.Web.Images.SrcSetPart;
 
 namespace ToSic.Sxc.Web.Images
 {
     public abstract partial class ImageLinkerBase: HasLog<ImageLinkerBase>
     {
         internal const string DontSetParam = "(none)";
-
         const string ResizeModeField = "ResizeMode";
         const string ScaleModeField = "ScaleMode";
         const string QualityField = "Quality";
+
+        /// <summary>
+        /// In case a srcSet is being generated with a '*' factor and we don't have a number, assume 1200.
+        /// This is an ideal number, as it's quite big but not huge, and will usually be easily divisible by 2,3,4,6 etc.
+        /// </summary>
+        private const int FallbackWidthForSrcSet = 1200;
+        private const int FallbackHeightForSrcSet = 0;
 
         protected ImageLinkerBase(string logName) : base(logName) { }
 
@@ -67,34 +74,69 @@ namespace ToSic.Sxc.Web.Images
             resizeParams.Mode = KeepBestString(resizeMode, getSettings?.Get(ResizeModeField));
             resizeParams.Scale = CorrectScales(KeepBestString(scaleMode, getSettings?.Get(ScaleModeField)));
 
-            string result;
-            var srcSetConfig = SrcSetParser.ParseSet(srcSet);
-
-            if ((srcSetConfig?.Length ?? 0) == 0)
-                result = ConstructUrl(url, resizeParams);
-            else
-            {
-                var results = srcSetConfig.Select(part =>
-                {
-                    if (part.SizeType == SrcSetPart.SizeDefault)
-                        return ConstructUrl(url, resizeParams);
-                    var partParams = new ResizeParams(resizeParams);
-                    
-                    // Set width if given (has precedence), otherwise multiply previous by pixel density in necessary
-                    if (part.Width != 0) 
-                        partParams.Width = part.Width;
-                    else if (part.SizeType == SrcSetPart.SizePixelDensity)
-                        partParams.Width = (int)(part.Size * partParams.Width);
-                    if (part.Height != 0) 
-                        partParams.Height = part.Height;
-                    else if (part.SizeType == SrcSetPart.SizePixelDensity)
-                        partParams.Height = (int)(part.Size * partParams.Height);
-                    return $"{ConstructUrl(url, partParams)} {part.Size}{part.SizeType}";
-                });
-                result = string.Join(",\n", results);
-            }
+            var result = GenerateFinalUrlOrSrcSet(url, srcSet, resizeParams);
 
             return wrapLog(result, result);
+        }
+
+        private string GenerateFinalUrlOrSrcSet(string url, string srcSet, ResizeParams originalParams)
+        {
+            var srcSetConfig = SrcSetParser.ParseSet(srcSet);
+
+            // Basic case - no srcSet config
+            if ((srcSetConfig?.Length ?? 0) == 0)
+                return ConstructUrl(url, originalParams);
+
+            var results = srcSetConfig.Select(part =>
+            {
+                if (part.SizeType == SizeDefault)
+                    return ConstructUrl(url, originalParams);
+
+                // Copy the params so we can optimize based on the expected SrcSet specs
+                var partParams = new ResizeParams(originalParams);
+
+                // Set width if given (has precedence), otherwise multiply previous by pixel density in necessary
+                //var shouldMultiply = part.SizeType == SizePixelDensity || part.SizeType == SizeFactorOf;
+                //if (part.Width != 0)
+                //    partParams.Width = part.Width;
+                //else if (shouldMultiply)
+                //    partParams.Width = (int)(part.Size * partParams.Width);
+                
+                //if (part.Height != 0)
+                //    partParams.Height = part.Height;
+                //else if (shouldMultiply)
+                //    partParams.Height = (int)(part.Size * partParams.Height);
+
+                partParams.Width = BestSrcSetDimension(partParams.Width, part.Width, part, FallbackWidthForSrcSet);
+                partParams.Height = BestSrcSetDimension(partParams.Height, part.Height, part, FallbackHeightForSrcSet);
+
+                var size = part.Size;
+                var sizeTypeCode = part.SizeType;
+                if (sizeTypeCode == SizeFactorOf)
+                {
+                    size = partParams.Width;
+                    sizeTypeCode = SizeWidth;
+                }
+
+                return $"{ConstructUrl(url, partParams)} {size}{sizeTypeCode}";
+            });
+            var result = string.Join(",\n", results);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get the best matching dimension (width/height) based on what's specified
+        /// </summary>
+        private int BestSrcSetDimension(int original, int onSrcSet, SrcSetPart part, int fallbackIfNoOriginal)
+        {
+            if (onSrcSet != 0) return onSrcSet;
+            if (part.SizeType == SizePixelDensity || part.SizeType == SizeFactorOf)
+            {
+                if (part.SizeType == SizeFactorOf && original == 0) original = fallbackIfNoOriginal;
+                return (int)(part.Size * original);
+            }
+            return original;
         }
 
         private string ConstructUrl(string url, ResizeParams resizeParams)

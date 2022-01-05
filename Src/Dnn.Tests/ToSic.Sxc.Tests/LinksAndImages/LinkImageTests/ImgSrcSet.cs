@@ -34,12 +34,14 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         public void SrcSetUrlOnlyW(string expected, string url, string srcSet) 
             => TestOnLinkerAndHelper(expected, url, srcSet: srcSet);
 
+
+
+
         [DataRow("test.jpg 1x", "test.jpg", "1")]
         [DataRow("test.jpg 1.5x", "test.jpg", "1.5x")]
         [DataTestMethod]
         public void SrcSetUrlOnlyX(string expected, string url, string srcSet) 
             => TestOnLinkerAndHelper(expected, url, srcSet: srcSet);
-
 
         [DataRow("test.jpg?w=1200 1x", "test.jpg", "1")]
         [DataRow("test.jpg?w=1800 1.5x", "test.jpg", "1.5x")]
@@ -47,31 +49,30 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         [DataRow("test.jpg?w=1200 1x,\ntest.jpg?w=1800 1.5x,\ntest.jpg?w=2000 2x", "test.jpg", "1x,1.5x,2=2000")]
         [DataRow("test.jpg?w=1200 1x,\ntest.jpg?w=1800 1.5x,\ntest.jpg?w=2000&h=1000 2x", "test.jpg", "1x,1.5x,2=2000:1000")]
         [DataTestMethod]
-        public void SrcSetUrlOnlyXAndWidth(string expected, string url, string srcSet)
+        public void SrcSetUrlXAndWidth(string expected, string url, string srcSet)
             => TestOnLinkerAndHelper(expected, url, width: 1200, srcSet: srcSet);
 
 
-        //[TestMethod]
-        //public void BasicWidthAndHeight()
-        //{
-        //    EqualOnLinkerAndHelper("test.jpg?w=200", "test.jpg", width: 200);
-        //    EqualOnLinkerAndHelper("test.jpg?h=200", "test.jpg", height: 200);
-        //    EqualOnLinkerAndHelper("test.jpg?w=200&h=200", "test.jpg", width: 200, height:200);
-        //}
 
-        //[TestMethod]
-        //public void BasicWidthAndAspectRatio()
-        //{
-        //    EqualOnLinkerAndHelper("test.jpg?w=200", "test.jpg", width: 200, aspectRatio: 0);
-        //    EqualOnLinkerAndHelper("test.jpg?w=200&h=200", "test.jpg", width: 200, aspectRatio: 1);
-        //    EqualOnLinkerAndHelper("test.jpg?w=200&h=400", "test.jpg", width: 200, aspectRatio: 0.5);
-        //    EqualOnLinkerAndHelper("test.jpg?w=200&h=100", "test.jpg", width: 200, aspectRatio: 2);
-        //    EqualOnLinkerAndHelper("test.jpg?w=200&h=80", "test.jpg", width: 200, aspectRatio: 2.5);
 
-        //    // Note: in this case it should be 112.5 and will be rounded down by default
-        //    EqualOnLinkerAndHelper("test.jpg?w=200&h=112", "test.jpg", width: 200, aspectRatio: 16f/9);
-        //}
+        [DataRow("test.jpg?w=1200 1200w", "test.jpg", "1*")]
+        [DataRow("test.jpg?w=1800 1800w", "test.jpg", "1.5*")]
+        [DataRow("test.jpg?w=600 600w", "test.jpg", "0.5*")]
+        // TODO: get 1/2 etc. 
+        [DataTestMethod]
+        public void SrcSetUrlOnlyStar(string expected, string url, string srcSet) 
+            => TestOnLinkerAndHelper(expected, url, srcSet: srcSet);
 
+        [DataRow("test.jpg?w=120 120w", "test.jpg", "1*")]
+        [DataRow("test.jpg?w=180 180w", "test.jpg", "1.5*")]
+        [DataRow("test.jpg?w=120 120w,\ntest.jpg?w=180 180w,\ntest.jpg?w=240 240w", "test.jpg", "1*,1.5*,2*")]
+        // Note: These two cases don't make sense but could be configured - as soon as you give an exact pixel, the 2* doesn't do much
+        [DataRow("test.jpg?w=120 120w,\ntest.jpg?w=200 200w", "test.jpg", "1*,2*=200")]
+        [DataRow("test.jpg?w=120 120w,\ntest.jpg?w=200&h=180 200w", "test.jpg", "1*,2*=200:180")]
+        [DataTestMethod]
+        public void SrcSetUrlStarAndWidth(string expected, string url, string srcSet)
+            => TestOnLinkerAndHelper(expected, url, width: 120, srcSet: srcSet);
+        
 
     }
 }
