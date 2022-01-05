@@ -6,7 +6,6 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Web.Url;
 
 namespace ToSic.Sxc.Web
 {
@@ -52,12 +51,12 @@ namespace ToSic.Sxc.Web
                 ? ToPage(pageId, strParams)
                 : ToApi(api, strParams);
 
-            var processed = ChangeToMatchType(type, url);
+            var processed = ExpandUrlIfNecessary(type, url);
 
             return Tags.SafeUrl(processed).ToString();
         }
 
-        private string ChangeToMatchType(string type, string url)
+        private string ExpandUrlIfNecessary(string type, string url)
         {
             // Short-Circuit to really not do anything if the type isn't specified
             if (string.IsNullOrEmpty(type)) return url;
@@ -125,20 +124,17 @@ namespace ToSic.Sxc.Web
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Image)}", $"{nameof(width)},{nameof(height)}," +
                 $"{nameof(quality)},{nameof(resizeMode)},{nameof(scaleMode)},{nameof(format)},{nameof(aspectRatio)},{nameof(type)},{nameof(parameters)}");
 
-            var imageUrl = ImgLinker.Image(url, settings, factor, noParamOrder, width, height, quality, resizeMode,
-                scaleMode, format, aspectRatio);
-
+            // If params were given, ensure it can be used as string, as it could also be a params-object
             var strParams = ParametersToString(parameters);
 
-            if (!string.IsNullOrWhiteSpace(strParams))
-            {
-                var paramList = UrlHelpers.ParseQueryString(strParams);
-                if (paramList != null & paramList.HasKeys()) 
-                    imageUrl = UrlHelpers.AddQueryString(imageUrl, paramList);
-            }
+            // If the url should be expanded to have a full root or something, do this first
+            var expandedUrl = ExpandUrlIfNecessary(type, url);
 
-            var processed = ChangeToMatchType(type, imageUrl);
-            return Tags.SafeUrl(processed).ToString();
+            // Get the image-url(s) as needed
+            var imageUrl = ImgLinker.Image(expandedUrl, settings, factor, noParamOrder, width, height, quality, resizeMode,
+                scaleMode, format, aspectRatio, strParams);
+
+            return imageUrl;
         }
 
         private bool _debug;

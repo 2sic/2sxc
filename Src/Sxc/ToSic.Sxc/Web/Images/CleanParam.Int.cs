@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Web
 {
-    internal static partial class CleanParam
+    internal static partial class ParseObject
     {
         /// <summary>
         /// Check if an object

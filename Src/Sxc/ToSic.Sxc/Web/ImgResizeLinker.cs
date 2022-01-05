@@ -3,7 +3,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.Images;
-using static ToSic.Sxc.Web.CleanParam;
+using static ToSic.Sxc.Web.ParseObject;
 
 namespace ToSic.Sxc.Web
 {
@@ -52,8 +52,7 @@ namespace ToSic.Sxc.Web
 
         private void IfDebugLogPair<T>(string prefix, Tuple<T, T> values)
         {
-            if (!Debug) return;
-            Log.Add($"{prefix}: W:{values.Item1}, H:{values.Item2}");
+            if (Debug) Log.Add($"{prefix}: W:{values.Item1}, H:{values.Item2}");
         }
 
 
@@ -63,9 +62,7 @@ namespace ToSic.Sxc.Web
             var maybeLog = Debug ? Log : null;
             var wrapLog = maybeLog.SafeCall<Tuple<int, int>>();
 
-
-            // var useAspectRatio = aspectRatio != 0 && !(Math.Abs(aspectRatio - 1) < 0.01);
-            var useAspectRatio = !DNearZero(aspectRatio); // !(Math.Abs(aspectRatio) < 0.01); // ignore super-small aspect ratios or zero
+            var useAspectRatio = !DNearZero(aspectRatio);
 
             // 1. Check if we have nothing to rescale
             string msgWhyNoRescale = null;
@@ -85,7 +82,7 @@ namespace ToSic.Sxc.Web
             
             // Height should only get Aspect Ratio if the Height wasn't specifically provided
             // and if useAR is true and Width is useful
-            var applyAspectRatio = scaleH && useAspectRatio; // && FNotNearZero(newW);
+            var applyAspectRatio = scaleH && useAspectRatio;
             var newH = applyAspectRatio 
                 ? newW / aspectRatio
                 : dims.Item2;
@@ -118,38 +115,6 @@ namespace ToSic.Sxc.Web
             var newH = (int)Math.Min(original.Item2 / correctionFactor, MaxSize);
 
             return wrapLog($"W:{newW}, H:{newH}", new Tuple<int, int>(newW, newH));
-        }
-
-        internal static string CorrectScales(string scale)
-        {
-            // ReSharper disable RedundantCaseLabel
-            switch (scale?.ToLowerInvariant())
-            {
-                case "up":
-                case "upscaleonly":
-                    return "upscaleonly";
-                case "both":
-                    return "both";
-                case "down":
-                case "downscaleonly":
-                    return "downscaleonly";
-                case null:
-                default: 
-                    return null;
-            }
-            // ReSharper restore RedundantCaseLabel
-        }
-
-        internal static string CorrectFormats(string format)
-        {
-            switch (format?.ToLowerInvariant()) 
-            {
-                case "jpg":
-                case "jpeg": return "jpg";
-                case "png": return "png";
-                case "gif": return "gif";
-                default: return null;
-            }
         }
     }
 }

@@ -3,11 +3,12 @@ using System.Collections.Specialized;
 using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
-using static ToSic.Sxc.Web.CleanParam;
+using ToSic.Sxc.Web.Url;
+using static ToSic.Sxc.Web.ParseObject;
 
 namespace ToSic.Sxc.Web.Images
 {
-    public abstract class ImageLinkerBase: HasLog<ImageLinkerBase>
+    public abstract partial class ImageLinkerBase: HasLog<ImageLinkerBase>
     {
         internal const string DontSetParam = "(none)";
 
@@ -29,7 +30,8 @@ namespace ToSic.Sxc.Web.Images
             string resizeMode = null,
             string scaleMode = null,
             string format = null,
-            object aspectRatio = null)
+            object aspectRatio = null,
+            string parameters = null)
         {
             var wrapLog = (Debug ? Log : null).SafeCall($"{nameof(url)}:{url}");
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Image)}", $"{nameof(url)},{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
@@ -46,7 +48,7 @@ namespace ToSic.Sxc.Web.Images
             var getSettings = settings as ICanGetNameNotFinal;
             if (Debug) Log.Add($"Has Settings:{getSettings != null}");
 
-            var resizedNew = FigureOutBestWidthAndHeight(width, height, factor, aspectRatio, getSettings);
+            var (bestWidth, bestHeight) = FigureOutBestWidthAndHeight(width, height, factor, aspectRatio, getSettings);
 
             var formToUse = RealStringOrNull(format);
 
@@ -56,16 +58,22 @@ namespace ToSic.Sxc.Web.Images
             string sToUse = KeepBestString(scaleMode, getSettings?.Get("ScaleMode"));
 
             var resizerNvc = new NameValueCollection();
-            ImgAddIfRelevant(resizerNvc, "w", resizedNew.Item1, "0");
-            ImgAddIfRelevant(resizerNvc, "h", resizedNew.Item2, "0");
+            ImgAddIfRelevant(resizerNvc, "w", bestWidth, "0");
+            ImgAddIfRelevant(resizerNvc, "h", bestHeight, "0");
             ImgAddIfRelevant(resizerNvc, "quality", qFinal, "0");
             ImgAddIfRelevant(resizerNvc, "mode", mToUse, DontSetParam);
-            ImgAddIfRelevant(resizerNvc, "scale", ImgResizeLinker.CorrectScales(sToUse), DontSetParam);
-            ImgAddIfRelevant(resizerNvc, "format", ImgResizeLinker.CorrectFormats(formToUse), DontSetParam);
+            ImgAddIfRelevant(resizerNvc, "scale", CorrectScales(sToUse), DontSetParam);
+            ImgAddIfRelevant(resizerNvc, "format", CorrectFormats(formToUse), DontSetParam);
 
-            url = Url.UrlHelpers.AddQueryString(url, resizerNvc);
+            url = UrlHelpers.AddQueryString(url, resizerNvc);
 
-            // todo: q - check if we need this safe-url, as it's handled a layer higher?
+            if (!string.IsNullOrWhiteSpace(parameters))
+            {
+                var paramList = UrlHelpers.ParseQueryString(parameters);
+                if (paramList != null & paramList.HasKeys())
+                    url = UrlHelpers.AddQueryString(url, paramList);
+            }
+
             var result = Tags.SafeUrl(url).ToString();
             wrapLog(result);
             return result;

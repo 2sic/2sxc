@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ToSic.Sxc.Web
 {
-    internal static partial class CleanParam
+    internal static partial class ParseObject
     {
 
         internal static double? DoubleOrNull(object value)
@@ -47,7 +43,6 @@ namespace ToSic.Sxc.Web
             return DoubleOrNull(value);
         }
 
-        //internal static bool FNearZero(float f) => Math.Abs(f) <= 0.01;
         internal static bool DNearZero(double f) => Math.Abs(f) <= 0.01;
     }
 }

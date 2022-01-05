@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Web
 {
-    internal static partial class CleanParam
+    internal static partial class ParseObject
     {
         internal static string RealStringOrNull(object value)
         {
