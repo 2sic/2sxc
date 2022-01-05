@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Web.Images
 
         public static SrcSetPart ParsePart(string partString)
         {
-            var withMore = partString
+            var withMore = (partString ?? string.Empty)
                 .Split('=')
                 .Select(more => more.Trim())
                 .ToArray();

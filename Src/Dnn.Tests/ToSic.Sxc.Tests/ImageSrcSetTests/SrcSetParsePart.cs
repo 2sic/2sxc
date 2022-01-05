@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Web.Images;
 
 namespace ToSic.Sxc.Tests.ImageSrcSetTests
@@ -53,8 +54,8 @@ namespace ToSic.Sxc.Tests.ImageSrcSetTests
         [DataRow("1.5x=77.9:22.9", 1.5, 'x', 78, 23)]
 
         [DataTestMethod]
-        public void ParseSourcePart(string srcSet, double size, char sizeType = 'w', int? width = null, int height = 0) 
-            => ParsePartAndCompareResult(srcSet, (float)size, sizeType, width, height);
+        public void ParsePartAsPartAndSet(string srcSet, double size, char sizeType = 'w', int? width = null, int height = 0) 
+            => TestAsPartAndSet(srcSet, (float)size, sizeType, width, height);
 
 
         // Some invalid data - should basically result in ignored data
@@ -62,20 +63,66 @@ namespace ToSic.Sxc.Tests.ImageSrcSetTests
         [DataRow("77vh", 0, 'd', 0, 0)]
         [DataRow("77vw", 0, 'w', 0, 0)] // this 'w' is picked up, because it's the last character
         [DataRow("100:100", 0, 'd', 0, 0)]
-        [DataRow("99,9", 99, 'w', 99, 0)] // comma should never be used, but in production it will just work, because commas are split before
 
         [DataTestMethod]
         public void ParseFaultySourcePart(string srcSet, double size, char sizeType = 'w', int? width = null, int height = 0) 
-            => ParsePartAndCompareResult(srcSet, (float)size, sizeType, width, height);
+            => TestAsPartAndSet(srcSet, (float)size, sizeType, width, height);
 
+        // Some invalid data - should basically result in ignored data
+        [DataRow(null, 0, 'd', 0, 0)]       // test this as part only, because it would return 0 items when run as a set
+        [DataRow("", 0, 'd', 0, 0)]         // test this as part only, because it would return 0 items when run as a set
+        [DataRow("99,9", 99, 'w', 99, 0)]   // comma should never be used, but in production it will just work, because commas are split before
+        [DataTestMethod]
+        public void ParseFaultySourcePartWithComma(string srcSet, double size, char sizeType = 'w', int? width = null, int height = 0) 
+            => TestPartOnly(srcSet, (float)size, sizeType, width, height);
+
+
+        [TestMethod]
+        public void ParseSet()
+        {
+            var srcSet = "100,100w,,100=100,100w=100:,d";
+            var expected100 = BuildExpected(100, 'w', 100, 0);
+            var expDefault = BuildExpected(0, 'd', 0, 0);
+            var result = SrcSetParser.ParseSet(srcSet);
+            Assert.AreEqual(6, result.Length);
+            CompareSrcSetPart(srcSet, result.First(), expected100);
+            CompareSrcSetPart(srcSet, result.Skip(1).First(), expected100);
+            CompareSrcSetPart(srcSet, result.Skip(2).First(), expDefault);
+            CompareSrcSetPart(srcSet, result.Skip(3).First(), expected100);
+            CompareSrcSetPart(srcSet, result.Skip(4).First(), expected100);
+            CompareSrcSetPart(srcSet, result.Skip(5).First(), expDefault);
+        }
 
         /// <summary>
         /// Real test function - standalone to quickly also run a single test if it fails
         /// </summary>
-        private static void ParsePartAndCompareResult(string srcSet, float size, char sizeType, int? width, int height)
+        private static void TestAsPartAndSet(string srcSet, float size, char sizeType, int? width, int height)
         {
-            var expected = new SrcSetPart(size, sizeType, width ?? (int)size, height);
+            TestPartOnly(srcSet, size, sizeType, width, height);
+            TestSetOnly(srcSet, size, sizeType, width, height);
+        }
+
+        private static void TestPartOnly(string srcSet, float size, char sizeType, int? width, int height)
+        {
+            var expected = BuildExpected(size, sizeType, width, height);
             var result = SrcSetParser.ParsePart(srcSet);
+            CompareSrcSetPart(srcSet, result, expected);
+        }
+
+        private static void TestSetOnly(string srcSet, float size, char sizeType, int? width, int height)
+        {
+            var expected = BuildExpected(size, sizeType, width, height);
+            var asSet = SrcSetParser.ParseSet(srcSet);
+            Assert.AreEqual(1, asSet.Length, "Expect 1 exact hit");
+            var first = asSet.First();
+            CompareSrcSetPart(srcSet, first, expected);
+        }
+
+        private static SrcSetPart BuildExpected(float size, char sizeType, int? width, int height) 
+            => new SrcSetPart(size, sizeType, width ?? (int)size, height);
+
+        private static void CompareSrcSetPart(string srcSet, SrcSetPart result, SrcSetPart expected)
+        {
             Assert.IsNotNull(result);
             Assert.AreEqual(expected.Size, result.Size, $"Sizes should match on '{srcSet}'");
             Assert.AreEqual(expected.SizeType, result.SizeType, $"Size Types should match on '{srcSet}'");
