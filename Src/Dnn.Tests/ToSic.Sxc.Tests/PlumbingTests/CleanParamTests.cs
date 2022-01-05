@@ -1,9 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Plumbing;
-using ToSic.Sxc.Web;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
-namespace ToSic.Sxc.Tests.WebTests
+namespace ToSic.Sxc.Tests.PlumbingTests
 {
     [TestClass]
     public class CleanParamTests

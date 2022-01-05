@@ -26,13 +26,14 @@ namespace ToSic.Sxc.Tests.WebTests.LinkImageTests
             string resizeMode = null,
             string scaleMode = null,
             string format = null,
-            object aspectRatio = null)
+            object aspectRatio = null,
+            string srcSet = null)
         {
             // Test with Linker
             var linker = GetLinker();
             var linkerResult = linker.Image(url: url, settings: settings, factor: factor, width: width, height: height,
                 quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format,
-                aspectRatio: aspectRatio);
+                aspectRatio: aspectRatio, srcSet: srcSet);
             Assert.AreEqual(expected, linkerResult, "Failed on ImgResizeLinker");
 
             var linkHelper = GetLinkHelper();
