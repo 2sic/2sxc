@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.Linq;
 using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
@@ -11,6 +12,10 @@ namespace ToSic.Sxc.Web.Images
     public abstract partial class ImageLinkerBase: HasLog<ImageLinkerBase>
     {
         internal const string DontSetParam = "(none)";
+
+        const string ResizeModeField = "ResizeMode";
+        const string ScaleModeField = "ScaleMode";
+        const string QualityField = "Quality";
 
         protected ImageLinkerBase(string logName) : base(logName) { }
 
@@ -31,15 +36,16 @@ namespace ToSic.Sxc.Web.Images
             string scaleMode = null,
             string format = null,
             object aspectRatio = null,
-            string parameters = null)
+            string parameters = null,
+            string srcSet = null)
         {
-            var wrapLog = (Debug ? Log : null).SafeCall($"{nameof(url)}:{url}");
+            var wrapLog = (Debug ? Log : null).SafeCall<string>($"{nameof(url)}:{url}");
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Image)}", $"{nameof(url)},{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
 
             // check common mistakes
             if (aspectRatio != null && height != null)
             {
-                wrapLog("error");
+                wrapLog("error", null);
                 const string messageOnlyOneOrNone = "only one or none of these should be provided, other can be zero";
                 throw new ArgumentOutOfRangeException($"{nameof(aspectRatio)},{nameof(height)}", messageOnlyOneOrNone);
             }
@@ -48,36 +54,60 @@ namespace ToSic.Sxc.Web.Images
             var getSettings = settings as ICanGetNameNotFinal;
             if (Debug) Log.Add($"Has Settings:{getSettings != null}");
 
-            var (bestWidth, bestHeight) = FigureOutBestWidthAndHeight(width, height, factor, aspectRatio, getSettings);
+            var resizeParams = new ResizeParams();
+            if (!string.IsNullOrWhiteSpace(parameters))
+                resizeParams.Parameters = UrlHelpers.ParseQueryString(parameters);
 
-            var formToUse = RealStringOrNull(format);
+            (resizeParams.Width, resizeParams.Height) = FigureOutBestWidthAndHeight(width, height, factor, aspectRatio, getSettings);
+
+            resizeParams.Format = CorrectFormats(RealStringOrNull(format));
 
             // Aspects which aren't affected by scale
-            var qFinal = IntOrZeroAsNull(quality) ?? IntOrZeroAsNull(getSettings?.Get("Quality")) ?? 0;
-            string mToUse = KeepBestString(resizeMode, getSettings?.Get("ResizeMode"));
-            string sToUse = KeepBestString(scaleMode, getSettings?.Get("ScaleMode"));
+            resizeParams.Quality = IntOrZeroAsNull(quality) ?? IntOrZeroAsNull(getSettings?.Get(QualityField)) ?? 0;
+            resizeParams.Mode = KeepBestString(resizeMode, getSettings?.Get(ResizeModeField));
+            resizeParams.Scale = CorrectScales(KeepBestString(scaleMode, getSettings?.Get(ScaleModeField)));
 
+            string result;
+            var srcSetConfig = SrcSetParser.ParseSet(srcSet);
+
+            if ((srcSetConfig?.Length ?? 0) == 0)
+                result = ConstructUrl(url, resizeParams);
+            else
+            {
+                var results = srcSetConfig.Select(part =>
+                {
+                    if (part.SizeType == SrcSetPart.SizeDefault)
+                        return ConstructUrl(url, resizeParams);
+                    var paramCopy = new ResizeParams(resizeParams);
+                    if (part.Width != 0) paramCopy.Width = part.Width;
+                    if (part.Height != 0) paramCopy.Height = part.Height;
+                    return $"{ConstructUrl(url, resizeParams)} {part.Size}{part.SizeType}";
+                });
+                result = string.Join(",\n", results);
+            }
+
+            return wrapLog(result, result);
+        }
+
+        private string ConstructUrl(string url, ResizeParams resizeParams)
+        {
             var resizerNvc = new NameValueCollection();
-            ImgAddIfRelevant(resizerNvc, "w", bestWidth, "0");
-            ImgAddIfRelevant(resizerNvc, "h", bestHeight, "0");
-            ImgAddIfRelevant(resizerNvc, "quality", qFinal, "0");
-            ImgAddIfRelevant(resizerNvc, "mode", mToUse, DontSetParam);
-            ImgAddIfRelevant(resizerNvc, "scale", CorrectScales(sToUse), DontSetParam);
-            ImgAddIfRelevant(resizerNvc, "format", CorrectFormats(formToUse), DontSetParam);
+            ImgAddIfRelevant(resizerNvc, "w", resizeParams.Width, "0");
+            ImgAddIfRelevant(resizerNvc, "h", resizeParams.Height, "0");
+            ImgAddIfRelevant(resizerNvc, "quality", resizeParams.Quality, "0");
+            ImgAddIfRelevant(resizerNvc, "mode", resizeParams.Mode, DontSetParam);
+            ImgAddIfRelevant(resizerNvc, "scale", resizeParams.Scale, DontSetParam);
+            ImgAddIfRelevant(resizerNvc, "format", resizeParams.Format, DontSetParam);
 
             url = UrlHelpers.AddQueryString(url, resizerNvc);
 
-            if (!string.IsNullOrWhiteSpace(parameters))
-            {
-                var paramList = UrlHelpers.ParseQueryString(parameters);
-                if (paramList != null & paramList.HasKeys())
-                    url = UrlHelpers.AddQueryString(url, paramList);
-            }
+            if (resizeParams.Parameters != null && resizeParams.Parameters.HasKeys())
+                url = UrlHelpers.AddQueryString(url, resizeParams.Parameters);
 
             var result = Tags.SafeUrl(url).ToString();
-            wrapLog(result);
             return result;
         }
+
 
         private bool ImgAddIfRelevant(NameValueCollection resizer, string key, object value, string irrelevant = "")
         {
