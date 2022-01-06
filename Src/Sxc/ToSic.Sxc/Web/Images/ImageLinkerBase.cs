@@ -4,6 +4,8 @@ using System.Linq;
 using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Images;
+using ToSic.Sxc.Services.Image;
 using ToSic.Sxc.Web.Url;
 using static ToSic.Sxc.Plumbing.ParseObject;
 using static ToSic.Sxc.Web.Images.SrcSetPart;
@@ -61,7 +63,7 @@ namespace ToSic.Sxc.Web.Images
             var getSettings = settings as ICanGetNameNotFinal;
             if (Debug) Log.Add($"Has Settings:{getSettings != null}");
 
-            var resizeParams = new ResizeParams();
+            var resizeParams = new ResizeParameters();
             if (!string.IsNullOrWhiteSpace(parameters))
                 resizeParams.Parameters = UrlHelpers.ParseQueryString(parameters);
 
@@ -79,21 +81,21 @@ namespace ToSic.Sxc.Web.Images
             return wrapLog(result, result);
         }
 
-        private string GenerateFinalUrlOrSrcSet(string url, string srcSet, ResizeParams originalParams)
+        private string GenerateFinalUrlOrSrcSet(string url, string srcSet, IResizeParameters originalParameters)
         {
             var srcSetConfig = SrcSetParser.ParseSet(srcSet);
 
             // Basic case - no srcSet config
             if ((srcSetConfig?.Length ?? 0) == 0)
-                return ConstructUrl(url, originalParams);
+                return ConstructUrl(url, originalParameters);
 
             var results = srcSetConfig.Select(part =>
             {
                 if (part.SizeType == SizeDefault)
-                    return ConstructUrl(url, originalParams);
+                    return ConstructUrl(url, originalParameters);
 
                 // Copy the params so we can optimize based on the expected SrcSet specs
-                var partParams = new ResizeParams(originalParams);
+                var partParams = new ResizeParameters(originalParameters);
                 
                 partParams.Width = BestSrcSetDimension(partParams.Width, part.Width, part, FallbackWidthForSrcSet);
                 partParams.Height = BestSrcSetDimension(partParams.Height, part.Height, part, FallbackHeightForSrcSet);
@@ -131,20 +133,20 @@ namespace ToSic.Sxc.Web.Images
             return (int)(part.Size * original);
         }
 
-        private string ConstructUrl(string url, ResizeParams resizeParams)
+        private string ConstructUrl(string url, IResizeParameters resizeParameters)
         {
             var resizerNvc = new NameValueCollection();
-            ImgAddIfRelevant(resizerNvc, "w", resizeParams.Width, "0");
-            ImgAddIfRelevant(resizerNvc, "h", resizeParams.Height, "0");
-            ImgAddIfRelevant(resizerNvc, "quality", resizeParams.Quality, "0");
-            ImgAddIfRelevant(resizerNvc, "mode", resizeParams.Mode, DontSetParam);
-            ImgAddIfRelevant(resizerNvc, "scale", resizeParams.Scale, DontSetParam);
-            ImgAddIfRelevant(resizerNvc, "format", resizeParams.Format, DontSetParam);
+            ImgAddIfRelevant(resizerNvc, "w", resizeParameters.Width, "0");
+            ImgAddIfRelevant(resizerNvc, "h", resizeParameters.Height, "0");
+            ImgAddIfRelevant(resizerNvc, "quality", resizeParameters.Quality, "0");
+            ImgAddIfRelevant(resizerNvc, "mode", resizeParameters.Mode, DontSetParam);
+            ImgAddIfRelevant(resizerNvc, "scale", resizeParameters.Scale, DontSetParam);
+            ImgAddIfRelevant(resizerNvc, "format", resizeParameters.Format, DontSetParam);
 
             url = UrlHelpers.AddQueryString(url, resizerNvc);
 
-            if (resizeParams.Parameters != null && resizeParams.Parameters.HasKeys())
-                url = UrlHelpers.AddQueryString(url, resizeParams.Parameters);
+            if (resizeParameters.Parameters != null && resizeParameters.Parameters.HasKeys())
+                url = UrlHelpers.AddQueryString(url, resizeParameters.Parameters);
 
             var result = Tags.SafeUrl(url).ToString();
             return result;

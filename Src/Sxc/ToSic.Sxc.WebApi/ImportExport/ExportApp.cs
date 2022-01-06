@@ -113,7 +113,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
                 var fileBytes = fileStream.ToArray();
                 Log.Add("will stream so many bytes:" + fileBytes.Length);
-                var mimeType = "application/octet-stream";
+                var mimeType = MimeHelper.FallbackType;
 #if NETSTANDARD
                 return new FileContentResult(fileBytes, mimeType) { FileDownloadName = fileName };
 #else

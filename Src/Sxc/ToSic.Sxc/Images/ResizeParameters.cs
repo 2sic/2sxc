@@ -1,26 +1,26 @@
 ﻿using System.Collections.Specialized;
 
-namespace ToSic.Sxc.Web.Images
+namespace ToSic.Sxc.Images
 {
-    internal class ResizeParams
+    public class ResizeParameters : IResizeParameters
     {
         public int Width { get; set; }
 
         public int Height { get; set; }
 
-        public int? Quality { get; set; }
+        public int Quality { get; set; }
 
         public string Mode { get; set; }
+
         public string Scale { get; set; }
 
         public string Format { get; set; }
 
         public NameValueCollection Parameters { get; set; }
 
+        public ResizeParameters() {}
 
-        public ResizeParams() {}
-
-        public ResizeParams(ResizeParams original)
+        public ResizeParameters(IResizeParameters original)
         {
             Width=original.Width;
             Height=original.Height;
