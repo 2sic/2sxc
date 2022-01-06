@@ -1,8 +1,7 @@
 ﻿using System.IO;
 using ToSic.Eav;
-using ToSic.Sxc.Images;
 
-namespace ToSic.Sxc.Services.Image
+namespace ToSic.Sxc.Images
 {
     public partial class ImageService
     {

@@ -15,7 +15,6 @@ using ToSic.Sxc.Images;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Image;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.JsContext;
 using ToSic.Sxc.Web.PageFeatures;

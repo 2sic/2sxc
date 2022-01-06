@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Images;
-using ToSic.Sxc.Services.Image;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Tests.ServicesTests
 {

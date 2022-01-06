@@ -1,22 +1,41 @@
-﻿using System;
+﻿using System.Web;
 using ToSic.Eav.Documentation;
-using ToSic.Razor.Markup;
-using ToSic.Razor.Html5;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Services
 {
-    [PrivateApi]
+    /// <summary>
+    /// Service to help create responsive `img` and `picture` tags the best possible way.
+    /// </summary>
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("Still WIP")]
     public interface IImageService
     {
         /// <summary>
-        /// Get the format
+        /// Get the format information for a specific extension.
+        /// Mostly used internally, you will usually not need this. 
         /// </summary>
         /// <param name="path">Path or extension</param>
         /// <returns></returns>
         /// <remarks>Only works for the basic, known image types</remarks>
+        [PrivateApi("Not sure if this is needed outside...")]
         IImageFormat GetFormat(string path);
 
+        /// <summary>
+        /// Construct custom Resize-Settings as needed, either based on existing settings or starting from scratch
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <param name="noParamOrder"></param>
+        /// <param name="factor"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="quality"></param>
+        /// <param name="resizeMode"></param>
+        /// <param name="scaleMode"></param>
+        /// <param name="format"></param>
+        /// <param name="aspectRatio"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
         IResizeSettings GetResizeSettings(
             object settings = null,
             string noParamOrder = Eav.Parameters.Protector,
@@ -31,7 +50,7 @@ namespace ToSic.Sxc.Services
             string parameters = null
         );
 
-        string SrcSet(
+        IHybridHtmlString SrcSet(
             string url,
             object settings = null,
             string noParamOrder = Eav.Parameters.Protector,
@@ -39,23 +58,19 @@ namespace ToSic.Sxc.Services
             string srcSet = null
         );
 
-
-        ITag SourceTags(
+        IPictureSet Picture(
             string url,
             object settings = null,
             string noParamOrder = Eav.Parameters.Protector,
             object factor = null,
-            string srcSet = null
-        );
+            string srcSet = null);
 
-        Picture PictureTag(
+        IImgSet Img(
             string url,
             object settings = null,
             string noParamOrder = Eav.Parameters.Protector,
             object factor = null,
-            string srcSet = null,
-            string alt = null,
-            Action<Img> imgAction = null // todo: would be Action on the img tag
-        );
+            string srcSet = null);
+            
     }
 }

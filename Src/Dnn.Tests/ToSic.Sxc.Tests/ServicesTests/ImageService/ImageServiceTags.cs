@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Razor.Html5;
-using ToSic.Sxc.Services.Image;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Tests.ServicesTests
 {
@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         {
             var svc = Build<IImageService>();
             var settings = svc.GetResizeSettings(width: 120, height: 24);
-            var sources = svc.SourceTags(ImgBase, settings, srcSet: SrcSet12);
+            var sources = svc.Picture(ImgBase, settings, srcSet: SrcSet12).SourceTags;
 
             var expected = SrcWebP12 + SrcJpg12;
             Assert.AreEqual(expected, sources.ToString());
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         {
             var svc = Build<IImageService>();
             var settings = svc.GetResizeSettings(width: 120, height: 24);
-            var sources = svc.SourceTags(ImgBase, settings, srcSet: SrcSetNone);
+            var sources = svc.Picture(ImgBase, settings, srcSet: SrcSetNone).SourceTags;
 
             var expected = SrcWebPNone + SrcJpgNone;
             Assert.AreEqual(expected, sources.ToString());
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         {
             var svc = Build<IImageService>();
             var settings = svc.GetResizeSettings(width: 120, height: 24);
-            var pic = svc.PictureTag(ImgBase, settings);
+            var pic = svc.Picture(ImgBase, settings);
 
             var expected = $"<picture>{SrcWebPNone}{SrcJpgNone}<img src='{ImgBase}?w=120&amp;h=24'></picture>";
             Assert.AreEqual(expected, pic.ToString());
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         {
             var svc = Build<IImageService>();
             var settings = svc.GetResizeSettings(width: 120, height: 24);
-            var pic = svc.PictureTag(ImgBase, settings, srcSet: SrcSet12);
+            var pic = svc.Picture(ImgBase, settings, srcSet: SrcSet12);
 
             var expected = $"<picture>{SrcWebP12}{SrcJpg12}<img src='{ImgBase}?w=120&amp;h=24'></picture>";
             Assert.AreEqual(expected, pic.ToString());
