@@ -15,6 +15,7 @@ using ToSic.Sxc.Images;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Image;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.JsContext;
 using ToSic.Sxc.Web.PageFeatures;
@@ -120,6 +121,7 @@ namespace ToSic.Sxc
             // 13 - ToolbarService & IFeaturesService
             services.TryAddTransient<IToolbarService, ToolbarService>();    // New 13.00
             services.TryAddTransient<IFeaturesService, FeaturesService>();  // New 13.01
+            services.TryAddTransient<IImageService, ImageService>();
 
 
             // Add possibly missing fallback services

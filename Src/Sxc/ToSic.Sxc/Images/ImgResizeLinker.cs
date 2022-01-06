@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Images
             string parameters = null,
             string srcSet = null)
         {
-            var wrapLog = (Debug ? Log : null).SafeCall<string>($"{nameof(url)}:{url}");
+            var wrapLog = (Debug ? Log : null).SafeCall<string>($"{nameof(url)}:{url}, {nameof(srcSet)}:{srcSet}");
 
             var resizeParams = ResizeParamMerger.BuildResizeParameters(
                 settings, factor, noParamOrder, width, height, quality, resizeMode, scaleMode, format, aspectRatio, parameters);

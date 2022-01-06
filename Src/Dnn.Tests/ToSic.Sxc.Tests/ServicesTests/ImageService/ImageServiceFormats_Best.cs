@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataTestMethod]
         public void TestBestPng(string path)
         {
-            var formats = new ImageService().GetFormat(path).ResizeFormats;
+            var formats = Build<IImageService>().GetFormat(path).ResizeFormats;
             Assert.IsNotNull(formats);
             Assert.AreEqual(2, formats.Count);
             AssertOneFileInfo(ImageConstants.Png, formats.Skip(1).First());
@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataTestMethod]
         public void TestBestEmpty(string path)
         {
-            var formats = new ImageService().GetFormat(path).ResizeFormats;
+            var formats = Build<IImageService>().GetFormat(path).ResizeFormats;
             Assert.IsNotNull(formats);
             Assert.AreEqual(0, formats.Count);
         }
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataTestMethod]
         public void TestBestUnknownAvif(string path)
         {
-            var formats = new ImageService().GetFormat(path).ResizeFormats;
+            var formats = Build<IImageService>().GetFormat(path).ResizeFormats;
             Assert.IsNotNull(formats);
             Assert.AreEqual(0, formats.Count);
             //AssertUnknownFileInfo("avif", formats.First());
@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataTestMethod]
         public void TestBestSvg(string path)
         {
-            var formats = new ImageService().GetFormat(path).ResizeFormats;
+            var formats = Build<IImageService>().GetFormat(path).ResizeFormats;
             Assert.IsNotNull(formats);
             Assert.AreEqual(0, formats.Count);
             //AssertOneFileInfo(ImageConstants.Svg, formats.First());

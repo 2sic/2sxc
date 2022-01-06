@@ -5,7 +5,7 @@ using ToSic.Sxc.Services.Image;
 namespace ToSic.Sxc.Tests.ServicesTests
 {
     [TestClass]
-    public partial class ImageServiceFormats
+    public partial class ImageServiceFormats: TestBaseSxc
     {
         [DataRow("test.png")]
         [DataRow(".png")]
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataTestMethod]
         public void TestPng(string path)
         {
-            var fileInfo = new ImageService().GetFormat(path);
+            var fileInfo = Build<IImageService>().GetFormat(path);
             AssertOneFileInfo(ImageConstants.Png, fileInfo);
         }
 
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataTestMethod]
         public void TestJpg(string path)
         {
-            var fileInfo = new ImageService().GetFormat(path);
+            var fileInfo = Build<IImageService>().GetFormat(path);
             AssertOneFileInfo(ImageConstants.Jpg, fileInfo);
         }
 
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void TestUnknown(string path, string expected)
         {
-            var typeInfo = new ImageService().GetFormat(path);
+            var typeInfo = Build<IImageService>().GetFormat(path);
             AssertUnknownFileInfo(expected, typeInfo);
         }
 

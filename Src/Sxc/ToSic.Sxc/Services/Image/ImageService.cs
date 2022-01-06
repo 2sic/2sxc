@@ -1,13 +1,22 @@
 ﻿using System;
 using System.Linq;
 using ToSic.Eav;
+using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
+using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Services.Image
 {
-    public partial class ImageService: IImageService
+    public partial class ImageService: HasLog<ImageService>, IImageService
     {
+        public ImgResizeLinker ImgLinker { get; }
+
+        public ImageService(ImgResizeLinker imgLinker) : base(Constants.SxcLogName + ".ImgSvc")
+        {
+            ImgLinker = imgLinker.Init(Log);
+        }
+
         public ITag SourceTags(string url, object settings = null, string noParamOrder = Parameters.Protector, object formats = null,
             object factor = null)
         {

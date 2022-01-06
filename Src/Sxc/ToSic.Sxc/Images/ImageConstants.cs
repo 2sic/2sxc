@@ -11,6 +11,14 @@ namespace ToSic.Sxc.Images
         internal const int MaxQuality = 100;
         internal const string DontSetParam = "(none)";
 
+        /// <summary>
+        /// In case a srcSet is being generated with a '*' factor and we don't have a number, assume 1200.
+        /// This is an ideal number, as it's quite big but not huge, and will usually be easily divisible by 2,3,4,6 etc.
+        /// </summary>
+        public const int FallbackWidthForSrcSet = 1200;
+
+        public const int FallbackHeightForSrcSet = 0;
+
         internal static string FindKnownScaleOrNull(string scale)
         {
             // ReSharper disable RedundantCaseLabel

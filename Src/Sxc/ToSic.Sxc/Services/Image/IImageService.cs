@@ -9,10 +9,11 @@ namespace ToSic.Sxc.Services.Image
     public interface IImageService
     {
         /// <summary>
-        /// Get a format information for the specified extension or image. Will help you create the appropriate resize/image tags.
+        /// Get the format
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="path">Path or extension</param>
         /// <returns></returns>
+        /// <remarks>Only works for the basic, known image types</remarks>
         IImageFormat GetFormat(string path);
 
 

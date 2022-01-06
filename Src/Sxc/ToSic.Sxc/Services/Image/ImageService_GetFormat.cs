@@ -1,17 +1,11 @@
 ﻿using System.IO;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Services.Image
 {
     public partial class ImageService
     {
-        /// <summary>
-        /// Get the format
-        /// </summary>
-        /// <param name="path">Path or extension</param>
-        /// <returns></returns>
-        /// <remarks>Only works for the basic, known image types</remarks>
+        /// <inheritdoc />
         public IImageFormat GetFormat(string path)
         {
             // 1. check extension makes sense / lower case
@@ -38,14 +32,12 @@ namespace ToSic.Sxc.Services.Image
             object quality = null,
             string resizeMode = null,
             string scaleMode = null,
-            //string format = null,
-
-            //object factor, 
             string format = null,
             object aspectRatio = null,
-            //ICanGetNameNotFinal settingsOrNull = null, 
-            string parameters = null)
+            string parameters = null
+            )
         {
+            // TODO: continue here - now that we have the linker!
             return null;
         }
     }
