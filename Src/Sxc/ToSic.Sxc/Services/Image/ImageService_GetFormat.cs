@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Services.Image
             // 4. Future / maybe: Otherwise check system for mime type and try to build a recommendation
         }
 
-        public ResizeParameters GetResizeParameters(
+        public IResizeSettings GetResizeSettings(
             object settings = null,
             object factor = null,
             string noParamOrder = Eav.Parameters.Protector,
@@ -37,8 +37,9 @@ namespace ToSic.Sxc.Services.Image
             string parameters = null
             )
         {
-            // TODO: continue here - now that we have the linker!
-            return null;
+            return ImgLinker.ResizeParamMerger.BuildResizeParameters(settings: settings, factor: factor,
+                noParamOrder: noParamOrder, width: width, height: height, quality: quality, resizeMode: resizeMode,
+                scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters);
         }
     }
 }

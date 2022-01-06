@@ -4,7 +4,7 @@ using ToSic.Eav.Documentation;
 namespace ToSic.Sxc.Images
 {
     [PrivateApi("Hide implementation")]
-    public class ResizeParameters : IResizeParameters
+    public class ResizeSettings : IResizeSettings
     {
         public int Width { get; set; }
 
@@ -20,9 +20,9 @@ namespace ToSic.Sxc.Images
 
         public NameValueCollection Parameters { get; set; }
 
-        public ResizeParameters() {}
+        public ResizeSettings() {}
 
-        public ResizeParameters(IResizeParameters original)
+        public ResizeSettings(IResizeSettings original)
         {
             Width=original.Width;
             Height=original.Height;

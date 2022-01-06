@@ -4,7 +4,7 @@ using ToSic.Eav.Documentation;
 namespace ToSic.Sxc.Images
 {
     [InternalApi_DoNotUse_MayChangeWithoutNotice("Still WIP")]
-    public interface IResizeParameters
+    public interface IResizeSettings
     {
         /// <summary>
         /// Width to resize to.

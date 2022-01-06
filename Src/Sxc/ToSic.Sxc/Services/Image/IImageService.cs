@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
 using ToSic.Razor.Markup;
+using ToSic.Razor.Html5;
 using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Services.Image
@@ -16,22 +17,36 @@ namespace ToSic.Sxc.Services.Image
         /// <remarks>Only works for the basic, known image types</remarks>
         IImageFormat GetFormat(string path);
 
+        IResizeSettings GetResizeSettings(
+            object settings = null,
+            object factor = null,
+            string noParamOrder = Eav.Parameters.Protector,
+            object width = null,
+            object height = null,
+            object quality = null,
+            string resizeMode = null,
+            string scaleMode = null,
+            string format = null,
+            object aspectRatio = null,
+            string parameters = null
+        );
 
         ITag SourceTags(
             string url,
             object settings = null,
             string noParamOrder = Eav.Parameters.Protector,
-            object formats = null,
-            object factor = null
+            object factor = null,
+            string srcSet = null
         );
 
-        object PictureTag(
+        Picture PictureTag(
             string url,
             object settings = null,
             string noParamOrder = Eav.Parameters.Protector,
             object factor = null,
+            string srcSet = null,
             string alt = null,
-            Action<string> img = null // todo: would be Action on the img tag
+            Action<Img> imgAction = null // todo: would be Action on the img tag
         );
     }
 }

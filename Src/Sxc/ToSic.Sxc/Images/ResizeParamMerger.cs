@@ -12,15 +12,18 @@ namespace ToSic.Sxc.Images
     /// </summary>
     internal class ResizeParamMerger: HasLog<ResizeParamMerger>
     {
-        const string ResizeModeField = "ResizeMode";
-        const string ScaleModeField = "ScaleMode";
-        const string QualityField = "Quality";
+        private const string ResizeModeField = "ResizeMode";
+        private const string ScaleModeField = "ScaleMode";
+        private const string QualityField = "Quality";
+        private const string WidthField = "Width";
+        private const string HeightField = "Height";
+        private const string AspectRatioField = "AspectRatio";
 
         public ResizeParamMerger() : base(Constants.SxcLogName + ".ImgRPM") { }
 
         public bool Debug = false;
 
-        internal IResizeParameters BuildResizeParameters(
+        internal IResizeSettings BuildResizeParameters(
             object settings = null,
             object factor = null,
             string noParamOrder = Eav.Parameters.Protector,
@@ -65,7 +68,7 @@ namespace ToSic.Sxc.Images
             return resizeParams;
         }
 
-        internal IResizeParameters FigureOutBestWidthAndHeight(object width, object height, object factor, object aspectRatio, ICanGetNameNotFinal settingsOrNull)
+        internal IResizeSettings FigureOutBestWidthAndHeight(object width, object height, object factor, object aspectRatio, ICanGetNameNotFinal settingsOrNull)
         {
             // Try to pre-process parameters and prefer them
             // The manually provided values must remember Zeros because they deactivate presets
@@ -73,7 +76,7 @@ namespace ToSic.Sxc.Images
             IfDebugLogPair("Params", parms);
 
             // Pre-Clean the values - all as strings
-            var set = new Tuple<dynamic, dynamic>(settingsOrNull?.Get("Width"), settingsOrNull?.Get("Height"));
+            var set = new Tuple<dynamic, dynamic>(settingsOrNull?.Get(WidthField), settingsOrNull?.Get(HeightField));
             if (settingsOrNull != null) IfDebugLogPair("Settings", set);
 
             var safe = new Tuple<int, int>(parms.Item1 ?? IntOrZeroAsNull(set.Item1) ?? 0, parms.Item2 ?? IntOrZeroAsNull(set.Item2) ?? 0);
@@ -82,7 +85,7 @@ namespace ToSic.Sxc.Images
 
             var factorFinal = DoubleOrNullWithCalculation(factor) ?? 0;
             double arFinal = DoubleOrNullWithCalculation(aspectRatio)
-                             ?? DoubleOrNullWithCalculation(settingsOrNull?.Get("AspectRatio")) ?? 0;
+                             ?? DoubleOrNullWithCalculation(settingsOrNull?.Get(AspectRatioField)) ?? 0;
             if (Debug) Log.Add($"Resize Factor: {factorFinal}, Aspect Ratio: {arFinal}");
 
             // if either param h/w was null, then do a rescaling on the param which comes from the settings
@@ -93,11 +96,12 @@ namespace ToSic.Sxc.Images
                 : safe;
             IfDebugLogPair("Rescale", resizedNew);
 
-            var resizeParams = new ResizeParameters();
+            var resizeParams = new ResizeSettings();
             (resizeParams.Width, resizeParams.Height) = KeepInRangeProportional(resizedNew);
 
             return resizeParams;
         }
+
 
 
         internal Tuple<int, int> Rescale(Tuple<int, int> dims, double factor, double aspectRatio, bool scaleW, bool scaleH)

@@ -70,6 +70,10 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="ToSic.Razor, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dnn\ToSic.Sxc.Dnn\razorblade\bin\ToSic.Razor.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adam\AdamSecurity.cs" />
@@ -85,6 +89,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceFormats_Best.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceFormats.cs" />
+    <Compile Include="ServicesTests\ImageService\ImageServiceTags.cs" />
     <Compile Include="ServicesTests\MailServiceBaseTests.cs" />
     <Compile Include="ServicesTests\MailAddressCollectionTests.cs" />
     <Compile Include="ServicesTests\AddMailAddressesInputTypeTests.cs" />
