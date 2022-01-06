@@ -58,4 +58,8 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Web\Images\" />
+  </ItemGroup>
+
 </Project>

@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Images;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
@@ -93,13 +94,13 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         private bool TestBestWH(int expW, int expH, object width = null, object height = null, object factor = null, object ar = null, ICanGetNameNotFinal settings = null)
         {
             // Get a new linker for each test run
-            var linker = GetLinker();
+            var linker = new ResizeParamMerger();
 
             var t1 = linker.FigureOutBestWidthAndHeight(width, height, factor, ar, settings);
-            var ok = Equals(new Tuple<int, int>(expW, expH), t1);
-            var okW = expW.Equals(t1.Item1);
-            var okH = expH.Equals(t1.Item2);
-            Console.WriteLine((ok ? "ok" : "error") + "; W:" + t1.Item1 + (okW ? "==": "!=") + expW + "; H:" + t1.Item2 + (okH ? "==" : "!=") + expH);
+            var okW = expW.Equals(t1.Width);
+            var okH = expH.Equals(t1.Height);
+            var ok = okW && okH;
+            Console.WriteLine((ok ? "ok" : "error") + "; W:" + t1.Width + (okW ? "==": "!=") + expW + "; H:" + t1.Width + (okH ? "==" : "!=") + expH);
             return ok;
         }
     }

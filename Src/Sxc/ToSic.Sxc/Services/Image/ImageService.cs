@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using ToSic.Eav;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
@@ -18,11 +19,13 @@ namespace ToSic.Sxc.Services.Image
 
             // 1.x. Settings
 
-            // 1.x. Formats if not yet known
-
-            // 1.x. Formats if known, verify its useful?
-
             // 1.x. Factor ?
+
+            // Generate Meta Tags
+
+            var sources = format.ResizeFormats.Select(rf => Tag.Source().Type(rf.MimeType).Srcset("todo"));
+            var result = Tag.Custom(null, sources);
+            return result;
 
 
             throw new NotImplementedException();

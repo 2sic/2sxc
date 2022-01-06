@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Eav.Run.Unknown;
+using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Web
 {

@@ -4,6 +4,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Images;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.WebApi;
 

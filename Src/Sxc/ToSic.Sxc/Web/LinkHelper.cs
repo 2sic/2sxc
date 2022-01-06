@@ -6,6 +6,7 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Web
 {

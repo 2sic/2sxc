@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Images
 {
+    [PrivateApi("Hide implementation")]
     public class ImageFormat : IImageFormat
     {
         /// <inheritdoc />

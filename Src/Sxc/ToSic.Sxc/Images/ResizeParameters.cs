@@ -1,7 +1,9 @@
 ﻿using System.Collections.Specialized;
+using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Images
 {
+    [PrivateApi("Hide implementation")]
     public class ResizeParameters : IResizeParameters
     {
         public int Width { get; set; }

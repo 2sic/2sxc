@@ -1,32 +1,20 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.Linq;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Data;
-using ToSic.Sxc.Images;
-using ToSic.Sxc.Services.Image;
 using ToSic.Sxc.Web.Url;
-using static ToSic.Sxc.Plumbing.ParseObject;
-using static ToSic.Sxc.Web.Images.SrcSetPart;
+using static ToSic.Sxc.Images.ImageConstants;
+using static ToSic.Sxc.Images.SrcSetPart;
 
-namespace ToSic.Sxc.Web.Images
+namespace ToSic.Sxc.Images
 {
-    public abstract partial class ImageLinkerBase: HasLog<ImageLinkerBase>
+    [PrivateApi("Internal stuff")]
+    public class ImgResizeLinker : HasLog<ImgResizeLinker>
     {
-        internal const string DontSetParam = "(none)";
-        const string ResizeModeField = "ResizeMode";
-        const string ScaleModeField = "ScaleMode";
-        const string QualityField = "Quality";
-
-        /// <summary>
-        /// In case a srcSet is being generated with a '*' factor and we don't have a number, assume 1200.
-        /// This is an ideal number, as it's quite big but not huge, and will usually be easily divisible by 2,3,4,6 etc.
-        /// </summary>
-        private const int FallbackWidthForSrcSet = 1200;
-        private const int FallbackHeightForSrcSet = 0;
-
-        protected ImageLinkerBase(string logName) : base(logName) { }
+        public ImgResizeLinker() : base($"{Constants.SxcLogName}.ImgRes") { }
 
         public bool Debug = false;
 
@@ -49,33 +37,10 @@ namespace ToSic.Sxc.Web.Images
             string srcSet = null)
         {
             var wrapLog = (Debug ? Log : null).SafeCall<string>($"{nameof(url)}:{url}");
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Image)}", $"{nameof(url)},{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
 
-            // check common mistakes
-            if (aspectRatio != null && height != null)
-            {
-                wrapLog("error", null);
-                const string messageOnlyOneOrNone = "only one or none of these should be provided, other can be zero";
-                throw new ArgumentOutOfRangeException($"{nameof(aspectRatio)},{nameof(height)}", messageOnlyOneOrNone);
-            }
-
-            // Check if the settings is the expected type or null/other type
-            var getSettings = settings as ICanGetNameNotFinal;
-            if (Debug) Log.Add($"Has Settings:{getSettings != null}");
-
-            var resizeParams = new ResizeParameters();
-            if (!string.IsNullOrWhiteSpace(parameters))
-                resizeParams.Parameters = UrlHelpers.ParseQueryString(parameters);
-
-            (resizeParams.Width, resizeParams.Height) = FigureOutBestWidthAndHeight(width, height, factor, aspectRatio, getSettings);
-
-            resizeParams.Format = CorrectFormats(RealStringOrNull(format));
-
-            // Aspects which aren't affected by scale
-            resizeParams.Quality = IntOrZeroAsNull(quality) ?? IntOrZeroAsNull(getSettings?.Get(QualityField)) ?? 0;
-            resizeParams.Mode = KeepBestString(resizeMode, getSettings?.Get(ResizeModeField));
-            resizeParams.Scale = CorrectScales(KeepBestString(scaleMode, getSettings?.Get(ScaleModeField)));
-
+            var resizeParams = ResizeParamMerger.BuildResizeParameters(
+                settings, factor, noParamOrder, width, height, quality, resizeMode, scaleMode, format, aspectRatio, parameters);
+            
             var result = GenerateFinalUrlOrSrcSet(url, srcSet, resizeParams);
 
             return wrapLog(result, result);
@@ -108,7 +73,7 @@ namespace ToSic.Sxc.Web.Images
                     sizeTypeCode = SizeWidth;
                 }
 
-                return $"{ConstructUrl(url, partParams)} {size}{sizeTypeCode}";
+                return $"{ConstructUrl(url, partParams)} {size.ToString(CultureInfo.InvariantCulture)}{sizeTypeCode}";
             });
             var result = string.Join(",\n", results);
 
@@ -171,11 +136,17 @@ namespace ToSic.Sxc.Web.Images
         }
 
 
-        #region Abstract Stuff
-
-        internal abstract Tuple<int, int> FigureOutBestWidthAndHeight(object width, object height, object factor,
-            object aspectRatio, ICanGetNameNotFinal getSettings);
-
-        #endregion
+        internal ResizeParamMerger ResizeParamMerger
+        {
+            get
+            {
+                if (_resizeParamMerger != null) return _resizeParamMerger;
+                _resizeParamMerger = new ResizeParamMerger().Init(Log);
+                if (Debug) _resizeParamMerger.Debug = true;
+                return _resizeParamMerger;
+            }
+        }
+        private ResizeParamMerger _resizeParamMerger;
+        
     }
 }

@@ -7,6 +7,48 @@ namespace ToSic.Sxc.Images
     [PrivateApi("Can and will change any time, don't use outside of 2sxc")]
     public class ImageConstants
     {
+        internal const int MaxSize = 3200;
+        internal const int MaxQuality = 100;
+        internal const string DontSetParam = "(none)";
+
+        internal static string FindKnownScaleOrNull(string scale)
+        {
+            // ReSharper disable RedundantCaseLabel
+                // ReSharper disable StringLiteralTypo
+            switch (scale?.ToLowerInvariant())
+            {
+                case "up":
+                case "upscaleonly":
+                    return "upscaleonly";
+                case "both":
+                    return "both";
+                case "down":
+                case "downscaleonly":
+                    return "downscaleonly";
+                case null:
+                default:
+                    return null;
+            }
+            // ReSharper restore RedundantCaseLabel
+            // ReSharper restore StringLiteralTypo
+        }
+
+
+        // ----- ----- ----- Image Formats ----- ----- -----
+
+        internal static string FindKnownFormatOrNull(string format)
+        {
+            switch (format?.ToLowerInvariant())
+            {
+                case Jpg:
+                case "jpeg": return Jpg;
+                case Png: return Png;
+                case Gif: return Gif;
+                default: return null;
+            }
+        }
+
+
         public const string Jpg = "jpg";
         public const string Gif = "gif";
         public const string Png = "png";

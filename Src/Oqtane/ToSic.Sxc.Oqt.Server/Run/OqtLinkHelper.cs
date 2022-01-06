@@ -6,6 +6,7 @@ using Oqtane.Shared;
 using System;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Images;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
@@ -46,33 +47,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
             base.AddBlockContext(codeRoot);
             _context = codeRoot.Block?.Context;
         }
-
-        ///// <inheritdoc />
-        //public override string To(string noParamOrder = Parameters.Protector, int? pageId = null, object parameters = null, string api = null)
-        //{
-        //    // prevent incorrect use without named parameters
-        //    Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
-
-        //    // Check initial conflicting values.
-        //    if (pageId != null && api != null)
-        //        throw new ArgumentException($"Multiple properties like '{nameof(api)}' or '{nameof(pageId)}' have a value - only one can be provided.");
-
-        //    var strParams = ParametersToString(parameters);
-
-        //    // Page or Api?
-        //    return api == null ? PageNavigateUrl(pageId, strParams) : ApiNavigateUrl(api, strParams);
-        //}
-
+        
         protected override string ToApi(string api, string parameters = null) => ApiNavigateUrl(api, parameters);
         protected override string ToPage(int? pageId, string parameters = null) => PageNavigateUrl(pageId, parameters);
-
-        //protected override string ToImplementation(int? pageId = null, string parameters = null, string api = null)
-        //{
-        //    // Page or Api?
-        //    return api == null ? PageNavigateUrl(pageId, parameters) : ApiNavigateUrl(api, parameters);
-
-        //}
-
+        
         // Prepare Api link.
         private string ApiNavigateUrl(string api, string parameters)
         {

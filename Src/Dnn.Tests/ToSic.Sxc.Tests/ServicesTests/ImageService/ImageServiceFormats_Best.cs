@@ -42,8 +42,8 @@ namespace ToSic.Sxc.Tests.ServicesTests
         {
             var formats = new ImageService().GetFormat(path).ResizeFormats;
             Assert.IsNotNull(formats);
-            Assert.AreEqual(1, formats.Count);
-            AssertUnknownFileInfo("avif", formats.First());
+            Assert.AreEqual(0, formats.Count);
+            //AssertUnknownFileInfo("avif", formats.First());
         }
 
         [DataRow("https://domain.com/abc/test.svg?w=2000")]
@@ -52,9 +52,9 @@ namespace ToSic.Sxc.Tests.ServicesTests
         {
             var formats = new ImageService().GetFormat(path).ResizeFormats;
             Assert.IsNotNull(formats);
-            Assert.AreEqual(1, formats.Count);
-            AssertOneFileInfo(ImageConstants.Svg, formats.First());
-            Assert.AreEqual(false, formats.First().CanResize);
+            Assert.AreEqual(0, formats.Count);
+            //AssertOneFileInfo(ImageConstants.Svg, formats.First());
+            //Assert.AreEqual(false, formats.First().CanResize);
         }
     }
 }

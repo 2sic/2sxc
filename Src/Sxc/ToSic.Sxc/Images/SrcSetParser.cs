@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
+using ToSic.Eav.Documentation;
 using static ToSic.Sxc.Plumbing.ParseObject;
 
-namespace ToSic.Sxc.Web.Images
+namespace ToSic.Sxc.Images
 {
+    [PrivateApi("Hide implementation")]
     public class SrcSetParser
     {
         public static SrcSetPart[] ParseSet(string srcSet)

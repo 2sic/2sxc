@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Web.Images;
+using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Tests.LinksAndImages
 {

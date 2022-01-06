@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Services.Image
@@ -26,6 +27,26 @@ namespace ToSic.Sxc.Services.Image
             return new ImageFormat(extension, "", false);
 
             // 4. Future / maybe: Otherwise check system for mime type and try to build a recommendation
+        }
+
+        public ResizeParameters GetResizeParameters(
+            object settings = null,
+            object factor = null,
+            string noParamOrder = Eav.Parameters.Protector,
+            object width = null,
+            object height = null,
+            object quality = null,
+            string resizeMode = null,
+            string scaleMode = null,
+            //string format = null,
+
+            //object factor, 
+            string format = null,
+            object aspectRatio = null,
+            //ICanGetNameNotFinal settingsOrNull = null, 
+            string parameters = null)
+        {
+            return null;
         }
     }
 }

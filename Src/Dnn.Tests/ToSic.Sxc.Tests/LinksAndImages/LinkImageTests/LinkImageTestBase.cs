@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Images;
 using ToSic.Sxc.Tests.DynamicData;
 using ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests;
 using ToSic.Sxc.Web;

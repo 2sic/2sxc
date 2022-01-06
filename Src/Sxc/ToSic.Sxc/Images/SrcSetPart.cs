@@ -1,5 +1,8 @@
-﻿namespace ToSic.Sxc.Web.Images
+﻿using ToSic.Eav.Documentation;
+
+namespace ToSic.Sxc.Images
 {
+    [PrivateApi("Hide implementation")]
     public class SrcSetPart
     {
         public const char SizeDefault = 'd';
