@@ -58,19 +58,24 @@ namespace ToSic.Sxc.Services
             string srcSet = null
         );
 
-        IPictureSet Picture(
+        IResponsivePicture Picture(
             string url,
             object settings = null,
             string noParamOrder = Eav.Parameters.Protector,
             object factor = null,
-            string srcSet = null);
+            string srcSet = null,
+            string imgAlt = null,
+            string imgClass = null
+        );
 
-        IImgSet Img(
+        IResponsiveImg Img(
             string url,
             object settings = null,
             string noParamOrder = Eav.Parameters.Protector,
             object factor = null,
-            string srcSet = null);
+            string srcSet = null,
+            string imgAlt = null,
+            string imgClass = null);
             
     }
 }

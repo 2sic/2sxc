@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav;
-using ToSic.Eav.Logging;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Images
@@ -13,12 +12,16 @@ namespace ToSic.Sxc.Images
             string noParamOrder = Parameters.Protector, 
             object factor = null, 
             string srcSet = null,
+            string imgAlt = null,
+            string imgClass = null,
             string logName = Constants.SxcLogName + ".IPSBas"
             ) : base(logName)
         {
             ImgService = imgService;
-            _factorParam = factor;
-            _srcSetParam = srcSet;
+            FactorParam = factor;
+            SrcSetParam = srcSet;
+            ImgAlt = imgAlt;
+            ImgClass = imgClass;
             ImgLinker = imgService.ImgLinker;
             Url = url;
             Settings = PrepareResizeSettings(settings, factor, srcSet);
@@ -26,8 +29,10 @@ namespace ToSic.Sxc.Images
         }
         protected readonly ImgResizeLinker ImgLinker;
         protected readonly ImageService ImgService;
-        protected readonly object _factorParam;
-        protected readonly string _srcSetParam;
+        protected readonly object FactorParam;
+        protected readonly string SrcSetParam;
+        protected readonly string ImgAlt;
+        protected readonly string ImgClass;
 
         public string Url { get; }
         internal IResizeSettings Settings { get; }
@@ -45,7 +50,7 @@ namespace ToSic.Sxc.Images
                 // TODO: STILL USE THE FACTOR!
             }
 
-            if (srcSet != null) resizeSettings.SrcSet = srcSet;
+            if (srcSet != null) (resizeSettings as ResizeSettings).SrcSet = srcSet;
 
             return resizeSettings;
         }

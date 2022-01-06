@@ -1,10 +1,11 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Razor.Html5;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Images
 {
     [InternalApi_DoNotUse_MayChangeWithoutNotice("Still WIP")]
-    public interface IImgSet
+    public interface IResponsiveImg: IHybridHtmlString
     {
         /// <summary>
         /// A `img` tag to either add directly to the page, or you can also use the normal RazorBlade API and do things like `.Alt("description")` etc.

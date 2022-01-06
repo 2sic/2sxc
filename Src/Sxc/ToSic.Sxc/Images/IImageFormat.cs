@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Images
     /// <summary>
     /// Describes everything to be known about an image format for resizing or generating source-tags.
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("Still WIP")]
+    [PrivateApi("ATM no good reason to show this information")]
     public interface IImageFormat
     {
         /// <summary>

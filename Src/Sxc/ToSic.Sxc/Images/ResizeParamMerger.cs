@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Images
             return resizeParams;
         }
 
-        internal IResizeSettings FigureOutBestWidthAndHeight(object width, object height, object factor, object aspectRatio, ICanGetNameNotFinal settingsOrNull)
+        internal ResizeSettings FigureOutBestWidthAndHeight(object width, object height, object factor, object aspectRatio, ICanGetNameNotFinal settingsOrNull)
         {
             // Try to pre-process parameters and prefer them
             // The manually provided values must remember Zeros because they deactivate presets
