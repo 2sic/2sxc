@@ -18,6 +18,7 @@ namespace ToSic.Sxc.Images
         private const string WidthField = "Width";
         private const string HeightField = "Height";
         private const string AspectRatioField = "AspectRatio";
+        private const string SrcSetField = "SrcSet";
 
         public ResizeParamMerger() : base(Constants.SxcLogName + ".ImgRPM") { }
 
@@ -34,7 +35,8 @@ namespace ToSic.Sxc.Images
             string scaleMode = null,
             string format = null,
             object aspectRatio = null,
-            string parameters = null
+            string parameters = null,
+            object srcSet = null
             )
         {
             var wrapLog = (Debug ? Log : null).SafeCall<string>();
@@ -64,6 +66,10 @@ namespace ToSic.Sxc.Images
             resizeParams.Quality = IntOrZeroAsNull(quality) ?? IntOrZeroAsNull(getSettings?.Get(QualityField)) ?? 0;
             resizeParams.Mode = KeepBestString(resizeMode, getSettings?.Get(ResizeModeField));
             resizeParams.Scale = FindKnownScaleOrNull(KeepBestString(scaleMode, getSettings?.Get(ScaleModeField)));
+
+            resizeParams.SrcSet = (srcSet is string srcSetString)
+                ? srcSetString
+                : srcSet is bool srcSetBool && srcSetBool ? getSettings?.Get(SrcSetField) : null;
             
             return resizeParams;
         }

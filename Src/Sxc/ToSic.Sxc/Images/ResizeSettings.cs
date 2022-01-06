@@ -18,11 +18,13 @@ namespace ToSic.Sxc.Images
 
         public string Format { get; set; }
 
+        public string SrcSet { get; set; }
+
         public NameValueCollection Parameters { get; set; }
 
         public ResizeSettings() {}
 
-        public ResizeSettings(IResizeSettings original)
+        public ResizeSettings(IResizeSettings original, bool keepSourceSet)
         {
             Width=original.Width;
             Height=original.Height;
@@ -31,6 +33,8 @@ namespace ToSic.Sxc.Images
             Scale=original.Scale;
             Format=original.Format;
             Parameters=original.Parameters;
+            if (keepSourceSet)
+                SrcSet = original.SrcSet;
         }
     }
 }

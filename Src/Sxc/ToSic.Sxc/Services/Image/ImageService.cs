@@ -19,12 +19,11 @@ namespace ToSic.Sxc.Services.Image
 
         public ITag SourceTags(string url, object settings = null, string noParamOrder = Parameters.Protector, object factor = null, string srcSet = null)
         {
-            var resizeSettings = PrepareResizeSettings(settings, factor);
-
-            return SourceTagsInternal(url, resizeSettings, srcSet);
+            var resizeSettings = PrepareResizeSettings(settings, factor, srcSet);
+            return SourceTagsInternal(url, resizeSettings);
         }
 
-        private ITag SourceTagsInternal(string url, IResizeSettings resizeSettings, string srcSet)
+        private ITag SourceTagsInternal(string url, IResizeSettings resizeSettings)
         {
             // Check formats
             var defFormat = GetFormat(url);
@@ -34,25 +33,28 @@ namespace ToSic.Sxc.Services.Image
             var sources = defFormat.ResizeFormats
                 .Select(resizeFormat =>
                 {
-                    var formatSettings = new ResizeSettings(resizeSettings);
+                    var formatSettings = new ResizeSettings(resizeSettings, true);
                     if (resizeFormat != defFormat) formatSettings.Format = resizeFormat.Format;
                     return Tag.Source().Type(resizeFormat.MimeType)
-                            .Srcset(ImgLinker.ImageOrSrcSetLink(url, formatSettings, srcSet));
+                            .Srcset(ImgLinker.Image(url, formatSettings));
                 });
             var result = Tag.Custom(null, sources);
             return result;
         }
 
-        public Picture PictureTag(string url, object settings = null,
-            string noParamOrder =
-                "Rule: all params must be named (https://r.2sxc.org/named-params), Example: \'enable: true, version: 10\'",
-            object factor = null, string srcSet = null,
-            string alt = null, Action<Img> imgAction = null)
+        public Picture PictureTag(
+            string url, 
+            object settings = null,
+            string noParamOrder = Parameters.Protector,
+            object factor = null, 
+            string srcSet = null,
+            string alt = null, 
+            Action<Img> imgAction = null)
         {
-            var resizeSettings = PrepareResizeSettings(settings, factor);
+            var resizeSettings = PrepareResizeSettings(settings, factor, srcSet);
 
             // Create the img tag
-            var imgTag = Tag.Img().Src(ImgLinker.ImageOrSrcSetLink(url, resizeSettings, null));
+            var imgTag = Tag.Img().Src(ImgLinker.Image(url, new ResizeSettings(resizeSettings, false), null));
 
             try
             {
@@ -66,7 +68,7 @@ namespace ToSic.Sxc.Services.Image
 
             // Create the picture tag to return later
             var picTag = Tag.Picture(
-                SourceTagsInternal(url, resizeSettings, srcSet),
+                SourceTagsInternal(url, resizeSettings),
                 imgTag
             );
 
@@ -74,11 +76,20 @@ namespace ToSic.Sxc.Services.Image
             return picTag;
         }
         
-        private IResizeSettings PrepareResizeSettings(object settings, object factor)
+        private IResizeSettings PrepareResizeSettings(object settings, object factor, string srcSet)
         {
             // 1. Prepare Settings
             if (!(settings is IResizeSettings resizeSettings))
+            {
                 resizeSettings = ImgLinker.ResizeParamMerger.BuildResizeParameters(settings, factor: factor);
+            }
+            else
+            {
+                // TODO: STILL USE THE FACTOR!
+            }
+
+            if (srcSet != null) resizeSettings.SrcSet = srcSet;
+
             return resizeSettings;
         }
 

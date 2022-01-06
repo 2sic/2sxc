@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using ToSic.Eav;
 using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Services.Image
@@ -23,10 +24,9 @@ namespace ToSic.Sxc.Services.Image
             // 4. Future / maybe: Otherwise check system for mime type and try to build a recommendation
         }
 
-        public IResizeSettings GetResizeSettings(
-            object settings = null,
+        public IResizeSettings GetResizeSettings(object settings = null,
+            string noParamOrder = Parameters.Protector,
             object factor = null,
-            string noParamOrder = Eav.Parameters.Protector,
             object width = null,
             object height = null,
             object quality = null,
@@ -34,11 +34,10 @@ namespace ToSic.Sxc.Services.Image
             string scaleMode = null,
             string format = null,
             object aspectRatio = null,
-            string parameters = null
-            )
+            string parameters = null)
         {
             return ImgLinker.ResizeParamMerger.BuildResizeParameters(settings: settings, factor: factor,
-                noParamOrder: noParamOrder, width: width, height: height, quality: quality, resizeMode: resizeMode,
+                width: width, height: height, quality: quality, resizeMode: resizeMode,
                 scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters);
         }
     }

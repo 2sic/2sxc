@@ -44,6 +44,11 @@ namespace ToSic.Sxc.Images
         string Format { get; set; }
 
         /// <summary>
+        /// SrcSet to generate.
+        /// </summary>
+        string SrcSet { get; set; }
+
+        /// <summary>
         /// Additional url parameters in case the final link would need this.
         /// Rarely used, but can be used for resize parameters which are not standard. 
         /// </summary>

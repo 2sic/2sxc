@@ -34,30 +34,25 @@ namespace ToSic.Sxc.Images
             string format = null,
             object aspectRatio = null,
             string parameters = null,
-            string srcSet = null)
+            object srcSet = null // can be a string or a bool:true 
+            )
         {
             var wrapLog = (Debug ? Log : null).SafeCall<string>($"{nameof(url)}:{url}, {nameof(srcSet)}:{srcSet}");
 
-            var resizeParams = ResizeParamMerger.BuildResizeParameters(
-                settings, factor, noParamOrder, width, height, quality, resizeMode, scaleMode, format, aspectRatio, parameters);
-            
-            var result = ImageOrSrcSetLink(url, resizeParams, srcSet);
+            if (!(settings is IResizeSettings resizeSettings))
+                resizeSettings = ResizeParamMerger.BuildResizeParameters(
+                    settings, factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
+                    scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
+                    parameters: parameters, srcSet: srcSet);
+
+            var result = GenerateFinalUrlOrSrcSet(url, resizeSettings);
 
             return wrapLog(result, result);
         }
 
-        public string ImageOrSrcSetLink(string url, IResizeSettings settings, string srcSet)
+        private string GenerateFinalUrlOrSrcSet(string url, IResizeSettings originalSettings)
         {
-            var wrapLog = (Debug ? Log : null).SafeCall<string>($"{nameof(url)}:{url}, {nameof(srcSet)}:{srcSet}");
-
-            var result = GenerateFinalUrlOrSrcSet(url, srcSet, settings);
-
-            return wrapLog(result, result);
-        }
-
-        private string GenerateFinalUrlOrSrcSet(string url, string srcSet, IResizeSettings originalSettings)
-        {
-            var srcSetConfig = SrcSetParser.ParseSet(srcSet);
+            var srcSetConfig = SrcSetParser.ParseSet(originalSettings.SrcSet);
 
             // Basic case - no srcSet config
             if ((srcSetConfig?.Length ?? 0) == 0)
@@ -69,7 +64,7 @@ namespace ToSic.Sxc.Images
                     return ConstructUrl(url, originalSettings);
 
                 // Copy the params so we can optimize based on the expected SrcSet specs
-                var partParams = new ResizeSettings(originalSettings);
+                var partParams = new ResizeSettings(originalSettings, false);
                 
                 partParams.Width = BestSrcSetDimension(partParams.Width, part.Width, part, FallbackWidthForSrcSet);
                 partParams.Height = BestSrcSetDimension(partParams.Height, part.Height, part, FallbackHeightForSrcSet);

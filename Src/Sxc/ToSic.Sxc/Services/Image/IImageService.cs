@@ -19,8 +19,8 @@ namespace ToSic.Sxc.Services.Image
 
         IResizeSettings GetResizeSettings(
             object settings = null,
-            object factor = null,
             string noParamOrder = Eav.Parameters.Protector,
+            object factor = null,
             object width = null,
             object height = null,
             object quality = null,
@@ -30,6 +30,15 @@ namespace ToSic.Sxc.Services.Image
             object aspectRatio = null,
             string parameters = null
         );
+
+        string SrcSet(
+            string url,
+            object settings = null,
+            string noParamOrder = Eav.Parameters.Protector,
+            object factor = null,
+            string srcSet = null
+        );
+
 
         ITag SourceTags(
             string url,
