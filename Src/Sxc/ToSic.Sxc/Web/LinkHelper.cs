@@ -31,8 +31,7 @@ namespace ToSic.Sxc.Web
 
         /// <inheritdoc />
         public string To(
-            string noParamOrder =
-                "Rule: all params must be named (https://r.2sxc.org/named-params), Example: \'enable: true, version: 10\'",
+            string noParamOrder = Eav.Parameters.Protector,
             int? pageId = null,
             string api = null,
             object parameters = null,
@@ -110,8 +109,7 @@ namespace ToSic.Sxc.Web
         public string Image(string url = null,
             object settings = null,
             object factor = null,
-            string noParamOrder =
-                "Rule: all params must be named (https://r.2sxc.org/named-params), Example: \'enable: true, version: 10\'",
+            string noParamOrder = Eav.Parameters.Protector,
             object width = null,
             object height = null,
             object quality = null,
@@ -120,8 +118,7 @@ namespace ToSic.Sxc.Web
             string format = null,
             object aspectRatio = null,
             string type = null,
-            object parameters = null, 
-            string srcSet = null
+            object parameters = null
             )
         {
             // prevent incorrect use without named parameters
@@ -136,7 +133,7 @@ namespace ToSic.Sxc.Web
 
             // Get the image-url(s) as needed
             var imageUrl = ImgLinker.Image(expandedUrl, settings, factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
-                scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: strParams, srcSet: srcSet);
+                scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: strParams, srcSet: false);
 
             return imageUrl;
         }

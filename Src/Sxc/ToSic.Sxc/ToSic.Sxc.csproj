@@ -59,6 +59,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Images\ImageService\" />
     <Folder Include="Web\Images\" />
   </ItemGroup>
 

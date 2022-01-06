@@ -12,13 +12,9 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests
             int? pageId = null,
             object parameters = null,
             string api = null,
-            string type = null // WIP, probably "full", "root", "https", "//", "http" etc.
-            // string part = null
-        )
+            string type = null)
         {
-            // if (part != null) throw new Exception("part shouldn't be used ATM,not implemented");
-            return link.To(noParamOrder: noParamOrder, pageId: pageId, parameters: parameters, api: api, type: type
-                /*part: part*/);
+            return link.To(noParamOrder: noParamOrder, pageId: pageId, parameters: parameters, api: api, type: type);
         }
 
 
@@ -34,10 +30,9 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests
             string scaleMode = null,
             string format = null,
             object aspectRatio = null,
-            string type = null,
-            string srcSet = null
+            string type = null
             )
             => link.Image(url, settings, factor, noParamOrder, width, height, quality, resizeMode, scaleMode, format,
-                aspectRatio, type: type, srcSet: srcSet);
+                aspectRatio, type: type);
     }
 }

@@ -37,11 +37,14 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
                 aspectRatio: aspectRatio, srcSet: srcSet);
             Assert.AreEqual(expected, linkerResult, "Failed on ImgResizeLinker");
 
+            // Skip Helper-tests if using SrcSet as that's not supported in that case
+            if (srcSet != null) return;
+
             var linkHelper = GetLinkHelper();
             var helperResult = linkHelper.TestImage(url: url, settings: settings, factor: factor, width: width,
                 height: height,
                 quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format,
-                aspectRatio: aspectRatio, srcSet: srcSet);
+                aspectRatio: aspectRatio);
             Assert.AreEqual(expected, helperResult, "Failed on ILinkHelper");
 
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Globalization;
-using Microsoft.SqlServer.Server;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
 {

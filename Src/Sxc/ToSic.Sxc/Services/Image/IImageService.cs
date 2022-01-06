@@ -4,7 +4,7 @@ using ToSic.Razor.Markup;
 using ToSic.Razor.Html5;
 using ToSic.Sxc.Images;
 
-namespace ToSic.Sxc.Services.Image
+namespace ToSic.Sxc.Services
 {
     [PrivateApi]
     public interface IImageService

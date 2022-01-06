@@ -78,7 +78,6 @@ namespace ToSic.Sxc.Web
         ///     - the parameters either as `id=47&amp;name=daniel` (Dnn also supports `/id/47/name/daniel`)
         ///     - in 2sxc 12.05+ it can also be an <see cref="ToSic.Sxc.Context.IParameters"/>
         /// </param>
-        /// <param name="srcSet">A list of sizes to use - will generate a srcSet list instead of just one url (new in v13)</param>
         /// <remarks>
         /// Usually a factor is applied to create a link which is possibly 50% of the content-width or similar.
         /// In these cases the height is not applied but the aspectRatio is used, which usually comes from `settings` if any were provided.
@@ -121,8 +120,7 @@ namespace ToSic.Sxc.Web
             string format = null,
             object aspectRatio = null,
             string type = null,
-            object parameters = null,
-            string srcSet = null
+            object parameters = null
             );
 
         /// <summary>
