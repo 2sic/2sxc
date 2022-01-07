@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Services
         /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
         /// - Or a specially prepared <see cref="ToSic.Sxc.Images.IResizeSettings"/> object containing all settings. If this is provided, only `factor` will still be respected, all other settings like `width` on this command will be ignored.
         /// </param>
-        /// <param name="noParamOrder">a helper to ensure that you must use named parameters. You shouldn't give it anything, but you must use all others like parameters: "id=47&amp;name=42"</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. It only affects sizes from the settings.</param>
         /// <param name="width">Optional width parameter. Cannot be used if `factor` is set. Usually takes the default from the `settings`.</param>
         /// <param name="height">Optional height parameter. Can only be 0 if `factor` is set, no not specify a height. Usually takes the default from the `settings`.</param>
@@ -37,7 +37,6 @@ namespace ToSic.Sxc.Services
         /// <param name="scaleMode">Optional scale-mode to allow up-scaling images like `up` or `both`. Usually takes the default from the `settings`.</param>
         /// <param name="format">Optional file format like `jpg` or `png`</param>
         /// <param name="aspectRatio">Aspect Ratio width/height, only relevant if a `factor` is supplied. Usually takes default from the `settings` or is ignored. </param>
-
         /// <param name="parameters">
         ///     - the parameters either as `id=47&amp;name=daniel` (Dnn also supports `/id/47/name/daniel`)
         ///     - in 2sxc 12.05+ it can also be an <see cref="ToSic.Sxc.Context.IParameters"/>
@@ -46,8 +45,6 @@ namespace ToSic.Sxc.Services
         /// <remarks>
         /// History: Added in 2sxc 13.01
         /// </remarks>
-        
-        // TODO: MAYBE TYPE PARAMETER AS WELL???
         IResizeSettings ResizeSettings(
             object settings = null,
             string noParamOrder = Eav.Parameters.Protector,
@@ -78,14 +75,14 @@ namespace ToSic.Sxc.Services
         /// - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
         /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
         /// - Or a specially prepared <see cref="ToSic.Sxc.Images.IResizeSettings"/> object containing all settings.
-        /// Note: If you need to construct very custom settings, use <see cref="ResizeSettings"/> to create them
+        /// Note: If you need to construct very custom settings, use <see cref="ResizeSettings">ResizeSettings</see> to create them
         /// </param>
-        /// <param name="noParamOrder">a helper to ensure that you must use named parameters. You shouldn't give it anything, but you must use all others like parameters: "id=47&amp;name=42"</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. It only affects sizes from the settings.</param>
-        /// <param name="srcSet">TODO</param>
+        /// <param name="srcSet">Optional string to configure what `srcset`s to generate - see [](xref:NetCode.Images.SrcSet)</param>
         /// <param name="imgAlt">`alt` attribute on the created `img` tag for SEO etc.</param>
         /// <param name="imgClass">`class` attribute on the created `img` tag</param>
-        /// <returns></returns>
+        /// <returns>A ResponsivePicture object which can be rendered directly. See [](xref:NetCode.Images.Index)</returns>
         IResponsivePicture Picture(
             string url,
             string noParamOrder = Eav.Parameters.Protector,
@@ -104,14 +101,14 @@ namespace ToSic.Sxc.Services
         /// - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
         /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
         /// - Or a specially prepared <see cref="ToSic.Sxc.Images.IResizeSettings"/> object containing all settings.
-        /// Note: If you need to construct very custom settings, use <see cref="ResizeSettings"/> to create them
+        /// Note: If you need to construct very custom settings, use <see cref="ResizeSettings">ResizeSettings</see> to create them
         /// </param>
-        /// <param name="noParamOrder">a helper to ensure that you must use named parameters. You shouldn't give it anything, but you must use all others like parameters: "id=47&amp;name=42"</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. It only affects sizes from the settings.</param>
-        /// <param name="srcSet">TODO</param>
+        /// <param name="srcSet">Optional string to configure what `srcset`s to generate - see [](xref:NetCode.Images.SrcSet)</param>
         /// <param name="imgAlt">`alt` attribute on the created `img` tag for SEO etc.</param>
         /// <param name="imgClass">`class` attribute on the created `img` tag</param>
-        /// <returns></returns>
+        /// <returns>A ResponsiveImage object which can be rendered directly. See [](xref:NetCode.Images.Index)</returns>
         IResponsiveImage Img(
             string url,
             string noParamOrder = Eav.Parameters.Protector,

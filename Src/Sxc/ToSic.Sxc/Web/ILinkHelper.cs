@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Web
         /// <summary>
         /// returns a link to the current page with parameters resolved in a way that DNN wants it
         /// </summary>
-        /// <param name="noParamOrder">a helper to ensure that you must use named parameters. You shouldn't give it anything, but you must use all others like parameters: "id=47&amp;name=42"</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="pageId">optional page ID (TabId) - if not supplied, will use current page</param>
         /// <param name="api">optional api url "api/name/method?id=something"</param>
         /// <param name="parameters">
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Web
         /// - Or a specially prepared <see cref="ToSic.Sxc.Images.IResizeSettings"/> object containing all settings. If this is provided, only `factor` will still be respected, all other settings like `width` on this command will be ignored.
         /// </param>
         /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. It only affects sizes from the settings.</param>
-        /// <param name="noParamOrder">a helper to ensure that you must use named parameters. You shouldn't give it anything, but you must use all others like parameters: "id=47&amp;name=42"</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="width">Optional width parameter. Cannot be used if `factor` is set. Usually takes the default from the `settings`.</param>
         /// <param name="height">Optional height parameter. Can only be 0 if `factor` is set, no not specify a height. Usually takes the default from the `settings`.</param>
         /// <param name="quality">Optional quality parameter. Usually takes the default from the `settings`.</param>
