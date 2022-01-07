@@ -43,14 +43,14 @@ namespace ToSic.Sxc.Images
         public Picture PictureTag => _pictureTag ?? (_pictureTag = Tag.Picture(SourceTagsInternal(Url, Settings), ImgTag));
         private Picture _pictureTag;
 
-        public TagCustom SourceTags => _sourceTags ?? (_sourceTags = SourceTagsInternal(Url, Settings));
-        private TagCustom _sourceTags;
+        public TagList SourceTags => _sourceTags ?? (_sourceTags = SourceTagsInternal(Url, Settings));
+        private TagList _sourceTags;
 
-        private TagCustom SourceTagsInternal(string url, IResizeSettings resizeSettings)
+        private TagList SourceTagsInternal(string url, IResizeSettings resizeSettings)
         {
             // Check formats
             var defFormat = ImgService.GetFormat(url);
-            if (defFormat == null || defFormat.ResizeFormats.Count == 0) return Tag.Custom(null);
+            if (defFormat == null || defFormat.ResizeFormats.Count == 0) return Tag.TagList();
 
             // Generate Meta Tags
             var sources = defFormat.ResizeFormats
@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Images
                     return Tag.Source().Type(resizeFormat.MimeType)
                         .Srcset(ImgLinker.Image(url, formatSettings));
                 });
-            var result = Tag.Custom(null, sources);
+            var result = Tag.TagList(sources);
             return result;
         }
 
