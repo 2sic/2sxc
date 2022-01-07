@@ -3,9 +3,9 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Images
 {
-    public abstract class ImgPicSetBase: HybridHtmlString
+    public abstract class ResponsiveBase: HybridHtmlString
     {
-        protected ImgPicSetBase(
+        protected ResponsiveBase(
             ImageService imgService, 
             string url, 
             object settings, 

@@ -8,7 +8,7 @@ using ToSic.Razor.Markup;
 
 namespace ToSic.Sxc.Images
 {
-    public class ResponsivePicture: ImgPicSetBase, IResponsivePicture
+    public class ResponsivePicture: ResponsiveBase, IResponsivePicture
     {
         internal ResponsivePicture(
             ImageService imgService, 
@@ -43,10 +43,10 @@ namespace ToSic.Sxc.Images
         public Picture PictureTag => _pictureTag ?? (_pictureTag = Tag.Picture(SourceTagsInternal(Url, Settings), ImgTag));
         private Picture _pictureTag;
 
-        public ITag SourceTags => _sourceTags ?? (_sourceTags = SourceTagsInternal(Url, Settings));
-        private ITag _sourceTags;
+        public TagCustom SourceTags => _sourceTags ?? (_sourceTags = SourceTagsInternal(Url, Settings));
+        private TagCustom _sourceTags;
 
-        private ITag SourceTagsInternal(string url, IResizeSettings resizeSettings)
+        private TagCustom SourceTagsInternal(string url, IResizeSettings resizeSettings)
         {
             // Check formats
             var defFormat = ImgService.GetFormat(url);

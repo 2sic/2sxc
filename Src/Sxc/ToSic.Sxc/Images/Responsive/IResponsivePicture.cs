@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Images
         /// The `source` tags as they were auto-generated, in case you want to build the picture tag manually.
         /// Contains many `source` tags - see [RazorBlade Source docs](https://razor-blade.net/api/ToSic.Razor.Html5.Source.html)
         /// </summary>
-        ITag SourceTags { get; }
+        TagCustom SourceTags { get; }
 
         /// <summary>
         /// The main url, commonly used for fallback `src` property
