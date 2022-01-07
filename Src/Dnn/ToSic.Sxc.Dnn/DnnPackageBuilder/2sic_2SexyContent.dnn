@@ -1199,7 +1199,7 @@
     <!-- Keep the 4th version number part as it is needed to prevent "repair install" message that DNN
       shows when upgrading 2sxc: https://github.com/2sic/2sxc/issues/1555
       -->
-    <package name="ToSic.RazorBlade" type="Library" version="03.07.00.01">
+    <package name="ToSic.RazorBlade" type="Library" version="03.08.00.01">
       <friendlyName>2sic RazorBlade</friendlyName>
       <description>2sic RazorBlade</description>
       <iconFile>icon.png</iconFile>
@@ -1241,7 +1241,7 @@
     </package>
 
 
-    <!-- old Connect.Razor Blade package - keep for compatibily, so old stuff doesn't break-->
+    <!-- old Connect.Razor Blade package - keep for compatibility, so old stuff doesn't break-->
     <package name="Connect.Razor" type="Library" version="02.00.00.01">
       <friendlyName>DnnConnect Razor Blade</friendlyName>
       <description>Razor Blade</description>
