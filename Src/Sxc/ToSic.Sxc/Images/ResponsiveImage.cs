@@ -7,10 +7,10 @@ using ToSic.Razor.Html5;
 
 namespace ToSic.Sxc.Images
 {
-    public class ResponsiveImg: ImgPicSetBase, IResponsiveImg
+    public class ResponsiveImage: ImgPicSetBase, IResponsiveImage
     {
         [PrivateApi("don't show")]
-        internal ResponsiveImg(
+        internal ResponsiveImage(
             ImageService imgService, 
             string url, 
             object settings, 

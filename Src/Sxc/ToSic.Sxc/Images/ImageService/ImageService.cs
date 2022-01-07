@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Images
             string imgClass = null
         ) => new ResponsivePicture(this, url, GetBestSettings(settings), factor: factor, srcSet: srcSet);
 
-        public IResponsiveImg Img(
+        public IResponsiveImage Img(
             string url,
             string noParamOrder = Parameters.Protector,
             object settings = null,
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Images
             string srcSet = null,
             string imgAlt = null,
             string imgClass = null
-        ) => new ResponsiveImg(this, url, GetBestSettings(settings), factor: factor, srcSet: srcSet, imgAlt: imgAlt, imgClass: imgClass);
+        ) => new ResponsiveImage(this, url, GetBestSettings(settings), factor: factor, srcSet: srcSet, imgAlt: imgAlt, imgClass: imgClass);
 
         public IHybridHtmlString SrcSet(
             string url, 

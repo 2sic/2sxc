@@ -4,11 +4,16 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Images
 {
+    /// <summary>
+    /// A object which contains everything to create HTML for responsive `img` tags with optimal `srcset` offering all the sizes you may need
+    /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("Still WIP")]
-    public interface IResponsiveImg: IHybridHtmlString
+    public interface IResponsiveImage: IHybridHtmlString
     {
         /// <summary>
-        /// A `img` tag to either add directly to the page, or you can also use the normal RazorBlade API and do things like `.Alt("description")` etc.
+        /// The `img` tag which would normally be added to the page automatically.
+        /// You can also use the normal RazorBlade API and do things like `.Alt("description")` etc.
+        /// See also the [RazorBlade Img docs](https://razor-blade.net/api/ToSic.Razor.Html5.Img.html)
         /// </summary>
         Img ImgTag { get; }
 

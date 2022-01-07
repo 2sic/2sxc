@@ -112,7 +112,7 @@ namespace ToSic.Sxc.Services
         /// <param name="imgAlt">`alt` attribute on the created `img` tag for SEO etc.</param>
         /// <param name="imgClass">`class` attribute on the created `img` tag</param>
         /// <returns></returns>
-        IResponsiveImg Img(
+        IResponsiveImage Img(
             string url,
             string noParamOrder = Eav.Parameters.Protector,
             object settings = null,
