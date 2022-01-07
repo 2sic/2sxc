@@ -23,7 +23,8 @@ namespace ToSic.Sxc.Images
             // 4. Future / maybe: Otherwise check system for mime type and try to build a recommendation
         }
 
-        public IResizeSettings GetResizeSettings(object settings = null,
+        public IResizeSettings ResizeSettings(
+            object settings = null,
             string noParamOrder = Parameters.Protector,
             object factor = null,
             object width = null,

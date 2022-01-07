@@ -48,7 +48,9 @@ namespace ToSic.Sxc.Images
 
                 // If it's a real size and we didn't already set the Type, set it based on the value range
                 if (part.SizeType == SrcSetPart.SizeDefault && !DNearZero(part.Size))
-                    part.SizeType = part.Size < 10 ? SrcSetPart.SizePixelDensity : SrcSetPart.SizeWidth;
+                    part.SizeType = part.Size < 1 
+                        ? SrcSetPart.SizeFactorOf // Less than 1 - can't be pixel density, must be factor
+                        : part.Size < 10 ? SrcSetPart.SizePixelDensity : SrcSetPart.SizeWidth;
             }
 
             // If size type is width, then we must round to int and the width must have the same value

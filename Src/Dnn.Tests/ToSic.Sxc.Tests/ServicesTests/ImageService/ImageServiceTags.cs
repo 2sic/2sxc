@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Razor.Html5;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Tests.ServicesTests
@@ -21,8 +20,8 @@ namespace ToSic.Sxc.Tests.ServicesTests
         public void SourceTags12()
         {
             var svc = Build<IImageService>();
-            var settings = svc.GetResizeSettings(width: 120, height: 24);
-            var sources = svc.Picture(ImgBase, settings, srcSet: SrcSet12).SourceTags;
+            var settings = svc.ResizeSettings(width: 120, height: 24);
+            var sources = svc.Picture(ImgBase, settings: settings, srcSet: SrcSet12).SourceTags;
 
             var expected = SrcWebP12 + SrcJpg12;
             Assert.AreEqual(expected, sources.ToString());
@@ -32,8 +31,8 @@ namespace ToSic.Sxc.Tests.ServicesTests
         public void SourceTagsNone()
         {
             var svc = Build<IImageService>();
-            var settings = svc.GetResizeSettings(width: 120, height: 24);
-            var sources = svc.Picture(ImgBase, settings, srcSet: SrcSetNone).SourceTags;
+            var settings = svc.ResizeSettings(width: 120, height: 24);
+            var sources = svc.Picture(ImgBase, settings: settings, srcSet: SrcSetNone).SourceTags;
 
             var expected = SrcWebPNone + SrcJpgNone;
             Assert.AreEqual(expected, sources.ToString());
@@ -43,8 +42,8 @@ namespace ToSic.Sxc.Tests.ServicesTests
         public void PictureTagNoSet()
         {
             var svc = Build<IImageService>();
-            var settings = svc.GetResizeSettings(width: 120, height: 24);
-            var pic = svc.Picture(ImgBase, settings);
+            var settings = svc.ResizeSettings(width: 120, height: 24);
+            var pic = svc.Picture(ImgBase, settings: settings);
 
             var expected = $"<picture>{SrcWebPNone}{SrcJpgNone}<img src='{ImgBase}?w=120&amp;h=24'></picture>";
             Assert.AreEqual(expected, pic.ToString());
@@ -54,8 +53,8 @@ namespace ToSic.Sxc.Tests.ServicesTests
         public void PictureTag12()
         {
             var svc = Build<IImageService>();
-            var settings = svc.GetResizeSettings(width: 120, height: 24);
-            var pic = svc.Picture(ImgBase, settings, srcSet: SrcSet12);
+            var settings = svc.ResizeSettings(width: 120, height: 24);
+            var pic = svc.Picture(ImgBase, settings: settings, srcSet: SrcSet12);
 
             var expected = $"<picture>{SrcWebP12}{SrcJpg12}<img src='{ImgBase}?w=120&amp;h=24'></picture>";
             Assert.AreEqual(expected, pic.ToString());

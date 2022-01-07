@@ -57,7 +57,11 @@ namespace ToSic.Sxc.Web
         /// - Most parameters if set to 0 will cause a reset so that this aspect is not in the URL
         /// </summary>
         /// <param name="url">The image url. Use an empty string if you want to just get the params for re-use.</param>
-        /// <param name="settings">A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings </param>
+        /// <param name="settings">
+        /// - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
+        /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
+        /// - Or a specially prepared <see cref="ToSic.Sxc.Images.IResizeSettings"/> object containing all settings. If this is provided, only `factor` will still be respected, all other settings like `width` on this command will be ignored.
+        /// </param>
         /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. It only affects sizes from the settings.</param>
         /// <param name="noParamOrder">a helper to ensure that you must use named parameters. You shouldn't give it anything, but you must use all others like parameters: "id=47&amp;name=42"</param>
         /// <param name="width">Optional width parameter. Cannot be used if `factor` is set. Usually takes the default from the `settings`.</param>

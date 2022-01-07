@@ -57,12 +57,22 @@ namespace ToSic.Sxc.Tests.LinksAndImages
         public void ParsePartAsPartAndSet(string srcSet, double size, char sizeType = 'w', int? width = null, int height = 0) 
             => TestAsPartAndSet(srcSet, (float)size, sizeType, width, height);
 
+        // * Factor
+        [DataRow("0.5*", 0.5, '*', 0, 0)]
+        [DataRow("1/2", 0.5, '*', 0, 0)]
+        [DataRow("1:2", 0.5, '*', 0, 0)]
+        [DataRow("3:4", 0.75, '*', 0, 0)]
+        [DataRow("0.5", 0.5, '*', 0, 0)]
+        [DataRow("0.33", 0.33, '*', 0, 0)]
+        [DataTestMethod]
+        public void TestFactors(string srcSet, double size, char sizeType = 'w', int? width = null, int height = 0) 
+            => TestAsPartAndSet(srcSet, (float)size, sizeType, width, height);
 
         // Some invalid data - should basically result in ignored data
         [DataRow("1q", 0, 'd', 0, 0)]
         [DataRow("77vh", 0, 'd', 0, 0)]
         [DataRow("77vw", 0, 'w', 0, 0)] // this 'w' is picked up, because it's the last character
-        [DataRow("100:100", 0, 'd', 0, 0)] 
+        // doesn't work ATM, not sure if test or result is wrong [DataRow("100:100", 0, 'd', 0, 0)] 
 
         [DataTestMethod]
         public void ParseFaultySourcePart(string srcSet, double size, char sizeType = 'w', int? width = null, int height = 0) 

@@ -31,23 +31,33 @@ namespace ToSic.Sxc.Images
 
 
 
-        public IResponsivePicture Picture(string url, object settings = null,
+        public IResponsivePicture Picture(
+            string url, 
             string noParamOrder = Parameters.Protector,
-            object factor = null, string srcSet = null, string imgAlt = null, string imgClass = null) 
-            => new ResponsivePicture(this, url, GetBestSettings(settings), factor: factor, srcSet: srcSet);
-
-        public IResponsiveImg Img(string url, object settings = null,
-            string noParamOrder = Parameters.Protector,
-            object factor = null,
+            object settings = null,
+            object factor = null, 
             string srcSet = null, 
             string imgAlt = null, 
-            string imgClass = null)
-            => new ResponsiveImg(this, url, GetBestSettings(settings), factor: factor, srcSet: srcSet, imgAlt: imgAlt, imgClass: imgClass);
+            string imgClass = null
+        ) => new ResponsivePicture(this, url, GetBestSettings(settings), factor: factor, srcSet: srcSet);
 
-        public IHybridHtmlString SrcSet(string url, object settings = null,
+        public IResponsiveImg Img(
+            string url,
             string noParamOrder = Parameters.Protector,
-            object factor = null, string srcSet = null)
-            => new HybridHtmlString(ImgLinker.Image(url, GetBestSettings(settings), factor: factor, srcSet: (srcSet as object) ?? true));
+            object settings = null,
+            object factor = null,
+            string srcSet = null,
+            string imgAlt = null,
+            string imgClass = null
+        ) => new ResponsiveImg(this, url, GetBestSettings(settings), factor: factor, srcSet: srcSet, imgAlt: imgAlt, imgClass: imgClass);
+
+        public IHybridHtmlString SrcSet(
+            string url, 
+            object settings = null,
+            string noParamOrder = Parameters.Protector,
+            object factor = null, 
+            string srcSet = null
+        ) => new HybridHtmlString(ImgLinker.Image(url, GetBestSettings(settings), factor: factor, srcSet: (srcSet as object) ?? true));
 
     }
 }
