@@ -34,11 +34,18 @@ namespace ToSic.Sxc.Images
             string scaleMode = null,
             string format = null,
             object aspectRatio = null,
-            string parameters = null)
+            string parameters = null,
+            object srcSet = null
+            )
         {
-            return ImgLinker.ResizeParamMerger.BuildResizeParameters(settings: settings, factor: factor,
+            settings = GetBestSettings(settings);
+            
+            // If we have initial settings and srcSet isn't specified, then we should set to true so it will auto-reuse
+            if (srcSet == null && settings != null) 
+                srcSet = true;
+            return ImgLinker.ResizeParamMerger.BuildResizeSettings(settings: settings, factor: factor,
                 width: width, height: height, quality: quality, resizeMode: resizeMode,
-                scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters);
+                scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters, srcSet: srcSet);
         }
     }
 }

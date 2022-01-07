@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Images
             // 1. Prepare Settings
             if (!(settings is IResizeSettings resizeSettings))
             {
-                resizeSettings = ImgLinker.ResizeParamMerger.BuildResizeParameters(settings, factor: factor, srcSet: true);
+                resizeSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, srcSet: true);
             }
             else
             {

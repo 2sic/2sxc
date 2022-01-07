@@ -24,9 +24,9 @@ namespace ToSic.Sxc.Services
         /// Construct custom Resize-Settings as needed, either based on existing settings or starting from scratch
         /// </summary>
         /// <param name="settings">
-        /// - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
-        /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
-        /// - Or a specially prepared <see cref="ToSic.Sxc.Images.IResizeSettings"/> object containing all settings. If this is provided, only `factor` will still be respected, all other settings like `width` on this command will be ignored.
+        ///     - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
+        ///     - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
+        ///     - Or a specially prepared <see cref="ToSic.Sxc.Images.IResizeSettings"/> object containing all settings. If this is provided, only `factor` will still be respected, all other settings like `width` on this command will be ignored.
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. It only affects sizes from the settings.</param>
@@ -41,6 +41,7 @@ namespace ToSic.Sxc.Services
         ///     - the parameters either as `id=47&amp;name=daniel` (Dnn also supports `/id/47/name/daniel`)
         ///     - in 2sxc 12.05+ it can also be an <see cref="ToSic.Sxc.Context.IParameters"/>
         /// </param>
+        /// <param name="srcSet"></param>
         /// <returns>A settings object which has all the parameters as configured</returns>
         /// <remarks>
         /// History: Added in 2sxc 13.01
@@ -56,8 +57,8 @@ namespace ToSic.Sxc.Services
             string scaleMode = null,
             string format = null,
             object aspectRatio = null,
-            string parameters = null
-        );
+            string parameters = null,
+            object srcSet = null);
 
         IHybridHtmlString SrcSet(
             string url,

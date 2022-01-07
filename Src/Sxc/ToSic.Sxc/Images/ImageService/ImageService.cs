@@ -25,7 +25,12 @@ namespace ToSic.Sxc.Images
         /// </summary>
         /// <param name="settings"></param>
         /// <returns></returns>
-        private object GetBestSettings(object settings) => settings ?? _codeRootOrNull?.Settings?.Images?.Content;
+        private object GetBestSettings(object settings)
+        {
+            return settings == null || settings is bool boolSettings && boolSettings
+                ? _codeRootOrNull?.Settings?.Images?.Content
+                : settings;
+        }
 
         #endregion
 

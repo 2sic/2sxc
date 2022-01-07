@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Images
             var wrapLog = (Debug ? Log : null).SafeCall<string>($"{nameof(url)}:{url}, {nameof(srcSet)}:{srcSet}");
 
             if (!(settings is IResizeSettings resizeSettings))
-                resizeSettings = ResizeParamMerger.BuildResizeParameters(
+                resizeSettings = ResizeParamMerger.BuildResizeSettings(
                     settings, factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
                     scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
                     parameters: parameters, srcSet: srcSet);

@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Images
 
         public bool Debug = false;
 
-        internal IResizeSettings BuildResizeParameters(
+        internal IResizeSettings BuildResizeSettings(
             object settings = null,
             object factor = null,
             string noParamOrder = Eav.Parameters.Protector,
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Images
             )
         {
             var wrapLog = (Debug ? Log : null).SafeCall<string>();
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(BuildResizeParameters)}", $"{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
+            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(BuildResizeSettings)}", $"{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
 
             // check common mistakes
             if (aspectRatio != null && height != null)
