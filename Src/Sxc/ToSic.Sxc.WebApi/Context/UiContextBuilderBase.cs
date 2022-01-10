@@ -109,8 +109,8 @@ namespace ToSic.Sxc.WebApi.Context
 
             // Otherwise also add the global appId
             var zoneId = Deps.SiteCtx.Site.ZoneId;
-            result.DefaultApp = Deps.AppStates.IdentityOfDefault(zoneId); // Deps.AppStates.Identity(null, Deps.AppStates.DefaultAppId(Deps.SiteCtx.Site.ZoneId));
-            result.PrimaryApp = Deps.AppStates.IdentityOfPrimary(zoneId); // Deps.AppStates.Identity(null, Deps.AppStates.PrimaryAppId(Deps.SiteCtx.Site.ZoneId));
+            result.DefaultApp = Deps.AppStates.IdentityOfDefault(zoneId);
+            result.PrimaryApp = Deps.AppStates.IdentityOfPrimary(zoneId);
             return result;
         }
 
@@ -122,7 +122,7 @@ namespace ToSic.Sxc.WebApi.Context
 
         protected virtual ContextEnableDto GetEnable(CtxEnable ctx)
         {
-            var isRealApp = App != null && (App.AppGuid != Eav.Constants.DefaultAppGuid /*&& App.AppGuid != Eav.Constants.PrimaryAppGuid*/); // #SiteApp v13 - Site-Apps should also have permissions
+            var isRealApp = App != null && App.AppGuid != Eav.Constants.DefaultAppGuid; // #SiteApp v13 - Site-Apps should also have permissions
             var tmp = new JsContextUser(Deps.SiteCtx.User);
             var dto = new ContextEnableDto();
             if (ctx.HasFlag(CtxEnable.AppPermissions)) dto.AppPermissions = isRealApp;
@@ -150,15 +150,18 @@ namespace ToSic.Sxc.WebApi.Context
 
             result.GettingStartedUrl = GetGettingStartedUrl();
             result.Identifier = _appToLaterInitialize.AppGuid;
-            // TODO: #SiteApp v13
+            
+            // #SiteApp v13
             result.SettingsScope = App.AppId == 1 
                 ? "Global" 
                 : result.Identifier == Eav.Constants.PrimaryAppGuid 
                     ? "Site" 
                     : "App";
 
+            result.Permissions = new HasPermissionsDto { Count = App.Metadata.Permissions.Count() };
 
-            result.Permissions = new HasPermissionsDto {Count = App.Metadata.Permissions.Count()};
+            result.IsGlobal = App.AppState.IsGlobal();
+            result.IsInherited = App.AppState.IsInherited();
             return result;
         }
     }

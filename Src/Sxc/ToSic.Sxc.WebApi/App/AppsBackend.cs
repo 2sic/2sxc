@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
@@ -37,7 +38,9 @@ namespace ToSic.Sxc.WebApi.App
                 ConfigurationId = a.Configuration?.Id,
                 Items = a.Data.List.Count(),
                 Thumbnail = a.Thumbnail,
-                Version = a.VersionSafe()
+                Version = a.VersionSafe(),
+                IsGlobal = a.AppState.IsGlobal(),
+                IsInherited = a.AppState.IsInherited(),
             }).ToList();
         }
 

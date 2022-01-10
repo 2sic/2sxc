@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Apps
         {
             // todo: unclear if this is the right way to do this - probably the ZoneId should come from the site?
             var zId = ZoneRuntime.ZoneId;
-            var appIds = _appStates.Apps(zId); //  _zoneRuntime/* new ZoneRuntime()*/.Init(zId, Log).Apps;
+            var appIds = _appStates.Apps(zId);
             return appIds
                 .Select(a => ServiceProvider.Build<App>()
                     .PreInit(site)
