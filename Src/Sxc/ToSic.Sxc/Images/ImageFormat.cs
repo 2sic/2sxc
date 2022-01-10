@@ -16,16 +16,16 @@ namespace ToSic.Sxc.Images
         /// <inheritdoc />
         public bool CanResize { get; }
 
-        public IList<ImageFormat> ResizeFormats { get; }
+        public IList<IImageFormat> ResizeFormats { get; }
 
-        public ImageFormat(string format, string mimeType, bool canResize, IEnumerable<ImageFormat> better = null)
+        public ImageFormat(string format, string mimeType, bool canResize, IEnumerable<IImageFormat> better = null)
         {
             Format = format;
             MimeType = mimeType;
             CanResize = canResize;
             ResizeFormats = canResize
-                ? better?.Union(new []{this}).ToList() ?? new List<ImageFormat> { this }
-                : new List<ImageFormat>();
+                ? better?.Union(new []{this}).ToList() ?? new List<IImageFormat> { this }
+                : new List<IImageFormat>();
         }
     }
 }

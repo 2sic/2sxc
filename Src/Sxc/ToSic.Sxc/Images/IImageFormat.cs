@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Images
         /// 
         /// Usually used for creating source-tags in HTML
         /// </summary>
-        IList<ImageFormat> ResizeFormats { get; }
+        IList<IImageFormat> ResizeFormats { get; }
 
     }
 }

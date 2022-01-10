@@ -1,8 +1,11 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using ToSic.Eav;
+using ToSic.Eav.Configuration;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
+using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -11,7 +14,8 @@ namespace ToSic.Sxc.Images
     public class ResponsivePicture: ResponsiveBase, IResponsivePicture
     {
         internal ResponsivePicture(
-            ImageService imgService, 
+            ImageService imgService,
+            IFeaturesService featuresService,
             string url, 
             object settings, 
             string noParamOrder = Parameters.Protector, 
@@ -21,7 +25,9 @@ namespace ToSic.Sxc.Images
             string imgClass = null
             ) : base(imgService, url, settings, factor: factor, srcSet: srcSet, imgAlt: imgAlt, imgClass: imgClass, logName: $"{Constants.SxcLogName}.PicSet")
         {
+            _featuresService = featuresService;
         }
+        private readonly IFeaturesService _featuresService;
 
         public Img ImgTag
         {
@@ -52,8 +58,13 @@ namespace ToSic.Sxc.Images
             var defFormat = ImgService.GetFormat(url);
             if (defFormat == null || defFormat.ResizeFormats.Count == 0) return Tag.TagList();
 
+            // Determine if the feature MultiFormat is enabled, if yes, use list, otherwise use only current
+            var formats = _featuresService.Enabled(FeaturesCatalog.ImageServiceMultiFormat.NameId)
+                ? defFormat.ResizeFormats
+                : new List<IImageFormat> { defFormat };
+
             // Generate Meta Tags
-            var sources = defFormat.ResizeFormats
+            var sources = formats //  defFormat.ResizeFormats
                 .Select(resizeFormat =>
                 {
                     var formatSettings = new ResizeSettings(resizeSettings, true);

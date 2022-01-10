@@ -10,8 +10,14 @@ namespace ToSic.Sxc.Images
     {
         #region Constructor and Inits
 
-        public ImageService(ImgResizeLinker imgLinker) : base(Constants.SxcLogName + ".ImgSvc") => ImgLinker = imgLinker.Init(Log);
+        public ImageService(ImgResizeLinker imgLinker, IFeaturesService features) : base(Constants.SxcLogName + ".ImgSvc")
+        {
+            _features = features;
+            ImgLinker = imgLinker.Init(Log);
+        }
+
         internal ImgResizeLinker ImgLinker { get; }
+        private readonly IFeaturesService _features;
 
         public void AddBlockContext(IDynamicCodeRoot codeRoot) => _codeRootOrNull = codeRoot;
         private IDynamicCodeRoot _codeRootOrNull;
@@ -44,7 +50,7 @@ namespace ToSic.Sxc.Images
             string srcSet = null, 
             string imgAlt = null, 
             string imgClass = null
-        ) => new ResponsivePicture(this, url, GetBestSettings(settings), factor: factor, srcSet: srcSet);
+        ) => new ResponsivePicture(this, _features, url, GetBestSettings(settings), factor: factor, srcSet: srcSet);
 
         public IResponsiveImage Img(
             string url,
