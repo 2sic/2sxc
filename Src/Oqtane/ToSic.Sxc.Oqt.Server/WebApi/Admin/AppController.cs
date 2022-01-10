@@ -72,6 +72,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         public List<AppDto> List(int zoneId)
             => _appsBackendLazy.Value.Init(Log).Apps();
 
+        [HttpGet]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = RoleNames.Host)]
+        public List<AppDto> InheritableApps()
+            => _appsBackendLazy.Value.Init(Log).GetGlobalApps();
+
+
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
@@ -81,8 +88,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
-        public void App(int zoneId, string name)
-            => _appBuilderLazy.Value.Init(zoneId, Log).Create(name);
+        public void App(int zoneId, string name, int? inheritAppId = null)
+            => _appBuilderLazy.Value.Init(zoneId, Log).Create(name, null, inheritAppId);
 
 
         /// <summary>

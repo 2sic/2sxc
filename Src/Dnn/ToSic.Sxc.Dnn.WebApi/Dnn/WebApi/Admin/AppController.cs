@@ -36,6 +36,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public List<AppDto> List(int zoneId)
             => GetService<AppsBackend>().Init(Log).Apps();
 
+        [HttpGet]
+        [ValidateAntiForgeryToken]
+        [SupportedModules("2sxc,2sxc-app")]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+        public List<AppDto> InheritableApps()
+            => GetService<AppsBackend>().Init(Log).GetGlobalApps();
+
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
@@ -47,8 +54,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public void App(int zoneId, string name)
-            => GetService<AppCreator>().Init(zoneId, Log).Create(name);
+        public void App(int zoneId, string name, int? inheritAppId = null)
+            => GetService<AppCreator>().Init(zoneId, Log).Create(name, null, inheritAppId);
 
 
         /// <summary>

@@ -6,7 +6,6 @@ using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Apps
 {
@@ -14,12 +13,11 @@ namespace ToSic.Sxc.Apps
     {
         #region Constructor / DI
 
-        public AppsRuntime(IServiceProvider serviceProvider, ZoneRuntime zoneRuntime, IAppStates appStates) : base(serviceProvider, "Cms.AppsRt")
+        public AppsRuntime(IServiceProvider serviceProvider, IAppStates appStates) : base(serviceProvider, "Cms.AppsRt")
         {
-            _zoneRuntime = zoneRuntime;
             _appStates = appStates;
         }
-        private readonly ZoneRuntime _zoneRuntime;
+
         private readonly IAppStates _appStates;
 
         #endregion
@@ -69,6 +67,38 @@ namespace ToSic.Sxc.Apps
                     .Init(new AppIdentity(zId, a.Key), buildConfig, Log) as IApp)
                 .OrderBy(a => a.Name)
                 .ToList();
+        }
+
+        /// <summary>
+        /// Returns all Apps for the current zone
+        /// </summary>
+        /// <returns></returns>
+        public List<IApp> GetGlobalApps(ISite site, Func<Eav.Apps.App, IAppDataConfiguration> buildConfig)
+        {
+            var zones = _appStates.Zones;
+            var appStateWithCacheInfo = (AppStates)_appStates;
+            var result = zones.SelectMany(zSet =>
+                {
+                    // todo: unclear if this is the right way to do this - probably the ZoneId should come from the site?
+                    var zId = zSet.Key;
+                    var appIds = _appStates.Apps(zId);
+
+                    return appIds
+                        .Select(a => new AppIdentity(zId, a.Key))
+                        .Where(aId =>
+                        {
+                            if (!appStateWithCacheInfo.IsCached(aId)) return false;
+                            var appState = _appStates.Get(aId);
+                            return appState != null && appState.IsGlobal();
+                        })
+                        .Select(a => ServiceProvider.Build<App>()
+                            .PreInit(site)
+                            .Init(a, buildConfig, Log) as IApp)
+                        .OrderBy(a => a.Name)
+                        .ToList();
+                })
+                .ToList();
+            return result;
         }
 
     }
