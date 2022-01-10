@@ -47,8 +47,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             if (delete != null)
             {
-                //_settingRepository.DeleteSetting(settingId: delete.SettingId); // not working in Oqt 3.0.1+
-                // workaround (STV TEST)
+                //_settingRepository.DeleteSetting(settingId: delete.SettingId); // can't use in Oqt 3.0.1+ because of change in signature
+                // workaround code that works in Oqt 2.3.1+
                 delete.SettingValue = null;
                 delete.ModifiedOn = DateTime.Now;
                 delete.ModifiedBy = WipConstants.SettingsChangeUserId;
