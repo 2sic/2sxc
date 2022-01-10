@@ -45,7 +45,15 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 .GetSettings(entityName, entityId)
                 .FirstOrDefault(item => item.SettingName == settingName);
 
-            if (delete != null) _settingRepository.DeleteSetting(delete.SettingId);
+            if (delete != null)
+            {
+                //_settingRepository.DeleteSetting(settingId: delete.SettingId); // not working in Oqt 3.0.1+
+                // workaround (STV TEST)
+                delete.SettingValue = null;
+                delete.ModifiedOn = DateTime.Now;
+                delete.ModifiedBy = WipConstants.SettingsChangeUserId;
+                _settingRepository.UpdateSetting(delete);
+            }
         }
 
         public void UpdateSetting(string entityName, int entityId, string settingName, string settingValue)
