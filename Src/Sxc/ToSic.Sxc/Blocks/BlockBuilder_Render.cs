@@ -52,9 +52,9 @@ namespace ToSic.Sxc.Blocks
                     result.Features = pss.Features.GetWithDependentsAndFlush(Log);
 
                     // Head & Page Changes
-                    result.HeadChanges = pss.GetHeadChangesAndFlush();
-                    result.PageChanges = pss.GetPropertyChangesAndFlush();
-                    result.ManualChanges = pss.Features.ManualFeaturesGetNew();
+                    result.HeadChanges = pss.GetHeadChangesAndFlush(Log);
+                    result.PageChanges = pss.GetPropertyChangesAndFlush(Log);
+                    result.ManualChanges = pss.Features.ManualFeaturesGetNew(Log);
 
                     result.HttpStatusCode = pss.HttpStatusCode;
                     result.HttpStatusMessage = pss.HttpStatusMessage;

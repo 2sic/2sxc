@@ -158,7 +158,9 @@ namespace ToSic.Sxc.Dnn.Web
 
         private static void RegisterJs(Page page, string version, string path, bool toHead, int priority)
         {
-            var url = UrlHelpers.QuickAddUrlParameter(path, "v", version); // $"{path}{(path.IndexOf('?') > 0 ? '&' : '?')}v={version}";
+            if (string.IsNullOrWhiteSpace(path)) return;
+
+            var url = UrlHelpers.QuickAddUrlParameter(path, "v", version);
             if (toHead)
             {
                 // don't add version in DNN 7 and probably 8, because it breaks the client-dependency - but only in the head

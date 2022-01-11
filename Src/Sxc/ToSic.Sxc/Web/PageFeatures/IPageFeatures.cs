@@ -36,8 +36,9 @@ namespace ToSic.Sxc.Web
         /// <summary>
         /// Get the manual features which were added - skip those which were previously already added
         /// </summary>
+        /// <param name="log"></param>
         /// <returns></returns>
-        List<IPageFeature> ManualFeaturesGetNew();
+        List<IPageFeature> ManualFeaturesGetNew(ILog log);
 
     }
 }

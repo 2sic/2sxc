@@ -70,31 +70,38 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
         public AjaxRenderDto RenderV2(int templateId, string lang, string root)
         {
             var wrapLog = Log.Call<AjaxRenderDto>();
+            Log.Add("1. Get Render result");
             var result = RenderToResult(templateId, lang);
+
+            Log.Add("2.1. Build Resources");
             var resources = new List<AjaxResourceDtoWIP>();
             var ver = Settings.Version.ToString();
             if (result.Features.Contains(BuiltInFeatures.TurnOn))
                 resources.Add(new AjaxResourceDtoWIP
                     { Url = UrlHelpers.QuickAddUrlParameter(root.SuffixSlash() + InpageCms.TurnOnJs, "v", ver) });
 
-            // 2. Add JS & CSS which was stripped before
+            Log.Add("2.2. Add JS & CSS which were stripped before");
             resources.AddRange(result.Assets.Select(asset => new AjaxResourceDtoWIP
             {
-                Url = UrlHelpers.QuickAddUrlParameter(asset.Url, "v", ver), 
-                Type = asset.IsJs ? "js" : "css"
+                // Note: Url can be empty if it has contents
+                Url = string.IsNullOrWhiteSpace(asset.Url) ? null : UrlHelpers.QuickAddUrlParameter(asset.Url, "v", ver), 
+                Type = asset.IsJs ? "js" : "css",
+                Contents = asset.Content
             }));
 
-            // 3. Add manual resources (fancybox etc.)
+            Log.Add("3. Add manual resources (fancybox etc.)");
             // First get all the parts out of HTML, as the configuration is still stored as plain HTML
             var mergedFeatures  = string.Join("\n", result.ManualChanges.Select(mc => mc.Html));
             var optimizer = _optimizer.Value;
             if(optimizer is ClientDependencyOptimizer withInternal) 
                 withInternal.ExtractOnlyEnableOptimization = false;
 
+            Log.Add("4.1. Process optimizers");
             var rest = optimizer.Process(mergedFeatures).Item1;
             if (!string.IsNullOrWhiteSpace(rest)) 
                 Log.Add("Warning: Rest after extraction should be empty - not handled ATM");
 
+            Log.Add("4.2. Add more resources based on processed");
             resources.AddRange(optimizer.Assets.Select(asset => new AjaxResourceDtoWIP
             {
                 Url = asset.Url,
