@@ -12,7 +12,7 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtUser: IUser<User> //, ICmsUser
+    public class OqtUser: IUser<User>
     {
         private readonly Lazy<IUserRepository> _userRepository;
         private readonly Lazy<IUserRoleRepository> _userRoleRepository;

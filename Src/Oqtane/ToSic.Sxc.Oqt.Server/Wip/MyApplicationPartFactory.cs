@@ -4,6 +4,8 @@ using System.Reflection;
 
 // Unsure if used! maybe remove??? 
 
+// TODO: @STV - find out if this is in use / needed, if yes, move to Plumbing folder, otherwise delete
+
 [assembly: ProvideApplicationPartFactory(typeof(ToSic.Sxc.Oqt.Server.Plumbing.MyApplicationPartFactory))]
 namespace ToSic.Sxc.Oqt.Server.Plumbing
 {

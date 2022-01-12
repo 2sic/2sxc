@@ -5,6 +5,9 @@ using System.Reflection;
 using System.Runtime.Loader;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
+// TODO: @STV - pls check if the WIP comment is still relevat, if this is in use etc.
+// and otherwise just rename/correct comments
+
 //[assembly: ProvideApplicationPartFactory(typeof(MyApplicationPartFactory))]
 
 // WIP trying to get https://stackoverflow.com/questions/58685966/adding-assemblies-types-to-be-made-available-to-razor-page-at-runtime to work

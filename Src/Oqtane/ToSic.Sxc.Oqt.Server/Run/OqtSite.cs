@@ -4,7 +4,6 @@ using System;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Block;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
@@ -17,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
     /// This is a Mvc implementation of a Tenant-object.
     /// </summary>
     [PrivateApi]
-    public sealed class OqtSite: Site<Site> // , ICmsSite
+    public sealed class OqtSite: Site<Site>
     {
         /// <summary>
         /// Constructor for DI

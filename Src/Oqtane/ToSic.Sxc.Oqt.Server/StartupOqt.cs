@@ -17,6 +17,8 @@ using ToSic.Sxc.Razor;
 using ToSic.Sxc.WebApi;
 using WebApiConstants = ToSic.Sxc.Oqt.Shared.WebApiConstants;
 
+// TODO: @STV - pls move to the startup folder
+
 namespace ToSic.Sxc.Oqt.Server
 {
     public class StartupOqt : IServerStartup

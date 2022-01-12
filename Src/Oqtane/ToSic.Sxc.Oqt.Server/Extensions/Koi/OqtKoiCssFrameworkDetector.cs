@@ -1,6 +1,8 @@
 ﻿using System;
 using Connect.Koi.Detectors;
 
+// TODO: @STV - pls move to folder Polymorphism
+
 namespace ToSic.Sxc.Oqt.Server.Extensions.Koi
 {
     public class OqtKoiCssFrameworkDetector : ICssFrameworkDetector
