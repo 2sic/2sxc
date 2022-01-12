@@ -84,7 +84,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
 
         #region Create
 
-        [HttpPost]
+        [HttpPost("{contentType}")]
         [AllowAnonymous] // will check security internally, so assume no requirements
         public IDictionary<string, object> CreateOrUpdate([FromRoute] string contentType,
             [FromBody] Dictionary<string, object> newContentItem, [FromQuery] int? id = null,
