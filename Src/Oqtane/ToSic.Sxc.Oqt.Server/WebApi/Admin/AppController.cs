@@ -76,7 +76,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Host)]
         public List<AppDto> InheritableApps()
-            => _appsBackendLazy.Value.Init(Log).GetGlobalApps();
+            => _appsBackendLazy.Value.Init(Log).GetInheritableApps();
 
 
         [HttpDelete]

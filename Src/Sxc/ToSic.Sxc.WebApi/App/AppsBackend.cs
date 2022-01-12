@@ -49,11 +49,11 @@ namespace ToSic.Sxc.WebApi.App
                 IsInherited = a.AppState.IsInherited(),
             };
 
-        public List<AppDto> GetGlobalApps()
+        public List<AppDto> GetInheritableApps()
         {
             var cms = _cmsZones.Init(_context.Site.ZoneId, Log);
             var configurationBuilder = ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(_context.UserMayEdit);
-            var list = cms.AppsRt.GetGlobalApps(_context.Site, configurationBuilder);
+            var list = cms.AppsRt.GetInheritableApps(_context.Site, configurationBuilder);
             return list.Select(CreateAppDto).ToList();
         }
     }

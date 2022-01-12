@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
         public List<AppDto> InheritableApps()
-            => GetService<AppsBackend>().Init(Log).GetGlobalApps();
+            => GetService<AppsBackend>().Init(Log).GetInheritableApps();
 
         [HttpDelete]
         [ValidateAntiForgeryToken]

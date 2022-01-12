@@ -73,11 +73,19 @@ namespace ToSic.Sxc.Apps
         /// Returns all Apps for the current zone
         /// </summary>
         /// <returns></returns>
-        public List<IApp> GetGlobalApps(ISite site, Func<Eav.Apps.App, IAppDataConfiguration> buildConfig)
+        public List<IApp> GetInheritableApps(ISite site, Func<Eav.Apps.App, IAppDataConfiguration> buildConfig)
         {
+            // Get existing apps, as we should not list inheritable apps which are already inherited
+            var siteApps = _appStates.Apps(site.ZoneId)
+                .Select(a => _appStates.Get(a.Key).Folder)
+                .ToList();
+
             var zones = _appStates.Zones;
             var appStateWithCacheInfo = (AppStates)_appStates;
-            var result = zones.SelectMany(zSet =>
+            var result = zones
+                // Skip all global apps on the current site, as they shouldn't be inheritable
+                .Where(z => z.Key != site.ZoneId)
+                .SelectMany(zSet =>
                 {
                     // todo: unclear if this is the right way to do this - probably the ZoneId should come from the site?
                     var zId = zSet.Key;
@@ -89,7 +97,7 @@ namespace ToSic.Sxc.Apps
                         {
                             if (!appStateWithCacheInfo.IsCached(aId)) return false;
                             var appState = _appStates.Get(aId);
-                            return appState != null && appState.IsGlobal();
+                            return appState != null && appState.IsGlobal() && !siteApps.Any(sa => sa.Equals(appState.Folder, StringComparison.InvariantCultureIgnoreCase));
                         })
                         .Select(a => ServiceProvider.Build<App>()
                             .PreInit(site)
