@@ -3,12 +3,16 @@ using System.Configuration;
 using System.Net;
 using System.Net.Mail;
 using DotNetNuke.Entities.Host;
+using ToSic.Eav.Context;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Dnn.Services
 {
     public class DnnMailService : MailServiceBase
     {
+        public DnnMailService(Lazy<IUser> userLazy) : base(userLazy)
+        { }
+        
         protected override SmtpClient SmtpClient()
         {
             var smtpServer = Host.SMTPServer;

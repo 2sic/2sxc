@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System;
 using ToSic.Eav.WebApi.Errors;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
@@ -17,9 +18,19 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                 context.Result = new ObjectResult(exception.Status)
                 {
                     StatusCode = exception.Status,
+                    Value = exception.Message,
                 };
                 context.ExceptionHandled = true;
             }
+            else if (context.Exception is Exception anyException)
+            {
+                context.Result = new ObjectResult(400)
+                {
+                    StatusCode = 400,
+                    Value = anyException,
+                };
+                context.ExceptionHandled = true;
+            }   
         }
     }
 }

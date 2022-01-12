@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using ToSic.Eav.Context;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Oqt.Server.Services
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.Services
         private readonly Lazy<ISiteRepository> _siteRepositoryLazy;
         private readonly Lazy<ISettingRepository> _settingRepositoryLazy;
 
-        public OqtMailService(Lazy<ISiteRepository> siteRepositoryLazy, Lazy<ISettingRepository> settingRepositoryLazy)
+        public OqtMailService(Lazy<ISiteRepository> siteRepositoryLazy, Lazy<ISettingRepository> settingRepositoryLazy, Lazy<IUser> userLazy) : base(userLazy)
         {
             _siteRepositoryLazy = siteRepositoryLazy;
             _settingRepositoryLazy = settingRepositoryLazy;
