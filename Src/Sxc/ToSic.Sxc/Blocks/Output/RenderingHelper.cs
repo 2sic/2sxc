@@ -4,13 +4,12 @@ using Newtonsoft.Json;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Run;
-
+using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.JsContext;
 
-namespace ToSic.Sxc.Web
+namespace ToSic.Sxc.Blocks.Output
 {
     public class RenderingHelper: HasLog, IRenderingHelper
     {

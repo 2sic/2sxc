@@ -1,9 +1,8 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Blocks;
 
-namespace ToSic.Sxc.Web
+namespace ToSic.Sxc.Blocks.Output
 {
     [PrivateApi("Internal only")]
     public interface IRenderingHelper

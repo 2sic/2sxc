@@ -4,10 +4,12 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Oqt.Server.Context;
+using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Web.Parameters;
 
-namespace ToSic.Sxc.Oqt.Server.Run
+namespace ToSic.Sxc.Oqt.Server.Blocks
 {
     /// <summary>
     /// WIP - separating concerns in OqtState to get the block and provide the state...

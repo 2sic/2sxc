@@ -1,15 +1,16 @@
-﻿using Oqtane.Models;
+﻿using System;
+using System.Linq;
+using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
-using System;
-using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Helpers;
 using ToSic.Sxc.Web;
+using Page = ToSic.Sxc.Context.Page;
 
-namespace ToSic.Sxc.Oqt.Server.Run
+namespace ToSic.Sxc.Oqt.Server.Context
 {
-    public class OqtPage : Context.Page, IWrapper<Page>
+    public class OqtPage : Page, IWrapper<Oqtane.Models.Page>
     {
         private readonly SiteState _siteState;
         private readonly Lazy<IAliasRepository> _aliasRepository;
@@ -25,8 +26,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
             _linkHelperLazy = linkHelperLazy;
         }
 
-        public Page UnwrappedContents { get; set; }
-        public Page GetContents() => UnwrappedContents;
+        public Oqtane.Models.Page UnwrappedContents { get; set; }
+        public Oqtane.Models.Page GetContents() => UnwrappedContents;
         public new OqtPage Init(int id)
         {
             base.Init(id);

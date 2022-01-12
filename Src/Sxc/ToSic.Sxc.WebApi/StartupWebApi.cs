@@ -5,6 +5,7 @@ using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.ImportExport;
+using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
@@ -45,7 +46,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<EngineBaseDependencies>();
 
             // These are usually replaced by the target platform
-            services.TryAddTransient<IClientDependencyOptimizer, BasicClientDependencyOptimizer>();
+            services.TryAddTransient<IBlockResourceExtractor, BasicBlockResourceExtractor>();
             
             // Backends
             services.TryAddTransient<AppsBackend>();

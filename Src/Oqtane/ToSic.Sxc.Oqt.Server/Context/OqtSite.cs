@@ -1,16 +1,17 @@
-﻿using Oqtane.Models;
+﻿using System;
+using Oqtane.Models;
 using Oqtane.Repository;
-using System;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Oqt.Server.Block;
 using ToSic.Sxc.Oqt.Server.Plumbing;
+using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
+using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
-namespace ToSic.Sxc.Oqt.Server.Run
+namespace ToSic.Sxc.Oqt.Server.Context
 {
     /// <summary>
     /// This is a Mvc implementation of a Tenant-object.
@@ -101,7 +102,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public override string AppsRootPhysical => string.Format(OqtConstants.AppRootPublicBase, Id);
 
         [PrivateApi]
-        public override string AppAssetsLinkTemplate => OqtAssetsAndHeaders.GetSiteRoot(_siteStateInitializer.InitializedState)
+        public override string AppAssetsLinkTemplate => OqtPageOutput.GetSiteRoot(_siteStateInitializer.InitializedState)
                                                         + WebApiConstants.AppRoot + "/" + LinkPaths.AppFolderPlaceholder + "/assets";
 
         [PrivateApi] public override string AppsRootPhysicalFull => _serverPaths.Value.FullAppPath(AppsRootPhysical);

@@ -2,7 +2,7 @@
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Context;
 
-namespace ToSic.Sxc.Oqt.Server.Run
+namespace ToSic.Sxc.Oqt.Server.Context
 {
     public static class OqtContextOfBlockExtensions
     {

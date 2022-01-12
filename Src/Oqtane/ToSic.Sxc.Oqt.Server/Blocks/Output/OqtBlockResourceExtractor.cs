@@ -1,10 +1,9 @@
 ﻿using System;
-using Microsoft.AspNetCore.Http;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Blocks.Output;
 
-namespace ToSic.Sxc.Oqt.Server.Run
+namespace ToSic.Sxc.Oqt.Server.Blocks.Output
 {
-    public class OqtClientDependencyOptimizer: ClientDependencyOptimizer
+    public class OqtBlockResourceExtractor: BlockResourceExtractor
     {
         public override Tuple<string, bool> Process(string renderedTemplate)
         {

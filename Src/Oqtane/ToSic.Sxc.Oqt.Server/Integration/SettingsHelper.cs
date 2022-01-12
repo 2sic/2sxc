@@ -6,7 +6,7 @@ using Oqtane.Repository;
 using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Shared.Dev;
 
-namespace ToSic.Sxc.Oqt.Server.Run
+namespace ToSic.Sxc.Oqt.Server.Integration
 {
     public class SettingsHelper
     {

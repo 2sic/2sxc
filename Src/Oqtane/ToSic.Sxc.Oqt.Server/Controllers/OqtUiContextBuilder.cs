@@ -3,9 +3,9 @@ using Oqtane.Shared;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Oqt.Server.Block;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.Context;
+using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
@@ -86,7 +86,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected override ContextAppDto GetApp(Ctx flags)
         {
             var appDto = base.GetApp(flags);
-            if (appDto != null) appDto.Api = OqtAssetsAndHeaders.GetSiteRoot(_siteState);
+            if (appDto != null) appDto.Api = OqtPageOutput.GetSiteRoot(_siteState);
             return appDto;
         }
 

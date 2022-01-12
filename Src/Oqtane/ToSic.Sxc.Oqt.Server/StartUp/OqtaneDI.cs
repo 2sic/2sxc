@@ -10,15 +10,21 @@ using ToSic.Eav.LookUp;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Apps.Assets;
+using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Adam;
-using ToSic.Sxc.Oqt.Server.Block;
+using ToSic.Sxc.Oqt.Server.Apps;
+using ToSic.Sxc.Oqt.Server.Blocks;
+using ToSic.Sxc.Oqt.Server.Blocks.Output;
+using ToSic.Sxc.Oqt.Server.Cms;
 using ToSic.Sxc.Oqt.Server.Code;
+using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.Oqt.Server.Data;
 using ToSic.Sxc.Oqt.Server.Installation;
+using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Server.LookUps;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
@@ -31,6 +37,7 @@ using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi.ApiExplorer;
 using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.Plumbing;
+using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp
 {
@@ -72,9 +79,9 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddTransient<IPagePublishingResolver, OqtPagePublishingResolver>();
 
             //// Oqtane Specific stuff
-            services.TryAddTransient<OqtAssetsAndHeaders>();
+            services.TryAddTransient<OqtPageOutput>();
             services.TryAddTransient<OqtSxcViewBuilder>();
-            services.TryAddTransient<IClientDependencyOptimizer, OqtClientDependencyOptimizer>();
+            services.TryAddTransient<IBlockResourceExtractor, OqtBlockResourceExtractor>();
             services.TryAddTransient<IValueConverter, OqtValueConverter>();
 
             services.AddSingleton<IPlatform, OqtPlatformContext>();

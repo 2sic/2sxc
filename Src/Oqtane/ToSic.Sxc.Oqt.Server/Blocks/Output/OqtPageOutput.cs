@@ -1,30 +1,30 @@
-﻿using Oqtane.Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Oqtane.Shared;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Edit;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.PageFeatures;
 
-namespace ToSic.Sxc.Oqt.Server.Block
+namespace ToSic.Sxc.Oqt.Server.Blocks.Output
 {
     [PrivateApi]
-    public partial class OqtAssetsAndHeaders : HasLog
+    public partial class OqtPageOutput : HasLog
     {
         #region Constructor and DI
 
-        public OqtAssetsAndHeaders(SiteState siteState, IClientDependencyOptimizer oqtClientDependencyOptimizer) : base($"{OqtConstants.OqtLogPrefix}.AssHdr")
+        public OqtPageOutput(SiteState siteState, IBlockResourceExtractor oqtBlockResourceExtractor) : base($"{OqtConstants.OqtLogPrefix}.AssHdr")
         {
             _siteState = siteState;
-            _oqtClientDependencyOptimizer = oqtClientDependencyOptimizer.Init(Log);
+            _oqtBlockResourceExtractor = oqtBlockResourceExtractor.Init(Log);
         }
 
         private readonly SiteState _siteState;
-        private readonly IClientDependencyOptimizer _oqtClientDependencyOptimizer;
+        private readonly IBlockResourceExtractor _oqtBlockResourceExtractor;
         
         public void Init(OqtSxcViewBuilder parent, RenderResult renderResult)
         {

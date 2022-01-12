@@ -1,18 +1,19 @@
-﻿using Custom.Hybrid;
+﻿using System;
+using Custom.Hybrid;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Oqtane.Repository;
 using Oqtane.Shared;
-using System;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Oqt.Server.Plumbing;
+using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.WebApi;
 
-namespace ToSic.Sxc.Oqt.Server.Run
+namespace ToSic.Sxc.Oqt.Server.Services
 {
     /// <summary>
     /// The Oqtane implementation of the <see cref="ILinkHelper"/>.
@@ -25,7 +26,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private readonly SiteStateInitializer _siteStateInitializer;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly OqtLinkPaths _linkPaths;
-        private Context.IContextOfBlock _context;
+        private Sxc.Context.IContextOfBlock _context;
 
         public OqtLinkHelper(
             IPageRepository pageRepository,

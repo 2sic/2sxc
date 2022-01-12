@@ -1,7 +1,6 @@
-﻿using ToSic.Eav.Context;
-using ToSic.Sxc.Context;
+﻿using ToSic.Sxc.Context;
 
-namespace ToSic.Sxc.Oqt.Server.Run
+namespace ToSic.Sxc.Oqt.Server.Context
 {
     public class OqtPlatformContext: Platform
     {

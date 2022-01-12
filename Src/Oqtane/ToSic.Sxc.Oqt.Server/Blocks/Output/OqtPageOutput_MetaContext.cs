@@ -3,10 +3,10 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Edit;
 using ToSic.Sxc.Oqt.Shared;
 
-namespace ToSic.Sxc.Oqt.Server.Block
+namespace ToSic.Sxc.Oqt.Server.Blocks.Output
 {
     [PrivateApi]
-    public partial class OqtAssetsAndHeaders
+    public partial class OqtPageOutput
     {
         /// <summary>
         /// Determines if the context header is needed

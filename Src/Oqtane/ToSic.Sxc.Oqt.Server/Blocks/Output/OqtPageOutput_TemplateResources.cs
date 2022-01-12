@@ -5,9 +5,9 @@ using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.PageFeatures;
 
-namespace ToSic.Sxc.Oqt.Server.Block
+namespace ToSic.Sxc.Oqt.Server.Blocks.Output
 {
-    public partial class OqtAssetsAndHeaders
+    public partial class OqtPageOutput
     {
         /// <summary>
         /// The JavaScript and Style assets
@@ -42,8 +42,8 @@ namespace ToSic.Sxc.Oqt.Server.Block
             foreach (var manualFeature in manualFeatures)
             {
                 // process manual features to get assets
-                _oqtClientDependencyOptimizer.Process(manualFeature.Html);
-                assets.AddRange(_oqtClientDependencyOptimizer.Assets);
+                _oqtBlockResourceExtractor.Process(manualFeature.Html);
+                assets.AddRange(_oqtBlockResourceExtractor.Assets);
             }
             return assets;
         }

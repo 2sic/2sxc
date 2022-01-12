@@ -1,7 +1,7 @@
 ﻿using System;
 using ToSic.Sxc.Oqt.Shared.Dev;
 
-namespace ToSic.Sxc.Oqt.Server.Run
+namespace ToSic.Sxc.Oqt.Server.Integration
 {
     public class OqtLogging
     {

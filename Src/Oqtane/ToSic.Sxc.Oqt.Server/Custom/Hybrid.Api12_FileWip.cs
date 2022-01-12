@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Net.Mime;
 using System.Text;
 using System.Xml;
-using Microsoft.Net.Http.Headers;
 using ToSic.Eav;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.WebApi;

@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Sxc.Oqt.Shared.Models;
 

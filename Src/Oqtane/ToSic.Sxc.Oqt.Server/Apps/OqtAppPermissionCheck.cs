@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Oqtane.Security;
-using Oqtane.Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using Oqtane.Security;
+using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
@@ -11,18 +11,17 @@ using ToSic.Eav.Security;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Shared;
 
-namespace ToSic.Sxc.Oqt.Server.Run
+namespace ToSic.Sxc.Oqt.Server.Apps
 {
     public class OqtPermissionCheck: AppPermissionCheck
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly Lazy<IUserPermissions> _userPermissions;
         private readonly Lazy<IUser> _oqtUser;
-        //private readonly OqtState _oqtState;
 
         public OqtPermissionCheck(IHttpContextAccessor httpContextAccessor, 
             Lazy<IUserPermissions> userPermissions, 
-            Lazy<IUser> oqtUser/*, OqtState oqtState*/,
+            Lazy<IUser> oqtUser,
             IAppStates appStates,
             Dependencies dependencies
             ) : base(appStates, dependencies, OqtConstants.OqtLogPrefix)
@@ -30,7 +29,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
             _httpContextAccessor = httpContextAccessor;
             _userPermissions = userPermissions;
             _oqtUser = oqtUser;
-            //_oqtState = oqtState.Init(Log);
         }
 
         /// <summary>
@@ -38,7 +36,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         /// </summary>
         public ClaimsPrincipal ClaimsPrincipal => _httpContextAccessor.HttpContext?.User;
 
-        protected IModule Module => _module ??= (Context as IContextOfBlock)?.Module; /*_oqtState.GetContext().Module*/ 
+        protected IModule Module => _module ??= (Context as IContextOfBlock)?.Module;
         private IModule _module;
 
         protected override bool EnvironmentAllows(List<Grants> grants)

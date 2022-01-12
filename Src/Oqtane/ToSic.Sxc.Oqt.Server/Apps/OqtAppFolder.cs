@@ -2,11 +2,10 @@
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Shared;
 
-namespace ToSic.Sxc.Oqt.Server.Run
+namespace ToSic.Sxc.Oqt.Server.Apps
 {
     public class OqtAppFolder: HasLog<OqtAppFolder>
     {
-        // TODO: @STV - pls test, I changed OqtState to use ctxResolver
         public OqtAppFolder(IContextResolver ctxResolver) : base($"{OqtConstants.OqtLogPrefix}.AppFolder") 
             => _ctxResolver = ctxResolver;
         private readonly IContextResolver _ctxResolver;

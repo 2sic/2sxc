@@ -14,6 +14,7 @@ using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Repositories;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
@@ -114,7 +115,7 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             services.TryAddTransient<IZoneMapper, DnnZoneMapper>();
 
-            services.TryAddTransient<IClientDependencyOptimizer, DnnClientDependencyOptimizer>();
+            services.TryAddTransient<IBlockResourceExtractor, DnnBlockResourceExtractor>();
             services.TryAddTransient<AppPermissionCheck, DnnPermissionCheck>();
             services.TryAddTransient<DnnPermissionCheck>();
 

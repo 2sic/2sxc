@@ -1,7 +1,7 @@
-﻿using Oqtane.Repository;
-using System.Linq;
+﻿using System.Linq;
+using Oqtane.Repository;
 
-namespace ToSic.Sxc.Oqt.Server.Run
+namespace ToSic.Sxc.Oqt.Server.Integration
 {
     public class OqtModuleHelper
     {

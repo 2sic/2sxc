@@ -2,7 +2,7 @@
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Oqt.Shared;
 
-namespace ToSic.Sxc.Oqt.Server.Run
+namespace ToSic.Sxc.Oqt.Server.Cms
 {
     internal class OqtPagePublishingResolver: PagePublishingResolverBase
     {

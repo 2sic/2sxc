@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Web
+namespace ToSic.Sxc.Blocks.Output
 {
     /// <summary>
     /// System to automatically pick up JS/CSS files which should be bundled
     /// </summary>
-    public interface IClientDependencyOptimizer: IHasLog<IClientDependencyOptimizer>
+    public interface IBlockResourceExtractor: IHasLog<IBlockResourceExtractor>
     {
         /// <summary>
         /// Scan the html for possible JS/CSS files which should be bundled and extract these. 

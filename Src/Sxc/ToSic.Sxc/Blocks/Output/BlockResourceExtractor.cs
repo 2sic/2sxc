@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Web
+namespace ToSic.Sxc.Blocks.Output
 {
-    public abstract class ClientDependencyOptimizer: HasLog<IClientDependencyOptimizer>, IClientDependencyOptimizer
+    public abstract class BlockResourceExtractor: HasLog<IBlockResourceExtractor>, IBlockResourceExtractor
     {
         #region Construction / DI
-        protected ClientDependencyOptimizer() : base("Sxc.AstOpt") { }
+        protected BlockResourceExtractor() : base("Sxc.AstOpt") { }
 
         #endregion
 

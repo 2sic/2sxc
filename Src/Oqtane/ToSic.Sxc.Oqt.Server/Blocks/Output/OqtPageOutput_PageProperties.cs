@@ -4,9 +4,9 @@ using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.PageService;
 
-namespace ToSic.Sxc.Oqt.Server.Block
+namespace ToSic.Sxc.Oqt.Server.Blocks.Output
 {
-    public partial class OqtAssetsAndHeaders
+    public partial class OqtPageOutput
     {
         /// <summary>
         /// 

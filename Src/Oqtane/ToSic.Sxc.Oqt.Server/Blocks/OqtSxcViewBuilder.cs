@@ -5,13 +5,14 @@ using ToSic.Eav.Logging;
 using ToSic.Sxc.Beta.LightSpeed;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
 using Page = Oqtane.Models.Page;
 
-namespace ToSic.Sxc.Oqt.Server.Block
+namespace ToSic.Sxc.Oqt.Server.Blocks
 {
     [PrivateApi]
     public class OqtSxcViewBuilder : HasLog, ISxcOqtane
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.Oqt.Server.Block
         #region Constructor and DI
 
         public OqtSxcViewBuilder(
-            OqtAssetsAndHeaders assetsAndHeaders, 
+            Blocks.Output.OqtPageOutput pageOutput, 
             IContextOfBlock contextOfBlockEmpty, 
             BlockFromModule blockModuleEmpty,
             IContextResolver contextResolverForLookUps,
@@ -32,11 +33,11 @@ namespace ToSic.Sxc.Oqt.Server.Block
             _blockModuleEmpty = blockModuleEmpty;
             _contextResolverForLookUps = contextResolverForLookUps;
             _globalTypesCheck = globalTypesCheck;
-            AssetsAndHeaders = assetsAndHeaders;
+            PageOutput = pageOutput;
             logHistory.Add("oqt-view", Log);
         }
 
-        public OqtAssetsAndHeaders AssetsAndHeaders { get; }
+        public Blocks.Output.OqtPageOutput PageOutput { get; }
         private readonly IContextOfBlock _contextOfBlockEmpty;
         private readonly BlockFromModule _blockModuleEmpty;
         private readonly IContextResolver _contextResolverForLookUps;
@@ -82,7 +83,7 @@ namespace ToSic.Sxc.Oqt.Server.Block
             // #Lightspeed
             var renderResult = PreviousCache?.Data ?? Block.BlockBuilder.Run(true);
 
-            AssetsAndHeaders.Init(this, renderResult);
+            PageOutput.Init(this, renderResult);
 
             //// #Lightspeed
             //if (NewCache != null)
@@ -95,12 +96,12 @@ namespace ToSic.Sxc.Oqt.Server.Block
             var ret = new OqtViewResultsDto
             {
                 Html = renderResult.Html, 
-                TemplateResources = AssetsAndHeaders.GetSxcResources(),
-                SxcContextMetaName = AssetsAndHeaders.AddContextMeta ? AssetsAndHeaders.ContextMetaName : null,
-                SxcContextMetaContents = AssetsAndHeaders.AddContextMeta ? AssetsAndHeaders.ContextMetaContents(): null,
-                SxcScripts = AssetsAndHeaders.Scripts().ToList(),
-                SxcStyles = AssetsAndHeaders.Styles().ToList(),
-                PageProperties = AssetsAndHeaders.GetOqtPagePropertyChangesList(renderResult.PageChanges)
+                TemplateResources = PageOutput.GetSxcResources(),
+                SxcContextMetaName = PageOutput.AddContextMeta ? PageOutput.ContextMetaName : null,
+                SxcContextMetaContents = PageOutput.AddContextMeta ? PageOutput.ContextMetaContents(): null,
+                SxcScripts = PageOutput.Scripts().ToList(),
+                SxcStyles = PageOutput.Styles().ToList(),
+                PageProperties = PageOutput.GetOqtPagePropertyChangesList(renderResult.PageChanges)
             };
 
             // TODO: stv

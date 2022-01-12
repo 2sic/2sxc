@@ -7,6 +7,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
+using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Edit;
@@ -25,14 +26,14 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             IPagePublishing publishing, 
             Lazy<CmsManager> cmsManagerLazy, 
             IContextResolver ctxResolver, 
-            Lazy<IClientDependencyOptimizer> optimizerLazy)
+            Lazy<IBlockResourceExtractor> optimizerLazy)
             : base(sp, cmsManagerLazy, ctxResolver, "Bck.FldLst")
         {
             _optimizer = optimizerLazy;
             _publishing = publishing.Init(Log);
         }
 
-        private readonly Lazy<IClientDependencyOptimizer> _optimizer;
+        private readonly Lazy<IBlockResourceExtractor> _optimizer;
         private readonly IPagePublishing _publishing;
 
         #endregion
@@ -93,7 +94,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             // First get all the parts out of HTML, as the configuration is still stored as plain HTML
             var mergedFeatures  = string.Join("\n", result.ManualChanges.Select(mc => mc.Html));
             var optimizer = _optimizer.Value;
-            if(optimizer is ClientDependencyOptimizer withInternal) 
+            if(optimizer is BlockResourceExtractor withInternal) 
                 withInternal.ExtractOnlyEnableOptimization = false;
 
             Log.Add("4.1. Process optimizers");
