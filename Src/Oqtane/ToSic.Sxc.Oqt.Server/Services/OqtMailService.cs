@@ -2,6 +2,7 @@
 using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -26,24 +27,32 @@ namespace ToSic.Sxc.Oqt.Server.Services
             if (!settings.ContainsKey("SMTPHost") || settings["SMTPHost"] == "" 
                 || !settings.ContainsKey("SMTPPort") || settings["SMTPPort"] == "" 
                 || !settings.ContainsKey("SMTPSSL") || settings["SMTPSSL"] == "" 
-                || !settings.ContainsKey("SMTPSender") || settings["SMTPSender"] == "") return null;
+                || !settings.ContainsKey("SMTPSender") || settings["SMTPSender"] == "") 
+                throw new ConfigurationErrorsException("SMTP configuration problem. Some settings are missing. Please configure 'SMTP Settings' in 'Site Settings'.");
 
-            // construct SMTP Client
-            var client = new SmtpClient()
+            try
             {
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
-                Host = settings["SMTPHost"],
-                Port = int.Parse(settings["SMTPPort"]),
-                EnableSsl = bool.Parse(settings["SMTPSSL"])
-            };
+                // construct SMTP Client
+                var client = new SmtpClient()
+                {
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Host = settings["SMTPHost"],
+                    Port = int.Parse(settings["SMTPPort"]),
+                    EnableSsl = bool.Parse(settings["SMTPSSL"])
+                };
 
-            if (settings["SMTPUsername"] != "" && settings["SMTPPassword"] != "")
-            {
-                client.Credentials = new NetworkCredential(settings["SMTPUsername"], settings["SMTPPassword"]);
+                if (settings["SMTPUsername"] != "" && settings["SMTPPassword"] != "")
+                {
+                    client.Credentials = new NetworkCredential(settings["SMTPUsername"], settings["SMTPPassword"]);
+                }
+
+                return client;
             }
-
-            return client;
+            catch (Exception ex)
+            {
+                throw new ConfigurationErrorsException("SMTP configuration problem.", ex);
+            }
         }
 
         private Dictionary<string, string> GetSettings()
