@@ -95,8 +95,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Context\" />
-    <Folder Include="Data\" />
     <Folder Include="wwwroot\Modules\" />
   </ItemGroup>
 
