@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Oqt.Content
             License = "MIT",
             Dependencies = "ToSic.Sxc.Oqtane.Shared",
             // PermissionNames = "",
-            ServerManagerType = "ToSic.Sxc.Oqt.Server.Manager.SxcManager, ToSic.Sxc.Oqtane.Server",
+            ServerManagerType = "ToSic.Sxc.Oqt.Server.Installation.SxcManager, ToSic.Sxc.Oqtane.Server",
             // ControlTypeRoutes = "",
             // This must contain all versions with a SQL script and current/latest version
             // list versions with sql scripts in \ToSic.Sxc.Oqt.Server\Scripts\

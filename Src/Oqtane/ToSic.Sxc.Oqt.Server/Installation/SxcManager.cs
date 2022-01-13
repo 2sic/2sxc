@@ -2,10 +2,7 @@ using Oqtane.Infrastructure;
 using Oqtane.Models;
 using Oqtane.Repository;
 
-// TODO: @STV pls move to the installation folder and probably rename to "OqtSxcInstallManager"
-// - probably also needs to update name in the ModuleInfo or something?
-
-namespace ToSic.Sxc.Oqt.Server.Manager
+namespace ToSic.Sxc.Oqt.Server.Installation
 {
     /// <summary>
     /// This is probably some kind of installer-class.

@@ -1,7 +1,7 @@
 ﻿using Connect.Koi;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Sxc.Oqt.Server.Extensions.Koi;
+using ToSic.Sxc.Oqt.Server.Polymorphism;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp
 {

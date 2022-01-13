@@ -27,23 +27,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         private readonly IConfigManager _configManager;
 
 
-        //protected override ContextLanguageDto GetLanguage()
-        //{
-        //    return new ContextLanguageDto
-        //    {
-        //        Current = _oqtCulture.CurrentCultureCode,
-        //        Primary = _oqtCulture.DefaultCultureCode,
-        //        //All = new Dictionary<string, string>
-        //        //{
-        //        //    {WipConstants.DefaultLanguage, WipConstants.DefaultLanguageText}
-        //        //}
-        //        All = _oqtZoneMapper.CulturesWithState(_context.Site.Id, _context.Site.ZoneId)
-        //            .Where(c => c.Active)
-        //            .AsEnumerable()
-        //            .ToDictionary(l => l.Key, l => l.Text),
-        //    };
-        //}
-
         protected override ContextResourceWithApp GetSystem(Ctx flags)
         {
             var result = base.GetSystem(flags);
@@ -73,16 +56,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                 Id = (_context as IContextOfBlock)?.Page.Id ?? Eav.Constants.NullId,
             };
 
-        //protected override ContextEnableDto GetEnable()
-        //{
-        //    return new()
-        //    {
-        //        AppPermissions = true,
-        //        CodeEditor = true,
-        //        Query = true
-        //    };
-        //}
-
         protected override ContextAppDto GetApp(Ctx flags)
         {
             var appDto = base.GetApp(flags);
@@ -100,9 +73,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                 Oqtane.Shared.Constants.Version, // Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),
                 _configManager.GetInstallationId(),
                 Deps.SiteCtx.Site,
-                blockCtx?.Module.Id ?? 0, // TODO: V12 - REQUIRED FOR CALLBACK TO WORK
+                blockCtx?.Module.Id ?? 0,
                 Deps.AppToLaterInitialize,
-                true // TODO: V12 - must be set so installer works properly // Module.DesktopModule.ModuleName == "2sxc"
+                true
                 );
             return gsUrl;
         }

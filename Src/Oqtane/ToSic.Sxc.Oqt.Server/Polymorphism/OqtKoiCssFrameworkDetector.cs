@@ -1,14 +1,12 @@
 ﻿using System;
 using Connect.Koi.Detectors;
 
-// TODO: @STV - pls move to folder Polymorphism
-
-namespace ToSic.Sxc.Oqt.Server.Extensions.Koi
+namespace ToSic.Sxc.Oqt.Server.Polymorphism
 {
     public class OqtKoiCssFrameworkDetector : ICssFrameworkDetector
     {
         private string _bootstrapVersion;
-        
+
         public string AutoDetect()
         {
             return _bootstrapVersion ??= GetBootstrapVersion();
@@ -19,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.Extensions.Koi
             var oqtaneVersion = GetOqtaneVersion();
 
             // bs5 for 2.2
-            if (oqtaneVersion >= new Version(2,2))
+            if (oqtaneVersion >= new Version(2, 2))
                 return Connect.Koi.CssFrameworks.Bootstrap5;
 
             // bs4 for < 2.2
