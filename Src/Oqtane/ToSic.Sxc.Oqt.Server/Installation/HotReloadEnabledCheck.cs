@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Oqt.Server.Installation
                 // if hotReloadEnabled property exists do nothing
                 if (IISExpress.ContainsKey("hotReloadEnabled")) return false;
 
-                // add hotReloadEnabled: true
+                // add hotReloadEnabled: false
                 IISExpress.Property("environmentVariables").AddAfterSelf(new JProperty("hotReloadEnabled", false));
 
                 File.WriteAllText(launchSettingsFile, launchSettings.ToString());
