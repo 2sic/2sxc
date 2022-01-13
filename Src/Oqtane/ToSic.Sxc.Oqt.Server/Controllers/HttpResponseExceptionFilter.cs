@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             }
             else if (context.Exception is Exception anyException)
             {
-                context.Result = new ObjectResult(400)
+                context.Result = new ObjectResult(500)
                 {
                     StatusCode = 400,
                     Value = anyException,

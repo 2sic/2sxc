@@ -104,9 +104,6 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
                 PageProperties = PageOutput.GetOqtPagePropertyChangesList(renderResult.PageChanges)
             };
 
-            // Ensure that Hot Reload is not enabled or try to disable it.
-            if (HotReloadEnabledCheck.WarnIfHotReloadIsEnabled(out var oqtViewResultsDtoWarning3)) ret.ErrorMessage += oqtViewResultsDtoWarning3.ErrorMessage;
-
             return ret;
         }
 

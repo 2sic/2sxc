@@ -11,44 +11,27 @@ namespace ToSic.Sxc.Oqt.Server.Installation
       
         private static bool? _hotReloadEnabledCheckedAndError;
 
+        private static string errorMessage = "Warning: You must run Oqtane without Hot-Reload to install Apps. See https://r.2sxc.org/oqt-hr";
+
         internal static OqtViewResultsDto InstallationErrorResult;
 
-        internal static bool WarnIfHotReloadIsEnabled(out OqtViewResultsDto oqtViewResultsDto)
+        internal static void Check()
         {
             // Don't repeat if already checked
-            if(_hotReloadEnabledCheckedAndError.HasValue)
-            {
-                oqtViewResultsDto = InstallationErrorResult;
-                return _hotReloadEnabledCheckedAndError.Value;
-            }
-            
-            // First time, run all checks
-            var errorMessage = string.Empty;
+            if (_hotReloadEnabledCheckedAndError.HasValue)
+                if (_hotReloadEnabledCheckedAndError.Value)
+                    ThrowError();
+                else
+                    return;
 
             // Check if Hot Reload is Enabled.
             // When HotReloadEnabled is not false, special modules are loaded, so we try to find them.
             _hotReloadEnabledCheckedAndError = IsModuleLoaded("Microsoft.AspNetCore.Watch.BrowserRefresh.dll") || IsModuleLoaded("Microsoft.WebTools.BrowserLink.Net.dll");
             if (_hotReloadEnabledCheckedAndError.Value)
             {
-                var hasHotReloadDisabled = DisableHotReload();
-
-                errorMessage = "<strong>Warning:</strong> Hot Reload is enabled. There is issue with HotReload automatic browser refreshing that prevents 2sxc app templates to be installed. " +
-                    (hasHotReloadDisabled 
-                        ? "2sxc module just disabled HotReload in 'IIS Express' profile in 'Oqtane.Server\\Properties\\launchSettings.json'. "
-                        : "Please check that property 'hotReloadEnabled':false exists in 'IIS Express' profile in 'Oqtane.Server\\Properties\\launchSettings.json'. ") +
-                    "Ensure that 'IIS Express' profile is selected and run Oqtane.Server project again. " +
-                    "More info: <a href=\"https://azing.org/2sxc/r/YUm957D-\" target=\"_new\">Disable Hot Reload for IIS Express profile of Oqtane.Server project in Visual Studio 2022</a>, " +
-                    "<a href=\"https://azing.org/2sxc/r/VJEjD7bN\" target=\"_new\">Install 2sxc module in Oqtane Framework source code with Visual Studio 2022</a>.";
-
-                InstallationErrorResult = new OqtViewResultsDto
-                {
-                    ErrorMessage = errorMessage,
-                };
-            }
-
-            oqtViewResultsDto = InstallationErrorResult;
-            
-            return !string.IsNullOrEmpty(errorMessage);
+                AddHotReloadProperty();
+                ThrowError();
+            }          
         }
 
         private static bool IsModuleLoaded(string moduleName)
@@ -56,7 +39,7 @@ namespace ToSic.Sxc.Oqt.Server.Installation
             return Process.GetCurrentProcess().Modules.OfType<ProcessModule>().Any(m => m.ModuleName.Contains(moduleName));
         }
 
-        private static bool DisableHotReload()
+        private static bool AddHotReloadProperty()
         {
             var launchSettingsFile = Path.Combine(Directory.GetCurrentDirectory(), $"Properties\\launchSettings.json");
             if (!File.Exists(launchSettingsFile)) return false;
@@ -71,8 +54,8 @@ namespace ToSic.Sxc.Oqt.Server.Installation
                 // if hotReloadEnabled property exists do nothing
                 if (IISExpress.ContainsKey("hotReloadEnabled")) return false;
 
-                // add hotReloadEnabled: false
-                IISExpress.Property("environmentVariables").AddAfterSelf(new JProperty("hotReloadEnabled", false));
+                // add hotReloadEnabled: true
+                IISExpress.Property("environmentVariables").AddAfterSelf(new JProperty("hotReloadEnabled", true));
 
                 File.WriteAllText(launchSettingsFile, launchSettings.ToString());
 
@@ -82,6 +65,11 @@ namespace ToSic.Sxc.Oqt.Server.Installation
             {
                 return false;
             }           
+        }
+
+        private static void ThrowError()
+        {
+            throw new System.Exception(errorMessage);
         }
     }
 }

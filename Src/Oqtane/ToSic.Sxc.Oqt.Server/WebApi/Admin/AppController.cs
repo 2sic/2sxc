@@ -11,6 +11,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.App;
@@ -180,6 +181,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         public ImportResultDto Import(int zoneId)
         {
             Log.Add("import app start");
+
+            // Ensure that Hot Reload is not enabled or try to disable it.
+            HotReloadEnabledCheck.Check();
 
             var request = HttpContext.Request.Form;
 
