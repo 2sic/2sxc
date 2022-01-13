@@ -18,20 +18,18 @@ namespace ToSic.Sxc.Oqt.Server.Installation
         internal static void Check()
         {
             // Don't repeat if already checked
-            if (_hotReloadEnabledCheckedAndError.HasValue)
-                if (_hotReloadEnabledCheckedAndError.Value)
-                    ThrowError();
-                else
-                    return;
-
-            // Check if Hot Reload is Enabled.
-            // When HotReloadEnabled is not false, special modules are loaded, so we try to find them.
-            _hotReloadEnabledCheckedAndError = IsModuleLoaded("Microsoft.AspNetCore.Watch.BrowserRefresh.dll") || IsModuleLoaded("Microsoft.WebTools.BrowserLink.Net.dll");
-            if (_hotReloadEnabledCheckedAndError.Value)
+            if (!_hotReloadEnabledCheckedAndError.HasValue)
             {
-                AddHotReloadProperty();
-                ThrowError();
-            }          
+                // Check if Hot Reload is Enabled.
+                // When HotReloadEnabled is not false, special modules are loaded, so we try to find them.
+                _hotReloadEnabledCheckedAndError = IsModuleLoaded("Microsoft.AspNetCore.Watch.BrowserRefresh.dll");
+                if (_hotReloadEnabledCheckedAndError.Value) 
+                    AddHotReloadProperty();
+            }
+
+            if (_hotReloadEnabledCheckedAndError.Value)
+                throw new System.Exception(errorMessage);
+         
         }
 
         private static bool IsModuleLoaded(string moduleName)
@@ -65,11 +63,6 @@ namespace ToSic.Sxc.Oqt.Server.Installation
             {
                 return false;
             }           
-        }
-
-        private static void ThrowError()
-        {
-            throw new System.Exception(errorMessage);
         }
     }
 }
