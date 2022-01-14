@@ -8,6 +8,7 @@ using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Serialization;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.WebApi.ImportExport;
@@ -62,6 +63,7 @@ namespace ToSic.Sxc.WebApi.Views
                 HasQuery = view.QueryRaw != null,
                 Used = view.Entity.Parents().Count,
                 IsShared = view.IsShared,
+                EditInfo = new EditInfoDto(view.Entity),
                 Metadata = ser?.CreateListOfSubEntities(view.Metadata, SubEntitySerialization.AllTrue()),
                 Permissions = new HasPermissionsDto {Count = view.Entity.Metadata.Permissions.Count()},
             });
