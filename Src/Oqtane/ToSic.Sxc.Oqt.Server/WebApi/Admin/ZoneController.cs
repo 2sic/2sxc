@@ -8,6 +8,8 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Languages;
+using ToSic.Sxc.WebApi.PublicApi;
+using ToSic.Sxc.WebApi.Zone;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -23,27 +25,27 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
     // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
-    public class ZoneController : OqtStatefulControllerBase
+    public class ZoneController : OqtStatefulControllerBase, IZoneController
     {
-        private readonly LanguagesBackend _languagesBackend;
-        private readonly Lazy<SiteStateInitializer> _siteStateInitializerLazy;
         protected override string HistoryLogName => "Api.Zone";
 
-        public ZoneController(LanguagesBackend languagesBackend, Lazy<SiteStateInitializer> siteStateInitializerLazy)
+        public ZoneController(LanguagesBackend languagesBackend, Lazy<SiteStateInitializer> siteStateInitializerLazy, Lazy<ZoneBackend> zoneBackendLazy)
         {
             _languagesBackend = languagesBackend;
             _siteStateInitializerLazy = siteStateInitializerLazy;
+            _zoneBackendLazy = zoneBackendLazy;
         }
+        private readonly LanguagesBackend _languagesBackend;
+        private readonly Lazy<SiteStateInitializer> _siteStateInitializerLazy;
+        private readonly Lazy<ZoneBackend> _zoneBackendLazy;
 
+        /// <inheritdoc />
         [HttpGet]
         public IList<SiteLanguageDto> GetLanguages() =>
             _languagesBackend.Init(Log)
                 .GetLanguages(_siteStateInitializerLazy.Value.InitializedState.Alias.SiteId);
 
-        /// <summary>
-        /// Enable / disable a language in the EAV
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
         public void SwitchLanguage(string cultureCode, bool enable) =>
             _languagesBackend.Init(Log)
@@ -52,5 +54,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
                     cultureCode,
                     enable,
                     CultureInfo.GetCultureInfo(cultureCode).EnglishName);
+
+        /// <inheritdoc />
+        [HttpGet]
+        public SystemInfoSetDto GetSystemInfo() => _zoneBackendLazy.Value.Init(Log)
+            .GetSystemInfo(_siteStateInitializerLazy.Value.InitializedState.Alias.SiteId);
+
     }
 }

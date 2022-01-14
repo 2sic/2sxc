@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Documentation;
+﻿using System;
+using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Context
 {
@@ -24,6 +25,12 @@ namespace ToSic.Sxc.Context
         /// Please be aware that platform names may change with time - like Dnn was once DotNetNuke
         /// So to safely ensure you are detecting the right platform you should focus on the Type attribute. 
         /// </remarks>
-        string Name {get; }
+        string Name { get; }
+
+        /// <summary>
+        /// The platform version
+        /// </summary>
+        /// <remarks>Added in v13</remarks>
+        Version Version { get; }
     }
 }

@@ -18,6 +18,8 @@ namespace ToSic.Sxc.Run
             Fingerprint = fingerprint;
         }
         
+        // TODO: STV - the platform version can now be retrieved from IPlatform, pls refactor to use that
+
         public string LinkToRemoteRouter(RemoteDestinations destination, 
             string platform, string sysVersion, string sysGuid, 
             ISite site, int moduleId, IApp app, bool isContentApp)

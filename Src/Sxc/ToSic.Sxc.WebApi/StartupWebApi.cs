@@ -25,6 +25,7 @@ using ToSic.Sxc.WebApi.InPage;
 using ToSic.Sxc.WebApi.Languages;
 using ToSic.Sxc.WebApi.Save;
 using ToSic.Sxc.WebApi.Usage;
+using ToSic.Sxc.WebApi.Zone;
 
 namespace ToSic.Sxc.WebApi
 {
@@ -96,6 +97,9 @@ namespace ToSic.Sxc.WebApi
 
             // Adam shared code across the APIs
             services.TryAddTransient<AdamCode>();
+
+            // new v13
+            services.TryAddTransient<ZoneBackend>();
 
             return services;
         }
