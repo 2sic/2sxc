@@ -53,5 +53,11 @@ namespace ToSic.Sxc.Run
             return templateRoot;
         }
 
+        public override string GlobalTemplatesRoot(int zoneId, int appId)
+        {
+            var app = _dependencies.NewApp.InitNoData(new AppIdentity(zoneId, appId), Log);
+            return app.PhysicalPathGlobal;
+        }
+
     }
 }

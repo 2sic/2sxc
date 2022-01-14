@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 #endif
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Context;
+using ToSic.Eav.ImportExport;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
@@ -53,7 +54,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var contextZoneId = _zoneMapper.GetZoneId(_siteId);
             var currentApp = _cmsRuntime.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
-            var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
+            var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathGlobal, Log);
             var cultCount = _zoneMapper
                 .CulturesWithState(_siteId, currentApp.ZoneId)
                 .Count(c => c.Active);
@@ -71,7 +72,9 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 HasRazorTemplates = cms.Views.GetRazor().Any(),
                 HasTokenTemplates = cms.Views.GetToken().Any(),
                 FilesCount = zipExport.FileManager.AllFiles.Count(),
-                TransferableFilesCount = zipExport.FileManager.AllTransferableFiles.Count()
+                TransferableFilesCount = zipExport.FileManager.AllTransferableFiles.Count(),
+                GlobalFilesCount = zipExport.FileManagerGlobal.AllFiles.Count(),
+                TransferableGlobalFilesCount = zipExport.FileManagerGlobal.AllTransferableFiles.Count(),
             };
         }
 
@@ -83,7 +86,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var contextZoneId = _zoneMapper.GetZoneId(_siteId);
             var currentApp = _cmsRuntime.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
-            var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
+            var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathGlobal, Log);
             zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid);
 
             return true;
@@ -101,7 +104,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var contextZoneId = _zoneMapper.GetZoneId(_siteId);
             var currentApp = _cmsRuntime.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
-            var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, Log);
+            var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathGlobal, Log);
             var addOnWhenContainingContent = includeContentGroups ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm") : "";
 
             var fileName =
