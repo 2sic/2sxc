@@ -8,6 +8,7 @@ using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
 using EavApp = ToSic.Eav.Apps.App;
 
@@ -22,9 +23,12 @@ namespace ToSic.Sxc.Apps
     {
         #region DI Constructors
 
-        public App(AppDependencies dependencies) : base(dependencies, "App.SxcApp")
+        public App(AppDependencies dependencies, Lazy<TemplateHelpers> templateHelpersLazy) : base(dependencies, "App.SxcApp")
         {
+            _templateHelpersLazy = templateHelpersLazy;
         }
+
+        private readonly Lazy<TemplateHelpers> _templateHelpersLazy;
 
         public App PreInit(ISite site)
         {
@@ -128,6 +132,12 @@ namespace ToSic.Sxc.Apps
 
         /// <inheritdoc />
         public string Thumbnail => File.Exists(PhysicalPath + IconFile) ? Path + IconFile : null;
+
+        public string PathGlobal => _pathGlobal ?? (_pathGlobal = _templateHelpersLazy.Value.Init(this, Log).AppPathRoot(true, PathTypes.PhysRelative));
+        private string _pathGlobal;
+
+        public string PhysicalPathGlobal => _physicalPathGlobal ?? (_physicalPathGlobal = _templateHelpersLazy.Value.Init(this, Log).AppPathRoot(true, PathTypes.PhysFull));
+        private string _physicalPathGlobal;
 
         #endregion
 
