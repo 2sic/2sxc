@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-// Unsure if used! maybe remove??? 
-
-// TODO: @STV - find out if this is in use / needed, if yes, move to Plumbing folder, otherwise delete
-
+// Code is required to razor runtime compilation.
+// Required for functioning of ToSic.Sxc.Razor.RazorEngine.RenderTemplate() 
 [assembly: ProvideApplicationPartFactory(typeof(ToSic.Sxc.Oqt.Server.Plumbing.MyApplicationPartFactory))]
 namespace ToSic.Sxc.Oqt.Server.Plumbing
 {
