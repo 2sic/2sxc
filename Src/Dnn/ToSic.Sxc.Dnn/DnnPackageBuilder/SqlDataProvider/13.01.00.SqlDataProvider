@@ -18,3 +18,8 @@ END
 COMMIT TRANSACTION SexyContentUpdate;
 --ROLLBACK TRANSACTION SexyContentUpdate;
 GO
+
+/* TargetTypes Metadata for ... */
+UPDATE [dbo].[ToSIC_EAV_AssignmentObjectTypes] SET [Name] = 'Scope' ,[Description] = 'Metadata for Scope' WHERE [AssignmentObjectTypeID] = 7
+UPDATE [dbo].[ToSIC_EAV_AssignmentObjectTypes] SET [Name] = 'Dimension' ,[Description] = 'Metadata for Dimension' WHERE [AssignmentObjectTypeID] = 8
+GO
