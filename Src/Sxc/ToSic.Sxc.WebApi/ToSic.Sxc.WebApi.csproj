@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
     <RootNamespace>ToSic.Sxc.WebApi</RootNamespace>
-    <Version>13.00.01</Version>
+    <Version>13.01.00</Version>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

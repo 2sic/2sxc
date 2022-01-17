@@ -41,7 +41,7 @@ namespace ToSic.Sxc
 
         public class Installation
         {
-            public const string CurrentReleaseVersion = "13.00.01";
+            public const string CurrentReleaseVersion = "13.01.00";
 
             // This list is just used to run code-upgrades
             // So we only need the versions which do have code upgrades - which is very uncommon
