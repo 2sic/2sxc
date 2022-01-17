@@ -27,7 +27,10 @@ namespace ToSic.Sxc.Services
         /// History
         /// * Added in 2sxc 13
         /// </remarks>
-        IToolbarBuilder Default(string noParamOrder = Eav.Parameters.Protector, string ui = "");
+        IToolbarBuilder Default(
+            string noParamOrder = Eav.Parameters.Protector,
+            string ui = null
+        );
 
         /// <summary>
         /// Build a Toolbar configuration using the `empty` toolbar to use with `@Edit.Toolbar`
@@ -41,7 +44,10 @@ namespace ToSic.Sxc.Services
         /// History
         /// * Added in 2sxc 13
         /// </remarks>
-        IToolbarBuilder Empty(string noParamOrder = Eav.Parameters.Protector, string ui = "");
+        IToolbarBuilder Empty(
+            string noParamOrder = Eav.Parameters.Protector,
+            string ui = null
+        );
 
         /// <summary>
         /// Build an **empty** Toolbar with a Metadata button.
@@ -50,11 +56,20 @@ namespace ToSic.Sxc.Services
         /// </summary>
         /// <param name="target">The target object which should receive metadata. Must support <see cref="ToSic.Eav.Metadata.IHasMetadata"/> </param>
         /// <param name="contentTypes">Name of **one** content-type for which to generate the button. In future _may_ also allow more content-types</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
+        /// <param name="parameters">Parameters for the metadata-command</param>
         /// <returns></returns>
         /// <remarks>
         /// History
         /// * Added in 2sxc 13
         /// </remarks>
-        IToolbarBuilder Metadata(object target, string contentTypes);
+        IToolbarBuilder Metadata(
+            object target,
+            string contentTypes,
+            string noParamOrder = Eav.Parameters.Protector,
+            string ui = null,
+            string parameters = null
+        );
     }
 }

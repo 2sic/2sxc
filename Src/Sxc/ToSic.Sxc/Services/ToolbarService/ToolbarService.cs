@@ -9,15 +9,21 @@ namespace ToSic.Sxc.Services
     {
         public IToolbarBuilder Default(
             string noParamOrder = Eav.Parameters.Protector,
-            string ui = "") 
-            => NewBuilder(noParamOrder, ToolbarRuleToolbar.Default, ui);
+            string ui = null
+        ) => NewBuilder(noParamOrder, ToolbarRuleToolbar.Default, ui);
 
         public IToolbarBuilder Empty(
             string noParamOrder = Eav.Parameters.Protector,
-            string ui = "") 
-            => NewBuilder(noParamOrder, ToolbarRuleToolbar.Empty, ui);
+            string ui = null
+        ) => NewBuilder(noParamOrder, ToolbarRuleToolbar.Empty, ui);
 
-        public IToolbarBuilder Metadata(object target, string contentTypes) => Empty().Metadata(target, contentTypes);
+        public IToolbarBuilder Metadata(
+            object target,
+            string contentTypes,
+            string noParamOrder = Eav.Parameters.Protector,
+            string ui = null,
+            string parameters = null
+        ) => Empty().Metadata(target, contentTypes, ui: ui, parameters: parameters);
 
         private IToolbarBuilder NewBuilder(string noParamOrder, string toolbarTemplate, string ui)
         {

@@ -47,14 +47,21 @@ namespace ToSic.Sxc.Edit
         /// </summary>
         /// <param name="target">The target object which should receive metadata. Must support <see cref="ToSic.Eav.Metadata.IHasMetadata"/> </param>
         /// <param name="contentTypes">Name of **one** content-type for which to generate the button. In future _may_ also allow more content-types</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
+        /// <param name="parameters">Parameters for the metadata-command</param>
         /// <returns></returns>
         /// <remarks>
         /// History
         /// * Added in 2sxc 13
         /// </remarks>
         IToolbarBuilder Metadata(
-            object target, 
-            string contentTypes);
+            object target,
+            string contentTypes,
+            string noParamOrder = Eav.Parameters.Protector,
+            string ui = null,
+            string parameters = null
+        );
 
         /// <summary>
         /// Add a `settings` rule to configure what the toolbar should look like. See [](xref:JsCode.Toolbars.Settings)
@@ -66,7 +73,7 @@ namespace ToSic.Sxc.Edit
         /// <param name="classes"></param>
         /// <param name="autoAddMore"></param>
         /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
-        /// <param name="parameters"></param>
+        /// <param name="parameters">Parameters for the command - doesn't really have an effect on Settings, but included for consistency</param>
         /// <returns></returns>
         /// <remarks>
         /// History
@@ -79,8 +86,9 @@ namespace ToSic.Sxc.Edit
             string follow = null,
             string classes = null,
             string autoAddMore = null,
-            string ui = "", 
-            string parameters = "");
+            string ui = null,
+            string parameters = null
+        );
 
         /// <summary>
         /// Converts the configuration to a json-string according to the JS-Toolbar specs.

@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 {
     public class ToolbarRuleMetadata: ToolbarRule
     {
-        public ToolbarRuleMetadata(object target, string contentTypes) : base("metadata", operation: '+')
+        public ToolbarRuleMetadata(object target, string contentTypes, string ui = null, string parameters = null) : base("metadata", operation: '+', ui: ui, parameters: parameters)
         {
             _target = target;
             _contentTypes = contentTypes;
