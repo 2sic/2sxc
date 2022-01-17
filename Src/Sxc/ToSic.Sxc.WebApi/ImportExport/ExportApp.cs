@@ -5,8 +5,10 @@ using System.Net.Http;
 #if NETSTANDARD
 using Microsoft.AspNetCore.Mvc;
 #endif
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Context;
+using ToSic.Eav.Data.Shared;
 using ToSic.Eav.ImportExport;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
@@ -47,7 +49,6 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
 #endregion
 
-
         public AppExportInfoDto GetAppInfo(int appId, int zoneId)
         {
             Log.Add($"get app info for app:{appId} and zone:{zoneId}");
@@ -66,15 +67,15 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 Name = currentApp.Name,
                 Guid = currentApp.AppGuid,
                 Version = currentApp.VersionSafe(),
-                EntitiesCount = cms.Entities.All.Count(),
+                EntitiesCount = cms.Entities.All.Where(e => !e.HasAncestor()).Count(),
                 LanguagesCount = cultCount,
                 TemplatesCount = cms.Views.GetAll().Count(),
                 HasRazorTemplates = cms.Views.GetRazor().Any(),
                 HasTokenTemplates = cms.Views.GetToken().Any(),
                 FilesCount = zipExport.FileManager.AllFiles.Count() // PortalFilesCount
-                    + zipExport.FileManagerGlobal.AllFiles.Count(), // GlobalFilesCount
+                    + (currentApp.AppState.HasParentApp() ? 0 : zipExport.FileManagerGlobal.AllFiles.Count()), // GlobalFilesCount
                 TransferableFilesCount = zipExport.FileManager.AllTransferableFiles.Count() // TransferablePortalFilesCount
-                    + zipExport.FileManagerGlobal.AllTransferableFiles.Count(), // TransferableGlobalFilesCount
+                    + (currentApp.AppState.HasParentApp() ? 0 : zipExport.FileManagerGlobal.AllTransferableFiles.Count()), // TransferableGlobalFilesCount
             };
         }
 
