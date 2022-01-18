@@ -1,4 +1,5 @@
-﻿using static ToSic.Razor.Blade.Tag;
+﻿using ToSic.Eav;
+using static ToSic.Razor.Blade.Tag;
 
 namespace ToSic.Sxc.Web.WebApi.System
 {
@@ -40,10 +41,12 @@ namespace ToSic.Sxc.Web.WebApi.System
                             + Li("ping the system <a href='isalive'>isalive</a>")
                             + "</ol>"
 
-                            + H2("Global Types")
+                            + H2("Global Data &amp; Types")
                             + "<ol>"
-                            + Li("global types in cache: " + A(globTypes).Href(globTypes))
-                            + Li("global types loading log: " + A(globTypesLog).Href(globTypesLog))
+                            + Li(A("Global Types in cache").Href(globTypes))
+                            + Li(A("Global Types loading log").Href(globTypesLog))
+                            + Li(A("Global logs").Href("logs?key=" + LogNames.LogHistoryGlobalTypes))
+                            + Li(A("Licenses &amp; Features").Href("details?view=licenses"))
                             + "</ol>"
 
                             + H2("Manual links to access debug information")

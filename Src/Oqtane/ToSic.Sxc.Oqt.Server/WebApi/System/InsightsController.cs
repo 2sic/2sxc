@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
     {
         private readonly Lazy<Insights> _lazyInsights;
 
-        public InsightsController(Lazy<Insights> lazyInsights) : base()
+        public InsightsController(Lazy<Insights> lazyInsights)
         {
             _lazyInsights = lazyInsights;
         }
@@ -63,6 +63,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
         #endregion
 
         private ContentResult Wrap(string contents) => base.Content(contents, "text/html");
+
+        #region New with fewer endpoints
+
+        [HttpGet]
+        public ContentResult Details(string view) => Wrap(Insights.Details(view));
+
+        #endregion
 
 
         #region Help and Basics

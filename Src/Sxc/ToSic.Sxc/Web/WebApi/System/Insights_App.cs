@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Web.WebApi.System
                         app.Name,
                         app.Folder,
                         $"{A("stats").Href($"stats?appid={app.Id}")} | {A("load log").Href($"loadlog?appid={app.Id}")} | {A("types").Href($"types?appid={app.Id}")}",
-                        Details(
+                        Tag.Details(
                             Summary("show actions"),
                             A("purge").Href($"purge?appid={app.Id}").ToString()
                         ),

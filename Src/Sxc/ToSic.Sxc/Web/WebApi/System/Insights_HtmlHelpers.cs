@@ -69,7 +69,7 @@ ol li ol li:: before {
 </style>";
 
         private static string HoverLabel(string label, string text, string classes)
-            => Tag.Span(label).Class(classes).Title(text).ToString();// + $"<span class='{classes}' title='{text}'>{label}</span>";
+            => Tag.Span(label).Class(classes).Title(text).ToString();
 
         private static string HtmlEncode(string text)
         {
@@ -88,6 +88,8 @@ ol li ol li:: before {
 
             return result.ToString();
         }
+
+        private static string EmojiTrueFalse(bool value) => HtmlEncode(value ? "✅" : "⛔");
 
     }
 }
