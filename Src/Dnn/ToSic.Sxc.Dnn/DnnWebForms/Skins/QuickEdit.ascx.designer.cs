@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ToSic.SexyContent.DnnWebForms.Skins {
+namespace ToSic.Sxc.Dnn.DnnWebForms.Skins {
     
     
     public partial class QuickEdit {
