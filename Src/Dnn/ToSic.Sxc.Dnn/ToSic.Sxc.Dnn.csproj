@@ -340,6 +340,7 @@ robocopy $(ProjectDir)Extensions\Imageflow\bin $(Dev2sxcDnnRoot)bin *.dll
 robocopy /mir "$(ProjectDir)..\..\Data\.data\ " "%25BuildTarget%25\.data\ "
 robocopy /mir "$(ProjectDir)..\..\Data\.databeta\ " "%25BuildTarget%25\.databeta\ "
 robocopy /mir "$(ProjectDir)..\..\Data\.data-custom\ " "%25BuildTarget%25\.data-custom\ "
+robocopy /mir "$(ProjectDir)..\..\Data\assets\ " "%25BuildTarget%25\assets\ "
 
 @REM Add the DNN specific content-types
 robocopy /s "$(ProjectDir)..\..\Data-Dnn\.data\ " "%25BuildTarget%25\.data\ "
