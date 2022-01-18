@@ -72,6 +72,7 @@ XCOPY "..\..\..\Dependencies\RazorBlade\Debug\netstandard2.0\ToSic.Razor.pdb" "%
 robocopy /mir "..\..\Data\.data\ " "%BuildTarget%\.data\ "
 robocopy /mir "..\..\Data\.databeta\ " "%BuildTarget%\.databeta\ "
 robocopy /mir "..\..\Data\.data-custom\ " "%BuildTarget%\.data-custom\ "
+robocopy /mir "..\..\Data\assets\ " "%BuildTarget%\assets\ "
 
 @Echo(
 @Echo Copy 2sxc JS stuff
