@@ -135,11 +135,11 @@ namespace ToSic.Sxc.Apps
         /// <inheritdoc />
         public string Thumbnail => File.Exists(PhysicalPath + "/" + AppConstants.AppIconFile) 
             ? Path + "/" + AppConstants.AppIconFile
-            // TODO: @stv - I just added this but didn't test yet 2022-01-18 pls test and remove comment
             : File.Exists(PhysicalPathGlobal + "/" + AppConstants.AppIconFile)
                 ? PathGlobal + "/" + AppConstants.AppIconFile
-                // TODO: @STV - pls check for Primary App here and use the /assets/logo-primary.png' from the 2sxc folder here
-                : null;
+                : AppGuid == Eav.Constants.PrimaryAppGuid // check for Primary App here and use the /assets/app-primary.png' from the 2sxc folder here
+                    ? _templateHelpersLazy.Value.Init(this, Log).AssetsLocation(AppConstants.AppPrimaryIconFile, PathTypes.Link) 
+                    : null;
 
         public string PathGlobal => _pathGlobal ?? (_pathGlobal = _templateHelpersLazy.Value.Init(this, Log).AppPathRoot(true, PathTypes.PhysRelative));
         private string _pathGlobal;

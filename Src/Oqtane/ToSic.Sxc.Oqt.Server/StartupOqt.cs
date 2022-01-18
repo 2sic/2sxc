@@ -91,6 +91,7 @@ namespace ToSic.Sxc.Oqt.Server
 
             var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
             globalConfig.GlobalFolder = Path.Combine(HostEnvironment.ContentRootPath, "wwwroot\\Modules\\ToSic.Sxc");
+            globalConfig.AssetsFolder = "~/Modules/ToSic.Sxc/assets/";
             globalConfig.GlobalSiteFolder = "todo - global apps not implemented yet";
 
 

@@ -168,5 +168,30 @@ namespace ToSic.Sxc.Engines
             AppPathTokenDetected(iconInConfig)
                 ? appPath + iconInConfig.Substring(AppConstants.AppPathPlaceholder.Length)
                 : iconInConfig;
+
+        /// <summary>
+        /// Returns the location where module global folder web assets are stored
+        /// </summary>
+        public string AssetsLocation(string path, PathTypes pathType)
+        {
+            var wrapLog = Log.Call<string>($"{pathType}");
+            var assetPath = Path.Combine(_globalConfiguration.AssetsFolder.Backslash(), path);
+            string assetLocation;
+            switch (pathType)
+            {
+                case PathTypes.Link:
+                    assetLocation = assetPath.ToAbsolutePathForwardSlash();
+                    break;
+                case PathTypes.PhysRelative:
+                    assetLocation = assetPath.TrimStart('~').Backslash();
+                    break;
+                case PathTypes.PhysFull:
+                    assetLocation = ServerPaths.FullAppPath(assetPath).Backslash();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(pathType), pathType, null);
+            }
+            return wrapLog("ok", assetLocation);
+        }
     }
 }

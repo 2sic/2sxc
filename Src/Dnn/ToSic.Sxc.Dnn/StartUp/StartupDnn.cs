@@ -59,6 +59,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             var globalConfig = transientSp.Build<IGlobalConfiguration>();
 
             globalConfig.GlobalFolder = HostingEnvironment.MapPath(DnnConstants.SysFolderRootVirtual);
+            globalConfig.AssetsFolder = DnnConstants.SysFolderRootVirtual + "assets/";
             globalConfig.GlobalSiteFolder = "~/Portals/_default/";
 
             // Load features from configuration
