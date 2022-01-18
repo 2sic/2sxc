@@ -8,7 +8,7 @@ namespace ToSic.Sxc.WebApi.Assets
     {
         private string ResolveAppPath(int appId, bool global, bool allowFullAccess)
         {
-            var thisApp = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), Log);
+            var thisApp = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(AppConstants.AutoLookupZone, appId), Log);
 
             if (global && !allowFullAccess)
                 throw new NotSupportedException("only host user may access global files");

@@ -135,7 +135,7 @@ namespace ToSic.Sxc.WebApi.Assets
         private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(AssetFromTemplateDto assetFromTemplateDto)
         {
             var wrapLog = Log.Call<AssetEditor>($"a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
-            var thisApp = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, assetFromTemplateDto.AppId), Log);
+            var thisApp = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(AppConstants.AutoLookupZone, assetFromTemplateDto.AppId), Log);
             var assetEditor = _assetEditorLazy.Value.Init(thisApp, assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0, Log);
             assetEditor.EnsureUserMayEditAssetOrThrow(assetEditor.InternalPath);
             return wrapLog(null, assetEditor);
