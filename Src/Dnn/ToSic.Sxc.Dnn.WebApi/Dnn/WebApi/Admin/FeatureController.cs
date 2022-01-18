@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// </remarks>
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public IEnumerable<Feature> List(bool reload = false) => 
+        public IEnumerable<FeatureState> List(bool reload = false) => 
             GetService<FeaturesBackend>().Init(Log).GetAll(reload);
 
         /// <summary>

@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// </summary>
         [HttpGet]
         [Authorize(Roles = RoleNames.Admin)]
-        public IEnumerable<Feature> List(bool reload = false) => _featuresBackend.Init(Log).GetAll(reload);
+        public IEnumerable<FeatureState> List(bool reload = false) => _featuresBackend.Init(Log).GetAll(reload);
 
         /// <summary>
         /// Used to be GET System/ManageFeaturesUrl

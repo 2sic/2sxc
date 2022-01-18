@@ -32,7 +32,7 @@ namespace ToSic.Sxc.WebApi.Features
 
         #endregion
 
-        public IEnumerable<Feature> GetAll(bool reload)
+        public IEnumerable<FeatureState> GetAll(bool reload)
         {
             if (reload) _systemLoaderLazy.Value.Init(Log).ReloadFeatures();
             return _features.Value.All;
