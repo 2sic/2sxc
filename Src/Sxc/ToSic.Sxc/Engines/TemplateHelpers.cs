@@ -174,8 +174,8 @@ namespace ToSic.Sxc.Engines
         /// </summary>
         public string AssetsLocation(string path, PathTypes pathType)
         {
-            var wrapLog = Log.Call<string>($"{pathType}");
-            var assetPath = Path.Combine(_globalConfiguration.AssetsFolder.Backslash(), path);
+            var wrapLog = Log.Call<string>($"path:{path},pathType:{pathType}");
+            var assetPath = Path.Combine(_globalConfiguration.AssetsVirtualUrl.Backslash(), path);
             string assetLocation;
             switch (pathType)
             {
