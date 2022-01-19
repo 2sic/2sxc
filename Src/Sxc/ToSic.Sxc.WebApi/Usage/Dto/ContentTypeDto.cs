@@ -10,7 +10,7 @@ namespace ToSic.Sxc.WebApi.Usage.Dto
 
         public ContentTypeDto(IContentType type)
         {
-            Id = type.ContentTypeId;
+            Id = type.Id;
             Name = type.Name;
             StaticName = type.NameId;
         }

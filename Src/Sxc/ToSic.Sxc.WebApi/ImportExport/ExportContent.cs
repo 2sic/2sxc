@@ -59,7 +59,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             {
                 ContentTypes = contentTypes.Select(c => new ExportPartsContentTypesDto
                 {
-                    Id = c.ContentTypeId,
+                    Id = c.Id,
                     Name = c.Name,
                     StaticName = c.NameId,
                     Templates = templates.Where(t => t.ContentType == c.NameId)
@@ -69,7 +69,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                             Name = t.Name
                         }),
                     Entities = entities
-                        .Where(e => e.Type.ContentTypeId == c.ContentTypeId)
+                        .Where(e => e.Type.Id == c.Id)
                         .Select(e => new ExportPartsEntitiesDto
                         {
                             Title = e.GetBestTitle(),

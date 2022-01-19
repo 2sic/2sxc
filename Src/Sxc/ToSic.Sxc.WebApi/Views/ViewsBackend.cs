@@ -83,7 +83,7 @@ namespace ToSic.Sxc.WebApi.Views
             var found = allCTs.FirstOrDefault(ct => ct.NameId == staticName);
             return new ViewContentTypeDto
             {
-                StaticName = staticName, Id = found?.ContentTypeId ?? 0, Name = found == null ? "no content type" : found.Name,
+                StaticName = staticName, Id = found?.Id ?? 0, Name = found == null ? "no content type" : found.Name,
                 DemoId = maybeEntity?.EntityId ?? 0,
                 DemoTitle = maybeEntity?.GetBestTitle() ?? ""
             };
