@@ -8,20 +8,20 @@ namespace ToSic.Sxc.Web.JsContext
 {
     public class JsContextEnvironment
     {
-        public int WebsiteId;       // aka PortalId
-        public string WebsiteUrl;
-        public int PageId;          // aka TabId
-        public string PageUrl;
+        public int WebsiteId { get; }       // aka PortalId
+        public string WebsiteUrl { get; }
+        public int PageId { get; }          // aka TabId
+        public string PageUrl { get; }
         // ReSharper disable once InconsistentNaming
-        public IEnumerable<KeyValuePair<string, string>> parameters;
+        public IEnumerable<KeyValuePair<string, string>> parameters { get; }
 
-        public int InstanceId;      // aka ModuleId
+        public int InstanceId { get; }      // aka ModuleId
 
-        public string SxcVersion;
+        public string SxcVersion { get; }
 
-        public string SxcRootUrl;
+        public string SxcRootUrl { get; }
 
-        public bool IsEditable;
+        public bool IsEditable { get; }
 
         public JsContextEnvironment(string systemRootUrl, IContextOfBlock ctx)
         {

@@ -8,12 +8,12 @@ namespace ToSic.Sxc.Web.JsContext
 {
     public class JsContextLanguage
     {
-        private readonly Lazy<IZoneMapper> _zoneMapperLazy;
-        public string Current;
-        public string Primary;
-        public IEnumerable<ClientInfoLanguage> All;
+        public string Current { get; private set; }
+        public string Primary { get; private set; }
+        public IEnumerable<ClientInfoLanguage> All { get; private set; }
 
         public JsContextLanguage(Lazy<IZoneMapper> zoneMapperLazy) => _zoneMapperLazy = zoneMapperLazy;
+        private readonly Lazy<IZoneMapper> _zoneMapperLazy;
 
         public JsContextLanguage Init(ISite site, int zoneId)
         {
