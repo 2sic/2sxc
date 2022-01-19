@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Http.ModelBinding.Binders;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.ImportExport.Json.V1;
@@ -154,7 +155,8 @@ namespace ToSic.Sxc.WebApi.Cms
                 Log.Add("Found an entity with the auto-lookup marker");
                 // try to find metadata for this
                 var mdFor = header.For;
-                var type = _mdTargetTypes.GetId(mdFor.Target);
+                // #TargetTypeIdInsteadOfTarget
+                var type = mdFor.TargetType != 0 ? mdFor.TargetType : _mdTargetTypes.GetId(mdFor.Target);
                 var mds = mdFor.Guid != null
                     ? appState.GetMetadata(type, mdFor.Guid.Value, header.ContentTypeName)
                     : mdFor.Number != null

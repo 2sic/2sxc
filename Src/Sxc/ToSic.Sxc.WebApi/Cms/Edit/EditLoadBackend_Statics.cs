@@ -46,7 +46,11 @@ namespace ToSic.Sxc.WebApi.Cms
                 if (ent.For != null)
                 {
                     var targetId = ent.For;
-                    ent.For.Title = appState.FindTargetTitle(jsonSerializer.MetadataTargets.GetId(targetId.Target),
+                    // #TargetTypeIdInsteadOfTarget
+                    var targetType = targetId.TargetType != 0
+                        ? targetId.TargetType
+                        : jsonSerializer.MetadataTargets.GetId(targetId.Target);
+                    ent.For.Title = appState.FindTargetTitle(targetType,
                         targetId.String ?? targetId.Guid?.ToString() ?? targetId.Number?.ToString());
                 }
             }
