@@ -1,16 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Net;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.Configuration.Licenses;
-using ToSic.Eav.Context;
-using ToSic.Sxc.Context;
-using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Run;
-using ToSic.Sxc.WebApi.ImportExport;
 using ToSic.Sxc.WebApi.Licenses;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
