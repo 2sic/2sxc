@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using ToSic.Eav.Configuration.Licenses;
 using static ToSic.Razor.Blade.Tag;
 
 namespace ToSic.Sxc.Web.WebApi.System
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.Web.WebApi.System
                       + H2("Licenses")
                       + P("These are the licenses as loaded by the system");
 
-            var rows = Eav.Configuration.Licenses.Licenses.All.Select(l => RowFields(
+            var rows = new LicenseService().All.Select(l => RowFields(
                 EmojiTrueFalse(l.Enabled),
                 l.Title,
                 l.LicenseKey,
