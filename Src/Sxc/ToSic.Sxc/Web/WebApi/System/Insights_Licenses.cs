@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Web.WebApi.System
                       + H2("Licenses")
                       + P("These are the licenses as loaded by the system");
 
-            var rows = new LicenseService().All.Select(l => RowFields(
+            var rows = _licenseServiceLazy.Value.All.Select(l => RowFields(
                 EmojiTrueFalse(l.Enabled),
                 l.Title,
                 l.LicenseKey,

@@ -23,6 +23,7 @@ using ToSic.Sxc.WebApi.Features;
 using ToSic.Sxc.WebApi.ImportExport;
 using ToSic.Sxc.WebApi.InPage;
 using ToSic.Sxc.WebApi.Languages;
+using ToSic.Sxc.WebApi.Licenses;
 using ToSic.Sxc.WebApi.Save;
 using ToSic.Sxc.WebApi.Usage;
 using ToSic.Sxc.WebApi.Zone;
@@ -58,6 +59,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<AppViewPickerBackend>();
             services.TryAddTransient<ContentBlockBackend>();
             services.TryAddTransient<FeaturesBackend>();
+            services.TryAddTransient<LicenseBackend>();
             services.TryAddTransient<UsageBackend>();
             services.TryAddTransient<LanguagesBackend>();
             services.TryAddTransient<QueryBackend>();
