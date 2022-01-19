@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Web.WebApi.System
             Log.Add($"debug app attributes for {appId} and {type}");
             var typ = AppState(appId).GetContentType(type);
 
-            var msg = "" + H1($"Attributes for {typ.Name} ({typ.StaticName}) in {appId}\n");
+            var msg = "" + H1($"Attributes for {typ.Name} ({typ.NameId}) in {appId}\n");
             try
             {
                 Log.Add("getting content-type stats");

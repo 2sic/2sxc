@@ -12,7 +12,7 @@ namespace ToSic.Sxc.WebApi.Usage.Dto
         {
             Id = type.ContentTypeId;
             Name = type.Name;
-            StaticName = type.StaticName;
+            StaticName = type.NameId;
         }
     }
 }

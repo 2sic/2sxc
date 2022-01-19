@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Web.WebApi.System
 
             var typ = appRead.ContentTypes.Get(type);
 
-            var msg = "" + H1($"Entities for {type} ({typ?.Name}/{typ?.StaticName}) in {appId}\n");
+            var msg = "" + H1($"Entities for {type} ({typ?.Name}/{typ?.NameId}) in {appId}\n");
             try
             {
                 Log.Add("getting content-type stats");

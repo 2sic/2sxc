@@ -80,7 +80,7 @@ namespace ToSic.Sxc.WebApi.Views
         /// <returns></returns>
         private static ViewContentTypeDto TypeSpecs(IEnumerable<IContentType> allCTs, string staticName, IEntity maybeEntity)
         {
-            var found = allCTs.FirstOrDefault(ct => ct.StaticName == staticName);
+            var found = allCTs.FirstOrDefault(ct => ct.NameId == staticName);
             return new ViewContentTypeDto
             {
                 StaticName = staticName, Id = found?.ContentTypeId ?? 0, Name = found == null ? "no content type" : found.Name,

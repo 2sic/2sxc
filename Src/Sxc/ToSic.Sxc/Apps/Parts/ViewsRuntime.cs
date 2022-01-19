@@ -119,10 +119,10 @@ namespace ToSic.Sxc.Apps
 
             var compatibleTemplates = GetAll().Where(t => t.UseForList || !isList);
             compatibleTemplates = compatibleTemplates
-                .Where(t => blockConfiguration.Content.All(c => c == null) || blockConfiguration.Content.First(e => e != null).Type.StaticName == t.ContentType)
-                .Where(t => blockConfiguration.Presentation.All(c => c == null) || blockConfiguration.Presentation.First(e => e != null).Type.StaticName == t.PresentationType)
-                .Where(t => blockConfiguration.Header.All(c => c == null) || blockConfiguration.Header.First(e => e != null).Type.StaticName == t.HeaderType)
-                .Where(t => blockConfiguration.HeaderPresentation.All(c => c == null) || blockConfiguration.HeaderPresentation.First(e => e != null).Type.StaticName == t.HeaderPresentationType);
+                .Where(t => blockConfiguration.Content.All(c => c == null) || blockConfiguration.Content.First(e => e != null).Type.NameId == t.ContentType)
+                .Where(t => blockConfiguration.Presentation.All(c => c == null) || blockConfiguration.Presentation.First(e => e != null).Type.NameId == t.PresentationType)
+                .Where(t => blockConfiguration.Header.All(c => c == null) || blockConfiguration.Header.First(e => e != null).Type.NameId == t.HeaderType)
+                .Where(t => blockConfiguration.HeaderPresentation.All(c => c == null) || blockConfiguration.HeaderPresentation.First(e => e != null).Type.NameId == t.HeaderPresentationType);
 
             return compatibleTemplates;
         }
@@ -135,7 +135,7 @@ namespace ToSic.Sxc.Apps
             var visible = templates.Where(t => !t.IsHidden).ToList();
 
             return Parent.ContentTypes.All.OfScope(Scopes.Default/* Settings.AttributeSetScope*/) 
-                .Where(ct => templates.Any(t => t.ContentType == ct.StaticName)) // must exist in at least 1 template
+                .Where(ct => templates.Any(t => t.ContentType == ct.NameId)) // must exist in at least 1 template
                 .OrderBy(ct => ct.Name)
                 .Select(ct =>
                 {
@@ -144,9 +144,9 @@ namespace ToSic.Sxc.Apps
                     if (TemplateHelpers.AppPathTokenDetected(thumbnail))
                         thumbnail = TemplateHelpers.AppPathTokenReplace(thumbnail, appPath);
                     return new ContentTypeUiInfo {
-                        StaticName = ct.StaticName,
+                        StaticName = ct.NameId,
                         Name = ct.Name,
-                        IsHidden = visible.All(t => t.ContentType != ct.StaticName),   // must check if *any* template is visible, otherwise tell the UI that it's hidden
+                        IsHidden = visible.All(t => t.ContentType != ct.NameId),   // must check if *any* template is visible, otherwise tell the UI that it's hidden
                         Thumbnail = thumbnail,
                         Properties = _dataToFormatLight.Convert(metadata),
                         IsDefault = ct.Metadata.HasType(Decorators.IsDefaultDecorator),

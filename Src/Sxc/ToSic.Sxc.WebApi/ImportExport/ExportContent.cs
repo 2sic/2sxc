@@ -61,8 +61,8 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 {
                     Id = c.ContentTypeId,
                     Name = c.Name,
-                    StaticName = c.StaticName,
-                    Templates = templates.Where(t => t.ContentType == c.StaticName)
+                    StaticName = c.NameId,
+                    Templates = templates.Where(t => t.ContentType == c.NameId)
                         .Select(t => new IdNameDto
                         {
                             Id = t.Id,

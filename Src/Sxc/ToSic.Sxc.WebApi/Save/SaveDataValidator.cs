@@ -157,8 +157,8 @@ namespace ToSic.Sxc.WebApi.Save
 
         private void CompareTypes(int count, IEntityLight originalEntity, IEntityLight newEntity)
         {
-            var wrapLog = Log.Call($"ids:{newEntity.Type.StaticName}/{originalEntity.Type.StaticName}");
-            if(originalEntity.Type.StaticName != newEntity.Type.StaticName)
+            var wrapLog = Log.Call($"ids:{newEntity.Type.NameId}/{originalEntity.Type.NameId}");
+            if(originalEntity.Type.NameId != newEntity.Type.NameId)
                 Add($"entity type mismatch on {count}");
             wrapLog("done");
         }
