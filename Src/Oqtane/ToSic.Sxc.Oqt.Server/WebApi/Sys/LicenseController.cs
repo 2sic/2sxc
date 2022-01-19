@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
     [Route(WebApiConstants.ApiRoot3 + "/sys/[controller]/[action]")]
 
     // Beta routes
-    [Route(WebApiConstants.WebApiStateRoot + "/sys/install/[action]")]
+    [Route(WebApiConstants.WebApiStateRoot + "/sys/[controller]/[action]")]
     public class LicenseController : OqtStatefulControllerBase
     {
         private readonly Lazy<LicenseBackend> _licenseBackendLazy;
