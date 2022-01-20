@@ -34,21 +34,15 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
         protected override ContextResourceWithApp GetSystem(Ctx flags)
         {
             var result = base.GetSystem(flags);
-            //return new ContextSiteDto
-            //{
             result.Url = VirtualPathUtility.ToAbsolute("~/");
-            //};
             return result;
         }
 
         protected override ContextResourceWithApp GetSite(Ctx flags)
         {
             var result = base.GetSite(flags);
-            //return new ContextSiteDto
-            //{
             result.Id = _portal.PortalId;
             result.Url = "//" + _portal.PortalAlias.HTTPAlias + "/";
-            //};
             return result;
         }
 

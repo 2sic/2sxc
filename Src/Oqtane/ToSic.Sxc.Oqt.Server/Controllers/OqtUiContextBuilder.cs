@@ -31,10 +31,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         {
             var result = base.GetSystem(flags);
 
-            //return new WebResourceDto
-            //{
             result.Url = _linkPaths.AsSeenFromTheDomainRoot("~/");
-            //};
             return result;
         }
 
@@ -42,16 +39,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         {
             var result = base.GetSite(flags);
 
-            //return new WebResourceDto
-            //{
             result.Id = _context.Site.Id;
             result.Url = "//" + _context.Site.UrlRoot;
-            //};
             return result;
         }
 
         protected override WebResourceDto GetPage() =>
-            new WebResourceDto
+            new()
             {
                 Id = (_context as IContextOfBlock)?.Page.Id ?? Eav.Constants.NullId,
             };
@@ -70,7 +64,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             var gsUrl = _remoteRouterLink.LinkToRemoteRouter(
                 RemoteDestinations.GettingStarted,
                 "Oqt",
-                Oqtane.Shared.Constants.Version, // Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),
+                Oqtane.Shared.Constants.Version, 
                 _configManager.GetInstallationId(),
                 Deps.SiteCtx.Site,
                 blockCtx?.Module.Id ?? 0,

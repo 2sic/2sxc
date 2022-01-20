@@ -1,13 +1,17 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Languages;
 using ToSic.Eav.Context;
+using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Web.JsContext;
 
 namespace ToSic.Sxc.WebApi.Context
 {
-    public class UiContextBuilderBase: IUiContextBuilder
+    public class UiContextBuilderBase: HasLog, IUiContextBuilder
     {
 
         #region Dependencies 
@@ -18,13 +22,15 @@ namespace ToSic.Sxc.WebApi.Context
             public JsContextLanguage JsCtx { get; }
             public Apps.IApp AppToLaterInitialize { get; }
             public IAppStates AppStates { get; }
+            public Lazy<AppUserLanguageCheck> AppUserLanguageCheck { get; }
 
-            public Dependencies(IContextOfSite siteCtx, JsContextLanguage jsCtx, Apps.App appToLaterInitialize, IAppStates appStates)
+            public Dependencies(IContextOfSite siteCtx, JsContextLanguage jsCtx, Apps.App appToLaterInitialize, IAppStates appStates, Lazy<AppUserLanguageCheck> appUserLanguageCheck)
             {
                 SiteCtx = siteCtx;
                 JsCtx = jsCtx;
                 AppToLaterInitialize = appToLaterInitialize;
                 AppStates = appStates;
+                AppUserLanguageCheck = appUserLanguageCheck;
             }
         }
 
@@ -32,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Context
 
         #region Constructor / DI
 
-        protected UiContextBuilderBase(Dependencies dependencies)
+        protected UiContextBuilderBase(Dependencies dependencies): base(Constants.SxcLogName + ".UiCtx")
         {
             Deps = dependencies;
             _appToLaterInitialize = dependencies.AppToLaterInitialize;
@@ -42,12 +48,15 @@ namespace ToSic.Sxc.WebApi.Context
         protected int ZoneId => Deps.SiteCtx.Site.ZoneId;
         protected IApp App;
         private readonly Apps.IApp _appToLaterInitialize;
+        protected AppState AppState;
 
         #endregion
 
-        public IUiContextBuilder InitApp(IAppIdentity app)
+        public IUiContextBuilder InitApp(AppState appState, ILog parentLog)
         {
-            App = app != null ? (_appToLaterInitialize as Apps.App)?.InitNoData(app, null) : null;
+            Log.LinkTo(parentLog);
+            AppState = appState;
+            App = appState != null ? (_appToLaterInitialize as Apps.App)?.InitNoData(appState, null) : null;
             return this;
         }
 
@@ -74,12 +83,26 @@ namespace ToSic.Sxc.WebApi.Context
         {
             if (ZoneId == 0) return null;
             var language = Deps.JsCtx.Init(Deps.SiteCtx.Site, ZoneId);
+
+            // New V13 - with try/catch as it's still very new
+            List<SiteLanguageDto> converted = null;
+            try
+            {
+                var langs = Deps.AppUserLanguageCheck.Value.Init(Log).LanguagesWithPermissions(AppState);
+                converted = langs.Select(l => new SiteLanguageDto
+                    { Code = l.Code, Culture = l.Culture, IsAllowed = l.IsAllowed, IsEnabled = l.IsEnabled }).ToList();
+            }
+            catch (Exception ex)
+            {
+                Log.Exception(ex);
+            }
+
             return new ContextLanguageDto
             {
                 Current = language.Current,
                 Primary = language.Primary,
                 All = language.All.ToDictionary(l => l.key.ToLowerInvariant(), l => l.name),
-                All2 = language.All.ToDictionary(l => l.key.ToLowerInvariant(), l => new ContextLanguageDetailsDto { Name = l.name, AllowEdit = true }),
+                List = converted,
             };
         }
 

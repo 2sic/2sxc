@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.WebApi.Context
 {
@@ -8,9 +9,8 @@ namespace ToSic.Sxc.WebApi.Context
         /// <summary>
         /// Initialize the context builder
         /// </summary>
-        /// <param name="app"></param>
         /// <returns></returns>
-        IUiContextBuilder InitApp(IAppIdentity app);
+        IUiContextBuilder InitApp(AppState appState, ILog parentLog);
 
         /// <summary>
         /// Get the context based on the situation

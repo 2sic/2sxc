@@ -34,7 +34,7 @@ namespace ToSic.Sxc.WebApi.Admin
                     throw HttpException.PermissionDenied(error);
             }
 
-            var cb = _uiContextBuilder.InitApp(appContext?.AppState);
+            var cb = _uiContextBuilder.InitApp(appContext?.AppState, Log);
 
             return new DialogContextStandalone
             {
