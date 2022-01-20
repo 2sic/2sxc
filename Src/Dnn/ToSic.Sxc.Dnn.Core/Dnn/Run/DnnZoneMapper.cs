@@ -77,20 +77,23 @@ namespace ToSic.Sxc.Dnn.Run
         }
 
         /// <inheritdoc />
-        public override List<TempTempCulture> CulturesWithState(ISite site)
+        public override List<ISiteLanguageState> CulturesWithState(ISite site)
         {
-            // note: 
+            if (_supportedCultures != null) return _supportedCultures;
+
             var availableEavLanguages = AppStates.Languages(site.ZoneId, true);
             var defaultLanguageCode = site.DefaultCultureCode;
 
-            return (from c in LocaleController.Instance.GetLocales(site.Id)
-                    select new TempTempCulture(
-                        c.Value.Code,
-                        c.Value.Text,
-                        availableEavLanguages.Any(a => a.Active && a.Matches(c.Value.Code)))
-                )
-                .OrderByDescending(c => c.Key == defaultLanguageCode)
-                .ThenBy(c => c.Key).ToList();
+            return _supportedCultures = LocaleController.Instance.GetLocales(site.Id)
+                .Select(c => new SiteLanguageState(
+                    c.Value.Code, 
+                    c.Value.Text,
+                    availableEavLanguages.Any(a => a.Active && a.Matches(c.Value.Code))))
+                .OrderByDescending(c => c.Code == defaultLanguageCode)
+                .ThenBy(c => c.Code)
+                .Cast<ISiteLanguageState>()
+                .ToList();
         }
+        private List<ISiteLanguageState> _supportedCultures;
     }
 }

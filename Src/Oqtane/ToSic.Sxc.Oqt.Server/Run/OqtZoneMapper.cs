@@ -88,13 +88,13 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return found != null ? _serviceProvider.Build<OqtSite>().Init(found) : null;
         }
 
-        public override List<TempTempCulture> CulturesWithState(ISite site)
+        public override List<ISiteLanguageState> CulturesWithState(ISite site)
         {
             if (_supportedCultures != null) return _supportedCultures;
             var availableEavLanguages = AppStates.Languages(site.ZoneId, true);
             _supportedCultures = _oqtCulture.GetSupportedCultures(site.Id, availableEavLanguages);
             return _supportedCultures;
         }
-        private List<TempTempCulture> _supportedCultures;
+        private List<ISiteLanguageState> _supportedCultures;
     }
 }

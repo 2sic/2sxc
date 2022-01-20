@@ -128,12 +128,12 @@ namespace ToSic.Sxc.Dnn.Run
                         return;
 
                     // Get Title value of Entity in current language
-                    var titleValue = titleItem.Title[dimension.Key].ToString();
+                    var titleValue = titleItem.Title[dimension.Code].ToString();
 
                     // Find module for given Culture
                     var moduleByCulture = moduleController.GetModuleByCulture(originalModule.ModuleID,
                         originalModule.TabID, block.Context.Site.Id,
-                        DotNetNuke.Services.Localization.LocaleController.Instance.GetLocale(dimension.Key));
+                        DotNetNuke.Services.Localization.LocaleController.Instance.GetLocale(dimension.Code));
 
                     // Break if no title module found
                     if (moduleByCulture == null || titleValue == null)

@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using Oqtane.Infrastructure;
 using Oqtane.Repository;
-using ToSic.Eav.Data;
 using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Context
@@ -31,21 +30,25 @@ namespace ToSic.Sxc.Oqt.Server.Context
 
         public string CurrentCultureCode => MapTwoLetterCulture(CultureInfo.CurrentCulture.Name).ToLowerInvariant();
 
-        public List<TempTempCulture> GetSupportedCultures(int siteId, List<DimensionDefinition>  availableEavLanguages)
+        public List<ISiteLanguageState> GetSupportedCultures(int siteId, List<Eav.Data.DimensionDefinition>  availableEavLanguages)
         {
             var cultures = new List<string>(new[] { DefaultCultureCode });
             cultures.AddRange(_languageRepository.Value.GetLanguages(siteId).Select(language => language.Code));
 
             // List of localizations enabled in Oqtane site.
-            var siteCultures = cultures.Select(c => CultureInfo.GetCultureInfo(c))
-                .Select(c => new TempTempCulture(
+            var siteCultures = cultures
+                .Select(CultureInfo.GetCultureInfo)
+                .Select(c => new SiteLanguageState(
                     c.Name.ToLowerInvariant(), 
                     c.EnglishName, 
                     availableEavLanguages.Any(a => a.Active && a.Matches(c.Name))
                     ))
                 .ToList();
             
-            return siteCultures.OrderByDescending(c => c.Key == DefaultLanguageCode(siteId)).ToList();
+            return siteCultures
+                .OrderByDescending(c => c.Code == DefaultLanguageCode(siteId))
+                .Cast<ISiteLanguageState>()
+                .ToList();
         }
 
         public static void SetCulture(string culture)

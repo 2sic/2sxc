@@ -21,8 +21,8 @@ namespace ToSic.Sxc.Web.JsContext
             Primary = site.DefaultCultureCode;
             All = _zoneMapperLazy.Value
                 .CulturesWithState(site)
-                .Where(c => c.Active)
-                .Select(c => new ClientInfoLanguage { key = c.Key.ToLowerInvariant(), name = c.Text });
+                .Where(c => c.IsEnabled)
+                .Select(c => new ClientInfoLanguage { key = c.Code.ToLowerInvariant(), name = c.Culture });
             return this;
         }
     }

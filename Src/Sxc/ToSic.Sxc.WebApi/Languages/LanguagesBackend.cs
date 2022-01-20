@@ -29,7 +29,7 @@ namespace ToSic.Sxc.WebApi.Languages
             var callLog = Log.Call();
             // ReSharper disable once PossibleInvalidOperationException
             var cultures = _zoneMapper.CulturesWithState(_site)
-                .Select(c => new SiteLanguageDto { Code = c.Key, Culture = c.Text, IsEnabled = c.Active })
+                .Select(c => new SiteLanguageDto { Code = c.Code, Culture = c.Culture, IsEnabled = c.IsEnabled })
                 .ToList();
 
             callLog("found:" + cultures.Count);
