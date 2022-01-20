@@ -88,11 +88,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return found != null ? _serviceProvider.Build<OqtSite>().Init(found) : null;
         }
 
-        public override List<TempTempCulture> CulturesWithState(int tenantId, int zoneId)
+        public override List<TempTempCulture> CulturesWithState(int siteId, int zoneId)
         {
             if (_supportedCultures != null) return _supportedCultures;
-            var availableEavLanguages = AppStates.Languages(zoneId, true); // new ZoneRuntime().Init(zoneId, Log).Languages(true);
-            _supportedCultures = _oqtCulture.GetSupportedCultures(tenantId, availableEavLanguages);
+            var availableEavLanguages = AppStates.Languages(zoneId, true);
+            _supportedCultures = _oqtCulture.GetSupportedCultures(siteId, availableEavLanguages);
             return _supportedCultures;
         }
         private List<TempTempCulture> _supportedCultures;

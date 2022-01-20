@@ -122,7 +122,7 @@ namespace ToSic.Sxc.WebApi.Cms
             result.Features = FeaturesHelpers.FeatureListWithPermissionCheck(_features, permCheck).ToList();
 
             // Attach context, but only the minimum needed for the UI
-            result.Context = _contextBuilder.SetZoneAndApp(appIdentity.ZoneId, context.AppState)
+            result.Context = _contextBuilder.InitApp(context.AppState)
                 .Get(Ctx.AppBasic | Ctx.Language | Ctx.Site | Ctx.System, CtxEnable.FormulaSave);
 
             try

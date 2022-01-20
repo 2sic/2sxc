@@ -3,6 +3,7 @@ using Oqtane.Shared;
 using System;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
@@ -17,28 +18,24 @@ namespace ToSic.Sxc.Oqt.Server.Run
     internal class OqtModuleUpdater: HasLog<IPlatformModuleUpdater>, IPlatformModuleUpdater
     {
         private readonly SettingsHelper _settingsHelper;
-        private readonly OqtZoneMapper _zoneMapper;
-        private readonly IModuleRepository _moduleRepository;
         private readonly IPageModuleRepository _pageModuleRepository;
         private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
         private readonly IAppStates _appStates;
+        private readonly ISite _site;
 
         /// <summary>
         /// Empty constructor for DI
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public OqtModuleUpdater(SettingsHelper settingsHelper, 
-            OqtZoneMapper zoneMapper, 
-            IModuleRepository moduleRepository,
+        public OqtModuleUpdater(SettingsHelper settingsHelper,
             IPageModuleRepository pageModuleRepository,
-            Lazy<CmsRuntime> lazyCmsRuntime, IAppStates appStates) : base($"{OqtConstants.OqtLogPrefix}.MapA2I")
+            Lazy<CmsRuntime> lazyCmsRuntime, IAppStates appStates, ISite site) : base($"{OqtConstants.OqtLogPrefix}.MapA2I")
         {
             _settingsHelper = settingsHelper;
-            _zoneMapper = zoneMapper.Init(Log) as OqtZoneMapper;
-            _moduleRepository = moduleRepository;
             _pageModuleRepository = pageModuleRepository;
             _lazyCmsRuntime = lazyCmsRuntime;
             _appStates = appStates;
+            _site = site;
         }
 
         public void SetAppId(IModule instance, int? appId)
@@ -49,22 +46,18 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             // ToDo: Should throw exception if a real BlockConfiguration exists
 
-            // Need module instance to get siteId.
-            var module = _moduleRepository.GetModule(instance.Id);
-            var zoneId = _zoneMapper.Init(Log).GetZoneId(module.SiteId);
-
             if (appId == Eav.Constants.AppIdEmpty || !appId.HasValue)
                 UpdateInstanceSetting(instance.Id, Settings.ModuleSettingApp, null, Log);
             else
             {
-                var appName = _appStates.AppIdentifier(zoneId, appId.Value);//  State.Zones[zoneId].Apps[appId.Value];
+                var appName = _appStates.AppIdentifier(_site.ZoneId, appId.Value);
                 UpdateInstanceSetting(instance.Id, Settings.ModuleSettingApp, appName, Log);
             }
 
             // Change to 1. available template if app has been set
             if (appId.HasValue)
             {
-                var appIdentity = new AppIdentity(zoneId, appId.Value);
+                var appIdentity = new AppIdentity(_site.ZoneId, appId.Value);
                 var cms = _lazyCmsRuntime.Value.Init(appIdentity, true, Log);
                 var templateGuid = cms.Views.GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
                 if (templateGuid.HasValue) SetPreview(instance.Id, templateGuid.Value);

@@ -9,7 +9,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data.Shared;
-using ToSic.Eav.ImportExport;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
@@ -22,42 +21,41 @@ namespace ToSic.Sxc.WebApi.ImportExport
 {
     public class ExportApp: HasLog
     {
+        #region Constructor / DI
 
-#region Constructor / DI
-
-        public ExportApp(IZoneMapper zoneMapper, ZipExport zipExport, CmsRuntime cmsRuntime) : base("Bck.Export")
+        public ExportApp(IZoneMapper zoneMapper, ZipExport zipExport, CmsRuntime cmsRuntime, ISite site, IUser user) : base("Bck.Export")
         {
             _zoneMapper = zoneMapper;
             _zipExport = zipExport;
             _cmsRuntime = cmsRuntime;
+            _site = site;
+            _user = user;
         }
 
         private readonly IZoneMapper _zoneMapper;
         private readonly ZipExport _zipExport;
         private readonly CmsRuntime _cmsRuntime;
-        private IUser _user;
-        private int _siteId;
+        private readonly ISite _site;
+        private readonly IUser _user;
 
-        public ExportApp Init(int tenantId, IUser user, ILog parentLog)
+        public ExportApp Init(ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            _siteId = tenantId;
-            _user = user;
             _zoneMapper.Init(Log);
             return this;
         }
 
-#endregion
+        #endregion
 
         public AppExportInfoDto GetAppInfo(int appId, int zoneId)
         {
             Log.Add($"get app info for app:{appId} and zone:{zoneId}");
-            var contextZoneId = _zoneMapper.GetZoneId(_siteId);
+            var contextZoneId = _site.ZoneId;
             var currentApp = _cmsRuntime.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
             var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathGlobal, Log);
             var cultCount = _zoneMapper
-                .CulturesWithState(_siteId, currentApp.ZoneId)
+                .CulturesWithState(_site.Id, currentApp.ZoneId)
                 .Count(c => c.Active);
 
             var cms = _cmsRuntime.Init(currentApp, true, Log);
@@ -84,7 +82,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             Log.Add($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
             SecurityHelpers.ThrowIfNotAdmin(_user); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
-            var contextZoneId = _zoneMapper.GetZoneId(_siteId);
+            var contextZoneId = _site.ZoneId;
             var currentApp = _cmsRuntime.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
             var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathGlobal, Log);
@@ -102,7 +100,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             Log.Add($"export app z#{zoneId}, a#{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
             SecurityHelpers.ThrowIfNotAdmin(_user); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
-            var contextZoneId = _zoneMapper.GetZoneId(_siteId);
+            var contextZoneId = _site.ZoneId;
             var currentApp = _cmsRuntime.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
             var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathGlobal, Log);

@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Context;
@@ -11,31 +12,34 @@ namespace ToSic.Sxc.WebApi.Zone
             IAppStates appStates, 
             IFingerprint fingerprint,
             IZoneMapper zoneMapper,
-            IPlatform platform
+            IPlatform platform,
+            ISite site
             ) : base("Bck.Zones")
         {
             _appStates = appStates;
             _fingerprint = fingerprint;
             _zoneMapper = zoneMapper;
             _platform = platform;
+            _site = site;
         }
         private readonly IAppStates _appStates;
         private readonly IFingerprint _fingerprint;
         private readonly IZoneMapper _zoneMapper;
         private readonly IPlatform _platform;
+        private readonly ISite _site;
 
-        public SystemInfoSetDto GetSystemInfo(int siteId)
+        public SystemInfoSetDto GetSystemInfo()
         {
-            var wrapLog = Log.Call<SystemInfoSetDto>($"{siteId}");
+            var wrapLog = Log.Call<SystemInfoSetDto>($"{_site.Id}");
 
-            var zoneId = _zoneMapper.GetZoneId(siteId);
+            var zoneId = _site.ZoneId;
 
             var siteStats = new SiteStatsDto
             {
-                SiteId = siteId,
-                ZoneId = zoneId, 
+                SiteId = _site.Id,
+                ZoneId = _site.ZoneId, 
                 Apps = _appStates.Apps(zoneId).Count,
-                Languages = _zoneMapper.CulturesWithState(siteId, zoneId).Count, 
+                Languages = _zoneMapper.CulturesWithState(_site.Id, _site.ZoneId).Count, 
             };
 
             var sysInfo = new SystemInfoDto

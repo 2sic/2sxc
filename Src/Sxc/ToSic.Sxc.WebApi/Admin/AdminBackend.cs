@@ -25,7 +25,7 @@ namespace ToSic.Sxc.WebApi.Admin
             if (appId < 0) appId = Eav.Constants.AppIdEmpty;
 
             var appContext = appId != Eav.Constants.AppIdEmpty ? _ctxResolver.BlockOrApp(appId) : null;
-            var context = appContext ?? _ctxResolver.Site();
+
             // if we have an appid (we don't have it in an install-new-apps-scenario) check permissions
             if (appContext != null)
             {
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.WebApi.Admin
                     throw HttpException.PermissionDenied(error);
             }
 
-            var cb = _uiContextBuilder.SetZoneAndApp(context.Site.ZoneId, appContext?.AppState);
+            var cb = _uiContextBuilder.InitApp(appContext?.AppState);
 
             return new DialogContextStandalone
             {

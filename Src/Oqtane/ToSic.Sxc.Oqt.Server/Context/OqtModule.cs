@@ -5,11 +5,10 @@ using Oqtane.Repository;
 using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Integration;
-using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Context
@@ -17,22 +16,20 @@ namespace ToSic.Sxc.Oqt.Server.Context
     public class OqtModule: Module<Module>
     {
         private readonly SettingsHelper _settingsHelper;
-        private readonly Lazy<OqtZoneMapper> _zoneMapperLazy;
         private readonly IModuleRepository _moduleRepository;
         private readonly IAppStates _appStates;
         private readonly Lazy<AppFinder> _appFinderLazy;
-        private IZoneMapper ZoneMapper => _zoneMapper ??= _zoneMapperLazy.Value.Init(Log);
-        private IZoneMapper _zoneMapper;
+        private readonly ISite _site;
         private Dictionary<string, string> _settings;
 
-        public OqtModule(SettingsHelper settingsHelper, Lazy<OqtZoneMapper> zoneMapperLazy, IModuleRepository moduleRepository, 
-            IAppStates appStates, Lazy<AppFinder> appFinderLazy) : base ($"{OqtConstants.OqtLogPrefix}.Cont")
+        public OqtModule(SettingsHelper settingsHelper, IModuleRepository moduleRepository, 
+            IAppStates appStates, Lazy<AppFinder> appFinderLazy, ISite site) : base ($"{OqtConstants.OqtLogPrefix}.Cont")
         {
             _settingsHelper = settingsHelper;
-            _zoneMapperLazy = zoneMapperLazy;
             _moduleRepository = moduleRepository;
             _appStates = appStates;
             _appFinderLazy = appFinderLazy;
+            _site = site;
         }
 
         public new OqtModule Init(Module module, ILog parentLog)
@@ -84,7 +81,8 @@ namespace ToSic.Sxc.Oqt.Server.Context
                 if (_blockIdentifier != null) return _blockIdentifier;
 
                 // find ZoneId, AppId and prepare settings for next values
-                var zoneId = ZoneMapper.GetZoneId(UnwrappedContents.SiteId);
+                // Todo: #CleanZoneIdUse - verify this works
+                var zoneId = _site.ZoneId; // ZoneMapper.GetZoneId(UnwrappedContents.SiteId);
                 var appId = GetInstanceAppId(zoneId); //appId ?? TestIds.Blog.App;
                 var block = Guid.Empty;
                 if (_settings.ContainsKey(Settings.ModuleSettingContentGroup))

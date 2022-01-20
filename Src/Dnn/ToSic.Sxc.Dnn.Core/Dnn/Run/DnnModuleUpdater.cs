@@ -46,13 +46,13 @@ namespace ToSic.Sxc.Dnn.Run
             // ToDo: Should throw exception if a real BlockConfiguration exists
 
             var module = (instance as Module<ModuleInfo>).UnwrappedContents;
-            var zoneId = _zoneMapper.GetZoneId(module.OwnerPortalID);
+            var zoneId = _zoneMapper.GetZoneId(module.OwnerPortalID);   // Important: OwnerPortal
 
             if (appId == Eav.Constants.AppIdEmpty || !appId.HasValue)
                 UpdateInstanceSettingForAllLanguages(instance.Id, Settings.ModuleSettingApp, null, Log);
             else
             {
-                var appName = _appStates.AppIdentifier(zoneId, appId.Value); // State.Zones[zoneId].Apps[appId.Value];
+                var appName = _appStates.AppIdentifier(zoneId, appId.Value);
                 UpdateInstanceSettingForAllLanguages(instance.Id, Settings.ModuleSettingApp, appName, Log);
             }
 

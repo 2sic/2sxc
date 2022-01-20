@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.WebApi.Languages;
 using ToSic.Sxc.WebApi.Zone;
 

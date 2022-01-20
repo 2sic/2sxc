@@ -3,6 +3,7 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Languages;
@@ -26,21 +27,15 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
         /// <inheritdoc />
         [HttpGet]
-        public IList<SiteLanguageDto> GetLanguages() =>
-            LanguagesBackend().GetLanguages(PortalSettings.PortalId);
+        public IList<SiteLanguageDto> GetLanguages() => LanguagesBackend().GetLanguages();
 
         /// <inheritdoc />
         [HttpGet]
         public void SwitchLanguage(string cultureCode, bool enable) =>
-            LanguagesBackend().Toggle(
-                PortalSettings.PortalId,
-                cultureCode,
-                enable,
-                LocaleController.Instance.GetLocale(cultureCode).Text);
+            LanguagesBackend().Toggle(cultureCode, enable, LocaleController.Instance.GetLocale(cultureCode).Text);
 
         /// <inheritdoc />
         [HttpGet]
-        public SystemInfoSetDto GetSystemInfo() => GetService<ZoneBackend>().Init(Log)
-            .GetSystemInfo(PortalSettings.PortalId);
+        public SystemInfoSetDto GetSystemInfo() => GetService<ZoneBackend>().Init(Log).GetSystemInfo();
     }
 }

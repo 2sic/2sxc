@@ -31,8 +31,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
         public ExportPartsOverviewDto Get(int zoneId, int appId, string scope)
-            => GetService<ExportContent>().Init(PortalSettings.PortalId, new DnnUser(), Log)
-                .PreExportSummary(appId, zoneId, scope);
+            => GetService<ExportContent>().Init(Log).PreExportSummary(appId, zoneId, scope);
 
         /// <summary>
         /// Used to be GET ImportExport/ExportContent
@@ -46,7 +45,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         public HttpResponseMessage Export(int zoneId, int appId, string contentTypeIdsString,
             string entityIdsString, string templateIdsString)
-            => GetService<ExportContent>().Init(PortalSettings.PortalId, new DnnUser(), Log)
+            => GetService<ExportContent>().Init(Log)
                 .Export(appId, zoneId, contentTypeIdsString, entityIdsString, templateIdsString);
 
 

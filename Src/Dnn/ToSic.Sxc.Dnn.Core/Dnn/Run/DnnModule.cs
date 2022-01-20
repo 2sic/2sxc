@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Dnn.Run
                 if (UnwrappedContents == null) return null;
 
                 // find ZoneId, AppId and prepare settings for next values
-                var zoneId = _zoneMapperLazy.Value.Init(Log).GetZoneId(UnwrappedContents.OwnerPortalID);
+                var zoneId = _zoneMapperLazy.Value.Init(Log).GetZoneId(UnwrappedContents.OwnerPortalID); // Important: OwnerPortal
                 var appId = GetInstanceAppId(zoneId);
                 var settings = UnwrappedContents.ModuleSettings;
 

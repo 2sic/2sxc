@@ -15,36 +15,29 @@ namespace ToSic.Sxc.WebApi.ImportExport
     /// <summary>
     /// This object will ensure that an app is reset to the state it was in when the app.xml was last exported
     /// </summary>
-    public class ResetApp: HasLog
+    public class ResetApp: HasLog<ResetApp>
     {
-
         #region Constructor / DI
 
-        public ResetApp(IZoneMapper zoneMapper, 
-            Lazy<XmlImportWithFiles> xmlImportWithFilesLazy,
+        public ResetApp(Lazy<XmlImportWithFiles> xmlImportWithFilesLazy,
             ImpExpHelpers impExpHelpers,
-            CmsZones cmsZones) : base("Bck.Export")
+            CmsZones cmsZones,
+            ISite site,
+            IUser user
+            ) : base("Bck.Export")
         {
-            _zoneMapper = zoneMapper;
             _xmlImportWithFilesLazy = xmlImportWithFilesLazy;
             _impExpHelpers = impExpHelpers;
             _cmsZones = cmsZones;
+            _site = site;
+            _user = user;
         }
 
-        private readonly IZoneMapper _zoneMapper;
         private readonly Lazy<XmlImportWithFiles> _xmlImportWithFilesLazy;
         private readonly ImpExpHelpers _impExpHelpers;
         private readonly CmsZones _cmsZones;
-        private IUser _user;
-        private int _siteId;
-        public ResetApp Init(int siteId, IUser user, ILog parentLog)
-        {
-            Log.LinkTo(parentLog);
-            _zoneMapper.Init(Log);
-            _user = user;
-            _siteId = siteId;
-            return this;
-        }
+        private readonly ISite _site;
+        private readonly IUser _user;
 
         #endregion
 
@@ -55,7 +48,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
             SecurityHelpers.ThrowIfNotAdmin(_user);
 
-            var contextZoneId = _zoneMapper.GetZoneId(_siteId);
+            var contextZoneId = _site.ZoneId;
             var currentApp = _impExpHelpers.Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
             // 1. Verify the file exists before we flush

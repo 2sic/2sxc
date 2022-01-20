@@ -1,10 +1,7 @@
-﻿using System;
-using System.Web;
+﻿using System.Web;
 using DotNetNuke.Common;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
@@ -20,29 +17,19 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
     {
         #region Constructor / DI
 
-        private readonly Lazy<IZoneMapper> _zoneMapper;
         private readonly IContextResolver _ctxResolver;
         private readonly WipRemoteRouterLink _remoteRouterLink;
         private readonly PortalSettings _portal = PortalSettings.Current;
 
         private ModuleInfo Module => (_ctxResolver.BlockOrNull()?.Module as DnnModule)?.UnwrappedContents;
 
-        public DnnUiContextBuilder(Lazy<IZoneMapper> zoneMapper, IContextResolver ctxResolver, WipRemoteRouterLink remoteRouterLink, Dependencies deps) : base(deps)
+        public DnnUiContextBuilder(IContextResolver ctxResolver, WipRemoteRouterLink remoteRouterLink, Dependencies deps) : base(deps)
         {
-            _zoneMapper = zoneMapper;
             _ctxResolver = ctxResolver;
             _remoteRouterLink = remoteRouterLink;
         }
 
         #endregion
-
-        public override IUiContextBuilder SetZoneAndApp(int zoneId, IAppIdentity app)
-        {
-            // check if we're providing context for missing app
-            // in this case we must find the zone based on the portals.
-            if (zoneId == 0 && app == null) zoneId = _zoneMapper.Value.Init(null).GetZoneId(_portal.PortalId);
-            return base.SetZoneAndApp(zoneId, app);
-        }
 
         protected override ContextResourceWithApp GetSystem(Ctx flags)
         {

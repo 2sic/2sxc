@@ -8,15 +8,13 @@ namespace ToSic.Sxc.WebApi.Context
         /// <summary>
         /// Initialize the context builder
         /// </summary>
-        /// <param name="zoneId"></param>
         /// <param name="app"></param>
         /// <returns></returns>
-        IUiContextBuilder SetZoneAndApp(int zoneId, IAppIdentity app);
+        IUiContextBuilder InitApp(IAppIdentity app);
 
         /// <summary>
         /// Get the context based on the situation
         /// </summary>
-        /// <param name="flags"></param>
         /// <returns></returns>
         ContextDto Get(Ctx flags, CtxEnable enableFlags);
     }

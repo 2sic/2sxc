@@ -39,15 +39,14 @@ namespace ToSic.Sxc.WebApi.Context
         }
         protected Dependencies Deps;
 
-        protected int ZoneId;
+        protected int ZoneId => Deps.SiteCtx.Site.ZoneId;
         protected IApp App;
         private readonly Apps.IApp _appToLaterInitialize;
 
         #endregion
 
-        public virtual IUiContextBuilder SetZoneAndApp(int zoneId, IAppIdentity app)
+        public IUiContextBuilder InitApp(IAppIdentity app)
         {
-            ZoneId = zoneId;
             App = app != null ? (_appToLaterInitialize as Apps.App)?.InitNoData(app, null) : null;
             return this;
         }
@@ -80,6 +79,7 @@ namespace ToSic.Sxc.WebApi.Context
                 Current = language.Current,
                 Primary = language.Primary,
                 All = language.All.ToDictionary(l => l.key.ToLowerInvariant(), l => l.name),
+                All2 = language.All.ToDictionary(l => l.key.ToLowerInvariant(), l => new ContextLanguageDetailsDto { Name = l.name, AllowEdit = true }),
             };
         }
 
