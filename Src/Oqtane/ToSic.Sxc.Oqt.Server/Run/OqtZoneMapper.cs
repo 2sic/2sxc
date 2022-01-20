@@ -91,8 +91,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public override List<TempTempCulture> CulturesWithState(ISite site)
         {
             if (_supportedCultures != null) return _supportedCultures;
-            var availableEavLanguages = AppStates.Languages(site.ZoneId/*zoneId*/, true);
-            _supportedCultures = _oqtCulture.GetSupportedCultures(site.Id/*siteId*/, availableEavLanguages);
+            var availableEavLanguages = AppStates.Languages(site.ZoneId, true);
+            _supportedCultures = _oqtCulture.GetSupportedCultures(site.Id, availableEavLanguages);
             return _supportedCultures;
         }
         private List<TempTempCulture> _supportedCultures;

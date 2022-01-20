@@ -44,7 +44,6 @@ namespace ToSic.Sxc.Dnn.Run
             if (siteId < 0)
                 throw new Exception("Can't get zone for invalid portal ID: " + siteId);
 
-            //const string zoneSettingKey = Settings.PortalSettingsPrefix + "ZoneID";
             var c = PortalController.Instance.GetPortalSettings(siteId);
 
             // Create new zone automatically
@@ -81,10 +80,10 @@ namespace ToSic.Sxc.Dnn.Run
         public override List<TempTempCulture> CulturesWithState(ISite site)
         {
             // note: 
-            var availableEavLanguages = AppStates.Languages(site.ZoneId/*zoneId*/, true);
-            var defaultLanguageCode = site.DefaultCultureCode; // new PortalSettings(siteId).DefaultLanguage;
+            var availableEavLanguages = AppStates.Languages(site.ZoneId, true);
+            var defaultLanguageCode = site.DefaultCultureCode;
 
-            return (from c in LocaleController.Instance.GetLocales(site.Id/*siteId*/)
+            return (from c in LocaleController.Instance.GetLocales(site.Id)
                     select new TempTempCulture(
                         c.Value.Code,
                         c.Value.Text,
