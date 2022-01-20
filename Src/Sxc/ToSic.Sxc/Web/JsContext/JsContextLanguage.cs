@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Web.JsContext
             Current = site.CurrentCultureCode;
             Primary = site.DefaultCultureCode;
             All = _zoneMapperLazy.Value
-                .CulturesWithState(site.Id, zoneId)
+                .CulturesWithState(site)
                 .Where(c => c.Active)
                 .Select(c => new ClientInfoLanguage { key = c.Key.ToLowerInvariant(), name = c.Text });
             return this;

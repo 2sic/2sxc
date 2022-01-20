@@ -77,20 +77,14 @@ namespace ToSic.Sxc.Dnn.Run
                 : wrapLog($"found {found.PortalId}", ((DnnSite)_spForNewSites.Build<ISite>()).Swap(found));
         }
 
-
         /// <inheritdoc />
-        /// <summary>
-        /// Returns all DNN Cultures with active / inactive state
-        /// </summary>
-        /// <param name="siteId">The ID of the tenant in the host system</param>
-        /// <param name="zoneId">The ID of the zone, to check which languages are enabled in this zone</param>
-        public override List<TempTempCulture> CulturesWithState(int siteId, int zoneId)
+        public override List<TempTempCulture> CulturesWithState(ISite site)
         {
             // note: 
-            var availableEavLanguages = AppStates.Languages(zoneId, true);
-            var defaultLanguageCode = new PortalSettings(siteId).DefaultLanguage;
+            var availableEavLanguages = AppStates.Languages(site.ZoneId/*zoneId*/, true);
+            var defaultLanguageCode = site.DefaultCultureCode; // new PortalSettings(siteId).DefaultLanguage;
 
-            return (from c in LocaleController.Instance.GetLocales(siteId)
+            return (from c in LocaleController.Instance.GetLocales(site.Id/*siteId*/)
                     select new TempTempCulture(
                         c.Value.Code,
                         c.Value.Text,

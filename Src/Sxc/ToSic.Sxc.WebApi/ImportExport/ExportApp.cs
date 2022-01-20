@@ -55,7 +55,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
             var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathGlobal, Log);
             var cultCount = _zoneMapper
-                .CulturesWithState(_site.Id, currentApp.ZoneId)
+                .CulturesWithState(_site)
                 .Count(c => c.Active);
 
             var cms = _cmsRuntime.Init(currentApp, true, Log);

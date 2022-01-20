@@ -39,7 +39,7 @@ namespace ToSic.Sxc.WebApi.Zone
                 SiteId = _site.Id,
                 ZoneId = _site.ZoneId, 
                 Apps = _appStates.Apps(zoneId).Count,
-                Languages = _zoneMapper.CulturesWithState(_site.Id, _site.ZoneId).Count, 
+                Languages = _zoneMapper.CulturesWithState(_site).Count, 
             };
 
             var sysInfo = new SystemInfoDto

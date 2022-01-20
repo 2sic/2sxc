@@ -3,6 +3,7 @@ using DotNetNuke.Services.Localization;
 using System;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Metadata;
@@ -23,14 +24,16 @@ namespace ToSic.Sxc.Dnn.Run
         /// Empty constructor for DI
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public DnnModuleUpdater(Lazy<CmsRuntime> cmsRuntimeLazy, IZoneMapper zoneMapper, IAppStates appStates) : base("Dnn.MapA2I")
+        public DnnModuleUpdater(Lazy<CmsRuntime> cmsRuntimeLazy, IZoneMapper zoneMapper, IAppStates appStates, ISite site) : base("Dnn.MapA2I")
         {
             _cmsRuntimeLazy = cmsRuntimeLazy;
             _appStates = appStates;
+            _site = site;
             _zoneMapper = zoneMapper.Init(Log);
         }
         private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
         private readonly IAppStates _appStates;
+        private readonly ISite _site;
         private readonly IZoneMapper _zoneMapper;
 
 
@@ -44,9 +47,8 @@ namespace ToSic.Sxc.Dnn.Run
             ClearPreview(instance.Id);
 
             // ToDo: Should throw exception if a real BlockConfiguration exists
-
-            var module = (instance as Module<ModuleInfo>).UnwrappedContents;
-            var zoneId = _zoneMapper.GetZoneId(module.OwnerPortalID);   // Important: OwnerPortal
+            // note: this is the correct zone, even if the module is shared from another portal, because the Site is prepared correctly
+            var zoneId = _site.ZoneId;
 
             if (appId == Eav.Constants.AppIdEmpty || !appId.HasValue)
                 UpdateInstanceSettingForAllLanguages(instance.Id, Settings.ModuleSettingApp, null, Log);
@@ -108,7 +110,7 @@ namespace ToSic.Sxc.Dnn.Run
         {
             Log.Add("update title");
 
-            var languages = _zoneMapper.CulturesWithState(block.Context.Site.Id, block.ZoneId);
+            var languages = _zoneMapper.CulturesWithState(block.Context.Site);
 
             // Find Module for default language
             var moduleController = new ModuleController();
