@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using Oqtane.Models;
+﻿using Oqtane.Models;
+using System.Linq;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Beta.LightSpeed;
@@ -7,7 +7,6 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Installation;
-using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
 using Page = Oqtane.Models.Page;
@@ -15,7 +14,7 @@ using Page = Oqtane.Models.Page;
 namespace ToSic.Sxc.Oqt.Server.Blocks
 {
     [PrivateApi]
-    public class OqtSxcViewBuilder : HasLog, ISxcOqtane
+    public class OqtSxcViewBuilder : HasLog
     {
 
         #region Constructor and DI

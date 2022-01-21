@@ -34,14 +34,6 @@ namespace ToSic.Sxc.Oqt.App
 
         public OqtViewResultsDto ViewResults { get; set; }
 
-        //protected override async Task OnInitializedAsync()
-        //{
-        //    await base.OnInitializedAsync();
-
-        //    // Subscribe to LocationChanged event.
-        //    NavigationManager.LocationChanged += HandleLocationChanged;
-        //}
-
         protected override async Task OnParametersSetAsync()
         {
 
@@ -66,7 +58,6 @@ namespace ToSic.Sxc.Oqt.App
         private async Task Initialize2sxcContentBlock()
         {
             var culture = CultureInfo.CurrentUICulture.Name;
-            //if (string.IsNullOrEmpty(culture)) culture = await GetUserSelectedCultureFromCookie();
 
             var urlQuery = NavigationManager.ToAbsoluteUri(NavigationManager.Uri).Query;
             ViewResults = await OqtSxcRenderService.PrepareAsync(
@@ -79,27 +70,6 @@ namespace ToSic.Sxc.Oqt.App
             if (!string.IsNullOrEmpty(ViewResults?.ErrorMessage)) AddModuleMessage(ViewResults.ErrorMessage, MessageType.Warning);
         }
 
-        //private async Task<string> GetUserSelectedCultureFromCookie()
-        //{
-        //    var interop = new Interop(JSRuntime);
-        //    var localizationCookie = await interop.GetCookie(CookieRequestCultureProvider.DefaultCookieName);
-        //    return CookieRequestCultureProvider.ParseCookieValue(localizationCookie).UICultures[0].Value;
-        //}
-
-        //public void Dispose() => NavigationManager.LocationChanged -= HandleLocationChanged;
-
-
-        ///// <summary>
-        ///// Handle router LocationChanged event.
-        ///// This is important if the url changes like /product --> /product?details=27
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="args"></param>
-        //private void HandleLocationChanged(object sender, LocationChangedEventArgs args)
-        //{
-        //    var log = $"{sender} {args}";
-        //} //Initialize2sxcContentBlock(); //.RunSynchronously();
-
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             //if (firstRender)
@@ -107,7 +77,7 @@ namespace ToSic.Sxc.Oqt.App
                 await base.OnAfterRenderAsync(firstRender);
 
                 // 2sxc part should be executed only if new 2sxc data arrived from server (ounce per view)
-                if (NewDataArrived && PageState.Runtime == Oqtane.Shared.Runtime.Server && ViewResults != null/* && 1 == 0*/)
+                if (NewDataArrived && PageState.Runtime == Oqtane.Shared.Runtime.Server && ViewResults != null)
                 {
                     NewDataArrived = false;
 

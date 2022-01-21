@@ -55,10 +55,8 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddScoped<IUser, OqtUser>();
             services.TryAddTransient<IModule, OqtModule>();
             services.TryAddTransient<OqtModule>();
-            //services.TryAddScoped<OqtState>();
             services.TryAddTransient<OqtGetBlock>();    // WIP - should replace most of OqtState
             services.TryAddScoped<RequestHelper>();
-            //services.TryAddTransient<OqtTempInstanceContext>();
 
             services.TryAddTransient<IZoneCultureResolver, OqtSite>();
             services.TryAddTransient<IZoneMapper, OqtZoneMapper>();
@@ -74,11 +72,11 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddTransient<OqtCulture>();
             services.TryAddTransient<SettingsHelper>();
 
-            //// add page publishing
+            // add page publishing
             services.TryAddTransient<IPagePublishing, OqtPagePublishing>();
             services.TryAddTransient<IPagePublishingResolver, OqtPagePublishingResolver>();
 
-            //// Oqtane Specific stuff
+            // Oqtane Specific stuff
             services.TryAddTransient<OqtPageOutput>();
             services.TryAddTransient<OqtSxcViewBuilder>();
             services.TryAddTransient<IBlockResourceExtractor, OqtBlockResourceExtractor>();
@@ -90,16 +88,15 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddTransient<IAdamPaths, OqtAdamPaths>();
             services.TryAddTransient<IAdamFileSystem<int, int>, OqtAdamFileSystem>();
             services.TryAddTransient<AdamManager, AdamManager<int, int>>();
-            //services.TryAddTransient(typeof(AdamItemDtoMaker<,>), typeof(OqtAdamItemDtoMaker<,>));
 
-            //// Still pending...
+            // Still pending...
             services.TryAddTransient<XmlExporter, OqtXmlExporter>();
             services.TryAddTransient<IImportExportEnvironment, OqtImportExportEnvironment>();
             //sc.TryAddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
             //sc.TryAddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
 
             // View Builder
-            services.TryAddTransient<ISxcOqtane, OqtSxcViewBuilder>();
+            services.TryAddTransient<OqtSxcViewBuilder>();
 
             // Site State Initializer for APIs etc. to ensure that the SiteState exists and is correctly preloaded
             services.TryAddTransient<SiteStateInitializer>();

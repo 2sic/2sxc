@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using ToSic.Sxc.WebApi.Plumbing;
 
-namespace ToSic.Sxc.Oqt.Server.Run
+namespace ToSic.Sxc.Oqt.Server.WebApi
 {
     public class OqtResponseMaker: ResponseMaker
     {

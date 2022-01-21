@@ -27,8 +27,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         {
             // ReSharper disable once VirtualMemberCallInConstructor
             Log = new Log(HistoryLogName, null, GetType().Name);
-            // ReSharper disable once VirtualMemberCallInConstructor
-            //History.Add(HistoryLogGroup, Log);
         }
 
         protected IServiceProvider ServiceProvider;
@@ -66,7 +64,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             // add log
             ServiceProvider.Build<LogHistory>().Add(HistoryLogGroup, Log);
 
-            //// background processes can pass in an alias using the SiteState service
+            // background processes can pass in an alias using the SiteState service
             ServiceProvider.Build<SiteStateInitializer>().InitIfEmpty();
         }
 

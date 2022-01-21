@@ -10,8 +10,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using ToSic.Sxc.Oqt.Server.Blocks;
 using ToSic.Sxc.Oqt.Server.Context;
-using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     public class OqtSxcRenderController : ModuleControllerBase
     {
         public OqtSxcRenderController(IHttpContextAccessor accessor,
-            ISxcOqtane sxcOqtane,
+            OqtSxcViewBuilder sxcOqtane,
             IAliasRepository aliases,
             ISiteRepository sites,
             IPageRepository pages,
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         }
 
         private readonly IHttpContextAccessor _accessor;
-        private readonly ISxcOqtane _sxcOqtane;
+        private readonly OqtSxcViewBuilder _sxcOqtane;
         private readonly IAliasRepository _aliases;
         private readonly ISiteRepository _sites;
         private readonly IPageRepository _pages;
@@ -89,8 +89,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
             var moduleDefinitions = _moduleDefinitions.GetModuleDefinitions(module.SiteId).ToList();
             module.ModuleDefinition = moduleDefinitions.Find(item => item.ModuleDefinitionName == module.ModuleDefinitionName);
-            //if (module.ModuleDefinition == null || !_userPermissions.IsAuthorized(User, "Utilize", module.ModuleDefinition.Permissions))
-            //    return Forbidden("Unauthorized ModuleDefinition Get Attempt {SiteId}", module.SiteId);
 
             module.Settings = _settings.GetSettings(EntityNames.Module, moduleId).ToDictionary(setting => setting.SettingName, setting => setting.SettingValue);
 
