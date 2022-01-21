@@ -46,6 +46,22 @@ namespace ToSic.Sxc.Dnn.WebApi
                 if (blockId < 0)   // negative id, so it's an inner block
                 {
                     log.Add($"Inner Content: {blockId}");
+                    if (request.Headers.Contains("BlockIds"))
+                    {
+                        var blockIds = request.Headers.GetValues("BlockIds").FirstOrDefault()?.Split(',');
+                        if (blockIds != null && blockIds.Length >= 2)
+                        {
+                            foreach (var ids in blockIds)
+                            {
+                                var parentIds = ids.Split(':');
+                                //var parentAppId = int.Parse(parentIds[0]);
+                                //var parentContentBlocks = new Guid(parentIds[1]);
+                                var id = int.Parse(parentIds[0]);
+                                if (int.TryParse(parentIds[1], out var cbid) && id != cbid && cbid < 0 && cbid != blockId)
+                                    block = _serviceProvider.Build<BlockFromEntity>().Init(block, cbid, log);
+                            }
+                        }
+                    }
                     block = _serviceProvider.Build<BlockFromEntity>().Init(block, blockId, log);
                 }
             }
