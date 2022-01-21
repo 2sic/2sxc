@@ -6,7 +6,6 @@ using static ToSic.Sxc.LookUp.LookUpConstants;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps
 {
-    // TODO: @STV pls test, I changed oqtState to CtxResolver
     public class OqtModuleLookUp : LookUpBase
     {
         private Module Module { get; set; }

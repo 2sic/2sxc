@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Oqt.Server.Integration
             {
                 //_settingRepository.DeleteSetting(settingId: delete.SettingId); // can't use in Oqt 3.0.1+ because of change in signature
                 // workaround code that works in Oqt 2.3.1+
-                delete.SettingValue = null;
+                delete.SettingValue = string.Empty;
                 delete.ModifiedOn = DateTime.Now;
                 delete.ModifiedBy = WipConstants.SettingsChangeUserId;
                 _settingRepository.UpdateSetting(delete);

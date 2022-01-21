@@ -81,7 +81,6 @@ namespace ToSic.Sxc.Oqt.Server.Context
                 if (_blockIdentifier != null) return _blockIdentifier;
 
                 // find ZoneId, AppId and prepare settings for next values
-                // Todo: #CleanZoneIdUse - verify this works
                 var zoneId = _site.ZoneId; // ZoneMapper.GetZoneId(UnwrappedContents.SiteId);
                 var appId = GetInstanceAppId(zoneId); //appId ?? TestIds.Blog.App;
                 var block = Guid.Empty;
