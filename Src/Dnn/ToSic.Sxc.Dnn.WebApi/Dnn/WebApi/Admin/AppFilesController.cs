@@ -96,5 +96,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public TemplatePreviewDto Preview(int appId, string path, string templateKey, bool global = false)
             => Backend().GetPreview(appId, path, templateKey, global);
 
+        [HttpGet]
+        public AllFilesDto AppFiles(int appId) => Backend().AppFiles(appId);
     }
 }
