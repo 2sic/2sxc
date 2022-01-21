@@ -53,13 +53,13 @@ namespace ToSic.Sxc.Apps
         /// images in the app folder. 
         /// </summary>
         /// <returns>Path usually starting with /portals/_default/...</returns>
-        string PathGlobal { get; }
+        string PathShared { get; }
 
         /// <summary>
         /// The path on the server hard disk for the current app global folder. 
         /// </summary>
         /// <returns>Path usually starting with c:\...</returns>
-        string PhysicalPathGlobal { get; }
+        string PhysicalPathShared { get; }
 
         /// <summary>
         /// The thumbnail path for the current app. 

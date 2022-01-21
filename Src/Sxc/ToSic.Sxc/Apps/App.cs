@@ -135,16 +135,16 @@ namespace ToSic.Sxc.Apps
         /// <inheritdoc />
         public string Thumbnail => File.Exists(PhysicalPath + "/" + AppConstants.AppIconFile) 
             ? Path + "/" + AppConstants.AppIconFile
-            : File.Exists(PhysicalPathGlobal + "/" + AppConstants.AppIconFile)
-                ? PathGlobal + "/" + AppConstants.AppIconFile
+            : File.Exists(PhysicalPathShared + "/" + AppConstants.AppIconFile)
+                ? PathShared + "/" + AppConstants.AppIconFile
                 : AppGuid == Eav.Constants.PrimaryAppGuid // check for Primary App here and use the /assets/app-primary.png' from the 2sxc folder here
                     ? _templateHelpersLazy.Value.Init(this, Log).AssetsLocation(AppConstants.AppPrimaryIconFile, PathTypes.Link) 
                     : null;
 
-        public string PathGlobal => _pathGlobal ?? (_pathGlobal = _templateHelpersLazy.Value.Init(this, Log).AppPathRoot(true, PathTypes.PhysRelative));
+        public string PathShared => _pathGlobal ?? (_pathGlobal = _templateHelpersLazy.Value.Init(this, Log).AppPathRoot(true, PathTypes.PhysRelative));
         private string _pathGlobal;
 
-        public string PhysicalPathGlobal => _physicalPathGlobal ?? (_physicalPathGlobal = _templateHelpersLazy.Value.Init(this, Log).AppPathRoot(true, PathTypes.PhysFull));
+        public string PhysicalPathShared => _physicalPathGlobal ?? (_physicalPathGlobal = _templateHelpersLazy.Value.Init(this, Log).AppPathRoot(true, PathTypes.PhysFull));
         private string _physicalPathGlobal;
 
         #endregion

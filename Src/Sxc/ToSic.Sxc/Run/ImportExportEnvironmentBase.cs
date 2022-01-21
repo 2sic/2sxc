@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Run
         public override string GlobalTemplatesRoot(int zoneId, int appId)
         {
             var app = _dependencies.NewApp.InitNoData(new AppIdentity(zoneId, appId), Log);
-            return app.PhysicalPathGlobal;
+            return app.PhysicalPathShared;
         }
 
     }

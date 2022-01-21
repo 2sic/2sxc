@@ -53,7 +53,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var contextZoneId = _site.ZoneId;
             var currentApp = _cmsRuntime.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
-            var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathGlobal, Log);
+            var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathShared, Log);
             var cultCount = _zoneMapper.CulturesWithState(_site).Count(c => c.IsEnabled);
 
             var cms = _cmsRuntime.Init(currentApp, true, Log);
@@ -83,7 +83,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var contextZoneId = _site.ZoneId;
             var currentApp = _cmsRuntime.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
-            var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathGlobal, Log);
+            var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathShared, Log);
             zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid);
 
             return true;
@@ -101,7 +101,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var contextZoneId = _site.ZoneId;
             var currentApp = _cmsRuntime.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
-            var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathGlobal, Log);
+            var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathShared, Log);
             var addOnWhenContainingContent = includeContentGroups ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm") : "";
 
             var fileName =
