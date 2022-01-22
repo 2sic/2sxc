@@ -29,7 +29,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
     [Route(WebApiConstants.AppRoot2 + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
     [Route(WebApiConstants.AppRoot3 + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
     // Beta routes
-    //[Route(WebApiConstants.WebApiStateRoot + "/app-content/{contentType}/{guid:guid}/{field}/[action]")]
     [Route(WebApiConstants.WebApiStateRoot + "/app-content/{contentType}/{guid:guid}/{field}")]
 
     public class AdamController : OqtStatefulControllerBase, IAdamController<int>

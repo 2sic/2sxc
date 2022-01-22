@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
                 view = oqtAuthList.Any(a => a.Policy == PolicyNames.ViewModule),
                 
                 // Supported-modules attribute do not exist in Oqtane
-                requireContext = oqtAuthList.Any() /*|| member.GetCustomAttribute<SupportedModulesAttribute>() != null*/,
+                requireContext = oqtAuthList.Any(),
             };
         }
 

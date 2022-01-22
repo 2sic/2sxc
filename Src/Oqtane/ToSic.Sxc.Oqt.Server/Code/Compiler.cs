@@ -28,8 +28,6 @@ namespace ToSic.Sxc.Oqt.Server.Code
 
         }
 
-
-
         public Assembly Compile(string filePath, string dllName)
         {
             Log.Add($"Starting compilation of: '{filePath}'");
@@ -139,14 +137,6 @@ namespace ToSic.Sxc.Oqt.Server.Code
             foreach (string dllFile in Directory.GetFiles(Path.Combine(dllPath, "refs"), "*.dll"))
                 references.Add(MetadataReference.CreateFromFile(dllFile));
             return references;
-            
-            //var rootRefs = Directory.GetFiles(dllPath, "*.dll");
-            //var rootRefFiles = rootRefs.Select(r => Path.GetFileName(r));
-            //var refsRefs = Directory.GetFiles(Path.Combine(dllPath, "refs"), "*.dll");
-            //var missingRefsRefs = refsRefs.Where(r => !rootRefFiles.Contains(Path.GetFileName(r)));
-            //foreach (string dllFile in missingRefsRefs)
-            //    references.Add(MetadataReference.CreateFromFile(dllFile));
-            // references.Add(MetadataReference.CreateFromFile(Path.Combine(dllPath, "refs", "Microsoft.AspNetCore.Html.Abstractions.dll")));
         }
 
         private CacheItemPolicy GetCacheItemPolicy(string filePath)

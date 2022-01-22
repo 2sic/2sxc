@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddScoped<IUser, OqtUser>();
             services.TryAddTransient<IModule, OqtModule>();
             services.TryAddTransient<OqtModule>();
-            services.TryAddTransient<OqtGetBlock>();
+            services.TryAddTransient<OqtGetBlock>();    // WIP - should replace most of OqtState
             services.TryAddScoped<RequestHelper>();
 
             services.TryAddTransient<IZoneCultureResolver, OqtSite>();
@@ -72,11 +72,11 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddTransient<OqtCulture>();
             services.TryAddTransient<SettingsHelper>();
 
-            //// add page publishing
+            // add page publishing
             services.TryAddTransient<IPagePublishing, OqtPagePublishing>();
             services.TryAddTransient<IPagePublishingResolver, OqtPagePublishingResolver>();
 
-            //// Oqtane Specific stuff
+            // Oqtane Specific stuff
             services.TryAddTransient<OqtPageOutput>();
             services.TryAddTransient<OqtSxcViewBuilder>();
             services.TryAddTransient<IBlockResourceExtractor, OqtBlockResourceExtractor>();
@@ -89,12 +89,12 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddTransient<IAdamFileSystem<int, int>, OqtAdamFileSystem>();
             services.TryAddTransient<AdamManager, AdamManager<int, int>>();
 
-            //// Still pending...
+            // Still pending...
             services.TryAddTransient<XmlExporter, OqtXmlExporter>();
             services.TryAddTransient<IImportExportEnvironment, OqtImportExportEnvironment>();
 
             // View Builder
-            services.TryAddTransient<ISxcOqtane, OqtSxcViewBuilder>();
+            services.TryAddTransient<OqtSxcViewBuilder>();
 
             // Site State Initializer for APIs etc. to ensure that the SiteState exists and is correctly preloaded
             services.TryAddTransient<SiteStateInitializer>();

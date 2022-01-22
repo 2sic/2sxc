@@ -35,13 +35,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
         {
             return toWebAbsolute(virtualPath);
         }
-        //public string ToAbsolute(string virtualPath, string subPath)
-        //{
-        //    return toWebAbsolute(Path.Combine(virtualPath, subPath));
-        //}
-
-        //public string AppAssetsBase(ISite site, IApp app) 
-        //    => toWebAbsolute(site.AppAssetsLinkTemplate.Replace(LinkPaths.AppFolderPlaceholder, app.Folder));
 
         public string ApiFromSiteRoot(string appFolder, string apiPath)
         {

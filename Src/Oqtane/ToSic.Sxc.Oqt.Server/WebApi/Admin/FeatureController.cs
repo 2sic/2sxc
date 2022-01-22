@@ -55,14 +55,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [Authorize(Roles = RoleNames.Host)]
         public string RemoteManageUrl()
         {
-            //return "//gettingstarted.2sxc.org/router.aspx?"
-            //       + $"DnnVersion={Oqtane.Shared.Constants.Version}"
-            //       + $"&2SexyContentVersion={Settings.ModuleVersion}"
-            //       + $"&fp={HttpUtility.UrlEncode(Fingerprint.System)}"
-            //       + $"&DnnGuid={Guid.Empty}" // we can try to use oqt host user guid from aspnetcore identity
-            //       + $"&ModuleId={GetContext().Module.Id}" // needed for callback later on
-            //       + "&destination=features";
-
             var ctx = GetContext();
             var site = ctx.Site;
             var module = ctx.Module;

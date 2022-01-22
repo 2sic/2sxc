@@ -78,9 +78,6 @@ namespace ToSic.Sxc.Oqt.Server.Data
         /// <returns></returns>
         private string TryToResolveOneLinkToInternalOqtCode(string potentialFilePath)
         {
-            // find site
-            //var site = TenantResolver.Value.GetAlias();
-
             // Try to find the Folder
             var pathAsFolder = potentialFilePath.Backslash();
             var folderPath = Path.GetDirectoryName(pathAsFolder);
@@ -136,9 +133,6 @@ namespace ToSic.Sxc.Oqt.Server.Data
             #region special handling of issues in case something in the background is broken
             try
             {
-                // SiteStateInitializerLazy.Value.InitIfEmpty();
-                //var alias = SiteStateInitializerLazy.Value.InitializedState.Alias; // SiteStateInitializerLazy.Value.SiteState.Alias;
-
                 var pathInAdam = Path.Combine(fileInfo.Folder.Path, fileInfo.Name/*)*/).ForwardSlash();
 
                 // get appName and filePath
@@ -174,28 +168,6 @@ namespace ToSic.Sxc.Oqt.Server.Data
             if (page == null) return null;
 
             return string.IsNullOrEmpty(Alias.Path) ? $"/{page.Path}" : $"/{Alias.Path}/{page.Path}";
-
-            //var psCurrent = PortalSettings.Current;
-            //var psPage = psCurrent;
-
-            //// Get full PortalSettings (with portal alias) if module sharing is active
-            //if (psCurrent != null && psCurrent.PortalId != tabInfo.PortalID)
-            //    psPage = new PortalSettings(tabInfo.PortalID);
-
-            //if (psPage == null) return null;
-
-            //if (tabInfo.CultureCode != "" && psCurrent != null && tabInfo.CultureCode != psCurrent.CultureCode)
-            //{
-            //    var cultureTabInfo = tabController
-            //        .GetTabByCulture(tabInfo.TabID, tabInfo.PortalID,
-            //            LocaleController.Instance.GetLocale(psCurrent.CultureCode));
-
-            //    if (cultureTabInfo != null)
-            //        tabInfo = cultureTabInfo;
-            //}
-
-            //// Exception in AdvancedURLProvider because ownerPortalSettings.PortalAlias is null
-            //return Globals.NavigateURL(tabInfo.TabID, psPage, "", new string[] { });
         }
     }
 }

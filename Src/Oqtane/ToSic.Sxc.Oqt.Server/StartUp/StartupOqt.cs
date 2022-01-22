@@ -1,23 +1,20 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.IO;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Oqtane.Infrastructure;
-using System.IO;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
-using ToSic.Sxc.Oqt.Server.StartUp;
 using ToSic.Sxc.Razor;
 using ToSic.Sxc.WebApi;
 using WebApiConstants = ToSic.Sxc.Oqt.Shared.WebApiConstants;
 
-// TODO: @STV - pls move to the startup folder
-
-namespace ToSic.Sxc.Oqt.Server
+namespace ToSic.Sxc.Oqt.Server.StartUp
 {
     public class StartupOqt : IServerStartup
     {

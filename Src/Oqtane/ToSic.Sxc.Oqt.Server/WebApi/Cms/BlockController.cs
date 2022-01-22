@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using ToSic.Eav.Apps.Ui;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.ContentBlocks;
@@ -74,15 +72,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
         public string Block(int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
-        {
-            var entityId = Backend.NewBlock(parentId, field, sortOrder, app, guid);
-
-            // TODO: @STV - THIS should use the ContentBlockBackend like DNN does
-            // now return a rendered instance
-            var newContentBlock = HttpContext.RequestServices.Build<BlockFromEntity>().Init(BlockOptional, entityId, Log);
-            return newContentBlock.BlockBuilder.Run(true).Html;
-
-        }
+            => Backend.NewBlockAndRender(parentId, field, sortOrder, app, guid).Html;
         #endregion
 
         #region BlockItems

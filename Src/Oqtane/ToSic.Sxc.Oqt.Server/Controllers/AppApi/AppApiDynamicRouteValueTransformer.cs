@@ -60,16 +60,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             Alias alias;
             if (values.ContainsKey("alias"))
             {
-                //var aliasId = int.Parse((string) values["alias"]);
                 alias = _tenantResolver.GetAlias();
             }
             else
             {
                 var serviceProvider = httpContext.RequestServices;
                 var siteStateInitializer = serviceProvider.Build<SiteStateInitializer>();
-                //var aliasRepositoryLazy = serviceProvider.Build<Lazy<IAliasRepository>>();
-                //siteStateInitializer.InitIfEmpty(); //siteState, httpContext, aliasRepositoryLazy);
-                alias = siteStateInitializer.InitializedState.Alias // siteStateInitializer.SiteState.Alias 
+                alias = siteStateInitializer.InitializedState.Alias
                         ?? throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, $"Error: missing required 'alias' route value.", "Not Found");
             }
             var aliasPart = OqtServerPaths.GetAppRootWithSiteId(alias.SiteId);

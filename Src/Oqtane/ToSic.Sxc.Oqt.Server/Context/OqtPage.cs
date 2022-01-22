@@ -44,8 +44,6 @@ namespace ToSic.Sxc.Oqt.Server.Context
             // also without trailing slash
             var parts = new UrlParts(_linkHelperLazy.Value.GetCurrentRequestUrl());
             return $"{parts.Protocol}{alias.Name}/{UnwrappedContents.Path}".TrimLastSlash();
-
-            //return (alias != null) ? $"//{alias?.Path}/{UnwrappedContents.Path}" : string.Empty;
         }
 
         private Alias GetAlias(int siteId)

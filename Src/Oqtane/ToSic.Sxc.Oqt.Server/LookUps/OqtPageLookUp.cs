@@ -5,7 +5,6 @@ using static ToSic.Sxc.LookUp.LookUpConstants;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps
 {
-    // TODO: @STV pls check - not using oqtState any more
     public class OqtPageLookUp : LookUpBase
     {
         private readonly IContextResolver _ctxResolver;

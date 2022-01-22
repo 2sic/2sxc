@@ -16,6 +16,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Run\**" />
+    <EmbeddedResource Remove="Run\**" />
+    <None Remove="Run\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.0" />
     <PackageReference Include="Oqtane.Shared" Version="2.2.0" />
@@ -23,10 +29,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Run\" />
   </ItemGroup>
 
 </Project>
