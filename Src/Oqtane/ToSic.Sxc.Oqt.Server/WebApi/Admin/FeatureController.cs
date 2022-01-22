@@ -29,10 +29,10 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         private readonly ISite _site;
         private readonly IConfigManager _configManager;
         private readonly OqtModuleHelper _oqtModuleHelper;
-        private readonly WipRemoteRouterLink _remoteRouterLink;
+        private readonly RemoteRouterLink _remoteRouterLink;
         protected override string HistoryLogName => "Api.Feats";
 
-        public FeatureController(FeaturesBackend featuresBackend, ISite site, IConfigManager configManager, OqtModuleHelper oqtModuleHelper, WipRemoteRouterLink remoteRouterLink)
+        public FeatureController(FeaturesBackend featuresBackend, ISite site, IConfigManager configManager, OqtModuleHelper oqtModuleHelper, RemoteRouterLink remoteRouterLink)
         {
             _featuresBackend = featuresBackend;
             _site = site;

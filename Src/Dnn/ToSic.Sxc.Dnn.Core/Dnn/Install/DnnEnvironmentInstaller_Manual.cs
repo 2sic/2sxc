@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Dnn.Install
                 }
                 catch { /* ignore */ }
             
-            var gettingStartedSrc = ServiceProvider.Build<WipRemoteRouterLink>().LinkToRemoteRouter(
+            var gettingStartedSrc = ServiceProvider.Build<RemoteRouterLink>().LinkToRemoteRouter(
                 RemoteDestinations.AutoConfigure, 
                 "Dnn",
                 Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4),

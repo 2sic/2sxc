@@ -147,7 +147,7 @@
     <Compile Include="Dnn\Run\DnnSite.cs" />
     <Compile Include="Dnn\Run\DnnValueConverter.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.Factory.cs" />
-    <Compile Include="Dnn\Run\DnnFingerprint.cs" />
+    <Compile Include="Dnn\Run\DnnPlatformInformation.cs" />
     <Compile Include="Dnn\ImportExport\DnnImportExportEnvironment.cs" />
     <Compile Include="Dnn\ImportExport\DnnXmlExporter.cs" />
     <Compile Include="Dnn\Install\Helpers.cs" />

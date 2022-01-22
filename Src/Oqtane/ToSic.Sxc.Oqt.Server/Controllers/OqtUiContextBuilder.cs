@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     public class OqtUiContextBuilder: UiContextBuilderBase
     {
-        public OqtUiContextBuilder(ILinkPaths linkPaths, IContextOfSite ctx, SiteState siteState, WipRemoteRouterLink remoteRouterLink, IConfigManager configManager, Dependencies deps) : base(deps)
+        public OqtUiContextBuilder(ILinkPaths linkPaths, IContextOfSite ctx, SiteState siteState, RemoteRouterLink remoteRouterLink, IConfigManager configManager, Dependencies deps) : base(deps)
         {
             _linkPaths = linkPaths;
             _context = ctx;
@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         private readonly ILinkPaths _linkPaths;
         private IContextOfSite _context;
         private readonly SiteState _siteState;
-        private readonly WipRemoteRouterLink _remoteRouterLink;
+        private readonly RemoteRouterLink _remoteRouterLink;
         private readonly IConfigManager _configManager;
 
 

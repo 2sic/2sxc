@@ -2,6 +2,7 @@
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
+using ToSic.Eav.Security.Fingerprint;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Zone
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.WebApi.Zone
     {
         public ZoneBackend(
             IAppStates appStates, 
-            IFingerprint fingerprint,
+            SystemFingerprint fingerprint,
             IZoneMapper zoneMapper,
             IPlatform platform,
             ISite site
@@ -45,7 +46,7 @@ namespace ToSic.Sxc.WebApi.Zone
             var sysInfo = new SystemInfoDto
             {
                 EavVersion = Settings.ModuleVersion,
-                Fingerprint = _fingerprint.GetSystemFingerprint(),
+                Fingerprint = _fingerprint.GetFingerprint(),
                 Zones = _appStates.Zones.Count,
                 Platform = _platform.Name,
                 PlatformVersion = Settings.VersionToNiceFormat(_platform.Version)

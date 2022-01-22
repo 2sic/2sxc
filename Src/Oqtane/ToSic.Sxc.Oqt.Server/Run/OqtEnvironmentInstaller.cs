@@ -14,11 +14,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
     public class OqtEnvironmentInstaller: HasLog<IEnvironmentInstaller>, IEnvironmentInstaller
     {
         private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
-        private readonly WipRemoteRouterLink _remoteRouterLink;
+        private readonly RemoteRouterLink _remoteRouterLink;
         private readonly IAppStates _appStates;
         private readonly IConfigManager _configManager;
 
-        public OqtEnvironmentInstaller(Lazy<CmsRuntime> cmsRuntimeLazy, WipRemoteRouterLink remoteRouterLink, IAppStates appStates, IConfigManager configManager) : base($"{OqtConstants.OqtLogPrefix}.Instll")
+        public OqtEnvironmentInstaller(Lazy<CmsRuntime> cmsRuntimeLazy, RemoteRouterLink remoteRouterLink, IAppStates appStates, IConfigManager configManager) : base($"{OqtConstants.OqtLogPrefix}.Instll")
         {
             _cmsRuntimeLazy = cmsRuntimeLazy;
             _remoteRouterLink = remoteRouterLink;

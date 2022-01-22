@@ -55,10 +55,8 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddScoped<IUser, OqtUser>();
             services.TryAddTransient<IModule, OqtModule>();
             services.TryAddTransient<OqtModule>();
-            //services.TryAddScoped<OqtState>();
-            services.TryAddTransient<OqtGetBlock>();    // WIP - should replace most of OqtState
+            services.TryAddTransient<OqtGetBlock>();
             services.TryAddScoped<RequestHelper>();
-            //services.TryAddTransient<OqtTempInstanceContext>();
 
             services.TryAddTransient<IZoneCultureResolver, OqtSite>();
             services.TryAddTransient<IZoneMapper, OqtZoneMapper>();
@@ -69,7 +67,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddTransient<IPlatformModuleUpdater, OqtModuleUpdater>();
             services.TryAddTransient<IEnvironmentInstaller, OqtEnvironmentInstaller>();
             services.TryAddTransient<ILookUpEngineResolver, OqtGetLookupEngine>();
-            services.TryAddTransient<IFingerprint, OqtFingerprintWip>();
+            services.TryAddTransient<PlatformInformationBase, OqtPlatformInformation>();
             services.TryAddTransient<IUiContextBuilder, OqtUiContextBuilder>();
             services.TryAddTransient<OqtCulture>();
             services.TryAddTransient<SettingsHelper>();
@@ -90,13 +88,10 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddTransient<IAdamPaths, OqtAdamPaths>();
             services.TryAddTransient<IAdamFileSystem<int, int>, OqtAdamFileSystem>();
             services.TryAddTransient<AdamManager, AdamManager<int, int>>();
-            //services.TryAddTransient(typeof(AdamItemDtoMaker<,>), typeof(OqtAdamItemDtoMaker<,>));
 
             //// Still pending...
             services.TryAddTransient<XmlExporter, OqtXmlExporter>();
             services.TryAddTransient<IImportExportEnvironment, OqtImportExportEnvironment>();
-            //sc.TryAddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
-            //sc.TryAddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
 
             // View Builder
             services.TryAddTransient<ISxcOqtane, OqtSxcViewBuilder>();
@@ -139,7 +134,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddTransient<IApiInspector, OqtApiInspector>();
             services.TryAddScoped<ResponseMaker, OqtResponseMaker>();
 
-            // new in v12 - integrate KOI - experimental!
+            // new in v12 - integrate KOI
             try
             {
                 services.ActivateKoi2Di();

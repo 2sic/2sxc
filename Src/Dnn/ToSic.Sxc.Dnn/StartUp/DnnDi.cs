@@ -142,7 +142,7 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             services.TryAddTransient<ILookUpEngineResolver, DnnLookUpEngineResolver>();
             services.TryAddTransient<DnnLookUpEngineResolver>();
-            services.TryAddTransient<IFingerprint, DnnFingerprint>();
+            services.TryAddTransient<PlatformInformationBase, DnnPlatformInformation>();
 
             // new in 11.07 - exception logger
             services.TryAddTransient<IEnvironmentLogger, DnnEnvironmentLogger>();

@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Run;
+using ToSic.Eav.Security.Fingerprint;
 using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Run
@@ -9,13 +9,13 @@ namespace ToSic.Sxc.Run
     /// WIP - single location for building router links for installer and app/content infos
     /// </summary>
     [PrivateApi]
-    public class WipRemoteRouterLink
+    public class RemoteRouterLink
     {
-        public IFingerprint Fingerprint { get; }
+        private readonly IFingerprint _fingerprint;
 
-        public WipRemoteRouterLink(IFingerprint fingerprint)
+        public RemoteRouterLink(SystemFingerprint fingerprint)
         {
-            Fingerprint = fingerprint;
+            _fingerprint = fingerprint;
         }
         
         // TODO: STV - the platform version can now be retrieved from IPlatform, pls refactor to use that
@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Run
                 link += $"&AppVersion={app.Configuration.Version}"
                         + $"&AppOriginalId={app.Configuration.OriginalId}";
 
-            link += "&fp=" + System.Net.WebUtility.UrlEncode(Fingerprint.GetSystemFingerprint())?.ToLowerInvariant();
+            link += "&fp=" + System.Net.WebUtility.UrlEncode(_fingerprint.GetFingerprint())?.ToLowerInvariant();
             return link;
         }
 

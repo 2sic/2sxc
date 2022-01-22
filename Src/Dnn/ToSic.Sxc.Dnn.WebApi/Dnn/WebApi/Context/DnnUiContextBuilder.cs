@@ -18,12 +18,12 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
         #region Constructor / DI
 
         private readonly IContextResolver _ctxResolver;
-        private readonly WipRemoteRouterLink _remoteRouterLink;
+        private readonly RemoteRouterLink _remoteRouterLink;
         private readonly PortalSettings _portal = PortalSettings.Current;
 
         private ModuleInfo Module => (_ctxResolver.BlockOrNull()?.Module as DnnModule)?.UnwrappedContents;
 
-        public DnnUiContextBuilder(IContextResolver ctxResolver, WipRemoteRouterLink remoteRouterLink, Dependencies deps) : base(deps)
+        public DnnUiContextBuilder(IContextResolver ctxResolver, RemoteRouterLink remoteRouterLink, Dependencies deps) : base(deps)
         {
             _ctxResolver = ctxResolver;
             _remoteRouterLink = remoteRouterLink;

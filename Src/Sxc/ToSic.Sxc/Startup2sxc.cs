@@ -106,7 +106,7 @@ namespace ToSic.Sxc
             services.TryAddTransient<ImgResizeLinker>();
 
             // WIP - objects which are not really final
-            services.TryAddTransient<WipRemoteRouterLink>();
+            services.TryAddTransient<RemoteRouterLink>();
 
             // WIP 12.05 - json converter
             services.TryAddTransient<IJsonService, JsonService>();
