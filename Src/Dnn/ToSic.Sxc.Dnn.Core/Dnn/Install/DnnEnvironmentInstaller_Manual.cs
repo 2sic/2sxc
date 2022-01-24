@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Web;
-using DotNetNuke.Common;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
@@ -9,7 +8,6 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Run;
-using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.Sxc.Dnn.Install
 {
@@ -58,10 +56,10 @@ namespace ToSic.Sxc.Dnn.Install
             if (forContentApp)
                 try
                 {
-                    var primaryAppId = ServiceProvider.Build<IAppStates>().DefaultAppId(site.ZoneId);
+                    var primaryAppId = ServiceProvider.Build<IAppStates>().IdentityOfDefault(site.ZoneId);
                     // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                     var contentViews = ServiceProvider.Build<CmsRuntime>()
-                        .Init(new AppIdentity(site.ZoneId, primaryAppId), false, Log)
+                        .Init(primaryAppId, false, Log)
                         .Views.GetAll();
                     if (contentViews.Any()) return null;
                 }
@@ -69,9 +67,6 @@ namespace ToSic.Sxc.Dnn.Install
             
             var gettingStartedSrc = ServiceProvider.Build<RemoteRouterLink>().LinkToRemoteRouter(
                 RemoteDestinations.AutoConfigure, 
-                "Dnn",
-                Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4),
-                DotNetNuke.Entities.Host.Host.GUID, 
                 site,
                 module.Id,
                 app: null,

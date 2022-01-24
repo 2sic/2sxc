@@ -142,7 +142,7 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             services.TryAddTransient<ILookUpEngineResolver, DnnLookUpEngineResolver>();
             services.TryAddTransient<DnnLookUpEngineResolver>();
-            services.TryAddTransient<PlatformInformationBase, DnnPlatformInformation>();
+            services.TryAddTransient<IPlatformInfo, DnnPlatformContext>();
 
             // new in 11.07 - exception logger
             services.TryAddTransient<IEnvironmentLogger, DnnEnvironmentLogger>();
@@ -152,8 +152,8 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddSingleton<IPlatform, DnnPlatformContext>();
 
             // add page publishing
-            services.TryAddTransient<IPagePublishing, Sxc.Dnn.Cms.DnnPagePublishing>();
-            services.TryAddTransient<IPagePublishingResolver, Sxc.Dnn.Cms.DnnPagePublishingResolver>();
+            services.TryAddTransient<IPagePublishing, Cms.DnnPagePublishing>();
+            services.TryAddTransient<IPagePublishingResolver, Cms.DnnPagePublishingResolver>();
 
             if (appsCacheOverride != null)
             {

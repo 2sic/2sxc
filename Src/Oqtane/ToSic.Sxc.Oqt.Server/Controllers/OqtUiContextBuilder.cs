@@ -1,5 +1,4 @@
-﻿using Oqtane.Infrastructure;
-using Oqtane.Shared;
+﻿using Oqtane.Shared;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Context;
@@ -11,20 +10,18 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     public class OqtUiContextBuilder: UiContextBuilderBase
     {
-        public OqtUiContextBuilder(ILinkPaths linkPaths, IContextOfSite ctx, SiteState siteState, RemoteRouterLink remoteRouterLink, IConfigManager configManager, Dependencies deps) : base(deps)
+        public OqtUiContextBuilder(ILinkPaths linkPaths, IContextOfSite ctx, SiteState siteState, RemoteRouterLink remoteRouterLink, Dependencies deps) : base(deps)
         {
             _linkPaths = linkPaths;
             _context = ctx;
             _siteState = siteState;
             _remoteRouterLink = remoteRouterLink;
-            _configManager = configManager;
         }
 
         private readonly ILinkPaths _linkPaths;
-        private IContextOfSite _context;
+        private readonly IContextOfSite _context;
         private readonly SiteState _siteState;
         private readonly RemoteRouterLink _remoteRouterLink;
-        private readonly IConfigManager _configManager;
 
 
         protected override ContextResourceWithApp GetSystem(Ctx flags)
@@ -63,9 +60,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
             var gsUrl = _remoteRouterLink.LinkToRemoteRouter(
                 RemoteDestinations.GettingStarted,
-                "Oqt",
-                Oqtane.Shared.Constants.Version, 
-                _configManager.GetInstallationId(),
                 Deps.SiteCtx.Site,
                 blockCtx?.Module.Id ?? 0,
                 Deps.AppToLaterInitialize,

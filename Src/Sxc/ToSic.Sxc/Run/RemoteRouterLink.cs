@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Run;
 using ToSic.Eav.Security.Fingerprint;
 using ToSic.Sxc.Apps;
 
@@ -11,18 +12,15 @@ namespace ToSic.Sxc.Run
     [PrivateApi]
     public class RemoteRouterLink
     {
-        private readonly IFingerprint _fingerprint;
-
-        public RemoteRouterLink(SystemFingerprint fingerprint)
+        public RemoteRouterLink(SystemFingerprint fingerprint, IPlatformInfo platformInfo)
         {
             _fingerprint = fingerprint;
+            _platformInfo = platformInfo;
         }
-        
-        // TODO: STV - the platform version can now be retrieved from IPlatform, pls refactor to use that
+        private readonly SystemFingerprint _fingerprint;
+        private readonly IPlatformInfo _platformInfo;
 
-        public string LinkToRemoteRouter(RemoteDestinations destination, 
-            string platform, string sysVersion, string sysGuid, 
-            ISite site, int moduleId, IApp app, bool isContentApp)
+        public string LinkToRemoteRouter(RemoteDestinations destination, ISite site, int moduleId, IApp app, bool isContentApp)
         {
             var destinationPart = "";
             if (destination == RemoteDestinations.AutoConfigure)
@@ -32,8 +30,8 @@ namespace ToSic.Sxc.Run
                 destinationPart = "&destination=features";
 
             var link = "//gettingstarted.2sxc.org/router.aspx?"
-                        + $"Platform={platform}"
-                        + $"&SysVersion={sysVersion}"
+                        + $"Platform={_platformInfo.Name}"
+                        + $"&SysVersion={_platformInfo.Version.ToString(4)}"
                         + $"&SxcVersion={Settings.ModuleVersion}"
                         + destinationPart
                         + "&ModuleId=" + moduleId
@@ -41,7 +39,7 @@ namespace ToSic.Sxc.Run
                         + "&ZoneID=" + site?.ZoneId
                         + "&DefaultLanguage=" + site?.DefaultCultureCode
                         + "&CurrentLanguage=" + site?.SafeCurrentCultureCode()
-                        + "&SysGuid=" + sysGuid
+                        + "&SysGuid=" + _platformInfo.Identity
                 ;
 
             link += "&AppId=" + (isContentApp ? "Default" : app?.AppGuid ?? "");

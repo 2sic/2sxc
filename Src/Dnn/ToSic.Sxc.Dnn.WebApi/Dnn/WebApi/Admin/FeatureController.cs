@@ -52,9 +52,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             var site = GetService<ISite>();
             var module = Request.FindModuleInfo();
             var link = GetService<RemoteRouterLink>().LinkToRemoteRouter(RemoteDestinations.Features,
-                "Dnn",
-                DotNetNukeContext.Current.Application.Version.ToString(4),
-                DotNetNuke.Entities.Host.Host.GUID,
                 site,
                 module.ModuleID,
                 app: null,

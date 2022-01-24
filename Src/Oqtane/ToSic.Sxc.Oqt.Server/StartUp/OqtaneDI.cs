@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddTransient<IPlatformModuleUpdater, OqtModuleUpdater>();
             services.TryAddTransient<IEnvironmentInstaller, OqtEnvironmentInstaller>();
             services.TryAddTransient<ILookUpEngineResolver, OqtGetLookupEngine>();
-            services.TryAddTransient<PlatformInformationBase, OqtPlatformInformation>();
+            services.TryAddTransient<IPlatformInfo, OqtPlatformContext>();
             services.TryAddTransient<IUiContextBuilder, OqtUiContextBuilder>();
             services.TryAddTransient<OqtCulture>();
             services.TryAddTransient<SettingsHelper>();

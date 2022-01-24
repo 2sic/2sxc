@@ -1,14 +1,13 @@
 ﻿using System.Web;
-using DotNetNuke.Common;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.Context;
-using Assembly = System.Reflection.Assembly;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Dnn.WebApi.Context
@@ -83,9 +82,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
 
             var gsUrl = _remoteRouterLink.LinkToRemoteRouter(
                 RemoteDestinations.GettingStarted,
-                "Dnn",
-                Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4),
-                DotNetNuke.Entities.Host.Host.GUID, 
                 Deps.SiteCtx.Site,
                 Module.ModuleID,
                 app,

@@ -1,5 +1,4 @@
-﻿using Oqtane.Infrastructure;
-using System;
+﻿using System;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
@@ -16,14 +15,12 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
         private readonly RemoteRouterLink _remoteRouterLink;
         private readonly IAppStates _appStates;
-        private readonly IConfigManager _configManager;
 
-        public OqtEnvironmentInstaller(Lazy<CmsRuntime> cmsRuntimeLazy, RemoteRouterLink remoteRouterLink, IAppStates appStates, IConfigManager configManager) : base($"{OqtConstants.OqtLogPrefix}.Instll")
+        public OqtEnvironmentInstaller(Lazy<CmsRuntime> cmsRuntimeLazy, RemoteRouterLink remoteRouterLink, IAppStates appStates) : base($"{OqtConstants.OqtLogPrefix}.Instll")
         {
             _cmsRuntimeLazy = cmsRuntimeLazy;
             _remoteRouterLink = remoteRouterLink;
             _appStates = appStates;
-            _configManager = configManager;
         }
 
 
@@ -51,10 +48,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
             if (forContentApp)
                 try
                 {
-                    var contentAppId = _appStates.IdentityOfDefault(site.ZoneId); //.DefaultAppId(site.ZoneId);
+                    var contentAppId = _appStates.IdentityOfDefault(site.ZoneId);
                     // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                     var contentViews = _cmsRuntimeLazy.Value
-                        .Init(contentAppId /*_appStates.Identity(null, primaryAppId)*/, false, Log)
+                        .Init(contentAppId, false, Log)
                         .Views.GetAll();
                     if (contentViews.Any()) return null;
                 }
@@ -62,9 +59,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             var link = _remoteRouterLink.LinkToRemoteRouter(
                 RemoteDestinations.AutoConfigure,
-                "Oqt",
-                Oqtane.Shared.Constants.Version,
-                _configManager.GetInstallationId(),
                 site,
                 module.Id,
                 app: null,
