@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Run
 
         public override string ModuleVersion => Settings.ModuleVersion;
 
-        public override string FallbackContentTypeScope => Scopes.Default; // Settings.AttributeSetScope;
+        public override string FallbackContentTypeScope => Scopes.Default;
 
         public override string TemplatesRoot(int zoneId, int appId)
         {

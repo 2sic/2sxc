@@ -24,12 +24,14 @@ namespace ToSic.Sxc.Apps
     {
         #region DI Constructors
 
-        public App(AppDependencies dependencies, Lazy<AppPathHelpers> templateHelpersLazy) : base(dependencies, "App.SxcApp")
+        public App(AppDependencies dependencies, Lazy<AppPathHelpers> appPathHelpersLazy) : base(dependencies, "App.SxcApp")
         {
-            _templateHelpersLazy = templateHelpersLazy;
+            _appPathHelpersLazy = appPathHelpersLazy;
         }
 
-        private readonly Lazy<AppPathHelpers> _templateHelpersLazy;
+        private readonly Lazy<AppPathHelpers> _appPathHelpersLazy;
+        private AppPathHelpers _appPathHelpers;
+        private AppPathHelpers AppPathHelpers => _appPathHelpers ?? (_appPathHelpers = _appPathHelpersLazy.Value.Init(this, Log));
 
         public App PreInit(ISite site)
         {
@@ -133,18 +135,26 @@ namespace ToSic.Sxc.Apps
         private string _path;
 
         /// <inheritdoc />
-        public string Thumbnail => File.Exists(PhysicalPath + "/" + AppConstants.AppIconFile) 
-            ? Path + "/" + AppConstants.AppIconFile
-            : File.Exists(PhysicalPathShared + "/" + AppConstants.AppIconFile)
-                ? PathShared + "/" + AppConstants.AppIconFile
-                : AppGuid == Eav.Constants.PrimaryAppGuid // check for Primary App here and use the /assets/app-primary.png' from the 2sxc folder here
-                    ? _templateHelpersLazy.Value.Init(this, Log).AssetsLocation(AppConstants.AppPrimaryIconFile, PathTypes.Link) 
-                    : null;
+        public string Thumbnail
+        {
+            get
+            {
+                if(_thumbnail != null) return _thumbnail;
+                if (File.Exists(PhysicalPath + "/" + AppConstants.AppIconFile))
+                    return _thumbnail = Path + "/" + AppConstants.AppIconFile;
+                if (File.Exists(PhysicalPathShared + "/" + AppConstants.AppIconFile))
+                    return _thumbnail = PathShared + "/" + AppConstants.AppIconFile;
+                if (AppGuid == Eav.Constants.PrimaryAppGuid)
+                    return _thumbnail = AppPathHelpers.AssetsLocation(AppConstants.AppPrimaryIconFile, PathTypes.Link);
+                return null;
+            }
+        }
+        private string _thumbnail;
 
-        public string PathShared => _pathGlobal ?? (_pathGlobal = _templateHelpersLazy.Value.Init(this, Log).AppPathRoot(true, PathTypes.PhysRelative));
+        public string PathShared => _pathGlobal ?? (_pathGlobal = AppPathHelpers.AppPathRoot(true, PathTypes.PhysRelative));
         private string _pathGlobal;
 
-        public string PhysicalPathShared => _physicalPathGlobal ?? (_physicalPathGlobal = _templateHelpersLazy.Value.Init(this, Log).AppPathRoot(true, PathTypes.PhysFull));
+        public string PhysicalPathShared => _physicalPathGlobal ?? (_physicalPathGlobal = AppPathHelpers.AppPathRoot(true, PathTypes.PhysFull));
         private string _physicalPathGlobal;
 
         #endregion

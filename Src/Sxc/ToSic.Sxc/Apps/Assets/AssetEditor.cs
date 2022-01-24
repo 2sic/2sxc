@@ -105,12 +105,6 @@ namespace ToSic.Sxc.Apps.Assets
                 throw new AccessViolationException("current user may not edit files outside of the app-scope");
         }
 
-        //private AssetEditInfo TemplateAssetsInfo(IView view)
-        //{
-        //    var t = new AssetEditInfo(_app.AppId, _app.Name, view.Path, view.IsShared);
-        //    return AddViewDetailsAndTypes(t, view);
-        //}
-
         private static AssetEditInfo AddViewDetailsAndTypes(AssetEditInfo t, IView view)
         {
             // Template specific properties, not really available in other files
