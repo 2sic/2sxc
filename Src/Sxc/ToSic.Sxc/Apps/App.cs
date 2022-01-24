@@ -145,17 +145,14 @@ namespace ToSic.Sxc.Apps
                 if (AppGuid == Eav.Constants.PrimaryAppGuid)
                     return _thumbnail = AppPathHelpers.AssetsLocation(AppConstants.AppPrimaryIconFile, PathTypes.Link);
 
-                // global app
-                if (AppState.IsGlobal())
-                {
-                    if (File.Exists(PhysicalPathShared + "/" + AppConstants.AppIconFile))
-                        return _thumbnail = PathShared + "/" + AppConstants.AppIconFile;
-                }
-                else
-                {
+                // standard app (not global) try to find app-icon in its (portal) app folder
+                if (!AppState.IsGlobal())
                     if (File.Exists(PhysicalPath + "/" + AppConstants.AppIconFile))
                         return _thumbnail = Path + "/" + AppConstants.AppIconFile;
-                }
+
+                // global app (and standard app without app-icon in its portal folder) looks for app-icon in global shared location 
+                if (File.Exists(PhysicalPathShared + "/" + AppConstants.AppIconFile))
+                    return _thumbnail = PathShared + "/" + AppConstants.AppIconFile;
 
                 return null;
             }
