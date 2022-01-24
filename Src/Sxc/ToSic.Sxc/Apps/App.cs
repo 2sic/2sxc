@@ -139,13 +139,24 @@ namespace ToSic.Sxc.Apps
         {
             get
             {
-                if(_thumbnail != null) return _thumbnail;
-                if (File.Exists(PhysicalPath + "/" + AppConstants.AppIconFile))
-                    return _thumbnail = Path + "/" + AppConstants.AppIconFile;
-                if (File.Exists(PhysicalPathShared + "/" + AppConstants.AppIconFile))
-                    return _thumbnail = PathShared + "/" + AppConstants.AppIconFile;
+                if (_thumbnail != null) return _thumbnail;
+
+                // primary app
                 if (AppGuid == Eav.Constants.PrimaryAppGuid)
                     return _thumbnail = AppPathHelpers.AssetsLocation(AppConstants.AppPrimaryIconFile, PathTypes.Link);
+
+                // global app
+                if (AppState.IsGlobal())
+                {
+                    if (File.Exists(PhysicalPathShared + "/" + AppConstants.AppIconFile))
+                        return _thumbnail = PathShared + "/" + AppConstants.AppIconFile;
+                }
+                else
+                {
+                    if (File.Exists(PhysicalPath + "/" + AppConstants.AppIconFile))
+                        return _thumbnail = Path + "/" + AppConstants.AppIconFile;
+                }
+
                 return null;
             }
         }
