@@ -22,12 +22,12 @@ namespace ToSic.Sxc.Services
         /// <summary>
         /// Checks if a list of features are enabled, in case you need many features to be activated.
         /// </summary>
-        /// <param name="nameIds">one or many name IDs</param>
+        /// <param name="nameIds">one or many name IDs - can also be the guids (as string)</param>
         /// <returns>true if all features are enabled, false if any one of them is not</returns>
         /// <remarks>
         /// Added in v13.01
         /// </remarks>
-        bool Enabled(params string[] nameIds);
+        bool IsEnabled(params string[] nameIds);
 
     }
 }

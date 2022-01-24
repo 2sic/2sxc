@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Services
     {
         public FeaturesService(ToSic.Eav.Configuration.IFeaturesService contents) : base(contents) { }
 
-        public bool Enabled(params string[] nameIds) => _contents.Enabled(nameIds);
+        public bool IsEnabled(params string[] nameIds) => _contents.IsEnabled(nameIds);
 
         public bool Valid => _contents.Valid;
 

@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Images
             if (defFormat == null || defFormat.ResizeFormats.Count == 0) return Tag.TagList();
 
             // Determine if the feature MultiFormat is enabled, if yes, use list, otherwise use only current
-            var formats = _featuresService.Enabled(FeaturesCatalog.ImageServiceMultiFormat.NameId)
+            var formats = _featuresService.IsEnabled(FeaturesCatalog.ImageServiceMultiFormat.NameId)
                 ? defFormat.ResizeFormats
                 : new List<IImageFormat> { defFormat };
 
