@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Apps
             var callLog = Log.Call<IList<AppUiInfo>>(filter);
             var list =
                 GetApps(site, null)
-                    .Where(a => a.Name != Eav.Constants.ContentAppName && a.Name != Eav.Constants.PrimaryAppName) // #SiteApp v13
+                    .Where(a => a.Name != Eav.Constants.ContentAppName && a.Name != Eav.Constants.PrimaryAppName && a.Name != Eav.Constants.PrimaryAppGuid) // #SiteApp v13
                     .Where(a => !a.Hidden)
                     .Select(a => new AppUiInfo
                     {
