@@ -4,7 +4,7 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Tests.ServicesTests
 {
     [TestClass]
-    public class ImageServiceTags: TestBaseSxc
+    public class ImageServiceTags: TestBaseSxcDb
     {
         private const string ImgBase = "/abc/def/test.jpg";
         private const string SrcSet12 = "1,2";
