@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Web.WebApi.System
                 var types = typesA
                     .OrderBy(t => t.RepositoryType)
                     .ThenBy(t => t.Scope)
-                    .ThenBy(t => t.StaticName)
+                    .ThenBy(t => t.NameId)
                     .ToList();
                 msg += P($"types: {types.Count}\n");
                 msg += "<table id='table'>"
@@ -62,15 +62,15 @@ namespace ToSic.Sxc.Web.WebApi.System
                     msg = msg + RowFields(
                         ++count,
                         type.Scope,
-                        type.StaticName,
+                        type.NameId,
                         type.Name,
-                        A($"{type.Attributes.Count}").Href($"attributes?appid={appId}&type={type.StaticName}"),
-                        A($"{type.Metadata.Count()}").Href($"typepermissions?appid={appId}&type={type.StaticName}"),
+                        A($"{type.Attributes.Count}").Href($"attributes?appid={appId}&type={type.NameId}"),
+                        A($"{type.Metadata.Count()}").Href($"typepermissions?appid={appId}&type={type.NameId}"),
                         A($"{type.Metadata.Permissions.Count()}").Href(
-                            $"typepermissions?appid={appId}&type={type.StaticName}"),
+                            $"typepermissions?appid={appId}&type={type.NameId}"),
                         type.IsDynamic.ToString(),
                         type.RepositoryType.ToString(),
-                        A($"{itemCount}").Href($"entities?appid={appId}&type={type.StaticName}")
+                        A($"{itemCount}").Href($"entities?appid={appId}&type={type.NameId}")
                     );
                 }
                 msg += "</tbody>";
@@ -118,7 +118,7 @@ namespace ToSic.Sxc.Web.WebApi.System
             Log.Add($"debug app metadata for {appId} and {type}");
             var typ = AppState(appId).GetContentType(type);
 
-            var msg = H1($"Metadata for {typ.Name} ({typ.StaticName}) in {appId}\n").ToString();
+            var msg = H1($"Metadata for {typ.Name} ({typ.NameId}) in {appId}\n").ToString();
             var metadata = typ.Metadata.ToList();
 
             return MetadataTable(msg, metadata);
@@ -134,7 +134,7 @@ namespace ToSic.Sxc.Web.WebApi.System
             Log.Add($"debug app metadata for {appId} and {type}");
             var typ = AppState(appId).GetContentType(type);
 
-            var msg = H1($"Permissions for {typ.Name} ({typ.StaticName}) in {appId}\n").ToString();
+            var msg = H1($"Permissions for {typ.Name} ({typ.NameId}) in {appId}\n").ToString();
             var metadata = typ.Metadata.Permissions.Select(p => p.Entity).ToList();
 
             return MetadataTable(msg, metadata);

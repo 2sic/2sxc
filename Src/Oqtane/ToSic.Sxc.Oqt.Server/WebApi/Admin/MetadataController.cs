@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
         [HttpGet]
         public MetadataListDto Get(int appId, int targetType, string keyType, string key, string contentType = null)
-            => Backend.Get(appId, targetType, keyType, key, contentType);
+            => Backend.Init(Log).Get(appId, targetType, keyType, key, contentType);
 
     }
 }

@@ -46,5 +46,16 @@ namespace ToSic.Sxc.WebApi.Assets
                     x.Replace("\\", "/")) // tip the slashes to web-convention (old template entries used "\")
                 .ToList();
         }
+
+        public AllFilesDto AppFiles(int appId)
+        {
+            var localFiles =
+                List(appId, global: false, path: null, mask: "*.*", withSubfolders: true, returnFolders: false)
+                    .Select(f => new AllFileDto { Path = f });
+            var globalFiles = 
+                List(appId, global: true, path: null, mask: "*.*", withSubfolders: true, returnFolders: false)
+                    .Select(f => new AllFileDto { Path = f, Shared = true });
+            return new AllFilesDto { Files = localFiles.Union(globalFiles),};
+        }
     }
 }

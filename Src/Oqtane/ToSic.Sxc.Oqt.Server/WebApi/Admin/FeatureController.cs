@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Oqtane.Infrastructure;
 using Oqtane.Shared;
 using System.Collections.Generic;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.Oqt.Server.Run;
+using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.Features;
@@ -26,17 +24,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     public class FeatureController : OqtStatefulControllerBase, IFeatureController
     {
         private readonly FeaturesBackend _featuresBackend;
-        private readonly ISite _site;
-        private readonly IConfigManager _configManager;
         private readonly OqtModuleHelper _oqtModuleHelper;
-        private readonly WipRemoteRouterLink _remoteRouterLink;
+        private readonly RemoteRouterLink _remoteRouterLink;
         protected override string HistoryLogName => "Api.Feats";
 
-        public FeatureController(FeaturesBackend featuresBackend, ISite site, IConfigManager configManager, OqtModuleHelper oqtModuleHelper, WipRemoteRouterLink remoteRouterLink)
+        public FeatureController(FeaturesBackend featuresBackend, OqtModuleHelper oqtModuleHelper, RemoteRouterLink remoteRouterLink)
         {
             _featuresBackend = featuresBackend;
-            _site = site;
-            _configManager = configManager;
             _oqtModuleHelper = oqtModuleHelper;
             _remoteRouterLink = remoteRouterLink;
         }
@@ -46,7 +40,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// </summary>
         [HttpGet]
         [Authorize(Roles = RoleNames.Admin)]
-        public IEnumerable<Feature> List(bool reload = false) => _featuresBackend.Init(Log).GetAll(reload);
+        public IEnumerable<FeatureState> List(bool reload = false) => _featuresBackend.Init(Log).GetAll(reload);
 
         /// <summary>
         /// Used to be GET System/ManageFeaturesUrl
@@ -55,22 +49,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [Authorize(Roles = RoleNames.Host)]
         public string RemoteManageUrl()
         {
-            //return "//gettingstarted.2sxc.org/router.aspx?"
-            //       + $"DnnVersion={Oqtane.Shared.Constants.Version}"
-            //       + $"&2SexyContentVersion={Settings.ModuleVersion}"
-            //       + $"&fp={HttpUtility.UrlEncode(Fingerprint.System)}"
-            //       + $"&DnnGuid={Guid.Empty}" // we can try to use oqt host user guid from aspnetcore identity
-            //       + $"&ModuleId={GetContext().Module.Id}" // needed for callback later on
-            //       + "&destination=features";
-
             var ctx = GetContext();
             var site = ctx.Site;
             var module = ctx.Module;
             
             var link = _remoteRouterLink.LinkToRemoteRouter(RemoteDestinations.Features,
-                "Oqt",
-                Oqtane.Shared.Constants.Version, // Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),
-                _configManager.GetInstallationId(),
                 site,
                 module.Id,
                 app: null,

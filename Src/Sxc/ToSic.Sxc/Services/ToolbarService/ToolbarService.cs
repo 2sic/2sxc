@@ -8,18 +8,22 @@ namespace ToSic.Sxc.Services
     public class ToolbarService: IToolbarService
     {
         public IToolbarBuilder Default(
-            string noParamOrder =
-                "Rule: all params must be named (https://r.2sxc.org/named-params), Example: \'enable: true, version: 10\'",
-            string ui = "") 
-            => NewBuilder(noParamOrder, ToolbarRuleToolbar.Default, ui);
+            string noParamOrder = Eav.Parameters.Protector,
+            string ui = null
+        ) => NewBuilder(noParamOrder, ToolbarRuleToolbar.Default, ui);
 
         public IToolbarBuilder Empty(
-            string noParamOrder =
-                "Rule: all params must be named (https://r.2sxc.org/named-params), Example: \'enable: true, version: 10\'",
-            string ui = "") 
-            => NewBuilder(noParamOrder, ToolbarRuleToolbar.Empty, ui);
+            string noParamOrder = Eav.Parameters.Protector,
+            string ui = null
+        ) => NewBuilder(noParamOrder, ToolbarRuleToolbar.Empty, ui);
 
-        public IToolbarBuilder Metadata(object target, string contentTypes) => Empty().Metadata(target, contentTypes);
+        public IToolbarBuilder Metadata(
+            object target,
+            string contentTypes,
+            string noParamOrder = Eav.Parameters.Protector,
+            string ui = null,
+            string parameters = null
+        ) => Empty().Metadata(target, contentTypes, ui: ui, parameters: parameters);
 
         private IToolbarBuilder NewBuilder(string noParamOrder, string toolbarTemplate, string ui)
         {

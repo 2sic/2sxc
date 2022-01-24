@@ -4,12 +4,15 @@ namespace ToSic.Sxc.Web.JsContext
 {
     public class JsContextUser
     {
-        public bool CanDesign;
-        public bool CanDevelop;
+        public bool CanDesign { get; }
+        public bool CanDevelop { get; }
 
-        public JsContextUser(IUser user)
+        public bool CanAdmin { get; }
+
+        public JsContextUser(IUser user, bool? overrideDesign = null)
         {
-            CanDesign = user.IsDesigner;
+            CanAdmin = user.IsAdmin;
+            CanDesign = overrideDesign ?? user.IsDesigner;
             CanDevelop = user.IsSuperUser;
         }
     }

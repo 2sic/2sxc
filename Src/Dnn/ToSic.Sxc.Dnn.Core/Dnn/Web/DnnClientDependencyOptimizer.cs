@@ -1,10 +1,11 @@
 ﻿using System;
 using DotNetNuke.Web.Client;
+using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.Web
 {
-    public class DnnClientDependencyOptimizer: ClientDependencyOptimizer
+    public class DnnBlockResourceExtractor: BlockResourceExtractor
     {
 
         public override Tuple<string, bool> Process(string renderedTemplate)

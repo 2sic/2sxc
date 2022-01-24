@@ -15,15 +15,23 @@ namespace ToSic.Sxc
         // In past build revision was good cachebreak value, but since assemblies are deterministic 
         // we use application start unix time as slow changing revision value for cachebreak purpose. 
         //public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
-        public static readonly Version Version = new Version(
-            Assembly.GetExecutingAssembly().GetName().Version.Major,
-            Assembly.GetExecutingAssembly().GetName().Version.Minor,
-            Assembly.GetExecutingAssembly().GetName().Version.Build,
-            (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds); // application start unix time as slow changing revision value
+        public static readonly Version Version =
+            VersionWithFakeBuildNumber(Assembly.GetExecutingAssembly().GetName().Version);
 
-        public static readonly string ModuleVersion = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString("00") + "."
-                                                      + Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString("00") + "."
-                                                      + Assembly.GetExecutingAssembly().GetName().Version.Build.ToString("00");
+        /// <summary>
+        /// application start unix time as slow changing revision value
+        /// </summary>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        private static Version VersionWithFakeBuildNumber(Version version) =>
+            new Version(version.Major, version.Minor, version.Build,
+                (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds);
+
+        public static readonly string ModuleVersion = VersionToNiceFormat(Assembly.GetExecutingAssembly().GetName().Version);
+
+        // Todo: probably move to plumbing or extension method?
+        public static string VersionToNiceFormat(Version version)
+            => $"{version.Major:00}.{version.Minor:00}.{version.Build:00}";
 
         public const string WebConfigTemplateFile = "WebConfigTemplate.config";
         public const string WebConfigFileName = "web.config";
@@ -33,7 +41,7 @@ namespace ToSic.Sxc
 
         public class Installation
         {
-            public const string CurrentReleaseVersion = "13.00.00";
+            public const string CurrentReleaseVersion = "13.01.00";
 
             // This list is just used to run code-upgrades
             // So we only need the versions which do have code upgrades - which is very uncommon
@@ -65,6 +73,7 @@ namespace ToSic.Sxc
                 // "12.07.00", was never released
                 //"12.08.00", "12.08.01", // LTS
                 //"12.10.00",
+                "13.00.00",
                 CurrentReleaseVersion,
             };
 

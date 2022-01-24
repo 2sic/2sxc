@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Oqt.Content
         /// <summary>
         /// The SQL versions must use a "-" to avoid being replaced on search/replace when releasing a new version
         /// </summary>
-        internal static string[] SqlScriptVersions = { "0-0-1", "12-00-00", "12-02-01", "12-05-00", "13-00-00" };
+        internal static string[] SqlScriptVersions = { "0-0-1", "12-00-00", "12-02-01", "12-05-00", "13-00-00", "13-01-00" };
 
         /// <summary>
         /// Merge versions for use in Oqtane version list
@@ -46,14 +46,14 @@ namespace ToSic.Sxc.Oqt.Content
             Name = name,
             Description = description,
             Categories = "Common",
-            Version = "13.00.00",
+            Version = "13.01.00",
             Owner = "2sic Internet Solutions",
             Url = "https://2sxc.org",
             Contact = "@iJungleboy",
             License = "MIT",
             Dependencies = "ToSic.Sxc.Oqtane.Shared",
             // PermissionNames = "",
-            ServerManagerType = "ToSic.Sxc.Oqt.Server.Manager.SxcManager, ToSic.Sxc.Oqtane.Server",
+            ServerManagerType = "ToSic.Sxc.Oqt.Server.Installation.SxcManager, ToSic.Sxc.Oqtane.Server",
             // ControlTypeRoutes = "",
             // This must contain all versions with a SQL script and current/latest version
             // list versions with sql scripts in \ToSic.Sxc.Oqt.Server\Scripts\

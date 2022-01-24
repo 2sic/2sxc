@@ -199,7 +199,6 @@
     <Content Include="View.ascx" />
     <Content Include="WebConfigTemplate.config" />
     <Content Include="web-Deploy.config" />
-    <Content Include="web.config" />
     <Content Include="ImportExport\Instructions\2sxc_App_ByUnknown_NameUnknown.dnn" />
     <Content Include="ImportExport\Instructions\Online help to install this app.url" />
     <Content Include="ImportExport\readme.md" />
@@ -281,6 +280,7 @@
     <Content Include="DnnPackageBuilder\SqlDataProvider\require-2sxc-9.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\13.00.00.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\13.01.00.SqlDataProvider" />
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
@@ -340,6 +340,7 @@ robocopy $(ProjectDir)Extensions\Imageflow\bin $(Dev2sxcDnnRoot)bin *.dll
 robocopy /mir "$(ProjectDir)..\..\Data\.data\ " "%25BuildTarget%25\.data\ "
 robocopy /mir "$(ProjectDir)..\..\Data\.databeta\ " "%25BuildTarget%25\.databeta\ "
 robocopy /mir "$(ProjectDir)..\..\Data\.data-custom\ " "%25BuildTarget%25\.data-custom\ "
+robocopy /mir "$(ProjectDir)..\..\Data\assets\ " "%25BuildTarget%25\assets\ "
 
 @REM Add the DNN specific content-types
 robocopy /s "$(ProjectDir)..\..\Data-Dnn\.data\ " "%25BuildTarget%25\.data\ "

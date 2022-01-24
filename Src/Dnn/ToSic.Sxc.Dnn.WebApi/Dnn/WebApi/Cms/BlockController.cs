@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
@@ -72,7 +69,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<ContentTypeUiInfo> ContentTypes() => ViewBackend.ContentTypes(); //  CmsRuntime?.Views.GetContentTypesWithStatus();
+        public IEnumerable<ContentTypeUiInfo> ContentTypes() => ViewBackend.ContentTypes();
 
         #endregion
 

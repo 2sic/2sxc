@@ -7,12 +7,12 @@ namespace ToSic.Sxc.Edit.Toolbar
 {
     public abstract class ToolbarRule: ToolbarRuleBase
     {
-        protected ToolbarRule(string command, string ui = "", string parameters = "", char? operation = null)
+        protected ToolbarRule(string command, string ui = null, string parameters = null, char? operation = null)
         {
             Command = command;
             Operation = operation;
-            Parameters = parameters;
-            Ui = ui;
+            Parameters = parameters ?? "";
+            Ui = ui ?? "";
         }
 
         public char? Operation { get; }

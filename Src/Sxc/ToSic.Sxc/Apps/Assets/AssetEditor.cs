@@ -105,12 +105,6 @@ namespace ToSic.Sxc.Apps.Assets
                 throw new AccessViolationException("current user may not edit files outside of the app-scope");
         }
 
-        //private AssetEditInfo TemplateAssetsInfo(IView view)
-        //{
-        //    var t = new AssetEditInfo(_app.AppId, _app.Name, view.Path, view.IsShared);
-        //    return AddViewDetailsAndTypes(t, view);
-        //}
-
         private static AssetEditInfo AddViewDetailsAndTypes(AssetEditInfo t, IView view)
         {
             // Template specific properties, not really available in other files
@@ -125,7 +119,7 @@ namespace ToSic.Sxc.Apps.Assets
         }
 
         public string InternalPath => NormalizePath(Path.Combine(
-            _cmsRuntime.ServiceProvider.Build<TemplateHelpers>().Init(_app, Log)
+            _cmsRuntime.ServiceProvider.Build<AppPathHelpers>().Init(_app, Log)
                 .AppPathRoot(EditInfo.IsShared, PathTypes.PhysFull), EditInfo.FileName));
 
         private static string NormalizePath(string path) => Path.GetFullPath(new Uri(path).LocalPath);
@@ -169,7 +163,7 @@ namespace ToSic.Sxc.Apps.Assets
             if (SanitizeFileNameAndCheckIfAssetAlreadyExists()) return false;
 
             // ensure the web.config exists (usually missing in the global area)
-            _cmsRuntime.ServiceProvider.Build<TemplateHelpers>().Init(_app, Log)
+            _cmsRuntime.ServiceProvider.Build<AppPathHelpers>().Init(_app, Log)
                 .EnsureTemplateFolderExists(EditInfo.IsShared);
 
             var absolutePath = InternalPath;

@@ -7,21 +7,22 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
 {
     public class ContentBlockDto : EntityDto
     {
-        public bool IsCreated;
-        public bool IsList;
-        public int TemplateId;
-        public int? QueryId;
-        public string ContentTypeName;
-        public string AppUrl;
-        public int? AppSettingsId;
-        public int? AppResourcesId;
+        public bool IsCreated { get; }
+        public bool IsList { get; }
+        public int TemplateId { get; }
+        public int? QueryId { get; }
+        public string ContentTypeName { get; }
+        public string AppUrl { get; }
+        public int? AppSettingsId { get; }
+        public int? AppResourcesId { get; }
 
-        public bool IsContent;
-        public bool HasContent;
-        public bool SupportsAjax;
+        public bool IsContent { get; }
+        public bool HasContent { get; }
+        public bool SupportsAjax { get; }
 
-        [JsonProperty(NullValueHandling = Ignore)] public string Edition;
-        [JsonProperty(NullValueHandling = Ignore)] public string TemplatePath;
+        [JsonProperty(NullValueHandling = Ignore)] public string Edition { get; }
+        [JsonProperty(NullValueHandling = Ignore)] public string TemplatePath { get; }
+        public bool TemplateIsShared { get; }
 
         public ContentBlockDto(IBlock block)
         {
@@ -44,6 +45,7 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
             TemplateId = block.View?.Id ?? 0;
             Edition = block.View?.Edition;
             TemplatePath = block.View?.EditionPath;
+            TemplateIsShared = block.View?.IsShared ?? false;
             QueryId = block.View?.Query?.Id; // will be null if not defined
             ContentTypeName = block.View?.ContentType ?? "";
             IsList = block.Configuration?.View?.UseForList ?? false;

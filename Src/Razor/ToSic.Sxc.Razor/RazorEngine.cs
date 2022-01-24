@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Razor
     /// <summary>
     /// The razor engine, which compiles / runs engine templates
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
+    [PrivateApi("used to be marked as internal, but it doesn't make sense to show in docs")]
     [EngineDefinition(Name = "Razor")]
 
     public partial class RazorEngine : EngineBase, IRazorEngine

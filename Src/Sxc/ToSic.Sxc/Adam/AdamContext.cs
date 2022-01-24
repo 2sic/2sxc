@@ -104,8 +104,8 @@ namespace ToSic.Sxc.Adam
 
         public readonly Guid[] FeaturesForRestrictedUsers =
         {
-            FeatureIds.PublicUpload,
-            FeatureIds.PublicForms
+            FeaturesCatalog.PublicUploadFiles.Guid,
+            FeaturesCatalog.PublicEditForm.Guid,
         };
 
 

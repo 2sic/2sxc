@@ -1,8 +1,7 @@
-﻿using System;
-using Microsoft.AspNetCore.Hosting;
-using Oqtane.Infrastructure;
+﻿using Microsoft.AspNetCore.Hosting;
 using Oqtane.Shared;
-using ToSic.Sxc.Oqt.Server.Run;
+using System;
+using ToSic.Sxc.Oqt.Server.Apps;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi
 {
@@ -10,19 +9,15 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
     {
         public IWebHostEnvironment HostingEnvironment { get; }
         public Lazy<OqtAppFolder> OqtAppFolderLazy { get; }
-        //public ILogManager Logger { get; }
         public SiteState SiteState { get; }
-
 
         public AppAssetsDependencies(
             IWebHostEnvironment hostingEnvironment, 
             Lazy<OqtAppFolder> oqtAppFolderLazy, 
-            ILogManager logger, 
             SiteState siteState)
         {
             HostingEnvironment = hostingEnvironment;
             OqtAppFolderLazy = oqtAppFolderLazy;
-            //Logger = logger;
             SiteState = siteState;
         }
     }

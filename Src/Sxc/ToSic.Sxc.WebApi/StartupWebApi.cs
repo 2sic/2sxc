@@ -5,6 +5,7 @@ using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.ImportExport;
+using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
@@ -22,8 +23,10 @@ using ToSic.Sxc.WebApi.Features;
 using ToSic.Sxc.WebApi.ImportExport;
 using ToSic.Sxc.WebApi.InPage;
 using ToSic.Sxc.WebApi.Languages;
+using ToSic.Sxc.WebApi.Licenses;
 using ToSic.Sxc.WebApi.Save;
 using ToSic.Sxc.WebApi.Usage;
+using ToSic.Sxc.WebApi.Zone;
 
 namespace ToSic.Sxc.WebApi
 {
@@ -41,11 +44,11 @@ namespace ToSic.Sxc.WebApi
             //services.TryAddTransient<IServerPaths, ServerPaths>();
             services.TryAddTransient<XmlImportWithFiles, XmlImportFull>();
             //services.TryAddTransient<XmlImportWithFiles.Dependencies>();
-            services.TryAddTransient<TemplateHelpers, TemplateHelpers>();
+            services.TryAddTransient<AppPathHelpers, AppPathHelpers>();
             services.TryAddTransient<EngineBaseDependencies>();
 
             // These are usually replaced by the target platform
-            services.TryAddTransient<IClientDependencyOptimizer, BasicClientDependencyOptimizer>();
+            services.TryAddTransient<IBlockResourceExtractor, BasicBlockResourceExtractor>();
             
             // Backends
             services.TryAddTransient<AppsBackend>();
@@ -56,6 +59,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<AppViewPickerBackend>();
             services.TryAddTransient<ContentBlockBackend>();
             services.TryAddTransient<FeaturesBackend>();
+            services.TryAddTransient<LicenseBackend>();
             services.TryAddTransient<UsageBackend>();
             services.TryAddTransient<LanguagesBackend>();
             services.TryAddTransient<QueryBackend>();
@@ -95,6 +99,9 @@ namespace ToSic.Sxc.WebApi
 
             // Adam shared code across the APIs
             services.TryAddTransient<AdamCode>();
+
+            // new v13
+            services.TryAddTransient<ZoneBackend>();
 
             return services;
         }

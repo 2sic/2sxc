@@ -61,5 +61,7 @@ namespace ToSic.Sxc.WebApi.Assets
 
         TemplatePreviewDto Preview(int appId, string path, string templateKey, bool global = false);
 
+        AllFilesDto AppFiles(int appId);
+
     }
 }

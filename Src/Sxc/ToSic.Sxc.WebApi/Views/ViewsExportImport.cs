@@ -31,7 +31,7 @@ namespace ToSic.Sxc.WebApi.Views
     public class ViewsExportImport: HasLog<ViewsExportImport>
     {
         private readonly IServerPaths _serverPaths;
-        private readonly TemplateHelpers _appHelpers;
+        private readonly AppPathHelpers _appHelpers;
         private readonly IEnvironmentLogger _envLogger;
         private readonly Lazy<CmsManager> _cmsManagerLazy;
         private readonly Lazy<JsonBundleSerializer> _jsonBundleLazy;
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.WebApi.Views
         private readonly IUser _user;
 
         public ViewsExportImport(IServerPaths serverPaths, 
-            TemplateHelpers appHelpers, 
+            AppPathHelpers appHelpers, 
             IEnvironmentLogger envLogger,
             Lazy<CmsManager> cmsManagerLazy, 
             Lazy<JsonBundleSerializer> jsonBundleLazy, 

@@ -121,8 +121,7 @@ namespace ToSic.Sxc.Web
         /// </remarks>
         IHybridHtmlString TagToolbar(
             object target = null,
-            string noParamOrder =
-                "Rule: all params must be named (https://r.2sxc.org/named-params), Example: \'enable: true, version: 10\'",
+            string noParamOrder = Eav.Parameters.Protector,
             string actions = null,
             string contentType = null,
             object condition = null,

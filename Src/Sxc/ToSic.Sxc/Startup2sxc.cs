@@ -5,12 +5,14 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
+using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DotNet;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Images;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
@@ -104,7 +106,7 @@ namespace ToSic.Sxc
             services.TryAddTransient<ImgResizeLinker>();
 
             // WIP - objects which are not really final
-            services.TryAddTransient<WipRemoteRouterLink>();
+            services.TryAddTransient<RemoteRouterLink>();
 
             // WIP 12.05 - json converter
             services.TryAddTransient<IJsonService, JsonService>();
@@ -116,28 +118,10 @@ namespace ToSic.Sxc
             // 12.06.01 moved here from WebApi, but it should probably be in Dnn as it's probably just used there
             services.TryAddTransient<IServerPaths, ServerPaths>();
 
-            // 13 - ToolbarService
-            services.TryAddTransient<IToolbarService, ToolbarService>();
-
-
-            // Add possibly missing fallback services
-            // This must always be at the end here so it doesn't accidentally replace something we actually need
-            services.AddSxcCoreFallbackServices();
-
-
-            // Add possibly missing fallback services
-            // This must always be at the end here so it doesn't accidentally replace something we actually need
-            services.AddSxcCoreFallbackServices();
-
-
-            // Add possibly missing fallback services
-            // This must always be at the end here so it doesn't accidentally replace something we actually need
-            services.AddSxcCoreFallbackServices();
-
-
-            // Add possibly missing fallback services
-            // This must always be at the end here so it doesn't accidentally replace something we actually need
-            services.AddSxcCoreFallbackServices();
+            // 13 - ToolbarService & IFeaturesService
+            services.TryAddTransient<IToolbarService, ToolbarService>();    // New 13.00
+            services.TryAddTransient<IFeaturesService, FeaturesService>();  // New 13.01
+            services.TryAddTransient<IImageService, ImageService>();
 
 
             // Add possibly missing fallback services

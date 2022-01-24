@@ -11,7 +11,7 @@ namespace ToSic.Eav.Configuration
     /// Prefer to use the IFeatureService instead
     /// </summary>
     [Obsolete("Obsolete in 2sxc 12 - please use the IFeaturesService instead")]
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
+    [PrivateApi("this is just fyi, hidden since 2022-01-04")]
     public static class Features
     {
 
@@ -26,12 +26,12 @@ namespace ToSic.Eav.Configuration
 
         public static IFeaturesInternal FeaturesFromDi = null;
 
-        [Obsolete("Was private before, now deprecated in 12.05, will remove in v13 as it should never have been used outside")]
-        [PrivateApi] public static IEnumerable<Feature> All => FeaturesFromDi.All;
-        //private static FeatureList _all;
+        // 2022-01-24 2dm disabled, remove ca. April 2022 if all is fine
+        //[Obsolete("Was private before, now deprecated in 12.05, will remove in v13 as it should never have been used outside")]
+        //[PrivateApi] public static IEnumerable<FeatureState> All => FeaturesFromDi.All;
 
-        [Obsolete("Was private before, now deprecated in 12.05, will remove in v13 as it should never have been used outside")]
-        [PrivateApi] public static IEnumerable<Feature> Ui => FeaturesFromDi.Ui;
+        //[Obsolete("Was private before, now deprecated in 12.05, will remove in v13 as it should never have been used outside")]
+        //[PrivateApi] public static IEnumerable<FeatureState> Ui => FeaturesFromDi.Ui;
 
         /// <summary>
         /// Checks if a feature is enabled

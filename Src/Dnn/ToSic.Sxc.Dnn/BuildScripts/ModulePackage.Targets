@@ -70,15 +70,13 @@
 
       <!-- all global types and queries -->
       <InstallInclude Include="..\..\Data\**\.data\**\*.json" Exclude="@(DefaultExclude)" />
+      <InstallInclude Include="..\..\Data\**\assets\**\*.*" />
       <InstallInclude Include="..\..\Data-Dnn\**\.data\**\*.json" Exclude="@(DefaultExclude)" />
 
       <InstallInclude Include="**\*.txt" Exclude="@(DefaultExclude);**\obj\**;**\_ReSharper*\**;License.txt;ReleaseNotes.txt" />
       <InstallInclude Include="**\*.ashx" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.png" Exclude="@(DefaultExclude);icon.png;icon-app.png" />
-      <!-- <InstallInclude Include="**\*.jpg" Exclude="@(DefaultExclude)" /> -->
-      <!-- <InstallInclude Include="**\*.gif" Exclude="@(DefaultExclude)" /> -->
       <InstallInclude Include="**\*.config" Exclude="@(DefaultExclude);**\web-Deploy.config;**\app.config;**\packages.config" />
-      <!-- <InstallInclude Include="**\*.xml" Exclude="@(DefaultExclude);" /> -->
 
       <!-- special DNN client scripts which react when adding a module to a page (js/html) -->
       <InstallInclude Include="*ClientScripts\*.*" />
@@ -100,7 +98,7 @@
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Dnn*.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Dnn*.pdb" />
 
-      <!-- 2021-12-01 commented, not used in 2sxc 13+, delete in 2022 -->
+      <!-- 2021-12-01 commented, not used in 2sxc 13+, #cleanup delete ca. April 2022 -->
       <!-- for DNN 9.4.0 older entity framework core etc. 1.1.0 assemblies used by 2sxc v<13 -->
       <!--
       <Assembly2sxcInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.dll" />
@@ -220,6 +218,7 @@
 
     <Copy SourceFiles="@(ImageflowAssemblyInclude)" DestinationFolder="$(TempPackageFolder)\bin" />
 
+    <!-- 2021-12-01 commented, not used in 2sxc 13+, #cleanup delete ca. April 2022 -->
     <!-- include ImageResizer folder -->
     <!--<ItemGroup>
       <IResizeFiles Include="$(MSBuildProjectDirectory)/Extensions/ImageResizer/*.*" Exclude="**\*.dll" />

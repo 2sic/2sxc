@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Services
         /// At the moment it MUST stay internal, as it's not clear what API we want to surface
         /// </summary>
         /// <param name="dynParent">The parent-item containing the content-blocks and providing edit-context</param>
-        /// <param name="noParamOrder"></param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="item">The content-block item to render. Optional, by default the same item is used as the context.</param>
         /// <param name="field">Optional: </param>
         /// <param name="newGuid">Internal: this is the guid given to the item when being created in this block. Important for the inner-content functionality to work. </param>
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Services
         /// Render content-blocks into a larger html-block containing placeholders
         /// </summary>
         /// <param name="context">The parent-item containing the content-blocks and providing edit-context</param>
-        /// <param name="noParamOrder"></param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="field">Required: Field containing the content-blocks. </param>
         /// <param name="max">BETA / WIP</param>
         /// <param name="merge">Optional: html-text containing special placeholders.</param>

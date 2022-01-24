@@ -3,11 +3,10 @@ using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
+using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Context;
-
 
 namespace ToSic.Sxc.Dnn.Run
 {
@@ -19,15 +18,16 @@ namespace ToSic.Sxc.Dnn.Run
     {
         #region Constructors and DI
         
-        public DnnModule(Lazy<IZoneMapper> zoneMapperLazy, IAppStates appStates, Lazy<AppFinder> appFinderLazy): base("Dnn.Contnr")
+        public DnnModule(IAppStates appStates, Lazy<AppFinder> appFinderLazy, ISite site): base("Dnn.Contnr")
         {
-            _zoneMapperLazy = zoneMapperLazy;
             _appStates = appStates;
             _appFinderLazy = appFinderLazy;
+            _site = site;
         }
-        private readonly Lazy<IZoneMapper> _zoneMapperLazy;
+
         private readonly IAppStates _appStates;
         private readonly Lazy<AppFinder> _appFinderLazy;
+        private readonly ISite _site;
 
         /// <summary>
         /// We don't use a Constructor because of DI
@@ -69,7 +69,8 @@ namespace ToSic.Sxc.Dnn.Run
                 if (UnwrappedContents == null) return null;
 
                 // find ZoneId, AppId and prepare settings for next values
-                var zoneId = _zoneMapperLazy.Value.Init(Log).GetZoneId(UnwrappedContents.OwnerPortalID);
+                // note: this is the correct zone, even if the module is shared from another portal, because the Site is prepared correctly
+                var zoneId = _site.ZoneId;
                 var appId = GetInstanceAppId(zoneId);
                 var settings = UnwrappedContents.ModuleSettings;
 

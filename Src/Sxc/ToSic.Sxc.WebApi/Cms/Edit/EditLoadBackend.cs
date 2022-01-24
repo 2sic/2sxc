@@ -122,7 +122,7 @@ namespace ToSic.Sxc.WebApi.Cms
             result.Features = FeaturesHelpers.FeatureListWithPermissionCheck(_features, permCheck).ToList();
 
             // Attach context, but only the minimum needed for the UI
-            result.Context = _contextBuilder.SetZoneAndApp(appIdentity.ZoneId, context.AppState)
+            result.Context = _contextBuilder.InitApp(context.AppState, Log)
                 .Get(Ctx.AppBasic | Ctx.Language | Ctx.Site | Ctx.System, CtxEnable.FormulaSave);
 
             try
@@ -154,7 +154,8 @@ namespace ToSic.Sxc.WebApi.Cms
                 Log.Add("Found an entity with the auto-lookup marker");
                 // try to find metadata for this
                 var mdFor = header.For;
-                var type = _mdTargetTypes.GetId(mdFor.Target);
+                // #TargetTypeIdInsteadOfTarget
+                var type = mdFor.TargetType != 0 ? mdFor.TargetType : _mdTargetTypes.GetId(mdFor.Target);
                 var mds = mdFor.Guid != null
                     ? appState.GetMetadata(type, mdFor.Guid.Value, header.ContentTypeName)
                     : mdFor.Number != null

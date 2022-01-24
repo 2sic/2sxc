@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Caching;
+using ToSic.Eav.Configuration.Licenses;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 
@@ -11,19 +12,21 @@ namespace ToSic.Sxc.Web.WebApi.System
 
         #region Constructor / DI
 
-        public Insights(IServiceProvider serviceProvider, IAppStates appStates, SystemManager systemManager, IAppsCache appsCache, LogHistory logHistory)
+        public Insights(IServiceProvider serviceProvider, IAppStates appStates, SystemManager systemManager, IAppsCache appsCache, LogHistory logHistory, Lazy<ILicenseService> licenseServiceLazy)
             : base("Api.SysIns")
         {
             _serviceProvider = serviceProvider;
             _appStates = appStates;
             _appsCache = appsCache;
             _logHistory = logHistory;
+            _licenseServiceLazy = licenseServiceLazy;
             SystemManager = systemManager.Init(Log);
         }
         private readonly IServiceProvider _serviceProvider;
         private readonly IAppStates _appStates;
         private readonly IAppsCache _appsCache;
         private readonly LogHistory _logHistory;
+        private readonly Lazy<ILicenseService> _licenseServiceLazy;
         protected readonly SystemManager SystemManager;
 
 

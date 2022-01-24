@@ -38,10 +38,12 @@ namespace ToSic.Sxc.Dnn.Web
         {
             const string tabId = "TabId";
             const string language = "language";
+            const string skinSrc = "SkinSrc"; // auto-added
 
             // DNN adds these automatically, but does it with exactly this spelling, so that's the only one we'll catch
             original.Remove(tabId);
             original.Remove(language);
+            original.Remove(skinSrc);
             return original;
         }
 

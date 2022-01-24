@@ -14,21 +14,21 @@ namespace ToSic.Sxc.WebApi.Assets
 
         #region Constructor / DI
 
-        public AppAssetsBackend(TemplateHelpers templateHelpers,
+        public AppAssetsBackend(AppPathHelpers appPathHelpers,
             IUser user, 
             Lazy<AssetEditor> assetEditorLazy,
             IServiceProvider serviceProvider,
             IAppStates appStates) : base("Bck.Assets")
         {
 
-            _templateHelpers = templateHelpers;
+            _appPathHelpers = appPathHelpers;
             _assetEditorLazy = assetEditorLazy;
             _assetTemplates = new AssetTemplates().Init(Log);
             _serviceProvider = serviceProvider;
             _appStates = appStates;
             _user = user;
         }
-        private readonly TemplateHelpers _templateHelpers;
+        private readonly AppPathHelpers _appPathHelpers;
         private readonly Lazy<AssetEditor> _assetEditorLazy;
         private readonly AssetTemplates _assetTemplates;
         private readonly IServiceProvider _serviceProvider;
@@ -135,7 +135,7 @@ namespace ToSic.Sxc.WebApi.Assets
         private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(AssetFromTemplateDto assetFromTemplateDto)
         {
             var wrapLog = Log.Call<AssetEditor>($"a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
-            var thisApp = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, assetFromTemplateDto.AppId), Log);
+            var thisApp = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(AppConstants.AutoLookupZone, assetFromTemplateDto.AppId), Log);
             var assetEditor = _assetEditorLazy.Value.Init(thisApp, assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0, Log);
             assetEditor.EnsureUserMayEditAssetOrThrow(assetEditor.InternalPath);
             return wrapLog(null, assetEditor);

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Oqt.Server.Plumbing;
-using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Adam
 {
@@ -39,8 +37,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 parts[1] = "adam";
 
                 // Insert alias path.
-                //_siteStateInitializer.InitIfEmpty();
-                var alias = _siteStateInitializer.InitializedState.Alias;// _siteStateInitializer.SiteState.Alias;
+                var alias = _siteStateInitializer.InitializedState.Alias;
                 var aliasPath = alias.Path;
                 parts.Insert(0, $"{aliasPath}/app");
 

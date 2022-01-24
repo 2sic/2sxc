@@ -117,7 +117,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 // 1. create the content type
                 var serializer = _jsonSerializerLazy.Value.Init(_appStates.Get(new AppIdentity(zoneId, appId)), Log);
 
-                var types = files.Select(f => serializer.DeserializeContentType(f.Contents) as ContentType).ToList();
+                var types = files.Select(f => serializer.DeserializeContentType(f.Contents)).ToList();
 
                 if (types.Any(t => t == null))
                     throw new NullReferenceException("One ContentType is null, something is wrong");

@@ -33,10 +33,7 @@ namespace ToSic.Sxc.Data
         /// Get a property using the string name. Only needed in special situations, as most cases can use the object.name directly
         /// </summary>
         /// <param name="name">the property name. </param>
-        /// <param name="noParamOrder">
-        /// This should enforce the convention that all following parameters (which are optional) must explicitly use the parameter name.
-        /// So <code>Get("FirstName", "en")</code> won't work, you must use <code>Get("FirstName", language: "en")</code> and similar
-        /// </param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="language">Optional language code - like "de-ch" to prioritize that language</param>
         /// <param name="convertLinks">Optionally turn off if links like file:72 are looked up to a real link. Default is true.</param>
         /// <param name="debug">Set true to see more details in [Insights](xref:NetCode.Debug.Insights.Index) how the value was retrieved.</param>

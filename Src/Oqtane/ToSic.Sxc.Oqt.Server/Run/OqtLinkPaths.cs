@@ -1,13 +1,9 @@
-﻿using System.IO;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Razor;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
-using ToSic.Sxc.Oqt.Server.Block;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Run;
+using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
 
 namespace ToSic.Sxc.Oqt.Server.Run
@@ -39,13 +35,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
         {
             return toWebAbsolute(virtualPath);
         }
-        //public string ToAbsolute(string virtualPath, string subPath)
-        //{
-        //    return toWebAbsolute(Path.Combine(virtualPath, subPath));
-        //}
-
-        //public string AppAssetsBase(ISite site, IApp app) 
-        //    => toWebAbsolute(site.AppAssetsLinkTemplate.Replace(LinkPaths.AppFolderPlaceholder, app.Folder));
 
         public string ApiFromSiteRoot(string appFolder, string apiPath)
         {
@@ -54,7 +43,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public string AppFromTheDomainRoot(string appFolder, string pagePath)
         {
-            var siteRoot = OqtAssetsAndHeaders.GetSiteRoot(_siteStateInitializer.InitializedState).TrimLastSlash();
+            var siteRoot = OqtPageOutput.GetSiteRoot(_siteStateInitializer.InitializedState).TrimLastSlash();
             return AppFromTheDomainRoot(siteRoot, appFolder, pagePath);
         }
 

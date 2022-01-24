@@ -51,7 +51,7 @@ namespace ToSic.Sxc.WebApi.Adam
             if (stream == null || fileName == null || contentType == null || guid == null || field == null)
                 throw new Exception();
 
-            var feats = new[] { FeatureIds.UseAdamInWebApi, FeatureIds.PublicUpload };
+            var feats = new[] { Eav.Configuration.FeaturesCatalog.SaveInAdamApi.Guid, Eav.Configuration.FeaturesCatalog.PublicUploadFiles.Guid };
 
             if (!_featuresLazy.Value.Enabled(feats, "can't save in ADAM", out var exp))
                 throw exp;

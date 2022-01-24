@@ -5,11 +5,12 @@ using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Languages;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.Run;
+using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run
@@ -87,13 +88,13 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return found != null ? _serviceProvider.Build<OqtSite>().Init(found) : null;
         }
 
-        public override List<TempTempCulture> CulturesWithState(int tenantId, int zoneId)
+        public override List<ISiteLanguageState> CulturesWithState(ISite site)
         {
             if (_supportedCultures != null) return _supportedCultures;
-            var availableEavLanguages = AppStates.Languages(zoneId, true); // new ZoneRuntime().Init(zoneId, Log).Languages(true);
-            _supportedCultures = _oqtCulture.GetSupportedCultures(tenantId, availableEavLanguages);
+            var availableEavLanguages = AppStates.Languages(site.ZoneId, true);
+            _supportedCultures = _oqtCulture.GetSupportedCultures(site.Id, availableEavLanguages);
             return _supportedCultures;
         }
-        private List<TempTempCulture> _supportedCultures;
+        private List<ISiteLanguageState> _supportedCultures;
     }
 }

@@ -4,6 +4,7 @@ using Oqtane.Shared;
 using System;
 using ToSic.Eav.Context;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.ImportExport;
@@ -83,6 +84,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
         [ValidateAntiForgeryToken]
         public IActionResult RemotePackage(string packageUrl)
         {
+            // Ensure that Hot Reload is not enabled or try to disable it.
+            HotReloadEnabledCheck.Check();
+
             PreventServerTimeout300();
 
             var container = GetContext().Module;

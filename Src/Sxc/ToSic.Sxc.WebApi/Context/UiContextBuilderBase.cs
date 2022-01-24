@@ -1,13 +1,17 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Languages;
 using ToSic.Eav.Context;
+using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Web.JsContext;
 
 namespace ToSic.Sxc.WebApi.Context
 {
-    public class UiContextBuilderBase: IUiContextBuilder
+    public class UiContextBuilderBase: HasLog, IUiContextBuilder
     {
 
         #region Dependencies 
@@ -18,13 +22,15 @@ namespace ToSic.Sxc.WebApi.Context
             public JsContextLanguage JsCtx { get; }
             public Apps.IApp AppToLaterInitialize { get; }
             public IAppStates AppStates { get; }
+            public Lazy<AppUserLanguageCheck> AppUserLanguageCheck { get; }
 
-            public Dependencies(IContextOfSite siteCtx, JsContextLanguage jsCtx, Apps.App appToLaterInitialize, IAppStates appStates)
+            public Dependencies(IContextOfSite siteCtx, JsContextLanguage jsCtx, Apps.App appToLaterInitialize, IAppStates appStates, Lazy<AppUserLanguageCheck> appUserLanguageCheck)
             {
                 SiteCtx = siteCtx;
                 JsCtx = jsCtx;
                 AppToLaterInitialize = appToLaterInitialize;
                 AppStates = appStates;
+                AppUserLanguageCheck = appUserLanguageCheck;
             }
         }
 
@@ -32,23 +38,25 @@ namespace ToSic.Sxc.WebApi.Context
 
         #region Constructor / DI
 
-        protected UiContextBuilderBase(Dependencies dependencies)
+        protected UiContextBuilderBase(Dependencies dependencies): base(Constants.SxcLogName + ".UiCtx")
         {
             Deps = dependencies;
             _appToLaterInitialize = dependencies.AppToLaterInitialize;
         }
         protected Dependencies Deps;
 
-        protected int ZoneId;
+        protected int ZoneId => Deps.SiteCtx.Site.ZoneId;
         protected IApp App;
         private readonly Apps.IApp _appToLaterInitialize;
+        protected AppState AppState;
 
         #endregion
 
-        public virtual IUiContextBuilder SetZoneAndApp(int zoneId, IAppIdentity app)
+        public IUiContextBuilder InitApp(AppState appState, ILog parentLog)
         {
-            ZoneId = zoneId;
-            App = app != null ? (_appToLaterInitialize as Apps.App)?.InitNoData(app, null) : null;
+            Log.LinkTo(parentLog);
+            AppState = appState;
+            App = appState != null ? (_appToLaterInitialize as Apps.App)?.InitNoData(appState, null) : null;
             return this;
         }
 
@@ -75,11 +83,26 @@ namespace ToSic.Sxc.WebApi.Context
         {
             if (ZoneId == 0) return null;
             var language = Deps.JsCtx.Init(Deps.SiteCtx.Site, ZoneId);
+
+            // New V13 - with try/catch as it's still very new
+            List<SiteLanguageDto> converted = null;
+            try
+            {
+                var langs = Deps.AppUserLanguageCheck.Value.Init(Log).LanguagesWithPermissions(AppState);
+                converted = langs.Select(l => new SiteLanguageDto
+                    { Code = l.Code, Culture = l.Culture, IsAllowed = l.IsAllowed, IsEnabled = l.IsEnabled }).ToList();
+            }
+            catch (Exception ex)
+            {
+                Log.Exception(ex);
+            }
+
             return new ContextLanguageDto
             {
                 Current = language.Current,
                 Primary = language.Primary,
                 All = language.All.ToDictionary(l => l.key.ToLowerInvariant(), l => l.name),
+                List = converted,
             };
         }
 
@@ -109,8 +132,8 @@ namespace ToSic.Sxc.WebApi.Context
 
             // Otherwise also add the global appId
             var zoneId = Deps.SiteCtx.Site.ZoneId;
-            result.DefaultApp = Deps.AppStates.IdentityOfDefault(zoneId); // Deps.AppStates.Identity(null, Deps.AppStates.DefaultAppId(Deps.SiteCtx.Site.ZoneId));
-            result.PrimaryApp = Deps.AppStates.IdentityOfPrimary(zoneId); // Deps.AppStates.Identity(null, Deps.AppStates.PrimaryAppId(Deps.SiteCtx.Site.ZoneId));
+            result.DefaultApp = Deps.AppStates.IdentityOfDefault(zoneId);
+            result.PrimaryApp = Deps.AppStates.IdentityOfPrimary(zoneId);
             return result;
         }
 
@@ -122,7 +145,7 @@ namespace ToSic.Sxc.WebApi.Context
 
         protected virtual ContextEnableDto GetEnable(CtxEnable ctx)
         {
-            var isRealApp = App != null && (App.AppGuid != Eav.Constants.DefaultAppGuid /*&& App.AppGuid != Eav.Constants.PrimaryAppGuid*/); // #SiteApp v13 - Site-Apps should also have permissions
+            var isRealApp = App != null && App.AppGuid != Eav.Constants.DefaultAppGuid; // #SiteApp v13 - Site-Apps should also have permissions
             var tmp = new JsContextUser(Deps.SiteCtx.User);
             var dto = new ContextEnableDto();
             if (ctx.HasFlag(CtxEnable.AppPermissions)) dto.AppPermissions = isRealApp;
@@ -150,15 +173,18 @@ namespace ToSic.Sxc.WebApi.Context
 
             result.GettingStartedUrl = GetGettingStartedUrl();
             result.Identifier = _appToLaterInitialize.AppGuid;
-            // TODO: #SiteApp v13
+            
+            // #SiteApp v13
             result.SettingsScope = App.AppId == 1 
                 ? "Global" 
                 : result.Identifier == Eav.Constants.PrimaryAppGuid 
                     ? "Site" 
                     : "App";
 
+            result.Permissions = new HasPermissionsDto { Count = App.Metadata.Permissions.Count() };
 
-            result.Permissions = new HasPermissionsDto {Count = App.Metadata.Permissions.Count()};
+            result.IsGlobal = App.AppState.IsGlobal();
+            result.IsInherited = App.AppState.IsInherited();
             return result;
         }
     }

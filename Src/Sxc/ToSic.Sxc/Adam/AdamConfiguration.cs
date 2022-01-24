@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Adam
                 { "[AppFolder]", app.Folder },
                 { "[ZoneId]", app.ZoneId.ToString() },
                 { "[AppId]", app.AppId.ToString() },
-                { "[AppGuid]", app.AppGuidName }
+                { "[AppGuid]", app.NameId }
             };
             var finalPath = FillMask(valuesDic, AdamAppRootFolder);
             return finalPath;

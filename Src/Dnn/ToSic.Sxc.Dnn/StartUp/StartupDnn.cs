@@ -52,13 +52,14 @@ namespace ToSic.Sxc.Dnn.StartUp
             // of .net core 2.1 bugs
             // ATM it appears that the service provider will get destroyed after startup, so we MUST get an additional one to use here
             var initialServiceProvider = DnnStaticDi.GetServiceProvider();
-            var transientSp = initialServiceProvider;//.Build<IServiceProvider>();
+            var transientSp = initialServiceProvider;
 
             // now we should be able to instantiate registration of DB
             transientSp.Build<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
             var globalConfig = transientSp.Build<IGlobalConfiguration>();
 
             globalConfig.GlobalFolder = HostingEnvironment.MapPath(DnnConstants.SysFolderRootVirtual);
+            globalConfig.AssetsVirtualUrl = DnnConstants.SysFolderRootVirtual + "assets/";
             globalConfig.GlobalSiteFolder = "~/Portals/_default/";
 
             // Load features from configuration

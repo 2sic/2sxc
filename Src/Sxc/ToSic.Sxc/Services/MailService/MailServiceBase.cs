@@ -5,6 +5,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Apps.Assets;
+using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
@@ -20,8 +21,12 @@ namespace ToSic.Sxc.Services
 
         [PrivateApi] protected IApp App;
 
-        protected MailServiceBase() : base($"{Constants.SxcLogName}.MailSrv")
-        { }
+        private readonly Lazy<IUser> _userLazy;
+
+        protected MailServiceBase(Lazy<IUser> userLazy) : base($"{Constants.SxcLogName}.MailSrv")
+        { 
+            _userLazy = userLazy;
+        }
 
         /// <inheritdoc />
         public virtual void AddBlockContext(IDynamicCodeRoot codeRoot)
@@ -46,7 +51,10 @@ namespace ToSic.Sxc.Services
             {
                 Log.Exception(ex);
                 wrapLog("error");
-                throw;
+                if (_userLazy.Value.IsSuperUser)
+                    throw;
+                else
+                    throw new Exception("SMTP configuration problem."); 
             }
         }
 

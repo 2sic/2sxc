@@ -5,13 +5,12 @@ using System;
 using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
-using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.Oqt.Server.Plumbing;
+using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.AppStack;
@@ -40,8 +39,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         private readonly Lazy<AppCreator> _appBuilderLazy;
         private readonly Lazy<ResetApp> _resetAppLazy;
         private readonly Lazy<SystemManager> _systemManagerLazy;
-        private readonly Lazy<SiteStateInitializer> _siteStateInitializerLazy;
-        private readonly Lazy<IUser> _userLazy;
         protected override string HistoryLogName => "Api.App";
 
         public AppController(
@@ -51,9 +48,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             Lazy<ImportApp> importAppLazy,
             Lazy<AppCreator> appBuilderLazy,
             Lazy<ResetApp> resetAppLazy,
-            Lazy<SystemManager> systemManagerLazy,
-            Lazy<SiteStateInitializer> siteStateInitializerLazy,
-            Lazy<IUser> userLazy)
+            Lazy<SystemManager> systemManagerLazy)
         {
             _appsBackendLazy = appsBackendLazy;
             _cmsZonesLazy = cmsZonesLazy;
@@ -62,8 +57,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             _appBuilderLazy = appBuilderLazy;
             _resetAppLazy = resetAppLazy;
             _systemManagerLazy = systemManagerLazy;
-            _siteStateInitializerLazy = siteStateInitializerLazy;
-            _userLazy = userLazy;
         }
 
         [HttpGet]
@@ -71,6 +64,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [Authorize(Roles = RoleNames.Admin)]
         public List<AppDto> List(int zoneId)
             => _appsBackendLazy.Value.Init(Log).Apps();
+
+        [HttpGet]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = RoleNames.Host)]
+        public List<AppDto> InheritableApps()
+            => _appsBackendLazy.Value.Init(Log).GetInheritableApps();
+
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
@@ -81,8 +81,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
-        public void App(int zoneId, string name)
-            => _appBuilderLazy.Value.Init(zoneId, Log).Create(name);
+        public void App(int zoneId, string name, int? inheritAppId = null)
+            => _appBuilderLazy.Value.Init(zoneId, Log).Create(name, null, inheritAppId);
 
 
         /// <summary>
@@ -95,8 +95,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public AppExportInfoDto Statistics(int zoneId, int appId)
-            => _exportAppLazy.Value.Init(_siteStateInitializerLazy.Value.InitializedState.Alias.SiteId, _userLazy.Value, Log)
-                .GetAppInfo(appId, zoneId);
+            => _exportAppLazy.Value.Init(Log).GetAppInfo(appId, zoneId);
 
 
         [HttpGet]
@@ -106,7 +105,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         {
             var wrapLog = Log.Call<bool>($"{zoneId}, {appId}");
             _systemManagerLazy.Value.Init(Log).Purge(zoneId, appId);
-            // SystemManager.Purge(zoneId, appId, log: Log);
             return wrapLog("ok", true);
         }
 
@@ -120,7 +118,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// <returns></returns>
         [HttpGet]
         public IActionResult Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid) =>
-            _exportAppLazy.Value.Init(_siteStateInitializerLazy.Value.InitializedState.Alias.SiteId, _userLazy.Value, Log)
+            _exportAppLazy.Value.Init(Log)
                 .Export(appId, zoneId, includeContentGroups, resetAppGuid);
 
         /// <inheritdoc />
@@ -132,9 +130,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             var wrapLog = Log.Call<ImportResultDto>();
 
             PreventServerTimeout300();
-            var result = _resetAppLazy.Value
-                .Init(_siteStateInitializerLazy.Value.InitializedState.Alias.SiteId, _userLazy.Value, Log)
-                .Reset(zoneId, appId, GetContext().Site.DefaultCultureCode);
+            var result = _resetAppLazy.Value.Init(Log).Reset(zoneId, appId, GetContext().Site.DefaultCultureCode);
 
             return wrapLog("ok", result);
         }
@@ -159,8 +155,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [Authorize(Roles = RoleNames.Admin)]
         [ValidateAntiForgeryToken]
         public bool SaveData(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => _exportAppLazy.Value.Init(_siteStateInitializerLazy.Value.InitializedState.Alias.SiteId, _userLazy.Value, Log)
-                .SaveDataForVersionControl(appId, zoneId, includeContentGroups, resetAppGuid);
+            => _exportAppLazy.Value.Init(Log).SaveDataForVersionControl(appId, zoneId, includeContentGroups, resetAppGuid);
 
 
         /// <summary>
@@ -174,13 +169,16 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         {
             Log.Add("import app start");
 
+            // Ensure that Hot Reload is not enabled or try to disable it.
+            HotReloadEnabledCheck.Check();
+
             var request = HttpContext.Request.Form;
 
             PreventServerTimeout300();
 
             if (request.Files.Count <= 0) return new ImportResultDto(false, "no files uploaded");
 
-            return _importAppLazy.Value.Init(_userLazy.Value, Log)
+            return _importAppLazy.Value.Init(Log)
                 .Import(zoneId, request["Name"], request.Files[0].OpenReadStream());
         }
     }

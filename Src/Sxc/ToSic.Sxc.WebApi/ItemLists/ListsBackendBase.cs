@@ -103,7 +103,7 @@ namespace ToSic.Sxc.WebApi.ItemLists
                 ? itemList[index]?.EntityId
                 : null;
 
-            var result = new ReplacementListDto {SelectedId = selectedId, Items = results, ContentTypeName = ct.StaticName};
+            var result = new ReplacementListDto {SelectedId = selectedId, Items = results, ContentTypeName = ct.NameId};
             return wrapLog(null, result);
         }
 
@@ -200,7 +200,7 @@ namespace ToSic.Sxc.WebApi.ItemLists
                 Id = header?.EntityId ?? 0,
                 Guid = header?.EntityGuid ?? Guid.Empty,
                 Title = header?.GetBestTitle() ?? "",
-                Type = header?.Type.StaticName ?? cg.View.HeaderType
+                Type = header?.Type.NameId ?? cg.View.HeaderType
             };
         }
 

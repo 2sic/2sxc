@@ -8,8 +8,10 @@ using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
 using EavApp = ToSic.Eav.Apps.App;
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Apps
 {
@@ -22,9 +24,14 @@ namespace ToSic.Sxc.Apps
     {
         #region DI Constructors
 
-        public App(AppDependencies dependencies) : base(dependencies, "App.SxcApp")
+        public App(AppDependencies dependencies, Lazy<AppPathHelpers> appPathHelpersLazy) : base(dependencies, "App.SxcApp")
         {
+            _appPathHelpersLazy = appPathHelpersLazy;
         }
+
+        private readonly Lazy<AppPathHelpers> _appPathHelpersLazy;
+        private AppPathHelpers _appPathHelpers;
+        private AppPathHelpers AppPathHelpers => _appPathHelpers ?? (_appPathHelpers = _appPathHelpersLazy.Value.Init(this, Log));
 
         public App PreInit(ISite site)
         {
@@ -123,11 +130,40 @@ namespace ToSic.Sxc.Apps
         /// <inheritdoc />
         public string Path => _path ?? (_path = Site.AppAssetsLinkTemplate
             .Replace(LinkPaths.AppFolderPlaceholder, Folder)
-            .ToAbsolutePathForwardSlash()); // // .AppAsset(System.IO.Path.Combine(Site.AppsRootLink, Folder)));
+            .ToAbsolutePathForwardSlash());
+
         private string _path;
 
         /// <inheritdoc />
-        public string Thumbnail => File.Exists(PhysicalPath + IconFile) ? Path + IconFile : null;
+        public string Thumbnail
+        {
+            get
+            {
+                if (_thumbnail != null) return _thumbnail;
+
+                // primary app
+                if (AppGuid == Eav.Constants.PrimaryAppGuid)
+                    return _thumbnail = AppPathHelpers.AssetsLocation(AppConstants.AppPrimaryIconFile, PathTypes.Link);
+
+                // standard app (not global) try to find app-icon in its (portal) app folder
+                if (!AppState.IsGlobal())
+                    if (File.Exists(PhysicalPath + "/" + AppConstants.AppIconFile))
+                        return _thumbnail = Path + "/" + AppConstants.AppIconFile;
+
+                // global app (and standard app without app-icon in its portal folder) looks for app-icon in global shared location 
+                if (File.Exists(PhysicalPathShared + "/" + AppConstants.AppIconFile))
+                    return _thumbnail = PathShared + "/" + AppConstants.AppIconFile;
+
+                return null;
+            }
+        }
+        private string _thumbnail;
+
+        public string PathShared => _pathGlobal ?? (_pathGlobal = AppPathHelpers.AppPathRoot(true, PathTypes.PhysRelative));
+        private string _pathGlobal;
+
+        public string PhysicalPathShared => _physicalPathGlobal ?? (_physicalPathGlobal = AppPathHelpers.AppPathRoot(true, PathTypes.PhysFull));
+        private string _physicalPathGlobal;
 
         #endregion
 

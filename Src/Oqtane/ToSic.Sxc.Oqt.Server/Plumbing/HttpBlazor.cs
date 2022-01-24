@@ -15,7 +15,6 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
     /// Note that it's probably not yet complete. As of now, it only provides ?x=y&a=b stuff,
     /// but if Blazor has any cute-url system like x/y/a/b this would probably not work yet
     /// </remarks>
-
     public class HttpBlazor : HttpAbstractionBase, IHttp
     {
         private readonly NavigationManager _navigationManager;

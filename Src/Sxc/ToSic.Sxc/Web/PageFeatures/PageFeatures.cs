@@ -27,8 +27,9 @@ namespace ToSic.Sxc.Web.PageFeatures
 
         public void ManualFeatureAdd(IPageFeature newFeature) => ManualFeatures.Add(newFeature);
 
-        public List<IPageFeature> ManualFeaturesGetNew()
+        public List<IPageFeature> ManualFeaturesGetNew(ILog log)
         {
+            var wrapLog = log.Call<List<IPageFeature>>();
             // Filter out the ones which were already added in a previous round
             var newFeatures = ManualFeatures
                 .GroupBy(f => f.Key)
@@ -38,7 +39,7 @@ namespace ToSic.Sxc.Web.PageFeatures
 
             // Mark the new ones as processed now, so they won't be processed in future
             newFeatures.ForEach(f => f.AlreadyProcessed = true);
-            return newFeatures;
+            return wrapLog($"{newFeatures.Count}", newFeatures);
         }
 
 

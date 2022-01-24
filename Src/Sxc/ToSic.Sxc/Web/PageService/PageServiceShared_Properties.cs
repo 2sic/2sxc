@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Web.PageService
 {
@@ -7,11 +8,12 @@ namespace ToSic.Sxc.Web.PageService
     {
         internal IList<PagePropertyChange> PropertyChanges { get; } = new List<PagePropertyChange>();
 
-        public IList<PagePropertyChange> GetPropertyChangesAndFlush()
+        public IList<PagePropertyChange> GetPropertyChangesAndFlush(ILog log)
         {
+            var wrapLog = log.Call<IList<PagePropertyChange>>();
             var changes = PropertyChanges.ToArray().ToList();
             PropertyChanges.Clear();
-            return changes;
+            return wrapLog($"{changes.Count}", changes);
         }
 
         /// <summary>

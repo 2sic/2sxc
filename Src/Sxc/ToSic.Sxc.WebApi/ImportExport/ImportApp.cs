@@ -6,38 +6,26 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Identity;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Dto;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
-    public class ImportApp: HasLog
+    public class ImportApp: HasLog<ImportApp>
     {
         #region DI Constructor
 
-        public ImportApp(IZoneMapper zoneMapper, IServerPaths serverPaths, IEnvironmentLogger envLogger, ZipImport zipImport, IGlobalConfiguration globalConfiguration) : base("Bck.Export")
+        public ImportApp(IEnvironmentLogger envLogger, ZipImport zipImport, IGlobalConfiguration globalConfiguration, IUser user) : base("Bck.Export")
         {
-            _zoneMapper = zoneMapper;
-            _serverPaths = serverPaths;
             _envLogger = envLogger;
             _zipImport = zipImport;
             _globalConfiguration = globalConfiguration;
+            _user = user;
         }
 
-        private readonly IZoneMapper _zoneMapper;
-        private readonly IServerPaths _serverPaths;
         private readonly IEnvironmentLogger _envLogger;
         private readonly ZipImport _zipImport;
         private readonly IGlobalConfiguration _globalConfiguration;
-        private IUser _user;
-
-        public ImportApp Init(IUser user, ILog parentLog)
-        {
-            Log.LinkTo(parentLog);
-            _zoneMapper.Init(Log);
-            _user = user;
-            return this;
-        }
+        private readonly IUser _user;
 
         #endregion
 

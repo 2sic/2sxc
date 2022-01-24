@@ -102,7 +102,7 @@ namespace ToSic.Sxc.Dnn
         /// <param name="parentLog">optional logger to attach to</param>
         /// <returns>An initialized App object which you can use to access App.Data</returns>
         public static IApp App(int appId, bool unusedButKeepForApiStability = false, bool showDrafts = false, ILog parentLog = null)
-            => App(Eav.Apps.App.AutoLookupZone, appId, null, showDrafts, parentLog);
+            => App(AppConstants.AutoLookupZone, appId, null, showDrafts, parentLog);
 
         /// <summary>
         /// Get a full app-object for accessing data of the app from outside
@@ -136,7 +136,7 @@ namespace ToSic.Sxc.Dnn
             bool unusedButKeepForApiStability = false,
             bool showDrafts = false,
             ILog parentLog = null)
-            => App(Eav.Apps.App.AutoLookupZone, appId,
+            => App(AppConstants.AutoLookupZone, appId,
                 ((DnnSite)StaticBuild<ISite>()).Swap(ownerPortalSettings), showDrafts, parentLog);
 
         [InternalApi_DoNotUse_MayChangeWithoutNotice]

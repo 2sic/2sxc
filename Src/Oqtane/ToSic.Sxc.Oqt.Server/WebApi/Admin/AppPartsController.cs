@@ -7,7 +7,6 @@ using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.ImportExport;
 
@@ -29,15 +28,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     {
         private readonly Lazy<ExportContent> _exportContentLazy;
         private readonly Lazy<ImportContent> _importContentLazy;
-        private readonly Lazy<SiteStateInitializer> _siteStateInitializerLazy;
         private readonly Lazy<IUser> _userLazy;
         protected override string HistoryLogName => "Api.AParts";
 
-        public AppPartsController(Lazy<ExportContent> exportContentLazy, Lazy<ImportContent> importContentLazy, Lazy<SiteStateInitializer> siteStateInitializerLazy, Lazy<IUser> userLazy)
+        public AppPartsController(Lazy<ExportContent> exportContentLazy, Lazy<ImportContent> importContentLazy, Lazy<IUser> userLazy)
         {
             _exportContentLazy = exportContentLazy;
             _importContentLazy = importContentLazy;
-            _siteStateInitializerLazy = siteStateInitializerLazy;
             _userLazy = userLazy;
         }
 
@@ -54,8 +51,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public ExportPartsOverviewDto Get(int zoneId, int appId, string scope)
-            => _exportContentLazy.Value.Init(_siteStateInitializerLazy.Value.InitializedState.Alias.SiteId, _userLazy.Value, Log)
-                .PreExportSummary(appId, zoneId, scope);
+            => _exportContentLazy.Value.Init(Log).PreExportSummary(appId, zoneId, scope);
 
         /// <summary>
         /// Used to be GET ImportExport/ExportContent
@@ -69,7 +65,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [HttpGet]
         public HttpResponseMessage Export(int zoneId, int appId, string contentTypeIdsString,
             string entityIdsString, string templateIdsString)
-            => _exportContentLazy.Value.Init(_siteStateInitializerLazy.Value.InitializedState.Alias.SiteId, _userLazy.Value, Log)
+            => _exportContentLazy.Value.Init(Log)
                 .Export(appId, zoneId, contentTypeIdsString, entityIdsString, templateIdsString);
 
         /// <summary>

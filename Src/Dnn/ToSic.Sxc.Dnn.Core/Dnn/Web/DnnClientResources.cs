@@ -51,7 +51,6 @@ namespace ToSic.Sxc.Dnn.Web
             // auto-detect Blockbuilder params
             if (features == null) features = Features;
 
-
             // normal scripts
             var editJs = features.Contains(BuiltInFeatures.JsCms);
             var readJs = features.Contains(BuiltInFeatures.JsCore);
@@ -131,11 +130,6 @@ namespace ToSic.Sxc.Dnn.Web
                 Log.Add("add 2sxc edit api; also request jQuery and anti-forgery");
                 // note: the inpage only works if it's not in the head, so we're adding it below
                 RegisterJs(page, ver, root + InpageCms.EditJs, false, priority + 1);
-
-                // #2492 2021-10-26 v12-07 we believe we don't need this any more
-                // request full $services and jQuery etc.
-                //JavaScript.RequestRegistration(CommonJs.jQuery);
-                //ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
             }
 
             if (features.Contains(BuiltInFeatures.JQuery))
@@ -164,7 +158,9 @@ namespace ToSic.Sxc.Dnn.Web
 
         private static void RegisterJs(Page page, string version, string path, bool toHead, int priority)
         {
-            var url = UrlHelpers.QuickAddUrlParameter(path, "v", version); // $"{path}{(path.IndexOf('?') > 0 ? '&' : '?')}v={version}";
+            if (string.IsNullOrWhiteSpace(path)) return;
+
+            var url = UrlHelpers.QuickAddUrlParameter(path, "v", version);
             if (toHead)
             {
                 // don't add version in DNN 7 and probably 8, because it breaks the client-dependency - but only in the head

@@ -1,57 +1,34 @@
-﻿using Oqtane.Infrastructure;
-using Oqtane.Shared;
+﻿using Oqtane.Shared;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Oqt.Server.Block;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.Context;
+using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     public class OqtUiContextBuilder: UiContextBuilderBase
     {
-        public OqtUiContextBuilder(ILinkPaths linkPaths, IContextOfSite ctx, SiteState siteState, WipRemoteRouterLink remoteRouterLink, IConfigManager configManager, Dependencies deps) : base(deps)
+        public OqtUiContextBuilder(ILinkPaths linkPaths, IContextOfSite ctx, SiteState siteState, RemoteRouterLink remoteRouterLink, Dependencies deps) : base(deps)
         {
             _linkPaths = linkPaths;
             _context = ctx;
             _siteState = siteState;
             _remoteRouterLink = remoteRouterLink;
-            _configManager = configManager;
         }
 
         private readonly ILinkPaths _linkPaths;
-        private IContextOfSite _context;
+        private readonly IContextOfSite _context;
         private readonly SiteState _siteState;
-        private readonly WipRemoteRouterLink _remoteRouterLink;
-        private readonly IConfigManager _configManager;
+        private readonly RemoteRouterLink _remoteRouterLink;
 
-
-        //protected override ContextLanguageDto GetLanguage()
-        //{
-        //    return new ContextLanguageDto
-        //    {
-        //        Current = _oqtCulture.CurrentCultureCode,
-        //        Primary = _oqtCulture.DefaultCultureCode,
-        //        //All = new Dictionary<string, string>
-        //        //{
-        //        //    {WipConstants.DefaultLanguage, WipConstants.DefaultLanguageText}
-        //        //}
-        //        All = _oqtZoneMapper.CulturesWithState(_context.Site.Id, _context.Site.ZoneId)
-        //            .Where(c => c.Active)
-        //            .AsEnumerable()
-        //            .ToDictionary(l => l.Key, l => l.Text),
-        //    };
-        //}
 
         protected override ContextResourceWithApp GetSystem(Ctx flags)
         {
             var result = base.GetSystem(flags);
 
-            //return new WebResourceDto
-            //{
             result.Url = _linkPaths.AsSeenFromTheDomainRoot("~/");
-            //};
             return result;
         }
 
@@ -59,34 +36,21 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         {
             var result = base.GetSite(flags);
 
-            //return new WebResourceDto
-            //{
             result.Id = _context.Site.Id;
             result.Url = "//" + _context.Site.UrlRoot;
-            //};
             return result;
         }
 
         protected override WebResourceDto GetPage() =>
-            new WebResourceDto
+            new()
             {
                 Id = (_context as IContextOfBlock)?.Page.Id ?? Eav.Constants.NullId,
             };
 
-        //protected override ContextEnableDto GetEnable()
-        //{
-        //    return new()
-        //    {
-        //        AppPermissions = true,
-        //        CodeEditor = true,
-        //        Query = true
-        //    };
-        //}
-
         protected override ContextAppDto GetApp(Ctx flags)
         {
             var appDto = base.GetApp(flags);
-            if (appDto != null) appDto.Api = OqtAssetsAndHeaders.GetSiteRoot(_siteState);
+            if (appDto != null) appDto.Api = OqtPageOutput.GetSiteRoot(_siteState);
             return appDto;
         }
 
@@ -96,13 +60,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
             var gsUrl = _remoteRouterLink.LinkToRemoteRouter(
                 RemoteDestinations.GettingStarted,
-                "Oqt",
-                Oqtane.Shared.Constants.Version, // Assembly.GetAssembly(typeof(SiteState))?.GetName().Version?.ToString(4),
-                _configManager.GetInstallationId(),
                 Deps.SiteCtx.Site,
-                blockCtx?.Module.Id ?? 0, // TODO: V12 - REQUIRED FOR CALLBACK TO WORK
+                blockCtx?.Module.Id ?? 0,
                 Deps.AppToLaterInitialize,
-                true // TODO: V12 - must be set so installer works properly // Module.DesktopModule.ModuleName == "2sxc"
+                true
                 );
             return gsUrl;
         }

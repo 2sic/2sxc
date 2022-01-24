@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
+using ToSic.Eav.Data.Shared;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit.ClientContextInfo;
-using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.Web.JsContext
 {
@@ -35,12 +35,16 @@ namespace ToSic.Sxc.Web.JsContext
 
             Environment = new JsContextEnvironment(systemRootUrl, ctx);
             Language = _jsLangCtx.Init(ctx.Site, block.ZoneId);
-            User = new JsContextUser(ctx.User);
+
+            // New in v13 - if the view is from remote, don't allow design
+            var view = block.View; // can be null
+            var canDesign = !view?.Entity.HasAncestor();
+
+            User = new JsContextUser(ctx.User, canDesign);
 
             ContentBlockReference = new ContentBlockReferenceDto(block, ctx.Publishing.Mode);
             ContentBlock = new ContentBlockDto(block);
             Ui = new UiDto(((BlockBuilder)block.BlockBuilder)?.UiAutoToolbar ?? false);
-            // Ui = new UiDto((block.BlockBuilder.Run().Features.Contains(BuiltInFeatures.AutoToolbarGlobal)));// ?? false);
 
             error = new ErrorDto(block);
             return this;

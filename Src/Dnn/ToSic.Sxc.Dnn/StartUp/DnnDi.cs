@@ -14,6 +14,7 @@ using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Repositories;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
@@ -114,7 +115,7 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             services.TryAddTransient<IZoneMapper, DnnZoneMapper>();
 
-            services.TryAddTransient<IClientDependencyOptimizer, DnnClientDependencyOptimizer>();
+            services.TryAddTransient<IBlockResourceExtractor, DnnBlockResourceExtractor>();
             services.TryAddTransient<AppPermissionCheck, DnnPermissionCheck>();
             services.TryAddTransient<DnnPermissionCheck>();
 
@@ -141,7 +142,7 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             services.TryAddTransient<ILookUpEngineResolver, DnnLookUpEngineResolver>();
             services.TryAddTransient<DnnLookUpEngineResolver>();
-            services.TryAddTransient<IFingerprint, DnnFingerprint>();
+            services.TryAddTransient<IPlatformInfo, DnnPlatformContext>();
 
             // new in 11.07 - exception logger
             services.TryAddTransient<IEnvironmentLogger, DnnEnvironmentLogger>();
@@ -151,8 +152,8 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddSingleton<IPlatform, DnnPlatformContext>();
 
             // add page publishing
-            services.TryAddTransient<IPagePublishing, Sxc.Dnn.Cms.DnnPagePublishing>();
-            services.TryAddTransient<IPagePublishingResolver, Sxc.Dnn.Cms.DnnPagePublishingResolver>();
+            services.TryAddTransient<IPagePublishing, Cms.DnnPagePublishing>();
+            services.TryAddTransient<IPagePublishingResolver, Cms.DnnPagePublishingResolver>();
 
             if (appsCacheOverride != null)
             {

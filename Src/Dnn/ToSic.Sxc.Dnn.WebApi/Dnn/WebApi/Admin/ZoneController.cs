@@ -3,9 +3,12 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Languages;
+using ToSic.Sxc.WebApi.PublicApi;
+using ToSic.Sxc.WebApi.Zone;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
@@ -16,27 +19,23 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [DnnLogExceptions]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public class ZoneController : SxcApiControllerBase
+    public class ZoneController : SxcApiControllerBase, IZoneController
     {
         protected override string HistoryLogName => "Api.Zone";
 
-        [HttpGet]
-        public IList<SiteLanguageDto> GetLanguages() =>
-            GetService<LanguagesBackend>().Init(Log)
-                .GetLanguages(PortalSettings.PortalId);
+        private LanguagesBackend LanguagesBackend() => GetService<LanguagesBackend>().Init(Log);
 
-        /// <summary>
-        /// Enable / disable a language in the EAV
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
+        [HttpGet]
+        public IList<SiteLanguageDto> GetLanguages() => LanguagesBackend().GetLanguages();
+
+        /// <inheritdoc />
         [HttpGet]
         public void SwitchLanguage(string cultureCode, bool enable) =>
-            GetService<LanguagesBackend>().Init(Log)
-                .Toggle(
-                    PortalSettings.PortalId,
-                    cultureCode,
-                    enable,
-                    LocaleController.Instance.GetLocale(cultureCode).Text);
+            LanguagesBackend().Toggle(cultureCode, enable, LocaleController.Instance.GetLocale(cultureCode).Text);
 
+        /// <inheritdoc />
+        [HttpGet]
+        public SystemInfoSetDto GetSystemInfo() => GetService<ZoneBackend>().Init(Log).GetSystemInfo();
     }
 }

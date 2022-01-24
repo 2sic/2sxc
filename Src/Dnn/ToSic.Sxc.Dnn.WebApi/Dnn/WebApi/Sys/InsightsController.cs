@@ -34,6 +34,20 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
                 throw HttpException.PermissionDenied("requires Superuser permissions");
         }
 
+        #region New with fewer endpoints
+
+        // TODO: 
+        // Some time soon, we'll probably change all insights commands to just use this details
+        // with optional appid, etc.
+        // Goal is that the WebApi has only one or two commands
+        // The Details(..., ..., ...) would then be responsible for choosing which insights to do
+
+        [HttpGet]
+        public string Details(string view) => GetInsights.Details(view);
+
+
+        #endregion
+
 
         #region Help and Basics
 

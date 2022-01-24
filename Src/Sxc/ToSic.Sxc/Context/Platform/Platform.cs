@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Documentation;
+﻿using System;
+using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Context
 {
@@ -11,6 +12,7 @@ namespace ToSic.Sxc.Context
     [PrivateApi]
     public abstract class Platform: IPlatform
     {
+
         /// <summary>
         /// The platform type Id from the enumerator - so stored as an int.
         /// </summary>
@@ -20,5 +22,7 @@ namespace ToSic.Sxc.Context
         /// A nice name ID, like "Dnn" or "Oqtane"
         /// </summary>
         public string Name => Type.ToString();
+
+        public abstract Version Version { get; }
     }
 }

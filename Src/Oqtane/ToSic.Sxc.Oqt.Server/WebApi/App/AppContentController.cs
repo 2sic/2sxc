@@ -7,11 +7,14 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.App;
 
-
-// TODO: #MissingFeature not yet implemented GetContext using current context
-
 namespace ToSic.Sxc.Oqt.Server.WebApi.App
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// Direct access to app-content items, simple manipulations etc.
+    /// Should check for security at each standard call - to see if the current user may do this
+    /// Then we can reduce security access level to anonymous, because each method will do the security check
+    /// </summary>
     [ApiController]
 
     // Release routes
@@ -84,7 +87,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
 
         #region Create
 
-        [HttpPost]
+        [HttpPost("{contentType}")]
         [AllowAnonymous] // will check security internally, so assume no requirements
         public IDictionary<string, object> CreateOrUpdate([FromRoute] string contentType,
             [FromBody] Dictionary<string, object> newContentItem, [FromQuery] int? id = null,

@@ -68,8 +68,13 @@
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="ToSic.Razor, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dnn\ToSic.Sxc.Dnn\razorblade\bin\ToSic.Razor.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adam\AdamSecurity.cs" />
@@ -78,9 +83,14 @@
     <Compile Include="DynamicData\SimpleObject.cs" />
     <Compile Include="DynamicData\TestAccessors.cs" />
     <Compile Include="DynamicData\DynamicReadRealClass.cs" />
+    <Compile Include="LinksAndImages\LinkImageTests\ImgSrcSet.cs" />
+    <Compile Include="LinksAndImages\SrcSetParsePart.cs" />
     <Compile Include="PageFeatures\SimpleFeatureManagement.cs" />
     <Compile Include="PageProperty\UpdatePropertyTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServicesTests\ImageService\ImageServiceFormats_Best.cs" />
+    <Compile Include="ServicesTests\ImageService\ImageServiceFormats.cs" />
+    <Compile Include="ServicesTests\ImageService\ImageServiceTags.cs" />
     <Compile Include="ServicesTests\MailServiceBaseTests.cs" />
     <Compile Include="ServicesTests\MailAddressCollectionTests.cs" />
     <Compile Include="ServicesTests\AddMailAddressesInputTypeTests.cs" />
@@ -89,31 +99,31 @@
     <Compile Include="ServicesTests\MailServiceTestsBase.cs" />
     <Compile Include="ServicesTests\SecureDataTests\SecureDataTest.cs" />
     <Compile Include="TestBaseSxc.cs" />
-    <Compile Include="WebTests\ConvertServiceTests\ConvertServiceTest.cs" />
-    <Compile Include="WebTests\LinkHelperTestBase.cs" />
-    <Compile Include="WebTests\LinkHelperTests\LinkHelperToVerifyTests.cs" />
-    <Compile Include="WebTests\LinkHelperTests\LinkHelperToTestBase.cs" />
-    <Compile Include="WebTests\LinkHelperTests\LinkTestHelperExtensions.cs" />
-    <Compile Include="WebTests\LinkHelperTests\LinkHelperToPartTests.cs" />
-    <Compile Include="WebTests\LinkImageTests\ImageBasic.cs" />
-    <Compile Include="WebTests\LinkImageTests\ImgResizeLinkerInternals.cs" />
-    <Compile Include="WebTests\LinkHelperTests\LinkHelperImagePartFullTests.cs" />
-    <Compile Include="WebTests\LinkHelperTests\LinkHelperImagePartUndefinedTests.cs" />
-    <Compile Include="WebTests\LinkHelperTests\LinkHelperToApiPartUndefinedTests.cs" />
-    <Compile Include="WebTests\LinkHelperTests\LinkHelperToCommonTests.cs" />
-    <Compile Include="WebTests\LinkHelperTests\LinkHelperToPagePartUnknownTests.cs" />
-    <Compile Include="WebTests\CleanParamTests.cs" />
-    <Compile Include="WebTests\LinkImageTests\ImageWithSettings.cs" />
-    <Compile Include="WebTests\LinkImageTests\LinkImageTestBase.cs" />
-    <Compile Include="WebTests\LinkImageTests\LinkImageParameters.cs" />
-    <Compile Include="WebTests\QueryHelperTests.cs" />
-    <Compile Include="WebTests\LinkToBasicTests.cs" />
-    <Compile Include="WebTests\UrlHelperTests\ParseQueryStringTests.cs" />
-    <Compile Include="WebTests\UrlHelperTests\MergeNameValueCollectionTests.cs" />
-    <Compile Include="WebTests\UrlParts\UrlPartsToLink.cs" />
-    <Compile Include="WebTests\UrlParts\UrlPartsProtocolAndDomain.cs" />
-    <Compile Include="WebTests\UrlParts\UrlPartsTrivial.cs" />
-    <Compile Include="WebTests\UrlParts\UrlPartsTestBase.cs" />
+    <Compile Include="ServicesTests\ConvertServiceTests\ConvertServiceTest.cs" />
+    <Compile Include="LinksAndImages\LinkHelperTestBase.cs" />
+    <Compile Include="LinksAndImages\LinkHelperTests\LinkHelperToVerifyTests.cs" />
+    <Compile Include="LinksAndImages\LinkHelperTests\LinkHelperToTestBase.cs" />
+    <Compile Include="LinksAndImages\LinkHelperTests\LinkTestHelperExtensions.cs" />
+    <Compile Include="LinksAndImages\LinkHelperTests\LinkHelperToPartTests.cs" />
+    <Compile Include="LinksAndImages\LinkImageTests\ImageBasic.cs" />
+    <Compile Include="LinksAndImages\LinkImageTests\ImgResizeLinkerInternals.cs" />
+    <Compile Include="LinksAndImages\LinkHelperTests\LinkHelperImagePartFullTests.cs" />
+    <Compile Include="LinksAndImages\LinkHelperTests\LinkHelperImagePartUndefinedTests.cs" />
+    <Compile Include="LinksAndImages\LinkHelperTests\LinkHelperToApiPartUndefinedTests.cs" />
+    <Compile Include="LinksAndImages\LinkHelperTests\LinkHelperToCommonTests.cs" />
+    <Compile Include="LinksAndImages\LinkHelperTests\LinkHelperToPagePartUnknownTests.cs" />
+    <Compile Include="PlumbingTests\CleanParamTests.cs" />
+    <Compile Include="LinksAndImages\LinkImageTests\ImageWithSettings.cs" />
+    <Compile Include="LinksAndImages\LinkImageTests\LinkImageTestBase.cs" />
+    <Compile Include="LinksAndImages\LinkImageTests\LinkImageParameters.cs" />
+    <Compile Include="LinksAndImages\QueryHelperTests.cs" />
+    <Compile Include="LinksAndImages\LinkToBasicTests.cs" />
+    <Compile Include="LinksAndImages\UrlHelperTests\ParseQueryStringTests.cs" />
+    <Compile Include="LinksAndImages\UrlHelperTests\MergeNameValueCollectionTests.cs" />
+    <Compile Include="LinksAndImages\UrlParts\UrlPartsToLink.cs" />
+    <Compile Include="LinksAndImages\UrlParts\UrlPartsProtocolAndDomain.cs" />
+    <Compile Include="LinksAndImages\UrlParts\UrlPartsTrivial.cs" />
+    <Compile Include="LinksAndImages\UrlParts\UrlPartsTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj">
@@ -147,6 +157,7 @@
       <Version>2.0.3</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

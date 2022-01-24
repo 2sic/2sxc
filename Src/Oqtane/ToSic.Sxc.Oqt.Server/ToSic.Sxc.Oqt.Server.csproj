@@ -4,11 +4,11 @@
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Version>13.00.00</Version>
+    <Version>13.01.00</Version>
     <Product>ToSic.Sxc</Product>
     <Authors>2sic</Authors>
     <Company>2sic</Company>
-    <Description>2sic 2sxc Oqtane POC</Description>
+    <Description>2sic 2sxc Oqtane</Description>
     <Copyright>2sic</Copyright>
     <AssemblyName>ToSic.Sxc.Oqtane.Server</AssemblyName>
     <!--2dm I think we need this to include DLLs-->
@@ -57,6 +57,7 @@
     <EmbeddedResource Include="Scripts\ToSic.Sxc.12.02.01.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.12.05.00.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.13.00.00.sql" />
+    <EmbeddedResource Include="Scripts\ToSic.Sxc.13.01.00.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.Uninstall.sql" />
   </ItemGroup>
 

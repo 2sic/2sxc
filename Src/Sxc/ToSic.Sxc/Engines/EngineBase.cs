@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Engines
         protected EngineBase(EngineBaseDependencies helpers) : base("Sxc.EngBas")
         {
             Helpers = helpers;
-            helpers.ClientDependencyOptimizer.Init(Log);
+            helpers.BlockResourceExtractor.Init(Log);
         }
         
         #endregion
@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Engines
             var view = Block.View;
             Log.LinkTo(parentLog);
 
-            var appPathRootInInstallation = Helpers.TemplateHelpers.Init(Block.App, Log).AppPathRoot(view.IsShared, PathTypes.PhysRelative);
+            var appPathRootInInstallation = Helpers.AppPathHelpers.Init(Block.App, Log).AppPathRoot(view.IsShared, PathTypes.PhysRelative);
             var subPath = view.Path;
             var polymorphInfo = TryToFindPolymorphPath(appPathRootInInstallation, view, subPath);
             var templatePath = polymorphInfo ?? Path.Combine(appPathRootInInstallation, subPath).ToAbsolutePathForwardSlash();
@@ -148,7 +148,7 @@ namespace ToSic.Sxc.Engines
                 return AlternateRendering;
 
             var renderedTemplate = RenderTemplate();
-            var depMan = Helpers.ClientDependencyOptimizer;
+            var depMan = Helpers.BlockResourceExtractor;
             var result = depMan.Process(renderedTemplate);
             ActivateJsApi = result.Item2;
             return result.Item1;
@@ -157,7 +157,7 @@ namespace ToSic.Sxc.Engines
         [PrivateApi] public bool ActivateJsApi { get; private set; }
 
         /// <inheritdoc/>
-        [PrivateApi] public List<ClientAssetInfo> Assets => Helpers.ClientDependencyOptimizer.Assets;
+        [PrivateApi] public List<ClientAssetInfo> Assets => Helpers.BlockResourceExtractor.Assets;
 
 
         private void CheckExpectedTemplateErrors()

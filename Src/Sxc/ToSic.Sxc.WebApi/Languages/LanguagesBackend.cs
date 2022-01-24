@@ -1,47 +1,46 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
+using ToSic.Eav.WebApi.Dto;
 
 namespace ToSic.Sxc.WebApi.Languages
 {
     public class LanguagesBackend: HasLog<LanguagesBackend>
     {
-        private readonly ZoneManager _zoneManager;
-
         #region Constructor & DI
         
-        public LanguagesBackend(IZoneMapper zoneMapper, ZoneManager zoneManager) : base("Bck.Admin")
+        public LanguagesBackend(IZoneMapper zoneMapper, ZoneManager zoneManager, ISite site) : base("Bck.Admin")
         {
             _zoneManager = zoneManager;
+            _site = site;
             _zoneMapper = zoneMapper.Init(Log);
         }
-
         private readonly IZoneMapper _zoneMapper;
+        private readonly ZoneManager _zoneManager;
+        private readonly ISite _site;
 
         #endregion
 
-        public IList<SiteLanguageDto> GetLanguages(int tenantId)
+        public IList<SiteLanguageDto> GetLanguages()
         {
             var callLog = Log.Call();
-            var zoneId = _zoneMapper.GetZoneId(tenantId);
             // ReSharper disable once PossibleInvalidOperationException
-            var cultures = _zoneMapper.CulturesWithState(tenantId, zoneId)
-                .Select(c => new SiteLanguageDto { Code = c.Key, Culture = c.Text, IsEnabled = c.Active })
+            var cultures = _zoneMapper.CulturesWithState(_site)
+                .Select(c => new SiteLanguageDto { Code = c.Code, Culture = c.Culture, IsEnabled = c.IsEnabled })
                 .ToList();
 
             callLog("found:" + cultures.Count);
             return cultures;
         }
 
-        public void Toggle(int tenantId, string cultureCode, bool enable, string niceName)
+        public void Toggle(string cultureCode, bool enable, string niceName)
         {
             Log.Add($"switch language:{cultureCode}, to:{enable}");
             // Activate or Deactivate the Culture
-            var zoneMapper = _zoneMapper.Init(Log);
-            var zoneId = zoneMapper.GetZoneId(tenantId);
-            _zoneManager.Init(zoneId, Log).SaveLanguage(cultureCode, niceName, enable);
+            _zoneManager.Init(_site.ZoneId, Log).SaveLanguage(cultureCode, niceName, enable);
         }
     }
 }

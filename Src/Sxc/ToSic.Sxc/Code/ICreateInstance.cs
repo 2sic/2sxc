@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Code
         /// Create an instance of code lying in a file near this
         /// </summary>
         /// <param name="virtualPath">path to the other code file to compile</param>
-        /// <param name="noParamOrder">dummy parameter to ensure all other parameters are called using named parameters, so that the API can change in future</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="name">Override the class name to compile - usually not required as it should match the file name</param>
         /// <param name="relativePath">optional relative path, will usually use the <see cref="CreateInstancePath"/></param>
         /// <param name="throwOnError">throw errors if compiling fails, recommended</param>

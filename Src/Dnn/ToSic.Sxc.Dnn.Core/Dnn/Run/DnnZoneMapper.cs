@@ -4,6 +4,7 @@ using System.Linq;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Languages;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
@@ -44,7 +45,6 @@ namespace ToSic.Sxc.Dnn.Run
             if (siteId < 0)
                 throw new Exception("Can't get zone for invalid portal ID: " + siteId);
 
-            //const string zoneSettingKey = Settings.PortalSettingsPrefix + "ZoneID";
             var c = PortalController.Instance.GetPortalSettings(siteId);
 
             // Create new zone automatically
@@ -77,27 +77,24 @@ namespace ToSic.Sxc.Dnn.Run
                 : wrapLog($"found {found.PortalId}", ((DnnSite)_spForNewSites.Build<ISite>()).Swap(found));
         }
 
-
         /// <inheritdoc />
-        /// <summary>
-        /// Returns all DNN Cultures with active / inactive state
-        /// </summary>
-        /// <param name="siteId">The ID of the tenant in the host system</param>
-        /// <param name="zoneId">The ID of the zone, to check which languages are enabled in this zone</param>
-        public override List<TempTempCulture> CulturesWithState(int siteId, int zoneId)
+        public override List<ISiteLanguageState> CulturesWithState(ISite site)
         {
-            // note: 
-            var availableEavLanguages = AppStates.Languages(zoneId, true); // _spForNewSites.Build<ZoneRuntime>().Init(zoneId, Log).Languages(true); 
-            var defaultLanguageCode = new PortalSettings(siteId).DefaultLanguage;
+            if (_supportedCultures != null) return _supportedCultures;
 
-            return (from c in LocaleController.Instance.GetLocales(siteId)
-                    select new TempTempCulture(
-                        c.Value.Code,
-                        c.Value.Text,
-                        availableEavLanguages.Any(a => a.Active && a.Matches(c.Value.Code)))
-                )
-                .OrderByDescending(c => c.Key == defaultLanguageCode)
-                .ThenBy(c => c.Key).ToList();
+            var availableEavLanguages = AppStates.Languages(site.ZoneId, true);
+            var defaultLanguageCode = site.DefaultCultureCode;
+
+            return _supportedCultures = LocaleController.Instance.GetLocales(site.Id)
+                .Select(c => new SiteLanguageState(
+                    c.Value.Code, 
+                    c.Value.Text,
+                    availableEavLanguages.Any(a => a.Active && a.Matches(c.Value.Code))))
+                .OrderByDescending(c => c.Code == defaultLanguageCode)
+                .ThenBy(c => c.Code)
+                .Cast<ISiteLanguageState>()
+                .ToList();
         }
+        private List<ISiteLanguageState> _supportedCultures;
     }
 }

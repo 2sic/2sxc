@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Logging;
 using ToSic.Razor.Markup;
 
 namespace ToSic.Sxc.Web.PageService
@@ -7,11 +8,12 @@ namespace ToSic.Sxc.Web.PageService
     public partial class PageServiceShared
     {
         public IList<HeadChange> Headers { get; } = new List<HeadChange>();
-        public IList<HeadChange> GetHeadChangesAndFlush()
+        public IList<HeadChange> GetHeadChangesAndFlush(ILog log)
         {
+            var wrapLog = log.Call<IList<HeadChange>>();
             var changes = Headers.ToArray().ToList();
             Headers.Clear();
-            return changes;
+            return wrapLog($"{changes.Count}", changes);
         }
 
 

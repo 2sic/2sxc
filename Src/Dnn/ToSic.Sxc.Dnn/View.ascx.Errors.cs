@@ -2,6 +2,7 @@
 using System.Web.UI;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn

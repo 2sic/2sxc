@@ -49,11 +49,22 @@ namespace ToSic.Sxc.Apps
         new string PhysicalPath { get; }
 
         /// <summary>
+        /// The path to the current app global folder, for linking JS/CSS files and
+        /// images in the app folder. 
+        /// </summary>
+        /// <returns>Path usually starting with /portals/_default/...</returns>
+        string PathShared { get; }
+
+        /// <summary>
+        /// The path on the server hard disk for the current app global folder. 
+        /// </summary>
+        /// <returns>Path usually starting with c:\...</returns>
+        string PhysicalPathShared { get; }
+
+        /// <summary>
         /// The thumbnail path for the current app. 
         /// </summary>
         /// <returns>path + app-icon.png if there is an icon there. </returns>
         new string Thumbnail { get; }
-
-
     }
 }

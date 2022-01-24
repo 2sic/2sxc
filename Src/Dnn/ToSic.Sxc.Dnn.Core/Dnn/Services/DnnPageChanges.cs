@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Dnn.Services
         {
             var wrapLog = Log.Call<int>();
 
-            props = props ?? PageServiceShared.GetPropertyChangesAndFlush();
+            props = props ?? PageServiceShared.GetPropertyChangesAndFlush(Log);
             foreach (var p in props)
                 switch (p.Property)
                 {

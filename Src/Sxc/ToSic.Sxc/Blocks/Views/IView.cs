@@ -54,6 +54,7 @@ namespace ToSic.Sxc.Blocks
         /// <summary>
         /// Translates the location to tell us if it's a shared view (the template is in a shared location)
         /// </summary>
+        // TODO: SHOULD PROBABLY rename to something else like IsGlobal ? 
         bool IsShared { get; }
 
         /// <summary>

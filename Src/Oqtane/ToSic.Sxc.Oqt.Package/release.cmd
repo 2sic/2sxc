@@ -4,6 +4,7 @@
 robocopy /mir "..\..\Data\.data\ " "%BuildTarget%\.data\ "
 rmdir /Q /S "%BuildTarget%\.databeta"
 rmdir /Q /S "%BuildTarget%\.data-custom"
+robocopy /mir "..\..\Data\assets\ " "%BuildTarget%\assets\ "
 
 @REM Copy 2sxc JS stuff
 robocopy /mir "%Dev2sxcAssets%\js\ " "%BuildTarget%\js\ "

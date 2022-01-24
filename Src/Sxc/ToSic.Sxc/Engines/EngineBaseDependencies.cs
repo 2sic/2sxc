@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 
@@ -12,8 +13,8 @@ namespace ToSic.Sxc.Engines
 
         public EngineBaseDependencies(IServerPaths serverPaths, 
             ILinkPaths linkPaths, 
-            TemplateHelpers templateHelpers, 
-            IClientDependencyOptimizer clientDependencyOptimizer,
+            AppPathHelpers appPathHelpers, 
+            IBlockResourceExtractor blockResourceExtractor,
             Lazy<AppPermissionCheck> appPermCheckLazy,
             Polymorphism.Polymorphism polymorphism,
             Lazy<IAppStates> appStatesLazy)
@@ -22,15 +23,15 @@ namespace ToSic.Sxc.Engines
             AppStatesLazy = appStatesLazy;
             ServerPaths = serverPaths;
             LinkPaths = linkPaths;
-            TemplateHelpers = templateHelpers;
-            ClientDependencyOptimizer = clientDependencyOptimizer;
+            AppPathHelpers = appPathHelpers;
+            BlockResourceExtractor = blockResourceExtractor;
             AppPermCheckLazy = appPermCheckLazy;
         }
 
         internal readonly IServerPaths ServerPaths;
         internal readonly ILinkPaths LinkPaths;
-        internal readonly TemplateHelpers TemplateHelpers;
-        internal readonly IClientDependencyOptimizer ClientDependencyOptimizer;
+        internal readonly AppPathHelpers AppPathHelpers;
+        internal readonly IBlockResourceExtractor BlockResourceExtractor;
         internal readonly Lazy<AppPermissionCheck> AppPermCheckLazy;
         internal Polymorphism.Polymorphism Polymorphism { get; }
         internal Lazy<IAppStates> AppStatesLazy { get; }

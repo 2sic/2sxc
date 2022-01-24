@@ -121,9 +121,13 @@ namespace ToSic.Sxc.WebApi.App
             var realApp = GetApp(Context.AppState.AppId, Context.UserMayEdit);
             if (id == null)
             {
+                Log.Add($"create new entity because id is null");
                 var metadata = GetMetadata(newContentItemCaseInsensitive);
+                Log.Add($"metadata: {metadata}");
                 var entity = realApp.Data.Create(contentType, cleanedNewItem, userName, metadata);
+                Log.Add($"new entity created: {entity}");
                 id = entity.EntityId;
+                Log.Add($"new entity id: {id}");
             }
             else
                 realApp.Data.Update(id.Value, cleanedNewItem, userName);
@@ -132,19 +136,22 @@ namespace ToSic.Sxc.WebApi.App
                 .Convert(realApp.Data.List.One(id.Value));
         }
 
-        private static Target GetMetadata(Dictionary<string, object> newContentItemCaseInsensitive)
+        private Target GetMetadata(Dictionary<string, object> newContentItemCaseInsensitive)
         {
-            if (!newContentItemCaseInsensitive.Keys.Contains(Attributes.JsonKeyMetadataFor)) return null;
+            var wrapLog = Log.Call<Target>($"item dictionary key count: {newContentItemCaseInsensitive.Count}");
+
+            if (!newContentItemCaseInsensitive.Keys.Contains(Attributes.JsonKeyMetadataFor)) return wrapLog("'For' key is missing", null);
 
             var metadataFor = newContentItemCaseInsensitive[Attributes.JsonKeyMetadataFor] as JObject;
-            if (metadataFor == null) return null;
+            if (metadataFor == null) return wrapLog("'For' value is null", null);
 
-            return new Target(GetTargetType(metadataFor[Attributes.TargetNiceName]), null)
+            var metaData = new Target(GetTargetType(metadataFor[Attributes.TargetNiceName]), null)
             {
                 KeyGuid = (Guid?) metadataFor[Attributes.GuidNiceName],
                 KeyNumber = (int?) metadataFor[Attributes.NumberNiceName],
                 KeyString = (string) metadataFor[Attributes.StringNiceName]
             };
+            return wrapLog($"new metadata g:{metaData.KeyGuid},n:{metaData.KeyNumber},s:{metaData.KeyString}", metaData);
         }
 
         private static int GetTargetType(JToken target)

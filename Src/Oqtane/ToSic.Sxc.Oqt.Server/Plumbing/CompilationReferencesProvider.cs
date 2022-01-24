@@ -5,10 +5,8 @@ using System.Reflection;
 using System.Runtime.Loader;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
-//[assembly: ProvideApplicationPartFactory(typeof(MyApplicationPartFactory))]
-
-// WIP trying to get https://stackoverflow.com/questions/58685966/adding-assemblies-types-to-be-made-available-to-razor-page-at-runtime to work
-
+// Used by RazorView compilation.
+// Based on https://stackoverflow.com/questions/58685966/adding-assemblies-types-to-be-made-available-to-razor-page-at-runtime to work
 namespace ToSic.Sxc.Oqt.Server.Plumbing
 {
     public class CompilationReferencesProvider: AssemblyPart, ICompilationReferencesProvider

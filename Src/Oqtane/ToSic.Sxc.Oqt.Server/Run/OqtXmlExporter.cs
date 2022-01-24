@@ -12,6 +12,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Adam;
+using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Shared;
 using App = ToSic.Sxc.Apps.App;
 
@@ -20,14 +21,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
     public class OqtXmlExporter : XmlExporter
     {
-        //private readonly IServiceProvider _serviceProvider;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        //private readonly Lazy<ISiteRepository> _siteRepositoryLazy;
         private readonly Lazy<IFileRepository> _fileRepositoryLazy;
         private readonly Lazy<IFolderRepository> _folderRepositoryLazy;
-        //private readonly Lazy<IServerPaths> _oqtServerPathsLazy;
         private readonly Lazy<ITenantResolver> _oqtTenantResolverLazy;
-        //private readonly Lazy<IValueConverter> _oqtValueConverterLazy;
         private readonly IContextResolver _ctxResolver;
 
         #region Constructor / DI
@@ -36,30 +33,21 @@ namespace ToSic.Sxc.Oqt.Server.Run
             AdamManager<int, int> adamManager,
             IContextResolver ctxResolver,
             XmlSerializer xmlSerializer,
-            //IServiceProvider serviceProvider,
             IWebHostEnvironment hostingEnvironment,
             Lazy<IFileRepository> fileRepositoryLazy,
             Lazy<IFolderRepository> folderRepositoryLazy,
-            //Lazy<IServerPaths> oqtServerPathsLazy,
-            //Lazy<ISiteRepository> siteRepositoryLazy,
             Lazy<ITenantResolver> oqtTenantResolverLazy,
-            //Lazy<IValueConverter> oqtValueConverterLazy
             IAppStates appStates
             ) : base(xmlSerializer, appStates, OqtConstants.OqtLogPrefix)
         {
-            //_serviceProvider = serviceProvider;
             _hostingEnvironment = hostingEnvironment;
-            //_siteRepositoryLazy = siteRepositoryLazy;
             _fileRepositoryLazy = fileRepositoryLazy;
             _folderRepositoryLazy = folderRepositoryLazy;
-            //_oqtServerPathsLazy = oqtServerPathsLazy;
             _oqtTenantResolverLazy = oqtTenantResolverLazy;
-            //_oqtValueConverterLazy = oqtValueConverterLazy;
             _ctxResolver = ctxResolver.Init(Log);
             AdamManager = adamManager;
         }
 
-        //private readonly IFileManager _dnnFiles = FileManager.Instance;
         internal AdamManager<int, int> AdamManager { get; }
 
         private string _appFolder;

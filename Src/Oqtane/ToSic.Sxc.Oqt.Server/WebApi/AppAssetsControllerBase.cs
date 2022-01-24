@@ -2,11 +2,10 @@ using System;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Oqtane.Infrastructure;
 using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Server.Adam;
+using ToSic.Sxc.Oqt.Server.Apps;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi
@@ -14,7 +13,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
     public abstract class AppAssetsControllerBase : OqtControllerBase
     {
         public virtual string Route => "default";
-        //private readonly ILogManager _logger;
         private readonly Lazy<OqtAppFolder> _oqtAppFolderLazy;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly SiteState _siteState;
@@ -24,7 +22,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
             _hostingEnvironment = dependencies.HostingEnvironment;
             _oqtAppFolderLazy = dependencies.OqtAppFolderLazy;
             _siteState = dependencies.SiteState;
-            //_logger = dependencies.Logger;
         }
 
         [HttpGet("{*filePath}")]
@@ -49,18 +46,5 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
                 return NotFound();
             }
         }
-
-        //// Get all files in directory and subdirectories.
-        //public List<string> GetAllFiles(string folder)
-        //{
-        //    var files = Directory.GetFiles(folder).ToList();
-        //    var subFolders = Directory.GetDirectories(folder);
-
-        //    // Recurse into subdirectories of  directory.
-        //    foreach (var subFolder in subFolders)
-        //        files.AddRange(GetAllFiles(subFolder));
-
-        //    return files;
-        //}
     }
 }

@@ -6,7 +6,7 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Web.Url;
+using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Web
 {
@@ -30,10 +30,11 @@ namespace ToSic.Sxc.Web
 
 
         /// <inheritdoc />
-        public string To(string noParamOrder = Eav.Parameters.Protector, 
-            int? pageId = null, 
-            object parameters = null, 
+        public string To(
+            string noParamOrder = Eav.Parameters.Protector,
+            int? pageId = null,
             string api = null,
+            object parameters = null,
             string type = null)
         {
             // prevent incorrect use without named parameters
@@ -50,12 +51,12 @@ namespace ToSic.Sxc.Web
                 ? ToPage(pageId, strParams)
                 : ToApi(api, strParams);
 
-            var processed = ChangeToMatchType(type, url);
+            var processed = ExpandUrlIfNecessary(type, url);
 
             return Tags.SafeUrl(processed).ToString();
         }
 
-        private string ChangeToMatchType(string type, string url)
+        private string ExpandUrlIfNecessary(string type, string url)
         {
             // Short-Circuit to really not do anything if the type isn't specified
             if (string.IsNullOrEmpty(type)) return url;
@@ -117,27 +118,24 @@ namespace ToSic.Sxc.Web
             string format = null,
             object aspectRatio = null,
             string type = null,
-            object parameters = null)
+            object parameters = null
+            )
         {
             // prevent incorrect use without named parameters
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Image)}", $"{nameof(width)},{nameof(height)}," +
                 $"{nameof(quality)},{nameof(resizeMode)},{nameof(scaleMode)},{nameof(format)},{nameof(aspectRatio)},{nameof(type)},{nameof(parameters)}");
 
-            var imageUrl = ImgLinker.Image(url, settings, factor, noParamOrder, width, height, quality, resizeMode,
-                scaleMode, format, aspectRatio);
-
+            // If params were given, ensure it can be used as string, as it could also be a params-object
             var strParams = ParametersToString(parameters);
 
-            if (!string.IsNullOrWhiteSpace(strParams))
-            {
-                var paramList = UrlHelpers.ParseQueryString(strParams);
-                if (paramList != null & paramList.HasKeys()) 
-                    imageUrl = UrlHelpers.AddQueryString(imageUrl, paramList);
-            }
+            // If the url should be expanded to have a full root or something, do this first
+            var expandedUrl = ExpandUrlIfNecessary(type, url);
 
-            var processed = ChangeToMatchType(type, imageUrl);
-            //var processed = ProcessPartParam(part, imageUrl);
-            return Tags.SafeUrl(processed).ToString();
+            // Get the image-url(s) as needed
+            var imageUrl = ImgLinker.Image(expandedUrl, settings, factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
+                scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: strParams, srcSet: false);
+
+            return imageUrl;
         }
 
         private bool _debug;

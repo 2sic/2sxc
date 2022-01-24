@@ -38,9 +38,7 @@ namespace ToSic.Sxc.WebApi.InPage
         {
             // nothing to do without app
             if (Block?.App == null) return null;
-
-            var appPath = Block.App.Path ?? "";
-            return CmsManagerOfBlock?.Read.Views.GetContentTypesWithStatus(appPath);
+            return CmsManagerOfBlock?.Read.Views.GetContentTypesWithStatus(Block.App.Path ?? "", Block.App.PathShared ?? "");
         }
 
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)

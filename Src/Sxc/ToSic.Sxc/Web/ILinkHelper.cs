@@ -12,19 +12,19 @@ namespace ToSic.Sxc.Web
         /// <summary>
         /// returns a link to the current page with parameters resolved in a way that DNN wants it
         /// </summary>
-        /// <param name="noParamOrder">a helper to ensure that you must use named parameters. You shouldn't give it anything, but you must use all others like parameters: "id=47&amp;name=42"</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="pageId">optional page ID (TabId) - if not supplied, will use current page</param>
-        /// <param name="parameters">
-        /// - the parameters either as `id=47&amp;name=daniel` (Dnn also supports `/id/47/name/daniel`)
-        /// - in 2sxc 12.05+ it can also be an <see cref="ToSic.Sxc.Context.IParameters"/>
-        /// </param>
         /// <param name="api">optional api url "api/name/method?id=something"</param>
+        /// <param name="parameters">
+        ///     - the parameters either as `id=47&amp;name=daniel` (Dnn also supports `/id/47/name/daniel`)
+        ///     - in 2sxc 12.05+ it can also be an <see cref="ToSic.Sxc.Context.IParameters"/>
+        /// </param>
         /// <param name="type">
-        /// Optional type changes how the link is generated. Possible values are:
-        ///
-        /// - null / not specified / empty = return link as is generated
-        /// - `"full"` return link with protocol and domain. If that was missing before, it will add current protocol/domain if possible, but not on relative `./` or `../` links
-        /// - `"//"` return link with `//domain`. If that was missing before, will add current domain if possible, but not on relative `./` or `../` links
+        ///     Optional type changes how the link is generated. Possible values are:
+        /// 
+        ///     - null / not specified / empty = return link as is generated
+        ///     - `"full"` return link with protocol and domain. If that was missing before, it will add current protocol/domain if possible, but not on relative `./` or `../` links
+        ///     - `"//"` return link with `//domain`. If that was missing before, will add current domain if possible, but not on relative `./` or `../` links
         /// </param>
         /// <returns></returns>
         /// <remarks>
@@ -35,10 +35,9 @@ namespace ToSic.Sxc.Web
         string To(
             string noParamOrder = Eav.Parameters.Protector,
             int? pageId = null,
-            object parameters = null,
             string api = null,
-            string type = null // WIP, probably "full", "/", "//" etc.
-            //string part = null
+            object parameters = null,
+            string type = null
         );
         
         /// <summary>
@@ -58,9 +57,13 @@ namespace ToSic.Sxc.Web
         /// - Most parameters if set to 0 will cause a reset so that this aspect is not in the URL
         /// </summary>
         /// <param name="url">The image url. Use an empty string if you want to just get the params for re-use.</param>
-        /// <param name="settings">A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings </param>
+        /// <param name="settings">
+        /// - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
+        /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
+        /// - Or a specially prepared <see cref="ToSic.Sxc.Images.IResizeSettings"/> object containing all settings. If this is provided, only `factor` will still be respected, all other settings like `width` on this command will be ignored.
+        /// </param>
         /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. It only affects sizes from the settings.</param>
-        /// <param name="noParamOrder">a helper to ensure that you must use named parameters. You shouldn't give it anything, but you must use all others like parameters: "id=47&amp;name=42"</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="width">Optional width parameter. Cannot be used if `factor` is set. Usually takes the default from the `settings`.</param>
         /// <param name="height">Optional height parameter. Can only be 0 if `factor` is set, no not specify a height. Usually takes the default from the `settings`.</param>
         /// <param name="quality">Optional quality parameter. Usually takes the default from the `settings`.</param>
@@ -68,18 +71,25 @@ namespace ToSic.Sxc.Web
         /// <param name="scaleMode">Optional scale-mode to allow up-scaling images like `up` or `both`. Usually takes the default from the `settings`.</param>
         /// <param name="format">Optional file format like `jpg` or `png`</param>
         /// <param name="aspectRatio">Aspect Ratio width/height, only relevant if a `factor` is supplied. Usually takes default from the `settings` or is ignored. </param>
-
         /// <param name="type">
-        /// Optional type changes how the link is generated. Possible values are:
-        ///
-        /// - null / not specified / empty = return link as is generated
-        /// - `"full"` return link with protocol and domain. If that was missing before, it will add current protocol/domain if possible, but not on relative `./` or `../` links
-        /// - `"//"` return link with `//domain`. If that was missing before, will add current domain if possible, but not on relative `./` or `../` links
+        ///     Optional type changes how the link is generated. Possible values are:
+        /// 
+        ///     - null / not specified / empty = return link as is generated
+        ///     - `"full"` return link with protocol and domain. If that was missing before, it will add current protocol/domain if possible, but not on relative `./` or `../` links
+        ///     - `"//"` return link with `//domain`. If that was missing before, will add current domain if possible, but not on relative `./` or `../` links
+        /// </param>
+        /// <param name="parameters">
+        ///     - the parameters either as `id=47&amp;name=daniel` (Dnn also supports `/id/47/name/daniel`)
+        ///     - in 2sxc 12.05+ it can also be an <see cref="ToSic.Sxc.Context.IParameters"/>
         /// </param>
         /// <remarks>
         /// Usually a factor is applied to create a link which is possibly 50% of the content-width or similar.
         /// In these cases the height is not applied but the aspectRatio is used, which usually comes from `settings` if any were provided.
-        /// New in 2sxc 12.03
+        ///
+        /// History
+        /// - New in 2sxc 12.03
+        /// - type added ca. v12.08
+        /// - srcSet added v13.01
         /// </remarks>
         /// <returns></returns>
         ///// <param name="part">
@@ -113,9 +123,8 @@ namespace ToSic.Sxc.Web
             string scaleMode = null,
             string format = null,
             object aspectRatio = null,
-            string type = null, // WIP, probably "full", "/", "//" etc.
+            string type = null,
             object parameters = null
-            //string part = null
             );
 
         /// <summary>
