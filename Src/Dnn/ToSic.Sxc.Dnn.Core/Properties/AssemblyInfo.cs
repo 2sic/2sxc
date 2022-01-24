@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("2sic Internet Solutions")]
 [assembly: AssemblyProduct("2sxc Dnn Core")]
-[assembly: AssemblyCopyright("Copyright © 2sic 2021")]
+[assembly: AssemblyCopyright("Copyright © 2sic 2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
