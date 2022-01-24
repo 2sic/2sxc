@@ -31,7 +31,8 @@ namespace ToSic.Sxc.Run
 
             var link = "//gettingstarted.2sxc.org/router.aspx?"
                         + $"Platform={_platformInfo.Name}"
-                        + $"&SysVersion={_platformInfo.Version.ToString(4)}"
+                        // note: Version ToString max 3, as Oqtane only has 3 version numbers, otherwise error
+                        + $"&SysVersion={_platformInfo.Version.ToString(3)}"
                         + $"&SxcVersion={Settings.ModuleVersion}"
                         + destinationPart
                         + "&ModuleId=" + moduleId
