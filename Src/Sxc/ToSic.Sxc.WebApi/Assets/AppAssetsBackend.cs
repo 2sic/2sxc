@@ -14,21 +14,21 @@ namespace ToSic.Sxc.WebApi.Assets
 
         #region Constructor / DI
 
-        public AppAssetsBackend(TemplateHelpers templateHelpers,
+        public AppAssetsBackend(AppPathHelpers appPathHelpers,
             IUser user, 
             Lazy<AssetEditor> assetEditorLazy,
             IServiceProvider serviceProvider,
             IAppStates appStates) : base("Bck.Assets")
         {
 
-            _templateHelpers = templateHelpers;
+            _appPathHelpers = appPathHelpers;
             _assetEditorLazy = assetEditorLazy;
             _assetTemplates = new AssetTemplates().Init(Log);
             _serviceProvider = serviceProvider;
             _appStates = appStates;
             _user = user;
         }
-        private readonly TemplateHelpers _templateHelpers;
+        private readonly AppPathHelpers _appPathHelpers;
         private readonly Lazy<AssetEditor> _assetEditorLazy;
         private readonly AssetTemplates _assetTemplates;
         private readonly IServiceProvider _serviceProvider;

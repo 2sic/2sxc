@@ -66,7 +66,5 @@ namespace ToSic.Sxc.Apps
         /// </summary>
         /// <returns>path + app-icon.png if there is an icon there. </returns>
         new string Thumbnail { get; }
-
-
     }
 }

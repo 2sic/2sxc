@@ -6,9 +6,10 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Blocks;
+using static System.StringComparison;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Engines
@@ -20,24 +21,20 @@ namespace ToSic.Sxc.Engines
         Link
     }
 
-    public class TemplateHelpers: HasLog
+    public class AppPathHelpers: HasLog
     {
-        public const string RazorC = "C# Razor";
-        public const string TokenReplace = "Token";
-
         #region Constructor / DI
-
 
         private IServerPaths ServerPaths { get; }
         public IApp App;
-        public TemplateHelpers(IServerPaths serverPaths, IGlobalConfiguration globalConfiguration, Lazy<IValueConverter> iconConverterLazy): base("Viw.Help")
+        public AppPathHelpers(IServerPaths serverPaths, IGlobalConfiguration globalConfiguration, Lazy<IValueConverter> iconConverterLazy): base("Viw.Help")
         {
             ServerPaths = serverPaths;
             _globalConfiguration = globalConfiguration;
             _iconConverterLazy = iconConverterLazy;
         }
 
-        public TemplateHelpers Init(IApp app, ILog parentLog)
+        public AppPathHelpers Init(IApp app, ILog parentLog)
         {
             App = app;
             Log.LinkTo(parentLog);
@@ -59,9 +56,8 @@ namespace ToSic.Sxc.Engines
             var portalPath = isShared
                 ? Path.Combine(ServerPaths.FullAppPath(_globalConfiguration.GlobalSiteFolder) ?? "", Settings.AppsRootFolder)
                 : App.Site.AppsRootPhysicalFull ?? "";
-            var sexyFolderPath = portalPath;
 
-            var sexyFolder = new DirectoryInfo(sexyFolderPath);
+            var sexyFolder = new DirectoryInfo(portalPath);
 
             // Create 2sxc folder if it does not exists
             sexyFolder.Create();
@@ -69,12 +65,9 @@ namespace ToSic.Sxc.Engines
             // Create web.config (copy from DesktopModules folder, but only if is there, and for Oqtane is not)
             // Note that DNN needs it because many razor file don't use @inherits and the web.config contains the default class
             // but in Oqtane we'll require that to work
-            var webConfigTempletFilePath = Path.Combine(_globalConfiguration.GlobalFolder, Settings.WebConfigTemplateFile);
-            if (File.Exists(webConfigTempletFilePath) && !sexyFolder.GetFiles(Settings.WebConfigFileName).Any())
-            {
-                File.Copy(webConfigTempletFilePath,
-                    Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
-            }
+            var webConfigTemplateFilePath = Path.Combine(_globalConfiguration.GlobalFolder, Settings.WebConfigTemplateFile);
+            if (File.Exists(webConfigTemplateFilePath) && !sexyFolder.GetFiles(Settings.WebConfigFileName).Any())
+                File.Copy(webConfigTemplateFilePath, Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
 
             // Create a Content folder (or App Folder)
             if (string.IsNullOrEmpty(App.Folder))
@@ -101,13 +94,11 @@ namespace ToSic.Sxc.Engines
             {
                 case PathTypes.Link:
                     basePath = global
-                        //? _linkPaths.ToAbsolute(Path.Combine(Settings.PortalHostDirectory, Settings.AppsRootFolder))
                         ? Path.Combine(_globalConfiguration.GlobalSiteFolder, Settings.AppsRootFolder, App.Folder).ToAbsolutePathForwardSlash()
                         : App.Path;
                     break;
                 case PathTypes.PhysRelative:
                     basePath = global
-                        //? _linkPaths.ToAbsolute(Path.Combine(Settings.PortalHostDirectory, Settings.AppsRootFolder))
                         ? Path.Combine(_globalConfiguration.GlobalSiteFolder, Settings.AppsRootFolder, App.Folder).ToAbsolutePathForwardSlash()
                         : Path.Combine(App.Site.AppsRootPhysical, App.Folder);
                     break;
@@ -120,21 +111,19 @@ namespace ToSic.Sxc.Engines
                     throw new ArgumentOutOfRangeException(nameof(pathType), pathType, null);
             }
 
-            //var finalPath = basePath.Contains(LinkPaths.AppFolderPlaceholder)
-            //    ? basePath.Replace(LinkPaths.AppFolderPlaceholder, App.Folder)
-            //    : Path.Combine(basePath, App.Folder);
             return wrapLog(basePath, basePath);
         }
 
         public string IconPathOrNull(IView view, PathTypes type)
         {
+            var wrapLog = Log.Call<string>();
             // 1. Check if the file actually exists
-            //var iconFile = ViewPath(view);
             var iconFile = IconPath(view, PathTypes.PhysFull);
             var exists = File.Exists(iconFile);
 
             // 2. Return as needed
-            return exists ? IconPath(view, type) : null;
+            var result = exists ? IconPath(view, type) : null;
+            return wrapLog(result ?? "not found", result);
         }
 
         private string IconPath(IView view, PathTypes type)
@@ -145,10 +134,9 @@ namespace ToSic.Sxc.Engines
                 var iconInConfig = view.Icon;
                 
                 // If we have the App:Path in front, replace as expected, but never on global
-                if (AppPathTokenDetected(iconInConfig))
-                    return AppPathTokenReplace(iconInConfig, AppPathRoot(false, type));
-                // AppPathRoot(false, type) + iconInConfig.Substring(AppAssets.AppPathPlaceholder.Length);
-                
+                if (HasAppPathToken(iconInConfig))
+                    return AppPathTokenReplace(iconInConfig, AppPathRoot(false, type), AppPathRoot(true, type));
+
                 // If not, we must assume it's file:## placeholder and we can only convert to relative link
                 if (type == PathTypes.Link) return _iconConverterLazy.Value.ToValue(iconInConfig, view.Guid);
 
@@ -156,18 +144,27 @@ namespace ToSic.Sxc.Engines
             }
 
             var viewPath1 = ViewPath(view, type);
-            return viewPath1.Substring(0, viewPath1.LastIndexOf(".", StringComparison.Ordinal)) + ".png";
+            return viewPath1.Substring(0, viewPath1.LastIndexOf(".", Ordinal)) + ".png";
         }
 
         public string ViewPath(IView view, PathTypes type) => Path.Combine(AppPathRoot(view.IsShared, type), view.Path);
 
-        public static bool AppPathTokenDetected(string iconInConfig) =>
-            (iconInConfig ?? "").StartsWith(AppConstants.AppPathPlaceholder, StringComparison.OrdinalIgnoreCase);
+        public static bool HasAppPathToken(string value)
+        {
+            value = value ?? "";
+            return value.StartsWith(AppConstants.AppPathPlaceholder, InvariantCultureIgnoreCase)
+                || value.StartsWith(AppConstants.AppPathSharedPlaceholder, InvariantCultureIgnoreCase);
+        }
 
-        public static string AppPathTokenReplace(string iconInConfig, string appPath) =>
-            AppPathTokenDetected(iconInConfig)
-                ? appPath + iconInConfig.Substring(AppConstants.AppPathPlaceholder.Length)
-                : iconInConfig;
+        public static string AppPathTokenReplace(string value, string appPath, string appPathShared)
+        {
+            value = value ?? "";
+            if (value.StartsWith(AppConstants.AppPathPlaceholder, InvariantCultureIgnoreCase))
+                return appPath + value.After(AppConstants.AppPathPlaceholder);
+            if (value.StartsWith(AppConstants.AppPathSharedPlaceholder, InvariantCultureIgnoreCase))
+                return appPathShared + value.After(AppConstants.AppPathSharedPlaceholder);
+            return value;
+        }
 
         /// <summary>
         /// Returns the location where module global folder web assets are stored

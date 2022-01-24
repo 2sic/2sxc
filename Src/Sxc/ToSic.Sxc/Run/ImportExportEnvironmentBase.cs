@@ -16,14 +16,14 @@ namespace ToSic.Sxc.Run
             internal readonly IAppStates AppStates;
             internal readonly ISite Site;
             internal readonly App NewApp;
-            internal readonly TemplateHelpers TemplateHelpers;
+            internal readonly AppPathHelpers AppPathHelpers;
 
-            public Dependencies(ISite site, App newApp, TemplateHelpers templateHelpers, IAppStates appStates)
+            public Dependencies(ISite site, App newApp, AppPathHelpers appPathHelpers, IAppStates appStates)
             {
                 AppStates = appStates;
                 Site = site;
                 NewApp = newApp;
-                TemplateHelpers = templateHelpers;
+                AppPathHelpers = appPathHelpers;
             }
         }
 
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Run
             var app = _dependencies.NewApp.InitNoData(new AppIdentity(zoneId, appId), Log);
 
             // Copy all files in 2sexy folder to (portal file system) 2sexy folder
-            var templateRoot = _dependencies.TemplateHelpers.Init(app, Log)
+            var templateRoot = _dependencies.AppPathHelpers.Init(app, Log)
                 .AppPathRoot(false, PathTypes.PhysFull);
             return templateRoot;
         }

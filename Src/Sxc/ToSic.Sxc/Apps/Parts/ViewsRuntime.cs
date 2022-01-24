@@ -96,16 +96,19 @@ namespace ToSic.Sxc.Apps
 	        else
 	            availableTemplates = GetAll().Where(p => p.UseForList);
 
-	        return availableTemplates.Select(t => new TemplateUiInfo
+            var thumbnailHelper = Parent.ServiceProvider.Build<AppPathHelpers>().Init(app, Log);
+
+            var result = availableTemplates.Select(t => new TemplateUiInfo
 	        {
 	            TemplateId = t.Id,
 	            Name = t.Name,
 	            ContentTypeStaticName = t.ContentType,
 	            IsHidden = t.IsHidden,
-	            Thumbnail = Parent.ServiceProvider.Build<TemplateHelpers>().Init(app, Log).IconPathOrNull(t, PathTypes.Link),
+	            Thumbnail = thumbnailHelper.IconPathOrNull(t, PathTypes.Link),
                 IsDefault = t.Metadata.HasType(Decorators.IsDefaultDecorator),
             });
-	    }
+            return result;
+        }
 
 
         /// <summary>
@@ -129,20 +132,20 @@ namespace ToSic.Sxc.Apps
 
 
         // todo: check if this call could be replaced with the normal ContentTypeController.Get to prevent redundant code
-        public IEnumerable<ContentTypeUiInfo> GetContentTypesWithStatus(string appPath)
+        public IEnumerable<ContentTypeUiInfo> GetContentTypesWithStatus(string appPath, string appPathShared)
         {
             var templates = GetAll().ToList();
             var visible = templates.Where(t => !t.IsHidden).ToList();
 
-            return Parent.ContentTypes.All.OfScope(Scopes.Default/* Settings.AttributeSetScope*/) 
+            return Parent.ContentTypes.All.OfScope(Scopes.Default) 
                 .Where(ct => templates.Any(t => t.ContentType == ct.NameId)) // must exist in at least 1 template
                 .OrderBy(ct => ct.Name)
                 .Select(ct =>
                 {
                     var metadata = ct.Metadata.Description;
                     var thumbnail = ValueConverter.ToValue(metadata?.Value<string>(View.ContentTypeFieldIcon));
-                    if (TemplateHelpers.AppPathTokenDetected(thumbnail))
-                        thumbnail = TemplateHelpers.AppPathTokenReplace(thumbnail, appPath);
+                    if (AppPathHelpers.HasAppPathToken(thumbnail))
+                        thumbnail = AppPathHelpers.AppPathTokenReplace(thumbnail, appPath, appPathShared);
                     return new ContentTypeUiInfo {
                         StaticName = ct.NameId,
                         Name = ct.Name,

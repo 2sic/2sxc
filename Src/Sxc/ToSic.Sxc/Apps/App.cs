@@ -24,12 +24,12 @@ namespace ToSic.Sxc.Apps
     {
         #region DI Constructors
 
-        public App(AppDependencies dependencies, Lazy<TemplateHelpers> templateHelpersLazy) : base(dependencies, "App.SxcApp")
+        public App(AppDependencies dependencies, Lazy<AppPathHelpers> templateHelpersLazy) : base(dependencies, "App.SxcApp")
         {
             _templateHelpersLazy = templateHelpersLazy;
         }
 
-        private readonly Lazy<TemplateHelpers> _templateHelpersLazy;
+        private readonly Lazy<AppPathHelpers> _templateHelpersLazy;
 
         public App PreInit(ISite site)
         {

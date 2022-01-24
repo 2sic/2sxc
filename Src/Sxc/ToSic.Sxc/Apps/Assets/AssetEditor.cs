@@ -125,7 +125,7 @@ namespace ToSic.Sxc.Apps.Assets
         }
 
         public string InternalPath => NormalizePath(Path.Combine(
-            _cmsRuntime.ServiceProvider.Build<TemplateHelpers>().Init(_app, Log)
+            _cmsRuntime.ServiceProvider.Build<AppPathHelpers>().Init(_app, Log)
                 .AppPathRoot(EditInfo.IsShared, PathTypes.PhysFull), EditInfo.FileName));
 
         private static string NormalizePath(string path) => Path.GetFullPath(new Uri(path).LocalPath);
@@ -169,7 +169,7 @@ namespace ToSic.Sxc.Apps.Assets
             if (SanitizeFileNameAndCheckIfAssetAlreadyExists()) return false;
 
             // ensure the web.config exists (usually missing in the global area)
-            _cmsRuntime.ServiceProvider.Build<TemplateHelpers>().Init(_app, Log)
+            _cmsRuntime.ServiceProvider.Build<AppPathHelpers>().Init(_app, Log)
                 .EnsureTemplateFolderExists(EditInfo.IsShared);
 
             var absolutePath = InternalPath;
