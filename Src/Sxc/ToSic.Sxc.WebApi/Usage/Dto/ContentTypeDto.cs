@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Data;
-using ToSic.Sxc.WebApi.SharedDto;
+using ToSic.Eav.WebApi.Dto;
 
 namespace ToSic.Sxc.WebApi.Usage.Dto
 {

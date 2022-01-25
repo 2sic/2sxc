@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ToSic.Eav.WebApi.Assets;
 
 namespace ToSic.Sxc.WebApi.Assets
 {

@@ -13,8 +13,10 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.App
 {
@@ -161,6 +163,13 @@ namespace ToSic.Sxc.WebApi.App
             throw new ArgumentOutOfRangeException(Attributes.TargetNiceName, "Value is not 'int' or TargetTypes 'string'.");
         }
 
+        /// <summary>
+        /// used for API calls to get the current app
+        /// </summary>
+        /// <returns></returns>
+        internal IApp GetApp(int appId, bool showDrafts) => GetService<Apps.App>().Init(ServiceProvider, appId, Log, null, showDrafts);
+
+
         #endregion
 
         #region helpers / initializers to prep the EAV and Serializer
@@ -214,7 +223,7 @@ namespace ToSic.Sxc.WebApi.App
 
         protected MultiPermissionsTypes ThrowIfNotAllowedInType(string contentType, List<Grants> requiredGrants, IAppIdentity alternateApp = null)
         {
-            var permCheck = ServiceProvider.Build<MultiPermissionsTypes>().Init(Context, alternateApp ?? Context.AppState, contentType, Log);
+            var permCheck = GetService<MultiPermissionsTypes>().Init(Context, alternateApp ?? Context.AppState, contentType, Log);
             if (!permCheck.EnsureAll(requiredGrants, out var error))
                 throw HttpException.PermissionDenied(error);
             return permCheck;
@@ -222,7 +231,7 @@ namespace ToSic.Sxc.WebApi.App
 
         protected MultiPermissionsItems ThrowIfNotAllowedInItem(IEntity itm, List<Grants> requiredGrants, IAppIdentity alternateApp = null)
         {
-            var permCheck = ServiceProvider.Build<MultiPermissionsItems>().Init(Context, alternateApp ?? Context.AppState, itm, Log);
+            var permCheck = GetService<MultiPermissionsItems>().Init(Context, alternateApp ?? Context.AppState, itm, Log);
             if (!permCheck.EnsureAll(requiredGrants, out var error))
                 throw HttpException.PermissionDenied(error);
             return permCheck;

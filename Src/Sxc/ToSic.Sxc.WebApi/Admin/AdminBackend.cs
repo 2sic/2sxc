@@ -1,10 +1,10 @@
 ﻿using System;
-using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi;
+using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.WebApi.Context;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.WebApi.Admin
             // if we have an appid (we don't have it in an install-new-apps-scenario) check permissions
             if (appContext != null)
             {
-                var appAndPerms = ServiceProvider.Build<MultiPermissionsApp>().Init(appContext, appContext.AppState, Log);
+                var appAndPerms = GetService<MultiPermissionsApp>().Init(appContext, appContext.AppState, Log);
                 if (!appAndPerms.ZoneIsOfCurrentContextOrUserIsSuper(out var error))
                     throw HttpException.PermissionDenied(error);
             }

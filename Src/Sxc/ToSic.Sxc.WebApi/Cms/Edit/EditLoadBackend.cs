@@ -8,13 +8,14 @@ using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
+using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Eav.WebApi.Features;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.WebApi.Context;
-using ToSic.Sxc.WebApi.Features;
 using ToSic.Sxc.WebApi.Save;
 using JsonSerializer = ToSic.Eav.ImportExport.Json.JsonSerializer;
 
@@ -72,7 +73,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // now look up the types, and repeat security check with type-names
             // todo: 2020-03-20 new feat 11.01, may not check inner type permissions ATM
-            var permCheck = ServiceProvider.Build<MultiPermissionsTypes>().Init(context, context.AppState, items, Log);
+            var permCheck = GetService<MultiPermissionsTypes>().Init(context, context.AppState, items, Log);
             if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
@@ -81,7 +82,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var entityApi = _entityApi.Init(appId, permCheck.EnsureAny(GrantSets.ReadDraft), Log);
             var typeRead = entityApi.AppRead.ContentTypes;
             var list = entityApi.GetEntitiesForEditing(items);
-            var jsonSerializer = ServiceProvider.Build<JsonSerializer>().Init(entityApi.AppRead.AppState, Log);
+            var jsonSerializer = GetService<JsonSerializer>().Init(entityApi.AppRead.AppState, Log);
             result.Items = list.Select(e => new BundleWithHeader<JsonEntity>
             {
                 Header = e.Header,

@@ -5,11 +5,12 @@ using System.Web;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Adam;
-using ToSic.Sxc.WebApi.PublicApi;
 
 namespace ToSic.Sxc.Dnn.WebApi
 {

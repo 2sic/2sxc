@@ -1,5 +1,6 @@
 ﻿using System;
 using DotNetNuke.Services.FileSystem;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Context;
@@ -42,7 +43,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
             Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
 
             // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally
-            InitExportXDocument(_site.DefaultCultureCode/* tenant.DefaultCultureCode*/, Settings.ModuleVersion);
+            InitExportXDocument(_site.DefaultCultureCode, EavSystemInfo.VersionString);
 
             return this;
         }

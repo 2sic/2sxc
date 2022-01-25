@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
-using JetBrains.Annotations;
 using ToSic.Eav.DataFormats.EavLight;
+using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Eav.WebApi.Query;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.App;
-using ToSic.Sxc.WebApi.PublicApi;
 
 namespace ToSic.Sxc.Dnn.WebApi.App
 {
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         [HttpPost]
         [AllowAnonymous] // will check security internally, so assume no requirements
         public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost([FromUri] string name,
-            [FromBody] AppQueryParameters more,
+            [FromBody] QueryParameters more,
             [FromUri] bool includeGuid = false,
             [FromUri] string stream = null,
             [FromUri] int? appId = null
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost(
             [FromUri] string appPath,
             [FromUri] string name,
-            [FromBody] AppQueryParameters more,
+            [FromBody] QueryParameters more,
             [FromUri] string stream = null
         ) => GetService<AppQuery>().Init(Log).PublicQuery(appPath, name, stream, more);
 

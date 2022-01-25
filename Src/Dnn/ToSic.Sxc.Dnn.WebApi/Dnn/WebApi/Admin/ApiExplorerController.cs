@@ -7,7 +7,7 @@ using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Http;
 using ToSic.Eav.Context;
-using ToSic.Sxc.WebApi.ApiExplorer;
+using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Sxc.WebApi.Plumbing;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin

@@ -68,19 +68,6 @@ namespace ToSic.Sxc.WebApi
             return isValidXml ? "text/xml" : contentType;
         }
 
-        //public static bool IsValidXml(string xml)
-        //{
-        //    try
-        //    {
-        //        XDocument.Parse(xml);
-        //        return true;
-        //    }
-        //    catch
-        //    {
-        //        return false;
-        //    }
-        //}
-
         public static bool IsValidXml(string xml)
         {
             var stringReader = new StringReader(xml);

@@ -1,8 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
-using ToSic.Eav.LookUp;
-using ToSic.Eav.Run;
 using ToSic.Sxc.LookUp;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -36,7 +34,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             }
 
             var app = _unInitializedApp.Init(new AppIdentity(zoneId, appId),
-                _configProvider.Build(true/*, new LookUpEngine(Log)*/), Log);
+                _configProvider.Build(true), Log);
             return wrapLog(null, app);
         }
 

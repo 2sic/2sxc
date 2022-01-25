@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using ToSic.Eav.Logging;
+using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.WebApi.ApiExplorer;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {

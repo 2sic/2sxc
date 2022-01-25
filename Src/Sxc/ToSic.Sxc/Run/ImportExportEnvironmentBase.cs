@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps;
+﻿using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Engines;
@@ -38,8 +39,6 @@ namespace ToSic.Sxc.Run
         }
 
         #endregion
-
-        public override string ModuleVersion => Settings.ModuleVersion;
 
         public override string FallbackContentTypeScope => Scopes.Default;
 

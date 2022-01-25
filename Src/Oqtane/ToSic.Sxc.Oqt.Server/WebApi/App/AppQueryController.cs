@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.DataFormats.EavLight;
+using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Eav.WebApi.Query;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.App;
-using ToSic.Sxc.WebApi.PublicApi;
 
 // TODO: #MissingFeature
 // 1. Query from context / header
@@ -62,7 +63,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
         [AllowAnonymous] // will check security internally, so assume no requirements
         public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost([FromRoute] string appPath,
             [FromRoute] string name,
-            AppQueryParameters more,
+            QueryParameters more,
             [FromRoute] string stream = null) => _appQuery.Value.Init(Log).PublicQuery(appPath, name, stream, more);
 
         [HttpGet("auto/query/{name}")]
@@ -77,7 +78,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
         [HttpPost("auto/query/{name}/{stream?}")]
         [AllowAnonymous] // will check security internally, so assume no requirements
         public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost([FromRoute] string name,
-            AppQueryParameters more,
+            QueryParameters more,
             [FromQuery] bool includeGuid = false,
             [FromRoute] string stream = null,
             [FromQuery] int? appId = null) => _appQuery.Value.Init(Log).Query(appId, name, includeGuid, stream, more);

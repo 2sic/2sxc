@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Context;
+﻿using ToSic.Eav;
+using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Fingerprint;
@@ -33,7 +34,7 @@ namespace ToSic.Sxc.Run
                         + $"Platform={_platformInfo.Name}"
                         // note: Version ToString max 3, as Oqtane only has 3 version numbers, otherwise error
                         + $"&SysVersion={_platformInfo.Version.ToString(3)}"
-                        + $"&SxcVersion={Settings.ModuleVersion}"
+                        + $"&SxcVersion={EavSystemInfo.VersionString}"
                         + destinationPart
                         + "&ModuleId=" + moduleId
                         + "&SiteId=" + site?.Id

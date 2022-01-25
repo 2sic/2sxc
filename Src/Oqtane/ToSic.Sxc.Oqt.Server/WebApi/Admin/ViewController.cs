@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi.Assets;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;

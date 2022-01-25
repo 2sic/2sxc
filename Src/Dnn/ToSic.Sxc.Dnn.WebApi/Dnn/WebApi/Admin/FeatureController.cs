@@ -6,9 +6,9 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
+using ToSic.Eav.WebApi.Features;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Run;
-using ToSic.Sxc.WebApi.Features;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {

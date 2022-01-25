@@ -45,8 +45,6 @@ namespace ToSic.Sxc.Context
 
         IContextOfApp AppNameRouteBlock(string nameOrPath);
 
-        //void AttachBlockContext(Func<IContextOfBlock> getBlockContext);
-
         void AttachRealBlock(Func<IBlock> getBlock);
 
         IBlock RealBlockOrNull();

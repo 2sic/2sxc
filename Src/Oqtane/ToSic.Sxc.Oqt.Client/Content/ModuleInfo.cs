@@ -1,6 +1,7 @@
 using System.Linq;
 using Oqtane.Models;
 using Oqtane.Modules;
+using ToSic.Eav;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Oqt.Content
@@ -35,7 +36,7 @@ namespace ToSic.Sxc.Oqt.Content
             var versionsWithDot = SqlScriptVersions
                 .Select(v => v.Replace('-', '.'))
                 .ToList();
-            versionsWithDot.Add(Sxc.Settings.Installation.CurrentReleaseVersion);
+            versionsWithDot.Add(EavSystemInfo.VersionString);
             // remove duplicates in case the current version also has SQL scripts
             var versions = versionsWithDot.Distinct();
             return string.Join(',', versions);

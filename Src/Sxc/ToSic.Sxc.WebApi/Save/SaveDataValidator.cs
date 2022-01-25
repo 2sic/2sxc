@@ -9,7 +9,7 @@ using ToSic.Eav.Metadata;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
-using ToSic.Sxc.WebApi.Validation;
+using ToSic.Eav.WebApi.Validation;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.WebApi.Save

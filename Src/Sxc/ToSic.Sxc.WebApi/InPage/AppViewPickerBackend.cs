@@ -21,14 +21,14 @@ namespace ToSic.Sxc.WebApi.InPage
 
         public IEnumerable<TemplateUiInfo> Templates() =>
             Block?.App == null 
-                ? new TemplateUiInfo[0] 
+                ? Array.Empty<TemplateUiInfo>()
                 : CmsManagerOfBlock?.Read.Views.GetCompatibleViews(Block?.App, Block?.Configuration);
 
         public IEnumerable<AppUiInfo> Apps(string apps = null)
         {
             // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
             var tenant = ContextOfBlock.Site;
-            return ServiceProvider.Build<CmsZones>().Init(tenant.ZoneId, Log)
+            return GetService<CmsZones>().Init(tenant.ZoneId, Log)
                 .AppsRt
                 .GetSelectableApps(tenant, apps)
                 .ToList();

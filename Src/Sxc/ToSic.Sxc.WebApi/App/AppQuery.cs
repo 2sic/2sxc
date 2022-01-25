@@ -7,7 +7,9 @@ using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.ImportExport;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Eav.WebApi.Query;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
@@ -35,7 +37,7 @@ namespace ToSic.Sxc.WebApi.App
 
         #region In-Container-Context Queries
 
-        public IDictionary<string, IEnumerable<EavLightEntity>> Query(int? appId, string name, bool includeGuid, string stream, AppQueryParameters more)
+        public IDictionary<string, IEnumerable<EavLightEntity>> Query(int? appId, string name, bool includeGuid, string stream, QueryParameters more)
         {
             var wrapLog = Log.Call($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
 
@@ -47,7 +49,7 @@ namespace ToSic.Sxc.WebApi.App
             // If no app available from context, check if an app-id was supplied in url
             // Note that it may only be an app from the current portal
             // and security checks will run internally
-            var app = ServiceProvider.Build<Apps.App>().Init(ServiceProvider, appCtx.AppState.AppId, Log, maybeBlock, appCtx.UserMayEdit);
+            var app = GetService<Apps.App>().Init(ServiceProvider, appCtx.AppState.AppId, Log, maybeBlock, appCtx.UserMayEdit);
 
             var result = BuildQueryAndRun(app, name, stream, includeGuid, appCtx,  appCtx.UserMayEdit, more);
             wrapLog(null);
@@ -59,7 +61,7 @@ namespace ToSic.Sxc.WebApi.App
         #region Public Queries
 
 
-        public IDictionary<string, IEnumerable<EavLightEntity>> PublicQuery(string appPath, string name, string stream, AppQueryParameters more)
+        public IDictionary<string, IEnumerable<EavLightEntity>> PublicQuery(string appPath, string name, string stream, QueryParameters more)
         {
             var wrapLog = Log.Call($"path:{appPath}, name:{name}, stream: {stream}");
             if (string.IsNullOrEmpty(name))
@@ -67,8 +69,8 @@ namespace ToSic.Sxc.WebApi.App
 
             var appCtx = _ctxResolver.AppOrBlock(appPath);
 
-            var queryApp = ServiceProvider.Build<Apps.App>().Init(appCtx.AppState,
-                ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(appCtx.UserMayEdit), Log);
+            var queryApp = GetService<Apps.App>().Init(appCtx.AppState,
+                GetService<AppConfigDelegate>().Init(Log).Build(appCtx.UserMayEdit), Log);
 
             // now just run the default query check and serializer
             var result = BuildQueryAndRun(queryApp, name, stream, false, appCtx, appCtx.UserMayEdit, more);
@@ -87,7 +89,7 @@ namespace ToSic.Sxc.WebApi.App
                 bool includeGuid, 
                 IContextOfSite context, 
                 bool userMayEdit,
-                AppQueryParameters more)
+                QueryParameters more)
         {
             var wrapLog = Log.Call($"name:{name}, stream:{stream}, withModule:{(context as IContextOfBlock)?.Module.Id}");
             var query = app.GetQuery(name);

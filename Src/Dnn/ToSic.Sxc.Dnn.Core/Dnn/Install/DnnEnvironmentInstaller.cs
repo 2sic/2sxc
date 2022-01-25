@@ -2,6 +2,7 @@
 using System;
 using System.Configuration;
 using System.Data.SqlClient;
+using ToSic.Eav;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Run;
@@ -106,7 +107,7 @@ namespace ToSic.Sxc.Dnn.Install
                 // Increase ClientDependency version upon each upgrade (System and all Portals)
                 // prevents browsers caching old JS and CSS files for editing, which could cause several errors
                 // only set this on the last upgraded version, to prevent crazy updating the client-resource-cache while upgrading
-                if (version == Settings.Installation.CurrentReleaseVersion)
+                if (version == EavSystemInfo.VersionString)
                 {
                     _installLogger.LogStep(version, "ClientResourceManager- seems to be last item in version-list, will clear");
 

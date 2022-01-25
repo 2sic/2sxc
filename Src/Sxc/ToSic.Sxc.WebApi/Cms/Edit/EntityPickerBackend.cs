@@ -29,8 +29,8 @@ namespace ToSic.Sxc.WebApi.Cms
             var context = _ctxResolver.BlockOrApp(appId);
             // do security check
             var permCheck = string.IsNullOrEmpty(contentTypeName)
-                ? ServiceProvider.Build<MultiPermissionsApp>().Init(context, context.AppState, Log)
-                : ServiceProvider.Build<MultiPermissionsTypes>().Init(context, context.AppState, contentTypeName, Log);
+                ? GetService<MultiPermissionsApp>().Init(context, context.AppState, Log)
+                : GetService<MultiPermissionsTypes>().Init(context, context.AppState, contentTypeName, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 

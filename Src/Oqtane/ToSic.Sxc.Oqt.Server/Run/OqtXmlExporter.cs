@@ -2,6 +2,7 @@
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Oqtane.Repository;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Helpers;
@@ -66,7 +67,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
 
             // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally
-            InitExportXDocument(oqtSite.DefaultCultureCode, Settings.ModuleVersion);
+            InitExportXDocument(oqtSite.DefaultCultureCode, EavSystemInfo.VersionString);
 
             return this;
         }

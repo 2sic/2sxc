@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Reflection;
+using ToSic.Eav;
 
 namespace ToSic.Sxc
 {
     public partial class Settings
     {
-
         // Important note: always use static-readonly, NOT constant for .net 456
         // reason is that we must ensure that the static constructor is called
         // whenever anything is accessed
@@ -27,12 +27,6 @@ namespace ToSic.Sxc
             new Version(version.Major, version.Minor, version.Build,
                 (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds);
 
-        public static readonly string ModuleVersion = VersionToNiceFormat(Assembly.GetExecutingAssembly().GetName().Version);
-
-        // Todo: probably move to plumbing or extension method?
-        public static string VersionToNiceFormat(Version version)
-            => $"{version.Major:00}.{version.Minor:00}.{version.Build:00}";
-
         public const string WebConfigTemplateFile = "WebConfigTemplate.config";
         public const string WebConfigFileName = "web.config";
         public const string SexyContentGroupName = "2sxc designers";
@@ -41,8 +35,6 @@ namespace ToSic.Sxc
 
         public class Installation
         {
-            public const string CurrentReleaseVersion = "13.02.00";
-
             // This list is just used to run code-upgrades
             // So we only need the versions which do have code upgrades - which is very uncommon
             // todo: Maybe this list can somehow be extracted from the module manifest or placed there...
@@ -75,7 +67,7 @@ namespace ToSic.Sxc
                 //"12.10.00",
                 "13.00.00",
                 // 13.01.00
-                CurrentReleaseVersion,
+                EavSystemInfo.VersionString,
             };
 
             // this is the last version which must run server-side change-code

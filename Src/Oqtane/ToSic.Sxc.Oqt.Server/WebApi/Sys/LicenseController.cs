@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
+using ToSic.Eav.WebApi.Licenses;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.WebApi.Licenses;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {

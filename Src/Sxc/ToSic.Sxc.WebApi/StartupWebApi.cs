@@ -2,31 +2,32 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Eav.Run;
+using ToSic.Eav.WebApi.Adam;
+using ToSic.Eav.WebApi.ApiExplorer;
+using ToSic.Eav.WebApi.Context;
+using ToSic.Eav.WebApi.Features;
+using ToSic.Eav.WebApi.ImportExport;
+using ToSic.Eav.WebApi.Languages;
+using ToSic.Eav.WebApi.Licenses;
+using ToSic.Eav.WebApi.Zone;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.ImportExport;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Basic;
 using ToSic.Sxc.Web.WebApi.System;
 using ToSic.Sxc.WebApi.Adam;
-using ToSic.Sxc.WebApi.ApiExplorer;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.AppStack;
 using ToSic.Sxc.WebApi.Cms;
 using ToSic.Sxc.WebApi.ContentBlocks;
 using ToSic.Sxc.WebApi.Context;
-using ToSic.Sxc.WebApi.Features;
 using ToSic.Sxc.WebApi.ImportExport;
 using ToSic.Sxc.WebApi.InPage;
-using ToSic.Sxc.WebApi.Languages;
-using ToSic.Sxc.WebApi.Licenses;
 using ToSic.Sxc.WebApi.Save;
 using ToSic.Sxc.WebApi.Usage;
-using ToSic.Sxc.WebApi.Zone;
 
 namespace ToSic.Sxc.WebApi
 {
@@ -40,10 +41,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<IConvertToEavLight, ConvertToEavLightWithCmsInfo>();
 
             services.TryAddScoped<ILinkPaths, LinkPaths>();
-            // moved to ToSic.Sxc
-            //services.TryAddTransient<IServerPaths, ServerPaths>();
             services.TryAddTransient<XmlImportWithFiles, XmlImportFull>();
-            //services.TryAddTransient<XmlImportWithFiles.Dependencies>();
             services.TryAddTransient<AppPathHelpers, AppPathHelpers>();
             services.TryAddTransient<EngineBaseDependencies>();
 
@@ -65,15 +63,9 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<QueryBackend>();
 
             // APIs
-            //services.TryAddTransient<EntityPickerApi>();
-            //services.TryAddTransient<ContentTypeApi>();
-            //services.TryAddTransient<QueryApi>();
-            //services.TryAddTransient<ContentExportApi>();
-            //services.TryAddTransient<ContentImportApi>();
             services.TryAddTransient<ApiExplorerBackend>();
 
             // Internal API helpers
-            //services.TryAddTransient<EntityApi>();
             services.TryAddTransient<Insights>();
             services.TryAddTransient<AppContent>();
             services.TryAddTransient<SxcPagePublishing>();
@@ -93,9 +85,6 @@ namespace ToSic.Sxc.WebApi
             
             // Helpers
             services.TryAddTransient<ImpExpHelpers>();
-
-            // Eav.WebApi
-            //services.TryAddTransient<MetadataBackend>();
 
             // Adam shared code across the APIs
             services.TryAddTransient<AdamCode>();
