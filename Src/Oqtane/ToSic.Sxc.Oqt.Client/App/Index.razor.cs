@@ -1,15 +1,17 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Oqtane.Models;
+using Oqtane.Modules;
+using Oqtane.Shared;
+using Oqtane.UI;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Oqtane.Modules;
-using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Client;
 using ToSic.Sxc.Oqt.Client.Services;
 using ToSic.Sxc.Oqt.Shared.Models;
+using Interop = ToSic.Sxc.Oqt.Client.Interop;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Oqt.App
@@ -47,6 +49,7 @@ namespace ToSic.Sxc.Oqt.App
                     : NavigationManager.Uri;
                 await Initialize2sxcContentBlock();
                 NewDataArrived = true;
+                new CrawlerSupport(this, _httpContextAccessor, PageState, ViewResults).Execute();
             }
 
             await base.OnParametersSetAsync();
@@ -69,6 +72,8 @@ namespace ToSic.Sxc.Oqt.App
 
             if (!string.IsNullOrEmpty(ViewResults?.ErrorMessage)) AddModuleMessage(ViewResults.ErrorMessage, MessageType.Warning);
         }
+
+
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
