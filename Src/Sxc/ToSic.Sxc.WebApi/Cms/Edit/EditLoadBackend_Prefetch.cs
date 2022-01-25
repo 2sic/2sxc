@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.WebApi.Cms
 {

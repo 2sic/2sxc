@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;

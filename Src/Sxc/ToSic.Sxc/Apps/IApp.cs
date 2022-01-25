@@ -20,7 +20,6 @@ namespace ToSic.Sxc.Apps
         /// This contains things like app version, path etc.
         /// </summary>
         /// <returns>An <see cref="IDynamicEntity"/> object</returns>
-        //new dynamic Configuration { get;  }
         new AppConfiguration Configuration { get; }
 
         /// <summary>

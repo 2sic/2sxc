@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
 
             // WebAPI calls can contain the original parameters that made the page, so that views can respect that
             var moduleId = requestHelper.GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderInstanceId, -1);
-            var pageId = requestHelper.GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderPageId, -1);
+            var pageId = requestHelper.GetTypedHeader(ContextConstants.PageIdKey, -1);
 
             if (moduleId == -1 || pageId == -1)
             {
