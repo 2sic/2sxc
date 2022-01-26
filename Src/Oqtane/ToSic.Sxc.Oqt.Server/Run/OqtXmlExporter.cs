@@ -15,7 +15,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Shared;
-using App = ToSic.Sxc.Apps.App;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
@@ -58,7 +57,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var context = _ctxResolver.App(appId);
             var contextOfSite = _ctxResolver.Site();
             var oqtSite = (OqtSite) contextOfSite.Site;
-            var app = AdamManager.AppRuntime.ServiceProvider.Build<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
+            var app = AdamManager.AppRuntime.ServiceProvider.Build<Sxc.Apps.App>().InitNoData(new AppIdentity(zoneId, appId), Log);
 
             // needed for TenantFileItem path resolving
             _appFolder = app.Folder;

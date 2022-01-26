@@ -16,6 +16,7 @@ using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Oqt.Client.Services;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Apps;
 using ToSic.Sxc.Oqt.Server.Blocks;
@@ -152,6 +153,9 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
             // v12.06
             services.TryAddSingleton<GlobalTypesCheck>();
+
+            // ToSic.Sxc.Oqt.Client
+            services.TryAddScoped<IPrerenderService, PrerenderService>();
 
             return services;
         }

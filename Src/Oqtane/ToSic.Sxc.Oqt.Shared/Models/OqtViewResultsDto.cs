@@ -7,6 +7,11 @@ namespace ToSic.Sxc.Oqt.Shared.Models
         /// <summary>
         /// The final HTML to show in the browser
         /// </summary>
+        public string FinalHtml => $"{Html}{SystemHtml}";
+
+        /// <summary>
+        /// The content HTML
+        /// </summary>
         public string Html { get; set; }
 
         /// <summary>
@@ -46,5 +51,11 @@ namespace ToSic.Sxc.Oqt.Shared.Models
         /// List of page property changes as specified
         /// </summary>
         public IEnumerable<OqtPagePropertyChanges> PageProperties { get; set; }
+
+        /// <summary>
+        /// System generated HTML
+        /// </summary>
+        public string SystemHtml { get; set; }
     }
+
 }

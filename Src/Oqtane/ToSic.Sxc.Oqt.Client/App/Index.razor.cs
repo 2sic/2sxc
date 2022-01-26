@@ -24,6 +24,9 @@ namespace ToSic.Sxc.Oqt.App
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
+        [Inject]
+        public IPrerenderService PrerenderService { get; set; }
+
         private string RenderedUri { get; set; }
         private string RenderedPage { get; set; }
         private bool NewDataArrived { get; set; }
@@ -49,7 +52,7 @@ namespace ToSic.Sxc.Oqt.App
                     : NavigationManager.Uri;
                 await Initialize2sxcContentBlock();
                 NewDataArrived = true;
-                new CrawlerSupport(this, _httpContextAccessor, PageState, ViewResults).Execute();
+                ViewResults.SystemHtml = PrerenderService.Init(PageState, logger).GetSystemHtml();
             }
 
             await base.OnParametersSetAsync();
