@@ -1,11 +1,11 @@
 ﻿using System;
 using ToSic.Eav.Run;
 
-namespace ToSic.Sxc.Tests.ServicesTests
+namespace ToSic.Sxc.Tests.TestSetup
 {
-    public class TestPlatformInfo: IPlatformInfo
+    public class TestPlatformWithImageOption: IPlatformInfo
     {
-        public string Name => "Test";
+        public virtual string Name => "Test";
 
         public Version Version => new Version(27, 42, 00);
 

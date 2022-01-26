@@ -90,6 +90,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceFormats_Best.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceFormats.cs" />
+    <Compile Include="ServicesTests\ImageService\ImageServiceTagsNoWebp.cs" />
+    <Compile Include="ServicesTests\ImageService\ImageServiceTagsBase.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceTags.cs" />
     <Compile Include="ServicesTests\MailServiceBaseTests.cs" />
     <Compile Include="ServicesTests\MailAddressCollectionTests.cs" />
@@ -98,7 +100,8 @@
     <Compile Include="ServicesTests\MailAddressInputTypeTests.cs" />
     <Compile Include="ServicesTests\MailServiceTestsBase.cs" />
     <Compile Include="ServicesTests\SecureDataTests\SecureDataTest.cs" />
-    <Compile Include="ServicesTests\TestPlatformInfo.cs" />
+    <Compile Include="ServicesTests\ImageService\TestPlatformNoImageOption.cs" />
+    <Compile Include="ServicesTests\ImageService\TestPlatformWithImageOption.cs" />
     <Compile Include="TestBaseSxcDb.cs" />
     <Compile Include="TestBaseSxc.cs" />
     <Compile Include="ServicesTests\ConvertServiceTests\ConvertServiceTest.cs" />
@@ -165,6 +168,7 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
