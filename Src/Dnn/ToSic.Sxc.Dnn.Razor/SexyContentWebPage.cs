@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Custom.Hybrid;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSources;
@@ -119,18 +120,24 @@ namespace ToSic.SexyContent.Razor
 
         #endregion
 
-        #region AsList (experimental)
+        #region Future features: AsList / Settings / Resources
 
         /// <inheritdoc />
         public IEnumerable<dynamic> AsList(object list)
-            => throw new Exception("AsList is a new feature in 2sxc 10.20. To use it, change your template type to " + nameof(RazorComponent) + " see https://r.2sxc.org/RazorComponent");
+            => throw new Exception("AsList is a newer feature in 2sxc. To use it, change your template type to " + nameof(Razor12) + " see https://r.2sxc.org/RazorComponent");
+
+        public dynamic Resources
+            => throw new Exception("Resources is a newer feature in 2sxc. To use it, change your template type to " + nameof(Razor12) + " see https://r.2sxc.org/RazorComponent");
+
+        public dynamic Settings
+            => throw new Exception("Settings is a newer feature in 2sxc. To use it, change your template type to " + nameof(Razor12) + " see https://r.2sxc.org/RazorComponent");
 
         #endregion
 
-        //#region Convert-Service
+        #region Not supported, not captured new features (like Convert-Service) - because they would break old code
         //[PrivateApi] 
         //public IConvertService Convert => throw new NotSupportedException($"{nameof(Convert)} not implemented on {nameof(SexyContentWebPage)}. {RazorComponent.NotImplementedUseCustomBase}");
-        //#endregion
+        #endregion
 
 
         #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
