@@ -7,6 +7,7 @@ using ToSic.Eav.Apps.Languages;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Context;
+using ToSic.Eav.WebApi.Languages;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Web.JsContext;
 
@@ -24,14 +25,16 @@ namespace ToSic.Sxc.WebApi.Context
             public Apps.IApp AppToLaterInitialize { get; }
             public IAppStates AppStates { get; }
             public Lazy<AppUserLanguageCheck> AppUserLanguageCheck { get; }
+            public Lazy<LanguagesBackend> LanguagesBackend { get; }
 
-            public Dependencies(IContextOfSite siteCtx, JsContextLanguage jsCtx, Apps.App appToLaterInitialize, IAppStates appStates, Lazy<AppUserLanguageCheck> appUserLanguageCheck)
+            public Dependencies(IContextOfSite siteCtx, JsContextLanguage jsCtx, Apps.App appToLaterInitialize, IAppStates appStates, Lazy<AppUserLanguageCheck> appUserLanguageCheck, Lazy<LanguagesBackend> languagesBackend)
             {
                 SiteCtx = siteCtx;
                 JsCtx = jsCtx;
                 AppToLaterInitialize = appToLaterInitialize;
                 AppStates = appStates;
                 AppUserLanguageCheck = appUserLanguageCheck;
+                LanguagesBackend = languagesBackend;
             }
         }
 
@@ -86,17 +89,18 @@ namespace ToSic.Sxc.WebApi.Context
             var language = Deps.JsCtx.Init(Deps.SiteCtx.Site, ZoneId);
 
             // New V13 - with try/catch as it's still very new
-            List<SiteLanguageDto> converted = null;
-            try
-            {
-                var langs = Deps.AppUserLanguageCheck.Value.Init(Log).LanguagesWithPermissions(AppState);
-                converted = langs.Select(l => new SiteLanguageDto
-                    { Code = l.Code, Culture = l.Culture, IsAllowed = l.IsAllowed, IsEnabled = l.IsEnabled }).ToList();
-            }
-            catch (Exception ex)
-            {
-                Log.Exception(ex);
-            }
+            //List<SiteLanguageDto> converted = null;
+            //try
+            //{
+            //    var langs = Deps.AppUserLanguageCheck.Value.Init(Log).LanguagesWithPermissions(AppState);
+            //    converted = langs.Select(l => new SiteLanguageDto
+            //        { Code = l.Code, Culture = l.Culture, IsAllowed = l.IsAllowed, IsEnabled = l.IsEnabled }).ToList();
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Exception(ex);
+            //}
+            var converted = Deps.LanguagesBackend.Value.Init(Log).GetLanguagesOfApp(AppState);
 
             return new ContextLanguageDto
             {

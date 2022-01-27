@@ -13,6 +13,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.WebApi.Admin;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.AppStack;
 using ToSic.Sxc.WebApi.ImportExport;
@@ -40,6 +41,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         private readonly Lazy<AppCreator> _appBuilderLazy;
         private readonly Lazy<ResetApp> _resetAppLazy;
         private readonly Lazy<SystemManager> _systemManagerLazy;
+        private AppControllerReal RealController { get; }
         protected override string HistoryLogName => "Api.App";
 
         public AppController(
@@ -49,7 +51,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             Lazy<ImportApp> importAppLazy,
             Lazy<AppCreator> appBuilderLazy,
             Lazy<ResetApp> resetAppLazy,
-            Lazy<SystemManager> systemManagerLazy)
+            Lazy<SystemManager> systemManagerLazy,
+            AppControllerReal appControllerReal)
         {
             _appsBackendLazy = appsBackendLazy;
             _cmsZonesLazy = cmsZonesLazy;
@@ -58,6 +61,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             _appBuilderLazy = appBuilderLazy;
             _resetAppLazy = resetAppLazy;
             _systemManagerLazy = systemManagerLazy;
+            RealController = appControllerReal.Init(Log);
         }
 
         [HttpGet]
@@ -85,6 +89,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         public void App(int zoneId, string name, int? inheritAppId = null)
             => _appBuilderLazy.Value.Init(zoneId, Log).Create(name, null, inheritAppId);
 
+
+        [HttpGet]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = RoleNames.Admin)]
+        public List<SiteLanguageDto> Languages(int appId) => RealController.Languages(appId);
 
         /// <summary>
         /// Used to be GET ImportExport/GetAppInfo

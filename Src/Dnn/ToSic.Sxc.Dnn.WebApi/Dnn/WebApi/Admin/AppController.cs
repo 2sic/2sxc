@@ -9,10 +9,12 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.ImportExport;
+using ToSic.Eav.WebApi.Languages;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
+using ToSic.Sxc.WebApi.Admin;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.AppStack;
 using ToSic.Sxc.WebApi.ImportExport;
@@ -28,6 +30,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     public class AppController : SxcApiControllerBase, IAppController
     {
         protected override string HistoryLogName => "Api.App";
+
+        private AppControllerReal RealController => GetService<AppControllerReal>();
 
         [HttpGet]
         [ValidateAntiForgeryToken]
@@ -56,6 +60,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public void App(int zoneId, string name, int? inheritAppId = null)
             => GetService<AppCreator>().Init(zoneId, Log).Create(name, null, inheritAppId);
+
+        [HttpGet]
+        [ValidateAntiForgeryToken]
+        [SupportedModules("2sxc,2sxc-app")]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        public List<SiteLanguageDto> Languages(int appId) => RealController.Languages(appId);
+
 
 
         /// <summary>

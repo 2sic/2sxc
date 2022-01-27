@@ -19,6 +19,7 @@ using ToSic.Sxc.Run;
 using ToSic.Sxc.Web.Basic;
 using ToSic.Sxc.Web.WebApi.System;
 using ToSic.Sxc.WebApi.Adam;
+using ToSic.Sxc.WebApi.Admin;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.AppStack;
 using ToSic.Sxc.WebApi.Cms;
@@ -91,6 +92,9 @@ namespace ToSic.Sxc.WebApi
 
             // new v13
             services.TryAddTransient<ZoneBackend>();
+
+            // New v13 - try to reduce Dnn/Oqtane code to the max, by creating ControllerReal objects which do everything
+            services.TryAddTransient<AppControllerReal>();
 
             return services;
         }
