@@ -98,6 +98,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             => Backend().GetPreview(appId, path, templateKey, global);
 
         [HttpGet]
-        public AllFilesDto AppFiles(int appId) => Backend().AppFiles(appId);
+        public AllFilesDto AppFiles(int appId, string path = null, string mask = null) => Backend().AppFiles(appId, path, mask);
     }
 }

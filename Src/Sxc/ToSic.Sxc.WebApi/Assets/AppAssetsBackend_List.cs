@@ -50,13 +50,14 @@ namespace ToSic.Sxc.WebApi.Assets
                 .ToList();
         }
 
-        public AllFilesDto AppFiles(int appId)
+        public AllFilesDto AppFiles(int appId, string path, string mask)
         {
+            mask = mask ?? "*.*";
             var localFiles =
-                List(appId, global: false, path: null, mask: "*.*", withSubfolders: true, returnFolders: false)
+                List(appId, global: false, path: path, mask: mask, withSubfolders: true, returnFolders: false)
                     .Select(f => new AllFileDto { Path = f });
             var globalFiles = _user.IsSuperUser
-                ? List(appId, global: true, path: null, mask: "*.*", withSubfolders: true, returnFolders: false)
+                ? List(appId, global: true, path: path, mask: mask, withSubfolders: true, returnFolders: false)
                     .Select(f => new AllFileDto { Path = f, Shared = true }).ToArray()
                 : Array.Empty<AllFileDto>();
             return new AllFilesDto { Files = localFiles.Union(globalFiles),};

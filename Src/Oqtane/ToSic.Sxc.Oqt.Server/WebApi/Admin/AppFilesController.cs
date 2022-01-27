@@ -120,7 +120,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             => Backend().GetPreview(appId, path, templateKey, global);
 
         [HttpGet]
-        public AllFilesDto AppFiles(int appId) => Backend().AppFiles(appId);
+        public AllFilesDto AppFiles(int appId, [FromQuery] string path = null, [FromQuery] string mask = null) => Backend().AppFiles(appId, path, mask);
 
     }
 }
