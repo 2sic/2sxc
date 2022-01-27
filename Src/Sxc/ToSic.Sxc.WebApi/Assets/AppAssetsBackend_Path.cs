@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.WebApi.Assets
 {
@@ -8,12 +9,12 @@ namespace ToSic.Sxc.WebApi.Assets
     {
         private string ResolveAppPath(int appId, bool global, bool allowFullAccess)
         {
-            var thisApp = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(AppConstants.AutoLookupZone, appId), Log);
-
             if (global && !allowFullAccess)
                 throw new NotSupportedException("only host user may access global files");
 
-            return _appPathHelpers.Init(thisApp, Log).AppPathRoot(global);
+            var thisApp = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(AppConstants.AutoLookupZone, appId), Log);
+
+            return thisApp.PhysicalPathSwitch(global);
         }
     }
 }

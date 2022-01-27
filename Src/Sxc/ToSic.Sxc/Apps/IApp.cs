@@ -65,5 +65,12 @@ namespace ToSic.Sxc.Apps
         /// </summary>
         /// <returns>path + app-icon.png if there is an icon there. </returns>
         new string Thumbnail { get; }
+
+        [PrivateApi("not public, not sure if we should surface this")]
+        string RelativePath { get; }
+
+        [PrivateApi("not public, not sure if we should surface this")]
+        string RelativePathShared { get; }
+
     }
 }

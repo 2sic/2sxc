@@ -1,15 +1,13 @@
-﻿using ToSic.Eav;
-using ToSic.Eav.Apps;
+﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Sxc.Engines;
+using ToSic.Sxc.Apps;
 using App = ToSic.Sxc.Apps.App;
 
 namespace ToSic.Sxc.Run
 {
     public abstract class ImportExportEnvironmentBase: Eav.Apps.Run.ImportExportEnvironmentBase
     {
-
         #region constructor / DI
 
         public class Dependencies
@@ -17,14 +15,12 @@ namespace ToSic.Sxc.Run
             internal readonly IAppStates AppStates;
             internal readonly ISite Site;
             internal readonly App NewApp;
-            internal readonly AppPathHelpers AppPathHelpers;
 
-            public Dependencies(ISite site, App newApp, AppPathHelpers appPathHelpers, IAppStates appStates)
+            public Dependencies(ISite site, App newApp, IAppStates appStates)
             {
                 AppStates = appStates;
                 Site = site;
                 NewApp = newApp;
-                AppPathHelpers = appPathHelpers;
             }
         }
 
@@ -47,8 +43,7 @@ namespace ToSic.Sxc.Run
             var app = _dependencies.NewApp.InitNoData(new AppIdentity(zoneId, appId), Log);
 
             // Copy all files in 2sexy folder to (portal file system) 2sexy folder
-            var templateRoot = _dependencies.AppPathHelpers.Init(app, Log)
-                .AppPathRoot(false, PathTypes.PhysFull);
+            var templateRoot = app.PhysicalPathSwitch(false);
             return templateRoot;
         }
 

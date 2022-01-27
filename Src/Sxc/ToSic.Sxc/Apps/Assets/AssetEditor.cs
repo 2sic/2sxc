@@ -3,7 +3,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
 
@@ -17,13 +16,15 @@ namespace ToSic.Sxc.Apps.Assets
 
         private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
         private readonly IUser _user;
+        private readonly Lazy<AppFolderInitializer> _appFolderInitializer;
         private CmsRuntime _cmsRuntime;
         private IApp _app;
 
-        public AssetEditor(Lazy<CmsRuntime> cmsRuntimeLazy, IUser user) : base("Sxc.AstEdt")
+        public AssetEditor(Lazy<CmsRuntime> cmsRuntimeLazy, IUser user, Lazy<AppFolderInitializer> appFolderInitializer) : base("Sxc.AstEdt")
         {
             _cmsRuntimeLazy = cmsRuntimeLazy;
             _user = user;
+            _appFolderInitializer = appFolderInitializer;
         }
 
         // TODO: REMOVE THIS once we release v13 #cleanUp EOY 2021
@@ -34,7 +35,6 @@ namespace ToSic.Sxc.Apps.Assets
             var t = new AssetEditInfo(_app.AppId, _app.Name, view.Path, view.IsShared);
             EditInfo = AddViewDetailsAndTypes(t, view);
 
-            //EditInfo = TemplateAssetsInfo(template);
             return this;
         }
 
@@ -118,9 +118,10 @@ namespace ToSic.Sxc.Apps.Assets
             return t;
         }
 
-        public string InternalPath => NormalizePath(Path.Combine(
-            _cmsRuntime.ServiceProvider.Build<AppPathHelpers>().Init(_app, Log)
-                .AppPathRoot(EditInfo.IsShared, PathTypes.PhysFull), EditInfo.FileName));
+        public string InternalPath => _internalPath ?? (_internalPath = NormalizePath(Path.Combine(
+            _app.PhysicalPathSwitch(EditInfo.IsShared), EditInfo.FileName)));
+
+        private string _internalPath;
 
         private static string NormalizePath(string path) => Path.GetFullPath(new Uri(path).LocalPath);
 
@@ -155,8 +156,7 @@ namespace ToSic.Sxc.Apps.Assets
             if (SanitizeFileNameAndCheckIfAssetAlreadyExists()) return false;
 
             // ensure the web.config exists (usually missing in the global area)
-            _cmsRuntime.ServiceProvider.Build<AppPathHelpers>().Init(_app, Log)
-                .EnsureTemplateFolderExists(EditInfo.IsShared);
+            _appFolderInitializer.Value.Init(Log).EnsureTemplateFolderExists(_app.AppState, EditInfo.IsShared);
 
             var absolutePath = InternalPath;
 

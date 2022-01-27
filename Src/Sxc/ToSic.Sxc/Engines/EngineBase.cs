@@ -8,6 +8,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Search;
@@ -57,7 +58,7 @@ namespace ToSic.Sxc.Engines
             var view = Block.View;
             Log.LinkTo(parentLog);
 
-            var appPathRootInInstallation = Helpers.AppPathHelpers.Init(Block.App, Log).AppPathRoot(view.IsShared, PathTypes.PhysRelative);
+            var appPathRootInInstallation = Block.App.PathSwitch(view.IsShared, PathTypes.PhysRelative);
             var subPath = view.Path;
             var polymorphInfo = TryToFindPolymorphPath(appPathRootInInstallation, view, subPath);
             var templatePath = polymorphInfo ?? Path.Combine(appPathRootInInstallation, subPath).ToAbsolutePathForwardSlash();

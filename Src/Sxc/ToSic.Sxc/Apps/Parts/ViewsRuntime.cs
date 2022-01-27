@@ -25,13 +25,15 @@ namespace ToSic.Sxc.Apps
         private readonly Lazy<IValueConverter> _valConverterLazy;
         private readonly IZoneCultureResolver _cultureResolver;
         private readonly IConvertToEavLight _dataToFormatLight;
+        private readonly Lazy<AppIconHelpers> _appIconHelpers;
         private IValueConverter _valConverter;
 
-        public ViewsRuntime(Lazy<IValueConverter> valConverterLazy, IZoneCultureResolver cultureResolver, IConvertToEavLight dataToFormatLight) : base("Cms.ViewRd")
+        public ViewsRuntime(Lazy<IValueConverter> valConverterLazy, IZoneCultureResolver cultureResolver, IConvertToEavLight dataToFormatLight, Lazy<AppIconHelpers> appIconHelpers) : base("Cms.ViewRd")
         {
             _valConverterLazy = valConverterLazy;
             _cultureResolver = cultureResolver;
             _dataToFormatLight = dataToFormatLight;
+            _appIconHelpers = appIconHelpers;
         }
 
         #endregion
@@ -96,7 +98,7 @@ namespace ToSic.Sxc.Apps
 	        else
 	            availableTemplates = GetAll().Where(p => p.UseForList);
 
-            var thumbnailHelper = Parent.ServiceProvider.Build<AppPathHelpers>().Init(app, Log);
+            var thumbnailHelper = _appIconHelpers.Value.Init(Log);
 
             var result = availableTemplates.Select(t => new TemplateUiInfo
 	        {
@@ -104,7 +106,7 @@ namespace ToSic.Sxc.Apps
 	            Name = t.Name,
 	            ContentTypeStaticName = t.ContentType,
 	            IsHidden = t.IsHidden,
-	            Thumbnail = thumbnailHelper.IconPathOrNull(t, PathTypes.Link),
+	            Thumbnail = thumbnailHelper.IconPathOrNull(app, t, PathTypes.Link),
                 IsDefault = t.Metadata.HasType(Decorators.IsDefaultDecorator),
             });
             return result;
@@ -144,8 +146,8 @@ namespace ToSic.Sxc.Apps
                 {
                     var metadata = ct.Metadata.Description;
                     var thumbnail = ValueConverter.ToValue(metadata?.Value<string>(View.ContentTypeFieldIcon));
-                    if (AppPathHelpers.HasAppPathToken(thumbnail))
-                        thumbnail = AppPathHelpers.AppPathTokenReplace(thumbnail, appPath, appPathShared);
+                    if (AppIconHelpers.HasAppPathToken(thumbnail))
+                        thumbnail = AppIconHelpers.AppPathTokenReplace(thumbnail, appPath, appPathShared);
                     return new ContentTypeUiInfo {
                         StaticName = ct.NameId,
                         Name = ct.Name,

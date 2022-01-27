@@ -5,7 +5,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Sxc.Apps.Assets;
-using ToSic.Sxc.Engines;
+using static System.StringComparison;
 
 namespace ToSic.Sxc.WebApi.Assets
 {
@@ -14,21 +14,17 @@ namespace ToSic.Sxc.WebApi.Assets
 
         #region Constructor / DI
 
-        public AppAssetsBackend(AppPathHelpers appPathHelpers,
-            IUser user, 
+        public AppAssetsBackend(IUser user, 
             Lazy<AssetEditor> assetEditorLazy,
             IServiceProvider serviceProvider,
             IAppStates appStates) : base("Bck.Assets")
         {
-
-            _appPathHelpers = appPathHelpers;
             _assetEditorLazy = assetEditorLazy;
             _assetTemplates = new AssetTemplates().Init(Log);
             _serviceProvider = serviceProvider;
             _appStates = appStates;
             _user = user;
         }
-        private readonly AppPathHelpers _appPathHelpers;
         private readonly Lazy<AssetEditor> _assetEditorLazy;
         private readonly AssetTemplates _assetTemplates;
         private readonly IServiceProvider _serviceProvider;
@@ -55,24 +51,6 @@ namespace ToSic.Sxc.WebApi.Assets
             return wrapLog(null, true);
         }
 
-        //[Obsolete("This Method is Deprecated", false)]
-        //public bool Create(int appId, string path, FileContentsDto content, string purpose, bool global = false)
-        //{
-        //    Log.Add($"create a#{appId}, path:{path}, global:{global}, purpose:{purpose}, cont-length:{content.Content?.Length}");
-        //    path = path.Replace("/", "\\");
-
-        //    var thisApp = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), Log);
-
-        //    if (content.Content == null)
-        //        content.Content = "";
-
-        //    path = SanitizePathAndContent(path, content, purpose);
-
-        //    var assetEditor = _assetEditorLazy.Value.Init(thisApp, path, global, 0, Log);
-        //    assetEditor.EnsureUserMayEditAssetOrThrow(path);
-        //    return assetEditor.Create(content.Content);
-        //}
-
         public bool Create(AssetFromTemplateDto assetFromTemplateDto)
         {
             var wrapLog = Log.Call<bool>($"create a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
@@ -97,16 +75,16 @@ namespace ToSic.Sxc.WebApi.Assets
             // TBD: future purpose implementation
             purpose = (purpose ?? AssetTemplates.ForTemplate).ToLowerInvariant().Trim() ?? "";
             var defId = AssetTemplates.RazorHybrid.Key;
-            if (purpose.Equals(AssetTemplates.ForApi, StringComparison.InvariantCultureIgnoreCase))
+            if (purpose.Equals(AssetTemplates.ForApi, InvariantCultureIgnoreCase))
                 defId = AssetTemplates.ApiHybrid.Key;
-            if (purpose.Equals(AssetTemplates.ForSearch, StringComparison.InvariantCultureIgnoreCase))
+            if (purpose.Equals(AssetTemplates.ForSearch, InvariantCultureIgnoreCase))
                 defId = AssetTemplates.DnnSearch.Key;
 
             // For templates we also check the type
-            if (purpose.Equals(AssetTemplates.ForTemplate, StringComparison.InvariantCultureIgnoreCase))
+            if (purpose.Equals(AssetTemplates.ForTemplate, InvariantCultureIgnoreCase))
             {
                 type = type?.ToLowerInvariant().Trim() ?? "";
-                if (type.Equals(AssetTemplates.TypeToken, StringComparison.InvariantCultureIgnoreCase))
+                if (type.Equals(AssetTemplates.TypeToken, InvariantCultureIgnoreCase))
                     defId = AssetTemplates.Token.Key;
             }
 

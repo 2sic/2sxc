@@ -11,9 +11,7 @@ namespace ToSic.Sxc.Engines
     public class EngineBaseDependencies
     {
 
-        public EngineBaseDependencies(IServerPaths serverPaths, 
-            ILinkPaths linkPaths, 
-            AppPathHelpers appPathHelpers, 
+        public EngineBaseDependencies(IServerPaths serverPaths,
             IBlockResourceExtractor blockResourceExtractor,
             Lazy<AppPermissionCheck> appPermCheckLazy,
             Polymorphism.Polymorphism polymorphism,
@@ -22,15 +20,11 @@ namespace ToSic.Sxc.Engines
             Polymorphism = polymorphism;
             AppStatesLazy = appStatesLazy;
             ServerPaths = serverPaths;
-            LinkPaths = linkPaths;
-            AppPathHelpers = appPathHelpers;
             BlockResourceExtractor = blockResourceExtractor;
             AppPermCheckLazy = appPermCheckLazy;
         }
 
         internal readonly IServerPaths ServerPaths;
-        internal readonly ILinkPaths LinkPaths;
-        internal readonly AppPathHelpers AppPathHelpers;
         internal readonly IBlockResourceExtractor BlockResourceExtractor;
         internal readonly Lazy<AppPermissionCheck> AppPermCheckLazy;
         internal Polymorphism.Polymorphism Polymorphism { get; }

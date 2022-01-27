@@ -69,8 +69,8 @@ namespace ToSic.Sxc.Dnn.Install
             if (!(sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
             {
                 // configure it
-                var tm = block.Context.ServiceProvider.Build<AppPathHelpers>().Init(block.App, block.Log);
-                tm.EnsureTemplateFolderExists(false);
+                var tm = block.Context.ServiceProvider.Build<AppFolderInitializer>().Init(Log);
+                tm.EnsureTemplateFolderExists(block.Context.AppState, false);
             }
 
             return wrapLog($"Completed init for module {_module.ModuleId} showing {block.AppId}", true);

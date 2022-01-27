@@ -68,31 +68,9 @@ namespace ToSic.Sxc.Polymorphism
             }
         }
 
-        // TODO: STATIC LIST OF ResolverTypes
-        // - on first access will ask plumbing for all IResolvers
-        // - then check the attributes to see what name they have
-        // - add to list
-        // 
-        // Afterwards
-        // When a resolver is needed, get it from the factory
-        // Note: Almost identical setup exists for DataSources - DataSourceCatalog
-
-        ///// <summary>
-        ///// The global list of resolvers, used in checking what edition to return
-        ///// </summary>
-        //public static Dictionary<string, IResolver> Resolvers = new Dictionary<string, IResolver>(StringComparer.InvariantCultureIgnoreCase);
-
-        ///// <summary>
-        ///// Register a resolver
-        ///// </summary>
-        ///// <param name="resolver"></param>
-        //public static void Add(IResolver resolver) => Resolvers.Add(resolver.Name, resolver);
-
         private static List<ResolverInfo> Cache { get; } = AssemblyHandling
             .FindInherited(typeof(IResolver))
             .Select(t => new ResolverInfo(t))
             .ToList();
-
-
     }
 }

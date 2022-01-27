@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Apps
 
         private readonly Lazy<AppPathHelpers> _appPathHelpersLazy;
         private AppPathHelpers _appPathHelpers;
-        private AppPathHelpers AppPathHelpers => _appPathHelpers ?? (_appPathHelpers = _appPathHelpersLazy.Value.Init(this, Log));
+        private AppPathHelpers AppPathHelpers => _appPathHelpers ?? (_appPathHelpers = _appPathHelpersLazy.Value.Init(Log));
 
         public App PreInit(ISite site)
         {
@@ -129,9 +129,7 @@ namespace ToSic.Sxc.Apps
 
         /// <inheritdoc />
         public string Path => _path ?? (_path = AppState.GetPiggyBack(nameof(Path),
-            () => Site.AppAssetsLinkTemplate
-                .Replace(LinkPaths.AppFolderPlaceholder, Folder)
-                .ToAbsolutePathForwardSlash()));
+            () => AppPathHelpers.AppPathRoot(Site, AppState, false, PathTypes.Link)));
         private string _path;
 
         /// <inheritdoc />
@@ -162,13 +160,24 @@ namespace ToSic.Sxc.Apps
 
         /// <inheritdoc />
         public string PathShared => _pathShared ?? (_pathShared = 
-            AppState.GetPiggyBack(nameof(PathShared), () => AppPathHelpers.AppPathRoot(true, PathTypes.PhysRelative)));
+            AppState.GetPiggyBack(nameof(PathShared), () => AppPathHelpers.AppPathRoot(Site, AppState, true, PathTypes.PhysRelative)));
         private string _pathShared;
 
         /// <inheritdoc />
         public string PhysicalPathShared => _physicalPathGlobal ?? (_physicalPathGlobal = 
-            AppState.GetPiggyBack(nameof(PhysicalPathShared), () => AppPathHelpers.AppPathRoot(true, PathTypes.PhysFull)));
+            AppState.GetPiggyBack(nameof(PhysicalPathShared), () => AppPathHelpers.AppPathRoot(Site, AppState, true, PathTypes.PhysFull)));
         private string _physicalPathGlobal;
+
+        [PrivateApi("not public, not sure if we should surface this")]
+        public string RelativePath => _relativePath ?? (_relativePath =
+            AppState.GetPiggyBack(nameof(RelativePath), () => AppPathHelpers.AppPathRoot(Site, AppState, false, PathTypes.PhysRelative)));
+        private string _relativePath;
+
+        [PrivateApi("not public, not sure if we should surface this")]
+        public string RelativePathShared => _relativePathShared ?? (_relativePathShared =
+            AppState.GetPiggyBack(nameof(RelativePathShared), () => AppPathHelpers.AppPathRoot(Site, AppState, true, PathTypes.PhysRelative)));
+        private string _relativePathShared;
+
 
         #endregion
 

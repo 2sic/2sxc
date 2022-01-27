@@ -31,28 +31,30 @@ namespace ToSic.Sxc.WebApi.Views
     public class ViewsExportImport: HasLog<ViewsExportImport>
     {
         private readonly IServerPaths _serverPaths;
-        private readonly AppPathHelpers _appHelpers;
         private readonly IEnvironmentLogger _envLogger;
         private readonly Lazy<CmsManager> _cmsManagerLazy;
         private readonly Lazy<JsonBundleSerializer> _jsonBundleLazy;
         private readonly IAppStates _appStates;
+        private readonly AppIconHelpers _appIconHelpers;
         private readonly ISite _site;
         private readonly IUser _user;
 
-        public ViewsExportImport(IServerPaths serverPaths, 
-            AppPathHelpers appHelpers, 
+        public ViewsExportImport(IServerPaths serverPaths,
             IEnvironmentLogger envLogger,
             Lazy<CmsManager> cmsManagerLazy, 
             Lazy<JsonBundleSerializer> jsonBundleLazy, 
             IContextOfSite context,
-            IAppStates appStates) : base("Bck.Views")
+            IAppStates appStates,
+            AppIconHelpers appIconHelpers
+            
+            ) : base("Bck.Views")
         {
             _serverPaths = serverPaths;
-            _appHelpers = appHelpers;
             _envLogger = envLogger;
             _cmsManagerLazy = cmsManagerLazy;
             _jsonBundleLazy = jsonBundleLazy;
             _appStates = appStates;
+            _appIconHelpers = appIconHelpers;
 
             _site = context.Site;
             _user = context.User;
@@ -72,11 +74,11 @@ namespace ToSic.Sxc.WebApi.Views
             // Attach files
             var view = new View(bundle.Entity, _site.CurrentCultureCode, Log);
 
-            _appHelpers.Init(app, Log);
+            _appIconHelpers.Init(Log);
             if (!string.IsNullOrEmpty(view.Path))
             {
-                TryAddAsset(bundle, _appHelpers.ViewPath(view, PathTypes.PhysRelative), view.Path);
-                var thumb = _appHelpers.IconPathOrNull(view, PathTypes.PhysRelative);
+                TryAddAsset(bundle, app.ViewPath(view, PathTypes.PhysRelative), view.Path);
+                var thumb = _appIconHelpers.IconPathOrNull(app, view, PathTypes.PhysRelative);
                 if(thumb != null)
                     TryAddAsset(bundle, thumb, thumb);
             }
@@ -110,7 +112,7 @@ namespace ToSic.Sxc.WebApi.Views
             {
                 // 0.1 Check permissions, get the app, 
                 var app = _cmsManagerLazy.Value.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
-                _appHelpers.Init(app, Log);
+                //_appHelpers.Init(app, Log);
 
                 // 0.2 Verify it's json etc.
                 if (files.Any(file => !Json.IsValidJson(file.Contents)))
@@ -137,7 +139,7 @@ namespace ToSic.Sxc.WebApi.Views
                 // 3. Import the attachments
                 var assets = bundles.SelectMany(b => b.Assets);
                 var assetMan = new JsonAssets();
-                foreach (var asset in assets) assetMan.Create(GetRealPath(asset), asset);
+                foreach (var asset in assets) assetMan.Create(GetRealPath(app, asset), asset);
 
                 // 3. possibly show messages / issues
                 return callLog("ok", new ImportResultDto(true));
@@ -149,10 +151,10 @@ namespace ToSic.Sxc.WebApi.Views
             }
         }
 
-        private string GetRealPath(JsonAsset asset)
+        private string GetRealPath(Apps.IApp app, JsonAsset asset)
         {
             if (!string.IsNullOrEmpty(asset.Storage) && asset.Storage != JsonAsset.StorageApp) return null;
-            var root = _appHelpers.AppPathRoot(false);
+            var root = app.PhysicalPathSwitch(false);
             return Path.Combine(root, asset.Folder, asset.Name);
         }
     }

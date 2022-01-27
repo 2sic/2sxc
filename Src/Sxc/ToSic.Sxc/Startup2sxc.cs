@@ -123,6 +123,10 @@ namespace ToSic.Sxc
             services.TryAddTransient<IFeaturesService, FeaturesService>();  // New 13.01
             services.TryAddTransient<IImageService, ImageService>();
 
+            // 13 - cleaning up handling of app paths
+            services.TryAddTransient<AppPathHelpers, AppPathHelpers>();
+            services.TryAddTransient<AppFolderInitializer>();
+            services.TryAddTransient<AppIconHelpers>();
 
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need
