@@ -133,6 +133,7 @@ namespace ToSic.Sxc.WebApi
 
         public static Encoding GetEncoding(string xmlString)
         {
+            if (!IsValidXml(xmlString)) return Encoding.UTF8;
             var xmlDocument = new XmlDocument();
             xmlDocument.LoadXml(xmlString);
             return GetEncoding(xmlDocument);

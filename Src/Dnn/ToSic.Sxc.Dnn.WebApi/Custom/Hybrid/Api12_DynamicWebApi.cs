@@ -36,7 +36,7 @@ namespace Custom.Hybrid
             if (!string.IsNullOrWhiteSpace(virtualPath))
                 httpContent = new StreamContent(new FileStream(HttpContext.Current.Server.MapPath(virtualPath), FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
 
-            var encoding = Encoding.UTF8;
+            var encoding = Encoding.UTF8; // the default response encoding is UTF-8
             var isValidXml = false;
             switch (contents)
             {
