@@ -50,17 +50,12 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         internal AdamManager<int, int> AdamManager { get; }
 
-        private string _appFolder;
-
         public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds, ILog parentLog)
         {
             var context = _ctxResolver.App(appId);
             var contextOfSite = _ctxResolver.Site();
             var oqtSite = (OqtSite) contextOfSite.Site;
             var app = AdamManager.AppRuntime.ServiceProvider.Build<Sxc.Apps.App>().InitNoData(new AppIdentity(zoneId, appId), Log);
-
-            // needed for TenantFileItem path resolving
-            _appFolder = app.Folder;
 
             AdamManager.Init(context, Constants.CompatibilityLevel10, Log);
             Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);

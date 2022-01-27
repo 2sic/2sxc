@@ -6,7 +6,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 
-namespace ToSic.Sxc.Engines
+namespace ToSic.Sxc.Apps.Paths
 {
     public class AppFolderInitializer : HasLog<AppFolderInitializer>
     {

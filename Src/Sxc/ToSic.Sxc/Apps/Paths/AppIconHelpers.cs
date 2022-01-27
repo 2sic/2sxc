@@ -4,12 +4,11 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Engines;
 using static System.StringComparison;
-using IApp = ToSic.Sxc.Apps.IApp;
 
-namespace ToSic.Sxc.Engines
+namespace ToSic.Sxc.Apps.Paths
 {
 
     public class AppIconHelpers : HasLog<AppIconHelpers>

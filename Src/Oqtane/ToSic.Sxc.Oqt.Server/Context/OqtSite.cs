@@ -1,6 +1,7 @@
 ﻿using System;
 using Oqtane.Models;
 using Oqtane.Repository;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
@@ -103,7 +104,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
 
         [PrivateApi]
         public override string AppAssetsLinkTemplate => OqtPageOutput.GetSiteRoot(_siteStateInitializer.InitializedState)
-                                                        + WebApiConstants.AppRoot + "/" + LinkPaths.AppFolderPlaceholder + "/assets";
+                                                        + WebApiConstants.AppRoot + "/" + AppConstants.AppFolderPlaceholder + "/assets";
 
         [PrivateApi] public override string AppsRootPhysicalFull => _serverPaths.Value.FullAppPath(AppsRootPhysical);
 

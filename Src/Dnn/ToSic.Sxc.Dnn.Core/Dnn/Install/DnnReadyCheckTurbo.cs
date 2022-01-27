@@ -4,6 +4,7 @@ using System.IO;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
 

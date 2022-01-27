@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
 

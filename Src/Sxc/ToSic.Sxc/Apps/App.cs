@@ -4,12 +4,11 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Run;
 using EavApp = ToSic.Eav.Apps.App;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -24,14 +23,18 @@ namespace ToSic.Sxc.Apps
     {
         #region DI Constructors
 
-        public App(AppDependencies dependencies, Lazy<AppPathHelpers> appPathHelpersLazy) : base(dependencies, "App.SxcApp")
+        public App(AppDependencies dependencies, Lazy<AppPathHelpers> appPathHelpersLazy, Lazy<AppPaths> appPathsLazy) : base(dependencies, "App.SxcApp")
         {
             _appPathHelpersLazy = appPathHelpersLazy;
+            _appPathsLazy = appPathsLazy;
         }
 
         private readonly Lazy<AppPathHelpers> _appPathHelpersLazy;
         private AppPathHelpers _appPathHelpers;
         private AppPathHelpers AppPathHelpers => _appPathHelpers ?? (_appPathHelpers = _appPathHelpersLazy.Value.Init(Log));
+        private readonly Lazy<AppPaths> _appPathsLazy;
+        private AppPaths _appPaths;
+        private AppPaths AppPaths => _appPaths ?? (_appPaths = _appPathsLazy.Value.Init(Site, AppState, Log));
 
         public App PreInit(ISite site)
         {
@@ -128,8 +131,7 @@ namespace ToSic.Sxc.Apps
         #region Paths
 
         /// <inheritdoc />
-        public string Path => _path ?? (_path = AppState.GetPiggyBack(nameof(Path),
-            () => AppPathHelpers.AppPathRoot(Site, AppState, false, PathTypes.Link)));
+        public string Path => _path ?? (_path = AppPaths.Path);
         private string _path;
 
         /// <inheritdoc />
@@ -159,23 +161,19 @@ namespace ToSic.Sxc.Apps
         private string _thumbnail;
 
         /// <inheritdoc />
-        public string PathShared => _pathShared ?? (_pathShared = 
-            AppState.GetPiggyBack(nameof(PathShared), () => AppPathHelpers.AppPathRoot(Site, AppState, true, PathTypes.PhysRelative)));
+        public string PathShared => _pathShared ?? (_pathShared = AppPaths.PathShared);
         private string _pathShared;
 
         /// <inheritdoc />
-        public string PhysicalPathShared => _physicalPathGlobal ?? (_physicalPathGlobal = 
-            AppState.GetPiggyBack(nameof(PhysicalPathShared), () => AppPathHelpers.AppPathRoot(Site, AppState, true, PathTypes.PhysFull)));
+        public string PhysicalPathShared => _physicalPathGlobal ?? (_physicalPathGlobal = AppPaths.PhysicalPathShared);
         private string _physicalPathGlobal;
 
         [PrivateApi("not public, not sure if we should surface this")]
-        public string RelativePath => _relativePath ?? (_relativePath =
-            AppState.GetPiggyBack(nameof(RelativePath), () => AppPathHelpers.AppPathRoot(Site, AppState, false, PathTypes.PhysRelative)));
+        public string RelativePath => _relativePath ?? (_relativePath = AppPaths.RelativePath);
         private string _relativePath;
 
         [PrivateApi("not public, not sure if we should surface this")]
-        public string RelativePathShared => _relativePathShared ?? (_relativePathShared =
-            AppState.GetPiggyBack(nameof(RelativePathShared), () => AppPathHelpers.AppPathRoot(Site, AppState, true, PathTypes.PhysRelative)));
+        public string RelativePathShared => _relativePathShared ?? (_relativePathShared = AppPaths.RelativePathShared);
         private string _relativePathShared;
 
 

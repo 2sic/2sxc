@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Blocks.Output;
@@ -124,7 +125,8 @@ namespace ToSic.Sxc
             services.TryAddTransient<IImageService, ImageService>();
 
             // 13 - cleaning up handling of app paths
-            services.TryAddTransient<AppPathHelpers, AppPathHelpers>();
+            services.TryAddTransient<AppPaths>();
+            services.TryAddTransient<AppPathHelpers>();
             services.TryAddTransient<AppFolderInitializer>();
             services.TryAddTransient<AppIconHelpers>();
 

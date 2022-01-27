@@ -22,6 +22,7 @@ using ToSic.Eav.WebApi.Helpers;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Eav.WebApi.Validation;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.WebApi.ImportExport;

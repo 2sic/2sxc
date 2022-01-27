@@ -4,6 +4,7 @@ using DotNetNuke.Entities.Portals;
 using System;
 using System.IO;
 using System.Web.Hosting;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
@@ -153,7 +154,7 @@ namespace ToSic.Sxc.Dnn.Run
 
 
         [PrivateApi]
-        public override string AppAssetsLinkTemplate => AppsRootPhysical + "/" + LinkPaths.AppFolderPlaceholder;
+        public override string AppAssetsLinkTemplate => AppsRootPhysical + "/" + AppConstants.AppFolderPlaceholder;
         
         internal string AppsRootRelative => Path.Combine(UnwrappedContents.HomeDirectory, Settings.AppsRootFolder);
         internal string SharedAppsRootRelative => Path.Combine(Globals.HostPath, Settings.AppsRootFolder);

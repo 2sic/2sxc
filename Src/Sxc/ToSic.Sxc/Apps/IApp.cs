@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Data;
 
 // ReSharper disable UnusedMemberInSuper.Global
@@ -10,7 +11,8 @@ namespace ToSic.Sxc.Apps
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
     public interface IApp: 
-        Eav.Apps.IApp
+        Eav.Apps.IApp,
+        IAppPaths
 #if NETFRAMEWORK
         , SexyContent.Interfaces.IApp // inherits from old namespace for compatibility
 #endif
@@ -71,6 +73,5 @@ namespace ToSic.Sxc.Apps
 
         [PrivateApi("not public, not sure if we should surface this")]
         string RelativePathShared { get; }
-
     }
 }

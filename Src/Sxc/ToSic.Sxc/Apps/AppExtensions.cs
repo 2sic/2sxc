@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
 
@@ -7,9 +8,9 @@ namespace ToSic.Sxc.Apps
 {
     public static class AppExtensions
     {
-        public static string PhysicalPathSwitch(this IApp app, bool isShared) => isShared ? app.PhysicalPathShared : app.PhysicalPath;
+        public static string PhysicalPathSwitch(this IAppPaths app, bool isShared) => isShared ? app.PhysicalPathShared : app.PhysicalPath;
 
-        public static string PathSwitch(this IApp app, bool isShared, PathTypes type)
+        public static string PathSwitch(this IAppPaths app, bool isShared, PathTypes type)
         {
             switch (type)
             {
@@ -24,6 +25,6 @@ namespace ToSic.Sxc.Apps
             }
         }
 
-        public static string ViewPath(this IApp app, IView view, PathTypes type) => Path.Combine(app.PathSwitch(view.IsShared, type), view.Path);
+        public static string ViewPath(this IAppPaths app, IView view, PathTypes type) => Path.Combine(app.PathSwitch(view.IsShared, type), view.Path);
     }
 }
