@@ -50,7 +50,7 @@ namespace ToSic.Sxc.WebApi.Context
         protected Dependencies Deps;
 
         protected int ZoneId => Deps.SiteCtx.Site.ZoneId;
-        protected IApp App;
+        protected Sxc.Apps.IApp App;
         private readonly Apps.IApp _appToLaterInitialize;
         protected AppState AppState;
 
@@ -60,7 +60,7 @@ namespace ToSic.Sxc.WebApi.Context
         {
             Log.LinkTo(parentLog);
             AppState = appState;
-            App = appState != null ? (_appToLaterInitialize as Apps.App)?.InitNoData(appState, null) : null;
+            App = appState != null ? (_appToLaterInitialize as Apps.App)?.Init(appState, null, Log) : null;
             return this;
         }
 
@@ -88,18 +88,6 @@ namespace ToSic.Sxc.WebApi.Context
             if (ZoneId == 0) return null;
             var language = Deps.JsCtx.Init(Deps.SiteCtx.Site, ZoneId);
 
-            // New V13 - with try/catch as it's still very new
-            //List<SiteLanguageDto> converted = null;
-            //try
-            //{
-            //    var langs = Deps.AppUserLanguageCheck.Value.Init(Log).LanguagesWithPermissions(AppState);
-            //    converted = langs.Select(l => new SiteLanguageDto
-            //        { Code = l.Code, Culture = l.Culture, IsAllowed = l.IsAllowed, IsEnabled = l.IsEnabled }).ToList();
-            //}
-            //catch (Exception ex)
-            //{
-            //    Log.Exception(ex);
-            //}
             var converted = Deps.LanguagesBackend.Value.Init(Log).GetLanguagesOfApp(AppState);
 
             return new ContextLanguageDto
@@ -168,7 +156,7 @@ namespace ToSic.Sxc.WebApi.Context
             var result = new ContextAppDto
             {
                 Id = App.AppId,
-                Url = (App as Apps.IApp)?.Path,
+                Url = App?.Path,
                 Name = App.Name,
                 Folder = App.Folder,
             };

@@ -15,8 +15,7 @@ namespace ToSic.Sxc.Apps
             var appIdentity = appStates.IdentityOfApp(appId);
             var confProvider = sp.Build<AppConfigDelegate>().Init(log);
             var buildConfig = (optionalBlock == null)
-                ? confProvider.Build(showDrafts) // return app.InitWithoutBlock(confProvider, appIdentity, log, showDrafts);
-                /*var buildConfig =*/
+                ? confProvider.Build(showDrafts)
                 : confProvider.Build(optionalBlock);
             return app.Init(appIdentity, buildConfig, log);
         }

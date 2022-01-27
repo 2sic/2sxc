@@ -10,7 +10,6 @@ namespace ToSic.Sxc.Apps.Paths
 {
     public class AppPaths: HasLog, IAppPaths
     {
-
         public AppPaths(Lazy<AppPathHelpers> pathHelpers) : base($"{LogNames.Eav}.AppPth") => _helpersLazy = pathHelpers;
         private readonly Lazy<AppPathHelpers> _helpersLazy;
         private AppPathHelpers _helpers;
@@ -27,10 +26,12 @@ namespace ToSic.Sxc.Apps.Paths
             _site = site;
             _appState = appState;
             Log.LinkTo(parentLog);
+            InitDone = true;
             return this;
         }
         private ISite _site;
         private AppState _appState;
+        public bool InitDone;
 
         public string Path => _appState.GetPiggyBack(nameof(Path), () => Helpers.Link(_site, _appState));
 

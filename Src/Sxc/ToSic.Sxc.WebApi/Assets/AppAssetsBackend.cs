@@ -5,6 +5,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Sxc.Apps.Assets;
+using ToSic.Sxc.Apps.Paths;
 using static System.StringComparison;
 
 namespace ToSic.Sxc.WebApi.Assets
@@ -14,21 +15,30 @@ namespace ToSic.Sxc.WebApi.Assets
 
         #region Constructor / DI
 
-        public AppAssetsBackend(IUser user, 
+        public AppAssetsBackend(
+            ISite site,
+            IUser user, 
             Lazy<AssetEditor> assetEditorLazy,
             IServiceProvider serviceProvider,
-            IAppStates appStates) : base("Bck.Assets")
+            IAppStates appStates,
+            AppPaths appPaths
+            ) : base("Bck.Assets")
         {
+            _site = site;
             _assetEditorLazy = assetEditorLazy;
             _assetTemplates = new AssetTemplates().Init(Log);
             _serviceProvider = serviceProvider;
             _appStates = appStates;
+            _appPaths = appPaths;
             _user = user;
         }
+
+        private readonly ISite _site;
         private readonly Lazy<AssetEditor> _assetEditorLazy;
         private readonly AssetTemplates _assetTemplates;
         private readonly IServiceProvider _serviceProvider;
         private readonly IAppStates _appStates;
+        private readonly AppPaths _appPaths;
         private readonly IUser _user;
 
         #endregion
@@ -98,7 +108,7 @@ namespace ToSic.Sxc.WebApi.Assets
         private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(int appId, int templateId, bool global, string path)
         {
             var wrapLog = Log.Call<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
-            var app = _serviceProvider.Build<Apps.App>().InitNoData(_appStates.IdentityOfApp(appId), Log);
+            var app = _appStates.Get(appId);
             var assetEditor = _serviceProvider.Build<AssetEditor>();
 
             // TODO: simplify once we release v13 #cleanUp EOY 2021
@@ -113,8 +123,8 @@ namespace ToSic.Sxc.WebApi.Assets
         private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(AssetFromTemplateDto assetFromTemplateDto)
         {
             var wrapLog = Log.Call<AssetEditor>($"a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
-            var thisApp = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(AppConstants.AutoLookupZone, assetFromTemplateDto.AppId), Log);
-            var assetEditor = _assetEditorLazy.Value.Init(thisApp, assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0, Log);
+            var app = _appStates.Get(assetFromTemplateDto.AppId);
+            var assetEditor = _assetEditorLazy.Value.Init(app, assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0, Log);
             assetEditor.EnsureUserMayEditAssetOrThrow(assetEditor.InternalPath);
             return wrapLog(null, assetEditor);
         }

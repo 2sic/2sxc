@@ -40,30 +40,15 @@ namespace ToSic.Sxc.Run
 
         public override string FallbackContentTypeScope => Scopes.Default;
 
-        public override string TemplatesRoot(int zoneId, int appId)
-        {
-            //var app = _dependencies.NewApp.InitNoData(new AppIdentity(zoneId, appId), Log);
+        public override string TemplatesRoot(int zoneId, int appId) 
+            => AppPaths(zoneId, appId).PhysicalPath;
 
-            //// Copy all files in 2sexy folder to (portal file system) 2sexy folder
-            //var templateRoot = app.PhysicalPath; //.PhysicalPathSwitch(false);
-            //return templateRoot;
-            return AppPaths(zoneId, appId).PhysicalPath; 
-        }
+        public override string GlobalTemplatesRoot(int zoneId, int appId) 
+            => AppPaths(zoneId, appId).PhysicalPathShared;
 
-        public override string GlobalTemplatesRoot(int zoneId, int appId)
-        {
-            //var app = _dependencies.NewApp.InitNoData(new AppIdentity(zoneId, appId), Log);
-            //return app.PhysicalPathShared;
-            return AppPaths(zoneId, appId).PhysicalPathShared;
-        }
-
-        private AppPaths AppPaths(int zoneId, int appId)
-        {
-            // only build once
-            return _appPaths ?? (_appPaths =_dependencies.AppPaths.Init(_dependencies.Site,
+        private AppPaths AppPaths(int zoneId, int appId) =>
+            _appPaths ?? (_appPaths =_dependencies.AppPaths.Init(_dependencies.Site,
                 _dependencies.AppStates.Get(new AppIdentity(zoneId, appId)), Log));
-        }
-
         private AppPaths _appPaths;
 
 

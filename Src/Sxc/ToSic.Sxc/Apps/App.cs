@@ -49,20 +49,9 @@ namespace ToSic.Sxc.Apps
         public new App Init(IAppIdentity appId, Func<EavApp, IAppDataConfiguration> buildConfig, ILog parentLog)
         {
             base.Init(appId, buildConfig, parentLog);
-            return this;
-        }
-
-        /// <summary>
-        /// Quick init - won't provide data but can access properties, metadata etc.
-        /// </summary>
-        /// <param name="appIdentity"></param>
-        /// <param name="parentLog"></param>
-        /// <returns></returns>
-        public App InitNoData(IAppIdentity appIdentity, ILog parentLog)
-        {
-            Init(appIdentity, null, parentLog);
+            if (buildConfig != null) return this;
             Log.Rename("App.SxcLgt");
-            Log.Add("App only initialized for light use - Data shouldn't be used");
+            Log.Add("App only initialized for light use - .Data shouldn't be used");
             return this;
         }
 

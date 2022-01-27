@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Engines;
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Apps.Assets
 {
@@ -18,31 +19,36 @@ namespace ToSic.Sxc.Apps.Assets
         private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
         private readonly IUser _user;
         private readonly Lazy<AppFolderInitializer> _appFolderInitializer;
+        private readonly ISite _site;
+        private readonly AppPaths _appPaths;
         private CmsRuntime _cmsRuntime;
         private IApp _app;
+        private AppState _appState;
 
-        public AssetEditor(Lazy<CmsRuntime> cmsRuntimeLazy, IUser user, Lazy<AppFolderInitializer> appFolderInitializer) : base("Sxc.AstEdt")
+        public AssetEditor(Lazy<CmsRuntime> cmsRuntimeLazy, IUser user, Lazy<AppFolderInitializer> appFolderInitializer, ISite site, AppPaths appPaths) : base("Sxc.AstEdt")
         {
             _cmsRuntimeLazy = cmsRuntimeLazy;
             _user = user;
             _appFolderInitializer = appFolderInitializer;
+            _site = site;
+            _appPaths = appPaths;
         }
 
         // TODO: REMOVE THIS once we release v13 #cleanUp EOY 2021
-        public AssetEditor Init(IApp app, int templateId, ILog parentLog)
+        public AssetEditor Init(AppState app, int templateId, ILog parentLog)
         {
             InitShared(app, parentLog);
             var view = _cmsRuntime.Views.Get(templateId);
-            var t = new AssetEditInfo(_app.AppId, _app.Name, view.Path, view.IsShared);
+            var t = new AssetEditInfo(_appState.AppId, _appState.Name, view.Path, view.IsShared);
             EditInfo = AddViewDetailsAndTypes(t, view);
 
             return this;
         }
 
-        public AssetEditor Init(IApp app, string path, bool global, int viewId, ILog parentLog)
+        public AssetEditor Init(AppState app, string path, bool global, int viewId, ILog parentLog)
         {
             InitShared(app, parentLog);
-            EditInfo = new AssetEditInfo(_app.AppId, _app.Name, path, global);
+            EditInfo = new AssetEditInfo(_appState.AppId, _appState.Name, path, global);
             if (viewId == 0) return this;
 
             var view = _cmsRuntime.Views.Get(viewId);
@@ -51,13 +57,14 @@ namespace ToSic.Sxc.Apps.Assets
         }
 
 
-        private void InitShared(IApp app, ILog parentLog)
+        private void InitShared(AppState app, ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            _app = app;
+            _appState = app;
+            _appPaths.Init(_site, _appState, Log);
 
             // todo: 2dm Views - see if we can get logger to flow
-            _cmsRuntime = _cmsRuntimeLazy.Value.Init(app, true, Log);
+            _cmsRuntime = _cmsRuntimeLazy.Value.Init(_appState, true, Log);
         }
 
         #endregion
@@ -102,7 +109,7 @@ namespace ToSic.Sxc.Apps.Assets
             if (path.Directory == null)
                 throw new AccessViolationException("path is null");
 
-            if (path.Directory.FullName.IndexOf(_app.PhysicalPath, StringComparison.InvariantCultureIgnoreCase) != 0)
+            if (path.Directory.FullName.IndexOf(_appPaths.PhysicalPath, StringComparison.InvariantCultureIgnoreCase) != 0)
                 throw new AccessViolationException("current user may not edit files outside of the app-scope");
         }
 
@@ -120,8 +127,7 @@ namespace ToSic.Sxc.Apps.Assets
         }
 
         public string InternalPath => _internalPath ?? (_internalPath = NormalizePath(Path.Combine(
-            _app.PhysicalPathSwitch(EditInfo.IsShared), EditInfo.FileName)));
-
+            _appPaths.PhysicalPathSwitch(EditInfo.IsShared), EditInfo.FileName)));
         private string _internalPath;
 
         private static string NormalizePath(string path) => Path.GetFullPath(new Uri(path).LocalPath);
@@ -157,7 +163,7 @@ namespace ToSic.Sxc.Apps.Assets
             if (SanitizeFileNameAndCheckIfAssetAlreadyExists()) return false;
 
             // ensure the web.config exists (usually missing in the global area)
-            _appFolderInitializer.Value.Init(Log).EnsureTemplateFolderExists(_app.AppState, EditInfo.IsShared);
+            _appFolderInitializer.Value.Init(Log).EnsureTemplateFolderExists(_appState, EditInfo.IsShared);
 
             var absolutePath = InternalPath;
 
