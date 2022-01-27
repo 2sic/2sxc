@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Run
                         + "&SysGuid=" + _platformInfo.Identity
                 ;
 
-            link += "&AppId=" + (isContentApp ? "Default" : app?.AppGuid ?? "");
+            link += "&AppId=" + (isContentApp ? "Default" : app?.NameId ?? "");
             
             // Add AppStaticName and Version if _not_ the primary content-app
             if (app?.Configuration != null)

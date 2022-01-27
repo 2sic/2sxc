@@ -63,7 +63,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             return new AppExportInfoDto
             {
                 Name = currentApp.Name,
-                Guid = currentApp.AppGuid,
+                Guid = currentApp.NameId,
                 Version = currentApp.VersionSafe(),
                 EntitiesCount = cms.Entities.All.Where(e => !e.HasAncestor()).Count(),
                 LanguagesCount = cultCount,

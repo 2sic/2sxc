@@ -150,7 +150,7 @@ namespace ToSic.Sxc.WebApi.Context
 
         protected virtual ContextEnableDto GetEnable(CtxEnable ctx)
         {
-            var isRealApp = App != null && App.AppGuid != Eav.Constants.DefaultAppGuid; // #SiteApp v13 - Site-Apps should also have permissions
+            var isRealApp = App != null && App.NameId != Eav.Constants.DefaultAppGuid; // #SiteApp v13 - Site-Apps should also have permissions
             var tmp = new JsContextUser(Deps.SiteCtx.User);
             var dto = new ContextEnableDto();
             if (ctx.HasFlag(CtxEnable.AppPermissions)) dto.AppPermissions = isRealApp;
@@ -177,7 +177,7 @@ namespace ToSic.Sxc.WebApi.Context
             if (!flags.HasFlag(Ctx.AppAdvanced)) return result;
 
             result.GettingStartedUrl = GetGettingStartedUrl();
-            result.Identifier = _appToLaterInitialize.AppGuid;
+            result.Identifier = _appToLaterInitialize.NameId;
             
             // #SiteApp v13
             result.SettingsScope = App.AppId == 1 

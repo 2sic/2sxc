@@ -143,7 +143,7 @@ namespace ToSic.Sxc.Apps
 
                 // Primary app - we only PiggyBack cache the icon in this case
                 // Because otherwise the icon could get moved, and people would have a hard time seeing the effect
-                if (AppGuid == Eav.Constants.PrimaryAppGuid)
+                if (NameId == Eav.Constants.PrimaryAppGuid)
                     return _thumbnail = AppState.GetPiggyBack(nameof(Thumbnail), () => AppPathHelpers.AssetsLocation(AppConstants.AppPrimaryIconFile, PathTypes.Link));
 
                 // standard app (not global) try to find app-icon in its (portal) app folder

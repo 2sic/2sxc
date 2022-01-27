@@ -55,10 +55,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var context = _ctxResolver.App(appId);
             var contextOfSite = _ctxResolver.Site();
             var oqtSite = (OqtSite) contextOfSite.Site;
-            var app = AdamManager.AppRuntime.ServiceProvider.Build<Sxc.Apps.App>().InitNoData(new AppIdentity(zoneId, appId), Log);
+            var appState = AppStates.Get(new AppIdentity(zoneId, appId));
+            //var app = AdamManager.AppRuntime.ServiceProvider.Build<Sxc.Apps.App>().InitNoData(new AppIdentity(zoneId, appId), Log);
 
             AdamManager.Init(context, Constants.CompatibilityLevel10, Log);
-            Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
+            Constructor(zoneId, appRuntime, appState.NameId /*app.AppGuid*/, appExport, attrSetIds, entityIds, parentLog);
 
             // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally
             InitExportXDocument(oqtSite.DefaultCultureCode, EavSystemInfo.VersionString);
