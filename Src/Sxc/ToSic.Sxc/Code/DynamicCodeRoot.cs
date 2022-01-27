@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
@@ -71,7 +72,11 @@ namespace ToSic.Sxc.Code
         [PrivateApi] private Dictionary<string, object> _piggyBackers;
 
         [PrivateApi]
-        public virtual IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility) // = Constants.CompatibilityLevel10)
+        internal PiggyBack PiggyBack => _piggyBack ?? (_piggyBack = new PiggyBack());
+        private PiggyBack _piggyBack;
+
+        [PrivateApi]
+        public virtual IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility)
         {
             Log.LinkTo(parentLog ?? block?.Log);
             if (block == null)

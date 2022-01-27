@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Documentation;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Beta.LightSpeed;
 using ToSic.Sxc.Code;
@@ -29,10 +28,7 @@ namespace ToSic.Sxc.Beta.Lightspeed
             _codeRoot = (DynamicCodeRoot)codeRoot;
 
             // Check if there is already a state object, otherwise create one
-            if (_codeRoot.PiggyBackers.TryGetValue(DynCodePiggyBackId, out var newState ))
-                _state = newState as OutputCacheConfigState;
-
-            if(_state == null) _codeRoot.PiggyBackers.Add(DynCodePiggyBackId, State);
+            _state = _codeRoot.PiggyBack.GetOrGenerate(DynCodePiggyBackId, () => State);
         }
         private DynamicCodeRoot _codeRoot;
 

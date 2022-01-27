@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Apps
         {
             Init(appIdentity, null, parentLog);
             Log.Rename("App.SxcLgt");
-            Log.Add("App only initialized for light use - data shouldn't be used");
+            Log.Add("App only initialized for light use - Data shouldn't be used");
             return this;
         }
 
@@ -128,10 +128,10 @@ namespace ToSic.Sxc.Apps
         #region Paths
 
         /// <inheritdoc />
-        public string Path => _path ?? (_path = Site.AppAssetsLinkTemplate
-            .Replace(LinkPaths.AppFolderPlaceholder, Folder)
-            .ToAbsolutePathForwardSlash());
-
+        public string Path => _path ?? (_path = AppState.GetPiggyBack(nameof(Path),
+            () => Site.AppAssetsLinkTemplate
+                .Replace(LinkPaths.AppFolderPlaceholder, Folder)
+                .ToAbsolutePathForwardSlash()));
         private string _path;
 
         /// <inheritdoc />
@@ -141,9 +141,10 @@ namespace ToSic.Sxc.Apps
             {
                 if (_thumbnail != null) return _thumbnail;
 
-                // primary app
+                // Primary app - we only PiggyBack cache the icon in this case
+                // Because otherwise the icon could get moved, and people would have a hard time seeing the effect
                 if (AppGuid == Eav.Constants.PrimaryAppGuid)
-                    return _thumbnail = AppPathHelpers.AssetsLocation(AppConstants.AppPrimaryIconFile, PathTypes.Link);
+                    return _thumbnail = AppState.GetPiggyBack(nameof(Thumbnail), () => AppPathHelpers.AssetsLocation(AppConstants.AppPrimaryIconFile, PathTypes.Link));
 
                 // standard app (not global) try to find app-icon in its (portal) app folder
                 if (!AppState.IsGlobal())
@@ -159,10 +160,14 @@ namespace ToSic.Sxc.Apps
         }
         private string _thumbnail;
 
-        public string PathShared => _pathGlobal ?? (_pathGlobal = AppPathHelpers.AppPathRoot(true, PathTypes.PhysRelative));
-        private string _pathGlobal;
+        /// <inheritdoc />
+        public string PathShared => _pathShared ?? (_pathShared = 
+            AppState.GetPiggyBack(nameof(PathShared), () => AppPathHelpers.AppPathRoot(true, PathTypes.PhysRelative)));
+        private string _pathShared;
 
-        public string PhysicalPathShared => _physicalPathGlobal ?? (_physicalPathGlobal = AppPathHelpers.AppPathRoot(true, PathTypes.PhysFull));
+        /// <inheritdoc />
+        public string PhysicalPathShared => _physicalPathGlobal ?? (_physicalPathGlobal = 
+            AppState.GetPiggyBack(nameof(PhysicalPathShared), () => AppPathHelpers.AppPathRoot(true, PathTypes.PhysFull)));
         private string _physicalPathGlobal;
 
         #endregion

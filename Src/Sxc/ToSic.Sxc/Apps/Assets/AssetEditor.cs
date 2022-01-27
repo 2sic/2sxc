@@ -136,24 +136,16 @@ namespace ToSic.Sxc.Apps.Assets
                     return File.ReadAllText(InternalPath);
 
                 throw new FileNotFoundException("could not find file"
-                                                + (_user.IsSuperUser // _userIsSuperUser
-                                                    ? " for superuser - file tried '" + InternalPath + "'"
-                                                    : "")
-                );
+                                                + (_user.IsSuperUser ? $" for superuser - file tried '{InternalPath}'" : ""));
             }
             set
             {
                 EnsureUserMayEditAssetOrThrow(InternalPath);
-
                 if (File.Exists(InternalPath))
                     File.WriteAllText(InternalPath, value);
                 else
                     throw new FileNotFoundException("could not find file"
-                                                    + (_user.IsSuperUser // _userIsSuperUser
-                                                        ? " for superuser - file tried '" + InternalPath + "'"
-                                                        : "")
-                    );
-
+                                                    + (_user.IsSuperUser ? $" for superuser - file tried '{InternalPath}'" : ""));
             }
         }
 
@@ -208,7 +200,6 @@ namespace ToSic.Sxc.Apps.Assets
         public bool SanitizeFileNameAndCheckIfAssetAlreadyExists()
         {
             SanitizeFileName();
-
             return File.Exists(InternalPath);
         }
     }

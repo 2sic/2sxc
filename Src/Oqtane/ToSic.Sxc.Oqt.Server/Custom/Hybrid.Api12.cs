@@ -88,11 +88,10 @@ namespace Custom.Hybrid
         private IApp LoadAppOnly(int appId, ISite site)
         {
             var wrapLog = Log.Call<IApp>($"{appId}");
-            var zoneId = AppConstants.AutoLookupZone;
             var showDrafts = false;
             var app = ServiceProvider.Build<ToSic.Sxc.Apps.App>();
             app.PreInit(site);
-            var appStuff = app.Init(new AppIdentity(zoneId, appId),
+            var appStuff = app.Init(new AppIdentity(AppConstants.AutoLookupZone, appId),
                 ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(showDrafts),
                 Log);
             return wrapLog(null, appStuff);
