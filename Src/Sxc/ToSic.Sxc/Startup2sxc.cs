@@ -68,7 +68,6 @@ namespace ToSic.Sxc
             // Context stuff in general
             services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
             services.TryAddTransient<IContextOfApp, ContextOfApp>();
-            // 2021-09-01 2dm seems unused services.TryAddTransient<ContextOfBlock>();
             services.TryAddTransient<IPage, Page>();
             services.TryAddTransient<Page>();
             services.TryAddTransient<ICmsContext, CmsContext>();
@@ -125,7 +124,6 @@ namespace ToSic.Sxc
             services.TryAddTransient<IImageService, ImageService>();
 
             // 13 - cleaning up handling of app paths
-            services.TryAddTransient<AppPaths>();
             services.TryAddTransient<AppFolderInitializer>();
             services.TryAddTransient<AppIconHelpers>();
 

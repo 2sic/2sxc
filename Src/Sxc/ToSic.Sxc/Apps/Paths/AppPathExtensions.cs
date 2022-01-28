@@ -2,7 +2,6 @@
 using System.IO;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Engines;
 
 namespace ToSic.Sxc.Apps.Paths
 {
@@ -24,6 +23,9 @@ namespace ToSic.Sxc.Apps.Paths
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
         }
+
+        // TODO: THIS SHOULD BE inlined in the 2 places it's used, so this function isn't necessary any more
+        // Then these helpers should be moved to ToSxc.Eav.Apps.Paths
 
         public static string ViewPath(this IAppPaths app, IView view, PathTypes type) => Path.Combine(app.PathSwitch(view.IsShared, type), view.Path);
     }

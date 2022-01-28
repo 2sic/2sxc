@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
