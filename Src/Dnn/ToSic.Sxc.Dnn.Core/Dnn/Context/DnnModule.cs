@@ -36,6 +36,7 @@ namespace ToSic.Sxc.Dnn.Context
         public new DnnModule Init(ModuleInfo item, ILog parentLog)
         {
             base.Init(item, parentLog);
+            Log.Call($"{item?.ModuleID}")(null);
             return this;
         }
 
@@ -43,10 +44,12 @@ namespace ToSic.Sxc.Dnn.Context
         /// We don't use a Constructor because of DI
         /// So you must always call Init
         /// </summary>
-        public override IModule Init(int instanceId, ILog parentLog) 
+        public override IModule Init(int moduleId, ILog parentLog)
         {
-            var mod = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, false);
-            return Init(mod, parentLog);
+            var mod = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, false);
+            Init(mod, parentLog);
+            Log.Call($"{moduleId}")(null);
+            return this;
         }
 
         #endregion

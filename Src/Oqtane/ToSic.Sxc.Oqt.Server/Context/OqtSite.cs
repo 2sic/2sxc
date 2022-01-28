@@ -4,11 +4,11 @@ using Oqtane.Repository;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
             Lazy<IServerPaths> serverPaths,
             Lazy<OqtZoneMapper> zoneMapper,
             Lazy<OqtCulture> oqtCulture,
-            Lazy<ILinkHelper> linkHelperLazy)
+            Lazy<ILinkHelper> linkHelperLazy): base(OqtConstants.OqtLogPrefix)
         {
             _siteStateInitializer = siteStateInitializer;
             _siteRepository = siteRepository;
@@ -48,22 +48,17 @@ namespace ToSic.Sxc.Oqt.Server.Context
 
         public OqtSite Init(Site site)
         {
-            UnwrappedContents = site;
+            _contents = site;
             return this;
         }
 
-        public override ISite Init(int siteId)
+        public override ISite Init(int siteId, ILog parentLog)
         {
-            UnwrappedContents = _siteRepository.Value.GetSite(siteId);
+            _contents = _siteRepository.Value.GetSite(siteId);
             return this;
         }
 
-        public override Site UnwrappedContents
-        {
-            get => _unwrapped ??= _siteRepository.Value.GetSite(Alias.SiteId);
-            protected set => _unwrapped = value;
-        }
-        private Site _unwrapped;
+        public override Site UnwrappedContents => _contents ??= _siteRepository.Value.GetSite(Alias.SiteId);
         private Alias Alias => _siteStateInitializer.InitializedState.Alias;
 
         /// <inheritdoc />
@@ -78,7 +73,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
         private string _currentCultureCode;
 
         /// <inheritdoc />
-        public override int Id => UnwrappedContents.SiteId;
+        public override int Id => _contents.SiteId;
 
         public override string Url
         {
@@ -97,7 +92,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
         public override string UrlRoot => Alias.Name;
 
         /// <inheritdoc />
-        public override string Name => UnwrappedContents.Name;
+        public override string Name => _contents.Name;
 
         [PrivateApi]
         public override string AppsRootPhysical => string.Format(OqtConstants.AppRootPublicBase, Id);
@@ -110,7 +105,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
 
 
         /// <inheritdoc />
-        public override string ContentPath => string.Format(OqtConstants.ContentRootPublicBase, UnwrappedContents.TenantId, Id);
+        public override string ContentPath => string.Format(OqtConstants.ContentRootPublicBase, _contents.TenantId, Id);
 
         public override int ZoneId
         {

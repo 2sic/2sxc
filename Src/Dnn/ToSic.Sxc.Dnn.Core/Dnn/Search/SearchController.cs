@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Search
             var appId = module.BlockIdentifier.AppId;
             if (appId == AppConstants.AppIdNotFound || appId == Eav.Constants.NullId) return wrapLog("cancel", "no app id");
 
-            DnnSite = ((DnnSite)_serviceProvider.Build<ISite>()).TrySwap(DnnModule);
+            DnnSite = ((DnnSite)_serviceProvider.Build<ISite>()).TrySwap(DnnModule, Log);
 
             // Ensure cache builds up with correct primary language
             // In case it's not loaded yet

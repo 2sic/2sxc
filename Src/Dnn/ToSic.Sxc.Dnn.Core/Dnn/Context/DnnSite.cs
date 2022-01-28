@@ -7,6 +7,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Web;
 
@@ -18,45 +19,51 @@ namespace ToSic.Sxc.Dnn.Context
     [PrivateApi("this is just internal, external users don't really have anything to do with this")]
     public sealed class DnnSite: Site<PortalSettings>
     {
-
         #region Constructors and DI
 
         /// <summary>
         /// DI Constructor, will get the current portal settings
         /// #TodoDI not ideal yet, as PortalSettings.current is still retrieved from global
         /// </summary>
-        public DnnSite(Lazy<IZoneMapper> zoneMapperLazy, Lazy<ILinkHelper> linkHelperLazy)
+        public DnnSite(Lazy<IZoneMapper> zoneMapperLazy, Lazy<ILinkHelper> linkHelperLazy): base(DnnConstants.LogName)
         {
             _zoneMapperLazy = zoneMapperLazy;
             _linkHelperLazy = linkHelperLazy;
-            Swap(null);
+            Swap(null, null);
         }
         private readonly Lazy<IZoneMapper> _zoneMapperLazy;
         private readonly Lazy<ILinkHelper> _linkHelperLazy;
 
         /// <inheritdoc />
-        public override ISite Init(int siteId) => Swap(new PortalSettings(siteId));
+        public override ISite Init(int siteId, ILog parentLog) => Swap(new PortalSettings(siteId), parentLog);
 
         #endregion
 
         #region Swap new Portal Settings into this object
 
-        public DnnSite Swap(PortalSettings settings)
+        public DnnSite Swap(PortalSettings settings, ILog extLogOrNull)
         {
-            UnwrappedContents = KeepBestPortalSettings(settings);
+            var wrapLog = extLogOrNull.SafeCall<DnnSite>();
+            _contents = KeepBestPortalSettings(settings);
 
             // reset language info to be sure to get it from the latest source
             _currentCulture = null;
             _defaultLanguage = null;
+            _zoneId = null;
 
-            return this;
+            return wrapLog($"Site Id {Id}", this);
         }
 
-        public DnnSite TrySwap(ModuleInfo module)
+        public DnnSite TrySwap(ModuleInfo module, ILog extLog)
         {
-            if (module == null || module.OwnerPortalID < 0) return this;
+            var wrapLog = extLog.Call<DnnSite>($"Owner Site: {module?.OwnerPortalID}, Current Site: {module?.PortalID}");
+
+            if (module == null) return wrapLog("no module", this);
+            if (module.OwnerPortalID < 0) return wrapLog("no change, owner < 0", this);
+
             var modulePortalSettings = new PortalSettings(module.OwnerPortalID);
-            return Swap(modulePortalSettings);
+            Swap(modulePortalSettings, extLog);
+            return wrapLog("", this);
         }
 
         /// <summary>
@@ -68,17 +75,20 @@ namespace ToSic.Sxc.Dnn.Context
         /// </summary>
         /// <param name="settings"></param>
         /// <returns></returns>
-        private static PortalSettings KeepBestPortalSettings(PortalSettings settings)
+        private static PortalSettings KeepBestPortalSettings(PortalSettings settings, ILog extLogOrNull = null)
         {
+            var safeWrap = extLogOrNull.SafeCall<PortalSettings>();
+
             // in case we don't have an HTTP Context with current portal settings, don't try anything
-            if (PortalSettings.Current == null) return settings;
+            if (PortalSettings.Current == null) return safeWrap("null", settings);
 
             // If we don't have settings, or they point to the same portal, then use that
-            if (settings == null || settings == PortalSettings.Current || settings.PortalId == PortalSettings.Current.PortalId)
-                return PortalSettings.Current;
+            if (settings == null) return safeWrap("null, use current", PortalSettings.Current);
+            if (settings == PortalSettings.Current) return safeWrap("is current, use current", PortalSettings.Current);
+            if (settings.PortalId == PortalSettings.Current.PortalId) return safeWrap("id=current, use current", PortalSettings.Current);
 
             // fallback: use supplied settings
-            return settings;
+            return safeWrap("use new settings", settings);
         }
 
 

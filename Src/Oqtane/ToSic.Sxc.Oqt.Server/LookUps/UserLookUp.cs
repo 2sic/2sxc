@@ -22,9 +22,9 @@ namespace ToSic.Sxc.Oqt.Server.LookUps
                 return key.ToLowerInvariant() switch
                 {
                     "id" => $"{_oqtUser.Id}",
-                    "username" => $"{_oqtUser.UnwrappedContents.Username}",
-                    "displayname" => $"{_oqtUser.UnwrappedContents.DisplayName}",
-                    "email" => $"{_oqtUser.UnwrappedContents.Email}",
+                    "username" => $"{_oqtUser.GetContents().Username}",
+                    "displayname" => $"{_oqtUser.GetContents().DisplayName}",
+                    "email" => $"{_oqtUser.GetContents().Email}",
                     "guid" => $"{_oqtUser.Guid}",
 
                     //"issuperuser" => $"{_oqtUser.IsSuperUser}",

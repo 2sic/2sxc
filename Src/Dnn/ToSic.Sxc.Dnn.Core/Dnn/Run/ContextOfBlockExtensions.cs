@@ -15,11 +15,11 @@ namespace ToSic.Sxc.Dnn.Run
         {
             context.Init(parentLog);
             var log = context.Log;
-            var wrapLog = log.Call<IContextOfBlock>("static init");
-            log.Add("Will try-swap module info into site");
-            ((DnnSite)context.Site).TrySwap(dnnModule);
+            var wrapLog = log.Call<IContextOfBlock>(message: "static init");
+            log.Add($"Will try-swap module info of {dnnModule.ModuleID} into site");
+            ((DnnSite)context.Site).TrySwap(dnnModule, log);
             log.Add("Will init module");
-            ((DnnModule)context.Module).Init(dnnModule, parentLog);
+            ((DnnModule)context.Module).Init(dnnModule, log);
             return wrapLog(null, InitPageOnly(context));
         }
 

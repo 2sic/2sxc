@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Oqt.Server.LookUps
             _alreadyTried = true;
             var ctx = _ctxResolver.BlockOrNull();
             var module = (OqtModule)ctx?.Module;
-            return module?.UnwrappedContents;
+            return module?.GetContents();
         }
 
         private bool _alreadyTried;
