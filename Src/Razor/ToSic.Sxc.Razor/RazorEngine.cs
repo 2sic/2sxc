@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Razor
                     rzv =>
                     {
                         if (rzv.RazorPage is not IRazor asSxc) return;
-                        asSxc.DynamicCodeCoupling(dynCode);
+                        asSxc.ConnectToRoot(dynCode);
                         // Note: Don't set the purpose here any more, it's a deprecated feature in 12+
                     });
                 var writer = new StringWriter();

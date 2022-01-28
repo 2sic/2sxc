@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Web.PageService
     public partial class PageService: HasLog, 
             // Important: Write with namespace, because it's easy to confuse with IPageService it supports
             ToSic.Sxc.Services.IPageService, 
-            INeedsCodeRoot,
+            INeedsDynamicCodeRoot,
 #pragma warning disable CS0618
             // Important: Write with namespace, because it's easy to confuse with IPageService it supports
             ToSic.Sxc.Web.IPageService    // Keep for compatibility with some Apps released in v12
@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Web.PageService
             PageServiceShared = pageServiceShared;
         }
 
-        public void AddBlockContext(IDynamicCodeRoot codeRoot)
+        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             CodeRoot = codeRoot;
             Log.LinkTo(codeRoot?.Log);

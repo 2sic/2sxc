@@ -43,9 +43,9 @@ namespace ToSic.Sxc.Oqt.Server.Services
         }
 
 
-        public override void AddBlockContext(IDynamicCodeRoot codeRoot)
+        public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
-            base.AddBlockContext(codeRoot);
+            base.ConnectToRoot(codeRoot);
             _context = codeRoot.Block?.Context;
         }
         

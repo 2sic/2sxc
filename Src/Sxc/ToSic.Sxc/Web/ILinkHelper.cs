@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Web
     /// Helpers to create links with parameters or base-tag links (important for SPAs)
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public interface ILinkHelper: INeedsCodeRoot
+    public interface ILinkHelper: INeedsDynamicCodeRoot
     {
         /// <summary>
         /// returns a link to the current page with parameters resolved in a way that DNN wants it

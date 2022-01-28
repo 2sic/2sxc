@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Web
 
 
             // Forward the context
-            DynamicCodeCoupling(typedParent._DynCodeRoot);
+            ConnectToRoot(typedParent._DynCodeRoot);
             try
             {
                 Log.Add("@RenderPage:" + VirtualPath);
@@ -106,11 +106,11 @@ namespace ToSic.Sxc.Web
         private ILog _log;
         #endregion
 
-        public void DynamicCodeCoupling(IDynamicCodeRoot parent)
+        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             // if (!(parent is IDynamicCodeRoot isDynCode)) return;
 
-            _DynCodeRoot = parent; // isDynCode;
+            _DynCodeRoot = codeRoot; // isDynCode;
             _log = new Log("Rzr.Comp", _DynCodeRoot?.Log);
             var wrapLog = Log.Call();
             wrapLog("ok");

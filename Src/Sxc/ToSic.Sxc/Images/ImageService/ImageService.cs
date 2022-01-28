@@ -6,7 +6,7 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Images
 {
-    public partial class ImageService: HasLog<ImageService>, IImageService, INeedsCodeRoot
+    public partial class ImageService: HasLog<ImageService>, IImageService, INeedsDynamicCodeRoot
     {
         #region Constructor and Inits
 
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Images
         internal ImgResizeLinker ImgLinker { get; }
         private readonly IFeaturesService _features;
 
-        public void AddBlockContext(IDynamicCodeRoot codeRoot) => _codeRootOrNull = codeRoot;
+        public void ConnectToRoot(IDynamicCodeRoot codeRoot) => _codeRootOrNull = codeRoot;
         private IDynamicCodeRoot _codeRootOrNull;
 
         #endregion

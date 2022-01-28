@@ -61,8 +61,8 @@ namespace ToSic.Sxc.Code
         public TService GetService<TService>()
         {
             var newService = _serviceProvider.Build<TService>();
-            if(newService is INeedsCodeRoot newWithNeeds)
-                newWithNeeds.AddBlockContext(this);
+            if(newService is INeedsDynamicCodeRoot newWithNeeds)
+                newWithNeeds.ConnectToRoot(this);
 
             return newService;
         }

@@ -4,8 +4,8 @@ namespace ToSic.Sxc.Code
 {
     // Todo: Merge with ICoupledDynamicCode as it does the same thing
     [PrivateApi]
-    public interface INeedsCodeRoot
+    public interface INeedsDynamicCodeRoot
     {
-        void AddBlockContext(IDynamicCodeRoot codeRoot);
+        void ConnectToRoot(IDynamicCodeRoot codeRoot);
     }
 }

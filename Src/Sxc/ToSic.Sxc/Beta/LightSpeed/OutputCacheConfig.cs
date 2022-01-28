@@ -6,7 +6,7 @@ using ToSic.Sxc.Code;
 namespace ToSic.Sxc.Beta.Lightspeed
 {
     [PrivateApi]
-    public class OutputCacheConfig: INeedsCodeRoot
+    public class OutputCacheConfig: INeedsDynamicCodeRoot
     {
         internal const string DynCodePiggyBackId = "OutputCacheConfig";
 
@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Beta.Lightspeed
 
         #region Connect to DynamicCodeRoot
 
-        public void AddBlockContext(IDynamicCodeRoot codeRoot)
+        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             _codeRoot = (DynamicCodeRoot)codeRoot;
 

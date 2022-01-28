@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Razor
 
         #region Connect to DynamicCodeRoot
 
-        public void AddBlockContext(IDynamicCodeRoot codeRoot)
+        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             CodeRoot = codeRoot;
         }

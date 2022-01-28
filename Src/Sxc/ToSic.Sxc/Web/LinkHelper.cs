@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Web
         }
         private ImgResizeLinker ImgLinker { get; }
 
-        public virtual void AddBlockContext(IDynamicCodeRoot codeRoot)
+        public virtual void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             CodeRoot = codeRoot;
             Log.LinkTo(codeRoot.Log);

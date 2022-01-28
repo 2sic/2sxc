@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Web
             throw new System.NotImplementedException();
         }
 
-        public void AddBlockContext(IDynamicCodeRoot codeRoot)
+        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             throw new System.NotImplementedException();
         }

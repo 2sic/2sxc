@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Services
         }
 
         /// <inheritdoc />
-        public virtual void AddBlockContext(IDynamicCodeRoot codeRoot)
+        public virtual void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             Log.LinkTo(codeRoot.Log);
             App = codeRoot.App;

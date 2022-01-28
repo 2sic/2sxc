@@ -10,13 +10,13 @@ using ToSic.Sxc.Dnn.Run;
 namespace ToSic.Sxc.Dnn.Context
 {
     [PrivateApi("this is just internal, external users don't really have anything to do with this")]
-    public class DnnContext : IDnnContext, INeedsCodeRoot
+    public class DnnContext : IDnnContext, INeedsDynamicCodeRoot
     {
         /// <summary>
         /// Build DNN Helper
         /// Note that the context can be null, in which case it will have no module context, and default to the current portal
         /// </summary>
-        public void AddBlockContext(IDynamicCodeRoot codeRoot)
+        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             var moduleContext = codeRoot.Block?.Context?.Module;
             Module = (moduleContext as Module<ModuleInfo>)?.UnwrappedContents;

@@ -3,13 +3,7 @@
 namespace ToSic.Sxc.Code
 {
     [PrivateApi]
-    public interface ICoupledDynamicCode: IHasDynamicCodeRoot
+    public interface ICoupledDynamicCode: IHasDynamicCodeRoot, INeedsDynamicCodeRoot
     {
-        /// <summary>
-        ///  Connect to the parent. Even though it experts an IDynamicCode, it will usually just work properly when it gets an IDynamicCodeRoot
-        /// </summary>
-        /// <param name="parent"></param>
-        void DynamicCodeCoupling(IDynamicCodeRoot parent);
-
     }
 }
