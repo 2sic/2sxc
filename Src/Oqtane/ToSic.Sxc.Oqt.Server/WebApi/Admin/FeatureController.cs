@@ -70,5 +70,16 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         public bool Save([FromBody] FeaturesDto featuresManagementResponse) =>
             _featuresBackend.Init(Log).SaveFeatures(featuresManagementResponse);
 
+        /// <summary>
+        /// POST updated features JSON configuration.
+        /// </summary>
+        /// <remarks>
+        /// Added in 2sxc 13
+        /// </remarks>
+        [HttpPost]
+        [Authorize(Roles = RoleNames.Host)]
+        public bool SaveNew([FromBody] List<FeatureNewDto> featuresManagementResponse) =>
+            _featuresBackend.Init(Log).SaveNewFeatures(featuresManagementResponse);
+
     }
 }
