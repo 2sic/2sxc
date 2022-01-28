@@ -1,4 +1,5 @@
 ﻿using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Paths;
 
 namespace ToSic.Sxc.WebApi.Assets
 {

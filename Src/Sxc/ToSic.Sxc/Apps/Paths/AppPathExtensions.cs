@@ -1,12 +1,11 @@
 ﻿using System;
 using System.IO;
-using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Engines;
 
-namespace ToSic.Sxc.Apps
+namespace ToSic.Sxc.Apps.Paths
 {
-    public static class AppExtensions
+    public static class AppPathExtensions
     {
         public static string PhysicalPathSwitch(this IAppPaths app, bool isShared) => isShared ? app.PhysicalPathShared : app.PhysicalPath;
 

@@ -1,8 +1,12 @@
 ﻿using System;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
+using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Run;
+using static System.IO.Path;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -10,10 +14,15 @@ namespace ToSic.Sxc.Apps.Paths
 {
     public class AppPaths: HasLog, IAppPaths
     {
-        public AppPaths(Lazy<AppPathHelpers> pathHelpers) : base($"{LogNames.Eav}.AppPth") => _helpersLazy = pathHelpers;
-        private readonly Lazy<AppPathHelpers> _helpersLazy;
-        private AppPathHelpers _helpers;
-        private AppPathHelpers Helpers => _helpers ?? (_helpers = _helpersLazy.Value.Init(Log));
+        public AppPaths(Lazy<IServerPaths> serverPaths, Lazy<IGlobalConfiguration> config) : base($"{LogNames.Eav}.AppPth")
+        {
+            _serverPaths = serverPaths;
+            _config = config;
+        }
+
+        private readonly Lazy<IServerPaths> _serverPaths;
+        private readonly Lazy<IGlobalConfiguration> _config;
+
         /// <summary>
         /// 
         /// </summary>
@@ -23,8 +32,8 @@ namespace ToSic.Sxc.Apps.Paths
         /// <returns></returns>
         public AppPaths Init(ISite site, AppState appState, ILog parentLog)
         {
-            _site = site;
-            _appState = appState;
+            this._site = site;
+            this._appState = appState;
             Log.LinkTo(parentLog);
             InitDone = true;
             return this;
@@ -33,16 +42,23 @@ namespace ToSic.Sxc.Apps.Paths
         private AppState _appState;
         public bool InitDone;
 
-        public string Path => _appState.GetPiggyBack(nameof(Path), () => Helpers.Link(_site, _appState));
+        public string Path => _appState.GetPiggyBack(nameof(Path), 
+            () => _site.AppAssetsLinkTemplate.Replace(AppConstants.AppFolderPlaceholder, _appState.Folder).ToAbsolutePathForwardSlash());
 
-        public string PathShared => _appState.GetPiggyBack(nameof(PathShared), () => Helpers.LinkShared(_appState));
+        public string PathShared => _appState.GetPiggyBack(nameof(PathShared), 
+            () => Combine(_config.Value.GlobalSiteFolder, Settings.AppsRootFolder, _appState.Folder)
+                .ToAbsolutePathForwardSlash());
 
-        public string PhysicalPath => _appState.GetPiggyBack(nameof(PhysicalPath), () => Helpers.PathFull(_site, _appState));
+        public string PhysicalPath => _appState.GetPiggyBack(nameof(PhysicalPath), 
+            () => Combine(_site.AppsRootPhysicalFull, _appState.Folder));
 
-        public string PhysicalPathShared => _appState.GetPiggyBack(nameof(PhysicalPathShared), () => Helpers.PathFullShared(_appState));
+        public string PhysicalPathShared => _appState.GetPiggyBack(nameof(PhysicalPathShared), 
+            () => _serverPaths.Value.FullAppPath(Combine(_config.Value.GlobalSiteFolder, Settings.AppsRootFolder, _appState.Folder)));
 
-        public string RelativePath => _appState.GetPiggyBack(nameof(RelativePath), () => Helpers.PathRelative(_site, _appState));
+        public string RelativePath => _appState.GetPiggyBack(nameof(RelativePath), 
+            () => Combine(_site.AppsRootPhysical, _appState.Folder));
         
-        public string RelativePathShared => _appState.GetPiggyBack(nameof(RelativePathShared), () => Helpers.PathRelativeShared(_appState));
+        public string RelativePathShared => _appState.GetPiggyBack(nameof(RelativePathShared), 
+            () => Combine(_config.Value.GlobalSiteFolder, Settings.AppsRootFolder, _appState.Folder).ToAbsolutePathForwardSlash());
     }
 }

@@ -23,15 +23,13 @@ namespace ToSic.Sxc.Apps
     {
         #region DI Constructors
 
-        public App(AppDependencies dependencies, Lazy<AppPathHelpers> appPathHelpersLazy, Lazy<AppPaths> appPathsLazy) : base(dependencies, "App.SxcApp")
+        public App(AppDependencies dependencies, Lazy<GlobalPaths> globalPaths, Lazy<AppPaths> appPathsLazy) : base(dependencies, "App.SxcApp")
         {
-            _appPathHelpersLazy = appPathHelpersLazy;
+            _globalPaths = globalPaths;
             _appPathsLazy = appPathsLazy;
         }
 
-        private readonly Lazy<AppPathHelpers> _appPathHelpersLazy;
-        private AppPathHelpers _appPathHelpers;
-        private AppPathHelpers AppPathHelpers => _appPathHelpers ?? (_appPathHelpers = _appPathHelpersLazy.Value.Init(Log));
+        private readonly Lazy<GlobalPaths> _globalPaths;
         private readonly Lazy<AppPaths> _appPathsLazy;
         private AppPaths _appPaths;
         private AppPaths AppPaths => _appPaths ?? (_appPaths = _appPathsLazy.Value.Init(Site, AppState, Log));
@@ -133,7 +131,7 @@ namespace ToSic.Sxc.Apps
                 // Primary app - we only PiggyBack cache the icon in this case
                 // Because otherwise the icon could get moved, and people would have a hard time seeing the effect
                 if (NameId == Eav.Constants.PrimaryAppGuid)
-                    return _thumbnail = AppState.GetPiggyBack(nameof(Thumbnail), () => AppPathHelpers.AssetsLocation(AppConstants.AppPrimaryIconFile, PathTypes.Link));
+                    return _thumbnail = AppState.GetPiggyBack(nameof(Thumbnail), () => _globalPaths.Value.SxcAssetsLocationWipMoveOut(AppConstants.AppPrimaryIconFile, PathTypes.Link));
 
                 // standard app (not global) try to find app-icon in its (portal) app folder
                 if (!AppState.IsGlobal())
