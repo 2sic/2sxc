@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.Apps;
@@ -21,16 +20,14 @@ namespace ToSic.Sxc.WebApi.Context
         public class Dependencies
         {
             public IContextOfSite SiteCtx { get; }
-            public JsContextLanguage JsCtx { get; }
             public Apps.IApp AppToLaterInitialize { get; }
             public IAppStates AppStates { get; }
             public Lazy<AppUserLanguageCheck> AppUserLanguageCheck { get; }
             public Lazy<LanguagesBackend> LanguagesBackend { get; }
 
-            public Dependencies(IContextOfSite siteCtx, JsContextLanguage jsCtx, Apps.App appToLaterInitialize, IAppStates appStates, Lazy<AppUserLanguageCheck> appUserLanguageCheck, Lazy<LanguagesBackend> languagesBackend)
+            public Dependencies(IContextOfSite siteCtx, Apps.App appToLaterInitialize, IAppStates appStates, Lazy<AppUserLanguageCheck> appUserLanguageCheck, Lazy<LanguagesBackend> languagesBackend)
             {
                 SiteCtx = siteCtx;
-                JsCtx = jsCtx;
                 AppToLaterInitialize = appToLaterInitialize;
                 AppStates = appStates;
                 AppUserLanguageCheck = appUserLanguageCheck;
@@ -86,15 +83,14 @@ namespace ToSic.Sxc.WebApi.Context
         protected virtual ContextLanguageDto GetLanguage()
         {
             if (ZoneId == 0) return null;
-            var language = Deps.JsCtx.Init(Deps.SiteCtx.Site, ZoneId);
+            var site = Deps.SiteCtx.Site;
 
             var converted = Deps.LanguagesBackend.Value.Init(Log).GetLanguagesOfApp(AppState);
 
             return new ContextLanguageDto
             {
-                Current = language.Current,
-                Primary = language.Primary,
-                All = language.All.ToDictionary(l => l.key.ToLowerInvariant(), l => l.name),
+                Current = site.CurrentCultureCode,
+                Primary = site.DefaultCultureCode,
                 List = converted,
             };
         }
