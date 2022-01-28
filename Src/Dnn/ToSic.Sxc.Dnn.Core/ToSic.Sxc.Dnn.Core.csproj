@@ -159,7 +159,7 @@
     <Compile Include="Dnn\Web\DnnModuleSettings.cs" />
     <Compile Include="Dnn\Cms\DnnPagePublishing.cs" />
     <Compile Include="Dnn\Cms\DnnPagePublishing_ModuleSettings.cs" />
-    <Compile Include="Dnn\Context\IDnnContext.cs" />
+    <Compile Include="Dnn\Run\IDnnContext.cs" />
     <Compile Include="Dnn\Search\SearchController.cs" />
     <Compile Include="Dnn\Search\SearchIndexException.cs" />
     <Compile Include="Dnn\Context\DnnUser.cs" />

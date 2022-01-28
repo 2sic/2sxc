@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Dnn.Context
     /// <summary>
     /// This is a DNN implementation of a Tenant-object. 
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
+    [PrivateApi("this is just internal, external users don't really have anything to do with this")]
     public sealed class DnnSite: Site<PortalSettings>
     {
 

@@ -13,20 +13,20 @@ namespace ToSic.Sxc.Web
     [PrivateApi]
     public abstract class LinkHelper : HasLog, ILinkHelper
     {
-        private ImgResizeLinker ImgLinker { get; }
-        [PrivateApi] protected IApp App;
-
         protected LinkHelper(ImgResizeLinker imgLinker) : base($"{Constants.SxcLogName}.LnkHlp")
         {
             ImgLinker = imgLinker;
             ImgLinker.Init(Log);
         }
+        private ImgResizeLinker ImgLinker { get; }
 
         public virtual void AddBlockContext(IDynamicCodeRoot codeRoot)
         {
+            CodeRoot = codeRoot;
             Log.LinkTo(codeRoot.Log);
-            App = codeRoot.App;
         }
+        [PrivateApi] protected IDynamicCodeRoot CodeRoot;
+        [PrivateApi] protected IApp App => CodeRoot.App;
 
 
         /// <inheritdoc />

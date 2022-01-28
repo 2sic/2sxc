@@ -8,12 +8,12 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Context;
 
-namespace ToSic.Sxc.Dnn.Run
+namespace ToSic.Sxc.Dnn.Context
 {
     /// <summary>
     /// The DNN implementation of a Block Container (a Module).
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
+    [PrivateApi("this is just internal, external users don't really have anything to do with this")]
     public class DnnModule: Module<ModuleInfo>
     {
         #region Constructors and DI

@@ -2,7 +2,6 @@
 using System.Web;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Images;
@@ -14,61 +13,23 @@ namespace ToSic.Sxc.Dnn.Web
     /// <summary>
     /// The DNN implementation of the <see cref="ILinkHelper"/>.
     /// </summary>
-    [PublicApi_Stable_ForUseInYourCode]
+    [PrivateApi("This implementation shouldn't be visible")]
     public class DnnLinkHelper : LinkHelper
     {
-        [PrivateApi] private readonly IDnnContext _dnn;
-
         [PrivateApi]
-        public DnnLinkHelper(IDnnContext dnnContext, ImgResizeLinker imgLinker): base(imgLinker)
-        {
-            _dnn = dnnContext;
-        }
+        public DnnLinkHelper(ImgResizeLinker imgLinker): base(imgLinker) { }
 
-        public override void AddBlockContext(IDynamicCodeRoot codeRoot)
-        {
-            base.AddBlockContext(codeRoot);
-            ((DnnContext) _dnn).Init(codeRoot.Block?.Context?.Module);
-        }
-
-        ///// <inheritdoc />
-        //public override string To(string noParamOrder = Eav.Parameters.Protector, int? pageId = null, object parameters = null, string api = null)
-        //{
-        //    // prevent incorrect use without named parameters
-        //    Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
-
-        //    // Check initial conflicting values.
-        //    if (pageId != null && api != null)
-        //        throw new ArgumentException($"Multiple properties like '{nameof(api)}' or '{nameof(pageId)}' have a value - only one can be provided.");
-
-        //    var strParams = ParametersToString(parameters);
-
-        //    if (api != null) return Api(path: LinkHelpers.CombineApiWithQueryString(api.TrimPrefixSlash(), strParams));
-
-        //    return parameters == null
-        //        ? _dnn.Tab.FullUrl
-        //        : DotNetNuke.Common.Globals.NavigateURL(pageId ?? _dnn.Tab.TabID, "", strParams); // NavigateURL returns absolute links
-        //}
+        [PrivateApi] private IDnnContext Dnn => _dnn ?? (_dnn = CodeRoot.GetService<IDnnContext>());
+        private IDnnContext _dnn;
 
         protected override string ToApi(string api, string parameters = null) 
             => Api(path: LinkHelpers.CombineApiWithQueryString(api.TrimPrefixSlash(), parameters));
 
-        protected override string ToPage(int? pageId, string parameters = null)
-        {
-            return parameters == null
-                ? _dnn.Tab.FullUrl
-                : DotNetNuke.Common.Globals.NavigateURL(pageId ?? _dnn.Tab.TabID, "", parameters); // NavigateURL returns absolute links
-        }
+        protected override string ToPage(int? pageId, string parameters = null) =>
+            parameters == null
+                ? Dnn.Tab.FullUrl
+                : DotNetNuke.Common.Globals.NavigateURL(pageId ?? Dnn.Tab.TabID, "", parameters); // NavigateURL returns absolute links
 
-
-        //protected override string ToImplementation(int? pageId = null, string parameters = null, string api = null)
-        //{
-        //    if (api != null) return Api(path: LinkHelpers.CombineApiWithQueryString(api.TrimPrefixSlash(), parameters));
-
-        //    return parameters == null
-        //        ? _dnn.Tab.FullUrl
-        //        : DotNetNuke.Common.Globals.NavigateURL(pageId ?? _dnn.Tab.TabID, "", parameters); // NavigateURL returns absolute links
-        //}
 
         private string Api(string noParamOrder = Eav.Parameters.Protector, string path = null)
         {
@@ -92,14 +53,8 @@ namespace ToSic.Sxc.Dnn.Web
             return relativePath;
         }
 
-        public override string GetCurrentLinkRoot()
-        {
-            return HttpContext.Current?.Request?.Url?.GetLeftPart(UriPartial.Authority) ?? string.Empty;
-        }
+        public override string GetCurrentLinkRoot() => HttpContext.Current?.Request?.Url?.GetLeftPart(UriPartial.Authority) ?? string.Empty;
 
-        public override string GetCurrentRequestUrl()
-        {
-            return HttpContext.Current?.Request?.Url?.AbsoluteUri ?? string.Empty;
-        }
+        public override string GetCurrentRequestUrl() => HttpContext.Current?.Request?.Url?.AbsoluteUri ?? string.Empty;
     }
 }

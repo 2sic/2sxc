@@ -39,7 +39,6 @@ using ToSic.Sxc.Search;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.Plumbing;
 using Type = System.Type;
 
@@ -99,12 +98,6 @@ namespace ToSic.Sxc.Dnn.StartUp
             
             // Module cannot yet be scoped, until we have a per-module scope at some time
             services.TryAddTransient<IModule, DnnModule>();
-            //services.TryAddScoped<IModule, DnnModule>();
-
-            //services.TryAddTransient<DnnModule>();
-            //services.TryAddTransient<DnnSite>();
-
-            //
             services.TryAddTransient<IValueConverter, DnnValueConverter>();
 
             services.TryAddTransient<XmlExporter, DnnXmlExporter>();
@@ -180,7 +173,6 @@ namespace ToSic.Sxc.Dnn.StartUp
             } catch { /* ignore */ }
             
             // new in v12.02 - RazorBlade DI
-            //services.TryAddScoped<IPageChangeApplicator, DnnPageChanges>();
             services.TryAddScoped<DnnPageChanges>();
             services.TryAddTransient<DnnClientResources>();
 

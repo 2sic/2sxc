@@ -9,7 +9,7 @@ using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Dnn.Context
 {
-    [PrivateApi("still WIP")]
+    [PrivateApi("this is just internal, external users don't really have anything to do with this")]
     public class DnnUser: IUser<UserInfo>
     {
         public DnnUser() { }

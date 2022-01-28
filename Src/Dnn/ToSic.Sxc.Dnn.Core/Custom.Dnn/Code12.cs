@@ -15,6 +15,5 @@ namespace Custom.Dnn
     {
         /// <inheritdoc />
         public IDnnContext Dnn => (_DynCodeRoot as DnnDynamicCodeRoot)?.Dnn;
-
     }
 }
