@@ -73,7 +73,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
         private string _currentCultureCode;
 
         /// <inheritdoc />
-        public override int Id => _contents.SiteId;
+        public override int Id => UnwrappedContents.SiteId;
 
         public override string Url
         {
