@@ -123,7 +123,7 @@
     <Compile Include="Dnn\Pages\Pages.cs" />
     <Compile Include="Dnn\Run\ContextOfBlockExtensions.cs" />
     <Compile Include="Dnn\Run\DnnAppFileSystemLoader.cs" />
-    <Compile Include="Dnn\Run\DnnContext.cs" />
+    <Compile Include="Dnn\Context\DnnContext.cs" />
     <Compile Include="Dnn\Factory.cs" />
     <Compile Include="Dnn\Run\DnnPlatformContext.cs" />
     <Compile Include="Dnn\Services\DnnPageChanges.cs" />
@@ -144,7 +144,7 @@
     <Compile Include="Dnn\DnnBusinessController.cs" />
     <Compile Include="Dnn\Run\DnnModule.cs" />
     <Compile Include="Dnn\Run\DnnPermissionCheck.cs" />
-    <Compile Include="Dnn\Run\DnnSite.cs" />
+    <Compile Include="Dnn\Context\DnnSite.cs" />
     <Compile Include="Dnn\Run\DnnValueConverter.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.Factory.cs" />
     <Compile Include="Dnn\ImportExport\DnnImportExportEnvironment.cs" />
@@ -159,10 +159,10 @@
     <Compile Include="Dnn\Web\DnnModuleSettings.cs" />
     <Compile Include="Dnn\Cms\DnnPagePublishing.cs" />
     <Compile Include="Dnn\Cms\DnnPagePublishing_ModuleSettings.cs" />
-    <Compile Include="Dnn\Run\IDnnContext.cs" />
+    <Compile Include="Dnn\Context\IDnnContext.cs" />
     <Compile Include="Dnn\Search\SearchController.cs" />
     <Compile Include="Dnn\Search\SearchIndexException.cs" />
-    <Compile Include="Dnn\Run\DnnUser.cs" />
+    <Compile Include="Dnn\Context\DnnUser.cs" />
     <Compile Include="Dnn\LookUp\DnnLookUpEngineResolver.cs" />
     <Compile Include="Dnn\LookUp\TokenReplaceDnn.cs" />
     <Compile Include="Dnn\LookUp\LookUpInDnnPropertyAccess.cs" />
