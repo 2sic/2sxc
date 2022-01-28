@@ -6,14 +6,9 @@ namespace ToSic.Sxc
 {
     public partial class Settings
     {
-        // Important note: always use static-readonly, NOT constant for .net 456
-        // reason is that we must ensure that the static constructor is called
-        // whenever anything is accessed
-        public const string AppsRootFolder = "2sxc";
-
-        // Version is used also as cachebreak for js assets.
-        // In past build revision was good cachebreak value, but since assemblies are deterministic 
-        // we use application start unix time as slow changing revision value for cachebreak purpose. 
+        // Version is used also as cache-break for js assets.
+        // In past build revision was good cache-break value, but since assemblies are deterministic 
+        // we use application start unix time as slow changing revision value for cache-break purpose. 
         //public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
         public static readonly Version Version =
             VersionWithFakeBuildNumber(Assembly.GetExecutingAssembly().GetName().Version);
@@ -30,8 +25,6 @@ namespace ToSic.Sxc
         public const string WebConfigTemplateFile = "WebConfigTemplate.config";
         public const string WebConfigFileName = "web.config";
         public const string SexyContentGroupName = "2sxc designers";
-
-        internal static readonly string AttributeSetStaticNameContentBlockTypeName = "ContentGroupReference";
 
         public class Installation
         {
@@ -73,7 +66,7 @@ namespace ToSic.Sxc
             // this is the last version which must run server-side change-code
             // it's not sql-code, as the SqlDataProvider files are imported by DNN, not by our code
             internal const string LastVersionWithServerChanges = "08.11.00";
-            internal const string LastVersionWithDnnDbChanges = "09.07.00"; // just fyi, not used anywhere
+            internal const string LastVersionWithDnnDbChanges = "13.01.00"; // just fyi, not used anywhere
         }
     }
 }

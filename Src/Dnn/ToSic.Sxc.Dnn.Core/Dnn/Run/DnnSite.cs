@@ -156,8 +156,8 @@ namespace ToSic.Sxc.Dnn.Run
         [PrivateApi]
         public override string AppAssetsLinkTemplate => AppsRootPhysical + "/" + AppConstants.AppFolderPlaceholder;
         
-        internal string AppsRootRelative => Path.Combine(UnwrappedContents.HomeDirectory, Settings.AppsRootFolder);
-        internal string SharedAppsRootRelative => Path.Combine(Globals.HostPath, Settings.AppsRootFolder);
+        internal string AppsRootRelative => Path.Combine(UnwrappedContents.HomeDirectory, AppConstants.AppsRootFolder);
+        internal string SharedAppsRootRelative => Path.Combine(Globals.HostPath, AppConstants.AppsRootFolder);
 
         [PrivateApi]
         public override string AppsRootPhysicalFull => HostingEnvironment.MapPath(AppsRootRelative);

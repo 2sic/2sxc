@@ -46,19 +46,19 @@ namespace ToSic.Sxc.Apps.Paths
             () => _site.AppAssetsLinkTemplate.Replace(AppConstants.AppFolderPlaceholder, _appState.Folder).ToAbsolutePathForwardSlash());
 
         public string PathShared => _appState.GetPiggyBack(nameof(PathShared), 
-            () => Combine(_config.Value.SharedAppsFolder, Settings.AppsRootFolder, _appState.Folder)
+            () => Combine(_config.Value.SharedAppsFolder, AppConstants.AppsRootFolder, _appState.Folder)
                 .ToAbsolutePathForwardSlash());
 
         public string PhysicalPath => _appState.GetPiggyBack(nameof(PhysicalPath), 
             () => Combine(_site.AppsRootPhysicalFull, _appState.Folder));
 
         public string PhysicalPathShared => _appState.GetPiggyBack(nameof(PhysicalPathShared), 
-            () => _serverPaths.Value.FullAppPath(Combine(_config.Value.SharedAppsFolder, Settings.AppsRootFolder, _appState.Folder)));
+            () => _serverPaths.Value.FullAppPath(Combine(_config.Value.SharedAppsFolder, AppConstants.AppsRootFolder, _appState.Folder)));
 
         public string RelativePath => _appState.GetPiggyBack(nameof(RelativePath), 
             () => Combine(_site.AppsRootPhysical, _appState.Folder));
         
         public string RelativePathShared => _appState.GetPiggyBack(nameof(RelativePathShared), 
-            () => Combine(_config.Value.SharedAppsFolder, Settings.AppsRootFolder, _appState.Folder).ToAbsolutePathForwardSlash());
+            () => Combine(_config.Value.SharedAppsFolder, AppConstants.AppsRootFolder, _appState.Folder).ToAbsolutePathForwardSlash());
     }
 }

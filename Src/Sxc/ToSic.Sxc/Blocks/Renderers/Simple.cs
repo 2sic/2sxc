@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.Blocks.Renderers
             var log = new Log("Htm.Render", parentBlock.Log, "simple");
 
             // if not the expected content-type, just output a hidden html placeholder
-            if (entity.Type.Name != Settings.AttributeSetStaticNameContentBlockTypeName)
+            if (entity.Type.Name != AppConstants.ContentGroupRefTypeName)
             {
                 log.Add("empty, will return hidden html placeholder");
                 return string.Format(EmptyMessage, entity.EntityId);
