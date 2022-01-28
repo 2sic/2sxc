@@ -3,6 +3,7 @@ using System.Web;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Web;
@@ -27,7 +28,7 @@ namespace ToSic.Sxc.Dnn.Web
         public override void AddBlockContext(IDynamicCodeRoot codeRoot)
         {
             base.AddBlockContext(codeRoot);
-            ((DnnContextOld) _dnn).Init(codeRoot.Block?.Context?.Module);
+            ((DnnContext) _dnn).Init(codeRoot.Block?.Context?.Module);
         }
 
         ///// <inheritdoc />

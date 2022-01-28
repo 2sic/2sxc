@@ -22,6 +22,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Adam;
 using ToSic.Sxc.Dnn.Code;
+using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.ImportExport;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.LookUp;
@@ -120,7 +121,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<AppPermissionCheck, DnnPermissionCheck>();
             services.TryAddTransient<DnnPermissionCheck>();
 
-            services.TryAddTransient<IDnnContext, DnnContextOld>();
+            services.TryAddTransient<IDnnContext, DnnContext>();
             services.TryAddTransient<ILinkHelper, DnnLinkHelper>();
             services.TryAddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
             services.TryAddTransient<DnnDynamicCodeRoot>();

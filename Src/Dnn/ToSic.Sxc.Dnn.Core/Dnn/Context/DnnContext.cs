@@ -2,19 +2,25 @@
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Entities.Users;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 
-
-namespace ToSic.Sxc.Dnn.Run
+namespace ToSic.Sxc.Dnn.Context
 {
-    public class DnnContextOld : IDnnContext
+    public class DnnContext : IDnnContext, INeedsCodeRoot
     {
+        public void AddBlockContext(IDynamicCodeRoot codeRoot)
+        {
+            throw new System.NotImplementedException();
+        }
+
+
         /// <summary>
         /// Build DNN Helper
         /// Note that the context can be null, in which case it will have no module context, and default to the current portal
         /// </summary>
         /// <param name="moduleContext"></param>
-        public DnnContextOld Init(IModule moduleContext)
+        public DnnContext Init(IModule moduleContext)
         {
             Module = (moduleContext as Module<ModuleInfo>)?.UnwrappedContents;
             // note: this may be a bug, I assume it should be Module.OwnerPortalId

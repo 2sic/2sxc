@@ -4,7 +4,7 @@ using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Entities.Users;
 using ToSic.Eav.Documentation;
 
-namespace ToSic.Sxc.Dnn.Run
+namespace ToSic.Sxc.Dnn.Context
 {
     /// <summary>
     /// Provides information about the current context within DNN.

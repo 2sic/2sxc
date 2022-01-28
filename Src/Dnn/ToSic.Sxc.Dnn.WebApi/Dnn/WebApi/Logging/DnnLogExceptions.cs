@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Filters;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 
 namespace ToSic.Sxc.Dnn.WebApi.Logging
@@ -24,7 +25,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Logging
                         ? context.Request.Properties[DnnConstants.EavLogKey] as ILog
                         : null;
                     var dnnContext = context.Request.Properties.ContainsKey(DnnConstants.DnnContextKey) 
-                        ? context.Request.Properties[DnnConstants.DnnContextKey] as DnnContextOld
+                        ? context.Request.Properties[DnnConstants.DnnContextKey] as DnnContext
                         : null;
                     DnnLogging.LogToDnn("2sxc-Api", "Auto-Log Exception", log, dnnContext, force: true);
                 }

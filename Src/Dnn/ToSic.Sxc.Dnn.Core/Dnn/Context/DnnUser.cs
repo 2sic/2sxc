@@ -6,12 +6,11 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
-using ToSic.Sxc.Context;
 
-namespace ToSic.Sxc.Dnn.Run
+namespace ToSic.Sxc.Dnn.Context
 {
     [PrivateApi("still WIP")]
-    public class DnnUser: IUser<UserInfo> //, ICmsUser
+    public class DnnUser: IUser<UserInfo>
     {
         public DnnUser() { }
 

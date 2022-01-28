@@ -1,17 +1,16 @@
-﻿using DotNetNuke.Common;
-using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
-using System;
+﻿using System;
 using System.IO;
 using System.Web.Hosting;
+using DotNetNuke.Common;
+using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Dnn.Run
+namespace ToSic.Sxc.Dnn.Context
 {
     /// <summary>
     /// This is a DNN implementation of a Tenant-object. 

@@ -142,7 +142,7 @@
     <Compile Include="Dnn\Web\DnnLinkHelper.cs" />
     <Compile Include="Dnn\Run\DnnModuleUpdater.cs" />
     <Compile Include="Dnn\DnnBusinessController.cs" />
-    <Compile Include="Dnn\Run\DnnModule.cs" />
+    <Compile Include="Dnn\Context\DnnModule.cs" />
     <Compile Include="Dnn\Run\DnnPermissionCheck.cs" />
     <Compile Include="Dnn\Context\DnnSite.cs" />
     <Compile Include="Dnn\Run\DnnValueConverter.cs" />
