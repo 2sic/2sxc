@@ -126,7 +126,6 @@ namespace ToSic.Sxc
 
             // 13 - cleaning up handling of app paths
             services.TryAddTransient<AppPaths>();
-            services.TryAddTransient<GlobalPaths>();
             services.TryAddTransient<AppFolderInitializer>();
             services.TryAddTransient<AppIconHelpers>();
 

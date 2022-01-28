@@ -6,6 +6,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
@@ -131,7 +132,8 @@ namespace ToSic.Sxc.Apps
                 // Primary app - we only PiggyBack cache the icon in this case
                 // Because otherwise the icon could get moved, and people would have a hard time seeing the effect
                 if (NameId == Eav.Constants.PrimaryAppGuid)
-                    return _thumbnail = AppState.GetPiggyBack(nameof(Thumbnail), () => _globalPaths.Value.SxcAssetsLocationWipMoveOut(AppConstants.AppPrimaryIconFile, PathTypes.Link));
+                    return _thumbnail = AppState.GetPiggyBack(nameof(Thumbnail), 
+                        () => _globalPaths.Value.GlobalPathTo(AppConstants.AppPrimaryIconFile, PathTypes.Link));
 
                 // standard app (not global) try to find app-icon in its (portal) app folder
                 if (!AppState.IsGlobal())
