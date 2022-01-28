@@ -49,7 +49,7 @@ namespace IntegrationSamples.SxcEdit01
             var hostingEnvironment = sp.Build<IHostEnvironment>();
             var globalConfig = sp.Build<IGlobalConfiguration>();
             globalConfig.GlobalFolder = Path.Combine(hostingEnvironment.ContentRootPath, "wwwroot\\system\\sxc");
-            globalConfig.GlobalSiteFolder = "todo - global apps not implemented yet";
+            globalConfig.SharedAppsFolder = "todo - global apps not implemented yet";
         }
 
         internal static IServiceCollection AddImplementations(this IServiceCollection services)
