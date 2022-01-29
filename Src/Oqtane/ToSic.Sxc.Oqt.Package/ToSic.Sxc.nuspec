@@ -30,7 +30,6 @@
     <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net5.0\ToSic.*.pdb" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Server\wwwroot\**\*.*" exclude="**\*.map;" target="wwwroot" />
     <!-- 3rd party dependencies -->
-    <!--<file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\refs\**\*.*" target="refs" />-->
 
     <!-- ToSic.Sxc.Dnn.Main PackageReference -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Connect.Koi.dll" target="lib\net5.0" />
@@ -54,6 +53,8 @@
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.Extensions.DependencyModel.dll" target="lib\net5.0" />
     <!-- ToSic.Eav.DataSources PackageReference -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\System.Data.SqlClient.dll" target="lib\net5.0" />
+    <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation default compilation context -->
+    <!--<file src="..\..\..\..\oqtane-razor-refs\net6.0\refs\*.dll" target="refs\net6.0" />-->
 
     <!-- ToSic.Imageflow.Oqtane 1.0.3 -->
     <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\lib\net5.0\ToSic.Imageflow.Oqt.Server.Oqtane.dll" target="lib\net5.0" />
