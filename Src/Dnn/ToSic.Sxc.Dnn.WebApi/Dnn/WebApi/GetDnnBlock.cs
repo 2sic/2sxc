@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Dnn.WebApi
             if (moduleInfo == null)
                 return wrapLog("request ModuleInfo not found", null);
             
-            var context = _serviceProvider.Build<IContextOfBlock>().Init(moduleInfo, log);
+            var context = _serviceProvider.Build<IContextOfBlock>().InitDnnSiteModuleAndBlockContext(moduleInfo, log);
             // WebAPI calls can contain the original parameters that made the page, so that views can respect that
             // Probably replace with OriginalParameters.GetOverrideParams(context.Page.Parameters);
             // once it has proven stable in Oqtane

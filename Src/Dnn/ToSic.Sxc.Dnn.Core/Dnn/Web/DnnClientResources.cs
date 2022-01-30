@@ -95,7 +95,7 @@ namespace ToSic.Sxc.Dnn.Web
         public bool NeedsPre1025Behavior()
         {
             var alwaysNeedsAntiForgeryAndHeader = BlockBuilder
-                                          ?.GetEngine(Purpose.WebView)
+                                          ?.GetEngine()
                                           ?.CompatibilityAutoLoadJQueryAndRVT
                                       ?? true;
             return alwaysNeedsAntiForgeryAndHeader;

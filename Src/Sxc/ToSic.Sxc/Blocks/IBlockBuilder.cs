@@ -48,9 +48,8 @@ namespace ToSic.Sxc.Blocks
         /// <summary>
         /// Get the engine which will render a block
         /// </summary>
-        /// <param name="renderingPurpose"></param>
         /// <returns></returns>
-        IEngine GetEngine(Purpose renderingPurpose = Purpose.WebView);
+        IEngine GetEngine();
 
         List<ClientAssetInfo> Assets { get; }
     }

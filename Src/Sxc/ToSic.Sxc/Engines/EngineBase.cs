@@ -56,9 +56,10 @@ namespace ToSic.Sxc.Engines
         /// <inheritdoc />
         public void Init(IBlock block, Purpose purpose, ILog parentLog)
         {
+            Log.LinkTo(parentLog);
+            var wrapLog = Log.Call();
             Block = block;
             var view = Block.View;
-            Log.LinkTo(parentLog);
 
             var appPathRootInInstallation = Block.App.PathSwitch(view.IsShared, PathTypes.PhysRelative);
             var subPath = view.Path;
@@ -84,6 +85,7 @@ namespace ToSic.Sxc.Engines
 
             // Run engine-internal init stuff
             Init();
+            wrapLog(null);
         }
 
         private string TryToFindPolymorphPath(string root, IView view, string subPath)

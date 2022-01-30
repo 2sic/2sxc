@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Search
             // In case it's not loaded yet
             _appsCache.Load(_serviceProvider, module.BlockIdentifier, DnnSite.DefaultCultureCode);
 
-            var dnnContext = _serviceProvider.Build<IContextOfBlock>().Init(DnnModule, Log);
+            var dnnContext = _serviceProvider.Build<IContextOfBlock>().InitDnnSiteModuleAndBlockContext(DnnModule, Log);
             Block = _serviceProvider.Build<BlockFromModule>().Init(dnnContext, Log);
             
             if (Block.View == null) return wrapLog("cancel", "no view");

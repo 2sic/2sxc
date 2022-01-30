@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Dnn
         public static IBlockBuilder CmsBlock(IModule module, ILog parentLog = null)
         {
             var dnnModule = ((Module<ModuleInfo>)module)?.UnwrappedContents;
-            var context = StaticBuild<IContextOfBlock>().Init(dnnModule, parentLog);
+            var context = StaticBuild<IContextOfBlock>().InitDnnSiteModuleAndBlockContext(dnnModule, parentLog);
             return StaticBuild<BlockFromModule>().Init(context, parentLog).BlockBuilder;
         }
 

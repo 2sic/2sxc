@@ -4,7 +4,6 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.Blocks
@@ -178,16 +177,16 @@ namespace ToSic.Sxc.Blocks
         /// Get the rendering engine, but avoid double execution.
         /// In some cases, the engine is needed early on to be sure if we need to do some overrides, but execution should then be later on Render()
         /// </summary>
-        /// <param name="renderingPurpose"></param>
         /// <returns></returns>
-        public IEngine GetEngine(Purpose renderingPurpose = Purpose.WebView)
+        public IEngine GetEngine()
         {
-            if (_engine != null) return _engine;
+            var wrapLog = Log.Call<IEngine>();
+            if (_engine != null) return wrapLog("cached", _engine);
             // edge case: view hasn't been built/configured yet, so no engine to find/attach
-            if (Block.View == null) return null;
+            if (Block.View == null) return wrapLog("no view", null);
             _engine = EngineFactory.CreateEngine(Block.Context.ServiceProvider, Block.View);
-            _engine.Init(Block, renderingPurpose, Log);
-            return _engine;
+            _engine.Init(Block, Purpose.WebView, Log);
+            return wrapLog("created", _engine);
         }
         private IEngine _engine;
 

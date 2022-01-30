@@ -93,7 +93,7 @@ namespace ToSic.Sxc.Dnn.Cms
                 //var container = _serviceProvider.Build<DnnContainer>().Init(dnnModule, Log);
                 // must find tenant through module, as the Portal-Settings.Current is null in search mode
                 //var tenant = new DnnSite().Init(dnnModule.OwnerPortalID);
-                var dnnContext = _serviceProvider.Build<IContextOfBlock>().Init(dnnModule, Log);
+                var dnnContext = _serviceProvider.Build<IContextOfBlock>().InitDnnSiteModuleAndBlockContext(dnnModule, Log);
                 var cb = _serviceProvider.Build<BlockFromModule>().Init(dnnContext, Log);
                     //.Init(DnnContextOfBlock.Create(tenant, container, _serviceProvider), Log);
 

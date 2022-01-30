@@ -11,11 +11,11 @@ namespace ToSic.Sxc.Dnn.Run
 {
     public static class ContextOfBlockExtensions
     {
-        public static IContextOfBlock Init(this IContextOfBlock context, ModuleInfo dnnModule, ILog parentLog)
+        public static IContextOfBlock InitDnnSiteModuleAndBlockContext(this IContextOfBlock context, ModuleInfo dnnModule, ILog parentLog)
         {
             context.Init(parentLog);
             var log = context.Log;
-            var wrapLog = log.Call<IContextOfBlock>(message: "static init");
+            var wrapLog = log.Call<IContextOfBlock>();
             log.Add($"Will try-swap module info of {dnnModule.ModuleID} into site");
             ((DnnSite)context.Site).TrySwap(dnnModule, log);
             log.Add("Will init module");
@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Dnn.Run
             return wrapLog(null, InitPageOnly(context));
         }
 
-        public static IContextOfBlock InitPageOnly(this IContextOfBlock context)
+        private static IContextOfBlock InitPageOnly(this IContextOfBlock context)
         {
             var log = context.Log;
             var wrapLog = log.Call<IContextOfBlock>();

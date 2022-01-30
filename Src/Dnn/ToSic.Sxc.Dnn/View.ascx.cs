@@ -24,18 +24,13 @@ namespace ToSic.Sxc.Dnn
         private IServiceProvider ServiceProvider => _serviceProvider ?? (_serviceProvider = DnnStaticDi.GetServiceProvider());
         private IServiceProvider _serviceProvider;
 
-        protected IBlock Block
+        private IBlock Block { get; set; }
+
+        private IBlock LoadBlock()
         {
-            get
-            {
-                if (_blockLoaded) return _block;
-                _blockLoaded = true;
-                var newCtx = ServiceProvider.Build<IContextOfBlock>().Init(ModuleConfiguration, Log);
-                return _block = ServiceProvider.Build<BlockFromModule>().Init(newCtx, Log);
-            }
+            var newCtx = ServiceProvider.Build<IContextOfBlock>().InitDnnSiteModuleAndBlockContext(ModuleConfiguration, Log);
+            return ServiceProvider.Build<BlockFromModule>().Init(newCtx, Log);
         }
-        private IBlock _block;
-        private bool _blockLoaded;
 
         private ILog Log { get; } = new Log("Sxc.View");
         private Stopwatch _stopwatch;
@@ -69,11 +64,7 @@ namespace ToSic.Sxc.Dnn
             if(PreviousCache == null) NewCache = new OutputCacheItem();
             #endregion
 
-            // always do this, part of the guarantee that everything will work
-            // 2020-01-06 2sxc 10.25 - moved away to DnnRenderingHelpers
-            // to only load when we're actually activating the JS.
-            // might be a breaking change for some code that "just worked" before
-            //ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
+            // Always do this, part of the guarantee that everything will work
             // new mechanism in 10.25
             // this must happen in Page-Load, so we know what supporting scripts to add
             // at this stage of the lifecycle
@@ -81,7 +72,8 @@ namespace ToSic.Sxc.Dnn
             // ensure everything is ready and that we know if we should activate the client-dependency
             TryCatchAndLogToDnn(() =>
             {
-                if (checkPortalIsReady) new DnnReadyCheckTurbo(this, Log).EnsureSiteAndAppFoldersAreReady(Block);
+                Block = LoadBlock();
+                if (checkPortalIsReady) DnnReadyCheckTurbo.EnsureSiteAndAppFoldersAreReady(this, Block, Log);
                 DnnClientResources = ServiceProvider.Build<DnnClientResources>()
                     .Init(Page, requiresPre1025Behavior == false ? null : Block?.BlockBuilder, Log);
                 var needsPre1025Behavior = requiresPre1025Behavior ?? DnnClientResources.NeedsPre1025Behavior();
