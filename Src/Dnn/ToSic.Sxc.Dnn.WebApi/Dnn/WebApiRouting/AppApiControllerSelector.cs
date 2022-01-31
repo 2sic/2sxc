@@ -10,7 +10,9 @@ using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
+using System.Web.Http.Routing;
 using ToSic.Eav.Context;
+using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
@@ -103,38 +105,34 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             try
             {
                 // new for 2sxc 9.34 #1651
-                var edition = "";
-                if (routeData.Values.ContainsKey(Names.Edition))
-                    edition = routeData.Values[Names.Edition].ToString();
-                if (!string.IsNullOrEmpty(edition))
-                    edition += "/";
-
+                var edition = GetEdition(routeData);
                 log.Add($"Edition: {edition}");
 
                 var site = (DnnSite)sp.Build<ISite>();
-                var controllerFolder = Path.Combine(site.AppsRootRelative, appFolder, edition + "api/");
 
-                controllerFolder = controllerFolder.Replace("\\", @"/");
+                var controllerFolder = GetControllerFolder(site, appFolder, edition, shared: false);
                 log.Add($"Controller Folder: {controllerFolder}");
 
-                controllerPath = Path.Combine(controllerFolder + controllerTypeName + ".cs");
+                controllerPath = GetControllerPath(controllerFolder, controllerTypeName);
                 log.Add($"Controller Path: {controllerPath}");
 
                 // note: this may look like something you could optimize/cache the result, but that's a bad idea
                 // because when the file changes, the type-object will be different, so please don't optimize :)
                 if (File.Exists(HostingEnvironment.MapPath(controllerPath)))
-                {
-                    var assembly = BuildManager.GetCompiledAssembly(controllerPath);
-                    var type = assembly.GetType(controllerTypeName, true, true);
+                    return HttpControllerDescriptor(request, controllerFolder, controllerPath, controllerTypeName, wrapLog);
 
-                    // help with path resolution for compilers running inside the created controller
-                    request?.Properties.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
+                log.Add("path not found, will check on shared location");
 
-                    var descriptor = new HttpControllerDescriptor(_config, type.Name, type);
-                    return wrapLog("ok", descriptor);
-                }
+                var sharedControllerFolder = GetControllerFolder(site, appFolder, edition, shared: true);
+                log.Add($"Shared Controller Folder: {sharedControllerFolder}");
 
-                log.Add("path not found, error will be thrown in a moment");
+                var sharedControllerPath = GetControllerPath(sharedControllerFolder, controllerTypeName);
+                log.Add($"Shared Controller Path: {sharedControllerPath}");
+
+                if (File.Exists(HostingEnvironment.MapPath(sharedControllerPath)))
+                    return HttpControllerDescriptor(request, sharedControllerFolder, sharedControllerPath, controllerTypeName, wrapLog);
+
+                log.Add("path not found in shared, error will be thrown in a moment");
             }
             catch (Exception e)
             {
@@ -145,6 +143,37 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             var msgFinal = $"2sxc Api Controller Finder: Controller {controllerTypeName} not found in app. " +
                            $"We checked the virtual path '{controllerPath}'";
             throw AppFolderUtilities.ReportToLogAndThrow(request, HttpStatusCode.NotFound, new Exception(), msgFinal, wrapLog);
+        }
+
+        private static string GetEdition(IHttpRouteData routeData)
+        {
+            var edition = "";
+            if (routeData.Values.ContainsKey(Names.Edition))
+                edition = routeData.Values[Names.Edition].ToString();
+            if (!string.IsNullOrEmpty(edition))
+                edition += "/";
+            return edition;
+        }
+
+        private static string GetControllerFolder(DnnSite site, string appFolder, string edition, bool shared = false) 
+            => Path.Combine(shared ? site.SharedAppsRootRelative: site.AppsRootRelative, appFolder, edition + "api/")
+                .ForwardSlash();
+
+        private static string GetControllerPath(string controllerFolder, string controllerTypeName)
+            => Path.Combine(controllerFolder + controllerTypeName + ".cs");
+
+        private HttpControllerDescriptor HttpControllerDescriptor(HttpRequestMessage request, 
+            string controllerFolder, string controllerPath, string controllerTypeName, 
+            Func<string, HttpControllerDescriptor, HttpControllerDescriptor> wrapLog)
+        {
+            var assembly = BuildManager.GetCompiledAssembly(controllerPath);
+            var type = assembly.GetType(controllerTypeName, true, true);
+
+            // help with path resolution for compilers running inside the created controller
+            request?.Properties.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
+
+            var descriptor = new HttpControllerDescriptor(_config, type.Name, type);
+            return wrapLog("ok", descriptor);
         }
 
         private static void AddToInsightsHistory(string url, ILog log)
