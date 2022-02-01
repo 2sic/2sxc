@@ -76,7 +76,9 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
             // Help RazorBlade to have a proper best-practices ToJson
             // New v12.05
-            ToSic.Razor.Internals.StartUp.RegisterToJson(JsonConvert.SerializeObject);
+            // 2022-02-01 2dm - should not be necessary any more, if we use .net 5.x DLLs (it is necessary if the .net standard 2 are used)
+            // But we'll leave it in, because possibly this function is more reliable than the built in
+            ToSic.Razor.StartUp.StartUp.RegisterToJson(JsonConvert.SerializeObject);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
