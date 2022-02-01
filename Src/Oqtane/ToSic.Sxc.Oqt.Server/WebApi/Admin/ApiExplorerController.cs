@@ -35,10 +35,10 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             var wrapLog = Log.Call<IActionResult>();
 
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (OqtResponseMaker)ServiceProvider.Build<ResponseMaker>() ;
+            var responseMaker = (OqtResponseMaker)ServiceProvider.Build<ResponseMaker<IActionResult>>() ;
             responseMaker.Init(this);
             
-            var backend = ServiceProvider.Build<ApiExplorerBackend>();
+            var backend = ServiceProvider.Build<ApiExplorerBackend<IActionResult>>();
             if (backend.PreCheckAndCleanPath(ref path, out var error)) return error;
 
             try

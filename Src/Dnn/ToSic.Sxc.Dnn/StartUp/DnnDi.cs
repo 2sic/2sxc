@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav;
@@ -61,7 +62,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             var appsCache = GetAppsCacheOverride();
             services.AddDnn(appsCache)
                 .AddAdamWebApi<int, int>()
-                .AddSxcWebApi()
+                .AddSxcWebApi<HttpResponseMessage>()
                 .AddSxcCore()
                 .AddEav();
 
@@ -130,7 +131,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             // Settings / WebApi stuff
             services.TryAddTransient<IUiContextBuilder, DnnUiContextBuilder>();
             services.TryAddTransient<IApiInspector, DnnApiInspector>();
-            services.TryAddScoped<ResponseMaker, DnnResponseMaker>(); // must be scoped, as the api-controller must init this for use in other parts
+            services.TryAddScoped<ResponseMaker<HttpResponseMessage>, DnnResponseMaker>(); // must be scoped, as the api-controller must init this for use in other parts
 
             // new #2160
             services.TryAddTransient<AdamSecurityChecksBase, DnnAdamSecurityChecks>();

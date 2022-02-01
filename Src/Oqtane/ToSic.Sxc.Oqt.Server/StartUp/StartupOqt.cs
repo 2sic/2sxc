@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -65,7 +66,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                 .AddSxcOqtane()
                 .AddSxcRazor()
                 .AddAdamWebApi<int, int>()
-                .AddSxcWebApi()
+                .AddSxcWebApi<IActionResult>()
                 .AddSxcCore()
                 .AddEav()
                 .AddAppApi(); // 2sxc Oqtane dyncode app api.

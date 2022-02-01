@@ -7,7 +7,7 @@ using ToSic.Sxc.WebApi.Plumbing;
 
 namespace ToSic.Sxc.Dnn
 {
-    public class DnnResponseMaker: ResponseMaker
+    public class DnnResponseMaker: ResponseMaker<HttpResponseMessage>
     {
         public void Init(System.Web.Http.ApiController apiController) => _apiController = apiController;
 

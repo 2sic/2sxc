@@ -1,22 +1,15 @@
-﻿using System;
+﻿using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.ImportExport;
-using ToSic.Eav.WebApi.Languages;
 using ToSic.Eav.WebApi.PublicApi;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Admin;
-using ToSic.Sxc.WebApi.App;
-using ToSic.Sxc.WebApi.AppStack;
 using ToSic.Sxc.WebApi.ImportExport;
 using AppDto = ToSic.Eav.WebApi.Dto.AppDto;
 
@@ -31,43 +24,43 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     {
         protected override string HistoryLogName => "Api.App";
 
-        private AppControllerReal RealController => GetService<AppControllerReal>();
+        private AppControllerReal<HttpResponseMessage> RealController 
+            => GetService<AppControllerReal<HttpResponseMessage>>().Init(PreventServerTimeout300, Log);
 
         [HttpGet]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public List<AppDto> List(int zoneId)
-            => GetService<AppsBackend>().Init(Log).Apps();
+            => RealController.List(zoneId);
 
         [HttpGet]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
         public List<AppDto> InheritableApps()
-            => GetService<AppsBackend>().Init(Log).GetInheritableApps();
+            => RealController.InheritableApps();
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public void App(int zoneId, int appId, bool fullDelete = true)
-            => GetService<CmsZones>().Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId, fullDelete);
+            => RealController.App(zoneId, appId, fullDelete);
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public void App(int zoneId, string name, int? inheritAppId = null)
-            => GetService<AppCreator>().Init(zoneId, Log).Create(name, null, inheritAppId);
+            => RealController.App(zoneId, name, inheritAppId);
 
         [HttpGet]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public List<SiteLanguageDto> Languages(int appId) => RealController.Languages(appId);
-
-
+        public List<SiteLanguageDto> Languages(int appId) 
+            => RealController.Languages(appId);
 
         /// <summary>
         /// Used to be GET ImportExport/GetAppInfo
@@ -79,18 +72,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
         public AppExportInfoDto Statistics(int zoneId, int appId)
-            => GetService<ExportApp>().Init(Log).GetAppInfo(appId, zoneId);
+            => RealController.Statistics(zoneId, appId);
 
 
         [HttpGet]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public bool FlushCache(int zoneId, int appId)
-        {
-            var wrapLog = Log.Call<bool>($"{zoneId}, {appId}");
-            GetService<SystemManager>().Init(Log).Purge(zoneId, appId);
-            return wrapLog("ok", true);
-        }
+            => RealController.FlushCache(zoneId, appId);
 
         /// <summary>
         /// Used to be GET ImportExport/ExportApp
@@ -102,7 +91,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <returns></returns>
         [HttpGet]
         public HttpResponseMessage Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => GetService<ExportApp>().Init(Log).Export(appId, zoneId, includeContentGroups, resetAppGuid);
+            => RealController.Export<HttpResponseMessage>(appId, zoneId, includeContentGroups, resetAppGuid);
 
         /// <summary>
         /// Used to be GET ImportExport/ExportForVersionControl
@@ -115,27 +104,20 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [ValidateAntiForgeryToken]
         public bool SaveData(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => GetService<ExportApp>().Init(Log).SaveDataForVersionControl(appId, zoneId, includeContentGroups, resetAppGuid);
-
-        /// <inheritdoc />
-        [HttpPost]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-        [ValidateAntiForgeryToken]
-        public ImportResultDto Reset(int zoneId, int appId)
-        {
-            var wrapLog = Log.Call<ImportResultDto>();
-
-            PreventServerTimeout300();
-            var result = GetService<ResetApp>().Init(Log).Reset(zoneId, appId, PortalSettings.DefaultLanguage);
-
-            return wrapLog("ok", result);
-        }
+            => RealController.SaveData(appId, zoneId, includeContentGroups, resetAppGuid);
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
         public List<StackInfoDto> GetStack(int appId, string part, string key = null, Guid? view = null) 
-            => GetService<AppStackBackend>().GetAll(appId, part ?? AppConstants.RootNameSettings, key, view, null);
+            => RealController.GetStack(appId, part, key, view);
+
+        /// <inheritdoc />
+        [HttpPost]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+        [ValidateAntiForgeryToken]
+        public ImportResultDto Reset(int zoneId, int appId) 
+            => RealController.Reset(zoneId, appId, PortalSettings.DefaultLanguage);
 
         /// <summary>
         /// Used to be POST ImportExport/ImportApp
@@ -146,17 +128,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         public ImportResultDto Import(int zoneId)
         {
-            Log.Add("import app start");
-
             var request = HttpContext.Current.Request;
-            PreventServerTimeout300();
-
-            if (request.Files.Count <= 0) return new ImportResultDto(false, "no files uploaded");
-
-            return GetService<ImportApp>().Init(Log)
-                .Import(zoneId, request["Name"], request.Files[0].InputStream);
+            return request.Files.Count <= 0 
+                ? new ImportResultDto(false, "no files uploaded") 
+                : RealController.Import(zoneId, request["Name"], request?.Files[0]?.InputStream);
         }
-
-
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -37,7 +38,6 @@ using ToSic.Sxc.Oqt.Server.WebApi.Admin;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
-using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.Plumbing;
 using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
@@ -134,7 +134,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
             // APiExplorer
             services.TryAddTransient<IApiInspector, OqtApiInspector>();
-            services.TryAddScoped<ResponseMaker, OqtResponseMaker>();
+            services.TryAddScoped<ResponseMaker<IActionResult>, OqtResponseMaker>();
 
             // new in v12 - integrate KOI
             try

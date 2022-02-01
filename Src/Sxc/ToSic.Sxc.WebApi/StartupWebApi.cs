@@ -34,7 +34,7 @@ namespace ToSic.Sxc.WebApi
 {
     public static class StartupWebApi
     {
-        public static IServiceCollection AddSxcWebApi(this IServiceCollection services)
+        public static IServiceCollection AddSxcWebApi<HttpResponseType>(this IServiceCollection services)
         {
             // The top version should be deprecated soon, so we just use DataToDictionary or an Interface instead
             services.TryAddTransient<ConvertToEavLight, ConvertToEavLightWithCmsInfo>(); // this is needed for all the EAV uses of conversion
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<QueryBackend>();
 
             // APIs
-            services.TryAddTransient<ApiExplorerBackend>();
+            services.TryAddTransient<ApiExplorerBackend<HttpResponseType>>();
 
             // Internal API helpers
             services.TryAddTransient<Insights>();
@@ -93,7 +93,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<ZoneBackend>();
 
             // New v13 - try to reduce Dnn/Oqtane code to the max, by creating ControllerReal objects which do everything
-            services.TryAddTransient<AppControllerReal>();
+            services.TryAddTransient(typeof(AppControllerReal<>));
 
             return services;
         }

@@ -24,10 +24,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             var wrapLog = Log.Call<HttpResponseMessage>();
 
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (DnnResponseMaker)GetService<ResponseMaker>() ;
+            var responseMaker = (DnnResponseMaker)GetService<ResponseMaker<HttpResponseMessage>>() ;
             responseMaker.Init(this);
             
-            var backend = GetService<ApiExplorerBackend>();
+            var backend = GetService<ApiExplorerBackend<HttpResponseMessage>>();
 
             if (backend.PreCheckAndCleanPath(ref path, out var error)) return error;
 
