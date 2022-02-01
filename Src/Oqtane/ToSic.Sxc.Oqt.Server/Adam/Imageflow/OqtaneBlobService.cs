@@ -45,10 +45,9 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
             if (!SupportsPath(virtualPath)) return null;
 
             // Get appName and filePath.
-            var appName = string.Empty;
-            var filePath = string.Empty;
-            Boolean rez = false;
-            rez = ContainsBetaPath(virtualPath)
+            string appName;
+            string filePath;
+            var rez = ContainsBetaPath(virtualPath)
                 ? GetBetaAppNameAndFilePath(virtualPath, out appName, out filePath)
                 : GetAppNameAndFilePath(virtualPath, out appName, out filePath);
             if (rez) return null;
@@ -59,7 +58,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
             using var scope = _serviceProvider.CreateScope();
 
             var webHostEnvironment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
-            if (ExistUnderWebRootPath(webHostEnvironment, virtualPath, out filePath)) BlobData(filePath);
+            if (ExistUnderWebRootPath(webHostEnvironment, virtualPath, out var webRootFilePath)) BlobData(webRootFilePath);
 
             // Get alias.
             //siteStateInitializer.InitIfEmpty();
