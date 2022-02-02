@@ -12,8 +12,7 @@ robocopy /mir "%Dev2sxcAssets%\dist\ " "%BuildTarget%\dist\ "
 robocopy /mir "%Dev2sxcAssets%\system\ " "%BuildTarget%\system\ "
 
 @REM Copy ImportExpor assets
-@REM TODO: @stv - THIS LOOKS Bad - we should not get files from here, get them from the SRC
-robocopy /mir "..\..\..\..\..\2sxc-dnn742\Website\DesktopModules\ToSIC_SexyContent\ImportExport\ " "%BuildTarget%\system\ImportExport\ "
+robocopy /mir "..\..\Dnn\ToSic.Sxc.Dnn\ImportExport\ " "%BuildTarget%\system\ImportExport\ "
 
 
 .nuget\nuget.exe pack ToSic.Sxc.nuspec

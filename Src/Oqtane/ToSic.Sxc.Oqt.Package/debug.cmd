@@ -60,9 +60,8 @@ XCOPY "..\..\..\Dependencies\Koi\netstandard2.0\Connect.Koi.pdb" "%OqtaneBin%" /
 
 @Echo(
 @Echo Copy RazorBlade DLLs from Debug
-@REM TODO: @stv - THIS LOOKS Bad - we should not get debug files. pls fix, and see if we can use .net 5 builds instead of .net standard
-XCOPY "..\..\..\Dependencies\RazorBlade\Debug\netstandard2.0\ToSic.Razor.dll" "%OqtaneBin%" /Y
-XCOPY "..\..\..\Dependencies\RazorBlade\Debug\netstandard2.0\ToSic.Razor.pdb" "%OqtaneBin%" /Y
+XCOPY "..\..\..\Dependencies\RazorBlade\Release\net5.0\ToSic.Razor.dll" "%OqtaneBin%" /Y
+XCOPY "..\..\..\Dependencies\RazorBlade\Release\net5.0\ToSic.Razor.pdb" "%OqtaneBin%" /Y
 
 @Echo(
 @Echo the target for js, css, json etc.
