@@ -92,6 +92,10 @@ namespace ToSic.Sxc.Dnn.StartUp
 
         public static IServiceCollection AddDnn(this IServiceCollection services, string appsCacheOverride)
         {
+            // Provide page scoped services
+            services.TryAddScoped<PageScopeAccessor>();
+            services.TryAddScoped(typeof(PageScopedService<>));
+
             // Core Runtime Context Objects
             services.TryAddScoped<IUser, DnnUser>();
 

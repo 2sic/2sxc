@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Web;
-using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
 
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Dnn
         /// Dictionary key for keeping the Scoped Injection Service Provider in the Http-Context
         /// </summary>
         // we changed key to one used in DNN9DI instead old one "eav-scoped-serviceprovider"
-        private static readonly Type ServiceProviderKey = typeof(IServiceScope); // "eav-scoped-serviceprovider";
+        private static readonly Type ServiceScopeKey = typeof(IServiceScope); // "eav-scoped-serviceprovider";
 
         private static IServiceProvider _sp;
 
@@ -65,18 +65,36 @@ namespace ToSic.Sxc.Dnn
             if (httpCtx == null) return _sp.CreateScope().ServiceProvider;
 
             // This only runs in Dnn 7.4.2 - Dnn 9.3, because Dnn 9.4 provides this in the http context
-            if (httpCtx.Items[ServiceProviderKey] == null)
+            if (!httpCtx.Items.Contains(ServiceScopeKey))
             {
-                httpCtx.Items[ServiceProviderKey] = _sp.CreateScope().ServiceProvider;
+                httpCtx.Items[ServiceScopeKey] = _sp.CreateScope();
 
                 // Make sure service provider is disposed after request finishes
-                httpCtx.AddOnRequestCompleted(context =>
-                {
-                    ((IDisposable)context.Items[ServiceProviderKey])?.Dispose();
-                });
+                httpCtx.AddOnRequestCompleted(context => ((IDisposable)context.Items[ServiceScopeKey])?.Dispose());
             }
 
-            return (IServiceProvider)httpCtx.Items[ServiceProviderKey];
+            return PageScope.ServiceProvider;
         }
+
+        [PrivateApi]
+        public static IServiceProvider GetModuleScopedServiceProvider() => CreateModuleScope().ServiceProvider;
+
+        internal static IServiceScope CreateModuleScope()
+        {
+            var pageScopedServiceProvider = GetServiceProvider();
+            var pageScope = PageScope;
+            //var moduleScope = HttpContext.Current.CreateScope();
+            //var moduleScope = pageScopedServiceProvider.CreateScope();
+            var moduleScope = pageScope.ServiceProvider.CreateScope();
+
+            var pageScopeAccessor = moduleScope.ServiceProvider.GetRequiredService<PageScopeAccessor>();
+            pageScopeAccessor.Scope = pageScope;
+
+            return moduleScope;
+        }
+
+        internal static IServiceScope PageScope 
+            => !HttpContext.Current.Items.Contains(ServiceScopeKey) ? null 
+                : HttpContext.Current.Items[ServiceScopeKey] is IServiceScope scope ? scope : null;
     }
 }
