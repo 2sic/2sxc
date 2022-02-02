@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Dnn;
@@ -22,10 +21,9 @@ namespace ToSic.Eav.Conversion
         /// <remarks>
         /// has an important side effect, this isn't clear from outside!
         /// </remarks>
-        public EntitiesToDictionary(): base(DnnStaticDi.Resolve<Dependencies>())
+        public EntitiesToDictionary(): base(DnnStaticDi.StaticBuild<Dependencies>())
         {
-            ToSic.Sxc.Compatibility.Obsolete.Warning13To14(nameof(EntitiesToDictionary), "", "https://r.2sxc.org/brc-13-conversion");
-
+            Sxc.Compatibility.Obsolete.Warning13To14(nameof(EntitiesToDictionary), "", "https://r.2sxc.org/brc-13-conversion");
         }
 
     }
