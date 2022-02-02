@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Blocks
                 "https://r.2sxc.org/brc-13-static-render",
                 (log) => LogBlockDetails(block, log));
 
-            return DnnStaticDi.GetServiceProvider().Build<Services.IRenderService>();
+            return DnnStaticDi.GetPageScopedServiceProvider().Build<Services.IRenderService>();
         }
 
         /// <summary>

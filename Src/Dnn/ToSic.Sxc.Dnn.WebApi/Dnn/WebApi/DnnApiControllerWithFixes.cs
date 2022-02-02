@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         protected void PreventServerTimeout300() => HttpContext.Current.Server.ScriptTimeout = 300;
 
         /// <inheritdoc />
-        public TService GetService<TService>() => (_serviceProvider ?? (_serviceProvider = DnnStaticDi.GetModuleScopedServiceProvider())).Build<TService>();
+        public TService GetService<TService>() => (_serviceProvider ?? (_serviceProvider = DnnStaticDi.GetPageScopedServiceProvider())).Build<TService>();
         // Must cache it, to be really sure we use the same ServiceProvider in the same request
         private IServiceProvider _serviceProvider;
 

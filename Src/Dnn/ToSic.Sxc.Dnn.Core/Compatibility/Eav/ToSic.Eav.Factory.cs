@@ -1,8 +1,6 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Dnn;
 using static ToSic.Sxc.Compatibility.Obsolete;
@@ -35,7 +33,7 @@ namespace ToSic.Eav
         public static T Resolve<T>()
         {
             Warning13To14("Factory.Resolve<T>", typeof(T).FullName, "https://r.2sxc.org/brc-13-eav-factory");
-            return DnnStaticDi.GetServiceProvider().Build<T>();
+            return DnnStaticDi.GetPageScopedServiceProvider().Build<T>();
 
             // Don't throw error yet, would probably cause too much breaks in public code
             // Activate ca. V14

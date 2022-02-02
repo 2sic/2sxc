@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Dnn
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        private static T StaticBuild<T>() => DnnStaticDi.GetServiceProvider().Build<T>();
+        private static T StaticBuild<T>() => DnnStaticDi.GetPageScopedServiceProvider().Build<T>();
 
         /// <summary>
         /// Get a Root CMS Block if you know the TabId and the ModId

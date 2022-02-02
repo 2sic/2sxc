@@ -90,7 +90,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
                 return wrapLog("upstream", PreviousSelector.SelectController(request));
 
             // Do this once and early, to be really sure we always use the same one
-            var sp = DnnStaticDi.GetModuleScopedServiceProvider();
+            var sp = DnnStaticDi.GetPageScopedServiceProvider();
 
             var routeData = request.GetRouteData();
 

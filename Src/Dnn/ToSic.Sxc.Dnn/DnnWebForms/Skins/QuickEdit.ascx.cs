@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Dnn.DnnWebForms.Skins
         {
             isEdit = DotNetNuke.Security.Permissions.TabPermissionController.HasTabPermission("EDIT");
             if (isEdit)
-                DnnStaticDi.GetModuleScopedServiceProvider().Build<DnnClientResources>()
+                DnnStaticDi.GetPageScopedServiceProvider().Build<DnnClientResources>()
                     .Init(Page, null, null)
                     .RegisterClientDependencies(Page, true, true, true);
         }
