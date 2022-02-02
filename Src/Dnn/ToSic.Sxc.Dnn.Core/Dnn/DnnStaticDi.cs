@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Dnn
         }
 
         [PrivateApi]
-        public static IServiceProvider GetModuleScopedServiceProvider() => CreateModuleScope().ServiceProvider;
+        public static IServiceProvider CreateModuleScopedServiceProvider() => CreateModuleScope().ServiceProvider;
 
         private static IServiceScope CreateModuleScope()
         {
