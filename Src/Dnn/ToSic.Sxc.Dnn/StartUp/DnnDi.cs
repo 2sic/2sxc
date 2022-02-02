@@ -16,6 +16,7 @@ using ToSic.Eav.Repositories;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Context;
+using ToSic.Razor.StartUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Cms.Publishing;
@@ -64,7 +65,8 @@ namespace ToSic.Sxc.Dnn.StartUp
                 .AddAdamWebApi<int, int>()
                 .AddSxcWebApi<HttpResponseMessage>()
                 .AddSxcCore()
-                .AddEav();
+                .AddEav()
+                .AddRazorBlade();
 
             // temp polymorphism - later put into AddPolymorphism
             services.TryAddTransient<Koi>();

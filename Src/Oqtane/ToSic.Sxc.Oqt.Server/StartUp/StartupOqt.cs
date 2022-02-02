@@ -9,6 +9,7 @@ using Oqtane.Infrastructure;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
+using ToSic.Razor.StartUp;
 using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Razor;
@@ -69,7 +70,8 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                 .AddSxcWebApi<IActionResult>()
                 .AddSxcCore()
                 .AddEav()
-                .AddAppApi(); // 2sxc Oqtane dyncode app api.
+                .AddAppApi() // 2sxc Oqtane dyncode app api.
+                .AddRazorBlade();
 
             // 2sxc Oqtane blob services for Imageflow.
             services.AddImageflowOqtaneBlobService();

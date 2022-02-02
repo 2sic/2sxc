@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Run;
+using ToSic.Razor.StartUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Paths;
