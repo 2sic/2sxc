@@ -52,7 +52,14 @@ namespace ToSic.Sxc.Blocks
                 "https://r.2sxc.org/brc-13-static-render",
                 (log) => LogBlockDetails(block, log));
 
-            return DnnStaticDi.GetPageScopedServiceProvider().Build<Services.IRenderService>();
+            // 2022-02-03 2dm remove a case of getting Page ServiceDependency which probably never needs it
+            // return DnnStaticDi.GetPageScopedServiceProvider().Build<Services.IRenderService>();
+            // The dynamic entity has a current service provider attached
+            if (block == null)
+                throw new Exception(
+                    "Error 2022-02-03 2dm - this is an unexpected error after a change which should never happen. If you run into this, please open an issue on Github.");
+
+            return block.Context.ServiceProvider.Build<Services.IRenderService>();
         }
 
         /// <summary>

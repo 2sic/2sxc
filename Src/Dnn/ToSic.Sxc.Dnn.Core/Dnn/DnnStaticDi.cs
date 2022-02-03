@@ -19,33 +19,23 @@ namespace ToSic.Sxc.Dnn
             ?? throw new Exception("Can't start Static DI for old Dnn, because the ServiceCollection is null.");
 
         /// <summary>
-        /// Dependency Injection resolver with a known type as a parameter.
-        /// </summary>
-        /// <typeparam name="T">The type / interface we need.</typeparam>
-        public static T Resolve<T>()
-        {
-            // TODO: DOCS FOR THIS
-            throw new NotSupportedException("The Eav.Factory is obsolete. TODO: DOCS");
-        }
-
-        /// <summary>
         /// This is a special internal resolver for static objects
         /// Should only be used with extreme caution, as downstream objects
         /// May need more scope-specific stuff, why may be missing
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        /// <remarks>
-        /// Avoid using at all cost - only DNN and test-code may use this!
-        /// </remarks>
         [PrivateApi]
+        [Obsolete("Avoid using at all cost - only DNN and test-code may use this!")]
         public static T StaticBuild<T>() => GetPageScopedServiceProvider().Build<T>();
 
         /// <summary>
         /// Dictionary key for keeping the Scoped Injection Service Provider in the Http-Context
         /// </summary>
-        // we changed key to one used in DNN9DI instead old one "eav-scoped-serviceprovider"
-        private static readonly Type ServiceScopeKey = typeof(IServiceScope); // "eav-scoped-serviceprovider";
+        /// <remarks>
+        /// In v13 we changed key to one used in DNN9 DI instead old one "eav-scoped-serviceprovider"
+        /// </remarks>
+        private static readonly Type ServiceScopeKey = typeof(IServiceScope);
 
         private static IServiceProvider _sp;
 

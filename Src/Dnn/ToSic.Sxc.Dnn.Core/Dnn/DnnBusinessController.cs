@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
@@ -20,7 +19,7 @@ namespace ToSic.Sxc.Dnn
     /// This is the connector-class which DNN consults when it needs to know things about a module
     /// It's used in the background, not when the page is loading
     /// </summary>
-    public class DnnBusinessController : ModuleSearchBase
+    public class DnnBusinessController : ModuleSearchBase, IHasLog
     {
         #region Constructor (not DI)
 
@@ -28,22 +27,12 @@ namespace ToSic.Sxc.Dnn
         /// Constructor overload for DotNetNuke
         /// (BusinessController needs a parameterless constructor)
         /// </summary>
-        public DnnBusinessController()
-        {
-            Log = new Log("DNN.BusCon", null, "starting");
-        }
-        
-        private ILog Log { get; }
+        public DnnBusinessController() => Log = new Log("DNN.BusCon", null, "starting");
+
+        public ILog Log { get; }
 
         #endregion
 
-        #region Diagnostics stuff
-
-        public static int SearchErrorsMax = 10;
-
-        public static int SearchErrorsCount { get; set; }
-
-        #endregion
 
         #region Service Providing
 
@@ -105,9 +94,10 @@ namespace ToSic.Sxc.Dnn
             return Publishing.GetPublishedVersion(instanceId);
         }
 
-        internal static void UpdateUpgradeCompleteStatus()
-            => DnnEnvironmentInstaller.UpgradeComplete = ((DnnEnvironmentInstaller)DnnStaticDi.GetPageScopedServiceProvider().Build<IEnvironmentInstaller>())
-                .IsUpgradeComplete(Settings.Installation.LastVersionWithServerChanges, "- static check");
+        // 2022-02-03 2dm moved to the env-installer
+        //internal static void UpdateUpgradeCompleteStatus()
+        //    => DnnEnvironmentInstaller.UpgradeComplete = DnnStaticDi.GetPageScopedServiceProvider().Build<DnnEnvironmentInstaller>()
+        //        .IsUpgradeComplete(Settings.Installation.LastVersionWithServerChanges, "- static check");
 
         /// <summary>
         /// This is part of the IUpgradeable of DNN
@@ -117,8 +107,7 @@ namespace ToSic.Sxc.Dnn
         public string UpgradeModule(string version)
         {
             Log.Add($"upgrade module - start for v:{version}");
-            // var res = new DnnEnvironmentInstaller().UpgradeModule(version);
-            var res = ((DnnEnvironmentInstaller)ServiceProvider.Build<IEnvironmentInstaller>()).UpgradeModule(version);
+            var res = ServiceProvider.Build<DnnEnvironmentInstaller>().UpgradeModule(version);
             Log.Add($"result:{res}");
             DnnLogging.LogToDnn("Upgrade", "ok", Log, force:true); // always log, this often causes hidden problems
             return res;
@@ -133,30 +122,9 @@ namespace ToSic.Sxc.Dnn
             }
             catch (Exception e)
             {
-                AddSearchExceptionToLog(moduleInfo, e, nameof(DnnBusinessController));
+                DnnEnvironmentLogger.AddSearchExceptionToLog(moduleInfo, e, nameof(DnnBusinessController));
                 return new List<SearchDocument>();
             }
-        }
-
-        public static void AddSearchExceptionToLog(ModuleInfo moduleInfo, Exception e, string nameOfSource)
-        {
-            var errCount = SearchErrorsCount++;
-            // ignore errors after 10
-            if (errCount > SearchErrorsMax) return;
-            
-            if (errCount == SearchErrorsMax)
-            {
-                Exceptions.LogException(new SearchIndexException(moduleInfo,
-                    new Exception(
-                        $"Hit {SearchErrorsMax} SearchIndex exceptions in 2sxc modules, will stop reporting them to not flood the error log. \n" +
-                        $"To start reporting again up to {SearchErrorsMax} just restart the application. \n" +
-                        $"To show more errors change 'ToSic.Sxc.Dnn.{nameof(DnnBusinessController)}.{nameof(SearchErrorsMax)}' to a higher number in some code of yours like in a temporary razor view. " +
-                        $"Note that in the meantime, the count may already be higher. You can always get that from {nameof(SearchErrorsCount)}."),
-                    nameOfSource, errCount, SearchErrorsMax));
-                return;
-            }
-
-            Exceptions.LogException(new SearchIndexException(moduleInfo, e, nameOfSource, errCount, SearchErrorsMax));
         }
 
         #endregion

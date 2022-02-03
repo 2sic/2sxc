@@ -127,8 +127,11 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<DnnDynamicCodeRoot>();
             services.TryAddTransient<IPlatformModuleUpdater, DnnModuleUpdater>();
             services.TryAddTransient<IEnvironmentInstaller, DnnEnvironmentInstaller>();
-            services.TryAddTransient<DnnInstallLogger>(sp =>
-                ActivatorUtilities.CreateInstance<DnnInstallLogger>(sp, DnnEnvironmentInstaller.SaveUnimportantDetails));
+            services.TryAddTransient<DnnEnvironmentInstaller>(); // Dnn Only
+            // 2022-02-03 2dm - removed strange indirect access to constant
+            //services.TryAddTransient<DnnInstallLogger>(sp =>
+            //    ActivatorUtilities.CreateInstance<DnnInstallLogger>(sp, DnnEnvironmentInstaller.SaveUnimportantDetails));
+            services.TryAddTransient<DnnInstallLogger>();
 
             // ADAM
             services.TryAddTransient<IAdamFileSystem<int, int>, DnnAdamFileSystem>();

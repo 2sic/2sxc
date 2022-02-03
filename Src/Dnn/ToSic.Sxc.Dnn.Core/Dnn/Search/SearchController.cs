@@ -175,7 +175,7 @@ namespace ToSic.Sxc.Search
         
         private List<SearchDocument> LogErrorForExit(Exception e, ModuleInfo modInfo)
         {
-            DnnBusinessController.AddSearchExceptionToLog(modInfo, e, nameof(SearchController));
+            DnnEnvironmentLogger.AddSearchExceptionToLog(modInfo, e, nameof(SearchController));
             Log.Exception(e);
             return new List<SearchDocument>();
         }
