@@ -21,7 +21,7 @@ namespace ToSic.Eav
         [PrivateApi]
         public delegate void ServiceConfigurator(IServiceCollection service);
 
-        [PrivateApi]
+        [PrivateApi("Removed v13.02 - should not be in use, completely remove ca. July 2022")]
 	    public static void ActivateNetCoreDi(ServiceConfigurator configure) =>
             Killed13(nameof(ActivateNetCoreDi), "", "https://r.2sxc.org/brc-13-eav-startup");
 

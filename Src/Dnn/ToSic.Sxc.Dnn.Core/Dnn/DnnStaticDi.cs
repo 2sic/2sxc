@@ -76,6 +76,8 @@ namespace ToSic.Sxc.Dnn
             var pageScope = GetPageScope();
             var moduleScope = pageScope.ServiceProvider.CreateScope();
 
+            // In the module scope, we initialize the scoped PageScope Accessor and give it the parent scope
+            // This is necessary for it to be able to give page-scoped objects
             var pageScopeAccessor = moduleScope.ServiceProvider.GetRequiredService<PageScopeAccessor>();
             pageScopeAccessor.Scope = pageScope;
 
