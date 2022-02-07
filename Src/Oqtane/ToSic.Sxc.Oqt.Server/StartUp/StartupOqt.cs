@@ -93,6 +93,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
             var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
             globalConfig.GlobalFolder = Path.Combine(HostEnvironment.ContentRootPath, "wwwroot\\Modules\\ToSic.Sxc");
+            globalConfig.DataFolder = Path.Combine(HostEnvironment.ContentRootPath, "2sxc", Constants.FolderData);
             globalConfig.AssetsVirtualUrl = "~/Modules/ToSic.Sxc/assets/";
             globalConfig.SharedAppsFolder = "todo - global apps not implemented yet";
 

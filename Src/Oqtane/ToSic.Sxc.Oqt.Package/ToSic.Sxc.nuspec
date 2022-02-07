@@ -28,7 +28,8 @@
     <file src="README.md" target="docs\" />
     <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net5.0\ToSic.*.dll" target="lib\net5.0" />
     <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net5.0\ToSic.*.pdb" target="lib\net5.0" />
-    <file src="..\ToSic.Sxc.Oqt.Server\wwwroot\**\*.*" exclude="**\*.map;" target="wwwroot" />
+    <file src="..\ToSic.Sxc.Oqt.Server\2sxc\.data\**\*.*" target="content\2sxc\.data" />
+    <file src="..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc\**\*.*" exclude="**\*.map;" target="wwwroot\Modules\ToSic.Sxc" />
     <!-- 3rd party dependencies -->
 
     <!-- ToSic.Sxc.Dnn.Main PackageReference -->

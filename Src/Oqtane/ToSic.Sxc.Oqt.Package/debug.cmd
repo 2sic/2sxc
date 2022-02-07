@@ -69,9 +69,9 @@ XCOPY "..\..\..\Dependencies\RazorBlade\Release\net5.0\ToSic.Razor.pdb" "%Oqtane
 
 @Echo(
 @Echo Copy the data folders
-robocopy /mir "..\..\Data\.data\ " "%BuildTarget%\.data\ "
-robocopy /mir "..\..\Data\.databeta\ " "%BuildTarget%\.databeta\ "
-robocopy /mir "..\..\Data\.data-custom\ " "%BuildTarget%\.data-custom\ "
+robocopy /mir "..\..\Data\.data\ " "%Dev2sxcOqtaneRoot%\2sxc\.data\ "
+robocopy /mir "..\..\Data\.databeta\ " "%Dev2sxcOqtaneRoot%\2sxc\.databeta\ "
+robocopy /mir "..\..\Data\.data-custom\ " "%Dev2sxcOqtaneRoot%\2sxc\.data-custom\ "
 robocopy /mir "..\..\Data\assets\ " "%BuildTarget%\assets\ "
 
 @Echo(
