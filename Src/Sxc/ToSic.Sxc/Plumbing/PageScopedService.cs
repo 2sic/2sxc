@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using ToSic.Eav.Plumbing;
 
-namespace ToSic.Sxc.Dnn
+namespace ToSic.Sxc.Plumbing
 {
     /// <summary>
     /// Provide page scoped services
@@ -8,13 +8,12 @@ namespace ToSic.Sxc.Dnn
     /// <typeparam name="T"></typeparam>
     public class PageScopedService<T> where T : class
     {
-        private readonly PageScopeAccessor _pageScopeAccessor;
-
         public PageScopedService(PageScopeAccessor pageScopeAccessor)
         {
             _pageScopeAccessor = pageScopeAccessor;
         }
+        private readonly PageScopeAccessor _pageScopeAccessor;
 
-        public T Value => _pageScopeAccessor.Scope.ServiceProvider.GetRequiredService<T>();
+        public T Value => _pageScopeAccessor.ServiceProvider.Build<T>();
     }
 }

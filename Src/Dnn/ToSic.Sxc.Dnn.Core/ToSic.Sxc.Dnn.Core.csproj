@@ -119,8 +119,6 @@
     <Compile Include="Dnn\Install\DnnEnvironmentInstaller_Manual.cs" />
     <Compile Include="Dnn\Install\DnnEnvironmentInstaller_Messages.cs" />
     <Compile Include="Dnn\Install\DnnEnvironmentInstaller_Statics.cs" />
-    <Compile Include="Dnn\DependencyInjection\PageScopeAccessor.cs" />
-    <Compile Include="Dnn\DependencyInjection\PageScopedService.cs" />
     <Compile Include="Dnn\Pages\ModuleWithContent.cs" />
     <Compile Include="Dnn\Pages\Pages.cs" />
     <Compile Include="Dnn\Run\ContextOfBlockExtensions.cs" />

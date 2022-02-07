@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Run;
-using ToSic.Razor.StartUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Paths;
@@ -16,6 +15,7 @@ using ToSic.Sxc.DotNet;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.LookUp;
+using ToSic.Sxc.Plumbing;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
@@ -127,6 +127,10 @@ namespace ToSic.Sxc
             // 13 - cleaning up handling of app paths
             services.TryAddTransient<AppFolderInitializer>();
             services.TryAddTransient<AppIconHelpers>();
+
+            // Provide page scoped services
+            services.TryAddScoped<PageScopeAccessor>();
+            services.TryAddScoped(typeof(PageScopedService<>));
 
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need

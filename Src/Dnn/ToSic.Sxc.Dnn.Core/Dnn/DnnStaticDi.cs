@@ -3,6 +3,7 @@ using System;
 using System.Web;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Plumbing;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -78,9 +79,8 @@ namespace ToSic.Sxc.Dnn
 
             // In the module scope, we initialize the scoped PageScope Accessor and give it the parent scope
             // This is necessary for it to be able to give page-scoped objects
-            var pageScopeAccessor = moduleScope.ServiceProvider.GetRequiredService<PageScopeAccessor>();
-            pageScopeAccessor.Scope = pageScope;
-
+            moduleScope.ServiceProvider.Build<PageScopeAccessor>()
+                .InitPageOfModule(pageScope.ServiceProvider);
             return moduleScope;
         }
     }
