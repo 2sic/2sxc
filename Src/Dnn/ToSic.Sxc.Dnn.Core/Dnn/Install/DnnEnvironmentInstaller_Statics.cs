@@ -19,13 +19,13 @@ namespace ToSic.Sxc.Dnn.Install
         {
             // When this is created, update the status
             //DnnBusinessController.UpdateUpgradeCompleteStatus();
-            VerifyUpgradeComplete(DnnStaticDi.GetPageScopedServiceProvider());
+            VerifyUpgradeComplete();
         }
 
-        public static void VerifyUpgradeComplete(IServiceProvider sp)
+        public static void VerifyUpgradeComplete()
         {
             // When this is created, update the status
-            UpgradeComplete = sp.Build<DnnEnvironmentInstaller>()
+            UpgradeComplete = DnnStaticDi.StaticBuild<DnnEnvironmentInstaller>()
                 .IsUpgradeComplete(Settings.Installation.LastVersionWithServerChanges, "- static check");
         }
 

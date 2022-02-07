@@ -22,6 +22,7 @@ namespace ToSic.Sxc.Dnn
     /// This is a factory to create CmsBlocks, Apps etc. and related objects from DNN.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
+    [Obsolete("This is obsolete in V13 but will continue to work. We're working on a better replacement, not ready yet.")]
     public static class Factory
     {
         /// <summary>
@@ -30,7 +31,9 @@ namespace ToSic.Sxc.Dnn
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        private static T StaticBuild<T>() => DnnStaticDi.GetPageScopedServiceProvider().Build<T>();
+#pragma warning disable CS0618
+        private static T StaticBuild<T>() => DnnStaticDi.StaticBuild<T>();
+#pragma warning restore CS0618
 
         /// <summary>
         /// Get a Root CMS Block if you know the TabId and the ModId

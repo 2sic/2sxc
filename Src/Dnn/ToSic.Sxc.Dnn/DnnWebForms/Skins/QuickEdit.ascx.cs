@@ -11,7 +11,10 @@ namespace ToSic.Sxc.Dnn.DnnWebForms.Skins
         {
             isEdit = DotNetNuke.Security.Permissions.TabPermissionController.HasTabPermission("EDIT");
             if (isEdit)
-                DnnStaticDi.GetPageScopedServiceProvider().Build<DnnClientResources>()
+                // TODO: Once we only support Dnn9, this should be replaced with the Dnn DI-accessor
+#pragma warning disable CS0618
+                DnnStaticDi.StaticBuild<DnnClientResources>()
+#pragma warning restore CS0618
                     .Init(Page, null, null)
                     .RegisterClientDependencies(Page, true, true, true);
         }

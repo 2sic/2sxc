@@ -33,7 +33,7 @@ namespace ToSic.Eav
         public static T Resolve<T>()
         {
             Warning13To14("Factory.Resolve<T>", typeof(T).FullName, "https://r.2sxc.org/brc-13-eav-factory");
-            return DnnStaticDi.GetPageScopedServiceProvider().Build<T>();
+            return DnnStaticDi.StaticBuild<T>();
 
             // Don't throw error yet, would probably cause too much breaks in public code
             // Activate ca. V14
