@@ -94,12 +94,22 @@ namespace ToSic.Sxc
             services.TryAddTransient<Polymorphism.Polymorphism>();
 
             // new in v12.02 - PageService & Page Features
-            services.TryAddTransient<ToSic.Sxc.Services.IPageService, PageService>();  // must be unique per module where it's used
+            services.TryAddTransient<Services.IPageService, PageService>();  // must be unique per module where it's used
 #pragma warning disable CS0618
-            services.TryAddTransient<ToSic.Sxc.Web.IPageService, PageService>();  // Obsolete version, needed to keep old Apps working which used this
+            services.TryAddTransient<Web.IPageService, PageService>();  // Obsolete version, needed to keep old Apps working which used this
 #pragma warning restore CS0618
 
-            services.TryAddScoped<PageServiceShared>();             // must be scoped / shared across all modules
+            // 2022-02-07 2dm experimental
+            // The PageServiceShared must always be generated from the PageScope
+            // I thought that the PageServiceShared must be scoped at page level, but I believe this is wrong
+            // Reason is that it seems to collect specs per module, and then actually only flushes it
+            // Because it shouldn't remain in the list for the second module
+            // So it actually looks like it's very module-scoped already, but had workarounds for it.
+            // So I think it really doesn't need to be have workarounds for it
+            services.TryAddScoped<PageServiceShared>();
+            //services.TryAddTransient<PageServiceShared>(); // this is only used for the next line where we create the scoped version
+            //services.TryAddScoped<IPageServiceShared>(sp => sp.Build<PageScopedService<PageServiceShared>>().Value);             // must be scoped / shared across all modules
+
             services.TryAddTransient<IPageFeatures, PageFeatures>();
             services.TryAddSingleton<IPageFeaturesManager, PageFeaturesManager>();
 
@@ -128,7 +138,8 @@ namespace ToSic.Sxc
             services.TryAddTransient<AppFolderInitializer>();
             services.TryAddTransient<AppIconHelpers>();
 
-            // Provide page scoped services
+            // v13 Provide page scoped services
+            // This is important, as most services are module scoped, but very few are actually scoped one level higher
             services.TryAddScoped<PageScopeAccessor>();
             services.TryAddScoped(typeof(PageScopedService<>));
 

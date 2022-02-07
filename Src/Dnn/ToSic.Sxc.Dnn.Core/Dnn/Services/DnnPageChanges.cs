@@ -26,13 +26,12 @@ namespace ToSic.Sxc.Dnn.Services
         public int Apply(Page page, RenderResult renderResult)
         {
             Log.Add("Will apply PageChanges");
-            //var changes = _pageChanges.Apply(_pageChanges.PageServiceShared.GetPropertyChangesAndFlush());
 
             if (renderResult == null) return 0;
 
             var dnnPage = new DnnHtmlPage();
 
-            AttachAssetsWIP(renderResult.Assets, page);
+            AttachAssets(renderResult.Assets, page);
             var count = Apply(dnnPage, renderResult.PageChanges);
 
             var headChanges = ApplyToHead(dnnPage, renderResult.HeadChanges);
@@ -85,7 +84,6 @@ namespace ToSic.Sxc.Dnn.Services
             // var pageService = GetService<ToSic.Sxc.Web.IPageService>();
             // pageService.Activate("fancybox4");
             // This will add a header for the sources of these features
-            //var feats = PageServiceShared.Features.ManualFeaturesGetNew();
             foreach (var f in feats) dnnPage.AddToHead(Tag.Custom(f.Html));
             return feats.Count;
         }
@@ -102,24 +100,21 @@ namespace ToSic.Sxc.Dnn.Services
 
         private void ApplyHttpStatus(Page page, RenderResult result)
         {
-            var pageServiceWithInternals = result; // _pageChanges.PageServiceShared; // as Sxc.Web.PageService.PageService;
-            if (page?.Response != null && pageServiceWithInternals?.HttpStatusCode != null)
-            {
-                var code = pageServiceWithInternals.HttpStatusCode.Value;
-                Log.Add($"Custom status code '{code}'. Will set and also {nameof(page.Response.TrySkipIisCustomErrors)}");
-                page.Response.StatusCode = code;
-                // Skip IIS & upstream redirects to a custom 404 so the Dnn page is preserved
-                page.Response.TrySkipIisCustomErrors = true;
-                if (pageServiceWithInternals.HttpStatusMessage != null)
-                {
-                    Log.Add($"Custom status Description '{pageServiceWithInternals.HttpStatusMessage}'.");
-                    page.Response.StatusDescription = pageServiceWithInternals.HttpStatusMessage;
-                }
-            }
+            if (page?.Response == null || result?.HttpStatusCode == null) return;
+
+            var code = result.HttpStatusCode.Value;
+            Log.Add($"Custom status code '{code}'. Will set and also {nameof(page.Response.TrySkipIisCustomErrors)}");
+            page.Response.StatusCode = code;
+            // Skip IIS & upstream redirects to a custom 404 so the Dnn page is preserved
+            page.Response.TrySkipIisCustomErrors = true;
+            if (result.HttpStatusMessage == null) return;
+
+            Log.Add($"Custom status Description '{result.HttpStatusMessage}'.");
+            page.Response.StatusDescription = result.HttpStatusMessage;
         }
 
 
-        public void AttachAssetsWIP(List<ClientAssetInfo> ass, Page page)
+        public void AttachAssets(List<ClientAssetInfo> ass, Page page)
         {
             ass.ForEach(a =>
             {
