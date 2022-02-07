@@ -13,9 +13,9 @@ namespace ToSic.Sxc.Plumbing
         /// <param name="serviceProvider"></param>
         public PageScopeAccessor(IServiceProvider serviceProvider) => ServiceProvider = serviceProvider;
 
-        public void InitPageOfModule(IServiceProvider serviceProvider)
+        public void InitPageOfModule(IServiceProvider pageServiceProvider)
         {
-            ServiceProvider = serviceProvider;
+            ServiceProvider = pageServiceProvider;
             ProvidedInModule = true;
         }
 
