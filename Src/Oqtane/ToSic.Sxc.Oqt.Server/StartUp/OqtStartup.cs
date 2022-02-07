@@ -79,9 +79,12 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             var serviceProvider = app.ApplicationServices;
 
             serviceProvider.Build<IDbConfiguration>().ConnectionString = Configuration.GetConnectionString("DefaultConnection");
-
+            
             var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
             globalConfig.GlobalFolder = Path.Combine(env.ContentRootPath, "wwwroot\\Modules\\ToSic.Sxc");
+            globalConfig.DataFolder = Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", Eav.Constants.FolderData);
+            globalConfig.TemporaryFolder = Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", Eav.Constants.TemporaryFolder);
+            globalConfig.InstructionsFolder = Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", Eav.Constants.InstructionsFolder);
             globalConfig.AssetsVirtualUrl = "~/Modules/ToSic.Sxc/assets/";
             globalConfig.SharedAppsFolder = $"/{OqtConstants.AppRoot}/{OqtConstants.SharedAppFolder}/"; // "/2sxc/Shared"
 

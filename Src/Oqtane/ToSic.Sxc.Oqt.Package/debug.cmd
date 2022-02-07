@@ -59,11 +59,15 @@ XCOPY "..\..\..\Dependencies\RazorBlade\Release\net5.0\ToSic.Razor.pdb" "%Oqtane
 @set BuildTarget=c:\Projects\2sxc\oqtane\oqtane.framework\Oqtane.Server\wwwroot\Modules\ToSic.Sxc
 
 @Echo(
+@Echo Copy ImportExport instructions
+robocopy /mir "..\ToSic.Sxc.Oqt.Server\Content\2sxc\system\ImportExport\ " "%Dev2sxcOqtaneRoot%\Content\2sxc\system\ImportExport\ "
+
+@Echo(
 @Echo Copy the data folders
-robocopy /mir "..\..\Data\.data\ " "%BuildTarget%\.data\ "
-robocopy /mir "..\..\Data\.databeta\ " "%BuildTarget%\.databeta\ "
-robocopy /mir "..\..\Data\.data-custom\ " "%BuildTarget%\.data-custom\ "
-robocopy "..\..\Data\.data-custom\ " "%BuildTarget%\.data-custom\ " /MIR /XO /XF "%BuildTarget%\.data-custom\configurations\features.json" /XF "%BuildTarget%\.data-custom\configurations\default.license.json"
+robocopy /mir "..\..\Data\.data\ " "%Dev2sxcOqtaneRoot%\Content\2sxc\system\.data\ "
+robocopy /mir "..\..\Data\.databeta\ " "%Dev2sxcOqtaneRoot%\Content\2sxc\system\.databeta\ "
+robocopy /mir "..\..\Data\.data-custom\ " "%Dev2sxcOqtaneRoot%\Content\2sxc\system\.data-custom\ "
+@REM robocopy "..\..\Data\.data-custom\ " "%Dev2sxcOqtaneRoot%\Content\2sxc\system\.data-custom\ " /MIR /XO /XF "%BuildTarget%\.data-custom\configurations\features.json" /XF "%BuildTarget%\.data-custom\configurations\default.license.json"
 robocopy /mir "..\..\Data\assets\ " "%BuildTarget%\assets\ "
 
 @Echo(
@@ -74,5 +78,3 @@ robocopy /mir "%Dev2sxcAssets%\system\ " "%BuildTarget%\system\ "
 
 @Echo(
 @echo Copied all files to this Website target: '%BuildTarget%' in mode Debug
-
-

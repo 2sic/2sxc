@@ -9,6 +9,7 @@ bin/
 Src/Integration/SxcEdit01/wwwroot/adam/*
 
 # 2sxc assets
+/Src/Oqtane/ToSic.Sxc.Oqt.Server/2sxc
 /Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc/.data
 /Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc/.data-custom
 /Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc/.databeta

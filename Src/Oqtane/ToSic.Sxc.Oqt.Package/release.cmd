@@ -1,7 +1,8 @@
-@set BuildTarget=..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc
+@set OqtaneRoot=..\ToSic.Sxc.Oqt.Server
+@set BuildTarget=%OqtaneRoot%\wwwroot\Modules\ToSic.Sxc
 
 @REM Copy the data folders
-robocopy /mir "..\..\Data\.data\ " "%BuildTarget%\.data\ "
+robocopy /mir "..\..\Data\.data\ " "%OqtaneRoot%\2sxc\.data\ "
 rmdir /Q /S "%BuildTarget%\.databeta"
 rmdir /Q /S "%BuildTarget%\.data-custom"
 robocopy /mir "..\..\Data\assets\ " "%BuildTarget%\assets\ "
