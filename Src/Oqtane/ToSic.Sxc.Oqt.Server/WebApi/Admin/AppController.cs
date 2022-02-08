@@ -96,7 +96,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// <returns></returns>
         [HttpGet]
         public IActionResult Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid) 
-            => RealController.Export<IActionResult>(appId, zoneId, includeContentGroups, resetAppGuid);
+            => RealController.Export(appId, zoneId, includeContentGroups, resetAppGuid);
 
         /// <summary>
         /// Used to be GET ImportExport/ExportForVersionControl

@@ -91,7 +91,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <returns></returns>
         [HttpGet]
         public HttpResponseMessage Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => RealController.Export<HttpResponseMessage>(appId, zoneId, includeContentGroups, resetAppGuid);
+            => RealController.Export(appId, zoneId, includeContentGroups, resetAppGuid);
 
         /// <summary>
         /// Used to be GET ImportExport/ExportForVersionControl
