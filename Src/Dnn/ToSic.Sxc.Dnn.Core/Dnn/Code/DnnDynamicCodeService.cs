@@ -1,5 +1,6 @@
 ﻿using System;
 using DotNetNuke.Entities.Modules;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code;
@@ -7,16 +8,25 @@ using ToSic.Sxc.Dnn.Run;
 
 namespace ToSic.Sxc.Dnn.Code
 {
+    [PrivateApi("hide implementation")]
     public class DnnDynamicCodeService: DynamicCodeService
     {
-        public DnnDynamicCodeService(IServiceProvider serviceProvider, Lazy<LogHistory> history) 
+        public DnnDynamicCodeService(
+            IServiceProvider serviceProvider, 
+            Lazy<LogHistory> history)
             : base(serviceProvider, history, DnnConstants.LogName)
         {
+            // Must use the ServiceProvider of the base class to generate these, 
+            // Otherwise it's in the wrong scope!
+            _blockGenerator = ServiceProvider.Build<Generator<DnnModuleBlockBuilder>>();
         }
+        private readonly Generator<DnnModuleBlockBuilder> _blockGenerator;
+
 
         public override IDynamicCode12 OfModule(int pageId, int moduleId)
         {
             var wrapLog = Log.Call<IDynamicCodeRoot>($"{pageId}, {moduleId}");
+            MakeSureLogIsInHistory();
             var moduleInfo = new ModuleController().GetModule(moduleId, pageId, false);
             if (moduleInfo == null)
             {
@@ -24,11 +34,11 @@ namespace ToSic.Sxc.Dnn.Code
                 Log.Add(msg);
                 throw new Exception(msg);
             }
-            var cmsBlock = ServiceProvider.Build<DnnModuleBlockBuilder>().Init(Log).GetBlockOfModule(moduleInfo);
-
-            var codeRoot = ServiceProvider.Build<DnnDynamicCodeRoot>().Init(cmsBlock, Log, Constants.CompatibilityLevel10) as DnnDynamicCodeRoot;
+            var cmsBlock = _blockGenerator.New.Init(Log).GetBlockOfModule(moduleInfo);
+            var codeRoot = CodeRootGenerator.New.Init(cmsBlock, Log, Constants.CompatibilityLevel12);
 
             return wrapLog("ok", codeRoot);
         }
+
     }
 }

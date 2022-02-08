@@ -75,7 +75,7 @@ namespace ToSic.Sxc.WebApi
                     // Look up if page publishing is enabled - if module context is not available, always false
                     Log.Add($"AppId: {appId}");
                     var app = Factory.App(appId, false, parentLog: Log);
-                    _DynCodeRoot.AttachAppAndInitLink(app);
+                    _DynCodeRoot.AttachApp(app);
                     found = true;
                 }
             } catch { /* ignore */ }

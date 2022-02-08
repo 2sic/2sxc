@@ -70,7 +70,7 @@ namespace Custom.Hybrid
                     // Look up if page publishing is enabled - if module context is not available, always false
                     Log.Add($"AppId: {appId}");
                     var app = LoadAppOnly(appId, CtxResolver.Site().Site);
-                    _DynCodeRoot.AttachAppAndInitLink(app);
+                    _DynCodeRoot.AttachApp(app);
                     found = true;
                 }
             }

@@ -11,6 +11,8 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Edit.InPageEditingSystem;
 using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
+// ReSharper disable InheritdocInvalidUsage
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Code
 {
@@ -28,6 +30,7 @@ namespace ToSic.Sxc.Code
         /// <summary>
         /// Helper class to ensure if dependencies change, inheriting objects don't need to change their signature
         /// </summary>
+        [PrivateApi]
         public class Dependencies
         {
             public IServiceProvider ServiceProvider { get; }
@@ -42,6 +45,7 @@ namespace ToSic.Sxc.Code
             }
         }
 
+        [PrivateApi]
         protected DynamicCodeRoot(Dependencies dependencies, string logPrefix) : base(logPrefix + ".DynCdR")
         {
             Deps = dependencies;
@@ -68,10 +72,6 @@ namespace ToSic.Sxc.Code
         }
 
         [PrivateApi]
-        internal Dictionary<string, object> PiggyBackers => _piggyBackers ?? (_piggyBackers = new Dictionary<string, object>());
-        [PrivateApi] private Dictionary<string, object> _piggyBackers;
-
-        [PrivateApi]
         internal PiggyBack PiggyBack => _piggyBack ?? (_piggyBack = new PiggyBack());
         private PiggyBack _piggyBack;
 
@@ -79,16 +79,16 @@ namespace ToSic.Sxc.Code
         public virtual IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility)
         {
             Log.LinkTo(parentLog ?? block?.Log);
+            CompatibilityLevel = compatibility;
             if (block == null)
                 return this;
 
-            CompatibilityLevel = compatibility;
             ((CmsContext) CmsContext).Update(block);
             Block = block;
             Data = block.Data;
             Edit = new InPageEditingHelper(block, Log);
 
-            AttachAppAndInitLink(block.App);
+            AttachApp(block.App);
 
             return this;
         }

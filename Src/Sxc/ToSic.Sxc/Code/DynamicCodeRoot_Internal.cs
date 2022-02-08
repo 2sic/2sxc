@@ -7,10 +7,7 @@ namespace ToSic.Sxc.Code
     public partial class DynamicCodeRoot
     {
         [PrivateApi]
-        public void AttachAppAndInitLink(IApp app)
-        {
-            App = app;
-        }
+        public void AttachApp(IApp app) => App = app;
 
         [PrivateApi]
         public int CompatibilityLevel { get; private set; }

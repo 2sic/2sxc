@@ -6,6 +6,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Web;
@@ -18,12 +19,12 @@ namespace ToSic.Sxc.LookUp
     {
         #region Constructor / DI
 
-        private readonly Lazy<ILookUpEngineResolver> _getEngineLazy;
+        private readonly LazyInitLog<ILookUpEngineResolver> _getEngineLazy;
         private readonly Lazy<IHttp> _httpLazy;
 
-        public AppConfigDelegate(Lazy<ILookUpEngineResolver> getEngineLazy, Lazy<IHttp> httpLazy) : base("Sxc.CnfPrv")
+        public AppConfigDelegate(LazyInitLog<ILookUpEngineResolver> getEngineLazy, Lazy<IHttp> httpLazy) : base("Sxc.CnfPrv")
         {
-            _getEngineLazy = getEngineLazy;
+            _getEngineLazy = getEngineLazy.SetLog(Log);
             _httpLazy = httpLazy;
         }
 
@@ -44,7 +45,7 @@ namespace ToSic.Sxc.LookUp
             return appToUse =>
             {
                 // check if we'll use the config already on the sxc-instance, or generate a new one
-                var lookUpEngine = GetConfigProviderForModule(context, appToUse as IApp, block);
+                var lookUpEngine = GetLookupEngineForContext(context, appToUse as IApp, block);
 
                 // return results
                 return new AppDataConfiguration(showDrafts, lookUpEngine);
@@ -70,21 +71,21 @@ namespace ToSic.Sxc.LookUp
         /// </summary>
         internal Func<App, IAppDataConfiguration> Build(bool showDrafts)
             => appToUse => new AppDataConfiguration(showDrafts,
-                GetConfigProviderForModule(null, appToUse as IApp, null));
+                GetLookupEngineForContext(null, appToUse as IApp, null));
 
 
 
         // note: not sure yet where the best place for this method is, so it's here for now
         // will probably move again some day
-        internal LookUpEngine GetConfigProviderForModule(IContextOfSite context, IApp appForLookup, IBlock blockForLookup)
+        internal LookUpEngine GetLookupEngineForContext(IContextOfSite context, IApp appForLookup, IBlock blockForLookup)
         {
             var modId = (context as ContextOfBlock)?.Module.Id ?? 0;
 
-            var wrapLog = Log.Call<LookUpEngine>($"{modId}, ..., ...");
+            var wrapLog = Log.Call<LookUpEngine>($"module: {modId}, app: {appForLookup?.AppId} ..., ...");
 
 
             // Find the standard DNN property sources if PortalSettings object is available
-            var envLookups = _getEngineLazy.Value.Init(Log).GetLookUpEngine(modId);
+            var envLookups = _getEngineLazy.Ready.GetLookUpEngine(modId);
             Log.Add($"Environment provided {envLookups.Sources.Count} sources");
 
             var provider = new LookUpEngine(envLookups, Log);

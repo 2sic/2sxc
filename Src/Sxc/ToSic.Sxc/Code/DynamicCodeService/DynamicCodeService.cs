@@ -4,7 +4,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.LookUp;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -24,9 +23,15 @@ namespace ToSic.Sxc.Code
             _history = history;
             var serviceScope = serviceProvider.CreateScope();
             ServiceProvider = serviceScope.ServiceProvider;
+            CodeRootGenerator = ServiceProvider.Build<Generator<DynamicCodeRoot>>();
+            AppGenerator = ServiceProvider.Build<Generator<App>>();
+            AppConfigDelegateGenerator = ServiceProvider.Build<GeneratorLog<AppConfigDelegate>>().SetLog(Log);
         }
         protected IServiceProvider ServiceProvider { get; }
         private readonly Lazy<LogHistory> _history;
+        protected readonly Generator<DynamicCodeRoot> CodeRootGenerator;
+        protected readonly Generator<App> AppGenerator;
+        protected readonly GeneratorLog<AppConfigDelegate> AppConfigDelegateGenerator;
 
         public IDynamicCodeService Init(ILog parentLog)
         {
@@ -36,7 +41,7 @@ namespace ToSic.Sxc.Code
         }
         private bool _logInitDone;
 
-        private void MakeSureLogIsInHistory()
+        protected void MakeSureLogIsInHistory()
         {
             if (_logInitDone) return;
             _logInitDone = true;
@@ -45,19 +50,20 @@ namespace ToSic.Sxc.Code
 
         #endregion
 
-        public IDynamicCode OfApp(int appId)
+        public IDynamicCode12 OfApp(int appId) => OfAppInternal(appId: appId);
+        public IDynamicCode12 OfApp(int zoneId, int appId) => OfAppInternal(zoneId: zoneId, appId: appId);
+
+        private IDynamicCode12 OfAppInternal(int zoneId = Eav.Constants.IdNotInitialized, int appId = Eav.Constants.IdNotInitialized)
         {
-            var ctxResolver = ServiceProvider.Build<IContextResolver>();
-            var appCtx = ctxResolver.App(appId);
-            var dynCodeRoot = ServiceProvider.Build<DynamicCodeRoot>();
-            // dynCodeRoot.Init()
-            return null;
+            var wrapLog = Log.Call<IDynamicCode12>();
+            MakeSureLogIsInHistory();
+            var codeRoot = CodeRootGenerator.New.Init(null, Log, Constants.CompatibilityLevel12);
+            var app = App(zoneId: zoneId, appId: appId);
+            codeRoot.AttachApp(app);
+            return wrapLog("ok", codeRoot);
         }
 
         public abstract IDynamicCode12 OfModule(int pageId, int moduleId);
-
-        //public IDynamicCode OfModule(int pageId, int moduleId) => null;
-
 
         /// <summary>
         /// Get a full app-object for accessing data of the app from outside
@@ -91,10 +97,10 @@ namespace ToSic.Sxc.Code
         private IApp App(int zoneId, int appId, ISite site, bool withUnpublished)
         {
             var wrapLog = Log.Call<IApp>($"z:{zoneId}, a:{appId}, site:{site != null}, showDrafts: {withUnpublished}");
-            var app = ServiceProvider.Build<App>();
+            var app = AppGenerator.New;
             if (site != null) app.PreInit(site);
             var appStuff = app.Init(new AppIdentity(zoneId, appId),
-                ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(withUnpublished),
+                AppConfigDelegateGenerator.New/*.Init(Log)*/.Build(withUnpublished),
                 Log);
             return wrapLog(null, appStuff);
         }
