@@ -6,7 +6,6 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Code;
@@ -82,8 +81,9 @@ namespace ToSic.Sxc.Dnn
         public static IBlockBuilder CmsBlock(IModule module, ILog parentLog = null)
         {
             var dnnModule = ((Module<ModuleInfo>)module)?.UnwrappedContents;
-            var context = StaticBuild<IContextOfBlock>().InitDnnSiteModuleAndBlockContext(dnnModule, parentLog);
-            return StaticBuild<BlockFromModule>().Init(context, parentLog).BlockBuilder;
+            //var context = StaticBuild<IContextOfBlock>().InitDnnSiteModuleAndBlockContext(dnnModule, parentLog);
+            //return StaticBuild<BlockFromModule>().Init(context, parentLog).BlockBuilder;
+            return StaticBuild<DnnModuleBlockBuilder>().Init(parentLog).GetBlockOfModule(dnnModule).BlockBuilder;
         }
 
         /// <summary>

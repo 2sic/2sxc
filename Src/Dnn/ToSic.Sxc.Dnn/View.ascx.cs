@@ -7,7 +7,6 @@ using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Beta.LightSpeed;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Services;
@@ -25,12 +24,6 @@ namespace ToSic.Sxc.Dnn
         private IServiceProvider _serviceProvider;
 
         private IBlock Block { get; set; }
-
-        private IBlock LoadBlock()
-        {
-            var newCtx = ServiceProvider.Build<IContextOfBlock>().InitDnnSiteModuleAndBlockContext(ModuleConfiguration, Log);
-            return ServiceProvider.Build<BlockFromModule>().Init(newCtx, Log);
-        }
 
         private ILog Log { get; } = new Log("Sxc.View");
         private Stopwatch _stopwatch;
@@ -72,7 +65,7 @@ namespace ToSic.Sxc.Dnn
             // ensure everything is ready and that we know if we should activate the client-dependency
             TryCatchAndLogToDnn(() =>
             {
-                Block = LoadBlock();
+                Block = ServiceProvider.Build<DnnModuleBlockBuilder>().Init(Log).GetBlockOfModule(ModuleConfiguration);
                 if (checkPortalIsReady) DnnReadyCheckTurbo.EnsureSiteAndAppFoldersAreReady(this, Block, Log);
                 DnnClientResources = ServiceProvider.Build<DnnClientResources>()
                     .Init(Page, requiresPre1025Behavior == false ? null : Block?.BlockBuilder, Log);

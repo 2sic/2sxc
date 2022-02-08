@@ -35,7 +35,6 @@ using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Admin;
 using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Plumbing;
 using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Search;
@@ -194,6 +193,9 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // v12.05
             services.TryAddTransient<IMailService, DnnMailService>();
+
+            // v13
+            services.TryAddTransient<DnnModuleBlockBuilder>();
 
             return services;
         }

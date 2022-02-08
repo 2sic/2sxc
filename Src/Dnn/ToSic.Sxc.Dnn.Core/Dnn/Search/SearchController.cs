@@ -74,8 +74,9 @@ namespace ToSic.Sxc.Search
             // In case it's not loaded yet
             _appsCache.Load(_serviceProvider, module.BlockIdentifier, DnnSite.DefaultCultureCode);
 
-            var dnnContext = _serviceProvider.Build<IContextOfBlock>().InitDnnSiteModuleAndBlockContext(DnnModule, Log);
-            Block = _serviceProvider.Build<BlockFromModule>().Init(dnnContext, Log);
+            //var dnnContext = _serviceProvider.Build<IContextOfBlock>().InitDnnSiteModuleAndBlockContext(DnnModule, Log);
+            //Block = _serviceProvider.Build<BlockFromModule>().Init(dnnContext, Log);
+            Block = _serviceProvider.Build<DnnModuleBlockBuilder>().Init(Log).GetBlockOfModule(DnnModule);
             
             if (Block.View == null) return wrapLog("cancel", "no view");
             if (Block.View.SearchIndexingDisabled) return wrapLog("cancel", "search disabled"); // new in 12.02

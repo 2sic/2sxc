@@ -7,12 +7,10 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
-using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
@@ -90,14 +88,12 @@ namespace ToSic.Sxc.Dnn.Cms
             {
                 // publish all entites of this content block
                 var dnnModule = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
-                //var container = _serviceProvider.Build<DnnContainer>().Init(dnnModule, Log);
                 // must find tenant through module, as the Portal-Settings.Current is null in search mode
-                //var tenant = new DnnSite().Init(dnnModule.OwnerPortalID);
-                var dnnContext = _serviceProvider.Build<IContextOfBlock>().InitDnnSiteModuleAndBlockContext(dnnModule, Log);
-                var cb = _serviceProvider.Build<BlockFromModule>().Init(dnnContext, Log);
-                    //.Init(DnnContextOfBlock.Create(tenant, container, _serviceProvider), Log);
+                //var dnnContext = _serviceProvider.Build<IContextOfBlock>().InitDnnSiteModuleAndBlockContext(dnnModule, Log);
+                //var cb = _serviceProvider.Build<BlockFromModule>().Init(dnnContext, Log);
+                var cb = _serviceProvider.Build<DnnModuleBlockBuilder>().Init(Log).GetBlockOfModule(dnnModule);
 
-                Log.Add($"found dnn mod {dnnContext.Module.Id}, tenant {dnnContext.Site.Id}, cb exists: {cb.ContentGroupExists}");
+                Log.Add($"found dnn mod {cb.Context.Module.Id}, tenant {cb.Context.Site.Id}, cb exists: {cb.ContentGroupExists}");
                 if (cb.ContentGroupExists)
                 {
                     Log.Add("cb exists");
@@ -114,8 +110,6 @@ namespace ToSic.Sxc.Dnn.Cms
                     var attachedPresItems = list
                         .Select(e => e.GetDecorator<EntityInBlockDecorator>()?.Presentation)
                         .Where(p => p != null);
-                        //.Where(e => (e as EntityInBlock)?.Presentation != null)
-                        //.Select(e => ((EntityInBlock)e).Presentation);
                     Log.Add($"adding presentation item⋮{attachedPresItems.Count()}");
                     list = list.Concat(attachedPresItems);
                     // ReSharper restore PossibleMultipleEnumeration
