@@ -1,6 +1,5 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Apps;
@@ -146,50 +145,6 @@ namespace ToSic.Sxc.Web
             ImgLinker.Debug = debug;
         }
         
-
-        private static bool IsInvalidUrl(UrlParts parts)
-        {
-            // if the url seems invalid (like `hello:there` or an invalid `file:593902` reference) nothing is added
-            if (parts.BuildUrl().Contains(":"))
-                return true;
-
-            // if the url starts with `../` (like `../image.jpg`) than nothing to do
-            if (parts.Path.StartsWith("../"))
-                return true;
-
-            // if the url has with `/../` (like `/sibling1/../sibling2/image.jpg`) than nothing to do
-            if (parts.Path.Contains("/../"))
-                return true;
-
-            //var converter = new UriTypeConverter();
-            //if (!converter.IsValid(parts.Path))
-            //    return true;
-
-            //if (!Uri.IsWellFormedUriString(parts.Path, UriKind.Relative))
-            //    return true;
-
-            //if (!string.IsNullOrWhiteSpace(parts.Path.TrimStart('/')) && Uri.TryCreate(parts.Path.TrimStart('/'), UriKind.RelativeOrAbsolute, out Uri uriResult))
-            //    return true;
-
-            return false;
-        }
-
-        // TODO: review w/Tonci STV if this is necessary any where
-        private string UrlIsRelative(UrlParts parts)
-        {
-            // clean "~" from path
-            if (parts.Path.StartsWith("~"))
-                parts.Path = parts.Path.TrimStart('~').PrefixSlash(); // ensure that we get host instead of current page url
-
-            // invalid urls
-            if (IsInvalidUrl(parts)) return parts.Url;
-
-            // create absolute url
-            parts.Path = $"{GetCurrentLinkRoot()}{parts.Path.PrefixSlash()}";
-
-            return parts.BuildUrl();
-        }
-
         public abstract string GetCurrentLinkRoot();
 
         public abstract string GetCurrentRequestUrl();

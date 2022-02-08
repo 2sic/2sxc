@@ -38,24 +38,15 @@ namespace ToSic.Sxc.Web
         {
         }
 
-        protected override string ToApi(string api, string parameters = null)
-        {
-            // todo: this looks bad, not sure if this should be in each unique implementation
-            if (!string.IsNullOrEmpty(parameters)) parameters = $"?{parameters}";
+        protected override string ToApi(string api, string parameters = null) => $"{api}{Parameters(parameters)}";
 
-            return $"{api}{parameters}";
-        }
-
-        protected override string ToPage(int? pageId, string parameters = null)
-        {
-            // todo: this looks bad!
-            if (!string.IsNullOrEmpty(parameters)) parameters = $"?{parameters}";
-
+        protected override string ToPage(int? pageId, string parameters = null) =>
             // Page or Api?
-            return pageId != null
-                    ? string.Format(AnyPageUrl, pageId) + parameters
-                    : $"{CurrentPageUrl}{parameters}";
-        }
+            pageId != null
+                ? string.Format(AnyPageUrl, pageId) + Parameters(parameters)
+                : $"{CurrentPageUrl}{Parameters(parameters)}";
+
+        private static string Parameters(string parameters) => string.IsNullOrEmpty(parameters) ? parameters : $"?{parameters}";
 
 
         public static void SwitchModeToUgly(bool uglyOn)
