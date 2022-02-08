@@ -6,6 +6,7 @@ using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Dnn.Context
@@ -18,15 +19,15 @@ namespace ToSic.Sxc.Dnn.Context
     {
         #region Constructors and DI
         
-        public DnnModule(IAppStates appStates, Lazy<AppFinder> appFinderLazy, ISite site): base("Dnn.Contnr")
+        public DnnModule(IAppStates appStates, LazyInitLog<AppFinder> appFinderLazy, ISite site): base("Dnn.Contnr")
         {
             _appStates = appStates;
-            _appFinderLazy = appFinderLazy;
+            _appFinderLazy = appFinderLazy.SetLog(Log);
             _site = site;
         }
 
         private readonly IAppStates _appStates;
-        private readonly Lazy<AppFinder> _appFinderLazy;
+        private readonly LazyInitLog<AppFinder> _appFinderLazy;
         private readonly ISite _site;
 
         /// <summary>
@@ -108,7 +109,7 @@ namespace ToSic.Sxc.Dnn.Context
             if (module.ModuleSettings.ContainsKey(Settings.ModuleSettingApp))
             {
                 var guid = module.ModuleSettings[Settings.ModuleSettingApp].ToString();
-                var appId = _appFinderLazy.Value.Init(Log).FindAppId(zoneId, guid);
+                var appId = _appFinderLazy.Ready.FindAppId(zoneId, guid);
                 return wrapLog($"{msg} AppG:{guid} = app:{appId}", appId);
             }
 

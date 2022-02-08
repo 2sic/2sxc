@@ -9,7 +9,6 @@ using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Dnn.Context;
 
 namespace ToSic.Sxc.Dnn.Run
@@ -22,13 +21,13 @@ namespace ToSic.Sxc.Dnn.Run
         private const string PortalSettingZoneId = "ToSIC_SexyContent_ZoneID";
 
         /// <inheritdoc />
-        public DnnZoneMapper(IServiceProvider spForNewSites, Lazy<ZoneCreator> zoneCreatorLazy, IAppStates appStates) : base(appStates, "DNN.ZoneMp")
+        public DnnZoneMapper(IServiceProvider spForNewSites, LazyInitLog<ZoneCreator> zoneCreatorLazy, IAppStates appStates) : base(appStates, "DNN.ZoneMp")
         {
             _spForNewSites = spForNewSites;
-            _zoneCreatorLazy = zoneCreatorLazy;
+            _zoneCreatorLazy = zoneCreatorLazy.SetLog(Log);
         }
         private readonly IServiceProvider _spForNewSites;
-        private readonly Lazy<ZoneCreator> _zoneCreatorLazy;
+        private readonly LazyInitLog<ZoneCreator> _zoneCreatorLazy;
 
 
         /// <inheritdoc />
@@ -52,7 +51,7 @@ namespace ToSic.Sxc.Dnn.Run
             if (c.ContainsKey(PortalSettingZoneId)) return int.Parse(c[PortalSettingZoneId]);
 
             var portalSettings = new PortalSettings(siteId);
-            var zoneId = _zoneCreatorLazy.Value.Init(Log).Create(portalSettings.PortalName + " (Portal " + siteId + ")");
+            var zoneId = _zoneCreatorLazy.Ready/*.Init(Log)*/.Create(portalSettings.PortalName + " (Portal " + siteId + ")");
             PortalController.UpdatePortalSetting(siteId, PortalSettingZoneId, zoneId.ToString());
             return zoneId;
 
