@@ -34,13 +34,20 @@ namespace ToSic.Sxc.Dnn
         private static T StaticBuild<T>() => DnnStaticDi.StaticBuild<T>();
 #pragma warning restore CS0618
 
+        private static ILog NewLog()
+        {
+            var log = new Log("Dnn.Factor");
+            History.Add("obsolete-dnn-factory", log);
+            return log;
+        }
+
         /// <summary>
         /// Get a Root CMS Block if you know the TabId and the ModId
         /// </summary>
         /// <param name="pageId">The DNN tab id (page id)</param>
         /// <param name="modId">The DNN Module id</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
-        public static IBlockBuilder CmsBlock(int pageId, int modId) => CmsBlock(pageId, modId, null);
+        public static IBlockBuilder CmsBlock(int pageId, int modId) => CmsBlock(pageId, modId, NewLog());
 
         /// <summary>
         /// Get a Root CMS Block if you know the TabId and the ModId
@@ -70,7 +77,7 @@ namespace ToSic.Sxc.Dnn
         /// <param name="moduleInfo">A DNN ModuleInfo object</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
         public static IBlockBuilder CmsBlock(ModuleInfo moduleInfo)
-            => CmsBlock(((DnnModule)StaticBuild<IModule>()).Init(moduleInfo, null));
+            => CmsBlock(((DnnModule)StaticBuild<IModule>()).Init(moduleInfo, NewLog()));
 
         /// <summary>
         /// Get a Root CMS Block if you have the ModuleInfo object.
@@ -80,6 +87,8 @@ namespace ToSic.Sxc.Dnn
         /// <returns>An initialized CMS Block, ready to use/render</returns>
         public static IBlockBuilder CmsBlock(IModule module, ILog parentLog = null)
         {
+            Compatibility.Obsolete.Warning13To14($"ToSic.Sxc.Dnn.Factory.{nameof(CmsBlock)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
+            parentLog = parentLog ?? NewLog();
             var dnnModule = ((Module<ModuleInfo>)module)?.UnwrappedContents;
             return StaticBuild<DnnModuleBlockBuilder>().Init(parentLog).GetBlockOfModule(dnnModule).BlockBuilder;
         }
@@ -89,8 +98,12 @@ namespace ToSic.Sxc.Dnn
         /// </summary>
         /// <param name="blockBuilder">CMS Block for which the helper is targeted. </param>
         /// <returns>A Code Helper based on <see cref="IDnnDynamicCode"/></returns>
-        public static IDnnDynamicCode DynamicCode(IBlockBuilder blockBuilder) 
-            => StaticBuild<DnnDynamicCodeRoot>().Init(blockBuilder.Block, null, Constants.CompatibilityLevel10) as DnnDynamicCodeRoot;
+        public static IDnnDynamicCode DynamicCode(IBlockBuilder blockBuilder)
+        {
+            Compatibility.Obsolete.Warning13To14($"ToSic.Sxc.Dnn.Factory.{nameof(DynamicCode)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
+            return StaticBuild<DnnDynamicCodeRoot>().Init(blockBuilder.Block, null, Constants.CompatibilityLevel10) as
+                DnnDynamicCodeRoot;
+        }
 
         /// <summary>
         /// Get a full app-object for accessing data of the app from outside
@@ -104,7 +117,7 @@ namespace ToSic.Sxc.Dnn
         /// <param name="parentLog">optional logger to attach to</param>
         /// <returns>An initialized App object which you can use to access App.Data</returns>
         public static IApp App(int appId, bool unusedButKeepForApiStability = false, bool showDrafts = false, ILog parentLog = null)
-            => App(AppConstants.AutoLookupZone, appId, null, showDrafts, parentLog);
+            => App(AppConstants.AutoLookupZone, appId, null, showDrafts, parentLog ?? NewLog());
 
         /// <summary>
         /// Get a full app-object for accessing data of the app from outside
@@ -119,7 +132,7 @@ namespace ToSic.Sxc.Dnn
         /// <param name="parentLog">optional logger to attach to</param>
         /// <returns>An initialized App object which you can use to access App.Data</returns>
         public static IApp App(int zoneId, int appId, bool unusedButKeepForApiStability = false, bool showDrafts = false, ILog parentLog = null)
-            => App(zoneId, appId, null, showDrafts, parentLog);
+            => App(zoneId, appId, null, showDrafts, parentLog ?? NewLog());
 
         /// <summary>
         /// Get a full app-object for accessing data of the app from outside
@@ -149,6 +162,8 @@ namespace ToSic.Sxc.Dnn
             bool showDrafts,
             ILog parentLog)
         {
+            Compatibility.Obsolete.Warning13To14($"ToSic.Sxc.Dnn.Factory.{nameof(App)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
+            parentLog = parentLog ?? NewLog();
             var log = new Log("Dnn.Factry", parentLog);
             log.Add($"Create App(z:{zoneId}, a:{appId}, tenantObj:{site != null}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
             var app = StaticBuild<App>();
