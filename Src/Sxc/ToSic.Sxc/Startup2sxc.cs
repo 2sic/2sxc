@@ -143,6 +143,9 @@ namespace ToSic.Sxc
             services.TryAddScoped<PageScopeAccessor>();
             services.TryAddScoped(typeof(PageScopedService<>));
 
+            // v13 DynamicCodeService
+            services.TryAddTransient<DynamicCodeService.Dependencies>();
+
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need
             services.AddSxcCoreFallbackServices();

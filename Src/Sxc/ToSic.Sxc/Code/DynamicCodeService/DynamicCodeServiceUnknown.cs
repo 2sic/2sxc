@@ -1,13 +1,12 @@
 ﻿using System;
-using ToSic.Eav.Logging;
 using ToSic.Eav.Run.Unknown;
 
 namespace ToSic.Sxc.Code
 {
     public class DynamicCodeServiceUnknown: DynamicCodeService
     {
-        public DynamicCodeServiceUnknown(IServiceProvider serviceProvider, Lazy<LogHistory> history, WarnUseOfUnknown<DynamicCodeServiceUnknown> warn) 
-            : base(serviceProvider, history, "Unk")
+        public DynamicCodeServiceUnknown(Dependencies dependencies, WarnUseOfUnknown<DynamicCodeServiceUnknown> warn) 
+            : base(dependencies, "Unk")
         {
         }
 

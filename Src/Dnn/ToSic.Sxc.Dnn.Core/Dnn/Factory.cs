@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn
     /// This is a factory to create CmsBlocks, Apps etc. and related objects from DNN.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    [Obsolete("This is obsolete in V13 but will continue to work. We're working on a better replacement, not ready yet.")]
+    [Obsolete("This is obsolete in V13 but will continue to work for now, we plan to remove in v14. Use the IDynamicCodeService instead.")]
     public static class Factory
     {
         /// <summary>
@@ -81,8 +81,6 @@ namespace ToSic.Sxc.Dnn
         public static IBlockBuilder CmsBlock(IModule module, ILog parentLog = null)
         {
             var dnnModule = ((Module<ModuleInfo>)module)?.UnwrappedContents;
-            //var context = StaticBuild<IContextOfBlock>().InitDnnSiteModuleAndBlockContext(dnnModule, parentLog);
-            //return StaticBuild<BlockFromModule>().Init(context, parentLog).BlockBuilder;
             return StaticBuild<DnnModuleBlockBuilder>().Init(parentLog).GetBlockOfModule(dnnModule).BlockBuilder;
         }
 

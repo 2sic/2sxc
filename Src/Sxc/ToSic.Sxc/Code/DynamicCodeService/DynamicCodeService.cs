@@ -5,6 +5,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.LookUp;
+using ToSic.Sxc.Services;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -16,19 +17,34 @@ namespace ToSic.Sxc.Code
     /// </summary>
     public abstract class DynamicCodeService: HasLog, IDynamicCodeService
     {
+        private readonly Dependencies _dependencies;
+
         #region Constructor and Init
 
-        protected DynamicCodeService(IServiceProvider serviceProvider, Lazy<LogHistory> history, string logPrefix): base($"{logPrefix}.DCS")
+        public class Dependencies
         {
-            _history = history;
-            var serviceScope = serviceProvider.CreateScope();
-            ServiceProvider = serviceScope.ServiceProvider;
+            public Dependencies(IServiceProvider serviceProvider, Lazy<LogHistory> history, Lazy<IUser> user)
+            {
+                ServiceProvider = serviceProvider;
+                History = history;
+                User = user;
+            }
+            public IServiceProvider ServiceProvider { get; }
+            public Lazy<LogHistory> History { get; }
+            public Lazy<IUser> User { get; }
+        }
+
+        protected DynamicCodeService(Dependencies dependencies, string logPrefix): base($"{logPrefix}.DCS")
+        {
+            _dependencies = dependencies;
+            ServiceProvider = dependencies.ServiceProvider.CreateScope().ServiceProvider;
+            // Important: These generators must be built inside the scope, so they must be made here
+            // and not come from the constructor injection
             CodeRootGenerator = ServiceProvider.Build<Generator<DynamicCodeRoot>>();
             AppGenerator = ServiceProvider.Build<Generator<App>>();
             AppConfigDelegateGenerator = ServiceProvider.Build<GeneratorLog<AppConfigDelegate>>().SetLog(Log);
         }
         protected IServiceProvider ServiceProvider { get; }
-        private readonly Lazy<LogHistory> _history;
         protected readonly Generator<DynamicCodeRoot> CodeRootGenerator;
         protected readonly Generator<App> AppGenerator;
         protected readonly GeneratorLog<AppConfigDelegate> AppConfigDelegateGenerator;
@@ -45,15 +61,17 @@ namespace ToSic.Sxc.Code
         {
             if (_logInitDone) return;
             _logInitDone = true;
-            _history.Value.Add("dynamic-code-service", base.Log);
+            _dependencies.History.Value.Add("dynamic-code-service", base.Log);
         }
 
         #endregion
 
+        /// <inheritdoc />
         public IDynamicCode12 OfApp(int appId) => OfAppInternal(appId: appId);
+        /// <inheritdoc />
         public IDynamicCode12 OfApp(int zoneId, int appId) => OfAppInternal(zoneId: zoneId, appId: appId);
 
-        private IDynamicCode12 OfAppInternal(int zoneId = Eav.Constants.IdNotInitialized, int appId = Eav.Constants.IdNotInitialized)
+        private IDynamicCode12 OfAppInternal(int? zoneId = null, int? appId = null)
         {
             var wrapLog = Log.Call<IDynamicCode12>();
             MakeSureLogIsInHistory();
@@ -65,42 +83,34 @@ namespace ToSic.Sxc.Code
 
         public abstract IDynamicCode12 OfModule(int pageId, int moduleId);
 
-        /// <summary>
-        /// Get a full app-object for accessing data of the app from outside
-        /// </summary>
-        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="zoneId"></param>
-        /// <param name="appId">The AppID of the app you need</param>
-        /// <param name="site">The owner portal - this is important when retrieving Apps from another portal.</param>
-        /// <param name="withUnpublished">Show draft items - usually false for visitors, true for editors/admins.</param>
-        /// <returns>An initialized App object which you can use to access App.Data</returns>
+        /// <inheritdoc />
         public IApp App(
             string noParamOrder = Eav.Parameters.Protector,
-            int zoneId = Eav.Constants.IdNotInitialized,
-            int appId = Eav.Constants.IdNotInitialized,
+            int? zoneId = null,
+            int? appId = null,
             ISite site = null,
-            bool withUnpublished = false)
+            bool? withUnpublished = null)
         {
             MakeSureLogIsInHistory();
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(App),
                 $"{nameof(zoneId)}, {nameof(appId)} (required), {nameof(site)}, {nameof(withUnpublished)}");
 
             // Ensure AppId is provided
-            if (appId < 1) throw new ArgumentException($"At least the {nameof(appId)} is required and must be a valid AppId", nameof(appId));
+            var realAppId = appId ?? throw new ArgumentException($"At least the {nameof(appId)} is required and must be a valid AppId", nameof(appId));
 
             // todo: lookup zoneid if not provided
-            zoneId = zoneId != Eav.Constants.IdNotInitialized ? zoneId : AppConstants.AutoLookupZone;
-            return App(zoneId, appId, site, withUnpublished: withUnpublished);
+            var realZoneId = zoneId ?? AppConstants.AutoLookupZone;
+            return App(zoneId ?? Eav.Constants.IdNotInitialized, realAppId, site, withUnpublished: withUnpublished);
         }
 
 
-        private IApp App(int zoneId, int appId, ISite site, bool withUnpublished)
+        private IApp App(int zoneId, int appId, ISite site, bool? withUnpublished = null)
         {
             var wrapLog = Log.Call<IApp>($"z:{zoneId}, a:{appId}, site:{site != null}, showDrafts: {withUnpublished}");
             var app = AppGenerator.New;
             if (site != null) app.PreInit(site);
             var appStuff = app.Init(new AppIdentity(zoneId, appId),
-                AppConfigDelegateGenerator.New/*.Init(Log)*/.Build(withUnpublished),
+                AppConfigDelegateGenerator.New.Build(withUnpublished ?? _dependencies.User.Value.IsAdmin),
                 Log);
             return wrapLog(null, appStuff);
         }
