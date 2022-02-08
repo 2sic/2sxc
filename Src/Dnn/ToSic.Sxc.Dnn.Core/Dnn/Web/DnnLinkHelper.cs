@@ -2,7 +2,6 @@
 using System.Web;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
-using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Web;
@@ -16,8 +15,13 @@ namespace ToSic.Sxc.Dnn.Web
     [PrivateApi("This implementation shouldn't be visible")]
     public class DnnLinkHelper : LinkHelper
     {
+        private readonly Lazy<DnnValueConverter> _dnnValueConverterLazy;
+
         [PrivateApi]
-        public DnnLinkHelper(ImgResizeLinker imgLinker): base(imgLinker) { }
+        public DnnLinkHelper(ImgResizeLinker imgLinker, Lazy<DnnValueConverter> dnnValueConverterLazy) : base(imgLinker)
+        {
+            _dnnValueConverterLazy = dnnValueConverterLazy;
+        }
 
         [PrivateApi] private IDnnContext Dnn => _dnn ?? (_dnn = CodeRoot.GetService<IDnnContext>());
         private IDnnContext _dnn;
@@ -25,10 +29,16 @@ namespace ToSic.Sxc.Dnn.Web
         protected override string ToApi(string api, string parameters = null) 
             => Api(path: LinkHelpers.CombineApiWithQueryString(api.TrimPrefixSlash(), parameters));
 
-        protected override string ToPage(int? pageId, string parameters = null) =>
-            parameters == null
+        protected override string ToPage(int? pageId, string parameters = null)
+        {
+            if (pageId.HasValue)
+                return _dnnValueConverterLazy.Value.ResolvePageLink(pageId.Value, parameters);
+
+            return parameters == null
                 ? Dnn.Tab.FullUrl
-                : DotNetNuke.Common.Globals.NavigateURL(pageId ?? Dnn.Tab.TabID, "", parameters); // NavigateURL returns absolute links
+                : DotNetNuke.Common.Globals.NavigateURL(Dnn.Tab.TabID, "", parameters);
+            // NavigateURL returns absolute links
+        }
 
 
         private string Api(string noParamOrder = Eav.Parameters.Protector, string path = null)
