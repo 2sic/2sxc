@@ -64,11 +64,12 @@ namespace ToSic.Sxc.Search
             var wrapLog = Log.Call<string>($"start search for mod#{DnnModule?.ModuleID}");
             if (DnnModule == null) return wrapLog("cancel", "no module");
             
+            // This changes site in whole scope
+            DnnSite = ((DnnSite)_serviceProvider.Build<ISite>()).TrySwap(DnnModule, Log);
+
             // New Context because Portal-Settings.Current is null
             var appId = module.BlockIdentifier.AppId;
             if (appId == AppConstants.AppIdNotFound || appId == Eav.Constants.NullId) return wrapLog("cancel", "no app id");
-
-            DnnSite = ((DnnSite)_serviceProvider.Build<ISite>()).TrySwap(DnnModule, Log);
 
             // Ensure cache builds up with correct primary language
             // In case it's not loaded yet
@@ -77,7 +78,7 @@ namespace ToSic.Sxc.Search
             //var dnnContext = _serviceProvider.Build<IContextOfBlock>().InitDnnSiteModuleAndBlockContext(DnnModule, Log);
             //Block = _serviceProvider.Build<BlockFromModule>().Init(dnnContext, Log);
             Block = _serviceProvider.Build<DnnModuleBlockBuilder>().Init(Log).GetBlockOfModule(DnnModule);
-            
+
             if (Block.View == null) return wrapLog("cancel", "no view");
             if (Block.View.SearchIndexingDisabled) return wrapLog("cancel", "search disabled"); // new in 12.02
 
