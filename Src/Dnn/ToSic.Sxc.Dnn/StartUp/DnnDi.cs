@@ -196,6 +196,7 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // v13
             services.TryAddTransient<DnnModuleBlockBuilder>();
+            services.TryAddTransient<IDynamicCodeService, DnnDynamicCodeService>();
 
             return services;
         }

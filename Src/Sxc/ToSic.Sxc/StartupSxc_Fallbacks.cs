@@ -53,6 +53,9 @@ namespace ToSic.Sxc
             // v12.05
             services.TryAddTransient<IMailService, MailServiceUnknown>();
 
+            // v13.02
+            services.TryAddTransient<IDynamicCodeService, DynamicCodeServiceUnknown>();
+
             return services;
         }
     }

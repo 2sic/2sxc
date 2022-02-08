@@ -21,7 +21,7 @@ namespace Custom.Hybrid
     /// It is without dependencies in class constructor, commonly provided with DI.
     /// </summary>
     [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
-    public abstract partial class Api12 : OqtStatefulControllerBase, IDynamicCode, IDynamicWebApi, IDynamicCode12
+    public abstract partial class Api12 : OqtStatefulControllerBase, IDynamicWebApi, IDynamicCode12
     {
         [PrivateApi]
         protected override string HistoryLogName => EavWebApiConstants.HistoryNameWebApi;
