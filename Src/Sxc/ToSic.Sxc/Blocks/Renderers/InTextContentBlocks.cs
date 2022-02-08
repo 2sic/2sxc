@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Edit.InPageEditingSystem;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Blocks.Renderers
 {
@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Blocks.Renderers
         static readonly Regex InlineCbDetector = new Regex("<hr[^>]+sxc[^>]+>", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
         static readonly Regex  GuidExtractor = new Regex("guid=\\\"([^\\\"]*)\\\"", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
 
-        internal static string Render(DynamicEntity parent, string entityField, string textTemplate)
+        internal static string Render(DynamicEntity parent, string entityField, string textTemplate, IInPageEditingSystem edit)
         {
             // do basic checking
             if (!InlineCbDetector.IsMatch(textTemplate))
@@ -25,9 +25,6 @@ namespace ToSic.Sxc.Blocks.Renderers
             var matches = InlineCbDetector.Matches(textTemplate);
             if (matches.Count == 0)
                 return textTemplate;
-
-            // create edit-object which is necessary for context attributes
-            var edit = new InPageEditingHelper(parent._Dependencies.BlockOrNull);
 
             foreach (Match curMatch in matches)
             {
@@ -49,18 +46,14 @@ namespace ToSic.Sxc.Blocks.Renderers
                 if (!Guid.TryParse(likelyGuid, out var guid))
                     continue;
 
-                DynamicEntity subitem = null;
-                var itms = parent.Children(entityField);//, out var objFound);
-                var found = itms.Any();
+                var items = parent.Children(entityField);
+                var found = items.Any();
 
-                if (found)
-                {
-                    //var itms = objFound as List<IDynamicEntity>;
-                    if (itms.Count > 0)
-                        subitem = itms.FirstOrDefault(i => i.EntityGuid == guid) as DynamicEntity;
-                }
+                var subItem = found && items.Count > 0
+                    ? items.FirstOrDefault(i => i.EntityGuid == guid) as DynamicEntity
+                    : null;
 
-                result.Append(Simple.RenderWithEditContext(parent, subitem, entityField,  guid, edit));
+                result.Append(Simple.RenderWithEditContext(parent, subItem, entityField,  guid, edit));
             }
 
             // attach the rest of the text (after the last match)

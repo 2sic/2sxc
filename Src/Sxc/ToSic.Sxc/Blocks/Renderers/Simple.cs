@@ -6,7 +6,6 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Edit.InPageEditingSystem;
 using ToSic.Sxc.Web;
 
 
@@ -46,33 +45,26 @@ namespace ToSic.Sxc.Blocks.Renderers
         private const string WrapperSingleItem = WrapperMultiItems + " show-placeholder single-item"; // enables a placeholder when empty, and limits one entry
 
 
-        internal static string RenderWithEditContext(DynamicEntity dynParent, IDynamicEntity subItem, string cbFieldName,  Guid? newGuid = null, IInPageEditingSystem edit = null)
+        internal static string RenderWithEditContext(DynamicEntity parent, IDynamicEntity subItem, string cbFieldName,  Guid? newGuid, IInPageEditingSystem edit)
         {
-            if (edit == null)
-                edit = new InPageEditingHelper(dynParent._Dependencies.BlockOrNull);
-
-            var attribs = edit.ContextAttributes(dynParent, field: cbFieldName, newGuid: newGuid);
-            var inner = subItem == null ? "": Render(dynParent._Dependencies.BlockOrNull, subItem.Entity);
+            var attribs = edit.ContextAttributes(parent, field: cbFieldName, newGuid: newGuid);
+            var inner = subItem == null ? "": Render(parent._Dependencies.BlockOrNull, subItem.Entity);
             var cbClasses = edit.Enabled ? WrapperSingleItem : "";
             return string.Format(WrapperTemplate, new object[] { cbClasses, attribs, inner});
         }
 
-        internal static string RenderListWithContext(DynamicEntity dynParent, string fieldName, string apps = null, int max = 100)
+        internal static string RenderListWithContext(DynamicEntity parent, string fieldName, string apps, int max, IInPageEditingSystem edit)
         {
             var innerBuilder = new StringBuilder();
-            var found = dynParent.TryGetMember(fieldName, out var objFound);
+            var found = parent.TryGetMember(fieldName, out var objFound);
             if (found && objFound is IList<DynamicEntity> items)
                 foreach (var cb in items)
                     innerBuilder.Append(Render(cb._Dependencies.BlockOrNull, cb.Entity));
 
-            // create edit object if missing...to re-use of the parent
-            //if (edit == null)
-            IInPageEditingSystem edit = new InPageEditingHelper(dynParent._Dependencies.BlockOrNull);
-
             return string.Format(WrapperTemplate, new object[]
             {
                 edit.Enabled ? WrapperMultiItems : "",
-                edit.ContextAttributes(dynParent, field: fieldName, apps: apps, max: max),
+                edit.ContextAttributes(parent, field: fieldName, apps: apps, max: max),
                 innerBuilder
             });
         }

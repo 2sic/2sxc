@@ -5,6 +5,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Web.PageService;
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Context
 {
@@ -21,8 +22,8 @@ namespace ToSic.Sxc.Context
             IModule module, 
             Lazy<IPagePublishingResolver> publishingResolver,
             PageServiceShared pageServiceShared,
-            IAppStates appStates)
-            : base(serviceProvider, site, user, appStates)
+            ContextOfAppDependencies appDependencies)
+            : base(serviceProvider, site, user, appDependencies)
         {
             Page = page;
             Module = module;
@@ -64,7 +65,7 @@ namespace ToSic.Sxc.Context
         private BlockPublishingState _publishing;
 
         /// <inheritdoc />
-        public new IContextOfSite Clone(ILog parentLog) => new ContextOfBlock(ServiceProvider, Site, User, Page, Module, _publishingResolver, PageServiceShared, AppStates)
+        public new IContextOfSite Clone(ILog parentLog) => new ContextOfBlock(ServiceProvider, Site, User, Page, Module, _publishingResolver, PageServiceShared, Deps)
             .Init(parentLog);
     }
 }

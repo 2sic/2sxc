@@ -12,6 +12,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DotNet;
+using ToSic.Sxc.Edit.InPageEditingSystem;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.LookUp;
@@ -69,6 +70,7 @@ namespace ToSic.Sxc
             // Context stuff in general
             services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
             services.TryAddTransient<IContextOfApp, ContextOfApp>();
+            services.TryAddTransient<ContextOfApp.ContextOfAppDependencies>();
             services.TryAddTransient<IPage, Page>();
             services.TryAddTransient<Page>();
             services.TryAddTransient<ICmsContext, CmsContext>();
@@ -145,6 +147,8 @@ namespace ToSic.Sxc
 
             // v13 DynamicCodeService
             services.TryAddTransient<DynamicCodeService.Dependencies>();
+
+            services.TryAddTransient<IInPageEditingSystem, InPageEditingHelper>();
 
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need

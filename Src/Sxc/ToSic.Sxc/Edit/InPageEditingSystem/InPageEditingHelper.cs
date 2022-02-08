@@ -1,17 +1,27 @@
 ﻿using Newtonsoft.Json;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
-    public partial class InPageEditingHelper : HasLog, IInPageEditingSystem
+    public partial class InPageEditingHelper : HasLog<IInPageEditingSystem>, IInPageEditingSystem
     {
-        // TODO: Switch to being CodeBlock dependent and then use GetService
-        internal InPageEditingHelper(IBlock block, ILog parentLog = null) : base("Edit", parentLog ?? block?.Log)
+        public InPageEditingHelper() : base("Sxc.Edit") { }
+
+        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
+        {
+            Log.LinkTo(codeRoot.Log);
+            SetBlock(codeRoot.Block);
+        }
+
+        public IInPageEditingSystem SetBlock(IBlock block)
         {
             Block = block;
             Enabled = Block?.Context.UserMayEdit ?? false;
+            if(Log.Parent == null && block != null) Log.LinkTo(block.Log);
+            return this;
         }
 
         protected IBlock Block;

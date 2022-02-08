@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
@@ -8,7 +7,6 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Edit.InPageEditingSystem;
 using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
 // ReSharper disable InheritdocInvalidUsage
@@ -86,7 +84,6 @@ namespace ToSic.Sxc.Code
             ((CmsContext) CmsContext).Update(block);
             Block = block;
             Data = block.Data;
-            Edit = new InPageEditingHelper(block, Log);
 
             AttachApp(block.App);
 
@@ -108,7 +105,8 @@ namespace ToSic.Sxc.Code
         #region Edit
 
         /// <inheritdoc />
-        public IInPageEditingSystem Edit { get; private set; }
+        public IInPageEditingSystem Edit => _edit ?? (_edit = GetService<IInPageEditingSystem>());// { get; private set; }
+        private IInPageEditingSystem _edit;
 
         #endregion
 
