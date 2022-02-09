@@ -18,12 +18,12 @@ using WebApiConstants = ToSic.Sxc.Oqt.Shared.WebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp
 {
-    public class StartupOqt : IServerStartup
+    public class OqtStartup : IServerStartup
     {
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment HostEnvironment { get; set; }
 
-        public StartupOqt()
+        public OqtStartup()
         {
             // Configuration is used to provide Master tenant sql connection string to 2sxc eav.
             var builder = new ConfigurationBuilder()

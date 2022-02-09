@@ -5,7 +5,7 @@ using ToSic.Sxc.Oqt.Server.Polymorphism;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp
 {
-    public static class RegisterKoi2
+    public static class OqtRegisterKoi
     {
 
         public static IServiceCollection ActivateKoi2Di(this IServiceCollection services)

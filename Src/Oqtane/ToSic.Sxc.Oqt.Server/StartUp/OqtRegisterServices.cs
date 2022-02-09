@@ -44,7 +44,7 @@ using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 namespace ToSic.Sxc.Oqt.Server.StartUp
 {
     // ReSharper disable once InconsistentNaming
-    static partial class OqtaneDI
+    internal static partial class OqtRegisterServices
     {
         public static IServiceCollection AddSxcOqtane(this IServiceCollection services)
         {
