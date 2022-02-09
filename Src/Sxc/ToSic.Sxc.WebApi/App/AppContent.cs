@@ -21,10 +21,8 @@ namespace ToSic.Sxc.WebApi.App
 {
     public class AppContent : WebApiBackendBase<AppContent>
     {
-        private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.Init(Context.AppState, _withDrafts, Log));
+        private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.Init(Context.AppState, showDrafts: false, Log));
         private CmsManager _cmsManager;
-        private bool _withDrafts = false;
-
 
         #region Constructor / DI
         protected IContextOfApp Context;
@@ -134,7 +132,7 @@ namespace ToSic.Sxc.WebApi.App
                 Log.Add($"new entity created: {entity}");
                 id = entity.EntityId;
                 Log.Add($"new entity id: {id}");
-                ParentRelationship(newContentItemCaseInsensitive);
+                var added = AddParentRelationship(newContentItemCaseInsensitive);
             }
             else
                 realApp.Data.Update(id.Value, cleanedNewItem, userName);
@@ -143,48 +141,32 @@ namespace ToSic.Sxc.WebApi.App
                 .Convert(realApp.Data.List.One(id.Value));
         }
 
-        private void ParentRelationship(IDictionary<string, object> newContentItemCaseInsensitive)
+        private bool AddParentRelationship(IDictionary<string, object> newContentItemCaseInsensitive)
         {
+            var wrapLog = Log.Call<bool>($"item dictionary key count: {newContentItemCaseInsensitive.Count}");
+
             if (!newContentItemCaseInsensitive.Keys.Contains(Attributes.JsonKeyParentRelationship))
-            {
-                Log.Add("'ParentRelationship' key is missing");
-                return;
-            }
+                return wrapLog("'ParentRelationship' key is missing", false);
 
             var parentRelationship = newContentItemCaseInsensitive[Attributes.JsonKeyParentRelationship] as JObject;
-            if (parentRelationship == null)
-            {
-                Log.Add("'ParentRelationship' value is null");
-                return;
-            }
+            if (parentRelationship == null) return wrapLog("'ParentRelationship' value is null", false);
 
-            var parentGuid = (Guid?) parentRelationship["Parent"];
-            if (!parentGuid.HasValue)
-            {
-                Log.Add("'Parent' guid is missing");
-                return;
-            };
+            var parentGuid = (Guid?)parentRelationship["Parent"];
+            if (!parentGuid.HasValue) return wrapLog("'Parent' guid is missing", false);
 
-            var entity = Context.AppState.List.One(parentGuid.Value);
-            if (entity == null)
-            {
-                Log.Add("Parent entity is missing");
-                return;
-            }
+            var parentEntity = Context.AppState.List.One(parentGuid.Value);
+            if (parentEntity == null) return wrapLog("Parent entity is missing", false);
 
             var entityId = (int?)parentRelationship["EntityId"];
             var ids = new[] { entityId as int? };
             var index = (int)parentRelationship["Index"];
-            var willAdd = (bool?)parentRelationship["Add"] ?? true;
-            var field = (string) parentRelationship["Field"];
-            var fieldPair = new[] { field };
+            var willAdd = (bool?)parentRelationship["Add"];
+            var field = (string)parentRelationship["Field"];
+            var fields = new[] { field };
 
-            if (willAdd) // this cannot be auto-detected, it must be specified
-                CmsManager.Entities.FieldListAdd(entity, fieldPair, index, ids, _withDrafts);
-            else
-                CmsManager.Entities.FieldListReplaceIfModified(entity, fieldPair, index, ids, _withDrafts);
+            CmsManager.Entities.FieldListAdd(parentEntity, fields, index, ids, asDraft: false);
 
-            Log.Add($"new ParentRelationship a:{willAdd},e:{entityId},p:{parentGuid},f:{field},i:{index}");
+            return wrapLog($"new ParentRelationship a:{willAdd},e:{entityId},p:{parentGuid},f:{field},i:{index}", true);
         }
 
         private Target GetMetadata(Dictionary<string, object> newContentItemCaseInsensitive)
