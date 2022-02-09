@@ -21,20 +21,25 @@ namespace ToSic.Sxc.WebApi.App
 {
     public class AppContent : WebApiBackendBase<AppContent>
     {
+        private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.Init(Context.AppState, _withDrafts, Log));
+        private CmsManager _cmsManager;
+        private bool _withDrafts = false;
+
 
         #region Constructor / DI
         protected IContextOfApp Context;
 
-        public AppContent(IServiceProvider sp, EntityApi entityApi, Lazy<IConvertToEavLight> entToDicLazy, IContextResolver ctxResolver) : base(sp, "Sxc.ApiApC")
+        public AppContent(IServiceProvider sp, EntityApi entityApi, Lazy<IConvertToEavLight> entToDicLazy, IContextResolver ctxResolver, Lazy<CmsManager> cmsManagerLazy) : base(sp, "Sxc.ApiApC")
         {
             _entityApi = entityApi;
             _entToDicLazy = entToDicLazy;
             _ctxResolver = ctxResolver;
-
+            _cmsManagerLazy = cmsManagerLazy;   
         }
         private readonly EntityApi _entityApi;
         private readonly Lazy<IConvertToEavLight> _entToDicLazy;
         private readonly IContextResolver _ctxResolver;
+        private readonly Lazy<CmsManager> _cmsManagerLazy;
 
         public AppContent Init(string appName, ILog parentLog)
         {
@@ -129,12 +134,57 @@ namespace ToSic.Sxc.WebApi.App
                 Log.Add($"new entity created: {entity}");
                 id = entity.EntityId;
                 Log.Add($"new entity id: {id}");
+                ParentRelationship(newContentItemCaseInsensitive);
             }
             else
                 realApp.Data.Update(id.Value, cleanedNewItem, userName);
 
             return InitEavAndSerializer(Context.AppState.AppId, Context.UserMayEdit)
                 .Convert(realApp.Data.List.One(id.Value));
+        }
+
+        private void ParentRelationship(IDictionary<string, object> newContentItemCaseInsensitive)
+        {
+            if (!newContentItemCaseInsensitive.Keys.Contains(Attributes.JsonKeyParentRelationship))
+            {
+                Log.Add("'ParentRelationship' key is missing");
+                return;
+            }
+
+            var parentRelationship = newContentItemCaseInsensitive[Attributes.JsonKeyParentRelationship] as JObject;
+            if (parentRelationship == null)
+            {
+                Log.Add("'ParentRelationship' value is null");
+                return;
+            }
+
+            var parentGuid = (Guid?) parentRelationship["Parent"];
+            if (!parentGuid.HasValue)
+            {
+                Log.Add("'Parent' guid is missing");
+                return;
+            };
+
+            var entity = Context.AppState.List.One(parentGuid.Value);
+            if (entity == null)
+            {
+                Log.Add("Parent entity is missing");
+                return;
+            }
+
+            var entityId = (int?)parentRelationship["EntityId"];
+            var ids = new[] { entityId as int? };
+            var index = (int)parentRelationship["Index"];
+            var willAdd = (bool?)parentRelationship["Add"] ?? true;
+            var field = (string) parentRelationship["Field"];
+            var fieldPair = new[] { field };
+
+            if (willAdd) // this cannot be auto-detected, it must be specified
+                CmsManager.Entities.FieldListAdd(entity, fieldPair, index, ids, _withDrafts);
+            else
+                CmsManager.Entities.FieldListReplaceIfModified(entity, fieldPair, index, ids, _withDrafts);
+
+            Log.Add($"new ParentRelationship a:{willAdd},e:{entityId},p:{parentGuid},f:{field},i:{index}");
         }
 
         private Target GetMetadata(Dictionary<string, object> newContentItemCaseInsensitive)
