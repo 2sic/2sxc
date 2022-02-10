@@ -132,7 +132,7 @@ namespace ToSic.Sxc.WebApi.App
                 Log.Add($"new entity created: {entity}");
                 id = entity.EntityId;
                 Log.Add($"new entity id: {id}");
-                var added = AddParentRelationship(newContentItemCaseInsensitive);
+                var added = AddParentRelationship(newContentItemCaseInsensitive, entity.EntityId);
             }
             else
                 realApp.Data.Update(id.Value, cleanedNewItem, userName);
@@ -141,7 +141,7 @@ namespace ToSic.Sxc.WebApi.App
                 .Convert(realApp.Data.List.One(id.Value));
         }
 
-        private bool AddParentRelationship(IDictionary<string, object> newContentItemCaseInsensitive)
+        private bool AddParentRelationship(IDictionary<string, object> newContentItemCaseInsensitive, int addedEntityId)
         {
             var wrapLog = Log.Call<bool>($"item dictionary key count: {newContentItemCaseInsensitive.Count}");
 
@@ -157,16 +157,17 @@ namespace ToSic.Sxc.WebApi.App
             var parentEntity = Context.AppState.List.One(parentGuid.Value);
             if (parentEntity == null) return wrapLog("Parent entity is missing", false);
 
-            var entityId = (int?)parentRelationship["EntityId"];
-            var ids = new[] { entityId as int? };
+            //var entityId = (int?)parentRelationship["EntityId"];
+            var ids = new[] { addedEntityId as int? };
             var index = (int)parentRelationship["Index"];
-            var willAdd = (bool?)parentRelationship["Add"];
+            //var willAdd = (bool?)parentRelationship["Add"];
             var field = (string)parentRelationship["Field"];
             var fields = new[] { field };
 
             CmsManager.Entities.FieldListAdd(parentEntity, fields, index, ids, asDraft: false);
 
-            return wrapLog($"new ParentRelationship a:{willAdd},e:{entityId},p:{parentGuid},f:{field},i:{index}", true);
+            //return wrapLog($"new ParentRelationship a:{willAdd},e:{entityId},p:{parentGuid},f:{field},i:{index}", true);
+            return wrapLog($"new ParentRelationship p:{parentGuid},f:{field},i:{index}", true);
         }
 
         private Target GetMetadata(Dictionary<string, object> newContentItemCaseInsensitive)
