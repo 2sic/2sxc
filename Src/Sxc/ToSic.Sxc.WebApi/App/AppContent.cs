@@ -131,6 +131,7 @@ namespace ToSic.Sxc.WebApi.App
                 var entity = realApp.Data.Create(contentType, cleanedNewItem, userName, metadata);
                 Log.Add($"new entity created: {entity}");
                 id = entity.EntityId;
+
                 Log.Add($"new entity id: {id}");
                 var added = AddParentRelationship(newContentItemCaseInsensitive, entity.EntityId);
             }

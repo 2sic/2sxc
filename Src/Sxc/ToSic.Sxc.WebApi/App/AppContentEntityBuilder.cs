@@ -80,6 +80,15 @@ namespace ToSic.Sxc.WebApi.App
 
                 // todo: maybe one day get default-values and insert them if not supplied by JS
             }
+
+            // Handle special attributes (for example of the system)
+            if (newContentItem.ContainsKey(Attributes.EntityFieldIsPublished))
+            {
+                var foundValue = newContentItem[Attributes.EntityFieldIsPublished];
+                if (bool.TryParse(foundValue.ToString(), out var bolValue))
+                    cleanedNewItem.Add(Attributes.EntityFieldIsPublished, bolValue);
+            }
+
             return cleanedNewItem;
         }
 
