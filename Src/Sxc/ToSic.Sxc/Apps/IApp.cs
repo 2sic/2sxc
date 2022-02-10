@@ -50,17 +50,25 @@ namespace ToSic.Sxc.Apps
         new string PhysicalPath { get; }
 
         /// <summary>
-        /// The path to the current app global folder, for linking JS/CSS files and
+        /// The path to the current apps shared/global folder, for linking JS/CSS files and
         /// images in the app folder. 
         /// </summary>
         /// <returns>Path usually starting with /portals/_default/...</returns>
+        /// <remarks>Added v13.01</remarks>
+#pragma warning disable CS0108, CS0114
+        // Important: Repeat definition of base interface for docs and because of Razor-Interface-Inheritance-Problems
         string PathShared { get; }
+#pragma warning restore CS0108, CS0114
 
         /// <summary>
-        /// The path on the server hard disk for the current app global folder. 
+        /// The path on the server hard disk for the current apps shared/global folder. 
         /// </summary>
         /// <returns>Path usually starting with c:\...</returns>
+        /// <remarks>Added v13.01</remarks>
+#pragma warning disable CS0108, CS0114
+        // Important: Repeat definition of base interface for docs and because of Razor-Interface-Inheritance-Problems
         string PhysicalPathShared { get; }
+#pragma warning restore CS0108, CS0114
 
         /// <summary>
         /// The thumbnail path for the current app. 
