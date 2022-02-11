@@ -6,7 +6,7 @@ using ToSic.Sxc.Images;
 namespace ToSic.Sxc.Web
 {
     [PrivateApi("for testing / un-implemented use")]
-    public class LinkHelperUnknown: LinkHelper, IIsUnknown
+    public class LinkHelperUnknown: LinkHelperBase, IIsUnknown
     {
         public const string DefDomain = "unknown.2sxc.org";
         public const string DefProtocol = "https";
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Web
 
         protected override string ToApi(string api, string parameters = null) => $"{api}{Parameters(parameters)}";
 
-        protected override string ToPage(int? pageId, string parameters = null) =>
+        protected override string ToPage(int? pageId, string parameters = null, string language = null) =>
             // Page or Api?
             pageId != null
                 ? string.Format(AnyPageUrl, pageId) + Parameters(parameters)

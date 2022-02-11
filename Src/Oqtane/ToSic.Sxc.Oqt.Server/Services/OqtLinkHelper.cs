@@ -1,9 +1,9 @@
-﻿using System;
-using Custom.Hybrid;
+﻿using Custom.Hybrid;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Oqtane.Repository;
 using Oqtane.Shared;
+using System;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Images;
@@ -11,7 +11,6 @@ using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
-using ToSic.Sxc.Web.WebApi;
 
 namespace ToSic.Sxc.Oqt.Server.Services
 {
@@ -19,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.Services
     /// The Oqtane implementation of the <see cref="ILinkHelper"/>.
     /// </summary>
     [PrivateApi]
-    public class OqtLinkHelper : LinkHelper
+    public class OqtLinkHelper : LinkHelperBase
     {
         public Razor12 RazorPage { get; set; }
         private readonly IPageRepository _pageRepository;
@@ -50,14 +49,14 @@ namespace ToSic.Sxc.Oqt.Server.Services
         }
         
         protected override string ToApi(string api, string parameters = null) => ApiNavigateUrl(api, parameters);
-        protected override string ToPage(int? pageId, string parameters = null) => PageNavigateUrl(pageId, parameters);
+        protected override string ToPage(int? pageId, string parameters = null, string language = null) => PageNavigateUrl(pageId, parameters);
         
         // Prepare Api link.
         private string ApiNavigateUrl(string api, string parameters)
         {
             var alias = _siteStateInitializer.InitializedState.Alias;
             
-            var pathWithQueryString = LinkHelpers.CombineApiWithQueryString(
+            var pathWithQueryString = CombineApiWithQueryString(
                 _linkPaths.ApiFromSiteRoot(App.Folder, api),
                 parameters);
 

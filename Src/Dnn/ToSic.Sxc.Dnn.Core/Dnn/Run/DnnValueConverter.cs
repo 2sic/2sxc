@@ -21,6 +21,8 @@ namespace ToSic.Sxc.Dnn.Run
     [PrivateApi("Hide implementation - not useful for external documentation")]
     public class DnnValueConverter : IValueConverter
     {
+        public const string CurrentLanguage = "current";
+
         #region DI Constructor
 
         public DnnValueConverter(ISite site, Lazy<IFeaturesService> featuresLazy, Lazy<PageScopedService<ISite>> siteFromPageLazy)
@@ -125,9 +127,18 @@ namespace ToSic.Sxc.Dnn.Run
             #endregion
         }
 
-        private string ResolvePageLink(int id) => ResolvePageLink(id, new string[] { });
+        private string ResolvePageLink(int id) => ResolvePageLink(id, CurrentLanguage, new string[] { });
 
-        internal string ResolvePageLink(int id, params string[] additionalParameters)
+        /// <summary>
+        /// Resolve URL to Page with TabId, but handles more situations than DNN framework:
+        /// - supports module sharing scenarios, when module is on different portal
+        /// - return localized page TabId, instead of requested TabId
+        /// </summary>
+        /// <param name="id">TabId to page</param>
+        /// <param name="language">"current" is required to ensure expected behavior (to try to find current language localized TabId)</param>
+        /// <param name="additionalParameters">query string parameters</param>
+        /// <returns>return string url to page</returns>
+        internal string ResolvePageLink(int id, string language = null, params string[] additionalParameters)
         {
             var tabController = new TabController();
 
@@ -144,7 +155,8 @@ namespace ToSic.Sxc.Dnn.Run
 
             if (psPage == null) return null;
 
-            if (tabInfo.CultureCode != "" && psCurrent != null && tabInfo.CultureCode != psCurrent.CultureCode)
+            // try to change TabID to localized version when language == CurrentLanguage
+            if (language == CurrentLanguage && tabInfo.CultureCode != "" && psCurrent != null && tabInfo.CultureCode != psCurrent.CultureCode)
             {
                 var cultureTabInfo = tabController
                     .GetTabByCulture(tabInfo.TabID, tabInfo.PortalID,

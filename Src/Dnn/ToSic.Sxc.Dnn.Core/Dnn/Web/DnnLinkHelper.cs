@@ -5,7 +5,6 @@ using ToSic.Eav.Helpers;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Web;
-using ToSic.Sxc.Web.WebApi;
 
 namespace ToSic.Sxc.Dnn.Web
 {
@@ -13,9 +12,11 @@ namespace ToSic.Sxc.Dnn.Web
     /// The DNN implementation of the <see cref="ILinkHelper"/>.
     /// </summary>
     [PrivateApi("This implementation shouldn't be visible")]
-    public class DnnLinkHelper : LinkHelper
+    public class DnnLinkHelper : LinkHelperBase
     {
         private readonly Lazy<DnnValueConverter> _dnnValueConverterLazy;
+
+
 
         [PrivateApi]
         public DnnLinkHelper(ImgResizeLinker imgLinker, Lazy<DnnValueConverter> dnnValueConverterLazy) : base(imgLinker)
@@ -25,14 +26,16 @@ namespace ToSic.Sxc.Dnn.Web
 
         [PrivateApi] private IDnnContext Dnn => _dnn ?? (_dnn = CodeRoot.GetService<IDnnContext>());
         private IDnnContext _dnn;
+        [PrivateApi] private DnnValueConverter DnnValueConverter => _dnnValueConverter ?? (_dnnValueConverter = _dnnValueConverterLazy.Value);
+        private DnnValueConverter _dnnValueConverter;
 
         protected override string ToApi(string api, string parameters = null) 
-            => Api(path: LinkHelpers.CombineApiWithQueryString(api.TrimPrefixSlash(), parameters));
+            => Api(path: CombineApiWithQueryString(api.TrimPrefixSlash(), parameters));
 
-        protected override string ToPage(int? pageId, string parameters = null)
+        protected override string ToPage(int? pageId, string parameters = null, string language = null)
         {
             if (pageId.HasValue)
-                return _dnnValueConverterLazy.Value.ResolvePageLink(pageId.Value, parameters);
+                return DnnValueConverter.ResolvePageLink(pageId.Value, language, parameters);
 
             return parameters == null
                 ? Dnn.Tab.FullUrl

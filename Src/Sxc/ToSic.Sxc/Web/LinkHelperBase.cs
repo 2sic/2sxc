@@ -9,11 +9,10 @@ using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Web
 {
-    // todo: rename to LinkHelperBase
     [PrivateApi]
-    public abstract class LinkHelper : HasLog, ILinkHelper
+    public abstract class LinkHelperBase : HasLog, ILinkHelper
     {
-        protected LinkHelper(ImgResizeLinker imgLinker) : base($"{Constants.SxcLogName}.LnkHlp")
+        protected LinkHelperBase(ImgResizeLinker imgLinker) : base($"{Constants.SxcLogName}.LnkHlp")
         {
             ImgLinker = imgLinker;
             ImgLinker.Init(Log);
@@ -50,7 +49,7 @@ namespace ToSic.Sxc.Web
 
             // TODO: unclear what would happen if a new parameter would replace an existing - would it just append? that wouldn't be good
             var url = api == null
-                ? ToPage(pageId, strParams)
+                ? ToPage(pageId, strParams, language)
                 : ToApi(api, strParams);
 
             var processed = ExpandUrlIfNecessary(type, url);
@@ -84,7 +83,7 @@ namespace ToSic.Sxc.Web
 
         protected abstract string ToApi(string api, string parameters = null);
 
-        protected abstract string ToPage(int? pageId, string parameters = null);
+        protected abstract string ToPage(int? pageId, string parameters = null, string language = null);
 
         protected static string ParametersToString(object parameters)
         {
@@ -151,6 +150,17 @@ namespace ToSic.Sxc.Web
         public abstract string GetCurrentLinkRoot();
 
         public abstract string GetCurrentRequestUrl();
-        
+
+        /**
+         * Combine api with query string.
+         */
+        public static string CombineApiWithQueryString(string api, string queryString)
+        {
+            queryString = queryString?.TrimStart('?').TrimStart('&');
+
+            // combine api with query string
+            return string.IsNullOrEmpty(queryString) ? api :
+                api?.IndexOf("?") > 0 ? $"{api}&{queryString}" : $"{api}?{queryString}";
+        }
     }
 }
