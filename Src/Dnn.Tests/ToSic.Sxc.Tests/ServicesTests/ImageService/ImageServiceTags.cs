@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Tests.TestSetup;
+using ToSic.Testing.Shared.Platforms;
 
 namespace ToSic.Sxc.Tests.ServicesTests
 {
@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         // Start the test with a platform-info that has WebP support
         protected override IServiceCollection SetupServices(IServiceCollection services = null)
         {
-            return base.SetupServices(services).AddTransient<IPlatformInfo, TestPlatformWithImageOption>();
+            return base.SetupServices(services).AddTransient<IPlatformInfo, TestPlatformWithLicense>();
         }
 
         [TestMethod]

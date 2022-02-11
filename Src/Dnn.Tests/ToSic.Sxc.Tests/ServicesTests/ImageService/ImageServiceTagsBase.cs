@@ -6,20 +6,6 @@ namespace ToSic.Sxc.Tests.ServicesTests
 {
     public abstract class ImageServiceTagsBase: TestBaseSxcDb
     {
-        protected ImageServiceTagsBase(): base()
-        {
-            // this will run after the base has done it's work
-        }
-
-        protected override IServiceCollection SetupServices(IServiceCollection services = null)
-        {
-            // Reset some important static stuff
-
-            // Just call the normal chain
-            return base.SetupServices(services);
-        }
-
-
         protected const string ImgBase = "/abc/def/test.jpg";
         protected const string SrcSet12 = "1,2";
         protected static string SrcWebP12 = $"<source type='image/webp' srcset='{ImgBase}?w=120&amp;h=24&amp;format=webp 1x,{ImgBase}?w=240&amp;h=48&amp;format=webp 2x'>";

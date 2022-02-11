@@ -100,8 +100,6 @@
     <Compile Include="ServicesTests\MailAddressInputTypeTests.cs" />
     <Compile Include="ServicesTests\MailServiceTestsBase.cs" />
     <Compile Include="ServicesTests\SecureDataTests\SecureDataTest.cs" />
-    <Compile Include="ServicesTests\ImageService\TestPlatformNoImageOption.cs" />
-    <Compile Include="ServicesTests\ImageService\TestPlatformWithImageOption.cs" />
     <Compile Include="TestBaseSxcDb.cs" />
     <Compile Include="TestBaseSxc.cs" />
     <Compile Include="ServicesTests\ConvertServiceTests\ConvertServiceTest.cs" />
