@@ -144,6 +144,7 @@ namespace ToSic.Sxc.Web
         void SetDebug(bool debug);
 
         [PrivateApi]
+        // todo: this should really not be in the LinkHelper. Maybe put on ILinkPaths or something, but NOT on the ILinkHelper
         string GetCurrentRequestUrl();
     }
 
