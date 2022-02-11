@@ -9,6 +9,7 @@ using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Web
 {
+    // todo: rename to LinkHelperBase
     [PrivateApi]
     public abstract class LinkHelper : HasLog, ILinkHelper
     {
@@ -34,7 +35,9 @@ namespace ToSic.Sxc.Web
             int? pageId = null,
             string api = null,
             object parameters = null,
-            string type = null)
+            string type = null,
+            string language = null
+            )
         {
             // prevent incorrect use without named parameters
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");

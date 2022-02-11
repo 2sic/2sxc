@@ -5,6 +5,7 @@
         /**
          * Combine api with query string.
          */
+        // TODO: stv - PUt into the real link helper base class
         public static string CombineApiWithQueryString(string api, string queryString)
         {
             queryString = queryString?.TrimStart('?').TrimStart('&');

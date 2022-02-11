@@ -26,18 +26,26 @@ namespace ToSic.Sxc.Web
         ///     - `"full"` return link with protocol and domain. If that was missing before, it will add current protocol/domain if possible, but not on relative `./` or `../` links
         ///     - `"//"` return link with `//domain`. If that was missing before, will add current domain if possible, but not on relative `./` or `../` links
         /// </param>
+        /// <param name="language">
+        /// - If not set, `null` or empty `""` will use the specified pageId (pageIds can be language specific); api would always be the current language
+        /// - If set to `"current"` will adjust pageId to use the language of the current language. API will be as before, as it was already `current`
+        /// - future _(not implemented yet)_ `"primary"` would link to primary language
+        /// - future _(not implemented yet)_ `"en"` or `"en-us"` would link to that specific language (page and API)
+        /// </param>
         /// <returns></returns>
         /// <remarks>
         /// History
         /// * v12 added the api parameter for liking APIs of the current app
         /// * In v12.05 the type of parameters was changed from string to object, to allow <see cref="ToSic.Sxc.Context.IParameters"/> as well
+        /// * In v13.02 introduced language with "current"
         /// </remarks>
         string To(
             string noParamOrder = Eav.Parameters.Protector,
             int? pageId = null,
             string api = null,
             object parameters = null,
-            string type = null
+            string type = null,
+            string language = null
         );
         
         /// <summary>
