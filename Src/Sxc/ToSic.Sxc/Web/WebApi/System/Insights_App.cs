@@ -9,21 +9,17 @@ namespace ToSic.Sxc.Web.WebApi.System
 {
     public partial class Insights
     {
-        public string LoadLog(int? appId = null)
+        private string LoadLog(int? appId)
         {
-            ThrowIfNotSuperUser();
-
             if (UrlParamsIncomplete(appId, out var message))
                 return message;
 
             Log.Add($"debug app-load {appId}");
-            return FormatLog($"2sxc load log for app {appId}", AppRt(appId).AppState.Log);
+            return PageStyles() + DumpTree($"2sxc load log for app {appId}", AppRt(appId).AppState.Log);
         }
 
-        public string Cache()
+        private string Cache()
         {
-            ThrowIfNotSuperUser();
-
             var msg = H1("Apps In Cache").ToString();
 
             var zones = _appStates.Zones.OrderBy(z => z.Key);
@@ -69,10 +65,10 @@ namespace ToSic.Sxc.Web.WebApi.System
                         app.InCache ? "yes" : "no",
                         app.Name,
                         app.Folder,
-                        $"{A("stats").Href($"stats?appid={app.Id}")} | {A("load log").Href($"loadlog?appid={app.Id}")} | {A("types").Href($"types?appid={app.Id}")}",
+                        $"{LinkTo("stats", nameof(Stats), app.Id)} | {LinkTo("load log", nameof(LoadLog), app.Id)} | {LinkTo("types", nameof(Types), app.Id)}",
                         Tag.Details(
                             Summary("show actions"),
-                            A("purge").Href($"purge?appid={app.Id}").ToString()
+                            app.Id != Eav.Constants.PresetAppId ? LinkTo("purge", nameof(Purge), app.Id) : null
                         ),
                         app.Hash?.ToString() ?? "-",
                         app.TS,
@@ -86,10 +82,8 @@ namespace ToSic.Sxc.Web.WebApi.System
             return msg;
         }
 
-        public string Stats(int? appId = null)
+        private string Stats(int? appId)
         {
-            ThrowIfNotSuperUser();
-
             if (UrlParamsIncomplete(appId, out var message))
                 return message;
 

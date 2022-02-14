@@ -2,12 +2,10 @@
 {
     public partial class Insights
     {
-        public string Purge(int? appId = null)
+        private string Purge(int? appId)
         {
-            ThrowIfNotSuperUser();
-
-            if (appId == null)
-                return "please add appid to the url parameters";
+            if (UrlParamsIncomplete(appId, out var message))
+                return message;
 
             SystemManager.Init(Log).PurgeApp(appId.Value);
 

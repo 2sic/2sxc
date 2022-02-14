@@ -7,10 +7,8 @@ namespace ToSic.Sxc.Web.WebApi.System
     public partial class Insights
     {
 
-        public string Attributes(int appId, string type = null)
+        private string Attributes(int? appId, string type)
         {
-            ThrowIfNotSuperUser();
-
             if (UrlParamsIncomplete(appId, type, out var message))
                 return message;
 
@@ -29,17 +27,15 @@ namespace ToSic.Sxc.Web.WebApi.System
                 var count = 0;
                 foreach (var att in attribs)
                 {
-                    msg = msg + RowFields(
+                    msg += RowFields(
                         (++count).ToString(),
                         att.AttributeId.ToString(),
                         att.Name,
                         att.Type,
                         att.InputType(),
-                        att.IsTitle.ToString(),
-                        A(att.Metadata.Count())
-                            .Href($"attributemetadata?appid={appId}&type={type}&attribute={att.Name}"),
-                        A($"{att.Metadata.Permissions.Count()}")
-                            .Href($"attributepermissions?appid={appId}&type={type}&attribute={att.Name}")
+                        EmojiTrueFalse(att.IsTitle),
+                        LinkTo($"{att.Metadata.Count()}", nameof(AttributeMetadata), appId, type: type, nameId: att.Name),
+                        LinkTo($"{att.Metadata.Permissions.Count()}", nameof(AttributePermissions), appId, type: type, nameId: att.Name)
                     );
                 }
                 msg += "</tbody>";
@@ -55,25 +51,23 @@ namespace ToSic.Sxc.Web.WebApi.System
             return msg;
         }
 
-        public string AttributeMetadata(int? appId = null, string type = null, string attribute = null)
+        private string AttributeMetadata(int? appId, string type, string nameId)
         {
-            ThrowIfNotSuperUser();
-
-            if (UrlParamsIncomplete(appId, type, attribute, out var message))
+            if (UrlParamsIncomplete(appId, type, nameId, out var message))
                 return message;
 
             Log.Add($"debug app metadata for {appId} and {type}");
             var typ = AppState(appId.Value).GetContentType(type);
-            var att = typ.Attributes.First(a => a.Name == attribute)
-                      ?? throw CreateBadRequest($"can't find attribute {attribute}");
+            var att = typ.Attributes.First(a => a.Name == nameId)
+                      ?? throw CreateBadRequest($"can't find attribute {nameId}");
 
-            var msg = H1($"Attribute Metadata for {typ.Name}.{attribute} in {appId}\n").ToString();
+            var msg = H1($"Attribute Metadata for {typ.Name}.{nameId} in {appId}\n").ToString();
             var metadata = att.Metadata.ToList();
 
             return MetadataTable(msg, metadata);
         }
 
-        public string AttributePermissions(int? appId = null, string type = null, string attribute = null)
+        private string AttributePermissions(int? appId, string type, string attribute)
         {
             if (UrlParamsIncomplete(appId, type, attribute, out var message))
                 return message;

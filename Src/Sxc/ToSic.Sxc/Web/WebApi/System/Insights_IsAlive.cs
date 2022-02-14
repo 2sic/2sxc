@@ -2,10 +2,6 @@
 {
     public partial class Insights
     {
-        public bool IsAlive()
-        {
-            ThrowIfNotSuperUser();
-            return true;
-        }
+        private string IsAlive() => true.ToString();
     }
 }

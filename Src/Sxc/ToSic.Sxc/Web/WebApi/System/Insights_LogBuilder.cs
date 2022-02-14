@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.Razor.Blade;
 using static ToSic.Razor.Blade.Tag;
 
 namespace ToSic.Sxc.Web.WebApi.System
@@ -14,21 +13,21 @@ namespace ToSic.Sxc.Web.WebApi.System
 
         internal string LogHeader(string key = null)
         {
-            var msg = "" + Div("back to " + A("2sxc insights home").Href( "./help"))
+            var msg =
+                      + Div("back to " + LinkTo("2sxc insights home", nameof(Help)))
                       + H1($"2sxc Insights: Log {key}")
                       + P("Status: ",
-                          Strong(_logHistory.Pause ? "paused" : "running"), 
+                          Strong(_logHistory.Pause ? "paused" : "running"),
                           " ",
-                          A(HtmlEncode("▶")).Href("logs?pause=false"),
+                          LinkTo(HtmlEncode("▶"), nameof(PauseLogs), more: "toggle=false"),
                           " | ",
-                          A(HtmlEncode("⏸")).Href("logs?pause=true"),
-                          $" collecting #{_logHistory.Count} of max {_logHistory.MaxCollect} (keep max {_logHistory.Size} per set, then FIFO) - "
-                          + A("change").Href($"logs?pause={!_logHistory.Pause}")
-                          + " (pause to see details of the log)\n");
-            return msg;
+                          LinkTo(HtmlEncode("⏸"), nameof(PauseLogs), more: "toggle=true"),
+                          $" collecting #{_logHistory.Count} of max {_logHistory.MaxCollect} (keep max {_logHistory.Size} per set, then FIFO)"
+                      );
+            return msg.ToString();
         }
 
-        internal static string LogHistoryOverview(LogHistory logHistory)
+        internal string LogHistoryOverview(LogHistory logHistory)
         {
             var msg = "";
             try
@@ -43,9 +42,9 @@ namespace ToSic.Sxc.Web.WebApi.System
                     Tbody(
                         logs.OrderBy(l => l.Key)
                             .Select(log => RowFields((++count).ToString(),
-                                A(log.Key).Href($"logs?key={log.Key}").ToString(),
+                                LinkTo(log.Key, nameof(Logs), key: log.Key),
                                 $"{log.Value.Count}",
-                                A("flush").Href($"logsflush?key={log.Key}").ToString())
+                                LinkTo("flush", nameof(LogsFlush), key: log.Key))
                             )
                             .Cast<object>()
                             .ToArray())
@@ -60,7 +59,7 @@ namespace ToSic.Sxc.Web.WebApi.System
             return msg;
         }
 
-        internal static string LogHistory(LogHistory logHistory, string key)
+        internal string LogHistory(LogHistory logHistory, string key)
         {
             var msg = "";
             //try
@@ -69,22 +68,17 @@ namespace ToSic.Sxc.Web.WebApi.System
                 {
                     var count = 0;
                     msg += P($"Logs Overview: {set.Count}\n");
-                    msg += Table().Id("table").Wrap( // ) "<table id='table'>"
-                        HeadFields("#", "Timestamp", "Key", "TopLevel Name", "Lines", "First Message"),
-                        //+ "<tbody>"
-                        //;
-                        Tbody(set
+                    msg += Table().Id("table").Wrap(
+                        HeadFields("#", "Timestamp", "Key", "TopLevel Name", "Lines", "First Message"), Tbody(set
                             .Select(log => RowFields(
                                 $"{++count}",
                                 log.Created.ToString("O"),
                                 $"{key}",
-                                A(log.FullIdentifier).Href($"logs?key={key}&position={count}"),
+                                LinkTo(log.FullIdentifier, nameof(Logs), key: key, more: $"position={count}"),
                                 $"{log.Entries.Count}",
                                 log.Entries.FirstOrDefault()?.Message)
                             )
                             .ToArray<object>()));
-                    //msg += "</tbody>";
-                    //msg += "</table>";
                     msg += "\n\n";
                     msg += JsTableSort();
                 }
@@ -103,36 +97,8 @@ namespace ToSic.Sxc.Web.WebApi.System
             return msg;
         }
 
-        private const string ResStartPlaceholder = "*resStart*";
-        private const string ResEndPlaceholder = "*resEnd*";
         private const string ResStart = "<span style='color: green'>= ";
         private const string ResEnd = "</span>";
-
-        private const string CallerPrefixPlaceholder = "*clrP*";
-        private const string CallerSuffixPlaceholder = "*clrS";
-        private const string CallerPrefix = " <span style='color: blue' title='";
-        private const string CallerSuffix = "'>C#</span>";
-
-        internal static string FormatLog(string title, ILog log)
-        {
-            var dump = log.Dump(" - ",
-                "",
-                "end of log",
-                ResStartPlaceholder,
-                ResEndPlaceholder,
-                withCaller: true,
-                callStart: CallerPrefixPlaceholder,
-                callEnd: CallerSuffixPlaceholder
-                );
-            var htmlEnc = H1($"{title}") + "\n" + HtmlEncode(dump);
-            htmlEnc = htmlEnc
-                .Replace(ResStartPlaceholder, ResStart)
-                .Replace(ResEndPlaceholder, ResEnd)
-                .Replace(CallerPrefixPlaceholder, CallerPrefix)
-                .Replace(CallerSuffixPlaceholder, CallerSuffix);
-
-            return Tags.Nl2Br(htmlEnc);
-        }
 
         internal static string DumpTree(string title, ILog log)
         {

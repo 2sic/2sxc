@@ -13,10 +13,8 @@ namespace ToSic.Sxc.Web.WebApi.System
     public partial class Insights
     {
 
-        public string Entities(int? appId = null, string type = null)
+        private string Entities(int? appId, string type)
         {
-            ThrowIfNotSuperUser();
-
             if (UrlParamsIncomplete(appId, type, out var message))
                 return message;
 
@@ -41,17 +39,15 @@ namespace ToSic.Sxc.Web.WebApi.System
                 {
                     msg = msg + RowFields(
                         (++count).ToString(),
-                        A($"{ent.EntityId}").Href($"entity?appid={appId}&entity={ent.EntityId}"),
-                        A($"{ent.EntityGuid}").Href($"entity?appid={appId}&entity={ent.EntityGuid}"),
+                        LinkTo($"{ent.EntityId}", nameof(Entity), appId, nameId: ent.EntityId.ToString()),
+                        LinkTo($"{ent.EntityGuid}", nameof(Entity), appId, nameId: ent.EntityGuid.ToString()), 
                         ent.GetBestTitle(),
                         ent.Type.Name,
                         ent.Modified.ToString(CultureInfo.InvariantCulture),
                         ent.Owner,
                         $"{ent.Version}",
-                        A($"{ent.Metadata.Count()}").Href($"entitymetadata?appid={appId}&entity={ent.EntityId}"),
-                        A($"{ent.Metadata.Permissions.Count()}")
-                            .Href($"entitypermissions?appid={appId}&entity={ent.EntityId}")
-                    );
+                        LinkTo($"{ent.Metadata.Count()}", nameof(EntityMetadata), appId, nameId: ent.EntityId.ToString()),
+                        LinkTo($"{ent.Metadata.Permissions.Count()}", nameof(EntityPermissions), appId, nameId: ent.EntityId.ToString()));
                 }
                 msg += "</tbody>";
                 msg += "</table>";
@@ -66,10 +62,8 @@ namespace ToSic.Sxc.Web.WebApi.System
             return msg;
         }
 
-        public string EntityMetadata(int? appId = null, int? entity = null)
+        private string EntityMetadata(int? appId = null, int? entity = null)
         {
-            ThrowIfNotSuperUser();
-
             if (UrlParamsIncomplete(appId, entity, out var message))
                 return message;
 
@@ -83,10 +77,8 @@ namespace ToSic.Sxc.Web.WebApi.System
             return MetadataTable(msg, metadata);
         }
 
-        public string EntityPermissions(int? appId = null, int? entity = null)
+        private string EntityPermissions(int? appId = null, int? entity = null)
         {
-            ThrowIfNotSuperUser();
-
             if (UrlParamsIncomplete(appId, entity, out var message))
                 return message;
 
@@ -100,20 +92,18 @@ namespace ToSic.Sxc.Web.WebApi.System
             return MetadataTable(msg, permissions);
         }
 
-        public string Entity(int? appId = null, string entity = null)
+        private string Entity(int? appId, string nameId)
         {
-            ThrowIfNotSuperUser();
-
-            if (UrlParamsIncomplete(appId, entity, out var message))
+            if (UrlParamsIncomplete(appId, nameId, out var message))
                 return message;
 
-            Log.Add($"debug app entity metadata for {appId} and entity {entity}");
+            Log.Add($"debug app entity metadata for {appId} and entity {nameId}");
             var appRead = AppRt(appId);
 
             IEntity ent;
-            if (Int32.TryParse(entity, out var entityId))
+            if (Int32.TryParse(nameId, out var entityId))
                 ent = appRead.Entities.Get(entityId);
-            else if (Guid.TryParse(entity, out var entityGuid))
+            else if (Guid.TryParse(nameId, out var entityGuid))
                 ent = appRead.Entities.Get(entityGuid);
             else
                 throw CreateBadRequest("can't use entityid - must be number or guid");
@@ -121,7 +111,7 @@ namespace ToSic.Sxc.Web.WebApi.System
             var ser = _serviceProvider.Build<JsonSerializer>().Init(appRead.AppState, Log);
             var json = ser.Serialize(ent);
 
-            var msg = H1($"Entity Debug for {entity} in {appId}\n")
+            var msg = H1($"Entity Debug for {nameId} in {appId}\n")
                       + Tags.Nl2Br("\n\n\n")
                       + Textarea(json).Rows("20").Cols("100");
 

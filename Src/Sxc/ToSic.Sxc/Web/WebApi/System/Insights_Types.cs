@@ -9,10 +9,8 @@ namespace ToSic.Sxc.Web.WebApi.System
 {
     public partial class Insights
     {
-
-        public string Types(int? appId = null, bool detailed = false)
+        private string Types(int? appId = null)
         {
-            ThrowIfNotSuperUser();
             if (appId == null)
                 return "please add appid to the url parameters";
 
@@ -64,18 +62,17 @@ namespace ToSic.Sxc.Web.WebApi.System
                         type.Scope,
                         type.NameId,
                         type.Name,
-                        A($"{type.Attributes.Count}").Href($"attributes?appid={appId}&type={type.NameId}"),
-                        A($"{type.Metadata.Count()}").Href($"typepermissions?appid={appId}&type={type.NameId}"),
-                        A($"{type.Metadata.Permissions.Count()}").Href(
-                            $"typepermissions?appid={appId}&type={type.NameId}"),
+                        LinkTo($"{type.Attributes.Count}", nameof(Attributes), appId, type: type.NameId),
+                        LinkTo($"{type.Metadata.Count()}", nameof(TypeMetadata), appId, type: type.NameId),
+                        LinkTo($"{type.Metadata.Permissions.Count()}", nameof(TypePermissions), appId, type: type.NameId),
                         type.IsDynamic.ToString(),
                         type.RepositoryType.ToString(),
-                        A($"{itemCount}").Href($"entities?appid={appId}&type={type.NameId}")
+                        LinkTo($"{itemCount}", nameof(Entities), appId, type: type.NameId)
                     );
                 }
                 msg += "</tbody>";
                 msg += RowFields("", "", "", "", "", "", "", "", "",
-                    A($"{totalItems}").Href($"entities?appid={appId}&type=all"));
+                    LinkTo($"{totalItems}", nameof(Entities), appId, type: "all"));
                 msg += "</table>";
                 msg += "\n\n";
                 msg += P(
@@ -90,17 +87,14 @@ namespace ToSic.Sxc.Web.WebApi.System
             return msg;
         }
 
-        public string GlobalTypes()
+        private string GlobalTypes()
         {
-            ThrowIfNotSuperUser();
-
             var globTypes = _appStates.GetPresetApp().ContentTypes;
             return TypesTable(Eav.Constants.PresetAppId, globTypes, null);
         }
 
-        public string GlobalTypesLog()
+        private string GlobalTypesLog()
         {
-            ThrowIfNotSuperUser();
             var msg = PageStyles() + LogHeader();
             var log = Runtime.LoadLog;
             return msg + (log == null
@@ -108,10 +102,8 @@ namespace ToSic.Sxc.Web.WebApi.System
                 : DumpTree($"Log for Global Types loading", log));
         }
 
-        public string TypeMetadata(int? appId = null, string type = null)
+        private string TypeMetadata(int? appId = null, string type = null)
         {
-            ThrowIfNotSuperUser();
-
             if (UrlParamsIncomplete(appId, type, out var message))
                 return message;
 
@@ -124,10 +116,8 @@ namespace ToSic.Sxc.Web.WebApi.System
             return MetadataTable(msg, metadata);
         }
 
-        public string TypePermissions(int? appId = null, string type = null)
+        private string TypePermissions(int? appId = null, string type = null)
         {
-            ThrowIfNotSuperUser();
-
             if (UrlParamsIncomplete(appId, type, out var message))
                 return message;
 

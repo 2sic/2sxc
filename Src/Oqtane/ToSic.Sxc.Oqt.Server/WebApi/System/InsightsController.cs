@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Oqtane.Shared;
-using System;
-using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Web.WebApi.System;
@@ -9,23 +6,18 @@ using ToSic.Sxc.Web.WebApi.System;
 namespace ToSic.Sxc.Oqt.Server.WebApi
 {
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/sys/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot2 + "/sys/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot3 + "/sys/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRoot + "/sys/[controller]/")]
+    [Route(WebApiConstants.ApiRoot2 + "/sys/[controller]/")]
+    [Route(WebApiConstants.ApiRoot3 + "/sys/[controller]/")]
 
     // Beta routes
-    [Route(WebApiConstants.WebApiStateRoot + "/sys/[controller]/[action]")]
+    [Route(WebApiConstants.WebApiStateRoot + "/sys/[controller]/")]
 
     [ApiController]
     public class InsightsController : OqtControllerBase
     {
-        private readonly Lazy<Insights> _lazyInsights;
-
-        public InsightsController(Lazy<Insights> lazyInsights)
-        {
-            _lazyInsights = lazyInsights;
-        }
-
+        public InsightsController(Insights insights) => _insights = insights;
+        private readonly Insights _insights;
 
         #region Logging aspects
 
@@ -37,143 +29,21 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
         /// </summary>
         protected override string HistoryLogGroup { get; } = "web-api.insights";
 
-        #endregion
-
         /// <summary>
         /// Enable/disable logging of access to insights
         /// Only enable this if you have trouble developing insights, otherwise it clutters our logs
         /// </summary>
         internal const bool InsightsLoggingEnabled = false;
 
-        //internal const string InsightsUrlFragment = "/sys/insights/";
-
-
-        #region Construction and Security
-
-        protected Insights Insights =>
-            _insights ??= _lazyInsights.Value.Init(Log, ThrowIfNotSuperuser, msg => new Exception(msg));
-        private Insights _insights;
-
-        private void ThrowIfNotSuperuser()
-        {
-            if (!User.IsInRole(RoleNames.Host))
-                throw HttpException.PermissionDenied("requires Host permissions");
-        }
-
         #endregion
 
         private ContentResult Wrap(string contents) => base.Content(contents, "text/html");
 
-        #region New with fewer endpoints
-
-        [HttpGet]
-        public ContentResult Details(string view) => Wrap(Insights.Details(view));
-
-        #endregion
-
-
-        #region Help and Basics
-
-        [HttpGet]
-        public ContentResult Help() => Wrap(Insights.Help());
-
-        [HttpGet]
-        public ContentResult IsAlive() => Wrap(Insights.IsAlive().ToString());
-
-        #endregion
-
-        #region App
-        [HttpGet]
-        public ContentResult LoadLog(int? appId = null) => Wrap(Insights.LoadLog(appId));
-
-        [HttpGet]
-        public ContentResult Cache() => Wrap(Insights.Cache());
-
-        [HttpGet]
-        public ContentResult Stats(int? appId = null) => Wrap(Insights.Stats(appId));
-        #endregion
-
-        #region Logs
-
-        /// <summary>
-        /// Logs is different from the WebForms implementation, because route detection isn't as rigid in .net core
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="position"></param>
-        /// <param name="pause"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public ContentResult Logs([FromQuery] string key, [FromQuery] int? position, [FromQuery] bool? pause)
-        {
-            // pause command, in this case it's the only parameter
-            if (pause != null) return Wrap(Insights.Logs(pause.Value));
-
-            if (key == null) return Wrap(Insights.Logs());
-            if (position == null) return Wrap(Insights.Logs(key));
-            return Wrap(Insights.Logs(key, position.Value));
-        }
-
-        [HttpGet]
-        public ContentResult LogsFlush(string key) => Wrap(Insights.LogsFlush(key));
-        #endregion
-
-        #region AppActions
-
-        [HttpGet]
-        public ContentResult Purge(int? appId = null) => Wrap(Insights.Purge(appId));
-
-        #endregion
-
-        #region Attributes
-
-        [HttpGet]
-        public ContentResult Attributes(int appId, string type = null) => Wrap(Insights.Attributes(appId, type));
-
-        [HttpGet]
-        public ContentResult AttributeMetadata(int? appId = null, string type = null, string attribute = null) =>
-            Wrap(Insights.AttributeMetadata(appId, type, attribute));
-
-        [HttpGet]
-        public ContentResult AttributePermissions(int? appId = null, string type = null, string attribute = null) =>
-            Wrap(Insights.AttributePermissions(appId, type, attribute));
-
-        #endregion
-
-
-        #region Entities
-
-        [HttpGet]
-        public ContentResult Entities(int? appId = null, string type = null) => Wrap(Insights.Entities(appId, type));
-
-        [HttpGet]
-        public ContentResult EntityMetadata(int? appId = null, int? entity = null) => Wrap(Insights.EntityMetadata(appId, entity));
-
-        [HttpGet]
-        public ContentResult EntityPermissions(int? appId = null, int? entity = null) =>
-            Wrap(Insights.EntityPermissions(appId, entity));
-
-        [HttpGet]
-        public ContentResult Entity(int? appId = null, string entity = null) => Wrap(Insights.Entity(appId, entity));
-        #endregion
-
-
-        #region Types
-
-        [HttpGet]
-        public ContentResult Types(int? appId = null, bool detailed = false) => Wrap(Insights.Types(appId, detailed));
-
-        [HttpGet]
-        public ContentResult GlobalTypes() => Wrap(Insights.GlobalTypes());
-
-        [HttpGet]
-        public ContentResult GlobalTypesLog() => Wrap(Insights.GlobalTypesLog());
-
-        [HttpGet]
-        public ContentResult TypeMetadata(int? appId = null, string type = null) => Wrap(Insights.TypeMetadata(appId, type));
-
-        [HttpGet]
-        public ContentResult TypePermissions(int? appId = null, string type = null) => Wrap(Insights.TypePermissions(appId, type));
-        #endregion
-
+        [HttpGet("{view}")]
+        public ContentResult Details([FromRoute] string view, 
+            [FromQuery] int? appId = null, [FromQuery] string key = null, [FromQuery] int? position = null,
+            [FromQuery] string type = null, [FromQuery] bool? toggle = null, string nameId = null)
+            => Wrap(_insights.Init(Log).Details(view, appId, key, position, type, toggle, nameId));
+        
     }
 }
