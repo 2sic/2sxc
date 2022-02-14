@@ -95,7 +95,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
             globalConfig.GlobalFolder = Path.Combine(HostEnvironment.ContentRootPath, "wwwroot\\Modules\\ToSic.Sxc");
             globalConfig.AssetsVirtualUrl = "~/Modules/ToSic.Sxc/assets/";
-            globalConfig.SharedAppsFolder = $"/{OqtConstants.AppRoot}/{OqtConstants.SharedAppFolder}"; // "/2sxc/Shared"
+            globalConfig.SharedAppsFolder = $"/{OqtConstants.AppRoot}/{OqtConstants.SharedAppFolder}/"; // "/2sxc/Shared"
 
 
             // Load features from configuration

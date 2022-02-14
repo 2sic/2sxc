@@ -1,7 +1,8 @@
-﻿using System.Configuration;
-using System.Web.Hosting;
-using DotNetNuke.Web.Api;
+﻿using DotNetNuke.Web.Api;
 using Newtonsoft.Json;
+using System.Configuration;
+using System.Web.Hosting;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
 using ToSic.SexyContent.Dnn920;
@@ -60,7 +61,7 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             globalConfig.GlobalFolder = HostingEnvironment.MapPath(DnnConstants.SysFolderRootVirtual);
             globalConfig.AssetsVirtualUrl = DnnConstants.SysFolderRootVirtual + "assets/";
-            globalConfig.SharedAppsFolder = "~/Portals/_default/";
+            globalConfig.SharedAppsFolder = "~/Portals/_default/" + AppConstants.AppsRootFolder + "/";
 
             // Load features from configuration
             var sysLoader = transientSp.Build<SystemLoader>();

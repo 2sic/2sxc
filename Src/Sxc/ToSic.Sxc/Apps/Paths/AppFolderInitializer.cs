@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Apps.Paths
         {
             var wrapLog = Log.Call($"{isShared}");
             var portalPath = isShared
-                ? Path.Combine(ServerPaths.FullAppPath(_globalConfiguration.SharedAppsFolder) ?? "", AppConstants.AppsRootFolder)
+                ? ServerPaths.FullAppPath(_globalConfiguration.SharedAppsFolder)
                 : _site.AppsRootPhysicalFull ?? "";
 
             var sxcFolder = new DirectoryInfo(portalPath);
