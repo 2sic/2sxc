@@ -56,6 +56,9 @@ namespace ToSic.Sxc
             // v13.02
             services.TryAddTransient<IDynamicCodeService, DynamicCodeServiceUnknown>();
 
+            // v13.02
+            services.TryAddTransient<ILinkPaths, LinkPathsUnknown>();
+
             return services;
         }
     }
