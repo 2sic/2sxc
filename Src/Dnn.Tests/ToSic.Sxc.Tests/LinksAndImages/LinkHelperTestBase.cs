@@ -14,10 +14,8 @@ namespace ToSic.Sxc.Tests.LinksAndImages
             // Every test should run by itself
 
             Link = Build<ILinkHelper>();
-            LinkPaths = Build<ILinkPaths>();
         }
 
         internal ILinkHelper Link;
-        internal ILinkPaths LinkPaths;
     }
 }
