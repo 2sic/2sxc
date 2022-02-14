@@ -11,6 +11,8 @@
 
         public const string AppRootPublicBase = AppRoot + "\\{0}";
 
+        public const string SharedAppFolder =  "Shared";
+
         public const string ContentSubfolder = "Content";
 
         public const string ContentRootPublicBase = ContentSubfolder + "\\Tenants\\{0}\\Sites\\{1}";

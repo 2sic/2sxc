@@ -12,6 +12,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
+using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Razor;
 using ToSic.Sxc.WebApi;
 using WebApiConstants = ToSic.Sxc.Oqt.Shared.WebApiConstants;
@@ -94,7 +95,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
             globalConfig.GlobalFolder = Path.Combine(HostEnvironment.ContentRootPath, "wwwroot\\Modules\\ToSic.Sxc");
             globalConfig.AssetsVirtualUrl = "~/Modules/ToSic.Sxc/assets/";
-            globalConfig.SharedAppsFolder = "todo - global apps not implemented yet";
+            globalConfig.SharedAppsFolder = $"/{OqtConstants.AppRoot}/{OqtConstants.SharedAppFolder}"; // "/2sxc/Shared"
 
 
             // Load features from configuration
