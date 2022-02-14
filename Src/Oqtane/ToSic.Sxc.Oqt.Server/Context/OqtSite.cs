@@ -9,6 +9,7 @@ using ToSic.Eav.Run;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
@@ -28,14 +29,14 @@ namespace ToSic.Sxc.Oqt.Server.Context
             Lazy<IServerPaths> serverPaths,
             Lazy<OqtZoneMapper> zoneMapper,
             Lazy<OqtCulture> oqtCulture,
-            Lazy<ILinkHelper> linkHelperLazy): base(OqtConstants.OqtLogPrefix)
+            Lazy<ILinkPaths> linkPathsLazy): base(OqtConstants.OqtLogPrefix)
         {
             _siteStateInitializer = siteStateInitializer;
             _siteRepository = siteRepository;
             _serverPaths = serverPaths;
             _zoneMapper = zoneMapper;
             _oqtCulture = oqtCulture;
-            _linkHelperLazy = linkHelperLazy;
+            _linkPathsLazy = linkPathsLazy;
         }
 
         private readonly SiteStateInitializer _siteStateInitializer;
@@ -43,7 +44,9 @@ namespace ToSic.Sxc.Oqt.Server.Context
         private readonly Lazy<IServerPaths> _serverPaths;
         private readonly Lazy<OqtZoneMapper> _zoneMapper;
         private readonly Lazy<OqtCulture> _oqtCulture;
-        private readonly Lazy<ILinkHelper> _linkHelperLazy;
+        private readonly Lazy<ILinkPaths> _linkPathsLazy;
+
+        private ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
 
         public OqtSite Init(Site site)
@@ -82,7 +85,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
                 if (_url != null) return _url;
                 // Site Alias in Oqtane is without protocol, so we need to add it from current request for consistency
                 // also without trailing slash
-                var parts = new UrlParts(_linkHelperLazy.Value.GetCurrentRequestUrl());
+                var parts = new UrlParts(LinkPaths.GetCurrentRequestUrl());
                 _url = $"{parts.Protocol}{Alias.Name}";
                 return _url;
             }

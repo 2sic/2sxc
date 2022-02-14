@@ -1,7 +1,9 @@
-﻿using ToSic.Eav.Documentation;
+﻿using System;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Eav.Run.Unknown;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Web
 {
@@ -34,7 +36,7 @@ namespace ToSic.Sxc.Web
         internal static string CurrentPageUrl = NiceCurrentUrl;
         internal static string AnyPageUrl = NiceAnyPageUrl;
 
-        public LinkHelperUnknown(ImgResizeLinker imgLinker, WarnUseOfUnknown<LinkHelperUnknown> warn) : base(imgLinker)
+        public LinkHelperUnknown(ImgResizeLinker imgLinker, Lazy<ILinkPaths> linkPathsLazy, WarnUseOfUnknown<LinkHelperUnknown> warn) : base(imgLinker, linkPathsLazy)
         {
         }
 
@@ -73,8 +75,5 @@ namespace ToSic.Sxc.Web
             // use a pre-standardized dummy-domain  
             return DefRoot;
         }
-
-        // Mock CurrentPage
-        public override string GetCurrentRequestUrl() => NiceCurrentUrl;
     }
 }

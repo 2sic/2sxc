@@ -4,6 +4,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.Web
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Dnn.Web
 
 
         [PrivateApi]
-        public DnnLinkHelper(ImgResizeLinker imgLinker, Lazy<DnnValueConverter> dnnValueConverterLazy) : base(imgLinker)
+        public DnnLinkHelper(ImgResizeLinker imgLinker, Lazy<DnnValueConverter> dnnValueConverterLazy, Lazy<ILinkPaths> linkPathsLazy) : base(imgLinker, linkPathsLazy)
         {
             _dnnValueConverterLazy = dnnValueConverterLazy;
         }
@@ -67,7 +68,5 @@ namespace ToSic.Sxc.Dnn.Web
         }
 
         public override string GetCurrentLinkRoot() => HttpContext.Current?.Request?.Url?.GetLeftPart(UriPartial.Authority) ?? string.Empty;
-
-        public override string GetCurrentRequestUrl() => HttpContext.Current?.Request?.Url?.AbsoluteUri ?? string.Empty;
     }
 }

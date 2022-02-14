@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using ToSic.Eav.Helpers;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Run;
@@ -31,15 +32,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return virtualPath.PrefixSlash().ForwardSlash();
         }
 
-        public string AsSeenFromTheDomainRoot(string virtualPath)
-        {
-            return toWebAbsolute(virtualPath);
-        }
+        public string AsSeenFromTheDomainRoot(string virtualPath) => toWebAbsolute(virtualPath);
 
-        public string ApiFromSiteRoot(string appFolder, string apiPath)
-        {
-            return $"/app/{appFolder}/{apiPath}";
-        }
+        public string ApiFromSiteRoot(string appFolder, string apiPath) => $"/app/{appFolder}/{apiPath}";
 
         public string AppFromTheDomainRoot(string appFolder, string pagePath)
         {
@@ -47,10 +42,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return AppFromTheDomainRoot(siteRoot, appFolder, pagePath);
         }
 
-        public string AppFromTheDomainRoot(string siteRoot, string appFolder, string pagePath)
-        {
-            return $"{siteRoot}/app/{appFolder}/{pagePath}";
-        }
+        public string AppFromTheDomainRoot(string siteRoot, string appFolder, string pagePath) => $"{siteRoot}/app/{appFolder}/{pagePath}";
+
         #endregion
+
+        public string GetCurrentRequestUrl() => _contextAccessor.HttpContext?.Request?.GetEncodedUrl() ?? string.Empty;
     }
 }

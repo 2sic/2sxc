@@ -3,5 +3,7 @@
     public interface ILinkPaths
     {
         string AsSeenFromTheDomainRoot(string virtualPath);
+
+        string GetCurrentRequestUrl();
     }
 }

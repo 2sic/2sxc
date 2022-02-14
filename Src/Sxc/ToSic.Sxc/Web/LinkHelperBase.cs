@@ -6,18 +6,22 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Web
 {
     [PrivateApi]
     public abstract class LinkHelperBase : HasLog, ILinkHelper
     {
-        protected LinkHelperBase(ImgResizeLinker imgLinker) : base($"{Constants.SxcLogName}.LnkHlp")
+        protected LinkHelperBase(ImgResizeLinker imgLinker, Lazy<ILinkPaths> linkPathsLazy) : base($"{Constants.SxcLogName}.LnkHlp")
         {
+            _linkPathsLazy = linkPathsLazy;
             ImgLinker = imgLinker;
             ImgLinker.Init(Log);
         }
         private ImgResizeLinker ImgLinker { get; }
+        private readonly Lazy<ILinkPaths> _linkPathsLazy;
+        public ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
         public virtual void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
@@ -67,11 +71,11 @@ namespace ToSic.Sxc.Web
             {
                 case "full":
                     if (!parts.IsAbsolute)
-                        parts.ReplaceRoot(GetCurrentRequestUrl());
+                        parts.ReplaceRoot(LinkPaths.GetCurrentRequestUrl());
                     return parts.ToLink("full");
                 case "//":
                     if (!parts.IsAbsolute)
-                        parts.ReplaceRoot(GetCurrentRequestUrl());
+                        parts.ReplaceRoot(LinkPaths.GetCurrentRequestUrl());
                     return parts.ToLink("//");
                 case "/": // note: "/" isn't officially supported
                     return parts.ToLink("/");
@@ -148,8 +152,6 @@ namespace ToSic.Sxc.Web
         }
         
         public abstract string GetCurrentLinkRoot();
-
-        public abstract string GetCurrentRequestUrl();
 
         /**
          * Combine api with query string.

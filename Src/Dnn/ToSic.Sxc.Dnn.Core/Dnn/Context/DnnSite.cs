@@ -9,6 +9,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.Context
@@ -25,14 +26,15 @@ namespace ToSic.Sxc.Dnn.Context
         /// DI Constructor, will get the current portal settings
         /// #TodoDI not ideal yet, as PortalSettings.current is still retrieved from global
         /// </summary>
-        public DnnSite(Lazy<IZoneMapper> zoneMapperLazy, Lazy<ILinkHelper> linkHelperLazy): base(DnnConstants.LogName)
+        public DnnSite(Lazy<IZoneMapper> zoneMapperLazy, Lazy<ILinkPaths> linkPathsLazy): base(DnnConstants.LogName)
         {
             _zoneMapperLazy = zoneMapperLazy;
-            _linkHelperLazy = linkHelperLazy;
+            _linkPathsLazy = linkPathsLazy;
             Swap(null, null);
         }
         private readonly Lazy<IZoneMapper> _zoneMapperLazy;
-        private readonly Lazy<ILinkHelper> _linkHelperLazy;
+        private readonly Lazy<ILinkPaths> _linkPathsLazy;
+        private ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
         /// <inheritdoc />
         public override ISite Init(int siteId, ILog parentLog) => Swap(new PortalSettings(siteId), parentLog);
@@ -134,7 +136,7 @@ namespace ToSic.Sxc.Dnn.Context
                 if (_url != null) return _url;
                 // PortalAlias in DNN is without protocol, so we need to add it from current request for consistency
                 // also without trailing slash
-                var parts = new UrlParts(_linkHelperLazy.Value.GetCurrentRequestUrl());
+                var parts = new UrlParts(LinkPaths.GetCurrentRequestUrl());
                 _url = $"{parts.Protocol}{UrlRoot}";
                 return _url;
             }

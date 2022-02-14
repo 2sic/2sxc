@@ -24,23 +24,20 @@ namespace ToSic.Sxc.Oqt.Server.Services
         private readonly IPageRepository _pageRepository;
         private readonly SiteStateInitializer _siteStateInitializer;
         private readonly IHttpContextAccessor _contextAccessor;
-        private readonly OqtLinkPaths _linkPaths;
         private Sxc.Context.IContextOfBlock _context;
 
         public OqtLinkHelper(
             IPageRepository pageRepository,
             SiteStateInitializer siteStateInitializer,
-            IHttpContextAccessor contextAccessor,
-            ILinkPaths linkPaths,
-            ImgResizeLinker imgLinker
-        ) : base(imgLinker)
+            IHttpContextAccessor contextAccessor, 
+            ImgResizeLinker imgLinker,
+            Lazy<ILinkPaths> linkPathsLazy
+        ) : base(imgLinker, linkPathsLazy)
         {
             _pageRepository = pageRepository;
             _siteStateInitializer = siteStateInitializer;
             _contextAccessor = contextAccessor;
-            _linkPaths = linkPaths as OqtLinkPaths;
         }
-
 
         public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
@@ -57,7 +54,7 @@ namespace ToSic.Sxc.Oqt.Server.Services
             var alias = _siteStateInitializer.InitializedState.Alias;
             
             var pathWithQueryString = CombineApiWithQueryString(
-                _linkPaths.ApiFromSiteRoot(App.Folder, api),
+                ((OqtLinkPaths)LinkPaths).ApiFromSiteRoot(App.Folder, api),
                 parameters);
 
             var relativePath = string.IsNullOrEmpty(alias.Path)
@@ -98,11 +95,6 @@ namespace ToSic.Sxc.Oqt.Server.Services
                 ? alias.Name
                 : alias.Name.Substring(0, alias.Name.Length - alias.Path.Length - 1);
             return  $"{scheme}://{domainName}";
-        }
-
-        public override string GetCurrentRequestUrl()
-        {
-            return _contextAccessor?.HttpContext?.Request?.GetEncodedUrl() ?? string.Empty;
         }
     }
 }

@@ -142,10 +142,6 @@ namespace ToSic.Sxc.Web
         /// <param name="debug"></param>
         [InternalApi_DoNotUse_MayChangeWithoutNotice("just for debugging, can change at any time but for debugging it's useful")]
         void SetDebug(bool debug);
-
-        [PrivateApi]
-        // todo: this should really not be in the LinkHelper. Maybe put on ILinkPaths or something, but NOT on the ILinkHelper
-        string GetCurrentRequestUrl();
     }
 
 }
