@@ -150,8 +150,6 @@ namespace ToSic.Sxc.Web
             // Set logging on ImageResizeHelper
             ImgLinker.Debug = debug;
         }
-        
-        public abstract string GetCurrentLinkRoot();
 
         /**
          * Combine api with query string.

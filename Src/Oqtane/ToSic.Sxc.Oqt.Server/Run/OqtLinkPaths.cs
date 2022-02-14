@@ -47,5 +47,15 @@ namespace ToSic.Sxc.Oqt.Server.Run
         #endregion
 
         public string GetCurrentRequestUrl() => _contextAccessor.HttpContext?.Request?.GetEncodedUrl() ?? string.Empty;
+
+        public string GetCurrentLinkRoot()
+        {
+            var scheme = _contextAccessor?.HttpContext?.Request?.Scheme ?? "http";
+            var alias = _siteStateInitializer.InitializedState.Alias;
+            var domainName = string.IsNullOrEmpty(alias.Path)
+                ? alias.Name
+                : alias.Name.Substring(0, alias.Name.Length - alias.Path.Length - 1);
+            return $"{scheme}://{domainName}";
+        }
     }
 }

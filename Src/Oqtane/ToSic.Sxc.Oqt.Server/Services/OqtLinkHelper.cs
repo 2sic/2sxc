@@ -1,6 +1,5 @@
 ﻿using Custom.Hybrid;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
 using Oqtane.Repository;
 using Oqtane.Shared;
 using System;
@@ -39,6 +38,8 @@ namespace ToSic.Sxc.Oqt.Server.Services
             _contextAccessor = contextAccessor;
         }
 
+        private new OqtLinkPaths LinkPaths => (OqtLinkPaths)base.LinkPaths;
+
         public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             base.ConnectToRoot(codeRoot);
@@ -54,7 +55,7 @@ namespace ToSic.Sxc.Oqt.Server.Services
             var alias = _siteStateInitializer.InitializedState.Alias;
             
             var pathWithQueryString = CombineApiWithQueryString(
-                ((OqtLinkPaths)LinkPaths).ApiFromSiteRoot(App.Folder, api),
+                LinkPaths.ApiFromSiteRoot(App.Folder, api),
                 parameters);
 
             var relativePath = string.IsNullOrEmpty(alias.Path)
@@ -84,17 +85,7 @@ namespace ToSic.Sxc.Oqt.Server.Services
             // for invalid page numbers just skip that part 
             var relativePath = Utilities.NavigateUrl(alias.Path, page?.Path ?? string.Empty, parameters ?? string.Empty); // NavigateUrl do not works with absolute links
 
-            return absoluteUrl ? $"{GetCurrentLinkRoot()}{relativePath}" : relativePath;
-        }
-
-        public override string GetCurrentLinkRoot()
-        {
-            var scheme = _contextAccessor?.HttpContext?.Request?.Scheme ?? "http";
-            var alias = _siteStateInitializer.InitializedState.Alias;
-            var domainName = string.IsNullOrEmpty(alias.Path)
-                ? alias.Name
-                : alias.Name.Substring(0, alias.Name.Length - alias.Path.Length - 1);
-            return  $"{scheme}://{domainName}";
+            return absoluteUrl ? $"{LinkPaths.GetCurrentLinkRoot()}{relativePath}" : relativePath;
         }
     }
 }

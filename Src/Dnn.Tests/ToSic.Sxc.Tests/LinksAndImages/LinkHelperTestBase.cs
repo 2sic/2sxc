@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Web;
+﻿using ToSic.Sxc.Run;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Tests.LinksAndImages
 {
@@ -13,9 +14,10 @@ namespace ToSic.Sxc.Tests.LinksAndImages
             // Every test should run by itself
 
             Link = Build<ILinkHelper>();
+            LinkPaths = Build<ILinkPaths>();
         }
 
         internal ILinkHelper Link;
-
+        internal ILinkPaths LinkPaths;
     }
 }

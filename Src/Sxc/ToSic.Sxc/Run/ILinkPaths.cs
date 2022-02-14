@@ -5,5 +5,7 @@
         string AsSeenFromTheDomainRoot(string virtualPath);
 
         string GetCurrentRequestUrl();
+
+        string GetCurrentLinkRoot();
     }
 }

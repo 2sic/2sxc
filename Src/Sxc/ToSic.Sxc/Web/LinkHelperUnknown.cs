@@ -68,12 +68,5 @@ namespace ToSic.Sxc.Web
         //            : $"{CurrentPage}{parameters}"
         //        : $"{api}{parameters}";
         //}
-
-        // Mock DomainName
-        public override string GetCurrentLinkRoot()
-        {
-            // use a pre-standardized dummy-domain  
-            return DefRoot;
-        }
     }
 }

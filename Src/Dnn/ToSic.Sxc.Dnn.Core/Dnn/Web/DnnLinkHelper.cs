@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Sxc.Dnn.Run;
@@ -66,7 +65,5 @@ namespace ToSic.Sxc.Dnn.Web
 
             return relativePath;
         }
-
-        public override string GetCurrentLinkRoot() => HttpContext.Current?.Request?.Url?.GetLeftPart(UriPartial.Authority) ?? string.Empty;
     }
 }
