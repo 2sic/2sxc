@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Oqt.Server.Apps
             var logWrap = Log.Call(() => $"[{string.Join(",", grants)}]");
             var ok = UserIsSuperuser(); // superusers are always ok
             if (!ok && CurrentZoneMatchesSiteZone())
-                ok = UserIsTenantAdmin()
+                ok = UserIsSiteAdmin()
                      || UserIsModuleAdmin()
                      || UserIsModuleEditor();
             if (ok) GrantedBecause = Conditions.EnvironmentGlobal;
