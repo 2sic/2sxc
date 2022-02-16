@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Blocks
 {
     /// <inheritdoc />
     [PrivateApi]
-    public class RenderResult : IRenderResult
+    public class RenderResult : HybridHtmlString, IRenderResult
     {
         /// <inheritdoc />
         public string Html { get; set; }
@@ -39,5 +39,7 @@ namespace ToSic.Sxc.Blocks
 
 
         public int ModuleId { get; set; }
+
+        public override string ToString() => Html;
     }
 }

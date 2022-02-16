@@ -109,6 +109,7 @@
     <Compile Include="Dnn\Code\IDnnDynamicCodeAdditions.cs" />
     <Compile Include="Dnn\DnnConstants.cs" />
     <Compile Include="Dnn\DnnEnvironmentLogger.cs" />
+    <Compile Include="Dnn\DnnModuleAndBlockBuilder.cs" />
     <Compile Include="Dnn\DnnStaticDi.cs" />
     <Compile Include="Dnn\DynamicCode.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.DataSources.DnnSqlDataSource.cs" />
@@ -135,7 +136,7 @@
     <Compile Include="Dnn\Code\IDnnDynamicCode.cs" />
     <Compile Include="Dnn\Run\DnnSecurity.cs" />
     <Compile Include="Dnn\Code\DnnDynamicCodeRoot.cs" />
-    <Compile Include="Dnn\Web\DnnClientDependencyOptimizer.cs" />
+    <Compile Include="Dnn\Web\DnnBlockResourceExtractor.cs" />
     <Compile Include="Dnn\DataSources\DnnSql.cs" />
     <Compile Include="Dnn\DataSources\DnnUserProfile.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.DataSources.DnnSqlDataSource.cs" />

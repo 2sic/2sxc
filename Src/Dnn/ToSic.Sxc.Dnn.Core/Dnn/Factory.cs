@@ -58,17 +58,9 @@ namespace ToSic.Sxc.Dnn
         /// <returns>An initialized CMS Block, ready to use/render</returns>
         public static IBlockBuilder CmsBlock(int pageId, int modId, ILog parentLog)
         {
-            var wrapLog = parentLog?.Call($"{pageId}, {modId}");
-            var moduleInfo = new ModuleController().GetModule(modId, pageId, false);
-            if (moduleInfo == null)
-            {
-                var msg = $"Can't find module {modId} on page {pageId}. Maybe you reversed the ID-order?";
-                parentLog?.Add(msg);
-                throw new Exception(msg);
-            }
-            var container = ((DnnModule)StaticBuild<IModule>()).Init(moduleInfo, parentLog);
-            wrapLog?.Invoke("ok");
-            return CmsBlock(container, parentLog);
+            var wrapLog = parentLog.SafeCall<IBlockBuilder>($"{pageId}, {modId}");
+            var module = StaticBuild<IModuleAndBlockBuilder>().Init(parentLog).GetModule(pageId, modId);
+            return wrapLog("ok", CmsBlock(module, parentLog));
         }
 
         /// <summary>
@@ -89,7 +81,7 @@ namespace ToSic.Sxc.Dnn
         {
             Compatibility.Obsolete.Warning13To14($"ToSic.Sxc.Dnn.Factory.{nameof(CmsBlock)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
             parentLog = parentLog ?? NewLog();
-            var dnnModule = ((Module<ModuleInfo>)module)?.UnwrappedContents;
+            var dnnModule = ((Module<ModuleInfo>)module)?.GetContents();
             return StaticBuild<DnnModuleBlockBuilder>().Init(parentLog).GetBlockOfModule(dnnModule).BlockBuilder;
         }
 
@@ -163,14 +155,13 @@ namespace ToSic.Sxc.Dnn
             ILog parentLog)
         {
             Compatibility.Obsolete.Warning13To14($"ToSic.Sxc.Dnn.Factory.{nameof(App)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
-            parentLog = parentLog ?? NewLog();
-            var log = new Log("Dnn.Factry", parentLog);
+            var log = new Log("Dnn.Factry", parentLog ?? NewLog());
             log.Add($"Create App(z:{zoneId}, a:{appId}, tenantObj:{site != null}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
             var app = StaticBuild<App>();
             if (site != null) app.PreInit(site);
             var appStuff = app.Init(new AppIdentity(zoneId, appId), 
-                StaticBuild<AppConfigDelegate>().Init(parentLog).Build(showDrafts),
-                parentLog);
+                StaticBuild<AppConfigDelegate>().Init(log).Build(showDrafts),
+                log);
             return appStuff;
         }
 

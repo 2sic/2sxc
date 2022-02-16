@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
@@ -58,6 +59,7 @@ namespace ToSic.Sxc
 
             // v13.02
             services.TryAddTransient<ILinkPaths, LinkPathsUnknown>();
+            services.TryAddTransient<IModuleAndBlockBuilder, ModuleAndBlockBuilderUnknown>();
 
             return services;
         }

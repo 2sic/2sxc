@@ -16,7 +16,7 @@ using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
-using ToSic.Sxc.Web.Basic;
+using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.Admin;
 using ToSic.Sxc.WebApi.App;
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.WebApi
 {
     public static class StartupWebApi
     {
-        public static IServiceCollection AddSxcWebApi<HttpResponseType>(this IServiceCollection services)
+        public static IServiceCollection AddSxcWebApi<THttpResponseType>(this IServiceCollection services)
         {
             // The top version should be deprecated soon, so we just use DataToDictionary or an Interface instead
             services.TryAddTransient<ConvertToEavLight, ConvertToEavLightWithCmsInfo>(); // this is needed for all the EAV uses of conversion
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<EngineBaseDependencies>();
 
             // These are usually replaced by the target platform
-            services.TryAddTransient<IBlockResourceExtractor, BasicBlockResourceExtractor>();
+            services.TryAddTransient<IBlockResourceExtractor, BlockResourceExtractorUnknown>();
             
             // Backends
             services.TryAddTransient<AppsBackend>();
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<QueryBackend>();
 
             // APIs
-            services.TryAddTransient<ApiExplorerBackend<HttpResponseType>>();
+            services.TryAddTransient<ApiExplorerBackend<THttpResponseType>>();
 
             // Internal API helpers
             services.TryAddTransient<Insights>();

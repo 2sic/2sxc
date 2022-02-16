@@ -18,6 +18,7 @@ using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
@@ -197,6 +198,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             // v13
             services.TryAddTransient<DnnModuleBlockBuilder>();
             services.TryAddTransient<IDynamicCodeService, DnnDynamicCodeService>();
+            services.TryAddTransient<IModuleAndBlockBuilder, DnnModuleAndBlockBuilder>();
 
             return services;
         }

@@ -21,9 +21,13 @@ namespace ToSic.Sxc.Blocks
 #pragma warning restore CS0618
     {
 
-        public RenderService(GeneratorLog<IInPageEditingSystem> editGenerator): base("Sxc.RndSvc", initialMessage:"()") 
-            => _editGenerator = editGenerator.SetLog(Log);
+        public RenderService(GeneratorLog<IInPageEditingSystem> editGenerator, LazyInitLog<IModuleAndBlockBuilder> builder): base("Sxc.RndSvc", initialMessage:"()")
+        {
+            _builder = builder.SetLog(Log);
+            _editGenerator = editGenerator.SetLog(Log);
+        }
         private readonly GeneratorLog<IInPageEditingSystem> _editGenerator;
+        private readonly LazyInitLog<IModuleAndBlockBuilder> _builder;
 
         public void ConnectToRoot(IDynamicCodeRoot codeRoot) => Log.LinkTo(codeRoot.Log);
 
@@ -75,6 +79,14 @@ namespace ToSic.Sxc.Blocks
             return new HybridHtmlString(merge == null
                     ? Simple.RenderListWithContext(parent, field, apps, max, GetEdit(parent))
                     : InTextContentBlocks.Render(parent, field, merge, GetEdit(parent)));
+        }
+
+        public IRenderResult Module(int pageId, int moduleId)
+        {
+            var wrapLog = Log.Call<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
+            var block = _builder.Ready.GetBuilder(pageId, moduleId);
+            var result = block.Run(true);
+            return wrapLog("ok", result);
         }
 
         /// <summary>

@@ -92,11 +92,11 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             // First get all the parts out of HTML, as the configuration is still stored as plain HTML
             var mergedFeatures  = string.Join("\n", result.FeaturesFromSettings.Select(mc => mc.Html));
             var optimizer = _optimizer.Value;
-            if(optimizer is BlockResourceExtractor withInternal) 
+            if(optimizer is BlockResourceExtractor withInternal)
                 withInternal.ExtractOnlyEnableOptimization = false;
 
             Log.Add("4.1. Process optimizers");
-            var rest = optimizer.Process(mergedFeatures).Item1;
+            var rest = optimizer.Process(mergedFeatures).Template;
             if (!string.IsNullOrWhiteSpace(rest)) 
                 Log.Add("Warning: Rest after extraction should be empty - not handled ATM");
 

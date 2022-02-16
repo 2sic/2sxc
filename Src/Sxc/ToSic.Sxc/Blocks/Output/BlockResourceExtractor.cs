@@ -36,13 +36,13 @@ namespace ToSic.Sxc.Blocks.Output
         /// List of extracted assets - this must be processed later by the caller
         /// </summary>
         public List<IClientAsset> Assets { get; }= new List<IClientAsset>();
-        
+
         /// <summary>
         /// Run the sequence to extract assets
         /// </summary>
         /// <param name="renderedTemplate"></param>
         /// <returns></returns>
-        public abstract Tuple<string, bool> Process(string renderedTemplate);
+        public abstract (string Template, bool Include2sxcJs) Process(string renderedTemplate);
 
 
 

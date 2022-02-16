@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web;
 
@@ -54,5 +55,7 @@ namespace ToSic.Sxc.Services
             int max = 100,
             string merge = null);
 
+        [PrivateApi("WIP v13.02")]
+        IRenderResult Module(int pageId, int moduleId);
     }
 }

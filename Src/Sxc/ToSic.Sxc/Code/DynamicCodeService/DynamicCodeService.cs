@@ -4,6 +4,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Services;
 using App = ToSic.Sxc.Apps.App;
@@ -43,11 +44,13 @@ namespace ToSic.Sxc.Code
             CodeRootGenerator = ServiceProvider.Build<Generator<DynamicCodeRoot>>();
             AppGenerator = ServiceProvider.Build<Generator<App>>();
             AppConfigDelegateGenerator = ServiceProvider.Build<GeneratorLog<AppConfigDelegate>>().SetLog(Log);
+            ModuleAndBlockBuilder = ServiceProvider.Build<LazyInitLog<IModuleAndBlockBuilder>>().SetLog(Log);
         }
         protected IServiceProvider ServiceProvider { get; }
         protected readonly Generator<DynamicCodeRoot> CodeRootGenerator;
         protected readonly Generator<App> AppGenerator;
         protected readonly GeneratorLog<AppConfigDelegate> AppConfigDelegateGenerator;
+        protected readonly LazyInitLog<IModuleAndBlockBuilder> ModuleAndBlockBuilder;
 
         public IDynamicCodeService Init(ILog parentLog)
         {

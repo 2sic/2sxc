@@ -155,8 +155,8 @@ namespace ToSic.Sxc.Engines
             var renderedTemplate = RenderTemplate();
             var depMan = Helpers.BlockResourceExtractor;
             var result = depMan.Process(renderedTemplate);
-            ActivateJsApi = result.Item2;
-            return result.Item1;
+            ActivateJsApi = result.Include2sxcJs;
+            return result.Template;
         }
 
         [PrivateApi] public bool ActivateJsApi { get; private set; }

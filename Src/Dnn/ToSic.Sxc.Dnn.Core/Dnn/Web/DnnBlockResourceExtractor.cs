@@ -1,16 +1,15 @@
 ﻿using System;
 using DotNetNuke.Web.Client;
 using ToSic.Sxc.Blocks.Output;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.Web
 {
     public class DnnBlockResourceExtractor: BlockResourceExtractor
     {
 
-        public override Tuple<string, bool> Process(string renderedTemplate)
+        public override (string Template, bool Include2sxcJs) Process(string renderedTemplate)
         {
-            var wrapLog = Log.Call<Tuple<string, bool>>();
+            var wrapLog = Log.Call<(string, bool)>();
 
             // Set priority for later processing?
             JsDefaultPriority = (int)FileOrder.Js.DefaultPriority;
@@ -25,7 +24,7 @@ namespace ToSic.Sxc.Dnn.Web
             // Handle Scripts
             renderedTemplate = ExtractStyles(renderedTemplate);
 
-            return wrapLog("ok", new Tuple<string, bool>(renderedTemplate, include2SxcJs));
+            return wrapLog("ok", (renderedTemplate, include2SxcJs));
         }
     }
 }
