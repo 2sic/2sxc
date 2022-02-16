@@ -1,5 +1,6 @@
 ﻿using System.Web.Http;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.WebApi.Sys;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
@@ -33,7 +34,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         /// </summary>
         [HttpGet]
         public string Details(string view, int? appId = null, string key = null, int? position = null, string type = null, bool? toggle = null, string nameId = null)
-            => GetService<Sxc.Web.WebApi.System.Insights>().Init(Log)
+            => GetService<Insights>().Init(Log)
                 .Details(view, appId, key, position, type, toggle, nameId);
 
         

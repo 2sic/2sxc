@@ -5,7 +5,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Persistence.File;
 using static ToSic.Razor.Blade.Tag;
 
-namespace ToSic.Sxc.Web.WebApi.System
+namespace ToSic.Sxc.WebApi.Sys
 {
     public partial class Insights
     {

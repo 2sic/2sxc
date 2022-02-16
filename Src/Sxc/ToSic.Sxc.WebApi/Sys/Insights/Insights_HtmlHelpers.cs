@@ -5,7 +5,7 @@ using System.Web;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 
-namespace ToSic.Sxc.Web.WebApi.System
+namespace ToSic.Sxc.WebApi.Sys
 {
     public partial class Insights
     {

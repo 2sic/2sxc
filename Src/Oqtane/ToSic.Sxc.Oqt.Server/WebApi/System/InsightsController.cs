@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.Web.WebApi.System;
+using ToSic.Sxc.WebApi.Sys;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi
 {

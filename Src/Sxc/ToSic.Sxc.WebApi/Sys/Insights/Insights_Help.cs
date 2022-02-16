@@ -3,7 +3,7 @@ using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using static ToSic.Razor.Blade.Tag;
 
-namespace ToSic.Sxc.Web.WebApi.System
+namespace ToSic.Sxc.WebApi.Sys
 {
     public partial class Insights
     {

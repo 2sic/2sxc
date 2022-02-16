@@ -7,7 +7,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Errors;
 
-namespace ToSic.Sxc.Web.WebApi.System
+namespace ToSic.Sxc.WebApi.Sys
 {
     public partial class Insights: HasLog
     {

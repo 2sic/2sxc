@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using static ToSic.Razor.Blade.Tag;
 
-namespace ToSic.Sxc.Web.WebApi.System
+namespace ToSic.Sxc.WebApi.Sys
 {
     public partial class Insights
     {

@@ -6,7 +6,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using static ToSic.Razor.Blade.Tag;
 
-namespace ToSic.Sxc.Web.WebApi.System
+namespace ToSic.Sxc.WebApi.Sys
 {
     public partial class Insights
     {

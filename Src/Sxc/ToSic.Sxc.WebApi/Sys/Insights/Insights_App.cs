@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Debug;
 using ToSic.Eav.Caching;
 using ToSic.Razor.Blade;
-using ToSic.Eav.Apps.Debug;
 using static ToSic.Razor.Blade.Tag;
 
-namespace ToSic.Sxc.Web.WebApi.System
+namespace ToSic.Sxc.WebApi.Sys
 {
     public partial class Insights
     {

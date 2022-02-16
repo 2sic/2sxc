@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using ToSic.Sxc.Web.WebApi.System;
 
 namespace IntegrationSamples.SxcEdit01.Controllers
 {
