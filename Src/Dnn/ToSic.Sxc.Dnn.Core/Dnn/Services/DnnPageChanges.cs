@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.UI;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using DotNetNuke.Web.Client.Providers;
@@ -23,21 +24,20 @@ namespace ToSic.Sxc.Dnn.Services
             PageServiceShared = pageServiceShared;
         }
 
-        public int Apply(Page page, RenderResult renderResult)
+        public int Apply(Page page, IRenderResult renderResult)
         {
             Log.Add("Will apply PageChanges");
-            //var changes = _pageChanges.Apply(_pageChanges.PageServiceShared.GetPropertyChangesAndFlush());
 
             if (renderResult == null) return 0;
 
             var dnnPage = new DnnHtmlPage();
 
-            AttachAssetsWIP(renderResult.Assets, page);
+            AttachAssets(renderResult.Assets, page);
             var count = Apply(dnnPage, renderResult.PageChanges);
 
             var headChanges = ApplyToHead(dnnPage, renderResult.HeadChanges);
 
-            var manualChanges = ManualFeatures(dnnPage, renderResult.ManualChanges);
+            var manualChanges = ManualFeatures(dnnPage, renderResult.FeaturesFromSettings);
 
             Log.Add("Will apply Header Status-Code changes if needed");
             ApplyHttpStatus(page, renderResult);
@@ -85,7 +85,6 @@ namespace ToSic.Sxc.Dnn.Services
             // var pageService = GetService<ToSic.Sxc.Web.IPageService>();
             // pageService.Activate("fancybox4");
             // This will add a header for the sources of these features
-            //var feats = PageServiceShared.Features.ManualFeaturesGetNew();
             foreach (var f in feats) dnnPage.AddToHead(Tag.Custom(f.Html));
             return feats.Count;
         }
@@ -100,28 +99,25 @@ namespace ToSic.Sxc.Dnn.Services
             return headChanges.Count;
         }
 
-        private void ApplyHttpStatus(Page page, RenderResult result)
+        private void ApplyHttpStatus(Page page, IRenderResult result)
         {
-            var pageServiceWithInternals = result; // _pageChanges.PageServiceShared; // as Sxc.Web.PageService.PageService;
-            if (page?.Response != null && pageServiceWithInternals?.HttpStatusCode != null)
-            {
-                var code = pageServiceWithInternals.HttpStatusCode.Value;
-                Log.Add($"Custom status code '{code}'. Will set and also {nameof(page.Response.TrySkipIisCustomErrors)}");
-                page.Response.StatusCode = code;
-                // Skip IIS & upstream redirects to a custom 404 so the Dnn page is preserved
-                page.Response.TrySkipIisCustomErrors = true;
-                if (pageServiceWithInternals.HttpStatusMessage != null)
-                {
-                    Log.Add($"Custom status Description '{pageServiceWithInternals.HttpStatusMessage}'.");
-                    page.Response.StatusDescription = pageServiceWithInternals.HttpStatusMessage;
-                }
-            }
+            if (page?.Response == null || result?.HttpStatusCode == null) return;
+
+            var code = result.HttpStatusCode.Value;
+            Log.Add($"Custom status code '{code}'. Will set and also {nameof(page.Response.TrySkipIisCustomErrors)}");
+            page.Response.StatusCode = code;
+            // Skip IIS & upstream redirects to a custom 404 so the Dnn page is preserved
+            page.Response.TrySkipIisCustomErrors = true;
+            if (result.HttpStatusMessage == null) return;
+
+            Log.Add($"Custom status Description '{result.HttpStatusMessage}'.");
+            page.Response.StatusDescription = result.HttpStatusMessage;
         }
 
 
-        public void AttachAssetsWIP(List<ClientAssetInfo> ass, Page page)
+        public void AttachAssets(IList<IClientAsset> ass, Page page)
         {
-            ass.ForEach(a =>
+            ass.ToList().ForEach(a =>
             {
                 if (a.IsJs) ClientResourceManager.RegisterScript(page, a.Url, a.Priority, DnnProviderName(a.PosInPage));
                 else ClientResourceManager.RegisterStyleSheet(page, a.Url, a.Priority, DnnProviderName(a.PosInPage));

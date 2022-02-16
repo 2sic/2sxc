@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Code
     /// We create another interface to ensure we don't accidentally pass around a sub-object where the root is really needed.
     /// </summary>
     [PrivateApi]
-    public interface IDynamicCodeRoot : IDynamicCode, IDynamicCode12
+    public interface IDynamicCodeRoot : IDynamicCode12
     {
         [PrivateApi("WIP")] IBlock Block { get; }
 
@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Code
         DataSourceFactory DataSourceFactory { get; }
 
         [PrivateApi]
-        void AttachAppAndInitLink(IApp app);
+        void AttachApp(IApp app);
         
     }
 }

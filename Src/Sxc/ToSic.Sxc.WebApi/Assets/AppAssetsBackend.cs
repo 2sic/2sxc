@@ -1,11 +1,13 @@
 ﻿using System;
-using System.IO;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi.Assets;
 using ToSic.Sxc.Apps.Assets;
-using ToSic.Sxc.Engines;
+using ToSic.Sxc.Apps.Paths;
+using static System.StringComparison;
 
 namespace ToSic.Sxc.WebApi.Assets
 {
@@ -14,25 +16,30 @@ namespace ToSic.Sxc.WebApi.Assets
 
         #region Constructor / DI
 
-        public AppAssetsBackend(AppPathHelpers appPathHelpers,
+        public AppAssetsBackend(
+            ISite site,
             IUser user, 
             Lazy<AssetEditor> assetEditorLazy,
             IServiceProvider serviceProvider,
-            IAppStates appStates) : base("Bck.Assets")
+            IAppStates appStates,
+            AppPaths appPaths
+            ) : base("Bck.Assets")
         {
-
-            _appPathHelpers = appPathHelpers;
+            _site = site;
             _assetEditorLazy = assetEditorLazy;
             _assetTemplates = new AssetTemplates().Init(Log);
             _serviceProvider = serviceProvider;
             _appStates = appStates;
+            _appPaths = appPaths;
             _user = user;
         }
-        private readonly AppPathHelpers _appPathHelpers;
+
+        private readonly ISite _site;
         private readonly Lazy<AssetEditor> _assetEditorLazy;
         private readonly AssetTemplates _assetTemplates;
         private readonly IServiceProvider _serviceProvider;
         private readonly IAppStates _appStates;
+        private readonly AppPaths _appPaths;
         private readonly IUser _user;
 
         #endregion
@@ -54,24 +61,6 @@ namespace ToSic.Sxc.WebApi.Assets
             assetEditor.Source = template.Code;
             return wrapLog(null, true);
         }
-
-        //[Obsolete("This Method is Deprecated", false)]
-        //public bool Create(int appId, string path, FileContentsDto content, string purpose, bool global = false)
-        //{
-        //    Log.Add($"create a#{appId}, path:{path}, global:{global}, purpose:{purpose}, cont-length:{content.Content?.Length}");
-        //    path = path.Replace("/", "\\");
-
-        //    var thisApp = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(Eav.Apps.App.AutoLookupZone, appId), Log);
-
-        //    if (content.Content == null)
-        //        content.Content = "";
-
-        //    path = SanitizePathAndContent(path, content, purpose);
-
-        //    var assetEditor = _assetEditorLazy.Value.Init(thisApp, path, global, 0, Log);
-        //    assetEditor.EnsureUserMayEditAssetOrThrow(path);
-        //    return assetEditor.Create(content.Content);
-        //}
 
         public bool Create(AssetFromTemplateDto assetFromTemplateDto)
         {
@@ -97,16 +86,16 @@ namespace ToSic.Sxc.WebApi.Assets
             // TBD: future purpose implementation
             purpose = (purpose ?? AssetTemplates.ForTemplate).ToLowerInvariant().Trim() ?? "";
             var defId = AssetTemplates.RazorHybrid.Key;
-            if (purpose.Equals(AssetTemplates.ForApi, StringComparison.InvariantCultureIgnoreCase))
+            if (purpose.Equals(AssetTemplates.ForApi, InvariantCultureIgnoreCase))
                 defId = AssetTemplates.ApiHybrid.Key;
-            if (purpose.Equals(AssetTemplates.ForSearch, StringComparison.InvariantCultureIgnoreCase))
+            if (purpose.Equals(AssetTemplates.ForSearch, InvariantCultureIgnoreCase))
                 defId = AssetTemplates.DnnSearch.Key;
 
             // For templates we also check the type
-            if (purpose.Equals(AssetTemplates.ForTemplate, StringComparison.InvariantCultureIgnoreCase))
+            if (purpose.Equals(AssetTemplates.ForTemplate, InvariantCultureIgnoreCase))
             {
                 type = type?.ToLowerInvariant().Trim() ?? "";
-                if (type.Equals(AssetTemplates.TypeToken, StringComparison.InvariantCultureIgnoreCase))
+                if (type.Equals(AssetTemplates.TypeToken, InvariantCultureIgnoreCase))
                     defId = AssetTemplates.Token.Key;
             }
 
@@ -120,7 +109,7 @@ namespace ToSic.Sxc.WebApi.Assets
         private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(int appId, int templateId, bool global, string path)
         {
             var wrapLog = Log.Call<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
-            var app = _serviceProvider.Build<Apps.App>().InitNoData(_appStates.IdentityOfApp(appId), Log);
+            var app = _appStates.Get(appId);
             var assetEditor = _serviceProvider.Build<AssetEditor>();
 
             // TODO: simplify once we release v13 #cleanUp EOY 2021
@@ -135,8 +124,8 @@ namespace ToSic.Sxc.WebApi.Assets
         private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(AssetFromTemplateDto assetFromTemplateDto)
         {
             var wrapLog = Log.Call<AssetEditor>($"a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
-            var thisApp = _serviceProvider.Build<Apps.App>().InitNoData(new AppIdentity(AppConstants.AutoLookupZone, assetFromTemplateDto.AppId), Log);
-            var assetEditor = _assetEditorLazy.Value.Init(thisApp, assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0, Log);
+            var app = _appStates.Get(assetFromTemplateDto.AppId);
+            var assetEditor = _assetEditorLazy.Value.Init(app, assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0, Log);
             assetEditor.EnsureUserMayEditAssetOrThrow(assetEditor.InternalPath);
             return wrapLog(null, assetEditor);
         }

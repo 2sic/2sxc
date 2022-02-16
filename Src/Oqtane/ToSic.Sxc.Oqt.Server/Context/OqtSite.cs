@@ -1,8 +1,10 @@
 ﻿using System;
 using Oqtane.Models;
 using Oqtane.Repository;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
@@ -27,14 +29,14 @@ namespace ToSic.Sxc.Oqt.Server.Context
             Lazy<IServerPaths> serverPaths,
             Lazy<OqtZoneMapper> zoneMapper,
             Lazy<OqtCulture> oqtCulture,
-            Lazy<ILinkHelper> linkHelperLazy)
+            Lazy<ILinkPaths> linkPathsLazy): base(OqtConstants.OqtLogPrefix)
         {
             _siteStateInitializer = siteStateInitializer;
             _siteRepository = siteRepository;
             _serverPaths = serverPaths;
             _zoneMapper = zoneMapper;
             _oqtCulture = oqtCulture;
-            _linkHelperLazy = linkHelperLazy;
+            _linkPathsLazy = linkPathsLazy;
         }
 
         private readonly SiteStateInitializer _siteStateInitializer;
@@ -42,27 +44,24 @@ namespace ToSic.Sxc.Oqt.Server.Context
         private readonly Lazy<IServerPaths> _serverPaths;
         private readonly Lazy<OqtZoneMapper> _zoneMapper;
         private readonly Lazy<OqtCulture> _oqtCulture;
-        private readonly Lazy<ILinkHelper> _linkHelperLazy;
+        private readonly Lazy<ILinkPaths> _linkPathsLazy;
+
+        private ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
 
         public OqtSite Init(Site site)
         {
-            UnwrappedContents = site;
+            _contents = site;
             return this;
         }
 
-        public override ISite Init(int siteId)
+        public override ISite Init(int siteId, ILog parentLog)
         {
-            UnwrappedContents = _siteRepository.Value.GetSite(siteId);
+            _contents = _siteRepository.Value.GetSite(siteId);
             return this;
         }
 
-        public override Site UnwrappedContents
-        {
-            get => _unwrapped ??= _siteRepository.Value.GetSite(Alias.SiteId);
-            protected set => _unwrapped = value;
-        }
-        private Site _unwrapped;
+        public override Site UnwrappedContents => _contents ??= _siteRepository.Value.GetSite(Alias.SiteId);
         private Alias Alias => _siteStateInitializer.InitializedState.Alias;
 
         /// <inheritdoc />
@@ -86,7 +85,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
                 if (_url != null) return _url;
                 // Site Alias in Oqtane is without protocol, so we need to add it from current request for consistency
                 // also without trailing slash
-                var parts = new UrlParts(_linkHelperLazy.Value.GetCurrentRequestUrl());
+                var parts = new UrlParts(LinkPaths.GetCurrentRequestUrl());
                 _url = $"{parts.Protocol}{Alias.Name}";
                 return _url;
             }
@@ -96,20 +95,20 @@ namespace ToSic.Sxc.Oqt.Server.Context
         public override string UrlRoot => Alias.Name;
 
         /// <inheritdoc />
-        public override string Name => UnwrappedContents.Name;
+        public override string Name => _contents.Name;
 
         [PrivateApi]
         public override string AppsRootPhysical => string.Format(OqtConstants.AppRootPublicBase, Id);
 
         [PrivateApi]
         public override string AppAssetsLinkTemplate => OqtPageOutput.GetSiteRoot(_siteStateInitializer.InitializedState)
-                                                        + WebApiConstants.AppRoot + "/" + LinkPaths.AppFolderPlaceholder + "/assets";
+                                                        + WebApiConstants.AppRoot + "/" + AppConstants.AppFolderPlaceholder + "/assets";
 
         [PrivateApi] public override string AppsRootPhysicalFull => _serverPaths.Value.FullAppPath(AppsRootPhysical);
 
 
         /// <inheritdoc />
-        public override string ContentPath => string.Format(OqtConstants.ContentRootPublicBase, UnwrappedContents.TenantId, Id);
+        public override string ContentPath => string.Format(OqtConstants.ContentRootPublicBase, _contents.TenantId, Id);
 
         public override int ZoneId
         {

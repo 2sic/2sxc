@@ -5,7 +5,7 @@ using ToSic.Sxc.WebApi.Plumbing;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi
 {
-    public class OqtResponseMaker: ResponseMaker
+    public class OqtResponseMaker: ResponseMaker<IActionResult>
     {
         public void Init(Controller apiController) => _apiController = apiController;
 

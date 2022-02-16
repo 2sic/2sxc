@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Blocks
 {
     public partial class BlockBuilder
     {
-        public List<ClientAssetInfo> Assets { get; private set; } = new List<ClientAssetInfo>();
+        public List<IClientAsset> Assets { get; private set; } = new List<IClientAsset>();
 
         private void TransferEngineAssetsToParent(IEngine engine)
         {

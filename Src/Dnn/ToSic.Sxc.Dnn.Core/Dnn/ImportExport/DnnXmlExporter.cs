@@ -1,15 +1,13 @@
-﻿using System;
-using DotNetNuke.Services.FileSystem;
+﻿using DotNetNuke.Services.FileSystem;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Context;
 using ToSic.Eav.ImportExport.Environment;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Xml;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
-using App = ToSic.Sxc.Apps.App;
 
 namespace ToSic.Sxc.Dnn.ImportExport
 {
@@ -17,15 +15,14 @@ namespace ToSic.Sxc.Dnn.ImportExport
     {
         #region Constructor / DI
 
-        public DnnXmlExporter(IServiceProvider serviceProvider, ISite site, AdamManager<int, int> adamManager, IContextResolver ctxResolver, XmlSerializer xmlSerializer, IAppStates appStates)
+        public DnnXmlExporter(ISite site, AdamManager<int, int> adamManager, IContextResolver ctxResolver, XmlSerializer xmlSerializer, IAppStates appStates)
             : base(xmlSerializer, appStates, DnnConstants.LogName)
         {
-            _serviceProvider = serviceProvider;
             _site = site;
             _ctxResolver = ctxResolver.Init(Log);
             AdamManager = adamManager;
         }
-        private readonly IServiceProvider _serviceProvider;
+
         private readonly ISite _site;
         private readonly IContextResolver _ctxResolver;
 
@@ -36,13 +33,12 @@ namespace ToSic.Sxc.Dnn.ImportExport
         public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds, ILog parentLog)
         {
             var context = _ctxResolver.App(appId);
-            //var tenant = new DnnSite();
-            var app = _serviceProvider.Build<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
+            var appState = AppStates.Get(new AppIdentity(zoneId, appId));
             AdamManager.Init(context, Constants.CompatibilityLevel10, Log);
-            Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
+            Constructor(zoneId, appRuntime, appState.NameId, appExport, attrSetIds, entityIds, parentLog);
 
             // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally
-            InitExportXDocument(_site.DefaultCultureCode/* tenant.DefaultCultureCode*/, Settings.ModuleVersion);
+            InitExportXDocument(_site.DefaultCultureCode, EavSystemInfo.VersionString);
 
             return this;
         }

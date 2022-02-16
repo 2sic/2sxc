@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Web.Http;
 using DotNetNuke.Services.Log.EventLog;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Dnn.Context;
 
 namespace ToSic.Sxc.Dnn.Run
 {
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.Dnn.Run
     {
         public const int MaxDuration = 10;
 
-        public static void LogToDnn(string key, string message, ILog log = null, DnnContextOld dnnContext = null, bool force = false)
+        public static void LogToDnn(string key, string message, ILog log = null, DnnContext dnnContext = null, bool force = false)
         {
             if(!force)
                 if (!EnableLogging(GlobalConfiguration.Configuration.Properties)) return;
@@ -55,7 +56,7 @@ namespace ToSic.Sxc.Dnn.Run
             catch { /* ignore */ }
         }
 
-        private static void AttachDnnStateIfPossible(DnnContextOld dnn, LogInfo logInfo)
+        private static void AttachDnnStateIfPossible(DnnContext dnn, LogInfo logInfo)
         {
             try
             {

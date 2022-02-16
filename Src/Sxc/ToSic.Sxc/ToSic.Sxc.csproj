@@ -4,13 +4,19 @@
     <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
     <RootNamespace>ToSic.Sxc</RootNamespace>
     <AssemblyName>ToSic.Sxc</AssemblyName>
-    <Version>13.01.00</Version>
+    <Version>13.02.00</Version>
     <Deterministic>true</Deterministic>
     <FileAlignment>512</FileAlignment>
     <NoWarn>7035</NoWarn>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
     <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Web\Images\**" />
+    <EmbeddedResource Remove="Web\Images\**" />
+    <None Remove="Web\Images\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj" />
@@ -42,7 +48,7 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="ToSic.Razor">
-      <HintPath>..\..\..\Dependencies\RazorBlade\Release\netstandard2.0\ToSic.Razor.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net472\ToSic.Razor.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -50,16 +56,6 @@
     <Reference Include="ToSic.Razor">
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\netstandard2.0\ToSic.Razor.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
-    <Reference Include="ToSic.Razor">
-      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net45\ToSic.Razor.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Web\Images\" />
   </ItemGroup>
 
 </Project>

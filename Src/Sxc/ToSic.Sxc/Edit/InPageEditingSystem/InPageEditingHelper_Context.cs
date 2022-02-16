@@ -1,6 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks.Output;
@@ -36,7 +37,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
                 max,
                 parent = target.EntityId,
                 parentGuid = target.EntityGuid,
-                type = contentType ?? Settings.AttributeSetStaticNameContentBlockTypeName,
+                type = contentType ?? AppConstants.ContentGroupRefTypeName,
             });
 
             return new HybridHtmlString(innerContentAttribute + "='" + serialized + "'");

@@ -1,9 +1,11 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
 #if NETSTANDARD
 using Microsoft.AspNetCore.Mvc;
+#else
+using System.IO;
+using System.Net.Http;
+using ToSic.Eav.WebApi.ImportExport;
 #endif
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
@@ -61,7 +63,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             return new AppExportInfoDto
             {
                 Name = currentApp.Name,
-                Guid = currentApp.AppGuid,
+                Guid = currentApp.NameId,
                 Version = currentApp.VersionSafe(),
                 EntitiesCount = cms.Entities.All.Where(e => !e.HasAncestor()).Count(),
                 LanguagesCount = cultCount,
@@ -92,8 +94,9 @@ namespace ToSic.Sxc.WebApi.ImportExport
 #if NETSTANDARD
         public IActionResult Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
 #else
-    public HttpResponseMessage Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
+        public HttpResponseMessage Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
 #endif
+
         {
             Log.Add($"export app z#{zoneId}, a#{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
             SecurityHelpers.ThrowIfNotAdmin(_user); // must happen inside here, as it's opened as a new browser window, so not all headers exist

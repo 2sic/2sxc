@@ -2,8 +2,10 @@
 using System;
 using System.Configuration;
 using System.Data.SqlClient;
+using ToSic.Eav;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Run;
 using Exception = System.Exception;
 
@@ -13,29 +15,33 @@ namespace ToSic.Sxc.Dnn.Install
     {
         public static bool SaveUnimportantDetails = true;
 
-        private readonly DnnInstallLogger _installLogger;
+        //#region Service Providing
 
-        #region Service Providing
+        ///// <summary>
+        ///// Get the service provider only once - ideally in Dnn9.4 we will get it from Dnn
+        ///// If we would get it multiple times, there are edge cases where it could be different each time! #2614
+        ///// </summary>
+        //private IServiceProvider ServiceProvider => _serviceProvider ?? (_serviceProvider = DnnStaticDi.GetPageScopedServiceProvider());
+        //private IServiceProvider _serviceProvider;
 
-        /// <summary>
-        /// Get the service provider only once - ideally in Dnn9.4 we will get it from Dnn
-        /// If we would get it multiple times, there are edge cases where it could be different each time! #2614
-        /// </summary>
-        private IServiceProvider ServiceProvider => _serviceProvider ?? (_serviceProvider = DnnStaticDi.GetServiceProvider());
-        private IServiceProvider _serviceProvider;
-
-        #endregion
+        //#endregion
 
 
         /// <summary>
         /// Instance initializers...
         /// </summary>
-        public DnnEnvironmentInstaller(): base("Dnn.InstCo")
+        public DnnEnvironmentInstaller(LogHistory logHistory, DnnInstallLogger installLogger, Lazy<IAppStates> appStatesLazy, Lazy<CmsRuntime> cmsRuntimeLazy, Lazy<RemoteRouterLink> remoteRouterLazy) : base("Dnn.InstCo")
         {
-            // _installLogger = new DnnInstallLogger(SaveUnimportantDetails);
-            _installLogger = ServiceProvider.Build<DnnInstallLogger>();
-            ServiceProvider.Build<LogHistory>().Add("installation", Log);
+            logHistory/*ServiceProvider.Build<LogHistory>()*/.Add("installation", Log);
+            _installLogger = installLogger; // ServiceProvider.Build<DnnInstallLogger>();
+            _appStatesLazy = appStatesLazy;
+            _cmsRuntimeLazy = cmsRuntimeLazy;
+            _remoteRouterLazy = remoteRouterLazy;
         }
+        private readonly DnnInstallLogger _installLogger;
+        private readonly Lazy<IAppStates> _appStatesLazy;
+        private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
+        private readonly Lazy<RemoteRouterLink> _remoteRouterLazy;
 
         public IEnvironmentInstaller Init(ILog parent)
         {
@@ -106,7 +112,7 @@ namespace ToSic.Sxc.Dnn.Install
                 // Increase ClientDependency version upon each upgrade (System and all Portals)
                 // prevents browsers caching old JS and CSS files for editing, which could cause several errors
                 // only set this on the last upgraded version, to prevent crazy updating the client-resource-cache while upgrading
-                if (version == Settings.Installation.CurrentReleaseVersion)
+                if (version == EavSystemInfo.VersionString)
                 {
                     _installLogger.LogStep(version, "ClientResourceManager- seems to be last item in version-list, will clear");
 

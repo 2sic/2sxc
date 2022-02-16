@@ -4,8 +4,8 @@ using System.IO;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Engines;
 
 namespace ToSic.Sxc.Dnn.Install
 {
@@ -15,17 +15,33 @@ namespace ToSic.Sxc.Dnn.Install
     /// </summary>
     public class DnnReadyCheckTurbo: HasLog
     {
-
-        public DnnReadyCheckTurbo(PortalModuleBase module, ILog parentLog) : base("Dnn.PreChk", parentLog)
+        /// <summary>
+        /// Fast static check to see if the check had previously completed. 
+        /// </summary>
+        /// <param name="module"></param>
+        /// <param name="block"></param>
+        /// <param name="log"></param>
+        public static void EnsureSiteAndAppFoldersAreReady(PortalModuleBase module, IBlock block, ILog log)
         {
-            _module = module;
+            var wrapLog = log.Call(message: $"Turbo Ready Check: module {module.ModuleId} on page {module.TabId}");
+            if (CachedModuleResults.TryGetValue(module.ModuleId, out var exists) && exists)
+            {
+                // all ok, skip
+                wrapLog("quick-check: ready");
+                return;
+            }
+
+            new DnnReadyCheckTurbo(module, log).EnsureSiteAndAppFoldersAreReadyInternal(block);
+            wrapLog("deep-check: ready");
         }
+
+        private DnnReadyCheckTurbo(PortalModuleBase module, ILog parentLog) : base("Dnn.PreChk", parentLog) => _module = module;
         private readonly PortalModuleBase _module;
 
         /// <summary>
         /// Verify that the portal is ready, otherwise show a good error
         /// </summary>
-        public bool EnsureSiteAndAppFoldersAreReady(IBlock block)
+        private bool EnsureSiteAndAppFoldersAreReadyInternal(IBlock block)
         {
             var timerWrap = Log.Call<bool>(message: $"module {_module.ModuleId} on page {_module.TabId}", useTimer: true);
 
@@ -59,7 +75,7 @@ namespace ToSic.Sxc.Dnn.Install
         /// <summary>
         /// Returns true if the Portal HomeDirectory Contains the 2sxc Folder and this folder contains the web.config and a Content folder
         /// </summary>
-        public bool EnsureSiteIsConfiguredAndTemplateFolderExists(IBlock block)
+        private bool EnsureSiteIsConfiguredAndTemplateFolderExists(IBlock block)
         {
             var wrapLog = Log.SafeCall<bool>($"AppId: {block.AppId}");
 
@@ -69,8 +85,8 @@ namespace ToSic.Sxc.Dnn.Install
             if (!(sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
             {
                 // configure it
-                var tm = block.Context.ServiceProvider.Build<AppPathHelpers>().Init(block.App, block.Log);
-                tm.EnsureTemplateFolderExists(false);
+                var tm = block.Context.ServiceProvider.Build<AppFolderInitializer>().Init(Log);
+                tm.EnsureTemplateFolderExists(block.Context.AppState, false);
             }
 
             return wrapLog($"Completed init for module {_module.ModuleId} showing {block.AppId}", true);

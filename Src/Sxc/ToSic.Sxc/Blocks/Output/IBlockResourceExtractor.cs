@@ -18,11 +18,11 @@ namespace ToSic.Sxc.Blocks.Output
         /// Original html without the js/css tags which were bundled (so they get removed here)
         /// Second return-param is an information if the core $2sxc.js should be included
         /// </returns>
-        Tuple<string, bool> Process(string renderedTemplate);
+        (string Template, bool Include2sxcJs) Process(string renderedTemplate);
 
         /// <summary>
         /// The assets which were extracted from the process
         /// </summary>
-        List<ClientAssetInfo> Assets { get; }
+        List<IClientAsset> Assets { get; }
     }
 }

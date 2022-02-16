@@ -1,11 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Apps.Languages;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
+using ToSic.Eav.WebApi.Context;
+using ToSic.Eav.WebApi.Languages;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Web.JsContext;
 
@@ -19,18 +21,18 @@ namespace ToSic.Sxc.WebApi.Context
         public class Dependencies
         {
             public IContextOfSite SiteCtx { get; }
-            public JsContextLanguage JsCtx { get; }
             public Apps.IApp AppToLaterInitialize { get; }
             public IAppStates AppStates { get; }
             public Lazy<AppUserLanguageCheck> AppUserLanguageCheck { get; }
+            public Lazy<LanguagesBackend> LanguagesBackend { get; }
 
-            public Dependencies(IContextOfSite siteCtx, JsContextLanguage jsCtx, Apps.App appToLaterInitialize, IAppStates appStates, Lazy<AppUserLanguageCheck> appUserLanguageCheck)
+            public Dependencies(IContextOfSite siteCtx, Apps.App appToLaterInitialize, IAppStates appStates, Lazy<AppUserLanguageCheck> appUserLanguageCheck, Lazy<LanguagesBackend> languagesBackend)
             {
                 SiteCtx = siteCtx;
-                JsCtx = jsCtx;
                 AppToLaterInitialize = appToLaterInitialize;
                 AppStates = appStates;
                 AppUserLanguageCheck = appUserLanguageCheck;
+                LanguagesBackend = languagesBackend;
             }
         }
 
@@ -46,7 +48,7 @@ namespace ToSic.Sxc.WebApi.Context
         protected Dependencies Deps;
 
         protected int ZoneId => Deps.SiteCtx.Site.ZoneId;
-        protected IApp App;
+        protected Sxc.Apps.IApp App;
         private readonly Apps.IApp _appToLaterInitialize;
         protected AppState AppState;
 
@@ -56,7 +58,7 @@ namespace ToSic.Sxc.WebApi.Context
         {
             Log.LinkTo(parentLog);
             AppState = appState;
-            App = appState != null ? (_appToLaterInitialize as Apps.App)?.InitNoData(appState, null) : null;
+            App = appState != null ? (_appToLaterInitialize as Apps.App)?.Init(appState, null, Log) : null;
             return this;
         }
 
@@ -82,26 +84,14 @@ namespace ToSic.Sxc.WebApi.Context
         protected virtual ContextLanguageDto GetLanguage()
         {
             if (ZoneId == 0) return null;
-            var language = Deps.JsCtx.Init(Deps.SiteCtx.Site, ZoneId);
+            var site = Deps.SiteCtx.Site;
 
-            // New V13 - with try/catch as it's still very new
-            List<SiteLanguageDto> converted = null;
-            try
-            {
-                var langs = Deps.AppUserLanguageCheck.Value.Init(Log).LanguagesWithPermissions(AppState);
-                converted = langs.Select(l => new SiteLanguageDto
-                    { Code = l.Code, Culture = l.Culture, IsAllowed = l.IsAllowed, IsEnabled = l.IsEnabled }).ToList();
-            }
-            catch (Exception ex)
-            {
-                Log.Exception(ex);
-            }
+            var converted = Deps.LanguagesBackend.Value.Init(Log).GetLanguagesOfApp(AppState);
 
             return new ContextLanguageDto
             {
-                Current = language.Current,
-                Primary = language.Primary,
-                All = language.All.ToDictionary(l => l.key.ToLowerInvariant(), l => l.name),
+                Current = site.CurrentCultureCode,
+                Primary = site.DefaultCultureCode,
                 List = converted,
             };
         }
@@ -145,13 +135,14 @@ namespace ToSic.Sxc.WebApi.Context
 
         protected virtual ContextEnableDto GetEnable(CtxEnable ctx)
         {
-            var isRealApp = App != null && App.AppGuid != Eav.Constants.DefaultAppGuid; // #SiteApp v13 - Site-Apps should also have permissions
+            var isRealApp = App != null && App.NameId != Eav.Constants.DefaultAppGuid; // #SiteApp v13 - Site-Apps should also have permissions
             var tmp = new JsContextUser(Deps.SiteCtx.User);
             var dto = new ContextEnableDto();
             if (ctx.HasFlag(CtxEnable.AppPermissions)) dto.AppPermissions = isRealApp;
             if (ctx.HasFlag(CtxEnable.CodeEditor)) dto.CodeEditor = tmp.CanDevelop;
             if(ctx.HasFlag(CtxEnable.Query)) dto.Query = isRealApp && tmp.CanDevelop;
             if (ctx.HasFlag(CtxEnable.FormulaSave)) dto.FormulaSave = tmp.CanDevelop;
+            if (ctx.HasFlag(CtxEnable.OverrideEditRestrictions)) dto.OverrideEditRestrictions = tmp.CanDevelop;
             return dto;
         }
 
@@ -163,7 +154,7 @@ namespace ToSic.Sxc.WebApi.Context
             var result = new ContextAppDto
             {
                 Id = App.AppId,
-                Url = (App as Apps.IApp)?.Path,
+                Url = App?.Path,
                 Name = App.Name,
                 Folder = App.Folder,
             };
@@ -172,7 +163,7 @@ namespace ToSic.Sxc.WebApi.Context
             if (!flags.HasFlag(Ctx.AppAdvanced)) return result;
 
             result.GettingStartedUrl = GetGettingStartedUrl();
-            result.Identifier = _appToLaterInitialize.AppGuid;
+            result.Identifier = _appToLaterInitialize.NameId;
             
             // #SiteApp v13
             result.SettingsScope = App.AppId == 1 

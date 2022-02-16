@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Apps
 {

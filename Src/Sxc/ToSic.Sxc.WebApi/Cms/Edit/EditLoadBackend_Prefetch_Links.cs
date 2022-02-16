@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -52,14 +51,13 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             try
             {
-                var hlnkBackend = ServiceProvider.Build<HyperlinkBackend<int, int>>().Init(Log);
+                var hlnkBackend = GetService<HyperlinkBackend<int, int>>().Init(Log);
                 var result = hlnkBackend.LookupHyperlink(appId, value, contentType, entityGuid, field);
-                return result;// _valueConverter.ToValue(value, entityGuid);
+                return result;
             }
             catch
             {
                 return new LinkInfoDto  { Value = "error" };
-                //return "error";
             }
         }
 

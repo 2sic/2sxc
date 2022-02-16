@@ -5,6 +5,7 @@ using Oqtane.Repository;
 using Oqtane.Shared;
 using ToSic.Eav.Data;
 using ToSic.Eav.Helpers;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 using Page = ToSic.Sxc.Context.Page;
 
@@ -15,15 +16,16 @@ namespace ToSic.Sxc.Oqt.Server.Context
         private readonly SiteState _siteState;
         private readonly Lazy<IAliasRepository> _aliasRepository;
         private readonly Lazy<IPageRepository> _pages;
-        private readonly Lazy<ILinkHelper> _linkHelperLazy;
+        private readonly Lazy<ILinkPaths> _linkPathsLazy;
+
         public Alias Alias { get; set; }
 
-        public OqtPage(Lazy<IHttp> httpBlazor, SiteState siteState, Lazy<IAliasRepository> aliasRepository, Lazy<IPageRepository> pages, Lazy<ILinkHelper> linkHelperLazy) : base(httpBlazor)
+        public OqtPage(Lazy<IHttp> httpBlazor, SiteState siteState, Lazy<IAliasRepository> aliasRepository, Lazy<IPageRepository> pages, Lazy<ILinkPaths> linkPathsLazy) : base(httpBlazor)
         {
             _siteState = siteState;
             _aliasRepository = aliasRepository;
             _pages = pages;
-            _linkHelperLazy = linkHelperLazy;
+            _linkPathsLazy = linkPathsLazy;
         }
 
         public Oqtane.Models.Page UnwrappedContents { get; set; }
@@ -38,11 +40,13 @@ namespace ToSic.Sxc.Oqt.Server.Context
             return this;
         }
 
+        private ILinkPaths LinkPaths => _linkPathsLazy.Value;
+
         public string GetUrl(Alias alias)
         {
             // Page url in Oqtane is without protocol, so we need to add it from current request for consistency
             // also without trailing slash
-            var parts = new UrlParts(_linkHelperLazy.Value.GetCurrentRequestUrl());
+            var parts = new UrlParts(LinkPaths.GetCurrentRequestUrl());
             return $"{parts.Protocol}{alias.Name}/{UnwrappedContents.Path}".TrimLastSlash();
         }
 

@@ -4,11 +4,11 @@ using DotNetNuke.Security;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Eav.WebApi.Languages;
+using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Eav.WebApi.Zone;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.Languages;
-using ToSic.Sxc.WebApi.PublicApi;
-using ToSic.Sxc.WebApi.Zone;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {

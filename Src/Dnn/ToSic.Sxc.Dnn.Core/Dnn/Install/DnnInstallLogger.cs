@@ -8,21 +8,19 @@ namespace ToSic.Sxc.Dnn.Install
 {
     public class DnnInstallLogger
     {
-        // private string _detailedLog;
         private readonly bool _saveUnimportantDetails;
 
         private StreamWriter _fileStreamWriter;
         private StreamWriter FileStreamWriter => _fileStreamWriter ?? OpenLogFiles();
 
-        public DnnInstallLogger(bool saveDetails)
+        public DnnInstallLogger()
         {
-            _saveUnimportantDetails = saveDetails;
+            _saveUnimportantDetails = DnnEnvironmentInstaller.SaveUnimportantDetails;
         }
 
-        internal void CloseLogFiles()
-        {
-            FileStreamWriter.BaseStream.Close();
-        }
+        // 2022-02-03 2dm seems unused
+        // todo: verify it's not needed, or make sure it's used where necessary
+        internal void CloseLogFiles() => FileStreamWriter.BaseStream.Close();
 
         private static string GenerateNewLogFileName()
         {
@@ -33,7 +31,7 @@ namespace ToSic.Sxc.Dnn.Install
         }
 
 
-        internal StreamWriter OpenLogFiles()//bool returnDetailed = false)
+        internal StreamWriter OpenLogFiles()
         {
             EnsureLogDirectoryExists();
 

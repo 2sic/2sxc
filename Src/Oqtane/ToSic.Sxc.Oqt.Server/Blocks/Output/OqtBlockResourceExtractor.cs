@@ -1,11 +1,10 @@
-﻿using System;
-using ToSic.Sxc.Blocks.Output;
+﻿using ToSic.Sxc.Blocks.Output;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output
 {
     public class OqtBlockResourceExtractor: BlockResourceExtractor
     {
-        public override Tuple<string, bool> Process(string renderedTemplate)
+        public override (string Template, bool Include2sxcJs) Process(string renderedTemplate)
         {
             var include2SxcJs = false;
 
@@ -22,7 +21,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
 
             Assets.ForEach(a => a.PosInPage = OqtPositionName(a.PosInPage));
 
-            return new Tuple<string, bool>(renderedTemplate, include2SxcJs);
+            return (renderedTemplate, include2SxcJs);
         }
 
 

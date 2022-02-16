@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Data;
 
 // ReSharper disable UnusedMemberInSuper.Global
@@ -10,7 +11,8 @@ namespace ToSic.Sxc.Apps
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
     public interface IApp: 
-        Eav.Apps.IApp
+        Eav.Apps.IApp,
+        IAppPaths
 #if NETFRAMEWORK
         , SexyContent.Interfaces.IApp // inherits from old namespace for compatibility
 #endif
@@ -20,7 +22,6 @@ namespace ToSic.Sxc.Apps
         /// This contains things like app version, path etc.
         /// </summary>
         /// <returns>An <see cref="IDynamicEntity"/> object</returns>
-        //new dynamic Configuration { get;  }
         new AppConfiguration Configuration { get; }
 
         /// <summary>
@@ -49,22 +50,36 @@ namespace ToSic.Sxc.Apps
         new string PhysicalPath { get; }
 
         /// <summary>
-        /// The path to the current app global folder, for linking JS/CSS files and
+        /// The path to the current apps shared/global folder, for linking JS/CSS files and
         /// images in the app folder. 
         /// </summary>
         /// <returns>Path usually starting with /portals/_default/...</returns>
+        /// <remarks>Added v13.01</remarks>
+#pragma warning disable CS0108, CS0114
+        // Important: Repeat definition of base interface for docs and because of Razor-Interface-Inheritance-Problems
         string PathShared { get; }
+#pragma warning restore CS0108, CS0114
 
         /// <summary>
-        /// The path on the server hard disk for the current app global folder. 
+        /// The path on the server hard disk for the current apps shared/global folder. 
         /// </summary>
         /// <returns>Path usually starting with c:\...</returns>
+        /// <remarks>Added v13.01</remarks>
+#pragma warning disable CS0108, CS0114
+        // Important: Repeat definition of base interface for docs and because of Razor-Interface-Inheritance-Problems
         string PhysicalPathShared { get; }
+#pragma warning restore CS0108, CS0114
 
         /// <summary>
         /// The thumbnail path for the current app. 
         /// </summary>
         /// <returns>path + app-icon.png if there is an icon there. </returns>
         new string Thumbnail { get; }
+
+        //[PrivateApi("not public, not sure if we should surface this")]
+        //string RelativePath { get; }
+
+        //[PrivateApi("not public, not sure if we should surface this")]
+        //string RelativePathShared { get; }
     }
 }

@@ -7,33 +7,37 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Metadata;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.App
 {
     public class AppContent : WebApiBackendBase<AppContent>
     {
+        private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.Init(Context.AppState, showDrafts: false, Log));
+        private CmsManager _cmsManager;
 
         #region Constructor / DI
         protected IContextOfApp Context;
 
-        public AppContent(IServiceProvider sp, EntityApi entityApi, Lazy<IConvertToEavLight> entToDicLazy, IContextResolver ctxResolver) : base(sp, "Sxc.ApiApC")
+        public AppContent(IServiceProvider sp, EntityApi entityApi, Lazy<IConvertToEavLight> entToDicLazy, IContextResolver ctxResolver, Lazy<CmsManager> cmsManagerLazy) : base(sp, "Sxc.ApiApC")
         {
             _entityApi = entityApi;
             _entToDicLazy = entToDicLazy;
             _ctxResolver = ctxResolver;
-
+            _cmsManagerLazy = cmsManagerLazy;   
         }
         private readonly EntityApi _entityApi;
         private readonly Lazy<IConvertToEavLight> _entToDicLazy;
         private readonly IContextResolver _ctxResolver;
+        private readonly Lazy<CmsManager> _cmsManagerLazy;
 
         public AppContent Init(string appName, ILog parentLog)
         {
@@ -127,13 +131,44 @@ namespace ToSic.Sxc.WebApi.App
                 var entity = realApp.Data.Create(contentType, cleanedNewItem, userName, metadata);
                 Log.Add($"new entity created: {entity}");
                 id = entity.EntityId;
+
                 Log.Add($"new entity id: {id}");
+                var added = AddParentRelationship(newContentItemCaseInsensitive, entity.EntityId);
             }
             else
                 realApp.Data.Update(id.Value, cleanedNewItem, userName);
 
             return InitEavAndSerializer(Context.AppState.AppId, Context.UserMayEdit)
                 .Convert(realApp.Data.List.One(id.Value));
+        }
+
+        private bool AddParentRelationship(IDictionary<string, object> newContentItemCaseInsensitive, int addedEntityId)
+        {
+            var wrapLog = Log.Call<bool>($"item dictionary key count: {newContentItemCaseInsensitive.Count}");
+
+            if (!newContentItemCaseInsensitive.Keys.Contains(Attributes.JsonKeyParentRelationship))
+                return wrapLog("'ParentRelationship' key is missing", false);
+
+            var parentRelationship = newContentItemCaseInsensitive[Attributes.JsonKeyParentRelationship] as JObject;
+            if (parentRelationship == null) return wrapLog("'ParentRelationship' value is null", false);
+
+            var parentGuid = (Guid?)parentRelationship["Parent"];
+            if (!parentGuid.HasValue) return wrapLog("'Parent' guid is missing", false);
+
+            var parentEntity = Context.AppState.List.One(parentGuid.Value);
+            if (parentEntity == null) return wrapLog("Parent entity is missing", false);
+
+            //var entityId = (int?)parentRelationship["EntityId"];
+            var ids = new[] { addedEntityId as int? };
+            var index = (int)parentRelationship["Index"];
+            //var willAdd = (bool?)parentRelationship["Add"];
+            var field = (string)parentRelationship["Field"];
+            var fields = new[] { field };
+
+            CmsManager.Entities.FieldListAdd(parentEntity, fields, index, ids, asDraft: false);
+
+            //return wrapLog($"new ParentRelationship a:{willAdd},e:{entityId},p:{parentGuid},f:{field},i:{index}", true);
+            return wrapLog($"new ParentRelationship p:{parentGuid},f:{field},i:{index}", true);
         }
 
         private Target GetMetadata(Dictionary<string, object> newContentItemCaseInsensitive)
@@ -160,6 +195,13 @@ namespace ToSic.Sxc.WebApi.App
             if (target.Type == JTokenType.String && Enum.TryParse<TargetTypes>((string) target, out var targetTypes)) return (int) targetTypes;
             throw new ArgumentOutOfRangeException(Attributes.TargetNiceName, "Value is not 'int' or TargetTypes 'string'.");
         }
+
+        /// <summary>
+        /// used for API calls to get the current app
+        /// </summary>
+        /// <returns></returns>
+        internal IApp GetApp(int appId, bool showDrafts) => GetService<Apps.App>().Init(ServiceProvider, appId, Log, null, showDrafts);
+
 
         #endregion
 
@@ -214,7 +256,7 @@ namespace ToSic.Sxc.WebApi.App
 
         protected MultiPermissionsTypes ThrowIfNotAllowedInType(string contentType, List<Grants> requiredGrants, IAppIdentity alternateApp = null)
         {
-            var permCheck = ServiceProvider.Build<MultiPermissionsTypes>().Init(Context, alternateApp ?? Context.AppState, contentType, Log);
+            var permCheck = GetService<MultiPermissionsTypes>().Init(Context, alternateApp ?? Context.AppState, contentType, Log);
             if (!permCheck.EnsureAll(requiredGrants, out var error))
                 throw HttpException.PermissionDenied(error);
             return permCheck;
@@ -222,7 +264,7 @@ namespace ToSic.Sxc.WebApi.App
 
         protected MultiPermissionsItems ThrowIfNotAllowedInItem(IEntity itm, List<Grants> requiredGrants, IAppIdentity alternateApp = null)
         {
-            var permCheck = ServiceProvider.Build<MultiPermissionsItems>().Init(Context, alternateApp ?? Context.AppState, itm, Log);
+            var permCheck = GetService<MultiPermissionsItems>().Init(Context, alternateApp ?? Context.AppState, itm, Log);
             if (!permCheck.EnsureAll(requiredGrants, out var error))
                 throw HttpException.PermissionDenied(error);
             return permCheck;

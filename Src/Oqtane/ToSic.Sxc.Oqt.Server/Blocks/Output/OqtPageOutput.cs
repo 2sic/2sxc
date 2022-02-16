@@ -26,14 +26,14 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
         private readonly SiteState _siteState;
         private readonly IBlockResourceExtractor _oqtBlockResourceExtractor;
         
-        public void Init(OqtSxcViewBuilder parent, RenderResult renderResult)
+        public void Init(OqtSxcViewBuilder parent, IRenderResult renderResult)
         {
             Parent = parent;
             RenderResult = renderResult;
         }
 
         protected OqtSxcViewBuilder Parent;
-        protected RenderResult RenderResult;
+        protected IRenderResult RenderResult;
 
         #endregion
 
@@ -81,8 +81,8 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
         public static string GetSiteRoot(SiteState siteState)
             => siteState?.Alias?.Name == null ? OqtConstants.SiteRoot : new Uri($"http://{siteState.Alias.Name}/").AbsolutePath.SuffixSlash();
 
-        internal List<IPageFeature> Features => _features ??= RenderResult.Features ?? new List<IPageFeature>();
-        private List<IPageFeature> _features;
+        internal IList<IPageFeature> Features => _features ??= RenderResult.Features ?? new List<IPageFeature>();
+        private IList<IPageFeature> _features;
 
     }
 }

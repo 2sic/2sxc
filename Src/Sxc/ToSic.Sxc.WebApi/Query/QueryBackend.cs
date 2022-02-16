@@ -42,7 +42,7 @@ namespace ToSic.Sxc.WebApi
         {
             var block = _contextResolver.RealBlockRequired();
             var lookUps = _appConfigMaker.Init(Log)
-                .GetConfigProviderForModule(block.Context, block.App, block);
+                .GetLookupEngineForContext(block.Context, block.App, block);
             return DebugStream(appId, id, top, lookUps, @from, @out);
         }
 
@@ -51,7 +51,7 @@ namespace ToSic.Sxc.WebApi
         {
             var block = _contextResolver.RealBlockRequired();
             var lookUps = _appConfigMaker.Init(Log)
-                .GetConfigProviderForModule(block.Context, block.App, block);
+                .GetLookupEngineForContext(block.Context, block.App, block);
 
             return RunDevInternal(appId, id, lookUps, top, builtQuery => builtQuery.Item1);
         }

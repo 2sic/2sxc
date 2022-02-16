@@ -21,8 +21,8 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
+using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.LookUp;
-using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Engines;
 using static System.StringComparer;
 using DynamicCode = ToSic.Sxc.Code.DynamicCode;
@@ -63,19 +63,19 @@ namespace ToSic.Sxc.Search
             var wrapLog = Log.Call<string>($"start search for mod#{DnnModule?.ModuleID}");
             if (DnnModule == null) return wrapLog("cancel", "no module");
             
+            // This changes site in whole scope
+            DnnSite = ((DnnSite)_serviceProvider.Build<ISite>()).TrySwap(DnnModule, Log);
+
             // New Context because Portal-Settings.Current is null
             var appId = module.BlockIdentifier.AppId;
             if (appId == AppConstants.AppIdNotFound || appId == Eav.Constants.NullId) return wrapLog("cancel", "no app id");
-
-            DnnSite = ((DnnSite)_serviceProvider.Build<ISite>()).TrySwap(DnnModule);
 
             // Ensure cache builds up with correct primary language
             // In case it's not loaded yet
             _appsCache.Load(_serviceProvider, module.BlockIdentifier, DnnSite.DefaultCultureCode);
 
-            var dnnContext = _serviceProvider.Build<IContextOfBlock>().Init(DnnModule, Log);
-            Block = _serviceProvider.Build<BlockFromModule>().Init(dnnContext, Log);
-            
+            Block = _serviceProvider.Build<IModuleAndBlockBuilder>().Init(Log).GetBlock(DnnModule);
+
             if (Block.View == null) return wrapLog("cancel", "no view");
             if (Block.View.SearchIndexingDisabled) return wrapLog("cancel", "search disabled"); // new in 12.02
 
@@ -103,7 +103,7 @@ namespace ToSic.Sxc.Search
         /// <summary>The DnnSite will be initialized, and must exist for the search-index to provide data.</summary>
         public DnnSite DnnSite;
         /// <summary>The Block will be initialized, and must exist for the search-index to provide data.</summary>
-        public BlockFromModule Block;
+        public IBlock Block;
         /// <summary>The SearchItems will be initialized, and must exist for the search-index to provide data.</summary>
         public Dictionary<string, List<ISearchItem>> SearchItems;
 
@@ -174,7 +174,7 @@ namespace ToSic.Sxc.Search
         
         private List<SearchDocument> LogErrorForExit(Exception e, ModuleInfo modInfo)
         {
-            DnnBusinessController.AddSearchExceptionToLog(modInfo, e, nameof(SearchController));
+            DnnEnvironmentLogger.AddSearchExceptionToLog(modInfo, e, nameof(SearchController));
             Log.Exception(e);
             return new List<SearchDocument>();
         }
@@ -290,7 +290,7 @@ namespace ToSic.Sxc.Search
             return wrapLog($"{streamsToIndex.Length}", streamsToIndex);
         }
 
-        private ICustomizeSearch CreateAndInitViewController(DnnSite site, BlockFromModule block)
+        private ICustomizeSearch CreateAndInitViewController(DnnSite site, IBlock block)
         {
             var wrapLog = Log.Call<ICustomizeSearch>();
             // 1. Get and compile the view.ViewController
@@ -310,7 +310,7 @@ namespace ToSic.Sxc.Search
             {
                 Log.Add($"attach DynamicCode context to class instance");
                 var parentDynamicCodeRoot = _serviceProvider.Build<DnnDynamicCodeRoot>().Init(block, Log, Constants.CompatibilityLevel10);
-                instanceWithContext.DynamicCodeCoupling(parentDynamicCodeRoot);
+                instanceWithContext.ConnectToRoot(parentDynamicCodeRoot);
             }
 
             return wrapLog("instance ok", customizeSearch);

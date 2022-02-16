@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
@@ -7,9 +7,10 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Edit.InPageEditingSystem;
 using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
+// ReSharper disable InheritdocInvalidUsage
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Code
 {
@@ -27,6 +28,7 @@ namespace ToSic.Sxc.Code
         /// <summary>
         /// Helper class to ensure if dependencies change, inheriting objects don't need to change their signature
         /// </summary>
+        [PrivateApi]
         public class Dependencies
         {
             public IServiceProvider ServiceProvider { get; }
@@ -41,6 +43,7 @@ namespace ToSic.Sxc.Code
             }
         }
 
+        [PrivateApi]
         protected DynamicCodeRoot(Dependencies dependencies, string logPrefix) : base(logPrefix + ".DynCdR")
         {
             Deps = dependencies;
@@ -60,30 +63,29 @@ namespace ToSic.Sxc.Code
         public TService GetService<TService>()
         {
             var newService = _serviceProvider.Build<TService>();
-            if(newService is INeedsCodeRoot newWithNeeds)
-                newWithNeeds.AddBlockContext(this);
+            if(newService is INeedsDynamicCodeRoot newWithNeeds)
+                newWithNeeds.ConnectToRoot(this);
 
             return newService;
         }
 
         [PrivateApi]
-        internal Dictionary<string, object> PiggyBackers => _piggyBackers ?? (_piggyBackers = new Dictionary<string, object>());
-        [PrivateApi] private Dictionary<string, object> _piggyBackers;
+        internal PiggyBack PiggyBack => _piggyBack ?? (_piggyBack = new PiggyBack());
+        private PiggyBack _piggyBack;
 
         [PrivateApi]
-        public virtual IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility) // = Constants.CompatibilityLevel10)
+        public virtual IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility)
         {
             Log.LinkTo(parentLog ?? block?.Log);
+            CompatibilityLevel = compatibility;
             if (block == null)
                 return this;
 
-            CompatibilityLevel = compatibility;
             ((CmsContext) CmsContext).Update(block);
             Block = block;
             Data = block.Data;
-            Edit = new InPageEditingHelper(block, Log);
 
-            AttachAppAndInitLink(block.App);
+            AttachApp(block.App);
 
             return this;
         }
@@ -103,7 +105,8 @@ namespace ToSic.Sxc.Code
         #region Edit
 
         /// <inheritdoc />
-        public IInPageEditingSystem Edit { get; private set; }
+        public IInPageEditingSystem Edit => _edit ?? (_edit = GetService<IInPageEditingSystem>());// { get; private set; }
+        private IInPageEditingSystem _edit;
 
         #endregion
 

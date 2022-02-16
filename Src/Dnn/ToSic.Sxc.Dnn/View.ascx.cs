@@ -7,7 +7,6 @@ using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Beta.LightSpeed;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Services;
@@ -21,21 +20,10 @@ namespace ToSic.Sxc.Dnn
         /// Get the service provider only once - ideally in Dnn9.4 we will get it from Dnn
         /// If we would get it multiple times, there are edge cases where it could be different each time! #2614
         /// </summary>
-        private IServiceProvider ServiceProvider => _serviceProvider ?? (_serviceProvider = DnnStaticDi.GetServiceProvider());
+        private IServiceProvider ServiceProvider => _serviceProvider ?? (_serviceProvider = DnnStaticDi.CreateModuleScopedServiceProvider());
         private IServiceProvider _serviceProvider;
 
-        protected IBlock Block
-        {
-            get
-            {
-                if (_blockLoaded) return _block;
-                _blockLoaded = true;
-                var newCtx = ServiceProvider.Build<IContextOfBlock>().Init(ModuleConfiguration, Log);
-                return _block = ServiceProvider.Build<BlockFromModule>().Init(newCtx, Log);
-            }
-        }
-        private IBlock _block;
-        private bool _blockLoaded;
+        private IBlock Block { get; set; }
 
         private ILog Log { get; } = new Log("Sxc.View");
         private Stopwatch _stopwatch;
@@ -69,11 +57,7 @@ namespace ToSic.Sxc.Dnn
             if(PreviousCache == null) NewCache = new OutputCacheItem();
             #endregion
 
-            // always do this, part of the guarantee that everything will work
-            // 2020-01-06 2sxc 10.25 - moved away to DnnRenderingHelpers
-            // to only load when we're actually activating the JS.
-            // might be a breaking change for some code that "just worked" before
-            //ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
+            // Always do this, part of the guarantee that everything will work
             // new mechanism in 10.25
             // this must happen in Page-Load, so we know what supporting scripts to add
             // at this stage of the lifecycle
@@ -81,7 +65,8 @@ namespace ToSic.Sxc.Dnn
             // ensure everything is ready and that we know if we should activate the client-dependency
             TryCatchAndLogToDnn(() =>
             {
-                if (checkPortalIsReady) new DnnReadyCheckTurbo(this, Log).EnsureSiteAndAppFoldersAreReady(Block);
+                Block = ServiceProvider.Build<IModuleAndBlockBuilder>().Init(Log).GetBlock(ModuleConfiguration);
+                if (checkPortalIsReady) DnnReadyCheckTurbo.EnsureSiteAndAppFoldersAreReady(this, Block, Log);
                 DnnClientResources = ServiceProvider.Build<DnnClientResources>()
                     .Init(Page, requiresPre1025Behavior == false ? null : Block?.BlockBuilder, Log);
                 var needsPre1025Behavior = requiresPre1025Behavior ?? DnnClientResources.NeedsPre1025Behavior();
@@ -108,7 +93,7 @@ namespace ToSic.Sxc.Dnn
             // #lightspeed
             if (PreviousCache != null) Log.Add("Lightspeed hit - will use cached");
 
-            RenderResult data = null;
+            IRenderResult data = null;
             var headersAndScriptsAdded = false;
             // skip this if something before this caused an error
             if (!IsError)
@@ -155,14 +140,14 @@ namespace ToSic.Sxc.Dnn
             _entireLog?.Invoke("✔");
         }
 
-        private RenderResult RenderViewAndGatherJsCssSpecs()
+        private IRenderResult RenderViewAndGatherJsCssSpecs()
         {
             var timerWrap = Log.Call(message: $"module {ModuleId} on page {TabId}", useTimer: true);
             var result = new RenderResult();
             TryCatchAndLogToDnn(() =>
             {
                 if (RenderNaked) Block.BlockBuilder.WrapInDiv = false;
-                result = Block.BlockBuilder.Run(true);
+                result = Block.BlockBuilder.Run(true) as RenderResult;
                 result.Html += GetOptionalDetailedLogToAttach();
             }, timerWrap);
 

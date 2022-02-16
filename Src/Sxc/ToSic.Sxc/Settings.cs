@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Reflection;
+using ToSic.Eav;
 
 namespace ToSic.Sxc
 {
     public partial class Settings
     {
-
-        // Important note: always use static-readonly, NOT constant for .net 456
-        // reason is that we must ensure that the static constructor is called
-        // whenever anything is accessed
-        public const string AppsRootFolder = "2sxc";
-
-        // Version is used also as cachebreak for js assets.
-        // In past build revision was good cachebreak value, but since assemblies are deterministic 
-        // we use application start unix time as slow changing revision value for cachebreak purpose. 
+        // Version is used also as cache-break for js assets.
+        // In past build revision was good cache-break value, but since assemblies are deterministic 
+        // we use application start unix time as slow changing revision value for cache-break purpose. 
         //public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
         public static readonly Version Version =
             VersionWithFakeBuildNumber(Assembly.GetExecutingAssembly().GetName().Version);
@@ -27,22 +22,12 @@ namespace ToSic.Sxc
             new Version(version.Major, version.Minor, version.Build,
                 (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds);
 
-        public static readonly string ModuleVersion = VersionToNiceFormat(Assembly.GetExecutingAssembly().GetName().Version);
-
-        // Todo: probably move to plumbing or extension method?
-        public static string VersionToNiceFormat(Version version)
-            => $"{version.Major:00}.{version.Minor:00}.{version.Build:00}";
-
         public const string WebConfigTemplateFile = "WebConfigTemplate.config";
         public const string WebConfigFileName = "web.config";
         public const string SexyContentGroupName = "2sxc designers";
 
-        internal static readonly string AttributeSetStaticNameContentBlockTypeName = "ContentGroupReference";
-
         public class Installation
         {
-            public const string CurrentReleaseVersion = "13.01.00";
-
             // This list is just used to run code-upgrades
             // So we only need the versions which do have code upgrades - which is very uncommon
             // todo: Maybe this list can somehow be extracted from the module manifest or placed there...
@@ -74,13 +59,14 @@ namespace ToSic.Sxc
                 //"12.08.00", "12.08.01", // LTS
                 //"12.10.00",
                 "13.00.00",
-                CurrentReleaseVersion,
+                // 13.01.00
+                EavSystemInfo.VersionString,
             };
 
             // this is the last version which must run server-side change-code
             // it's not sql-code, as the SqlDataProvider files are imported by DNN, not by our code
             internal const string LastVersionWithServerChanges = "08.11.00";
-            internal const string LastVersionWithDnnDbChanges = "09.07.00"; // just fyi, not used anywhere
+            internal const string LastVersionWithDnnDbChanges = "13.01.00"; // just fyi, not used anywhere
         }
     }
 }

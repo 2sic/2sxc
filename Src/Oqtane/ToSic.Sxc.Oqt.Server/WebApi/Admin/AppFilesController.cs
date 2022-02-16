@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Eav.WebApi.Assets;
 using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
@@ -119,7 +120,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             => Backend().GetPreview(appId, path, templateKey, global);
 
         [HttpGet]
-        public AllFilesDto AppFiles(int appId) => Backend().AppFiles(appId);
+        public AllFilesDto AppFiles(int appId, [FromQuery] string path = null, [FromQuery] string mask = null) => Backend().AppFiles(appId, path, mask);
 
     }
 }

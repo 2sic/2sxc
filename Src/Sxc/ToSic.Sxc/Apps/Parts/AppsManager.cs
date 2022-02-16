@@ -2,7 +2,10 @@
 using System.IO;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Apps.Paths;
+using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Apps.Paths;
 
 namespace ToSic.Sxc.Apps
 {
@@ -10,13 +13,17 @@ namespace ToSic.Sxc.Apps
     {
         #region Constructor / DI
 
-        public AppsManager(Lazy<ZoneManager> zoneManagerLazy, IServiceProvider serviceProvider, IAppStates appStates) : base(serviceProvider, "Cms.AppsRt")
+        public AppsManager(Lazy<ZoneManager> zoneManagerLazy, IServiceProvider serviceProvider, IAppStates appStates, ISite site, AppPaths appPaths) : base(serviceProvider, "Cms.AppsRt")
         {
             _zoneManagerLazy = zoneManagerLazy;
             _appStates = appStates;
+            _site = site;
+            _appPaths = appPaths;
         }
         private readonly Lazy<ZoneManager> _zoneManagerLazy;
         private readonly IAppStates _appStates;
+        private readonly ISite _site;
+        private readonly AppPaths _appPaths;
 
         #endregion
 
@@ -35,9 +42,10 @@ namespace ToSic.Sxc.Apps
             // todo: maybe verify the app is of this portal; I assume delete will fail anyhow otherwise
 
             // Prepare to Delete folder in dnn - this must be done, before deleting the app in the DB
-            var sexyApp = ServiceProvider.Build<App>().InitNoData(new AppIdentity(zoneId, appId), null);
-            var folder = sexyApp.Folder;
-            var physPath = sexyApp.PhysicalPath;
+            var appState = _appStates.Get(new AppIdentity(zoneId, appId));
+            var paths = _appPaths.Init(_site, appState, Log);
+            var folder = appState.Folder;
+            var physPath = paths.PhysicalPath;
 
             // now remove from DB. This sometimes fails, so we do this before trying to clean the files
             // as the db part should be in a transaction, and if it fails, everything should stay as is

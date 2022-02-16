@@ -1,7 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Data;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Context;
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public dynamic Usage(int appId, Guid guid)
         {
             var context = _ctxResolver.BlockOrApp(appId);
-            var permCheck = ServiceProvider.Build<MultiPermissionsApp>().Init(context, context.AppState, Log);
+            var permCheck = GetService<MultiPermissionsApp>().Init(context, context.AppState, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 

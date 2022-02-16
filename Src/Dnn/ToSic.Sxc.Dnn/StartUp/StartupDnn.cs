@@ -1,7 +1,8 @@
-﻿using System.Configuration;
-using System.Web.Hosting;
-using DotNetNuke.Web.Api;
+﻿using DotNetNuke.Web.Api;
 using Newtonsoft.Json;
+using System.Configuration;
+using System.Web.Hosting;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
 using ToSic.SexyContent.Dnn920;
@@ -51,7 +52,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             // Getting the service provider in Configure is tricky business, because
             // of .net core 2.1 bugs
             // ATM it appears that the service provider will get destroyed after startup, so we MUST get an additional one to use here
-            var initialServiceProvider = DnnStaticDi.GetServiceProvider();
+            var initialServiceProvider = DnnStaticDi.GetPageScopedServiceProvider();
             var transientSp = initialServiceProvider;
 
             // now we should be able to instantiate registration of DB
@@ -60,7 +61,7 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             globalConfig.GlobalFolder = HostingEnvironment.MapPath(DnnConstants.SysFolderRootVirtual);
             globalConfig.AssetsVirtualUrl = DnnConstants.SysFolderRootVirtual + "assets/";
-            globalConfig.GlobalSiteFolder = "~/Portals/_default/";
+            globalConfig.SharedAppsFolder = "~/Portals/_default/" + AppConstants.AppsRootFolder + "/";
 
             // Load features from configuration
             var sysLoader = transientSp.Build<SystemLoader>();
@@ -77,7 +78,9 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // Help RazorBlade to have a proper best-practices ToJson
             // New v12.05
-            Razor.Internals.StartUp.RegisterToJson(JsonConvert.SerializeObject);
+            // 2022-02-01 2dm - should not be necessary any more, .net Framework doesn't need this
+            // But we'll leave it in, because possibly this function is more reliable than the built in
+            Razor.StartUp.StartUp.RegisterToJson(JsonConvert.SerializeObject);
 
             _alreadyConfigured = true;
         }

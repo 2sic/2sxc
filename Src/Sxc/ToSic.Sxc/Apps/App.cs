@@ -1,15 +1,17 @@
 ﻿using System;
 using System.IO;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Decorators;
+using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.Run;
+using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Run;
 using EavApp = ToSic.Eav.Apps.App;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -24,14 +26,16 @@ namespace ToSic.Sxc.Apps
     {
         #region DI Constructors
 
-        public App(AppDependencies dependencies, Lazy<AppPathHelpers> appPathHelpersLazy) : base(dependencies, "App.SxcApp")
+        public App(AppDependencies dependencies, Lazy<GlobalPaths> globalPaths, Lazy<AppPaths> appPathsLazy) : base(dependencies, "App.SxcApp")
         {
-            _appPathHelpersLazy = appPathHelpersLazy;
+            _globalPaths = globalPaths;
+            _appPathsLazy = appPathsLazy;
         }
 
-        private readonly Lazy<AppPathHelpers> _appPathHelpersLazy;
-        private AppPathHelpers _appPathHelpers;
-        private AppPathHelpers AppPathHelpers => _appPathHelpers ?? (_appPathHelpers = _appPathHelpersLazy.Value.Init(this, Log));
+        private readonly Lazy<GlobalPaths> _globalPaths;
+        private readonly Lazy<AppPaths> _appPathsLazy;
+        private AppPaths _appPaths;
+        private AppPaths AppPaths => _appPaths ?? (_appPaths = _appPathsLazy.Value.Init(Site, AppState, Log));
 
         public App PreInit(ISite site)
         {
@@ -46,20 +50,9 @@ namespace ToSic.Sxc.Apps
         public new App Init(IAppIdentity appId, Func<EavApp, IAppDataConfiguration> buildConfig, ILog parentLog)
         {
             base.Init(appId, buildConfig, parentLog);
-            return this;
-        }
-
-        /// <summary>
-        /// Quick init - won't provide data but can access properties, metadata etc.
-        /// </summary>
-        /// <param name="appIdentity"></param>
-        /// <param name="parentLog"></param>
-        /// <returns></returns>
-        public App InitNoData(IAppIdentity appIdentity, ILog parentLog)
-        {
-            Init(appIdentity, null, parentLog);
+            if (buildConfig != null) return this;
             Log.Rename("App.SxcLgt");
-            Log.Add("App only initialized for light use - data shouldn't be used");
+            Log.Add("App only initialized for light use - .Data shouldn't be used");
             return this;
         }
 
@@ -128,10 +121,7 @@ namespace ToSic.Sxc.Apps
         #region Paths
 
         /// <inheritdoc />
-        public string Path => _path ?? (_path = Site.AppAssetsLinkTemplate
-            .Replace(LinkPaths.AppFolderPlaceholder, Folder)
-            .ToAbsolutePathForwardSlash());
-
+        public string Path => _path ?? (_path = AppPaths.Path);
         private string _path;
 
         /// <inheritdoc />
@@ -141,9 +131,11 @@ namespace ToSic.Sxc.Apps
             {
                 if (_thumbnail != null) return _thumbnail;
 
-                // primary app
-                if (AppGuid == Eav.Constants.PrimaryAppGuid)
-                    return _thumbnail = AppPathHelpers.AssetsLocation(AppConstants.AppPrimaryIconFile, PathTypes.Link);
+                // Primary app - we only PiggyBack cache the icon in this case
+                // Because otherwise the icon could get moved, and people would have a hard time seeing the effect
+                if (NameId == Eav.Constants.PrimaryAppGuid)
+                    return _thumbnail = AppState.GetPiggyBack(nameof(Thumbnail), 
+                        () => _globalPaths.Value.GlobalPathTo(AppConstants.AppPrimaryIconFile, PathTypes.Link));
 
                 // standard app (not global) try to find app-icon in its (portal) app folder
                 if (!AppState.IsGlobal())
@@ -159,11 +151,22 @@ namespace ToSic.Sxc.Apps
         }
         private string _thumbnail;
 
-        public string PathShared => _pathGlobal ?? (_pathGlobal = AppPathHelpers.AppPathRoot(true, PathTypes.PhysRelative));
-        private string _pathGlobal;
+        /// <inheritdoc />
+        public string PathShared => _pathShared ?? (_pathShared = AppPaths.PathShared);
+        private string _pathShared;
 
-        public string PhysicalPathShared => _physicalPathGlobal ?? (_physicalPathGlobal = AppPathHelpers.AppPathRoot(true, PathTypes.PhysFull));
+        /// <inheritdoc />
+        public string PhysicalPathShared => _physicalPathGlobal ?? (_physicalPathGlobal = AppPaths.PhysicalPathShared);
         private string _physicalPathGlobal;
+
+        [PrivateApi("not public, not sure if we should surface this")]
+        public string RelativePath => _relativePath ?? (_relativePath = AppPaths.RelativePath);
+        private string _relativePath;
+
+        [PrivateApi("not public, not sure if we should surface this")]
+        public string RelativePathShared => _relativePathShared ?? (_relativePathShared = AppPaths.RelativePathShared);
+        private string _relativePathShared;
+
 
         #endregion
 

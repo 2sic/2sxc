@@ -3,6 +3,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using System.Collections.Generic;
 using System.Web.Http;
+using ToSic.Eav.WebApi.Assets;
 using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
@@ -97,6 +98,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             => Backend().GetPreview(appId, path, templateKey, global);
 
         [HttpGet]
-        public AllFilesDto AppFiles(int appId) => Backend().AppFiles(appId);
+        public AllFilesDto AppFiles(int appId, string path = null, string mask = null) => Backend().AppFiles(appId, path, mask);
     }
 }

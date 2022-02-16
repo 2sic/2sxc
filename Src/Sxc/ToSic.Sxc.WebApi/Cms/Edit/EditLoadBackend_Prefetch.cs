@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -98,7 +97,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         private IEnumerable<AdamItemDto> GetAdamListOfItems(int appId, BundleWithLinkField set, string key)
         {
-            var adamListMaker = ServiceProvider.Build<IAdamTransGetItems>();
+            var adamListMaker = GetService<IAdamTransGetItems>();
             adamListMaker.Init(appId, set.ContentTypeName, set.Guid, key, false, Log);
             var dic = adamListMaker.ItemsInField(string.Empty, false) as IEnumerable<AdamItemDto>;
             return dic;

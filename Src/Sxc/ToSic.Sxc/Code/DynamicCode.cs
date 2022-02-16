@@ -31,11 +31,11 @@ namespace ToSic.Sxc.Code
         #region Dynamic Code Coupling
 
         [PrivateApi]
-        public virtual void DynamicCodeCoupling(IDynamicCodeRoot parent)
+        public virtual void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
-            Log.LinkTo(parent?.Log);
+            Log.LinkTo(codeRoot?.Log);
             Log.Call()(null);
-            _DynCodeRoot = parent;
+            _DynCodeRoot = codeRoot;
         }
 
         /// <inheritdoc />

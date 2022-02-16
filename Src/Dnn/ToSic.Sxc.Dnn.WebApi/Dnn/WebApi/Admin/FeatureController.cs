@@ -6,9 +6,9 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
+using ToSic.Eav.WebApi.Features;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Run;
-using ToSic.Sxc.WebApi.Features;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
@@ -70,5 +70,16 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
         public bool Save([FromBody] FeaturesDto featuresManagementResponse) => 
             GetService<FeaturesBackend>().Init(Log).SaveFeatures(featuresManagementResponse);
+
+        /// <summary>
+        /// POST updated features JSON configuration.
+        /// </summary>
+        /// <remarks>
+        /// Added in 2sxc 13
+        /// </remarks>
+        [HttpPost]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+        public bool SaveNew([FromBody] List<FeatureNewDto> featuresManagementResponse) =>
+            GetService<FeaturesBackend>().Init(Log).SaveNewFeatures(featuresManagementResponse);
     }
 }

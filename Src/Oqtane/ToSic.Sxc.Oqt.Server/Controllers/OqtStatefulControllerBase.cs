@@ -31,6 +31,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected IBlock BlockOptional { get; private set; }
 
         protected IApp GetApp(int appId)
-            => ServiceProvider.Build<App>().Init(ServiceProvider, appId, Log, BlockOptional);
+            => ServiceProvider.Build<Sxc.Apps.App>().Init(ServiceProvider, appId, Log, BlockOptional);
     }
 }

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.WebApi;
+using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.WebApi.Context;
 
 namespace ToSic.Sxc.WebApi.Usage
 {
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.WebApi.Usage
             var context = _ctxResolver.BlockOrApp(appId);
 
             // extra security to only allow zone change if host user
-            var permCheck = ServiceProvider.Build<MultiPermissionsApp>().Init(context, context.AppState, Log);
+            var permCheck = GetService<MultiPermissionsApp>().Init(context, context.AppState, Log);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 

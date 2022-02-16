@@ -7,17 +7,9 @@ namespace ToSic.Sxc.Web
     [PrivateApi("Helper to ensure that code providing an IHtmlString will work on .net Framework and .net Standard")]
     public class HybridHtmlString: IHybridHtmlString, IString
     {
-        public HybridHtmlString(string value)
-        {
-            _value = value;
-        }
+        public HybridHtmlString(string value) => _value = value;
 
-        [PrivateApi]
-        protected HybridHtmlString()
-        {
-            _value = string.Empty;
-        }
-
+        protected HybridHtmlString() => _value = "";
         private readonly string _value;
 
         /// <summary>

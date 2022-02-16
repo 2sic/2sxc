@@ -19,11 +19,11 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
             // assets from razor template
             var resources = SxcResourcesBuilder(RenderResult.Assets);
             // assets from manual features
-            resources.AddRange(SxcResourcesBuilder(GetAssetsFromManualFeatures(RenderResult.ManualChanges)));
+            resources.AddRange(SxcResourcesBuilder(GetAssetsFromManualFeatures(RenderResult.FeaturesFromSettings)));
             return resources;
         }
 
-        private static List<SxcResource> SxcResourcesBuilder(List<ClientAssetInfo> assets)
+        private static List<SxcResource> SxcResourcesBuilder(IList<IClientAsset> assets)
         {
             var resources = assets.Select(a => new SxcResource
             {
@@ -36,9 +36,9 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
             return resources;
         }
 
-        private List<ClientAssetInfo> GetAssetsFromManualFeatures(IList<IPageFeature> manualFeatures)
+        private List<IClientAsset> GetAssetsFromManualFeatures(IList<IPageFeature> manualFeatures)
         {
-            var assets = new List<ClientAssetInfo>();
+            var assets = new List<IClientAsset>();
             foreach (var manualFeature in manualFeatures)
             {
                 // process manual features to get assets

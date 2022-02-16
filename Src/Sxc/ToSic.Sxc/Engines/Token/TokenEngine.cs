@@ -10,7 +10,6 @@ using ToSic.Eav.LookUp;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Engines.Token;
 using ToSic.Sxc.LookUp;
 
 // ReSharper disable once CheckNamespace
@@ -86,7 +85,7 @@ namespace ToSic.Sxc.Engines
 
         private IDynamicCodeRoot _data;
 
-        private TokenReplaceEav _tokenReplace;
+        private TokenReplace _tokenReplace;
 
         [PrivateApi]
         protected override void Init()
@@ -100,8 +99,8 @@ namespace ToSic.Sxc.Engines
 
         private void InitTokenReplace()
         {
-            var confProv = Block.Context.ServiceProvider.Build<AppConfigDelegate>().Init(Log).GetConfigProviderForModule(Block.Context, Block.App, Block);
-            _tokenReplace = new TokenReplaceEav(confProv);
+            var confProv = Block.Context.ServiceProvider.Build<AppConfigDelegate>().Init(Log).GetLookupEngineForContext(Block.Context, Block.App, Block);
+            _tokenReplace = new TokenReplace(confProv);
             
             // Add the Content and ListContent property sources used always
             confProv.Add(new LookUpForTokenTemplate(SourcePropertyName.ListContent, _data.Header));

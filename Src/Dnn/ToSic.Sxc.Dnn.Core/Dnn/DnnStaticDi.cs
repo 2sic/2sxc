@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Web;
-using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Plumbing;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -19,41 +20,30 @@ namespace ToSic.Sxc.Dnn
             ?? throw new Exception("Can't start Static DI for old Dnn, because the ServiceCollection is null.");
 
         /// <summary>
-        /// Dependency Injection resolver with a known type as a parameter.
-        /// </summary>
-        /// <typeparam name="T">The type / interface we need.</typeparam>
-        public static T Resolve<T>()
-        {
-            // TODO: DOCS FOR THIS
-            throw new NotSupportedException("The Eav.Factory is obsolete. TODO: DOCS");
-        }
-
-        /// <summary>
         /// This is a special internal resolver for static objects
         /// Should only be used with extreme caution, as downstream objects
         /// May need more scope-specific stuff, why may be missing
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        /// <remarks>
-        /// Avoid using at all cost - only DNN and test-code may use this!
-        /// </remarks>
         [PrivateApi]
-        public static T StaticBuild<T>() => GetServiceProvider().Build<T>();
+        [Obsolete("Avoid using at all cost - only DNN and test-code may use this!")]
+        public static T StaticBuild<T>() => GetPageScopedServiceProvider().Build<T>();
 
         /// <summary>
         /// Dictionary key for keeping the Scoped Injection Service Provider in the Http-Context
         /// </summary>
-        // we changed key to one used in DNN9DI instead old one "eav-scoped-serviceprovider"
-        private static readonly Type ServiceProviderKey = typeof(IServiceScope); // "eav-scoped-serviceprovider";
+        /// <remarks>
+        /// In v13 we changed key to one used in DNN9 DI instead old one "eav-scoped-serviceprovider"
+        /// </remarks>
+        private static readonly Type ServiceScopeKey = typeof(IServiceScope);
 
         private static IServiceProvider _sp;
 
-        // Might need this depending on research...
-        //public static IServiceProvider GetGlobalServiceProviderForStartUp() => _sp;
-
         [PrivateApi("This is just a temporary solution - shouldn't be used long term")]
-        public static IServiceProvider GetServiceProvider()
+        public static IServiceProvider GetPageScopedServiceProvider() => GetPageServiceProvider();
+
+        private static IServiceProvider GetPageServiceProvider()
         {
             // Because 2sxc runs inside DNN as a webforms project and not asp.net core mvc, we have
             // to make sure the service-provider object is disposed correctly. If we don't do this,
@@ -65,18 +55,30 @@ namespace ToSic.Sxc.Dnn
             if (httpCtx == null) return _sp.CreateScope().ServiceProvider;
 
             // This only runs in Dnn 7.4.2 - Dnn 9.3, because Dnn 9.4 provides this in the http context
-            if (httpCtx.Items[ServiceProviderKey] == null)
+            if (!httpCtx.Items.Contains(ServiceScopeKey))
             {
-                httpCtx.Items[ServiceProviderKey] = _sp.CreateScope().ServiceProvider;
+                httpCtx.Items[ServiceScopeKey] = _sp.CreateScope();
 
                 // Make sure service provider is disposed after request finishes
-                httpCtx.AddOnRequestCompleted(context =>
-                {
-                    ((IDisposable)context.Items[ServiceProviderKey])?.Dispose();
-                });
+                httpCtx.AddOnRequestCompleted(context => ((IDisposable)context.Items[ServiceScopeKey])?.Dispose());
             }
 
-            return (IServiceProvider)httpCtx.Items[ServiceProviderKey];
+            return httpCtx.Items[ServiceScopeKey] is IServiceScope scope ? scope.ServiceProvider : null;
+        }
+
+        [PrivateApi]
+        public static IServiceProvider CreateModuleScopedServiceProvider() => CreateModuleServiceProvider();
+
+        private static IServiceProvider CreateModuleServiceProvider()
+        {
+            var pageSp = GetPageServiceProvider();
+            var moduleSp = pageSp.CreateScope().ServiceProvider;
+
+            // In the module scope, we initialize the scoped PageScope Accessor and give it the parent scope
+            // This is necessary for it to be able to give page-scoped objects
+            moduleSp.Build<PageScopeAccessor>()
+                .InitPageOfModule(pageSp);
+            return moduleSp;
         }
     }
 }

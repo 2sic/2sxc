@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Adam
         {
             var valuesDic = new Dictionary<string, string>
             {
-                { "[AppFolder]", app.Folder },
+                { AppConstants.AppFolderPlaceholder, app.Folder },
                 { "[ZoneId]", app.ZoneId.ToString() },
                 { "[AppId]", app.AppId.ToString() },
                 { "[AppGuid]", app.NameId }

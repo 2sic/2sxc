@@ -1,5 +1,6 @@
 ﻿using System.Web.Http.Filters;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 
 namespace ToSic.Sxc.Dnn.WebApi.Logging
@@ -30,7 +31,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Logging
                 DnnLogging.LogToDnn("2sxc-Api", 
                     actionContext.Request.RequestUri.PathAndQuery, 
                     log, 
-                    dnnContext as DnnContextOld);
+                    dnnContext as DnnContext);
 
                 // set property, to prevent double-logging
                 actionContext.Request.Properties.Add(AlreadyLogged, true);

@@ -4,7 +4,6 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.Blocks
@@ -20,10 +19,10 @@ namespace ToSic.Sxc.Blocks
 
         public string Render() => Run(true).Html;
 
-        public RenderResult Run(bool topLevel = true)
+        public IRenderResult Run(bool topLevel = true)
         {
             if (_result != null) return _result;
-            var wrapLog = Log.Call<RenderResult>();
+            var wrapLog = Log.Call<IRenderResult>();
             try
             {
                 var result = new RenderResult
@@ -50,18 +49,17 @@ namespace ToSic.Sxc.Blocks
                         pss.Activate(BuiltInFeatures.ToolbarsAuto.Key);
                     }
 
-                    result.Features = pss.Features.GetWithDependentsAndFlush(Log);
+                    result.Features = pss.Features.GetFeaturesWithDependentsAndFlush(Log);
 
                     // Head & Page Changes
                     result.HeadChanges = pss.GetHeadChangesAndFlush(Log);
                     result.PageChanges = pss.GetPropertyChangesAndFlush(Log);
-                    result.ManualChanges = pss.Features.ManualFeaturesGetNew(Log);
+                    result.FeaturesFromSettings = pss.Features.FeaturesFromSettingsGetNew(Log);
 
                     result.HttpStatusCode = pss.HttpStatusCode;
                     result.HttpStatusMessage = pss.HttpStatusMessage;
                 }
 
-                result.Ready = true;
                 _result = result;
             }
             catch (Exception ex)
@@ -73,7 +71,7 @@ namespace ToSic.Sxc.Blocks
             return wrapLog(null, _result);
         }
 
-        private RenderResult _result;
+        private IRenderResult _result;
 
         private string RenderInternal()
         {
@@ -178,16 +176,16 @@ namespace ToSic.Sxc.Blocks
         /// Get the rendering engine, but avoid double execution.
         /// In some cases, the engine is needed early on to be sure if we need to do some overrides, but execution should then be later on Render()
         /// </summary>
-        /// <param name="renderingPurpose"></param>
         /// <returns></returns>
-        public IEngine GetEngine(Purpose renderingPurpose = Purpose.WebView)
+        public IEngine GetEngine()
         {
-            if (_engine != null) return _engine;
+            var wrapLog = Log.Call<IEngine>();
+            if (_engine != null) return wrapLog("cached", _engine);
             // edge case: view hasn't been built/configured yet, so no engine to find/attach
-            if (Block.View == null) return null;
+            if (Block.View == null) return wrapLog("no view", null);
             _engine = EngineFactory.CreateEngine(Block.Context.ServiceProvider, Block.View);
-            _engine.Init(Block, renderingPurpose, Log);
-            return _engine;
+            _engine.Init(Block, Purpose.WebView, Log);
+            return wrapLog("created", _engine);
         }
         private IEngine _engine;
 

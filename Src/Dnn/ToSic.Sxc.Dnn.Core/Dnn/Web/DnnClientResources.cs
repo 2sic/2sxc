@@ -41,12 +41,12 @@ namespace ToSic.Sxc.Dnn.Web
         }
 
 
-        internal List<IPageFeature> Features => _features ?? (_features = BlockBuilder?.Run(true).Features ?? new List<IPageFeature>());
-        private List<IPageFeature> _features;
+        internal IList<IPageFeature> Features => _features ?? (_features = BlockBuilder?.Run(true).Features ?? new List<IPageFeature>());
+        private IList<IPageFeature> _features;
 
-        public List<IPageFeature> AddEverything(List<IPageFeature> features = null)
+        public IList<IPageFeature> AddEverything(IList<IPageFeature> features = null)
         {
-            var wrapLog = Log.Call<List<IPageFeature>>();
+            var wrapLog = Log.Call<IList<IPageFeature>>();
             // temporary solution, till the features are correctly activated in the block
             // auto-detect Blockbuilder params
             if (features == null) features = Features;
@@ -95,14 +95,14 @@ namespace ToSic.Sxc.Dnn.Web
         public bool NeedsPre1025Behavior()
         {
             var alwaysNeedsAntiForgeryAndHeader = BlockBuilder
-                                          ?.GetEngine(Purpose.WebView)
+                                          ?.GetEngine()
                                           ?.CompatibilityAutoLoadJQueryAndRVT
                                       ?? true;
             return alwaysNeedsAntiForgeryAndHeader;
         }
 
 
-        public void RegisterClientDependencies(Page page, bool readJs, bool editJs, bool editCss, List<IPageFeature> overrideFeatures = null)
+        public void RegisterClientDependencies(Page page, bool readJs, bool editJs, bool editCss, IList<IPageFeature> overrideFeatures = null)
         {
             var wrapLog = Log.Call($"-, {nameof(readJs)}:{readJs}, {nameof(editJs)}:{editJs}, {nameof(editCss)}:{editCss}");
 

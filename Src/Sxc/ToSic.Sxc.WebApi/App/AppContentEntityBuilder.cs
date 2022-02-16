@@ -27,7 +27,6 @@ namespace ToSic.Sxc.WebApi.App
             var listOfTypes = appState.GetContentType(contentType);
             var attribs = listOfTypes.Attributes;
 
-
             var cleanedNewItem = new Dictionary<string, object>();
             foreach (var attrDef in attribs)
             {
@@ -80,7 +79,20 @@ namespace ToSic.Sxc.WebApi.App
 
                 // todo: maybe one day get default-values and insert them if not supplied by JS
             }
+            
+            AddIsPublished(newContentItem, cleanedNewItem);
+
             return cleanedNewItem;
+        }
+
+        // add (updated) "IsPublished" in "values" (before it can be removed when there is no IsPublished attribute)
+        private static void AddIsPublished(IDictionary<string, object> values, IDictionary<string, object> cleaned)
+        {
+            if (!values.ContainsKey(Attributes.EntityFieldIsPublished)) return;
+
+            var isPublishedValue = values[Attributes.EntityFieldIsPublished];
+            if (bool.TryParse(isPublishedValue.ToString(), out var isPublished))
+                cleaned.Add(Attributes.EntityFieldIsPublished, isPublished);
         }
 
         /// <summary>

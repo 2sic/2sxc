@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Collections.Generic;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.WebApi.Features;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
-using ToSic.Sxc.WebApi.Features;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -69,6 +69,17 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [Authorize(Roles = RoleNames.Host)]
         public bool Save([FromBody] FeaturesDto featuresManagementResponse) =>
             _featuresBackend.Init(Log).SaveFeatures(featuresManagementResponse);
+
+        /// <summary>
+        /// POST updated features JSON configuration.
+        /// </summary>
+        /// <remarks>
+        /// Added in 2sxc 13
+        /// </remarks>
+        [HttpPost]
+        [Authorize(Roles = RoleNames.Host)]
+        public bool SaveNew([FromBody] List<FeatureNewDto> featuresManagementResponse) =>
+            _featuresBackend.Init(Log).SaveNewFeatures(featuresManagementResponse);
 
     }
 }

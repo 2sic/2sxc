@@ -26,7 +26,7 @@ namespace Custom.Hybrid
         }
 
         // TODO: STV - this should probably also attach logs? not sure in what direction
-        public void DynamicCodeCoupling(IDynamicCodeRoot parent)
+        public void ConnectToRoot(IDynamicCodeRoot parent)
         {
             _DynCodeRoot = parent;
         }

@@ -2,7 +2,7 @@
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Sxc.WebApi.Licenses;
+using ToSic.Eav.WebApi.Licenses;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {

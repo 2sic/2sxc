@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Context
         #region Constructors and DI
 
         /// <inheritdoc />
-        public T UnwrappedContents => _contents;// { get; private set; }
+        public T UnwrappedContents => _contents;
 
         public T GetContents() => _contents;
         [PrivateApi] private T _contents;

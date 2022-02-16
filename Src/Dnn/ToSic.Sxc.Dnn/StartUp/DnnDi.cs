@@ -1,6 +1,7 @@
-﻿using System.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Configuration;
+using System.Net.Http;
 using ToSic.Eav;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
@@ -13,13 +14,19 @@ using ToSic.Eav.LookUp;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Repositories;
 using ToSic.Eav.Run;
+using ToSic.Eav.Security;
+using ToSic.Eav.WebApi.ApiExplorer;
+using ToSic.Eav.WebApi.Context;
+using ToSic.Razor.StartUp;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Adam;
 using ToSic.Sxc.Dnn.Code;
+using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.ImportExport;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.LookUp;
@@ -36,8 +43,6 @@ using ToSic.Sxc.Search;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.ApiExplorer;
-using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.Plumbing;
 using Type = System.Type;
 
@@ -60,9 +65,10 @@ namespace ToSic.Sxc.Dnn.StartUp
             var appsCache = GetAppsCacheOverride();
             services.AddDnn(appsCache)
                 .AddAdamWebApi<int, int>()
-                .AddSxcWebApi()
+                .AddSxcWebApi<HttpResponseMessage>()
                 .AddSxcCore()
-                .AddEav();
+                .AddEav()
+                .AddRazorBlade();
 
             // temp polymorphism - later put into AddPolymorphism
             services.TryAddTransient<Koi>();
@@ -97,12 +103,6 @@ namespace ToSic.Sxc.Dnn.StartUp
             
             // Module cannot yet be scoped, until we have a per-module scope at some time
             services.TryAddTransient<IModule, DnnModule>();
-            //services.TryAddScoped<IModule, DnnModule>();
-
-            //services.TryAddTransient<DnnModule>();
-            //services.TryAddTransient<DnnSite>();
-
-            //
             services.TryAddTransient<IValueConverter, DnnValueConverter>();
 
             services.TryAddTransient<XmlExporter, DnnXmlExporter>();
@@ -118,15 +118,19 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<IBlockResourceExtractor, DnnBlockResourceExtractor>();
             services.TryAddTransient<AppPermissionCheck, DnnPermissionCheck>();
             services.TryAddTransient<DnnPermissionCheck>();
+            services.TryAddTransient<IEnvironmentPermission, DnnEnvironmentPermission>();
 
-            services.TryAddTransient<IDnnContext, DnnContextOld>();
+            services.TryAddTransient<IDnnContext, DnnContext>();
             services.TryAddTransient<ILinkHelper, DnnLinkHelper>();
             services.TryAddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
             services.TryAddTransient<DnnDynamicCodeRoot>();
             services.TryAddTransient<IPlatformModuleUpdater, DnnModuleUpdater>();
             services.TryAddTransient<IEnvironmentInstaller, DnnEnvironmentInstaller>();
-            services.TryAddTransient<DnnInstallLogger>(sp =>
-                ActivatorUtilities.CreateInstance<DnnInstallLogger>(sp, DnnEnvironmentInstaller.SaveUnimportantDetails));
+            services.TryAddTransient<DnnEnvironmentInstaller>(); // Dnn Only
+            // 2022-02-03 2dm - removed strange indirect access to constant
+            //services.TryAddTransient<DnnInstallLogger>(sp =>
+            //    ActivatorUtilities.CreateInstance<DnnInstallLogger>(sp, DnnEnvironmentInstaller.SaveUnimportantDetails));
+            services.TryAddTransient<DnnInstallLogger>();
 
             // ADAM
             services.TryAddTransient<IAdamFileSystem<int, int>, DnnAdamFileSystem>();
@@ -135,7 +139,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             // Settings / WebApi stuff
             services.TryAddTransient<IUiContextBuilder, DnnUiContextBuilder>();
             services.TryAddTransient<IApiInspector, DnnApiInspector>();
-            services.TryAddScoped<ResponseMaker, DnnResponseMaker>(); // must be scoped, as the api-controller must init this for use in other parts
+            services.TryAddScoped<ResponseMaker<HttpResponseMessage>, DnnResponseMaker>(); // must be scoped, as the api-controller must init this for use in other parts
 
             // new #2160
             services.TryAddTransient<AdamSecurityChecksBase, DnnAdamSecurityChecks>();
@@ -178,7 +182,6 @@ namespace ToSic.Sxc.Dnn.StartUp
             } catch { /* ignore */ }
             
             // new in v12.02 - RazorBlade DI
-            //services.TryAddScoped<IPageChangeApplicator, DnnPageChanges>();
             services.TryAddScoped<DnnPageChanges>();
             services.TryAddTransient<DnnClientResources>();
 
@@ -193,6 +196,11 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // v12.05
             services.TryAddTransient<IMailService, DnnMailService>();
+
+            // v13
+            //services.TryAddTransient<DnnModuleBlockBuilder>();
+            services.TryAddTransient<IDynamicCodeService, DynamicCodeService>();
+            services.TryAddTransient<IModuleAndBlockBuilder, DnnModuleAndBlockBuilder>();
 
             return services;
         }

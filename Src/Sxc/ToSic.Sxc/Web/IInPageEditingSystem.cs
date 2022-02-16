@@ -1,7 +1,9 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
+using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
-using ToSic.Eav.Metadata;
 
 // ReSharper disable UnusedMember.Global
 namespace ToSic.Sxc.Web
@@ -10,7 +12,7 @@ namespace ToSic.Sxc.Web
     /// Contains status and commands to configure the in-page editing system.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public interface IInPageEditingSystem
+    public interface IInPageEditingSystem: IHasLog<IInPageEditingSystem>, INeedsDynamicCodeRoot
     {
         /// <summary>
         /// If editing is enabled or not
@@ -234,5 +236,8 @@ namespace ToSic.Sxc.Web
         /// <param name="value">the attribute value, used for ="..."</param>
         /// <returns>A string but as HtmlString, so it can be used with @Attribute(...)</returns>
         IHybridHtmlString Attribute(string name, object value);
+
+        [PrivateApi("internal use only")]
+        IInPageEditingSystem SetBlock(IBlock block);
     }
 }

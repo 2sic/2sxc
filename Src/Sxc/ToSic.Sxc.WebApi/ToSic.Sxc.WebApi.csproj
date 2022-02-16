@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
     <RootNamespace>ToSic.Sxc.WebApi</RootNamespace>
-    <Version>13.01.00</Version>
+    <Version>13.02.00</Version>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -25,8 +25,9 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <Reference Include="System.Web" />
     <Reference Include="ToSic.Razor">
-      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net45\ToSic.Razor.dll</HintPath>
+	    <HintPath>..\..\..\Dependencies\RazorBlade\Release\net472\ToSic.Razor.dll</HintPath>
     </Reference>
   </ItemGroup>
 

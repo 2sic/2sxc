@@ -12,7 +12,7 @@ robocopy /mir "%Dev2sxcAssets%\dist\ " "%BuildTarget%\dist\ "
 robocopy /mir "%Dev2sxcAssets%\system\ " "%BuildTarget%\system\ "
 
 @REM Copy ImportExpor assets
-robocopy /mir "..\..\..\..\..\2sxc-dnn742\Website\DesktopModules\ToSIC_SexyContent\ImportExport\ " "%BuildTarget%\system\ImportExport\ "
+robocopy /mir "..\..\Dnn\ToSic.Sxc.Dnn\ImportExport\ " "%BuildTarget%\system\ImportExport\ "
 
 
 .nuget\nuget.exe pack ToSic.Sxc.nuspec

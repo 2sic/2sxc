@@ -15,7 +15,7 @@ namespace ToSic.Sxc.WebApi.InPage
     /// </summary>
     public class AjaxPreviewHelperWIP
     {
-        public string ReconstructHtml(RenderResult renderResult, string root)
+        public string ReconstructHtml(IRenderResult renderResult, string root)
         {
             // 0. Skip basics like jQuery, $2sxc, editApi and editUI as they are always available in edit mode
 
@@ -29,9 +29,9 @@ namespace ToSic.Sxc.WebApi.InPage
                 addOn += Js(ver, root + InpageCms.TurnOnJs);
 
             // 2. Add JS & CSS which was stripped before
-            renderResult.Assets.ForEach(a => addOn += "\n" + (a.IsJs ? Js(ver, a.Url) : Css(a.Url)));
+            renderResult.Assets.ToList().ForEach(a => addOn += "\n" + (a.IsJs ? Js(ver, a.Url) : Css(a.Url)));
 
-            renderResult.ManualChanges.ToList().ForEach(f => addOn += "\n" + f.Html);
+            renderResult.FeaturesFromSettings.ToList().ForEach(f => addOn += "\n" + f.Html);
 
             var html = renderResult.Html;
             if (!string.IsNullOrEmpty(html) && !string.IsNullOrEmpty(addOn))

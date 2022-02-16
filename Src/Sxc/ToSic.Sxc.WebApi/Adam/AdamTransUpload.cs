@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;

@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Oqt.Server.LookUps
             if (_alreadyTried) return null;
             _alreadyTried = true;
             var ctx = _ctxResolver.BlockOrNull();
-            return ((OqtPage) ctx.Page).UnwrappedContents;
+            return ((OqtPage) ctx.Page).GetContents();
         }
         private bool _alreadyTried;
 

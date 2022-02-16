@@ -6,6 +6,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
+using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Dnn.WebApiRouting;
@@ -74,7 +75,7 @@ namespace ToSic.Sxc.WebApi
                     // Look up if page publishing is enabled - if module context is not available, always false
                     Log.Add($"AppId: {appId}");
                     var app = Factory.App(appId, false, parentLog: Log);
-                    _DynCodeRoot.AttachAppAndInitLink(app);
+                    _DynCodeRoot.AttachApp(app);
                     found = true;
                 }
             } catch { /* ignore */ }

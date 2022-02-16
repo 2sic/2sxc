@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Documentation;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Beta.LightSpeed;
 using ToSic.Sxc.Code;
@@ -7,7 +6,7 @@ using ToSic.Sxc.Code;
 namespace ToSic.Sxc.Beta.Lightspeed
 {
     [PrivateApi]
-    public class OutputCacheConfig: INeedsCodeRoot
+    public class OutputCacheConfig: INeedsDynamicCodeRoot
     {
         internal const string DynCodePiggyBackId = "OutputCacheConfig";
 
@@ -24,15 +23,12 @@ namespace ToSic.Sxc.Beta.Lightspeed
 
         #region Connect to DynamicCodeRoot
 
-        public void AddBlockContext(IDynamicCodeRoot codeRoot)
+        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             _codeRoot = (DynamicCodeRoot)codeRoot;
 
             // Check if there is already a state object, otherwise create one
-            if (_codeRoot.PiggyBackers.TryGetValue(DynCodePiggyBackId, out var newState ))
-                _state = newState as OutputCacheConfigState;
-
-            if(_state == null) _codeRoot.PiggyBackers.Add(DynCodePiggyBackId, State);
+            _state = _codeRoot.PiggyBack.GetOrGenerate(DynCodePiggyBackId, () => State);
         }
         private DynamicCodeRoot _codeRoot;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Apps.Blocks;
@@ -47,7 +48,7 @@ namespace ToSic.Sxc.Apps
         public int NewBlockReference(int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
         {
             Log.Add($"get CB parent:{parentId}, field:{field}, order:{sortOrder}, app:{app}, guid:{guid}");
-            var contentTypeName = Settings.AttributeSetStaticNameContentBlockTypeName;
+            var contentTypeName = AppConstants.ContentGroupRefTypeName;
             var values = new Dictionary<string, object>
             {
                 {BlockFromEntity.CbPropertyTitle, ""},

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Helpers;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
@@ -11,7 +10,6 @@ using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Edit;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.Url;
 using ToSic.Sxc.WebApi.InPage;
@@ -39,12 +37,12 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
         #endregion
 
 
-        public RenderResult NewBlockAndRender(int parentId, string field, int sortOrder, string app = "", Guid? guid = null) 
+        public IRenderResult NewBlockAndRender(int parentId, string field, int sortOrder, string app = "", Guid? guid = null) 
         {
             var entityId = NewBlock(parentId, field, sortOrder, app, guid);
 
             // now return a rendered instance
-            var newContentBlock = ServiceProvider.Build<BlockFromEntity>().Init(Block, entityId, Log);
+            var newContentBlock = GetService<BlockFromEntity>().Init(Block, entityId, Log);
             return newContentBlock.BlockBuilder.Run(true);
         }
 
@@ -92,13 +90,13 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
 
             Log.Add("3. Add manual resources (fancybox etc.)");
             // First get all the parts out of HTML, as the configuration is still stored as plain HTML
-            var mergedFeatures  = string.Join("\n", result.ManualChanges.Select(mc => mc.Html));
+            var mergedFeatures  = string.Join("\n", result.FeaturesFromSettings.Select(mc => mc.Html));
             var optimizer = _optimizer.Value;
-            if(optimizer is BlockResourceExtractor withInternal) 
+            if(optimizer is BlockResourceExtractor withInternal)
                 withInternal.ExtractOnlyEnableOptimization = false;
 
             Log.Add("4.1. Process optimizers");
-            var rest = optimizer.Process(mergedFeatures).Item1;
+            var rest = optimizer.Process(mergedFeatures).Template;
             if (!string.IsNullOrWhiteSpace(rest)) 
                 Log.Add("Warning: Rest after extraction should be empty - not handled ATM");
 
@@ -116,9 +114,9 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             });
         }
 
-        private RenderResult RenderToResult(int templateId, string lang)
+        private IRenderResult RenderToResult(int templateId, string lang)
         {
-            var callLog = Log.Call<RenderResult>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
+            var callLog = Log.Call<IRenderResult>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
             //SetThreadCulture(lang);
 
             // if a preview templateId was specified, swap to that

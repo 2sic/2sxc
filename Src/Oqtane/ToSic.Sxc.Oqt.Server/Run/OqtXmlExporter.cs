@@ -2,6 +2,7 @@
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Oqtane.Repository;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Helpers;
@@ -14,7 +15,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Shared;
-using App = ToSic.Sxc.Apps.App;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
@@ -50,23 +50,19 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         internal AdamManager<int, int> AdamManager { get; }
 
-        private string _appFolder;
-
         public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds, ILog parentLog)
         {
             var context = _ctxResolver.App(appId);
             var contextOfSite = _ctxResolver.Site();
             var oqtSite = (OqtSite) contextOfSite.Site;
-            var app = AdamManager.AppRuntime.ServiceProvider.Build<App>().InitNoData(new AppIdentity(zoneId, appId), Log);
-
-            // needed for TenantFileItem path resolving
-            _appFolder = app.Folder;
+            var appState = AppStates.Get(new AppIdentity(zoneId, appId));
+            //var app = AdamManager.AppRuntime.ServiceProvider.Build<Sxc.Apps.App>().InitNoData(new AppIdentity(zoneId, appId), Log);
 
             AdamManager.Init(context, Constants.CompatibilityLevel10, Log);
-            Constructor(zoneId, appRuntime, app.AppGuid, appExport, attrSetIds, entityIds, parentLog);
+            Constructor(zoneId, appRuntime, appState.NameId /*app.AppGuid*/, appExport, attrSetIds, entityIds, parentLog);
 
             // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally
-            InitExportXDocument(oqtSite.DefaultCultureCode, Settings.ModuleVersion);
+            InitExportXDocument(oqtSite.DefaultCultureCode, EavSystemInfo.VersionString);
 
             return this;
         }

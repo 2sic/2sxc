@@ -1,12 +1,13 @@
-﻿using Imazen.Common.Storage;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Imazen.Common.Storage;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using ToSic.Eav.Helpers;
 using ToSic.Sxc.Oqt.Server.Plumbing;
-using File = System.IO.File;
 
 namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
 {
@@ -44,10 +45,9 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
             if (!SupportsPath(virtualPath)) return null;
 
             // Get appName and filePath.
-            var appName = string.Empty;
-            var filePath = string.Empty;
-            Boolean rez = false;
-            rez = ContainsBetaPath(virtualPath)
+            string appName;
+            string filePath;
+            var rez = ContainsBetaPath(virtualPath)
                 ? GetBetaAppNameAndFilePath(virtualPath, out appName, out filePath)
                 : GetAppNameAndFilePath(virtualPath, out appName, out filePath);
             if (rez) return null;
@@ -55,24 +55,31 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
             // Get route.
             var route = GetRoute(virtualPath);
 
-            // Get alias.
             using var scope = _serviceProvider.CreateScope();
-            var siteStateInitializer = scope.ServiceProvider.GetRequiredService<SiteStateInitializer>();
+
+            var webHostEnvironment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
+            if (ExistUnderWebRootPath(webHostEnvironment, virtualPath, out var webRootFilePath)) BlobData(webRootFilePath);
+
+            // Get alias.
             //siteStateInitializer.InitIfEmpty();
+            var siteStateInitializer = scope.ServiceProvider.GetRequiredService<SiteStateInitializer>();
             var alias = siteStateInitializer.InitializedState.Alias; // siteStateInitializer.SiteState.Alias;
-
-            var hostingEnvironment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
-
+            
             // Build physicalPath.
-            var physicalPath = ContentFileHelper.GetFilePath(hostingEnvironment.ContentRootPath, alias, route, appName, filePath);
-            if (string.IsNullOrEmpty(physicalPath)) throw new BlobMissingException($"Oqtane blob \"{filePath}\" not found.");
+            var physicalPath = ContentFileHelper.GetFilePath(webHostEnvironment.ContentRootPath, alias, route, appName, filePath);
+            if (string.IsNullOrEmpty(physicalPath)) throw new BlobMissingException($"Oqtane blob \"{virtualPath}\" not found.");
 
-            return new BlobProviderFile()
+            return BlobData(physicalPath);
+        }
+
+        private static IBlobData BlobData(string physicalPath)
+        {
+            return new BlobProviderFile
             {
                 Path = physicalPath,
                 Exists = true,
                 LastModifiedDateUtc = File.GetLastWriteTimeUtc(physicalPath)
-            } as IBlobData;
+            };
         }
 
         private static bool GetAppNameAndFilePath(string virtualPath, out string appName, out string filePath)
@@ -134,5 +141,12 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
         private static string GetRoute(string virtualPath)
             => (ContainsAdamPath(virtualPath) || ContainsBetaAdamPath(virtualPath)) ? Adam :
                 (ContainsSxcPath(virtualPath) || ContainsBetaSxcPath(virtualPath)) ? Sxc : string.Empty;
+
+        private static bool ExistUnderWebRootPath(IWebHostEnvironment webHostEnvironment, string virtualPath, out string filePath)
+        {
+            var path = virtualPath.Backslash().TrimPrefixSlash();
+            filePath = Path.Combine(webHostEnvironment.WebRootPath, path);
+            return File.Exists(filePath);
+        }
     }
 }

@@ -68,19 +68,6 @@ namespace ToSic.Sxc.WebApi
             return isValidXml ? "text/xml" : contentType;
         }
 
-        //public static bool IsValidXml(string xml)
-        //{
-        //    try
-        //    {
-        //        XDocument.Parse(xml);
-        //        return true;
-        //    }
-        //    catch
-        //    {
-        //        return false;
-        //    }
-        //}
-
         public static bool IsValidXml(string xml)
         {
             var stringReader = new StringReader(xml);
@@ -146,6 +133,7 @@ namespace ToSic.Sxc.WebApi
 
         public static Encoding GetEncoding(string xmlString)
         {
+            if (!IsValidXml(xmlString)) return Encoding.UTF8;
             var xmlDocument = new XmlDocument();
             xmlDocument.LoadXml(xmlString);
             return GetEncoding(xmlDocument);

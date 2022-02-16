@@ -9,16 +9,13 @@ namespace ToSic.Sxc.Context
     public class ContextResolver: HasLog<IContextResolver>, IContextResolver
     {
         #region Constructor / DI
-
-        protected AppIdResolver AppIdResolver => _appIdResolver ?? (_appIdResolver = _appIdResolverLazy.Value.Init(Log));
-        private AppIdResolver _appIdResolver;
-        private readonly Lazy<AppIdResolver> _appIdResolverLazy;
+        protected readonly LazyInitLog<AppIdResolver> AppIdResolver;
 
         private IServiceProvider ServiceProvider { get; }
 
-        public ContextResolver(IServiceProvider serviceProvider, Lazy<AppIdResolver> appIdResolverLazy) : base("Sxc.CtxRes")
+        public ContextResolver(IServiceProvider serviceProvider, LazyInitLog<AppIdResolver> appIdResolverLazy) : base("Sxc.CtxRes")
         {
-            _appIdResolverLazy = appIdResolverLazy;
+            AppIdResolver = appIdResolverLazy.SetLog(Log);
             ServiceProvider = serviceProvider;
         }
 
@@ -68,14 +65,14 @@ namespace ToSic.Sxc.Context
         public IBlock RealBlockRequired() => _getBlock?.Invoke() ?? throw new Exception("Block required but missing. It was not attached");
 
 
-        public IContextOfApp App(string nameOrPath) => App(AppIdResolver.GetAppIdFromPath(Site().Site.ZoneId, nameOrPath, true));
+        public IContextOfApp App(string nameOrPath) => App(AppIdResolver.Ready.GetAppIdFromPath(Site().Site.ZoneId, nameOrPath, true));
 
         public IContextOfApp AppOrBlock(string nameOrPath) => AppOrNull(nameOrPath) ?? BlockRequired();
 
         public IContextOfApp AppOrNull(string nameOrPath)
         {
             if (string.IsNullOrWhiteSpace(nameOrPath)) return null;
-            var id = AppIdResolver.GetAppIdFromPath(Site().Site.ZoneId, nameOrPath, false);
+            var id = AppIdResolver.Ready.GetAppIdFromPath(Site().Site.ZoneId, nameOrPath, false);
             return id <= Eav.Constants.AppIdEmpty ? null : App(id);
         }
 
@@ -84,7 +81,7 @@ namespace ToSic.Sxc.Context
             var ctx = AppOrNull(nameOrPath);
             if (ctx != null) return ctx;
 
-            var identity = AppIdResolver.GetAppIdFromRoute();
+            var identity = AppIdResolver.Ready.GetAppIdFromRoute();
             if (identity != null)
             {
                 ctx = ServiceProvider.Build<IContextOfApp>();

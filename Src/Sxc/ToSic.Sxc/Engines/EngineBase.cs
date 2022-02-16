@@ -7,7 +7,10 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Search;
@@ -53,11 +56,12 @@ namespace ToSic.Sxc.Engines
         /// <inheritdoc />
         public void Init(IBlock block, Purpose purpose, ILog parentLog)
         {
+            Log.LinkTo(parentLog);
+            var wrapLog = Log.Call();
             Block = block;
             var view = Block.View;
-            Log.LinkTo(parentLog);
 
-            var appPathRootInInstallation = Helpers.AppPathHelpers.Init(Block.App, Log).AppPathRoot(view.IsShared, PathTypes.PhysRelative);
+            var appPathRootInInstallation = Block.App.PathSwitch(view.IsShared, PathTypes.PhysRelative);
             var subPath = view.Path;
             var polymorphInfo = TryToFindPolymorphPath(appPathRootInInstallation, view, subPath);
             var templatePath = polymorphInfo ?? Path.Combine(appPathRootInInstallation, subPath).ToAbsolutePathForwardSlash();
@@ -81,6 +85,7 @@ namespace ToSic.Sxc.Engines
 
             // Run engine-internal init stuff
             Init();
+            wrapLog(null);
         }
 
         private string TryToFindPolymorphPath(string root, IView view, string subPath)
@@ -150,14 +155,14 @@ namespace ToSic.Sxc.Engines
             var renderedTemplate = RenderTemplate();
             var depMan = Helpers.BlockResourceExtractor;
             var result = depMan.Process(renderedTemplate);
-            ActivateJsApi = result.Item2;
-            return result.Item1;
+            ActivateJsApi = result.Include2sxcJs;
+            return result.Template;
         }
 
         [PrivateApi] public bool ActivateJsApi { get; private set; }
 
         /// <inheritdoc/>
-        [PrivateApi] public List<ClientAssetInfo> Assets => Helpers.BlockResourceExtractor.Assets;
+        [PrivateApi] public List<IClientAsset> Assets => Helpers.BlockResourceExtractor.Assets;
 
 
         private void CheckExpectedTemplateErrors()

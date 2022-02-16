@@ -27,25 +27,28 @@ namespace ToSic.Sxc.Dnn.LookUp
         #endregion
 
         /// <inheritdoc />
-        public ILookUpEngine GetLookUpEngine(int instanceId)
+        public ILookUpEngine GetLookUpEngine(int moduleId)
         {
+            var wrapLog = Log.Call<ILookUpEngine>("" + moduleId);
             var portalSettings = PortalSettings.Current;
-            return portalSettings == null
-                ? new LookUpEngine(Log)
-                : GenerateDnnBasedLookupEngine(portalSettings, instanceId);
+            return portalSettings == null 
+                ? wrapLog("no context", new LookUpEngine(Log)) 
+                : wrapLog("with site", GenerateDnnBasedLookupEngine(portalSettings, moduleId));
         }
 
         [PrivateApi]
-        public LookUpEngine GenerateDnnBasedLookupEngine(PortalSettings portalSettings, int instanceId)
+        public LookUpEngine GenerateDnnBasedLookupEngine(PortalSettings portalSettings, int moduleId)
         {
+            var wrapLog = Log.Call<LookUpEngine>($"..., {moduleId}");
             var providers = new LookUpEngine(Log);
             var dnnUsr = portalSettings.UserInfo;
             var dnnCult = _cultureResolver.SafeCurrentCultureInfo();
-            var dnn = new DnnTokenReplace(instanceId, portalSettings, dnnUsr);
+            var dnn = new DnnTokenReplace(moduleId, portalSettings, dnnUsr);
             var stdSources = dnn.PropertySources;
             foreach (var propertyAccess in stdSources)
                 providers.Add(new LookUpInDnnPropertyAccess(propertyAccess.Key, propertyAccess.Value, dnnUsr, dnnCult));
 
+            // Expand the Lookup for "module" to also have an "id" property
             if (providers.HasSource(SourceModule))
             {
                 var original = providers.Sources[SourceModule];
@@ -54,7 +57,7 @@ namespace ToSic.Sxc.Dnn.LookUp
                 providers.Sources[SourceModule] = new LookUpInLookUps(SourceModule, preferred, original);
             }
 
-            // site - id & guid
+            // Create the lookup for "site" based on the "portal" and only give it "id" & "guid"
             if (providers.HasSource(OldDnnSiteSource))
             {
                 var original = providers.Sources[OldDnnSiteSource];
@@ -64,7 +67,7 @@ namespace ToSic.Sxc.Dnn.LookUp
                 providers.Add(preferred);
             }
 
-            // page - id only for now or maybe guid
+            // Create the lookup for "page" based on the "tab" and only give it "id" & "guid"
             if (providers.HasSource(OldDnnPageSource))
             {
                 var original = providers.Sources[OldDnnPageSource];
@@ -74,9 +77,9 @@ namespace ToSic.Sxc.Dnn.LookUp
                 providers.Add(preferred);
             }
 
-            // Not implemented: Tenant
+            // Not implemented in Dnn: "Tenant" source
 
-            return providers;
+            return wrapLog(null, providers);
         }
     }
 }

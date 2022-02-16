@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Documentation;
-using ToSic.Razor.Html5;
 
 namespace ToSic.Sxc.Web.PageFeatures
 {
-    [PrivateApi]
+    [PrivateApi("Internal / not final - neither name, namespace or anything")]
     public interface IPageFeature
     {
         /// <summary>
@@ -23,11 +22,6 @@ namespace ToSic.Sxc.Web.PageFeatures
         string Description { get; }
 
         string Html { get; }
-
-        //IList<Script> ScriptFiles { get; }
-        //IList<Script> Scripts { get; }
-        //IList<Link> StyleFiles { get; }
-        //IList<Style> Styles { get; }
 
         /// <summary>
         /// List of other features required to run this feature.

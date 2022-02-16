@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using Microsoft.AspNetCore.Http;
 using Oqtane.Repository;
 using Oqtane.Security;
 using Oqtane.Shared;
@@ -7,6 +8,7 @@ using System.Linq;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 
 // ReSharper disable once CheckNamespace
@@ -30,16 +32,18 @@ namespace ToSic.Sxc.DataSources
         private readonly SiteState _siteState;
         private readonly IUserPermissions _userPermissions;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILinkHelper _linkHelper;
+        private readonly Lazy<ILinkPaths> _linkPathsLazy;
 
-        public Pages(IPageRepository pages, SiteState siteState, IUserPermissions userPermissions, IHttpContextAccessor httpContextAccessor, ILinkHelper linkHelper)
+        public Pages(IPageRepository pages, SiteState siteState, IUserPermissions userPermissions, IHttpContextAccessor httpContextAccessor, Lazy<ILinkPaths> linkPathsLazy)
         {
             _pages = pages;
             _siteState = siteState;
             _userPermissions = userPermissions;
             _httpContextAccessor = httpContextAccessor;
-            _linkHelper = linkHelper;
+            _linkPathsLazy = linkPathsLazy;
         }
+
+        private ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
         protected override List<TempPageInfo> GetPagesInternal()
         {
@@ -48,7 +52,7 @@ namespace ToSic.Sxc.DataSources
                 .Where(page => _userPermissions.IsAuthorized(user, PermissionNames.View, page.Permissions))
                 .ToList();
 
-            var parts = new UrlParts(_linkHelper.GetCurrentRequestUrl());
+            var parts = new UrlParts(LinkPaths.GetCurrentRequestUrl());
 
             return pages.Select(p => new TempPageInfo()
             {

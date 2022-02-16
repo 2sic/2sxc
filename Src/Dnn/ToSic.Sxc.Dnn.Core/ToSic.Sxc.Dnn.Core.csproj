@@ -85,9 +85,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="ToSic.Razor, Version=3.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ToSic.Razor, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net45\ToSic.Razor.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net472\ToSic.Razor.dll</HintPath>
     </Reference>
     <Reference Include="ToSic.Razor.Dnn">
       <HintPath>..\..\..\Dependencies\RazorBlade\Dnn\ToSic.Razor.Dnn.dll</HintPath>
@@ -105,9 +105,11 @@
     <Compile Include="Custom.Dnn\Code12.cs" />
     <Compile Include="Dnn\Adam\DnnAdam.cs" />
     <Compile Include="Dnn\Cms\DnnPagePublishingResolver.cs" />
+    <Compile Include="Dnn\Code\DnnDynamicCodeService.cs" />
     <Compile Include="Dnn\Code\IDnnDynamicCodeAdditions.cs" />
     <Compile Include="Dnn\DnnConstants.cs" />
     <Compile Include="Dnn\DnnEnvironmentLogger.cs" />
+    <Compile Include="Dnn\DnnModuleAndBlockBuilder.cs" />
     <Compile Include="Dnn\DnnStaticDi.cs" />
     <Compile Include="Dnn\DynamicCode.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.DataSources.DnnSqlDataSource.cs" />
@@ -121,11 +123,11 @@
     <Compile Include="Dnn\Install\DnnEnvironmentInstaller_Statics.cs" />
     <Compile Include="Dnn\Pages\ModuleWithContent.cs" />
     <Compile Include="Dnn\Pages\Pages.cs" />
-    <Compile Include="Dnn\Run\ContextOfBlockExtensions.cs" />
     <Compile Include="Dnn\Run\DnnAppFileSystemLoader.cs" />
-    <Compile Include="Dnn\Run\DnnContext.cs" />
+    <Compile Include="Dnn\Context\DnnContext.cs" />
     <Compile Include="Dnn\Factory.cs" />
     <Compile Include="Dnn\Run\DnnPlatformContext.cs" />
+    <Compile Include="Dnn\Run\DnnEnvironmentPermission.cs" />
     <Compile Include="Dnn\Services\DnnPageChanges.cs" />
     <Compile Include="Dnn\Services\DnnLogService.cs" />
     <Compile Include="Dnn\Web\DnnHttp.cs" />
@@ -134,7 +136,7 @@
     <Compile Include="Dnn\Code\IDnnDynamicCode.cs" />
     <Compile Include="Dnn\Run\DnnSecurity.cs" />
     <Compile Include="Dnn\Code\DnnDynamicCodeRoot.cs" />
-    <Compile Include="Dnn\Web\DnnClientDependencyOptimizer.cs" />
+    <Compile Include="Dnn\Web\DnnBlockResourceExtractor.cs" />
     <Compile Include="Dnn\DataSources\DnnSql.cs" />
     <Compile Include="Dnn\DataSources\DnnUserProfile.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.DataSources.DnnSqlDataSource.cs" />
@@ -142,9 +144,9 @@
     <Compile Include="Dnn\Web\DnnLinkHelper.cs" />
     <Compile Include="Dnn\Run\DnnModuleUpdater.cs" />
     <Compile Include="Dnn\DnnBusinessController.cs" />
-    <Compile Include="Dnn\Run\DnnModule.cs" />
+    <Compile Include="Dnn\Context\DnnModule.cs" />
     <Compile Include="Dnn\Run\DnnPermissionCheck.cs" />
-    <Compile Include="Dnn\Run\DnnSite.cs" />
+    <Compile Include="Dnn\Context\DnnSite.cs" />
     <Compile Include="Dnn\Run\DnnValueConverter.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.Factory.cs" />
     <Compile Include="Dnn\ImportExport\DnnImportExportEnvironment.cs" />
@@ -162,7 +164,7 @@
     <Compile Include="Dnn\Run\IDnnContext.cs" />
     <Compile Include="Dnn\Search\SearchController.cs" />
     <Compile Include="Dnn\Search\SearchIndexException.cs" />
-    <Compile Include="Dnn\Run\DnnUser.cs" />
+    <Compile Include="Dnn\Context\DnnUser.cs" />
     <Compile Include="Dnn\LookUp\DnnLookUpEngineResolver.cs" />
     <Compile Include="Dnn\LookUp\TokenReplaceDnn.cs" />
     <Compile Include="Dnn\LookUp\LookUpInDnnPropertyAccess.cs" />

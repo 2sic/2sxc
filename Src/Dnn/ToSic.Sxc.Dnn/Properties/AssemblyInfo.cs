@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("2sic Internet Solutions")]
 [assembly: AssemblyProduct("2sxc Dnn")]
-[assembly: AssemblyCopyright("Copyright © 2sic 2021")]
+[assembly: AssemblyCopyright("Copyright © 2sic 2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: Guid("bd90b92e-79ec-4846-8998-b56277d5b2b4")]
 
@@ -29,6 +29,6 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("13.01.00")]
+[assembly: AssemblyVersion("13.02.00")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Dnn.WebApi")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Dnn.Core")]

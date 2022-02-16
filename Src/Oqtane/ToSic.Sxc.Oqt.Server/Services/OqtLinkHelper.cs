@@ -1,9 +1,8 @@
-﻿using System;
-using Custom.Hybrid;
+﻿using Custom.Hybrid;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
 using Oqtane.Repository;
 using Oqtane.Shared;
+using System;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Images;
@@ -11,7 +10,6 @@ using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
-using ToSic.Sxc.Web.WebApi;
 
 namespace ToSic.Sxc.Oqt.Server.Services
 {
@@ -19,46 +17,45 @@ namespace ToSic.Sxc.Oqt.Server.Services
     /// The Oqtane implementation of the <see cref="ILinkHelper"/>.
     /// </summary>
     [PrivateApi]
-    public class OqtLinkHelper : LinkHelper
+    public class OqtLinkHelper : LinkHelperBase
     {
         public Razor12 RazorPage { get; set; }
         private readonly IPageRepository _pageRepository;
         private readonly SiteStateInitializer _siteStateInitializer;
         private readonly IHttpContextAccessor _contextAccessor;
-        private readonly OqtLinkPaths _linkPaths;
         private Sxc.Context.IContextOfBlock _context;
 
         public OqtLinkHelper(
             IPageRepository pageRepository,
             SiteStateInitializer siteStateInitializer,
-            IHttpContextAccessor contextAccessor,
-            ILinkPaths linkPaths,
-            ImgResizeLinker imgLinker
-        ) : base(imgLinker)
+            IHttpContextAccessor contextAccessor, 
+            ImgResizeLinker imgLinker,
+            Lazy<ILinkPaths> linkPathsLazy
+        ) : base(imgLinker, linkPathsLazy)
         {
             _pageRepository = pageRepository;
             _siteStateInitializer = siteStateInitializer;
             _contextAccessor = contextAccessor;
-            _linkPaths = linkPaths as OqtLinkPaths;
         }
 
+        private new OqtLinkPaths LinkPaths => (OqtLinkPaths)base.LinkPaths;
 
-        public override void AddBlockContext(IDynamicCodeRoot codeRoot)
+        public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
-            base.AddBlockContext(codeRoot);
+            base.ConnectToRoot(codeRoot);
             _context = codeRoot.Block?.Context;
         }
         
         protected override string ToApi(string api, string parameters = null) => ApiNavigateUrl(api, parameters);
-        protected override string ToPage(int? pageId, string parameters = null) => PageNavigateUrl(pageId, parameters);
+        protected override string ToPage(int? pageId, string parameters = null, string language = null) => PageNavigateUrl(pageId, parameters);
         
         // Prepare Api link.
         private string ApiNavigateUrl(string api, string parameters)
         {
             var alias = _siteStateInitializer.InitializedState.Alias;
             
-            var pathWithQueryString = LinkHelpers.CombineApiWithQueryString(
-                _linkPaths.ApiFromSiteRoot(App.Folder, api),
+            var pathWithQueryString = CombineApiWithQueryString(
+                LinkPaths.ApiFromSiteRoot(App.Folder, api),
                 parameters);
 
             var relativePath = string.IsNullOrEmpty(alias.Path)
@@ -88,22 +85,7 @@ namespace ToSic.Sxc.Oqt.Server.Services
             // for invalid page numbers just skip that part 
             var relativePath = Utilities.NavigateUrl(alias.Path, page?.Path ?? string.Empty, parameters ?? string.Empty); // NavigateUrl do not works with absolute links
 
-            return absoluteUrl ? $"{GetCurrentLinkRoot()}{relativePath}" : relativePath;
-        }
-
-        public override string GetCurrentLinkRoot()
-        {
-            var scheme = _contextAccessor?.HttpContext?.Request?.Scheme ?? "http";
-            var alias = _siteStateInitializer.InitializedState.Alias;
-            var domainName = string.IsNullOrEmpty(alias.Path)
-                ? alias.Name
-                : alias.Name.Substring(0, alias.Name.Length - alias.Path.Length - 1);
-            return  $"{scheme}://{domainName}";
-        }
-
-        public override string GetCurrentRequestUrl()
-        {
-            return _contextAccessor?.HttpContext?.Request?.GetEncodedUrl() ?? string.Empty;
+            return absoluteUrl ? $"{LinkPaths.GetCurrentLinkRoot()}{relativePath}" : relativePath;
         }
     }
 }

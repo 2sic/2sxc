@@ -11,25 +11,31 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
+using ToSic.Sxc.Plumbing;
 
 namespace ToSic.Sxc.Dnn.Run
 {
     /// <summary>
     /// The DNN implementation of the <see cref="IValueConverter"/> which converts "file:22" or "page:5" to the url,
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
+    [PrivateApi("Hide implementation - not useful for external documentation")]
     public class DnnValueConverter : IValueConverter
     {
+        public const string CurrentLanguage = "current";
+
         #region DI Constructor
 
-        public DnnValueConverter(ISite site, Lazy<IFeaturesService> featuresLazy )
+        public DnnValueConverter(ISite site, Lazy<IFeaturesService> featuresLazy, Lazy<PageScopedService<ISite>> siteFromPageLazy)
         {
             _site = site;
             _featuresLazy = featuresLazy;
+            _siteFromPageLazy = siteFromPageLazy;
         }
 
         private readonly ISite _site;
         private readonly Lazy<IFeaturesService> _featuresLazy;
+        private readonly Lazy<PageScopedService<ISite>> _siteFromPageLazy;
+        private int PageSiteId => _siteFromPageLazy.Value.Value.Id; // PortalId from page di scope
 
         #endregion
 
@@ -52,17 +58,19 @@ namespace ToSic.Sxc.Dnn.Run
         private string TryToResolveOneLinkToInternalDnnCode(string potentialFilePath)
         {
             // Try file reference
-            var fileInfo = FileManager.Instance.GetFile(_site.Id, potentialFilePath);
+            var fileInfo = FileManager.Instance.GetFile(_site.Id, potentialFilePath) // PortalId from module di scope
+                           ?? FileManager.Instance.GetFile(PageSiteId, potentialFilePath); // PortalId from page di scope (module sharing on different site)
             if (fileInfo != null) return ValueConverterBase.PrefixFile + ValueConverterBase.Separator + fileInfo.FileId;
 
             // Try page / tab ID
             var tabController = new TabController();
-            var tabCollection = tabController.GetTabsByPortal(_site.Id);
-            var tabInfo = tabCollection.Select(tab => tab.Value)
-                                       .FirstOrDefault(tab => tab.TabPath == potentialFilePath);
+            var tabInfo = tabController.GetTabsByPortal(_site.Id).Select(tab => tab.Value)
+                              .FirstOrDefault(tab => tab.TabPath == potentialFilePath)// PortalId from module di scope
+                          ?? tabController.GetTabsByPortal(PageSiteId).Select(tab => tab.Value)
+                              .FirstOrDefault(tab => tab.TabPath == potentialFilePath);// PortalId from page di scope (module sharing on different site)
 
-            return tabInfo != null 
-                ? ValueConverterBase.PrefixPage + ValueConverterBase.Separator + tabInfo.TabID 
+            return tabInfo != null
+                ? ValueConverterBase.PrefixPage + ValueConverterBase.Separator + tabInfo.TabID
                 : potentialFilePath;
         }
 
@@ -119,11 +127,23 @@ namespace ToSic.Sxc.Dnn.Run
             #endregion
         }
 
-        private static string ResolvePageLink(int id)
+        private string ResolvePageLink(int id) => ResolvePageLink(id, CurrentLanguage, new string[] { });
+
+        /// <summary>
+        /// Resolve URL to Page with TabId, but handles more situations than DNN framework:
+        /// - supports module sharing scenarios, when module is on different portal
+        /// - return localized page TabId, instead of requested TabId
+        /// </summary>
+        /// <param name="id">TabId to page</param>
+        /// <param name="language">"current" is required to ensure expected behavior (to try to find current language localized TabId)</param>
+        /// <param name="additionalParameters">query string parameters</param>
+        /// <returns>return string url to page</returns>
+        internal string ResolvePageLink(int id, string language = null, params string[] additionalParameters)
         {
             var tabController = new TabController();
 
-            var tabInfo = tabController.GetTab(id, 0);
+            var tabInfo = tabController.GetTab(id, _site.Id) // PortalId from module di scope
+                          ?? tabController.GetTab(id, PageSiteId); // PortalId from page di scope (module sharing on different site)
             if (tabInfo == null) return null;
 
             var psCurrent = PortalSettings.Current;
@@ -131,11 +151,12 @@ namespace ToSic.Sxc.Dnn.Run
 
             // Get full PortalSettings (with portal alias) if module sharing is active
             if (psCurrent != null && psCurrent.PortalId != tabInfo.PortalID)
-                psPage = new PortalSettings(tabInfo.PortalID);
+                psPage = PortalSettingsForNavigateUrl(tabInfo.PortalID);
 
             if (psPage == null) return null;
 
-            if (tabInfo.CultureCode != "" && psCurrent != null && tabInfo.CultureCode != psCurrent.CultureCode)
+            // try to change TabID to localized version when language == CurrentLanguage
+            if (language == CurrentLanguage && tabInfo.CultureCode != "" && psCurrent != null && tabInfo.CultureCode != psCurrent.CultureCode)
             {
                 var cultureTabInfo = tabController
                     .GetTabByCulture(tabInfo.TabID, tabInfo.PortalID,
@@ -146,7 +167,24 @@ namespace ToSic.Sxc.Dnn.Run
             }
 
             // Exception in AdvancedURLProvider because ownerPortalSettings.PortalAlias is null
-            return Globals.NavigateURL(tabInfo.TabID, psPage, "", new string[] { });
+            return Globals.NavigateURL(tabInfo.TabID, psPage, "", additionalParameters);
+
         }
+
+        private static PortalSettings PortalSettingsForNavigateUrl(int portalId)
+        {
+            var psPage = new PortalSettings(portalId);
+
+            // PortalAlias is required for NavigateURL in AdvancedURLProvider,
+            // but sometimes is missing (module sharing)
+            if (psPage.PortalAlias == null)
+                psPage.PortalAlias = PortalAliasForNavigateUrl(portalId);
+
+            return psPage;
+        }
+
+        private static PortalAliasInfo PortalAliasForNavigateUrl(int portalId) =>
+            PortalAliasController.Instance.GetPortalAliasesByPortalId(portalId)
+                .FirstOrDefault(alias => alias.IsPrimary); // get primary alias
     }
 }

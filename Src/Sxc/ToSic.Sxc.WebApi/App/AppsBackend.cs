@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Context;
-using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.LookUp;
@@ -25,7 +26,7 @@ namespace ToSic.Sxc.WebApi.App
         public List<AppDto> Apps()
         {
             var cms = _cmsZones.Init(_context.Site.ZoneId, Log);
-            var configurationBuilder = ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(_context.UserMayEdit);
+            var configurationBuilder = GetService<AppConfigDelegate>().Init(Log).Build(_context.UserMayEdit);
             var list = cms.AppsRt.GetApps(_context.Site, configurationBuilder);
             return list.Select(CreateAppDto).ToList();
         }
@@ -34,9 +35,9 @@ namespace ToSic.Sxc.WebApi.App
             new AppDto
             {
                 Id = a.AppId,
-                IsApp = a.AppGuid != Eav.Constants.DefaultAppGuid &&
-                        a.AppGuid != Eav.Constants.PrimaryAppGuid, // #SiteApp v13
-                Guid = a.AppGuid,
+                IsApp = a.NameId != Eav.Constants.DefaultAppGuid &&
+                        a.NameId != Eav.Constants.PrimaryAppGuid, // #SiteApp v13
+                Guid = a.NameId,
                 Name = a.Name,
                 Folder = a.Folder,
                 AppRoot = a.Path,
@@ -52,7 +53,7 @@ namespace ToSic.Sxc.WebApi.App
         public List<AppDto> GetInheritableApps()
         {
             var cms = _cmsZones.Init(_context.Site.ZoneId, Log);
-            var configurationBuilder = ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(_context.UserMayEdit);
+            var configurationBuilder = GetService<AppConfigDelegate>().Init(Log).Build(_context.UserMayEdit);
             var list = cms.AppsRt.GetInheritableApps(_context.Site, configurationBuilder);
             return list.Select(CreateAppDto).ToList();
         }

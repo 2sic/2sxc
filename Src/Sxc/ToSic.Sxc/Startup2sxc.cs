@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Blocks.Output;
@@ -11,9 +12,11 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DotNet;
+using ToSic.Sxc.Edit.InPageEditingSystem;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.LookUp;
+using ToSic.Sxc.Plumbing;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
@@ -67,7 +70,7 @@ namespace ToSic.Sxc
             // Context stuff in general
             services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
             services.TryAddTransient<IContextOfApp, ContextOfApp>();
-            // 2021-09-01 2dm seems unused services.TryAddTransient<ContextOfBlock>();
+            services.TryAddTransient<ContextOfApp.ContextOfAppDependencies>();
             services.TryAddTransient<IPage, Page>();
             services.TryAddTransient<Page>();
             services.TryAddTransient<ICmsContext, CmsContext>();
@@ -93,12 +96,22 @@ namespace ToSic.Sxc
             services.TryAddTransient<Polymorphism.Polymorphism>();
 
             // new in v12.02 - PageService & Page Features
-            services.TryAddTransient<ToSic.Sxc.Services.IPageService, PageService>();  // must be unique per module where it's used
+            services.TryAddTransient<Services.IPageService, PageService>();  // must be unique per module where it's used
 #pragma warning disable CS0618
-            services.TryAddTransient<ToSic.Sxc.Web.IPageService, PageService>();  // Obsolete version, needed to keep old Apps working which used this
+            services.TryAddTransient<Web.IPageService, PageService>();  // Obsolete version, needed to keep old Apps working which used this
 #pragma warning restore CS0618
 
-            services.TryAddScoped<PageServiceShared>();             // must be scoped / shared across all modules
+            // 2022-02-07 2dm experimental
+            // The PageServiceShared must always be generated from the PageScope
+            // I thought that the PageServiceShared must be scoped at page level, but I believe this is wrong
+            // Reason is that it seems to collect specs per module, and then actually only flushes it
+            // Because it shouldn't remain in the list for the second module
+            // So it actually looks like it's very module-scoped already, but had workarounds for it.
+            // So I think it really doesn't need to be have workarounds for it
+            services.TryAddScoped<PageServiceShared>();
+            //services.TryAddTransient<PageServiceShared>(); // this is only used for the next line where we create the scoped version
+            //services.TryAddScoped<IPageServiceShared>(sp => sp.Build<PageScopedService<PageServiceShared>>().Value);             // must be scoped / shared across all modules
+
             services.TryAddTransient<IPageFeatures, PageFeatures>();
             services.TryAddSingleton<IPageFeaturesManager, PageFeaturesManager>();
 
@@ -123,6 +136,19 @@ namespace ToSic.Sxc
             services.TryAddTransient<IFeaturesService, FeaturesService>();  // New 13.01
             services.TryAddTransient<IImageService, ImageService>();
 
+            // 13 - cleaning up handling of app paths
+            services.TryAddTransient<AppFolderInitializer>();
+            services.TryAddTransient<AppIconHelpers>();
+
+            // v13 Provide page scoped services
+            // This is important, as most services are module scoped, but very few are actually scoped one level higher
+            services.TryAddScoped<PageScopeAccessor>();
+            services.TryAddScoped(typeof(PageScopedService<>));
+
+            // v13 DynamicCodeService
+            services.TryAddTransient<DynamicCodeService.Dependencies>();
+
+            services.TryAddTransient<IInPageEditingSystem, InPageEditingHelper>();
 
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need

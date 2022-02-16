@@ -23,12 +23,12 @@ namespace ToSic.Sxc.Blocks
         /// 
         /// </summary>
         /// <param name="topLevel">
-        /// This means it's the outer-most render which is happening.
-        /// This changes if things like header changes, features etc. are picked up - which should only happen at top level
+        ///     This means it's the outer-most render which is happening.
+        ///     This changes if things like header changes, features etc. are picked up - which should only happen at top level
         /// </param>
         /// <returns></returns>
         [PrivateApi]
-        RenderResult Run(bool topLevel);
+        IRenderResult Run(bool topLevel);
 
         /// <summary>
         /// The real block / unit of content which will be rendered. 
@@ -48,10 +48,9 @@ namespace ToSic.Sxc.Blocks
         /// <summary>
         /// Get the engine which will render a block
         /// </summary>
-        /// <param name="renderingPurpose"></param>
         /// <returns></returns>
-        IEngine GetEngine(Purpose renderingPurpose = Purpose.WebView);
+        IEngine GetEngine();
 
-        List<ClientAssetInfo> Assets { get; }
+        List<IClientAsset> Assets { get; }
     }
 }
