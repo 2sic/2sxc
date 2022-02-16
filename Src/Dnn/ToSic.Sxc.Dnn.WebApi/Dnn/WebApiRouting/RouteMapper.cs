@@ -74,11 +74,11 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
 
             #region New routes in 2sxc 11.06+ which should replace most previous internal routes
 
-            //AddTy("2sxc-sys",     Root.Sys + "/" + TokenSet.ConAct,           typeof(InsightsController));
-            // Special update v13 - all the commands go through "Details?view=xyz
-            _mapRouteManager.MapHttpRoute(Mod2Sxc, "2sxc-sys-new", $"{Root.Sys}/{Token.Controller}/{{View}}", 
-                new { action = nameof(InsightsController.Details) }, new[] { typeof(InsightsController).Namespace });
+            AddTy("2sxc-sys",     Root.Sys + "/" + TokenSet.ConAct,           typeof(InstallController));
 
+            // Special update v13 - all the commands go through "Details?view=xyz
+            _mapRouteManager.MapHttpRoute(Mod2Sxc, "2sxc-sys-new", $"{Root.Sys}/Insights/{{View}}", 
+                new { controller = "Insights", action = nameof(InsightsController.Details) }, new[] { typeof(InsightsController).Namespace });
 
             AddTy("2sxc-cms",     Root.Cms + "/" + TokenSet.ConAct,           typeof(BlockController));
             AddTy("2sic-admin",   Root.Admin + "/" + TokenSet.ConAct,         typeof(MetadataController));
