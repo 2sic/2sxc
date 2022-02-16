@@ -127,6 +127,7 @@
     <Compile Include="Dnn\Context\DnnContext.cs" />
     <Compile Include="Dnn\Factory.cs" />
     <Compile Include="Dnn\Run\DnnPlatformContext.cs" />
+    <Compile Include="Dnn\Run\DnnEnvironmentPermission.cs" />
     <Compile Include="Dnn\Services\DnnPageChanges.cs" />
     <Compile Include="Dnn\Services\DnnLogService.cs" />
     <Compile Include="Dnn\Web\DnnHttp.cs" />

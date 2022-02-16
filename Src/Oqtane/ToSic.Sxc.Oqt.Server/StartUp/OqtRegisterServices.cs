@@ -10,6 +10,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Run;
+using ToSic.Eav.Security;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Sxc.Adam;
@@ -64,6 +65,8 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddTransient<IZoneMapper, OqtZoneMapper>();
             services.TryAddTransient<OqtZoneMapper>();
             services.TryAddTransient<AppPermissionCheck, OqtPermissionCheck>();
+            services.TryAddTransient<IEnvironmentPermission, OqtEnvironmentPermission>();
+
             services.TryAddTransient<ILinkHelper, OqtLinkHelper>();
             services.TryAddTransient<DynamicCodeRoot, OqtaneDynamicCodeRoot>();
             services.TryAddTransient<IPlatformModuleUpdater, OqtModuleUpdater>();

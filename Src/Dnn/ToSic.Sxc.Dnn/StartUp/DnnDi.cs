@@ -1,7 +1,7 @@
-﻿using System.Configuration;
-using System.Net.Http;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Configuration;
+using System.Net.Http;
 using ToSic.Eav;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
@@ -14,6 +14,7 @@ using ToSic.Eav.LookUp;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Repositories;
 using ToSic.Eav.Run;
+using ToSic.Eav.Security;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Razor.StartUp;
@@ -117,6 +118,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<IBlockResourceExtractor, DnnBlockResourceExtractor>();
             services.TryAddTransient<AppPermissionCheck, DnnPermissionCheck>();
             services.TryAddTransient<DnnPermissionCheck>();
+            services.TryAddTransient<IEnvironmentPermission, DnnEnvironmentPermission>();
 
             services.TryAddTransient<IDnnContext, DnnContext>();
             services.TryAddTransient<ILinkHelper, DnnLinkHelper>();
