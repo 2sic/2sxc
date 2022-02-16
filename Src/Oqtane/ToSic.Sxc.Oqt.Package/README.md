@@ -1,4 +1,4 @@
-﻿# 2sxc 12 - CMS & App-Engine for DNN and Oqtane
+﻿# 2sxc 13 - CMS & App-Engine for DNN and Oqtane
 
 > you can't use DNN or Oqtane without 2sxc 😉
 
@@ -15,4 +15,4 @@ Visit [2sxc Blogs](https://2sxc.org/en/blog) for news, updates, articles.
 
 Visit https://github.com/2sic/2sxc/releases for the latest releases.
 
-![2sxc 12](https://raw.githubusercontent.com/wiki/2sic/2sxc/assets/logos/2sxc12/2sxc12-500.png)
+![2sxc 13](https://raw.githubusercontent.com/wiki/2sic/2sxc/assets/logos/2sxc12/2sxc12-500.png)
