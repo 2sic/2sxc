@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Context
 
         public class ContextOfAppDependencies
         {
-            public ContextOfAppDependencies(IAppStates appStates, Lazy<IFeaturesService> featsLazy, LazyInitLog<AppUserLanguageCheck> langCheckLazy, Generator<IEnvironmentPermission> environmentPermissionGenerator)
+            public ContextOfAppDependencies(IAppStates appStates, Lazy<IFeaturesService> featsLazy, LazyInitLog<AppUserLanguageCheck> langCheckLazy, GeneratorLog<IEnvironmentPermission> environmentPermissionGenerator)
             {
                 EnvironmentPermissionGenerator = environmentPermissionGenerator;
                 AppStates = appStates;
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Context
             public IAppStates AppStates { get; }
             public Lazy<IFeaturesService> FeatsLazy { get; }
             public LazyInitLog<AppUserLanguageCheck> LangCheckLazy { get; }
-            internal readonly Generator<IEnvironmentPermission> EnvironmentPermissionGenerator;
+            internal readonly GeneratorLog<IEnvironmentPermission> EnvironmentPermissionGenerator;
         }
 
         public ContextOfApp(IServiceProvider serviceProvider, ISite site, IUser user, ContextOfAppDependencies dependencies)
@@ -37,6 +37,7 @@ namespace ToSic.Sxc.Context
         {
             Deps = dependencies;
             dependencies.LangCheckLazy.SetLog(Log);
+            dependencies.EnvironmentPermissionGenerator.SetLog(Log);
             Log.Rename("Sxc.CtxApp");
         }
         protected readonly ContextOfAppDependencies Deps;
@@ -70,12 +71,14 @@ namespace ToSic.Sxc.Context
                 if (_userMayEdit.HasValue) return _userMayEdit.Value;
                 var wrapLog = Log.Call<bool>();
 
+                // Case 1: Superuser always may
                 if (User.IsSuperUser)
                 {
                     _userMayEdit = true;
                     return wrapLog("super", _userMayEdit.Value);
                 }
 
+                // Case 2: No App-State
                 if (AppState == null)
                 {
                     _userMayEdit = base.UserMayEdit;
@@ -83,8 +86,9 @@ namespace ToSic.Sxc.Context
                     if (_userMayEdit.Value)
                         return wrapLog("no app, use fallback", _userMayEdit.Value);
 
-                    _userMayEdit = (Deps.EnvironmentPermissionGenerator.New)
-                        .Init<IContextOfSite>(this, AppState, Log)
+                    // If user isn't allowed yet, it may be that the environment allows it
+                    _userMayEdit = Deps.EnvironmentPermissionGenerator.New
+                        .Init(this as IContextOfSite, null)
                         .EnvironmentAllows(GrantSets.WriteSomething);
 
                     return wrapLog("no app, use fallback", _userMayEdit.Value);

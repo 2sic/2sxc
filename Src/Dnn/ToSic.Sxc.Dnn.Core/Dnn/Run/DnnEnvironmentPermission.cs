@@ -3,10 +3,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
 using System;
 using System.Collections.Generic;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
-using ToSic.Eav.Context;
-using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
 using ToSic.Sxc.Context;
 
@@ -14,8 +11,7 @@ namespace ToSic.Sxc.Dnn.Run
 {
     public class DnnEnvironmentPermission : EnvironmentPermission
     {
-        public DnnEnvironmentPermission() : base(DnnConstants.LogName)
-        { }
+        public DnnEnvironmentPermission() : base(DnnConstants.LogName) { }
 
         private readonly string _salPrefix = "SecurityAccessLevel.".ToLowerInvariant();
         public string CustomPermissionKey = ""; // "CONTENT";
