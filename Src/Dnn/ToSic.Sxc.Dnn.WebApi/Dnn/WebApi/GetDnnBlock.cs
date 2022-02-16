@@ -35,10 +35,7 @@ namespace ToSic.Sxc.Dnn.WebApi
             // WebAPI calls can contain the original parameters that made the page, so that views can respect that
             // Probably replace with OriginalParameters.GetOverrideParams(context.Page.Parameters);
             // once it has proven stable in Oqtane
-            //var context = _serviceProvider.Build<IContextOfBlock>().InitDnnSiteModuleAndBlockContext(moduleInfo, log);
-            //context.Page.ParametersInternalOld = GetOverrideParams(request);
-            //IBlock block = _serviceProvider.Build<BlockFromModule>().Init(context, log);
-            IBlock block = _serviceProvider.Build<DnnModuleBlockBuilder>().Init(log).GetBlockOfModule(moduleInfo);
+            IBlock block = _serviceProvider.Build<IModuleAndBlockBuilder>().Init(log).GetBlock(moduleInfo);
             block.Context.Page.ParametersInternalOld = GetOverrideParams(request);
 
             // check if we need an inner block

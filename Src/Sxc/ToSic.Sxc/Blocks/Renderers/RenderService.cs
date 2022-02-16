@@ -84,7 +84,7 @@ namespace ToSic.Sxc.Blocks
         public IRenderResult Module(int pageId, int moduleId)
         {
             var wrapLog = Log.Call<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
-            var block = _builder.Ready.GetBuilder(pageId, moduleId);
+            var block = _builder.Ready.GetBlock(pageId, moduleId).BlockBuilder;
             var result = block.Run(true);
             return wrapLog("ok", result);
         }

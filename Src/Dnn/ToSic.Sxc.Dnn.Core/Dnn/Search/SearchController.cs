@@ -23,7 +23,6 @@ using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.LookUp;
-using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Engines;
 using static System.StringComparer;
 using DynamicCode = ToSic.Sxc.Code.DynamicCode;
@@ -75,9 +74,7 @@ namespace ToSic.Sxc.Search
             // In case it's not loaded yet
             _appsCache.Load(_serviceProvider, module.BlockIdentifier, DnnSite.DefaultCultureCode);
 
-            //var dnnContext = _serviceProvider.Build<IContextOfBlock>().InitDnnSiteModuleAndBlockContext(DnnModule, Log);
-            //Block = _serviceProvider.Build<BlockFromModule>().Init(dnnContext, Log);
-            Block = _serviceProvider.Build<DnnModuleBlockBuilder>().Init(Log).GetBlockOfModule(DnnModule);
+            Block = _serviceProvider.Build<IModuleAndBlockBuilder>().Init(Log).GetBlock(DnnModule);
 
             if (Block.View == null) return wrapLog("cancel", "no view");
             if (Block.View.SearchIndexingDisabled) return wrapLog("cancel", "search disabled"); // new in 12.02
@@ -106,7 +103,7 @@ namespace ToSic.Sxc.Search
         /// <summary>The DnnSite will be initialized, and must exist for the search-index to provide data.</summary>
         public DnnSite DnnSite;
         /// <summary>The Block will be initialized, and must exist for the search-index to provide data.</summary>
-        public BlockFromModule Block;
+        public IBlock Block;
         /// <summary>The SearchItems will be initialized, and must exist for the search-index to provide data.</summary>
         public Dictionary<string, List<ISearchItem>> SearchItems;
 
@@ -293,7 +290,7 @@ namespace ToSic.Sxc.Search
             return wrapLog($"{streamsToIndex.Length}", streamsToIndex);
         }
 
-        private ICustomizeSearch CreateAndInitViewController(DnnSite site, BlockFromModule block)
+        private ICustomizeSearch CreateAndInitViewController(DnnSite site, IBlock block)
         {
             var wrapLog = Log.Call<ICustomizeSearch>();
             // 1. Get and compile the view.ViewController

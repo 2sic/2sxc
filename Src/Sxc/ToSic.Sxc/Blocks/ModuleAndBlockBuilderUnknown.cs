@@ -10,8 +10,9 @@ namespace ToSic.Sxc.Blocks
         {
         }
 
-        protected override IModule GetModuleImplementation(int pageId, int moduleId) => throw new NotImplementedException();
+        protected override IModule GetModuleImplementation(int pageId, int moduleId) => throw new NotSupportedException();
+        public override IBlock GetBlock<TPlatformModule>(TPlatformModule module) => throw new NotSupportedException();
 
-        protected override IBlockBuilder GetBuilderImplementation(int pageId, int moduleId) => throw new NotImplementedException();
+        protected override IBlock GetBlockImplementation(IModule module) => throw new NotSupportedException();
     }
 }

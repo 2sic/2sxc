@@ -6,10 +6,8 @@ namespace ToSic.Sxc.Code
     public class DynamicCodeServiceUnknown: DynamicCodeService
     {
         public DynamicCodeServiceUnknown(Dependencies dependencies, WarnUseOfUnknown<DynamicCodeServiceUnknown> warn) 
-            : base(dependencies, "Unk")
+            : base(dependencies)
         {
         }
-
-        public override IDynamicCode12 OfModule(int pageId, int moduleId) => throw new NotSupportedException();
     }
 }

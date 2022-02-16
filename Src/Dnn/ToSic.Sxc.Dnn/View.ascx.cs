@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Dnn
             // ensure everything is ready and that we know if we should activate the client-dependency
             TryCatchAndLogToDnn(() =>
             {
-                Block = ServiceProvider.Build<DnnModuleBlockBuilder>().Init(Log).GetBlockOfModule(ModuleConfiguration);
+                Block = ServiceProvider.Build<IModuleAndBlockBuilder>().Init(Log).GetBlock(ModuleConfiguration);
                 if (checkPortalIsReady) DnnReadyCheckTurbo.EnsureSiteAndAppFoldersAreReady(this, Block, Log);
                 DnnClientResources = ServiceProvider.Build<DnnClientResources>()
                     .Init(Page, requiresPre1025Behavior == false ? null : Block?.BlockBuilder, Log);

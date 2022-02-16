@@ -55,7 +55,16 @@ namespace ToSic.Sxc.Services
             int max = 100,
             string merge = null);
 
-        [PrivateApi("WIP v13.02")]
+        /// <summary>
+        /// Get a 2sxc module rendered directly. 
+        /// </summary>
+        /// <param name="pageId"></param>
+        /// <param name="moduleId"></param>
+        /// <returns>
+        /// An HTML-String which can be added to the output directly.
+        /// The object also has additional information like assets or page changes, which are not applied when using this render command. 
+        /// </returns>
+        /// <remarks>New in 2sxc 13.02</remarks>
         IRenderResult Module(int pageId, int moduleId);
     }
 }

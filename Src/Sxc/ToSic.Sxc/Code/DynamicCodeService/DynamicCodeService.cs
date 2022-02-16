@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Code
     /// WIP - goal is to have a DI factory which creates DynamicCode objects for use in Skins and other external controls
     /// Not sure how to get this to work, since normally we always start with a code-file, and here we don't have one!
     /// </summary>
-    public abstract class DynamicCodeService: HasLog, IDynamicCodeService
+    public class DynamicCodeService: HasLog, IDynamicCodeService
     {
         private readonly Dependencies _dependencies;
 
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Code
             public Lazy<IUser> User { get; }
         }
 
-        protected DynamicCodeService(Dependencies dependencies, string logPrefix): base($"{logPrefix}.DCS")
+        public DynamicCodeService(Dependencies dependencies): base($"{Constants.SxcLogName}.DCS")
         {
             _dependencies = dependencies;
             ServiceProvider = dependencies.ServiceProvider.CreateScope().ServiceProvider;
@@ -84,7 +84,16 @@ namespace ToSic.Sxc.Code
             return wrapLog("ok", codeRoot);
         }
 
-        public abstract IDynamicCode12 OfModule(int pageId, int moduleId);
+        public IDynamicCode12 OfModule(int pageId, int moduleId)
+        {
+            var wrapLog = Log.Call<IDynamicCodeRoot>($"{pageId}, {moduleId}");
+            MakeSureLogIsInHistory();
+            //var module = ModuleAndBlockBuilder.Ready.GetModule(pageId, moduleId);
+            var cmsBlock = ModuleAndBlockBuilder.Ready.GetBlock(pageId, moduleId);
+            var codeRoot = CodeRootGenerator.New.Init(cmsBlock, Log, Constants.CompatibilityLevel12);
+
+            return wrapLog("ok", codeRoot);
+        }
 
         /// <inheritdoc />
         public IApp App(

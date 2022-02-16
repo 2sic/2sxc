@@ -10,11 +10,25 @@ namespace ToSic.Sxc.Blocks
         {
         }
 
-        public IModule GetModule(int pageId, int moduleId)
-        {
-            var wrapLog = Log.Call<IModule>($"{pageId}, {moduleId}");
-            return wrapLog("ok", GetModuleImplementation(pageId, moduleId));
-        }
+        // 2022-02-16 2dm - ATM not needed, maybe we'll reactivate if ever requested
+        //public IModule GetModule(int pageId, int moduleId)
+        //{
+        //    var wrapLog = Log.Call<IModule>($"{pageId}, {moduleId}");
+        //    return wrapLog("ok", GetModuleImplementation(pageId, moduleId));
+        //}
+        //public IBlock GetBlock(IModule module)
+        //{
+        //    var wrapLog = Log.Call<IBlock>($"module: {module?.Id}");
+        //    ThrowIfModuleIsNull(module);
+        //    return wrapLog("ok", GetBlockImplementation(module));
+        //}
+        //protected void ThrowIfModuleIsNull<TModule>(TModule moduleInfo)
+        //{
+        //    if (moduleInfo != null) return;
+        //    var msg = $"Module is Null. Can't continue.";
+        //    Log.Add(msg);
+        //    throw new Exception(msg);
+        //}
 
         protected abstract IModule GetModuleImplementation(int pageId, int moduleId);
 
@@ -26,13 +40,16 @@ namespace ToSic.Sxc.Blocks
             throw new Exception(msg);
         }
 
-        public IBlockBuilder GetBuilder(int pageId, int moduleId)
+        public IBlock GetBlock(int pageId, int moduleId)
         {
-            var wrapLog = Log.Call<IBlockBuilder>($"{pageId}, {moduleId}");
-            return wrapLog("ok", GetBuilderImplementation(pageId, moduleId));
-
+            var wrapLog = Log.Call<IBlock>($"{pageId}, {moduleId}");
+            var module = GetModuleImplementation(pageId, moduleId);
+            var result = GetBlockImplementation(module);
+            return wrapLog("ok", result);
         }
-        protected abstract IBlockBuilder GetBuilderImplementation(int pageId, int moduleId);
 
+        public abstract IBlock GetBlock<TPlatformModule>(TPlatformModule module) where TPlatformModule : class;
+
+        protected abstract IBlock GetBlockImplementation(IModule module);
     }
 }

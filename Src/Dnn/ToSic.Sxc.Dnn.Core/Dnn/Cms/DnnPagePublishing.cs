@@ -11,6 +11,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
@@ -89,9 +90,7 @@ namespace ToSic.Sxc.Dnn.Cms
                 // publish all entites of this content block
                 var dnnModule = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
                 // must find tenant through module, as the Portal-Settings.Current is null in search mode
-                //var dnnContext = _serviceProvider.Build<IContextOfBlock>().InitDnnSiteModuleAndBlockContext(dnnModule, Log);
-                //var cb = _serviceProvider.Build<BlockFromModule>().Init(dnnContext, Log);
-                var cb = _serviceProvider.Build<DnnModuleBlockBuilder>().Init(Log).GetBlockOfModule(dnnModule);
+                var cb = _serviceProvider.Build<IModuleAndBlockBuilder>().Init(Log).GetBlock(dnnModule);
 
                 Log.Add($"found dnn mod {cb.Context.Module.Id}, tenant {cb.Context.Site.Id}, cb exists: {cb.ContentGroupExists}");
                 if (cb.ContentGroupExists)
