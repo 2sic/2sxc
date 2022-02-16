@@ -44,12 +44,12 @@ namespace ToSic.Sxc.Blocks
         {
             var wrapLog = Log.Call<IBlock>($"{pageId}, {moduleId}");
             var module = GetModuleImplementation(pageId, moduleId);
-            var result = GetBlockImplementation(module);
+            var result = GetBlock(module);
             return wrapLog("ok", result);
         }
 
         public abstract IBlock GetBlock<TPlatformModule>(TPlatformModule module) where TPlatformModule : class;
 
-        protected abstract IBlock GetBlockImplementation(IModule module);
+        protected abstract IBlock GetBlock(IModule module);
     }
 }

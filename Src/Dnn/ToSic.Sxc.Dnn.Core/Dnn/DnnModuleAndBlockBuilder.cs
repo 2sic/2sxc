@@ -15,12 +15,12 @@ namespace ToSic.Sxc.Dnn
     {
         public DnnModuleAndBlockBuilder(Generator<IModule> moduleGenerator, Generator<IContextOfBlock> contextGenerator, Generator<BlockFromModule> blockGenerator) : base(DnnConstants.LogName)
         {
-            ModuleGenerator = moduleGenerator;
-            ContextGenerator = contextGenerator;
+            _moduleGenerator = moduleGenerator;
+            _contextGenerator = contextGenerator;
             _blockGenerator = blockGenerator;
         }
-        protected readonly Generator<IModule> ModuleGenerator;
-        protected readonly Generator<IContextOfBlock> ContextGenerator;
+        private readonly Generator<IModule> _moduleGenerator;
+        private readonly Generator<IContextOfBlock> _contextGenerator;
         private readonly Generator<BlockFromModule> _blockGenerator;
         private ILog ParentLog => Log.Parent ?? Log;
 
@@ -29,11 +29,10 @@ namespace ToSic.Sxc.Dnn
         {
             var moduleInfo = new ModuleController().GetModule(moduleId, pageId, false);
             ThrowIfModuleIsNull(pageId, moduleId, moduleInfo);
-            var module = ((DnnModule)ModuleGenerator.New).Init(moduleInfo, Log);
+            var module = ((DnnModule)_moduleGenerator.New).Init(moduleInfo, Log);
             return module;
         }
-        protected override IBlock GetBlockImplementation(IModule module) 
-            => GetBlock((module as DnnModule)?.GetContents());
+        protected override IBlock GetBlock(IModule module) => GetBlock((module as DnnModule)?.GetContents());
 
 
         public override IBlock GetBlock<TPlatformModule>(TPlatformModule module)
@@ -51,7 +50,7 @@ namespace ToSic.Sxc.Dnn
         private IContextOfBlock InitDnnSiteModuleAndBlockContext(ModuleInfo dnnModule)
         {
             var wrapLog = Log.Call<IContextOfBlock>();
-            var context = ContextGenerator.New;
+            var context = _contextGenerator.New;
             context.Init(ParentLog);
             Log.Add($"Will try-swap module info of {dnnModule.ModuleID} into site");
             ((DnnSite)context.Site).TrySwap(dnnModule, ParentLog);
