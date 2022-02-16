@@ -4,6 +4,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
@@ -12,21 +13,21 @@ namespace ToSic.Sxc.Dnn.Run
 {
     public class DnnModuleBlockBuilder: HasLog<DnnModuleBlockBuilder>
     {
-        public DnnModuleBlockBuilder(IContextOfBlock context, BlockFromModule block) : base($"{DnnConstants.LogName}.CtxBlF")
+        public DnnModuleBlockBuilder(Generator<IContextOfBlock> contextGenerator, Generator<BlockFromModule> blockGenerator) : base($"{DnnConstants.LogName}.CtxBlF")
         {
-            Context = context;
-            _block = block;
+            ContextGenerator = contextGenerator;
+            _blockGenerator = blockGenerator;
         }
-        protected readonly IContextOfBlock Context;
-        private readonly BlockFromModule _block;
+        protected readonly Generator<IContextOfBlock> ContextGenerator;
+        private readonly Generator<BlockFromModule> _blockGenerator;
         protected bool AlreadyConfigured = false;
-        private ILog _parentLog;
+        private ILog ParentLog => Log.Parent ?? Log;
 
-        public new DnnModuleBlockBuilder Init(ILog parentLog)
-        {
-            _parentLog = parentLog;
-            return base.Init(parentLog);
-        }
+        //public override DnnModuleBlockBuilder Init(ILog parentLog)
+        //{
+        //    //_parentLog = parentLog;
+        //    return base.Init(parentLog);
+        //}
 
 
         public BlockFromModule GetBlockOfModule(ModuleInfo dnnModule)
@@ -35,23 +36,23 @@ namespace ToSic.Sxc.Dnn.Run
             if (dnnModule == null) throw new ArgumentNullException(nameof(dnnModule));
             if (AlreadyConfigured) throw new Exception($"{nameof(GetBlockOfModule)} can only be called once. Then you need a new service.");
 
-            var initializedCtx = InitDnnSiteModuleAndBlockContext(Context, dnnModule);
+            var initializedCtx = InitDnnSiteModuleAndBlockContext(ContextGenerator.New, dnnModule);
 
             AlreadyConfigured = true;
 
-            var result = _block.Init(initializedCtx, _parentLog);
+            var result = _blockGenerator.New.Init(initializedCtx, ParentLog);
             return wrapLog("ok", result);
 
         }
 
         private IContextOfBlock InitDnnSiteModuleAndBlockContext(IContextOfBlock context, ModuleInfo dnnModule)
         {
-            context.Init(_parentLog);
+            context.Init(ParentLog);
             var wrapLog = Log.Call<IContextOfBlock>();
             Log.Add($"Will try-swap module info of {dnnModule.ModuleID} into site");
-            ((DnnSite)context.Site).TrySwap(dnnModule, _parentLog);
+            ((DnnSite)context.Site).TrySwap(dnnModule, ParentLog);
             Log.Add("Will init module");
-            ((DnnModule)context.Module).Init(dnnModule, _parentLog);
+            ((DnnModule)context.Module).Init(dnnModule, ParentLog);
             return wrapLog(null, InitPageOnly(context));
         }
 
