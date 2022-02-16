@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Blocks.Output
         /// <summary>
         /// List of extracted assets - this must be processed later by the caller
         /// </summary>
-        public List<ClientAssetInfo> Assets { get; }= new List<ClientAssetInfo>();
+        public List<IClientAsset> Assets { get; }= new List<IClientAsset>();
         
         /// <summary>
         /// Run the sequence to extract assets
@@ -86,7 +86,7 @@ namespace ToSic.Sxc.Blocks.Output
 
                 // Register, then remember to remove later on
                 var url = FixUrlWithSpaces(match.Groups["Src"].Value);
-                Assets.Add(new ClientAssetInfo { Id = id, IsJs = false, PosInPage = posInPage, Priority = priority, Url = url });
+                Assets.Add(new ClientAsset { Id = id, IsJs = false, PosInPage = posInPage, Priority = priority, Url = url });
                 styleMatchesToRemove.Add(match);
             }
 
@@ -140,7 +140,7 @@ namespace ToSic.Sxc.Blocks.Output
                 }
 
                 // Register, then add to remove-queue
-                Assets.Add(new ClientAssetInfo { Id = id, IsJs = true, PosInPage = providerName, Priority = priority, Url = url });
+                Assets.Add(new ClientAsset { Id = id, IsJs = true, PosInPage = providerName, Priority = priority, Url = url });
                 scriptMatchesToRemove.Add(match);
             }
 
@@ -163,7 +163,7 @@ namespace ToSic.Sxc.Blocks.Output
             foreach (Match match in scriptMatches)
             {
                 // Register, then add to remove-queue
-                Assets.Add(new ClientAssetInfo { IsJs = true, Priority = order++, PosInPage = "inline", Content = match.Groups["Content"]?.Value, IsExternal = false});
+                Assets.Add(new ClientAsset { IsJs = true, Priority = order++, PosInPage = "inline", Content = match.Groups["Content"]?.Value, IsExternal = false});
                 scriptMatchesToRemove.Add(match);
             }
 

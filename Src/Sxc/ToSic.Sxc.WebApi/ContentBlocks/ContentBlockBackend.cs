@@ -37,7 +37,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
         #endregion
 
 
-        public RenderResult NewBlockAndRender(int parentId, string field, int sortOrder, string app = "", Guid? guid = null) 
+        public IRenderResult NewBlockAndRender(int parentId, string field, int sortOrder, string app = "", Guid? guid = null) 
         {
             var entityId = NewBlock(parentId, field, sortOrder, app, guid);
 
@@ -90,7 +90,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
 
             Log.Add("3. Add manual resources (fancybox etc.)");
             // First get all the parts out of HTML, as the configuration is still stored as plain HTML
-            var mergedFeatures  = string.Join("\n", result.ManualChanges.Select(mc => mc.Html));
+            var mergedFeatures  = string.Join("\n", result.FeaturesFromSettings.Select(mc => mc.Html));
             var optimizer = _optimizer.Value;
             if(optimizer is BlockResourceExtractor withInternal) 
                 withInternal.ExtractOnlyEnableOptimization = false;
@@ -114,9 +114,9 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             });
         }
 
-        private RenderResult RenderToResult(int templateId, string lang)
+        private IRenderResult RenderToResult(int templateId, string lang)
         {
-            var callLog = Log.Call<RenderResult>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
+            var callLog = Log.Call<IRenderResult>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
             //SetThreadCulture(lang);
 
             // if a preview templateId was specified, swap to that

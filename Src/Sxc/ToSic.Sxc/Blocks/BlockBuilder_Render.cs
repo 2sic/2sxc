@@ -19,10 +19,10 @@ namespace ToSic.Sxc.Blocks
 
         public string Render() => Run(true).Html;
 
-        public RenderResult Run(bool topLevel = true)
+        public IRenderResult Run(bool topLevel = true)
         {
             if (_result != null) return _result;
-            var wrapLog = Log.Call<RenderResult>();
+            var wrapLog = Log.Call<IRenderResult>();
             try
             {
                 var result = new RenderResult
@@ -49,18 +49,17 @@ namespace ToSic.Sxc.Blocks
                         pss.Activate(BuiltInFeatures.ToolbarsAuto.Key);
                     }
 
-                    result.Features = pss.Features.GetWithDependentsAndFlush(Log);
+                    result.Features = pss.Features.GetFeaturesWithDependentsAndFlush(Log);
 
                     // Head & Page Changes
                     result.HeadChanges = pss.GetHeadChangesAndFlush(Log);
                     result.PageChanges = pss.GetPropertyChangesAndFlush(Log);
-                    result.ManualChanges = pss.Features.ManualFeaturesGetNew(Log);
+                    result.FeaturesFromSettings = pss.Features.FeaturesFromSettingsGetNew(Log);
 
                     result.HttpStatusCode = pss.HttpStatusCode;
                     result.HttpStatusMessage = pss.HttpStatusMessage;
                 }
 
-                result.Ready = true;
                 _result = result;
             }
             catch (Exception ex)
@@ -72,7 +71,7 @@ namespace ToSic.Sxc.Blocks
             return wrapLog(null, _result);
         }
 
-        private RenderResult _result;
+        private IRenderResult _result;
 
         private string RenderInternal()
         {

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Search;
@@ -63,6 +61,6 @@ namespace ToSic.Sxc.Engines
         [PrivateApi]
         bool CompatibilityAutoLoadJQueryAndRVT { get; }
 
-        List<ClientAssetInfo> Assets { get; }
+        List<IClientAsset> Assets { get; }
     }
 }

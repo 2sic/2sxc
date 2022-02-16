@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Web.PageService
                 Log.Add("Found html and everything, will register");
                 // all ok so far
                 keysToRemove.Add(key);
-                PageServiceShared.Features.ManualFeatureAdd(new PageFeature(key, "", "", html: html));
+                PageServiceShared.Features.FeaturesFromSettingsAdd(new PageFeature(key, "", "", html: html));
             }
 
             // drop keys which were already taken care of

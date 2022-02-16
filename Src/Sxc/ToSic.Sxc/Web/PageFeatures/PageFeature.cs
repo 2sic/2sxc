@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Razor.Html5;
+using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Web.PageFeatures
 {
@@ -8,16 +8,13 @@ namespace ToSic.Sxc.Web.PageFeatures
     /// A feature describes something that can be enabled on a page. It can be a script, some css, an inline JS or combinations thereof.
     /// This is just the information which is prepared. It will be in a list of features to activate.
     /// </summary>
+    [PrivateApi("Internal / not final - neither name, namespace or anything")]
     public class PageFeature : IPageFeature
     {
         public PageFeature(
             string key, 
             string name, 
-            string description = null, 
-            //List<Script> scriptFiles = null, 
-            //List<Link> styleFiles = null,
-            //List<Script> scripts = null, 
-            //List<Style> styles = null,
+            string description = null,
             string[] requires = null,
             string html = null)
         {
@@ -25,11 +22,7 @@ namespace ToSic.Sxc.Web.PageFeatures
             Name = name ?? throw new Exception("name is required");
             Html = html;
             Description = description ?? "";
-            //ScriptFiles = scriptFiles ?? new List<Script>();
-            //StyleFiles = styleFiles ?? new List<Link>();
-            //Scripts = scripts ?? new List<Script>();
-            //Styles = styles ?? new List<Style>();
-            Requires = requires ?? new string[0];
+            Requires = requires ?? Array.Empty<string>();
         }
         
         /// <summary>
@@ -49,14 +42,6 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// </summary>
         public string Description { get; }
 
-        //public IList<Script> ScriptFiles { get; }
-
-        //public IList<Script> Scripts { get; }
-
-        //public IList<Link> StyleFiles { get; }
-
-        //public IList<Style> Styles { get; }
-        
         /// <summary>
         /// List of other features required to run this feature.
         /// </summary>

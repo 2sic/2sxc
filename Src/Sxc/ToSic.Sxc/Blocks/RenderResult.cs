@@ -6,49 +6,38 @@ using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Blocks
 {
-    /// <summary>
-    /// WIP - should contain everything which results from a render
-    /// Incl. all the features that are activated, page changes etc.
-    /// It's kind of like a bundle of things the CMS must then do to deliver to the page
-    /// </summary>
+    /// <inheritdoc />
     [PrivateApi]
-    public class RenderResult
+    public class RenderResult : IRenderResult
     {
-        /// <summary>
-        /// True if the work has been done and this is populated
-        /// </summary>
-        public bool Ready;
+        /// <inheritdoc />
+        public string Html { get; set; }
 
-        /// <summary>
-        /// The resulting HTML to add to the page
-        /// </summary>
-        public string Html;
+        /// <inheritdoc />
+        public IList<IPageFeature> Features { get; set; }
 
-        /// <summary>
-        /// The features which are activated
-        /// </summary>
-        public List<IPageFeature> Features;
+        /// <inheritdoc />
+        public IList<IClientAsset> Assets { get; set; }
 
-        /// <summary>
-        /// Assets which must be added to the page
-        /// </summary>
-        public List<ClientAssetInfo> Assets;
+        /// <inheritdoc />
+        public IList<PagePropertyChange> PageChanges { get; set; }
 
-        public IList<PagePropertyChange> PageChanges;
+        /// <inheritdoc />
+        public IList<HeadChange> HeadChanges { get; set; }
 
-        public IList<HeadChange> HeadChanges;
+        /// <inheritdoc />
+        public IList<IPageFeature> FeaturesFromSettings { get; set; }
 
-        public IList<IPageFeature> ManualChanges;
+        /// <inheritdoc />
+        public int? HttpStatusCode { get; set; }
 
-        public int? HttpStatusCode;
-        public string HttpStatusMessage;
+        /// <inheritdoc />
+        public string HttpStatusMessage { get; set; }
+
+        /// <inheritdoc />
+        public IList<int> DependentApps { get; } = new List<int>();
 
 
-        /// <summary>
-        /// WIP Additional infos
-        /// </summary>
-        public List<int> DependentApps = new List<int>();
-
-        public int ModuleId;
+        public int ModuleId { get; set; }
     }
 }

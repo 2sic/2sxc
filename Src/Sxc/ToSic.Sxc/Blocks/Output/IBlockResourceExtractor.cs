@@ -23,6 +23,6 @@ namespace ToSic.Sxc.Blocks.Output
         /// <summary>
         /// The assets which were extracted from the process
         /// </summary>
-        List<ClientAssetInfo> Assets { get; }
+        List<IClientAsset> Assets { get; }
     }
 }

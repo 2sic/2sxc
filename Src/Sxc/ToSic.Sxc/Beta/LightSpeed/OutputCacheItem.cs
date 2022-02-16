@@ -4,7 +4,7 @@ namespace ToSic.Sxc.Beta.LightSpeed
 {
     public class OutputCacheItem
     {
-        public RenderResult Data;
+        public IRenderResult Data;
 
         public bool EnforcePre1025 = true;
 

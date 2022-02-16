@@ -2,15 +2,15 @@
 {
     public struct PagePropertyChange
     {
-        public PageChangeModes ChangeMode;
+        public PageChangeModes ChangeMode { get; set; }
         
-        internal PageProperties Property;
-        
-        public string Value;
+        internal PageProperties Property { get; set; }
+
+        public string Value { get; set; }
 
         /// <summary>
         /// This is part of the original property, which would be replaced.
         /// </summary>
-        public string ReplacementIdentifier;
+        public string ReplacementIdentifier { get; set; }
     }
 }

@@ -162,7 +162,7 @@ namespace ToSic.Sxc.Engines
         [PrivateApi] public bool ActivateJsApi { get; private set; }
 
         /// <inheritdoc/>
-        [PrivateApi] public List<ClientAssetInfo> Assets => Helpers.BlockResourceExtractor.Assets;
+        [PrivateApi] public List<IClientAsset> Assets => Helpers.BlockResourceExtractor.Assets;
 
 
         private void CheckExpectedTemplateErrors()
