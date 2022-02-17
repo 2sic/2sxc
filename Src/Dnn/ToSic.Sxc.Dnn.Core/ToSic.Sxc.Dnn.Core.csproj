@@ -105,7 +105,6 @@
     <Compile Include="Custom.Dnn\Code12.cs" />
     <Compile Include="Dnn\Adam\DnnAdam.cs" />
     <Compile Include="Dnn\Cms\DnnPagePublishingResolver.cs" />
-    <Compile Include="Dnn\Code\DnnDynamicCodeService.cs" />
     <Compile Include="Dnn\Code\IDnnDynamicCodeAdditions.cs" />
     <Compile Include="Dnn\DnnConstants.cs" />
     <Compile Include="Dnn\DnnEnvironmentLogger.cs" />
