@@ -8,7 +8,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks
 {
@@ -54,7 +53,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
 
         public override IBlock GetBlock<TPlatformModule>(TPlatformModule module)
         {
-            var wrapLog = Log.Call<BlockFromModule>();
+            var wrapLog = Log.Call<IBlock>();
             if (module == null) throw new ArgumentNullException(nameof(module));
             if (!(module is Module oqtModule)) throw new ArgumentException("Given data is not a module");
             Log.Add($"Module: {oqtModule.ModuleId}");

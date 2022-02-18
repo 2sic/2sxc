@@ -6,11 +6,11 @@ using System.Collections.Generic;
 
 namespace ToSic.Sxc.Oqt.Client.Services
 {
-    public class PrerenderService : IPrerenderService
+    public class OqtPrerenderService : IPrerenderService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public PrerenderService(IHttpContextAccessor httpContextAccessor)
+        public OqtPrerenderService(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Client.Services
         private PageState _pageState;
         private ModuleBase.Logger _logger;
 
-        public PrerenderService Init(PageState pageState, ModuleBase.Logger logger)
+        public OqtPrerenderService Init(PageState pageState, ModuleBase.Logger logger)
         {
             _pageState = pageState;
             _logger = logger;

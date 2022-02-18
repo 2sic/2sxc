@@ -159,11 +159,9 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddSingleton<GlobalTypesCheck>();
 
             // ToSic.Sxc.Oqt.Client
-            services.TryAddScoped<IPrerenderService, PrerenderService>();
+            services.TryAddScoped<IPrerenderService, OqtPrerenderService>();
 
             // v13
-            //services.TryAddTransient<DnnModuleBlockBuilder>();
-            services.TryAddTransient<IDynamicCodeService, DynamicCodeService>();
             services.TryAddTransient<IModuleAndBlockBuilder, OqtModuleAndBlockBuilder>();
 
             return services;

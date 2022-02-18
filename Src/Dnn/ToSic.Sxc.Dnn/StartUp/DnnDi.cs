@@ -198,8 +198,6 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<IMailService, DnnMailService>();
 
             // v13
-            //services.TryAddTransient<DnnModuleBlockBuilder>();
-            services.TryAddTransient<IDynamicCodeService, DynamicCodeService>();
             services.TryAddTransient<IModuleAndBlockBuilder, DnnModuleAndBlockBuilder>();
 
             return services;

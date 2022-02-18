@@ -146,9 +146,9 @@ namespace ToSic.Sxc
             services.TryAddScoped(typeof(PageScopedService<>));
 
             // v13 DynamicCodeService
-            services.TryAddTransient<DynamicCodeService.Dependencies>();
-
             services.TryAddTransient<IInPageEditingSystem, InPageEditingHelper>();
+            services.TryAddTransient<DynamicCodeService.Dependencies>();
+            services.TryAddTransient<IDynamicCodeService, DynamicCodeService>();
 
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need

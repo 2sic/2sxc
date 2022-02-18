@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Oqt.Client.Services
 {
     public interface IPrerenderService
     {
-        PrerenderService Init(PageState pageState, ModuleBase.Logger logger);
+        OqtPrerenderService Init(PageState pageState, ModuleBase.Logger logger);
         string GetSystemHtml();
     }
 }
