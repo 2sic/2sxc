@@ -55,9 +55,15 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         {
             var wrapLog = Log.Call<IBlock>();
             if (module == null) throw new ArgumentNullException(nameof(module));
-            if (!(module is Module oqtModule)) throw new ArgumentException("Given data is not a module");
-            Log.Add($"Module: {oqtModule.ModuleId}");
 
+            var oqtModule = module switch
+            {
+                Module oModule => oModule,
+                PageModule oPageModule => oPageModule.Module,
+                _ => throw new ArgumentException("Given data is not a module")
+            };
+
+            Log.Add($"Module: {oqtModule.ModuleId}");
             var initializedCtx = InitOqtSiteModuleAndBlockContext(oqtModule);
             var result = _blockGenerator.New.Init(initializedCtx, ParentLog);
             return wrapLog("ok", result);
