@@ -1,6 +1,8 @@
-﻿using System;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using System;
+using ToSic.Sxc.Context;
+using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Integration
 {
@@ -45,5 +47,15 @@ namespace ToSic.Sxc.Oqt.Server.Integration
                 return fallback;
             }
         }
+
+        public int TryGetPageId() =>
+            GetTypedHeader(ContextConstants.PageIdKey,
+                GetQueryString(WebApiConstants.PageId,
+                    GetRouteValuesString(WebApiConstants.PageId, Eav.Constants.NullId)));
+
+        public int TryGetModuleId() =>
+            GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderInstanceId,
+                GetQueryString(WebApiConstants.ModuleId,
+                    GetRouteValuesString(WebApiConstants.ModuleId, Eav.Constants.NullId)));
     }
 }

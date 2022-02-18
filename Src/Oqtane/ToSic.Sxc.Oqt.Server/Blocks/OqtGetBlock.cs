@@ -62,19 +62,8 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             var wrapLog = Log.Call<IBlock>();
 
             // WebAPI calls can contain the original parameters that made the page, so that views can respect that
-            var moduleId = requestHelper.GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderInstanceId, -1);
-            var pageId = requestHelper.GetTypedHeader(ContextConstants.PageIdKey, -1);
-
-            if (moduleId == -1 || pageId == -1)
-            {
-                moduleId = requestHelper.GetQueryString(WebApiConstants.ModuleId, requestHelper.GetRouteValuesString(WebApiConstants.ModuleId, -1));
-                pageId = requestHelper.GetQueryString(WebApiConstants.PageId, requestHelper.GetRouteValuesString(WebApiConstants.PageId, -1));
-
-                if (moduleId == -1 || pageId == -1)
-                    return wrapLog("not found", null);
-
-                Log.Add($"Found page/module {pageId}/{moduleId} in route");
-            }
+            var moduleId = TryGetModuleId();
+            var pageId = TryGetPageId();
 
             var module = _modRepoLazy.Value.GetModule(moduleId);
             var ctx = _serviceProvider.Build<IContextOfBlock>().Init(pageId, module, Log);
@@ -90,6 +79,28 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             Log.Add($"Inner Content: {contentBlockId}");
             var entityBlock = _serviceProvider.Build<BlockFromEntity>().Init(block, contentBlockId, Log);
             return wrapLog("found inner block", entityBlock);
+        }
+
+        private int TryGetPageId()
+        {
+            var wrapLog = Log.Call<int>();
+
+            var pageId = requestHelper.TryGetPageId();
+
+            return pageId == Eav.Constants.NullId
+                ? wrapLog("error, pageId not found", Eav.Constants.NullId) 
+                : wrapLog("ok, found pageId", pageId);
+        }
+
+        private int TryGetModuleId()
+        {
+            var wrapLog = Log.Call<int>();
+
+            var moduleId = requestHelper.TryGetModuleId();
+
+            return moduleId == Eav.Constants.NullId
+                ? wrapLog("error, moduleId not found", Eav.Constants.NullId)
+                : wrapLog("ok, found moduleId", moduleId);
         }
     }
 }

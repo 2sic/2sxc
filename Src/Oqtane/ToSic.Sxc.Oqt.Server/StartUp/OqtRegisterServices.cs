@@ -14,6 +14,7 @@ using ToSic.Eav.Security;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
@@ -159,6 +160,11 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
             // ToSic.Sxc.Oqt.Client
             services.TryAddScoped<IPrerenderService, PrerenderService>();
+
+            // v13
+            //services.TryAddTransient<DnnModuleBlockBuilder>();
+            services.TryAddTransient<IDynamicCodeService, DynamicCodeService>();
+            services.TryAddTransient<IModuleAndBlockBuilder, OqtModuleAndBlockBuilder>();
 
             return services;
         }
