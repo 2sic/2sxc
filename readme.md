@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/wiki/2sic/2sxc/assets/logos/2sxc12/2sxc12-500.png" width="200px" align="right">
+<img src="https://raw.githubusercontent.com/2sic/2sxc-docs/master/docs/assets/logos/v13/2sxc13-500.png" width="200px" align="right">
 
 # 2sxc 13 - CMS & App-Engine for DNN and Oqtane
 

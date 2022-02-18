@@ -15,4 +15,4 @@ Visit [2sxc Blogs](https://2sxc.org/en/blog) for news, updates, articles.
 
 Visit https://github.com/2sic/2sxc/releases for the latest releases.
 
-![2sxc 13](https://raw.githubusercontent.com/wiki/2sic/2sxc/assets/logos/2sxc12/2sxc12-500.png)
+![2sxc 13](https://raw.githubusercontent.com/2sic/2sxc-docs/master/docs/assets/logos/v13/2sxc13-500.png)
