@@ -19,8 +19,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             Generator<IContextOfBlock> contextGenerator,
             Generator<BlockFromModule> blockGenerator,
             Generator<IModuleRepository> moduleRepositoryGenerator,
-            RequestHelper requestHelper,
-            Generator<ILinkPaths> linkPathsGenerator
+            RequestHelper requestHelper
         ) : base(OqtConstants.OqtLogPrefix)
         {
             _moduleGenerator = moduleGenerator;
@@ -28,7 +27,6 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             _blockGenerator = blockGenerator;
             _moduleRepositoryGenerator = moduleRepositoryGenerator;
             _requestHelper = requestHelper;
-            _linkPathsGenerator = linkPathsGenerator;
         }
 
         private readonly Generator<IModule> _moduleGenerator;
@@ -36,7 +34,6 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         private readonly Generator<BlockFromModule> _blockGenerator;
         private readonly Generator<IModuleRepository> _moduleRepositoryGenerator;
         private readonly RequestHelper _requestHelper;
-        private readonly Generator<ILinkPaths> _linkPathsGenerator;
         private ILog ParentLog => Log.Parent ?? Log;
 
         /// <summary>
@@ -84,7 +81,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             var wrapLog = Log.Call<IContextOfBlock>();
             // Collect / assemble page information
             context.Page.Init(_requestHelper.TryGetPageId());
-            var url = (_linkPathsGenerator.New).GetCurrentRequestUrl();
+            var url = context.Page.Url;
             return wrapLog(url, context);
         }
     }
