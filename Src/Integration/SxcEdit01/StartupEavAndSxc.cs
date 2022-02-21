@@ -2,6 +2,7 @@
 using IntegrationSamples.SxcEdit01.Adam;
 using IntegrationSamples.SxcEdit01.Controllers;
 using IntegrationSamples.SxcEdit01.Integration;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Configuration;
@@ -37,7 +38,7 @@ namespace IntegrationSamples.SxcEdit01
                     .AddAdam()
                     .AddImplementations()
                     .AddAdamWebApi<string, string>()
-                    .AddSxcWebApi()
+                    .AddSxcWebApi<IActionResult>()
                     .AddSxcCore()
                     .AddEav();
             //});

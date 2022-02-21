@@ -62,10 +62,15 @@ namespace IntegrationSamples.BasicEav01
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+
+                // #2sxcIntegration - enable insights controllers
+                endpoints.MapControllers();
             });
+
         }
     }
 }

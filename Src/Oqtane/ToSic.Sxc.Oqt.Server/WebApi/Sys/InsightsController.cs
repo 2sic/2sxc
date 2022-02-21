@@ -3,7 +3,7 @@ using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 
-namespace ToSic.Sxc.Oqt.Server.WebApi
+namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
     // Release routes
     [Route(WebApiConstants.ApiRoot + "/sys/[controller]/")]
