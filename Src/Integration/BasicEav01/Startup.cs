@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -21,16 +22,27 @@ namespace IntegrationSamples.BasicEav01
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Enable EAV
             services.AddEav();
+
+            // RazorPages - standard .net core MVC feature
             services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // ----- Start EAV stuff -----
+            var serviceProvider = app.ApplicationServices;
             var connectionString = Configuration.GetConnectionString("SiteSqlServer");
-            app.ApplicationServices.Build<IDbConfiguration>().ConnectionString = connectionString;
+            serviceProvider.Build<IDbConfiguration>().ConnectionString = connectionString;
+            var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
+            globalConfig.GlobalFolder = Path.Combine(env.ContentRootPath, "sys-2sxc");
+            serviceProvider.Build<SystemLoader>().StartUp();
+            // ----- Start EAV stuff -----
 
+
+            // Standard Stuff
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
