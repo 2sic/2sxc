@@ -88,6 +88,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             var sysLoader = serviceProvider.Build<SystemLoader>();
             sysLoader.StartUp();
 
+            // TODO: @STV - should we really add an error handler? I assume Oqtane has this already
             app.UseExceptionHandler("/error");
 
             // routing middleware
