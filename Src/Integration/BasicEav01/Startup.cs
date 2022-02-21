@@ -24,7 +24,7 @@ namespace IntegrationSamples.BasicEav01
         /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
-            // Enable EAV
+            // #2sxcIntegration Enable EAV
             services.AddEav();
 
             // RazorPages - standard .net core MVC feature
@@ -36,14 +36,19 @@ namespace IntegrationSamples.BasicEav01
         /// </summary>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // ----- Start EAV stuff -----
+            // ----- Start EAV stuff #2sxcIntegration -----
             var serviceProvider = app.ApplicationServices;
-            var connectionString = _connStringFromConfig;
-            serviceProvider.Build<IDbConfiguration>().ConnectionString = connectionString;
+            
+            // Set Connection String
+            serviceProvider.Build<IDbConfiguration>().ConnectionString = _connStringFromConfig;
+
+            // Set global path where it will find the .data folder
             var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
             globalConfig.GlobalFolder = Path.Combine(env.ContentRootPath, "sys-2sxc");
+
+            // Trigger start where the data etc. will be loaded & initialized
             serviceProvider.Build<SystemLoader>().StartUp();
-            // ----- Start EAV stuff -----
+            // ----- End EAV stuff #2sxcIntegration -----
 
 
             // Standard Stuff
