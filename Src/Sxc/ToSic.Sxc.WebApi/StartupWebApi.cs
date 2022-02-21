@@ -9,7 +9,6 @@ using ToSic.Eav.WebApi.Features;
 using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Eav.WebApi.Languages;
 using ToSic.Eav.WebApi.Licenses;
-using ToSic.Eav.WebApi.Sys;
 using ToSic.Eav.WebApi.Zone;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.ImportExport;
@@ -56,17 +55,17 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<EditSaveBackend>();
             services.TryAddTransient<AppViewPickerBackend>();
             services.TryAddTransient<ContentBlockBackend>();
-            services.TryAddTransient<FeaturesBackend>();
-            services.TryAddTransient<LicenseBackend>();
+            //services.TryAddTransient<FeaturesBackend>();
+            //services.TryAddTransient<LicenseBackend>();
             services.TryAddTransient<UsageBackend>();
-            services.TryAddTransient<LanguagesBackend>();
+            //services.TryAddTransient<LanguagesBackend>();
             services.TryAddTransient<QueryBackend>();
 
             // APIs
             services.TryAddTransient<ApiExplorerBackend<THttpResponseType>>();
 
             // Internal API helpers
-            services.TryAddTransient<Insights>();
+            //services.TryAddTransient<Insights>();
             services.TryAddTransient<AppContent>();
             services.TryAddTransient<SxcPagePublishing>();
             services.TryAddTransient<ExportApp>();
@@ -90,7 +89,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<AdamCode>();
 
             // new v13
-            services.TryAddTransient<ZoneBackend>();
+            //services.TryAddTransient<ZoneBackend>();
 
             // New v13 - try to reduce Dnn/Oqtane code to the max, by creating ControllerReal objects which do everything
             services.TryAddTransient(typeof(AppControllerReal<>));
