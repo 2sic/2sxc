@@ -3,19 +3,19 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
-using ToSic.Sxc.WebApi.Plumbing;
+using ToSic.Eav.WebApi.Plumbing;
 
 namespace ToSic.Sxc.Dnn
 {
-    public class DnnResponseMaker: ResponseMaker<HttpResponseMessage>
+    public class ResponseMakerNetFramework: ResponseMaker<HttpResponseMessage>
     {
         public void Init(System.Web.Http.ApiController apiController) => _apiController = apiController;
 
         private System.Web.Http.ApiController _apiController;
 
-        public System.Web.Http.ApiController ApiController => _apiController ??
-                                                              throw new Exception(
-                                                                  $"Accessing the {nameof(ApiController)} in the {nameof(DnnResponseMaker)} requires it to be Init first.");
+        private System.Web.Http.ApiController ApiController
+            => _apiController ?? throw new Exception(
+                $"Accessing the {nameof(ApiController)} in the {nameof(ResponseMakerNetFramework)} requires it to be Init first.");
 
         public override HttpResponseMessage InternalServerError(string message) 
             => Error((int)HttpStatusCode.InternalServerError, message);

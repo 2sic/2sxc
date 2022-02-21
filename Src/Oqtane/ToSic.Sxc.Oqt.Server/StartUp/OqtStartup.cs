@@ -9,6 +9,7 @@ using Oqtane.Infrastructure;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
@@ -51,8 +52,9 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                 .AddSxcOqtane()                 // Always first add your override services
                 .AddSxcRazor()                  // this is the .net core Razor compiler
                 .AddAdamWebApi<int, int>()      // This is used to enable ADAM WebAPIs
-                .AddSxcWebApi<IActionResult>()  // This adds all the standard backend services for WebAPIs to work
+                .AddSxcWebApi()                 // This adds all the standard backend services for WebAPIs to work
                 .AddSxcCore()                   // Core 2sxc services
+                .AddEavApiExplorer<IActionResult>()
                 .AddEav()                       // Core EAV services
                 .AddOqtAppWebApi()              // Oqtane App WebAPI stuff
                 .AddRazorBlade();               // RazorBlade helpers for Razor in the edition used by Oqtane

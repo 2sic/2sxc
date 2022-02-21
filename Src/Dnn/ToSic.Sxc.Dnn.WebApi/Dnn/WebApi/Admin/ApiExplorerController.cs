@@ -8,7 +8,7 @@ using System.Web.Hosting;
 using System.Web.Http;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.ApiExplorer;
-using ToSic.Sxc.WebApi.Plumbing;
+using ToSic.Eav.WebApi.Plumbing;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             var wrapLog = Log.Call<HttpResponseMessage>();
 
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (DnnResponseMaker)GetService<ResponseMaker<HttpResponseMessage>>() ;
+            var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>() ;
             responseMaker.Init(this);
             
             var backend = GetService<ApiExplorerBackend<HttpResponseMessage>>();

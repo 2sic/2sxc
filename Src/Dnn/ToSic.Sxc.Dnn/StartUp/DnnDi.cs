@@ -6,7 +6,6 @@ using ToSic.Eav;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
@@ -15,8 +14,10 @@ using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Repositories;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Context;
+using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
@@ -43,7 +44,6 @@ using ToSic.Sxc.Search;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.Plumbing;
 using Type = System.Type;
 
 
@@ -65,8 +65,9 @@ namespace ToSic.Sxc.Dnn.StartUp
             var appsCache = GetAppsCacheOverride();
             services.AddDnn(appsCache)
                 .AddAdamWebApi<int, int>()
-                .AddSxcWebApi<HttpResponseMessage>()
+                .AddSxcWebApi()
                 .AddSxcCore()
+                .AddEavApiExplorer<HttpResponseMessage>()
                 .AddEav()
                 .AddRazorBlade();
 
@@ -116,8 +117,8 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<IZoneMapper, DnnZoneMapper>();
 
             services.TryAddTransient<IBlockResourceExtractor, DnnBlockResourceExtractor>();
-            services.TryAddTransient<AppPermissionCheck, DnnPermissionCheck>();
-            services.TryAddTransient<DnnPermissionCheck>();
+            //services.TryAddTransient<AppPermissionCheck, DnnPermissionCheck>();
+            //services.TryAddTransient<DnnPermissionCheck>();
             services.TryAddTransient<IEnvironmentPermission, DnnEnvironmentPermission>();
 
             services.TryAddTransient<IDnnContext, DnnContext>();
@@ -139,7 +140,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             // Settings / WebApi stuff
             services.TryAddTransient<IUiContextBuilder, DnnUiContextBuilder>();
             services.TryAddTransient<IApiInspector, DnnApiInspector>();
-            services.TryAddScoped<ResponseMaker<HttpResponseMessage>, DnnResponseMaker>(); // must be scoped, as the api-controller must init this for use in other parts
+            services.TryAddScoped<ResponseMaker<HttpResponseMessage>, ResponseMakerNetFramework>(); // must be scoped, as the api-controller must init this for use in other parts
 
             // new #2160
             services.TryAddTransient<AdamSecurityChecksBase, DnnAdamSecurityChecks>();

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using ToSic.Sxc.WebApi.Plumbing;
+using ToSic.Eav.WebApi.Plumbing;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi
 {
@@ -27,9 +27,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
         public override IActionResult Error(int statusCode, Exception exception)
             => ApiController.Problem(exception.Message, null, statusCode);
 
-        public override IActionResult Json(object json)
-        {
-            return ApiController.Json(json);
-        }
+        public override IActionResult Json(object json) => ApiController.Json(json);
     }
 }

@@ -33,7 +33,7 @@ namespace ToSic.Sxc.WebApi
 {
     public static class StartupWebApi
     {
-        public static IServiceCollection AddSxcWebApi<THttpResponseType>(this IServiceCollection services)
+        public static IServiceCollection AddSxcWebApi(this IServiceCollection services)
         {
             // The top version should be deprecated soon, so we just use DataToDictionary or an Interface instead
             services.TryAddTransient<ConvertToEavLight, ConvertToEavLightWithCmsInfo>(); // this is needed for all the EAV uses of conversion
@@ -61,8 +61,8 @@ namespace ToSic.Sxc.WebApi
             //services.TryAddTransient<LanguagesBackend>();
             services.TryAddTransient<QueryBackend>();
 
-            // APIs
-            services.TryAddTransient<ApiExplorerBackend<THttpResponseType>>();
+            //// APIs
+            //services.TryAddTransient<ApiExplorerBackend<THttpResponseType>>();
 
             // Internal API helpers
             //services.TryAddTransient<Insights>();
