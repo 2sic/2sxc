@@ -1,8 +1,5 @@
 ﻿@page
-@using Microsoft.Extensions.Configuration
 @using ToSic.Eav.Apps
-@model PrivacyModel
-@inject IConfiguration Config
 @inject IAppStates AppStates
 @{
     ViewData["Title"] = "First Read Data from EAV";
@@ -14,6 +11,7 @@
     var appState = AppStates.Get(new AppIdentity(zoneId, appId));
     var firstItem = appState.List.FirstOrDefault();
 }
+
 <h1>@ViewData["Title"]</h1>
 
 <p>
@@ -24,8 +22,6 @@
   Reading data from EAV Zone/App: @zoneId / @appId
 </div>
 
-@{
-}
 <ol>
   <li>State Object: @appState</li>
   <li>List Object: @appState.List</li>

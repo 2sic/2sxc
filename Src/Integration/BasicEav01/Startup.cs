@@ -14,12 +14,14 @@ namespace IntegrationSamples.BasicEav01
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _connStringFromConfig = configuration.GetConnectionString("SiteSqlServer");
         }
 
-        public IConfiguration Configuration { get; }
+        private readonly string _connStringFromConfig;
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
             // Enable EAV
@@ -29,12 +31,14 @@ namespace IntegrationSamples.BasicEav01
             services.AddRazorPages();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // ----- Start EAV stuff -----
             var serviceProvider = app.ApplicationServices;
-            var connectionString = Configuration.GetConnectionString("SiteSqlServer");
+            var connectionString = _connStringFromConfig;
             serviceProvider.Build<IDbConfiguration>().ConnectionString = connectionString;
             var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
             globalConfig.GlobalFolder = Path.Combine(env.ContentRootPath, "sys-2sxc");
@@ -56,11 +60,8 @@ namespace IntegrationSamples.BasicEav01
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
