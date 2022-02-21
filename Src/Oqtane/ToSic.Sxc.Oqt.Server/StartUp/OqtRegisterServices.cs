@@ -45,7 +45,6 @@ using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp
 {
-    // ReSharper disable once InconsistentNaming
     internal static partial class OqtRegisterServices
     {
         public static IServiceCollection AddSxcOqtane(this IServiceCollection services)
@@ -55,15 +54,18 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
             services.TryAddScoped<ISite, OqtSite>();
             services.TryAddScoped<IPage, OqtPage>();
+            // TODO: @STV - this could cause a bug, because OqtSite and ISite are both scoped, but no the same object
             services.TryAddScoped<OqtSite>();
             services.TryAddScoped<IUser, OqtUser>();
             services.TryAddTransient<IModule, OqtModule>();
             services.TryAddTransient<OqtModule>();
-            services.TryAddTransient<OqtGetBlock>();    // WIP - should replace most of OqtState
+            services.TryAddTransient<OqtGetBlock>();
             services.TryAddScoped<RequestHelper>();
 
+            // TODO: @STV - this could cause a bug - probably better not to mix this
             services.TryAddTransient<IZoneCultureResolver, OqtSite>();
             services.TryAddTransient<IZoneMapper, OqtZoneMapper>();
+            // TODO: @STV - probably just use the IZoneMapper and not register again
             services.TryAddTransient<OqtZoneMapper>();
             services.TryAddTransient<AppPermissionCheck, OqtPermissionCheck>();
             services.TryAddTransient<IEnvironmentPermission, OqtEnvironmentPermission>();
@@ -71,6 +73,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddTransient<ILinkHelper, OqtLinkHelper>();
             services.TryAddTransient<DynamicCodeRoot, OqtaneDynamicCodeRoot>();
             services.TryAddTransient<IPlatformModuleUpdater, OqtModuleUpdater>();
+            // Installation: Helper to ensure the installation is complete
             services.TryAddTransient<IEnvironmentInstaller, OqtEnvironmentInstaller>();
             services.TryAddTransient<ILookUpEngineResolver, OqtGetLookupEngine>();
             services.TryAddTransient<IPlatformInfo, OqtPlatformContext>();
@@ -95,31 +98,27 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddTransient<IAdamFileSystem<int, int>, OqtAdamFileSystem>();
             services.TryAddTransient<AdamManager, AdamManager<int, int>>();
 
-            // Still pending...
+            // Import / Export
             services.TryAddTransient<XmlExporter, OqtXmlExporter>();
             services.TryAddTransient<IImportExportEnvironment, OqtImportExportEnvironment>();
 
-            // View Builder
+            // Views / Templates / Razor: View Builder
             services.TryAddTransient<OqtSxcViewBuilder>();
 
             // Site State Initializer for APIs etc. to ensure that the SiteState exists and is correctly preloaded
             services.TryAddTransient<SiteStateInitializer>();
 
-            // Experimental - it seems that Blazor hides the url params in the request
+            // Views / Templates / Razor: Get url params in the request
             services.TryAddTransient<IHttp, HttpBlazor>();
 
             // Resolve appFolder when appName is "auto"
             services.TryAddTransient<OqtAppFolder>();
             services.TryAddTransient<AppAssetsDependencies>();
 
-            // Lookup
-            services.TryAddTransient<QueryStringLookUp>();
-            services.TryAddTransient<SiteLookUp>();
-            services.TryAddTransient<OqtPageLookUp>();
-            services.TryAddTransient<OqtModuleLookUp>();
-            services.TryAddScoped<UserLookUp>();
+            // Lookups / LookUp Engine:
+            services.AddOqtLookUpSources();
 
-            // Polymorphism Resolvers
+            // Views / Templates / Razor: Polymorphism Resolvers
             services.TryAddTransient<Sxc.Polymorphism.Koi>();
             services.TryAddTransient<Polymorphism.Permissions>();
 
@@ -133,14 +132,14 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             // action filter instead of global option AllowEmptyInputInBodyModelBinding = true
             services.AddTransient<OptionalBodyFilter>();
 
-            // new in v12 - .net specific code compiler
+            // App WebApi: .net specific code compiler
             services.TryAddTransient<CodeCompiler, CodeCompilerNetCore>();
 
-            // APiExplorer
+            // ApiExplorer
             services.TryAddTransient<IApiInspector, OqtApiInspector>();
             services.TryAddScoped<ResponseMaker<IActionResult>, OqtResponseMaker>();
 
-            // new in v12 - integrate KOI
+            // Views / Templates / Razor: Integrate KOI
             try
             {
                 services.ActivateKoi2Di();
@@ -149,13 +148,11 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
             services.TryAddTransient<OqtModuleHelper>();
 
-            // v12.05
+            // Oqtane Integration
             services.TryAddTransient<ILogService, OqtLogService>();
-
-            // v12.05
             services.TryAddTransient<IMailService, OqtMailService>();
 
-            // v12.06
+            // Installation: Verify the Razor Helper DLLs are available
             services.TryAddSingleton<GlobalTypesCheck>();
 
             // ToSic.Sxc.Oqt.Client
@@ -167,7 +164,16 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             return services;
         }
 
+        private static IServiceCollection AddOqtLookUpSources(this IServiceCollection services)
+        {
+            services.TryAddTransient<QueryStringLookUp>();
+            services.TryAddTransient<SiteLookUp>();
+            services.TryAddTransient<OqtPageLookUp>();
+            services.TryAddTransient<OqtModuleLookUp>();
+            services.TryAddScoped<UserLookUp>();
 
+            return services;
+        }
 
     }
 }

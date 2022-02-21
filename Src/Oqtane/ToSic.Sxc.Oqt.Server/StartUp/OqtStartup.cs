@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
     public class OqtStartup : IServerStartup
     {
         public IConfiguration Configuration { get; }
-        public IWebHostEnvironment HostEnvironment { get; set; }
+        //public IWebHostEnvironment HostEnvironment { get; set; }
 
         public OqtStartup()
         {
@@ -34,14 +34,10 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // try to enable dynamic razor compiling - still WIP
+            // 1. Enable dynamic razor compiling
             services.AddRazorPages()            
                 .AddRazorRuntimeCompilation(options =>
                 {
-                    // Add razor pages dynamic compilation WIP
-                    //var ContentRootPath = Path.GetFullPath(Path.Combine(HostEnvironment.ContentRootPath, OqtConstants.ContentSubfolder));
-                    //options.FileProviders.Add(new PhysicalFileProvider(ContentRootPath));
-
                     var dllLocation = typeof(Oqtane.Server.Program).Assembly.Location;
                     var dllPath = Path.GetDirectoryName(dllLocation);
                     foreach (var dllFile in Directory.GetFiles(dllPath, "*.dll"))
@@ -49,30 +45,17 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                 });
 
             // TODO: STV - MAKE SURE OUR CONTROLLERS RULES ONLY APPLY TO OURS, NOT TO override rules on normal Oqtane controllers
-            // enable webapi - include all controllers in the Sxc.Mvc assembly
-            //services
-            //    .AddControllers(options =>
-            //    {
-            //        // options.AllowEmptyInputInBodyModelBinding = true; // Added with attribute
-            //        // options.Filters.Add(new HttpResponseExceptionFilter()); // Added with attribute
-            //    });
-            // This is needed to preserve compatibility with previous api usage
-            //.AddNewtonsoftJson(options =>
-            //{
-            //    // this ensures that c# objects with Pascal-case keep that
-            //    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-            //    Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings);
-            //});
 
+            // 2. Register EAV & 2sxc
             services
-                .AddSxcOqtane()
-                .AddSxcRazor()
-                .AddAdamWebApi<int, int>()
-                .AddSxcWebApi<IActionResult>()
-                .AddSxcCore()
-                .AddEav()
-                .AddAppApi() // 2sxc Oqtane dyncode app api.
-                .AddRazorBlade();
+                .AddSxcOqtane()                 // Always first add your override services
+                .AddSxcRazor()                  // this is the .net core Razor compiler
+                .AddAdamWebApi<int, int>()      // This is used to enable ADAM WebAPIs
+                .AddSxcWebApi<IActionResult>()  // This adds all the standard backend services for WebAPIs to work
+                .AddSxcCore()                   // Core 2sxc services
+                .AddEav()                       // Core EAV services
+                .AddOqtWebApis()                // Oqtane App WebAPI stuff
+                .AddRazorBlade();               // RazorBlade helpers for Razor in the edition used by Oqtane
 
             // 2sxc Oqtane blob services for Imageflow.
             services.AddImageflowOqtaneBlobService();
@@ -86,14 +69,14 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            HostEnvironment = env;
+            //HostEnvironment = env;
 
             var serviceProvider = app.ApplicationServices;
 
             serviceProvider.Build<IDbConfiguration>().ConnectionString = Configuration.GetConnectionString("DefaultConnection");
 
             var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
-            globalConfig.GlobalFolder = Path.Combine(HostEnvironment.ContentRootPath, "wwwroot\\Modules\\ToSic.Sxc");
+            globalConfig.GlobalFolder = Path.Combine(env.ContentRootPath, "wwwroot\\Modules\\ToSic.Sxc");
             globalConfig.AssetsVirtualUrl = "~/Modules/ToSic.Sxc/assets/";
             globalConfig.SharedAppsFolder = $"/{OqtConstants.AppRoot}/{OqtConstants.SharedAppFolder}/"; // "/2sxc/Shared"
 
@@ -106,7 +89,6 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             sysLoader.StartUp();
 
             app.UseExceptionHandler("/error");
-            //app.UseDeveloperExceptionPage();
 
             // routing middleware
             app.UseRouting();

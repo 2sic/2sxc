@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
     // ReSharper disable once InconsistentNaming
     internal static partial class OqtRegisterServices
     {
-        public static IServiceCollection AddAppApi(this IServiceCollection services)
+        public static IServiceCollection AddOqtWebApis(this IServiceCollection services)
         {
             services.AddSingleton<IActionDescriptorChangeProvider>(AppApiActionDescriptorChangeProvider.Instance);
             services.AddSingleton(AppApiActionDescriptorChangeProvider.Instance);
