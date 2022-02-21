@@ -1,7 +1,6 @@
 ﻿using IntegrationSamples.SxcEdit01.Adam;
 using IntegrationSamples.SxcEdit01.Controllers;
 using IntegrationSamples.SxcEdit01.Integration;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +9,6 @@ using Newtonsoft.Json.Serialization;
 using ToSic.Eav;
 using ToSic.Eav.Context;
 using ToSic.Eav.Security;
-using ToSic.Eav.WebApi;
 using ToSic.Sxc;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.WebApi;
@@ -40,7 +38,6 @@ namespace IntegrationSamples.SxcEdit01
         {
             services.TryAddTransient<ISite, IntSite>();
             services.TryAddTransient<IUser, IntUserSuper>();
-            //services.TryAddTransient<AppPermissionCheck, IntAppPermissionCheck>();
             services.TryAddTransient<IEnvironmentPermission, IntEnvironmentPermissions>();
             services.TryAddTransient<IntStatefulControllerBase.Dependencies>();
             return services;

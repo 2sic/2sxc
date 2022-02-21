@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Run;
 
 namespace IntegrationSamples.SxcEdit01.Adam
 {
