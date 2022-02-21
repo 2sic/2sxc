@@ -7,7 +7,6 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Oqt.Server.Plumbing;
-using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
@@ -27,7 +26,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
         public OqtSite(SiteStateInitializer siteStateInitializer,
             Lazy<ISiteRepository> siteRepository,
             Lazy<IServerPaths> serverPaths,
-            Lazy<OqtZoneMapper> zoneMapper,
+            Lazy<IZoneMapper> zoneMapper,
             Lazy<OqtCulture> oqtCulture,
             Lazy<ILinkPaths> linkPathsLazy): base(OqtConstants.OqtLogPrefix)
         {
@@ -42,7 +41,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
         private readonly SiteStateInitializer _siteStateInitializer;
         private readonly Lazy<ISiteRepository> _siteRepository;
         private readonly Lazy<IServerPaths> _serverPaths;
-        private readonly Lazy<OqtZoneMapper> _zoneMapper;
+        private readonly Lazy<IZoneMapper> _zoneMapper;
         private readonly Lazy<OqtCulture> _oqtCulture;
         private readonly Lazy<ILinkPaths> _linkPathsLazy;
 

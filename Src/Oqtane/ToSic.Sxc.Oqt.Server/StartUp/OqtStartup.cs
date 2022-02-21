@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                 .AddSxcWebApi<IActionResult>()  // This adds all the standard backend services for WebAPIs to work
                 .AddSxcCore()                   // Core 2sxc services
                 .AddEav()                       // Core EAV services
-                .AddOqtWebApis()                // Oqtane App WebAPI stuff
+                .AddOqtAppWebApi()              // Oqtane App WebAPI stuff
                 .AddRazorBlade();               // RazorBlade helpers for Razor in the edition used by Oqtane
 
             // 2sxc Oqtane blob services for Imageflow.
