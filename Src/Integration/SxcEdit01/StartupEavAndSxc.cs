@@ -1,24 +1,19 @@
-﻿using System.IO;
-using IntegrationSamples.SxcEdit01.Adam;
+﻿using IntegrationSamples.SxcEdit01.Adam;
 using IntegrationSamples.SxcEdit01.Controllers;
 using IntegrationSamples.SxcEdit01.Integration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using ToSic.Eav;
-using ToSic.Eav.Apps.Security;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
-using ToSic.Eav.Plumbing;
+using ToSic.Eav.Security;
+using ToSic.Eav.WebApi;
 using ToSic.Sxc;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.Adam;
 
 namespace IntegrationSamples.SxcEdit01
 {
@@ -28,42 +23,31 @@ namespace IntegrationSamples.SxcEdit01
     /// </summary>
     public static class StartupEavAndSxc
     {
-        internal static void AddEavAndSxcIntegration(this IServiceCollection services, IConfiguration configuration)
+        internal static void AddEavAndSxcIntegration(this IServiceCollection services)
         {
-            //Factory.UseExistingServices(services);
-            //Factory.ActivateNetCoreDi(services2 =>
-            //{
-                services
-                    .MvcSystemParts()
-                    .AddAdam()
-                    .AddImplementations()
-                    .AddAdamWebApi<string, string>()
-                    .AddSxcWebApi<IActionResult>()
-                    .AddSxcCore()
-                    .AddEav();
-            //});
-
-            var sp = services.BuildServiceProvider();
-            var connectionString = configuration.GetConnectionString("SiteSqlServer");
-
-            sp.Build<IDbConfiguration>().ConnectionString = connectionString;
-            var hostingEnvironment = sp.Build<IHostEnvironment>();
-            var globalConfig = sp.Build<IGlobalConfiguration>();
-            globalConfig.GlobalFolder = Path.Combine(hostingEnvironment.ContentRootPath, "wwwroot\\system\\sxc");
-            globalConfig.SharedAppsFolder = "todo - global apps not implemented yet";
+            services
+                .MvcSystemParts()
+                .AddAdam()
+                .AddImplementations()
+                .AddAdamWebApi<string, string>()
+                .AddSxcWebApi()
+                .AddSxcCore()
+                //.AddEavApiExplorer<IActionResult>()
+                .AddEav();
         }
 
         internal static IServiceCollection AddImplementations(this IServiceCollection services)
         {
+            services.TryAddTransient<ISite, IntSite>();
             services.TryAddTransient<IUser, IntUserSuper>();
-            services.TryAddTransient<AppPermissionCheck, IntAppPermissionCheck>();
+            //services.TryAddTransient<AppPermissionCheck, IntAppPermissionCheck>();
+            services.TryAddTransient<IEnvironmentPermission, IntEnvironmentPermissions>();
             services.TryAddTransient<IntStatefulControllerBase.Dependencies>();
             return services;
         }
         internal static IServiceCollection AddAdam(this IServiceCollection services)
         {
             // ADAM stuff
-            services.TryAddTransient<ISite, IntSite>();
             services.TryAddTransient<IAdamPaths, AdamPathsWwwroot>();
             return services;
         }

@@ -1,10 +1,18 @@
-﻿using ToSic.Eav.Context;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Run;
 
 namespace IntegrationSamples.SxcEdit01.Adam
 {
     public class IntSite : ISite
     {
+        public ISite Init(int siteId, ILog parentLog)
+        {
+            Id = siteId;
+            return this;
+        }
+
         public int Id { get; set; }= 1;
 
         public string Name => "Demo Integration Site";
@@ -13,7 +21,7 @@ namespace IntegrationSamples.SxcEdit01.Adam
 
         public string AppsRootPhysicalFull => "todo apps root physical full not set";
 
-        public string AppAssetsLinkTemplate => "todo apps root link not set/" + LinkPaths.AppFolderPlaceholder;
+        public string AppAssetsLinkTemplate => "todo apps root link not set/" + AppConstants.AppFolderPlaceholder;
 
         public string ContentPath => "wwwroot";
 
@@ -27,10 +35,6 @@ namespace IntegrationSamples.SxcEdit01.Adam
 
         public string DefaultCultureCode => "";
 
-        public ISite Init(int siteId)
-        {
-            Id = siteId;
-            return this;
-        }
+
     }
 }
