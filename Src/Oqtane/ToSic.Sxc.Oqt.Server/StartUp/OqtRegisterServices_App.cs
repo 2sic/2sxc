@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
         private static IServiceCollection AddSxcOqtAppPermissionsAndImportExport(this IServiceCollection services)
         {
             // Permissions
-            services.TryAddTransient<AppPermissionCheck, OqtPermissionCheck>();
+            //services.TryAddTransient<AppPermissionCheck, OqtPermissionCheck>();
             services.TryAddTransient<IEnvironmentPermission, OqtEnvironmentPermission>();
 
             // Import / Export
