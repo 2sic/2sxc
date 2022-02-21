@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ToSic.Eav;
+using ToSic.Eav.Configuration;
+using ToSic.Eav.Plumbing;
 
 namespace IntegrationSamples.BasicEav01
 {
@@ -18,15 +21,16 @@ namespace IntegrationSamples.BasicEav01
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddEav();
             services.AddRazorPages();
-
-            // #2sxcIntegration
-            services.AddEavAndSxcIntegration(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var connectionString = Configuration.GetConnectionString("SiteSqlServer");
+            app.ApplicationServices.Build<IDbConfiguration>().ConnectionString = connectionString;
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

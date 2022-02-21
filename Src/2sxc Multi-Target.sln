@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.32106.194
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Eav.Core", "..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj", "{82F94588-269B-4CDD-98D1-D5CB14C39090}"
 EndProject
@@ -1166,6 +1166,7 @@ Global
 		{9269847A-20A1-4F72-9E14-36BFE0323632}.Testing|Windows-x86.ActiveCfg = Release|Any CPU
 		{9269847A-20A1-4F72-9E14-36BFE0323632}.Testing|Windows-x86.Build.0 = Release|Any CPU
 		{7F370FB9-704B-400C-B907-F4D7B884006A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F370FB9-704B-400C-B907-F4D7B884006A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F370FB9-704B-400C-B907-F4D7B884006A}.Debug|DNN.ActiveCfg = Debug|Any CPU
 		{7F370FB9-704B-400C-B907-F4D7B884006A}.Debug|DNN.Build.0 = Debug|Any CPU
 		{7F370FB9-704B-400C-B907-F4D7B884006A}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
@@ -1265,7 +1266,7 @@ Global
 		{67672FFA-702D-423F-906E-5E6A6D6B9EFD} = {783FE270-1D23-4B43-8B17-C87C0697DBD5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
+		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 	EndGlobalSection
 EndGlobal
