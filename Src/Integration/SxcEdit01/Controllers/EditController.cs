@@ -10,7 +10,7 @@ using ToSic.Sxc.WebApi.Cms;
 namespace IntegrationSamples.SxcEdit01.Controllers
 {
     //[AutoValidateAntiforgeryToken]
-    [Route(WebApiConstants.DefaultRouteRoot + "/cms" + WebApiConstants.DefaultRouteControllerAction)]
+    [Route(IntegrationConstants.DefaultRouteRoot + "/cms" + IntegrationConstants.DefaultRouteControllerAction)]
     [ApiController]
     public class EditController: IntControllerProxyBase<EditControllerReal>, IEditController
     {

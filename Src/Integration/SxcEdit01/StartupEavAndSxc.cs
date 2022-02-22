@@ -1,12 +1,10 @@
-﻿using IntegrationSamples.SxcEdit01.Adam;
-using IntegrationSamples.SxcEdit01.Integration;
+﻿using IntegrationSamples.SxcEdit01.Context;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Newtonsoft.Json.Serialization;
 using ToSic.Eav.Context;
-using ToSic.Eav.Security;
 using ToSic.Sxc.Adam;
 
 namespace IntegrationSamples.SxcEdit01
@@ -22,9 +20,6 @@ namespace IntegrationSamples.SxcEdit01
             // Context
             services.TryAddTransient<ISite, IntSite>();
             services.TryAddTransient<IUser, IntUserSuper>();
-
-            // Security / Permissions
-            services.TryAddTransient<IEnvironmentPermission, IntEnvironmentPermissions>();
 
             // ADAM
             services.TryAddTransient<IAdamPaths, AdamPathsWwwroot>();

@@ -1,5 +1,4 @@
 ﻿@page
-@using Microsoft.Extensions.Configuration
 @using ToSic.Eav.Apps
 @using ToSic.Eav.Data
 @using ToSic.Eav.Logging.Simple
@@ -7,38 +6,31 @@
 @using ToSic.Eav.Plumbing
 @using ToSic.Sxc.Adam
 @using ToSic.Sxc.Context
-@*@model PrivacyModel*@
-@inject IConfiguration Config
 @inject IAppStates AppStates
 @inject IServiceProvider ServiceProvider;
 @{
   ViewData["Title"] = "Edit 2sxc data";
 
   // Adjust these values to your testing environment
-  var zoneId = 145; //2;
-  var appId = 1369; // 78;
-  var pageId = 4427;
-  var moduleId = 9771;
-  var appState = AppStates.Get(new AppIdentity(zoneId, appId));
+  var appIdentity = IntegrationConstants.AppIdentity;
+  var appState = AppStates.Get(appIdentity);
   var firstItem = appState.List.FirstOrDefault();
-
-  var itemWithImagesId = 128280;
 }
 <h1>@ViewData["Title"]</h1>
 
 <script language="javascript">
   function getSxc() {
-    return $2sxc({ zoneId: @zoneId, appId: @appId, pageId: @pageId, moduleId: @moduleId });
+    return $2sxc({ zoneId: @appIdentity.ZoneId, appId: @appIdentity.AppId, pageId: @IntegrationConstants.PageId, moduleId: @IntegrationConstants.ModuleId });
   }
 </script>
 <p>
-  Try using the $2sxc js api for @zoneId/@appId and page @pageId and module @moduleId - first item @@firstItem.EntityId <br />
+  Try using the $2sxc js api for @appIdentity.ZoneId/@appIdentity.AppId and page @IntegrationConstants.PageId and module @IntegrationConstants.ModuleId - first item @@firstItem.EntityId <br />
 </p>
 
 <ol>
   <li>Check api works - <a href="/api/pong/pong" target="_blank">Test</a></li>
   <li><a href="/api/sxc/sys/insights/help" target="_blank">Insights</a></li>
-  <li><a href="/api/sxc/Dialog/Settings?appId=@appId" target="_blank">Call Dialog/Settings?appId=@appId</a></li>
+  <li><a href="/api/sxc/Dialog/Settings?appId=@appIdentity.AppId" target="_blank">Call Dialog/Settings?appId=@appIdentity.AppId</a></li>
   <li><a href="#" onclick="getSxc().manage.run('app')">Click to open app-dialog</a></li>
   <li><a href="#" onclick="getSxc().manage.run('edit', { entityId: @firstItem.EntityId })">Click to open edit dialog</a></li>
 </ol>
@@ -46,7 +38,8 @@
 <hr />
 <h2>ADAM Images / Files</h2>
 <ol>
-  <li><a href="#" onclick="getSxc().manage.run('edit', { entityId: @itemWithImagesId })">Edit something with images!</a></li>
+    <!-- TODO: check if it should be CMS.run -->
+    <li><a href="#" onclick="getSxc().manage.run('edit', { entityId: @IntegrationConstants.ItemWithImagesId })">Edit something with images!</a></li>
 </ol>
 @{
   // This is the same as the AsAdam implementation
@@ -58,15 +51,15 @@
   // Get the App execution context since our code here doesn't have it
   var appContext = ServiceProvider.Build<IContextOfApp>();
   appContext.Init(log);
-  appContext.ResetApp(appId);
+  appContext.ResetApp(appIdentity.AppId);
 
   //// Now get the adam-manager, which will give us the AdamFolder object
   var adamManager = ServiceProvider.Build<AdamManager<string, string>>();
   adamManager.Init(appContext, ToSic.Sxc.Constants.CompatibilityLevel10, log);
 
   //// Now get the folder (which is what AsAdam would return)
-  var entityWithAdam = appState.List.One(itemWithImagesId);
-  var folder = adamManager.Folder(entityWithAdam, "ImageLibrary");
+  var entityWithAdam = appState.List.One(IntegrationConstants.ItemWithImagesId);
+  var folder = adamManager.Folder(entityWithAdam, IntegrationConstants.ImagesField);
 }
 <h3>Files</h3>
 <ol>
@@ -95,6 +88,7 @@ Found Metadata: @md.Count()
 <script>
   function openMetadata(targetId) {
     console.log('test1');
+    // TODO: CHECK Target property - was this public API? how can we prevent breaks?
     const forRef = { Number: targetId, Target: 'CmsObject', Singleton: true };
     getSxc().manage.run('edit', {
       items: [

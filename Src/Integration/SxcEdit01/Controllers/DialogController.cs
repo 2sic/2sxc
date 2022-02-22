@@ -3,7 +3,7 @@ using ToSic.Sxc.WebApi.Admin;
 
 namespace IntegrationSamples.SxcEdit01.Controllers
 {
-    [Route(WebApiConstants.DefaultRouteRoot + "/admin" + WebApiConstants.DefaultRouteControllerAction)]
+    [Route(IntegrationConstants.DefaultRouteRoot + "/admin" + IntegrationConstants.DefaultRouteControllerAction)]
     [ApiController]
     public class DialogController : IntControllerProxyBase<AdminBackend>
     {

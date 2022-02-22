@@ -2,7 +2,7 @@
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 
-namespace IntegrationSamples.SxcEdit01.Adam
+namespace IntegrationSamples.SxcEdit01.Context
 {
     public class IntSite : ISite
     {
@@ -22,6 +22,11 @@ namespace IntegrationSamples.SxcEdit01.Adam
 
         public string AppAssetsLinkTemplate => "todo apps root link not set/" + AppConstants.AppFolderPlaceholder;
 
+        /// <summary>
+        /// #2sxcIntegration
+        /// This is important to set, for ADAM uploads to find out where they go.
+        /// It's the path relative to the project folder, not the URL
+        /// </summary>
         public string ContentPath => "wwwroot";
 
         public string Url => "https://" + UrlRoot;

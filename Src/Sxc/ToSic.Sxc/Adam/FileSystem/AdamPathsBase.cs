@@ -60,6 +60,13 @@ namespace ToSic.Sxc.Adam
                 : path.Substring(adamPosition);
         }
 
+        /// <summary>
+        /// Will receive the path as is on the file system, and return the url form how it would be called from outside.
+        /// This default implementation assumes the path of the server and url are the same.
+        /// In .net core this will be different, so it must replace the internal logic
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public virtual string Url(string path) => Path.Combine(AdamManager.Site.ContentPath, path).ForwardSlash();
     }
 }

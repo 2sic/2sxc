@@ -17,7 +17,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
     /// Then we can reduce security access level to anonymous, because each method will do the security check
     /// </summary>
     [ApiController]
-    [Route(WebApiConstants.DefaultRouteRoot + "/app/auto" + "/data/{contentType}/{guid}/{field}/")]
+    [Route(IntegrationConstants.DefaultRouteRoot + "/app/auto" + "/data/{contentType}/{guid}/{field}/")]
     public class AdamController : IntControllerProxyBase<AdamControllerReal<string>>, IAdamController<string>
     {
         public AdamController() : base("Adam") { }
