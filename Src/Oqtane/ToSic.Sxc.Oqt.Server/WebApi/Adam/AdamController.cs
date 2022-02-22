@@ -33,14 +33,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
 
     public class AdamController : OqtStatefulControllerBase, IAdamController<int>
     {
-        #region Constructor / DI
+        protected override string HistoryLogName => "Api.Adam";
 
         public AdamController(AdamControllerReal<int> realController) => RealController = realController.Init(Log);
         public AdamControllerReal<int> RealController;
 
-        #endregion
-
-        protected override string HistoryLogName => "Api.Adam";
 
         [HttpPost]
         [HttpPut]
