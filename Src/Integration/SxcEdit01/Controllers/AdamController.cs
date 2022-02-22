@@ -18,34 +18,30 @@ namespace IntegrationSamples.SxcEdit01.Controllers
     /// </summary>
     [ApiController]
     [Route(WebApiConstants.DefaultRouteRoot + "/app/auto" + "/data/{contentType}/{guid}/{field}/")]
-    public class AdamController : IntStatefulControllerBase, IAdamController<string>
+    public class AdamController : IntControllerProxyBase<AdamControllerReal<string>>, IAdamController<string>
     {
-        protected override string HistoryLogName => "Api.Adam";
+        public AdamController() : base("Adam") { }
 
-        public AdamController(AdamControllerReal<string> realController) => RealController = realController.Init(Log);
-        public AdamControllerReal<string> RealController;
-
-        
         [HttpPost]
         [HttpPut]
         public UploadResultDto Upload(int appId, string contentType, Guid guid, string field, string subFolder = "", bool usePortalRoot = false)
-            => RealController.Upload(new HttpUploadedFile(Request), appId, contentType, guid, field, subFolder, usePortalRoot);
+            => Real.Upload(new HttpUploadedFile(Request), appId, contentType, guid, field, subFolder, usePortalRoot);
 
         [HttpGet("items")]
         public IEnumerable<AdamItemDto> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
-            => RealController.Items(appId, contentType, guid, field, subfolder, usePortalRoot);
+            => Real.Items(appId, contentType, guid, field, subfolder, usePortalRoot);
 
         [HttpPost("folder")]
         public IEnumerable<AdamItemDto> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
-            => RealController.Folder(appId, contentType, guid, field, subfolder, newFolder, usePortalRoot);
+            => Real.Folder(appId, contentType, guid, field, subfolder, newFolder, usePortalRoot);
 
         [HttpGet("delete")]
         public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, string id, bool usePortalRoot)
-            => RealController.Delete(appId, contentType, guid, field, subfolder, isFolder, id, usePortalRoot);
+            => Real.Delete(appId, contentType, guid, field, subfolder, isFolder, id, usePortalRoot);
 
         [HttpGet("rename")]
         public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, string id, string newName, bool usePortalRoot)
-            => RealController.Rename(appId, contentType, guid, field, subfolder, isFolder, id, newName, usePortalRoot);
+            => Real.Rename(appId, contentType, guid, field, subfolder, isFolder, id, newName, usePortalRoot);
 
     }
 }

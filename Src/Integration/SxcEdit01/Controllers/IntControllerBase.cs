@@ -11,13 +11,11 @@ using ToSic.Eav.WebApi;
 
 namespace IntegrationSamples.SxcEdit01.Controllers
 {
-    public abstract class IntStatelessControllerBase : Controller, IHasLog
+    public abstract class IntControllerBase : Controller, IHasLog
     {
-        protected IntStatelessControllerBase()
+        protected IntControllerBase(string logName)
         {
-            // ReSharper disable VirtualMemberCallInConstructor
-            Log = new Log(HistoryLogName, null, GetType().Name);
-            // ReSharper restore VirtualMemberCallInConstructor
+            Log = new Log(IntegrationConstants.LogPrefix + logName, null, GetType().Name);
         }
 
         /// <inheritdoc />
@@ -30,13 +28,6 @@ namespace IntegrationSamples.SxcEdit01.Controllers
         /// Helps group various calls by use case. 
         /// </summary>
         protected virtual string HistoryLogGroup => EavWebApiConstants.HistoryNameWebApi;
-
-        /// <summary>
-        /// The name of the logger in insights.
-        /// The inheriting class should provide the real name to be used.
-        /// </summary>
-        protected abstract string HistoryLogName { get; }
-
 
         private Action<string> ActionTimerWrap; // it is used across events to track action execution total time
 
@@ -55,7 +46,6 @@ namespace IntegrationSamples.SxcEdit01.Controllers
 
             // add log
             ServiceProvider.Build<LogHistory>().Add(HistoryLogGroup, Log);
-
         }
 
         /// <inheritdoc/>
