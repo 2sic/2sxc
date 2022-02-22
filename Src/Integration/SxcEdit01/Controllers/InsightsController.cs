@@ -11,7 +11,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
         /// <summary>
         /// Constructor which will retrieve the Insights backend for use here
         /// </summary>
-        public InsightsController(Insights insights) => _insights = insights;
+        public InsightsController(Insights insights) => _insights = insights.Init(new Log("Int.Insights"));
         private readonly Insights _insights;
 
         /// <summary>
@@ -30,9 +30,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
             // Temporary setting to allow Insights despite minimal setup
             ToSic.Eav.Context.UserUnknown.AllowEverything = true;
 
-            var result = _insights
-                .Init(new Log("Int.Insights"))
-                .Details(view, appId, key, position, type, toggle, nameId);
+            var result = _insights.Details(view, appId, key, position, type, toggle, nameId);
             return base.Content(result, "text/html");
         }
     }
