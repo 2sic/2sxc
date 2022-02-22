@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
         private readonly Lazy<AppContent> _appContentLazy;
 
         #region DI / Constructor
-        protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "AppCnt";
+        protected override string HistoryLogName => "Api.AppCnt";
 
         public AppContentController(Lazy<AppContent> appContentLazy)
         {

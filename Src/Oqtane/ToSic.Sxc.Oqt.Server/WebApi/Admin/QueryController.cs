@@ -9,7 +9,7 @@ using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi;
-using WebApiConstants = ToSic.Sxc.Oqt.Shared.WebApiConstants;
+using WebApiConstants = ToSic.Sxc.Oqt.Server.WebApi.WebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {

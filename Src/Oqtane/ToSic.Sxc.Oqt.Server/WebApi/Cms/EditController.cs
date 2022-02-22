@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     public class EditController: OqtStatefulControllerBase, IEditController
     {
         #region DI
-        protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "UiCntr";
+        protected override string HistoryLogName => "Api.UiCntr";
 
         public EditController(EditControllerReal realController) => RealController = realController.Init(Log);
         private EditControllerReal RealController { get; }
