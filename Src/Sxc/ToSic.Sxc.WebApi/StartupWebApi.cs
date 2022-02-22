@@ -89,6 +89,7 @@ namespace ToSic.Sxc.WebApi
             // New v13 - try to reduce Dnn/Oqtane code to the max, by creating ControllerReal objects which do everything
             services.TryAddTransient(typeof(AppControllerReal<>));
             services.TryAddTransient<EditControllerReal>();
+            services.TryAddTransient(typeof(AdamControllerReal<>));
 
             return services;
         }

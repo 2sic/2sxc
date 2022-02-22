@@ -21,22 +21,17 @@ namespace IntegrationSamples.SxcEdit01.Controllers
     [Route(WebApiConstants.DefaultRouteRoot + "/app-content/{contentType}/{guid}/{field}/")]
     public class AdamController : IntStatefulControllerBase, IAdamController<string>
     {
-        private readonly AdamTransUpload<string, string> _adamUpload;
-        private readonly AdamTransGetItems<string, string> _adamItems;
-        private readonly AdamTransFolder<string, string> _adamFolders;
-        private readonly AdamTransDelete<string, string> _adamDelete;
-        private readonly AdamTransRename<string, string> _adamRename;
-
         #region Constructor / DI
 
         protected override string HistoryLogName => "Api.Adam";
 
-        public AdamController(AdamTransUpload<string, string> adamUpload, 
+        public AdamController(
+            AdamTransUpload<string, string> adamUpload, 
             AdamTransGetItems<string, string> adamItems, 
             AdamTransFolder<string, string> adamFolders,
             AdamTransDelete<string, string> adamDelete,
-         AdamTransRename<string, string> adamRename,
-            Dependencies dependencies): base()
+            AdamTransRename<string, string> adamRename
+            )
         {
             _adamUpload = adamUpload;
             _adamItems = adamItems;
@@ -44,6 +39,12 @@ namespace IntegrationSamples.SxcEdit01.Controllers
             _adamDelete = adamDelete;
             _adamRename = adamRename;
         }
+        private readonly AdamTransUpload<string, string> _adamUpload;
+        private readonly AdamTransGetItems<string, string> _adamItems;
+        private readonly AdamTransFolder<string, string> _adamFolders;
+        private readonly AdamTransDelete<string, string> _adamDelete;
+        private readonly AdamTransRename<string, string> _adamRename;
+
 
         #endregion
         [HttpPost]
