@@ -6,6 +6,7 @@
 @using ToSic.Eav.Plumbing
 @using ToSic.Sxc.Adam
 @using ToSic.Sxc.Context
+@using ToSic.Sxc.Services
 @inject IAppStates AppStates
 @inject IServiceProvider ServiceProvider;
 @{
@@ -42,28 +43,20 @@
     <li><a href="#" onclick="getSxc().manage.run('edit', { entityId: @IntegrationConstants.ItemWithImagesId })">Edit something with images!</a></li>
 </ol>
 @{
-  // This is the same as the AsAdam implementation
+    // Create a log-object (optional) which is used to track what the code does
+    // could also just be null
+    var log = new Log("My.Log");
 
-  // Create a log-object (optional) which is used to track what the code does
-  // could also just be null
-  var log = new Log("My.Log");
+    // Get the App execution context since our code here doesn't have it
+    var dynCodeSvc = ServiceProvider.Build<IDynamicCodeService>();
+    var dynCode = dynCodeSvc.OfApp(appIdentity);
 
-  // Get the App execution context since our code here doesn't have it
-  var appContext = ServiceProvider.Build<IContextOfApp>();
-  appContext.Init(log);
-  appContext.ResetApp(appIdentity.AppId);
-
-  //// Now get the adam-manager, which will give us the AdamFolder object
-  var adamManager = ServiceProvider.Build<AdamManager<string, string>>();
-  adamManager.Init(appContext, ToSic.Sxc.Constants.CompatibilityLevel10, log);
-
-  //// Now get the folder (which is what AsAdam would return)
-  var entityWithAdam = appState.List.One(IntegrationConstants.ItemWithImagesId);
-  var folder = adamManager.Folder(entityWithAdam, IntegrationConstants.ImagesField);
+    var entityWithAdam = dynCode.App.Data.List.One(IntegrationConstants.ItemWithImagesId);
+    var folder2 = dynCode.AsAdam(entityWithAdam, IntegrationConstants.ImagesField);
 }
-<h3>Files</h3>
+<h3>Files in @dynCode.AsDynamic(entityWithAdam).EntityTitle </h3>
 <ol>
-  @foreach (var img in folder.Files)
+  @foreach (var img in folder2.Files)
   {
     <li>@img.Url</li>
   }
@@ -92,8 +85,8 @@ Found Metadata: @md.Count()
     const forRef = { Number: targetId, Target: 'CmsObject', Singleton: true };
     getSxc().manage.run('edit', {
       items: [
-        { ContentTypeName: 'MetadataGps', For: forRef, Operations: "mdsingleton", Prefill: { Color: "super-pink" } },
-        { ContentTypeName: 'MetadataCar', For: forRef, Sfx: "mdsingleton" }
+        { ContentTypeName: 'MetadataGps', For: forRef, Operations: "singleton", Prefill: { Color: "super-pink" } },
+        { ContentTypeName: 'MetadataCar', For: forRef, Sfx: "singleton" }
       ]
     });
   }

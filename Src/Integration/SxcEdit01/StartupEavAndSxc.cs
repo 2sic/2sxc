@@ -22,6 +22,7 @@ namespace IntegrationSamples.SxcEdit01
             services.TryAddTransient<IUser, IntUserSuper>();
 
             // ADAM
+            services.TryAddTransient<AdamManager, AdamManager<string, string>>();
             services.TryAddTransient<IAdamPaths, AdamPathsWwwroot>();
 
             return services;
