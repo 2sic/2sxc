@@ -5,11 +5,8 @@
     ViewData["Title"] = "First Read Data from EAV";
 
     // #2sxcIntegration
-    // Adjust these values to your testing environment
-    var zoneId = 2;
-    var appId = 78;
-
-    var appState = AppStates.Get(new AppIdentity(zoneId, appId));
+    var appIdentity = IntegrationConstants.AppIdentity;
+    var appState = AppStates.Get(appIdentity);
     var firstItem = appState.List.FirstOrDefault();
 }
 
@@ -20,7 +17,7 @@
 </p>
 
 <div>
-  Reading data from EAV Zone/App: @zoneId / @appId
+  Reading data from EAV Zone/App: @appIdentity.ZoneId / @appIdentity.AppId
 </div>
 
 <ol>

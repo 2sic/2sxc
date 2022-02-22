@@ -12,12 +12,18 @@ namespace IntegrationSamples.BasicEav01
 {
     public class Startup
     {
+        #region Constructor and Pickup of Configuration
+
         public Startup(IConfiguration configuration)
         {
             _connStringFromConfig = configuration.GetConnectionString("SiteSqlServer");
         }
 
         private readonly string _connStringFromConfig;
+
+        #endregion
+
+        #region Configure Services / Dependency Injection
 
         /// <summary>
         /// This method gets called by the runtime. Use this method to add services to the container.
@@ -30,6 +36,8 @@ namespace IntegrationSamples.BasicEav01
             // RazorPages - standard .net core MVC feature
             services.AddRazorPages();
         }
+
+        #endregion
 
         /// <summary>
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
