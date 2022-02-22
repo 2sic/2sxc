@@ -1,5 +1,4 @@
 ﻿using IntegrationSamples.SxcEdit01.Adam;
-using IntegrationSamples.SxcEdit01.Controllers;
 using IntegrationSamples.SxcEdit01.Integration;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -20,12 +19,14 @@ namespace IntegrationSamples.SxcEdit01
     {
         internal static IServiceCollection AddImplementations(this IServiceCollection services)
         {
+            // Context
             services.TryAddTransient<ISite, IntSite>();
             services.TryAddTransient<IUser, IntUserSuper>();
-            services.TryAddTransient<IEnvironmentPermission, IntEnvironmentPermissions>();
-            services.TryAddTransient<IntStatefulControllerBase.Dependencies>();
 
-            // ADAM stuff
+            // Security / Permissions
+            services.TryAddTransient<IEnvironmentPermission, IntEnvironmentPermissions>();
+
+            // ADAM
             services.TryAddTransient<IAdamPaths, AdamPathsWwwroot>();
 
             return services;

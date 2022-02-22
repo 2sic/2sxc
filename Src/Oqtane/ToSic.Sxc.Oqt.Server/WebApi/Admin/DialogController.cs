@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Admin;
@@ -30,21 +29,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     {
         protected override string HistoryLogName => "Api.SysCnt";
 
-        #region Dialog Helpers
-        /// <summary>
-        /// This is the subsystem which delivers the getting-started app-iframe with instructions etc.
-        /// Used to be GET System/DialogSettings
-        /// </summary>
-        /// <param name="appId"></param>
-        /// <returns></returns>
+        public DialogController(AdminBackend adminBackend) => RealController = adminBackend.Init(Log);
+        public AdminBackend RealController { get; }
+        
         [HttpGet]
-        public DialogContextStandalone Settings(int appId)
-        {
-            return HttpContext.RequestServices.Build<AdminBackend>().Init(Log)
-                .DialogSettings(appId);
-        }
-
-        #endregion
-
+        public DialogContextStandalone Settings(int appId) => RealController.DialogSettings(appId);
+        
     }
 }

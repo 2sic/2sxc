@@ -19,6 +19,12 @@ namespace ToSic.Sxc.WebApi.Admin
             _uiContextBuilder = uiContextBuilder;
         }
 
+        /// <summary>
+        /// This is the subsystem which delivers the getting-started app-iframe with instructions etc.
+        /// Used to be GET System/DialogSettings
+        /// </summary>
+        /// <param name="appId"></param>
+        /// <returns></returns>
         public DialogContextStandalone DialogSettings(int appId)
         {            
             // reset app-id if we get a info-token like -100
