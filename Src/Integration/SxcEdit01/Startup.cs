@@ -4,13 +4,18 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc;
+using ToSic.Sxc.WebApi;
 
 namespace IntegrationSamples.SxcEdit01
 {
     public class Startup
     {
+        #region Constructor and Pickup of Configuration
+
         public Startup(IConfiguration configuration)
         {
             _connStringFromConfig = configuration.GetConnectionString("SiteSqlServer");
@@ -18,14 +23,30 @@ namespace IntegrationSamples.SxcEdit01
 
         private readonly string _connStringFromConfig;
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        #endregion
+
+        #region Configure Services / Dependency Injection
+
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
 
             // #2sxcIntegration
-            services.AddEavAndSxcIntegration();
+            services
+                .AddMvcRazor()
+                .AddControllersAndConfigureJson()
+                .AddImplementations()
+                .AddAdamWebApi<string, string>()
+                .AddSxcWebApi()
+                .AddSxcCore()
+                .AddEav();
         }
+
+        #endregion
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -45,9 +66,7 @@ namespace IntegrationSamples.SxcEdit01
             // ----- End EAV stuff #2sxcIntegration -----
 
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-            }
             else
             {
                 app.UseExceptionHandler("/Error");
@@ -57,9 +76,7 @@ namespace IntegrationSamples.SxcEdit01
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

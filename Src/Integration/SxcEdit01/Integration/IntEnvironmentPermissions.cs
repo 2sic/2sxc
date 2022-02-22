@@ -6,7 +6,7 @@ namespace IntegrationSamples.SxcEdit01.Integration
 {
     public class IntEnvironmentPermissions: EnvironmentPermission
     {
-        public IntEnvironmentPermissions() : base(IntConstants.LogPrefix)
+        public IntEnvironmentPermissions() : base(IntegrationConstants.LogPrefix)
         {
         }
 

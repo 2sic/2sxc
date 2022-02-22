@@ -1,6 +1,6 @@
-﻿// #2sxcIntegration
+﻿using ToSic.Eav.Apps;
 
-using ToSic.Eav.Apps;
+// #2sxcIntegration
 
 namespace IntegrationSamples.BasicEav01
 {

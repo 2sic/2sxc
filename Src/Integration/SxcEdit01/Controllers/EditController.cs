@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using IntegrationSamples.SxcEdit01.Integration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.WebApi.Dto;
@@ -16,7 +15,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
     public class EditController: IntStatefulControllerBase, IEditController
     {
         #region DI
-        protected override string HistoryLogName => IntConstants.LogPrefix + ".UiCntr";
+        protected override string HistoryLogName => IntegrationConstants.LogPrefix + ".UiCntr";
 
         public EditController(Dependencies dependencies,
             Lazy<EntityPickerBackend> entityBackend,
