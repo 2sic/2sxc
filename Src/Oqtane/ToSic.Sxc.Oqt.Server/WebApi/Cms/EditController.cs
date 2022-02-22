@@ -31,23 +31,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         #region DI
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "UiCntr";
 
-        public EditController(
-            Lazy<EntityPickerBackend> entityBackend,
-            Lazy<EditLoadBackend> loadBackend,
-            Lazy<EditSaveBackend> saveBackendLazy,
-            Lazy<HyperlinkBackend<int, int>> linkBackendLazy)
-        {
-            _entityBackend = entityBackend;
-            _loadBackend = loadBackend;
-            _saveBackendLazy = saveBackendLazy;
-            _linkBackendLazy = linkBackendLazy;
-        }
-
-        private readonly Lazy<EntityPickerBackend> _entityBackend;
-        private readonly Lazy<EditLoadBackend> _loadBackend;
-        private readonly Lazy<EditSaveBackend> _saveBackendLazy;
-        private readonly Lazy<HyperlinkBackend<int, int>> _linkBackendLazy;
-        private EntityPickerBackend EntityBackend => _entityBackend.Value;
+        public EditController(EditControllerReal realController) => RealController = realController.Init(Log);
+        private EditControllerReal RealController { get; }
 
         #endregion
 
@@ -55,13 +40,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
-            => _loadBackend.Value.Init(Log).Load(appId, items);
+            => RealController.Load(items, appId);
 
         [HttpPost]
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         [Authorize(Roles = RoleNames.Admin)]
         public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
-            => _saveBackendLazy.Value.Init(appId, Log).Save(package, partOfPage);
+            => RealController.Save(package, appId, partOfPage);
 
         [HttpGet]
         [HttpPost]
@@ -75,8 +60,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
             var body = await reader.ReadToEndAsync();
             var items = JsonConvert.DeserializeObject<string[]>(body);
 
-            return EntityBackend.Init(Log)
-                .GetAvailableEntities(appId, items, contentTypeName);
+            return RealController.EntityPicker(appId, items, contentTypeName);
         }
 
         /// <inheritdoc />
@@ -85,7 +69,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         //[Authorize(Roles = RoleNames.Everyone)] commented because of http403 issue
         // TODO: 2DM please check permissions
         public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
-            => _linkBackendLazy.Value.Init(Log).LookupHyperlink(appId, link, contentType, guid, field);
-
+            => RealController.LinkInfo(link, appId, contentType, guid, field);
     }
 }

@@ -17,32 +17,35 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
     {
         protected override string HistoryLogName => "Api.Edit";
 
-        /// <inheritdoc />
-        [HttpPost]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
-            => GetService<EditLoadBackend>().Init(Log).Load(appId, items);
+        private EditControllerReal RealController => GetService<EditControllerReal>().Init(Log);
 
         /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage) 
-            => GetService<EditSaveBackend>().Init(appId, Log).Save(package, partOfPage);
+        public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
+            => RealController.Load(items, appId);
+
+        /// <inheritdoc />
+        [HttpPost]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
+            => RealController.Save(package, appId, partOfPage);
 
         /// <inheritdoc />
         [HttpGet]
         [HttpPost]
         [AllowAnonymous] // security check happens internally
         public IEnumerable<EntityForPickerDto> EntityPicker(
-            [FromUri] int appId, 
+            [FromUri] int appId,
             [FromBody] string[] items,
             [FromUri] string contentTypeName = null)
-            => GetService<EntityPickerBackend>().Init(Log).GetAvailableEntities(appId, items, contentTypeName);
+            => RealController.EntityPicker(appId, items, contentTypeName);
 
         /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
-            => GetService<HyperlinkBackend<int, int>>().Init(Log).LookupHyperlink(appId, link, contentType, guid, field);
+        public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default,
+            string field = default)
+            => RealController.LinkInfo(link, appId, contentType, guid, field);
     }
 }
