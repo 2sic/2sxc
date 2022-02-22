@@ -44,6 +44,7 @@ namespace ToSic.Sxc.WebApi
             
             // Backends
             services.TryAddTransient<AppsBackend>();
+            services.TryAddTransient<AdminBackend>();
             services.TryAddTransient<EntityPickerBackend>();
             services.TryAddTransient<EntityBackend>();
             services.TryAddTransient<EditLoadBackend>();
