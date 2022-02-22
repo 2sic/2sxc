@@ -17,10 +17,10 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
         };
         public static RootId[] Content =
         {
-            new RootId("cont-auto", AppRoots.AppContentAuto), 
-            new RootId("cont-name", AppRoots.AppContentNamed),
-            new RootId("data-auto", AppRoots.AppDataAuto), // new, v13
-            new RootId("data-name", AppRoots.AppDataNamed) // new, v13
+            new RootId("cont-auto", AppRoots.AppAutoContent), 
+            new RootId("cont-name", AppRoots.AppNamedContent),
+            new RootId("data-auto", AppRoots.AppAutoData), // new, v13
+            new RootId("data-name", AppRoots.AppNamedData) // new, v13
         };
 
         public static RootId[] AppAutoNamedInclEditions = AppAutoAndNamed
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
 
     internal class RouteParts
     {
-        public const string RouteApiControllerAction = "api/" + TokensFramework.SetControllerAction;
+        public const string RouteApiControllerAction = "api/" + ValueTokens.SetControllerAction;
     }
 
     public class ControllerNames

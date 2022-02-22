@@ -43,10 +43,10 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             #region new API routes after 08.10
 
             // ADAM routes
-            AddWD("adam-auto", AppRoots.AppContentAuto + "/" + TokensFramework.SetTypeGuidField, ControllerNames.Adam, AdamNamespace);
-            AddWD("adam2-auto", AppRoots.AppContentAuto + "/" + TokensFramework.SetTypeGuidFieldAction, ControllerNames.Adam, AdamNamespace);
-            AddWD("adam3-auto", AppRoots.AppDataAuto + "/" + TokensFramework.SetTypeGuidField, ControllerNames.Adam, AdamNamespace); // new, v13
-            AddWD("adam4-auto", AppRoots.AppDataAuto + "/" + TokensFramework.SetTypeGuidFieldAction, ControllerNames.Adam, AdamNamespace); // new, v13
+            AddWD("adam-auto", AppRoots.AppAutoContent + "/" + TokensFramework.SetTypeGuidField, ControllerNames.Adam, AdamNamespace);
+            AddWD("adam2-auto", AppRoots.AppAutoContent + "/" + TokensFramework.SetTypeGuidFieldAction, ControllerNames.Adam, AdamNamespace);
+            AddWD("adam3-auto", AppRoots.AppAutoData + "/" + TokensFramework.SetTypeGuidField, ControllerNames.Adam, AdamNamespace); // new, v13
+            AddWD("adam4-auto", AppRoots.AppAutoData + "/" + TokensFramework.SetTypeGuidFieldAction, ControllerNames.Adam, AdamNamespace); // new, v13
 
             // App Content routes - for GET/DELETE/PUT entities using REST
             // 1. Type and null or int-id
@@ -90,7 +90,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             #endregion
 
             // DNN: System calls to dnn - this is just for module delete
-            AddTy("dnn", "dnn/" + TokensFramework.SetControllerAction, typeof(ModuleController));
+            AddTy("dnn", "dnn/" + ValueTokens.SetControllerAction, typeof(ModuleController));
 
 
             // Add custom service locator into the chain of service-locators
