@@ -16,6 +16,7 @@ using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.WebApi.Sys;
@@ -91,7 +92,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
 
             var routeData = request.GetRouteData();
 
-            var controllerTypeName = routeData.Values[Names.Controller] + "Controller";
+            var controllerTypeName = routeData.Values[VarNames.Controller] + "Controller";
 
             // Now Handle the 2sxc app-api queries
 
@@ -145,8 +146,8 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
         private static string GetEdition(IHttpRouteData routeData)
         {
             var edition = "";
-            if (routeData.Values.ContainsKey(Names.Edition))
-                edition = routeData.Values[Names.Edition].ToString();
+            if (routeData.Values.ContainsKey(VarNames.Edition))
+                edition = routeData.Values[VarNames.Edition].ToString();
             if (!string.IsNullOrEmpty(edition))
                 edition += "/";
             return edition;
