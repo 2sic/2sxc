@@ -1,7 +1,8 @@
-﻿using ToSic.Eav.Context;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Services
 {
@@ -47,7 +48,17 @@ namespace ToSic.Sxc.Services
         IDynamicCode12 OfApp(int zoneId, int appId);
 
         /// <summary>
-        /// Get a rich <see cref="IApp"/> object for a specific App.
+        /// Get a <see cref="IDynamicCode12"/> object for a specific App.
+        /// This is the simplest way to work with Dynamic Code for this App.
+        /// 
+        /// Note that this is without Page/Module context, so there will be no useful `Content` object on the dynamic code.
+        /// </summary>
+        /// <param name="appIdentity">The App Identifier</param>
+        /// <returns>The dynamic code object for this App</returns>
+        IDynamicCode12 OfApp(IAppIdentity appIdentity);
+
+        /// <summary>
+        /// Get a rich <see cref="Apps.IApp"/> object for a specific App.
         /// This is the simplest way to work with data of this App, but won't give you commands like `AsDynamic(...)`
         /// </summary>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>

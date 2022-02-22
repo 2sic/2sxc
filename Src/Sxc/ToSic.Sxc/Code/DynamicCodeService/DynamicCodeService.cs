@@ -74,6 +74,9 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public IDynamicCode12 OfApp(int zoneId, int appId) => OfAppInternal(zoneId: zoneId, appId: appId);
 
+        /// <inheritdoc />
+        public IDynamicCode12 OfApp(IAppIdentity appIdentity) => OfAppInternal(zoneId: appIdentity.ZoneId, appId: appIdentity.AppId);
+
         private IDynamicCode12 OfAppInternal(int? zoneId = null, int? appId = null)
         {
             var wrapLog = Log.Call<IDynamicCode12>();
