@@ -103,12 +103,12 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             app.UseEndpoints(endpoints =>
             {
                 // Release routes
-                endpoints.Map(WebApiConstants.AppRoot + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map(WebApiConstants.AppRoot + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map(WebApiConstants.AppRoot2 + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map(WebApiConstants.AppRoot2 + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map(WebApiConstants.AppRoot3 + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map(WebApiConstants.AppRoot3 + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.AppRootNoLanguage + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.AppRootNoLanguage + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.AppRootPathOrLang + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.AppRootPathOrLang + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.AppRootPathNdLang + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.AppRootPathNdLang + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
 
                 // Beta routes
                 endpoints.Map(WebApiConstants.WebApiStateRoot + "/app/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);

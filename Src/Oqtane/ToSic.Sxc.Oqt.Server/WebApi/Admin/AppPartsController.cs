@@ -6,6 +6,7 @@ using System.Net.Http;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.ImportExport;
@@ -18,12 +19,12 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     // we can't set this globally (only needed for imports)
 
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot2 + "/admin/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot3 + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
+    [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
+    [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    // Beta routes
-    [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
+    // Beta routes - TODO: @STV - why is this beta?
+    [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Admin}")]
     public class AppPartsController : OqtStatefulControllerBase, IAppPartsController
     {
         private readonly Lazy<ExportContent> _exportContentLazy;

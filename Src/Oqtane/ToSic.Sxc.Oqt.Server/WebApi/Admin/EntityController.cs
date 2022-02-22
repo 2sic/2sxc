@@ -13,6 +13,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.ImportExport;
+using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 
@@ -33,12 +34,12 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     //[DnnLogExceptions]
 
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot2 + "/admin/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot3 + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
+    [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
+    [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    // Beta routes
-    [Route(WebApiConstants.WebApiStateRoot + "/admin/entity/[action]")]
+    // Beta routes - TODO: @STV - why is this beta?
+    [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Admin}")]
     public class EntityController : OqtStatefulControllerBase //, IEntitiesController // FIX: changed from interface to solve ambiguous DELETE routes.
     {
         private readonly Lazy<ContentExportApi>_contentExportLazy;

@@ -4,18 +4,19 @@ using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
 using ToSic.Eav.WebApi.Licenses;
+using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/sys/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot2 + "/sys/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot3 + "/sys/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRootWithNoLang + "/" + AreaRoutes.Sys)]
+    [Route(WebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
+    [Route(WebApiConstants.ApiRootPathNdLang + "/" + AreaRoutes.Sys)]
 
-    // Beta routes
-    [Route(WebApiConstants.WebApiStateRoot + "/sys/[controller]/[action]")]
+    // Beta routes - TODO: @STV - why is this beta?
+    [Route(WebApiConstants.WebApiStateRoot + "/" + AreaRoutes.Sys)]
     public class LicenseController : OqtStatefulControllerBase
     {
         private readonly Lazy<LicenseBackend> _licenseBackendLazy;

@@ -7,6 +7,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Cms;
@@ -14,12 +15,12 @@ using ToSic.Sxc.WebApi.Cms;
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
 {
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/cms/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot2 + "/cms/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot3 + "/cms/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Cms}")]
+    [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Cms}")]
+    [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Cms}")]
 
-    // Beta routes
-    [Route(WebApiConstants.WebApiStateRoot + "/cms/[controller]/[action]")]
+    // Beta routes - TODO: @STV - why is this beta?
+    [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Cms}")]
 
     [ValidateAntiForgeryToken]
     public class HistoryController : OqtStatefulControllerBase, IHistoryController

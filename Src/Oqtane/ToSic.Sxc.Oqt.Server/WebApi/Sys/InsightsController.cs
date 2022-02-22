@@ -6,9 +6,9 @@ using ToSic.Sxc.Oqt.Shared;
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/sys/[controller]/")]
-    [Route(WebApiConstants.ApiRoot2 + "/sys/[controller]/")]
-    [Route(WebApiConstants.ApiRoot3 + "/sys/[controller]/")]
+    [Route(WebApiConstants.ApiRootWithNoLang + "/sys/[controller]/")]
+    [Route(WebApiConstants.ApiRootPathOrLang + "/sys/[controller]/")]
+    [Route(WebApiConstants.ApiRootPathNdLang + "/sys/[controller]/")]
 
     // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/sys/[controller]/")]

@@ -4,6 +4,7 @@ using Oqtane.Shared;
 using System;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.ImportExport;
+using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Shared;
@@ -13,12 +14,12 @@ using ToSic.Sxc.WebApi.ImportExport;
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/sys/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot2 + "/sys/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot3 + "/sys/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRootWithNoLang + "/" + AreaRoutes.Sys)]
+    [Route(WebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
+    [Route(WebApiConstants.ApiRootPathNdLang + "/" + AreaRoutes.Sys)]
 
-    // Beta routes
-    [Route(WebApiConstants.WebApiStateRoot + "/sys/install/[action]")]
+    // Beta routes - TODO: @STV - why is this beta?
+    [Route(WebApiConstants.WebApiStateRoot + "/" + AreaRoutes.Sys)]
     public class InstallController: OqtStatefulControllerBase
     {
         private readonly Lazy<IEnvironmentInstaller> _envInstallerLazy;

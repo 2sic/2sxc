@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Shared;
@@ -19,12 +20,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     // we can't set this globally (only needed for imports)
 
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot2 + "/admin/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot3 + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
+    [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
+    [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    // Beta routes
+    // Beta routes - TODO: @STV - why is this beta?
     [Route(WebApiConstants.WebApiStateRoot + "/admin/app/[action]")]
+
     public class AppController : OqtStatefulControllerBase, IAppController
     {
 

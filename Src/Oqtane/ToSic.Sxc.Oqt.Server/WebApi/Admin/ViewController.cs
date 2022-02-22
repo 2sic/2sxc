@@ -8,6 +8,7 @@ using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Assets;
@@ -18,20 +19,20 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [AllowAnonymous] // necessary at this level, because otherwise download would fail
 
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot2 + "/admin/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot3 + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
+    [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
+    [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    // Beta routes
-    [Route(WebApiConstants.WebApiStateRoot + "/admin/view/[action]")]
+    // Beta routes - TODO: @STV - why is this beta?
+    [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Admin}")]
     public class ViewController : OqtStatefulControllerBase
     {
         private readonly Lazy<ViewsBackend> _viewsBackendLazy;
         private readonly Lazy<ViewsExportImport> _viewExportLazy;
         protected override string HistoryLogName => "Api.TmpCnt";
 
-        private ViewsBackend Backend => _viewsBackendLazy.Value.Init(/*GetContext(),*/ Log);
-        private ViewsExportImport ExportImport => _viewExportLazy.Value.Init(/*GetContext(),*/ Log);
+        private ViewsBackend Backend => _viewsBackendLazy.Value.Init(Log);
+        private ViewsExportImport ExportImport => _viewExportLazy.Value.Init(Log);
 
         public ViewController(Lazy<ViewsBackend> viewsBackendLazy, Lazy<ViewsExportImport> viewExportLazy)
         {

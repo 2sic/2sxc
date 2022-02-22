@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.WebApi.Assets;
+using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
@@ -18,12 +19,12 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Authorize(Roles = RoleNames.Admin)]
 
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot2 + "/admin/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot3 + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
+    [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
+    [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    // Beta routes
-    [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
+    // Beta routes - TODO: @STV - why is this beta?
+    [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Admin}")]
     public class AppFilesController : OqtStatefulControllerBase, IAppFilesController
     {
         private readonly Lazy<AppAssetsBackend> _appAssetsLazy;

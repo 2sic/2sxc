@@ -22,12 +22,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
     [ValidateAntiForgeryToken]
 
     // Release routes
-    [Route(WebApiConstants.AppRoot + "/{appName}/content/{contentType}/{guid:guid}/{field}")]
-    [Route(WebApiConstants.AppRoot2 + "/{appName}/content/{contentType}/{guid:guid}/{field}")]
-    [Route(WebApiConstants.AppRoot3 + "/{appName}/content/{contentType}/{guid:guid}/{field}")]
-    [Route(WebApiConstants.AppRoot + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
-    [Route(WebApiConstants.AppRoot2 + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
-    [Route(WebApiConstants.AppRoot3 + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
+    [Route(WebApiConstants.AppRootNoLanguage + "/{appName}/content/{contentType}/{guid:guid}/{field}")]
+    [Route(WebApiConstants.AppRootPathOrLang + "/{appName}/content/{contentType}/{guid:guid}/{field}")]
+    [Route(WebApiConstants.AppRootPathNdLang + "/{appName}/content/{contentType}/{guid:guid}/{field}")]
+    [Route(WebApiConstants.AppRootNoLanguage + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
+    [Route(WebApiConstants.AppRootPathOrLang + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
+    [Route(WebApiConstants.AppRootPathNdLang + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
+
     // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/app-content/{contentType}/{guid:guid}/{field}")]
 

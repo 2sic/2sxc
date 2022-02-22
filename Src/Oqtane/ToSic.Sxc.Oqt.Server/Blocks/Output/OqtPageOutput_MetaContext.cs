@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
 
             var pageId = Parent?.Page.PageId ?? -1;
             var siteRoot = GetSiteRoot(_siteState);
-            var apiRoot = siteRoot + WebApiConstants.ApiRoot + "/";
+            var apiRoot = siteRoot + WebApiConstants.ApiRootWithNoLang + "/";
             var appApiRoot = siteRoot; // without "app/" because the UI will add that later on
             var result = InpageCms.JsApiJson(
                 platform: PlatformType.Oqtane.ToString(),

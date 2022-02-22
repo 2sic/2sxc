@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps.Ui;
+using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
@@ -14,12 +15,12 @@ using ToSic.Sxc.WebApi.InPage;
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
 {
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/cms/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot2 + "/cms/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot3 + "/cms/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Cms}")]
+    [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Cms}")]
+    [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Cms}")]
 
-    // Beta routes
-    [Route(WebApiConstants.WebApiStateRoot + "/cms/block/[action]")]
+    // Beta routes - TODO: @STV - why is this beta?
+    [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Cms}")]
 
     [ValidateAntiForgeryToken]
     [ApiController]

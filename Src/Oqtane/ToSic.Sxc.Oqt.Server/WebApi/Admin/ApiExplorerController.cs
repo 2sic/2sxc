@@ -6,6 +6,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Plumbing;
+using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Apps;
 using ToSic.Sxc.Oqt.Server.Code;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -17,10 +18,10 @@ using ToSic.Sxc.Oqt.Shared;
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot2 + "/admin/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot3 + "/admin/[controller]/[action]")]
-    
+    [Route(WebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
+    [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
+    [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
+
     [ValidateAntiForgeryToken]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [Authorize(Roles = RoleNames.Admin)]

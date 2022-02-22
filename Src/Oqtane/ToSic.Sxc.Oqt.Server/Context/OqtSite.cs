@@ -101,7 +101,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
 
         [PrivateApi]
         public override string AppAssetsLinkTemplate => OqtPageOutput.GetSiteRoot(_siteStateInitializer.InitializedState)
-                                                        + WebApiConstants.AppRoot + "/" + AppConstants.AppFolderPlaceholder + "/assets";
+                                                        + WebApiConstants.AppRootNoLanguage + "/" + AppConstants.AppFolderPlaceholder + "/assets";
 
         [PrivateApi] public override string AppsRootPhysicalFull => _serverPaths.Value.FullAppPath(AppsRootPhysical);
 

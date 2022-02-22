@@ -23,9 +23,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
     /// </summary>
     
     // Release routes
-    [Route(WebApiConstants.AppRoot)]
-    [Route(WebApiConstants.AppRoot2)]
-    [Route(WebApiConstants.AppRoot3)]
+    [Route(WebApiConstants.AppRootNoLanguage)]
+    [Route(WebApiConstants.AppRootPathOrLang)]
+    [Route(WebApiConstants.AppRootPathNdLang)]
 
     // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/app/")]

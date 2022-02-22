@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.WebApi.Features;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared;
@@ -15,12 +16,12 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [ValidateAntiForgeryToken]
 
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot2 + "/admin/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot3 + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
+    [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
+    [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    // Beta routes
-    [Route(WebApiConstants.WebApiStateRoot + "/admin/[controller]/[action]")]
+    // Beta routes - TODO: @STV - why is this beta?
+    [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Admin}")]
     public class FeatureController : OqtStatefulControllerBase, IFeatureController
     {
         private readonly FeaturesBackend _featuresBackend;

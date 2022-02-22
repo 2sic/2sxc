@@ -5,12 +5,15 @@
         public const string Auto = "auto";
 
         // Release routes
-        public const string ApiRoot = "api/sxc";
-        public const string ApiRoot2 = "{path-or-language}/api/sxc";
-        public const string ApiRoot3 = "{path}/{subpath-or-language}/api/sxc";
-        public const string AppRoot = "app";
-        public const string AppRoot2 = "{path-or-language}/app";
-        public const string AppRoot3 = "{path}/{subpath-or-language}/app";
+        // Names are a bit strange so they are the same length
+        // Which helps align values when they are used together later on
+        public const string ApiRootWithNoLang = "api/sxc";
+        public const string ApiRootPathOrLang = "{path-or-language}/api/sxc";
+        public const string ApiRootPathNdLang = "{path}/{subpath-or-language}/api/sxc";
+        
+        public const string AppRootNoLanguage = "app";
+        public const string AppRootPathOrLang = "{path-or-language}/app";
+        public const string AppRootPathNdLang = "{path}/{subpath-or-language}/app";
 
         // Beta routes
         public const string WebApiRoot = "api/sxc";
