@@ -17,23 +17,8 @@ namespace IntegrationSamples.SxcEdit01.Controllers
         #region DI
         protected override string HistoryLogName => IntegrationConstants.LogPrefix + ".UiCntr";
 
-        public EditController(Dependencies dependencies,
-            Lazy<EntityPickerBackend> entityBackend,
-            Lazy<EditLoadBackend> loadBackend,
-            Lazy<EditSaveBackend> saveBackendLazy,
-            Lazy<HyperlinkBackend<int, int>> linkBackendLazy) : base(dependencies)
-        {
-            _entityBackend = entityBackend;
-            _loadBackend = loadBackend;
-            _saveBackendLazy = saveBackendLazy;
-            _linkBackendLazy = linkBackendLazy;
-        }
-
-        private readonly Lazy<EntityPickerBackend> _entityBackend;
-        private readonly Lazy<EditLoadBackend> _loadBackend;
-        private readonly Lazy<EditSaveBackend> _saveBackendLazy;
-        private readonly Lazy<HyperlinkBackend<int, int>> _linkBackendLazy;
-        private EntityPickerBackend EntityBackend => _entityBackend.Value;
+        public EditController(EditControllerReal realController) => RealController = realController.Init(Log);
+        private EditControllerReal RealController { get; }
 
         #endregion
 
@@ -41,29 +26,24 @@ namespace IntegrationSamples.SxcEdit01.Controllers
         [HttpPost]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
-        {
-            var result = _loadBackend.Value
-                .Init(Log)
-                .Load(appId, items);
-            return result;
-        }
+            => RealController.Load(items, appId);
 
         [HttpPost]
         // todo #mvcSec [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
-            => _saveBackendLazy.Value.Init(appId, Log).Save(package, partOfPage);
+            => RealController.Save(package, appId, partOfPage);
 
         [HttpGet]
         [HttpPost]
         [AllowAnonymous] // security check happens internally
         public IEnumerable<EntityForPickerDto> EntityPicker(int appId, [FromBody] string[] items, string contentTypeName = null)
-            => EntityBackend.Init(Log).GetAvailableEntities(appId, items, contentTypeName);
+            => RealController.EntityPicker(appId, items, contentTypeName);
 
         /// <inheritdoc />
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
-            => _linkBackendLazy.Value.Init(Log).LookupHyperlink(appId, link, contentType, guid, field);
+            => RealController.LinkInfo(link, appId, contentType, guid, field);
 
     }
 }

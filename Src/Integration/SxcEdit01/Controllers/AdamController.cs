@@ -36,7 +36,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
             AdamTransFolder<string, string> adamFolders,
             AdamTransDelete<string, string> adamDelete,
          AdamTransRename<string, string> adamRename,
-            Dependencies dependencies): base(dependencies)
+            Dependencies dependencies): base()
         {
             _adamUpload = adamUpload;
             _adamItems = adamItems;

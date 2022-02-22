@@ -11,7 +11,7 @@
         {
         }
 
-        protected IntStatefulControllerBase(Dependencies dependencies) : base()
+        protected IntStatefulControllerBase() : base()
         {
         }
 

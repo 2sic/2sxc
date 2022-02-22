@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         }
 
         // TODO: 2021-09-20 2dm this should probably be removed - I don't think the context should be available on this class, but I'm not sure 
-        protected IContextOfBlock GetContext() => BlockOptional?.Context; // OqtState.GetContext();
+        protected IContextOfBlock GetContext() => BlockOptional?.Context;
 
         protected IBlock BlockOptional { get; private set; }
 
