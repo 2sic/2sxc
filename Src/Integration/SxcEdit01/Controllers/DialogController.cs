@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.WebApi.Admin;
 
 namespace IntegrationSamples.SxcEdit01.Controllers
 {
-    [Route(IntegrationConstants.DefaultRouteRoot + "/admin" + IntegrationConstants.DefaultRouteControllerAction)]
+    [Route(IntegrationConstants.DefaultRouteRoot + AreaRoutes.Admin)]
     [ApiController]
     public class DialogController : IntControllerProxyBase<AdminBackend>
     {

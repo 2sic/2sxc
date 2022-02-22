@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.WebApi.Adam;
 
 // #todo: security checks on APIs still completely missing
@@ -17,7 +18,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
     /// Then we can reduce security access level to anonymous, because each method will do the security check
     /// </summary>
     [ApiController]
-    [Route(IntegrationConstants.DefaultRouteRoot + "/app/auto" + "/data/{contentType}/{guid}/{field}/")]
+    [Route(IntegrationConstants.DefaultRouteRoot + AppRoots.AppAutoData + "/" + ValueTokens.SetTypeGuidField)]
     public class AdamController : IntControllerProxyBase<AdamControllerReal<string>>, IAdamController<string>
     {
         public AdamController() : base("Adam") { }

@@ -5,12 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.WebApi.Cms;
 
 namespace IntegrationSamples.SxcEdit01.Controllers
 {
     //[AutoValidateAntiforgeryToken]
-    [Route(IntegrationConstants.DefaultRouteRoot + "/cms" + IntegrationConstants.DefaultRouteControllerAction)]
+    [Route(IntegrationConstants.DefaultRouteRoot + AreaRoutes.Cms)]
     [ApiController]
     public class EditController: IntControllerProxyBase<EditControllerReal>, IEditController
     {
@@ -18,7 +19,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
 
 
         [HttpPost]
-        [AllowAnonymous]   // will check security internally, so assume no requirements
+        [AllowAnonymous] // Anonymous is ok, security check happens internally
         public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
             => Real.Load(items, appId);
 
@@ -29,7 +30,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
 
         [HttpGet]
         [HttpPost]
-        [AllowAnonymous] // security check happens internally
+        [AllowAnonymous] // Anonymous is ok, security check happens internally
         public IEnumerable<EntityForPickerDto> EntityPicker(int appId, [FromBody] string[] items, string contentTypeName = null)
             => Real.EntityPicker(appId, items, contentTypeName);
 

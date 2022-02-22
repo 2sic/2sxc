@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.WebApi.Routing;
 using ToSic.Eav.WebApi.Sys;
 
 namespace IntegrationSamples.BasicEav01.Controllers
 {
-    [Route("api/sxc/sys/[controller]")]
+    [Route("api/sxc/" + Areas.Sys + "/[controller]")]
     [ApiController]
     public class InsightsController : ControllerBase
     {

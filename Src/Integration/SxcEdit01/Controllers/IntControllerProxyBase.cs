@@ -18,7 +18,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
         /// </summary>
         public TRealController Real => _real
             ??= ServiceProvider?.Build<TRealController>().Init(Log) ??
-                throw new Exception($"Can't use {nameof(Real)} before OnActionExecuting");
+                throw new Exception($"Can't use {nameof(Real)} before {nameof(OnActionExecuting)}");
         private TRealController _real;
 
     }
