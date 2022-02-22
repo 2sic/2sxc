@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
         };
 
         public static RootId[] AppAutoNamedInclEditions = AppAutoAndNamed
-            .Concat(AppAutoAndNamed.Select(rid => new RootId(rid.Name + "-edition", rid.Path + "/" + TokensFramework.Edition)))
+            .Concat(AppAutoAndNamed.Select(rid => new RootId(rid.Name + "-edition", rid.Path + "/" + ValueTokens.Edition)))
             .ToArray();
     }
 
