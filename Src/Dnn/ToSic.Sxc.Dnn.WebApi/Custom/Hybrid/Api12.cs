@@ -25,7 +25,7 @@ namespace Custom.Hybrid
     /// This is the base class for all custom API Controllers. <br/>
     /// With this, your code receives the full context  incl. the current App, DNN, Data, etc.
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP for 2sxc 12")]
+    [PublicApi_Stable_ForUseInYourCode("This is the official base class for v12+")]
     [DnnLogExceptions]
     public abstract partial class Api12: DynamicApiController, IDynamicCode12, IDynamicWebApi, IHasDynamicCodeRoot
     {

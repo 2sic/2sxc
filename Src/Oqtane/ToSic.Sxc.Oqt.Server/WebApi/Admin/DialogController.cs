@@ -29,11 +29,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     {
         protected override string HistoryLogName => "Api.SysCnt";
 
-        public DialogController(AdminBackend adminBackend) => RealController = adminBackend.Init(Log);
-        public AdminBackend RealController { get; }
+        public DialogController(DialogControllerReal adminBackend) => RealController = adminBackend.Init(Log);
+        public DialogControllerReal RealController { get; }
         
         [HttpGet]
-        public DialogContextStandalone Settings(int appId) => RealController.DialogSettings(appId);
+        public DialogContextStandaloneDto Settings(int appId) => RealController.DialogSettings(appId);
         
     }
 }

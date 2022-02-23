@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
@@ -16,8 +15,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
     [ApiController]
     public class InsightsController : OqtControllerBase
     {
-        public InsightsController(Insights insights) => _insights = insights;
-        private readonly Insights _insights;
+        public InsightsController(InsightsControllerReal insights) => _insights = insights;
+        private readonly InsightsControllerReal _insights;
 
         #region Logging aspects
 

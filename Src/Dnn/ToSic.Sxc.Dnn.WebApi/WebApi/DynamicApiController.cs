@@ -6,7 +6,6 @@ using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
-using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Dnn.WebApiRouting;
@@ -21,7 +20,7 @@ namespace ToSic.Sxc.WebApi
     /// For others, please use the SxiApiControllerBase, which doesn't have all that, and is usually then
     /// safer because it can't accidentally mix the App with a different appId in the params
     /// </summary>
-    [PrivateApi]
+    [PrivateApi("This is an internal base class used for the App ApiControllers. Make sure the implementations don't break")]
     [DnnLogExceptions]
     public abstract class DynamicApiController : SxcApiControllerBase, ICreateInstance, IHasDynamicCodeRoot
     {

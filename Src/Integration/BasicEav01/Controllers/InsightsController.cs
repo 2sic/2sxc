@@ -12,8 +12,8 @@ namespace IntegrationSamples.BasicEav01.Controllers
         /// <summary>
         /// Constructor which will retrieve the Insights backend for use here
         /// </summary>
-        public InsightsController(Insights insights) => _insights = insights;
-        private readonly Insights _insights;
+        public InsightsController(InsightsControllerReal insights) => _insights = insights;
+        private readonly InsightsControllerReal _insights;
 
         /// <summary>
         /// The main call on this controller, will return all kinds of views with information

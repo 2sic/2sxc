@@ -26,8 +26,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <param name="appId"></param>
         /// <returns></returns>
         [HttpGet]
-        public DialogContextStandalone Settings(int appId) 
-            => GetService<AdminBackend>().Init(Log).DialogSettings(appId);
+        public DialogContextStandaloneDto Settings(int appId) 
+            => GetService<DialogControllerReal>().Init(Log).DialogSettings(appId);
 
         #endregion
 

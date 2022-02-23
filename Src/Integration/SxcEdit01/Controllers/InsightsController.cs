@@ -7,7 +7,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
 {
     [Route(IntegrationConstants.DefaultRouteRoot + Areas.Sys + "/[controller]")]
     [ApiController]
-    public class InsightsController : IntControllerProxyBase<Insights>
+    public class InsightsController : IntControllerProxyBase<InsightsControllerReal>
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 

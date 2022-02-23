@@ -13,6 +13,7 @@ namespace ToSic.Sxc.WebApi
     /// But it will NOT provide an App or anything like that
     /// </summary>
     [DnnLogExceptions]
+    [PrivateApi("This was only ever used as an internal base class, so it can be modified as needed - just make sure the derived types don't break")]
     public class SxcApiControllerBase: DnnApiControllerWithFixes
     {
         protected override string HistoryLogName => "Api.CntBas";
@@ -22,7 +23,6 @@ namespace ToSic.Sxc.WebApi
             base.Initialize(controllerContext);
             SharedContextResolver = GetService<IContextResolver>();
             SharedContextResolver.AttachRealBlock(() => BlockOfRequest);
-            //SharedContextResolver.AttachBlockContext(() => BlockOfRequest?.Context);
         }
 
         protected IContextResolver SharedContextResolver;

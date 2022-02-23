@@ -8,12 +8,12 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
-    public class AdminBackend: WebApiBackendBase<AdminBackend>
+    public class DialogControllerReal: WebApiBackendBase<DialogControllerReal>
     {
         private readonly IContextResolver _ctxResolver;
         private readonly IUiContextBuilder _uiContextBuilder;
 
-        public AdminBackend(IServiceProvider serviceProvider, IContextResolver ctxResolver, IUiContextBuilder uiContextBuilder) : base(serviceProvider, "Bck.Admin")
+        public DialogControllerReal(IServiceProvider serviceProvider, IContextResolver ctxResolver, IUiContextBuilder uiContextBuilder) : base(serviceProvider, "Bck.Admin")
         {
             _ctxResolver = ctxResolver;
             _uiContextBuilder = uiContextBuilder;
@@ -25,7 +25,7 @@ namespace ToSic.Sxc.WebApi.Admin
         /// </summary>
         /// <param name="appId"></param>
         /// <returns></returns>
-        public DialogContextStandalone DialogSettings(int appId)
+        public DialogContextStandaloneDto DialogSettings(int appId)
         {            
             // reset app-id if we get a info-token like -100
             if (appId < 0) appId = Eav.Constants.AppIdEmpty;
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.WebApi.Admin
 
             var cb = _uiContextBuilder.InitApp(appContext?.AppState, Log);
 
-            return new DialogContextStandalone
+            return new DialogContextStandaloneDto
             {
                 Context = cb.Get(Ctx.All, CtxEnable.All),
             };
@@ -50,7 +50,7 @@ namespace ToSic.Sxc.WebApi.Admin
 
     }
 
-    public class DialogContextStandalone
+    public class DialogContextStandaloneDto
     {
         public ContextDto Context { get; set; }
     }

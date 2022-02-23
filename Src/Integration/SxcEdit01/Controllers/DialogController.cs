@@ -6,13 +6,13 @@ namespace IntegrationSamples.SxcEdit01.Controllers
 {
     [Route(IntegrationConstants.DefaultRouteRoot + AreaRoutes.Admin)]
     [ApiController]
-    public class DialogController : IntControllerProxyBase<AdminBackend>
+    public class DialogController : IntControllerProxyBase<DialogControllerReal>
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
         public DialogController() :base("SysCnt") { }
 
         [HttpGet]
-        public DialogContextStandalone Settings(int appId) => Real.DialogSettings(appId);
+        public DialogContextStandaloneDto Settings(int appId) => Real.DialogSettings(appId);
     }
 }
