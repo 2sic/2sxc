@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     // [ValidateAntiForgeryToken] because the exports are called by the browser directly (new tab) 
     // we can't set this globally (only needed for imports)
     [DnnLogExceptions]
-    public class AppController : SxcApiControllerBase, IAppController
+    public class AppController : SxcApiControllerBase<DummyControllerReal>, IAppController
     {
         public AppController() : base("App") { }
 

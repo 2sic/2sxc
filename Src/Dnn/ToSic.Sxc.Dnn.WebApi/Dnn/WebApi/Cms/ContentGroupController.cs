@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.WebApi;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.ItemLists;
 
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
     [SupportedModules("2sxc,2sxc-app")]
     [ValidateAntiForgeryToken]
-    public class ContentGroupController : SxcApiControllerBase
+    public class ContentGroupController : SxcApiControllerBase<DummyControllerReal>
     {
         public ContentGroupController(): base("ConGrp") { }
 

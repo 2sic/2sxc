@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [SupportedModules("2sxc,2sxc-app")]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public class MetadataController : SxcApiControllerBase, IMetadataController
+    public class MetadataController : SxcApiControllerBase<DummyControllerReal>, IMetadataController
     {
         public MetadataController() : base("MetaDt") { }
 

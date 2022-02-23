@@ -2,6 +2,7 @@
 using DotNetNuke.Web.Api;
 using System.Collections.Generic;
 using System.Web.Http;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Dnn.WebApi.Logging;
@@ -17,7 +18,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [DnnLogExceptions]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public class AppFilesController : SxcApiControllerBase, IAppFilesController
+    public class AppFilesController : SxcApiControllerBase<DummyControllerReal>, IAppFilesController
     {
         public AppFilesController() : base("Assets") { }
 

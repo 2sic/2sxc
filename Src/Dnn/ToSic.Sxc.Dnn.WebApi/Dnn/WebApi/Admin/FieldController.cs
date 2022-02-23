@@ -5,6 +5,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.WebApi;
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [SupportedModules("2sxc,2sxc-app")]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public class FieldController : SxcApiControllerBase, IFieldController
+    public class FieldController : SxcApiControllerBase<DummyControllerReal>, IFieldController
     {
         public FieldController() : base("Fields") { }
 

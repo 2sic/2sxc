@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Web.Http;
 using ToSic.Eav.Data;
+using ToSic.Eav.WebApi;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.App;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -15,8 +16,8 @@ namespace ToSic.Sxc.Dnn.WebApi.App
     /// Then we can reduce security access level to anonymous, because each method will do the security check
     /// </summary>
     [AllowAnonymous]
-    public class AppContentController : SxcApiControllerBase
-	{
+    public class AppContentController : SxcApiControllerBase<DummyControllerReal>
+    {
         public AppContentController(): base("AppCnt") { }
 
         #region Get List / all of a certain content-type

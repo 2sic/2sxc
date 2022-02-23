@@ -4,6 +4,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Persistence.Versions;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.WebApi;
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
     [SupportedModules("2sxc,2sxc-app")]
     [ValidateAntiForgeryToken]
-    public class HistoryController : SxcApiControllerBase, IHistoryController
+    public class HistoryController : SxcApiControllerBase<DummyControllerReal>, IHistoryController
     {
         public HistoryController() : base("History") { }
 

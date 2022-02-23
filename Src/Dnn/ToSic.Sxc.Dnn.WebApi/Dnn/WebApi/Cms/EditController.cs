@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
@@ -13,13 +14,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
     [SupportedModules("2sxc,2sxc-app")]
     [ValidateAntiForgeryToken]
-    public class EditController : SxcApiControllerBase, IEditController
+    public class EditController : SxcApiControllerBase<EditControllerReal>, IEditController
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
         public EditController() : base("Edit") { }
-
-        private EditControllerReal Real => GetService<EditControllerReal>().Init(Log);
 
         /// <inheritdoc />
         [HttpPost]

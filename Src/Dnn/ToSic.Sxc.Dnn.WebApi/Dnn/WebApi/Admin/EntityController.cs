@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     /// Security checking is possible, because the cookie still contains user information
     /// </remarks>
     [DnnLogExceptions]
-	public class EntityController : SxcApiControllerBase, IEntitiesController
+	public class EntityController : SxcApiControllerBase<DummyControllerReal>, IEntitiesController
 	{
         public EntityController(): base("Entity") { }
 

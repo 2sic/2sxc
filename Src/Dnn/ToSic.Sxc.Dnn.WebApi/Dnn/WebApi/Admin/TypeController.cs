@@ -6,6 +6,7 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Persistence.Logging;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.ImportExport;
@@ -33,7 +34,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     /// Security checking is possible, because the cookie still contains user information
     /// </remarks>
     [DnnLogExceptions]
-    public class TypeController : SxcApiControllerBase, ITypeController
+    public class TypeController : SxcApiControllerBase<DummyControllerReal>, ITypeController
     {
         public TypeController() : base("Types") { }
 

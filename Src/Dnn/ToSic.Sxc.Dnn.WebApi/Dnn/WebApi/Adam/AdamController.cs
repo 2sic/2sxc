@@ -20,20 +20,36 @@ namespace ToSic.Sxc.Dnn.WebApi
     [SupportedModules("2sxc,2sxc-app")]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]    // use view, all methods must re-check permissions
     [ValidateAntiForgeryToken]
-    public class AdamController : SxcApiControllerBase, IAdamController<int>
+    public class AdamController : SxcApiControllerBase<AdamControllerReal<int>>, IAdamController<int>
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
         public AdamController() : base("Adam") { }
-
-        private AdamControllerReal<int> Real => GetService<AdamControllerReal<int>>().Init(Log);
-
 
         [HttpPost]
         [HttpPut]
         public UploadResultDto Upload(int appId, string contentType, Guid guid, string field, [FromUri] string subFolder = "", bool usePortalRoot = false) 
             => Real.Upload(new HttpUploadedFile(Request, HttpContext.Current.Request), appId, contentType, guid, field, subFolder, usePortalRoot);
 
+
+        [HttpGet]
+        public IEnumerable<AdamItemDto> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
+            => Real.Items(appId, contentType, guid, field, subfolder, usePortalRoot);
+
+
+        [HttpPost]
+        public IEnumerable<AdamItemDto> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
+            => Real.Folder(appId, contentType, guid, field, subfolder, newFolder, usePortalRoot);
+
+
+        [HttpGet]
+        public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot)
+            => Real.Delete(appId, contentType, guid, field, subfolder, isFolder, id, usePortalRoot);
+
+
+        [HttpGet]
+        public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot)
+            => Real.Rename(appId, contentType, guid, field, subfolder, isFolder, id, newName, usePortalRoot);
 
         // test method to provide a public API for accessing adam items easily
         // not sure if it is ever used
@@ -45,23 +61,5 @@ namespace ToSic.Sxc.Dnn.WebApi
         //    const int AutoDetect = -1;
         //    return Items(AutoDetect, contentType, guid, field, folder);
         //}
-
-        [HttpGet]
-        public IEnumerable<AdamItemDto> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
-            => Real.Items(appId, contentType, guid, field, subfolder, usePortalRoot);
-
-
-        [HttpPost]
-        public IEnumerable<AdamItemDto> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
-            => Real.Folder(appId, contentType, guid, field, subfolder, newFolder, usePortalRoot);
-
-        [HttpGet]
-        public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot)
-            => Real.Delete(appId, contentType, guid, field, subfolder, isFolder, id, usePortalRoot);
-
-        [HttpGet]
-        public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot)
-            => Real.Rename(appId, contentType, guid, field, subfolder, isFolder, id, newName, usePortalRoot);
-
     }
 }

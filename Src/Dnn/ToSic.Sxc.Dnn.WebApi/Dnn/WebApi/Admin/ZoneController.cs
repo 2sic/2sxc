@@ -3,6 +3,7 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Languages;
 using ToSic.Eav.WebApi.PublicApi;
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [DnnLogExceptions]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public class ZoneController : SxcApiControllerBase, IZoneController
+    public class ZoneController : SxcApiControllerBase<DummyControllerReal>, IZoneController
     {
         public ZoneController() : base("Zone") { }
 

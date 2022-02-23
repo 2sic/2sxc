@@ -7,6 +7,7 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Persistence.Logging;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
@@ -32,8 +33,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     /// Security checking is possible, because the cookie still contains user information
     /// </remarks>
     [DnnLogExceptions]
-    public class ViewController : SxcApiControllerBase
-	{
+    public class ViewController : SxcApiControllerBase<DummyControllerReal>
+    {
         public ViewController() : base("View") { }
 
         private ViewsBackend Backend => GetService<ViewsBackend>().Init(Log);

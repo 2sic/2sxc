@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
 using ToSic.Eav.DataFormats.EavLight;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Eav.WebApi.Query;
 using ToSic.Sxc.WebApi;
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
     /// They will only be delivered if the security is confirmed - it must be publicly available
     /// </summary>
     [AllowAnonymous]
-    public class AppQueryController : SxcApiControllerBase, IAppQueryController
+    public class AppQueryController : SxcApiControllerBase<DummyControllerReal>, IAppQueryController
     {
         public AppQueryController() : base("AppQry") { }
 

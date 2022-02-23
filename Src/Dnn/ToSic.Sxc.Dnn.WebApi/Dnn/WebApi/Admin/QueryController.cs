@@ -4,6 +4,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.DataSources.Catalog;
 using ToSic.Eav.DataSources.Queries;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [DnnLogExceptions]
     [ValidateAntiForgeryToken]
-	public class QueryController : SxcApiControllerBase, IQueryController
+	public class QueryController : SxcApiControllerBase<DummyControllerReal>, IQueryController
     {
         public QueryController() : base("Query") { }
 

@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [DnnLogExceptions]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public class DialogController : SxcApiControllerBase
+    public class DialogController : SxcApiControllerBase<DialogControllerReal>
     {
         public DialogController(): base("Dialog") { }
 

@@ -2,6 +2,7 @@
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.WebApi;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.FieldList;
 
@@ -9,7 +10,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
     [SupportedModules("2sxc,2sxc-app")]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public class ListController: SxcApiControllerBase
+    public class ListController: SxcApiControllerBase<DummyControllerReal>
     {
         public ListController() : base("List") { }
 
