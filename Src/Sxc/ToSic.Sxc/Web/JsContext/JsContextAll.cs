@@ -38,9 +38,9 @@ namespace ToSic.Sxc.Web.JsContext
 
             // New in v13 - if the view is from remote, don't allow design
             var view = block.View; // can be null
-            var canDesign = !view?.Entity.HasAncestor();
+            var blockCanDesign = (view?.Entity.HasAncestor() ?? false) ? (bool?)false : null;
 
-            User = new JsContextUser(ctx.User, canDesign);
+            User = new JsContextUser(ctx.User, blockCanDesign);
 
             ContentBlockReference = new ContentBlockReferenceDto(block, ctx.Publishing.Mode);
             ContentBlock = new ContentBlockDto(block);

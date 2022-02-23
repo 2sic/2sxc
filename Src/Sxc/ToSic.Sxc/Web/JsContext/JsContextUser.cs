@@ -4,7 +4,8 @@ namespace ToSic.Sxc.Web.JsContext
 {
     public class JsContextUser
     {
-        public bool CanDesign { get; }
+        // 2022-02-23 2dm remove this, believe it's not used any more
+        //public bool CanDesign { get; }
         public bool CanDevelop { get; }
 
         public bool CanAdmin { get; }
@@ -12,7 +13,8 @@ namespace ToSic.Sxc.Web.JsContext
         public JsContextUser(IUser user, bool? overrideDesign = null)
         {
             CanAdmin = user.IsAdmin;
-            CanDesign = overrideDesign ?? user.IsDesigner;
+            // 2022-02-23 2dm remove this, believe it's not used any more
+            //CanDesign = overrideDesign ?? user.IsDesigner;
             CanDevelop = user.IsSuperUser;
         }
     }
