@@ -8,7 +8,6 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Beta.LightSpeed;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Install;
-using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Web;
 
@@ -22,19 +21,27 @@ namespace ToSic.Sxc.Dnn
         /// </summary>
         private IServiceProvider ServiceProvider => _serviceProvider ?? (_serviceProvider = DnnStaticDi.CreateModuleScopedServiceProvider());
         private IServiceProvider _serviceProvider;
+        private TService GetService<TService>() => ServiceProvider.Build<TService>();
 
-        private IBlock Block { get; set; }
+        /// <summary>
+        /// Block needs to self-initialize when first requested, because it's used in the Actions-Menu builder
+        /// which runs before page-load
+        /// </summary>
+        private IBlock Block => _block ?? (_block = GetService<IModuleAndBlockBuilder>().Init(Log).GetBlock(ModuleConfiguration));
+        private IBlock _block;
 
         private ILog Log { get; } = new Log("Sxc.View");
         private Stopwatch _stopwatch;
         private Action<string> _entireLog;
+
+
         /// <summary>
         /// Page Load event
         /// </summary>
         protected void Page_Load(object sender, EventArgs e)
         {
             // add to insights-history for analytic
-            ServiceProvider.Build<LogHistory>().Add("module", Log);
+            GetService<LogHistory>().Add("module", Log);
             _stopwatch = Stopwatch.StartNew();
             _entireLog = Log.Call(message: $"Page:{TabId} '{Page?.Title}', Instance:{ModuleId} '{ModuleConfiguration.ModuleTitle}'", useTimer: true);
             var callLog = Log.Call(useTimer: true);
@@ -65,9 +72,8 @@ namespace ToSic.Sxc.Dnn
             // ensure everything is ready and that we know if we should activate the client-dependency
             TryCatchAndLogToDnn(() =>
             {
-                Block = ServiceProvider.Build<IModuleAndBlockBuilder>().Init(Log).GetBlock(ModuleConfiguration);
                 if (checkPortalIsReady) DnnReadyCheckTurbo.EnsureSiteAndAppFoldersAreReady(this, Block, Log);
-                DnnClientResources = ServiceProvider.Build<DnnClientResources>()
+                DnnClientResources = GetService<DnnClientResources>()
                     .Init(Page, requiresPre1025Behavior == false ? null : Block?.BlockBuilder, Log);
                 var needsPre1025Behavior = requiresPre1025Behavior ?? DnnClientResources.NeedsPre1025Behavior();
                 if (needsPre1025Behavior) DnnClientResources.EnforcePre1025Behavior();
@@ -104,7 +110,7 @@ namespace ToSic.Sxc.Dnn
                     // in this case assets & page settings were not applied
                     try
                     {
-                        var pageChanges = ServiceProvider.Build<DnnPageChanges>();
+                        var pageChanges = GetService<DnnPageChanges>();
                         pageChanges.Apply(Page, data); // note: if Assets == null, it will take the default
                     }
                     catch{ /* ignore */ }
