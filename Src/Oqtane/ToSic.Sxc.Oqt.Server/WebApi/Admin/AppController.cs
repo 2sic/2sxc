@@ -8,9 +8,7 @@ using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
-using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Admin;
-using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -27,7 +25,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     // Beta routes - TODO: @STV - why is this beta?
     [Route(WebApiConstants.WebApiStateRoot + "/admin/app/[action]")]
 
-    public class AppController : OqtStatefulControllerBase, IAppController
+    public class AppController : OqtStatefulControllerBase, IAppController<IActionResult>
     {
 
         private AppControllerReal<IActionResult> RealController { get; }
@@ -35,7 +33,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
         public AppController(AppControllerReal<IActionResult> appControllerReal)
         {
-            RealController = appControllerReal.Init(PreventServerTimeout300, Log);
+            RealController = appControllerReal.Init(Log).Init(PreventServerTimeout300);
         }
 
         [HttpGet]

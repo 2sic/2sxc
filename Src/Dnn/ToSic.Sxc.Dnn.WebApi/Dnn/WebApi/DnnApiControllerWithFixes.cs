@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         /// The RealController which is the full backend of this controller.
         /// Note that it's not available at construction time, because the ServiceProvider isn't ready till later.
         /// </summary>
-        public TRealController Real
+        protected virtual TRealController Real
             => _real ?? (_real = GetService<TRealController>().Init(Log)
                                  ?? throw new Exception($"Can't use {nameof(Real)} for unknown reasons"));
         private TRealController _real;

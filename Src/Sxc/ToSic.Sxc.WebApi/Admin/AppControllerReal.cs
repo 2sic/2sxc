@@ -60,10 +60,9 @@ namespace ToSic.Sxc.WebApi.Admin
 
         private Action _preventServerTimeout300;
 
-        public AppControllerReal<THttpResponseType> Init(Action preventServerTimeout300, ILog parent)
+        public AppControllerReal<THttpResponseType> Init(Action preventServerTimeout300)
         {
             _preventServerTimeout300 = preventServerTimeout300;
-            base.Init(parent);
             return this;
         }
 
