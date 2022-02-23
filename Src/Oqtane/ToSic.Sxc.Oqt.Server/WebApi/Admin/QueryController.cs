@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.DataSources.Catalog;
 using ToSic.Eav.DataSources.Queries;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Eav.WebApi.Routing;
@@ -26,12 +27,10 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
     // Beta routes - TODO: @STV - why is this beta?
     [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Admin}")]
-    public class QueryController : OqtStatefulControllerBase, IQueryController
+    public class QueryController : OqtStatefulControllerBase<DummyControllerReal>, IQueryController
     {
+        public QueryController(QueryBackend queryLazy) : base("Query") => _queryLazy = queryLazy;
         private readonly QueryBackend _queryLazy;
-        protected override string HistoryLogName => "Api.Query";
-
-        public QueryController(QueryBackend queryLazy) => _queryLazy = queryLazy;
 
         /// <summary>
         /// Get a Pipeline with DataSources

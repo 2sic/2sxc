@@ -42,9 +42,10 @@ namespace ToSic.Sxc.WebApi
             // These are usually replaced by the target platform
             services.TryAddTransient<IBlockResourceExtractor, BlockResourceExtractorUnknown>();
             
+            // Real Controllers
+
             // Backends
             services.TryAddTransient<AppsBackend>();
-            services.TryAddTransient<DialogControllerReal>();
             services.TryAddTransient<EntityPickerBackend>();
             services.TryAddTransient<EntityBackend>();
             services.TryAddTransient<EditLoadBackend>();
@@ -88,6 +89,7 @@ namespace ToSic.Sxc.WebApi
             //services.TryAddTransient<ZoneBackend>();
 
             // New v13 - try to reduce Dnn/Oqtane code to the max, by creating ControllerReal objects which do everything
+            services.TryAddTransient<DialogControllerReal>();
             services.TryAddTransient(typeof(AppControllerReal<>));
             services.TryAddTransient<EditControllerReal>();
             services.TryAddTransient(typeof(AdamControllerReal<>));

@@ -4,6 +4,7 @@ using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Languages;
 using ToSic.Eav.WebApi.PublicApi;
@@ -26,11 +27,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
     // Beta routes - TODO: @STV - why is this beta?
     [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Admin}")]
-    public class ZoneController : OqtStatefulControllerBase, IZoneController
+    public class ZoneController : OqtStatefulControllerBase<DummyControllerReal>, IZoneController
     {
-        protected override string HistoryLogName => "Api.Zone";
-
-        public ZoneController(LanguagesBackend languagesBackend, Lazy<ZoneBackend> zoneBackendLazy)
+        public ZoneController(LanguagesBackend languagesBackend, Lazy<ZoneBackend> zoneBackendLazy): base("Zone")
         {
             _languagesBackend = languagesBackend;
             _zoneBackendLazy = zoneBackendLazy;

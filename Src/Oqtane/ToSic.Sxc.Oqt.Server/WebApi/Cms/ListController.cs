@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.FieldList;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
@@ -19,17 +19,15 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     [ValidateAntiForgeryToken]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public class ListController : OqtStatefulControllerBase
+    public class ListController : OqtStatefulControllerBase<DummyControllerReal>
     {
-        protected override string HistoryLogName => "Api.List";
-
-        private readonly Lazy<FieldListBackend> _fieldListBackendLazy;
-        private FieldListBackend FieldBacked => _fieldBackend ??= _fieldListBackendLazy.Value.Init(Log);
-        private FieldListBackend _fieldBackend;
-        public ListController(Lazy<FieldListBackend> fieldListBackendLazy)
+        public ListController(Lazy<FieldListBackend> fieldListBackendLazy): base("List")
         {
             _fieldListBackendLazy = fieldListBackendLazy;
         }
+        private readonly Lazy<FieldListBackend> _fieldListBackendLazy;
+        private FieldListBackend FieldBacked => _fieldBackend ??= _fieldListBackendLazy.Value.Init(Log);
+        private FieldListBackend _fieldBackend;
 
         /// <summary>
         /// used to be GET Module/ChangeOrder

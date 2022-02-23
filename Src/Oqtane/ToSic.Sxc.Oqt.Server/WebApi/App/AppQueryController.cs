@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.DataFormats.EavLight;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Eav.WebApi.Query;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -34,19 +35,14 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
 
     //[AllowAnonymous]
     [Produces("application/json")]
-    public class AppQueryController : OqtStatefulControllerBase, IAppQueryController
+    public class AppQueryController : OqtStatefulControllerBase<DummyControllerReal>, IAppQueryController
     {
-        private readonly Lazy<AppQuery> _appQuery;
-
-        #region DI / Constructor
-        protected override string HistoryLogName => "App.AppQry";
-
-        public AppQueryController(Lazy<AppQuery> appQuery)
+        public AppQueryController(Lazy<AppQuery> appQuery): base("Query")
         {
             _appQuery = appQuery;
         }
+        private readonly Lazy<AppQuery> _appQuery;
 
-        #endregion
 
         // GET is separated from POST to solve HttpResponseException that happens when
         // 'content-type' header is missing (or in GET request) on the endpoint that has [FromBody] in signature

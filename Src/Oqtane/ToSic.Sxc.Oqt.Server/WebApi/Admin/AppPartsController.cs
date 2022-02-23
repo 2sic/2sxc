@@ -4,6 +4,7 @@ using Oqtane.Shared;
 using System;
 using System.Net.Http;
 using ToSic.Eav.Context;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Eav.WebApi.Routing;
@@ -25,19 +26,18 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
     // Beta routes - TODO: @STV - why is this beta?
     [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Admin}")]
-    public class AppPartsController : OqtStatefulControllerBase, IAppPartsController
+    public class AppPartsController : OqtStatefulControllerBase<DummyControllerReal>, IAppPartsController
     {
-        private readonly Lazy<ExportContent> _exportContentLazy;
-        private readonly Lazy<ImportContent> _importContentLazy;
-        private readonly Lazy<IUser> _userLazy;
-        protected override string HistoryLogName => "Api.AParts";
-
-        public AppPartsController(Lazy<ExportContent> exportContentLazy, Lazy<ImportContent> importContentLazy, Lazy<IUser> userLazy)
+        public AppPartsController(Lazy<ExportContent> exportContentLazy, Lazy<ImportContent> importContentLazy, Lazy<IUser> userLazy): base("AParts")
         {
             _exportContentLazy = exportContentLazy;
             _importContentLazy = importContentLazy;
             _userLazy = userLazy;
         }
+        private readonly Lazy<ExportContent> _exportContentLazy;
+        private readonly Lazy<ImportContent> _importContentLazy;
+        private readonly Lazy<IUser> _userLazy;
+
 
         #region Parts Export/Import
 

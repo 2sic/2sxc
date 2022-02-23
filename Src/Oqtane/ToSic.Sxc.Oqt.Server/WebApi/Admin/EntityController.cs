@@ -40,21 +40,21 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
     // Beta routes - TODO: @STV - why is this beta?
     [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Admin}")]
-    public class EntityController : OqtStatefulControllerBase //, IEntitiesController // FIX: changed from interface to solve ambiguous DELETE routes.
+    public class EntityController : OqtStatefulControllerBase<DummyControllerReal> //, IEntitiesController // FIX: changed from interface to solve ambiguous DELETE routes.
     {
-        private readonly Lazy<ContentExportApi>_contentExportLazy;
-        private readonly Lazy<ContentImportApi> _contentImportLazy;
-        private readonly Lazy<IUser> _userLazy;
-        private readonly Lazy<EntityApi> _lazyEntityApi;
-        protected override string HistoryLogName => "Api.EntCnt";
-        
         public EntityController(Lazy<EntityApi> lazyEntityApi, Lazy<ContentExportApi> contentExportLazy, Lazy<ContentImportApi> contentImportLazy, Lazy<IUser> userLazy)
+            : base("Entity")
         {
             _contentExportLazy = contentExportLazy;
             _contentImportLazy = contentImportLazy;
             _userLazy = userLazy;
             _lazyEntityApi = lazyEntityApi;
         }
+        private readonly Lazy<ContentExportApi> _contentExportLazy;
+        private readonly Lazy<ContentImportApi> _contentImportLazy;
+        private readonly Lazy<IUser> _userLazy;
+        private readonly Lazy<EntityApi> _lazyEntityApi;
+
 
         /// <summary>
         /// Used to be Entities/GetOllOfTypeForAdmin

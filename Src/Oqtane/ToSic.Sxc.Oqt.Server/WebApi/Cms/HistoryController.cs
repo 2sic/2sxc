@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Persistence.Versions;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Eav.WebApi.Routing;
@@ -23,17 +24,15 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Cms}")]
 
     [ValidateAntiForgeryToken]
-    public class HistoryController : OqtStatefulControllerBase, IHistoryController
+    public class HistoryController : OqtStatefulControllerBase<DummyControllerReal>, IHistoryController
     {
-        private readonly IdentifierHelper _idHelper;
-        private readonly Lazy<AppManager> _appManagerLazy;
-        protected override string HistoryLogName => "Api.History";
-
-        public HistoryController(IdentifierHelper idHelper, Lazy<AppManager> appManagerLazy)
+        public HistoryController(IdentifierHelper idHelper, Lazy<AppManager> appManagerLazy): base("History")
         {
             _idHelper = idHelper;
             _appManagerLazy = appManagerLazy;
         }
+        private readonly IdentifierHelper _idHelper;
+        private readonly Lazy<AppManager> _appManagerLazy;
 
         /// <summary>
         /// Used to be POST Entities/History

@@ -13,11 +13,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
 
     public class AppAssetsController: WebApi.AppAssetsControllerBase
     {
-        protected override string HistoryLogName => "Oqt.AppAdm";
+        //protected override string HistoryLogName => "Oqt.AppAdm";
         
         public override string Route => "adam";
 
-        public AppAssetsController(AppAssetsDependencies dependencies) : base(dependencies)
+        public AppAssetsController(AppAssetsDependencies dependencies) : base(dependencies, "Assets")
         {
 
         }

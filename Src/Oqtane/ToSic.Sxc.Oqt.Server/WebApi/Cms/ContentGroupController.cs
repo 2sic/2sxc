@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
@@ -21,14 +22,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     [ValidateAntiForgeryToken]
     [ApiController]
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
-    public class ContentGroupController : OqtStatefulControllerBase
+    public class ContentGroupController : OqtStatefulControllerBase<DummyControllerReal>
     {
-        private readonly Lazy<ListsBackendBase> _listBackendLazy;
-        protected override string HistoryLogName => "Api.ConGrp";
-        public ContentGroupController(Lazy<ListsBackendBase> listBackendLazy)
+        public ContentGroupController(Lazy<ListsBackendBase> listBackendLazy): base("ConGrp")
         {
             _listBackendLazy = listBackendLazy;
         }
+        private readonly Lazy<ListsBackendBase> _listBackendLazy;
 
         private ListsBackendBase Backend => _listBackendLazy.Value.Init(Log);
 

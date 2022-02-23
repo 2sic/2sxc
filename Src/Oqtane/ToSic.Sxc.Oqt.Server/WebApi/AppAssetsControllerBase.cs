@@ -3,21 +3,21 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Eav.WebApi;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Apps;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi
 {
-    public abstract class AppAssetsControllerBase : OqtControllerBase
+    public abstract class AppAssetsControllerBase : OqtControllerBase<DummyControllerReal>
     {
         public virtual string Route => "default";
         private readonly Lazy<OqtAppFolder> _oqtAppFolderLazy;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly SiteState _siteState;
 
-        protected AppAssetsControllerBase(AppAssetsDependencies dependencies)
+        protected AppAssetsControllerBase(AppAssetsDependencies dependencies, string logSuffix): base(logSuffix)
         {
             _hostingEnvironment = dependencies.HostingEnvironment;
             _oqtAppFolderLazy = dependencies.OqtAppFolderLazy;

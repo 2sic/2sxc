@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps.Ui;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -25,27 +26,24 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     [ValidateAntiForgeryToken]
     [ApiController]
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
-    public class BlockController : OqtStatefulControllerBase, ToSic.Sxc.WebApi.Cms.IBlockController
+    public class BlockController : OqtStatefulControllerBase<DummyControllerReal>, ToSic.Sxc.WebApi.Cms.IBlockController
     {
-        private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
-        private readonly Lazy<ContentBlockBackend> _blockBackendLazy;
-        private readonly Lazy<AppViewPickerBackend> _viewsBackendLazy;
-        private readonly Lazy<CmsZones> _cmsZonesLazy;
-        private readonly Lazy<AppViewPickerBackend> _appViewPickerBackendLazy;
-        protected override string HistoryLogName => "Api.Block";
         public BlockController(
             Lazy<CmsRuntime> lazyCmsRuntime,
             Lazy<ContentBlockBackend> blockBackendLazy,
             Lazy<AppViewPickerBackend> viewsBackendLazy,
-            Lazy<CmsZones> cmsZonesLazy,
-            Lazy<AppViewPickerBackend> appViewPickerBackendLazy)
+            Lazy<CmsZones> cmsZonesLazy): base("Block")
         {
             _lazyCmsRuntime = lazyCmsRuntime;
             _blockBackendLazy = blockBackendLazy;
             _viewsBackendLazy = viewsBackendLazy;
             _cmsZonesLazy = cmsZonesLazy;
-            _appViewPickerBackendLazy = appViewPickerBackendLazy;
         }
+        private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
+        private readonly Lazy<ContentBlockBackend> _blockBackendLazy;
+        private readonly Lazy<AppViewPickerBackend> _viewsBackendLazy;
+        private readonly Lazy<CmsZones> _cmsZonesLazy;
+
 
         protected CmsRuntime CmsRuntime
         {
@@ -60,7 +58,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         private CmsRuntime _cmsRuntime;
 
         // TODO: NOT sure if this is correct - it just gets the App but the block may be null
-        private IApp ContextApp => _app ??= BlockOptional.App; // GetBlock().App;
+        private IApp ContextApp => _app ??= BlockOptional.App;
         private IApp _app;
 
         #region Block

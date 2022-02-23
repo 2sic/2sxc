@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Admin;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
@@ -25,15 +24,14 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Admin}")]
     [ApiController]
 
-    public class DialogController : OqtStatefulControllerBase
+    public class DialogController : OqtStatefulControllerBase<DialogControllerReal>
     {
-        protected override string HistoryLogName => "Api.SysCnt";
+        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-        public DialogController(DialogControllerReal adminBackend) => RealController = adminBackend.Init(Log);
-        public DialogControllerReal RealController { get; }
+        public DialogController() : base("Dialog") { }
         
         [HttpGet]
-        public DialogContextStandaloneDto Settings(int appId) => RealController.DialogSettings(appId);
+        public DialogContextStandaloneDto Settings(int appId) => Real.DialogSettings(appId);
         
     }
 }

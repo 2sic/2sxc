@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
@@ -32,15 +33,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
     // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/app-content/{contentType}/{guid:guid}/{field}")]
 
-    public class AdamController : OqtStatefulControllerBase, IAdamController<int>
+    public class AdamController : OqtStatefulControllerBase<AdamControllerReal<int>>, IAdamController<int>
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-        protected override string HistoryLogName => "Api.Adam";
-
-        public AdamController(AdamControllerReal<int> realController) => Real = realController.Init(Log);
-        public AdamControllerReal<int> Real;
-
+        public AdamController(): base("Adam") { }
 
         [HttpPost]
         [HttpPut]

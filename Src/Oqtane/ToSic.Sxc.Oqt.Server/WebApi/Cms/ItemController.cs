@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
@@ -17,15 +18,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     // Beta routes - TODO: @STV - why is this beta?
     [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Cms}")]
     [ValidateAntiForgeryToken]
-    public class ItemController : OqtStatefulControllerBase
+    public class ItemController : OqtStatefulControllerBase<DummyControllerReal>
     {
-        private readonly Lazy<AppViewPickerBackend> _appViewPickerBackendLazy;
-        protected override string HistoryLogName => "Api.Item";
-
-        public ItemController(Lazy<AppViewPickerBackend> appViewPickerBackendLazy)
+        public ItemController(Lazy<AppViewPickerBackend> appViewPickerBackendLazy): base("Item")
         {
             _appViewPickerBackendLazy = appViewPickerBackendLazy;
         }
+        private readonly Lazy<AppViewPickerBackend> _appViewPickerBackendLazy;
 
         /// <summary>
         /// Used to be GET Module/Publish

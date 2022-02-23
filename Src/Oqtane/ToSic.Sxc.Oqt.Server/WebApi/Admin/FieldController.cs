@@ -25,16 +25,15 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
     // Beta routes - TODO: @STV - why is this beta?
     [Route(WebApiConstants.WebApiStateRoot + "/admin/field/[action]")]
-    public class FieldController : OqtStatefulControllerBase, IFieldController
+    public class FieldController : OqtStatefulControllerBase<DummyControllerReal>, IFieldController
     {
-        private readonly Lazy<AppRuntime> _appRuntime;
-        private readonly Lazy<ContentTypeApi> _ctApiLazy;
-        protected override string HistoryLogName => "Api.Fields";
-        public FieldController(Lazy<AppRuntime> appRuntime, Lazy<ContentTypeApi> ctApiLazy)
+        public FieldController(Lazy<AppRuntime> appRuntime, Lazy<ContentTypeApi> ctApiLazy): base("Fields")
         {
             _appRuntime = appRuntime;
             _ctApiLazy = ctApiLazy;
         }
+        private readonly Lazy<AppRuntime> _appRuntime;
+        private readonly Lazy<ContentTypeApi> _ctApiLazy;
 
         #region Fields - Get, Reorder, Data-Types (for dropdown), etc.
 

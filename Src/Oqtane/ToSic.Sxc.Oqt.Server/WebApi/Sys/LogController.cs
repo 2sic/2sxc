@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Integration;
-using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
@@ -17,11 +17,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
     [Route(WebApiConstants.WebApiStateRoot + "/" + AreaRoutes.Sys)]
     // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [Authorize(Roles = RoleNames.Admin)]
-    public class LogController: OqtStatefulControllerBase
+    public class LogController: OqtStatefulControllerBase<DummyControllerReal>
     {
-        protected override string HistoryLogName => "Api.Log";
-
-        #region Enable extended logging
+        public LogController() : base("Log") { }
 
         /// <summary>
         /// Used to be GET System/ExtendedLogging
@@ -36,7 +34,5 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
             Log.Add(msg);
             return msg;
         }
-
-        #endregion
     }
 }

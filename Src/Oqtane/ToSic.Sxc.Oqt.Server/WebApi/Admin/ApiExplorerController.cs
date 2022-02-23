@@ -4,6 +4,7 @@ using Oqtane.Shared;
 using System;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Eav.WebApi.Routing;
@@ -26,9 +27,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [Authorize(Roles = RoleNames.Admin)]
 
-    public class ApiExplorerController : OqtStatefulControllerBase
+    public class ApiExplorerController : OqtStatefulControllerBase<DummyControllerReal>
     {
-        protected override string HistoryLogName => "Api.Explorer";
+        public ApiExplorerController() : base("Explor") { }
 
         [HttpGet]
         public IActionResult Inspect(string path)
@@ -36,10 +37,10 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             var wrapLog = Log.Call<IActionResult>();
 
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (OqtResponseMaker)ServiceProvider.Build<ResponseMaker<IActionResult>>() ;
+            var responseMaker = (OqtResponseMaker)GetService<ResponseMaker<IActionResult>>() ;
             responseMaker.Init(this);
             
-            var backend = ServiceProvider.Build<ApiExplorerBackend<IActionResult>>();
+            var backend = GetService<ApiExplorerBackend<IActionResult>>();
             if (backend.PreCheckAndCleanPath(ref path, out var error)) return error;
 
             try
@@ -68,10 +69,10 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
         private string GetPathFromRoot(string path)
         {
-            var siteStateInitializer = ServiceProvider.Build<SiteStateInitializer>();
+            var siteStateInitializer = GetService<SiteStateInitializer>();
             var siteId = siteStateInitializer.InitializedState.Alias.SiteId;
 
-            var oqtAppFolder = ServiceProvider.Build<OqtAppFolder>();
+            var oqtAppFolder = GetService<OqtAppFolder>();
             var appFolder = oqtAppFolder.GetAppFolder();
 
             return OqtServerPaths.GetAppApiPath(siteId, appFolder, path);
@@ -79,7 +80,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
         private string GetFullPath(string pathFromRoot)
         {
-            var oqtServerPaths = ServiceProvider.Build<IServerPaths>();
+            var oqtServerPaths = GetService<IServerPaths>();
             return oqtServerPaths.FullContentPath(pathFromRoot);
         }
 

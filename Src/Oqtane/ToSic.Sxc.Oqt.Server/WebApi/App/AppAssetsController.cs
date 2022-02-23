@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.App
 {
@@ -14,13 +13,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
 
     // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/assets/{appName}")]
-    public class AppAssetsController: WebApi.AppAssetsControllerBase
+    public class AppAssetsController: AppAssetsControllerBase
     {
-        protected override string HistoryLogName => "Oqt.AppAst";
-
         public override string Route => "assets";
 
-        public AppAssetsController(AppAssetsDependencies dependencies) : base(dependencies)
+        public AppAssetsController(AppAssetsDependencies dependencies) : base(dependencies, "Assets")
         { }
 
     }

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.Data;
+using ToSic.Eav.WebApi;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.App;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.App
@@ -27,18 +27,14 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
 
     // Beta routes
     [Route( WebApiConstants.WebApiStateRoot + "/app/{appPath}/content/")]
-    public class AppContentController: OqtStatefulControllerBase
+    public class AppContentController: OqtStatefulControllerBase<DummyControllerReal>
     {
-        private readonly Lazy<AppContent> _appContentLazy;
-
-        #region DI / Constructor
-        protected override string HistoryLogName => "Api.AppCnt";
-
-        public AppContentController(Lazy<AppContent> appContentLazy)
+        public AppContentController(Lazy<AppContent> appContentLazy): base("Content")
         {
             _appContentLazy = appContentLazy;
         }
-        #endregion
+        private readonly Lazy<AppContent> _appContentLazy;
+
 
         #region Get List / all of a certain content-type
         /// <summary>

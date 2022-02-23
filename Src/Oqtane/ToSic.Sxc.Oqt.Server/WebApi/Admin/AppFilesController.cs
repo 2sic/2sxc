@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Apps.Assets;
@@ -25,17 +26,16 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
     // Beta routes - TODO: @STV - why is this beta?
     [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Admin}")]
-    public class AppFilesController : OqtStatefulControllerBase, IAppFilesController
+    public class AppFilesController : OqtStatefulControllerBase<DummyControllerReal>, IAppFilesController
     {
-        private readonly Lazy<AppAssetsBackend> _appAssetsLazy;
-        protected override string HistoryLogName => "Api.Assets";
-
-        private AppAssetsBackend Backend() => _appAssetsLazy.Value.Init(Log);
-
-        public AppFilesController(Lazy<AppAssetsBackend> appAssetsLazy)
+        public AppFilesController(Lazy<AppAssetsBackend> appAssetsLazy): base("Assets")
         {
             _appAssetsLazy = appAssetsLazy;
         }
+        private readonly Lazy<AppAssetsBackend> _appAssetsLazy;
+
+        private AppAssetsBackend Backend() => _appAssetsLazy.Value.Init(Log);
+
 
         [HttpGet]
         public List<string> All(

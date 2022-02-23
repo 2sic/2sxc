@@ -25,47 +25,45 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     // Beta routes - TODO: @STV - why is this beta?
     [Route(WebApiConstants.WebApiStateRoot + "/admin/app/[action]")]
 
-    public class AppController : OqtStatefulControllerBase, IAppController<IActionResult>
+    public class AppController : OqtStatefulControllerBase<AppControllerReal<IActionResult>>, IAppController<IActionResult>
     {
+        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-        private AppControllerReal<IActionResult> RealController { get; }
-        protected override string HistoryLogName => "Api.App";
+        public AppController(): base("App") { }
 
-        public AppController(AppControllerReal<IActionResult> appControllerReal)
-        {
-            RealController = appControllerReal.Init(Log).Init(PreventServerTimeout300);
-        }
+        protected override AppControllerReal<IActionResult> Real => base.Real.Init(PreventServerTimeout300);
+
 
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public List<AppDto> List(int zoneId)
-            => RealController.List(zoneId);
+            => Real.List(zoneId);
 
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Host)]
         public List<AppDto> InheritableApps()
-            => RealController.InheritableApps();
+            => Real.InheritableApps();
 
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public void App(int zoneId, int appId, bool fullDelete = true)
-            => RealController.App(zoneId, appId, fullDelete);
+            => Real.App(zoneId, appId, fullDelete);
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public void App(int zoneId, string name, int? inheritAppId = null)
-            => RealController.App(zoneId, name, inheritAppId);
+            => Real.App(zoneId, name, inheritAppId);
 
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public List<SiteLanguageDto> Languages(int appId) 
-            => RealController.Languages(appId);
+            => Real.Languages(appId);
 
         /// <summary>
         /// Used to be GET ImportExport/GetAppInfo
@@ -77,14 +75,14 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public AppExportInfoDto Statistics(int zoneId, int appId)
-            => RealController.Statistics( zoneId, appId);
+            => Real.Statistics( zoneId, appId);
 
 
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public bool FlushCache(int zoneId, int appId)
-            => RealController.FlushCache(zoneId, appId);
+            => Real.FlushCache(zoneId, appId);
 
         /// <summary>
         /// Used to be GET ImportExport/ExportApp
@@ -96,7 +94,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// <returns></returns>
         [HttpGet]
         public IActionResult Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid) 
-            => RealController.Export(appId, zoneId, includeContentGroups, resetAppGuid);
+            => Real.Export(appId, zoneId, includeContentGroups, resetAppGuid);
 
         /// <summary>
         /// Used to be GET ImportExport/ExportForVersionControl
@@ -110,20 +108,20 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [Authorize(Roles = RoleNames.Admin)]
         [ValidateAntiForgeryToken]
         public bool SaveData(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => RealController.SaveData(appId, zoneId, includeContentGroups, resetAppGuid);
+            => Real.SaveData(appId, zoneId, includeContentGroups, resetAppGuid);
 
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public List<StackInfoDto> GetStack(int appId, string part, string key = null, Guid? view = null)
-            => RealController.GetStack(appId, part, key, view);
+            => Real.GetStack(appId, part, key, view);
 
         /// <inheritdoc />
         [HttpPost]
         [Authorize(Roles = RoleNames.Host)]
         [ValidateAntiForgeryToken]
         public ImportResultDto Reset(int zoneId, int appId) 
-            => RealController.Reset(zoneId, appId, GetContext().Site.DefaultCultureCode);
+            => Real.Reset(zoneId, appId, GetContext().Site.DefaultCultureCode);
 
         /// <summary>
         /// Used to be POST ImportExport/ImportApp
@@ -139,7 +137,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             var request = HttpContext.Request.Form;
             return request.Files.Count <= 0 
                 ? new ImportResultDto(false, "no files uploaded") 
-                : RealController.Import(zoneId, request["Name"], request.Files[0].OpenReadStream());
+                : Real.Import(zoneId, request["Name"], request.Files[0].OpenReadStream());
         }
     }
 }

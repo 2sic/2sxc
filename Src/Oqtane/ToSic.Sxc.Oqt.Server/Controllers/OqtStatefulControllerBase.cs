@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
-using ToSic.Eav.Plumbing;
+using ToSic.Eav.Logging;
+using ToSic.Eav.WebApi;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
@@ -9,8 +10,10 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
-    public abstract class OqtStatefulControllerBase : OqtControllerBase
+    public abstract class OqtStatefulControllerBase<TRealController> : OqtControllerBase<TRealController> where TRealController : class, IHasLog<TRealController>
     {
+        protected OqtStatefulControllerBase(string logSuffix): base(logSuffix) { }
+
         protected IContextResolver CtxResolver;
 
         public override void OnActionExecuting(ActionExecutingContext context)
@@ -19,7 +22,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
             base.OnActionExecuting(context);
 
-            var getBlock = ServiceProvider.Build<OqtGetBlock>().Init(Log);
+            var getBlock = GetService<OqtGetBlock>().Init(Log);
             CtxResolver = getBlock.TryToLoadBlockAndAttachToResolver();
             BlockOptional = CtxResolver.RealBlockOrNull();
             wrapLog(null);
@@ -31,6 +34,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected IBlock BlockOptional { get; private set; }
 
         protected IApp GetApp(int appId)
-            => ServiceProvider.Build<Sxc.Apps.App>().Init(ServiceProvider, appId, Log, BlockOptional);
+            => GetService<Sxc.Apps.App>().Init(ServiceProvider, appId, Log, BlockOptional);
     }
 }

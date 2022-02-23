@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using System;
 using System.Collections.Generic;
 using ToSic.Eav.WebApi.Licenses;
 using ToSic.Eav.WebApi.Routing;
@@ -17,16 +16,12 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 
     // Beta routes - TODO: @STV - why is this beta?
     [Route(WebApiConstants.WebApiStateRoot + "/" + AreaRoutes.Sys)]
-    public class LicenseController : OqtStatefulControllerBase
+    public class LicenseController : OqtStatefulControllerBase<LicenseControllerReal>
     {
-        private readonly Lazy<LicenseControllerReal> _licenseBackendLazy;
+        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-        public LicenseController(Lazy<LicenseControllerReal> licenseBackendLazy )
-        {
-            _licenseBackendLazy = licenseBackendLazy;
-        }
+        public LicenseController(): base("License") { }
 
-        protected override string HistoryLogName => "Api.License";
 
         /// <summary>
         /// Make sure that these requests don't land in the normal api-log.
@@ -43,7 +38,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
         [HttpGet]
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
         [Authorize(Roles = RoleNames.Host)]
-        public IEnumerable<LicenseDto> Summary() => _licenseBackendLazy.Value.Init(Log).Summary();
+        public IEnumerable<LicenseDto> Summary() => Real.Summary();
 
         #endregion
        

@@ -15,8 +15,6 @@ using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.WebApi.Assets;
 using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
@@ -38,19 +36,17 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Admin}")]
 
     [ValidateAntiForgeryToken]
-    public class TypeController : OqtStatefulControllerBase, ITypeController
+    public class TypeController : OqtStatefulControllerBase<DummyControllerReal>, ITypeController
     {
-        private readonly Lazy<ContentTypeApi> _ctApiLazy;
-        private readonly Lazy<ContentExportApi> _contentExportLazy;
-        private readonly Lazy<IUser> _userLazy;
-        protected override string HistoryLogName => "Api.Types";
-
-        public TypeController(Lazy<ContentTypeApi> ctApiLazy, Lazy<ContentExportApi> contentExportLazy, Lazy<IUser> userLazy)
+        public TypeController(Lazy<ContentTypeApi> ctApiLazy, Lazy<ContentExportApi> contentExportLazy, Lazy<IUser> userLazy): base("Types")
         {
             _ctApiLazy = ctApiLazy;
             _contentExportLazy = contentExportLazy;
             _userLazy = userLazy;
         }
+        private readonly Lazy<ContentTypeApi> _ctApiLazy;
+        private readonly Lazy<ContentExportApi> _contentExportLazy;
+        private readonly Lazy<IUser> _userLazy;
 
         [HttpGet]
         [ValidateAntiForgeryToken]

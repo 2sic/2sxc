@@ -3,13 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System;
 using ToSic.Eav.Context;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
-using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
-using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
@@ -20,28 +19,25 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 
     // Beta routes - TODO: @STV - why is this beta?
     [Route(WebApiConstants.WebApiStateRoot + "/" + AreaRoutes.Sys)]
-    public class InstallController: OqtStatefulControllerBase
+    public class InstallController: OqtStatefulControllerBase<DummyControllerReal>
     {
+        #region System Installation
+
+        public InstallController(Lazy<IEnvironmentInstaller> envInstallerLazy, Lazy<ImportFromRemote> impFromRemoteLazy, Lazy<IUser> userLazy): base("Install")
+        {
+            _envInstallerLazy = envInstallerLazy;
+            _impFromRemoteLazy = impFromRemoteLazy;
+            _userLazy = userLazy;
+        }
         private readonly Lazy<IEnvironmentInstaller> _envInstallerLazy;
         private readonly Lazy<ImportFromRemote> _impFromRemoteLazy;
         private readonly Lazy<IUser> _userLazy;
-        protected override string HistoryLogName => "Api.Install";
 
         /// <summary>
         /// Make sure that these requests don't land in the normal api-log.
         /// Otherwise each log-access would re-number what item we're looking at
         /// </summary>
         protected override string HistoryLogGroup { get; } = "web-api.install";
-
-
-        #region System Installation
-
-        public InstallController(Lazy<IEnvironmentInstaller> envInstallerLazy, Lazy<ImportFromRemote> impFromRemoteLazy, Lazy<IUser> userLazy)
-        {
-            _envInstallerLazy = envInstallerLazy;
-            _impFromRemoteLazy = impFromRemoteLazy;
-            _userLazy = userLazy;
-        }
 
         /// <summary>
         /// Finish system installation which had somehow been interrupted

@@ -6,12 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.WebApi.Assets;
 using ToSic.Sxc.WebApi.Views;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
@@ -25,20 +24,19 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
     // Beta routes - TODO: @STV - why is this beta?
     [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Admin}")]
-    public class ViewController : OqtStatefulControllerBase
+    public class ViewController : OqtStatefulControllerBase<DummyControllerReal>
     {
-        private readonly Lazy<ViewsBackend> _viewsBackendLazy;
-        private readonly Lazy<ViewsExportImport> _viewExportLazy;
-        protected override string HistoryLogName => "Api.TmpCnt";
-
-        private ViewsBackend Backend => _viewsBackendLazy.Value.Init(Log);
-        private ViewsExportImport ExportImport => _viewExportLazy.Value.Init(Log);
-
-        public ViewController(Lazy<ViewsBackend> viewsBackendLazy, Lazy<ViewsExportImport> viewExportLazy)
+        public ViewController(Lazy<ViewsBackend> viewsBackendLazy, Lazy<ViewsExportImport> viewExportLazy): base("View")
         {
             _viewsBackendLazy = viewsBackendLazy;
             _viewExportLazy = viewExportLazy;
         }
+        private readonly Lazy<ViewsBackend> _viewsBackendLazy;
+        private readonly Lazy<ViewsExportImport> _viewExportLazy;
+
+        private ViewsBackend Backend => _viewsBackendLazy.Value.Init(Log);
+        private ViewsExportImport ExportImport => _viewExportLazy.Value.Init(Log);
+
 
         [HttpGet]
         //[SupportedModules("2sxc,2sxc-app")]

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Collections.Generic;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Features;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Eav.WebApi.Routing;
@@ -22,19 +23,18 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
     // Beta routes - TODO: @STV - why is this beta?
     [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Admin}")]
-    public class FeatureController : OqtStatefulControllerBase, IFeatureController
+    public class FeatureController : OqtStatefulControllerBase<DummyControllerReal>, IFeatureController
     {
-        private readonly FeaturesBackend _featuresBackend;
-        private readonly OqtModuleHelper _oqtModuleHelper;
-        private readonly RemoteRouterLink _remoteRouterLink;
-        protected override string HistoryLogName => "Api.Feats";
-
-        public FeatureController(FeaturesBackend featuresBackend, OqtModuleHelper oqtModuleHelper, RemoteRouterLink remoteRouterLink)
+        public FeatureController(FeaturesBackend featuresBackend, OqtModuleHelper oqtModuleHelper, RemoteRouterLink remoteRouterLink): base("Feats")
         {
             _featuresBackend = featuresBackend;
             _oqtModuleHelper = oqtModuleHelper;
             _remoteRouterLink = remoteRouterLink;
         }
+        private readonly FeaturesBackend _featuresBackend;
+        private readonly OqtModuleHelper _oqtModuleHelper;
+        private readonly RemoteRouterLink _remoteRouterLink;
+
 
         /// <summary>
         /// Used to be GET System/Features

@@ -27,17 +27,12 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     [ValidateAntiForgeryToken]
 
     [ApiController]
-    public class EditController: OqtStatefulControllerBase, IEditController
+    public class EditController: OqtStatefulControllerBase<EditControllerReal>, IEditController
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-        #region DI
-        protected override string HistoryLogName => "Api.UiCntr";
+        public EditController() : base("Edit") { }
 
-        public EditController(EditControllerReal realController) => Real = realController.Init(Log);
-        private EditControllerReal Real { get; }
-
-        #endregion
 
         [HttpPost]
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]

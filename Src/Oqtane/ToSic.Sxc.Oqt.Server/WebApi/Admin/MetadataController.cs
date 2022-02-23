@@ -21,15 +21,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
     // Beta routes - TODO: @STV - why is this beta?
     [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Admin}")]
-    public class MetadataController : OqtStatefulControllerBase, IMetadataController
+    public class MetadataController : OqtStatefulControllerBase<DummyControllerReal>, IMetadataController
     {
-        public MetadataBackend Backend { get; }
-        protected override string HistoryLogName => "Api.Metadata";
-
-        public MetadataController(MetadataBackend backend)
+        public MetadataController(MetadataBackend backend): base("MetaDt")
         {
             Backend = backend;
         }
+        public MetadataBackend Backend { get; }
 
         [HttpGet]
         public MetadataListDto Get(int appId, int targetType, string keyType, string key, string contentType = null)

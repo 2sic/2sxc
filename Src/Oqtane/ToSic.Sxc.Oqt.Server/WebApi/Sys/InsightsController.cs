@@ -13,20 +13,27 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
     [Route(WebApiConstants.WebApiStateRoot + "/sys/[controller]/")]
 
     [ApiController]
-    public class InsightsController : OqtControllerBase
+    public class InsightsController : OqtControllerBase<InsightsControllerReal>
     {
-        public InsightsController(InsightsControllerReal insights) => _insights = insights;
-        private readonly InsightsControllerReal _insights;
+        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+
+        public InsightsController(): base("Insights") { }
+
+        private ContentResult Wrap(string contents) => base.Content(contents, "text/html");
+
+        [HttpGet("{view}")]
+        public ContentResult Details([FromRoute] string view, 
+            [FromQuery] int? appId = null, [FromQuery] string key = null, [FromQuery] int? position = null,
+            [FromQuery] string type = null, [FromQuery] bool? toggle = null, string nameId = null)
+            => Wrap(Real.Details(view, appId, key, position, type, toggle, nameId));
 
         #region Logging aspects
-
-        protected override string HistoryLogName => "Api.Debug";
 
         /// <summary>
         /// Make sure that these requests don't land in the normal api-log.
         /// Otherwise each log-access would re-number what item we're looking at
         /// </summary>
-        protected override string HistoryLogGroup { get; } = "web-api.insights";
+        protected override string HistoryLogGroup => "web-api.insights";
 
         /// <summary>
         /// Enable/disable logging of access to insights
@@ -35,14 +42,5 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
         internal const bool InsightsLoggingEnabled = false;
 
         #endregion
-
-        private ContentResult Wrap(string contents) => base.Content(contents, "text/html");
-
-        [HttpGet("{view}")]
-        public ContentResult Details([FromRoute] string view, 
-            [FromQuery] int? appId = null, [FromQuery] string key = null, [FromQuery] int? position = null,
-            [FromQuery] string type = null, [FromQuery] bool? toggle = null, string nameId = null)
-            => Wrap(_insights.Init(Log).Details(view, appId, key, position, type, toggle, nameId));
-        
     }
 }
