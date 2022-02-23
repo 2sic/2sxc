@@ -4,8 +4,6 @@
 @using ToSic.Eav.Logging.Simple
 @using ToSic.Eav.Metadata
 @using ToSic.Eav.Plumbing
-@using ToSic.Sxc.Adam
-@using ToSic.Sxc.Context
 @using ToSic.Sxc.Services
 @inject IAppStates AppStates
 @inject IServiceProvider ServiceProvider;
@@ -15,17 +13,17 @@
   // Adjust these values to your testing environment
   var appIdentity = IntegrationConstants.AppIdentity;
   var appState = AppStates.Get(appIdentity);
-  var firstItem = appState.List.FirstOrDefault();
+  var firstItem = appState.List.First();
 }
 <h1>@ViewData["Title"]</h1>
 
 <script language="javascript">
   function getSxc() {
-    return $2sxc({ zoneId: @appIdentity.ZoneId, appId: @appIdentity.AppId, pageId: @IntegrationConstants.PageId, moduleId: @IntegrationConstants.ModuleId });
+    return $2sxc({ zoneId: @appIdentity.ZoneId, appId: @appIdentity.AppId, pageId: 1, moduleId: 1 });
   }
 </script>
 <p>
-  Try using the $2sxc js api for @appIdentity.ZoneId/@appIdentity.AppId and page @IntegrationConstants.PageId and module @IntegrationConstants.ModuleId - first item @@firstItem.EntityId <br />
+  Try using the $2sxc js api for @appIdentity.ZoneId/@appIdentity.AppId - first item @firstItem.EntityId <br />
 </p>
 
 <ol>
