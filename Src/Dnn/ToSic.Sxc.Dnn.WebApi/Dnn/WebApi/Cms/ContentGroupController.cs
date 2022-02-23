@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
     [ValidateAntiForgeryToken]
     public class ContentGroupController : SxcApiControllerBase
     {
-        protected override string HistoryLogName => "Api.ConGrp";
+        public ContentGroupController(): base("ConGrp") { }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]

@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public class ApiExplorerController : DnnApiControllerWithFixes
     {
-        protected override string HistoryLogName => "Api.Explorer";
+        public ApiExplorerController() : base("Explor") { }
 
         [HttpGet]
         public HttpResponseMessage Inspect(string path)

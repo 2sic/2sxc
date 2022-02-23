@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Dnn
     /// This is the base class for all custom API Controllers. <br/>
     /// With this, your code receives the full context  incl. the current App, DNN, Data, etc.
     /// </summary>
-    [PublicApi("This was the official base class before v12. Try to move away from it, go to the latest baste class on Custom.Dnn.Api12")]
+    [PublicApi("This was the official base class before v12. Try to move away from it, go to the latest base class on Custom.Dnn.Api12")]
     [DnnLogExceptions]
     [Obsolete("This will continue to work, but you should use the Custom.Hybrid.Api12 or Custom.Dnn.Api12 instead.")]
     public abstract class ApiController : DynamicApiController, IDnnDynamicWebApi, IDynamicCode, IDynamicWebApi, IHasDynamicCodeRoot

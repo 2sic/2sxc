@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [ValidateAntiForgeryToken]
 	public class QueryController : SxcApiControllerBase, IQueryController
     {
-        protected override string HistoryLogName => "Api.Query";
+        public QueryController() : base("Query") { }
 
         /// <summary>
         /// Get a Pipeline with DataSources

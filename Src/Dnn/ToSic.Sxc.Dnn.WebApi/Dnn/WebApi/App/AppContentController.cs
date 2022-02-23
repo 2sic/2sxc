@@ -17,9 +17,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
     [AllowAnonymous]
     public class AppContentController : SxcApiControllerBase
 	{
-        #region Constructor / DI
-        protected override string HistoryLogName => "Api.ApCont";
-        #endregion
+        public AppContentController(): base("AppCnt") { }
 
         #region Get List / all of a certain content-type
         /// <summary>

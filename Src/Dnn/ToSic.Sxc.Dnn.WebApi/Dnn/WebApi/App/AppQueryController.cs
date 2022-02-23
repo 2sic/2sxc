@@ -8,7 +8,6 @@ using ToSic.Sxc.WebApi.App;
 
 namespace ToSic.Sxc.Dnn.WebApi.App
 {
-    /// <inheritdoc />
     /// <summary>
     /// In charge of delivering Pipeline-Queries on the fly
     /// They will only be delivered if the security is confirmed - it must be publicly available
@@ -16,9 +15,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
     [AllowAnonymous]
     public class AppQueryController : SxcApiControllerBase, IAppQueryController
     {
-        #region Constructor / DI
-        protected override string HistoryLogName => "Api.ApQrCt";
-        #endregion
+        public AppQueryController() : base("AppQry") { }
 
         // GET is separated from POST to solve HttpResponseException that happens when
         // 'content-type' header is missing (or in GET request) on the endpoint that has [FromBody] in signature

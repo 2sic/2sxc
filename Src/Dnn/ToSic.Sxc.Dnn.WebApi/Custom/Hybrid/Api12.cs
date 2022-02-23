@@ -29,6 +29,9 @@ namespace Custom.Hybrid
     [DnnLogExceptions]
     public abstract partial class Api12: DynamicApiController, IDynamicCode12, IDynamicWebApi, IHasDynamicCodeRoot
     {
+        protected Api12() : base("Hyb12") { }
+        protected Api12(string logSuffix) : base(logSuffix) { }
+
         [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
 
         /// <inheritdoc />

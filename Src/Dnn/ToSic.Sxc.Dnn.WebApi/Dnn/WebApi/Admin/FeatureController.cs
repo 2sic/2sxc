@@ -22,10 +22,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [ValidateAntiForgeryToken]
     public class FeatureController : DnnApiControllerWithFixes, IFeatureController
     {
-        /// <summary>
-        /// Name of this class in the insights logs.
-        /// </summary>
-        protected override string HistoryLogName => "Api.Feats";
+        public FeatureController(): base("Feats") { }
 
         /// <summary>
         /// Used to be GET a list of Features

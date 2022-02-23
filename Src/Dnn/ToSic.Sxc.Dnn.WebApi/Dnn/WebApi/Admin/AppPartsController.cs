@@ -6,7 +6,6 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Dnn.Context;
-using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
@@ -17,7 +16,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     // we can't set this globally (only needed for imports)
     public class AppPartsController : DnnApiControllerWithFixes, IAppPartsController
     {
-        protected override string HistoryLogName => "Api.AParts";
+        public AppPartsController() : base("Parts") { }
 
         #region Parts Export/Import
 

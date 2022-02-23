@@ -10,7 +10,6 @@ using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Admin;
-using ToSic.Sxc.WebApi.ImportExport;
 using AppDto = ToSic.Eav.WebApi.Dto.AppDto;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
@@ -22,7 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [DnnLogExceptions]
     public class AppController : SxcApiControllerBase, IAppController
     {
-        protected override string HistoryLogName => "Api.App";
+        public AppController() : base("App") { }
 
         private AppControllerReal<HttpResponseMessage> RealController 
             => GetService<AppControllerReal<HttpResponseMessage>>().Init(PreventServerTimeout300, Log);

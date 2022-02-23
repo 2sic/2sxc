@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
     [ValidateAntiForgeryToken]
     public class LogController : DnnApiControllerWithFixes
     {
-        protected override string HistoryLogName => "Api.Log";
+        public LogController() : base("Log") { }
 
         #region Enable extended logging
 

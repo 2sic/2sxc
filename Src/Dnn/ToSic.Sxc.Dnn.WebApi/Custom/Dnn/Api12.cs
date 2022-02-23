@@ -15,6 +15,9 @@ namespace Custom.Dnn
     [DnnLogExceptions]
     public abstract class Api12 : Hybrid.Api12, IDnnDynamicWebApi, IDnnDynamicCodeAdditions
     {
+        protected Api12() : base("Dnn12") { }
+        protected Api12(string logSuffix) : base(logSuffix) { }
+
         /// <inheritdoc />
         public new IDnnContext Dnn => base.Dnn;
     }

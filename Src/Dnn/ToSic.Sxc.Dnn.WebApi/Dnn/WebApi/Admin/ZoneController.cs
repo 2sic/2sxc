@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [ValidateAntiForgeryToken]
     public class ZoneController : SxcApiControllerBase, IZoneController
     {
-        protected override string HistoryLogName => "Api.Zone";
+        public ZoneController() : base("Zone") { }
 
         private LanguagesBackend LanguagesBackend() => GetService<LanguagesBackend>().Init(Log);
 

@@ -35,10 +35,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [DnnLogExceptions]
     public class TypeController : SxcApiControllerBase, ITypeController
     {
-        /// <summary>
-        /// Name of this class in the insights logs.
-        /// </summary>
-        protected override string HistoryLogName => "Api.Types";
+        public TypeController() : base("Types") { }
 
         private ContentTypeApi Backend => GetService<ContentTypeApi>();
 

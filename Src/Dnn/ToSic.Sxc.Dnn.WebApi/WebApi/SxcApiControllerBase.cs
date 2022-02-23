@@ -14,9 +14,9 @@ namespace ToSic.Sxc.WebApi
     /// </summary>
     [DnnLogExceptions]
     [PrivateApi("This was only ever used as an internal base class, so it can be modified as needed - just make sure the derived types don't break")]
-    public class SxcApiControllerBase: DnnApiControllerWithFixes
+    public abstract class SxcApiControllerBase: DnnApiControllerWithFixes
     {
-        protected override string HistoryLogName => "Api.CntBas";
+        protected SxcApiControllerBase(string logName) : base(logName) { }
 
         protected override void Initialize(HttpControllerContext controllerContext)
         {

@@ -46,6 +46,8 @@ namespace ToSic.SexyContent.WebApi
         IAppAndDataHelpers
 #pragma warning restore 618
     {
+        protected SxcApiController() : base("OldApi") { }
+
         public new IDnnContext Dnn => base.Dnn;
 
         [Obsolete]

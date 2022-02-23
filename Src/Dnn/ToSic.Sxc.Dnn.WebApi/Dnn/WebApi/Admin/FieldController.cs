@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public class FieldController : SxcApiControllerBase, IFieldController
     {
-        protected override string HistoryLogName => "Api.Fields";
+        public FieldController() : base("Fields") { }
 
         private ContentTypeApi Backend => GetService<ContentTypeApi>();
 

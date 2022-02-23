@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [ValidateAntiForgeryToken]
     public class DialogController : SxcApiControllerBase
     {
-        protected override string HistoryLogName => "Api.SysCnt";
+        public DialogController(): base("Dialog") { }
 
         #region Dialog Helpers
         /// <summary>

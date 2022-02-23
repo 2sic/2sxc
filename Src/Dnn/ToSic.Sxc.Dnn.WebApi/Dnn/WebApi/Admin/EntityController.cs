@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [DnnLogExceptions]
 	public class EntityController : SxcApiControllerBase, IEntitiesController
 	{
-        protected override string HistoryLogName => "Api.EntCnt";
+        public EntityController(): base("Entity") { }
 
         private IContextResolver ContextResolver
             => _contextResolver ?? (_contextResolver = GetService<IContextResolver>().Init(Log));

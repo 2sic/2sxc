@@ -7,14 +7,13 @@ using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
-using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
     public class InstallController : DnnApiControllerWithFixes
     {
-        protected override string HistoryLogName => "Api.Install";
+        public InstallController() : base("Install") { }
 
         /// <summary>
         /// Make sure that these requests don't land in the normal api-log.

@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
     public class LicenseController : DnnApiControllerWithFixes
     {
-        protected override string HistoryLogName => "Api.License";
+        public LicenseController() : base("License") { }
 
         /// <summary>
         /// Make sure that these requests don't land in the normal api-log.

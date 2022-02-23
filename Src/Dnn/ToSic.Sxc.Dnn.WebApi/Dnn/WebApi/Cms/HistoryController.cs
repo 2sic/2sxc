@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
     [ValidateAntiForgeryToken]
     public class HistoryController : SxcApiControllerBase, IHistoryController
     {
-        protected override string HistoryLogName => "Api.History";
+        public HistoryController() : base("History") { }
 
         /// <inheritdoc />
         [HttpPost]

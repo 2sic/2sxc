@@ -2,16 +2,16 @@
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.SexyContent.WebApi;
+using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.FieldList;
 
 namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
     [SupportedModules("2sxc,2sxc-app")]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public class ListController: SxcApiController
+    public class ListController: SxcApiControllerBase
     {
-        protected override string HistoryLogName => "Api.List";
+        public ListController() : base("List") { }
 
         private FieldListBackend FieldBacked => GetService<FieldListBackend>().Init(Log);
 

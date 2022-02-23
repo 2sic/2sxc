@@ -14,6 +14,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [ValidateAntiForgeryToken]
     public class MetadataController : SxcApiControllerBase, IMetadataController
     {
+        public MetadataController() : base("MetaDt") { }
+
         [HttpGet]
         public MetadataListDto Get(int appId, int targetType, string keyType, string key, string contentType = null)
             => GetService<MetadataBackend>().Init(Log).Get(appId, targetType, keyType, key, contentType);

@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Dnn.WebApi
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-        protected override string HistoryLogName => "Api.Adam";
+        public AdamController() : base("Adam") { }
 
         private AdamControllerReal<int> Real => GetService<AdamControllerReal<int>>().Init(Log);
 

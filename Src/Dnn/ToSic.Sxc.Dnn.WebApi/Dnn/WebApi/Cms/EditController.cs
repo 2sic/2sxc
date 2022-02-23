@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-        protected override string HistoryLogName => "Api.Edit";
+        public EditController() : base("Edit") { }
 
         private EditControllerReal Real => GetService<EditControllerReal>().Init(Log);
 

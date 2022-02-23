@@ -34,10 +34,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [DnnLogExceptions]
     public class ViewController : SxcApiControllerBase
 	{
-        /// <summary>
-        /// Name of this class in the insights logs.
-        /// </summary>
-        protected override string HistoryLogName => "Api.TmpCnt";
+        public ViewController() : base("View") { }
 
         private ViewsBackend Backend => GetService<ViewsBackend>().Init(Log);
         private ViewsExportImport ExportImport => GetService<ViewsExportImport>().Init(Log);

@@ -7,8 +7,9 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
     [DnnLogExceptions]
     public class InsightsController : DnnApiControllerWithFixes
     {
+        public InsightsController() : base("Insight") { }
+
         #region Logging
-        protected override string HistoryLogName => "Api.Debug";
 
         /// <summary>
         /// Enable/disable logging of access to insights

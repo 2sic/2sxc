@@ -4,8 +4,8 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Ui;
-using ToSic.SexyContent.WebApi;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Cms;
 using ToSic.Sxc.WebApi.ContentBlocks;
 using ToSic.Sxc.WebApi.InPage;
@@ -14,13 +14,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
     [ValidateAntiForgeryToken]
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
-    public class BlockController : SxcApiController, IBlockController
+    public class BlockController : DynamicApiController, IBlockController
     {
-        protected override string HistoryLogName => "Api.Block";
+        public BlockController() : base("Block") { }
 
-        protected CmsRuntime CmsRuntime => _cmsRuntime ?? (_cmsRuntime = base.App == null
+        protected CmsRuntime CmsRuntime => _cmsRuntime ?? (_cmsRuntime = _DynCodeRoot.App == null
                 ? null
-                : GetService<CmsRuntime>().Init(base.App, true, Log)
+                : GetService<CmsRuntime>().Init(_DynCodeRoot.App, true, Log)
             );
         private CmsRuntime _cmsRuntime;
 

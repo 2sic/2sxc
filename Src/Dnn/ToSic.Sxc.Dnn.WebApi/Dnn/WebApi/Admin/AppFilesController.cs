@@ -1,5 +1,4 @@
-﻿using System;
-using DotNetNuke.Security;
+﻿using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using System.Collections.Generic;
 using System.Web.Http;
@@ -20,7 +19,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [ValidateAntiForgeryToken]
     public class AppFilesController : SxcApiControllerBase, IAppFilesController
     {
-        protected override string HistoryLogName => "Api.Assets";
+        public AppFilesController() : base("Assets") { }
 
         private AppAssetsBackend Backend() => GetService<AppAssetsBackend>().Init(Log);
 
