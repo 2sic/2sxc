@@ -32,7 +32,7 @@ namespace IntegrationSamples.SxcEdit01
         public const string UrlTo2sxcInPageJs = EnvUiRoot + "dist/inpage/inpage.min.js";
 
         // Environment settings for the JS to use
-        public const int EnvPageId = 2742;
+        //public const int EnvPageId = 2742;
         public const string EnvApiRoot = "/" + DefaultRouteRoot;    // the api base path
         public const string EnvUiRoot = "/system/sxc/";             // the path above the `js` and `dist` which contains everything
         public const string EnvRvt = "...";                         // This sample doesn't use RequestVerificationTokens
