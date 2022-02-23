@@ -24,7 +24,11 @@ namespace ToSic.Sxc
 
         public const string WebConfigTemplateFile = "WebConfigTemplate.config";
         public const string WebConfigFileName = "web.config";
-        public const string SexyContentGroupName = "2sxc designers";
+
+        // Special user groups to determine if admins can really admin
+        public const string DnnGroupSxcDesigners = "2sxc designers";
+        //public const string DnnGroupSxcDesigners = "2sxcDesigners";
+        public const string DnnGroupSxcAdmins = "2sxcAdministrators"; // New in v13.03 - to replace the old name
 
         public class Installation
         {

@@ -6,6 +6,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
+using ToSic.Sxc.Dnn.Run;
 
 namespace ToSic.Sxc.Dnn.Context
 {
@@ -28,31 +29,12 @@ namespace ToSic.Sxc.Dnn.Context
         public List<int> Roles => _roles ?? (_roles = BuildRoleList());
         private List<int> _roles;
 
-        #region New Permission properties for v12
-
-        ///// <inheritdoc />
-        //// This is a hopefully clearer implementation of what the user can do
-        //public bool IsSiteAdmin => IsAdmin;
-
-        ///// <inheritdoc />
-        //// This is a hopefully clearer implementation of what the user can do
-        //public bool IsSiteDeveloper => IsDesigner;
-        
-        ///// <inheritdoc />
-        //// This is a hopefully clearer implementation of what the user can do
-        //public bool IsSystemAdmin => IsSuperUser;
-
-        #endregion
-        
         public bool IsSuperUser => UnwrappedContents?.IsSuperUser ?? false;
 
-        public bool IsAdmin => _isAdmin 
-                               ?? (_isAdmin = UnwrappedContents?.IsInRole(PortalSettings.Current?.AdministratorRoleName ?? "dummy-if-no-portal")) 
-                               ?? false;
-        private bool? _isAdmin; 
+        public bool IsAdmin => _isAdmin ?? (_isAdmin = UnwrappedContents?.UserMayAdminThis() ?? false).Value;
+        private bool? _isAdmin;
 
-        public bool IsDesigner => _isDesigner ?? (_isDesigner = UnwrappedContents?.IsInRole(Settings.SexyContentGroupName)) ?? false;
-        private bool? _isDesigner;
+        public bool IsDesigner => IsSuperUser;
 
         public UserInfo UnwrappedContents => _user ?? (_user = PortalSettings.Current?.UserInfo);
         private UserInfo _user;
