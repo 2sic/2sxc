@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         /// Make sure that these requests don't land in the normal api-log.
         /// Otherwise each log-access would re-number what item we're looking at
         /// </summary>
-        protected override string HistoryLogGroup { get; } = "web-api.license";
+        protected override string HistoryLogGroup => "web-api.license";
 
         #region License
 
