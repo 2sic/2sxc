@@ -12,8 +12,10 @@ using ToSic.Sxc.Dnn.WebApi.Logging;
 namespace ToSic.Sxc.Dnn.WebApi
 {
     [DnnLogWebApi, JsonResponse]
-    public abstract class DnnApiControllerWithFixes: DnnApiController, IHasLog
+    public abstract class DnnApiControllerWithFixes<TRealController> : DnnApiController, IHasLog where TRealController : class, IHasLog<TRealController>
     {
+        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+
         protected DnnApiControllerWithFixes(string logName) 
 	    {
             Log = new Log("Api." + logName, null, $"Path: {HttpContext.Current?.Request?.Url?.AbsoluteUri}");
@@ -58,5 +60,15 @@ namespace ToSic.Sxc.Dnn.WebApi
         public TService GetService<TService>() => (_serviceProvider ?? (_serviceProvider = DnnStaticDi.GetPageScopedServiceProvider())).Build<TService>();
         // Must cache it, to be really sure we use the same ServiceProvider in the same request
         private IServiceProvider _serviceProvider;
+
+        /// <summary>
+        /// The RealController which is the full backend of this controller.
+        /// Note that it's not available at construction time, because the ServiceProvider isn't ready till later.
+        /// </summary>
+        public TRealController Real
+            => _real ?? (_real = GetService<TRealController>().Init(Log)
+                                 ?? throw new Exception($"Can't use {nameof(Real)} for unknown reasons"));
+        private TRealController _real;
+
     }
 }

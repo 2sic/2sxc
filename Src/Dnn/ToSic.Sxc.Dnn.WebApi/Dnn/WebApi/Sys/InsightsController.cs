@@ -5,27 +5,9 @@ using ToSic.Sxc.Dnn.WebApi.Logging;
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
     [DnnLogExceptions]
-    public class InsightsController : DnnApiControllerWithFixes
+    public class InsightsController : DnnApiControllerWithFixes<InsightsControllerReal>
     {
         public InsightsController() : base("Insight") { }
-
-        #region Logging
-
-        /// <summary>
-        /// Enable/disable logging of access to insights
-        /// Only enable this if you have trouble developing insights, otherwise it clutters our logs
-        /// </summary>
-        internal const bool InsightsLoggingEnabled = false;
-
-        internal const string InsightsUrlFragment = "/sys/insights/";
-
-        /// <summary>
-        /// Make sure that these requests don't land in the normal api-log.
-        /// Otherwise each log-access would re-number what item we're looking at
-        /// </summary>
-        protected override string HistoryLogGroup => "web-api.insights";
-
-        #endregion
 
         /// <summary>
         /// Single-Point-Of-Entry
@@ -35,9 +17,28 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         /// </summary>
         [HttpGet]
         public string Details(string view, int? appId = null, string key = null, int? position = null, string type = null, bool? toggle = null, string nameId = null)
-            => GetService<InsightsControllerReal>().Init(Log)
-                .Details(view, appId, key, position, type, toggle, nameId);
+            => Real.Details(view, appId, key, position, type, toggle, nameId);
 
-        
+
+        #region Controll Logging of Requests on Insights for special debugging, usually disabled to not clutter the logs
+
+        /// <summary>
+        /// Enable/disable logging of access to insights
+        /// Only enable this if you have trouble developing insights, otherwise it clutters our logs
+        /// </summary>
+        internal const bool InsightsLoggingEnabled = false;
+
+        /// <summary>
+        /// Special detection for the AppApiController to skip these requests?
+        /// </summary>
+        internal const string InsightsUrlFragment = "/sys/insights/";
+
+        /// <summary>
+        /// Make sure that these requests don't land in the normal api-log.
+        /// Otherwise each log-access would re-number what item we're looking at
+        /// </summary>
+        protected override string HistoryLogGroup => "web-api.insights";
+
+        #endregion
     }
 }

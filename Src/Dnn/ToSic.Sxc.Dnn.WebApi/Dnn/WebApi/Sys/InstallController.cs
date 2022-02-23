@@ -4,6 +4,7 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Context;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
@@ -11,7 +12,7 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
-    public class InstallController : DnnApiControllerWithFixes
+    public class InstallController : DnnApiControllerWithFixes<DummyControllerReal>
     {
         public InstallController() : base("Install") { }
 

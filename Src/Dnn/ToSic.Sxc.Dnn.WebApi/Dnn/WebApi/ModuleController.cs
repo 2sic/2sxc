@@ -1,6 +1,7 @@
 ﻿using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.WebApi;
 
 namespace ToSic.Sxc.Dnn.WebApi
 {
@@ -8,7 +9,7 @@ namespace ToSic.Sxc.Dnn.WebApi
     [SupportedModules("2sxc,2sxc-app")]
 	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public class ModuleController: DnnApiControllerWithFixes
+    public class ModuleController: DnnApiControllerWithFixes<DummyControllerReal>
     {
         public ModuleController() : base("Mod") { }
 

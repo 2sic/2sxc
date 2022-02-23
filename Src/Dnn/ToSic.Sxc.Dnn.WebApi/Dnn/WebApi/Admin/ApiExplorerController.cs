@@ -7,6 +7,7 @@ using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Http;
 using ToSic.Eav.Context;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Plumbing;
 
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public class ApiExplorerController : DnnApiControllerWithFixes
+    public class ApiExplorerController : DnnApiControllerWithFixes<DummyControllerReal>
     {
         public ApiExplorerController() : base("Explor") { }
 

@@ -3,6 +3,7 @@ using System.Web;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Dnn.Context;
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     // token, which fails in the cases where the url is called using get, which should result in a download
     // [ValidateAntiForgeryToken] because the exports are called by the browser directly (new tab) 
     // we can't set this globally (only needed for imports)
-    public class AppPartsController : DnnApiControllerWithFixes, IAppPartsController
+    public class AppPartsController : DnnApiControllerWithFixes<DummyControllerReal>, IAppPartsController
     {
         public AppPartsController() : base("Parts") { }
 

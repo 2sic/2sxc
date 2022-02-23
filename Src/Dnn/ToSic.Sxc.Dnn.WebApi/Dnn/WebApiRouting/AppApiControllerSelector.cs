@@ -177,10 +177,11 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
         private static void AddToInsightsHistory(string url, ILog log)
         {
             var addToHistory = true;
+#pragma warning disable CS0162
+            if (InsightsController.InsightsLoggingEnabled)
+                addToHistory = (url?.Contains(InsightsController.InsightsUrlFragment) ?? false);
+#pragma warning restore CS0162
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            if (!InsightsController.InsightsLoggingEnabled)
-                if (url?.Contains(InsightsController.InsightsUrlFragment) ?? false)
-                    addToHistory = false;
             if (addToHistory) new LogHistory().Add("http-request", log);
         }
     }

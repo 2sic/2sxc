@@ -6,6 +6,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
+using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Features;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Run;
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     /// </remarks>
     [SupportedModules("2sxc,2sxc-app")]
     [ValidateAntiForgeryToken]
-    public class FeatureController : DnnApiControllerWithFixes, IFeatureController
+    public class FeatureController : DnnApiControllerWithFixes<DummyControllerReal>, IFeatureController
     {
         public FeatureController(): base("Feats") { }
 
