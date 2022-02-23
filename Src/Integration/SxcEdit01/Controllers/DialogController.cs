@@ -6,7 +6,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
 {
     [Route(IntegrationConstants.DefaultRouteRoot + AreaRoutes.Admin)]
     [ApiController]
-    public class DialogController : IntControllerProxyBase<DialogControllerReal>
+    public class DialogController : IntControllerBase<DialogControllerReal>
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 

@@ -13,7 +13,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
     //[AutoValidateAntiforgeryToken]
     [Route(IntegrationConstants.DefaultRouteRoot + AreaRoutes.Cms)]
     [ApiController]
-    public class EditController: IntControllerProxyBase<EditControllerReal>, IEditController
+    public class EditController: IntControllerBase<EditControllerReal>, IEditController
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 

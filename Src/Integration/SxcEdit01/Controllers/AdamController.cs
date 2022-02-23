@@ -18,7 +18,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
     /// </summary>
     [ApiController]
     [Route(IntegrationConstants.DefaultRouteRoot + AppRoots.AppAutoData + "/" + ValueTokens.SetTypeGuidField)]
-    public class AdamController : IntControllerProxyBase<AdamControllerReal<string>>, IAdamController<string>
+    public class AdamController : IntControllerBase<AdamControllerReal<string>>, IAdamController<string>
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
