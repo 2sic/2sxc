@@ -19,9 +19,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
     [Route(WebApiConstants.WebApiStateRoot + "/" + AreaRoutes.Sys)]
     public class LicenseController : OqtStatefulControllerBase
     {
-        private readonly Lazy<LicenseBackend> _licenseBackendLazy;
+        private readonly Lazy<LicenseControllerReal> _licenseBackendLazy;
 
-        public LicenseController(Lazy<LicenseBackend> licenseBackendLazy )
+        public LicenseController(Lazy<LicenseControllerReal> licenseBackendLazy )
         {
             _licenseBackendLazy = licenseBackendLazy;
         }

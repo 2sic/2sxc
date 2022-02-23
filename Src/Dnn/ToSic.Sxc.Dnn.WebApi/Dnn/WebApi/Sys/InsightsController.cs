@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         /// This is important for many reasons, inc. the fact that this will always be the first endpoint to implement
         /// on any additional system. 
         /// </summary>
-        [HttpGet]
+        [HttpGet] // Will do security checks internally
         public string Details(string view, int? appId = null, string key = null, int? position = null, string type = null, bool? toggle = null, string nameId = null)
             => Real.Details(view, appId, key, position, type, toggle, nameId);
 
