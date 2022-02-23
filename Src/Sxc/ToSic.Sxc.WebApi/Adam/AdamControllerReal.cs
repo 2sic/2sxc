@@ -7,6 +7,8 @@ using ToSic.Eav.WebApi.Errors;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
+    // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+
     public class AdamControllerReal<TIdentifier>: HasLog<AdamControllerReal<TIdentifier>>
     {
         public AdamControllerReal(

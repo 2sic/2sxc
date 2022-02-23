@@ -29,11 +29,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     [ApiController]
     public class EditController: OqtStatefulControllerBase, IEditController
     {
+        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+
         #region DI
         protected override string HistoryLogName => "Api.UiCntr";
 
-        public EditController(EditControllerReal realController) => RealController = realController.Init(Log);
-        private EditControllerReal RealController { get; }
+        public EditController(EditControllerReal realController) => Real = realController.Init(Log);
+        private EditControllerReal Real { get; }
 
         #endregion
 
@@ -41,13 +43,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
-            => RealController.Load(items, appId);
+            => Real.Load(items, appId);
 
         [HttpPost]
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         [Authorize(Roles = RoleNames.Admin)]
         public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
-            => RealController.Save(package, appId, partOfPage);
+            => Real.Save(package, appId, partOfPage);
 
         [HttpGet]
         [HttpPost]
@@ -61,7 +63,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
             var body = await reader.ReadToEndAsync();
             var items = JsonConvert.DeserializeObject<string[]>(body);
 
-            return RealController.EntityPicker(appId, items, contentTypeName);
+            return Real.EntityPicker(appId, items, contentTypeName);
         }
 
         /// <inheritdoc />
@@ -70,6 +72,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         //[Authorize(Roles = RoleNames.Everyone)] commented because of http403 issue
         // TODO: 2DM please check permissions
         public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
-            => RealController.LinkInfo(link, appId, contentType, guid, field);
+            => Real.LinkInfo(link, appId, contentType, guid, field);
     }
 }

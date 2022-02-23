@@ -10,6 +10,8 @@ namespace IntegrationSamples.SxcEdit01.Controllers
     /// <typeparam name="TRealController"></typeparam>
     public abstract class IntControllerProxyBase<TRealController>: IntControllerBase where TRealController : class, IHasLog<TRealController>
     {
+        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+
         protected IntControllerProxyBase(string logName) : base(logName) { }
 
         /// <summary>

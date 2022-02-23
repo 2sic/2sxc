@@ -7,13 +7,11 @@ namespace IntegrationSamples.SxcEdit01.Controllers
 {
     [Route(IntegrationConstants.DefaultRouteRoot + Areas.Sys + "/[controller]")]
     [ApiController]
-    public class InsightsController : ControllerBase
+    public class InsightsController : IntControllerProxyBase<Insights>
     {
-        /// <summary>
-        /// Constructor which will retrieve the Insights backend for use here
-        /// </summary>
-        public InsightsController(Insights insights) => _insights = insights.Init(new Log("Int.Insights"));
-        private readonly Insights _insights;
+        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+
+        public InsightsController(): base("Insight") {}
 
         /// <summary>
         /// The main call on this controller, will return all kinds of views with information
@@ -31,7 +29,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
             // Temporary setting to allow Insights despite minimal setup
             ToSic.Eav.Context.UserUnknown.AllowEverything = true;
 
-            var result = _insights.Details(view, appId, key, position, type, toggle, nameId);
+            var result = Real.Details(view, appId, key, position, type, toggle, nameId);
             return base.Content(result, "text/html");
         }
     }

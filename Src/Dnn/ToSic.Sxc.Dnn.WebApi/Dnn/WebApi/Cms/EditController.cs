@@ -15,21 +15,23 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
     [ValidateAntiForgeryToken]
     public class EditController : SxcApiControllerBase, IEditController
     {
+        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+
         protected override string HistoryLogName => "Api.Edit";
 
-        private EditControllerReal RealController => GetService<EditControllerReal>().Init(Log);
+        private EditControllerReal Real => GetService<EditControllerReal>().Init(Log);
 
         /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
-            => RealController.Load(items, appId);
+            => Real.Load(items, appId);
 
         /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
-            => RealController.Save(package, appId, partOfPage);
+            => Real.Save(package, appId, partOfPage);
 
         /// <inheritdoc />
         [HttpGet]
@@ -39,13 +41,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
             [FromUri] int appId,
             [FromBody] string[] items,
             [FromUri] string contentTypeName = null)
-            => RealController.EntityPicker(appId, items, contentTypeName);
+            => Real.EntityPicker(appId, items, contentTypeName);
 
         /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default,
             string field = default)
-            => RealController.LinkInfo(link, appId, contentType, guid, field);
+            => Real.LinkInfo(link, appId, contentType, guid, field);
     }
 }

@@ -8,7 +8,6 @@ using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.WebApi.Adam;
 
 // #todo: security checks on APIs still completely missing
-// #todo: upload not implemented yet
 
 namespace IntegrationSamples.SxcEdit01.Controllers
 {
@@ -21,6 +20,8 @@ namespace IntegrationSamples.SxcEdit01.Controllers
     [Route(IntegrationConstants.DefaultRouteRoot + AppRoots.AppAutoData + "/" + ValueTokens.SetTypeGuidField)]
     public class AdamController : IntControllerProxyBase<AdamControllerReal<string>>, IAdamController<string>
     {
+        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+
         public AdamController() : base("Adam") { }
 
         [HttpPost]

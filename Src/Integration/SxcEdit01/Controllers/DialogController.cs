@@ -8,6 +8,8 @@ namespace IntegrationSamples.SxcEdit01.Controllers
     [ApiController]
     public class DialogController : IntControllerProxyBase<AdminBackend>
     {
+        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+
         public DialogController() :base("SysCnt") { }
 
         [HttpGet]

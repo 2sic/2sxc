@@ -7,6 +7,8 @@ using ToSic.Eav.WebApi.Formats;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
+    // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+
     public class EditControllerReal: HasLog<EditControllerReal>
     {
         public EditControllerReal(
