@@ -40,8 +40,6 @@ namespace IntegrationSamples.SxcEdit01.Controllers
         /// <inheritdoc />
         public ILog Log { get; }
 
-        private IServiceProvider _serviceProvider;
-
         /// <summary>
         /// The group name for log entries in insights.
         /// Helps group various calls by use case. 
@@ -56,7 +54,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             base.OnActionExecuting(context);
-            _serviceProvider = _helper.OnActionExecuting(context, HistoryLogGroup);
+            _helper.OnActionExecuting(context, HistoryLogGroup);
         }
 
         /// <summary>
@@ -74,9 +72,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
         /// The RealController which is the full backend of this controller.
         /// Note that it's not available at construction time, because the ServiceProvider isn't ready till later.
         /// </summary>
-        public TRealController Real => _real
-            ??= _serviceProvider?.Build<TRealController>().Init(Log) ??
-                throw new Exception($"Can't use {nameof(Real)} before {nameof(OnActionExecuting)}");
+        protected TRealController Real => _real ??= _helper.Real<TRealController>();
         private TRealController _real;
 
     }
