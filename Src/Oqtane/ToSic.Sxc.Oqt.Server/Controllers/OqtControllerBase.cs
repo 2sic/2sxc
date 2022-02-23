@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Controllers;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
-using System.Threading.Tasks;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi;
+using ToSic.Eav.WebApi.Helpers;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using Log = ToSic.Eav.Logging.Simple.Log;
@@ -27,12 +25,19 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         {
             // ReSharper disable once VirtualMemberCallInConstructor
             Log = new Log(HistoryLogName, null, GetType().Name);
+            _helper = new NetCoreControllersHelper(this);
         }
 
         protected IServiceProvider ServiceProvider;
 
         /// <inheritdoc />
         public ILog Log { get; }
+
+        /// <summary>
+        /// The helper to assist in timing and common operations of WebApi Controllers
+        /// </summary>
+        private readonly NetCoreControllersHelper _helper;
+
 
         /// <summary>
         /// The group name for log entries in insights.
@@ -46,7 +51,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// </summary>
         protected abstract string HistoryLogName { get; }
 
-        private Action<string> ActionTimerWrap; // it is used across events to track action execution total time
+        //private Action<string> ActionTimerWrap; // it is used across events to track action execution total time
 
         /// <summary>
         /// Initializer - just ensure SiteState is initialized thanks to our paths
@@ -55,14 +60,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         [NonAction]
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            ActionTimerWrap = Log.Call($"action executing url: {context.HttpContext.Request.GetDisplayUrl()}", useTimer: true);
-
             base.OnActionExecuting(context);
-
-            ServiceProvider = context.HttpContext.RequestServices;
-
-            // add log
-            ServiceProvider.Build<LogHistory>().Add(HistoryLogGroup, Log);
+            ServiceProvider = _helper.OnActionExecuting(context, HistoryLogGroup);
 
             // background processes can pass in an alias using the SiteState service
             ServiceProvider.Build<SiteStateInitializer>().InitIfEmpty();
@@ -79,25 +78,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         public override void OnActionExecuted(ActionExecutedContext context)
         {
             base.OnActionExecuted(context);
-
-            if (context.ActionDescriptor is ControllerActionDescriptor actionDescriptor)
-            {
-                // If the api endpoint method return type is "void" or "Task", Web API will return HTTP response with status code 204 (No Content).
-                // This changes aspnetcore default behavior in Oqtane that returns HTTP 200 OK, with no body so it is same as in ASP.NET MVC2 in DNN. 
-                // This is helpful for jQuery Ajax issue that on HTTP 200 OK with empty body throws json parse error.
-                // https://docs.microsoft.com/en-us/aspnet/web-api/overview/getting-started-with-aspnet-web-api/action-results#void
-                // https://github.com/dotnet/aspnetcore/issues/16944
-                // https://github.com/2sic/2sxc/issues/2555
-                var returnType = actionDescriptor.MethodInfo.ReturnType;
-                if (returnType == typeof(void) || returnType == typeof(Task))
-                {
-                    if (context.HttpContext.Response.StatusCode == 200)
-                        context.HttpContext.Response.StatusCode = 204; // NoContent (instead of HTTP 200 OK)
-                }
-            }
-
-            ActionTimerWrap("ok");
-            ActionTimerWrap = null; // just to mark that Action Delegate is not in use any more, so GC can collect it
+            _helper.OnActionExecuted(context);
         }
     }
 

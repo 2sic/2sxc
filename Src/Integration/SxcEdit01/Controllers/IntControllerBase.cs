@@ -32,6 +32,9 @@ namespace IntegrationSamples.SxcEdit01.Controllers
             _helper = new NetCoreControllersHelper(this);
         }
 
+        /// <summary>
+        /// The helper to assist in timing and common operations of WebApi Controllers
+        /// </summary>
         private readonly NetCoreControllersHelper _helper;
 
         /// <inheritdoc />
