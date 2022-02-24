@@ -3,7 +3,6 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Admin.Features;
-using ToSic.Eav.WebApi.PublicApi;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
