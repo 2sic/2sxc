@@ -27,16 +27,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
         [HttpGet] public IEnumerable<DataSourceDto> DataSources() => Real.Init(0).DataSources();
 
-		[HttpPost]
-	    public QueryDefinitionDto Save([FromBody] QueryDefinitionDto data, int appId, int id)
+		[HttpPost] public QueryDefinitionDto Save([FromBody] QueryDefinitionDto data, int appId, int id)
 	        => Real.Init(appId).Save(data, appId, id);
 
 
 	    [HttpGet] public QueryRunDto Run(int appId, int id, int top = 0) => Real.Init(appId).RunDev(appId, id, top);
 
-        // Experimental
-        [HttpGet]
-        public QueryRunDto DebugStream(int appId, int id, string from, string @out, int top = 25) 
+        [HttpGet] public QueryRunDto DebugStream(int appId, int id, string from, string @out, int top = 25) 
             => Real.Init(appId).DebugStream(appId, id, @from, @out, top);
 
 	    [HttpGet] public void Clone(int appId, int id) => Real.Init(appId).Clone(appId, id);
