@@ -3,8 +3,8 @@ using DotNetNuke.Web.Api;
 using System.Collections.Generic;
 using System.Web.Http;
 using ToSic.Eav.Persistence.Versions;
+using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Formats;
-using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Cms;
 
