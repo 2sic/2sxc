@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Eav.WebApi.Sys;
 

@@ -66,7 +66,7 @@
 <hr />
 <h2>Metadata</h2>
 @{
-  var targetType = TargetTypes.CmsItem; // 10; // CMS object, maybe better something else, officially should be > 100
+  var targetType = (int)TargetTypes.CmsItem; // 10; // CMS object, maybe better something else, officially should be > 100
   var myItemId = 1234;
   var md = appState.GetMetadata(targetType, myItemId);
 }
@@ -83,7 +83,7 @@ Found Metadata: @md.Count()
     function openMetadata(targetId) {
         console.log('test1');
         // TODO: CHECK Target property - was this public API? how can we prevent breaks?
-        const forRef = { Number: targetId, Target: 'CmsObject', Singleton: true };
+        const forRef = { Number: targetId, TargetType: @targetType, Singleton: true };
         getSxc().manage.run('edit', {
             items: [
                 { ContentTypeName: 'MetadataGps', For: forRef, Operations: "singleton", Prefill: { Color: "super-pink" } },
