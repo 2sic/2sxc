@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Oqtane.Shared;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Cms;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
@@ -21,9 +20,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Cms}")]
     [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Cms}")]
 
-    // Beta routes - TODO: @STV - why is this beta?
-    [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Cms}")]
-
     [ValidateAntiForgeryToken]
 
     [ApiController]
@@ -31,7 +27,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-        public EditController() : base("Edit") { }
+        public EditController() : base(EditControllerReal.LogSuffix) { }
 
 
         [HttpPost]
@@ -68,5 +64,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         // TODO: 2DM please check permissions
         public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
             => Real.LinkInfo(link, appId, contentType, guid, field);
+
+        /// <inheritdoc />
+        [HttpPost]
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        public bool Publish(int id)
+            => Real.Publish(id);
     }
 }

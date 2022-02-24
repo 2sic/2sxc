@@ -17,7 +17,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-        public EditController() : base("Edit") { }
+        public EditController() : base(EditControllerReal.LogSuffix) { }
 
 
         [HttpPost]
@@ -42,5 +42,10 @@ namespace IntegrationSamples.SxcEdit01.Controllers
         public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
             => Real.LinkInfo(link, appId, contentType, guid, field);
 
+        /// <inheritdoc />
+        [HttpPost]
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        public bool Publish(int id)
+            => Real.Publish(id);
     }
 }

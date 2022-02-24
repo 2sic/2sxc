@@ -1,9 +1,8 @@
-﻿using System;
+﻿using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
+using System;
 using System.Collections.Generic;
 using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.PublicApi;
@@ -18,7 +17,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-        public EditController() : base("Edit") { }
+        public EditController() : base(EditControllerReal.LogSuffix) { }
 
         /// <inheritdoc />
         [HttpPost]
@@ -48,5 +47,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default,
             string field = default)
             => Real.LinkInfo(link, appId, contentType, guid, field);
+
+        /// <inheritdoc />
+        [HttpPost]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        public bool Publish(int id)
+            => Real.Publish(id);
     }
 }
