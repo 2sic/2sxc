@@ -24,14 +24,14 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Admin}")]
     [ApiController]
 
-    public class DialogController : OqtStatefulControllerBase<DialogControllerReal>
+    public class DialogController : OqtStatefulControllerBase<DialogControllerReal>, IDialogController
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
         public DialogController() : base("Dialog") { }
         
         [HttpGet]
-        public DialogContextStandaloneDto Settings(int appId) => Real.DialogSettings(appId);
+        public DialogContextStandaloneDto Settings(int appId) => Real.Settings(appId);
         
     }
 }

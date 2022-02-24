@@ -14,13 +14,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [DnnLogExceptions]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public class DialogController : SxcApiControllerBase<DialogControllerReal>
+    public class DialogController : SxcApiControllerBase<DialogControllerReal>, IDialogController
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
         public DialogController(): base("Dialog") { }
 
         [HttpGet]
-        public DialogContextStandaloneDto Settings(int appId) => Real.DialogSettings(appId);
+        public DialogContextStandaloneDto Settings(int appId) => Real.Settings(appId);
     }
 }

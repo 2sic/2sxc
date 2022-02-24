@@ -8,7 +8,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
-    public class DialogControllerReal: WebApiBackendBase<DialogControllerReal>
+    public class DialogControllerReal: WebApiBackendBase<DialogControllerReal>, IDialogController
     {
         private readonly IContextResolver _ctxResolver;
         private readonly IUiContextBuilder _uiContextBuilder;
@@ -19,13 +19,8 @@ namespace ToSic.Sxc.WebApi.Admin
             _uiContextBuilder = uiContextBuilder;
         }
 
-        /// <summary>
-        /// This is the subsystem which delivers the getting-started app-iframe with instructions etc.
-        /// Used to be GET System/DialogSettings
-        /// </summary>
-        /// <param name="appId"></param>
-        /// <returns></returns>
-        public DialogContextStandaloneDto DialogSettings(int appId)
+        ///<inheritdoc />
+        public DialogContextStandaloneDto Settings(int appId)
         {            
             // reset app-id if we get a info-token like -100
             if (appId < 0) appId = Eav.Constants.AppIdEmpty;
