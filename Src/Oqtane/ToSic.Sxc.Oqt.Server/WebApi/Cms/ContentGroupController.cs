@@ -16,21 +16,18 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Cms}")]
     [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Cms}")]
 
-    // Beta routes - TODO: @STV - why is this beta?
-    [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Cms}")]
-
     [ValidateAntiForgeryToken]
     [ApiController]
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
     public class ContentGroupController : OqtStatefulControllerBase<DummyControllerReal>
     {
-        public ContentGroupController(Lazy<ListsBackendBase> listBackendLazy): base("ConGrp")
+        public ContentGroupController(Lazy<ContentGroupControllerReal> listBackendLazy): base("ConGrp")
         {
             _listBackendLazy = listBackendLazy;
         }
-        private readonly Lazy<ListsBackendBase> _listBackendLazy;
+        private readonly Lazy<ContentGroupControllerReal> _listBackendLazy;
 
-        private ListsBackendBase Backend => _listBackendLazy.Value.Init(Log);
+        private ContentGroupControllerReal Backend => _listBackendLazy.Value.Init(Log);
 
 
         [HttpGet]

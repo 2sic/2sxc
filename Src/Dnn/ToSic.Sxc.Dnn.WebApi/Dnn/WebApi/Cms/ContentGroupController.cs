@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         public EntityInListDto Header(Guid guid) 
             => Backend.HeaderItem(guid);
 
-        private ListsBackendBase Backend => GetService<ListsBackendBase>().Init(Log);
+        private ContentGroupControllerReal Backend => GetService<ContentGroupControllerReal>().Init(Log);
 
         // TODO: shouldn't be part of ContentGroupController any more, as it's generic now
         [HttpPost]

@@ -14,7 +14,7 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.WebApi.ItemLists
 {
-    public class ListsBackendBase: HasLog
+    public class ContentGroupControllerReal: HasLog
     {
         public IContextResolver CtxResolver { get; }
 
@@ -27,14 +27,14 @@ namespace ToSic.Sxc.WebApi.ItemLists
         private IContextOfBlock Context => _context ?? (_context = CtxResolver.BlockRequired());
         private IContextOfBlock _context;
 
-        public ListsBackendBase(IPagePublishing publishing, Lazy<CmsManager> cmsManagerLazy, IContextResolver ctxResolver) : base("Bck.Lists")
+        public ContentGroupControllerReal(IPagePublishing publishing, Lazy<CmsManager> cmsManagerLazy, IContextResolver ctxResolver) : base("Bck.Lists")
         {
             CtxResolver = ctxResolver;
             _cmsManagerLazy = cmsManagerLazy;
             _publishing = publishing.Init(Log);
         }
 
-        public ListsBackendBase Init(ILog parentLog)
+        public ContentGroupControllerReal Init(ILog parentLog)
         {
             Log.LinkTo(parentLog);
             return this;
