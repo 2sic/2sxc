@@ -13,7 +13,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
     public class EditControllerReal: HasLog<EditControllerReal>, IEditController
     {
-        public const string LogSuffix = "Api.CmsEdit";
+        public const string LogSuffix = "Edit";
 
         public EditControllerReal(
             LazyInitLog<EntityPickerBackend> entityBackend,
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 Lazy<EditSaveBackend> saveBackendLazy,
                 LazyInitLog<HyperlinkBackend<int, int>> linkBackendLazy,
                 LazyInitLog<AppViewPickerBackend> appViewPickerBackendLazy
-            ) : base("Api.CmsEditRl")
+            ) : base("Api.EditRl")
         {
             _entityBackend = entityBackend.SetLog(Log);
             _loadBackend = loadBackend.SetLog(Log);

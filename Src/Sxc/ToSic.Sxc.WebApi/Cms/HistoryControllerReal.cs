@@ -13,7 +13,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
     public class HistoryControllerReal : HasLog<HistoryControllerReal>, IHistoryController
     {
-        public const string LogSuffix = "Api.CmsHistory";
+        public const string LogSuffix = "Hist";
 
         public HistoryControllerReal(LazyInitLog<IdentifierHelper> idHelper, Lazy<AppManager> appManagerLazy) : base("Api.CmsHistoryRl")
         {
