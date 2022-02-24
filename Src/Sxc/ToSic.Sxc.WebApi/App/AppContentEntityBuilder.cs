@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.WebApi.App
 {
@@ -86,13 +87,24 @@ namespace ToSic.Sxc.WebApi.App
         }
 
         // add (updated) "IsPublished" in "values" (before it can be removed when there is no IsPublished attribute)
-        private static void AddIsPublished(IDictionary<string, object> values, IDictionary<string, object> cleaned)
+        private void AddIsPublished(IDictionary<string, object> values, IDictionary<string, object> cleaned)
         {
             if (!values.ContainsKey(Attributes.EntityFieldIsPublished)) return;
 
             var isPublishedValue = values[Attributes.EntityFieldIsPublished];
-            if (bool.TryParse(isPublishedValue.ToString(), out var isPublished))
-                cleaned.Add(Attributes.EntityFieldIsPublished, isPublished);
+            switch (isPublishedValue)
+            {
+                case null:
+                case string emptyString when string.IsNullOrEmpty(emptyString):
+                case string nullString when nullString.ToLowerInvariant().Contains("null"):
+                    return;
+                case string draftString when draftString.ToLowerInvariant().Contains("draft"):
+                    cleaned.Add(Attributes.EntityFieldIsPublished, "draft");
+                    return;
+                default:
+                    cleaned.Add(Attributes.EntityFieldIsPublished, isPublishedValue.ConvertOrDefault<bool>(numeric: false, truthy: true));
+                    return;
+            }
         }
 
         /// <summary>
