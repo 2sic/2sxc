@@ -16,9 +16,9 @@ namespace ToSic.Sxc.Dnn.WebApi
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-        protected DnnApiControllerWithFixes(string logName) 
+        protected DnnApiControllerWithFixes(string logSuffix) 
 	    {
-            Log = new Log("Api." + logName, null, $"Path: {HttpContext.Current?.Request?.Url?.AbsoluteUri}");
+            Log = new Log("Api." + logSuffix, null, $"Path: {HttpContext.Current?.Request?.Url?.AbsoluteUri}");
             TimerWrapLog = Log.Call(message: "timer", useTimer: true);
 	        
             // ReSharper disable VirtualMemberCallInConstructor
