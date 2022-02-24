@@ -2,12 +2,12 @@
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.WebApi.Licenses;
+using ToSic.Eav.WebApi.Sys.Licenses;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public class LicenseController : DnnApiControllerWithFixes<LicenseControllerReal>
+    public class LicenseController : DnnApiControllerWithFixes<LicenseControllerReal>, ILicenseController
     {
         public LicenseController() : base("License") { }
 
@@ -17,15 +17,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         /// </summary>
         protected override string HistoryLogGroup => "web-api.license";
 
-        #region License
-
-        /// <summary>
-        /// Gives an array of License (sort by priority)
-        /// </summary>
-        /// <returns></returns>
         [HttpGet]
         public IEnumerable<LicenseDto> Summary() => Real.Summary();
 
-        #endregion
     }
 }

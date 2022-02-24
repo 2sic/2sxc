@@ -2,10 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Collections.Generic;
-using ToSic.Eav.WebApi.Licenses;
 using ToSic.Eav.WebApi.Routing;
+using ToSic.Eav.WebApi.Sys.Licenses;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
@@ -16,7 +15,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 
     // Beta routes - TODO: @STV - why is this beta?
     [Route(WebApiConstants.WebApiStateRoot + "/" + AreaRoutes.Sys)]
-    public class LicenseController : OqtStatefulControllerBase<LicenseControllerReal>
+    public class LicenseController : OqtStatefulControllerBase<LicenseControllerReal>, ILicenseController
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
@@ -31,10 +30,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 
         #region License
 
-        /// <summary>
-        /// Gives an array of License (sort by priority)
-        /// </summary>
-        /// <returns></returns>
         [HttpGet]
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
         [Authorize(Roles = RoleNames.Host)]
