@@ -1,11 +1,14 @@
 using System.IO;
+using IntegrationSamples.BasicEav01.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 
 namespace IntegrationSamples.BasicEav01
@@ -30,7 +33,10 @@ namespace IntegrationSamples.BasicEav01
         /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
-            // #2sxcIntegration Enable EAV
+            // #2sxcIntegration
+            // Register our Always-Super-User (to allow Insights to be used)
+            services.TryAddTransient<IUser, IntUser>();
+            // Enable all of EAV
             services.AddEav();
 
             // RazorPages - standard .net core MVC feature

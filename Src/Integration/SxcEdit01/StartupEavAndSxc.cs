@@ -19,7 +19,7 @@ namespace IntegrationSamples.SxcEdit01
         {
             // Context
             services.TryAddTransient<ISite, IntSite>();
-            services.TryAddTransient<IUser, IntUserSuper>();
+            services.TryAddTransient<IUser, IntUser>();
 
             // ADAM
             services.TryAddTransient<AdamManager, AdamManager<string, string>>();

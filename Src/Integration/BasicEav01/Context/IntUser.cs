@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using ToSic.Eav.Context;
 
-namespace IntegrationSamples.SxcEdit01.Context
+namespace IntegrationSamples.BasicEav01.Context
 {
     /// <summary>
     /// #2sxcIntegration
     /// Dummy user, which always says it's a superuser
     /// </summary>
-    public class IntUserSuper: IUser
+    public class IntUser: IUser
     {
         public int Id => 0;
         public string IdentityToken => "impl-user:0";

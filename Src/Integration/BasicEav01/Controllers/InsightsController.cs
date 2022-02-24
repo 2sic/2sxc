@@ -28,9 +28,6 @@ namespace IntegrationSamples.BasicEav01.Controllers
             [FromQuery] bool? toggle = null,
             [FromQuery] string nameId = null)
         {
-            // Temporary setting to allow Insights despite minimal setup
-            ToSic.Eav.Context.UserUnknown.AllowEverything = true;
-
             var result = _insights
                 .Init(new Log("Int.Insights"))
                 .Details(view, appId, key, position, type, toggle, nameId);
