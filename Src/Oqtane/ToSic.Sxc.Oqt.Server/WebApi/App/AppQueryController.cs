@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Admin.Query;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -34,14 +32,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
 
     //[AllowAnonymous]
     [Produces("application/json")]
-    public class AppQueryController : OqtStatefulControllerBase<DummyControllerReal>, IAppQueryController
+    public class AppQueryController : OqtStatefulControllerBase<AppQueryControllerReal>, IAppQueryController
     {
-        public AppQueryController(Lazy<AppQuery> appQuery): base("Query")
-        {
-            _appQuery = appQuery;
-        }
-        private readonly Lazy<AppQuery> _appQuery;
-
+        public AppQueryController(): base(AppQueryControllerReal.LogSuffix) { }
 
         // GET is separated from POST to solve HttpResponseException that happens when
         // 'content-type' header is missing (or in GET request) on the endpoint that has [FromBody] in signature
@@ -49,33 +42,39 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
         [HttpGet("{appPath}/query/{name}")]
         [HttpGet("{appPath}/query/{name}/{stream}")]
         [AllowAnonymous] // will check security internally, so assume no requirements
-        public IDictionary<string, IEnumerable<EavLightEntity>> PublicQuery([FromRoute] string appPath,
+        public IDictionary<string, IEnumerable<EavLightEntity>> PublicQuery(
+            [FromRoute] string appPath,
             [FromRoute] string name,
-            [FromRoute] string stream = null) => _appQuery.Value.Init(Log).PublicQuery(appPath, name, stream, null);
+            [FromRoute] string stream = null) => Real.PublicQuery(appPath, name, stream);
 
         [HttpPost("{appPath}/query/{name}")]
         [HttpPost("{appPath}/query/{name}/{stream}")]
         [AllowAnonymous] // will check security internally, so assume no requirements
-        public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost([FromRoute] string appPath,
+        public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost(
+            [FromRoute] string appPath,
             [FromRoute] string name,
             QueryParameters more,
-            [FromRoute] string stream = null) => _appQuery.Value.Init(Log).PublicQuery(appPath, name, stream, more);
+            [FromRoute] string stream = null) => Real.PublicQueryPost(appPath, name, more, stream);
 
         [HttpGet("auto/query/{name}")]
         [HttpGet("auto/query/{name}/{stream?}")]
         [AllowAnonymous] // will check security internally, so assume no requirements
-        public IDictionary<string, IEnumerable<EavLightEntity>> Query([FromRoute] string name,
-            [FromQuery] bool includeGuid = false,
+        public IDictionary<string, IEnumerable<EavLightEntity>> Query(
+            [FromRoute] string name,
+            [FromQuery] int? appId = null,
             [FromRoute] string stream = null,
-            [FromQuery] int? appId = null) => _appQuery.Value.Init(Log).Query(appId, name, includeGuid, stream, null);
+            [FromQuery] bool includeGuid = false
+            ) => Real.Query(name, appId, stream, includeGuid);
 
         [HttpPost("auto/query/{name}")]
         [HttpPost("auto/query/{name}/{stream?}")]
         [AllowAnonymous] // will check security internally, so assume no requirements
-        public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost([FromRoute] string name,
+        public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost(
+            [FromRoute] string name,
             QueryParameters more,
-            [FromQuery] bool includeGuid = false,
+            [FromQuery] int? appId = null,
             [FromRoute] string stream = null,
-            [FromQuery] int? appId = null) => _appQuery.Value.Init(Log).Query(appId, name, includeGuid, stream, more);
+            [FromQuery] bool includeGuid = false
+            ) => Real.QueryPost(name, more, appId, stream, includeGuid);
     }
 }

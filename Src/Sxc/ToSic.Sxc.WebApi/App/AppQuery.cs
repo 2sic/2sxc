@@ -9,6 +9,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Admin.Query;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
@@ -17,13 +18,15 @@ using ToSic.Sxc.LookUp;
 
 namespace ToSic.Sxc.WebApi.App
 {
-    public class AppQuery: WebApiBackendBase<AppQuery>
+    public class AppQueryControllerReal: WebApiBackendBase<AppQueryControllerReal> , IAppQueryController
     {
+        public const string LogSuffix = "AppQry";
+
         private const string AllStreams = "*";
 
         #region Constructor / DI
 
-        public AppQuery(IServiceProvider serviceProvider, IContextResolver ctxResolver, IConvertToEavLight dataToFormatLight) : base(serviceProvider, "Sxc.ApiApQ")
+        public AppQueryControllerReal(IServiceProvider serviceProvider, IContextResolver ctxResolver, IConvertToEavLight dataToFormatLight) : base(serviceProvider, "Sxc.ApiApQ")
         {
             _ctxResolver = ctxResolver;
             _dataToFormatLight = dataToFormatLight;
@@ -36,7 +39,13 @@ namespace ToSic.Sxc.WebApi.App
 
         #region In-Container-Context Queries
 
-        public IDictionary<string, IEnumerable<EavLightEntity>> Query(int? appId, string name, bool includeGuid, string stream, QueryParameters more)
+        public IDictionary<string, IEnumerable<EavLightEntity>> Query(string name, int? appId, string stream = null,
+            bool includeGuid = false)
+            => QueryPost(name, null, appId, stream, includeGuid);
+
+        public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost(string name, QueryParameters more,
+            int? appId, string stream = null,
+            bool includeGuid = false)
         {
             var wrapLog = Log.Call($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
 
@@ -59,8 +68,11 @@ namespace ToSic.Sxc.WebApi.App
 
         #region Public Queries
 
+        public IDictionary<string, IEnumerable<EavLightEntity>> PublicQuery(string appPath, string name, string stream)
+            => PublicQueryPost(appPath, name, null, stream);
 
-        public IDictionary<string, IEnumerable<EavLightEntity>> PublicQuery(string appPath, string name, string stream, QueryParameters more)
+
+        public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost(string appPath, string name, QueryParameters more, string stream)
         {
             var wrapLog = Log.Call($"path:{appPath}, name:{name}, stream: {stream}");
             if (string.IsNullOrEmpty(name))
