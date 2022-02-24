@@ -18,9 +18,12 @@
 <h1>@ViewData["Title"]</h1>
 
 <script language="javascript">
-  function getSxc() {
-    return $2sxc({ zoneId: @appIdentity.ZoneId, appId: @appIdentity.AppId });
-  }
+    // Important note
+    // This requires that the JS is loaded on the page. In this sample it's done in the _Layout.cshtml
+    // It also requires some environment properties to be set - which is also done in _Layout.cshtml
+    function getSxc() {
+        return $2sxc({ zoneId: @appIdentity.ZoneId, appId: @appIdentity.AppId });
+    }
 </script>
 <p>
   Try using the $2sxc js api for @appIdentity.ZoneId/@appIdentity.AppId - first item @firstItem.EntityId <br />
@@ -77,17 +80,17 @@ Found Metadata: @md.Count()
 
 
 <script>
-  function openMetadata(targetId) {
-    console.log('test1');
-    // TODO: CHECK Target property - was this public API? how can we prevent breaks?
-    const forRef = { Number: targetId, Target: 'CmsObject', Singleton: true };
-    getSxc().manage.run('edit', {
-      items: [
-        { ContentTypeName: 'MetadataGps', For: forRef, Operations: "singleton", Prefill: { Color: "super-pink" } },
-        { ContentTypeName: 'MetadataCar', For: forRef, Sfx: "singleton" }
-      ]
-    });
-  }
+    function openMetadata(targetId) {
+        console.log('test1');
+        // TODO: CHECK Target property - was this public API? how can we prevent breaks?
+        const forRef = { Number: targetId, Target: 'CmsObject', Singleton: true };
+        getSxc().manage.run('edit', {
+            items: [
+                { ContentTypeName: 'MetadataGps', For: forRef, Operations: "singleton", Prefill: { Color: "super-pink" } },
+                { ContentTypeName: 'MetadataCar', For: forRef, Sfx: "singleton" }
+            ]
+        });
+    }
 </script>
 
 wip
@@ -106,10 +109,10 @@ wip
 <p>
   <!-- Note to myself: key seems to have a bug, if it's not a string-->
   <a href="#" onclick="getSxc().manage.run('edit', {
-  items: [
-    { ContentTypeName: 'MetadataGps', EntityId: 0, Metadata: { targetType: 10, keyType: 'number', key: @myItemId } },
-    { ContentTypeName: 'MetadataCar', EntityId: 0, For: { targetType: 10, Number: @myItemId } }
-  ]
+    items: [
+        { ContentTypeName: 'MetadataGps', EntityId: 0, Metadata: { targetType: 10, keyType: 'number', key: @myItemId } },
+        { ContentTypeName: 'MetadataCar', EntityId: 0, For: { targetType: 10, Number: @myItemId } }
+    ]
 })">Edit Test</a>
 </p>
 

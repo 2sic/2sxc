@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi;
-using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Eav.WebApi.Admin.Metadata;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -21,17 +18,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
     // Beta routes - TODO: @STV - why is this beta?
     [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Admin}")]
-    public class MetadataController : OqtStatefulControllerBase<DummyControllerReal>, IMetadataController
+    public class MetadataController : OqtStatefulControllerBase<MetadataControllerReal>, IMetadataController
     {
-        public MetadataController(MetadataBackend backend): base("MetaDt")
-        {
-            Backend = backend;
-        }
-        public MetadataBackend Backend { get; }
+        public MetadataController(): base("MetaDt") { }
 
         [HttpGet]
         public MetadataListDto Get(int appId, int targetType, string keyType, string key, string contentType = null)
-            => Backend.Init(Log).Get(appId, targetType, keyType, key, contentType);
+            => Real.Get(appId, targetType, keyType, key, contentType);
 
     }
 }
