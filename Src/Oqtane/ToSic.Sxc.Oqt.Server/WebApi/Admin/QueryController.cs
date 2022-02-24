@@ -8,7 +8,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.WebApi;
+using ToSic.Sxc.WebApi.Admin.Query;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {

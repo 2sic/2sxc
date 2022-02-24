@@ -4,10 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.WebApi;
+using ToSic.Eav.WebApi.Admin.Query;
 using ToSic.Eav.WebApi.PublicApi;
-using ToSic.Eav.WebApi.Query;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.App;
 
 // TODO: #MissingFeature

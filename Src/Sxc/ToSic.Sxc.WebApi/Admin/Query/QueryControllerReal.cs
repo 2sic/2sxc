@@ -1,18 +1,19 @@
 ﻿using System;
 using ToSic.Eav.Apps;
 using ToSic.Eav.WebApi;
+using ToSic.Eav.WebApi.Admin.Query;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.LookUp;
 
-namespace ToSic.Sxc.WebApi
+namespace ToSic.Sxc.WebApi.Admin.Query
 {
     public class QueryControllerReal: QueryControllerBase<QueryControllerReal>
     {
         public const string LogSuffix = "Query";
 
-        public QueryControllerReal(QueryApiDependencies dependencies, Lazy<CmsManager> cmsManagerLazy, IAppStates appStates, IContextResolver contextResolver, AppConfigDelegate appConfigMaker) 
+        public QueryControllerReal(QueryControllerDependencies dependencies, Lazy<CmsManager> cmsManagerLazy, IAppStates appStates, IContextResolver contextResolver, AppConfigDelegate appConfigMaker) 
             : base(dependencies, "Api." + LogSuffix)
         {
             _cmsManagerLazy = cmsManagerLazy;
