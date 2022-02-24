@@ -10,12 +10,21 @@ using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.WebApi.ItemLists;
 using static System.StringComparison;
 
-namespace ToSic.Sxc.WebApi.ItemLists
+namespace ToSic.Sxc.WebApi.Cms
 {
-    public class ContentGroupControllerReal: HasLog
+    public class ContentGroupControllerReal: HasLog<ContentGroupControllerReal>, IContentGroupController
     {
+        public const string LogSuffix = "CntGrp";
+        public ContentGroupControllerReal(IPagePublishing publishing, Lazy<CmsManager> cmsManagerLazy, IContextResolver ctxResolver) : base("Api.CntGrpRl")
+        {
+            CtxResolver = ctxResolver;
+            _cmsManagerLazy = cmsManagerLazy;
+            _publishing = publishing.Init(Log);
+        }
+
         public IContextResolver CtxResolver { get; }
 
         #region Constructor / di
@@ -27,24 +36,30 @@ namespace ToSic.Sxc.WebApi.ItemLists
         private IContextOfBlock Context => _context ?? (_context = CtxResolver.BlockRequired());
         private IContextOfBlock _context;
 
-        public ContentGroupControllerReal(IPagePublishing publishing, Lazy<CmsManager> cmsManagerLazy, IContextResolver ctxResolver) : base("Bck.Lists")
-        {
-            CtxResolver = ctxResolver;
-            _cmsManagerLazy = cmsManagerLazy;
-            _publishing = publishing.Init(Log);
-        }
-
-        public ContentGroupControllerReal Init(ILog parentLog)
-        {
-            Log.LinkTo(parentLog);
-            return this;
-        }
-
         #endregion
 
+        public EntityInListDto Header(Guid guid)
+        {
+            Log.Add($"header for:{guid}");
+            var cg = GetContentGroup(guid);
+
+            // new in v11 - this call might be run on a non-content-block, in which case we return null
+            if (cg.Entity.Type.Name != BlocksRuntime.BlockTypeName) return null;
+
+            var header = cg.Header.FirstOrDefault();
+
+            return new EntityInListDto
+            {
+                Index = 0,
+                Id = header?.EntityId ?? 0,
+                Guid = header?.EntityGuid ?? Guid.Empty,
+                Title = header?.GetBestTitle() ?? "",
+                Type = header?.Type.NameId ?? cg.View.HeaderType
+            };
+        }
 
 
-        // TODO: probably should move from "backend" to a Manager
+        // TODO: probably should move to a Manager
         public void Replace(Guid guid, string part, int index, int entityId, bool add = false)
         {
             var wrapLog = Log.Call($"target:{guid}, part:{part}, index:{index}, id:{entityId}");
@@ -75,10 +90,9 @@ namespace ToSic.Sxc.WebApi.ItemLists
             wrapLog(null);
         }
 
+
         // TODO: WIP changing this from ContentGroup editing to any list editing
-
-
-        public ReplacementListDto GetReplacementOptions(Guid guid, string part, int index)
+        public ReplacementListDto Replace(Guid guid, string part, int index)
         {
             var wrapLog = Log.Call<ReplacementListDto>($"target:{guid}, part:{part}, index:{index}");
             part = part.ToLowerInvariant();
@@ -103,10 +117,9 @@ namespace ToSic.Sxc.WebApi.ItemLists
                 ? itemList[index]?.EntityId
                 : null;
 
-            var result = new ReplacementListDto {SelectedId = selectedId, Items = results, ContentTypeName = ct.NameId};
+            var result = new ReplacementListDto { SelectedId = selectedId, Items = results, ContentTypeName = ct.NameId };
             return wrapLog(null, result);
         }
-
 
 
         public List<EntityInListDto> ItemList(Guid guid, string part)
@@ -128,7 +141,7 @@ namespace ToSic.Sxc.WebApi.ItemLists
 
 
         // TODO: part should be handed in with all the relevant names! atm it's "content" in the content-block scenario
-        public bool Reorder(/*IContextOfBlock context,*/ Guid guid, List<EntityInListDto> list,  string part = null)
+        public bool ItemList(/*IContextOfBlock context,*/ Guid guid, List<EntityInListDto> list,  string part = null)
         {
             Log.Add($"list for:{guid}, items:{list?.Count}");
             if (list == null) throw new ArgumentNullException(nameof(list));
@@ -182,29 +195,6 @@ namespace ToSic.Sxc.WebApi.ItemLists
             attributeSetName = partIsContent ? contentGroup.View.ContentType : contentGroup.View.HeaderType;
             return wrapLog(null, itemList);
         }
-
-
-        public EntityInListDto HeaderItem(Guid guid)
-        {
-            Log.Add($"header for:{guid}");
-            var cg = GetContentGroup(guid);
-
-            // new in v11 - this call might be run on a non-content-block, in which case we return null
-            if (cg.Entity.Type.Name != BlocksRuntime.BlockTypeName) return null;
-
-            var header = cg.Header.FirstOrDefault();
-
-            return new EntityInListDto
-            {
-                Index = 0,
-                Id = header?.EntityId ?? 0,
-                Guid = header?.EntityGuid ?? Guid.Empty,
-                Title = header?.GetBestTitle() ?? "",
-                Type = header?.Type.NameId ?? cg.View.HeaderType
-            };
-        }
-
-
 
         protected BlockConfiguration GetContentGroup(Guid contentGroupGuid)
         {
