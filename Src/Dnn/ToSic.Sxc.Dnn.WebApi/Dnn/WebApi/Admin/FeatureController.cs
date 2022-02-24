@@ -19,15 +19,16 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     {
         public FeatureController(): base(FeatureControllerReal.LogSuffix) { }
 
-        /// <summary>
-        /// Used to be GET a list of Features
-        /// </summary>
-        /// <remarks>
-        /// Added in 2sxc 10
-        /// </remarks>
-        [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public IEnumerable<FeatureState> List(bool reload = false) => Real.List(reload);
+        // TODO: PROBABLY REMOVE, PROBABLY NOT USED ANY MORE
+        ///// <summary>
+        ///// Used to be GET a list of Features
+        ///// </summary>
+        ///// <remarks>
+        ///// Added in 2sxc 10
+        ///// </remarks>
+        //[HttpGet]
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        //public IEnumerable<FeatureState> List(bool reload = false) => Real.List(reload);
 
         // v13.02 not used any more
         ///// <summary>

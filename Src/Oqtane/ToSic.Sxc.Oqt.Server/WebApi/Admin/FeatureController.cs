@@ -28,13 +28,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         //private readonly OqtModuleHelper _oqtModuleHelper;
         //private readonly RemoteRouterLink _remoteRouterLink;
 
-
-        /// <summary>
-        /// Used to be GET System/Features
-        /// </summary>
-        [HttpGet]
-        [Authorize(Roles = RoleNames.Admin)]
-        public IEnumerable<FeatureState> List(bool reload = false) => Real.List(reload);
+        // TODO: PROBABLY REMOVE, PROBABLY NOT USED ANY MORE
+        ///// <summary>
+        ///// Used to be GET System/Features
+        ///// </summary>
+        //[HttpGet]
+        //[Authorize(Roles = RoleNames.Admin)]
+        //public IEnumerable<FeatureState> List(bool reload = false) => Real.List(reload);
 
         // v13.02 not used any more
         ///// <summary>
