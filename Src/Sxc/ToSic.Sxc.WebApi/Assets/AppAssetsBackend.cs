@@ -6,17 +6,16 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Sxc.Apps.Assets;
-using ToSic.Sxc.Apps.Paths;
 using static System.StringComparison;
 
 namespace ToSic.Sxc.WebApi.Assets
 {
-    public partial class AppAssetsBackend: HasLog<AppAssetsBackend>
+    public partial class AppFilesControllerReal: HasLog<AppFilesControllerReal>, IAppFilesController
     {
-
+        public const string LogSuffix = "AppAss";
         #region Constructor / DI
 
-        public AppAssetsBackend(
+        public AppFilesControllerReal(
             ISite site,
             IUser user, 
             Lazy<AssetEditor> assetEditorLazy,
@@ -44,8 +43,10 @@ namespace ToSic.Sxc.WebApi.Assets
 
         #endregion
 
-
-        public AssetEditInfo Get(int appId, int templateId, string path, bool global)
+        /// <summary>
+        /// Get details and source code
+        /// </summary>
+        public AssetEditInfo Asset(int appId, int templateId = 0, string path = null, bool global = false)
         {
             var wrapLog = Log.Call<AssetEditInfo>($"asset templ:{templateId}, path:{path}, global:{global}");
             var assetEditor = GetAssetEditorOrThrowIfInsufficientPermissions(appId, templateId, global, path);
@@ -53,8 +54,10 @@ namespace ToSic.Sxc.WebApi.Assets
             return wrapLog(null, assetEditor.EditInfoWithSource);
         }
 
-
-        public bool Save(int appId, AssetEditInfo template, int templateId, bool global, string path)
+        /// <summary>
+        /// Save operation - but must be called Asset to match public REST API
+        /// </summary>
+        public bool Asset(int appId, AssetEditInfo template, int templateId, string path, bool global)
         {
             var wrapLog = Log.Call<bool>($"templ:{templateId}, global:{global}, path:{path}");
             var assetEditor = GetAssetEditorOrThrowIfInsufficientPermissions(appId, templateId, global, path);
@@ -62,8 +65,29 @@ namespace ToSic.Sxc.WebApi.Assets
             return wrapLog(null, true);
         }
 
-        public bool Create(AssetFromTemplateDto assetFromTemplateDto)
+        /// <summary>
+        /// Create a new file (if it doesn't exist yet) and optionally prefill it with content
+        /// </summary>
+        /// <param name="appId"></param>
+        /// <param name="path"></param>
+        /// <param name="global">this determines, if the app-file store is the global in _default or the local in the current app</param>
+        /// <param name="templateKey"></param>
+        /// <returns></returns>
+        public bool Create(// note: as of 2020-09 the content is never submitted
+            int appId,
+            string path,
+            bool global,
+            string templateKey
+            // as of 2021-12, all create calls include templateKey
+        )
         {
+            var assetFromTemplateDto = new AssetFromTemplateDto
+            {
+                AppId = appId,
+                Path = path,
+                Global = global,
+                TemplateKey = templateKey,
+            };
             var wrapLog = Log.Call<bool>($"create a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
 
             assetFromTemplateDto.Path = assetFromTemplateDto.Path.Replace("/", "\\");
@@ -74,17 +98,23 @@ namespace ToSic.Sxc.WebApi.Assets
             var assetEditor = GetAssetEditorOrThrowIfInsufficientPermissions(assetFromTemplateDto);
 
             // get and prepare template content
-            var content = GetTemplateContent(assetFromTemplateDto);
+            var body = GetTemplateContent(assetFromTemplateDto);
 
-            return wrapLog("Created", assetEditor.Create(content));
+            return wrapLog("Created", assetEditor.Create(body));
         }
 
+        /// <summary>
+        /// Get all asset template types
+        /// </summary>
+        /// <param name="purpose">filter by Purpose when provided</param>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public TemplatesDto GetTemplates(string purpose, string type)
         {
             var templateInfos = _assetTemplates.GetTemplates();
 
             // TBD: future purpose implementation
-            purpose = (purpose ?? AssetTemplates.ForTemplate).ToLowerInvariant().Trim() ?? "";
+            purpose = (purpose ?? AssetTemplates.ForTemplate).ToLowerInvariant().Trim();
             var defId = AssetTemplates.RazorHybrid.Key;
             if (purpose.Equals(AssetTemplates.ForApi, InvariantCultureIgnoreCase))
                 defId = AssetTemplates.ApiHybrid.Key;
@@ -130,7 +160,7 @@ namespace ToSic.Sxc.WebApi.Assets
             return wrapLog(null, assetEditor);
         }
 
-        public TemplatePreviewDto GetPreview(int appId, string path, string templateKey, bool b)
+        public TemplatePreviewDto Preview(int appId, string path, string templateKey, bool b)
         {
             var wrapLog = Log.Call<TemplatePreviewDto>($"create a#{appId}, path:{path}, global:{b}, key:{templateKey}");
             var templatePreviewDto = new TemplatePreviewDto();

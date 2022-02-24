@@ -3,7 +3,7 @@ using ToSic.Sxc.Apps.Paths;
 
 namespace ToSic.Sxc.WebApi.Assets
 {
-    public partial class AppAssetsBackend
+    public partial class AppFilesControllerReal
     {
         private string ResolveAppPath(int appId, bool global) =>
             (_appPaths.InitDone

@@ -29,10 +29,12 @@ namespace ToSic.Sxc.WebApi.Assets
         /// <param name="path"></param>
         /// <param name="appId"></param>
         /// <returns></returns>
-        bool Asset(int appId, AssetEditInfo template,
-            int templateId = 0, string path = null, // identifier is either template Id or path
+        bool Asset(
+            int appId, 
+            AssetEditInfo template,
+            int templateId = 0, 
+            string path = null, // identifier is either template Id or path
             // todo w/SPM - global never seems to be used - must check why and if we remove or add to UI
-            // TODO: NEW PARAM TEMPLATEKey SHOULD BE USED TO CREATE THE FILE
             bool global = false);
 
         /// <summary>
@@ -40,17 +42,14 @@ namespace ToSic.Sxc.WebApi.Assets
         /// </summary>
         /// <param name="appId"></param>
         /// <param name="path"></param>
-        /// <param name="content"></param>
         /// <param name="global">this determines, if the app-file store is the global in _default or the local in the current app</param>
         /// <param name="templateKey"></param>
         /// <returns></returns>
         bool Create(
             int appId,
             string path,
-            FileContentsDto content, // note: as of 2020-09 the content is never submitted
             bool global,
             string templateKey // as of 2021-12, all create calls include templateKey
-            // string purpose = Purpose.Auto
         );
 
         /// <summary>

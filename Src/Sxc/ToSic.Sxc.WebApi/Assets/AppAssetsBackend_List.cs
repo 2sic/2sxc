@@ -6,9 +6,9 @@ using ToSic.Eav.WebApi.Assets;
 
 namespace ToSic.Sxc.WebApi.Assets
 {
-    public partial class AppAssetsBackend
+    public partial class AppFilesControllerReal
     {
-        public List<string> List(int appId, bool global = false, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
+        public List<string> All(int appId, bool global = false, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
         {
             Log.Add($"list a#{appId}, global:{global}, path:{path}, mask:{mask}, withSub:{withSubfolders}, withFld:{returnFolders}");
             // set global access security if ok...
@@ -54,10 +54,10 @@ namespace ToSic.Sxc.WebApi.Assets
         {
             mask = mask ?? "*.*";
             var localFiles =
-                List(appId, global: false, path: path, mask: mask, withSubfolders: true, returnFolders: false)
+                All(appId, global: false, path: path, mask: mask, withSubfolders: true, returnFolders: false)
                     .Select(f => new AllFileDto { Path = f });
             var globalFiles = _user.IsSuperUser
-                ? List(appId, global: true, path: path, mask: mask, withSubfolders: true, returnFolders: false)
+                ? All(appId, global: true, path: path, mask: mask, withSubfolders: true, returnFolders: false)
                     .Select(f => new AllFileDto { Path = f, Shared = true }).ToArray()
                 : Array.Empty<AllFileDto>();
             return new AllFilesDto { Files = localFiles.Union(globalFiles),};

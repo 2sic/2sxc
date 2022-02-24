@@ -5,7 +5,7 @@ using ToSic.Sxc.Apps.Assets;
 
 namespace ToSic.Sxc.WebApi.Assets
 {
-    public partial class AppAssetsBackend
+    public partial class AppFilesControllerReal
     {
         //private const string ApiFolder = "api";
 
