@@ -51,6 +51,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
             => _linkBackendLazy.Ready.LookupHyperlink(appId, link, contentType, guid, field);
 
+        // TODO: we will need to make simpler implementation
         public bool Publish(int id)
             => _appViewPickerBackendLazy.Ready.Publish(id);
     }
