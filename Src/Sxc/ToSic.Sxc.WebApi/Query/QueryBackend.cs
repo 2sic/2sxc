@@ -1,6 +1,5 @@
 ﻿using System;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Apps;
@@ -9,10 +8,12 @@ using ToSic.Sxc.LookUp;
 
 namespace ToSic.Sxc.WebApi
 {
-    public class QueryBackend: QueryApi
+    public class QueryControllerReal: QueryControllerBase<QueryControllerReal>
     {
+        public const string LogSuffix = "Query";
 
-        public QueryBackend(Dependencies dependencies, Lazy<CmsManager> cmsManagerLazy, IAppStates appStates, IContextResolver contextResolver, AppConfigDelegate appConfigMaker) : base(dependencies)
+        public QueryControllerReal(QueryApiDependencies dependencies, Lazy<CmsManager> cmsManagerLazy, IAppStates appStates, IContextResolver contextResolver, AppConfigDelegate appConfigMaker) 
+            : base(dependencies, "Api." + LogSuffix)
         {
             _cmsManagerLazy = cmsManagerLazy;
             _appStates = appStates;
@@ -24,14 +25,10 @@ namespace ToSic.Sxc.WebApi
         private readonly IContextResolver _contextResolver;
         private readonly AppConfigDelegate _appConfigMaker;
 
-
-        public new QueryBackend Init(int appId, ILog parentLog)
-        {
-            base.Init(appId, parentLog);
-            return this;
-        }
-
-
+        /// <summary>
+        /// Delete a Pipeline with the Pipeline Entity, Pipeline Parts and their Configurations.
+        /// Stops if the if the Pipeline Entity has relationships to other Entities or is in use in a 2sxc-Template.
+        /// </summary>
         public bool DeleteIfUnused(int appId, int id)
             => _cmsManagerLazy.Value
                 .Init(_appStates.IdentityOfApp(appId), true, Log)
@@ -47,6 +44,9 @@ namespace ToSic.Sxc.WebApi
         }
 
 
+        /// <summary>
+        /// Query the Result of a Pipeline using Test-Parameters
+        /// </summary>
         public QueryRunDto RunDev(int appId, int id, int top)
         {
             var block = _contextResolver.RealBlockRequired();

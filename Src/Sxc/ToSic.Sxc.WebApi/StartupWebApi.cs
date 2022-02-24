@@ -56,7 +56,7 @@ namespace ToSic.Sxc.WebApi
             //services.TryAddTransient<LicenseBackend>();
             services.TryAddTransient<UsageBackend>();
             //services.TryAddTransient<LanguagesBackend>();
-            services.TryAddTransient<QueryBackend>();
+            services.TryAddTransient<QueryControllerReal>();
 
             //// APIs
             //services.TryAddTransient<ApiExplorerBackend<THttpResponseType>>();
