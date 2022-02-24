@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Eav.WebApi.Sys;
 
@@ -21,17 +20,12 @@ namespace IntegrationSamples.BasicEav01.Controllers
         [HttpGet("{view}")]
         public ContentResult Details(
             [FromRoute] string view,
-            [FromQuery] int? appId = null, 
-            [FromQuery] string key = null, 
+            [FromQuery] int? appId = null,
+            [FromQuery] string key = null,
             [FromQuery] int? position = null,
             [FromQuery] string type = null,
             [FromQuery] bool? toggle = null,
-            [FromQuery] string nameId = null)
-        {
-            var result = _insights
-                .Init(new Log("Int.Insights"))
-                .Details(view, appId, key, position, type, toggle, nameId);
-            return base.Content(result, "text/html");
-        }
+            [FromQuery] string nameId = null
+        ) => Content(_insights.Details(view, appId, key, position, type, toggle, nameId), "text/html");
     }
 }

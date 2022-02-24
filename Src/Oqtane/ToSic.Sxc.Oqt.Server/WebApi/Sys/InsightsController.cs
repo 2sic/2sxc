@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-        public InsightsController(): base("Insights") { }
+        public InsightsController(): base(InsightsControllerReal.LogSuffix) { }
 
         private ContentResult Wrap(string contents) => base.Content(contents, "text/html");
 

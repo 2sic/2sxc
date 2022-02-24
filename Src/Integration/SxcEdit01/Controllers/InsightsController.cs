@@ -10,7 +10,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-        public InsightsController(): base("Insight") {}
+        public InsightsController(): base(InsightsControllerReal.LogSuffix) {}
 
         /// <summary>
         /// The main call on this controller, will return all kinds of views with information
@@ -23,13 +23,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
             [FromQuery] int? position = null,
             [FromQuery] string type = null,
             [FromQuery] bool? toggle = null,
-            [FromQuery] string nameId = null)
-        {
-            // Temporary setting to allow Insights despite minimal setup
-            ToSic.Eav.Context.UserUnknown.AllowEverything = true;
-
-            var result = Real.Details(view, appId, key, position, type, toggle, nameId);
-            return base.Content(result, "text/html");
-        }
+            [FromQuery] string nameId = null
+        ) => Content(Real.Details(view, appId, key, position, type, toggle, nameId), "text/html");
     }
 }

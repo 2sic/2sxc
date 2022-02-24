@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
     [DnnLogExceptions]
     public class InsightsController : DnnApiControllerWithFixes<InsightsControllerReal>
     {
-        public InsightsController() : base("Insight") { }
+        public InsightsController() : base(InsightsControllerReal.LogSuffix) { }
 
         /// <summary>
         /// Single-Point-Of-Entry
