@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
-using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.WebApi.InPage;
 
 namespace ToSic.Sxc.WebApi.Cms
