@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
     [Route(WebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
     [Route(WebApiConstants.ApiRootPathNdLang + "/" + AreaRoutes.Sys)]
 
-    public class LicenseController : OqtStatefulControllerBase<LicenseControllerReal>
+    public class LicenseController : OqtStatefulControllerBase<LicenseControllerReal>, ILicenseController
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
