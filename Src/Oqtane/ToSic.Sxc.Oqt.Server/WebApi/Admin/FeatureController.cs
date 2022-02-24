@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Collections.Generic;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.WebApi.Admin.Features;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -15,8 +16,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
     [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    // Beta routes - TODO: @STV - why is this beta?
-    [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Admin}")]
     public class FeatureController : OqtStatefulControllerBase<FeatureControllerReal>, IFeatureController
     {
         public FeatureController(/*FeaturesControllerReal featuresBackend, OqtModuleHelper oqtModuleHelper, RemoteRouterLink remoteRouterLink*/): base(FeatureControllerReal.LogSuffix)
@@ -30,13 +29,12 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         //private readonly RemoteRouterLink _remoteRouterLink;
 
 
-        // TODO: PROBABLY REMOVE, PROBABLY NOT USED ANY MORE
-        ///// <summary>
-        ///// Used to be GET System/Features
-        ///// </summary>
-        //[HttpGet]
-        //[Authorize(Roles = RoleNames.Admin)]
-        //public IEnumerable<FeatureState> List(bool reload = false) => Real.List(reload);
+        /// <summary>
+        /// Used to be GET System/Features
+        /// </summary>
+        [HttpGet]
+        [Authorize(Roles = RoleNames.Admin)]
+        public IEnumerable<FeatureState> List(bool reload = false) => Real.List(reload);
 
         // v13.02 not used any more
         ///// <summary>

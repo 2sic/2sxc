@@ -2,6 +2,7 @@
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.WebApi.Admin.Features;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
@@ -18,16 +19,15 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     {
         public FeatureController(): base(FeatureControllerReal.LogSuffix) { }
 
-        // TODO: PROBABLY REMOVE, PROBABLY NOT USED ANY MORE
-        ///// <summary>
-        ///// Used to be GET a list of Features
-        ///// </summary>
-        ///// <remarks>
-        ///// Added in 2sxc 10
-        ///// </remarks>
-        //[HttpGet]
-        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        //public IEnumerable<FeatureState> List(bool reload = false) => Real.List(reload);
+        /// <summary>
+        /// Used to be GET a list of Features
+        /// </summary>
+        /// <remarks>
+        /// Added in 2sxc 10
+        /// </remarks>
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        public IEnumerable<FeatureState> List(bool reload = false) => Real.List(reload);
 
         // v13.02 not used any more
         ///// <summary>

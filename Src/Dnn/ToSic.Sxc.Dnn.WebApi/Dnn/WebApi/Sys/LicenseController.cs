@@ -7,7 +7,7 @@ using ToSic.Eav.WebApi.Sys.Licenses;
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public class LicenseController : DnnApiControllerWithFixes<LicenseControllerReal>, ILicenseController
+    public class LicenseController : DnnApiControllerWithFixes<LicenseControllerReal>
     {
         public LicenseController() : base("License") { }
 
