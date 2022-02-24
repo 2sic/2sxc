@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Collections.Generic;
+using ToSic.Eav.WebApi.Licenses;
 using ToSic.Eav.WebApi.Routing;
-using ToSic.Eav.WebApi.Sys.Licenses;
 using ToSic.Sxc.Oqt.Server.Controllers;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
@@ -13,9 +13,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
     [Route(WebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
     [Route(WebApiConstants.ApiRootPathNdLang + "/" + AreaRoutes.Sys)]
 
-    // Beta routes - TODO: @STV - why is this beta?
-    [Route(WebApiConstants.WebApiStateRoot + "/" + AreaRoutes.Sys)]
-    public class LicenseController : OqtStatefulControllerBase<LicenseControllerReal>, ILicenseController
+    public class LicenseController : OqtStatefulControllerBase<LicenseControllerReal>
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 

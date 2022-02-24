@@ -2,12 +2,12 @@
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.WebApi.Sys.Licenses;
+using ToSic.Eav.WebApi.Licenses;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public class LicenseController : DnnApiControllerWithFixes<LicenseControllerReal>, ILicenseController
+    public class LicenseController : DnnApiControllerWithFixes<LicenseControllerReal>
     {
         public LicenseController() : base("License") { }
 
