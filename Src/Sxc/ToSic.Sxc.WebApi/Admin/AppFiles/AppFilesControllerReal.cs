@@ -8,7 +8,7 @@ using ToSic.Eav.WebApi.Assets;
 using ToSic.Sxc.Apps.Assets;
 using static System.StringComparison;
 
-namespace ToSic.Sxc.WebApi.Assets
+namespace ToSic.Sxc.WebApi.Admin.AppFiles
 {
     public partial class AppFilesControllerReal: HasLog<AppFilesControllerReal>, IAppFilesController
     {
@@ -81,7 +81,7 @@ namespace ToSic.Sxc.WebApi.Assets
             // as of 2021-12, all create calls include templateKey
         )
         {
-            var assetFromTemplateDto = new AssetFromTemplateDto
+            var assetFromTemplateDto = new AppFile
             {
                 AppId = appId,
                 Path = path,
@@ -151,7 +151,7 @@ namespace ToSic.Sxc.WebApi.Assets
             return wrapLog(null, assetEditor);
         }
 
-        private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(AssetFromTemplateDto assetFromTemplateDto)
+        private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(AppFile assetFromTemplateDto)
         {
             var wrapLog = Log.Call<AssetEditor>($"a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
             var app = _appStates.Get(assetFromTemplateDto.AppId);
@@ -167,7 +167,7 @@ namespace ToSic.Sxc.WebApi.Assets
 
             try
             {
-                var assetFromTemplateDto = new AssetFromTemplateDto()
+                var assetFromTemplateDto = new AppFile()
                 {
                     AppId = appId,
                     Path = path?.Replace("/", "\\") ?? string.Empty,

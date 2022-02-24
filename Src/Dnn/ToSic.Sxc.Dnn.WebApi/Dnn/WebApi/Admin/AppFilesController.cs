@@ -6,7 +6,7 @@ using ToSic.Eav.WebApi.Assets;
 using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.Assets;
+using ToSic.Sxc.WebApi.Admin.AppFiles;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {

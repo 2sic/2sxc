@@ -2,7 +2,7 @@
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Sxc.Apps.Assets;
 
-namespace ToSic.Sxc.WebApi.Assets
+namespace ToSic.Sxc.WebApi.Admin.AppFiles
 {
     public interface IAppFilesController
     {

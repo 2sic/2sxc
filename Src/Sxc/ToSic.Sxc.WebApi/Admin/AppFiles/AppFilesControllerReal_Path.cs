@@ -1,7 +1,6 @@
-﻿using ToSic.Sxc.Apps;
-using ToSic.Sxc.Apps.Paths;
+﻿using ToSic.Sxc.Apps.Paths;
 
-namespace ToSic.Sxc.WebApi.Assets
+namespace ToSic.Sxc.WebApi.Admin.AppFiles
 {
     public partial class AppFilesControllerReal
     {

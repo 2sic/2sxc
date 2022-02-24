@@ -1,9 +1,9 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
 using System.IO;
+using JetBrains.Annotations;
 using ToSic.Sxc.Apps.Assets;
 
-namespace ToSic.Sxc.WebApi.Assets
+namespace ToSic.Sxc.WebApi.Admin.AppFiles
 {
     public partial class AppFilesControllerReal
     {
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.WebApi.Assets
         //    return path;
         //}
 
-        private string GetTemplateContent(AssetFromTemplateDto assetFromTemplateDto)
+        private string GetTemplateContent(AppFile assetFromTemplateDto)
         {
             var name = Path.GetFileName(assetFromTemplateDto.Path);
             var ext = Path.GetExtension(assetFromTemplateDto.Path);
@@ -85,7 +85,7 @@ namespace ToSic.Sxc.WebApi.Assets
                 .Replace(AssetTemplates.CsCodeTemplateName, nameWithoutExt);
         }
 
-        private static void EnsureCshtmlStartWithUnderscore(AssetFromTemplateDto assetFromTemplateDto)
+        private static void EnsureCshtmlStartWithUnderscore(AppFile assetFromTemplateDto)
         {
             var name = Path.GetFileName(assetFromTemplateDto.Path);
             if ((assetFromTemplateDto.TemplateKey == AssetTemplates.RazorHybrid.Key || assetFromTemplateDto.TemplateKey == AssetTemplates.DnnCsCode.Key)

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Sxc.Apps.Assets;
 
-namespace ToSic.Sxc.WebApi.Assets
+namespace ToSic.Sxc.WebApi.Admin.AppFiles
 {
     public class TemplatesDto
     {
