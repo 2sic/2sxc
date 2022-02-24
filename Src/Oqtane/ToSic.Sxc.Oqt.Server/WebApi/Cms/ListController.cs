@@ -1,11 +1,11 @@
-﻿using System;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi;
+using System;
+using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.WebApi.FieldList;
+using ToSic.Sxc.WebApi.Cms;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
 {
@@ -14,20 +14,12 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Cms}")]
     [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Cms}")]
 
-    // Beta routes - TODO: @STV - why is this beta?
-    [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Cms}")]
     [ValidateAntiForgeryToken]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public class ListController : OqtStatefulControllerBase<DummyControllerReal>
+    public class ListController : OqtStatefulControllerBase<ListControllerReal>, IListController
     {
-        public ListController(Lazy<FieldListBackend> fieldListBackendLazy): base("List")
-        {
-            _fieldListBackendLazy = fieldListBackendLazy;
-        }
-        private readonly Lazy<FieldListBackend> _fieldListBackendLazy;
-        private FieldListBackend FieldBacked => _fieldBackend ??= _fieldListBackendLazy.Value.Init(Log);
-        private FieldListBackend _fieldBackend;
+        public ListController(): base(ListControllerReal.LogSuffix) { }
 
         /// <summary>
         /// used to be GET Module/ChangeOrder
@@ -37,11 +29,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         /// <param name="index"></param>
         /// <param name="toIndex"></param>
         [HttpPost]
-        public IActionResult Move(Guid? parent, string fields, int index, int toIndex)
-        {
-            FieldBacked.ChangeOrder(parent, fields, index, toIndex);
-            return new NoContentResult();
-        }
+        public void Move(Guid? parent, string fields, int index, int toIndex) 
+            => Real.Move(parent, fields, index, toIndex);
 
         /// <summary>
         /// Used to be Get Module/RemoveFromList
@@ -50,10 +39,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         /// <param name="fields"></param>
         /// <param name="index"></param>
         [HttpDelete]
-        public IActionResult Delete(Guid? parent, string fields, int index)
-        {
-            FieldBacked.Remove(parent, fields, index);
-            return new NoContentResult();
-        }
+        public void Delete(Guid? parent, string fields, int index) 
+            => Real.Delete(parent, fields, index);
     }
 }
