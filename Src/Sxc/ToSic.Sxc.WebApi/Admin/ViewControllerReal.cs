@@ -21,19 +21,20 @@ namespace ToSic.Sxc.WebApi.Admin
         public const string LogSuffix = "View";
 
         public ViewControllerReal(
-            IContextResolver contextResolver,
+            LazyInitLog<IContextResolver> contextResolver,
             LazyInitLog<ViewsBackend> viewsBackend, 
             LazyInitLog<ViewsExportImport> viewExportImport, 
             LazyInitLog<UsageBackend> usageBackend, 
-            LazyInitLog<PolymorphismBackend> polymorphismBackend) : base("Api.ViewRl")
+            LazyInitLog<PolymorphismBackend> polymorphismBackend
+            ) : base("Api.ViewRl")
         {
-            _contextResolver = contextResolver;
+            _contextResolver = contextResolver.SetLog(Log);
             _polymorphismBackend = polymorphismBackend.SetLog(Log);
             _usageBackend = usageBackend.SetLog(Log);
             _viewsBackend = viewsBackend.SetLog(Log);
             _viewExportImport = viewExportImport.SetLog(Log);
         }
-        private readonly IContextResolver _contextResolver;
+        private readonly LazyInitLog<IContextResolver> _contextResolver;
         private readonly LazyInitLog<PolymorphismBackend> _polymorphismBackend;
         private readonly LazyInitLog<UsageBackend> _usageBackend;
         private readonly LazyInitLog<ViewsBackend> _viewsBackend;
@@ -91,7 +92,7 @@ namespace ToSic.Sxc.WebApi.Admin
                 var (fileName, stream) = uploadInfo.GetStream(i);
                 streams.Add(new FileUploadDto {Name = fileName, Stream = stream});
             }
-            var result = _viewExportImport.Ready.ImportView(zoneId, appId, streams, _contextResolver.Site().Site.DefaultCultureCode);
+            var result = _viewExportImport.Ready.ImportView(zoneId, appId, streams, _contextResolver.Ready.Site().Site.DefaultCultureCode);
 
             return wrapLog("ok", result);
         }
@@ -123,6 +124,6 @@ namespace ToSic.Sxc.WebApi.Admin
         /// <summary>
         /// Helper method to get SiteId for ControllerReal proxy class.
         /// </summary>
-        public int SiteId => _contextResolver.Site().Site.Id;
+        public int SiteId => _contextResolver.Ready.Site().Site.Id;
     }
 }
