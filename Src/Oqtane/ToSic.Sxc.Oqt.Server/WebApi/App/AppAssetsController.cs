@@ -15,10 +15,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
     [Route(WebApiConstants.WebApiStateRoot + "/assets/{appName}")]
     public class AppAssetsController: AppAssetsControllerBase
     {
-        public override string Route => "assets";
-
         public AppAssetsController(AppAssetsDependencies dependencies) : base(dependencies, "Assets")
-        { }
-
+        {
+            Route = "assets";
+        }
     }
 }

@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             {
                 "" => AdamPathWithoutAppName(contentRootPath, alias, filePath),
                 "adam" => AdamPath(contentRootPath, alias, appName, filePath),
-                "sxc" => SxcPath(contentRootPath, alias, appName, filePath),
+                "assets" => SxcPath(contentRootPath, alias, appName, filePath),
                 _ => SxcPath(contentRootPath, alias, appName, filePath),
             };
 

@@ -12,7 +12,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
 {
     public abstract class AppAssetsControllerBase : OqtControllerBase<DummyControllerReal>
     {
-        public virtual string Route => "default";
+        public string Route { get; protected set; } = "default";
+
         private readonly Lazy<OqtAppFolder> _oqtAppFolderLazy;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly SiteState _siteState;
