@@ -18,6 +18,10 @@ using ToSic.Sxc.LookUp;
 
 namespace ToSic.Sxc.WebApi.App
 {
+    /// <summary>
+    /// In charge of delivering Pipeline-Queries on the fly
+    /// They will only be delivered if the security is confirmed - it must be publicly available
+    /// </summary>
     public class AppQueryControllerReal: WebApiBackendBase<AppQueryControllerReal> , IAppQueryController
     {
         public const string LogSuffix = "AppQry";
