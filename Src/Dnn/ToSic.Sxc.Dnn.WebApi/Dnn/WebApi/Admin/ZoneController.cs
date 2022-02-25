@@ -10,9 +10,6 @@ using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
-    /// <summary>
-    /// This one supplies portal-wide (or cross-portal) settings / configuration
-    /// </summary>
 	[SupportedModules("2sxc,2sxc-app")]
     [DnnLogExceptions]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
