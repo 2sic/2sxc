@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Oqt.Server.Adam;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
 {
@@ -13,9 +13,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
 
     public class AppAssetsController: WebApi.AppAssetsControllerBase
     {
-        public AppAssetsController(AppAssetsDependencies dependencies) : base(dependencies, "Assets")
-        {
-            Route = "adam";
-        }
+        public AppAssetsController(AppAssetsDependencies dependencies) 
+            : base(dependencies, ContentFileHelper.RouteAdam, "Assets") { }
     }
 }

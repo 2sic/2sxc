@@ -12,17 +12,18 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
 {
     public abstract class AppAssetsControllerBase : OqtControllerBase<DummyControllerReal>
     {
-        public string Route { get; protected set; } = "default";
+        private string Route { get; }
 
         private readonly Lazy<OqtAppFolder> _oqtAppFolderLazy;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly SiteState _siteState;
 
-        protected AppAssetsControllerBase(AppAssetsDependencies dependencies, string logSuffix): base(logSuffix)
+        protected AppAssetsControllerBase(AppAssetsDependencies dependencies, string route, string logSuffix): base(logSuffix)
         {
             _hostingEnvironment = dependencies.HostingEnvironment;
             _oqtAppFolderLazy = dependencies.OqtAppFolderLazy;
             _siteState = dependencies.SiteState;
+            Route = route;
         }
 
         [HttpGet("{*filePath}")]

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ToSic.Sxc.Oqt.Server.Adam;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.App
 {
@@ -15,9 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
     [Route(WebApiConstants.WebApiStateRoot + "/assets/{appName}")]
     public class AppAssetsController: AppAssetsControllerBase
     {
-        public AppAssetsController(AppAssetsDependencies dependencies) : base(dependencies, "Assets")
-        {
-            Route = "assets";
-        }
+        public AppAssetsController(AppAssetsDependencies dependencies) 
+            : base(dependencies, ContentFileHelper.RouteAssets, "Assets") { }
     }
 }
