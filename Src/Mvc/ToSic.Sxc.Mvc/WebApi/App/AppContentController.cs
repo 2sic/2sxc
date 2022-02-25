@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.Data;
+using ToSic.Eav.WebApi.App;
 using ToSic.Sxc.WebApi.App;
 
 
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Mvc.WebApi.App
 {
     [ApiController]
     [Route(WebApiConstants.WebApiRoot + "/app/{appPath}/content/")]
-    public class AppContentController: SxcStatefulControllerBase
+    public class AppContentController: SxcStatefulControllerBase, IAppContentController
     {
         #region DI / Constructor
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "AppCnt";
