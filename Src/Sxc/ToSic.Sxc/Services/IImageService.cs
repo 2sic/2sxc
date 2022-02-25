@@ -60,6 +60,20 @@ namespace ToSic.Sxc.Services
             string parameters = null,
             object srcSet = null);
 
+        /// <summary>
+        /// Generate a `srcset` attribute for an image, containing various sizes as specified by the image itself
+        /// </summary>
+        /// <param name="url">The image url</param>
+        /// <param name="settings">
+        /// - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
+        /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
+        /// - Or a specially prepared <see cref="ToSic.Sxc.Images.IResizeSettings"/> object containing all settings.
+        /// Note: If you need to construct very custom settings, use <see cref="ResizeSettings">ResizeSettings</see> to create them
+        /// </param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. It only affects sizes from the settings.</param>
+        /// <param name="srcSet">Optional string to configure what `srcset`s to generate - see [](xref:NetCode.Images.SrcSet)</param>
+        /// <returns></returns>
         IHybridHtmlString SrcSet(
             string url,
             object settings = null,
@@ -71,7 +85,7 @@ namespace ToSic.Sxc.Services
         /// <summary>
         /// Get a Responsive Picture object which you can then either just show, or use to construct a more customized output as you need it.
         /// </summary>
-        /// <param name="url">The image url.</param>
+        /// <param name="url">The image url</param>
         /// <param name="settings">
         /// - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
         /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)

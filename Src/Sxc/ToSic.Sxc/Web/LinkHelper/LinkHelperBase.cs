@@ -137,6 +137,8 @@ namespace ToSic.Sxc.Web
             var expandedUrl = ExpandUrlIfNecessary(type, url);
 
             // Get the image-url(s) as needed
+            // Note that srcSet is false, so it won't generate a bunch of sources, just one - which is how the API works
+            // Anybody that wants a srcSet must use the new IImageService for that
             var imageUrl = ImgLinker.Image(expandedUrl, settings, factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
                 scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: strParams, srcSet: false);
 

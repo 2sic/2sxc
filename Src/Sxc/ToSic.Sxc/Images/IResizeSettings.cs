@@ -34,13 +34,13 @@ namespace ToSic.Sxc.Images
         /// Resize mode.
         /// If empty or "(none)" will not be used. 
         /// </summary>
-        string Mode { get; }
+        string ResizeMode { get; }
 
         /// <summary>
         /// Scale Mode.
         /// If empty or "(none)" will not be used. 
         /// </summary>
-        string Scale { get; }
+        string ScaleMode { get; }
 
         /// <summary>
         /// Target format like 'jpg' or 'png'.

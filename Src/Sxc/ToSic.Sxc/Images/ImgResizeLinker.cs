@@ -108,8 +108,8 @@ namespace ToSic.Sxc.Images
             ImgAddIfRelevant(resizerNvc, "w", resizeSettings.Width, "0");
             ImgAddIfRelevant(resizerNvc, "h", resizeSettings.Height, "0");
             ImgAddIfRelevant(resizerNvc, "quality", resizeSettings.Quality, "0");
-            ImgAddIfRelevant(resizerNvc, "mode", resizeSettings.Mode, DontSetParam);
-            ImgAddIfRelevant(resizerNvc, "scale", resizeSettings.Scale, DontSetParam);
+            ImgAddIfRelevant(resizerNvc, "mode", resizeSettings.ResizeMode, DontSetParam);
+            ImgAddIfRelevant(resizerNvc, "scale", resizeSettings.ScaleMode, DontSetParam);
             ImgAddIfRelevant(resizerNvc, "format", resizeSettings.Format, DontSetParam);
 
             url = UrlHelpers.AddQueryString(url, resizerNvc);

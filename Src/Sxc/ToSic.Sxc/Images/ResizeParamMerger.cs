@@ -64,8 +64,8 @@ namespace ToSic.Sxc.Images
 
             // Aspects which aren't affected by scale
             resizeParams.Quality = IntOrZeroAsNull(quality) ?? IntOrZeroAsNull(getSettings?.Get(QualityField)) ?? 0;
-            resizeParams.Mode = KeepBestString(resizeMode, getSettings?.Get(ResizeModeField));
-            resizeParams.Scale = FindKnownScaleOrNull(KeepBestString(scaleMode, getSettings?.Get(ScaleModeField)));
+            resizeParams.ResizeMode = KeepBestString(resizeMode, getSettings?.Get(ResizeModeField));
+            resizeParams.ScaleMode = FindKnownScaleOrNull(KeepBestString(scaleMode, getSettings?.Get(ScaleModeField)));
 
             resizeParams.SrcSet = (srcSet is string srcSetString)
                 ? srcSetString
