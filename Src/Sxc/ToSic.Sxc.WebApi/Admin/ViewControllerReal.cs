@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Plumbing;
@@ -9,7 +10,6 @@ using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.Usage;
 using ToSic.Sxc.WebApi.Views;
@@ -21,20 +21,20 @@ namespace ToSic.Sxc.WebApi.Admin
         public const string LogSuffix = "View";
 
         public ViewControllerReal(
-            LazyInitLog<IContextResolver> contextResolver,
+            LazyInitLog<IContextOfSite> context,
             LazyInitLog<ViewsBackend> viewsBackend, 
             LazyInitLog<ViewsExportImport> viewExportImport, 
             LazyInitLog<UsageBackend> usageBackend, 
             LazyInitLog<PolymorphismBackend> polymorphismBackend
             ) : base("Api.ViewRl")
         {
-            _contextResolver = contextResolver.SetLog(Log);
+            _context = context.SetLog(Log);
             _polymorphismBackend = polymorphismBackend.SetLog(Log);
             _usageBackend = usageBackend.SetLog(Log);
             _viewsBackend = viewsBackend.SetLog(Log);
             _viewExportImport = viewExportImport.SetLog(Log);
         }
-        private readonly LazyInitLog<IContextResolver> _contextResolver;
+        private readonly LazyInitLog<IContextOfSite> _context;
         private readonly LazyInitLog<PolymorphismBackend> _polymorphismBackend;
         private readonly LazyInitLog<UsageBackend> _usageBackend;
         private readonly LazyInitLog<ViewsBackend> _viewsBackend;
@@ -92,7 +92,7 @@ namespace ToSic.Sxc.WebApi.Admin
                 var (fileName, stream) = uploadInfo.GetStream(i);
                 streams.Add(new FileUploadDto {Name = fileName, Stream = stream});
             }
-            var result = _viewExportImport.Ready.ImportView(zoneId, appId, streams, _contextResolver.Ready.Site().Site.DefaultCultureCode);
+            var result = _viewExportImport.Ready.ImportView(zoneId, appId, streams, _context.Ready.Site.DefaultCultureCode);
 
             return wrapLog("ok", result);
         }
@@ -124,6 +124,6 @@ namespace ToSic.Sxc.WebApi.Admin
         /// <summary>
         /// Helper method to get SiteId for ControllerReal proxy class.
         /// </summary>
-        public int SiteId => _contextResolver.Ready.Site().Site.Id;
+        public int SiteId => _context.Ready.Site.Id;
     }
 }
