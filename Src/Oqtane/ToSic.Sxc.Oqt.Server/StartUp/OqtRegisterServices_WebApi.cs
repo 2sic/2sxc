@@ -40,6 +40,9 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             // Resolve appFolder when appName is "auto"
             services.TryAddTransient<OqtAppFolder>();
 
+            // ViewController deps for AllModulesWithContent
+            services.TryAddTransient<Pages.Pages>();
+
             return services;
         }
     }

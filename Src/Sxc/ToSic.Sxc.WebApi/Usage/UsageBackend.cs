@@ -12,7 +12,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Usage
 {
-    internal class UsageBackend: WebApiBackendBase<UsageBackend>
+    public class UsageBackend: WebApiBackendBase<UsageBackend>
     {
         private readonly CmsRuntime _cmsRuntime;
         private readonly IContextResolver _ctxResolver;
@@ -45,6 +45,5 @@ namespace ToSic.Sxc.WebApi.Usage
 
             return wrapLog("ok", result);
         }
-
     }
 }

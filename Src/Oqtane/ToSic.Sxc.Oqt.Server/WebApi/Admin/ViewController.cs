@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.Persistence.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.WebApi;
-using ToSic.Eav.WebApi.Assets;
+using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.WebApi.Adam;
+using ToSic.Sxc.WebApi.Admin;
 using ToSic.Sxc.WebApi.Views;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
@@ -22,96 +23,60 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
     [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    // Beta routes - TODO: @STV - why is this beta?
-    [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Admin}")]
-    public class ViewController : OqtStatefulControllerBase<DummyControllerReal>
+    public class ViewController : OqtStatefulControllerBase<ViewControllerReal>, IViewController
     {
-        public ViewController(Lazy<ViewsBackend> viewsBackendLazy, Lazy<ViewsExportImport> viewExportLazy): base("View")
+        public ViewController(LazyInitLog<Pages.Pages> pages) : base(ViewControllerReal.LogSuffix)
         {
-            _viewsBackendLazy = viewsBackendLazy;
-            _viewExportLazy = viewExportLazy;
+            _pages = pages.SetLog(Log);
         }
-        private readonly Lazy<ViewsBackend> _viewsBackendLazy;
-        private readonly Lazy<ViewsExportImport> _viewExportLazy;
+        private readonly LazyInitLog<Pages.Pages> _pages;
 
-        private ViewsBackend Backend => _viewsBackendLazy.Value.Init(Log);
-        private ViewsExportImport ExportImport => _viewExportLazy.Value.Init(Log);
-
-
+        /// <inheritdoc />
         [HttpGet]
         //[SupportedModules("2sxc,2sxc-app")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
-        public IEnumerable<ViewDetailsDto> All(int appId) => Backend.GetAll(appId);
+        public IEnumerable<ViewDetailsDto> All(int appId) => Real.All(appId);
 
+        /// <inheritdoc />
         [HttpGet]
         //[SupportedModules("2sxc,2sxc-app")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
-        public PolymorphismDto Polymorphism(int appId) => HttpContext.RequestServices.Build<PolymorphismBackend>().Init(Log).Polymorphism(appId);
+        public PolymorphismDto Polymorphism(int appId) => Real.Polymorphism(appId);
 
+        /// <inheritdoc />
         [HttpGet, HttpDelete]
         //[SupportedModules("2sxc,2sxc-app")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
-        public bool Delete(int appId, int id) => Backend.Delete(appId, id);
+        public bool Delete(int appId, int id) => Real.Delete(appId, id);
 
+        /// <inheritdoc />
         [HttpGet]
         [AllowAnonymous] // will do security check internally
-        public HttpResponseMessage Json(int appId, int viewId) => ExportImport.DownloadViewAsJson(appId, viewId);
+        public HttpResponseMessage Json(int appId, int viewId) => Real.Json(appId, viewId);
 
-        /// <summary>
-        /// Used to be POST ImportExport/ImportContent
-        /// </summary>
-        /// <remarks>
-        /// New in 2sxc 11.07
-        /// </remarks>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
-        public ImportResultDto Import(int zoneId, int appId)
+        public ImportResultDto Import(int zoneId, int appId) => Real.Set(PreventServerTimeout300).Import(new HttpUploadedFile(Request), zoneId, appId);
+
+        /// <inheritdoc />
+        [HttpGet]
+        //[SupportedModules("2sxc,2sxc-app")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = RoleNames.Admin)]
+        public IEnumerable<ViewDto> Usage(int appId, Guid guid) => Real.Set((views, blocks) =>
         {
-            var wrapLog = Log.Call<ImportResultDto>();
+            // create list with all 2sxc modules in this site
+            var allMods = _pages.Ready.AllModulesWithContent(Real.SiteId);
+            Log.Add($"Found {allMods.Count} modules");
 
-            PreventServerTimeout300();
+            return views.Select(vwb => _pages.Ready.ViewDtoBuilder(vwb, blocks, allMods));
+        }).Usage(appId, guid);
 
-            if (HttpContext.Request.Form.Files.Count <= 0)
-                return new ImportResultDto(false, "no file uploaded", Message.MessageTypes.Error);
 
-            var files = HttpContext.Request.Form.Files;
-            var streams = new List<FileUploadDto>();
-            for (var i = 0; i < files.Count; i++)
-                streams.Add(new FileUploadDto { Name = files[i].FileName, Stream = files[i].OpenReadStream() });
-            var result = ExportImport.ImportView(zoneId, appId, streams, GetContext().Site.DefaultCultureCode);
-
-            return wrapLog("ok", result);
-        }
-
-        ///// <summary>
-        ///// Get usage statistics for entities so the UI can guide the user
-        ///// to find out if data is being used or if it can be safely deleted.
-        ///// </summary>
-        ///// <param name="appId">App ID</param>
-        ///// <param name="guid">Guid of the Entity</param>
-        ///// <returns></returns>
-        ///// <remarks>
-        ///// New in 2sxc 11.11
-        ///// </remarks>
-        //[HttpGet]
-        ////[SupportedModules("2sxc,2sxc-app")]
-        //[ValidateAntiForgeryToken]
-        //[Authorize(Roles = RoleNames.Admin)]
-        // TODO: implement Usage
-        //public IEnumerable<ViewDto> Usage(int appId, Guid guid)
-        //    => HttpContext.RequestServices.Build<UsageBackend>().Init(Log)
-        //        .ViewUsage(appId, guid, (views, blocks) =>
-        //        {
-        //            // create array with all 2sxc modules in this portal
-        //            var allMods = new Pages.Pages(Log).AllModulesWithContent(GetContext().Site.Id);
-        //            Log.Add($"Found {allMods.Count} modules");
-
-        //            return views.Select(vwb => new ViewDto().Init(vwb, blocks, allMods));
-        //        });
     }
 }

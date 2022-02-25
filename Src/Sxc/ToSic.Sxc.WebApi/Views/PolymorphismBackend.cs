@@ -5,7 +5,7 @@ using ToSic.Sxc.Polymorphism;
 
 namespace ToSic.Sxc.WebApi.Views
 {
-    internal class PolymorphismBackend : WebApiBackendBase<PolymorphismBackend>
+    public class PolymorphismBackend : WebApiBackendBase<PolymorphismBackend>
     {
         public PolymorphismBackend(IServiceProvider serviceProvider, Polymorphism.Polymorphism polymorphism, IAppStates appStates) : base(serviceProvider, "Bck.Views")
         {

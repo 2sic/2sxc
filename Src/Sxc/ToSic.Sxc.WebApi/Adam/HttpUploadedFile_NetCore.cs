@@ -16,9 +16,11 @@ namespace ToSic.Sxc.WebApi.Adam
 
         public bool HasFiles() => Request.Form.Files.Any();
 
-        public (string, Stream) GetStream()
+        public int Count => Request.Form.Files.Count;
+
+        public (string, Stream) GetStream(int i = 0)
         {
-            var originalFile = Request.Form.Files[0];
+            var originalFile = Request.Form.Files[i];
             return (originalFile.FileName, originalFile.OpenReadStream());
         }
 
