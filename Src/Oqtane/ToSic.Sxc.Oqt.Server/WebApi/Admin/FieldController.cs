@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using System;
 using System.Collections.Generic;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data;
-using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Routing;
@@ -22,15 +19,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
     [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    public class FieldController : OqtStatefulControllerBase<DummyControllerReal>, IFieldController
+    public class FieldController : OqtStatefulControllerBase<FieldControllerReal>, IFieldController
     {
-        public FieldController(Lazy<AppRuntime> appRuntime, Lazy<ContentTypeApi> ctApiLazy): base("Fields")
-        {
-            _appRuntime = appRuntime;
-            _ctApiLazy = ctApiLazy;
-        }
-        private readonly Lazy<AppRuntime> _appRuntime;
-        private readonly Lazy<ContentTypeApi> _ctApiLazy;
+        public FieldController(): base(FieldControllerReal.LogSuffix) { }
 
         #region Fields - Get, Reorder, Data-Types (for dropdown), etc.
 
@@ -38,19 +29,19 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// Returns the configuration for a content type
         /// </summary>
         [HttpGet]
-        public IEnumerable<ContentTypeFieldDto> All(int appId, string staticName) => _ctApiLazy.Value.Init(appId, Log).GetFields(staticName);
+        public IEnumerable<ContentTypeFieldDto> All(int appId, string staticName) => Real.All(appId, staticName);
 
         /// <summary>
         /// Used to be GET ContentType/DataTypes
         /// </summary>
         [HttpGet]
-        public string[] DataTypes(int appId) => _ctApiLazy.Value.Init(appId, Log).DataTypes();
+        public string[] DataTypes(int appId) => Real.DataTypes(appId);
 
         /// <summary>
         /// Used to be GET ContentType/InputTypes
         /// </summary>
 	    [HttpGet]
-        public List<InputTypeInfo> InputTypes(int appId) => _appRuntime.Value.Init(appId, true, Log).ContentTypes.GetInputTypes();
+        public List<InputTypeInfo> InputTypes(int appId) => Real.InputTypes(appId);
 
         /// <inheritdoc />
         [HttpGet]
@@ -61,27 +52,26 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// </summary>
         [HttpPost]
         public int Add(int appId, int contentTypeId, string staticName, string type, string inputType, int index)
-            => _ctApiLazy.Value.Init(appId, Log).AddField(contentTypeId, staticName, type, inputType, index);
+            => Real.Add(appId, contentTypeId, staticName, type, inputType, index);
 
         /// <summary>
         /// Used to be GET ContentType/DeleteField
         /// </summary>
         [HttpDelete]
-        public bool Delete(int appId, int contentTypeId, int attributeId)
-            => _ctApiLazy.Value.Init(appId, Log).DeleteField(contentTypeId, attributeId);
+        public bool Delete(int appId, int contentTypeId, int attributeId) => Real.Delete(appId, contentTypeId, attributeId);
 
         /// <summary>
         /// Used to be GET ContentType/Reorder
         /// </summary>
 	    [HttpPost]
-        public bool Sort(int appId, int contentTypeId, string order) => _ctApiLazy.Value.Init(appId, Log).Reorder(contentTypeId, order);
+        public bool Sort(int appId, int contentTypeId, string order) => Real.Sort(appId, contentTypeId, order);
 
 
         /// <summary>
         /// Used to be GET ContentType/UpdateInputType
         /// </summary>
         [HttpPost]
-        public bool InputType(int appId, int attributeId, string inputType) => _ctApiLazy.Value.Init(appId, Log).SetInputType(attributeId, inputType);
+        public bool InputType(int appId, int attributeId, string inputType) => Real.InputType(appId, attributeId, inputType);
 
         #endregion
 
@@ -89,6 +79,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// Used to be GET ContentType/Rename
         /// </summary>
         [HttpPost]
-        public void Rename(int appId, int contentTypeId, int attributeId, string newName) => _ctApiLazy.Value.Init(appId, Log).Rename(contentTypeId, attributeId, newName);
+        public void Rename(int appId, int contentTypeId, int attributeId, string newName) => Real.Rename(appId, contentTypeId, attributeId, newName);
     }
 }
