@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Oqtane.Models;
 using Oqtane.Repository;
-using System;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -12,8 +11,8 @@ using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Oqt.Server.Apps;
 using ToSic.Sxc.Oqt.Server.Blocks;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
@@ -30,21 +29,22 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
     {
         private readonly ITenantResolver _tenantResolver;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly Lazy<AppFolder> _oqtAppFolderLazy;
+        private readonly LazyInitLog<AppFolder> _appFolder;
 
         public const string HttpContextKeyForAppFolder = "SxcAppFolderName";
 
         public AppApiDynamicRouteValueTransformer(
             ITenantResolver tenantResolver,
             IWebHostEnvironment hostingEnvironment,
-            Lazy<AppFolder> oqtAppFolderLazy,
+            LazyInitLog<AppFolder> appFolder,
             LogHistory logHistory)
         {
-            _tenantResolver = tenantResolver;
-            _hostingEnvironment = hostingEnvironment;
-            _oqtAppFolderLazy = oqtAppFolderLazy;
             Log = new Log(HistoryLogName, null, nameof(AppApiDynamicRouteValueTransformer));
             logHistory.Add(HistoryLogGroup, Log);
+
+            _tenantResolver = tenantResolver;
+            _hostingEnvironment = hostingEnvironment;
+            _appFolder = appFolder.SetLog(Log);
         }
 
         public ILog Log { get; }
@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 // Before trying to get the AppFolder, we must init the ICmsContext as this will
                 var blockInitializer = httpContext.RequestServices.Build<OqtGetBlock>();
                 blockInitializer.TryToLoadBlockAndAttachToResolver();
-                appFolder = _oqtAppFolderLazy.Value.GetAppFolder();
+                appFolder = _appFolder.Ready.GetAppFolder();
             }
 
 

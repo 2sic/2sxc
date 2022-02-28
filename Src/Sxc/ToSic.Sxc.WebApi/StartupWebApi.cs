@@ -6,6 +6,7 @@ using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.ImportExport;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Data;
@@ -57,7 +58,6 @@ namespace ToSic.Sxc.WebApi
             //services.TryAddTransient<LicenseBackend>();
             services.TryAddTransient<UsageBackend>();
             //services.TryAddTransient<LanguagesBackend>();
-            services.TryAddTransient<QueryControllerReal>();
 
             //// APIs
             //services.TryAddTransient<ApiExplorerBackend<THttpResponseType>>();
@@ -71,6 +71,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<ImportContent>();
             services.TryAddTransient<ResetApp>();
             services.TryAddTransient<AppStackBackend>();
+            services.TryAddTransient<AppFolder>();
 
 
             // Small WebApi Helpers
@@ -91,6 +92,7 @@ namespace ToSic.Sxc.WebApi
             //services.TryAddTransient<ZoneBackend>();
 
             // New v13 - try to reduce Dnn/Oqtane code to the max, by creating ControllerReal objects which do everything
+            services.TryAddTransient<QueryControllerReal>();
             services.TryAddTransient<DialogControllerReal>();
             services.TryAddTransient(typeof(AppControllerReal<>));
             services.TryAddTransient<EditControllerReal>();

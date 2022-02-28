@@ -1,23 +1,23 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Oqtane.Shared;
-using System;
-using ToSic.Sxc.Oqt.Server.Apps;
+using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi
 {
     public class AppAssetsDependencies
     {
         public IWebHostEnvironment HostingEnvironment { get; }
-        public Lazy<AppFolder> OqtAppFolderLazy { get; }
+        public LazyInitLog<AppFolder> AppFolder { get; }
         public SiteState SiteState { get; }
 
         public AppAssetsDependencies(
-            IWebHostEnvironment hostingEnvironment, 
-            Lazy<AppFolder> oqtAppFolderLazy, 
+            IWebHostEnvironment hostingEnvironment,
+            LazyInitLog<AppFolder> appFolder, 
             SiteState siteState)
         {
             HostingEnvironment = hostingEnvironment;
-            OqtAppFolderLazy = oqtAppFolderLazy;
+            AppFolder = appFolder;
             SiteState = siteState;
         }
     }

@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Logging;
 using ToSic.Sxc.Context;
 
-namespace ToSic.Sxc.Oqt.Server.Apps
+namespace ToSic.Sxc.Apps
 {
     public class AppFolder: HasLog<AppFolder>
     {
