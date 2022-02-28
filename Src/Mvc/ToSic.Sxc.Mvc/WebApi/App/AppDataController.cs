@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Mvc.WebApi.App
 {
     [ApiController]
     [Route(WebApiConstants.WebApiRoot + "/app/{appPath}/content/")]
-    public class AppContentController: SxcStatefulControllerBase, IAppContentController
+    public class AppDataController: SxcStatefulControllerBase, IAppDataController
     {
         #region DI / Constructor
         protected override string HistoryLogName => WebApiConstants.MvcApiLogPrefix + "AppCnt";

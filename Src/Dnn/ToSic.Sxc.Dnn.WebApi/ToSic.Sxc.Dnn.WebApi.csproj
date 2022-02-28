@@ -133,7 +133,7 @@
     <Compile Include="Dnn\WebApi\Adam\AdamController.cs" />
     <Compile Include="Dnn\WebApiRouting\AppApiControllerSelector.cs" />
     <Compile Include="Dnn\WebApi\Admin\AppFilesController.cs" />
-    <Compile Include="Dnn\WebApi\App\AppContentController.cs" />
+    <Compile Include="Dnn\WebApi\App\AppDataController.cs" />
     <Compile Include="Dnn\WebApi\App\AppQueryController.cs" />
     <Compile Include="Dnn\WebApi\Cms\ContentGroupController.cs" />
     <Compile Include="Dnn\WebApi\DnnApiControllerWithFixes.cs" />

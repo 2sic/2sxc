@@ -8,9 +8,9 @@ namespace ToSic.Sxc.Dnn.WebApi.App
 {
     /// <inheritdoc />
     [AllowAnonymous]
-    public class AppContentController : SxcApiControllerBase<AppContentControllerReal>, IAppContentController
+    public class AppDataController : SxcApiControllerBase<AppDataControllerReal>, IAppDataController
     {
-        public AppContentController(): base(AppContentControllerReal.LogSuffix) { }
+        public AppDataController(): base(AppDataControllerReal.LogSuffix) { }
 
         #region Get List / all of a certain content-type
         

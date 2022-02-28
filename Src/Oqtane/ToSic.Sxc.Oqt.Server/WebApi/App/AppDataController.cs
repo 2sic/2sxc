@@ -18,9 +18,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
     [Route(WebApiConstants.AppRootPathOrLang + "/{appPath}/data")] // new, v13
     [Route(WebApiConstants.AppRootPathNdLang + "/{appPath}/data")] // new, v13
 
-    public class AppContentController: OqtStatefulControllerBase<AppContentControllerReal>, IAppContentController
+    public class AppDataController: OqtStatefulControllerBase<AppDataControllerReal>, IAppDataController
     {
-        public AppContentController(): base(AppContentControllerReal.LogSuffix) { }
+        public AppDataController(): base(AppDataControllerReal.LogSuffix) { }
 
         #region Get List / all of a certain content-type
         

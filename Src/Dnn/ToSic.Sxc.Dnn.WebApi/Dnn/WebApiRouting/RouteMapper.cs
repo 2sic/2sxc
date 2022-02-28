@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
         // app-query    will try to request a query
         // app-api      will call custom c# web-apis of a specific app
 
-        static readonly string[] StdNsWebApi = {typeof(AppContentController).Namespace /* "ToSic.Sxc.WebApi.App" */};
+        static readonly string[] StdNsWebApi = {typeof(AppDataController).Namespace /* "ToSic.Sxc.WebApi.App" */};
         static readonly string[] AdamNamespace = {typeof(AdamController).Namespace};
         private IMapRoute _mapRouteManager;
         private static readonly object appContentDefs = new {controller = ControllerNames.AppContent, id = RouteParameter.Optional };

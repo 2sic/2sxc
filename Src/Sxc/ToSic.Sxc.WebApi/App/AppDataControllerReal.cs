@@ -7,11 +7,11 @@ using ToSic.Eav.WebApi.App;
 namespace ToSic.Sxc.WebApi.App
 {
     /// <inheritdoc />
-    public class AppContentControllerReal: HasLog<AppContentControllerReal>, IAppContentController
+    public class AppDataControllerReal: HasLog<AppDataControllerReal>, IAppDataController
     {
-        public const string LogSuffix = "Cont";
+        public const string LogSuffix = "Data";
 
-        public AppContentControllerReal(Lazy<AppContent> appContentLazy): base("Api.ContRl")
+        public AppDataControllerReal(Lazy<AppContent> appContentLazy): base("Api.DataRl")
         {
             _appContentLazy = appContentLazy;
         }
