@@ -1,11 +1,10 @@
-﻿using System;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
-using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.Sys;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
@@ -15,11 +14,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
     [Route(WebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
     [Route(WebApiConstants.ApiRootPathNdLang + "/" + AreaRoutes.Sys)]
 
-    public class InstallController: OqtStatefulControllerBase<InstallControllerReal>
+    public class InstallController: OqtStatefulControllerBase<InstallControllerReal<IActionResult>>
     {
         #region System Installation
 
-        public InstallController(): base(InstallControllerReal.LogSuffix) { }
+        public InstallController(): base(InstallControllerReal<IActionResult>.LogSuffix) { }
+
+        protected override InstallControllerReal<IActionResult> Real => base.Real.Init(PreventServerTimeout300);
 
         /// <summary>
         /// Make sure that these requests don't land in the normal api-log.
@@ -63,9 +64,12 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
         public IActionResult RemotePackage(string packageUrl)
         {
             HotReloadEnabledCheck.Check(); // Ensure that Hot Reload is not enabled or try to disable it.
-            PreventServerTimeout300();
-            var (success, messages) = Real.RemotePackage(packageUrl, GetContext().Module);
-            return (success ? Ok(new {Item1 = success, Item2 = messages }) : Problem());
+
+            // Make sure the Scoped ResponseMaker has this controller context
+            var responseMaker = (OqtResponseMaker)GetService<ResponseMaker<IActionResult>>();
+            responseMaker.Init(this);
+
+            return Real.RemotePackage(packageUrl, GetContext().Module);
         }
 
         #endregion

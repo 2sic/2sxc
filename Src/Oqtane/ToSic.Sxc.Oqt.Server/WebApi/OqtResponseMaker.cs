@@ -28,5 +28,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
             => ApiController.Problem(exception.Message, null, statusCode);
 
         public override IActionResult Json(object json) => ApiController.Json(json);
+
+        public override IActionResult Ok() => ApiController.Ok();
     }
 }

@@ -108,7 +108,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<EditControllerReal>();
             services.TryAddTransient<HistoryControllerReal>();
             services.TryAddTransient<ListControllerReal>();
-            services.TryAddTransient<InstallControllerReal>();
+            services.TryAddTransient(typeof(InstallControllerReal<>));
 
             return services;
         }

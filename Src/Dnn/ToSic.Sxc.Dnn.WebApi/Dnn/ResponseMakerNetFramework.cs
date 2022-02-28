@@ -35,5 +35,8 @@ namespace ToSic.Sxc.Dnn
             responseMessage.Content = new StringContent(JsonConvert.SerializeObject(json), Encoding.UTF8, "application/json");
             return responseMessage;
         }
+
+        public override HttpResponseMessage Ok() 
+            => ApiController.Request.CreateResponse(HttpStatusCode.OK);
     }
 }

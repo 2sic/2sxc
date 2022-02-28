@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using ToSic.Eav;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.ImportExport;
+using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.WebApi.Sys
 {
-    public class InstallControllerReal: HasLog<InstallControllerReal>
+    public class InstallControllerReal<THttpResponseType> : HasLog<InstallControllerReal<THttpResponseType>>
     {
         public const string LogSuffix = "Install";
 
@@ -21,19 +23,30 @@ namespace ToSic.Sxc.WebApi.Sys
             LazyInitLog<IContextOfSite> context,
             Lazy<IEnvironmentInstaller> envInstallerLazy, 
             Lazy<ImportFromRemote> impFromRemoteLazy, 
-            Lazy<IUser> userLazy
-            ): base($"{LogNames.WebApi}.{LogSuffix}Rl")
+            Lazy<IUser> userLazy,
+            ResponseMaker<THttpResponseType> responseMaker
+            ) : base($"{LogNames.WebApi}.{LogSuffix}Rl")
         {
             _context = context.SetLog(Log);
             _envInstallerLazy = envInstallerLazy;
             _impFromRemoteLazy = impFromRemoteLazy;
             _userLazy = userLazy;
+            _responseMaker = responseMaker;
         }
 
         private readonly LazyInitLog<IContextOfSite> _context;
         private readonly Lazy<IEnvironmentInstaller> _envInstallerLazy;
         private readonly Lazy<ImportFromRemote> _impFromRemoteLazy;
         private readonly Lazy<IUser> _userLazy;
+        private readonly ResponseMaker<THttpResponseType> _responseMaker;
+
+        private Action _preventServerTimeout300;
+
+        public InstallControllerReal<THttpResponseType> Init(Action preventServerTimeout300)
+        {
+            _preventServerTimeout300 = preventServerTimeout300;
+            return this;
+        }
 
         /// <summary>
         /// Finish system installation which had somehow been interrupted
@@ -62,20 +75,32 @@ namespace ToSic.Sxc.WebApi.Sys
         /// Before this was GET Installer/InstallPackage
         /// </summary>
         /// <param name="packageUrl"></param>
+        /// <param name="container"></param>
         /// <returns></returns>
-        public Tuple<bool, List<Message>> RemotePackage(string packageUrl, IModule container)
+        public THttpResponseType RemotePackage(string packageUrl, IModule container)
         {
+            var wrapLog = Log.Call<THttpResponseType>();
+
+            _preventServerTimeout300();
+
             var isApp = !container.IsContent;
 
             Log.Add("install package:" + packageUrl);
 
             var block = container.BlockIdentifier;
-            var result = _impFromRemoteLazy.Value.Init(_userLazy.Value, Log)
+            var (success, messages) = _impFromRemoteLazy.Value.Init(_userLazy.Value, Log)
                 .InstallPackage(block.ZoneId, block.AppId, isApp, packageUrl);
 
-            Log.Add("install completed with success:" + result.Item1);
+            Log.Add("install completed with success:" + success);
 
-            return result;
+            return success ? wrapLog("Ok",_responseMaker.Ok()) : wrapLog("Error",_responseMaker.InternalServerError(MessageBuilder(messages)));
+        }
+
+        private static string MessageBuilder(List<Message> messages)
+        {
+            var err = new StringBuilder();
+            foreach (var m in messages) err.AppendFormat("{0}", m.Text);
+            return err.ToString();
         }
 
         #endregion
