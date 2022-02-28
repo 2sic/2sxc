@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using ToSic.Eav.Api.Api01;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Api.Api01;
 using ToSic.Eav.Context;
@@ -9,6 +10,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Metadata;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
@@ -18,7 +20,7 @@ using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using IApp = ToSic.Sxc.Apps.IApp;
+using IApp = ToSic.Eav.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.App
 {
@@ -26,19 +28,22 @@ namespace ToSic.Sxc.WebApi.App
     {
         #region Constructor / DI
 
-        public AppContent(IServiceProvider sp, EntityApi entityApi, Lazy<IConvertToEavLight> entToDicLazy, IContextResolver ctxResolver, Lazy<AppManager> appManagerLazy) : base(sp, "Sxc.ApiApC")
+        public AppContent(IServiceProvider sp, EntityApi entityApi, Lazy<IConvertToEavLight> entToDicLazy, IContextResolver ctxResolver, Lazy<AppManager> appManagerLazy,
+            LazyInitLog<SimpleDataController> dataControllerLazy) : base(sp, "Sxc.ApiApC")
         {
             _entityApi = entityApi;
             _entToDicLazy = entToDicLazy;
             _ctxResolver = ctxResolver;
-            _appManagerLazy = appManagerLazy;   
+            _appManagerLazy = appManagerLazy;
+            _dataControllerLazy = dataControllerLazy.SetLog(Log);
         }
         private readonly EntityApi _entityApi;
         private readonly Lazy<IConvertToEavLight> _entToDicLazy;
         private readonly IContextResolver _ctxResolver;
         private readonly Lazy<AppManager> _appManagerLazy;
-        private AppManager CmsManager => _cmsManager ?? (_cmsManager = _appManagerLazy.Value.Init(AppState, showDrafts: false, Log));
-        private AppManager _cmsManager;
+        private readonly LazyInitLog<SimpleDataController> _dataControllerLazy;
+        private AppManager AppManager => _appManager ?? (_appManager = _appManagerLazy.Value.Init(AppState, showDrafts: false, Log));
+        private AppManager _appManager;
 
         public AppContent Init(string appName, ILog parentLog)
         {
@@ -130,11 +135,13 @@ namespace ToSic.Sxc.WebApi.App
             var userName = Context.User.IdentityToken;
 
             var realApp = GetApp(AppState.AppId, Context.UserMayEdit);
+            var dataController = DataController(AppState);
             if (id == null)
             {
                 Log.Add($"create new entity because id is null");
                 var metadata = GetMetadata(newContentItemCaseInsensitive);
                 Log.Add($"metadata: {metadata}");
+                // todo: try to use DataController
                 var entity = realApp.Data.Create(contentType, cleanedNewItem, userName, metadata);
                 Log.Add($"new entity created: {entity}");
                 id = entity.EntityId;
@@ -143,10 +150,11 @@ namespace ToSic.Sxc.WebApi.App
                 var added = AddParentRelationship(newContentItemCaseInsensitive, entity.EntityId);
             }
             else
+                // todo: try to use DataController
                 realApp.Data.Update(id.Value, cleanedNewItem, userName);
 
             return InitEavAndSerializer(AppState.AppId, Context.UserMayEdit)
-                .Convert(realApp.Data.List.One(id.Value));
+                .Convert(AppState.List.One(id.Value));
         }
 
         private bool AddParentRelationship(IDictionary<string, object> newContentItemCaseInsensitive, int addedEntityId)
@@ -172,7 +180,7 @@ namespace ToSic.Sxc.WebApi.App
             var field = (string)parentRelationship[SaveApiAttributes.ParentRelField];
             var fields = new[] { field };
 
-            CmsManager.Entities.FieldListAdd(parentEntity, fields, index, ids, asDraft: false);
+            AppManager.Entities.FieldListAdd(parentEntity, fields, index, ids, asDraft: false);
 
             //return wrapLog($"new ParentRelationship a:{willAdd},e:{entityId},p:{parentGuid},f:{field},i:{index}", true);
             return wrapLog($"new ParentRelationship p:{parentGuid},f:{field},i:{index}", true);
@@ -209,6 +217,9 @@ namespace ToSic.Sxc.WebApi.App
         /// <returns></returns>
         internal IApp GetApp(int appId, bool showDrafts) => GetService<Apps.App>().Init(ServiceProvider, appId, Log, null, showDrafts);
 
+        // TODO: THIS SHOULD probably replace The GetApp above, as it's just an indirect way of getting the data-controller?
+        private SimpleDataController DataController(IAppIdentity app) => _dataController ?? (_dataController = _dataControllerLazy.Ready.Init(app.ZoneId, app.AppId));
+        private SimpleDataController _dataController;
 
         #endregion
 
