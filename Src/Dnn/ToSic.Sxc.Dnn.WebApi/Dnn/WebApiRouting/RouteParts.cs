@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
     public class ControllerNames
     {
         public const string Adam = "Adam";
-        public const string AppContent = "AppContent";
+        public const string AppContent = "AppData";
         public const string AppQuery = "AppQuery";
     }
 }
