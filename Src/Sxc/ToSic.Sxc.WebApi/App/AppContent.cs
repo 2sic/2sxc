@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Api.Api01;
+using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Logging;
@@ -10,6 +12,7 @@ using ToSic.Eav.Metadata;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
+using ToSic.Eav.WebApi.App;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
@@ -21,23 +24,21 @@ namespace ToSic.Sxc.WebApi.App
 {
     public class AppContent : WebApiBackendBase<AppContent>
     {
-        private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.Init(Context.AppState, showDrafts: false, Log));
-        private CmsManager _cmsManager;
-
         #region Constructor / DI
-        protected IContextOfApp Context;
 
-        public AppContent(IServiceProvider sp, EntityApi entityApi, Lazy<IConvertToEavLight> entToDicLazy, IContextResolver ctxResolver, Lazy<CmsManager> cmsManagerLazy) : base(sp, "Sxc.ApiApC")
+        public AppContent(IServiceProvider sp, EntityApi entityApi, Lazy<IConvertToEavLight> entToDicLazy, IContextResolver ctxResolver, Lazy<AppManager> appManagerLazy) : base(sp, "Sxc.ApiApC")
         {
             _entityApi = entityApi;
             _entToDicLazy = entToDicLazy;
             _ctxResolver = ctxResolver;
-            _cmsManagerLazy = cmsManagerLazy;   
+            _appManagerLazy = appManagerLazy;   
         }
         private readonly EntityApi _entityApi;
         private readonly Lazy<IConvertToEavLight> _entToDicLazy;
         private readonly IContextResolver _ctxResolver;
-        private readonly Lazy<CmsManager> _cmsManagerLazy;
+        private readonly Lazy<AppManager> _appManagerLazy;
+        private AppManager CmsManager => _cmsManager ?? (_cmsManager = _appManagerLazy.Value.Init(AppState, showDrafts: false, Log));
+        private AppManager _cmsManager;
 
         public AppContent Init(string appName, ILog parentLog)
         {
@@ -48,6 +49,12 @@ namespace ToSic.Sxc.WebApi.App
 
             return this;
         }
+        protected IContextOfApp Context;
+
+        protected AppState AppState => Context?.AppState ??
+                                       throw new Exception(
+                                           "Can't access AppState before Context is ready. Did you forget to call Init(...)?");
+
         #endregion
 
 
@@ -58,9 +65,9 @@ namespace ToSic.Sxc.WebApi.App
             var wrapLog = Log.Call($"get entities type:{contentType}, path:{appPath}");
 
             // verify that read-access to these content-types is permitted
-            var permCheck = ThrowIfNotAllowedInType(contentType, GrantSets.ReadSomething, Context.AppState);
+            var permCheck = ThrowIfNotAllowedInType(contentType, GrantSets.ReadSomething, AppState);
 
-            var result = _entityApi.Init(Context.AppState.AppId, permCheck.EnsureAny(GrantSets.ReadDraft), Log)
+            var result = _entityApi.Init(AppState.AppId, permCheck.EnsureAny(GrantSets.ReadDraft), Log)
                 .GetEntities(contentType)
                 ?.ToList();
             wrapLog("found: " + result?.Count);
@@ -82,14 +89,14 @@ namespace ToSic.Sxc.WebApi.App
             Log.Add($"get and serialize after security check type:{contentType}, path:{appPath}");
 
             // first try to find in all entities incl. drafts
-            var itm = getOne(Context.AppState.List);
-            var permCheck = ThrowIfNotAllowedInItem(itm, GrantSets.ReadSomething, Context.AppState);
+            var itm = getOne(AppState.List);
+            var permCheck = ThrowIfNotAllowedInItem(itm, GrantSets.ReadSomething, AppState);
 
             // in case draft wasn't allow, get again with more restricted permissions 
             if (!permCheck.EnsureAny(GrantSets.ReadDraft))
-                itm = getOne(Context.AppState.ListPublished);
+                itm = getOne(AppState.ListPublished);
 
-            return InitEavAndSerializer(Context.AppState.AppId, Context.UserMayEdit).Convert(itm);
+            return InitEavAndSerializer(AppState.AppId, Context.UserMayEdit).Convert(itm);
         }
 
 
@@ -108,21 +115,21 @@ namespace ToSic.Sxc.WebApi.App
             // this throws an error if it's not the correct type
             var itm = id == null
                 ? null
-                : Context.AppState.List.GetOrThrow(contentType, id.Value);
+                : AppState.List.GetOrThrow(contentType, id.Value);
 
-            if (itm == null) ThrowIfNotAllowedInType(contentType, Grants.Create.AsSet(), Context.AppState);
-            else ThrowIfNotAllowedInItem(itm, Grants.Update.AsSet(), Context.AppState);
+            if (itm == null) ThrowIfNotAllowedInType(contentType, Grants.Create.AsSet(), AppState);
+            else ThrowIfNotAllowedInItem(itm, Grants.Update.AsSet(), AppState);
 
             // Convert to case-insensitive dictionary just to be safe!
             var newContentItemCaseInsensitive = new Dictionary<string, object>(newContentItem, StringComparer.InvariantCultureIgnoreCase);
 
             // Now create the cleaned up import-dictionary so we can create a new entity
             var cleanedNewItem = new AppContentEntityBuilder(Log)
-                .CreateEntityDictionary(contentType, newContentItemCaseInsensitive, Context.AppState);
+                .CreateEntityDictionary(contentType, newContentItemCaseInsensitive, AppState);
 
             var userName = Context.User.IdentityToken;
 
-            var realApp = GetApp(Context.AppState.AppId, Context.UserMayEdit);
+            var realApp = GetApp(AppState.AppId, Context.UserMayEdit);
             if (id == null)
             {
                 Log.Add($"create new entity because id is null");
@@ -138,7 +145,7 @@ namespace ToSic.Sxc.WebApi.App
             else
                 realApp.Data.Update(id.Value, cleanedNewItem, userName);
 
-            return InitEavAndSerializer(Context.AppState.AppId, Context.UserMayEdit)
+            return InitEavAndSerializer(AppState.AppId, Context.UserMayEdit)
                 .Convert(realApp.Data.List.One(id.Value));
         }
 
@@ -146,23 +153,23 @@ namespace ToSic.Sxc.WebApi.App
         {
             var wrapLog = Log.Call<bool>($"item dictionary key count: {newContentItemCaseInsensitive.Count}");
 
-            if (!newContentItemCaseInsensitive.Keys.Contains(Attributes.JsonKeyParentRelationship))
+            if (!newContentItemCaseInsensitive.Keys.Contains(SaveApiAttributes.ParentRelationship))
                 return wrapLog("'ParentRelationship' key is missing", false);
 
-            var parentRelationship = newContentItemCaseInsensitive[Attributes.JsonKeyParentRelationship] as JObject;
-            if (parentRelationship == null) return wrapLog("'ParentRelationship' value is null", false);
+            var parentRelationship = newContentItemCaseInsensitive[SaveApiAttributes.ParentRelationship] as JObject;
+            if (parentRelationship == null) return wrapLog($"'{SaveApiAttributes.ParentRelationship}' value is null", false);
 
-            var parentGuid = (Guid?)parentRelationship["Parent"];
-            if (!parentGuid.HasValue) return wrapLog("'Parent' guid is missing", false);
+            var parentGuid = (Guid?)parentRelationship[SaveApiAttributes.ParentRelParent];
+            if (!parentGuid.HasValue) return wrapLog($"'{SaveApiAttributes.ParentRelParent}' guid is missing", false);
 
-            var parentEntity = Context.AppState.List.One(parentGuid.Value);
+            var parentEntity = AppState.List.One(parentGuid.Value);
             if (parentEntity == null) return wrapLog("Parent entity is missing", false);
 
             //var entityId = (int?)parentRelationship["EntityId"];
             var ids = new[] { addedEntityId as int? };
-            var index = (int)parentRelationship["Index"];
+            var index = (int)parentRelationship[SaveApiAttributes.ParentRelIndex];
             //var willAdd = (bool?)parentRelationship["Add"];
-            var field = (string)parentRelationship["Field"];
+            var field = (string)parentRelationship[SaveApiAttributes.ParentRelField];
             var fields = new[] { field };
 
             CmsManager.Entities.FieldListAdd(parentEntity, fields, index, ids, asDraft: false);
@@ -230,9 +237,9 @@ namespace ToSic.Sxc.WebApi.App
             if (contentType == "any")
                 throw new Exception("type any not allowed with id-only, requires guid");
 
-            var entityApi = _entityApi.Init(Context.AppState.AppId, true, Log);
+            var entityApi = _entityApi.Init(AppState.AppId, true, Log);
             var itm = entityApi.AppRead.AppState.List.GetOrThrow(contentType, id);
-            ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), Context.AppState);
+            ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppState);
             entityApi.Delete(itm.Type.Name, id);
         }
 
@@ -241,10 +248,10 @@ namespace ToSic.Sxc.WebApi.App
             Log.Add($"delete guid:{guid}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
 
-            var entityApi = _entityApi.Init(Context.AppState.AppId, Context.UserMayEdit, Log);
-            var itm = Context.AppState.List.GetOrThrow(contentType == "any" ? null : contentType, guid);
+            var entityApi = _entityApi.Init(AppState.AppId, Context.UserMayEdit, Log);
+            var itm = AppState.List.GetOrThrow(contentType == "any" ? null : contentType, guid);
 
-            ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), Context.AppState);
+            ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppState);
 
             entityApi.Delete(itm.Type.Name, guid);
         }
@@ -256,7 +263,7 @@ namespace ToSic.Sxc.WebApi.App
 
         protected MultiPermissionsTypes ThrowIfNotAllowedInType(string contentType, List<Grants> requiredGrants, IAppIdentity alternateApp = null)
         {
-            var permCheck = GetService<MultiPermissionsTypes>().Init(Context, alternateApp ?? Context.AppState, contentType, Log);
+            var permCheck = GetService<MultiPermissionsTypes>().Init(Context, alternateApp ?? AppState, contentType, Log);
             if (!permCheck.EnsureAll(requiredGrants, out var error))
                 throw HttpException.PermissionDenied(error);
             return permCheck;
@@ -264,7 +271,7 @@ namespace ToSic.Sxc.WebApi.App
 
         protected MultiPermissionsItems ThrowIfNotAllowedInItem(IEntity itm, List<Grants> requiredGrants, IAppIdentity alternateApp = null)
         {
-            var permCheck = GetService<MultiPermissionsItems>().Init(Context, alternateApp ?? Context.AppState, itm, Log);
+            var permCheck = GetService<MultiPermissionsItems>().Init(Context, alternateApp ?? AppState, itm, Log);
             if (!permCheck.EnsureAll(requiredGrants, out var error))
                 throw HttpException.PermissionDenied(error);
             return permCheck;
