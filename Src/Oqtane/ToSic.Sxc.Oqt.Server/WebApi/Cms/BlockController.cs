@@ -3,14 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using ToSic.Eav.Apps.Ui;
-using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Routing;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.WebApi.ContentBlocks;
+using ToSic.Sxc.WebApi.Cms;
 using ToSic.Sxc.WebApi.InPage;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
@@ -20,58 +17,22 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Cms}")]
     [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Cms}")]
 
-    // Beta routes - TODO: @STV - why is this beta?
-    [Route(WebApiConstants.WebApiStateRoot + $"/{AreaRoutes.Cms}")]
-
     [ValidateAntiForgeryToken]
     [ApiController]
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
-    public class BlockController : OqtStatefulControllerBase<DummyControllerReal>, ToSic.Sxc.WebApi.Cms.IBlockController
+    public class BlockController : OqtStatefulControllerBase<BlockControllerReal>, IBlockController
     {
-        public BlockController(
-            Lazy<CmsRuntime> lazyCmsRuntime,
-            Lazy<ContentBlockBackend> blockBackendLazy,
-            Lazy<AppViewPickerBackend> viewsBackendLazy,
-            Lazy<CmsZones> cmsZonesLazy): base("Block")
-        {
-            _lazyCmsRuntime = lazyCmsRuntime;
-            _blockBackendLazy = blockBackendLazy;
-            _viewsBackendLazy = viewsBackendLazy;
-            _cmsZonesLazy = cmsZonesLazy;
-        }
-        private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
-        private readonly Lazy<ContentBlockBackend> _blockBackendLazy;
-        private readonly Lazy<AppViewPickerBackend> _viewsBackendLazy;
-        private readonly Lazy<CmsZones> _cmsZonesLazy;
+        public BlockController(): base(BlockControllerReal.LogSuffix) { }
 
-
-        protected CmsRuntime CmsRuntime
-        {
-            get
-            {
-                var runtime = _cmsRuntime;
-                if (runtime != null) return runtime;
-
-                return _cmsRuntime = ContextApp == null ? null : _lazyCmsRuntime.Value.Init(ContextApp, true, Log);
-            }
-        }
-        private CmsRuntime _cmsRuntime;
-
-        // TODO: NOT sure if this is correct - it just gets the App but the block may be null
-        private IApp ContextApp => _app ??= BlockOptional.App;
-        private IApp _app;
 
         #region Block
-
-        private ContentBlockBackend Backend => _backend ??= _blockBackendLazy.Value.Init(Log);
-        private ContentBlockBackend _backend;
 
         /// <inheritdoc />
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
         public string Block(int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
-            => Backend.NewBlockAndRender(parentId, field, sortOrder, app, guid).Html;
+            => Real.Block(parentId, field, sortOrder, app, guid);
         #endregion
 
         #region BlockItems
@@ -81,11 +42,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
-        public IActionResult Item(int? index = null)
-        {
-            Backend.AddItem(index);
-            return new NoContentResult();
-        }
+        public void Item(int? index = null) => Real.Item(index);
 
         #endregion
 
@@ -99,8 +56,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
-        public void App(int? appId)
-            => _viewsBackendLazy.Value.Init(Log).SetAppId(appId);
+        public void App(int? appId) => Real.App(appId);
 
         /// <summary>
         /// used to be GET Module/GetSelectableApps
@@ -110,13 +66,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
-        public IEnumerable<AppUiInfo> Apps(string apps = null)
-        {
-            // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
-            var tenant = GetContext().Site;// new DnnTenant(PortalSettings);
-            return _cmsZonesLazy.Value.Init(tenant.ZoneId, Log).AppsRt.GetSelectableApps(tenant, apps)
-                .ToList();
-        }
+        public IEnumerable<AppUiInfo> Apps(string apps = null) => Real.Apps(apps);
 
         #endregion
 
@@ -126,7 +76,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
-        public IEnumerable<ContentTypeUiInfo> ContentTypes() => _viewsBackendLazy.Value.ContentTypes();
+        public IEnumerable<ContentTypeUiInfo> ContentTypes() => Real.ContentTypes();
 
         #endregion
 
@@ -139,7 +89,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
-        public IEnumerable<TemplateUiInfo> Templates() => _viewsBackendLazy.Value.Init(Log).Templates();
+        public IEnumerable<TemplateUiInfo> Templates() => Real.Templates();
 
         /// <summary>
         /// Used in InPage.js
@@ -153,9 +103,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         //[Authorize(Roles = RoleNames.Registered)]
         [Authorize(Roles = RoleNames.Admin)]
         // TODO: 2DM please check permissions
-        public Guid? Template(int templateId, bool forceCreateContentGroup)
-            => _viewsBackendLazy.Value.Init(Log)
-                .SaveTemplateId(templateId, forceCreateContentGroup);
+        public Guid? Template(int templateId, bool forceCreateContentGroup) => Real.Template(templateId, forceCreateContentGroup);
 
         #endregion
 
@@ -163,17 +111,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
-        public AjaxRenderDto Render(int templateId, string lang)
-        {
-            Log.Add($"render template:{templateId}, lang:{lang}");
-            return Backend.RenderV2(templateId, lang, OqtConstants.UiRoot);
-        }
+        public AjaxRenderDto Render(int templateId, string lang) => Real.Set(OqtConstants.UiRoot).Render(templateId, lang);
 
         /// <inheritdoc />
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
-        public bool Publish(string part, int index) => Backend.PublishPart(part, index);
+        public bool Publish(string part, int index) => Real.Publish(part, index);
 
     }
 }

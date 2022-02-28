@@ -1,42 +1,32 @@
-﻿using System;
+﻿using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
+using System;
 using System.Collections.Generic;
 using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
 using ToSic.Eav.Apps.Ui;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Cms;
-using ToSic.Sxc.WebApi.ContentBlocks;
 using ToSic.Sxc.WebApi.InPage;
 
 namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
     [ValidateAntiForgeryToken]
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
-    public class BlockController : DynamicApiController, IBlockController
+    public class BlockController : SxcApiControllerBase<BlockControllerReal>, IBlockController
     {
-        public BlockController() : base("Block") { }
+        public BlockController() : base(BlockControllerReal.LogSuffix) { }
 
-        protected CmsRuntime CmsRuntime => _cmsRuntime ?? (_cmsRuntime = _DynCodeRoot.App == null
-                ? null
-                : GetService<CmsRuntime>().Init(_DynCodeRoot.App, true, Log)
-            );
-        private CmsRuntime _cmsRuntime;
 
         #region Block
-
-        private ContentBlockBackend Backend => GetService<ContentBlockBackend>().Init(Log);
-
-        private AppViewPickerBackend ViewBackend => GetService<AppViewPickerBackend>().Init(Log);
 
         /// <summary>
         /// used to be GET Module/GenerateContentBlock
         /// </summary>
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public new string Block(int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
-            => Backend.NewBlockAndRender(parentId, field, sortOrder, app, guid).Html;
+        public string Block(int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
+            => Real.Block(parentId, field, sortOrder, app, guid);
+
 
         #endregion
 
@@ -45,7 +35,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void Item([FromUri] int? index = null) => Backend.AddItem(index);
+        public void Item([FromUri] int? index = null) => Real.Item(index);
 
         #endregion
 
@@ -55,12 +45,12 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public new void App(int? appId) => ViewBackend.SetAppId(appId);
+        public void App(int? appId) => Real.App(appId);
 
         /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<AppUiInfo> Apps(string apps = null) => ViewBackend.Apps(apps);
+        public IEnumerable<AppUiInfo> Apps(string apps = null) => Real.Apps(apps);
 
         #endregion
 
@@ -69,7 +59,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<ContentTypeUiInfo> ContentTypes() => ViewBackend.ContentTypes();
+        public IEnumerable<ContentTypeUiInfo> ContentTypes() => Real.ContentTypes();
 
         #endregion
 
@@ -78,27 +68,23 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<TemplateUiInfo> Templates() => ViewBackend.Templates();
+        public IEnumerable<TemplateUiInfo> Templates() => Real.Templates();
 
         /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        public Guid? Template(int templateId, bool forceCreateContentGroup) => ViewBackend.SaveTemplateId(templateId, forceCreateContentGroup);
+        public Guid? Template(int templateId, bool forceCreateContentGroup) => Real.Template(templateId, forceCreateContentGroup);
 
         #endregion
 
         /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public AjaxRenderDto Render([FromUri] int templateId, [FromUri] string lang)
-        {
-            Log.Add($"render template:{templateId}, lang:{lang}");
-            return Backend.RenderV2(templateId, lang, DnnConstants.SysFolderRootVirtual.Trim('~'));
-        }
+        public AjaxRenderDto Render([FromUri] int templateId, [FromUri] string lang) => Real.Set(DnnConstants.SysFolderRootVirtual.Trim('~')).Render(templateId, lang);
 
         /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public bool Publish(string part, int index) => Backend.PublishPart(part, index);
+        public bool Publish(string part, int index) => Real.Publish(part, index);
     }
 }
