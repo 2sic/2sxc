@@ -96,6 +96,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Apps\" />
     <Folder Include="wwwroot\Modules\" />
   </ItemGroup>
 

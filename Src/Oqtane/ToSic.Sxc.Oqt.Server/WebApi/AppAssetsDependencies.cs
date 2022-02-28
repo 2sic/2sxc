@@ -8,12 +8,12 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
     public class AppAssetsDependencies
     {
         public IWebHostEnvironment HostingEnvironment { get; }
-        public Lazy<OqtAppFolder> OqtAppFolderLazy { get; }
+        public Lazy<AppFolder> OqtAppFolderLazy { get; }
         public SiteState SiteState { get; }
 
         public AppAssetsDependencies(
             IWebHostEnvironment hostingEnvironment, 
-            Lazy<OqtAppFolder> oqtAppFolderLazy, 
+            Lazy<AppFolder> oqtAppFolderLazy, 
             SiteState siteState)
         {
             HostingEnvironment = hostingEnvironment;

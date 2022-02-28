@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
     {
         private string Route { get; }
 
-        private readonly Lazy<OqtAppFolder> _oqtAppFolderLazy;
+        private readonly Lazy<AppFolder> _oqtAppFolderLazy;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly SiteState _siteState;
 

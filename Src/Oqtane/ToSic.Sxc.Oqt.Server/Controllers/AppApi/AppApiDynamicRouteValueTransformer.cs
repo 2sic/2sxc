@@ -30,14 +30,14 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
     {
         private readonly ITenantResolver _tenantResolver;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly Lazy<OqtAppFolder> _oqtAppFolderLazy;
+        private readonly Lazy<AppFolder> _oqtAppFolderLazy;
 
         public const string HttpContextKeyForAppFolder = "SxcAppFolderName";
 
         public AppApiDynamicRouteValueTransformer(
             ITenantResolver tenantResolver,
             IWebHostEnvironment hostingEnvironment,
-            Lazy<OqtAppFolder> oqtAppFolderLazy,
+            Lazy<AppFolder> oqtAppFolderLazy,
             LogHistory logHistory)
         {
             _tenantResolver = tenantResolver;

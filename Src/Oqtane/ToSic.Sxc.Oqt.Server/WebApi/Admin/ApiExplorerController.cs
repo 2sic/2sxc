@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             var siteStateInitializer = GetService<SiteStateInitializer>();
             var siteId = siteStateInitializer.InitializedState.Alias.SiteId;
 
-            var oqtAppFolder = GetService<OqtAppFolder>();
+            var oqtAppFolder = GetService<AppFolder>();
             var appFolder = oqtAppFolder.GetAppFolder();
 
             return OqtServerPaths.GetAppApiPath(siteId, appFolder, path);

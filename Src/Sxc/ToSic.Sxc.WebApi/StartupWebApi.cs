@@ -72,6 +72,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<ResetApp>();
             services.TryAddTransient<AppStackBackend>();
 
+
             // Small WebApi Helpers
             services.TryAddTransient<IdentifierHelper>();
             services.TryAddTransient<ContentGroupList>();
