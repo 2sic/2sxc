@@ -61,14 +61,14 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
-        public ImportResultDto Import(int zoneId, int appId) => Real.Set(PreventServerTimeout300).Import(new HttpUploadedFile(Request), zoneId, appId);
+        public ImportResultDto Import(int zoneId, int appId) => Real.Init(PreventServerTimeout300).Import(new HttpUploadedFile(Request), zoneId, appId);
 
         /// <inheritdoc />
         [HttpGet]
         //[SupportedModules("2sxc,2sxc-app")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
-        public IEnumerable<ViewDto> Usage(int appId, Guid guid) => Real.Set((views, blocks) =>
+        public IEnumerable<ViewDto> Usage(int appId, Guid guid) => Real.UsagePreparations((views, blocks) =>
         {
             // create list with all 2sxc modules in this site
             var allMods = _pages.Ready.AllModulesWithContent(Real.SiteId);

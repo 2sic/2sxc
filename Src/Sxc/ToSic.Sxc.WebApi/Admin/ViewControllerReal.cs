@@ -40,6 +40,20 @@ namespace ToSic.Sxc.WebApi.Admin
         private readonly LazyInitLog<ViewsBackend> _viewsBackend;
         private readonly LazyInitLog<ViewsExportImport> _viewExportImport;
 
+        /// <summary>
+        /// Special init to give it a implementation how to extend the server timeout - used in Dnn, probably not used in Oqtane.
+        /// Only needed for the Import
+        /// </summary>
+        /// <param name="preventServerTimeout300"></param>
+        /// <returns></returns>
+        public ViewControllerReal Init(Action preventServerTimeout300)
+        {
+            PreventServerTimeout300 = preventServerTimeout300;
+            return this;
+        }
+        private Action PreventServerTimeout300 { get; set; }
+
+
         /// <inheritdoc />
         public IEnumerable<ViewDetailsDto> All(int appId) => _viewsBackend.Ready.GetAll(appId);
 
@@ -96,13 +110,6 @@ namespace ToSic.Sxc.WebApi.Admin
 
             return wrapLog("ok", result);
         }
-        public ViewControllerReal Set(Action preventServerTimeout300)
-        {
-            PreventServerTimeout300 = preventServerTimeout300;
-            return this;
-        }
-        private Action PreventServerTimeout300 { get; set; }
-
 
         /// <inheritdoc />
         public IEnumerable<ViewDto> Usage(int appId, Guid guid)
@@ -114,7 +121,7 @@ namespace ToSic.Sxc.WebApi.Admin
             }
             return _usageBackend.Ready.ViewUsage(appId, guid, FinalBuilder);
         }
-        public ViewControllerReal Set(Func<List<IView>, List<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
+        public ViewControllerReal UsagePreparations(Func<List<IView>, List<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
         {
             FinalBuilder = finalBuilder;
             return this;

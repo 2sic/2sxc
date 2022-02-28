@@ -52,14 +52,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
-        public ImportResultDto Import(int zoneId, int appId) => Real.Set(PreventServerTimeout300).Import(new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId, appId);
+        public ImportResultDto Import(int zoneId, int appId) => Real.Init(PreventServerTimeout300).Import(new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId, appId);
 
         /// <inheritdoc />
         [HttpGet]
         [SupportedModules("2sxc,2sxc-app")]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public IEnumerable<ViewDto> Usage(int appId, Guid guid) => Real.Set((views, blocks) =>
+        public IEnumerable<ViewDto> Usage(int appId, Guid guid) => Real.UsagePreparations((views, blocks) =>
         {
             // create array with all 2sxc modules in this portal
             var allMods = new Pages.Pages(Log).AllModulesWithContent(PortalSettings.PortalId);
