@@ -63,7 +63,12 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
 
             // WebAPI calls can contain the original parameters that made the page, so that views can respect that
             var moduleId = TryGetModuleId();
+            if (moduleId == Eav.Constants.NullId)
+                return wrapLog("missing block because ModuleId not found in request", null);
+
             var pageId = TryGetPageId();
+            if (pageId == Eav.Constants.NullId)
+                return wrapLog("missing block because PageId not found in request", null);
 
             var module = _modRepoLazy.Value.GetModule(moduleId);
             var ctx = _serviceProvider.Build<IContextOfBlock>().Init(pageId, module, Log);
