@@ -25,6 +25,7 @@ using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.ImportExport;
 using ToSic.Sxc.WebApi.InPage;
 using ToSic.Sxc.WebApi.Save;
+using ToSic.Sxc.WebApi.Sys;
 using ToSic.Sxc.WebApi.Usage;
 
 namespace ToSic.Sxc.WebApi
@@ -107,6 +108,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<EditControllerReal>();
             services.TryAddTransient<HistoryControllerReal>();
             services.TryAddTransient<ListControllerReal>();
+            services.TryAddTransient<InstallControllerReal>();
 
             return services;
         }

@@ -1,17 +1,16 @@
-﻿using System.Net;
+﻿using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
+using System;
+using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using ToSic.Eav.Context;
-using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
-using ToSic.Sxc.Run;
+using ToSic.Sxc.WebApi.Sys;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
-    public class InstallController : DnnApiControllerWithFixes<IEnvironmentInstaller>
+    public class InstallController : DnnApiControllerWithFixes<InstallControllerReal>
     {
         public InstallController() : base("Install") { }
 
@@ -29,7 +28,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         /// <returns></returns>
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-        public bool Resume() => Real.ResumeAbortedUpgrade();
+        public bool Resume() => Real.Resume();
 
         #endregion
 
@@ -38,10 +37,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public string RemoteWizardUrl(bool isContentApp) =>
-            Real.GetAutoInstallPackagesUiUrl(
-                    GetService<ISite>(), ((DnnModule)GetService<IModule>()).Init(Request.FindModuleInfo(), Log), 
-                    isContentApp);
+        public string RemoteWizardUrl(bool isContentApp) 
+            => Real.RemoteWizardUrl(isContentApp, ((DnnModule) GetService<IModule>()).Init(Request.FindModuleInfo(), Log));
 
 
         /// <summary>
@@ -55,20 +52,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         public HttpResponseMessage RemotePackage(string packageUrl)
         {
             PreventServerTimeout300();
-
-            Log.Add("install package:" + packageUrl);
-            var module = ((DnnModule)GetService<IModule>()).Init(ActiveModule, Log);
-            var block = module.BlockIdentifier;
-
-            var importFromRemote = GetService<ImportFromRemote>();
-
-            var fromRemote = importFromRemote.Init(new DnnUser(), Log);
-
-            var result = fromRemote
-                .InstallPackage(block.ZoneId, block.AppId, ActiveModule.DesktopModule.ModuleName == "2sxc-app", packageUrl);
-
-            Log.Add("install completed with success:" + result.Item1);
-            return Request.CreateResponse(result.Item1 ? HttpStatusCode.OK : HttpStatusCode.InternalServerError, new { result.Item1, result.Item2 });
+            var (success, messages) = Real.RemotePackage(packageUrl, ((DnnModule)GetService<IModule>()).Init(ActiveModule, Log));
+            return Request.CreateResponse(success ? HttpStatusCode.OK : HttpStatusCode.InternalServerError, new {Item1 = success, Item2 = messages });
         }
 
         #endregion
