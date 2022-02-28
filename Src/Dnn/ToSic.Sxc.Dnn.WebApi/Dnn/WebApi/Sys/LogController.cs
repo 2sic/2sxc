@@ -1,7 +1,7 @@
-﻿using System.Web.Http;
-using DotNetNuke.Security;
+﻿using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.WebApi;
+using System.Web.Http;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 
@@ -14,9 +14,9 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
     [DnnLogExceptions]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public class LogController : DnnApiControllerWithFixes<DummyControllerReal>
+    public class LogController : DnnApiControllerWithFixes<LogControllerReal>
     {
-        public LogController() : base("Log") { }
+        public LogController() : base(LogControllerReal.LogSuffix) { }
 
         #region Enable extended logging
 
@@ -26,13 +26,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         /// <param name="duration"></param>
         /// <returns></returns>
         [HttpGet]
-        public string EnableDebug(int duration = 1)
-        {
-            Log.Add("Extended logging will set for duration:" + duration);
-            var msg = DnnLogging.ActivateForDuration(duration);
-            Log.Add(msg);
-            return msg;
-        }
+        public string EnableDebug(int duration = 1) => Real.EnableDebug(DnnLogging.ActivateForDuration, duration);
 
         #endregion
     }
