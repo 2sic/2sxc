@@ -3,68 +3,45 @@ using DotNetNuke.Web.Api;
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Http;
 using ToSic.Eav.Context;
-using ToSic.Eav.WebApi;
-using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Plumbing;
+using ToSic.Sxc.WebApi.Admin;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public class ApiExplorerController : DnnApiControllerWithFixes<DummyControllerReal>
+    public class ApiExplorerController : DnnApiControllerWithFixes<ApiExplorerControllerReal<HttpResponseMessage>>
     {
-        public ApiExplorerController() : base("Explor") { }
+        public ApiExplorerController() : base(ApiExplorerControllerReal<HttpResponseMessage>.LogSuffix) { }
 
         [HttpGet]
         public HttpResponseMessage Inspect(string path)
         {
-            var wrapLog = Log.Call<HttpResponseMessage>();
-
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>() ;
+            var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
             responseMaker.Init(this);
-            
-            var backend = GetService<ApiExplorerBackend<HttpResponseMessage>>();
 
-            if (backend.PreCheckAndCleanPath(ref path, out var error)) return error;
+            return Real.Inspect(path, GetAssembly);
+        }
 
-            try
-            {
-                var controllerVirtualPath = Path.Combine(AppFolderUtilities.GetAppFolderVirtualPath(GetService<IServiceProvider>(), Request, GetService<ISite>(), Log), path);
-                Log.Add($"Controller Virtual Path: {controllerVirtualPath}");
+        private Assembly GetAssembly(string path)
+        {
+            var controllerVirtualPath =
+                Path.Combine(
+                    AppFolderUtilities.GetAppFolderVirtualPath(GetService<IServiceProvider>(), Request, GetService<ISite>(), Log), 
+                    path);
 
-                if (!File.Exists(HostingEnvironment.MapPath(controllerVirtualPath)))
-                {
-                    var msg = $"Error: can't find controller file: {controllerVirtualPath}";
-                    return wrapLog(msg, responseMaker.InternalServerError(msg));
-                }
+            Log.Add($"Controller Virtual Path: {controllerVirtualPath}");
 
-                var assembly = BuildManager.GetCompiledAssembly(controllerVirtualPath);
+            if (!File.Exists(HostingEnvironment.MapPath(controllerVirtualPath)))
+                throw new Exception($"Error: can't find controller file: {controllerVirtualPath}");
 
-                return wrapLog(null, backend.AnalyzeClassAndCreateDto(path, assembly));
-                //var controllerName = path.Substring(path.LastIndexOf('\\') + 1);
-                //controllerName = controllerName.Substring(0, controllerName.IndexOf('.'));
-                //var controller = assembly.DefinedTypes.FirstOrDefault(a => controllerName.Equals(a.Name, StringComparison.InvariantCultureIgnoreCase));
-                //if (controller == null)
-                //{
-                //    var msg = $"Error: can't find controller class: {controllerName} in file {Path.GetFileNameWithoutExtension(path)}. This can happen if the controller class does not have the same name as the file.";
-                //    return responseMaker.InternalServerError(msg);
-                //}
-
-                //var controllerDto = backend.BuildApiControllerDto(controller);
-
-                //var responseMessage = responseMaker.Json(controllerDto); // Request.CreateResponse(HttpStatusCode.OK);
-                //// responseMessage.Content = new StringContent(controllerDto.ToJson(), Encoding.UTF8, "application/json");
-                //return wrapLog("ok", responseMessage);
-            }
-            catch (Exception exc)
-            {
-                return wrapLog($"Error: {exc.Message}.", responseMaker.InternalServerError(exc));
-            }
+            return BuildManager.GetCompiledAssembly(controllerVirtualPath);
         }
 
         //private static bool PreCheckAndCleanPath(ref string path, Func<string, HttpResponseMessage, HttpResponseMessage> wrapLog, DnnResponseMaker responseMaker,

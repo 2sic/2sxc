@@ -2,9 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System;
+using System.Reflection;
 using ToSic.Eav.Run;
-using ToSic.Eav.WebApi;
-using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Apps;
@@ -13,6 +12,7 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
+using ToSic.Sxc.WebApi.Admin;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -25,44 +25,33 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [Authorize(Roles = RoleNames.Admin)]
 
-    public class ApiExplorerController : OqtStatefulControllerBase<DummyControllerReal>
+    public class ApiExplorerController : OqtStatefulControllerBase<ApiExplorerControllerReal<IActionResult>>
     {
-        public ApiExplorerController() : base("Explor") { }
+        public ApiExplorerController() : base(ApiExplorerControllerReal<IActionResult>.LogSuffix) { }
 
         [HttpGet]
         public IActionResult Inspect(string path)
         {
-            var wrapLog = Log.Call<IActionResult>();
-
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (OqtResponseMaker)GetService<ResponseMaker<IActionResult>>() ;
+            var responseMaker = (OqtResponseMaker)GetService<ResponseMaker<IActionResult>>();
             responseMaker.Init(this);
-            
-            var backend = GetService<ApiExplorerBackend<IActionResult>>();
-            if (backend.PreCheckAndCleanPath(ref path, out var error)) return error;
 
-            try
-            {
-                var pathFromRoot = GetPathFromRoot(path);
-                Log.Add($"Controller path from root: {pathFromRoot}");
+            return Real.Inspect(path, GetAssembly);
+        }
 
-                var apiFile = GetFullPath(pathFromRoot);
-                if (!System.IO.File.Exists(apiFile))
-                {
-                    var msg = $"Error: can't find controller file: {pathFromRoot}";
-                    return wrapLog(msg, responseMaker.InternalServerError(msg));
-                }
+        private Assembly GetAssembly(string path)
+        {
+            var pathFromRoot = GetPathFromRoot(path);
+            Log.Add($"Controller path from root: {pathFromRoot}");
 
-                var dllName = GetDllName(pathFromRoot, apiFile);
+            var apiFile = GetFullPath(pathFromRoot);
 
-                var assembly = new Compiler().Compile(apiFile, dllName);
+            if (!System.IO.File.Exists(apiFile))
+                throw new Exception($"Error: can't find controller file: {pathFromRoot}");
 
-                return wrapLog(null, backend.AnalyzeClassAndCreateDto(path, assembly));
-            }
-            catch (Exception exc)
-            {
-                return wrapLog($"Error: {exc.Message}.", responseMaker.InternalServerError(exc));
-            }
+            var dllName = GetDllName(pathFromRoot, apiFile);
+
+            return new Compiler().Compile(apiFile, dllName);
         }
 
         private string GetPathFromRoot(string path)
