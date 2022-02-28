@@ -15,6 +15,7 @@ using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.Admin;
+using ToSic.Sxc.WebApi.Admin.AppFiles;
 using ToSic.Sxc.WebApi.Admin.Query;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.AppStack;
@@ -92,17 +93,20 @@ namespace ToSic.Sxc.WebApi
             //services.TryAddTransient<ZoneBackend>();
 
             // New v13 - try to reduce Dnn/Oqtane code to the max, by creating ControllerReal objects which do everything
+            services.TryAddTransient(typeof(AdamControllerReal<>));
+            services.TryAddTransient<AppFilesControllerReal>();
             services.TryAddTransient<QueryControllerReal>();
-            services.TryAddTransient<DialogControllerReal>();
             services.TryAddTransient(typeof(AppControllerReal<>));
+            services.TryAddTransient<AppPartsControllerReal>();
+            services.TryAddTransient<DialogControllerReal>();
+            services.TryAddTransient<TypeControllerReal>();
+            services.TryAddTransient<ViewControllerReal>();
+            services.TryAddTransient<AppDataControllerReal>();
+            services.TryAddTransient<AppQueryControllerReal>();
+            services.TryAddTransient<ContentGroupControllerReal>();
             services.TryAddTransient<EditControllerReal>();
             services.TryAddTransient<HistoryControllerReal>();
-            services.TryAddTransient<ContentGroupControllerReal>();
-            services.TryAddTransient(typeof(AdamControllerReal<>));
             services.TryAddTransient<ListControllerReal>();
-            services.TryAddTransient<AppDataControllerReal>();
-            services.TryAddTransient<ViewControllerReal>();
-            services.TryAddTransient<AppPartsControllerReal>();
 
             return services;
         }
