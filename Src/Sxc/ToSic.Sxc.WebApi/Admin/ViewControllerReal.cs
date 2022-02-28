@@ -40,20 +40,6 @@ namespace ToSic.Sxc.WebApi.Admin
         private readonly LazyInitLog<ViewsBackend> _viewsBackend;
         private readonly LazyInitLog<ViewsExportImport> _viewExportImport;
 
-        /// <summary>
-        /// Special init to give it a implementation how to extend the server timeout - used in Dnn, probably not used in Oqtane.
-        /// Only needed for the Import
-        /// </summary>
-        /// <param name="preventServerTimeout300"></param>
-        /// <returns></returns>
-        public ViewControllerReal Init(Action preventServerTimeout300)
-        {
-            PreventServerTimeout300 = preventServerTimeout300;
-            return this;
-        }
-        private Action PreventServerTimeout300 { get; set; }
-
-
         /// <inheritdoc />
         public IEnumerable<ViewDetailsDto> All(int appId) => _viewsBackend.Ready.GetAll(appId);
 
@@ -73,10 +59,7 @@ namespace ToSic.Sxc.WebApi.Admin
         /// <param name="appId"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public ImportResultDto Import(int zoneId, int appId)
-        {
-            throw new NotImplementedException();
-        }
+        public ImportResultDto Import(int zoneId, int appId) => throw new NotImplementedException();
 
         /// <summary>
         /// This implementation is special ControllerReal, instead of ImportResultDto Import(int zoneId, int appId) that is not implemented.
@@ -110,6 +93,21 @@ namespace ToSic.Sxc.WebApi.Admin
 
             return wrapLog("ok", result);
         }
+
+        /// <summary>
+        /// Special init to give it a implementation how to extend the server timeout - used in Dnn, probably not used in Oqtane.
+        /// Only needed for the Import.
+        /// Todo: Review if this should really be here, or move back to Dnn as it's probably only used there
+        /// </summary>
+        /// <param name="preventServerTimeout300"></param>
+        /// <returns></returns>
+        public ViewControllerReal ImportPrep(Action preventServerTimeout300)
+        {
+            PreventServerTimeout300 = preventServerTimeout300;
+            return this;
+        }
+        private Action PreventServerTimeout300 { get; set; }
+
 
         /// <inheritdoc />
         public IEnumerable<ViewDto> Usage(int appId, Guid guid)

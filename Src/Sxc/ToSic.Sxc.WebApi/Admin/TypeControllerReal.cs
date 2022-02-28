@@ -95,10 +95,7 @@ namespace ToSic.Sxc.WebApi.Admin
         /// <param name="appId"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public ImportResultDto Import(int zoneId, int appId)
-        {
-            throw new NotImplementedException();
-        }
+        public ImportResultDto Import(int zoneId, int appId) => throw new NotImplementedException();
 
         /// <summary>
         /// This implementation is special ControllerReal, instead of ImportResultDto Import(int zoneId, int appId) that is not implemented.
@@ -133,7 +130,9 @@ namespace ToSic.Sxc.WebApi.Admin
 
             return wrapLog("ok", result);
         }
-        public TypeControllerReal Set(Action preventServerTimeout300)
+
+        /// Todo: Review if this should really be here, or move back to Dnn as it's probably only used there
+        public TypeControllerReal ImportPrep(Action preventServerTimeout300)
         {
             PreventServerTimeout300 = preventServerTimeout300;
             return this;
