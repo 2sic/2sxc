@@ -49,15 +49,14 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [ValidateAntiForgeryToken]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
-        public void Delete(
-            [FromQuery] string contentType,
-            [FromQuery] int? id, 
-            [FromQuery] Guid? guid, 
-            [FromQuery] int appId, 
+        public void Delete([FromQuery] string contentType,
+            [FromQuery] int appId,
+            [FromQuery] int? id = null,
+            [FromQuery] Guid? guid = null,
             [FromQuery] bool force = false,
-            [FromQuery] int? parentId = null, 
+            [FromQuery] int? parentId = null,
             [FromQuery] string parentField = null) =>
-            Real.Delete(contentType, id, guid, appId, force, parentId, parentField);
+            Real.Delete(contentType, appId, id, guid, force, parentId, parentField);
 
 
         /// <inheritdoc/>

@@ -41,8 +41,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void Delete(string contentType, int? id, Guid? guid, int appId, bool force = false, int? parentId = null, string parentField = null)
-        => Real.Delete(contentType, id, guid, appId, force, parentId, parentField);
+        public void Delete(string contentType, int appId, int? id = null, Guid? guid = null, bool force = false, int? parentId = null, string parentField = null)
+        => Real.Delete(contentType, appId, id, guid, force, parentId, parentField);
 
 
         /// <inheritdoc/>
