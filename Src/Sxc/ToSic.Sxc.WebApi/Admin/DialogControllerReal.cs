@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
@@ -10,14 +11,15 @@ namespace ToSic.Sxc.WebApi.Admin
 {
     public class DialogControllerReal: WebApiBackendBase<DialogControllerReal>, IDialogController
     {
-        private readonly IContextResolver _ctxResolver;
-        private readonly IUiContextBuilder _uiContextBuilder;
+        public const string LogSuffix = "Dialog";
 
-        public DialogControllerReal(IServiceProvider serviceProvider, IContextResolver ctxResolver, IUiContextBuilder uiContextBuilder) : base(serviceProvider, "Bck.Admin")
+        public DialogControllerReal(IServiceProvider serviceProvider, IContextResolver ctxResolver, IUiContextBuilder uiContextBuilder) : base(serviceProvider, $"{LogNames.WebApi}.{LogSuffix}Rl")
         {
             _ctxResolver = ctxResolver;
             _uiContextBuilder = uiContextBuilder;
         }
+        private readonly IContextResolver _ctxResolver;
+        private readonly IUiContextBuilder _uiContextBuilder;
 
         ///<inheritdoc />
         public DialogContextStandaloneDto Settings(int appId)

@@ -8,10 +8,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
     [Route(WebApiConstants.ApiRootWithNoLang + "/sys/[controller]/")]
     [Route(WebApiConstants.ApiRootPathOrLang + "/sys/[controller]/")]
     [Route(WebApiConstants.ApiRootPathNdLang + "/sys/[controller]/")]
-
-    // Beta routes
-    [Route(WebApiConstants.WebApiStateRoot + "/sys/[controller]/")]
-
+    
     [ApiController]
     public class InsightsController : OqtControllerBase<InsightsControllerReal>
     {

@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-        public DialogController(): base("Dialog") { }
+        public DialogController(): base(DialogControllerReal.LogSuffix) { }
 
         [HttpGet]
         public DialogContextStandaloneDto Settings(int appId) => Real.Settings(appId);

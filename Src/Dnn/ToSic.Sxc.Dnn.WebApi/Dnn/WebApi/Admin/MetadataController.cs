@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [ValidateAntiForgeryToken]
     public class MetadataController : SxcApiControllerBase<MetadataControllerReal>, IMetadataController
     {
-        public MetadataController() : base("MetaDt") { }
+        public MetadataController() : base(MetadataControllerReal.LogSuffix) { }
 
         [HttpGet]
         public MetadataListDto Get(int appId, int targetType, string keyType, string key, string contentType = null)
