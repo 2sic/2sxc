@@ -1,12 +1,11 @@
 ﻿using ToSic.Eav.Logging;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Oqt.Shared;
 
-namespace ToSic.Sxc.Oqt.Server.Apps
+namespace ToSic.Sxc.Apps
 {
-    public class OqtAppFolder: HasLog<OqtAppFolder>
+    public class AppFolder: HasLog<AppFolder>
     {
-        public OqtAppFolder(IContextResolver ctxResolver) : base($"{OqtConstants.OqtLogPrefix}.AppFolder") 
+        public AppFolder(IContextResolver ctxResolver) : base("AppFolder") 
             => _ctxResolver = ctxResolver;
         private readonly IContextResolver _ctxResolver;
 

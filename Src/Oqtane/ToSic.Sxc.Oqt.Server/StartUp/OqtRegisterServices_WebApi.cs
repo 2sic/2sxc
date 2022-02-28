@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Plumbing;
-using ToSic.Sxc.Oqt.Server.Apps;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Server.WebApi.Admin;
@@ -36,9 +35,6 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.AddTransient<OptionalBodyFilter>();
 
             services.TryAddTransient<AppAssetsDependencies>();
-
-            // Resolve appFolder when appName is "auto"
-            services.TryAddTransient<OqtAppFolder>();
 
             // ViewController deps for AllModulesWithContent
             services.TryAddTransient<Pages.Pages>();
