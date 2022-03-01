@@ -37,9 +37,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
-        public ImportResultDto Import(int zoneId, int appId) 
-            => Real.Set(PreventServerTimeout300).Import(new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId, appId);
-
+        public ImportResultDto Import(int zoneId, int appId)
+        {
+            PreventServerTimeout300();
+            return Real.Import(new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId, appId);
+        }
 
         #endregion
 

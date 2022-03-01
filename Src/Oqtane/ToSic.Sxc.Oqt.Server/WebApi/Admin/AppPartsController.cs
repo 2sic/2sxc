@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public ImportResultDto Import(int zoneId, int appId) 
-            => Real.Set(PreventServerTimeout300).Import(new HttpUploadedFile(Request), zoneId, appId);
+            => Real.Import(new HttpUploadedFile(Request), zoneId, appId);
 
         #endregion
     }

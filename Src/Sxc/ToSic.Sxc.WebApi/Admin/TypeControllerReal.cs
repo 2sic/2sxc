@@ -108,13 +108,6 @@ namespace ToSic.Sxc.WebApi.Admin
         {
             var wrapLog = Log.Call<ImportResultDto>();
 
-            if (PreventServerTimeout300 == null)
-            {
-                Log.Add("Error, PreventServerTimeout300 implementation is not set.");
-                throw new ArgumentException("PreventServerTimeout300 implementation is not set.");
-            }
-            PreventServerTimeout300();
-
             if (!uploadInfo.HasFiles())
                 return new ImportResultDto(false, "no file uploaded", Message.MessageTypes.Error);
 
@@ -129,13 +122,5 @@ namespace ToSic.Sxc.WebApi.Admin
 
             return wrapLog("ok", result);
         }
-
-        /// TODO: STV Review if this should really be here, or move back to Dnn as it's probably only used there
-        public TypeControllerReal<THttpResponseType> ImportPrep(Action preventServerTimeout300)
-        {
-            PreventServerTimeout300 = preventServerTimeout300;
-            return this;
-        }
-        private Action PreventServerTimeout300 { get; set; }
     }
 }
