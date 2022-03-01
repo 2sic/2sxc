@@ -35,8 +35,10 @@ namespace Custom.Hybrid
         {
             base.OnActionExecuting(context);
 
+            // Use the ServiceProvider of the current request to build DynamicCodeRoot
             // Note that BlockOptional was already retrieved in the base class
-            _DynCodeRoot = GetService<DynamicCodeRoot>().Init(BlockOptional, Log, ToSic.Sxc.Constants.CompatibilityLevel12);
+            _DynCodeRoot = context.HttpContext.RequestServices.Build<DynamicCodeRoot>().Init(BlockOptional, Log, ToSic.Sxc.Constants.CompatibilityLevel12);
+
             _AdamCode = GetService<AdamCode>().Init(_DynCodeRoot, Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
