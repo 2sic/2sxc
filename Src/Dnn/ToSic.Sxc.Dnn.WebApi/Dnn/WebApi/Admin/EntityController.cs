@@ -6,6 +6,7 @@ using System.Web.Http;
 using ToSic.Eav.ImportExport.Options;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using Guid = System.Guid;
@@ -25,9 +26,9 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     /// Security checking is possible, because the cookie still contains user information
     /// </remarks>
     [DnnLogExceptions]
-	public class EntityController : SxcApiControllerBase<EntityControllerReal>, IEntityController
+	public class EntityController : SxcApiControllerBase<EntityControllerReal<HttpResponseMessage>>, IEntityController<HttpResponseMessage>
 	{
-        public EntityController(): base(EntityControllerReal.LogSuffix) { }
+        public EntityController(): base(EntityControllerReal<HttpResponseMessage>.LogSuffix) { }
 
 
         /// <inheritdoc/>
@@ -48,7 +49,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <inheritdoc/>
         [HttpGet]
         [AllowAnonymous] // will do security check internally
-        public HttpResponseMessage Json(int appId, int id, string prefix, bool withMetadata) => Real.Json(appId, id, prefix, withMetadata);
+        public HttpResponseMessage Json(int appId, int id, string prefix, bool withMetadata)
+        {
+            // Make sure the Scoped ResponseMaker has this controller context
+            var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
+            responseMaker.Init(this);
+
+            return Real.Json(appId, id, prefix, withMetadata);
+        }
 
 
         /// <inheritdoc/>
@@ -63,7 +71,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             ExportResourceReferenceMode resourcesReferences,
             ExportLanguageResolution languageReferences, 
             string selectedIds = null)
-            => Real.Download(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences, languageReferences, selectedIds);
+        {
+            // Make sure the Scoped ResponseMaker has this controller context
+            var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
+            responseMaker.Init(this);
+
+            return Real.Download(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
+                languageReferences, selectedIds);
+        }
 
 
         /// <inheritdoc/>

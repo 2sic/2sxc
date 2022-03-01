@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Context;
@@ -18,18 +17,17 @@ using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Helpers;
+using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Eav.WebApi.Validation;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Engines;
 using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.WebApi.Views
 {
-    public class ViewsExportImport: HasLog<ViewsExportImport>
+    public class ViewsExportImport<THttpResponseType> : HasLog<ViewsExportImport<THttpResponseType>>
     {
         private readonly IServerPaths _serverPaths;
         private readonly IEnvironmentLogger _envLogger;
@@ -37,6 +35,7 @@ namespace ToSic.Sxc.WebApi.Views
         private readonly Lazy<JsonBundleSerializer> _jsonBundleLazy;
         private readonly IAppStates _appStates;
         private readonly AppIconHelpers _appIconHelpers;
+        private readonly ResponseMaker<THttpResponseType> _responseMaker;
         private readonly ISite _site;
         private readonly IUser _user;
 
@@ -46,8 +45,8 @@ namespace ToSic.Sxc.WebApi.Views
             Lazy<JsonBundleSerializer> jsonBundleLazy, 
             IContextOfSite context,
             IAppStates appStates,
-            AppIconHelpers appIconHelpers
-            
+            AppIconHelpers appIconHelpers,
+            ResponseMaker<THttpResponseType> responseMaker
             ) : base("Bck.Views")
         {
             _serverPaths = serverPaths;
@@ -56,12 +55,13 @@ namespace ToSic.Sxc.WebApi.Views
             _jsonBundleLazy = jsonBundleLazy;
             _appStates = appStates;
             _appIconHelpers = appIconHelpers;
+            _responseMaker = responseMaker;
 
             _site = context.Site;
             _user = context.User;
         }
 
-        public HttpResponseMessage DownloadViewAsJson(int appId, int viewId)
+        public THttpResponseType DownloadViewAsJson(int appId, int viewId)
         {
             var logCall = Log.Call($"{appId}, {viewId}");
             SecurityHelpers.ThrowIfNotAdmin(_user);
@@ -89,7 +89,7 @@ namespace ToSic.Sxc.WebApi.Views
             var serialized = serializer.Serialize(bundle, 0);
 
             logCall("ok");
-            return Download.BuildDownload(serialized,
+            return _responseMaker.BuildDownload(serialized,
                 ("View" + "." + bundle.Entity.GetBestTitle() + ImpExpConstants.Extension(ImpExpConstants.Files.json))
                 .RemoveNonFilenameCharacters());
         }

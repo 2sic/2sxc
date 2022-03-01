@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Http;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
@@ -18,9 +19,9 @@ using ToSic.Sxc.WebApi.Views;
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
     [DnnLogExceptions]
-    public class ViewController : SxcApiControllerBase<ViewControllerReal>, IViewController
+    public class ViewController : SxcApiControllerBase<ViewControllerReal<HttpResponseMessage>>, IViewController<HttpResponseMessage>
     {
-        public ViewController() : base(ViewControllerReal.LogSuffix) { }
+        public ViewController() : base(ViewControllerReal<HttpResponseMessage>.LogSuffix) { }
 
         /// <inheritdoc />
         [HttpGet]
@@ -46,7 +47,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <inheritdoc />
         [HttpGet]
         [AllowAnonymous] // will do security check internally
-        public HttpResponseMessage Json(int appId, int viewId) => Real.Json(appId, viewId);
+        public HttpResponseMessage Json(int appId, int viewId)
+        {
+            // Make sure the Scoped ResponseMaker has this controller context
+            var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
+            responseMaker.Init(this);
+
+            return Real.Json(appId, viewId);
+        }
 
         /// <inheritdoc />
         [HttpPost]

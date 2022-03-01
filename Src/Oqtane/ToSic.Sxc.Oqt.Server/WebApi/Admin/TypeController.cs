@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Collections.Generic;
-using System.Net.Http;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi.Adam;
@@ -25,10 +25,10 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
     [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    [ValidateAntiForgeryToken]
-    public class TypeController : OqtStatefulControllerBase<TypeControllerReal>, ITypeController
+
+    public class TypeController : OqtStatefulControllerBase<TypeControllerReal<IActionResult>>, ITypeController<IActionResult>
     {
-        public TypeController(): base(TypeControllerReal.LogSuffix) { }
+        public TypeController(): base(TypeControllerReal<IActionResult>.LogSuffix) { }
 
         [HttpGet]
         [ValidateAntiForgeryToken]
@@ -74,7 +74,14 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
         [HttpGet]
         [AllowAnonymous] // will do security check internally
-        public HttpResponseMessage Json(int appId, string name) => Real.Json(appId, name);
+        public IActionResult Json(int appId, string name)
+        {
+            // Make sure the Scoped ResponseMaker has this controller context
+            var responseMaker = (OqtResponseMaker)GetService<ResponseMaker<IActionResult>>();
+            responseMaker.Init(this);
+
+            return Real.Json(appId, name);
+        }
 
 
         [HttpPost]

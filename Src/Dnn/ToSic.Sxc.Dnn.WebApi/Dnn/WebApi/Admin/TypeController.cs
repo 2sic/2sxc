@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Http;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Adam;
@@ -26,9 +27,9 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     /// Security checking is possible, because the cookie still contains user information
     /// </remarks>
     [DnnLogExceptions]
-    public class TypeController : SxcApiControllerBase<TypeControllerReal>, ITypeController
+    public class TypeController : SxcApiControllerBase<TypeControllerReal<HttpResponseMessage>>, ITypeController<HttpResponseMessage>
     {
-        public TypeController() : base(TypeControllerReal.LogSuffix) { }
+        public TypeController() : base(TypeControllerReal<HttpResponseMessage>.LogSuffix) { }
 
 
         /// <summary>
@@ -130,7 +131,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// </remarks>
         [HttpGet]
         [AllowAnonymous] // will do security check internally
-        public HttpResponseMessage Json(int appId, string name) => Real.Json(appId, name);
+        public HttpResponseMessage Json(int appId, string name)
+        {
+            // Make sure the Scoped ResponseMaker has this controller context
+            var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
+            responseMaker.Init(this);
+
+            return Real.Json(appId, name);
+        }
 
 
         /// <summary>

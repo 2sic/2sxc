@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using ToSic.Eav.ImportExport.Options;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 
@@ -31,9 +31,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
     [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    public class EntityController : OqtStatefulControllerBase<EntityControllerReal>, IEntityController
+    public class EntityController : OqtStatefulControllerBase<EntityControllerReal<IActionResult>>, IEntityController<IActionResult>
     {
-        public EntityController() : base(EntityControllerReal.LogSuffix) { }
+        public EntityController() : base(EntityControllerReal<IActionResult>.LogSuffix) { }
 
 
         /// <inheritdoc/>
@@ -62,13 +62,20 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// <inheritdoc/>
         [HttpGet]
         [AllowAnonymous] // will do security check internally
-        public HttpResponseMessage Json(int appId, int id, string prefix, bool withMetadata) => Real.Json(appId, id, prefix, withMetadata);
+        public IActionResult Json(int appId, int id, string prefix, bool withMetadata)
+        {
+            // Make sure the Scoped ResponseMaker has this controller context
+            var responseMaker = (OqtResponseMaker)GetService<ResponseMaker<IActionResult>>();
+            responseMaker.Init(this);
+
+            return Real.Json(appId, id, prefix, withMetadata);
+        }
 
 
         /// <inheritdoc/>
         [HttpGet]
         [AllowAnonymous] // will do security check internally
-        public HttpResponseMessage Download(
+        public IActionResult Download(
             int appId,
             string language,
             string defaultLanguage,
@@ -76,8 +83,15 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             ExportSelection recordExport, 
             ExportResourceReferenceMode resourcesReferences,
             ExportLanguageResolution languageReferences, 
-            string selectedIds = null) 
-            => Real.Download(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences, languageReferences, selectedIds);
+            string selectedIds = null)
+        {
+            // Make sure the Scoped ResponseMaker has this controller context
+            var responseMaker = (OqtResponseMaker)GetService<ResponseMaker<IActionResult>>();
+            responseMaker.Init(this);
+
+            return Real.Download(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
+                languageReferences, selectedIds);
+        }
 
 
         /// <inheritdoc/>

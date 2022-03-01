@@ -4,10 +4,10 @@ using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi.Adam;
@@ -23,9 +23,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
     [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    public class ViewController : OqtStatefulControllerBase<ViewControllerReal>, IViewController
+    public class ViewController : OqtStatefulControllerBase<ViewControllerReal<IActionResult>>, IViewController<IActionResult>
     {
-        public ViewController(LazyInitLog<Pages.Pages> pages) : base(ViewControllerReal.LogSuffix)
+        public ViewController(LazyInitLog<Pages.Pages> pages) : base(ViewControllerReal<IActionResult>.LogSuffix)
         {
             _pages = pages.SetLog(Log);
         }
@@ -55,7 +55,14 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// <inheritdoc />
         [HttpGet]
         [AllowAnonymous] // will do security check internally
-        public HttpResponseMessage Json(int appId, int viewId) => Real.Json(appId, viewId);
+        public IActionResult Json(int appId, int viewId)
+        {
+            // Make sure the Scoped ResponseMaker has this controller context
+            var responseMaker = (OqtResponseMaker)GetService<ResponseMaker<IActionResult>>();
+            responseMaker.Init(this);
+
+            return Real.Json(appId, viewId);
+        }
 
         /// <inheritdoc />
         [HttpPost]

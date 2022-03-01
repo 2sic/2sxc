@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.DataFormats.EavLight;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Admin.App;
 using ToSic.Eav.WebApi.Admin.Query;
 using ToSic.Eav.WebApi.Routing;
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
     // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/app/")]
 
-    [Produces("application/json")] // TODO: stv - DOES IT NEED THIS?
+    [Produces(MimeHelper.Json)] // TODO: stv - DOES IT NEED THIS?
     [AllowAnonymous] // All functions will check security internally, so assume no requirements
     public class AppQueryController : OqtStatefulControllerBase<AppQueryControllerReal>, IAppQueryController
     {

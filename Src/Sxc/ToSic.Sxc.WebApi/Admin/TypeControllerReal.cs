@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Logging;
@@ -16,14 +15,14 @@ using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
-    public class TypeControllerReal : HasLog<TypeControllerReal>, ITypeController
+    public class TypeControllerReal<THttpResponseType> : HasLog<TypeControllerReal<THttpResponseType>>, ITypeController<THttpResponseType>
     {
         public const string LogSuffix = "Types";
 
         public TypeControllerReal(
             LazyInitLog<IContextOfSite> context,
             Lazy<ContentTypeApi> ctApiLazy, 
-            Lazy<ContentExportApi> contentExportLazy, 
+            Lazy<ContentExportApi<THttpResponseType>> contentExportLazy, 
             Lazy<IUser> userLazy,
             Generator<ImportContent> importContent
             ) : base("Api.TypesRl")
@@ -37,7 +36,7 @@ namespace ToSic.Sxc.WebApi.Admin
 
         private readonly LazyInitLog<IContextOfSite> _context;
         private readonly Lazy<ContentTypeApi> _ctApiLazy;
-        private readonly Lazy<ContentExportApi> _contentExportLazy;
+        private readonly Lazy<ContentExportApi<THttpResponseType>> _contentExportLazy;
         private readonly Lazy<IUser> _userLazy;
         private readonly Generator<ImportContent> _importContent;
 
@@ -85,7 +84,7 @@ namespace ToSic.Sxc.WebApi.Admin
         /// Used to be GET ContentExport/DownloadTypeAsJson
         /// </summary>
 
-        public HttpResponseMessage Json(int appId, string name)
+        public THttpResponseType Json(int appId, string name)
             => _contentExportLazy.Value.Init(appId, Log).DownloadTypeAsJson(_userLazy.Value, name);
 
         /// <summary>
@@ -131,8 +130,8 @@ namespace ToSic.Sxc.WebApi.Admin
             return wrapLog("ok", result);
         }
 
-        /// Todo: Review if this should really be here, or move back to Dnn as it's probably only used there
-        public TypeControllerReal ImportPrep(Action preventServerTimeout300)
+        /// TODO: STV Review if this should really be here, or move back to Dnn as it's probably only used there
+        public TypeControllerReal<THttpResponseType> ImportPrep(Action preventServerTimeout300)
         {
             PreventServerTimeout300 = preventServerTimeout300;
             return this;

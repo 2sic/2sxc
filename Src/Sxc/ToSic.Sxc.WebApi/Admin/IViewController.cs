@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.WebApi.Views;
@@ -20,7 +19,7 @@ namespace ToSic.Sxc.WebApi.Admin
     /// Instead, each method must have all attributes, or do additional security checking.
     /// Security checking is possible, because the cookie still contains user information
     /// </remarks>
-    public interface IViewController
+    public interface IViewController<THttpResponseType>
     {
         /// <summary>
         /// Get the views of this App
@@ -53,7 +52,7 @@ namespace ToSic.Sxc.WebApi.Admin
         /// <remarks>
         /// New in 2sxc 11.07
         /// </remarks>
-        HttpResponseMessage Json(int appId, int viewId);
+        THttpResponseType Json(int appId, int viewId);
 
         /// <summary>
         /// Used to be POST ImportExport/ImportContent

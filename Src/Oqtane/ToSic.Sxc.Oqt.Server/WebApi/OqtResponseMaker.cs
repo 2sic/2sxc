@@ -1,6 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
+using System;
+using System.IO;
 using System.Net;
-using Microsoft.AspNetCore.Mvc;
+using System.Text;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Plumbing;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi
@@ -30,5 +34,26 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
         public override IActionResult Json(object json) => ApiController.Json(json);
 
         public override IActionResult Ok() => ApiController.Ok();
+
+        public override IActionResult GetAttachmentHttpResponseMessage(string fileName, string fileType, Stream fileContent)
+        {
+            using var memoryStream = new MemoryStream();
+            fileContent.CopyTo(memoryStream);
+            return new FileContentResult(memoryStream.ToArray(), fileType) { FileDownloadName = fileName };
+        }
+
+        public override IActionResult GetAttachmentHttpResponseMessage(string fileName, string fileType, string fileContent)
+        {
+            var fileBytes = Encoding.UTF8.GetBytes(fileContent);
+            return GetAttachmentHttpResponseMessage(fileName, fileType, new MemoryStream(fileBytes));
+        }
+
+        public override IActionResult BuildDownload(string content, string fileName)
+        {
+            var fileBytes = Encoding.UTF8.GetBytes(content);
+            new FileExtensionContentTypeProvider().TryGetContentType(fileName, out var contentType);
+            return new FileContentResult(fileBytes, contentType ?? MimeHelper.FallbackType) { FileDownloadName = fileName };
+        }
+
     }
 }

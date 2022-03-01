@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Logging;
@@ -16,14 +15,14 @@ using ToSic.Sxc.WebApi.Views;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
-    public class ViewControllerReal : HasLog<ViewControllerReal>, IViewController
+    public class ViewControllerReal<THttpResponseType> : HasLog<ViewControllerReal<THttpResponseType>>, IViewController<THttpResponseType>
     {
         public const string LogSuffix = "View";
 
         public ViewControllerReal(
             LazyInitLog<IContextOfSite> context,
             LazyInitLog<ViewsBackend> viewsBackend, 
-            LazyInitLog<ViewsExportImport> viewExportImport, 
+            LazyInitLog<ViewsExportImport<THttpResponseType>> viewExportImport, 
             LazyInitLog<UsageBackend> usageBackend, 
             LazyInitLog<PolymorphismBackend> polymorphismBackend
             ) : base("Api.ViewRl")
@@ -38,7 +37,7 @@ namespace ToSic.Sxc.WebApi.Admin
         private readonly LazyInitLog<PolymorphismBackend> _polymorphismBackend;
         private readonly LazyInitLog<UsageBackend> _usageBackend;
         private readonly LazyInitLog<ViewsBackend> _viewsBackend;
-        private readonly LazyInitLog<ViewsExportImport> _viewExportImport;
+        private readonly LazyInitLog<ViewsExportImport<THttpResponseType>> _viewExportImport;
 
         /// <inheritdoc />
         public IEnumerable<ViewDetailsDto> All(int appId) => _viewsBackend.Ready.GetAll(appId);
@@ -50,7 +49,7 @@ namespace ToSic.Sxc.WebApi.Admin
         public bool Delete(int appId, int id) => _viewsBackend.Ready.Delete(appId, id);
 
         /// <inheritdoc />
-        public HttpResponseMessage Json(int appId, int viewId) => _viewExportImport.Ready.DownloadViewAsJson(appId, viewId);
+        public THttpResponseType Json(int appId, int viewId) => _viewExportImport.Ready.DownloadViewAsJson(appId, viewId);
 
         /// <summary>
         /// This method is not implemented for ControllerReal, because ControllerReal implements Import(HttpUploadedFile uploadInfo, int zoneId, int appId)
@@ -97,11 +96,11 @@ namespace ToSic.Sxc.WebApi.Admin
         /// <summary>
         /// Special init to give it a implementation how to extend the server timeout - used in Dnn, probably not used in Oqtane.
         /// Only needed for the Import.
-        /// Todo: Review if this should really be here, or move back to Dnn as it's probably only used there
+        /// TODO: STV Review if this should really be here, or move back to Dnn as it's probably only used there
         /// </summary>
         /// <param name="preventServerTimeout300"></param>
         /// <returns></returns>
-        public ViewControllerReal ImportPrep(Action preventServerTimeout300)
+        public ViewControllerReal<THttpResponseType> ImportPrep(Action preventServerTimeout300)
         {
             PreventServerTimeout300 = preventServerTimeout300;
             return this;
@@ -119,7 +118,7 @@ namespace ToSic.Sxc.WebApi.Admin
             }
             return _usageBackend.Ready.ViewUsage(appId, guid, FinalBuilder);
         }
-        public ViewControllerReal UsagePreparations(Func<List<IView>, List<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
+        public ViewControllerReal<THttpResponseType> UsagePreparations(Func<List<IView>, List<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
         {
             FinalBuilder = finalBuilder;
             return this;
