@@ -103,7 +103,6 @@
     <Compile Include="Custom\Hybrid\Api12_Obsolete.cs" />
     <Compile Include="Custom\Hybrid\Api12_Responses.cs" />
     <Compile Include="Dnn\Providers\ModifiedTabAndModuleInfoProvider.cs" />
-    <Compile Include="Dnn\ResponseMakerNetFramework.cs" />
     <Compile Include="Dnn\WebApi\Adam\DnnAdamSecurityChecks.cs" />
     <Compile Include="Dnn\ApiController.cs" />
     <Compile Include="Dnn\AppFolderUtilities.cs" />

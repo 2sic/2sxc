@@ -140,7 +140,8 @@ namespace ToSic.Sxc.Dnn.StartUp
             // Settings / WebApi stuff
             services.TryAddTransient<IUiContextBuilder, DnnUiContextBuilder>();
             services.TryAddTransient<IApiInspector, DnnApiInspector>();
-            services.TryAddScoped<ResponseMaker<HttpResponseMessage>, ResponseMakerNetFramework>(); // must be scoped, as the api-controller must init this for use in other parts
+            // Moved to EAV WebApi
+            //services.TryAddScoped<ResponseMaker<HttpResponseMessage>, ResponseMakerNetFramework>(); // must be scoped, as the api-controller must init this for use in other parts
 
             // new #2160
             services.TryAddTransient<AdamSecurityChecksBase, DnnAdamSecurityChecks>();
