@@ -54,8 +54,8 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                 .AddAdamWebApi<int, int>()      // This is used to enable ADAM WebAPIs
                 .AddSxcWebApi()                 // This adds all the standard backend services for WebAPIs to work
                 .AddSxcCore()                   // Core 2sxc services
-                .AddEavApiExplorer<IActionResult>()
                 .AddEav()                       // Core EAV services
+                .AddEavWebApiTypedAfterEav<IActionResult>()
                 .AddOqtAppWebApi()              // Oqtane App WebAPI stuff
                 .AddRazorBlade();               // RazorBlade helpers for Razor in the edition used by Oqtane
 
