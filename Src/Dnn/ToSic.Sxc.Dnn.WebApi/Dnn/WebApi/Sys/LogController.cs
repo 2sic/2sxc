@@ -18,8 +18,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
     {
         public LogController() : base(LogControllerReal.LogSuffix) { }
 
-        #region Enable extended logging
-
         /// <summary>
         /// Used to be GET System/ExtendedLogging
         /// </summary>
@@ -28,6 +26,5 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         [HttpGet]
         public string EnableDebug(int duration = 1) => Real.EnableDebug(DnnLogging.ActivateForDuration, duration);
 
-        #endregion
     }
 }

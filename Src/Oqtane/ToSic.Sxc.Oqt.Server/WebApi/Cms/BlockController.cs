@@ -25,52 +25,32 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         public BlockController(): base(BlockControllerReal.LogSuffix) { }
 
 
-        #region Block
-
         /// <inheritdoc />
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
         public string Block(int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
             => Real.Block(parentId, field, sortOrder, app, guid);
-        #endregion
 
-        #region BlockItems
-        /// <summary>
-        /// used to be GET Module/AddItem
-        /// </summary>
+        /// <inheritdoc />
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
         public void Item(int? index = null) => Real.Item(index);
 
-        #endregion
 
-
-        #region App
-
-        /// <summary>
-        /// used to be GET Module/SetAppId
-        /// </summary>
-        /// <param name="appId"></param>
+        /// <inheritdoc />
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
         public void App(int? appId) => Real.App(appId);
 
-        /// <summary>
-        /// used to be GET Module/GetSelectableApps
-        /// </summary>
-        /// <param name="apps"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
         public IEnumerable<AppUiInfo> Apps(string apps = null) => Real.Apps(apps);
 
-        #endregion
-
-        #region Types
 
         /// <inheritdoc />
         [HttpGet]
@@ -78,26 +58,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         [Authorize(Roles = RoleNames.Admin)]
         public IEnumerable<ContentTypeUiInfo> ContentTypes() => Real.ContentTypes();
 
-        #endregion
-
-        #region Templates
-
-        /// <summary>
-        /// used to be GET Module/GetSelectableTemplates
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
         public IEnumerable<TemplateUiInfo> Templates() => Real.Templates();
 
-        /// <summary>
-        /// Used in InPage.js
-        /// used to be GET Module/SaveTemplateId
-        /// </summary>
-        /// <param name="templateId"></param>
-        /// <param name="forceCreateContentGroup"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         //[Authorize(Roles = RoleNames.Registered)]
@@ -105,7 +72,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         // TODO: 2DM please check permissions
         public Guid? Template(int templateId, bool forceCreateContentGroup) => Real.Template(templateId, forceCreateContentGroup);
 
-        #endregion
 
         /// <inheritdoc />
         [HttpGet]

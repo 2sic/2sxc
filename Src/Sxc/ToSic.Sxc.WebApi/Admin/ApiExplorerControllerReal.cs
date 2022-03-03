@@ -8,6 +8,7 @@ using ToSic.Eav.WebApi.Plumbing;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
+    // TODO: @STV - probably it doesn't need this additional class, just move the code into the ApiExplorerBackend and rename that
     public class ApiExplorerControllerReal<THttpResponseType> : HasLog<ApiExplorerControllerReal<THttpResponseType>>
     {
         public const string LogSuffix = "Explor";

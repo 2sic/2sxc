@@ -16,31 +16,18 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
     {
         public BlockController() : base(BlockControllerReal.LogSuffix) { }
 
-
-        #region Block
-
-        /// <summary>
-        /// used to be GET Module/GenerateContentBlock
-        /// </summary>
+        /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public string Block(int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
             => Real.Block(parentId, field, sortOrder, app, guid);
 
 
-        #endregion
-
-        #region BlockItems
-
         /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Item([FromUri] int? index = null) => Real.Item(index);
 
-        #endregion
-
-
-        #region App
 
         /// <inheritdoc />
         [HttpPost]
@@ -52,18 +39,12 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<AppUiInfo> Apps(string apps = null) => Real.Apps(apps);
 
-        #endregion
-
-        #region Types
 
         /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<ContentTypeUiInfo> ContentTypes() => Real.ContentTypes();
 
-        #endregion
-
-        #region Templates
 
         /// <inheritdoc />
         [HttpGet]
@@ -75,7 +56,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Guid? Template(int templateId, bool forceCreateContentGroup) => Real.Template(templateId, forceCreateContentGroup);
 
-        #endregion
 
         /// <inheritdoc />
         [HttpGet]
