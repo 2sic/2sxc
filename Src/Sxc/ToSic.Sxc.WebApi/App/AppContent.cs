@@ -122,8 +122,8 @@ namespace ToSic.Sxc.WebApi.App
                 ? null
                 : AppState.List.GetOrThrow(contentType, id.Value);
 
-            if (itm == null) ThrowIfNotAllowedInType(contentType, Grants.Create.AsSet(), AppState);
-            else ThrowIfNotAllowedInItem(itm, Grants.Update.AsSet(), AppState);
+            if (itm == null) ThrowIfNotAllowedInType(contentType, GrantSets.CreateSomething, AppState);
+            else ThrowIfNotAllowedInItem(itm, GrantSets.WriteSomething, AppState);
 
             // Convert to case-insensitive dictionary just to be safe!
             var newContentItemCaseInsensitive = new Dictionary<string, object>(newContentItem, StringComparer.InvariantCultureIgnoreCase);
