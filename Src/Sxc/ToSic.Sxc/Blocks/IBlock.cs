@@ -1,13 +1,12 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Context;
+﻿using System.Collections.Generic;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Engines;
-
+using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks
@@ -65,5 +64,7 @@ namespace ToSic.Sxc.Blocks
         [PrivateApi("naming not final")]
         bool ContentGroupExists { get; }
 
+        [PrivateApi("WIP 13.x do get/set if toolbar/context are used")]
+        List<string> BlockFeatureKeys { get; }
     }
 }

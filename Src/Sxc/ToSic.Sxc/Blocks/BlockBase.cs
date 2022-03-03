@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
@@ -8,6 +9,8 @@ using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.LookUp;
+using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.PageFeatures;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -99,6 +102,9 @@ namespace ToSic.Sxc.Blocks
         public IApp App { get; protected set; }
 
         public bool ContentGroupExists => Configuration?.Exists ?? false;
+
+        public List<string> BlockFeatureKeys { get; } = new List<string>();
+
 
         public int ParentId { get; protected set; }
 

@@ -1,14 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿using System.Linq;
+using Newtonsoft.Json;
 using ToSic.Eav.Data.Shared;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit.ClientContextInfo;
+using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.Web.JsContext
 {
     public class JsContextAll : HasLog
     {
-        private readonly JsContextLanguage _jsLangCtx;
         public JsContextEnvironment Environment;
         public JsContextUser User;
         public JsContextLanguage Language;
@@ -23,10 +24,8 @@ namespace ToSic.Sxc.Web.JsContext
 
         public UiDto Ui;
 
-        public JsContextAll(JsContextLanguage jsLangCtx) : base("Sxc.CliInf")
-        {
-            _jsLangCtx = jsLangCtx;
-        }
+        public JsContextAll(JsContextLanguage jsLangCtx) : base("Sxc.CliInf") => _jsLangCtx = jsLangCtx;
+        private readonly JsContextLanguage _jsLangCtx;
 
         public JsContextAll Init(string systemRootUrl, IBlock block, ILog parentLog)
         {
@@ -44,7 +43,14 @@ namespace ToSic.Sxc.Web.JsContext
 
             ContentBlockReference = new ContentBlockReferenceDto(block, ctx.Publishing.Mode);
             ContentBlock = new ContentBlockDto(block);
-            Ui = new UiDto(((BlockBuilder)block.BlockBuilder)?.UiAutoToolbar ?? false);
+            var autoToolbar = ctx.UserMayEdit;
+            if (!autoToolbar && block.BlockFeatureKeys.Any())
+            {
+                var features = block.Context.PageServiceShared.Features.GetWithDependents(block.BlockFeatureKeys, Log);
+                autoToolbar = features.Contains(BuiltInFeatures.ModuleContext);
+            }
+
+            Ui = new UiDto(autoToolbar);
 
             error = new ErrorDto(block);
             return this;

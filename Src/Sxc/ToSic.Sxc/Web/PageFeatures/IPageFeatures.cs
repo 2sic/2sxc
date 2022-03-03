@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Web
     [PrivateApi("should never be public, could be confused with the IPageService")]
     public interface IPageFeatures
     {
-        void Activate(params string[] keys);
+        IEnumerable<string> Activate(params string[] keys);
         
         /// <summary>
         /// Get a list of all features incl. dependent features for adding to the page
@@ -20,6 +20,16 @@ namespace ToSic.Sxc.Web
         /// <param name="log"></param>
         /// <returns></returns>
         List<IPageFeature> GetFeaturesWithDependentsAndFlush(ILog log);
+
+
+        /// <summary>
+        /// Internal helper to expand a set of keys to the features.
+        /// It must be callable separately, because we also need it to expand features which are from another source. 
+        /// </summary>
+        /// <param name="features"></param>
+        /// <param name="log"></param>
+        /// <returns></returns>
+        List<IPageFeature> GetWithDependents(List<string> features, ILog log);
 
         /// <summary>
         /// Add a manual feature (having custom HTML)

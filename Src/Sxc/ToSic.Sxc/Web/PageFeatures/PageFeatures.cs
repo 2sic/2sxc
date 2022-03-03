@@ -12,10 +12,11 @@ namespace ToSic.Sxc.Web.PageFeatures
         private readonly IPageFeaturesManager _pfm;
 
         /// <inheritdoc />
-        public void Activate(params string[] keys)
+        public IEnumerable<string> Activate(params string[] keys)
         {
-            var realKeys = keys.Where(k => !string.IsNullOrWhiteSpace(k));
+            var realKeys = keys.Where(k => !string.IsNullOrWhiteSpace(k)).ToArray();
             FeatureKeys.AddRange(realKeys);
+            return realKeys;
         }
 
         private List<IPageFeature> FeaturesFromSettings { get; } = new List<IPageFeature>();
@@ -44,18 +45,23 @@ namespace ToSic.Sxc.Web.PageFeatures
 
         private List<string> FeatureKeys { get; } = new List<string>();
         
-        private List<string> GetFeatureKeysAndFlush()
-        {
-            var keys = FeatureKeys.ToList();
-            FeatureKeys.Clear();
-            return keys;
-        }
 
         public List<IPageFeature> GetFeaturesWithDependentsAndFlush(ILog log)
         {
             var wrapLog = log.Call<List<IPageFeature>>();
             log.Add("Try to get new specs from IPageService");
-            var features = GetFeatureKeysAndFlush();
+            //var features = FeatureKeys.ToList();
+            //log.Add($"Got {features.Count} items");
+            var unfolded = GetWithDependents(FeatureKeys.ToList(), log); // _pfm.GetWithDependents(features);
+            //log.Add($"Got unfolded features {unfolded.Count}");
+            FeatureKeys.Clear();
+            return wrapLog("ok", unfolded);
+        }
+
+        /// <inheritdoc />
+        public List<IPageFeature> GetWithDependents(List<string> features, ILog log)
+        {
+            var wrapLog = log.Call<List<IPageFeature>>();
             log.Add($"Got {features.Count} items");
             var unfolded = _pfm.GetWithDependents(features);
             log.Add($"Got unfolded features {unfolded.Count}");
