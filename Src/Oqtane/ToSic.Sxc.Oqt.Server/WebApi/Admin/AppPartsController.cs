@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using System.Net.Http;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi.Adam;
@@ -20,9 +20,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
     [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    public class AppPartsController : OqtStatefulControllerBase<AppPartsControllerReal>, IAppPartsController
+    public class AppPartsController : OqtStatefulControllerBase<AppPartsControllerReal<IActionResult>>, IAppPartsController<IActionResult>
     {
-        public AppPartsController(): base(AppPartsControllerReal.LogSuffix) { }
+        public AppPartsController(): base(AppPartsControllerReal<IActionResult>.LogSuffix) { }
 
 
         #region Parts Export/Import
@@ -36,8 +36,14 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
         /// <inheritdoc />
         [HttpGet]
-        public HttpResponseMessage Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
-            => Real.Export(zoneId: zoneId, appId: appId, contentTypeIdsString: contentTypeIdsString, entityIdsString: entityIdsString, templateIdsString: templateIdsString);
+        public IActionResult Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
+        {
+            // Make sure the Scoped ResponseMaker has this controller context
+            var responseMaker = (OqtResponseMaker)GetService<ResponseMaker<IActionResult>>();
+            responseMaker.Init(this);
+
+            return Real.Export(zoneId: zoneId, appId: appId, contentTypeIdsString: contentTypeIdsString, entityIdsString: entityIdsString, templateIdsString: templateIdsString);
+        }
 
 
         /// <inheritdoc />

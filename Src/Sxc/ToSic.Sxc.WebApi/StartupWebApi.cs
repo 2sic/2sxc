@@ -71,6 +71,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<ExportApp>();
             services.TryAddTransient<ImportApp>();
             services.TryAddTransient<ImportContent>();
+            services.TryAddTransient(typeof(ExportContent<>));
             services.TryAddTransient<ResetApp>();
             services.TryAddTransient<AppStackBackend>();
             services.TryAddTransient<AppFolder>();
@@ -98,7 +99,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<AppFilesControllerReal>();
             services.TryAddTransient<QueryControllerReal>();
             services.TryAddTransient(typeof(AppControllerReal<>));
-            services.TryAddTransient<AppPartsControllerReal>();
+            services.TryAddTransient(typeof(AppPartsControllerReal<>));
             services.TryAddTransient<DialogControllerReal>();
             services.TryAddTransient(typeof(TypeControllerReal<>));
             services.TryAddTransient(typeof(ViewControllerReal<>));

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
@@ -10,13 +9,13 @@ using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
-    public class AppPartsControllerReal : HasLog<AppPartsControllerReal>, IAppPartsController
+    public class AppPartsControllerReal<THttpResponseType> : HasLog<AppPartsControllerReal<THttpResponseType>>, IAppPartsController<THttpResponseType>
     {
         public const string LogSuffix = "AParts";
 
         public AppPartsControllerReal(
             LazyInitLog<IContextOfSite> context,
-            LazyInitLog<ExportContent> exportContent,
+            LazyInitLog<ExportContent<THttpResponseType>> exportContent,
             Generator<ImportContent> importContent, 
             Lazy<IUser> user
             ): base("Api.APartsRl")
@@ -27,7 +26,7 @@ namespace ToSic.Sxc.WebApi.Admin
             _user = user;
         }
         private readonly LazyInitLog<IContextOfSite> _context;
-        private readonly LazyInitLog<ExportContent> _exportContent;
+        private readonly LazyInitLog<ExportContent<THttpResponseType>> _exportContent;
         private readonly Generator<ImportContent> _importContent;
         private readonly Lazy<IUser> _user;
 
@@ -39,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Admin
 
 
         /// <inheritdoc />
-        public HttpResponseMessage Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
+        public THttpResponseType Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
             => _exportContent.Ready.Export(appId: appId, zoneId: zoneId, contentTypeIdsString: contentTypeIdsString, entityIdsString: entityIdsString, templateIdsString: templateIdsString);
 
 
