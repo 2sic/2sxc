@@ -59,7 +59,6 @@ namespace ToSic.Sxc.Engines
             try
             {
                 // ensure thread safe one-time initialization with lock (blocking)
-                if (_webpageInitialized) return;
                 lock (_initLock)
                 {
                     if (_webpageInitialized) return;
