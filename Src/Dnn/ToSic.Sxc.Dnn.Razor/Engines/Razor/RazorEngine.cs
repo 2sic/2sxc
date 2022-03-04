@@ -24,6 +24,9 @@ namespace ToSic.Sxc.Engines
     public partial class RazorEngine : EngineBase, IRazorEngine
     {
         private readonly Lazy<DnnDynamicCodeRoot> _dnnDynCodeLazy;
+        private RazorComponentBase _webpage;
+        private readonly object _initLock = new object();
+        private bool _webpageInitialized = false;
 
         #region Constructor / DI
 
@@ -36,15 +39,33 @@ namespace ToSic.Sxc.Engines
 
 
         [PrivateApi]
-        protected RazorComponentBase  Webpage { get; set; }
+        protected RazorComponentBase Webpage
+        {
+            get
+            {
+                if (_webpage != null) return _webpage;
+                // if Webpage is not initialized, we need to wait on its initialization.
+                Init();
+                return _webpage; // it will still return null when TemplatePath is empty
+            }
+            set => _webpage = value;
+        }
 
         /// <inheritdoc />
         [PrivateApi]
         protected override void Init()
         {
+            if (_webpageInitialized) return;
             try
             {
-                InitWebpage();
+                // ensure thread safe one-time initialization with lock (blocking)
+                if (_webpageInitialized) return;
+                lock (_initLock)
+                {
+                    if (_webpageInitialized) return;
+                    InitWebpage();
+                    if (!string.IsNullOrEmpty(TemplatePath)) _webpageInitialized = true;
+                }
             }
             // Catch web.config Error on DNNs upgraded to 7
             catch (ConfigurationErrorsException exc)
