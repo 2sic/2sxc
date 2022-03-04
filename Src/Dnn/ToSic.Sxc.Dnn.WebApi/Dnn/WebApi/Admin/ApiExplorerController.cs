@@ -8,16 +8,16 @@ using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Http;
 using ToSic.Eav.Context;
+using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Plumbing;
-using ToSic.Sxc.WebApi.Admin;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public class ApiExplorerController : DnnApiControllerWithFixes<ApiExplorerControllerReal<HttpResponseMessage>>
+    public class ApiExplorerController : DnnApiControllerWithFixes<ApiExplorerBackend<HttpResponseMessage>>
     {
-        public ApiExplorerController() : base(ApiExplorerControllerReal<HttpResponseMessage>.LogSuffix) { }
+        public ApiExplorerController() : base(ApiExplorerBackend<HttpResponseMessage>.LogSuffix) { }
 
         [HttpGet]
         public HttpResponseMessage Inspect(string path)

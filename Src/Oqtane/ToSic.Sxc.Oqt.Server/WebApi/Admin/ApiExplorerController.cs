@@ -4,6 +4,7 @@ using Oqtane.Shared;
 using System;
 using System.Reflection;
 using ToSic.Eav.Run;
+using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Apps;
@@ -12,7 +13,6 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
-using ToSic.Sxc.WebApi.Admin;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -25,9 +25,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [Authorize(Roles = RoleNames.Admin)]
 
-    public class ApiExplorerController : OqtStatefulControllerBase<ApiExplorerControllerReal<IActionResult>>
+    public class ApiExplorerController : OqtStatefulControllerBase<ApiExplorerBackend<IActionResult>>
     {
-        public ApiExplorerController() : base(ApiExplorerControllerReal<IActionResult>.LogSuffix) { }
+        public ApiExplorerController() : base(ApiExplorerBackend<IActionResult>.LogSuffix) { }
 
         [HttpGet]
         public IActionResult Inspect(string path)

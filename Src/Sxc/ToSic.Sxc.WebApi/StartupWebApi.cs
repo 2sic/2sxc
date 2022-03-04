@@ -61,9 +61,6 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<UsageBackend>();
             //services.TryAddTransient<LanguagesBackend>();
 
-            //// APIs
-            //services.TryAddTransient<ApiExplorerBackend<THttpResponseType>>();
-
             // Internal API helpers
             //services.TryAddTransient<Insights>();
             services.TryAddTransient<AppContent>();
@@ -111,7 +108,6 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<ListControllerReal>();
             services.TryAddTransient(typeof(InstallControllerReal<>));
             services.TryAddTransient<BlockControllerReal>();
-            services.TryAddTransient(typeof(ApiExplorerControllerReal<>));
 
             return services;
         }
