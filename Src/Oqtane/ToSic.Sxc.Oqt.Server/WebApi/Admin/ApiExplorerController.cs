@@ -25,9 +25,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [Authorize(Roles = RoleNames.Admin)]
 
-    public class ApiExplorerController : OqtStatefulControllerBase<ApiExplorerBackend<IActionResult>>
+    public class ApiExplorerController : OqtStatefulControllerBase<ApiExplorerControllerReal<IActionResult>>, IApiExplorerController<IActionResult>
     {
-        public ApiExplorerController() : base(ApiExplorerBackend<IActionResult>.LogSuffix) { }
+        public ApiExplorerController() : base(ApiExplorerControllerReal<IActionResult>.LogSuffix) { }
 
         [HttpGet]
         public IActionResult Inspect(string path)

@@ -15,9 +15,9 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public class ApiExplorerController : DnnApiControllerWithFixes<ApiExplorerBackend<HttpResponseMessage>>
+    public class ApiExplorerController : DnnApiControllerWithFixes<ApiExplorerControllerReal<HttpResponseMessage>>, IApiExplorerController<HttpResponseMessage>
     {
-        public ApiExplorerController() : base(ApiExplorerBackend<HttpResponseMessage>.LogSuffix) { }
+        public ApiExplorerController() : base(ApiExplorerControllerReal<HttpResponseMessage>.LogSuffix) { }
 
         [HttpGet]
         public HttpResponseMessage Inspect(string path)
