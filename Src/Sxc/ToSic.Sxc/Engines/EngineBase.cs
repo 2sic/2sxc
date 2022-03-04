@@ -9,7 +9,6 @@ using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
@@ -139,6 +138,7 @@ namespace ToSic.Sxc.Engines
         /// <inheritdoc />
         public string Render()
         {
+            var wrapLog = Log.Call<string>();
             // call engine internal feature to optionally change what data is actually used or prepared for search...
             CustomizeData();
 
@@ -150,13 +150,13 @@ namespace ToSic.Sxc.Engines
 
 
             if (PreRenderStatus != RenderStatusType.Ok)
-                return AlternateRendering;
+                return wrapLog($"{nameof(PreRenderStatus)} not OK", AlternateRendering);
 
             var renderedTemplate = RenderTemplate();
             var depMan = Helpers.BlockResourceExtractor;
             var result = depMan.Process(renderedTemplate);
             ActivateJsApi = result.Include2sxcJs;
-            return result.Template;
+            return wrapLog("ok", result.Template);
         }
 
         [PrivateApi] public bool ActivateJsApi { get; private set; }
