@@ -16,7 +16,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks
 {
-    public abstract partial class BlockBase : HasLog<BlockBase>, IBlock
+    public abstract partial class BlockBase : HasLog/*<BlockBase>*/, IBlock
     {
         private readonly Lazy<BlockDataSourceFactory> _bdsFactoryLazy;
 
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Blocks
 
         protected void Init(IContextOfBlock context, IAppIdentity appId, ILog parentLog)
         {
-            Init(parentLog);
+            this.Init(parentLog);
             Context = context;
             ZoneId = appId.ZoneId;
             AppId = appId.AppId;

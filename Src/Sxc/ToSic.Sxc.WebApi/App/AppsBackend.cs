@@ -4,6 +4,7 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Context;
+using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Apps;

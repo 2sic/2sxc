@@ -15,7 +15,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.LookUp
 {
-    public class AppConfigDelegate: HasLog<AppConfigDelegate>
+    public class AppConfigDelegate: HasLog/*<AppConfigDelegate>*/
     {
         #region Constructor / DI
 

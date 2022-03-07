@@ -11,7 +11,7 @@ using static System.StringComparison;
 namespace ToSic.Sxc.Apps.Paths
 {
 
-    public class AppIconHelpers : HasLog<AppIconHelpers>
+    public class AppIconHelpers : HasLog/*<AppIconHelpers>*/
     {
         #region Constructor / DI
 

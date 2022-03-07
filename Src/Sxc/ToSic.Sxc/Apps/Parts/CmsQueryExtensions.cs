@@ -11,13 +11,13 @@ namespace ToSic.Sxc.Apps
             var wrapLog = log.Call<bool>($"delete pipe:{id} on app:{cms.AppId}");
 
             // Stop if views still use this Query
-            var templatesUsingPipeline = cms.Read.Views.GetAll()
+            var viewUsingQuery = cms.Read.Views.GetAll()
                 .Where(t => t.Query?.Id == id)
                 .Select(t => t.Id)
                 .ToArray();
-            if (templatesUsingPipeline.Any())
+            if (viewUsingQuery.Any())
                 throw new Exception(
-                    $"Query is used by Views and cant be deleted. Query ID: {id}. TemplateIds: {string.Join(", ", templatesUsingPipeline)}");
+                    $"Query is used by Views and cant be deleted. Query ID: {id}. TemplateIds: {string.Join(", ", viewUsingQuery)}");
 
             return wrapLog("ok", cms.Queries.Delete(id));
         }
