@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace ToSic.Sxc.Oqt.Client.Services
 {
-    public class OqtPrerenderService : IPrerenderService
+    public class OqtPrerenderService : IOqtPrerenderService, IService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 

@@ -28,10 +28,6 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
             services.TryAddTransient<IUiContextBuilder, OqtUiContextBuilder>();
 
-            // For ToSic.Sxc.Oqt.Client
-            // TODO: @SPM UNSURE IF it should be registered here? or on the client only?
-            services.TryAddScoped<IPrerenderService, OqtPrerenderService>();
-
             return services;
         }
         
