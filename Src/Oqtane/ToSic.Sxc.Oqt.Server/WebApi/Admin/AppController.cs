@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
+using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
+using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.Admin;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-        public AppController(): base("App") { }
+        public AppController(): base(AppControllerReal<IActionResult>.LogSuffix) { }
 
         /// <inheritdoc />
         [HttpGet]
@@ -40,15 +41,12 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [Authorize(Roles = RoleNames.Host)]
         public List<AppDto> InheritableApps() => Real.InheritableApps();
 
-
-        // TODO: @STV - SEEMS TO BE MISSING IN INTERFACE?
         /// <inheritdoc />
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public void App(int zoneId, int appId, bool fullDelete = true) => Real.App(zoneId, appId, fullDelete);
 
-        // TODO: @STV - SEEMS TO BE MISSING IN INTERFACE?
         /// <inheritdoc />
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -67,7 +65,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [Authorize(Roles = RoleNames.Admin)]
         public AppExportInfoDto Statistics(int zoneId, int appId) => Real.Statistics(zoneId, appId);
 
-        // TODO: @STV - SEEMS TO BE MISSING IN INTERFACE?
         /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
@@ -107,11 +104,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         {
             // Ensure that Hot Reload is not enabled or try to disable it.
             HotReloadEnabledCheck.Check();
-            // TODO: @STV ENHANCE WITH THE SAME OBJECT as used in ADAM upload (to determine request infos/uploaded files), and move to the real-implementation
-            var request = HttpContext.Request.Form;
-            return request.Files.Count <= 0 
-                ? new ImportResultDto(false, "no files uploaded") 
-                : Real.Import(zoneId, request["Name"], request.Files[0].OpenReadStream());
+            return Real.Import(new HttpUploadedFile(Request), zoneId);
         }
     }
 }

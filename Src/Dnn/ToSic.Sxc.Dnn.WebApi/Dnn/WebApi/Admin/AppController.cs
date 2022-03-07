@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
+using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.Admin;
 using AppDto = ToSic.Eav.WebApi.Dto.AppDto;
 
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [DnnLogExceptions]
     public class AppController : SxcApiControllerBase<AppControllerReal<HttpResponseMessage>>, IAppController<HttpResponseMessage>
     {
-        public AppController() : base("App") { }
+        public AppController() : base(AppControllerReal<HttpResponseMessage>.LogSuffix) { }
 
         /// <inheritdoc />
         [HttpGet]
@@ -106,11 +107,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public ImportResultDto Import(int zoneId)
         {
             PreventServerTimeout300();
-            var request = HttpContext.Current.Request;
-            // TODO: @STV ENHANCE WITH THE SAME OBJECT as used in ADAM upload (to determine request infos/uploaded files), and move to the real-implementation
-            return request.Files.Count <= 0 
-                ? new ImportResultDto(false, "no files uploaded") 
-                : Real.Import(zoneId, request["Name"], request?.Files[0]?.InputStream);
+            return Real.Import(new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId);
         }
     }
 }
