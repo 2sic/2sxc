@@ -34,12 +34,12 @@ namespace ToSic.Sxc.WebApi.Admin
         #region Parts Export/Import
 
         /// <inheritdoc />
-        public ExportPartsOverviewDto Get(int zoneId, int appId, string scope) => _exportContent.Ready.PreExportSummary(appId: appId, zoneId: zoneId, scope: scope);
+        public ExportPartsOverviewDto Get(int zoneId, int appId, string scope) => _exportContent.Ready.PreExportSummary(zoneId: zoneId, appId: appId, scope: scope);
 
 
         /// <inheritdoc />
         public THttpResponseType Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
-            => _exportContent.Ready.Export(appId: appId, zoneId: zoneId, contentTypeIdsString: contentTypeIdsString, entityIdsString: entityIdsString, templateIdsString: templateIdsString);
+            => _exportContent.Ready.Export(zoneId: zoneId, appId: appId, contentTypeIdsString: contentTypeIdsString, entityIdsString: entityIdsString, templateIdsString: templateIdsString);
 
 
         /// <summary>

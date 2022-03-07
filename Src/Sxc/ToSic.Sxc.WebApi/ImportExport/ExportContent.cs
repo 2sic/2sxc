@@ -35,7 +35,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         #endregion
 
-        public ExportPartsOverviewDto PreExportSummary(int appId, int zoneId, string scope)
+        public ExportPartsOverviewDto PreExportSummary(int zoneId, int appId, string scope)
         {
             Log.Add($"get content info for z#{zoneId}, a#{appId}, scope:{scope} super?:{_user.IsSuperUser}");
             var contextZoneId = _site.ZoneId;
@@ -78,7 +78,8 @@ namespace ToSic.Sxc.WebApi.ImportExport
         }
 
 
-        public THttpResponseType Export(int appId, int zoneId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
+        public THttpResponseType Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString,
+            string templateIdsString)
         {
             Log.Add($"export content z#{zoneId}, a#{appId}, ids:{entityIdsString}, templId:{templateIdsString}");
             SecurityHelpers.ThrowIfNotAdmin(_user); // must happen inside here, as it's opened as a new browser window, so not all headers exist

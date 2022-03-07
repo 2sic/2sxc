@@ -65,14 +65,14 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// <summary>
         /// Used to be GET ImportExport/GetAppInfo
         /// </summary>
-        /// <param name="appId"></param>
         /// <param name="zoneId"></param>
+        /// <param name="appId"></param>
         /// <returns></returns>
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public AppExportInfoDto Statistics(int zoneId, int appId)
-            => Real.Statistics( zoneId, appId);
+            => Real.Statistics(zoneId, appId);
 
 
         [HttpGet]
@@ -84,28 +84,28 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         /// <summary>
         /// Used to be GET ImportExport/ExportApp
         /// </summary>
-        /// <param name="appId"></param>
         /// <param name="zoneId"></param>
+        /// <param name="appId"></param>
         /// <param name="includeContentGroups"></param>
         /// <param name="resetAppGuid"></param>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid) 
-            => Real.Export(appId, zoneId, includeContentGroups, resetAppGuid);
+        public IActionResult Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid) 
+            => Real.Export(zoneId, appId, includeContentGroups, resetAppGuid);
 
         /// <summary>
         /// Used to be GET ImportExport/ExportForVersionControl
         /// </summary>
-        /// <param name="appId"></param>
         /// <param name="zoneId"></param>
+        /// <param name="appId"></param>
         /// <param name="includeContentGroups"></param>
         /// <param name="resetAppGuid"></param>
         /// <returns></returns>
         [HttpGet]
         [Authorize(Roles = RoleNames.Admin)]
         [ValidateAntiForgeryToken]
-        public bool SaveData(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => Real.SaveData(appId, zoneId, includeContentGroups, resetAppGuid);
+        public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
+            => Real.SaveData(zoneId, appId, includeContentGroups, resetAppGuid);
 
         [HttpGet]
         [ValidateAntiForgeryToken]

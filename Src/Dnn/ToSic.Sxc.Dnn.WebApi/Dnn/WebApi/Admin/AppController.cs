@@ -75,27 +75,27 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <summary>
         /// Used to be GET ImportExport/ExportApp
         /// </summary>
-        /// <param name="appId"></param>
         /// <param name="zoneId"></param>
+        /// <param name="appId"></param>
         /// <param name="includeContentGroups"></param>
         /// <param name="resetAppGuid"></param>
         /// <returns></returns>
         [HttpGet]
-        public HttpResponseMessage Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => Real.Export(appId, zoneId, includeContentGroups, resetAppGuid);
+        public HttpResponseMessage Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
+            => Real.Export(zoneId, appId, includeContentGroups, resetAppGuid);
 
         /// <summary>
         /// Used to be GET ImportExport/ExportForVersionControl
         /// </summary>
-        /// <param name="appId"></param>
         /// <param name="zoneId"></param>
+        /// <param name="appId"></param>
         /// <param name="includeContentGroups"></param>
         /// <param name="resetAppGuid"></param>
         /// <returns></returns>
         [HttpGet]
         [ValidateAntiForgeryToken]
-        public bool SaveData(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => Real.SaveData(appId, zoneId, includeContentGroups, resetAppGuid);
+        public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
+            => Real.SaveData(zoneId, appId, includeContentGroups, resetAppGuid);
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]

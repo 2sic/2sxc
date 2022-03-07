@@ -80,7 +80,7 @@ namespace ToSic.Sxc.WebApi.Admin
             => _languagesBackendLazy.Ready.GetLanguagesOfApp(_appStatesLazy.Value.Get(appId), true);
 
         public AppExportInfoDto Statistics(int zoneId, int appId)
-            => _exportAppLazy.Ready.GetAppInfo(appId, zoneId);
+            => _exportAppLazy.Ready.GetAppInfo(zoneId, appId);
 
         public bool FlushCache(int zoneId, int appId)
         {
@@ -89,11 +89,11 @@ namespace ToSic.Sxc.WebApi.Admin
             return wrapLog("ok", true);
         }
 
-        public THttpResponseType Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => _exportAppLazy.Ready.Export(appId, zoneId, includeContentGroups, resetAppGuid) as THttpResponseType;
+        public THttpResponseType Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
+            => _exportAppLazy.Ready.Export(zoneId, appId, includeContentGroups, resetAppGuid) as THttpResponseType;
 
-        public bool SaveData(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => _exportAppLazy.Ready.SaveDataForVersionControl(appId, zoneId, includeContentGroups, resetAppGuid);
+        public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
+            => _exportAppLazy.Ready.SaveDataForVersionControl(zoneId, appId, includeContentGroups, resetAppGuid);
 
         public List<StackInfoDto> GetStack(int appId, string part, string key = null, Guid? view = null)
             => _appStackBackendLazy.Ready.GetAll(appId, part ?? AppConstants.RootNameSettings, key, view, null);
