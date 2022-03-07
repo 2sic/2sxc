@@ -13,8 +13,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
     {
         public InstallController() : base(InstallControllerReal<HttpResponseMessage>.LogSuffix) { }
 
-        protected override InstallControllerReal<HttpResponseMessage> Real => base.Real.Init(PreventServerTimeout300);
-
         /// <summary>
         /// Make sure that these requests don't land in the normal api-log.
         /// Otherwise each log-access would re-number what item we're looking at
@@ -52,6 +50,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         [ValidateAntiForgeryToken] // now activate this, as it's post now, previously not, because this is a GET and can't include the RVT
         public HttpResponseMessage RemotePackage(string packageUrl)
         {
+            PreventServerTimeout300();
+
             // Make sure the Scoped ResponseMaker has this controller context
             var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
             responseMaker.Init(this);

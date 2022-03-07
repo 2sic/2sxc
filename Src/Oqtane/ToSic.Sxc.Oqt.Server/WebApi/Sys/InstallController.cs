@@ -20,8 +20,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 
         public InstallController(): base(InstallControllerReal<IActionResult>.LogSuffix) { }
 
-        protected override InstallControllerReal<IActionResult> Real => base.Real.Init(PreventServerTimeout300);
-
         /// <summary>
         /// Make sure that these requests don't land in the normal api-log.
         /// Otherwise each log-access would re-number what item we're looking at

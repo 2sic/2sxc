@@ -40,13 +40,6 @@ namespace ToSic.Sxc.WebApi.Sys
         private readonly Lazy<IUser> _userLazy;
         private readonly ResponseMaker<THttpResponseType> _responseMaker;
 
-        private Action _preventServerTimeout300;
-
-        public InstallControllerReal<THttpResponseType> Init(Action preventServerTimeout300)
-        {
-            _preventServerTimeout300 = preventServerTimeout300;
-            return this;
-        }
 
         /// <summary>
         /// Finish system installation which had somehow been interrupted
@@ -80,8 +73,6 @@ namespace ToSic.Sxc.WebApi.Sys
         public THttpResponseType RemotePackage(string packageUrl, IModule container)
         {
             var wrapLog = Log.Call<THttpResponseType>();
-
-            _preventServerTimeout300();
 
             var isApp = !container.IsContent;
 

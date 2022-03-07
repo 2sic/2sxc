@@ -28,39 +28,31 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
         public AppController(): base("App") { }
 
-        protected override AppControllerReal<IActionResult> Real => base.Real.Init(PreventServerTimeout300);
-
-
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
-        public List<AppDto> List(int zoneId)
-            => Real.List(zoneId);
+        public List<AppDto> List(int zoneId) => Real.List(zoneId);
 
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Host)]
-        public List<AppDto> InheritableApps()
-            => Real.InheritableApps();
+        public List<AppDto> InheritableApps() => Real.InheritableApps();
 
 
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
-        public void App(int zoneId, int appId, bool fullDelete = true)
-            => Real.App(zoneId, appId, fullDelete);
+        public void App(int zoneId, int appId, bool fullDelete = true) => Real.App(zoneId, appId, fullDelete);
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
-        public void App(int zoneId, string name, int? inheritAppId = null)
-            => Real.App(zoneId, name, inheritAppId);
+        public void App(int zoneId, string name, int? inheritAppId = null) => Real.App(zoneId, name, inheritAppId);
 
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
-        public List<SiteLanguageDto> Languages(int appId) 
-            => Real.Languages(appId);
+        public List<SiteLanguageDto> Languages(int appId) => Real.Languages(appId);
 
         /// <summary>
         /// Used to be GET ImportExport/GetAppInfo
@@ -71,15 +63,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
-        public AppExportInfoDto Statistics(int zoneId, int appId)
-            => Real.Statistics(zoneId, appId);
+        public AppExportInfoDto Statistics(int zoneId, int appId) => Real.Statistics(zoneId, appId);
 
 
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
-        public bool FlushCache(int zoneId, int appId)
-            => Real.FlushCache(zoneId, appId);
+        public bool FlushCache(int zoneId, int appId) => Real.FlushCache(zoneId, appId);
 
         /// <summary>
         /// Used to be GET ImportExport/ExportApp
@@ -117,8 +107,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [HttpPost]
         [Authorize(Roles = RoleNames.Host)]
         [ValidateAntiForgeryToken]
-        public ImportResultDto Reset(int zoneId, int appId) 
-            => Real.Reset(zoneId, appId, GetContext().Site.DefaultCultureCode);
+        public ImportResultDto Reset(int zoneId, int appId) => Real.Reset(zoneId, appId, GetContext().Site.DefaultCultureCode);
 
         /// <summary>
         /// Used to be POST ImportExport/ImportApp

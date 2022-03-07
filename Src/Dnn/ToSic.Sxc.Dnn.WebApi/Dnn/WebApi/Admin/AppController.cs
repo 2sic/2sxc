@@ -23,8 +23,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     {
         public AppController() : base("App") { }
 
-        protected override AppControllerReal<HttpResponseMessage> Real => base.Real.Init(PreventServerTimeout300);
-
         [HttpGet]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
@@ -107,8 +105,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
         [ValidateAntiForgeryToken]
-        public ImportResultDto Reset(int zoneId, int appId) 
-            => Real.Reset(zoneId, appId, PortalSettings.DefaultLanguage);
+        public ImportResultDto Reset(int zoneId, int appId)
+        {
+            PreventServerTimeout300();
+            return Real.Reset(zoneId, appId, PortalSettings.DefaultLanguage);
+        }
 
         /// <summary>
         /// Used to be POST ImportExport/ImportApp
@@ -119,6 +120,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         public ImportResultDto Import(int zoneId)
         {
+            PreventServerTimeout300();
             var request = HttpContext.Current.Request;
             // TODO: ENHANCE WITH THE SAME OBJECT as used in ADAM upload (to determine request infos/uploaded files), and move to the real-implementation
             return request.Files.Count <= 0 

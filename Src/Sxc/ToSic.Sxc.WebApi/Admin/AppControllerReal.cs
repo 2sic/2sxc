@@ -58,13 +58,6 @@ namespace ToSic.Sxc.WebApi.Admin
             _appStackBackendLazy = appStackBackendLazy.SetLog(Log);
         }
 
-        private Action _preventServerTimeout300;
-
-        public AppControllerReal<THttpResponseType> Init(Action preventServerTimeout300)
-        {
-            _preventServerTimeout300 = preventServerTimeout300;
-            return this;
-        }
 
         public List<AppDto> List(int zoneId) => _appsBackendLazy.Ready.Apps();
 
@@ -79,8 +72,7 @@ namespace ToSic.Sxc.WebApi.Admin
         public List<SiteLanguageDto> Languages(int appId)
             => _languagesBackendLazy.Ready.GetLanguagesOfApp(_appStatesLazy.Value.Get(appId), true);
 
-        public AppExportInfoDto Statistics(int zoneId, int appId)
-            => _exportAppLazy.Ready.GetAppInfo(zoneId, appId);
+        public AppExportInfoDto Statistics(int zoneId, int appId) => _exportAppLazy.Ready.GetAppInfo(zoneId, appId);
 
         public bool FlushCache(int zoneId, int appId)
         {
@@ -98,16 +90,8 @@ namespace ToSic.Sxc.WebApi.Admin
         public List<StackInfoDto> GetStack(int appId, string part, string key = null, Guid? view = null)
             => _appStackBackendLazy.Ready.GetAll(appId, part ?? AppConstants.RootNameSettings, key, view, null);
 
-        public ImportResultDto Reset(int zoneId, int appId, string defaultLanguage)
-        {
-            _preventServerTimeout300();
-            return _resetAppLazy.Ready.Reset(zoneId, appId, defaultLanguage);
-        }
+        public ImportResultDto Reset(int zoneId, int appId, string defaultLanguage) => _resetAppLazy.Ready.Reset(zoneId, appId, defaultLanguage);
 
-        public ImportResultDto Import(int zoneId, string name, Stream stream)
-        {
-            _preventServerTimeout300();
-            return _importAppLazy.Ready.Import(zoneId, name, stream);
-        }
+        public ImportResultDto Import(int zoneId, string name, Stream stream) => _importAppLazy.Ready.Import(zoneId, name, stream);
     }
 }
