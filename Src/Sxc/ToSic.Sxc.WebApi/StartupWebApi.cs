@@ -27,6 +27,7 @@ using ToSic.Sxc.WebApi.InPage;
 using ToSic.Sxc.WebApi.Save;
 using ToSic.Sxc.WebApi.Sys;
 using ToSic.Sxc.WebApi.Usage;
+using ToSic.Sxc.WebApi.Views;
 
 namespace ToSic.Sxc.WebApi
 {
@@ -72,7 +73,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<ResetApp>();
             services.TryAddTransient<AppStackBackend>();
             services.TryAddTransient<AppFolder>();
-
+            services.TryAddTransient(typeof(ViewsExportImport<>));
 
             // Small WebApi Helpers
             services.TryAddTransient<IdentifierHelper>();
