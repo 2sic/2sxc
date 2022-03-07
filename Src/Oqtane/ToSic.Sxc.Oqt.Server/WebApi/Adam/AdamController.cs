@@ -1,12 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
@@ -19,7 +17,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
     //[SupportedModules("2sxc,2sxc-app")]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)] // use view, all methods must re-check permissions
     //[Authorize(Roles = RoleNames.Everyone)] commented because of http403 issue
-    // TODO: 2DM please check permissions
     [ValidateAntiForgeryToken]
 
     // Release routes
@@ -29,10 +26,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
     [Route(WebApiConstants.AppRootNoLanguage + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
     [Route(WebApiConstants.AppRootPathOrLang + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
     [Route(WebApiConstants.AppRootPathNdLang + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
-
-    // Beta routes
-    [Route(WebApiConstants.WebApiStateRoot + "/app-content/{contentType}/{guid:guid}/{field}")]
-
     public class AdamController : OqtStatefulControllerBase<AdamControllerReal<int>>, IAdamController<int>
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
