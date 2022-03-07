@@ -7,10 +7,13 @@ using ToSic.Sxc.Dnn.WebApi.Logging;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
+    // TODO: @STV - interface missing
+    // - then remove the method docs and replace with <inheritdocs...>
+
     /// <summary>
     /// This one supplies portal-wide (or cross-portal) settings / configuration
     /// </summary>
-	[SupportedModules("2sxc,2sxc-app")]
+    [SupportedModules("2sxc,2sxc-app")]
     [DnnLogExceptions]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]

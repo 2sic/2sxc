@@ -36,10 +36,10 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             var responseMaker = (OqtResponseMaker)GetService<ResponseMaker<IActionResult>>();
             responseMaker.Init(this);
 
-            return Real.Inspect(path, GetAssembly);
+            return Real.Inspect(path, GetCompiledAssembly);
         }
 
-        private Assembly GetAssembly(string path)
+        private Assembly GetCompiledAssembly(string path)
         {
             // get path from root
             var siteStateInitializer = GetService<SiteStateInitializer>();

@@ -28,75 +28,65 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
         public AppController(): base("App") { }
 
+        /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public List<AppDto> List(int zoneId) => Real.List(zoneId);
 
+        /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Host)]
         public List<AppDto> InheritableApps() => Real.InheritableApps();
 
 
+        // TODO: @STV - SEEMS TO BE MISSING IN INTERFACE?
+        /// <inheritdoc />
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public void App(int zoneId, int appId, bool fullDelete = true) => Real.App(zoneId, appId, fullDelete);
 
+        // TODO: @STV - SEEMS TO BE MISSING IN INTERFACE?
+        /// <inheritdoc />
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public void App(int zoneId, string name, int? inheritAppId = null) => Real.App(zoneId, name, inheritAppId);
 
+        /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public List<SiteLanguageDto> Languages(int appId) => Real.Languages(appId);
 
-        /// <summary>
-        /// Used to be GET ImportExport/GetAppInfo
-        /// </summary>
-        /// <param name="zoneId"></param>
-        /// <param name="appId"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public AppExportInfoDto Statistics(int zoneId, int appId) => Real.Statistics(zoneId, appId);
 
-
+        // TODO: @STV - SEEMS TO BE MISSING IN INTERFACE?
+        /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public bool FlushCache(int zoneId, int appId) => Real.FlushCache(zoneId, appId);
 
-        /// <summary>
-        /// Used to be GET ImportExport/ExportApp
-        /// </summary>
-        /// <param name="zoneId"></param>
-        /// <param name="appId"></param>
-        /// <param name="includeContentGroups"></param>
-        /// <param name="resetAppGuid"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
         public IActionResult Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid) 
             => Real.Export(zoneId, appId, includeContentGroups, resetAppGuid);
 
-        /// <summary>
-        /// Used to be GET ImportExport/ExportForVersionControl
-        /// </summary>
-        /// <param name="zoneId"></param>
-        /// <param name="appId"></param>
-        /// <param name="includeContentGroups"></param>
-        /// <param name="resetAppGuid"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
         [Authorize(Roles = RoleNames.Admin)]
         [ValidateAntiForgeryToken]
         public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
             => Real.SaveData(zoneId, appId, includeContentGroups, resetAppGuid);
 
+        /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
@@ -109,10 +99,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [ValidateAntiForgeryToken]
         public ImportResultDto Reset(int zoneId, int appId) => Real.Reset(zoneId, appId, GetContext().Site.DefaultCultureCode);
 
-        /// <summary>
-        /// Used to be POST ImportExport/ImportApp
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
@@ -120,6 +107,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         {
             // Ensure that Hot Reload is not enabled or try to disable it.
             HotReloadEnabledCheck.Check();
+            // TODO: @STV ENHANCE WITH THE SAME OBJECT as used in ADAM upload (to determine request infos/uploaded files), and move to the real-implementation
             var request = HttpContext.Request.Form;
             return request.Files.Count <= 0 
                 ? new ImportResultDto(false, "no files uploaded") 

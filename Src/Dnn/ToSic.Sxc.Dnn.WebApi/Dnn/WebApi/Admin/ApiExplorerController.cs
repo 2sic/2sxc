@@ -26,10 +26,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
             responseMaker.Init(this);
 
-            return Real.Inspect(path, GetAssembly);
+            return Real.Inspect(path, GetCompiledAssembly);
         }
 
-        private Assembly GetAssembly(string path)
+        private Assembly GetCompiledAssembly(string path)
         {
             var controllerVirtualPath =
                 Path.Combine(

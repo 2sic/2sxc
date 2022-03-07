@@ -9,6 +9,9 @@ using ToSic.Sxc.WebApi.Sys;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
+    // TODO: @STV - interface missing
+    // - then remove the method docs and replace with <inheritdocs...>
+
     // Release routes
     [Route(WebApiConstants.ApiRootWithNoLang + "/" + AreaRoutes.Sys)]
     [Route(WebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]

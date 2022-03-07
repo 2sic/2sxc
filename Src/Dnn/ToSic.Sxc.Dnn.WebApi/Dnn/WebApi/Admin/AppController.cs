@@ -23,78 +23,66 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     {
         public AppController() : base("App") { }
 
+        /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public List<AppDto> List(int zoneId) => Real.List(zoneId);
 
+        /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
         public List<AppDto> InheritableApps() => Real.InheritableApps();
 
+        /// <inheritdoc />
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public void App(int zoneId, int appId, bool fullDelete = true) => Real.App(zoneId, appId, fullDelete);
 
+        /// <inheritdoc />
         [HttpPost]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public void App(int zoneId, string name, int? inheritAppId = null) => Real.App(zoneId, name, inheritAppId);
 
+        /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public List<SiteLanguageDto> Languages(int appId) => Real.Languages(appId);
 
-        /// <summary>
-        /// Used to be GET ImportExport/GetAppInfo
-        /// </summary>
-        /// <param name="appId"></param>
-        /// <param name="zoneId"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
         public AppExportInfoDto Statistics(int zoneId, int appId) => Real.Statistics(zoneId, appId);
 
 
+        /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public bool FlushCache(int zoneId, int appId) => Real.FlushCache(zoneId, appId);
 
-        /// <summary>
-        /// Used to be GET ImportExport/ExportApp
-        /// </summary>
-        /// <param name="zoneId"></param>
-        /// <param name="appId"></param>
-        /// <param name="includeContentGroups"></param>
-        /// <param name="resetAppGuid"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
         public HttpResponseMessage Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
             => Real.Export(zoneId, appId, includeContentGroups, resetAppGuid);
 
-        /// <summary>
-        /// Used to be GET ImportExport/ExportForVersionControl
-        /// </summary>
-        /// <param name="zoneId"></param>
-        /// <param name="appId"></param>
-        /// <param name="includeContentGroups"></param>
-        /// <param name="resetAppGuid"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
             => Real.SaveData(zoneId, appId, includeContentGroups, resetAppGuid);
 
+        /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
@@ -111,10 +99,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             return Real.Reset(zoneId, appId, PortalSettings.DefaultLanguage);
         }
 
-        /// <summary>
-        /// Used to be POST ImportExport/ImportApp
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
@@ -122,7 +107,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         {
             PreventServerTimeout300();
             var request = HttpContext.Current.Request;
-            // TODO: ENHANCE WITH THE SAME OBJECT as used in ADAM upload (to determine request infos/uploaded files), and move to the real-implementation
+            // TODO: @STV ENHANCE WITH THE SAME OBJECT as used in ADAM upload (to determine request infos/uploaded files), and move to the real-implementation
             return request.Files.Count <= 0 
                 ? new ImportResultDto(false, "no files uploaded") 
                 : Real.Import(zoneId, request["Name"], request?.Files[0]?.InputStream);

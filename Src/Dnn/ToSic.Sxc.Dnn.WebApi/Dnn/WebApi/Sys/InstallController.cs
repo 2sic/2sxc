@@ -9,6 +9,8 @@ using ToSic.Sxc.WebApi.Sys;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
+    // TODO: @STV - interface missing
+    // - then remove the method docs and replace with <inheritdocs...>
     public class InstallController : DnnApiControllerWithFixes<InstallControllerReal<HttpResponseMessage>>
     {
         public InstallController() : base(InstallControllerReal<HttpResponseMessage>.LogSuffix) { }
@@ -19,8 +21,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         /// </summary>
         protected override string HistoryLogGroup => "web-api.install";
 
-        #region System Installation
-
         /// <summary>
         /// Finish system installation which had somehow been interrupted
         /// </summary>
@@ -29,10 +29,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
         public bool Resume() => Real.Resume();
 
-        #endregion
 
-
-        #region App / Content Package Installation
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
@@ -58,7 +55,5 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
 
             return Real.RemotePackage(packageUrl, ((DnnModule)GetService<IModule>()).Init(ActiveModule, Log));
         }
-
-        #endregion
     }
 }
