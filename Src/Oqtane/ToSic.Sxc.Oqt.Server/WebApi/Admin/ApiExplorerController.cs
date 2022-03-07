@@ -41,39 +41,25 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
         private Assembly GetAssembly(string path)
         {
-            var pathFromRoot = GetPathFromRoot(path);
+            // get path from root
+            var siteStateInitializer = GetService<SiteStateInitializer>();
+            var siteId = siteStateInitializer.InitializedState.Alias.SiteId;
+            var appFolder = GetService<AppFolder>().GetAppFolder();
+            var pathFromRoot = OqtServerPaths.GetAppApiPath(siteId, appFolder, path);
             Log.Add($"Controller path from root: {pathFromRoot}");
 
-            var apiFile = GetFullPath(pathFromRoot);
+            // get full path
+            var oqtServerPaths = GetService<IServerPaths>();
+            var apiFile = oqtServerPaths.FullContentPath(pathFromRoot);
 
             if (!System.IO.File.Exists(apiFile))
                 throw new Exception($"Error: can't find controller file: {pathFromRoot}");
 
-            var dllName = GetDllName(pathFromRoot, apiFile);
+            // get dll name
+            var controllerFolder = pathFromRoot.Substring(0, pathFromRoot.LastIndexOf(@"\"));
+            var dllName = AppApiDynamicRouteValueTransformer.GetDllName(controllerFolder, apiFile);
 
             return new Compiler().Compile(apiFile, dllName);
-        }
-
-        private string GetPathFromRoot(string path)
-        {
-            var siteStateInitializer = GetService<SiteStateInitializer>();
-            var siteId = siteStateInitializer.InitializedState.Alias.SiteId;
-
-            var appFolder = GetService<AppFolder>().GetAppFolder();
-
-            return OqtServerPaths.GetAppApiPath(siteId, appFolder, path);
-        }
-
-        private string GetFullPath(string pathFromRoot)
-        {
-            var oqtServerPaths = GetService<IServerPaths>();
-            return oqtServerPaths.FullContentPath(pathFromRoot);
-        }
-
-        private static string GetDllName(string controllerVirtualPath, string apiFile)
-        {
-            var controllerFolder = controllerVirtualPath.Substring(0, controllerVirtualPath.LastIndexOf(@"\"));
-            return AppApiDynamicRouteValueTransformer.GetDllName(controllerFolder, apiFile);
         }
     }
 
