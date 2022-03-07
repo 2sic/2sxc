@@ -94,7 +94,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 Log
             ).GenerateNiceXml();
 
-            return _responseMaker.GetAttachmentHttpResponseMessage(fileName, "text/xml", fileXml);
+            return _responseMaker.File(fileXml, fileName, "text/xml");
         }
     }
 }

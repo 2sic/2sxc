@@ -89,7 +89,7 @@ namespace ToSic.Sxc.WebApi.Views
             var serialized = serializer.Serialize(bundle, 0);
 
             logCall("ok");
-            return _responseMaker.BuildDownload(serialized,
+            return _responseMaker.File(serialized,
                 ("View" + "." + bundle.Entity.GetBestTitle() + ImpExpConstants.Extension(ImpExpConstants.Files.json))
                 .RemoveNonFilenameCharacters());
         }

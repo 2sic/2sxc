@@ -18,12 +18,6 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
                                            throw new Exception(
                                                $"Accessing the {nameof(ApiController)} in the {nameof(OqtResponseMaker)} requires it to be Init first.");
 
-        //public override IActionResult InternalServerError(string message) 
-        //    => Error((int)HttpStatusCode.InternalServerError, message);
-
-        //public override IActionResult InternalServerError(Exception exception)
-        //    => Error((int)HttpStatusCode.InternalServerError, exception);
-
         public override IActionResult Error(int statusCode, string message)
             => ApiController.Problem(message, null, statusCode); 
 
@@ -34,25 +28,17 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
 
         public override IActionResult Ok() => ApiController.Ok();
 
-        public override IActionResult GetAttachmentHttpResponseMessage(string fileName, string fileType, Stream fileContent)
+        public override IActionResult File(Stream fileContent, string fileName, string fileType)
         {
             using var memoryStream = new MemoryStream();
             fileContent.CopyTo(memoryStream);
             return new FileContentResult(memoryStream.ToArray(), fileType) { FileDownloadName = fileName };
         }
 
-        //public override IActionResult GetAttachmentHttpResponseMessage(string fileName, string fileType, string fileContent)
-        //{
-        //    var fileBytes = Encoding.UTF8.GetBytes(fileContent);
-        //    return GetAttachmentHttpResponseMessage(fileName, fileType, new MemoryStream(fileBytes));
-        //}
-
-        public override IActionResult BuildDownload(string content, string fileName)
+        public override IActionResult File(string fileContent, string fileName)
         {
-            var fileBytes = Encoding.UTF8.GetBytes(content);
             new FileExtensionContentTypeProvider().TryGetContentType(fileName, out var contentType);
-            return new FileContentResult(fileBytes, contentType ?? MimeHelper.FallbackType) { FileDownloadName = fileName };
+            return File(fileContent, fileName, contentType ?? MimeHelper.FallbackType);
         }
-
     }
 }
