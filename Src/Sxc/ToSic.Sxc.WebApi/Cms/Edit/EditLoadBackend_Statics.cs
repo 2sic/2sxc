@@ -19,9 +19,10 @@ namespace ToSic.Sxc.WebApi.Cms
         /// based on the header (if none already existed)
         /// </summary>
         /// <returns></returns>
-        internal static JsonEntity GetSerializeAndMdAssignJsonEntity(int appId, BundleWithHeader<IEntity> bundle, JsonSerializer jsonSerializer,
+        internal JsonEntity GetSerializeAndMdAssignJsonEntity(int appId, BundleWithHeader<IEntity> bundle, JsonSerializer jsonSerializer,
             ContentTypeRuntime typeRead, AppState appState)
         {
+            var wrapLog = Log.Call<JsonEntity>();
             // attach original metadata assignment when creating a new one
             JsonEntity ent;
             if (bundle.Entity != null)
@@ -52,7 +53,7 @@ namespace ToSic.Sxc.WebApi.Cms
             }
             catch { /* ignore experimental */ }
 
-            return ent;
+            return wrapLog(null, ent);
         }
 
         internal static List<IContentType> UsedTypes(List<BundleWithHeader<IEntity>> list, ContentTypeRuntime typeRead)
@@ -98,11 +99,12 @@ namespace ToSic.Sxc.WebApi.Cms
             return wrapLog($"{found.Count}", found);
         }
 
-        internal static IEntity ConstructEmptyEntity(int appId, ItemIdentifier header, ContentTypeRuntime typeRead)
+        internal IEntity ConstructEmptyEntity(int appId, ItemIdentifier header, ContentTypeRuntime typeRead)
         {
+            var wrapLog = Log.Call<IEntity>();
             var type = typeRead.Get(header.ContentTypeName);
-            var ent = EntityBuilder.EntityTemplate(appId, header.Guid, header.EntityId, 0, type);
-            return ent;
+            var ent = _entityBuilder.EntityTemplate(appId, header.Guid, header.EntityId, 0, type);
+            return wrapLog(null, ent);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.Data.Builder;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Security.Permissions;
@@ -23,7 +24,9 @@ namespace ToSic.Sxc.WebApi.Cms
     {
         #region DI Constructor
 
-        public EditLoadBackend(EntityApi entityApi, ContentGroupList contentGroupList, 
+        public EditLoadBackend(EntityApi entityApi, 
+            ContentGroupList contentGroupList, 
+            EntityBuilder entityBuilder,
             IServiceProvider serviceProvider, 
             IUiContextBuilder contextBuilder, 
             IContextResolver ctxResolver, 
@@ -34,6 +37,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             _entityApi = entityApi;
             _contentGroupList = contentGroupList;
+            _entityBuilder = entityBuilder;
             _contextBuilder = contextBuilder;
             _ctxResolver = ctxResolver;
             _mdTargetTypes = mdTargetTypes;
@@ -44,6 +48,7 @@ namespace ToSic.Sxc.WebApi.Cms
         
         private readonly EntityApi _entityApi;
         private readonly ContentGroupList _contentGroupList;
+        private readonly EntityBuilder _entityBuilder;
         private readonly IUiContextBuilder _contextBuilder;
         private readonly IContextResolver _ctxResolver;
         private readonly ITargetTypes _mdTargetTypes;
