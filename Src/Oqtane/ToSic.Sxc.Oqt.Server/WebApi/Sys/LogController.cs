@@ -8,9 +8,6 @@ using ToSic.Sxc.Oqt.Server.Integration;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
-    // TODO: @STV - interface missing
-    // - then remove the method docs and replace with <inheritdocs...>
-
     // Release routes
     [Route(WebApiConstants.ApiRootWithNoLang + "/" + AreaRoutes.Sys)]
     [Route(WebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
@@ -18,16 +15,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 
     // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [Authorize(Roles = RoleNames.Admin)]
-    public class LogController: OqtStatefulControllerBase<LogControllerReal>
+    public class LogController: OqtStatefulControllerBase<LogControllerReal>, ILogController
     {
         public LogController() : base(LogControllerReal.LogSuffix) { }
 
-        /// <summary>
-        /// Used to be GET System/ExtendedLogging
-        /// </summary>
-        /// <param name="duration"></param>
-        /// <returns></returns>
+
+        /// <inheritdoc />
         [HttpGet]
-        public string EnableDebug([FromQuery] int duration = 1) => Real.EnableDebug(OqtLogging.ActivateForDuration, duration);
+        public string EnableDebug(int duration = 1) => Real.EnableDebug(OqtLogging.ActivateForDuration, duration);
     }
 }

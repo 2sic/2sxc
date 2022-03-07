@@ -3,15 +3,14 @@ using DotNetNuke.Web.Api;
 using System.Net.Http;
 using System.Web.Http;
 using ToSic.Eav.WebApi.Plumbing;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.WebApi.Sys;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
-    // TODO: @STV - interface missing
-    // - then remove the method docs and replace with <inheritdocs...>
-    public class InstallController : DnnApiControllerWithFixes<InstallControllerReal<HttpResponseMessage>>
+    public class InstallController : DnnApiControllerWithFixes<InstallControllerReal<HttpResponseMessage>>, IInstallController<HttpResponseMessage>
     {
         public InstallController() : base(InstallControllerReal<HttpResponseMessage>.LogSuffix) { }
 
@@ -21,27 +20,28 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         /// </summary>
         protected override string HistoryLogGroup => "web-api.install";
 
-        /// <summary>
-        /// Finish system installation which had somehow been interrupted
-        /// </summary>
-        /// <returns></returns>
+
+        /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
         public bool Resume() => Real.Resume();
 
 
-
+        /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public string RemoteWizardUrl(bool isContentApp) 
-            => Real.RemoteWizardUrl(isContentApp, ((DnnModule) GetService<IModule>()).Init(Request.FindModuleInfo(), Log));
+        public HttpResponseMessage RemoteWizardUrl(bool isContentApp)
+        {
+            // Make sure the Scoped ResponseMaker has this controller context
+            var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
+            responseMaker.Init(this);
+
+            return Real.RemoteWizardUrl(isContentApp,
+                ((DnnModule) GetService<IModule>()).Init(Request.FindModuleInfo(), Log));
+        }
 
 
-        /// <summary>
-        /// Before this was GET Installer/InstallPackage
-        /// </summary>
-        /// <param name="packageUrl"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken] // now activate this, as it's post now, previously not, because this is a GET and can't include the RVT

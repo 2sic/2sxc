@@ -3,23 +3,21 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Eav.WebApi.Routing;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.WebApi.Sys;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
-    // TODO: @STV - interface missing
-    // - then remove the method docs and replace with <inheritdocs...>
-
     // Release routes
     [Route(WebApiConstants.ApiRootWithNoLang + "/" + AreaRoutes.Sys)]
     [Route(WebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
     [Route(WebApiConstants.ApiRootPathNdLang + "/" + AreaRoutes.Sys)]
 
-    public class InstallController: OqtStatefulControllerBase<InstallControllerReal<IActionResult>>
+    public class InstallController: OqtStatefulControllerBase<InstallControllerReal<IActionResult>>, IInstallController<IActionResult>
     {
-        #region System Installation
+
 
         public InstallController(): base(InstallControllerReal<IActionResult>.LogSuffix) { }
 
@@ -29,35 +27,28 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
         /// </summary>
         protected override string HistoryLogGroup { get; } = "web-api.install";
 
-        /// <summary>
-        /// Finish system installation which had somehow been interrupted
-        /// </summary>
-        /// <returns></returns>
+
+        /// <inheritdoc />
         [HttpGet]
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
         [Authorize(Roles = RoleNames.Host)]
         public bool Resume() => Real.Resume();
 
-        #endregion
 
-
-        #region App / Content Package Installation
-
-        /// <summary>
-        /// Before this was GET Module/RemoteInstallDialogUrl
-        /// </summary>
-        /// <param name="isContentApp"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [Authorize(Roles = RoleNames.Admin)]
-        public IActionResult RemoteWizardUrl(bool isContentApp) => Json(Real.RemoteWizardUrl(isContentApp, GetContext().Module));
+        public IActionResult RemoteWizardUrl(bool isContentApp)
+        {
+            // Make sure the Scoped ResponseMaker has this controller context
+            var responseMaker = (OqtResponseMaker)GetService<ResponseMaker<IActionResult>>();
+            responseMaker.Init(this);
 
-        /// <summary>
-        /// Before this was GET Installer/InstallPackage
-        /// </summary>
-        /// <param name="packageUrl"></param>
-        /// <returns></returns>
+            return Real.RemoteWizardUrl(isContentApp, GetContext().Module);
+        }
+
+        /// <inheritdoc />
         [HttpPost]
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [Authorize(Roles = RoleNames.Admin)]
@@ -72,7 +63,5 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 
             return Real.RemotePackage(packageUrl, GetContext().Module);
         }
-
-        #endregion
     }
 }

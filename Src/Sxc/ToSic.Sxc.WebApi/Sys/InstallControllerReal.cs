@@ -57,12 +57,12 @@ namespace ToSic.Sxc.WebApi.Sys
         /// </summary>
         /// <param name="isContentApp"></param>
         /// <returns></returns>
-        public string RemoteWizardUrl(bool isContentApp, IModule module) 
-            => _envInstallerLazy.Value.Init(Log)
+        public THttpResponseType RemoteWizardUrl(bool isContentApp, IModule module) 
+            => _responseMaker.Json(_envInstallerLazy.Value.Init(Log)
                 .GetAutoInstallPackagesUiUrl(
                     _context.Ready.Site,
                     module,
-                    isContentApp);
+                    isContentApp));
 
         /// <summary>
         /// Before this was GET Installer/InstallPackage

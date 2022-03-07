@@ -7,9 +7,6 @@ using ToSic.Sxc.Dnn.WebApi.Logging;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
-    // TODO: @STV - interface missing
-    // - then remove the method docs and replace with <inheritdocs...>
-
     /// <summary>
     /// This one supplies portal-wide (or cross-portal) settings / configuration
     /// </summary>
@@ -17,17 +14,12 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
     [DnnLogExceptions]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public class LogController : DnnApiControllerWithFixes<LogControllerReal>
+    public class LogController : DnnApiControllerWithFixes<LogControllerReal>, ILogController
     {
         public LogController() : base(LogControllerReal.LogSuffix) { }
 
-        /// <summary>
-        /// Used to be GET System/ExtendedLogging
-        /// </summary>
-        /// <param name="duration"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
         public string EnableDebug(int duration = 1) => Real.EnableDebug(DnnLogging.ActivateForDuration, duration);
-
     }
 }
