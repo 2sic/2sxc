@@ -103,7 +103,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             var wrapLog = Log.Call<IEntity>();
             var type = typeRead.Get(header.ContentTypeName);
-            var ent = _entityBuilder.EntityTemplate(appId, header.Guid, header.EntityId, 0, type);
+            var ent = _entityBuilder.EmptyOfType(appId, header.Guid, header.EntityId, 0, type);
             return wrapLog(null, ent);
         }
     }
