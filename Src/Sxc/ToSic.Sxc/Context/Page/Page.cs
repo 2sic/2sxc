@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Sxc.Context.Query;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.Parameters;
 
 namespace ToSic.Sxc.Context
 {
@@ -25,14 +26,8 @@ namespace ToSic.Sxc.Context
 
         public int Id { get; private set; } = Eav.Constants.NullId;
 
-        public List<KeyValuePair<string, string>> ParametersInternalOld
-        {
-            get => _paramsInternalOld ?? (_paramsInternalOld = _httpLazy.Value?.QueryStringKeyValuePairs() ?? new List<KeyValuePair<string, string>>());
-            set => _paramsInternalOld = value ?? _paramsInternalOld;
-        }
-        private List<KeyValuePair<string, string>> _paramsInternalOld;
 
-        public IParameters Parameters => _parameters ?? (_parameters = new Parameters(_httpLazy.Value?.QueryStringParams));
+        public IParameters Parameters => _parameters ?? (_parameters = new Parameters(OriginalParameters.GetOverrideParams(_httpLazy.Value?.QueryStringParams)));
         private IParameters _parameters;
 
 

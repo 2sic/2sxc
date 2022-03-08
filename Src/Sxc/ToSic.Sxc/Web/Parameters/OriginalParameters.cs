@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace ToSic.Sxc.Web.Parameters
 {
@@ -15,19 +15,19 @@ namespace ToSic.Sxc.Web.Parameters
         /// </summary>
         /// <param name="requestParams"></param>
         /// <returns></returns>
-        public static List<KeyValuePair<string, string>> GetOverrideParams(List<KeyValuePair<string, string>> requestParams)
+        public static NameValueCollection GetOverrideParams(NameValueCollection requestParams)
         {
-            List<KeyValuePair<string, string>> urlParams = null;
+            if (requestParams == null) return new NameValueCollection();
 
-            var origParams = requestParams.Where(p => p.Key == NameInUrlForOriginalParameters).ToList();
-            if (!origParams.Any()) return requestParams; // just return requestParams (when origParams are not provided)
+            var paramSet = requestParams[NameInUrlForOriginalParameters];
+            if (string.IsNullOrEmpty(paramSet)) return requestParams; // just return requestParams (when origParams are not provided)
 
-            var paramSet = origParams.First().Value;
+            var urlParams = new NameValueCollection();
 
             // Workaround for deserializing KeyValuePair -it requires lowercase properties(case sensitive),
             // which seems to be a bug in some Newtonsoft.Json versions: http://stackoverflow.com/questions/11266695/json-net-case-insensitive-property-deserialization
             var items = JsonConvert.DeserializeObject<List<UpperCaseStringKeyValuePair>>(paramSet);
-            urlParams = items.Select(a => new KeyValuePair<string, string>(a.Key, a.Value)).ToList();
+            items.ForEach(a => urlParams.Add(a.Key, a.Value));
 
             return urlParams;
         }

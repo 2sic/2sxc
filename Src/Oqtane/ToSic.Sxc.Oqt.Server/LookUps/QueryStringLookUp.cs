@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+using System.Collections.Specialized;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Web.Parameters;
 
@@ -10,7 +9,7 @@ namespace ToSic.Sxc.Oqt.Server.LookUps
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private IQueryCollection _source;
-        private List<KeyValuePair<string, string>> _originalParams;
+        private NameValueCollection _originalParams;
 
         public QueryStringLookUp(IHttpContextAccessor httpContextAccessor)
         {
@@ -37,16 +36,11 @@ namespace ToSic.Sxc.Oqt.Server.LookUps
 
             if (_originalParams == null)
             {
-                var originalParams = new List<KeyValuePair<string, string>> 
-                    { new(OriginalParameters.NameInUrlForOriginalParameters, queryStringValue.ToString()) };
+                var originalParams = new NameValueCollection {{OriginalParameters.NameInUrlForOriginalParameters, queryStringValue.ToString()}};
                 _originalParams = OriginalParameters.GetOverrideParams(originalParams);
             }
 
-            var overrideParams = _originalParams
-                .Where(l => l.Key == key.ToLowerInvariant())
-                .ToList();
-
-            return overrideParams.Any() ? overrideParams.First().Value : string.Empty;
+            return _originalParams[key];
         }
     }
 }

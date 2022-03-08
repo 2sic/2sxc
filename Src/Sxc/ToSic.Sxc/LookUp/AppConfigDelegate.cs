@@ -99,8 +99,8 @@ namespace ToSic.Sxc.LookUp
                 // new
                 var paramList = new NameValueCollection();
                 var ctxWithPage = context as IContextOfBlock;
-                if (ctxWithPage?.Page.ParametersInternalOld != null)
-                    foreach (var pair in ctxWithPage.Page.ParametersInternalOld)
+                if (ctxWithPage?.Page.Parameters != null)
+                    foreach (var pair in ctxWithPage.Page.Parameters)
                         paramList.Add(pair.Key, pair.Value);
                 else
                     paramList = http.QueryStringParams;

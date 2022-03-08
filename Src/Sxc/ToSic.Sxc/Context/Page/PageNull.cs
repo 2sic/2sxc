@@ -21,13 +21,6 @@ namespace ToSic.Sxc.Context
 
         public string Url => Eav.Constants.UrlNotInitialized;
 
-        public List<KeyValuePair<string, string>> ParametersInternalOld
-        {
-            get => _parameters ?? (_parameters = new List<KeyValuePair<string, string>>());
-            set => _parameters = value;
-        }
-        private List<KeyValuePair<string, string>> _parameters;
-
         public IParameters Parameters => new Parameters(null);
 
     }

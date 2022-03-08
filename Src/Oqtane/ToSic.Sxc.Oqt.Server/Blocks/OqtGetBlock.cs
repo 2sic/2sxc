@@ -1,5 +1,5 @@
-﻿using System;
-using Oqtane.Repository;
+﻿using Oqtane.Repository;
+using System;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
@@ -7,7 +7,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.Web.Parameters;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks
 {
@@ -72,9 +71,6 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
 
             var module = _modRepoLazy.Value.GetModule(moduleId);
             var ctx = _serviceProvider.Build<IContextOfBlock>().Init(pageId, module, Log);
-
-            // WebAPI calls can contain the original parameters that made the page, so that views can respect that
-            ctx.Page.ParametersInternalOld = OriginalParameters.GetOverrideParams(ctx.Page.ParametersInternalOld);
             var block = _serviceProvider.Build<BlockFromModule>().Init(ctx, Log);
 
             // only if it's negative, do we load the inner block

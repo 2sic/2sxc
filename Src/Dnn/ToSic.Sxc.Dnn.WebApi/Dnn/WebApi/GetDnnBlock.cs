@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DotNetNuke.Web.Api;
+using System;
 using System.Linq;
 using System.Net.Http;
-using DotNetNuke.Common.Utilities;
-using DotNetNuke.Web.Api;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Context;
-using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Web.Parameters;
 using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Dnn.WebApi
@@ -32,9 +27,7 @@ namespace ToSic.Sxc.Dnn.WebApi
             if (moduleInfo == null)
                 return wrapLog("request ModuleInfo not found", null);
 
-            // WebAPI calls can contain the original parameters that made the page, so that views can respect that
-            IBlock block = _serviceProvider.Build<IModuleAndBlockBuilder>().Init(log).GetBlock(moduleInfo);
-            block.Context.Page.ParametersInternalOld = OriginalParameters.GetOverrideParams(request.GetQueryNameValuePairs().ToList());
+            var block = _serviceProvider.Build<IModuleAndBlockBuilder>().Init(log).GetBlock(moduleInfo);
 
             // check if we need an inner block
             if (request.Headers.Contains(WebApiConstants.HeaderContentBlockId)) { 
