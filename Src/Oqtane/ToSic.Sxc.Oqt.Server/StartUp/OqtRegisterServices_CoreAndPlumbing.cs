@@ -36,8 +36,10 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             // Helper to access settings of a Site, Module etc.
             services.TryAddTransient<SettingsHelper>();
 
-            // TODO: DOCUMENT what this does
+            // Helper to get header, query string and route information from current request
             services.TryAddScoped<RequestHelper>();
+
+            // Manage oqtane site culture info
             services.TryAddTransient<OqtCulture>();
 
             // Site State Initializer for APIs etc. to ensure that the SiteState exists and is correctly preloaded

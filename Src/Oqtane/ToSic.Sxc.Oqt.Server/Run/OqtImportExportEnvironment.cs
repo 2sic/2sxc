@@ -6,7 +6,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Persistence.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Context;
@@ -18,16 +17,12 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtImportExportEnvironment : ImportExportEnvironmentBase
     {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly Lazy<ISiteRepository> _siteRepository;
         private readonly IServerPaths _oqtServerPaths;
         private readonly IFileRepository _oqtFileRepository;
         private readonly IFolderRepository _oqtFolderRepository;
 
-        public OqtImportExportEnvironment(Dependencies dependencies, IServiceProvider serviceProvider, Lazy<ISiteRepository> siteRepository, IServerPaths oqtServerPaths, IFileRepository oqtFileRepository, IFolderRepository oqtFolderRepository) : base(dependencies, $"{OqtConstants.OqtLogPrefix}.IExEnv")
+        public OqtImportExportEnvironment(Dependencies dependencies, IServerPaths oqtServerPaths, IFileRepository oqtFileRepository, IFolderRepository oqtFolderRepository) : base(dependencies, $"{OqtConstants.OqtLogPrefix}.IExEnv")
         {
-            _serviceProvider = serviceProvider;
-            _siteRepository = siteRepository;
             _oqtServerPaths = oqtServerPaths;
             _oqtFileRepository = oqtFileRepository;
             _oqtFolderRepository = oqtFolderRepository;
@@ -45,8 +40,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var messages = new List<Message>();
             var files = IO.Directory.GetFiles(sourceFolder, "*.*");
             var siteId = Site.Id;
-            var site = _siteRepository.Value.GetSite(siteId);
-            var oqtSite = _serviceProvider.Build<OqtSite>().Init(site);
+            var oqtSite = (OqtSite)Site;
 
             // Ensure trim prefixSlash and backslash at the end of folder path, because Oqtane require path like that.
             destinationFolder = (destinationFolder.Backslash().TrimLastSlash() + IO.Path.DirectorySeparatorChar).TrimPrefixSlash();

@@ -34,9 +34,6 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
         {
             // Multi-Site Services
             services.TryAddTransient<IZoneMapper, OqtZoneMapper>();
-            // TODO: @STV - probably just use the IZoneMapper and not register again
-            // 2022-02-21 2dm disabled this
-            // services.TryAddTransient<OqtZoneMapper>();
 
             // Update title etc. when a module-content changes
             services.TryAddTransient<IPlatformModuleUpdater, OqtModuleUpdater>();
