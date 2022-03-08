@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
         private static IServiceCollection AddOqtaneLookUpsAndSources(this IServiceCollection services)
         {
             services.TryAddTransient<ILookUpEngineResolver, OqtGetLookupEngine>();
-            services.TryAddTransient<QueryStringLookUp>();
+            //services.TryAddTransient<QueryStringLookUp>();
             services.TryAddTransient<SiteLookUp>();
             services.TryAddTransient<OqtPageLookUp>();
             services.TryAddTransient<OqtModuleLookUp>();

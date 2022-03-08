@@ -28,5 +28,8 @@ namespace ToSic.Sxc.LookUp
         public const string OldDnnPageId = "tabid";
         public const string OldDnnSiteSource = "portal";
         public const string OldDnnSiteId = "portalid";
+
+        public const string SourceQuery = "query";
+        public const string OldDnnSourceQueryString = "querystring";
     }
 }

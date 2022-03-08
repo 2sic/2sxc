@@ -15,7 +15,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.LookUp
 {
-    public class AppConfigDelegate: HasLog/*<AppConfigDelegate>*/
+    public class AppConfigDelegate : HasLog/*<AppConfigDelegate>*/
     {
         #region Constructor / DI
 
@@ -96,7 +96,8 @@ namespace ToSic.Sxc.LookUp
             {
                 Log.Add("Found Http-Context, will ty to add params for querystring, server etc.");
 
-                // new
+
+                // new (Oqt and Dnn)
                 var paramList = new NameValueCollection();
                 var ctxWithPage = context as IContextOfBlock;
                 if (ctxWithPage?.Page.Parameters != null)
@@ -104,12 +105,14 @@ namespace ToSic.Sxc.LookUp
                         paramList.Add(pair.Key, pair.Value);
                 else
                     paramList = http.QueryStringParams;
-                provider.Add(new LookUpInNameValueCollection("query", paramList));
 
+                // add "query" if it was not already added previously (Oqt has it)
+                if (!provider.HasSource(LookUpConstants.SourceQuery))
+                    provider.Add(new LookUpInNameValueCollection(LookUpConstants.SourceQuery, paramList));
 
-                // old
-#if NETFRAMEWORK
-                provider.Add(new LookUpInNameValueCollection("querystring", paramList));
+#if NETFRAMEWORK 
+                // old (Dnn only)
+                provider.Add(new LookUpInNameValueCollection(LookUpConstants.OldDnnSourceQueryString, paramList));
                 provider.Add(new LookUpInNameValueCollection("form", http.Request.Form));
                 //provider.Add(new LookUpInNameValueCollection("server", http.Request.ServerVariables)); // deprecated
 #else

@@ -61,6 +61,7 @@ namespace ToSic.Sxc
 #pragma warning restore CS0618
 
             // Configuration Provider WIP
+            services.TryAddTransient<QueryStringLookUp>();
             services.TryAddTransient<AppConfigDelegate>();
             services.TryAddTransient<App>();
             services.TryAddTransient<ImportExportEnvironmentBase.Dependencies>();
