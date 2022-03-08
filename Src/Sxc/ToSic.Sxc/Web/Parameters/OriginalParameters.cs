@@ -18,9 +18,9 @@ namespace ToSic.Sxc.Web.Parameters
         public static List<KeyValuePair<string, string>> GetOverrideParams(List<KeyValuePair<string, string>> requestParams)
         {
             List<KeyValuePair<string, string>> urlParams = null;
-            //var requestParams = request.GetQueryNameValuePairs();
+
             var origParams = requestParams.Where(p => p.Key == NameInUrlForOriginalParameters).ToList();
-            if (!origParams.Any()) return requestParams;
+            if (!origParams.Any()) return requestParams; // just return requestParams (when origParams are not provided)
 
             var paramSet = origParams.First().Value;
 

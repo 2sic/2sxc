@@ -33,10 +33,8 @@ namespace ToSic.Sxc.Dnn.WebApi
                 return wrapLog("request ModuleInfo not found", null);
 
             // WebAPI calls can contain the original parameters that made the page, so that views can respect that
-            // Probably replace with OriginalParameters.GetOverrideParams(context.Page.Parameters);
-            // once it has proven stable in Oqtane
             IBlock block = _serviceProvider.Build<IModuleAndBlockBuilder>().Init(log).GetBlock(moduleInfo);
-            block.Context.Page.ParametersInternalOld = GetOverrideParams(request);
+            block.Context.Page.ParametersInternalOld = OriginalParameters.GetOverrideParams(request.GetQueryNameValuePairs().ToList());
 
             // check if we need an inner block
             if (request.Headers.Contains(WebApiConstants.HeaderContentBlockId)) { 
@@ -75,37 +73,5 @@ namespace ToSic.Sxc.Dnn.WebApi
 
             return parent;
         }
-
-        /// <summary>
-        /// get url parameters and provide override values to ensure all configuration is 
-        /// preserved in AJAX calls
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        // TODO: this is probably old code, and should be merged centrally to use the generic implementation
-        // and be the same for Dnn and Oqtane
-        private static List<KeyValuePair<string, string>> GetOverrideParams(HttpRequestMessage request)
-        {
-            List<KeyValuePair<string, string>> urlParams = null;
-            var requestParams = request.GetQueryNameValuePairs();
-            var origParams = requestParams.Where(p => p.Key == OriginalParameters.NameInUrlForOriginalParameters).ToList();
-            if (origParams.Any())
-            {
-                var paramSet = origParams.First().Value;
-
-                // Workaround for deserializing KeyValuePair -it requires lowercase properties(case sensitive),
-                // which seems to be a bug in some Newtonsoft.Json versions: http://stackoverflow.com/questions/11266695/json-net-case-insensitive-property-deserialization
-                var items = Json.Deserialize<List<UpperCaseStringKeyValuePair>>(paramSet);
-                urlParams = items.Select(a => new KeyValuePair<string, string>(a.Key, a.Value)).ToList();
-            }
-
-            return urlParams;
-        }
-
-
-
-
     }
-
-
 }
