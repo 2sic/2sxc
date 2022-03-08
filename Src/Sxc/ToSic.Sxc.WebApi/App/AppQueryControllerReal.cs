@@ -117,7 +117,7 @@ namespace ToSic.Sxc.WebApi.App
                 throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, msg, "query not found");
             }
 
-            var permissionChecker = context.ServiceProvider.Build<AppPermissionCheck>()
+            var permissionChecker = GetService<AppPermissionCheck>()
                 .ForItem(context, app, query.Definition.Entity, Log);
             var readExplicitlyAllowed = permissionChecker.UserMay(GrantSets.ReadSomething);
 

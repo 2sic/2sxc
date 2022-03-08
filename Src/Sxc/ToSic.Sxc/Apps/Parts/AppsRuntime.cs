@@ -14,12 +14,14 @@ namespace ToSic.Sxc.Apps
     {
         #region Constructor / DI
 
-        public AppsRuntime(IServiceProvider serviceProvider, IAppStates appStates) : base(serviceProvider, "Cms.AppsRt")
+        public AppsRuntime(IServiceProvider serviceProvider, IAppStates appStates, Generator<App> appGenerator) : base("Cms.AppsRt")
         {
             _appStates = appStates;
+            _appGenerator = appGenerator;
         }
 
         private readonly IAppStates _appStates;
+        private readonly Generator<App> _appGenerator;
 
         #endregion
 
@@ -66,7 +68,7 @@ namespace ToSic.Sxc.Apps
             var zId = ZoneRuntime.ZoneId;
             var appIds = _appStates.Apps(zId);
             return appIds
-                .Select(a => ServiceProvider.Build<App>()
+                .Select(a => _appGenerator.New // ServiceProvider.Build<App>()
                     .PreInit(site)
                     .Init(new AppIdentity(zId, a.Key), buildConfig, Log) as IApp)
                 .OrderBy(a => a.Name)
@@ -103,7 +105,7 @@ namespace ToSic.Sxc.Apps
                             var appState = _appStates.Get(aId);
                             return appState != null && appState.IsGlobal() && !siteApps.Any(sa => sa.Equals(appState.Folder, StringComparison.InvariantCultureIgnoreCase));
                         })
-                        .Select(a => ServiceProvider.Build<App>()
+                        .Select(a => _appGenerator.New // ServiceProvider.Build<App>()
                             .PreInit(site)
                             .Init(a, buildConfig, Log) as IApp)
                         .OrderBy(a => a.Name)

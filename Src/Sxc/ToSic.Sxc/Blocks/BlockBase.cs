@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.LookUp;
-using ToSic.Sxc.Web;
-using ToSic.Sxc.Web.PageFeatures;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -18,14 +15,33 @@ namespace ToSic.Sxc.Blocks
 {
     public abstract partial class BlockBase : HasLog/*<BlockBase>*/, IBlock
     {
-        private readonly Lazy<BlockDataSourceFactory> _bdsFactoryLazy;
-
         #region Constructor and DI
 
-        protected BlockBase(Lazy<BlockDataSourceFactory> bdsFactoryLazy, string logName) : base(logName)
+        public class Dependencies
         {
-            _bdsFactoryLazy = bdsFactoryLazy;
+            public Dependencies(
+                Lazy<BlockDataSourceFactory> bdsFactoryLazy,
+                Lazy<App> appLazy,
+                Lazy<AppConfigDelegate> appConfigDelegateLazy,
+                Lazy<CmsRuntime> cmsLazy)
+            {
+                BdsFactoryLazy = bdsFactoryLazy;
+                AppLazy = appLazy;
+                AppConfigDelegateLazy = appConfigDelegateLazy;
+                CmsLazy = cmsLazy;
+            }
+            internal Lazy<BlockDataSourceFactory> BdsFactoryLazy { get; }
+            internal Lazy<App> AppLazy { get; }
+            internal Lazy<AppConfigDelegate> AppConfigDelegateLazy { get; }
+            internal Lazy<CmsRuntime> CmsLazy { get; }
         }
+
+        protected BlockBase(Dependencies dependencies, string logName) : base(logName)
+        {
+            _deps = dependencies;
+        }
+
+        private readonly Dependencies _deps;
 
         protected void Init(IContextOfBlock context, IAppIdentity appId, ILog parentLog)
         {
@@ -35,7 +51,7 @@ namespace ToSic.Sxc.Blocks
             AppId = appId.AppId;
         }
 
-        protected bool CompleteInit(IBlockBuilder rootBuilder, IBlockIdentifier blockId, int blockNumberUnsureIfNeeded)
+        protected bool CompleteInit(IBlockBuilder rootBuilderOrNull, IBlockIdentifier blockId, int blockNumberUnsureIfNeeded)
         {
             var wrapLog = Log.Call<bool>();
 
@@ -46,7 +62,7 @@ namespace ToSic.Sxc.Blocks
 
             // 2020-09-04 2dm - new change, moved BlockBuilder up so it's never null - may solve various issues
             // but may introduce new ones
-            BlockBuilder = new BlockBuilder(rootBuilder, this, Log);
+            BlockBuilder = new BlockBuilder(rootBuilderOrNull, this, Log);
 
             // If specifically no app found, end initialization here
             // Means we have no data, and no BlockBuilder
@@ -68,13 +84,13 @@ namespace ToSic.Sxc.Blocks
 
             // Get App for this block
             Log.Add("About to create app");
-            App = Context.ServiceProvider.Build<App>()
+            App = _deps.AppLazy.Value // Context.ServiceProvider.Build<App>()
                 .PreInit(Context.Site)
-                .Init(this, Context.ServiceProvider.Build<AppConfigDelegate>().Init(Log).BuildForNewBlock(Context, this), Log);
+                .Init(this, _deps.AppConfigDelegateLazy.Value /*Context.ServiceProvider.Build<AppConfigDelegate>()*/.Init(Log).BuildForNewBlock(Context, this), Log);
             Log.Add("App created");
 
             // note: requires EditAllowed, which isn't ready till App is created
-            var cms = Context.ServiceProvider.Build<CmsRuntime>().Init(App, Context.UserMayEdit, Log);
+            var cms = _deps.CmsLazy.Value /*Context.ServiceProvider.Build<CmsRuntime>()*/.Init(App, Context.UserMayEdit, Log);
 
             Configuration = cms.Blocks.GetOrGeneratePreviewConfig(blockId);
 
@@ -147,7 +163,7 @@ namespace ToSic.Sxc.Blocks
                 if (_dataSource != null) return _dataSource;
                 Log.Add(
                     $"About to load data source with possible app configuration provider. App is probably null: {App}");
-                _dataSource = _bdsFactoryLazy.Value.Init(Log).GetBlockDataSource(this, App?.ConfigurationProvider);
+                _dataSource = _deps.BdsFactoryLazy.Value /*_bdsFactoryLazy.Value*/.Init(Log).GetBlockDataSource(this, App?.ConfigurationProvider);
                 return _dataSource;
             }
         }

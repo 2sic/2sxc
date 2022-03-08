@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             _helper = new NetCoreControllersHelper(this);
         }
 
-        public IServiceProvider ServiceProvider => _helper.ServiceProvider;
+        protected IServiceProvider ServiceProvider => _helper.ServiceProvider;
 
         /// <inheritdoc />
         public ILog Log { get; }

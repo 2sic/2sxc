@@ -54,6 +54,7 @@ namespace ToSic.Sxc
             services.TryAddTransient<BlockDataSourceFactory>();
             services.TryAddTransient<BlockFromModule>();
             services.TryAddTransient<BlockFromEntity>();
+            services.TryAddTransient<BlockBase.Dependencies>();
             services.TryAddTransient<Services.IRenderService, RenderService>();  // new 12.05
 #pragma warning disable CS0618
             services.TryAddTransient<Blocks.IRenderService, RenderService>();  // Obsolete, but keep for the few apps we already released in v12

@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Plumbing
         /// <summary>
         /// The page level ServiceProvider
         /// </summary>
-        public IServiceProvider ServiceProvider { get; private set; }
+        internal IServiceProvider ServiceProvider { get; private set; }
 
 
         /// <summary>

@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         public class Dependencies
         {
-            public IServiceProvider ServiceProvider { get; }
+            internal IServiceProvider ServiceProvider { get; }
             public ICmsContext CmsContext { get; }
             public Lazy<CodeCompiler> CodeCompilerLazy { get; }
 

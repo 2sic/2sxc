@@ -1,8 +1,6 @@
-﻿using System;
-using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.DataSources;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -14,7 +12,7 @@ namespace ToSic.Sxc.Blocks
         /// <summary>
         /// Official constructor, must call Init afterwards
         /// </summary>
-        public BlockFromModule(Lazy<BlockDataSourceFactory> bdsFactoryLazy) : base(bdsFactoryLazy, "CB.Mod") { }
+        public BlockFromModule(Dependencies dependencies) : base(dependencies, "CB.Mod") { }
 
         #endregion
 

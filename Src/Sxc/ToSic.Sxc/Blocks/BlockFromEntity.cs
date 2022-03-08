@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Blocks
         
         #region Constructor and DI
 
-        public BlockFromEntity(Lazy<BlockDataSourceFactory> bdsFactoryLazy, Lazy<AppFinder> appFinderLazy) : base(bdsFactoryLazy, "CB.Ent")
+        public BlockFromEntity(Dependencies dependencies, Lazy<AppFinder> appFinderLazy) : base(dependencies, "CB.Ent")
         {
             _appFinderLazy = appFinderLazy;
         }

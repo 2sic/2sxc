@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Code
                 History = history;
                 User = user;
             }
-            public IServiceProvider ServiceProvider { get; }
+            internal IServiceProvider ServiceProvider { get; }
             public Lazy<LogHistory> History { get; }
             public Lazy<IUser> User { get; }
         }
