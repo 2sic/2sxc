@@ -1,5 +1,7 @@
 ﻿using Microsoft.JSInterop;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Client
 {
@@ -34,6 +36,20 @@ namespace ToSic.Sxc.Oqt.Client
             catch
             {
                 return new ValueTask<string>(Task.FromResult(string.Empty));
+            }
+        }
+
+        public async Task IncludeClientScripts(IEnumerable<SxcResource> clientAssets)
+        {
+            try
+            {
+                await _jsRuntime.InvokeVoidAsync(
+                    "ToSic.Sxc.includeClientScripts",
+                    (object)clientAssets);
+            }
+            catch
+            {
+                // ignore exception
             }
         }
     }

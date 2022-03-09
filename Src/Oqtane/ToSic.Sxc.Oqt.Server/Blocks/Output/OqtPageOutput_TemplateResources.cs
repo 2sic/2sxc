@@ -31,7 +31,8 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
                 Url = a.Url,
                 IsExternal = a.IsExternal,
                 Content = a.Content,
-                UniqueId = a.Id
+                UniqueId = a.Id,
+                HtmlAttributes = a.HtmlAttributes
             }).ToList();
             return resources;
         }
