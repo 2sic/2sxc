@@ -54,6 +54,10 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="ClientDependency.Core">
+      <HintPath>..\..\..\Dependencies\Dnn742\ClientDependency.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DotNetNuke">
       <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.dll</HintPath>
       <Private>False</Private>

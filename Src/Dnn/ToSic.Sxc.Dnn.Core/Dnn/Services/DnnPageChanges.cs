@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using DotNetNuke.Web.Client.ClientResourceManagement;
+using DotNetNuke.Web.Client.Providers;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.UI;
-using DotNetNuke.Web.Client.ClientResourceManagement;
-using DotNetNuke.Web.Client.Providers;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
@@ -119,9 +119,39 @@ namespace ToSic.Sxc.Dnn.Services
         {
             ass.ToList().ForEach(a =>
             {
-                if (a.IsJs) ClientResourceManager.RegisterScript(page, a.Url, a.Priority, DnnProviderName(a.PosInPage));
+                if (a.IsJs) RegisterJsScript(page, a);
                 else ClientResourceManager.RegisterStyleSheet(page, a.Url, a.Priority, DnnProviderName(a.PosInPage));
             });
+        }
+
+        /// <summary>
+        /// Register JS script with additional html attributes.
+        /// </summary>
+        /// <remarks>
+        /// Our implementation is necessary because it is not possible to provide
+        /// additional html attributes with DNN ClientResourceManager.RegisterScript.
+        /// </remarks>
+        /// <param name="page"></param>
+        /// <param name="clientAsset"></param>
+        private void RegisterJsScript(Page page, IClientAsset clientAsset)
+        {
+            var include = new DnnJsInclude 
+            {
+                ForceProvider = DnnProviderName(clientAsset.PosInPage), 
+                Priority = clientAsset.Priority, 
+                FilePath = clientAsset.Url, 
+                AddTag = false
+            }; // direct dependency on ClientDependency.Core.dll (included in default DNN installation)
+            if (clientAsset.HtmlAttributes.Count > 0)
+            {
+                // Convert HtmlAttributes dictionary to string.
+                // The syntax for the string must be: key1:value1, key2:value2   etc...
+                // Used to set the HtmlAttributes on DnnJsInclude class via a string which is parsed.
+                var list = clientAsset.HtmlAttributes.Select(a => $"{a.Key}:{(!string.IsNullOrEmpty(a.Value) ? a.Value : a.Key)}").ToList();
+                var htmlAttributesAsString = string.Join(",", list);
+                include.HtmlAttributesAsString = htmlAttributesAsString;
+            }
+            page.FindControl("ClientResourceIncludes")?.Controls.Add(include);
         }
 
         private string DnnProviderName(string position)
