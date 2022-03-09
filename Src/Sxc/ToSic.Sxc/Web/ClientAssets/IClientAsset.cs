@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Web
+﻿using System.Collections.Generic;
+
+namespace ToSic.Sxc.Web
 {
     public interface IClientAsset
     {
@@ -14,5 +16,10 @@
         bool AutoOpt { get; set; }
         bool IsExternal { get; set; }
         string Content { get; set; }
+
+        /// <summary>
+        /// Used to store all other html attributes from html tag.
+        /// </summary>
+        IDictionary<string, string> HtmlAttributes { get; set; }
     }
 }
