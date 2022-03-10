@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Services
         /// <param name="settings">
         /// - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
         /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
-        /// - Or a specially prepared <see cref="ToSic.Sxc.Images.IResizeSettings"/> object containing all settings.
+        /// - Or a specially prepared <see cref="IResizeSettings"/> object containing all settings.
         /// Note: If you need to construct very custom settings, use <see cref="ResizeSettings">ResizeSettings</see> to create them
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
@@ -87,12 +87,14 @@ namespace ToSic.Sxc.Services
 
         /// <summary>
         /// Get a Responsive Picture object which you can then either just show, or use to construct a more customized output as you need it.
+        ///
+        /// The resulting object can just be added to the html, like `@pic` or you can work with sub-properties as specified in the <see cref="IResponsivePicture"/>
         /// </summary>
         /// <param name="url">The image url</param>
         /// <param name="settings">
         /// - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
         /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
-        /// - Or a specially prepared <see cref="ToSic.Sxc.Images.IResizeSettings"/> object containing all settings.
+        /// - Or a specially prepared <see cref="IResizeSettings"/> object containing all settings.
         /// Note: If you need to construct very custom settings, use <see cref="ResizeSettings">ResizeSettings</see> to create them
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
@@ -116,6 +118,8 @@ namespace ToSic.Sxc.Services
 
         /// <summary>
         /// Get a Responsive Image object which you can then either just show, or use to construct a more customized output as you need it.
+        ///
+        /// The resulting object can just be added to the html, like `@img` or you can work with sub-properties as specified in the <see cref="IResponsiveImage"/>
         /// </summary>
         /// <param name="url">The image url.</param>
         /// <param name="settings">

@@ -5,7 +5,9 @@ using ToSic.Sxc.Web;
 namespace ToSic.Sxc.Images
 {
     /// <summary>
-    /// A object which contains everything to create HTML for responsive `img` tags with optimal `srcset` offering all the sizes you may need
+    /// A object which contains everything to create HTML for responsive `img` tags with optimal `srcset` offering all the sizes you may need.
+    ///
+    /// You can simply add this object to the source, like `@image` to render the image - which is the same as `@image.ImgTag`
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("Still WIP")]
     public interface IResponsiveImage: IHybridHtmlString

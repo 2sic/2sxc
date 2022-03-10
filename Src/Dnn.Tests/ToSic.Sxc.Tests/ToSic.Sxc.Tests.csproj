@@ -93,7 +93,8 @@
     <Compile Include="ServicesTests\ImageService\ImageServiceFormats.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceTagsNoWebp.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceTagsBase.cs" />
-    <Compile Include="ServicesTests\ImageService\ImageServiceTags.cs" />
+    <Compile Include="ServicesTests\ImageService\ImageTagsTestPermutations.cs" />
+    <Compile Include="ServicesTests\ImageService\ImageServiceTagsWebp.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceResizeSettings.cs" />
     <Compile Include="ServicesTests\MailServiceBaseTests.cs" />
     <Compile Include="ServicesTests\MailAddressCollectionTests.cs" />

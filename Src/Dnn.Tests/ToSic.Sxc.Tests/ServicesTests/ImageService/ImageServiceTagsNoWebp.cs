@@ -14,16 +14,30 @@ namespace ToSic.Sxc.Tests.ServicesTests
             return base.SetupServices(services).AddTransient<IPlatformInfo, TestPlatformNoLicense>();
         }
 
+        // [DataRow(ImgTagJpg, SrcSetNone, "No Src Set")]
+        [DataRow(ImgTagJpg, SrcSet12, "With Src Set 1,2")]
         [TestMethod]
-        public void SourceTags12() => base.SourceTags12(SrcJpg12);
+        public void ImgTagsMultiTests(string expected, string srcSet, string name) => ImageTagMultiTest(expected, srcSet, name);
 
-        [TestMethod]
-        public void SourceTagsNone() => base.SourceTagsNone(SrcJpgNone);
+        //[DataRow(SrcJpgNone, SrcSetNone, true, "No Src Set, in-pic")]
+        //[DataRow(SrcJpgNone, SrcSetNone, false, "No Src Set, in-settings")]
+        //[DataRow(SrcJpg12, SrcSet12, true, "With Src Set 1,2, in-pic")]
+        //[DataRow(SrcJpg12, SrcSet12, false, "With Src Set 1,2, in-settings")]
+        //[TestMethod]
+        //public void SourceTags(string expected, string srcSet, bool inPicTag, string name) => SourceTagsInner(expected, srcSet, inPicTag, name);
 
+        [DataRow(SrcJpgNone, SrcSetNone, "No Src Set")]
+        [DataRow(SrcJpg12, SrcSet12, "With Src Set 1,2")]
         [TestMethod]
-        public void PictureTagNoSet() => base.PictureTagNoSet(SrcJpgNone);
+        public void SourceTagsMultiTests(string expected, string srcSet, string name) => SourceTagsMultiTest(expected, srcSet, name);
 
+
+        [DataRow(SrcJpgNone, SrcSetNone, true, "No Src Set, in-pic")]
+        [DataRow(SrcJpgNone, SrcSetNone, false, "No Src Set, in-settings")]
+        [DataRow(SrcJpg12, SrcSet12, true, "With Src Set 1,2, in-pic")]
+        [DataRow(SrcJpg12, SrcSet12, false, "With Src Set 1,2, in-settings")]
         [TestMethod]
-        public void PictureTag12() => base.PictureTag12(SrcJpg12);
+        public void PictureTags(string expected, string srcSet, bool inPicTag, string name) 
+            => PictureTagInner(expected, srcSet, inPicTag, name);
     }
 }
