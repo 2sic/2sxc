@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Web;
@@ -172,14 +174,14 @@ namespace ToSic.Sxc.Blocks.Output
 
             if (attributesMatch.Count == 0) return null;
 
-            var attributes = new Dictionary<string, string>();
+            var attributes = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
             foreach (Match attributeMatch in attributesMatch)
             {
                 if (!attributeMatch.Success) continue;
-                var key = attributeMatch.Groups["Key"].Value;
+                var key = attributeMatch.Groups["Key"]?.Value.ToLowerInvariant();
 
                 // skip special attributes like "src", "id", "data-enableoptimizations"
-                if (SkipHtmlAttributes.Contains(key)) continue;
+                if (string.IsNullOrEmpty(key) || SkipHtmlAttributes.Contains(key, StringComparer.InvariantCultureIgnoreCase)) continue;
 
                 var value = attributeMatch.Groups["Value"]?.Value;
 

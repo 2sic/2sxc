@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Sxc.Blocks.Output;
@@ -29,7 +30,7 @@ namespace ToSic.Sxc.Tests.Blocks.Output
             var rez2 = GetHtmlAttributes("<tag     key/>");
             var rez3 = GetHtmlAttributes("<tag    key    />");
             var rez4 = GetHtmlAttributes("<tag \n \t   key    />");
-            var expected = new Dictionary<string, string> { { "key", "" } };
+            var expected = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) { { "key", "" } };
             CollectionAssert.AreEquivalent(rez1.ToList(), expected.ToList());
             CollectionAssert.AreEquivalent(rez2.ToList(), expected.ToList());
             CollectionAssert.AreEquivalent(rez3.ToList(), expected.ToList());
@@ -40,13 +41,13 @@ namespace ToSic.Sxc.Tests.Blocks.Output
         public void ManyAttributesWithoutValueTests()
         {
             var rez = GetHtmlAttributes("<tag key1 key2 \n key3    Key4  \t  KEY5/>");
-            var expected = new Dictionary<string, string>
+            var expected = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
             {
                 { "key1", "" },
                 { "key2", "" }, 
                 { "key3", "" },
-                { "Key4", "" },
-                { "KEY5", "" }
+                { "key4", "" },
+                { "key5", "" }
             };
             CollectionAssert.AreEquivalent(rez.ToList(), expected.ToList());
         }
@@ -55,11 +56,9 @@ namespace ToSic.Sxc.Tests.Blocks.Output
         public void ManyDuplicateAttributesWithoutValueTests()
         {
             var rez = GetHtmlAttributes("<tag key1  key1 \n key1    Key1   KEY1/>");
-            var expected = new Dictionary<string, string>
+            var expected = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
             {
-                { "key1", "" },
-                { "Key1", "" },
-                { "KEY1", "" }
+                { "key1", "" }
             };
             CollectionAssert.AreEquivalent(rez.ToList(), expected.ToList());
         }
@@ -70,7 +69,10 @@ namespace ToSic.Sxc.Tests.Blocks.Output
             var rez1 = GetHtmlAttributes("<tag key=\"value\"/>");
             var rez2 = GetHtmlAttributes("<tag key='value'   />");
             //var rez3 = GetHtmlAttributes("<tag key=value/>");
-            var expected = new Dictionary<string, string> {{"key", "value"}};
+            var expected = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
+            {
+                {"key", "value"}
+            };
             CollectionAssert.AreEquivalent(rez1.ToList(), expected.ToList());
             CollectionAssert.AreEquivalent(rez2.ToList(), expected.ToList());
             //CollectionAssert.AreEquivalent(rez3.ToList(), expected.ToList());
@@ -80,7 +82,7 @@ namespace ToSic.Sxc.Tests.Blocks.Output
         public void ManyAttributesTests()
         {
             var rez1 = GetHtmlAttributes("<tag key1 key2=\"value\"   \n  key3=\"value\"     />");
-            var expected = new Dictionary<string, string>
+            var expected = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
             {
                 { "key1", "" } , 
                 { "key2", "value" },
@@ -93,7 +95,7 @@ namespace ToSic.Sxc.Tests.Blocks.Output
         public void ScriptOnlyAdditionalAttributesTests()
         {
             var rez1 = GetHtmlAttributes("<script type='module' async crossorigin='anonymous' defer integrity='filehash' nomodule='false' referrerpolicy='strict-origin-when-cross-origin' ></script>");
-            var expected = new Dictionary<string, string>
+            var expected = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
             {
                 { "type", "module" } ,
                 { "async", "" },
@@ -110,7 +112,7 @@ namespace ToSic.Sxc.Tests.Blocks.Output
         public void ScriptOnlyAdditionalAttributesNoValueTests()
         {
             var rez1 = GetHtmlAttributes("<script async defer></script>");
-            var expected = new Dictionary<string, string>
+            var expected = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
             {
                 { "async", "" },
                 { "defer", "" }
@@ -122,7 +124,7 @@ namespace ToSic.Sxc.Tests.Blocks.Output
         public void ScriptOnlyAdditionalAttributesWithValueTests()
         {
             var rez1 = GetHtmlAttributes("<script async='async' defer='defer'></script>");
-            var expected = new Dictionary<string, string>
+            var expected = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
             {
                 { "async", "async" },
                 { "defer", "defer" }
@@ -134,7 +136,7 @@ namespace ToSic.Sxc.Tests.Blocks.Output
         public void ScriptOnlyBlacklistAttributesTests()
         {
             var rez1 = GetHtmlAttributes("<script id='id' src='src' data-enableoptimizations='true' ></script>");
-            var expected = new Dictionary<string, string> { };
+            var expected = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) { };
             CollectionAssert.AreEquivalent(rez1.ToList(), expected.ToList());
         }
 
@@ -142,7 +144,7 @@ namespace ToSic.Sxc.Tests.Blocks.Output
         public void ScriptMixAttributesTests()
         {
             var rez1 = GetHtmlAttributes("<script id='id' async src='src' defer data-enableoptimizations='true' ></script>");
-            var expected = new Dictionary<string, string>
+            var expected = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
             {
                 { "async", "" },
                 { "defer", "" }
