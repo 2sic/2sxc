@@ -174,12 +174,12 @@ namespace ToSic.Sxc.Tests.Blocks.Output
         }
 
         [TestMethod()]
-        [DataRow("<script src='src' multiline=\"line1\nline2\nline3\"></script>")]
+        [DataRow("<script src='src' multiline=\"line1\nli'ne2\nli''ne3\"></script>")]
         public void ScriptMultilineAttributeTests(string htmlTag)
         {
             var expected = new Dictionary<string, string>()
             {
-                { "multiline", "line1\nline2\nline3" }
+                { "multiline", "line1\nli'ne2\nli''ne3" }
             };
             CollectionAssert.AreEquivalent(expected, GetHtmlAttributes(htmlTag));
         }
@@ -197,7 +197,19 @@ namespace ToSic.Sxc.Tests.Blocks.Output
         }
 
         [TestMethod()]
-        [DataRow("<script json=\"{'Environment':{'WebsiteId':74}}\"></script>")]
+        [DataRow("<script json='{\"Environment\":{\"WebsiteId\":74}}'></script>")]
+        public void ScriptAttributeWithQuoteSimpleJsonTests(string htmlTag)
+        {
+            var expected = new Dictionary<string, string>()
+            {
+                { "json", "{\"Environment\":{\"WebsiteId\":74}}" }
+            };
+            var actual = GetHtmlAttributes(htmlTag);
+            CollectionAssert.AreEquivalent(expected, actual);
+        }
+
+        [TestMethod()]
+        [DataRow("<script json=\"{'Environment':{'WebsiteId':74}}\"></script>")] // 2DM this would never be valid json because json can never use '...' as string holders.
         public void ScriptAttributeWithSingleQuoteSimpleJsonTests(string htmlTag)
         {
             var expected = new Dictionary<string, string>()
